@@ -10,10 +10,10 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Search\Escargot;
+namespace Contao\CoreBundle\Tests\Crawl\Escargot;
 
-use Contao\CoreBundle\Search\Escargot\Factory;
-use Contao\CoreBundle\Search\Escargot\Subscriber\EscargotSubscriberInterface;
+use Contao\CoreBundle\Crawl\Escargot\Factory;
+use Contao\CoreBundle\Crawl\Escargot\Subscriber\EscargotSubscriberInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
@@ -68,15 +68,15 @@ class FactoryTest extends TestCase
             ['https://example.com']
         );
 
-        $this->assertCount(1, $factory->getAdditionalSearchUriCollection());
-        $this->assertTrue($factory->getAdditionalSearchUriCollection()->containsHost('example.com'));
+        $this->assertCount(1, $factory->getAdditionalCrawlUriCollection());
+        $this->assertTrue($factory->getAdditionalCrawlUriCollection()->containsHost('example.com'));
 
         $this->assertCount(1, $factory->getRootPageUriCollection());
         $this->assertTrue($factory->getRootPageUriCollection()->containsHost('contao.org'));
 
-        $this->assertCount(2, $factory->getSearchUriCollection());
-        $this->assertTrue($factory->getSearchUriCollection()->containsHost('example.com'));
-        $this->assertTrue($factory->getSearchUriCollection()->containsHost('contao.org'));
+        $this->assertCount(2, $factory->getCrawlUriCollection());
+        $this->assertTrue($factory->getCrawlUriCollection()->containsHost('example.com'));
+        $this->assertTrue($factory->getCrawlUriCollection()->containsHost('contao.org'));
     }
 
     public function testCreatesEscargotCorrectlyWithNewJobId(): void

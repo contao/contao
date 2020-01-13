@@ -10,10 +10,10 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Search\Escargot;
+namespace Contao\CoreBundle\Crawl\Escargot;
 
+use Contao\CoreBundle\Crawl\Escargot\Subscriber\EscargotSubscriberInterface;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Search\Escargot\Subscriber\EscargotSubscriberInterface;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use Nyholm\Psr7\Uri;
@@ -121,12 +121,12 @@ class Factory
         return $this->defaultHttpClientOptions;
     }
 
-    public function getSearchUriCollection(): BaseUriCollection
+    public function getCrawlUriCollection(): BaseUriCollection
     {
-        return $this->getRootPageUriCollection()->mergeWith($this->getAdditionalSearchUriCollection());
+        return $this->getRootPageUriCollection()->mergeWith($this->getAdditionalCrawlUriCollection());
     }
 
-    public function getAdditionalSearchUriCollection(): BaseUriCollection
+    public function getAdditionalCrawlUriCollection(): BaseUriCollection
     {
         $collection = new BaseUriCollection();
 
@@ -187,7 +187,15 @@ class Factory
 
     private function createHttpClient(array $options = []): HttpClientInterface
     {
-        return HttpClient::create(array_merge_recursive($this->getDefaultHttpClientOptions(), $options));
+        return HttpClient::create(
+            array_merge_recursive(
+                [
+                    'headers' => ['accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'],
+                    'max_duration' => 10, // Ignore requests that take longer than 10 seconds
+                ],
+                array_merge_recursive($this->getDefaultHttpClientOptions(), $options)
+            )
+        );
     }
 
     private function registerDefaultSubscribers(Escargot $escargot): void

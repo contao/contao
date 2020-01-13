@@ -159,6 +159,28 @@ services:
         tags:
             - nelmio_cors.options_provider
 
+    contao.crawl.escargot_factory:
+        class: Contao\CoreBundle\Crawl\Escargot\Factory
+        arguments:
+            - '@database_connection'
+            - '@contao.framework'
+        public: true
+
+    contao.crawl.escargot_subscriber.broken_link_checker:
+        class: Contao\CoreBundle\Crawl\Escargot\Subscriber\BrokenLinkCheckerSubscriber
+        arguments:
+            - '@translator'
+        tags:
+            - { name: 'contao.escargot_subscriber' }
+
+    contao.crawl.escargot_subscriber.search_index:
+        class: Contao\CoreBundle\Crawl\Escargot\Subscriber\SearchIndexSubscriber
+        arguments:
+            - '@contao.search.indexer'
+            - '@translator'
+        tags:
+            - { name: 'contao.escargot_subscriber' }
+
     contao.csrf.token_manager:
         class: Symfony\Component\Security\Csrf\CsrfTokenManager
         arguments:
@@ -531,28 +553,6 @@ services:
             - '@contao.framework'
             - '%contao.prepend_locale%'
         public: true
-
-    contao.search.escargot_factory:
-        class: Contao\CoreBundle\Search\Escargot\Factory
-        arguments:
-            - '@database_connection'
-            - '@contao.framework'
-        public: true
-
-    contao.search.escargot_subscriber.broken_link_checker:
-        class: Contao\CoreBundle\Search\Escargot\Subscriber\BrokenLinkCheckerSubscriber
-        arguments:
-            - '@translator'
-        tags:
-            - { name: 'contao.escargot_subscriber' }
-
-    contao.search.escargot_subscriber.search_index:
-        class: Contao\CoreBundle\Search\Escargot\Subscriber\SearchIndexSubscriber
-        arguments:
-            - '@contao.search.indexer'
-            - '@translator'
-        tags:
-            - { name: 'contao.escargot_subscriber' }
 
     contao.search.indexer.default:
         class: Contao\CoreBundle\Search\Indexer\DefaultIndexer

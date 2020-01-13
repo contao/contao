@@ -10,10 +10,10 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Search\Escargot\Subscriber;
+namespace Contao\CoreBundle\Tests\Crawl\Escargot\Subscriber;
 
-use Contao\CoreBundle\Search\Escargot\Subscriber\BrokenLinkCheckerSubscriber;
-use Contao\CoreBundle\Search\Escargot\Subscriber\SubscriberResult;
+use Contao\CoreBundle\Crawl\Escargot\Subscriber\BrokenLinkCheckerSubscriber;
+use Contao\CoreBundle\Crawl\Escargot\Subscriber\SubscriberResult;
 use Nyholm\Psr7\Uri;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -23,7 +23,7 @@ use Symfony\Component\HttpClient\Chunk\LastChunk;
 use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Component\HttpClient\Exception\TransportException;
 use Symfony\Contracts\HttpClient\ChunkInterface;
-use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Terminal42\Escargot\BaseUriCollection;
@@ -31,6 +31,7 @@ use Terminal42\Escargot\CrawlUri;
 use Terminal42\Escargot\Escargot;
 use Terminal42\Escargot\Queue\InMemoryQueue;
 use Terminal42\Escargot\Subscriber\SubscriberInterface;
+use Terminal42\Escargot\SubscriberLogger;
 
 class BrokenLinkCheckerSubscriberTest extends TestCase
 {
@@ -52,7 +53,12 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
             $logger
                 ->expects($this->once())
                 ->method('log')
-                ->with($expectedLogLevel, $expectedLogMessage, ['source' => BrokenLinkCheckerSubscriber::class])
+                ->with($expectedLogLevel, $expectedLogMessage, $this->callback(function (array $context) {
+                    $this->assertInstanceOf(CrawlUri::class, $context['crawlUri']);
+                    $this->assertSame(BrokenLinkCheckerSubscriber::class, $context['source']);
+
+                    return true;
+                }))
             ;
         } else {
             $logger
@@ -71,6 +77,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
 
         $subscriber = new BrokenLinkCheckerSubscriber($this->getTranslator());
         $subscriber->setEscargot($escargot);
+        $subscriber->setLogger(new SubscriberLogger($logger, \get_class($subscriber)));
 
         $decision = $subscriber->shouldRequest($crawlUri);
 
@@ -83,14 +90,14 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
             (new CrawlUri(new Uri('https://github.com'), 0)),
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
-            '[URI: https://github.com/ (Level: 0, Processed: no, Found on: root, Tags: none)] Did not check because it is not part of the base URI collection or was not found on one of that is.',
+            'Did not check because it is not part of the base URI collection or was not found on one of that is.',
         ];
 
         yield 'Test skips URIs that were found on an URI that did not belong to our base URI collection' => [
             (new CrawlUri(new Uri('https://gitlab.com'), 1, false, new Uri('https://github.com'))),
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
-            '[URI: https://gitlab.com/ (Level: 1, Processed: no, Found on: https://github.com/, Tags: none)] Did not check because it is not part of the base URI collection or was not found on one of that is.',
+            'Did not check because it is not part of the base URI collection or was not found on one of that is.',
             (new CrawlUri(new Uri('https://github.com'), 0, true)),
         ];
 
@@ -111,7 +118,12 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
             $logger
                 ->expects($this->once())
                 ->method('log')
-                ->with($expectedLogLevel, $expectedLogMessage, ['source' => BrokenLinkCheckerSubscriber::class])
+                ->with($expectedLogLevel, $expectedLogMessage, $this->callback(function (array $context) {
+                    $this->assertInstanceOf(CrawlUri::class, $context['crawlUri']);
+                    $this->assertSame(BrokenLinkCheckerSubscriber::class, $context['source']);
+
+                    return true;
+                }))
             ;
         } else {
             $logger
@@ -125,6 +137,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
 
         $subscriber = new BrokenLinkCheckerSubscriber($this->getTranslator());
         $subscriber->setEscargot($escargot);
+        $subscriber->setLogger(new SubscriberLogger($logger, \get_class($subscriber)));
 
         $decision = $subscriber->needsContent(
             new CrawlUri(new Uri('https://contao.org'), 0),
@@ -151,7 +164,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
             $this->getResponse(404),
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::ERROR,
-            '[URI: https://contao.org/ (Level: 0, Processed: no, Found on: root, Tags: none)] Broken link! HTTP Status Code: 404.',
+            'Broken link! HTTP Status Code: 404.',
             ['ok' => 0, 'error' => 1],
         ];
 
@@ -159,7 +172,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
             $this->getResponse(404),
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::ERROR,
-            '[URI: https://contao.org/ (Level: 0, Processed: no, Found on: root, Tags: none)] Broken link! HTTP Status Code: 404.',
+            'Broken link! HTTP Status Code: 404.',
             ['ok' => 0, 'error' => 2],
             ['ok' => 0, 'error' => 1],
         ];
@@ -183,9 +196,9 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
     }
 
     /**
-     * @dataProvider onExceptionProvider
+     * @dataProvider onTransportExceptionProvider
      */
-    public function testOnException(ExceptionInterface $exception, ResponseInterface $response, ?ChunkInterface $chunk, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = []): void
+    public function testOnTransportException(TransportException $exception, ResponseInterface $response, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = []): void
     {
         $logger = $this->createMock(LoggerInterface::class);
 
@@ -193,7 +206,12 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
             $logger
                 ->expects($this->once())
                 ->method('log')
-                ->with($expectedLogLevel, $expectedLogMessage, ['source' => BrokenLinkCheckerSubscriber::class])
+                ->with($expectedLogLevel, $expectedLogMessage, $this->callback(function (array $context) {
+                    $this->assertInstanceOf(CrawlUri::class, $context['crawlUri']);
+                    $this->assertSame(BrokenLinkCheckerSubscriber::class, $context['source']);
+
+                    return true;
+                }))
             ;
         } else {
             $logger
@@ -207,7 +225,8 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
 
         $subscriber = new BrokenLinkCheckerSubscriber($this->getTranslator());
         $subscriber->setEscargot($escargot);
-        $subscriber->onException(new CrawlUri(new Uri('https://contao.org'), 0), $exception, $response, $chunk);
+        $subscriber->setLogger(new SubscriberLogger($logger, \get_class($subscriber)));
+        $subscriber->onTransportException(new CrawlUri(new Uri('https://contao.org'), 0), $exception, $response);
 
         $previousResult = null;
 
@@ -220,14 +239,70 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
         $this->assertSame($expectedStats, $result->getInfo('stats'));
     }
 
-    public function onExceptionProvider(): \Generator
+    public function onTransportExceptionProvider(): \Generator
+    {
+        yield 'Test reports transport exception responses' => [
+            new TransportException('Could not resolve host or timeout'),
+            $this->getResponse(404),
+            LogLevel::ERROR,
+            'Broken link! Could not request properly: Could not resolve host or timeout.',
+            ['ok' => 0, 'error' => 2],
+            ['ok' => 0, 'error' => 1],
+        ];
+    }
+
+    /**
+     * @dataProvider onHttpExceptionProvider
+     */
+    public function testOnHttpException(HttpExceptionInterface $exception, ResponseInterface $response, ChunkInterface $chunk, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = []): void
+    {
+        $logger = $this->createMock(LoggerInterface::class);
+
+        if ('' !== $expectedLogLevel) {
+            $logger
+                ->expects($this->once())
+                ->method('log')
+                ->with($expectedLogLevel, $expectedLogMessage, $this->callback(function (array $context) {
+                    $this->assertInstanceOf(CrawlUri::class, $context['crawlUri']);
+                    $this->assertSame(BrokenLinkCheckerSubscriber::class, $context['source']);
+
+                    return true;
+                }))
+            ;
+        } else {
+            $logger
+                ->expects($this->never())
+                ->method('log')
+            ;
+        }
+
+        $escargot = Escargot::create(new BaseUriCollection([new Uri('https://contao.org')]), new InMemoryQueue());
+        $escargot = $escargot->withLogger($logger);
+
+        $subscriber = new BrokenLinkCheckerSubscriber($this->getTranslator());
+        $subscriber->setEscargot($escargot);
+        $subscriber->setLogger(new SubscriberLogger($logger, \get_class($subscriber)));
+        $subscriber->onHttpException(new CrawlUri(new Uri('https://contao.org'), 0), $exception, $response, $chunk);
+
+        $previousResult = null;
+
+        if (0 !== \count($previousStats)) {
+            $previousResult = new SubscriberResult(true, 'foobar');
+            $previousResult->addInfo('stats', $previousStats);
+        }
+
+        $result = $subscriber->getResult($previousResult);
+        $this->assertSame($expectedStats, $result->getInfo('stats'));
+    }
+
+    public function onHttpExceptionProvider(): \Generator
     {
         yield 'Test reports responses that were not successful' => [
             new ClientException($this->getResponse(404)),
             $this->getResponse(404),
             new LastChunk(),
             LogLevel::ERROR,
-            '[URI: https://contao.org/ (Level: 0, Processed: no, Found on: root, Tags: none)] Broken link! HTTP Status Code: 404.',
+            'Broken link! HTTP Status Code: 404.',
             ['ok' => 0, 'error' => 1],
         ];
 
@@ -236,17 +311,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
             $this->getResponse(404),
             new LastChunk(),
             LogLevel::ERROR,
-            '[URI: https://contao.org/ (Level: 0, Processed: no, Found on: root, Tags: none)] Broken link! HTTP Status Code: 404.',
-            ['ok' => 0, 'error' => 2],
-            ['ok' => 0, 'error' => 1],
-        ];
-
-        yield 'Test reports transport exception responses' => [
-            new TransportException('Could not resolve host or timeout'),
-            $this->getResponse(404),
-            null,
-            LogLevel::ERROR,
-            '[URI: https://contao.org/ (Level: 0, Processed: no, Found on: root, Tags: none)] Broken link! Could not request properly: Could not resolve host or timeout.',
+            'Broken link! HTTP Status Code: 404.',
             ['ok' => 0, 'error' => 2],
             ['ok' => 0, 'error' => 1],
         ];

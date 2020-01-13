@@ -12,13 +12,18 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Command;
 
-use Contao\CoreBundle\Search\Escargot\Factory;
+use Contao\CoreBundle\Crawl\Escargot\Factory;
+use Contao\CoreBundle\Crawl\Monolog\CrawlCsvLogHandler;
+use Monolog\Formatter\LineFormatter;
+use Monolog\Handler\GroupHandler;
+use Psr\Log\LoggerInterface;
+use Symfony\Bridge\Monolog\Handler\ConsoleHandler;
+use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -70,9 +75,11 @@ class CrawlCommand extends Command
             ->addOption('delay', null, InputOption::VALUE_REQUIRED, 'The number of microseconds to wait between requests (0 = throttling is disabled)', 0)
             ->addOption('max-requests', null, InputOption::VALUE_REQUIRED, 'The maximum number of requests to execute (0 = no limit)', 0)
             ->addOption('max-depth', null, InputOption::VALUE_REQUIRED, 'The maximum depth to crawl for (0 = no limit)', 0)
-            ->addOption('no-progress', null, InputOption::VALUE_NONE, 'Disables the progess bar output')
+            ->addOption('no-progress', null, InputOption::VALUE_NONE, 'Disables the progress bar output')
+            ->addOption('enable-debug-csv', null, InputOption::VALUE_NONE, 'Writes the crawl debug log into a separate CSV file')
+            ->addOption('debug-csv-path', null, InputOption::VALUE_REQUIRED, 'The path of the debug log CSV file', getcwd().'/crawl_debug_log.csv')
             ->setDescription('Crawls the Contao root pages with the desired subscribers')
-            ->setHelp('You can add additional URIs via the <info>contao.search.additional_uris</info> parameter.')
+            ->setHelp('You can add additional URIs via the <info>contao.crawl.additional_uris</info> parameter.')
         ;
     }
 
@@ -86,7 +93,7 @@ class CrawlCommand extends Command
 
         $subscribers = $input->getOption('subscribers');
         $queue = new InMemoryQueue();
-        $baseUris = $this->escargotFactory->getSearchUriCollection();
+        $baseUris = $this->escargotFactory->getCrawlUriCollection();
 
         try {
             if ($jobId = $input->getArgument('job')) {
@@ -107,14 +114,12 @@ class CrawlCommand extends Command
         $logOutput = $output instanceof ConsoleOutput ? $output->section() : $output;
 
         $this->escargot = $this->escargot
-            ->withLogger($this->createSourceProvidingConsoleLogger($logOutput))
+            ->withLogger($this->createLogger($logOutput, $input))
             ->withConcurrency((int) $input->getOption('concurrency'))
             ->withRequestDelay((int) $input->getOption('delay'))
             ->withMaxRequests((int) $input->getOption('max-requests'))
             ->withMaxDepth((int) $input->getOption('max-depth'))
         ;
-
-        $io->comment('Started crawling...');
 
         if (!$input->getOption('no-progress')) {
             $this->addProgressBar($output);
@@ -147,14 +152,30 @@ class CrawlCommand extends Command
         return (int) $errored;
     }
 
-    private function createSourceProvidingConsoleLogger(OutputInterface $output): ConsoleLogger
+    private function createLogger(OutputInterface $output, InputInterface $input): LoggerInterface
     {
-        return new class($output) extends ConsoleLogger {
-            public function log($level, $message, array $context = []): void
-            {
-                parent::log($level, '[{source}] '.$message, $context);
+        $handlers = [];
+
+        if ($input->getOption('enable-debug-csv')) {
+            // Delete file if it already exists
+            if (file_exists($input->getOption('debug-csv-path'))) {
+                unlink($input->getOption('debug-csv-path'));
             }
-        };
+
+            $csvDebugHandler = new CrawlCsvLogHandler($input->getOption('debug-csv-path'), Logger::DEBUG);
+            $handlers[] = $csvDebugHandler;
+        }
+
+        $outputHandler = new ConsoleHandler($output);
+        $outputHandler->setFormatter(new LineFormatter("[%context.source%] [%context.crawlUri%] %message%\n"));
+        $handlers[] = $outputHandler;
+
+        $groupHandler = new GroupHandler($handlers);
+
+        $logger = new Logger('crawl-logger');
+        $logger->pushHandler($groupHandler);
+
+        return $logger;
     }
 
     private function addProgressBar(OutputInterface $output): void

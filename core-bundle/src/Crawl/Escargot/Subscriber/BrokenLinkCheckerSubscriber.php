@@ -10,11 +10,12 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Search\Escargot\Subscriber;
+namespace Contao\CoreBundle\Crawl\Escargot\Subscriber;
 
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LogLevel;
 use Symfony\Contracts\HttpClient\ChunkInterface;
-use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
@@ -24,10 +25,13 @@ use Terminal42\Escargot\EscargotAwareInterface;
 use Terminal42\Escargot\EscargotAwareTrait;
 use Terminal42\Escargot\Subscriber\ExceptionSubscriberInterface;
 use Terminal42\Escargot\Subscriber\SubscriberInterface;
+use Terminal42\Escargot\SubscriberLoggerTrait;
 
-class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, EscargotAwareInterface, ExceptionSubscriberInterface
+class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, EscargotAwareInterface, ExceptionSubscriberInterface, LoggerAwareInterface
 {
     use EscargotAwareTrait;
+    use LoggerAwareTrait;
+    use SubscriberLoggerTrait;
 
     /**
      * @var TranslatorInterface
@@ -62,10 +66,10 @@ class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, Escarg
             && $this->escargot->getBaseUris()->containsHost($originalCrawlUri->getUri()->getHost());
 
         if (!$fromBaseUriCollection && !$foundOnBaseUriCollection) {
-            $this->escargot->log(
+            $this->logWithCrawlUri(
+                $crawlUri,
                 LogLevel::DEBUG,
-                $crawlUri->createLogMessage('Did not check because it is not part of the base URI collection or was not found on one of that is.'),
-                ['source' => static::class]
+                'Did not check because it is not part of the base URI collection or was not found on one of that is.'
             );
 
             return SubscriberInterface::DECISION_NEGATIVE;
@@ -110,39 +114,20 @@ class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, Escarg
         return $result;
     }
 
-    public function onException(CrawlUri $crawlUri, ExceptionInterface $exception, ResponseInterface $response, ChunkInterface $chunk = null): void
+    public function onTransportException(CrawlUri $crawlUri, TransportExceptionInterface $exception, ResponseInterface $response): void
     {
-        if ($exception instanceof TransportExceptionInterface) {
-            $this->logError($crawlUri, 'Could not request properly: '.$exception->getMessage());
+        $this->logError($crawlUri, 'Could not request properly: '.$exception->getMessage());
+    }
 
-            return;
-        }
-
-        try {
-            $isLastChunk = null !== $chunk && $chunk->isLast();
-            $statusCode = $response->getStatusCode();
-        } catch (TransportExceptionInterface $exception) {
-            $this->logError($crawlUri, 'Could not request properly: '.$exception->getMessage());
-
-            return;
-        }
-
-        // Only log on last chunk for HttpExceptions, otherwise we have a log entry on every chunk that arrives.
-        if ($exception instanceof HttpExceptionInterface && null !== $chunk && !$isLastChunk) {
-            return;
-        }
-
-        $this->logError($crawlUri, 'HTTP Status Code: '.$statusCode);
+    public function onHttpException(CrawlUri $crawlUri, HttpExceptionInterface $exception, ResponseInterface $response, ChunkInterface $chunk): void
+    {
+        $this->logError($crawlUri, 'HTTP Status Code: '.$response->getStatusCode());
     }
 
     private function logError(CrawlUri $crawlUri, string $message): void
     {
         ++$this->stats['error'];
 
-        $this->escargot->log(
-            LogLevel::ERROR,
-            $crawlUri->createLogMessage(sprintf('Broken link! %s.', $message)),
-            ['source' => static::class]
-        );
+        $this->logWithCrawlUri($crawlUri, LogLevel::ERROR, sprintf('Broken link! %s.', $message));
     }
 }

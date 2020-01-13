@@ -10,10 +10,10 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Search\Escargot\Subscriber;
+namespace Contao\CoreBundle\Tests\Crawl\Escargot\Subscriber;
 
-use Contao\CoreBundle\Search\Escargot\Subscriber\SearchIndexSubscriber;
-use Contao\CoreBundle\Search\Escargot\Subscriber\SubscriberResult;
+use Contao\CoreBundle\Crawl\Escargot\Subscriber\SearchIndexSubscriber;
+use Contao\CoreBundle\Crawl\Escargot\Subscriber\SubscriberResult;
 use Contao\CoreBundle\Search\Indexer\IndexerException;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Nyholm\Psr7\Uri;
@@ -31,6 +31,7 @@ use Terminal42\Escargot\Queue\InMemoryQueue;
 use Terminal42\Escargot\Subscriber\HtmlCrawlerSubscriber;
 use Terminal42\Escargot\Subscriber\RobotsSubscriber;
 use Terminal42\Escargot\Subscriber\SubscriberInterface;
+use Terminal42\Escargot\SubscriberLogger;
 
 class SearchIndexSubscriberTest extends TestCase
 {
@@ -51,7 +52,12 @@ class SearchIndexSubscriberTest extends TestCase
             $logger
                 ->expects($this->once())
                 ->method('log')
-                ->with($expectedLogLevel, $expectedLogMessage, ['source' => SearchIndexSubscriber::class])
+                ->with($expectedLogLevel, $expectedLogMessage, $this->callback(function (array $context) {
+                    $this->assertInstanceOf(CrawlUri::class, $context['crawlUri']);
+                    $this->assertSame(SearchIndexSubscriber::class, $context['source']);
+
+                    return true;
+                }))
             ;
         } else {
             $logger
@@ -70,6 +76,7 @@ class SearchIndexSubscriberTest extends TestCase
 
         $subscriber = new SearchIndexSubscriber($this->createMock(IndexerInterface::class), $this->getTranslator());
         $subscriber->setEscargot($escargot);
+        $subscriber->setLogger(new SubscriberLogger($logger, \get_class($subscriber)));
 
         $decision = $subscriber->shouldRequest($crawlUri);
 
@@ -82,7 +89,7 @@ class SearchIndexSubscriberTest extends TestCase
             (new CrawlUri(new Uri('https://contao.org'), 1, false, new Uri('https://original.contao.org'))),
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
-            '[URI: https://contao.org/ (Level: 1, Processed: no, Found on: https://original.contao.org/, Tags: none)] Do not request because when the crawl URI was found, the robots information disallowed following this URI.',
+            'Do not request because when the crawl URI was found, the robots information disallowed following this URI.',
             (new CrawlUri(new Uri('https://original.contao.org'), 0, true))->addTag(RobotsSubscriber::TAG_NOFOLLOW),
         ];
 
@@ -90,21 +97,21 @@ class SearchIndexSubscriberTest extends TestCase
             (new CrawlUri(new Uri('https://contao.org'), 0))->addTag(HtmlCrawlerSubscriber::TAG_REL_NOFOLLOW),
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
-            '[URI: https://contao.org/ (Level: 0, Processed: no, Found on: root, Tags: rel-nofollow)] Do not request because when the crawl URI was found, the "rel" attribute contained "nofollow".',
+            'Do not request because when the crawl URI was found, the "rel" attribute contained "nofollow".',
         ];
 
         yield 'Test skips URIs that contained the no-html-type tag' => [
             (new CrawlUri(new Uri('https://contao.org'), 0))->addTag(HtmlCrawlerSubscriber::TAG_NO_TEXT_HTML_TYPE),
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
-            '[URI: https://contao.org/ (Level: 0, Processed: no, Found on: root, Tags: no-txt-html-type)] Do not request because when the crawl URI was found, the "type" attribute was present and did not contain "text/html".',
+            'Do not request because when the crawl URI was found, the "type" attribute was present and did not contain "text/html".',
         ];
 
         yield 'Test skips URIs that do not belong to our base URI collection' => [
             (new CrawlUri(new Uri('https://github.com'), 0)),
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
-            '[URI: https://github.com/ (Level: 0, Processed: no, Found on: root, Tags: none)] Did not index because it was not part of the base URI collection.',
+            'Did not index because it was not part of the base URI collection.',
         ];
 
         yield 'Test requests if everything is okay' => [
@@ -124,7 +131,12 @@ class SearchIndexSubscriberTest extends TestCase
             $logger
                 ->expects($this->once())
                 ->method('log')
-                ->with($expectedLogLevel, $expectedLogMessage, ['source' => SearchIndexSubscriber::class])
+                ->with($expectedLogLevel, $expectedLogMessage, $this->callback(function (array $context) {
+                    $this->assertInstanceOf(CrawlUri::class, $context['crawlUri']);
+                    $this->assertSame(SearchIndexSubscriber::class, $context['source']);
+
+                    return true;
+                }))
             ;
         } else {
             $logger
@@ -138,6 +150,7 @@ class SearchIndexSubscriberTest extends TestCase
 
         $subscriber = new SearchIndexSubscriber($this->createMock(IndexerInterface::class), $this->getTranslator());
         $subscriber->setEscargot($escargot);
+        $subscriber->setLogger(new SubscriberLogger($logger, \get_class($subscriber)));
 
         $decision = $subscriber->needsContent(
             new CrawlUri(new Uri('https://contao.org'), 0),
@@ -154,14 +167,14 @@ class SearchIndexSubscriberTest extends TestCase
             $this->getResponse(true, 404),
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
-            '[URI: https://contao.org/ (Level: 0, Processed: no, Found on: root, Tags: none)] Did not index because according to the HTTP status code the response was not successful (404).',
+            'Did not index because according to the HTTP status code the response was not successful (404).',
         ];
 
         yield 'Test skips responses that were not HTML responses' => [
             $this->getResponse(false),
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
-            '[URI: https://contao.org/ (Level: 0, Processed: no, Found on: root, Tags: none)] Did not index because the response did not contain a "text/html" Content-Type header.',
+            'Did not index because the response did not contain a "text/html" Content-Type header.',
         ];
 
         yield 'Test requests successful HTML responses' => [
@@ -179,7 +192,12 @@ class SearchIndexSubscriberTest extends TestCase
         $logger
             ->expects($this->once())
             ->method('log')
-            ->with($expectedLogLevel, $expectedLogMessage, ['source' => SearchIndexSubscriber::class])
+            ->with($expectedLogLevel, $expectedLogMessage, $this->callback(function (array $context) {
+                $this->assertInstanceOf(CrawlUri::class, $context['crawlUri']);
+                $this->assertSame(SearchIndexSubscriber::class, $context['source']);
+
+                return true;
+            }))
         ;
 
         $indexer = $this->createMock(IndexerInterface::class);
@@ -202,6 +220,7 @@ class SearchIndexSubscriberTest extends TestCase
 
         $subscriber = new SearchIndexSubscriber($indexer, $this->getTranslator());
         $subscriber->setEscargot($escargot);
+        $subscriber->setLogger(new SubscriberLogger($logger, \get_class($subscriber)));
 
         $subscriber->onLastChunk(
             new CrawlUri(new Uri('https://contao.org'), 0),
@@ -225,14 +244,14 @@ class SearchIndexSubscriberTest extends TestCase
         yield 'Successful index' => [
             null,
             LogLevel::INFO,
-            'Sent https://contao.org/ to the search indexer. Was indexed successfully.',
+            'Forwarded to the search indexer. Was indexed successfully.',
             ['ok' => 1, 'warning' => 0, 'error' => 0],
         ];
 
         yield 'Successful index with previous result' => [
             null,
             LogLevel::INFO,
-            'Sent https://contao.org/ to the search indexer. Was indexed successfully.',
+            'Forwarded to the search indexer. Was indexed successfully.',
             ['ok' => 2, 'warning' => 0, 'error' => 0],
             ['ok' => 1, 'warning' => 0, 'error' => 0],
         ];
@@ -240,14 +259,14 @@ class SearchIndexSubscriberTest extends TestCase
         yield 'Unsuccessful index (warning only)' => [
             IndexerException::createAsWarning('Warning!'),
             LogLevel::DEBUG,
-            'Sent https://contao.org/ to the search indexer. Did not index because of the following reason: Warning!',
+            'Forwarded to the search indexer. Did not index because of the following reason: Warning!',
             ['ok' => 0, 'warning' => 1, 'error' => 0],
         ];
 
         yield 'Unsuccessful index (warning only) with previous result' => [
             IndexerException::createAsWarning('Warning!'),
             LogLevel::DEBUG,
-            'Sent https://contao.org/ to the search indexer. Did not index because of the following reason: Warning!',
+            'Forwarded to the search indexer. Did not index because of the following reason: Warning!',
             ['ok' => 0, 'warning' => 11, 'error' => 0],
             ['ok' => 0, 'warning' => 10, 'error' => 0],
         ];
@@ -255,14 +274,14 @@ class SearchIndexSubscriberTest extends TestCase
         yield 'Unsuccessful index' => [
             new IndexerException('Major failure!'),
             LogLevel::DEBUG,
-            'Sent https://contao.org/ to the search indexer. Did not index because of the following reason: Major failure!',
+            'Forwarded to the search indexer. Did not index because of the following reason: Major failure!',
             ['ok' => 0, 'warning' => 0, 'error' => 1],
         ];
 
         yield 'Unsuccessful index with previous result' => [
             new IndexerException('Major failure!'),
             LogLevel::DEBUG,
-            'Sent https://contao.org/ to the search indexer. Did not index because of the following reason: Major failure!',
+            'Forwarded to the search indexer. Did not index because of the following reason: Major failure!',
             ['ok' => 0, 'warning' => 0, 'error' => 2],
             ['ok' => 0, 'warning' => 0, 'error' => 1],
         ];

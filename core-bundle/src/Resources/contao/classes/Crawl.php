@@ -10,13 +10,12 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Crawl\Escargot\Factory;
+use Contao\CoreBundle\Crawl\Escargot\Subscriber\SubscriberResult;
+use Contao\CoreBundle\Crawl\Monolog\CrawlCsvLogHandler;
 use Contao\CoreBundle\Exception\ResponseException;
-use Contao\CoreBundle\Search\Escargot\Factory;
-use Contao\CoreBundle\Search\Escargot\Subscriber\SubscriberResult;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
-use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\GroupHandler;
-use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -55,7 +54,7 @@ class Crawl extends Backend implements \executable
 	public function run()
 	{
 		/** @var Factory $factory */
-		$factory = System::getContainer()->get('contao.search.escargot_factory');
+		$factory = System::getContainer()->get('contao.crawl.escargot_factory');
 		$subscriberNames = $factory->getSubscriberNames();
 		$subscribersWidget = $this->generateSubscribersWidget($subscriberNames);
 		$memberWidget = $this->generateMemberWidget();
@@ -78,7 +77,7 @@ class Crawl extends Backend implements \executable
 
 		$jobId = Input::get('jobId');
 		$queue = $factory->createLazyQueue();
-		$debugLogPath = sys_get_temp_dir() . '/contao-crawl/' . $jobId . '.log';
+		$debugLogPath = sys_get_temp_dir() . '/contao-crawl/' . $jobId . '_log.csv';
 		$resultCache = sys_get_temp_dir() . '/contao-crawl/' . $jobId . '.result-cache';
 
 		if ($downloadLog = Input::get('downloadLog'))
@@ -86,12 +85,12 @@ class Crawl extends Backend implements \executable
 			if ('debug' === $downloadLog)
 			{
 				$filePath = $debugLogPath;
-				$fileName = 'crawl_debug.log';
+				$fileName = 'crawl_debug_log.csv';
 			}
 			else
 			{
 				$filePath = $this->getSubscriberLogFilePath($downloadLog, $jobId);
-				$fileName = 'crawl_' . $downloadLog . '.log';
+				$fileName = 'crawl_' . $downloadLog . '_log.csv';
 			}
 
 			$response = new BinaryFileResponse($filePath);
@@ -133,7 +132,7 @@ class Crawl extends Backend implements \executable
 
 		if (!$jobId)
 		{
-			$baseUris = $factory->getSearchUriCollection();
+			$baseUris = $factory->getCrawlUriCollection();
 			$escargot = $factory->create($baseUris, $queue, $activeSubscribers, $clientOptions);
 
 			Controller::redirect(Controller::addToUrl('&jobId=' . $escargot->getJobId()));
@@ -236,17 +235,13 @@ class Crawl extends Backend implements \executable
 		$handlers = array();
 
 		// Create the general debug handler
-		$debugHandler = new StreamHandler($debugLogPath, Logger::DEBUG);
-		$debugHandler->setFormatter(new LineFormatter("[%context.source%] %message%\n"));
-
+		$debugHandler = new CrawlCsvLogHandler($debugLogPath, Logger::DEBUG);
 		$handlers[] = $debugHandler;
 
 		// Create the subscriber specific info handlers
 		foreach ($factory->getSubscribers($activeSubscribers) as $subscriber)
 		{
-			$subscriberHandler = new StreamHandler($this->getSubscriberLogFilePath($subscriber->getName(), $jobId), Logger::INFO);
-			$subscriberHandler->setFormatter(new LineFormatter("%message%\n"));
-
+			$subscriberHandler = new CrawlCsvLogHandler($this->getSubscriberLogFilePath($subscriber->getName(), $jobId), Logger::INFO);
 			$handlers[] = $subscriberHandler;
 		}
 
@@ -260,7 +255,7 @@ class Crawl extends Backend implements \executable
 
 	private function getSubscriberLogFilePath(string $subscriberName, string $jobId): string
 	{
-		return sys_get_temp_dir() . '/contao-crawl/' . $jobId . '_' . $subscriberName . '.log';
+		return sys_get_temp_dir() . '/contao-crawl/' . $jobId . '_' . $subscriberName . '_log.csv';
 	}
 
 	private function generateSubscribersWidget(array $subscriberNames): Widget

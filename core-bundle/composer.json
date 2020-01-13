@@ -88,6 +88,7 @@
         "symfony/http-foundation": "4.4.*",
         "symfony/http-kernel": "4.4.*",
         "symfony/lock": "4.4.*",
+        "symfony/monolog-bridge": "4.4.*",
         "symfony/process": "4.4.*",
         "symfony/routing": "4.4.*",
         "symfony/security-bundle": "4.4.*",
@@ -96,11 +97,11 @@
         "symfony/twig-bundle": "4.4.*",
         "symfony/var-dumper": "4.4.*",
         "symfony/yaml": "4.4.*",
-        "terminal42/escargot": "^0.3",
+        "terminal42/escargot": "^0.5.1",
         "terminal42/service-annotation-bundle": "^1.0",
         "true/punycode": "^2.1",
         "twig/twig": "^2.7",
-        "webignition/robots-txt-file": "^2.1"
+        "webignition/robots-txt-file": "^3.0"
     },
     "conflict": {
         "contao-community-alliance/composer-plugin": "<3.0",
