@@ -583,6 +583,7 @@ services:
             - '@contao.security.authentication_success_handler'
             - '@contao.security.authentication_failure_handler'
             - []
+            - '@scheb_two_factor.token_factory'
             - '@?logger'
             - '@?event_dispatcher'
         tags:
@@ -597,6 +598,10 @@ services:
             - ~ # provider-shared key
             - '@security.encoder_factory'
             - '@contao.framework'
+            - ~ # 2FA authentication provider
+            - '@scheb_two_factor.authenticated_token_handler'
+            - '@scheb_two_factor.authentication_context_factory'
+            - '@request_stack'
 
     contao.security.authentication_success_handler:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler

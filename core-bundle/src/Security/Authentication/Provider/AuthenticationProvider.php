@@ -16,7 +16,15 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\Exception\LockedException;
 use Contao\System;
 use Contao\User;
+use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
+use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextFactoryInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Handler\AuthenticationHandlerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider;
+use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -28,18 +36,88 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 class AuthenticationProvider extends DaoAuthenticationProvider
 {
     /**
+     * @var UserCheckerInterface
+     */
+    private $userChecker;
+
+    /**
+     * @var string
+     */
+    private $providerKey;
+
+    /**
      * @var ContaoFramework
      */
     private $framework;
 
     /**
+     * @var AuthenticationProviderInterface
+     */
+    private $twoFactorAuthenticationProvider;
+
+    /**
+     * @var AuthenticationHandlerInterface
+     */
+    private $twoFactorAuthenticationHandler;
+
+    /**
+     * @var AuthenticationContextFactoryInterface
+     */
+    private $authenticationContextFactory;
+
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
      * @internal Do not inherit from this class; decorate the "contao.security.authentication_provider" service instead
      */
-    public function __construct(UserProviderInterface $userProvider, UserCheckerInterface $userChecker, string $providerKey, EncoderFactoryInterface $encoderFactory, ContaoFramework $framework)
+    public function __construct(UserProviderInterface $userProvider, UserCheckerInterface $userChecker, string $providerKey, EncoderFactoryInterface $encoderFactory, ContaoFramework $framework, AuthenticationProviderInterface $twoFactorAuthenticationProvider, AuthenticationHandlerInterface $twoFactorAuthenticationHandler, AuthenticationContextFactoryInterface $authenticationContextFactory, RequestStack $requestStack)
     {
         parent::__construct($userProvider, $userChecker, $providerKey, $encoderFactory, false);
 
+        $this->userChecker = $userChecker;
+        $this->providerKey = $providerKey;
         $this->framework = $framework;
+        $this->twoFactorAuthenticationProvider = $twoFactorAuthenticationProvider;
+        $this->twoFactorAuthenticationHandler = $twoFactorAuthenticationHandler;
+        $this->authenticationContextFactory = $authenticationContextFactory;
+        $this->requestStack = $requestStack;
+    }
+
+    public function authenticate(TokenInterface $token): TokenInterface
+    {
+        if ($token instanceof TwoFactorTokenInterface) {
+            return $this->checkTwoFactor($token);
+        }
+
+        $wasAlreadyAuthenticated = $token->isAuthenticated();
+        $token = parent::authenticate($token);
+
+        // Only trigger two-factor authentication when the provider was called
+        // with an unauthenticated token. When we get an authenticated token,
+        // the system will refresh it and starting two-factor authentication
+        // would trigger an endless loop.
+        if ($wasAlreadyAuthenticated) {
+            return $token;
+        }
+
+        // AnonymousToken and TwoFactorTokenInterface can be ignored. Guard
+        // might return null due to having multiple Guard authenticators.
+        if ($token instanceof AnonymousToken || $token instanceof TwoFactorTokenInterface || null === $token) {
+            return $token;
+        }
+
+        $request = $this->requestStack->getMasterRequest();
+        $context = $this->authenticationContextFactory->create($request, $token, $this->providerKey);
+
+        return $this->twoFactorAuthenticationHandler->beginTwoFactorAuthentication($context);
+    }
+
+    public function supports(TokenInterface $token): bool
+    {
+        return parent::supports($token) || $this->twoFactorAuthenticationProvider->supports($token);
     }
 
     /**
@@ -61,35 +139,66 @@ class AuthenticationProvider extends DaoAuthenticationProvider
             }
 
             if (!$this->triggerCheckCredentialsHook($user, $token)) {
+                $exception = new BadCredentialsException(
+                    sprintf('Invalid password submitted for username "%s"', $user->username),
+                    $exception->getCode(),
+                    $exception
+                );
+
                 throw $this->onBadCredentials($user, $exception);
             }
         }
     }
 
-    /**
-     * Counts the login attempts and locks the user after the first try
-     * following a specific delay scheme.
-     *
-     * After each failed attempt A, the authentication server waits for an
-     * increased T * A number of seconds, e.g. say T = 5, then after 1 attempt,
-     * the server waits for 5 seconds, at the second failed attempt, it waits
-     * for 5 * 2 = 10 seconds and so on.
-     */
-    public function onBadCredentials(User $user, AuthenticationException $exception): AuthenticationException
+    private function checkTwoFactor(TokenInterface $token): TokenInterface
     {
-        if ($user->loginAttempts < 1) {
-            ++$user->loginAttempts;
-            $user->save();
+        $user = $token->getUser();
 
-            return new BadCredentialsException(
-                sprintf('Invalid password submitted for username "%s"', $user->username),
+        if (!$user instanceof User) {
+            return $this->twoFactorAuthenticationProvider->authenticate($token);
+        }
+
+        try {
+            $this->userChecker->checkPreAuth($user);
+            $token = $this->twoFactorAuthenticationProvider->authenticate($token);
+            $this->userChecker->checkPostAuth($user);
+
+            return $token;
+        } catch (AuthenticationException $exception) {
+            if (!$exception instanceof InvalidTwoFactorCodeException) {
+                throw $exception;
+            }
+
+            $exception = new BadCredentialsException(
+                sprintf('Invalid two-factor code submitted for username "%s"', $user->username),
                 $exception->getCode(),
                 $exception
             );
+
+            throw $this->onBadCredentials($user, $exception);
+        }
+    }
+
+    /**
+     * Counts the login attempts and locks the user after three failed attempts
+     * following a specific delay scheme.
+     *
+     * After the third failed attempt A, the authentication server waits for an
+     * increased (A - 2) * 60 seconds. After 3 attempts, the server waits for 60 seconds,
+     * at the fourth failed attempt, it waits for 2 * 60 = 120 seconds and so on.
+     */
+    private function onBadCredentials(User $user, AuthenticationException $exception): AuthenticationException
+    {
+        ++$user->loginAttempts;
+
+        if ($user->loginAttempts < 3) {
+            $user->save();
+
+            return $exception;
         }
 
-        $lockedSeconds = $user->loginAttempts * 5;
-        ++$user->loginAttempts;
+        $lockedSeconds = ($user->loginAttempts - 2) * 60;
+
         $user->locked = time() + $lockedSeconds;
         $user->save();
 

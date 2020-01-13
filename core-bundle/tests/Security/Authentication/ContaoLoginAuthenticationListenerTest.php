@@ -15,6 +15,8 @@ namespace Contao\CoreBundle\Tests\Security\Authentication;
 use Contao\CoreBundle\Security\Authentication\ContaoLoginAuthenticationListener;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenFactoryInterface;
+use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,7 +48,7 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
             $request->request->set('password', 'foobar');
         }
 
-        $authenticationManager = $this->mockAuthenticationListener($requiresAuthentication ? 'foo' : null, 'foobar');
+        $authenticationManager = $this->mockAuthenticationManager($requiresAuthentication ? 'foo' : null, 'foobar');
 
         $listener = $this->createListener($authenticationManager);
         $listener($this->mockRequestEvent($request));
@@ -68,7 +70,7 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
         $request->request->set('username', ['foo']);
         $request->request->set('password', 'foobar');
 
-        $authenticationManager = $this->mockAuthenticationListener(null);
+        $authenticationManager = $this->mockAuthenticationManager(null);
         $listener = $this->createListener($authenticationManager);
 
         $this->expectException(BadRequestHttpException::class);
@@ -83,7 +85,7 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
         $request->request->set('username', ' foo ');
         $request->request->set('password', 'foobar');
 
-        $authenticationManager = $this->mockAuthenticationListener('foo', 'foobar');
+        $authenticationManager = $this->mockAuthenticationManager('foo', 'foobar');
 
         $listener = $this->createListener($authenticationManager);
         $listener($this->mockRequestEvent($request));
@@ -96,7 +98,7 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
         $request->request->set('username', implode('', array_fill(0, 4097, 'a')));
         $request->request->set('password', 'foobar');
 
-        $authenticationManager = $this->mockAuthenticationListener(null);
+        $authenticationManager = $this->mockAuthenticationManager(null);
 
         $listener = $this->createListener($authenticationManager);
         $listener($this->mockRequestEvent($request));
@@ -116,13 +118,68 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
         $request->request->set('username', 'foo');
         $request->request->set('password', 'foobar');
 
-        $authenticationManager = $this->mockAuthenticationListener('foo', 'foobar');
+        $authenticationManager = $this->mockAuthenticationManager('foo', 'foobar');
 
         $listener = $this->createListener($authenticationManager);
         $listener($this->mockRequestEvent($request));
     }
 
-    private function createListener(AuthenticationManagerInterface $authenticationManager): ContaoLoginAuthenticationListener
+    public function testHandlesTwoFactorAuthentication(): void
+    {
+        $authenticatedToken = $this->createMock(UsernamePasswordToken::class);
+
+        $currentToken = $this->createMock(TwoFactorTokenInterface::class);
+        $currentToken
+            ->expects($this->once())
+            ->method('getAuthenticatedToken')
+            ->willReturn($authenticatedToken)
+        ;
+
+        $currentToken
+            ->expects($this->once())
+            ->method('getAttributes')
+            ->willReturn(['foo'])
+        ;
+
+        $tokenStorage = $this->createMock(TokenStorageInterface::class);
+        $tokenStorage
+            ->expects($this->once())
+            ->method('getToken')
+            ->willReturn($currentToken)
+        ;
+
+        $newToken = $this->createMock(TwoFactorTokenInterface::class);
+        $newToken
+            ->expects($this->once())
+            ->method('setAttributes')
+            ->with(['foo'])
+        ;
+
+        $twoFactorTokenFactory = $this->createMock(TwoFactorTokenFactoryInterface::class);
+        $twoFactorTokenFactory
+            ->expects($this->once())
+            ->method('create')
+            ->with($authenticatedToken, '123456', 'provider_key', [])
+            ->willReturn($newToken)
+        ;
+
+        $authenticationManager = $this->createMock(AuthenticationManagerInterface::class);
+        $authenticationManager
+            ->expects($this->once())
+            ->method('authenticate')
+            ->with($newToken)
+            ->willReturn(null)
+        ;
+
+        $request = $this->mockRequest(true);
+        $request->request->set('FORM_SUBMIT', 'tl_login');
+        $request->request->set('verify', '123456');
+
+        $listener = $this->createListener($authenticationManager, $tokenStorage, $twoFactorTokenFactory);
+        $listener($this->mockRequestEvent($request));
+    }
+
+    private function createListener(AuthenticationManagerInterface $authenticationManager, TokenStorageInterface $tokenStorage = null, TwoFactorTokenFactoryInterface $twoFactorTokenFactory = null): ContaoLoginAuthenticationListener
     {
         $failureHandler = $this->createMock(AuthenticationFailureHandlerInterface::class);
         $failureHandler
@@ -130,8 +187,16 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
             ->willReturn(new Response())
         ;
 
+        if (null === $tokenStorage) {
+            $tokenStorage = $this->createMock(TokenStorageInterface::class);
+        }
+
+        if (null === $twoFactorTokenFactory) {
+            $twoFactorTokenFactory = $this->createMock(TwoFactorTokenFactoryInterface::class);
+        }
+
         return new ContaoLoginAuthenticationListener(
-            $this->createMock(TokenStorageInterface::class),
+            $tokenStorage,
             $authenticationManager,
             $this->createMock(SessionAuthenticationStrategyInterface::class),
             $this->createMock(HttpUtils::class),
@@ -139,6 +204,7 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
             $this->createMock(AuthenticationSuccessHandlerInterface::class),
             $failureHandler,
             [], // Options
+            $twoFactorTokenFactory,
             null, // Logger
             null // Event Dispatcher
         );
@@ -186,10 +252,9 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
         return new RequestEvent($this->createMock(KernelInterface::class), $request, KernelInterface::MASTER_REQUEST);
     }
 
-    private function mockAuthenticationListener(?string $username, string $password = null): AuthenticationManagerInterface
+    private function mockAuthenticationManager(?string $username, string $password = null): AuthenticationManagerInterface
     {
         $authenticationManager = $this->createMock(AuthenticationManagerInterface::class);
-
         $authenticationManager
             ->expects(null === $username ? $this->never() : $this->once())
             ->method('authenticate')

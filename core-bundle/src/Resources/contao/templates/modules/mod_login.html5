@@ -14,6 +14,7 @@
       <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId ?>">
       <input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}">
       <input type="hidden" name="_target_path" value="<?= $this->targetPath ?>">
+      <input type="hidden" name="_always_use_target_path" value="<?= $this->forceTargetPath ?>">
       <?php if ($this->logout): ?>
         <p class="login_info"><?= $this->loggedInAs ?><br><?= $this->lastLogin ?></p>
       <?php elseif ($this->twoFactorEnabled): ?>
@@ -23,7 +24,6 @@
           <input type="text" name="verify" id="verify" class="text" value="" autocapitalize="off" autocomplete="off" required>
         </div>
       <?php else: ?>
-        <input type="hidden" name="_always_use_target_path" value="<?= $this->forceTargetPath ?>">
         <div class="widget widget-text">
           <label for="username"><?= $this->username ?></label>
           <input type="text" name="username" id="username" class="text" value="<?= $this->value ?>" required>
