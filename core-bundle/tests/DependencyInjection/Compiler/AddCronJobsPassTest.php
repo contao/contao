@@ -129,7 +129,7 @@ class AddCronJobsPassTest extends TestCase
 
         $crons = $this->getCronsFromDefinition($container);
 
-        $this->assertSame(null, $crons[0][2]);
+        $this->assertNull($crons[0][2]);
     }
 
     public function testUsesMethodNameIfMethodNameIsGiven(): void

@@ -83,7 +83,7 @@ class CronJob
 
     public function setScope(string $scope): self
     {
-        if ($this->service instanceof ScopeAwareCronJobInterface ) {
+        if ($this->service instanceof ScopeAwareCronJobInterface) {
             $this->service->setScope($scope);
         }
 

@@ -161,7 +161,7 @@ class CronTest extends TestCase
 
         $this->expectException(InvalidArgumentException::class);
         $cron->run('invalid_scope');
-     }
+    }
 
     /**
      * @return CronJob&MockObject
