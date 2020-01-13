@@ -33,9 +33,7 @@ class CronJobRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, CronJob::class);
 
-        if (($connection = $registry->getConnection()) instanceof Connection) {
-            $this->connection = $connection;
-        }
+        $this->connection = $registry->getConnection();
     }
 
     public function lockTable(): void
