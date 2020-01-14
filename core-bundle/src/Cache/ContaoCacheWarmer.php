@@ -60,9 +60,14 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     private $framework;
 
     /**
+     * @var array
+     */
+    private $locales;
+
+    /**
      * @internal Do not inherit from this class; decorate the "contao.cache.warm_internal" service instead
      */
-    public function __construct(Filesystem $filesystem, ResourceFinderInterface $finder, FileLocator $locator, string $rootDir, Connection $connection, ContaoFramework $framework)
+    public function __construct(Filesystem $filesystem, ResourceFinderInterface $finder, FileLocator $locator, string $rootDir, Connection $connection, ContaoFramework $framework, array $locales)
     {
         $this->filesystem = $filesystem;
         $this->finder = $finder;
@@ -70,6 +75,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         $this->rootDir = $rootDir;
         $this->connection = $connection;
         $this->framework = $framework;
+        $this->locales = $locales;
     }
 
     /**
@@ -142,7 +148,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
 
         $dumper->setHeader("<?php\n");
 
-        foreach ($this->getLanguagesInUse() as $language) {
+        foreach ($this->locales as $language) {
             $processed = [];
             $files = $this->findLanguageFiles($language);
 
@@ -225,52 +231,6 @@ class ContaoCacheWarmer implements CacheWarmerInterface
             $cacheDir.'/contao/config/templates.php',
             sprintf("<?php\n\nreturn %s;\n", var_export($mapper, true))
         );
-    }
-
-    /**
-     * @return string[]
-     */
-    private function getLanguagesInUse(): array
-    {
-        // Get all languages in use (see #6013)
-        $statement = $this->connection->prepare("
-            SELECT
-                language
-            FROM
-                tl_member
-            UNION
-                SELECT
-                    language
-                FROM
-                    tl_user
-            UNION
-                SELECT
-                    REPLACE(language, '-', '_')
-                FROM
-                    tl_page
-                WHERE
-                    type = 'root'
-        ");
-
-        $statement->execute();
-
-        // Always load the English language (see #1040)
-        $languages = ['en'];
-
-        while (false !== ($language = $statement->fetch(\PDO::FETCH_OBJ))) {
-            if ('' === $language->language) {
-                continue;
-            }
-
-            $languages[] = $language->language;
-
-            // Also cache "de" if "de-CH" is requested
-            if (\strlen($language->language) > 2) {
-                $languages[] = substr($language->language, 0, 2);
-            }
-        }
-
-        return array_unique($languages);
     }
 
     private function isCompleteInstallation(): bool

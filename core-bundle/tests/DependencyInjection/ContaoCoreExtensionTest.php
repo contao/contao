@@ -1205,6 +1205,7 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('%kernel.project_dir%'),
                 new Reference('database_connection'),
                 new Reference('contao.framework'),
+                new Reference('%contao.locales%'),
             ],
             $definition->getArguments()
         );
