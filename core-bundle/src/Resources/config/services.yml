@@ -195,8 +195,6 @@ services:
     Contao\CoreBundle\Cron\LegacyCron:
         arguments:
             - '@contao.framework'
-        tags:
-            - { name: 'terminal42_service_annotation' }
 
     contao.csrf.token_manager:
         class: Symfony\Component\Security\Csrf\CsrfTokenManager
