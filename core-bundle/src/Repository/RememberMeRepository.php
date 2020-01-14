@@ -31,9 +31,7 @@ class RememberMeRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, RememberMe::class);
 
-        if (($connection = $registry->getConnection()) instanceof Connection) {
-            $this->connection = $connection;
-        }
+        $this->connection = $registry->getConnection();
     }
 
     public function lockTable(): void
