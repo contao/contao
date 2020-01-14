@@ -125,9 +125,3 @@ fos_http_cache:
         annotations:
             enabled: false
         max_header_value_length: 4096
-
-# Scheb TwoFactor configuration
-scheb_two_factor:
-    backup_codes:
-        enabled: true
-        manager: contao.security.two_factor.backup_code_manager

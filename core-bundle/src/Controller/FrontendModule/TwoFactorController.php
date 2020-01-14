@@ -12,11 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller\FrontendModule;
 
-use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
-use Contao\CoreBundle\Security\TwoFactor\BackupCode\BackupCodeManager;
+use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
 use Contao\FrontendUser;
 use Contao\ModuleModel;
 use Contao\PageModel;
@@ -43,7 +42,8 @@ class TwoFactorController extends AbstractFrontendModuleController
     public function __invoke(Request $request, ModuleModel $model, string $section, array $classes = null, PageModel $page = null): Response
     {
         if (!$this->get('security.helper')->isGranted('IS_AUTHENTICATED_FULLY')) {
-            throw new InsufficientAuthenticationException('User is not fully authenticated');
+            // TODO: front end users should be able to re-authenticate after REMEMBERME
+            return new Response('', Response::HTTP_NO_CONTENT);
         }
 
         $this->page = $page;
@@ -69,9 +69,9 @@ class TwoFactorController extends AbstractFrontendModuleController
         $services['contao.routing.scope_matcher'] = ScopeMatcher::class;
         $services['contao.security.two_factor.authenticator'] = Authenticator::class;
         $services['security.authentication_utils'] = AuthenticationUtils::class;
-        $services['translator'] = TranslatorInterface::class;
-        $services['contao.security.two_factor.backup_code_manager'] = BackupCodeManager::class;
         $services['security.helper'] = Security::class;
+        $services['translator'] = TranslatorInterface::class;
+        $services[BackupCodeManager::class] = BackupCodeManager::class;
 
         return $services;
     }
@@ -197,7 +197,7 @@ class TwoFactorController extends AbstractFrontendModuleController
     private function generateBackupCodes(FrontendUser $user): void
     {
         /** @var BackupCodeManager $backupCodeManager */
-        $backupCodeManager = $this->get('contao.security.two_factor.backup_code_manager');
+        $backupCodeManager = $this->get(BackupCodeManager::class);
         $backupCodeManager->generateBackupCodes($user);
     }
 }

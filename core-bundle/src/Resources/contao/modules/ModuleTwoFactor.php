@@ -13,7 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
-use Contao\CoreBundle\Security\TwoFactor\BackupCode\BackupCodeManager;
+use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
 use ParagonIE\ConstantTime\Base32;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
@@ -175,7 +175,7 @@ class ModuleTwoFactor extends BackendModule
 	private function generateBackupCodes(BackendUser $user)
 	{
 		/** @var BackupCodeManager $backupCodeManager */
-		$backupCodeManager = System::getContainer()->get('contao.security.two_factor.backup_code_manager');
+		$backupCodeManager = System::getContainer()->get(BackupCodeManager::class);
 		$backupCodeManager->generateBackupCodes($user);
 	}
 }

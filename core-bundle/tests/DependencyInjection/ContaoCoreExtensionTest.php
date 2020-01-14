@@ -121,7 +121,7 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Security\Logout\LogoutHandler;
 use Contao\CoreBundle\Security\Logout\LogoutSuccessHandler;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
-use Contao\CoreBundle\Security\TwoFactor\BackupCode\BackupCodeManager;
+use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
 use Contao\CoreBundle\Security\TwoFactor\Provider;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
 use Contao\CoreBundle\Security\User\UserChecker;
@@ -2821,11 +2821,10 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function testRegistersTheSecurityTwoFactorBackupCodeManager(): void
     {
-        $this->assertTrue($this->container->has('contao.security.two_factor.backup_code_manager'));
+        $this->assertTrue($this->container->has(BackupCodeManager::class));
 
-        $definition = $this->container->getDefinition('contao.security.two_factor.backup_code_manager');
+        $definition = $this->container->getDefinition(BackupCodeManager::class);
 
-        $this->assertSame(BackupCodeManager::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
     }
 

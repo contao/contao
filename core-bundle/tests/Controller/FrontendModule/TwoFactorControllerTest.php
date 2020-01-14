@@ -14,10 +14,9 @@ namespace Contao\CoreBundle\Tests\Controller\FrontendModule;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Controller\FrontendModule\TwoFactorController;
-use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
-use Contao\CoreBundle\Security\TwoFactor\BackupCode\BackupCodeManager;
+use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\FrontendUser;
@@ -48,7 +47,7 @@ class TwoFactorControllerTest extends TestCase
         System::setContainer($this->getContainerWithContaoConfiguration());
     }
 
-    public function testDeniesAccessIfTheUserIsNotFullyAuthenticated(): void
+    public function testReturnsEmptyResponseIfTheUserIsNotFullyAuthenticated(): void
     {
         $container = $this->getContainerWithFrameworkTemplate(
             'mod_two_factor',
@@ -63,10 +62,10 @@ class TwoFactorControllerTest extends TestCase
         $module = $this->createMock(ModuleModel::class);
         $page = $this->mockPageModel();
 
-        $this->expectException(InsufficientAuthenticationException::class);
-        $this->expectExceptionMessage('User is not fully authenticated');
+        $response = $controller(new Request(), $module, 'main', null, $page);
 
-        $controller(new Request(), $module, 'main', null, $page);
+        $this->assertEmpty($response->getContent());
+        $this->assertSame(204, $response->getStatusCode());
     }
 
     public function testReturnsIfTheUserIsNotAFrontendUser(): void
@@ -366,7 +365,7 @@ class TwoFactorControllerTest extends TestCase
         );
 
         /** @var BackupCodeManager&MockObject $backupCodeManager */
-        $backupCodeManager = $container->get('contao.security.two_factor.backup_code_manager');
+        $backupCodeManager = $container->get(BackupCodeManager::class);
         $backupCodeManager
             ->expects($this->once())
             ->method('generateBackupCodes')
@@ -505,7 +504,7 @@ class TwoFactorControllerTest extends TestCase
         $container->set('translator', $translator);
         $container->set('contao.security.two_factor.authenticator', $authenticator);
         $container->set('security.authentication_utils', $authenticationUtils);
-        $container->set('contao.security.two_factor.backup_code_manager', $backupCodeManager);
+        $container->set(BackupCodeManager::class, $backupCodeManager);
         $container->set('security.helper', $security);
 
         return $container;

@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\DependencyInjection\Security;
 
 use Contao\CoreBundle\DependencyInjection\Security\ContaoLoginFactory;
+use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -60,9 +61,10 @@ class ContaoLoginFactoryTest extends TestCase
         $arguments = $container->getDefinition($twoFactorProviderId)->getArguments();
 
         $this->assertIsArray($arguments);
-        $this->assertCount(2, $arguments);
+        $this->assertCount(3, $arguments);
         $this->assertEquals('contao_frontend', $arguments['index_0']);
         $this->assertEquals([], $arguments['index_1']);
+        $this->assertEquals(new Reference(BackupCodeManager::class), $arguments['index_3']);
 
         $this->assertTrue($container->hasDefinition($twoFactorListenerId));
 

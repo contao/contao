@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Security\TwoFactor\BackupCode;
+namespace Contao\CoreBundle\Security\TwoFactor;
 
 use Contao\User;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Backup\BackupCodeManagerInterface;
@@ -26,7 +26,7 @@ class BackupCodeManager implements BackupCodeManagerInterface
             return false;
         }
 
-        return $user->isBackupCode($code);
+        return \in_array($code, json_decode($user->backupCodes, true), true);
     }
 
     /**
@@ -38,7 +38,14 @@ class BackupCodeManager implements BackupCodeManagerInterface
             return;
         }
 
-        $user->invalidateBackupCode($code);
+        $backupCodes = json_decode($user->backupCodes, true);
+        $key = array_search($code, $backupCodes, true);
+
+        if (false !== $key) {
+            unset($backupCodes[$key]);
+            $user->backupCodes = json_encode($backupCodes);
+        }
+
         $user->save();
     }
 
