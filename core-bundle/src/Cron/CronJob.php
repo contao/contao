@@ -52,12 +52,12 @@ class CronJob
         }
     }
 
-    public function __invoke(): void
+    public function __invoke(string $scope): void
     {
         if (\is_callable($this->service)) {
-            ($this->service)();
+            ($this->service)($scope);
         } else {
-            $this->service->{$this->method}();
+            $this->service->{$this->method}($scope);
         }
     }
 
@@ -79,14 +79,5 @@ class CronJob
     public function getName(): string
     {
         return $this->name;
-    }
-
-    public function setScope(string $scope): self
-    {
-        if ($this->service instanceof ScopeAwareCronJobInterface) {
-            $this->service->setScope($scope);
-        }
-
-        return $this;
     }
 }

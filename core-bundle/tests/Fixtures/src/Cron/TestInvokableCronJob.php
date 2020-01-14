@@ -12,15 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Fixtures\Cron;
 
-use Contao\CoreBundle\Cron\ScopeAwareCronJobInterface;
-
-class TestInvokableScopeAwareCronJob implements ScopeAwareCronJobInterface
+class TestInvokableCronJob
 {
     public function __invoke(): void
-    {
-    }
-
-    public function setScope(string $scope): void
     {
     }
 }

@@ -80,7 +80,7 @@ class LegacyCronTest extends TestCase
         $cron->addCronJob($legacyCron, '@daily', 'onDaily');
         $cron->addCronJob($legacyCron, '@weekly', 'onWeekly');
         $cron->addCronJob($legacyCron, '@monthly', 'onMonthly');
-        $cron->run();
+        $cron->run(Cron::SCOPE_CLI);
 
         unset($GLOBALS['TL_CRON']);
     }

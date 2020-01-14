@@ -51,10 +51,10 @@ class Cron
     /**
      * Run all the registered Contao cron jobs.
      */
-    public function run(string $scope = null): void
+    public function run(string $scope): void
     {
         // Validate scope
-        if (null !== $scope && self::SCOPE_WEB !== $scope && self::SCOPE_CLI !== $scope) {
+        if (self::SCOPE_WEB !== $scope && self::SCOPE_CLI !== $scope) {
             throw new \InvalidArgumentException('Invalid scope "'.$scope.'"');
         }
 
@@ -105,11 +105,7 @@ class Cron
                 $this->logger->debug(sprintf('Executing cron job "%s"', $cron->getName()));
             }
 
-            if (null !== $scope) {
-                $cron->setScope($scope);
-            }
-
-            $cron();
+            $cron($scope);
         }
     }
 }

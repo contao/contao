@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Tests\Cron;
 use Contao\CoreBundle\Cron\Cron;
 use Contao\CoreBundle\Entity\CronJob;
 use Contao\CoreBundle\Fixtures\Cron\TestCronJob;
-use Contao\CoreBundle\Fixtures\Cron\TestInvokableScopeAwareCronJob;
+use Contao\CoreBundle\Fixtures\Cron\TestInvokableCronJob;
 use Contao\CoreBundle\Repository\CronJobRepository;
 use Contao\CoreBundle\Tests\TestCase;
 use InvalidArgumentException;
@@ -36,7 +36,7 @@ class CronTest extends TestCase
 
         $cron = new Cron($repository);
         $cron->addCronJob($cronjob, '@hourly', 'onHourly');
-        $cron->run();
+        $cron->run(Cron::SCOPE_CLI);
     }
 
     public function testLoggingOfExecutedCronJobs(): void
@@ -72,7 +72,7 @@ class CronTest extends TestCase
         $cron = new Cron($repository, $logger);
         $cron->addCronJob($cronjob, '* * * * *', 'onMinutely');
         $cron->addCronJob($cronjob, '0 * * * *', 'onHourly');
-        $cron->run();
+        $cron->run(Cron::SCOPE_CLI);
     }
 
     public function testUpdatesCronEntities(): void
@@ -116,28 +116,15 @@ class CronTest extends TestCase
 
         $cron = new Cron($repository);
         $cron->addCronJob($cronjob, '@hourly', 'onHourly');
-        $cron->run();
-    }
-
-    public function testDoesNotSetScope(): void
-    {
-        $cronjob = $this->createMock(TestInvokableScopeAwareCronJob::class);
-        $cronjob
-            ->expects($this->never())
-            ->method('setScope')
-        ;
-
-        $cron = new Cron($this->createMock(CronJobRepository::class));
-        $cron->addCronJob($cronjob, '@hourly');
-        $cron->run();
+        $cron->run(Cron::SCOPE_CLI);
     }
 
     public function testSetsScope(): void
     {
-        $cronjob = $this->createMock(TestInvokableScopeAwareCronJob::class);
+        $cronjob = $this->createMock(TestInvokableCronJob::class);
         $cronjob
             ->expects($this->once())
-            ->method('setScope')
+            ->method('__invoke')
             ->with(Cron::SCOPE_CLI)
         ;
 
@@ -151,7 +138,6 @@ class CronTest extends TestCase
         $cron = new Cron($this->createMock(CronJobRepository::class));
 
         try {
-            $cron->run();
             $cron->run(Cron::SCOPE_CLI);
             $cron->run(Cron::SCOPE_WEB);
         } catch (InvalidArgumentException $e) {
