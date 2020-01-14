@@ -76,6 +76,16 @@ class Registry implements \Countable
 	}
 
 	/**
+	 * Clear the registry
+	 */
+	public function clear()
+	{
+		$this->arrRegistry = array();
+		$this->arrAliases = array();
+		$this->arrIdentities = array();
+	}
+
+	/**
 	 * Count the elements
 	 *
 	 * @return integer The number of models
