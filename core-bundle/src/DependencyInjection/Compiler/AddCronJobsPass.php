@@ -13,10 +13,12 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\Cron\Cron;
+use Contao\CoreBundle\Cron\CronJob;
 use Cron\CronExpression;
 use Symfony\Component\Config\Definition\Exception\InvalidDefinitionException;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
 class AddCronJobsPass implements CompilerPassInterface
@@ -55,7 +57,12 @@ class AddCronJobsPass implements CompilerPassInterface
                     throw new InvalidDefinitionException(sprintf('The contao.cronjob definition for service "%s" has an invalid interval expression "%s"', $serviceId, $interval));
                 }
 
-                $definition->addMethodCall('addCronJob', [new Reference($serviceId), $interval, $method]);
+                $definition->addMethodCall(
+                    'addCronJob',
+                    [
+                        new Definition(CronJob::class, [new Reference($serviceId), $interval, $method]),
+                    ]
+                );
             }
         }
     }

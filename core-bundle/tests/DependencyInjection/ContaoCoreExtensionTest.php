@@ -1523,15 +1523,6 @@ class ContaoCoreExtensionTest extends TestCase
             ],
             $definition->getArguments()
         );
-
-        $this->assertSame(
-            [
-                'terminal42_service_annotation' => [
-                    [],
-                ],
-            ],
-            $definition->getTags()
-        );
     }
 
     public function testRegistersTheCsrfTokenManager(): void

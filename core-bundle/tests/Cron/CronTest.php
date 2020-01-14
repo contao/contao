@@ -13,7 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Cron;
 
 use Contao\CoreBundle\Cron\Cron;
-use Contao\CoreBundle\Entity\CronJob;
+use Contao\CoreBundle\Cron\CronJob;
+use Contao\CoreBundle\Entity\CronJob as CronJobEntity;
 use Contao\CoreBundle\Fixtures\Cron\TestCronJob;
 use Contao\CoreBundle\Fixtures\Cron\TestInvokableCronJob;
 use Contao\CoreBundle\Repository\CronJobRepository;
@@ -35,7 +36,7 @@ class CronTest extends TestCase
         ;
 
         $cron = new Cron($repository);
-        $cron->addCronJob($cronjob, '@hourly', 'onHourly');
+        $cron->addCronJob(new CronJob($cronjob, '@hourly', 'onHourly'));
         $cron->run(Cron::SCOPE_CLI);
     }
 
@@ -70,8 +71,8 @@ class CronTest extends TestCase
         ;
 
         $cron = new Cron($repository, $logger);
-        $cron->addCronJob($cronjob, '* * * * *', 'onMinutely');
-        $cron->addCronJob($cronjob, '0 * * * *', 'onHourly');
+        $cron->addCronJob(new CronJob($cronjob, '* * * * *', 'onMinutely'));
+        $cron->addCronJob(new CronJob($cronjob, '0 * * * *', 'onHourly'));
         $cron->run(Cron::SCOPE_CLI);
     }
 
@@ -106,7 +107,7 @@ class CronTest extends TestCase
             ->method('persistAndFlush')
             ->with(
                 $this->callback(
-                    static function (CronJob $entity) {
+                    static function (CronJobEntity $entity) {
                         return 'UpdateEntitiesCron::onHourly' === $entity->getName()
                             && (new \DateTime()) >= $entity->getLastRun();
                     }
@@ -115,7 +116,7 @@ class CronTest extends TestCase
         ;
 
         $cron = new Cron($repository);
-        $cron->addCronJob($cronjob, '@hourly', 'onHourly');
+        $cron->addCronJob(new CronJob($cronjob, '@hourly', 'onHourly'));
         $cron->run(Cron::SCOPE_CLI);
     }
 
@@ -129,7 +130,7 @@ class CronTest extends TestCase
         ;
 
         $cron = new Cron($this->createMock(CronJobRepository::class));
-        $cron->addCronJob($cronjob, '@hourly');
+        $cron->addCronJob(new CronJob($cronjob, '@hourly'));
         $cron->run(Cron::SCOPE_CLI);
     }
 
@@ -149,11 +150,11 @@ class CronTest extends TestCase
     }
 
     /**
-     * @return CronJob&MockObject
+     * @return CronJobEntity&MockObject
      */
-    private function mockEntity(string $name, \DateTime $lastRun = null): CronJob
+    private function mockEntity(string $name, \DateTime $lastRun = null): CronJobEntity
     {
-        $entity = $this->createMock(CronJob::class);
+        $entity = $this->createMock(CronJobEntity::class);
         $entity
             ->method('getName')
             ->willReturn($name)

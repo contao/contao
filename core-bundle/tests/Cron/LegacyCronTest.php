@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Cron;
 
 use Contao\CoreBundle\Cron\Cron;
+use Contao\CoreBundle\Cron\CronJob;
 use Contao\CoreBundle\Cron\LegacyCron;
 use Contao\CoreBundle\Fixtures\Cron\TestCronJob;
 use Contao\CoreBundle\Repository\CronJobRepository;
@@ -75,11 +76,11 @@ class LegacyCronTest extends TestCase
         $legacyCron = new LegacyCron($framework);
 
         $cron = new Cron($this->createMock(CronJobRepository::class));
-        $cron->addCronJob($legacyCron, '* * * * *', 'onMinutely');
-        $cron->addCronJob($legacyCron, '@hourly', 'onHourly');
-        $cron->addCronJob($legacyCron, '@daily', 'onDaily');
-        $cron->addCronJob($legacyCron, '@weekly', 'onWeekly');
-        $cron->addCronJob($legacyCron, '@monthly', 'onMonthly');
+        $cron->addCronJob(new CronJob($legacyCron, '* * * * *', 'onMinutely'));
+        $cron->addCronJob(new CronJob($legacyCron, '@hourly', 'onHourly'));
+        $cron->addCronJob(new CronJob($legacyCron, '@daily', 'onDaily'));
+        $cron->addCronJob(new CronJob($legacyCron, '@weekly', 'onWeekly'));
+        $cron->addCronJob(new CronJob($legacyCron, '@monthly', 'onMonthly'));
         $cron->run(Cron::SCOPE_CLI);
 
         unset($GLOBALS['TL_CRON']);

@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\Cron\Cron;
+use Contao\CoreBundle\Cron\CronJob;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddCronJobsPass;
 use Contao\CoreBundle\Fixtures\Cron\TestCronJob;
 use Contao\CoreBundle\Fixtures\Cron\TestInvokableCronJob;
@@ -113,7 +114,10 @@ class AddCronJobsPassTest extends TestCase
 
         $crons = $this->getCronsFromDefinition($container);
 
-        $this->assertSame('onMinutely', $crons[0][2]);
+        /** @var Definition $definition */
+        $definition = $crons[0][0];
+
+        $this->assertSame('onMinutely', $definition->getArgument(2));
     }
 
     public function testUsesNoMethodIfNoneGiven(): void
@@ -129,7 +133,10 @@ class AddCronJobsPassTest extends TestCase
 
         $crons = $this->getCronsFromDefinition($container);
 
-        $this->assertNull($crons[0][2]);
+        /** @var Definition $definition */
+        $definition = $crons[0][0];
+
+        $this->assertNull($definition->getArgument(2));
     }
 
     public function testUsesMethodNameIfMethodNameIsGiven(): void
@@ -152,7 +159,10 @@ class AddCronJobsPassTest extends TestCase
 
         $crons = $this->getCronsFromDefinition($container);
 
-        $this->assertSame('customMethod', $crons[0][2]);
+        /** @var Definition $definition */
+        $definition = $crons[0][0];
+
+        $this->assertSame('customMethod', $definition->getArgument(2));
     }
 
     public function testHandlesMultipleTags(): void
@@ -172,12 +182,15 @@ class AddCronJobsPassTest extends TestCase
 
         $crons = $this->getCronsFromDefinition($container);
 
+        /** @var array<Definition> $definitions */
+        $definitions = array_column($crons, 0);
+
         $this->assertCount(5, $crons);
-        $this->assertSame('* * * * *', $crons[0][1]);
-        $this->assertSame('@hourly', $crons[1][1]);
-        $this->assertSame('@daily', $crons[2][1]);
-        $this->assertSame('@weekly', $crons[3][1]);
-        $this->assertSame('@monthly', $crons[4][1]);
+        $this->assertSame('* * * * *', $definitions[0]->getArgument(1));
+        $this->assertSame('@hourly', $definitions[1]->getArgument(1));
+        $this->assertSame('@daily', $definitions[2]->getArgument(1));
+        $this->assertSame('@weekly', $definitions[3]->getArgument(1));
+        $this->assertSame('@monthly', $definitions[4]->getArgument(1));
     }
 
     /**
@@ -208,11 +221,17 @@ class AddCronJobsPassTest extends TestCase
         foreach ($methodCalls as $methodCall) {
             $this->assertSame('addCronJob', $methodCall[0]);
             $this->assertIsArray($methodCall[1]);
-            $this->assertInstanceOf(Reference::class, $methodCall[1][0]);
-            $this->assertIsString($methodCall[1][1]);
+            $this->assertInstanceOf(Definition::class, $methodCall[1][0]);
 
-            if (isset($methodCall[1][2])) {
-                $this->assertIsString($methodCall[1][2]);
+            /** @var Definition $definition */
+            $definition = $methodCall[1][0];
+
+            $this->assertSame(CronJob::class, $definition->getClass());
+            $this->assertInstanceOf(Reference::class, $definition->getArgument(0));
+            $this->assertIsString($definition->getArgument(1));
+
+            if (null !== $definition->getArgument(2)) {
+                $this->assertIsString($definition->getArgument(2));
             }
 
             $crons[] = $methodCall[1];
