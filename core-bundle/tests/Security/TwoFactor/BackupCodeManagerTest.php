@@ -10,10 +10,10 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Security\TwoFactor\Backup;
+namespace Contao\CoreBundle\Tests\Security\TwoFactor;
 
 use Contao\BackendUser;
-use Contao\CoreBundle\Security\TwoFactor\BackupCode\BackupCodeManager;
+use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -35,25 +35,13 @@ class BackupCodeManagerTest extends TestCase
     {
         $backupCodes = json_encode(['123456', '234567']);
 
-        $frontendUser = $this->mockClassWithProperties(FrontendUser::class, ['backupCodes']);
+        /** @var FrontendUser&MockObject $frontendUser */
+        $frontendUser = $this->mockClassWithProperties(FrontendUser::class, []);
         $frontendUser->backupCodes = $backupCodes;
 
-        $frontendUser
-            ->expects($this->once())
-            ->method('isBackupCode')
-            ->with('123456')
-            ->willReturn(true)
-        ;
-
+        /** @var BackendUser&MockObject $backendUser */
         $backendUser = $this->mockClassWithProperties(BackendUser::class);
         $backendUser->backupCodes = $backupCodes;
-
-        $backendUser
-            ->expects($this->once())
-            ->method('isBackupCode')
-            ->with('234567')
-            ->willReturn(true)
-        ;
 
         $backupCodeManager = new BackupCodeManager();
 
@@ -71,18 +59,7 @@ class BackupCodeManagerTest extends TestCase
 
         $user
             ->expects($this->once())
-            ->method('invalidateBackupCode')
-            ->with('123456')
-        ;
-
-        $user
-            ->expects($this->once())
             ->method('save')
-        ;
-
-        $user
-            ->expects($this->once())
-            ->method('isBackupCode')
         ;
 
         $backupCodeManager = new BackupCodeManager();
