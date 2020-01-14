@@ -33,6 +33,8 @@ class PageTypeRegistry implements \IteratorAggregate
     public function register(PageTypeInterface $pageType): self
     {
         $this->pageTypes[$pageType->getName()] = $pageType;
+
+        return $this;
     }
 
     public function has(string $type): bool
