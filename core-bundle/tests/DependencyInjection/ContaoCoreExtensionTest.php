@@ -86,6 +86,7 @@ use Contao\CoreBundle\Menu\BackendMenuBuilder;
 use Contao\CoreBundle\Monolog\ContaoTableHandler;
 use Contao\CoreBundle\Monolog\ContaoTableProcessor;
 use Contao\CoreBundle\OptIn\OptIn;
+use Contao\CoreBundle\PageType\PageTypeRegistry;
 use Contao\CoreBundle\Picker\ArticlePickerProvider;
 use Contao\CoreBundle\Picker\FilePickerProvider;
 use Contao\CoreBundle\Picker\PagePickerProvider;
@@ -2406,6 +2407,7 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('database_connection'),
                 new Reference('%contao.url_suffix%'),
                 new Reference('%contao.prepend_locale%'),
+                new Reference(PageTypeRegistry::class)
             ],
             $definition->getArguments()
         );

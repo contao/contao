@@ -24,6 +24,7 @@ use Contao\CoreBundle\DependencyInjection\Compiler\MapFragmentsToGlobalsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\PickerProviderPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterHookListenersPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\RegisterPageTypesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RemembermeServicesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\SearchIndexerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\TaggedMigrationsPass;
@@ -57,6 +58,7 @@ class ContaoCoreBundleTest extends TestCase
             PickerProviderPass::class,
             RegisterFragmentsPass::class,
             RegisterFragmentsPass::class,
+            RegisterPageTypesPass::class,
             FragmentRendererPass::class,
             RemembermeServicesPass::class,
             MapFragmentsToGlobalsPass::class,
