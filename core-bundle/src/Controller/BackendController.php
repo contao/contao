@@ -199,17 +199,6 @@ class BackendController extends AbstractController
     }
 
     /**
-     * Redirects the user to the Contao back end in case they manually call the
-     * /contao/two-factor route. Will be intercepted by the two factor bundle otherwise.
-     *
-     * @Route("/contao/two-factor", name="contao_backend_two_factor")
-     */
-    public function twoFactorAuthenticationAction(): Response
-    {
-        return $this->redirectToRoute('contao_backend');
-    }
-
-    /**
      * {@inheritdoc}
      */
     public static function getSubscribedServices(): array

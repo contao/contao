@@ -72,7 +72,7 @@ class UserChecker implements UserCheckerInterface
 
         $ex = new LockedException(
             $lockedSeconds,
-            sprintf('User "%s" has been locked for %s minutes', $user->username, ceil($lockedSeconds / 60))
+            sprintf('User "%s" is still locked for %s seconds', $user->username, $lockedSeconds)
         );
 
         $ex->setUser($user);

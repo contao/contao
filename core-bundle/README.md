@@ -101,13 +101,6 @@ security:
             contao_login:
                 remember_me: false
 
-            two_factor:
-                auth_form_path: contao_backend_login
-                check_path: contao_backend_two_factor
-                default_target_path: contao_backend
-                success_handler: contao.security.authentication_success_handler
-                auth_code_parameter_name: verify
-
             logout:
                 path: contao_backend_logout
                 handlers:
@@ -125,15 +118,6 @@ security:
             contao_login:
                 remember_me: true
 
-            two_factor:
-                auth_form_path: contao_frontend_two_factor
-                check_path: contao_frontend_two_factor
-                default_target_path: contao_root
-                success_handler: contao.security.authentication_success_handler
-                auth_code_parameter_name: verify
-                prepare_on_login: true
-                prepare_on_access_denied: true
-
             remember_me:
                 secret: '%kernel.secret%'
                 remember_me_parameter: autologin
@@ -149,8 +133,7 @@ security:
         - { path: ^/contao/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/contao/logout$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/contao(/|$), roles: ROLE_USER }
-        - { path: ^/_contao/two-factor$, roles: [IS_AUTHENTICATED_2FA_IN_PROGRESS, ROLE_MEMBER] }
-        - { path: ^/, roles: [IS_AUTHENTICATED_2FA_IN_PROGRESS, IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
 ```
 
 The Contao core-bundle as well as the installation-bundle are now installed and

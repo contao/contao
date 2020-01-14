@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Security;
 
+use Scheb\TwoFactorBundle\DependencyInjection\Factory\Security\TwoFactorFactory;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\AbstractFactory;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -26,6 +27,15 @@ class ContaoLoginFactory extends AbstractFactory
         $this->defaultFailureHandlerOptions = [];
     }
 
+    public function create(ContainerBuilder $container, $id, $config, $userProviderId, $defaultEntryPointId): array
+    {
+        $ids = parent::create($container, $id, $config, $userProviderId, $defaultEntryPointId);
+
+        $this->createTwoFactorPreparationListener($container, $id);
+
+        return $ids;
+    }
+
     public function getPosition(): string
     {
         return 'form';
@@ -38,6 +48,14 @@ class ContaoLoginFactory extends AbstractFactory
 
     protected function createAuthProvider(ContainerBuilder $container, $id, $config, $userProviderId): string
     {
+        $twoFactorProviderId = TwoFactorFactory::PROVIDER_ID_PREFIX.$id;
+
+        $container
+            ->setDefinition($twoFactorProviderId, new ChildDefinition(TwoFactorFactory::PROVIDER_DEFINITION_ID))
+            ->replaceArgument(0, $id)
+            ->replaceArgument(1, [])
+        ;
+
         $provider = 'contao.security.authentication_provider.'.$id;
 
         $container
@@ -45,6 +63,7 @@ class ContaoLoginFactory extends AbstractFactory
             ->replaceArgument(0, new Reference($userProviderId))
             ->replaceArgument(1, new Reference('security.user_checker.'.$id))
             ->replaceArgument(2, $id)
+            ->replaceArgument(5, new Reference($twoFactorProviderId))
         ;
 
         return $provider;
@@ -68,5 +87,20 @@ class ContaoLoginFactory extends AbstractFactory
     protected function createAuthenticationFailureHandler($container, $id, $config): string
     {
         return 'contao.security.authentication_failure_handler';
+    }
+
+    private function createTwoFactorPreparationListener(ContainerBuilder $container, string $firewallName): void
+    {
+        $firewallConfigId = TwoFactorFactory::PROVIDER_PREPARATION_LISTENER_ID_PREFIX.$firewallName;
+
+        $container
+            ->setDefinition($firewallConfigId, new ChildDefinition(TwoFactorFactory::PROVIDER_PREPARATION_LISTENER_DEFINITION_ID))
+            ->replaceArgument(3, $firewallName)
+            ->replaceArgument(4, true)
+            ->replaceArgument(5, false)
+            ->addTag('kernel.event_listener', ['event' => 'security.authentication.success', 'method' => 'onLogin', 'priority' => PHP_INT_MAX])
+            ->addTag('kernel.event_listener', ['event' => 'scheb_two_factor.authentication.form', 'method' => 'onTwoFactorForm'])
+            ->addTag('kernel.event_listener', ['event' => 'kernel.finish_request', 'method' => 'onKernelFinishRequest'])
+        ;
     }
 }

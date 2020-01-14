@@ -2565,6 +2565,7 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('contao.security.authentication_success_handler'),
                 new Reference('contao.security.authentication_failure_handler'),
                 [],
+                new Reference('scheb_two_factor.token_factory'),
                 new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
                 new Reference('event_dispatcher', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
             ],
@@ -2599,6 +2600,10 @@ class ContaoCoreExtensionTest extends TestCase
                 null,
                 new Reference('security.encoder_factory'),
                 new Reference('contao.framework'),
+                null,
+                new Reference('scheb_two_factor.authenticated_token_handler'),
+                new Reference('scheb_two_factor.authentication_context_factory'),
+                new Reference('request_stack'),
             ],
             $definition->getArguments()
         );

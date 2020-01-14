@@ -12,15 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
-use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
-use Contao\CoreBundle\Exception\ResponseException;
 use Contao\FrontendCron;
 use Contao\FrontendIndex;
 use Contao\FrontendShare;
-use Contao\PageError401;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\LogoutException;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
@@ -123,32 +119,6 @@ class FrontendController extends AbstractController
         $response->headers->addCacheControlDirective('must-revalidate');
 
         return $response;
-    }
-
-    /**
-     * Redirects the user to the Contao front end in case they manually call the
-     * /_contao/two-factor route. Will be intercepted by the two factor bundle otherwise.
-     *
-     * @Route("/_contao/two-factor", name="contao_frontend_two_factor")
-     */
-    public function twoFactorAuthenticationAction(): Response
-    {
-        $this->initializeContaoFramework();
-
-        if (!isset($GLOBALS['TL_PTY']['error_401']) || !class_exists($GLOBALS['TL_PTY']['error_401'])) {
-            throw new UnauthorizedHttpException('', 'Not authorized');
-        }
-
-        /** @var PageError401 $pageHandler */
-        $pageHandler = new $GLOBALS['TL_PTY']['error_401']();
-
-        try {
-            return $pageHandler->getResponse();
-        } catch (ResponseException $e) {
-            return $e->getResponse();
-        } catch (InsufficientAuthenticationException $e) {
-            throw new UnauthorizedHttpException('', $e->getMessage());
-        }
     }
 
     /**
