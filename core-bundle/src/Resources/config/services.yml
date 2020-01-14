@@ -420,7 +420,6 @@ services:
         class: Contao\CoreBundle\Repository\RememberMeRepository
         arguments:
             - '@doctrine'
-            - 'Contao\CoreBundle\Entity\RememberMe'
 
     contao.resource_finder:
         class: Contao\CoreBundle\Config\ResourceFinder
