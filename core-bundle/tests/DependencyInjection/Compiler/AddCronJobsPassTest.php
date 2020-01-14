@@ -211,7 +211,7 @@ class AddCronJobsPassTest extends TestCase
             $this->assertInstanceOf(Reference::class, $methodCall[1][0]);
             $this->assertIsString($methodCall[1][1]);
 
-            if (null !== $methodCall[1][2]) {
+            if (isset($methodCall[1][2])) {
                 $this->assertIsString($methodCall[1][2]);
             }
 

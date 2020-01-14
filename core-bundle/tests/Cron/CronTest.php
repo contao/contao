@@ -29,7 +29,6 @@ class CronTest extends TestCase
         $repository = $this->createMock(CronJobRepository::class);
 
         $cronjob = $this->createMock(TestCronJob::class);
-
         $cronjob
             ->expects($this->once())
             ->method('onHourly')

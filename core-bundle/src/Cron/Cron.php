@@ -15,8 +15,6 @@ namespace Contao\CoreBundle\Cron;
 use Contao\CoreBundle\Entity\CronJob as CronJobEntity;
 use Contao\CoreBundle\Repository\CronJobRepository;
 use Cron\CronExpression;
-use DateTimeImmutable;
-use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 
 class Cron
@@ -57,12 +55,12 @@ class Cron
     {
         // Validate scope
         if (null !== $scope && self::SCOPE_WEB !== $scope && self::SCOPE_CLI !== $scope) {
-            throw new InvalidArgumentException('Invalid scope "'.$scope.'"');
+            throw new \InvalidArgumentException('Invalid scope "'.$scope.'"');
         }
 
         /** @var array<CronJob> */
         $cronJobsToBeRun = [];
-        $now = new DateTimeImmutable();
+        $now = new \DateTimeImmutable();
 
         try {
             // Lock cron table

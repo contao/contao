@@ -22,6 +22,7 @@ class CronJobTest extends TestCase
     public function testThrowsExceptionIfNoMethodIsGivenAndServiceIsNotInvokable(): void
     {
         $this->expectException(InvalidArgumentException::class);
+
         new CronJob(new TestCronJob(), '@hourly');
     }
 }

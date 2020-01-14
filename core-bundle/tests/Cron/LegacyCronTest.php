@@ -25,7 +25,6 @@ class LegacyCronTest extends TestCase
     {
         // Mock a simple object to be used for TL_CRON
         $legacyCronObject = $this->createMock(TestCronJob::class);
-
         $legacyCronObject
             ->expects($this->once())
             ->method('onMinutely')
