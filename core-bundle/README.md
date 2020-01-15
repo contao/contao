@@ -105,7 +105,7 @@ security:
                 path: contao_backend_logout
                 handlers:
                     - contao.security.logout_handler
-                    - contao_manager.security.logout_handler
+                    # - contao_manager.security.logout_handler # only used when manager-bundle is installed
                 success_handler: contao.security.logout_success_handler
 
         contao_frontend:
