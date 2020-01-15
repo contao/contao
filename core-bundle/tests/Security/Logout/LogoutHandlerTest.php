@@ -127,7 +127,7 @@ class LogoutHandlerTest extends TestCase
         // Dummy method to test the postLogout hook
     }
 
-    public function testRemovesTargetPathFromSessionWithUsernamePasswordToken()
+    public function testRemovesTargetPathFromSessionWithUsernamePasswordToken(): void
     {
         $session = $this->createMock(SessionInterface::class);
         $session
@@ -159,7 +159,7 @@ class LogoutHandlerTest extends TestCase
         $handler->logout($request, $this->createMock(Response::class), $token);
     }
 
-    public function testRemovesTargetPathFromSessionWithTwoFactorToken()
+    public function testRemovesTargetPathFromSessionWithTwoFactorToken(): void
     {
         $session = $this->createMock(SessionInterface::class);
         $session

@@ -52,7 +52,7 @@ class LogoutHandler implements LogoutHandlerInterface
      */
     public function logout(Request $request, Response $response, TokenInterface $token): void
     {
-        if ($request->hasSession() && \method_exists($token, 'getProviderKey')) {
+        if ($request->hasSession() && method_exists($token, 'getProviderKey')) {
             $this->removeTargetPath($request->getSession(), $token->getProviderKey());
         }
 

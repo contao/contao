@@ -375,7 +375,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $this->assertSame('http://localhost/failure', $response->getTargetUrl());
     }
 
-    public function testRemovesTheTargetPathInTheSessionOnLogin()
+    public function testRemovesTheTargetPathInTheSessionOnLogin(): void
     {
         $session = $this->createMock(SessionInterface::class);
         $session

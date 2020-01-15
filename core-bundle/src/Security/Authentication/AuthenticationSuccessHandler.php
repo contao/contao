@@ -107,7 +107,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
 
         $this->triggerPostLoginHook();
 
-        if ($request->hasSession() && \method_exists($token, 'getProviderKey')) {
+        if ($request->hasSession() && method_exists($token, 'getProviderKey')) {
             $this->removeTargetPath($request->getSession(), $token->getProviderKey());
         }
 
