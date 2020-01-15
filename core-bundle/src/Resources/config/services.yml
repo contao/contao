@@ -106,7 +106,9 @@ services:
         tags:
             - controller.service_arguments
 
-    Contao\CoreBundle\Controller\FrontendController: ~
+    Contao\CoreBundle\Controller\FrontendController:
+        tags:
+            - { name: 'controller.service_arguments' }
 
     Contao\CoreBundle\Controller\FrontendModule\TwoFactorController:
         tags:
@@ -181,6 +183,17 @@ services:
             - '@translator'
         tags:
             - { name: 'contao.escargot_subscriber' }
+
+    Contao\CoreBundle\Cron\Cron:
+        arguments:
+            - '@Contao\CoreBundle\Repository\CronJobRepository'
+            - '@doctrine.orm.entity_manager'
+            - '@?logger'
+        public: true
+
+    Contao\CoreBundle\Cron\LegacyCron:
+        arguments:
+            - '@contao.framework'
 
     contao.csrf.token_manager:
         class: Symfony\Component\Security\Csrf\CsrfTokenManager
@@ -415,6 +428,10 @@ services:
             - '@database_connection'
         tags:
             - { name: contao.picker_provider }
+
+    Contao\CoreBundle\Repository\CronJobRepository:
+        arguments:
+            - '@doctrine'
 
     contao.repository.remember_me:
         class: Contao\CoreBundle\Repository\RememberMeRepository

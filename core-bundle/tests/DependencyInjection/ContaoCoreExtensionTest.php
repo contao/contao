@@ -40,6 +40,8 @@ use Contao\CoreBundle\Cors\WebsiteRootsConfigProvider;
 use Contao\CoreBundle\Crawl\Escargot\Factory;
 use Contao\CoreBundle\Crawl\Escargot\Subscriber\BrokenLinkCheckerSubscriber;
 use Contao\CoreBundle\Crawl\Escargot\Subscriber\SearchIndexSubscriber;
+use Contao\CoreBundle\Cron\Cron;
+use Contao\CoreBundle\Cron\LegacyCron;
 use Contao\CoreBundle\Csrf\MemoryTokenStorage;
 use Contao\CoreBundle\DataCollector\ContaoDataCollector;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
@@ -95,6 +97,7 @@ use Contao\CoreBundle\Picker\FilePickerProvider;
 use Contao\CoreBundle\Picker\PagePickerProvider;
 use Contao\CoreBundle\Picker\PickerBuilder;
 use Contao\CoreBundle\Picker\TablePickerProvider;
+use Contao\CoreBundle\Repository\CronJobRepository;
 use Contao\CoreBundle\Repository\RememberMeRepository;
 use Contao\CoreBundle\Routing\Enhancer\InputEnhancer;
 use Contao\CoreBundle\Routing\FrontendLoader;
@@ -437,6 +440,7 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 new Reference('contao.framework'),
                 new Reference('database_connection'),
+                new Reference(Cron::class),
                 new Reference('%fragment.path%'),
             ],
             $definition->getArguments()
@@ -1272,6 +1276,15 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $this->container->getDefinition(FrontendController::class);
 
         $this->assertTrue($definition->isPrivate());
+
+        $this->assertSame(
+            [
+                'controller.service_arguments' => [
+                    [],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheFrontendModuleTwoFactorController(): void
@@ -1467,6 +1480,40 @@ class ContaoCoreExtensionTest extends TestCase
                 ],
             ],
             $definition->getTags()
+        );
+    }
+
+    public function testRegistersTheCronService(): void
+    {
+        $this->assertTrue($this->container->has(Cron::class));
+
+        $definition = $this->container->getDefinition(Cron::class);
+
+        $this->assertTrue($definition->isPublic());
+
+        $this->assertEquals(
+            [
+                new Reference(CronJobRepository::class),
+                new Reference('doctrine.orm.entity_manager'),
+                new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+            ],
+            $definition->getArguments()
+        );
+    }
+
+    public function testRegistersTheLegacyCronService(): void
+    {
+        $this->assertTrue($this->container->has(LegacyCron::class));
+
+        $definition = $this->container->getDefinition(LegacyCron::class);
+
+        $this->assertTrue($definition->isPublic());
+
+        $this->assertEquals(
+            [
+                new Reference('contao.framework'),
+            ],
+            $definition->getArguments()
         );
     }
 
@@ -2114,6 +2161,22 @@ class ContaoCoreExtensionTest extends TestCase
                 ],
             ],
             $definition->getTags()
+        );
+    }
+
+    public function testRegistersTheCronJobRepository(): void
+    {
+        $this->assertTrue($this->container->has(CronJobRepository::class));
+
+        $definition = $this->container->getDefinition(CronJobRepository::class);
+
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('doctrine'),
+            ],
+            $definition->getArguments()
         );
     }
 

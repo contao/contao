@@ -12,10 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
-use Contao\FrontendCron;
+use Contao\CoreBundle\Cron\Cron;
 use Contao\FrontendIndex;
 use Contao\FrontendShare;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\LogoutException;
@@ -40,13 +41,13 @@ class FrontendController extends AbstractController
     /**
      * @Route("/_contao/cron", name="contao_frontend_cron")
      */
-    public function cronAction(): Response
+    public function cronAction(Request $request, Cron $cron): Response
     {
-        $this->initializeContaoFramework();
+        if ($request->isMethod(Request::METHOD_GET)) {
+            $cron->run(Cron::SCOPE_WEB);
+        }
 
-        $controller = new FrontendCron();
-
-        return $controller->run();
+        return new Response('', Response::HTTP_NO_CONTENT);
     }
 
     /**
