@@ -10,18 +10,20 @@
 
 namespace Contao;
 
+use \Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 trait ModuleControllerTrait
 {
-	public function __invoke(Request $request, ModuleModel $model, string $section, array $classes = null): Response
+	public function __construct()
 	{
-		/* @var Module $class */
-		$class = $GLOBALS['FE_MOD'][$model->type];
+		// Do not call parent
+	}
 
-		/* @var Module $module */
-		$module = new $class($model, $section);
+	public function __invoke(Request $request, ModuleModel $model, string $section): Response
+	{
+		parent::__construct($model, $section);
 
-		return new Response($module->generate());
+		return new Response($this->generate());
 	}
 }

@@ -10,18 +10,20 @@
 
 namespace Contao;
 
+use \Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 trait ContentControllerTrait
 {
+	public function __construct()
+	{
+		// Do not call parent
+	}
+
 	public function __invoke(Request $request, ModuleModel $model, string $section, array $classes = null): Response
 	{
-		/* @var ContentElement $class */
-		$class = $GLOBALS['TL_CTE'][$model->type];
+		parent::__construct($model, $section);
 
-		/* @var ContentElement $element */
-		$element = new $class($model, $section);
-
-		return new Response($element->generate());
+		return new Response($this->generate());
 	}
 }
