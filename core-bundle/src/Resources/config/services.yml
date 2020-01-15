@@ -107,8 +107,6 @@ services:
             - controller.service_arguments
 
     Contao\CoreBundle\Controller\FrontendController:
-        arguments:
-            - '@Contao\CoreBundle\Cron\Cron'
         tags:
             - { name: 'controller.service_arguments' }
 

@@ -1278,13 +1278,6 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertTrue($definition->isPrivate());
 
-        $this->assertEquals(
-            [
-                new Reference(Cron::class),
-            ],
-            $definition->getArguments()
-        );
-
         $this->assertSame(
             [
                 'controller.service_arguments' => [
