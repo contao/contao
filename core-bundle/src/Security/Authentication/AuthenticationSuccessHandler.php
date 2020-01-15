@@ -81,6 +81,11 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
 
             $response = new RedirectResponse($request->getUri());
 
+            // Used by the TwoFactorListener to redirect a user back to the authentication page
+            if ($request->hasSession() && $request->isMethodSafe() && !$request->isXmlHttpRequest()) {
+                $this->saveTargetPath($request->getSession(), $token->getProviderKey(), $request->getUri());
+            }
+
             return $response;
         }
 
@@ -101,6 +106,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         }
 
         $this->triggerPostLoginHook();
+        $this->removeTargetPath($request->getSession(), $token->getProviderKey());
 
         return $response;
     }

@@ -22,9 +22,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Logout\LogoutHandlerInterface;
+use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 class LogoutHandler implements LogoutHandlerInterface
 {
+    use TargetPathTrait;
+
     /**
      * @var ContaoFramework
      */
@@ -63,6 +66,7 @@ class LogoutHandler implements LogoutHandlerInterface
         }
 
         $this->triggerPostLogoutHook($user);
+        $this->removeTargetPath($request->getSession(), $token->getProviderKey());
     }
 
     private function triggerPostLogoutHook(User $user): void
