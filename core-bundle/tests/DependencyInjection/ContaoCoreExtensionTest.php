@@ -2130,7 +2130,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEquals(
             [
                 new Reference('doctrine'),
-                new Reference(RememberMe::class),
             ],
             $definition->getArguments()
         );
