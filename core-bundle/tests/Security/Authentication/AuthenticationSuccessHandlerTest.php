@@ -291,9 +291,8 @@ class AuthenticationSuccessHandlerTest extends TestCase
     {
         $session = $this->createMock(SessionInterface::class);
         $session
-            ->expects($this->once())
+            ->expects($this->never())
             ->method('set')
-            ->with('_security.contao_frontend.target_path', 'http://localhost/failure')
         ;
 
         $request = $this->createMock(Request::class);
@@ -318,7 +317,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
         /** @var TwoFactorTokenInterface&MockObject $token */
         $token = $this->createMock(TwoFactorTokenInterface::class);
         $token
-            ->expects($this->once())
             ->method('getProviderKey')
             ->willReturn('contao_frontend')
         ;

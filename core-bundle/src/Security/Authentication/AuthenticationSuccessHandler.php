@@ -81,8 +81,6 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
 
             $response = new RedirectResponse($request->getUri());
 
-            $this->saveTargetPath($request->getSession(), $token->getProviderKey(), $response->getTargetUrl());
-
             return $response;
         }
 
