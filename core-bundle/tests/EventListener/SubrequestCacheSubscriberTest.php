@@ -35,7 +35,7 @@ class SubrequestCacheSubscriberTest extends TestCase
         );
     }
 
-    public function testMergesCacheControlHeader()
+    public function testMergesCacheControlHeader(): void
     {
         $subscriber = new SubrequestCacheSubscriber();
 
@@ -59,7 +59,7 @@ class SubrequestCacheSubscriberTest extends TestCase
         $this->assertSame('max-age=30, public', $mainResponse->headers->get('Cache-Control'));
     }
 
-    public function testMakeMasterResponsePrivateIfSubrequestIsPrivate()
+    public function testMakeMasterResponsePrivateIfSubrequestIsPrivate(): void
     {
         $subscriber = new SubrequestCacheSubscriber();
 
@@ -81,7 +81,7 @@ class SubrequestCacheSubscriberTest extends TestCase
         $this->assertSame('private', $mainResponse->headers->get('Cache-Control'));
     }
 
-    public function testIgnoresSubrequestWithoutMergeHeader()
+    public function testIgnoresSubrequestWithoutMergeHeader(): void
     {
         $subscriber = new SubrequestCacheSubscriber();
 
@@ -102,7 +102,7 @@ class SubrequestCacheSubscriberTest extends TestCase
         $this->assertSame('max-age=60, public', $mainResponse->headers->get('Cache-Control'));
     }
 
-    public function testIgnoresSubrequestWithoutCacheControlHeader()
+    public function testIgnoresSubrequestWithoutCacheControlHeader(): void
     {
         $subscriber = new SubrequestCacheSubscriber();
 
@@ -124,7 +124,7 @@ class SubrequestCacheSubscriberTest extends TestCase
         $this->assertSame('max-age=60, public', $mainResponse->headers->get('Cache-Control'));
     }
 
-    private function onKernelRequest(SubrequestCacheSubscriber $subscriber, int $requestType)
+    private function onKernelRequest(SubrequestCacheSubscriber $subscriber, int $requestType): void
     {
         $event = $this->createMock(RequestEvent::class);
         $event
@@ -136,7 +136,7 @@ class SubrequestCacheSubscriberTest extends TestCase
         $subscriber->onKernelRequest($event);
     }
 
-    private function onKernelResponse(SubrequestCacheSubscriber $subscriber, Response $response, int $requestType)
+    private function onKernelResponse(SubrequestCacheSubscriber $subscriber, Response $response, int $requestType): void
     {
         $event = $this->createMock(ResponseEvent::class);
         $event
