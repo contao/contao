@@ -45,20 +45,8 @@ class AuthenticationSuccessHandlerTest extends TestCase
             '_target_path' => base64_encode('http://localhost/target'),
         ];
 
-        $session = $this->createMock(SessionInterface::class);
-        $session
-            ->expects($this->once())
-            ->method('remove')
-            ->with('_security.contao_frontend.target_path')
-        ;
-
         $request = $this->createMock(Request::class);
         $request->request = new ParameterBag($parameters);
-
-        $request
-            ->method('getSession')
-            ->willReturn($session)
-        ;
 
         /** @var BackendUser&MockObject $user */
         $user = $this->createPartialMock(BackendUser::class, ['save']);
@@ -71,17 +59,11 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->method('save')
         ;
 
-        $token = $this->createMock(UsernamePasswordToken::class);
+        $token = $this->createMock(TokenInterface::class);
         $token
             ->expects($this->once())
             ->method('getUser')
             ->willReturn($user)
-        ;
-
-        $token
-            ->expects($this->once())
-            ->method('getProviderKey')
-            ->willReturn('contao_frontend')
         ;
 
         $handler = $this->getHandler(null, $logger);
@@ -132,20 +114,8 @@ class AuthenticationSuccessHandlerTest extends TestCase
             '_target_path' => base64_encode('http://localhost/target'),
         ];
 
-        $session = $this->createMock(SessionInterface::class);
-        $session
-            ->expects($this->once())
-            ->method('remove')
-            ->with('_security.contao_frontend.target_path')
-        ;
-
         $request = $this->createMock(Request::class);
         $request->request = new ParameterBag($parameters);
-
-        $request
-            ->method('getSession')
-            ->willReturn($session)
-        ;
 
         /** @var BackendUser&MockObject $user */
         $user = $this->createPartialMock(BackendUser::class, ['save']);
@@ -158,17 +128,11 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->method('save')
         ;
 
-        $token = $this->createMock(UsernamePasswordToken::class);
+        $token = $this->createMock(TokenInterface::class);
         $token
             ->expects($this->once())
             ->method('getUser')
             ->willReturn($user)
-        ;
-
-        $token
-            ->expects($this->once())
-            ->method('getProviderKey')
-            ->willReturn('contao_frontend')
         ;
 
         $systemAdapter = $this->mockAdapter(['importStatic']);
@@ -228,35 +192,14 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->method('save')
         ;
 
-        $session = $this->createMock(SessionInterface::class);
-        $session
-            ->expects($this->once())
-            ->method('remove')
-            ->with('_security.contao_frontend.target_path')
-        ;
-
-        $request = $this->createMock(Request::class);
-        $request->request = new ParameterBag();
-
-        $request
-            ->method('getSession')
-            ->willReturn($session)
-        ;
-
-        $token = $this->createMock(UsernamePasswordToken::class);
+        $token = $this->createMock(TokenInterface::class);
         $token
             ->method('getUser')
             ->willReturn($user)
         ;
 
-        $token
-            ->expects($this->once())
-            ->method('getProviderKey')
-            ->willReturn('contao_frontend')
-        ;
-
         $handler = $this->getHandler($framework);
-        $response = $handler->onAuthenticationSuccess($request, $token);
+        $response = $handler->onAuthenticationSuccess(new Request(), $token);
 
         $this->assertSame('http://localhost/page', $response->getTargetUrl());
     }
@@ -278,20 +221,8 @@ class AuthenticationSuccessHandlerTest extends TestCase
             '_target_path' => base64_encode('http://localhost/target'),
         ];
 
-        $session = $this->createMock(SessionInterface::class);
-        $session
-            ->expects($this->once())
-            ->method('remove')
-            ->with('_security.contao_frontend.target_path')
-        ;
-
         $request = $this->createMock(Request::class);
         $request->request = new ParameterBag($parameters);
-
-        $request
-            ->method('getSession')
-            ->willReturn($session)
-        ;
 
         /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['save']);
@@ -304,16 +235,10 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->method('save')
         ;
 
-        $token = $this->createMock(UsernamePasswordToken::class);
+        $token = $this->createMock(TokenInterface::class);
         $token
             ->method('getUser')
             ->willReturn($user)
-        ;
-
-        $token
-            ->expects($this->once())
-            ->method('getProviderKey')
-            ->willReturn('contao_frontend')
         ;
 
         $handler = $this->getHandler($framework);
@@ -322,7 +247,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $this->assertSame('http://localhost/target', $response->getTargetUrl());
     }
 
-    public function testUsesThePostTargetPath(): void
+    public function testUsesTheTargetPath(): void
     {
         $adapter = $this->mockAdapter(['findFirstActiveByMemberGroups']);
         $adapter
@@ -337,20 +262,8 @@ class AuthenticationSuccessHandlerTest extends TestCase
             '_target_path' => base64_encode('http://localhost/target'),
         ];
 
-        $session = $this->createMock(SessionInterface::class);
-        $session
-            ->expects($this->once())
-            ->method('remove')
-            ->with('_security.contao_frontend.target_path')
-        ;
-
         $request = $this->createMock(Request::class);
         $request->request = new ParameterBag($parameters);
-
-        $request
-            ->method('getSession')
-            ->willReturn($session)
-        ;
 
         /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['save']);
@@ -363,16 +276,10 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->method('save')
         ;
 
-        $token = $this->createMock(UsernamePasswordToken::class);
+        $token = $this->createMock(TokenInterface::class);
         $token
             ->method('getUser')
             ->willReturn($user)
-        ;
-
-        $token
-            ->expects($this->once())
-            ->method('getProviderKey')
-            ->willReturn('contao_frontend')
         ;
 
         $handler = $this->getHandler($framework);
@@ -466,6 +373,44 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $response = $this->getHandler()->onAuthenticationSuccess($request, $token);
 
         $this->assertSame('http://localhost/failure', $response->getTargetUrl());
+    }
+
+    public function testRemovesTheTargetPathInTheSessionOnLogin()
+    {
+        $session = $this->createMock(SessionInterface::class);
+        $session
+            ->expects($this->once())
+            ->method('remove')
+            ->with('_security.contao_frontend.target_path')
+        ;
+
+        $request = $this->createMock(Request::class);
+        $request->request = new ParameterBag(['_target_path' => base64_encode('/')]);
+
+        $request
+            ->method('getSession')
+            ->willReturn($session)
+        ;
+
+        $request
+            ->method('hasSession')
+            ->willReturn(true)
+        ;
+
+        $token = $this->createMock(UsernamePasswordToken::class);
+        $token
+            ->expects($this->once())
+            ->method('getUser')
+            ->willReturn($this->createPartialMock(BackendUser::class, ['save']))
+        ;
+
+        $token
+            ->expects($this->once())
+            ->method('getProviderKey')
+            ->willReturn('contao_frontend')
+        ;
+
+        $this->getHandler()->onAuthenticationSuccess($request, $token);
     }
 
     /**

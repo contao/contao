@@ -52,6 +52,10 @@ class LogoutHandler implements LogoutHandlerInterface
      */
     public function logout(Request $request, Response $response, TokenInterface $token): void
     {
+        if ($request->hasSession() && \method_exists($token, 'getProviderKey')) {
+            $this->removeTargetPath($request->getSession(), $token->getProviderKey());
+        }
+
         $user = $token->getUser();
 
         if (!$user instanceof User || $token instanceof TwoFactorTokenInterface) {
@@ -66,7 +70,6 @@ class LogoutHandler implements LogoutHandlerInterface
         }
 
         $this->triggerPostLogoutHook($user);
-        $this->removeTargetPath($request->getSession(), $token->getProviderKey());
     }
 
     private function triggerPostLogoutHook(User $user): void
