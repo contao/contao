@@ -47,13 +47,4 @@ class CronJobRepository extends ServiceEntityRepository
     {
         $this->connection->exec('UNLOCK TABLES');
     }
-
-    public function persistAndFlush(CronJob ...$entities): void
-    {
-        foreach ($entities as $entity) {
-            $this->_em->persist($entity);
-        }
-
-        $this->_em->flush();
-    }
 }

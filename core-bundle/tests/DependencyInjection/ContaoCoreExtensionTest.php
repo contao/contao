@@ -46,7 +46,6 @@ use Contao\CoreBundle\Csrf\MemoryTokenStorage;
 use Contao\CoreBundle\DataCollector\ContaoDataCollector;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
-use Contao\CoreBundle\Entity\CronJob;
 use Contao\CoreBundle\Entity\RememberMe;
 use Contao\CoreBundle\EventListener\BackendLocaleListener;
 use Contao\CoreBundle\EventListener\BypassMaintenanceListener;
@@ -1503,6 +1502,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEquals(
             [
                 new Reference(CronJobRepository::class),
+                new Reference('doctrine.orm.entity_manager'),
                 new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
             ],
             $definition->getArguments()
@@ -2183,7 +2183,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEquals(
             [
                 new Reference('doctrine'),
-                new Reference(CronJob::class),
             ],
             $definition->getArguments()
         );

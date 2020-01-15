@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Cron;
 use Contao\CoreBundle\Entity\CronJob as CronJobEntity;
 use Contao\CoreBundle\Repository\CronJobRepository;
 use Cron\CronExpression;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 
 class Cron
@@ -28,6 +29,11 @@ class Cron
     private $repository;
 
     /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -37,10 +43,11 @@ class Cron
      */
     private $cronJobs = [];
 
-    public function __construct(CronJobRepository $repository, LoggerInterface $logger = null)
+    public function __construct(CronJobRepository $repository, EntityManagerInterface $entityManager, LoggerInterface $logger = null)
     {
-        $this->logger = $logger;
         $this->repository = $repository;
+        $this->entityManager = $entityManager;
+        $this->logger = $logger;
     }
 
     public function addCronJob(CronJob $cronjob): void
@@ -81,6 +88,7 @@ class Cron
                     $lastRunDate = $lastRunEntity->getLastRun();
                 } else {
                     $lastRunEntity = new CronJobEntity($name);
+                    $this->entityManager->persist($lastRunEntity);
                 }
 
                 // Check if the cron should be run
@@ -89,12 +97,13 @@ class Cron
                 if (null === $lastRunDate || $now >= $expression->getNextRunDate($lastRunDate)) {
                     // Update the cron entry
                     $lastRunEntity->setLastRun($now);
-                    $this->repository->persistAndFlush($lastRunEntity);
 
                     // Add job to the crons to be run
                     $cronJobsToBeRun[] = $cron;
                 }
             }
+
+            $this->entityManager->flush();
         } finally {
             $this->repository->unlockTable();
         }

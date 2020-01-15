@@ -19,6 +19,7 @@ use Contao\CoreBundle\Fixtures\Cron\TestCronJob;
 use Contao\CoreBundle\Repository\CronJobRepository;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\System;
+use Doctrine\ORM\EntityManagerInterface;
 
 class LegacyCronTest extends TestCase
 {
@@ -75,7 +76,7 @@ class LegacyCronTest extends TestCase
         // Create a LegacyCron instance and add cron jobs to the cron service
         $legacyCron = new LegacyCron($framework);
 
-        $cron = new Cron($this->createMock(CronJobRepository::class));
+        $cron = new Cron($this->createMock(CronJobRepository::class), $this->createMock(EntityManagerInterface::class));
         $cron->addCronJob(new CronJob($legacyCron, '* * * * *', 'onMinutely'));
         $cron->addCronJob(new CronJob($legacyCron, '@hourly', 'onHourly'));
         $cron->addCronJob(new CronJob($legacyCron, '@daily', 'onDaily'));

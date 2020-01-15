@@ -19,6 +19,7 @@ use Contao\CoreBundle\Fixtures\Cron\TestCronJob;
 use Contao\CoreBundle\Fixtures\Cron\TestInvokableCronJob;
 use Contao\CoreBundle\Repository\CronJobRepository;
 use Contao\CoreBundle\Tests\TestCase;
+use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
@@ -35,7 +36,7 @@ class CronTest extends TestCase
             ->method('onHourly')
         ;
 
-        $cron = new Cron($repository);
+        $cron = new Cron($repository, $this->createMock(EntityManagerInterface::class));
         $cron->addCronJob(new CronJob($cronjob, '@hourly', 'onHourly'));
         $cron->run(Cron::SCOPE_CLI);
     }
@@ -70,7 +71,7 @@ class CronTest extends TestCase
             )
         ;
 
-        $cron = new Cron($repository, $logger);
+        $cron = new Cron($repository, $this->createMock(EntityManagerInterface::class), $logger);
         $cron->addCronJob(new CronJob($cronjob, '* * * * *', 'onMinutely'));
         $cron->addCronJob(new CronJob($cronjob, '0 * * * *', 'onHourly'));
         $cron->run(Cron::SCOPE_CLI);
@@ -79,6 +80,10 @@ class CronTest extends TestCase
     public function testUpdatesCronEntities(): void
     {
         $entity = $this->mockEntity('UpdateEntitiesCron::onHourly', (new \DateTime())->modify('-1 hours'));
+        $entity
+            ->expects($this->once())
+            ->method('setLastRun')
+        ;
 
         $repository = $this->createMock(CronJobRepository::class);
         $repository
@@ -102,20 +107,13 @@ class CronTest extends TestCase
             ->method('onHourly')
         ;
 
-        $repository
+        $manager = $this->createMock(EntityManagerInterface::class);
+        $manager
             ->expects($this->once())
-            ->method('persistAndFlush')
-            ->with(
-                $this->callback(
-                    static function (CronJobEntity $entity) {
-                        return 'UpdateEntitiesCron::onHourly' === $entity->getName()
-                            && (new \DateTime()) >= $entity->getLastRun();
-                    }
-                )
-            )
+            ->method('flush')
         ;
 
-        $cron = new Cron($repository);
+        $cron = new Cron($repository, $manager);
         $cron->addCronJob(new CronJob($cronjob, '@hourly', 'onHourly'));
         $cron->run(Cron::SCOPE_CLI);
     }
@@ -129,14 +127,14 @@ class CronTest extends TestCase
             ->with(Cron::SCOPE_CLI)
         ;
 
-        $cron = new Cron($this->createMock(CronJobRepository::class));
+        $cron = new Cron($this->createMock(CronJobRepository::class), $this->createMock(EntityManagerInterface::class));
         $cron->addCronJob(new CronJob($cronjob, '@hourly'));
         $cron->run(Cron::SCOPE_CLI);
     }
 
     public function testInvalidArgumentExceptionForScope(): void
     {
-        $cron = new Cron($this->createMock(CronJobRepository::class));
+        $cron = new Cron($this->createMock(CronJobRepository::class), $this->createMock(EntityManagerInterface::class));
 
         try {
             $cron->run(Cron::SCOPE_CLI);
