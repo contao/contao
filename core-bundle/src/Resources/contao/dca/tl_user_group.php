@@ -301,6 +301,13 @@ class tl_user_group extends Contao\Backend
 		{
 			Contao\Message::addInfo($GLOBALS['TL_LANG']['MSC']['groupTemplateEditor']);
 		}
+
+		$objResult = $this->Database->query("SELECT COUNT(*) AS cnt FROM tl_user_group WHERE themes LIKE '%\"theme_import\"%'");
+
+		if ($objResult->cnt > 0)
+		{
+			Contao\Message::addInfo($GLOBALS['TL_LANG']['MSC']['groupThemeImport']);
+		}
 	}
 
 	/**

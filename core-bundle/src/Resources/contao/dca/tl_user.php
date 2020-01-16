@@ -584,6 +584,13 @@ class tl_user extends Contao\Backend
 		{
 			Contao\Message::addInfo($GLOBALS['TL_LANG']['MSC']['userTemplateEditor']);
 		}
+
+		$objResult = $this->Database->query("SELECT COUNT(*) AS cnt FROM tl_user WHERE admin='' AND themes LIKE '%\"theme_import\"%'");
+
+		if ($objResult->cnt > 0)
+		{
+			Contao\Message::addInfo($GLOBALS['TL_LANG']['MSC']['userThemeImport']);
+		}
 	}
 
 	/**
