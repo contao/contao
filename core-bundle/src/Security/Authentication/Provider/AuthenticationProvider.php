@@ -169,7 +169,7 @@ class AuthenticationProvider extends DaoAuthenticationProvider
                 throw $exception;
             }
 
-            $exception = new BadCredentialsException(
+            $exception = new InvalidTwoFactorCodeException(
                 sprintf('Invalid two-factor code submitted for username "%s"', $user->username),
                 $exception->getCode(),
                 $exception

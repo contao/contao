@@ -125,7 +125,7 @@ class AuthenticationProviderTest extends TestCase
                 $this->assertInstanceOf(LockedException::class, $e);
                 $this->assertSame($user, $e->getUser());
             } else {
-                $this->assertInstanceOf(BadCredentialsException::class, $e);
+                $this->assertInstanceOf(InvalidTwoFactorCodeException::class, $e);
             }
 
             $hasException = true;
