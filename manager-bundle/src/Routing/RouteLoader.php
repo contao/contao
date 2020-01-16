@@ -93,6 +93,10 @@ class RouteLoader
     {
         foreach (['routes.yaml', 'routes.yml', 'routing.yaml', 'routing.yml'] as $file) {
             if (file_exists($this->rootDir.'/config/'.$file)) {
+                if (0 === strncmp($file, 'routing.', 8)) {
+                    @trigger_error(sprintf('Using a "%s" file has been deprecated and will no longer work in Contao 5.0. Rename it to "routes.yaml" instead.', $file), E_USER_DEPRECATED);
+                }
+
                 return $this->rootDir.'/config/'.$file;
             }
 
