@@ -30,13 +30,15 @@ class TrustedDeviceRepository extends EntityRepository
         ;
     }
 
-    public function findExisting(int $userId, string $cookieValue)
+    public function findExisting(int $userId, string $cookieValue, int $version)
     {
         return $this->createQueryBuilder('td')
             ->andWhere('td.userId = :userId')
             ->andWhere('td.cookieValue = :cookieValue')
+            ->andWhere('td.version = :version')
             ->setParameter('userId', $userId)
             ->setParameter('cookieValue', $cookieValue)
+            ->setParameter('version', $version)
 
             ->getQuery()
             ->getOneOrNullResult()

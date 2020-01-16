@@ -70,7 +70,7 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
 
         // Check if already an earlier version of the trusted device exists
         try {
-            $trustedDevice = $trustedDeviceRepository->findExisting((int) $user->id, $oldCookieValue) ?? new TrustedDevice();
+            $trustedDevice = $trustedDeviceRepository->findExisting((int) $user->id, $oldCookieValue, $version) ?? new TrustedDevice();
         } catch (NonUniqueResultException $exception) {
             $trustedDevice = new TrustedDevice();
         }
