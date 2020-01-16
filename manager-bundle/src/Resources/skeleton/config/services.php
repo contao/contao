@@ -9,7 +9,6 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
  * @var ContainerBuilder $container
  */
 return static function(ContainerConfigurator $configurator) use ($container) {
-
     $originalDefinitions = $container->getDefinitions();
 
     // Don't do anything if there is a service definition for the App namespace
@@ -20,10 +19,7 @@ return static function(ContainerConfigurator $configurator) use ($container) {
     }
 
     $config = $configurator->services();
-    $config->defaults()
-        ->autowire(true)
-        ->autoconfigure(true)
-    ;
+    $config->defaults()->autowire(true)->autoconfigure(true);
 
     $servicesDir = $container->getParameter('kernel.project_dir').'/src';
 
@@ -36,7 +32,7 @@ return static function(ContainerConfigurator $configurator) use ($container) {
         // Trigger __destruct handler
         unset($config);
     } catch (\Exception $e) {
-        // ignore failed autoloading
+        // Ignore failed autoloading
     }
 
     $errors = [];
@@ -52,7 +48,7 @@ return static function(ContainerConfigurator $configurator) use ($container) {
         }
     }
 
-    // If all services fail to register, there's probably another namespace in use
+    // If all services fail to register, there is probably another namespace in use
     if ($serviceCount === \count($errors)) {
         foreach ($errors as $id) {
             $container->removeDefinition($id);
