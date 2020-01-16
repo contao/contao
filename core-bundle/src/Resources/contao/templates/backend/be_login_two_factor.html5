@@ -52,12 +52,10 @@
               <label for="verify"><?= $this->authCode ?></label>
               <input type="text" name="verify" id="verify" class="tl_text" value="" autocapitalize="off" autocomplete="off" placeholder="<?= $this->authCode ?>" required>
             </div>
-            <?php if ($this->trustedDevice): ?>
-              <div class="widget">
-                <input type="checkbox" name="trusted" id="trusted" class="tl_checkbox" value="1">
-                <label for="trusted"><?= $this->trustDevice ?></label>
-              </div>
-            <?php endif; ?>
+            <div class="widget">
+              <input type="checkbox" name="trusted" id="trusted" class="tl_checkbox" value="1">
+              <label for="trusted"><?= $this->trans('MSC.twoFactorTrustDevice') ?></label>
+            </div>
             <div class="submit_container cf">
               <button type="submit" name="login" id="login" class="tl_submit"><?= $this->loginButton ?></button>
               <a href="<?= $this->route('contao_backend_logout') ?>" class="footer_preview"><?= $this->cancel ?> ›</a>

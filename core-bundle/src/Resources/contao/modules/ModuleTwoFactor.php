@@ -181,7 +181,9 @@ class ModuleTwoFactor extends BackendModule
 		$user->save();
 
 		// clear all trusted devices
-		$this->clearTrustedDevices($user, $return);
+		$this->clearTrustedDevices($user);
+
+		throw new RedirectResponseException($return);
 	}
 
 	/**
