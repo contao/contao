@@ -230,7 +230,7 @@ class ContaoKernelTest extends ContaoTestCase
         yield [
             __DIR__.'/../Fixtures/HttpKernel/WithAppNamespace',
             'prod',
-            ['autoload.php'],
+            ['services.php'],
         ];
 
         yield [
