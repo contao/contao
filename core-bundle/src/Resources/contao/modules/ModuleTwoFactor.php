@@ -106,7 +106,7 @@ class ModuleTwoFactor extends BackendModule
 		$this->Template->isEnabled = (bool) $user->useTwoFactor;
 		$this->Template->backupCodes = json_decode((string) $user->backupCodes, true) ?? array();
 		$this->Template->trustedDevices = $trustedDeviceRepository->findForUser($user);
-		$this->Template->currentDevice = $request->cookies->get($container->getParameter('scheb_two_factor.trusted_device.cookie_name'));
+		$this->Template->currentDevice = $request->cookies->get('contao_2fa_trusted_device_backend');
 	}
 
 	/**
@@ -208,7 +208,7 @@ class ModuleTwoFactor extends BackendModule
 		$container = System::getContainer();
 
 		/** @var TrustedDeviceManager $trustedDeviceManager */
-		$trustedDeviceManager = $container->get('contao.security.two_factor.trusted_device_manager');
+		$trustedDeviceManager = $container->get('contao.security.two_factor.trusted_device_manager.contao_backend');
 		$trustedDeviceManager->clearTrustedDevices($user);
 	}
 }

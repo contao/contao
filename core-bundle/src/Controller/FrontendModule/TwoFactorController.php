@@ -76,7 +76,7 @@ class TwoFactorController extends AbstractFrontendModuleController
         $services['security.helper'] = Security::class;
         $services['translator'] = TranslatorInterface::class;
         $services['doctrine.orm.entity_manager'] = EntityManagerInterface::class;
-        $services['contao.security.two_factor.trusted_device_manager'] = TrustedDeviceManager::class;
+//        $services['contao.security.two_factor.trusted_device_manager.contao_frontend'] = '@contao.security.two_factor.trusted_device_manager.contao_frontend';
         $services[BackupCodeManager::class] = BackupCodeManager::class;
 
         return $services;
@@ -148,7 +148,7 @@ class TwoFactorController extends AbstractFrontendModuleController
         $template->href = $this->page->getAbsoluteUrl().'?2fa=enable';
         $template->backupCodes = json_decode((string) $user->backupCodes, true) ?? [];
         $template->trustedDevices = $trustedDeviceRepository->findForUser($user);
-        $template->currentDevice = $request->cookies->get($this->getParameter('scheb_two_factor.trusted_device.cookie_name'));
+        $template->currentDevice = $request->cookies->get('contao_2fa_trusted_device_frontend');
 
         return new Response($template->parse());
     }
@@ -219,7 +219,7 @@ class TwoFactorController extends AbstractFrontendModuleController
     private function clearTrustedDevices(FrontendUser $user): void
     {
         /** @var TrustedDeviceManager $trustedDeviceManager */
-        $trustedDeviceManager = $this->get('contao.security.two_factor.trusted_device_manager');
+        $trustedDeviceManager = $this->get('contao.security.two_factor.trusted_device_manager.contao_frontend');
         $trustedDeviceManager->clearTrustedDevices($user);
     }
 }

@@ -247,6 +247,32 @@ services:
         tags:
             - { name: kernel.event_listener }
 
+    contao.listener.two_factor.trusted_cookie_response_listener.frontend:
+        class: Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedCookieResponseListener
+        arguments:
+            - '@contao.security.two_factor.trusted_token_storage.contao_frontend'
+            - 5184000
+            - 'contao_2fa_trusted_device_frontend'
+            - false
+            - 'lax'
+            - '/'
+            - ~ # cookieDomain
+        tags:
+            - { name: kernel.event_listener, event: kernel.response, method: 'onKernelResponse' }
+
+    contao.listener.two_factor.trusted_cookie_response_listener.backend:
+        class: Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedCookieResponseListener
+        arguments:
+            - '@contao.security.two_factor.trusted_token_storage.contao_backend'
+            - 5184000
+            - 'contao_2fa_trusted_device_backend'
+            - false
+            - 'lax'
+            - '/contao'
+            - ~ # cookieDomain
+        tags:
+            - { name: kernel.event_listener, event: kernel.response, method: 'onKernelResponse' }
+
     contao.listener.user_session:
         class: Contao\CoreBundle\EventListener\UserSessionListener
         arguments:

@@ -59,6 +59,7 @@ class ContaoLoginFactory extends AbstractFactory
         ;
 
         $provider = 'contao.security.authentication_provider.'.$id;
+        $trustedDeviceManager = 'contao.security.two_factor.trusted_device_manager.'.$id;
 
         $container
             ->setDefinition($provider, new ChildDefinition('contao.security.authentication_provider'))
@@ -66,6 +67,7 @@ class ContaoLoginFactory extends AbstractFactory
             ->replaceArgument(1, new Reference('security.user_checker.'.$id))
             ->replaceArgument(2, $id)
             ->replaceArgument(5, new Reference($twoFactorProviderId))
+            ->replaceArgument(9, new Reference($trustedDeviceManager))
         ;
 
         return $provider;
@@ -83,7 +85,7 @@ class ContaoLoginFactory extends AbstractFactory
 
     protected function createAuthenticationSuccessHandler($container, $id, $config): string
     {
-        return 'contao.security.authentication_success_handler';
+        return 'contao.security.authentication_success_handler.'.$id;
     }
 
     protected function createAuthenticationFailureHandler($container, $id, $config): string

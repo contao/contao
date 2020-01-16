@@ -16,6 +16,7 @@ use Contao\CoreBundle\Entity\TrustedDevice;
 use Contao\CoreBundle\Repository\TrustedDeviceRepository;
 use Contao\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
 use Scheb\TwoFactorBundle\Model\TrustedDeviceInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManagerInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceTokenStorage;
@@ -54,8 +55,12 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
             return;
         }
 
+        /** @var TrustedDeviceRepository $trustedDeviceRepository */
+        $trustedDeviceRepository = $this->entityManager->getRepository(TrustedDevice::class);
+
         $username = $user->getUsername();
         $version = $this->getTrustedTokenVersion($user);
+        $oldCookieValue = $this->trustedTokenStorage->getCookieValue();
 
         $userAgent = $this->requestStack->getMasterRequest()->headers->get('User-Agent');
         $parser = Parser::create();
@@ -63,7 +68,13 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
 
         $this->trustedTokenStorage->addTrustedToken($username, $firewallName, $version);
 
-        $trustedDevice = new TrustedDevice();
+        // Check if already an earlier version of the trusted device exists
+        try {
+            $trustedDevice = $trustedDeviceRepository->findExisting((int) $user->id, $oldCookieValue) ?? new TrustedDevice();
+        } catch (NonUniqueResultException $exception) {
+            $trustedDevice = new TrustedDevice();
+        }
+
         $trustedDevice
             ->setUserId((int) $user->id)
             ->setUserClass(\get_class($user))

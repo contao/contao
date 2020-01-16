@@ -2673,11 +2673,14 @@ class ContaoCoreExtensionTest extends TestCase
         );
     }
 
-    public function testRegistersTheSecurityAuthenticationSuccessHandler(): void
+    /**
+     * @dataProvider getFirewallNames
+     */
+    public function testRegistersTheSecurityAuthenticationSuccessHandler(string $firewallName): void
     {
-        $this->assertTrue($this->container->has('contao.security.authentication_success_handler'));
+        $this->assertTrue($this->container->has('contao.security.authentication_success_handler.'.$firewallName));
 
-        $definition = $this->container->getDefinition('contao.security.authentication_success_handler');
+        $definition = $this->container->getDefinition('contao.security.authentication_success_handler.'.$firewallName);
 
         $this->assertSame(AuthenticationSuccessHandler::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
@@ -2685,12 +2688,18 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEquals(
             [
                 new Reference('contao.framework'),
-                new Reference('contao.security.two_factor.trusted_device_manager'),
+                new Reference('contao.security.two_factor.trusted_device_manager.'.$firewallName),
                 new Reference('security.firewall.map'),
                 new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
             ],
             $definition->getArguments()
         );
+    }
+
+    public function getFirewallNames(): \Generator
+    {
+        yield ['contao_frontend'];
+        yield ['contao_backend'];
     }
 
     public function testRegistersTheSecurityBackendAccessVoter(): void

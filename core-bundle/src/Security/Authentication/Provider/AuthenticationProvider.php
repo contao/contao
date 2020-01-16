@@ -119,9 +119,13 @@ class AuthenticationProvider extends DaoAuthenticationProvider
         $request = $this->requestStack->getMasterRequest();
         $context = $this->authenticationContextFactory->create($request, $token, $this->providerKey);
         $firewallName = $context->getFirewallName();
+        $user = $context->getUser();
 
         // Skip two-factor authentication on trusted devices
-        if ($this->trustedDeviceManager->isTrustedDevice($context->getUser(), $firewallName)) {
+        if ($this->trustedDeviceManager->isTrustedDevice($user, $firewallName)) {
+            // Renew the token
+            $this->trustedDeviceManager->addTrustedDevice($user, $firewallName);
+
             return $context->getToken();
         }
 

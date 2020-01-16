@@ -87,7 +87,6 @@ class ContaoCoreExtension extends Extension
         $container->setParameter('contao.image.imagine_options', $config['image']['imagine_options']);
         $container->setParameter('contao.image.reject_large_uploads', $config['image']['reject_large_uploads']);
         $container->setParameter('contao.security.two_factor.enforce_backend', $config['security']['two_factor']['enforce_backend']);
-        $container->setParameter('contao.security.two_factor.trusted_device.enabled', $config['security']['two_factor']['trusted_device']['enabled']);
 
         if (isset($config['localconfig'])) {
             $container->setParameter('contao.localconfig', $config['localconfig']);
