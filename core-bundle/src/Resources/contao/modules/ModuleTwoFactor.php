@@ -10,8 +10,8 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Entity\TrustedDevice;
+use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Repository\TrustedDeviceRepository;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
