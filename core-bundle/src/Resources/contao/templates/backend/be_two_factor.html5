@@ -6,6 +6,7 @@
 <div class="two-factor">
   <h2 class="sub_headline"><?= $this->trans('MSC.twoFactorAuthentication') ?></h2>
   <?= $this->messages ?>
+
   <?php if ($this->enable): ?>
     <p><?= $this->trans('MSC.twoFactorScan') ?></p>
     <form action="<?= $this->action ?>" class="tl_two_factor_form" method="post">

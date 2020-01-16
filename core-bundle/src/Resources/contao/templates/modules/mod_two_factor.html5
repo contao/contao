@@ -5,6 +5,7 @@
   <?php if ($this->headline): ?>
     <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
   <?php endif; ?>
+
   <?php if ($this->enable): ?>
     <?php if ($this->message): ?>
       <p class="error"><?= $this->message ?></p>
