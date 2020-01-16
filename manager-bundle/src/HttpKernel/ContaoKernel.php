@@ -189,7 +189,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
      */
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
-        if ($parametersFile = $this->getConfigFile('parameters.yml')) {
+        if ($parametersFile = $this->getConfigFile('parameters')) {
             $loader->load($parametersFile);
         }
 
@@ -206,14 +206,14 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
             $loader->load($parametersFile);
         }
 
-        if ($configFile = $this->getConfigFile('config_'.$this->getEnvironment().'.yml')) {
+        if ($configFile = $this->getConfigFile('config_'.$this->getEnvironment())) {
             $loader->load($configFile);
-        } elseif ($configFile = $this->getConfigFile('config.yml')) {
+        } elseif ($configFile = $this->getConfigFile('config')) {
             $loader->load($configFile);
         }
 
         // Automatically load the services.yml file if it exists
-        if ($servicesFile = $this->getConfigFile('services.yml')) {
+        if ($servicesFile = $this->getConfigFile('services')) {
             $loader->load($servicesFile);
         }
     }
@@ -339,15 +339,17 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     {
         $rootDir = $this->getProjectDir();
 
-        if (file_exists($rootDir.'/config/'.$file)) {
-            return $rootDir.'/config/'.$file;
-        }
+        foreach (['.yaml', '.yml'] as $ext) {
+            if (file_exists($rootDir.'/config/'.$file.$ext)) {
+                return $rootDir.'/config/'.$file.$ext;
+            }
 
-        // Fallback to the legacy config file (see #566)
-        if (file_exists($rootDir.'/app/config/'.$file)) {
-            @trigger_error(sprintf('Storing the "%s" file in the "app/config" folder has been deprecated and will no longer work in Contao 5.0. Move it to the "config" folder instead.', $file), E_USER_DEPRECATED);
+            // Fallback to the legacy config file (see #566)
+            if (file_exists($rootDir.'/app/config/'.$file.$ext)) {
+                @trigger_error(sprintf('Storing the "%s" file in the "app/config" folder has been deprecated and will no longer work in Contao 5.0. Move it to the "config" folder instead.', $file.$ext), E_USER_DEPRECATED);
 
-            return $rootDir.'/app/config/'.$file;
+                return $rootDir.'/app/config/'.$file.$ext;
+            }
         }
 
         return null;
