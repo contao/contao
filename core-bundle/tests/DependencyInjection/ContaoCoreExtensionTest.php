@@ -2667,6 +2667,7 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('scheb_two_factor.authenticated_token_handler'),
                 new Reference('scheb_two_factor.authentication_context_factory'),
                 new Reference('request_stack'),
+                new Reference('contao.security.two_factor.trusted_device_manager'),
             ],
             $definition->getArguments()
         );
@@ -2684,6 +2685,8 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEquals(
             [
                 new Reference('contao.framework'),
+                new Reference('contao.security.two_factor.trusted_device_manager'),
+                new Reference('security.firewall.map'),
                 new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
             ],
             $definition->getArguments()

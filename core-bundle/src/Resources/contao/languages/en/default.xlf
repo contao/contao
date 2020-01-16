@@ -1976,8 +1976,14 @@
       <trans-unit id="MSC.trustedDevices">
         <source>Trusted Devices</source>
       </trans-unit>
+      <trans-unit id="MSC.noTrustedDevices">
+        <source>No trusted devices found.</source>
+      </trans-unit>
       <trans-unit id="MSC.device">
         <source>Device</source>
+      </trans-unit>
+      <trans-unit id="MSC.thisDevice">
+        <source>This device</source>
       </trans-unit>
       <trans-unit id="MSC.browser">
         <source>Browser</source>

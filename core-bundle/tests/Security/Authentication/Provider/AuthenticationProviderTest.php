@@ -23,6 +23,7 @@ use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCode
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextFactoryInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Handler\AuthenticationHandlerInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
@@ -488,6 +489,8 @@ class AuthenticationProviderTest extends TestCase
             ->willReturn($this->createMock(Request::class))
         ;
 
+        $trustedDeviceManager = $this->createMock(TrustedDeviceManagerInterface::class);
+
         return new AuthenticationProvider(
             $userProvider,
             $userChecker,
@@ -497,7 +500,8 @@ class AuthenticationProviderTest extends TestCase
             $this->createMock(AuthenticationProviderInterface::class),
             $this->createMock(AuthenticationHandlerInterface::class),
             $this->createMock(AuthenticationContextFactoryInterface::class),
-            $requestStack
+            $requestStack,
+            $trustedDeviceManager
         );
     }
 
@@ -522,6 +526,8 @@ class AuthenticationProviderTest extends TestCase
             ->willReturn($this->createMock(Request::class))
         ;
 
+        $trustedDeviceManager = $this->createMock(TrustedDeviceManagerInterface::class);
+
         return new AuthenticationProvider(
             $userProvider,
             $userChecker,
@@ -531,7 +537,8 @@ class AuthenticationProviderTest extends TestCase
             $twoFactorAuthenticationProvider,
             $this->createMock(AuthenticationHandlerInterface::class),
             $this->createMock(AuthenticationContextFactoryInterface::class),
-            $requestStack
+            $requestStack,
+            $trustedDeviceManager
         );
     }
 }

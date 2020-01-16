@@ -49,13 +49,6 @@ class ModuleTwoFactor extends BackendModule
 			throw new AccessDeniedException('User is not fully authenticated');
 		}
 
-		/** @var Request $request */
-		$request = $container->get('request_stack')->getMasterRequest();
-
-		/** @var TrustedDeviceRepository $trustedDeviceRepository */
-		$trustedDeviceRepository = $container->get('doctrine.orm.entity_manager')->getRepository(TrustedDevice::class);
-		$ref = $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
-		$return = $container->get('router')->generate('contao_backend', array('do'=>'security', 'ref'=>$ref));
 		$user = BackendUser::getInstance();
 
 		// Inform the user if 2FA is enforced
@@ -101,23 +94,17 @@ class ModuleTwoFactor extends BackendModule
 
 		if (Input::post('FORM_SUBMIT') == 'tl_two_factor_clear_trusted_devices')
 		{
-			$this->clearTrustedDevices($user, $return);
+			$this->clearTrustedDevices($user);
 		}
+
+		/** @var Request $request */
+		$request = $container->get('request_stack')->getMasterRequest();
+
+		/** @var TrustedDeviceRepository $trustedDeviceRepository */
+		$trustedDeviceRepository = $container->get('doctrine.orm.entity_manager')->getRepository(TrustedDevice::class);
 
 		$this->Template->isEnabled = (bool) $user->useTwoFactor;
 		$this->Template->backupCodes = json_decode((string) $user->backupCodes, true) ?? array();
-
-		$this->Template->isEnabled = (bool) $this->User->useTwoFactor;
-		$this->Template->twoFactor = $GLOBALS['TL_LANG']['MSC']['twoFactorAuthentication'];
-		$this->Template->explain = $GLOBALS['TL_LANG']['MSC']['twoFactorExplain'];
-		$this->Template->active = $GLOBALS['TL_LANG']['MSC']['twoFactorActive'];
-		$this->Template->enableButton = $GLOBALS['TL_LANG']['MSC']['enable'];
-		$this->Template->disableButton = $GLOBALS['TL_LANG']['MSC']['disable'];
-		$this->Template->trustedDevicesLabel = $GLOBALS['TL_LANG']['MSC']['trustedDevices'];
-		$this->Template->deviceLabel = $GLOBALS['TL_LANG']['MSC']['device'];
-		$this->Template->browserLabel = $GLOBALS['TL_LANG']['MSC']['browser'];
-		$this->Template->operatingSystemLabel = $GLOBALS['TL_LANG']['MSC']['operatingSystem'];
-		$this->Template->clearTrustedDevicesButton = $GLOBALS['TL_LANG']['MSC']['clearTrustedDevices'];
 		$this->Template->trustedDevices = $trustedDeviceRepository->findForUser($user);
 		$this->Template->currentDevice = $request->cookies->get($container->getParameter('scheb_two_factor.trusted_device.cookie_name'));
 	}
@@ -213,16 +200,13 @@ class ModuleTwoFactor extends BackendModule
 	 * Clears trusted devices with incrementing the trustedVersion number
 	 *
 	 * @param BackendUser $user
-	 * @param $return
 	 */
-	protected function clearTrustedDevices(BackendUser $user, $return)
+	protected function clearTrustedDevices(BackendUser $user)
 	{
 		$container = System::getContainer();
 
 		/** @var TrustedDeviceManager $trustedDeviceManager */
-		$trustedDeviceManager = $container->get(TrustedDeviceManager::class);
+		$trustedDeviceManager = $container->get('contao.security.two_factor.trusted_device_manager');
 		$trustedDeviceManager->clearTrustedDevices($user);
-
-		throw new RedirectResponseException($return);
 	}
 }

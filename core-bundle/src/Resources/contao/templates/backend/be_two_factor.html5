@@ -6,7 +6,6 @@
 <div class="two-factor">
   <h2 class="sub_headline"><?= $this->trans('MSC.twoFactorAuthentication') ?></h2>
   <?= $this->messages ?>
-
   <?php if ($this->enable): ?>
     <p><?= $this->trans('MSC.twoFactorScan') ?></p>
     <form action="<?= $this->action ?>" class="tl_two_factor_form" method="post">
@@ -44,15 +43,15 @@
       </div>
     </form>
     <div class="tl_trusted_devices">
-      <h2 class="sub_headline"><?= $this->trustedDevicesLabel ?></h2>
+      <h2 class="sub_headline"><?= $this->trans('MSC.trustedDevices') ?></h2>
       <div class="tl_listing_container list_view">
         <?php if (count($this->trustedDevices)): ?>
           <table class="tl_listing showColumns">
             <tr>
-              <th class="tl_folder_tlist"><?= $this->deviceLabel ?></th>
-              <th class="tl_folder_tlist"><?= $this->browserLabel ?></th>
-              <th class="tl_folder_tlist"><?= $this->operatingSystemLabel ?></th>
-              <th class="tl_folder_tlist"><?= $this->createdLabel ?></th>
+              <th class="tl_folder_tlist"><?= $this->trans('MSC.device') ?></th>
+              <th class="tl_folder_tlist"><?= $this->trans('MSC.browser') ?></th>
+              <th class="tl_folder_tlist"><?= $this->trans('MSC.operatingSystem') ?></th>
+              <th class="tl_folder_tlist"><?= $this->trans('MSC.createdOn') ?></th>
             </tr>
             <?php foreach ($this->trustedDevices as $index => $trustedDevice): ?>
               <?php /** @var Contao\CoreBundle\Entity\TrustedDevice $trustedDevice */ ?>
@@ -65,7 +64,7 @@
             <?php endforeach; ?>
           </table>
         <?php else: ?>
-          <p class="tl_info">No trusted devices found.</p>
+          <p class="tl_info"><?= $this->trans('MSC.noTrustedDevices') ?></p>
         <?php endif; ?>
       </div>
       <?php if (count($this->trustedDevices)): ?>
@@ -74,7 +73,7 @@
             <input type="hidden" name="FORM_SUBMIT" value="tl_two_factor_clear_trusted_devices">
             <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
             <div class="submit_container cf">
-              <button type="submit" class="tl_submit"><?= $this->clearTrustedDevicesButton ?></button>
+              <button type="submit" class="tl_submit"><?= $this->trans('MSC.clearTrustedDevices') ?></button>
             </div>
           </div>
         </form>

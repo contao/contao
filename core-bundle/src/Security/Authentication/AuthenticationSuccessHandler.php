@@ -21,6 +21,10 @@ use Contao\System;
 use Contao\User;
 use Psr\Log\LoggerInterface;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
+use Scheb\TwoFactorBundle\Security\Http\ParameterBagUtils;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManagerInterface;
+use Symfony\Bundle\SecurityBundle\Security\FirewallConfig;
+use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,12 +40,22 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
     /**
      * @var ContaoFramework
      */
-    protected $framework;
+    private $framework;
+
+    /**
+     * @var TrustedDeviceManagerInterface
+     */
+    private $trustedDeviceManager;
+
+    /**
+     * @var FirewallMap
+     */
+    private $firewallMap;
 
     /**
      * @var LoggerInterface|null
      */
-    protected $logger;
+    private $logger;
 
     /**
      * @var User|UserInterface
@@ -51,9 +65,11 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.authentication_success_handler" service instead
      */
-    public function __construct(ContaoFramework $framework, LoggerInterface $logger = null)
+    public function __construct(ContaoFramework $framework, TrustedDeviceManagerInterface $trustedDeviceManager, FirewallMap $firewallMap, LoggerInterface $logger = null)
     {
         $this->framework = $framework;
+        $this->trustedDeviceManager = $trustedDeviceManager;
+        $this->firewallMap = $firewallMap;
         $this->logger = $logger;
     }
 
@@ -93,8 +109,12 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         $this->user->currentLogin = time();
         $this->user->save();
 
-        // TODO: implement 2FA trusted device here
-        // $this->trustedDeviceManager->addTrustedDevice($user, $this->firewallName);
+        if ($this->hasTrustedDeviceParameter($request)) {
+            /** @var FirewallConfig $firewallConfig */
+            $firewallConfig = $this->firewallMap->getFirewallConfig($request);
+
+            $this->trustedDeviceManager->addTrustedDevice($token->getUser(), $firewallConfig->getName());
+        }
 
         $response = new RedirectResponse($this->determineTargetUrl($request));
 
@@ -151,5 +171,10 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         foreach ($GLOBALS['TL_HOOKS']['postLogin'] as $callback) {
             $system->importStatic($callback[0])->{$callback[1]}($this->user);
         }
+    }
+
+    private function hasTrustedDeviceParameter(Request $request): bool
+    {
+        return (bool) ParameterBagUtils::getRequestParameterValue($request, 'trusted');
     }
 }

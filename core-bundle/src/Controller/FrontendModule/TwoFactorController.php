@@ -76,8 +76,8 @@ class TwoFactorController extends AbstractFrontendModuleController
         $services['security.helper'] = Security::class;
         $services['translator'] = TranslatorInterface::class;
         $services['doctrine.orm.entity_manager'] = EntityManagerInterface::class;
+        $services['contao.security.two_factor.trusted_device_manager'] = TrustedDeviceManager::class;
         $services[BackupCodeManager::class] = BackupCodeManager::class;
-        $services[TrustedDeviceManager::class] = TrustedDeviceManager::class;
 
         return $services;
     }
@@ -138,11 +138,7 @@ class TwoFactorController extends AbstractFrontendModuleController
         }
 
         if ('tl_two_factor_clear_trusted_devices' === $request->request->get('FORM_SUBMIT')) {
-            $response = $this->clearTrustedDevices($user);
-
-            if (null !== $response) {
-                return $response;
-            }
+            $this->clearTrustedDevices($user);
         }
 
         /** @var TrustedDeviceRepository $trustedDeviceRepository */
@@ -151,19 +147,6 @@ class TwoFactorController extends AbstractFrontendModuleController
         $template->isEnabled = (bool) $user->useTwoFactor;
         $template->href = $this->page->getAbsoluteUrl().'?2fa=enable';
         $template->backupCodes = json_decode((string) $user->backupCodes, true) ?? [];
-        $template->isEnabled = (bool) $user->useTwoFactor;
-        $template->href = $this->page->getAbsoluteUrl().'?2fa=enable';
-        $template->twoFactor = $translator->trans('MSC.twoFactorAuthentication', [], 'contao_default');
-        $template->explain = $translator->trans('MSC.twoFactorExplain', [], 'contao_default');
-        $template->active = $translator->trans('MSC.twoFactorActive', [], 'contao_default');
-        $template->enableButton = $translator->trans('MSC.enable', [], 'contao_default');
-        $template->disableButton = $translator->trans('MSC.disable', [], 'contao_default');
-        $template->trustDevice = $translator->trans('MSC.twoFactorTrustDevice', [], 'contao_default');
-        $template->trustedDevicesLabel = $translator->trans('MSC.trustedDevices', [], 'contao_default');
-        $template->deviceLabel = $translator->trans('MSC.device', [], 'contao_default');
-        $template->browserLabel = $translator->trans('MSC.browser', [], 'contao_default');
-        $template->operatingSystemLabel = $translator->trans('MSC.operatingSystem', [], 'contao_default');
-        $template->clearTrustedDevicesButton = $translator->trans('MSC.clearTrustedDevices', [], 'contao_default');
         $template->trustedDevices = $trustedDeviceRepository->findForUser($user);
         $template->currentDevice = $request->cookies->get($this->getParameter('scheb_two_factor.trusted_device.cookie_name'));
 
@@ -233,12 +216,10 @@ class TwoFactorController extends AbstractFrontendModuleController
         $backupCodeManager->generateBackupCodes($user);
     }
 
-    private function clearTrustedDevices(FrontendUser $user): ?Response
+    private function clearTrustedDevices(FrontendUser $user): void
     {
         /** @var TrustedDeviceManager $trustedDeviceManager */
-        $trustedDeviceManager = $this->get(TrustedDeviceManager::class);
+        $trustedDeviceManager = $this->get('contao.security.two_factor.trusted_device_manager');
         $trustedDeviceManager->clearTrustedDevices($user);
-
-        return new RedirectResponse($this->page->getAbsoluteUrl());
     }
 }

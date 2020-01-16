@@ -49,22 +49,20 @@
     <?php endif; ?>
 
   <div class="trusted_devices">
-    <h2><?= $this->trustedDevicesLabel ?></h2>
-    <div>
-      <h2><?= $this->trustedDevicesLabel ?></h2>
+    <h3><?= $this->trans('MSC.trustedDevices') ?></h3>
       <div>
         <?php if (count($this->trustedDevices)): ?>
           <table>
             <tr>
-              <th><?= $this->deviceLabel ?></th>
-              <th><?= $this->browserLabel ?></th>
-              <th><?= $this->operatingSystemLabel ?></th>
-              <th><?= $this->createdLabel ?></th>
+              <th><?= $this->trans('MSC.device') ?></th>
+              <th><?= $this->trans('MSC.browser') ?></th>
+              <th><?= $this->trans('MSC.operatingSystem') ?></th>
+              <th><?= $this->trans('MSC.createdOn') ?></th>
             </tr>
             <?php foreach ($this->trustedDevices as $index => $trustedDevice): ?>
               <?php /** @var Contao\CoreBundle\Entity\TrustedDevice $trustedDevice */ ?>
               <tr class="<?php if ($index % 2): ?>odd<?php else: ?>even<?php endif; ?>">
-                <td><?= $trustedDevice->getDeviceFamily() ?> <?php if ($this->currentDevice === $trustedDevice->getCookieValue()): ?>(This device) <?php endif; ?></td>
+                <td><?= $trustedDevice->getDeviceFamily() ?> <?php if ($this->currentDevice === $trustedDevice->getCookieValue()): ?>(<?= $this->trans('MSC.thisDevice') ?>)<?php endif; ?></td>
                 <td><?= $trustedDevice->getUaFamily() ?></td>
                 <td><?= $trustedDevice->getOsFamily() ?></td>
                 <td><?= $trustedDevice->getCreated()->format(\Config::get('datimFormat')) ?></td>
@@ -81,7 +79,7 @@
           <input type="hidden" name="FORM_SUBMIT" value="tl_two_factor_clear_trusted_devices">
           <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
           <div class="submit_container">
-            <button type="submit" class="submit"><?= $this->clearTrustedDevicesButton ?></button>
+            <button type="submit" class="submit"><?= $this->trans('MSC.clearTrustedDevices') ?></button>
           </div>
         </div>
       </form>
