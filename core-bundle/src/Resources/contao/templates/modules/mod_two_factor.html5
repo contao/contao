@@ -59,8 +59,6 @@
               <th><?= $this->deviceLabel ?></th>
               <th><?= $this->browserLabel ?></th>
               <th><?= $this->operatingSystemLabel ?></th>
-              <th><?= $this->cityLabel ?></th>
-              <th><?= $this->countryLabel ?></th>
               <th><?= $this->createdLabel ?></th>
             </tr>
             <?php foreach ($this->trustedDevices as $index => $trustedDevice): ?>
@@ -69,8 +67,6 @@
                 <td><?= $trustedDevice->getDeviceFamily() ?> <?php if ($this->currentDevice === $trustedDevice->getCookieValue()): ?>(This device) <?php endif; ?></td>
                 <td><?= $trustedDevice->getUaFamily() ?></td>
                 <td><?= $trustedDevice->getOsFamily() ?></td>
-                <td><?php if ($trustedDevice->getCity()): ?><?= $trustedDevice->getCity() ?><?php endif; ?></td>
-                <td><?php if ($trustedDevice->getCountry()): ?><?= $this->countries[$trustedDevice->getCountry()] ?><?php endif; ?></td>
                 <td><?= $trustedDevice->getCreated()->format(\Config::get('datimFormat')) ?></td>
               </tr>
             <?php endforeach; ?>

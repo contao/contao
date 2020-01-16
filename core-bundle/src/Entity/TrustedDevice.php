@@ -92,20 +92,6 @@ class TrustedDevice
      */
     protected $deviceFamily;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $country;
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $city;
-
     public function getId(): int
     {
         return $this->id;
@@ -222,30 +208,6 @@ class TrustedDevice
     public function setDeviceFamily(?string $deviceFamily): self
     {
         $this->deviceFamily = $deviceFamily;
-
-        return $this;
-    }
-
-    public function getCountry(): ?string
-    {
-        return $this->country;
-    }
-
-    public function setCountry(?string $country): self
-    {
-        $this->country = $country;
-
-        return $this;
-    }
-
-    public function getCity(): ?string
-    {
-        return $this->city;
-    }
-
-    public function setCity(?string $city): self
-    {
-        $this->city = $city;
 
         return $this;
     }

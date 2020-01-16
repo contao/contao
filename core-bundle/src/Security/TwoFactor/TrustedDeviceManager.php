@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Security\TwoFactor\TrustedDevice;
+namespace Contao\CoreBundle\Security\TwoFactor;
 
 use Contao\CoreBundle\Entity\TrustedDevice;
 use Contao\CoreBundle\Repository\TrustedDeviceRepository;
@@ -19,10 +19,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Scheb\TwoFactorBundle\Model\TrustedDeviceInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManagerInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceTokenStorage;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 use UAParser\Parser;
 
 class TrustedDeviceManager implements TrustedDeviceManagerInterface
@@ -44,23 +41,11 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
      */
     private $entityManager;
 
-    /**
-     * @var HttpClientInterface
-     */
-    private $httpClient;
-
-    /**
-     * @string
-     */
-    private $requestGeolocation;
-
-    public function __construct(RequestStack $requestStack, TrustedDeviceTokenStorage $trustedTokenStorage, EntityManagerInterface $entityManager, HttpClientInterface $httpClient, bool $requestGeolocation)
+    public function __construct(RequestStack $requestStack, TrustedDeviceTokenStorage $trustedTokenStorage, EntityManagerInterface $entityManager)
     {
         $this->requestStack = $requestStack;
         $this->trustedTokenStorage = $trustedTokenStorage;
         $this->entityManager = $entityManager;
-        $this->httpClient = $httpClient;
-        $this->requestGeolocation = $requestGeolocation;
     }
 
     public function addTrustedDevice($user, string $firewallName): void
@@ -76,18 +61,6 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
         $parser = Parser::create();
         $parsedUserAgent = $parser->parse($userAgent);
 
-        $geolocation = $this->getGeoLocation();
-        $country = null;
-        $city = null;
-
-        if (\array_key_exists('country', $geolocation)) {
-            $country = strtolower($geolocation['country']);
-        }
-
-        if (\array_key_exists('city', $geolocation)) {
-            $city = $geolocation['city'];
-        }
-
         $this->trustedTokenStorage->addTrustedToken($username, $firewallName, $version);
 
         $trustedDevice = new TrustedDevice();
@@ -101,8 +74,6 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
             ->setOsFamily($parsedUserAgent->os->family)
             ->setDeviceFamily($parsedUserAgent->device->family)
             ->setVersion($version)
-            ->setCountry($country)
-            ->setCity($city)
         ;
 
         $this->entityManager->persist($trustedDevice);
@@ -144,34 +115,5 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
         }
 
         return self::DEFAULT_TOKEN_VERSION;
-    }
-
-    private function getGeoLocation(): array
-    {
-        $geolocation = [];
-
-        if (false === $this->requestGeolocation) {
-            return $geolocation;
-        }
-
-        $request = $this->requestStack->getCurrentRequest();
-
-        if (!$request instanceof Request) {
-            return $geolocation;
-        }
-
-        try {
-            $response = $this->httpClient->request('GET', sprintf('https://ipinfo.io/%s/json', $request->getClientIp()));
-
-            if (200 === $response->getStatusCode()) {
-                $geolocation = json_decode($response->getContent(), true);
-            }
-        } catch (ExceptionInterface $exception) {
-            return $geolocation;
-        } catch (\Exception $exception) {
-            return $geolocation;
-        }
-
-        return $geolocation;
     }
 }

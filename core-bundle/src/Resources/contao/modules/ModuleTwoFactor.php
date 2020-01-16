@@ -16,7 +16,7 @@ use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Repository\TrustedDeviceRepository;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
-use Contao\CoreBundle\Security\TwoFactor\TrustedDevice\TrustedDeviceManager;
+use Contao\CoreBundle\Security\TwoFactor\TrustedDeviceManager;
 use ParagonIE\ConstantTime\Base32;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
@@ -117,12 +117,8 @@ class ModuleTwoFactor extends BackendModule
 		$this->Template->deviceLabel = $GLOBALS['TL_LANG']['MSC']['device'];
 		$this->Template->browserLabel = $GLOBALS['TL_LANG']['MSC']['browser'];
 		$this->Template->operatingSystemLabel = $GLOBALS['TL_LANG']['MSC']['operatingSystem'];
-		$this->Template->cityLabel = $GLOBALS['TL_LANG']['MSC']['city'];
-		$this->Template->countryLabel = $GLOBALS['TL_LANG']['MSC']['country'];
-		$this->Template->createdLabel = $GLOBALS['TL_LANG']['MSC']['createdOn'];
 		$this->Template->clearTrustedDevicesButton = $GLOBALS['TL_LANG']['MSC']['clearTrustedDevices'];
 		$this->Template->trustedDevices = $trustedDeviceRepository->findForUser($user);
-		$this->Template->countries = System::getCountries();
 		$this->Template->currentDevice = $request->cookies->get($container->getParameter('scheb_two_factor.trusted_device.cookie_name'));
 	}
 
@@ -224,7 +220,7 @@ class ModuleTwoFactor extends BackendModule
 		$container = System::getContainer();
 
 		/** @var TrustedDeviceManager $trustedDeviceManager */
-		$trustedDeviceManager = $container->get('contao.security.two_factor.trusted_device_manager');
+		$trustedDeviceManager = $container->get(TrustedDeviceManager::class);
 		$trustedDeviceManager->clearTrustedDevices($user);
 
 		throw new RedirectResponseException($return);
