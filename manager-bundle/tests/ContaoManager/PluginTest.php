@@ -85,7 +85,7 @@ class PluginTest extends ContaoTestCase
         /** @var BundleConfig[] $bundles */
         $bundles = $plugin->getBundles(new DelegatingParser());
 
-        $this->assertCount(15, $bundles);
+        $this->assertCount(14, $bundles);
 
         $this->assertSame(FrameworkBundle::class, $bundles[0]->getName());
         $this->assertSame([], $bundles[0]->getReplace());
@@ -131,23 +131,19 @@ class PluginTest extends ContaoTestCase
         $this->assertSame([], $bundles[10]->getReplace());
         $this->assertSame([], $bundles[10]->getLoadAfter());
 
-        $this->assertSame(HttplugBundle::class, $bundles[11]->getName());
+        $this->assertSame(ContaoManagerBundle::class, $bundles[11]->getName());
         $this->assertSame([], $bundles[11]->getReplace());
-        $this->assertSame([], $bundles[11]->getLoadAfter());
+        $this->assertSame([ContaoCoreBundle::class], $bundles[11]->getLoadAfter());
 
-        $this->assertSame(ContaoManagerBundle::class, $bundles[12]->getName());
+        $this->assertSame(DebugBundle::class, $bundles[12]->getName());
         $this->assertSame([], $bundles[12]->getReplace());
-        $this->assertSame([ContaoCoreBundle::class], $bundles[12]->getLoadAfter());
+        $this->assertSame([], $bundles[12]->getLoadAfter());
+        $this->assertFalse($bundles[12]->loadInProduction());
 
-        $this->assertSame(DebugBundle::class, $bundles[13]->getName());
+        $this->assertSame(WebProfilerBundle::class, $bundles[13]->getName());
         $this->assertSame([], $bundles[13]->getReplace());
         $this->assertSame([], $bundles[13]->getLoadAfter());
         $this->assertFalse($bundles[13]->loadInProduction());
-
-        $this->assertSame(WebProfilerBundle::class, $bundles[14]->getName());
-        $this->assertSame([], $bundles[14]->getReplace());
-        $this->assertSame([], $bundles[14]->getLoadAfter());
-        $this->assertFalse($bundles[14]->loadInProduction());
     }
 
     public function testRegistersModuleBundles(): void
@@ -172,7 +168,7 @@ class PluginTest extends ContaoTestCase
         $plugin = new Plugin();
         $configs = $plugin->getBundles($parser);
 
-        $this->assertCount(17, $configs);
+        $this->assertCount(16, $configs);
         $this->assertContains('foo1', $configs);
         $this->assertContains('foo2', $configs);
         $this->assertNotContains('foo3', $configs);
