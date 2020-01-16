@@ -1733,21 +1733,6 @@ class ContaoCoreExtensionTest extends TestCase
             ],
             $definition->getArguments()
         );
-
-        if (method_exists($definition->getClass(), 'reset')) {
-            $this->assertSame(
-                [
-                    'kernel.reset' => [
-                        [
-                            'method' => 'reset',
-                        ],
-                    ],
-                ],
-                $definition->getTags()
-            );
-        } else {
-            $this->assertSame([], $definition->getTags());
-        }
     }
 
     public function testRegistersTheImageImagineService(): void
