@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\DependencyInjection\Security;
 use Contao\CoreBundle\DependencyInjection\Security\ContaoLoginFactory;
 use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
 use Contao\CoreBundle\Tests\TestCase;
+use Scheb\TwoFactorBundle\DependencyInjection\Factory\Security\TwoFactorFactory;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
@@ -38,8 +39,8 @@ class ContaoLoginFactoryTest extends TestCase
             null
         );
 
-        $twoFactorProviderId = 'security.authentication.provider.two_factor.contao_frontend';
-        $twoFactorListenerId = 'security.authentication.provider_preparation_listener.two_factor.contao_frontend';
+        $twoFactorProviderId = TwoFactorFactory::PROVIDER_ID_PREFIX.'contao_frontend';
+        $twoFactorListenerId = TwoFactorFactory::PROVIDER_PREPARATION_LISTENER_ID_PREFIX.'contao_frontend';
 
         $this->assertSame('contao.security.authentication_provider.contao_frontend', $authProviderId);
         $this->assertSame('contao.security.authentication_listener.contao_frontend', $listenerId);
