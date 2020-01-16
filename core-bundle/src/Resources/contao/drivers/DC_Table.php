@@ -1902,7 +1902,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				if (isset($legends[$k]))
 				{
 					list($key, $cls) = explode(':', $legends[$k]);
-					$legend = "\n" . '<legend><span onclick="AjaxRequest.toggleFieldset(this,\'' . $key . '\',\'' . $this->strTable . '\')">' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '</span></legend>';
+					$legend = "\n" . '<legend onclick="AjaxRequest.toggleFieldset(this,\'' . $key . '\',\'' . $this->strTable . '\')">' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '</legend>';
 				}
 
 				if (isset($fs[$this->strTable][$key]))
