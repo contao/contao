@@ -1929,7 +1929,7 @@ label.error,legend.error,.tl_checkbox_container.error legend {
 /* Fieldsets */
 fieldset.tl_tbox,fieldset.tl_box {
 	padding-top:9px;
-	border-top:26px solid #f6f6f6;
+	border-top:none;
 	border-left:0;
 	border-right:0;
 }
@@ -1937,7 +1937,6 @@ fieldset.tl_tbox.nolegend,fieldset.tl_box.nolegend {
 	border-top:0;
 }
 fieldset.tl_tbox > legend,fieldset.tl_box > legend {
-	width:100%;
 	box-sizing:border-box;
 	color:#6a6a6c;
 	padding:14px 0 0 28px;
