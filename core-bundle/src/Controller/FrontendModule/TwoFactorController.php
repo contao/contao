@@ -76,7 +76,6 @@ class TwoFactorController extends AbstractFrontendModuleController
         $services['security.helper'] = Security::class;
         $services['translator'] = TranslatorInterface::class;
         $services['doctrine.orm.entity_manager'] = EntityManagerInterface::class;
-//        $services['contao.security.two_factor.trusted_device_manager.contao_frontend'] = '@contao.security.two_factor.trusted_device_manager.contao_frontend';
         $services[BackupCodeManager::class] = BackupCodeManager::class;
 
         return $services;
