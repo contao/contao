@@ -24,7 +24,7 @@
         <source>Themes</source>
       </trans-unit>
       <trans-unit id="MOD.themes.1">
-        <source>Manage front end modules, style sheets, page layouts and templates</source>
+        <source>Manage themes, front end modules, page layouts or image sizes</source>
       </trans-unit>
       <trans-unit id="MOD.page.0">
         <source>Site structure</source>
@@ -36,7 +36,7 @@
         <source>Templates</source>
       </trans-unit>
       <trans-unit id="MOD.tpl_editor.1">
-        <source>Edit templates in the back end</source>
+        <source>Add or edit custom templates</source>
       </trans-unit>
       <trans-unit id="MOD.accounts">
         <source>Account manager</source>
@@ -45,31 +45,31 @@
         <source>Members</source>
       </trans-unit>
       <trans-unit id="MOD.member.1">
-        <source>Manage member accounts (front end users)</source>
+        <source>Manage member accounts (front end)</source>
       </trans-unit>
       <trans-unit id="MOD.mgroup.0">
         <source>Member groups</source>
       </trans-unit>
       <trans-unit id="MOD.mgroup.1">
-        <source>Manage member groups (front end user groups)</source>
+        <source>Manage member groups (front end)</source>
       </trans-unit>
       <trans-unit id="MOD.user.0">
         <source>Users</source>
       </trans-unit>
       <trans-unit id="MOD.user.1">
-        <source>Manage user accounts (back end users)</source>
+        <source>Manage user accounts (back end)</source>
       </trans-unit>
       <trans-unit id="MOD.group.0">
         <source>User groups</source>
       </trans-unit>
       <trans-unit id="MOD.group.1">
-        <source>Manage user groups (back end user groups)</source>
+        <source>Manage user groups (back end)</source>
       </trans-unit>
       <trans-unit id="MOD.opt_in.0">
         <source>Double opt-in</source>
       </trans-unit>
       <trans-unit id="MOD.opt_in.1">
-        <source>Manage the double opt-in tokens</source>
+        <source>Manage double opt-in tokens</source>
       </trans-unit>
       <trans-unit id="MOD.system">
         <source>System</source>
@@ -78,25 +78,25 @@
         <source>File manager</source>
       </trans-unit>
       <trans-unit id="MOD.files.1">
-        <source>Manage files and folders or upload new files to the server</source>
+        <source>Manage files and folders</source>
       </trans-unit>
       <trans-unit id="MOD.log.0">
         <source>System log</source>
       </trans-unit>
       <trans-unit id="MOD.log.1">
-        <source>Browse the system log and analyze the activity on the website</source>
+        <source>Browse the system log</source>
       </trans-unit>
       <trans-unit id="MOD.settings.0">
         <source>Settings</source>
       </trans-unit>
       <trans-unit id="MOD.settings.1">
-        <source>Check and optimize the Contao configuration</source>
+        <source>Adjust the Contao configuration</source>
       </trans-unit>
       <trans-unit id="MOD.maintenance.0">
         <source>Maintenance</source>
       </trans-unit>
       <trans-unit id="MOD.maintenance.1">
-        <source>Maintain or update Contao</source>
+        <source>Crawl the website or purge generated data</source>
       </trans-unit>
       <trans-unit id="MOD.security.0">
         <source>Security</source>
