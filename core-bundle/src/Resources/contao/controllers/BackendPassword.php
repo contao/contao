@@ -131,7 +131,6 @@ class BackendPassword extends Backend
 		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pw_new']);
 		$objTemplate->host = Backend::getDecodedHostname();
 		$objTemplate->charset = Config::get('characterSet');
-		$objTemplate->action = ampersand(Environment::get('request'));
 		$objTemplate->headline = $GLOBALS['TL_LANG']['MSC']['pw_new'];
 		$objTemplate->explain = $GLOBALS['TL_LANG']['MSC']['pw_change'];
 		$objTemplate->submitButton = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['continue']);

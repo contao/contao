@@ -337,7 +337,6 @@ class ModuleListing extends Module
 		$this->Template->total = $objTotal->count;
 
 		// Template variables
-		$this->Template->action = Environment::get('indexFreeRequest');
 		$this->Template->details = (bool) $this->list_info;
 		$this->Template->search_label = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['search']);
 		$this->Template->per_page_label = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['list_perPage']);

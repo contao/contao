@@ -2,7 +2,7 @@
 
 <?php $this->block('content'); ?>
 
-  <form<?php if ($this->request): ?> action="<?= $this->request ?>"<?php endif; ?> method="post">
+  <form method="post">
     <div class="formbody">
       <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId ?>">
       <input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}">

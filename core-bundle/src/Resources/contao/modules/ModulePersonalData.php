@@ -388,7 +388,6 @@ class ModulePersonalData extends Module
 		$this->Template->categories = array_filter($arrGroups);
 		$this->Template->formId = $strFormId;
 		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['saveData']);
-		$this->Template->action = Environment::get('indexFreeRequest');
 		$this->Template->enctype = $hasUpload ? 'multipart/form-data' : 'application/x-www-form-urlencoded';
 		$this->Template->rowLast = 'row_' . $row . ((($row % 2) == 0) ? ' even' : ' odd');
 	}
