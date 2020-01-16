@@ -20,9 +20,11 @@ return static function(ContainerConfigurator $configurator) use ($container) {
     }
 
     $config = $configurator->services();
+    $config->defaults()
+        ->autowire(true)
+        ->autoconfigure(true)
+    ;
 
-    $config->defaults()->autowire(true);
-    $config->defaults()->autoconfigure(true);
     $servicesDir = $container->getParameter('kernel.project_dir').'/src';
 
     try {
