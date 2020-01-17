@@ -13,85 +13,79 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\DependencyInjection\Security;
 
 use Contao\CoreBundle\DependencyInjection\Security\ContaoLoginFactory;
+use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
 use Contao\CoreBundle\Tests\TestCase;
+use Scheb\TwoFactorBundle\DependencyInjection\Factory\Security\TwoFactorFactory;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Reference;
 
 class ContaoLoginFactoryTest extends TestCase
 {
     public function testReturnsTheCorrectKey(): void
     {
-        $factory = new ContaoLoginFactory();
-
-        $this->assertSame('contao-login', $factory->getKey());
+        $this->assertSame('contao-login', (new ContaoLoginFactory())->getKey());
     }
 
     public function testConfiguresTheContainerServices(): void
     {
-        $config = [
-            'login_path' => 'contao_frontend_login',
-            'lock_period' => 300,
-            'login_attempts' => 3,
-            'remember_me' => true,
-            'use_forward' => false,
-        ];
-
         $container = new ContainerBuilder();
-
         $factory = new ContaoLoginFactory();
-        $factory->create($container, 'contao_frontend', $config, 'contao.security.frontend_user_provider', null);
 
-        $this->assertTrue($container->hasDefinition('contao.security.authentication_provider.contao_frontend'));
+        [$authProviderId, $listenerId, $defaultEntryPoint] = $factory->create(
+            $container,
+            'contao_frontend',
+            ['remember_me' => true],
+            'contao.security.frontend_user_provider',
+            null
+        );
 
-        $arguments = $container
-            ->getDefinition('contao.security.authentication_provider.contao_frontend')
-            ->getArguments()
-        ;
+        $twoFactorProviderId = TwoFactorFactory::PROVIDER_ID_PREFIX.'contao_frontend';
+        $twoFactorListenerId = TwoFactorFactory::PROVIDER_PREPARATION_LISTENER_ID_PREFIX.'contao_frontend';
+
+        $this->assertSame('contao.security.authentication_provider.contao_frontend', $authProviderId);
+        $this->assertSame('contao.security.authentication_listener.contao_frontend', $listenerId);
+        $this->assertSame('contao.security.entry_point', $defaultEntryPoint);
+
+        $this->assertTrue($container->hasDefinition($authProviderId));
+
+        $arguments = $container->getDefinition($authProviderId)->getArguments();
 
         $this->assertIsArray($arguments);
         $this->assertCount(4, $arguments);
-        $this->assertSame('contao.security.frontend_user_provider', (string) $arguments['index_0']);
-        $this->assertSame('security.user_checker.contao_frontend', (string) $arguments['index_1']);
+        $this->assertEquals(new Reference('contao.security.frontend_user_provider'), $arguments['index_0']);
+        $this->assertEquals(new Reference('security.user_checker.contao_frontend'), $arguments['index_1']);
         $this->assertSame('contao_frontend', $arguments['index_2']);
+        $this->assertEquals(new Reference($twoFactorProviderId), $arguments['index_5']);
 
-        $this->assertSame(
-            [
-                'lock_period' => 300,
-                'login_attempts' => 3,
-            ],
-            $arguments[0]
-        );
+        $this->assertTrue($container->hasDefinition($twoFactorProviderId));
 
-        $this->assertTrue($container->hasDefinition('security.authentication.listener.form.contao_frontend'));
-
-        $arguments = $container
-            ->getDefinition('security.authentication.listener.form.contao_frontend')
-            ->getArguments()
-        ;
+        $arguments = $container->getDefinition($twoFactorProviderId)->getArguments();
 
         $this->assertIsArray($arguments);
-        $this->assertCount(5, $arguments);
+        $this->assertCount(3, $arguments);
+        $this->assertEquals('contao_frontend', $arguments['index_0']);
+        $this->assertEquals([], $arguments['index_1']);
+        $this->assertEquals(new Reference(BackupCodeManager::class), $arguments['index_3']);
 
-        $this->assertSame('contao_frontend', $arguments['index_4']);
+        $this->assertTrue($container->hasDefinition($twoFactorListenerId));
 
-        $this->assertSame(
-            'security.authentication.success_handler.contao_frontend.contao_login',
-            (string) $arguments['index_5']
-        );
+        $arguments = $container->getDefinition($twoFactorListenerId)->getArguments();
 
-        $this->assertSame(
-            'security.authentication.failure_handler.contao_frontend.contao_login',
-            (string) $arguments['index_6']
-        );
+        $this->assertIsArray($arguments);
+        $this->assertCount(3, $arguments);
+        $this->assertEquals('contao_frontend', $arguments['index_3']);
+        $this->assertTrue($arguments['index_4']);
+        $this->assertFalse($arguments['index_5']);
 
         $this->assertSame(
             [
-                'lock_period' => 300,
-                'login_attempts' => 3,
-                'use_forward' => false,
-                'username_parameter' => 'username',
-                'password_parameter' => 'password',
+                'kernel.event_listener' => [
+                    ['event' => 'security.authentication.success', 'method' => 'onLogin', 'priority' => PHP_INT_MAX],
+                    ['event' => 'scheb_two_factor.authentication.form', 'method' => 'onTwoFactorForm'],
+                    ['event' => 'kernel.finish_request', 'method' => 'onKernelFinishRequest'],
+                ],
             ],
-            $arguments['index_7']
+            $container->getDefinition($twoFactorListenerId)->getTags()
         );
     }
 }

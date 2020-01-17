@@ -10,14 +10,17 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Search\Escargot\Subscriber;
+namespace Contao\CoreBundle\Crawl\Escargot\Subscriber;
 
 use Contao\CoreBundle\Search\Document;
 use Contao\CoreBundle\Search\Indexer\IndexerException;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LogLevel;
 use Symfony\Contracts\HttpClient\ChunkInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Terminal42\Escargot\CrawlUri;
 use Terminal42\Escargot\EscargotAwareInterface;
 use Terminal42\Escargot\EscargotAwareTrait;
@@ -25,10 +28,13 @@ use Terminal42\Escargot\Subscriber\HtmlCrawlerSubscriber;
 use Terminal42\Escargot\Subscriber\RobotsSubscriber;
 use Terminal42\Escargot\Subscriber\SubscriberInterface;
 use Terminal42\Escargot\Subscriber\Util;
+use Terminal42\Escargot\SubscriberLoggerTrait;
 
-class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwareInterface
+class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwareInterface, LoggerAwareInterface
 {
     use EscargotAwareTrait;
+    use LoggerAwareTrait;
+    use SubscriberLoggerTrait;
 
     /**
      * @var IndexerInterface
@@ -36,13 +42,19 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
     private $indexer;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * @var array
      */
     private $stats = ['ok' => 0, 'warning' => 0, 'error' => 0];
 
-    public function __construct(IndexerInterface $indexer)
+    public function __construct(IndexerInterface $indexer, TranslatorInterface $translator)
     {
         $this->indexer = $indexer;
+        $this->translator = $translator;
     }
 
     /**
@@ -61,10 +73,10 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
             && ($originalCrawlUri = $this->escargot->getCrawlUri($crawlUri->getFoundOn()))
             && $originalCrawlUri->hasTag(RobotsSubscriber::TAG_NOFOLLOW)
         ) {
-            $this->escargot->log(
+            $this->logWithCrawlUri(
+                $crawlUri,
                 LogLevel::DEBUG,
-                $crawlUri->createLogMessage('Do not request because when the crawl URI was found, the robots information disallowed following this URI.'),
-                ['source' => \get_class($this)]
+                'Do not request because when the crawl URI was found, the robots information disallowed following this URI.'
             );
 
             return SubscriberInterface::DECISION_NEGATIVE;
@@ -72,10 +84,10 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
 
         // Skip rel="nofollow" links
         if ($crawlUri->hasTag(HtmlCrawlerSubscriber::TAG_REL_NOFOLLOW)) {
-            $this->escargot->log(
+            $this->logWithCrawlUri(
+                $crawlUri,
                 LogLevel::DEBUG,
-                $crawlUri->createLogMessage('Do not request because when the crawl URI was found, the "rel" attribute contained "nofollow".'),
-                ['source' => \get_class($this)]
+                'Do not request because when the crawl URI was found, the "rel" attribute contained "nofollow".'
             );
 
             return SubscriberInterface::DECISION_NEGATIVE;
@@ -83,10 +95,10 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
 
         // Skip the links that have the "type" attribute set and it's not text/html
         if ($crawlUri->hasTag(HtmlCrawlerSubscriber::TAG_NO_TEXT_HTML_TYPE)) {
-            $this->escargot->log(
+            $this->logWithCrawlUri(
+                $crawlUri,
                 LogLevel::DEBUG,
-                $crawlUri->createLogMessage('Do not request because when the crawl URI was found, the "type" attribute was present and did not contain "text/html".'),
-                ['source' => \get_class($this)]
+                'Do not request because when the crawl URI was found, the "type" attribute was present and did not contain "text/html".'
             );
 
             return SubscriberInterface::DECISION_NEGATIVE;
@@ -94,10 +106,10 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
 
         // Skip links that do not belong to our base URI collection
         if (!$this->escargot->getBaseUris()->containsHost($crawlUri->getUri()->getHost())) {
-            $this->escargot->log(
+            $this->logWithCrawlUri(
+                $crawlUri,
                 LogLevel::DEBUG,
-                $crawlUri->createLogMessage('Did not index because it was not part of the base URI collection.'),
-                ['source' => \get_class($this)]
+                'Did not index because it was not part of the base URI collection.'
             );
 
             return SubscriberInterface::DECISION_NEGATIVE;
@@ -113,13 +125,13 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
 
         // We only care about successful responses
         if ($statusCode < 200 || $statusCode >= 300) {
-            $this->escargot->log(
+            $this->logWithCrawlUri(
+                $crawlUri,
                 LogLevel::DEBUG,
-                $crawlUri->createLogMessage(sprintf(
+                sprintf(
                     'Did not index because according to the HTTP status code the response was not successful (%s).',
                     $response->getStatusCode()
-                )),
-                ['source' => \get_class($this)]
+                )
             );
 
             return SubscriberInterface::DECISION_NEGATIVE;
@@ -127,12 +139,10 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
 
         // No HTML, no index
         if (!Util::isOfContentType($response, 'text/html')) {
-            $this->escargot->log(
+            $this->logWithCrawlUri(
+                $crawlUri,
                 LogLevel::DEBUG,
-                $crawlUri->createLogMessage(
-                    'Did not index because the response did not contain a "text/html" Content-Type header.'
-                ),
-                ['source' => \get_class($this)]
+                'Did not index because the response did not contain a "text/html" Content-Type header.'
             );
 
             return SubscriberInterface::DECISION_NEGATIVE;
@@ -155,10 +165,10 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
             $this->indexer->index($document);
             ++$this->stats['ok'];
 
-            $this->escargot->log(
+            $this->logWithCrawlUri(
+                $crawlUri,
                 LogLevel::INFO,
-                sprintf('Sent %s to the search indexer. Was indexed successfully.', (string) $crawlUri->getUri()),
-                ['source' => \get_class($this)]
+                'Forwarded to the search indexer. Was indexed successfully.'
             );
         } catch (IndexerException $e) {
             if ($e->isOnlyWarning()) {
@@ -167,10 +177,10 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
                 ++$this->stats['error'];
             }
 
-            $this->escargot->log(
+            $this->logWithCrawlUri(
+                $crawlUri,
                 LogLevel::DEBUG,
-                sprintf('Sent %s to the search indexer. Did not index because of the following reason: %s', (string) $crawlUri->getUri(), $e->getMessage()),
-                ['source' => \get_class($this)]
+                sprintf('Forwarded to the search indexer. Did not index because of the following reason: %s', $e->getMessage())
             );
         }
     }
@@ -187,11 +197,11 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
 
         $result = new SubscriberResult(
             0 === $stats['error'],
-            sprintf('Indexed %d URI(s) successfully. %d failed.', $stats['ok'], $stats['error'])
+            $this->translator->trans('CRAWL.searchIndex.summary', [$stats['ok'], $stats['error']], 'contao_default')
         );
 
         if (0 !== $stats['warning']) {
-            $result->setWarning(sprintf('%d URI(s) were skipped (if you are missing one, checkout the debug logs).', $stats['warning']));
+            $result->setWarning($this->translator->trans('CRAWL.searchIndex.warning', [$stats['warning']], 'contao_default'));
         }
 
         $result->addInfo('stats', $stats);

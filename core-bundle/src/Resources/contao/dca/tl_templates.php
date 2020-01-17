@@ -332,7 +332,7 @@ class tl_templates extends Contao\Backend
 <a href="' . $this->getReferer(true) . '" class="header_back" title="' . Contao\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>
 
-<form action="' . ampersand(Contao\Environment::get('request')) . '" id="tl_create_template" class="tl_form tl_edit_form" method="post">
+<form id="tl_create_template" class="tl_form tl_edit_form" method="post">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_create_template">
 <input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">

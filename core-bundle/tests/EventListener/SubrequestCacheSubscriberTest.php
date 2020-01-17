@@ -1,0 +1,156 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
+namespace Contao\CoreBundle\Tests\EventListener;
+
+use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
+use Contao\CoreBundle\Tests\TestCase;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\HttpKernel\KernelInterface;
+
+class SubrequestCacheSubscriberTest extends TestCase
+{
+    public function testSubscribedEvents(): void
+    {
+        $subscriber = new SubrequestCacheSubscriber();
+
+        $this->assertSame(
+            [
+                KernelEvents::REQUEST => ['onKernelRequest', 255],
+                KernelEvents::RESPONSE => ['onKernelResponse', -255],
+            ],
+            $subscriber::getSubscribedEvents()
+        );
+    }
+
+    public function testMergesCacheControlHeader(): void
+    {
+        $subscriber = new SubrequestCacheSubscriber();
+
+        $this->onKernelRequest($subscriber, KernelInterface::MASTER_REQUEST);
+
+        $subResponse = new Response();
+        $subResponse->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, true);
+        $subResponse->setPublic();
+        $subResponse->setMaxAge(30);
+
+        $this->onKernelResponse($subscriber, $subResponse, KernelInterface::SUB_REQUEST);
+
+        $mainResponse = new Response();
+        $mainResponse->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, true);
+        $mainResponse->setPublic();
+        $mainResponse->setMaxAge(60);
+
+        $this->onKernelResponse($subscriber, $mainResponse, KernelInterface::MASTER_REQUEST);
+
+        $this->assertSame(30, $mainResponse->getMaxAge());
+        $this->assertSame('max-age=30, public', $mainResponse->headers->get('Cache-Control'));
+    }
+
+    public function testMakeMasterResponsePrivateIfSubrequestIsPrivate(): void
+    {
+        $subscriber = new SubrequestCacheSubscriber();
+
+        $this->onKernelRequest($subscriber, KernelInterface::MASTER_REQUEST);
+
+        $subResponse = new Response();
+        $subResponse->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, true);
+        $subResponse->setPrivate();
+
+        $this->onKernelResponse($subscriber, $subResponse, KernelInterface::SUB_REQUEST);
+
+        $mainResponse = new Response();
+        $mainResponse->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, true);
+        $subResponse->setPublic();
+        $mainResponse->setMaxAge(60);
+
+        $this->onKernelResponse($subscriber, $mainResponse, KernelInterface::MASTER_REQUEST);
+
+        $this->assertSame('private', $mainResponse->headers->get('Cache-Control'));
+    }
+
+    public function testIgnoresSubrequestWithoutMergeHeader(): void
+    {
+        $subscriber = new SubrequestCacheSubscriber();
+
+        $this->onKernelRequest($subscriber, KernelInterface::MASTER_REQUEST);
+
+        $subResponse = new Response();
+        $subResponse->setPrivate();
+
+        $this->onKernelResponse($subscriber, $subResponse, KernelInterface::SUB_REQUEST);
+
+        $mainResponse = new Response();
+        $mainResponse->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, true);
+        $mainResponse->setPublic();
+        $mainResponse->setMaxAge(60);
+
+        $this->onKernelResponse($subscriber, $mainResponse, KernelInterface::MASTER_REQUEST);
+
+        $this->assertSame('max-age=60, public', $mainResponse->headers->get('Cache-Control'));
+    }
+
+    public function testIgnoresSubrequestWithoutCacheControlHeader(): void
+    {
+        $subscriber = new SubrequestCacheSubscriber();
+
+        $this->onKernelRequest($subscriber, KernelInterface::MASTER_REQUEST);
+
+        $subResponse = new Response();
+        $subResponse->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, true);
+        $subResponse->headers->remove('Cache-Control');
+
+        $this->onKernelResponse($subscriber, $subResponse, KernelInterface::SUB_REQUEST);
+
+        $mainResponse = new Response();
+        $mainResponse->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, true);
+        $mainResponse->setPublic();
+        $mainResponse->setMaxAge(60);
+
+        $this->onKernelResponse($subscriber, $mainResponse, KernelInterface::MASTER_REQUEST);
+
+        $this->assertSame('max-age=60, public', $mainResponse->headers->get('Cache-Control'));
+    }
+
+    private function onKernelRequest(SubrequestCacheSubscriber $subscriber, int $requestType): void
+    {
+        $event = $this->createMock(RequestEvent::class);
+        $event
+            ->expects($this->once())
+            ->method('getRequestType')
+            ->willReturn($requestType)
+        ;
+
+        $subscriber->onKernelRequest($event);
+    }
+
+    private function onKernelResponse(SubrequestCacheSubscriber $subscriber, Response $response, int $requestType): void
+    {
+        $event = $this->createMock(ResponseEvent::class);
+        $event
+            ->expects($this->atLeastOnce())
+            ->method('getResponse')
+            ->willReturn($response)
+        ;
+
+        $event
+            ->expects($this->once())
+            ->method('getRequestType')
+            ->willReturn($requestType)
+        ;
+
+        $subscriber->onKernelResponse($event);
+    }
+}

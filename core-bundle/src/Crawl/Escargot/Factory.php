@@ -10,10 +10,10 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Search\Escargot;
+namespace Contao\CoreBundle\Crawl\Escargot;
 
+use Contao\CoreBundle\Crawl\Escargot\Subscriber\EscargotSubscriberInterface;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Search\Escargot\Subscriber\EscargotSubscriberInterface;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use Nyholm\Psr7\Uri;
@@ -111,7 +111,7 @@ class Factory
                 static function (): string {
                     return Uuid::uuid4()->toString();
                 },
-                'tl_search_index_queue'
+                'tl_crawl_queue'
             )
         );
     }
@@ -121,12 +121,12 @@ class Factory
         return $this->defaultHttpClientOptions;
     }
 
-    public function getSearchUriCollection(): BaseUriCollection
+    public function getCrawlUriCollection(): BaseUriCollection
     {
-        return $this->getRootPageUriCollection()->mergeWith($this->getAdditionalSearchUriCollection());
+        return $this->getRootPageUriCollection()->mergeWith($this->getAdditionalCrawlUriCollection());
     }
 
-    public function getAdditionalSearchUriCollection(): BaseUriCollection
+    public function getAdditionalCrawlUriCollection(): BaseUriCollection
     {
         $collection = new BaseUriCollection();
 
@@ -161,9 +161,9 @@ class Factory
     /**
      * @throws \InvalidArgumentException
      */
-    public function create(BaseUriCollection $baseUris, QueueInterface $queue, array $selectedSubscribers, ?HttpClientInterface $client = null): Escargot
+    public function create(BaseUriCollection $baseUris, QueueInterface $queue, array $selectedSubscribers, array $clientOptions = []): Escargot
     {
-        $escargot = Escargot::create($baseUris, $queue, $client ?? $this->createDefaultHttpClient());
+        $escargot = Escargot::create($baseUris, $queue, $this->createHttpClient($clientOptions));
 
         $this->registerDefaultSubscribers($escargot);
         $this->registerSubscribers($escargot, $this->validateSubscribers($selectedSubscribers));
@@ -175,9 +175,9 @@ class Factory
      * @throws \InvalidArgumentException
      * @throws InvalidJobIdException
      */
-    public function createFromJobId(string $jobId, QueueInterface $queue, array $selectedSubscribers, ?HttpClientInterface $client = null): Escargot
+    public function createFromJobId(string $jobId, QueueInterface $queue, array $selectedSubscribers, array $clientOptions = []): Escargot
     {
-        $escargot = Escargot::createFromJobId($jobId, $queue, $client ?? $this->createDefaultHttpClient());
+        $escargot = Escargot::createFromJobId($jobId, $queue, $this->createHttpClient($clientOptions));
 
         $this->registerDefaultSubscribers($escargot);
         $this->registerSubscribers($escargot, $this->validateSubscribers($selectedSubscribers));
@@ -185,19 +185,15 @@ class Factory
         return $escargot;
     }
 
-    /**
-     * Creates an HttpClientInterface instance that behaves like a regular
-     * browser by default.
-     */
-    private function createDefaultHttpClient(): HttpClientInterface
+    private function createHttpClient(array $options = []): HttpClientInterface
     {
         return HttpClient::create(
             array_merge_recursive(
                 [
                     'headers' => ['accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'],
-                    'max_duration' => 20, // Ignore requests that take longer than 20 seconds
+                    'max_duration' => 10, // Ignore requests that take longer than 10 seconds
                 ],
-                $this->getDefaultHttpClientOptions()
+                array_merge_recursive($this->getDefaultHttpClientOptions(), $options)
             )
         );
     }

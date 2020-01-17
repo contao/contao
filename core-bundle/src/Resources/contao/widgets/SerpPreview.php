@@ -128,13 +128,13 @@ EOT;
 			throw new \LogicException('No url_callback given');
 		}
 
-		$alias = $this->getAlias($model);
+		$aliasField = $this->aliasField ?: 'alias';
 		$placeholder = bin2hex(random_bytes(10));
 
 		// Pass a detached clone with the alias set to the placeholder
-		$tempModel = clone $model;
-		$tempModel->origAlias = $tempModel->$alias;
-		$tempModel->$alias = $placeholder;
+		$tempModel = $model->cloneOriginal();
+		$tempModel->origAlias = $tempModel->$aliasField;
+		$tempModel->$aliasField = $placeholder;
 		$tempModel->preventSaving(false);
 
 		if (\is_array($this->url_callback))

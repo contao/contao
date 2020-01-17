@@ -57,6 +57,7 @@ services:
             - '%kernel.project_dir%'
             - '@database_connection'
             - '@contao.framework'
+            - '%contao.locales%'
 
     Contao\CoreBundle\Controller\BackendController: ~
 
@@ -105,7 +106,9 @@ services:
         tags:
             - controller.service_arguments
 
-    Contao\CoreBundle\Controller\FrontendController: ~
+    Contao\CoreBundle\Controller\FrontendController:
+        tags:
+            - { name: 'controller.service_arguments' }
 
     Contao\CoreBundle\Controller\FrontendModule\TwoFactorController:
         tags:
@@ -158,6 +161,39 @@ services:
             - '@database_connection'
         tags:
             - nelmio_cors.options_provider
+
+    contao.crawl.escargot_factory:
+        class: Contao\CoreBundle\Crawl\Escargot\Factory
+        arguments:
+            - '@database_connection'
+            - '@contao.framework'
+        public: true
+
+    contao.crawl.escargot_subscriber.broken_link_checker:
+        class: Contao\CoreBundle\Crawl\Escargot\Subscriber\BrokenLinkCheckerSubscriber
+        arguments:
+            - '@translator'
+        tags:
+            - { name: 'contao.escargot_subscriber' }
+
+    contao.crawl.escargot_subscriber.search_index:
+        class: Contao\CoreBundle\Crawl\Escargot\Subscriber\SearchIndexSubscriber
+        arguments:
+            - '@contao.search.indexer'
+            - '@translator'
+        tags:
+            - { name: 'contao.escargot_subscriber' }
+
+    Contao\CoreBundle\Cron\Cron:
+        arguments:
+            - '@Contao\CoreBundle\Repository\CronJobRepository'
+            - '@doctrine.orm.entity_manager'
+            - '@?logger'
+        public: true
+
+    Contao\CoreBundle\Cron\LegacyCron:
+        arguments:
+            - '@contao.framework'
 
     contao.csrf.token_manager:
         class: Symfony\Component\Security\Csrf\CsrfTokenManager
@@ -316,8 +352,6 @@ services:
             - '@contao.menu.matcher'
         public: true
 
-    Contao\CoreBundle\Migration\MigrationCollection: ~
-
     contao.model_argument_resolver:
         class: Contao\CoreBundle\HttpKernel\ModelArgumentResolver
         arguments:
@@ -395,11 +429,14 @@ services:
         tags:
             - { name: contao.picker_provider }
 
+    Contao\CoreBundle\Repository\CronJobRepository:
+        arguments:
+            - '@doctrine'
+
     contao.repository.remember_me:
         class: Contao\CoreBundle\Repository\RememberMeRepository
         arguments:
             - '@doctrine'
-            - 'Contao\CoreBundle\Entity\RememberMe'
 
     contao.resource_finder:
         class: Contao\CoreBundle\Config\ResourceFinder
@@ -532,25 +569,6 @@ services:
             - '%contao.prepend_locale%'
         public: true
 
-    contao.search.escargot_factory:
-        class: Contao\CoreBundle\Search\Escargot\Factory
-        arguments:
-            - '@database_connection'
-            - '@contao.framework'
-        public: true
-
-    contao.search.escargot_subscriber.broken_link_checker:
-        class: Contao\CoreBundle\Search\Escargot\Subscriber\BrokenLinkCheckerSubscriber
-        tags:
-            - { name: 'contao.escargot_subscriber' }
-
-    contao.search.escargot_subscriber.search_index:
-        class: Contao\CoreBundle\Search\Escargot\Subscriber\SearchIndexSubscriber
-        arguments:
-            - '@contao.search.indexer'
-        tags:
-            - { name: 'contao.escargot_subscriber' }
-
     contao.search.indexer.default:
         class: Contao\CoreBundle\Search\Indexer\DefaultIndexer
         arguments:
@@ -569,10 +587,24 @@ services:
     contao.security.authentication_failure_handler:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler
         arguments:
-            - '@http_kernel'
-            - '@security.http_utils'
-            - []
             - '@?logger'
+
+    contao.security.authentication_listener:
+        class: Contao\CoreBundle\Security\Authentication\ContaoLoginAuthenticationListener
+        arguments:
+            - '@security.token_storage'
+            - '@security.authentication.manager'
+            - '@security.authentication.session_strategy'
+            - '@security.http_utils'
+            - ~
+            - '@contao.security.authentication_success_handler'
+            - '@contao.security.authentication_failure_handler'
+            - []
+            - '@scheb_two_factor.token_factory'
+            - '@?logger'
+            - '@?event_dispatcher'
+        tags:
+            - { name: monolog.logger, channel: security }
 
     contao.security.authentication_provider:
         class: Contao\CoreBundle\Security\Authentication\Provider\AuthenticationProvider
@@ -583,11 +615,14 @@ services:
             - ~ # provider-shared key
             - '@security.encoder_factory'
             - '@contao.framework'
+            - ~ # 2FA authentication provider
+            - '@scheb_two_factor.authenticated_token_handler'
+            - '@scheb_two_factor.authentication_context_factory'
+            - '@request_stack'
 
     contao.security.authentication_success_handler:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler
         arguments:
-            - '@security.http_utils'
             - '@contao.framework'
             - '@?logger'
 
@@ -605,8 +640,10 @@ services:
     contao.security.entry_point:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationEntryPoint
         arguments:
-            - '@security.http_utils'
             - '@router'
+            - '@uri_signer'
+            - '@contao.framework'
+            - '@contao.routing.scope_matcher'
 
     contao.security.expiring_token_based_remember_me_services:
         class: Contao\CoreBundle\Security\Authentication\RememberMe\ExpiringTokenBasedRememberMeServices
@@ -663,6 +700,9 @@ services:
 
     contao.security.two_factor.authenticator:
         class: Contao\CoreBundle\Security\TwoFactor\Authenticator
+        public: true
+
+    Contao\CoreBundle\Security\TwoFactor\BackupCodeManager:
         public: true
 
     contao.security.two_factor.provider:

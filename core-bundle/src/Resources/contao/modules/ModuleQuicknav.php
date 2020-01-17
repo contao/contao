@@ -85,7 +85,6 @@ class ModuleQuicknav extends Module
 		$this->Template->targetPage = $GLOBALS['TL_LANG']['MSC']['targetPage'];
 		$this->Template->button = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['go']);
 		$this->Template->title = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['quicknav'];
-		$this->Template->request = ampersand(Environment::get('request'));
 		$this->Template->items = $this->getQuicknavPages($this->rootPage, 1, $host);
 	}
 

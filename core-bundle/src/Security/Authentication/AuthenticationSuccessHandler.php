@@ -26,11 +26,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationSuccessHandler;
-use Symfony\Component\Security\Http\HttpUtils;
+use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
-class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
+class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterface
 {
     use TargetPathTrait;
 
@@ -52,10 +51,8 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.authentication_success_handler" service instead
      */
-    public function __construct(HttpUtils $httpUtils, ContaoFramework $framework, LoggerInterface $logger = null)
+    public function __construct(ContaoFramework $framework, LoggerInterface $logger = null)
     {
-        parent::__construct($httpUtils);
-
         $this->framework = $framework;
         $this->logger = $logger;
     }
@@ -67,29 +64,39 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token): Response
     {
-        if ($token instanceof TwoFactorTokenInterface) {
-            $response = $this->httpUtils->createRedirectResponse(
-                $request,
-                $request->request->get('_failure_path') ?: 'contao_root'
-            );
+        $user = $token->getUser();
 
-            $this->saveTargetPath($request->getSession(), $token->getProviderKey(), $response->getTargetUrl());
+        if (!$user instanceof User) {
+            return new RedirectResponse($this->determineTargetUrl($request));
+        }
+
+        $this->user = $user;
+
+        // Reset login attempts and locked values
+        $this->user->loginAttempts = 0;
+        $this->user->locked = 0;
+
+        if ($token instanceof TwoFactorTokenInterface) {
+            $this->user->save();
+
+            $response = new RedirectResponse($request->getUri());
+
+            // Used by the TwoFactorListener to redirect a user back to the authentication page
+            if ($request->hasSession() && $request->isMethodSafe() && !$request->isXmlHttpRequest()) {
+                $this->saveTargetPath($request->getSession(), $token->getProviderKey(), $request->getUri());
+            }
 
             return $response;
         }
 
-        $user = $token->getUser();
-
-        if (!$user instanceof User) {
-            return $this->httpUtils->createRedirectResponse($request, $this->determineTargetUrl($request));
-        }
-
-        $this->user = $user;
         $this->user->lastLogin = $this->user->currentLogin;
         $this->user->currentLogin = time();
         $this->user->save();
 
-        $response = $this->httpUtils->createRedirectResponse($request, $this->determineTargetUrl($request));
+        // TODO: implement 2FA trusted device here
+        // $this->trustedDeviceManager->addTrustedDevice($user, $this->firewallName);
+
+        $response = new RedirectResponse($this->determineTargetUrl($request));
 
         if (null !== $this->logger) {
             $this->logger->info(
@@ -100,6 +107,10 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
 
         $this->triggerPostLoginHook();
 
+        if ($request->hasSession() && method_exists($token, 'getProviderKey')) {
+            $this->removeTargetPath($request->getSession(), $token->getProviderKey());
+        }
+
         return $response;
     }
 
@@ -108,12 +119,8 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
      */
     protected function determineTargetUrl(Request $request): string
     {
-        if (!$this->user instanceof FrontendUser) {
-            return parent::determineTargetUrl($request);
-        }
-
-        if ($targetUrl = $this->getFixedTargetPath($request)) {
-            return $targetUrl;
+        if (!$this->user instanceof FrontendUser || $request->request->get('_always_use_target_path')) {
+            return base64_decode($request->request->get('_target_path'), true);
         }
 
         /** @var PageModel $pageModelAdapter */
@@ -125,7 +132,7 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
             return $groupPage->getAbsoluteUrl();
         }
 
-        return parent::determineTargetUrl($request);
+        return base64_decode($request->request->get('_target_path'), true);
     }
 
     private function triggerPostLoginHook(): void
@@ -144,14 +151,5 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
         foreach ($GLOBALS['TL_HOOKS']['postLogin'] as $callback) {
             $system->importStatic($callback[0])->{$callback[1]}($this->user);
         }
-    }
-
-    private function getFixedTargetPath(Request $request): ?string
-    {
-        if (!$request->request->get('_always_use_target_path')) {
-            return null;
-        }
-
-        return $request->request->get('_target_path');
     }
 }

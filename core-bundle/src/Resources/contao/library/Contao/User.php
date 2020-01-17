@@ -68,7 +68,7 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
  * @property integer     $dateAdded
  * @property integer     $lastLogin
  * @property integer     $currentLogin
- * @property integer     $loginCount
+ * @property integer     $loginAttempts
  * @property integer     $locked
  * @property string      $firstname
  * @property string      $lastname
@@ -95,6 +95,7 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
  * @property object      $objLogout
  * @property string      $useTwoFactor
  * @property string|null $secret
+ * @property string|null $backupCodes
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */

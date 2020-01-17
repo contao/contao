@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle;
 
 use Contao\CoreBundle\DependencyInjection\Compiler\AddAssetsPackagesPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\AddCronJobsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddSessionBagsPass;
@@ -97,5 +98,6 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new RegisterHookListenersPass(), PassConfig::TYPE_OPTIMIZE);
         $container->addCompilerPass(new SearchIndexerPass());
         $container->addCompilerPass(new EscargotSubscriberPass());
+        $container->addCompilerPass(new AddCronJobsPass());
     }
 }

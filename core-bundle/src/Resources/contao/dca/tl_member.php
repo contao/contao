@@ -360,10 +360,10 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
-		'loginCount' => array
+		'loginAttempts' => array
 		(
 			'eval'                    => array('doNotCopy'=>true),
-			'sql'                     => "smallint(5) unsigned NOT NULL default 3"
+			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
 		),
 		'locked' => array
 		(
@@ -384,6 +384,11 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		(
 			'eval'                    => array('isBoolean'=>true, 'doNotCopy'=>true, 'tl_class'=>'w50 m12'),
 			'sql'                     => "char(1) NOT NULL default ''"
+		),
+		'backupCodes' => array
+		(
+			'eval'                    => array('doNotCopy'=>true),
+			'sql'                     => "text NULL"
 		)
 	)
 );

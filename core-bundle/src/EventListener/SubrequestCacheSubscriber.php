@@ -75,7 +75,7 @@ class SubrequestCacheSubscriber implements EventSubscriberInterface, ResetInterf
         if ($this->currentStrategy && $response->headers->has(self::MERGE_CACHE_HEADER)) {
             if ($isMasterRequest) {
                 $this->currentStrategy->update($response);
-            } else {
+            } elseif ($response->headers->has('Cache-Control')) {
                 $this->currentStrategy->add($response);
             }
         }

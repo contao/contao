@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Search\Escargot\Subscriber;
+namespace Contao\CoreBundle\Crawl\Escargot\Subscriber;
 
 use Terminal42\Escargot\Subscriber\SubscriberInterface;
 

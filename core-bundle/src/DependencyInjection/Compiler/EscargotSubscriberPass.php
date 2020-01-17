@@ -25,11 +25,11 @@ class EscargotSubscriberPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container): void
     {
-        if (!$container->has('contao.search.escargot_factory')) {
+        if (!$container->has('contao.crawl.escargot_factory')) {
             return;
         }
 
-        $definition = $container->findDefinition('contao.search.escargot_factory');
+        $definition = $container->findDefinition('contao.crawl.escargot_factory');
         $references = $this->findAndSortTaggedServices('contao.escargot_subscriber', $container);
 
         foreach ($references as $reference) {

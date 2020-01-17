@@ -268,6 +268,9 @@ class InsertTags extends Controller
 						case 'CONFIRM':
 						case 'DP':
 						case 'COLS':
+						case 'SECTIONS':
+						case 'DCA':
+						case 'CRAWL':
 							$file = 'default';
 							break;
 					}

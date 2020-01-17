@@ -13,7 +13,9 @@ namespace Contao;
 use Contao\CoreBundle\Security\Exception\LockedException;
 use Patchwork\Utf8;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
-use Symfony\Component\Routing\Router;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvents;
+use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /**
@@ -59,14 +61,25 @@ class ModuleLogin extends Module
 			return $objTemplate->parse();
 		}
 
-		if ($_POST)
+		$container = System::getContainer();
+		$request = $container->get('request_stack')->getCurrentRequest();
+
+		// If the form was submitted and the credentials were wrong, take the target
+		// path from the submitted data as otherwise it would take the current page
+		if ($request->isMethod('POST'))
 		{
-			$this->targetPath = (string) Input::post('_target_path');
+			$this->targetPath = base64_decode($request->request->get('_target_path'));
 		}
-		elseif ($this->redirectBack && ($referer = Input::get('referer', true)))
+		elseif ($this->redirectBack && $request && $request->query->has('redirect'))
 		{
-			// Decode the referer and urlencode insert tags
-			$this->targetPath = Environment::get('base') . str_replace(array('{', '}'), array('%7B', '%7D'), base64_decode($referer, true));
+			/** @var UriSigner $uriSigner */
+			$uriSigner = $container->get('uri_signer');
+
+			// We cannot use $request->getUri() here as we want to work with the original URI (no query string reordering)
+			if ($uriSigner->check($request->getSchemeAndHttpHost() . $request->getBaseUrl() . $request->getPathInfo() . (null !== ($qs = $request->server->get('QUERY_STRING')) ? '?' . $qs : '')))
+			{
+				$this->targetPath = $request->query->get('redirect');
+			}
 		}
 
 		return parent::generate();
@@ -82,34 +95,9 @@ class ModuleLogin extends Module
 
 		$container = System::getContainer();
 
-		/** @var Router $router */
-		$router = $container->get('router');
-
 		/** @var AuthenticationException|null $exception */
 		$exception = $container->get('security.authentication_utils')->getLastAuthenticationError();
 		$authorizationChecker = $container->get('security.authorization_checker');
-
-		if ($authorizationChecker->isGranted('IS_AUTHENTICATED_2FA_IN_PROGRESS'))
-		{
-			$user = FrontendUser::getInstance();
-			$redirectPage = $this->jumpTo > 0 ? PageModel::findByPk($this->jumpTo) : null;
-
-			$this->Template->action = $router->generate('contao_frontend_two_factor');
-			$this->Template->targetPath = $redirectPage instanceof PageModel ? $redirectPage->getAbsoluteUrl() : $objPage->getAbsoluteUrl();
-			$this->Template->twoFactorEnabled = $user->useTwoFactor;
-			$this->Template->authCode = $GLOBALS['TL_LANG']['MSC']['twoFactorVerification'];
-			$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['continue']);
-			$this->Template->cancel = $GLOBALS['TL_LANG']['MSC']['cancelBT'];
-			$this->Template->twoFactorAuthentication = $GLOBALS['TL_LANG']['MSC']['twoFactorAuthentication'];
-
-			if ($exception instanceof InvalidTwoFactorCodeException)
-			{
-				$this->Template->hasError = true;
-				$this->Template->message = $GLOBALS['TL_LANG']['ERR']['invalidTwoFactor'];
-			}
-
-			return;
-		}
 
 		if ($authorizationChecker->isGranted('ROLE_MEMBER'))
 		{
@@ -149,6 +137,11 @@ class ModuleLogin extends Module
 			$this->Template->hasError = true;
 			$this->Template->message = sprintf($GLOBALS['TL_LANG']['ERR']['accountLocked'], $exception->getLockedMinutes());
 		}
+		elseif ($exception instanceof InvalidTwoFactorCodeException)
+		{
+			$this->Template->hasError = true;
+			$this->Template->message = $GLOBALS['TL_LANG']['ERR']['invalidTwoFactor'];
+		}
 		elseif ($exception instanceof AuthenticationException)
 		{
 			$this->Template->hasError = true;
@@ -172,17 +165,33 @@ class ModuleLogin extends Module
 			$strRedirect = $objTarget->getAbsoluteUrl();
 		}
 
+		$this->Template->formId = 'tl_login_' . $this->id;
+		$this->Template->forceTargetPath = (int) $blnRedirectBack;
+		$this->Template->targetPath = StringUtil::specialchars(base64_encode($strRedirect));
+
+		if ($authorizationChecker->isGranted('IS_AUTHENTICATED_2FA_IN_PROGRESS'))
+		{
+			// Dispatch 2FA form event to prepare 2FA providers
+			$request = $container->get('request_stack')->getCurrentRequest();
+			$token = $container->get('security.token_storage')->getToken();
+			$event = new TwoFactorAuthenticationEvent($request, $token);
+			$container->get('event_dispatcher')->dispatch($event, TwoFactorAuthenticationEvents::FORM);
+
+			$this->Template->twoFactorEnabled = true;
+			$this->Template->authCode = $GLOBALS['TL_LANG']['MSC']['twoFactorVerification'];
+			$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['continue']);
+			$this->Template->cancel = $GLOBALS['TL_LANG']['MSC']['cancelBT'];
+			$this->Template->twoFactorAuthentication = $GLOBALS['TL_LANG']['MSC']['twoFactorAuthentication'];
+
+			return;
+		}
+
 		$this->Template->username = $GLOBALS['TL_LANG']['MSC']['username'];
 		$this->Template->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
-		$this->Template->action = $router->generate('contao_frontend_login');
 		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['login']);
 		$this->Template->value = StringUtil::specialchars($container->get('security.authentication_utils')->getLastUsername());
-		$this->Template->formId = 'tl_login_' . $this->id;
 		$this->Template->autologin = $this->autologin;
 		$this->Template->autoLabel = $GLOBALS['TL_LANG']['MSC']['autologin'];
-		$this->Template->forceTargetPath = (int) $blnRedirectBack;
-		$this->Template->targetPath = StringUtil::specialchars($strRedirect);
-		$this->Template->failurePath = StringUtil::specialchars(Environment::get('base') . Environment::get('request'));
 	}
 }
 

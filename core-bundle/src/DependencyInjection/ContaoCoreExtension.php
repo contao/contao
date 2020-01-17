@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection;
 
+use Contao\CoreBundle\Crawl\Escargot\Subscriber\EscargotSubscriberInterface;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Migration\MigrationInterface;
 use Contao\CoreBundle\Picker\PickerProviderInterface;
-use Contao\CoreBundle\Search\Escargot\Subscriber\EscargotSubscriberInterface;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Imagine\Exception\RuntimeException;
 use Imagine\Gd\Imagine;
@@ -67,6 +67,7 @@ class ContaoCoreExtension extends Extension
         $loader->load('commands.yml');
         $loader->load('listener.yml');
         $loader->load('services.yml');
+        $loader->load('migrations.yml');
 
         $container->setParameter('contao.web_dir', $config['web_dir']);
         $container->setParameter('contao.prepend_locale', $config['prepend_locale']);
@@ -96,7 +97,6 @@ class ContaoCoreExtension extends Extension
         $this->setPredefinedImageSizes($config, $container);
         $this->setImagineService($config, $container);
         $this->overwriteImageTargetDir($config, $container);
-        $this->resetDeferredImageStorage($container);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -155,11 +155,11 @@ class ContaoCoreExtension extends Extension
             ->addTag('contao.escargot_subscriber')
         ;
 
-        if (!$container->hasDefinition('contao.search.escargot_factory')) {
+        if (!$container->hasDefinition('contao.crawl.escargot_factory')) {
             return;
         }
 
-        $factory = $container->getDefinition('contao.search.escargot_factory');
+        $factory = $container->getDefinition('contao.crawl.escargot_factory');
         $factory->setArgument(2, $config['crawl']['additional_uris']);
         $factory->setArgument(3, $config['crawl']['default_http_client_options']);
     }
@@ -263,18 +263,5 @@ class ContaoCoreExtension extends Extension
         );
 
         @trigger_error('Using the "contao.image.target_path" parameter has been deprecated and will no longer work in Contao 5.0. Use the "contao.image.target_dir" parameter instead.', E_USER_DEPRECATED);
-    }
-
-    private function resetDeferredImageStorage(ContainerBuilder $container): void
-    {
-        if (!$container->hasDefinition('contao.image.deferred_image_storage')) {
-            return;
-        }
-
-        $definition = $container->findDefinition('contao.image.deferred_image_storage');
-
-        if (method_exists($definition->getClass(), 'reset')) {
-            $definition->addTag('kernel.reset', ['method' => 'reset']);
-        }
     }
 }

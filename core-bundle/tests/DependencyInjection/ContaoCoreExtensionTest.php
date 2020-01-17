@@ -37,11 +37,15 @@ use Contao\CoreBundle\Controller\ImagesController;
 use Contao\CoreBundle\Controller\InsertTagsController;
 use Contao\CoreBundle\Controller\RobotsTxtController;
 use Contao\CoreBundle\Cors\WebsiteRootsConfigProvider;
+use Contao\CoreBundle\Crawl\Escargot\Factory;
+use Contao\CoreBundle\Crawl\Escargot\Subscriber\BrokenLinkCheckerSubscriber;
+use Contao\CoreBundle\Crawl\Escargot\Subscriber\SearchIndexSubscriber;
+use Contao\CoreBundle\Cron\Cron;
+use Contao\CoreBundle\Cron\LegacyCron;
 use Contao\CoreBundle\Csrf\MemoryTokenStorage;
 use Contao\CoreBundle\DataCollector\ContaoDataCollector;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
-use Contao\CoreBundle\Entity\RememberMe;
 use Contao\CoreBundle\EventListener\BackendLocaleListener;
 use Contao\CoreBundle\EventListener\BypassMaintenanceListener;
 use Contao\CoreBundle\EventListener\ClearSessionDataListener;
@@ -83,6 +87,8 @@ use Contao\CoreBundle\Image\ImageSizes;
 use Contao\CoreBundle\Image\LegacyResizer;
 use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Menu\BackendMenuBuilder;
+use Contao\CoreBundle\Migration\MigrationCollection;
+use Contao\CoreBundle\Migration\Version409\CeAccessMigration;
 use Contao\CoreBundle\Monolog\ContaoTableHandler;
 use Contao\CoreBundle\Monolog\ContaoTableProcessor;
 use Contao\CoreBundle\OptIn\OptIn;
@@ -91,6 +97,7 @@ use Contao\CoreBundle\Picker\FilePickerProvider;
 use Contao\CoreBundle\Picker\PagePickerProvider;
 use Contao\CoreBundle\Picker\PickerBuilder;
 use Contao\CoreBundle\Picker\TablePickerProvider;
+use Contao\CoreBundle\Repository\CronJobRepository;
 use Contao\CoreBundle\Repository\RememberMeRepository;
 use Contao\CoreBundle\Routing\Enhancer\InputEnhancer;
 use Contao\CoreBundle\Routing\FrontendLoader;
@@ -104,13 +111,11 @@ use Contao\CoreBundle\Routing\Matcher\UrlMatcher;
 use Contao\CoreBundle\Routing\RouteProvider;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Routing\UrlGenerator;
-use Contao\CoreBundle\Search\Escargot\Factory;
-use Contao\CoreBundle\Search\Escargot\Subscriber\BrokenLinkCheckerSubscriber;
-use Contao\CoreBundle\Search\Escargot\Subscriber\SearchIndexSubscriber;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Contao\CoreBundle\Security\Authentication\AuthenticationEntryPoint;
 use Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler;
 use Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler;
+use Contao\CoreBundle\Security\Authentication\ContaoLoginAuthenticationListener;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Security\Authentication\Provider\AuthenticationProvider;
 use Contao\CoreBundle\Security\Authentication\RememberMe\ExpiringTokenBasedRememberMeServices;
@@ -118,6 +123,7 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Security\Logout\LogoutHandler;
 use Contao\CoreBundle\Security\Logout\LogoutSuccessHandler;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
+use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
 use Contao\CoreBundle\Security\TwoFactor\Provider;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
 use Contao\CoreBundle\Security\User\UserChecker;
@@ -435,6 +441,7 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 new Reference('contao.framework'),
                 new Reference('database_connection'),
+                new Reference(Cron::class),
                 new Reference('%fragment.path%'),
             ],
             $definition->getArguments()
@@ -676,6 +683,13 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(MakeResponsePrivateListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('contao.routing.scope_matcher'),
+            ],
+            $definition->getArguments()
+        );
 
         $tags = $definition->getTags();
 
@@ -1195,6 +1209,7 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('%kernel.project_dir%'),
                 new Reference('database_connection'),
                 new Reference('contao.framework'),
+                new Reference('%contao.locales%'),
             ],
             $definition->getArguments()
         );
@@ -1262,6 +1277,15 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $this->container->getDefinition(FrontendController::class);
 
         $this->assertTrue($definition->isPrivate());
+
+        $this->assertSame(
+            [
+                'controller.service_arguments' => [
+                    [],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheFrontendModuleTwoFactorController(): void
@@ -1386,6 +1410,111 @@ class ContaoCoreExtensionTest extends TestCase
                 ],
             ],
             $definition->getTags()
+        );
+    }
+
+    public function testRegistersTheEscargotFactory(): void
+    {
+        $this->assertTrue($this->container->has('contao.crawl.escargot_factory'));
+
+        $definition = $this->container->getDefinition('contao.crawl.escargot_factory');
+
+        $this->assertSame(Factory::class, $definition->getClass());
+        $this->assertTrue($definition->isPublic());
+
+        $this->assertEquals(
+            [
+                new Reference('database_connection'),
+                new Reference('contao.framework'),
+                [],
+                [],
+            ],
+            $definition->getArguments()
+        );
+    }
+
+    public function testRegistersTheEscargotBrokenLinkCheckerSubscriber(): void
+    {
+        $this->assertTrue($this->container->has('contao.crawl.escargot_subscriber.broken_link_checker'));
+
+        $definition = $this->container->getDefinition('contao.crawl.escargot_subscriber.broken_link_checker');
+
+        $this->assertSame(BrokenLinkCheckerSubscriber::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+        $this->assertEquals(
+            [
+                new Reference('translator'),
+            ],
+            $definition->getArguments()
+        );
+        $this->assertSame(
+            [
+                'contao.escargot_subscriber' => [
+                    [],
+                ],
+            ],
+            $definition->getTags()
+        );
+    }
+
+    public function testRegistersTheEscargotSearchIndexSubscriber(): void
+    {
+        $this->assertTrue($this->container->has('contao.crawl.escargot_subscriber.search_index'));
+
+        $definition = $this->container->getDefinition('contao.crawl.escargot_subscriber.search_index');
+
+        $this->assertSame(SearchIndexSubscriber::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('contao.search.indexer'),
+                new Reference('translator'),
+            ],
+            $definition->getArguments()
+        );
+
+        $this->assertSame(
+            [
+                'contao.escargot_subscriber' => [
+                    [],
+                ],
+            ],
+            $definition->getTags()
+        );
+    }
+
+    public function testRegistersTheCronService(): void
+    {
+        $this->assertTrue($this->container->has(Cron::class));
+
+        $definition = $this->container->getDefinition(Cron::class);
+
+        $this->assertTrue($definition->isPublic());
+
+        $this->assertEquals(
+            [
+                new Reference(CronJobRepository::class),
+                new Reference('doctrine.orm.entity_manager'),
+                new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+            ],
+            $definition->getArguments()
+        );
+    }
+
+    public function testRegistersTheLegacyCronService(): void
+    {
+        $this->assertTrue($this->container->has(LegacyCron::class));
+
+        $definition = $this->container->getDefinition(LegacyCron::class);
+
+        $this->assertTrue($definition->isPublic());
+
+        $this->assertEquals(
+            [
+                new Reference('contao.framework'),
+            ],
+            $definition->getArguments()
         );
     }
 
@@ -1604,21 +1733,6 @@ class ContaoCoreExtensionTest extends TestCase
             ],
             $definition->getArguments()
         );
-
-        if (method_exists($definition->getClass(), 'reset')) {
-            $this->assertSame(
-                [
-                    'kernel.reset' => [
-                        [
-                            'method' => 'reset',
-                        ],
-                    ],
-                ],
-                $definition->getTags()
-            );
-        } else {
-            $this->assertSame([], $definition->getTags());
-        }
     }
 
     public function testRegistersTheImageImagineService(): void
@@ -2036,6 +2150,22 @@ class ContaoCoreExtensionTest extends TestCase
         );
     }
 
+    public function testRegistersTheCronJobRepository(): void
+    {
+        $this->assertTrue($this->container->has(CronJobRepository::class));
+
+        $definition = $this->container->getDefinition(CronJobRepository::class);
+
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('doctrine'),
+            ],
+            $definition->getArguments()
+        );
+    }
+
     public function testRegistersTheRememberMeRepository(): void
     {
         $this->assertTrue($this->container->has('contao.repository.remember_me'));
@@ -2048,7 +2178,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEquals(
             [
                 new Reference('doctrine'),
-                new Reference(RememberMe::class),
             ],
             $definition->getArguments()
         );
@@ -2448,72 +2577,6 @@ class ContaoCoreExtensionTest extends TestCase
         );
     }
 
-    public function testRegistersTheSearchEscargotFactory(): void
-    {
-        $this->assertTrue($this->container->has('contao.search.escargot_factory'));
-
-        $definition = $this->container->getDefinition('contao.search.escargot_factory');
-
-        $this->assertSame(Factory::class, $definition->getClass());
-        $this->assertTrue($definition->isPublic());
-
-        $this->assertEquals(
-            [
-                new Reference('database_connection'),
-                new Reference('contao.framework'),
-                [],
-                [],
-            ],
-            $definition->getArguments()
-        );
-    }
-
-    public function testRegistersTheSearchEscargotBrokenLinkCheckerSubscriber(): void
-    {
-        $this->assertTrue($this->container->has('contao.search.escargot_subscriber.broken_link_checker'));
-
-        $definition = $this->container->getDefinition('contao.search.escargot_subscriber.broken_link_checker');
-
-        $this->assertSame(BrokenLinkCheckerSubscriber::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
-        $this->assertSame([], $definition->getArguments());
-
-        $this->assertSame(
-            [
-                'contao.escargot_subscriber' => [
-                    [],
-                ],
-            ],
-            $definition->getTags()
-        );
-    }
-
-    public function testRegistersTheSearchEscargotSearchIndexSubscriber(): void
-    {
-        $this->assertTrue($this->container->has('contao.search.escargot_subscriber.search_index'));
-
-        $definition = $this->container->getDefinition('contao.search.escargot_subscriber.search_index');
-
-        $this->assertSame(SearchIndexSubscriber::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
-
-        $this->assertEquals(
-            [
-                new Reference('contao.search.indexer'),
-            ],
-            $definition->getArguments()
-        );
-
-        $this->assertSame(
-            [
-                'contao.escargot_subscriber' => [
-                    [],
-                ],
-            ],
-            $definition->getTags()
-        );
-    }
-
     public function testRegistersTheSecurityAuthenticationFailureHandler(): void
     {
         $this->assertTrue($this->container->has('contao.security.authentication_failure_handler'));
@@ -2525,12 +2588,47 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertEquals(
             [
-                new Reference('http_kernel'),
-                new Reference('security.http_utils'),
-                [],
                 new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
             ],
             $definition->getArguments()
+        );
+    }
+
+    public function testRegistersTheSecurityAuthenticationListener(): void
+    {
+        $this->assertTrue($this->container->has('contao.security.authentication_listener'));
+
+        $definition = $this->container->getDefinition('contao.security.authentication_listener');
+
+        $this->assertSame(ContaoLoginAuthenticationListener::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('security.token_storage'),
+                new Reference('security.authentication.manager'),
+                new Reference('security.authentication.session_strategy'),
+                new Reference('security.http_utils'),
+                null,
+                new Reference('contao.security.authentication_success_handler'),
+                new Reference('contao.security.authentication_failure_handler'),
+                [],
+                new Reference('scheb_two_factor.token_factory'),
+                new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+                new Reference('event_dispatcher', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+            ],
+            $definition->getArguments()
+        );
+
+        $this->assertSame(
+            [
+                'monolog.logger' => [
+                    [
+                        'channel' => 'security',
+                    ],
+                ],
+            ],
+            $definition->getTags()
         );
     }
 
@@ -2550,6 +2648,10 @@ class ContaoCoreExtensionTest extends TestCase
                 null,
                 new Reference('security.encoder_factory'),
                 new Reference('contao.framework'),
+                null,
+                new Reference('scheb_two_factor.authenticated_token_handler'),
+                new Reference('scheb_two_factor.authentication_context_factory'),
+                new Reference('request_stack'),
             ],
             $definition->getArguments()
         );
@@ -2566,7 +2668,6 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertEquals(
             [
-                new Reference('security.http_utils'),
                 new Reference('contao.framework'),
                 new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
             ],
@@ -2615,8 +2716,10 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertEquals(
             [
-                new Reference('security.http_utils'),
                 new Reference('router'),
+                new Reference('uri_signer'),
+                new Reference('contao.framework'),
+                new Reference('contao.routing.scope_matcher'),
             ],
             $definition->getArguments()
         );
@@ -2760,6 +2863,15 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $this->container->getDefinition('contao.security.two_factor.authenticator');
 
         $this->assertSame(Authenticator::class, $definition->getClass());
+        $this->assertTrue($definition->isPublic());
+    }
+
+    public function testRegistersTheSecurityTwoFactorBackupCodeManager(): void
+    {
+        $this->assertTrue($this->container->has(BackupCodeManager::class));
+
+        $definition = $this->container->getDefinition(BackupCodeManager::class);
+
         $this->assertTrue($definition->isPublic());
     }
 
@@ -2998,6 +3110,41 @@ class ContaoCoreExtensionTest extends TestCase
         );
     }
 
+    public function testRegistersTheMigrationCollection(): void
+    {
+        $this->assertTrue($this->container->has(MigrationCollection::class));
+
+        $definition = $this->container->getDefinition(MigrationCollection::class);
+
+        $this->assertTrue($definition->isPrivate());
+    }
+
+    public function testRegistersTheVersion409CeAccessMigration(): void
+    {
+        $this->assertTrue($this->container->has(CeAccessMigration::class));
+
+        $definition = $this->container->getDefinition(CeAccessMigration::class);
+
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('database_connection'),
+                new Reference('contao.framework'),
+            ],
+            $definition->getArguments()
+        );
+
+        $this->assertSame(
+            [
+                'contao.migration' => [
+                    [],
+                ],
+            ],
+            $definition->getTags()
+        );
+    }
+
     public function testRegistersThePredefinedImageSizes(): void
     {
         $services = ['contao.image.image_sizes', 'contao.image.image_factory', 'contao.image.picture_factory'];
@@ -3082,9 +3229,9 @@ class ContaoCoreExtensionTest extends TestCase
         $extension = new ContaoCoreExtension();
         $extension->load([], $this->container);
 
-        $this->assertTrue($this->container->has('contao.search.escargot_factory'));
+        $this->assertTrue($this->container->has('contao.crawl.escargot_factory'));
 
-        $definition = $this->container->getDefinition('contao.search.escargot_factory');
+        $definition = $this->container->getDefinition('contao.crawl.escargot_factory');
 
         $this->assertEquals(
             [
@@ -3112,7 +3259,7 @@ class ContaoCoreExtensionTest extends TestCase
             $this->container
         );
 
-        $definition = $this->container->getDefinition('contao.search.escargot_factory');
+        $definition = $this->container->getDefinition('contao.crawl.escargot_factory');
 
         $this->assertEquals(
             [
