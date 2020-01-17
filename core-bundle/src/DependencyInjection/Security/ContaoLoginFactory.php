@@ -96,7 +96,7 @@ class ContaoLoginFactory extends AbstractFactory
 
         $container
             ->setDefinition($handler, new ChildDefinition('contao.security.authentication_success_handler'))
-            ->replaceArgument(1, $trustedDeviceManager)
+            ->replaceArgument(1, new Reference($trustedDeviceManager))
         ;
 
         return $handler;
@@ -140,7 +140,7 @@ class ContaoLoginFactory extends AbstractFactory
 
         $container
             ->setDefinition($trustedDeviceManagerId, new ChildDefinition('contao.security.two_factor.trusted_device_manager'))
-            ->replaceArgument(1, $trustedDevicesTokenStorageId)
+            ->replaceArgument(1, new Reference($trustedDevicesTokenStorageId))
             ->setPublic(true)
         ;
     }
@@ -156,7 +156,7 @@ class ContaoLoginFactory extends AbstractFactory
 
         $container
             ->setDefinition($trustedCookieResponseListenerId, new ChildDefinition('scheb_two_factor.trusted_cookie_response_listener'))
-            ->replaceArgument(0, 'contao.security.two_factor.trusted_token_storage.'.$firewallName)
+            ->replaceArgument(0, new Reference('contao.security.two_factor.trusted_token_storage.'.$firewallName))
             ->replaceArgument(1, self::TRUSTED_DEVICES_TOKEN_LIFETIME)
             ->replaceArgument(2, self::TRUSTED_DEVICES_TOKEN_ID_PREFIX.$firewallName)
             ->replaceArgument(5, $domain)
