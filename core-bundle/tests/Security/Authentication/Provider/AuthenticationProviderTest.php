@@ -531,7 +531,7 @@ class AuthenticationProviderTest extends TestCase
     /**
      * @param ContaoFramework&MockObject                $framework
      * @param AuthenticationHandlerInterface&MockObject $twoFactorHandler
-     * @param TrustedDeviceManagerInterface&MockObject   $trustedDeviceManager
+     * @param TrustedDeviceManagerInterface&MockObject  $trustedDeviceManager
      */
     private function createUsernamePasswordProvider(ContaoFramework $framework = null, AuthenticationHandlerInterface $twoFactorHandler = null, TrustedDeviceManagerInterface $trustedDeviceManager = null): AuthenticationProvider
     {
@@ -555,7 +555,7 @@ class AuthenticationProviderTest extends TestCase
         $contextFactory = $this->createMock(AuthenticationContextFactoryInterface::class);
         $contextFactory
             ->method('create')
-            ->willReturnCallback(function($request, $token, $firewallName) {
+            ->willReturnCallback(static function ($request, $token, $firewallName) {
                 return new AuthenticationContext($request, $token, $firewallName);
             })
         ;
@@ -604,7 +604,7 @@ class AuthenticationProviderTest extends TestCase
         $contextFactory = $this->createMock(AuthenticationContextFactoryInterface::class);
         $contextFactory
             ->method('create')
-            ->willReturnCallback(function($request, $token, $firewallName) {
+            ->willReturnCallback(static function ($request, $token, $firewallName) {
                 return new AuthenticationContext($request, $token, $firewallName);
             })
         ;
