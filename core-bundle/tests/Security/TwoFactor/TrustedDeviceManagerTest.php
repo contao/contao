@@ -22,7 +22,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class TrustedDeviceManagerTest extends TestCase
 {
-    public function testIsTrustedDevice()
+    public function testIsTrustedDevice(): void
     {
         $tokenStorage = $this->createMock(TrustedDeviceTokenStorage::class);
         $tokenStorage
@@ -54,7 +54,7 @@ class TrustedDeviceManagerTest extends TestCase
         $this->assertTrue($manager->isTrustedDevice($user, 'contao_backend'));
     }
 
-    public function testIsTrustedDeviceIgnoresNonContaoUser()
+    public function testIsTrustedDeviceIgnoresNonContaoUser(): void
     {
         $tokenStorage = $this->createMock(TrustedDeviceTokenStorage::class);
         $tokenStorage
