@@ -51,7 +51,7 @@ class ContaoLoginFactoryTest extends TestCase
         $arguments = $container->getDefinition($authProviderId)->getArguments();
 
         $this->assertIsArray($arguments);
-        $this->assertCount(5, $arguments);
+        $this->assertCount(4, $arguments);
         $this->assertEquals(new Reference('contao.security.frontend_user_provider'), $arguments['index_0']);
         $this->assertEquals(new Reference('security.user_checker.contao_frontend'), $arguments['index_1']);
         $this->assertSame('contao_frontend', $arguments['index_2']);

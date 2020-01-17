@@ -2681,12 +2681,11 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(AuthenticationSuccessHandler::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertTrue($definition->isAbstract());
 
         $this->assertEquals(
             [
                 new Reference('contao.framework'),
-                null,
+                new Reference('contao.security.two_factor.trusted_device_manager'),
                 new Reference('security.firewall.map'),
                 new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
             ],

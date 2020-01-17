@@ -625,10 +625,9 @@ services:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler
         arguments:
             - '@contao.framework'
-            - ~ # trusted device manager
+            - '@contao.security.two_factor.trusted_device_manager'
             - '@security.firewall.map'
             - '@?logger'
-        abstract: true
 
     contao.security.backend_access_voter:
         class: Contao\CoreBundle\Security\Voter\BackendAccessVoter
@@ -720,9 +719,9 @@ services:
         class: Contao\CoreBundle\Security\TwoFactor\TrustedDeviceManager
         arguments:
             - '@request_stack'
-            - ~ # trusted device token storage
+            - '@contao.security.two_factor.trusted_token_storage'
             - '@doctrine.orm.entity_manager'
-        abstract: true
+        public: true
 
     contao.security.user_checker:
         class: Contao\CoreBundle\Security\User\UserChecker

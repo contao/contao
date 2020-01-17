@@ -148,7 +148,7 @@ class TwoFactorController extends AbstractFrontendModuleController
         $template->href = $this->page->getAbsoluteUrl().'?2fa=enable';
         $template->backupCodes = json_decode((string) $user->backupCodes, true) ?? [];
         $template->trustedDevices = $trustedDeviceRepository->findForUser($user);
-        $template->currentDevice = $request->cookies->get(ContaoLoginFactory::TRUSTED_DEVICES_TOKEN_ID_PREFIX.'contao_frontend');
+        $template->currentDevice = $request->cookies->get(ContaoLoginFactory::TRUSTED_DEVICES_TOKEN_ID_PREFIX);
 
         return new Response($template->parse());
     }

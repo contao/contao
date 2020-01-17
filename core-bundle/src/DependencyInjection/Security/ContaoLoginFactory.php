@@ -22,7 +22,7 @@ use Symfony\Component\DependencyInjection\Reference;
 class ContaoLoginFactory extends AbstractFactory
 {
     public const TRUSTED_DEVICES_TOKEN_LIFETIME = 5184000;
-    public const TRUSTED_DEVICES_TOKEN_ID_PREFIX = 'contao_2fa_trusted_device_';
+    public const TRUSTED_DEVICES_TOKEN_ID_PREFIX = 'contao_2fa_trusted_device';
 
     public function __construct()
     {
@@ -37,7 +37,6 @@ class ContaoLoginFactory extends AbstractFactory
 
         $this->createTwoFactorPreparationListener($container, $id);
         $this->createTwoFactorTrustedDevicesTokenStorage($container, $id);
-        $this->createTwoFactorTrustedDeviceManager($container, $id);
         $this->createTwoFactorTrustedCookieResponseListener($container, $id);
 
         return $ids;
@@ -65,7 +64,6 @@ class ContaoLoginFactory extends AbstractFactory
         ;
 
         $provider = 'contao.security.authentication_provider.'.$id;
-        $trustedDeviceManager = 'contao.security.two_factor.trusted_device_manager.'.$id;
 
         $container
             ->setDefinition($provider, new ChildDefinition('contao.security.authentication_provider'))
@@ -73,7 +71,6 @@ class ContaoLoginFactory extends AbstractFactory
             ->replaceArgument(1, new Reference('security.user_checker.'.$id))
             ->replaceArgument(2, $id)
             ->replaceArgument(5, new Reference($twoFactorProviderId))
-            ->replaceArgument(9, new Reference($trustedDeviceManager))
         ;
 
         return $provider;
@@ -91,15 +88,7 @@ class ContaoLoginFactory extends AbstractFactory
 
     protected function createAuthenticationSuccessHandler($container, $id, $config): string
     {
-        $handler = 'contao.security.authentication_success_handler.'.$id;
-        $trustedDeviceManager = 'contao.security.two_factor.trusted_device_manager.'.$id;
-
-        $container
-            ->setDefinition($handler, new ChildDefinition('contao.security.authentication_success_handler'))
-            ->replaceArgument(1, new Reference($trustedDeviceManager))
-        ;
-
-        return $handler;
+        return 'contao.security.authentication_success_handler';
     }
 
     protected function createAuthenticationFailureHandler($container, $id, $config): string
@@ -124,24 +113,10 @@ class ContaoLoginFactory extends AbstractFactory
 
     private function createTwoFactorTrustedDevicesTokenStorage(ContainerBuilder $container, string $firewallName): void
     {
-        $trustedDevicesTokenStorageId = 'contao.security.two_factor.trusted_token_storage.'.$firewallName;
-
         $container
-            ->setDefinition($trustedDevicesTokenStorageId, new ChildDefinition('scheb_two_factor.trusted_token_storage'))
-            ->replaceArgument(2, self::TRUSTED_DEVICES_TOKEN_ID_PREFIX.$firewallName)
+            ->setDefinition('contao.security.two_factor.trusted_token_storage', new ChildDefinition('scheb_two_factor.trusted_token_storage'))
+            ->replaceArgument(2, self::TRUSTED_DEVICES_TOKEN_ID_PREFIX)
             ->replaceArgument(3, self::TRUSTED_DEVICES_TOKEN_LIFETIME)
-        ;
-    }
-
-    private function createTwoFactorTrustedDeviceManager(ContainerBuilder $container, string $firewallName): void
-    {
-        $trustedDeviceManagerId = 'contao.security.two_factor.trusted_device_manager.'.$firewallName;
-        $trustedDevicesTokenStorageId = 'contao.security.two_factor.trusted_token_storage.'.$firewallName;
-
-        $container
-            ->setDefinition($trustedDeviceManagerId, new ChildDefinition('contao.security.two_factor.trusted_device_manager'))
-            ->replaceArgument(1, new Reference($trustedDevicesTokenStorageId))
-            ->setPublic(true)
         ;
     }
 
@@ -156,9 +131,9 @@ class ContaoLoginFactory extends AbstractFactory
 
         $container
             ->setDefinition($trustedCookieResponseListenerId, new ChildDefinition('scheb_two_factor.trusted_cookie_response_listener'))
-            ->replaceArgument(0, new Reference('contao.security.two_factor.trusted_token_storage.'.$firewallName))
+            ->replaceArgument(0, new Reference('contao.security.two_factor.trusted_token_storage'))
             ->replaceArgument(1, self::TRUSTED_DEVICES_TOKEN_LIFETIME)
-            ->replaceArgument(2, self::TRUSTED_DEVICES_TOKEN_ID_PREFIX.$firewallName)
+            ->replaceArgument(2, self::TRUSTED_DEVICES_TOKEN_ID_PREFIX)
             ->replaceArgument(5, $domain)
             ->addTag('kernel.event_listener', ['event' => 'kernel.response', 'method' => 'onKernelResponse'])
 
