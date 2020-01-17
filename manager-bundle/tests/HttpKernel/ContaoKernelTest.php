@@ -339,6 +339,9 @@ class ContaoKernelTest extends ContaoTestCase
         $classLoader->unregister();
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testIntegrationAutoloadThrowsDebugExceptionOnMixedNamespace(): void
     {
         $classLoader = new ClassLoader();
