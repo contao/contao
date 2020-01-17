@@ -268,14 +268,15 @@ class ContaoKernelTest extends ContaoTestCase
         ]);
 
         ContaoKernel::setProjectDir(__DIR__.'/../Fixtures/HttpKernel/WithAppNamespace');
+
         $kernel = new ContaoKernel('prod', false);
         $kernel->setPluginLoader($pluginLoader)
         $kernel->boot();
 
         $container = $kernel->getContainer();
 
-        $this->assertTrue($container->has('App\\EventListener\\FoobarListener'));
-        $this->assertInstanceOf(FoobarListener::class, $container->get('App\\EventListener\\FoobarListener'));
+        $this->assertTrue($container->has('App\EventListener\FoobarListener'));
+        $this->assertInstanceOf(FoobarListener::class, $container->get('App\EventListener\FoobarListener'));
 
         $kernel->shutdown();
         $classLoader->unregister();
@@ -292,13 +293,14 @@ class ContaoKernelTest extends ContaoTestCase
         ]);
 
         ContaoKernel::setProjectDir(__DIR__.'/../Fixtures/HttpKernel/WithAppNamespace');
+
         $kernel = new ContaoKernel('prod', false);
         $kernel->setPluginLoader($pluginLoader)
         $kernel->boot();
 
         $container = $kernel->getContainer();
 
-        $this->assertFalse($container->has('App\\EventListener\\FoobarListener'));
+        $this->assertFalse($container->has('App\EventListener\FoobarListener'));
 
         $kernel->shutdown();
     }
@@ -318,13 +320,14 @@ class ContaoKernelTest extends ContaoTestCase
         ]);
 
         ContaoKernel::setProjectDir(__DIR__.'/../Fixtures/HttpKernel/WithInvalidNamespace');
+
         $kernel = new ContaoKernel('prod', false);
         $kernel->setPluginLoader($pluginLoader)
         $kernel->boot();
 
         $container = $kernel->getContainer();
 
-        $this->assertFalse($container->has('App\\EventListener\\FoobarListener'));
+        $this->assertFalse($container->has('App\EventListener\FoobarListener'));
 
         $kernel->shutdown();
         $classLoader->unregister();
@@ -345,21 +348,24 @@ class ContaoKernelTest extends ContaoTestCase
         ]);
 
         DebugClassLoader::enable();
-
         ContaoKernel::setProjectDir(__DIR__.'/../Fixtures/HttpKernel/WithInvalidNamespace');
+
         $kernel = new ContaoKernel('dev', true);
         $kernel->setPluginLoader($pluginLoader)
         $kernel->boot();
 
         $container = $kernel->getContainer();
 
-        $this->assertFalse($container->has('App\\EventListener\\FoobarListener'));
+        $this->assertFalse($container->has('App\EventListener\FoobarListener'));
 
         $kernel->shutdown();
         DebugClassLoader::disable();
         $classLoader->unregister();
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testIntegrationAutoloadThrowsDebugExceptionOnMixedNamespace(): void
     {
         $classLoader = new ClassLoader();
@@ -372,8 +378,8 @@ class ContaoKernelTest extends ContaoTestCase
         ]);
 
         DebugClassLoader::enable();
-
         ContaoKernel::setProjectDir(__DIR__.'/../Fixtures/HttpKernel/WithMixedNamespace');
+
         $kernel = new ContaoKernel('dev', true);
         $kernel->setPluginLoader($pluginLoader)
 
@@ -389,7 +395,7 @@ class ContaoKernelTest extends ContaoTestCase
             $classLoader->unregister();
         }
 
-        $this->fail(__METHOD__.' did not throw expected exception');
+        $this->fail(__METHOD__.' did not throw the expected exception');
     }
 
     public function testGetHttpCache(): void
