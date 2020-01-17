@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\PageType;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\PageModel;
 use Symfony\Component\Routing\Route;
+use function strtolower;
 
 abstract class AbstractPageType implements PageTypeInterface
 {
@@ -28,14 +29,20 @@ abstract class AbstractPageType implements PageTypeInterface
     protected static $parameters = [];
 
     /**
-     * Computes the name of the page type by using unqualified classname without suffix "PageType" and lowercase first
-     * char.
+     * Computes the name of the page type by using unqualified classname without suffix "PageType" and converts it to
+     * camelize.
      *
      * @return string
      */
     public function getName(): string
     {
-        return lcfirst(substr(strrchr(static::class, '\\'), 1, -8));
+        return strtolower(
+            preg_replace(
+                '/(?<!^)[A-Z]/',
+                '_$0',
+                substr(strrchr(static::class, '\\'), 1, -8)
+            )
+        );
     }
 
     public function createPageTypeConfig(PageModel $pageModel): PageTypeConfigInterface
