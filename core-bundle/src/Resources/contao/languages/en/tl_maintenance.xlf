@@ -111,7 +111,7 @@
         <source>Automatically log in a front end member to index protected pages.</source>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlWaitToBeFinished">
-        <source>The crawler is currently working, please wait for it to finish to see the results.</source>
+        <source>The crawler is currently working. Please wait for it to finish to see the results.</source>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlDownloadDebugLog">
         <source>Download the debug log</source>
