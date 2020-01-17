@@ -102,7 +102,7 @@ class RouteLoader
         }
 
         // Fallback to the legacy config file (see #566)
-        foreach (['routing.yaml', 'routing.yml'] as $file) {
+        foreach (['routes.yaml', 'routes.yml', 'routing.yaml', 'routing.yml'] as $file) {
             if (file_exists($this->rootDir.'/app/config/'.$file)) {
                 @trigger_error(sprintf('Storing the "%s" file in the "app/config" folder has been deprecated and will no longer work in Contao 5.0. Move it to the "config" folder instead.', $file), E_USER_DEPRECATED);
 
