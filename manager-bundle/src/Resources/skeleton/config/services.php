@@ -31,7 +31,7 @@ return static function(ContainerConfigurator $configurator) use ($container) {
 
         // Trigger __destruct handler
         unset($config);
-    } catch (\Exception $e) {
+    } catch (\Throwable $e) {
         // Ignore failed autoloading
     }
 
