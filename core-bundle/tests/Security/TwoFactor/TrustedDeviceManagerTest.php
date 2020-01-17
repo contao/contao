@@ -32,18 +32,10 @@ class TrustedDeviceManagerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $user = $this->createPartialMock(BackendUser::class, ['getUsername', 'getTrustedTokenVersion']);
-        $user
-            ->expects($this->once())
-            ->method('getUsername')
-            ->willReturn('foo')
-        ;
-
-        $user
-            ->expects($this->once())
-            ->method('getTrustedTokenVersion')
-            ->willReturn(1)
-        ;
+        $user = $this->mockClassWithProperties(BackendUser::class, [
+            'username' => 'foo',
+            'trustedTokenVersion' => 1,
+        ]);
 
         $manager = new TrustedDeviceManager(
             $this->createMock(RequestStack::class),
