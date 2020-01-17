@@ -16,7 +16,6 @@ use Contao\CoreBundle\Entity\TrustedDevice;
 use Contao\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
-use Scheb\TwoFactorBundle\Model\TrustedDeviceInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManagerInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceTokenStorage;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -48,11 +47,10 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
 
     public function addTrustedDevice($user, string $firewallName): void
     {
-        if (!$user instanceof User || !$user instanceof TrustedDeviceInterface) {
+        if (!$user instanceof User) {
             return;
         }
 
-        $username = $user->getUsername();
         $version = (int) $user->trustedTokenVersion;
         $oldCookieValue = $this->trustedTokenStorage->getCookieValue();
 
@@ -60,7 +58,7 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
         $parser = Parser::create();
         $parsedUserAgent = $parser->parse($userAgent);
 
-        $this->trustedTokenStorage->addTrustedToken($username, $firewallName, $version);
+        $this->trustedTokenStorage->addTrustedToken($user->username, $firewallName, $version);
 
         // Check if already an earlier version of the trusted device exists
         try {
