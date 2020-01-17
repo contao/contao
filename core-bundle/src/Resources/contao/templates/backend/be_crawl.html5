@@ -25,7 +25,7 @@
       <script>Backend.crawl()</script>
     </div>
   <?php else: ?>
-    <form action="<?= $this->action ?>" class="tl_form" method="get">
+    <form class="tl_form" method="get">
       <div class="tl_formbody_edit">
         <input type="hidden" name="do" value="maintenance">
         <input type="hidden" name="act" value="crawl">

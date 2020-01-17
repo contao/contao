@@ -90,7 +90,6 @@ class TwoFactorController extends AbstractFrontendModuleController
         $redirectPage = $model->jumpTo > 0 ? $adapter->findByPk($model->jumpTo) : null;
         $return = $redirectPage instanceof PageModel ? $redirectPage->getAbsoluteUrl() : $this->page->getAbsoluteUrl();
 
-        $template->action = '';
         $template->enforceTwoFactor = $this->page->enforceTwoFactor;
         $template->targetPath = $return;
 

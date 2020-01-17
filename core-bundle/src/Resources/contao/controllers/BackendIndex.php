@@ -86,7 +86,6 @@ class BackendIndex extends Backend
 		}
 
 		$objTemplate = new BackendTemplate('be_login');
-		$objTemplate->action = ampersand(Environment::get('request'));
 		$objTemplate->headline = $GLOBALS['TL_LANG']['MSC']['loginBT'];
 
 		/** @var TokenInterface $token */

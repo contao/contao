@@ -27,7 +27,7 @@
 
   <div id="container">
     <main id="main">
-      <form action="<?= $this->action ?>" method="post">
+      <form method="post">
         <div class="formbody">
           <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
           <?php if ($this->staticFrom): ?>

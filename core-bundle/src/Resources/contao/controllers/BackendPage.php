@@ -142,7 +142,6 @@ class BackendPage extends Backend
 		$objTemplate->charset = Config::get('characterSet');
 		$objTemplate->addSearch = true;
 		$objTemplate->search = $GLOBALS['TL_LANG']['MSC']['search'];
-		$objTemplate->action = ampersand(Environment::get('request'));
 		$objTemplate->value = $objSessionBag->get('page_selector_search');
 		$objTemplate->breadcrumb = $GLOBALS['TL_DCA']['tl_page']['list']['sorting']['breadcrumb'];
 

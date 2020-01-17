@@ -60,7 +60,6 @@ class Crawl extends Backend implements \executable
 		$memberWidget = $this->generateMemberWidget();
 
 		$template = new BackendTemplate('be_crawl');
-		$template->action = ampersand(Environment::get('request'));
 		$template->isActive = $this->isActive();
 		$template->subscribersWidget = $subscribersWidget;
 		$template->memberWidget = $memberWidget;

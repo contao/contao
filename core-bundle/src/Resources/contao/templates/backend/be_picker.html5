@@ -54,7 +54,7 @@
         </div>
       <?php endif; ?>
       <?php if ($this->addSearch): ?>
-        <form action="<?= $this->action ?>" method="post">
+        <form method="post">
           <div id="search">
             <input type="hidden" name="FORM_SUBMIT" value="item_selector">
             <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">

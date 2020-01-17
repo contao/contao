@@ -172,7 +172,6 @@ class BackendCsvImportController
 
         $template->formId = $this->getFormId($request);
         $template->backUrl = $this->getBackUrl($request);
-        $template->action = $request->getRequestUri();
         $template->fileMaxSize = $config->get('maxFileSize');
         $template->uploader = $uploader->generateMarkup();
         $template->separators = $this->getSeparators($allowLinebreak);
