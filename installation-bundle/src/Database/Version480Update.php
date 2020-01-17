@@ -26,7 +26,7 @@ class Version480Update extends AbstractMigration
     /**
      * @var Connection
      */
-    protected $connection;
+    private $connection;
 
     /**
      * @var string

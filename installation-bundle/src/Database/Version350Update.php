@@ -24,7 +24,7 @@ class Version350Update extends AbstractMigration
     /**
      * @var Connection
      */
-    protected $connection;
+    private $connection;
 
     public function __construct(Connection $connection)
     {

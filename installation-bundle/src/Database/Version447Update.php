@@ -15,7 +15,7 @@ namespace Contao\InstallationBundle\Database;
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Doctrine\DBAL\Connection;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
@@ -25,7 +25,7 @@ class Version447Update extends AbstractMigration
     /**
      * @var Connection
      */
-    protected $connection;
+    private $connection;
 
     /**
      * @var TranslatorInterface

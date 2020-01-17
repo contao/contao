@@ -31,6 +31,7 @@ class ContaoInstallationExtension extends Extension
 
         $loader->load('commands.yml');
         $loader->load('listener.yml');
+        $loader->load('migrations.yml');
         $loader->load('services.yml');
     }
 }
