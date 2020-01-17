@@ -290,7 +290,7 @@ class AuthenticationProviderTest extends TestCase
     public function testBeginsTwoFactorAuthenticationForContaoUsers(): void
     {
         $user = $this->createPartialMock(BackendUser::class, ['save']);
-        $user->admin = 1;
+        $user->admin = '1';
 
         $token = new UsernamePasswordToken($user, 'foo', 'contao_frontend');
 
@@ -316,7 +316,7 @@ class AuthenticationProviderTest extends TestCase
     public function testSkipsTwoFactorAuthenticationForTrustedDevices(): void
     {
         $user = $this->createPartialMock(BackendUser::class, ['save']);
-        $user->admin = 1;
+        $user->admin = '1';
 
         $token = new UsernamePasswordToken($user, 'foo', 'contao_frontend');
 
