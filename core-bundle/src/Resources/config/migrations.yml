@@ -2,11 +2,6 @@ services:
     _defaults:
         autoconfigure: true
 
-    _instanceof:
-        Contao\CoreBundle\Migration\AbstractMigration:
-            tags:
-                - contao.migration
-
     Contao\CoreBundle\Migration\MigrationCollection: ~
 
     Contao\CoreBundle\Migration\Version409\CeAccessMigration:

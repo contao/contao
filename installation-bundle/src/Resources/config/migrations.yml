@@ -2,11 +2,6 @@ services:
     _defaults:
         autoconfigure: true
 
-    _instanceof:
-        Contao\CoreBundle\Migration\AbstractMigration:
-            tags:
-                - contao.migration
-
     Contao\InstallationBundle\Database\Version330Update:
         arguments:
             - '@database_connection'
