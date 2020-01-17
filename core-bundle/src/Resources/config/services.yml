@@ -597,7 +597,7 @@ services:
             - '@security.authentication.session_strategy'
             - '@security.http_utils'
             - ~
-            - '@contao.security.authentication_success_handler'
+            - ~ # authentication success handler
             - '@contao.security.authentication_failure_handler'
             - []
             - '@scheb_two_factor.token_factory'
@@ -621,21 +621,14 @@ services:
             - '@request_stack'
             - '@contao.security.two_factor.trusted_device_manager'
 
-    contao.security.authentication_success_handler.contao_frontend:
+    contao.security.authentication_success_handler:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler
         arguments:
             - '@contao.framework'
-            - '@contao.security.two_factor.trusted_device_manager.contao_frontend'
+            - ~ # trusted device manager
             - '@security.firewall.map'
             - '@?logger'
-
-    contao.security.authentication_success_handler.contao_backend:
-        class: Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler
-        arguments:
-            - '@contao.framework'
-            - '@contao.security.two_factor.trusted_device_manager.contao_backend'
-            - '@security.firewall.map'
-            - '@?logger'
+        abstract: true
 
     contao.security.backend_access_voter:
         class: Contao\CoreBundle\Security\Voter\BackendAccessVoter
@@ -723,37 +716,13 @@ services:
         tags:
             - { name: scheb_two_factor.provider, alias: contao }
 
-    contao.security.two_factor.trusted_token_storage.contao_backend:
-        class: Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceTokenStorage
-        arguments:
-            - '@request_stack'
-            - '@scheb_two_factor.trusted_jwt_encoder'
-            - 'contao_2fa_trusted_device_backend'
-            - 5184000
-
-    contao.security.two_factor.trusted_token_storage.contao_frontend:
-        class: Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceTokenStorage
-        arguments:
-            - '@request_stack'
-            - '@scheb_two_factor.trusted_jwt_encoder'
-            - 'contao_2fa_trusted_device_frontend'
-            - 5184000
-
-    contao.security.two_factor.trusted_device_manager.contao_backend:
+    contao.security.two_factor.trusted_device_manager:
         class: Contao\CoreBundle\Security\TwoFactor\TrustedDeviceManager
         arguments:
             - '@request_stack'
-            - '@contao.security.two_factor.trusted_token_storage.contao_backend'
+            - ~ # trusted device token storage
             - '@doctrine.orm.entity_manager'
-        public: true
-
-    contao.security.two_factor.trusted_device_manager.contao_frontend:
-        class: Contao\CoreBundle\Security\TwoFactor\TrustedDeviceManager
-        arguments:
-            - '@request_stack'
-            - '@contao.security.two_factor.trusted_token_storage.contao_frontend'
-            - '@doctrine.orm.entity_manager'
-        public: true
+        abstract: true
 
     contao.security.user_checker:
         class: Contao\CoreBundle\Security\User\UserChecker

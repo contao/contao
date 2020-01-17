@@ -2625,7 +2625,7 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('security.authentication.session_strategy'),
                 new Reference('security.http_utils'),
                 null,
-                new Reference('contao.security.authentication_success_handler'),
+                null,
                 new Reference('contao.security.authentication_failure_handler'),
                 [],
                 new Reference('scheb_two_factor.token_factory'),
@@ -2673,33 +2673,25 @@ class ContaoCoreExtensionTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider getFirewallNames
-     */
-    public function testRegistersTheSecurityAuthenticationSuccessHandler(string $firewallName): void
+    public function testRegistersTheSecurityAuthenticationSuccessHandler(): void
     {
-        $this->assertTrue($this->container->has('contao.security.authentication_success_handler.'.$firewallName));
+        $this->assertTrue($this->container->has('contao.security.authentication_success_handler'));
 
-        $definition = $this->container->getDefinition('contao.security.authentication_success_handler.'.$firewallName);
+        $definition = $this->container->getDefinition('contao.security.authentication_success_handler');
 
         $this->assertSame(AuthenticationSuccessHandler::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
+        $this->assertTrue($definition->isAbstract());
 
         $this->assertEquals(
             [
                 new Reference('contao.framework'),
-                new Reference('contao.security.two_factor.trusted_device_manager.'.$firewallName),
+                null,
                 new Reference('security.firewall.map'),
                 new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
             ],
             $definition->getArguments()
         );
-    }
-
-    public function getFirewallNames(): \Generator
-    {
-        yield ['contao_frontend'];
-        yield ['contao_backend'];
     }
 
     public function testRegistersTheSecurityBackendAccessVoter(): void

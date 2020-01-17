@@ -21,6 +21,9 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class ContaoLoginFactory extends AbstractFactory
 {
+    public const TRUSTED_DEVICES_TOKEN_LIFETIME = 5184000;
+    public const TRUSTED_DEVICES_TOKEN_ID_PREFIX = 'contao_2fa_trusted_device_';
+
     public function __construct()
     {
         $this->options = ['require_previous_session' => false];
@@ -33,6 +36,9 @@ class ContaoLoginFactory extends AbstractFactory
         $ids = parent::create($container, $id, $config, $userProviderId, $defaultEntryPointId);
 
         $this->createTwoFactorPreparationListener($container, $id);
+        $this->createTwoFactorTrustedDevicesTokenStorage($container, $id);
+        $this->createTwoFactorTrustedDeviceManager($container, $id);
+        $this->createTwoFactorTrustedCookieResponseListener($container, $id);
 
         return $ids;
     }
@@ -85,7 +91,15 @@ class ContaoLoginFactory extends AbstractFactory
 
     protected function createAuthenticationSuccessHandler($container, $id, $config): string
     {
-        return 'contao.security.authentication_success_handler.'.$id;
+        $handler = 'contao.security.authentication_success_handler.'.$id;
+        $trustedDeviceManager = 'contao.security.two_factor.trusted_device_manager.'.$id;
+
+        $container
+            ->setDefinition($handler, new ChildDefinition('contao.security.authentication_success_handler'))
+            ->replaceArgument(1, $trustedDeviceManager)
+        ;
+
+        return $handler;
     }
 
     protected function createAuthenticationFailureHandler($container, $id, $config): string
@@ -105,6 +119,49 @@ class ContaoLoginFactory extends AbstractFactory
             ->addTag('kernel.event_listener', ['event' => 'security.authentication.success', 'method' => 'onLogin', 'priority' => PHP_INT_MAX])
             ->addTag('kernel.event_listener', ['event' => 'scheb_two_factor.authentication.form', 'method' => 'onTwoFactorForm'])
             ->addTag('kernel.event_listener', ['event' => 'kernel.finish_request', 'method' => 'onKernelFinishRequest'])
+        ;
+    }
+
+    private function createTwoFactorTrustedDevicesTokenStorage(ContainerBuilder $container, string $firewallName): void
+    {
+        $trustedDevicesTokenStorageId = 'contao.security.two_factor.trusted_token_storage.'.$firewallName;
+
+        $container
+            ->setDefinition($trustedDevicesTokenStorageId, new ChildDefinition('scheb_two_factor.trusted_token_storage'))
+            ->replaceArgument(2, self::TRUSTED_DEVICES_TOKEN_ID_PREFIX.$firewallName)
+            ->replaceArgument(3, self::TRUSTED_DEVICES_TOKEN_LIFETIME)
+        ;
+    }
+
+    private function createTwoFactorTrustedDeviceManager(ContainerBuilder $container, string $firewallName): void
+    {
+        $trustedDeviceManagerId = 'contao.security.two_factor.trusted_device_manager.'.$firewallName;
+        $trustedDevicesTokenStorageId = 'contao.security.two_factor.trusted_token_storage.'.$firewallName;
+
+        $container
+            ->setDefinition($trustedDeviceManagerId, new ChildDefinition('contao.security.two_factor.trusted_device_manager'))
+            ->replaceArgument(1, $trustedDevicesTokenStorageId)
+            ->setPublic(true)
+        ;
+    }
+
+    private function createTwoFactorTrustedCookieResponseListener(ContainerBuilder $container, string $firewallName): void
+    {
+        $trustedCookieResponseListenerId = 'contao.listener.two_factor.trusted_cookie_response_listener.'.$firewallName;
+        $domain = '/';
+
+        if ('contao_backend' === $firewallName) {
+            $domain = '/contao';
+        }
+
+        $container
+            ->setDefinition($trustedCookieResponseListenerId, new ChildDefinition('scheb_two_factor.trusted_cookie_response_listener'))
+            ->replaceArgument(0, 'contao.security.two_factor.trusted_token_storage.'.$firewallName)
+            ->replaceArgument(1, self::TRUSTED_DEVICES_TOKEN_LIFETIME)
+            ->replaceArgument(2, self::TRUSTED_DEVICES_TOKEN_ID_PREFIX.$firewallName)
+            ->replaceArgument(5, $domain)
+            ->addTag('kernel.event_listener', ['event' => 'kernel.response', 'method' => 'onKernelResponse'])
+
         ;
     }
 }
