@@ -209,7 +209,7 @@ class ModuleTwoFactor extends BackendModule
 		$container = System::getContainer();
 
 		/** @var TrustedDeviceManager $trustedDeviceManager */
-		$trustedDeviceManager = $container->get('contao.security.two_factor.trusted_device_manager.contao_backend');
+		$trustedDeviceManager = $container->get('contao.security.two_factor.trusted_device_manager');
 		$trustedDeviceManager->clearTrustedDevices($user);
 	}
 }

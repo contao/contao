@@ -219,7 +219,7 @@ class TwoFactorController extends AbstractFrontendModuleController
     private function clearTrustedDevices(FrontendUser $user): void
     {
         /** @var TrustedDeviceManager $trustedDeviceManager */
-        $trustedDeviceManager = $this->get('contao.security.two_factor.trusted_device_manager.contao_frontend');
+        $trustedDeviceManager = $this->get('contao.security.two_factor.trusted_device_manager');
         $trustedDeviceManager->clearTrustedDevices($user);
     }
 }
