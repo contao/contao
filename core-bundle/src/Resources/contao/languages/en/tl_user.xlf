@@ -126,13 +126,13 @@
         <source>Content elements</source>
       </trans-unit>
       <trans-unit id="tl_user.elements.1">
-        <source>Here you can limit the content element types.</source>
+        <source>Here you can select the allowed content element types.</source>
       </trans-unit>
       <trans-unit id="tl_user.fields.0">
         <source>Form fields</source>
       </trans-unit>
       <trans-unit id="tl_user.fields.1">
-        <source>Here you can limit the form field types.</source>
+        <source>Here you can select the allowed form field types.</source>
       </trans-unit>
       <trans-unit id="tl_user.pagemounts.0">
         <source>Pagemounts</source>
