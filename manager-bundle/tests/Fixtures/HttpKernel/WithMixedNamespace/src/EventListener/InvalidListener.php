@@ -10,10 +10,12 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace AppBundle;
+namespace Foo\EventListener;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
-
-class AppBundle extends Bundle
+class InvalidListener
 {
+    public function __invoke(): void
+    {
+        // do nothing
+    }
 }

@@ -12,8 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Tests\HttpKernel;
 
+use App\EventListener\FoobarListener;
 use AppBundle\AppBundle;
+use Composer\Autoload\ClassLoader;
+use Contao\CoreBundle\ContaoManager\Plugin as CorePlugin;
 use Contao\ManagerBundle\Api\ManagerConfig;
+use Contao\ManagerBundle\ContaoManager\Plugin as ManagerPlugin;
 use Contao\ManagerBundle\ContaoManagerBundle;
 use Contao\ManagerBundle\HttpKernel\ContaoCache;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
@@ -25,6 +29,8 @@ use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\ErrorHandler\DebugClassLoader;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 
 class ContaoKernelTest extends ContaoTestCase
@@ -37,6 +43,13 @@ class ContaoKernelTest extends ContaoTestCase
         $reflection = new \ReflectionClass(ContaoKernel::class);
 
         $prop = $reflection->getProperty('projectDir');
+        $prop->setAccessible(true);
+        $prop->setValue(null);
+
+        // Reset the manager-bundle Plugin static properties
+        $reflection = new \ReflectionClass(ManagerPlugin::class);
+
+        $prop = $reflection->getProperty('autoloadModules');
         $prop->setAccessible(true);
         $prop->setValue(null);
 
@@ -58,6 +71,21 @@ class ContaoKernelTest extends ContaoTestCase
         $prop = $reflection->getProperty('httpMethodParameterOverride');
         $prop->setAccessible(true);
         $prop->setValue(false);
+
+        $filesystem = new Filesystem();
+        $filesystem->remove(__DIR__.'/../Fixtures/HttpKernel/WithAppNamespace/var');
+        $filesystem->remove(__DIR__.'/../Fixtures/HttpKernel/WithInvalidNamespace/var');
+        $filesystem->remove(__DIR__.'/../Fixtures/HttpKernel/WithMixedNamespace/var');
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        $filesystem = new Filesystem();
+        $filesystem->remove(__DIR__.'/../Fixtures/HttpKernel/WithAppNamespace/var');
+        $filesystem->remove(__DIR__.'/../Fixtures/HttpKernel/WithInvalidNamespace/var');
+        $filesystem->remove(__DIR__.'/../Fixtures/HttpKernel/WithMixedNamespace/var');
     }
 
     public function testRegisterBundles(): void
@@ -201,6 +229,12 @@ class ContaoKernelTest extends ContaoTestCase
         ];
 
         yield [
+            __DIR__.'/../Fixtures/HttpKernel/WithAppNamespace',
+            'prod',
+            ['services.php'],
+        ];
+
+        yield [
             $this->getTempDir(),
             'prod',
             [],
@@ -221,6 +255,145 @@ class ContaoKernelTest extends ContaoTestCase
         $kernel = $this->getKernel($this->getTempDir());
         $kernel->setPluginLoader($pluginLoader);
         $kernel->registerContainerConfiguration($loader);
+    }
+
+    public function testIntegrationAutoloadAppNamespace(): void
+    {
+        $classLoader = new ClassLoader();
+        $classLoader->addPsr4('App\\', __DIR__.'/../Fixtures/HttpKernel/WithAppNamespace/src');
+        $classLoader->register();
+
+        $pluginLoader = new PluginLoader(null, [
+            'contao/core-bundle' => new CorePlugin(),
+            'contao/manager-bundle' => new ManagerPlugin(),
+        ]);
+
+        ContaoKernel::setProjectDir(__DIR__.'/../Fixtures/HttpKernel/WithAppNamespace');
+
+        $kernel = new ContaoKernel('prod', false);
+        $kernel->setPluginLoader($pluginLoader);
+        $kernel->boot();
+
+        $container = $kernel->getContainer();
+
+        $this->assertTrue($container->has('App\EventListener\FoobarListener'));
+        $this->assertInstanceOf(FoobarListener::class, $container->get('App\EventListener\FoobarListener'));
+
+        $kernel->shutdown();
+        $classLoader->unregister();
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testIntegrationAutoloadIsIgnoredWithoutClassloader(): void
+    {
+        $pluginLoader = new PluginLoader(null, [
+            'contao/core-bundle' => new CorePlugin(),
+            'contao/manager-bundle' => new ManagerPlugin(),
+        ]);
+
+        ContaoKernel::setProjectDir(__DIR__.'/../Fixtures/HttpKernel/WithAppNamespace');
+
+        $kernel = new ContaoKernel('prod', false);
+        $kernel->setPluginLoader($pluginLoader);
+        $kernel->boot();
+
+        $container = $kernel->getContainer();
+
+        $this->assertFalse($container->has('App\EventListener\FoobarListener'));
+
+        $kernel->shutdown();
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testIntegrationAutoloadIgnoresInvalidNamespace(): void
+    {
+        $classLoader = new ClassLoader();
+        $classLoader->addPsr4('App\\', __DIR__.'/../Fixtures/HttpKernel/WithInvalidNamespace/src');
+        $classLoader->register();
+
+        $pluginLoader = new PluginLoader(null, [
+            'contao/core-bundle' => new CorePlugin(),
+            'contao/manager-bundle' => new ManagerPlugin(),
+        ]);
+
+        ContaoKernel::setProjectDir(__DIR__.'/../Fixtures/HttpKernel/WithInvalidNamespace');
+
+        $kernel = new ContaoKernel('prod', false);
+        $kernel->setPluginLoader($pluginLoader);
+        $kernel->boot();
+
+        $container = $kernel->getContainer();
+
+        $this->assertFalse($container->has('App\EventListener\FoobarListener'));
+
+        $kernel->shutdown();
+        $classLoader->unregister();
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testIntegrationAutoloadIgnoresDebugExceptionOnInvalidNamespace(): void
+    {
+        $classLoader = new ClassLoader();
+        $classLoader->addPsr4('App\\', __DIR__.'/../Fixtures/HttpKernel/WithInvalidNamespace/src');
+        $classLoader->register();
+
+        $pluginLoader = new PluginLoader(null, [
+            'contao/core-bundle' => new CorePlugin(),
+            'contao/manager-bundle' => new ManagerPlugin(),
+        ]);
+
+        DebugClassLoader::enable();
+        ContaoKernel::setProjectDir(__DIR__.'/../Fixtures/HttpKernel/WithInvalidNamespace');
+
+        $kernel = new ContaoKernel('dev', true);
+        $kernel->setPluginLoader($pluginLoader);
+        $kernel->boot();
+
+        $container = $kernel->getContainer();
+
+        $this->assertFalse($container->has('App\EventListener\FoobarListener'));
+
+        $kernel->shutdown();
+        DebugClassLoader::disable();
+        $classLoader->unregister();
+    }
+
+    public function testIntegrationAutoloadThrowsDebugExceptionOnMixedNamespace(): void
+    {
+        $classLoader = new ClassLoader();
+        $classLoader->addPsr4('App\\', __DIR__.'/../Fixtures/HttpKernel/WithMixedNamespace/src');
+        $classLoader->register();
+
+        $pluginLoader = new PluginLoader(null, [
+            'contao/core-bundle' => new CorePlugin(),
+            'contao/manager-bundle' => new ManagerPlugin(),
+        ]);
+
+        DebugClassLoader::enable();
+        ContaoKernel::setProjectDir(__DIR__.'/../Fixtures/HttpKernel/WithMixedNamespace');
+
+        $kernel = new ContaoKernel('dev', true);
+        $kernel->setPluginLoader($pluginLoader);
+
+        try {
+            $kernel->boot();
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(\RuntimeException::class, $e);
+
+            return;
+        } finally {
+            $kernel->shutdown();
+            DebugClassLoader::disable();
+            $classLoader->unregister();
+        }
+
+        $this->fail(__METHOD__.' did not throw the expected exception');
     }
 
     public function testGetHttpCache(): void
