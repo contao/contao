@@ -107,7 +107,7 @@ class ModuleTwoFactor extends BackendModule
 		$this->Template->isEnabled = (bool) $user->useTwoFactor;
 		$this->Template->backupCodes = json_decode((string) $user->backupCodes, true) ?? array();
 		$this->Template->trustedDevices = $trustedDeviceRepository->findForUser($user);
-		$this->Template->currentDevice = $request->cookies->get(ContaoLoginFactory::TRUSTED_DEVICES_TOKEN_ID_PREFIX.'contao_backend');
+		$this->Template->currentDevice = $request->cookies->get(ContaoLoginFactory::TRUSTED_DEVICES_TOKEN_ID_PREFIX . 'contao_backend');
 	}
 
 	/**
