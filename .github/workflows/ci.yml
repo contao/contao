@@ -106,7 +106,7 @@ jobs:
               uses: shivammathur/setup-php@v1
               with:
                   php-version: ${{ matrix.php }}
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysql, pcre, pdo, zlib
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
                   tools: prestissimo
                   coverage: none
 
@@ -140,7 +140,7 @@ jobs:
               uses: shivammathur/setup-php@v1
               with:
                   php-version: 7.3
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysql, pcre, pdo, zlib
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
                   tools: prestissimo
                   coverage: none
 
@@ -215,7 +215,7 @@ jobs:
               uses: shivammathur/setup-php@v1
               with:
                   php-version: 7.3
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysql, pcre, pdo, zlib
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
                   tools: prestissimo
                   coverage: none
 
