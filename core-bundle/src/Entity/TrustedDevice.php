@@ -93,11 +93,12 @@ class TrustedDevice
      */
     protected $deviceFamily;
 
-    public function __construct(User $user)
+    public function __construct(User $user, int $version)
     {
         $this->userId = (int) $user->id;
-        $this->userClass = \get_class($user);
+        $this->version = $version;
         $this->created = new \DateTime();
+        $this->userClass = \get_class($user);
     }
 
     public function getId(): int
@@ -144,13 +145,6 @@ class TrustedDevice
     public function getVersion(): int
     {
         return $this->version;
-    }
-
-    public function setVersion(int $version): self
-    {
-        $this->version = $version;
-
-        return $this;
     }
 
     public function setUserAgent(?string $userAgent): self

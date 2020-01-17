@@ -10,10 +10,8 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Entity\TrustedDevice;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
-use Contao\CoreBundle\Repository\TrustedDeviceRepository;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
 use ParagonIE\ConstantTime\Base32;
@@ -93,19 +91,16 @@ class ModuleTwoFactor extends BackendModule
 
 		if (Input::post('FORM_SUBMIT') == 'tl_two_factor_clear_trusted_devices')
 		{
-			$this->clearTrustedDevices($user);
+			$container->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
 		}
 
 		/** @var Request $request */
 		$request = $container->get('request_stack')->getMasterRequest();
 
-		/** @var TrustedDeviceRepository $trustedDeviceRepository */
-		$trustedDeviceRepository = $container->get('doctrine.orm.entity_manager')->getRepository(TrustedDevice::class);
-
 		$this->Template->isEnabled = (bool) $user->useTwoFactor;
 		$this->Template->backupCodes = json_decode((string) $user->backupCodes, true) ?? array();
 		$this->Template->trustedDevices = $container->get('contao.security.two_factor.trusted_device_manager')->getTrustedDevices($user);
-		$this->Template->currentDevice = $request->cookies->get('trusted_device');
+		$this->Template->currentDevice = $request->cookies->get($container->getParameter('scheb_two_factor.trusted_device.cookie_name'));
 	}
 
 	/**
@@ -180,7 +175,8 @@ class ModuleTwoFactor extends BackendModule
 		$user->save();
 
 		// clear all trusted devices
-		$this->clearTrustedDevices($user);
+		$container = System::getContainer();
+		$container->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
 
 		throw new RedirectResponseException($return);
 	}
@@ -195,16 +191,5 @@ class ModuleTwoFactor extends BackendModule
 		/** @var BackupCodeManager $backupCodeManager */
 		$backupCodeManager = System::getContainer()->get(BackupCodeManager::class);
 		$backupCodeManager->generateBackupCodes($user);
-	}
-
-	/**
-	 * Clears trusted devices with incrementing the trustedVersion number
-	 *
-	 * @param BackendUser $user
-	 */
-	protected function clearTrustedDevices(BackendUser $user)
-	{
-		$container = System::getContainer();
-		$container->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
 	}
 }

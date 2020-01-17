@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\RedirectResponseException;
-use Scheb\TwoFactorBundle\Model\TrustedDeviceInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\EquatableInterface;
@@ -97,11 +96,11 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
  * @property string      $useTwoFactor
  * @property string|null $secret
  * @property string|null $backupCodes
- * @property int         $trustedVersion
+ * @property integer     $trustedTokenVersion
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-abstract class User extends System implements UserInterface, EquatableInterface, TrustedDeviceInterface, \Serializable
+abstract class User extends System implements UserInterface, EquatableInterface, \Serializable
 {
 	/**
 	 * Object instance (Singleton)
@@ -631,14 +630,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 		}
 
 		return true;
-	}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getTrustedTokenVersion(): int
-	{
-		return (int) $this->arrData['trustedVersion'];
 	}
 
 	/**

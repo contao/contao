@@ -390,7 +390,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'eval'                    => array('doNotCopy'=>true),
 			'sql'                     => "text NULL"
 		),
-		'trustedVersion' => array
+		'trustedTokenVersion' => array
 		(
 			'eval'                    => array('doNotCopy'=>true),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"

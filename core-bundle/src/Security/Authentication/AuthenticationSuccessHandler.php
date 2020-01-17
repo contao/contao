@@ -21,7 +21,6 @@ use Contao\System;
 use Contao\User;
 use Psr\Log\LoggerInterface;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
-use Scheb\TwoFactorBundle\Security\Http\ParameterBagUtils;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security\FirewallConfig;
 use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
@@ -109,7 +108,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         $this->user->currentLogin = time();
         $this->user->save();
 
-        if ($this->hasTrustedDeviceParameter($request)) {
+        if ($request->request->has('trusted')) {
             /** @var FirewallConfig $firewallConfig */
             $firewallConfig = $this->firewallMap->getFirewallConfig($request);
 
@@ -171,10 +170,5 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         foreach ($GLOBALS['TL_HOOKS']['postLogin'] as $callback) {
             $system->importStatic($callback[0])->{$callback[1]}($this->user);
         }
-    }
-
-    private function hasTrustedDeviceParameter(Request $request): bool
-    {
-        return (bool) ParameterBagUtils::getRequestParameterValue($request, 'trusted');
     }
 }

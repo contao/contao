@@ -17,7 +17,6 @@ use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Controller\FrontendModule\TwoFactorController;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
-use Contao\CoreBundle\Repository\TrustedDeviceRepository;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
@@ -509,19 +508,14 @@ class TwoFactorControllerTest extends TestCase
         $translator = $this->createMock(TranslatorInterface::class);
         $backupCodeManager = $this->createMock(BackupCodeManager::class);
 
-        $trustedDeviceRespository = $this->createMock(TrustedDeviceRepository::class);
         $trustedDeviceManager = $this->createMock(TrustedDeviceManager::class);
 
         $entityManager = $this->createMock(EntityManagerInterface::class);
-        $entityManager
-            ->method('getRepository')
-            ->willReturn($trustedDeviceRespository)
-        ;
 
         $finder = new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao');
 
         $parameterBag = new ParameterBag([
-            'scheb_two_factor.trusted_device.cookie_name' => 'trusted_device',
+            'scheb_two_factor.trusted_device.cookie_name' => 'trusted',
         ]);
 
         $container = new ContainerBuilder($parameterBag);

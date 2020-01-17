@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Security\TwoFactor;
 
 use Contao\CoreBundle\Entity\TrustedDevice;
-use Contao\CoreBundle\Repository\TrustedDeviceRepository;
 use Contao\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
@@ -25,8 +24,6 @@ use UAParser\Parser;
 
 class TrustedDeviceManager implements TrustedDeviceManagerInterface
 {
-    private const DEFAULT_TOKEN_VERSION = 0;
-
     /**
      * @var RequestStack
      */
@@ -55,11 +52,8 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
             return;
         }
 
-        /** @var TrustedDeviceRepository $trustedDeviceRepository */
-        $trustedDeviceRepository = $this->entityManager->getRepository(TrustedDevice::class);
-
         $username = $user->getUsername();
-        $version = $this->getTrustedTokenVersion($user);
+        $version = (int) $user->trustedTokenVersion;
         $oldCookieValue = $this->trustedTokenStorage->getCookieValue();
 
         $userAgent = $this->requestStack->getMasterRequest()->headers->get('User-Agent');
@@ -70,9 +64,9 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
 
         // Check if already an earlier version of the trusted device exists
         try {
-            $trustedDevice = $trustedDeviceRepository->findExisting((int) $user->id, $oldCookieValue, $version) ?? new TrustedDevice($user);
+            $trustedDevice = $this->findExistingTrustedDevice((int) $user->id, $oldCookieValue, $version) ?? new TrustedDevice($user, $version);
         } catch (NonUniqueResultException $exception) {
-            $trustedDevice = new TrustedDevice($user);
+            $trustedDevice = new TrustedDevice($user, $version);
         }
 
         $trustedDevice
@@ -82,7 +76,6 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
             ->setUaFamily($parsedUserAgent->ua->family)
             ->setOsFamily($parsedUserAgent->os->family)
             ->setDeviceFamily($parsedUserAgent->device->family)
-            ->setVersion($version)
         ;
 
         $this->entityManager->persist($trustedDevice);
@@ -95,8 +88,8 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
             return false;
         }
 
-        $username = $user->getUsername();
-        $version = $this->getTrustedTokenVersion($user);
+        $username = $user->username;
+        $version = (int) $user->trustedTokenVersion;
 
         return $this->trustedTokenStorage->hasTrustedToken($username, $firewallName, $version);
     }
@@ -111,24 +104,39 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
 
         $this->entityManager->flush();
 
-        ++$user->trustedVersion;
+        ++$user->trustedTokenVersion;
         $user->save();
     }
 
     public function getTrustedDevices(User $user)
     {
-        /** @var TrustedDeviceRepository $trustedDeviceRepository */
-        $trustedDeviceRepository = $this->entityManager->getRepository(TrustedDevice::class);
+        return $this->entityManager->createQueryBuilder()
+            ->select('td')
+            ->from(TrustedDevice::class, 'td')
+            ->andWhere('td.userClass = :userClass')
+            ->andWhere('td.userId = :userId')
+            ->setParameter('userClass', \get_class($user))
+            ->setParameter('userId', (int) $user->id)
 
-        return $trustedDeviceRepository->findForUser($user);
+            ->getQuery()
+            ->execute()
+        ;
     }
 
-    private function getTrustedTokenVersion($user): int
+    public function findExistingTrustedDevice(int $userId, string $cookieValue, int $version)
     {
-        if ($user instanceof TrustedDeviceInterface) {
-            return $user->getTrustedTokenVersion();
-        }
+        return $this->entityManager->createQueryBuilder()
+            ->select('td')
+            ->from(TrustedDevice::class, 'td')
+            ->andWhere('td.userId = :userId')
+            ->andWhere('td.cookieValue = :cookieValue')
+            ->andWhere('td.version = :version')
+            ->setParameter('userId', $userId)
+            ->setParameter('cookieValue', $cookieValue)
+            ->setParameter('version', $version)
 
-        return self::DEFAULT_TOKEN_VERSION;
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
     }
 }
