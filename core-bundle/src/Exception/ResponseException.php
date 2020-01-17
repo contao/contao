@@ -33,10 +33,6 @@ class ResponseException extends \RuntimeException
      */
     public function __construct(Response $response, \Exception $previous = null)
     {
-        if (!$response->headers->has('X-Status-Code')) {
-            $response->headers->set('X-Status-Code', $response->getStatusCode());
-        }
-
         $this->response = $response;
 
         parent::__construct('This exception has no message. Use $exception->getResponse() instead.', 0, $previous);

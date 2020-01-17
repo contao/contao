@@ -41,6 +41,7 @@ class ResponseExceptionListenerTest extends TestCase
         $listener->onKernelException($event);
 
         $this->assertTrue($event->hasResponse());
+        $this->assertTrue($event->isAllowingCustomResponseCode());
 
         $response = $event->getResponse();
 
@@ -64,5 +65,6 @@ class ResponseExceptionListenerTest extends TestCase
         $listener->onKernelException($event);
 
         $this->assertFalse($event->hasResponse());
+        $this->assertFalse($event->isAllowingCustomResponseCode());
     }
 }
