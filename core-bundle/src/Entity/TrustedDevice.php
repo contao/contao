@@ -117,6 +117,13 @@ class TrustedDevice
         return $this->created;
     }
 
+    public function setCreated(\DateTime $created): self
+    {
+        $this->created = $created;
+
+        return $this;
+    }
+
     public function getUserClass(): string
     {
         return $this->userClass;

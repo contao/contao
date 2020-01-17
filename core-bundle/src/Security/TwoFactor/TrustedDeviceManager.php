@@ -76,6 +76,7 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
         }
 
         $trustedDevice
+            ->setCreated(new \DateTime())
             ->setCookieValue($this->trustedTokenStorage->getCookieValue())
             ->setUserAgent($userAgent)
             ->setUaFamily($parsedUserAgent->ua->family)
