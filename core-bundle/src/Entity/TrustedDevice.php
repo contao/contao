@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Entity;
 
+use Contao\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -92,6 +93,13 @@ class TrustedDevice
      */
     protected $deviceFamily;
 
+    public function __construct(User $user)
+    {
+        $this->userId = (int) $user->id;
+        $this->userClass = \get_class($user);
+        $this->created = new \DateTime();
+    }
+
     public function getId(): int
     {
         return $this->id;
@@ -109,35 +117,14 @@ class TrustedDevice
         return $this->created;
     }
 
-    public function setCreated(\DateTime $created): self
-    {
-        $this->created = $created;
-
-        return $this;
-    }
-
     public function getUserClass(): string
     {
         return $this->userClass;
     }
 
-    public function setUserClass(?string $userClass): self
-    {
-        $this->userClass = $userClass;
-
-        return $this;
-    }
-
     public function getUserId(): int
     {
         return $this->userId;
-    }
-
-    public function setUserId(?int $userId): self
-    {
-        $this->userId = $userId;
-
-        return $this;
     }
 
     public function getCookieValue(): string

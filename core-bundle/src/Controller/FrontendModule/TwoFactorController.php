@@ -16,6 +16,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
+use Contao\CoreBundle\Security\TwoFactor\TrustedDeviceManager;
 use Contao\FrontendUser;
 use Contao\ModuleModel;
 use Contao\PageModel;
@@ -73,6 +74,7 @@ class TwoFactorController extends AbstractFrontendModuleController
         $services['security.helper'] = Security::class;
         $services['translator'] = TranslatorInterface::class;
         $services['doctrine.orm.entity_manager'] = EntityManagerInterface::class;
+        $services['contao.security.two_factor.trusted_device_manager'] = TrustedDeviceManager::class;
         $services[BackupCodeManager::class] = BackupCodeManager::class;
 
         return $services;
