@@ -16,7 +16,6 @@ use Contao\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Contao\CoreBundle\Repository\TrustedDeviceRepository")
  * @ORM\Table(name="tl_trusted_device")
  */
 class TrustedDevice
