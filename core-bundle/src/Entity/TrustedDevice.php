@@ -124,11 +124,6 @@ class TrustedDevice
         return $this;
     }
 
-    public function getUserClass(): string
-    {
-        return $this->userClass;
-    }
-
     public function getUserId(): int
     {
         return $this->userId;
@@ -156,11 +151,6 @@ class TrustedDevice
         $this->version = $version;
 
         return $this;
-    }
-
-    public function getUserAgent(): ?string
-    {
-        return $this->userAgent;
     }
 
     public function setUserAgent(?string $userAgent): self
