@@ -127,12 +127,12 @@ class InitializeController extends AbstractController
 
         try {
             $event = new ResponseEvent($this->get('http_kernel'), $request, $type, $response);
-            $this->get('event_dispatcher')->dispatch(KernelEvents::RESPONSE, $event);
+            $this->get('event_dispatcher')->dispatch($event, KernelEvents::RESPONSE);
             $response = $event->getResponse();
 
             $this->get('event_dispatcher')->dispatch(
-                KernelEvents::FINISH_REQUEST,
-                new FinishRequestEvent($this->get('http_kernel'), $request, $type)
+                new FinishRequestEvent($this->get('http_kernel'), $request, $type),
+                KernelEvents::FINISH_REQUEST
             );
 
             $this->get('request_stack')->pop();

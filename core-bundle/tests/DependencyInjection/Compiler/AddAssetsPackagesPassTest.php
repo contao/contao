@@ -143,6 +143,7 @@ class AddAssetsPackagesPassTest extends TestCase
         $this->assertSame('assets._version_manifest_json', (string) $service->getArgument(1));
         $this->assertTrue($container->hasDefinition('assets._version_manifest_json'));
 
+        /** @var ChildDefinition $definition */
         $definition = $container->getDefinition('assets._version_manifest_json');
 
         $this->assertInstanceOf(ChildDefinition::class, $definition);
