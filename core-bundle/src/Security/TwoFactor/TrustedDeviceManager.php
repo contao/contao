@@ -105,9 +105,7 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
 
     public function clearTrustedDevices(User $user): void
     {
-        /** @var TrustedDeviceRepository $trustedDeviceRepository */
-        $trustedDeviceRepository = $this->entityManager->getRepository(TrustedDevice::class);
-        $trustedDevices = $trustedDeviceRepository->findForUser($user);
+        $trustedDevices = $this->getTrustedDevices($user);
 
         foreach ($trustedDevices as $trustedDevice) {
             $this->entityManager->remove($trustedDevice);
@@ -117,6 +115,14 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
 
         ++$user->trustedVersion;
         $user->save();
+    }
+
+    public function getTrustedDevices(User $user)
+    {
+        /** @var TrustedDeviceRepository $trustedDeviceRepository */
+        $trustedDeviceRepository = $this->entityManager->getRepository(TrustedDevice::class);
+
+        return $trustedDeviceRepository->findForUser($user);
     }
 
     private function getTrustedTokenVersion($user): int

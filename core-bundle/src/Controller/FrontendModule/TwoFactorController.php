@@ -12,13 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller\FrontendModule;
 
-use Contao\CoreBundle\Entity\TrustedDevice;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Repository\TrustedDeviceRepository;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
-use Contao\CoreBundle\Security\TwoFactor\TrustedDeviceManager;
 use Contao\FrontendUser;
 use Contao\ModuleModel;
 use Contao\PageModel;
@@ -137,16 +134,13 @@ class TwoFactorController extends AbstractFrontendModuleController
         }
 
         if ('tl_two_factor_clear_trusted_devices' === $request->request->get('FORM_SUBMIT')) {
-            $this->clearTrustedDevices($user);
+            $this->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
         }
-
-        /** @var TrustedDeviceRepository $trustedDeviceRepository */
-        $trustedDeviceRepository = $this->get('doctrine.orm.entity_manager')->getRepository(TrustedDevice::class);
 
         $template->isEnabled = (bool) $user->useTwoFactor;
         $template->href = $this->page->getAbsoluteUrl().'?2fa=enable';
         $template->backupCodes = json_decode((string) $user->backupCodes, true) ?? [];
-        $template->trustedDevices = $trustedDeviceRepository->findForUser($user);
+        $template->trustedDevices = $this->get('contao.security.two_factor.trusted_device_manager')->getTrustedDevices($user);
         $template->currentDevice = $request->cookies->get('trusted_device');
 
         return new Response($template->parse());
@@ -213,12 +207,5 @@ class TwoFactorController extends AbstractFrontendModuleController
         /** @var BackupCodeManager $backupCodeManager */
         $backupCodeManager = $this->get(BackupCodeManager::class);
         $backupCodeManager->generateBackupCodes($user);
-    }
-
-    private function clearTrustedDevices(FrontendUser $user): void
-    {
-        /** @var TrustedDeviceManager $trustedDeviceManager */
-        $trustedDeviceManager = $this->get('contao.security.two_factor.trusted_device_manager');
-        $trustedDeviceManager->clearTrustedDevices($user);
     }
 }

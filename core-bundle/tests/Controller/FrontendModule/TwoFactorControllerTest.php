@@ -21,6 +21,7 @@ use Contao\CoreBundle\Repository\TrustedDeviceRepository;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
+use Contao\CoreBundle\Security\TwoFactor\TrustedDeviceManager;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\FrontendUser;
@@ -509,6 +510,7 @@ class TwoFactorControllerTest extends TestCase
         $backupCodeManager = $this->createMock(BackupCodeManager::class);
 
         $trustedDeviceRespository = $this->createMock(TrustedDeviceRepository::class);
+        $trustedDeviceManager = $this->createMock(TrustedDeviceManager::class);
 
         $entityManager = $this->createMock(EntityManagerInterface::class);
         $entityManager
@@ -539,6 +541,7 @@ class TwoFactorControllerTest extends TestCase
         $container->set('contao.routing.scope_matcher', $scopeMatcher);
         $container->set('translator', $translator);
         $container->set('contao.security.two_factor.authenticator', $authenticator);
+        $container->set('contao.security.two_factor.trusted_device_manager', $trustedDeviceManager);
         $container->set('security.authentication_utils', $authenticationUtils);
         $container->set(BackupCodeManager::class, $backupCodeManager);
         $container->set('security.helper', $security);

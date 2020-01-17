@@ -16,7 +16,6 @@ use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Repository\TrustedDeviceRepository;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
-use Contao\CoreBundle\Security\TwoFactor\TrustedDeviceManager;
 use ParagonIE\ConstantTime\Base32;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
@@ -105,7 +104,7 @@ class ModuleTwoFactor extends BackendModule
 
 		$this->Template->isEnabled = (bool) $user->useTwoFactor;
 		$this->Template->backupCodes = json_decode((string) $user->backupCodes, true) ?? array();
-		$this->Template->trustedDevices = $trustedDeviceRepository->findForUser($user);
+		$this->Template->trustedDevices = $container->get('contao.security.two_factor.trusted_device_manager')->getTrustedDevices($user);
 		$this->Template->currentDevice = $request->cookies->get('trusted_device');
 	}
 
@@ -206,9 +205,6 @@ class ModuleTwoFactor extends BackendModule
 	protected function clearTrustedDevices(BackendUser $user)
 	{
 		$container = System::getContainer();
-
-		/** @var TrustedDeviceManager $trustedDeviceManager */
-		$trustedDeviceManager = $container->get('contao.security.two_factor.trusted_device_manager');
-		$trustedDeviceManager->clearTrustedDevices($user);
+		$container->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
 	}
 }
