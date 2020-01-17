@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\DependencyInjection\Security\ContaoLoginFactory;
 use Contao\CoreBundle\Entity\TrustedDevice;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
@@ -106,7 +107,7 @@ class ModuleTwoFactor extends BackendModule
 		$this->Template->isEnabled = (bool) $user->useTwoFactor;
 		$this->Template->backupCodes = json_decode((string) $user->backupCodes, true) ?? array();
 		$this->Template->trustedDevices = $trustedDeviceRepository->findForUser($user);
-		$this->Template->currentDevice = $request->cookies->get('contao_2fa_trusted_device_backend');
+		$this->Template->currentDevice = $request->cookies->get(ContaoLoginFactory::TRUSTED_DEVICES_TOKEN_ID_PREFIX.'contao_backend');
 	}
 
 	/**
