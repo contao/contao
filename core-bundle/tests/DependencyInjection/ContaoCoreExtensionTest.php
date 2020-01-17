@@ -2625,7 +2625,7 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('security.authentication.session_strategy'),
                 new Reference('security.http_utils'),
                 null,
-                null,
+                new Reference('contao.security.authentication_success_handler'),
                 new Reference('contao.security.authentication_failure_handler'),
                 [],
                 new Reference('scheb_two_factor.token_factory'),

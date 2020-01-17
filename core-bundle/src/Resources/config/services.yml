@@ -597,7 +597,7 @@ services:
             - '@security.authentication.session_strategy'
             - '@security.http_utils'
             - ~
-            - ~ # authentication success handler
+            - '@contao.security.authentication_success_handler'
             - '@contao.security.authentication_failure_handler'
             - []
             - '@scheb_two_factor.token_factory'
@@ -719,7 +719,7 @@ services:
         class: Contao\CoreBundle\Security\TwoFactor\TrustedDeviceManager
         arguments:
             - '@request_stack'
-            - '@contao.security.two_factor.trusted_token_storage'
+            - '@scheb_two_factor.trusted_token_storage'
             - '@doctrine.orm.entity_manager'
         public: true
 

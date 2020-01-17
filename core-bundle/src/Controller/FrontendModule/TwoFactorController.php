@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller\FrontendModule;
 
-use Contao\CoreBundle\DependencyInjection\Security\ContaoLoginFactory;
 use Contao\CoreBundle\Entity\TrustedDevice;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Repository\TrustedDeviceRepository;
@@ -148,7 +147,7 @@ class TwoFactorController extends AbstractFrontendModuleController
         $template->href = $this->page->getAbsoluteUrl().'?2fa=enable';
         $template->backupCodes = json_decode((string) $user->backupCodes, true) ?? [];
         $template->trustedDevices = $trustedDeviceRepository->findForUser($user);
-        $template->currentDevice = $request->cookies->get(ContaoLoginFactory::TRUSTED_DEVICES_TOKEN_ID_PREFIX);
+        $template->currentDevice = $request->cookies->get('trusted_device');
 
         return new Response($template->parse());
     }

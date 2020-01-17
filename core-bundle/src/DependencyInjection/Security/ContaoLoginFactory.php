@@ -21,9 +21,6 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class ContaoLoginFactory extends AbstractFactory
 {
-    public const TRUSTED_DEVICES_TOKEN_LIFETIME = 5184000;
-    public const TRUSTED_DEVICES_TOKEN_ID_PREFIX = 'contao_2fa_trusted_device';
-
     public function __construct()
     {
         $this->options = ['require_previous_session' => false];
@@ -36,7 +33,6 @@ class ContaoLoginFactory extends AbstractFactory
         $ids = parent::create($container, $id, $config, $userProviderId, $defaultEntryPointId);
 
         $this->createTwoFactorPreparationListener($container, $id);
-        $this->createTwoFactorTrustedDevicesTokenStorage($container, $id);
         $this->createTwoFactorTrustedCookieResponseListener($container, $id);
 
         return $ids;
@@ -111,32 +107,18 @@ class ContaoLoginFactory extends AbstractFactory
         ;
     }
 
-    private function createTwoFactorTrustedDevicesTokenStorage(ContainerBuilder $container, string $firewallName): void
-    {
-        $container
-            ->setDefinition('contao.security.two_factor.trusted_token_storage', new ChildDefinition('scheb_two_factor.trusted_token_storage'))
-            ->replaceArgument(2, self::TRUSTED_DEVICES_TOKEN_ID_PREFIX)
-            ->replaceArgument(3, self::TRUSTED_DEVICES_TOKEN_LIFETIME)
-        ;
-    }
-
     private function createTwoFactorTrustedCookieResponseListener(ContainerBuilder $container, string $firewallName): void
     {
         $trustedCookieResponseListenerId = 'contao.listener.two_factor.trusted_cookie_response_listener.'.$firewallName;
-        $domain = '/';
+        $path = '/';
 
         if ('contao_backend' === $firewallName) {
-            $domain = '/contao';
+            $path = '/contao';
         }
 
         $container
             ->setDefinition($trustedCookieResponseListenerId, new ChildDefinition('scheb_two_factor.trusted_cookie_response_listener'))
-            ->replaceArgument(0, new Reference('contao.security.two_factor.trusted_token_storage'))
-            ->replaceArgument(1, self::TRUSTED_DEVICES_TOKEN_LIFETIME)
-            ->replaceArgument(2, self::TRUSTED_DEVICES_TOKEN_ID_PREFIX)
-            ->replaceArgument(5, $domain)
-            ->addTag('kernel.event_listener', ['event' => 'kernel.response', 'method' => 'onKernelResponse'])
-
+            ->replaceArgument(5, $path)
         ;
     }
 }

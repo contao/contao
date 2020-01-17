@@ -183,7 +183,6 @@ class ModuleLogin extends Module
 			$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['continue']);
 			$this->Template->cancel = $GLOBALS['TL_LANG']['MSC']['cancelBT'];
 			$this->Template->twoFactorAuthentication = $GLOBALS['TL_LANG']['MSC']['twoFactorAuthentication'];
-			$this->Template->trustedDevicesEnabled = $this->trustedDevicesEnabled;
 
 			return;
 		}
