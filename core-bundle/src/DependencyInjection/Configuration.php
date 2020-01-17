@@ -91,6 +91,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->scalarNode('upload_path')
+                    ->info('The folder used by the file manager.')
                     ->cannotBeEmpty()
                     ->defaultValue('files')
                     ->validate()
