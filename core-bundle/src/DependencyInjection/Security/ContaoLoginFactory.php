@@ -33,6 +33,7 @@ class ContaoLoginFactory extends AbstractFactory
         $ids = parent::create($container, $id, $config, $userProviderId, $defaultEntryPointId);
 
         $this->createTwoFactorPreparationListener($container, $id);
+        $this->createTwoFactorTrustedCookieResponseListener($container, $id);
 
         return $ids;
     }
@@ -103,6 +104,15 @@ class ContaoLoginFactory extends AbstractFactory
             ->addTag('kernel.event_listener', ['event' => 'security.authentication.success', 'method' => 'onLogin', 'priority' => PHP_INT_MAX])
             ->addTag('kernel.event_listener', ['event' => 'scheb_two_factor.authentication.form', 'method' => 'onTwoFactorForm'])
             ->addTag('kernel.event_listener', ['event' => 'kernel.finish_request', 'method' => 'onKernelFinishRequest'])
+        ;
+    }
+
+    private function createTwoFactorTrustedCookieResponseListener(ContainerBuilder $container, string $firewallName): void
+    {
+        $trustedCookieResponseListenerId = 'contao.listener.two_factor.trusted_cookie_response_listener.'.$firewallName;
+
+        $container
+            ->setDefinition($trustedCookieResponseListenerId, new ChildDefinition('scheb_two_factor.trusted_cookie_response_listener'))
         ;
     }
 }
