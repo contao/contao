@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\Security\Authentication;
 use Contao\BackendUser;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler;
-use Contao\CoreBundle\Security\TwoFactor\TrustedDeviceManager;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Contao\PageModel;
@@ -69,7 +68,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->willReturn($user)
         ;
 
-        $handler = $this->getHandler(null, null, null, $logger);
+        $handler = $this->getHandler(null, $logger);
         $response = $handler->onAuthenticationSuccess($request, $token);
 
         $this->assertSame('http://localhost/target', $response->getTargetUrl());
@@ -154,7 +153,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
         $GLOBALS['TL_HOOKS']['postLogin'][] = [static::class, 'onPostLogin'];
 
-        $handler = $this->getHandler($framework, null, null, $logger);
+        $handler = $this->getHandler($framework, $logger);
         $handler->onAuthenticationSuccess($request, $token);
 
         unset($GLOBALS['TL_HOOKS']);
@@ -417,24 +416,17 @@ class AuthenticationSuccessHandlerTest extends TestCase
     }
 
     /**
-     * @param ContaoFramework&MockObject               $framework
-     * @param TrustedDeviceManagerInterface&MockObject $trustedDeviceManager
-     * @param FirewallMap&MockObject                   $firewallMap
-     * @param LoggerInterface&MockObject               $logger
+     * @param ContaoFramework&MockObject $framework
+     * @param LoggerInterface&MockObject $logger
      */
-    private function getHandler(ContaoFramework $framework = null, TrustedDeviceManagerInterface $trustedDeviceManager = null, FirewallMap $firewallMap = null, LoggerInterface $logger = null): AuthenticationSuccessHandler
+    private function getHandler(ContaoFramework $framework = null, LoggerInterface $logger = null): AuthenticationSuccessHandler
     {
         if (null === $framework) {
             $framework = $this->mockContaoFramework();
         }
 
-        if (null === $trustedDeviceManager) {
-            $trustedDeviceManager = $this->createMock(TrustedDeviceManagerInterface::class);
-        }
-
-        if (null === $firewallMap) {
-            $firewallMap = $this->createMock(FirewallMap::class);
-        }
+        $trustedDeviceManager = $this->createMock(TrustedDeviceManagerInterface::class);
+        $firewallMap = $this->createMock(FirewallMap::class);
 
         if (null === $logger) {
             $logger = $this->createMock(LoggerInterface::class);

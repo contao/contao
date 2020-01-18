@@ -27,7 +27,6 @@ use Contao\FrontendUser;
 use Contao\ModuleModel;
 use Contao\PageModel;
 use Contao\System;
-use Contao\User;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
@@ -489,10 +488,7 @@ class TwoFactorControllerTest extends TestCase
             ->willReturn(null)
         ;
 
-        $framework = $this->mockContaoFramework([
-            PageModel::class => $adapter,
-        ]);
-
+        $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
         $framework
             ->method('createInstance')
             ->with(FrontendTemplate::class, [$templateName])
@@ -507,16 +503,10 @@ class TwoFactorControllerTest extends TestCase
 
         $translator = $this->createMock(TranslatorInterface::class);
         $backupCodeManager = $this->createMock(BackupCodeManager::class);
-
         $trustedDeviceManager = $this->createMock(TrustedDeviceManager::class);
-
         $entityManager = $this->createMock(EntityManagerInterface::class);
-
         $finder = new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao');
-
-        $parameterBag = new ParameterBag([
-            'scheb_two_factor.trusted_device.cookie_name' => 'trusted',
-        ]);
+        $parameterBag = new ParameterBag(['scheb_two_factor.trusted_device.cookie_name' => 'trusted']);
 
         $container = new ContainerBuilder($parameterBag);
         $container->setParameter('kernel.debug', false);

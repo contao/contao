@@ -1974,7 +1974,7 @@
         <source>Clear all trusted devices</source>
       </trans-unit>
       <trans-unit id="MSC.trustedDevices">
-        <source>Trusted Devices</source>
+        <source>Trusted devices</source>
       </trans-unit>
       <trans-unit id="MSC.noTrustedDevices">
         <source>No trusted devices found.</source>
@@ -1989,7 +1989,7 @@
         <source>Browser</source>
       </trans-unit>
       <trans-unit id="MSC.operatingSystem">
-        <source>Operating System</source>
+        <source>Operating system</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

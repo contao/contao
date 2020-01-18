@@ -174,9 +174,8 @@ class ModuleTwoFactor extends BackendModule
 		$user->backupCodes = null;
 		$user->save();
 
-		// clear all trusted devices
-		$container = System::getContainer();
-		$container->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
+		// Clear all trusted devices
+		System::getContainer()->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
 
 		throw new RedirectResponseException($return);
 	}

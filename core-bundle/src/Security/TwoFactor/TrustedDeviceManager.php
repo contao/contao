@@ -53,8 +53,8 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
 
         $version = (int) $user->trustedTokenVersion;
         $oldCookieValue = $this->trustedTokenStorage->getCookieValue();
-
         $userAgent = $this->requestStack->getMasterRequest()->headers->get('User-Agent');
+
         $parser = Parser::create();
         $parsedUserAgent = $parser->parse($userAgent);
 
@@ -108,14 +108,14 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
 
     public function getTrustedDevices(User $user)
     {
-        return $this->entityManager->createQueryBuilder()
+        return $this->entityManager
+            ->createQueryBuilder()
             ->select('td')
             ->from(TrustedDevice::class, 'td')
             ->andWhere('td.userClass = :userClass')
             ->andWhere('td.userId = :userId')
             ->setParameter('userClass', \get_class($user))
             ->setParameter('userId', (int) $user->id)
-
             ->getQuery()
             ->execute()
         ;
@@ -123,7 +123,8 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
 
     public function findExistingTrustedDevice(int $userId, string $cookieValue, int $version)
     {
-        return $this->entityManager->createQueryBuilder()
+        return $this->entityManager
+            ->createQueryBuilder()
             ->select('td')
             ->from(TrustedDevice::class, 'td')
             ->andWhere('td.userId = :userId')
@@ -132,7 +133,6 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
             ->setParameter('userId', $userId)
             ->setParameter('cookieValue', $cookieValue)
             ->setParameter('version', $version)
-
             ->getQuery()
             ->getOneOrNullResult()
         ;
