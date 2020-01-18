@@ -110,8 +110,8 @@
         <target>Смещение</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.start.1">
-        <source>In case the sending process is interrupted, you can enter a numeric offset here to continue with a particular recipient. You can check how many mails have been sent in the &lt;em&gt;newsletter_%s.log&lt;/em&gt; file. E.g., if 120 mails have been sent, enter &quot;120&quot; to continue with the 121st recipient (counting starts at 0).</source>
-        <target>В случае, если процесс отправки прервется, вы можете ввести цифровое значение смещения для продолжения с определенного получателя. Вы можете проверить сколько писем было отправлено в файле &lt;em&gt;newsletter_%s.log&lt;/em&gt;. Например, если было отправлено 120 писем, введите &quot;120&quot;, чтобы продолжить со 121-го получателя (отсчет начинается с 0).</target>
+        <source>In case the sending process is interrupted, you can enter a numeric offset here to continue with a particular recipient. You can check how many mails have been sent by selecting the category &lt;code&gt;NEWSLETTER_%s&lt;/code&gt; in the system log. If there are 120 entries, enter &quot;120&quot; to continue with the 121st recipient (counting starts at 0).</source>
+        <target>В случае, если процесс отправки прервется, вы можете ввести цифровое значение смещения для продолжения с определенного получателя. Вы можете проверить, сколько писем было отправлено, выбрав категорию &lt;code&gt;NEWSLETTER_%s&lt;/code&gt; в системном журнале. Например, если было отправлено 120 писем, введите &quot;120&quot;, чтобы продолжить со 121-го получателя (отсчет начинается с 0).</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendPreviewTo.0">
         <source>Send preview to</source>
@@ -193,70 +193,6 @@
         <source>Do you really want to send the newsletter?</source>
         <target>Вы действительно хотите отправить новостную рассылку?</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.new.0">
-        <source>New newsletter</source>
-        <target>Новая новостная рассылка</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.new.1">
-        <source>Create a new newsletter</source>
-        <target>Создать новую новостную рассылку</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.show.0">
-        <source>Newsletter details</source>
-        <target>Детали новостной рассылки</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.show.1">
-        <source>Show the details of newsletter ID %s</source>
-        <target>Показать детали новостной рассылки ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.edit.0">
-        <source>Edit newsletter</source>
-        <target>Редактировать новостную рассылку</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.edit.1">
-        <source>Edit newsletter ID %s</source>
-        <target>Редактировать новостную рассылку ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.copy.0">
-        <source>Duplicate newsletter</source>
-        <target>Дублировать новостную рассылку</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.copy.1">
-        <source>Duplicate newsletter ID %s</source>
-        <target>Дублировать новостную рассылку ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.cut.0">
-        <source>Move newsletter</source>
-        <target>Переместить новостную рассылку</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.cut.1">
-        <source>Move newsletter ID %s</source>
-        <target>Переместить новостную рассылку ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.delete.0">
-        <source>Delete newsletter</source>
-        <target>Удалить новостную рассылку</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.delete.1">
-        <source>Delete newsletter ID %s</source>
-        <target>Удалить новостную рассылку ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.editheader.0">
-        <source>Edit channel</source>
-        <target>Редактировать канал</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.editheader.1">
-        <source>Edit the channel settings</source>
-        <target>Редактировать настройки канала</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.pasteafter.0">
-        <source>Paste into this channel</source>
-        <target>Вставить в этот канал</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.pasteafter.1">
-        <source>Paste after newsletter ID %s</source>
-        <target>Вставить после новостной рассылки ID %s</target>
-      </trans-unit>
       <trans-unit id="tl_newsletter.send.0">
         <source>Send newsletter</source>
         <target>Отправить новостную рассылку</target>
@@ -264,6 +200,38 @@
       <trans-unit id="tl_newsletter.send.1">
         <source>Send newsletter ID %s</source>
         <target>Отправить новостную рассылку ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.new.0">
+        <source>New</source>
+        <target>Новый</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.new.1">
+        <source>Create a new newsletter</source>
+        <target>Создать новую новостную рассылку</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.show">
+        <source>Show the details of newsletter ID %s</source>
+        <target>Показать детали новостной рассылки ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.edit">
+        <source>Edit newsletter ID %s</source>
+        <target>Редактировать новостную рассылку ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.copy">
+        <source>Duplicate newsletter ID %s</source>
+        <target>Дублировать новостную рассылку ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.cut">
+        <source>Move newsletter ID %s</source>
+        <target>Переместить новостную рассылку ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.delete">
+        <source>Delete newsletter ID %s</source>
+        <target>Удалить новостную рассылку ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.pasteafter.0">
+        <source>Paste into this channel</source>
+        <target>Вставить в этот канал</target>
       </trans-unit>
     </body>
   </file>

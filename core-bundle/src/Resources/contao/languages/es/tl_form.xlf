@@ -81,6 +81,14 @@
         <source>The form data will be attached to the e-mail as a CSV file.</source>
         <target>Los datos del formulario se envían adjuntos al e-mail en un archivo CSV (valores separados por comas).</target>
       </trans-unit>
+      <trans-unit id="tl_form.skipEmpty.0">
+        <source>Skip empty fields</source>
+        <target>Omitir campos vacíos</target>
+      </trans-unit>
+      <trans-unit id="tl_form.skipEmpty.1">
+        <source>Do not include empty fields in the form data.</source>
+        <target>No incluya campos vacíos en los datos del formulario.</target>
+      </trans-unit>
       <trans-unit id="tl_form.email.0">
         <source>E-mail</source>
         <target>Formato e-mail</target>
@@ -106,12 +114,12 @@
         <target>Si seleccionas esta opción, los valores enviados seran guardados y reintroducidos en los campos del formulario.</target>
       </trans-unit>
       <trans-unit id="tl_form.customTpl.0">
-        <source>Form template</source>
-        <target>Plantilla formulario</target>
+        <source>Custom form template</source>
+        <target>Plantilla de formulario personalizada</target>
       </trans-unit>
       <trans-unit id="tl_form.customTpl.1">
-        <source>Here you can select the form template.</source>
-        <target>Por favor selecciona una plantilla de formulario. La plantilla por defecto se llama &lt;em&gt;member_default&lt;/em&gt;. Si quieres añadir tu propias plantillas, súbelas al directorio &lt;em&gt;templates&lt;/em&gt; (la extensión de archivo debe ser &lt;em&gt;tpl&lt;/em&gt;).</target>
+        <source>Here you can overwrite the default form template.</source>
+        <target>Aquí puede sobrescribir la plantilla de formulario predeterminada.</target>
       </trans-unit>
       <trans-unit id="tl_form.targetTable.0">
         <source>Target table</source>
@@ -194,50 +202,30 @@
         <target>Ajustes de plantilla</target>
       </trans-unit>
       <trans-unit id="tl_form.new.0">
-        <source>New form</source>
-        <target>Nuevo formulario</target>
+        <source>New</source>
+        <target>Nuevo</target>
       </trans-unit>
       <trans-unit id="tl_form.new.1">
         <source>Create a new form</source>
         <target>Crear un formulario nuevo</target>
       </trans-unit>
-      <trans-unit id="tl_form.show.0">
-        <source>Form details</source>
-        <target>Detalles formulario</target>
-      </trans-unit>
-      <trans-unit id="tl_form.show.1">
+      <trans-unit id="tl_form.show">
         <source>Show the details of form ID %s</source>
         <target>Mostrar detalles del formulario con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form.edit.0">
-        <source>Edit form</source>
-        <target>Editar encabezado del formulario</target>
-      </trans-unit>
-      <trans-unit id="tl_form.edit.1">
+      <trans-unit id="tl_form.edit">
         <source>Edit form ID %s</source>
         <target>Editar el formulario con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form.editheader.0">
-        <source>Edit form</source>
-        <target>Editar encabezado del formulario</target>
+      <trans-unit id="tl_form.editheader">
+        <source>Edit the settings of form ID %s</source>
+        <target>Editar los ajustes del formulario con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form.editheader.1">
-        <source>Edit the form settings</source>
-        <target>Editar el encabezado de este formulario</target>
-      </trans-unit>
-      <trans-unit id="tl_form.copy.0">
-        <source>Duplicate form</source>
-        <target>Duplicar formulario</target>
-      </trans-unit>
-      <trans-unit id="tl_form.copy.1">
+      <trans-unit id="tl_form.copy">
         <source>Duplicate form ID %s</source>
         <target>Duplicar formulario con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form.delete.0">
-        <source>Delete form</source>
-        <target>Eliminar formulario</target>
-      </trans-unit>
-      <trans-unit id="tl_form.delete.1">
+      <trans-unit id="tl_form.delete">
         <source>Delete form ID %s</source>
         <target>Eliminar formulario con ID %s</target>
       </trans-unit>

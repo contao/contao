@@ -49,6 +49,14 @@
         <source>Here you can enter a website address.</source>
         <target>Овде можете унети адресу сајта.</target>
       </trans-unit>
+      <trans-unit id="tl_comments.member.0">
+        <source>Member</source>
+        <target>Члан</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.member.1">
+        <source>Here you can associate the comment with a member.</source>
+        <target>Овде можете повезати коментар са чланом.</target>
+      </trans-unit>
       <trans-unit id="tl_comments.comment.0">
         <source>Comment</source>
         <target>Коментар</target>
@@ -157,35 +165,19 @@
         <source>Event</source>
         <target>Дешавање</target>
       </trans-unit>
-      <trans-unit id="tl_comments.show.0">
-        <source>Comment details</source>
-        <target>Детаљи коментара</target>
-      </trans-unit>
-      <trans-unit id="tl_comments.show.1">
+      <trans-unit id="tl_comments.show">
         <source>Show the details of comment ID %s</source>
         <target>Прикажи детаље коментара ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_comments.edit.0">
-        <source>Edit comment</source>
-        <target>Уреди коментар</target>
-      </trans-unit>
-      <trans-unit id="tl_comments.edit.1">
+      <trans-unit id="tl_comments.edit">
         <source>Edit comment ID %s</source>
         <target>Уреди коментар ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_comments.delete.0">
-        <source>Delete comment</source>
-        <target>Обриши коментар</target>
-      </trans-unit>
-      <trans-unit id="tl_comments.delete.1">
+      <trans-unit id="tl_comments.delete">
         <source>Delete comment ID %s</source>
         <target>Обриши коментар ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_comments.toggle.0">
-        <source>Publish/unpublish comment</source>
-        <target>Објави/сакриј коментар</target>
-      </trans-unit>
-      <trans-unit id="tl_comments.toggle.1">
+      <trans-unit id="tl_comments.toggle">
         <source>Publish/unpublish comment ID %s</source>
         <target>Објави/сакриј коментар ID %s</target>
       </trans-unit>

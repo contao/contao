@@ -65,22 +65,6 @@
         <source>Front end</source>
         <target>بخش کاربری</target>
       </trans-unit>
-      <trans-unit id="tl_log.show.0">
-        <source>Show details</source>
-        <target>نمایش جزئیات</target>
-      </trans-unit>
-      <trans-unit id="tl_log.show.1">
-        <source>Show the details of entry ID %s</source>
-        <target>نمایش جزئیات ورودی شناسه‌ی %s</target>
-      </trans-unit>
-      <trans-unit id="tl_log.delete.0">
-        <source>Delete</source>
-        <target>حذف</target>
-      </trans-unit>
-      <trans-unit id="tl_log.delete.1">
-        <source>Delete entry ID %s</source>
-        <target>حذف ورودی شناسه‌ی %s</target>
-      </trans-unit>
     </body>
   </file>
 </xliff>

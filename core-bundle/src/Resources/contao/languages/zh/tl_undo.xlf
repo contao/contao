@@ -41,21 +41,9 @@
         <source>Raw data of the undo step</source>
         <target>被删除的记录数据</target>
       </trans-unit>
-      <trans-unit id="tl_undo.show.0">
-        <source>Show details</source>
-        <target>显示详情</target>
-      </trans-unit>
-      <trans-unit id="tl_undo.show.1">
-        <source>Show the details of entry ID %s</source>
-        <target>显示ID为%s的记录详情</target>
-      </trans-unit>
-      <trans-unit id="tl_undo.undo.0">
-        <source>Restore</source>
-        <target>撤销</target>
-      </trans-unit>
-      <trans-unit id="tl_undo.undo.1">
-        <source>Restore entry ID %s</source>
-        <target>还原ID为%s的记录</target>
+      <trans-unit id="tl_undo.undo">
+        <source>Restore element ID %s</source>
+        <target>恢复 元素 ID %s</target>
       </trans-unit>
     </body>
   </file>

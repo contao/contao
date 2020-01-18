@@ -89,6 +89,18 @@
         <source>Show this page if there is none that matches the visitor's language.</source>
         <target>Прикажи ову страницу ако нема подударања са језиком посетиоца.</target>
       </trans-unit>
+      <trans-unit id="tl_page.favicon.0">
+        <source>Favicon</source>
+      </trans-unit>
+      <trans-unit id="tl_page.favicon.1">
+        <source>Here you can select a favicon for the website.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.robotsTxt.0">
+        <source>Custom robots.txt content</source>
+      </trans-unit>
+      <trans-unit id="tl_page.robotsTxt.1">
+        <source>Here you can enter custom robots.txt content. It may be extended automatically by extensions.</source>
+      </trans-unit>
       <trans-unit id="tl_page.dns.0">
         <source>Domain name</source>
         <target>Домен</target>
@@ -96,6 +108,22 @@
       <trans-unit id="tl_page.dns.1">
         <source>Here you can restrict the access to the website to a certain domain name.</source>
         <target>Овде можете ограничити приступ сајту за одређено доменско име.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticFiles.0">
+        <source>Files URL</source>
+        <target>URL фајлова</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticFiles.1">
+        <source>The files URL applies to the &lt;em&gt;files&lt;/em&gt; directory (page speed optimization).</source>
+        <target>URL фајлова се односи на &lt;em&gt;files&lt;/em&gt; фолдер (оптимизација брзине учитавања страница).</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticPlugins.0">
+        <source>Assets URL</source>
+        <target>URL ресурса</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticPlugins.1">
+        <source>The assets URL applies to the &lt;em&gt;assets&lt;/em&gt; directory (page speed optimization).</source>
+        <target>URL ресурса се односи на &lt;em&gt;assets&lt;/em&gt; фолдер (оптимизација брзине учитавања страница).</target>
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.0">
         <source>E-mail address of the website administrator</source>
@@ -201,14 +229,6 @@
         <source>You can manage page layouts with the &quot;themes&quot; module.</source>
         <target>Распоредом страница можете управљати и модулом &quot;теме&quot;.</target>
       </trans-unit>
-      <trans-unit id="tl_page.mobileLayout.0">
-        <source>Mobile page layout</source>
-        <target>Распоред страница прилагођен мобилним уређајима</target>
-      </trans-unit>
-      <trans-unit id="tl_page.mobileLayout.1">
-        <source>This layout will be used if the visitor uses a mobile device.</source>
-        <target>Овај распоред ће бити кориштен када посетилац приступа преко мобилног уређаја.</target>
-      </trans-unit>
       <trans-unit id="tl_page.includeCache.0">
         <source>Set cache timeouts</source>
         <target>Подеси вредност кеш тајмаута.</target>
@@ -218,20 +238,22 @@
         <target>Подеси вредност кеш тајмаута за страницу и њене подстранице.</target>
       </trans-unit>
       <trans-unit id="tl_page.cache.0">
-        <source>Server cache timeout</source>
-        <target>Кеш тајмаут сервера</target>
+        <source>Shared cache timeout</source>
       </trans-unit>
       <trans-unit id="tl_page.cache.1">
-        <source>The number of seconds after which the page should no longer be considered fresh by shared caches.</source>
-        <target>Број секунди након којих страница неће више бити сматрана освеженом од стране дељених кешова.</target>
+        <source>The period after which the page should no longer be considered fresh by a shared cache.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.alwaysLoadFromCache.0">
+        <source>Always load from shared cache</source>
+      </trans-unit>
+      <trans-unit id="tl_page.alwaysLoadFromCache.1">
+        <source>Always load this page from the shared cache, even if a member is logged in. Note that you can no longer personalize the page for logged in members in this case!</source>
       </trans-unit>
       <trans-unit id="tl_page.clientCache.0">
-        <source>Client cache timeout</source>
-        <target>Кеш тајмаут клијента</target>
+        <source>Private cache timeout</source>
       </trans-unit>
       <trans-unit id="tl_page.clientCache.1">
-        <source>The number of seconds after which the page should no longer be considered fresh by the browser.</source>
-        <target>Број секунди након којих страница неће више бити сматрана освеженом од стране претраживача.</target>
+        <source>The period after which the page should no longer be considered fresh by a private cache.</source>
       </trans-unit>
       <trans-unit id="tl_page.includeChmod.0">
         <source>Assign access rights</source>
@@ -290,12 +312,10 @@
         <target>Класа(е) ће бити кориштене у навигационом менију и тагу &amp;lt;body&amp;gt;.</target>
       </trans-unit>
       <trans-unit id="tl_page.sitemap.0">
-        <source>Show in sitemap</source>
-        <target>Прикажи у мапи сајта</target>
+        <source>Show in HTML sitemap</source>
       </trans-unit>
       <trans-unit id="tl_page.sitemap.1">
-        <source>Here you can define whether the page is shown in the sitemap.</source>
-        <target>Овде можете дефинисати да ли страница треба да буде приказана у мапи сајта.</target>
+        <source>Here you can define whether the page is shown in the HTML sitemap.</source>
       </trans-unit>
       <trans-unit id="tl_page.hide.0">
         <source>Hide from navigation</source>
@@ -342,16 +362,26 @@
         <target>Прикажи од</target>
       </trans-unit>
       <trans-unit id="tl_page.start.1">
-        <source>Do not show the page on the website before this day.</source>
-        <target>Не приказуј страницу на сајту пре наведеног датума.</target>
+        <source>If you want to prevent the page from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_page.stop.0">
         <source>Show until</source>
         <target>Прикажи до</target>
       </trans-unit>
       <trans-unit id="tl_page.stop.1">
-        <source>Do not show the page on the website on and after this day.</source>
-        <target>Не приказуј страницу на сајту након наведеног датума.</target>
+        <source>If you want to prevent the page from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.enforceTwoFactor.0">
+        <source>Enforce two-factor authentication</source>
+      </trans-unit>
+      <trans-unit id="tl_page.enforceTwoFactor.1">
+        <source>Enforce two-factor authentication for all members.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.twoFactorJumpTo.0">
+        <source>Two-factor redirect page</source>
+      </trans-unit>
+      <trans-unit id="tl_page.twoFactorJumpTo.1">
+        <source>Please choose the page to which visitors will be redirected when setting up two-factor authentication.</source>
       </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
@@ -372,6 +402,9 @@
       <trans-unit id="tl_page.dns_legend">
         <source>DNS settings</source>
         <target>Подешавања DNS-а</target>
+      </trans-unit>
+      <trans-unit id="tl_page.website_legend">
+        <source>Website settings</source>
       </trans-unit>
       <trans-unit id="tl_page.global_legend">
         <source>Global settings</source>
@@ -417,6 +450,10 @@
         <source>Publish settings</source>
         <target>Примени подешавања</target>
       </trans-unit>
+      <trans-unit id="tl_page.twoFactor_legend">
+        <source>Two-factor authentication</source>
+        <target>Двостепена аутентификација</target>
+      </trans-unit>
       <trans-unit id="tl_page.permanent">
         <source>301 Permanent redirect</source>
         <target>Трајно преусмеравање 301</target>
@@ -438,90 +475,53 @@
         <target>Никад не приказуј</target>
       </trans-unit>
       <trans-unit id="tl_page.new.0">
-        <source>New page</source>
-        <target>Нова страница</target>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_page.new.1">
         <source>Create a new page</source>
         <target>Креирај нову страницу</target>
       </trans-unit>
-      <trans-unit id="tl_page.show.0">
-        <source>Page details</source>
-        <target>Детаљи странице</target>
-      </trans-unit>
-      <trans-unit id="tl_page.show.1">
+      <trans-unit id="tl_page.show">
         <source>Show the details of page ID %s</source>
         <target>Детаљи странице ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.edit.0">
-        <source>Edit page</source>
-        <target>Уреди страницу</target>
-      </trans-unit>
-      <trans-unit id="tl_page.edit.1">
+      <trans-unit id="tl_page.edit">
         <source>Edit page ID %s</source>
         <target>Уреди страницу ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.cut.0">
-        <source>Move page</source>
-        <target>Помери страницу</target>
-      </trans-unit>
-      <trans-unit id="tl_page.cut.1">
+      <trans-unit id="tl_page.cut">
         <source>Move page ID %s</source>
         <target>Помери страницу ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.copy.0">
-        <source>Duplicate page</source>
-        <target>Копирај страницу</target>
-      </trans-unit>
-      <trans-unit id="tl_page.copy.1">
+      <trans-unit id="tl_page.copy">
         <source>Duplicate page ID %s</source>
         <target>Копирај страницу ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.copyChilds.0">
-        <source>Duplicate with subpages</source>
-        <target>Копирај са подстраницама</target>
-      </trans-unit>
-      <trans-unit id="tl_page.copyChilds.1">
+      <trans-unit id="tl_page.copyChilds">
         <source>Duplicate page ID %s with its subpages</source>
         <target>Копирај страницу ID %s са њеним подстраницама</target>
       </trans-unit>
-      <trans-unit id="tl_page.delete.0">
-        <source>Delete page</source>
-        <target>Обриши страницу</target>
-      </trans-unit>
-      <trans-unit id="tl_page.delete.1">
+      <trans-unit id="tl_page.delete">
         <source>Delete page ID %s</source>
         <target>Обриши страницу ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.toggle.0">
-        <source>Publish/unpublish page</source>
-        <target>Објави/сакриј страницу</target>
-      </trans-unit>
-      <trans-unit id="tl_page.toggle.1">
+      <trans-unit id="tl_page.toggle">
         <source>Publish/unpublish page ID %s</source>
         <target>Објави/сакриј страницу ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.pasteafter.0">
-        <source>Paste after</source>
-        <target>Налепи после</target>
-      </trans-unit>
-      <trans-unit id="tl_page.pasteafter.1">
-        <source>Paste after page ID %s</source>
-        <target>Налепи страницу ID %s</target>
-      </trans-unit>
       <trans-unit id="tl_page.pasteinto.0">
-        <source>Paste into</source>
-        <target>Налепи у</target>
+        <source>Paste at the top</source>
+        <target>Налепи на врх</target>
       </trans-unit>
       <trans-unit id="tl_page.pasteinto.1">
         <source>Paste into page ID %s</source>
         <target>Налепи у страницу ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.articles.0">
-        <source>Edit articles</source>
-        <target>Уреди чланке</target>
+      <trans-unit id="tl_page.pasteafter.1">
+        <source>Paste after page ID %s</source>
+        <target>Налепи страницу ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.articles.1">
+      <trans-unit id="tl_page.articles">
         <source>Edit the articles of page ID %s</source>
         <target>Уреди чланак на страници ID %s</target>
       </trans-unit>
@@ -591,12 +591,15 @@
       </trans-unit>
       <trans-unit id="CACHE.7776000">
         <source>3 months</source>
+        <target>3 месеца</target>
       </trans-unit>
       <trans-unit id="CACHE.15552000">
         <source>6 months</source>
+        <target>6 месеци</target>
       </trans-unit>
       <trans-unit id="CACHE.31536000">
         <source>1 year</source>
+        <target>1 годину</target>
       </trans-unit>
     </body>
   </file>

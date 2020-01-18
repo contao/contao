@@ -33,13 +33,13 @@
         <source>Invalid source or target directory &quot;%s&quot;!</source>
         <target>Le répertoire source ou cible &quot;%s&quot; n'est pas valide !</target>
       </trans-unit>
-      <trans-unit id="tl_templates.new_tpl.0">
-        <source>New template</source>
-        <target>Nouveau modèle</target>
+      <trans-unit id="tl_templates.overridesAnotherTpl">
+        <source>This template overrides &quot;%s&quot;.</source>
+        <target>Ce modèle remplace &quot;%s&quot;.</target>
       </trans-unit>
-      <trans-unit id="tl_templates.new_tpl.1">
-        <source>Create a new template</source>
-        <target>Créer un nouveau modèle</target>
+      <trans-unit id="tl_templates.pleaseSelect">
+        <source>Please select a template from the list above and click &quot;Show differences&quot;.</source>
+        <target>Sélectionnez un modèle dans la liste ci-dessus et cliquez sur &quot;Afficher les différences&quot;.</target>
       </trans-unit>
       <trans-unit id="tl_templates.new.0">
         <source>New folder</source>
@@ -49,29 +49,23 @@
         <source>Create a new folder</source>
         <target>Créer un nouveau répertoire</target>
       </trans-unit>
+      <trans-unit id="tl_templates.new_tpl.0">
+        <source>New template</source>
+        <target>Nouveau modèle</target>
+      </trans-unit>
+      <trans-unit id="tl_templates.new_tpl.1">
+        <source>Create a new template</source>
+        <target>Créer un nouveau modèle</target>
+      </trans-unit>
       <trans-unit id="tl_templates.pasteinto.0">
-        <source>Paste into</source>
-        <target>Coller dedans</target>
+        <source>Paste into the root folder</source>
       </trans-unit>
       <trans-unit id="tl_templates.pasteinto.1">
-        <source>Paste into this folder</source>
-        <target>Coller dedans ce répertoire</target>
+        <source>Paste into folder &quot;%s&quot;</source>
       </trans-unit>
-      <trans-unit id="tl_templates.compare.0">
-        <source>Compare template</source>
-        <target>Comparer le modèle</target>
-      </trans-unit>
-      <trans-unit id="tl_templates.compare.1">
+      <trans-unit id="tl_templates.compare">
         <source>Compare &quot;%s&quot; with another template</source>
         <target>Comparer &quot;%s&quot; avec un autre modèle</target>
-      </trans-unit>
-      <trans-unit id="tl_templates.overridesAnotherTpl">
-        <source>This template overrides &quot;%s&quot;.</source>
-        <target>Ce modèle remplace &quot;%s&quot;.</target>
-      </trans-unit>
-      <trans-unit id="tl_templates.pleaseSelect">
-        <source>Please select a template from the list above and click &quot;Show differences&quot;.</source>
-        <target>Sélectionnez un modèle dans la liste ci-dessus et cliquez sur &quot;Afficher les différences&quot;.</target>
       </trans-unit>
     </body>
   </file>

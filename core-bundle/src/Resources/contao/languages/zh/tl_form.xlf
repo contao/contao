@@ -81,6 +81,13 @@
         <source>The form data will be attached to the e-mail as a CSV file.</source>
         <target>表单数据将以CSV文件的形式作为邮件附件。</target>
       </trans-unit>
+      <trans-unit id="tl_form.skipEmpty.0">
+        <source>Skip empty fields</source>
+        <target>跳过空白页</target>
+      </trans-unit>
+      <trans-unit id="tl_form.skipEmpty.1">
+        <source>Do not include empty fields in the form data.</source>
+      </trans-unit>
       <trans-unit id="tl_form.email.0">
         <source>E-mail</source>
         <target>电子邮件格式</target>
@@ -106,12 +113,12 @@
         <target>把提交的表单数据储存到数据库。</target>
       </trans-unit>
       <trans-unit id="tl_form.customTpl.0">
-        <source>Form template</source>
-        <target>表单模板</target>
+        <source>Custom form template</source>
+        <target>自定义表单模板</target>
       </trans-unit>
       <trans-unit id="tl_form.customTpl.1">
-        <source>Here you can select the form template.</source>
-        <target>可选择表单模板</target>
+        <source>Here you can overwrite the default form template.</source>
+        <target>覆盖默认的表单模板。</target>
       </trans-unit>
       <trans-unit id="tl_form.targetTable.0">
         <source>Target table</source>
@@ -194,50 +201,30 @@
         <target>模板设设置</target>
       </trans-unit>
       <trans-unit id="tl_form.new.0">
-        <source>New form</source>
-        <target>新表单</target>
+        <source>New</source>
+        <target>新建</target>
       </trans-unit>
       <trans-unit id="tl_form.new.1">
         <source>Create a new form</source>
         <target>建立一个新表单</target>
       </trans-unit>
-      <trans-unit id="tl_form.show.0">
-        <source>Form details</source>
-        <target>表单细节</target>
-      </trans-unit>
-      <trans-unit id="tl_form.show.1">
+      <trans-unit id="tl_form.show">
         <source>Show the details of form ID %s</source>
         <target>显示ID为 %s 的表单细节</target>
       </trans-unit>
-      <trans-unit id="tl_form.edit.0">
-        <source>Edit form</source>
-        <target>编辑表单</target>
-      </trans-unit>
-      <trans-unit id="tl_form.edit.1">
+      <trans-unit id="tl_form.edit">
         <source>Edit form ID %s</source>
         <target>编辑ID为 %s 的表单</target>
       </trans-unit>
-      <trans-unit id="tl_form.editheader.0">
-        <source>Edit form</source>
-        <target>编辑表单</target>
+      <trans-unit id="tl_form.editheader">
+        <source>Edit the settings of form ID %s</source>
+        <target>编辑ID为 %s 的表单设定</target>
       </trans-unit>
-      <trans-unit id="tl_form.editheader.1">
-        <source>Edit the form settings</source>
-        <target>编辑表单设置</target>
-      </trans-unit>
-      <trans-unit id="tl_form.copy.0">
-        <source>Duplicate form</source>
-        <target>复制表单</target>
-      </trans-unit>
-      <trans-unit id="tl_form.copy.1">
+      <trans-unit id="tl_form.copy">
         <source>Duplicate form ID %s</source>
         <target>复制ID为 %s 的表单</target>
       </trans-unit>
-      <trans-unit id="tl_form.delete.0">
-        <source>Delete form</source>
-        <target>删除表单</target>
-      </trans-unit>
-      <trans-unit id="tl_form.delete.1">
+      <trans-unit id="tl_form.delete">
         <source>Delete form ID %s</source>
         <target>删除ID为 %s 的表单</target>
       </trans-unit>

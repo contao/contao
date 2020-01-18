@@ -33,6 +33,14 @@
         <source>Make the folder and its sub-folders accessible via HTTP.</source>
         <target>Zpřístupnit adresář a jeho podadresáře přes HTTP.</target>
       </trans-unit>
+      <trans-unit id="tl_files.syncExclude.0">
+        <source>Do not synchronize</source>
+        <target>Nesynchronizovat</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncExclude.1">
+        <source>Do not synchronize the folder and its subfolders with the database.</source>
+        <target>Nesynchronizovat složky a podsložky s databází.</target>
+      </trans-unit>
       <trans-unit id="tl_files.importantPartX.0">
         <source>Important part x coordinate</source>
         <target>Důležitá část x-koordinátů</target>
@@ -105,6 +113,10 @@
         <source>Edit file &quot;%s&quot;</source>
         <target>Upravit soubor &quot;%s&quot;</target>
       </trans-unit>
+      <trans-unit id="tl_files.edit_preview_help">
+        <source>Mark the important part of the image with your mouse cursor.</source>
+        <target>Označit důležitou část obrázku pomocí kurzoru myši.</target>
+      </trans-unit>
       <trans-unit id="tl_files.browseFiles">
         <source>Browse files</source>
         <target>Procházet</target>
@@ -123,13 +135,14 @@
       </trans-unit>
       <trans-unit id="tl_files.dropzoneFileTooBig">
         <source>The file is too big ({{filesize}} MiB). The maximum filesize is {{maxFilesize}} MiB.</source>
+        <target>Soubor je příliš velký ({{filesize}} MB). Maximální povolená velikost souboru činí {{maxFilesize}} MB.</target>
       </trans-unit>
       <trans-unit id="tl_files.dropzoneInvalidType">
         <source>Files of this type cannot be uploaded.</source>
+        <target>Souboru tohoto druhu nelze nahrát.</target>
       </trans-unit>
       <trans-unit id="tl_files.fileLocation">
-        <source>File location: %s</source>
-        <target>Umístění souboru: %s</target>
+        <source>Path: %s</source>
       </trans-unit>
       <trans-unit id="tl_files.syncAdded">
         <source>Added the file or folder &quot;%s&quot;</source>
@@ -171,93 +184,13 @@
         <source>Create a new folder</source>
         <target>Vytvořit novou složku</target>
       </trans-unit>
-      <trans-unit id="tl_files.cut.0">
-        <source>Move file or folder</source>
-        <target>Přesunout soubor nebo složku</target>
-      </trans-unit>
-      <trans-unit id="tl_files.cut.1">
-        <source>Move file or folder &quot;%s&quot;</source>
-        <target>Přesunout soubor do složky &quot;%s&quot;</target>
-      </trans-unit>
-      <trans-unit id="tl_files.copy.0">
-        <source>Duplicate file or folder</source>
-        <target>Kopírovat soubor nebo složku</target>
-      </trans-unit>
-      <trans-unit id="tl_files.copy.1">
-        <source>Duplicate file or folder &quot;%s&quot;</source>
-        <target>Kopírovat soubor nebo složku &quot;%s&quot;</target>
-      </trans-unit>
-      <trans-unit id="tl_files.edit.0">
-        <source>Edit file or folder</source>
-        <target>Upravit soubor nebo složku</target>
-      </trans-unit>
-      <trans-unit id="tl_files.edit.1">
-        <source>Edit file or folder &quot;%s&quot;</source>
-        <target>Upravit soubor nebo složku %s</target>
-      </trans-unit>
-      <trans-unit id="tl_files.delete.0">
-        <source>Delete file or folder</source>
-        <target>Smazat soubor nebo složku</target>
-      </trans-unit>
-      <trans-unit id="tl_files.delete.1">
-        <source>Delete file or folder &quot;%s&quot;</source>
-        <target>Smazat soubor nebo složku &quot;%s&quot;</target>
-      </trans-unit>
-      <trans-unit id="tl_files.show.0">
-        <source>File or folder details</source>
-        <target>Podrobnosti k souboru nebo složce</target>
-      </trans-unit>
-      <trans-unit id="tl_files.show.1">
-        <source>Show the details of file or folder &quot;%s&quot;</source>
-        <target>Zobrazit podrobnosti k souboru nebo složce %s</target>
-      </trans-unit>
-      <trans-unit id="tl_files.source.0">
-        <source>Edit file</source>
-        <target>Upravit</target>
-      </trans-unit>
-      <trans-unit id="tl_files.source.1">
-        <source>Edit file &quot;%s&quot;</source>
-        <target>Upravit soubor &quot;%s&quot;</target>
-      </trans-unit>
-      <trans-unit id="tl_files.upload.0">
+      <trans-unit id="tl_files.move.0">
         <source>Upload files</source>
         <target>Nahrát soubory</target>
-      </trans-unit>
-      <trans-unit id="tl_files.upload.1">
-        <source>Upload files to folder &quot;%s&quot;</source>
-        <target>Nahrát soubor do adresáře &quot;%s&quot;</target>
-      </trans-unit>
-      <trans-unit id="tl_files.protect.0">
-        <source>Protect folder</source>
-        <target>Chránit složku</target>
-      </trans-unit>
-      <trans-unit id="tl_files.protect.1">
-        <source>Protect folder &quot;%s&quot;</source>
-        <target>Chránit složku &quot;%s&quot;</target>
-      </trans-unit>
-      <trans-unit id="tl_files.unlock.0">
-        <source>Remove protection</source>
-        <target>Odebrat ochranu</target>
-      </trans-unit>
-      <trans-unit id="tl_files.unlock.1">
-        <source>Unprotect folder &quot;%s&quot;</source>
-        <target>Odebrat ochranu &quot;%s&quot;</target>
-      </trans-unit>
-      <trans-unit id="tl_files.move.0">
-        <source>File upload</source>
-        <target>Přenos souborů</target>
       </trans-unit>
       <trans-unit id="tl_files.move.1">
         <source>Upload files to the server</source>
         <target>Nahrát soubory na server</target>
-      </trans-unit>
-      <trans-unit id="tl_files.pasteinto.0">
-        <source>Paste into</source>
-        <target>Umístit za</target>
-      </trans-unit>
-      <trans-unit id="tl_files.pasteinto.1">
-        <source>Paste into this folder</source>
-        <target>Umístit do složky</target>
       </trans-unit>
       <trans-unit id="tl_files.sync.0">
         <source>Synchronize</source>
@@ -267,9 +200,49 @@
         <source>Synchronize the file system and the database</source>
         <target>Synchronizovat systém souborů a databáze</target>
       </trans-unit>
-      <trans-unit id="tl_files.edit_preview_help">
-        <source>Mark the important part of the image with your mouse cursor.</source>
-        <target>Označit důležitou část obrázku pomocí kurzoru myši.</target>
+      <trans-unit id="tl_files.show">
+        <source>Show the details of file or folder &quot;%s&quot;</source>
+        <target>Zobrazit podrobnosti k souboru nebo složce %s</target>
+      </trans-unit>
+      <trans-unit id="tl_files.cut">
+        <source>Move file or folder &quot;%s&quot;</source>
+        <target>Přesunout soubor do složky &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.copy">
+        <source>Duplicate file or folder &quot;%s&quot;</source>
+        <target>Kopírovat soubor nebo složku &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.edit">
+        <source>Edit file or folder &quot;%s&quot;</source>
+        <target>Upravit soubor nebo složku %s</target>
+      </trans-unit>
+      <trans-unit id="tl_files.delete">
+        <source>Delete file or folder &quot;%s&quot;</source>
+        <target>Smazat soubor nebo složku &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.drag">
+        <source>Drag file or folder &quot;%s&quot;</source>
+      </trans-unit>
+      <trans-unit id="tl_files.source">
+        <source>Edit the source text of file &quot;%s&quot;</source>
+      </trans-unit>
+      <trans-unit id="tl_files.upload">
+        <source>Upload files to folder &quot;%s&quot;</source>
+        <target>Nahrát soubor do adresáře &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.protect">
+        <source>Protect folder &quot;%s&quot;</source>
+        <target>Chránit složku &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.unlock">
+        <source>Unprotect folder &quot;%s&quot;</source>
+        <target>Odebrat ochranu &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.pasteinto.0">
+        <source>Paste into the root folder</source>
+      </trans-unit>
+      <trans-unit id="tl_files.pasteinto.1">
+        <source>Paste into folder &quot;%s&quot;</source>
       </trans-unit>
     </body>
   </file>

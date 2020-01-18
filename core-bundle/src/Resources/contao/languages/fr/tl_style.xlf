@@ -557,85 +557,12 @@
         <source>none</source>
         <target>aucun</target>
       </trans-unit>
-      <trans-unit id="tl_style.new.0">
-        <source>New format definition</source>
-        <target>Nouvelle définition de formatage</target>
-      </trans-unit>
-      <trans-unit id="tl_style.new.1">
-        <source>Create a new format definition</source>
-        <target>Créer une nouvelle définition de formatage</target>
-      </trans-unit>
-      <trans-unit id="tl_style.show.0">
-        <source>Format definition details</source>
-        <target>Détails de la définition</target>
-      </trans-unit>
-      <trans-unit id="tl_style.show.1">
-        <source>Show the details of format definition ID %s</source>
-        <target>Détails de la définition ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_style.edit.0">
-        <source>Edit format definition</source>
-        <target>Éditer la définition</target>
-      </trans-unit>
-      <trans-unit id="tl_style.edit.1">
-        <source>Edit format definition ID %s</source>
-        <target>Éditer la définition ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_style.cut.0">
-        <source>Move format definition</source>
-        <target>Déplacer la définition</target>
-      </trans-unit>
-      <trans-unit id="tl_style.cut.1">
-        <source>Move format definition ID %s</source>
-        <target>Déplacer la définition ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_style.copy.0">
-        <source>Duplicate format definition</source>
-        <target>Dupliquer la définition</target>
-      </trans-unit>
-      <trans-unit id="tl_style.copy.1">
-        <source>Duplicate format definition ID %s</source>
-        <target>Dupliquer la définition ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_style.delete.0">
-        <source>Delete format definition</source>
-        <target>Supprimer la définition</target>
-      </trans-unit>
-      <trans-unit id="tl_style.delete.1">
-        <source>Delete format definition ID %s</source>
-        <target>Supprimer la définition ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_style.editheader.0">
-        <source>Edit style sheet</source>
-        <target>Éditer la feuille de style</target>
-      </trans-unit>
-      <trans-unit id="tl_style.editheader.1">
+      <trans-unit id="tl_style.editheader">
         <source>Edit the style sheet settings</source>
         <target>Éditer les paramètres de la feuille de style</target>
       </trans-unit>
-      <trans-unit id="tl_style.pasteafter.0">
-        <source>Paste at the top</source>
-        <target>Coller au début</target>
-      </trans-unit>
-      <trans-unit id="tl_style.pasteafter.1">
-        <source>Paste after format definition ID %s</source>
-        <target>Coller après la définition de formatage ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_style.pastenew.0">
-        <source>Add new at the top</source>
-        <target>Créer une nouvelle définition de formatage au début</target>
-      </trans-unit>
-      <trans-unit id="tl_style.pastenew.1">
-        <source>Add new after format definition ID %s</source>
-        <target>Créer une nouvelle définition de formatage après la définition ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_style.toggle.0">
-        <source>Toggle visibility</source>
-        <target>Basculer la visibilité</target>
-      </trans-unit>
-      <trans-unit id="tl_style.toggle.1">
-        <source>Toggle the visibility of format definition ID %s</source>
-        <target>Basculer la visibilité de la définition de formatage ID %s</target>
+      <trans-unit id="tl_style.toggle">
+        <source>Activate/deactivate element ID %s</source>
       </trans-unit>
     </body>
   </file>

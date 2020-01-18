@@ -33,6 +33,13 @@
         <source>Make the folder and its sub-folders accessible via HTTP.</source>
         <target>شاخه و زیرشاخه‌هایش را قابل دسترس از طریق HTTP می‌کند.</target>
       </trans-unit>
+      <trans-unit id="tl_files.syncExclude.0">
+        <source>Do not synchronize</source>
+        <target>هنگام‌سازی نکنید</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncExclude.1">
+        <source>Do not synchronize the folder and its subfolders with the database.</source>
+      </trans-unit>
       <trans-unit id="tl_files.importantPartX.0">
         <source>Important part x coordinate</source>
         <target>مختصات x بخش مهم</target>
@@ -104,6 +111,10 @@
         <source>Edit file &quot;%s&quot;</source>
         <target>ویرایش پرونده &quot;%s&quot;</target>
       </trans-unit>
+      <trans-unit id="tl_files.edit_preview_help">
+        <source>Mark the important part of the image with your mouse cursor.</source>
+        <target>قسمت مهم تصویر را با نشانگر ماوس مشخص نمایید.</target>
+      </trans-unit>
       <trans-unit id="tl_files.browseFiles">
         <source>Browse files</source>
         <target>مرور پرونده‌ها</target>
@@ -125,10 +136,10 @@
       </trans-unit>
       <trans-unit id="tl_files.dropzoneInvalidType">
         <source>Files of this type cannot be uploaded.</source>
+        <target>فایل‌های این نوع نمی‌توانند بارگذاری شوند.</target>
       </trans-unit>
       <trans-unit id="tl_files.fileLocation">
-        <source>File location: %s</source>
-        <target>موقعیت پرونده: %s</target>
+        <source>Path: %s</source>
       </trans-unit>
       <trans-unit id="tl_files.syncAdded">
         <source>Added the file or folder &quot;%s&quot;</source>
@@ -170,93 +181,13 @@
         <source>Create a new folder</source>
         <target>ایجاد یک پوشه جدید</target>
       </trans-unit>
-      <trans-unit id="tl_files.cut.0">
-        <source>Move file or folder</source>
-        <target>جابجایی پرونده یا پوشه</target>
-      </trans-unit>
-      <trans-unit id="tl_files.cut.1">
-        <source>Move file or folder &quot;%s&quot;</source>
-        <target>جابجایی پرونده یا پوشه &quot;%s&quot;</target>
-      </trans-unit>
-      <trans-unit id="tl_files.copy.0">
-        <source>Duplicate file or folder</source>
-        <target>تکثیر پرونده یا پوشه</target>
-      </trans-unit>
-      <trans-unit id="tl_files.copy.1">
-        <source>Duplicate file or folder &quot;%s&quot;</source>
-        <target>تکثیر پرونده یا پوشه &quot;%s&quot;</target>
-      </trans-unit>
-      <trans-unit id="tl_files.edit.0">
-        <source>Edit file or folder</source>
-        <target>ویرایش پرونده یا پوشه</target>
-      </trans-unit>
-      <trans-unit id="tl_files.edit.1">
-        <source>Edit file or folder &quot;%s&quot;</source>
-        <target>ویرایش پرونده یا پوشه &quot;%s&quot;</target>
-      </trans-unit>
-      <trans-unit id="tl_files.delete.0">
-        <source>Delete file or folder</source>
-        <target>حذف پرونده یا پوشه</target>
-      </trans-unit>
-      <trans-unit id="tl_files.delete.1">
-        <source>Delete file or folder &quot;%s&quot;</source>
-        <target>حذف پرونده یا پوشه &quot;%s&quot;</target>
-      </trans-unit>
-      <trans-unit id="tl_files.show.0">
-        <source>File or folder details</source>
-        <target>جزئیات پرونده یا پوشه</target>
-      </trans-unit>
-      <trans-unit id="tl_files.show.1">
-        <source>Show the details of file or folder &quot;%s&quot;</source>
-        <target>نمایش جزئیات پرونده یا پوشه &quot;%s&quot;</target>
-      </trans-unit>
-      <trans-unit id="tl_files.source.0">
-        <source>Edit file</source>
-        <target>ویرایش پرونده</target>
-      </trans-unit>
-      <trans-unit id="tl_files.source.1">
-        <source>Edit file &quot;%s&quot;</source>
-        <target>ویرایش پرونده &quot;%s&quot;</target>
-      </trans-unit>
-      <trans-unit id="tl_files.upload.0">
+      <trans-unit id="tl_files.move.0">
         <source>Upload files</source>
         <target>بارگزاری پرونده‌ها</target>
-      </trans-unit>
-      <trans-unit id="tl_files.upload.1">
-        <source>Upload files to folder &quot;%s&quot;</source>
-        <target>بارگزاری یک یا چند پرونده درون پوشه &quot;%s&quot;</target>
-      </trans-unit>
-      <trans-unit id="tl_files.protect.0">
-        <source>Protect folder</source>
-        <target>حافظت از پوشه</target>
-      </trans-unit>
-      <trans-unit id="tl_files.protect.1">
-        <source>Protect folder &quot;%s&quot;</source>
-        <target>حافظت از پوشه &quot;%s&quot;</target>
-      </trans-unit>
-      <trans-unit id="tl_files.unlock.0">
-        <source>Remove protection</source>
-        <target>حذف حافظت</target>
-      </trans-unit>
-      <trans-unit id="tl_files.unlock.1">
-        <source>Unprotect folder &quot;%s&quot;</source>
-        <target>حذف حافظت پوشه &quot;%s&quot;</target>
-      </trans-unit>
-      <trans-unit id="tl_files.move.0">
-        <source>File upload</source>
-        <target>بارگزاری پرونده</target>
       </trans-unit>
       <trans-unit id="tl_files.move.1">
         <source>Upload files to the server</source>
         <target>بارگزاری پرونده‌ها در سرور</target>
-      </trans-unit>
-      <trans-unit id="tl_files.pasteinto.0">
-        <source>Paste into</source>
-        <target>جاگذاری در</target>
-      </trans-unit>
-      <trans-unit id="tl_files.pasteinto.1">
-        <source>Paste into this folder</source>
-        <target>جاگذاری در این پوشه</target>
       </trans-unit>
       <trans-unit id="tl_files.sync.0">
         <source>Synchronize</source>
@@ -266,9 +197,52 @@
         <source>Synchronize the file system and the database</source>
         <target>هماهنگ‌سازی سامانه پرونده و پایگاه‌داده</target>
       </trans-unit>
-      <trans-unit id="tl_files.edit_preview_help">
-        <source>Mark the important part of the image with your mouse cursor.</source>
-        <target>قسمت مهم تصویر را با نشانگر ماوس مشخص نمایید.</target>
+      <trans-unit id="tl_files.show">
+        <source>Show the details of file or folder &quot;%s&quot;</source>
+        <target>نمایش جزئیات پرونده یا پوشه &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.cut">
+        <source>Move file or folder &quot;%s&quot;</source>
+        <target>جابجایی پرونده یا پوشه &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.copy">
+        <source>Duplicate file or folder &quot;%s&quot;</source>
+        <target>تکثیر پرونده یا پوشه &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.edit">
+        <source>Edit file or folder &quot;%s&quot;</source>
+        <target>ویرایش پرونده یا پوشه &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.delete">
+        <source>Delete file or folder &quot;%s&quot;</source>
+        <target>حذف پرونده یا پوشه &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.drag">
+        <source>Drag file or folder &quot;%s&quot;</source>
+        <target>کشیدن فایل یا فولدر «%s»</target>
+      </trans-unit>
+      <trans-unit id="tl_files.source">
+        <source>Edit the source text of file &quot;%s&quot;</source>
+      </trans-unit>
+      <trans-unit id="tl_files.upload">
+        <source>Upload files to folder &quot;%s&quot;</source>
+        <target>بارگزاری یک یا چند پرونده درون پوشه &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.protect">
+        <source>Protect folder &quot;%s&quot;</source>
+        <target>حافظت از پوشه &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.unlock">
+        <source>Unprotect folder &quot;%s&quot;</source>
+        <target>حذف حافظت پوشه &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.pasteinto.0">
+        <source>Paste into the root folder</source>
+        <target>جاگذاری در فولدر ریشه</target>
+      </trans-unit>
+      <trans-unit id="tl_files.pasteinto.1">
+        <source>Paste into folder &quot;%s&quot;</source>
+        <target>جاگذاری در فولدر «%s»</target>
       </trans-unit>
     </body>
   </file>

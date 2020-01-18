@@ -126,16 +126,16 @@
         <target>Wrapper sākums</target>
       </trans-unit>
       <trans-unit id="tl_article.start.1">
-        <source>Do not show the article on the website before this day.</source>
-        <target>Nerādīt rakstu mājas lapā pirms šā datuma.</target>
+        <source>If you want to prevent the article from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Ja nevēlaties ļaut rakstam parādīties vietnē pirms noteikta datuma / laika, varat to ievadīt šeit. Pretējā gadījumā atstājiet lauku tukšu.</target>
       </trans-unit>
       <trans-unit id="tl_article.stop.0">
         <source>Show until</source>
         <target>Wrapper beigas</target>
       </trans-unit>
       <trans-unit id="tl_article.stop.1">
-        <source>Do not show the article on the website on and after this day.</source>
-        <target>Nerādīt rakstu mājas lapā šajā un pēc šī datuma.</target>
+        <source>If you want to prevent the article from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Ja nevēlaties ļaut rakstam parādīties vietnē pēc noteikta datuma / laika, varat to ievadīt šeit. Pretējā gadījumā atstājiet lauku tukšu.</target>
       </trans-unit>
       <trans-unit id="tl_article.tstamp.0">
         <source>Revision date</source>
@@ -193,85 +193,45 @@
         <source>Share on Twitter</source>
         <target>Ieteikt Twitter</target>
       </trans-unit>
-      <trans-unit id="tl_article.gplus">
-        <source>Share on Google+</source>
-        <target>Kopīgot Google+</target>
-      </trans-unit>
       <trans-unit id="tl_article.new.0">
-        <source>New article</source>
-        <target>Jauns raksts</target>
+        <source>New</source>
+        <target>Jauns</target>
       </trans-unit>
       <trans-unit id="tl_article.new.1">
         <source>Create a new article</source>
         <target>Izveidot jaunu rakstu</target>
       </trans-unit>
-      <trans-unit id="tl_article.show.0">
-        <source>Article details</source>
-        <target>Raksta detaļas</target>
-      </trans-unit>
-      <trans-unit id="tl_article.show.1">
+      <trans-unit id="tl_article.show">
         <source>Show the details of article ID %s</source>
         <target>Rādīt raksta ID %s detaļas</target>
       </trans-unit>
-      <trans-unit id="tl_article.edit.0">
-        <source>Edit article</source>
-        <target>Rediģēt rakstu</target>
-      </trans-unit>
-      <trans-unit id="tl_article.edit.1">
+      <trans-unit id="tl_article.edit">
         <source>Edit article ID %s</source>
         <target>Rediģēt rakstu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_article.editheader.0">
-        <source>Edit article</source>
-        <target>Rediģēt rakstu</target>
+      <trans-unit id="tl_article.editheader">
+        <source>Edit the settings of article ID %s</source>
+        <target>Rediģēt raksta ID %s uzstādījumus</target>
       </trans-unit>
-      <trans-unit id="tl_article.editheader.1">
-        <source>Edit the article settings</source>
-        <target>Rediģēt raksta iestatījumus</target>
-      </trans-unit>
-      <trans-unit id="tl_article.copy.0">
-        <source>Duplicate article</source>
-        <target>Dublicēt rakstu</target>
-      </trans-unit>
-      <trans-unit id="tl_article.copy.1">
+      <trans-unit id="tl_article.copy">
         <source>Duplicate article ID %s</source>
         <target>Dublicēt rakstu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_article.cut.0">
-        <source>Move article</source>
-        <target>Pārvietot rakstu</target>
-      </trans-unit>
-      <trans-unit id="tl_article.cut.1">
+      <trans-unit id="tl_article.cut">
         <source>Move article ID %s</source>
         <target>Pārvietot rakstu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_article.delete.0">
-        <source>Delete article</source>
-        <target>Dzēst rakstu</target>
-      </trans-unit>
-      <trans-unit id="tl_article.delete.1">
+      <trans-unit id="tl_article.delete">
         <source>Delete article ID %s</source>
         <target>Dzēst rakstu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_article.toggle.0">
-        <source>Publish/unpublish article</source>
-        <target>Publicet/nepublicēt rakstu</target>
-      </trans-unit>
-      <trans-unit id="tl_article.toggle.1">
+      <trans-unit id="tl_article.toggle">
         <source>Publish/unpublish article ID %s</source>
         <target>Publicet/nepublicēt rakstu ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_article.pasteafter.0">
-        <source>Paste after</source>
-        <target>Ielīmēt pēc</target>
       </trans-unit>
       <trans-unit id="tl_article.pasteafter.1">
         <source>Paste after article ID %s</source>
         <target>Ielīmēt pēc raksta ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_article.pasteinto.0">
-        <source>Paste into</source>
-        <target>Ielīmēt</target>
       </trans-unit>
       <trans-unit id="tl_article.pasteinto.1">
         <source>Paste into page ID %s</source>

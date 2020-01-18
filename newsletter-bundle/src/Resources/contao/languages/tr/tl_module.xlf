@@ -19,9 +19,11 @@
       </trans-unit>
       <trans-unit id="tl_module.nl_text.0">
         <source>Custom text</source>
+        <target>Özel yazı</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_text.1">
         <source>Here you can e.g. enter a privacy note to make the newsletter subscription GDPR compliant.</source>
+        <target>Buraya haber aboneliklerini  saklılık talebi kurallarına uygun kılmak için özel bir yazı girebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_hideChannels.0">
         <source>Hide channel menu</source>
@@ -57,6 +59,7 @@
       </trans-unit>
       <trans-unit id="tl_module.text_legend">
         <source>Custom text</source>
+        <target>Özel yazı</target>
       </trans-unit>
       <trans-unit id="tl_module.text_subscribe.0">
         <source>Your subscription on %s</source>
@@ -75,6 +78,18 @@ The confirmation link is valid for 24 hours. You can cancel your subscription at
 
 If you did not subscribe yourself, please ignore this e-mail.
 </source>
+        <target>##domain## sitesinde altta sıralanmış olan  kanallara abone olmak istediniz: 
+
+##channels##
+
+Aboneliğinizi etkinleştirmek için buraya tıklayınız:
+
+##link##
+
+Onaylama bağlantısı 24 saat geçerlidir. Aboneliğinizi istediğiniz zaman iptal edebilirsiniz.
+
+Abonelik başvurusunda bulunmadıysanız  bu e-postayı umursamayın.
+</target>
       </trans-unit>
       <trans-unit id="tl_module.text_unsubscribe.0">
         <source>Your subscription on %s</source>

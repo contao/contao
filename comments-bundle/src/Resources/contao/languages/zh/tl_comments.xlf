@@ -49,6 +49,13 @@
         <source>Here you can enter a website address.</source>
         <target>您可以在这里输入网站地址。</target>
       </trans-unit>
+      <trans-unit id="tl_comments.member.0">
+        <source>Member</source>
+        <target>会员</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.member.1">
+        <source>Here you can associate the comment with a member.</source>
+      </trans-unit>
       <trans-unit id="tl_comments.comment.0">
         <source>Comment</source>
         <target>评论</target>
@@ -157,35 +164,19 @@
         <source>Event</source>
         <target>活动</target>
       </trans-unit>
-      <trans-unit id="tl_comments.show.0">
-        <source>Comment details</source>
-        <target>评论详情</target>
-      </trans-unit>
-      <trans-unit id="tl_comments.show.1">
+      <trans-unit id="tl_comments.show">
         <source>Show the details of comment ID %s</source>
         <target>显示ID为%s的评论详情</target>
       </trans-unit>
-      <trans-unit id="tl_comments.edit.0">
-        <source>Edit comment</source>
-        <target>编辑评论</target>
-      </trans-unit>
-      <trans-unit id="tl_comments.edit.1">
+      <trans-unit id="tl_comments.edit">
         <source>Edit comment ID %s</source>
         <target>编辑ID为%s的评论</target>
       </trans-unit>
-      <trans-unit id="tl_comments.delete.0">
-        <source>Delete comment</source>
-        <target>删除评论</target>
-      </trans-unit>
-      <trans-unit id="tl_comments.delete.1">
+      <trans-unit id="tl_comments.delete">
         <source>Delete comment ID %s</source>
         <target>删除ID为%s的评论</target>
       </trans-unit>
-      <trans-unit id="tl_comments.toggle.0">
-        <source>Publish/unpublish comment</source>
-        <target>发布/取消评论</target>
-      </trans-unit>
-      <trans-unit id="tl_comments.toggle.1">
+      <trans-unit id="tl_comments.toggle">
         <source>Publish/unpublish comment ID %s</source>
         <target>发布/取消ID为%s的评论</target>
       </trans-unit>

@@ -182,16 +182,18 @@
         <target>فعال در</target>
       </trans-unit>
       <trans-unit id="tl_member.start.1">
-        <source>Automatically activate the account on this day.</source>
-        <target>فعال کردن خودکار در این روز.</target>
+        <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_member.stop.0">
         <source>Deactivate on</source>
         <target>غیرفعال در</target>
       </trans-unit>
       <trans-unit id="tl_member.stop.1">
-        <source>Automatically deactivate the account on this day.</source>
-        <target>غیرفعال کردن خودکار در این روز.</target>
+        <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+      </trans-unit>
+      <trans-unit id="tl_member.useTwoFactor">
+        <source>Use two-factor authentication</source>
+        <target>استفاده از احراز هویت دومرحله‌ای</target>
       </trans-unit>
       <trans-unit id="tl_member.personal_legend">
         <source>Personal data</source>
@@ -238,58 +240,34 @@
         <target>جزئیات ورود</target>
       </trans-unit>
       <trans-unit id="tl_member.new.0">
-        <source>New member</source>
-        <target>عضو جدید</target>
+        <source>New</source>
+        <target>جدید</target>
       </trans-unit>
       <trans-unit id="tl_member.new.1">
         <source>Create a new member</source>
         <target>ایجاد یک عضو جدید</target>
       </trans-unit>
-      <trans-unit id="tl_member.show.0">
-        <source>Member details</source>
-        <target>جزئیات عضو</target>
-      </trans-unit>
-      <trans-unit id="tl_member.show.1">
+      <trans-unit id="tl_member.show">
         <source>Show the details of member ID %s</source>
         <target>نمایش جزئیات عضو شناسه‌ی %s</target>
       </trans-unit>
-      <trans-unit id="tl_member.edit.0">
-        <source>Edit member</source>
-        <target>ویرایش عضو</target>
-      </trans-unit>
-      <trans-unit id="tl_member.edit.1">
+      <trans-unit id="tl_member.edit">
         <source>Edit member ID %s</source>
         <target>ویرایش عضو شناسه‌ی %s</target>
       </trans-unit>
-      <trans-unit id="tl_member.copy.0">
-        <source>Duplicate member</source>
-        <target>تکثیر عضو</target>
-      </trans-unit>
-      <trans-unit id="tl_member.copy.1">
+      <trans-unit id="tl_member.copy">
         <source>Duplicate member ID %s</source>
         <target>تکثیر عضو شناسه‌ی %s</target>
       </trans-unit>
-      <trans-unit id="tl_member.delete.0">
-        <source>Delete member</source>
-        <target>حذف عضو</target>
-      </trans-unit>
-      <trans-unit id="tl_member.delete.1">
+      <trans-unit id="tl_member.delete">
         <source>Delete member ID %s</source>
         <target>حذف عضو شناسه‌ی %s</target>
       </trans-unit>
-      <trans-unit id="tl_member.toggle.0">
-        <source>Activate/deactivate member</source>
-        <target>فعال/غیرفعال کردن عضو</target>
-      </trans-unit>
-      <trans-unit id="tl_member.toggle.1">
+      <trans-unit id="tl_member.toggle">
         <source>Activate/deactivate member ID %s</source>
         <target>فعال/غیرفعال کردن عضو شناسه‌ی %s</target>
       </trans-unit>
-      <trans-unit id="tl_member.su.0">
-        <source>Preview</source>
-        <target>پیش‌نمایش</target>
-      </trans-unit>
-      <trans-unit id="tl_member.su.1">
+      <trans-unit id="tl_member.su">
         <source>Preview the front end as member ID %s</source>
         <target>مشاهده بخش کاربری به عنوان عضو شناسه‌ی %s</target>
       </trans-unit>

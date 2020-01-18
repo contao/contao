@@ -81,6 +81,14 @@
         <source>The form data will be attached to the e-mail as a CSV file.</source>
         <target>Данные формы прикрепляются к письму как CSV файл.</target>
       </trans-unit>
+      <trans-unit id="tl_form.skipEmpty.0">
+        <source>Skip empty fields</source>
+        <target>Пропускать пустые поля</target>
+      </trans-unit>
+      <trans-unit id="tl_form.skipEmpty.1">
+        <source>Do not include empty fields in the form data.</source>
+        <target>Не включать пустые поля в данные формы.</target>
+      </trans-unit>
       <trans-unit id="tl_form.email.0">
         <source>E-mail</source>
         <target>E-mail</target>
@@ -106,12 +114,12 @@
         <target>Хранить принятые данные в базе данных.</target>
       </trans-unit>
       <trans-unit id="tl_form.customTpl.0">
-        <source>Form template</source>
-        <target>Шаблон формы</target>
+        <source>Custom form template</source>
+        <target>Пользовательский шаблон формы</target>
       </trans-unit>
       <trans-unit id="tl_form.customTpl.1">
-        <source>Here you can select the form template.</source>
-        <target>Вы можете выбрать шаблон формы.</target>
+        <source>Here you can overwrite the default form template.</source>
+        <target>Вы можете переписать шаблон формы по умолчанию.</target>
       </trans-unit>
       <trans-unit id="tl_form.targetTable.0">
         <source>Target table</source>
@@ -194,50 +202,30 @@
         <target>Настройки шаблона</target>
       </trans-unit>
       <trans-unit id="tl_form.new.0">
-        <source>New form</source>
-        <target>Новая форма</target>
+        <source>New</source>
+        <target>Новый</target>
       </trans-unit>
       <trans-unit id="tl_form.new.1">
         <source>Create a new form</source>
         <target>Создать новую форму</target>
       </trans-unit>
-      <trans-unit id="tl_form.show.0">
-        <source>Form details</source>
-        <target>Детали формы</target>
-      </trans-unit>
-      <trans-unit id="tl_form.show.1">
+      <trans-unit id="tl_form.show">
         <source>Show the details of form ID %s</source>
         <target>Показать детали формы ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form.edit.0">
-        <source>Edit form</source>
-        <target>Редактировать форму</target>
-      </trans-unit>
-      <trans-unit id="tl_form.edit.1">
+      <trans-unit id="tl_form.edit">
         <source>Edit form ID %s</source>
         <target>Редактировать форму ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form.editheader.0">
-        <source>Edit form</source>
-        <target>Редактировать форму</target>
+      <trans-unit id="tl_form.editheader">
+        <source>Edit the settings of form ID %s</source>
+        <target>Редактировать настройки формы ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form.editheader.1">
-        <source>Edit the form settings</source>
-        <target>Редактировать настройки формы</target>
-      </trans-unit>
-      <trans-unit id="tl_form.copy.0">
-        <source>Duplicate form</source>
-        <target>Дублировать форму</target>
-      </trans-unit>
-      <trans-unit id="tl_form.copy.1">
+      <trans-unit id="tl_form.copy">
         <source>Duplicate form ID %s</source>
         <target>Дублировать форму ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form.delete.0">
-        <source>Delete form</source>
-        <target>Удалить форму</target>
-      </trans-unit>
-      <trans-unit id="tl_form.delete.1">
+      <trans-unit id="tl_form.delete">
         <source>Delete form ID %s</source>
         <target>Удалить форму ID %s</target>
       </trans-unit>

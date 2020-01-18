@@ -81,6 +81,13 @@
         <source>The form data will be attached to the e-mail as a CSV file.</source>
         <target>Подаци из формулара ће бити прикачени у имејл као CSV фајл.</target>
       </trans-unit>
+      <trans-unit id="tl_form.skipEmpty.0">
+        <source>Skip empty fields</source>
+        <target>Прескочи празна поља</target>
+      </trans-unit>
+      <trans-unit id="tl_form.skipEmpty.1">
+        <source>Do not include empty fields in the form data.</source>
+      </trans-unit>
       <trans-unit id="tl_form.email.0">
         <source>E-mail</source>
         <target>Имејл</target>
@@ -106,12 +113,10 @@
         <target>Сачувај поднесене податке у базу података.</target>
       </trans-unit>
       <trans-unit id="tl_form.customTpl.0">
-        <source>Form template</source>
-        <target>Шаблон формулара</target>
+        <source>Custom form template</source>
       </trans-unit>
       <trans-unit id="tl_form.customTpl.1">
-        <source>Here you can select the form template.</source>
-        <target>Овде можете одабрати шаблон за формулар.</target>
+        <source>Here you can overwrite the default form template.</source>
       </trans-unit>
       <trans-unit id="tl_form.targetTable.0">
         <source>Target table</source>
@@ -194,50 +199,29 @@
         <target>Подешавања шаблона</target>
       </trans-unit>
       <trans-unit id="tl_form.new.0">
-        <source>New form</source>
-        <target>Нови формулар</target>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_form.new.1">
         <source>Create a new form</source>
         <target>Креирај нови формулар</target>
       </trans-unit>
-      <trans-unit id="tl_form.show.0">
-        <source>Form details</source>
-        <target>Детаљи формулара</target>
-      </trans-unit>
-      <trans-unit id="tl_form.show.1">
+      <trans-unit id="tl_form.show">
         <source>Show the details of form ID %s</source>
         <target>Прикажи детаље формулара ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form.edit.0">
-        <source>Edit form</source>
-        <target>Уреди формулар</target>
-      </trans-unit>
-      <trans-unit id="tl_form.edit.1">
+      <trans-unit id="tl_form.edit">
         <source>Edit form ID %s</source>
         <target>Уреди формулар ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form.editheader.0">
-        <source>Edit form</source>
-        <target>Уреди формулар</target>
+      <trans-unit id="tl_form.editheader">
+        <source>Edit the settings of form ID %s</source>
+        <target>Уреди подешавања формулара ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form.editheader.1">
-        <source>Edit the form settings</source>
-        <target>Уреди подешавања формулара</target>
-      </trans-unit>
-      <trans-unit id="tl_form.copy.0">
-        <source>Duplicate form</source>
-        <target>Копирај формулар</target>
-      </trans-unit>
-      <trans-unit id="tl_form.copy.1">
+      <trans-unit id="tl_form.copy">
         <source>Duplicate form ID %s</source>
         <target>Копирај формулар ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form.delete.0">
-        <source>Delete form</source>
-        <target>Обриши формулар</target>
-      </trans-unit>
-      <trans-unit id="tl_form.delete.1">
+      <trans-unit id="tl_form.delete">
         <source>Delete form ID %s</source>
         <target>Обриши формулар ID %s</target>
       </trans-unit>

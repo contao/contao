@@ -33,13 +33,13 @@
         <source>Invalid source or target directory &quot;%s&quot;!</source>
         <target>无效的源或目标目录&quot;%s&quot;!</target>
       </trans-unit>
-      <trans-unit id="tl_templates.new_tpl.0">
-        <source>New template</source>
-        <target>新模板</target>
+      <trans-unit id="tl_templates.overridesAnotherTpl">
+        <source>This template overrides &quot;%s&quot;.</source>
+        <target>该模板覆盖&quot;%s&quot;.</target>
       </trans-unit>
-      <trans-unit id="tl_templates.new_tpl.1">
-        <source>Create a new template</source>
-        <target>创建一个新模板</target>
+      <trans-unit id="tl_templates.pleaseSelect">
+        <source>Please select a template from the list above and click &quot;Show differences&quot;.</source>
+        <target>请在点击&quot;显示不同&quot;后出现的列表中选择一个模板子.</target>
       </trans-unit>
       <trans-unit id="tl_templates.new.0">
         <source>New folder</source>
@@ -49,29 +49,25 @@
         <source>Create a new folder</source>
         <target>创建一个新的模板</target>
       </trans-unit>
+      <trans-unit id="tl_templates.new_tpl.0">
+        <source>New template</source>
+        <target>新模板</target>
+      </trans-unit>
+      <trans-unit id="tl_templates.new_tpl.1">
+        <source>Create a new template</source>
+        <target>创建一个新模板</target>
+      </trans-unit>
       <trans-unit id="tl_templates.pasteinto.0">
-        <source>Paste into</source>
-        <target>粘贴进</target>
+        <source>Paste into the root folder</source>
+        <target>粘贴到根目录</target>
       </trans-unit>
       <trans-unit id="tl_templates.pasteinto.1">
-        <source>Paste into this folder</source>
-        <target>粘贴到这个目录</target>
+        <source>Paste into folder &quot;%s&quot;</source>
+        <target>粘贴到目录 &quot;%s&quot;</target>
       </trans-unit>
-      <trans-unit id="tl_templates.compare.0">
-        <source>Compare template</source>
-        <target>比较模板</target>
-      </trans-unit>
-      <trans-unit id="tl_templates.compare.1">
+      <trans-unit id="tl_templates.compare">
         <source>Compare &quot;%s&quot; with another template</source>
         <target>比较&quot;%s&quot;和其他模板</target>
-      </trans-unit>
-      <trans-unit id="tl_templates.overridesAnotherTpl">
-        <source>This template overrides &quot;%s&quot;.</source>
-        <target>该模板覆盖&quot;%s&quot;.</target>
-      </trans-unit>
-      <trans-unit id="tl_templates.pleaseSelect">
-        <source>Please select a template from the list above and click &quot;Show differences&quot;.</source>
-        <target>请在点击&quot;显示不同&quot;后出现的列表中选择一个模板子.</target>
       </trans-unit>
     </body>
   </file>

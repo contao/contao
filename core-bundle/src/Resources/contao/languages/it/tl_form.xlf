@@ -81,6 +81,13 @@
         <source>The form data will be attached to the e-mail as a CSV file.</source>
         <target>I dati del form verranno inviati come file CSV. (una virgola separa i valori)</target>
       </trans-unit>
+      <trans-unit id="tl_form.skipEmpty.0">
+        <source>Skip empty fields</source>
+        <target>Salta campi vuoti</target>
+      </trans-unit>
+      <trans-unit id="tl_form.skipEmpty.1">
+        <source>Do not include empty fields in the form data.</source>
+      </trans-unit>
       <trans-unit id="tl_form.email.0">
         <source>E-mail</source>
         <target>Formato e-mail</target>
@@ -106,12 +113,10 @@
         <target>Archivia i valori inviati dal form in un database.</target>
       </trans-unit>
       <trans-unit id="tl_form.customTpl.0">
-        <source>Form template</source>
-        <target>Modello form</target>
+        <source>Custom form template</source>
       </trans-unit>
       <trans-unit id="tl_form.customTpl.1">
-        <source>Here you can select the form template.</source>
-        <target>Seleziona un modello di form. Il modello predefinito è chiamato &lt;em&gt;member_default&lt;/em&gt;. Se vuoi aggiungere un modello, caricalo nella cartella &lt;em&gt;templates&lt;/em&gt;. (l'estensione del file deve essere &quot;.tpl&quot;)</target>
+        <source>Here you can overwrite the default form template.</source>
       </trans-unit>
       <trans-unit id="tl_form.targetTable.0">
         <source>Target table</source>
@@ -194,50 +199,30 @@
         <target>Impostazioni template</target>
       </trans-unit>
       <trans-unit id="tl_form.new.0">
-        <source>New form</source>
-        <target>Nuovo form</target>
+        <source>New</source>
+        <target>Nuovo</target>
       </trans-unit>
       <trans-unit id="tl_form.new.1">
         <source>Create a new form</source>
         <target>Crea un nuovo form</target>
       </trans-unit>
-      <trans-unit id="tl_form.show.0">
-        <source>Form details</source>
-        <target>Dettagli form</target>
-      </trans-unit>
-      <trans-unit id="tl_form.show.1">
+      <trans-unit id="tl_form.show">
         <source>Show the details of form ID %s</source>
         <target>Mostra dettagli per il form ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form.edit.0">
-        <source>Edit form</source>
-        <target>Modifica intestazione form</target>
-      </trans-unit>
-      <trans-unit id="tl_form.edit.1">
+      <trans-unit id="tl_form.edit">
         <source>Edit form ID %s</source>
         <target>Modifica form ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form.editheader.0">
-        <source>Edit form</source>
-        <target>Modifica intestazione form</target>
+      <trans-unit id="tl_form.editheader">
+        <source>Edit the settings of form ID %s</source>
+        <target>Modifica la configurazione del form ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form.editheader.1">
-        <source>Edit the form settings</source>
-        <target>Modifica l'intestazione di questo form</target>
-      </trans-unit>
-      <trans-unit id="tl_form.copy.0">
-        <source>Duplicate form</source>
-        <target>Duplica form</target>
-      </trans-unit>
-      <trans-unit id="tl_form.copy.1">
+      <trans-unit id="tl_form.copy">
         <source>Duplicate form ID %s</source>
         <target>Duplica form ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form.delete.0">
-        <source>Delete form</source>
-        <target>Cancella form</target>
-      </trans-unit>
-      <trans-unit id="tl_form.delete.1">
+      <trans-unit id="tl_form.delete">
         <source>Delete form ID %s</source>
         <target>Cancella form ID %s</target>
       </trans-unit>

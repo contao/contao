@@ -49,6 +49,14 @@
         <source>Here you can enter a website address.</source>
         <target>Inserisci un sito web (opzionale).</target>
       </trans-unit>
+      <trans-unit id="tl_comments.member.0">
+        <source>Member</source>
+        <target>Membro</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.member.1">
+        <source>Here you can associate the comment with a member.</source>
+        <target>Qui puoi associare il commento ad un membro.</target>
+      </trans-unit>
       <trans-unit id="tl_comments.comment.0">
         <source>Comment</source>
         <target>Commento</target>
@@ -99,6 +107,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.notified.0">
         <source>Notified (comment)</source>
+        <target>Notificato (commento)</target>
       </trans-unit>
       <trans-unit id="tl_comments.notified.1">
         <source>The notification of this comment has been sent.</source>
@@ -106,9 +115,11 @@
       </trans-unit>
       <trans-unit id="tl_comments.notifiedReply.0">
         <source>Notified (reply)</source>
+        <target>Notificato (risposta)</target>
       </trans-unit>
       <trans-unit id="tl_comments.notifiedReply.1">
         <source>The notification of the reply to this comment has been sent.</source>
+        <target>È stata inviata la notifica della risposta a tale commento.</target>
       </trans-unit>
       <trans-unit id="tl_comments.author_legend">
         <source>Author</source>
@@ -154,35 +165,19 @@
         <source>Event</source>
         <target>Evento</target>
       </trans-unit>
-      <trans-unit id="tl_comments.show.0">
-        <source>Comment details</source>
-        <target>Dettagli commento</target>
-      </trans-unit>
-      <trans-unit id="tl_comments.show.1">
+      <trans-unit id="tl_comments.show">
         <source>Show the details of comment ID %s</source>
         <target>Mostra i dettagli del commento ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_comments.edit.0">
-        <source>Edit comment</source>
-        <target>Modifica commento</target>
-      </trans-unit>
-      <trans-unit id="tl_comments.edit.1">
+      <trans-unit id="tl_comments.edit">
         <source>Edit comment ID %s</source>
         <target>Modifica commento ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_comments.delete.0">
-        <source>Delete comment</source>
-        <target>Cancella commento</target>
-      </trans-unit>
-      <trans-unit id="tl_comments.delete.1">
+      <trans-unit id="tl_comments.delete">
         <source>Delete comment ID %s</source>
         <target>Cancella commento ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_comments.toggle.0">
-        <source>Publish/unpublish comment</source>
-        <target>Pubblica/disattiva commento</target>
-      </trans-unit>
-      <trans-unit id="tl_comments.toggle.1">
+      <trans-unit id="tl_comments.toggle">
         <source>Publish/unpublish comment ID %s</source>
         <target>Pubblica/disattiva commento ID %s</target>
       </trans-unit>

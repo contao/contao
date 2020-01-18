@@ -26,8 +26,8 @@
         <target>Er is een fout opgetreden tijdens het uitvoeren van het script. Iets werkt niet helemaal correct.</target>
       </trans-unit>
       <trans-unit id="XPT.errorFixOne">
-        <source>Open the current log file in the &lt;code&gt;var/logs&lt;/code&gt; or &lt;code&gt;app/logs&lt;/code&gt; directory and find the associated error message (usually the last one).</source>
-        <target>Open het huidige log bestand in de &lt;code&gt;var/logs&lt;/code&gt; of &lt;code&gt;app/logs&lt;/code&gt; map en zoek naar de bijbehorende foutmelding (meestal de laatste).</target>
+        <source>Open the current log file in the &lt;code&gt;var/logs&lt;/code&gt; directory and find the associated error message (usually the last one).</source>
+        <target>Open het huidige log bestand in de &lt;code&gt;var/logs&lt;/code&gt;  map en zoek naar de bijbehorende foutmelding (meestal de laatste).</target>
       </trans-unit>
       <trans-unit id="XPT.errorExplain">
         <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, search the &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;Contao support page&lt;/a&gt;.</source>
@@ -53,74 +53,6 @@
         <source>For more information, search the &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;Contao support page&lt;/a&gt;.</source>
         <target>Voor meer informatie, zoek in de &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt; Contao FAQs &lt;/a&gt; of ga naar &lt;a href = &quot;https://contao.org / support.html &quot;target =&quot; _blank &quot;&gt; Contao support pagina &lt;/a&gt;.</target>
       </trans-unit>
-      <trans-unit id="XPT.incomplete">
-        <source>Incomplete installation</source>
-        <target>Onvolledige installatie</target>
-      </trans-unit>
-      <trans-unit id="XPT.incompleteInstallation">
-        <source>The installation has not been completed, therefore Contao cannot work properly.</source>
-        <target>De installatie is onvolledig, Contao zal niet naar behoren werken.</target>
-      </trans-unit>
-      <trans-unit id="XPT.incompleteFix">
-        <source>Please open the Contao install tool (&lt;code&gt;/contao/install&lt;/code&gt;) in your browser.</source>
-        <target>Open het Contao installatieprogramma (&lt;code&gt;/contao/install&lt;/code&gt;) in uw browser.</target>
-      </trans-unit>
-      <trans-unit id="XPT.incompleteExplain">
-        <source>For more information, please refer to the &lt;a href=&quot;https://contao.org/manual/installation.html&quot; target=&quot;_blank&quot;&gt;Contao manual&lt;/a&gt;.</source>
-        <target>Voor meer informatie, verwijzen wij u naar het &lt;a href=&quot;https://contao.org/manual/installation.html&quot; target=&quot;_blank&quot;&gt;Contao manual&lt;/a&gt;.</target>
-      </trans-unit>
-      <trans-unit id="XPT.noForward">
-        <source>Forward page not found</source>
-        <target>Forward pagina werd niet gevonden</target>
-      </trans-unit>
-      <trans-unit id="XPT.noForwardPage">
-        <source>The application has been configured to forward the request to another page, however, the target page does not exist or has not been published.</source>
-        <target>De applicatie is geconfigureerd om het verzoek door te sturen naar een andere pagina, echter de doelpagina bestaat niet of is niet gepubliceerd.</target>
-      </trans-unit>
-      <trans-unit id="XPT.noForwardFix">
-        <source>This is something that needs to be fixed by the administrator of the website. If you are a visitor, there is nothing you can do except to &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; to let them know that there is something wrong.</source>
-        <target>Dit is iets dat door de beheerder van de website in orde gemaakt dient te worden. Als bezoeker is er niets wat u kunt doen, behalve &lt;a href=&quot;%s&quot;&gt; contact op te nemen met de webmaster &lt;/a&gt; om hem te laten weten dat er iets niet in orde is.</target>
-      </trans-unit>
-      <trans-unit id="XPT.noRoot">
-        <source>No root page found</source>
-        <target>Geen startpagina gevonden</target>
-      </trans-unit>
-      <trans-unit id="XPT.noRootPage">
-        <source>There is no website root page which matches the requested language and/or domain name.</source>
-        <target>Er is geen website startpagina welke overeenkomt met de gevraagde taal en/of domeinnaam.</target>
-      </trans-unit>
-      <trans-unit id="XPT.noRootFix">
-        <source>If you have explicitly set a language, try to &lt;a href=&quot;%s&quot;&gt;go to the top level&lt;/a&gt; and see whether you are being redirected. Otherwise &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let them know that there is something wrong.</source>
-        <target>Als u expliciet een taal heeft ingesteld, probeer dan &lt;a href=&quot;%s&quot;&gt; naar het top level te gaan&lt;/a&gt; en kijk of u wordt doorgestuurd. Neem anders &lt;a href=&quot;%s&quot;&gt; contact op met de webmaster&lt;/a&gt; en laat hem weten dat er iets niet in orde is.</target>
-      </trans-unit>
-      <trans-unit id="XPT.noLayout">
-        <source>No layout specified</source>
-        <target>Geen lay-out gespecificeerd</target>
-      </trans-unit>
-      <trans-unit id="XPT.noLayoutSpecified">
-        <source>The page you have requested has not yet been associated with a page layout.</source>
-        <target>De pagina die u heeft opgevraagd is nog niet gekoppeld aan een pagina lay-out.</target>
-      </trans-unit>
-      <trans-unit id="XPT.noLayoutFix">
-        <source>Make sure that you have assigned a page layout to each website root page in the site structure.</source>
-        <target>Zorg ervoor dat u een pagina lay-out hebt toegewezen aan elke website startpagina in de site-structuur.</target>
-      </trans-unit>
-      <trans-unit id="XPT.noLayoutExplain">
-        <source>For more information, please refer to the &lt;a href=&quot;https://contao.org/manual/managing-pages.html&quot; target=&quot;_blank&quot;&gt;Contao manual&lt;/a&gt;.</source>
-        <target>Voor meer informatie, verwijzen wij u naar het &lt;a href=&quot;https://contao.org/manual/managing-pages.html&quot; target=&quot;_blank&quot;&gt;Contao manual&lt;/a&gt;.</target>
-      </trans-unit>
-      <trans-unit id="XPT.noActive">
-        <source>No active pages found</source>
-        <target>Geen actieve pagina's gevonden</target>
-      </trans-unit>
-      <trans-unit id="XPT.noActivePages">
-        <source>Your request has been mapped to a website which does not yet contain any published pages.</source>
-        <target>Uw aanvraag is toegewezen aan een website welke nog geen gepubliceerde pagina's bevat.</target>
-      </trans-unit>
-      <trans-unit id="XPT.noActiveFix">
-        <source>Most likely, the website is still under development and will be online in a few days. If you still think that there is something wrong, &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let them know.</source>
-        <target>Waarschijnlijk is de website nog in ontwikkeling en zal binnenkort online zijn. Als u denkt dat er iets mis is, &lt;a href=&quot;%s&quot;&gt; neem dan contact op met de webmaster &lt;/a&gt; en laat iets weten.</target>
-      </trans-unit>
       <trans-unit id="XPT.unavailable">
         <source>Service unavailable</source>
         <target>Dienst niet beschikbaar</target>
@@ -128,22 +60,6 @@
       <trans-unit id="XPT.maintenance">
         <source>The website is currently not available. Please come back later.</source>
         <target>De website is momenteel niet beschikbaar. Kom later nog een keer terug.</target>
-      </trans-unit>
-      <trans-unit id="XPT.insecure">
-        <source>Insecure document root</source>
-        <target>Onveilige hoofdmap</target>
-      </trans-unit>
-      <trans-unit id="XPT.insecureRoot">
-        <source>Your installation is not secure, because non-public resources are publicy available via HTTP.</source>
-        <target>Uw installatie is onveilig, omdat niet-openbare bronnen publiekelijk beschikbaar zijn via HTTP.</target>
-      </trans-unit>
-      <trans-unit id="XPT.insecureFix">
-        <source>Please set the document root to the &lt;code&gt;web/&lt;/code&gt; subfolder. This is usually done in the domain routing section of your server administration panel or in the vhosts file of your web server.</source>
-        <target>In de map waarin u Contao wilt installeren maakt u een map met de naam &lt;code&gt;web/&lt;/code&gt;stel deze in als document root. Dit wordt meestal gedaan in het domein routing gedeelte van serverbeheer of in het vhosts bestand van uw webserver.</target>
-      </trans-unit>
-      <trans-unit id="XPT.insecureExplain">
-        <source>Contao 4 no longer relies on &lt;code&gt;.htaccess&lt;/code&gt; files to protect folders and instead uses a public subfolder as document root. Anything above the document root must not be accessible via HTTP, otherwise anyone could download non-public resources including sensitive data such as configuration files.</source>
-        <target>Contao 4 maakt geen gebruik van &lt;code&gt; .htaccess &lt;/ code&gt; bestanden om mappen te beschermen, maar maakt gebruik van een openbare submap als hoofdmap. Alles boven de hoofdmap mag niet toegankelijk zijn via HTTP, anders zou iedereen niet-openbare bronnen kunnen downloaden inclusief gevoelige gegevens zoals configuratiebestanden.</target>
       </trans-unit>
     </body>
   </file>

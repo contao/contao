@@ -122,50 +122,34 @@
         <target>Стирание категории ID %s удалит и все вопросы и ответы! Продолжить?</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.new.0">
-        <source>New category</source>
-        <target>Новая категория</target>
+        <source>New</source>
+        <target>Новый</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.new.1">
         <source>Create a new category</source>
         <target>Создать новую категорию</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.show.0">
-        <source>Category details</source>
-        <target>Детали категории</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.show.1">
+      <trans-unit id="tl_faq_category.show">
         <source>Show the details of category ID %s</source>
         <target>Показать детали категории ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.edit.0">
-        <source>Edit category</source>
-        <target>Редактировать категорию</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.edit.1">
+      <trans-unit id="tl_faq_category.edit">
         <source>Edit category ID %s</source>
         <target>Редактировать категорию ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.editheader.0">
-        <source>Edit category</source>
-        <target>Редактировать категорию</target>
+      <trans-unit id="tl_faq_category.editheader">
+        <source>Edit the settings of category ID %s</source>
+        <target>Редактировать настройки категории ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.editheader.1">
+      <trans-unit id="tl_faq_category.editmeta">
         <source>Edit the category settings</source>
         <target>Редактировать настройки категории</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.copy.0">
-        <source>Duplicate category</source>
-        <target>Дублировать категорию</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.copy.1">
+      <trans-unit id="tl_faq_category.copy">
         <source>Duplicate category ID %s</source>
         <target>Дублировать категорию ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.delete.0">
-        <source>Delete category</source>
-        <target>Удалить категорию</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.delete.1">
+      <trans-unit id="tl_faq_category.delete">
         <source>Delete category ID %s</source>
         <target>Удалить категорию ID %s</target>
       </trans-unit>

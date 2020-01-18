@@ -9,14 +9,6 @@
         <source>Please select the data you want to purge or rebuild.</source>
         <target>Bitte wählen Sie die zu bereinigenden bzw. neu zu erstellenden Daten aus.</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance.frontendUser.0">
-        <source>Front end user</source>
-        <target>Frontend-Benutzer</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.frontendUser.1">
-        <source>Automatically log in a front end user to index protected pages.</source>
-        <target>Um geschützte Seiten zu indizieren, muss ein Frontend-Benutzer angemeldet werden.</target>
-      </trans-unit>
       <trans-unit id="tl_maintenance.job">
         <source>Job</source>
         <target>Job</target>
@@ -36,30 +28,6 @@
       <trans-unit id="tl_maintenance.cacheCleared">
         <source>The data has been purged</source>
         <target>Die Daten wurden bereinigt</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.searchIndex">
-        <source>Rebuild the search index</source>
-        <target>Suchindex neu aufbauen</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.indexSubmit">
-        <source>Rebuild index</source>
-        <target>Suchindex aufbauen</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.noSearchable">
-        <source>No searchable pages found</source>
-        <target>Keine durchsuchbaren Seiten gefunden</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.indexNote">
-        <source>Please wait for the page to load completely before you proceed!</source>
-        <target>Bitte warten Sie, bis die Seite vollständig geladen ist, bevor Sie Ihre Arbeit fortsetzen!</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.indexLoading">
-        <source>Please wait while the search index is being rebuilt.</source>
-        <target>Bitte warten Sie, während der Suchindex neu aufgebaut wird.</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.indexComplete">
-        <source>The search index has been rebuilt. You can now proceed.</source>
-        <target>Der Suchindex wurde neu aufgebaut. Sie können nun fortfahren.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.updateHelp">
         <source>Please enter your %s here.</source>
@@ -102,28 +70,28 @@
         <target>Bildercache leeren</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.images.1">
-        <source>Removes the automatically generated images and then purges the page cache, so there are no links to deleted resources.</source>
-        <target>Löscht die automatisch erstellten Bilder und leert anschließend den Seitencache, damit keine ungültigen Links zurück bleiben.</target>
+        <source>Removes the automatically generated images and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>Löscht die automatisch erstellten Bilder und leert anschließend den Shared-Cache, damit keine ungültigen Links zurück bleiben.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.0">
         <source>Purge the script cache</source>
         <target>Skriptcache leeren</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.1">
-        <source>Removes the automatically generated &lt;code&gt;.css&lt;/code&gt; and &lt;code&gt;.js&lt;/code&gt; files, recreates the internal style sheets and then purges the page cache.</source>
-        <target>Löscht die automatisch erstellten &lt;code&gt;.css&lt;/code&gt;- und &lt;code&gt;.js&lt;/code&gt;-Dateien, schreibt die internen Stylesheets neu und leert anschließend den Seitencache.</target>
+        <source>Removes the automatically generated &lt;code&gt;.css&lt;/code&gt; and &lt;code&gt;.js&lt;/code&gt; files, recreates the internal style sheets and then purges the shared cache.</source>
+        <target>Löscht die automatisch erstellten &lt;code&gt;.css&lt;/code&gt;- und &lt;code&gt;.js&lt;/code&gt;-Dateien, schreibt die internen Stylesheets neu und leert anschließend den Shared-Cache.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.pages.0">
-        <source>Purge the page cache</source>
-        <target>Seitencache leeren</target>
+        <source>Purge the shared cache</source>
+        <target>Shared-Cache leeren</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.pages.1">
         <source>Removes the cached versions of the front end pages.</source>
         <target>Löscht die gespeicherten Versionen der Frontend-Seiten.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.search.0">
-        <source>Purge the search cache</source>
-        <target>Suchcache leeren</target>
+        <source>Purge the search results cache</source>
+        <target>Den Suchergebnis-Cache leeren</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.search.1">
         <source>Removes the cached versions of the search results.</source>
@@ -142,8 +110,8 @@
         <target>XML-Dateien neu schreiben</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.xml.1">
-        <source>Recreates the XML files (sitemaps and feeds) and then purges the page cache, so there are no links to deleted resources.</source>
-        <target>Schreibt die XML-Dateien (Sitemaps/Feeds) neu und leert anschließend den Seitencache, damit keine ungültigen Links zurück bleiben.</target>
+        <source>Recreates the XML files (sitemaps and feeds) and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>Schreibt die XML-Dateien (Sitemaps/Feeds) neu und leert anschließend den Shared-Cache, damit keine ungültigen Links zurück bleiben.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.0">
         <source>Recreate the symlinks</source>
@@ -152,6 +120,50 @@
       <trans-unit id="tl_maintenance_jobs.symlinks.1">
         <source>Recreates the symlinks in the &lt;code&gt;web/&lt;/code&gt; folder (document root).</source>
         <target>Legt die Symlinks im Ordner &lt;code&gt;web/&lt;/code&gt; (Document-Root) neu an.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawler">
+        <source>Crawler</source>
+        <target>Crawler</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.startCrawling">
+        <source>Start crawling</source>
+        <target>Crawler starten</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlSubscribers.0">
+        <source>Enabled features</source>
+        <target>Aktivierte Funktionen</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlSubscribers.1">
+        <source>The crawler crawls all URLs it finds. Here you can decide what to do with these results.</source>
+        <target>Der Crawler analysiert alle URLs, die er findet. Hier können Sie festlegen, was mit den Ergebnissen geschehen soll.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlMember.0">
+        <source>Front end member</source>
+        <target>Frontend-Mitglied</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlMember.1">
+        <source>Automatically log in a front end member to index protected pages.</source>
+        <target>Um geschützte Seiten zu indizieren, muss ein Frontend-Mitglied angemeldet werden.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlWaitToBeFinished">
+        <source>The crawler is currently working. Please wait for it to finish to see the results.</source>
+        <target>Der Crawler arbeitet gerade. Bitte warten Sie bis er fertig ist, um die Ergebnisse zu sehen.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDownloadDebugLog">
+        <source>Download the debug log</source>
+        <target>Debug-Log herunterladen</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDownloadSubscriberLog">
+        <source>Download the log</source>
+        <target>Log herunterladen</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlSubscriberNames.search-index">
+        <source>Update the search index</source>
+        <target>Den Suchindex aktualisieren</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlSubscriberNames.broken-link-checker">
+        <source>Check for broken links</source>
+        <target>Nach kaputten Links suchen</target>
       </trans-unit>
     </body>
   </file>

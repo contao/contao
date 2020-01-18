@@ -1,14 +1,6 @@
 <?xml version="1.0" ?><xliff version="1.1">
   <file datatype="php" original="src/Resources/contao/languages/en/tl_settings.php" source-language="en" target-language="nl">
     <body>
-      <trans-unit id="tl_settings.websiteTitle.0">
-        <source>Website title</source>
-        <target>Website titel</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.websiteTitle.1">
-        <source>Please enter the title of the website.</source>
-        <target>Geef een titel voor de website op.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.adminEmail.0">
         <source>E-mail address of the system administrator</source>
         <target>E-mail adres van de systeembeheerder</target>
@@ -49,14 +41,6 @@
         <source>Please select the server time zone.</source>
         <target>Selecteer de server tijdzone.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.characterSet.0">
-        <source>Character set</source>
-        <target>Karakterset</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.characterSet.1">
-        <source>It is recommended to use UTF-8, so special characters are displayed correctly.</source>
-        <target>Het wordt aangeraden om UTF-8 te gebruiken om er zeker van te zijn dat alle speciale karakters correct worden weergegeven.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.disableCron.0">
         <source>Disable the command scheduler</source>
         <target>Uitschakelen van de commando scheduler</target>
@@ -64,22 +48,6 @@
       <trans-unit id="tl_settings.disableCron.1">
         <source>Disable the periodic command scheduler and trigger the &lt;em&gt;_contao/cron&lt;/em&gt; route by a real cron job (which you have to set up manually).</source>
         <target>Schakel de periodieke commando scheduler uit en voer het &lt;em&gt;_contao/cron&lt;/em&gt; script uit door een echte cron job (deze dient u handmatig in te stellen).</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.minifyMarkup.0">
-        <source>Minify the markup</source>
-        <target>Opmaak comprimeren</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.minifyMarkup.1">
-        <source>Minify the HTML markup before it is sent to the browser.</source>
-        <target>Verklein de HTML-opmaak voordat deze verstuurd wordt naar de browser.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.gzipScripts.0">
-        <source>Compress scripts</source>
-        <target>Comprimeer scripts</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.gzipScripts.1">
-        <source>Create a compressed version of the combined CSS and JavaScript files. Requires adjustments of the .htaccess file.</source>
-        <target>Maak een gecomprimeerde versie van de gecombineerde CSS en JavaScript-bestanden. Vereist aanpassingen van het .htaccess-bestand.</target>
       </trans-unit>
       <trans-unit id="tl_settings.resultsPerPage.0">
         <source>Items per page</source>
@@ -97,14 +65,6 @@
         <source>This overall limit takes effect if a user chooses the &quot;show all records&quot; option.</source>
         <target>De algemene limiet wordt gebruikt als de gebruiker de optie &quot;show all records&quot; kiest.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.fileSyncExclude.0">
-        <source>Exclude folders from synchronization</source>
-        <target>Mappen uitsluiten van synchronisatie</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.fileSyncExclude.1">
-        <source>Here you can enter a comma separated list of folders which will be exempt from the files synchronization (e.g. &lt;em&gt;attachments,music_academy&lt;/em&gt;). Note that excluded resources cannot be used in e.g. image or download elements!</source>
-        <target>Hier kunt u een door komma's gescheiden lijst met mappen opgeven welke zijn vrijgesteld van bestandsynchronisatie (bijv. &lt;em&gt; attachments, music_academy &lt;/em&gt;). Bedenk dat uitgesloten bronnen niet kunnen worden gebruikt in bv. beeld of download elementen!</target>
-      </trans-unit>
       <trans-unit id="tl_settings.doNotCollapse.0">
         <source>Do not collapse elements</source>
         <target>Elementen niet samenvouwen</target>
@@ -113,14 +73,6 @@
         <source>Do not collapse elements in the back end preview.</source>
         <target>Bestands elementen en andere resources in het back-end niet samenvouwen.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.sslProxyDomain.0">
-        <source>SSL proxy domain</source>
-        <target>SSL proxy domein</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.sslProxyDomain.1">
-        <source>If your website is available via an SSL proxy server, please enter its domain here (e.g. &lt;em&gt;sslsites.de&lt;/em&gt;).</source>
-        <target>Indien uw website beschikbaar is via een SSL proxy server, geef dan hier het domein op (bijv.&lt;em&gt;sslsites.de&lt;/em&gt;).</target>
-      </trans-unit>
       <trans-unit id="tl_settings.doNotRedirectEmpty.0">
         <source>Do not redirect empty URLs</source>
         <target>Redirect geen lege URLs</target>
@@ -128,14 +80,6 @@
       <trans-unit id="tl_settings.doNotRedirectEmpty.1">
         <source>For an empty URL display the website instead of redirecting to the language root page (not recommended).</source>
         <target>In geval van een lege URL toon de website in plaats van door te verwijzen naar de taal startpagina (niet aanbevolen).</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.useAutoItem.0">
-        <source>Enable auto_item</source>
-        <target>Gebruik de auto_item parameter</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.useAutoItem.1">
-        <source>Skip the &lt;em&gt;items/&lt;/em&gt; or &lt;em&gt;events/&lt;/em&gt; fragment in the URL and automatically discover the item based on the &lt;em&gt;auto_item&lt;/em&gt; parameter.</source>
-        <target>Gebruik geen &lt;em&gt;items/&lt;/em&gt; of &lt;em&gt;evenementen/&lt;/em&gt; fragmenten in de URL, maar alleen de &lt;em&gt;auto_item&lt;/em&gt; waarde.</target>
       </trans-unit>
       <trans-unit id="tl_settings.folderUrl.0">
         <source>Enable folder URLs</source>
@@ -168,22 +112,6 @@
       <trans-unit id="tl_settings.allowedDownload.1">
         <source>Here you can enter a comma separated list of downloadable file types.</source>
         <target>Geef een door komma's gescheiden lijst op van extensies van downloadbare bestandstypes.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.editableFiles.0">
-        <source>Editable file types</source>
-        <target>Bewerkbare bestandstypes</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.editableFiles.1">
-        <source>Here you can enter a comma separated list of file types that can be edited in the source editor.</source>
-        <target>Geef een door komma's gescheiden lijst op van extensies die bewerkt kunnen worden in de bestandseditor.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.templateFiles.0">
-        <source>Template file types</source>
-        <target>Template bestandstype</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.templateFiles.1">
-        <source>Here you can enter a comma separated list of supported template file types.</source>
-        <target>Hier kunt u een komma gescheiden lijst van ondersteunde template bestandstypen invoeren.</target>
       </trans-unit>
       <trans-unit id="tl_settings.gdMaxImgWidth.0">
         <source>Maximum GD image width</source>
@@ -233,54 +161,6 @@
         <source>Here you can enter the maximum height for image uploads in pixels.</source>
         <target>Geef de maximum afbeeldingshoogte in pixels op voor te uploaden bestanden.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.enableSearch.0">
-        <source>Enable searching</source>
-        <target>Zoekmachine inschakelen</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.enableSearch.1">
-        <source>Index pages so they can be searched.</source>
-        <target>Indexeer pagina's automatisch zodat ze gevonden worden door de zoekmachine.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.indexProtected.0">
-        <source>Index protected pages</source>
-        <target>Indexeer beschermde pagina's</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.indexProtected.1">
-        <source>Use this option carefully and always exclude personalized pages from being indexed!</source>
-        <target>Gebruik deze optie voorzichtig en sluit persoonlijke pagina's altijd uit van indexering!</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.undoPeriod.0">
-        <source>Storage time for undo steps</source>
-        <target>Bewaartijd voor undo stappen</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.undoPeriod.1">
-        <source>Here you can enter the storage time for undo steps in seconds (24 hours = 86400 seconds).</source>
-        <target>Geef de bewaartijd op voor undo stappen in seconden (standaard: 24 uren = 86400 seconden).</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.versionPeriod.0">
-        <source>Storage time for versions</source>
-        <target>Bewaartijd voor versies</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.versionPeriod.1">
-        <source>Here you can enter the storage time for different versions of a record in seconds (90 days = 7776000 seconds).</source>
-        <target>Geef de bewaartijd op voor verschillende versies van records in seconden (standaard: 90 dagen = 7776000 seconden).</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.logPeriod.0">
-        <source>Storage time for log entries</source>
-        <target>Bewaartijd voor log entries</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.logPeriod.1">
-        <source>Here you can enter the storage time for log entries in seconds (14 days = 1209600 seconds).</source>
-        <target>Geef de bewaartijd voor log entries in seconden op (standaard: 14 dagen = 1209600 seconden).</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.sessionTimeout.0">
-        <source>Session timeout</source>
-        <target>Sessie timeout</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.sessionTimeout.1">
-        <source>Here you can enter the maximum lifetime of a session in seconds (60 minutes = 3600 seconds).</source>
-        <target>Geef de maximale levensduur van een sessie in seconden op (standaard: 60 minuten = 3600 seconden).</target>
-      </trans-unit>
       <trans-unit id="tl_settings.defaultUser.0">
         <source>Default page owner</source>
         <target>Standaard paginagebruiker</target>
@@ -305,10 +185,6 @@
         <source>Please assign the default access rights for pages and articles.</source>
         <target>Ken de standaard toegangsrechten voor pagina's en artikelen toe.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.title_legend">
-        <source>Website title</source>
-        <target>Website titel</target>
-      </trans-unit>
       <trans-unit id="tl_settings.date_legend">
         <source>Date and time</source>
         <target>Datum en tijd</target>
@@ -325,10 +201,6 @@
         <source>Front end configuration</source>
         <target>Front-end configuratie</target>
       </trans-unit>
-      <trans-unit id="tl_settings.proxy_legend">
-        <source>Proxy configuration</source>
-        <target>Proxy configuratie</target>
-      </trans-unit>
       <trans-unit id="tl_settings.security_legend">
         <source>Security settings</source>
         <target>Veiligheidsinstellingen</target>
@@ -341,21 +213,13 @@
         <source>Upload settings</source>
         <target>Upload instellingen</target>
       </trans-unit>
-      <trans-unit id="tl_settings.search_legend">
-        <source>Search engine settings</source>
-        <target>Zoekmachine instellingen</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.timeout_legend">
-        <source>Timeout values</source>
-        <target>Timeout waarden</target>
+      <trans-unit id="tl_settings.cron_legend">
+        <source>Cron job settings</source>
+        <target>Cronjob instellingen</target>
       </trans-unit>
       <trans-unit id="tl_settings.chmod_legend">
         <source>Default access rights</source>
         <target>Standaard toegangsrechten</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.edit">
-        <source>Edit the local configuration</source>
-        <target>Wijzig lokale configuratie</target>
       </trans-unit>
     </body>
   </file>

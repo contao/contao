@@ -19,7 +19,7 @@
       </trans-unit>
       <trans-unit id="ERR.blacklisted">
         <source>The e-mail address has been unsubscribed from the channel.</source>
-        <target>Die E-Mail-Adresse wurde aus dem Kanal ausgetragen.</target>
+        <target>Die E-Mail-Adresse wurde aus dem Verteiler ausgetragen.</target>
       </trans-unit>
       <trans-unit id="MSC.subscribe">
         <source>Subscribe</source>
@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="MSC.nl_subject">
         <source>Your subscription on %s</source>
-        <target>Ihr Newsletter-Abonnement auf %s</target>
+        <target>Ihr Abonnement auf %s</target>
       </trans-unit>
       <trans-unit id="MSC.nl_confirm">
         <source>Thank you for your subscription. You will receive a confirmation e-mail.</source>

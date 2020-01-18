@@ -141,54 +141,6 @@
         <source>Full articles</source>
         <target>Volledige nieuwsberichten</target>
       </trans-unit>
-      <trans-unit id="tl_calendar.new.0">
-        <source>New calendar</source>
-        <target>Nieuwe kalender</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.new.1">
-        <source>Create a new calendar</source>
-        <target>Maak een nieuwe kalender</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.show.0">
-        <source>Calendar details</source>
-        <target>Kalender details</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.show.1">
-        <source>Show the details of calendar ID %s</source>
-        <target>Toon details van kalender ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.edit.0">
-        <source>Edit calendar</source>
-        <target>Bewerk kalender</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.edit.1">
-        <source>Edit calendar ID %s</source>
-        <target>Bewerk kalender ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.editheader.0">
-        <source>Edit calendar</source>
-        <target>Bewerk kalender</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.editheader.1">
-        <source>Edit the calendar settings</source>
-        <target>Bewerk kalender instellingen</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.copy.0">
-        <source>Duplicate calendar</source>
-        <target>Kopieer kalender</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.copy.1">
-        <source>Duplicate calendar ID %s</source>
-        <target>Kopieer kalender ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.delete.0">
-        <source>Delete calendar</source>
-        <target>Verwijder kalender</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.delete.1">
-        <source>Delete calendar ID %s</source>
-        <target>Verwijder kalender ID %s</target>
-      </trans-unit>
       <trans-unit id="tl_calendar.feeds.0">
         <source>RSS feeds</source>
         <target>RSS feeds</target>
@@ -196,6 +148,38 @@
       <trans-unit id="tl_calendar.feeds.1">
         <source>Manage RSS feeds</source>
         <target>Beheer RSS feeds</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.new.0">
+        <source>New</source>
+        <target>Nieuw</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.new.1">
+        <source>Create a new calendar</source>
+        <target>Maak een nieuwe kalender</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.show">
+        <source>Show the details of calendar ID %s</source>
+        <target>Toon details van kalender ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.edit">
+        <source>Edit calendar ID %s</source>
+        <target>Bewerk kalender ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.editmeta">
+        <source>Edit the calendar settings</source>
+        <target>Bewerk kalender instellingen</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.editheader">
+        <source>Edit the settings of calendar ID %s</source>
+        <target>Bewerk de instellingen van kalender ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.copy">
+        <source>Duplicate calendar ID %s</source>
+        <target>Kopieer kalender ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.delete">
+        <source>Delete calendar ID %s</source>
+        <target>Verwijder kalender ID %s</target>
       </trans-unit>
     </body>
   </file>

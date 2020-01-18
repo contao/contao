@@ -141,54 +141,6 @@
         <source>Full articles</source>
         <target>記事全体</target>
       </trans-unit>
-      <trans-unit id="tl_calendar.new.0">
-        <source>New calendar</source>
-        <target>新しいカレンダー</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.new.1">
-        <source>Create a new calendar</source>
-        <target>新しくカレンダーを作成</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.show.0">
-        <source>Calendar details</source>
-        <target>カレンダーの詳細</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.show.1">
-        <source>Show the details of calendar ID %s</source>
-        <target>ID %sのカレンダーの詳細を表示</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.edit.0">
-        <source>Edit calendar</source>
-        <target>カレンダーを編集</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.edit.1">
-        <source>Edit calendar ID %s</source>
-        <target>ID %sのカレンダーを編集</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.editheader.0">
-        <source>Edit calendar</source>
-        <target>カレンダーを編集</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.editheader.1">
-        <source>Edit the calendar settings</source>
-        <target>このカレンダーの設定を変更</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.copy.0">
-        <source>Duplicate calendar</source>
-        <target>カレンダーを複製</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.copy.1">
-        <source>Duplicate calendar ID %s</source>
-        <target>ID %sのカレンダーを複製</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.delete.0">
-        <source>Delete calendar</source>
-        <target>カレンダーを削除</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.delete.1">
-        <source>Delete calendar ID %s</source>
-        <target>ID %sのカレンダーを削除</target>
-      </trans-unit>
       <trans-unit id="tl_calendar.feeds.0">
         <source>RSS feeds</source>
         <target>RSSフィード</target>
@@ -196,6 +148,38 @@
       <trans-unit id="tl_calendar.feeds.1">
         <source>Manage RSS feeds</source>
         <target>RSSフィードを管理</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.new.0">
+        <source>New</source>
+        <target>新規作成</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.new.1">
+        <source>Create a new calendar</source>
+        <target>新しいカレンダーを作成</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.show">
+        <source>Show the details of calendar ID %s</source>
+        <target>ID %sのカレンダーの詳細を表示</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.edit">
+        <source>Edit calendar ID %s</source>
+        <target>ID %sのカレンダーを編集</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.editmeta">
+        <source>Edit the calendar settings</source>
+        <target>このカレンダーの設定を変更</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.editheader">
+        <source>Edit the settings of calendar ID %s</source>
+        <target>ID %sのカレンダーの設定を変更</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.copy">
+        <source>Duplicate calendar ID %s</source>
+        <target>ID %sのカレンダーを複製</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.delete">
+        <source>Delete calendar ID %s</source>
+        <target>ID %sのカレンダーを削除</target>
       </trans-unit>
     </body>
   </file>

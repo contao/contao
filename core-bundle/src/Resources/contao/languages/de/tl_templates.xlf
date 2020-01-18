@@ -33,13 +33,13 @@
         <source>Invalid source or target directory &quot;%s&quot;!</source>
         <target>Ungültiges Quell- oder Zielverzeichnis &quot;%s&quot;!</target>
       </trans-unit>
-      <trans-unit id="tl_templates.new_tpl.0">
-        <source>New template</source>
-        <target>Neues Template</target>
+      <trans-unit id="tl_templates.overridesAnotherTpl">
+        <source>This template overrides &quot;%s&quot;.</source>
+        <target>Dieses Template überschreibt &quot;%s&quot;.</target>
       </trans-unit>
-      <trans-unit id="tl_templates.new_tpl.1">
-        <source>Create a new template</source>
-        <target>Ein neues Template erstellen</target>
+      <trans-unit id="tl_templates.pleaseSelect">
+        <source>Please select a template from the list above and click &quot;Show differences&quot;.</source>
+        <target>Bitte wählen Sie ein Template aus der obigen Liste und klicken Sie &quot;Unterschiede anzeigen&quot;.</target>
       </trans-unit>
       <trans-unit id="tl_templates.new.0">
         <source>New folder</source>
@@ -49,29 +49,25 @@
         <source>Create a new folder</source>
         <target>Einen neuen Ordner anlegen</target>
       </trans-unit>
+      <trans-unit id="tl_templates.new_tpl.0">
+        <source>New template</source>
+        <target>Neues Template</target>
+      </trans-unit>
+      <trans-unit id="tl_templates.new_tpl.1">
+        <source>Create a new template</source>
+        <target>Ein neues Template erstellen</target>
+      </trans-unit>
       <trans-unit id="tl_templates.pasteinto.0">
-        <source>Paste into</source>
-        <target>Einfügen in</target>
+        <source>Paste into the root folder</source>
+        <target>In das Wurzelverzeichnis einfügen</target>
       </trans-unit>
       <trans-unit id="tl_templates.pasteinto.1">
-        <source>Paste into this folder</source>
-        <target>In dieses Verzeichnis einfügen</target>
+        <source>Paste into folder &quot;%s&quot;</source>
+        <target>In den Ordner &quot;%s&quot; einfügen</target>
       </trans-unit>
-      <trans-unit id="tl_templates.compare.0">
-        <source>Compare template</source>
-        <target>Template vergleichen</target>
-      </trans-unit>
-      <trans-unit id="tl_templates.compare.1">
+      <trans-unit id="tl_templates.compare">
         <source>Compare &quot;%s&quot; with another template</source>
         <target>Das Template &quot;%s&quot; mit einem anderen vergleichen</target>
-      </trans-unit>
-      <trans-unit id="tl_templates.overridesAnotherTpl">
-        <source>This template overrides &quot;%s&quot;.</source>
-        <target>Dieses Template überschreibt &quot;%s&quot;.</target>
-      </trans-unit>
-      <trans-unit id="tl_templates.pleaseSelect">
-        <source>Please select a template from the list above and click &quot;Show differences&quot;.</source>
-        <target>Bitte wählen Sie ein Template aus der obigen Liste und klicken Sie &quot;Unterschiede anzeigen&quot;.</target>
       </trans-unit>
     </body>
   </file>

@@ -110,8 +110,7 @@
         <target>Offset</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.start.1">
-        <source>In case the sending process is interrupted, you can enter a numeric offset here to continue with a particular recipient. You can check how many mails have been sent in the &lt;em&gt;newsletter_%s.log&lt;/em&gt; file. E.g., if 120 mails have been sent, enter &quot;120&quot; to continue with the 121st recipient (counting starts at 0).</source>
-        <target>W przypadku, gdy proces wysyłki jest przerwany, tutaj możesz wprowadzić offset, od którego wysyłka będzie kontynuowana. Możesz sprawdzić ile e-maili zostało wysłanych w pliku &lt;em&gt;newsletter_%s.log&lt;/em&gt;. Np. jeśli wysłane zostało 120 mejli, wprowadź 120 aby kontynuować ze 121 odbiorcą (liczenie zaczyna się od zera).</target>
+        <source>In case the sending process is interrupted, you can enter a numeric offset here to continue with a particular recipient. You can check how many mails have been sent by selecting the category &lt;code&gt;NEWSLETTER_%s&lt;/code&gt; in the system log. If there are 120 entries, enter &quot;120&quot; to continue with the 121st recipient (counting starts at 0).</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendPreviewTo.0">
         <source>Send preview to</source>
@@ -193,70 +192,6 @@
         <source>Do you really want to send the newsletter?</source>
         <target>Czy na pewno chcesz wysłać newsletter?</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.new.0">
-        <source>New newsletter</source>
-        <target>Nowy newsletter</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.new.1">
-        <source>Create a new newsletter</source>
-        <target>Utwórz nowy newsletter</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.show.0">
-        <source>Newsletter details</source>
-        <target>Szczegóły newslettera</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.show.1">
-        <source>Show the details of newsletter ID %s</source>
-        <target>Pokaż szczegóły newslettera ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.edit.0">
-        <source>Edit newsletter</source>
-        <target>Edytuj newsletter</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.edit.1">
-        <source>Edit newsletter ID %s</source>
-        <target>Edytuj newsletter ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.copy.0">
-        <source>Duplicate newsletter</source>
-        <target>Kopiuj newsletter</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.copy.1">
-        <source>Duplicate newsletter ID %s</source>
-        <target>Kopiuj newsletter ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.cut.0">
-        <source>Move newsletter</source>
-        <target>Przenieś newsletter</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.cut.1">
-        <source>Move newsletter ID %s</source>
-        <target>Przenieś newsletter ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.delete.0">
-        <source>Delete newsletter</source>
-        <target>Skasuj newsletter</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.delete.1">
-        <source>Delete newsletter ID %s</source>
-        <target>Skasuj newsletter ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.editheader.0">
-        <source>Edit channel</source>
-        <target>Edytuj kanał</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.editheader.1">
-        <source>Edit the channel settings</source>
-        <target>Edytuj kanał</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.pasteafter.0">
-        <source>Paste into this channel</source>
-        <target>Wklej do tego kanału</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.pasteafter.1">
-        <source>Paste after newsletter ID %s</source>
-        <target>Wklej po newsletterze ID %s</target>
-      </trans-unit>
       <trans-unit id="tl_newsletter.send.0">
         <source>Send newsletter</source>
         <target>Wyślij newsletter</target>
@@ -264,6 +199,37 @@
       <trans-unit id="tl_newsletter.send.1">
         <source>Send newsletter ID %s</source>
         <target>Wyślij newsletter ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.new.0">
+        <source>New</source>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.new.1">
+        <source>Create a new newsletter</source>
+        <target>Utwórz nowy newsletter</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.show">
+        <source>Show the details of newsletter ID %s</source>
+        <target>Pokaż szczegóły newslettera ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.edit">
+        <source>Edit newsletter ID %s</source>
+        <target>Edytuj newsletter ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.copy">
+        <source>Duplicate newsletter ID %s</source>
+        <target>Kopiuj newsletter ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.cut">
+        <source>Move newsletter ID %s</source>
+        <target>Przenieś newsletter ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.delete">
+        <source>Delete newsletter ID %s</source>
+        <target>Skasuj newsletter ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.pasteafter.0">
+        <source>Paste into this channel</source>
+        <target>Wklej do tego kanału</target>
       </trans-unit>
     </body>
   </file>

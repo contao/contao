@@ -41,6 +41,22 @@
         <source>Please enter the time according to the global time format.</source>
         <target>Lūdzu ievadiet jaunumu raksta laiku.</target>
       </trans-unit>
+      <trans-unit id="tl_news.pageTitle.0">
+        <source>Meta title</source>
+        <target>Meta nosaukums</target>
+      </trans-unit>
+      <trans-unit id="tl_news.pageTitle.1">
+        <source>Here you can add a custom meta title to overwrite the default page title.</source>
+        <target>Šeit jūs varat pievienot pielāgotu meta nosaukumu, lai pārrakstītu noklusējuma lapas nosaukumu.</target>
+      </trans-unit>
+      <trans-unit id="tl_news.description.0">
+        <source>Meta description</source>
+        <target>Meta apraksts</target>
+      </trans-unit>
+      <trans-unit id="tl_news.description.1">
+        <source>Here you can add a custom meta description to overwrite the default page description.</source>
+        <target>Šeit jūs varat pievienot pielāgotu meta aprakstu, lai pārrakstītu noklusējuma lapas aprakstu.</target>
+      </trans-unit>
       <trans-unit id="tl_news.subheadline.0">
         <source>Subheadline</source>
         <target>Apakšvirsraksts</target>
@@ -182,16 +198,16 @@
         <target>Wrapper sākums</target>
       </trans-unit>
       <trans-unit id="tl_news.start.1">
-        <source>Do not show the news item on the website before this day.</source>
-        <target>Nerādīt jaunumu vienumu mājas lapā pirms šā datuma.</target>
+        <source>If you want to prevent the news item from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Ja nevēlaties, lai jaunumi tiktu rādīti vietnē pirms noteikta datuma / laika, varat tos ievadīt šeit. Pretējā gadījumā atstājiet lauku tukšu.</target>
       </trans-unit>
       <trans-unit id="tl_news.stop.0">
         <source>Show until</source>
         <target>Wrapper beigas</target>
       </trans-unit>
       <trans-unit id="tl_news.stop.1">
-        <source>Do not show the news item on the website on and after this day.</source>
-        <target>Nerādīt jaunumu vienumu mājas lapā šajā un pēc šī datuma.</target>
+        <source>If you want to prevent the news item from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Ja nevēlaties, lai jaunumi tiktu rādīti vietnē pēc noteikta datuma / laika, varat tos ievadīt šeit. Pretējā gadījumā atstājiet lauku tukšu.</target>
       </trans-unit>
       <trans-unit id="tl_news.tstamp.0">
         <source>Revision date</source>
@@ -208,6 +224,10 @@
       <trans-unit id="tl_news.date_legend">
         <source>Date and time</source>
         <target>Datums un laiks</target>
+      </trans-unit>
+      <trans-unit id="tl_news.meta_legend">
+        <source>Meta data</source>
+        <target>Meta dati</target>
       </trans-unit>
       <trans-unit id="tl_news.teaser_legend">
         <source>Subheadline and teaser</source>
@@ -238,92 +258,48 @@
         <target>Publicēšanas uzstādījumi</target>
       </trans-unit>
       <trans-unit id="tl_news.new.0">
-        <source>New item</source>
-        <target>Jauns vienums</target>
+        <source>New</source>
+        <target>Jauns</target>
       </trans-unit>
       <trans-unit id="tl_news.new.1">
         <source>Create a new news item</source>
         <target>Izveidot jaunu jaunumu vienumu</target>
       </trans-unit>
-      <trans-unit id="tl_news.show.0">
-        <source>Item details</source>
-        <target>Vienuma detaļas</target>
-      </trans-unit>
-      <trans-unit id="tl_news.show.1">
+      <trans-unit id="tl_news.show">
         <source>Show the details of news item ID %s</source>
         <target>Rādīt jaunumu vienuma ID %s detaļas</target>
       </trans-unit>
-      <trans-unit id="tl_news.edit.0">
-        <source>Edit item</source>
-        <target>Rediģēt vienumu</target>
-      </trans-unit>
-      <trans-unit id="tl_news.edit.1">
+      <trans-unit id="tl_news.edit">
         <source>Edit news item ID %s</source>
         <target>Rediģēt jaunumu vienumu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.copy.0">
-        <source>Duplicate item</source>
-        <target>Dublēt vienumu</target>
-      </trans-unit>
-      <trans-unit id="tl_news.copy.1">
+      <trans-unit id="tl_news.copy">
         <source>Duplicate news item ID %s</source>
         <target>Dublēt jaunumu vienumu ID %s </target>
       </trans-unit>
-      <trans-unit id="tl_news.cut.0">
-        <source>Move item</source>
-        <target>Pārvietot vienumu</target>
-      </trans-unit>
-      <trans-unit id="tl_news.cut.1">
+      <trans-unit id="tl_news.cut">
         <source>Move news item ID %s</source>
         <target>Pārvietot jaunumu vienumu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.delete.0">
-        <source>Delete item</source>
-        <target>Dzēst vienumu</target>
-      </trans-unit>
-      <trans-unit id="tl_news.delete.1">
+      <trans-unit id="tl_news.delete">
         <source>Delete news item ID %s</source>
         <target>Dzēst jaunumu vienumu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.toggle.0">
-        <source>Publish/unpublish item</source>
-        <target>Publicēt/nepublicēt vienumu</target>
-      </trans-unit>
-      <trans-unit id="tl_news.toggle.1">
+      <trans-unit id="tl_news.toggle">
         <source>Publish/unpublish news item ID %s</source>
         <target>Publicēt/nepublicēt jaunumu vienumu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.feature.0">
-        <source>Feature/unfeature item</source>
-        <target>Iezīmēt/neiezīmēt vienumu</target>
-      </trans-unit>
-      <trans-unit id="tl_news.feature.1">
+      <trans-unit id="tl_news.feature">
         <source>Feature/unfeature news item ID %s</source>
         <target>Iezīmēt/neiezīmēt jaunumu vienumu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.editheader.0">
-        <source>Edit archive</source>
-        <target>Rediģēt arhīvu</target>
-      </trans-unit>
-      <trans-unit id="tl_news.editheader.1">
-        <source>Edit the news archive settings</source>
-        <target>Rediģēt jaunumu arhīva iestatījumus</target>
-      </trans-unit>
-      <trans-unit id="tl_news.editmeta.0">
-        <source>Edit item settings</source>
-        <target>Rediģēt vienuma iestatījumus</target>
-      </trans-unit>
-      <trans-unit id="tl_news.editmeta.1">
-        <source>Edit the news item settings</source>
-        <target>Rediģēt jaunumu vienuma iestatījumus</target>
+      <trans-unit id="tl_news.editheader">
+        <source>Edit the settings of news item ID %s</source>
+        <target>Rediģēt jaunumu vienuma ID %s iestatījumus</target>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
         <target>Ielīmēt šajā jaunumu arhīvā</target>
-      </trans-unit>
-      <trans-unit id="tl_news.pasteafter.1">
-        <source>Paste after news item ID %s</source>
-        <target>Ielīmēt pēc jaunumu vienuma ID %s</target>
       </trans-unit>
     </body>
   </file>
