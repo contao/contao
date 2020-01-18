@@ -20,6 +20,7 @@ use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCode
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextFactoryInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Handler\AuthenticationHandlerInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider;
@@ -71,9 +72,14 @@ class AuthenticationProvider extends DaoAuthenticationProvider
     private $requestStack;
 
     /**
+     * @var TrustedDeviceManagerInterface
+     */
+    private $trustedDeviceManager;
+
+    /**
      * @internal Do not inherit from this class; decorate the "contao.security.authentication_provider" service instead
      */
-    public function __construct(UserProviderInterface $userProvider, UserCheckerInterface $userChecker, string $providerKey, EncoderFactoryInterface $encoderFactory, ContaoFramework $framework, AuthenticationProviderInterface $twoFactorAuthenticationProvider, AuthenticationHandlerInterface $twoFactorAuthenticationHandler, AuthenticationContextFactoryInterface $authenticationContextFactory, RequestStack $requestStack)
+    public function __construct(UserProviderInterface $userProvider, UserCheckerInterface $userChecker, string $providerKey, EncoderFactoryInterface $encoderFactory, ContaoFramework $framework, AuthenticationProviderInterface $twoFactorAuthenticationProvider, AuthenticationHandlerInterface $twoFactorAuthenticationHandler, AuthenticationContextFactoryInterface $authenticationContextFactory, RequestStack $requestStack, TrustedDeviceManagerInterface $trustedDeviceManager)
     {
         parent::__construct($userProvider, $userChecker, $providerKey, $encoderFactory, false);
 
@@ -84,6 +90,7 @@ class AuthenticationProvider extends DaoAuthenticationProvider
         $this->twoFactorAuthenticationHandler = $twoFactorAuthenticationHandler;
         $this->authenticationContextFactory = $authenticationContextFactory;
         $this->requestStack = $requestStack;
+        $this->trustedDeviceManager = $trustedDeviceManager;
     }
 
     public function authenticate(TokenInterface $token): TokenInterface
@@ -111,6 +118,16 @@ class AuthenticationProvider extends DaoAuthenticationProvider
 
         $request = $this->requestStack->getMasterRequest();
         $context = $this->authenticationContextFactory->create($request, $token, $this->providerKey);
+        $firewallName = $context->getFirewallName();
+        $user = $context->getUser();
+
+        // Skip two-factor authentication on trusted devices
+        if ($this->trustedDeviceManager->isTrustedDevice($user, $firewallName)) {
+            // Renew the token
+            $this->trustedDeviceManager->addTrustedDevice($user, $firewallName);
+
+            return $context->getToken();
+        }
 
         return $this->twoFactorAuthenticationHandler->beginTwoFactorAuthentication($context);
     }

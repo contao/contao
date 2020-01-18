@@ -88,8 +88,18 @@ class ModuleTwoFactor extends BackendModule
 			$this->Template->showBackupCodes = true;
 		}
 
+		if (Input::post('FORM_SUBMIT') == 'tl_two_factor_clear_trusted_devices')
+		{
+			$container->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
+		}
+
+		/** @var Request $request */
+		$request = $container->get('request_stack')->getMasterRequest();
+
 		$this->Template->isEnabled = (bool) $user->useTwoFactor;
 		$this->Template->backupCodes = json_decode((string) $user->backupCodes, true) ?? array();
+		$this->Template->trustedDevices = $container->get('contao.security.two_factor.trusted_device_manager')->getTrustedDevices($user);
+		$this->Template->currentDevice = $request->cookies->get($container->getParameter('scheb_two_factor.trusted_device.cookie_name'));
 	}
 
 	/**
@@ -162,6 +172,9 @@ class ModuleTwoFactor extends BackendModule
 		$user->useTwoFactor = '';
 		$user->backupCodes = null;
 		$user->save();
+
+		// Clear all trusted devices
+		System::getContainer()->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
 
 		throw new RedirectResponseException($return);
 	}

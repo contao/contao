@@ -125,6 +125,7 @@ use Contao\CoreBundle\Security\Logout\LogoutSuccessHandler;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
 use Contao\CoreBundle\Security\TwoFactor\Provider;
+use Contao\CoreBundle\Security\TwoFactor\TrustedDeviceManager;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
 use Contao\CoreBundle\Security\User\UserChecker;
 use Contao\CoreBundle\Security\Voter\BackendAccessVoter;
@@ -2652,6 +2653,7 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('scheb_two_factor.authenticated_token_handler'),
                 new Reference('scheb_two_factor.authentication_context_factory'),
                 new Reference('request_stack'),
+                new Reference('contao.security.two_factor.trusted_device_manager'),
             ],
             $definition->getArguments()
         );
@@ -2669,6 +2671,8 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEquals(
             [
                 new Reference('contao.framework'),
+                new Reference('contao.security.two_factor.trusted_device_manager'),
+                new Reference('security.firewall.map'),
                 new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
             ],
             $definition->getArguments()
@@ -2900,6 +2904,25 @@ class ContaoCoreExtensionTest extends TestCase
                 ],
             ],
             $definition->getTags()
+        );
+    }
+
+    public function testRegistersTheSecurityTwoFactorTrustedDeviceManager(): void
+    {
+        $this->assertTrue($this->container->has('contao.security.two_factor.trusted_device_manager'));
+
+        $definition = $this->container->getDefinition('contao.security.two_factor.trusted_device_manager');
+
+        $this->assertSame(TrustedDeviceManager::class, $definition->getClass());
+        $this->assertTrue($definition->isPublic());
+
+        $this->assertEquals(
+            [
+                new Reference('request_stack'),
+                new Reference('scheb_two_factor.trusted_token_storage'),
+                new Reference('doctrine.orm.entity_manager'),
+            ],
+            $definition->getArguments()
         );
     }
 

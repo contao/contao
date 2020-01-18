@@ -48,9 +48,13 @@
             <input type="hidden" name="_target_path" value="<?= $this->targetPath ?>">
             <input type="hidden" name="_always_use_target_path" value="1">
             <h1><?= $this->headline ?></h1>
-            <div class="widget">
+            <div class="widget widget-text">
               <label for="verify"><?= $this->authCode ?></label>
               <input type="text" name="verify" id="verify" class="tl_text" value="" autocapitalize="off" autocomplete="off" placeholder="<?= $this->authCode ?>" required>
+            </div>
+            <div class="widget widget-checkbox">
+              <input type="checkbox" name="trusted" id="trusted" class="tl_checkbox" value="1">
+              <label for="trusted"><?= $this->trans('MSC.twoFactorTrustDevice') ?></label>
             </div>
             <div class="submit_container cf">
               <button type="submit" name="login" id="login" class="tl_submit"><?= $this->loginButton ?></button>

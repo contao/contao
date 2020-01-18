@@ -22,6 +22,7 @@ services:
     Contao\CoreBundle\Routing\ScopeMatcher: '@contao.routing.scope_matcher'
     Contao\CoreBundle\Security\Authentication\Token\TokenChecker: '@contao.security.token_checker'
     Contao\CoreBundle\Security\TwoFactor\Authenticator: '@contao.security.two_factor.authenticator'
+    Contao\CoreBundle\Security\TwoFactor\TrustedDeviceManager: '@contao.security.two_factor.trusted_device_manager'
     Contao\CoreBundle\Slug\Slug: '@contao.slug'
 
     # Backwards compatibility
@@ -619,11 +620,14 @@ services:
             - '@scheb_two_factor.authenticated_token_handler'
             - '@scheb_two_factor.authentication_context_factory'
             - '@request_stack'
+            - '@contao.security.two_factor.trusted_device_manager'
 
     contao.security.authentication_success_handler:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler
         arguments:
             - '@contao.framework'
+            - '@contao.security.two_factor.trusted_device_manager'
+            - '@security.firewall.map'
             - '@?logger'
 
     contao.security.backend_access_voter:
@@ -711,6 +715,14 @@ services:
             - '@contao.security.two_factor.authenticator'
         tags:
             - { name: scheb_two_factor.provider, alias: contao }
+
+    contao.security.two_factor.trusted_device_manager:
+        class: Contao\CoreBundle\Security\TwoFactor\TrustedDeviceManager
+        arguments:
+            - '@request_stack'
+            - '@scheb_two_factor.trusted_token_storage'
+            - '@doctrine.orm.entity_manager'
+        public: true
 
     contao.security.user_checker:
         class: Contao\CoreBundle\Security\User\UserChecker

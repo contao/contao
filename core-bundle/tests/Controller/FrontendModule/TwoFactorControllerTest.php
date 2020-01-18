@@ -13,10 +13,14 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller\FrontendModule;
 
 use Contao\BackendUser;
+use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Controller\FrontendModule\TwoFactorController;
+use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
+use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
+use Contao\CoreBundle\Security\TwoFactor\TrustedDeviceManager;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\FrontendUser;
@@ -26,6 +30,7 @@ use Contao\System;
 use PHPUnit\Framework\MockObject\MockObject;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -468,7 +473,7 @@ class TwoFactorControllerTest extends TestCase
         return $page;
     }
 
-    private function getContainerWithFrameworkTemplate(string $templateName, Authenticator $authenticator, AuthenticationUtils $authenticationUtils, Security $security): ContainerBuilder
+    private function getContainerWithFrameworkTemplate(string $templateName, Authenticator $authenticator, AuthenticationUtils $authenticationUtils, Security $security, string $projectDir = ''): ContainerBuilder
     {
         $template = $this->createMock(FrontendTemplate::class);
         $template
@@ -497,15 +502,39 @@ class TwoFactorControllerTest extends TestCase
 
         $translator = $this->createMock(TranslatorInterface::class);
         $backupCodeManager = $this->createMock(BackupCodeManager::class);
+        $trustedDeviceManager = $this->createMock(TrustedDeviceManager::class);
 
-        $container = new ContainerBuilder();
+        $finder = new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao');
+        $parameterBag = new ParameterBag(['scheb_two_factor.trusted_device.cookie_name' => 'trusted']);
+
+        $container = new ContainerBuilder($parameterBag);
+        $container->setParameter('kernel.debug', false);
+        $container->setParameter('kernel.default_locale', 'en');
+        $container->setParameter('kernel.cache_dir', $projectDir.'/var/cache');
+        $container->setParameter('kernel.project_dir', $projectDir);
+        $container->setParameter('kernel.root_dir', $projectDir.'/app');
+        $container->setParameter('kernel.bundles', []);
+        $container->setParameter('kernel.bundles_metadata', []);
+
+        // Load the default configuration
+        $extension = new ContaoCoreExtension();
+        $extension->load([], $container);
+
         $container->set('contao.framework', $framework);
         $container->set('contao.routing.scope_matcher', $scopeMatcher);
         $container->set('translator', $translator);
         $container->set('contao.security.two_factor.authenticator', $authenticator);
+        $container->set('contao.security.two_factor.trusted_device_manager', $trustedDeviceManager);
         $container->set('security.authentication_utils', $authenticationUtils);
         $container->set(BackupCodeManager::class, $backupCodeManager);
         $container->set('security.helper', $security);
+        $container->set('contao.resource_finder', $finder);
+        $container->set('parameter_bag', $parameterBag);
+
+        $pass = new AddResourcesPathsPass();
+        $pass->process($container);
+
+        System::setContainer($container);
 
         return $container;
     }

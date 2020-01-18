@@ -16,6 +16,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
+use Contao\CoreBundle\Security\TwoFactor\TrustedDeviceManager;
 use Contao\FrontendUser;
 use Contao\ModuleModel;
 use Contao\PageModel;
@@ -71,6 +72,7 @@ class TwoFactorController extends AbstractFrontendModuleController
         $services['security.authentication_utils'] = AuthenticationUtils::class;
         $services['security.helper'] = Security::class;
         $services['translator'] = TranslatorInterface::class;
+        $services['contao.security.two_factor.trusted_device_manager'] = TrustedDeviceManager::class;
         $services[BackupCodeManager::class] = BackupCodeManager::class;
 
         return $services;
@@ -130,9 +132,15 @@ class TwoFactorController extends AbstractFrontendModuleController
             $template->showBackupCodes = true;
         }
 
+        if ('tl_two_factor_clear_trusted_devices' === $request->request->get('FORM_SUBMIT')) {
+            $this->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
+        }
+
         $template->isEnabled = (bool) $user->useTwoFactor;
         $template->href = $this->page->getAbsoluteUrl().'?2fa=enable';
         $template->backupCodes = json_decode((string) $user->backupCodes, true) ?? [];
+        $template->trustedDevices = $this->get('contao.security.two_factor.trusted_device_manager')->getTrustedDevices($user);
+        $template->currentDevice = $request->cookies->get($this->getParameter('scheb_two_factor.trusted_device.cookie_name'));
 
         return new Response($template->parse());
     }

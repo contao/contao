@@ -96,6 +96,7 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
  * @property string      $useTwoFactor
  * @property string|null $secret
  * @property string|null $backupCodes
+ * @property integer     $trustedTokenVersion
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */

@@ -22,6 +22,8 @@ use Contao\System;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManagerInterface;
+use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -423,10 +425,13 @@ class AuthenticationSuccessHandlerTest extends TestCase
             $framework = $this->mockContaoFramework();
         }
 
+        $trustedDeviceManager = $this->createMock(TrustedDeviceManagerInterface::class);
+        $firewallMap = $this->createMock(FirewallMap::class);
+
         if (null === $logger) {
             $logger = $this->createMock(LoggerInterface::class);
         }
 
-        return new AuthenticationSuccessHandler($framework, $logger);
+        return new AuthenticationSuccessHandler($framework, $trustedDeviceManager, $firewallMap, $logger);
     }
 }

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Security\Authentication\Provider;
 
+use Contao\BackendUser;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\Authentication\Provider\AuthenticationProvider;
 use Contao\CoreBundle\Security\Exception\LockedException;
@@ -21,8 +22,10 @@ use Contao\System;
 use PHPUnit\Framework\MockObject\MockObject;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextFactoryInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Handler\AuthenticationHandlerInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
@@ -284,6 +287,63 @@ class AuthenticationProviderTest extends TestCase
         $provider->checkAuthentication($user, $token);
     }
 
+    public function testBeginsTwoFactorAuthenticationForContaoUsers(): void
+    {
+        $user = $this->createPartialMock(BackendUser::class, ['save']);
+        $user->admin = '1';
+
+        $token = new UsernamePasswordToken($user, 'foo', 'contao_frontend');
+
+        $twoFactorHandler = $this->createMock(AuthenticationHandlerInterface::class);
+        $twoFactorHandler
+            ->expects($this->once())
+            ->method('beginTwoFactorAuthentication')
+            ->willReturn($token)
+        ;
+
+        $trustedDeviceManager = $this->createMock(TrustedDeviceManagerInterface::class);
+        $trustedDeviceManager
+            ->expects($this->once())
+            ->method('isTrustedDevice')
+            ->with($user, 'contao_frontend')
+            ->willReturn(false)
+        ;
+
+        $provider = $this->createUsernamePasswordProvider(null, $twoFactorHandler, $trustedDeviceManager);
+        $provider->authenticate($token);
+    }
+
+    public function testSkipsTwoFactorAuthenticationForTrustedDevices(): void
+    {
+        $user = $this->createPartialMock(BackendUser::class, ['save']);
+        $user->admin = '1';
+
+        $token = new UsernamePasswordToken($user, 'foo', 'contao_frontend');
+
+        $twoFactorHandler = $this->createMock(AuthenticationHandlerInterface::class);
+        $twoFactorHandler
+            ->expects($this->never())
+            ->method('beginTwoFactorAuthentication')
+        ;
+
+        $trustedDeviceManager = $this->createMock(TrustedDeviceManagerInterface::class);
+        $trustedDeviceManager
+            ->expects($this->once())
+            ->method('isTrustedDevice')
+            ->with($user, 'contao_frontend')
+            ->willReturn(true)
+        ;
+
+        $trustedDeviceManager
+            ->expects($this->once())
+            ->method('addTrustedDevice')
+            ->with($user, 'contao_frontend')
+        ;
+
+        $provider = $this->createUsernamePasswordProvider(null, $twoFactorHandler, $trustedDeviceManager);
+        $provider->authenticate($token);
+    }
+
     public function testDoesNotHandleNonContaoUsers(): void
     {
         $user = $this->createMock(UserInterface::class);
@@ -469,9 +529,11 @@ class AuthenticationProviderTest extends TestCase
     }
 
     /**
-     * @param ContaoFramework&MockObject $framework
+     * @param ContaoFramework&MockObject                $framework
+     * @param AuthenticationHandlerInterface&MockObject $twoFactorHandler
+     * @param TrustedDeviceManagerInterface&MockObject  $trustedDeviceManager
      */
-    private function createUsernamePasswordProvider(ContaoFramework $framework = null): AuthenticationProvider
+    private function createUsernamePasswordProvider(ContaoFramework $framework = null, AuthenticationHandlerInterface $twoFactorHandler = null, TrustedDeviceManagerInterface $trustedDeviceManager = null): AuthenticationProvider
     {
         $userProvider = $this->createMock(UserProviderInterface::class);
         $userChecker = $this->createMock(UserCheckerInterface::class);
@@ -481,6 +543,24 @@ class AuthenticationProviderTest extends TestCase
         if (null === $framework) {
             $framework = $this->createMock(ContaoFramework::class);
         }
+
+        if (null === $twoFactorHandler) {
+            $twoFactorHandler = $this->createMock(AuthenticationHandlerInterface::class);
+        }
+
+        if (null === $trustedDeviceManager) {
+            $trustedDeviceManager = $this->createMock(TrustedDeviceManagerInterface::class);
+        }
+
+        $contextFactory = $this->createMock(AuthenticationContextFactoryInterface::class);
+        $contextFactory
+            ->method('create')
+            ->willReturnCallback(
+                static function ($request, $token, $firewallName) {
+                    return new AuthenticationContext($request, $token, $firewallName);
+                }
+            )
+        ;
 
         $requestStack = $this->createMock(RequestStack::class);
         $requestStack
@@ -495,9 +575,10 @@ class AuthenticationProviderTest extends TestCase
             $encoderFactory,
             $framework,
             $this->createMock(AuthenticationProviderInterface::class),
-            $this->createMock(AuthenticationHandlerInterface::class),
-            $this->createMock(AuthenticationContextFactoryInterface::class),
-            $requestStack
+            $twoFactorHandler,
+            $contextFactory,
+            $requestStack,
+            $trustedDeviceManager
         );
     }
 
@@ -522,6 +603,16 @@ class AuthenticationProviderTest extends TestCase
             ->willReturn($this->createMock(Request::class))
         ;
 
+        $contextFactory = $this->createMock(AuthenticationContextFactoryInterface::class);
+        $contextFactory
+            ->method('create')
+            ->willReturnCallback(
+                static function ($request, $token, $firewallName) {
+                    return new AuthenticationContext($request, $token, $firewallName);
+                }
+            )
+        ;
+
         return new AuthenticationProvider(
             $userProvider,
             $userChecker,
@@ -530,8 +621,9 @@ class AuthenticationProviderTest extends TestCase
             $framework,
             $twoFactorAuthenticationProvider,
             $this->createMock(AuthenticationHandlerInterface::class),
-            $this->createMock(AuthenticationContextFactoryInterface::class),
-            $requestStack
+            $contextFactory,
+            $requestStack,
+            $this->createMock(TrustedDeviceManagerInterface::class)
         );
     }
 }

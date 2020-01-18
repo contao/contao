@@ -691,6 +691,9 @@ h2.sub_headline {
 .two-factor .qr-code {
 	margin:0 15px;
 }
+.two-factor .tl_listing_container {
+	margin-top:0;
+}
 .two-factor .widget {
 	height:auto;
 	margin:15px 15px 12px;
@@ -720,7 +723,7 @@ h2.sub_headline {
 	background-color:transparent;
 	background-position-y:center;
 }
-.two-factor .tl_recovery_codes > p {
+.two-factor .tl_recovery_codes > p,.two-factor .tl_trusted_devices > p {
 	margin:0 15px 12px;
 	line-height:1.3;
 }
