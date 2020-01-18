@@ -11,7 +11,7 @@
       <p class="error"><?= $this->message ?></p>
     <?php endif; ?>
     <p><?= $this->trans('MSC.twoFactorScan') ?></p>
-    <form action="<?= $this->action ?>" class="tl_two_factor_form" method="post">
+    <form class="tl_two_factor_form" method="post">
       <div class="formbody">
         <input type="hidden" name="FORM_SUBMIT" value="tl_two_factor">
         <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
@@ -37,7 +37,7 @@
       <p class="confirm"><?= $this->trans('MSC.twoFactorActive') ?></p>
     </div>
     <?php if (!$this->enforceTwoFactor): ?>
-      <form action="<?= $this->action ?>" class="tl_two_factor_form" id="<?= $this->formId ?>" method="post">
+      <form class="tl_two_factor_form" id="<?= $this->formId ?>" method="post">
         <div class="formbody">
           <input type="hidden" name="FORM_SUBMIT" value="tl_two_factor_disable">
           <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
@@ -51,7 +51,7 @@
       <h3><?= $this->trans('MSC.twoFactorBackupCodesLabel') ?></h3>
       <p><?= $this->trans('MSC.twoFactorBackupCodesExplain') ?></p>
       <?php if (!$this->showBackupCodes): ?>
-        <form action="<?= $this->action ?>" class="tl_two_factor_form" method="post">
+        <form class="tl_two_factor_form" method="post">
           <input type="hidden" name="FORM_SUBMIT" value="tl_two_factor_show_backup_codes">
           <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
           <div class="submit_container cf">
@@ -67,7 +67,7 @@
             <li><code><?= $backupCode ?></code></li>
           <?php endforeach; ?>
         </ul>
-        <form action="<?= $this->action ?>" class="tl_two_factor_form" method="post">
+        <form class="tl_two_factor_form" method="post">
           <input type="hidden" name="FORM_SUBMIT" value="tl_two_factor_generate_backup_codes">
           <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
           <div class="submit_container cf">

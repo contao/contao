@@ -69,7 +69,7 @@
         <source>Enable lazy loading</source>
       </trans-unit>
       <trans-unit id="tl_image_size.lazyLoading.1">
-        <source>Adds loading=&amp;quot;lazy&amp;quot; to the &amp;lt;img&amp;gt; tag to defer loading the image until it is scrolled into the viewport.</source>
+        <source>Defer loading the image until it is scrolled into the viewport.</source>
       </trans-unit>
       <trans-unit id="tl_image_size.tstamp.0">
         <source>Revision date</source>

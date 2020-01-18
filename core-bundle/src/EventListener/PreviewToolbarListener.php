@@ -74,7 +74,7 @@ class PreviewToolbarListener
         $response = $event->getResponse();
 
         // Do not capture redirects, errors, or modify XML HTTP Requests
-        if (!$response->isOk() || $request->isXmlHttpRequest()) {
+        if ($response->isRedirection() || $response->isServerError() || $request->isXmlHttpRequest()) {
             return;
         }
 

@@ -24,7 +24,7 @@ class MigrationCollectionTest extends TestCase
         $migrations = new MigrationCollection($this->getMigrationServices());
         $pendingMigrations = $migrations->getPendingNames();
 
-        if (!\is_array($pendingMigrations)) {
+        if ($pendingMigrations instanceof \Traversable) {
             $pendingMigrations = iterator_to_array($pendingMigrations);
         }
 
@@ -36,7 +36,7 @@ class MigrationCollectionTest extends TestCase
         $migrations = new MigrationCollection($this->getMigrationServices());
         $results = $migrations->run();
 
-        if (!\is_array($results)) {
+        if ($results instanceof \Traversable) {
             $results = iterator_to_array($results);
         }
 

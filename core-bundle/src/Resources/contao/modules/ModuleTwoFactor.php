@@ -59,7 +59,6 @@ class ModuleTwoFactor extends BackendModule
 
 		$this->Template->href = $this->getReferer(true);
 		$this->Template->ref = $ref;
-		$this->Template->action = Environment::get('indexFreeRequest');
 		$this->Template->messages = Message::generateUnwrapped();
 
 		if (Input::get('act') == 'enable')

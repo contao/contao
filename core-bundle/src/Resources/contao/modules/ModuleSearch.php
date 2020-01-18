@@ -82,7 +82,6 @@ class ModuleSearch extends Module
 		$this->Template->search = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchLabel']);
 		$this->Template->matchAll = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['matchAll']);
 		$this->Template->matchAny = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['matchAny']);
-		$this->Template->action = ampersand(Environment::get('indexFreeRequest'));
 		$this->Template->advanced = ($this->searchType == 'advanced');
 
 		// Redirect page

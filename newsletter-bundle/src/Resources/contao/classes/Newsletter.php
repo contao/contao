@@ -537,7 +537,7 @@ class Newsletter extends Backend
 <a href="' . ampersand(str_replace('&key=import', '', Environment::get('request'))) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>
 ' . Message::generate() . '
-<form action="' . ampersand(Environment::get('request')) . '" id="tl_recipients_import" class="tl_form tl_edit_form" method="post" enctype="multipart/form-data">
+<form id="tl_recipients_import" class="tl_form tl_edit_form" method="post" enctype="multipart/form-data">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_recipients_import">
 <input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">

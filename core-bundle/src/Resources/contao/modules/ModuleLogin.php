@@ -166,7 +166,6 @@ class ModuleLogin extends Module
 		}
 
 		$this->Template->formId = 'tl_login_' . $this->id;
-		$this->Template->action = ampersand(\Environment::get('indexFreeRequest'));
 		$this->Template->forceTargetPath = (int) $blnRedirectBack;
 		$this->Template->targetPath = StringUtil::specialchars(base64_encode($strRedirect));
 
