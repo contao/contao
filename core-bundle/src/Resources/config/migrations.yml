@@ -8,5 +8,3 @@ services:
         arguments:
             - '@database_connection'
             - '@contao.framework'
-        tags:
-            - { name: contao.migration }

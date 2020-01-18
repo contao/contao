@@ -3157,15 +3157,6 @@ class ContaoCoreExtensionTest extends TestCase
             ],
             $definition->getArguments()
         );
-
-        $this->assertSame(
-            [
-                'contao.migration' => [
-                    [],
-                ],
-            ],
-            $definition->getTags()
-        );
     }
 
     public function testRegistersThePredefinedImageSizes(): void
