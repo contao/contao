@@ -21,7 +21,6 @@ use Contao\FrontendUser;
 use Contao\ModuleModel;
 use Contao\PageModel;
 use Contao\Template;
-use Doctrine\ORM\EntityManagerInterface;
 use ParagonIE\ConstantTime\Base32;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -73,7 +72,6 @@ class TwoFactorController extends AbstractFrontendModuleController
         $services['security.authentication_utils'] = AuthenticationUtils::class;
         $services['security.helper'] = Security::class;
         $services['translator'] = TranslatorInterface::class;
-        $services['doctrine.orm.entity_manager'] = EntityManagerInterface::class;
         $services['contao.security.two_factor.trusted_device_manager'] = TrustedDeviceManager::class;
         $services[BackupCodeManager::class] = BackupCodeManager::class;
 
