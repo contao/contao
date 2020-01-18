@@ -1971,19 +1971,19 @@
         <source>Here you can preview the meta data in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
       </trans-unit>
       <trans-unit id="MSC.clearTrustedDevices">
-        <source>Clear all trusted devices</source>
+        <source>Clear trusted devices</source>
       </trans-unit>
       <trans-unit id="MSC.trustedDevices">
         <source>Trusted devices</source>
       </trans-unit>
       <trans-unit id="MSC.noTrustedDevices">
-        <source>No trusted devices found.</source>
+        <source>Currently there are no trusted devices.</source>
       </trans-unit>
       <trans-unit id="MSC.device">
         <source>Device</source>
       </trans-unit>
       <trans-unit id="MSC.thisDevice">
-        <source>This device</source>
+        <source>this device</source>
       </trans-unit>
       <trans-unit id="MSC.browser">
         <source>Browser</source>

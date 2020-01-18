@@ -24,8 +24,8 @@
           <input type="text" name="verify" id="verify" class="text" value="" autocapitalize="off" autocomplete="off" required>
         </div>
         <div class="widget widget-checkbox">
-          <label for="trusted"><?= $this->trans('MSC.twoFactorTrustDevice') ?></label>
           <input type="checkbox" name="trusted" id="trusted" class="tl_checkbox" value="1">
+          <label for="trusted"><?= $this->trans('MSC.twoFactorTrustDevice') ?></label>
         </div>
       <?php else: ?>
         <div class="widget widget-text">
