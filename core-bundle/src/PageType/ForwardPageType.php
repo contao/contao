@@ -12,6 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\PageType;
 
-class ForwardPageType extends AbstractPageType
+use Contao\PageForward;
+
+class ForwardPageType extends AbstractPageType implements HasLegacyPageInterface
 {
+    public function getLegacyPageClass(): string
+    {
+        return PageForward::class;
+    }
 }

@@ -12,6 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\PageType;
 
-class Error401PageType extends AbstractPageType
+use Contao\PageError401;
+
+class Error401PageType extends AbstractPageType implements HasLegacyPageInterface
 {
+    public function getLegacyPageClass(): string
+    {
+        return PageError401::class;
+    }
 }

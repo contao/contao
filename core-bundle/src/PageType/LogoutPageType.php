@@ -12,6 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\PageType;
 
-class LogoutPageType extends AbstractPageType
+use Contao\PageLogout;
+
+class LogoutPageType extends AbstractPageType implements HasLegacyPageInterface
 {
+    public function getLegacyPageClass(): string
+    {
+        return PageLogout::class;
+    }
 }

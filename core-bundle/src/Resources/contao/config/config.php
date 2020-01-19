@@ -258,17 +258,7 @@ $GLOBALS['TL_FFL'] = array
 );
 
 // Page types
-$GLOBALS['TL_PTY'] = array
-(
-	'regular'   => 'Contao\PageRegular',
-	'forward'   => 'Contao\PageForward',
-	'redirect'  => 'Contao\PageRedirect',
-	'root'      => 'Contao\PageRoot',
-	'logout'    => 'Contao\PageLogout',
-	'error_401' => 'Contao\PageError401',
-	'error_403' => 'Contao\PageError403',
-	'error_404' => 'Contao\PageError404'
-);
+$GLOBALS['TL_PTY'] = array();
 
 // Maintenance
 $GLOBALS['TL_MAINTENANCE'] = array

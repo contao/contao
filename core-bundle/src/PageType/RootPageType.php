@@ -6,9 +6,10 @@ namespace Contao\CoreBundle\PageType;
 use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\PageModel;
+use Contao\PageRoot;
 use Symfony\Component\Routing\Route;
 
-class RootPageType extends AbstractPageType
+class RootPageType extends AbstractPageType implements HasLegacyPageInterface
 {
     /**
      * @var ContaoFrameworkInterface
@@ -18,6 +19,11 @@ class RootPageType extends AbstractPageType
     public function __construct(ContaoFrameworkInterface $framework)
     {
         $this->framework = $framework;
+    }
+
+    public function getLegacyPageClass(): string
+    {
+        return PageRoot::class;
     }
 
     public function getRoutes(PageModel $pageModel, bool $prependLocale, string $urlSuffix): iterable

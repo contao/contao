@@ -12,6 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\PageType;
 
-class RegularPageType extends AbstractPageType
+use Contao\PageRegular;
+
+class RegularPageType extends AbstractPageType implements HasLegacyPageInterface
 {
+    public function getLegacyPageClass(): string
+    {
+        return PageRegular::class;
+    }
 }

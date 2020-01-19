@@ -253,3 +253,9 @@ services:
             - '@event_dispatcher'
         tags:
             - { name: kernel.event_listener }
+
+    Contao\CoreBundle\EventListener\PageTypeListener:
+        arguments:
+            - '@Contao\CoreBundle\PageType\PageTypeRegistry'
+        tags:
+            - { name: contao.hook, hook: initializeSystem }

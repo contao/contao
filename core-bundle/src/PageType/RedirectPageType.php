@@ -12,6 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\PageType;
 
-class RedirectPageType extends AbstractPageType
+use Contao\PageRedirect;
+
+class RedirectPageType extends AbstractPageType implements HasLegacyPageInterface
 {
+    public function getLegacyPageClass(): string
+    {
+        return PageRedirect::class;
+    }
 }
