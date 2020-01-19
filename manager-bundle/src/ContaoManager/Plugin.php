@@ -366,10 +366,10 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         $userPassword = '';
 
         if ($user = $container->getParameter('database_user')) {
-            $userPassword = $user;
+            $userPassword = $this->encodeUrlParameter($user);
 
             if ($password = $container->getParameter('database_password')) {
-                $userPassword .= ':'.$password;
+                $userPassword .= ':'.$this->encodeUrlParameter($password);
             }
 
             $userPassword .= '@';
@@ -378,13 +378,13 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         $dbName = '';
 
         if ($name = $container->getParameter('database_name')) {
-            $dbName = '/'.$name;
+            $dbName = '/'.$this->encodeUrlParameter($name);
         }
 
         return sprintf(
             'mysql://%s%s:%s%s',
             $userPassword,
-            $container->getParameter('database_host'),
+            $this->encodeUrlParameter($container->getParameter('database_host')),
             $container->getParameter('database_port'),
             $dbName
         );
@@ -422,5 +422,10 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             (int) $container->getParameter('mailer_port'),
             $qs
         );
+    }
+
+    private function encodeUrlParameter(string $parameter): string
+    {
+        return str_replace('%', '%%', rawurlencode($parameter));
     }
 }
