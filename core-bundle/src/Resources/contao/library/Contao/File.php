@@ -281,7 +281,7 @@ class File extends System
 								);
 							}
 						}
-						catch (\Exception $e)
+						catch (\Throwable $e)
 						{
 							// ignore
 						}
@@ -339,7 +339,7 @@ class File extends System
 								$this->arrImageViewSize = false;
 							}
 						}
-						catch (\Exception $e)
+						catch (\Throwable $e)
 						{
 							$this->arrImageViewSize = false;
 						}

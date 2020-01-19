@@ -924,7 +924,7 @@ class InsertTags extends Controller
 							$arrCache[$strTag] = '<a href="' . Controller::addFilesUrlTo($strFile) . '"' . (($alt != '') ? ' title="' . StringUtil::specialchars($alt) . '"' : '') . ' data-lightbox="' . StringUtil::specialchars($rel) . '">' . $arrCache[$strTag] . '</a>';
 						}
 					}
-					catch (\Exception $e)
+					catch (\Throwable $e)
 					{
 						$arrCache[$strTag] = '';
 					}

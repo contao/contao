@@ -188,7 +188,7 @@ abstract class Controller extends System
 			{
 				$objTheme = ThemeModel::findAll(array('order'=>'name'));
 			}
-			catch (\Exception $e)
+			catch (\Throwable $e)
 			{
 				$objTheme = null;
 			}
@@ -1496,7 +1496,7 @@ abstract class Controller extends System
 		{
 			$objFile = new File($arrItem['singleSRC']);
 		}
-		catch (\Exception $e)
+		catch (\Throwable $e)
 		{
 			$objFile = null;
 		}
@@ -1582,7 +1582,7 @@ abstract class Controller extends System
 				$objFile = new File(rawurldecode($src));
 			}
 		}
-		catch (\Exception $e)
+		catch (\Throwable $e)
 		{
 			System::log('Image "' . $arrItem['singleSRC'] . '" could not be processed: ' . $e->getMessage(), __METHOD__, TL_ERROR);
 
@@ -1718,7 +1718,7 @@ abstract class Controller extends System
 
 							$objTemplate->$strHrefKey = $objTemplate->lightboxPicture['img']['src'];
 						}
-						catch (\Exception $e)
+						catch (\Throwable $e)
 						{
 							$objTemplate->$strHrefKey = static::addFilesUrlTo(System::urlEncode($arrItem['imageUrl']));
 							$objTemplate->lightboxPicture = array('img'=>array('src'=>$objTemplate->$strHrefKey, 'srcset'=>$objTemplate->$strHrefKey), 'sources'=>array());
@@ -1751,7 +1751,7 @@ abstract class Controller extends System
 
 				$objTemplate->$strHrefKey = $objTemplate->lightboxPicture['img']['src'];
 			}
-			catch (\Exception $e)
+			catch (\Throwable $e)
 			{
 				$objTemplate->$strHrefKey = static::addFilesUrlTo(System::urlEncode($arrItem['singleSRC']));
 				$objTemplate->lightboxPicture = array('img'=>array('src'=>$objTemplate->$strHrefKey, 'srcset'=>$objTemplate->$strHrefKey), 'sources'=>array());

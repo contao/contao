@@ -163,7 +163,7 @@ class PrettyErrorScreenListener
             return $pageHandler->getResponse();
         } catch (ResponseException $e) {
             return $e->getResponse();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return null;
         }
     }

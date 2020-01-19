@@ -192,7 +192,7 @@ class ExceptionConverterListenerTest extends TestCase
         $this->assertInstanceOf(PageNotFoundException::class, $exception->getPrevious());
     }
 
-    private function getResponseEvent(\Exception $exception): ExceptionEvent
+    private function getResponseEvent(\Throwable $exception): ExceptionEvent
     {
         $kernel = $this->createMock(KernelInterface::class);
         $request = new Request();

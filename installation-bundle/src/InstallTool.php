@@ -110,7 +110,7 @@ class InstallTool
             $this->connection->query('SHOW TABLES');
 
             return true;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
         }
 
         if (null === $name || null === $this->connection) {
@@ -119,7 +119,7 @@ class InstallTool
 
         try {
             $this->connection->connect();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->logException($e);
 
             return false;
@@ -442,7 +442,7 @@ class InstallTool
         $config->save();
     }
 
-    public function logException(\Exception $e): void
+    public function logException(\Throwable $e): void
     {
         $this->logger->critical('An exception occurred.', ['exception' => $e]);
     }

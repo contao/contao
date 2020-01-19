@@ -254,7 +254,7 @@ abstract class Backend extends Controller
 			{
 				include $file;
 			}
-			catch (\Exception $e)
+			catch (\Throwable $e)
 			{
 			}
 

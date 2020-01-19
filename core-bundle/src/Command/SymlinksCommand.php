@@ -223,7 +223,7 @@ class SymlinksCommand extends Command
                 $link,
                 $target,
             ];
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->statusCode = 1;
 
             $this->rows[] = [

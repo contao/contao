@@ -266,7 +266,7 @@ class ModuleRegistration extends Module
 								$varValue = $callback($varValue, null);
 							}
 						}
-						catch (\Exception $e)
+						catch (\Throwable $e)
 						{
 							$objWidget->class = 'error';
 							$objWidget->addError($e->getMessage());

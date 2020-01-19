@@ -411,7 +411,7 @@ abstract class DataContainer extends Backend
 					{
 						throw $e;
 					}
-					catch (\Exception $e)
+					catch (\Throwable $e)
 					{
 						$this->noReload = true;
 						$objWidget->addError($e->getMessage());

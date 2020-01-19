@@ -77,7 +77,7 @@ class PageSelector extends Widget
 								   ->limit(1)
 								   ->execute($strKeyword);
 				}
-				catch (\Exception $e)
+				catch (\Throwable $e)
 				{
 					$strKeyword = '';
 				}
@@ -154,7 +154,7 @@ class PageSelector extends Widget
 					$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = array_unique($arrIds);
 				}
 			}
-			catch (\Exception $e)
+			catch (\Throwable $e)
 			{
 			}
 		}

@@ -98,7 +98,7 @@ class PrettyErrorScreenListenerTest extends TestCase
     /**
      * @dataProvider getErrorTypes
      */
-    public function testRendersTheContaoPageHandler(int $type, \Exception $exception): void
+    public function testRendersTheContaoPageHandler(int $type, \Throwable $exception): void
     {
         $GLOBALS['TL_PTY']['error_'.$type] = 'Contao\CoreBundle\Fixtures\Controller\PageError'.$type.'Controller';
 
@@ -337,7 +337,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         return $request;
     }
 
-    private function getResponseEvent(\Exception $exception, Request $request = null, bool $isSubRequest = false): ExceptionEvent
+    private function getResponseEvent(\Throwable $exception, Request $request = null, bool $isSubRequest = false): ExceptionEvent
     {
         $kernel = $this->createMock(KernelInterface::class);
 

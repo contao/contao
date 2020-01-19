@@ -94,7 +94,7 @@ class FileSelector extends Widget
 								   ->limit(1)
 								   ->execute($strKeyword);
 				}
-				catch (\Exception $e)
+				catch (\Throwable $e)
 				{
 					$strKeyword = '';
 				}
@@ -198,7 +198,7 @@ class FileSelector extends Widget
 					$GLOBALS['TL_DCA']['tl_files']['list']['sorting']['root'] = array_unique($arrPaths);
 				}
 			}
-			catch (\Exception $e)
+			catch (\Throwable $e)
 			{
 			}
 		}

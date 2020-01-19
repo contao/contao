@@ -710,7 +710,7 @@ class Versions extends Controller
 
 				$arrVersions[$k]['deleted'] = ($objDeleted->count < 1);
 			}
-			catch (\Exception $e)
+			catch (\Throwable $e)
 			{
 				// Probably a disabled module
 				--$intCount;

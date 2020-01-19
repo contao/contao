@@ -341,7 +341,7 @@ class Theme extends Backend
 				{
 					File::putContent($this->customizeUploadPath($objArchive->file_name), $objArchive->unzip());
 				}
-				catch (\Exception $e)
+				catch (\Throwable $e)
 				{
 					Message::addError($e->getMessage());
 				}

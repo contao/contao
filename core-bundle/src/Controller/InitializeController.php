@@ -136,7 +136,7 @@ class InitializeController extends AbstractController
             );
 
             $this->get('request_stack')->pop();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             // ignore and continue with original response
         }
 

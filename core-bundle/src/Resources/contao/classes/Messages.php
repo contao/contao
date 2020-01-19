@@ -52,7 +52,7 @@ class Messages extends Backend
 				return '<p class="tl_error">' . $GLOBALS['TL_LANG']['MSC']['maintenanceEnabled'] . '</p>';
 			}
 		}
-		catch (\Exception $e)
+		catch (\Throwable $e)
 		{
 			// ignore
 		}

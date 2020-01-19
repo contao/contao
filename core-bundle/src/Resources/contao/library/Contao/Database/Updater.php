@@ -746,7 +746,7 @@ class Updater extends Controller
 			{
 				$this->loadDataContainer($strTable);
 			}
-			catch (\Exception $e)
+			catch (\Throwable $e)
 			{
 				continue;
 			}

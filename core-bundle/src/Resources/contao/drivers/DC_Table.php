@@ -5174,7 +5174,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 								   ->limit(1)
 								   ->execute($strKeyword);
 				}
-				catch (\Exception $e)
+				catch (\Throwable $e)
 				{
 					$strKeyword = '';
 				}

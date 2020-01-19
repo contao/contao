@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AjaxRedirectResponseException extends ResponseException
 {
-    public function __construct(string $location, int $status = 302, \Exception $previous = null)
+    public function __construct(string $location, int $status = 302, \Throwable $previous = null)
     {
         parent::__construct(new Response($location, $status, ['X-Ajax-Location' => $location]), $previous);
     }

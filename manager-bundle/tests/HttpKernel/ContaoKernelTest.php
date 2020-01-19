@@ -383,7 +383,7 @@ class ContaoKernelTest extends ContaoTestCase
 
         try {
             $kernel->boot();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->assertInstanceOf(\RuntimeException::class, $e);
 
             return;

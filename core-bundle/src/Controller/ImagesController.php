@@ -66,7 +66,7 @@ class ImagesController
             if ($image instanceof DeferredImageInterface && $resizer instanceof DeferredResizerInterface) {
                 $resizer->resizeDeferredImage($image);
             }
-        } catch (\Exception $exception) {
+        } catch (\Throwable $exception) {
             throw new NotFoundHttpException($exception->getMessage(), $exception);
         }
 

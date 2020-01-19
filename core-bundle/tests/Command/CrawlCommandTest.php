@@ -127,7 +127,7 @@ class CrawlCommandTest extends TestCase
     /**
      * @return Factory&MockObject
      */
-    private function createInvalidEscargotFactory(\Exception $exception, bool $withExistingJobId = false): Factory
+    private function createInvalidEscargotFactory(\Throwable $exception, bool $withExistingJobId = false): Factory
     {
         $escargotFactory = $this->createEscargotFactory();
 

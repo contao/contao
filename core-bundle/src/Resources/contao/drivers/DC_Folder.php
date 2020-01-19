@@ -381,7 +381,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 					$this->arrFilemounts = $this->eliminateNestedPaths(array_unique($arrRoot));
 				}
 			}
-			catch (\Exception $e)
+			catch (\Throwable $e)
 			{
 			}
 		}
@@ -2854,7 +2854,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 								   ->limit(1)
 								   ->execute($strKeyword);
 				}
-				catch (\Exception $e)
+				catch (\Throwable $e)
 				{
 					$strKeyword = '';
 				}

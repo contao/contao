@@ -690,7 +690,7 @@ class Image
 			{
 				$deferredImage = $container->get('contao.image.image_factory')->create($rootDir . '/' . $src);
 			}
-			catch (\Exception $e)
+			catch (\Throwable $e)
 			{
 				$deferredImage = null;
 			}
@@ -888,7 +888,7 @@ class Image
 				return $path;
 			}
 		}
-		catch (\Exception $e)
+		catch (\Throwable $e)
 		{
 			System::log('Image "' . $image . '" could not be processed: ' . $e->getMessage(), __METHOD__, 'ERROR');
 		}
