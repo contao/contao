@@ -415,6 +415,13 @@ class PluginTest extends ContaoTestCase
             'contao_test',
             'mysql://root:foobar@localhost:3306/contao_test',
         ];
+
+        yield [
+            'root',
+            'aA&3yuA?123-2ABC',
+            'contao_test',
+            'mysql://root:aA%%263yuA%%3F123-2ABC@localhost:3306/contao_test',
+        ];
     }
 
     public function testAddsTheDefaultServerVersion(): void
