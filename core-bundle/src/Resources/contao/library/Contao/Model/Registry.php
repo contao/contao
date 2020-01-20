@@ -78,7 +78,7 @@ class Registry implements \Countable
 	/**
 	 * Clear the registry
 	 */
-	public function clear()
+	public function reset()
 	{
 		$this->arrRegistry = array();
 		$this->arrAliases = array();
