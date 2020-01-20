@@ -92,6 +92,20 @@ class Automator extends System
 	}
 
 	/**
+	 * Purge the crawl queue
+	 */
+	public function purgeCrawlQueue()
+	{
+		$objDatabase = Database::getInstance();
+
+		// Truncate the table
+		$objDatabase->execute("TRUNCATE TABLE tl_crawl_queue");
+
+		// Add a log entry
+		$this->log('Purged the crawl queue', __METHOD__, TL_CRON);
+	}
+
+	/**
 	 * Purge the image cache
 	 */
 	public function purgeImageCache()
