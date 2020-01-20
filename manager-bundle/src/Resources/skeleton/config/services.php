@@ -44,6 +44,12 @@ return static function(ContainerConfigurator $configurator) use ($container) {
 
     foreach ($services as $id => $definition) {
         if ($definition->hasErrors()) {
+            if (\is_a($definition->getClass(), \Contao\System::class)) {
+                $container->removeDefinition($id);
+                --$serviceCount;
+                continue;
+            }
+
             $errors[] = $id;
         }
     }
