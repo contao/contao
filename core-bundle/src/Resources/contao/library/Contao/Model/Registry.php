@@ -76,7 +76,9 @@ class Registry implements \Countable
 	}
 
 	/**
-	 * Clear the registry
+	 * Clear the registry and dump all tracking information.
+	 *
+	 * @internal This should only be called by @Contao\CoreBundle\Framework\ContaoFramework during the kernel.reset event.
 	 */
 	public function reset()
 	{
