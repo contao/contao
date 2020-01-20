@@ -28,7 +28,8 @@
         connections:
             default:
                 default_table_options:
-                    engine: MyISAM</pre>
+                    engine: MyISAM
+                    row_format: ~</pre>
       </div>
     {% elseif errorCode == 4 %}
       <p class="tl_error">{{ 'engine_mismatch'|trans }}</p>
