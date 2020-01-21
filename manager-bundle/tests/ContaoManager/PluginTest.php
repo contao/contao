@@ -526,7 +526,7 @@ class PluginTest extends ContaoTestCase
             null,
             25,
             null,
-            'smtp://127.0.0.1:25?username=foo%40bar.com',
+            'smtp://127.0.0.1:25?username=foo%%40bar.com',
         ];
 
         yield [
@@ -536,7 +536,7 @@ class PluginTest extends ContaoTestCase
             'foobar',
             25,
             null,
-            'smtp://127.0.0.1:25?username=foo%40bar.com&password=foobar',
+            'smtp://127.0.0.1:25?username=foo%%40bar.com&password=foobar',
         ];
 
         yield [
@@ -556,7 +556,7 @@ class PluginTest extends ContaoTestCase
             'foobar',
             587,
             'tls',
-            'smtp://127.0.0.1:587?username=foo%40bar.com&password=foobar&encryption=tls',
+            'smtp://127.0.0.1:587?username=foo%%40bar.com&password=foobar&encryption=tls',
         ];
     }
 
