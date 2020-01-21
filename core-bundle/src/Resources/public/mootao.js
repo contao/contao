@@ -36,7 +36,13 @@ Request.Contao = new Class(
 
 	initialize: function(options) {
 		if (options && !options.url) {
-			this.options.url = location.href;
+			var form = options.field.getParent('form');
+
+			if (form && form.hasAttribute('action')) {
+				this.options.url = form.getAttribute('action');
+			} else {
+				this.options.url = location.href;
+			}
 		}
 		this.parent(options);
 	},
