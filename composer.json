@@ -144,8 +144,8 @@
     "require-dev": {
         "ext-fileinfo": "*",
         "composer/composer": "^1.0",
+        "contao/easy-coding-standard": "^1.0",
         "contao/monorepo-tools": "dev-master",
-        "contao/php-cs-fixer": "^2.2",
         "contao/phpstan": "^0.12",
         "contao/test-case": "^4.0",
         "doctrine/doctrine-migrations-bundle": "^1.1",
@@ -249,20 +249,20 @@
         "all": [
             "@unit-tests",
             "@functional-tests",
-            "@php-cs-fixer",
+            "@cs-fixer",
             "@phpstan",
             "@monorepo-tools"
         ],
+         "cs-fixer": [
+            "vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests --config vendor/contao/easy-coding-standard/config/default.yaml --ansi",
+            "vendor/bin/ecs check *-bundle/src/Resources/contao --config vendor/contao/easy-coding-standard/config/legacy.yaml --ansi",
+            "vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config vendor/contao/easy-coding-standard/config/template.yaml --ansi"
+         ],
         "functional-tests": [
             "vendor/bin/phpunit --testsuite=functional --colors=always"
         ],
         "monorepo-tools": [
             "vendor/bin/monorepo-tools composer-json --validate --ansi"
-        ],
-        "php-cs-fixer": [
-            "PHP_CS_CONFIG=default vendor/bin/php-cs-fixer fix -v --ansi",
-            "PHP_CS_CONFIG=legacy vendor/bin/php-cs-fixer fix -v --ansi",
-            "PHP_CS_CONFIG=template vendor/bin/php-cs-fixer fix -v --ansi"
         ],
         "phpstan": [
             "vendor/bin/phpstan analyze core-bundle/src core-bundle/tests --level=3 --memory-limit=1G --ansi"
