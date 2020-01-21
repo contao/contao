@@ -22,7 +22,7 @@ jobs:
                   php-version: 7.3
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
                   tools: prestissimo
-                  coverage: pcov
+                  coverage: xdebug
 
             - name: Checkout
               uses: actions/checkout@v2
@@ -62,7 +62,7 @@ jobs:
                   # * If you have an idea how to solve this in a better way, please
                   #   let us know.
                   token: e129b38e-acf2-484c-97bc-1cde6b4a0693
-                  file: './*.xml'
+                  file: '*-bundle.xml'
                   fail_ci_if_error: true
 
     coding-style:
