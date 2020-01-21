@@ -385,7 +385,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             'mysql://%s%s:%s%s',
             $userPassword,
             $container->getParameter('database_host'),
-            $container->getParameter('database_port'),
+            (int) $container->getParameter('database_port'),
             $dbName
         );
     }

@@ -97,14 +97,8 @@ class ParameterDumper
         $parameters = [];
 
         foreach ($this->parameters['parameters'] as $key => $value) {
-            if (\is_string($value)) {
-                if (0 === strncmp($value, '@', 1)) {
-                    $value = '@'.$value;
-                }
-
-                if (false !== strpos($value, '%')) {
-                    $value = str_replace('%', '%%', $value);
-                }
+            if (\is_string($value) && 0 === strncmp($value, '@', 1)) {
+                $value = '@'.$value;
             }
 
             $parameters[$key] = $value;

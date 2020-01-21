@@ -571,7 +571,7 @@ class PluginTest extends ContaoTestCase
                     'connections' => [
                         'default' => [
                             'url' => '%env(DATABASE_URL)%',
-                            'password' => 'foo%%bar',
+                            'password' => '@foobar',
                         ],
                     ],
                 ],
@@ -592,8 +592,8 @@ class PluginTest extends ContaoTestCase
         $dbalConnectionFactory = function ($params) use ($connection) {
             $this->assertSame(
                 [
-                    'url' => 'mysql://root:foo%bar@localhost:3306/database',
-                    'password' => 'foo%bar',
+                    'url' => 'mysql://root:%%40foobar@localhost:3306/database',
+                    'password' => '@foobar',
                 ],
                 $params
             );
@@ -602,7 +602,7 @@ class PluginTest extends ContaoTestCase
         };
 
         $url = $_ENV['DATABASE_URL'] ?? null;
-        $_SERVER['DATABASE_URL'] = $_ENV['DATABASE_URL'] = 'mysql://root:foo%bar@localhost:3306/database';
+        $_SERVER['DATABASE_URL'] = $_ENV['DATABASE_URL'] = 'mysql://root:%%40foobar@localhost:3306/database';
 
         $plugin = new Plugin($dbalConnectionFactory);
         $plugin->getExtensionConfig('doctrine', $extensionConfigs, $container);
