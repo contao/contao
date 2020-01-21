@@ -45,6 +45,7 @@ doctrine:
                     charset: utf8mb4
                     collate: utf8mb4_unicode_ci
                     engine: InnoDB
+                    row_format: DYNAMIC
                 options:
                     !php/const PDO::MYSQL_ATTR_MULTI_STATEMENTS: false
         types:
