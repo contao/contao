@@ -1,0 +1,302 @@
+name: CI
+
+on:
+    pull_request: ~
+    push:
+        branches:
+            - 4.4
+        tags:
+            - 4.4.*
+    schedule:
+        - cron: '0 13 * * MON,TUE'
+
+jobs:
+    coverage:
+        name: Coverage
+        runs-on: ubuntu-latest
+        if: github.event_name != 'schedule'
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v1
+              with:
+                  php-version: 7.3
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
+                  tools: prestissimo
+                  coverage: pcov
+
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            - name: Install the dependencies
+              run: |
+                  composer global require symfony/flex
+                  composer install --no-interaction --no-suggest
+
+            - name: Generate the coverage report
+              run: |
+                  php -d pcov.enabled=1 vendor/bin/phpunit -c calendar-bundle --coverage-clover=calendar-bundle.xml --colors=always
+                  php -d pcov.enabled=1 vendor/bin/phpunit -c core-bundle --exclude-group contao3 --coverage-clover=core-bundle.xml --colors=always
+                  php -d pcov.enabled=1 vendor/bin/phpunit -c faq-bundle --coverage-clover=faq-bundle.xml --colors=always
+                  php -d pcov.enabled=1 vendor/bin/phpunit -c manager-bundle --coverage-clover=manager-bundle.xml --colors=always
+                  php -d pcov.enabled=1 vendor/bin/phpunit -c news-bundle --coverage-clover=news-bundle.xml --colors=always
+
+            - name: Upload the coverage report
+              uses: codecov/codecov-action@v1
+              with:
+                  # Yes, this is our upload token in plain text and yes, we should
+                  # set it as a secret instead. However, this is currently the
+                  # only way to allow coverage uploads from fork repository PRs:
+                  #
+                  # https://github.com/codecov/codecov-node/issues/118
+                  # https://github.community/t5/GitHub-Actions/Make-secrets-available-to-builds-of-forks/m-p/33885#M1696
+                  #
+                  # If you stumble across this, here is what you should do:
+                  #
+                  # * If the problems mentioned above have been solved and we did
+                  #   not notice, please give us a heads-up.
+                  #
+                  # * If you think about doing the same, make sure to be aware of
+                  #   the implications. This is a trial and error shot on our end
+                  #   and the odds are that the outcome is error.
+                  #
+                  # * If you have an idea how to solve this in a better way, please
+                  #   let us know.
+                  token: e129b38e-acf2-484c-97bc-1cde6b4a0693
+                  file: ./*.xml
+                  fail_ci_if_error: true
+
+    coding-style:
+        name: Coding Style
+        runs-on: ubuntu-latest
+        if: github.event_name == 'pull_request'
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v1
+              with:
+                  php-version: 7.3
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
+                  tools: prestissimo
+                  coverage: none
+
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            - name: Install the dependencies
+              run: |
+                  composer global require symfony/flex
+                  composer install --no-interaction --no-suggest
+
+            - name: Check the coding style
+              run: |
+                  PHP_CS_CONFIG=default vendor/bin/php-cs-fixer fix --diff --diff-format=udiff --dry-run
+                  PHP_CS_CONFIG=legacy vendor/bin/php-cs-fixer fix --diff --diff-format=udiff --dry-run
+                  PHP_CS_CONFIG=template vendor/bin/php-cs-fixer fix --diff --diff-format=udiff --dry-run
+
+            - name: Analyze the code
+              run: vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
+
+    tests:
+        name: PHP ${{ matrix.php }}
+        runs-on: ubuntu-latest
+        if: github.event_name != 'push'
+        strategy:
+            fail-fast: false
+            matrix:
+                php: [7.1, 7.2, 7.3, 7.4]
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v1
+              with:
+                  php-version: ${{ matrix.php }}
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
+                  tools: prestissimo
+                  coverage: none
+
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            - name: Install the dependencies
+              run: |
+                  composer global require symfony/flex
+                  composer install --no-interaction --no-suggest
+
+            - name: Run the unit tests
+              run: |
+                  vendor/bin/phpunit -c calendar-bundle --colors=always
+                  vendor/bin/phpunit -c core-bundle --colors=always
+                  vendor/bin/phpunit -c faq-bundle --colors=always
+                  vendor/bin/phpunit -c installation-bundle --colors=always
+                  vendor/bin/phpunit -c manager-bundle --colors=always
+                  vendor/bin/phpunit -c news-bundle --colors=always
+
+    php5:
+        name: PHP 5.6
+        runs-on: ubuntu-latest
+        if: github.event_name != 'push'
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v1
+              with:
+                  php-version: 5.6
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
+                  tools: prestissimo
+                  coverage: none
+
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            - name: Install the dependencies
+              run: |
+                  php -r '
+                    $data = json_decode(file_get_contents(__DIR__."/composer.json"), true);
+                    $data["require"]["contao/manager-plugin"] = "^2.2";
+                    unset($data["require-dev"]["contao/monorepo-tools"]);
+                    file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
+                  '
+                  composer global require symfony/flex
+                  composer install --no-interaction --no-suggest
+
+            - name: Run the unit tests
+              run: |
+                  vendor/bin/phpunit -c calendar-bundle --colors=always
+                  vendor/bin/phpunit -c core-bundle --colors=always
+                  vendor/bin/phpunit -c faq-bundle --colors=always
+                  vendor/bin/phpunit -c installation-bundle --colors=always
+                  vendor/bin/phpunit -c manager-bundle --colors=always
+                  vendor/bin/phpunit -c news-bundle --colors=always
+
+    prefer-lowest:
+        name: Prefer Lowest
+        runs-on: ubuntu-latest
+        if: github.event_name != 'push'
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v1
+              with:
+                  php-version: 7.3
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
+                  tools: prestissimo
+                  coverage: none
+
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            - name: Install the dependencies
+              run: |
+                  composer global require symfony/flex
+                  composer update --prefer-lowest --prefer-stable --no-interaction --no-suggest
+
+            - name: Run the unit tests
+              run: |
+                  vendor/bin/phpunit -c calendar-bundle --colors=always
+                  vendor/bin/phpunit -c core-bundle --colors=always
+                  vendor/bin/phpunit -c faq-bundle --colors=always
+                  vendor/bin/phpunit -c installation-bundle --colors=always
+                  vendor/bin/phpunit -c manager-bundle --colors=always
+                  vendor/bin/phpunit -c news-bundle --colors=always
+
+    bundles:
+        name: Bundles
+        runs-on: ubuntu-latest
+        if: github.event_name != 'push'
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v1
+              with:
+                  php-version: 7.3
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
+                  tools: prestissimo
+                  coverage: none
+
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            - name: Test the single bundles
+              run: |
+                  composer global require symfony/flex
+                  bundles=(calendar-bundle core-bundle faq-bundle manager-bundle news-bundle)
+                  for bundle in "${bundles[@]}"; do
+                      cd $bundle
+                      php -r '
+                          $data = json_decode(file_get_contents(__DIR__."/composer.json"), true);
+                          if ("contao/core-bundle" !== $data["name"]) {
+                              $data["repositories"][0]["type"] = "path";
+                              $data["repositories"][0]["url"] = "../core-bundle";
+                          }
+                          if ("contao/installation-bundle" !== $data["name"]) {
+                              $data["repositories"][1]["type"] = "path";
+                              $data["repositories"][1]["url"] = "../installation-bundle";
+                          }
+                          file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
+                      '
+                      COMPOSER_ROOT_VERSION=dev-${{ env.GITHUB_SHA }} composer install --no-interaction --no-suggest
+                      vendor/bin/phpunit --colors=always
+                      cd ..
+                  done
+
+    windows:
+        name: Windows
+        runs-on: windows-latest
+        if: github.event_name != 'push'
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v1
+              with:
+                  php-version: 7.3
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
+                  ini-values: memory_limit=1G
+                  tools: prestissimo
+                  coverage: none
+
+            - name: Adjust the Git autocrlf setting
+              run: git config --global core.autocrlf false
+
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            - name: Install the dependencies
+              run: |
+                  composer global require symfony/flex --no-progress
+                  composer install --no-interaction --no-suggest --no-progress
+
+            - name: Run the unit tests
+              run: |
+                  vendor/bin/phpunit.bat -c calendar-bundle --colors=always
+                  vendor/bin/phpunit.bat -c core-bundle --colors=always
+                  vendor/bin/phpunit.bat -c faq-bundle --colors=always
+                  vendor/bin/phpunit.bat -c installation-bundle --colors=always
+                  vendor/bin/phpunit.bat -c manager-bundle --colors=always
+                  vendor/bin/phpunit.bat -c news-bundle --colors=always
+
+    monorepo-split:
+        name: Monorepo Split
+        runs-on: ubuntu-latest
+        if: github.event_name == 'push'
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v1
+              with:
+                  php-version: 7.3
+                  extensions: json, zlib
+                  tools: prestissimo
+                  coverage: none
+
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            - name: Cache the monorepo split
+              uses: actions/cache@v1
+              with:
+                path: .monorepo-split-cache
+                key: dev-${GITHUB_REF##*/}
+
+            - name: Install the dependencies
+              run: composer global require contao/monorepo-tools:dev-master
+
+            - name: Validate the composer.json files
+              run: $HOME/.composer/vendor/bin/monorepo-tools composer-json --validate --ansi
+
+            - name: Split the monorepo
+              run: $HOME/.composer/vendor/bin/monorepo-tools split ${GITHUB_REF##*/}
+              env:
+                  GITHUB_TOKEN: ${{ secrets.MONOREPO_SPLIT_TOKEN }}
