@@ -36,22 +36,19 @@ class BackendLocaleListenerTest extends TestCase
         $security
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($user)
-        ;
+            ->willReturn($user);
 
         $request = $this->createMock(Request::class);
         $request
             ->expects($this->once())
             ->method('setLocale')
-            ->with('de')
-        ;
+            ->with('de');
 
         $translator = $this->createMock(LocaleAwareInterface::class);
         $translator
             ->expects($this->once())
             ->method('setLocale')
-            ->with('de')
-        ;
+            ->with('de');
 
         $kernel = $this->createMock(KernelInterface::class);
         $event = new RequestEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
@@ -72,14 +69,12 @@ class BackendLocaleListenerTest extends TestCase
         $security
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($this->createMock(FrontendUser::class))
-        ;
+            ->willReturn($this->createMock(FrontendUser::class));
 
         $request = $this->createMock(Request::class);
         $request
             ->expects($this->never())
-            ->method('setLocale')
-        ;
+            ->method('setLocale');
 
         $kernel = $this->createMock(KernelInterface::class);
         $event = new RequestEvent($kernel, new Request(), HttpKernelInterface::MASTER_REQUEST);
@@ -95,14 +90,12 @@ class BackendLocaleListenerTest extends TestCase
         $security
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($security)
-        ;
+            ->willReturn($security);
 
         $request = $this->createMock(Request::class);
         $request
             ->expects($this->never())
-            ->method('setLocale')
-        ;
+            ->method('setLocale');
 
         $kernel = $this->createMock(KernelInterface::class);
         $event = new RequestEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);

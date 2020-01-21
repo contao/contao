@@ -34,8 +34,7 @@ class MergeHttpHeadersListenerTest extends TestCase
         $framework
             ->expects($this->once())
             ->method('isInitialized')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $listener = new MergeHttpHeadersListener($framework, new MemoryHeaderStorage(['Content-Type: text/html']));
         $listener($responseEvent);
@@ -54,8 +53,7 @@ class MergeHttpHeadersListenerTest extends TestCase
         $framework
             ->expects($this->once())
             ->method('isInitialized')
-            ->willReturn(false)
-        ;
+            ->willReturn(false);
 
         $listener = new MergeHttpHeadersListener($framework, new MemoryHeaderStorage(['Content-Type: text/html']));
         $listener($responseEvent);
@@ -74,8 +72,7 @@ class MergeHttpHeadersListenerTest extends TestCase
         $framework
             ->expects($this->once())
             ->method('isInitialized')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $headers = new MemoryHeaderStorage(['set-cookie: new-content=foobar']); // lower-case key
 
@@ -154,8 +151,7 @@ class MergeHttpHeadersListenerTest extends TestCase
         $framework
             ->expects($this->atLeastOnce())
             ->method('isInitialized')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $headerStorage = new MemoryHeaderStorage(['Content-Type: text/html']);
 
@@ -186,8 +182,7 @@ class MergeHttpHeadersListenerTest extends TestCase
         $framework
             ->expects($this->atLeastOnce())
             ->method('isInitialized')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $headerStorage = new MemoryHeaderStorage(['Set-Cookie: content=foobar']);
 
@@ -224,8 +219,7 @@ class MergeHttpHeadersListenerTest extends TestCase
         $framework
             ->expects($this->once())
             ->method('isInitialized')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $headerStorage = new MemoryHeaderStorage(['Cache-Control: public, s-maxage=10800']);
 
@@ -246,15 +240,13 @@ class MergeHttpHeadersListenerTest extends TestCase
         $response->headers
             ->expects($this->exactly(2))
             ->method('set')
-            ->with('foo', 'Bar')
-        ;
+            ->with('foo', 'Bar');
 
         $framework = $this->createMock(ContaoFramework::class);
         $framework
             ->expects($this->exactly(3))
             ->method('isInitialized')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $headerStorage = new MemoryHeaderStorage(['Foo: Bar']);
 

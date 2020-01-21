@@ -29,26 +29,22 @@ class TranslatorTest extends TestCase
             ->expects($this->once())
             ->method('trans')
             ->with('id', ['param' => 'value'], $domain, 'en')
-            ->willReturn('trans')
-        ;
+            ->willReturn('trans');
 
         $originalTranslator
             ->expects($this->once())
             ->method('setLocale')
-            ->with('en')
-        ;
+            ->with('en');
 
         $originalTranslator
             ->expects($this->once())
             ->method('getLocale')
-            ->willReturn('en')
-        ;
+            ->willReturn('en');
 
         $framework = $this->mockContaoFramework();
         $framework
             ->expects($this->never())
-            ->method('initialize')
-        ;
+            ->method('initialize');
 
         $translator = new Translator($originalTranslator, $framework);
 
@@ -77,8 +73,7 @@ class TranslatorTest extends TestCase
             ->expects($this->once())
             ->method('transChoice')
             ->with('id', 3, ['param' => 'value'], 'domain', 'en')
-            ->willReturn('transChoice')
-        ;
+            ->willReturn('transChoice');
 
         $translator = new Translator($originalTranslator, $this->mockContaoFramework());
 
@@ -91,14 +86,12 @@ class TranslatorTest extends TestCase
         $adapter
             ->expects($this->atLeastOnce())
             ->method('loadLanguageFile')
-            ->with('default')
-        ;
+            ->with('default');
 
         $framework = $this->mockContaoFramework([System::class => $adapter]);
         $framework
             ->expects($this->atLeastOnce())
-            ->method('initialize')
-        ;
+            ->method('initialize');
 
         $translator = new Translator($this->createMock(BaseTranslator::class), $framework);
 
@@ -136,21 +129,18 @@ class TranslatorTest extends TestCase
         $originalTranslator
             ->expects($this->once())
             ->method('getLocale')
-            ->willReturn('de')
-        ;
+            ->willReturn('de');
 
         $adapter = $this->mockAdapter(['loadLanguageFile']);
         $adapter
             ->expects($this->atLeastOnce())
             ->method('loadLanguageFile')
-            ->with('default', 'de')
-        ;
+            ->with('default', 'de');
 
         $framework = $this->mockContaoFramework([System::class => $adapter]);
         $framework
             ->expects($this->atLeastOnce())
-            ->method('initialize')
-        ;
+            ->method('initialize');
 
         $translator = new Translator($originalTranslator, $framework);
 

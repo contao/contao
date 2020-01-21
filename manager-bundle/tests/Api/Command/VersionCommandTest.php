@@ -46,8 +46,7 @@ class VersionCommandTest extends TestCase
 
         $this->application
             ->method('getPluginLoader')
-            ->willReturn($this->pluginLoader)
-        ;
+            ->willReturn($this->pluginLoader);
 
         $this->command = new VersionCommand($this->application);
     }
@@ -62,15 +61,13 @@ class VersionCommandTest extends TestCase
         $this->application
             ->expects($this->once())
             ->method('all')
-            ->willReturn([])
-        ;
+            ->willReturn([]);
 
         $this->pluginLoader
             ->expects($this->once())
             ->method('getInstancesOf')
             ->with(ApiPluginInterface::class)
-            ->willReturn([])
-        ;
+            ->willReturn([]);
 
         $commandTester = new CommandTester($this->command);
         $commandTester->execute([]);
@@ -90,15 +87,13 @@ class VersionCommandTest extends TestCase
         $this->application
             ->expects($this->once())
             ->method('all')
-            ->willReturn(['foo:bar' => 'a-command-instance'])
-        ;
+            ->willReturn(['foo:bar' => 'a-command-instance']);
 
         $this->pluginLoader
             ->expects($this->once())
             ->method('getInstancesOf')
             ->with(ApiPluginInterface::class)
-            ->willReturn([])
-        ;
+            ->willReturn([]);
 
         $commandTester = new CommandTester($this->command);
         $commandTester->execute([]);
@@ -122,21 +117,18 @@ class VersionCommandTest extends TestCase
             ->willReturn([
                 'foo' => 'bar',
                 'bar' => 'baz',
-            ])
-        ;
+            ]);
 
         $this->application
             ->expects($this->once())
             ->method('all')
-            ->willReturn([])
-        ;
+            ->willReturn([]);
 
         $this->pluginLoader
             ->expects($this->once())
             ->method('getInstancesOf')
             ->with(ApiPluginInterface::class)
-            ->willReturn(['foo/bar-bundle' => $plugin])
-        ;
+            ->willReturn(['foo/bar-bundle' => $plugin]);
 
         $commandTester = new CommandTester($this->command);
         $commandTester->execute([]);

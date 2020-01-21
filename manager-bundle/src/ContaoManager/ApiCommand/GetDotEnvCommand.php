@@ -43,8 +43,7 @@ class GetDotEnvCommand extends Command
         $this
             ->setName('dot-env:get')
             ->setDescription('Reads a parameter from the .env file.')
-            ->addArgument('key', InputArgument::OPTIONAL, 'The variable name')
-        ;
+            ->addArgument('key', InputArgument::OPTIONAL, 'The variable name');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

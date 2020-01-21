@@ -29,28 +29,23 @@ class LegacyCronTest extends TestCase
         $legacyCronObject = $this->createMock(TestCronJob::class);
         $legacyCronObject
             ->expects($this->once())
-            ->method('onMinutely')
-        ;
+            ->method('onMinutely');
 
         $legacyCronObject
             ->expects($this->once())
-            ->method('onHourly')
-        ;
+            ->method('onHourly');
 
         $legacyCronObject
             ->expects($this->once())
-            ->method('onDaily')
-        ;
+            ->method('onDaily');
 
         $legacyCronObject
             ->expects($this->once())
-            ->method('onWeekly')
-        ;
+            ->method('onWeekly');
 
         $legacyCronObject
             ->expects($this->once())
-            ->method('onMonthly')
-        ;
+            ->method('onMonthly');
 
         // Register crons the legacy way
         $GLOBALS['TL_CRON'] = [
@@ -67,8 +62,7 @@ class LegacyCronTest extends TestCase
             ->expects($this->exactly(5))
             ->method('importStatic')
             ->with('TestCron')
-            ->willReturn($legacyCronObject)
-        ;
+            ->willReturn($legacyCronObject);
 
         // Mock the Contao framework with the System adapter
         $framework = $this->mockContaoFramework([System::class => $systemAdapter]);
@@ -92,8 +86,7 @@ class LegacyCronTest extends TestCase
         $framework = $this->mockContaoFramework();
         $framework
             ->expects($this->never())
-            ->method('getAdapter')
-        ;
+            ->method('getAdapter');
 
         $legacyCron = new LegacyCron($framework);
         $legacyCron->onMinutely();

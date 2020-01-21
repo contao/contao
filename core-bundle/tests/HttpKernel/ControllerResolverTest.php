@@ -31,8 +31,7 @@ class ControllerResolverTest extends TestCase
             ->expects($this->once())
             ->method('get')
             ->with('foo.bar')
-            ->willReturn($config)
-        ;
+            ->willReturn($config);
 
         $request = new Request();
         $request->attributes->set('_controller', 'foo.bar');
@@ -48,8 +47,7 @@ class ControllerResolverTest extends TestCase
         $decorated = $this->createMock(ControllerResolverInterface::class);
         $decorated
             ->expects($this->once())
-            ->method('getController')
-        ;
+            ->method('getController');
 
         $resolver = new ControllerResolver($decorated, new FragmentRegistry());
         $resolver->getController(new Request());
@@ -60,8 +58,7 @@ class ControllerResolverTest extends TestCase
         $registry = $this->createMock(FragmentRegistry::class);
         $registry
             ->expects($this->never())
-            ->method('get')
-        ;
+            ->method('get');
 
         $request = new Request();
         $request->attributes->set('_controller', new ControllerReference('foo'));

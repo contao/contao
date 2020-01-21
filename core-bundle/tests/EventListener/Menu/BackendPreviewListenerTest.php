@@ -40,15 +40,13 @@ class BackendPreviewListenerTest extends ContaoTestCase
             ->expects($this->once())
             ->method('isGranted')
             ->with('ROLE_USER')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $router = $this->createMock(RouterInterface::class);
         $router
             ->method('generate')
             ->with('contao_backend_preview')
-            ->willReturn('/contao/preview')
-        ;
+            ->willReturn('/contao/preview');
 
         $request = new Request();
         $request->query->set('id', 42);
@@ -76,8 +74,7 @@ class BackendPreviewListenerTest extends ContaoTestCase
 
                     return true;
                 }
-            ))
-        ;
+            ));
 
         /** @var ArticleModel&MockObject $article */
         $article = $this->mockClassWithProperties(ArticleModel::class);
@@ -88,8 +85,7 @@ class BackendPreviewListenerTest extends ContaoTestCase
             ->expects('article' === $do ? $this->once() : $this->never())
             ->method('findByPk')
             ->with(42)
-            ->willReturn($article)
-        ;
+            ->willReturn($article);
 
         $listener = new BackendPreviewListener(
             $security,
@@ -140,15 +136,13 @@ class BackendPreviewListenerTest extends ContaoTestCase
             ->expects($this->once())
             ->method('isGranted')
             ->with('ROLE_USER')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $router = $this->createMock(RouterInterface::class);
         $router
             ->method('generate')
             ->with('contao_backend_preview')
-            ->willReturn('/contao/preview')
-        ;
+            ->willReturn('/contao/preview');
 
         $request = new Request();
         $request->query->set('do', 'page');
@@ -159,8 +153,7 @@ class BackendPreviewListenerTest extends ContaoTestCase
             ->expects($this->once())
             ->method('get')
             ->with('CURRENT_ID')
-            ->willReturn(3)
-        ;
+            ->willReturn(3);
 
         $request->setSession($session);
 
@@ -206,14 +199,12 @@ class BackendPreviewListenerTest extends ContaoTestCase
             ->expects($this->once())
             ->method('isGranted')
             ->with('ROLE_USER')
-            ->willReturn(false)
-        ;
+            ->willReturn(false);
 
         $router = $this->createMock(RouterInterface::class);
         $router
             ->expects($this->never())
-            ->method('generate')
-        ;
+            ->method('generate');
 
         $nodeFactory = new MenuFactory();
         $event = new MenuEvent($nodeFactory, $nodeFactory->createItem('headerMenu'));
@@ -241,14 +232,12 @@ class BackendPreviewListenerTest extends ContaoTestCase
             ->expects($this->once())
             ->method('isGranted')
             ->with('ROLE_USER')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $router = $this->createMock(RouterInterface::class);
         $router
             ->expects($this->never())
-            ->method('generate')
-        ;
+            ->method('generate');
 
         $nodeFactory = new MenuFactory();
         $event = new MenuEvent($nodeFactory, $nodeFactory->createItem('root'));
@@ -278,8 +267,7 @@ class BackendPreviewListenerTest extends ContaoTestCase
                 static function (string $id): string {
                     return $id;
                 }
-            )
-        ;
+            );
 
         return $translator;
     }

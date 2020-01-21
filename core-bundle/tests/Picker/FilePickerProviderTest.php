@@ -222,8 +222,7 @@ class FilePickerProviderTest extends ContaoTestCase
         $security
             ->expects(null === $accessGranted ? $this->never() : $this->atLeastOnce())
             ->method('isGranted')
-            ->willReturn($accessGranted ?? false)
-        ;
+            ->willReturn($accessGranted ?? false);
 
         $menuFactory = $this->createMock(FactoryInterface::class);
         $menuFactory
@@ -238,8 +237,7 @@ class FilePickerProviderTest extends ContaoTestCase
 
                     return $item;
                 }
-            )
-        ;
+            );
 
         $router = $this->createMock(RouterInterface::class);
         $router
@@ -248,8 +246,7 @@ class FilePickerProviderTest extends ContaoTestCase
                 static function (string $name, array $params): string {
                     return $name.'?'.http_build_query($params);
                 }
-            )
-        ;
+            );
 
         /** @var FilesModel&MockObject $filesModel */
         $filesModel = $this->mockClassWithProperties(FilesModel::class);
@@ -259,21 +256,18 @@ class FilePickerProviderTest extends ContaoTestCase
         $adapter = $this->mockAdapter(['findByUuid', 'findByPath']);
         $adapter
             ->method('findByUuid')
-            ->willReturn($filesModel)
-        ;
+            ->willReturn($filesModel);
 
         $adapter
             ->method('findByPath')
-            ->willReturnOnConsecutiveCalls($filesModel, null)
-        ;
+            ->willReturnOnConsecutiveCalls($filesModel, null);
 
         $framwork = $this->mockContaoFramework([FilesModel::class => $adapter]);
 
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
             ->method('trans')
-            ->willReturn('File picker')
-        ;
+            ->willReturn('File picker');
 
         $picker = new FilePickerProvider($menuFactory, $router, $translator, $security, __DIR__);
         $picker->setFramework($framwork);

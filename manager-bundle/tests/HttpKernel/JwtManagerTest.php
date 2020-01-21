@@ -72,13 +72,11 @@ class JwtManagerTest extends ContaoTestCase
         $headerBag
             ->expects($this->once())
             ->method('getCookies')
-            ->willReturn([Cookie::create(JwtManager::COOKIE_NAME, 'foobar')])
-        ;
+            ->willReturn([Cookie::create(JwtManager::COOKIE_NAME, 'foobar')]);
 
         $headerBag
             ->expects($this->never())
-            ->method('setCookie')
-        ;
+            ->method('setCookie');
 
         $response = new Response();
         $response->headers = $headerBag;
@@ -112,14 +110,12 @@ class JwtManagerTest extends ContaoTestCase
         $headerBag
             ->expects($this->once())
             ->method('clearCookie')
-            ->with(JwtManager::COOKIE_NAME)
-        ;
+            ->with(JwtManager::COOKIE_NAME);
 
         $headerBag
             ->expects($this->once())
             ->method('getCookies')
-            ->willReturn([])
-        ;
+            ->willReturn([]);
 
         $response = new Response();
         $response->headers = $headerBag;
@@ -134,14 +130,12 @@ class JwtManagerTest extends ContaoTestCase
         $headerBag
             ->expects($this->never())
             ->method('clearCookie')
-            ->with(JwtManager::COOKIE_NAME)
-        ;
+            ->with(JwtManager::COOKIE_NAME);
 
         $headerBag
             ->expects($this->once())
             ->method('getCookies')
-            ->willReturn([Cookie::create(JwtManager::COOKIE_NAME, 'foobar')])
-        ;
+            ->willReturn([Cookie::create(JwtManager::COOKIE_NAME, 'foobar')]);
 
         $response = new Response();
         $response->headers = $headerBag;

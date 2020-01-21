@@ -44,8 +44,7 @@ class SetDotEnvCommand extends Command
             ->setName('dot-env:set')
             ->setDescription('Writes a parameter to the .env file.')
             ->addArgument('key', InputArgument::REQUIRED, 'The variable name')
-            ->addArgument('value', InputArgument::REQUIRED, 'The new value')
-        ;
+            ->addArgument('value', InputArgument::REQUIRED, 'The new value');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

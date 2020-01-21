@@ -48,8 +48,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $request = $this->createMock(Request::class);
         $request
             ->method('isXmlHttpRequest')
-            ->willReturn(false)
-        ;
+            ->willReturn(false);
 
         $response = $controller($request);
 
@@ -72,14 +71,12 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $request = $this->createMock(Request::class);
         $request
             ->method('isXmlHttpRequest')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $request
             ->method('isMethod')
             ->with('GET')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $response = $controller($request);
 
@@ -105,14 +102,12 @@ class BackendPreviewSwitchControllerTest extends TestCase
 
         $request
             ->method('isXmlHttpRequest')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $request
             ->method('isMethod')
             ->with('GET')
-            ->willReturn(false)
-        ;
+            ->willReturn(false);
 
         $response = $controller($request);
 
@@ -137,14 +132,12 @@ class BackendPreviewSwitchControllerTest extends TestCase
 
         $request
             ->method('isXmlHttpRequest')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $request
             ->method('isMethod')
             ->with('GET')
-            ->willReturn(false)
-        ;
+            ->willReturn(false);
 
         $response = $controller($request);
 
@@ -162,8 +155,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $router
             ->method('generate')
             ->with('contao_backend_preview_switch')
-            ->willReturn('/contao/preview_switch')
-        ;
+            ->willReturn('/contao/preview_switch');
 
         return $router;
     }
@@ -176,13 +168,11 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $tokenChecker = $this->createMock(TokenChecker::class);
         $tokenChecker
             ->method('getFrontendUsername')
-            ->willReturn($frontendUsername)
-        ;
+            ->willReturn($frontendUsername);
 
         $tokenChecker
             ->method('isPreviewMode')
-            ->willReturn($previewMode)
-        ;
+            ->willReturn($previewMode);
 
         return $tokenChecker;
     }
@@ -197,8 +187,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $security = $this->createMock(Security::class);
         $security
             ->method('getUser')
-            ->willReturn($user)
-        ;
+            ->willReturn($user);
 
         return $security;
     }
@@ -211,8 +200,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $twig = $this->createMock(Environment::class);
         $twig
             ->method('render')
-            ->willReturn($render)
-        ;
+            ->willReturn($render);
 
         return $twig;
     }
@@ -225,8 +213,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $twig = $this->createMock(CsrfTokenManagerInterface::class);
         $twig
             ->method('getToken')
-            ->willReturn(new CsrfToken('csrf', 'csrf'))
-        ;
+            ->willReturn(new CsrfToken('csrf', 'csrf'));
 
         return $twig;
     }
@@ -238,14 +225,12 @@ class BackendPreviewSwitchControllerTest extends TestCase
     {
         $resultStatement = $this->createMock(ResultStatement::class)
             ->method('fetchAll')
-            ->willReturn($return)
-        ;
+            ->willReturn($return);
 
         $connection = $this->createMock(Connection::class);
         $connection
             ->method('executeQuery')
-            ->willReturn($resultStatement)
-        ;
+            ->willReturn($resultStatement);
 
         return $connection;
     }

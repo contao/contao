@@ -36,8 +36,7 @@ class LogoutHandlerTest extends TestCase
         $logger
             ->expects($this->once())
             ->method('info')
-            ->with('User "foobar" has logged out')
-        ;
+            ->with('User "foobar" has logged out');
 
         /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
@@ -47,8 +46,7 @@ class LogoutHandlerTest extends TestCase
         $token
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($user)
-        ;
+            ->willReturn($user);
 
         $handler = new LogoutHandler($framework, $logger);
         $handler->logout(new Request(), new Response(), $token);
@@ -61,15 +59,13 @@ class LogoutHandlerTest extends TestCase
         $logger = $this->createMock(LoggerInterface::class);
         $logger
             ->expects($this->never())
-            ->method('info')
-        ;
+            ->method('info');
 
         $token = $this->createMock(TokenInterface::class);
         $token
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($this->createMock(UserInterface::class))
-        ;
+            ->willReturn($this->createMock(UserInterface::class));
 
         $handler = new LogoutHandler($framework, $logger);
         $handler->logout(new Request(), new Response(), $token);
@@ -91,28 +87,24 @@ class LogoutHandlerTest extends TestCase
             ->expects($this->once())
             ->method('importStatic')
             ->with(static::class)
-            ->willReturn($this)
-        ;
+            ->willReturn($this);
 
         $framework = $this->mockContaoFramework([System::class => $systemAdapter]);
         $framework
             ->expects($this->once())
-            ->method('initialize')
-        ;
+            ->method('initialize');
 
         $logger = $this->createMock(LoggerInterface::class);
         $logger
             ->expects($this->once())
             ->method('info')
-            ->with('User "foobar" has logged out')
-        ;
+            ->with('User "foobar" has logged out');
 
         $token = $this->createMock(TokenInterface::class);
         $token
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($user)
-        ;
+            ->willReturn($user);
 
         $GLOBALS['TL_HOOKS']['postLogout'][] = [static::class, 'onPostLogout'];
 
@@ -133,27 +125,23 @@ class LogoutHandlerTest extends TestCase
         $session
             ->expects($this->once())
             ->method('remove')
-            ->with('_security.contao_frontend.target_path')
-        ;
+            ->with('_security.contao_frontend.target_path');
 
         $request = $this->createMock(Request::class);
         $request
             ->expects($this->once())
             ->method('getSession')
-            ->willReturn($session)
-        ;
+            ->willReturn($session);
 
         $request
             ->method('hasSession')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $token = $this->createMock(UsernamePasswordToken::class);
         $token
             ->expects($this->once())
             ->method('getProviderKey')
-            ->willReturn('contao_frontend')
-        ;
+            ->willReturn('contao_frontend');
 
         $handler = new LogoutHandler($this->mockContaoFramework());
         $handler->logout($request, $this->createMock(Response::class), $token);
@@ -165,28 +153,24 @@ class LogoutHandlerTest extends TestCase
         $session
             ->expects($this->once())
             ->method('remove')
-            ->with('_security.contao_frontend.target_path')
-        ;
+            ->with('_security.contao_frontend.target_path');
 
         $request = $this->createMock(Request::class);
         $request
             ->expects($this->once())
             ->method('getSession')
-            ->willReturn($session)
-        ;
+            ->willReturn($session);
 
         $request
             ->method('hasSession')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         /** @var TwoFactorTokenInterface&MockObject $token */
         $token = $this->createMock(TwoFactorTokenInterface::class);
         $token
             ->expects($this->once())
             ->method('getProviderKey')
-            ->willReturn('contao_frontend')
-        ;
+            ->willReturn('contao_frontend');
 
         $handler = new LogoutHandler($this->mockContaoFramework());
         $handler->logout($request, $this->createMock(Response::class), $token);

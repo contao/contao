@@ -45,8 +45,7 @@ class LegacyMatcherTest extends TestCase
         $request = $this->createMock(Request::class);
         $request
             ->method('getPathInfo')
-            ->willReturn('foo.html')
-        ;
+            ->willReturn('foo.html');
 
         $matcher->matchRequest($request);
     }
@@ -60,8 +59,7 @@ class LegacyMatcherTest extends TestCase
         $request
             ->expects($this->once())
             ->method('getPathInfo')
-            ->willReturn($pathInfo)
-        ;
+            ->willReturn($pathInfo);
 
         $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = ['foo', 'bar'];
 
@@ -99,8 +97,7 @@ class LegacyMatcherTest extends TestCase
         $request
             ->expects($this->once())
             ->method('getPathInfo')
-            ->willReturn($requestPath)
-        ;
+            ->willReturn($requestPath);
 
         $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = $hooks;
 
@@ -252,8 +249,7 @@ class LegacyMatcherTest extends TestCase
         $request
             ->expects($this->once())
             ->method('getPathInfo')
-            ->willReturn('foo.html')
-        ;
+            ->willReturn('foo.html');
 
         $matcher = $this->createMock(RequestMatcherInterface::class);
         $matcher
@@ -280,8 +276,7 @@ class LegacyMatcherTest extends TestCase
 
                     return [];
                 }
-            )
-        ;
+            );
 
         $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = [['foo', 'bar']];
 
@@ -308,8 +303,7 @@ class LegacyMatcherTest extends TestCase
         $request
             ->expects($this->once())
             ->method('getPathInfo')
-            ->willReturn('foo.html')
-        ;
+            ->willReturn('foo.html');
 
         $matcher = $this->createMock(RequestMatcherInterface::class);
         $matcher
@@ -336,8 +330,7 @@ class LegacyMatcherTest extends TestCase
 
                     return [];
                 }
-            )
-        ;
+            );
 
         $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = [['foo', 'bar']];
 
@@ -363,8 +356,7 @@ class LegacyMatcherTest extends TestCase
         $request = $this->createMock(Request::class);
         $request
             ->method('getPathInfo')
-            ->willReturn('foo.html')
-        ;
+            ->willReturn('foo.html');
 
         $matcher = $this->createMock(RequestMatcherInterface::class);
         $matcher
@@ -395,8 +387,7 @@ class LegacyMatcherTest extends TestCase
 
                     return [];
                 }
-            )
-        ;
+            );
 
         $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = [['foo', 'bar']];
 
@@ -422,8 +413,7 @@ class LegacyMatcherTest extends TestCase
         $request = $this->createMock(Request::class);
         $request
             ->method('getPathInfo')
-            ->willReturn('foo/bar/baz.html')
-        ;
+            ->willReturn('foo/bar/baz.html');
 
         $matcher = $this->createMock(RequestMatcherInterface::class);
         $matcher
@@ -457,8 +447,7 @@ class LegacyMatcherTest extends TestCase
 
                     return [];
                 }
-            )
-        ;
+            );
 
         $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = [['foo', 'bar']];
 
@@ -484,8 +473,7 @@ class LegacyMatcherTest extends TestCase
         $request = $this->createMock(Request::class);
         $request
             ->method('getPathInfo')
-            ->willReturn('foo/baz.html')
-        ;
+            ->willReturn('foo/baz.html');
 
         $matcher = $this->createMock(RequestMatcherInterface::class);
         $matcher
@@ -519,8 +507,7 @@ class LegacyMatcherTest extends TestCase
 
                     return [];
                 }
-            )
-        ;
+            );
 
         $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = [['foo', 'bar']];
 
@@ -541,8 +528,7 @@ class LegacyMatcherTest extends TestCase
         $request
             ->expects($this->once())
             ->method('getPathInfo')
-            ->willReturn('foo.php')
-        ;
+            ->willReturn('foo.php');
 
         $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = [[]];
 
@@ -567,8 +553,7 @@ class LegacyMatcherTest extends TestCase
         $request
             ->expects($this->once())
             ->method('getPathInfo')
-            ->willReturn('foo/bar.html')
-        ;
+            ->willReturn('foo/bar.html');
 
         $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = [[]];
 
@@ -597,8 +582,7 @@ class LegacyMatcherTest extends TestCase
         $request
             ->expects($this->once())
             ->method('getPathInfo')
-            ->willReturn('foo.html')
-        ;
+            ->willReturn('foo.html');
 
         $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = [['foo', 'bar']];
 
@@ -626,8 +610,7 @@ class LegacyMatcherTest extends TestCase
                 ->expects($this->once())
                 ->method($hook[1])
                 ->with($hook[2])
-                ->willReturn($hook[3] ?? $hook[2])
-            ;
+                ->willReturn($hook[3] ?? $hook[2]);
 
             $callbacks[] = $callback;
         }
@@ -637,15 +620,13 @@ class LegacyMatcherTest extends TestCase
             ->expects($this->exactly(\count($hooks)))
             ->method('importStatic')
             ->withConsecutive(...$classes)
-            ->willReturnOnConsecutiveCalls(...$callbacks)
-        ;
+            ->willReturnOnConsecutiveCalls(...$callbacks);
 
         $inputAdapter = $this->mockAdapter(['setGet']);
         $inputAdapter
             ->expects(null === $language ? $this->never() : $this->once())
             ->method('setGet')
-            ->with('language', $language)
-        ;
+            ->with('language', $language);
 
         $framework = $this->mockContaoFramework([
             System::class => $systemAdapter,
@@ -655,8 +636,7 @@ class LegacyMatcherTest extends TestCase
 
         $framework
             ->expects($this->once())
-            ->method('initialize')
-        ;
+            ->method('initialize');
 
         return $framework;
     }
@@ -675,8 +655,7 @@ class LegacyMatcherTest extends TestCase
                     return null === $pathInfo || $request->getPathInfo() === $pathInfo;
                 }
             ))
-            ->willReturn($match)
-        ;
+            ->willReturn($match);
 
         return $matcher;
     }
@@ -693,8 +672,7 @@ class LegacyMatcherTest extends TestCase
                 static function ($param) use ($config) {
                     return $config[$param] ?? null;
                 }
-            )
-        ;
+            );
 
         return $configAdapter;
     }

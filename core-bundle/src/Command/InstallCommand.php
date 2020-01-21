@@ -75,8 +75,7 @@ class InstallCommand extends Command
         $this
             ->setName('contao:install')
             ->addArgument('target', InputArgument::OPTIONAL, 'The target directory', 'web')
-            ->setDescription('Installs the required Contao directories')
-        ;
+            ->setDescription('Installs the required Contao directories');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

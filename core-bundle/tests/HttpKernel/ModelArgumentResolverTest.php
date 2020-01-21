@@ -61,8 +61,7 @@ class ModelArgumentResolverTest extends TestCase
         $framework = $this->mockContaoFramework();
         $framework
             ->expects($this->never())
-            ->method('initialize')
-        ;
+            ->method('initialize');
 
         $request = Request::create('/foobar');
         $argument = new ArgumentMetadata('foobar', 'string', false, false, '');
@@ -76,8 +75,7 @@ class ModelArgumentResolverTest extends TestCase
         $framework = $this->mockContaoFramework();
         $framework
             ->expects($this->once())
-            ->method('initialize')
-        ;
+            ->method('initialize');
 
         $request = Request::create('/foobar');
         $request->attributes->set('foobar', 'test');
@@ -94,8 +92,7 @@ class ModelArgumentResolverTest extends TestCase
         $framework = $this->mockContaoFramework();
         $framework
             ->expects($this->once())
-            ->method('initialize')
-        ;
+            ->method('initialize');
 
         $request = Request::create('/foobar');
         $request->attributes->set('notAPage', 42);
@@ -112,8 +109,7 @@ class ModelArgumentResolverTest extends TestCase
         $framework = $this->mockContaoFramework();
         $framework
             ->expects($this->once())
-            ->method('initialize')
-        ;
+            ->method('initialize');
 
         $request = Request::create('/foobar');
         $request->attributes->set('pageModel', 42);

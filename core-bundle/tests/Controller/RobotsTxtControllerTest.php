@@ -27,20 +27,17 @@ class RobotsTxtControllerTest extends TestCase
         $pageModelAdapter
             ->expects($this->once())
             ->method('findPublishedFallbackByHostname')
-            ->willReturn(null)
-        ;
+            ->willReturn(null);
 
         $framework = $this->mockContaoFramework([PageModel::class => $pageModelAdapter]);
         $framework
             ->expects($this->once())
-            ->method('initialize')
-        ;
+            ->method('initialize');
 
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
         $eventDispatcher
             ->expects($this->never())
-            ->method('dispatch')
-        ;
+            ->method('dispatch');
 
         $request = Request::create('/robots.txt');
         $controller = new RobotsTxtController($framework, $eventDispatcher);
@@ -57,20 +54,17 @@ class RobotsTxtControllerTest extends TestCase
         $pageModelAdapter
             ->expects($this->once())
             ->method('findPublishedFallbackByHostname')
-            ->willReturn($pageModel)
-        ;
+            ->willReturn($pageModel);
 
         $framework = $this->mockContaoFramework([PageModel::class => $pageModelAdapter]);
         $framework
             ->expects($this->once())
-            ->method('initialize')
-        ;
+            ->method('initialize');
 
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
         $eventDispatcher
             ->expects($this->once())
-            ->method('dispatch')
-        ;
+            ->method('dispatch');
 
         $request = Request::create('/robots.txt');
         $controller = new RobotsTxtController($framework, $eventDispatcher);

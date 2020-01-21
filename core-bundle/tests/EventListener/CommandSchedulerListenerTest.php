@@ -35,8 +35,7 @@ class CommandSchedulerListenerTest extends TestCase
         $cron
             ->expects($this->once())
             ->method('run')
-            ->with(Cron::SCOPE_WEB)
-        ;
+            ->with(Cron::SCOPE_WEB);
 
         $listener = new CommandSchedulerListener($this->mockContaoFramework(), $this->mockConnection(), $cron);
         $listener($this->getTerminateEvent('contao_frontend'));
@@ -47,13 +46,11 @@ class CommandSchedulerListenerTest extends TestCase
         $framework = $this->createMock(ContaoFramework::class);
         $framework
             ->method('isInitialized')
-            ->willReturn(false)
-        ;
+            ->willReturn(false);
 
         $framework
             ->expects($this->never())
-            ->method('getAdapter')
-        ;
+            ->method('getAdapter');
 
         $listener = new CommandSchedulerListener($framework, $this->mockConnection(), $this->createMock(Cron::class));
         $listener($this->getTerminateEvent('contao_backend'));
@@ -64,8 +61,7 @@ class CommandSchedulerListenerTest extends TestCase
         $framework = $this->mockContaoFramework();
         $framework
             ->expects($this->never())
-            ->method('getAdapter')
-        ;
+            ->method('getAdapter');
 
         $ref = new \ReflectionClass(Request::class);
 
@@ -87,8 +83,7 @@ class CommandSchedulerListenerTest extends TestCase
         $framework = $this->mockContaoFramework();
         $framework
             ->expects($this->never())
-            ->method('getAdapter')
-        ;
+            ->method('getAdapter');
 
         $ref = new \ReflectionClass(Request::class);
 
@@ -110,19 +105,16 @@ class CommandSchedulerListenerTest extends TestCase
         $adapter = $this->mockAdapter(['isComplete', 'get']);
         $adapter
             ->method('isComplete')
-            ->willReturn(false)
-        ;
+            ->willReturn(false);
 
         $adapter
             ->expects($this->never())
-            ->method('get')
-        ;
+            ->method('get');
 
         $framework = $this->mockContaoFramework([Config::class => $adapter]);
         $framework
             ->expects($this->never())
-            ->method('createInstance')
-        ;
+            ->method('createInstance');
 
         $listener = new CommandSchedulerListener($framework, $this->mockConnection(), $this->createMock(Cron::class));
         $listener($this->getTerminateEvent('contao_backend'));
@@ -133,20 +125,17 @@ class CommandSchedulerListenerTest extends TestCase
         $adapter = $this->mockAdapter(['isComplete', 'get']);
         $adapter
             ->method('isComplete')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $adapter
             ->method('get')
             ->with('disableCron')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $framework = $this->mockContaoFramework([Config::class => $adapter]);
         $framework
             ->expects($this->never())
-            ->method('createInstance')
-        ;
+            ->method('createInstance');
 
         $listener = new CommandSchedulerListener($framework, $this->mockConnection(), $this->createMock(Cron::class));
         $listener($this->getTerminateEvent('contao_frontend'));
@@ -157,20 +146,17 @@ class CommandSchedulerListenerTest extends TestCase
         $framework = $this->mockContaoFramework();
         $framework
             ->expects($this->once())
-            ->method('getAdapter')
-        ;
+            ->method('getAdapter');
 
         $cron = $this->createMock(Cron::class);
         $cron
             ->expects($this->never())
-            ->method('run')
-        ;
+            ->method('run');
 
         $connection = $this->createMock(Connection::class);
         $connection
             ->method('isConnected')
-            ->willThrowException(new DriverException('Could not connect', new MysqliException('Invalid password')))
-        ;
+            ->willThrowException(new DriverException('Could not connect', new MysqliException('Invalid password')));
 
         $listener = new CommandSchedulerListener($framework, $connection, $cron);
         $listener($this->getTerminateEvent('contao_backend'));
@@ -184,19 +170,16 @@ class CommandSchedulerListenerTest extends TestCase
         $schemaManager = $this->createMock(MySqlSchemaManager::class);
         $schemaManager
             ->method('tablesExist')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $connection = $this->createMock(Connection::class);
         $connection
             ->method('isConnected')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $connection
             ->method('getSchemaManager')
-            ->willReturn($schemaManager)
-        ;
+            ->willReturn($schemaManager);
 
         return $connection;
     }

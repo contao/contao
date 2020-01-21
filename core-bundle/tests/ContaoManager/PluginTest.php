@@ -96,14 +96,12 @@ class PluginTest extends TestCase
         $loader = $this->createMock(LoaderInterface::class);
         $loader
             ->expects($this->once())
-            ->method('load')
-        ;
+            ->method('load');
 
         $resolver = $this->createMock(LoaderResolverInterface::class);
         $resolver
             ->method('resolve')
-            ->willReturn($loader)
-        ;
+            ->willReturn($loader);
 
         $plugin = new Plugin();
         $plugin->getRouteCollection($resolver, $this->createMock(KernelInterface::class));

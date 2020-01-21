@@ -51,14 +51,12 @@ class ContaoTableHandlerTest extends TestCase
         $statement = $this->createMock(Statement::class);
         $statement
             ->expects($this->once())
-            ->method('execute')
-        ;
+            ->method('execute');
 
         $connection = $this->createMock(Connection::class);
         $connection
             ->method('prepare')
-            ->willReturn($statement)
-        ;
+            ->willReturn($statement);
 
         $system = $this->mockConfiguredAdapter(['importStatic' => $this]);
 

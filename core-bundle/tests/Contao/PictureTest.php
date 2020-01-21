@@ -310,8 +310,7 @@ class PictureTest extends TestCase
         $context = $this->createMock(ContaoContext::class);
         $context
             ->method('getStaticUrl')
-            ->willReturn('http://example.com/')
-        ;
+            ->willReturn('http://example.com/');
 
         $framework = $this->mockContaoFramework($adapters);
 

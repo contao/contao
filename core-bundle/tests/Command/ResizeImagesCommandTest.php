@@ -42,8 +42,7 @@ class ResizeImagesCommandTest extends TestCase
         $storage = $this->createMock(DeferredImageStorageInterface::class);
         $storage
             ->method('listPaths')
-            ->willReturn([])
-        ;
+            ->willReturn([]);
 
         $command = $this->getCommand(null, null, $storage);
         $tester = new CommandTester($command);
@@ -62,20 +61,17 @@ class ResizeImagesCommandTest extends TestCase
         $factory = $this->createMock(ImageFactoryInterface::class);
         $factory
             ->method('create')
-            ->willReturn($this->createMock(DeferredImageInterface::class))
-        ;
+            ->willReturn($this->createMock(DeferredImageInterface::class));
 
         $resizer = $this->createMock(DeferredResizerInterface::class);
         $resizer
             ->method('resizeDeferredImage')
-            ->willReturn($this->createMock(ImageInterface::class))
-        ;
+            ->willReturn($this->createMock(ImageInterface::class));
 
         $storage = $this->createMock(DeferredImageStorageInterface::class);
         $storage
             ->method('listPaths')
-            ->willReturn(['image1.jpg', 'image2.jpg'])
-        ;
+            ->willReturn(['image1.jpg', 'image2.jpg']);
 
         $command = $this->getCommand($factory, $resizer, $storage);
         $tester = new CommandTester($command);
@@ -96,8 +92,7 @@ class ResizeImagesCommandTest extends TestCase
         $factory = $this->createMock(ImageFactoryInterface::class);
         $factory
             ->method('create')
-            ->willReturn($this->createMock(DeferredImageInterface::class))
-        ;
+            ->willReturn($this->createMock(DeferredImageInterface::class));
 
         $resizer = $this->createMock(DeferredResizerInterface::class);
         $resizer
@@ -108,14 +103,12 @@ class ResizeImagesCommandTest extends TestCase
 
                     return $this->createMock(ImageInterface::class);
                 }
-            )
-        ;
+            );
 
         $storage = $this->createMock(DeferredImageStorageInterface::class);
         $storage
             ->method('listPaths')
-            ->willReturn(['image1.jpg', 'image2.jpg'])
-        ;
+            ->willReturn(['image1.jpg', 'image2.jpg']);
 
         ClockMock::withClockMock(1142164800);
 

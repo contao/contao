@@ -53,8 +53,7 @@ class InstallWebDirCommand extends Command
         $this
             ->setName('contao:install-web-dir')
             ->addArgument('target', InputArgument::OPTIONAL, 'The target directory', 'web')
-            ->setDescription('Installs the files in the "web" directory')
-        ;
+            ->setDescription('Installs the files in the "web" directory');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

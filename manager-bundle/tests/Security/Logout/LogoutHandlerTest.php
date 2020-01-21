@@ -29,8 +29,7 @@ class LogoutHandlerTest extends ContaoTestCase
         $jwtManager
             ->expects($this->once())
             ->method('clearResponseCookie')
-            ->with($response)
-        ;
+            ->with($response);
 
         $handler = new LogoutHandler($jwtManager);
 

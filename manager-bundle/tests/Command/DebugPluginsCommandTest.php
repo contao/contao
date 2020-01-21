@@ -147,29 +147,24 @@ class DebugPluginsCommandTest extends ContaoTestCase
         $pluginLoader
             ->expects(0 === \count($plugins) ? $this->never() : $this->once())
             ->method('getInstances')
-            ->willReturn($plugins)
-        ;
+            ->willReturn($plugins);
 
         $kernel = $this->createMock(ContaoKernel::class);
         $kernel
             ->method('getContainer')
-            ->willReturn($container)
-        ;
+            ->willReturn($container);
 
         $kernel
             ->method('getPluginLoader')
-            ->willReturn($pluginLoader)
-        ;
+            ->willReturn($pluginLoader);
 
         $kernel
             ->method('getBundles')
-            ->willReturn($bundles)
-        ;
+            ->willReturn($bundles);
 
         $kernel
             ->method('getProjectDir')
-            ->willReturn(\dirname(__DIR__, 4))
-        ;
+            ->willReturn(\dirname(__DIR__, 4));
 
         $container->set('kernel', $kernel);
 
@@ -202,8 +197,7 @@ Contao Manager Plugins
  ------------------------------------------------ ---------------------------- -------- --------- -------- ----------- ----------- ----- 
 
 
-OUTPUT
-        ;
+OUTPUT;
     }
 
     private function getTestPluginOutput(): string
@@ -224,8 +218,7 @@ Contao Manager Plugins
  ---------------------------------------------------------- ------------------ -------- --------- -------- ----------- ----------- ----- 
 
 
-OUTPUT
-        ;
+OUTPUT;
     }
 
     private function getRegisteredBundlesOutput(): string
@@ -265,8 +258,7 @@ Bundles Registered by Plugin "Contao\CoreBundle\ContaoManager\Plugin"
  ---------------------------------------------------------------------- ---------- --------------------------------------------------------- ------------- 
 
 
-OUTPUT
-        ;
+OUTPUT;
     }
 
     private function getLoadingOrderOutput(): string
@@ -284,8 +276,7 @@ Registered Bundles in Loading Order
  ------------------ ------------------------------------------ 
 
 
-OUTPUT
-        ;
+OUTPUT;
     }
 
     private function normalizeDisplay(string $string): string

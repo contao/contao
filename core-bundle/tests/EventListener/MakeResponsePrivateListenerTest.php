@@ -97,8 +97,7 @@ class MakeResponsePrivateListenerTest extends TestCase
         $session
             ->expects($this->once())
             ->method('isStarted')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $response = new Response();
         $response->setPublic();
@@ -190,8 +189,7 @@ class MakeResponsePrivateListenerTest extends TestCase
         $scopeMatcher
             ->expects($this->once())
             ->method('isContaoMasterRequest')
-            ->willReturn($isContaoMasterRequest)
-        ;
+            ->willReturn($isContaoMasterRequest);
 
         return $scopeMatcher;
     }

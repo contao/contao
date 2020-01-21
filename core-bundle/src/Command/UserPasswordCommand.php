@@ -66,8 +66,7 @@ class UserPasswordCommand extends Command
             ->setName('contao:user:password')
             ->addArgument('username', InputArgument::REQUIRED, 'The username of the back end user')
             ->addOption('password', 'p', InputOption::VALUE_REQUIRED, 'The new password (using this option is not recommended for security reasons)')
-            ->setDescription('Changes the password of a Contao back end user.')
-        ;
+            ->setDescription('Changes the password of a Contao back end user.');
     }
 
     protected function interact(InputInterface $input, OutputInterface $output): void

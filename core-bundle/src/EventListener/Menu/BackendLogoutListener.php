@@ -72,8 +72,7 @@ class BackendLogoutListener
             ->setUri($this->getLogoutUrl())
             ->setLinkAttribute('class', 'icon-logout')
             ->setLinkAttribute('accesskey', 'q')
-            ->setExtra('translation_domain', false)
-        ;
+            ->setExtra('translation_domain', false);
 
         $submenu->addChild($logout);
     }

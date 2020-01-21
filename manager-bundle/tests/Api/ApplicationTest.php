@@ -57,8 +57,7 @@ class ApplicationTest extends ContaoTestCase
                 'contao_manager' => [
                     'disabled_packages' => ['foo/bar'],
                 ],
-            ])
-        ;
+            ]);
 
         $application = $this->getApplication();
         $application->setManagerConfig($config);
@@ -92,16 +91,14 @@ class ApplicationTest extends ContaoTestCase
         $plugin
             ->expects($this->once())
             ->method('getApiCommands')
-            ->willReturn([GetConfigCommand::class])
-        ;
+            ->willReturn([GetConfigCommand::class]);
 
         $pluginLoader = $this->createMock(PluginLoader::class);
         $pluginLoader
             ->expects($this->once())
             ->method('getInstancesOf')
             ->with(ApiPluginInterface::class)
-            ->willReturn([$plugin])
-        ;
+            ->willReturn([$plugin]);
 
         $application = $this->getApplication();
         $application->setPluginLoader($pluginLoader);
@@ -119,16 +116,14 @@ class ApplicationTest extends ContaoTestCase
         $plugin
             ->expects($this->once())
             ->method('getApiCommands')
-            ->willReturn([ContaoManagerBundle::class])
-        ;
+            ->willReturn([ContaoManagerBundle::class]);
 
         $pluginLoader = $this->createMock(PluginLoader::class);
         $pluginLoader
             ->expects($this->once())
             ->method('getInstancesOf')
             ->with(ApiPluginInterface::class)
-            ->willReturn([$plugin])
-        ;
+            ->willReturn([$plugin]);
 
         $application = $this->getApplication();
         $application->setPluginLoader($pluginLoader);

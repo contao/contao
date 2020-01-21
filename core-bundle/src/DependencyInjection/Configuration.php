@@ -125,8 +125,7 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addSecurityNode())
                 ->append($this->addSearchNode())
                 ->append($this->addCrawlNode())
-            ->end()
-        ;
+            ->end();
 
         return $treeBuilder;
     }
@@ -324,8 +323,7 @@ class Configuration implements ConfigurationInterface
                     ->prototype('scalar')->end()
                     ->defaultValue(['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp'])
                 ->end()
-            ->end()
-        ;
+            ->end();
     }
 
     private function addSecurityNode(): NodeDefinition
@@ -342,8 +340,7 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
-            ->end()
-        ;
+            ->end();
     }
 
     private function addSearchNode(): NodeDefinition
@@ -379,8 +376,7 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
-            ->end()
-        ;
+            ->end();
     }
 
     private function addCrawlNode(): NodeDefinition
@@ -413,8 +409,7 @@ class Configuration implements ConfigurationInterface
                     ->prototype('scalar')->end()
                     ->defaultValue([])
                 ->end()
-            ->end()
-        ;
+            ->end();
     }
 
     /**

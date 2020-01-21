@@ -95,8 +95,7 @@ class SymlinksCommand extends Command
         $this
             ->setName('contao:symlinks')
             ->addArgument('target', InputArgument::OPTIONAL, 'The target directory', 'web')
-            ->setDescription('Symlinks the public resources into the web directory.')
-        ;
+            ->setDescription('Symlinks the public resources into the web directory.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -247,8 +246,7 @@ class SymlinksCommand extends Command
                 }
             )
             ->followLinks()
-            ->in($path)
-        ;
+            ->in($path);
     }
 
     /**

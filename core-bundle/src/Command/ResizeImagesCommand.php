@@ -86,8 +86,7 @@ class ResizeImagesCommand extends Command
             ->addOption('time-limit', 'l', InputOption::VALUE_OPTIONAL, 'Time limit in seconds', '0')
             ->addOption('concurrent', 'c', InputOption::VALUE_OPTIONAL, 'Run multiple processes concurrently', '1')
             ->addOption('throttle', 't', InputOption::VALUE_OPTIONAL, 'Pause between resizes to limit CPU utilization, 0.1 relates to 10% CPU usage', '1')
-            ->setDescription('Resizes deferred images that have not been processed yet.')
-        ;
+            ->setDescription('Resizes deferred images that have not been processed yet.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

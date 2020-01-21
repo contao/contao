@@ -37,14 +37,12 @@ class BackendLogoutListenerTest extends ContaoTestCase
             ->expects($this->once())
             ->method('isGranted')
             ->with('ROLE_USER')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $security
             ->expects($this->exactly(2))
             ->method('getToken')
-            ->willReturn($token)
-        ;
+            ->willReturn($token);
 
         $router = $this->createMock(RouterInterface::class);
 
@@ -53,13 +51,11 @@ class BackendLogoutListenerTest extends ContaoTestCase
                 ->expects($this->once())
                 ->method('generate')
                 ->with('contao_backend', ['do' => 'user', '_switch_user' => SwitchUserListener::EXIT_VALUE])
-                ->willReturn('/contao?do=user&_switch_user=_exit')
-            ;
+                ->willReturn('/contao?do=user&_switch_user=_exit');
         } else {
             $router
                 ->expects($this->never())
-                ->method('generate')
-            ;
+                ->method('generate');
         }
 
         $urlGenerator = $this->createMock(BaseLogoutUrlGenerator::class);
@@ -68,13 +64,11 @@ class BackendLogoutListenerTest extends ContaoTestCase
             $urlGenerator
                 ->expects($this->once())
                 ->method('getLogoutUrl')
-                ->willReturn('/contao/logout')
-            ;
+                ->willReturn('/contao/logout');
         } else {
             $urlGenerator
                 ->expects($this->never())
-                ->method('getLogoutUrl')
-            ;
+                ->method('getLogoutUrl');
         }
 
         $factory = new MenuFactory();
@@ -124,8 +118,7 @@ class BackendLogoutListenerTest extends ContaoTestCase
             ->expects($this->once())
             ->method('isGranted')
             ->with('ROLE_USER')
-            ->willReturn(false)
-        ;
+            ->willReturn(false);
 
         $factory = new MenuFactory();
 
@@ -155,8 +148,7 @@ class BackendLogoutListenerTest extends ContaoTestCase
             ->expects($this->once())
             ->method('isGranted')
             ->with('ROLE_USER')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $factory = new MenuFactory();
 
@@ -186,8 +178,7 @@ class BackendLogoutListenerTest extends ContaoTestCase
             ->expects($this->once())
             ->method('isGranted')
             ->with('ROLE_USER')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $factory = new MenuFactory();
         $menu = $factory->createItem('headerMenu');
@@ -216,8 +207,7 @@ class BackendLogoutListenerTest extends ContaoTestCase
                 static function (string $id): string {
                     return $id;
                 }
-            )
-        ;
+            );
 
         return $translator;
     }

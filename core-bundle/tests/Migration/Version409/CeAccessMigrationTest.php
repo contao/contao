@@ -53,39 +53,33 @@ class CeAccessMigrationTest extends TestCase
             ->expects($this->once())
             ->method('tablesExist')
             ->with(['tl_user_group'])
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $schemaManager
             ->expects($this->once())
             ->method('listTableColumns')
-            ->willReturn([])
-        ;
+            ->willReturn([]);
 
         $stmt = $this->createMock(Statement::class);
         $stmt
             ->expects($this->once())
             ->method('execute')
-            ->with([':elements' => 'a:1:{i:0;s:4:"text";}', ':fields' => 'a:1:{i:0;s:4:"text";}'])
-        ;
+            ->with([':elements' => 'a:1:{i:0;s:4:"text";}', ':fields' => 'a:1:{i:0;s:4:"text";}']);
 
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
             ->method('getSchemaManager')
-            ->willReturn($schemaManager)
-        ;
+            ->willReturn($schemaManager);
 
         $connection
             ->expects($this->once())
-            ->method('query')
-        ;
+            ->method('query');
 
         $connection
             ->expects($this->once())
             ->method('prepare')
-            ->willReturn($stmt)
-        ;
+            ->willReturn($stmt);
 
         $migration = new CeAccessMigration($connection, $this->mockContaoFramework());
 
@@ -100,26 +94,22 @@ class CeAccessMigrationTest extends TestCase
             ->expects($this->once())
             ->method('tablesExist')
             ->with(['tl_user_group'])
-            ->willReturn(false)
-        ;
+            ->willReturn(false);
 
         $schemaManager
             ->expects($this->never())
-            ->method('listTableColumns')
-        ;
+            ->method('listTableColumns');
 
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
             ->method('getSchemaManager')
-            ->willReturn($schemaManager)
-        ;
+            ->willReturn($schemaManager);
 
         $framework = $this->mockContaoFramework();
         $framework
             ->expects($this->never())
-            ->method('initialize')
-        ;
+            ->method('initialize');
 
         $migration = new CeAccessMigration($connection, $framework);
 
@@ -133,27 +123,23 @@ class CeAccessMigrationTest extends TestCase
             ->expects($this->once())
             ->method('tablesExist')
             ->with(['tl_user_group'])
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $schemaManager
             ->expects($this->once())
             ->method('listTableColumns')
-            ->willReturn(['elements' => new Column('elements', Type::getType('string'))])
-        ;
+            ->willReturn(['elements' => new Column('elements', Type::getType('string'))]);
 
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
             ->method('getSchemaManager')
-            ->willReturn($schemaManager)
-        ;
+            ->willReturn($schemaManager);
 
         $framework = $this->mockContaoFramework();
         $framework
             ->expects($this->never())
-            ->method('initialize')
-        ;
+            ->method('initialize');
 
         $migration = new CeAccessMigration($connection, $framework);
 

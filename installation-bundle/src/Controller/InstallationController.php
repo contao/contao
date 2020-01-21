@@ -253,8 +253,7 @@ class InstallationController implements ContainerAwareInterface
         $finder = Finder::create()
             ->depth(0)
             ->exclude($containerDir)
-            ->in($cacheDir)
-        ;
+            ->in($cacheDir);
 
         foreach ($finder as $file) {
             $filesystem->remove($file->getPathname());

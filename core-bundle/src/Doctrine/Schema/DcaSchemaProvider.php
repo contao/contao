@@ -411,8 +411,7 @@ class DcaSchemaProvider
         $largePrefix = $this->doctrine
             ->getConnection()
             ->query("SHOW VARIABLES LIKE 'innodb_large_prefix'")
-            ->fetch(\PDO::FETCH_OBJ)
-        ;
+            ->fetch(\PDO::FETCH_OBJ);
 
         // The variable no longer exists as of MySQL 8 and MariaDB 10.3
         if (false === $largePrefix || '' === $largePrefix->Value) {
@@ -422,8 +421,7 @@ class DcaSchemaProvider
         $version = $this->doctrine
             ->getConnection()
             ->query('SELECT @@version as Value')
-            ->fetch(\PDO::FETCH_OBJ)
-        ;
+            ->fetch(\PDO::FETCH_OBJ);
 
         [$ver] = explode('-', $version->Value);
 
@@ -445,8 +443,7 @@ class DcaSchemaProvider
         $filePerTable = $this->doctrine
             ->getConnection()
             ->query("SHOW VARIABLES LIKE 'innodb_file_per_table'")
-            ->fetch(\PDO::FETCH_OBJ)
-        ;
+            ->fetch(\PDO::FETCH_OBJ);
 
         // The innodb_file_per_table option is disabled
         if (!\in_array(strtolower((string) $filePerTable->Value), ['1', 'on'], true)) {
@@ -456,8 +453,7 @@ class DcaSchemaProvider
         $fileFormat = $this->doctrine
             ->getConnection()
             ->query("SHOW VARIABLES LIKE 'innodb_file_format'")
-            ->fetch(\PDO::FETCH_OBJ)
-        ;
+            ->fetch(\PDO::FETCH_OBJ);
 
         // The InnoDB file format is not Barracuda
         if ('' !== $fileFormat->Value && 'barracuda' !== strtolower((string) $fileFormat->Value)) {

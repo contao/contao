@@ -58,8 +58,7 @@ class InsertTagsListenerTest extends ContaoTestCase
 
                     return 'news/foo-is-not-bar.html';
                 }
-            )
-        ;
+            );
 
         $adapters = [
             NewsModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => $newsModel]),

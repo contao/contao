@@ -63,13 +63,11 @@ class SearchIndexSubscriberTest extends TestCase
                             return true;
                         }
                     )
-                )
-            ;
+                );
         } else {
             $logger
                 ->expects($this->never())
-                ->method('log')
-            ;
+                ->method('log');
         }
 
         $queue = new InMemoryQueue();
@@ -148,13 +146,11 @@ class SearchIndexSubscriberTest extends TestCase
                             return true;
                         }
                     )
-                )
-            ;
+                );
         } else {
             $logger
                 ->expects($this->never())
-                ->method('log')
-            ;
+                ->method('log');
         }
 
         $escargot = Escargot::create(new BaseUriCollection([new Uri('https://contao.org')]), new InMemoryQueue());
@@ -215,22 +211,19 @@ class SearchIndexSubscriberTest extends TestCase
                         return true;
                     }
                 )
-            )
-        ;
+            );
 
         $indexer = $this->createMock(IndexerInterface::class);
 
         if (null === $indexerException) {
             $indexer
                 ->expects($this->once())
-                ->method('index')
-            ;
+                ->method('index');
         } else {
             $indexer
                 ->expects($this->once())
                 ->method('index')
-                ->willThrowException($indexerException)
-            ;
+                ->willThrowException($indexerException);
         }
 
         $escargot = Escargot::create(new BaseUriCollection([new Uri('https://contao.org')]), new InMemoryQueue());
@@ -312,13 +305,11 @@ class SearchIndexSubscriberTest extends TestCase
         $response = $this->createMock(ResponseInterface::class);
         $response
             ->method('getHeaders')
-            ->willReturn($headers)
-        ;
+            ->willReturn($headers);
 
         $response
             ->method('getStatusCode')
-            ->willReturn($statusCode)
-        ;
+            ->willReturn($statusCode);
 
         return $response;
     }
@@ -331,8 +322,7 @@ class SearchIndexSubscriberTest extends TestCase
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
             ->method('trans')
-            ->willReturn('Foobar')
-        ;
+            ->willReturn('Foobar');
 
         return $translator;
     }

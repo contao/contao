@@ -156,8 +156,7 @@ class ArticlePickerProviderTest extends ContaoTestCase
         $security
             ->expects(null === $accessGranted ? $this->never() : $this->once())
             ->method('isGranted')
-            ->willReturn($accessGranted ?? false)
-        ;
+            ->willReturn($accessGranted ?? false);
 
         $menuFactory = $this->createMock(FactoryInterface::class);
         $menuFactory
@@ -172,8 +171,7 @@ class ArticlePickerProviderTest extends ContaoTestCase
 
                     return $item;
                 }
-            )
-        ;
+            );
 
         $router = $this->createMock(RouterInterface::class);
         $router
@@ -182,8 +180,7 @@ class ArticlePickerProviderTest extends ContaoTestCase
                 static function (string $name, array $params): string {
                     return $name.'?'.http_build_query($params);
                 }
-            )
-        ;
+            );
 
         return new ArticlePickerProvider($menuFactory, $router, null, $security);
     }

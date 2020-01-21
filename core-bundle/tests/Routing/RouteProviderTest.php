@@ -38,8 +38,7 @@ class RouteProviderTest extends TestCase
             ->expects($this->once())
             ->method('findByPk')
             ->with(17)
-            ->willReturn($page)
-        ;
+            ->willReturn($page);
 
         $framework = $this->mockFramework($pageAdapter);
         $route = $this->getRouteProvider($framework)->getRouteByName('tl_page.17');
@@ -63,8 +62,7 @@ class RouteProviderTest extends TestCase
         $pageAdapter
             ->expects($this->once())
             ->method('findByPk')
-            ->with(17)
-        ;
+            ->with(17);
 
         $provider = $this->getRouteProvider($this->mockFramework($pageAdapter));
 
@@ -89,8 +87,7 @@ class RouteProviderTest extends TestCase
             ->expects($this->once())
             ->method('findBy')
             ->with('tl_page.id IN (17,21)')
-            ->willReturn(new Collection([$page1, $page2], 'tl_page'))
-        ;
+            ->willReturn(new Collection([$page1, $page2], 'tl_page'));
 
         $provider = $this->getRouteProvider($this->mockFramework($pageAdapter));
         $routes = $provider->getRoutesByNames(['tl_page.17', 'tl_page.21']);
@@ -110,8 +107,7 @@ class RouteProviderTest extends TestCase
             ->expects($this->once())
             ->method('findByPk')
             ->with(17)
-            ->willReturn($page)
-        ;
+            ->willReturn($page);
 
         $framework = $this->mockFramework($pageAdapter);
         $route = $this->getRouteProvider($framework)->getRouteByName('tl_page.17');
@@ -131,8 +127,7 @@ class RouteProviderTest extends TestCase
             ->expects($this->once())
             ->method('findByPk')
             ->with(17)
-            ->willReturn($page)
-        ;
+            ->willReturn($page);
 
         $framework = $this->mockFramework($pageAdapter);
         $route = $this->getRouteProvider($framework)->getRouteByName('tl_page.17');
@@ -145,8 +140,7 @@ class RouteProviderTest extends TestCase
         $pageAdapter = $this->mockAdapter(['findAll']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findAll')
-        ;
+            ->method('findAll');
 
         $provider = $this->getRouteProvider($this->mockFramework($pageAdapter));
         $provider->getRoutesByNames(null);
@@ -157,8 +151,7 @@ class RouteProviderTest extends TestCase
         $pageAdapter = $this->mockAdapter(['findBy']);
         $pageAdapter
             ->expects($this->never())
-            ->method('findBy')
-        ;
+            ->method('findBy');
 
         $provider = $this->getRouteProvider($this->mockFramework($pageAdapter));
 
@@ -207,8 +200,7 @@ class RouteProviderTest extends TestCase
             ->expects($this->once())
             ->method('findBy')
             ->with([implode(' OR ', $conditions)], [])
-            ->willReturn(null)
-        ;
+            ->willReturn(null);
 
         $configAdapter = $this->mockConfigAdapter(compact('folderUrl'));
         $framework = $this->mockFramework($pageAdapter, $configAdapter);
@@ -321,8 +313,7 @@ class RouteProviderTest extends TestCase
         $pageAdapter
             ->expects($this->once())
             ->method('findBy')
-            ->willReturn(new Collection(array_values($pages), 'tl_page'))
-        ;
+            ->willReturn(new Collection(array_values($pages), 'tl_page'));
 
         $configAdapter = $this->mockConfigAdapter(['folderUrl' => true]);
         $framework = $this->mockFramework($pageAdapter, $configAdapter);
@@ -473,8 +464,7 @@ class RouteProviderTest extends TestCase
         $pageAdapter
             ->expects($this->once())
             ->method('findBy')
-            ->willReturn(new Collection([$page], 'tl_page'))
-        ;
+            ->willReturn(new Collection([$page], 'tl_page'));
 
         $configAdapter = $this->mockConfigAdapter(['folderUrl' => true]);
         $framework = $this->mockFramework($pageAdapter, $configAdapter);
@@ -542,8 +532,7 @@ class RouteProviderTest extends TestCase
                 static function ($param) use ($config) {
                     return $config[$param] ?? null;
                 }
-            )
-        ;
+            );
 
         return $configAdapter;
     }
@@ -556,13 +545,11 @@ class RouteProviderTest extends TestCase
         $request = $this->createMock(Request::class);
         $request
             ->method('getPathInfo')
-            ->willReturn($path)
-        ;
+            ->willReturn($path);
 
         $request
             ->method('getLanguages')
-            ->willReturn($languages)
-        ;
+            ->willReturn($languages);
 
         return $request;
     }
@@ -606,8 +593,7 @@ class RouteProviderTest extends TestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->method('quote')
-            ->willReturnArgument(0)
-        ;
+            ->willReturnArgument(0);
 
         return new RouteProvider($framework, $connection, $urlSuffix, $prependLocale);
     }

@@ -29,8 +29,7 @@ class InitializeControllerTest extends TestCase
         $requestStack
             ->expects($this->once())
             ->method('getMasterRequest')
-            ->willReturn(null)
-        ;
+            ->willReturn(null);
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('request_stack', $requestStack);

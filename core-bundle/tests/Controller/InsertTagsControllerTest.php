@@ -22,13 +22,11 @@ class InsertTagsControllerTest extends TestCase
     {
         $framework = $this->mockContaoFramework();
         $framework
-            ->method('initialize')
-        ;
+            ->method('initialize');
 
         $framework
             ->method('createInstance')
-            ->willReturn($this->mockConfiguredAdapter(['replace' => '3858f62230ac3c915f300c664312c63f']))
-        ;
+            ->willReturn($this->mockConfiguredAdapter(['replace' => '3858f62230ac3c915f300c664312c63f']));
 
         $controller = new InsertTagsController($framework);
         $response = $controller->renderAction(new Request(), '{{request_token}}');

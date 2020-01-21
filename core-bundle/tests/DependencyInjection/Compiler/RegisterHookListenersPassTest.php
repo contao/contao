@@ -284,13 +284,11 @@ class RegisterHookListenersPassTest extends TestCase
         $container
             ->method('hasDefinition')
             ->with('contao.framework')
-            ->willReturn(false)
-        ;
+            ->willReturn(false);
 
         $container
             ->expects($this->never())
-            ->method('findTaggedServiceIds')
-        ;
+            ->method('findTaggedServiceIds');
 
         $pass = new RegisterHookListenersPass();
         $pass->process($container);

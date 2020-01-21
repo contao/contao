@@ -178,8 +178,7 @@ class StoreRefererListenerTest extends TestCase
         $session = $this->createMock(SessionInterface::class);
         $session
             ->expects($this->never())
-            ->method('set')
-        ;
+            ->method('set');
 
         $request = new Request();
         $request->setSession($session);
@@ -200,8 +199,7 @@ class StoreRefererListenerTest extends TestCase
         $session = $this->createMock(SessionInterface::class);
         $session
             ->expects($this->never())
-            ->method('set')
-        ;
+            ->method('set');
 
         $request = new Request();
         $request->setSession($session);
@@ -215,8 +213,7 @@ class StoreRefererListenerTest extends TestCase
         $session = $this->createMock(SessionInterface::class);
         $session
             ->expects($this->never())
-            ->method('set')
-        ;
+            ->method('set');
 
         $request = new Request();
         $request->setSession($session);
@@ -234,8 +231,7 @@ class StoreRefererListenerTest extends TestCase
         $session = $this->createMock(SessionInterface::class);
         $session
             ->expects($this->never())
-            ->method('set')
-        ;
+            ->method('set');
 
         $request = new Request();
         $request->setSession($session);
@@ -274,8 +270,7 @@ class StoreRefererListenerTest extends TestCase
         $security
             ->expects($expectsSecurityCall || null !== $user ? $this->once() : $this->never())
             ->method('getUser')
-            ->willReturn($user)
-        ;
+            ->willReturn($user);
 
         return new StoreRefererListener($security, $this->mockScopeMatcher());
     }

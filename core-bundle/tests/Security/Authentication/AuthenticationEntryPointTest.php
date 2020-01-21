@@ -42,8 +42,7 @@ class AuthenticationEntryPointTest extends TestCase
         $scopeMatcher
             ->expects($this->once())
             ->method('isBackendRequest')
-            ->willReturn(false)
-        ;
+            ->willReturn(false);
 
         $entryPoint = new AuthenticationEntryPoint(
             $this->createMock(RouterInterface::class),
@@ -69,8 +68,7 @@ class AuthenticationEntryPointTest extends TestCase
         $scopeMatcher
             ->expects($this->once())
             ->method('isBackendRequest')
-            ->willReturn(false)
-        ;
+            ->willReturn(false);
 
         $entryPoint = new AuthenticationEntryPoint(
             $this->createMock(RouterInterface::class),
@@ -96,8 +94,7 @@ class AuthenticationEntryPointTest extends TestCase
         $scopeMatcher
             ->expects($this->once())
             ->method('isBackendRequest')
-            ->willReturn(false)
-        ;
+            ->willReturn(false);
 
         $entryPoint = new AuthenticationEntryPoint(
             $this->createMock(RouterInterface::class),
@@ -119,8 +116,7 @@ class AuthenticationEntryPointTest extends TestCase
         $scopeMatcher
             ->expects($this->once())
             ->method('isBackendRequest')
-            ->willReturn(false)
-        ;
+            ->willReturn(false);
 
         $entryPoint = new AuthenticationEntryPoint(
             $this->createMock(RouterInterface::class),
@@ -144,8 +140,7 @@ class AuthenticationEntryPointTest extends TestCase
         $scopeMatcher
             ->expects($this->once())
             ->method('isBackendRequest')
-            ->willReturn(false)
-        ;
+            ->willReturn(false);
 
         $entryPoint = new AuthenticationEntryPoint(
             $this->createMock(RouterInterface::class),
@@ -171,16 +166,14 @@ class AuthenticationEntryPointTest extends TestCase
             ->expects($this->once())
             ->method('generate')
             ->with('contao_backend_login', ['redirect' => $request->getUri()])
-            ->willReturn('http://localhost/contao/login?redirect=https%3A%2F%2Fcontao.org%2Fpreview.php%2Fabout-contao.html')
-        ;
+            ->willReturn('http://localhost/contao/login?redirect=https%3A%2F%2Fcontao.org%2Fpreview.php%2Fabout-contao.html');
 
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $scopeMatcher
             ->expects($this->once())
             ->method('isBackendRequest')
             ->with($request)
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $entryPoint = new AuthenticationEntryPoint(
             $router,
@@ -204,16 +197,14 @@ class AuthenticationEntryPointTest extends TestCase
             ->expects($this->once())
             ->method('generate')
             ->with('contao_backend_login')
-            ->willReturn('http://localhost/contao/login')
-        ;
+            ->willReturn('http://localhost/contao/login');
 
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $scopeMatcher
             ->expects($this->once())
             ->method('isBackendRequest')
             ->with($request)
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $entryPoint = new AuthenticationEntryPoint(
             $router,

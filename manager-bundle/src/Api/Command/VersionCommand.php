@@ -41,8 +41,7 @@ class VersionCommand extends Command
 
         $this
             ->setName('version')
-            ->setDescription('Gets the Contao Manager API version and features.')
-        ;
+            ->setDescription('Gets the Contao Manager API version and features.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

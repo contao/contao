@@ -24,8 +24,7 @@ class FrontendPreviewTokenTest extends TestCase
         $user
             ->expects($this->once())
             ->method('getRoles')
-            ->willReturn(['ROLE_MEMBER'])
-        ;
+            ->willReturn(['ROLE_MEMBER']);
 
         $token = new FrontendPreviewToken($user, false);
 
@@ -73,8 +72,7 @@ class FrontendPreviewTokenTest extends TestCase
         $user
             ->expects($this->once())
             ->method('getRoles')
-            ->willReturn(['ROLE_USER'])
-        ;
+            ->willReturn(['ROLE_USER']);
 
         $token = new FrontendPreviewToken($user, false);
 

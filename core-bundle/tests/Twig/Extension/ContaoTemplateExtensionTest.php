@@ -32,21 +32,18 @@ class ContaoTemplateExtensionTest extends TestCase
         $backendRoute
             ->expects($this->once())
             ->method('getTemplateObject')
-            ->willReturn($template)
-        ;
+            ->willReturn($template);
 
         $backendRoute
             ->expects($this->once())
             ->method('run')
-            ->willReturn(new Response())
-        ;
+            ->willReturn(new Response());
 
         $framework = $this->mockContaoFramework();
         $framework
             ->method('createInstance')
             ->with(BackendCustom::class)
-            ->willReturn($backendRoute)
-        ;
+            ->willReturn($backendRoute);
 
         $extension = $this->getExtension($framework);
         $extension->renderContaoBackendTemplate(['a' => 'a', 'b' => 'b', 'c' => 'c']);

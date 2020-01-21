@@ -51,15 +51,13 @@ class UserSessionListenerTest extends TestCase
         $security = $this->createMock(Security::class);
         $security
             ->method('getUser')
-            ->willReturn($user)
-        ;
+            ->willReturn($user);
 
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
         $eventDispatcher
             ->expects($this->once())
             ->method('addListener')
-            ->with(KernelEvents::RESPONSE)
-        ;
+            ->with(KernelEvents::RESPONSE);
 
         $session = $this->mockSession();
 
@@ -90,20 +88,17 @@ class UserSessionListenerTest extends TestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
-            ->method('update')
-        ;
+            ->method('update');
 
         $user = $this->createPartialMock($userClass, ['getTable']);
         $user
             ->method('getTable')
-            ->willReturn($userTable)
-        ;
+            ->willReturn($userTable);
 
         $security = $this->createMock(Security::class);
         $security
             ->method('getUser')
-            ->willReturn($user)
-        ;
+            ->willReturn($user);
 
         $request = new Request();
         $request->setSession($this->mockSession());
@@ -124,14 +119,12 @@ class UserSessionListenerTest extends TestCase
         $session = $this->createMock(SessionInterface::class);
         $session
             ->expects($this->never())
-            ->method('getBag')
-        ;
+            ->method('getBag');
 
         $security = $this->createMock(Security::class);
         $security
             ->method('getUser')
-            ->willReturn(null)
-        ;
+            ->willReturn(null);
 
         $request = new Request();
         $request->setSession($session);
@@ -146,20 +139,17 @@ class UserSessionListenerTest extends TestCase
         $session = $this->createMock(SessionInterface::class);
         $session
             ->expects($this->never())
-            ->method('getBag')
-        ;
+            ->method('getBag');
 
         $security = $this->createMock(Security::class);
         $security
             ->method('getUser')
-            ->willReturn(null)
-        ;
+            ->willReturn(null);
 
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->never())
-            ->method('update')
-        ;
+            ->method('update');
 
         $request = new Request();
         $request->setSession($session);
@@ -174,8 +164,7 @@ class UserSessionListenerTest extends TestCase
         $session = $this->createMock(SessionInterface::class);
         $session
             ->expects($this->never())
-            ->method('getBag')
-        ;
+            ->method('getBag');
 
         $request = new Request();
         $request->setSession($session);
@@ -193,14 +182,12 @@ class UserSessionListenerTest extends TestCase
         $session = $this->createMock(SessionInterface::class);
         $session
             ->expects($this->never())
-            ->method('getBag')
-        ;
+            ->method('getBag');
 
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->never())
-            ->method('update')
-        ;
+            ->method('update');
 
         $request = new Request();
         $request->setSession($session);
@@ -218,8 +205,7 @@ class UserSessionListenerTest extends TestCase
         $session = $this->createMock(SessionInterface::class);
         $session
             ->expects($this->never())
-            ->method('getBag')
-        ;
+            ->method('getBag');
 
         $request = new Request();
         $request->setSession($session);
@@ -233,14 +219,12 @@ class UserSessionListenerTest extends TestCase
         $session = $this->createMock(SessionInterface::class);
         $session
             ->expects($this->never())
-            ->method('getBag')
-        ;
+            ->method('getBag');
 
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->never())
-            ->method('update')
-        ;
+            ->method('update');
 
         $request = new Request();
         $request->setSession($session);
@@ -254,8 +238,7 @@ class UserSessionListenerTest extends TestCase
         $security = $this->createMock(Security::class);
         $security
             ->method('getUser')
-            ->willReturn(new User('foo', 'bar'))
-        ;
+            ->willReturn(new User('foo', 'bar'));
 
         $listener = $this->getListener($this->createMock(Connection::class), $security);
 
@@ -272,8 +255,7 @@ class UserSessionListenerTest extends TestCase
         $security = $this->createMock(Security::class);
         $security
             ->method('getUser')
-            ->willReturn(new User('foo', 'bar'))
-        ;
+            ->willReturn(new User('foo', 'bar'));
 
         $connection = $this->createMock(Connection::class);
         $listener = $this->getListener($connection, $security);
@@ -296,8 +278,7 @@ class UserSessionListenerTest extends TestCase
         $security = $this->createMock(Security::class);
         $security
             ->method('getUser')
-            ->willReturn($user)
-        ;
+            ->willReturn($user);
 
         $request = new Request();
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
@@ -315,14 +296,12 @@ class UserSessionListenerTest extends TestCase
         $user = $this->createPartialMock(BackendUser::class, ['getTable']);
         $user
             ->method('getTable')
-            ->willReturn('tl_user')
-        ;
+            ->willReturn('tl_user');
 
         $security = $this->createMock(Security::class);
         $security
             ->method('getUser')
-            ->willReturn($user)
-        ;
+            ->willReturn($user);
 
         $request = new Request();
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);

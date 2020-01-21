@@ -52,8 +52,7 @@ class DebugFragmentsCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription('Displays the fragment controller configuration.')
-        ;
+            ->setDescription('Displays the fragment controller configuration.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

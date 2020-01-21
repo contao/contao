@@ -40,8 +40,7 @@ class SetConfigCommandTest extends TestCase
         $application = $this->createMock(Application::class);
         $application
             ->method('getManagerConfig')
-            ->willReturn($this->config)
-        ;
+            ->willReturn($this->config);
 
         $this->command = new SetConfigCommand($application);
     }
@@ -58,8 +57,7 @@ class SetConfigCommandTest extends TestCase
         $this->config
             ->expects($this->once())
             ->method('write')
-            ->with(['foo' => 'bar'])
-        ;
+            ->with(['foo' => 'bar']);
 
         $commandTester = new CommandTester($this->command);
         $commandTester->execute(['json' => '{"foo":"bar"}']);

@@ -170,8 +170,7 @@ class InstallTool
 
         $sql = $this->connection
             ->getDatabasePlatform()
-            ->getListTableColumnsSQL('tl_layout', $this->connection->getDatabase())
-        ;
+            ->getListTableColumnsSQL('tl_layout', $this->connection->getDatabase());
 
         $columns = $this->connection->fetchAll($sql);
 
@@ -191,8 +190,7 @@ class InstallTool
     {
         $row = $this->connection
             ->query('SELECT @@version as Version')
-            ->fetch(\PDO::FETCH_OBJ)
-        ;
+            ->fetch(\PDO::FETCH_OBJ);
 
         [$version] = explode('-', $row->Version);
 
@@ -251,8 +249,7 @@ class InstallTool
 
             $row = $this->connection
                 ->query("SHOW VARIABLES LIKE 'innodb_large_prefix'")
-                ->fetch(\PDO::FETCH_OBJ)
-            ;
+                ->fetch(\PDO::FETCH_OBJ);
 
             // The variable no longer exists as of MySQL 8 and MariaDB 10.3
             if (false === $row || '' === $row->Value) {
@@ -278,8 +275,7 @@ class InstallTool
 
             $row = $this->connection
                 ->query("SHOW VARIABLES LIKE 'innodb_file_per_table'")
-                ->fetch(\PDO::FETCH_OBJ)
-            ;
+                ->fetch(\PDO::FETCH_OBJ);
 
             // The innodb_file_per_table option is disabled
             if (!\in_array(strtolower((string) $row->Value), ['1', 'on'], true)) {
@@ -290,8 +286,7 @@ class InstallTool
 
             $row = $this->connection
                 ->query("SHOW VARIABLES LIKE 'innodb_file_format'")
-                ->fetch(\PDO::FETCH_OBJ)
-            ;
+                ->fetch(\PDO::FETCH_OBJ);
 
             // The InnoDB file format is not Barracuda
             if ('' !== $row->Value && 'barracuda' !== strtolower((string) $row->Value)) {
@@ -325,8 +320,7 @@ class InstallTool
         $finder = Finder::create()
             ->files()
             ->name('*.sql')
-            ->in($this->rootDir.'/templates')
-        ;
+            ->in($this->rootDir.'/templates');
 
         $templates = [];
 

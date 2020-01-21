@@ -152,15 +152,13 @@ EOT;
         $kernel = $this->createMock(ContaoKernel::class);
         $kernel
             ->method('getContainer')
-            ->willReturn($container)
-        ;
+            ->willReturn($container);
 
         if (null !== $config) {
             $kernel
                 ->expects($this->atLeastOnce())
                 ->method('getManagerConfig')
-                ->willReturn($config)
-            ;
+                ->willReturn($config);
         }
 
         $container->set('kernel', $kernel);

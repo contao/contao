@@ -27,8 +27,7 @@ class BackendMenuBuilderTest extends TestCase
         $eventDispatcher
             ->expects($this->atLeastOnce())
             ->method('dispatch')
-            ->with($this->isInstanceOf(MenuEvent::class), ContaoCoreEvents::BACKEND_MENU_BUILD)
-        ;
+            ->with($this->isInstanceOf(MenuEvent::class), ContaoCoreEvents::BACKEND_MENU_BUILD);
 
         $builder = new BackendMenuBuilder(new MenuFactory(), $eventDispatcher);
         $tree = $builder->buildMainMenu();
@@ -43,8 +42,7 @@ class BackendMenuBuilderTest extends TestCase
         $eventDispatcher
             ->expects($this->atLeastOnce())
             ->method('dispatch')
-            ->with($this->isInstanceOf(MenuEvent::class), ContaoCoreEvents::BACKEND_MENU_BUILD)
-        ;
+            ->with($this->isInstanceOf(MenuEvent::class), ContaoCoreEvents::BACKEND_MENU_BUILD);
 
         $builder = new BackendMenuBuilder(new MenuFactory(), $eventDispatcher);
         $tree = $builder->buildHeaderMenu();

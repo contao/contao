@@ -91,21 +91,18 @@ class ContaoCoreExtension extends Extension
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
-            ->addTag('contao.picker_provider')
-        ;
+            ->addTag('contao.picker_provider');
 
         $container
             ->registerForAutoconfiguration(MigrationInterface::class)
-            ->addTag('contao.migration')
-        ;
+            ->addTag('contao.migration');
     }
 
     private function handleSearchConfig(array $config, ContainerBuilder $container): void
     {
         $container
             ->registerForAutoconfiguration(IndexerInterface::class)
-            ->addTag('contao.search_indexer')
-        ;
+            ->addTag('contao.search_indexer');
 
         // Set the two parameters so they can be used in our legacy Config class for maximum BC
         $container->setParameter('contao.search.default_indexer.enable', $config['search']['default_indexer']['enable']);
@@ -143,8 +140,7 @@ class ContaoCoreExtension extends Extension
     {
         $container
             ->registerForAutoconfiguration(EscargotSubscriberInterface::class)
-            ->addTag('contao.escargot_subscriber')
-        ;
+            ->addTag('contao.escargot_subscriber');
 
         if (!$container->hasDefinition('contao.crawl.escargot_factory')) {
             return;

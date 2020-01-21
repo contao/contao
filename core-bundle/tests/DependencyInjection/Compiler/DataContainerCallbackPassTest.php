@@ -451,13 +451,11 @@ class DataContainerCallbackPassTest extends TestCase
         $container
             ->method('hasDefinition')
             ->with('contao.listener.data_container_callback')
-            ->willReturn(false)
-        ;
+            ->willReturn(false);
 
         $container
             ->expects($this->never())
-            ->method('findTaggedServiceIds')
-        ;
+            ->method('findTaggedServiceIds');
 
         $pass = new DataContainerCallbackPass();
         $pass->process($container);

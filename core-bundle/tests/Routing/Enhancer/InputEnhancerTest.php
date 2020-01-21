@@ -34,8 +34,7 @@ class InputEnhancerTest extends TestCase
         $framework = $this->mockContaoFramework();
         $framework
             ->expects($this->never())
-            ->method('initialize')
-        ;
+            ->method('initialize');
 
         $enhancer = new InputEnhancer($framework, false);
         $enhancer->enhance([], Request::create('/'));
@@ -50,8 +49,7 @@ class InputEnhancerTest extends TestCase
         $input
             ->expects($prependLocale ? $this->once() : $this->never())
             ->method('setGet')
-            ->with('language', $locale)
-        ;
+            ->with('language', $locale);
 
         $framework = $this->mockContaoFramework([Input::class => $input]);
 
@@ -77,8 +75,7 @@ class InputEnhancerTest extends TestCase
         $input = $this->mockAdapter(['setGet']);
         $input
             ->expects($this->never())
-            ->method('setGet')
-        ;
+            ->method('setGet');
 
         $framework = $this->mockContaoFramework([Input::class => $input]);
 
@@ -107,8 +104,7 @@ class InputEnhancerTest extends TestCase
         $input
             ->expects($this->exactly(\count($setters)))
             ->method('setGet')
-            ->withConsecutive(...$setters)
-        ;
+            ->withConsecutive(...$setters);
 
         $adapters = [
             Input::class => $input,
@@ -140,8 +136,7 @@ class InputEnhancerTest extends TestCase
         $input = $this->mockAdapter(['setGet']);
         $input
             ->expects($this->never())
-            ->method('setGet')
-        ;
+            ->method('setGet');
 
         $framework = $this->mockContaoFramework([Input::class => $input]);
 
@@ -166,8 +161,7 @@ class InputEnhancerTest extends TestCase
         $input
             ->expects($this->once())
             ->method('setGet')
-            ->with('auto_item', 'foo')
-        ;
+            ->with('auto_item', 'foo');
 
         $framework = $this->mockContaoFramework([Input::class => $input]);
 
@@ -191,8 +185,7 @@ class InputEnhancerTest extends TestCase
         $input = $this->mockAdapter(['setGet']);
         $input
             ->expects($this->never())
-            ->method('setGet')
-        ;
+            ->method('setGet');
 
         $adapters = [
             Input::class => $input,
@@ -220,8 +213,7 @@ class InputEnhancerTest extends TestCase
         $input
             ->expects($this->once())
             ->method('setGet')
-            ->with('foo', 'bar')
-        ;
+            ->with('foo', 'bar');
 
         $adapters = [
             Input::class => $input,

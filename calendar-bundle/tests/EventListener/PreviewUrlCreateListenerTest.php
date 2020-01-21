@@ -50,8 +50,7 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
         $framework = $this->createMock(ContaoFramework::class);
         $framework
             ->method('isInitialized')
-            ->willReturn(false)
-        ;
+            ->willReturn(false);
 
         $event = new PreviewUrlCreateEvent('calendar', 1);
 

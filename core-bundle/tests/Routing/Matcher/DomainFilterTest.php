@@ -33,14 +33,12 @@ class DomainFilterTest extends TestCase
         $collection
             ->expects($this->exactly(2))
             ->method('all')
-            ->willReturn($routes)
-        ;
+            ->willReturn($routes);
 
         $collection
             ->expects($this->exactly(2))
             ->method('remove')
-            ->withConsecutive(['nohost'], ['barfoo'])
-        ;
+            ->withConsecutive(['nohost'], ['barfoo']);
 
         $request = Request::create('/');
         $request->headers->set('Host', 'foobar.com');
@@ -60,13 +58,11 @@ class DomainFilterTest extends TestCase
         $collection
             ->expects($this->once())
             ->method('all')
-            ->willReturn($routes)
-        ;
+            ->willReturn($routes);
 
         $collection
             ->expects($this->never())
-            ->method('remove')
-        ;
+            ->method('remove');
 
         $request = Request::create('/');
         $request->headers->set('Host', 'barfoo.com');
@@ -83,8 +79,7 @@ class DomainFilterTest extends TestCase
         $route = $this->createMock(Route::class);
         $route
             ->method('getHost')
-            ->willReturn($host)
-        ;
+            ->willReturn($host);
 
         return $route;
     }

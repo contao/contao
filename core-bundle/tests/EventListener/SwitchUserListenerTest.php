@@ -42,8 +42,7 @@ class SwitchUserListenerTest extends TestCase
         $tokenStorage
             ->expects($this->once())
             ->method('getToken')
-            ->willReturn(null)
-        ;
+            ->willReturn(null);
 
         $event = new SwitchUserEvent(new Request(), $this->createMock(BackendUser::class));
         $listener = new SwitchUserListener($tokenStorage, $this->mockLogger());
@@ -76,8 +75,7 @@ class SwitchUserListenerTest extends TestCase
         $logger
             ->expects($this->once())
             ->method('info')
-            ->with($message, $context)
-        ;
+            ->with($message, $context);
 
         return $logger;
     }
@@ -94,14 +92,12 @@ class SwitchUserListenerTest extends TestCase
             $token
                 ->expects($this->once())
                 ->method('getUsername')
-                ->willReturn($username)
-            ;
+                ->willReturn($username);
 
             $tokenStorage
                 ->expects($this->once())
                 ->method('getToken')
-                ->willReturn($token)
-            ;
+                ->willReturn($token);
         }
 
         return $tokenStorage;
@@ -116,8 +112,7 @@ class SwitchUserListenerTest extends TestCase
             $user
                 ->expects($this->once())
                 ->method('getUsername')
-                ->willReturn($username)
-            ;
+                ->willReturn($username);
         }
 
         return new SwitchUserEvent(new Request(), $user);

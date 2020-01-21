@@ -32,14 +32,12 @@ class SearchIndexListenerTest extends TestCase
         $indexer
             ->expects($index ? $this->once() : $this->never())
             ->method('index')
-            ->with($this->isInstanceOf(Document::class))
-        ;
+            ->with($this->isInstanceOf(Document::class));
 
         $indexer
             ->expects($delete ? $this->once() : $this->never())
             ->method('delete')
-            ->with($this->isInstanceOf(Document::class))
-        ;
+            ->with($this->isInstanceOf(Document::class));
 
         $event = new TerminateEvent($this->createMock(HttpKernelInterface::class), $request, $response);
 

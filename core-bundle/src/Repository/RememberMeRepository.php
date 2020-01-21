@@ -62,8 +62,7 @@ class RememberMeRepository extends ServiceEntityRepository
             )
             ->setParameter('series', $series)
             ->setParameter('now', new \DateTime())
-            ->orderBy('rm.expires', 'ASC')
-        ;
+            ->orderBy('rm.expires', 'ASC');
 
         return $qb->getQuery()->getResult();
     }
@@ -76,8 +75,7 @@ class RememberMeRepository extends ServiceEntityRepository
             ->where('rm.series = :series')
             ->andWhere('rm.value != :value')
             ->setParameter('series', $entity->getSeries())
-            ->setParameter('value', $entity->getValue())
-        ;
+            ->setParameter('value', $entity->getValue());
 
         $qb->getQuery()->execute();
     }
@@ -88,8 +86,7 @@ class RememberMeRepository extends ServiceEntityRepository
         $qb
             ->delete($this->_entityName, 'rm')
             ->where('rm.series = :series')
-            ->setParameter('series', $series)
-        ;
+            ->setParameter('series', $series);
 
         $qb->getQuery()->execute();
     }
@@ -102,8 +99,7 @@ class RememberMeRepository extends ServiceEntityRepository
             ->where('rm.lastUsed < :lastUsed')
             ->orWhere('rm.expires < :expires')
             ->setParameter('lastUsed', (new \DateTime())->sub(new \DateInterval('PT'.$lastUsedLifetime.'S')))
-            ->setParameter('expires', (new \DateTime())->sub(new \DateInterval('PT'.$expiresLifetime.'S')))
-        ;
+            ->setParameter('expires', (new \DateTime())->sub(new \DateInterval('PT'.$expiresLifetime.'S')));
 
         $qb->getQuery()->execute();
     }

@@ -27,13 +27,11 @@ class TranslationDataCollectorPassTest extends TestCase
             ->expects($this->once())
             ->method('hasDefinition')
             ->with('translator.data_collector')
-            ->willReturn(false)
-        ;
+            ->willReturn(false);
 
         $container
             ->expects($this->never())
-            ->method('getDefinition')
-        ;
+            ->method('getDefinition');
 
         $pass = new TranslationDataCollectorPass();
         $pass->process($container);

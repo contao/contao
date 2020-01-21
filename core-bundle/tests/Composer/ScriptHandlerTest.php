@@ -207,18 +207,15 @@ class ScriptHandlerTest extends TestCase
         $composer = $this->createMock(Composer::class);
         $composer
             ->method('getConfig')
-            ->willReturn($this->createMock(Config::class))
-        ;
+            ->willReturn($this->createMock(Config::class));
 
         $composer
             ->method('getDownloadManager')
-            ->willReturn($this->createMock(DownloadManager::class))
-        ;
+            ->willReturn($this->createMock(DownloadManager::class));
 
         $composer
             ->method('getPackage')
-            ->willReturn($package)
-        ;
+            ->willReturn($package);
 
         return $composer;
     }
@@ -233,8 +230,7 @@ class ScriptHandlerTest extends TestCase
         if (null !== $method) {
             $io
                 ->method($method)
-                ->willReturn(true)
-            ;
+                ->willReturn(true);
         }
 
         return $io;
@@ -248,24 +244,20 @@ class ScriptHandlerTest extends TestCase
         $package = $this->createMock(PackageInterface::class);
         $package
             ->method('getTargetDir')
-            ->willReturn('')
-        ;
+            ->willReturn('');
 
         $package
             ->method('getName')
-            ->willReturn('foo/bar')
-        ;
+            ->willReturn('foo/bar');
 
         $package
             ->method('getPrettyName')
-            ->willReturn('foo/bar')
-        ;
+            ->willReturn('foo/bar');
 
         $package
             ->expects(empty($extras) ? $this->any() : $this->atLeastOnce())
             ->method('getExtra')
-            ->willReturn($extras)
-        ;
+            ->willReturn($extras);
 
         return $package;
     }

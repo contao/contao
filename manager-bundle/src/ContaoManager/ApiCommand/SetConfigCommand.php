@@ -43,8 +43,7 @@ class SetConfigCommand extends Command
         $this
             ->setName('config:set')
             ->setDescription('Sets the Contao Manager configuration from a JSON string.')
-            ->addArgument('json', InputArgument::REQUIRED, 'The configuration as JSON string')
-        ;
+            ->addArgument('json', InputArgument::REQUIRED, 'The configuration as JSON string');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

@@ -145,8 +145,7 @@ class ScriptHandler
         $package = $composer
             ->getRepositoryManager()
             ->getLocalRepository()
-            ->findPackage('paragonie/random_compat', '*')
-        ;
+            ->findPackage('paragonie/random_compat', '*');
 
         if (null === $package) {
             return;

@@ -203,8 +203,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $menu = $this->createMock(ItemInterface::class);
         $menu
             ->expects($this->exactly(\count($modules)))
-            ->method('addChild')
-        ;
+            ->method('addChild');
 
         $provider->addMenuItems($menu, $config);
     }
@@ -224,14 +223,12 @@ class TablePickerProviderTest extends ContaoTestCase
         $menu = $this->createMock(ItemInterface::class);
         $menu
             ->expects($this->exactly(\count($modules)))
-            ->method('addChild')
-        ;
+            ->method('addChild');
 
         $menu
             ->expects($this->once())
             ->method('getFirstChild')
-            ->willReturn($this->createMock(ItemInterface::class))
-        ;
+            ->willReturn($this->createMock(ItemInterface::class));
 
         $config = $this->mockPickerConfig('tl_foobar', '', 'tablePicker.'.$current, $expectedCurrent);
         $provider = $this->createMenuTableProvider($modules, $current, $menu);
@@ -486,8 +483,7 @@ class TablePickerProviderTest extends ContaoTestCase
             ->expects($this->exactly(\count($expectedItems)))
             ->method('createItem')
             ->withConsecutive(...$expectedItems)
-            ->willReturn($menu)
-        ;
+            ->willReturn($menu);
 
         return new TablePickerProvider(
             $this->createMock(ContaoFramework::class),
@@ -510,22 +506,18 @@ class TablePickerProviderTest extends ContaoTestCase
         $config = $this->createMock(PickerConfig::class);
         $config
             ->method('getContext')
-            ->willReturn('dc.'.$table)
-        ;
+            ->willReturn('dc.'.$table);
 
         $config
             ->method('getValue')
-            ->willReturn($value)
-        ;
+            ->willReturn($value);
 
         $config
             ->method('getCurrent')
-            ->willReturn($current)
-        ;
+            ->willReturn($current);
 
         $clone = $config
-            ->method('cloneForCurrent')
-        ;
+            ->method('cloneForCurrent');
 
         if ($expectedCurrent) {
             $clone->withConsecutive(...$expectedCurrent);
@@ -535,8 +527,7 @@ class TablePickerProviderTest extends ContaoTestCase
 
         $config
             ->method('urlEncode')
-            ->willReturn('foobar')
-        ;
+            ->willReturn('foobar');
 
         return $config;
     }
@@ -549,16 +540,14 @@ class TablePickerProviderTest extends ContaoTestCase
         $dcaLoader = $this->createMock(DcaLoader::class);
         $dcaLoader
             ->expects($this->once())
-            ->method('load')
-        ;
+            ->method('load');
 
         $framework = $this->createMock(ContaoFramework::class);
         $framework
             ->expects($this->once())
             ->method('createInstance')
             ->with(DcaLoader::class, [$table])
-            ->willReturn($dcaLoader)
-        ;
+            ->willReturn($dcaLoader);
 
         return $framework;
     }
@@ -579,8 +568,7 @@ class TablePickerProviderTest extends ContaoTestCase
             ->expects($this->exactly(\count($expected)))
             ->method('generate')
             ->withConsecutive(...$expected)
-            ->willReturn('')
-        ;
+            ->willReturn('');
 
         return $router;
     }
@@ -593,8 +581,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->never())
-            ->method($this->anything())
-        ;
+            ->method($this->anything());
 
         return $connection;
     }
@@ -609,63 +596,54 @@ class TablePickerProviderTest extends ContaoTestCase
             ->expects($this->once())
             ->method('eq')
             ->with('id', $id)
-            ->willReturnSelf()
-        ;
+            ->willReturnSelf();
 
         $statement = $this->createMock(Statement::class);
         $statement
             ->expects($this->once())
             ->method('fetch')
-            ->willReturn($data)
-        ;
+            ->willReturn($data);
 
         $queryBuilder = $this->createMock(QueryBuilder::class);
         $queryBuilder
             ->expects($this->once())
             ->method('expr')
-            ->willReturn($expr)
-        ;
+            ->willReturn($expr);
 
         $queryBuilder
             ->expects($this->once())
             ->method('select')
             ->with('pid')
-            ->willReturnSelf()
-        ;
+            ->willReturnSelf();
 
         $queryBuilder
             ->expects($this->once())
             ->method('from')
             ->with($table)
-            ->willReturnSelf()
-        ;
+            ->willReturnSelf();
 
         $queryBuilder
             ->expects($this->once())
             ->method('where')
             ->with($expr)
-            ->willReturnSelf()
-        ;
+            ->willReturnSelf();
 
         $queryBuilder
             ->expects($dynamicPtable ? $this->once() : $this->never())
             ->method('addSelect')
             ->with('ptable')
-            ->willReturnSelf()
-        ;
+            ->willReturnSelf();
 
         $queryBuilder
             ->expects($this->once())
             ->method('execute')
-            ->willReturn($statement)
-        ;
+            ->willReturn($statement);
 
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
             ->method('createQueryBuilder')
-            ->willReturn($queryBuilder)
-        ;
+            ->willReturn($queryBuilder);
 
         return $connection;
     }
@@ -686,8 +664,7 @@ class TablePickerProviderTest extends ContaoTestCase
             ->expects($this->exactly(\count($modules)))
             ->method('trans')
             ->withConsecutive(...$expected)
-            ->willReturnArgument(0)
-        ;
+            ->willReturnArgument(0);
 
         return $translator;
     }

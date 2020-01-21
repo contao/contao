@@ -63,8 +63,7 @@ class DebugPluginsCommand extends Command
         $this
             ->addArgument('name', InputArgument::OPTIONAL, 'The plugin class or package name')
             ->addOption('bundles', null, InputOption::VALUE_NONE, 'List all bundles or the bundle configuration of the given plugin')
-            ->setDescription('Displays the Contao Manager plugin configurations')
-        ;
+            ->setDescription('Displays the Contao Manager plugin configurations');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

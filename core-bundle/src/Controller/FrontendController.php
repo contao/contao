@@ -108,8 +108,7 @@ class FrontendController extends AbstractController
         $token = $this
             ->get('contao.csrf.token_manager')
             ->getToken($this->getParameter('contao.csrf_token_name'))
-            ->getValue()
-        ;
+            ->getValue();
 
         $token = json_encode($token);
 

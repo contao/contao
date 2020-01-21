@@ -34,8 +34,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $security
             ->expects($this->exactly(2))
             ->method('isGranted')
-            ->willReturnOnConsecutiveCalls(true, true)
-        ;
+            ->willReturnOnConsecutiveCalls(true, true);
 
         $session = $this->mockSession();
 
@@ -44,14 +43,12 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $user
             ->expects($this->once())
             ->method('getRoles')
-            ->willReturn(['ROLE_MEMBER'])
-        ;
+            ->willReturn(['ROLE_MEMBER']);
 
         $userProvider = $this->createMock(UserProviderInterface::class);
         $userProvider
             ->method('loadUserByUsername')
-            ->willReturn($user)
-        ;
+            ->willReturn($user);
 
         $authenticator = $this->getAuthenticator($security, $session, $userProvider);
 
@@ -78,8 +75,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ->expects($this->once())
             ->method('isGranted')
             ->with('ROLE_USER')
-            ->willReturn(false)
-        ;
+            ->willReturn(false);
 
         $authenticator = $this->getAuthenticator($security);
 
@@ -93,22 +89,19 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ->expects($this->once())
             ->method('isGranted')
             ->with('ROLE_USER')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $userProvider = $this->createMock(UserProviderInterface::class);
         $userProvider
             ->expects($this->once())
             ->method('loadUserByUsername')
-            ->willThrowException(new UsernameNotFoundException())
-        ;
+            ->willThrowException(new UsernameNotFoundException());
 
         $logger = $this->createMock(LoggerInterface::class);
         $logger
             ->expects($this->once())
             ->method('info')
-            ->with('Could not find a front end user with the username "foobar"')
-        ;
+            ->with('Could not find a front end user with the username "foobar"');
 
         $authenticator = $this->getAuthenticator($security, null, $userProvider, $logger);
 
@@ -121,22 +114,19 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $security
             ->expects($this->exactly(2))
             ->method('isGranted')
-            ->willReturnOnConsecutiveCalls(true, false)
-        ;
+            ->willReturnOnConsecutiveCalls(true, false);
 
         /** @var FrontendUser&MockObject $user */
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user
             ->expects($this->never())
             ->method('getRoles')
-            ->willReturn(['ROLE_MEMBER'])
-        ;
+            ->willReturn(['ROLE_MEMBER']);
 
         $userProvider = $this->createMock(UserProviderInterface::class);
         $userProvider
             ->method('loadUserByUsername')
-            ->willReturn($user)
-        ;
+            ->willReturn($user);
 
         $authenticator = $this->getAuthenticator($security, null, $userProvider);
 
@@ -152,8 +142,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $security
             ->expects($this->once())
             ->method('isGranted')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $session = $this->mockSession();
         $authenticator = $this->getAuthenticator($security, $session);
@@ -174,14 +163,12 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $security
             ->expects($this->once())
             ->method('isGranted')
-            ->willReturn(false)
-        ;
+            ->willReturn(false);
 
         $session = $this->createMock(SessionInterface::class);
         $session
             ->expects($this->never())
-            ->method('set')
-        ;
+            ->method('set');
 
         $authenticator = $this->getAuthenticator($security, $session);
 
@@ -194,21 +181,18 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $session
             ->expects($this->once())
             ->method('isStarted')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $session
             ->expects($this->once())
             ->method('has')
             ->with('_security_contao_frontend')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $session
             ->expects($this->once())
             ->method('remove')
-            ->with('_security_contao_frontend')
-        ;
+            ->with('_security_contao_frontend');
 
         $authenticator = $this->getAuthenticator(null, $session);
 
@@ -221,8 +205,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $session
             ->expects($this->once())
             ->method('isStarted')
-            ->willReturn(false)
-        ;
+            ->willReturn(false);
 
         $authenticator = $this->getAuthenticator(null, $session);
 
@@ -235,15 +218,13 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $session
             ->expects($this->once())
             ->method('isStarted')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $session
             ->expects($this->once())
             ->method('has')
             ->with('_security_contao_frontend')
-            ->willReturn(false)
-        ;
+            ->willReturn(false);
 
         $authenticator = $this->getAuthenticator(null, $session);
 
@@ -266,8 +247,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             $session = $this->createMock(SessionInterface::class);
             $session
                 ->method('isStarted')
-                ->willReturn(true)
-            ;
+                ->willReturn(true);
         }
 
         if (null === $userProvider) {

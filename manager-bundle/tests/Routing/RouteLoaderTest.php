@@ -33,8 +33,7 @@ class RouteLoaderTest extends ContaoTestCase
         $loader
             ->expects($this->exactly(2))
             ->method('getResolver')
-            ->willReturn($loaderResolver)
-        ;
+            ->willReturn($loaderResolver);
 
         $plugin1 = $this->mockRoutePlugin('foo', '/foo/path');
         $plugin2 = $this->mockRoutePlugin('foo2', '/foo2/path2');
@@ -44,8 +43,7 @@ class RouteLoaderTest extends ContaoTestCase
             ->expects($this->once())
             ->method('getInstancesOf')
             ->with(PluginLoader::ROUTING_PLUGINS, true)
-            ->willReturn([$plugin1, $plugin2])
-        ;
+            ->willReturn([$plugin1, $plugin2]);
 
         $routeLoader = new RouteLoader(
             $loader,
@@ -71,8 +69,7 @@ class RouteLoaderTest extends ContaoTestCase
         $loader
             ->expects($this->exactly(4))
             ->method('getResolver')
-            ->willReturn($loaderResolver)
-        ;
+            ->willReturn($loaderResolver);
 
         $plugin1 = $this->mockRoutePlugin('foo', '/foo/path');
         $plugin2 = $this->mockRoutePlugin('contao_catch_all', '/foo2/path2');
@@ -84,8 +81,7 @@ class RouteLoaderTest extends ContaoTestCase
             ->expects($this->once())
             ->method('getInstancesOf')
             ->with(PluginLoader::ROUTING_PLUGINS, true)
-            ->willReturn([$plugin1, $plugin2, $plugin3, $plugin4])
-        ;
+            ->willReturn([$plugin1, $plugin2, $plugin3, $plugin4]);
 
         $routeLoader = new RouteLoader(
             $loader,
@@ -113,8 +109,7 @@ class RouteLoaderTest extends ContaoTestCase
         $plugin
             ->expects($this->atLeastOnce())
             ->method('getRouteCollection')
-            ->willReturn($collection)
-        ;
+            ->willReturn($collection);
 
         return $plugin;
     }

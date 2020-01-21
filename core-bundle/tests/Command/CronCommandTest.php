@@ -25,8 +25,7 @@ class CronCommandTest extends TestCase
         $cron
             ->expects($this->once())
             ->method('run')
-            ->with(Cron::SCOPE_CLI)
-        ;
+            ->with(Cron::SCOPE_CLI);
 
         $command = new CronCommand($cron);
 

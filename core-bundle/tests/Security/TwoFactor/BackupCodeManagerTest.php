@@ -59,8 +59,7 @@ class BackupCodeManagerTest extends TestCase
 
         $user
             ->expects($this->once())
-            ->method('save')
-        ;
+            ->method('save');
 
         $backupCodeManager = new BackupCodeManager();
         $backupCodeManager->invalidateBackupCode($user, '123456');
@@ -76,8 +75,7 @@ class BackupCodeManagerTest extends TestCase
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user
             ->expects($this->once())
-            ->method('save')
-        ;
+            ->method('save');
 
         $backupCodes = $backupCodeManager->generateBackupCodes($user);
 

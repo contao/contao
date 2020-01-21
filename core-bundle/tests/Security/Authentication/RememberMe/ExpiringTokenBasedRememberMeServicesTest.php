@@ -66,18 +66,15 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
         $user = $this->createMock(UserInterface::class);
         $user
             ->method('getRoles')
-            ->willReturn([])
-        ;
+            ->willReturn([]);
 
         $this->userProvider
             ->method('supportsClass')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $this->userProvider
             ->method('loadUserByUsername')
-            ->willReturn($user)
-        ;
+            ->willReturn($user);
 
         $this->listener = new ExpiringTokenBasedRememberMeServices(
             $this->repository,
@@ -95,14 +92,12 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
             ->expects($this->once())
             ->method('setExpiresInSeconds')
             ->with(ExpiringTokenBasedRememberMeServices::EXPIRATION)
-            ->willReturnSelf()
-        ;
+            ->willReturnSelf();
 
         $entity
             ->expects($this->once())
             ->method('cloneWithNewValue')
-            ->willReturn($this->mockEntity('baz'))
-        ;
+            ->willReturn($this->mockEntity('baz'));
 
         $this->expectTableLocking();
         $this->expectTableReturnsEntities($entity);
@@ -110,8 +105,7 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
         $this->repository
             ->expects($this->once())
             ->method('persist')
-            ->with($entity)
-        ;
+            ->with($entity);
 
         $request = $this->mockRequestWithCookie('foo', 'bar');
         $token = $this->listener->autoLogin($request);
@@ -205,8 +199,7 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
         $token
             ->expects($this->atLeastOnce())
             ->method('getUser')
-            ->willReturn($this->createMock(UserInterface::class))
-        ;
+            ->willReturn($this->createMock(UserInterface::class));
 
         $this->repository
             ->expects($this->once())
@@ -217,8 +210,7 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
 
                     return 1;
                 }
-            )
-        ;
+            );
 
         $this->listener->loginSuccess($request, $response, $token);
 
@@ -237,8 +229,7 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
 
         $this->repository
             ->expects($this->never())
-            ->method('persist')
-        ;
+            ->method('persist');
 
         $this->listener->loginSuccess($request, $response, $token);
     }
@@ -262,18 +253,15 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
 
         $entity
             ->method('getValue')
-            ->willReturn($value)
-        ;
+            ->willReturn($value);
 
         $entity
             ->method('getLastUsed')
-            ->willReturn($lastUsed ?: new \DateTime())
-        ;
+            ->willReturn($lastUsed ?: new \DateTime());
 
         $entity
             ->method('getExpires')
-            ->willReturn($expires)
-        ;
+            ->willReturn($expires);
 
         return $entity;
     }
@@ -282,13 +270,11 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
     {
         $this->repository
             ->expects($this->once())
-            ->method('lockTable')
-        ;
+            ->method('lockTable');
 
         $this->repository
             ->expects($this->once())
-            ->method('unlockTable')
-        ;
+            ->method('unlockTable');
     }
 
     private function expectTableReturnsEntities(RememberMe ...$entities): void
@@ -297,14 +283,12 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
             ->expects($this->once())
             ->method('findBySeries')
             ->with(hash_hmac('sha256', 'foo', self::SECRET, true))
-            ->willReturn($entities)
-        ;
+            ->willReturn($entities);
 
         // Expired records should always be deleted when current ones are searched for
         $this->repository
             ->expects($this->once())
-            ->method('deleteExpired')
-        ;
+            ->method('deleteExpired');
     }
 
     private function expectSeriesIsDeleted(string $series): void
@@ -312,8 +296,7 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
         $this->repository
             ->expects($this->once())
             ->method('deleteBySeries')
-            ->with(hash_hmac('sha256', $series, self::SECRET, true))
-        ;
+            ->with(hash_hmac('sha256', $series, self::SECRET, true));
     }
 
     private function assertCookieIsDeleted(Request $request): void

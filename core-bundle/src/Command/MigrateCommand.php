@@ -73,8 +73,7 @@ class MigrateCommand extends Command
             ->setName('contao:migrate')
             ->addOption('with-deletes', null, InputOption::VALUE_NONE, 'Execute all database migrations including DROP queries. Can be used together with --no-interaction.')
             ->addOption('schema-only', null, InputOption::VALUE_NONE, 'Execute database schema migration only.')
-            ->setDescription('Executes migrations and the database schema diff.')
-        ;
+            ->setDescription('Executes migrations and the database schema diff.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -229,8 +228,7 @@ class MigrateCommand extends Command
 
             $options = $withDeletesOption
                 ? ['yes, with deletes', 'no']
-                : ['yes', 'yes, with deletes', 'no']
-            ;
+                : ['yes', 'yes, with deletes', 'no'];
 
             $answer = $this->io->choice('Execute the listed database updates?', $options, $options[0]);
 

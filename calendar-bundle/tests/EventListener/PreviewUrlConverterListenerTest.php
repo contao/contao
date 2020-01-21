@@ -50,8 +50,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $framework = $this->createMock(ContaoFramework::class);
         $framework
             ->method('isInitialized')
-            ->willReturn(false)
-        ;
+            ->willReturn(false);
 
         $event = new PreviewUrlConvertEvent(new Request());
 

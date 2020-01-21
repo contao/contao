@@ -26,20 +26,17 @@ class DataCollectorTranslatorTest extends TestCase
             ->expects($this->once())
             ->method('trans')
             ->with('MSC.mainNavigation', [], 'contao_default', 'en')
-            ->willReturn('Main navigation')
-        ;
+            ->willReturn('Main navigation');
 
         $originalTranslator
             ->expects($this->once())
             ->method('getLocale')
-            ->willReturn('en')
-        ;
+            ->willReturn('en');
 
         $originalTranslator
             ->expects($this->once())
             ->method('getCollectedMessages')
-            ->willReturn([])
-        ;
+            ->willReturn([]);
 
         $translator = new DataCollectorTranslator($originalTranslator);
         $translator->trans('MSC.mainNavigation', [], 'contao_default', 'en');
@@ -65,13 +62,11 @@ class DataCollectorTranslatorTest extends TestCase
             ->expects($this->once())
             ->method('trans')
             ->with('translation_key', [], 'message_domain', 'en')
-            ->willReturn('translation')
-        ;
+            ->willReturn('translation');
 
         $originalTranslator
             ->expects($this->never())
-            ->method('getCollectedMessages')
-        ;
+            ->method('getCollectedMessages');
 
         $translator = new DataCollectorTranslator($originalTranslator);
 
@@ -83,18 +78,15 @@ class DataCollectorTranslatorTest extends TestCase
         $originalTranslator = $this->createMock(SymfonyDataCollectorTranslator::class);
         $originalTranslator
             ->method('getCollectedMessages')
-            ->willReturn([])
-        ;
+            ->willReturn([]);
 
         $originalTranslator
             ->method('getLocale')
-            ->willReturn('en')
-        ;
+            ->willReturn('en');
 
         $originalTranslator
             ->method('trans')
-            ->willReturn('bar')
-        ;
+            ->willReturn('bar');
 
         $translator = new DataCollectorTranslator($originalTranslator);
 

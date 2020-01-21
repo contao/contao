@@ -31,8 +31,7 @@ class BypassMaintenanceListenerTest extends TestCase
         $tokenChecker
             ->expects($this->once())
             ->method('hasBackendUser')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $listener = new BypassMaintenanceListener($tokenChecker);
         $listener($event);
@@ -49,8 +48,7 @@ class BypassMaintenanceListenerTest extends TestCase
         $tokenChecker
             ->expects($this->once())
             ->method('hasBackendUser')
-            ->willReturn(false)
-        ;
+            ->willReturn(false);
 
         $listener = new BypassMaintenanceListener($tokenChecker);
         $listener($event);

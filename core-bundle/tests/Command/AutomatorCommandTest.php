@@ -59,8 +59,7 @@ class AutomatorCommandTest extends TestCase
         $kernel = $this->createMock(KernelInterface::class);
         $kernel
             ->method('getContainer')
-            ->willReturn($container)
-        ;
+            ->willReturn($container);
 
         $application = new Application($kernel);
         $application->setCatchExceptions(true);

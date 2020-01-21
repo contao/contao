@@ -29,8 +29,7 @@ class VersionCommand extends Command
     {
         $this
             ->setName('contao:version')
-            ->setDescription('Outputs the contao/core-bundle version (deprecated).')
-        ;
+            ->setDescription('Outputs the contao/core-bundle version (deprecated).');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

@@ -146,8 +146,7 @@ class NewsPickerProviderTest extends ContaoTestCase
             ->expects($this->once())
             ->method('getRelated')
             ->with('pid')
-            ->willReturn($model)
-        ;
+            ->willReturn($model);
 
         $config = new PickerConfig('link', [], '{{news_url::1}}', 'newsPicker');
 
@@ -194,8 +193,7 @@ class NewsPickerProviderTest extends ContaoTestCase
             ->expects($this->once())
             ->method('getRelated')
             ->with('pid')
-            ->willReturn(null)
-        ;
+            ->willReturn(null);
 
         $config = new PickerConfig('link', [], '{{news_url::1}}', 'newsPicker');
 
@@ -221,8 +219,7 @@ class NewsPickerProviderTest extends ContaoTestCase
         $security
             ->expects(null === $accessGranted ? $this->never() : $this->once())
             ->method('isGranted')
-            ->willReturn($accessGranted ?? false)
-        ;
+            ->willReturn($accessGranted ?? false);
 
         $menuFactory = $this->createMock(FactoryInterface::class);
         $menuFactory
@@ -237,8 +234,7 @@ class NewsPickerProviderTest extends ContaoTestCase
 
                     return $item;
                 }
-            )
-        ;
+            );
 
         $router = $this->createMock(RouterInterface::class);
         $router
@@ -247,14 +243,12 @@ class NewsPickerProviderTest extends ContaoTestCase
                 static function (string $name, array $params): string {
                     return $name.'?'.http_build_query($params);
                 }
-            )
-        ;
+            );
 
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
             ->method('trans')
-            ->willReturn('News picker')
-        ;
+            ->willReturn('News picker');
 
         return new NewsPickerProvider($menuFactory, $router, $translator, $security);
     }

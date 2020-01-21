@@ -173,8 +173,7 @@ class TwoFactorControllerTest extends TestCase
         $page
             ->expects($this->exactly(2))
             ->method('getAbsoluteUrl')
-            ->willReturn('https://localhost.wip/foobar')
-        ;
+            ->willReturn('https://localhost.wip/foobar');
 
         /** @var RedirectResponse $response */
         $response = $controller($request, $module, 'main', null, $page);
@@ -208,8 +207,7 @@ class TwoFactorControllerTest extends TestCase
         $page = $this->mockPageModel();
         $page
             ->method('getAbsoluteUrl')
-            ->willReturn('https://localhost.wip/foobar')
-        ;
+            ->willReturn('https://localhost.wip/foobar');
 
         $response = $controller($request, $module, 'main', null, $page);
 
@@ -242,8 +240,7 @@ class TwoFactorControllerTest extends TestCase
         $page
             ->expects($this->exactly(2))
             ->method('getAbsoluteUrl')
-            ->willReturn('https://localhost.wip/foobar')
-        ;
+            ->willReturn('https://localhost.wip/foobar');
 
         $controller($request, $module, 'main', null, $page);
     }
@@ -276,8 +273,7 @@ class TwoFactorControllerTest extends TestCase
         $page
             ->expects($this->exactly(2))
             ->method('getAbsoluteUrl')
-            ->willReturn('https://localhost.wip/foobar')
-        ;
+            ->willReturn('https://localhost.wip/foobar');
 
         $controller($request, $module, 'main', null, $page);
     }
@@ -291,8 +287,7 @@ class TwoFactorControllerTest extends TestCase
 
         $user
             ->expects($this->once())
-            ->method('save')
-        ;
+            ->method('save');
 
         $container = $this->getContainerWithFrameworkTemplate(
             'mod_two_factor',
@@ -315,8 +310,7 @@ class TwoFactorControllerTest extends TestCase
         $page
             ->expects($this->once())
             ->method('getAbsoluteUrl')
-            ->willReturn('https://localhost.wip/foobar')
-        ;
+            ->willReturn('https://localhost.wip/foobar');
 
         $response = $controller($request, $module, 'main', null, $page);
 
@@ -371,8 +365,7 @@ class TwoFactorControllerTest extends TestCase
         $backupCodeManager
             ->expects($this->once())
             ->method('generateBackupCodes')
-            ->with($user)
-        ;
+            ->with($user);
 
         $controller = new TwoFactorController();
         $controller->setContainer($container);
@@ -413,8 +406,7 @@ class TwoFactorControllerTest extends TestCase
                 ->expects($this->once())
                 ->method('validateCode')
                 ->with($user, '123456')
-                ->willReturn($return)
-            ;
+                ->willReturn($return);
         }
 
         return $authenticator;
@@ -431,8 +423,7 @@ class TwoFactorControllerTest extends TestCase
             $authenticationUtils
                 ->expects($this->once())
                 ->method('getLastAuthenticationError')
-                ->willReturn($authenticationException)
-            ;
+                ->willReturn($authenticationException);
         }
 
         return $authenticationUtils;
@@ -447,13 +438,11 @@ class TwoFactorControllerTest extends TestCase
         $security
             ->method('isGranted')
             ->with('IS_AUTHENTICATED_FULLY')
-            ->willReturn($isFullyAuthenticated)
-        ;
+            ->willReturn($isFullyAuthenticated);
 
         $security
             ->method('getUser')
-            ->willReturn($user)
-        ;
+            ->willReturn($user);
 
         return $security;
     }
@@ -475,27 +464,23 @@ class TwoFactorControllerTest extends TestCase
         $template = $this->createMock(FrontendTemplate::class);
         $template
             ->method('getResponse')
-            ->willReturn(new Response())
-        ;
+            ->willReturn(new Response());
 
         $adapter = $this->mockAdapter(['findByPk']);
         $adapter
             ->method('findByPk')
-            ->willReturn(null)
-        ;
+            ->willReturn(null);
 
         $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
         $framework
             ->method('createInstance')
             ->with(FrontendTemplate::class, [$templateName])
-            ->willReturn($template)
-        ;
+            ->willReturn($template);
 
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $scopeMatcher
             ->method('isFrontendRequest')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $translator = $this->createMock(TranslatorInterface::class);
         $backupCodeManager = $this->createMock(BackupCodeManager::class);

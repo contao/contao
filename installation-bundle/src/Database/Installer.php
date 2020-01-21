@@ -200,8 +200,7 @@ class Installer
 
             $tableOptions = $this->connection
                 ->query("SHOW TABLE STATUS LIKE '".$tableName."'")
-                ->fetch(\PDO::FETCH_OBJ)
-            ;
+                ->fetch(\PDO::FETCH_OBJ);
 
             // The table does not yet exist
             if (false === $tableOptions) {
@@ -274,8 +273,7 @@ class Installer
     {
         $filePerTable = $this->connection
             ->query("SHOW VARIABLES LIKE 'innodb_file_per_table'")
-            ->fetch(\PDO::FETCH_OBJ)
-        ;
+            ->fetch(\PDO::FETCH_OBJ);
 
         // Dynamic rows require innodb_file_per_table to be enabled
         if (!\in_array(strtolower((string) $filePerTable->Value), ['1', 'on'], true)) {
@@ -284,8 +282,7 @@ class Installer
 
         $fileFormat = $this->connection
             ->query("SHOW VARIABLES LIKE 'innodb_file_format'")
-            ->fetch(\PDO::FETCH_OBJ)
-        ;
+            ->fetch(\PDO::FETCH_OBJ);
 
         // MySQL 8 and MariaDB 10.3 no longer have the "innodb_file_format" setting
         if (false === $fileFormat || '' === $fileFormat->Value) {

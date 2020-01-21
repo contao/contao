@@ -31,13 +31,11 @@ class AddCronJobsPassTest extends TestCase
         $container
             ->method('hasDefinition')
             ->with(Cron::class)
-            ->willReturn(false)
-        ;
+            ->willReturn(false);
 
         $container
             ->expects($this->never())
-            ->method('findTaggedServiceIds')
-        ;
+            ->method('findTaggedServiceIds');
 
         $pass = new AddCronJobsPass();
         $pass->process($container);

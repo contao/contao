@@ -36,8 +36,7 @@ class PickerBuilderTest extends ContaoTestCase
         $router = $this->createMock(RouterInterface::class);
         $router
             ->method('generate')
-            ->willReturn('/contao/picker?context=page')
-        ;
+            ->willReturn('/contao/picker?context=page');
 
         $this->builder = new PickerBuilder(new MenuFactory(), $router);
     }
@@ -135,8 +134,7 @@ class PickerBuilderTest extends ContaoTestCase
         $security = $this->createMock(Security::class);
         $security
             ->method('isGranted')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         return $security;
     }

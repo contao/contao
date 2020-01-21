@@ -26,19 +26,16 @@ class InsertTagsListenerTest extends ContaoTestCase
         $page = $this->createMock(PageModel::class);
         $page
             ->method('getFrontendUrl')
-            ->willReturn('faq/what-does-foobar-mean.html')
-        ;
+            ->willReturn('faq/what-does-foobar-mean.html');
 
         $page
             ->method('getAbsoluteUrl')
-            ->willReturn('http://domain.tld/faq/what-does-foobar-mean.html')
-        ;
+            ->willReturn('http://domain.tld/faq/what-does-foobar-mean.html');
 
         $categoryModel = $this->createMock(FaqCategoryModel::class);
         $categoryModel
             ->method('getRelated')
-            ->willReturn($page)
-        ;
+            ->willReturn($page);
 
         /** @var FaqModel&MockObject $faqModel */
         $faqModel = $this->mockClassWithProperties(FaqModel::class);
@@ -47,8 +44,7 @@ class InsertTagsListenerTest extends ContaoTestCase
 
         $faqModel
             ->method('getRelated')
-            ->willReturn($categoryModel)
-        ;
+            ->willReturn($categoryModel);
 
         $adapters = [
             FaqModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => $faqModel]),
@@ -105,8 +101,7 @@ class InsertTagsListenerTest extends ContaoTestCase
         $faqModel = $this->createMock(FaqModel::class);
         $faqModel
             ->method('getRelated')
-            ->willReturn(null)
-        ;
+            ->willReturn(null);
 
         $adapters = [
             FaqModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => $faqModel]),

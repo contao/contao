@@ -184,8 +184,7 @@ class PagePickerProviderTest extends ContaoTestCase
         $security
             ->expects(null === $accessGranted ? $this->never() : $this->atLeastOnce())
             ->method('isGranted')
-            ->willReturn($accessGranted ?? false)
-        ;
+            ->willReturn($accessGranted ?? false);
 
         $menuFactory = $this->createMock(FactoryInterface::class);
         $menuFactory
@@ -200,8 +199,7 @@ class PagePickerProviderTest extends ContaoTestCase
 
                     return $item;
                 }
-            )
-        ;
+            );
 
         $router = $this->createMock(RouterInterface::class);
         $router
@@ -210,14 +208,12 @@ class PagePickerProviderTest extends ContaoTestCase
                 static function (string $name, array $params): string {
                     return $name.'?'.http_build_query($params);
                 }
-            )
-        ;
+            );
 
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
             ->method('trans')
-            ->willReturn('Page picker')
-        ;
+            ->willReturn('Page picker');
 
         return new PagePickerProvider($menuFactory, $router, $translator, $security);
     }

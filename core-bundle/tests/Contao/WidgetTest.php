@@ -130,15 +130,13 @@ class WidgetTest extends TestCase
             ->getMockBuilder(Widget::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['validator'])
-            ->getMockForAbstractClass()
-        ;
+            ->getMockForAbstractClass();
 
         $widget
             ->expects($this->exactly(3))
             ->method('validator')
             ->withAnyParameters()
-            ->willReturnArgument(0)
-        ;
+            ->willReturnArgument(0);
 
         $widget
             ->setInputCallback(
@@ -146,8 +144,7 @@ class WidgetTest extends TestCase
                     return 'foobar';
                 }
             )
-            ->validate()
-        ;
+            ->validate();
 
         $this->assertSame('foobar', $widget->value);
 
@@ -157,14 +154,13 @@ class WidgetTest extends TestCase
                     return null;
                 }
             )
-            ->validate()
-        ;
+            ->validate();
 
         $this->assertNull($widget->value);
 
         $widget
             ->setInputCallback()
             ->validate() // getPost() should be called once here
-        ;
+;
     }
 }

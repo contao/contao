@@ -45,8 +45,7 @@ class DebugDcaCommand extends Command
         $this
             ->setName('debug:dca')
             ->addArgument('table', InputArgument::REQUIRED, 'The table name')
-            ->setDescription('Dumps the DCA configuration for a table.')
-        ;
+            ->setDescription('Dumps the DCA configuration for a table.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

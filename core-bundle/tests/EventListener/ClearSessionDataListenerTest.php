@@ -33,8 +33,7 @@ class ClearSessionDataListenerTest extends TestCase
         $session
             ->expects($this->once())
             ->method('isStarted')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $request = new Request();
         $request->setSession($session);
@@ -108,8 +107,7 @@ class ClearSessionDataListenerTest extends TestCase
         $request = $this->createMock(Request::class);
         $request
             ->expects($this->never())
-            ->method('isMethod')
-        ;
+            ->method('isMethod');
 
         $event = new ResponseEvent(
             $this->createMock(KernelInterface::class),
@@ -127,8 +125,7 @@ class ClearSessionDataListenerTest extends TestCase
         $session = $this->createMock(Session::class);
         $session
             ->expects($this->never())
-            ->method('isStarted')
-        ;
+            ->method('isStarted');
 
         $request = new Request();
         $request->setSession($session);
@@ -151,8 +148,7 @@ class ClearSessionDataListenerTest extends TestCase
         $session
             ->expects($this->once())
             ->method('isStarted')
-            ->willReturn(false)
-        ;
+            ->willReturn(false);
 
         $request = new Request();
         $request->setSession($session);
@@ -178,8 +174,7 @@ class ClearSessionDataListenerTest extends TestCase
         $session
             ->expects($this->once())
             ->method('isStarted')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $request = new Request();
         $request->setSession($session);

@@ -53,8 +53,7 @@ class BackendCsvImportControllerTest extends TestCase
         $html = $this
             ->getController($request)
             ->importListWizardAction($this->mockDataContainer())
-            ->getContent()
-        ;
+            ->getContent();
 
         $expect = <<<'EOF'
 <form id="tl_csv_import_lw">
@@ -72,8 +71,7 @@ EOF;
         $connection
             ->expects($this->atLeastOnce())
             ->method('update')
-            ->with('tl_content', ['listitems' => serialize(['foo', 'bar'])], ['id' => 1])
-        ;
+            ->with('tl_content', ['listitems' => serialize(['foo', 'bar'])], ['id' => 1]);
 
         $request = new Request();
         $request->query->set('key', 'lw');
@@ -106,8 +104,7 @@ EOF;
         $html = $this
             ->getController($request)
             ->importTableWizardAction($this->mockDataContainer())
-            ->getContent()
-        ;
+            ->getContent();
 
         $expect = <<<'EOF'
 <form id="tl_csv_import_tw">
@@ -125,8 +122,7 @@ EOF;
         $connection
             ->expects($this->atLeastOnce())
             ->method('update')
-            ->with('tl_content', ['tableitems' => serialize([['foo', 'bar']])], ['id' => 1])
-        ;
+            ->with('tl_content', ['tableitems' => serialize([['foo', 'bar']])], ['id' => 1]);
 
         $request = new Request();
         $request->query->set('key', 'tw');
@@ -159,8 +155,7 @@ EOF;
         $html = $this
             ->getController($request)
             ->importOptionWizardAction($this->mockDataContainer())
-            ->getContent()
-        ;
+            ->getContent();
 
         $expect = <<<'EOF'
 <form id="tl_csv_import_ow">
@@ -182,8 +177,7 @@ EOF;
                 'tl_content',
                 ['options' => serialize([['value' => 'foo', 'label' => 'bar', 'default' => '', 'group' => '']])],
                 ['id' => 1]
-            )
-        ;
+            );
 
         $request = new Request();
         $request->query->set('key', 'ow');
@@ -222,8 +216,7 @@ EOF;
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
             ->method('trans')
-            ->willReturnArgument(0)
-        ;
+            ->willReturnArgument(0);
 
         $controller = new BackendCsvImportController(
             $this->mockFramework(['files/data.csv'], true),
@@ -270,8 +263,7 @@ EOF;
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
             ->method('trans')
-            ->willReturnArgument(0)
-        ;
+            ->willReturnArgument(0);
 
         $controller = new BackendCsvImportController(
             $this->mockFramework([], true),
@@ -301,8 +293,7 @@ EOF;
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
             ->method('trans')
-            ->willReturnArgument(0)
-        ;
+            ->willReturnArgument(0);
 
         $controller = new BackendCsvImportController(
             $this->mockFramework(['files/data.jpg'], true),
@@ -323,20 +314,17 @@ EOF;
         $uploader = $this->createMock(FileUpload::class);
         $uploader
             ->method('uploadTo')
-            ->willReturn($files)
-        ;
+            ->willReturn($files);
 
         $adapter = $this->mockAdapter(['addError']);
         $adapter
             ->expects($expectError ? $this->once() : $this->never())
-            ->method('addError')
-        ;
+            ->method('addError');
 
         $framework = $this->mockContaoFramework([Message::class => $adapter]);
         $framework
             ->method('createInstance')
-            ->willReturn($uploader)
-        ;
+            ->willReturn($uploader);
 
         return $framework;
     }
@@ -349,8 +337,7 @@ EOF;
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
             ->method('trans')
-            ->willReturnArgument(0)
-        ;
+            ->willReturnArgument(0);
 
         return new BackendCsvImportController(
             $this->mockContaoFrameworkWithUploader(),
@@ -384,14 +371,12 @@ EOF;
         $uploader = $this->createMock(FileUpload::class);
         $uploader
             ->method('uploadTo')
-            ->willReturn(['files/data/data.csv'])
-        ;
+            ->willReturn(['files/data/data.csv']);
 
         $framework = $this->mockContaoFramework();
         $framework
             ->method('createInstance')
-            ->willReturn($uploader)
-        ;
+            ->willReturn($uploader);
 
         return $framework;
     }

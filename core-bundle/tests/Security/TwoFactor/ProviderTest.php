@@ -29,8 +29,7 @@ class ProviderTest extends TestCase
         $context
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn(null)
-        ;
+            ->willReturn(null);
 
         $provider = new Provider($authenticator);
 
@@ -49,8 +48,7 @@ class ProviderTest extends TestCase
         $context
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($user)
-        ;
+            ->willReturn($user);
 
         $provider = new Provider($authenticator);
 
@@ -69,8 +67,7 @@ class ProviderTest extends TestCase
         $context
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($user)
-        ;
+            ->willReturn($user);
 
         $provider = new Provider($authenticator);
 
@@ -94,8 +91,7 @@ class ProviderTest extends TestCase
             ->expects($this->once())
             ->method('validateCode')
             ->with($user, '123456')
-            ->willReturn(false)
-        ;
+            ->willReturn(false);
 
         $provider = new Provider($authenticator);
 
@@ -112,8 +108,7 @@ class ProviderTest extends TestCase
             ->expects($this->once())
             ->method('validateCode')
             ->with($user, '123456')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $provider = new Provider($authenticator);
 

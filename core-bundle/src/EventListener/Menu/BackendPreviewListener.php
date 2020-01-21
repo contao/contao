@@ -89,8 +89,7 @@ class BackendPreviewListener
             ->setLinkAttribute('title', $this->translator->trans('MSC.fePreviewTitle', [], 'contao_default'))
             ->setLinkAttribute('target', '_blank')
             ->setLinkAttribute('accesskey', 'f')
-            ->setExtra('translation_domain', 'contao_default')
-        ;
+            ->setExtra('translation_domain', 'contao_default');
 
         $children = [];
 

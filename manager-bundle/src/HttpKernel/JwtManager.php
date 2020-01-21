@@ -119,8 +119,7 @@ class JwtManager
             ->setIssuedAt(time())
             ->setExpiration(strtotime('+30 minutes'))
             ->sign($this->signer, $this->secret)
-            ->getToken()
-        ;
+            ->getToken();
 
         return Cookie::create(self::COOKIE_NAME, (string) $token);
     }

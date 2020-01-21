@@ -61,8 +61,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $security
             ->method('isGranted')
             ->with('ROLE_USER')
-            ->willReturn(false)
-        ;
+            ->willReturn(false);
 
         $exception = new InternalServerErrorHttpException('', new InternalServerErrorException());
         $event = $this->getResponseEvent($exception);
@@ -82,8 +81,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $security = $this->createMock(Security::class);
         $security
             ->method('isGranted')
-            ->willThrowException(new AuthenticationCredentialsNotFoundException())
-        ;
+            ->willThrowException(new AuthenticationCredentialsNotFoundException());
 
         $exception = new InternalServerErrorHttpException('', new InternalServerErrorException());
         $event = $this->getResponseEvent($exception);
@@ -174,8 +172,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $security
             ->method('isGranted')
             ->with('ROLE_USER')
-            ->willReturn(false)
-        ;
+            ->willReturn(false);
 
         $listener = new PrettyErrorScreenListener(false, $twig, $framework, $security);
         $listener($event);
@@ -192,8 +189,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $security
             ->method('isGranted')
             ->with('ROLE_USER')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $exception = new ServiceUnavailableHttpException(null, null, new ServiceUnavailableException());
         $event = $this->getResponseEvent($exception, null, true);
@@ -230,8 +226,7 @@ class PrettyErrorScreenListenerTest extends TestCase
                         throw new Error('foo');
                     }
                 }
-            )
-        ;
+            );
 
         $listener = $this->getListener(false, true, $twig);
         $listener($event);
@@ -249,8 +244,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $security
             ->method('isGranted')
             ->with('ROLE_USER')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $exception = new InternalServerErrorHttpException('', new InsecureInstallationException());
         $event = $this->getResponseEvent($exception, $this->getRequest('frontend', 'json'));
@@ -273,8 +267,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $security
             ->method('isGranted')
             ->with('ROLE_USER')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $exception = new InternalServerErrorHttpException('', new InsecureInstallationException());
         $event = $this->getResponseEvent($exception, $this->getRequest('backend', 'html', 'application/json'));
@@ -323,8 +316,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $security
             ->method('isGranted')
             ->with('ROLE_USER')
-            ->willReturn($isBackendUser)
-        ;
+            ->willReturn($isBackendUser);
 
         return new PrettyErrorScreenListener(true, $twig, $framework, $security);
     }
