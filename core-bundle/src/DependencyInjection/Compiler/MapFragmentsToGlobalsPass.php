@@ -65,7 +65,7 @@ class MapFragmentsToGlobalsPass implements CompilerPassInterface
     /**
      * @throws InvalidConfigurationException
      *
-     * @return string[]
+     * @return array<string>
      */
     private function getFragmentTags(ContainerBuilder $container, string $tag): array
     {

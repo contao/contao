@@ -249,7 +249,7 @@ class InstallationController implements ContainerAwareInterface
         $ref = new \ReflectionObject($this->container);
         $containerDir = basename(\dirname($ref->getFileName()));
 
-        /** @var SplFileInfo[] $finder */
+        /** @var array<SplFileInfo> $finder */
         $finder = Finder::create()
             ->depth(0)
             ->exclude($containerDir)

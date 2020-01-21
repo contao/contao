@@ -84,7 +84,7 @@ class AutomatorCommand extends Command
     }
 
     /**
-     * @return string[]
+     * @return array<string>
      */
     private function getCommands(): array
     {
@@ -96,7 +96,7 @@ class AutomatorCommand extends Command
     }
 
     /**
-     * @return string[]
+     * @return array<string>
      */
     private function generateCommandMap(): array
     {

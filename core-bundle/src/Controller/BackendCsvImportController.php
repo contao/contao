@@ -189,7 +189,7 @@ class BackendCsvImportController
     /**
      * Returns an array of data from the imported CSV files.
      *
-     * @return string[]
+     * @return array<string>
      */
     private function fetchData(FileUpload $uploader, string $separator, callable $callback): array
     {
@@ -271,7 +271,7 @@ class BackendCsvImportController
      *
      * @throws \RuntimeException
      *
-     * @return string[]
+     * @return array<string>
      */
     private function getFiles(FileUpload $uploader): array
     {

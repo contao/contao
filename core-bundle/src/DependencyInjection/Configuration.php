@@ -457,7 +457,7 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * @return string[]
+     * @return array<string>
      */
     private function getLocales(): array
     {
@@ -475,7 +475,7 @@ class Configuration implements ConfigurationInterface
         // The default locale must be the first supported language (see contao/core#6533)
         $languages = [$this->defaultLocale];
 
-        /** @var SplFileInfo[] $finder */
+        /** @var array<SplFileInfo> $finder */
         $finder = Finder::create()->directories()->depth(0)->name('/^[a-z]{2}(_[A-Z]{2})?$/')->in($dirs);
 
         foreach ($finder as $file) {

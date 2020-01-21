@@ -90,7 +90,7 @@ class MemoryTokenStorage implements TokenStorageInterface, ResetInterface
     }
 
     /**
-     * @return mixed[]
+     * @return array<mixed>
      */
     public function getUsedTokens(): array
     {

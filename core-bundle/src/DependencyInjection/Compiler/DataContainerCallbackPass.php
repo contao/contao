@@ -42,7 +42,7 @@ class DataContainerCallbackPass implements CompilerPassInterface
     }
 
     /**
-     * @return array<string,array<int,string[]>>
+     * @return array<string, array<int, array<string>>>
      */
     private function getCallbacks(ContainerBuilder $container): array
     {

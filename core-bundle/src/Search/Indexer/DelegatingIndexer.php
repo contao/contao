@@ -17,7 +17,7 @@ use Contao\CoreBundle\Search\Document;
 class DelegatingIndexer implements IndexerInterface
 {
     /**
-     * @var IndexerInterface[]
+     * @var array<IndexerInterface>
      */
     private $indexers = [];
 

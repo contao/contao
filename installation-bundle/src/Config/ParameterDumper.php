@@ -88,7 +88,7 @@ class ParameterDumper
     /**
      * Escapes % and @.
      *
-     * @return array<string,string[]>
+     * @return array<string, array<string>>
      *
      * @see https://symfony.com/doc/current/service_container.html#service-parameters
      */

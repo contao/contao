@@ -34,7 +34,7 @@ class ImageSizesEvent extends Event
     }
 
     /**
-     * @return array<string,string[]>
+     * @return array<string, array<string>>
      */
     public function getImageSizes(): array
     {

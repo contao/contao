@@ -107,7 +107,7 @@ class InstallWebDirCommand extends Command
      */
     private function addFiles(string $webDir): void
     {
-        /** @var SplFileInfo[] $finder */
+        /** @var array<SplFileInfo> $finder */
         $finder = Finder::create()->files()->in(__DIR__.'/../Resources/skeleton/web');
 
         foreach ($finder as $file) {

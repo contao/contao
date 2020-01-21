@@ -88,8 +88,8 @@
         "symfony/debug": "4.4.*",
         "symfony/debug-bundle": "4.4.*",
         "symfony/dependency-injection": "4.4.*",
-        "symfony/dom-crawler": "4.4.*",
         "symfony/doctrine-bridge": "4.4.*",
+        "symfony/dom-crawler": "4.4.*",
         "symfony/dotenv": "4.4.*",
         "symfony/event-dispatcher": "4.4.*",
         "symfony/expression-language": "4.4.*",
@@ -253,11 +253,11 @@
             "@phpstan",
             "@monorepo-tools"
         ],
-         "cs-fixer": [
+        "cs-fixer": [
             "vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests --config vendor/contao/easy-coding-standard/config/default.yaml --ansi",
             "vendor/bin/ecs check *-bundle/src/Resources/contao --config vendor/contao/easy-coding-standard/config/legacy.yaml --ansi",
             "vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config vendor/contao/easy-coding-standard/config/template.yaml --ansi"
-         ],
+        ],
         "functional-tests": [
             "vendor/bin/phpunit --testsuite=functional --colors=always"
         ],

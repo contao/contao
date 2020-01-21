@@ -197,7 +197,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         $config = $this->getManagerConfig()->all();
         $plugins = $this->getPluginLoader()->getInstancesOf(PluginLoader::CONFIG_PLUGINS);
 
-        /** @var ConfigPluginInterface[] $plugins */
+        /** @var array<ConfigPluginInterface> $plugins */
         foreach ($plugins as $plugin) {
             $plugin->registerContainerConfiguration($loader, $config);
         }

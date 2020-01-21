@@ -51,7 +51,7 @@ class ResourceFinder implements ResourceFinderInterface
     /**
      * @throws \InvalidArgumentException
      *
-     * @return string[]
+     * @return array<string>
      */
     private function getExistingSubpaths(string $subpath): array
     {

@@ -245,7 +245,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     }
 
     /**
-     * @return string[]|string
+     * @return array<string>|string
      */
     private function findConfigFiles(string $name)
     {
@@ -257,7 +257,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     }
 
     /**
-     * @return Finder|SplFileInfo[]|array
+     * @return Finder|array<SplFileInfo>|array
      */
     private function findDcaFiles()
     {
@@ -269,7 +269,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     }
 
     /**
-     * @return Finder|SplFileInfo[]|array
+     * @return Finder|array<SplFileInfo>|array
      */
     private function findLanguageFiles(string $language)
     {
@@ -281,7 +281,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     }
 
     /**
-     * @return Finder|SplFileInfo[]|array
+     * @return Finder|array<SplFileInfo>|array
      */
     private function findTemplateFiles()
     {

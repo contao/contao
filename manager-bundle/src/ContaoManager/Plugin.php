@@ -114,7 +114,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
         // Autoload the legacy modules
         if (null !== static::$autoloadModules && file_exists(static::$autoloadModules)) {
-            /** @var SplFileInfo[] $modules */
+            /** @var array<SplFileInfo> $modules */
             $modules = Finder::create()
                 ->directories()
                 ->depth(0)

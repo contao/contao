@@ -168,7 +168,7 @@ class SymlinksCommand extends Command
 
     private function symlinkThemes(): void
     {
-        /** @var SplFileInfo[] $themes */
+        /** @var array<SplFileInfo> $themes */
         $themes = $this->resourceFinder->findIn('themes')->depth(0)->directories();
 
         foreach ($themes as $theme) {
@@ -260,7 +260,7 @@ class SymlinksCommand extends Command
     /**
      * Filters nested paths so only the top folder is symlinked.
      *
-     * @return SplFileInfo[]
+     * @return array<SplFileInfo>
      */
     private function filterNestedPaths(Finder $finder, string $prepend): array
     {

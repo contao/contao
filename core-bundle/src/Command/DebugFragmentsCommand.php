@@ -28,7 +28,7 @@ class DebugFragmentsCommand extends Command
     private $identifiers = [];
 
     /**
-     * @var FragmentConfig[]
+     * @var array<FragmentConfig>
      */
     private $configs = [];
 

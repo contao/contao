@@ -196,7 +196,7 @@ class UrlGenerator implements UrlGeneratorInterface
     /**
      * Extracts host and port from the domain.
      *
-     * @return (string|null)[]
+     * @return array<(string|null)>
      */
     private function getHostAndPort(string $domain): array
     {
@@ -210,7 +210,7 @@ class UrlGenerator implements UrlGeneratorInterface
     /**
      * Returns the auto_item key from the parameters or the global array.
      *
-     * @return string[]
+     * @return array<string>
      */
     private function getAutoItems(array $parameters): array
     {

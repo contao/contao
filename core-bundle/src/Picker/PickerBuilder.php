@@ -28,7 +28,7 @@ class PickerBuilder implements PickerBuilderInterface
     private $router;
 
     /**
-     * @var PickerProviderInterface[]
+     * @var array<PickerProviderInterface>
      */
     private $providers = [];
 

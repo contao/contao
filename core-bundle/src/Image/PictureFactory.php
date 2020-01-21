@@ -151,7 +151,7 @@ class PictureFactory implements PictureFactoryInterface
      *
      * @param int|array|null $size
      *
-     * @return (PictureConfiguration|array<string,string>|ResizeOptions|null)[]
+     * @return array<(PictureConfiguration|array<string, string>|ResizeOptions|null)>
      */
     private function createConfig($size): array
     {
@@ -209,7 +209,7 @@ class PictureFactory implements PictureFactoryInterface
                     $this->imageSizeItemsCache[$size[2]] = $adapter->findVisibleByPid($size[2], ['order' => 'sorting ASC']);
                 }
 
-                /** @var ImageSizeItemModel[] $imageSizeItems */
+                /** @var array<ImageSizeItemModel> $imageSizeItems */
                 $imageSizeItems = $this->imageSizeItemsCache[$size[2]];
 
                 if (null !== $imageSizeItems) {

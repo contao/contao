@@ -30,7 +30,7 @@ class AddResourcesPathsPass implements CompilerPassInterface
     }
 
     /**
-     * @return string[]
+     * @return array<string>
      */
     private function getResourcesPaths(ContainerBuilder $container): array
     {

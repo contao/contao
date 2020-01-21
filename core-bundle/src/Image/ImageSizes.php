@@ -76,7 +76,7 @@ class ImageSizes implements ResetInterface
     /**
      * Returns the image sizes as options suitable for widgets.
      *
-     * @return array<string,string[]>
+     * @return array<string, array<string>>
      */
     public function getAllOptions(): array
     {
@@ -92,7 +92,7 @@ class ImageSizes implements ResetInterface
     /**
      * Returns the image sizes for the given user suitable for widgets.
      *
-     * @return array<string,string[]>
+     * @return array<string, array<string>>
      */
     public function getOptionsForUser(BackendUser $user): array
     {
@@ -181,7 +181,7 @@ class ImageSizes implements ResetInterface
     /**
      * Filters the options by the given allowed sizes and returns the result.
      *
-     * @return array<string,string[]>
+     * @return array<string, array<string>>
      */
     private function filterOptions(array $allowedSizes): array
     {

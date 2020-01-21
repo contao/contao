@@ -189,7 +189,7 @@ class RouteProvider implements RouteProviderInterface
     /**
      * Compiles all possible aliases by applying dirname() to the request (e.g. news/archive/item, news/archive, news).
      *
-     * @return string[]
+     * @return array<string>
      */
     private function getAliasCandidates(string $pathInfo): array
     {
@@ -217,7 +217,7 @@ class RouteProvider implements RouteProviderInterface
     }
 
     /**
-     * @param PageModel[] $pages
+     * @param iterable<PageModel> $pages
      */
     private function addRoutesForPages(iterable $pages, array &$routes): void
     {
@@ -227,7 +227,7 @@ class RouteProvider implements RouteProviderInterface
     }
 
     /**
-     * @param PageModel[] $pages
+     * @param array<PageModel> $pages
      */
     private function addRoutesForRootPages(array $pages, array &$routes): void
     {
@@ -338,7 +338,7 @@ class RouteProvider implements RouteProviderInterface
     }
 
     /**
-     * @return int[]
+     * @return array<int>
      */
     private function getPageIdsFromNames(array $names): array
     {
@@ -467,7 +467,7 @@ class RouteProvider implements RouteProviderInterface
     /**
      * Finds the page models keeping the candidates order.
      *
-     * @return Model[]
+     * @return array<Model>
      */
     private function findPages(array $candidates): array
     {
@@ -525,7 +525,7 @@ class RouteProvider implements RouteProviderInterface
     }
 
     /**
-     * @return Model[]
+     * @return array<Model>
      */
     private function findRootPages(string $httpHost): array
     {

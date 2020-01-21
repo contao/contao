@@ -201,10 +201,10 @@ class ResizeImagesCommand extends Command
             throw new \RuntimeException('The php executable could not be found.');
         }
 
-        /** @var Process[] $processes */
+        /** @var array<Process> $processes */
         $processes = [];
 
-        /** @var string[] $buffers */
+        /** @var array<string> $buffers */
         $buffers = [];
 
         for ($i = 0; $i < $count; ++$i) {

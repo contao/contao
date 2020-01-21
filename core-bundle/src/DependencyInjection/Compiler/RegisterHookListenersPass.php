@@ -46,7 +46,7 @@ class RegisterHookListenersPass implements CompilerPassInterface
     }
 
     /**
-     * @return array<string,array<int,string[]>>
+     * @return array<string, array<int, array<string>>>
      */
     private function getHooks(ContainerBuilder $container): array
     {

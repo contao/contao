@@ -45,7 +45,7 @@ class SubrequestCacheSubscriber implements EventSubscriberInterface, ResetInterf
     public const MERGE_CACHE_HEADER = 'Contao-Merge-Cache-Control';
 
     /**
-     * @var ResponseCacheStrategy[]
+     * @var array<ResponseCacheStrategy>
      */
     private $strategyStack = [];
 

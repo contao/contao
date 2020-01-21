@@ -17,7 +17,7 @@ interface OptInInterface
     /**
      * Creates a new double opt-in token.
      *
-     * @param array<string,int[]> $related An array of related tables and IDs
+     * @param array<string, array<int>> $related An array of related tables and IDs
      */
     public function create(string $prefix, string $email, array $related): OptInTokenInterface;
 
