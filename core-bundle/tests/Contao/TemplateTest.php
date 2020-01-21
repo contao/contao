@@ -23,9 +23,6 @@ use Symfony\Component\VarDumper\VarDumper;
 
 class TemplateTest extends TestCase
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -36,9 +33,6 @@ class TemplateTest extends TestCase
         System::setContainer($this->getContainerWithContaoConfiguration($this->getFixturesDir()));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function tearDown(): void
     {
         parent::tearDown();

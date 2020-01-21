@@ -33,9 +33,6 @@ class ImagesLoader extends Loader
         $this->pathPrefix = rtrim($filesystem->makePathRelative($imageTargetDir, $projectDir), '/');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load($resource, $type = null): RouteCollection
     {
         $route = new Route(
@@ -53,9 +50,6 @@ class ImagesLoader extends Loader
         return $routes;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports($resource, $type = null): bool
     {
         return 'contao_images' === $type;

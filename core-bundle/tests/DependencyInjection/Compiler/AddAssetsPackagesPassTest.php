@@ -26,9 +26,6 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class AddAssetsPackagesPassTest extends TestCase
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();

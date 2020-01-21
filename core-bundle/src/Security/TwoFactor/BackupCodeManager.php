@@ -17,9 +17,6 @@ use Scheb\TwoFactorBundle\Security\TwoFactor\Backup\BackupCodeManagerInterface;
 
 class BackupCodeManager implements BackupCodeManagerInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function isBackupCode($user, string $code): bool
     {
         if (!$user instanceof User) {
@@ -29,9 +26,6 @@ class BackupCodeManager implements BackupCodeManagerInterface
         return \in_array($code, json_decode($user->backupCodes, true), true);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function invalidateBackupCode($user, string $code): void
     {
         if (!$user instanceof User) {

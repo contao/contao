@@ -79,9 +79,6 @@ class ResizeImagesCommand extends Command
         parent::__construct();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure(): void
     {
         $this
@@ -93,9 +90,6 @@ class ResizeImagesCommand extends Command
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if (!$this->resizer instanceof DeferredResizerInterface) {

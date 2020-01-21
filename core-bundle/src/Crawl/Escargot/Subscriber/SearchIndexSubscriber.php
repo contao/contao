@@ -57,9 +57,6 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
         $this->translator = $translator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName(): string
     {
         return 'search-index';

@@ -28,9 +28,6 @@ class DelegatingIndexer implements IndexerInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function index(Document $document): void
     {
         foreach ($this->indexers as $indexer) {
@@ -38,9 +35,6 @@ class DelegatingIndexer implements IndexerInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function delete(Document $document): void
     {
         foreach ($this->indexers as $indexer) {
@@ -48,9 +42,6 @@ class DelegatingIndexer implements IndexerInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function clear(): void
     {
         foreach ($this->indexers as $indexer) {

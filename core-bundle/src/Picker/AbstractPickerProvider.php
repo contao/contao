@@ -47,17 +47,11 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
         $this->translator = $translator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getUrl(PickerConfig $config)
     {
         return $this->generateUrl($config, false);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function createMenuItem(PickerConfig $config)
     {
         $name = $this->getName();
@@ -91,9 +85,6 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
         $this->tokenStorage = $tokenStorage;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isCurrent(PickerConfig $config)
     {
         return $config->getCurrent() === $this->getName();

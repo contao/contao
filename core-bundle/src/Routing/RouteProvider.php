@@ -59,9 +59,6 @@ class RouteProvider implements RouteProviderInterface
         $this->prependLocale = $prependLocale;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRouteCollectionForRequest(Request $request): RouteCollection
     {
         $this->framework->initialize(true);
@@ -95,9 +92,6 @@ class RouteProvider implements RouteProviderInterface
         return $this->createCollectionForRoutes($routes, $request->getLanguages());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRouteByName($name): Route
     {
         $this->framework->initialize(true);
@@ -123,9 +117,6 @@ class RouteProvider implements RouteProviderInterface
         return $routes[$name];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRoutesByNames($names): array
     {
         $this->framework->initialize(true);

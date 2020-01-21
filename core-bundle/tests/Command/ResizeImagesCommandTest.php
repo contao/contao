@@ -26,9 +26,6 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class ResizeImagesCommandTest extends TestCase
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function tearDown(): void
     {
         parent::tearDown();

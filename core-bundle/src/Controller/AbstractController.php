@@ -19,9 +19,6 @@ use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
 abstract class AbstractController extends SymfonyAbstractController implements ServiceAnnotationInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedServices()
     {
         $services = parent::getSubscribedServices();

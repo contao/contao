@@ -32,9 +32,6 @@ class WebsiteRootsConfigProvider implements ProviderInterface
         $this->connection = $connection;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getOptions(Request $request): array
     {
         if (!$this->isCorsRequest($request) || !$this->canRunDbQuery()) {

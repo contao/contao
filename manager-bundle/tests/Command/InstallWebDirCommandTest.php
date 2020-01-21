@@ -39,9 +39,6 @@ class InstallWebDirCommandTest extends ContaoTestCase
      */
     private $webFiles;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -52,9 +49,6 @@ class InstallWebDirCommandTest extends ContaoTestCase
         $this->webFiles = Finder::create()->files()->in(__DIR__.'/../../src/Resources/skeleton/web');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function tearDown(): void
     {
         parent::tearDown();

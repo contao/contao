@@ -35,9 +35,6 @@ class LanguageFilter implements RouteFilterInterface
         $this->prependLocale = $prependLocale;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function filter(RouteCollection $collection, Request $request): RouteCollection
     {
         $languages = $request->getLanguages();

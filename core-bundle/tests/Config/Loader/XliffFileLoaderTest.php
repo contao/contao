@@ -22,9 +22,6 @@ class XliffFileLoaderTest extends TestCase
      */
     private $loader;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();

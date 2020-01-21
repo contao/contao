@@ -19,9 +19,6 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class InstallCommandTest extends TestCase
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function tearDown(): void
     {
         parent::tearDown();

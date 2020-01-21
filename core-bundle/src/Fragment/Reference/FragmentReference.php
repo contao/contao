@@ -17,9 +17,6 @@ use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
 class FragmentReference extends ControllerReference
 {
-    /**
-     * {@inheritdoc}
-     */
     public function __construct($fragment, array $attributes = [], array $query = [])
     {
         parent::__construct($fragment, $attributes, $query);

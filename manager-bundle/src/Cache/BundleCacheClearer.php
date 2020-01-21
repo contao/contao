@@ -30,9 +30,6 @@ class BundleCacheClearer implements CacheClearerInterface
         $this->filesystem = $filesystem ?: new Filesystem();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function clear($cacheDir): void
     {
         $this->filesystem->remove($cacheDir.'/bundles.map');

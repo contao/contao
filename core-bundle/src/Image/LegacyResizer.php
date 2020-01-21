@@ -37,9 +37,6 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
      */
     private $legacyImage;
 
-    /**
-     * {@inheritdoc}
-     */
     public function resize(ImageInterface $image, ResizeConfiguration $config, ResizeOptions $options): ImageInterface
     {
         $this->framework->initialize(true);
@@ -92,9 +89,6 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
         return parent::resize($image, $config, $options);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function executeResize(ImageInterface $image, ResizeCoordinates $coordinates, string $path, ResizeOptions $options): ImageInterface
     {
         if ($this->legacyImage && $this->hasGetImageHook()) {

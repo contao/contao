@@ -41,9 +41,6 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class ImageFactoryTest extends TestCase
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -51,9 +48,6 @@ class ImageFactoryTest extends TestCase
         System::setContainer($this->getContainerWithContaoConfiguration());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function tearDown(): void
     {
         parent::tearDown();

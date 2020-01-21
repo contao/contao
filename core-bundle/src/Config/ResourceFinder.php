@@ -32,17 +32,11 @@ class ResourceFinder implements ResourceFinderInterface
         $this->paths = (array) $paths;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function find(): Finder
     {
         return Finder::create()->in($this->paths);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findIn($subpath): Finder
     {
         return Finder::create()->in($this->getExistingSubpaths($subpath));

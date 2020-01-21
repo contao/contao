@@ -93,18 +93,12 @@ class Application extends BaseApplication
         $this->managerConfig = $managerConfig;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configureIO(InputInterface $input, OutputInterface $output): void
     {
         $output->setDecorated(false);
         $input->setInteractive(false);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getDefaultInputDefinition(): InputDefinition
     {
         return new InputDefinition([
@@ -112,9 +106,6 @@ class Application extends BaseApplication
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getDefaultCommands(): array
     {
         $commands = parent::getDefaultCommands();

@@ -34,9 +34,6 @@ class RemembermeServicesPass implements CompilerPassInterface
         $this->firewallName = $firewallName;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function process(ContainerBuilder $container): void
     {
         $overrideId = self::OVERRIDE_PREFIX.'.'.$this->firewallName;

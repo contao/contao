@@ -78,9 +78,6 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         $this->locales = $locales;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function warmUp($cacheDir): void
     {
         if (!$this->isCompleteInstallation()) {
@@ -96,9 +93,6 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         $this->generateTemplateMapper($cacheDir);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isOptional(): bool
     {
         return true;

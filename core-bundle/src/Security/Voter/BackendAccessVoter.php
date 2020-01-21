@@ -18,17 +18,11 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class BackendAccessVoter extends Voter
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function supports($attribute, $subject): bool
     {
         return \is_string($attribute) && 0 === strncmp($attribute, 'contao_user.', 12);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();

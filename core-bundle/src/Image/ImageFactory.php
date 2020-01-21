@@ -109,9 +109,6 @@ class ImageFactory implements ImageFactoryInterface
         $this->predefinedSizes = $predefinedSizes;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function create($path, $size = null, $options = null): ImageInterface
     {
         if (null !== $options && !\is_string($options) && !$options instanceof ResizeOptions) {
@@ -192,9 +189,6 @@ class ImageFactory implements ImageFactoryInterface
         return $this->resizer->resize($image, $resizeConfig, $options);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getImportantPartFromLegacyMode(ImageInterface $image, $mode): ImportantPart
     {
         if (1 !== substr_count($mode, '_')) {

@@ -81,9 +81,6 @@ class PictureFactory implements PictureFactoryInterface
         $this->imagineOptions = $imagineOptions;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setDefaultDensities($densities): self
     {
         $this->defaultDensities = (string) $densities;
@@ -99,9 +96,6 @@ class PictureFactory implements PictureFactoryInterface
         $this->predefinedSizes = $predefinedSizes;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function create($path, $size = null, ResizeOptions $options = null): PictureInterface
     {
         $attributes = [];

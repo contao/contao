@@ -43,9 +43,6 @@ class Version447Update extends AbstractMigration
         return 'Contao 4.4.7 Update';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function shouldRun(): bool
     {
         $schemaManager = $this->connection->getSchemaManager();
@@ -59,9 +56,6 @@ class Version447Update extends AbstractMigration
         return !isset($columns['pid_email']);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function run(): MigrationResult
     {
         $schemaManager = $this->connection->getSchemaManager();

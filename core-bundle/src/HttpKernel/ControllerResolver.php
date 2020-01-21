@@ -37,9 +37,6 @@ class ControllerResolver implements ControllerResolverInterface
         $this->registry = $registry;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getController(Request $request)
     {
         if (
@@ -56,9 +53,6 @@ class ControllerResolver implements ControllerResolverInterface
         return $this->resolver->getController($request);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getArguments(Request $request, $controller): array
     {
         if (!method_exists($this->resolver, 'getArguments')) {

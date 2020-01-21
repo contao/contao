@@ -101,17 +101,12 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         $this->isFrontend = false;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isInitialized(): bool
     {
         return self::$initialized;
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @throws \LogicException
      */
     public function initialize(bool $isFrontend = false): void
@@ -139,9 +134,6 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         $this->hookListeners = $hookListeners;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function createInstance($class, $args = [])
     {
         if (\in_array('getInstance', get_class_methods($class), true)) {
@@ -153,9 +145,6 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         return $reflection->newInstanceArgs($args);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getAdapter($class): Adapter
     {
         if (!isset($this->adapterCache[$class])) {

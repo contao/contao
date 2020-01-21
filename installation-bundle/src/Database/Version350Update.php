@@ -36,9 +36,6 @@ class Version350Update extends AbstractMigration
         return 'Contao 3.5.0 Update';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function shouldRun(): bool
     {
         $schemaManager = $this->connection->getSchemaManager();
@@ -52,9 +49,6 @@ class Version350Update extends AbstractMigration
         return isset($columns['username']) && true === $columns['username']->getNotnull();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function run(): MigrationResult
     {
         $this->connection->query('

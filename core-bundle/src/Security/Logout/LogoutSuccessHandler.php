@@ -35,9 +35,6 @@ class LogoutSuccessHandler extends DefaultLogoutSuccessHandler
         $this->scopeMatcher = $scopeMatcher;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function onLogoutSuccess(Request $request): Response
     {
         if ($this->scopeMatcher->isBackendRequest($request)) {

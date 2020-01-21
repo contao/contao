@@ -49,9 +49,6 @@ class DebugFragmentsCommand extends Command
         $this->attributes[$identifier] = $attributes;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure(): void
     {
         $this
@@ -59,9 +56,6 @@ class DebugFragmentsCommand extends Command
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->io = new SymfonyStyle($input, $output);

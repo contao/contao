@@ -29,9 +29,6 @@ class LazySessionAccess implements \ArrayAccess, \Countable
         $this->session = $session;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function offsetExists($offset): bool
     {
         $this->startSession();
@@ -39,9 +36,6 @@ class LazySessionAccess implements \ArrayAccess, \Countable
         return \array_key_exists($offset, $_SESSION);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function &offsetGet($offset)
     {
         $this->startSession();
@@ -49,9 +43,6 @@ class LazySessionAccess implements \ArrayAccess, \Countable
         return $_SESSION[$offset];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function offsetSet($offset, $value): void
     {
         $this->startSession();
@@ -59,9 +50,6 @@ class LazySessionAccess implements \ArrayAccess, \Countable
         $_SESSION[$offset] = $value;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function offsetUnset($offset): void
     {
         $this->startSession();
@@ -69,9 +57,6 @@ class LazySessionAccess implements \ArrayAccess, \Countable
         unset($_SESSION[$offset]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function count(): int
     {
         $this->startSession();

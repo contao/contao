@@ -26,9 +26,6 @@ class SearchIndexerPass implements CompilerPassInterface
 
     private const DELEGATING_SERVICE_ID = 'contao.search.indexer.delegating';
 
-    /**
-     * {@inheritdoc}
-     */
     public function process(ContainerBuilder $container): void
     {
         if (!$container->has(self::DELEGATING_SERVICE_ID)) {

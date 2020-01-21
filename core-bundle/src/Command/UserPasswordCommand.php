@@ -60,9 +60,6 @@ class UserPasswordCommand extends Command
         parent::__construct();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure(): void
     {
         $this
@@ -73,9 +70,6 @@ class UserPasswordCommand extends Command
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function interact(InputInterface $input, OutputInterface $output): void
     {
         if (null === $input->getArgument('username')) {
@@ -96,9 +90,6 @@ class UserPasswordCommand extends Command
         $input->setOption('password', $password);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if (null === $input->getArgument('username') || null === $input->getOption('password')) {

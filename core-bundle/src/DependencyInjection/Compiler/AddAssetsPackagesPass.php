@@ -26,9 +26,6 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class AddAssetsPackagesPass implements CompilerPassInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function process(ContainerBuilder $container): void
     {
         if (!$container->hasDefinition('assets.packages')) {

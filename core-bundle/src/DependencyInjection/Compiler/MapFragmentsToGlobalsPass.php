@@ -30,9 +30,6 @@ class MapFragmentsToGlobalsPass implements CompilerPassInterface
 {
     use PriorityTaggedServiceTrait;
 
-    /**
-     * {@inheritdoc}
-     */
     public function process(ContainerBuilder $container): void
     {
         $tags = $this->getFragmentTags($container, ContentElementReference::TAG_NAME);

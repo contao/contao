@@ -54,9 +54,6 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
         $this->secret = $secret;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function cancelCookie(Request $request): void
     {
         // Delete the cookie on the client
@@ -71,9 +68,6 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function processAutoLoginCookie(array $cookieParts, Request $request): UserInterface
     {
         if (2 !== \count($cookieParts)) {
@@ -112,9 +106,6 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
         return $this->getUserProvider($matchedToken->getClass())->loadUserByUsername($matchedToken->getUsername());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function onLoginSuccess(Request $request, Response $response, TokenInterface $token): void
     {
         $user = $token->getUser();

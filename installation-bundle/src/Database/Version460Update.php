@@ -37,9 +37,6 @@ class Version460Update extends AbstractMigration
         return 'Contao 4.6.0 Update';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function shouldRun(): bool
     {
         $schemaManager = $this->connection->getSchemaManager();
@@ -53,9 +50,6 @@ class Version460Update extends AbstractMigration
         return !isset($columns['playeroptions']);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function run(): MigrationResult
     {
         // Convert 403 pages to 401 pages so the login redirect does not break

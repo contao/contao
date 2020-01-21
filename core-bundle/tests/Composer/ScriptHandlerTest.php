@@ -29,9 +29,6 @@ class ScriptHandlerTest extends TestCase
      */
     private $handler;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();

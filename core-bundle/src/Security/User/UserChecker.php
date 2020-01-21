@@ -37,9 +37,6 @@ class UserChecker implements UserCheckerInterface
         $this->framework = $framework;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function checkPreAuth(UserInterface $user): void
     {
         if (!$user instanceof User) {
@@ -52,9 +49,6 @@ class UserChecker implements UserCheckerInterface
         $this->checkIfAccountIsActive($user);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function checkPostAuth(UserInterface $user): void
     {
     }

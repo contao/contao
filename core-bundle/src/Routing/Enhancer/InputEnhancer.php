@@ -41,9 +41,6 @@ class InputEnhancer implements RouteEnhancerInterface
         $this->prependLocale = $prependLocale;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function enhance(array $defaults, Request $request): array
     {
         if (!isset($defaults['pageModel']) || !$defaults['pageModel'] instanceof PageModel) {

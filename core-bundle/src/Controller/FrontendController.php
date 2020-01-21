@@ -122,9 +122,6 @@ class FrontendController extends AbstractController
         return $response;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();
