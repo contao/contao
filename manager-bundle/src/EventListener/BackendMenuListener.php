@@ -17,6 +17,7 @@ use Contao\ManagerBundle\HttpKernel\JwtManager;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
@@ -39,6 +40,11 @@ class BackendMenuListener
     private $requestStack;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * @var bool
      */
     private $debug;
@@ -53,11 +59,12 @@ class BackendMenuListener
      */
     private $jwtManager;
 
-    public function __construct(Security $security, RouterInterface $router, RequestStack $requestStack, bool $debug, ?string $managerPath, ?JwtManager $jwtManager)
+    public function __construct(Security $security, RouterInterface $router, RequestStack $requestStack, TranslatorInterface $translator, bool $debug, ?string $managerPath, ?JwtManager $jwtManager)
     {
         $this->security = $security;
         $this->router = $router;
         $this->requestStack = $requestStack;
+        $this->translator = $translator;
         $this->debug = $debug;
         $this->managerPath = $managerPath;
         $this->jwtManager = $jwtManager;
@@ -104,6 +111,7 @@ class BackendMenuListener
             ->setLabel('debug_mode')
             ->setUri($this->router->generate('contao_backend', $params))
             ->setLinkAttribute('class', 'icon-debug')
+            ->setLinkAttribute('title', $this->translator->trans('MSC.debugMode', [], 'contao_default'))
             ->setExtra('translation_domain', 'ContaoManagerBundle')
         ;
 
