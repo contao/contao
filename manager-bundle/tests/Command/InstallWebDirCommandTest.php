@@ -214,6 +214,10 @@ EOT;
             $this->markTestSkipped('Questions with hidden input cannot be tested on Windows');
         }
 
+        if (!posix_isatty(STDOUT)) {
+            $this->markTestSkipped('Cannot test commands interactively if not a TTY');
+        }
+
         $commandTester = new CommandTester($this->command);
         $commandTester->setInputs(['foo', 'bar']);
         $commandTester->execute(['--password' => null]);
@@ -236,6 +240,10 @@ EOT;
     {
         if ('\\' === \DIRECTORY_SEPARATOR) {
             $this->markTestSkipped('Questions with hidden input cannot be tested on Windows');
+        }
+
+        if (!posix_isatty(STDOUT)) {
+            $this->markTestSkipped('Cannot test commands interactively if not a TTY');
         }
 
         $commandTester = new CommandTester($this->command);

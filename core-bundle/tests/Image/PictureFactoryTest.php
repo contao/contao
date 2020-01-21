@@ -414,11 +414,11 @@ class PictureFactoryTest extends TestCase
     /**
      * Tests that the set has a single aspect ratio attribute.
      *
-     * @param boolean $expected
-     * @param integer $imgWidth
-     * @param integer $imgHeight
-     * @param integer $sourceWidth
-     * @param integer $sourceHeight
+     * @param bool $expected
+     * @param int  $imgWidth
+     * @param int  $imgHeight
+     * @param int  $sourceWidth
+     * @param int  $sourceHeight
      *
      * @dataProvider getAspectRatios
      */

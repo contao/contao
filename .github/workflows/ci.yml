@@ -62,7 +62,7 @@ jobs:
                   # * If you have an idea how to solve this in a better way, please
                   #   let us know.
                   token: e129b38e-acf2-484c-97bc-1cde6b4a0693
-                  file: ./*.xml
+                  file: './*.xml'
                   fail_ci_if_error: true
 
     coding-style:
@@ -92,9 +92,6 @@ jobs:
                   PHP_CS_CONFIG=legacy vendor/bin/php-cs-fixer fix --diff --diff-format=udiff --dry-run
                   PHP_CS_CONFIG=template vendor/bin/php-cs-fixer fix --diff --diff-format=udiff --dry-run
 
-            - name: Analyze the code
-              run: vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
-
     tests:
         name: PHP ${{ matrix.php }}
         runs-on: ubuntu-latest
@@ -102,7 +99,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php: [7.1, 7.2, 7.3, 7.4]
+                php: [7.1, 7.2, 7.3]
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v1
@@ -153,7 +150,6 @@ jobs:
                     unset($data["require-dev"]["contao/monorepo-tools"]);
                     file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
                   '
-                  composer global require symfony/flex
                   composer install --no-interaction --no-suggest
 
             - name: Run the unit tests
