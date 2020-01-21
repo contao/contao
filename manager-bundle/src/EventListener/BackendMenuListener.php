@@ -111,7 +111,7 @@ class BackendMenuListener
             ->setLabel('debug_mode')
             ->setUri($this->router->generate('contao_backend', $params))
             ->setLinkAttribute('class', 'icon-debug')
-            ->setLinkAttribute('title', $this->translator->trans('MSC.debugMode', [], 'contao_default'))
+            ->setLinkAttribute('title', $this->translator->trans('debug_mode', [], 'ContaoManagerBundle'))
             ->setExtra('translation_domain', 'ContaoManagerBundle')
         ;
 
