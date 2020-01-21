@@ -97,10 +97,7 @@ class Configuration implements ConfigurationInterface
                     ->validate()
                         ->ifTrue(
                             static function (string $v): int {
-                                return preg_match(
-                                    '@^(app|assets|bin|config|contao|plugins|share|system|templates|var|vendor|web)(/|$)@',
-                                    $v
-                                );
+                                return preg_match('@^(app|assets|bin|config|contao|plugins|share|system|templates|var|vendor|web)(/|$)@', $v);
                             }
                         )
                         ->thenInvalid('%s')
@@ -196,7 +193,7 @@ class Configuration implements ConfigurationInterface
                                     'right_bottom',
                                 ];
 
-                                foreach ($value as $name => $config) {
+                                foreach (array_keys($value) as $name) {
                                     if (preg_match('/^\d+$/', (string) $name)) {
                                         throw new \InvalidArgumentException(sprintf('The image size name "%s" cannot contain only digits', $name));
                                     }

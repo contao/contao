@@ -382,15 +382,13 @@ class PictureFactoryTest extends TestCase
         $imageFactory
             ->expects($this->once())
             ->method('create')
-            ->with(
-                $this->callback(
-                    function (string $imagePath) use ($path): bool {
-                        $this->assertSame($path, $imagePath);
+            ->with($this->callback(
+                function (string $imagePath) use ($path): bool {
+                    $this->assertSame($path, $imagePath);
 
-                        return true;
-                    }
-                )
-            )
+                    return true;
+                }
+            ))
             ->willReturn($imageMock)
         ;
 

@@ -106,7 +106,7 @@ class ModuleCustomnav extends Module
 		$arrPages = array_values(array_filter($arrPages));
 
 		$objTemplate = new FrontendTemplate($this->navigationTpl ?: 'nav_default');
-		$objTemplate->type = \get_class($this);
+		$objTemplate->type = static::class;
 		$objTemplate->cssID = $this->cssID; // see #4897 and 6129
 		$objTemplate->level = 'level_1';
 		$objTemplate->module = $this; // see #155

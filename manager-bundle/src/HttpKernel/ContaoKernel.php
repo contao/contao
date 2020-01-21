@@ -127,7 +127,8 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
             $config = $this->getManagerConfig()->all();
 
-            if (isset($config['contao_manager']['disabled_packages'])
+            if (
+                isset($config['contao_manager']['disabled_packages'])
                 && \is_array($config['contao_manager']['disabled_packages'])
             ) {
                 $this->pluginLoader->setDisabledPackages($config['contao_manager']['disabled_packages']);
@@ -418,6 +419,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         }
 
         $_SERVER += $_ENV;
-        $_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = ($_SERVER['APP_ENV'] ?? $_ENV['APP_ENV'] ?? null) ?: $defaultEnv;
+        $_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = $_SERVER['APP_ENV'] ?? $_ENV['APP_ENV'] ?? null ?: $defaultEnv;
     }
 }

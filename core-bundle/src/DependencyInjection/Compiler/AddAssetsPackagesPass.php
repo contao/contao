@@ -56,7 +56,7 @@ class AddAssetsPackagesPass implements CompilerPassInterface
         $bundles = $container->getParameter('kernel.bundles');
         $meta = $container->getParameter('kernel.bundles_metadata');
 
-        foreach ($bundles as $name => $class) {
+        foreach (array_keys($bundles) as $name) {
             if (null === ($path = $this->findBundlePath($meta, $name))) {
                 continue;
             }

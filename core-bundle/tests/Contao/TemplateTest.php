@@ -243,9 +243,11 @@ EOF
 
         $dump = null;
 
-        VarDumper::setHandler(static function ($var) use (&$dump): void {
-            $dump = $var;
-        });
+        VarDumper::setHandler(
+            static function ($var) use (&$dump): void {
+                $dump = $var;
+            }
+        );
 
         $template->dumpTemplateVars();
 

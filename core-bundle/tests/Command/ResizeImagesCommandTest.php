@@ -105,11 +105,13 @@ class ResizeImagesCommandTest extends TestCase
         $resizer = $this->createMock(DeferredResizerInterface::class);
         $resizer
             ->method('resizeDeferredImage')
-            ->willReturnCallback(function () {
-                sleep(1);
+            ->willReturnCallback(
+                function () {
+                    sleep(1);
 
-                return $this->createMock(ImageInterface::class);
-            })
+                    return $this->createMock(ImageInterface::class);
+                }
+            )
         ;
 
         $storage = $this->createMock(DeferredImageStorageInterface::class);

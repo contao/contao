@@ -234,7 +234,10 @@ class ScriptHandlerTest extends TestCase
         $io = $this->createMock(IOInterface::class);
 
         if (null !== $method) {
-            $io->method($method)->willReturn(true);
+            $io
+                ->method($method)
+                ->willReturn(true)
+            ;
         }
 
         return $io;

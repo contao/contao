@@ -79,7 +79,7 @@ class RequestTokenListener
             || false === $request->attributes->get('_token_check')
             || (!$request->attributes->has('_token_check') && !$this->scopeMatcher->isContaoRequest($request))
             || (
-                (0 === $request->cookies->count() || $request->cookies->keys() === [$this->csrfCookiePrefix.$this->csrfTokenName])
+                (0 === $request->cookies->count() || [$this->csrfCookiePrefix.$this->csrfTokenName] === $request->cookies->keys())
                 && !$request->getUserInfo()
                 && !($request->hasSession() && $request->getSession()->isStarted())
             )

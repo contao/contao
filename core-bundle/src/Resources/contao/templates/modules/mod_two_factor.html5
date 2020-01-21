@@ -90,7 +90,7 @@
               <th><?= $this->trans('MSC.operatingSystem') ?></th>
               <th><?= $this->trans('MSC.createdOn') ?></th>
             </tr>
-            <?php foreach ($this->trustedDevices as $index => $trustedDevice): ?>
+            <?php foreach ($this->trustedDevices as $trustedDevice): ?>
               <tr>
                 <td><?= $trustedDevice->getDeviceFamily() ?><?php if ($this->currentDevice === $trustedDevice->getCookieValue()): ?> (<?= $this->trans('MSC.thisDevice') ?>)<?php endif; ?></td>
                 <td><?= $trustedDevice->getUaFamily() ?></td>

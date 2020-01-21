@@ -73,37 +73,37 @@ class ContaoCoreBundleTest extends TestCase
         $security
             ->expects($this->once())
             ->method('addSecurityListenerFactory')
-            ->with(
-                $this->callback(static function ($param) {
+            ->with($this->callback(
+                static function ($param) {
                     return $param instanceof ContaoLoginFactory;
-                })
-            )
+                }
+            ))
         ;
 
         $container = $this->createMock(ContainerBuilder::class);
         $container
             ->expects($this->exactly(\count($passes)))
             ->method('addCompilerPass')
-            ->with(
-                $this->callback(function (CompilerPassInterface $pass) use ($passes): bool {
+            ->with($this->callback(
+                function (CompilerPassInterface $pass) use ($passes): bool {
                     if ($pass instanceof AddEventAliasesPass) {
-                        $eventAliasPass = new AddEventAliasesPass([
+                        $eventAliases = [
                             GenerateSymlinksEvent::class => ContaoCoreEvents::GENERATE_SYMLINKS,
                             MenuEvent::class => ContaoCoreEvents::BACKEND_MENU_BUILD,
                             PreviewUrlCreateEvent::class => ContaoCoreEvents::PREVIEW_URL_CREATE,
                             PreviewUrlConvertEvent::class => ContaoCoreEvents::PREVIEW_URL_CONVERT,
                             RobotsTxtEvent::class => ContaoCoreEvents::ROBOTS_TXT,
                             SlugValidCharactersEvent::class => ContaoCoreEvents::SLUG_VALID_CHARACTERS,
-                        ]);
+                        ];
 
-                        $this->assertEquals($eventAliasPass, $pass);
+                        $this->assertEquals(new AddEventAliasesPass($eventAliases), $pass);
                     }
 
                     $this->assertContains(\get_class($pass), $passes);
 
                     return true;
-                })
-            )
+                }
+            ))
         ;
 
         $container

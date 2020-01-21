@@ -124,7 +124,7 @@ class AuthenticationProviderTest extends TestCase
             $provider->authenticate($token);
         } catch (\Exception $e) {
             if ($lockedSeconds > 0) {
-                /* @var LockedException $e */
+                /** @var LockedException $e */
                 $this->assertInstanceOf(LockedException::class, $e);
                 $this->assertSame($user, $e->getUser());
             } else {

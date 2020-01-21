@@ -391,74 +391,77 @@ class RouteProvider implements RouteProviderInterface
             $languages = array_flip(array_values($languages));
         }
 
-        uasort($routes, static function (Route $a, Route $b) use ($languages, $routes) {
-            $fallbackA = '.fallback' === substr(array_search($a, $routes, true), -9);
-            $fallbackB = '.fallback' === substr(array_search($b, $routes, true), -9);
+        uasort(
+            $routes,
+            static function (Route $a, Route $b) use ($languages, $routes) {
+                $fallbackA = '.fallback' === substr(array_search($a, $routes, true), -9);
+                $fallbackB = '.fallback' === substr(array_search($b, $routes, true), -9);
 
-            if ($fallbackA && !$fallbackB) {
-                return 1;
-            }
-
-            if ($fallbackB && !$fallbackA) {
-                return -1;
-            }
-
-            if ('' !== $a->getHost() && '' === $b->getHost()) {
-                return -1;
-            }
-
-            if ('' === $a->getHost() && '' !== $b->getHost()) {
-                return 1;
-            }
-
-            /** @var PageModel $pageA */
-            $pageA = $a->getDefault('pageModel');
-
-            /** @var PageModel $pageB */
-            $pageB = $b->getDefault('pageModel');
-
-            // Check if the page models are valid (should always be the case, as routes are generated from pages)
-            if (!$pageA instanceof PageModel || !$pageB instanceof PageModel) {
-                return 0;
-            }
-
-            if ('root' !== $pageA->type && 'root' === $pageB->type) {
-                return -1;
-            }
-
-            if ('root' === $pageA->type && 'root' !== $pageB->type) {
-                return 1;
-            }
-
-            if (null !== $languages && $pageA->rootLanguage !== $pageB->rootLanguage) {
-                $langA = $languages[$pageA->rootLanguage] ?? null;
-                $langB = $languages[$pageB->rootLanguage] ?? null;
-
-                if (null === $langA && null === $langB) {
-                    if ($pageA->rootIsFallback) {
-                        return -1;
-                    }
-
-                    if ($pageB->rootIsFallback) {
-                        return 1;
-                    }
-
-                    return $pageA->rootSorting <=> $pageB->rootSorting;
-                }
-
-                if (null === $langA && null !== $langB) {
+                if ($fallbackA && !$fallbackB) {
                     return 1;
                 }
 
-                if (null !== $langA && null === $langB) {
+                if ($fallbackB && !$fallbackA) {
                     return -1;
                 }
 
-                return $langA < $langB ? -1 : 1;
-            }
+                if ('' !== $a->getHost() && '' === $b->getHost()) {
+                    return -1;
+                }
 
-            return strnatcasecmp((string) $pageB->alias, (string) $pageA->alias);
-        });
+                if ('' === $a->getHost() && '' !== $b->getHost()) {
+                    return 1;
+                }
+
+                /** @var PageModel $pageA */
+                $pageA = $a->getDefault('pageModel');
+
+                /** @var PageModel $pageB */
+                $pageB = $b->getDefault('pageModel');
+
+                // Check if the page models are valid (should always be the case, as routes are generated from pages)
+                if (!$pageA instanceof PageModel || !$pageB instanceof PageModel) {
+                    return 0;
+                }
+
+                if ('root' !== $pageA->type && 'root' === $pageB->type) {
+                    return -1;
+                }
+
+                if ('root' === $pageA->type && 'root' !== $pageB->type) {
+                    return 1;
+                }
+
+                if (null !== $languages && $pageA->rootLanguage !== $pageB->rootLanguage) {
+                    $langA = $languages[$pageA->rootLanguage] ?? null;
+                    $langB = $languages[$pageB->rootLanguage] ?? null;
+
+                    if (null === $langA && null === $langB) {
+                        if ($pageA->rootIsFallback) {
+                            return -1;
+                        }
+
+                        if ($pageB->rootIsFallback) {
+                            return 1;
+                        }
+
+                        return $pageA->rootSorting <=> $pageB->rootSorting;
+                    }
+
+                    if (null === $langA && null !== $langB) {
+                        return 1;
+                    }
+
+                    if (null !== $langA && null === $langB) {
+                        return -1;
+                    }
+
+                    return $langA < $langB ? -1 : 1;
+                }
+
+                return strnatcasecmp((string) $pageB->alias, (string) $pageA->alias);
+            }
+        );
     }
 
     /**

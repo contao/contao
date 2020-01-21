@@ -63,8 +63,8 @@ class ContaoLoginFactoryTest extends TestCase
 
         $this->assertIsArray($arguments);
         $this->assertCount(3, $arguments);
-        $this->assertEquals('contao_frontend', $arguments['index_0']);
-        $this->assertEquals([], $arguments['index_1']);
+        $this->assertSame('contao_frontend', $arguments['index_0']);
+        $this->assertSame([], $arguments['index_1']);
         $this->assertEquals(new Reference(BackupCodeManager::class), $arguments['index_3']);
 
         $this->assertTrue($container->hasDefinition($twoFactorListenerId));
@@ -73,7 +73,7 @@ class ContaoLoginFactoryTest extends TestCase
 
         $this->assertIsArray($arguments);
         $this->assertCount(3, $arguments);
-        $this->assertEquals('contao_frontend', $arguments['index_3']);
+        $this->assertSame('contao_frontend', $arguments['index_3']);
         $this->assertTrue($arguments['index_4']);
         $this->assertFalse($arguments['index_5']);
 

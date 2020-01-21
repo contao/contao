@@ -87,7 +87,7 @@
               <th class="tl_folder_tlist"><?= $this->trans('MSC.createdOn') ?></th>
             </tr>
             <?php foreach ($this->trustedDevices as $index => $trustedDevice): ?>
-              <tr class="<?= ($index % 2) ? 'odd' : 'even' ?> hover-row">
+              <tr class="<?= $index % 2 ? 'odd' : 'even' ?> hover-row">
                 <td class="tl_file_list"><?= $trustedDevice->getDeviceFamily() ?><?php if ($this->currentDevice === $trustedDevice->getCookieValue()): ?> (<?= $this->trans('MSC.thisDevice') ?>)<?php endif; ?></td>
                 <td class="tl_file_list"><?= $trustedDevice->getUaFamily() ?></td>
                 <td class="tl_file_list"><?= $trustedDevice->getOsFamily() ?></td>

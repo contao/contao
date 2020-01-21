@@ -365,8 +365,8 @@ class PictureFactory implements PictureFactoryInterface
                 return false;
             }
 
-            $diffA = abs(($img['width'] / $img['height']) / ($source['width'] / $source['height']) - 1);
-            $diffB = abs(($img['height'] / $img['width']) / ($source['height'] / $source['width']) - 1);
+            $diffA = abs($img['width'] / $img['height'] / ($source['width'] / $source['height']) - 1);
+            $diffB = abs($img['height'] / $img['width'] / ($source['height'] / $source['width']) - 1);
 
             if ($diffA > self::ASPECT_RATIO_THRESHOLD && $diffB > self::ASPECT_RATIO_THRESHOLD) {
                 return false;
