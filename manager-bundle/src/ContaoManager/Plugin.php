@@ -384,7 +384,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         return sprintf(
             'mysql://%s%s:%s%s',
             $userPassword,
-            $this->encodeUrlParameter($container->getParameter('database_host')),
+            $container->getParameter('database_host'),
             $container->getParameter('database_port'),
             $dbName
         );
