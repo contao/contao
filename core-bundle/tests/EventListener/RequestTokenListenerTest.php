@@ -50,7 +50,8 @@ class RequestTokenListenerTest extends TestCase
         $session = $this->createMock(SessionInterface::class);
         $session
             ->method('isStarted')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $request = Request::create('/account.html');
         $request->setMethod('POST');
@@ -88,13 +89,15 @@ class RequestTokenListenerTest extends TestCase
         $scopeMatcher
             ->expects($this->once())
             ->method('isContaoRequest')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $csrfTokenManager = $this->createMock(CsrfTokenManagerInterface::class);
         $csrfTokenManager
             ->expects($this->once())
             ->method('isTokenValid')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $request = Request::create('/account.html');
         $request->setMethod('POST');
@@ -104,7 +107,8 @@ class RequestTokenListenerTest extends TestCase
         $event
             ->expects($this->once())
             ->method('getRequest')
-            ->willReturn($request);
+            ->willReturn($request)
+        ;
 
         $listener = new RequestTokenListener($framework, $scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
         $listener($event);
@@ -120,7 +124,8 @@ class RequestTokenListenerTest extends TestCase
         $csrfTokenManager
             ->expects($this->once())
             ->method('isTokenValid')
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $request = Request::create('/account.html');
         $request->setMethod('POST');
@@ -131,7 +136,8 @@ class RequestTokenListenerTest extends TestCase
         $event
             ->expects($this->once())
             ->method('getRequest')
-            ->willReturn($request);
+            ->willReturn($request)
+        ;
 
         $listener = new RequestTokenListener($framework, $scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
 
@@ -145,7 +151,8 @@ class RequestTokenListenerTest extends TestCase
         $framework = $this->mockContaoFramework();
         $framework
             ->expects($this->never())
-            ->method('getAdapter');
+            ->method('getAdapter')
+        ;
 
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $csrfTokenManager = $this->createMock(CsrfTokenManagerInterface::class);
@@ -159,7 +166,8 @@ class RequestTokenListenerTest extends TestCase
         $event
             ->expects($this->once())
             ->method('getRequest')
-            ->willReturn($request);
+            ->willReturn($request)
+        ;
 
         $listener = new RequestTokenListener($framework, $scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
         $listener($event);
@@ -170,7 +178,8 @@ class RequestTokenListenerTest extends TestCase
         $framework = $this->mockContaoFramework();
         $framework
             ->expects($this->never())
-            ->method('getAdapter');
+            ->method('getAdapter')
+        ;
 
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $csrfTokenManager = $this->createMock(CsrfTokenManagerInterface::class);
@@ -185,7 +194,8 @@ class RequestTokenListenerTest extends TestCase
         $event
             ->expects($this->once())
             ->method('getRequest')
-            ->willReturn($request);
+            ->willReturn($request)
+        ;
 
         $listener = new RequestTokenListener($framework, $scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
         $listener($event);
@@ -196,7 +206,8 @@ class RequestTokenListenerTest extends TestCase
         $framework = $this->mockContaoFramework();
         $framework
             ->expects($this->never())
-            ->method('getAdapter');
+            ->method('getAdapter')
+        ;
 
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $csrfTokenManager = $this->createMock(CsrfTokenManagerInterface::class);
@@ -210,7 +221,8 @@ class RequestTokenListenerTest extends TestCase
         $event
             ->expects($this->once())
             ->method('getRequest')
-            ->willReturn($request);
+            ->willReturn($request)
+        ;
 
         $listener = new RequestTokenListener($framework, $scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
         $listener($event);
@@ -221,13 +233,15 @@ class RequestTokenListenerTest extends TestCase
         $framework = $this->mockContaoFramework();
         $framework
             ->expects($this->never())
-            ->method('getAdapter');
+            ->method('getAdapter')
+        ;
 
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $scopeMatcher
             ->expects($this->once())
             ->method('isContaoRequest')
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $csrfTokenManager = $this->createMock(CsrfTokenManagerInterface::class);
 
@@ -239,7 +253,8 @@ class RequestTokenListenerTest extends TestCase
         $event
             ->expects($this->once())
             ->method('getRequest')
-            ->willReturn($request);
+            ->willReturn($request)
+        ;
 
         $listener = new RequestTokenListener($framework, $scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
         $listener($event);
@@ -255,13 +270,15 @@ class RequestTokenListenerTest extends TestCase
         $csrfTokenManager
             ->expects($shouldValidate ? $this->once() : $this->never())
             ->method('isTokenValid')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $event = $this->createMock(RequestEvent::class);
         $event
             ->expects($this->once())
             ->method('getRequest')
-            ->willReturn($request);
+            ->willReturn($request)
+        ;
 
         $listener = new RequestTokenListener($framework, $scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
         $listener($event);

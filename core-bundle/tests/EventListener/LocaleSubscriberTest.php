@@ -99,7 +99,8 @@ class LocaleSubscriberTest extends TestCase
         $attributes = $this->createMock(ParameterBag::class);
         $attributes
             ->expects($this->never())
-            ->method('set');
+            ->method('set')
+        ;
 
         $event = new RequestEvent(
             $this->createMock(KernelInterface::class),
@@ -154,7 +155,8 @@ class LocaleSubscriberTest extends TestCase
         $translator
             ->expects($this->once())
             ->method('setLocale')
-            ->with('de');
+            ->with('de')
+        ;
 
         $listener = new LocaleSubscriber($translator, $this->mockScopeMatcher(), ['en', 'de']);
         $listener->setTranslatorLocale($event);

@@ -35,7 +35,8 @@ class CronCommand extends Command
     {
         $this
             ->setName('contao:cron')
-            ->setDescription('Runs all registered cron jobs on the command line.');
+            ->setDescription('Runs all registered cron jobs on the command line.')
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

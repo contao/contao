@@ -165,7 +165,8 @@ class FrontendLoaderTest extends TestCase
         $loader = $this->createMock(LoaderInterface::class);
         $loader
             ->method('load')
-            ->willReturn($collection);
+            ->willReturn($collection)
+        ;
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('routing.loader', $loader);

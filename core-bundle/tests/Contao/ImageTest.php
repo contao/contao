@@ -71,7 +71,8 @@ class ImageTest extends TestCase
         $fileMock = $this->createMock(File::class);
         $fileMock
             ->method('exists')
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $this->expectException('InvalidArgumentException');
 
@@ -89,7 +90,8 @@ class ImageTest extends TestCase
         $fileMock = $this->mockClassWithProperties(File::class, ['extension' => 'foobar']);
         $fileMock
             ->method('exists')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $this->expectException('InvalidArgumentException');
 
@@ -115,7 +117,8 @@ class ImageTest extends TestCase
         $fileMock = $this->mockClassWithProperties(File::class, $properties);
         $fileMock
             ->method('exists')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $imageObj = new Image($fileMock);
         $imageObj->setTargetWidth($arguments[0]);
@@ -574,7 +577,8 @@ class ImageTest extends TestCase
         $fileMock = $this->mockClassWithProperties(File::class, $properties);
         $fileMock
             ->method('exists')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $imageObj = new Image($fileMock);
         $imageObj->setTargetWidth($arguments[0]);
@@ -753,7 +757,8 @@ class ImageTest extends TestCase
         $fileMock = $this->mockClassWithProperties(File::class, $properties);
         $fileMock
             ->method('exists')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $imageObj = new Image($fileMock);
 
@@ -872,7 +877,8 @@ class ImageTest extends TestCase
         $fileMock = $this->mockClassWithProperties(File::class, $properties);
         $fileMock
             ->method('exists')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $imageObj = new Image($fileMock);
         $imageObj->setTargetWidth($arguments[0]);
@@ -940,7 +946,8 @@ class ImageTest extends TestCase
         $fileMock = $this->mockClassWithProperties(File::class, ['extension' => 'jpg']);
         $fileMock
             ->method('exists')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $imageObj = new Image($fileMock);
 
@@ -1427,7 +1434,8 @@ class ImageTest extends TestCase
         /** @var DeferredImageInterface $deferredImage */
         $deferredImage = System::getContainer()
             ->get('contao.image.image_factory')
-            ->create(System::getContainer()->getParameter('kernel.project_dir').'/'.$imageObj->getResizedPath());
+            ->create(System::getContainer()->getParameter('kernel.project_dir').'/'.$imageObj->getResizedPath())
+        ;
 
         System::getContainer()->get('contao.image.resizer')->resizeDeferredImage($deferredImage);
 

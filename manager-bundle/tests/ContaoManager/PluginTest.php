@@ -161,7 +161,8 @@ class PluginTest extends ContaoTestCase
                 static function ($resource): array {
                     return [$resource];
                 }
-            );
+            )
+        ;
 
         $plugin = new Plugin();
         $configs = $plugin->getBundles($parser);
@@ -191,7 +192,8 @@ class PluginTest extends ContaoTestCase
                         $resource($container);
                     }
                 }
-            );
+            )
+        ;
 
         $plugin = new Plugin();
         $plugin->registerContainerConfiguration($loader, []);
@@ -218,7 +220,8 @@ class PluginTest extends ContaoTestCase
                         $resource($container);
                     }
                 }
-            );
+            )
+        ;
 
         $plugin = new Plugin();
         $plugin->registerContainerConfiguration($loader, []);
@@ -232,7 +235,8 @@ class PluginTest extends ContaoTestCase
         $kernel
             ->expects($this->once())
             ->method('getEnvironment')
-            ->willReturn('prod');
+            ->willReturn('prod')
+        ;
 
         $plugin = new Plugin();
         $resolver = $this->createMock(LoaderResolverInterface::class);
@@ -253,19 +257,22 @@ class PluginTest extends ContaoTestCase
 
                     return $collection;
                 }
-            );
+            )
+        ;
 
         $resolver = $this->createMock(LoaderResolverInterface::class);
         $resolver
             ->expects($this->atLeastOnce())
             ->method('resolve')
-            ->willReturn($loader);
+            ->willReturn($loader)
+        ;
 
         $kernel = $this->createMock(KernelInterface::class);
         $kernel
             ->expects($this->once())
             ->method('getEnvironment')
-            ->willReturn('dev');
+            ->willReturn('dev')
+        ;
 
         $plugin = new Plugin();
         $collection = $plugin->getRouteCollection($resolver, $kernel);
@@ -282,7 +289,8 @@ class PluginTest extends ContaoTestCase
     {
         $files = Finder::create()
             ->name('*.php')
-            ->in(__DIR__.'/../../src/ContaoManager/ApiCommand');
+            ->in(__DIR__.'/../../src/ContaoManager/ApiCommand')
+        ;
 
         /** @var SplFileInfo $file */
         foreach ($files as $file) {
@@ -566,11 +574,13 @@ class PluginTest extends ContaoTestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
-            ->method('connect');
+            ->method('connect')
+        ;
 
         $connection
             ->expects($this->once())
-            ->method('close');
+            ->method('close')
+        ;
 
         $dbalConnectionFactory = function ($params) use ($connection) {
             $this->assertSame(

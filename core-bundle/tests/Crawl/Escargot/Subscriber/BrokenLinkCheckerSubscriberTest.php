@@ -64,11 +64,13 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
                             return true;
                         }
                     )
-                );
+                )
+            ;
         } else {
             $logger
                 ->expects($this->never())
-                ->method('log');
+                ->method('log')
+            ;
         }
 
         $queue = new InMemoryQueue();
@@ -133,11 +135,13 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
                             return true;
                         }
                     )
-                );
+                )
+            ;
         } else {
             $logger
                 ->expects($this->never())
-                ->method('log');
+                ->method('log')
+            ;
         }
 
         $escargot = Escargot::create(new BaseUriCollection([new Uri('https://contao.org')]), new InMemoryQueue());
@@ -225,11 +229,13 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
                             return true;
                         }
                     )
-                );
+                )
+            ;
         } else {
             $logger
                 ->expects($this->never())
-                ->method('log');
+                ->method('log')
+            ;
         }
 
         $escargot = Escargot::create(new BaseUriCollection([new Uri('https://contao.org')]), new InMemoryQueue());
@@ -285,11 +291,13 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
                             return true;
                         }
                     )
-                );
+                )
+            ;
         } else {
             $logger
                 ->expects($this->never())
-                ->method('log');
+                ->method('log')
+            ;
         }
 
         $escargot = Escargot::create(new BaseUriCollection([new Uri('https://contao.org')]), new InMemoryQueue());
@@ -341,7 +349,8 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
         $response = $this->createMock(ResponseInterface::class);
         $response
             ->method('getStatusCode')
-            ->willReturn($statusCode);
+            ->willReturn($statusCode)
+        ;
 
         $response
             ->method('getInfo')
@@ -361,7 +370,8 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
 
                     throw new \InvalidArgumentException('Invalid key: '.$key);
                 }
-            );
+            )
+        ;
 
         return $response;
     }
@@ -374,7 +384,8 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
             ->method('trans')
-            ->willReturn('Foobar');
+            ->willReturn('Foobar')
+        ;
 
         return $translator;
     }

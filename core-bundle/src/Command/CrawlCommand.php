@@ -76,7 +76,8 @@ class CrawlCommand extends Command
             ->addOption('enable-debug-csv', null, InputOption::VALUE_NONE, 'Writes the crawl debug log into a separate CSV file')
             ->addOption('debug-csv-path', null, InputOption::VALUE_REQUIRED, 'The path of the debug log CSV file', getcwd().'/crawl_debug_log.csv')
             ->setDescription('Crawls the Contao root pages with the desired subscribers')
-            ->setHelp('You can add additional URIs via the <info>contao.crawl.additional_uris</info> parameter.');
+            ->setHelp('You can add additional URIs via the <info>contao.crawl.additional_uris</info> parameter.')
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -111,7 +112,8 @@ class CrawlCommand extends Command
             ->withConcurrency((int) $input->getOption('concurrency'))
             ->withRequestDelay((int) $input->getOption('delay'))
             ->withMaxRequests((int) $input->getOption('max-requests'))
-            ->withMaxDepth((int) $input->getOption('max-depth'));
+            ->withMaxDepth((int) $input->getOption('max-depth'))
+        ;
 
         if (!$input->getOption('no-progress')) {
             $this->addProgressBar($output);

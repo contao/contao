@@ -54,14 +54,16 @@ class FrontendControllerTest extends TestCase
         $token
             ->expects($this->once())
             ->method('getValue')
-            ->willReturn('tokenValue');
+            ->willReturn('tokenValue')
+        ;
 
         $tokenManager = $this->createMock(CsrfTokenManagerInterface::class);
         $tokenManager
             ->expects($this->once())
             ->method('getToken')
             ->with('csrf_token')
-            ->willReturn($token);
+            ->willReturn($token)
+        ;
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('parameter_bag', $bag);
@@ -93,14 +95,16 @@ class FrontendControllerTest extends TestCase
         $cron
             ->expects($this->once())
             ->method('run')
-            ->with(Cron::SCOPE_WEB);
+            ->with(Cron::SCOPE_WEB)
+        ;
 
         $request = $this->createMock(Request::class);
         $request
             ->expects($this->once())
             ->method('isMethod')
             ->with(Request::METHOD_GET)
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $controller->cronAction($request, $cron);
     }
@@ -118,14 +122,16 @@ class FrontendControllerTest extends TestCase
         $cron = $this->createMock(Cron::class);
         $cron
             ->expects($this->never())
-            ->method('run');
+            ->method('run')
+        ;
 
         $request = $this->createMock(Request::class);
         $request
             ->expects($this->once())
             ->method('isMethod')
             ->with(Request::METHOD_GET)
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $controller->cronAction($request, $cron);
     }

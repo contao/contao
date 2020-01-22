@@ -28,12 +28,14 @@ class FaviconControllerTest extends TestCase
         $pageModelAdapter
             ->expects($this->once())
             ->method('findPublishedFallbackByHostname')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $framework = $this->mockContaoFramework([PageModel::class => $pageModelAdapter]);
         $framework
             ->expects($this->once())
-            ->method('initialize');
+            ->method('initialize')
+        ;
 
         $request = Request::create('/robots.txt');
         $controller = new FaviconController($framework, $this->createMock(ResponseTagger::class));
@@ -55,14 +57,16 @@ class FaviconControllerTest extends TestCase
         $pageModelAdapter
             ->expects($this->once())
             ->method('findPublishedFallbackByHostname')
-            ->willReturn($pageModel);
+            ->willReturn($pageModel)
+        ;
 
         $filesModelAdapter = $this->mockAdapter(['findByUuid']);
         $filesModelAdapter
             ->expects($this->once())
             ->method('findByUuid')
             ->with('favicon-uuid')
-            ->willReturn($faviconModel);
+            ->willReturn($faviconModel)
+        ;
 
         $framework = $this->mockContaoFramework([
             PageModel::class => $pageModelAdapter,
@@ -71,13 +75,15 @@ class FaviconControllerTest extends TestCase
 
         $framework
             ->expects($this->once())
-            ->method('initialize');
+            ->method('initialize')
+        ;
 
         $responseTagger = $this->createMock(ResponseTagger::class);
         $responseTagger
             ->expects($this->once())
             ->method('addTags')
-            ->with(['contao.db.tl_page.42']);
+            ->with(['contao.db.tl_page.42'])
+        ;
 
         $request = Request::create('/favicon.ico');
         $controller = new FaviconController($framework, $responseTagger);

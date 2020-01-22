@@ -65,7 +65,8 @@ class BackendPreviewControllerTest extends TestCase
         $previewAuthenticator
             ->expects($this->once())
             ->method('authenticateFrontendUser')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $request = $this->mockRequest();
         $request->query->set('user', '9');
@@ -89,7 +90,8 @@ class BackendPreviewControllerTest extends TestCase
         $dispatcher
             ->expects($this->atLeastOnce())
             ->method('dispatch')
-            ->with($this->isInstanceOf(PreviewUrlConvertEvent::class));
+            ->with($this->isInstanceOf(PreviewUrlConvertEvent::class))
+        ;
 
         $controller = new BackendPreviewController(
             'preview.php',
@@ -132,7 +134,8 @@ class BackendPreviewControllerTest extends TestCase
 
         $request
             ->method('getScriptName')
-            ->willReturn('preview.php');
+            ->willReturn('preview.php')
+        ;
 
         return $request;
     }
@@ -146,7 +149,8 @@ class BackendPreviewControllerTest extends TestCase
         $router
             ->method('generate')
             ->with('contao_root')
-            ->willReturn('/index.html');
+            ->willReturn('/index.html')
+        ;
 
         return $router;
     }
@@ -159,7 +163,8 @@ class BackendPreviewControllerTest extends TestCase
         $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
         $authorizationChecker
             ->method('isGranted')
-            ->willReturn($granted);
+            ->willReturn($granted)
+        ;
 
         return $authorizationChecker;
     }

@@ -218,7 +218,8 @@ EOF
             ->expects($this->once())
             ->method('getUrl')
             ->with('/path/to/asset', 'package_name')
-            ->willReturnArgument(0);
+            ->willReturnArgument(0)
+        ;
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('assets.packages', $packages);

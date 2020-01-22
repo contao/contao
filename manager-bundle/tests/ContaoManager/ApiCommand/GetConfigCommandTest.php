@@ -40,7 +40,8 @@ class GetConfigCommandTest extends TestCase
         $application = $this->createMock(Application::class);
         $application
             ->method('getManagerConfig')
-            ->willReturn($this->config);
+            ->willReturn($this->config)
+        ;
 
         $this->command = new GetConfigCommand($application);
     }
@@ -55,7 +56,8 @@ class GetConfigCommandTest extends TestCase
         $this->config
             ->expects($this->once())
             ->method('all')
-            ->willReturn(['foo' => 'bar']);
+            ->willReturn(['foo' => 'bar'])
+        ;
 
         $commandTester = new CommandTester($this->command);
         $commandTester->execute([]);

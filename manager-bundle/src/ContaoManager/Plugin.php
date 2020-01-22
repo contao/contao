@@ -112,7 +112,8 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             $modules = Finder::create()
                 ->directories()
                 ->depth(0)
-                ->in(static::$autoloadModules);
+                ->in(static::$autoloadModules)
+            ;
 
             $iniConfigs = [];
 

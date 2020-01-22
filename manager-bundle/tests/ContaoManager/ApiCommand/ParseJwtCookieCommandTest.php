@@ -40,7 +40,8 @@ class ParseJwtCookieCommandTest extends ContaoTestCase
         $application = $this->createMock(Application::class);
         $application
             ->method('getProjectDir')
-            ->willReturn($this->getTempDir());
+            ->willReturn($this->getTempDir())
+        ;
 
         $this->command = new ParseJwtCookieCommand($application, $this->jwtManager);
     }
@@ -56,7 +57,8 @@ class ParseJwtCookieCommandTest extends ContaoTestCase
             ->expects($this->once())
             ->method('parseCookie')
             ->with('foobar')
-            ->willReturn(['foo' => 'bar']);
+            ->willReturn(['foo' => 'bar'])
+        ;
 
         $commandTester = new CommandTester($this->command);
         $commandTester->execute(['content' => 'foobar']);

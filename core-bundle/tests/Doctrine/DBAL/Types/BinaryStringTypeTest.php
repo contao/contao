@@ -47,16 +47,19 @@ class BinaryStringTypeTest extends TestCase
         $platform = $this
             ->getMockBuilder(AbstractPlatform::class)
             ->onlyMethods(['getBinaryTypeDeclarationSQL', 'getBlobTypeDeclarationSQL'])
-            ->getMockForAbstractClass();
+            ->getMockForAbstractClass()
+        ;
 
         $platform
             ->expects($this->once())
             ->method('getBinaryTypeDeclarationSQL')
-            ->willReturn('BINARY(255)');
+            ->willReturn('BINARY(255)')
+        ;
 
         $platform
             ->expects($this->never())
-            ->method('getBlobTypeDeclarationSQL');
+            ->method('getBlobTypeDeclarationSQL')
+        ;
 
         $this->type->getSQLDeclaration($fieldDefinition, $platform);
     }
@@ -69,16 +72,19 @@ class BinaryStringTypeTest extends TestCase
         $platform = $this
             ->getMockBuilder(AbstractPlatform::class)
             ->onlyMethods(['getBinaryTypeDeclarationSQL', 'getBlobTypeDeclarationSQL'])
-            ->getMockForAbstractClass();
+            ->getMockForAbstractClass()
+        ;
 
         $platform
             ->expects($this->never())
-            ->method('getBinaryTypeDeclarationSQL');
+            ->method('getBinaryTypeDeclarationSQL')
+        ;
 
         $platform
             ->expects($this->once())
             ->method('getBlobTypeDeclarationSQL')
-            ->willReturn('BLOB');
+            ->willReturn('BLOB')
+        ;
 
         $this->type->getSQLDeclaration($fieldDefinition, $platform);
     }

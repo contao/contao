@@ -57,7 +57,8 @@ class CombinedFileDumperTest extends TestCase
         $filesystem
             ->expects($this->once())
             ->method('dumpFile')
-            ->with($this->getTempDir().'/test.php', $expects);
+            ->with($this->getTempDir().'/test.php', $expects)
+        ;
 
         return $filesystem;
     }
@@ -72,7 +73,8 @@ class CombinedFileDumperTest extends TestCase
             ->expects($this->once())
             ->method('load')
             ->with('test.php', null)
-            ->willReturn("\necho 'test';\n");
+            ->willReturn("\necho 'test';\n")
+        ;
 
         return $loader;
     }

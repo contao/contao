@@ -97,7 +97,8 @@ class BackendMenuListener
                     ->setLinkAttribute('title', $categoryData['title'])
                     ->setLinkAttribute('onclick', "return AjaxRequest.toggleNavigation(this, '".$categoryName."', '".$path."')")
                     ->setChildrenAttribute('id', $categoryName)
-                    ->setExtra('translation_domain', false);
+                    ->setExtra('translation_domain', false)
+                ;
 
                 if (isset($categoryData['class']) && preg_match('/\bnode-collapsed\b/', $categoryData['class'])) {
                     $categoryNode->setAttribute('class', 'collapsed');
@@ -115,7 +116,8 @@ class BackendMenuListener
                     ->setLinkAttribute('class', $this->getClassFromAttributes($nodeData))
                     ->setLinkAttribute('title', $nodeData['title'])
                     ->setCurrent((bool) $nodeData['isActive'])
-                    ->setExtra('translation_domain', false);
+                    ->setExtra('translation_domain', false)
+                ;
 
                 $categoryNode->addChild($moduleNode);
             }
@@ -137,7 +139,8 @@ class BackendMenuListener
             ->setLinkAttribute('title', $systemMessages)
             ->setLinkAttribute('onclick', "Backend.openModalIframe({'title':'".StringUtil::specialchars(str_replace("'", "\\'", $systemMessages))."','url':this.href});return false")
             ->setExtra('safe_label', true)
-            ->setExtra('translation_domain', false);
+            ->setExtra('translation_domain', false)
+        ;
 
         $tree->addChild($alerts);
 
@@ -146,7 +149,8 @@ class BackendMenuListener
             ->setLabel($this->trans('MSC.user').' '.$user->username)
             ->setAttribute('class', 'submenu')
             ->setLabelAttribute('class', 'h2')
-            ->setExtra('translation_domain', false);
+            ->setExtra('translation_domain', false)
+        ;
 
         $tree->addChild($submenu);
 
@@ -155,7 +159,8 @@ class BackendMenuListener
             ->setLabel(sprintf('<strong>%s</strong> %s', $user->name, $user->email))
             ->setAttribute('class', 'info')
             ->setExtra('safe_label', true)
-            ->setExtra('translation_domain', false);
+            ->setExtra('translation_domain', false)
+        ;
 
         $submenu->addChild($info);
 
@@ -164,7 +169,8 @@ class BackendMenuListener
             ->setLabel('MSC.profile')
             ->setUri($this->router->generate('contao_backend', ['do' => 'login', 'ref' => $ref]))
             ->setLinkAttribute('class', 'icon-profile')
-            ->setExtra('translation_domain', 'contao_default');
+            ->setExtra('translation_domain', 'contao_default')
+        ;
 
         $submenu->addChild($login);
 
@@ -173,7 +179,8 @@ class BackendMenuListener
             ->setLabel('MSC.security')
             ->setUri($this->router->generate('contao_backend', ['do' => 'security', 'ref' => $ref]))
             ->setLinkAttribute('class', 'icon-security')
-            ->setExtra('translation_domain', 'contao_default');
+            ->setExtra('translation_domain', 'contao_default')
+        ;
 
         $submenu->addChild($security);
 
@@ -182,7 +189,8 @@ class BackendMenuListener
             ->setLabel('<button type="button" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>')
             ->setAttribute('class', 'burger')
             ->setExtra('safe_label', true)
-            ->setExtra('translation_domain', false);
+            ->setExtra('translation_domain', false)
+        ;
 
         $tree->addChild($buger);
     }

@@ -141,7 +141,8 @@ class ContentElementControllerTest extends TestCase
         $responseTagger
             ->expects($this->once())
             ->method('addTags')
-            ->with(['contao.db.tl_content.42']);
+            ->with(['contao.db.tl_content.42'])
+        ;
 
         $container = $this->mockContainerWithFrameworkTemplate('ce_test');
         $container->set('fos_http_cache.http.symfony_response_tagger', $responseTagger);
@@ -209,7 +210,8 @@ class ContentElementControllerTest extends TestCase
             ->expects($this->once())
             ->method('createInstance')
             ->with(FrontendTemplate::class, [$templateName])
-            ->willReturn(new FrontendTemplate());
+            ->willReturn(new FrontendTemplate())
+        ;
 
         $container = new ContainerBuilder();
         $container->set('contao.framework', $framework);

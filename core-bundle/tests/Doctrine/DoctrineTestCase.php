@@ -41,25 +41,30 @@ abstract class DoctrineTestCase extends TestCase
         $schemaManager = $this->createMock(AbstractSchemaManager::class);
         $schemaManager
             ->method('tablesExist')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $config = $this->createMock(Configuration::class);
         $config
             ->method('getSchemaAssetsFilter')
-            ->willReturn($this->getSchemaAssetsFilter($filter));
+            ->willReturn($this->getSchemaAssetsFilter($filter))
+        ;
 
         $connection = $this->createMock(Connection::class);
         $connection
             ->method('getDatabasePlatform')
-            ->willReturn(new MySqlPlatform());
+            ->willReturn(new MySqlPlatform())
+        ;
 
         $connection
             ->method('query')
-            ->willReturn($statement);
+            ->willReturn($statement)
+        ;
 
         $connection
             ->method('getSchemaManager')
-            ->willReturn($schemaManager);
+            ->willReturn($schemaManager)
+        ;
 
         $connection
             ->method('getParams')
@@ -70,24 +75,29 @@ abstract class DoctrineTestCase extends TestCase
                         'collate' => 'utf8mb4_unicode_ci',
                     ],
                 ]
-            );
+            )
+        ;
 
         $connection
             ->method('getConfiguration')
-            ->willReturn($config);
+            ->willReturn($config)
+        ;
 
         $registry = $this->createMock(Registry::class);
         $registry
             ->method('getConnection')
-            ->willReturn($connection);
+            ->willReturn($connection)
+        ;
 
         $registry
             ->method('getConnections')
-            ->willReturn([$connection]);
+            ->willReturn([$connection])
+        ;
 
         $registry
             ->method('getManagerNames')
-            ->willReturn([]);
+            ->willReturn([])
+        ;
 
         return $registry;
     }
@@ -102,70 +112,85 @@ abstract class DoctrineTestCase extends TestCase
         $config = $this->createMock(Configuration::class);
         $config
             ->method('getSchemaAssetsFilter')
-            ->willReturn($this->getSchemaAssetsFilter($filter));
+            ->willReturn($this->getSchemaAssetsFilter($filter))
+        ;
 
         $connection = $this->createMock(Connection::class);
         $connection
             ->method('getDatabasePlatform')
-            ->willReturn(new MySqlPlatform());
+            ->willReturn(new MySqlPlatform())
+        ;
 
         $connection
             ->expects(!empty($metadata) ? $this->once() : $this->never())
             ->method('getSchemaManager')
-            ->willReturn(new MySqlSchemaManager($connection));
+            ->willReturn(new MySqlSchemaManager($connection))
+        ;
 
         $connection
             ->method('getConfiguration')
-            ->willReturn($config);
+            ->willReturn($config)
+        ;
 
         $factory = $this->createMock(ClassMetadataFactory::class);
         $factory
             ->method('getAllMetadata')
-            ->willReturn($metadata);
+            ->willReturn($metadata)
+        ;
 
         $configuration = $this->createMock(Configuration::class);
         $configuration
             ->method('getQuoteStrategy')
-            ->willReturn(new DefaultQuoteStrategy());
+            ->willReturn(new DefaultQuoteStrategy())
+        ;
 
         $eventManager = $this->createMock(EventManager::class);
         $eventManager
             ->method('hasListeners')
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $em = $this->createMock(EntityManagerInterface::class);
         $em
             ->method('getMetadataFactory')
-            ->willReturn($factory);
+            ->willReturn($factory)
+        ;
 
         $em
             ->method('getConnection')
-            ->willReturn($connection);
+            ->willReturn($connection)
+        ;
 
         $em
             ->method('getConfiguration')
-            ->willReturn($configuration);
+            ->willReturn($configuration)
+        ;
 
         $em
             ->method('getEventManager')
-            ->willReturn($eventManager);
+            ->willReturn($eventManager)
+        ;
 
         $registry = $this->createMock(Registry::class);
         $registry
             ->method('getConnection')
-            ->willReturn($connection);
+            ->willReturn($connection)
+        ;
 
         $registry
             ->method('getConnections')
-            ->willReturn([$connection]);
+            ->willReturn([$connection])
+        ;
 
         $registry
             ->method('getManagerNames')
-            ->willReturn([$em]);
+            ->willReturn([$em])
+        ;
 
         $registry
             ->method('getManager')
-            ->willReturn($em);
+            ->willReturn($em)
+        ;
 
         return $registry;
     }
@@ -180,16 +205,19 @@ abstract class DoctrineTestCase extends TestCase
         $installer = $this->createMock(Installer::class);
         $installer
             ->method('getFromDca')
-            ->willReturn($dca);
+            ->willReturn($dca)
+        ;
 
         $installer
             ->method('getFromFile')
-            ->willReturn($file);
+            ->willReturn($file)
+        ;
 
         $framework = $this->mockContaoFramework();
         $framework
             ->method('createInstance')
-            ->willReturn($installer);
+            ->willReturn($installer)
+        ;
 
         return $framework;
     }

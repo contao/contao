@@ -55,7 +55,8 @@ class ContaoLoginFactory extends AbstractFactory
             ->setDefinition($twoFactorProviderId, new ChildDefinition(TwoFactorFactory::PROVIDER_DEFINITION_ID))
             ->replaceArgument(0, $id)
             ->replaceArgument(1, [])
-            ->replaceArgument(3, new Reference(BackupCodeManager::class));
+            ->replaceArgument(3, new Reference(BackupCodeManager::class))
+        ;
 
         $provider = 'contao.security.authentication_provider.'.$id;
 
@@ -64,7 +65,8 @@ class ContaoLoginFactory extends AbstractFactory
             ->replaceArgument(0, new Reference($userProviderId))
             ->replaceArgument(1, new Reference('security.user_checker.'.$id))
             ->replaceArgument(2, $id)
-            ->replaceArgument(5, new Reference($twoFactorProviderId));
+            ->replaceArgument(5, new Reference($twoFactorProviderId))
+        ;
 
         return $provider;
     }
@@ -100,6 +102,7 @@ class ContaoLoginFactory extends AbstractFactory
             ->replaceArgument(5, false)
             ->addTag('kernel.event_listener', ['event' => 'security.authentication.success', 'method' => 'onLogin', 'priority' => PHP_INT_MAX])
             ->addTag('kernel.event_listener', ['event' => 'scheb_two_factor.authentication.form', 'method' => 'onTwoFactorForm'])
-            ->addTag('kernel.event_listener', ['event' => 'kernel.finish_request', 'method' => 'onKernelFinishRequest']);
+            ->addTag('kernel.event_listener', ['event' => 'kernel.finish_request', 'method' => 'onKernelFinishRequest'])
+        ;
     }
 }

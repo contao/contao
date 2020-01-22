@@ -27,7 +27,8 @@ final class Configuration implements ConfigurationInterface
                     ->defaultNull()
                     ->info('The path to the Contao manager relative to the Contao web directory.')
                 ->end()
-            ->end();
+            ->end()
+        ;
 
         return $treeBuilder;
     }

@@ -31,13 +31,15 @@ class LogoutSuccessHandlerTest extends TestCase
             ->expects($this->once())
             ->method('createRedirectResponse')
             ->with($request, 'http://localhost/home')
-            ->willReturn(new RedirectResponse('http://localhost/home'));
+            ->willReturn(new RedirectResponse('http://localhost/home'))
+        ;
 
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $scopeMatcher
             ->expects($this->once())
             ->method('isBackendRequest')
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $handler = new LogoutSuccessHandler($httpUtils, $scopeMatcher);
 
@@ -58,13 +60,15 @@ class LogoutSuccessHandlerTest extends TestCase
             ->expects($this->once())
             ->method('createRedirectResponse')
             ->with($request, 'http://localhost/home')
-            ->willReturn(new RedirectResponse('http://localhost/home'));
+            ->willReturn(new RedirectResponse('http://localhost/home'))
+        ;
 
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $scopeMatcher
             ->expects($this->once())
             ->method('isBackendRequest')
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $handler = new LogoutSuccessHandler($httpUtils, $scopeMatcher);
 
@@ -84,13 +88,15 @@ class LogoutSuccessHandlerTest extends TestCase
             ->expects($this->once())
             ->method('createRedirectResponse')
             ->with($request, '/')
-            ->willReturn(new RedirectResponse('http://localhost'));
+            ->willReturn(new RedirectResponse('http://localhost'))
+        ;
 
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $scopeMatcher
             ->expects($this->once())
             ->method('isBackendRequest')
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $handler = new LogoutSuccessHandler($httpUtils, $scopeMatcher);
 
@@ -110,13 +116,15 @@ class LogoutSuccessHandlerTest extends TestCase
             ->expects($this->once())
             ->method('createRedirectResponse')
             ->with($request, 'contao_backend_login')
-            ->willReturn(new RedirectResponse('contao_backend_login'));
+            ->willReturn(new RedirectResponse('contao_backend_login'))
+        ;
 
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $scopeMatcher
             ->expects($this->once())
             ->method('isBackendRequest')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $handler = new LogoutSuccessHandler($httpUtils, $scopeMatcher);
 

@@ -105,7 +105,8 @@ class AddAssetsPackagesPass implements CompilerPassInterface
             ->setPublic(false)
             ->replaceArgument(0, $basePath)
             ->replaceArgument(1, $version)
-            ->replaceArgument(2, $context);
+            ->replaceArgument(2, $context)
+        ;
 
         return $package;
     }

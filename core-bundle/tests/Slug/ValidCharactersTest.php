@@ -39,12 +39,14 @@ class ValidCharactersTest extends TestCase
                     }
                 ),
                 ContaoCoreEvents::SLUG_VALID_CHARACTERS
-            );
+            )
+        ;
 
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
             ->expects($this->atLeastOnce())
-            ->method('trans');
+            ->method('trans')
+        ;
 
         $validCharacters = new ValidCharacters($eventDispatcher, $translator);
         $options = $validCharacters->getOptions();

@@ -73,7 +73,8 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
             ->setUserAgent($userAgent)
             ->setUaFamily($parsedUserAgent->ua->family)
             ->setOsFamily($parsedUserAgent->os->family)
-            ->setDeviceFamily($parsedUserAgent->device->family);
+            ->setDeviceFamily($parsedUserAgent->device->family)
+        ;
 
         $this->entityManager->persist($trustedDevice);
         $this->entityManager->flush();
@@ -116,7 +117,8 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
             ->setParameter('userClass', \get_class($user))
             ->setParameter('userId', (int) $user->id)
             ->getQuery()
-            ->execute();
+            ->execute()
+        ;
     }
 
     public function findExistingTrustedDevice(int $userId, string $cookieValue, int $version)
@@ -132,6 +134,7 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
             ->setParameter('cookieValue', $cookieValue)
             ->setParameter('version', $version)
             ->getQuery()
-            ->getOneOrNullResult();
+            ->getOneOrNullResult()
+        ;
     }
 }

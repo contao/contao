@@ -43,7 +43,8 @@ class BackendMenuBuilder
     {
         $tree = $this->factory
             ->createItem('mainMenu')
-            ->setChildrenAttribute('class', 'menu_level_0');
+            ->setChildrenAttribute('class', 'menu_level_0')
+        ;
 
         $this->eventDispatcher->dispatch(new MenuEvent($this->factory, $tree), ContaoCoreEvents::BACKEND_MENU_BUILD);
 
@@ -54,7 +55,8 @@ class BackendMenuBuilder
     {
         $tree = $this->factory
             ->createItem('headerMenu')
-            ->setChildrenAttribute('id', 'tmenu');
+            ->setChildrenAttribute('id', 'tmenu')
+        ;
 
         $this->eventDispatcher->dispatch(new MenuEvent($this->factory, $tree), ContaoCoreEvents::BACKEND_MENU_BUILD);
 

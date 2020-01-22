@@ -30,7 +30,8 @@ class AuthenticationFailureHandlerTest extends TestCase
         $exception = $this->createMock(AccountStatusException::class);
         $exception
             ->expects($this->never())
-            ->method('getUser');
+            ->method('getUser')
+        ;
 
         $handler = new AuthenticationFailureHandler();
 
@@ -47,13 +48,15 @@ class AuthenticationFailureHandlerTest extends TestCase
         $user
             ->expects($this->once())
             ->method('getUsername')
-            ->willReturn('foobar');
+            ->willReturn('foobar')
+        ;
 
         $exception = $this->createMock(AccountStatusException::class);
         $exception
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($user);
+            ->willReturn($user)
+        ;
 
         $context = new ContaoContext(
             'Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler::logException',
@@ -65,7 +68,8 @@ class AuthenticationFailureHandlerTest extends TestCase
         $logger
             ->expects($this->once())
             ->method('info')
-            ->with('', ['contao' => $context]);
+            ->with('', ['contao' => $context])
+        ;
 
         $handler = new AuthenticationFailureHandler($logger);
 
@@ -82,7 +86,8 @@ class AuthenticationFailureHandlerTest extends TestCase
         $exception
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $context = new ContaoContext(
             'Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler::logException',
@@ -94,7 +99,8 @@ class AuthenticationFailureHandlerTest extends TestCase
         $logger
             ->expects($this->once())
             ->method('info')
-            ->with('', ['contao' => $context]);
+            ->with('', ['contao' => $context])
+        ;
 
         $handler = new AuthenticationFailureHandler($logger);
         $handler->onAuthenticationFailure($this->getRequest('barfoo'), $exception);
@@ -108,25 +114,29 @@ class AuthenticationFailureHandlerTest extends TestCase
         $session = $this->createMock(SessionInterface::class);
         $session
             ->expects($this->once())
-            ->method('set');
+            ->method('set')
+        ;
 
         $request = $this->createMock(Request::class);
         $request
             ->expects($this->once())
             ->method('getUri')
-            ->willReturn('https://localhost');
+            ->willReturn('https://localhost')
+        ;
 
         $request
             ->expects($this->once())
             ->method('getSession')
-            ->willReturn($session);
+            ->willReturn($session)
+        ;
 
         $request->request = $this->createMock(ParameterBag::class);
         $request->request
             ->expects(null === $username ? $this->never() : $this->once())
             ->method('get')
             ->with('username')
-            ->willReturn($username);
+            ->willReturn($username)
+        ;
 
         return $request;
     }

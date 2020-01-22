@@ -130,7 +130,8 @@ class SubrequestCacheSubscriberTest extends TestCase
         $event
             ->expects($this->once())
             ->method('getRequestType')
-            ->willReturn($requestType);
+            ->willReturn($requestType)
+        ;
 
         $subscriber->onKernelRequest($event);
     }
@@ -141,12 +142,14 @@ class SubrequestCacheSubscriberTest extends TestCase
         $event
             ->expects($this->atLeastOnce())
             ->method('getResponse')
-            ->willReturn($response);
+            ->willReturn($response)
+        ;
 
         $event
             ->expects($this->once())
             ->method('getRequestType')
-            ->willReturn($requestType);
+            ->willReturn($requestType)
+        ;
 
         $subscriber->onKernelResponse($event);
     }

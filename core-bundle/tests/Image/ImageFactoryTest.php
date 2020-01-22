@@ -91,7 +91,8 @@ class ImageFactoryTest extends TestCase
                     }
                 )
             )
-            ->willReturn($imageMock);
+            ->willReturn($imageMock)
+        ;
 
         /** @var FilesModel&MockObject $filesModel */
         $filesModel = $this->mockClassWithProperties(FilesModel::class);
@@ -148,7 +149,8 @@ class ImageFactoryTest extends TestCase
                     }
                 )
             )
-            ->willReturn($imageMock);
+            ->willReturn($imageMock)
+        ;
 
         /** @var FilesModel&MockObject $filesModel */
         $filesModel = $this->mockClassWithProperties(FilesModel::class);
@@ -228,7 +230,8 @@ class ImageFactoryTest extends TestCase
                     }
                 )
             )
-            ->willReturn($imageMock);
+            ->willReturn($imageMock)
+        ;
 
         $imageSizeProperties = [
             'width' => 100,
@@ -241,7 +244,8 @@ class ImageFactoryTest extends TestCase
         $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class, $imageSizeProperties);
         $imageSizeModel
             ->method('row')
-            ->willReturn($imageSizeProperties);
+            ->willReturn($imageSizeProperties)
+        ;
 
         $imageSizeAdapter = $this->mockConfiguredAdapter(['findByPk' => $imageSizeModel]);
 
@@ -286,7 +290,8 @@ class ImageFactoryTest extends TestCase
 
                     return $image;
                 }
-            );
+            )
+        ;
 
         $framework = $this->mockContaoFramework($adapters);
         $imageFactory = $this->getImageFactory($resizer, null, null, null, $framework);
@@ -346,7 +351,8 @@ class ImageFactoryTest extends TestCase
                     }
                 )
             )
-            ->willReturn($imageMock);
+            ->willReturn($imageMock)
+        ;
 
         $imageFactory = $this->getImageFactory($resizer);
         $imageFactory->setPredefinedSizes($predefinedSizes);
@@ -362,7 +368,8 @@ class ImageFactoryTest extends TestCase
             ->setWidth(100)
             ->setHeight(200)
             ->setMode(ResizeConfiguration::MODE_BOX)
-            ->setZoomLevel(50);
+            ->setZoomLevel(50)
+        ;
 
         $imageMock = $this->createMock(ImageInterface::class);
 
@@ -402,7 +409,8 @@ class ImageFactoryTest extends TestCase
                     }
                 )
             )
-            ->willReturn($imageMock);
+            ->willReturn($imageMock)
+        ;
 
         $imageFactory = $this->getImageFactory($resizer);
         $image = $imageFactory->create($imageMock, $resizeConfig, $this->getFixturesDir().'/target/path.jpg');
@@ -428,7 +436,8 @@ class ImageFactoryTest extends TestCase
         $resizer
             ->method('getDeferredImage')
             ->with($path)
-            ->willReturn($imageMock);
+            ->willReturn($imageMock)
+        ;
 
         $imageFactory = $this->getImageFactory($resizer);
         $image = $imageFactory->create($path);
@@ -448,12 +457,14 @@ class ImageFactoryTest extends TestCase
         $filesystem = $this
             ->getMockBuilder(Filesystem::class)
             ->onlyMethods(['exists'])
-            ->getMock();
+            ->getMock()
+        ;
 
         $filesystem
             ->expects($this->once())
             ->method('exists')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $resizer = $this->createMock(ResizerInterface::class);
         $resizer
@@ -488,7 +499,8 @@ class ImageFactoryTest extends TestCase
                     }
                 )
             )
-            ->willReturn($imageMock);
+            ->willReturn($imageMock)
+        ;
 
         $imagine = $this->createMock(ImagineInterface::class);
 
@@ -550,12 +562,14 @@ class ImageFactoryTest extends TestCase
         $dimensionsMock = $this->createMock(ImageDimensions::class);
         $dimensionsMock
             ->method('getSize')
-            ->willReturn(new Box(100, 100));
+            ->willReturn(new Box(100, 100))
+        ;
 
         $imageMock = $this->createMock(ImageInterface::class);
         $imageMock
             ->method('getDimensions')
-            ->willReturn($dimensionsMock);
+            ->willReturn($dimensionsMock)
+        ;
 
         $imageFactory = $this->getImageFactory();
 

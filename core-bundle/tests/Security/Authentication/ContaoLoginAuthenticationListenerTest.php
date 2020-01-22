@@ -110,7 +110,8 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
         $session
             ->expects($this->once())
             ->method('set')
-            ->with(Security::LAST_USERNAME, 'foo');
+            ->with(Security::LAST_USERNAME, 'foo')
+        ;
 
         $request = $this->mockRequest(true, $session);
         $request->request->set('FORM_SUBMIT', 'tl_login');
@@ -131,38 +132,44 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
         $currentToken
             ->expects($this->once())
             ->method('getAuthenticatedToken')
-            ->willReturn($authenticatedToken);
+            ->willReturn($authenticatedToken)
+        ;
 
         $currentToken
             ->expects($this->once())
             ->method('getAttributes')
-            ->willReturn(['foo']);
+            ->willReturn(['foo'])
+        ;
 
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
         $tokenStorage
             ->expects($this->once())
             ->method('getToken')
-            ->willReturn($currentToken);
+            ->willReturn($currentToken)
+        ;
 
         $newToken = $this->createMock(TwoFactorTokenInterface::class);
         $newToken
             ->expects($this->once())
             ->method('setAttributes')
-            ->with(['foo']);
+            ->with(['foo'])
+        ;
 
         $twoFactorTokenFactory = $this->createMock(TwoFactorTokenFactoryInterface::class);
         $twoFactorTokenFactory
             ->expects($this->once())
             ->method('create')
             ->with($authenticatedToken, '123456', 'provider_key', [])
-            ->willReturn($newToken);
+            ->willReturn($newToken)
+        ;
 
         $authenticationManager = $this->createMock(AuthenticationManagerInterface::class);
         $authenticationManager
             ->expects($this->once())
             ->method('authenticate')
             ->with($newToken)
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $request = $this->mockRequest(true);
         $request->request->set('FORM_SUBMIT', 'tl_login');
@@ -177,7 +184,8 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
         $failureHandler = $this->createMock(AuthenticationFailureHandlerInterface::class);
         $failureHandler
             ->method('onAuthenticationFailure')
-            ->willReturn(new Response());
+            ->willReturn(new Response())
+        ;
 
         if (null === $tokenStorage) {
             $tokenStorage = $this->createMock(TokenStorageInterface::class);
@@ -214,21 +222,25 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
         $request = $this->createMock(Request::class);
         $request
             ->method('hasPreviousSession')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $request
             ->method('hasSession')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $request
             ->method('getSession')
-            ->willReturn($session);
+            ->willReturn($session)
+        ;
 
         $request
             ->expects($this->once())
             ->method('isMethod')
             ->with('POST')
-            ->willReturn($isPost);
+            ->willReturn($isPost)
+        ;
 
         $request->request = new ParameterBag();
 
@@ -256,7 +268,8 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
                     return true;
                 }
             ))
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         return $authenticationManager;
     }

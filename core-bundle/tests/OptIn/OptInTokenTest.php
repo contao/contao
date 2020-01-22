@@ -67,7 +67,8 @@ class OptInTokenTest extends ContaoTestCase
         $model
             ->expects($this->once())
             ->method('getRelatedRecords')
-            ->willReturn([]);
+            ->willReturn([])
+        ;
 
         $token = $this->getToken($model);
         $token->confirm();
@@ -85,19 +86,22 @@ class OptInTokenTest extends ContaoTestCase
 
         $related
             ->expects($this->once())
-            ->method('save');
+            ->method('save')
+        ;
 
         $related
             ->expects($this->once())
             ->method('getRelatedRecords')
-            ->willReturn(['tl_user' => [2]]);
+            ->willReturn(['tl_user' => [2]])
+        ;
 
         $adapter = $this->mockAdapter(['findByRelatedTableAndIds']);
         $adapter
             ->expects($this->once())
             ->method('findByRelatedTableAndIds')
             ->with('tl_user', [2])
-            ->willReturn([$related]);
+            ->willReturn([$related])
+        ;
 
         $framework = $this->mockContaoFramework([OptInModel::class => $adapter]);
 
@@ -110,7 +114,8 @@ class OptInTokenTest extends ContaoTestCase
         $model
             ->expects($this->once())
             ->method('getRelatedRecords')
-            ->willReturn(['tl_user' => [2]]);
+            ->willReturn(['tl_user' => [2]])
+        ;
 
         $token = $this->getToken($model, $framework);
         $token->confirm();
@@ -129,19 +134,22 @@ class OptInTokenTest extends ContaoTestCase
 
         $related
             ->expects($this->never())
-            ->method('save');
+            ->method('save')
+        ;
 
         $related
             ->expects($this->once())
             ->method('getRelatedRecords')
-            ->willReturn(['tl_user' => [2, 3]]);
+            ->willReturn(['tl_user' => [2, 3]])
+        ;
 
         $adapter = $this->mockAdapter(['findByRelatedTableAndIds']);
         $adapter
             ->expects($this->once())
             ->method('findByRelatedTableAndIds')
             ->with('tl_user', [2])
-            ->willReturn([$related]);
+            ->willReturn([$related])
+        ;
 
         $framework = $this->mockContaoFramework([OptInModel::class => $adapter]);
 
@@ -154,7 +162,8 @@ class OptInTokenTest extends ContaoTestCase
         $model
             ->expects($this->once())
             ->method('getRelatedRecords')
-            ->willReturn(['tl_user' => [2]]);
+            ->willReturn(['tl_user' => [2]])
+        ;
 
         $token = $this->getToken($model, $framework);
         $token->confirm();
@@ -203,19 +212,22 @@ class OptInTokenTest extends ContaoTestCase
 
         $model
             ->expects($this->once())
-            ->method('save');
+            ->method('save')
+        ;
 
         $email = $this->createMock(Email::class);
         $email
             ->expects($this->once())
-            ->method('sendTo');
+            ->method('sendTo')
+        ;
 
         $framework = $this->mockContaoFramework();
         $framework
             ->expects($this->once())
             ->method('createInstance')
             ->with(Email::class)
-            ->willReturn($email);
+            ->willReturn($email)
+        ;
 
         $token = $this->getToken($model, $framework);
         $token->send('Subject', 'Text');
@@ -263,7 +275,8 @@ class OptInTokenTest extends ContaoTestCase
 
         $model
             ->expects($this->never())
-            ->method('save');
+            ->method('save')
+        ;
 
         $token = $this->getToken($model);
 
@@ -284,19 +297,22 @@ class OptInTokenTest extends ContaoTestCase
 
         $model
             ->expects($this->never())
-            ->method('save');
+            ->method('save')
+        ;
 
         $email = $this->createMock(Email::class);
         $email
             ->expects($this->once())
-            ->method('sendTo');
+            ->method('sendTo')
+        ;
 
         $framework = $this->mockContaoFramework();
         $framework
             ->expects($this->once())
             ->method('createInstance')
             ->with(Email::class)
-            ->willReturn($email);
+            ->willReturn($email)
+        ;
 
         $token = $this->getToken($model, $framework);
         $token->send('Subject', 'Text');

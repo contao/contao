@@ -175,12 +175,14 @@ class ImageSizesTest extends TestCase
 
         $this->eventDispatcher
             ->expects($this->exactly(3))
-            ->method('dispatch');
+            ->method('dispatch')
+        ;
 
         $this->connection
             ->expects($this->exactly(2))
             ->method('fetchAll')
-            ->willReturn([]);
+            ->willReturn([])
+        ;
 
         // Test that fetchAll() is only called once
         $this->imageSizes->getAllOptions();
@@ -198,7 +200,8 @@ class ImageSizesTest extends TestCase
         $this->eventDispatcher
             ->expects($this->atLeastOnce())
             ->method('dispatch')
-            ->with($this->isInstanceOf(ImageSizesEvent::class), $event);
+            ->with($this->isInstanceOf(ImageSizesEvent::class), $event)
+        ;
     }
 
     /**
@@ -209,7 +212,8 @@ class ImageSizesTest extends TestCase
         $this->connection
             ->expects($this->atLeastOnce())
             ->method('fetchAll')
-            ->willReturn($imageSizes);
+            ->willReturn($imageSizes)
+        ;
     }
 
     /**

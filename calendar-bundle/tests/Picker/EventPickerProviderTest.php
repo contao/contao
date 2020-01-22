@@ -146,7 +146,8 @@ class EventPickerProviderTest extends ContaoTestCase
             ->expects($this->once())
             ->method('getRelated')
             ->with('pid')
-            ->willReturn($calendarModel);
+            ->willReturn($calendarModel)
+        ;
 
         $config = new PickerConfig('link', [], '{{event_url::1}}', 'eventPicker');
 
@@ -193,7 +194,8 @@ class EventPickerProviderTest extends ContaoTestCase
             ->expects($this->once())
             ->method('getRelated')
             ->with('pid')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $config = new PickerConfig('link', [], '{{event_url::1}}', 'eventPicker');
 
@@ -219,7 +221,8 @@ class EventPickerProviderTest extends ContaoTestCase
         $security
             ->expects(null === $accessGranted ? $this->never() : $this->once())
             ->method('isGranted')
-            ->willReturn($accessGranted ?? false);
+            ->willReturn($accessGranted ?? false)
+        ;
 
         $menuFactory = $this->createMock(FactoryInterface::class);
         $menuFactory
@@ -234,7 +237,8 @@ class EventPickerProviderTest extends ContaoTestCase
 
                     return $item;
                 }
-            );
+            )
+        ;
 
         $router = $this->createMock(RouterInterface::class);
         $router
@@ -243,12 +247,14 @@ class EventPickerProviderTest extends ContaoTestCase
                 static function (string $name, array $params): string {
                     return $name.'?'.http_build_query($params);
                 }
-            );
+            )
+        ;
 
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
             ->method('trans')
-            ->willReturn('Event picker');
+            ->willReturn('Event picker')
+        ;
 
         return new EventPickerProvider($menuFactory, $router, $translator, $security);
     }

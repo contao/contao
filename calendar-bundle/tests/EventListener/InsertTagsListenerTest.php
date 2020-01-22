@@ -58,7 +58,8 @@ class InsertTagsListenerTest extends ContaoTestCase
 
                     return 'events/the-foobar-event.html';
                 }
-            );
+            )
+        ;
 
         $adapters = [
             CalendarEventsModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => $eventModel]),

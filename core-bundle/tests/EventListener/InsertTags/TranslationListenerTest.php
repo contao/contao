@@ -28,7 +28,8 @@ class TranslationListenerTest extends TestCase
             ->expects($this->once())
             ->method('trans')
             ->with($id, $parameters, $domain)
-            ->willReturn($result);
+            ->willReturn($result)
+        ;
 
         $listener = new TranslationListener($translator);
 
@@ -55,11 +56,13 @@ class TranslationListenerTest extends TestCase
         $translator = $this->createMock(Translator::class);
         $translator
             ->expects($this->never())
-            ->method('trans');
+            ->method('trans')
+        ;
 
         $translator
             ->expects($this->never())
-            ->method('transChoice');
+            ->method('transChoice')
+        ;
 
         $listener = new TranslationListener($translator);
 

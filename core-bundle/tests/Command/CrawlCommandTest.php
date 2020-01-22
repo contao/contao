@@ -98,7 +98,8 @@ class CrawlCommandTest extends TestCase
         $escargotFactory
             ->expects($this->once())
             ->method('getCrawlUriCollection')
-            ->willReturn($this->createBaseUriCollection());
+            ->willReturn($this->createBaseUriCollection())
+        ;
 
         return $escargotFactory;
     }
@@ -112,11 +113,13 @@ class CrawlCommandTest extends TestCase
         $escargotFactory
             ->expects($this->once())
             ->method('create')
-            ->willReturn($escargot);
+            ->willReturn($escargot)
+        ;
 
         $escargotFactory
             ->expects($this->never())
-            ->method('createFromJobId');
+            ->method('createFromJobId')
+        ;
 
         return $escargotFactory;
     }
@@ -132,11 +135,13 @@ class CrawlCommandTest extends TestCase
             $escargotFactory
                 ->expects($this->once())
                 ->method('createFromJobId')
-                ->willThrowException($exception);
+                ->willThrowException($exception)
+            ;
 
             $escargotFactory
                 ->expects($this->never())
-                ->method('create');
+                ->method('create')
+            ;
 
             return $escargotFactory;
         }
@@ -144,11 +149,13 @@ class CrawlCommandTest extends TestCase
         $escargotFactory
             ->expects($this->once())
             ->method('create')
-            ->willThrowException($exception);
+            ->willThrowException($exception)
+        ;
 
         $escargotFactory
             ->expects($this->never())
-            ->method('createFromJobId');
+            ->method('createFromJobId')
+        ;
 
         return $escargotFactory;
     }

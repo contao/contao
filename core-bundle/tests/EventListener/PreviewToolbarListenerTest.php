@@ -325,15 +325,18 @@ class PreviewToolbarListenerTest extends TestCase
 
         $request
             ->method('isXmlHttpRequest')
-            ->willReturn($isXmlHttpRequest);
+            ->willReturn($isXmlHttpRequest)
+        ;
 
         $request
             ->method('getRequestFormat')
-            ->willReturn($requestFormat);
+            ->willReturn($requestFormat)
+        ;
 
         $request
             ->method('getScriptName')
-            ->willReturn('preview.php');
+            ->willReturn('preview.php')
+        ;
 
         if ($hasSession) {
             $request->setSession($this->createMock(Session::class));
@@ -350,7 +353,8 @@ class PreviewToolbarListenerTest extends TestCase
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $scopeMatcher
             ->method('isFrontendMasterRequest')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         return $scopeMatcher;
     }
@@ -363,7 +367,8 @@ class PreviewToolbarListenerTest extends TestCase
         $twig = $this->createMock(Environment::class);
         $twig
             ->method('render')
-            ->willReturn($render);
+            ->willReturn($render)
+        ;
 
         return $twig;
     }
@@ -376,11 +381,13 @@ class PreviewToolbarListenerTest extends TestCase
         $router = $this->createMock(RouterInterface::class);
         $router
             ->method('generate')
-            ->with($expectedRoute, $expectedParameters, $referenceType);
+            ->with($expectedRoute, $expectedParameters, $referenceType)
+        ;
 
         $router
             ->method('getContext')
-            ->willReturn(new RequestContext());
+            ->willReturn(new RequestContext())
+        ;
 
         return $router;
     }

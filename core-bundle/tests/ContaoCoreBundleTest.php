@@ -77,7 +77,8 @@ class ContaoCoreBundleTest extends TestCase
                 static function ($param) {
                     return $param instanceof ContaoLoginFactory;
                 }
-            ));
+            ))
+        ;
 
         $container = $this->createMock(ContainerBuilder::class);
         $container
@@ -102,13 +103,15 @@ class ContaoCoreBundleTest extends TestCase
 
                     return true;
                 }
-            ));
+            ))
+        ;
 
         $container
             ->expects($this->once())
             ->method('getExtension')
             ->with('security')
-            ->willReturn($security);
+            ->willReturn($security)
+        ;
 
         $bundle = new ContaoCoreBundle();
         $bundle->build($container);

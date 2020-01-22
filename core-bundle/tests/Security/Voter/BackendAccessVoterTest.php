@@ -55,7 +55,8 @@ class BackendAccessVoterTest extends TestCase
         $token
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $this->assertSame(VoterInterface::ACCESS_DENIED, $this->voter->vote($token, 'alexf', ['contao_user.']));
     }
@@ -66,7 +67,8 @@ class BackendAccessVoterTest extends TestCase
         $token
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($this->createMock(BackendUser::class));
+            ->willReturn($this->createMock(BackendUser::class))
+        ;
 
         $this->assertSame(VoterInterface::ACCESS_DENIED, $this->voter->vote($token, new \stdClass(), ['contao_user.']));
     }
@@ -77,13 +79,15 @@ class BackendAccessVoterTest extends TestCase
         $user
             ->expects($this->once())
             ->method('hasAccess')
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $token = $this->createMock(TokenInterface::class);
         $token
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($user);
+            ->willReturn($user)
+        ;
 
         $this->assertSame(VoterInterface::ACCESS_DENIED, $this->voter->vote($token, 'alexf', ['contao_user.']));
     }
@@ -94,13 +98,15 @@ class BackendAccessVoterTest extends TestCase
         $user
             ->expects($this->once())
             ->method('hasAccess')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $token = $this->createMock(TokenInterface::class);
         $token
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($user);
+            ->willReturn($user)
+        ;
 
         $this->assertSame(VoterInterface::ACCESS_GRANTED, $this->voter->vote($token, 'alexf', ['contao_user.']));
     }

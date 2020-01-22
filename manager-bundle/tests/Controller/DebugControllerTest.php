@@ -94,7 +94,8 @@ class DebugControllerTest extends ContaoTestCase
         $security
             ->expects($this->once())
             ->method('isGranted')
-            ->willReturn($isAdmin);
+            ->willReturn($isAdmin)
+        ;
 
         return $security;
     }
@@ -114,7 +115,8 @@ class DebugControllerTest extends ContaoTestCase
         $requestStack
             ->expects($this->once())
             ->method('getCurrentRequest')
-            ->willReturn($request);
+            ->willReturn($request)
+        ;
 
         return $requestStack;
     }
@@ -128,7 +130,8 @@ class DebugControllerTest extends ContaoTestCase
         $jwtManager
             ->expects($expectAddsCookie ? $this->once() : $this->never())
             ->method('addResponseCookie')
-            ->with($this->anything(), ['debug' => $debug]);
+            ->with($this->anything(), ['debug' => $debug])
+        ;
 
         return $jwtManager;
     }

@@ -30,14 +30,16 @@ class BackendControllerTest extends TestCase
         $authorizationChecker
             ->expects($this->once())
             ->method('isGranted')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $router = $this->createMock(RouterInterface::class);
         $router
             ->expects($this->once())
             ->method('generate')
             ->with('contao_backend')
-            ->willReturn('/contao');
+            ->willReturn('/contao')
+        ;
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $this->mockContaoFramework());
@@ -61,7 +63,8 @@ class BackendControllerTest extends TestCase
             ->expects($this->once())
             ->method('generate')
             ->with('contao_backend_login')
-            ->willReturn('/contao/login');
+            ->willReturn('/contao/login')
+        ;
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $this->mockContaoFramework());
@@ -80,12 +83,14 @@ class BackendControllerTest extends TestCase
         $picker = $this->createMock(PickerInterface::class);
         $picker
             ->method('getCurrentUrl')
-            ->willReturn('/foobar');
+            ->willReturn('/foobar')
+        ;
 
         $builder = $this->createMock(PickerBuilderInterface::class);
         $builder
             ->method('create')
-            ->willReturn($picker);
+            ->willReturn($picker)
+        ;
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.picker.builder', $builder);
@@ -122,7 +127,8 @@ class BackendControllerTest extends TestCase
         $builder = $this->createMock(PickerBuilderInterface::class);
         $builder
             ->method('create')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.picker.builder', $builder);

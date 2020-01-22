@@ -44,7 +44,8 @@ class CombinerTest extends ContaoTestCase
         $context = $this->createMock(ContaoContext::class);
         $context
             ->method('getStaticUrl')
-            ->willReturn('');
+            ->willReturn('')
+        ;
 
         $this->container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $this->container->setParameter('contao.web_dir', $this->getTempDir().'/web');

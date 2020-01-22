@@ -81,7 +81,8 @@ class ContaoUserProviderTest extends TestCase
             ->expects($this->once())
             ->method('get')
             ->with('sessionTimeout')
-            ->willReturn(3600);
+            ->willReturn(3600)
+        ;
 
         $adapters = [
             BackendUser::class => $userAdapter,
@@ -94,23 +95,27 @@ class ContaoUserProviderTest extends TestCase
         $metadata
             ->expects($this->once())
             ->method('getLastUsed')
-            ->willReturn(time() - 1800);
+            ->willReturn(time() - 1800)
+        ;
 
         $session = $this->createMock(SessionInterface::class);
         $session
             ->expects($this->once())
             ->method('isStarted')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $session
             ->expects($this->once())
             ->method('getMetadataBag')
-            ->willReturn($metadata);
+            ->willReturn($metadata)
+        ;
 
         $logger = $this->createMock(LoggerInterface::class);
         $logger
             ->expects($this->never())
-            ->method('info');
+            ->method('info')
+        ;
 
         $userProvider = new ContaoUserProvider($framework, $session, BackendUser::class, $logger);
 
@@ -130,7 +135,8 @@ class ContaoUserProviderTest extends TestCase
             ->expects($this->once())
             ->method('get')
             ->with('sessionTimeout')
-            ->willReturn(3600);
+            ->willReturn(3600)
+        ;
 
         $adapters = [
             BackendUser::class => $userAdapter,
@@ -143,24 +149,28 @@ class ContaoUserProviderTest extends TestCase
         $metadata
             ->expects($this->once())
             ->method('getLastUsed')
-            ->willReturn(time() - 7200);
+            ->willReturn(time() - 7200)
+        ;
 
         $session = $this->createMock(SessionInterface::class);
         $session
             ->expects($this->once())
             ->method('isStarted')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $session
             ->expects($this->once())
             ->method('getMetadataBag')
-            ->willReturn($metadata);
+            ->willReturn($metadata)
+        ;
 
         $logger = $this->createMock(LoggerInterface::class);
         $logger
             ->expects($this->once())
             ->method('info')
-            ->with('User "foobar" has been logged out automatically due to inactivity');
+            ->with('User "foobar" has been logged out automatically due to inactivity')
+        ;
 
         $userProvider = new ContaoUserProvider($framework, $session, BackendUser::class, $logger);
 
@@ -206,7 +216,8 @@ class ContaoUserProviderTest extends TestCase
 
         $user
             ->expects($this->once())
-            ->method('save');
+            ->method('save')
+        ;
 
         $userProvider = $this->getProvider(null, BackendUser::class);
         $userProvider->upgradePassword($user, 'newsuperhash');
@@ -241,7 +252,8 @@ class ContaoUserProviderTest extends TestCase
             ->expects($this->once())
             ->method('importStatic')
             ->with(static::class)
-            ->willReturn($this);
+            ->willReturn($this)
+        ;
 
         $framework = $this->mockContaoFramework([
             BackendUser::class => $this->mockConfiguredAdapter(['loadUserByUsername' => $user]),
@@ -250,7 +262,8 @@ class ContaoUserProviderTest extends TestCase
 
         $framework
             ->expects($this->once())
-            ->method('initialize');
+            ->method('initialize')
+        ;
 
         $GLOBALS['TL_HOOKS']['postAuthenticate'][] = [static::class, 'onPostAuthenticate'];
 

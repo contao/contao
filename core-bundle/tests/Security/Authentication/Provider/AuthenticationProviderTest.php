@@ -47,25 +47,29 @@ class AuthenticationProviderTest extends TestCase
         $token
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($user);
+            ->willReturn($user)
+        ;
 
         $authProvider = $this->createMock(AuthenticationProviderInterface::class);
         $authProvider
             ->expects($this->once())
             ->method('authenticate')
             ->with($token)
-            ->willReturn($token);
+            ->willReturn($token)
+        ;
 
         $userChecker = $this->createMock(UserCheckerInterface::class);
         $userChecker
             ->expects($this->once())
             ->method('checkPreAuth')
-            ->with($user);
+            ->with($user)
+        ;
 
         $userChecker
             ->expects($this->once())
             ->method('checkPostAuth')
-            ->with($user);
+            ->with($user)
+        ;
 
         $provider = $this->createTwoFactorProvider($authProvider, $userChecker);
         $provider->authenticate($token);
@@ -84,29 +88,34 @@ class AuthenticationProviderTest extends TestCase
 
         $user
             ->expects($this->once())
-            ->method('save');
+            ->method('save')
+        ;
 
         $token = $this->createMock(TwoFactorTokenInterface::class);
         $token
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($user);
+            ->willReturn($user)
+        ;
 
         $authProvider = $this->createMock(AuthenticationProviderInterface::class);
         $authProvider
             ->expects($this->never())
-            ->method('authenticate');
+            ->method('authenticate')
+        ;
 
         $userChecker = $this->createMock(UserCheckerInterface::class);
         $userChecker
             ->expects($this->once())
             ->method('checkPreAuth')
             ->with($user)
-            ->willThrowException(new InvalidTwoFactorCodeException());
+            ->willThrowException(new InvalidTwoFactorCodeException())
+        ;
 
         $userChecker
             ->expects($this->never())
-            ->method('checkPostAuth');
+            ->method('checkPostAuth')
+        ;
 
         $provider = $this->createTwoFactorProvider($authProvider, $userChecker);
         $hasException = false;
@@ -161,18 +170,21 @@ class AuthenticationProviderTest extends TestCase
 
         $user
             ->expects($this->never())
-            ->method('save');
+            ->method('save')
+        ;
 
         $token = $this->createMock(TwoFactorTokenInterface::class);
         $token
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($user);
+            ->willReturn($user)
+        ;
 
         $authProvider = $this->createMock(AuthenticationProviderInterface::class);
         $authProvider
             ->expects($this->never())
-            ->method('authenticate');
+            ->method('authenticate')
+        ;
 
         $exception = new \RuntimeException();
 
@@ -181,11 +193,13 @@ class AuthenticationProviderTest extends TestCase
             ->expects($this->once())
             ->method('checkPreAuth')
             ->with($user)
-            ->willThrowException($exception);
+            ->willThrowException($exception)
+        ;
 
         $userChecker
             ->expects($this->never())
-            ->method('checkPostAuth');
+            ->method('checkPostAuth')
+        ;
 
         $provider = $this->createTwoFactorProvider($authProvider, $userChecker);
         $hasException = false;
@@ -207,23 +221,27 @@ class AuthenticationProviderTest extends TestCase
         $token
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($this->createMock(UserInterface::class));
+            ->willReturn($this->createMock(UserInterface::class))
+        ;
 
         $authProvider = $this->createMock(AuthenticationProviderInterface::class);
         $authProvider
             ->expects($this->once())
             ->method('authenticate')
             ->with($token)
-            ->willReturn($token);
+            ->willReturn($token)
+        ;
 
         $userChecker = $this->createMock(UserCheckerInterface::class);
         $userChecker
             ->expects($this->never())
-            ->method('checkPreAuth');
+            ->method('checkPreAuth')
+        ;
 
         $userChecker
             ->expects($this->never())
-            ->method('checkPostAuth');
+            ->method('checkPostAuth')
+        ;
 
         $provider = $this->createTwoFactorProvider($authProvider, $userChecker);
         $provider->authenticate($token);
@@ -239,23 +257,27 @@ class AuthenticationProviderTest extends TestCase
         $user
             ->expects($this->once())
             ->method('getPassword')
-            ->willReturn('foobar');
+            ->willReturn('foobar')
+        ;
 
         $user
             ->expects($this->once())
-            ->method('save');
+            ->method('save')
+        ;
 
         $currentUser = $this->createMock(UserInterface::class);
         $currentUser
             ->expects($this->once())
             ->method('getPassword')
-            ->willReturn('barfoo');
+            ->willReturn('barfoo')
+        ;
 
         $token = $this->createMock(UsernamePasswordToken::class);
         $token
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($currentUser);
+            ->willReturn($currentUser)
+        ;
 
         $provider = $this->createUsernamePasswordProvider();
 
@@ -276,14 +298,16 @@ class AuthenticationProviderTest extends TestCase
         $twoFactorHandler
             ->expects($this->once())
             ->method('beginTwoFactorAuthentication')
-            ->willReturn($token);
+            ->willReturn($token)
+        ;
 
         $trustedDeviceManager = $this->createMock(TrustedDeviceManagerInterface::class);
         $trustedDeviceManager
             ->expects($this->once())
             ->method('isTrustedDevice')
             ->with($user, 'contao_frontend')
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $provider = $this->createUsernamePasswordProvider(null, $twoFactorHandler, $trustedDeviceManager);
         $provider->authenticate($token);
@@ -299,19 +323,22 @@ class AuthenticationProviderTest extends TestCase
         $twoFactorHandler = $this->createMock(AuthenticationHandlerInterface::class);
         $twoFactorHandler
             ->expects($this->never())
-            ->method('beginTwoFactorAuthentication');
+            ->method('beginTwoFactorAuthentication')
+        ;
 
         $trustedDeviceManager = $this->createMock(TrustedDeviceManagerInterface::class);
         $trustedDeviceManager
             ->expects($this->once())
             ->method('isTrustedDevice')
             ->with($user, 'contao_frontend')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $trustedDeviceManager
             ->expects($this->once())
             ->method('addTrustedDevice')
-            ->with($user, 'contao_frontend');
+            ->with($user, 'contao_frontend')
+        ;
 
         $provider = $this->createUsernamePasswordProvider(null, $twoFactorHandler, $trustedDeviceManager);
         $provider->authenticate($token);
@@ -323,19 +350,22 @@ class AuthenticationProviderTest extends TestCase
         $user
             ->expects($this->once())
             ->method('getPassword')
-            ->willReturn('foobar');
+            ->willReturn('foobar')
+        ;
 
         $currentUser = $this->createMock(UserInterface::class);
         $currentUser
             ->expects($this->once())
             ->method('getPassword')
-            ->willReturn('foobar');
+            ->willReturn('foobar')
+        ;
 
         $token = $this->createMock(UsernamePasswordToken::class);
         $token
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($currentUser);
+            ->willReturn($currentUser)
+        ;
 
         $provider = $this->createUsernamePasswordProvider();
         $provider->checkAuthentication($user, $token);
@@ -357,28 +387,33 @@ class AuthenticationProviderTest extends TestCase
         $user
             ->expects($this->once())
             ->method('getPassword')
-            ->willReturn('foobar');
+            ->willReturn('foobar')
+        ;
 
         $user
             ->expects($this->once())
-            ->method('save');
+            ->method('save')
+        ;
 
         $currentUser = $this->createMock(UserInterface::class);
         $currentUser
             ->expects($this->once())
             ->method('getPassword')
-            ->willReturn('barfoo');
+            ->willReturn('barfoo')
+        ;
 
         $token = $this->createMock(UsernamePasswordToken::class);
         $token
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($currentUser);
+            ->willReturn($currentUser)
+        ;
 
         $framework = $this->mockContaoFramework();
         $framework
             ->expects($this->atLeastOnce())
-            ->method('initialize');
+            ->method('initialize')
+        ;
 
         $provider = $this->createUsernamePasswordProvider($framework);
 
@@ -394,7 +429,8 @@ class AuthenticationProviderTest extends TestCase
         $token
             ->expects($this->once())
             ->method('getUser')
-            ->willThrowException(new AuthenticationException('Unsupported user'));
+            ->willThrowException(new AuthenticationException('Unsupported user'))
+        ;
 
         $provider = $this->createUsernamePasswordProvider();
 
@@ -420,40 +456,47 @@ class AuthenticationProviderTest extends TestCase
         $user
             ->expects($this->once())
             ->method('getPassword')
-            ->willReturn('foobar');
+            ->willReturn('foobar')
+        ;
 
         $currentUser = $this->createMock(UserInterface::class);
         $currentUser
             ->expects($this->once())
             ->method('getPassword')
-            ->willReturn('barfoo');
+            ->willReturn('barfoo')
+        ;
 
         $token = $this->createMock(UsernamePasswordToken::class);
         $token
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($currentUser);
+            ->willReturn($currentUser)
+        ;
 
         $token
             ->expects($this->once())
             ->method('getUsername')
-            ->willReturn('foo');
+            ->willReturn('foo')
+        ;
 
         $token
             ->expects($this->once())
             ->method('getCredentials')
-            ->willReturn('bar');
+            ->willReturn('bar')
+        ;
 
         $systemAdapter = $this->mockAdapter(['importStatic']);
         $systemAdapter
             ->method('importStatic')
             ->with(static::class)
-            ->willReturn($this);
+            ->willReturn($this)
+        ;
 
         $framework = $this->mockContaoFramework([System::class => $systemAdapter]);
         $framework
             ->expects($this->atLeastOnce())
-            ->method('initialize');
+            ->method('initialize')
+        ;
 
         $GLOBALS['TL_HOOKS']['checkCredentials'][] = [static::class, $callback];
 
@@ -516,12 +559,14 @@ class AuthenticationProviderTest extends TestCase
                 static function ($request, $token, $firewallName) {
                     return new AuthenticationContext($request, $token, $firewallName);
                 }
-            );
+            )
+        ;
 
         $requestStack = $this->createMock(RequestStack::class);
         $requestStack
             ->method('getMasterRequest')
-            ->willReturn($this->createMock(Request::class));
+            ->willReturn($this->createMock(Request::class))
+        ;
 
         return new AuthenticationProvider(
             $userProvider,
@@ -555,7 +600,8 @@ class AuthenticationProviderTest extends TestCase
         $requestStack = $this->createMock(RequestStack::class);
         $requestStack
             ->method('getMasterRequest')
-            ->willReturn($this->createMock(Request::class));
+            ->willReturn($this->createMock(Request::class))
+        ;
 
         $contextFactory = $this->createMock(AuthenticationContextFactoryInterface::class);
         $contextFactory
@@ -564,7 +610,8 @@ class AuthenticationProviderTest extends TestCase
                 static function ($request, $token, $firewallName) {
                     return new AuthenticationContext($request, $token, $firewallName);
                 }
-            );
+            )
+        ;
 
         return new AuthenticationProvider(
             $userProvider,

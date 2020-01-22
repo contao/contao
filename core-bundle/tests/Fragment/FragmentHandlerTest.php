@@ -158,7 +158,8 @@ class FragmentHandlerTest extends TestCase
         $preHandlers
             ->expects($this->once())
             ->method('preHandleFragment')
-            ->with($uri, $config);
+            ->with($uri, $config)
+        ;
 
         $preHandlers = $this->mockServiceLocator('foo.bar', $preHandlers);
         $renderers = $this->mockServiceLocatorWithRenderer('inline');
@@ -172,12 +173,14 @@ class FragmentHandlerTest extends TestCase
         $baseHandler = $this->createMock(BaseFragmentHandler::class);
         $baseHandler
             ->expects($this->once())
-            ->method('render');
+            ->method('render')
+        ;
 
         $fragmentRegistry = $this->createMock(FragmentRegistry::class);
         $fragmentRegistry
             ->expects($this->never())
-            ->method('get');
+            ->method('get')
+        ;
 
         $fragmentHandler = $this->getFragmentHandler($fragmentRegistry, null, null, null, $baseHandler);
         $fragmentHandler->render('foo.bar');
@@ -242,11 +245,13 @@ class FragmentHandlerTest extends TestCase
         $renderer = $this->createMock(FragmentRendererInterface::class);
         $renderer
             ->method('getName')
-            ->willReturn($name);
+            ->willReturn($name)
+        ;
 
         $method = $renderer
             ->expects($this->once())
-            ->method('render');
+            ->method('render')
+        ;
 
         if (null !== $with) {
             $method = \call_user_func_array([$method, 'with'], $with);
@@ -271,13 +276,15 @@ class FragmentHandlerTest extends TestCase
             ->expects($this->once())
             ->method('has')
             ->with($name)
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $serviceLocator
             ->expects($this->once())
             ->method('get')
             ->with($name)
-            ->willReturn($service);
+            ->willReturn($service)
+        ;
 
         return $serviceLocator;
     }

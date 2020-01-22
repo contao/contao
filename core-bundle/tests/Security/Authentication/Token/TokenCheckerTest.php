@@ -54,12 +54,14 @@ class TokenCheckerTest extends TestCase
         $session = $this->createMock(SessionInterface::class);
         $session
             ->expects($this->never())
-            ->method('isStarted');
+            ->method('isStarted')
+        ;
 
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
         $tokenStorage
             ->method('getToken')
-            ->willReturn($token);
+            ->willReturn($token)
+        ;
 
         $tokenChecker = new TokenChecker(
             $this->mockRequestStack(),
@@ -157,7 +159,8 @@ class TokenCheckerTest extends TestCase
             $session = $this->createMock(SessionInterface::class);
             $session
                 ->expects($this->never())
-                ->method('isStarted');
+                ->method('isStarted')
+            ;
         }
 
         $tokenChecker = new TokenChecker(
@@ -186,11 +189,13 @@ class TokenCheckerTest extends TestCase
         $session
             ->expects($this->once())
             ->method('isStarted')
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $session
             ->expects($this->never())
-            ->method('has');
+            ->method('has')
+        ;
 
         $tokenChecker = new TokenChecker(
             $this->mockRequestStack(),
@@ -209,12 +214,14 @@ class TokenCheckerTest extends TestCase
         $session
             ->expects($this->once())
             ->method('isStarted')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $session
             ->expects($this->once())
             ->method('has')
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $tokenChecker = new TokenChecker(
             $this->mockRequestStack(),
@@ -233,17 +240,20 @@ class TokenCheckerTest extends TestCase
         $session
             ->expects($this->once())
             ->method('isStarted')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $session
             ->expects($this->once())
             ->method('has')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $session
             ->expects($this->once())
             ->method('get')
-            ->willReturn(serialize(new \stdClass()));
+            ->willReturn(serialize(new \stdClass()))
+        ;
 
         $tokenChecker = new TokenChecker(
             $this->mockRequestStack(),
@@ -310,7 +320,8 @@ class TokenCheckerTest extends TestCase
         $requestStack = $this->createMock(RequestStack::class);
         $requestStack
             ->method('getMasterRequest')
-            ->willReturn($request);
+            ->willReturn($request)
+        ;
 
         return $requestStack;
     }
@@ -325,7 +336,8 @@ class TokenCheckerTest extends TestCase
         $map = $this->createMock(FirewallMap::class);
         $map
             ->method('getFirewallConfig')
-            ->willReturn($config);
+            ->willReturn($config)
+        ;
 
         return $map;
     }
@@ -339,17 +351,20 @@ class TokenCheckerTest extends TestCase
         $session
             ->expects($this->once())
             ->method('isStarted')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $session
             ->expects($this->once())
             ->method('has')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $session
             ->expects($this->once())
             ->method('get')
-            ->willReturn(serialize($token));
+            ->willReturn(serialize($token))
+        ;
 
         return $session;
     }

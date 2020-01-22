@@ -60,7 +60,8 @@ class UserPasswordCommandTest extends TestCase
         $question = $this->createMock(QuestionHelper::class);
         $question
             ->method('ask')
-            ->willReturn('12345678');
+            ->willReturn('12345678')
+        ;
 
         $command->getHelperSet()->set($question, 'question');
 
@@ -76,7 +77,8 @@ class UserPasswordCommandTest extends TestCase
         $question = $this->createMock(QuestionHelper::class);
         $question
             ->method('ask')
-            ->willReturnOnConsecutiveCalls('12345678', '87654321');
+            ->willReturnOnConsecutiveCalls('12345678', '87654321')
+        ;
 
         $command->getHelperSet()->set($question, 'question');
 
@@ -145,7 +147,8 @@ class UserPasswordCommandTest extends TestCase
         $connection
             ->expects($this->once())
             ->method('update')
-            ->willReturn(0);
+            ->willReturn(0)
+        ;
 
         $command = $this->getCommand($connection);
 
@@ -175,7 +178,8 @@ class UserPasswordCommandTest extends TestCase
                 ['password' => '$argon2id$v=19$m=65536,t=6,p=1$T+WK0xPOk21CQ2dX9AFplw$2uCrfvt7Tby81Dhc8Y7wHQQGP1HnPC3nDEb4FtXsfrQ'],
                 ['username' => $username]
             )
-            ->willReturn(1);
+            ->willReturn(1)
+        ;
 
         $input = [
             'username' => $username,
@@ -210,13 +214,15 @@ class UserPasswordCommandTest extends TestCase
         $encoder
             ->method('encodePassword')
             ->with($password, null)
-            ->willReturn('$argon2id$v=19$m=65536,t=6,p=1$T+WK0xPOk21CQ2dX9AFplw$2uCrfvt7Tby81Dhc8Y7wHQQGP1HnPC3nDEb4FtXsfrQ');
+            ->willReturn('$argon2id$v=19$m=65536,t=6,p=1$T+WK0xPOk21CQ2dX9AFplw$2uCrfvt7Tby81Dhc8Y7wHQQGP1HnPC3nDEb4FtXsfrQ')
+        ;
 
         $encoderFactory = $this->createMock(EncoderFactoryInterface::class);
         $encoderFactory
             ->method('getEncoder')
             ->with(BackendUser::class)
-            ->willReturn($encoder);
+            ->willReturn($encoder)
+        ;
 
         $command = new UserPasswordCommand($this->mockContaoFramework(), $connection, $encoderFactory);
         $command->setApplication(new Application());

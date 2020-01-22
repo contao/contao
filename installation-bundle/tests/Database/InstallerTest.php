@@ -30,7 +30,8 @@ class InstallerTest extends TestCase
         $fromSchema = new Schema();
         $fromSchema
             ->createTable('tl_foo')
-            ->addColumn('foo', 'string');
+            ->addColumn('foo', 'string')
+        ;
 
         $toSchema = new Schema();
         $toSchema
@@ -38,7 +39,8 @@ class InstallerTest extends TestCase
             ->addOption('engine', 'InnoDB')
             ->addOption('charset', 'utf8mb4')
             ->addOption('collate', 'utf8mb4_unicode_ci')
-            ->addColumn('foo', 'string');
+            ->addColumn('foo', 'string')
+        ;
 
         $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_foo']);
         $commands = $installer->getCommands();
@@ -63,28 +65,34 @@ class InstallerTest extends TestCase
         $fromSchema = new Schema();
         $fromSchema
             ->createTable('tl_foo')
-            ->addOption('engine', 'MyISAM');
+            ->addOption('engine', 'MyISAM')
+        ;
 
         $fromSchema
             ->getTable('tl_foo')
-            ->addColumn('foo', 'string');
+            ->addColumn('foo', 'string')
+        ;
 
         $fromSchema
             ->getTable('tl_foo')
-            ->addIndex(['foo'], 'foo_idx');
+            ->addIndex(['foo'], 'foo_idx')
+        ;
 
         $toSchema = new Schema();
         $toSchema
             ->createTable('tl_foo')
-            ->addOption('engine', 'InnoDB');
+            ->addOption('engine', 'InnoDB')
+        ;
 
         $toSchema
             ->getTable('tl_foo')
-            ->addColumn('foo', 'string');
+            ->addColumn('foo', 'string')
+        ;
 
         $toSchema
             ->getTable('tl_foo')
-            ->addIndex(['foo'], 'foo_idx');
+            ->addIndex(['foo'], 'foo_idx')
+        ;
 
         $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_foo']);
         $commands = $installer->getCommands();
@@ -100,28 +108,34 @@ class InstallerTest extends TestCase
         $fromSchema = new Schema();
         $fromSchema
             ->createTable('tl_foo')
-            ->addOption('collate', 'utf8_unicode_ci');
+            ->addOption('collate', 'utf8_unicode_ci')
+        ;
 
         $fromSchema
             ->getTable('tl_foo')
-            ->addColumn('foo', 'string');
+            ->addColumn('foo', 'string')
+        ;
 
         $fromSchema
             ->getTable('tl_foo')
-            ->addIndex(['foo'], 'foo_idx');
+            ->addIndex(['foo'], 'foo_idx')
+        ;
 
         $toSchema = new Schema();
         $toSchema
             ->createTable('tl_foo')
-            ->addOption('collate', 'utf8mb4_unicode_ci');
+            ->addOption('collate', 'utf8mb4_unicode_ci')
+        ;
 
         $toSchema
             ->getTable('tl_foo')
-            ->addColumn('foo', 'string');
+            ->addColumn('foo', 'string')
+        ;
 
         $toSchema
             ->getTable('tl_foo')
-            ->addIndex(['foo'], 'foo_idx');
+            ->addIndex(['foo'], 'foo_idx')
+        ;
 
         $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_foo']);
         $commands = $installer->getCommands();
@@ -137,7 +151,8 @@ class InstallerTest extends TestCase
         $fromSchema = new Schema();
         $fromSchema
             ->createTable('tl_bar')
-            ->addColumn('foo', 'string');
+            ->addColumn('foo', 'string')
+        ;
 
         $toSchema = new Schema();
         $toSchema
@@ -146,7 +161,8 @@ class InstallerTest extends TestCase
             ->addOption('row_format', 'DYNAMIC')
             ->addOption('charset', 'utf8mb4')
             ->addOption('collate', 'utf8mb4_unicode_ci')
-            ->addColumn('foo', 'string');
+            ->addColumn('foo', 'string')
+        ;
 
         $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_foo']);
         $commands = $installer->getCommands();
@@ -165,7 +181,8 @@ class InstallerTest extends TestCase
         $fromSchema = new Schema();
         $fromSchema
             ->createTable('tl_foo')
-            ->addColumn('foo', 'string');
+            ->addColumn('foo', 'string')
+        ;
 
         $toSchema = new Schema();
         $toSchema
@@ -174,7 +191,8 @@ class InstallerTest extends TestCase
             ->addOption('row_format', 'DYNAMIC')
             ->addOption('charset', 'utf8mb4')
             ->addOption('collate', 'utf8mb4_unicode_ci')
-            ->addColumn('foo', 'string');
+            ->addColumn('foo', 'string')
+        ;
 
         $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_foo'], 'OFF');
         $commands = $installer->getCommands();
@@ -193,16 +211,19 @@ class InstallerTest extends TestCase
         $fromSchema = new Schema();
         $fromSchema
             ->createTable('tl_foo')
-            ->addColumn('foo', 'string');
+            ->addColumn('foo', 'string')
+        ;
 
         $fromSchema
             ->getTable('tl_foo')
-            ->addColumn('bar', 'string');
+            ->addColumn('bar', 'string')
+        ;
 
         $toSchema = new Schema();
         $toSchema
             ->createTable('tl_foo')
-            ->addColumn('foo', 'string');
+            ->addColumn('foo', 'string')
+        ;
 
         $installer = $this->getInstaller($fromSchema, $toSchema);
         $commands = $installer->getCommands();
@@ -216,16 +237,19 @@ class InstallerTest extends TestCase
         $fromSchema = new Schema();
         $fromSchema
             ->createTable('tl_foo')
-            ->addColumn('foo', 'string');
+            ->addColumn('foo', 'string')
+        ;
 
         $toSchema = new Schema();
         $toSchema
             ->createTable('tl_foo')
-            ->addColumn('foo', 'string');
+            ->addColumn('foo', 'string')
+        ;
 
         $toSchema
             ->getTable('tl_foo')
-            ->addColumn('bar', 'string');
+            ->addColumn('bar', 'string')
+        ;
 
         $installer = $this->getInstaller($fromSchema, $toSchema);
         $commands = $installer->getCommands();
@@ -245,7 +269,8 @@ class InstallerTest extends TestCase
         $toSchema = new Schema();
         $toSchema
             ->createTable('tl_foo')
-            ->addColumn('foo', 'decimal', ['precision' => 9, 'scale' => 2]);
+            ->addColumn('foo', 'decimal', ['precision' => 9, 'scale' => 2])
+        ;
 
         $installer = $this->getInstaller($fromSchema, $toSchema);
         $commands = $installer->getCommands();
@@ -265,7 +290,8 @@ class InstallerTest extends TestCase
         $toSchema = new Schema();
         $toSchema
             ->createTable('tl_foo')
-            ->addColumn('foo', 'string', ['default' => ',']);
+            ->addColumn('foo', 'string', ['default' => ','])
+        ;
 
         $installer = $this->getInstaller($fromSchema, $toSchema);
         $commands = $installer->getCommands();
@@ -285,19 +311,23 @@ class InstallerTest extends TestCase
         $toSchema = new Schema();
         $toSchema
             ->createTable('tl_foo')
-            ->addColumn('foo1', 'string');
+            ->addColumn('foo1', 'string')
+        ;
 
         $toSchema
             ->getTable('tl_foo')
-            ->addColumn('foo2', 'integer');
+            ->addColumn('foo2', 'integer')
+        ;
 
         $toSchema
             ->getTable('tl_foo')
-            ->addColumn('foo3', 'decimal', ['precision' => 9, 'scale' => 2]);
+            ->addColumn('foo3', 'decimal', ['precision' => 9, 'scale' => 2])
+        ;
 
         $toSchema
             ->getTable('tl_foo')
-            ->addColumn('foo4', 'string', ['default' => ',']);
+            ->addColumn('foo4', 'string', ['default' => ','])
+        ;
 
         $installer = $this->getInstaller($fromSchema, $toSchema);
         $commands = $installer->getCommands();
@@ -318,7 +348,8 @@ class InstallerTest extends TestCase
         $fromSchema = new Schema();
         $fromSchema
             ->createTable('tl_foo')
-            ->addColumn('foo', 'string');
+            ->addColumn('foo', 'string')
+        ;
 
         $toSchema = new Schema();
         $toSchema
@@ -326,7 +357,8 @@ class InstallerTest extends TestCase
             ->addOption('engine', 'MyISAM')
             ->addOption('charset', 'utf8')
             ->addOption('collate', 'utf8_unicode_ci')
-            ->addColumn('foo', 'string');
+            ->addColumn('foo', 'string')
+        ;
 
         $installer = $this->getInstaller($fromSchema, $toSchema);
         $commands = $installer->getCommands();
@@ -344,20 +376,24 @@ class InstallerTest extends TestCase
         $schemaManager = $this->createMock(MySqlSchemaManager::class);
         $schemaManager
             ->method('createSchema')
-            ->willReturn($fromSchema);
+            ->willReturn($fromSchema)
+        ;
 
         $schemaManager
             ->method('listTableNames')
-            ->willReturn($tables);
+            ->willReturn($tables)
+        ;
 
         $connection = $this->createMock(Connection::class);
         $connection
             ->method('getSchemaManager')
-            ->willReturn($schemaManager);
+            ->willReturn($schemaManager)
+        ;
 
         $connection
             ->method('getDatabasePlatform')
-            ->willReturn(new MySqlPlatform());
+            ->willReturn(new MySqlPlatform())
+        ;
 
         $connection
             ->method('query')
@@ -368,7 +404,8 @@ class InstallerTest extends TestCase
                             $statement = $this->createMock(Statement::class);
                             $statement
                                 ->method('fetch')
-                                ->willReturn((object) ['Value' => $filePerTable]);
+                                ->willReturn((object) ['Value' => $filePerTable])
+                            ;
 
                             return $statement;
 
@@ -376,7 +413,8 @@ class InstallerTest extends TestCase
                             $statement = $this->createMock(Statement::class);
                             $statement
                                 ->method('fetch')
-                                ->willReturn((object) ['Value' => 'Barracuda']);
+                                ->willReturn((object) ['Value' => 'Barracuda'])
+                            ;
 
                             return $statement;
 
@@ -387,7 +425,8 @@ class InstallerTest extends TestCase
                                 ->willReturn((object) [
                                     'Engine' => 'MyISAM',
                                     'Collation' => 'utf8_unicode_ci',
-                                ]);
+                                ])
+                            ;
 
                             return $statement;
 
@@ -399,23 +438,27 @@ class InstallerTest extends TestCase
                                     'Engine' => 'InnoDB',
                                     'Create_options' => 'row_format=COMPATCT',
                                     'Collation' => 'utf8mb4_unicode_ci',
-                                ]);
+                                ])
+                            ;
 
                             return $statement;
                     }
 
                     return null;
                 }
-            );
+            )
+        ;
 
         $connection
             ->method('getConfiguration')
-            ->willReturn($this->createMock(Configuration::class));
+            ->willReturn($this->createMock(Configuration::class))
+        ;
 
         $schemaProvider = $this->createMock(DcaSchemaProvider::class);
         $schemaProvider
             ->method('createSchema')
-            ->willReturn($toSchema);
+            ->willReturn($toSchema)
+        ;
 
         return new Installer($connection, $schemaProvider);
     }

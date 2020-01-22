@@ -51,7 +51,8 @@ class RemoveDotEnvCommandTest extends ContaoTestCase
         $application = $this->createMock(Application::class);
         $application
             ->method('getProjectDir')
-            ->willReturn($this->tempdir);
+            ->willReturn($this->tempdir)
+        ;
 
         $this->command = new RemoveDotEnvCommand($application);
     }

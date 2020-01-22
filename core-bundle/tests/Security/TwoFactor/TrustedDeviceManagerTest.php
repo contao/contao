@@ -29,7 +29,8 @@ class TrustedDeviceManagerTest extends TestCase
             ->expects($this->once())
             ->method('hasTrustedToken')
             ->with('foo', 'contao_backend', 1)
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         /** @var BackendUser $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
@@ -50,7 +51,8 @@ class TrustedDeviceManagerTest extends TestCase
         $tokenStorage = $this->createMock(TrustedDeviceTokenStorage::class);
         $tokenStorage
             ->expects($this->never())
-            ->method('hasTrustedToken');
+            ->method('hasTrustedToken')
+        ;
 
         $manager = new TrustedDeviceManager(
             $this->createMock(RequestStack::class),

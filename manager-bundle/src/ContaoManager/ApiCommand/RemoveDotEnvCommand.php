@@ -43,7 +43,8 @@ class RemoveDotEnvCommand extends Command
         $this
             ->setName('dot-env:remove')
             ->setDescription('Removes a parameter from the .env file.')
-            ->addArgument('key', InputArgument::REQUIRED, 'The variable name');
+            ->addArgument('key', InputArgument::REQUIRED, 'The variable name')
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

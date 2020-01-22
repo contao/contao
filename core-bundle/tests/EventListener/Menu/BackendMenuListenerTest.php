@@ -33,19 +33,22 @@ class BackendMenuListenerTest extends ContaoTestCase
         $user
             ->expects($this->once())
             ->method('navigation')
-            ->willReturn($this->getNavigation());
+            ->willReturn($this->getNavigation())
+        ;
 
         $security = $this->createMock(Security::class);
         $security
             ->method('getUser')
-            ->willReturn($user);
+            ->willReturn($user)
+        ;
 
         $router = $this->createMock(RouterInterface::class);
         $router
             ->expects($this->once())
             ->method('generate')
             ->with('contao_backend')
-            ->willReturn('/contao');
+            ->willReturn('/contao')
+        ;
 
         $nodeFactory = new MenuFactory();
         $event = new MenuEvent($nodeFactory, $nodeFactory->createItem('mainMenu'));
@@ -122,12 +125,14 @@ class BackendMenuListenerTest extends ContaoTestCase
         $security = $this->createMock(Security::class);
         $security
             ->method('getUser')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $router = $this->createMock(RouterInterface::class);
         $router
             ->expects($this->never())
-            ->method('generate');
+            ->method('generate')
+        ;
 
         $nodeFactory = new MenuFactory();
         $event = new MenuEvent($nodeFactory, $nodeFactory->createItem('mainMenu'));
@@ -152,12 +157,14 @@ class BackendMenuListenerTest extends ContaoTestCase
         $security = $this->createMock(Security::class);
         $security
             ->method('getUser')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $router = $this->createMock(RouterInterface::class);
         $router
             ->expects($this->never())
-            ->method('generate');
+            ->method('generate')
+        ;
 
         $nodeFactory = new MenuFactory();
         $event = new MenuEvent($nodeFactory, $nodeFactory->createItem('root'));
@@ -189,7 +196,8 @@ class BackendMenuListenerTest extends ContaoTestCase
         $security
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($user);
+            ->willReturn($user)
+        ;
 
         $router = $this->createMock(RouterInterface::class);
         $router
@@ -202,7 +210,8 @@ class BackendMenuListenerTest extends ContaoTestCase
 
                     return '/contao?'.http_build_query($options);
                 }
-            );
+            )
+        ;
 
         $request = new Request();
         $request->attributes->set('_contao_referer_id', 'bar');
@@ -214,7 +223,8 @@ class BackendMenuListenerTest extends ContaoTestCase
         $systemMessages
             ->expects($this->once())
             ->method('getSystemMessages')
-            ->willReturn('<p class="tl_error">Foo</p>');
+            ->willReturn('<p class="tl_error">Foo</p>')
+        ;
 
         $nodeFactory = new MenuFactory();
         $event = new MenuEvent($nodeFactory, $nodeFactory->createItem('headerMenu'));
@@ -291,12 +301,14 @@ class BackendMenuListenerTest extends ContaoTestCase
         $security = $this->createMock(Security::class);
         $security
             ->method('getUser')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $router = $this->createMock(RouterInterface::class);
         $router
             ->expects($this->never())
-            ->method('generate');
+            ->method('generate')
+        ;
 
         $nodeFactory = new MenuFactory();
         $event = new MenuEvent($nodeFactory, $nodeFactory->createItem('headerMenu'));
@@ -321,12 +333,14 @@ class BackendMenuListenerTest extends ContaoTestCase
         $security = $this->createMock(Security::class);
         $security
             ->method('getUser')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $router = $this->createMock(RouterInterface::class);
         $router
             ->expects($this->never())
-            ->method('generate');
+            ->method('generate')
+        ;
 
         $nodeFactory = new MenuFactory();
         $event = new MenuEvent($nodeFactory, $nodeFactory->createItem('root'));
@@ -393,7 +407,8 @@ class BackendMenuListenerTest extends ContaoTestCase
                 static function (string $id): string {
                     return $id;
                 }
-            );
+            )
+        ;
 
         return $translator;
     }

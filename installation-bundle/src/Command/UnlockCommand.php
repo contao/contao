@@ -40,7 +40,8 @@ class UnlockCommand extends Command
     {
         $this
             ->setName('contao:install:unlock')
-            ->setDescription('Unlocks the install tool.');
+            ->setDescription('Unlocks the install tool.')
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

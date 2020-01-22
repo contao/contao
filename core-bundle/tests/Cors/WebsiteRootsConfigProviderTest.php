@@ -30,12 +30,14 @@ class WebsiteRootsConfigProviderTest extends TestCase
         $statement = $this->createMock(Statement::class);
         $statement
             ->method('bindValue')
-            ->with('dns', 'origin.com');
+            ->with('dns', 'origin.com')
+        ;
 
         $statement
             ->expects($this->once())
             ->method('fetchColumn')
-            ->willReturn('1');
+            ->willReturn('1')
+        ;
 
         $connection = $this->mockConnection($statement);
 
@@ -60,12 +62,14 @@ class WebsiteRootsConfigProviderTest extends TestCase
         $statement = $this->createMock(Statement::class);
         $statement
             ->method('bindValue')
-            ->with('dns', 'origin.com');
+            ->with('dns', 'origin.com')
+        ;
 
         $statement
             ->expects($this->once())
             ->method('fetchColumn')
-            ->willReturn('0');
+            ->willReturn('0')
+        ;
 
         $connection = $this->mockConnection($statement);
 
@@ -83,7 +87,8 @@ class WebsiteRootsConfigProviderTest extends TestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->never())
-            ->method('prepare');
+            ->method('prepare')
+        ;
 
         $configProvider = new WebsiteRootsConfigProvider($connection);
         $result = $configProvider->getOptions($request);
@@ -99,7 +104,8 @@ class WebsiteRootsConfigProviderTest extends TestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->never())
-            ->method('prepare');
+            ->method('prepare')
+        ;
 
         $configProvider = new WebsiteRootsConfigProvider($connection);
         $result = $configProvider->getOptions($request);
@@ -116,16 +122,19 @@ class WebsiteRootsConfigProviderTest extends TestCase
         $schemaManager
             ->expects($this->once())
             ->method('tablesExist')
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $connection = $this->createMock(Connection::class);
         $connection
             ->method('getSchemaManager')
-            ->willReturn($schemaManager);
+            ->willReturn($schemaManager)
+        ;
 
         $connection
             ->expects($this->never())
-            ->method('prepare');
+            ->method('prepare')
+        ;
 
         $configProvider = new WebsiteRootsConfigProvider($connection);
         $result = $configProvider->getOptions($request);
@@ -142,18 +151,21 @@ class WebsiteRootsConfigProviderTest extends TestCase
         $schemaManager
             ->expects($this->once())
             ->method('tablesExist')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
             ->method('prepare')
-            ->willReturn($statement);
+            ->willReturn($statement)
+        ;
 
         $connection
             ->expects($this->once())
             ->method('getSchemaManager')
-            ->willReturn($schemaManager);
+            ->willReturn($schemaManager)
+        ;
 
         return $connection;
     }

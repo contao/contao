@@ -28,7 +28,8 @@ class PublishedFilterTest extends TestCase
         $collection = $this->createMock(RouteCollection::class);
         $collection
             ->expects($this->never())
-            ->method('all');
+            ->method('all')
+        ;
 
         $filter = new PublishedFilter($this->mockTokenChecker(true));
         $filter->filter($collection, $this->createMock(Request::class));
@@ -41,17 +42,20 @@ class PublishedFilterTest extends TestCase
             ->expects($this->once())
             ->method('getDefault')
             ->with('pageModel')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $collection = $this->createMock(RouteCollection::class);
         $collection
             ->expects($this->once())
             ->method('all')
-            ->willReturn(['foo' => $route]);
+            ->willReturn(['foo' => $route])
+        ;
 
         $collection
             ->expects($this->never())
-            ->method('remove');
+            ->method('remove')
+        ;
 
         $filter = new PublishedFilter($this->mockTokenChecker());
         $filter->filter($collection, $this->createMock(Request::class));
@@ -64,18 +68,21 @@ class PublishedFilterTest extends TestCase
             ->expects($this->once())
             ->method('getDefault')
             ->with('pageModel')
-            ->willReturn($this->mockClassWithProperties(PageModel::class, ['rootIsPublic' => false]));
+            ->willReturn($this->mockClassWithProperties(PageModel::class, ['rootIsPublic' => false]))
+        ;
 
         $collection = $this->createMock(RouteCollection::class);
         $collection
             ->expects($this->once())
             ->method('all')
-            ->willReturn(['foo' => $route]);
+            ->willReturn(['foo' => $route])
+        ;
 
         $collection
             ->expects($this->once())
             ->method('remove')
-            ->with('foo');
+            ->with('foo')
+        ;
 
         $filter = new PublishedFilter($this->mockTokenChecker());
         $filter->filter($collection, $this->createMock(Request::class));
@@ -88,17 +95,20 @@ class PublishedFilterTest extends TestCase
             ->expects($this->once())
             ->method('getDefault')
             ->with('pageModel')
-            ->willReturn($this->mockClassWithProperties(PageModel::class, ['rootIsPublic' => true]));
+            ->willReturn($this->mockClassWithProperties(PageModel::class, ['rootIsPublic' => true]))
+        ;
 
         $collection = $this->createMock(RouteCollection::class);
         $collection
             ->expects($this->once())
             ->method('all')
-            ->willReturn(['foo' => $route]);
+            ->willReturn(['foo' => $route])
+        ;
 
         $collection
             ->expects($this->never())
-            ->method('remove');
+            ->method('remove')
+        ;
 
         $filter = new PublishedFilter($this->mockTokenChecker());
         $filter->filter($collection, $this->createMock(Request::class));
@@ -112,11 +122,13 @@ class PublishedFilterTest extends TestCase
         $tokenChecker = $this->createMock(TokenChecker::class);
         $tokenChecker
             ->method('hasBackendUser')
-            ->willReturn($isPreviewMode);
+            ->willReturn($isPreviewMode)
+        ;
 
         $tokenChecker
             ->method('isPreviewMode')
-            ->willReturn($isPreviewMode);
+            ->willReturn($isPreviewMode)
+        ;
 
         return $tokenChecker;
     }

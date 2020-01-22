@@ -45,6 +45,7 @@ class InstallCommandListener
                 __DIR__.'/../Resources/skeleton/system/initialize.php',
                 $this->projectDir.'/system/initialize.php',
                 true
-            );
+            )
+        ;
     }
 }

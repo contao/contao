@@ -27,19 +27,22 @@ class OptInTest extends ContaoTestCase
         $model = $this->mockClassWithProperties(OptInModel::class);
         $model
             ->expects($this->once())
-            ->method('save');
+            ->method('save')
+        ;
 
         $model
             ->expects($this->once())
             ->method('setRelatedRecords')
-            ->with(['tl_member' => 1]);
+            ->with(['tl_member' => 1])
+        ;
 
         $framework = $this->mockContaoFramework();
         $framework
             ->expects($this->once())
             ->method('createInstance')
             ->with(OptInModel::class)
-            ->willReturn($model);
+            ->willReturn($model)
+        ;
 
         $token = (new OptIn($framework))->create('reg', 'foo@bar.com', ['tl_member' => 1]);
 
@@ -54,7 +57,8 @@ class OptInTest extends ContaoTestCase
         $framework = $this->mockContaoFramework();
         $framework
             ->expects($this->never())
-            ->method('createInstance');
+            ->method('createInstance')
+        ;
 
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('The token prefix must not be longer than 6 characters');
@@ -72,7 +76,8 @@ class OptInTest extends ContaoTestCase
         $adapter
             ->expects($this->exactly(2))
             ->method('findByToken')
-            ->willReturnOnConsecutiveCalls($model, null);
+            ->willReturnOnConsecutiveCalls($model, null)
+        ;
 
         $framework = $this->mockContaoFramework([OptInModel::class => $adapter]);
         $token = (new OptIn($framework))->find('foobar');
@@ -90,29 +95,34 @@ class OptInTest extends ContaoTestCase
         $token
             ->expects($this->once())
             ->method('getRelatedRecords')
-            ->willReturn(['tl_member' => 1]);
+            ->willReturn(['tl_member' => 1])
+        ;
 
         $token
             ->expects($this->once())
-            ->method($method);
+            ->method($method)
+        ;
 
         $optInAdapter = $this->mockAdapter(['findExpiredTokens']);
         $optInAdapter
             ->expects($this->once())
             ->method('findExpiredTokens')
-            ->willReturn([$token]);
+            ->willReturn([$token])
+        ;
 
         $modelAdapter = $this->mockAdapter(['getClassFromTable']);
         $modelAdapter
             ->expects($this->once())
             ->method('getClassFromTable')
-            ->willReturn(MemberModel::class);
+            ->willReturn(MemberModel::class)
+        ;
 
         $memberAdapter = $this->mockAdapter(['findMultipleByIds']);
         $memberAdapter
             ->expects($this->once())
             ->method('findMultipleByIds')
-            ->willReturn($model);
+            ->willReturn($model)
+        ;
 
         $adapters = [
             OptInModel::class => $optInAdapter,

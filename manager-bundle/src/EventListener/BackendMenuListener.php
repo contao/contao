@@ -104,7 +104,8 @@ class BackendMenuListener
             ->setLabel('debug_mode')
             ->setUri($this->router->generate('contao_backend', $params))
             ->setLinkAttribute('class', 'icon-debug')
-            ->setExtra('translation_domain', 'ContaoManagerBundle');
+            ->setExtra('translation_domain', 'ContaoManagerBundle')
+        ;
 
         $children = [];
 
@@ -144,7 +145,8 @@ class BackendMenuListener
             ->createItem('contao_manager')
             ->setLabel('Contao Manager')
             ->setUri('/'.$this->managerPath)
-            ->setLinkAttribute('class', 'navigation contao_manager');
+            ->setLinkAttribute('class', 'navigation contao_manager')
+        ;
 
         $categoryNode->addChild($item);
     }

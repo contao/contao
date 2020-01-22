@@ -32,12 +32,14 @@ class DefaultIndexerTest extends ContaoTestCase
         if (null === $expectedIndexParams) {
             $searchAdapter
                 ->expects($this->never())
-                ->method('indexPage');
+                ->method('indexPage')
+            ;
         } else {
             $searchAdapter
                 ->expects($this->once())
                 ->method('indexPage')
-                ->with($expectedIndexParams);
+                ->with($expectedIndexParams)
+            ;
         }
 
         $framework = $this->mockContaoFramework([Search::class => $searchAdapter]);
@@ -45,7 +47,8 @@ class DefaultIndexerTest extends ContaoTestCase
         if (null !== $expectedIndexParams) {
             $framework
                 ->expects($this->once())
-                ->method('initialize');
+                ->method('initialize')
+            ;
         }
 
         if (null !== $expectedMessage) {
@@ -118,12 +121,14 @@ class DefaultIndexerTest extends ContaoTestCase
         $searchAdapter
             ->expects($this->once())
             ->method('removeEntry')
-            ->with('https://example.com');
+            ->with('https://example.com')
+        ;
 
         $framework = $this->mockContaoFramework([Search::class => $searchAdapter]);
         $framework
             ->expects($this->once())
-            ->method('initialize');
+            ->method('initialize')
+        ;
 
         $indexer = new DefaultIndexer($framework, $this->createMock(Connection::class));
         $indexer->delete(new Document(new Uri('https://example.com'), 200, [], ''));
@@ -140,7 +145,8 @@ class DefaultIndexerTest extends ContaoTestCase
             ->withConsecutive(
                 ['TRUNCATE TABLE tl_search'],
                 ['TRUNCATE TABLE tl_search_index']
-            );
+            )
+        ;
 
         $indexer = new DefaultIndexer($framework, $connection);
         $indexer->clear();

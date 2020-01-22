@@ -166,7 +166,8 @@ class RegisterFragmentsPassTest extends TestCase
         $container = $this->createMock(ContainerBuilder::class);
         $container
             ->expects($this->never())
-            ->method('findDefinition');
+            ->method('findDefinition')
+        ;
 
         $pass = new RegisterFragmentsPass(ContentElementReference::TAG_NAME);
         $pass->process($container);

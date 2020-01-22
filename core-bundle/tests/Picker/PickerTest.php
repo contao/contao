@@ -35,7 +35,8 @@ class PickerTest extends TestCase
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
             ->method('trans')
-            ->willReturn('Page picker');
+            ->willReturn('Page picker')
+        ;
 
         $factory = new MenuFactory();
         $router = $this->createMock(RouterInterface::class);
@@ -119,7 +120,8 @@ class PickerTest extends TestCase
         $security = $this->createMock(Security::class);
         $security
             ->method('isGranted')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         return $security;
     }

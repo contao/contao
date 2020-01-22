@@ -26,27 +26,31 @@ class SlugTest extends ContaoTestCase
         $pageModel
             ->expects($this->atLeastOnce())
             ->method('getSlugOptions')
-            ->willReturn([]);
+            ->willReturn([])
+        ;
 
         $pageModelAdapter = $this->mockAdapter(['findWithDetails']);
         $pageModelAdapter
             ->expects($this->atLeastOnce())
             ->method('findWithDetails')
             ->with(123)
-            ->willReturn($pageModel, null);
+            ->willReturn($pageModel, null)
+        ;
 
         $framework = $this->createMock(ContaoFramework::class);
         $framework
             ->expects($this->atLeastOnce())
             ->method('getAdapter')
             ->with(PageModel::class)
-            ->willReturn($pageModelAdapter);
+            ->willReturn($pageModelAdapter)
+        ;
 
         $generator = $this->createMock(SlugGeneratorInterface::class);
         $generator
             ->expects($this->atLeastOnce())
             ->method('generate')
-            ->willReturnArgument(0);
+            ->willReturnArgument(0)
+        ;
 
         $slug = new Slug($generator, $framework);
 

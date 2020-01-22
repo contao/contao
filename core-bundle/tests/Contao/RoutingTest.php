@@ -54,11 +54,13 @@ class RoutingTest extends ContaoTestCase
         $request = $this->createMock(Request::class);
         $request
             ->method('getBasePath')
-            ->willReturn('');
+            ->willReturn('')
+        ;
 
         $request
             ->method('getScriptName')
-            ->willReturn('index.php');
+            ->willReturn('index.php')
+        ;
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
@@ -98,11 +100,13 @@ class RoutingTest extends ContaoTestCase
         $request = $this->createMock(Request::class);
         $request
             ->method('getBasePath')
-            ->willReturn('');
+            ->willReturn('')
+        ;
 
         $request
             ->method('getScriptName')
-            ->willReturn('index.php');
+            ->willReturn('index.php')
+        ;
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
@@ -126,11 +130,13 @@ class RoutingTest extends ContaoTestCase
         $request = $this->createMock(Request::class);
         $request
             ->method('getBasePath')
-            ->willReturn('');
+            ->willReturn('')
+        ;
 
         $request
             ->method('getScriptName')
-            ->willReturn('index.php');
+            ->willReturn('index.php')
+        ;
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
@@ -154,11 +160,13 @@ class RoutingTest extends ContaoTestCase
         $request = $this->createMock(Request::class);
         $request
             ->method('getBasePath')
-            ->willReturn('');
+            ->willReturn('')
+        ;
 
         $request
             ->method('getScriptName')
-            ->willReturn('index.php');
+            ->willReturn('index.php')
+        ;
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
@@ -182,11 +190,13 @@ class RoutingTest extends ContaoTestCase
         $request = $this->createMock(Request::class);
         $request
             ->method('getBasePath')
-            ->willReturn('');
+            ->willReturn('')
+        ;
 
         $request
             ->method('getScriptName')
-            ->willReturn('index.php');
+            ->willReturn('index.php')
+        ;
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
@@ -211,11 +221,13 @@ class RoutingTest extends ContaoTestCase
         $request = $this->createMock(Request::class);
         $request
             ->method('getBasePath')
-            ->willReturn('');
+            ->willReturn('')
+        ;
 
         $request
             ->method('getScriptName')
-            ->willReturn('index.php');
+            ->willReturn('index.php')
+        ;
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
@@ -239,11 +251,13 @@ class RoutingTest extends ContaoTestCase
         $request = $this->createMock(Request::class);
         $request
             ->method('getBasePath')
-            ->willReturn('');
+            ->willReturn('')
+        ;
 
         $request
             ->method('getScriptName')
-            ->willReturn('index.php');
+            ->willReturn('index.php')
+        ;
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
@@ -274,11 +288,13 @@ class RoutingTest extends ContaoTestCase
         $request = $this->createMock(Request::class);
         $request
             ->method('getBasePath')
-            ->willReturn('');
+            ->willReturn('')
+        ;
 
         $request
             ->method('getScriptName')
-            ->willReturn('index.php');
+            ->willReturn('index.php')
+        ;
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
@@ -303,11 +319,13 @@ class RoutingTest extends ContaoTestCase
         $request = $this->createMock(Request::class);
         $request
             ->method('getBasePath')
-            ->willReturn('');
+            ->willReturn('')
+        ;
 
         $request
             ->method('getScriptName')
-            ->willReturn('index.php');
+            ->willReturn('index.php')
+        ;
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
@@ -332,11 +350,13 @@ class RoutingTest extends ContaoTestCase
         $request = $this->createMock(Request::class);
         $request
             ->method('getBasePath')
-            ->willReturn('');
+            ->willReturn('')
+        ;
 
         $request
             ->method('getScriptName')
-            ->willReturn('index.php');
+            ->willReturn('index.php')
+        ;
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
@@ -361,11 +381,13 @@ class RoutingTest extends ContaoTestCase
         $request = $this->createMock(Request::class);
         $request
             ->method('getBasePath')
-            ->willReturn('');
+            ->willReturn('')
+        ;
 
         $request
             ->method('getScriptName')
-            ->willReturn('index.php');
+            ->willReturn('index.php')
+        ;
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
@@ -391,11 +413,13 @@ class RoutingTest extends ContaoTestCase
         $request = $this->createMock(Request::class);
         $request
             ->method('getBasePath')
-            ->willReturn('/foo');
+            ->willReturn('/foo')
+        ;
 
         $request
             ->method('getScriptName')
-            ->willReturn('index.php');
+            ->willReturn('index.php')
+        ;
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
@@ -403,7 +427,8 @@ class RoutingTest extends ContaoTestCase
         $pageModel = $this->mockAdapter(['findByAliases']);
         $pageModel
             ->method('findByAliases')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $container = new ContainerBuilder();
         $container->set('request_stack', $requestStack);
@@ -425,11 +450,13 @@ class RoutingTest extends ContaoTestCase
         $request = $this->createMock(Request::class);
         $request
             ->method('getBasePath')
-            ->willReturn('');
+            ->willReturn('')
+        ;
 
         $request
             ->method('getScriptName')
-            ->willReturn('index.php');
+            ->willReturn('index.php')
+        ;
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
@@ -443,7 +470,8 @@ class RoutingTest extends ContaoTestCase
 
         $page
             ->method('loadDetails')
-            ->willReturn($page);
+            ->willReturn($page)
+        ;
 
         $pageModel = $this->mockAdapter(['findByAliases']);
         $pageModel
@@ -455,7 +483,8 @@ class RoutingTest extends ContaoTestCase
                     return true;
                 }
             ))
-            ->willReturn(new Collection([$page], 'tl_page'));
+            ->willReturn(new Collection([$page], 'tl_page'))
+        ;
 
         $framework = $this->mockContaoFramework([PageModel::class => $pageModel]);
 
@@ -481,11 +510,13 @@ class RoutingTest extends ContaoTestCase
         $request = $this->createMock(Request::class);
         $request
             ->method('getBasePath')
-            ->willReturn('');
+            ->willReturn('')
+        ;
 
         $request
             ->method('getScriptName')
-            ->willReturn('index.php');
+            ->willReturn('index.php')
+        ;
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
@@ -499,7 +530,8 @@ class RoutingTest extends ContaoTestCase
 
         $page
             ->method('loadDetails')
-            ->willReturn($page);
+            ->willReturn($page)
+        ;
 
         $pageModel = $this->mockAdapter(['findByAliases']);
         $pageModel
@@ -520,7 +552,8 @@ class RoutingTest extends ContaoTestCase
                     return true;
                 }
             ))
-            ->willReturn(new Collection([$page], 'tl_page'));
+            ->willReturn(new Collection([$page], 'tl_page'))
+        ;
 
         $framework = $this->mockContaoFramework([PageModel::class => $pageModel]);
 
@@ -547,11 +580,13 @@ class RoutingTest extends ContaoTestCase
         $request = $this->createMock(Request::class);
         $request
             ->method('getBasePath')
-            ->willReturn('');
+            ->willReturn('')
+        ;
 
         $request
             ->method('getScriptName')
-            ->willReturn('index.php');
+            ->willReturn('index.php')
+        ;
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
@@ -565,7 +600,8 @@ class RoutingTest extends ContaoTestCase
 
         $page
             ->method('loadDetails')
-            ->willReturn($page);
+            ->willReturn($page)
+        ;
 
         $pageModel = $this->mockAdapter(['findByAliases']);
         $pageModel
@@ -577,7 +613,8 @@ class RoutingTest extends ContaoTestCase
                     return true;
                 }
             ))
-            ->willReturn(new Collection([$page], 'tl_page'));
+            ->willReturn(new Collection([$page], 'tl_page'))
+        ;
 
         $framework = $this->mockContaoFramework([PageModel::class => $pageModel]);
 

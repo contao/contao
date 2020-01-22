@@ -282,7 +282,8 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $statement = $this->createMock(Statement::class);
         $statement
             ->method('fetch')
-            ->willReturn((object) ['Collation' => null]);
+            ->willReturn((object) ['Collation' => null])
+        ;
 
         $provider = $this->getProvider(
             [
@@ -345,7 +346,8 @@ class DcaSchemaProviderTest extends DoctrineTestCase
                 (object) ['Value' => $version],
                 (object) ['Value' => $filePerTable],
                 (object) ['Value' => $fileFormat]
-            );
+            )
+        ;
 
         $provider = $this->getProvider(
             [
@@ -584,7 +586,8 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $statement = $this->createMock(Statement::class);
         $statement
             ->method('fetch')
-            ->willReturn((object) ['Value' => 'On']);
+            ->willReturn((object) ['Value' => 'On'])
+        ;
 
         $provider = $this->getProvider(
             [

@@ -41,7 +41,8 @@ class GenerateJwtCookieCommandTest extends ContaoTestCase
         $application = $this->createMock(Application::class);
         $application
             ->method('getProjectDir')
-            ->willReturn($this->getTempDir());
+            ->willReturn($this->getTempDir())
+        ;
 
         $this->command = new GenerateJwtCookieCommand($application, $this->jwtManager);
     }
@@ -59,7 +60,8 @@ class GenerateJwtCookieCommandTest extends ContaoTestCase
             ->expects($this->once())
             ->method('createCookie')
             ->with(['debug' => true])
-            ->willReturn($cookie);
+            ->willReturn($cookie)
+        ;
 
         $commandTester = new CommandTester($this->command);
         $commandTester->execute(['--debug' => true]);
@@ -76,7 +78,8 @@ class GenerateJwtCookieCommandTest extends ContaoTestCase
             ->expects($this->once())
             ->method('createCookie')
             ->with(['debug' => false])
-            ->willReturn($cookie);
+            ->willReturn($cookie)
+        ;
 
         $commandTester = new CommandTester($this->command);
         $commandTester->execute([]);

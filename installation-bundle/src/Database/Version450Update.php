@@ -92,7 +92,8 @@ class Version450Update extends AbstractMigration
 
         $columns = $this->connection
             ->getSchemaManager()
-            ->listTableColumns('tl_module');
+            ->listTableColumns('tl_module')
+        ;
 
         if (isset($columns['news_order'])) {
             $this->connection->query("

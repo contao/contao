@@ -106,7 +106,8 @@ class Document
 
                     return $data;
                 }
-            );
+            )
+        ;
 
         // Filter invalid (null) values
         $this->jsonLds = array_filter($this->jsonLds);

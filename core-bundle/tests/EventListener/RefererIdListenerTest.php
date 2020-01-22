@@ -95,7 +95,8 @@ class RefererIdListenerTest extends TestCase
         $tokenGenerator = $this->createMock(TokenGeneratorInterface::class);
         $tokenGenerator
             ->method('generateToken')
-            ->willReturn('testValue');
+            ->willReturn('testValue')
+        ;
 
         return $tokenGenerator;
     }

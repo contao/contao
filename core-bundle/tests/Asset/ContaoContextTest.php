@@ -58,7 +58,8 @@ class ContaoContextTest extends TestCase
         $request
             ->expects($this->once())
             ->method('getBasePath')
-            ->willReturn($basePath);
+            ->willReturn($basePath)
+        ;
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
@@ -91,7 +92,8 @@ class ContaoContextTest extends TestCase
         $request
             ->expects($this->once())
             ->method('getBasePath')
-            ->willReturn('/foo');
+            ->willReturn('/foo')
+        ;
 
         $requestStack = new RequestStack();
         $requestStack->push($request);

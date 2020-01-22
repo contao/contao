@@ -41,7 +41,8 @@ class GetConfigCommand extends Command
 
         $this
             ->setName('config:get')
-            ->setDescription('Gets the Contao Manager configuration as JSON string.');
+            ->setDescription('Gets the Contao Manager configuration as JSON string.')
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

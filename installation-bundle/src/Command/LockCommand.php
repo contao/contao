@@ -40,7 +40,8 @@ class LockCommand extends Command
     {
         $this
             ->setName('contao:install:lock')
-            ->setDescription('Locks the install tool.');
+            ->setDescription('Locks the install tool.')
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

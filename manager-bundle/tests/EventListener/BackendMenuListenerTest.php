@@ -29,7 +29,8 @@ class BackendMenuListenerTest extends ContaoTestCase
         $event = $this->createMock(MenuEvent::class);
         $event
             ->expects($this->never())
-            ->method('getTree');
+            ->method('getTree')
+        ;
 
         $security = $this->getSecurity(false);
         $router = $this->createMock(RouterInterface::class);
@@ -62,7 +63,8 @@ class BackendMenuListenerTest extends ContaoTestCase
             ->expects($this->once())
             ->method('generate')
             ->with('contao_backend', $params)
-            ->willReturn('/contao?do=debug&key=enable&referer='.base64_encode('do=page').'&ref=foo');
+            ->willReturn('/contao?do=debug&key=enable&referer='.base64_encode('do=page').'&ref=foo')
+        ;
 
         $factory = new MenuFactory();
         $item = $factory->createItem($itemName);
@@ -101,7 +103,8 @@ class BackendMenuListenerTest extends ContaoTestCase
         $event = $this->createMock(MenuEvent::class);
         $event
             ->expects($this->never())
-            ->method('getTree');
+            ->method('getTree')
+        ;
 
         $security = $this->getSecurity();
         $router = $this->createMock(RouterInterface::class);
@@ -117,11 +120,13 @@ class BackendMenuListenerTest extends ContaoTestCase
         $event
             ->expects($this->once())
             ->method('getTree')
-            ->willReturn((new MenuFactory())->createItem('mainMenu'));
+            ->willReturn((new MenuFactory())->createItem('mainMenu'))
+        ;
 
         $event
             ->expects($this->never())
-            ->method('getFactory');
+            ->method('getFactory')
+        ;
 
         $security = $this->getSecurity();
         $router = $this->createMock(RouterInterface::class);
@@ -138,7 +143,8 @@ class BackendMenuListenerTest extends ContaoTestCase
         $event
             ->expects($this->once())
             ->method('getTree')
-            ->willReturn((new MenuFactory())->createItem('headerMenu'));
+            ->willReturn((new MenuFactory())->createItem('headerMenu'))
+        ;
 
         $security = $this->getSecurity();
         $router = $this->createMock(RouterInterface::class);
@@ -226,7 +232,8 @@ class BackendMenuListenerTest extends ContaoTestCase
             ->expects($this->once())
             ->method('isGranted')
             ->with('ROLE_ADMIN')
-            ->willReturn($isAdmin);
+            ->willReturn($isAdmin)
+        ;
 
         return $security;
     }

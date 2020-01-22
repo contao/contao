@@ -34,17 +34,20 @@ class LanguageFilterTest extends TestCase
             ->expects($expectPageModel ? $this->once() : $this->never())
             ->method('getDefault')
             ->with('pageModel')
-            ->willReturn($page);
+            ->willReturn($page)
+        ;
 
         $collection = $this->createMock(RouteCollection::class);
         $collection
             ->expects($this->once())
             ->method('all')
-            ->willReturn([$name => $route]);
+            ->willReturn([$name => $route])
+        ;
 
         $collection
             ->expects($expectRemoval ? $this->once() : $this->never())
-            ->method('remove');
+            ->method('remove')
+        ;
 
         $request = Request::create('/');
         $request->headers->set('Accept-Language', $acceptLanguage);

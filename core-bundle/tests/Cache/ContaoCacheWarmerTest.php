@@ -111,12 +111,14 @@ class ContaoCacheWarmerTest extends TestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->method('query')
-            ->willThrowException(new \Exception());
+            ->willThrowException(new \Exception())
+        ;
 
         $framework = $this->mockContaoFramework();
         $framework
             ->expects($this->never())
-            ->method('initialize');
+            ->method('initialize')
+        ;
 
         $warmer = $this->getCacheWarmer($connection, $framework);
         $warmer->warmUp($this->getFixturesDir().'/var/cache/contao');

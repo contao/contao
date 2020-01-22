@@ -47,11 +47,13 @@ class AddAssetsPackagesPassTest extends TestCase
             ->expects($this->once())
             ->method('hasDefinition')
             ->with('assets.packages')
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $container
             ->expects($this->never())
-            ->method('getDefinition');
+            ->method('getDefinition')
+        ;
 
         $pass = new AddAssetsPackagesPass();
         $pass->process($container);

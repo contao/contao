@@ -90,7 +90,8 @@ class MigrateCommandTest extends TestCase
         $installer = $this->createMock(Installer::class);
         $installer
             ->expects($this->atLeastOnce())
-            ->method('compileCommands');
+            ->method('compileCommands')
+        ;
 
         $installer
             ->expects($this->atLeastOnce())
@@ -104,7 +105,8 @@ class MigrateCommandTest extends TestCase
                     'DROP' => ['hash5' => 'DROP QUERY'],
                 ],
                 []
-            );
+            )
+        ;
 
         $command = $this->getCommand([], [], [], $installer);
 
@@ -183,13 +185,15 @@ class MigrateCommandTest extends TestCase
 
         $migrations
             ->method('getPendingNames')
-            ->willReturn(...$pendingMigrations);
+            ->willReturn(...$pendingMigrations)
+        ;
 
         $migrationResults[] = [];
 
         $migrations
             ->method('run')
-            ->willReturn(...$migrationResults);
+            ->willReturn(...$migrationResults)
+        ;
 
         $runonceFiles[] = [];
         $runonceFiles[] = [];
@@ -204,7 +208,8 @@ class MigrateCommandTest extends TestCase
         $fileLocator
             ->method('locate')
             ->with('config/runonce.php', null, false)
-            ->willReturn(...$duplicatedRunonceFiles);
+            ->willReturn(...$duplicatedRunonceFiles)
+        ;
 
         return new MigrateCommand(
             $migrations,

@@ -28,12 +28,14 @@ class FactoryTest extends TestCase
         $subscriber1 = $this->createMock(EscargotSubscriberInterface::class);
         $subscriber1
             ->method('getName')
-            ->willReturn('subscriber-1');
+            ->willReturn('subscriber-1')
+        ;
 
         $subscriber2 = $this->createMock(EscargotSubscriberInterface::class);
         $subscriber2
             ->method('getName')
-            ->willReturn('subscriber-2');
+            ->willReturn('subscriber-2')
+        ;
 
         $factory = new Factory($this->createMock(Connection::class), $this->mockContaoFramework());
         $factory->addSubscriber($subscriber1);
@@ -51,12 +53,14 @@ class FactoryTest extends TestCase
         $rootPage = $this->createMock(PageModel::class);
         $rootPage
             ->method('getAbsoluteUrl')
-            ->willReturn('https://contao.org');
+            ->willReturn('https://contao.org')
+        ;
 
         $pageModelAdapter = $this->mockAdapter(['findPublishedRootPages']);
         $pageModelAdapter
             ->method('findPublishedRootPages')
-            ->willReturn([$rootPage]);
+            ->willReturn([$rootPage])
+        ;
 
         $factory = new Factory(
             $this->createMock(Connection::class),
@@ -80,7 +84,8 @@ class FactoryTest extends TestCase
         $subscriber1 = $this->createMock(EscargotSubscriberInterface::class);
         $subscriber1
             ->method('getName')
-            ->willReturn('subscriber-1');
+            ->willReturn('subscriber-1')
+        ;
 
         $factory = new Factory($this->createMock(Connection::class), $this->mockContaoFramework());
         $factory->addSubscriber($subscriber1);
@@ -101,7 +106,8 @@ class FactoryTest extends TestCase
         $subscriber1 = $this->createMock(EscargotSubscriberInterface::class);
         $subscriber1
             ->method('getName')
-            ->willReturn('subscriber-1');
+            ->willReturn('subscriber-1')
+        ;
 
         $factory = new Factory($this->createMock(Connection::class), $this->mockContaoFramework());
         $factory->addSubscriber($subscriber1);

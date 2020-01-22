@@ -146,7 +146,8 @@ class FaqPickerProviderTest extends ContaoTestCase
             ->expects($this->once())
             ->method('getRelated')
             ->with('pid')
-            ->willReturn($model);
+            ->willReturn($model)
+        ;
 
         $config = new PickerConfig('link', [], '{{faq_url::1}}', 'faqPicker');
 
@@ -193,7 +194,8 @@ class FaqPickerProviderTest extends ContaoTestCase
             ->expects($this->once())
             ->method('getRelated')
             ->with('pid')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $config = new PickerConfig('link', [], '{{faq_url::1}}', 'faqPicker');
 
@@ -219,7 +221,8 @@ class FaqPickerProviderTest extends ContaoTestCase
         $security
             ->expects(null === $accessGranted ? $this->never() : $this->once())
             ->method('isGranted')
-            ->willReturn($accessGranted ?? false);
+            ->willReturn($accessGranted ?? false)
+        ;
 
         $menuFactory = $this->createMock(FactoryInterface::class);
         $menuFactory
@@ -234,7 +237,8 @@ class FaqPickerProviderTest extends ContaoTestCase
 
                     return $item;
                 }
-            );
+            )
+        ;
 
         $router = $this->createMock(RouterInterface::class);
         $router
@@ -243,12 +247,14 @@ class FaqPickerProviderTest extends ContaoTestCase
                 static function (string $name, array $params): string {
                     return $name.'?'.http_build_query($params);
                 }
-            );
+            )
+        ;
 
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
             ->method('trans')
-            ->willReturn('Faq picker');
+            ->willReturn('Faq picker')
+        ;
 
         return new FaqPickerProvider($menuFactory, $router, $translator, $security);
     }

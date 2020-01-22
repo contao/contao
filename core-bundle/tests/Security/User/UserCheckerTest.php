@@ -49,7 +49,8 @@ class UserCheckerTest extends TestCase
         $framework = $this->mockContaoFramework();
         $framework
             ->expects($this->never())
-            ->method('getAdapter');
+            ->method('getAdapter')
+        ;
 
         $userChecker = new UserChecker($framework);
         $userChecker->checkPreAuth($this->createMock(UserInterface::class));

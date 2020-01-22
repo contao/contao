@@ -43,7 +43,8 @@ class GenerateJwtCookieCommand extends Command
         $this
             ->setName('jwt-cookie:generate')
             ->addOption('debug', null, InputOption::VALUE_NONE, 'Enable debug mode in the JWT cookie')
-            ->setDescription('Generates a JWT cookie for the preview entry point.');
+            ->setDescription('Generates a JWT cookie for the preview entry point.')
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

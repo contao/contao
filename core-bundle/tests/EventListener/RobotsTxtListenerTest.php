@@ -45,12 +45,14 @@ class RobotsTxtListenerTest extends TestCase
         $pageModelAdapter
             ->expects($this->once())
             ->method('findPublishedRootPages')
-            ->willReturn([$rootPage, $otherRootPage]);
+            ->willReturn([$rootPage, $otherRootPage])
+        ;
 
         $framework = $this->mockContaoFramework([PageModel::class => $pageModelAdapter]);
         $framework
             ->expects($this->once())
-            ->method('initialize');
+            ->method('initialize')
+        ;
 
         $parser = new Parser();
         $parser->setSource($providedRobotsTxt);

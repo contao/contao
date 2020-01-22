@@ -113,7 +113,8 @@ class ContaoFrameworkTest extends TestCase
         $config = $framework->getAdapter(Config::class);
         $config
             ->expects($this->once())
-            ->method('preload');
+            ->method('preload')
+        ;
 
         $framework->initialize();
 
@@ -147,7 +148,8 @@ class ContaoFrameworkTest extends TestCase
         $config = $framework->getAdapter(Config::class);
         $config
             ->expects($this->once())
-            ->method('preload');
+            ->method('preload')
+        ;
 
         $framework->initialize(true);
 
@@ -185,7 +187,8 @@ class ContaoFrameworkTest extends TestCase
         $config = $framework->getAdapter(Config::class);
         $config
             ->expects($this->once())
-            ->method('preload');
+            ->method('preload')
+        ;
 
         $framework->initialize(true);
 
@@ -264,17 +267,20 @@ class ContaoFrameworkTest extends TestCase
         $tokenChecker
             ->expects($this->once())
             ->method('hasBackendUser')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $tokenChecker
             ->expects($this->once())
             ->method('isPreviewMode')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $tokenChecker
             ->expects($this->once())
             ->method('hasFrontendUser')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $framework = $this->mockFramework($request, null, $tokenChecker);
         $framework->setContainer($this->getContainerWithContaoConfiguration());
@@ -310,12 +316,14 @@ class ContaoFrameworkTest extends TestCase
         $scopeMatcher
             ->expects($this->exactly(2))
             ->method('isBackendRequest')
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $scopeMatcher
             ->expects($this->exactly(2))
             ->method('isFrontendRequest')
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $framework = $this->mockFramework(Request::create('/index.html'), $scopeMatcher);
         $framework->setContainer($this->getContainerWithContaoConfiguration());
@@ -679,16 +687,19 @@ class ContaoFrameworkTest extends TestCase
         $config = $this->mockAdapter(['preload', 'isComplete', 'getInstance', 'get']);
         $config
             ->method('isComplete')
-            ->willReturn($complete);
+            ->willReturn($complete)
+        ;
 
         $config
             ->method('getInstance')
-            ->willReturn($config);
+            ->willReturn($config)
+        ;
 
         $config
             ->method('get')
             ->with('timeZone')
-            ->willReturn('Europe/Berlin');
+            ->willReturn('Europe/Berlin')
+        ;
 
         return $config;
     }
@@ -698,11 +709,13 @@ class ContaoFrameworkTest extends TestCase
         $adapter = $this->mockAdapter(['get', 'validate']);
         $adapter
             ->method('get')
-            ->willReturn('foobar');
+            ->willReturn('foobar')
+        ;
 
         $adapter
             ->method('validate')
-            ->willReturn($valid);
+            ->willReturn($valid)
+        ;
 
         return $adapter;
     }

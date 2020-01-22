@@ -133,7 +133,8 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $adapter
             ->expects($this->once())
             ->method('findPublishedById')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $token = $this->mockToken(TwoFactorToken::class, true, $user);
         $event = $this->getRequestEvent($this->getRequest(true, $pageModel));
@@ -167,7 +168,8 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $adapter
             ->expects($this->once())
             ->method('findPublishedById')
-            ->willReturn($pageModel);
+            ->willReturn($pageModel)
+        ;
 
         $token = $this->mockToken(TwoFactorToken::class, true, $user);
         $event = $this->getRequestEvent($this->getRequest(true, $pageModel));
@@ -203,13 +205,15 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $twoFactorPageModel
             ->expects($this->once())
             ->method('getAbsoluteUrl')
-            ->willReturn('http://localhost/two_factor');
+            ->willReturn('http://localhost/two_factor')
+        ;
 
         $adapter = $this->mockAdapter(['findPublishedById']);
         $adapter
             ->expects($this->once())
             ->method('findPublishedById')
-            ->willReturn($twoFactorPageModel);
+            ->willReturn($twoFactorPageModel)
+        ;
 
         $response = new RedirectResponse('http://localhost/two_factor');
         $token = $this->mockToken(TwoFactorToken::class, true, $user);
@@ -243,7 +247,8 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $adapter = $this->mockAdapter(['find401ByPid']);
         $adapter
             ->expects($this->never())
-            ->method('find401ByPid');
+            ->method('find401ByPid')
+        ;
 
         $response = new RedirectResponse('http://localhost/two_factor');
         $token = $this->mockToken(UsernamePasswordToken::class, true, $user);
@@ -281,13 +286,15 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $session
             ->expects($this->once())
             ->method('get')
-            ->willReturn('http://localhost/foobar');
+            ->willReturn('http://localhost/foobar')
+        ;
 
         $adapter = $this->mockAdapter(['find401ByPid']);
         $adapter
             ->expects($this->once())
             ->method('find401ByPid')
-            ->willReturn($page401);
+            ->willReturn($page401)
+        ;
 
         $response = new RedirectResponse('http://localhost/two_factor');
         $token = $this->mockToken(TwoFactorToken::class, true, $user);
@@ -334,7 +341,8 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $adapter
             ->expects($this->once())
             ->method('find401ByPid')
-            ->willReturn($page401);
+            ->willReturn($page401)
+        ;
 
         $response = new RedirectResponse('http://localhost/two_factor');
         $token = $this->mockToken(TwoFactorToken::class, true, $user);
@@ -367,7 +375,8 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $adapter
             ->expects($this->once())
             ->method('find401ByPid')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $response = new RedirectResponse('http://localhost/two_factor');
         $token = $this->mockToken(TwoFactorToken::class, true, $user);
@@ -400,13 +409,15 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $session
             ->expects($this->once())
             ->method('get')
-            ->willReturn('http://:');
+            ->willReturn('http://:')
+        ;
 
         $adapter = $this->mockAdapter(['find401ByPid']);
         $adapter
             ->expects($this->once())
             ->method('find401ByPid')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $response = new RedirectResponse('http://localhost/two_factor');
         $token = $this->mockToken(TwoFactorToken::class, true, $user);
@@ -443,13 +454,15 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $session
             ->expects($this->once())
             ->method('get')
-            ->willReturn('http://localhost/foobar');
+            ->willReturn('http://localhost/foobar')
+        ;
 
         $adapter = $this->mockAdapter(['find401ByPid']);
         $adapter
             ->expects($this->once())
             ->method('find401ByPid')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $response = new RedirectResponse('http://localhost/two_factor');
         $token = $this->mockToken(TwoFactorToken::class, true, $user);
@@ -491,13 +504,15 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
             $token
                 ->expects($this->once())
                 ->method('getUser')
-                ->willReturn($user);
+                ->willReturn($user)
+            ;
         }
 
         $token
             ->expects($this->atMost(2))
             ->method('getProviderKey')
-            ->willReturn('contao_frontend');
+            ->willReturn('contao_frontend')
+        ;
 
         return $token;
     }
@@ -529,7 +544,8 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $tokenStorage
             ->expects($this->once())
             ->method('getToken')
-            ->willReturn($token);
+            ->willReturn($token)
+        ;
 
         return $tokenStorage;
     }
@@ -544,7 +560,8 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
             ->expects($this->once())
             ->method('isFrontendMasterRequest')
             ->with($event)
-            ->willReturn($hasFrontendUser);
+            ->willReturn($hasFrontendUser)
+        ;
 
         return $scopeMatcher;
     }

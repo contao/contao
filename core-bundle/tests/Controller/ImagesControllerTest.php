@@ -29,17 +29,20 @@ class ImagesControllerTest extends TestCase
         $image = $this->createMock(DeferredImageInterface::class);
         $image
             ->method('getPath')
-            ->willReturn($this->getFixturesDir().'/images/dummy.jpg');
+            ->willReturn($this->getFixturesDir().'/images/dummy.jpg')
+        ;
 
         $factory = $this->createMock(ImageFactoryInterface::class);
         $factory
             ->method('create')
-            ->willReturn($image);
+            ->willReturn($image)
+        ;
 
         $resizer = $this->createMock(DeferredResizerInterface::class);
         $resizer
             ->method('resizeDeferredImage')
-            ->willReturn($this->createMock(ImageInterface::class));
+            ->willReturn($this->createMock(ImageInterface::class))
+        ;
 
         $controller = new ImagesController($factory, $resizer, $this->getFixturesDir().'/images');
 
@@ -57,7 +60,8 @@ class ImagesControllerTest extends TestCase
         $factory = $this->createMock(ImageFactoryInterface::class);
         $factory
             ->method('create')
-            ->willThrowException(new \InvalidArgumentException('Image does not exist'));
+            ->willThrowException(new \InvalidArgumentException('Image does not exist'))
+        ;
 
         $resizer = $this->createMock(ResizerInterface::class);
         $controller = new ImagesController($factory, $resizer, $this->getFixturesDir().'/images');
