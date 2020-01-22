@@ -107,7 +107,6 @@
         "doctrine/doctrine-migrations-bundle": "^1.1",
         "doctrine/orm": "^2.5",
         "monolog/monolog": "^1.22",
-        "php-coveralls/php-coveralls": "^2.1",
         "phpunit/phpunit": "^5.7.26",
         "symfony/phpunit-bridge": "^3.3.11"
     },
