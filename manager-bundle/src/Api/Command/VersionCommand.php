@@ -35,9 +35,6 @@ class VersionCommand extends Command
         $this->application = $application;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure(): void
     {
         parent::configure();
@@ -48,9 +45,6 @@ class VersionCommand extends Command
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->write(json_encode([
@@ -63,7 +57,7 @@ class VersionCommand extends Command
     }
 
     /**
-     * @return string[]
+     * @return array<string>
      */
     private function getCommandNames(): array
     {
@@ -71,11 +65,11 @@ class VersionCommand extends Command
     }
 
     /**
-     * @return array<string,string[]>
+     * @return array<string, array<string>>
      */
     private function getFeatures(): array
     {
-        /** @var ApiPluginInterface[] $plugins */
+        /** @var array<ApiPluginInterface> $plugins */
         $plugins = $this->application->getPluginLoader()->getInstancesOf(ApiPluginInterface::class);
 
         $features = [];

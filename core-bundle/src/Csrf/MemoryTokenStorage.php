@@ -28,9 +28,6 @@ class MemoryTokenStorage implements TokenStorageInterface, ResetInterface
      */
     private $usedTokens = [];
 
-    /**
-     * {@inheritdoc}
-     */
     public function getToken($tokenId): string
     {
         $this->assertInitialized();
@@ -44,9 +41,6 @@ class MemoryTokenStorage implements TokenStorageInterface, ResetInterface
         return $this->tokens[$tokenId];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setToken($tokenId, $token): void
     {
         $this->assertInitialized();
@@ -55,9 +49,6 @@ class MemoryTokenStorage implements TokenStorageInterface, ResetInterface
         $this->tokens[$tokenId] = $token;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasToken($tokenId): bool
     {
         $this->assertInitialized();
@@ -65,9 +56,6 @@ class MemoryTokenStorage implements TokenStorageInterface, ResetInterface
         return !empty($this->tokens[$tokenId]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function removeToken($tokenId): ?string
     {
         $this->assertInitialized();
@@ -90,7 +78,7 @@ class MemoryTokenStorage implements TokenStorageInterface, ResetInterface
     }
 
     /**
-     * @return mixed[]
+     * @return array<mixed>
      */
     public function getUsedTokens(): array
     {

@@ -31,9 +31,6 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class ImageTest extends TestCase
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
@@ -50,9 +47,6 @@ class ImageTest extends TestCase
         $fs->mkdir(static::getTempDir().'/system/tmp');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -1416,8 +1410,7 @@ class ImageTest extends TestCase
             .'_'.$imageObj->getResizeMode()
             .'_'.$imageObj->getTargetPath()
             .'_'.str_replace('\\', '-', \get_class($imageObj))
-            .'.jpg'
-        ;
+            .'.jpg';
 
         file_put_contents(System::getContainer()->getParameter('kernel.project_dir').'/'.$path, '');
 
@@ -1494,8 +1487,7 @@ class ImageTest extends TestCase
             .'_'.str_replace('\\', '-', \get_class($fileObj))
             .'_'.$targetPath
             .'_'.str_replace('\\', '-', \get_class($imageObj))
-            .'.jpg'
-        ;
+            .'.jpg';
 
         file_put_contents(System::getContainer()->getParameter('kernel.project_dir').'/'.$path, '');
 

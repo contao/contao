@@ -137,9 +137,6 @@ class AuthenticationProvider extends DaoAuthenticationProvider
         return parent::supports($token) || $this->twoFactorAuthenticationProvider->supports($token);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function checkAuthentication(UserInterface $user, UsernamePasswordToken $token): void
     {
         if (!$user instanceof User) {

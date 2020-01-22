@@ -46,7 +46,7 @@ class ManagerConfig
     }
 
     /**
-     * @return mixed[]
+     * @return array<mixed>
      */
     public function all(): array
     {
@@ -58,7 +58,7 @@ class ManagerConfig
     }
 
     /**
-     * @return mixed[]
+     * @return array<mixed>
      */
     public function read(): array
     {

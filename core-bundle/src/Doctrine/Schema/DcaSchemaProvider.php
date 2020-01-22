@@ -113,7 +113,7 @@ class DcaSchemaProvider
         /** @var EntityManagerInterface $manager */
         $manager = $this->doctrine->getManager();
 
-        /** @var ClassMetadata[] $metadata */
+        /** @var array<ClassMetadata> $metadata */
         $metadata = $manager->getMetadataFactory()->getAllMetadata();
 
         /** @var Connection $connection */
@@ -323,7 +323,7 @@ class DcaSchemaProvider
     /**
      * Returns the SQL definitions from the Contao installer.
      *
-     * @return array<string,array<string,string[]>>
+     * @return array<string, array<string, array<string>>>
      */
     private function getSqlDefinitions(): array
     {

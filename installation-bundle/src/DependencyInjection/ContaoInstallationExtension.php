@@ -19,9 +19,6 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class ContaoInstallationExtension extends Extension
 {
-    /**
-     * {@inheritdoc}
-     */
     public function load(array $configs, ContainerBuilder $container): void
     {
         $loader = new YamlFileLoader(

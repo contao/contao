@@ -258,18 +258,16 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
         $authenticationManager
             ->expects(null === $username ? $this->never() : $this->once())
             ->method('authenticate')
-            ->with(
-                $this->callback(
-                    function ($token) use ($username, $password) {
-                        /* @var UsernamePasswordToken $token */
-                        $this->assertInstanceOf(UsernamePasswordToken::class, $token);
-                        $this->assertSame($username, $token->getUser());
-                        $this->assertSame($password, $token->getCredentials());
+            ->with($this->callback(
+                function ($token) use ($username, $password) {
+                    /** @var UsernamePasswordToken $token */
+                    $this->assertInstanceOf(UsernamePasswordToken::class, $token);
+                    $this->assertSame($username, $token->getUser());
+                    $this->assertSame($password, $token->getCredentials());
 
-                        return true;
-                    }
-                )
-            )
+                    return true;
+                }
+            ))
             ->willReturn(null)
         ;
 

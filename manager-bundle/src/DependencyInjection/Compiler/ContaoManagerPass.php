@@ -20,9 +20,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class ContaoManagerPass implements CompilerPassInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function process(ContainerBuilder $container): void
     {
         $webDir = $container->getParameter('contao.web_dir');

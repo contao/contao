@@ -21,9 +21,6 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class TranslationDataCollectorPass implements CompilerPassInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function process(ContainerBuilder $container): void
     {
         if (!$container->hasDefinition('translator.data_collector')) {

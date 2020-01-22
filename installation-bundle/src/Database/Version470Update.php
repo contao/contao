@@ -55,9 +55,6 @@ class Version470Update extends AbstractMigration
         return 'Contao 4.7.0 Update';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function shouldRun(): bool
     {
         $schemaManager = $this->connection->getSchemaManager();
@@ -71,9 +68,6 @@ class Version470Update extends AbstractMigration
         return !isset($columns['minifymarkup']);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function run(): MigrationResult
     {
         $this->connection->query("

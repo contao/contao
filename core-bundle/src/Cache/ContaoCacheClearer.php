@@ -30,9 +30,6 @@ class ContaoCacheClearer implements CacheClearerInterface
         $this->filesystem = $filesystem;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function clear($cacheDir): void
     {
         $this->filesystem->remove($cacheDir.'/contao/config');

@@ -41,14 +41,14 @@ interface FragmentRegistryInterface
     /**
      * Returns all fragment identifiers.
      *
-     * @return string[]
+     * @return array<string>
      */
     public function keys(): array;
 
     /**
      * Returns all fragments.
      *
-     * @return FragmentConfig[]
+     * @return array<FragmentConfig>
      */
     public function all(): array;
 }

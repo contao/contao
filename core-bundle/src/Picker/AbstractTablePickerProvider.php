@@ -59,9 +59,6 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         $this->connection = $connection;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getUrl(PickerConfig $config): string
     {
         $table = $this->getTableFromContext($config->getContext());
@@ -91,9 +88,6 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         return $this->getUrlForValue($config, $module, $table, $pid);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function addMenuItems(ItemInterface $menu, PickerConfig $config): void
     {
         $modules = array_keys($this->getModulesForTable($this->getTableFromContext($config->getContext())));
@@ -117,9 +111,6 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function createMenuItem(PickerConfig $config): ItemInterface
     {
         $menu = $this->menuFactory->createItem('picker');
@@ -129,9 +120,6 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         return $menu->getFirstChild();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsContext($context): bool
     {
         if (0 !== strpos($context, self::PREFIX)) {
@@ -144,29 +132,19 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         $this->framework->createInstance(DcaLoader::class, [$table])->load();
 
         return $this->getDataContainer() === $GLOBALS['TL_DCA'][$table]['config']['dataContainer']
-            && 0 !== \count($this->getModulesForTable($table))
-        ;
+            && 0 !== \count($this->getModulesForTable($table));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsValue(PickerConfig $config): bool
     {
         return true;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isCurrent(PickerConfig $config): bool
     {
         return 0 === strpos($config->getCurrent(), $this->getName().'.');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDcaTable(PickerConfig $config = null): string
     {
         if (null === $config) {
@@ -176,9 +154,6 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         return $this->getTableFromContext($config->getContext());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDcaAttributes(PickerConfig $config): array
     {
         $attributes = ['fieldType' => 'radio'];
@@ -198,9 +173,6 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         return $attributes;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function convertDcaValue(PickerConfig $config, $value)
     {
         return (int) $value;

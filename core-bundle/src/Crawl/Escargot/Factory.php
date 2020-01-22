@@ -53,7 +53,7 @@ class Factory
     private $defaultHttpClientOptions;
 
     /**
-     * @var EscargotSubscriberInterface[]
+     * @var array<EscargotSubscriberInterface>
      */
     private $subscribers = [];
 
@@ -73,7 +73,7 @@ class Factory
     }
 
     /**
-     * @return EscargotSubscriberInterface[]
+     * @return array<EscargotSubscriberInterface>
      */
     public function getSubscribers(array $selectedSubscribers = []): array
     {

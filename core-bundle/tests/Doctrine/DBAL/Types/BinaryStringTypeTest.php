@@ -25,9 +25,6 @@ class BinaryStringTypeTest extends TestCase
      */
     private $type;
 
-    /**
-     * {@inheritdoc}
-     */
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
@@ -35,9 +32,6 @@ class BinaryStringTypeTest extends TestCase
         Type::addType(BinaryStringType::NAME, BinaryStringType::class);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();

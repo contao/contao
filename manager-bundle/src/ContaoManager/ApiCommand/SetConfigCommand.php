@@ -36,9 +36,6 @@ class SetConfigCommand extends Command
         $this->managerConfig = $application->getManagerConfig();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure(): void
     {
         parent::configure();
@@ -50,9 +47,6 @@ class SetConfigCommand extends Command
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $data = @json_decode($input->getArgument('json'), true);

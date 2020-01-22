@@ -66,9 +66,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
      */
     private $httpCache;
 
-    /**
-     * {@inheritdoc}
-     */
     public function registerBundles(): array
     {
         $bundles = [];
@@ -78,9 +75,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         return $bundles;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getProjectDir(): string
     {
         if (null === self::$projectDir) {
@@ -91,8 +85,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @deprecated since Symfony 4.2, use getProjectDir() instead
      */
     public function getRootDir(): string
@@ -104,17 +96,11 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         return $this->rootDir;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCacheDir(): string
     {
         return $this->getProjectDir().'/var/cache/'.$this->getEnvironment();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLogDir(): string
     {
         return $this->getProjectDir().'/var/logs';
@@ -127,7 +113,8 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
             $config = $this->getManagerConfig()->all();
 
-            if (isset($config['contao_manager']['disabled_packages'])
+            if (
+                isset($config['contao_manager']['disabled_packages'])
                 && \is_array($config['contao_manager']['disabled_packages'])
             ) {
                 $this->pluginLoader->setDisabledPackages($config['contao_manager']['disabled_packages']);
@@ -184,9 +171,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         $this->managerConfig = $managerConfig;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         if ($parametersFile = $this->getConfigFile('parameters')) {
@@ -196,7 +180,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         $config = $this->getManagerConfig()->all();
         $plugins = $this->getPluginLoader()->getInstancesOf(PluginLoader::CONFIG_PLUGINS);
 
-        /** @var ConfigPluginInterface[] $plugins */
+        /** @var array<ConfigPluginInterface> $plugins */
         foreach ($plugins as $plugin) {
             $plugin->registerContainerConfiguration($loader, $config);
         }
@@ -222,9 +206,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getHttpCache(): ContaoCache
     {
         if (null !== $this->httpCache) {
@@ -304,9 +285,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         return static::create($projectDir, $env);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getContainerBuilder(): PluginContainerBuilder
     {
         $container = new PluginContainerBuilder($this->getPluginLoader(), []);
@@ -319,9 +297,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         return $container;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function initializeContainer(): void
     {
         parent::initializeContainer();
@@ -418,6 +393,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         }
 
         $_SERVER += $_ENV;
-        $_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = ($_SERVER['APP_ENV'] ?? $_ENV['APP_ENV'] ?? null) ?: $defaultEnv;
+        $_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = $_SERVER['APP_ENV'] ?? $_ENV['APP_ENV'] ?? null ?: $defaultEnv;
     }
 }

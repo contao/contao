@@ -72,7 +72,7 @@ class MergeHttpHeadersListener implements ResetInterface
     }
 
     /**
-     * @return string[]
+     * @return array<string>
      */
     public function getMultiHeaders(): array
     {

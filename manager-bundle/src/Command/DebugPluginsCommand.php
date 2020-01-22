@@ -58,9 +58,6 @@ class DebugPluginsCommand extends Command
         $this->kernel = $kernel;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure(): void
     {
         $this
@@ -70,9 +67,6 @@ class DebugPluginsCommand extends Command
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->io = new SymfonyStyle($input, $output);

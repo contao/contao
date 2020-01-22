@@ -42,7 +42,7 @@ class PluginTest extends TestCase
     {
         $plugin = new Plugin();
 
-        /** @var BundleConfig[] $bundles */
+        /** @var array<BundleConfig> $bundles */
         $bundles = $plugin->getBundles(new DelegatingParser());
 
         $this->assertCount(6, $bundles);

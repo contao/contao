@@ -317,11 +317,11 @@ class InstallTool
     /**
      * Returns the available SQL templates.
      *
-     * @return string[]
+     * @return array<string>
      */
     public function getTemplates(): array
     {
-        /** @var SplFileInfo[] $finder */
+        /** @var array<SplFileInfo> $finder */
         $finder = Finder::create()
             ->files()
             ->name('*.sql')

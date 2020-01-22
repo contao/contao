@@ -45,9 +45,6 @@ class AutomatorCommand extends Command
         parent::__construct();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure(): void
     {
         $this
@@ -57,9 +54,6 @@ class AutomatorCommand extends Command
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->framework->initialize();
@@ -84,7 +78,7 @@ class AutomatorCommand extends Command
     }
 
     /**
-     * @return string[]
+     * @return array<string>
      */
     private function getCommands(): array
     {
@@ -96,7 +90,7 @@ class AutomatorCommand extends Command
     }
 
     /**
-     * @return string[]
+     * @return array<string>
      */
     private function generateCommandMap(): array
     {

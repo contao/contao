@@ -29,9 +29,6 @@ class UrlMatcher extends RedirectableUrlMatcher implements FinalMatcherInterface
         parent::__construct(new RouteCollection(), new RequestContext());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function finalMatch(RouteCollection $collection, Request $request)
     {
         $this->routes = $collection;
@@ -45,9 +42,6 @@ class UrlMatcher extends RedirectableUrlMatcher implements FinalMatcherInterface
         return $this->matchRequest($request);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function redirect($path, $route, $scheme = null): array
     {
         return [

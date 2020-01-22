@@ -58,33 +58,21 @@ class DataCollectorTranslator extends SymfonyDataCollectorTranslator implements 
         return $translated;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function transChoice($id, $number, array $parameters = [], $domain = null, $locale = null): string
     {
         return $this->translator->transChoice($id, $number, $parameters, $domain, $locale);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setLocale($locale): void
     {
         $this->translator->setLocale($locale);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLocale(): string
     {
         return $this->translator->getLocale();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCatalogue($locale = null): MessageCatalogueInterface
     {
         return $this->translator->getCatalogue($locale);

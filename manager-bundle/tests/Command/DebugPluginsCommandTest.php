@@ -202,8 +202,7 @@ Contao Manager Plugins
  ------------------------------------------------ ---------------------------- -------- --------- -------- ----------- ----------- ----- 
 
 
-OUTPUT
-        ;
+OUTPUT;
     }
 
     private function getTestPluginOutput(): string
@@ -224,8 +223,7 @@ Contao Manager Plugins
  ---------------------------------------------------------- ------------------ -------- --------- -------- ----------- ----------- ----- 
 
 
-OUTPUT
-        ;
+OUTPUT;
     }
 
     private function getRegisteredBundlesOutput(): string
@@ -265,8 +263,7 @@ Bundles Registered by Plugin "Contao\CoreBundle\ContaoManager\Plugin"
  ---------------------------------------------------------------------- ---------- --------------------------------------------------------- ------------- 
 
 
-OUTPUT
-        ;
+OUTPUT;
     }
 
     private function getLoadingOrderOutput(): string
@@ -284,8 +281,7 @@ Registered Bundles in Loading Order
  ------------------ ------------------------------------------ 
 
 
-OUTPUT
-        ;
+OUTPUT;
     }
 
     private function normalizeDisplay(string $string): string

@@ -25,9 +25,6 @@ class RoutingTest extends WebTestCase
 {
     use ContaoDatabaseTrait;
 
-    /**
-     * {@inheritdoc}
-     */
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
@@ -35,9 +32,6 @@ class RoutingTest extends WebTestCase
         static::loadFileIntoDatabase(__DIR__.'/app/Resources/contao_test.sql');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();

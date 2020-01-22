@@ -35,17 +35,11 @@ class XliffFileLoader extends Loader
         $this->addToGlobals = $addToGlobals;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load($file, $type = null): string
     {
         return $this->convertXlfToPhp((string) $file, $type ?: 'en');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports($resource, $type = null): bool
     {
         return 'xlf' === pathinfo((string) $resource, PATHINFO_EXTENSION);

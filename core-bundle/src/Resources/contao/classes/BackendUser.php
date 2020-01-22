@@ -583,7 +583,7 @@ class BackendUser extends User
 			return array('ROLE_USER', 'ROLE_ADMIN', 'ROLE_ALLOWED_TO_SWITCH', 'ROLE_ALLOWED_TO_SWITCH_MEMBER');
 		}
 
-		if (\is_array($this->amg) && !empty($this->amg))
+		if (!empty($this->amg) && \is_array($this->amg))
 		{
 			return array('ROLE_USER', 'ROLE_ALLOWED_TO_SWITCH_MEMBER');
 		}

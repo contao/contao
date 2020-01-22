@@ -46,9 +46,6 @@ class ContaoTemplateExtension extends AbstractExtension
         $this->scopeMatcher = $scopeMatcher;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFunctions(): array
     {
         return [

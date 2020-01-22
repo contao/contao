@@ -167,9 +167,6 @@ class ContaoCoreExtensionTest extends TestCase
      */
     private $container;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -1028,7 +1025,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(SubrequestCacheSubscriber::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertEquals([], $definition->getArguments());
+        $this->assertSame([], $definition->getArguments());
 
         $this->assertSame(
             [
@@ -1630,7 +1627,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(ServiceLocator::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 [],
             ],
@@ -1665,7 +1662,7 @@ class ContaoCoreExtensionTest extends TestCase
             $definition->getArguments()
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 [
                     'setFragmentPath',
@@ -2227,7 +2224,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(RequestMatcher::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 [
                     'matchAttribute',
@@ -2294,7 +2291,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(RequestMatcher::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 [
                     'matchAttribute',
@@ -2428,15 +2425,15 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 [
                     'addRouteFilter',
-                    ['contao.routing.domain_filter'],
+                    [new Reference('contao.routing.domain_filter')],
                 ],
                 [
                     'addRouteFilter',
-                    ['contao.routing.published_filter'],
+                    [new Reference('contao.routing.published_filter')],
                 ],
                 [
                     'addRouteFilter',
-                    ['contao.routing.language_filter'],
+                    [new Reference('contao.routing.language_filter')],
                 ],
             ],
             $definition->getMethodCalls()
@@ -2468,7 +2465,7 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 [
                     'addRouteEnhancer',
-                    ['contao.routing.input_enhancer'],
+                    [new Reference('contao.routing.input_enhancer')],
                 ],
             ],
             $definition->getMethodCalls()
@@ -2952,14 +2949,14 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(ArrayAttributeBag::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 '_contao_be_attributes',
             ],
             $definition->getArguments()
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 [
                     'setName',
@@ -2979,14 +2976,14 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(ArrayAttributeBag::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 '_contao_fe_attributes',
             ],
             $definition->getArguments()
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 [
                     'setName',
@@ -3024,7 +3021,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(SlugGenerator::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 ['validChars' => '0-9a-z'],
             ],
@@ -3059,7 +3056,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(UriSafeTokenGenerator::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 48,
             ],

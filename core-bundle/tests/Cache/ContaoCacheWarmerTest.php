@@ -29,9 +29,6 @@ class ContaoCacheWarmerTest extends TestCase
      */
     private $warmer;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -39,9 +36,6 @@ class ContaoCacheWarmerTest extends TestCase
         $this->warmer = $this->getCacheWarmer();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function tearDown(): void
     {
         parent::tearDown();

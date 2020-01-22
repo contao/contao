@@ -40,9 +40,6 @@ class ContaoContext implements ContextInterface
         $this->debug = $debug;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getBasePath(): string
     {
         if ($this->debug) {
@@ -61,9 +58,6 @@ class ContaoContext implements ContextInterface
         return sprintf('%s://%s%s', $protocol, $relative, $request->getBasePath());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isSecure(): bool
     {
         $page = $this->getPageModel();

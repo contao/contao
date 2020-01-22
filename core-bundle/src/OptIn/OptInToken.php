@@ -34,33 +34,21 @@ class OptInToken implements OptInTokenInterface
         $this->framework = $framework;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getIdentifier(): string
     {
         return $this->model->token;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getEmail(): string
     {
         return $this->model->email;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isValid(): bool
     {
         return !$this->model->invalidatedThrough && $this->model->createdOn > strtotime('-24 hours');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function confirm(): void
     {
         if ($this->isConfirmed()) {
@@ -115,17 +103,12 @@ class OptInToken implements OptInTokenInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isConfirmed(): bool
     {
         return $this->model->confirmedOn > 0;
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @throws \LogicException
      */
     public function send(string $subject = null, string $text = null): void
@@ -155,17 +138,11 @@ class OptInToken implements OptInTokenInterface
         $email->sendTo($this->model->email);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasBeenSent(): bool
     {
         return $this->model->emailSubject && $this->model->emailText;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRelatedRecords(): array
     {
         return $this->model->getRelatedRecords();

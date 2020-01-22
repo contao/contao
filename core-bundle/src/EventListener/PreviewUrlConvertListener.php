@@ -60,7 +60,7 @@ class PreviewUrlConvertListener
                 if ($article = $articleAdapter->findByAlias($request->query->get('article'))) {
                     $params = sprintf(
                         '/articles/%s%s',
-                        ('main' !== $article->inColumn) ? $article->inColumn.':' : '',
+                        'main' !== $article->inColumn ? $article->inColumn.':' : '',
                         $article->id
                     );
                 }

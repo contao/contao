@@ -15,12 +15,12 @@ namespace Contao\CoreBundle\Migration;
 class MigrationCollection
 {
     /**
-     * @var MigrationInterface[]
+     * @var array<MigrationInterface>
      */
     private $migrations;
 
     /**
-     * @param MigrationInterface[] $migrations
+     * @param iterable<MigrationInterface> $migrations
      */
     public function __construct(iterable $migrations)
     {
@@ -28,7 +28,7 @@ class MigrationCollection
     }
 
     /**
-     * @return MigrationInterface[]
+     * @return iterable<MigrationInterface>
      */
     public function getPending(): iterable
     {
@@ -40,7 +40,7 @@ class MigrationCollection
     }
 
     /**
-     * @return string[]
+     * @return iterable<string>
      */
     public function getPendingNames(): iterable
     {
@@ -50,7 +50,7 @@ class MigrationCollection
     }
 
     /**
-     * @return MigrationResult[]
+     * @return iterable<MigrationResult>
      */
     public function run(): iterable
     {

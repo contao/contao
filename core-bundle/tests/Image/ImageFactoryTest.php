@@ -41,9 +41,6 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class ImageFactoryTest extends TestCase
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -51,9 +48,6 @@ class ImageFactoryTest extends TestCase
         System::setContainer($this->getContainerWithContaoConfiguration());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function tearDown(): void
     {
         parent::tearDown();
@@ -691,8 +685,7 @@ class ImageFactoryTest extends TestCase
             .'_'.$imageObj->getResizeMode()
             .'_'.$imageObj->getTargetPath()
             .'_'.str_replace('\\', '-', \get_class($imageObj))
-            .'.jpg'
-        ;
+            .'.jpg';
 
         $rootDir = System::getContainer()->getParameter('kernel.project_dir');
 
@@ -779,8 +772,7 @@ class ImageFactoryTest extends TestCase
             .'_'.str_replace('\\', '-', \get_class($fileObj))
             .'_'.$targetPath
             .'_'.str_replace('\\', '-', \get_class($imageObj))
-            .'.jpg'
-        ;
+            .'.jpg';
 
         $rootDir = System::getContainer()->getParameter('kernel.project_dir');
 

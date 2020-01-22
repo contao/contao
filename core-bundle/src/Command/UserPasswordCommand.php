@@ -60,27 +60,16 @@ class UserPasswordCommand extends Command
         parent::__construct();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure(): void
     {
         $this
             ->setName('contao:user:password')
             ->addArgument('username', InputArgument::REQUIRED, 'The username of the back end user')
-            ->addOption(
-                'password',
-                'p',
-                InputOption::VALUE_REQUIRED,
-                'The new password (using this option is not recommended for security reasons)'
-            )
+            ->addOption('password', 'p', InputOption::VALUE_REQUIRED, 'The new password (using this option is not recommended for security reasons)')
             ->setDescription('Changes the password of a Contao back end user.')
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function interact(InputInterface $input, OutputInterface $output): void
     {
         if (null === $input->getArgument('username')) {
@@ -101,9 +90,6 @@ class UserPasswordCommand extends Command
         $input->setOption('password', $password);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if (null === $input->getArgument('username') || null === $input->getOption('password')) {

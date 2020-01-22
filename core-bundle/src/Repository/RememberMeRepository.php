@@ -47,7 +47,7 @@ class RememberMeRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return RememberMe[]
+     * @return array<RememberMe>
      */
     public function findBySeries(string $series): array
     {

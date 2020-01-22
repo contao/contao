@@ -97,52 +97,52 @@ class MergeHttpHeadersListenerTest extends TestCase
         $listener = new MergeHttpHeadersListener($this->mockContaoFramework());
 
         $this->assertSame(
-            $listener->getMultiHeaders(),
             [
                 'set-cookie',
                 'link',
                 'vary',
                 'pragma',
                 'cache-control',
-            ]
+            ],
+            $listener->getMultiHeaders()
         );
 
         $listener->removeMultiHeader('cache-control');
 
         $this->assertSame(
-            $listener->getMultiHeaders(),
             [
                 'set-cookie',
                 'link',
                 'vary',
                 'pragma',
-            ]
+            ],
+            $listener->getMultiHeaders()
         );
 
         $listener->addMultiHeader('dummy');
 
         $this->assertSame(
-            $listener->getMultiHeaders(),
             [
                 'set-cookie',
                 'link',
                 'vary',
                 'pragma',
                 'dummy',
-            ]
+            ],
+            $listener->getMultiHeaders()
         );
 
         $listener->setMultiHeader(['set-cookie', 'link', 'vary', 'pragma', 'cache-control']);
 
         $this->assertSame(
-            $listener->getMultiHeaders(),
             [
                 'set-cookie',
                 'link',
                 'vary',
                 'pragma',
                 'cache-control',
-            ]
+            ],
+            $listener->getMultiHeaders()
         );
     }
 

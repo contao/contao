@@ -133,9 +133,6 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         return $response;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function determineTargetUrl(Request $request): string
     {
         if (!$this->user instanceof FrontendUser || $request->request->get('_always_use_target_path')) {

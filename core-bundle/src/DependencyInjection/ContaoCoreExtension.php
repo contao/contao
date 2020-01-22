@@ -28,17 +28,11 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class ContaoCoreExtension extends Extension
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getAlias(): string
     {
         return 'contao';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getConfiguration(array $config, ContainerBuilder $container): Configuration
     {
         return new Configuration(
@@ -47,9 +41,6 @@ class ContaoCoreExtension extends Extension
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration(

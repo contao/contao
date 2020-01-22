@@ -21,9 +21,6 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class AddSessionBagsPass implements CompilerPassInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function process(ContainerBuilder $container): void
     {
         if (!$container->hasDefinition('session')) {

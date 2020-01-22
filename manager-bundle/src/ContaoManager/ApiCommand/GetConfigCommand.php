@@ -35,9 +35,6 @@ class GetConfigCommand extends Command
         $this->managerConfig = $application->getManagerConfig();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure(): void
     {
         parent::configure();
@@ -48,9 +45,6 @@ class GetConfigCommand extends Command
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->write(json_encode($this->managerConfig->all()));
