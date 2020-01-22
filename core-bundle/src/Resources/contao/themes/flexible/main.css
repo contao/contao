@@ -725,7 +725,7 @@ table.tl_listing {
 	padding:7px 0;
 }
 .tl_file_list .ellipsis {
-	height:15px;
+	height:16px;
 	text-overflow:ellipsis;
 	overflow:hidden;
 	padding-right:18px;
