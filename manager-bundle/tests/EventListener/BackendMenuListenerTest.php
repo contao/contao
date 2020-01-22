@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BackendMenuListenerTest extends ContaoTestCase
 {
@@ -34,8 +35,9 @@ class BackendMenuListenerTest extends ContaoTestCase
 
         $security = $this->getSecurity(false);
         $router = $this->createMock(RouterInterface::class);
+        $translator = $this->getTranslator();
 
-        $listener = new BackendMenuListener($security, $router, new RequestStack(), false, null, null);
+        $listener = new BackendMenuListener($security, $router, new RequestStack(), $translator, false, null, null);
         $listener($event);
     }
 
@@ -50,6 +52,8 @@ class BackendMenuListenerTest extends ContaoTestCase
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
+
+        $translator = $this->getTranslator();
 
         $params = [
             'do' => 'debug',
@@ -76,7 +80,7 @@ class BackendMenuListenerTest extends ContaoTestCase
         $jwtManager = $this->createMock(JwtManager::class);
         $security = $this->getSecurity();
 
-        $listener = new BackendMenuListener($security, $router, $requestStack, false, null, $jwtManager);
+        $listener = new BackendMenuListener($security, $router, $requestStack, $translator, false, null, $jwtManager);
         $listener($event);
 
         $children = $event->getTree()->getChildren();
@@ -109,8 +113,9 @@ class BackendMenuListenerTest extends ContaoTestCase
         $security = $this->getSecurity();
         $router = $this->createMock(RouterInterface::class);
         $requestStack = new RequestStack();
+        $translator = $this->getTranslator();
 
-        $listener = new BackendMenuListener($security, $router, $requestStack, false, null, null);
+        $listener = new BackendMenuListener($security, $router, $requestStack, $translator, false, null, null);
         $listener($event);
     }
 
@@ -131,9 +136,10 @@ class BackendMenuListenerTest extends ContaoTestCase
         $security = $this->getSecurity();
         $router = $this->createMock(RouterInterface::class);
         $requestStack = new RequestStack();
+        $translator = $this->getTranslator();
         $jwtManager = $this->createMock(JwtManager::class);
 
-        $listener = new BackendMenuListener($security, $router, $requestStack, false, null, $jwtManager);
+        $listener = new BackendMenuListener($security, $router, $requestStack, $translator, false, null, $jwtManager);
         $listener($event);
     }
 
@@ -149,9 +155,10 @@ class BackendMenuListenerTest extends ContaoTestCase
         $security = $this->getSecurity();
         $router = $this->createMock(RouterInterface::class);
         $requestStack = new RequestStack();
+        $translator = $this->getTranslator();
         $jwtManager = $this->createMock(JwtManager::class);
 
-        $listener = new BackendMenuListener($security, $router, $requestStack, false, null, $jwtManager);
+        $listener = new BackendMenuListener($security, $router, $requestStack, $translator, false, null, $jwtManager);
 
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('The request stack did not contain a request');
@@ -171,8 +178,9 @@ class BackendMenuListenerTest extends ContaoTestCase
         $security = $this->getSecurity();
         $router = $this->createMock(RouterInterface::class);
         $requestStack = new RequestStack();
+        $translator = $this->getTranslator();
 
-        $listener = new BackendMenuListener($security, $router, $requestStack, false, 'contao-manager.phar.php', null);
+        $listener = new BackendMenuListener($security, $router, $requestStack, $translator, false, 'contao-manager.phar.php', null);
         $listener($event);
 
         $children = $event->getTree()->getChild('system')->getChildren();
@@ -199,8 +207,9 @@ class BackendMenuListenerTest extends ContaoTestCase
         $security = $this->getSecurity();
         $router = $this->createMock(RouterInterface::class);
         $requestStack = new RequestStack();
+        $translator = $this->getTranslator();
 
-        $listener = new BackendMenuListener($security, $router, $requestStack, false, null, null);
+        $listener = new BackendMenuListener($security, $router, $requestStack, $translator, false, null, null);
         $listener($event);
 
         $this->assertCount(0, $event->getTree()->getChild('system')->getChildren());
@@ -218,8 +227,9 @@ class BackendMenuListenerTest extends ContaoTestCase
         $security = $this->getSecurity();
         $router = $this->createMock(RouterInterface::class);
         $requestStack = new RequestStack();
+        $translator = $this->getTranslator();
 
-        $listener = new BackendMenuListener($security, $router, $requestStack, false, 'contao-manager.phar.php', null);
+        $listener = new BackendMenuListener($security, $router, $requestStack, $translator, false, 'contao-manager.phar.php', null);
         $listener($event);
 
         $this->assertNull($event->getTree()->getChild('system'));
@@ -236,5 +246,20 @@ class BackendMenuListenerTest extends ContaoTestCase
         ;
 
         return $security;
+    }
+
+    private function getTranslator(): TranslatorInterface
+    {
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->method('trans')
+            ->willReturnCallback(
+                static function (string $id): string {
+                    return $id;
+                }
+            )
+        ;
+
+        return $translator;
     }
 }
