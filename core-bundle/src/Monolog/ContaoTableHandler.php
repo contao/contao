@@ -45,9 +45,6 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
         $this->dbalServiceName = $name;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function handle(array $record): bool
     {
         if (!$this->isHandling($record)) {
@@ -72,9 +69,6 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
         return false === $this->bubble;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function write(array $record): void
     {
         $this->createStatement();
@@ -96,9 +90,6 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getDefaultFormatter(): LineFormatter
     {
         return new LineFormatter('%message%');

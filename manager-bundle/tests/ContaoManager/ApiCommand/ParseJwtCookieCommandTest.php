@@ -31,9 +31,6 @@ class ParseJwtCookieCommandTest extends ContaoTestCase
      */
     private $command;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();

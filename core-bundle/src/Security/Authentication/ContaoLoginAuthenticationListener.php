@@ -51,9 +51,6 @@ class ContaoLoginAuthenticationListener extends AbstractAuthenticationListener
         $this->twoFactorTokenFactory = $twoFactorTokenFactory;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function requiresAuthentication(Request $request): bool
     {
         return $request->isMethod('POST')

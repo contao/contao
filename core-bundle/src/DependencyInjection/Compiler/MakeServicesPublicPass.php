@@ -40,9 +40,6 @@ class MakeServicesPublicPass implements CompilerPassInterface
         'security.encoder_factory',
     ];
 
-    /**
-     * {@inheritdoc}
-     */
     public function process(ContainerBuilder $container): void
     {
         foreach (self::SERVICES as $service) {

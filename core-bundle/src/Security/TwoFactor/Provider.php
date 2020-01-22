@@ -32,9 +32,6 @@ class Provider implements TwoFactorProviderInterface
         $this->authenticator = $authenticator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function beginAuthentication(AuthenticationContextInterface $context): bool
     {
         $user = $context->getUser();
@@ -46,9 +43,6 @@ class Provider implements TwoFactorProviderInterface
         return (bool) $user->useTwoFactor;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function validateAuthenticationCode($user, string $authenticationCode): bool
     {
         if (!$user instanceof User) {
@@ -62,17 +56,11 @@ class Provider implements TwoFactorProviderInterface
         return true;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFormRenderer(): TwoFactorFormRendererInterface
     {
         throw new \RuntimeException('The "contao" two-factor provider does not support forms');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function prepareAuthentication($user): void
     {
     }

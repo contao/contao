@@ -21,9 +21,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class RegisterHookListenersPass implements CompilerPassInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function process(ContainerBuilder $container): void
     {
         if (!$container->hasDefinition('contao.framework')) {
@@ -46,7 +43,7 @@ class RegisterHookListenersPass implements CompilerPassInterface
     }
 
     /**
-     * @return array<string,array<int,string[]>>
+     * @return array<string, array<int, array<string>>>
      */
     private function getHooks(ContainerBuilder $container): array
     {

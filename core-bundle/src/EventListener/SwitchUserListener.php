@@ -53,7 +53,6 @@ class SwitchUserListener
         }
 
         $sourceUser = $token->getUsername();
-
         $targetUser = $event->getTargetUser();
 
         if ($targetUser instanceof UserInterface) {

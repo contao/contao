@@ -241,6 +241,20 @@
         <source>Here you can add Google web fonts to your website. Specify the font families without the base URL (e.g. &lt;em&gt;Ubuntu|Ubuntu+Mono&lt;/em&gt;).</source>
         <target>Qui puoi aggiungere fonts web Google al tuo sito web. Specifica le famiglie delle font senza l'URL di base (e.g. &lt;em&gt;Ubuntu|Ubuntu+Mono&lt;/em&gt;</target>
       </trans-unit>
+      <trans-unit id="tl_layout.lightboxSize.0">
+        <source>Lightbox image size</source>
+      </trans-unit>
+      <trans-unit id="tl_layout.lightboxSize.1">
+        <source>Here you can select an image size for the images shown in the lightbox.</source>
+      </trans-unit>
+      <trans-unit id="tl_layout.defaultImageDensities.0">
+        <source>Default image pixel densities</source>
+        <target>Default densità pixel dell'immagine</target>
+      </trans-unit>
+      <trans-unit id="tl_layout.defaultImageDensities.1">
+        <source>Here you can define the default pixel densities, e.g. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</source>
+        <target>In questo punto è possibile definire la densità in pixel di default, es. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</target>
+      </trans-unit>
       <trans-unit id="tl_layout.modules.0">
         <source>Included modules</source>
         <target>Moduli inclusi</target>
@@ -257,13 +271,13 @@
         <source>Here you can select the page template.</source>
         <target>Seleziona un modello di layout. Il modello predefinito si chiama &lt;em&gt;fe_page.tpl&lt;/em&gt;. Se desideri aggiungere un modello personalizzato, carica il file nella cartella &lt;em&gt;templates&lt;/em&gt;. I modelli di layout devono cominciare con &lt;em&gt;fe_&lt;/em&gt; e terminare con l'estensione &lt;em&gt;.tpl&lt;/em&gt;.</target>
       </trans-unit>
-      <trans-unit id="tl_layout.doctype.0">
-        <source>Output format</source>
-        <target>Formato di output</target>
+      <trans-unit id="tl_layout.minifyMarkup.0">
+        <source>Minify the markup</source>
+        <target>Minimizza il codice html</target>
       </trans-unit>
-      <trans-unit id="tl_layout.doctype.1">
-        <source>Here you can set the output format.</source>
-        <target>Qui è possibile selezionare il formato di output</target>
+      <trans-unit id="tl_layout.minifyMarkup.1">
+        <source>Minify the HTML markup before it is sent to the browser.</source>
+        <target>Minimizza il codice HTML prima che la pagina venga inviata al browser.</target>
       </trans-unit>
       <trans-unit id="tl_layout.cssClass.0">
         <source>Body class</source>
@@ -287,6 +301,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.titleTag.1">
         <source>Here you can overwrite the title tag.</source>
+        <target>Qui è possibile sovrascrivere il tag del titolo.</target>
       </trans-unit>
       <trans-unit id="tl_layout.onload.0">
         <source>Body onload</source>
@@ -352,14 +367,6 @@
         <source>Here you can select one or more MooTools templates.</source>
         <target>Se desideri eseguire un mootools a fisarmonica nel tuo sito web, devi inserire un JavaScript che inizializzi l'effetto. Puoi scegliere il codice Javascript qui. I modelli Mootools devono cominciare con &lt;em&gt;moo_&lt;/em&gt;. (estensione dei file &lt;em&gt;.tpl&lt;/em&gt;)</target>
       </trans-unit>
-      <trans-unit id="tl_layout.picturefill.0">
-        <source>Load the image polyfill</source>
-        <target>Carica le immagini polyfill</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.picturefill.1">
-        <source>Include the image polyfill (&lt;em&gt;respimage.js&lt;/em&gt;) in the layout.</source>
-        <target>Includi le imamgini polyfill  (&lt;em&gt;respimage.js&lt;/em&gt;) nel layout.</target>
-      </trans-unit>
       <trans-unit id="tl_layout.scripts.0">
         <source>JavaScript templates</source>
         <target>Template JavaScript</target>
@@ -382,6 +389,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.externalJs.1">
         <source>Here you can add external JS files from the file system.</source>
+        <target>Qui è possibile aggiungere file JS esterni dal file system.</target>
       </trans-unit>
       <trans-unit id="tl_layout.script.0">
         <source>Custom JavaScript code</source>
@@ -435,13 +443,13 @@
         <source>Web fonts</source>
         <target>Web fonts</target>
       </trans-unit>
+      <trans-unit id="tl_layout.image_legend">
+        <source>Image sizes</source>
+        <target>Dimensioni immagine</target>
+      </trans-unit>
       <trans-unit id="tl_layout.style_legend">
         <source>Style sheets</source>
         <target>Fogli di stile</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.picturefill_legend">
-        <source>Responsive images</source>
-        <target>Immagini responsive</target>
       </trans-unit>
       <trans-unit id="tl_layout.modules_legend">
         <source>Front end modules</source>
@@ -512,60 +520,26 @@
         <target>Piwik</target>
       </trans-unit>
       <trans-unit id="tl_layout.new.0">
-        <source>New layout</source>
-        <target>Nuovo layout</target>
+        <source>New</source>
+        <target>Nuovo</target>
       </trans-unit>
       <trans-unit id="tl_layout.new.1">
-        <source>Create a new layout</source>
-        <target>Crea un nuovo layout</target>
+        <source>Create a new page layout</source>
       </trans-unit>
-      <trans-unit id="tl_layout.show.0">
-        <source>Layout details</source>
-        <target>Dettagli layout</target>
+      <trans-unit id="tl_layout.show">
+        <source>Show the details of page layout ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_layout.show.1">
-        <source>Show the details of layout ID %s</source>
-        <target>Mostra dettagli layout ID %s</target>
+      <trans-unit id="tl_layout.edit">
+        <source>Edit page layout ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_layout.edit.0">
-        <source>Edit layout</source>
-        <target>Modifica layout</target>
+      <trans-unit id="tl_layout.copy">
+        <source>Duplicate page layout ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_layout.edit.1">
-        <source>Edit layout ID %s</source>
-        <target>Modifica layout ID %s</target>
+      <trans-unit id="tl_layout.cut">
+        <source>Move page layout ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_layout.cut.0">
-        <source>Move layout</source>
-        <target>Sposta layout</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.cut.1">
-        <source>Move layout ID %s</source>
-        <target>Sposta layout ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.copy.0">
-        <source>Duplicate layout</source>
-        <target>Duplica layout</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.copy.1">
-        <source>Duplicate layout ID %s</source>
-        <target>Duplica layout ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.delete.0">
-        <source>Delete layout</source>
-        <target>Elimina layout</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.delete.1">
-        <source>Delete layout ID %s</source>
-        <target>Elimina layout ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.editheader.0">
-        <source>Edit theme</source>
-        <target>Modifica tema</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.editheader.1">
-        <source>Edit the theme settings</source>
-        <target>Modifica le impostazioni del tema</target>
+      <trans-unit id="tl_layout.delete">
+        <source>Delete page layout ID %s</source>
       </trans-unit>
     </body>
   </file>

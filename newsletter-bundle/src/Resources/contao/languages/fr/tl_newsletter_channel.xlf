@@ -62,58 +62,37 @@
         <target>Paramètres de l'expéditeur</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.new.0">
-        <source>New channel</source>
-        <target>Nouvelle liste de diffusion</target>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.new.1">
         <source>Create a new channel</source>
         <target>Créer une nouvelle liste de diffusion.</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.show.0">
-        <source>Channel details</source>
-        <target>Détails de la liste de diffusion</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.show.1">
+      <trans-unit id="tl_newsletter_channel.show">
         <source>Show the details of channel ID %s</source>
         <target>Afficher les détails de la liste de diffusion ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.edit.0">
-        <source>Edit channel</source>
-        <target>Éditer la liste de diffusion</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.edit.1">
+      <trans-unit id="tl_newsletter_channel.edit">
         <source>Edit channel ID %s</source>
         <target>Éditer la liste de diffusion ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.editheader.0">
-        <source>Edit channel</source>
-        <target>Éditer la liste de diffusion</target>
+      <trans-unit id="tl_newsletter_channel.editheader">
+        <source>Edit the settings of channel ID %s</source>
+        <target>Éditer les paramètres de la liste de diffusion ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.editheader.1">
+      <trans-unit id="tl_newsletter_channel.editmeta">
         <source>Edit the channel settings</source>
         <target>Éditer les paramètres de la liste de diffusion</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.copy.0">
-        <source>Duplicate channel</source>
-        <target>Dupliquer la liste de diffusion</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.copy.1">
+      <trans-unit id="tl_newsletter_channel.copy">
         <source>Duplicate channel ID %s</source>
         <target>Dupliquer la liste de diffusion ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.delete.0">
-        <source>Delete channel</source>
-        <target>Supprimer la liste de diffusion</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.delete.1">
+      <trans-unit id="tl_newsletter_channel.delete">
         <source>Delete channel ID %s</source>
         <target>Supprimer la liste de diffusion ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.recipients.0">
-        <source>Edit recipients</source>
-        <target>Éditer les destinataires</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.recipients.1">
+      <trans-unit id="tl_newsletter_channel.recipients">
         <source>Edit the recipients of channel ID %s</source>
         <target>Éditer les destinataires de la liste de diffusion ID %s</target>
       </trans-unit>

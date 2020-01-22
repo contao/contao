@@ -81,7 +81,7 @@ class PluginTest extends ContaoTestCase
     {
         $plugin = new Plugin();
 
-        /** @var BundleConfig[] $bundles */
+        /** @var array<BundleConfig> $bundles */
         $bundles = $plugin->getBundles(new DelegatingParser());
 
         $this->assertCount(14, $bundles);
@@ -277,7 +277,7 @@ class PluginTest extends ContaoTestCase
         $plugin = new Plugin();
         $collection = $plugin->getRouteCollection($resolver, $kernel);
 
-        /** @var Route[] $routes */
+        /** @var array<Route> $routes */
         $routes = array_values($collection->all());
 
         $this->assertCount(3, $routes);

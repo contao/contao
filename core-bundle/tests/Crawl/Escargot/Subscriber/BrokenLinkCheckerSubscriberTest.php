@@ -53,12 +53,18 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
             $logger
                 ->expects($this->once())
                 ->method('log')
-                ->with($expectedLogLevel, $expectedLogMessage, $this->callback(function (array $context) {
-                    $this->assertInstanceOf(CrawlUri::class, $context['crawlUri']);
-                    $this->assertSame(BrokenLinkCheckerSubscriber::class, $context['source']);
+                ->with(
+                    $expectedLogLevel,
+                    $expectedLogMessage,
+                    $this->callback(
+                        function (array $context) {
+                            $this->assertInstanceOf(CrawlUri::class, $context['crawlUri']);
+                            $this->assertSame(BrokenLinkCheckerSubscriber::class, $context['source']);
 
-                    return true;
-                }))
+                            return true;
+                        }
+                    )
+                )
             ;
         } else {
             $logger
@@ -118,12 +124,18 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
             $logger
                 ->expects($this->once())
                 ->method('log')
-                ->with($expectedLogLevel, $expectedLogMessage, $this->callback(function (array $context) {
-                    $this->assertInstanceOf(CrawlUri::class, $context['crawlUri']);
-                    $this->assertSame(BrokenLinkCheckerSubscriber::class, $context['source']);
+                ->with(
+                    $expectedLogLevel,
+                    $expectedLogMessage,
+                    $this->callback(
+                        function (array $context) {
+                            $this->assertInstanceOf(CrawlUri::class, $context['crawlUri']);
+                            $this->assertSame(BrokenLinkCheckerSubscriber::class, $context['source']);
 
-                    return true;
-                }))
+                            return true;
+                        }
+                    )
+                )
             ;
         } else {
             $logger
@@ -206,12 +218,18 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
             $logger
                 ->expects($this->once())
                 ->method('log')
-                ->with($expectedLogLevel, $expectedLogMessage, $this->callback(function (array $context) {
-                    $this->assertInstanceOf(CrawlUri::class, $context['crawlUri']);
-                    $this->assertSame(BrokenLinkCheckerSubscriber::class, $context['source']);
+                ->with(
+                    $expectedLogLevel,
+                    $expectedLogMessage,
+                    $this->callback(
+                        function (array $context) {
+                            $this->assertInstanceOf(CrawlUri::class, $context['crawlUri']);
+                            $this->assertSame(BrokenLinkCheckerSubscriber::class, $context['source']);
 
-                    return true;
-                }))
+                            return true;
+                        }
+                    )
+                )
             ;
         } else {
             $logger
@@ -262,12 +280,18 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
             $logger
                 ->expects($this->once())
                 ->method('log')
-                ->with($expectedLogLevel, $expectedLogMessage, $this->callback(function (array $context) {
-                    $this->assertInstanceOf(CrawlUri::class, $context['crawlUri']);
-                    $this->assertSame(BrokenLinkCheckerSubscriber::class, $context['source']);
+                ->with(
+                    $expectedLogLevel,
+                    $expectedLogMessage,
+                    $this->callback(
+                        function (array $context) {
+                            $this->assertInstanceOf(CrawlUri::class, $context['crawlUri']);
+                            $this->assertSame(BrokenLinkCheckerSubscriber::class, $context['source']);
 
-                    return true;
-                }))
+                            return true;
+                        }
+                    )
+                )
             ;
         } else {
             $logger

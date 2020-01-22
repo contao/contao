@@ -29,9 +29,6 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
 {
     use FrameworkAwareTrait;
 
-    /**
-     * {@inheritdoc}
-     */
     public function collect(Request $request, Response $response, \Exception $exception = null): void
     {
         $this->data = ['contao_version' => PackageUtil::getContaoVersion()];
@@ -57,7 +54,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     }
 
     /**
-     * @return string[]
+     * @return array<string>
      */
     public function getClassesSet(): array
     {
@@ -69,7 +66,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     }
 
     /**
-     * @return string[]
+     * @return array<string>
      */
     public function getClassesAliased(): array
     {
@@ -81,7 +78,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     }
 
     /**
-     * @return string[]
+     * @return array<string>
      */
     public function getClassesComposerized(): array
     {
@@ -93,7 +90,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     }
 
     /**
-     * @return mixed[]
+     * @return array<mixed>
      */
     public function getAdditionalData(): array
     {
@@ -111,17 +108,11 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         return $data;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName(): string
     {
         return 'contao';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function reset(): void
     {
         $this->data = [];

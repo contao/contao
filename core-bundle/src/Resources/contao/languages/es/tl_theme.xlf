@@ -49,14 +49,6 @@
         <source>Here you can define global variables for the style sheets of the theme (e.g. &lt;em&gt;$red&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; or &lt;em&gt;$margin&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;).</source>
         <target>Aqui puede definir variables globales para la hoja de estilo del tema (p. ej. &lt;em&gt;$red&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; o &lt;em&gt;$margin&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;)</target>
       </trans-unit>
-      <trans-unit id="tl_theme.defaultImageDensities.0">
-        <source>Default image pixel densities</source>
-        <target>Densidades de píxeles de imagen predeterminadas</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.defaultImageDensities.1">
-        <source>Here you can define the default pixel densities, e.g. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</source>
-        <target>Aquí puede definir las densidades de píxeles predeterminadas, p.e. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</target>
-      </trans-unit>
       <trans-unit id="tl_theme.source.0">
         <source>Source files</source>
         <target>Archivos de fuentes</target>
@@ -80,10 +72,6 @@
       <trans-unit id="tl_theme.config_legend">
         <source>Configuration</source>
         <target>Configuración</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.image_legend">
-        <source>Image sizes</source>
-        <target>Tamaños de imágen</target>
       </trans-unit>
       <trans-unit id="tl_theme.vars_legend">
         <source>Global variables</source>
@@ -133,83 +121,55 @@
         <source>Find more themes in the Contao theme store</source>
         <target>Encuentre más temas en la Tienda de Temas de Contao.</target>
       </trans-unit>
+      <trans-unit id="tl_theme.importTheme.0">
+        <source>Import</source>
+        <target>Importar</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.importTheme.1">
+        <source>Import a theme</source>
+        <target>Importar un tema</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.editmeta">
+        <source>Edit the theme settings</source>
+        <target>Editar configuración del tema</target>
+      </trans-unit>
       <trans-unit id="tl_theme.new.0">
-        <source>New theme</source>
-        <target>Nuevo tema</target>
+        <source>New</source>
+        <target>Nuevo</target>
       </trans-unit>
       <trans-unit id="tl_theme.new.1">
         <source>Create a new theme</source>
         <target>Crear un nuevo tema</target>
       </trans-unit>
-      <trans-unit id="tl_theme.show.0">
-        <source>Theme details</source>
-        <target>Detalles del tema</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.show.1">
+      <trans-unit id="tl_theme.show">
         <source>Show the details of theme ID %s</source>
         <target>Mostrar los detalles del tema con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.edit.0">
-        <source>Edit theme</source>
-        <target>Editar tema</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.edit.1">
+      <trans-unit id="tl_theme.edit">
         <source>Edit theme ID %s</source>
         <target>Editar tema con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.delete.0">
-        <source>Delete theme</source>
-        <target>Eliminar tema</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.delete.1">
+      <trans-unit id="tl_theme.delete">
         <source>Delete theme ID %s</source>
         <target>Eliminar tema con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.css.0">
-        <source>Style sheets</source>
-        <target>Hojas de estilo</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.css.1">
+      <trans-unit id="tl_theme.css">
         <source>Edit the style sheets of theme ID %s</source>
         <target>Editar la hoja de estilo del tema con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.modules.0">
-        <source>Modules</source>
-        <target>Módulos</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.modules.1">
+      <trans-unit id="tl_theme.modules">
         <source>Edit the front end modules of theme ID %s</source>
         <target>Editar los módulos de front end del tema con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.layout.0">
-        <source>Layouts</source>
-        <target>Diseños</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.layout.1">
+      <trans-unit id="tl_theme.layout">
         <source>Edit the page layouts of theme ID %s</source>
         <target>Editar los diseños de página del tema con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.imageSizes.0">
-        <source>Image sizes</source>
-        <target>Tamaños de imágen</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.imageSizes.1">
+      <trans-unit id="tl_theme.imageSizes">
         <source>Edit the image sizes of theme ID %s</source>
         <target>Editar los tamaños de imágen del ID del tema %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.importTheme.0">
-        <source>Theme import</source>
-        <target>Importar tema</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.importTheme.1">
-        <source>Import new themes</source>
-        <target>Importar nuevos temas</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.exportTheme.0">
-        <source>Export</source>
-        <target>Exportar</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.exportTheme.1">
+      <trans-unit id="tl_theme.exportTheme">
         <source>Export theme ID %s</source>
         <target>Exportar tema con ID %s</target>
       </trans-unit>

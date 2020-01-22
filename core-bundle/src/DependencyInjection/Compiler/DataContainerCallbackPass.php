@@ -22,9 +22,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class DataContainerCallbackPass implements CompilerPassInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function process(ContainerBuilder $container): void
     {
         if (!$container->hasDefinition('contao.listener.data_container_callback')) {
@@ -42,7 +39,7 @@ class DataContainerCallbackPass implements CompilerPassInterface
     }
 
     /**
-     * @return array<string,array<int,string[]>>
+     * @return array<string, array<int, array<string>>>
      */
     private function getCallbacks(ContainerBuilder $container): array
     {

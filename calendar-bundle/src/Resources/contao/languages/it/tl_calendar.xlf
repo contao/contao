@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_calendar.title.0">
         <source>Title</source>
-        <target>Nome del modulo</target>
+        <target>Titolo</target>
       </trans-unit>
       <trans-unit id="tl_calendar.title.1">
         <source>Please enter the calendar title.</source>
@@ -141,54 +141,6 @@
         <source>Full articles</source>
         <target>Articoli completi</target>
       </trans-unit>
-      <trans-unit id="tl_calendar.new.0">
-        <source>New calendar</source>
-        <target>Nuovo calendario</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.new.1">
-        <source>Create a new calendar</source>
-        <target>Crea un nuovo calendario</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.show.0">
-        <source>Calendar details</source>
-        <target>Dettagli calendario</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.show.1">
-        <source>Show the details of calendar ID %s</source>
-        <target>Mostra i dettagli del calendario ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.edit.0">
-        <source>Edit calendar</source>
-        <target>Modifica calendario</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.edit.1">
-        <source>Edit calendar ID %s</source>
-        <target>Modifica il calendario ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.editheader.0">
-        <source>Edit calendar</source>
-        <target>Modifica calendario</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.editheader.1">
-        <source>Edit the calendar settings</source>
-        <target>Modifica le impostazioni del calendario</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.copy.0">
-        <source>Duplicate calendar</source>
-        <target>Copia calendario</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.copy.1">
-        <source>Duplicate calendar ID %s</source>
-        <target>Copia il calendario ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.delete.0">
-        <source>Delete calendar</source>
-        <target>Cancella calendario</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.delete.1">
-        <source>Delete calendar ID %s</source>
-        <target>Cancella il calendario ID %s</target>
-      </trans-unit>
       <trans-unit id="tl_calendar.feeds.0">
         <source>RSS feeds</source>
         <target>RSS feeds</target>
@@ -196,6 +148,38 @@
       <trans-unit id="tl_calendar.feeds.1">
         <source>Manage RSS feeds</source>
         <target>Gestisci il feed RSS</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.new.0">
+        <source>New</source>
+        <target>Nuovo</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.new.1">
+        <source>Create a new calendar</source>
+        <target>Crea un nuovo calendario</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.show">
+        <source>Show the details of calendar ID %s</source>
+        <target>Mostra i dettagli del calendario ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.edit">
+        <source>Edit calendar ID %s</source>
+        <target>Modifica il calendario ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.editmeta">
+        <source>Edit the calendar settings</source>
+        <target>Modifica le impostazioni del calendario</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.editheader">
+        <source>Edit the settings of calendar ID %s</source>
+        <target>Modificare le impostazioni calendario ID% s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.copy">
+        <source>Duplicate calendar ID %s</source>
+        <target>Copia il calendario ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.delete">
+        <source>Delete calendar ID %s</source>
+        <target>Cancella il calendario ID %s</target>
       </trans-unit>
     </body>
   </file>

@@ -19,9 +19,11 @@
       </trans-unit>
       <trans-unit id="tl_module.nl_text.0">
         <source>Custom text</source>
+        <target>Произвољан текст</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_text.1">
         <source>Here you can e.g. enter a privacy note to make the newsletter subscription GDPR compliant.</source>
+        <target>Овде можете додати нпр. обавештење о приватности како би претплата била у складу са GDPR.</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_hideChannels.0">
         <source>Hide channel menu</source>
@@ -57,6 +59,7 @@
       </trans-unit>
       <trans-unit id="tl_module.text_legend">
         <source>Custom text</source>
+        <target>Произвољан текст</target>
       </trans-unit>
       <trans-unit id="tl_module.text_subscribe.0">
         <source>Your subscription on %s</source>
@@ -75,6 +78,18 @@ The confirmation link is valid for 24 hours. You can cancel your subscription at
 
 If you did not subscribe yourself, please ignore this e-mail.
 </source>
+        <target>Пријавили сте се за претплату на следеће канале са сајта ##domain##:
+
+##channels##
+
+Да би сте активирали претплату, потребно је да кликнете на линк испод:
+
+##link##
+
+Линк важи 24 часа. Претплату можете отказати у било ком тренутку.
+
+Ако нисте захтевали претплату, игноришите овај имејл.
+</target>
       </trans-unit>
       <trans-unit id="tl_module.text_unsubscribe.0">
         <source>Your subscription on %s</source>

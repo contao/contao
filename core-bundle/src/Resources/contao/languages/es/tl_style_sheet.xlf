@@ -89,75 +89,47 @@
         <source>Style sheet &quot;%s&quot; has been imported as &quot;%s&quot;.</source>
         <target>La hoja de estilo &quot;%s&quot; ha sido importada como &quot;&quot;%s.</target>
       </trans-unit>
+      <trans-unit id="tl_style_sheet.import.0">
+        <source>Import</source>
+        <target>Importar</target>
+      </trans-unit>
+      <trans-unit id="tl_style_sheet.import.1">
+        <source>Import a style sheet</source>
+        <target>Importar una hoja de estilos</target>
+      </trans-unit>
       <trans-unit id="tl_style_sheet.new.0">
-        <source>New style sheet</source>
-        <target>Nueva hoja de estilos</target>
+        <source>New</source>
+        <target>Nuevo</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.new.1">
         <source>Create a new style sheet</source>
         <target>Crear una hoja de estilos nueva</target>
       </trans-unit>
-      <trans-unit id="tl_style_sheet.show.0">
-        <source>Style sheet details</source>
-        <target>Detalles de hoja de estilos</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.show.1">
+      <trans-unit id="tl_style_sheet.show">
         <source>Show the details of style sheet ID %s</source>
         <target>Mostrar los detalles de la hoja de estilo con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_style_sheet.edit.0">
-        <source>Edit style sheet</source>
-        <target>Editar hoja de estilos</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.edit.1">
+      <trans-unit id="tl_style_sheet.edit">
         <source>Edit style sheet ID %s</source>
         <target>Editar la hoja de estilos con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_style_sheet.editheader.0">
-        <source>Edit style sheet</source>
-        <target>Editar hoja de estilos</target>
+      <trans-unit id="tl_style_sheet.editheader">
+        <source>Edit the settings of style sheet ID %s</source>
+        <target>Editar la configuración de la hoja de estilos con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_style_sheet.editheader.1">
-        <source>Edit the style sheet settings</source>
-        <target>Editar el encabezado de esta hoja de estilo</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.cut.0">
-        <source>Move style sheet</source>
-        <target>Mover la hoja de estilo</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.cut.1">
-        <source>Move style sheet ID %s</source>
-        <target>Mover la hoja de estilo con ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.copy.0">
-        <source>Duplicate style sheet</source>
-        <target>Duplicar hoja de estilos</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.copy.1">
+      <trans-unit id="tl_style_sheet.copy">
         <source>Duplicate style sheet ID %s</source>
         <target>Duplicar la hoja de estilos con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_style_sheet.delete.0">
-        <source>Delete style sheet</source>
-        <target>Eliminar hoja de estilos</target>
+      <trans-unit id="tl_style_sheet.cut">
+        <source>Move style sheet ID %s</source>
+        <target>Mover la hoja de estilo con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_style_sheet.delete.1">
+      <trans-unit id="tl_style_sheet.delete">
         <source>Delete style sheet ID %s</source>
         <target>Eliminar la hoja de estilos con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_style_sheet.import.0">
-        <source>CSS import</source>
-        <target>Importar CSS</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.import.1">
-        <source>Import existing CSS files</source>
-        <target>Importar un archivo CSS</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.export.0">
-        <source>Export style sheet</source>
-        <target>Exportar hoja de estilos</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.export.1">
+      <trans-unit id="tl_style_sheet.export">
         <source>Export style sheet ID %s</source>
         <target>Exportar hoja de estilos con ID %s</target>
       </trans-unit>

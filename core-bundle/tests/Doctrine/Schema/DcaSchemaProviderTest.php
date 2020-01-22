@@ -235,7 +235,6 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertSame('InnoDB', $table->getOption('engine'));
         $this->assertSame('utf8', $table->getOption('charset'));
         $this->assertSame('utf8_unicode_ci', $table->getOption('collate'));
-        $this->assertSame('DYNAMIC', $table->getOption('row_format'));
 
         $provider = $this->getProvider(
             [],
@@ -256,7 +255,6 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertSame('InnoDB', $table->getOption('engine'));
         $this->assertSame('utf8mb4', $table->getOption('charset'));
         $this->assertSame('utf8mb4_unicode_ci', $table->getOption('collate'));
-        $this->assertSame('DYNAMIC', $table->getOption('row_format'));
 
         $provider = $this->getProvider(
             [

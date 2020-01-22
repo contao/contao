@@ -226,20 +226,16 @@
         <target>Contient un champ de saisie et un menu de boutons à cocher pour choisir le type de requête.</target>
       </trans-unit>
       <trans-unit id="tl_module.contextLength.0">
-        <source>Context range</source>
-        <target>Étendu du contexte</target>
+        <source>Context length</source>
       </trans-unit>
       <trans-unit id="tl_module.contextLength.1">
-        <source>The number of characters on the left and right side of each keyword that are used as context.</source>
-        <target>Saisir le nombre de caractères à droite et à gauche de chaque mot-clé qui doivent être utilisés comme contexte.</target>
+        <source>The first field defines the number of characters on the left and right side of each keyword and the second one the overall context length per result.</source>
       </trans-unit>
-      <trans-unit id="tl_module.totalLength.0">
-        <source>Maximum context length</source>
-        <target>Longueur maximale du contexte</target>
+      <trans-unit id="tl_module.minKeywordLength.0">
+        <source>Minimum keyword length</source>
       </trans-unit>
-      <trans-unit id="tl_module.totalLength.1">
-        <source>Here you can limit the overall context length per result.</source>
-        <target>Saisir la longueur maximale du contexte de chaque résultat.</target>
+      <trans-unit id="tl_module.minKeywordLength.1">
+        <source>Keywords deceeding the minimum length will be ignored in the search results. Set to 0 to disable.</source>
       </trans-unit>
       <trans-unit id="tl_module.perPage.0">
         <source>Items per page</source>
@@ -266,12 +262,10 @@
         <target>Choisir un modèle de résultat de recherche.</target>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.0">
-        <source>Column</source>
-        <target>Colonne</target>
+        <source>Layout section</source>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.1">
-        <source>Please choose the column whose articles you want to list.</source>
-        <target>Choisir la colonne contenant les articles que vous voulez énumérer.</target>
+        <source>Please choose the layout section whose articles you want to list.</source>
       </trans-unit>
       <trans-unit id="tl_module.skipFirst.0">
         <source>Skip items</source>
@@ -600,68 +594,30 @@ If you did not request this e-mail, please contact the website administrator.
         <target>Supprimer le compte de manière irrévocable</target>
       </trans-unit>
       <trans-unit id="tl_module.new.0">
-        <source>Add module</source>
-        <target>Ajouter un module</target>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_module.new.1">
-        <source>Add a module</source>
-        <target>Ajouter un module</target>
+        <source>Create a new module</source>
       </trans-unit>
-      <trans-unit id="tl_module.show.0">
-        <source>Module details</source>
-        <target>Détails du module</target>
-      </trans-unit>
-      <trans-unit id="tl_module.show.1">
+      <trans-unit id="tl_module.show">
         <source>Show the details of module ID %s</source>
         <target>Afficher les détails du module ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_module.edit.0">
-        <source>Edit module</source>
-        <target>Éditer le module</target>
-      </trans-unit>
-      <trans-unit id="tl_module.edit.1">
+      <trans-unit id="tl_module.edit">
         <source>Edit module ID %s</source>
         <target>Éditer le module ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_module.cut.0">
-        <source>Move module</source>
-        <target>Déplacer le module</target>
-      </trans-unit>
-      <trans-unit id="tl_module.cut.1">
-        <source>Move module ID %s</source>
-        <target>Déplacer le module ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_module.copy.0">
-        <source>Duplicate module</source>
-        <target>Dupliquer le module</target>
-      </trans-unit>
-      <trans-unit id="tl_module.copy.1">
+      <trans-unit id="tl_module.copy">
         <source>Duplicate module ID %s</source>
         <target>Dupliquer le module ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_module.delete.0">
-        <source>Delete module</source>
-        <target>Supprimer le module</target>
+      <trans-unit id="tl_module.cut">
+        <source>Move module ID %s</source>
+        <target>Déplacer le module ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_module.delete.1">
+      <trans-unit id="tl_module.delete">
         <source>Delete module ID %s</source>
         <target>Supprimer le module ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_module.editheader.0">
-        <source>Edit theme</source>
-        <target>Éditer le thème</target>
-      </trans-unit>
-      <trans-unit id="tl_module.editheader.1">
-        <source>Edit the theme settings</source>
-        <target>Éditer les paramètres du thème</target>
-      </trans-unit>
-      <trans-unit id="tl_module.pasteafter.0">
-        <source>Paste here</source>
-        <target>Coller ici</target>
-      </trans-unit>
-      <trans-unit id="tl_module.pasteafter.1">
-        <source>Paste after module ID %s</source>
-        <target>Coller après le module ID %s</target>
       </trans-unit>
     </body>
   </file>

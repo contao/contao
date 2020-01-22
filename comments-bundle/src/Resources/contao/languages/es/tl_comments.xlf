@@ -49,6 +49,14 @@
         <source>Here you can enter a website address.</source>
         <target>Introduzca una dirección web.</target>
       </trans-unit>
+      <trans-unit id="tl_comments.member.0">
+        <source>Member</source>
+        <target>Miembro</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.member.1">
+        <source>Here you can associate the comment with a member.</source>
+        <target>Aquí puede asociar el comentario con un miembro.</target>
+      </trans-unit>
       <trans-unit id="tl_comments.comment.0">
         <source>Comment</source>
         <target>Comentarios</target>
@@ -157,35 +165,19 @@
         <source>Event</source>
         <target>Evento</target>
       </trans-unit>
-      <trans-unit id="tl_comments.show.0">
-        <source>Comment details</source>
-        <target>Detalles de comentario</target>
-      </trans-unit>
-      <trans-unit id="tl_comments.show.1">
+      <trans-unit id="tl_comments.show">
         <source>Show the details of comment ID %s</source>
         <target>Mostrar detalles del comentario con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_comments.edit.0">
-        <source>Edit comment</source>
-        <target>Editar comentario</target>
-      </trans-unit>
-      <trans-unit id="tl_comments.edit.1">
+      <trans-unit id="tl_comments.edit">
         <source>Edit comment ID %s</source>
         <target>Editar comentacio con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_comments.delete.0">
-        <source>Delete comment</source>
-        <target>Eliminar comentario</target>
-      </trans-unit>
-      <trans-unit id="tl_comments.delete.1">
+      <trans-unit id="tl_comments.delete">
         <source>Delete comment ID %s</source>
         <target>Eliminar comentario con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_comments.toggle.0">
-        <source>Publish/unpublish comment</source>
-        <target>Publicar/retirar comentario</target>
-      </trans-unit>
-      <trans-unit id="tl_comments.toggle.1">
+      <trans-unit id="tl_comments.toggle">
         <source>Publish/unpublish comment ID %s</source>
         <target>Publicar/retirar el comentario con ID %s</target>
       </trans-unit>

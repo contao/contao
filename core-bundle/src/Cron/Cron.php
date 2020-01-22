@@ -94,13 +94,15 @@ class Cron
                 // Check if the cron should be run
                 $expression = CronExpression::factory($interval);
 
-                if (null === $lastRunDate || $now >= $expression->getNextRunDate($lastRunDate)) {
-                    // Update the cron entry
-                    $lastRunEntity->setLastRun($now);
-
-                    // Add job to the crons to be run
-                    $cronJobsToBeRun[] = $cron;
+                if (null !== $lastRunDate && $now < $expression->getNextRunDate($lastRunDate)) {
+                    continue;
                 }
+
+                // Update the cron entry
+                $lastRunEntity->setLastRun($now);
+
+                // Add job to the crons to be run
+                $cronJobsToBeRun[] = $cron;
             }
 
             $this->entityManager->flush();

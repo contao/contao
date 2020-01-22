@@ -49,14 +49,6 @@
         <source>Here you can define global variables for the style sheets of the theme (e.g. &lt;em&gt;$red&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; or &lt;em&gt;$margin&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;).</source>
         <target>Вы можете определить глобальные переменные для стилей темы (напр. &lt;em&gt;$red&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; или &lt;em&gt;$margin&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;).</target>
       </trans-unit>
-      <trans-unit id="tl_theme.defaultImageDensities.0">
-        <source>Default image pixel densities</source>
-        <target>Плотность пикселей изображения по умолчанию</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.defaultImageDensities.1">
-        <source>Here you can define the default pixel densities, e.g. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</source>
-        <target>Вы можете определить плотность пикселей по умолчанию, напр.,&lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</target>
-      </trans-unit>
       <trans-unit id="tl_theme.source.0">
         <source>Source files</source>
         <target>Исходные файлы</target>
@@ -80,10 +72,6 @@
       <trans-unit id="tl_theme.config_legend">
         <source>Configuration</source>
         <target>Конфигурация</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.image_legend">
-        <source>Image sizes</source>
-        <target>Размеры изображения</target>
       </trans-unit>
       <trans-unit id="tl_theme.vars_legend">
         <source>Global variables</source>
@@ -133,83 +121,55 @@
         <source>Find more themes in the Contao theme store</source>
         <target>Найти темы в магазине шаблонов Contao</target>
       </trans-unit>
+      <trans-unit id="tl_theme.importTheme.0">
+        <source>Import</source>
+        <target>Импорт</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.importTheme.1">
+        <source>Import a theme</source>
+        <target>Импорт темы</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.editmeta">
+        <source>Edit the theme settings</source>
+        <target>Редактировать настройки темы</target>
+      </trans-unit>
       <trans-unit id="tl_theme.new.0">
-        <source>New theme</source>
-        <target>Новая тема</target>
+        <source>New</source>
+        <target>Новый</target>
       </trans-unit>
       <trans-unit id="tl_theme.new.1">
         <source>Create a new theme</source>
         <target>Создать новую тему</target>
       </trans-unit>
-      <trans-unit id="tl_theme.show.0">
-        <source>Theme details</source>
-        <target>Детали темы</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.show.1">
+      <trans-unit id="tl_theme.show">
         <source>Show the details of theme ID %s</source>
         <target>Показать детали темы ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.edit.0">
-        <source>Edit theme</source>
-        <target>Редактировать тему</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.edit.1">
+      <trans-unit id="tl_theme.edit">
         <source>Edit theme ID %s</source>
         <target>Редактировать тему ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.delete.0">
-        <source>Delete theme</source>
-        <target>Удалить тему</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.delete.1">
+      <trans-unit id="tl_theme.delete">
         <source>Delete theme ID %s</source>
         <target>Удалить тему ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.css.0">
-        <source>Style sheets</source>
-        <target>Таблицы стилей</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.css.1">
+      <trans-unit id="tl_theme.css">
         <source>Edit the style sheets of theme ID %s</source>
         <target>Редактировать таблицы стилей темы ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.modules.0">
-        <source>Modules</source>
-        <target>Модули</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.modules.1">
+      <trans-unit id="tl_theme.modules">
         <source>Edit the front end modules of theme ID %s</source>
         <target>Редактировать модули внешнего интерфейса ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.layout.0">
-        <source>Layouts</source>
-        <target>Макет</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.layout.1">
+      <trans-unit id="tl_theme.layout">
         <source>Edit the page layouts of theme ID %s</source>
         <target>Изменить макет страницы темы ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.imageSizes.0">
-        <source>Image sizes</source>
-        <target>Размеры изображения</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.imageSizes.1">
+      <trans-unit id="tl_theme.imageSizes">
         <source>Edit the image sizes of theme ID %s</source>
         <target>Редактировать размеры изображения темы ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.importTheme.0">
-        <source>Theme import</source>
-        <target>Импорт темы</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.importTheme.1">
-        <source>Import new themes</source>
-        <target>Импорт новых тем</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.exportTheme.0">
-        <source>Export</source>
-        <target>Экспорт</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.exportTheme.1">
+      <trans-unit id="tl_theme.exportTheme">
         <source>Export theme ID %s</source>
         <target>Экспорт темы ID %s</target>
       </trans-unit>

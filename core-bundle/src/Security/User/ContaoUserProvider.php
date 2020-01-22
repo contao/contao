@@ -64,9 +64,6 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
         $this->logger = $logger;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function loadUserByUsername($username): User
     {
         $this->framework->initialize();
@@ -82,9 +79,6 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
         throw new UsernameNotFoundException(sprintf('Could not find user "%s"', $username));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function refreshUser(UserInterface $user)
     {
         if (!is_a($user, $this->userClass)) {
@@ -99,9 +93,6 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
         return $user;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsClass($class): bool
     {
         return $this->userClass === $class;

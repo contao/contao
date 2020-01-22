@@ -41,6 +41,18 @@
         <source>Please enter the time according to the global time format.</source>
         <target>Saisir les heures et minutes de l'actualité selon le format de date global.</target>
       </trans-unit>
+      <trans-unit id="tl_news.pageTitle.0">
+        <source>Meta title</source>
+      </trans-unit>
+      <trans-unit id="tl_news.pageTitle.1">
+        <source>Here you can add a custom meta title to overwrite the default page title.</source>
+      </trans-unit>
+      <trans-unit id="tl_news.description.0">
+        <source>Meta description</source>
+      </trans-unit>
+      <trans-unit id="tl_news.description.1">
+        <source>Here you can add a custom meta description to overwrite the default page description.</source>
+      </trans-unit>
       <trans-unit id="tl_news.subheadline.0">
         <source>Subheadline</source>
         <target>Sous-titre</target>
@@ -182,16 +194,14 @@
         <target>Afficher à partir du</target>
       </trans-unit>
       <trans-unit id="tl_news.start.1">
-        <source>Do not show the news item on the website before this day.</source>
-        <target>Ne pas afficher l'actualité sur le site avant ce jour.</target>
+        <source>If you want to prevent the news item from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_news.stop.0">
         <source>Show until</source>
         <target>Afficher jusqu'au</target>
       </trans-unit>
       <trans-unit id="tl_news.stop.1">
-        <source>Do not show the news item on the website on and after this day.</source>
-        <target>Ne plus afficher l'actualité sur le site après ce jour.</target>
+        <source>If you want to prevent the news item from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_news.tstamp.0">
         <source>Revision date</source>
@@ -208,6 +218,10 @@
       <trans-unit id="tl_news.date_legend">
         <source>Date and time</source>
         <target>Date et heure</target>
+      </trans-unit>
+      <trans-unit id="tl_news.meta_legend">
+        <source>Meta data</source>
+        <target>Meta-données</target>
       </trans-unit>
       <trans-unit id="tl_news.teaser_legend">
         <source>Subheadline and teaser</source>
@@ -238,92 +252,46 @@
         <target>Paramètres de publication</target>
       </trans-unit>
       <trans-unit id="tl_news.new.0">
-        <source>New item</source>
-        <target>Nouvelle actualité</target>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_news.new.1">
         <source>Create a new news item</source>
         <target>Créer une nouvelle actualité</target>
       </trans-unit>
-      <trans-unit id="tl_news.show.0">
-        <source>Item details</source>
-        <target>Détails de l'actualité</target>
-      </trans-unit>
-      <trans-unit id="tl_news.show.1">
+      <trans-unit id="tl_news.show">
         <source>Show the details of news item ID %s</source>
         <target>Afficher les détails de l'actualité ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.edit.0">
-        <source>Edit item</source>
-        <target>Éditer l'actualité</target>
-      </trans-unit>
-      <trans-unit id="tl_news.edit.1">
+      <trans-unit id="tl_news.edit">
         <source>Edit news item ID %s</source>
         <target>Éditer l'actualité ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.copy.0">
-        <source>Duplicate item</source>
-        <target>Dupliquer l'actualité</target>
-      </trans-unit>
-      <trans-unit id="tl_news.copy.1">
+      <trans-unit id="tl_news.copy">
         <source>Duplicate news item ID %s</source>
         <target>Dupliquer l'actualité ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.cut.0">
-        <source>Move item</source>
-        <target>Déplacer l'actualité</target>
-      </trans-unit>
-      <trans-unit id="tl_news.cut.1">
+      <trans-unit id="tl_news.cut">
         <source>Move news item ID %s</source>
         <target>Déplacer l'actualité ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.delete.0">
-        <source>Delete item</source>
-        <target>Supprimer l'actualité</target>
-      </trans-unit>
-      <trans-unit id="tl_news.delete.1">
+      <trans-unit id="tl_news.delete">
         <source>Delete news item ID %s</source>
         <target>Supprimer l'actualité ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.toggle.0">
-        <source>Publish/unpublish item</source>
-        <target>Publier/dé-publier l'actualité</target>
-      </trans-unit>
-      <trans-unit id="tl_news.toggle.1">
+      <trans-unit id="tl_news.toggle">
         <source>Publish/unpublish news item ID %s</source>
         <target>Publier/dé-publier l'actualité ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.feature.0">
-        <source>Feature/unfeature item</source>
-        <target>Actualité vedette / actualité standard</target>
-      </trans-unit>
-      <trans-unit id="tl_news.feature.1">
+      <trans-unit id="tl_news.feature">
         <source>Feature/unfeature news item ID %s</source>
         <target>Actualité ID %s vedette / standard</target>
       </trans-unit>
-      <trans-unit id="tl_news.editheader.0">
-        <source>Edit archive</source>
-        <target>Éditer l'archive</target>
-      </trans-unit>
-      <trans-unit id="tl_news.editheader.1">
-        <source>Edit the news archive settings</source>
-        <target>Éditer les paramètres de l'archive</target>
-      </trans-unit>
-      <trans-unit id="tl_news.editmeta.0">
-        <source>Edit item settings</source>
-        <target>Éditer les paramètres de l'archive</target>
-      </trans-unit>
-      <trans-unit id="tl_news.editmeta.1">
-        <source>Edit the news item settings</source>
-        <target>Éditer les paramètres de l'actualité</target>
+      <trans-unit id="tl_news.editheader">
+        <source>Edit the settings of news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
         <target>Coller dans cette archive</target>
-      </trans-unit>
-      <trans-unit id="tl_news.pasteafter.1">
-        <source>Paste after news item ID %s</source>
-        <target>Coller après l'actualité ID %s</target>
       </trans-unit>
     </body>
   </file>

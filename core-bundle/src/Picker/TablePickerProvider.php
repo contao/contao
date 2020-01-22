@@ -14,17 +14,11 @@ namespace Contao\CoreBundle\Picker;
 
 class TablePickerProvider extends AbstractTablePickerProvider
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getName(): string
     {
         return 'tablePicker';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getDataContainer(): string
     {
         return 'Table';

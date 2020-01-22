@@ -79,9 +79,6 @@ class ResizeImagesCommand extends Command
         parent::__construct();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure(): void
     {
         $this
@@ -93,9 +90,6 @@ class ResizeImagesCommand extends Command
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if (!$this->resizer instanceof DeferredResizerInterface) {
@@ -201,10 +195,10 @@ class ResizeImagesCommand extends Command
             throw new \RuntimeException('The php executable could not be found.');
         }
 
-        /** @var Process[] $processes */
+        /** @var array<Process> $processes */
         $processes = [];
 
-        /** @var string[] $buffers */
+        /** @var array<string> $buffers */
         $buffers = [];
 
         for ($i = 0; $i < $count; ++$i) {

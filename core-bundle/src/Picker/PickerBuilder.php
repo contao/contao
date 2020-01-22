@@ -28,7 +28,7 @@ class PickerBuilder implements PickerBuilderInterface
     private $router;
 
     /**
-     * @var PickerProviderInterface[]
+     * @var array<PickerProviderInterface>
      */
     private $providers = [];
 
@@ -49,9 +49,6 @@ class PickerBuilder implements PickerBuilderInterface
         $this->providers[$provider->getName()] = $provider;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function create(PickerConfig $config): ?Picker
     {
         $providers = $this->providers;
@@ -74,9 +71,6 @@ class PickerBuilder implements PickerBuilderInterface
         return new Picker($this->menuFactory, $providers, $config);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function createFromData($data): ?Picker
     {
         try {
@@ -88,9 +82,6 @@ class PickerBuilder implements PickerBuilderInterface
         return $this->create($config);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsContext($context, array $allowed = null): bool
     {
         $providers = $this->providers;
@@ -108,9 +99,6 @@ class PickerBuilder implements PickerBuilderInterface
         return false;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getUrl($context, array $extras = [], $value = ''): string
     {
         $providers = isset($extras['providers']) && \is_array($extras['providers']) ? $extras['providers'] : null;

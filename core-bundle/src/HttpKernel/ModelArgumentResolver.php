@@ -40,9 +40,6 @@ class ModelArgumentResolver implements ArgumentValueResolverInterface
         $this->scopeMatcher = $scopeMatcher;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports(Request $request, ArgumentMetadata $argument): bool
     {
         if (!$this->scopeMatcher->isContaoRequest($request)) {
@@ -62,9 +59,6 @@ class ModelArgumentResolver implements ArgumentValueResolverInterface
         return true;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function resolve(Request $request, ArgumentMetadata $argument): \Generator
     {
         yield $this->fetchModel($request, $argument);

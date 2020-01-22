@@ -19,9 +19,6 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
  */
 class MockNativeSessionStorage extends MockArraySessionStorage
 {
-    /**
-     * {@inheritdoc}
-     */
     public function start(): bool
     {
         parent::start();

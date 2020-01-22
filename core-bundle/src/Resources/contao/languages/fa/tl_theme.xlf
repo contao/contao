@@ -49,13 +49,6 @@
         <source>Here you can define global variables for the style sheets of the theme (e.g. &lt;em&gt;$red&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; or &lt;em&gt;$margin&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;).</source>
         <target>اینجا می‌توانید متغییرهای جهانی را برای شیوه‌نامه‌های استایل پوسته (برای نمونه &lt;em&gt;$red&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; or &lt;em&gt;$margin&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;) تعریف کنید.</target>
       </trans-unit>
-      <trans-unit id="tl_theme.defaultImageDensities.0">
-        <source>Default image pixel densities</source>
-        <target>چگالی پیکسلی پیش‌فرض تصویر</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.defaultImageDensities.1">
-        <source>Here you can define the default pixel densities, e.g. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</source>
-      </trans-unit>
       <trans-unit id="tl_theme.source.0">
         <source>Source files</source>
         <target>پرونده‌های منبع</target>
@@ -79,10 +72,6 @@
       <trans-unit id="tl_theme.config_legend">
         <source>Configuration</source>
         <target>پیکربندی</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.image_legend">
-        <source>Image sizes</source>
-        <target>اندازه‌های تصویر</target>
       </trans-unit>
       <trans-unit id="tl_theme.vars_legend">
         <source>Global variables</source>
@@ -130,85 +119,57 @@
       </trans-unit>
       <trans-unit id="tl_theme.store.1">
         <source>Find more themes in the Contao theme store</source>
-        <target>پیدا کردن پوسته‌های بیشتر در فروشگاه پوسته کانتائو</target>
+        <target>پیدا کردن پوسته‌های بیشتر در فروشگاه پوسته کنتائو</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.importTheme.0">
+        <source>Import</source>
+        <target>وارد کردن</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.importTheme.1">
+        <source>Import a theme</source>
+        <target>وارد کردن یک پوسته</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.editmeta">
+        <source>Edit the theme settings</source>
+        <target>ویرایش تنظیمات پوسته</target>
       </trans-unit>
       <trans-unit id="tl_theme.new.0">
-        <source>New theme</source>
-        <target>پوسته جدید</target>
+        <source>New</source>
+        <target>جدید</target>
       </trans-unit>
       <trans-unit id="tl_theme.new.1">
         <source>Create a new theme</source>
         <target>ایجاد یک پوسته جدید</target>
       </trans-unit>
-      <trans-unit id="tl_theme.show.0">
-        <source>Theme details</source>
-        <target>جزئیات پوسته</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.show.1">
+      <trans-unit id="tl_theme.show">
         <source>Show the details of theme ID %s</source>
         <target>نمایش جزئیات پوسته شناسه‌ی %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.edit.0">
-        <source>Edit theme</source>
-        <target>ویرایش پوسته</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.edit.1">
+      <trans-unit id="tl_theme.edit">
         <source>Edit theme ID %s</source>
         <target>ویرایش پوسته شناسه‌ی %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.delete.0">
-        <source>Delete theme</source>
-        <target>حذف پوسته</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.delete.1">
+      <trans-unit id="tl_theme.delete">
         <source>Delete theme ID %s</source>
         <target>حذف پوسته شناسه‌ی %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.css.0">
-        <source>Style sheets</source>
-        <target>شیوه‌نامه‌ها</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.css.1">
+      <trans-unit id="tl_theme.css">
         <source>Edit the style sheets of theme ID %s</source>
         <target>ویرایش شیوه‌نامه‌های پوسته شناسه‌ی %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.modules.0">
-        <source>Modules</source>
-        <target>ماژول‌ها</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.modules.1">
+      <trans-unit id="tl_theme.modules">
         <source>Edit the front end modules of theme ID %s</source>
         <target>ویرایش ماژول‌های بخش کاربری پوسته شناسه‌ی %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.layout.0">
-        <source>Layouts</source>
-        <target>چیدمان‌ها</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.layout.1">
+      <trans-unit id="tl_theme.layout">
         <source>Edit the page layouts of theme ID %s</source>
         <target>ویرایش چیدمان برگه‌ها پوسته شناسه‌ی %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.imageSizes.0">
-        <source>Image sizes</source>
-        <target>اندازه‌های تصویر</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.imageSizes.1">
+      <trans-unit id="tl_theme.imageSizes">
         <source>Edit the image sizes of theme ID %s</source>
         <target>ویرایش اندازه نصویر پوسته شناسه‌ی %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.importTheme.0">
-        <source>Theme import</source>
-        <target>وارد کردن پوسته</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.importTheme.1">
-        <source>Import new themes</source>
-        <target>وارد کردن پوسته‌های جدید</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.exportTheme.0">
-        <source>Export</source>
-        <target>خارج کردن</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.exportTheme.1">
+      <trans-unit id="tl_theme.exportTheme">
         <source>Export theme ID %s</source>
         <target>خارج کردن پوسته شناسه‌ی %s</target>
       </trans-unit>

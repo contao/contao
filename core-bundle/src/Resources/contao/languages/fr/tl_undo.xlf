@@ -41,21 +41,8 @@
         <source>Raw data of the undo step</source>
         <target>Données des enregistrements supprimés</target>
       </trans-unit>
-      <trans-unit id="tl_undo.show.0">
-        <source>Show details</source>
-        <target>Afficher les détails</target>
-      </trans-unit>
-      <trans-unit id="tl_undo.show.1">
-        <source>Show the details of entry ID %s</source>
-        <target>Afficher les détails de l'entrée ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_undo.undo.0">
-        <source>Restore</source>
-        <target>Rétablir</target>
-      </trans-unit>
-      <trans-unit id="tl_undo.undo.1">
-        <source>Restore entry ID %s</source>
-        <target>Rétablir l'action ID %s</target>
+      <trans-unit id="tl_undo.undo">
+        <source>Restore element ID %s</source>
       </trans-unit>
     </body>
   </file>

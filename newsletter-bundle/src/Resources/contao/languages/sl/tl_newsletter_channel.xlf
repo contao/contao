@@ -62,58 +62,38 @@
         <target>Nastavitve pošiljatelja</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.new.0">
-        <source>New channel</source>
-        <target>Nova vrsta e-novic</target>
+        <source>New</source>
+        <target>Nov</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.new.1">
         <source>Create a new channel</source>
         <target>Ustvarite novo vrsto e-novic</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.show.0">
-        <source>Channel details</source>
-        <target>Podrobnosti vrste e-novice</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.show.1">
+      <trans-unit id="tl_newsletter_channel.show">
         <source>Show the details of channel ID %s</source>
         <target>Prikaži podrobnosti vrste e-novice ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.edit.0">
-        <source>Edit channel</source>
-        <target>Uredi vrsto e-novice</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.edit.1">
+      <trans-unit id="tl_newsletter_channel.edit">
         <source>Edit channel ID %s</source>
         <target>Uredi vrsto e-novice ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.editheader.0">
-        <source>Edit channel</source>
-        <target>Uredi vrsto e-novice</target>
+      <trans-unit id="tl_newsletter_channel.editheader">
+        <source>Edit the settings of channel ID %s</source>
+        <target>Uredi nastavitve za vrsto e-novice ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.editheader.1">
+      <trans-unit id="tl_newsletter_channel.editmeta">
         <source>Edit the channel settings</source>
         <target>Uredi nastavitve za vrsto e-novice</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.copy.0">
-        <source>Duplicate channel</source>
-        <target>Kopiraj vrsto e-novice</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.copy.1">
+      <trans-unit id="tl_newsletter_channel.copy">
         <source>Duplicate channel ID %s</source>
         <target>Kopiraj vrsto e-novice ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.delete.0">
-        <source>Delete channel</source>
-        <target>Izbriši vrsto e-novice</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.delete.1">
+      <trans-unit id="tl_newsletter_channel.delete">
         <source>Delete channel ID %s</source>
         <target>Izbriši vrsto e-novice ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.recipients.0">
-        <source>Edit recipients</source>
-        <target>Uredi prejemnike</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.recipients.1">
+      <trans-unit id="tl_newsletter_channel.recipients">
         <source>Edit the recipients of channel ID %s</source>
         <target>Uredi prejemnike za vrsto e-novice ID %s</target>
       </trans-unit>

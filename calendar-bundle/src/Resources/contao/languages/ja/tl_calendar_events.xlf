@@ -65,6 +65,22 @@
         <source>Leave blank to create a single day event.</source>
         <target>空欄にすると1日だけのイベントを作成します。</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.pageTitle.0">
+        <source>Meta title</source>
+        <target>メタタイトル</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.pageTitle.1">
+        <source>Here you can add a custom meta title to overwrite the default page title.</source>
+        <target>独自のメタタイトルを追加して、ページの題名の初期値を上書きできます。</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.description.0">
+        <source>Meta description</source>
+        <target>メタデスクリプション</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.description.1">
+        <source>Here you can add a custom meta description to overwrite the default page description.</source>
+        <target>独自のメタデスクリプションを追加して、ページの説明の初期値を上書きできます。</target>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.location.0">
         <source>Location name</source>
         <target>会場の名前</target>
@@ -234,16 +250,16 @@
         <target>公開の開始日</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.start.1">
-        <source>Do not show the event on the website before this day.</source>
-        <target>この日より前はイベントをウェブサイトに表示しません。</target>
+        <source>If you want to prevent the event from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>ある特定の日時より前はイベントをウェブサイトに表示したくない場合は、その日時を入力します。それ以外の場合は空のままにしてください。</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.0">
         <source>Show until</source>
         <target>公開の終了日</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.1">
-        <source>Do not show the event on the website on and after this day.</source>
-        <target>この日から後はイベントをウェブサイトに表示しません。</target>
+        <source>If you want to prevent the event from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>ある特定の日時より後はイベントをウェブサイトに表示したくない場合は、その日時を入力します。それ以外の場合は空のままにしてください。</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.tstamp.0">
         <source>Revision date</source>
@@ -260,6 +276,10 @@
       <trans-unit id="tl_calendar_events.date_legend">
         <source>Date and time</source>
         <target>日付と時刻</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.meta_legend">
+        <source>Meta data</source>
+        <target>メタデータ</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.details_legend">
         <source>Event details</source>
@@ -310,84 +330,44 @@
         <target>年</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.new.0">
-        <source>New event</source>
-        <target>新しいイベント</target>
+        <source>New</source>
+        <target>新規作成</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.new.1">
         <source>Create a new event</source>
-        <target>新しくイベントを作成</target>
+        <target>新しいイベントを作成</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.show.0">
-        <source>Event details</source>
-        <target>イベントの詳細</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.show.1">
+      <trans-unit id="tl_calendar_events.show">
         <source>Show the details of event ID %s</source>
         <target>ID %sのイベントの詳細を表示</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.edit.0">
-        <source>Edit event</source>
-        <target>イベントを編集</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.edit.1">
+      <trans-unit id="tl_calendar_events.edit">
         <source>Edit event ID %s</source>
         <target>ID %sのイベントを編集</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.copy.0">
-        <source>Duplicate event</source>
-        <target>イベントを複製</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.copy.1">
+      <trans-unit id="tl_calendar_events.copy">
         <source>Duplicate event ID %s</source>
         <target>ID %sのイベントを複製</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.cut.0">
-        <source>Move event</source>
-        <target>イベントを移動</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.cut.1">
+      <trans-unit id="tl_calendar_events.cut">
         <source>Move event ID %s</source>
         <target>ID %sのイベントを移動</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.delete.0">
-        <source>Delete event</source>
-        <target>イベントを削除</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.delete.1">
+      <trans-unit id="tl_calendar_events.delete">
         <source>Delete event ID %s</source>
         <target>ID %sのイベントを削除</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.toggle.0">
-        <source>Publish/unpublish event</source>
-        <target>イベントを公開または非公開</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.toggle.1">
+      <trans-unit id="tl_calendar_events.toggle">
         <source>Publish/unpublish event ID %s</source>
         <target>ID %sのイベントの公開と非公開を切り替え</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.editheader.0">
-        <source>Edit calendar</source>
-        <target>カレンダーを編集</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.editheader.1">
-        <source>Edit the calendar settings</source>
-        <target>このカレンダーの設定を変更</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.editmeta.0">
-        <source>Edit event settings</source>
-        <target>イベントの設定を変更</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.editmeta.1">
-        <source>Edit the event settings</source>
-        <target>イベントの設定を変更</target>
+      <trans-unit id="tl_calendar_events.editheader">
+        <source>Edit the settings of event ID %s</source>
+        <target>ID %sのイベントの設定を編集</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>
         <target>このカレンダーに貼り付け</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.pasteafter.1">
-        <source>Paste after event ID %s</source>
-        <target>ID %sのイベントの後に貼り付け</target>
       </trans-unit>
     </body>
   </file>

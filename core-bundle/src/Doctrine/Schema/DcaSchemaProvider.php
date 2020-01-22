@@ -80,11 +80,6 @@ class DcaSchemaProvider
                 }
             }
 
-            // The default InnoDB row format before MySQL 5.7.9 is "Compact" but innodb_large_prefix requires "DYNAMIC"
-            if ($table->hasOption('engine') && 'InnoDB' === $table->getOption('engine')) {
-                $table->addOption('row_format', 'DYNAMIC');
-            }
-
             if (isset($definitions['SCHEMA_FIELDS'])) {
                 foreach ($definitions['SCHEMA_FIELDS'] as $fieldName => $config) {
                     $options = $config;
@@ -118,7 +113,7 @@ class DcaSchemaProvider
         /** @var EntityManagerInterface $manager */
         $manager = $this->doctrine->getManager();
 
-        /** @var ClassMetadata[] $metadata */
+        /** @var array<ClassMetadata> $metadata */
         $metadata = $manager->getMetadataFactory()->getAllMetadata();
 
         /** @var Connection $connection */
@@ -328,7 +323,7 @@ class DcaSchemaProvider
     /**
      * Returns the SQL definitions from the Contao installer.
      *
-     * @return array<string,array<string,string[]>>
+     * @return array<string, array<string, array<string>>>
      */
     private function getSqlDefinitions(): array
     {

@@ -48,9 +48,6 @@ class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, Escarg
         $this->translator = $translator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName(): string
     {
         return 'broken-link-checker';

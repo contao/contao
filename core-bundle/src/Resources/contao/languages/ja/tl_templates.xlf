@@ -33,38 +33,6 @@
         <source>Invalid source or target directory &quot;%s&quot;!</source>
         <target>保存先のディレクトリ&quot;%s&quot;が不正です。</target>
       </trans-unit>
-      <trans-unit id="tl_templates.new_tpl.0">
-        <source>New template</source>
-        <target>新しいテンプレート</target>
-      </trans-unit>
-      <trans-unit id="tl_templates.new_tpl.1">
-        <source>Create a new template</source>
-        <target>新しくテンプレートを作成</target>
-      </trans-unit>
-      <trans-unit id="tl_templates.new.0">
-        <source>New folder</source>
-        <target>新しいフォルダー</target>
-      </trans-unit>
-      <trans-unit id="tl_templates.new.1">
-        <source>Create a new folder</source>
-        <target>新しくフォルダーを作成</target>
-      </trans-unit>
-      <trans-unit id="tl_templates.pasteinto.0">
-        <source>Paste into</source>
-        <target>この中に貼り付け</target>
-      </trans-unit>
-      <trans-unit id="tl_templates.pasteinto.1">
-        <source>Paste into this folder</source>
-        <target>このフォルダーの中に貼り付け</target>
-      </trans-unit>
-      <trans-unit id="tl_templates.compare.0">
-        <source>Compare template</source>
-        <target>テンプレートを比較</target>
-      </trans-unit>
-      <trans-unit id="tl_templates.compare.1">
-        <source>Compare &quot;%s&quot; with another template</source>
-        <target>&quot;%s&quot;というテンプレートを別のテンプレートと比較</target>
-      </trans-unit>
       <trans-unit id="tl_templates.overridesAnotherTpl">
         <source>This template overrides &quot;%s&quot;.</source>
         <target>このテンプレートは&quot;%s&quot;を上書きします。</target>
@@ -72,6 +40,34 @@
       <trans-unit id="tl_templates.pleaseSelect">
         <source>Please select a template from the list above and click &quot;Show differences&quot;.</source>
         <target>上の一覧からテンプレートを選択して&quot;変更を表示&quot;してください。</target>
+      </trans-unit>
+      <trans-unit id="tl_templates.new.0">
+        <source>New folder</source>
+        <target>新しいフォルダー</target>
+      </trans-unit>
+      <trans-unit id="tl_templates.new.1">
+        <source>Create a new folder</source>
+        <target>新しいフォルダーを作成</target>
+      </trans-unit>
+      <trans-unit id="tl_templates.new_tpl.0">
+        <source>New template</source>
+        <target>新しいテンプレート</target>
+      </trans-unit>
+      <trans-unit id="tl_templates.new_tpl.1">
+        <source>Create a new template</source>
+        <target>新しいテンプレートを作成</target>
+      </trans-unit>
+      <trans-unit id="tl_templates.pasteinto.0">
+        <source>Paste into the root folder</source>
+        <target>ルートフォルダーの中に貼り付け</target>
+      </trans-unit>
+      <trans-unit id="tl_templates.pasteinto.1">
+        <source>Paste into folder &quot;%s&quot;</source>
+        <target>&quot;%s&quot;というフォルダーの中に貼り付け</target>
+      </trans-unit>
+      <trans-unit id="tl_templates.compare">
+        <source>Compare &quot;%s&quot; with another template</source>
+        <target>&quot;%s&quot;というテンプレートを別のテンプレートと比較</target>
       </trans-unit>
     </body>
   </file>

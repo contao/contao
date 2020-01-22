@@ -81,9 +81,6 @@ class PictureFactory implements PictureFactoryInterface
         $this->imagineOptions = $imagineOptions;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setDefaultDensities($densities): self
     {
         $this->defaultDensities = (string) $densities;
@@ -99,9 +96,6 @@ class PictureFactory implements PictureFactoryInterface
         $this->predefinedSizes = $predefinedSizes;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function create($path, $size = null, ResizeOptions $options = null): PictureInterface
     {
         $attributes = [];
@@ -151,7 +145,7 @@ class PictureFactory implements PictureFactoryInterface
      *
      * @param int|array|null $size
      *
-     * @return (PictureConfiguration|array<string,string>|ResizeOptions|null)[]
+     * @return array<(PictureConfiguration|array<string, string>|ResizeOptions|null)>
      */
     private function createConfig($size): array
     {
@@ -209,7 +203,7 @@ class PictureFactory implements PictureFactoryInterface
                     $this->imageSizeItemsCache[$size[2]] = $adapter->findVisibleByPid($size[2], ['order' => 'sorting ASC']);
                 }
 
-                /** @var ImageSizeItemModel[] $imageSizeItems */
+                /** @var array<ImageSizeItemModel> $imageSizeItems */
                 $imageSizeItems = $this->imageSizeItemsCache[$size[2]];
 
                 if (null !== $imageSizeItems) {
@@ -365,8 +359,8 @@ class PictureFactory implements PictureFactoryInterface
                 return false;
             }
 
-            $diffA = abs(($img['width'] / $img['height']) / ($source['width'] / $source['height']) - 1);
-            $diffB = abs(($img['height'] / $img['width']) / ($source['height'] / $source['width']) - 1);
+            $diffA = abs($img['width'] / $img['height'] / ($source['width'] / $source['height']) - 1);
+            $diffB = abs($img['height'] / $img['width'] / ($source['height'] / $source['width']) - 1);
 
             if ($diffA > self::ASPECT_RATIO_THRESHOLD && $diffB > self::ASPECT_RATIO_THRESHOLD) {
                 return false;

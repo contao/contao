@@ -31,9 +31,6 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class PictureTest extends TestCase
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
@@ -50,9 +47,6 @@ class PictureTest extends TestCase
         $fs->mkdir(static::getTempDir().'/system/tmp');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();

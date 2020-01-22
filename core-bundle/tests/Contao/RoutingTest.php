@@ -29,9 +29,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class RoutingTest extends ContaoTestCase
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();

@@ -19,9 +19,6 @@ use Symfony\Component\Config\Loader\Loader;
  */
 class PhpFileLoader extends Loader
 {
-    /**
-     * {@inheritdoc}
-     */
     public function load($file, $type = null): string
     {
         [$code, $namespace] = $this->parseFile((string) $file);
@@ -35,9 +32,6 @@ class PhpFileLoader extends Loader
         return $code;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports($resource, $type = null): bool
     {
         return 'php' === pathinfo((string) $resource, PATHINFO_EXTENSION);
@@ -46,7 +40,7 @@ class PhpFileLoader extends Loader
     /**
      * Parses a file and returns the code and namespace.
      *
-     * @return string[]
+     * @return array<string>
      */
     private function parseFile(string $file): array
     {

@@ -89,75 +89,44 @@
         <source>Style sheet &quot;%s&quot; has been imported as &quot;%s&quot;.</source>
         <target>Kaskádovitý styl &quot;%s&quot; byl úspěšně importován jako &quot;%s&quot;.</target>
       </trans-unit>
+      <trans-unit id="tl_style_sheet.import.0">
+        <source>Import</source>
+      </trans-unit>
+      <trans-unit id="tl_style_sheet.import.1">
+        <source>Import a style sheet</source>
+      </trans-unit>
       <trans-unit id="tl_style_sheet.new.0">
-        <source>New style sheet</source>
-        <target>Nový styl</target>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_style_sheet.new.1">
         <source>Create a new style sheet</source>
         <target>Vytvořit nový styl</target>
       </trans-unit>
-      <trans-unit id="tl_style_sheet.show.0">
-        <source>Style sheet details</source>
-        <target>Zobrazit podrobnosti</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.show.1">
+      <trans-unit id="tl_style_sheet.show">
         <source>Show the details of style sheet ID %s</source>
         <target>Zobrazit podrobnosti ke stylu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_style_sheet.edit.0">
-        <source>Edit style sheet</source>
-        <target>Upravit styl</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.edit.1">
+      <trans-unit id="tl_style_sheet.edit">
         <source>Edit style sheet ID %s</source>
         <target>Upravit styl ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_style_sheet.editheader.0">
-        <source>Edit style sheet</source>
-        <target>Upravit styl</target>
+      <trans-unit id="tl_style_sheet.editheader">
+        <source>Edit the settings of style sheet ID %s</source>
+        <target>Upravit nastavení stylu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_style_sheet.editheader.1">
-        <source>Edit the style sheet settings</source>
-        <target>Upravit kaskádovité styly</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.cut.0">
-        <source>Move style sheet</source>
-        <target>Přesunout kaskádovitý styl</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.cut.1">
-        <source>Move style sheet ID %s</source>
-        <target>Přesunout kaskádovitý styl ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.copy.0">
-        <source>Duplicate style sheet</source>
-        <target>Duplikovat styl</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.copy.1">
+      <trans-unit id="tl_style_sheet.copy">
         <source>Duplicate style sheet ID %s</source>
         <target>Duplikovat styl ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_style_sheet.delete.0">
-        <source>Delete style sheet</source>
-        <target>Smazat styl</target>
+      <trans-unit id="tl_style_sheet.cut">
+        <source>Move style sheet ID %s</source>
+        <target>Přesunout kaskádovitý styl ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_style_sheet.delete.1">
+      <trans-unit id="tl_style_sheet.delete">
         <source>Delete style sheet ID %s</source>
         <target>Smazat styl ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_style_sheet.import.0">
-        <source>CSS import</source>
-        <target>Import CSS</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.import.1">
-        <source>Import existing CSS files</source>
-        <target>Importovat existující soubor CSS</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.export.0">
-        <source>Export style sheet</source>
-        <target>Exportovat kaskádovité styly</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.export.1">
+      <trans-unit id="tl_style_sheet.export">
         <source>Export style sheet ID %s</source>
         <target>Exportovat kaskádovité styly ID %s</target>
       </trans-unit>

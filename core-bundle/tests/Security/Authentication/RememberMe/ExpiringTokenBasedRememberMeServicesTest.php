@@ -211,11 +211,13 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
         $this->repository
             ->expects($this->once())
             ->method('persist')
-            ->willReturnCallback(static function (...$args) use (&$entity) {
-                $entity = $args[0];
+            ->willReturnCallback(
+                static function (...$args) use (&$entity) {
+                    $entity = $args[0];
 
-                return 1;
-            })
+                    return 1;
+                }
+            )
         ;
 
         $this->listener->loginSuccess($request, $response, $token);

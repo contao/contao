@@ -19,9 +19,6 @@ use Contao\System;
 
 class GdImageTest extends TestCase
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();

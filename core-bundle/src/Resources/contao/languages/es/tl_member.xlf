@@ -182,16 +182,18 @@
         <target>Activar el</target>
       </trans-unit>
       <trans-unit id="tl_member.start.1">
-        <source>Automatically activate the account on this day.</source>
-        <target>Si introduces una fecha aquí, la cuenta actual se activará en esa fecha.</target>
+        <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_member.stop.0">
         <source>Deactivate on</source>
         <target>Deactivate on</target>
       </trans-unit>
       <trans-unit id="tl_member.stop.1">
-        <source>Automatically deactivate the account on this day.</source>
-        <target>Si introduces una fecha aquí, la cuenta actual será desactivada en esa fecha.</target>
+        <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+      </trans-unit>
+      <trans-unit id="tl_member.useTwoFactor">
+        <source>Use two-factor authentication</source>
+        <target>Usar autenticación de dos factores</target>
       </trans-unit>
       <trans-unit id="tl_member.personal_legend">
         <source>Personal data</source>
@@ -238,58 +240,34 @@
         <target>Detalles de login</target>
       </trans-unit>
       <trans-unit id="tl_member.new.0">
-        <source>New member</source>
-        <target>Nuevo miembro</target>
+        <source>New</source>
+        <target>Nuevo</target>
       </trans-unit>
       <trans-unit id="tl_member.new.1">
         <source>Create a new member</source>
         <target>Crear un miembro nuevo</target>
       </trans-unit>
-      <trans-unit id="tl_member.show.0">
-        <source>Member details</source>
-        <target>Detalles miembro</target>
-      </trans-unit>
-      <trans-unit id="tl_member.show.1">
+      <trans-unit id="tl_member.show">
         <source>Show the details of member ID %s</source>
         <target>Mostrar los detalles del miembro con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_member.edit.0">
-        <source>Edit member</source>
-        <target>Editar miembro</target>
-      </trans-unit>
-      <trans-unit id="tl_member.edit.1">
+      <trans-unit id="tl_member.edit">
         <source>Edit member ID %s</source>
         <target>Editar el miembro con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_member.copy.0">
-        <source>Duplicate member</source>
-        <target>Duplicar miembro</target>
-      </trans-unit>
-      <trans-unit id="tl_member.copy.1">
+      <trans-unit id="tl_member.copy">
         <source>Duplicate member ID %s</source>
         <target>Duplicar el miembro con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_member.delete.0">
-        <source>Delete member</source>
-        <target>Eliminar miembro</target>
-      </trans-unit>
-      <trans-unit id="tl_member.delete.1">
+      <trans-unit id="tl_member.delete">
         <source>Delete member ID %s</source>
         <target>Eliminar el miembro con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_member.toggle.0">
-        <source>Activate/deactivate member</source>
-        <target>Activar/desactivar miembro</target>
-      </trans-unit>
-      <trans-unit id="tl_member.toggle.1">
+      <trans-unit id="tl_member.toggle">
         <source>Activate/deactivate member ID %s</source>
         <target>Activar/desactivar el miembro con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_member.su.0">
-        <source>Preview</source>
-        <target>Previsualización</target>
-      </trans-unit>
-      <trans-unit id="tl_member.su.1">
+      <trans-unit id="tl_member.su">
         <source>Preview the front end as member ID %s</source>
         <target>Previsualice el frontal del sitio como ID miembro %s</target>
       </trans-unit>

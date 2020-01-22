@@ -34,41 +34,26 @@ class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements D
         $this->security = $security;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName(): string
     {
         return 'articlePicker';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsContext($context): bool
     {
         return 'link' === $context && $this->security->isGranted('contao_user.modules', 'article');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsValue(PickerConfig $config): bool
     {
         return $this->isMatchingInsertTag($config);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDcaTable(): string
     {
         return 'tl_article';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDcaAttributes(PickerConfig $config): array
     {
         $attributes = ['fieldType' => 'radio'];
@@ -84,25 +69,16 @@ class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements D
         return $attributes;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function convertDcaValue(PickerConfig $config, $value): string
     {
         return sprintf($this->getInsertTag($config), $value);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getRouteParameters(PickerConfig $config = null): array
     {
         return ['do' => 'article'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getDefaultInsertTag(): string
     {
         return '{{article_url::%s}}';

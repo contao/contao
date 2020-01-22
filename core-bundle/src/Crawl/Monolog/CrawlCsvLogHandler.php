@@ -17,9 +17,6 @@ use Terminal42\Escargot\CrawlUri;
 
 class CrawlCsvLogHandler extends StreamHandler
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function streamWrite($resource, array $record): void
     {
         if (!isset($record['context']['source'])) {

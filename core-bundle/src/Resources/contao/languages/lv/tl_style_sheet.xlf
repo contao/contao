@@ -89,75 +89,45 @@
         <source>Style sheet &quot;%s&quot; has been imported as &quot;%s&quot;.</source>
         <target>Stila lapa &quot;% s&quot; tika importēta kā &quot;% s&quot;.</target>
       </trans-unit>
+      <trans-unit id="tl_style_sheet.import.0">
+        <source>Import</source>
+      </trans-unit>
+      <trans-unit id="tl_style_sheet.import.1">
+        <source>Import a style sheet</source>
+      </trans-unit>
       <trans-unit id="tl_style_sheet.new.0">
-        <source>New style sheet</source>
-        <target>Jauna stila lapa</target>
+        <source>New</source>
+        <target>Jauns</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.new.1">
         <source>Create a new style sheet</source>
         <target>Izveidot jaunu stila lapu</target>
       </trans-unit>
-      <trans-unit id="tl_style_sheet.show.0">
-        <source>Style sheet details</source>
-        <target>Stila lapas detaļas</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.show.1">
+      <trans-unit id="tl_style_sheet.show">
         <source>Show the details of style sheet ID %s</source>
         <target>Rādīt stila lapas ID %s detaļas</target>
       </trans-unit>
-      <trans-unit id="tl_style_sheet.edit.0">
-        <source>Edit style sheet</source>
-        <target>Rediģēt stila lapu</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.edit.1">
+      <trans-unit id="tl_style_sheet.edit">
         <source>Edit style sheet ID %s</source>
         <target>Rediģēt stila lapu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_style_sheet.editheader.0">
-        <source>Edit style sheet</source>
-        <target>Rediģēt stila lapu</target>
+      <trans-unit id="tl_style_sheet.editheader">
+        <source>Edit the settings of style sheet ID %s</source>
+        <target>Rediģēt iestatījumus stila lapai ID% s</target>
       </trans-unit>
-      <trans-unit id="tl_style_sheet.editheader.1">
-        <source>Edit the style sheet settings</source>
-        <target>Rediģēt stila lapas uzstādījumus</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.cut.0">
-        <source>Move style sheet</source>
-        <target>Pārvietot stila lapu</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.cut.1">
-        <source>Move style sheet ID %s</source>
-        <target>Pārvietot stila lapu ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.copy.0">
-        <source>Duplicate style sheet</source>
-        <target>Dublicēt stila lapu</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.copy.1">
+      <trans-unit id="tl_style_sheet.copy">
         <source>Duplicate style sheet ID %s</source>
         <target>Dublicēt stila lapu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_style_sheet.delete.0">
-        <source>Delete style sheet</source>
-        <target>Dzēst stila lapu</target>
+      <trans-unit id="tl_style_sheet.cut">
+        <source>Move style sheet ID %s</source>
+        <target>Pārvietot stila lapu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_style_sheet.delete.1">
+      <trans-unit id="tl_style_sheet.delete">
         <source>Delete style sheet ID %s</source>
         <target>Dzēst stila lapu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_style_sheet.import.0">
-        <source>CSS import</source>
-        <target>CSS importēšana</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.import.1">
-        <source>Import existing CSS files</source>
-        <target>Importēt eksistējošu CSS datni</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.export.0">
-        <source>Export style sheet</source>
-        <target>Eksportēt stila lapu</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.export.1">
+      <trans-unit id="tl_style_sheet.export">
         <source>Export style sheet ID %s</source>
         <target>Eksportēt stila lapu ID %s</target>
       </trans-unit>

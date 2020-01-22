@@ -150,7 +150,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
-        $this->assertEquals(json_encode([]), $response->getContent());
+        $this->assertSame(json_encode([]), $response->getContent());
     }
 
     /**

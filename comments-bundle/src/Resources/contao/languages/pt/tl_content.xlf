@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_content.com_order.0">
         <source>Sort order</source>
-        <target>Ordem de classificação</target>
+        <target>Ordem de Exibição</target>
       </trans-unit>
       <trans-unit id="tl_content.com_order.1">
         <source>Please choose the sort order.</source>
@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_content.com_perPage.1">
         <source>The number of comments per page. Set to 0 to disable pagination.</source>
-        <target>Favor informar o número de comentários por página (0 = desabilita paginação)</target>
+        <target>O número de comentários por página. Definir como 0 (zero) para desactivar a paginação.</target>
       </trans-unit>
       <trans-unit id="tl_content.com_moderate.0">
         <source>Moderate</source>
@@ -35,15 +35,15 @@
       </trans-unit>
       <trans-unit id="tl_content.com_requireLogin.0">
         <source>Require login to comment</source>
-        <target>Requerem login para comentar</target>
+        <target>Requerir inicio de sessão para fazer comentários</target>
       </trans-unit>
       <trans-unit id="tl_content.com_requireLogin.1">
         <source>Allow only authenticated users to create comments.</source>
-        <target>Permitir que somente usuários autenticados podem criar comentários.</target>
+        <target>Permitir que apenas utilizadores autenticados possam criar comentários.</target>
       </trans-unit>
       <trans-unit id="tl_content.com_disableCaptcha.0">
         <source>Disable the security question</source>
-        <target>Disabilitar pergunta de segurança</target>
+        <target>Desactivar pergunta de segurança</target>
       </trans-unit>
       <trans-unit id="tl_content.com_disableCaptcha.1">
         <source>Here you can disable the security question (not recommended).</source>
@@ -51,11 +51,11 @@
       </trans-unit>
       <trans-unit id="tl_content.com_template.0">
         <source>Comments template</source>
-        <target>Layout dos Comentários</target>
+        <target>Modelo dos Comentários</target>
       </trans-unit>
       <trans-unit id="tl_content.com_template.1">
         <source>Here you can select the comments template.</source>
-        <target>Favor escolher um layout para os comentários. Você pode adicionar um layout a pasta &lt;em&gt;templates&lt;/em&gt;. Modelos de comentários iniciam com &lt;em&gt;com_&lt;/em&gt; e possuem extensão &lt;em&gt;.tpl&lt;/em&gt;</target>
+        <target>Aqui pode seleccionar um modelo para os comentários.</target>
       </trans-unit>
       <trans-unit id="tl_content.comment_legend">
         <source>Comment settings</source>

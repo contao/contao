@@ -59,9 +59,6 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
         $this->scopeMatcher = $scopeMatcher;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function start(Request $request, AuthenticationException $authException = null)
     {
         if ($this->scopeMatcher->isBackendRequest($request)) {

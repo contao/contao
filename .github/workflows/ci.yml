@@ -6,6 +6,8 @@ on:
         branches:
             - master
             - '[0-9]+.[0-9]+'
+        tags:
+            - '*'
     schedule:
         - cron: '0 13 * * MON,TUE'
 
@@ -82,9 +84,9 @@ jobs:
 
             - name: Check the coding style
               run: |
-                  PHP_CS_CONFIG=default vendor/bin/php-cs-fixer fix --diff --diff-format=udiff --dry-run
-                  PHP_CS_CONFIG=legacy vendor/bin/php-cs-fixer fix --diff --diff-format=udiff --dry-run
-                  PHP_CS_CONFIG=template vendor/bin/php-cs-fixer fix --diff --diff-format=udiff --dry-run
+                  vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests --config vendor/contao/easy-coding-standard/config/default.yaml --no-progress-bar
+                  vendor/bin/ecs check *-bundle/src/Resources/contao --config vendor/contao/easy-coding-standard/config/legacy.yaml --no-progress-bar
+                  vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config vendor/contao/easy-coding-standard/config/template.yaml --no-progress-bar
 
             - name: Analyze the code
               run: vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress

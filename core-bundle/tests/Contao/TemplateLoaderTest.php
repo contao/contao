@@ -23,9 +23,6 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class TemplateLoaderTest extends TestCase
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -54,9 +51,6 @@ class TemplateLoaderTest extends TestCase
         System::setContainer($this->getContainerWithContaoConfiguration($this->getFixturesDir()));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function tearDown(): void
     {
         parent::tearDown();

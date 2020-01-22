@@ -30,16 +30,16 @@
         <target>Aktivizēt</target>
       </trans-unit>
       <trans-unit id="tl_user_group.start.1">
-        <source>Automatically activate the group on this day.</source>
-        <target>Automātiski aktivizēt grupu norādītajā dienā.</target>
+        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Ja nevēlaties ļaut grupai būt aktīvai pirms noteikta datuma / laika, varat to ievadīt šeit. Pretējā gadījumā atstājiet lauku tukšu.</target>
       </trans-unit>
       <trans-unit id="tl_user_group.stop.0">
         <source>Deactivate on</source>
         <target>Deaktivizēt</target>
       </trans-unit>
       <trans-unit id="tl_user_group.stop.1">
-        <source>Automatically deactivate the group on this day.</source>
-        <target>Automātiski deaktivizēt grupu norādītajā dienā.</target>
+        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Ja nevēlaties ļaut grupai būt aktīvai pirms noteikta datuma / laika, varat to ievadīt šeit. Pretējā gadījumā atstājiet lauku tukšu.</target>
       </trans-unit>
       <trans-unit id="tl_user_group.title_legend">
         <source>Title</source>
@@ -48,6 +48,9 @@
       <trans-unit id="tl_user_group.modules_legend">
         <source>Allowed modules</source>
         <target>Atļautie moduļi</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.elements_legend">
+        <source>Allowed elements</source>
       </trans-unit>
       <trans-unit id="tl_user_group.pagemounts_legend">
         <source>Pagemounts</source>
@@ -74,56 +77,35 @@
         <target>Atļautie lauki</target>
       </trans-unit>
       <trans-unit id="tl_user_group.account_legend">
-        <source>Account settings</source>
-        <target>Konta uzstādījumi</target>
+        <source>Group settings</source>
       </trans-unit>
       <trans-unit id="tl_user_group.new.0">
-        <source>New user group</source>
-        <target>Jauna lietotāju grupa</target>
+        <source>New</source>
+        <target>Jauns</target>
       </trans-unit>
       <trans-unit id="tl_user_group.new.1">
         <source>Create a new user group</source>
         <target>Izveidot jaunu lietotāju grupu.</target>
       </trans-unit>
-      <trans-unit id="tl_user_group.show.0">
-        <source>Group details</source>
-        <target>Grupas specifikācija</target>
+      <trans-unit id="tl_user_group.show">
+        <source>Show the details of user group ID %s</source>
+        <target>Rādīt lietotāju grupas ID %s detaļas</target>
       </trans-unit>
-      <trans-unit id="tl_user_group.show.1">
-        <source>Show the details of group ID %s</source>
-        <target>Parāda grupas ID %s specifikāciju.</target>
+      <trans-unit id="tl_user_group.edit">
+        <source>Edit user group ID %s</source>
+        <target>Rediģēt lietotāju grupu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_user_group.edit.0">
-        <source>Edit group</source>
-        <target>Rediģēt grupu</target>
+      <trans-unit id="tl_user_group.copy">
+        <source>Duplicate user group ID %s</source>
+        <target>Dublicēt lietotāju grupu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_user_group.edit.1">
-        <source>Edit group ID %s</source>
-        <target>Rediģēt ID %s grupu.</target>
+      <trans-unit id="tl_user_group.delete">
+        <source>Delete user group ID %s</source>
+        <target>Dzēst lietotāju grupu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_user_group.copy.0">
-        <source>Duplicate group</source>
-        <target>Duplicēt grupu</target>
-      </trans-unit>
-      <trans-unit id="tl_user_group.copy.1">
-        <source>Duplicate group ID %s</source>
-        <target>Duplicēt ID %s grupu.</target>
-      </trans-unit>
-      <trans-unit id="tl_user_group.delete.0">
-        <source>Delete group</source>
-        <target>Dzēst grupu</target>
-      </trans-unit>
-      <trans-unit id="tl_user_group.delete.1">
-        <source>Delete group ID %s</source>
-        <target>Dzēst ID %s grupu.</target>
-      </trans-unit>
-      <trans-unit id="tl_user_group.toggle.0">
-        <source>Activate/deactivate group</source>
-        <target>Aktivizēt/Deaktivizēt grupu</target>
-      </trans-unit>
-      <trans-unit id="tl_user_group.toggle.1">
-        <source>Activate/deactivate group ID %s</source>
-        <target>Aktivizēt/Deaktivizēt ID %s grupu.</target>
+      <trans-unit id="tl_user_group.toggle">
+        <source>Activate/deactivate user group ID %s</source>
+        <target>Aktivizēt/deaktivizēt lietotāju grupu ID %s</target>
       </trans-unit>
     </body>
   </file>

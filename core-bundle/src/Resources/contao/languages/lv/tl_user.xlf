@@ -161,6 +161,19 @@
         <source>Here you can grant access to the theme modules.</source>
         <target>Šeit Jūs varat piešķirt piekļuvi tēmu moduļiem.</target>
       </trans-unit>
+      <trans-unit id="tl_user.elements.0">
+        <source>Content elements</source>
+        <target>Satura elementi</target>
+      </trans-unit>
+      <trans-unit id="tl_user.elements.1">
+        <source>Here you can select the allowed content element types.</source>
+      </trans-unit>
+      <trans-unit id="tl_user.fields.0">
+        <source>Form fields</source>
+      </trans-unit>
+      <trans-unit id="tl_user.fields.1">
+        <source>Here you can select the allowed form field types.</source>
+      </trans-unit>
       <trans-unit id="tl_user.pagemounts.0">
         <source>Pagemounts</source>
         <target>Lapu piesaiste</target>
@@ -230,16 +243,14 @@
         <target>Aktivizēt</target>
       </trans-unit>
       <trans-unit id="tl_user.start.1">
-        <source>Automatically activate the account on this day.</source>
-        <target>Automātiski aktivizēt kontu šajā dienā.</target>
+        <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_user.stop.0">
         <source>Deactivate on</source>
         <target>Deaktivizēt</target>
       </trans-unit>
       <trans-unit id="tl_user.stop.1">
-        <source>Automatically deactivate the account on this day.</source>
-        <target>Automātiski deaktivizēt kontu šajā dienā.</target>
+        <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_user.session.0">
         <source>Purge data</source>
@@ -276,6 +287,9 @@
       <trans-unit id="tl_user.modules_legend">
         <source>Allowed modules</source>
         <target>Atļautie moduļi</target>
+      </trans-unit>
+      <trans-unit id="tl_user.elements_legend">
+        <source>Allowed elements</source>
       </trans-unit>
       <trans-unit id="tl_user.pagemounts_legend">
         <source>Pagemounts</source>
@@ -314,8 +328,7 @@
         <target>Attēlu kešatmiņa</target>
       </trans-unit>
       <trans-unit id="tl_user.tempLabel">
-        <source>Page cache</source>
-        <target>Pagaidu mape</target>
+        <source>Shared cache</source>
       </trans-unit>
       <trans-unit id="tl_user.sessionPurged">
         <source>The session data has been purged</source>
@@ -326,8 +339,7 @@
         <target>Attēlu kešatmiņa ir iztīrīta</target>
       </trans-unit>
       <trans-unit id="tl_user.tempPurged">
-        <source>The page cache has been purged</source>
-        <target>Pagaidu mape ir iztīrīta</target>
+        <source>The shared cache has been purged</source>
       </trans-unit>
       <trans-unit id="tl_user.FileUpload">
         <source>Default uploader</source>
@@ -337,58 +349,34 @@
         <source>Use two-factor authentication</source>
       </trans-unit>
       <trans-unit id="tl_user.new.0">
-        <source>New user</source>
-        <target>Jauns lietotājs</target>
+        <source>New</source>
+        <target>Jauns</target>
       </trans-unit>
       <trans-unit id="tl_user.new.1">
         <source>Create a new user</source>
         <target>Izveidot jaunu lietotāju</target>
       </trans-unit>
-      <trans-unit id="tl_user.show.0">
-        <source>User details</source>
-        <target>Lietotāja detaļas</target>
-      </trans-unit>
-      <trans-unit id="tl_user.show.1">
+      <trans-unit id="tl_user.show">
         <source>Show the details of user ID %s</source>
         <target>Rādīt lietotāja ID %s detaļas</target>
       </trans-unit>
-      <trans-unit id="tl_user.edit.0">
-        <source>Edit user</source>
-        <target>Rediģēt lietotāju</target>
-      </trans-unit>
-      <trans-unit id="tl_user.edit.1">
+      <trans-unit id="tl_user.edit">
         <source>Edit user ID %s</source>
         <target>Rediģēt lietotāju ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_user.copy.0">
-        <source>Duplicate user</source>
-        <target>Dublicēt lietotāju</target>
-      </trans-unit>
-      <trans-unit id="tl_user.copy.1">
+      <trans-unit id="tl_user.copy">
         <source>Duplicate user ID %s</source>
         <target>Dublicēt lietotāju ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_user.delete.0">
-        <source>Delete user</source>
-        <target>Dzēst lietotāju</target>
-      </trans-unit>
-      <trans-unit id="tl_user.delete.1">
+      <trans-unit id="tl_user.delete">
         <source>Delete user ID %s</source>
         <target>Dzēst lietotāju ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_user.toggle.0">
-        <source>Activate/deactivate user</source>
-        <target>Aktivizēt/deaktivizēt lietotāju</target>
-      </trans-unit>
-      <trans-unit id="tl_user.toggle.1">
+      <trans-unit id="tl_user.toggle">
         <source>Activate/deactivate user ID %s</source>
         <target>Aktivizēt/deaktivizēt lietotāju ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_user.su.0">
-        <source>Switch user</source>
-        <target>Pārslēgt lietotāju</target>
-      </trans-unit>
-      <trans-unit id="tl_user.su.1">
+      <trans-unit id="tl_user.su">
         <source>Switch to user ID %s</source>
         <target>Pārslēgties uz lietotāju ID %s</target>
       </trans-unit>

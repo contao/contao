@@ -38,16 +38,16 @@
         <target>Активировать с</target>
       </trans-unit>
       <trans-unit id="tl_member_group.start.1">
-        <source>Automatically activate the group on this day.</source>
-        <target>Автоматически активировать группу в этот день.</target>
+        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Если хотите запретить активацию группы на веб-сайте до определенной даты/времени, введите её здесь. В противном случае оставьте поле пустым.</target>
       </trans-unit>
       <trans-unit id="tl_member_group.stop.0">
         <source>Deactivate on</source>
         <target>Деактивировать с</target>
       </trans-unit>
       <trans-unit id="tl_member_group.stop.1">
-        <source>Automatically deactivate the group on this day.</source>
-        <target>Автоматически деактивировать группу в этот день.</target>
+        <source>If you want to prevent the group from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Если хотите запретить активацию группы на веб-сайте после определенной даты/времени, введите её здесь. В противном случае оставьте поле пустым.</target>
       </trans-unit>
       <trans-unit id="tl_member_group.title_legend">
         <source>Title</source>
@@ -57,57 +57,36 @@
         <source>Auto-redirect</source>
         <target>Автоматическое перенаправление</target>
       </trans-unit>
-      <trans-unit id="tl_member_group.disable_legend">
-        <source>Account settings</source>
-        <target>Настройки учетной записи</target>
+      <trans-unit id="tl_member_group.account_legend">
+        <source>Group settings</source>
       </trans-unit>
       <trans-unit id="tl_member_group.new.0">
-        <source>New group</source>
-        <target>Новая группа</target>
+        <source>New</source>
+        <target>Новый</target>
       </trans-unit>
       <trans-unit id="tl_member_group.new.1">
-        <source>Create a new group</source>
-        <target>Создать новую группу</target>
+        <source>Create a new member group</source>
+        <target>Создать новую группу участников</target>
       </trans-unit>
-      <trans-unit id="tl_member_group.show.0">
-        <source>Group details</source>
-        <target>Детали группы</target>
+      <trans-unit id="tl_member_group.show">
+        <source>Show the details of member group ID %s</source>
+        <target>Показать детали группы участников ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_member_group.show.1">
-        <source>Show the details of group ID %s</source>
-        <target>Показать детали группы ID %s</target>
+      <trans-unit id="tl_member_group.edit">
+        <source>Edit member group ID %s</source>
+        <target>Редактировать группу участников ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_member_group.edit.0">
-        <source>Edit group</source>
-        <target>Редактировать группу</target>
+      <trans-unit id="tl_member_group.copy">
+        <source>Duplicate member group ID %s</source>
+        <target>Дублировать группу участников ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_member_group.edit.1">
-        <source>Edit group ID %s</source>
-        <target>Редактировать группу ID %s</target>
+      <trans-unit id="tl_member_group.delete">
+        <source>Delete member group ID %s</source>
+        <target>Удалить группу участников ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_member_group.copy.0">
-        <source>Duplicate group</source>
-        <target>Дублировать группу</target>
-      </trans-unit>
-      <trans-unit id="tl_member_group.copy.1">
-        <source>Duplicate group ID %s</source>
-        <target>Дублировать группу ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_member_group.delete.0">
-        <source>Delete group</source>
-        <target>Удалить группу</target>
-      </trans-unit>
-      <trans-unit id="tl_member_group.delete.1">
-        <source>Delete group ID %s</source>
-        <target>Удалить группу ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_member_group.toggle.0">
-        <source>Activate/deactivate group</source>
-        <target>Активировать/деактивировать группу</target>
-      </trans-unit>
-      <trans-unit id="tl_member_group.toggle.1">
-        <source>Activate/deactivate group ID %s</source>
-        <target>Активировать/деактивировать группу ID %s</target>
+      <trans-unit id="tl_member_group.toggle">
+        <source>Activate/deactivate member group ID %s</source>
+        <target>Активировать/деактивировать группу участников ID %s</target>
       </trans-unit>
     </body>
   </file>

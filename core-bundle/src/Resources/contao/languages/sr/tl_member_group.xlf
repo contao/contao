@@ -38,16 +38,14 @@
         <target>Активирај</target>
       </trans-unit>
       <trans-unit id="tl_member_group.start.1">
-        <source>Automatically activate the group on this day.</source>
-        <target>Аутоматски активирај групу на овај дан.</target>
+        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_member_group.stop.0">
         <source>Deactivate on</source>
         <target>Деактивирај</target>
       </trans-unit>
       <trans-unit id="tl_member_group.stop.1">
-        <source>Automatically deactivate the group on this day.</source>
-        <target>Аутоматски деактивирај групу на овај дан.</target>
+        <source>If you want to prevent the group from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_member_group.title_legend">
         <source>Title</source>
@@ -57,57 +55,29 @@
         <source>Auto-redirect</source>
         <target>Аутопреусмерење.</target>
       </trans-unit>
-      <trans-unit id="tl_member_group.disable_legend">
-        <source>Account settings</source>
-        <target>Подешавања налога</target>
+      <trans-unit id="tl_member_group.account_legend">
+        <source>Group settings</source>
       </trans-unit>
       <trans-unit id="tl_member_group.new.0">
-        <source>New group</source>
-        <target>Нова група</target>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_member_group.new.1">
-        <source>Create a new group</source>
-        <target>Креирај нову групу</target>
+        <source>Create a new member group</source>
       </trans-unit>
-      <trans-unit id="tl_member_group.show.0">
-        <source>Group details</source>
-        <target>Детаљи групе</target>
+      <trans-unit id="tl_member_group.show">
+        <source>Show the details of member group ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_member_group.show.1">
-        <source>Show the details of group ID %s</source>
-        <target>Прикажи детаље групе ID %s</target>
+      <trans-unit id="tl_member_group.edit">
+        <source>Edit member group ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_member_group.edit.0">
-        <source>Edit group</source>
-        <target>Уреди групу</target>
+      <trans-unit id="tl_member_group.copy">
+        <source>Duplicate member group ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_member_group.edit.1">
-        <source>Edit group ID %s</source>
-        <target>Уреди детаље групе ID %s</target>
+      <trans-unit id="tl_member_group.delete">
+        <source>Delete member group ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_member_group.copy.0">
-        <source>Duplicate group</source>
-        <target>Копирај групу</target>
-      </trans-unit>
-      <trans-unit id="tl_member_group.copy.1">
-        <source>Duplicate group ID %s</source>
-        <target>Копирај групу ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_member_group.delete.0">
-        <source>Delete group</source>
-        <target>Обриши групу</target>
-      </trans-unit>
-      <trans-unit id="tl_member_group.delete.1">
-        <source>Delete group ID %s</source>
-        <target>Обриши групу ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_member_group.toggle.0">
-        <source>Activate/deactivate group</source>
-        <target>Активирање/Деактивирање групе</target>
-      </trans-unit>
-      <trans-unit id="tl_member_group.toggle.1">
-        <source>Activate/deactivate group ID %s</source>
-        <target>Активирање/Деактивирање групе ID %s</target>
+      <trans-unit id="tl_member_group.toggle">
+        <source>Activate/deactivate member group ID %s</source>
       </trans-unit>
     </body>
   </file>

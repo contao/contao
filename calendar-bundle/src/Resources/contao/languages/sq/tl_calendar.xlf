@@ -141,54 +141,6 @@
         <source>Full articles</source>
         <target>Plotë artikuj</target>
       </trans-unit>
-      <trans-unit id="tl_calendar.new.0">
-        <source>New calendar</source>
-        <target>Kalendar të ri</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.new.1">
-        <source>Create a new calendar</source>
-        <target>Krijo kalendar të ri</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.show.0">
-        <source>Calendar details</source>
-        <target>Detajet e kalenderit</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.show.1">
-        <source>Show the details of calendar ID %s</source>
-        <target>Tregon detajet e kalendarit ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.edit.0">
-        <source>Edit calendar</source>
-        <target>Përpuno kalendarin</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.edit.1">
-        <source>Edit calendar ID %s</source>
-        <target>Përpuno kalendarin ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.editheader.0">
-        <source>Edit calendar</source>
-        <target>Përpuno kalendarin</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.editheader.1">
-        <source>Edit the calendar settings</source>
-        <target>Përpuno kalendarin aktual</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.copy.0">
-        <source>Duplicate calendar</source>
-        <target>Kopjo kalendarin</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.copy.1">
-        <source>Duplicate calendar ID %s</source>
-        <target>Kopjon kalendarin ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.delete.0">
-        <source>Delete calendar</source>
-        <target>Shlyej kalendarin</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.delete.1">
-        <source>Delete calendar ID %s</source>
-        <target>Shlyen kalendarin ID %s</target>
-      </trans-unit>
       <trans-unit id="tl_calendar.feeds.0">
         <source>RSS feeds</source>
         <target>Furnizimet RSS</target>
@@ -196,6 +148,38 @@
       <trans-unit id="tl_calendar.feeds.1">
         <source>Manage RSS feeds</source>
         <target>Rregullo furnizimin RSS</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.new.0">
+        <source>New</source>
+        <target>Të ri</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.new.1">
+        <source>Create a new calendar</source>
+        <target>Krijo kalendar të ri</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.show">
+        <source>Show the details of calendar ID %s</source>
+        <target>Tregon detajet e kalendarit ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.edit">
+        <source>Edit calendar ID %s</source>
+        <target>Përpuno kalendarin ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.editmeta">
+        <source>Edit the calendar settings</source>
+        <target>Përpuno kalendarin aktual</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.editheader">
+        <source>Edit the settings of calendar ID %s</source>
+        <target>Redakto parametrat e kalendarit ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.copy">
+        <source>Duplicate calendar ID %s</source>
+        <target>Kopjon kalendarin ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.delete">
+        <source>Delete calendar ID %s</source>
+        <target>Shlyen kalendarin ID %s</target>
       </trans-unit>
     </body>
   </file>

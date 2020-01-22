@@ -47,9 +47,6 @@ class LogoutHandler implements LogoutHandlerInterface
         $this->logger = $logger;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function logout(Request $request, Response $response, TokenInterface $token): void
     {
         if ($request->hasSession() && method_exists($token, 'getProviderKey')) {

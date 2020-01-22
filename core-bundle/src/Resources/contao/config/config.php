@@ -303,6 +303,11 @@ $GLOBALS['TL_PURGE'] = array
 		(
 			'callback' => array('Contao\Automator', 'purgeSystemLog'),
 			'affected' => array('tl_log')
+		),
+		'crawl_queue' => array
+		(
+			'callback' => array('Contao\Automator', 'purgeCrawlQueue'),
+			'affected' => array('tl_crawl_queue')
 		)
 	),
 	'folders' => array

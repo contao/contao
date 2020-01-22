@@ -50,6 +50,7 @@ class DropZone extends FileUpload
     Dropzone.autoDiscover = false;
     window.addEvent("domready", function() {
       new Dropzone("#tl_files", {
+        url: window.location.href,
         paramName: "' . $this->strName . '",
         maxFilesize: ' . $intMaxSize . ',
         acceptedFiles: "' . $strAccepted . '",

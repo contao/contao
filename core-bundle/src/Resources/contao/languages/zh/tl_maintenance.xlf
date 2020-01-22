@@ -9,14 +9,6 @@
         <source>Please select the data you want to purge or rebuild.</source>
         <target>请选择您想要清除或重新生成的数据。</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance.frontendUser.0">
-        <source>Front end user</source>
-        <target>网站用户</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.frontendUser.1">
-        <source>Automatically log in a front end user to index protected pages.</source>
-        <target>为受保护的页面编入索引自动登录一位前端用户。</target>
-      </trans-unit>
       <trans-unit id="tl_maintenance.job">
         <source>Job</source>
         <target>工作</target>
@@ -36,30 +28,6 @@
       <trans-unit id="tl_maintenance.cacheCleared">
         <source>The data has been purged</source>
         <target>缓存已清除</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.searchIndex">
-        <source>Rebuild the search index</source>
-        <target>重建搜索索引</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.indexSubmit">
-        <source>Rebuild index</source>
-        <target>重建索引</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.noSearchable">
-        <source>No searchable pages found</source>
-        <target>没有可搜索的页面</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.indexNote">
-        <source>Please wait for the page to load completely before you proceed!</source>
-        <target>请等到页面完全载入再进行下一步!</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.indexLoading">
-        <source>Please wait while the search index is being rebuilt.</source>
-        <target>稍候，正在重建搜索索引。</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.indexComplete">
-        <source>The search index has been rebuilt. You can now proceed.</source>
-        <target>搜索索引已重建，您现在可以继续。</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.updateHelp">
         <source>Please enter your %s here.</source>
@@ -102,28 +70,27 @@
         <target>清除图片缓存</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.images.1">
-        <source>Removes the automatically generated images and then purges the page cache, so there are no links to deleted resources.</source>
-        <target>删除自动创建的图片然后清除页面缓存，所以没有链到已删除的资源。</target>
+        <source>Removes the automatically generated images and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>移除自动创建的图片并清除共享缓存, 避免链接到已删除的资源。</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.0">
         <source>Purge the script cache</source>
         <target>清除脚本缓存</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.1">
-        <source>Removes the automatically generated &lt;code&gt;.css&lt;/code&gt; and &lt;code&gt;.js&lt;/code&gt; files, recreates the internal style sheets and then purges the page cache.</source>
-        <target>衣橱自动创建的 &lt;code&gt;.css&lt;/code&gt; and &lt;code&gt;.js&lt;/code&gt; 文件, 重新创建内部样式表然后清空页面缓存.</target>
+        <source>Removes the automatically generated &lt;code&gt;.css&lt;/code&gt; and &lt;code&gt;.js&lt;/code&gt; files, recreates the internal style sheets and then purges the shared cache.</source>
+        <target>移除自动创建的 &lt;code&gt;.css&lt;/code&gt; 和 &lt;code&gt;.js&lt;/code&gt; 文件，重新创建内部样式表并清除共享缓存。</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.pages.0">
-        <source>Purge the page cache</source>
-        <target>清除页面缓存</target>
+        <source>Purge the shared cache</source>
+        <target>清除共享缓存</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.pages.1">
         <source>Removes the cached versions of the front end pages.</source>
         <target>删除前端页面的缓存版本。</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.search.0">
-        <source>Purge the search cache</source>
-        <target>清除搜索缓存</target>
+        <source>Purge the search results cache</source>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.search.1">
         <source>Removes the cached versions of the search results.</source>
@@ -142,8 +109,8 @@
         <target>重建XML文件</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.xml.1">
-        <source>Recreates the XML files (sitemaps and feeds) and then purges the page cache, so there are no links to deleted resources.</source>
-        <target>重建XML文件(站点地图和源)，然后清除页面缓存，所以没有链到已删除的资源。</target>
+        <source>Recreates the XML files (sitemaps and feeds) and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>重建XML文件(站点地图和源)，然后清除共享缓存，避免链接到已删除的资源。。</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.0">
         <source>Recreate the symlinks</source>
@@ -152,6 +119,39 @@
       <trans-unit id="tl_maintenance_jobs.symlinks.1">
         <source>Recreates the symlinks in the &lt;code&gt;web/&lt;/code&gt; folder (document root).</source>
         <target>在&lt;code&gt;web/&lt;/code&gt; 文件夹 (文件根目录)重新创建符号链接.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawler">
+        <source>Crawler</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.startCrawling">
+        <source>Start crawling</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlSubscribers.0">
+        <source>Enabled features</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlSubscribers.1">
+        <source>The crawler crawls all URLs it finds. Here you can decide what to do with these results.</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlMember.0">
+        <source>Front end member</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlMember.1">
+        <source>Automatically log in a front end member to index protected pages.</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlWaitToBeFinished">
+        <source>The crawler is currently working. Please wait for it to finish to see the results.</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDownloadDebugLog">
+        <source>Download the debug log</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDownloadSubscriberLog">
+        <source>Download the log</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlSubscriberNames.search-index">
+        <source>Update the search index</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlSubscriberNames.broken-link-checker">
+        <source>Check for broken links</source>
       </trans-unit>
     </body>
   </file>

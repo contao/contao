@@ -47,25 +47,16 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         $this->uploadPath = $uploadPath;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName(): string
     {
         return 'filePicker';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsContext($context): bool
     {
         return \in_array($context, ['file', 'link'], true) && $this->security->isGranted('contao_user.modules', 'files');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsValue(PickerConfig $config): bool
     {
         if ('file' === $config->getContext()) {
@@ -75,17 +66,11 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return $this->isMatchingInsertTag($config) || 0 === strpos($config->getValue(), $this->uploadPath.'/');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDcaTable(): string
     {
         return 'tl_files';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDcaAttributes(PickerConfig $config): array
     {
         if ('file' === $config->getContext()) {
@@ -95,9 +80,6 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return $this->getLinkDcaAttributes($config);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function convertDcaValue(PickerConfig $config, $value): string
     {
         if ('file' === $config->getContext()) {
@@ -115,17 +97,11 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return $value;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getRouteParameters(PickerConfig $config = null): array
     {
         return ['do' => 'files'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getDefaultInsertTag(): string
     {
         return '{{file::%s}}';

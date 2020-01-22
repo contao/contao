@@ -22,9 +22,6 @@ class BinaryStringType extends Type
 {
     public const NAME = 'binary_string';
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform): string
     {
         if (!empty($fieldDeclaration['fixed'])) {
@@ -34,17 +31,11 @@ class BinaryStringType extends Type
         return $platform->getBlobTypeDeclarationSQL($fieldDeclaration);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName(): string
     {
         return self::NAME;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function requiresSQLCommentHint(AbstractPlatform $platform): bool
     {
         return true;

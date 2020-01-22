@@ -36,9 +36,6 @@ class GenerateJwtCookieCommand extends Command
         $this->jwtManager = $jwtManager ?: new JwtManager($application->getProjectDir());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure(): void
     {
         parent::configure();
@@ -50,9 +47,6 @@ class GenerateJwtCookieCommand extends Command
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $cookie = $this->jwtManager->createCookie(['debug' => $input->getOption('debug')]);

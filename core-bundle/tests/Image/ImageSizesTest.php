@@ -51,9 +51,6 @@ class ImageSizesTest extends TestCase
      */
     private $translator;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();

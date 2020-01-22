@@ -112,8 +112,7 @@ class StoreRefererListener
             && !$request->query->has('state')
             && 'feRedirect' !== $request->query->get('do')
             && 'contao_backend' === $request->attributes->get('_route')
-            && !$request->isXmlHttpRequest()
-        ;
+            && !$request->isXmlHttpRequest();
     }
 
     /**
@@ -170,8 +169,7 @@ class StoreRefererListener
             && isset($referer['current'])
             && 'contao_frontend' === $request->attributes->get('_route')
             && $this->getRelativeRequestUri($request) !== $referer['current']
-            && !$request->isXmlHttpRequest()
-        ;
+            && !$request->isXmlHttpRequest();
     }
 
     /**

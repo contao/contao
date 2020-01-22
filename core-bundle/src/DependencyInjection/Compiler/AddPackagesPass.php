@@ -24,9 +24,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class AddPackagesPass implements CompilerPassInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function process(ContainerBuilder $container): void
     {
         $packages = [];

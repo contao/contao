@@ -94,42 +94,25 @@
         <target>Plné znění</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.new.0">
-        <source>New feed</source>
-        <target>Nový kanál RSS</target>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_news_feed.new.1">
         <source>Create a new feed</source>
         <target>Vytvořit nový kanál RSS</target>
       </trans-unit>
-      <trans-unit id="tl_news_feed.show.0">
-        <source>Feed details</source>
-        <target>Podrobnosti ke kanálu RSS</target>
-      </trans-unit>
-      <trans-unit id="tl_news_feed.show.1">
+      <trans-unit id="tl_news_feed.show">
         <source>Show the details of feed ID %s</source>
         <target>Zobrazit podrobnosti ke kanálu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news_feed.edit.0">
-        <source>Edit feed</source>
-        <target>Upravit kanál RSS</target>
-      </trans-unit>
-      <trans-unit id="tl_news_feed.edit.1">
+      <trans-unit id="tl_news_feed.edit">
         <source>Edit feed ID %s</source>
         <target>Upravit kanál RSS %s</target>
       </trans-unit>
-      <trans-unit id="tl_news_feed.copy.0">
-        <source>Duplicate feed</source>
-        <target>Duplikovat kanál RSS</target>
-      </trans-unit>
-      <trans-unit id="tl_news_feed.copy.1">
+      <trans-unit id="tl_news_feed.copy">
         <source>Duplicate feed ID %s</source>
         <target>Duplikovat kanál RSS %s</target>
       </trans-unit>
-      <trans-unit id="tl_news_feed.delete.0">
-        <source>Delete feed</source>
-        <target>Smazat kanál RSS</target>
-      </trans-unit>
-      <trans-unit id="tl_news_feed.delete.1">
+      <trans-unit id="tl_news_feed.delete">
         <source>Delete feed ID %s</source>
         <target>Smazat kanál RSS %s</target>
       </trans-unit>

@@ -52,12 +52,18 @@ class SearchIndexSubscriberTest extends TestCase
             $logger
                 ->expects($this->once())
                 ->method('log')
-                ->with($expectedLogLevel, $expectedLogMessage, $this->callback(function (array $context) {
-                    $this->assertInstanceOf(CrawlUri::class, $context['crawlUri']);
-                    $this->assertSame(SearchIndexSubscriber::class, $context['source']);
+                ->with(
+                    $expectedLogLevel,
+                    $expectedLogMessage,
+                    $this->callback(
+                        function (array $context) {
+                            $this->assertInstanceOf(CrawlUri::class, $context['crawlUri']);
+                            $this->assertSame(SearchIndexSubscriber::class, $context['source']);
 
-                    return true;
-                }))
+                            return true;
+                        }
+                    )
+                )
             ;
         } else {
             $logger
@@ -131,12 +137,18 @@ class SearchIndexSubscriberTest extends TestCase
             $logger
                 ->expects($this->once())
                 ->method('log')
-                ->with($expectedLogLevel, $expectedLogMessage, $this->callback(function (array $context) {
-                    $this->assertInstanceOf(CrawlUri::class, $context['crawlUri']);
-                    $this->assertSame(SearchIndexSubscriber::class, $context['source']);
+                ->with(
+                    $expectedLogLevel,
+                    $expectedLogMessage,
+                    $this->callback(
+                        function (array $context) {
+                            $this->assertInstanceOf(CrawlUri::class, $context['crawlUri']);
+                            $this->assertSame(SearchIndexSubscriber::class, $context['source']);
 
-                    return true;
-                }))
+                            return true;
+                        }
+                    )
+                )
             ;
         } else {
             $logger
@@ -192,12 +204,18 @@ class SearchIndexSubscriberTest extends TestCase
         $logger
             ->expects($this->once())
             ->method('log')
-            ->with($expectedLogLevel, $expectedLogMessage, $this->callback(function (array $context) {
-                $this->assertInstanceOf(CrawlUri::class, $context['crawlUri']);
-                $this->assertSame(SearchIndexSubscriber::class, $context['source']);
+            ->with(
+                $expectedLogLevel,
+                $expectedLogMessage,
+                $this->callback(
+                    function (array $context) {
+                        $this->assertInstanceOf(CrawlUri::class, $context['crawlUri']);
+                        $this->assertSame(SearchIndexSubscriber::class, $context['source']);
 
-                return true;
-            }))
+                        return true;
+                    }
+                )
+            )
         ;
 
         $indexer = $this->createMock(IndexerInterface::class);

@@ -54,9 +54,6 @@ class LegacyMatcher implements RequestMatcherInterface
         $this->prependLocale = $prependLocale;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function matchRequest(Request $request): array
     {
         $this->framework->initialize(true);

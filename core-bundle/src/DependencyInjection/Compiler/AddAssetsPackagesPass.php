@@ -26,9 +26,6 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class AddAssetsPackagesPass implements CompilerPassInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function process(ContainerBuilder $container): void
     {
         if (!$container->hasDefinition('assets.packages')) {
@@ -56,7 +53,7 @@ class AddAssetsPackagesPass implements CompilerPassInterface
         $bundles = $container->getParameter('kernel.bundles');
         $meta = $container->getParameter('kernel.bundles_metadata');
 
-        foreach ($bundles as $name => $class) {
+        foreach (array_keys($bundles) as $name) {
             if (null === ($path = $this->findBundlePath($meta, $name))) {
                 continue;
             }

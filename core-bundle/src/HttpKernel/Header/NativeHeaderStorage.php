@@ -17,25 +17,16 @@ namespace Contao\CoreBundle\HttpKernel\Header;
  */
 class NativeHeaderStorage implements HeaderStorageInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function all(): array
     {
         return headers_list();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function add(string $header): void
     {
         header($header);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function clear(): void
     {
         if ('cli' !== \PHP_SAPI && !headers_sent()) {

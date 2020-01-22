@@ -98,68 +98,36 @@
         <target>Configurações de Publicação</target>
       </trans-unit>
       <trans-unit id="tl_faq.new.0">
-        <source>New question</source>
-        <target>Nova questão</target>
+        <source>New</source>
+        <target>Novo</target>
       </trans-unit>
       <trans-unit id="tl_faq.new.1">
         <source>Create a new question</source>
         <target>Cria uma nova questão.</target>
       </trans-unit>
-      <trans-unit id="tl_faq.show.0">
-        <source>Show question details</source>
-        <target>Exibir questão</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.show.1">
+      <trans-unit id="tl_faq.show">
         <source>Show the details of question ID %s</source>
         <target>Exibe detalhes da questão ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq.edit.0">
-        <source>Edit question</source>
-        <target>Editar Questão</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.edit.1">
+      <trans-unit id="tl_faq.edit">
         <source>Edit question ID %s</source>
         <target>Edita a questão ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq.copy.0">
-        <source>Duplicate question</source>
-        <target>Duplicar questão</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.copy.1">
+      <trans-unit id="tl_faq.copy">
         <source>Duplicate question ID %s</source>
         <target>Duplica a questão ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq.cut.0">
-        <source>Move question</source>
-        <target>Mover questão</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.cut.1">
+      <trans-unit id="tl_faq.cut">
         <source>Move question ID %s</source>
         <target>Move a questão ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq.delete.0">
-        <source>Delete question</source>
-        <target>Remover questão</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.delete.1">
+      <trans-unit id="tl_faq.delete">
         <source>Delete question ID %s</source>
         <target>Remover a questão ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq.toggle.0">
-        <source>Publish/unpublish question</source>
-        <target>Publicar/despublicar pergunta</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.toggle.1">
+      <trans-unit id="tl_faq.toggle">
         <source>Publish/unpublish question ID %s</source>
         <target>Publicar/despublicar pergunta ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.editheader.0">
-        <source>Edit category</source>
-        <target>Editar categoria</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.editheader.1">
-        <source>Edit the category settings</source>
-        <target>Edita esta categoria</target>
       </trans-unit>
       <trans-unit id="tl_faq.pasteafter.0">
         <source>Paste at the top</source>
@@ -170,12 +138,12 @@
         <target>Cola após a questão ID %s</target>
       </trans-unit>
       <trans-unit id="tl_faq.pastenew.0">
-        <source>Add new at the top</source>
-        <target>Criar novo elemento de conteúdo no topo</target>
+        <source>Create a new question at the top</source>
+        <target>Criar uma nova questão no topo</target>
       </trans-unit>
       <trans-unit id="tl_faq.pastenew.1">
-        <source>Add new after question ID %s</source>
-        <target>Cria uma nova questão após a questão ID %s</target>
+        <source>Create a new question after question ID %s</source>
+        <target>Criar uma nova questão depois da questão com ID %s </target>
       </trans-unit>
     </body>
   </file>

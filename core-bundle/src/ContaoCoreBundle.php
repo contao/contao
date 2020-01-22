@@ -51,17 +51,11 @@ class ContaoCoreBundle extends Bundle
     public const SCOPE_BACKEND = 'backend';
     public const SCOPE_FRONTEND = 'frontend';
 
-    /**
-     * {@inheritdoc}
-     */
     public function getContainerExtension(): ContaoCoreExtension
     {
         return new ContaoCoreExtension();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function build(ContainerBuilder $container): void
     {
         parent::build($container);

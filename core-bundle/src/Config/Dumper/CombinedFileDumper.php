@@ -59,9 +59,6 @@ class CombinedFileDumper implements DumperInterface
         $this->header = $header;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function dump($files, $cacheFile, array $options = []): void
     {
         $buffer = $this->header;

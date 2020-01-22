@@ -58,8 +58,8 @@
         <target>半角の数字、プラス(+)、マイナス(-)、丸括弧で電話番号を入力してください。</target>
       </trans-unit>
       <trans-unit id="ERR.extnd">
-        <source>For security reasons you can not use the following characters here: =&lt;&gt;&amp;/()#</source>
-        <target>セキュリティ上の理由のため、ここでは以下の文字は使用できせん: =&lt;&gt;&amp;/()#</target>
+        <source>For security reasons you can not use the following characters here: #&lt;&gt;()\=</source>
+        <target>セキュリティ上の理由のため、ここでは以下の文字は使用できせん: #&lt;&gt;()\=</target>
       </trans-unit>
       <trans-unit id="ERR.email">
         <source>Please enter a valid e-mail address!</source>
@@ -221,6 +221,10 @@
         <source>You can only select &quot;%s&quot; files!</source>
         <target>選択できるのは&quot;%s&quot;のファイルだけです。</target>
       </trans-unit>
+      <trans-unit id="ERR.forbiddenExtensions">
+        <source>The following file extensions are not allowed: %s</source>
+        <target>次のファイルの拡張子は許可していません: %s</target>
+      </trans-unit>
       <trans-unit id="ERR.invalidPages">
         <source>Your selection contains invalid page IDs!</source>
         <target>選択した中に不正なページのIDがあります。</target>
@@ -228,6 +232,10 @@
       <trans-unit id="ERR.circularReference">
         <source>Invalid redirect target (circular reference)!</source>
         <target>リダイレクト先が誤って(循環参照して)います。</target>
+      </trans-unit>
+      <trans-unit id="ERR.circularPicker">
+        <source>Invalid selection (circular reference)!</source>
+        <target>不正な(循環参照のある)選択です!</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
         <source>None of the active website root pages without an explicit DNS setting have the language fallback option set.</source>
@@ -249,13 +257,13 @@
         <source>There are top-level pages in the site structure which are not website root pages.</source>
         <target>サイト構造の最上位のページにウェブサイトのルートでないページがあります。</target>
       </trans-unit>
-      <trans-unit id="ERR.invalidTokenUrl">
-        <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
-        <target>開こうとしているURLを確認できません。あなた自身でクリックしたか、信頼に値する人から受け取ったリンクでしたら、以下を承認して処理を進めて良いでしょう。</target>
-      </trans-unit>
       <trans-unit id="ERR.form">
         <source>The form could not be sent</source>
         <target>フォームを送信できませんでした。</target>
+      </trans-unit>
+      <trans-unit id="ERR.formCookieWarning">
+        <source>You will not be able to send this form, because you have disabled cookies in your browser.</source>
+        <target>ブラウザーのクッキーを無効にしているので、このフォームを送信できないでしょう。</target>
       </trans-unit>
       <trans-unit id="ERR.captcha">
         <source>Please answer the security question!</source>
@@ -288,6 +296,22 @@
       <trans-unit id="ERR.invalidTwoFactor">
         <source>Invalid verification code!</source>
         <target>正しくない確認コードです!</target>
+      </trans-unit>
+      <trans-unit id="ERR.emptyTitleOrId">
+        <source>Please enter both title and ID!</source>
+        <target>題名とIDの両方を入力してください!</target>
+      </trans-unit>
+      <trans-unit id="ERR.duplicateSectionTitle">
+        <source>Duplicate layout section title &quot;%s&quot;!</source>
+        <target>レイアウトセクションの題名: &quot;%s&quot;が重複しています!</target>
+      </trans-unit>
+      <trans-unit id="ERR.duplicateSectionId">
+        <source>Duplicate layout section ID &quot;%s&quot;!</source>
+        <target>レイアウトセクションのID: &quot;%s&quot;が重複しています!</target>
+      </trans-unit>
+      <trans-unit id="ERR.moduleWithoutColumn">
+        <source>Please assign all modules to a column!</source>
+        <target>列にすべてのモジュールを割り当ててください!</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -537,6 +561,126 @@
         <source>Displays the teaser text of an article.</source>
         <target>アーティクルのティーザーのテキストを表示します。</target>
       </trans-unit>
+      <trans-unit id="FFL.explanation.0">
+        <source>Explanation</source>
+        <target>説明</target>
+      </trans-unit>
+      <trans-unit id="FFL.explanation.1">
+        <source>A custom field to insert an explanation text.</source>
+        <target>説明のテキストを入れるフォームの項目です。</target>
+      </trans-unit>
+      <trans-unit id="FFL.html.0">
+        <source>HTML code</source>
+        <target>HTMLコード</target>
+      </trans-unit>
+      <trans-unit id="FFL.html.1">
+        <source>A custom field to insert HTML code.</source>
+        <target>HTMLコードを直接入れるフォームの項目です。</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStart.0">
+        <source>Fieldset start</source>
+        <target>フィールドセットの開始</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStart.1">
+        <source>The opening part of a fieldset with an optional legend.</source>
+        <target>フィールドセットの開始を示し、見出しを含められます。</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStop.0">
+        <source>Fieldset stop</source>
+        <target>フィールドセットの終了</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStop.1">
+        <source>The closing part of a fieldset.</source>
+        <target>フィールドセットの終了を示します。</target>
+      </trans-unit>
+      <trans-unit id="FFL.text.0">
+        <source>Text field</source>
+        <target>テキスト入力</target>
+      </trans-unit>
+      <trans-unit id="FFL.text.1">
+        <source>A single-line input field for a short or medium text.</source>
+        <target>短めから中程度の長さを入力する、1行のテキスト入力の項目です。</target>
+      </trans-unit>
+      <trans-unit id="FFL.password.0">
+        <source>Password field</source>
+        <target>パスワード入力</target>
+      </trans-unit>
+      <trans-unit id="FFL.password.1">
+        <source>A single-line input field for a password. Contao automatically adds a confirmation field.</source>
+        <target>パスワード用の1行の入力項目です。Contaoは自動的にパスワードの確認の入力項目を追加します。</target>
+      </trans-unit>
+      <trans-unit id="FFL.textarea.0">
+        <source>Textarea</source>
+        <target>テキストエリア</target>
+      </trans-unit>
+      <trans-unit id="FFL.textarea.1">
+        <source>A multi-line input field for a medium or long text.</source>
+        <target>中程度から長めのテキストを入力する、複数行の入力項目です。</target>
+      </trans-unit>
+      <trans-unit id="FFL.select.0">
+        <source>Select menu</source>
+        <target>選択メニュー</target>
+      </trans-unit>
+      <trans-unit id="FFL.select.1">
+        <source>A single- or multi-line drop-down menu.</source>
+        <target>1行または複数行のドロップダウンメニューです。</target>
+      </trans-unit>
+      <trans-unit id="FFL.radio.0">
+        <source>Radio button menu</source>
+        <target>ラジオボタンメニュー</target>
+      </trans-unit>
+      <trans-unit id="FFL.radio.1">
+        <source>A list of multiple options from which one can be selected.</source>
+        <target>1つだけ選択できる、複数の選択肢のリストです。</target>
+      </trans-unit>
+      <trans-unit id="FFL.checkbox.0">
+        <source>Checkbox menu</source>
+        <target>チェックボックスメニュー</target>
+      </trans-unit>
+      <trans-unit id="FFL.checkbox.1">
+        <source>A list of multiple options from which any can be selected.</source>
+        <target>どれでも選択できる、複数の選択肢のリストです。</target>
+      </trans-unit>
+      <trans-unit id="FFL.upload.0">
+        <source>File upload</source>
+        <target>ファイルをアップロード</target>
+      </trans-unit>
+      <trans-unit id="FFL.upload.1">
+        <source>A single-line input field to upload a local file to the server.</source>
+        <target>ローカルのファイルをサーバーにアップロードするための1行の入力項目です。</target>
+      </trans-unit>
+      <trans-unit id="FFL.range.0">
+        <source>Range slider</source>
+        <target>範囲のスライダー</target>
+      </trans-unit>
+      <trans-unit id="FFL.range.1">
+        <source>A range slider to select a value or range of values between a specified min and max.</source>
+        <target>範囲のスライダーは指定された最小と最大の値の間の範囲の値を洗濯します。</target>
+      </trans-unit>
+      <trans-unit id="FFL.hidden.0">
+        <source>Hidden field</source>
+        <target>隠し入力</target>
+      </trans-unit>
+      <trans-unit id="FFL.hidden.1">
+        <source>A single-line input field that is not visible in the form.</source>
+        <target>フォームに表示されない1行のテキストの入力項目です。</target>
+      </trans-unit>
+      <trans-unit id="FFL.captcha.0">
+        <source>Security question</source>
+        <target>セキュリティ質問</target>
+      </trans-unit>
+      <trans-unit id="FFL.captcha.1">
+        <source>A simple math question to verify that the form is being submitted by a human (CAPTCHA).</source>
+        <target>(ボットのようなプログラムではなく)人間によってフォームが提出されたことを確認するための、やさしい計算問題です。(CAPTCHA)</target>
+      </trans-unit>
+      <trans-unit id="FFL.submit.0">
+        <source>Submit field</source>
+        <target>提出ボタン</target>
+      </trans-unit>
+      <trans-unit id="FFL.submit.1">
+        <source>A button to submit the form.</source>
+        <target>フォームを提出するボタンです。</target>
+      </trans-unit>
       <trans-unit id="PTY.regular.0">
         <source>Regular page</source>
         <target>通常ページ</target>
@@ -582,24 +726,24 @@
         <target>401 認証が必要</target>
       </trans-unit>
       <trans-unit id="PTY.error_401.1">
-        <source>If a user requests a protected page without being authenticated, a 401 error page will be loaded instead.</source>
-        <target>認証をしないでユーザーが保護したページをアクセスしようとした場合、401のエラーページを代わりに表示します。</target>
+        <source>If a visitor requests a protected page without being authenticated, a 401 error page will be loaded instead.</source>
+        <target>認証をしないで保護したページをアクセスしようとした場合、401のエラーページを代わりに表示します。</target>
       </trans-unit>
       <trans-unit id="PTY.error_403.0">
         <source>403 Access denied</source>
         <target>403 アクセス拒否</target>
       </trans-unit>
       <trans-unit id="PTY.error_403.1">
-        <source>If a user requests a protected page without permission, a 403 error page will be loaded instead.</source>
-        <target>アクセス権のない保護されたページをユーザーが要求すると、代わりに403のエラーページが読み込まれます。</target>
+        <source>If a member requests a protected page without permission, a 403 error page will be loaded instead.</source>
+        <target>アクセス権のない保護されたページをメンバーがアクセスすると、代わりに403のエラーページが読み込まれます。</target>
       </trans-unit>
       <trans-unit id="PTY.error_404.0">
         <source>404 Page not found</source>
         <target>404 存在しないページ</target>
       </trans-unit>
       <trans-unit id="PTY.error_404.1">
-        <source>If a user requests a non-existent page, a 404 error page will be loaded instead.</source>
-        <target>存在しないページをユーザーが要求すると、代わりに404のエラーページが読み込まれます。</target>
+        <source>If a visitor requests a non-existent page, a 404 error page will be loaded instead.</source>
+        <target>存在しないページをアクセスすると、代わりに404のエラーページが読み込まれます。</target>
       </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
@@ -1090,8 +1234,8 @@
         <target>モジュール</target>
       </trans-unit>
       <trans-unit id="MSC.mw_column">
-        <source>Column</source>
-        <target>列</target>
+        <source>Layout section</source>
+        <target>レイアウトセクション</target>
       </trans-unit>
       <trans-unit id="MSC.mw_enable">
         <source>Enable/disable the module</source>
@@ -1278,16 +1422,16 @@
         <target>複数を変更</target>
       </trans-unit>
       <trans-unit id="MSC.all.1">
-        <source>Edit multiple records at once</source>
-        <target>複数の項目を一度に変更</target>
+        <source>Edit multiple elements at once</source>
+        <target>複数の要素を一度に変更</target>
       </trans-unit>
       <trans-unit id="MSC.all_override.0">
         <source>Override multiple</source>
         <target>複数を上書き</target>
       </trans-unit>
       <trans-unit id="MSC.all_override.1">
-        <source>Override multiple records at once</source>
-        <target>複数の項目を一度に上書き</target>
+        <source>Override multiple elements at once</source>
+        <target>複数の要素を一度に上書き</target>
       </trans-unit>
       <trans-unit id="MSC.all_fields.0">
         <source>Available fields</source>
@@ -1341,7 +1485,7 @@
         <source>This seems to be your first login. Welcome to Contao!</source>
         <target>初めてのログインのようですね。Contaoへようこそ!</target>
       </trans-unit>
-      <trans-unit id="MSC.loginCount">
+      <trans-unit id="MSC.loginAttempts">
         <source>Login attempts</source>
         <target>ログインの試み</target>
       </trans-unit>
@@ -1350,8 +1494,8 @@
         <target>ロック状態</target>
       </trans-unit>
       <trans-unit id="MSC.move">
-        <source>Move the item via drag and drop or the up and down keys</source>
-        <target>ドラッグアンドドロップ、または上下の矢印キーで項目を移動</target>
+        <source>Move the item via drag and drop</source>
+        <target>ドラッグアンドドロップで項目を移動</target>
       </trans-unit>
       <trans-unit id="MSC.move_up.0">
         <source>Move up</source>
@@ -1368,22 +1512,6 @@
       <trans-unit id="MSC.move_down.1">
         <source>Move the item one position down</source>
         <target>項目を1つ下の位置に移動</target>
-      </trans-unit>
-      <trans-unit id="MSC.staticFiles.0">
-        <source>Files URL</source>
-        <target>filesのURL</target>
-      </trans-unit>
-      <trans-unit id="MSC.staticFiles.1">
-        <source>The files URL applies to the &lt;em&gt;files&lt;/em&gt; directory (page speed optimization).</source>
-        <target>filesのURLは&lt;em&gt;files&lt;/em&gt;のディレクトリとすべての画像のサムネイルに適用します。(Page Speed最適化)</target>
-      </trans-unit>
-      <trans-unit id="MSC.staticPlugins.0">
-        <source>Assets URL</source>
-        <target>assetsのURL</target>
-      </trans-unit>
-      <trans-unit id="MSC.staticPlugins.1">
-        <source>The assets URL applies to the &lt;em&gt;assets&lt;/em&gt; directory (page speed optimization).</source>
-        <target>asstesのURLは&lt;em&gt;assets&lt;/em&gt;のディレクトリに適用します。(Page Speed最適化)</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.0">
         <source>Back end keyboard shortcuts</source>
@@ -1457,10 +1585,6 @@
         <source>Back to the back end start page</source>
         <target>バックエンドの開始ページに戻る</target>
       </trans-unit>
-      <trans-unit id="MSC.burgerTitle">
-        <source>Toggle navigation</source>
-        <target>ナビゲーションを切り替え</target>
-      </trans-unit>
       <trans-unit id="MSC.learnMore">
         <source>Learn more on %s</source>
         <target>さらに%sで習得</target>
@@ -1468,10 +1592,6 @@
       <trans-unit id="MSC.user">
         <source>User</source>
         <target>ユーザー</target>
-      </trans-unit>
-      <trans-unit id="MSC.loginTo">
-        <source>Log into %s</source>
-        <target>%sにログイン</target>
       </trans-unit>
       <trans-unit id="MSC.loginBT">
         <source>Login</source>
@@ -1502,8 +1622,8 @@
         <target>取り止め</target>
       </trans-unit>
       <trans-unit id="MSC.deleteConfirm">
-        <source>Do you really want to delete entry ID %s?</source>
-        <target>IDが%sの項目を本当に削除しますか?</target>
+        <source>Do you really want to delete element ID %s?</source>
+        <target>ID %sの要素を本当に削除しますか?</target>
       </trans-unit>
       <trans-unit id="MSC.delAllConfirm">
         <source>Do you really want to delete the selected records?</source>
@@ -1579,7 +1699,7 @@
       </trans-unit>
       <trans-unit id="MSC.saveNcreate">
         <source>Save and new</source>
-        <target>保存して新しく作成</target>
+        <target>保存して新規作成</target>
       </trans-unit>
       <trans-unit id="MSC.saveNduplicate">
         <source>Save and duplicate</source>
@@ -1709,10 +1829,6 @@
         <source>justified</source>
         <target>両端揃え</target>
       </trans-unit>
-      <trans-unit id="MSC.filetree">
-        <source>File system</source>
-        <target>ファイルシステム</target>
-      </trans-unit>
       <trans-unit id="MSC.male">
         <source>Male</source>
         <target>男性</target>
@@ -1720,6 +1836,10 @@
       <trans-unit id="MSC.female">
         <source>Female</source>
         <target>女性</target>
+      </trans-unit>
+      <trans-unit id="MSC.other">
+        <source>Other</source>
+        <target>その他</target>
       </trans-unit>
       <trans-unit id="MSC.fileSize">
         <source>File size</source>
@@ -1773,9 +1893,9 @@
         <source>Back end modules</source>
         <target>バックエンドモジュール</target>
       </trans-unit>
-      <trans-unit id="MSC.welcomeTo">
-        <source>%s back end</source>
-        <target>%sのバックエンド</target>
+      <trans-unit id="MSC.dashboard">
+        <source>Dashboard</source>
+        <target>ダッシュボード</target>
       </trans-unit>
       <trans-unit id="MSC.updateVersion">
         <source>Contao version %s is available.</source>
@@ -1882,16 +2002,16 @@
         <target>クリップボードを消去</target>
       </trans-unit>
       <trans-unit id="MSC.hiddenElements">
-        <source>Unpublished elements</source>
-        <target>非公開の要素</target>
+        <source>Unpublished</source>
+        <target>非公開</target>
       </trans-unit>
       <trans-unit id="MSC.hiddenHide">
         <source>hide</source>
-        <target>表示しない</target>
+        <target>非表示</target>
       </trans-unit>
       <trans-unit id="MSC.hiddenShow">
         <source>show</source>
-        <target>表示する</target>
+        <target>表示</target>
       </trans-unit>
       <trans-unit id="MSC.apply">
         <source>Apply</source>
@@ -2165,6 +2285,10 @@
         <source>Your search for &lt;strong&gt;%s&lt;/strong&gt; returned no results.</source>
         <target>&lt;strong&gt;%s&lt;/strong&gt;の検索の結果はありませんでした。</target>
       </trans-unit>
+      <trans-unit id="MSC.sKeywordHint">
+        <source>Note that keywords shorter than %s characters and without a modifier have been ignored.</source>
+        <target>%s文字より短く、修飾子のないキーワードを無視することに注意してください。</target>
+      </trans-unit>
       <trans-unit id="MSC.seconds">
         <source>seconds</source>
         <target>秒</target>
@@ -2257,10 +2381,6 @@
         <source>Share on Twitter</source>
         <target>Twitterで共有</target>
       </trans-unit>
-      <trans-unit id="MSC.gplusShare">
-        <source>Share on Google+</source>
-        <target>Google+で共有</target>
-      </trans-unit>
       <trans-unit id="MSC.pleaseWait">
         <source>Please wait</source>
         <target>お待ちください</target>
@@ -2321,9 +2441,25 @@
         <source>%s relevance</source>
         <target>%sの関連性</target>
       </trans-unit>
-      <trans-unit id="MSC.invalidTokenUrl">
+      <trans-unit id="MSC.invalidToken">
         <source>Invalid token</source>
         <target>不正なトークン</target>
+      </trans-unit>
+      <trans-unit id="MSC.tokenConfirmed">
+        <source>This token has already been confirmed</source>
+        <target>このトークンは既に確認済み</target>
+      </trans-unit>
+      <trans-unit id="MSC.tokenEmailMismatch">
+        <source>The e-mail address of the token does not match</source>
+        <target>トークンの電子メールアドレスが不一致</target>
+      </trans-unit>
+      <trans-unit id="MSC.resendToken">
+        <source>The token has been re-sent to %s.</source>
+        <target>トークンを%sに再送信しました。</target>
+      </trans-unit>
+      <trans-unit id="MSC.invalidTokenUrl">
+        <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
+        <target>開こうとしているURLを確認できません。あなた自身でクリックしたか、信頼に値する人から受け取ったリンクでしたら、以下を承認して処理を進めて良いでしょう。</target>
       </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
@@ -2425,6 +2561,57 @@
         <source>Please enable up two-factor authentication before you continue.</source>
         <target>続ける前に2ファクター認証を有効にしてください。</target>
       </trans-unit>
+      <trans-unit id="MSC.twoFactorTextCode">
+        <source>If you cannot scan the QR code, enter this key instead:</source>
+        <target>QRコードをスキャンできない場合は、このキーを代わりに入力してください:</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesLabel">
+        <source>Backup codes</source>
+        <target>バックアップコード</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesShow">
+        <source>Show backup codes</source>
+        <target>バックアップコードを表示</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesExplain">
+        <source>Backup codes can be used to access your account if you have lost your authentication device and cannot generate two-factor codes anymore. Treat your backup codes with the same level of attention as your password! We recommend saving them with a password manager such as Lastpass, 1Password or Keeper.</source>
+        <target>認証機器を紛失して、もう2ファクターコードを生成できなくなった場合にバックアップコードをアカウントの開く接すに使用できます。バックアップコードはパスワードと同じレベルに注意して扱ってください。バックアップコードはLastpass、1Password、Keeperのようなパスワード管理に保存することを推奨します。</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesInfo">
+        <source>Put the codes in a safe spot. If you lose your authentication device and do not have backup codes, you cannot access your account anymore!</source>
+        <target>コードは安全な場所に置いてください。認証機器を紛失して、バックアップコードがないと、アカウントにアクセスできなくなります!</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesGenerate">
+        <source>Generate backup codes</source>
+        <target>バックアップコードを生成</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesRegenerate">
+        <source>Regenerate backup codes</source>
+        <target>バックアップコードを再生成</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesRegenerateInfo">
+        <source>When you regenerate the backup codes, your old codes will not work anymore.</source>
+        <target>バックアップコードを再生成すると、古いコードはそれ以降動作しなくなります。</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorTrustDevice">
+        <source>Trust this device</source>
+      </trans-unit>
+      <trans-unit id="MSC.userTemplateEditor">
+        <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
+        <target>テンプレートエディターにアクセス権のあるユーザーが存在します。テンプレートはPHPファイルですので、これらのユーザーは暗黙の内にシステム全体に渡る制御権を持っています!</target>
+      </trans-unit>
+      <trans-unit id="MSC.groupTemplateEditor">
+        <source>There is at least one user group granting access to the template editor. Since templates are PHP files, users of these groups implicitly have full control over the system!</source>
+        <target>テンプレートエディターにアクセス権のあるグループが存在します。テンプレートはPHPファイルですので、これらのグループのユーザーは暗黙の内にシステム全体に渡る制御権を持っています!</target>
+      </trans-unit>
+      <trans-unit id="MSC.userThemeImport">
+        <source>There is at least one regular user with permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, these users implicitly have full control over the system!</source>
+        <target>テーマをインポートする権限を持った通常ユーザーがいます。テーマには任意のテンプレートを含めることができ、テンプレートはPHPファイルなので、これらのユーザーは暗黙の内にシステム全体を制御できます!</target>
+      </trans-unit>
+      <trans-unit id="MSC.groupThemeImport">
+        <source>There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!</source>
+        <target>テーマをインポートする権限を持ったユーザーグループがあります。テーマには任意のテンプレートを含めることができ、テンプレートはPHPファイルなので、これらのグループは暗黙の内にシステム全体を制御できます!</target>
+      </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
         <target>有効</target>
@@ -2432,6 +2619,40 @@
       <trans-unit id="MSC.disable">
         <source>Disable</source>
         <target>無効</target>
+      </trans-unit>
+      <trans-unit id="MSC.internalCssEditor">
+        <source>The internal CSS editor has been deprecated and will be removed in one of the next Contao versions! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
+        <target>内部のCSSエディターは非推奨になり、Contaoの次期バージョンのどこかで削除します!  既存のスタイルシートをエクスポートして、外部スタイルシートとしてページレイアウトに再追加することをご検討ください。</target>
+      </trans-unit>
+      <trans-unit id="MSC.serpPreview.0">
+        <source>Google search results preview</source>
+        <target>Google検索の結果のプレビュー</target>
+      </trans-unit>
+      <trans-unit id="MSC.serpPreview.1">
+        <source>Here you can preview the meta data in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
+        <target>Google検索の結果のメタデータをプレビューできます。他の検索エンジンでは、さらに長いテキストを表示したり、異なる位置で切り取られたり、するかもしれません。</target>
+      </trans-unit>
+      <trans-unit id="MSC.clearTrustedDevices">
+        <source>Clear trusted devices</source>
+      </trans-unit>
+      <trans-unit id="MSC.trustedDevices">
+        <source>Trusted devices</source>
+      </trans-unit>
+      <trans-unit id="MSC.noTrustedDevices">
+        <source>Currently there are no trusted devices.</source>
+      </trans-unit>
+      <trans-unit id="MSC.device">
+        <source>Device</source>
+      </trans-unit>
+      <trans-unit id="MSC.thisDevice">
+        <source>this device</source>
+      </trans-unit>
+      <trans-unit id="MSC.browser">
+        <source>Browser</source>
+        <target>ブラウザー</target>
+      </trans-unit>
+      <trans-unit id="MSC.operatingSystem">
+        <source>Operating system</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2552,6 +2773,102 @@
       <trans-unit id="SECTIONS.manual">
         <source>Manual output</source>
         <target>手動の出力</target>
+      </trans-unit>
+      <trans-unit id="DCA.all.0">
+        <source>Edit multiple</source>
+        <target>複数を変更</target>
+      </trans-unit>
+      <trans-unit id="DCA.all.1">
+        <source>Edit multiple elements at once</source>
+        <target>複数の要素を一度に変更</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggleNodes.0">
+        <source>Toggle all</source>
+        <target>すべてを切り替え</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggleNodes.1">
+        <source>Expand or collapse all nodes</source>
+        <target>すべてのノードの展開または折り畳み</target>
+      </trans-unit>
+      <trans-unit id="DCA.new.0">
+        <source>New</source>
+        <target>新規作成</target>
+      </trans-unit>
+      <trans-unit id="DCA.new.1">
+        <source>Create a new element</source>
+        <target>新しい要素を作成</target>
+      </trans-unit>
+      <trans-unit id="DCA.show">
+        <source>Show the details of element ID %s</source>
+        <target>ID %sの要素の詳細を表示</target>
+      </trans-unit>
+      <trans-unit id="DCA.edit">
+        <source>Edit element ID %s</source>
+        <target>ID %sの要素の詳細を編集</target>
+      </trans-unit>
+      <trans-unit id="DCA.cut">
+        <source>Move element ID %s</source>
+        <target>ID %sの要素の詳細を移動</target>
+      </trans-unit>
+      <trans-unit id="DCA.copy">
+        <source>Duplicate element ID %s</source>
+        <target>ID %sの要素の詳細を複製</target>
+      </trans-unit>
+      <trans-unit id="DCA.delete">
+        <source>Delete element ID %s</source>
+        <target>ID %sの要素の詳細を削除</target>
+      </trans-unit>
+      <trans-unit id="DCA.drag">
+        <source>Drag element ID %s</source>
+        <target>ID %sの要素の詳細をドラッグ</target>
+      </trans-unit>
+      <trans-unit id="DCA.editheader.0">
+        <source>Edit the element settings</source>
+        <target>要素の設定を変更</target>
+      </trans-unit>
+      <trans-unit id="DCA.editheader.1">
+        <source>Edit the settings of element ID %s</source>
+        <target>ID %sの要素の設定を変更</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggle">
+        <source>Publish/unpublish element ID %s</source>
+        <target>ID %sの要素の公開/非公開を切り替え</target>
+      </trans-unit>
+      <trans-unit id="DCA.pasteinto.0">
+        <source>Paste at the top</source>
+        <target>先頭に貼り付け</target>
+      </trans-unit>
+      <trans-unit id="DCA.pasteinto.1">
+        <source>Paste into element ID %s</source>
+        <target>ID %sの要素の中に貼り付け</target>
+      </trans-unit>
+      <trans-unit id="DCA.pasteafter.0">
+        <source>Paste at the top</source>
+        <target>先頭に貼り付け</target>
+      </trans-unit>
+      <trans-unit id="DCA.pasteafter.1">
+        <source>Paste after element ID %s</source>
+        <target>ID %sの要素の後ろに貼り付け</target>
+      </trans-unit>
+      <trans-unit id="DCA.pastenew.0">
+        <source>Create a new element at the top</source>
+        <target>先頭に新しい要素を作成</target>
+      </trans-unit>
+      <trans-unit id="DCA.pastenew.1">
+        <source>Create a new element after element ID %s</source>
+        <target>ID %sの要素の後ろに新しい要素を作成</target>
+      </trans-unit>
+      <trans-unit id="CRAWL.searchIndex.summary">
+        <source>Indexed %d URI(s) successfully. %d failed.</source>
+        <target>%d個のURIをインデックスできました。%d個のインデックスに失敗しました。</target>
+      </trans-unit>
+      <trans-unit id="CRAWL.searchIndex.warning">
+        <source>%d URI(s) were skipped (if you are missing one, checkout the debug log).</source>
+        <target>%d 個のURIを飛ばしました。(欠けているURIがある場合はデバッグログを確認してください。)</target>
+      </trans-unit>
+      <trans-unit id="CRAWL.brokenLinkChecker.summary">
+        <source>Checked %d link(s) successfully. %d were broken.</source>
+        <target>%d 個のリンクが正しいと検査できました。%d個のリンクが切れていました。</target>
       </trans-unit>
     </body>
   </file>
