@@ -8,7 +8,7 @@ on:
         tags:
             - 4.4.*
     schedule:
-        - cron: '0 13 * * MON,TUE'
+        - cron: 0 13 * * MON,TUE
 
 jobs:
     coverage:
@@ -34,11 +34,11 @@ jobs:
 
             - name: Generate the coverage report
               run: |
-                  php -d pcov.enabled=1 vendor/bin/phpunit -c calendar-bundle --coverage-clover=calendar-bundle.xml --colors=always
-                  php -d pcov.enabled=1 vendor/bin/phpunit -c core-bundle --exclude-group contao3 --coverage-clover=core-bundle.xml --colors=always
-                  php -d pcov.enabled=1 vendor/bin/phpunit -c faq-bundle --coverage-clover=faq-bundle.xml --colors=always
-                  php -d pcov.enabled=1 vendor/bin/phpunit -c manager-bundle --coverage-clover=manager-bundle.xml --colors=always
-                  php -d pcov.enabled=1 vendor/bin/phpunit -c news-bundle --coverage-clover=news-bundle.xml --colors=always
+                  vendor/bin/phpunit -c calendar-bundle --coverage-clover=calendar-bundle.xml --colors=always
+                  vendor/bin/phpunit -c core-bundle --exclude-group contao3 --coverage-clover=core-bundle.xml --colors=always
+                  vendor/bin/phpunit -c faq-bundle --coverage-clover=faq-bundle.xml --colors=always
+                  vendor/bin/phpunit -c manager-bundle --coverage-clover=manager-bundle.xml --colors=always
+                  vendor/bin/phpunit -c news-bundle --coverage-clover=news-bundle.xml --colors=always
 
             - name: Upload the coverage report
               uses: codecov/codecov-action@v1
@@ -92,40 +92,6 @@ jobs:
                   PHP_CS_CONFIG=legacy vendor/bin/php-cs-fixer fix --diff --diff-format=udiff --dry-run
                   PHP_CS_CONFIG=template vendor/bin/php-cs-fixer fix --diff --diff-format=udiff --dry-run
 
-    tests:
-        name: PHP ${{ matrix.php }}
-        runs-on: ubuntu-latest
-        if: github.event_name != 'push'
-        strategy:
-            fail-fast: false
-            matrix:
-                php: [7.1, 7.2, 7.3]
-        steps:
-            - name: Setup PHP
-              uses: shivammathur/setup-php@v1
-              with:
-                  php-version: ${{ matrix.php }}
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
-                  tools: prestissimo
-                  coverage: none
-
-            - name: Checkout
-              uses: actions/checkout@v2
-
-            - name: Install the dependencies
-              run: |
-                  composer global require symfony/flex
-                  composer install --no-interaction --no-suggest
-
-            - name: Run the unit tests
-              run: |
-                  vendor/bin/phpunit -c calendar-bundle --colors=always
-                  vendor/bin/phpunit -c core-bundle --colors=always
-                  vendor/bin/phpunit -c faq-bundle --colors=always
-                  vendor/bin/phpunit -c installation-bundle --colors=always
-                  vendor/bin/phpunit -c manager-bundle --colors=always
-                  vendor/bin/phpunit -c news-bundle --colors=always
-
     php5:
         name: PHP 5.6
         runs-on: ubuntu-latest
@@ -150,6 +116,40 @@ jobs:
                     unset($data["require-dev"]["contao/monorepo-tools"]);
                     file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
                   '
+                  composer install --no-interaction --no-suggest
+
+            - name: Run the unit tests
+              run: |
+                  vendor/bin/phpunit -c calendar-bundle --colors=always
+                  vendor/bin/phpunit -c core-bundle --colors=always
+                  vendor/bin/phpunit -c faq-bundle --colors=always
+                  vendor/bin/phpunit -c installation-bundle --colors=always
+                  vendor/bin/phpunit -c manager-bundle --colors=always
+                  vendor/bin/phpunit -c news-bundle --colors=always
+
+    tests:
+        name: PHP ${{ matrix.php }}
+        runs-on: ubuntu-latest
+        if: github.event_name != 'push'
+        strategy:
+            fail-fast: false
+            matrix:
+                php: [7.1, 7.2, 7.3]
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v1
+              with:
+                  php-version: ${{ matrix.php }}
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
+                  tools: prestissimo
+                  coverage: none
+
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            - name: Install the dependencies
+              run: |
+                  composer global require symfony/flex
                   composer install --no-interaction --no-suggest
 
             - name: Run the unit tests
