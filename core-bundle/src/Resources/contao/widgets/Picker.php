@@ -181,7 +181,7 @@ class Picker extends Widget
 			return (array) $this->varValue;
 		}
 
-		\Controller::loadDataContainer($strRelatedTable);
+		Controller::loadDataContainer($strRelatedTable);
 
 		$arrValues = array();
 
