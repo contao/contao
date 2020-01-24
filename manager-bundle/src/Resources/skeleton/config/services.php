@@ -44,13 +44,47 @@ return static function(ContainerConfigurator $configurator) use ($container) {
 
     foreach ($services as $id => $definition) {
         if ($definition->hasErrors()) {
-            if (\is_a($definition->getClass(), \Contao\System::class)) {
-                $container->removeDefinition($id);
-                --$serviceCount;
+            $errors[] = $id;
+            continue;
+        }
+
+        $class = $definition->getClass() ?: $id;
+
+        if (is_a($class, \Contao\System::class, true) || is_a($class, \Contao\Model::class, true)) {
+            $container->removeDefinition($id);
+            --$serviceCount;
+            continue;
+        }
+
+        $ref = $container->getReflectionClass($class, false);
+
+        if (null === $ref) {
+            $errors[] = $id;
+            continue;
+        }
+
+        // Class does not have a constructor, nothing to worry about
+        if (!($constructor = $ref->getConstructor())) {
+            continue;
+        }
+
+        if (!$constructor->isPublic()) {
+            $errors[] = $id;
+            continue;
+        }
+
+        foreach ($constructor->getParameters() as $index => $parameter) {
+            if ($parameter->isDefaultValueAvailable() || $parameter->isOptional()) {
                 continue;
             }
 
-            $errors[] = $id;
+            $type = $parameter->getType();
+
+            if ($type && !$type->isBuiltin() && (is_a($type->getName(), \Contao\System::class, true) || is_a($type->getName(), \Contao\Model::class, true))) {
+                $container->removeDefinition($id);
+                --$serviceCount;
+                continue(2);
+            }
         }
     }
 
