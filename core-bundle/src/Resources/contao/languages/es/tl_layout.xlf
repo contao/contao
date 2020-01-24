@@ -241,6 +241,22 @@
         <source>Here you can add Google web fonts to your website. Specify the font families without the base URL (e.g. &lt;em&gt;Ubuntu|Ubuntu+Mono&lt;/em&gt;).</source>
         <target>Aqui puedes añadir fuentes web de Google a tu página. Especifica la familia fuente sin la base URL (por ejemplo.&lt;em&gt;Ubuntu|Ubuntu+Mono&lt;/em&gt;).</target>
       </trans-unit>
+      <trans-unit id="tl_layout.lightboxSize.0">
+        <source>Lightbox image size</source>
+        <target>Tamaño de imagen del lightbox</target>
+      </trans-unit>
+      <trans-unit id="tl_layout.lightboxSize.1">
+        <source>Here you can select an image size for the images shown in the lightbox.</source>
+        <target>Aquí puede seleccionar un tamaño de imagen para las imágenes que se muestran en el lightbox.</target>
+      </trans-unit>
+      <trans-unit id="tl_layout.defaultImageDensities.0">
+        <source>Default image pixel densities</source>
+        <target>Densidades de píxeles de imagen predeterminadas</target>
+      </trans-unit>
+      <trans-unit id="tl_layout.defaultImageDensities.1">
+        <source>Here you can define the default pixel densities, e.g. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</source>
+        <target>Aquí puede definir las densidades de píxeles predeterminadas, p.e. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</target>
+      </trans-unit>
       <trans-unit id="tl_layout.modules.0">
         <source>Included modules</source>
         <target>Módulos incluidos</target>
@@ -257,13 +273,13 @@
         <source>Here you can select the page template.</source>
         <target>Por favor selecciona una plantilla de diseño. La plantilla por defecto se llama &lt;em&gt;fe_page&lt;/em&gt;. Si quieres añadir tus propias plantillas, sube las al directorio &lt;em&gt;templates&lt;/em&gt; (la extensión del archivo debe ser &lt;em&gt;tpl&lt;/em&gt;).</target>
       </trans-unit>
-      <trans-unit id="tl_layout.doctype.0">
-        <source>Output format</source>
-        <target>Definición de Tipo de Documento (DTD)</target>
+      <trans-unit id="tl_layout.minifyMarkup.0">
+        <source>Minify the markup</source>
+        <target>Minificar el código</target>
       </trans-unit>
-      <trans-unit id="tl_layout.doctype.1">
-        <source>Here you can set the output format.</source>
-        <target>Por favor selecciona una DTD.</target>
+      <trans-unit id="tl_layout.minifyMarkup.1">
+        <source>Minify the HTML markup before it is sent to the browser.</source>
+        <target>Minifica el marcado HTML antes de ser enviado al navegador.</target>
       </trans-unit>
       <trans-unit id="tl_layout.cssClass.0">
         <source>Body class</source>
@@ -353,14 +369,6 @@
         <source>Here you can select one or more MooTools templates.</source>
         <target>Si quiere ejecutar un desplegable mootools en tu web, debes añadir una plantilla de JavaScript que inicialice el efecto. Puedes seleccionar esa plantilla JavaScript aqui. Las plantillas Mootools empiezan por &lt;em&gt;moo_&lt;/em&gt; (extensión de archivo &lt;em&gt;tpl&lt;/em&gt;).</target>
       </trans-unit>
-      <trans-unit id="tl_layout.picturefill.0">
-        <source>Load the image polyfill</source>
-        <target>Cargar el polyfill de imagen</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.picturefill.1">
-        <source>Include the image polyfill (&lt;em&gt;respimage.js&lt;/em&gt;) in the layout.</source>
-        <target>Incluir el polyfill de imagen (&lt;em&gt;respimage.js&lt;/em&gt;) en el diseño.</target>
-      </trans-unit>
       <trans-unit id="tl_layout.scripts.0">
         <source>JavaScript templates</source>
         <target>Plantillas JavaScript</target>
@@ -437,13 +445,13 @@
         <source>Web fonts</source>
         <target>Fuentes web</target>
       </trans-unit>
+      <trans-unit id="tl_layout.image_legend">
+        <source>Image sizes</source>
+        <target>Tamaños de imágen</target>
+      </trans-unit>
       <trans-unit id="tl_layout.style_legend">
         <source>Style sheets</source>
         <target>Hojas de estilo</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.picturefill_legend">
-        <source>Responsive images</source>
-        <target>Imágenes adaptativas</target>
       </trans-unit>
       <trans-unit id="tl_layout.modules_legend">
         <source>Front end modules</source>
@@ -514,60 +522,32 @@
         <target>Piwik</target>
       </trans-unit>
       <trans-unit id="tl_layout.new.0">
-        <source>New layout</source>
-        <target>Nuevo diseño</target>
+        <source>New</source>
+        <target>Nuevo</target>
       </trans-unit>
       <trans-unit id="tl_layout.new.1">
-        <source>Create a new layout</source>
-        <target>Crear un diseño nuevo</target>
+        <source>Create a new page layout</source>
+        <target>Crear un nuevo diseño de página</target>
       </trans-unit>
-      <trans-unit id="tl_layout.show.0">
-        <source>Layout details</source>
-        <target>Detalles diseño</target>
+      <trans-unit id="tl_layout.show">
+        <source>Show the details of page layout ID %s</source>
+        <target>Mostrar los detalles del diseño de página con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_layout.show.1">
-        <source>Show the details of layout ID %s</source>
-        <target>Muestra detalles del diseño con ID %s</target>
+      <trans-unit id="tl_layout.edit">
+        <source>Edit page layout ID %s</source>
+        <target>Editar el layout de página con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_layout.edit.0">
-        <source>Edit layout</source>
-        <target>Editar diseño</target>
+      <trans-unit id="tl_layout.copy">
+        <source>Duplicate page layout ID %s</source>
+        <target>Duplicarel disenno de página con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_layout.edit.1">
-        <source>Edit layout ID %s</source>
-        <target>Editar diseño con ID %s</target>
+      <trans-unit id="tl_layout.cut">
+        <source>Move page layout ID %s</source>
+        <target>Mover el diseño de página con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_layout.cut.0">
-        <source>Move layout</source>
-        <target>Mover diseño</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.cut.1">
-        <source>Move layout ID %s</source>
-        <target>Mover diseño ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.copy.0">
-        <source>Duplicate layout</source>
-        <target>Duplicar diseño</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.copy.1">
-        <source>Duplicate layout ID %s</source>
-        <target>Duplica el diseño con ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.delete.0">
-        <source>Delete layout</source>
-        <target>Eliminar diseño</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.delete.1">
-        <source>Delete layout ID %s</source>
-        <target>Elimina diseño con ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.editheader.0">
-        <source>Edit theme</source>
-        <target>Editar tema</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.editheader.1">
-        <source>Edit the theme settings</source>
-        <target>Editar configuración del tema</target>
+      <trans-unit id="tl_layout.delete">
+        <source>Delete page layout ID %s</source>
+        <target>Eliminar el diesño de página con ID %s</target>
       </trans-unit>
     </body>
   </file>

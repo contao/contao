@@ -37,9 +37,6 @@ class UserChecker implements UserCheckerInterface
         $this->framework = $framework;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function checkPreAuth(UserInterface $user): void
     {
         if (!$user instanceof User) {
@@ -52,9 +49,6 @@ class UserChecker implements UserCheckerInterface
         $this->checkIfAccountIsActive($user);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function checkPostAuth(UserInterface $user): void
     {
     }
@@ -72,7 +66,7 @@ class UserChecker implements UserCheckerInterface
 
         $ex = new LockedException(
             $lockedSeconds,
-            sprintf('User "%s" has been locked for %s minutes', $user->username, ceil($lockedSeconds / 60))
+            sprintf('User "%s" is still locked for %s seconds', $user->username, $lockedSeconds)
         );
 
         $ex->setUser($user);

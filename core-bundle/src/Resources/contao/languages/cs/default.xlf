@@ -58,8 +58,7 @@
         <target>Prosím zadejte platné telefonní číslo!</target>
       </trans-unit>
       <trans-unit id="ERR.extnd">
-        <source>For security reasons you can not use the following characters here: =&lt;&gt;&amp;/()#</source>
-        <target>Z bezpečnostních důvodů nelze použít tyto znaky (=&amp;/()#) !</target>
+        <source>For security reasons you can not use the following characters here: #&lt;&gt;()\=</source>
       </trans-unit>
       <trans-unit id="ERR.email">
         <source>Please enter a valid e-mail address!</source>
@@ -221,6 +220,9 @@
         <source>You can only select &quot;%s&quot; files!</source>
         <target>Můžete vybrat pouze následující soubory &quot;%s&quot;!</target>
       </trans-unit>
+      <trans-unit id="ERR.forbiddenExtensions">
+        <source>The following file extensions are not allowed: %s</source>
+      </trans-unit>
       <trans-unit id="ERR.invalidPages">
         <source>Your selection contains invalid page IDs!</source>
         <target>Váš výběr obsahuje neplatné ID stránek!</target>
@@ -229,14 +231,20 @@
         <source>Invalid redirect target (circular reference)!</source>
         <target>Neplatný cíl přesměrování (cyklický odkaz)!</target>
       </trans-unit>
+      <trans-unit id="ERR.circularPicker">
+        <source>Invalid selection (circular reference)!</source>
+      </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
         <source>None of the active website root pages without an explicit DNS setting have the language fallback option set.</source>
+        <target>Žádná z kořenových stránek, která nepoužívá zvláštní nastavení DNS, není nastavená jako výchozí jazyková verze.</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackDns">
         <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; have the language fallback option set.</source>
+        <target>Žádná z aktivních kořenových stránek&lt;strong&gt;%s&lt;/strong&gt; není nastavená jako výchozí jazyková verze.</target>
       </trans-unit>
       <trans-unit id="ERR.multipleFallback">
         <source>You can only define one website root page per domain as the language fallback.</source>
+        <target>Můžete určit jen jednu z kořenových stránek jako výchozí jazykovou verzi.</target>
       </trans-unit>
       <trans-unit id="ERR.topLevelRoot">
         <source>Top-level pages must be website root pages!</source>
@@ -246,13 +254,13 @@
         <source>There are top-level pages in the site structure which are not website root pages.</source>
         <target>Ve struktuře stránek se nachází stránky na vysoké úrovni, které nejsou kořenové stránky.</target>
       </trans-unit>
-      <trans-unit id="ERR.invalidTokenUrl">
-        <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
-        <target>Odkaz, který se snažíte otevřít, nemůže být ověřen. Pokud jste ho otevřeli sami, nebo ho obdrželi od důvěryhodné osoby, můžete potvrdit jeho otevření v dalším kroku. </target>
-      </trans-unit>
       <trans-unit id="ERR.form">
         <source>The form could not be sent</source>
         <target>Formulář není možné odeslat.</target>
+      </trans-unit>
+      <trans-unit id="ERR.formCookieWarning">
+        <source>You will not be able to send this form, because you have disabled cookies in your browser.</source>
+        <target>Tento formulář nebudete moct odeslat, protože nemáte ve Vašem prohlížeči povolené cookies.</target>
       </trans-unit>
       <trans-unit id="ERR.captcha">
         <source>Please answer the security question!</source>
@@ -280,9 +288,23 @@
       </trans-unit>
       <trans-unit id="ERR.largeImage">
         <source>Image exceeds the maximum dimensions of %sx%s.</source>
+        <target>Obrázek překračuje nastavenou maximální velikost %sx%s.</target>
       </trans-unit>
       <trans-unit id="ERR.invalidTwoFactor">
         <source>Invalid verification code!</source>
+        <target>Neplatný ověřovací kód!</target>
+      </trans-unit>
+      <trans-unit id="ERR.emptyTitleOrId">
+        <source>Please enter both title and ID!</source>
+      </trans-unit>
+      <trans-unit id="ERR.duplicateSectionTitle">
+        <source>Duplicate layout section title &quot;%s&quot;!</source>
+      </trans-unit>
+      <trans-unit id="ERR.duplicateSectionId">
+        <source>Duplicate layout section ID &quot;%s&quot;!</source>
+      </trans-unit>
+      <trans-unit id="ERR.moduleWithoutColumn">
+        <source>Please assign all modules to a column!</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -532,6 +554,124 @@
         <source>Displays the teaser text of an article.</source>
         <target>Začlenění perexu (ukázky) konkrétního článku.</target>
       </trans-unit>
+      <trans-unit id="FFL.explanation.0">
+        <source>Explanation</source>
+        <target>Vysvětlivka</target>
+      </trans-unit>
+      <trans-unit id="FFL.explanation.1">
+        <source>A custom field to insert an explanation text.</source>
+        <target>vlastní pole pro uvedení vysvětlivky.</target>
+      </trans-unit>
+      <trans-unit id="FFL.html.0">
+        <source>HTML code</source>
+        <target>Kód HTML</target>
+      </trans-unit>
+      <trans-unit id="FFL.html.1">
+        <source>A custom field to insert HTML code.</source>
+        <target>vlastní pole pro uvedení kód HTML.</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStart.0">
+        <source>Fieldset start</source>
+        <target>Začátek skupiny polí</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStart.1">
+        <source>The opening part of a fieldset with an optional legend.</source>
+        <target>Zahajující část skupiny polí s možnou legendou.</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStop.0">
+        <source>Fieldset stop</source>
+        <target>Konec skupiny polí</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStop.1">
+        <source>The closing part of a fieldset.</source>
+        <target>Zakončující část skupiny polí. </target>
+      </trans-unit>
+      <trans-unit id="FFL.text.0">
+        <source>Text field</source>
+        <target>Textové pole</target>
+      </trans-unit>
+      <trans-unit id="FFL.text.1">
+        <source>A single-line input field for a short or medium text.</source>
+        <target>pro uvedení krátkého či delšího textu.</target>
+      </trans-unit>
+      <trans-unit id="FFL.password.0">
+        <source>Password field</source>
+        <target>Pole pro heslo</target>
+      </trans-unit>
+      <trans-unit id="FFL.password.1">
+        <source>A single-line input field for a password. Contao automatically adds a confirmation field.</source>
+        <target>jednořádkové pole pro vložení hesla. Contao k tomu automaticky přidá druhé pole, v němž se musí ještě jednou uvést před tím zadané heslo.</target>
+      </trans-unit>
+      <trans-unit id="FFL.textarea.0">
+        <source>Textarea</source>
+        <target>Textová oblast</target>
+      </trans-unit>
+      <trans-unit id="FFL.textarea.1">
+        <source>A multi-line input field for a medium or long text.</source>
+        <target>víceřádkové pole, do něhož se může zadat delší text (např. sdělení).</target>
+      </trans-unit>
+      <trans-unit id="FFL.select.0">
+        <source>Select menu</source>
+        <target>Rozvírací menu</target>
+      </trans-unit>
+      <trans-unit id="FFL.select.1">
+        <source>A single- or multi-line drop-down menu.</source>
+        <target>jedno- nebo víceřádkové rozevírací menu.</target>
+      </trans-unit>
+      <trans-unit id="FFL.radio.0">
+        <source>Radio button menu</source>
+        <target>Výběrové tlačítko</target>
+      </trans-unit>
+      <trans-unit id="FFL.radio.1">
+        <source>A list of multiple options from which one can be selected.</source>
+        <target>seznam výběrových tlačítek, z nichž jen jedno může být označeno.</target>
+      </trans-unit>
+      <trans-unit id="FFL.checkbox.0">
+        <source>Checkbox menu</source>
+        <target>Zaškrtávací políčko</target>
+      </trans-unit>
+      <trans-unit id="FFL.checkbox.1">
+        <source>A list of multiple options from which any can be selected.</source>
+        <target>seznam různých možností</target>
+      </trans-unit>
+      <trans-unit id="FFL.upload.0">
+        <source>File upload</source>
+        <target>Přenos souborů</target>
+      </trans-unit>
+      <trans-unit id="FFL.upload.1">
+        <source>A single-line input field to upload a local file to the server.</source>
+        <target>jednořádkové pole na nahrání a přenos souborů na server přes formulář.</target>
+      </trans-unit>
+      <trans-unit id="FFL.range.0">
+        <source>Range slider</source>
+      </trans-unit>
+      <trans-unit id="FFL.range.1">
+        <source>A range slider to select a value or range of values between a specified min and max.</source>
+      </trans-unit>
+      <trans-unit id="FFL.hidden.0">
+        <source>Hidden field</source>
+        <target>Skryté pole</target>
+      </trans-unit>
+      <trans-unit id="FFL.hidden.1">
+        <source>A single-line input field that is not visible in the form.</source>
+        <target>jednořádkové pole, které je skryté.</target>
+      </trans-unit>
+      <trans-unit id="FFL.captcha.0">
+        <source>Security question</source>
+        <target>Bezpečnostní otázka</target>
+      </trans-unit>
+      <trans-unit id="FFL.captcha.1">
+        <source>A simple math question to verify that the form is being submitted by a human (CAPTCHA).</source>
+        <target>Jednoduchá výpočetní otázka, kterou musí před odesláním vypočítat osoba vyplňující formulář.</target>
+      </trans-unit>
+      <trans-unit id="FFL.submit.0">
+        <source>Submit field</source>
+        <target>Tlačítko &quot;odeslat&quot;</target>
+      </trans-unit>
+      <trans-unit id="FFL.submit.1">
+        <source>A button to submit the form.</source>
+        <target>tlačítko pro odeslání formuláře.</target>
+      </trans-unit>
       <trans-unit id="PTY.regular.0">
         <source>Regular page</source>
         <target>Normální stránka</target>
@@ -574,25 +714,24 @@
       </trans-unit>
       <trans-unit id="PTY.error_401.0">
         <source>401 Not authenticated</source>
+        <target>401 Neautorizovaný</target>
       </trans-unit>
       <trans-unit id="PTY.error_401.1">
-        <source>If a user requests a protected page without being authenticated, a 401 error page will be loaded instead.</source>
+        <source>If a visitor requests a protected page without being authenticated, a 401 error page will be loaded instead.</source>
       </trans-unit>
       <trans-unit id="PTY.error_403.0">
         <source>403 Access denied</source>
         <target>Chyba 403 (přístup odmítnut)</target>
       </trans-unit>
       <trans-unit id="PTY.error_403.1">
-        <source>If a user requests a protected page without permission, a 403 error page will be loaded instead.</source>
-        <target>Tato stránka je zobrazena pokud se uživatel pokusí přistoupit k stránce bez potřebných oprávnění. Pokud je tato chybová stránka vložena určitého kořene webu, bude její použití omezeno pouze na tento web.</target>
+        <source>If a member requests a protected page without permission, a 403 error page will be loaded instead.</source>
       </trans-unit>
       <trans-unit id="PTY.error_404.0">
         <source>404 Page not found</source>
         <target>Chyba 404 (stránka nenalezena)</target>
       </trans-unit>
       <trans-unit id="PTY.error_404.1">
-        <source>If a user requests a non-existent page, a 404 error page will be loaded instead.</source>
-        <target>Tato stránka je zobrazena pokud se uživatel pokusí přistoupit na nedostupnou stránku. Pokud je tato chybová stránka vložena určitého kořene webu, bude její použití omezeno pouze na tento web.</target>
+        <source>If a visitor requests a non-existent page, a 404 error page will be loaded instead.</source>
       </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
@@ -667,6 +806,7 @@
       </trans-unit>
       <trans-unit id="DATE.A">
         <source>AM</source>
+        <target>odpoledne</target>
       </trans-unit>
       <trans-unit id="DATE.d">
         <source>DD</source>
@@ -1081,8 +1221,7 @@
         <target>Modul</target>
       </trans-unit>
       <trans-unit id="MSC.mw_column">
-        <source>Column</source>
-        <target>Sloupec</target>
+        <source>Layout section</source>
       </trans-unit>
       <trans-unit id="MSC.mw_enable">
         <source>Enable/disable the module</source>
@@ -1269,16 +1408,14 @@
         <target>Upravit více záznamů najednou</target>
       </trans-unit>
       <trans-unit id="MSC.all.1">
-        <source>Edit multiple records at once</source>
-        <target>Upravit několik záznamů najednou</target>
+        <source>Edit multiple elements at once</source>
       </trans-unit>
       <trans-unit id="MSC.all_override.0">
         <source>Override multiple</source>
         <target>Zrušit vícenásobně</target>
       </trans-unit>
       <trans-unit id="MSC.all_override.1">
-        <source>Override multiple records at once</source>
-        <target>Zrušit více záznamů najednou</target>
+        <source>Override multiple elements at once</source>
       </trans-unit>
       <trans-unit id="MSC.all_fields.0">
         <source>Available fields</source>
@@ -1332,7 +1469,7 @@
         <source>This seems to be your first login. Welcome to Contao!</source>
         <target>Zdá se, že jste se poprvé přihlásili do Contao. Vítejte!</target>
       </trans-unit>
-      <trans-unit id="MSC.loginCount">
+      <trans-unit id="MSC.loginAttempts">
         <source>Login attempts</source>
         <target>Pokusy přihlášení</target>
       </trans-unit>
@@ -1341,8 +1478,8 @@
         <target>Uzamčené</target>
       </trans-unit>
       <trans-unit id="MSC.move">
-        <source>Move the item via drag and drop or the up and down keys</source>
-        <target>Přesuňte položku pomocí zachycení a puštění nebo pomocí šipek nahoru a dolu</target>
+        <source>Move the item via drag and drop</source>
+        <target>Přesunout položku pomocí chytnutí a puštění.</target>
       </trans-unit>
       <trans-unit id="MSC.move_up.0">
         <source>Move up</source>
@@ -1359,22 +1496,6 @@
       <trans-unit id="MSC.move_down.1">
         <source>Move the item one position down</source>
         <target>Posunout položku o jedno dolů</target>
-      </trans-unit>
-      <trans-unit id="MSC.staticFiles.0">
-        <source>Files URL</source>
-        <target>URL-adresa k souborům</target>
-      </trans-unit>
-      <trans-unit id="MSC.staticFiles.1">
-        <source>The files URL applies to the &lt;em&gt;files&lt;/em&gt; directory (page speed optimization).</source>
-        <target>Dotkne se všech souborů v adresáři &lt;em&gt;tl_files&lt;/em&gt; (zvýší rychlost načítání stránky)</target>
-      </trans-unit>
-      <trans-unit id="MSC.staticPlugins.0">
-        <source>Assets URL</source>
-        <target>URL-adresa rozšíření</target>
-      </trans-unit>
-      <trans-unit id="MSC.staticPlugins.1">
-        <source>The assets URL applies to the &lt;em&gt;assets&lt;/em&gt; directory (page speed optimization).</source>
-        <target>URL-adresa rozšíření se dotkne všech souborů v adresáři &lt;em&gt;rozšíření&lt;/em&gt; (zvýší rychlost načítání stránky).</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.0">
         <source>Back end keyboard shortcuts</source>
@@ -1448,10 +1569,6 @@
         <source>Back to the back end start page</source>
         <target>Zpět na backendovou startovní stránku</target>
       </trans-unit>
-      <trans-unit id="MSC.burgerTitle">
-        <source>Toggle navigation</source>
-        <target>Sbalit navigaci</target>
-      </trans-unit>
       <trans-unit id="MSC.learnMore">
         <source>Learn more on %s</source>
         <target>Zobrazit více informací %s</target>
@@ -1459,10 +1576,6 @@
       <trans-unit id="MSC.user">
         <source>User</source>
         <target>Uživatel</target>
-      </trans-unit>
-      <trans-unit id="MSC.loginTo">
-        <source>Log into %s</source>
-        <target>Přihlásit se do %s</target>
       </trans-unit>
       <trans-unit id="MSC.loginBT">
         <source>Login</source>
@@ -1493,8 +1606,7 @@
         <target>Zrušit</target>
       </trans-unit>
       <trans-unit id="MSC.deleteConfirm">
-        <source>Do you really want to delete entry ID %s?</source>
-        <target>Chcete opravdu smazat záznam ID %s?</target>
+        <source>Do you really want to delete element ID %s?</source>
       </trans-unit>
       <trans-unit id="MSC.delAllConfirm">
         <source>Do you really want to delete the selected records?</source>
@@ -1700,10 +1812,6 @@
         <source>justified</source>
         <target>do bloku</target>
       </trans-unit>
-      <trans-unit id="MSC.filetree">
-        <source>File system</source>
-        <target>Systém souborů</target>
-      </trans-unit>
       <trans-unit id="MSC.male">
         <source>Male</source>
         <target>Muž</target>
@@ -1711,6 +1819,10 @@
       <trans-unit id="MSC.female">
         <source>Female</source>
         <target>Žena</target>
+      </trans-unit>
+      <trans-unit id="MSC.other">
+        <source>Other</source>
+        <target>Jiné</target>
       </trans-unit>
       <trans-unit id="MSC.fileSize">
         <source>File size</source>
@@ -1764,9 +1876,9 @@
         <source>Back end modules</source>
         <target>Backend moduly</target>
       </trans-unit>
-      <trans-unit id="MSC.welcomeTo">
-        <source>%s back end</source>
-        <target>%s backend</target>
+      <trans-unit id="MSC.dashboard">
+        <source>Dashboard</source>
+        <target>Nástěnka</target>
       </trans-unit>
       <trans-unit id="MSC.updateVersion">
         <source>Contao version %s is available.</source>
@@ -1873,8 +1985,8 @@
         <target>Vyprázdnit schránku</target>
       </trans-unit>
       <trans-unit id="MSC.hiddenElements">
-        <source>Unpublished elements</source>
-        <target>Nepublikované elementy</target>
+        <source>Unpublished</source>
+        <target>Nepublikováno</target>
       </trans-unit>
       <trans-unit id="MSC.hiddenHide">
         <source>hide</source>
@@ -2156,6 +2268,9 @@
         <source>Your search for &lt;strong&gt;%s&lt;/strong&gt; returned no results.</source>
         <target>Žádný výsledek pro &lt;strong&gt;%s&lt;/strong&gt;</target>
       </trans-unit>
+      <trans-unit id="MSC.sKeywordHint">
+        <source>Note that keywords shorter than %s characters and without a modifier have been ignored.</source>
+      </trans-unit>
       <trans-unit id="MSC.seconds">
         <source>seconds</source>
         <target>sekundy</target>
@@ -2166,6 +2281,7 @@
       </trans-unit>
       <trans-unit id="MSC.first">
         <source>First</source>
+        <target>První</target>
       </trans-unit>
       <trans-unit id="MSC.previous">
         <source>Previous</source>
@@ -2177,6 +2293,7 @@
       </trans-unit>
       <trans-unit id="MSC.last">
         <source>Last</source>
+        <target>Poslední</target>
       </trans-unit>
       <trans-unit id="MSC.goToPage">
         <source>Go to page %s</source>
@@ -2246,10 +2363,6 @@
         <source>Share on Twitter</source>
         <target>Sdílet přes Twitter</target>
       </trans-unit>
-      <trans-unit id="MSC.gplusShare">
-        <source>Share on Google+</source>
-        <target>Sdílet přes Google+</target>
-      </trans-unit>
       <trans-unit id="MSC.pleaseWait">
         <source>Please wait</source>
         <target>Čekejte, prosím</target>
@@ -2310,9 +2423,23 @@
         <source>%s relevance</source>
         <target>%s relevance</target>
       </trans-unit>
-      <trans-unit id="MSC.invalidTokenUrl">
+      <trans-unit id="MSC.invalidToken">
         <source>Invalid token</source>
         <target>Invalidní klíč</target>
+      </trans-unit>
+      <trans-unit id="MSC.tokenConfirmed">
+        <source>This token has already been confirmed</source>
+      </trans-unit>
+      <trans-unit id="MSC.tokenEmailMismatch">
+        <source>The e-mail address of the token does not match</source>
+      </trans-unit>
+      <trans-unit id="MSC.resendToken">
+        <source>The token has been re-sent to %s.</source>
+        <target>Kód byl znovu odeslán %s.</target>
+      </trans-unit>
+      <trans-unit id="MSC.invalidTokenUrl">
+        <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
+        <target>Odkaz, který se snažíte otevřít, nemůže být ověřen. Pokud jste ho otevřeli sami, nebo ho obdrželi od důvěryhodné osoby, můžete potvrdit jeho otevření v dalším kroku. </target>
       </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
@@ -2384,27 +2511,78 @@
       </trans-unit>
       <trans-unit id="MSC.security">
         <source>Security</source>
+        <target>Zabezpečení
+</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorAuthentication">
         <source>Two-factor authentication</source>
+        <target>Dvoufázové ověření</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorVerification">
         <source>Verification code</source>
+        <target>Ověřovací kód</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorVerificationHelp">
         <source>Please enter the verification code generated by your 2FA/TOTP app.</source>
+        <target>Zadejte prosím ověřovací kód vytvořený Vámi zvolenou aplikací 2FA/TOTP.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorExplain">
         <source>Here you can enable two-factor authentication, which adds an extra layer of security to your account. In addition to your username and password, you will need to enter a verification code generated by a two-factor app such as 1Password, Authy, Google Authenticator, Microsoft Authenticator, LastPass Authenticator or any other TOTP app.</source>
+        <target>Zde můžete zapnout dvoufázové ověření, čímž se přidá další stupeň při přihlašování do Contaa. Při přihlašování budete navíc potřebovat ověřovací kód dvoufázového přihlášení, který vytvoří Vám zvolená aplikace jako 1Password, Authy, Google Authenticator, Microsoft Authenticator, LastPass Authenticator nebo jiná aplikace pro dvoufázové ověření.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorScan">
         <source>Please scan the QR code with your 2FA/TOTP app.</source>
+        <target>Naskenujte prosím tento kód pomocí Vaší aplikace pro dvoufázové přihlášení.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorActive">
         <source>Two-factor authentication has been enabled.</source>
+        <target>Dvoufázové ověření je zapnuté.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorEnforced">
         <source>Please enable up two-factor authentication before you continue.</source>
+        <target>Zapněte prosím dvoufázové ověření, ještě než budete pokračovat.</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorTextCode">
+        <source>If you cannot scan the QR code, enter this key instead:</source>
+        <target>Pokud nemůžete naskenovat querový kód, zadejte místo toho následující klíč:</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesLabel">
+        <source>Backup codes</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesShow">
+        <source>Show backup codes</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesExplain">
+        <source>Backup codes can be used to access your account if you have lost your authentication device and cannot generate two-factor codes anymore. Treat your backup codes with the same level of attention as your password! We recommend saving them with a password manager such as Lastpass, 1Password or Keeper.</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesInfo">
+        <source>Put the codes in a safe spot. If you lose your authentication device and do not have backup codes, you cannot access your account anymore!</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesGenerate">
+        <source>Generate backup codes</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesRegenerate">
+        <source>Regenerate backup codes</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesRegenerateInfo">
+        <source>When you regenerate the backup codes, your old codes will not work anymore.</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorTrustDevice">
+        <source>Trust this device</source>
+      </trans-unit>
+      <trans-unit id="MSC.userTemplateEditor">
+        <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
+        <target>Existuje přinejmenším jeden pravidelný uživatel, který má přistup k editoru předloh. Od té doby kdy jsou předlohy ve formátu PHP, mají tací uživatelé plnou kontrolu nad systémem!</target>
+      </trans-unit>
+      <trans-unit id="MSC.groupTemplateEditor">
+        <source>There is at least one user group granting access to the template editor. Since templates are PHP files, users of these groups implicitly have full control over the system!</source>
+        <target>Existuje přinejmenším jedna skupina, která má přistup k editoru předloh. Od té doby kdy jsou předlohy ve formátu PHP, mají takové skupiny plnou kontrolu nad systémem!</target>
+      </trans-unit>
+      <trans-unit id="MSC.userThemeImport">
+        <source>There is at least one regular user with permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, these users implicitly have full control over the system!</source>
+      </trans-unit>
+      <trans-unit id="MSC.groupThemeImport">
+        <source>There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!</source>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
@@ -2413,6 +2591,37 @@
       <trans-unit id="MSC.disable">
         <source>Disable</source>
         <target>Neaktivní</target>
+      </trans-unit>
+      <trans-unit id="MSC.internalCssEditor">
+        <source>The internal CSS editor has been deprecated and will be removed in one of the next Contao versions! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
+      </trans-unit>
+      <trans-unit id="MSC.serpPreview.0">
+        <source>Google search results preview</source>
+      </trans-unit>
+      <trans-unit id="MSC.serpPreview.1">
+        <source>Here you can preview the meta data in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
+      </trans-unit>
+      <trans-unit id="MSC.clearTrustedDevices">
+        <source>Clear trusted devices</source>
+      </trans-unit>
+      <trans-unit id="MSC.trustedDevices">
+        <source>Trusted devices</source>
+      </trans-unit>
+      <trans-unit id="MSC.noTrustedDevices">
+        <source>Currently there are no trusted devices.</source>
+      </trans-unit>
+      <trans-unit id="MSC.device">
+        <source>Device</source>
+      </trans-unit>
+      <trans-unit id="MSC.thisDevice">
+        <source>this device</source>
+      </trans-unit>
+      <trans-unit id="MSC.browser">
+        <source>Browser</source>
+        <target>Prohlížeč</target>
+      </trans-unit>
+      <trans-unit id="MSC.operatingSystem">
+        <source>Operating system</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2533,6 +2742,83 @@
       <trans-unit id="SECTIONS.manual">
         <source>Manual output</source>
         <target>Manuální výstup</target>
+      </trans-unit>
+      <trans-unit id="DCA.all.0">
+        <source>Edit multiple</source>
+        <target>Upravit více záznamů najednou</target>
+      </trans-unit>
+      <trans-unit id="DCA.all.1">
+        <source>Edit multiple elements at once</source>
+      </trans-unit>
+      <trans-unit id="DCA.toggleNodes.0">
+        <source>Toggle all</source>
+        <target>Rozevřít všechny</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggleNodes.1">
+        <source>Expand or collapse all nodes</source>
+        <target>Rozevřít nebo zavřít všechny uzly</target>
+      </trans-unit>
+      <trans-unit id="DCA.new.0">
+        <source>New</source>
+      </trans-unit>
+      <trans-unit id="DCA.new.1">
+        <source>Create a new element</source>
+      </trans-unit>
+      <trans-unit id="DCA.show">
+        <source>Show the details of element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.edit">
+        <source>Edit element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.cut">
+        <source>Move element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.copy">
+        <source>Duplicate element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.delete">
+        <source>Delete element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.drag">
+        <source>Drag element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.editheader.0">
+        <source>Edit the element settings</source>
+      </trans-unit>
+      <trans-unit id="DCA.editheader.1">
+        <source>Edit the settings of element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.toggle">
+        <source>Publish/unpublish element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.pasteinto.0">
+        <source>Paste at the top</source>
+        <target>Vložit nahoru</target>
+      </trans-unit>
+      <trans-unit id="DCA.pasteinto.1">
+        <source>Paste into element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.pasteafter.0">
+        <source>Paste at the top</source>
+        <target>Vložit nahoru</target>
+      </trans-unit>
+      <trans-unit id="DCA.pasteafter.1">
+        <source>Paste after element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.pastenew.0">
+        <source>Create a new element at the top</source>
+      </trans-unit>
+      <trans-unit id="DCA.pastenew.1">
+        <source>Create a new element after element ID %s</source>
+      </trans-unit>
+      <trans-unit id="CRAWL.searchIndex.summary">
+        <source>Indexed %d URI(s) successfully. %d failed.</source>
+      </trans-unit>
+      <trans-unit id="CRAWL.searchIndex.warning">
+        <source>%d URI(s) were skipped (if you are missing one, checkout the debug log).</source>
+      </trans-unit>
+      <trans-unit id="CRAWL.brokenLinkChecker.summary">
+        <source>Checked %d link(s) successfully. %d were broken.</source>
       </trans-unit>
     </body>
   </file>

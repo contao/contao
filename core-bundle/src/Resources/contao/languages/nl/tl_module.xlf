@@ -226,20 +226,20 @@
         <target>Bevat een input veld en radio knop menu om een zoekopdracht te kiezen.</target>
       </trans-unit>
       <trans-unit id="tl_module.contextLength.0">
-        <source>Context range</source>
-        <target>Context bereik</target>
+        <source>Context length</source>
+        <target>Contextlengte</target>
       </trans-unit>
       <trans-unit id="tl_module.contextLength.1">
-        <source>The number of characters on the left and right side of each keyword that are used as context.</source>
-        <target>Geef het aantal tekens links en rechts van elk sleutelwoord op dat gebruikt zal worden als context.</target>
+        <source>The first field defines the number of characters on the left and right side of each keyword and the second one the overall context length per result.</source>
+        <target>Het eerste veld definieert het aantal tekens aan de linker- en rechterkant van elk trefwoord en het tweede de totale contextlengte per resultaat.</target>
       </trans-unit>
-      <trans-unit id="tl_module.totalLength.0">
-        <source>Maximum context length</source>
-        <target>Maximale context lengte</target>
+      <trans-unit id="tl_module.minKeywordLength.0">
+        <source>Minimum keyword length</source>
+        <target>Minimale lengte trefwoord</target>
       </trans-unit>
-      <trans-unit id="tl_module.totalLength.1">
-        <source>Here you can limit the overall context length per result.</source>
-        <target>Geef de maximale context lengte voor elk resultaat op.</target>
+      <trans-unit id="tl_module.minKeywordLength.1">
+        <source>Keywords deceeding the minimum length will be ignored in the search results. Set to 0 to disable.</source>
+        <target>Zoektermen die kleiner zijn dan de minimumlengte worden genegeerd in de zoekopdracht. Voer 0 in om dit uit te schakelen.</target>
       </trans-unit>
       <trans-unit id="tl_module.perPage.0">
         <source>Items per page</source>
@@ -266,12 +266,12 @@
         <target>Selecteer hier de template voor zoekresultaten.</target>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.0">
-        <source>Column</source>
-        <target>Kolom</target>
+        <source>Layout section</source>
+        <target>Lay-out sectie</target>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.1">
-        <source>Please choose the column whose articles you want to list.</source>
-        <target>Gelieve een kolom te kiezen van artikelen die u wilt opsommen.</target>
+        <source>Please choose the layout section whose articles you want to list.</source>
+        <target>Kies de lay-out sectie van wiens artikelen u wilt vermelden.</target>
       </trans-unit>
       <trans-unit id="tl_module.skipFirst.0">
         <source>Skip items</source>
@@ -617,68 +617,32 @@ Indien u geen nieuw wachtwoord aanvroeg, gelieve dan met de administrator van de
         <target>Account onherroepelijk verwijderen</target>
       </trans-unit>
       <trans-unit id="tl_module.new.0">
-        <source>Add module</source>
-        <target>Module toevoegen</target>
+        <source>New</source>
+        <target>Nieuw</target>
       </trans-unit>
       <trans-unit id="tl_module.new.1">
-        <source>Add a module</source>
-        <target>Voeg een module toe</target>
+        <source>Create a new module</source>
+        <target>Maak een nieuwe module aan</target>
       </trans-unit>
-      <trans-unit id="tl_module.show.0">
-        <source>Module details</source>
-        <target>Module details</target>
-      </trans-unit>
-      <trans-unit id="tl_module.show.1">
+      <trans-unit id="tl_module.show">
         <source>Show the details of module ID %s</source>
         <target>Toon details van module ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_module.edit.0">
-        <source>Edit module</source>
-        <target>Bewerk module</target>
-      </trans-unit>
-      <trans-unit id="tl_module.edit.1">
+      <trans-unit id="tl_module.edit">
         <source>Edit module ID %s</source>
         <target>Bewerk module ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_module.cut.0">
-        <source>Move module</source>
-        <target>Verplaats module</target>
-      </trans-unit>
-      <trans-unit id="tl_module.cut.1">
-        <source>Move module ID %s</source>
-        <target>Verplaats module ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_module.copy.0">
-        <source>Duplicate module</source>
-        <target>Kopieer module</target>
-      </trans-unit>
-      <trans-unit id="tl_module.copy.1">
+      <trans-unit id="tl_module.copy">
         <source>Duplicate module ID %s</source>
         <target>Kopieer module ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_module.delete.0">
-        <source>Delete module</source>
-        <target>Verwijder module</target>
+      <trans-unit id="tl_module.cut">
+        <source>Move module ID %s</source>
+        <target>Verplaats module ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_module.delete.1">
+      <trans-unit id="tl_module.delete">
         <source>Delete module ID %s</source>
         <target>Verwijder module ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_module.editheader.0">
-        <source>Edit theme</source>
-        <target>Bewerk thema</target>
-      </trans-unit>
-      <trans-unit id="tl_module.editheader.1">
-        <source>Edit the theme settings</source>
-        <target>Bewerk de thema instellingen</target>
-      </trans-unit>
-      <trans-unit id="tl_module.pasteafter.0">
-        <source>Paste here</source>
-        <target>Plak hier</target>
-      </trans-unit>
-      <trans-unit id="tl_module.pasteafter.1">
-        <source>Paste after module ID %s</source>
-        <target>Plak achter module ID %s</target>
       </trans-unit>
     </body>
   </file>

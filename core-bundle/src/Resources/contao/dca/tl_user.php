@@ -440,14 +440,24 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
-		'loginCount' => array
+		'loginAttempts' => array
 		(
 			'eval'                    => array('doNotCopy'=>true),
-			'sql'                     => "smallint(5) unsigned NOT NULL default 3"
+			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
 		),
 		'locked' => array
 		(
 			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
+		),
+		'backupCodes' => array
+		(
+			'eval'                    => array('doNotCopy'=>true),
+			'sql'                     => "text NULL"
+		),
+		'trustedTokenVersion' => array
+		(
+			'eval'                    => array('doNotCopy'=>true),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		)
 	)
@@ -573,11 +583,16 @@ class tl_user extends Contao\Backend
 			return;
 		}
 
-		$objResult = $this->Database->query("SELECT COUNT(*) AS cnt FROM tl_user WHERE admin='' AND modules LIKE '%\"tpl_editor\"%'");
+		$objResult = $this->Database->query("SELECT EXISTS(SELECT * FROM tl_user WHERE admin='' AND modules LIKE '%\"tpl_editor\"%') as showTemplateWarning, EXISTS(SELECT * FROM tl_user WHERE admin='' AND themes LIKE '%\"theme_import\"%') as showThemeWarning");
 
-		if ($objResult->cnt > 0)
+		if ($objResult->showTemplateWarning)
 		{
 			Contao\Message::addInfo($GLOBALS['TL_LANG']['MSC']['userTemplateEditor']);
+		}
+
+		if ($objResult->showThemeWarning)
+		{
+			Contao\Message::addInfo($GLOBALS['TL_LANG']['MSC']['userThemeImport']);
 		}
 	}
 

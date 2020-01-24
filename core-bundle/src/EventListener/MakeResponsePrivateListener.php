@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
 
@@ -20,6 +21,16 @@ use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
  */
 class MakeResponsePrivateListener
 {
+    /**
+     * @var ScopeMatcher
+     */
+    private $scopeMatcher;
+
+    public function __construct(ScopeMatcher $scopeMatcher)
+    {
+        $this->scopeMatcher = $scopeMatcher;
+    }
+
     /**
      * Make sure that the current response becomes a private response if any
      * of the following conditions are true.
@@ -34,7 +45,7 @@ class MakeResponsePrivateListener
      */
     public function __invoke(ResponseEvent $event): void
     {
-        if (!$event->isMasterRequest()) {
+        if (!$this->scopeMatcher->isContaoMasterRequest($event)) {
             return;
         }
 

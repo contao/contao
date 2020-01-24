@@ -82,17 +82,11 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         static::$autoloadModules = $modulePath;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPackageDependencies()
     {
         return ['contao/core-bundle'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getBundles(ParserInterface $parser)
     {
         $configs = [
@@ -114,7 +108,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
         // Autoload the legacy modules
         if (null !== static::$autoloadModules && file_exists(static::$autoloadModules)) {
-            /** @var SplFileInfo[] $modules */
+            /** @var array<SplFileInfo> $modules */
             $modules = Finder::create()
                 ->directories()
                 ->depth(0)
@@ -137,9 +131,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         return $configs;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function registerContainerConfiguration(LoaderInterface $loader, array $managerConfig): void
     {
         $loader->load(
@@ -150,15 +141,11 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                     $loader->load('@ContaoManagerBundle/Resources/skeleton/config/config_prod.yml');
                 }
 
-                $container->setParameter('container.autowiring.strict_mode', true);
                 $container->setParameter('container.dumper.inline_class_loader', true);
             }
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel): ?RouteCollection
     {
         if ('dev' !== $kernel->getEnvironment()) {
@@ -207,9 +194,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         return $collection;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getApiFeatures(): array
     {
         return [
@@ -226,9 +210,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getApiCommands(): array
     {
         return [
@@ -242,9 +223,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getExtensionConfig($extensionName, array $extensionConfigs, PluginContainerBuilder $container): array
     {
         switch ($extensionName) {

@@ -46,9 +46,6 @@ abstract class AbstractFrontendModuleController extends AbstractFragmentControll
         return $response;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();

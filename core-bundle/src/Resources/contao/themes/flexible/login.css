@@ -51,8 +51,14 @@ body {
 .tl_text {
 	padding-right:24px;
 }
+.widget-checkbox {
+	margin-top:6px;
+}
+.tl_checkbox + label {
+	margin-left:4px;
+}
 .submit_container {
-	margin-top:9px;
+	margin-top:12px;
 }
 .submit_container a {
 	float:right;

@@ -33,6 +33,14 @@
         <source>Add an image to the content element.</source>
         <target>コンテント要素に画像を追加します。</target>
       </trans-unit>
+      <trans-unit id="tl_content.inline.0">
+        <source>Show in browser</source>
+        <target>ブラウザーで表示</target>
+      </trans-unit>
+      <trans-unit id="tl_content.inline.1">
+        <source>Show the file in the browser instead of opening the download dialog.</source>
+        <target>ダウンロードのダイアログを開く代わりにブラウザーでファイルを表示します。</target>
+      </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.0">
         <source>Overwrite meta data</source>
         <target>メタデータを上書き</target>
@@ -481,6 +489,14 @@
         <source>Here you can select the aspect ratio of the video to make it responsive.</source>
         <target>動画のアスペクト比を選択してレスポンシブにできます。</target>
       </trans-unit>
+      <trans-unit id="tl_content.splashImage.0">
+        <source>Use a splash image</source>
+        <target>スプラッシュ画像を使用</target>
+      </trans-unit>
+      <trans-unit id="tl_content.splashImage.1">
+        <source>Only load the video after the user has clicked on the splash image.</source>
+        <target>ユーザーがスプラッシュ画像をクリックした後にだけ動画を読み込みます。</target>
+      </trans-unit>
       <trans-unit id="tl_content.playerColor.0">
         <source>Controls color</source>
         <target>動画制御の色</target>
@@ -607,16 +623,16 @@
         <target>公開の開始日</target>
       </trans-unit>
       <trans-unit id="tl_content.start.1">
-        <source>Do not show the element on the website before this day.</source>
-        <target>この日より前は、このコンテント要素をウェブサイトに表示しません。</target>
+        <source>If you want to prevent the element from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>ある特定の日時より前はコンテント要素をウェブサイトに表示したくない場合は、その日時を入力します。それ以外の場合は空のままにしてください。</target>
       </trans-unit>
       <trans-unit id="tl_content.stop.0">
         <source>Show until</source>
         <target>公開の終了日</target>
       </trans-unit>
       <trans-unit id="tl_content.stop.1">
-        <source>Do not show the element on the website on and after this day.</source>
-        <target>この日より後は、このコンテント要素をウェブサイトに表示しません。</target>
+        <source>If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>ある特定の日時より後はコンテント要素をウェブサイトに表示したくない場合は、その日時を入力します。それ以外の場合は空のままにしてください。</target>
       </trans-unit>
       <trans-unit id="tl_content.type_legend">
         <source>Element type</source>
@@ -629,6 +645,10 @@
       <trans-unit id="tl_content.image_legend">
         <source>Image settings</source>
         <target>画像の設定</target>
+      </trans-unit>
+      <trans-unit id="tl_content.download_legend">
+        <source>Download settings</source>
+        <target>ダウンロードの設定</target>
       </trans-unit>
       <trans-unit id="tl_content.slider_legend">
         <source>Slider settings</source>
@@ -673,6 +693,10 @@
       <trans-unit id="tl_content.protected_legend">
         <source>Access protection</source>
         <target>アクセスの保護</target>
+      </trans-unit>
+      <trans-unit id="tl_content.splash_legend">
+        <source>Splash image</source>
+        <target>スプラッシュ画像</target>
       </trans-unit>
       <trans-unit id="tl_content.expert_legend">
         <source>Expert settings</source>
@@ -827,60 +851,40 @@
         <target>作成者を表示しない</target>
       </trans-unit>
       <trans-unit id="tl_content.new.0">
-        <source>New element</source>
-        <target>新しい要素</target>
+        <source>New</source>
+        <target>新規作成</target>
       </trans-unit>
       <trans-unit id="tl_content.new.1">
         <source>Add a new content element</source>
-        <target>新しくコンテント要素を追加</target>
+        <target>新しいコンテント要素を追加</target>
       </trans-unit>
-      <trans-unit id="tl_content.show.0">
-        <source>Element details</source>
-        <target>要素の詳細</target>
-      </trans-unit>
-      <trans-unit id="tl_content.show.1">
+      <trans-unit id="tl_content.show">
         <source>Show the details of content element ID %s</source>
         <target>ID %sのコンテント要素の詳細を表示</target>
       </trans-unit>
-      <trans-unit id="tl_content.cut.0">
-        <source>Move element</source>
-        <target>要素を移動</target>
-      </trans-unit>
-      <trans-unit id="tl_content.cut.1">
+      <trans-unit id="tl_content.cut">
         <source>Move content element ID %s</source>
         <target>ID %sのコンテント要素を移動</target>
       </trans-unit>
-      <trans-unit id="tl_content.copy.0">
-        <source>Duplicate element</source>
-        <target>要素を複製</target>
-      </trans-unit>
-      <trans-unit id="tl_content.copy.1">
+      <trans-unit id="tl_content.copy">
         <source>Duplicate content element ID %s</source>
         <target>ID %sのコンテント要素を複製</target>
       </trans-unit>
-      <trans-unit id="tl_content.delete.0">
-        <source>Delete element</source>
-        <target>要素を削除</target>
-      </trans-unit>
-      <trans-unit id="tl_content.delete.1">
+      <trans-unit id="tl_content.delete">
         <source>Delete content element ID %s</source>
         <target>ID %sのコンテント要素を削除</target>
       </trans-unit>
-      <trans-unit id="tl_content.edit.0">
-        <source>Edit element</source>
-        <target>要素を編集</target>
-      </trans-unit>
-      <trans-unit id="tl_content.edit.1">
+      <trans-unit id="tl_content.edit">
         <source>Edit content element ID %s</source>
         <target>ID %sのコンテント要素を編集</target>
       </trans-unit>
-      <trans-unit id="tl_content.editheader.0">
-        <source>Edit article</source>
-        <target>記事を編集</target>
-      </trans-unit>
-      <trans-unit id="tl_content.editheader.1">
+      <trans-unit id="tl_content.editheader">
         <source>Edit the article settings</source>
         <target>記事の設定を変更</target>
+      </trans-unit>
+      <trans-unit id="tl_content.toggle">
+        <source>Hide/unhide content element ID %s</source>
+        <target>ID %sのコンテント要素を隠す/表示</target>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.0">
         <source>Paste at the top</source>
@@ -891,34 +895,18 @@
         <target>ID %sのコンテント要素の後に貼り付け</target>
       </trans-unit>
       <trans-unit id="tl_content.pastenew.0">
-        <source>Add new at the top</source>
-        <target>先頭に新しく追加</target>
+        <source>Create a new content element at the top</source>
+        <target>先頭に新しいコンテント要素を作成</target>
       </trans-unit>
       <trans-unit id="tl_content.pastenew.1">
-        <source>Add new after content element ID %s</source>
-        <target>ID %sのコンテント要素の後に新しく追加</target>
+        <source>Create a new content element after content element ID %s</source>
+        <target>ID %sのコンテント要素の後ろに新しいコンテント要素を作成</target>
       </trans-unit>
-      <trans-unit id="tl_content.toggle.0">
-        <source>Toggle visibility</source>
-        <target>表示と非表示を切り替え</target>
-      </trans-unit>
-      <trans-unit id="tl_content.toggle.1">
-        <source>Toggle the visibility of element ID %s</source>
-        <target>ID %sのコンテント要素の表示と非表示を切り替え</target>
-      </trans-unit>
-      <trans-unit id="tl_content.editalias.0">
-        <source>Edit source element</source>
-        <target>参照している要素を編集</target>
-      </trans-unit>
-      <trans-unit id="tl_content.editalias.1">
+      <trans-unit id="tl_content.editalias">
         <source>Edit the source element ID %s</source>
         <target>参照しているID %sのコンテント要素を編集</target>
       </trans-unit>
-      <trans-unit id="tl_content.editarticle.0">
-        <source>Edit article</source>
-        <target>記事を編集</target>
-      </trans-unit>
-      <trans-unit id="tl_content.editarticle.1">
+      <trans-unit id="tl_content.editarticle">
         <source>Edit article ID %s</source>
         <target>ID %sのアーティクルを編集</target>
       </trans-unit>

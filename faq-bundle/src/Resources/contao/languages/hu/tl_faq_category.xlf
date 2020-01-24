@@ -122,50 +122,33 @@
         <target>Az ID %s kategória törlésével az összes benne lévő GyIK is törlődik! Folytatja?</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.new.0">
-        <source>New category</source>
-        <target>Új kategória</target>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_faq_category.new.1">
         <source>Create a new category</source>
         <target>Új kategória létrehozása</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.show.0">
-        <source>Category details</source>
-        <target>Kategória részletei</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.show.1">
+      <trans-unit id="tl_faq_category.show">
         <source>Show the details of category ID %s</source>
         <target>Az ID %s kategória részletei</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.edit.0">
-        <source>Edit category</source>
-        <target>Kategória szerkesztése</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.edit.1">
+      <trans-unit id="tl_faq_category.edit">
         <source>Edit category ID %s</source>
         <target>Az ID %s kategória szerkesztése</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.editheader.0">
-        <source>Edit category</source>
-        <target>Kategória szerkesztése</target>
+      <trans-unit id="tl_faq_category.editheader">
+        <source>Edit the settings of category ID %s</source>
+        <target>Az ID %s kategória beállításainak szerkesztése</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.editheader.1">
+      <trans-unit id="tl_faq_category.editmeta">
         <source>Edit the category settings</source>
         <target>Kategória beállításainak szerkesztése</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.copy.0">
-        <source>Duplicate category</source>
-        <target>Kategória duplázása</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.copy.1">
+      <trans-unit id="tl_faq_category.copy">
         <source>Duplicate category ID %s</source>
         <target>Az ID %s kategória duplázása</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.delete.0">
-        <source>Delete category</source>
-        <target>Kategória törlése</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.delete.1">
+      <trans-unit id="tl_faq_category.delete">
         <source>Delete category ID %s</source>
         <target>Az ID %s kategória törlése</target>
       </trans-unit>

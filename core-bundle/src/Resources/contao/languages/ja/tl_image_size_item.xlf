@@ -29,69 +29,49 @@
         <source>Image size settings</source>
         <target>画像サイズの設定</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.expert_legend">
-        <source>Expert settings</source>
-        <target>専門的な設定</target>
+      <trans-unit id="tl_image_size_item.source_legend">
+        <source>Image source settings</source>
+        <target>画像ソースの設定</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.visibility_legend">
         <source>Visibility</source>
         <target>可視性</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.new.0">
-        <source>New media query</source>
-        <target>新しいメディアクエリ</target>
+        <source>New</source>
+        <target>新規作成</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.new.1">
         <source>Create a new media query</source>
         <target>新しいメディアクエリを作成</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.show.0">
-        <source>Media query details</source>
-        <target>メディアクエリの詳細</target>
-      </trans-unit>
-      <trans-unit id="tl_image_size_item.show.1">
+      <trans-unit id="tl_image_size_item.show">
         <source>Show the details of media query ID %s</source>
         <target>ID %sのメディアクエリの詳細を表示</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.edit.0">
-        <source>Edit media query</source>
-        <target>メディアクエリを編集</target>
-      </trans-unit>
-      <trans-unit id="tl_image_size_item.edit.1">
+      <trans-unit id="tl_image_size_item.edit">
         <source>Edit media query ID %s</source>
         <target>ID %sのメディアクエリを編集</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.cut.0">
-        <source>Move media query</source>
-        <target>メディアクエリを移動</target>
+      <trans-unit id="tl_image_size_item.editheader">
+        <source>Edit the image size settings</source>
+        <target>画像サイズの設定を変更</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.cut.1">
+      <trans-unit id="tl_image_size_item.cut">
         <source>Move media query ID %s</source>
         <target>画像サイズのメディアクエリを移動</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.copy.0">
-        <source>Duplicate media query</source>
-        <target>メディアクエリを複製</target>
-      </trans-unit>
-      <trans-unit id="tl_image_size_item.copy.1">
+      <trans-unit id="tl_image_size_item.copy">
         <source>Duplicate media query ID %s</source>
         <target>ID %sのメディアクエリを複製</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.delete.0">
-        <source>Delete media query</source>
-        <target>メディアクエリを削除</target>
-      </trans-unit>
-      <trans-unit id="tl_image_size_item.delete.1">
+      <trans-unit id="tl_image_size_item.delete">
         <source>Delete media query ID %s</source>
         <target>ID %sのメディアクエリを削除</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.editheader.0">
-        <source>Edit image size</source>
-        <target>画像サイズを編集</target>
-      </trans-unit>
-      <trans-unit id="tl_image_size_item.editheader.1">
-        <source>Edit the image size settings</source>
-        <target>画像サイズの設定を変更</target>
+      <trans-unit id="tl_image_size_item.toggle">
+        <source>Activate/deactivate media query ID %s</source>
+        <target>ID %sのメディアクエリを有効/無効</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pasteafter.0">
         <source>Paste at the top</source>
@@ -102,20 +82,12 @@
         <target>ID %sのメディアクエリの後に貼り付け</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pastenew.0">
-        <source>Add new at the top</source>
-        <target>先頭に新しく追加</target>
+        <source>Create a new media query at the top</source>
+        <target>先頭に新しいメディアクエリを作成</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pastenew.1">
-        <source>Add new after media query ID %s</source>
-        <target>ID %sのメディアクエリの後に追加</target>
-      </trans-unit>
-      <trans-unit id="tl_image_size_item.toggle.0">
-        <source>Toggle visibility</source>
-        <target>表示と非表示を切り替え</target>
-      </trans-unit>
-      <trans-unit id="tl_image_size_item.toggle.1">
-        <source>Toggle the visibility of media query ID %s</source>
-        <target>ID %sのメディアクエリの表示と非表示を切り替え</target>
+        <source>Create a new media query after media query ID %s</source>
+        <target>ID %sのメディアクエリの後に新しいメディアクエリを作成</target>
       </trans-unit>
     </body>
   </file>

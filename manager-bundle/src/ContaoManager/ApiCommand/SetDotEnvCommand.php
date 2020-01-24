@@ -36,9 +36,6 @@ class SetDotEnvCommand extends Command
         $this->projectDir = $application->getProjectDir();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure(): void
     {
         parent::configure();
@@ -51,9 +48,6 @@ class SetDotEnvCommand extends Command
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $dotenv = new DotenvDumper($this->projectDir.'/.env');

@@ -33,13 +33,13 @@
         <source>Invalid source or target directory &quot;%s&quot;!</source>
         <target>Неисправан изворни или одредишни фолдер &quot;%s&quot;!</target>
       </trans-unit>
-      <trans-unit id="tl_templates.new_tpl.0">
-        <source>New template</source>
-        <target>Нови шаблон</target>
+      <trans-unit id="tl_templates.overridesAnotherTpl">
+        <source>This template overrides &quot;%s&quot;.</source>
+        <target>Овај шаблон ће да прегази &quot;%s&quot;.</target>
       </trans-unit>
-      <trans-unit id="tl_templates.new_tpl.1">
-        <source>Create a new template</source>
-        <target>Креирај нови шаблон</target>
+      <trans-unit id="tl_templates.pleaseSelect">
+        <source>Please select a template from the list above and click &quot;Show differences&quot;.</source>
+        <target>Изаберите шаблон из листе изнад и кликните на &quot;Прикажи разлике&quot;.</target>
       </trans-unit>
       <trans-unit id="tl_templates.new.0">
         <source>New folder</source>
@@ -49,29 +49,23 @@
         <source>Create a new folder</source>
         <target>Креирај нови фолдер</target>
       </trans-unit>
+      <trans-unit id="tl_templates.new_tpl.0">
+        <source>New template</source>
+        <target>Нови шаблон</target>
+      </trans-unit>
+      <trans-unit id="tl_templates.new_tpl.1">
+        <source>Create a new template</source>
+        <target>Креирај нови шаблон</target>
+      </trans-unit>
       <trans-unit id="tl_templates.pasteinto.0">
-        <source>Paste into</source>
-        <target>Налепи у</target>
+        <source>Paste into the root folder</source>
       </trans-unit>
       <trans-unit id="tl_templates.pasteinto.1">
-        <source>Paste into this folder</source>
-        <target>Налепи у овај фолдер</target>
+        <source>Paste into folder &quot;%s&quot;</source>
       </trans-unit>
-      <trans-unit id="tl_templates.compare.0">
-        <source>Compare template</source>
-        <target>Упореди шаблоне</target>
-      </trans-unit>
-      <trans-unit id="tl_templates.compare.1">
+      <trans-unit id="tl_templates.compare">
         <source>Compare &quot;%s&quot; with another template</source>
         <target>Упореди &quot;%s&quot; са другим шаблоном</target>
-      </trans-unit>
-      <trans-unit id="tl_templates.overridesAnotherTpl">
-        <source>This template overrides &quot;%s&quot;.</source>
-        <target>Овај шаблон ће да прегази &quot;%s&quot;.</target>
-      </trans-unit>
-      <trans-unit id="tl_templates.pleaseSelect">
-        <source>Please select a template from the list above and click &quot;Show differences&quot;.</source>
-        <target>Изаберите шаблон из листе изнад и кликните на &quot;Прикажи разлике&quot;.</target>
       </trans-unit>
     </body>
   </file>

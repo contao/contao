@@ -295,11 +295,16 @@ class tl_user_group extends Contao\Backend
 			return;
 		}
 
-		$objResult = $this->Database->query("SELECT COUNT(*) AS cnt FROM tl_user_group WHERE modules LIKE '%\"tpl_editor\"%'");
+		$objResult = $this->Database->query("SELECT EXISTS(SELECT * FROM tl_user_group WHERE modules LIKE '%\"tpl_editor\"%') as showTemplateWarning, EXISTS(SELECT * FROM tl_user WHERE themes LIKE '%\"theme_import\"%') as showThemeWarning");
 
-		if ($objResult->cnt > 0)
+		if ($objResult->showTemplateWarning > 0)
 		{
 			Contao\Message::addInfo($GLOBALS['TL_LANG']['MSC']['groupTemplateEditor']);
+		}
+
+		if ($objResult->showThemeWarning > 0)
+		{
+			Contao\Message::addInfo($GLOBALS['TL_LANG']['MSC']['groupThemeImport']);
 		}
 	}
 

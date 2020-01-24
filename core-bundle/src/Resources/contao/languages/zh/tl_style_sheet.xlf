@@ -89,75 +89,47 @@
         <source>Style sheet &quot;%s&quot; has been imported as &quot;%s&quot;.</source>
         <target>样式表&quot;%s&quot;已经作为&quot;%s&quot;被导入。</target>
       </trans-unit>
+      <trans-unit id="tl_style_sheet.import.0">
+        <source>Import</source>
+        <target>导入</target>
+      </trans-unit>
+      <trans-unit id="tl_style_sheet.import.1">
+        <source>Import a style sheet</source>
+        <target>导入样式表</target>
+      </trans-unit>
       <trans-unit id="tl_style_sheet.new.0">
-        <source>New style sheet</source>
-        <target>新样式表</target>
+        <source>New</source>
+        <target>新建</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.new.1">
         <source>Create a new style sheet</source>
         <target>创建一个新样式表</target>
       </trans-unit>
-      <trans-unit id="tl_style_sheet.show.0">
-        <source>Style sheet details</source>
-        <target>样式表详情</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.show.1">
+      <trans-unit id="tl_style_sheet.show">
         <source>Show the details of style sheet ID %s</source>
         <target>显示ID为%s的样式表详情</target>
       </trans-unit>
-      <trans-unit id="tl_style_sheet.edit.0">
-        <source>Edit style sheet</source>
-        <target>编辑样式表</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.edit.1">
+      <trans-unit id="tl_style_sheet.edit">
         <source>Edit style sheet ID %s</source>
         <target>编辑ID为%s的样式表</target>
       </trans-unit>
-      <trans-unit id="tl_style_sheet.editheader.0">
-        <source>Edit style sheet</source>
-        <target>编辑样式表</target>
+      <trans-unit id="tl_style_sheet.editheader">
+        <source>Edit the settings of style sheet ID %s</source>
+        <target>编辑ID为%s的样式表设置</target>
       </trans-unit>
-      <trans-unit id="tl_style_sheet.editheader.1">
-        <source>Edit the style sheet settings</source>
-        <target>编辑样式表设置</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.cut.0">
-        <source>Move style sheet</source>
-        <target>移动样式表</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.cut.1">
-        <source>Move style sheet ID %s</source>
-        <target>移动删除ID为%s的样式表</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.copy.0">
-        <source>Duplicate style sheet</source>
-        <target>复制样式表</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.copy.1">
+      <trans-unit id="tl_style_sheet.copy">
         <source>Duplicate style sheet ID %s</source>
         <target>复制ID为%s的样式表</target>
       </trans-unit>
-      <trans-unit id="tl_style_sheet.delete.0">
-        <source>Delete style sheet</source>
-        <target>删除样式表</target>
+      <trans-unit id="tl_style_sheet.cut">
+        <source>Move style sheet ID %s</source>
+        <target>移动删除ID为%s的样式表</target>
       </trans-unit>
-      <trans-unit id="tl_style_sheet.delete.1">
+      <trans-unit id="tl_style_sheet.delete">
         <source>Delete style sheet ID %s</source>
         <target>删除ID为%s的样式表</target>
       </trans-unit>
-      <trans-unit id="tl_style_sheet.import.0">
-        <source>CSS import</source>
-        <target>导入CSS</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.import.1">
-        <source>Import existing CSS files</source>
-        <target>导入现有CSS文件</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.export.0">
-        <source>Export style sheet</source>
-        <target>导出样式表</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.export.1">
+      <trans-unit id="tl_style_sheet.export">
         <source>Export style sheet ID %s</source>
         <target>导出ID为%s的样式表</target>
       </trans-unit>

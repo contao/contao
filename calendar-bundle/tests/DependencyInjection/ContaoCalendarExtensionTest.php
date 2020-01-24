@@ -32,9 +32,6 @@ class ContaoCalendarExtensionTest extends TestCase
      */
     private $container;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();

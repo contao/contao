@@ -110,8 +110,8 @@
         <target>Índice numérico</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.start.1">
-        <source>In case the sending process is interrupted, you can enter a numeric offset here to continue with a particular recipient. You can check how many mails have been sent in the &lt;em&gt;newsletter_%s.log&lt;/em&gt; file. E.g., if 120 mails have been sent, enter &quot;120&quot; to continue with the 121st recipient (counting starts at 0).</source>
-        <target>No caso de o processo de envio ser interrompido, pode inserir um índice numérico aqui para continuar com um destinatário específico. Você pode verificar quantos e-mails foram enviados no sistema &lt;em&gt;sytem/logs /newsletter_1%s.log&lt;/em&gt; arquivo. Por exemplo, se 120 mails foram enviados, digite &quot;120&quot; para continuar com o receptor 121 (contagem inicia em 0).</target>
+        <source>In case the sending process is interrupted, you can enter a numeric offset here to continue with a particular recipient. You can check how many mails have been sent by selecting the category &lt;code&gt;NEWSLETTER_%s&lt;/code&gt; in the system log. If there are 120 entries, enter &quot;120&quot; to continue with the 121st recipient (counting starts at 0).</source>
+        <target>No caso do processo de envio ser interrompido, pode introduzir um intervalo numérico para continuar com um destinatário especifico. Pode verificar quantos e-mails foram enviados selecionado a categoria &lt;code&gt;NEWSLETTER_%s&lt;/code&gt; no registo de actividade do sistema. Se existirem 120 ocorrências, introduza &quot;120&quot; para continuar com o destinatário número 121 (a contagem começa em 0).</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendPreviewTo.0">
         <source>Send preview to</source>
@@ -193,70 +193,6 @@
         <source>Do you really want to send the newsletter?</source>
         <target>Você realmente deseja enviar a newsletter?</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.new.0">
-        <source>New newsletter</source>
-        <target>Nova newsletter</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.new.1">
-        <source>Create a new newsletter</source>
-        <target>Criar nova newsletter</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.show.0">
-        <source>Newsletter details</source>
-        <target>Detalhes da newsletter</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.show.1">
-        <source>Show the details of newsletter ID %s</source>
-        <target>Mostrar detalhes da newsletter com ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.edit.0">
-        <source>Edit newsletter</source>
-        <target>Editar newsletter</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.edit.1">
-        <source>Edit newsletter ID %s</source>
-        <target>Editar newsletter com ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.copy.0">
-        <source>Duplicate newsletter</source>
-        <target>Copiar newsletter</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.copy.1">
-        <source>Duplicate newsletter ID %s</source>
-        <target>Copiar newsletter com ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.cut.0">
-        <source>Move newsletter</source>
-        <target>Mover Newsletter</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.cut.1">
-        <source>Move newsletter ID %s</source>
-        <target>Mover Newsletter ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.delete.0">
-        <source>Delete newsletter</source>
-        <target>Remover newsletter</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.delete.1">
-        <source>Delete newsletter ID %s</source>
-        <target>Remover newsletter com ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.editheader.0">
-        <source>Edit channel</source>
-        <target>Editar canal</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.editheader.1">
-        <source>Edit the channel settings</source>
-        <target>Editar as configurações de canal</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.pasteafter.0">
-        <source>Paste into this channel</source>
-        <target>Colar para este canal</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.pasteafter.1">
-        <source>Paste after newsletter ID %s</source>
-        <target>Colar para canal ID %s</target>
-      </trans-unit>
       <trans-unit id="tl_newsletter.send.0">
         <source>Send newsletter</source>
         <target>Enviar newsletter</target>
@@ -264,6 +200,38 @@
       <trans-unit id="tl_newsletter.send.1">
         <source>Send newsletter ID %s</source>
         <target>Enviar newsletter com ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.new.0">
+        <source>New</source>
+        <target>Novo</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.new.1">
+        <source>Create a new newsletter</source>
+        <target>Criar nova newsletter</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.show">
+        <source>Show the details of newsletter ID %s</source>
+        <target>Mostrar detalhes da newsletter com ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.edit">
+        <source>Edit newsletter ID %s</source>
+        <target>Editar newsletter com ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.copy">
+        <source>Duplicate newsletter ID %s</source>
+        <target>Copiar newsletter com ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.cut">
+        <source>Move newsletter ID %s</source>
+        <target>Mover Newsletter ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.delete">
+        <source>Delete newsletter ID %s</source>
+        <target>Remover newsletter com ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.pasteafter.0">
+        <source>Paste into this channel</source>
+        <target>Colar para este canal</target>
       </trans-unit>
     </body>
   </file>

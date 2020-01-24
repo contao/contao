@@ -5,7 +5,8 @@ on:
     push:
         branches:
             - master
-            - '[0-9]+.[0-9]+'
+        tags:
+            - '*'
     schedule:
         - cron: '0 13 * * MON,TUE'
 
@@ -24,9 +25,7 @@ jobs:
                   coverage: pcov
 
             - name: Checkout
-              uses: actions/checkout@v1
-              with:
-                  fetch-depth: 50
+              uses: actions/checkout@v2
 
             - name: Install the dependencies
               run: |
@@ -75,9 +74,7 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v1
-              with:
-                  fetch-depth: 50
+              uses: actions/checkout@v2
 
             - name: Install the dependencies
               run: |
@@ -86,9 +83,9 @@ jobs:
 
             - name: Check the coding style
               run: |
-                  PHP_CS_CONFIG=default vendor/bin/php-cs-fixer fix --diff --diff-format=udiff --dry-run
-                  PHP_CS_CONFIG=legacy vendor/bin/php-cs-fixer fix --diff --diff-format=udiff --dry-run
-                  PHP_CS_CONFIG=template vendor/bin/php-cs-fixer fix --diff --diff-format=udiff --dry-run
+                  vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests --config vendor/contao/easy-coding-standard/config/default.yaml --no-progress-bar
+                  vendor/bin/ecs check *-bundle/src/Resources/contao --config vendor/contao/easy-coding-standard/config/legacy.yaml --no-progress-bar
+                  vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config vendor/contao/easy-coding-standard/config/template.yaml --no-progress-bar
 
             - name: Analyze the code
               run: vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
@@ -106,7 +103,7 @@ jobs:
               uses: shivammathur/setup-php@v1
               with:
                   php-version: ${{ matrix.php }}
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysql, pcre, pdo, zlib
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
                   tools: prestissimo
                   coverage: none
 
@@ -114,9 +111,7 @@ jobs:
               run: mysql -uroot -proot -e "CREATE database contao_test"
 
             - name: Checkout
-              uses: actions/checkout@v1
-              with:
-                  fetch-depth: 50
+              uses: actions/checkout@v2
 
             - name: Install the dependencies
               run: |
@@ -140,7 +135,7 @@ jobs:
               uses: shivammathur/setup-php@v1
               with:
                   php-version: 7.3
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysql, pcre, pdo, zlib
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
                   tools: prestissimo
                   coverage: none
 
@@ -148,9 +143,7 @@ jobs:
               run: mysql -uroot -proot -e "CREATE database contao_test"
 
             - name: Checkout
-              uses: actions/checkout@v1
-              with:
-                  fetch-depth: 50
+              uses: actions/checkout@v2
 
             - name: Install the dependencies
               run: |
@@ -179,9 +172,7 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v1
-              with:
-                  fetch-depth: 50
+              uses: actions/checkout@v2
 
             - name: Test the single bundles
               run: |
@@ -215,7 +206,8 @@ jobs:
               uses: shivammathur/setup-php@v1
               with:
                   php-version: 7.3
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysql, pcre, pdo, zlib
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
+                  ini-values: memory_limit=1G
                   tools: prestissimo
                   coverage: none
 
@@ -223,9 +215,7 @@ jobs:
               run: git config --global core.autocrlf false
 
             - name: Checkout
-              uses: actions/checkout@v1
-              with:
-                  fetch-depth: 50
+              uses: actions/checkout@v2
 
             - name: Install the dependencies
               run: |
@@ -249,9 +239,7 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v1
-              with:
-                  fetch-depth: 50
+              uses: actions/checkout@v2
 
             - name: Cache the monorepo split
               uses: actions/cache@v1

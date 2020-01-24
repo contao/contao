@@ -65,22 +65,6 @@
         <source>Front end</source>
         <target>Priekšpuse</target>
       </trans-unit>
-      <trans-unit id="tl_log.show.0">
-        <source>Show details</source>
-        <target>Rādīt detaļas</target>
-      </trans-unit>
-      <trans-unit id="tl_log.show.1">
-        <source>Show the details of entry ID %s</source>
-        <target>Rādīt ieraksta ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_log.delete.0">
-        <source>Delete</source>
-        <target>Dzēst</target>
-      </trans-unit>
-      <trans-unit id="tl_log.delete.1">
-        <source>Delete entry ID %s</source>
-        <target>Dzēst ierakstu ID %s</target>
-      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -1,114 +1,6 @@
 <?xml version="1.0" ?><xliff version="1.1">
   <file datatype="php" original="src/Resources/contao/languages/en/tl_form_field.php" source-language="en" target-language="lv">
     <body>
-      <trans-unit id="FFL.explanation.0">
-        <source>Explanation</source>
-        <target>Paskaidrojums</target>
-      </trans-unit>
-      <trans-unit id="FFL.explanation.1">
-        <source>A custom field to insert an explanation text.</source>
-        <target>Pielāgots lauks, lai ievietotu paskaidrojuma tekstu.</target>
-      </trans-unit>
-      <trans-unit id="FFL.html.0">
-        <source>HTML code</source>
-        <target>HTML kods</target>
-      </trans-unit>
-      <trans-unit id="FFL.html.1">
-        <source>A custom field to insert HTML code.</source>
-        <target>Pielāgots lauks, lai ievietotu HTML kodu.</target>
-      </trans-unit>
-      <trans-unit id="FFL.fieldsetStart.0">
-        <source>Fieldset start</source>
-      </trans-unit>
-      <trans-unit id="FFL.fieldsetStart.1">
-        <source>The opening part of a fieldset with an optional legend.</source>
-      </trans-unit>
-      <trans-unit id="FFL.fieldsetStop.0">
-        <source>Fieldset stop</source>
-      </trans-unit>
-      <trans-unit id="FFL.fieldsetStop.1">
-        <source>The closing part of a fieldset.</source>
-      </trans-unit>
-      <trans-unit id="FFL.text.0">
-        <source>Text field</source>
-        <target>Teksta lauks</target>
-      </trans-unit>
-      <trans-unit id="FFL.text.1">
-        <source>A single-line input field for a short or medium text.</source>
-        <target>Vienrindas datu ievadīšanas lauks īsa vai vidēja teksta ievadīšanai.</target>
-      </trans-unit>
-      <trans-unit id="FFL.password.0">
-        <source>Password field</source>
-        <target>Paroles lauks</target>
-      </trans-unit>
-      <trans-unit id="FFL.password.1">
-        <source>A single-line input field for a password. Contao automatically adds a confirmation field.</source>
-        <target>Vienrindas datu ievadīšanas lauks paroles eivadīšanai. Contao automātiski pievieno apstiprināšanas lauku.</target>
-      </trans-unit>
-      <trans-unit id="FFL.textarea.0">
-        <source>Textarea</source>
-        <target>Teksta apgabals</target>
-      </trans-unit>
-      <trans-unit id="FFL.textarea.1">
-        <source>A multi-line input field for a medium or long text.</source>
-        <target>Daudzrindu datu ievades lauks vidēju vai garu tekstu ievadīšanai.</target>
-      </trans-unit>
-      <trans-unit id="FFL.select.0">
-        <source>Select menu</source>
-        <target>Izvēles saraksts</target>
-      </trans-unit>
-      <trans-unit id="FFL.select.1">
-        <source>A single- or multi-line drop-down menu.</source>
-        <target>Vienrindas vai daudzrindu izritināmasi sarkaksts.</target>
-      </trans-unit>
-      <trans-unit id="FFL.radio.0">
-        <source>Radio button menu</source>
-        <target>Radio poga</target>
-      </trans-unit>
-      <trans-unit id="FFL.radio.1">
-        <source>A list of multiple options from which one can be selected.</source>
-        <target>Vairāku variantu saralsts, no kuriem izvēlēties var tikai vienu.</target>
-      </trans-unit>
-      <trans-unit id="FFL.checkbox.0">
-        <source>Checkbox menu</source>
-        <target>Čekbokss</target>
-      </trans-unit>
-      <trans-unit id="FFL.checkbox.1">
-        <source>A list of multiple options from which any can be selected.</source>
-        <target>Vairāku variantu saralsts, no kuriem izvēlēties var jebkuru.</target>
-      </trans-unit>
-      <trans-unit id="FFL.upload.0">
-        <source>File upload</source>
-        <target>Augšupielādes fails</target>
-      </trans-unit>
-      <trans-unit id="FFL.upload.1">
-        <source>A single-line input field to upload a local file to the server.</source>
-        <target>Vienrindas datu ievades lauks failu augšupielādēšanai serverī.</target>
-      </trans-unit>
-      <trans-unit id="FFL.hidden.0">
-        <source>Hidden field</source>
-        <target>Slēptais lauks</target>
-      </trans-unit>
-      <trans-unit id="FFL.hidden.1">
-        <source>A single-line input field that is not visible in the form.</source>
-        <target>Vienrindas datu ievades lauks, kas nav redzams formā.</target>
-      </trans-unit>
-      <trans-unit id="FFL.captcha.0">
-        <source>Security question</source>
-        <target>Drošības jautājums</target>
-      </trans-unit>
-      <trans-unit id="FFL.captcha.1">
-        <source>A simple math question to verify that the form is being submitted by a human (CAPTCHA).</source>
-        <target>Matemātiski vienkāršs jautājumu, lai pārliecinātos, ka formā ievadītos datus iesniedz cilvēks (CAPTCHA).</target>
-      </trans-unit>
-      <trans-unit id="FFL.submit.0">
-        <source>Submit field</source>
-        <target>Apstiprināšanas lauks</target>
-      </trans-unit>
-      <trans-unit id="FFL.submit.1">
-        <source>A button to submit the form.</source>
-        <target>Poga formā ievadīto datu apstiprināšanai.</target>
-      </trans-unit>
       <trans-unit id="tl_form_field.type.0">
         <source>Field type</source>
         <target>Lauka tips</target>
@@ -202,8 +94,7 @@
         <target>Paplašinātie alfabētiskie simboli</target>
       </trans-unit>
       <trans-unit id="tl_form_field.extnd.1">
-        <source>Allows everything except special characters which are usually encoded for security reasons (#/()&lt;=&gt;).</source>
-        <target>Atļauj visu, izņemot speciālās rakstzīmes, kas parasti kodētas drošības apsvērumu dēļ (#/()&lt;=&gt;).</target>
+        <source>Allows everything except special characters which are usually encoded for security reasons: #&lt;&gt;()\=</source>
       </trans-unit>
       <trans-unit id="tl_form_field.date.0">
         <source>Date</source>
@@ -276,6 +167,26 @@
       <trans-unit id="tl_form_field.maxlength.1">
         <source>Limit the field length to a certain number of characters (text) or bytes (file uploads).</source>
         <target>Ierobežo lauka garumu līdz noteiktam rakstzīmju skaitam (tekstam) vai baitos (failu augšuielādei).</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.minval.0">
+        <source>Minimum value</source>
+        <target>Minimālā vērtība</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.minval.1">
+        <source>Here you can set the minimum value for numeric fields.</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.maxval.0">
+        <source>Maximum value</source>
+        <target>Maksimālā vērtība</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.maxval.1">
+        <source>Here you can set the maximum value for numeric fields.</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.step.0">
+        <source>Step</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.step.1">
+        <source>Here you can set the discrete step size of the field.</source>
       </trans-unit>
       <trans-unit id="tl_form_field.size.0">
         <source>Rows and columns</source>
@@ -419,6 +330,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.invisible.1">
         <source>Hide the form field on the website.</source>
+        <target>Slēpt veidlapas lauku mājas lapā.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.type_legend">
         <source>Field type and name</source>
@@ -465,84 +377,56 @@
         <target>Redzamība</target>
       </trans-unit>
       <trans-unit id="tl_form_field.new.0">
-        <source>New field</source>
-        <target>Jauns lauks</target>
+        <source>New</source>
+        <target>Jauns</target>
       </trans-unit>
       <trans-unit id="tl_form_field.new.1">
-        <source>Create a new field</source>
-        <target>Izveidot jaunu lauku</target>
+        <source>Create a new form field</source>
+        <target>Izveidot jaunu veidlapas lauku</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.show.0">
-        <source>Field details</source>
-        <target>Lauka detaļas</target>
+      <trans-unit id="tl_form_field.show">
+        <source>Show the details of form field ID %s</source>
+        <target>Parādīt veidlapas lauka ID %s detaļas</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.show.1">
-        <source>Show the details of field ID %s</source>
-        <target>Parādīt lauka ID %s detaļas</target>
+      <trans-unit id="tl_form_field.edit">
+        <source>Edit form field ID %s</source>
+        <target>Rediģēt veidlapas lauku ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.edit.0">
-        <source>Edit field</source>
-        <target>Rediģēt lauku</target>
+      <trans-unit id="tl_form_field.cut">
+        <source>Move form field ID %s</source>
+        <target>Pārvietot veidlapas lauku ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.edit.1">
-        <source>Edit field ID %s</source>
-        <target>Rediģēt lauku ID %s</target>
+      <trans-unit id="tl_form_field.copy">
+        <source>Duplicate form field ID %s</source>
+        <target>Dublicēt veidlapas lauku ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.cut.0">
-        <source>Move field</source>
-        <target>Pārvietot lauku</target>
+      <trans-unit id="tl_form_field.delete">
+        <source>Delete form field ID %s</source>
+        <target>Dzēst veidlapas lauku ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.cut.1">
-        <source>Move field ID %s</source>
-        <target>Pārvietot lauku ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.copy.0">
-        <source>Duplicate field</source>
-        <target>Duplicēt lauku</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.copy.1">
-        <source>Duplicate field ID %s</source>
-        <target>Duplicēt lauku ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.delete.0">
-        <source>Delete field</source>
-        <target>Dzēst lauku</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.delete.1">
-        <source>Delete field ID %s</source>
-        <target>Dzēst lauku ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.editheader.0">
-        <source>Edit form</source>
-        <target>Rediģēt formu</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.editheader.1">
+      <trans-unit id="tl_form_field.editheader">
         <source>Edit the form settings</source>
         <target>Rediģēt formas uzstādījumus</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.toggle">
+        <source>Hide/unhide form field ID %s</source>
+        <target>Slēpt/parādīt veidlapas lauku ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pasteafter.0">
         <source>Paste at the top</source>
         <target>Ielīmēt sākumā</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pasteafter.1">
-        <source>Paste after field ID %s</source>
-        <target>Ievietot pēc lauka ID %s</target>
+        <source>Paste after form field ID %s</source>
+        <target>Ielīmēt pēc veidlapas lauka ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pastenew.0">
-        <source>Add new at the top</source>
-        <target>Pievienot sākumā</target>
+        <source>Create a new form field at the top</source>
+        <target>Izveidot jaunu veidlapas lauku augšpusē</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pastenew.1">
-        <source>Add new after field ID %s</source>
-        <target>Pievienot jaunu pēc lauka ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.toggle.0">
-        <source>Toggle visibility</source>
-        <target>Pārslēgt redzamību</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.toggle.1">
-        <source>Toggle the visibility of field ID %s</source>
-        <target>Pārslēgt lauka ID %s redzamību</target>
+        <source>Create a new form field after form field ID %s</source>
+        <target>Izveidot jaunu veidlapas lauku pēc veidlapas lauka ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.option.1">
         <source>Import options from a CSV file</source>

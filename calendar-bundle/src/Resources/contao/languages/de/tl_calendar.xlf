@@ -87,7 +87,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.protected.1">
         <source>Show events to certain member groups only.</source>
-        <target>Events nur bestimmten Frontend-Gruppen anzeigen.</target>
+        <target>Events nur bestimmten Mitgliedergruppen anzeigen.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.groups.0">
         <source>Allowed member groups</source>
@@ -141,54 +141,6 @@
         <source>Full articles</source>
         <target>Komplette Beiträge</target>
       </trans-unit>
-      <trans-unit id="tl_calendar.new.0">
-        <source>New calendar</source>
-        <target>Neuer Kalender</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.new.1">
-        <source>Create a new calendar</source>
-        <target>Einen neuen Kalender erstellen</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.show.0">
-        <source>Calendar details</source>
-        <target>Kalenderdetails</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.show.1">
-        <source>Show the details of calendar ID %s</source>
-        <target>Details des Kalenders ID %s anzeigen</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.edit.0">
-        <source>Edit calendar</source>
-        <target>Kalender bearbeiten</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.edit.1">
-        <source>Edit calendar ID %s</source>
-        <target>Kalender ID %s bearbeiten</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.editheader.0">
-        <source>Edit calendar</source>
-        <target>Kalender bearbeiten</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.editheader.1">
-        <source>Edit the calendar settings</source>
-        <target>Die Kalender-Einstellungen bearbeiten</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.copy.0">
-        <source>Duplicate calendar</source>
-        <target>Kalender duplizieren</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.copy.1">
-        <source>Duplicate calendar ID %s</source>
-        <target>Kalender ID %s duplizieren</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.delete.0">
-        <source>Delete calendar</source>
-        <target>Kalender löschen</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.delete.1">
-        <source>Delete calendar ID %s</source>
-        <target>Kalender ID %s löschen</target>
-      </trans-unit>
       <trans-unit id="tl_calendar.feeds.0">
         <source>RSS feeds</source>
         <target>RSS-Feeds</target>
@@ -196,6 +148,38 @@
       <trans-unit id="tl_calendar.feeds.1">
         <source>Manage RSS feeds</source>
         <target>RSS-Feeds verwalten</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.new.0">
+        <source>New</source>
+        <target>Neu</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.new.1">
+        <source>Create a new calendar</source>
+        <target>Einen neuen Kalender erstellen</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.show">
+        <source>Show the details of calendar ID %s</source>
+        <target>Details des Kalenders ID %s anzeigen</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.edit">
+        <source>Edit calendar ID %s</source>
+        <target>Kalender ID %s bearbeiten</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.editmeta">
+        <source>Edit the calendar settings</source>
+        <target>Kalendereinstellungen bearbeiten</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.editheader">
+        <source>Edit the settings of calendar ID %s</source>
+        <target>Einstellungen des Kalenders ID %s bearbeiten</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.copy">
+        <source>Duplicate calendar ID %s</source>
+        <target>Kalender ID %s duplizieren</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.delete">
+        <source>Delete calendar ID %s</source>
+        <target>Kalender ID %s löschen</target>
       </trans-unit>
     </body>
   </file>

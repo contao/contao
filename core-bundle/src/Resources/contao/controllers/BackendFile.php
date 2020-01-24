@@ -153,7 +153,6 @@ class BackendFile extends Backend
 		$objTemplate->addSearch = true;
 		$objTemplate->search = $GLOBALS['TL_LANG']['MSC']['search'];
 		$objTemplate->searchExclude = $GLOBALS['TL_LANG']['MSC']['searchExclude'];
-		$objTemplate->action = ampersand(Environment::get('request'));
 		$objTemplate->value = $objSessionBag->get('file_selector_search');
 		$objTemplate->breadcrumb = $GLOBALS['TL_DCA']['tl_files']['list']['sorting']['breadcrumb'];
 

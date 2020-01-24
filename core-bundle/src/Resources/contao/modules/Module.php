@@ -278,7 +278,7 @@ abstract class Module extends Frontend
 
 		$objTemplate = new FrontendTemplate($this->navigationTpl ?: 'nav_default');
 		$objTemplate->pid = $pid;
-		$objTemplate->type = \get_class($this);
+		$objTemplate->type = static::class;
 		$objTemplate->cssID = $this->cssID; // see #4897
 		$objTemplate->level = 'level_' . $level++;
 		$objTemplate->module = $this; // see #155

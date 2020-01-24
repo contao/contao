@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\EventListener\MakeResponsePrivateListener;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,7 +26,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class MakeResponsePrivateListenerTest extends TestCase
 {
-    public function testIgnoresSubRequests(): void
+    public function testIgnoresNonContaoMasterRequests(): void
     {
         // Public response with cookie, should be turned into a private response if it was a master request
         $response = new Response();
@@ -40,7 +41,7 @@ class MakeResponsePrivateListenerTest extends TestCase
             $response
         );
 
-        $listener = new MakeResponsePrivateListener();
+        $listener = new MakeResponsePrivateListener($this->createScopeMatcher(false));
         $listener($event);
 
         $this->assertTrue($response->headers->getCacheControlDirective('public'));
@@ -59,7 +60,7 @@ class MakeResponsePrivateListenerTest extends TestCase
             $response
         );
 
-        $listener = new MakeResponsePrivateListener();
+        $listener = new MakeResponsePrivateListener($this->createScopeMatcher(true));
         $listener($event);
 
         $this->assertTrue($response->headers->getCacheControlDirective('public'));
@@ -83,7 +84,7 @@ class MakeResponsePrivateListenerTest extends TestCase
             $response
         );
 
-        $listener = new MakeResponsePrivateListener();
+        $listener = new MakeResponsePrivateListener($this->createScopeMatcher(true));
         $listener($event);
 
         $this->assertTrue($response->headers->has(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER));
@@ -113,7 +114,7 @@ class MakeResponsePrivateListenerTest extends TestCase
             $response
         );
 
-        $listener = new MakeResponsePrivateListener();
+        $listener = new MakeResponsePrivateListener($this->createScopeMatcher(true));
         $listener($event);
 
         $this->assertTrue($response->headers->has(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER));
@@ -134,7 +135,7 @@ class MakeResponsePrivateListenerTest extends TestCase
             $response
         );
 
-        $listener = new MakeResponsePrivateListener();
+        $listener = new MakeResponsePrivateListener($this->createScopeMatcher(true));
         $listener($event);
 
         $this->assertTrue($response->headers->has(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER));
@@ -155,7 +156,7 @@ class MakeResponsePrivateListenerTest extends TestCase
             $response
         );
 
-        $listener = new MakeResponsePrivateListener();
+        $listener = new MakeResponsePrivateListener($this->createScopeMatcher(true));
         $listener($event);
 
         $this->assertTrue($response->headers->has(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER));
@@ -176,10 +177,22 @@ class MakeResponsePrivateListenerTest extends TestCase
             $response
         );
 
-        $listener = new MakeResponsePrivateListener();
+        $listener = new MakeResponsePrivateListener($this->createScopeMatcher(true));
         $listener($event);
 
         $this->assertTrue($response->headers->has(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER));
         $this->assertTrue($response->headers->getCacheControlDirective('public'));
+    }
+
+    private function createScopeMatcher(bool $isContaoMasterRequest): ScopeMatcher
+    {
+        $scopeMatcher = $this->createMock(ScopeMatcher::class);
+        $scopeMatcher
+            ->expects($this->once())
+            ->method('isContaoMasterRequest')
+            ->willReturn($isContaoMasterRequest)
+        ;
+
+        return $scopeMatcher;
     }
 }

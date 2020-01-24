@@ -54,25 +54,20 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
         $this->secret = $secret;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function cancelCookie(Request $request): void
     {
         // Delete the cookie on the client
         parent::cancelCookie($request);
 
         // Delete the cookie from the tokenProvider
-        if (null !== ($cookie = $request->cookies->get($this->options['name']))
+        if (
+            null !== ($cookie = $request->cookies->get($this->options['name']))
             && 2 === \count($parts = $this->decodeCookie($cookie))
         ) {
             $this->repository->deleteBySeries($this->encodeSeries($parts[0]));
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function processAutoLoginCookie(array $cookieParts, Request $request): UserInterface
     {
         if (2 !== \count($cookieParts)) {
@@ -111,9 +106,6 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
         return $this->getUserProvider($matchedToken->getClass())->loadUserByUsername($matchedToken->getUsername());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function onLoginSuccess(Request $request, Response $response, TokenInterface $token): void
     {
         $user = $token->getUser();
@@ -153,7 +145,7 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
     }
 
     /**
-     * @param RememberMe[] $rows
+     * @param array<RememberMe> $rows
      */
     private function findValidToken(array $rows, string $cookieValue): RememberMe
     {

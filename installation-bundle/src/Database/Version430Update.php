@@ -25,7 +25,7 @@ class Version430Update extends AbstractMigration
     /**
      * @var Connection
      */
-    protected $connection;
+    private $connection;
 
     public function __construct(Connection $connection)
     {
@@ -37,9 +37,6 @@ class Version430Update extends AbstractMigration
         return 'Contao 4.3.0 Update';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function shouldRun(): bool
     {
         $schemaManager = $this->connection->getSchemaManager();
@@ -53,9 +50,6 @@ class Version430Update extends AbstractMigration
         return !isset($columns['combinescripts']);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function run(): MigrationResult
     {
         $this->connection->query('

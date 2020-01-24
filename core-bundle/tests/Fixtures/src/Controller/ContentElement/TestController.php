@@ -21,9 +21,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class TestController extends AbstractContentElementController
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function getResponse(Template $template, ContentModel $model, Request $request): Response
     {
         return new JsonResponse($template->getData());

@@ -172,7 +172,6 @@ class BackendCsvImportController
 
         $template->formId = $this->getFormId($request);
         $template->backUrl = $this->getBackUrl($request);
-        $template->action = $request->getRequestUri();
         $template->fileMaxSize = $config->get('maxFileSize');
         $template->uploader = $uploader->generateMarkup();
         $template->separators = $this->getSeparators($allowLinebreak);
@@ -190,7 +189,7 @@ class BackendCsvImportController
     /**
      * Returns an array of data from the imported CSV files.
      *
-     * @return string[]
+     * @return array<string>
      */
     private function fetchData(FileUpload $uploader, string $separator, callable $callback): array
     {
@@ -272,7 +271,7 @@ class BackendCsvImportController
      *
      * @throws \RuntimeException
      *
-     * @return string[]
+     * @return array<string>
      */
     private function getFiles(FileUpload $uploader): array
     {

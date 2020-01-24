@@ -38,9 +38,6 @@ class PublishedFilter implements RouteFilterInterface
         $this->tokenChecker = $tokenChecker;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function filter(RouteCollection $collection, Request $request): RouteCollection
     {
         if ($this->tokenChecker->hasBackendUser() && $this->tokenChecker->isPreviewMode()) {

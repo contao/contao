@@ -94,42 +94,25 @@
         <target>Комплетне приче</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.new.0">
-        <source>New feed</source>
-        <target>Нови сажетак</target>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_news_feed.new.1">
         <source>Create a new feed</source>
         <target>Креирај нови сажетак</target>
       </trans-unit>
-      <trans-unit id="tl_news_feed.show.0">
-        <source>Feed details</source>
-        <target>Детаљи сажетка</target>
-      </trans-unit>
-      <trans-unit id="tl_news_feed.show.1">
+      <trans-unit id="tl_news_feed.show">
         <source>Show the details of feed ID %s</source>
         <target>Прикажи детаље сажетка ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news_feed.edit.0">
-        <source>Edit feed</source>
-        <target>Уреди сажетак</target>
-      </trans-unit>
-      <trans-unit id="tl_news_feed.edit.1">
+      <trans-unit id="tl_news_feed.edit">
         <source>Edit feed ID %s</source>
         <target>Уреди сажетак ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news_feed.copy.0">
-        <source>Duplicate feed</source>
-        <target>Копирај сажетак</target>
-      </trans-unit>
-      <trans-unit id="tl_news_feed.copy.1">
+      <trans-unit id="tl_news_feed.copy">
         <source>Duplicate feed ID %s</source>
         <target>Копирај сажетак ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news_feed.delete.0">
-        <source>Delete feed</source>
-        <target>Обриши сажетак</target>
-      </trans-unit>
-      <trans-unit id="tl_news_feed.delete.1">
+      <trans-unit id="tl_news_feed.delete">
         <source>Delete feed ID %s</source>
         <target>Обриши сажетак ID %s</target>
       </trans-unit>

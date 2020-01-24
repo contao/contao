@@ -33,9 +33,6 @@ class LogoutHandler implements LogoutHandlerInterface
         $this->jwtManager = $jwtManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function logout(Request $request, Response $response, TokenInterface $token): void
     {
         if (null !== $this->jwtManager) {

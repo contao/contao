@@ -9,14 +9,6 @@
         <source>Please select the data you want to purge or rebuild.</source>
         <target>Выберите данные, которые хотите очистить или перестроить.</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance.frontendUser.0">
-        <source>Front end user</source>
-        <target>Пользователь внешнего интерфейса</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.frontendUser.1">
-        <source>Automatically log in a front end user to index protected pages.</source>
-        <target>Авторизовать пользователя внешнего интерфейса для индексирования защищенных страниц.</target>
-      </trans-unit>
       <trans-unit id="tl_maintenance.job">
         <source>Job</source>
         <target>Задание</target>
@@ -36,30 +28,6 @@
       <trans-unit id="tl_maintenance.cacheCleared">
         <source>The data has been purged</source>
         <target>Данные очищены успешно</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.searchIndex">
-        <source>Rebuild the search index</source>
-        <target>Перестроение поискового индекса</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.indexSubmit">
-        <source>Rebuild index</source>
-        <target>Перестроить индекс</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.noSearchable">
-        <source>No searchable pages found</source>
-        <target>Доступных для поиска страниц не найдено</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.indexNote">
-        <source>Please wait for the page to load completely before you proceed!</source>
-        <target>Дождитесь полной загрузки страницы прежде, чем продолжите!</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.indexLoading">
-        <source>Please wait while the search index is being rebuilt.</source>
-        <target>Дождитесь окончания перестроения поискового индекса.</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.indexComplete">
-        <source>The search index has been rebuilt. You can now proceed.</source>
-        <target>Поисковый индекс перестроен. Теперь вы можете продолжить.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.updateHelp">
         <source>Please enter your %s here.</source>
@@ -102,28 +70,28 @@
         <target>Очистить кеш изображений</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.images.1">
-        <source>Removes the automatically generated images and then purges the page cache, so there are no links to deleted resources.</source>
-        <target>Удаляет автоматически созданные изображения, а затем очищает кеш страниц, при этом очищаются ссылки на удаленные ресурсы.</target>
+        <source>Removes the automatically generated images and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>Удаляет автоматически созданные изображения, а затем очищает общий кеш, чтобы не было ссылок на удаленные ресурсы.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.0">
         <source>Purge the script cache</source>
         <target>Очистить кеш скриптов</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.1">
-        <source>Removes the automatically generated &lt;code&gt;.css&lt;/code&gt; and &lt;code&gt;.js&lt;/code&gt; files, recreates the internal style sheets and then purges the page cache.</source>
-        <target>Удаляет автоматически созданные &lt;code&gt;.css&lt;/code&gt; и &lt;code&gt;.js&lt;/code&gt; файлы, создает заново внутренние таблицы стилей, а затем очищает кеш страниц.</target>
+        <source>Removes the automatically generated &lt;code&gt;.css&lt;/code&gt; and &lt;code&gt;.js&lt;/code&gt; files, recreates the internal style sheets and then purges the shared cache.</source>
+        <target>Удаляет автоматически созданные &lt;code&gt;.css&lt;/code&gt; и &lt;code&gt;.js&lt;/code&gt; файлы, создает заново внутренние таблицы стилей, а затем очищает общий кеш.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.pages.0">
-        <source>Purge the page cache</source>
-        <target>Очистить кеш страниц</target>
+        <source>Purge the shared cache</source>
+        <target>Очистить общий кеш</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.pages.1">
         <source>Removes the cached versions of the front end pages.</source>
         <target>Удаляет кешированные страницы внешнего интерфейса.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.search.0">
-        <source>Purge the search cache</source>
-        <target>Очистить поисковый кеш</target>
+        <source>Purge the search results cache</source>
+        <target>Очистить кеш результатов поиска</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.search.1">
         <source>Removes the cached versions of the search results.</source>
@@ -142,8 +110,8 @@
         <target>Создать заново XML файлы</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.xml.1">
-        <source>Recreates the XML files (sitemaps and feeds) and then purges the page cache, so there are no links to deleted resources.</source>
-        <target>Создает заново XML-файлы (карты веб-сайта и каналы), а затем очищает кеш страниц, при этом очищаются ссылки на удаленные ресурсы.</target>
+        <source>Recreates the XML files (sitemaps and feeds) and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>Создает заново XML-файлы (карты веб-сайта и каналы), а затем удаляет общий кеш, чтобы не было ссылок на удаленные ресурсы.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.0">
         <source>Recreate the symlinks</source>
@@ -152,6 +120,49 @@
       <trans-unit id="tl_maintenance_jobs.symlinks.1">
         <source>Recreates the symlinks in the &lt;code&gt;web/&lt;/code&gt; folder (document root).</source>
         <target>Воссоздает символические ссылки в каталоге &lt;code&gt;web/&lt;/code&gt; (корень документа).</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawler">
+        <source>Crawler</source>
+        <target>Поисковый робот</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.startCrawling">
+        <source>Start crawling</source>
+        <target>Запустить поисковый робот</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlSubscribers.0">
+        <source>Enabled features</source>
+        <target>Включенные функции</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlSubscribers.1">
+        <source>The crawler crawls all URLs it finds. Here you can decide what to do with these results.</source>
+        <target>Поисковый робот сканирует все URL-адреса, которые находит. Здесь вы можете решить, что делать с этими результатами.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlMember.0">
+        <source>Front end member</source>
+        <target>Участник внешнего интерфейса</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlMember.1">
+        <source>Automatically log in a front end member to index protected pages.</source>
+        <target>Авторизовать участника внешнего интерфейса для индексирования защищенных страниц.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlWaitToBeFinished">
+        <source>The crawler is currently working. Please wait for it to finish to see the results.</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDownloadDebugLog">
+        <source>Download the debug log</source>
+        <target>Загрузить журнал отладки</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDownloadSubscriberLog">
+        <source>Download the log</source>
+        <target>Загрузить журнал</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlSubscriberNames.search-index">
+        <source>Update the search index</source>
+        <target>Обновление индекса поиска</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlSubscriberNames.broken-link-checker">
+        <source>Check for broken links</source>
+        <target>Проверить битые ссылки</target>
       </trans-unit>
     </body>
   </file>

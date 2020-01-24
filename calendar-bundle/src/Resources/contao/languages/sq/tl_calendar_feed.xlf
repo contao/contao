@@ -94,42 +94,26 @@
         <target>Plotë artikuj</target>
       </trans-unit>
       <trans-unit id="tl_calendar_feed.new.0">
-        <source>New feed</source>
-        <target>Furnizim të ri</target>
+        <source>New</source>
+        <target>Të ri</target>
       </trans-unit>
       <trans-unit id="tl_calendar_feed.new.1">
         <source>Create a new feed</source>
         <target>Krijo një furnizim të ri</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_feed.show.0">
-        <source>Feed details</source>
-        <target>Detajet e furnizimit</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_feed.show.1">
+      <trans-unit id="tl_calendar_feed.show">
         <source>Show the details of feed ID %s</source>
         <target>Trego detajet e furnizimit ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_feed.edit.0">
-        <source>Edit feed</source>
-        <target>Përpuno furnizimin</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_feed.edit.1">
+      <trans-unit id="tl_calendar_feed.edit">
         <source>Edit feed ID %s</source>
         <target>Përpuno furnizimin ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_feed.copy.0">
-        <source>Duplicate feed</source>
-        <target>Dyfisho furnizimin</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_feed.copy.1">
+      <trans-unit id="tl_calendar_feed.copy">
         <source>Duplicate feed ID %s</source>
         <target>Dyfisho furnizimin %s</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_feed.delete.0">
-        <source>Delete feed</source>
-        <target>Shlyej furnizimin</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_feed.delete.1">
+      <trans-unit id="tl_calendar_feed.delete">
         <source>Delete feed ID %s</source>
         <target>Shlyej furnizimin %s</target>
       </trans-unit>

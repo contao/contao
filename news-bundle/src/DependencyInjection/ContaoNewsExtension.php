@@ -19,9 +19,6 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 class ContaoNewsExtension extends Extension
 {
-    /**
-     * {@inheritdoc}
-     */
     public function load(array $mergedConfig, ContainerBuilder $container): void
     {
         $loader = new YamlFileLoader(

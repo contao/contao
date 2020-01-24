@@ -35,6 +35,7 @@
         "symfony/debug-bundle": "4.4.*",
         "symfony/dependency-injection": "4.4.*",
         "symfony/dotenv": "4.4.*",
+        "symfony/doctrine-bridge": "4.4.*",
         "symfony/expression-language": "4.4.*",
         "symfony/filesystem": "4.4.*",
         "symfony/finder": "4.4.*",
@@ -61,12 +62,15 @@
         "phpunit/phpunit": "^8.4",
         "symfony/phpunit-bridge": "4.4.*"
     },
+    "conflict": {
+        "symfony/config": "<4.4.2"
+    },
     "suggest": {
         "contao/tcpdf-bundle": "To export articles as PDF files"
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "4.9.x-dev"
+            "dev-master": "4.10.x-dev"
         },
         "contao-manager-plugin": "Contao\\ManagerBundle\\ContaoManager\\Plugin",
         "symfony": {

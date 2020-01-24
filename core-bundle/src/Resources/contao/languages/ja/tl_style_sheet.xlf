@@ -89,75 +89,47 @@
         <source>Style sheet &quot;%s&quot; has been imported as &quot;%s&quot;.</source>
         <target>スタイルシート&quot;%s&quot;を&quot;%s&quot;としてインポートしました。</target>
       </trans-unit>
+      <trans-unit id="tl_style_sheet.import.0">
+        <source>Import</source>
+        <target>インポート</target>
+      </trans-unit>
+      <trans-unit id="tl_style_sheet.import.1">
+        <source>Import a style sheet</source>
+        <target>スタイルシートをインポート</target>
+      </trans-unit>
       <trans-unit id="tl_style_sheet.new.0">
-        <source>New style sheet</source>
-        <target>新しいスタイルシート</target>
+        <source>New</source>
+        <target>新規作成</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.new.1">
         <source>Create a new style sheet</source>
-        <target>新しくスタイルシートを作成</target>
+        <target>新しいスタイルシートを作成</target>
       </trans-unit>
-      <trans-unit id="tl_style_sheet.show.0">
-        <source>Style sheet details</source>
-        <target>スタイルシートの詳細</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.show.1">
+      <trans-unit id="tl_style_sheet.show">
         <source>Show the details of style sheet ID %s</source>
         <target>ID %sのスタイルシートの詳細を表示</target>
       </trans-unit>
-      <trans-unit id="tl_style_sheet.edit.0">
-        <source>Edit style sheet</source>
-        <target>スタイルシートを編集</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.edit.1">
+      <trans-unit id="tl_style_sheet.edit">
         <source>Edit style sheet ID %s</source>
         <target>ID %sのスタイルシートを編集</target>
       </trans-unit>
-      <trans-unit id="tl_style_sheet.editheader.0">
-        <source>Edit style sheet</source>
-        <target>スタイルシートを編集</target>
+      <trans-unit id="tl_style_sheet.editheader">
+        <source>Edit the settings of style sheet ID %s</source>
+        <target>ID %sのスタイルシートの設定を変更</target>
       </trans-unit>
-      <trans-unit id="tl_style_sheet.editheader.1">
-        <source>Edit the style sheet settings</source>
-        <target>このスタイルシートの設定を変更</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.cut.0">
-        <source>Move style sheet</source>
-        <target>スタイルシートを移動</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.cut.1">
-        <source>Move style sheet ID %s</source>
-        <target>ID %sのスタイルシートを移動</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.copy.0">
-        <source>Duplicate style sheet</source>
-        <target>スタイルシートを複製</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.copy.1">
+      <trans-unit id="tl_style_sheet.copy">
         <source>Duplicate style sheet ID %s</source>
         <target>ID %sのスタイルシートを複製</target>
       </trans-unit>
-      <trans-unit id="tl_style_sheet.delete.0">
-        <source>Delete style sheet</source>
-        <target>スタイルシートを削除</target>
+      <trans-unit id="tl_style_sheet.cut">
+        <source>Move style sheet ID %s</source>
+        <target>ID %sのスタイルシートを移動</target>
       </trans-unit>
-      <trans-unit id="tl_style_sheet.delete.1">
+      <trans-unit id="tl_style_sheet.delete">
         <source>Delete style sheet ID %s</source>
         <target>ID %sのスタイルシートを削除</target>
       </trans-unit>
-      <trans-unit id="tl_style_sheet.import.0">
-        <source>CSS import</source>
-        <target>CSSをインポート</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.import.1">
-        <source>Import existing CSS files</source>
-        <target>既存のCSSファイルをインポート</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.export.0">
-        <source>Export style sheet</source>
-        <target>スタイルシートをエクスポート</target>
-      </trans-unit>
-      <trans-unit id="tl_style_sheet.export.1">
+      <trans-unit id="tl_style_sheet.export">
         <source>Export style sheet ID %s</source>
         <target>ID %sのスタイルシートをエクスポート</target>
       </trans-unit>

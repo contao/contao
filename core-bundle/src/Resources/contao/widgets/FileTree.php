@@ -368,27 +368,7 @@ class FileTree extends Widget
 		}
 		else
 		{
-			$extras = array('fieldType'=>$this->fieldType);
-
-			if ($this->files)
-			{
-				$extras['files'] = (bool) $this->files;
-			}
-
-			if ($this->filesOnly)
-			{
-				$extras['filesOnly'] = (bool) $this->filesOnly;
-			}
-
-			if ($this->path)
-			{
-				$extras['path'] = (string) $this->path;
-			}
-
-			if ($this->extensions)
-			{
-				$extras['extensions'] = (string) $this->extensions;
-			}
+			$extras = $this->getPickerUrlExtras($arrValues);
 
 			$return .= '
     <p><a href="' . ampersand(System::getContainer()->get('contao.picker.builder')->getUrl('file', $extras)) . '" class="tl_submit" id="ft_' . $this->strName . '">' . $GLOBALS['TL_LANG']['MSC']['changeSelection'] . '</a></p>
@@ -418,6 +398,41 @@ class FileTree extends Widget
 		$return = '<div>' . $return . '</div></div>';
 
 		return $return;
+	}
+
+	/**
+	 * Return the extra parameters for the picker URL
+	 *
+	 * @param array $values
+	 *
+	 * @return array
+	 */
+	protected function getPickerUrlExtras($values = array())
+	{
+		$extras = array();
+		$extras['fieldType'] = $this->fieldType;
+
+		if ($this->files)
+		{
+			$extras['files'] = (bool) $this->files;
+		}
+
+		if ($this->filesOnly)
+		{
+			$extras['filesOnly'] = (bool) $this->filesOnly;
+		}
+
+		if ($this->path)
+		{
+			$extras['path'] = (string) $this->path;
+		}
+
+		if ($this->extensions)
+		{
+			$extras['extensions'] = (string) $this->extensions;
+		}
+
+		return $extras;
 	}
 
 	/**

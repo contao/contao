@@ -70,6 +70,22 @@ Click here to edit or answer the comment:
 
 %s
 </source>
+        <target>%sさんがウェブサイトで新しいコメントを作成しました:
+
+---
+
+%s
+
+---
+
+コメントを表示:
+
+%s
+
+コメントを編集または返信:
+
+%s
+</target>
       </trans-unit>
       <trans-unit id="MSC.com_moderated">
         <source>This comment has to be published in the back end before it will appear on the website!</source>
@@ -98,13 +114,13 @@ please confirm that you want to be notified of new comments by e-mail on this pa
 
 %s
 
+---
+
 Click here to confirm your subscription:
 
 %s
 
-The confirmation link is valid for 24 hours.
-
-You can cancel your subscription at any time by clicking here:
+The confirmation link is valid for 24 hours. You can cancel your subscription at any time by clicking here:
 
 %s
 </source>
@@ -114,12 +130,13 @@ You can cancel your subscription at any time by clicking here:
 
 %s
 
+---
+
 クリックすると登録を承認:
 
 %s
 
 承認のリンクは24時間有効です。
-
 次をクリックするといつでも登録を止められます。
 
 %s
@@ -144,6 +161,20 @@ Click here to cancel your subscription:
 
 %s
 </source>
+        <target>こんにちは、%sさん、
+
+登録しているページに新しいコメントが追加されました:
+
+---
+
+%s
+
+---
+
+登録を取り消すには、次をクリックしてください:
+
+%s
+</target>
       </trans-unit>
       <trans-unit id="MSC.com_notifyReplySubject">
         <source>New reply to a comment on %s</source>
@@ -164,6 +195,20 @@ Click here to cancel your subscription:
 
 %s
 </source>
+        <target>こんにちは、%sさん、
+
+登録しているページに新しい返信が追加されました:
+
+---
+
+%s
+
+---
+
+登録を取り消すには、次をクリックしてください:
+
+%s
+</target>
       </trans-unit>
     </body>
   </file>

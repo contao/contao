@@ -122,50 +122,33 @@
         <target>Stizzar la categoria cun l'ID %s vegn era a stizzar tut ils FAQs cumpigliads. Cuntinuar?</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.new.0">
-        <source>New category</source>
-        <target>Nova categoria</target>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_faq_category.new.1">
         <source>Create a new category</source>
         <target>Crear ina nova categoria</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.show.0">
-        <source>Category details</source>
-        <target>Detagls da categoria</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.show.1">
+      <trans-unit id="tl_faq_category.show">
         <source>Show the details of category ID %s</source>
         <target>Mussar ils detagls da la categoria cun l'ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.edit.0">
-        <source>Edit category</source>
-        <target>Modifitgar la categoria</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.edit.1">
+      <trans-unit id="tl_faq_category.edit">
         <source>Edit category ID %s</source>
         <target>Modifitgar la categoria cun l'ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.editheader.0">
-        <source>Edit category</source>
-        <target>Modifitgar la categoria</target>
+      <trans-unit id="tl_faq_category.editheader">
+        <source>Edit the settings of category ID %s</source>
+        <target>Modifitgar las opziuns da la categoria cun l'ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.editheader.1">
+      <trans-unit id="tl_faq_category.editmeta">
         <source>Edit the category settings</source>
         <target>Modifitgar las opziuns da la categoria</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.copy.0">
-        <source>Duplicate category</source>
-        <target>Duplitgar la categoria</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.copy.1">
+      <trans-unit id="tl_faq_category.copy">
         <source>Duplicate category ID %s</source>
         <target>Duplitgar la categoria cun l'ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.delete.0">
-        <source>Delete category</source>
-        <target>Stizzar la categoria</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.delete.1">
+      <trans-unit id="tl_faq_category.delete">
         <source>Delete category ID %s</source>
         <target>Stizzar la categoria cun l'ID %s</target>
       </trans-unit>

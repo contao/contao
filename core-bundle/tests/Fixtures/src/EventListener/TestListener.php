@@ -90,7 +90,7 @@ class TestListener
     {
     }
 
-    private function onPrivateCallback(): void
+    protected function onPrivateCallback(): void
     {
     }
 }

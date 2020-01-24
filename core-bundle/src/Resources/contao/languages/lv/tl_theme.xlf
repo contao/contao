@@ -49,14 +49,6 @@
         <source>Here you can define global variables for the style sheets of the theme (e.g. &lt;em&gt;$red&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; or &lt;em&gt;$margin&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;).</source>
         <target>Šeit jūs varat definēt globālos mainīgos tēmas stila lapām (piem. &lt;em&gt;$red&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; vai &lt;em&gt;$margin&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;).</target>
       </trans-unit>
-      <trans-unit id="tl_theme.defaultImageDensities.0">
-        <source>Default image pixel densities</source>
-        <target>Noklusējuma attēla pikseļu blīvumi</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.defaultImageDensities.1">
-        <source>Here you can define the default pixel densities, e.g. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</source>
-        <target>Šeit jūs varat noteikt noklusējuma pikseļu blīvumus, piem. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</target>
-      </trans-unit>
       <trans-unit id="tl_theme.source.0">
         <source>Source files</source>
         <target>Avota datnes</target>
@@ -80,10 +72,6 @@
       <trans-unit id="tl_theme.config_legend">
         <source>Configuration</source>
         <target>Konfigurācija</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.image_legend">
-        <source>Image sizes</source>
-        <target>Attēla izmēri</target>
       </trans-unit>
       <trans-unit id="tl_theme.vars_legend">
         <source>Global variables</source>
@@ -133,83 +121,53 @@
         <source>Find more themes in the Contao theme store</source>
         <target>Atrodi vaitāk tēmu Contao tēmu veikalā</target>
       </trans-unit>
+      <trans-unit id="tl_theme.importTheme.0">
+        <source>Import</source>
+      </trans-unit>
+      <trans-unit id="tl_theme.importTheme.1">
+        <source>Import a theme</source>
+      </trans-unit>
+      <trans-unit id="tl_theme.editmeta">
+        <source>Edit the theme settings</source>
+        <target>Rediģēt tēmas uzstādījumus</target>
+      </trans-unit>
       <trans-unit id="tl_theme.new.0">
-        <source>New theme</source>
-        <target>Jauna tēma</target>
+        <source>New</source>
+        <target>Jauns</target>
       </trans-unit>
       <trans-unit id="tl_theme.new.1">
         <source>Create a new theme</source>
         <target>Izveidot jaunu tēmu</target>
       </trans-unit>
-      <trans-unit id="tl_theme.show.0">
-        <source>Theme details</source>
-        <target>Tēmas detaļas</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.show.1">
+      <trans-unit id="tl_theme.show">
         <source>Show the details of theme ID %s</source>
         <target>Rādīt tēmas ID %s detaļas</target>
       </trans-unit>
-      <trans-unit id="tl_theme.edit.0">
-        <source>Edit theme</source>
-        <target>Rediģēt tēmu</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.edit.1">
+      <trans-unit id="tl_theme.edit">
         <source>Edit theme ID %s</source>
         <target>Rediģēt tēmu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.delete.0">
-        <source>Delete theme</source>
-        <target>Dzēst tēmu</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.delete.1">
+      <trans-unit id="tl_theme.delete">
         <source>Delete theme ID %s</source>
         <target>Dzēst tēmu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.css.0">
-        <source>Style sheets</source>
-        <target>Stila lapas</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.css.1">
+      <trans-unit id="tl_theme.css">
         <source>Edit the style sheets of theme ID %s</source>
         <target>Rediģēt tēmas ID %s stila lapas</target>
       </trans-unit>
-      <trans-unit id="tl_theme.modules.0">
-        <source>Modules</source>
-        <target>Moduļi</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.modules.1">
+      <trans-unit id="tl_theme.modules">
         <source>Edit the front end modules of theme ID %s</source>
         <target>Rediģēt tēmas ID %s priekšgala moduļus</target>
       </trans-unit>
-      <trans-unit id="tl_theme.layout.0">
-        <source>Layouts</source>
-        <target>Salikumi</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.layout.1">
+      <trans-unit id="tl_theme.layout">
         <source>Edit the page layouts of theme ID %s</source>
         <target>Rediģēt tēmas ID %s lapas salikumus</target>
       </trans-unit>
-      <trans-unit id="tl_theme.imageSizes.0">
-        <source>Image sizes</source>
-        <target>Attēla izmēri</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.imageSizes.1">
+      <trans-unit id="tl_theme.imageSizes">
         <source>Edit the image sizes of theme ID %s</source>
         <target>Rediģēt tēmas ID %s attēlu izmērus</target>
       </trans-unit>
-      <trans-unit id="tl_theme.importTheme.0">
-        <source>Theme import</source>
-        <target>Tēmu imports</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.importTheme.1">
-        <source>Import new themes</source>
-        <target>Importēt jaunas tēmas</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.exportTheme.0">
-        <source>Export</source>
-        <target>Eksportēt</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.exportTheme.1">
+      <trans-unit id="tl_theme.exportTheme">
         <source>Export theme ID %s</source>
         <target>Eksportēt tēmu ID %s</target>
       </trans-unit>

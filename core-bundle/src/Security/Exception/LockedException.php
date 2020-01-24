@@ -28,17 +28,11 @@ class LockedException extends BaseLockedException
         $this->lockedSeconds = $lockedSeconds;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function __serialize(): array
     {
         return [$this->lockedSeconds, parent::__serialize()];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function __unserialize(array $data): void
     {
         [$this->lockedSeconds, $parentData] = $data;

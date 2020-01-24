@@ -19,9 +19,11 @@
       </trans-unit>
       <trans-unit id="tl_module.nl_text.0">
         <source>Custom text</source>
+        <target>Testo personalizzato</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_text.1">
         <source>Here you can e.g. enter a privacy note to make the newsletter subscription GDPR compliant.</source>
+        <target>Qui è possibile, ad esempio, inserire una nota sulla privacy per rendere l'abbonamento alla newsletter conforme al GDPR.</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_hideChannels.0">
         <source>Hide channel menu</source>
@@ -57,6 +59,7 @@
       </trans-unit>
       <trans-unit id="tl_module.text_legend">
         <source>Custom text</source>
+        <target>Testo personalizzato</target>
       </trans-unit>
       <trans-unit id="tl_module.text_subscribe.0">
         <source>Your subscription on %s</source>
@@ -75,6 +78,18 @@ The confirmation link is valid for 24 hours. You can cancel your subscription at
 
 If you did not subscribe yourself, please ignore this e-mail.
 </source>
+        <target>Ti sei iscritto alla newsletter: 
+
+##channel## 
+
+su ##domain##.
+
+Clicca il seguente link di attivazione per completare l'iscrizione: 
+
+##link##
+
+Se l'iscrizione non è avvenuta per opera tua, ti preghiamo di ignorare questa e-mail.
+</target>
       </trans-unit>
       <trans-unit id="tl_module.text_unsubscribe.0">
         <source>Your subscription on %s</source>

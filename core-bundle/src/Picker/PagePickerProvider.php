@@ -34,25 +34,16 @@ class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         $this->security = $security;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName(): string
     {
         return 'pagePicker';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsContext($context): bool
     {
         return \in_array($context, ['page', 'link'], true) && $this->security->isGranted('contao_user.modules', 'page');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsValue(PickerConfig $config): bool
     {
         if ('page' === $config->getContext()) {
@@ -62,17 +53,11 @@ class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return $this->isMatchingInsertTag($config);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDcaTable(): string
     {
         return 'tl_page';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDcaAttributes(PickerConfig $config): array
     {
         $value = $config->getValue();
@@ -107,9 +92,6 @@ class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return $attributes;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function convertDcaValue(PickerConfig $config, $value)
     {
         if ('page' === $config->getContext()) {
@@ -119,17 +101,11 @@ class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return sprintf($this->getInsertTag($config), $value);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getRouteParameters(PickerConfig $config = null): array
     {
         return ['do' => 'page'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getDefaultInsertTag(): string
     {
         return '{{link_url::%s}}';

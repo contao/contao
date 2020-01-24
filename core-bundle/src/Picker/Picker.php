@@ -23,7 +23,7 @@ class Picker implements PickerInterface
     private $menuFactory;
 
     /**
-     * @var PickerProviderInterface[]
+     * @var array<PickerProviderInterface>
      */
     private $providers;
 
@@ -38,7 +38,7 @@ class Picker implements PickerInterface
     private $menu;
 
     /**
-     * @param PickerProviderInterface[] $providers
+     * @param array<PickerProviderInterface> $providers
      */
     public function __construct(FactoryInterface $menuFactory, array $providers, PickerConfig $config)
     {
@@ -47,17 +47,11 @@ class Picker implements PickerInterface
         $this->config = $config;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getConfig(): PickerConfig
     {
         return $this->config;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getMenu(): ItemInterface
     {
         if (null !== $this->menu) {
@@ -77,9 +71,6 @@ class Picker implements PickerInterface
         return $this->menu;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCurrentProvider(): ?PickerProviderInterface
     {
         foreach ($this->providers as $provider) {
@@ -91,9 +82,6 @@ class Picker implements PickerInterface
         return null;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCurrentUrl(): ?string
     {
         foreach ($this->providers as $provider) {

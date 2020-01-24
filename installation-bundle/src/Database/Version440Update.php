@@ -25,7 +25,7 @@ class Version440Update extends AbstractMigration
     /**
      * @var Connection
      */
-    protected $connection;
+    private $connection;
 
     public function __construct(Connection $connection)
     {
@@ -37,9 +37,6 @@ class Version440Update extends AbstractMigration
         return 'Contao 4.4.0 Update';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function shouldRun(): bool
     {
         $schemaManager = $this->connection->getSchemaManager();
@@ -53,9 +50,6 @@ class Version440Update extends AbstractMigration
         return !isset($columns['imagetitle']);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function run(): MigrationResult
     {
         // Add the js_autofocus.html5 template

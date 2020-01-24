@@ -252,6 +252,7 @@ $GLOBALS['TL_FFL'] = array
 	'radio'         => 'Contao\FormRadioButton',
 	'checkbox'      => 'Contao\FormCheckBox',
 	'upload'        => 'Contao\FormFileUpload',
+	'range'         => 'Contao\FormRange',
 	'hidden'        => 'Contao\FormHidden',
 	'captcha'       => 'Contao\FormCaptcha',
 	'submit'        => 'Contao\FormSubmit',
@@ -264,7 +265,7 @@ $GLOBALS['TL_PTY'] = array();
 $GLOBALS['TL_MAINTENANCE'] = array
 (
 	'Contao\Maintenance',
-	'Contao\RebuildIndex',
+	'Contao\Crawl',
 	'Contao\PurgeData'
 );
 
@@ -292,6 +293,11 @@ $GLOBALS['TL_PURGE'] = array
 		(
 			'callback' => array('Contao\Automator', 'purgeSystemLog'),
 			'affected' => array('tl_log')
+		),
+		'crawl_queue' => array
+		(
+			'callback' => array('Contao\Automator', 'purgeCrawlQueue'),
+			'affected' => array('tl_crawl_queue')
 		)
 	),
 	'folders' => array

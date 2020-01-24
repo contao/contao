@@ -22,14 +22,13 @@ class LockedExceptionTest extends TestCase
         $exception = new LockedException(300);
 
         $this->assertSame(300, $exception->getLockedSeconds());
-        $this->assertSame(5, $exception->getLockedMinutes());
     }
 
     public function testSerializesItself(): void
     {
         $exception = new LockedException(300, 'foobar');
         $serialized = $exception->__serialize();
-        $expected = [300, [null, [null, 0, 'foobar', __FILE__, 30]]];
+        $expected = [300, [null, [null, 0, 'foobar', __FILE__, 29]]];
 
         $this->assertSame($expected, $serialized);
 

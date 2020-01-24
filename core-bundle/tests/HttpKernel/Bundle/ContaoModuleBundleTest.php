@@ -22,9 +22,6 @@ class ContaoModuleBundleTest extends TestCase
      */
     private $bundle;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();

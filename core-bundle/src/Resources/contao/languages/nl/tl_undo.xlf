@@ -41,21 +41,9 @@
         <source>Raw data of the undo step</source>
         <target>Onbewerkte gegevens van de undo-stap</target>
       </trans-unit>
-      <trans-unit id="tl_undo.show.0">
-        <source>Show details</source>
-        <target>Toon details</target>
-      </trans-unit>
-      <trans-unit id="tl_undo.show.1">
-        <source>Show the details of entry ID %s</source>
-        <target>Toon details van invoeging ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_undo.undo.0">
-        <source>Restore</source>
-        <target>Herstellen</target>
-      </trans-unit>
-      <trans-unit id="tl_undo.undo.1">
-        <source>Restore entry ID %s</source>
-        <target>Herstel ingang ID %s</target>
+      <trans-unit id="tl_undo.undo">
+        <source>Restore element ID %s</source>
+        <target>Herstel element ID %s</target>
       </trans-unit>
     </body>
   </file>

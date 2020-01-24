@@ -197,10 +197,6 @@
         <source>Colombia</source>
         <target>Колумбия</target>
       </trans-unit>
-      <trans-unit id="CNT.cp">
-        <source>Clipperton Island</source>
-        <target>Клиппертон, остров</target>
-      </trans-unit>
       <trans-unit id="CNT.cr">
         <source>Costa Rica</source>
         <target>Коста-Рика</target>
@@ -226,16 +222,12 @@
         <target>Кипр</target>
       </trans-unit>
       <trans-unit id="CNT.cz">
-        <source>Czech Republic</source>
+        <source>Czechia</source>
         <target>Чехия</target>
       </trans-unit>
       <trans-unit id="CNT.de">
         <source>Germany</source>
         <target>Германия</target>
-      </trans-unit>
-      <trans-unit id="CNT.dg">
-        <source>Diego Garcia</source>
-        <target>Диего-Гарсия, остров</target>
       </trans-unit>
       <trans-unit id="CNT.dj">
         <source>Djibouti</source>
@@ -590,8 +582,8 @@
         <target>Маршалловы острова</target>
       </trans-unit>
       <trans-unit id="CNT.mk">
-        <source>Macedonia</source>
-        <target>Македония</target>
+        <source>North Macedonia</source>
+        <target>Северная Македония</target>
       </trans-unit>
       <trans-unit id="CNT.ml">
         <source>Mali</source>
@@ -866,8 +858,8 @@
         <target>Сирия</target>
       </trans-unit>
       <trans-unit id="CNT.sz">
-        <source>Swaziland</source>
-        <target>Свазиланд</target>
+        <source>Eswatini</source>
+        <target>Эсватини</target>
       </trans-unit>
       <trans-unit id="CNT.ta">
         <source>Tristan da Cunha</source>

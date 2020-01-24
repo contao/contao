@@ -197,10 +197,6 @@
         <source>Colombia</source>
         <target>哥伦比亚</target>
       </trans-unit>
-      <trans-unit id="CNT.cp">
-        <source>Clipperton Island</source>
-        <target>克利珀顿岛</target>
-      </trans-unit>
       <trans-unit id="CNT.cr">
         <source>Costa Rica</source>
         <target>哥斯达黎加</target>
@@ -226,16 +222,11 @@
         <target>塞浦路斯</target>
       </trans-unit>
       <trans-unit id="CNT.cz">
-        <source>Czech Republic</source>
-        <target>捷克共和国</target>
+        <source>Czechia</source>
       </trans-unit>
       <trans-unit id="CNT.de">
         <source>Germany</source>
         <target>德国</target>
-      </trans-unit>
-      <trans-unit id="CNT.dg">
-        <source>Diego Garcia</source>
-        <target>迪戈加西亚</target>
       </trans-unit>
       <trans-unit id="CNT.dj">
         <source>Djibouti</source>
@@ -590,8 +581,7 @@
         <target>马绍尔群岛</target>
       </trans-unit>
       <trans-unit id="CNT.mk">
-        <source>Macedonia</source>
-        <target>前南斯拉夫马其顿共和国</target>
+        <source>North Macedonia</source>
       </trans-unit>
       <trans-unit id="CNT.ml">
         <source>Mali</source>
@@ -866,8 +856,7 @@
         <target>叙利亚</target>
       </trans-unit>
       <trans-unit id="CNT.sz">
-        <source>Swaziland</source>
-        <target>斯威士兰</target>
+        <source>Eswatini</source>
       </trans-unit>
       <trans-unit id="CNT.ta">
         <source>Tristan da Cunha</source>

@@ -98,68 +98,35 @@
         <target>ထုတ်ဝေချိန်ညှိချက်</target>
       </trans-unit>
       <trans-unit id="tl_faq.new.0">
-        <source>New question</source>
-        <target>မေးခွန်းအသစ်</target>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_faq.new.1">
         <source>Create a new question</source>
         <target>မေးခွန်းအသစ်ဖန်တီး</target>
       </trans-unit>
-      <trans-unit id="tl_faq.show.0">
-        <source>Show question details</source>
-        <target>မေးခွန်းအချက်အလက်များပြသ</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.show.1">
+      <trans-unit id="tl_faq.show">
         <source>Show the details of question ID %s</source>
         <target>မေးခွန်းအိုင်ဒီ %s အချက်အလက်များပြသ</target>
       </trans-unit>
-      <trans-unit id="tl_faq.edit.0">
-        <source>Edit question</source>
-        <target>မေးခွန်းတည်းဖြတ်</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.edit.1">
+      <trans-unit id="tl_faq.edit">
         <source>Edit question ID %s</source>
         <target>မေးခွန်းအိုင်ဒီ %s တည်းဖြတ်</target>
       </trans-unit>
-      <trans-unit id="tl_faq.copy.0">
-        <source>Duplicate question</source>
-        <target>မေးခွန်းပံုစံတူပွား</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.copy.1">
+      <trans-unit id="tl_faq.copy">
         <source>Duplicate question ID %s</source>
         <target>မေးခွန်းအိုင်ဒီ %s ပံုစံတူပွား</target>
       </trans-unit>
-      <trans-unit id="tl_faq.cut.0">
-        <source>Move question</source>
-        <target>မေးခွန်းရွေ့ပြောင်း</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.cut.1">
+      <trans-unit id="tl_faq.cut">
         <source>Move question ID %s</source>
         <target>မေးခွန်းအိုင်ဒီ %s ရွေ့ပြောင်း</target>
       </trans-unit>
-      <trans-unit id="tl_faq.delete.0">
-        <source>Delete question</source>
-        <target>မေးခွန်းပယ်ဖျက်</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.delete.1">
+      <trans-unit id="tl_faq.delete">
         <source>Delete question ID %s</source>
         <target>မေးခွန်းအိုင်ဒီ %s ပယ်ဖျက်</target>
       </trans-unit>
-      <trans-unit id="tl_faq.toggle.0">
-        <source>Publish/unpublish question</source>
-        <target>မေးခွန်းထုတ်ဝေ/မထုတ်ဝေ</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.toggle.1">
+      <trans-unit id="tl_faq.toggle">
         <source>Publish/unpublish question ID %s</source>
         <target>မေးခွန်းအိုင်ဒီ %s ထုတ်ဝေ/မထုတ်ဝေ</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.editheader.0">
-        <source>Edit category</source>
-        <target>အမျိုးအစားတည်းဖြတ်</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.editheader.1">
-        <source>Edit the category settings</source>
-        <target>အမျိုးအစားချိန်ညှိချက်တည်းဖြတ်</target>
       </trans-unit>
       <trans-unit id="tl_faq.pasteafter.0">
         <source>Paste at the top</source>
@@ -170,12 +137,10 @@
         <target>မေးခွန်းအိုင်ဒီ %s ပြီးနောက်ထုတ်ထား</target>
       </trans-unit>
       <trans-unit id="tl_faq.pastenew.0">
-        <source>Add new at the top</source>
-        <target>အပေါ်တွင်အသစ်ထည့်</target>
+        <source>Create a new question at the top</source>
       </trans-unit>
       <trans-unit id="tl_faq.pastenew.1">
-        <source>Add new after question ID %s</source>
-        <target>မေးခွန်းအိုင်ဒီ %s ပြီးနောက်အသစ်ထည့်</target>
+        <source>Create a new question after question ID %s</source>
       </trans-unit>
     </body>
   </file>

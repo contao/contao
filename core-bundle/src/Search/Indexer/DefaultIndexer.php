@@ -44,9 +44,6 @@ class DefaultIndexer implements IndexerInterface
         $this->indexProtected = $indexProtected;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function index(Document $document): void
     {
         if (200 !== $document->getStatusCode()) {
@@ -103,9 +100,6 @@ class DefaultIndexer implements IndexerInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function delete(Document $document): void
     {
         $this->framework->initialize();
@@ -115,9 +109,6 @@ class DefaultIndexer implements IndexerInterface
         $search->removeEntry((string) $document->getUri());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function clear(): void
     {
         $this->connection->exec('TRUNCATE TABLE tl_search');

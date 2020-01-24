@@ -112,6 +112,16 @@ class FormTextField extends Widget
 				break;
 
 			case 'step':
+				if ($varValue > 0 && $this->type == 'number')
+				{
+					$this->arrAttributes[$strKey] = $varValue;
+				}
+				else
+				{
+					unset($this->arrAttributes[$strKey]);
+				}
+				break;
+
 			case 'placeholder':
 				$this->arrAttributes[$strKey] = $varValue;
 				break;

@@ -49,6 +49,12 @@
         <source>Here you can enter a website address.</source>
         <target>Gellout a rit ebarzhiñ chomlec'h ur lec'hienn internet amañ.</target>
       </trans-unit>
+      <trans-unit id="tl_comments.member.0">
+        <source>Member</source>
+      </trans-unit>
+      <trans-unit id="tl_comments.member.1">
+        <source>Here you can associate the comment with a member.</source>
+      </trans-unit>
       <trans-unit id="tl_comments.comment.0">
         <source>Comment</source>
         <target>Evezhiadenn</target>
@@ -157,35 +163,19 @@
         <source>Event</source>
         <target>Darvoud</target>
       </trans-unit>
-      <trans-unit id="tl_comments.show.0">
-        <source>Comment details</source>
-        <target>Munudoù an evezhiadenn</target>
-      </trans-unit>
-      <trans-unit id="tl_comments.show.1">
+      <trans-unit id="tl_comments.show">
         <source>Show the details of comment ID %s</source>
         <target>Diskouez munudoù an evezhiadenn %s</target>
       </trans-unit>
-      <trans-unit id="tl_comments.edit.0">
-        <source>Edit comment</source>
-        <target>Kemm an evezhiadenn</target>
-      </trans-unit>
-      <trans-unit id="tl_comments.edit.1">
+      <trans-unit id="tl_comments.edit">
         <source>Edit comment ID %s</source>
         <target>Kemm an evezhiadenn %s</target>
       </trans-unit>
-      <trans-unit id="tl_comments.delete.0">
-        <source>Delete comment</source>
-        <target>Dilemel an evezhiadenn</target>
-      </trans-unit>
-      <trans-unit id="tl_comments.delete.1">
+      <trans-unit id="tl_comments.delete">
         <source>Delete comment ID %s</source>
         <target>Dilemel an evezhiadenn %s</target>
       </trans-unit>
-      <trans-unit id="tl_comments.toggle.0">
-        <source>Publish/unpublish comment</source>
-        <target>Embann/diembann an evezhiadenn</target>
-      </trans-unit>
-      <trans-unit id="tl_comments.toggle.1">
+      <trans-unit id="tl_comments.toggle">
         <source>Publish/unpublish comment ID %s</source>
         <target>Embann/diembann an evezhiadenn %s</target>
       </trans-unit>

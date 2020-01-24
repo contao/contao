@@ -33,6 +33,13 @@
         <source>Add an image to the content element.</source>
         <target>Pievienot attēlu satura elementam.</target>
       </trans-unit>
+      <trans-unit id="tl_content.inline.0">
+        <source>Show in browser</source>
+        <target>Rādīt pārlūkā</target>
+      </trans-unit>
+      <trans-unit id="tl_content.inline.1">
+        <source>Show the file in the browser instead of opening the download dialog.</source>
+      </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.0">
         <source>Overwrite meta data</source>
         <target>Pārrakstīt meta datus</target>
@@ -411,6 +418,7 @@
       </trans-unit>
       <trans-unit id="tl_content.vimeo.1">
         <source>Please enter the Vimeo video ID (e.g. &lt;em&gt;275028611&lt;/em&gt;).</source>
+        <target>Lūdzu ievadiet Vimeo video ID (piem. &lt;em&gt;275028611&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_content.posterSRC.0">
         <source>Preview image</source>
@@ -438,9 +446,11 @@
       </trans-unit>
       <trans-unit id="tl_content.playerPreload.0">
         <source>Preloading</source>
+        <target>Pirmsielāde</target>
       </trans-unit>
       <trans-unit id="tl_content.playerPreload.1">
         <source>Here you can suggest how the browser shall preload the video.</source>
+        <target>Šeit jūs varat norādīt, kā pārlūks pirmsielādēs video.</target>
       </trans-unit>
       <trans-unit id="tl_content.playerStart.0">
         <source>Start at</source>
@@ -464,18 +474,29 @@
       </trans-unit>
       <trans-unit id="tl_content.playerCaption.1">
         <source>Here you can enter a caption.</source>
+        <target>Šeit jūs varat ievadīt parakstu.</target>
       </trans-unit>
       <trans-unit id="tl_content.playerAspect.0">
         <source>Aspect ratio</source>
+        <target>Attēla attiecība</target>
       </trans-unit>
       <trans-unit id="tl_content.playerAspect.1">
         <source>Here you can select the aspect ratio of the video to make it responsive.</source>
       </trans-unit>
+      <trans-unit id="tl_content.splashImage.0">
+        <source>Use a splash image</source>
+        <target>Izmantojiet uzplaiksnījuma attēlu</target>
+      </trans-unit>
+      <trans-unit id="tl_content.splashImage.1">
+        <source>Only load the video after the user has clicked on the splash image.</source>
+      </trans-unit>
       <trans-unit id="tl_content.playerColor.0">
         <source>Controls color</source>
+        <target>Vadīklu krāsa</target>
       </trans-unit>
       <trans-unit id="tl_content.playerColor.1">
         <source>Here you can enter a hexadecimal color (e.g. ff0000) for the video controls.</source>
+        <target>Šeit varat norādīt heksadecimālo krāsu (pie.: ff0000) video vadīklām</target>
       </trans-unit>
       <trans-unit id="tl_content.sliderDelay.0">
         <source>Sliding interval</source>
@@ -590,16 +611,14 @@
         <target>Wrapper sākums</target>
       </trans-unit>
       <trans-unit id="tl_content.start.1">
-        <source>Do not show the element on the website before this day.</source>
-        <target>Iezīmē sākumu accordion rūtī, kas aptver vairākus satura elementus.</target>
+        <source>If you want to prevent the element from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_content.stop.0">
         <source>Show until</source>
         <target>Wrapper beigas</target>
       </trans-unit>
       <trans-unit id="tl_content.stop.1">
-        <source>Do not show the element on the website on and after this day.</source>
-        <target>Iezīmē beigas accordion rūtī, kas aptver vairākus satura elementus.</target>
+        <source>If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_content.type_legend">
         <source>Element type</source>
@@ -612,6 +631,10 @@
       <trans-unit id="tl_content.image_legend">
         <source>Image settings</source>
         <target>Attēla uzstādījumi</target>
+      </trans-unit>
+      <trans-unit id="tl_content.download_legend">
+        <source>Download settings</source>
+        <target>Lejupielādes uzstādījumi</target>
       </trans-unit>
       <trans-unit id="tl_content.slider_legend">
         <source>Slider settings</source>
@@ -656,6 +679,9 @@
       <trans-unit id="tl_content.protected_legend">
         <source>Access protection</source>
         <target>Piekļuves aizsardzība</target>
+      </trans-unit>
+      <trans-unit id="tl_content.splash_legend">
+        <source>Splash image</source>
       </trans-unit>
       <trans-unit id="tl_content.expert_legend">
         <source>Expert settings</source>
@@ -721,24 +747,30 @@
       </trans-unit>
       <trans-unit id="tl_content.player_nocontrols">
         <source>Hide the controls</source>
+        <target>Slēpt vadīklas</target>
       </trans-unit>
       <trans-unit id="tl_content.player_loop">
         <source>Play in a loop</source>
+        <target>Atskaņot cilpā</target>
       </trans-unit>
       <trans-unit id="tl_content.player_muted">
         <source>Mute the audio output</source>
+        <target>Izslēgt audio izvadi</target>
       </trans-unit>
       <trans-unit id="tl_content.player_playsinline">
         <source>Play inline (no fullscreen mode)</source>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.auto">
         <source>Auto (preload the entiry video)</source>
+        <target>Automātiski (pirmsielādēt visu video)</target>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.metadata">
         <source>Metadata (preload the metadata only)</source>
+        <target>Metadati (pirmsielādēt tikai metadatus)</target>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.none">
         <source>None (do not preload anything)</source>
+        <target>Neko (neko nepirmslādēt)</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_autoplay">
         <source>Autoplay</source>
@@ -746,6 +778,7 @@
       </trans-unit>
       <trans-unit id="tl_content.youtube_controls">
         <source>Hide the controls</source>
+        <target>Slēpt vadīklas</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_cc_load_policy">
         <source>Show captions by default</source>
@@ -777,6 +810,7 @@
       </trans-unit>
       <trans-unit id="tl_content.youtube_nocookie">
         <source>Use the youtube-nocookie.com domain</source>
+        <target>Izmantot domēnu youtube-nocookie.com</target>
       </trans-unit>
       <trans-unit id="tl_content.vimeo_autoplay">
         <source>Autoplay</source>
@@ -784,71 +818,55 @@
       </trans-unit>
       <trans-unit id="tl_content.vimeo_loop">
         <source>Play in a loop</source>
+        <target>Atskaņot cilpā</target>
       </trans-unit>
       <trans-unit id="tl_content.vimeo_portrait">
         <source>Hide the profile image</source>
+        <target>Slēpt profila attēlu</target>
       </trans-unit>
       <trans-unit id="tl_content.vimeo_title">
         <source>Hide the title</source>
+        <target>Slēpt nosaukumu</target>
       </trans-unit>
       <trans-unit id="tl_content.vimeo_byline">
         <source>Hide the author</source>
+        <target>Slēpt autoru</target>
       </trans-unit>
       <trans-unit id="tl_content.new.0">
-        <source>New element</source>
-        <target>Jauns elements</target>
+        <source>New</source>
+        <target>Jauns</target>
       </trans-unit>
       <trans-unit id="tl_content.new.1">
         <source>Add a new content element</source>
-        <target>Izveidot jaunu elementu</target>
+        <target>Pievienot jaunu satura elementu</target>
       </trans-unit>
-      <trans-unit id="tl_content.show.0">
-        <source>Element details</source>
-        <target>Elementa detaļas</target>
-      </trans-unit>
-      <trans-unit id="tl_content.show.1">
+      <trans-unit id="tl_content.show">
         <source>Show the details of content element ID %s</source>
-        <target>Rādīt satura elemetna ID %s detaļas</target>
+        <target>Rādīt satura elementa ID %s detaļas</target>
       </trans-unit>
-      <trans-unit id="tl_content.cut.0">
-        <source>Move element</source>
-        <target>Pārvietot elementu</target>
-      </trans-unit>
-      <trans-unit id="tl_content.cut.1">
+      <trans-unit id="tl_content.cut">
         <source>Move content element ID %s</source>
         <target>Pārvietot satura elementu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_content.copy.0">
-        <source>Duplicate element</source>
-        <target>Kopēt elementu</target>
-      </trans-unit>
-      <trans-unit id="tl_content.copy.1">
+      <trans-unit id="tl_content.copy">
         <source>Duplicate content element ID %s</source>
-        <target>Kopēt satura elementu ID %s</target>
+        <target>Dublicēt satura elementu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_content.delete.0">
-        <source>Delete element</source>
-        <target>Dzēst elementu</target>
-      </trans-unit>
-      <trans-unit id="tl_content.delete.1">
+      <trans-unit id="tl_content.delete">
         <source>Delete content element ID %s</source>
         <target>Dzēst satura elementu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_content.edit.0">
-        <source>Edit element</source>
-        <target>Rediģēt elementu</target>
-      </trans-unit>
-      <trans-unit id="tl_content.edit.1">
+      <trans-unit id="tl_content.edit">
         <source>Edit content element ID %s</source>
         <target>Rediģēt satura elementu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_content.editheader.0">
-        <source>Edit article</source>
-        <target>Rediģēt rakstu</target>
-      </trans-unit>
-      <trans-unit id="tl_content.editheader.1">
+      <trans-unit id="tl_content.editheader">
         <source>Edit the article settings</source>
         <target>Rediģēt raksta iestatījumus</target>
+      </trans-unit>
+      <trans-unit id="tl_content.toggle">
+        <source>Hide/unhide content element ID %s</source>
+        <target>Slēpt/parādīt satura elementu ID  %s</target>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.0">
         <source>Paste at the top</source>
@@ -859,34 +877,18 @@
         <target>Ielīmēt pēc satura elementa ID %s</target>
       </trans-unit>
       <trans-unit id="tl_content.pastenew.0">
-        <source>Add new at the top</source>
-        <target>Pievienot sākumā</target>
+        <source>Create a new content element at the top</source>
+        <target>Izveidot jaunu satura elementu augšpusē</target>
       </trans-unit>
       <trans-unit id="tl_content.pastenew.1">
-        <source>Add new after content element ID %s</source>
+        <source>Create a new content element after content element ID %s</source>
         <target>Izveidot jaunu satura elementu pēc satura elementa ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_content.toggle.0">
-        <source>Toggle visibility</source>
-        <target>Pārslēgt redzamību</target>
-      </trans-unit>
-      <trans-unit id="tl_content.toggle.1">
-        <source>Toggle the visibility of element ID %s</source>
-        <target>Pārslēgt elementa ID %s redzamību</target>
-      </trans-unit>
-      <trans-unit id="tl_content.editalias.0">
-        <source>Edit source element</source>
-        <target>Rediģēt avota elementu</target>
-      </trans-unit>
-      <trans-unit id="tl_content.editalias.1">
+      <trans-unit id="tl_content.editalias">
         <source>Edit the source element ID %s</source>
         <target>Rediģēt avota elementu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_content.editarticle.0">
-        <source>Edit article</source>
-        <target>Rediģēt rakstu</target>
-      </trans-unit>
-      <trans-unit id="tl_content.editarticle.1">
+      <trans-unit id="tl_content.editarticle">
         <source>Edit article ID %s</source>
         <target>Rediģēt rakstu ID %s</target>
       </trans-unit>

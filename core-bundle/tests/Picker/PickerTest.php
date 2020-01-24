@@ -28,9 +28,6 @@ class PickerTest extends TestCase
      */
     private $picker;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();

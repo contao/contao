@@ -30,16 +30,16 @@
         <target>Activeer op</target>
       </trans-unit>
       <trans-unit id="tl_user_group.start.1">
-        <source>Automatically activate the group on this day.</source>
-        <target>Als u hier een datum invult zal de huidige groep op deze dag geactiveerd worden.</target>
+        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Als u wilt voorkomen dat de groep vóór een bepaalde datum / tijd actief is, kunt u dit hier invoeren. Laat het veld anders leeg.</target>
       </trans-unit>
       <trans-unit id="tl_user_group.stop.0">
         <source>Deactivate on</source>
         <target>Deactiveer op</target>
       </trans-unit>
       <trans-unit id="tl_user_group.stop.1">
-        <source>Automatically deactivate the group on this day.</source>
-        <target>Als u hier een datum invult zal de huidige groep op deze dag gedeactiveerd worden.</target>
+        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Als u wilt voorkomen dat de groep vóór een bepaalde datum / tijd actief is, kunt u dit hier invoeren. Laat het veld anders leeg.</target>
       </trans-unit>
       <trans-unit id="tl_user_group.title_legend">
         <source>Title</source>
@@ -48,6 +48,9 @@
       <trans-unit id="tl_user_group.modules_legend">
         <source>Allowed modules</source>
         <target>Toegestane modules</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.elements_legend">
+        <source>Allowed elements</source>
       </trans-unit>
       <trans-unit id="tl_user_group.pagemounts_legend">
         <source>Pagemounts</source>
@@ -74,56 +77,35 @@
         <target>Toegestane velden</target>
       </trans-unit>
       <trans-unit id="tl_user_group.account_legend">
-        <source>Account settings</source>
-        <target>Account instellingen</target>
+        <source>Group settings</source>
       </trans-unit>
       <trans-unit id="tl_user_group.new.0">
-        <source>New user group</source>
-        <target>Nieuwe gebruikersgroep</target>
+        <source>New</source>
+        <target>Nieuw</target>
       </trans-unit>
       <trans-unit id="tl_user_group.new.1">
         <source>Create a new user group</source>
         <target>Maak een nieuwe gebruikersgroep</target>
       </trans-unit>
-      <trans-unit id="tl_user_group.show.0">
-        <source>Group details</source>
-        <target>Groep details</target>
+      <trans-unit id="tl_user_group.show">
+        <source>Show the details of user group ID %s</source>
+        <target>Toon details van gebruikersgroep ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_user_group.show.1">
-        <source>Show the details of group ID %s</source>
-        <target>Toon details van groep ID %s</target>
+      <trans-unit id="tl_user_group.edit">
+        <source>Edit user group ID %s</source>
+        <target>Bewerk gebruikersgroep ID%s</target>
       </trans-unit>
-      <trans-unit id="tl_user_group.edit.0">
-        <source>Edit group</source>
-        <target>Bewerk groep</target>
+      <trans-unit id="tl_user_group.copy">
+        <source>Duplicate user group ID %s</source>
+        <target>Kopieer gebruikersgroep ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_user_group.edit.1">
-        <source>Edit group ID %s</source>
-        <target>Bewerk groep ID %s</target>
+      <trans-unit id="tl_user_group.delete">
+        <source>Delete user group ID %s</source>
+        <target>Verwijder gebruikersgroep ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_user_group.copy.0">
-        <source>Duplicate group</source>
-        <target>Dupliceer groep</target>
-      </trans-unit>
-      <trans-unit id="tl_user_group.copy.1">
-        <source>Duplicate group ID %s</source>
-        <target>Dupliceer groep ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_user_group.delete.0">
-        <source>Delete group</source>
-        <target>Verwijder groep</target>
-      </trans-unit>
-      <trans-unit id="tl_user_group.delete.1">
-        <source>Delete group ID %s</source>
-        <target>Verwijder groep ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_user_group.toggle.0">
-        <source>Activate/deactivate group</source>
-        <target>Activeer/deactiveer groep</target>
-      </trans-unit>
-      <trans-unit id="tl_user_group.toggle.1">
-        <source>Activate/deactivate group ID %s</source>
-        <target>Activeer/deactiveer groep ID %s</target>
+      <trans-unit id="tl_user_group.toggle">
+        <source>Activate/deactivate user group ID %s</source>
+        <target>Activeer/deactiveer gebruikersgroep ID %s</target>
       </trans-unit>
     </body>
   </file>

@@ -98,68 +98,36 @@
         <target>Publiko cilësit</target>
       </trans-unit>
       <trans-unit id="tl_faq.new.0">
-        <source>New question</source>
-        <target>Pyetje të re</target>
+        <source>New</source>
+        <target>Të ri</target>
       </trans-unit>
       <trans-unit id="tl_faq.new.1">
         <source>Create a new question</source>
         <target>Krijo pyetje të re.</target>
       </trans-unit>
-      <trans-unit id="tl_faq.show.0">
-        <source>Show question details</source>
-        <target>Trego pyetjen</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.show.1">
+      <trans-unit id="tl_faq.show">
         <source>Show the details of question ID %s</source>
         <target>Trego detajet e pyetjes.</target>
       </trans-unit>
-      <trans-unit id="tl_faq.edit.0">
-        <source>Edit question</source>
-        <target>Përpuno pyetjen</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.edit.1">
+      <trans-unit id="tl_faq.edit">
         <source>Edit question ID %s</source>
         <target>Përpuno pyetjen ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq.copy.0">
-        <source>Duplicate question</source>
-        <target>Dupliko pyetjen</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.copy.1">
+      <trans-unit id="tl_faq.copy">
         <source>Duplicate question ID %s</source>
         <target>Dupliko pyetjen ID %s.</target>
       </trans-unit>
-      <trans-unit id="tl_faq.cut.0">
-        <source>Move question</source>
-        <target>Lëviz pyetjen</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.cut.1">
+      <trans-unit id="tl_faq.cut">
         <source>Move question ID %s</source>
         <target>Lëviz pyetjen ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq.delete.0">
-        <source>Delete question</source>
-        <target>Shlyej pyetjen</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.delete.1">
+      <trans-unit id="tl_faq.delete">
         <source>Delete question ID %s</source>
         <target>Shlyej pyetjen ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq.toggle.0">
-        <source>Publish/unpublish question</source>
-        <target>Publiko/ç'publiko pyetje</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.toggle.1">
+      <trans-unit id="tl_faq.toggle">
         <source>Publish/unpublish question ID %s</source>
         <target>Publiko/ç'publiko pyetjen ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.editheader.0">
-        <source>Edit category</source>
-        <target>Përpuno kategorinë</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.editheader.1">
-        <source>Edit the category settings</source>
-        <target>Përpuno këtë kategori.</target>
       </trans-unit>
       <trans-unit id="tl_faq.pasteafter.0">
         <source>Paste at the top</source>
@@ -170,12 +138,10 @@
         <target>Fute pas pyetjes ID %s</target>
       </trans-unit>
       <trans-unit id="tl_faq.pastenew.0">
-        <source>Add new at the top</source>
-        <target>Krijo definicion të ri të formatit në fillim</target>
+        <source>Create a new question at the top</source>
       </trans-unit>
       <trans-unit id="tl_faq.pastenew.1">
-        <source>Add new after question ID %s</source>
-        <target>Krijo një pyetje të re pas pyetjes ID %s.</target>
+        <source>Create a new question after question ID %s</source>
       </trans-unit>
     </body>
   </file>

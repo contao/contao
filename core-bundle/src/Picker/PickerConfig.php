@@ -97,9 +97,6 @@ class PickerConfig implements \JsonSerializable
         return new self($this->context, $this->extras, $this->value, $current);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function jsonSerialize(): array
     {
         return [

@@ -15,7 +15,11 @@ services:
     contao.command.crawl:
         class: Contao\CoreBundle\Command\CrawlCommand
         arguments:
-            - '@contao.search.escargot_factory'
+            - '@contao.crawl.escargot_factory'
+
+    Contao\CoreBundle\Command\CronCommand:
+        arguments:
+            - '@Contao\CoreBundle\Cron\Cron'
 
     contao.command.debug_dca:
         class: Contao\CoreBundle\Command\DebugDcaCommand

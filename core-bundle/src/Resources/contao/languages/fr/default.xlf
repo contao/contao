@@ -58,8 +58,7 @@
         <target>Veuillez saisir un numéro de téléphone valide.</target>
       </trans-unit>
       <trans-unit id="ERR.extnd">
-        <source>For security reasons you can not use the following characters here: =&lt;&gt;&amp;/()#</source>
-        <target>Pour des raisons de sécurité n'utilisez pas ces caractères : =&lt;&gt;&amp;/()#</target>
+        <source>For security reasons you can not use the following characters here: #&lt;&gt;()\=</source>
       </trans-unit>
       <trans-unit id="ERR.email">
         <source>Please enter a valid e-mail address!</source>
@@ -221,6 +220,9 @@
         <source>You can only select &quot;%s&quot; files!</source>
         <target>Vous ne pouvez sélectionner que les fichiers &quot;%s&quot; !</target>
       </trans-unit>
+      <trans-unit id="ERR.forbiddenExtensions">
+        <source>The following file extensions are not allowed: %s</source>
+      </trans-unit>
       <trans-unit id="ERR.invalidPages">
         <source>Your selection contains invalid page IDs!</source>
         <target>Votre sélection contient des ID de page non valides !</target>
@@ -228,6 +230,9 @@
       <trans-unit id="ERR.circularReference">
         <source>Invalid redirect target (circular reference)!</source>
         <target>Cible de redirection non valide (redondance cyclique).</target>
+      </trans-unit>
+      <trans-unit id="ERR.circularPicker">
+        <source>Invalid selection (circular reference)!</source>
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
         <source>None of the active website root pages without an explicit DNS setting have the language fallback option set.</source>
@@ -249,13 +254,13 @@
         <source>There are top-level pages in the site structure which are not website root pages.</source>
         <target>Il y a des pages de niveau supérieur dans la structure du site qui ne sont pas des pages racines du site.</target>
       </trans-unit>
-      <trans-unit id="ERR.invalidTokenUrl">
-        <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
-        <target>Le lien que vous tentez d'ouvrir n'a pas pu être vérifié. Si vous avez cliqué sur le lien ou l'avez reçu par une personne de confiance, vous pouvez confirmer le processus ci-dessous.</target>
-      </trans-unit>
       <trans-unit id="ERR.form">
         <source>The form could not be sent</source>
         <target>Le formulaire n'a pas pu être envoyé</target>
+      </trans-unit>
+      <trans-unit id="ERR.formCookieWarning">
+        <source>You will not be able to send this form, because you have disabled cookies in your browser.</source>
+        <target>Vous ne pourrez pas envoyer ce formulaire car vous avez désactivé les cookies dans votre navigateur.</target>
       </trans-unit>
       <trans-unit id="ERR.captcha">
         <source>Please answer the security question!</source>
@@ -283,9 +288,23 @@
       </trans-unit>
       <trans-unit id="ERR.largeImage">
         <source>Image exceeds the maximum dimensions of %sx%s.</source>
+        <target>L'image dépasse les dimensions maximales de %sx%s.</target>
       </trans-unit>
       <trans-unit id="ERR.invalidTwoFactor">
         <source>Invalid verification code!</source>
+      </trans-unit>
+      <trans-unit id="ERR.emptyTitleOrId">
+        <source>Please enter both title and ID!</source>
+        <target>Veuillez entrer le titre et l'ID</target>
+      </trans-unit>
+      <trans-unit id="ERR.duplicateSectionTitle">
+        <source>Duplicate layout section title &quot;%s&quot;!</source>
+      </trans-unit>
+      <trans-unit id="ERR.duplicateSectionId">
+        <source>Duplicate layout section ID &quot;%s&quot;!</source>
+      </trans-unit>
+      <trans-unit id="ERR.moduleWithoutColumn">
+        <source>Please assign all modules to a column!</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -535,6 +554,124 @@
         <source>Displays the teaser text of an article.</source>
         <target>Affiche l'accroche d'un article.</target>
       </trans-unit>
+      <trans-unit id="FFL.explanation.0">
+        <source>Explanation</source>
+        <target>Explication</target>
+      </trans-unit>
+      <trans-unit id="FFL.explanation.1">
+        <source>A custom field to insert an explanation text.</source>
+        <target>Champ personnalisé pour insérer un texte d'explication.</target>
+      </trans-unit>
+      <trans-unit id="FFL.html.0">
+        <source>HTML code</source>
+        <target>Code HTML</target>
+      </trans-unit>
+      <trans-unit id="FFL.html.1">
+        <source>A custom field to insert HTML code.</source>
+        <target>Champ personnalisé pour insérer du code HTML.</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStart.0">
+        <source>Fieldset start</source>
+        <target>Marque fieldset de départ</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStart.1">
+        <source>The opening part of a fieldset with an optional legend.</source>
+        <target>Début d'un &quot;fieldset&quot; avec une légende optionnelle.</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStop.0">
+        <source>Fieldset stop</source>
+        <target>Marque fieldset de fin</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStop.1">
+        <source>The closing part of a fieldset.</source>
+        <target>La marque de fin d'un fieldset</target>
+      </trans-unit>
+      <trans-unit id="FFL.text.0">
+        <source>Text field</source>
+        <target>Champ texte</target>
+      </trans-unit>
+      <trans-unit id="FFL.text.1">
+        <source>A single-line input field for a short or medium text.</source>
+        <target>Champ d'une ligne pour la saisie d'un texte court ou moyen.</target>
+      </trans-unit>
+      <trans-unit id="FFL.password.0">
+        <source>Password field</source>
+        <target>Champ &quot;mot de passe&quot;</target>
+      </trans-unit>
+      <trans-unit id="FFL.password.1">
+        <source>A single-line input field for a password. Contao automatically adds a confirmation field.</source>
+        <target>Champ d'une ligne pour la saisie d'un mot de passe. Contao ajoute automatiquement un champ de confirmation.</target>
+      </trans-unit>
+      <trans-unit id="FFL.textarea.0">
+        <source>Textarea</source>
+        <target>Zone de texte</target>
+      </trans-unit>
+      <trans-unit id="FFL.textarea.1">
+        <source>A multi-line input field for a medium or long text.</source>
+        <target>Champ comportant plusieurs lignes pour la saisie d'un texte moyen ou long.</target>
+      </trans-unit>
+      <trans-unit id="FFL.select.0">
+        <source>Select menu</source>
+        <target>Liste déroulante</target>
+      </trans-unit>
+      <trans-unit id="FFL.select.1">
+        <source>A single- or multi-line drop-down menu.</source>
+        <target>Liste déroulante pour la sélection d'un ou plusieurs choix.</target>
+      </trans-unit>
+      <trans-unit id="FFL.radio.0">
+        <source>Radio button menu</source>
+        <target>Bouton radio</target>
+      </trans-unit>
+      <trans-unit id="FFL.radio.1">
+        <source>A list of multiple options from which one can be selected.</source>
+        <target>Liste de plusieurs options dont une seule peut être sélectionnée.</target>
+      </trans-unit>
+      <trans-unit id="FFL.checkbox.0">
+        <source>Checkbox menu</source>
+        <target>Case à cocher</target>
+      </trans-unit>
+      <trans-unit id="FFL.checkbox.1">
+        <source>A list of multiple options from which any can be selected.</source>
+        <target>Liste de plusieurs options dont chacune peut être sélectionnée.</target>
+      </trans-unit>
+      <trans-unit id="FFL.upload.0">
+        <source>File upload</source>
+        <target>Envoi de fichier</target>
+      </trans-unit>
+      <trans-unit id="FFL.upload.1">
+        <source>A single-line input field to upload a local file to the server.</source>
+        <target>Champ d'une ligne pour l'envoi d'un fichier local vers le serveur.</target>
+      </trans-unit>
+      <trans-unit id="FFL.range.0">
+        <source>Range slider</source>
+      </trans-unit>
+      <trans-unit id="FFL.range.1">
+        <source>A range slider to select a value or range of values between a specified min and max.</source>
+      </trans-unit>
+      <trans-unit id="FFL.hidden.0">
+        <source>Hidden field</source>
+        <target>Champ caché</target>
+      </trans-unit>
+      <trans-unit id="FFL.hidden.1">
+        <source>A single-line input field that is not visible in the form.</source>
+        <target>Champ d'une ligne non visible dans le formulaire.</target>
+      </trans-unit>
+      <trans-unit id="FFL.captcha.0">
+        <source>Security question</source>
+        <target>Question de sécurité</target>
+      </trans-unit>
+      <trans-unit id="FFL.captcha.1">
+        <source>A simple math question to verify that the form is being submitted by a human (CAPTCHA).</source>
+        <target>Question simple d'arithmétique pour vérifier que le formulaire est bien soumis par un individu (CAPTCHA).</target>
+      </trans-unit>
+      <trans-unit id="FFL.submit.0">
+        <source>Submit field</source>
+        <target>Bouton d'envoi</target>
+      </trans-unit>
+      <trans-unit id="FFL.submit.1">
+        <source>A button to submit the form.</source>
+        <target>Bouton d'envoi du formulaire.</target>
+      </trans-unit>
       <trans-unit id="PTY.regular.0">
         <source>Regular page</source>
         <target>Page simple</target>
@@ -580,24 +717,21 @@
         <target>401 Pas authentifié</target>
       </trans-unit>
       <trans-unit id="PTY.error_401.1">
-        <source>If a user requests a protected page without being authenticated, a 401 error page will be loaded instead.</source>
-        <target>Si un utilisateur sans permission essaye d'accéder à une page protégée, une page d'erreur 401 sera retournée.</target>
+        <source>If a visitor requests a protected page without being authenticated, a 401 error page will be loaded instead.</source>
       </trans-unit>
       <trans-unit id="PTY.error_403.0">
         <source>403 Access denied</source>
         <target>Erreur 403 (accès interdit)</target>
       </trans-unit>
       <trans-unit id="PTY.error_403.1">
-        <source>If a user requests a protected page without permission, a 403 error page will be loaded instead.</source>
-        <target>Si un utilisateur sans permission essaye d'accéder à une page protégée, une page d'erreur 403 sera retournée.</target>
+        <source>If a member requests a protected page without permission, a 403 error page will be loaded instead.</source>
       </trans-unit>
       <trans-unit id="PTY.error_404.0">
         <source>404 Page not found</source>
         <target>Erreur 404 (page non trouvée)</target>
       </trans-unit>
       <trans-unit id="PTY.error_404.1">
-        <source>If a user requests a non-existent page, a 404 error page will be loaded instead.</source>
-        <target>Si un utilisateur essaye d'accéder à une page qui n'existe pas, une page d'erreur 404 sera retournée.</target>
+        <source>If a visitor requests a non-existent page, a 404 error page will be loaded instead.</source>
       </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
@@ -1088,8 +1222,7 @@
         <target>Module</target>
       </trans-unit>
       <trans-unit id="MSC.mw_column">
-        <source>Column</source>
-        <target>Colonne</target>
+        <source>Layout section</source>
       </trans-unit>
       <trans-unit id="MSC.mw_enable">
         <source>Enable/disable the module</source>
@@ -1276,16 +1409,14 @@
         <target>Édition multiple</target>
       </trans-unit>
       <trans-unit id="MSC.all.1">
-        <source>Edit multiple records at once</source>
-        <target>Éditer plusieurs enregistrements à la fois.</target>
+        <source>Edit multiple elements at once</source>
       </trans-unit>
       <trans-unit id="MSC.all_override.0">
         <source>Override multiple</source>
         <target>Remplacement multiple</target>
       </trans-unit>
       <trans-unit id="MSC.all_override.1">
-        <source>Override multiple records at once</source>
-        <target>Remplacer plusieurs enregistrements à la fois</target>
+        <source>Override multiple elements at once</source>
       </trans-unit>
       <trans-unit id="MSC.all_fields.0">
         <source>Available fields</source>
@@ -1339,7 +1470,7 @@
         <source>This seems to be your first login. Welcome to Contao!</source>
         <target>Cela semble être votre première connexion. Bienvenue dans Contao !</target>
       </trans-unit>
-      <trans-unit id="MSC.loginCount">
+      <trans-unit id="MSC.loginAttempts">
         <source>Login attempts</source>
         <target>Tentatives de connexion</target>
       </trans-unit>
@@ -1348,8 +1479,8 @@
         <target>Verrouillé</target>
       </trans-unit>
       <trans-unit id="MSC.move">
-        <source>Move the item via drag and drop or the up and down keys</source>
-        <target>Déplacer l'élément par glisser-déposer ou par les touches haut et bas</target>
+        <source>Move the item via drag and drop</source>
+        <target>Déplacer l'élément par glisser-déposer</target>
       </trans-unit>
       <trans-unit id="MSC.move_up.0">
         <source>Move up</source>
@@ -1366,22 +1497,6 @@
       <trans-unit id="MSC.move_down.1">
         <source>Move the item one position down</source>
         <target>Déplacer l'élément d'une position vers le bas</target>
-      </trans-unit>
-      <trans-unit id="MSC.staticFiles.0">
-        <source>Files URL</source>
-        <target>URL des fichiers</target>
-      </trans-unit>
-      <trans-unit id="MSC.staticFiles.1">
-        <source>The files URL applies to the &lt;em&gt;files&lt;/em&gt; directory (page speed optimization).</source>
-        <target>L'URL des fichiers s'applique au répertoire &lt;em&gt;files&lt;/em&gt;  (optimisation de la vitesse de chargement des pages).</target>
-      </trans-unit>
-      <trans-unit id="MSC.staticPlugins.0">
-        <source>Assets URL</source>
-        <target>URL des ressources</target>
-      </trans-unit>
-      <trans-unit id="MSC.staticPlugins.1">
-        <source>The assets URL applies to the &lt;em&gt;assets&lt;/em&gt; directory (page speed optimization).</source>
-        <target>L'URL des ressources s'applique à toutes les ressources se trouvant dans le répertoire &lt;em&gt;assets&lt;/em&gt; (optimisation de la vitesse de chargement des pages).</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.0">
         <source>Back end keyboard shortcuts</source>
@@ -1455,10 +1570,6 @@
         <source>Back to the back end start page</source>
         <target>Retour à la page d'accueil du back office</target>
       </trans-unit>
-      <trans-unit id="MSC.burgerTitle">
-        <source>Toggle navigation</source>
-        <target>Basculer la navigation</target>
-      </trans-unit>
       <trans-unit id="MSC.learnMore">
         <source>Learn more on %s</source>
         <target>En savoir plus sur %s</target>
@@ -1466,10 +1577,6 @@
       <trans-unit id="MSC.user">
         <source>User</source>
         <target>Utilisateur</target>
-      </trans-unit>
-      <trans-unit id="MSC.loginTo">
-        <source>Log into %s</source>
-        <target>Connexion sur %s</target>
       </trans-unit>
       <trans-unit id="MSC.loginBT">
         <source>Login</source>
@@ -1500,8 +1607,7 @@
         <target>Annuler</target>
       </trans-unit>
       <trans-unit id="MSC.deleteConfirm">
-        <source>Do you really want to delete entry ID %s?</source>
-        <target>Voulez-vous vraiment supprimer l'entrée ID %s ?</target>
+        <source>Do you really want to delete element ID %s?</source>
       </trans-unit>
       <trans-unit id="MSC.delAllConfirm">
         <source>Do you really want to delete the selected records?</source>
@@ -1707,10 +1813,6 @@
         <source>justified</source>
         <target>justifié</target>
       </trans-unit>
-      <trans-unit id="MSC.filetree">
-        <source>File system</source>
-        <target>Répertoire système</target>
-      </trans-unit>
       <trans-unit id="MSC.male">
         <source>Male</source>
         <target>Homme</target>
@@ -1718,6 +1820,10 @@
       <trans-unit id="MSC.female">
         <source>Female</source>
         <target>Femme</target>
+      </trans-unit>
+      <trans-unit id="MSC.other">
+        <source>Other</source>
+        <target>Autre</target>
       </trans-unit>
       <trans-unit id="MSC.fileSize">
         <source>File size</source>
@@ -1771,9 +1877,8 @@
         <source>Back end modules</source>
         <target>Modules du back office</target>
       </trans-unit>
-      <trans-unit id="MSC.welcomeTo">
-        <source>%s back end</source>
-        <target>%s en coulisses</target>
+      <trans-unit id="MSC.dashboard">
+        <source>Dashboard</source>
       </trans-unit>
       <trans-unit id="MSC.updateVersion">
         <source>Contao version %s is available.</source>
@@ -1880,8 +1985,8 @@
         <target>Vider le presse-papier</target>
       </trans-unit>
       <trans-unit id="MSC.hiddenElements">
-        <source>Unpublished elements</source>
-        <target>Éléments non publiés</target>
+        <source>Unpublished</source>
+        <target>Non publié</target>
       </trans-unit>
       <trans-unit id="MSC.hiddenHide">
         <source>hide</source>
@@ -2163,6 +2268,9 @@
         <source>Your search for &lt;strong&gt;%s&lt;/strong&gt; returned no results.</source>
         <target>Votre recherche &lt;strong&gt;%s&lt;/strong&gt; n'a retourné aucun résultat.</target>
       </trans-unit>
+      <trans-unit id="MSC.sKeywordHint">
+        <source>Note that keywords shorter than %s characters and without a modifier have been ignored.</source>
+      </trans-unit>
       <trans-unit id="MSC.seconds">
         <source>seconds</source>
         <target>secondes</target>
@@ -2255,10 +2363,6 @@
         <source>Share on Twitter</source>
         <target>Partager sur Twitter</target>
       </trans-unit>
-      <trans-unit id="MSC.gplusShare">
-        <source>Share on Google+</source>
-        <target>Partager sur Google+</target>
-      </trans-unit>
       <trans-unit id="MSC.pleaseWait">
         <source>Please wait</source>
         <target>Veuillez patienter</target>
@@ -2319,9 +2423,22 @@
         <source>%s relevance</source>
         <target>%s pertinent</target>
       </trans-unit>
-      <trans-unit id="MSC.invalidTokenUrl">
+      <trans-unit id="MSC.invalidToken">
         <source>Invalid token</source>
         <target>Jeton non valide</target>
+      </trans-unit>
+      <trans-unit id="MSC.tokenConfirmed">
+        <source>This token has already been confirmed</source>
+      </trans-unit>
+      <trans-unit id="MSC.tokenEmailMismatch">
+        <source>The e-mail address of the token does not match</source>
+      </trans-unit>
+      <trans-unit id="MSC.resendToken">
+        <source>The token has been re-sent to %s.</source>
+      </trans-unit>
+      <trans-unit id="MSC.invalidTokenUrl">
+        <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
+        <target>Le lien que vous tentez d'ouvrir n'a pas pu être vérifié. Si vous avez cliqué sur le lien ou l'avez reçu par une personne de confiance, vous pouvez confirmer le processus ci-dessous.</target>
       </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
@@ -2393,27 +2510,75 @@
       </trans-unit>
       <trans-unit id="MSC.security">
         <source>Security</source>
+        <target>Sécurité</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorAuthentication">
         <source>Two-factor authentication</source>
+        <target>Vérification en deux étapes</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorVerification">
         <source>Verification code</source>
+        <target>Code de vérification</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorVerificationHelp">
         <source>Please enter the verification code generated by your 2FA/TOTP app.</source>
+        <target>Veuillez entrer le code de vérification généré par votre application 2FA/TOTP.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorExplain">
         <source>Here you can enable two-factor authentication, which adds an extra layer of security to your account. In addition to your username and password, you will need to enter a verification code generated by a two-factor app such as 1Password, Authy, Google Authenticator, Microsoft Authenticator, LastPass Authenticator or any other TOTP app.</source>
+        <target>Vous pouvez activer la vérification en deux étapes, ce qui ajoute une couche de sécurité supplémentaire à votre compte. En plus de votre nom d'utilisateur et de votre mot de passe, vous devrez entrer un code de vérification généré par une application de vérification en deux étapes, telle que 1Password, Authy, Google Authenticator, Microsoft Authenticator, LastPass Authenticator ou toutes autres applications TOTP.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorScan">
         <source>Please scan the QR code with your 2FA/TOTP app.</source>
+        <target>Veuillez scanner le QR code avec votre application 2FA/TOTP.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorActive">
         <source>Two-factor authentication has been enabled.</source>
+        <target>La vérification en deux étapes a été activée.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorEnforced">
         <source>Please enable up two-factor authentication before you continue.</source>
+        <target>Veuillez activer la vérification en deux étapes avant de continuer.</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorTextCode">
+        <source>If you cannot scan the QR code, enter this key instead:</source>
+        <target>Si vous ne pouvez pas scanner le QR code, entrez cette clé à la place :</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesLabel">
+        <source>Backup codes</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesShow">
+        <source>Show backup codes</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesExplain">
+        <source>Backup codes can be used to access your account if you have lost your authentication device and cannot generate two-factor codes anymore. Treat your backup codes with the same level of attention as your password! We recommend saving them with a password manager such as Lastpass, 1Password or Keeper.</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesInfo">
+        <source>Put the codes in a safe spot. If you lose your authentication device and do not have backup codes, you cannot access your account anymore!</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesGenerate">
+        <source>Generate backup codes</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesRegenerate">
+        <source>Regenerate backup codes</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesRegenerateInfo">
+        <source>When you regenerate the backup codes, your old codes will not work anymore.</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorTrustDevice">
+        <source>Trust this device</source>
+      </trans-unit>
+      <trans-unit id="MSC.userTemplateEditor">
+        <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
+      </trans-unit>
+      <trans-unit id="MSC.groupTemplateEditor">
+        <source>There is at least one user group granting access to the template editor. Since templates are PHP files, users of these groups implicitly have full control over the system!</source>
+      </trans-unit>
+      <trans-unit id="MSC.userThemeImport">
+        <source>There is at least one regular user with permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, these users implicitly have full control over the system!</source>
+      </trans-unit>
+      <trans-unit id="MSC.groupThemeImport">
+        <source>There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!</source>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
@@ -2422,6 +2587,37 @@
       <trans-unit id="MSC.disable">
         <source>Disable</source>
         <target>Désactiver</target>
+      </trans-unit>
+      <trans-unit id="MSC.internalCssEditor">
+        <source>The internal CSS editor has been deprecated and will be removed in one of the next Contao versions! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
+      </trans-unit>
+      <trans-unit id="MSC.serpPreview.0">
+        <source>Google search results preview</source>
+      </trans-unit>
+      <trans-unit id="MSC.serpPreview.1">
+        <source>Here you can preview the meta data in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
+      </trans-unit>
+      <trans-unit id="MSC.clearTrustedDevices">
+        <source>Clear trusted devices</source>
+      </trans-unit>
+      <trans-unit id="MSC.trustedDevices">
+        <source>Trusted devices</source>
+      </trans-unit>
+      <trans-unit id="MSC.noTrustedDevices">
+        <source>Currently there are no trusted devices.</source>
+      </trans-unit>
+      <trans-unit id="MSC.device">
+        <source>Device</source>
+      </trans-unit>
+      <trans-unit id="MSC.thisDevice">
+        <source>this device</source>
+      </trans-unit>
+      <trans-unit id="MSC.browser">
+        <source>Browser</source>
+        <target>Navigateur</target>
+      </trans-unit>
+      <trans-unit id="MSC.operatingSystem">
+        <source>Operating system</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2542,6 +2738,83 @@
       <trans-unit id="SECTIONS.manual">
         <source>Manual output</source>
         <target>Sortie manuelle</target>
+      </trans-unit>
+      <trans-unit id="DCA.all.0">
+        <source>Edit multiple</source>
+        <target>Édition multiple</target>
+      </trans-unit>
+      <trans-unit id="DCA.all.1">
+        <source>Edit multiple elements at once</source>
+      </trans-unit>
+      <trans-unit id="DCA.toggleNodes.0">
+        <source>Toggle all</source>
+        <target>Tout basculer</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggleNodes.1">
+        <source>Expand or collapse all nodes</source>
+        <target>Développer ou réduire tous les nœuds</target>
+      </trans-unit>
+      <trans-unit id="DCA.new.0">
+        <source>New</source>
+      </trans-unit>
+      <trans-unit id="DCA.new.1">
+        <source>Create a new element</source>
+      </trans-unit>
+      <trans-unit id="DCA.show">
+        <source>Show the details of element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.edit">
+        <source>Edit element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.cut">
+        <source>Move element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.copy">
+        <source>Duplicate element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.delete">
+        <source>Delete element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.drag">
+        <source>Drag element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.editheader.0">
+        <source>Edit the element settings</source>
+      </trans-unit>
+      <trans-unit id="DCA.editheader.1">
+        <source>Edit the settings of element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.toggle">
+        <source>Publish/unpublish element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.pasteinto.0">
+        <source>Paste at the top</source>
+        <target>Coller au début</target>
+      </trans-unit>
+      <trans-unit id="DCA.pasteinto.1">
+        <source>Paste into element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.pasteafter.0">
+        <source>Paste at the top</source>
+        <target>Coller au début</target>
+      </trans-unit>
+      <trans-unit id="DCA.pasteafter.1">
+        <source>Paste after element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.pastenew.0">
+        <source>Create a new element at the top</source>
+      </trans-unit>
+      <trans-unit id="DCA.pastenew.1">
+        <source>Create a new element after element ID %s</source>
+      </trans-unit>
+      <trans-unit id="CRAWL.searchIndex.summary">
+        <source>Indexed %d URI(s) successfully. %d failed.</source>
+      </trans-unit>
+      <trans-unit id="CRAWL.searchIndex.warning">
+        <source>%d URI(s) were skipped (if you are missing one, checkout the debug log).</source>
+      </trans-unit>
+      <trans-unit id="CRAWL.brokenLinkChecker.summary">
+        <source>Checked %d link(s) successfully. %d were broken.</source>
       </trans-unit>
     </body>
   </file>

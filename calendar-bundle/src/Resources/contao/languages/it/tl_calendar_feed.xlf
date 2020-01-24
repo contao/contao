@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_calendar_feed.title.0">
         <source>Title</source>
-        <target>Nome del modulo</target>
+        <target>Titolo</target>
       </trans-unit>
       <trans-unit id="tl_calendar_feed.title.1">
         <source>Please enter a feed title.</source>
@@ -95,42 +95,26 @@
         <target>Articoli completi</target>
       </trans-unit>
       <trans-unit id="tl_calendar_feed.new.0">
-        <source>New feed</source>
-        <target>Nuovo feed</target>
+        <source>New</source>
+        <target>Nuovo</target>
       </trans-unit>
       <trans-unit id="tl_calendar_feed.new.1">
         <source>Create a new feed</source>
         <target>Crea un nuovo feed</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_feed.show.0">
-        <source>Feed details</source>
-        <target>Dettagli del feed</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_feed.show.1">
+      <trans-unit id="tl_calendar_feed.show">
         <source>Show the details of feed ID %s</source>
         <target>Mostra i dettagli del feed ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_feed.edit.0">
-        <source>Edit feed</source>
-        <target>Modifica il feed</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_feed.edit.1">
+      <trans-unit id="tl_calendar_feed.edit">
         <source>Edit feed ID %s</source>
         <target>Modifica il feed ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_feed.copy.0">
-        <source>Duplicate feed</source>
-        <target>Duplica il feed</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_feed.copy.1">
+      <trans-unit id="tl_calendar_feed.copy">
         <source>Duplicate feed ID %s</source>
         <target>Duplica il feed ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_feed.delete.0">
-        <source>Delete feed</source>
-        <target>Elimina il feed</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_feed.delete.1">
+      <trans-unit id="tl_calendar_feed.delete">
         <source>Delete feed ID %s</source>
         <target>Elimina il feed ID %s</target>
       </trans-unit>

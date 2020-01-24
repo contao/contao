@@ -33,6 +33,14 @@
         <source>Add an image to the content element.</source>
         <target>Dem Inhaltselement ein Bild hinzufügen.</target>
       </trans-unit>
+      <trans-unit id="tl_content.inline.0">
+        <source>Show in browser</source>
+        <target>Im Browser anzeigen</target>
+      </trans-unit>
+      <trans-unit id="tl_content.inline.1">
+        <source>Show the file in the browser instead of opening the download dialog.</source>
+        <target>Die Datei im Browser anzeigen anstatt den Download-Dialog zu öffnen.</target>
+      </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.0">
         <source>Overwrite meta data</source>
         <target>Metadaten überschreiben</target>
@@ -481,6 +489,14 @@
         <source>Here you can select the aspect ratio of the video to make it responsive.</source>
         <target>Hier können Sie das Seitenverhältnis des Videos auswählen, um es responsive zu machen.</target>
       </trans-unit>
+      <trans-unit id="tl_content.splashImage.0">
+        <source>Use a splash image</source>
+        <target>Ein Vorschaubild verwenden</target>
+      </trans-unit>
+      <trans-unit id="tl_content.splashImage.1">
+        <source>Only load the video after the user has clicked on the splash image.</source>
+        <target>Das Video erst laden, nachdem der Benutzer auf das Vorschaubild geklickt hat.</target>
+      </trans-unit>
       <trans-unit id="tl_content.playerColor.0">
         <source>Controls color</source>
         <target>Farben der Steuererlemente</target>
@@ -567,7 +583,7 @@
       </trans-unit>
       <trans-unit id="tl_content.protected.1">
         <source>Show the content element to certain member groups only.</source>
-        <target>Das Inhaltselement nur bestimmten Gruppen anzeigen.</target>
+        <target>Das Inhaltselement nur bestimmten Mitgliedergruppen anzeigen.</target>
       </trans-unit>
       <trans-unit id="tl_content.groups.0">
         <source>Allowed member groups</source>
@@ -606,16 +622,16 @@
         <target>Anzeigen ab</target>
       </trans-unit>
       <trans-unit id="tl_content.start.1">
-        <source>Do not show the element on the website before this day.</source>
-        <target>Das Element erst ab diesem Tag auf der Webseite anzeigen.</target>
+        <source>If you want to prevent the element from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Wenn Sie das Inhaltselement erst ab einem bestimmten Zeitpunkt auf der Webseite anzeigen möchten, können Sie diesen hier eingeben. Andernfalls lassen Sie das Feld leer. </target>
       </trans-unit>
       <trans-unit id="tl_content.stop.0">
         <source>Show until</source>
         <target>Anzeigen bis</target>
       </trans-unit>
       <trans-unit id="tl_content.stop.1">
-        <source>Do not show the element on the website on and after this day.</source>
-        <target>Das Element nur bis zu diesem Tag auf der Webseite anzeigen.</target>
+        <source>If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Wenn Sie das Inhaltselement nur bis zu einem bestimmten Zeitpunkt auf der Webseite anzeigen möchten, können Sie diesen hier eingeben. Andernfalls lassen Sie das Feld leer. </target>
       </trans-unit>
       <trans-unit id="tl_content.type_legend">
         <source>Element type</source>
@@ -627,7 +643,11 @@
       </trans-unit>
       <trans-unit id="tl_content.image_legend">
         <source>Image settings</source>
-        <target>Bild-Einstellungen</target>
+        <target>Bildeinstellungen</target>
+      </trans-unit>
+      <trans-unit id="tl_content.download_legend">
+        <source>Download settings</source>
+        <target>Download-Einstellungen</target>
       </trans-unit>
       <trans-unit id="tl_content.slider_legend">
         <source>Slider settings</source>
@@ -673,9 +693,13 @@
         <source>Access protection</source>
         <target>Zugriffsschutz</target>
       </trans-unit>
+      <trans-unit id="tl_content.splash_legend">
+        <source>Splash image</source>
+        <target>Vorschaubild</target>
+      </trans-unit>
       <trans-unit id="tl_content.expert_legend">
         <source>Expert settings</source>
-        <target>Experten-Einstellungen</target>
+        <target>Experteneinstellungen</target>
       </trans-unit>
       <trans-unit id="tl_content.template_legend">
         <source>Template settings</source>
@@ -826,60 +850,40 @@
         <target>Den Autor ausblenden</target>
       </trans-unit>
       <trans-unit id="tl_content.new.0">
-        <source>New element</source>
-        <target>Neues Element</target>
+        <source>New</source>
+        <target>Neu</target>
       </trans-unit>
       <trans-unit id="tl_content.new.1">
         <source>Add a new content element</source>
         <target>Ein neues Inhaltselement erstellen</target>
       </trans-unit>
-      <trans-unit id="tl_content.show.0">
-        <source>Element details</source>
-        <target>Elementdetails</target>
-      </trans-unit>
-      <trans-unit id="tl_content.show.1">
+      <trans-unit id="tl_content.show">
         <source>Show the details of content element ID %s</source>
         <target>Details des Inhaltselements ID %s anzeigen</target>
       </trans-unit>
-      <trans-unit id="tl_content.cut.0">
-        <source>Move element</source>
-        <target>Element verschieben</target>
-      </trans-unit>
-      <trans-unit id="tl_content.cut.1">
+      <trans-unit id="tl_content.cut">
         <source>Move content element ID %s</source>
         <target>Inhaltselement ID %s verschieben</target>
       </trans-unit>
-      <trans-unit id="tl_content.copy.0">
-        <source>Duplicate element</source>
-        <target>Element duplizieren</target>
-      </trans-unit>
-      <trans-unit id="tl_content.copy.1">
+      <trans-unit id="tl_content.copy">
         <source>Duplicate content element ID %s</source>
         <target>Inhaltselement ID %s duplizieren</target>
       </trans-unit>
-      <trans-unit id="tl_content.delete.0">
-        <source>Delete element</source>
-        <target>Element löschen</target>
-      </trans-unit>
-      <trans-unit id="tl_content.delete.1">
+      <trans-unit id="tl_content.delete">
         <source>Delete content element ID %s</source>
         <target>Inhaltselement ID %s löschen</target>
       </trans-unit>
-      <trans-unit id="tl_content.edit.0">
-        <source>Edit element</source>
-        <target>Element bearbeiten</target>
-      </trans-unit>
-      <trans-unit id="tl_content.edit.1">
+      <trans-unit id="tl_content.edit">
         <source>Edit content element ID %s</source>
         <target>Inhaltselement ID %s bearbeiten</target>
       </trans-unit>
-      <trans-unit id="tl_content.editheader.0">
-        <source>Edit article</source>
-        <target>Artikel bearbeiten</target>
-      </trans-unit>
-      <trans-unit id="tl_content.editheader.1">
+      <trans-unit id="tl_content.editheader">
         <source>Edit the article settings</source>
-        <target>Die Artikeleinstellungen bearbeiten</target>
+        <target>Artikeleinstellungen bearbeiten</target>
+      </trans-unit>
+      <trans-unit id="tl_content.toggle">
+        <source>Hide/unhide content element ID %s</source>
+        <target>Inhaltselement ID %s verstecken/anzeigen</target>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.0">
         <source>Paste at the top</source>
@@ -890,34 +894,18 @@
         <target>Nach dem Inhaltselement ID %s einfügen</target>
       </trans-unit>
       <trans-unit id="tl_content.pastenew.0">
-        <source>Add new at the top</source>
+        <source>Create a new content element at the top</source>
         <target>Neues Inhaltselement oben erstellen</target>
       </trans-unit>
       <trans-unit id="tl_content.pastenew.1">
-        <source>Add new after content element ID %s</source>
-        <target>Neues Inhaltselement nach ID %s erstellen</target>
+        <source>Create a new content element after content element ID %s</source>
+        <target>Neues Inhaltselement nach dem Inhaltselement ID %s erstellen</target>
       </trans-unit>
-      <trans-unit id="tl_content.toggle.0">
-        <source>Toggle visibility</source>
-        <target>Sichtbarkeit ändern</target>
-      </trans-unit>
-      <trans-unit id="tl_content.toggle.1">
-        <source>Toggle the visibility of element ID %s</source>
-        <target>Die Sichtbarkeit des Inhaltselements ID %s ändern</target>
-      </trans-unit>
-      <trans-unit id="tl_content.editalias.0">
-        <source>Edit source element</source>
-        <target>Quellelement bearbeiten</target>
-      </trans-unit>
-      <trans-unit id="tl_content.editalias.1">
+      <trans-unit id="tl_content.editalias">
         <source>Edit the source element ID %s</source>
-        <target>Das Quellelement ID %s bearbeiten</target>
+        <target>Quellelement ID %s bearbeiten</target>
       </trans-unit>
-      <trans-unit id="tl_content.editarticle.0">
-        <source>Edit article</source>
-        <target>Artikel bearbeiten</target>
-      </trans-unit>
-      <trans-unit id="tl_content.editarticle.1">
+      <trans-unit id="tl_content.editarticle">
         <source>Edit article ID %s</source>
         <target>Artikel ID %s bearbeiten</target>
       </trans-unit>

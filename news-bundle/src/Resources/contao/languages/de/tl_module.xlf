@@ -113,6 +113,10 @@
         <source>Skip featured news items</source>
         <target>Hervorgehobene Beiträge überspringen</target>
       </trans-unit>
+      <trans-unit id="tl_module.featured_first">
+        <source>Show featured news items first</source>
+        <target>Hervorgehobene Beiträge zuerst anzeigen</target>
+      </trans-unit>
       <trans-unit id="tl_module.order_date_asc">
         <source>Date ascending</source>
         <target>Datum aufsteigend</target>

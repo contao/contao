@@ -66,9 +66,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
      */
     private $httpCache;
 
-    /**
-     * {@inheritdoc}
-     */
     public function registerBundles(): array
     {
         $bundles = [];
@@ -78,9 +75,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         return $bundles;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getProjectDir(): string
     {
         if (null === self::$projectDir) {
@@ -91,8 +85,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @deprecated since Symfony 4.2, use getProjectDir() instead
      */
     public function getRootDir(): string
@@ -104,17 +96,11 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         return $this->rootDir;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCacheDir(): string
     {
         return $this->getProjectDir().'/var/cache/'.$this->getEnvironment();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLogDir(): string
     {
         return $this->getProjectDir().'/var/logs';
@@ -127,7 +113,8 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
             $config = $this->getManagerConfig()->all();
 
-            if (isset($config['contao_manager']['disabled_packages'])
+            if (
+                isset($config['contao_manager']['disabled_packages'])
                 && \is_array($config['contao_manager']['disabled_packages'])
             ) {
                 $this->pluginLoader->setDisabledPackages($config['contao_manager']['disabled_packages']);
@@ -184,19 +171,16 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         $this->managerConfig = $managerConfig;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
-        if ($parametersFile = $this->getConfigFile('parameters.yml')) {
+        if ($parametersFile = $this->getConfigFile('parameters')) {
             $loader->load($parametersFile);
         }
 
         $config = $this->getManagerConfig()->all();
         $plugins = $this->getPluginLoader()->getInstancesOf(PluginLoader::CONFIG_PLUGINS);
 
-        /** @var ConfigPluginInterface[] $plugins */
+        /** @var array<ConfigPluginInterface> $plugins */
         foreach ($plugins as $plugin) {
             $plugin->registerContainerConfiguration($loader, $config);
         }
@@ -206,21 +190,22 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
             $loader->load($parametersFile);
         }
 
-        if ($configFile = $this->getConfigFile('config_'.$this->getEnvironment().'.yml')) {
+        if ($configFile = $this->getConfigFile('config_'.$this->getEnvironment())) {
             $loader->load($configFile);
-        } elseif ($configFile = $this->getConfigFile('config.yml')) {
+        } elseif ($configFile = $this->getConfigFile('config')) {
             $loader->load($configFile);
         }
 
         // Automatically load the services.yml file if it exists
-        if ($servicesFile = $this->getConfigFile('services.yml')) {
+        if ($servicesFile = $this->getConfigFile('services')) {
             $loader->load($servicesFile);
+        }
+
+        if (is_dir($this->getProjectDir().'/src')) {
+            $loader->load(__DIR__.'/../Resources/skeleton/config/services.php');
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getHttpCache(): ContaoCache
     {
         if (null !== $this->httpCache) {
@@ -300,9 +285,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         return static::create($projectDir, $env);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getContainerBuilder(): PluginContainerBuilder
     {
         $container = new PluginContainerBuilder($this->getPluginLoader(), []);
@@ -315,9 +297,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         return $container;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function initializeContainer(): void
     {
         parent::initializeContainer();
@@ -339,15 +318,19 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     {
         $rootDir = $this->getProjectDir();
 
-        if (file_exists($rootDir.'/config/'.$file)) {
-            return $rootDir.'/config/'.$file;
+        foreach (['.yaml', '.yml'] as $ext) {
+            if (file_exists($rootDir.'/config/'.$file.$ext)) {
+                return $rootDir.'/config/'.$file.$ext;
+            }
         }
 
         // Fallback to the legacy config file (see #566)
-        if (file_exists($rootDir.'/app/config/'.$file)) {
-            @trigger_error(sprintf('Storing the "%s" file in the "app/config" folder has been deprecated and will no longer work in Contao 5.0. Move it to the "config" folder instead.', $file), E_USER_DEPRECATED);
+        foreach (['.yaml', '.yml'] as $ext) {
+            if (file_exists($rootDir.'/app/config/'.$file.$ext)) {
+                @trigger_error(sprintf('Storing the "%s" file in the "app/config" folder has been deprecated and will no longer work in Contao 5.0. Move it to the "config" folder instead.', $file.$ext), E_USER_DEPRECATED);
 
-            return $rootDir.'/app/config/'.$file;
+                return $rootDir.'/app/config/'.$file.$ext;
+            }
         }
 
         return null;
@@ -410,6 +393,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         }
 
         $_SERVER += $_ENV;
-        $_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = ($_SERVER['APP_ENV'] ?? $_ENV['APP_ENV'] ?? null) ?: $defaultEnv;
+        $_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = $_SERVER['APP_ENV'] ?? $_ENV['APP_ENV'] ?? null ?: $defaultEnv;
     }
 }

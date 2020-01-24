@@ -161,11 +161,12 @@ class PreviewToolbarListenerTest extends TestCase
     }
 
     /**
-     * @dataProvider getRedirects
+     * @dataProvider getDisallowedStatusCodes
      */
-    public function testDoesNotInjectTheToolbarIntoARedirectResponse(int $statusCode, bool $hasSession): void
+    public function testDoesNotInjectToolbarOnDisallowedStatusCodes(int $statusCode, bool $hasSession): void
     {
         $response = new Response('<html><head></head><body></body></html>', $statusCode);
+        $response->headers->set('Content-Type', 'text/html; charset=utf-8');
 
         $event = new ResponseEvent(
             $this->createMock(HttpKernelInterface::class),
@@ -186,12 +187,60 @@ class PreviewToolbarListenerTest extends TestCase
         $this->assertSame('<html><head></head><body></body></html>', $response->getContent());
     }
 
-    public function getRedirects(): \Generator
+    public function getDisallowedStatusCodes(): \Generator
     {
+        yield [100, true];
         yield [301, true];
         yield [302, true];
+        yield [500, true];
+        yield [100, false];
         yield [301, false];
         yield [302, false];
+        yield [302, false];
+        yield [500, false];
+    }
+
+    /**
+     * @dataProvider getAllowedStatusCodes
+     */
+    public function testInjectsToolbarOnAllowedStatusCodes(int $statusCode, bool $hasSession): void
+    {
+        $response = new Response('<html><head></head><body></body></html>');
+        $response->headers->set('Content-Type', 'text/html; charset=utf-8');
+
+        $event = new ResponseEvent(
+            $this->createMock(HttpKernelInterface::class),
+            $this->getRequestMock(false, 'html', $hasSession),
+            HttpKernelInterface::MASTER_REQUEST,
+            $response
+        );
+
+        $listener = new PreviewToolbarListener(
+            'preview.php',
+            $this->mockScopeMatcher(),
+            $this->getTwigMock(),
+            $this->mockRouterWithContext()
+        );
+
+        $listener($event);
+
+        $this->assertSame("<html><head></head><body>\nCONTAO\n</body></html>", $response->getContent());
+    }
+
+    public function getAllowedStatusCodes(): \Generator
+    {
+        yield [200, true];
+        yield [201, true];
+        yield [202, true];
+        yield [401, true];
+        yield [403, true];
+        yield [404, true];
+        yield [200, false];
+        yield [201, false];
+        yield [202, false];
+        yield [401, false];
+        yield [403, false];
+        yield [404, false];
     }
 
     public function testDoesNotInjectTheToolbarIntoAnIncompleteHtmlResponse(): void

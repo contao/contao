@@ -27,9 +27,6 @@ class CombinerTest extends ContaoTestCase
      */
     private $container;
 
-    /**
-     * {@inheritdoc}
-     */
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
@@ -40,9 +37,6 @@ class CombinerTest extends ContaoTestCase
         $fs->mkdir(static::getTempDir().'/web');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();

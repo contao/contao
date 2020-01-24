@@ -29,9 +29,6 @@ class PickerBuilderTest extends ContaoTestCase
      */
     private $builder;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();

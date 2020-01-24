@@ -77,14 +77,16 @@ class InitializeController extends AbstractController
         // it will pop the current request, resulting in the real request being active.
         $this->get('request_stack')->push($masterRequest);
 
-        set_exception_handler(function ($e) use ($realRequest): void {
-            // Do not catch PHP7 Throwables
-            if (!$e instanceof \Exception) {
-                throw $e;
-            }
+        set_exception_handler(
+            function ($e) use ($realRequest): void {
+                // Do not catch PHP7 Throwables
+                if (!$e instanceof \Exception) {
+                    throw $e;
+                }
 
-            $this->handleException($e, $realRequest, HttpKernelInterface::MASTER_REQUEST);
-        });
+                $this->handleException($e, $realRequest, HttpKernelInterface::MASTER_REQUEST);
+            }
+        );
 
         return new InitializeControllerResponse('', 204);
     }
@@ -127,12 +129,12 @@ class InitializeController extends AbstractController
 
         try {
             $event = new ResponseEvent($this->get('http_kernel'), $request, $type, $response);
-            $this->get('event_dispatcher')->dispatch(KernelEvents::RESPONSE, $event);
+            $this->get('event_dispatcher')->dispatch($event, KernelEvents::RESPONSE);
             $response = $event->getResponse();
 
             $this->get('event_dispatcher')->dispatch(
-                KernelEvents::FINISH_REQUEST,
-                new FinishRequestEvent($this->get('http_kernel'), $request, $type)
+                new FinishRequestEvent($this->get('http_kernel'), $request, $type),
+                KernelEvents::FINISH_REQUEST
             );
 
             $this->get('request_stack')->pop();

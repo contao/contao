@@ -30,16 +30,14 @@
         <target>此时激活</target>
       </trans-unit>
       <trans-unit id="tl_user_group.start.1">
-        <source>Automatically activate the group on this day.</source>
-        <target>在这一天自动激活用户组。</target>
+        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_user_group.stop.0">
         <source>Deactivate on</source>
         <target>此时不激活</target>
       </trans-unit>
       <trans-unit id="tl_user_group.stop.1">
-        <source>Automatically deactivate the group on this day.</source>
-        <target>在这一天自动使用户组不可用。</target>
+        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_user_group.title_legend">
         <source>Title</source>
@@ -48,6 +46,9 @@
       <trans-unit id="tl_user_group.modules_legend">
         <source>Allowed modules</source>
         <target>允许的模块</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.elements_legend">
+        <source>Allowed elements</source>
       </trans-unit>
       <trans-unit id="tl_user_group.pagemounts_legend">
         <source>Pagemounts</source>
@@ -74,56 +75,35 @@
         <target>排除字段</target>
       </trans-unit>
       <trans-unit id="tl_user_group.account_legend">
-        <source>Account settings</source>
-        <target>账户设定</target>
+        <source>Group settings</source>
       </trans-unit>
       <trans-unit id="tl_user_group.new.0">
-        <source>New user group</source>
-        <target>新建用户组</target>
+        <source>New</source>
+        <target>新建</target>
       </trans-unit>
       <trans-unit id="tl_user_group.new.1">
         <source>Create a new user group</source>
         <target>创建新的用户组</target>
       </trans-unit>
-      <trans-unit id="tl_user_group.show.0">
-        <source>Group details</source>
-        <target>用户组细节</target>
+      <trans-unit id="tl_user_group.show">
+        <source>Show the details of user group ID %s</source>
+        <target>显示用户组 ID %s 详情</target>
       </trans-unit>
-      <trans-unit id="tl_user_group.show.1">
-        <source>Show the details of group ID %s</source>
-        <target>显示ID为 %S的用户组细节</target>
+      <trans-unit id="tl_user_group.edit">
+        <source>Edit user group ID %s</source>
+        <target>编辑用户组 ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_user_group.edit.0">
-        <source>Edit group</source>
-        <target>编辑用户组</target>
+      <trans-unit id="tl_user_group.copy">
+        <source>Duplicate user group ID %s</source>
+        <target>复制用户组 ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_user_group.edit.1">
-        <source>Edit group ID %s</source>
-        <target>编辑ID为 %S的用户组</target>
+      <trans-unit id="tl_user_group.delete">
+        <source>Delete user group ID %s</source>
+        <target>删除用户组 ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_user_group.copy.0">
-        <source>Duplicate group</source>
-        <target>复制用户组</target>
-      </trans-unit>
-      <trans-unit id="tl_user_group.copy.1">
-        <source>Duplicate group ID %s</source>
-        <target>复制ID为 %S的用户组</target>
-      </trans-unit>
-      <trans-unit id="tl_user_group.delete.0">
-        <source>Delete group</source>
-        <target>删除用户组</target>
-      </trans-unit>
-      <trans-unit id="tl_user_group.delete.1">
-        <source>Delete group ID %s</source>
-        <target>删除ID为 %S的用户组</target>
-      </trans-unit>
-      <trans-unit id="tl_user_group.toggle.0">
-        <source>Activate/deactivate group</source>
-        <target>激活/去活组</target>
-      </trans-unit>
-      <trans-unit id="tl_user_group.toggle.1">
-        <source>Activate/deactivate group ID %s</source>
-        <target>激活/去活ID为 %s 的组</target>
+      <trans-unit id="tl_user_group.toggle">
+        <source>Activate/deactivate user group ID %s</source>
+        <target>激活/未激活 用户组 ID %s</target>
       </trans-unit>
     </body>
   </file>

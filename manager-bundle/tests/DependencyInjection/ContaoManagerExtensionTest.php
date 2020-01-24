@@ -33,9 +33,6 @@ class ContaoManagerExtensionTest extends TestCase
      */
     private $container;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -145,6 +142,7 @@ class ContaoManagerExtensionTest extends TestCase
                 new Reference('contao.routing.scope_matcher'),
                 new Reference('contao.security.token_checker'),
                 new Reference('router'),
+                new Reference('uri_signer'),
                 new Reference('%contao.preview_script%'),
             ],
             $definition->getArguments()

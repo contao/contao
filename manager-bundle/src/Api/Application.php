@@ -63,7 +63,8 @@ class Application extends BaseApplication
 
             $config = $this->getManagerConfig()->all();
 
-            if (isset($config['contao_manager']['disabled_packages'])
+            if (
+                isset($config['contao_manager']['disabled_packages'])
                 && \is_array($config['contao_manager']['disabled_packages'])
             ) {
                 $this->pluginLoader->setDisabledPackages($config['contao_manager']['disabled_packages']);
@@ -92,18 +93,12 @@ class Application extends BaseApplication
         $this->managerConfig = $managerConfig;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configureIO(InputInterface $input, OutputInterface $output): void
     {
         $output->setDecorated(false);
         $input->setInteractive(false);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getDefaultInputDefinition(): InputDefinition
     {
         return new InputDefinition([
@@ -111,9 +106,6 @@ class Application extends BaseApplication
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getDefaultCommands(): array
     {
         $commands = parent::getDefaultCommands();

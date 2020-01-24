@@ -24,7 +24,7 @@ class Version410Update extends AbstractMigration
     /**
      * @var Connection
      */
-    protected $connection;
+    private $connection;
 
     public function __construct(Connection $connection)
     {
@@ -36,9 +36,6 @@ class Version410Update extends AbstractMigration
         return 'Contao 4.1.0 Update';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function shouldRun(): bool
     {
         $schemaManager = $this->connection->getSchemaManager();
@@ -52,9 +49,6 @@ class Version410Update extends AbstractMigration
         return !isset($columns['imagesizes']);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function run(): MigrationResult
     {
         $crop = $GLOBALS['TL_CROP'];

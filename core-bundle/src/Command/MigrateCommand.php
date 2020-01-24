@@ -67,9 +67,6 @@ class MigrateCommand extends Command
         parent::__construct();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure(): void
     {
         $this
@@ -80,9 +77,6 @@ class MigrateCommand extends Command
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->io = new SymfonyStyle($input, $output);
@@ -235,8 +229,7 @@ class MigrateCommand extends Command
 
             $options = $withDeletesOption
                 ? ['yes, with deletes', 'no']
-                : ['yes', 'yes, with deletes', 'no']
-            ;
+                : ['yes', 'yes, with deletes', 'no'];
 
             $answer = $this->io->choice('Execute the listed database updates?', $options, $options[0]);
 

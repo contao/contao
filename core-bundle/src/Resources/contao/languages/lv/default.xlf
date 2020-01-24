@@ -58,8 +58,8 @@
         <target>Lūdzu ievadiet derīgu tālruņa numuru!</target>
       </trans-unit>
       <trans-unit id="ERR.extnd">
-        <source>For security reasons you can not use the following characters here: =&lt;&gt;&amp;/()#</source>
-        <target>Drošibas apstākļu dēļ jūs nevarat šeit izmantot šīs zīmes (=&amp;/()#)!</target>
+        <source>For security reasons you can not use the following characters here: #&lt;&gt;()\=</source>
+        <target>Drošības apsvērumu dēļ jūs nevarat šeit izmantot sekojošās zīmes: #&lt;&gt;()\=</target>
       </trans-unit>
       <trans-unit id="ERR.email">
         <source>Please enter a valid e-mail address!</source>
@@ -220,6 +220,9 @@
         <source>You can only select &quot;%s&quot; files!</source>
         <target>Jūs varat tikai izvēlēties &quot;%s&quot; datnes!</target>
       </trans-unit>
+      <trans-unit id="ERR.forbiddenExtensions">
+        <source>The following file extensions are not allowed: %s</source>
+      </trans-unit>
       <trans-unit id="ERR.invalidPages">
         <source>Your selection contains invalid page IDs!</source>
         <target>Jūsu atlasē ir nederīgi lapu ID!</target>
@@ -227,6 +230,9 @@
       <trans-unit id="ERR.circularReference">
         <source>Invalid redirect target (circular reference)!</source>
         <target>Nederīgs novirzīšanas mērķis (riņķveida atsauce)!</target>
+      </trans-unit>
+      <trans-unit id="ERR.circularPicker">
+        <source>Invalid selection (circular reference)!</source>
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
         <source>None of the active website root pages without an explicit DNS setting have the language fallback option set.</source>
@@ -244,13 +250,12 @@
       <trans-unit id="ERR.topLevelRegular">
         <source>There are top-level pages in the site structure which are not website root pages.</source>
       </trans-unit>
-      <trans-unit id="ERR.invalidTokenUrl">
-        <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
-        <target>Saiti, kuru mēģiniet atvērt, nevar pārbaudīt. Ja saiti esat pats nospiedis vai saņēmis no uzticama avota, varat to apstiprināt zemāk.</target>
-      </trans-unit>
       <trans-unit id="ERR.form">
         <source>The form could not be sent</source>
         <target>Formulāru nevarēja nosūtīt</target>
+      </trans-unit>
+      <trans-unit id="ERR.formCookieWarning">
+        <source>You will not be able to send this form, because you have disabled cookies in your browser.</source>
       </trans-unit>
       <trans-unit id="ERR.captcha">
         <source>Please answer the security question!</source>
@@ -278,9 +283,24 @@
       </trans-unit>
       <trans-unit id="ERR.largeImage">
         <source>Image exceeds the maximum dimensions of %sx%s.</source>
+        <target>Attēls pārsniedz maksimālos izmērus %sx%s.</target>
       </trans-unit>
       <trans-unit id="ERR.invalidTwoFactor">
         <source>Invalid verification code!</source>
+        <target>Nederīgs verifikācijas kods!</target>
+      </trans-unit>
+      <trans-unit id="ERR.emptyTitleOrId">
+        <source>Please enter both title and ID!</source>
+        <target>Lūdzu, ievadiet gan nosaukumu, gan ID!</target>
+      </trans-unit>
+      <trans-unit id="ERR.duplicateSectionTitle">
+        <source>Duplicate layout section title &quot;%s&quot;!</source>
+      </trans-unit>
+      <trans-unit id="ERR.duplicateSectionId">
+        <source>Duplicate layout section ID &quot;%s&quot;!</source>
+      </trans-unit>
+      <trans-unit id="ERR.moduleWithoutColumn">
+        <source>Please assign all modules to a column!</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -376,9 +396,11 @@
       </trans-unit>
       <trans-unit id="CTE.markdown.0">
         <source>Markdown</source>
+        <target>Marķējums</target>
       </trans-unit>
       <trans-unit id="CTE.markdown.1">
         <source>Generates HTML code from a markdown text.</source>
+        <target>Ģenerē HTML kodu no marķējuma teksta. </target>
       </trans-unit>
       <trans-unit id="CTE.slider">
         <source>Content slider</source>
@@ -528,6 +550,120 @@
         <source>Displays the teaser text of an article.</source>
         <target>rāda raksta ievada tekstu.</target>
       </trans-unit>
+      <trans-unit id="FFL.explanation.0">
+        <source>Explanation</source>
+        <target>Paskaidrojums</target>
+      </trans-unit>
+      <trans-unit id="FFL.explanation.1">
+        <source>A custom field to insert an explanation text.</source>
+        <target>Pielāgots lauks, lai ievietotu paskaidrojuma tekstu.</target>
+      </trans-unit>
+      <trans-unit id="FFL.html.0">
+        <source>HTML code</source>
+        <target>HTML kods</target>
+      </trans-unit>
+      <trans-unit id="FFL.html.1">
+        <source>A custom field to insert HTML code.</source>
+        <target>Pielāgots lauks, lai ievietotu HTML kodu.</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStart.0">
+        <source>Fieldset start</source>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStart.1">
+        <source>The opening part of a fieldset with an optional legend.</source>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStop.0">
+        <source>Fieldset stop</source>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStop.1">
+        <source>The closing part of a fieldset.</source>
+      </trans-unit>
+      <trans-unit id="FFL.text.0">
+        <source>Text field</source>
+        <target>Teksta lauks</target>
+      </trans-unit>
+      <trans-unit id="FFL.text.1">
+        <source>A single-line input field for a short or medium text.</source>
+        <target>Vienrindas datu ievadīšanas lauks īsa vai vidēja teksta ievadīšanai.</target>
+      </trans-unit>
+      <trans-unit id="FFL.password.0">
+        <source>Password field</source>
+        <target>Paroles lauks</target>
+      </trans-unit>
+      <trans-unit id="FFL.password.1">
+        <source>A single-line input field for a password. Contao automatically adds a confirmation field.</source>
+        <target>Vienrindas datu ievadīšanas lauks paroles eivadīšanai. Contao automātiski pievieno apstiprināšanas lauku.</target>
+      </trans-unit>
+      <trans-unit id="FFL.textarea.0">
+        <source>Textarea</source>
+        <target>Teksta apgabals</target>
+      </trans-unit>
+      <trans-unit id="FFL.textarea.1">
+        <source>A multi-line input field for a medium or long text.</source>
+        <target>Daudzrindu datu ievades lauks vidēju vai garu tekstu ievadīšanai.</target>
+      </trans-unit>
+      <trans-unit id="FFL.select.0">
+        <source>Select menu</source>
+        <target>Izvēles saraksts</target>
+      </trans-unit>
+      <trans-unit id="FFL.select.1">
+        <source>A single- or multi-line drop-down menu.</source>
+        <target>Vienrindas vai daudzrindu izritināmasi sarkaksts.</target>
+      </trans-unit>
+      <trans-unit id="FFL.radio.0">
+        <source>Radio button menu</source>
+        <target>Radio poga</target>
+      </trans-unit>
+      <trans-unit id="FFL.radio.1">
+        <source>A list of multiple options from which one can be selected.</source>
+        <target>Vairāku variantu saralsts, no kuriem izvēlēties var tikai vienu.</target>
+      </trans-unit>
+      <trans-unit id="FFL.checkbox.0">
+        <source>Checkbox menu</source>
+        <target>Čekbokss</target>
+      </trans-unit>
+      <trans-unit id="FFL.checkbox.1">
+        <source>A list of multiple options from which any can be selected.</source>
+        <target>Vairāku variantu saralsts, no kuriem izvēlēties var jebkuru.</target>
+      </trans-unit>
+      <trans-unit id="FFL.upload.0">
+        <source>File upload</source>
+        <target>Augšupielādes fails</target>
+      </trans-unit>
+      <trans-unit id="FFL.upload.1">
+        <source>A single-line input field to upload a local file to the server.</source>
+        <target>Vienrindas datu ievades lauks failu augšupielādēšanai serverī.</target>
+      </trans-unit>
+      <trans-unit id="FFL.range.0">
+        <source>Range slider</source>
+      </trans-unit>
+      <trans-unit id="FFL.range.1">
+        <source>A range slider to select a value or range of values between a specified min and max.</source>
+      </trans-unit>
+      <trans-unit id="FFL.hidden.0">
+        <source>Hidden field</source>
+        <target>Slēptais lauks</target>
+      </trans-unit>
+      <trans-unit id="FFL.hidden.1">
+        <source>A single-line input field that is not visible in the form.</source>
+        <target>Vienrindas datu ievades lauks, kas nav redzams formā.</target>
+      </trans-unit>
+      <trans-unit id="FFL.captcha.0">
+        <source>Security question</source>
+        <target>Drošības jautājums</target>
+      </trans-unit>
+      <trans-unit id="FFL.captcha.1">
+        <source>A simple math question to verify that the form is being submitted by a human (CAPTCHA).</source>
+        <target>Matemātiski vienkāršs jautājumu, lai pārliecinātos, ka formā ievadītos datus iesniedz cilvēks (CAPTCHA).</target>
+      </trans-unit>
+      <trans-unit id="FFL.submit.0">
+        <source>Submit field</source>
+        <target>Apstiprināšanas lauks</target>
+      </trans-unit>
+      <trans-unit id="FFL.submit.1">
+        <source>A button to submit the form.</source>
+        <target>Poga formā ievadīto datu apstiprināšanai.</target>
+      </trans-unit>
       <trans-unit id="PTY.regular.0">
         <source>Regular page</source>
         <target>Standarta lapa</target>
@@ -570,25 +706,24 @@
       </trans-unit>
       <trans-unit id="PTY.error_401.0">
         <source>401 Not authenticated</source>
+        <target>401 Nav autentificēts</target>
       </trans-unit>
       <trans-unit id="PTY.error_401.1">
-        <source>If a user requests a protected page without being authenticated, a 401 error page will be loaded instead.</source>
+        <source>If a visitor requests a protected page without being authenticated, a 401 error page will be loaded instead.</source>
       </trans-unit>
       <trans-unit id="PTY.error_403.0">
         <source>403 Access denied</source>
         <target>403 Piekļuve liegta</target>
       </trans-unit>
       <trans-unit id="PTY.error_403.1">
-        <source>If a user requests a protected page without permission, a 403 error page will be loaded instead.</source>
-        <target>Ja lietotājs pieprasa aizsargātu lapu bez atļaujas, 403 kļūdas lapa tiks ielādēta vietā.</target>
+        <source>If a member requests a protected page without permission, a 403 error page will be loaded instead.</source>
       </trans-unit>
       <trans-unit id="PTY.error_404.0">
         <source>404 Page not found</source>
         <target>404 Lapa netika atrasta</target>
       </trans-unit>
       <trans-unit id="PTY.error_404.1">
-        <source>If a user requests a non-existent page, a 404 error page will be loaded instead.</source>
-        <target>Ja lietotājs pieprasa neesošu lapu, 404 kļūdas lapa tiks ielādēta vietā.</target>
+        <source>If a visitor requests a non-existent page, a 404 error page will be loaded instead.</source>
       </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
@@ -660,9 +795,11 @@
       </trans-unit>
       <trans-unit id="DATE.a">
         <source>am</source>
+        <target>no rīta</target>
       </trans-unit>
       <trans-unit id="DATE.A">
         <source>AM</source>
+        <target>No rīta</target>
       </trans-unit>
       <trans-unit id="DATE.d">
         <source>DD</source>
@@ -1077,8 +1214,7 @@
         <target>Modulis</target>
       </trans-unit>
       <trans-unit id="MSC.mw_column">
-        <source>Column</source>
-        <target>Kolonna</target>
+        <source>Layout section</source>
       </trans-unit>
       <trans-unit id="MSC.mw_enable">
         <source>Enable/disable the module</source>
@@ -1265,16 +1401,15 @@
         <target>Rediģēt visus ierakstus</target>
       </trans-unit>
       <trans-unit id="MSC.all.1">
-        <source>Edit multiple records at once</source>
-        <target>Rediģēt visus ierakstus</target>
+        <source>Edit multiple elements at once</source>
+        <target>Rediģēt vairākus elementus vienlaikus</target>
       </trans-unit>
       <trans-unit id="MSC.all_override.0">
         <source>Override multiple</source>
         <target>Ignorēt vairākus</target>
       </trans-unit>
       <trans-unit id="MSC.all_override.1">
-        <source>Override multiple records at once</source>
-        <target>Ignorēt vairākus ierakstus vienlaikus</target>
+        <source>Override multiple elements at once</source>
       </trans-unit>
       <trans-unit id="MSC.all_fields.0">
         <source>Available fields</source>
@@ -1328,7 +1463,7 @@
         <source>This seems to be your first login. Welcome to Contao!</source>
         <target>Šī, šķiet, ir jūsu pirmā pieslēgšanās. Laipni lūdzam Contao!</target>
       </trans-unit>
-      <trans-unit id="MSC.loginCount">
+      <trans-unit id="MSC.loginAttempts">
         <source>Login attempts</source>
         <target>Pieslēgšanās mēģinājumi</target>
       </trans-unit>
@@ -1337,8 +1472,8 @@
         <target>Bloķēts</target>
       </trans-unit>
       <trans-unit id="MSC.move">
-        <source>Move the item via drag and drop or the up and down keys</source>
-        <target>Pārvietojiet vienumu ar vilkšanu un nomešanu vai augšup un lejup taustiņiem</target>
+        <source>Move the item via drag and drop</source>
+        <target>Pārvietot vienumu ar vilkšanu un nomešanu</target>
       </trans-unit>
       <trans-unit id="MSC.move_up.0">
         <source>Move up</source>
@@ -1355,22 +1490,6 @@
       <trans-unit id="MSC.move_down.1">
         <source>Move the item one position down</source>
         <target>Pārvietot vienumu vienu pozīciju zemāk</target>
-      </trans-unit>
-      <trans-unit id="MSC.staticFiles.0">
-        <source>Files URL</source>
-        <target>Faila URL</target>
-      </trans-unit>
-      <trans-unit id="MSC.staticFiles.1">
-        <source>The files URL applies to the &lt;em&gt;files&lt;/em&gt; directory (page speed optimization).</source>
-        <target>Faila URL attiecas uz &lt;em&gt;tl_files&lt;/em&gt; direktoriju un visiem sīktēliem (lapas ātruma optimizācija).</target>
-      </trans-unit>
-      <trans-unit id="MSC.staticPlugins.0">
-        <source>Assets URL</source>
-        <target>Papildinājuma URL</target>
-      </trans-unit>
-      <trans-unit id="MSC.staticPlugins.1">
-        <source>The assets URL applies to the &lt;em&gt;assets&lt;/em&gt; directory (page speed optimization).</source>
-        <target>Papildinājuma URL attiecas uz visiem resursiem &lt;em&gt;plugins&lt;/em&gt; direktorijā (lapas ātruma optimizācija).</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.0">
         <source>Back end keyboard shortcuts</source>
@@ -1443,10 +1562,6 @@
         <source>Back to the back end start page</source>
         <target>Atpakaļ uz aizmugures sākuma lapu</target>
       </trans-unit>
-      <trans-unit id="MSC.burgerTitle">
-        <source>Toggle navigation</source>
-        <target>Pārslēgt navigāciju</target>
-      </trans-unit>
       <trans-unit id="MSC.learnMore">
         <source>Learn more on %s</source>
         <target>Uzzini vairāk %s</target>
@@ -1454,10 +1569,6 @@
       <trans-unit id="MSC.user">
         <source>User</source>
         <target>Lietotājs</target>
-      </trans-unit>
-      <trans-unit id="MSC.loginTo">
-        <source>Log into %s</source>
-        <target>Pieslēgties %s</target>
       </trans-unit>
       <trans-unit id="MSC.loginBT">
         <source>Login</source>
@@ -1488,8 +1599,7 @@
         <target>Atcelt</target>
       </trans-unit>
       <trans-unit id="MSC.deleteConfirm">
-        <source>Do you really want to delete entry ID %s?</source>
-        <target>Vai tiešām vēlaties dzēst ierakstu ID %s?</target>
+        <source>Do you really want to delete element ID %s?</source>
       </trans-unit>
       <trans-unit id="MSC.delAllConfirm">
         <source>Do you really want to delete the selected records?</source>
@@ -1695,10 +1805,6 @@
         <source>justified</source>
         <target>izlīdzināts</target>
       </trans-unit>
-      <trans-unit id="MSC.filetree">
-        <source>File system</source>
-        <target>Datņu sistēma</target>
-      </trans-unit>
       <trans-unit id="MSC.male">
         <source>Male</source>
         <target>vīrietis</target>
@@ -1706,6 +1812,10 @@
       <trans-unit id="MSC.female">
         <source>Female</source>
         <target>sieviete</target>
+      </trans-unit>
+      <trans-unit id="MSC.other">
+        <source>Other</source>
+        <target>Citi</target>
       </trans-unit>
       <trans-unit id="MSC.fileSize">
         <source>File size</source>
@@ -1759,9 +1869,9 @@
         <source>Back end modules</source>
         <target>Aizmugures moduļi</target>
       </trans-unit>
-      <trans-unit id="MSC.welcomeTo">
-        <source>%s back end</source>
-        <target>%s aizmugure</target>
+      <trans-unit id="MSC.dashboard">
+        <source>Dashboard</source>
+        <target>Vadības panelis</target>
       </trans-unit>
       <trans-unit id="MSC.updateVersion">
         <source>Contao version %s is available.</source>
@@ -1868,8 +1978,8 @@
         <target>Novākt starpliktuvi</target>
       </trans-unit>
       <trans-unit id="MSC.hiddenElements">
-        <source>Unpublished elements</source>
-        <target>Nepublicēti elementi</target>
+        <source>Unpublished</source>
+        <target>Nepublicēts</target>
       </trans-unit>
       <trans-unit id="MSC.hiddenHide">
         <source>hide</source>
@@ -1897,6 +2007,7 @@
       </trans-unit>
       <trans-unit id="MSC.searchAndFilter">
         <source>Search and filter functions</source>
+        <target>Meklēšanas un filtrēšanas funkcijas</target>
       </trans-unit>
       <trans-unit id="MSC.mandatory">
         <source>Mandatory field</source>
@@ -2150,6 +2261,9 @@
         <source>Your search for &lt;strong&gt;%s&lt;/strong&gt; returned no results.</source>
         <target>Meklējot &lt;strong&gt;%s&lt;/strong&gt; nav rezultātu.</target>
       </trans-unit>
+      <trans-unit id="MSC.sKeywordHint">
+        <source>Note that keywords shorter than %s characters and without a modifier have been ignored.</source>
+      </trans-unit>
       <trans-unit id="MSC.seconds">
         <source>seconds</source>
         <target>sekundes</target>
@@ -2160,6 +2274,7 @@
       </trans-unit>
       <trans-unit id="MSC.first">
         <source>First</source>
+        <target>Pirmais</target>
       </trans-unit>
       <trans-unit id="MSC.previous">
         <source>Previous</source>
@@ -2171,6 +2286,7 @@
       </trans-unit>
       <trans-unit id="MSC.last">
         <source>Last</source>
+        <target>Pēdējais</target>
       </trans-unit>
       <trans-unit id="MSC.goToPage">
         <source>Go to page %s</source>
@@ -2240,10 +2356,6 @@
         <source>Share on Twitter</source>
         <target>Ieteikt Twitter</target>
       </trans-unit>
-      <trans-unit id="MSC.gplusShare">
-        <source>Share on Google+</source>
-        <target>Kopīgot Google+</target>
-      </trans-unit>
       <trans-unit id="MSC.pleaseWait">
         <source>Please wait</source>
         <target>Lūdzu uzgaidiet</target>
@@ -2304,9 +2416,22 @@
         <source>%s relevance</source>
         <target>%s sakarība</target>
       </trans-unit>
-      <trans-unit id="MSC.invalidTokenUrl">
+      <trans-unit id="MSC.invalidToken">
         <source>Invalid token</source>
         <target>Nederīga pilnvara</target>
+      </trans-unit>
+      <trans-unit id="MSC.tokenConfirmed">
+        <source>This token has already been confirmed</source>
+      </trans-unit>
+      <trans-unit id="MSC.tokenEmailMismatch">
+        <source>The e-mail address of the token does not match</source>
+      </trans-unit>
+      <trans-unit id="MSC.resendToken">
+        <source>The token has been re-sent to %s.</source>
+      </trans-unit>
+      <trans-unit id="MSC.invalidTokenUrl">
+        <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
+        <target>Saiti, kuru mēģiniet atvērt, nevar pārbaudīt. Ja saiti esat pats nospiedis vai saņēmis no uzticama avota, varat to apstiprināt zemāk.</target>
       </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
@@ -2355,15 +2480,19 @@
       </trans-unit>
       <trans-unit id="MSC.validCharacters.unicodeLowercase">
         <source>Unicode numbers and lowercase letters</source>
+        <target>Unikoda cipari un mazie burti</target>
       </trans-unit>
       <trans-unit id="MSC.validCharacters.unicode">
         <source>Unicode numbers and letters</source>
+        <target>Unikoda cipari un burti</target>
       </trans-unit>
       <trans-unit id="MSC.validCharacters.asciiLowercase">
         <source>ASCII numbers and lowercase letters</source>
+        <target>ASCII cipari un mazie burti</target>
       </trans-unit>
       <trans-unit id="MSC.validCharacters.ascii">
         <source>ASCII numbers and letters</source>
+        <target>ASCII cipari un burti</target>
       </trans-unit>
       <trans-unit id="MSC.sortOrder">
         <source>Sort order</source>
@@ -2371,27 +2500,73 @@
       </trans-unit>
       <trans-unit id="MSC.security">
         <source>Security</source>
+        <target>Drošība</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorAuthentication">
         <source>Two-factor authentication</source>
+        <target>Divfaktoru autentifikācija</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorVerification">
         <source>Verification code</source>
+        <target>Verifikācijas kods</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorVerificationHelp">
         <source>Please enter the verification code generated by your 2FA/TOTP app.</source>
+        <target>Lūdzu, ievadiet verifikācijas kodu, ko ģenerējusi jūsu 2FA/TOTP lietotne.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorExplain">
         <source>Here you can enable two-factor authentication, which adds an extra layer of security to your account. In addition to your username and password, you will need to enter a verification code generated by a two-factor app such as 1Password, Authy, Google Authenticator, Microsoft Authenticator, LastPass Authenticator or any other TOTP app.</source>
       </trans-unit>
       <trans-unit id="MSC.twoFactorScan">
         <source>Please scan the QR code with your 2FA/TOTP app.</source>
+        <target>Lūdzu, skenējiet QR kodu ar savu 2FA/TOTP lietotni.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorActive">
         <source>Two-factor authentication has been enabled.</source>
+        <target>Divfaktoru autentifikācija ir iespējota.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorEnforced">
         <source>Please enable up two-factor authentication before you continue.</source>
+        <target>Pirms turpināt, iespējojiet divfaktoru autentifikāciju.</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorTextCode">
+        <source>If you cannot scan the QR code, enter this key instead:</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesLabel">
+        <source>Backup codes</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesShow">
+        <source>Show backup codes</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesExplain">
+        <source>Backup codes can be used to access your account if you have lost your authentication device and cannot generate two-factor codes anymore. Treat your backup codes with the same level of attention as your password! We recommend saving them with a password manager such as Lastpass, 1Password or Keeper.</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesInfo">
+        <source>Put the codes in a safe spot. If you lose your authentication device and do not have backup codes, you cannot access your account anymore!</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesGenerate">
+        <source>Generate backup codes</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesRegenerate">
+        <source>Regenerate backup codes</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesRegenerateInfo">
+        <source>When you regenerate the backup codes, your old codes will not work anymore.</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorTrustDevice">
+        <source>Trust this device</source>
+      </trans-unit>
+      <trans-unit id="MSC.userTemplateEditor">
+        <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
+      </trans-unit>
+      <trans-unit id="MSC.groupTemplateEditor">
+        <source>There is at least one user group granting access to the template editor. Since templates are PHP files, users of these groups implicitly have full control over the system!</source>
+      </trans-unit>
+      <trans-unit id="MSC.userThemeImport">
+        <source>There is at least one regular user with permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, these users implicitly have full control over the system!</source>
+      </trans-unit>
+      <trans-unit id="MSC.groupThemeImport">
+        <source>There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!</source>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
@@ -2400,6 +2575,37 @@
       <trans-unit id="MSC.disable">
         <source>Disable</source>
         <target>Atspējot</target>
+      </trans-unit>
+      <trans-unit id="MSC.internalCssEditor">
+        <source>The internal CSS editor has been deprecated and will be removed in one of the next Contao versions! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
+      </trans-unit>
+      <trans-unit id="MSC.serpPreview.0">
+        <source>Google search results preview</source>
+      </trans-unit>
+      <trans-unit id="MSC.serpPreview.1">
+        <source>Here you can preview the meta data in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
+      </trans-unit>
+      <trans-unit id="MSC.clearTrustedDevices">
+        <source>Clear trusted devices</source>
+      </trans-unit>
+      <trans-unit id="MSC.trustedDevices">
+        <source>Trusted devices</source>
+      </trans-unit>
+      <trans-unit id="MSC.noTrustedDevices">
+        <source>Currently there are no trusted devices.</source>
+      </trans-unit>
+      <trans-unit id="MSC.device">
+        <source>Device</source>
+      </trans-unit>
+      <trans-unit id="MSC.thisDevice">
+        <source>this device</source>
+      </trans-unit>
+      <trans-unit id="MSC.browser">
+        <source>Browser</source>
+        <target>Pārlūkprogramma</target>
+      </trans-unit>
+      <trans-unit id="MSC.operatingSystem">
+        <source>Operating system</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2520,6 +2726,99 @@
       <trans-unit id="SECTIONS.manual">
         <source>Manual output</source>
         <target>Manuālā izvade</target>
+      </trans-unit>
+      <trans-unit id="DCA.all.0">
+        <source>Edit multiple</source>
+        <target>Rediģēt visus ierakstus</target>
+      </trans-unit>
+      <trans-unit id="DCA.all.1">
+        <source>Edit multiple elements at once</source>
+        <target>Rediģēt vairākus elementus vienlaikus</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggleNodes.0">
+        <source>Toggle all</source>
+        <target>Pārslēgt visus</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggleNodes.1">
+        <source>Expand or collapse all nodes</source>
+        <target>Izvērst vai sakļaut visus mezglus</target>
+      </trans-unit>
+      <trans-unit id="DCA.new.0">
+        <source>New</source>
+        <target>Jauns</target>
+      </trans-unit>
+      <trans-unit id="DCA.new.1">
+        <source>Create a new element</source>
+        <target>Izveidot jaunu elementu</target>
+      </trans-unit>
+      <trans-unit id="DCA.show">
+        <source>Show the details of element ID %s</source>
+        <target>Rādīt elementa ID %s detaļas</target>
+      </trans-unit>
+      <trans-unit id="DCA.edit">
+        <source>Edit element ID %s</source>
+        <target>Rediģēt elementu ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.cut">
+        <source>Move element ID %s</source>
+        <target>Pārvietot elementu ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.copy">
+        <source>Duplicate element ID %s</source>
+        <target>Dublicēt elementu ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.delete">
+        <source>Delete element ID %s</source>
+        <target>Dzēst elementu ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.drag">
+        <source>Drag element ID %s</source>
+        <target>Vilkt elementu ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.editheader.0">
+        <source>Edit the element settings</source>
+        <target>Rediģēt elementa iestatījumus</target>
+      </trans-unit>
+      <trans-unit id="DCA.editheader.1">
+        <source>Edit the settings of element ID %s</source>
+        <target>Rediģēt elementa ID %s iestatījumus</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggle">
+        <source>Publish/unpublish element ID %s</source>
+        <target>Publicēt/slēpt elementu ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.pasteinto.0">
+        <source>Paste at the top</source>
+        <target>Ielīmēt sākumā</target>
+      </trans-unit>
+      <trans-unit id="DCA.pasteinto.1">
+        <source>Paste into element ID %s</source>
+        <target>Ielīmēt elementā ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.pasteafter.0">
+        <source>Paste at the top</source>
+        <target>Ielīmēt sākumā</target>
+      </trans-unit>
+      <trans-unit id="DCA.pasteafter.1">
+        <source>Paste after element ID %s</source>
+        <target>Ielīmēt pēc elementa ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.pastenew.0">
+        <source>Create a new element at the top</source>
+        <target>Izveidot jaunu elementu augšpusē</target>
+      </trans-unit>
+      <trans-unit id="DCA.pastenew.1">
+        <source>Create a new element after element ID %s</source>
+        <target>Izveidot jaunu elementu pēc elementa ID %s</target>
+      </trans-unit>
+      <trans-unit id="CRAWL.searchIndex.summary">
+        <source>Indexed %d URI(s) successfully. %d failed.</source>
+      </trans-unit>
+      <trans-unit id="CRAWL.searchIndex.warning">
+        <source>%d URI(s) were skipped (if you are missing one, checkout the debug log).</source>
+      </trans-unit>
+      <trans-unit id="CRAWL.brokenLinkChecker.summary">
+        <source>Checked %d link(s) successfully. %d were broken.</source>
       </trans-unit>
     </body>
   </file>

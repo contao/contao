@@ -19,9 +19,6 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class ContaoInstallationExtension extends Extension
 {
-    /**
-     * {@inheritdoc}
-     */
     public function load(array $configs, ContainerBuilder $container): void
     {
         $loader = new YamlFileLoader(
@@ -32,5 +29,6 @@ class ContaoInstallationExtension extends Extension
         $loader->load('commands.yml');
         $loader->load('listener.yml');
         $loader->load('services.yml');
+        $loader->load('migrations.yml');
     }
 }

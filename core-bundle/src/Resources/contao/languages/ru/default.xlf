@@ -58,8 +58,8 @@
         <target>Введите действующий телефонный номер!</target>
       </trans-unit>
       <trans-unit id="ERR.extnd">
-        <source>For security reasons you can not use the following characters here: =&lt;&gt;&amp;/()#</source>
-        <target>По соображениям безопасности, вы не должны использовать здесь следующие символы: =&lt;&gt;&amp;/()#</target>
+        <source>For security reasons you can not use the following characters here: #&lt;&gt;()\=</source>
+        <target>По соображениям безопасности, вы не должны использовать здесь следующие символы: #&lt;&gt;()\=</target>
       </trans-unit>
       <trans-unit id="ERR.email">
         <source>Please enter a valid e-mail address!</source>
@@ -221,6 +221,10 @@
         <source>You can only select &quot;%s&quot; files!</source>
         <target>Вы можете выбрать только &quot;%s&quot; файлы!</target>
       </trans-unit>
+      <trans-unit id="ERR.forbiddenExtensions">
+        <source>The following file extensions are not allowed: %s</source>
+        <target>Следующие расширения файлов не разрешены: %s</target>
+      </trans-unit>
       <trans-unit id="ERR.invalidPages">
         <source>Your selection contains invalid page IDs!</source>
         <target>Ваш выбор содержит недопустимые ID страниц!</target>
@@ -228,6 +232,10 @@
       <trans-unit id="ERR.circularReference">
         <source>Invalid redirect target (circular reference)!</source>
         <target>Неверный объект переадресации (циклическая ссылка)!</target>
+      </trans-unit>
+      <trans-unit id="ERR.circularPicker">
+        <source>Invalid selection (circular reference)!</source>
+        <target>Неверный выбор (циклическая ссылка)!</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
         <source>None of the active website root pages without an explicit DNS setting have the language fallback option set.</source>
@@ -249,13 +257,13 @@
         <source>There are top-level pages in the site structure which are not website root pages.</source>
         <target>В структуре сайта имеются страницы верхнего уровня, которые не являются корневыми страницами веб-сайта.</target>
       </trans-unit>
-      <trans-unit id="ERR.invalidTokenUrl">
-        <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
-        <target>Ссылка, которую вы пытались открыть не может быть проверена. Если вы нажали на ссылку самостоятельно или получили её от доверенного лица, можете подтвердить процесс ниже.</target>
-      </trans-unit>
       <trans-unit id="ERR.form">
         <source>The form could not be sent</source>
         <target>Форма не может быть отправлена</target>
+      </trans-unit>
+      <trans-unit id="ERR.formCookieWarning">
+        <source>You will not be able to send this form, because you have disabled cookies in your browser.</source>
+        <target>Вы не сможете отправить эту форму, потому что cookie отключены в вашем браузере.</target>
       </trans-unit>
       <trans-unit id="ERR.captcha">
         <source>Please answer the security question!</source>
@@ -288,6 +296,22 @@
       <trans-unit id="ERR.invalidTwoFactor">
         <source>Invalid verification code!</source>
         <target>Неверный код подтверждения!</target>
+      </trans-unit>
+      <trans-unit id="ERR.emptyTitleOrId">
+        <source>Please enter both title and ID!</source>
+        <target>Введите название и ID!</target>
+      </trans-unit>
+      <trans-unit id="ERR.duplicateSectionTitle">
+        <source>Duplicate layout section title &quot;%s&quot;!</source>
+        <target>Дублировать название секции макета &quot;%s&quot;!</target>
+      </trans-unit>
+      <trans-unit id="ERR.duplicateSectionId">
+        <source>Duplicate layout section ID &quot;%s&quot;!</source>
+        <target>Дублировать секции макета ID &quot;%s&quot;!</target>
+      </trans-unit>
+      <trans-unit id="ERR.moduleWithoutColumn">
+        <source>Please assign all modules to a column!</source>
+        <target>Назначьте все модули в колонку!</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -537,6 +561,124 @@
         <source>Displays the teaser text of an article.</source>
         <target>Позволяет показать текст анонса определённой статьи.</target>
       </trans-unit>
+      <trans-unit id="FFL.explanation.0">
+        <source>Explanation</source>
+        <target>Пояснение</target>
+      </trans-unit>
+      <trans-unit id="FFL.explanation.1">
+        <source>A custom field to insert an explanation text.</source>
+        <target>Настраиваемое поле для вставки текста пояснения.</target>
+      </trans-unit>
+      <trans-unit id="FFL.html.0">
+        <source>HTML code</source>
+        <target>HTML-код</target>
+      </trans-unit>
+      <trans-unit id="FFL.html.1">
+        <source>A custom field to insert HTML code.</source>
+        <target>Настраиваемое поле для вставки HTML-кода.</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStart.0">
+        <source>Fieldset start</source>
+        <target>Начало Fieldset</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStart.1">
+        <source>The opening part of a fieldset with an optional legend.</source>
+        <target>Открывающая часть fieldset с необязательной легендой.</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStop.0">
+        <source>Fieldset stop</source>
+        <target>Остановка Fieldset</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStop.1">
+        <source>The closing part of a fieldset.</source>
+        <target>Закрывающая часть fieldset.</target>
+      </trans-unit>
+      <trans-unit id="FFL.text.0">
+        <source>Text field</source>
+        <target>Текстовое поле</target>
+      </trans-unit>
+      <trans-unit id="FFL.text.1">
+        <source>A single-line input field for a short or medium text.</source>
+        <target>Однострочное поле для ввода текста небольшого или среднего объёма.</target>
+      </trans-unit>
+      <trans-unit id="FFL.password.0">
+        <source>Password field</source>
+        <target>Поле 'Пароль'</target>
+      </trans-unit>
+      <trans-unit id="FFL.password.1">
+        <source>A single-line input field for a password. Contao automatically adds a confirmation field.</source>
+        <target>Однострочное поле для ввода пароля. Contao автоматически добавит поле подтверждения.</target>
+      </trans-unit>
+      <trans-unit id="FFL.textarea.0">
+        <source>Textarea</source>
+        <target>Текстовая область</target>
+      </trans-unit>
+      <trans-unit id="FFL.textarea.1">
+        <source>A multi-line input field for a medium or long text.</source>
+        <target>Многострочное поле для ввода текста среднего и большого объёма.</target>
+      </trans-unit>
+      <trans-unit id="FFL.select.0">
+        <source>Select menu</source>
+        <target>Выпадающий список</target>
+      </trans-unit>
+      <trans-unit id="FFL.select.1">
+        <source>A single- or multi-line drop-down menu.</source>
+        <target>Поле содержащие однострочное или многострочное раскрывающееся меню.</target>
+      </trans-unit>
+      <trans-unit id="FFL.radio.0">
+        <source>Radio button menu</source>
+        <target>Радио-кнопка</target>
+      </trans-unit>
+      <trans-unit id="FFL.radio.1">
+        <source>A list of multiple options from which one can be selected.</source>
+        <target>Список нескольких вариантов, из которых можно выбрать только один.</target>
+      </trans-unit>
+      <trans-unit id="FFL.checkbox.0">
+        <source>Checkbox menu</source>
+        <target>Чек-боксы</target>
+      </trans-unit>
+      <trans-unit id="FFL.checkbox.1">
+        <source>A list of multiple options from which any can be selected.</source>
+        <target>Список нескольких вариантов, каждый из которых может быть выбран.</target>
+      </trans-unit>
+      <trans-unit id="FFL.upload.0">
+        <source>File upload</source>
+        <target>Загрузка файла</target>
+      </trans-unit>
+      <trans-unit id="FFL.upload.1">
+        <source>A single-line input field to upload a local file to the server.</source>
+        <target>Однострочное поле для загрузки локального файла на сервер.</target>
+      </trans-unit>
+      <trans-unit id="FFL.range.0">
+        <source>Range slider</source>
+      </trans-unit>
+      <trans-unit id="FFL.range.1">
+        <source>A range slider to select a value or range of values between a specified min and max.</source>
+      </trans-unit>
+      <trans-unit id="FFL.hidden.0">
+        <source>Hidden field</source>
+        <target>Скрытое поле</target>
+      </trans-unit>
+      <trans-unit id="FFL.hidden.1">
+        <source>A single-line input field that is not visible in the form.</source>
+        <target>Однострочное поле, которое невидимо в форме.</target>
+      </trans-unit>
+      <trans-unit id="FFL.captcha.0">
+        <source>Security question</source>
+        <target>Контрольный вопрос</target>
+      </trans-unit>
+      <trans-unit id="FFL.captcha.1">
+        <source>A simple math question to verify that the form is being submitted by a human (CAPTCHA).</source>
+        <target>Простой математический вопрос для проверки, что форма отправляется человеком (CAPTCHA).</target>
+      </trans-unit>
+      <trans-unit id="FFL.submit.0">
+        <source>Submit field</source>
+        <target>Кнопка 'Отправить'</target>
+      </trans-unit>
+      <trans-unit id="FFL.submit.1">
+        <source>A button to submit the form.</source>
+        <target>Кнопка для отправки формы.</target>
+      </trans-unit>
       <trans-unit id="PTY.regular.0">
         <source>Regular page</source>
         <target>Постоянная страница</target>
@@ -582,24 +724,24 @@
         <target>401 Не аутентифицирован</target>
       </trans-unit>
       <trans-unit id="PTY.error_401.1">
-        <source>If a user requests a protected page without being authenticated, a 401 error page will be loaded instead.</source>
-        <target>Страница ошибка 401 выводится, когда пользователь запрашивает защищенную страницу без проверки подлинности.</target>
+        <source>If a visitor requests a protected page without being authenticated, a 401 error page will be loaded instead.</source>
+        <target>Страница ошибка 401 выводится, когда посетитель запрашивает защищенную страницу без проверки подлинности.</target>
       </trans-unit>
       <trans-unit id="PTY.error_403.0">
         <source>403 Access denied</source>
         <target>Ошибка 403 (доступ запрещен)</target>
       </trans-unit>
       <trans-unit id="PTY.error_403.1">
-        <source>If a user requests a protected page without permission, a 403 error page will be loaded instead.</source>
-        <target>Страница ошибка 403 выводится, когда пользователь пытается получить доступ к защищенной странице без разрешения.</target>
+        <source>If a member requests a protected page without permission, a 403 error page will be loaded instead.</source>
+        <target>Страница ошибка 403 выводится, когда участник пытается получить доступ к защищенной странице без разрешения.</target>
       </trans-unit>
       <trans-unit id="PTY.error_404.0">
         <source>404 Page not found</source>
         <target>Ошибка 404 (страница не найдена)</target>
       </trans-unit>
       <trans-unit id="PTY.error_404.1">
-        <source>If a user requests a non-existent page, a 404 error page will be loaded instead.</source>
-        <target>Страница ошибка 404 выводится, когда пользователь пытается получить доступ к несуществующей странице.</target>
+        <source>If a visitor requests a non-existent page, a 404 error page will be loaded instead.</source>
+        <target>Страница ошибка 404 выводится, когда посетитель пытается получить доступ к несуществующей странице.</target>
       </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
@@ -1090,8 +1232,8 @@
         <target>Модуль</target>
       </trans-unit>
       <trans-unit id="MSC.mw_column">
-        <source>Column</source>
-        <target>Колонка</target>
+        <source>Layout section</source>
+        <target>Секция макета</target>
       </trans-unit>
       <trans-unit id="MSC.mw_enable">
         <source>Enable/disable the module</source>
@@ -1278,16 +1420,16 @@
         <target>Редактировать все</target>
       </trans-unit>
       <trans-unit id="MSC.all.1">
-        <source>Edit multiple records at once</source>
-        <target>Редактировать несколько записей одновременно</target>
+        <source>Edit multiple elements at once</source>
+        <target>Редактировать несколько элементов одновременно</target>
       </trans-unit>
       <trans-unit id="MSC.all_override.0">
         <source>Override multiple</source>
         <target>Переопределить несколько</target>
       </trans-unit>
       <trans-unit id="MSC.all_override.1">
-        <source>Override multiple records at once</source>
-        <target>Переопределить несколько записей сразу</target>
+        <source>Override multiple elements at once</source>
+        <target>Переопределить несколько элементов одновременно</target>
       </trans-unit>
       <trans-unit id="MSC.all_fields.0">
         <source>Available fields</source>
@@ -1341,7 +1483,7 @@
         <source>This seems to be your first login. Welcome to Contao!</source>
         <target>Вероятно, это ваш первый вход в систему. Добро пожаловать в Contao!</target>
       </trans-unit>
-      <trans-unit id="MSC.loginCount">
+      <trans-unit id="MSC.loginAttempts">
         <source>Login attempts</source>
         <target>Попыток входа</target>
       </trans-unit>
@@ -1350,8 +1492,8 @@
         <target>Заблокирован</target>
       </trans-unit>
       <trans-unit id="MSC.move">
-        <source>Move the item via drag and drop or the up and down keys</source>
-        <target>Переместите элемент с помощью перетаскивания или клавиш вверх и вниз</target>
+        <source>Move the item via drag and drop</source>
+        <target>Переместите элемент с помощью перетаскивания</target>
       </trans-unit>
       <trans-unit id="MSC.move_up.0">
         <source>Move up</source>
@@ -1368,22 +1510,6 @@
       <trans-unit id="MSC.move_down.1">
         <source>Move the item one position down</source>
         <target>Переместить на одну позицию вниз</target>
-      </trans-unit>
-      <trans-unit id="MSC.staticFiles.0">
-        <source>Files URL</source>
-        <target>URL файлов</target>
-      </trans-unit>
-      <trans-unit id="MSC.staticFiles.1">
-        <source>The files URL applies to the &lt;em&gt;files&lt;/em&gt; directory (page speed optimization).</source>
-        <target>URL файлов применяется к каталогу &lt;em&gt;files&lt;/em&gt; и всем эскизам изображений (оптимизация скорости страниц).</target>
-      </trans-unit>
-      <trans-unit id="MSC.staticPlugins.0">
-        <source>Assets URL</source>
-        <target>URL ресурсов</target>
-      </trans-unit>
-      <trans-unit id="MSC.staticPlugins.1">
-        <source>The assets URL applies to the &lt;em&gt;assets&lt;/em&gt; directory (page speed optimization).</source>
-        <target>URL ресурсов применяется к каталогу &lt;em&gt;assets&lt;/em&gt; и всем ресурсам внутри (оптимизация скорости страниц).</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.0">
         <source>Back end keyboard shortcuts</source>
@@ -1457,10 +1583,6 @@
         <source>Back to the back end start page</source>
         <target>Перейти к главной странице панели управления</target>
       </trans-unit>
-      <trans-unit id="MSC.burgerTitle">
-        <source>Toggle navigation</source>
-        <target>Переключить навигацию</target>
-      </trans-unit>
       <trans-unit id="MSC.learnMore">
         <source>Learn more on %s</source>
         <target>Узнайте больше на %s</target>
@@ -1468,10 +1590,6 @@
       <trans-unit id="MSC.user">
         <source>User</source>
         <target>Пользователь</target>
-      </trans-unit>
-      <trans-unit id="MSC.loginTo">
-        <source>Log into %s</source>
-        <target>Панель управления: %s</target>
       </trans-unit>
       <trans-unit id="MSC.loginBT">
         <source>Login</source>
@@ -1502,8 +1620,8 @@
         <target>Отмена</target>
       </trans-unit>
       <trans-unit id="MSC.deleteConfirm">
-        <source>Do you really want to delete entry ID %s?</source>
-        <target>Вы действительно хотите удалить запись ID %s?</target>
+        <source>Do you really want to delete element ID %s?</source>
+        <target>Вы действительно хотите удалить элемент ID %s?</target>
       </trans-unit>
       <trans-unit id="MSC.delAllConfirm">
         <source>Do you really want to delete the selected records?</source>
@@ -1709,10 +1827,6 @@
         <source>justified</source>
         <target>по ширине</target>
       </trans-unit>
-      <trans-unit id="MSC.filetree">
-        <source>File system</source>
-        <target>Файловая система</target>
-      </trans-unit>
       <trans-unit id="MSC.male">
         <source>Male</source>
         <target>Мужчина</target>
@@ -1720,6 +1834,10 @@
       <trans-unit id="MSC.female">
         <source>Female</source>
         <target>Женщина</target>
+      </trans-unit>
+      <trans-unit id="MSC.other">
+        <source>Other</source>
+        <target>Другое</target>
       </trans-unit>
       <trans-unit id="MSC.fileSize">
         <source>File size</source>
@@ -1773,9 +1891,9 @@
         <source>Back end modules</source>
         <target>Модули панели управления</target>
       </trans-unit>
-      <trans-unit id="MSC.welcomeTo">
-        <source>%s back end</source>
-        <target>Панель управления: %s</target>
+      <trans-unit id="MSC.dashboard">
+        <source>Dashboard</source>
+        <target>Панель инструментов</target>
       </trans-unit>
       <trans-unit id="MSC.updateVersion">
         <source>Contao version %s is available.</source>
@@ -1882,8 +2000,8 @@
         <target>Очистить буфер обмена</target>
       </trans-unit>
       <trans-unit id="MSC.hiddenElements">
-        <source>Unpublished elements</source>
-        <target>Неопубликованные элементы</target>
+        <source>Unpublished</source>
+        <target>Не опубликовано</target>
       </trans-unit>
       <trans-unit id="MSC.hiddenHide">
         <source>hide</source>
@@ -2165,6 +2283,10 @@
         <source>Your search for &lt;strong&gt;%s&lt;/strong&gt; returned no results.</source>
         <target>Ваш поиск &lt;strong&gt;%s&lt;/strong&gt; не принес результатов.</target>
       </trans-unit>
+      <trans-unit id="MSC.sKeywordHint">
+        <source>Note that keywords shorter than %s characters and without a modifier have been ignored.</source>
+        <target>Обратите внимание, ключевые слова короче %s символов и без модификатора были проигнорированы.</target>
+      </trans-unit>
       <trans-unit id="MSC.seconds">
         <source>seconds</source>
         <target>секунды</target>
@@ -2257,10 +2379,6 @@
         <source>Share on Twitter</source>
         <target>Добавить в Twitter</target>
       </trans-unit>
-      <trans-unit id="MSC.gplusShare">
-        <source>Share on Google+</source>
-        <target>Поделиться в Google+</target>
-      </trans-unit>
       <trans-unit id="MSC.pleaseWait">
         <source>Please wait</source>
         <target>Пожалуйста, подождите</target>
@@ -2321,9 +2439,25 @@
         <source>%s relevance</source>
         <target>Релевантность %s</target>
       </trans-unit>
-      <trans-unit id="MSC.invalidTokenUrl">
+      <trans-unit id="MSC.invalidToken">
         <source>Invalid token</source>
         <target>Неверный токен</target>
+      </trans-unit>
+      <trans-unit id="MSC.tokenConfirmed">
+        <source>This token has already been confirmed</source>
+        <target>Этот токен уже подтвержден</target>
+      </trans-unit>
+      <trans-unit id="MSC.tokenEmailMismatch">
+        <source>The e-mail address of the token does not match</source>
+        <target>E-mail токена не совпадает</target>
+      </trans-unit>
+      <trans-unit id="MSC.resendToken">
+        <source>The token has been re-sent to %s.</source>
+        <target>Токен был повторно отправлен %s.</target>
+      </trans-unit>
+      <trans-unit id="MSC.invalidTokenUrl">
+        <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
+        <target>Ссылка, которую вы пытались открыть не может быть проверена. Если вы нажали на ссылку самостоятельно или получили её от доверенного лица, можете подтвердить процесс ниже.</target>
       </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
@@ -2425,6 +2559,48 @@
         <source>Please enable up two-factor authentication before you continue.</source>
         <target>Перед продолжением включите двухфакторную авторизацию.</target>
       </trans-unit>
+      <trans-unit id="MSC.twoFactorTextCode">
+        <source>If you cannot scan the QR code, enter this key instead:</source>
+        <target>Если вы не можете отсканировать QR-код, введите этот ключ:</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesLabel">
+        <source>Backup codes</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesShow">
+        <source>Show backup codes</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesExplain">
+        <source>Backup codes can be used to access your account if you have lost your authentication device and cannot generate two-factor codes anymore. Treat your backup codes with the same level of attention as your password! We recommend saving them with a password manager such as Lastpass, 1Password or Keeper.</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesInfo">
+        <source>Put the codes in a safe spot. If you lose your authentication device and do not have backup codes, you cannot access your account anymore!</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesGenerate">
+        <source>Generate backup codes</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesRegenerate">
+        <source>Regenerate backup codes</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesRegenerateInfo">
+        <source>When you regenerate the backup codes, your old codes will not work anymore.</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorTrustDevice">
+        <source>Trust this device</source>
+      </trans-unit>
+      <trans-unit id="MSC.userTemplateEditor">
+        <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
+        <target>Существует как минимум один обычный пользователь с правами доступа к редактору шаблонов. Поскольку шаблоны являются файлами PHP, эти пользователи неявно имеют полный контроль над системой!</target>
+      </trans-unit>
+      <trans-unit id="MSC.groupTemplateEditor">
+        <source>There is at least one user group granting access to the template editor. Since templates are PHP files, users of these groups implicitly have full control over the system!</source>
+        <target>Существует как минимум одна группа пользователей, предоставляющая доступ к редактору шаблонов. Поскольку шаблоны являются файлами PHP, пользователи этих групп неявно имеют полный контроль над системой!</target>
+      </trans-unit>
+      <trans-unit id="MSC.userThemeImport">
+        <source>There is at least one regular user with permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, these users implicitly have full control over the system!</source>
+      </trans-unit>
+      <trans-unit id="MSC.groupThemeImport">
+        <source>There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!</source>
+      </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
         <target>Включить</target>
@@ -2432,6 +2608,40 @@
       <trans-unit id="MSC.disable">
         <source>Disable</source>
         <target>Отключить</target>
+      </trans-unit>
+      <trans-unit id="MSC.internalCssEditor">
+        <source>The internal CSS editor has been deprecated and will be removed in one of the next Contao versions! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
+        <target>Внутренний редактор CSS устарел и будет удален в одной из следующих версий Contao! Рассмотрите возможность экспорта существующих таблиц стилей и повторного их добавления в макет страницы в качестве внешних таблиц стилей.</target>
+      </trans-unit>
+      <trans-unit id="MSC.serpPreview.0">
+        <source>Google search results preview</source>
+        <target>Предпросмотр результатов поиска Google</target>
+      </trans-unit>
+      <trans-unit id="MSC.serpPreview.1">
+        <source>Here you can preview the meta data in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
+        <target>Вы можете просмотреть метаданные в результатах поиска Google. Другие поисковые системы могут показывать более длинные тексты или обрезать их в разных местах.</target>
+      </trans-unit>
+      <trans-unit id="MSC.clearTrustedDevices">
+        <source>Clear trusted devices</source>
+      </trans-unit>
+      <trans-unit id="MSC.trustedDevices">
+        <source>Trusted devices</source>
+      </trans-unit>
+      <trans-unit id="MSC.noTrustedDevices">
+        <source>Currently there are no trusted devices.</source>
+      </trans-unit>
+      <trans-unit id="MSC.device">
+        <source>Device</source>
+      </trans-unit>
+      <trans-unit id="MSC.thisDevice">
+        <source>this device</source>
+      </trans-unit>
+      <trans-unit id="MSC.browser">
+        <source>Browser</source>
+        <target>Браузер</target>
+      </trans-unit>
+      <trans-unit id="MSC.operatingSystem">
+        <source>Operating system</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2552,6 +2762,99 @@
       <trans-unit id="SECTIONS.manual">
         <source>Manual output</source>
         <target>Ручной вывод</target>
+      </trans-unit>
+      <trans-unit id="DCA.all.0">
+        <source>Edit multiple</source>
+        <target>Редактировать все</target>
+      </trans-unit>
+      <trans-unit id="DCA.all.1">
+        <source>Edit multiple elements at once</source>
+        <target>Редактировать несколько элементов одновременно</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggleNodes.0">
+        <source>Toggle all</source>
+        <target>Переключить все</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggleNodes.1">
+        <source>Expand or collapse all nodes</source>
+        <target>Развернуть или свернуть все узлы</target>
+      </trans-unit>
+      <trans-unit id="DCA.new.0">
+        <source>New</source>
+        <target>Новый</target>
+      </trans-unit>
+      <trans-unit id="DCA.new.1">
+        <source>Create a new element</source>
+        <target>Создать новый элемент</target>
+      </trans-unit>
+      <trans-unit id="DCA.show">
+        <source>Show the details of element ID %s</source>
+        <target>Показать детали элемента ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.edit">
+        <source>Edit element ID %s</source>
+        <target>Редактировать элемент ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.cut">
+        <source>Move element ID %s</source>
+        <target>Переместить элемент ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.copy">
+        <source>Duplicate element ID %s</source>
+        <target>Дублировать элемент ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.delete">
+        <source>Delete element ID %s</source>
+        <target>Удалить элемент ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.drag">
+        <source>Drag element ID %s</source>
+        <target>Перетащить элемент ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.editheader.0">
+        <source>Edit the element settings</source>
+        <target>Редактировать настройки элемента</target>
+      </trans-unit>
+      <trans-unit id="DCA.editheader.1">
+        <source>Edit the settings of element ID %s</source>
+        <target>Редактировать настройки элемента ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggle">
+        <source>Publish/unpublish element ID %s</source>
+        <target>Опубликовать/изъять элемент ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.pasteinto.0">
+        <source>Paste at the top</source>
+        <target>Вставить после</target>
+      </trans-unit>
+      <trans-unit id="DCA.pasteinto.1">
+        <source>Paste into element ID %s</source>
+        <target>Вставить в элемент ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.pasteafter.0">
+        <source>Paste at the top</source>
+        <target>Вставить после</target>
+      </trans-unit>
+      <trans-unit id="DCA.pasteafter.1">
+        <source>Paste after element ID %s</source>
+        <target>Вставить после элемента ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.pastenew.0">
+        <source>Create a new element at the top</source>
+        <target>Создать новый элемент вверху</target>
+      </trans-unit>
+      <trans-unit id="DCA.pastenew.1">
+        <source>Create a new element after element ID %s</source>
+        <target>Создать новый элемент после элемента ID %s</target>
+      </trans-unit>
+      <trans-unit id="CRAWL.searchIndex.summary">
+        <source>Indexed %d URI(s) successfully. %d failed.</source>
+      </trans-unit>
+      <trans-unit id="CRAWL.searchIndex.warning">
+        <source>%d URI(s) were skipped (if you are missing one, checkout the debug log).</source>
+      </trans-unit>
+      <trans-unit id="CRAWL.brokenLinkChecker.summary">
+        <source>Checked %d link(s) successfully. %d were broken.</source>
       </trans-unit>
     </body>
   </file>

@@ -144,25 +144,4 @@ class BackendControllerTest extends TestCase
 
         $controller->pickerAction($request);
     }
-
-    public function testRedirectsToTheBackendIfTheTwoFactorRouteIsCalledManually(): void
-    {
-        $router = $this->createMock(RouterInterface::class);
-        $router
-            ->expects($this->once())
-            ->method('generate')
-            ->with('contao_backend')
-            ->willReturn('/contao')
-        ;
-
-        $container = $this->getContainerWithContaoConfiguration();
-        $container->set('router', $router);
-
-        $controller = new BackendController();
-        $controller->setContainer($container);
-
-        $response = $controller->twoFactorAuthenticationAction();
-
-        $this->assertInstanceOf(RedirectResponse::class, $response);
-    }
 }

@@ -31,6 +31,7 @@ services:
             - '@contao.routing.scope_matcher'
             - '@contao.security.token_checker'
             - '@router'
+            - '@uri_signer'
             - '%contao.preview_script%'
         tags:
             # The priority must be lower than the one of the firewall listener (defaults to 8)

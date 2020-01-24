@@ -15,7 +15,7 @@ namespace Contao\InstallationBundle\Database;
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Doctrine\DBAL\Connection;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
@@ -25,7 +25,7 @@ class Version447Update extends AbstractMigration
     /**
      * @var Connection
      */
-    protected $connection;
+    private $connection;
 
     /**
      * @var TranslatorInterface
@@ -43,9 +43,6 @@ class Version447Update extends AbstractMigration
         return 'Contao 4.4.7 Update';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function shouldRun(): bool
     {
         $schemaManager = $this->connection->getSchemaManager();
@@ -59,9 +56,6 @@ class Version447Update extends AbstractMigration
         return !isset($columns['pid_email']);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function run(): MigrationResult
     {
         $schemaManager = $this->connection->getSchemaManager();

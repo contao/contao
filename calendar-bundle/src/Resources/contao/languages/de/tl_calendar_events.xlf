@@ -65,6 +65,22 @@
         <source>Leave blank to create a single day event.</source>
         <target>Lassen Sie das Feld leer, um ein eintägiges Event zu erstellen.</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.pageTitle.0">
+        <source>Meta title</source>
+        <target>Meta-Titel</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.pageTitle.1">
+        <source>Here you can add a custom meta title to overwrite the default page title.</source>
+        <target>Hier können Sie einen individuellen Meta-Titel eingeben, um den Standard-Seitentitel zu überschreiben.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.description.0">
+        <source>Meta description</source>
+        <target>Meta-Beschreibung</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.description.1">
+        <source>Here you can add a custom meta description to overwrite the default page description.</source>
+        <target>Hier können Sie eine individuelle Meta-Beschreibung eingeben, um die Standard-Seitenbeschreibung zu überschreiben.</target>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.location.0">
         <source>Location name</source>
         <target>Veranstaltungsort</target>
@@ -234,16 +250,16 @@
         <target>Anzeigen ab</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.start.1">
-        <source>Do not show the event on the website before this day.</source>
-        <target>Das Event erst ab diesem Tag auf der Webseite anzeigen.</target>
+        <source>If you want to prevent the event from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Wenn Sie das Event erst ab einem bestimmten Zeitpunkt auf der Webseite anzeigen möchten, können Sie diesen hier eingeben. Andernfalls lassen Sie das Feld leer.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.0">
         <source>Show until</source>
         <target>Anzeigen bis</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.1">
-        <source>Do not show the event on the website on and after this day.</source>
-        <target>Das Event nur bis zu diesem Tag auf der Webseite anzeigen.</target>
+        <source>If you want to prevent the event from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Wenn Sie das Event nur bis zu einem bestimmten Zeitpunkt auf der Webseite anzeigen möchten, können Sie diesen hier eingeben. Andernfalls lassen Sie das Feld leer. </target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.tstamp.0">
         <source>Revision date</source>
@@ -261,6 +277,10 @@
         <source>Date and time</source>
         <target>Datum und Zeit</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.meta_legend">
+        <source>Meta data</source>
+        <target>Metadaten</target>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.details_legend">
         <source>Event details</source>
         <target>Eventdetails</target>
@@ -271,7 +291,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.image_legend">
         <source>Image settings</source>
-        <target>Bild-Einstellungen</target>
+        <target>Bildeinstellungen</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.recurring_legend">
         <source>Recurrence settings</source>
@@ -287,7 +307,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.expert_legend">
         <source>Expert settings</source>
-        <target>Experten-Einstellungen</target>
+        <target>Experteneinstellungen</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.publish_legend">
         <source>Publish settings</source>
@@ -310,84 +330,44 @@
         <target>Jahr(e)</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.new.0">
-        <source>New event</source>
-        <target>Neues Event</target>
+        <source>New</source>
+        <target>Neu</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.new.1">
         <source>Create a new event</source>
         <target>Ein neues Event erstellen</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.show.0">
-        <source>Event details</source>
-        <target>Eventdetails</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.show.1">
+      <trans-unit id="tl_calendar_events.show">
         <source>Show the details of event ID %s</source>
         <target>Details des Events ID %s anzeigen</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.edit.0">
-        <source>Edit event</source>
-        <target>Event bearbeiten</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.edit.1">
+      <trans-unit id="tl_calendar_events.edit">
         <source>Edit event ID %s</source>
         <target>Event ID %s bearbeiten</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.copy.0">
-        <source>Duplicate event</source>
-        <target>Event duplizieren</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.copy.1">
+      <trans-unit id="tl_calendar_events.copy">
         <source>Duplicate event ID %s</source>
         <target>Event ID %s duplizieren</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.cut.0">
-        <source>Move event</source>
-        <target>Event verschieben</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.cut.1">
+      <trans-unit id="tl_calendar_events.cut">
         <source>Move event ID %s</source>
         <target>Event ID %s verschieben</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.delete.0">
-        <source>Delete event</source>
-        <target>Event löschen</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.delete.1">
+      <trans-unit id="tl_calendar_events.delete">
         <source>Delete event ID %s</source>
         <target>Event ID %s löschen</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.toggle.0">
-        <source>Publish/unpublish event</source>
-        <target>Event veröffentlichen/unveröffentlichen</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.toggle.1">
+      <trans-unit id="tl_calendar_events.toggle">
         <source>Publish/unpublish event ID %s</source>
         <target>Event ID %s veröffentlichen/unveröffentlichen</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.editheader.0">
-        <source>Edit calendar</source>
-        <target>Kalender bearbeiten</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.editheader.1">
-        <source>Edit the calendar settings</source>
-        <target>Die Kalender-Einstellungen bearbeiten</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.editmeta.0">
-        <source>Edit event settings</source>
-        <target>Eventeinstellungen bearbeiten</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.editmeta.1">
-        <source>Edit the event settings</source>
-        <target>Die Eventeinstellungen bearbeiten</target>
+      <trans-unit id="tl_calendar_events.editheader">
+        <source>Edit the settings of event ID %s</source>
+        <target>Einstellungen des Events ID %s bearbeiten</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>
         <target>In diesen Kalender einfügen</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.pasteafter.1">
-        <source>Paste after event ID %s</source>
-        <target>Nach dem Event ID %s einfügen</target>
       </trans-unit>
     </body>
   </file>

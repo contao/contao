@@ -1,0 +1,52 @@
+services:
+    _defaults:
+        autoconfigure: true
+
+    Contao\InstallationBundle\Database\Version330Update:
+        arguments:
+            - '@database_connection'
+
+    Contao\InstallationBundle\Database\Version350Update:
+        arguments:
+            - '@database_connection'
+
+    Contao\InstallationBundle\Database\Version400Update:
+        arguments:
+            - '@database_connection'
+
+    Contao\InstallationBundle\Database\Version410Update:
+        arguments:
+            - '@database_connection'
+
+    Contao\InstallationBundle\Database\Version430Update:
+        arguments:
+            - '@database_connection'
+
+    Contao\InstallationBundle\Database\Version440Update:
+        arguments:
+            - '@database_connection'
+
+    Contao\InstallationBundle\Database\Version447Update:
+        arguments:
+            - '@database_connection'
+            - '@translator'
+
+    Contao\InstallationBundle\Database\Version450Update:
+        arguments:
+            - '@database_connection'
+
+    Contao\InstallationBundle\Database\Version460Update:
+        arguments:
+            - '@database_connection'
+
+    Contao\InstallationBundle\Database\Version470Update:
+        arguments:
+            - '@database_connection'
+            - '@filesystem'
+            - '%contao.upload_path%'
+            - '%kernel.project_dir%'
+
+    Contao\InstallationBundle\Database\Version480Update:
+        arguments:
+            - '@database_connection'
+            - '%kernel.project_dir%'

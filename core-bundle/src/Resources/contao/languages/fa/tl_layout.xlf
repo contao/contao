@@ -146,11 +146,11 @@
       </trans-unit>
       <trans-unit id="tl_layout.framework.0">
         <source>CSS framework</source>
-        <target>چارچوب سی‌اس‌اس</target>
+        <target>چارچوب CSS</target>
       </trans-unit>
       <trans-unit id="tl_layout.framework.1">
         <source>Here you can activate the components of the Contao CSS framework.</source>
-        <target>اینجا می‌توانید اجزاء چارچوب سی‌اس‌اس کانتائو را فعال نمایید.</target>
+        <target>اینجا می‌توانید اجزاء چارچوب CSS کنتائو را فعال نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_layout.layout.css.0">
         <source>Layout builder</source>
@@ -158,7 +158,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.layout.css.1">
         <source>Generates a CSS layout based on the page layout settings. This component is required for the page layout generator to work!</source>
-        <target>یک چیدمان سی‌اس‌اس بر پایه تنظیمات چیدمان برگه تولید می‌کند. این مولفه برای اینکه تولیدکننده چیدمان برگه کار کند لازم است!</target>
+        <target>یک چیدمان CSS بر پایه تنظیمات چیدمان برگه تولید می‌کند. این مولفه برای اینکه تولیدکننده چیدمان برگه کار کند لازم است!</target>
       </trans-unit>
       <trans-unit id="tl_layout.responsive.css.0">
         <source>Responsive layout</source>
@@ -166,7 +166,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.responsive.css.1">
         <source>Adds a meta viewport tag to the page header and scales the CSS layout based on the device width.</source>
-        <target>افزودن برچسب ویوپورت متا به سربرگ و بزرگنمایی چیدمان سی‌اس‌اس بر پایه عرض دستگاه.</target>
+        <target>افزودن برچسب ویوپورت متا به سربرگ و بزرگنمایی چیدمان CSS بر پایه عرض دستگاه.</target>
       </trans-unit>
       <trans-unit id="tl_layout.grid.css.0">
         <source>12-column grid</source>
@@ -174,15 +174,15 @@
       </trans-unit>
       <trans-unit id="tl_layout.grid.css.1">
         <source>Adds a responsive 12-column grid that is triggered by the CSS classes &quot;grid1&quot; to &quot;grid12&quot; and &quot;offset1&quot; to &quot;offset12&quot;.</source>
-        <target>شبکه ۱۲-ستونی پاسخگو را اضافه می‌کند که با کلاس‌های سی‌اس‌اس &quot;grid1&quot; تا &quot;grid12&quot; و &quot;offset1&quot; تا &quot;offset12&quot; مشخص می‌شوند.</target>
+        <target>شبکه ۱۲-ستونی پاسخگو را اضافه می‌کند که با کلاس‌های CSS &quot;grid1&quot; تا &quot;grid12&quot; و &quot;offset1&quot; تا &quot;offset12&quot; مشخص می‌شوند.</target>
       </trans-unit>
       <trans-unit id="tl_layout.reset.css.0">
         <source>CSS reset</source>
-        <target>بازتنظیم سی‌اس‌اس</target>
+        <target>بازتنظیم CSS</target>
       </trans-unit>
       <trans-unit id="tl_layout.reset.css.1">
         <source>Removes the inconsistent default styling of HTML elements in different browsers.</source>
-        <target>سبک‌های پیش‌فرض متناقض عنصر‌های اچ‌تی‌ام‌ال را در مرورگرهای متفاوت حذف می‌نماید.</target>
+        <target>سبک‌های پیش‌فرض متناقض عنصر‌های HTML را در مرورگرهای متفاوت حذف می‌نماید.</target>
       </trans-unit>
       <trans-unit id="tl_layout.form.css.0">
         <source>Basic forms</source>
@@ -239,6 +239,20 @@
         <source>Here you can add Google web fonts to your website. Specify the font families without the base URL (e.g. &lt;em&gt;Ubuntu|Ubuntu+Mono&lt;/em&gt;).</source>
         <target>اینجا می‌توانید قلم‌های وب گوگل را به وب‌سایت خود اضافه نمایید. خانواده‌های قلم را بدون نشانی وب مشخص نمایید (برای نمونه &lt;em&gt;Ubuntu|Ubuntu+Mono&lt;/em&gt;).</target>
       </trans-unit>
+      <trans-unit id="tl_layout.lightboxSize.0">
+        <source>Lightbox image size</source>
+        <target>اندازه تصویر Lightbox</target>
+      </trans-unit>
+      <trans-unit id="tl_layout.lightboxSize.1">
+        <source>Here you can select an image size for the images shown in the lightbox.</source>
+      </trans-unit>
+      <trans-unit id="tl_layout.defaultImageDensities.0">
+        <source>Default image pixel densities</source>
+        <target>چگالی پیکسلی پیش‌فرض تصویر</target>
+      </trans-unit>
+      <trans-unit id="tl_layout.defaultImageDensities.1">
+        <source>Here you can define the default pixel densities, e.g. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</source>
+      </trans-unit>
       <trans-unit id="tl_layout.modules.0">
         <source>Included modules</source>
         <target>ماژول‌های گنجانده شده</target>
@@ -255,13 +269,13 @@
         <source>Here you can select the page template.</source>
         <target>اینجا می‌توانید قالب برگه را انتخاب نمایید.</target>
       </trans-unit>
-      <trans-unit id="tl_layout.doctype.0">
-        <source>Output format</source>
-        <target>قالب خروجی</target>
+      <trans-unit id="tl_layout.minifyMarkup.0">
+        <source>Minify the markup</source>
+        <target>کوچک کردن نشانه‌گذاری</target>
       </trans-unit>
-      <trans-unit id="tl_layout.doctype.1">
-        <source>Here you can set the output format.</source>
-        <target>اینجا می‌توانید قالب خروجی را تنظیم نمایید.</target>
+      <trans-unit id="tl_layout.minifyMarkup.1">
+        <source>Minify the HTML markup before it is sent to the browser.</source>
+        <target>نشانه‌گذاری HTML را قبل از ارسال به مرورگر کوچک می‌کند.</target>
       </trans-unit>
       <trans-unit id="tl_layout.cssClass.0">
         <source>Body class</source>
@@ -349,14 +363,6 @@
         <source>Here you can select one or more MooTools templates.</source>
         <target>اینجا می‌توانید یک یا چند قالب موتولز را انتخاب کنید.</target>
       </trans-unit>
-      <trans-unit id="tl_layout.picturefill.0">
-        <source>Load the image polyfill</source>
-        <target>بارگیری polyfill تصویر</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.picturefill.1">
-        <source>Include the image polyfill (&lt;em&gt;respimage.js&lt;/em&gt;) in the layout.</source>
-        <target>polyfill تصویر (&lt;em&gt;respimage.js&lt;/em&gt;) در چیدمان می‌گنجاند.</target>
-      </trans-unit>
       <trans-unit id="tl_layout.scripts.0">
         <source>JavaScript templates</source>
         <target>قالب‌های جاوا اسکریپت</target>
@@ -432,13 +438,13 @@
         <source>Web fonts</source>
         <target>قلم‌های وبی</target>
       </trans-unit>
+      <trans-unit id="tl_layout.image_legend">
+        <source>Image sizes</source>
+        <target>اندازه‌های تصویر</target>
+      </trans-unit>
       <trans-unit id="tl_layout.style_legend">
         <source>Style sheets</source>
         <target>شیوه‌نامه‌ها</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.picturefill_legend">
-        <source>Responsive images</source>
-        <target>تصویرهای واکنش‌گرا</target>
       </trans-unit>
       <trans-unit id="tl_layout.modules_legend">
         <source>Front end modules</source>
@@ -490,7 +496,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.html5">
         <source>HTML</source>
-        <target>اچ‌تی‌ام‌ال</target>
+        <target>HTML</target>
       </trans-unit>
       <trans-unit id="tl_layout.edit_styles">
         <source>Edit the style sheets</source>
@@ -509,60 +515,32 @@
         <target>پی‌ویک</target>
       </trans-unit>
       <trans-unit id="tl_layout.new.0">
-        <source>New layout</source>
-        <target>چیدمان جدید</target>
+        <source>New</source>
+        <target>جدید</target>
       </trans-unit>
       <trans-unit id="tl_layout.new.1">
-        <source>Create a new layout</source>
-        <target>ساخت یک چیدمان جدید</target>
+        <source>Create a new page layout</source>
+        <target>ایجاد یک چیدمان برگه جدید</target>
       </trans-unit>
-      <trans-unit id="tl_layout.show.0">
-        <source>Layout details</source>
-        <target>جزئیات چیدمان</target>
+      <trans-unit id="tl_layout.show">
+        <source>Show the details of page layout ID %s</source>
+        <target>نمایش جزئیات چیدمان برگه شناسه‌ی %s</target>
       </trans-unit>
-      <trans-unit id="tl_layout.show.1">
-        <source>Show the details of layout ID %s</source>
-        <target>نمایش جزئیات چیدمان شناسه‌ی %s</target>
+      <trans-unit id="tl_layout.edit">
+        <source>Edit page layout ID %s</source>
+        <target>ویرایش چیدمان برگه شناسه‌ی %s</target>
       </trans-unit>
-      <trans-unit id="tl_layout.edit.0">
-        <source>Edit layout</source>
-        <target>ویرایش چیدمان</target>
+      <trans-unit id="tl_layout.copy">
+        <source>Duplicate page layout ID %s</source>
+        <target>دونسخه کردن چیدمان برگه شناسه‌ی %s</target>
       </trans-unit>
-      <trans-unit id="tl_layout.edit.1">
-        <source>Edit layout ID %s</source>
-        <target>ویرایش چیدمان شناسه‌ی %s</target>
+      <trans-unit id="tl_layout.cut">
+        <source>Move page layout ID %s</source>
+        <target>جابجایی چیدمان برگه شناسه‌ی %s</target>
       </trans-unit>
-      <trans-unit id="tl_layout.cut.0">
-        <source>Move layout</source>
-        <target>جابجایی چیدمان</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.cut.1">
-        <source>Move layout ID %s</source>
-        <target>جابجایی چیدمان شناسه‌ی %s</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.copy.0">
-        <source>Duplicate layout</source>
-        <target>تکثیر چیدمان</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.copy.1">
-        <source>Duplicate layout ID %s</source>
-        <target>تکثیر چیدمان شناسه‌ی %s</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.delete.0">
-        <source>Delete layout</source>
-        <target>حذف چیدمان</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.delete.1">
-        <source>Delete layout ID %s</source>
-        <target>حذف چیدمان شناسه‌ی %s</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.editheader.0">
-        <source>Edit theme</source>
-        <target>ویرایش پوسته</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.editheader.1">
-        <source>Edit the theme settings</source>
-        <target>ویرایش تنظیمات پوسته</target>
+      <trans-unit id="tl_layout.delete">
+        <source>Delete page layout ID %s</source>
+        <target>حذف چیدمان برگه شناسه‌ی %s</target>
       </trans-unit>
     </body>
   </file>

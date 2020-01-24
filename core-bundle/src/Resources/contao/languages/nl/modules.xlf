@@ -14,8 +14,8 @@
         <target>Beheer van artikelen en inhoud elementen.</target>
       </trans-unit>
       <trans-unit id="MOD.form.0">
-        <source>Form generator</source>
-        <target>Formulier generator</target>
+        <source>Forms</source>
+        <target>Formulieren</target>
       </trans-unit>
       <trans-unit id="MOD.form.1">
         <source>Create custom forms and store or send the submitted data</source>
@@ -30,8 +30,7 @@
         <target>Thema's</target>
       </trans-unit>
       <trans-unit id="MOD.themes.1">
-        <source>Manage front end modules, style sheets, page layouts and templates</source>
-        <target>Beheer van style sheets, frontend modules en pagina lay-outs.</target>
+        <source>Manage themes, front end modules, page layouts or image sizes</source>
       </trans-unit>
       <trans-unit id="MOD.page.0">
         <source>Site structure</source>
@@ -46,8 +45,7 @@
         <target>Templates</target>
       </trans-unit>
       <trans-unit id="MOD.tpl_editor.1">
-        <source>Edit templates in the back end</source>
-        <target>Bewerk templates in het back-end</target>
+        <source>Add or edit custom templates</source>
       </trans-unit>
       <trans-unit id="MOD.accounts">
         <source>Account manager</source>
@@ -58,32 +56,35 @@
         <target>Leden</target>
       </trans-unit>
       <trans-unit id="MOD.member.1">
-        <source>Manage member accounts (front end users)</source>
-        <target>Beheer van ledenaccounts (frontend gebruikers / bezoekers).</target>
+        <source>Manage member accounts (front end)</source>
       </trans-unit>
       <trans-unit id="MOD.mgroup.0">
         <source>Member groups</source>
         <target>Ledengroepen</target>
       </trans-unit>
       <trans-unit id="MOD.mgroup.1">
-        <source>Manage member groups (front end user groups)</source>
-        <target>Leden kunnen toegewezen worden aan een of meer groepen die bepaalde eigenschappen delen. Met deze module kunt u deze groepen aanmaken en beheren.</target>
+        <source>Manage member groups (front end)</source>
       </trans-unit>
       <trans-unit id="MOD.user.0">
         <source>Users</source>
         <target>Gebruikers</target>
       </trans-unit>
       <trans-unit id="MOD.user.1">
-        <source>Manage user accounts (back end users)</source>
-        <target>Beheer van gebruikersaccounts (backend gebruikers / redacteuren).</target>
+        <source>Manage user accounts (back end)</source>
       </trans-unit>
       <trans-unit id="MOD.group.0">
         <source>User groups</source>
         <target>Gebruikersgroepen</target>
       </trans-unit>
       <trans-unit id="MOD.group.1">
-        <source>Manage user groups (back end user groups)</source>
-        <target>Beheren van gebruikers groepen (back-end gebruikers groepen)</target>
+        <source>Manage user groups (back end)</source>
+      </trans-unit>
+      <trans-unit id="MOD.opt_in.0">
+        <source>Double opt-in</source>
+        <target>Dubbele opt-in</target>
+      </trans-unit>
+      <trans-unit id="MOD.opt_in.1">
+        <source>Manage double opt-in tokens</source>
       </trans-unit>
       <trans-unit id="MOD.system">
         <source>System</source>
@@ -94,32 +95,28 @@
         <target>Bestandsbeheer</target>
       </trans-unit>
       <trans-unit id="MOD.files.1">
-        <source>Manage files and folders or upload new files to the server</source>
-        <target>Beheer van bestanden en mappen of upload van nieuwe bestanden naar de server.</target>
+        <source>Manage files and folders</source>
       </trans-unit>
       <trans-unit id="MOD.log.0">
         <source>System log</source>
         <target>Systeemlog</target>
       </trans-unit>
       <trans-unit id="MOD.log.1">
-        <source>Browse the system log and analyze the activity on the website</source>
-        <target>Systeemlog bekijken en analyseren van website activiteiten.</target>
+        <source>Browse the system log</source>
       </trans-unit>
       <trans-unit id="MOD.settings.0">
         <source>Settings</source>
         <target>Instellingen</target>
       </trans-unit>
       <trans-unit id="MOD.settings.1">
-        <source>Check and optimize the Contao configuration</source>
-        <target>Configuratie van de Contao installatie controleren en optimaliseren.</target>
+        <source>Adjust the Contao configuration</source>
       </trans-unit>
       <trans-unit id="MOD.maintenance.0">
         <source>Maintenance</source>
         <target>Systeembeheer</target>
       </trans-unit>
       <trans-unit id="MOD.maintenance.1">
-        <source>Maintain or update Contao</source>
-        <target>Onderhoud of update uw Contao installatie.</target>
+        <source>Crawl the website or purge generated data</source>
       </trans-unit>
       <trans-unit id="MOD.security.0">
         <source>Security</source>
@@ -262,8 +259,8 @@
         <target>Toont een menu om door de artikelen op een pagina te bladeren.</target>
       </trans-unit>
       <trans-unit id="FMD.sitemap.0">
-        <source>Sitemap</source>
-        <target>Sitemap</target>
+        <source>HTML sitemap</source>
+        <target>HTML sitemap</target>
       </trans-unit>
       <trans-unit id="FMD.sitemap.1">
         <source>Generates a list of all pages in the site structure</source>
@@ -384,6 +381,14 @@
       <trans-unit id="FMD.rssReader.1">
         <source>Adds an RSS feed to the page</source>
         <target>Voegt een RSS feed aan een pagina toe.</target>
+      </trans-unit>
+      <trans-unit id="FMD.two_factor.0">
+        <source>Two-factor authentication</source>
+        <target>Twee-traps authenticatie</target>
+      </trans-unit>
+      <trans-unit id="FMD.two_factor.1">
+        <source>Generates a form to set up or change two-factor authentication</source>
+        <target>Genereert een formulier om twee-traps authenticatie in te stellen of te wijzigen</target>
       </trans-unit>
     </body>
   </file>

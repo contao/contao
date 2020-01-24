@@ -155,7 +155,6 @@ class ModuleSubscribe extends Module
 		$this->Template->submit = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['subscribe']);
 		$this->Template->channelsLabel = $GLOBALS['TL_LANG']['MSC']['nl_channels'];
 		$this->Template->emailLabel = $GLOBALS['TL_LANG']['MSC']['emailAddress'];
-		$this->Template->action = Environment::get('indexFreeRequest');
 		$this->Template->formId = $strFormId;
 		$this->Template->id = $this->id;
 		$this->Template->text = $this->nl_text;

@@ -26,7 +26,7 @@ class Version480Update extends AbstractMigration
     /**
      * @var Connection
      */
-    protected $connection;
+    private $connection;
 
     /**
      * @var string
@@ -44,9 +44,6 @@ class Version480Update extends AbstractMigration
         return 'Contao 4.8.0 Update';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function shouldRun(): bool
     {
         $schemaManager = $this->connection->getSchemaManager();
@@ -60,9 +57,6 @@ class Version480Update extends AbstractMigration
         return isset($columns['picturefill']);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function run(): MigrationResult
     {
         $this->connection->query('

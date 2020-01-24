@@ -278,7 +278,6 @@ class Form extends Hybrid
 		$this->Template->hasError = $doNotSubmit;
 		$this->Template->attributes = $strAttributes;
 		$this->Template->enctype = $hasUpload ? 'multipart/form-data' : 'application/x-www-form-urlencoded';
-		$this->Template->action = Environment::get('indexFreeRequest');
 		$this->Template->maxFileSize = $hasUpload ? $this->objModel->getMaxUploadFileSize() : false;
 		$this->Template->novalidate = $this->novalidate ? ' novalidate' : '';
 

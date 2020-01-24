@@ -143,7 +143,7 @@ class Registry implements \Countable
 	 */
 	public function register(Model $objModel)
 	{
-		$intObjectId = spl_object_hash($objModel);
+		$intObjectId = spl_object_id($objModel);
 
 		// The model has been registered already
 		if (isset($this->arrIdentities[$intObjectId]))
@@ -191,7 +191,7 @@ class Registry implements \Countable
 	 */
 	public function unregister(Model $objModel)
 	{
-		$intObjectId = spl_object_hash($objModel);
+		$intObjectId = spl_object_id($objModel);
 
 		// The model is not registered
 		if (!isset($this->arrIdentities[$intObjectId]))
@@ -218,7 +218,7 @@ class Registry implements \Countable
 	 */
 	public function isRegistered(Model $objModel)
 	{
-		$intObjectId = spl_object_hash($objModel);
+		$intObjectId = spl_object_id($objModel);
 
 		return isset($this->arrIdentities[$intObjectId]);
 	}

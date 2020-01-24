@@ -22,9 +22,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class WidgetTest extends TestCase
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -168,6 +165,6 @@ class WidgetTest extends TestCase
         $widget
             ->setInputCallback()
             ->validate() // getPost() should be called once here
-        ;
+;
     }
 }

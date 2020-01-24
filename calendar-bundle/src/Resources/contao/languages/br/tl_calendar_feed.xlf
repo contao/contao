@@ -94,42 +94,25 @@
         <target>Pennadoù klok</target>
       </trans-unit>
       <trans-unit id="tl_calendar_feed.new.0">
-        <source>New feed</source>
-        <target>Froud nevez</target>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_calendar_feed.new.1">
         <source>Create a new feed</source>
         <target>Krouiñ ur froud nevez</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_feed.show.0">
-        <source>Feed details</source>
-        <target>Munudoù ar froud</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_feed.show.1">
+      <trans-unit id="tl_calendar_feed.show">
         <source>Show the details of feed ID %s</source>
         <target>Diskouez munudoù ID ar froud %s</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_feed.edit.0">
-        <source>Edit feed</source>
-        <target>Kemm froud</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_feed.edit.1">
+      <trans-unit id="tl_calendar_feed.edit">
         <source>Edit feed ID %s</source>
         <target>Kemm ID ar froud %s</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_feed.copy.0">
-        <source>Duplicate feed</source>
-        <target>Eilañ ar froud</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_feed.copy.1">
+      <trans-unit id="tl_calendar_feed.copy">
         <source>Duplicate feed ID %s</source>
         <target>Eilañ ID ar froud %s</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_feed.delete.0">
-        <source>Delete feed</source>
-        <target>Dilemel ar froud.</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_feed.delete.1">
+      <trans-unit id="tl_calendar_feed.delete">
         <source>Delete feed ID %s</source>
         <target>Dilemel ID ar froud %s</target>
       </trans-unit>

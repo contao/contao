@@ -557,85 +557,13 @@
         <source>none</source>
         <target>neviens</target>
       </trans-unit>
-      <trans-unit id="tl_style.new.0">
-        <source>New format definition</source>
-        <target>Jauna formāta definēšana</target>
-      </trans-unit>
-      <trans-unit id="tl_style.new.1">
-        <source>Create a new format definition</source>
-        <target>Izveidot jaunu formāta defiīciju</target>
-      </trans-unit>
-      <trans-unit id="tl_style.show.0">
-        <source>Format definition details</source>
-        <target>Formāta definīcijas detaļas</target>
-      </trans-unit>
-      <trans-unit id="tl_style.show.1">
-        <source>Show the details of format definition ID %s</source>
-        <target>Parāda ID %s formāta definīcijas detaļas</target>
-      </trans-unit>
-      <trans-unit id="tl_style.edit.0">
-        <source>Edit format definition</source>
-        <target>Rediģēt formāta definīciju</target>
-      </trans-unit>
-      <trans-unit id="tl_style.edit.1">
-        <source>Edit format definition ID %s</source>
-        <target>Rediģēt ID %s formāta definīciju</target>
-      </trans-unit>
-      <trans-unit id="tl_style.cut.0">
-        <source>Move format definition</source>
-        <target>Pārvietot formāta definīciju</target>
-      </trans-unit>
-      <trans-unit id="tl_style.cut.1">
-        <source>Move format definition ID %s</source>
-        <target>Pārvietot ID %s formāta definīciju</target>
-      </trans-unit>
-      <trans-unit id="tl_style.copy.0">
-        <source>Duplicate format definition</source>
-        <target>Duplicēt formāta definīciju</target>
-      </trans-unit>
-      <trans-unit id="tl_style.copy.1">
-        <source>Duplicate format definition ID %s</source>
-        <target>Duplicēt ID %s formāta definīciju</target>
-      </trans-unit>
-      <trans-unit id="tl_style.delete.0">
-        <source>Delete format definition</source>
-        <target>Dzēst formāta definīciju</target>
-      </trans-unit>
-      <trans-unit id="tl_style.delete.1">
-        <source>Delete format definition ID %s</source>
-        <target>Dzēst ID %s formāta definīciju</target>
-      </trans-unit>
-      <trans-unit id="tl_style.editheader.0">
-        <source>Edit style sheet</source>
-        <target>Rediģēt stila lapu</target>
-      </trans-unit>
-      <trans-unit id="tl_style.editheader.1">
+      <trans-unit id="tl_style.editheader">
         <source>Edit the style sheet settings</source>
         <target>Rediģēt stila lapas uzstādījumus</target>
       </trans-unit>
-      <trans-unit id="tl_style.pasteafter.0">
-        <source>Paste at the top</source>
-        <target>Ielīmēt sākumā</target>
-      </trans-unit>
-      <trans-unit id="tl_style.pasteafter.1">
-        <source>Paste after format definition ID %s</source>
-        <target>Ielīmēt pēc ID %s formāta definīcijas</target>
-      </trans-unit>
-      <trans-unit id="tl_style.pastenew.0">
-        <source>Add new at the top</source>
-        <target>Pievienot sākumā</target>
-      </trans-unit>
-      <trans-unit id="tl_style.pastenew.1">
-        <source>Add new after format definition ID %s</source>
-        <target>Pievienot pēc ID %s formāta definīcijas</target>
-      </trans-unit>
-      <trans-unit id="tl_style.toggle.0">
-        <source>Toggle visibility</source>
-        <target>Pārslēgt redzamību</target>
-      </trans-unit>
-      <trans-unit id="tl_style.toggle.1">
-        <source>Toggle the visibility of format definition ID %s</source>
-        <target>Pārslēgt formāta ID %s redzamību</target>
+      <trans-unit id="tl_style.toggle">
+        <source>Activate/deactivate element ID %s</source>
+        <target>Aktivizēt/deaktivizēt elementu ID %s</target>
       </trans-unit>
     </body>
   </file>

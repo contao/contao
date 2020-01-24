@@ -33,6 +33,14 @@
         <source>Add an image to the content element.</source>
         <target>Добавить изображение к элементу контента.</target>
       </trans-unit>
+      <trans-unit id="tl_content.inline.0">
+        <source>Show in browser</source>
+        <target>Показать в браузере</target>
+      </trans-unit>
+      <trans-unit id="tl_content.inline.1">
+        <source>Show the file in the browser instead of opening the download dialog.</source>
+        <target>Показать файл в браузере вместо открытия диалогового окна загрузки.</target>
+      </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.0">
         <source>Overwrite meta data</source>
         <target>Переписать метаданные</target>
@@ -481,6 +489,14 @@
         <source>Here you can select the aspect ratio of the video to make it responsive.</source>
         <target>Вы можете выбрать соотношение сторон видео, чтобы сделать его адаптивным.</target>
       </trans-unit>
+      <trans-unit id="tl_content.splashImage.0">
+        <source>Use a splash image</source>
+        <target>Использовать splash-изображение</target>
+      </trans-unit>
+      <trans-unit id="tl_content.splashImage.1">
+        <source>Only load the video after the user has clicked on the splash image.</source>
+        <target>Загружать видео только после нажатия на splash-изображение.</target>
+      </trans-unit>
       <trans-unit id="tl_content.playerColor.0">
         <source>Controls color</source>
         <target>Элементы управления цветом</target>
@@ -606,16 +622,16 @@
         <target>Публиковать с</target>
       </trans-unit>
       <trans-unit id="tl_content.start.1">
-        <source>Do not show the element on the website before this day.</source>
-        <target>Не показывать элемент на веб-сайте до этого дня.</target>
+        <source>If you want to prevent the element from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Если хотите запретить показ элемента на веб-сайте до определенной даты/времени, введите её здесь. В противном случае оставьте поле пустым.</target>
       </trans-unit>
       <trans-unit id="tl_content.stop.0">
         <source>Show until</source>
         <target>Публиковать до</target>
       </trans-unit>
       <trans-unit id="tl_content.stop.1">
-        <source>Do not show the element on the website on and after this day.</source>
-        <target>Не показывать элемент на веб-сайте после этого дня.</target>
+        <source>If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Если хотите запретить показ элемента на веб-сайте после определенной даты/времени, введите её здесь. В противном случае оставьте поле пустым.</target>
       </trans-unit>
       <trans-unit id="tl_content.type_legend">
         <source>Element type</source>
@@ -628,6 +644,10 @@
       <trans-unit id="tl_content.image_legend">
         <source>Image settings</source>
         <target>Настройки изображения</target>
+      </trans-unit>
+      <trans-unit id="tl_content.download_legend">
+        <source>Download settings</source>
+        <target>Настройки загрузки</target>
       </trans-unit>
       <trans-unit id="tl_content.slider_legend">
         <source>Slider settings</source>
@@ -672,6 +692,10 @@
       <trans-unit id="tl_content.protected_legend">
         <source>Access protection</source>
         <target>Защита доступа</target>
+      </trans-unit>
+      <trans-unit id="tl_content.splash_legend">
+        <source>Splash image</source>
+        <target>Splash-изображение</target>
       </trans-unit>
       <trans-unit id="tl_content.expert_legend">
         <source>Expert settings</source>
@@ -826,60 +850,40 @@
         <target>Скрыть автора</target>
       </trans-unit>
       <trans-unit id="tl_content.new.0">
-        <source>New element</source>
-        <target>Новый элемент</target>
+        <source>New</source>
+        <target>Новый</target>
       </trans-unit>
       <trans-unit id="tl_content.new.1">
         <source>Add a new content element</source>
         <target>Создать новый элемент</target>
       </trans-unit>
-      <trans-unit id="tl_content.show.0">
-        <source>Element details</source>
-        <target>Детали элемента</target>
-      </trans-unit>
-      <trans-unit id="tl_content.show.1">
+      <trans-unit id="tl_content.show">
         <source>Show the details of content element ID %s</source>
         <target>Показать детали элемента ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_content.cut.0">
-        <source>Move element</source>
-        <target>Переместить элемент</target>
-      </trans-unit>
-      <trans-unit id="tl_content.cut.1">
+      <trans-unit id="tl_content.cut">
         <source>Move content element ID %s</source>
         <target>Переместить элемент ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_content.copy.0">
-        <source>Duplicate element</source>
-        <target>Дублировать элемент</target>
-      </trans-unit>
-      <trans-unit id="tl_content.copy.1">
+      <trans-unit id="tl_content.copy">
         <source>Duplicate content element ID %s</source>
         <target>Дублировать элемент ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_content.delete.0">
-        <source>Delete element</source>
-        <target>Удалить элемент</target>
-      </trans-unit>
-      <trans-unit id="tl_content.delete.1">
+      <trans-unit id="tl_content.delete">
         <source>Delete content element ID %s</source>
         <target>Удалить элемент ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_content.edit.0">
-        <source>Edit element</source>
-        <target>Редактировать элемент</target>
-      </trans-unit>
-      <trans-unit id="tl_content.edit.1">
+      <trans-unit id="tl_content.edit">
         <source>Edit content element ID %s</source>
         <target>Редактировать элемент ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_content.editheader.0">
-        <source>Edit article</source>
-        <target>Редактировать статью</target>
-      </trans-unit>
-      <trans-unit id="tl_content.editheader.1">
+      <trans-unit id="tl_content.editheader">
         <source>Edit the article settings</source>
         <target>Редактировать настройки статьи</target>
+      </trans-unit>
+      <trans-unit id="tl_content.toggle">
+        <source>Hide/unhide content element ID %s</source>
+        <target>Скрыть/показать элемент контента ID %s</target>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.0">
         <source>Paste at the top</source>
@@ -890,34 +894,18 @@
         <target>Вставить после элемента контента ID %s</target>
       </trans-unit>
       <trans-unit id="tl_content.pastenew.0">
-        <source>Add new at the top</source>
-        <target>Добавить новый элемент вверху</target>
+        <source>Create a new content element at the top</source>
+        <target>Создать новый элемент контента вверху</target>
       </trans-unit>
       <trans-unit id="tl_content.pastenew.1">
-        <source>Add new after content element ID %s</source>
-        <target>Создать новый элемент контента после ID %s</target>
+        <source>Create a new content element after content element ID %s</source>
+        <target>Создать новый элемент контента после элемента ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_content.toggle.0">
-        <source>Toggle visibility</source>
-        <target>Переключить видимость</target>
-      </trans-unit>
-      <trans-unit id="tl_content.toggle.1">
-        <source>Toggle the visibility of element ID %s</source>
-        <target>Переключить видимость элемента ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_content.editalias.0">
-        <source>Edit source element</source>
-        <target>Редактировать исходный элемент</target>
-      </trans-unit>
-      <trans-unit id="tl_content.editalias.1">
+      <trans-unit id="tl_content.editalias">
         <source>Edit the source element ID %s</source>
         <target>Редактировать исходный элемент ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_content.editarticle.0">
-        <source>Edit article</source>
-        <target>Редактировать статью</target>
-      </trans-unit>
-      <trans-unit id="tl_content.editarticle.1">
+      <trans-unit id="tl_content.editarticle">
         <source>Edit article ID %s</source>
         <target>Редактировать статью ID %s</target>
       </trans-unit>

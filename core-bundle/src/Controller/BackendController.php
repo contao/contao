@@ -56,13 +56,16 @@ class BackendController extends AbstractController
         $this->initializeContaoFramework();
 
         if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
-            $queryString = '';
+            if ($request->query->has('redirect')) {
+                $uriSigner = $this->get('uri_signer');
 
-            if ($request->query->has('referer')) {
-                $queryString = '?'.base64_decode($request->query->get('referer'), true);
+                // We cannot use $request->getUri() here as we want to work with the original URI (no query string reordering)
+                if ($uriSigner->check($request->getSchemeAndHttpHost().$request->getBaseUrl().$request->getPathInfo().(null !== ($qs = $request->server->get('QUERY_STRING')) ? '?'.$qs : ''))) {
+                    return new RedirectResponse($request->query->get('redirect'));
+                }
             }
 
-            return new RedirectResponse($this->generateUrl('contao_backend').$queryString);
+            return new RedirectResponse($this->generateUrl('contao_backend'));
         }
 
         $controller = new BackendIndex();
@@ -195,25 +198,12 @@ class BackendController extends AbstractController
         return new RedirectResponse($picker->getCurrentUrl());
     }
 
-    /**
-     * Redirects the user to the Contao back end in case they manually call the
-     * /contao/two-factor route. Will be intercepted by the two factor bundle otherwise.
-     *
-     * @Route("/contao/two-factor", name="contao_backend_two_factor")
-     */
-    public function twoFactorAuthenticationAction(): Response
-    {
-        return $this->redirectToRoute('contao_backend');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();
 
         $services['contao.picker.builder'] = PickerBuilderInterface::class;
+        $services['uri_signer'] = 'uri_signer'; // FIXME: adjust this once https://github.com/symfony/symfony/pull/35298 has been merged
 
         return $services;
     }

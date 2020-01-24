@@ -12,15 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
-use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
-use Contao\CoreBundle\Exception\ResponseException;
-use Contao\FrontendCron;
+use Contao\CoreBundle\Cron\Cron;
 use Contao\FrontendIndex;
 use Contao\FrontendShare;
-use Contao\PageError401;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\LogoutException;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
@@ -44,13 +41,13 @@ class FrontendController extends AbstractController
     /**
      * @Route("/_contao/cron", name="contao_frontend_cron")
      */
-    public function cronAction(): Response
+    public function cronAction(Request $request, Cron $cron): Response
     {
-        $this->initializeContaoFramework();
+        if ($request->isMethod(Request::METHOD_GET)) {
+            $cron->run(Cron::SCOPE_WEB);
+        }
 
-        $controller = new FrontendCron();
-
-        return $controller->run();
+        return new Response('', Response::HTTP_NO_CONTENT);
     }
 
     /**
@@ -63,33 +60,6 @@ class FrontendController extends AbstractController
         $controller = new FrontendShare();
 
         return $controller->run();
-    }
-
-    /**
-     * Symfony will authenticate the user automatically by calling this route.
-     *
-     * @return RedirectResponse|Response
-     *
-     * @Route("/_contao/login", name="contao_frontend_login")
-     */
-    public function loginAction(): Response
-    {
-        $this->initializeContaoFramework();
-
-        if (!isset($GLOBALS['TL_PTY']['error_401']) || !class_exists($GLOBALS['TL_PTY']['error_401'])) {
-            throw new UnauthorizedHttpException('', 'Not authorized');
-        }
-
-        /** @var PageError401 $pageHandler */
-        $pageHandler = new $GLOBALS['TL_PTY']['error_401']();
-
-        try {
-            return $pageHandler->getResponse();
-        } catch (ResponseException $e) {
-            return $e->getResponse();
-        } catch (InsufficientAuthenticationException $e) {
-            throw new UnauthorizedHttpException('', $e->getMessage());
-        }
     }
 
     /**
@@ -152,35 +122,6 @@ class FrontendController extends AbstractController
         return $response;
     }
 
-    /**
-     * Redirects the user to the Contao front end in case they manually call the
-     * /_contao/two-factor route. Will be intercepted by the two factor bundle otherwise.
-     *
-     * @Route("/_contao/two-factor", name="contao_frontend_two_factor")
-     */
-    public function twoFactorAuthenticationAction(): Response
-    {
-        $this->initializeContaoFramework();
-
-        if (!isset($GLOBALS['TL_PTY']['error_401']) || !class_exists($GLOBALS['TL_PTY']['error_401'])) {
-            throw new UnauthorizedHttpException('', 'Not authorized');
-        }
-
-        /** @var PageError401 $pageHandler */
-        $pageHandler = new $GLOBALS['TL_PTY']['error_401']();
-
-        try {
-            return $pageHandler->getResponse();
-        } catch (ResponseException $e) {
-            return $e->getResponse();
-        } catch (InsufficientAuthenticationException $e) {
-            throw new UnauthorizedHttpException('', $e->getMessage());
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();
