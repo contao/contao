@@ -12,11 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\PageType;
 
-use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\PageTypeConfigEvent;
 use Contao\PageModel;
-use Symfony\Component\Routing\Route;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use function in_array;
 use function strtolower;
@@ -30,14 +28,14 @@ abstract class AbstractPageType implements PageTypeInterface
      *
      * @var array
      */
-    protected static $parameters = [];
+    protected $parameters = [];
 
     /**
      * List of supported features.
      *
      * @var array
      */
-    protected static $features = [
+    protected $features = [
         self::FEATURE_ARTICLES
     ];
 
@@ -77,7 +75,7 @@ abstract class AbstractPageType implements PageTypeInterface
 
     public function getAvailableParameters(): array
     {
-        return array_keys(static::$parameters);
+        return array_keys($this->parameters);
     }
 
     public function getRequiredParameters(): array
@@ -88,74 +86,22 @@ abstract class AbstractPageType implements PageTypeInterface
     public function getRequirements(array $parameters): array
     {
         return array_filter(
-            array_intersect_key(static::$parameters, array_flip($parameters))
+            array_intersect_key($this->parameters, array_flip($parameters))
         );
+    }
+
+    public function supportFeature(string $feature): void
+    {
+        if ($this->supportsFeature($feature)) {
+            return;
+        }
+
+        $this->features[] = $feature;
     }
 
     public function supportsFeature(string $feature) : bool
     {
         return in_array($feature, static::$features, true);
-    }
-
-    public function getPageIdsFromRouteNames(array $names): ?array
-    {
-        $pageIds = [];
-
-        foreach ($names as $name) {
-            if (0 !== strncmp($name, 'tl_page.', 8)) {
-                continue;
-            }
-
-            [, $id] = explode('.', $name);
-
-            if (!is_numeric($id)) {
-                continue;
-            }
-
-            $pageIds[] = (int) $id;
-        }
-
-        if (count($pageIds) === 0) {
-            return null;
-        }
-
-        return $pageIds;
-    }
-
-    public function getRoutes(PageModel $pageModel, bool $prependLocale, string $urlSuffix): iterable
-    {
-        yield 'tl_page.'.$pageModel->id => new Route(
-            $this->getRoutePath($pageModel, $prependLocale, $urlSuffix),
-            $this->getRouteDefaults($pageModel),
-            $this->getRouteRequirements($pageModel),
-            [],
-            $pageModel->domain,
-            $pageModel->rootUseSSL ? 'https' : null,
-            []
-        );
-    }
-
-    protected function getRoutePath(PageModel $pageModel, bool $prependLocale, string $urlSuffix): string
-    {
-        $path = sprintf('/%s{parameters}%s', $pageModel->alias ?: $pageModel->id, $urlSuffix);
-
-        if ($prependLocale) {
-            $path = '/{_locale}'.$path;
-        }
-
-        return $path;
-    }
-
-    protected function getRouteDefaults(PageModel $pageModel): array
-    {
-        return [
-            '_token_check' => true,
-            '_controller' => 'Contao\FrontendIndex::renderPage',
-            '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
-            '_locale' => $pageModel->rootLanguage,
-            'pageModel' => $pageModel,
-            'pageTypeConfig' => $this->configurePageTypeConfig(new PageTypeConfig($this, $pageModel)),
-        ];
     }
 
     protected function getRouteRequirements(PageModel $pageModel): array
@@ -164,11 +110,11 @@ abstract class AbstractPageType implements PageTypeInterface
             return [];
         }
 
-        $unsupported = array_diff($matches[1], array_keys(static::$parameters));
+        $unsupported = array_diff($matches[1], array_keys($this->parameters));
         if (count($unsupported) > 0) {
             throw InvalidPageAliasException::withInvalidParameters($unsupported);
         }
 
-        return array_intersect_key(static::$parameters, array_flip($matches[1]));
+        return array_intersect_key($this->parameters, array_flip($matches[1]));
     }
 }

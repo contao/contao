@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\PageType;
 
 use Contao\PageForward;
 
-class ForwardPageType extends AbstractPageType implements HasLegacyPageInterface
+class ForwardPageType extends AbstractSinglePageType implements HasLegacyPageInterface
 {
     protected static $features = [];
 

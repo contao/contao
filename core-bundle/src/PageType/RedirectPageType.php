@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\PageType;
 
 use Contao\PageRedirect;
 
-class RedirectPageType extends AbstractPageType implements HasLegacyPageInterface
+class RedirectPageType extends AbstractSinglePageType implements HasLegacyPageInterface
 {
     public function getLegacyPageClass(): string
     {

@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\PageType;
 
 use Contao\PageRegular;
 
-class RegularPageType extends AbstractPageType implements HasLegacyPageInterface
+class RegularPageType extends AbstractSinglePageType implements HasLegacyPageInterface
 {
     protected static $features = [
         self::FEATURE_ARTICLES,

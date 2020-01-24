@@ -1,5 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
 
 namespace Contao\CoreBundle\PageType;
 
@@ -10,7 +19,7 @@ use Contao\PageRoot;
 use Symfony\Component\Routing\Route;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-class RootPageType extends AbstractPageType implements HasLegacyPageInterface
+class RootPageType extends AbstractSinglePageType implements HasLegacyPageInterface
 {
     protected static $features = [];
 

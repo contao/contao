@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\PageType;
 
 use Contao\PageError404;
 
-class Error404PageType extends AbstractPageType implements HasLegacyPageInterface
+class Error404PageType extends AbstractSinglePageType implements HasLegacyPageInterface
 {
     protected static $features = [];
 
