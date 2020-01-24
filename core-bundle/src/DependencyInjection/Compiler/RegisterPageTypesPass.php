@@ -29,7 +29,7 @@ class RegisterPageTypesPass implements CompilerPassInterface
 
         $definition = $container->findDefinition(PageTypeRegistry::class);
 
-        foreach ($this->findAndSortTaggedServices('contao.page_type') as $reference) {
+        foreach ($this->findAndSortTaggedServices('contao.page_type', $container) as $reference) {
             $definition->addMethodCall('register', [$reference]);
         }
     }
