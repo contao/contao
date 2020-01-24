@@ -78,4 +78,9 @@ abstract class AbstractSinglePageType extends AbstractPageType
             'pageTypeConfig' => new PageTypeConfig($this, $pageModel),
         ];
     }
+
+    protected function getRouteRequirements(PageModel $pageModel): array
+    {
+        return ['parameters' => '(/.+)?'];
+    }
 }
