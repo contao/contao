@@ -1359,9 +1359,12 @@ class tl_page extends Contao\Backend
 	public function getPageTypes(Contao\DataContainer $dc)
 	{
 		$arrOptions = array();
+		$pageTypeRegistry = static::getContainer()->get(\Contao\CoreBundle\PageType\PageTypeRegistry::class);
 
-		foreach (array_keys($GLOBALS['TL_PTY']) as $pty)
+		foreach ($pageTypeRegistry as $pageType)
 		{
+			$pty = $pageType->getName();
+
 			// Root pages are allowed on the first level only (see #6360)
 			if ($pty == 'root' && $dc->activeRecord && $dc->activeRecord->pid > 0)
 			{
