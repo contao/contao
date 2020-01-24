@@ -14,7 +14,9 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\PageType\HasLegacyPageInterface;
 use Contao\CoreBundle\PageType\LegacyPageType;
+use Contao\CoreBundle\PageType\PageTypeInterface;
 use Contao\CoreBundle\PageType\PageTypeRegistry;
+use function array_keys;
 
 class PageTypeListener
 {
@@ -38,6 +40,7 @@ class PageTypeListener
 
     public function registerLegacyPageClasses(): void
     {
+        /** @var PageTypeInterface $pageType */
         foreach ($this->pageTypeRegistry as $pageType) {
             if ($pageType instanceof HasLegacyPageInterface) {
                 $GLOBALS['TL_PTY'][$pageType->getName()] = $pageType->getLegacyPageClass();
@@ -54,7 +57,7 @@ class PageTypeListener
      */
     public function registerLegacyPageTypes(array $legacyPageTypes): void
     {
-        foreach ($legacyPageTypes ?? [] as $pageType) {
+        foreach (array_keys($legacyPageTypes) as $pageType) {
             $this->pageTypeRegistry->register(new LegacyPageType($pageType));
         }
     }
