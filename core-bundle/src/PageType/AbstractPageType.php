@@ -13,8 +13,11 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\PageType;
 
 use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\Event\ContaoCoreEvents;
+use Contao\CoreBundle\Event\PageTypeConfigEvent;
 use Contao\PageModel;
 use Symfony\Component\Routing\Route;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use function strtolower;
 
 abstract class AbstractPageType implements PageTypeInterface
@@ -27,6 +30,16 @@ abstract class AbstractPageType implements PageTypeInterface
      * @var array
      */
     protected static $parameters = [];
+
+    /**
+     * @var EventDispatcherInterface
+     */
+    protected $eventDispatcher;
+
+    public function __construct(EventDispatcherInterface $eventDispatcher)
+    {
+        $this->eventDispatcher = $eventDispatcher;
+    }
 
     /**
      * Computes the name of the page type by using unqualified classname without suffix "PageType" and converts it to
@@ -45,9 +58,11 @@ abstract class AbstractPageType implements PageTypeInterface
         );
     }
 
-    public function createPageTypeConfig(PageModel $pageModel): PageTypeConfigInterface
+    protected function configurePageTypeConfig(PageTypeConfigInterface $pageTypeConfig): PageTypeConfigInterface
     {
-        return new PageTypeConfig($this, $pageModel);
+        $this->eventDispatcher->dispatch(new PageTypeConfigEvent($pageTypeConfig), ContaoCoreEvents::PAGE_TYOE_CONFIG);
+
+        return $pageTypeConfig;
     }
 
     public function getAvailableParameters(): array
@@ -99,7 +114,7 @@ abstract class AbstractPageType implements PageTypeInterface
             '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
             '_locale' => $pageModel->rootLanguage,
             'pageModel' => $pageModel,
-            'pageTypeConfig' => $this->createPageTypeConfig($pageModel)
+            'pageTypeConfig' => $this->configurePageTypeConfig(new PageTypeConfig($this, $pageModel)),
         ];
     }
 

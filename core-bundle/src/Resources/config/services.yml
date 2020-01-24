@@ -125,53 +125,55 @@ services:
             - { name: controller.service_arguments }
 
     Contao\CoreBundle\PageType\PageTypeRegistry:
+        public: true
         arguments:
             - '@event_dispatcher'
 
     Contao\CoreBundle\PageType\Error401PageType:
         arguments:
-            - '@contao.framework'
+            - '@event_dispatcher'
         tags:
             - { name: contao.page_type }
 
     Contao\CoreBundle\PageType\Error403PageType:
         arguments:
-            - '@contao.framework'
+            - '@event_dispatcher'
         tags:
             - { name: contao.page_type }
 
     Contao\CoreBundle\PageType\Error404PageType:
         arguments:
-            - '@contao.framework'
+            - '@event_dispatcher'
         tags:
             - { name: contao.page_type }
 
     Contao\CoreBundle\PageType\ForwardPageType:
         arguments:
-            - '@contao.framework'
+            - '@event_dispatcher'
         tags:
             - { name: contao.page_type }
 
     Contao\CoreBundle\PageType\LogoutPageType:
         arguments:
-            - '@contao.framework'
+            - '@event_dispatcher'
         tags:
             - { name: contao.page_type }
 
     Contao\CoreBundle\PageType\RedirectPageType:
         arguments:
-            - '@contao.framework'
+            - '@event_dispatcher'
         tags:
             - { name: contao.page_type }
 
     Contao\CoreBundle\PageType\RegularPageType:
         arguments:
-            - '@contao.framework'
+            - '@event_dispatcher'
         tags:
             - { name: contao.page_type }
 
     Contao\CoreBundle\PageType\RootPageType:
         arguments:
+            - '@event_dispatcher'
             - '@contao.framework'
         tags:
             - { name: contao.page_type }

@@ -8,6 +8,7 @@ use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\PageModel;
 use Contao\PageRoot;
 use Symfony\Component\Routing\Route;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class RootPageType extends AbstractPageType implements HasLegacyPageInterface
 {
@@ -16,8 +17,10 @@ class RootPageType extends AbstractPageType implements HasLegacyPageInterface
      */
     private $framework;
 
-    public function __construct(ContaoFrameworkInterface $framework)
+    public function __construct(EventDispatcherInterface $eventDispatcher, ContaoFrameworkInterface $framework)
     {
+        parent::__construct($eventDispatcher);
+
         $this->framework = $framework;
     }
 

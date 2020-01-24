@@ -37,6 +37,4 @@ interface PageTypeInterface
      * @return iterable|Route[]
      */
     public function getRoutes(PageModel $pageModel, bool $prependLocale, string $urlSuffix): iterable;
-
-    public function createPageTypeConfig(PageModel $pageModel): PageTypeConfigInterface;
 }
