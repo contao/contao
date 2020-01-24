@@ -16,6 +16,8 @@ use Contao\PageForward;
 
 class ForwardPageType extends AbstractPageType implements HasLegacyPageInterface
 {
+    protected static $features = [];
+
     public function getLegacyPageClass(): string
     {
         return PageForward::class;

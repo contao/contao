@@ -17,6 +17,8 @@ use Symfony\Component\Routing\Route;
 
 interface PageTypeInterface
 {
+    public const FEATURE_ARTICLES = 'articles';
+
     public function getName(): string;
 
     /**
@@ -37,4 +39,6 @@ interface PageTypeInterface
      * @return iterable|Route[]
      */
     public function getRoutes(PageModel $pageModel, bool $prependLocale, string $urlSuffix): iterable;
+
+    public function supportsFeature(string $feature): bool;
 }

@@ -18,6 +18,7 @@ use Contao\CoreBundle\Event\PageTypeConfigEvent;
 use Contao\PageModel;
 use Symfony\Component\Routing\Route;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use function in_array;
 use function strtolower;
 
 abstract class AbstractPageType implements PageTypeInterface
@@ -30,6 +31,15 @@ abstract class AbstractPageType implements PageTypeInterface
      * @var array
      */
     protected static $parameters = [];
+
+    /**
+     * List of supported features.
+     *
+     * @var array
+     */
+    protected static $features = [
+        self::FEATURE_ARTICLES
+    ];
 
     /**
      * @var EventDispatcherInterface
@@ -80,6 +90,11 @@ abstract class AbstractPageType implements PageTypeInterface
         return array_filter(
             array_intersect_key(static::$parameters, array_flip($parameters))
         );
+    }
+
+    public function supportsFeature(string $feature) : bool
+    {
+        return in_array($feature, static::$features, true);
     }
 
     public function getRoutes(PageModel $pageModel, bool $prependLocale, string $urlSuffix): iterable

@@ -1627,7 +1627,16 @@ class tl_page extends Contao\Backend
 			return '';
 		}
 
-		return ($row['type'] == 'regular' || $row['type'] == 'error_401' || $row['type'] == 'error_403' || $row['type'] == 'error_404') ? '<a href="' . $this->addToUrl($href . '&amp;pn=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '">' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		$pageTypeRegistry = static::getContainer()->get(\Contao\CoreBundle\PageType\PageTypeRegistry::class);
+		if (! $pageTypeRegistry->has($row['type'])) {
+			return '';
+		}
+
+		$supportsArticles = $pageTypeRegistry
+			->get($row['type'])
+			->supportsFeature(\Contao\CoreBundle\PageType\PageTypeInterface::FEATURE_ARTICLES);
+
+		return ($supportsArticles) ? '<a href="' . $this->addToUrl($href . '&amp;pn=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '">' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**

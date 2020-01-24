@@ -12,6 +12,8 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class RootPageType extends AbstractPageType implements HasLegacyPageInterface
 {
+    protected static $features = [];
+
     /**
      * @var ContaoFrameworkInterface
      */
