@@ -17,7 +17,6 @@ use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\PageModel;
 use Contao\PageRoot;
 use Symfony\Component\Routing\Route;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class RootPageType extends AbstractSinglePageType implements HasLegacyPageInterface
 {
@@ -28,10 +27,8 @@ class RootPageType extends AbstractSinglePageType implements HasLegacyPageInterf
      */
     private $framework;
 
-    public function __construct(EventDispatcherInterface $eventDispatcher, ContaoFrameworkInterface $framework)
+    public function __construct(ContaoFrameworkInterface $framework)
     {
-        parent::__construct($eventDispatcher);
-
         $this->framework = $framework;
     }
 

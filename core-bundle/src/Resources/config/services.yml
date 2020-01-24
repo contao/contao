@@ -130,50 +130,35 @@ services:
             - '@event_dispatcher'
 
     Contao\CoreBundle\PageType\Error401PageType:
-        arguments:
-            - '@event_dispatcher'
         tags:
             - { name: contao.page_type }
 
     Contao\CoreBundle\PageType\Error403PageType:
-        arguments:
-            - '@event_dispatcher'
         tags:
             - { name: contao.page_type }
 
     Contao\CoreBundle\PageType\Error404PageType:
-        arguments:
-            - '@event_dispatcher'
         tags:
             - { name: contao.page_type }
 
     Contao\CoreBundle\PageType\ForwardPageType:
-        arguments:
-            - '@event_dispatcher'
         tags:
             - { name: contao.page_type }
 
     Contao\CoreBundle\PageType\LogoutPageType:
-        arguments:
-            - '@event_dispatcher'
         tags:
             - { name: contao.page_type }
 
     Contao\CoreBundle\PageType\RedirectPageType:
-        arguments:
-            - '@event_dispatcher'
         tags:
             - { name: contao.page_type }
 
     Contao\CoreBundle\PageType\RegularPageType:
-        arguments:
-            - '@event_dispatcher'
         tags:
             - { name: contao.page_type }
 
     Contao\CoreBundle\PageType\RootPageType:
         arguments:
-            - '@event_dispatcher'
             - '@contao.framework'
         tags:
             - { name: contao.page_type }

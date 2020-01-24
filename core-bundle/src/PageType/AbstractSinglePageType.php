@@ -75,7 +75,7 @@ abstract class AbstractSinglePageType extends AbstractPageType
             '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
             '_locale' => $pageModel->rootLanguage,
             'pageModel' => $pageModel,
-            'pageTypeConfig' => $this->configurePageTypeConfig(new PageTypeConfig($this, $pageModel)),
+            'pageTypeConfig' => new PageTypeConfig($this, $pageModel),
         ];
     }
 }

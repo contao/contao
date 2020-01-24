@@ -12,10 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\PageType;
 
-use Contao\CoreBundle\Event\ContaoCoreEvents;
-use Contao\CoreBundle\Event\PageTypeConfigEvent;
 use Contao\PageModel;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use function in_array;
 use function strtolower;
 
@@ -40,16 +37,6 @@ abstract class AbstractPageType implements PageTypeInterface
     ];
 
     /**
-     * @var EventDispatcherInterface
-     */
-    protected $eventDispatcher;
-
-    public function __construct(EventDispatcherInterface $eventDispatcher)
-    {
-        $this->eventDispatcher = $eventDispatcher;
-    }
-
-    /**
      * Computes the name of the page type by using unqualified classname without suffix "PageType" and converts it to
      * camelize.
      *
@@ -64,13 +51,6 @@ abstract class AbstractPageType implements PageTypeInterface
                 substr(strrchr(static::class, '\\'), 1, -8)
             )
         );
-    }
-
-    protected function configurePageTypeConfig(PageTypeConfigInterface $pageTypeConfig): PageTypeConfigInterface
-    {
-        $this->eventDispatcher->dispatch(new PageTypeConfigEvent($pageTypeConfig), ContaoCoreEvents::PAGE_TYOE_CONFIG);
-
-        return $pageTypeConfig;
     }
 
     public function getAvailableParameters(): array

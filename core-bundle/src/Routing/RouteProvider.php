@@ -250,7 +250,7 @@ class RouteProvider implements RouteProviderInterface
     private function addRoutesForPage(PageModel $page, array &$routes): void
     {
         // TODO: Should we throw an error instead?
-        if (! $this->pageTypeRegistry->has($page->type)) {
+        if (!$this->pageTypeRegistry->has($page->type)) {
             return;
         }
 
