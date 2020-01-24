@@ -35,11 +35,31 @@ interface PageTypeInterface
     public function getRequiredParameters(): array;
 
     /**
+     * Extract page id information from names.
+     *
+     * If the page type doesn't support any name it has to return null.
+     *
+     * @param array|string[] $names
+     *
+     * @return array<int>|null
+     */
+    public function getPageIdsFromRouteNames(array $names): ?array;
+
+    /**
      * Get map of routes created for the current page
      *
      * @return iterable|Route[]
      */
     public function getRoutes(PageModel $pageModel, bool $prependLocale, string $urlSuffix): iterable;
+
+    /**
+     * Add support for feature by name.
+     *
+     * This may be used by extensions to assign own features to separate page types.
+     *
+     * @param string $feature
+     */
+    public function supportFeature(string $feature): void;
 
     public function supportsFeature(string $feature): bool;
 }

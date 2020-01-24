@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Routing;
 
 use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\PageType\PageTypeInterface;
 use Contao\CoreBundle\PageType\PageTypeRegistry;
 use Contao\Model;
 use Contao\Model\Collection;
@@ -278,27 +279,22 @@ class RouteProvider implements RouteProviderInterface
     }
 
     /**
+     * @param string[] $names
+     *
      * @return array<int>
      */
     private function getPageIdsFromNames(array $names): array
     {
-        $ids = [];
-
-        foreach ($names as $name) {
-            if (0 !== strncmp($name, 'tl_page.', 8)) {
+        /** @var PageTypeInterface $pageType */
+        foreach ($this->pageTypeRegistry as $pageType) {
+            if (null === ($pageIds = $pageType->getPageIdsFromRouteNames($names))) {
                 continue;
             }
 
-            [, $id] = explode('.', $name);
-
-            if (!is_numeric($id)) {
-                continue;
-            }
-
-            $ids[] = (int) $id;
+            return $pageIds;
         }
 
-        return array_unique($ids);
+        return [];
     }
 
     /**
