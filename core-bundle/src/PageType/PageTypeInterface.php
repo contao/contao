@@ -25,14 +25,14 @@ interface PageTypeInterface
     /**
      * Get available parameters which might be used in the page alias
      */
-    public function getAvailableParameters(): array;
+    public function getAvailableAliasParameters(): array;
 
     /**
      * Get list of required parameters which has to be used in the page alias
      *
      * @return array
      */
-    public function getRequiredParameters(): array;
+    public function getRequiredAliasParameters(): array;
 
     /**
      * Extract page id information from names.

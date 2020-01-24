@@ -49,12 +49,12 @@ abstract class AbstractPageType implements PageTypeInterface
         );
     }
 
-    public function getAvailableParameters(): array
+    public function getAvailableAliasParameters(): array
     {
         return \array_keys($this->parameters);
     }
 
-    public function getRequiredParameters(): array
+    public function getRequiredAliasParameters(): array
     {
         return [];
     }
