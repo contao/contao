@@ -51,7 +51,7 @@ abstract class AbstractPageType implements PageTypeInterface
     {
         return strtolower(
             preg_replace(
-                '/(?<!^)[A-Z]/',
+                '/(?<!^)(?<![0-9])[A-Z0-9]/',
                 '_$0',
                 substr(strrchr(static::class, '\\'), 1, -8)
             )
