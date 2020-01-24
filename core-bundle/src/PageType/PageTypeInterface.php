@@ -35,17 +35,6 @@ interface PageTypeInterface
     public function getRequiredAliasParameters(): array;
 
     /**
-     * Extract page id information from names.
-     *
-     * If the page type doesn't support any name it has to return null.
-     *
-     * @param array|string[] $names
-     *
-     * @return array<int>|null
-     */
-    public function getPageIdsFromRouteNames(array $names): ?array;
-
-    /**
      * Get map of routes created for the current page
      *
      * @return iterable|Route[]

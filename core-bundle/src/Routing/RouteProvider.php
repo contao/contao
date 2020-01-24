@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Routing;
 
 use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\PageType\PageTypeInterface;
 use Contao\CoreBundle\PageType\PageTypeRegistry;
 use Contao\Model;
 use Contao\Model\Collection;
@@ -55,15 +54,21 @@ class RouteProvider implements RouteProviderInterface
     private $pageTypeRegistry;
 
     /**
+     * @var PageIdResolverInterface
+     */
+    private $pageIdResolver;
+
+    /**
      * @internal Do not inherit from this class; decorate the "contao.routing.route_provider" service instead
      */
-    public function __construct(ContaoFramework $framework, Connection $database, string $urlSuffix, bool $prependLocale, PageTypeRegistry $pageTypeRegistry)
+    public function __construct(ContaoFramework $framework, Connection $database, string $urlSuffix, bool $prependLocale, PageTypeRegistry $pageTypeRegistry, PageIdResolverInterface $pageIdResolver)
     {
         $this->framework = $framework;
         $this->database = $database;
         $this->urlSuffix = $urlSuffix;
         $this->prependLocale = $prependLocale;
         $this->pageTypeRegistry = $pageTypeRegistry;
+        $this->pageIdResolver = $pageIdResolver;
     }
 
     public function getRouteCollectionForRequest(Request $request): RouteCollection
@@ -285,16 +290,7 @@ class RouteProvider implements RouteProviderInterface
      */
     private function getPageIdsFromNames(array $names): array
     {
-        /** @var PageTypeInterface $pageType */
-        foreach ($this->pageTypeRegistry as $pageType) {
-            if (null === ($pageIds = $pageType->getPageIdsFromRouteNames($names))) {
-                continue;
-            }
-
-            return $pageIds;
-        }
-
-        return [];
+        return $this->pageIdResolver->resolvePageIds($names);
     }
 
     /**

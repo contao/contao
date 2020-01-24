@@ -18,31 +18,6 @@ use Symfony\Component\Routing\Route;
 
 abstract class AbstractSinglePageType extends AbstractPageType
 {
-    public function getPageIdsFromRouteNames(array $names): ?array
-    {
-        $pageIds = [];
-
-        foreach ($names as $name) {
-            if (0 !== strncmp($name, 'tl_page.', 8)) {
-                continue;
-            }
-
-            [, $id] = explode('.', $name);
-
-            if (!is_numeric($id)) {
-                continue;
-            }
-
-            $pageIds[] = (int) $id;
-        }
-
-        if (count($pageIds) === 0) {
-            return null;
-        }
-
-        return $pageIds;
-    }
-
     public function getRoutes(PageModel $pageModel, bool $prependLocale, string $urlSuffix): iterable
     {
         yield 'tl_page.'.$pageModel->id => new Route(
