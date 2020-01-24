@@ -18,6 +18,7 @@ use Symfony\Component\Routing\Route;
 interface PageTypeInterface
 {
     public const FEATURE_ARTICLES = 'articles';
+    public const FEATURE_ARTICLE_VIEW = 'article-view';
 
     public function getName(): string;
 

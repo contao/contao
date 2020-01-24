@@ -15,6 +15,9 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\CoreBundle\PageType\PageTypeConfigAwareInterface;
+use Contao\CoreBundle\PageType\PageTypeConfigInterface;
+use Contao\CoreBundle\PageType\PageTypeInterface;
 use Contao\Database\Result;
 use Contao\Image\PictureConfiguration;
 use Contao\Model\Collection;
@@ -120,7 +123,7 @@ abstract class Controller extends System
 		{
 			if ($strTemplate != $strPrefix)
 			{
-				list($k, $strKey) = explode('_', $strTemplate, 2);
+				[$k, $strKey] = explode('_', $strTemplate, 2);
 
 				if (isset($arrMapper[$k]) && \in_array($strKey, $arrMapper[$k]))
 				{
@@ -257,13 +260,15 @@ abstract class Controller extends System
 		/** @var PageModel $objPage */
 		global $objPage;
 
+		$pageTypeConfig = static::getPageTypeConfigFromCurrentRequest();
+
 		// Articles
 		if (!\is_object($intId) && $intId == 0)
 		{
 			// Show a particular article only
-			if ($objPage->type == 'regular' && Input::get('articles'))
+			if ($pageTypeConfig && $pageTypeConfig->getPageType()->supportsFeature(PageTypeInterface::FEATURE_ARTICLE_VIEW) && Input::get('articles'))
 			{
-				list($strSection, $strArticle) = explode(':', Input::get('articles'));
+				[$strSection, $strArticle] = explode(':', Input::get('articles'));
 
 				if ($strArticle === null)
 				{
@@ -386,6 +391,11 @@ abstract class Controller extends System
 
 		/** @var Module $objModule */
 		$objModule = new $strClass($objRow, $strColumn);
+
+		if ($pageTypeConfig && $objModule instanceof PageTypeConfigAwareInterface) {
+			$objModule->setPageTypeConfig($pageTypeConfig);
+		}
+
 		$strBuffer = $objModule->generate();
 
 		// HOOK: add custom logic
@@ -542,6 +552,12 @@ abstract class Controller extends System
 
 		/** @var ContentElement $objElement */
 		$objElement = new $strClass($objRow, $strColumn);
+
+		$pageTypeConfig = static::getPageTypeConfigFromCurrentRequest();
+		if ($pageTypeConfig && $objElement instanceof PageTypeConfigAwareInterface) {
+			$objElement->setPageTypeConfig($pageTypeConfig);
+		}
+
 		$strBuffer = $objElement->generate();
 
 		// HOOK: add custom logic
@@ -2484,6 +2500,21 @@ abstract class Controller extends System
 		$files = iterator_to_array($filesIterator);
 
 		return array_keys($files);
+	}
+
+	protected static function getPageTypeConfigFromCurrentRequest(): ?PageTypeConfigInterface
+	{
+		$request = static::getContainer()->get('request_stack')->getCurrentRequest();
+		if (null === $request) {
+			return null;
+		}
+
+		$pageTypeConfig = $request->attributes->get('pageTypeConfig');
+		if ($pageTypeConfig instanceof PageTypeConfigInterface) {
+			return $pageTypeConfig;
+		}
+
+		return null;
 	}
 }
 

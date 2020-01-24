@@ -16,6 +16,11 @@ use Contao\PageRegular;
 
 class RegularPageType extends AbstractPageType implements HasLegacyPageInterface
 {
+    protected static $features = [
+        self::FEATURE_ARTICLES,
+        self::FEATURE_ARTICLE_VIEW
+    ];
+
     public function getLegacyPageClass(): string
     {
         return PageRegular::class;
