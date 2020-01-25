@@ -1632,9 +1632,7 @@ class tl_page extends Contao\Backend
 			return '';
 		}
 
-		$supportsArticles = $pageTypeRegistry
-			->get($row['type'])
-			->supportsFeature(\Contao\CoreBundle\PageType\PageTypeInterface::FEATURE_ARTICLES);
+		$supportsArticles = $pageTypeRegistry->supportsFeature($row['type'], \Contao\CoreBundle\PageType\PageTypeInterface::FEATURE_ARTICLES);
 
 		return ($supportsArticles) ? '<a href="' . $this->addToUrl($href . '&amp;pn=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '">' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}

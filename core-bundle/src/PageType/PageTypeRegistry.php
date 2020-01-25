@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\PageType;
 
+use Contao\PageModel;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class PageTypeRegistry implements \IteratorAggregate
@@ -46,6 +47,24 @@ class PageTypeRegistry implements \IteratorAggregate
         }
 
         return $this->pageTypes[$type];
+    }
+
+    public function supportsFeature(string $type, string $feature): bool
+    {
+        if (!$this->has($type)) {
+            return false;
+        }
+
+        return $this->get($type)->supportsFeature($feature);
+    }
+
+    public function getRoutes(PageModel $pageModel, bool $prependLocale, string $urlSuffix): iterable
+    {
+        if (!$this->has($pageModel->type)) {
+            return [];
+        }
+
+        return $this->get($pageModel->type)->getRoutes($pageModel, $prependLocale, $urlSuffix);
     }
 
     public function getIterator(): \Traversable

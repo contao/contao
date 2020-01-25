@@ -260,9 +260,8 @@ class RouteProvider implements RouteProviderInterface
         }
 
         $page->loadDetails();
-        $pageType = $this->pageTypeRegistry->get($page->type);
 
-        foreach ($pageType->getRoutes($page, $this->prependLocale, $this->urlSuffix) as $name => $route) {
+        foreach ($this->pageTypeRegistry->getRoutes($page, $this->prependLocale, $this->urlSuffix) as $name => $route) {
             $routes[$name] = $route;
         }
 
@@ -276,9 +275,8 @@ class RouteProvider implements RouteProviderInterface
         }
 
         $page->loadDetails();
-        $rootPageType = $this->pageTypeRegistry->get('root');
 
-        foreach ($rootPageType->getRoutes($page, $this->prependLocale, $this->urlSuffix) as $name => $route) {
+        foreach ($this->pageTypeRegistry->getRoutes($page, $this->prependLocale, $this->urlSuffix) as $name => $route) {
             $routes[$name] = $route;
         }
     }
