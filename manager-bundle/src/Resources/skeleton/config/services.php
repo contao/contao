@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Contao\Model;
+use Contao\System;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
@@ -50,7 +52,7 @@ return static function(ContainerConfigurator $configurator) use ($container) {
 
         $class = $definition->getClass() ?: $id;
 
-        if (is_a($class, \Contao\System::class, true) || is_a($class, \Contao\Model::class, true)) {
+        if (is_a($class, System::class, true) || is_a($class, Model::class, true)) {
             $container->removeDefinition($id);
             --$serviceCount;
             continue;
@@ -73,14 +75,18 @@ return static function(ContainerConfigurator $configurator) use ($container) {
             continue;
         }
 
-        foreach ($constructor->getParameters() as $index => $parameter) {
+        foreach ($constructor->getParameters() as $parameter) {
             if ($parameter->isDefaultValueAvailable() || $parameter->isOptional()) {
                 continue;
             }
 
             $type = $parameter->getType();
 
-            if ($type && !$type->isBuiltin() && (is_a($type->getName(), \Contao\System::class, true) || is_a($type->getName(), \Contao\Model::class, true))) {
+            if (
+                $type
+                && !$type->isBuiltin()
+                && (is_a($type->getName(), System::class, true) || is_a($type->getName(), Model::class, true))
+            ) {
                 $container->removeDefinition($id);
                 --$serviceCount;
                 continue(2);
