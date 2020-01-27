@@ -19,6 +19,16 @@ class ChainPageIdResolver implements PageIdResolverInterface
     /** @var PageIdResolverInterface[] */
     private $resolvers = [];
 
+    /**
+     * @param PageIdResolverInterface[] $resolvers
+     */
+    public function __construct(iterable $resolvers = [])
+    {
+        foreach ($resolvers as $resolver) {
+            $this->register($resolver);
+        }
+    }
+
     public function register(PageIdResolverInterface $pageIdResolver): void
     {
         $this->resolvers[] = $pageIdResolver;
@@ -26,15 +36,19 @@ class ChainPageIdResolver implements PageIdResolverInterface
 
     public function resolvePageIds(?array $names): array
     {
+        if (count($this->resolvers) === 0) {
+            return [];
+        }
+
+        $resolvers = array_map(
+            static function (PageIdResolverInterface $pageIdResolver) use ($names): array {
+                return $pageIdResolver->resolvePageIds($names);
+            },
+            $this->resolvers
+        );
+
         return array_unique(
-            array_merge(
-                ...array_map(
-                    static function (PageIdResolverInterface $pageIdResolver) use ($names): array {
-                        return $pageIdResolver->resolvePageIds($names);
-                    },
-                    $this->resolvers
-                )
-            )
+            array_merge(...$resolvers)
         );
     }
 }

@@ -582,6 +582,13 @@ services:
 
     contao.routing.page_id_resolver:
         class: Contao\CoreBundle\Routing\PageIdResolver\ChainPageIdResolver
+        arguments:
+            - !tagged contao.page_id_resolver
+
+
+    Contao\CoreBundle\Routing\PageIdResolver\SimplePageIdResolver:
+        tags:
+            - { name: contao.page_id_resolver, priority: -128 }
 
     contao.routing.route_generator:
         class: Symfony\Cmf\Component\Routing\ProviderBasedGenerator
