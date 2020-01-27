@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\Routing\RouterInterface;
+
 /**
  * Provide methods regarding news archives.
  *
@@ -367,6 +369,7 @@ class News extends Frontend
 		// Initialize the cache
 		self::$arrUrlCache[$strCacheKey] = null;
 
+
 		switch ($objItem->source)
 		{
 			// Link to an external page
@@ -413,9 +416,11 @@ class News extends Frontend
 			}
 			else
 			{
-				$params = (Config::get('useAutoItem') ? '/' : '/items/') . ($objItem->alias ?: $objItem->id);
-
-				self::$arrUrlCache[$strCacheKey] = ampersand($blnAbsolute ? $objPage->getAbsoluteUrl($params) : $objPage->getFrontendUrl($params));
+				self::$arrUrlCache[$strCacheKey] = self::getContainer()->get('router')->generate(
+					'tl_news.'.$objItem->id,
+					['parameters' => ''],
+					$blnAbsolute ? RouterInterface::ABSOLUTE_URL : RouterInterface::ABSOLUTE_PATH
+				);
 			}
 
 			// Add the current archive parameter (news archive)

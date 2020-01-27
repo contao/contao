@@ -12,7 +12,11 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\PageType\PageTypeConfigAwareInterface;
+use Contao\CoreBundle\PageType\PageTypeConfigInterface;
+use Contao\NewsBundle\PageType\NewsReaderPageTypeConfig;
 use Patchwork\Utf8;
+use function get_class;
 
 /**
  * Front end module "news reader".
@@ -23,13 +27,27 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleNewsReader extends ModuleNews
+class ModuleNewsReader extends ModuleNews implements PageTypeConfigAwareInterface
 {
 	/**
 	 * Template
 	 * @var string
 	 */
 	protected $strTemplate = 'mod_newsreader';
+
+	/**
+	 * @var NewsReaderPageTypeConfig|null
+	 */
+	protected $pageTypeConfig;
+
+	public function setPageTypeConfig(PageTypeConfigInterface $pageTypeConfig) : void
+	{
+		if (!$pageTypeConfig instanceof NewsReaderPageTypeConfig) {
+			throw new \RuntimeException(sprintf('Page type "%s" is not supported. ', get_class($pageTypeConfig)));
+		}
+
+		$this->pageTypeConfig = $pageTypeConfig;
+	}
 
 	/**
 	 * Display a wildcard in the back end
@@ -50,6 +68,11 @@ class ModuleNewsReader extends ModuleNews
 			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
 
 			return $objTemplate->parse();
+		}
+
+		// If page type config is present, no need to validate anything.
+		if ($this->pageTypeConfig) {
+			return parent::generate();
 		}
 
 		// Set the item from the auto_item parameter
@@ -87,7 +110,11 @@ class ModuleNewsReader extends ModuleNews
 		$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
 
 		// Get the news item
-		$objArticle = NewsModel::findPublishedByParentAndIdOrAlias(Input::get('items'), $this->news_archives);
+		if ($this->pageTypeConfig) {
+			$objArticle = $this->pageTypeConfig->getNewsModel();
+		} else {
+			$objArticle = NewsModel::findPublishedByParentAndIdOrAlias(Input::get('items'), $this->news_archives);
+		}
 
 		// The news item does not exist or has an external target (see #33)
 		if (null === $objArticle || $objArticle->source != 'default')

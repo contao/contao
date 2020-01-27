@@ -35,6 +35,12 @@
       <trans-unit id="MSC.newsPicker">
         <source>News</source>
       </trans-unit>
+      <trans-unit id="PTY.news_reader.0">
+        <source>News reader page</source>
+      </trans-unit>
+      <trans-unit id="PTY.news_reader.1">
+        <source>Page for the detail view of a news</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>
