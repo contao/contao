@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
+use function array_map;
 use function implode;
 
 class RouteProvider implements RouteProviderInterface
@@ -423,11 +424,16 @@ class RouteProvider implements RouteProviderInterface
         }
 
         if (!empty($aliases)) {
-            $dynamicPageTypes = $this->pageTypeRegistry->getPageTypesWithDynamicAliases()->getNames();
+            $dynamicPageTypes = array_map(
+                function (string $name) {
+                    return $this->database->quote($name);
+                },
+                $this->pageTypeRegistry->getPageTypesWithDynamicAliases()->getNames()
+            );
 
             if ($dynamicPageTypes) {
-                $conditions[] = '(tl_page.type IN ('.implode(',', $dynamicPageTypes).') AND (\''.implode(' REGEXP tl_page.aliasRegexp OR \''. $aliases).'\')))';
-                $conditions[] = '(tl_page.type NOT IN ('.implode(',', $dynamicPageTypes).') AND tl_page.alias IN ('.implode(',', $aliases).')';
+                $conditions[] = '(tl_page.type IN ('.implode(',', $dynamicPageTypes).') AND ('.implode(' REGEXP tl_page.aliasRegexp OR ', $aliases).' REGEXP tl_page.aliasRegexp))';
+                $conditions[] = '(tl_page.type NOT IN ('.implode(',', $dynamicPageTypes).') AND tl_page.alias IN ('.implode(',', $aliases).'))';
             } else {
                 $conditions[] = 'tl_page.alias IN ('.implode(',', $aliases).')';
             }
@@ -445,6 +451,8 @@ class RouteProvider implements RouteProviderInterface
             if (isset($models['id|'.$page->id])) {
                 $models['id|'.$page->id] = $page;
             } elseif (isset($models['alias|'.$page->alias])) {
+                $models['alias|'.$page->alias][] = $page;
+            } elseif ($page->alias) {
                 $models['alias|'.$page->alias][] = $page;
             }
         }

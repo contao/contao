@@ -1887,9 +1887,9 @@ class tl_page extends Contao\Backend
 
 		$requirements = $pageType->getAvailableAliasParameters();
 		$aliasRegexp =  preg_replace_callback(
-			'#\{(\w+)\}#',
+			'#([^\{\}]*)\{(\w+)\}#',
 			static function (array $matches) use ($requirements) {
-				return $requirements[$matches[1]] ?: '[^/]+';
+				return preg_quote($matches[1]) . ($requirements[$matches[2]] ?: '[^/]+');
 			},
 			$dc->activeRecord->alias
 		);
