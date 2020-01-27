@@ -47,6 +47,22 @@ class BackupCodeManagerTest extends TestCase
         $this->assertFalse($backupCodeManager->isBackupCode($backendUser, '234567'));
     }
 
+    public function testHandlesInvalidJson(): void
+    {
+        /** @var FrontendUser&MockObject $frontendUser */
+        $frontendUser = $this->mockClassWithProperties(FrontendUser::class, []);
+        $frontendUser->backupCodes = 'foobar';
+
+        /** @var BackendUser&MockObject $backendUser */
+        $backendUser = $this->mockClassWithProperties(BackendUser::class);
+        $backendUser->backupCodes = 'foobar';
+
+        $backupCodeManager = new BackupCodeManager();
+
+        $this->assertFalse($backupCodeManager->isBackupCode($frontendUser, '123456'));
+        $this->assertFalse($backupCodeManager->isBackupCode($backendUser, '234567'));
+    }
+
     public function testHandlesContaoUsers(): void
     {
         $backupCodes = json_encode(['123456', '234567']);
