@@ -16,8 +16,6 @@ use Contao\PageError401;
 
 class Error401PageType extends AbstractSinglePageType implements HasLegacyPageInterface
 {
-    protected $features = [];
-
     public function getLegacyPageClass(): string
     {
         return PageError401::class;

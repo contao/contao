@@ -16,6 +16,8 @@ use Contao\PageRedirect;
 
 class RedirectPageType extends AbstractSinglePageType implements HasLegacyPageInterface
 {
+    protected $features = [];
+
     public function getLegacyPageClass(): string
     {
         return PageRedirect::class;

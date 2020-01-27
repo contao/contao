@@ -16,6 +16,8 @@ use Contao\PageLogout;
 
 class LogoutPageType extends AbstractSinglePageType implements HasLegacyPageInterface
 {
+    protected $features = [];
+
     public function getLegacyPageClass(): string
     {
         return PageLogout::class;
