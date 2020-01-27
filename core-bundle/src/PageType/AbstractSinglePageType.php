@@ -18,6 +18,10 @@ use Symfony\Component\Routing\Route;
 
 abstract class AbstractSinglePageType extends AbstractPageType
 {
+    protected $features = [
+        self::FEATURE_ARTICLES
+    ];
+
     public function getRoutes(PageModel $pageModel, bool $prependLocale, string $urlSuffix): iterable
     {
         yield 'tl_page.'.$pageModel->id => new Route(

@@ -11,53 +11,92 @@ declare(strict_types=1);
  */
 namespace Contao\CoreBundle\PageType;
 
+use function array_filter;
+use function array_key_exists;
+use function array_map;
+use function stat;
+
 class PageTypeIterator implements \Iterator, \Countable
 {
+    /** @var int */
     private $index = 0;
 
-    private $pageTypes;
+    /** @var array<PageTypeInterface> */
+    private $pageTypes = [];
 
-    private function __construct(array $pageTypes)
+    /** @param array<PageTypeInterface> $pageTypes */
+    private function __construct(array $pageTypes = [])
     {
-        $this->pageTypes = $pageTypes;
+        foreach ($pageTypes as $pageType) {
+            $this->append($pageType);
+        }
     }
 
+    /** @param array<PageTypeInterface> $pageTypes */
     public static function fromArray(array $pageTypes): self
-    {
-    }
-
-    public static function fromList(PageTypeInterface ... $pageTypes): self
     {
         return new self($pageTypes);
     }
 
-    public function next()
+    public static function fromList(PageTypeInterface ... $pageTypes): self
     {
-        // TODO: Implement next() method.
+        $iterator = new self();
+        $iterator->pageTypes = $pageTypes;
+
+        return $iterator;
     }
 
-    public function valid()
+    private function append(PageTypeInterface $pageType): void
     {
-        // TODO: Implement valid() method.
+        $this->pageTypes[] = $pageType;
     }
 
-    public function rewind()
+    public function next(): void
     {
-        // TODO: Implement rewind() method.
+        $this->index++;
     }
 
-    public function current()
+    public function valid(): bool
     {
-        // TODO: Implement current() method.
+        return array_key_exists($this->index, $this->pageTypes);
     }
 
-    public function key()
+    public function rewind(): void
     {
-        // TODO: Implement key() method.
+        $this->index = 0;
     }
 
-    public function count()
+    public function current(): PageTypeInterface
     {
-        // TODO: Implement count() method.
+        return $this->pageTypes[$this->index];
+    }
+
+    public function key(): int
+    {
+        return $this->index;
+    }
+
+    public function count(): int
+    {
+        return count($this->pageTypes);
+    }
+
+    public function filter(callable $callback): self
+    {
+        $iterator = new self;
+        $iterator->pageTypes = array_filter($this->pageTypes, $callback);
+
+        return $iterator;
+    }
+
+    /** @return array<string> */
+    public function getNames(): array
+    {
+        return array_map(
+            static function (PageTypeInterface $pageType) {
+                return $pageType->getName();
+            },
+            $this->pageTypes
+        );
     }
 }

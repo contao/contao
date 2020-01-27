@@ -28,9 +28,7 @@ abstract class AbstractPageType implements PageTypeInterface
      *
      * @var array
      */
-    protected $features = [
-        self::FEATURE_ARTICLES
-    ];
+    protected $features = [];
 
     /**
      * Computes the name of the page type by using unqualified classname without suffix "PageType" and converts it to
@@ -51,7 +49,7 @@ abstract class AbstractPageType implements PageTypeInterface
 
     public function getAvailableAliasParameters(): array
     {
-        return \array_keys($this->parameters);
+        return $this->parameters;
     }
 
     public function getRequiredAliasParameters(): array
@@ -70,6 +68,6 @@ abstract class AbstractPageType implements PageTypeInterface
 
     public function supportsFeature(string $feature) : bool
     {
-        return \in_array($feature, static::$features, true);
+        return \in_array($feature, $this->features, true);
     }
 }

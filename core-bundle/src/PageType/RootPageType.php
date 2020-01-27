@@ -20,8 +20,6 @@ use Symfony\Component\Routing\Route;
 
 class RootPageType extends AbstractSinglePageType implements HasLegacyPageInterface
 {
-    protected static $features = [];
-
     /**
      * @var ContaoFrameworkInterface
      */

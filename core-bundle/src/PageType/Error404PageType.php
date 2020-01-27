@@ -16,7 +16,7 @@ use Contao\PageError404;
 
 class Error404PageType extends AbstractSinglePageType implements HasLegacyPageInterface
 {
-    protected static $features = [];
+    protected $features = [];
 
     public function getLegacyPageClass(): string
     {
