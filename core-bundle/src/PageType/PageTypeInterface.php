@@ -23,7 +23,9 @@ interface PageTypeInterface
     public function getName(): string;
 
     /**
-     * Get available parameters which might be used in the page alias
+     * Get map of available parameters which might be used in the page alias
+     *
+     * The key defines the parameter name, the value the requirement declared as mysql regular expression
      */
     public function getAvailableAliasParameters(): array;
 
@@ -50,5 +52,12 @@ interface PageTypeInterface
      */
     public function supportFeature(string $feature): void;
 
+    /**
+     * Check if a specific feature is supported.
+     *
+     * @param string $feature
+     *
+     * @return bool
+     */
     public function supportsFeature(string $feature): bool;
 }
