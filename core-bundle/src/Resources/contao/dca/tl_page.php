@@ -48,7 +48,8 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 				'id' => 'primary',
 				'alias' => 'index',
 				'type,dns' => 'index',
-				'pid,type,start,stop,published' => 'index'
+				'pid,type,start,stop,published' => 'index',
+				'aliasRegexp' => 'index'
 			)
 		)
 	),
@@ -1886,7 +1887,7 @@ class tl_page extends Contao\Backend
 		}
 
 		$requirements = $pageType->getAvailableAliasParameters();
-		$aliasRegexp =  preg_replace_callback(
+		$aliasRegexp =  '^' . preg_replace_callback(
 			'#([^\{\}]*)\{(\w+)\}#',
 			static function (array $matches) use ($requirements) {
 				return preg_quote($matches[1]) . ($requirements[$matches[2]] ?: '[^/]+');
