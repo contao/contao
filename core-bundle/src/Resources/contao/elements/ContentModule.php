@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\PageType\PageTypeConfigAwareInterface;
 use FOS\HttpCache\ResponseTagger;
 
 /**
@@ -49,6 +50,11 @@ class ContentModule extends ContentElement
 
 		/** @var Module $objModule */
 		$objModule = new $strClass($objModule, $this->strColumn);
+
+		$pageTypeConfig = static::getPageTypeConfigFromCurrentRequest();
+		if ($pageTypeConfig && $objModule instanceof PageTypeConfigAwareInterface) {
+			$objModule->setPageTypeConfig($pageTypeConfig);
+		}
 
 		$cssID = StringUtil::deserialize($objModule->cssID, true);
 
