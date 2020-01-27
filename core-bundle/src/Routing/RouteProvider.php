@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
+use function implode;
 
 class RouteProvider implements RouteProviderInterface
 {
@@ -422,7 +423,14 @@ class RouteProvider implements RouteProviderInterface
         }
 
         if (!empty($aliases)) {
-            $conditions[] = 'tl_page.alias IN ('.implode(',', $aliases).')';
+            $dynamicPageTypes = $this->pageTypeRegistry->getPageTypesWithDynamicAliases()->getNames();
+
+            if ($dynamicPageTypes) {
+                $conditions[] = '(tl_page.type IN ('.implode(',', $dynamicPageTypes).') AND (\''.implode(' REGEXP tl_page.aliasRegexp OR \''. $aliases).'\')))';
+                $conditions[] = '(tl_page.type NOT IN ('.implode(',', $dynamicPageTypes).') AND tl_page.alias IN ('.implode(',', $aliases).')';
+            } else {
+                $conditions[] = 'tl_page.alias IN ('.implode(',', $aliases).')';
+            }
         }
 
         /** @var PageModel $pageModel */

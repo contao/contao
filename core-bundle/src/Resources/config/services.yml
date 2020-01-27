@@ -580,6 +580,9 @@ services:
         arguments:
             - '@contao.security.token_checker'
 
+    contao.routing.page_id_resolver:
+        class: Contao\CoreBundle\Routing\PageIdResolver\ChainPageIdResolver
+
     contao.routing.route_generator:
         class: Symfony\Cmf\Component\Routing\ProviderBasedGenerator
         arguments:
@@ -594,6 +597,7 @@ services:
             - '%contao.url_suffix%'
             - '%contao.prepend_locale%'
             - '@Contao\CoreBundle\PageType\PageTypeRegistry'
+            - '@contao.routing.page_id_resolver'
 
     contao.routing.scope_matcher:
         class: Contao\CoreBundle\Routing\ScopeMatcher

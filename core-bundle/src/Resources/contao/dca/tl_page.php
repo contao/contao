@@ -24,7 +24,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			array('tl_page', 'setRootType'),
 			array('tl_page', 'showFallbackWarning'),
 			array('tl_page', 'makeRedirectPageMandatory'),
-			array('tl_page', 'generateSitemap')
+			array('tl_page', 'generateSitemap'),
 		),
 		'oncut_callback' => array
 		(
@@ -38,7 +38,8 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'onsubmit_callback' => array
 		(
 			array('tl_page', 'scheduleUpdate'),
-			array('tl_page', 'generateArticle')
+			array('tl_page', 'generateArticle'),
+			array('tl_page', 'generateAliasRegexp')
 		),
 		'sql' => array
 		(
@@ -210,11 +211,15 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'folderalias', 'doNotCopy'=>true, 'maxlength'=>128, 'tl_class'=>'w50 clr'),
+			'eval'                    => array('doNotCopy'=>true, 'maxlength'=>128, 'tl_class'=>'w50 clr'),
 			'save_callback' => array
 			(
 				array('tl_page', 'generateAlias')
 			),
+			'sql'                     => "varchar(255) BINARY NOT NULL default ''"
+		),
+		'aliasRegexp' => array
+		(
 			'sql'                     => "varchar(255) BINARY NOT NULL default ''"
 		),
 		'type' => array
@@ -1866,5 +1871,32 @@ class tl_page extends Contao\Backend
 
 		// The onsubmit_callback has triggered scheduleUpdate(), so run generateSitemap() now
 		$this->generateSitemap();
+	}
+
+	public function generateAliasRegexp(\Contao\DataContainer $dc): void
+	{
+		$pageTypeRegistry = self::getContainer()->get(\Contao\CoreBundle\PageType\PageTypeRegistry::class);
+		if (!$pageTypeRegistry->has($dc->activeRecord->type)) {
+			return;
+		}
+
+		$pageType = $pageTypeRegistry->get($dc->activeRecord->type);
+		if (null === count($pageType->getAvailableAliasParameters())) {
+			return;
+		}
+
+		$requirements = $pageType->getAvailableAliasParameters();
+		$aliasRegexp =  preg_replace_callback(
+			'#\{(\w+)\}#',
+			static function (array $matches) use ($requirements) {
+				return $requirements[$matches[1]] ?: '[^/]+';
+			},
+			$dc->activeRecord->alias
+		);
+
+		$this->Database
+			->prepare('UPDATE tl_page %s WHERE id=?')
+			->set(['aliasRegexp' => $aliasRegexp])
+			->execute($dc->id);
 	}
 }

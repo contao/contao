@@ -14,8 +14,3 @@ services:
         tags:
             - { name: contao.picker_provider, priority: 128 }
 
-    Contao\NewsBundle\PageType\NewsReaderPageType:
-        arguments:
-            - '@event_dispatcher'
-        tags:
-            - { name: contao.page_type }
