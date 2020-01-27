@@ -67,8 +67,24 @@ class PageTypeRegistry implements \IteratorAggregate
         return $this->get($pageModel->type)->getRoutes($pageModel, $prependLocale, $urlSuffix);
     }
 
+    /**
+     * @return \Traversable|PageTypeInterface[]
+     */
     public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->pageTypes);
+    }
+
+    /**
+     * @return \Traversable|PageTypeInterface[]
+     */
+    public function getPageTypesWithDynamicAliases(): \Traversable
+    {
+        return new \CallbackFilterIterator(
+            $this->getIterator(),
+            static function (PageTypeInterface $pageType) {
+                return count($pageType->getAvailableAliasParameters()) > 0;
+            }
+        );
     }
 }
