@@ -334,8 +334,15 @@ class DC_Table extends DataContainer implements \listable, \editable
 		{
 			foreach ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['filter'] as $filter)
 			{
-				$this->procedure[] = $filter[0];
-				$this->values[] = $filter[1];
+				if (\is_string($filter))
+				{
+					$this->procedure[] = $filter;
+				}
+				else
+				{
+					$this->procedure[] = $filter[0];
+					$this->values[] = $filter[1];
+				}
 			}
 		}
 
@@ -5632,8 +5639,15 @@ class DC_Table extends DataContainer implements \listable, \editable
 			{
 				foreach ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['filter'] as $fltr)
 				{
-					$arrProcedure[] = $fltr[0];
-					$arrValues[] = $fltr[1];
+					if (\is_string($fltr))
+					{
+						$arrProcedure[] = $fltr;
+					}
+					else
+					{
+						$arrProcedure[] = $fltr[0];
+						$arrValues[] = $fltr[1];
+					}
 				}
 			}
 
