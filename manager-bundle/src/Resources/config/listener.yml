@@ -5,6 +5,7 @@ services:
             - '@security.helper'
             - '@router'
             - '@request_stack'
+            - '@translator'
             - '%kernel.debug%'
             - '%contao_manager.manager_path%'
             - '@?contao_manager.jwt_manager'
