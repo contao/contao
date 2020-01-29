@@ -60,6 +60,7 @@ class ContaoManagerExtensionTest extends TestCase
                 new Reference('security.helper'),
                 new Reference('router'),
                 new Reference('request_stack'),
+                new Reference('translator'),
                 new Reference('%kernel.debug%'),
                 new Reference('%contao_manager.manager_path%'),
                 new Reference('contao_manager.jwt_manager', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
