@@ -136,7 +136,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
     protected function determineTargetUrl(Request $request): string
     {
         if (!$this->user instanceof FrontendUser || $request->request->get('_always_use_target_path')) {
-            return base64_decode($request->request->get('_target_path'), true);
+            return base64_decode((string) $request->request->get('_target_path'), true);
         }
 
         /** @var PageModel $pageModelAdapter */
@@ -148,7 +148,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
             return $groupPage->getAbsoluteUrl();
         }
 
-        return base64_decode($request->request->get('_target_path'), true);
+        return base64_decode((string) $request->request->get('_target_path'), true);
     }
 
     private function triggerPostLoginHook(): void
