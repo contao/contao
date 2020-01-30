@@ -106,7 +106,6 @@ class InitializeController extends Controller
             @trigger_error(sprintf('Using the X-Status-Code header is deprecated since Symfony 3.3 and will be removed in 4.0. Use %s::allowCustomResponseCode() instead.', GetResponseForExceptionEvent::class), E_USER_DEPRECATED);
 
             $response->setStatusCode($response->headers->get('X-Status-Code'));
-
             $response->headers->remove('X-Status-Code');
         } elseif (
             !$event->isAllowingCustomResponseCode()
