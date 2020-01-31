@@ -299,18 +299,19 @@ class Search
 	/**
 	 * Search the index and return the result object
 	 *
-	 * @param string  $strKeywords The keyword string
-	 * @param boolean $blnOrSearch If true, the result can contain any keyword
-	 * @param array   $arrPid      An optional array of page IDs to limit the result to
-	 * @param integer $intRows     An optional maximum number of result rows
-	 * @param integer $intOffset   An optional result offset
-	 * @param boolean $blnFuzzy    If true, the search will be fuzzy
+	 * @param string  $strKeywords  The keyword string
+	 * @param boolean $blnOrSearch  If true, the result can contain any keyword
+	 * @param array   $arrPid       An optional array of page IDs to limit the result to
+	 * @param integer $intRows      An optional maximum number of result rows
+	 * @param integer $intOffset    An optional result offset
+	 * @param boolean $blnFuzzy     If true, the search will be fuzzy
+	 * @param array   $arrHighlight An array that stores the matched keywords to highlight
 	 *
-	 * @return array The results array
+	 * @return Database\Result The database result object
 	 *
 	 * @throws \Exception If the cleaned keyword string is empty
 	 */
-	public static function searchFor($strKeywords, $blnOrSearch=false, $arrPid=array(), $intRows=0, $intOffset=0, $blnFuzzy=false)
+	public static function searchFor($strKeywords, $blnOrSearch=false, $arrPid=array(), $intRows=0, $intOffset=0, $blnFuzzy=false, &$arrHighlight=array())
 	{
 		// Clean the keywords
 		$strKeywords = Utf8::strtolower($strKeywords);
@@ -511,18 +512,19 @@ class Search
 			$objResultStmt->limit($intRows, $intOffset);
 		}
 
-		$arrResult = $objResultStmt->execute($arrValues)->fetchAllAssoc();
+		$i = 0;
+		$objResult = $objResultStmt->execute($arrValues);
 
-		foreach ($arrResult as $k=>$v)
+		while ($objResult->next())
 		{
-			$arrHighlight = array();
-			$arrMatches = explode(',', $v['matches']);
+			$arrHighlight[$i] = array();
+			$arrMatches = explode(',', $objResult->matches);
 
 			foreach ($arrKeywords as $strKeyword)
 			{
 				if (\in_array($strKeyword, $arrMatches))
 				{
-					$arrHighlight[] = $strKeyword;
+					$arrHighlight[$i][] = $strKeyword;
 				}
 			}
 
@@ -530,7 +532,7 @@ class Search
 			{
 				if (\in_array($strKeyword, $arrMatches))
 				{
-					$arrHighlight[] = $strKeyword;
+					$arrHighlight[$i][] = $strKeyword;
 				}
 			}
 
@@ -539,7 +541,7 @@ class Search
 			{
 				if ($matches = preg_grep('/'.str_replace('%', '.*', $strKeyword).'/', $arrMatches))
 				{
-					$arrHighlight = array_merge($arrHighlight, $matches);
+					$arrHighlight[$i] = array_merge($arrHighlight[$i], $matches);
 				}
 			}
 
@@ -550,14 +552,14 @@ class Search
 
 				if (!array_diff(explode(' ', $strPhrase), $arrMatches))
 				{
-					$arrHighlight[] = $strPhrase;
+					$arrHighlight[$i][] = $strPhrase;
 				}
 			}
 
-			$arrResult[$k]['matches'] = implode(',', $arrHighlight);
+			++$i;
 		}
 
-		return $arrResult;
+		return $objResult;
 	}
 
 	/**

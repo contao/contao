@@ -159,7 +159,14 @@ class ModuleSearch extends \Module
 			{
 				try
 				{
-					$arrResult = \Search::searchFor($strKeywords, ($strQueryType == 'or'), $arrPages, 0, 0, $blnFuzzy);
+					$arrHighlight = array();
+					$objResult = \Search::searchFor($strKeywords, ($strQueryType == 'or'), $arrPages, 0, 0, $blnFuzzy, $arrHighlight);
+					$arrResult = $objResult->fetchAllAssoc();
+
+					foreach (array_keys($arrResult) as $k)
+					{
+						$arrResult[$k]['matches'] = implode(',', $arrHighlight[$k]);
+					}
 				}
 				catch (\Exception $e)
 				{
