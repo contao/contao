@@ -160,8 +160,8 @@ class ModuleSearch extends \Module
 				try
 				{
 					$arrHighlight = array();
-					$objResult = \Search::searchFor($strKeywords, ($strQueryType == 'or'), $arrPages, 0, 0, $blnFuzzy, $arrHighlight);
-					$arrResult = $objResult->fetchAllAssoc();
+					$objSearch = \Search::searchFor($strKeywords, ($strQueryType == 'or'), $arrPages, 0, 0, $blnFuzzy, $arrHighlight);
+					$arrResult = $objSearch->fetchAllAssoc();
 
 					foreach (array_keys($arrResult) as $k)
 					{
