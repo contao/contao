@@ -539,7 +539,7 @@ class Search
 			// Highlight the words which matched the wildcard keywords
 			foreach ($arrWildcards as $strKeyword)
 			{
-				if ($matches = preg_grep('/'.str_replace('%', '.*', $strKeyword).'/', $arrMatches))
+				if ($matches = preg_grep('/' . str_replace('%', '.*', $strKeyword) . '/', $arrMatches))
 				{
 					$arrHighlight[$i] = array_merge($arrHighlight[$i], $matches);
 				}
