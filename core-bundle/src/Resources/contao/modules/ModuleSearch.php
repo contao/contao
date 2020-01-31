@@ -159,8 +159,7 @@ class ModuleSearch extends \Module
 			{
 				try
 				{
-					$objSearch = \Search::searchFor($strKeywords, ($strQueryType == 'or'), $arrPages, 0, 0, $blnFuzzy);
-					$arrResult = $objSearch->fetchAllAssoc();
+					$arrResult = \Search::searchFor($strKeywords, ($strQueryType == 'or'), $arrPages, 0, 0, $blnFuzzy);
 				}
 				catch (\Exception $e)
 				{
