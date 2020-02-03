@@ -179,6 +179,22 @@ class Result
 	}
 
 	/**
+	 * Overwrite a value in the result set
+	 *
+	 * @param string $strKey
+	 * @param mixed  $varValue
+	 */
+	public function overwrite($strKey, $varValue)
+	{
+		if (empty($this->arrCache))
+		{
+			$this->next();
+		}
+
+		$this->resultSet[$this->intIndex][$strKey] = $varValue;
+	}
+
+	/**
 	 * Fetch the current row as enumerated array
 	 *
 	 * @return array|false The row as enumerated array or false if there is no row

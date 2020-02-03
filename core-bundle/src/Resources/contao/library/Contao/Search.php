@@ -511,7 +511,53 @@ class Search
 			$objResultStmt->limit($intRows, $intOffset);
 		}
 
-		return $objResultStmt->execute($arrValues);
+		$objResult = $objResultStmt->execute($arrValues);
+
+		while ($objResult->next())
+		{
+			$arrHighlight = array();
+			$arrMatches = explode(',', $objResult->matches);
+
+			foreach ($arrKeywords as $strKeyword)
+			{
+				if (\in_array($strKeyword, $arrMatches))
+				{
+					$arrHighlight[] = $strKeyword;
+				}
+			}
+
+			foreach ($arrIncluded as $strKeyword)
+			{
+				if (\in_array($strKeyword, $arrMatches))
+				{
+					$arrHighlight[] = $strKeyword;
+				}
+			}
+
+			// Highlight the words which matched the wildcard keywords
+			foreach ($arrWildcards as $strKeyword)
+			{
+				if ($matches = preg_grep('/' . str_replace('%', '.*', $strKeyword) . '/', $arrMatches))
+				{
+					$arrHighlight = array_merge($arrHighlight, $matches);
+				}
+			}
+
+			// Highlight phrases if all their words have matched
+			foreach ($arrPhrases as $strPhrase)
+			{
+				$strPhrase = str_replace('[^[:alnum:]]+', ' ', Utf8::substr($strPhrase, 7, -7));
+
+				if (!array_diff(explode(' ', $strPhrase), $arrMatches))
+				{
+					$arrHighlight[] = $strPhrase;
+				}
+			}
+
+			$objResult->overwrite('matches', implode(',', $arrHighlight));
+		}
+
+		return $objResult;
 	}
 
 	/**
