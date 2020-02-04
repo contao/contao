@@ -63,7 +63,6 @@
         "nelmio/cors-bundle": "^1.5.3",
         "nyholm/psr7": "^1.2",
         "ocramius/package-versions": "^1.2",
-        "oyejorge/less.php": "^1.7",
         "paragonie/constant_time_encoding": "^2.2",
         "patchwork/utf8": "^1.2",
         "phpspec/php-diff": "^1.0",
@@ -103,7 +102,8 @@
         "true/punycode": "^2.1",
         "twig/twig": "^2.7",
         "ua-parser/uap-php": "^3.9",
-        "webignition/robots-txt-file": "^3.0"
+        "webignition/robots-txt-file": "^3.0",
+        "wikimedia/less.php": "^1.7"
     },
     "conflict": {
         "contao-community-alliance/composer-plugin": "<3.0",
