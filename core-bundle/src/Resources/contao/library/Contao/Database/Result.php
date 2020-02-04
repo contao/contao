@@ -51,7 +51,7 @@ class Result
 	 * Result set
 	 * @var array
 	 */
-	protected $resultSet;
+	protected $resultSet = [];
 
 	/**
 	 * Current row index
@@ -60,10 +60,10 @@ class Result
 	private $intIndex = -1;
 
 	/**
-	 * End indicator
-	 * @var boolean
+	 * Number of rows
+	 * @var integer
 	 */
-	private $blnDone = false;
+	private $rowCount;
 
 	/**
 	 * Modification indicator
@@ -80,16 +80,25 @@ class Result
 	/**
 	 * Validate the connection resource and store the query string
 	 *
-	 * @param DoctrineStatement $statement The database statement
-	 * @param string            $strQuery  The query string
-	 *
-	 * @todo Try to find a solution that works without fetchAll().
+	 * @param DoctrineStatement|array $statement The database statement
+	 * @param string                  $strQuery  The query string
 	 */
-	public function __construct(DoctrineStatement $statement, $strQuery)
+	public function __construct($statement, $strQuery)
 	{
-		$this->resResult = $statement;
+		if ($statement instanceof DoctrineStatement)
+		{
+			$this->resResult = $statement;
+		}
+		elseif (is_array($statement) && \count(array_filter(array_map('is_array', $statement))) === \count($statement))
+		{
+			$this->resultSet = array_values($statement);
+			$this->rowCount = \count($this->resultSet);
+		}
+		else {
+			throw new \InvalidArgumentException(sprintf('$statement must be of type "%s" or an array of rows', DoctrineStatement::class));
+		}
+
 		$this->strQuery = $strQuery;
-		$this->resultSet = $statement->fetchAll(\PDO::FETCH_ASSOC);
 	}
 
 	/**
@@ -97,8 +106,9 @@ class Result
 	 */
 	public function __destruct()
 	{
-		$this->resultSet = null;
-		$this->resResult->closeCursor();
+		if ($this->resResult) {
+			$this->resResult->closeCursor();
+		}
 	}
 
 	/**
@@ -155,7 +165,17 @@ class Result
 				break;
 
 			case 'numFields':
-				return $this->resResult->columnCount();
+				if ($this->resResult)
+				{
+					return $this->resResult->columnCount();
+				}
+
+				if (isset($this->resultSet[0]))
+				{
+					return \count($this->resultSet[0]);
+				}
+
+				return 0;
 				break;
 
 			case 'isModified':
@@ -185,7 +205,9 @@ class Result
 	 */
 	public function fetchRow()
 	{
-		if ($this->intIndex >= $this->count() - 1)
+		$this->preload($this->intIndex + 1);
+
+		if ($this->intIndex >= \count($this->resultSet) - 1)
 		{
 			return false;
 		}
@@ -202,7 +224,9 @@ class Result
 	 */
 	public function fetchAssoc()
 	{
-		if ($this->intIndex >= $this->count() - 1)
+		$this->preload($this->intIndex + 1);
+
+		if ($this->intIndex >= \count($this->resultSet) - 1)
 		{
 			return false;
 		}
@@ -279,8 +303,8 @@ class Result
 	public function first()
 	{
 		$this->intIndex = 0;
+		$this->preload(0);
 
-		$this->blnDone = false;
 		$this->arrCache = $this->resultSet[$this->intIndex];
 
 		return $this;
@@ -298,7 +322,8 @@ class Result
 			return false;
 		}
 
-		$this->blnDone = false;
+		$this->preload($this->intIndex - 1);
+
 		$this->arrCache = $this->resultSet[--$this->intIndex];
 
 		return $this;
@@ -311,17 +336,10 @@ class Result
 	 */
 	public function next()
 	{
-		if ($this->blnDone)
-		{
-			return false;
-		}
-
 		if ($this->fetchAssoc() !== false)
 		{
 			return $this;
 		}
-
-		$this->blnDone = true;
 
 		return false;
 	}
@@ -334,8 +352,8 @@ class Result
 	public function last()
 	{
 		$this->intIndex = $this->count() - 1;
+		$this->preload($this->intIndex);
 
-		$this->blnDone = true;
 		$this->arrCache = $this->resultSet[$this->intIndex];
 
 		return $this;
@@ -348,7 +366,19 @@ class Result
 	 */
 	public function count()
 	{
-		return \count($this->resultSet);
+		if ($this->rowCount === null)
+		{
+			$this->rowCount = $this->resResult->rowCount();
+
+			// rowCount() might incorrectly return 0 for some platforms
+			if ($this->rowCount < 1)
+			{
+				$this->preload(PHP_INT_MAX);
+				$this->rowCount = \count($this->resultSet);
+			}
+		}
+
+		return $this->rowCount;
 	}
 
 	/**
@@ -376,9 +406,32 @@ class Result
 	public function reset()
 	{
 		$this->intIndex = -1;
-		$this->blnDone = false;
 		$this->arrCache = array();
 
 		return $this;
+	}
+
+	/**
+	 * Preload all rows up to the specified index from the underlying statement
+	 * and store them in the resultSet array.
+	 *
+	 * @param int $index
+	 */
+	private function preload($index)
+	{
+		while($this->resResult && \count($this->resultSet) <= $index)
+		{
+			$row = $this->resResult->fetch(\PDO::FETCH_ASSOC);
+
+			if ($row === false)
+			{
+				$this->rowCount = \count($this->resultSet);
+				$this->resResult->closeCursor();
+				$this->resResult = null;
+				break;
+			}
+
+			$this->resultSet[] = $row;
+		}
 	}
 }
