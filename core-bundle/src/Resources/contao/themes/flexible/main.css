@@ -1581,6 +1581,7 @@ ul.sgallery li {
 /* Paste/sort hint */
 #paste_hint {
 	position:relative;
+	z-index:1;
 }
 .tl_message + #paste_hint {
 	margin-top:-12px;
