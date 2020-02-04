@@ -73,6 +73,8 @@ class BackendMain extends Backend
 		// Front end redirect
 		if (Input::get('do') == 'feRedirect')
 		{
+			@trigger_error('Using the "feRedirect" parameter has been deprecated and will no longer work in Contao 5.0. Use the "contao_backend_preview" route directly instead.', E_USER_DEPRECATED);
+
 			$this->redirectToFrontendPage(Input::get('page'), Input::get('article'));
 		}
 
