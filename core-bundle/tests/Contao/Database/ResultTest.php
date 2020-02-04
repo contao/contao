@@ -94,9 +94,9 @@ class ResultTest extends TestCase
             $this->assertNull($result->{'0'});
 
             $this->assertSame(['value2'], $result->fetchRow());
-            $this->assertSame(['value2'], $result->row());
-            $this->assertSame('value2', $result->{'0'});
-            $this->assertNull($result->field);
+            $this->assertSame(['field' => 'value2'], $result->row());
+            $this->assertSame('value2', $result->field);
+            $this->assertNull($result->{'0'});
         }
     }
 

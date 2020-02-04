@@ -205,16 +205,11 @@ class Result
 	 */
 	public function fetchRow()
 	{
-		$this->preload($this->intIndex + 1);
-
-		if ($this->intIndex >= \count($this->resultSet) - 1)
-		{
-			return false;
+		if ($row = $this->fetchAssoc()) {
+			return array_values($row);
 		}
 
-		$this->arrCache = array_values($this->resultSet[++$this->intIndex]);
-
-		return $this->arrCache;
+		return false;
 	}
 
 	/**
