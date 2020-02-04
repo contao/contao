@@ -36,12 +36,6 @@ use Doctrine\DBAL\Driver\Statement as DoctrineStatement;
 class Result
 {
 	/**
-	 * Database result
-	 * @var DoctrineStatement
-	 */
-	protected $resResult;
-
-	/**
 	 * Query string
 	 * @var string
 	 */
@@ -87,18 +81,10 @@ class Result
 	 */
 	public function __construct(DoctrineStatement $statement, $strQuery)
 	{
-		$this->resResult = $statement;
 		$this->strQuery = $strQuery;
 		$this->resultSet = $statement->fetchAll(\PDO::FETCH_ASSOC);
-	}
 
-	/**
-	 * Automatically free the result
-	 */
-	public function __destruct()
-	{
-		$this->resultSet = null;
-		$this->resResult->closeCursor();
+		$statement->closeCursor();
 	}
 
 	/**
@@ -155,7 +141,7 @@ class Result
 				break;
 
 			case 'numFields':
-				return $this->resResult->columnCount();
+				return \count($this->resultSet[0]);
 				break;
 
 			case 'isModified':
