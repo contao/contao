@@ -161,22 +161,6 @@
         <source>Here you can enter the maximum height for image uploads in pixels.</source>
         <target>アップロードできる画像の最大の高さをピクセルで入力します。</target>
       </trans-unit>
-      <trans-unit id="tl_settings.enableSearch.0">
-        <source>Enable searching</source>
-        <target>検索を使用</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.enableSearch.1">
-        <source>Index pages so they can be searched.</source>
-        <target>ページのインデックスを作成して検索できるようにします。</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.indexProtected.0">
-        <source>Index protected pages</source>
-        <target>保護したページをインデックス</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.indexProtected.1">
-        <source>Use this option carefully and always exclude personalized pages from being indexed!</source>
-        <target>このオプションは注意して使用し、常に個人用のページをインデックス作成から除外してください。</target>
-      </trans-unit>
       <trans-unit id="tl_settings.defaultUser.0">
         <source>Default page owner</source>
         <target>ページの所有者の初期設定</target>
@@ -232,10 +216,6 @@
       <trans-unit id="tl_settings.cron_legend">
         <source>Cron job settings</source>
         <target>Cronジョブの設定</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.search_legend">
-        <source>Search engine settings</source>
-        <target>検索エンジンの設定</target>
       </trans-unit>
       <trans-unit id="tl_settings.chmod_legend">
         <source>Default access rights</source>

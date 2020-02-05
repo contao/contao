@@ -23,9 +23,6 @@ use Symfony\Component\Security\Core\Security;
 
 class ArticlePickerProviderTest extends ContaoTestCase
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
@@ -33,9 +30,6 @@ class ArticlePickerProviderTest extends ContaoTestCase
         $GLOBALS['TL_LANG']['MSC']['articlePicker'] = 'Article picker';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
@@ -162,7 +156,7 @@ class ArticlePickerProviderTest extends ContaoTestCase
         $security
             ->expects(null === $accessGranted ? $this->never() : $this->once())
             ->method('isGranted')
-            ->willReturn($accessGranted)
+            ->willReturn($accessGranted ?? false)
         ;
 
         $menuFactory = $this->createMock(FactoryInterface::class);

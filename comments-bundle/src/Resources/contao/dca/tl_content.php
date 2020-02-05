@@ -66,25 +66,10 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['com_template'] = array
 (
 	'exclude'                 => true,
 	'inputType'               => 'select',
-	'options_callback'        => array('tl_content_comments', 'getCommentsTemplates'),
-	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => "varchar(64) NOT NULL default 'com_default'"
-);
-
-/**
- * Provide miscellaneous methods that are used by the data configuration array.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
-class tl_content_comments extends Contao\Backend
-{
-	/**
-	 * Return all comments templates as array
-	 *
-	 * @return array
-	 */
-	public function getCommentsTemplates()
+	'options_callback' => static function ()
 	{
-		return $this->getTemplateGroup('com_');
-	}
-}
+		return Contao\Controller::getTemplateGroup('com_');
+	},
+	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
+	'sql'                     => "varchar(64) NOT NULL default ''"
+);

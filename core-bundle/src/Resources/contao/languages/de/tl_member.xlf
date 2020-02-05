@@ -182,16 +182,16 @@
         <target>Aktivieren am</target>
       </trans-unit>
       <trans-unit id="tl_member.start.1">
-        <source>Automatically activate the account on this day.</source>
-        <target>Das Konto automatisch an diesem Tag aktivieren.</target>
+        <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Wenn Sie das Konto erst ab einem bestimmten Zeitpunkt aktivieren möchten, können Sie diesen hier eingeben. Andernfalls lassen Sie das Feld leer. </target>
       </trans-unit>
       <trans-unit id="tl_member.stop.0">
         <source>Deactivate on</source>
         <target>Deaktivieren am</target>
       </trans-unit>
       <trans-unit id="tl_member.stop.1">
-        <source>Automatically deactivate the account on this day.</source>
-        <target>Das Konto automatisch an diesem Tag deaktivieren.</target>
+        <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Wenn Sie das Konto nur bis zu einem bestimmten Zeitpunkt aktivieren möchten, können Sie diesen hier eingeben. Andernfalls lassen Sie das Feld leer. </target>
       </trans-unit>
       <trans-unit id="tl_member.useTwoFactor">
         <source>Use two-factor authentication</source>

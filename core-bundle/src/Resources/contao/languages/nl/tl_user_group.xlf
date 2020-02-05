@@ -30,16 +30,16 @@
         <target>Activeer op</target>
       </trans-unit>
       <trans-unit id="tl_user_group.start.1">
-        <source>Automatically activate the group on this day.</source>
-        <target>Als u hier een datum invult zal de huidige groep op deze dag geactiveerd worden.</target>
+        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Als u wilt voorkomen dat de groep vóór een bepaalde datum / tijd actief is, kunt u dit hier invoeren. Laat het veld anders leeg.</target>
       </trans-unit>
       <trans-unit id="tl_user_group.stop.0">
         <source>Deactivate on</source>
         <target>Deactiveer op</target>
       </trans-unit>
       <trans-unit id="tl_user_group.stop.1">
-        <source>Automatically deactivate the group on this day.</source>
-        <target>Als u hier een datum invult zal de huidige groep op deze dag gedeactiveerd worden.</target>
+        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Als u wilt voorkomen dat de groep vóór een bepaalde datum / tijd actief is, kunt u dit hier invoeren. Laat het veld anders leeg.</target>
       </trans-unit>
       <trans-unit id="tl_user_group.title_legend">
         <source>Title</source>
@@ -48,6 +48,9 @@
       <trans-unit id="tl_user_group.modules_legend">
         <source>Allowed modules</source>
         <target>Toegestane modules</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.elements_legend">
+        <source>Allowed elements</source>
       </trans-unit>
       <trans-unit id="tl_user_group.pagemounts_legend">
         <source>Pagemounts</source>
@@ -74,8 +77,7 @@
         <target>Toegestane velden</target>
       </trans-unit>
       <trans-unit id="tl_user_group.account_legend">
-        <source>Account settings</source>
-        <target>Account instellingen</target>
+        <source>Group settings</source>
       </trans-unit>
       <trans-unit id="tl_user_group.new.0">
         <source>New</source>

@@ -126,16 +126,14 @@
         <target>Afficher à partir du</target>
       </trans-unit>
       <trans-unit id="tl_article.start.1">
-        <source>Do not show the article on the website before this day.</source>
-        <target>Ne pas afficher cet article sur le site avant ce jour.</target>
+        <source>If you want to prevent the article from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_article.stop.0">
         <source>Show until</source>
         <target>Afficher jusqu'au</target>
       </trans-unit>
       <trans-unit id="tl_article.stop.1">
-        <source>Do not show the article on the website on and after this day.</source>
-        <target>Ne plus afficher cet article sur le site après ce jour.</target>
+        <source>If you want to prevent the article from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_article.tstamp.0">
         <source>Revision date</source>

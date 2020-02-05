@@ -20,8 +20,9 @@ use Contao\CoreBundle\Translation\Translator;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\Service\ResetInterface;
 
-class ImageSizes
+class ImageSizes implements ResetInterface
 {
     /**
      * @var Connection
@@ -49,10 +50,13 @@ class ImageSizes
     private $predefinedSizes = [];
 
     /**
-     * @var array
+     * @var array|null
      */
     private $options;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.image.image_sizes" service instead
+     */
     public function __construct(Connection $connection, EventDispatcherInterface $eventDispatcher, ContaoFramework $framework, Translator $translator)
     {
         $this->connection = $connection;
@@ -72,7 +76,7 @@ class ImageSizes
     /**
      * Returns the image sizes as options suitable for widgets.
      *
-     * @return array<string,string[]>
+     * @return array<string, array<string>>
      */
     public function getAllOptions(): array
     {
@@ -80,7 +84,7 @@ class ImageSizes
 
         $event = new ImageSizesEvent($this->options);
 
-        $this->eventDispatcher->dispatch(ContaoCoreEvents::IMAGE_SIZES_ALL, $event);
+        $this->eventDispatcher->dispatch($event, ContaoCoreEvents::IMAGE_SIZES_ALL);
 
         return $event->getImageSizes();
     }
@@ -88,7 +92,7 @@ class ImageSizes
     /**
      * Returns the image sizes for the given user suitable for widgets.
      *
-     * @return array<string,string[]>
+     * @return array<string, array<string>>
      */
     public function getOptionsForUser(BackendUser $user): array
     {
@@ -107,9 +111,14 @@ class ImageSizes
             $event = new ImageSizesEvent($this->filterOptions($options), $user);
         }
 
-        $this->eventDispatcher->dispatch(ContaoCoreEvents::IMAGE_SIZES_USER, $event);
+        $this->eventDispatcher->dispatch($event, ContaoCoreEvents::IMAGE_SIZES_USER);
 
         return $event->getImageSizes();
+    }
+
+    public function reset(): void
+    {
+        $this->options = null;
     }
 
     /**
@@ -172,7 +181,7 @@ class ImageSizes
     /**
      * Filters the options by the given allowed sizes and returns the result.
      *
-     * @return array<string,string[]>
+     * @return array<string, array<string>>
      */
     private function filterOptions(array $allowedSizes): array
     {

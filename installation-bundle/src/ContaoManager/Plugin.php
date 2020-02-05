@@ -21,11 +21,11 @@ use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
+/**
+ * @internal
+ */
 class Plugin implements BundlePluginInterface, RoutingPluginInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getBundles(ParserInterface $parser)
     {
         return [
@@ -34,9 +34,6 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel)
     {
         return $resolver

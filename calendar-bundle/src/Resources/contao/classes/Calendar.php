@@ -42,8 +42,10 @@ class Calendar extends Frontend
 		// Delete XML file
 		if (Input::get('act') == 'delete')
 		{
+			$webDir = StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir'));
+
 			$this->import(Files::class, 'Files');
-			$this->Files->delete('web/share/' . $objCalendar->feedName . '.xml');
+			$this->Files->delete($webDir . '/share/' . $objCalendar->feedName . '.xml');
 		}
 
 		// Update XML file
@@ -159,7 +161,7 @@ class Calendar extends Frontend
 				}
 
 				// Skip the event if it requires a jumpTo URL but there is none
-				if ($arrUrls[$jumpTo] === false && $objArticle->source == 'default')
+				if ($objArticle->source == 'default' && $arrUrls[$jumpTo] === false)
 				{
 					continue;
 				}
@@ -172,7 +174,7 @@ class Calendar extends Frontend
 				{
 					$arrRepeat = StringUtil::deserialize($objArticle->repeatEach);
 
-					if (!\is_array($arrRepeat) || !isset($arrRepeat['unit']) || !isset($arrRepeat['value']) || $arrRepeat['value'] < 1)
+					if (!isset($arrRepeat['unit'], $arrRepeat['value']) || $arrRepeat['value'] < 1)
 					{
 						continue;
 					}
@@ -279,8 +281,10 @@ class Calendar extends Frontend
 			}
 		}
 
+		$webDir = StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir'));
+
 		// Create the file
-		File::putContent('web/share/' . $strFile . '.xml', $this->replaceInsertTags($objFeed->$strType(), false));
+		File::putContent($webDir . '/share/' . $strFile . '.xml', $this->replaceInsertTags($objFeed->$strType(), false));
 	}
 
 	/**

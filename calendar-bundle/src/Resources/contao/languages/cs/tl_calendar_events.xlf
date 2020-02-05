@@ -67,15 +67,15 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.pageTitle.0">
         <source>Meta title</source>
-        <target>Název pro meta údaj (SEO)</target>
+        <target>Název pro meta údaj</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.pageTitle.1">
         <source>Here you can add a custom meta title to overwrite the default page title.</source>
-        <target>Zde můžete přidat vlastní název události a tím přepsat výše uvedený. Zobrazí se jen jako informace ve zdrojovém kódu dané stránky.</target>
+        <target>Zde můžete přidat vlastní název události a tím přepsat výše uvedený. </target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.description.0">
         <source>Meta description</source>
-        <target>Popis pro meta údaj (SEO)</target>
+        <target>Popis pro meta údaj</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.description.1">
         <source>Here you can add a custom meta description to overwrite the default page description.</source>
@@ -250,16 +250,14 @@
         <target>Zobrazit od</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.start.1">
-        <source>Do not show the event on the website before this day.</source>
-        <target>Nezobrazit danou událost na webových stránkách před tímto dnem.</target>
+        <source>If you want to prevent the event from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.0">
         <source>Show until</source>
         <target>Zobrazit do</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.1">
-        <source>Do not show the event on the website on and after this day.</source>
-        <target>Nezobrazit danou událost na webových stránkách po tomto dni.</target>
+        <source>If you want to prevent the event from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.tstamp.0">
         <source>Revision date</source>

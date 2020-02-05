@@ -232,6 +232,9 @@
         <source>Invalid redirect target (circular reference)!</source>
         <target>非法的重定向目标（循环引用）！</target>
       </trans-unit>
+      <trans-unit id="ERR.circularPicker">
+        <source>Invalid selection (circular reference)!</source>
+      </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
         <source>None of the active website root pages without an explicit DNS setting have the language fallback option set.</source>
         <target>没有明确DNS设置的有效网站根页面都没有设置语言fallback选项。</target>
@@ -555,6 +558,124 @@
         <source>Displays the teaser text of an article.</source>
         <target>显示文章的简短摘要</target>
       </trans-unit>
+      <trans-unit id="FFL.explanation.0">
+        <source>Explanation</source>
+        <target>解释</target>
+      </trans-unit>
+      <trans-unit id="FFL.explanation.1">
+        <source>A custom field to insert an explanation text.</source>
+        <target>支持HTML代码。</target>
+      </trans-unit>
+      <trans-unit id="FFL.html.0">
+        <source>HTML code</source>
+        <target>HTML</target>
+      </trans-unit>
+      <trans-unit id="FFL.html.1">
+        <source>A custom field to insert HTML code.</source>
+        <target>自定义区域，可插入HTML代码</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStart.0">
+        <source>Fieldset start</source>
+        <target>字段组开始</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStart.1">
+        <source>The opening part of a fieldset with an optional legend.</source>
+        <target>带有可选标题的字段组开始部分。</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStop.0">
+        <source>Fieldset stop</source>
+        <target>字段组结束</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStop.1">
+        <source>The closing part of a fieldset.</source>
+        <target>字段组结束部分。</target>
+      </trans-unit>
+      <trans-unit id="FFL.text.0">
+        <source>Text field</source>
+        <target>文字</target>
+      </trans-unit>
+      <trans-unit id="FFL.text.1">
+        <source>A single-line input field for a short or medium text.</source>
+        <target>单行输入区，适合短文字</target>
+      </trans-unit>
+      <trans-unit id="FFL.password.0">
+        <source>Password field</source>
+        <target>密码</target>
+      </trans-unit>
+      <trans-unit id="FFL.password.1">
+        <source>A single-line input field for a password. Contao automatically adds a confirmation field.</source>
+        <target>单行密码输入区，自动增加确认</target>
+      </trans-unit>
+      <trans-unit id="FFL.textarea.0">
+        <source>Textarea</source>
+        <target>文本</target>
+      </trans-unit>
+      <trans-unit id="FFL.textarea.1">
+        <source>A multi-line input field for a medium or long text.</source>
+        <target>多行文字</target>
+      </trans-unit>
+      <trans-unit id="FFL.select.0">
+        <source>Select menu</source>
+        <target>选择菜单</target>
+      </trans-unit>
+      <trans-unit id="FFL.select.1">
+        <source>A single- or multi-line drop-down menu.</source>
+        <target>单行或者多行下拉菜单</target>
+      </trans-unit>
+      <trans-unit id="FFL.radio.0">
+        <source>Radio button menu</source>
+        <target>单选按钮菜单</target>
+      </trans-unit>
+      <trans-unit id="FFL.radio.1">
+        <source>A list of multiple options from which one can be selected.</source>
+        <target>多项选择的列表</target>
+      </trans-unit>
+      <trans-unit id="FFL.checkbox.0">
+        <source>Checkbox menu</source>
+        <target>复选框菜单</target>
+      </trans-unit>
+      <trans-unit id="FFL.checkbox.1">
+        <source>A list of multiple options from which any can be selected.</source>
+        <target>多项选择的列表</target>
+      </trans-unit>
+      <trans-unit id="FFL.upload.0">
+        <source>File upload</source>
+        <target>文件上传</target>
+      </trans-unit>
+      <trans-unit id="FFL.upload.1">
+        <source>A single-line input field to upload a local file to the server.</source>
+        <target>单行输入区，可上传本地文件到服务器</target>
+      </trans-unit>
+      <trans-unit id="FFL.range.0">
+        <source>Range slider</source>
+      </trans-unit>
+      <trans-unit id="FFL.range.1">
+        <source>A range slider to select a value or range of values between a specified min and max.</source>
+      </trans-unit>
+      <trans-unit id="FFL.hidden.0">
+        <source>Hidden field</source>
+        <target>隐藏</target>
+      </trans-unit>
+      <trans-unit id="FFL.hidden.1">
+        <source>A single-line input field that is not visible in the form.</source>
+        <target>单行输入区，不可见</target>
+      </trans-unit>
+      <trans-unit id="FFL.captcha.0">
+        <source>Security question</source>
+        <target>安全问题</target>
+      </trans-unit>
+      <trans-unit id="FFL.captcha.1">
+        <source>A simple math question to verify that the form is being submitted by a human (CAPTCHA).</source>
+        <target>简单的数学问题，防止机器人注册</target>
+      </trans-unit>
+      <trans-unit id="FFL.submit.0">
+        <source>Submit field</source>
+        <target>递交</target>
+      </trans-unit>
+      <trans-unit id="FFL.submit.1">
+        <source>A button to submit the form.</source>
+        <target>表格提交按钮</target>
+      </trans-unit>
       <trans-unit id="PTY.regular.0">
         <source>Regular page</source>
         <target>普通页面</target>
@@ -600,24 +721,21 @@
         <target>401 未授权</target>
       </trans-unit>
       <trans-unit id="PTY.error_401.1">
-        <source>If a user requests a protected page without being authenticated, a 401 error page will be loaded instead.</source>
-        <target>当用户在没有通过身份验证情况下访问一个受保护页面，会加载401错误页面。</target>
+        <source>If a visitor requests a protected page without being authenticated, a 401 error page will be loaded instead.</source>
       </trans-unit>
       <trans-unit id="PTY.error_403.0">
         <source>403 Access denied</source>
         <target>HTTP错误403(访问被拒绝)</target>
       </trans-unit>
       <trans-unit id="PTY.error_403.1">
-        <source>If a user requests a protected page without permission, a 403 error page will be loaded instead.</source>
-        <target>当用户在未被授权的情况下访问一个被保护的页面时，系统将会显示此页面。这个页面将只会在其所属的网站中生效。</target>
+        <source>If a member requests a protected page without permission, a 403 error page will be loaded instead.</source>
       </trans-unit>
       <trans-unit id="PTY.error_404.0">
         <source>404 Page not found</source>
         <target>HTTP错误404(页面未找到)</target>
       </trans-unit>
       <trans-unit id="PTY.error_404.1">
-        <source>If a user requests a non-existent page, a 404 error page will be loaded instead.</source>
-        <target>当用户访问一个不存在的页面是，系统将会显示此页面。这个页面将只会在其所属的网站中生效。</target>
+        <source>If a visitor requests a non-existent page, a 404 error page will be loaded instead.</source>
       </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
@@ -1108,8 +1226,7 @@
         <target>模组</target>
       </trans-unit>
       <trans-unit id="MSC.mw_column">
-        <source>Column</source>
-        <target>列</target>
+        <source>Layout section</source>
       </trans-unit>
       <trans-unit id="MSC.mw_enable">
         <source>Enable/disable the module</source>
@@ -1359,7 +1476,7 @@
         <source>This seems to be your first login. Welcome to Contao!</source>
         <target>这好像是你的第一次登录. 欢迎来到Contao!</target>
       </trans-unit>
-      <trans-unit id="MSC.loginCount">
+      <trans-unit id="MSC.loginAttempts">
         <source>Login attempts</source>
         <target>尝试登录次数</target>
       </trans-unit>
@@ -1458,10 +1575,6 @@
       <trans-unit id="MSC.homeTitle">
         <source>Back to the back end start page</source>
         <target>返回后台起始页面</target>
-      </trans-unit>
-      <trans-unit id="MSC.burgerTitle">
-        <source>Toggle navigation</source>
-        <target>切换导航</target>
       </trans-unit>
       <trans-unit id="MSC.learnMore">
         <source>Learn more on %s</source>
@@ -2443,6 +2556,30 @@
         <source>If you cannot scan the QR code, enter this key instead:</source>
         <target>如果不能扫描二维码，请输入key：</target>
       </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesLabel">
+        <source>Backup codes</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesShow">
+        <source>Show backup codes</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesExplain">
+        <source>Backup codes can be used to access your account if you have lost your authentication device and cannot generate two-factor codes anymore. Treat your backup codes with the same level of attention as your password! We recommend saving them with a password manager such as Lastpass, 1Password or Keeper.</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesInfo">
+        <source>Put the codes in a safe spot. If you lose your authentication device and do not have backup codes, you cannot access your account anymore!</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesGenerate">
+        <source>Generate backup codes</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesRegenerate">
+        <source>Regenerate backup codes</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesRegenerateInfo">
+        <source>When you regenerate the backup codes, your old codes will not work anymore.</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorTrustDevice">
+        <source>Trust this device</source>
+      </trans-unit>
       <trans-unit id="MSC.userTemplateEditor">
         <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
         <target>至少有一个普通用户可以访问模板编辑器。 由于模板是PHP文件，因此这些用户可以完全控制系统！</target>
@@ -2450,6 +2587,12 @@
       <trans-unit id="MSC.groupTemplateEditor">
         <source>There is at least one user group granting access to the template editor. Since templates are PHP files, users of these groups implicitly have full control over the system!</source>
         <target>至少有一个用户组可以访问模板编辑器。 由于模板是PHP文件，因此这些用户组的用户可以完全控制系统！</target>
+      </trans-unit>
+      <trans-unit id="MSC.userThemeImport">
+        <source>There is at least one regular user with permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, these users implicitly have full control over the system!</source>
+      </trans-unit>
+      <trans-unit id="MSC.groupThemeImport">
+        <source>There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!</source>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
@@ -2462,6 +2605,34 @@
       <trans-unit id="MSC.internalCssEditor">
         <source>The internal CSS editor has been deprecated and will be removed in one of the next Contao versions! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
         <target>下一个版本的Contao将会移除已废弃的内部CSS编辑器! 请考虑导出现有的样式表并在页面布局中以外部样式表的方式重新添加。</target>
+      </trans-unit>
+      <trans-unit id="MSC.serpPreview.0">
+        <source>Google search results preview</source>
+      </trans-unit>
+      <trans-unit id="MSC.serpPreview.1">
+        <source>Here you can preview the meta data in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
+      </trans-unit>
+      <trans-unit id="MSC.clearTrustedDevices">
+        <source>Clear trusted devices</source>
+      </trans-unit>
+      <trans-unit id="MSC.trustedDevices">
+        <source>Trusted devices</source>
+      </trans-unit>
+      <trans-unit id="MSC.noTrustedDevices">
+        <source>Currently there are no trusted devices.</source>
+      </trans-unit>
+      <trans-unit id="MSC.device">
+        <source>Device</source>
+      </trans-unit>
+      <trans-unit id="MSC.thisDevice">
+        <source>this device</source>
+      </trans-unit>
+      <trans-unit id="MSC.browser">
+        <source>Browser</source>
+        <target>浏览器</target>
+      </trans-unit>
+      <trans-unit id="MSC.operatingSystem">
+        <source>Operating system</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2666,6 +2837,15 @@
       <trans-unit id="DCA.pastenew.1">
         <source>Create a new element after element ID %s</source>
         <target>在内容元素ID %s 后创建新内容元素</target>
+      </trans-unit>
+      <trans-unit id="CRAWL.searchIndex.summary">
+        <source>Indexed %d URI(s) successfully. %d failed.</source>
+      </trans-unit>
+      <trans-unit id="CRAWL.searchIndex.warning">
+        <source>%d URI(s) were skipped (if you are missing one, checkout the debug log).</source>
+      </trans-unit>
+      <trans-unit id="CRAWL.brokenLinkChecker.summary">
+        <source>Checked %d link(s) successfully. %d were broken.</source>
       </trans-unit>
     </body>
   </file>

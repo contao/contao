@@ -16,7 +16,7 @@ use Contao\CoreBundle\EventListener\InsecureInstallationListener;
 use Contao\CoreBundle\Exception\InsecureInstallationException;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -28,7 +28,7 @@ class InsecureInstallationListenerTest extends TestCase
 
         $this->expectException(InsecureInstallationException::class);
 
-        $listener->onKernelRequest($this->getResponseEvent($this->getRequest()));
+        $listener($this->getResponseEvent($this->getRequest()));
     }
 
     public function testDoesNotThrowAnExceptionIfTheDocumentRootIsSecure(): void
@@ -38,7 +38,7 @@ class InsecureInstallationListenerTest extends TestCase
         $request->server->set('SCRIPT_FILENAME', $this->getTempDir().'/index.php');
 
         $listener = new InsecureInstallationListener();
-        $listener->onKernelRequest($this->getResponseEvent($request));
+        $listener($this->getResponseEvent($request));
 
         $this->addToAssertionCount(1);  // does not throw an exception
     }
@@ -49,7 +49,7 @@ class InsecureInstallationListenerTest extends TestCase
         $request->server->set('REMOTE_ADDR', '127.0.0.1');
 
         $listener = new InsecureInstallationListener();
-        $listener->onKernelRequest($this->getResponseEvent($request));
+        $listener($this->getResponseEvent($request));
 
         $this->addToAssertionCount(1);  // does not throw an exception
     }
@@ -65,7 +65,7 @@ class InsecureInstallationListenerTest extends TestCase
         return $request;
     }
 
-    private function getResponseEvent(Request $request = null): GetResponseEvent
+    private function getResponseEvent(Request $request = null): RequestEvent
     {
         $kernel = $this->createMock(KernelInterface::class);
 
@@ -73,6 +73,6 @@ class InsecureInstallationListenerTest extends TestCase
             $request = new Request();
         }
 
-        return new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        return new RequestEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
     }
 }

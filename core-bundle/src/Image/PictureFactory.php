@@ -69,6 +69,9 @@ class PictureFactory implements PictureFactoryInterface
      */
     private $predefinedSizes = [];
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.image.picture_factory" service instead
+     */
     public function __construct(PictureGeneratorInterface $pictureGenerator, ImageFactoryInterface $imageFactory, ContaoFramework $framework, bool $bypassCache, array $imagineOptions)
     {
         $this->pictureGenerator = $pictureGenerator;
@@ -78,9 +81,6 @@ class PictureFactory implements PictureFactoryInterface
         $this->imagineOptions = $imagineOptions;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setDefaultDensities($densities): self
     {
         $this->defaultDensities = (string) $densities;
@@ -96,9 +96,6 @@ class PictureFactory implements PictureFactoryInterface
         $this->predefinedSizes = $predefinedSizes;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function create($path, $size = null, ResizeOptions $options = null): PictureInterface
     {
         $attributes = [];
@@ -148,7 +145,7 @@ class PictureFactory implements PictureFactoryInterface
      *
      * @param int|array|null $size
      *
-     * @return (PictureConfiguration|array<string,string>|ResizeOptions|null)[]
+     * @return array<(PictureConfiguration|array<string, string>|ResizeOptions|null)>
      */
     private function createConfig($size): array
     {
@@ -167,7 +164,7 @@ class PictureFactory implements PictureFactoryInterface
                 $imageSizeModel = $this->framework->getAdapter(ImageSizeModel::class);
                 $imageSizes = $imageSizeModel->findByPk($size[2]);
 
-                $config->setSize($this->createConfigItem((null !== $imageSizes) ? $imageSizes->row() : null));
+                $config->setSize($this->createConfigItem(null !== $imageSizes ? $imageSizes->row() : null));
 
                 if (null !== $imageSizes) {
                     $options->setSkipIfDimensionsMatch((bool) $imageSizes->skipIfDimensionsMatch);
@@ -190,8 +187,14 @@ class PictureFactory implements PictureFactoryInterface
                     ));
                 }
 
-                if ($imageSizes && $imageSizes->cssClass) {
-                    $attributes['class'] = $imageSizes->cssClass;
+                if ($imageSizes) {
+                    if ($imageSizes->cssClass) {
+                        $attributes['class'] = $imageSizes->cssClass;
+                    }
+
+                    if ($imageSizes->lazyLoading) {
+                        $attributes['loading'] = 'lazy';
+                    }
                 }
 
                 if (!\array_key_exists($size[2], $this->imageSizeItemsCache)) {
@@ -200,6 +203,7 @@ class PictureFactory implements PictureFactoryInterface
                     $this->imageSizeItemsCache[$size[2]] = $adapter->findVisibleByPid($size[2], ['order' => 'sorting ASC']);
                 }
 
+                /** @var array<ImageSizeItemModel> $imageSizeItems */
                 $imageSizeItems = $this->imageSizeItemsCache[$size[2]];
 
                 if (null !== $imageSizeItems) {
@@ -224,8 +228,12 @@ class PictureFactory implements PictureFactoryInterface
                 $config->setFormats($imageSizes['formats'] ?? []);
                 $options->setSkipIfDimensionsMatch($imageSizes['skipIfDimensionsMatch'] ?? false);
 
-                if ($imageSizes && isset($imageSizes['cssClass']) && $imageSizes['cssClass']) {
+                if (!empty($imageSizes['cssClass'])) {
                     $attributes['class'] = $imageSizes['cssClass'];
+                }
+
+                if (!empty($imageSizes['lazyLoading'])) {
+                    $attributes['loading'] = 'lazy';
                 }
 
                 if (\count($imageSizes['items']) > 0) {
@@ -351,8 +359,8 @@ class PictureFactory implements PictureFactoryInterface
                 return false;
             }
 
-            $diffA = abs(($img['width'] / $img['height']) / ($source['width'] / $source['height']) - 1);
-            $diffB = abs(($img['height'] / $img['width']) / ($source['height'] / $source['width']) - 1);
+            $diffA = abs($img['width'] / $img['height'] / ($source['width'] / $source['height']) - 1);
+            $diffB = abs($img['height'] / $img['width'] / ($source['height'] / $source['width']) - 1);
 
             if ($diffA > self::ASPECT_RATIO_THRESHOLD && $diffB > self::ASPECT_RATIO_THRESHOLD) {
                 return false;

@@ -363,15 +363,12 @@ abstract class Widget extends Controller
 		{
 			case 'id':
 				return $this->strId;
-				break;
 
 			case 'name':
 				return $this->strName;
-				break;
 
 			case 'label':
 				return $this->strLabel;
-				break;
 
 			case 'value':
 				// Encrypt the value
@@ -386,39 +383,30 @@ abstract class Widget extends Controller
 				}
 
 				return $this->varValue;
-				break;
 
 			case 'class':
 				return $this->strClass;
-				break;
 
 			case 'prefix':
 				return $this->strPrefix;
-				break;
 
 			case 'template':
 				return $this->strTemplate;
-				break;
 
 			case 'wizard':
 				return $this->strWizard;
-				break;
 
 			case 'required':
 				return $this->arrConfiguration[$strKey];
-				break;
 
 			case 'forAttribute':
 				return $this->blnForAttribute;
-				break;
 
 			case 'dataContainer':
 				return $this->objDca;
-				break;
 
 			case 'activeRecord':
 				return $this->objDca->activeRecord;
-				break;
 
 			default:
 				if (isset($this->arrAttributes[$strKey]))
@@ -449,51 +437,39 @@ abstract class Widget extends Controller
 		{
 			case 'id':
 				return isset($this->strId);
-				break;
 
 			case 'name':
 				return isset($this->strName);
-				break;
 
 			case 'label':
 				return isset($this->strLabel);
-				break;
 
 			case 'value':
 				return isset($this->varValue);
-				break;
 
 			case 'class':
 				return isset($this->strClass);
-				break;
 
 			case 'template':
 				return isset($this->strTemplate);
-				break;
 
 			case 'wizard':
 				return isset($this->strWizard);
-				break;
 
 			case 'required':
 				return isset($this->arrConfiguration[$strKey]);
-				break;
 
 			case 'forAttribute':
 				return isset($this->blnForAttribute);
-				break;
 
 			case 'dataContainer':
 				return isset($this->objDca);
-				break;
 
 			case 'activeRecord':
 				return isset($this->objDca->activeRecord);
-				break;
 
 			default:
 				return isset($this->arrAttributes[$strKey]) || isset($this->arrConfiguration[$strKey]);
-				break;
 		}
 	}
 
@@ -983,6 +959,7 @@ abstract class Widget extends Controller
 					break;
 
 				case 'emails':
+					// Check whether the current value is list of valid e-mail addresses
 					$arrEmails = StringUtil::trimsplit(',', $varInput);
 
 					foreach ($arrEmails as $strEmail)
@@ -1289,7 +1266,7 @@ abstract class Widget extends Controller
 		}
 
 		// Add Ajax event
-		if ($arrData['inputType'] == 'checkbox' && \is_array($GLOBALS['TL_DCA'][$strTable]['subpalettes']) && \array_key_exists($strField, $GLOBALS['TL_DCA'][$strTable]['subpalettes']) && $arrData['eval']['submitOnChange'])
+		if ($arrData['inputType'] == 'checkbox' && $arrData['eval']['submitOnChange'] && \is_array($GLOBALS['TL_DCA'][$strTable]['subpalettes']) && \array_key_exists($strField, $GLOBALS['TL_DCA'][$strTable]['subpalettes']))
 		{
 			$arrAttributes['onclick'] = "AjaxRequest.toggleSubpalette(this, 'sub_" . $strName . "', '" . $strField . "')";
 		}
@@ -1363,12 +1340,12 @@ abstract class Widget extends Controller
 
 		if (\is_array($arrAttributes['sql']) && !isset($arrAttributes['sql']['columnDefinition']))
 		{
-			if (isset($arrAttributes['sql']['length']) && !isset($arrAttributes['maxlength']))
+			if (!isset($arrAttributes['maxlength']) && isset($arrAttributes['sql']['length']))
 			{
 				$arrAttributes['maxlength'] = $arrAttributes['sql']['length'];
 			}
 
-			if (isset($arrAttributes['sql']['customSchemaOptions']['unique']) && !isset($arrAttributes['unique']))
+			if (!isset($arrAttributes['unique']) && isset($arrAttributes['sql']['customSchemaOptions']['unique']))
 			{
 				$arrAttributes['unique'] = $arrAttributes['sql']['customSchemaOptions']['unique'];
 			}

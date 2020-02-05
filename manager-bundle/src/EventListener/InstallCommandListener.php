@@ -16,6 +16,9 @@ use Contao\CoreBundle\Command\InstallCommand;
 use Symfony\Component\Console\Event\ConsoleTerminateEvent;
 use Symfony\Component\Filesystem\Filesystem;
 
+/**
+ * @internal
+ */
 class InstallCommandListener
 {
     /**
@@ -31,7 +34,7 @@ class InstallCommandListener
     /**
      * Adds the initialize.php file.
      */
-    public function onConsoleTerminate(ConsoleTerminateEvent $event): void
+    public function __invoke(ConsoleTerminateEvent $event): void
     {
         if (!$event->getCommand() instanceof InstallCommand) {
             return;

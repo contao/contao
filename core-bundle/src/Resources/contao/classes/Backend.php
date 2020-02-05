@@ -14,6 +14,9 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\Database\Result;
+use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
@@ -150,45 +153,36 @@ abstract class Backend extends Controller
 			case 'xml':
 			case 'yaml':
 				return $ext;
-				break;
 
 			case 'js':
 			case 'javascript':
 				return 'javascript';
-				break;
 
 			case 'md':
 			case 'markdown':
 				return 'markdown';
-				break;
 
 			case 'cgi':
 			case 'pl':
 				return 'perl';
-				break;
 
 			case 'py':
 				return 'python';
-				break;
 
 			case 'c': case 'cc': case 'cpp': case 'c++':
 			case 'h': case 'hh': case 'hpp': case 'h++':
 				return 'c_cpp';
-				break;
 
 			case 'html5':
 			case 'xhtml':
 				return 'php';
-				break;
 
 			case 'svg':
 			case 'svgz':
 				return 'xml';
-				break;
 
 			default:
 				return 'text';
-				break;
 		}
 	}
 
@@ -272,6 +266,30 @@ abstract class Backend extends Controller
 			}
 
 			System::log("File $strRelpath ran once and has then been removed successfully", __METHOD__, TL_GENERAL);
+		}
+
+		$appDir = System::getContainer()->getParameter('kernel.project_dir') . '/app';
+
+		if (!is_dir($appDir))
+		{
+			return;
+		}
+
+		$finder = Finder::create()->files()->in($appDir);
+
+		// Do not remove the app folder if there are still files in it
+		if ($finder->hasResults())
+		{
+			return;
+		}
+
+		try
+		{
+			(new Filesystem())->remove($appDir);
+		}
+		catch (IOException $e)
+		{
+			// ignore
 		}
 	}
 
@@ -368,17 +386,14 @@ abstract class Backend extends Controller
 			{
 				foreach ($GLOBALS['TL_DCA'][$strTable]['fields'] as $k=>$v)
 				{
-					if ($v['exclude'])
+					if ($v['exclude'] && $this->User->hasAccess($strTable . '::' . $k, 'alexf'))
 					{
-						if ($this->User->hasAccess($strTable . '::' . $k, 'alexf'))
+						if ($strTable == 'tl_user_group')
 						{
-							if ($strTable == 'tl_user_group')
-							{
-								$GLOBALS['TL_DCA'][$strTable]['fields'][$k]['orig_exclude'] = $GLOBALS['TL_DCA'][$strTable]['fields'][$k]['exclude'];
-							}
-
-							$GLOBALS['TL_DCA'][$strTable]['fields'][$k]['exclude'] = false;
+							$GLOBALS['TL_DCA'][$strTable]['fields'][$k]['orig_exclude'] = $GLOBALS['TL_DCA'][$strTable]['fields'][$k]['exclude'];
 						}
+
+						$GLOBALS['TL_DCA'][$strTable]['fields'][$k]['exclude'] = false;
 					}
 				}
 			}
@@ -503,7 +518,7 @@ abstract class Backend extends Controller
 
 				$pid = $dc->id;
 				$table = $strTable;
-				$ptable = (Input::get('act') != 'edit') ? $GLOBALS['TL_DCA'][$strTable]['config']['ptable'] : $strTable;
+				$ptable = ($act != 'edit') ? $GLOBALS['TL_DCA'][$strTable]['config']['ptable'] : $strTable;
 
 				while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'], array(5, 6)))
 				{
@@ -557,72 +572,71 @@ abstract class Backend extends Controller
 				}
 			}
 
+			$do = Input::get('do');
+
 			// Add the current action
-			if (Input::get('act') == 'editAll')
+			if ($act == 'editAll')
 			{
 				if (isset($GLOBALS['TL_LANG']['MSC']['all'][0]))
 				{
 					$this->Template->headline .= ' › <span>' . $GLOBALS['TL_LANG']['MSC']['all'][0] . '</span>';
 				}
 			}
-			elseif (Input::get('act') == 'overrideAll')
+			elseif ($act == 'overrideAll')
 			{
 				if (isset($GLOBALS['TL_LANG']['MSC']['all_override'][0]))
 				{
 					$this->Template->headline .= ' › <span>' . $GLOBALS['TL_LANG']['MSC']['all_override'][0] . '</span>';
 				}
 			}
-			else
+			elseif (Input::get('id'))
 			{
-				if (Input::get('id'))
+				if ($do == 'files' || $do == 'tpl_editor')
 				{
-					if (Input::get('do') == 'files' || Input::get('do') == 'tpl_editor')
+					// Handle new folders (see #7980)
+					if (strpos(Input::get('id'), '__new__') !== false)
 					{
-						// Handle new folders (see #7980)
-						if (strpos(Input::get('id'), '__new__') !== false)
-						{
-							$this->Template->headline .= ' › <span>' . \dirname(Input::get('id')) . '</span> › <span>' . $GLOBALS['TL_LANG'][$strTable]['new'][1] . '</span>';
-						}
-						else
-						{
-							$this->Template->headline .= ' › <span>' . Input::get('id') . '</span>';
-						}
+						$this->Template->headline .= ' › <span>' . \dirname(Input::get('id')) . '</span> › <span>' . $GLOBALS['TL_LANG'][$strTable]['new'][1] . '</span>';
 					}
-					elseif (isset($GLOBALS['TL_LANG'][$strTable][$act]))
+					else
 					{
-						if (\is_array($GLOBALS['TL_LANG'][$strTable][$act]))
-						{
-							$this->Template->headline .= ' › <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], Input::get('id')) . '</span>';
-						}
-						else
-						{
-							$this->Template->headline .= ' › <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act], Input::get('id')) . '</span>';
-						}
+						$this->Template->headline .= ' › <span>' . Input::get('id') . '</span>';
 					}
 				}
-				elseif (Input::get('pid'))
+				elseif (isset($GLOBALS['TL_LANG'][$strTable][$act]))
 				{
-					if (Input::get('do') == 'files' || Input::get('do') == 'tpl_editor')
+					if (\is_array($GLOBALS['TL_LANG'][$strTable][$act]))
 					{
-						if (Input::get('act') == 'move')
-						{
-							$this->Template->headline .= ' › <span>' . Input::get('pid') . '</span> › <span>' . $GLOBALS['TL_LANG'][$strTable]['move'][1] . '</span>';
-						}
-						else
-						{
-							$this->Template->headline .= ' › <span>' . Input::get('pid') . '</span>';
-						}
+						$this->Template->headline .= ' › <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], Input::get('id')) . '</span>';
 					}
-					elseif (isset($GLOBALS['TL_LANG'][$strTable][$act]))
+					else
 					{
-						if (\is_array($GLOBALS['TL_LANG'][$strTable][$act]))
-						{
-							$this->Template->headline .= ' › <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], Input::get('pid')) . '</span>';
-						}
-						else
-						{
-							$this->Template->headline .= ' › <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act], Input::get('pid')) . '</span>';
-						}
+						$this->Template->headline .= ' › <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act], Input::get('id')) . '</span>';
+					}
+				}
+			}
+			elseif (Input::get('pid'))
+			{
+				if ($do == 'files' || $do == 'tpl_editor')
+				{
+					if ($act == 'move')
+					{
+						$this->Template->headline .= ' › <span>' . Input::get('pid') . '</span> › <span>' . $GLOBALS['TL_LANG'][$strTable]['move'][1] . '</span>';
+					}
+					else
+					{
+						$this->Template->headline .= ' › <span>' . Input::get('pid') . '</span>';
+					}
+				}
+				elseif (isset($GLOBALS['TL_LANG'][$strTable][$act]))
+				{
+					if (\is_array($GLOBALS['TL_LANG'][$strTable][$act]))
+					{
+						$this->Template->headline .= ' › <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], Input::get('pid')) . '</span>';
+					}
+					else
+					{
+						$this->Template->headline .= ' › <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act], Input::get('pid')) . '</span>';
 					}
 				}
 			}
@@ -714,28 +728,25 @@ abstract class Backend extends Controller
 		{
 			$objPage = PageModel::findOneBy(array('tl_page.id=(SELECT pid FROM tl_article WHERE id=?)'), $intPid);
 		}
-		else
+		elseif (isset($GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest']) && \is_array($GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest']))
 		{
 			// HOOK: support custom modules
-			if (isset($GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest']) && \is_array($GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest']))
+			foreach ($GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest'] as $callback)
 			{
-				foreach ($GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest'] as $callback)
+				if (($val = System::importStatic($callback[0])->{$callback[1]}($strPtable, $intPid)) !== false)
 				{
-					if (($val = System::importStatic($callback[0])->{$callback[1]}($strPtable, $intPid)) !== false)
-					{
-						$objPage = $val;
-					}
+					$objPage = $val;
 				}
+			}
 
-				if ($objPage instanceof Result && $objPage->numRows < 1)
-				{
-					return;
-				}
+			if ($objPage instanceof Result && $objPage->numRows < 1)
+			{
+				return;
+			}
 
-				if (\is_object($objPage) && !($objPage instanceof PageModel))
-				{
-					$objPage = PageModel::findByPk($objPage->id);
-				}
+			if (\is_object($objPage) && !($objPage instanceof PageModel))
+			{
+				$objPage = PageModel::findByPk($objPage->id);
 			}
 		}
 

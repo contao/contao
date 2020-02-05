@@ -111,7 +111,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.start.1">
         <source>In case the sending process is interrupted, you can enter a numeric offset here to continue with a particular recipient. You can check how many mails have been sent by selecting the category &lt;code&gt;NEWSLETTER_%s&lt;/code&gt; in the system log. If there are 120 entries, enter &quot;120&quot; to continue with the 121st recipient (counting starts at 0).</source>
-        <target>Hvis afsendelsen bliver afbrudt, kan du vælge hvorfra en ny udsendelse skal starte. Du kan se hvor mange mail, der er blevet afsendt ved at vælge kategorien &lt;code&gt;1NEWSLETTER_%s&lt;/code&gt; i system log. Hvis der f.eks. er 120 emner, indtaster du &quot;120&quot; her, for at starte med med at udsende til modtager nummer 121 (tælleren starter ved 0).</target>
+        <target>Hvis afsendelsen bliver afbrudt, kan du vælge hvorfra en ny afsendelse skal starte. Du kan se hvor mange mail, der er blevet afsendt ved at vælge kategorien &lt;code&gt;1NEWSLETTER_%s&lt;/code&gt; i system log. Hvis der f.eks. er 120 emner, indtaster du &quot;120&quot; her, for at starte med med at udsende til modtager nummer 121 (tælleren starter ved 0).</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendPreviewTo.0">
         <source>Send preview to</source>

@@ -264,12 +264,10 @@
         <target>Šeit jūs varat izvēlēties veidni meklēšanas rezultātiem.</target>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.0">
-        <source>Column</source>
-        <target>Kolonna</target>
+        <source>Layout section</source>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.1">
-        <source>Please choose the column whose articles you want to list.</source>
-        <target>Lūdzu izvēlēties kolonnu, kuras ierakstus vēlaties apskatīt.</target>
+        <source>Please choose the layout section whose articles you want to list.</source>
       </trans-unit>
       <trans-unit id="tl_module.skipFirst.0">
         <source>Skip items</source>

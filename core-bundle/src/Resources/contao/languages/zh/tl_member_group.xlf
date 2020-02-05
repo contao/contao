@@ -38,16 +38,14 @@
         <target>此时激活</target>
       </trans-unit>
       <trans-unit id="tl_member_group.start.1">
-        <source>Automatically activate the group on this day.</source>
-        <target>在这一天自动激活用户组。</target>
+        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_member_group.stop.0">
         <source>Deactivate on</source>
         <target>此时不激活</target>
       </trans-unit>
       <trans-unit id="tl_member_group.stop.1">
-        <source>Automatically deactivate the group on this day.</source>
-        <target>在这一天自动使用户组不可用。</target>
+        <source>If you want to prevent the group from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_member_group.title_legend">
         <source>Title</source>
@@ -57,9 +55,8 @@
         <source>Auto-redirect</source>
         <target>自动重定向</target>
       </trans-unit>
-      <trans-unit id="tl_member_group.disable_legend">
-        <source>Account settings</source>
-        <target>账户设定</target>
+      <trans-unit id="tl_member_group.account_legend">
+        <source>Group settings</source>
       </trans-unit>
       <trans-unit id="tl_member_group.new.0">
         <source>New</source>

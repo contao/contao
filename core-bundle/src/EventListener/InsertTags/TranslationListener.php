@@ -12,8 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\InsertTags;
 
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @internal
+ */
 class TranslationListener
 {
     /**

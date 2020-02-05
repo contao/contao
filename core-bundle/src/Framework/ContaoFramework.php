@@ -27,11 +27,12 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Contracts\Service\ResetInterface;
 
 /**
- * @internal Do not instantiate this class in your code; use the "contao.framework" service instead
+ * @internal Do not use this class in your code; use the "contao.framework" service instead
  */
-class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterface
+class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterface, ResetInterface
 {
     use ContainerAwareTrait;
 
@@ -94,17 +95,18 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         $this->errorLevel = $errorLevel;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    public function reset(): void
+    {
+        $this->adapterCache = [];
+        $this->isFrontend = false;
+    }
+
     public function isInitialized(): bool
     {
         return self::$initialized;
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @throws \LogicException
      */
     public function initialize(bool $isFrontend = false): void
@@ -132,9 +134,6 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         $this->hookListeners = $hookListeners;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function createInstance($class, $args = [])
     {
         if (\in_array('getInstance', get_class_methods($class), true)) {
@@ -146,9 +145,6 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         return $reflection->newInstanceArgs($args);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getAdapter($class): Adapter
     {
         if (!isset($this->adapterCache[$class])) {

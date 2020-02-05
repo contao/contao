@@ -39,9 +39,6 @@ class ManagerConfigTest extends ContaoTestCase
      */
     private $config;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -52,9 +49,6 @@ class ManagerConfigTest extends ContaoTestCase
         $this->config = new ManagerConfig($this->tempdir);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function tearDown(): void
     {
         parent::tearDown();

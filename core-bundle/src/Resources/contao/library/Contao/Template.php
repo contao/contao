@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use MatthiasMullie\Minify;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\VarDumper\VarDumper;
@@ -51,6 +52,11 @@ use Symfony\Component\VarDumper\VarDumper;
  * @property string       $scan
  * @property string       $verify
  * @property string       $verifyHelp
+ * @property boolean      $showBackupCodes
+ * @property array        $backupCodes
+ * @property boolean      $trustedDevicesEnabled
+ * @property array        $trustedDevices
+ * @property string       $currentDevice
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -318,6 +324,10 @@ abstract class Template extends Controller
 		$response = new Response($this->strBuffer);
 		$response->headers->set('Content-Type', $this->strContentType . '; charset=' . Config::get('characterSet'));
 
+		// Mark this response to affect the caching of the current page but remove any default cache headers
+		$response->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, true);
+		$response->headers->remove('Cache-Control');
+
 		return $response;
 	}
 
@@ -395,6 +405,18 @@ abstract class Template extends Controller
 
 		// Contao paths are relative to the <base> tag, so remove leading slashes
 		return ltrim($url, '/');
+	}
+
+	/**
+	 * Returns a container parameter
+	 *
+	 * @param string $strKey
+	 *
+	 * @return mixed
+	 */
+	public function param($strKey)
+	{
+		return System::getContainer()->getParameter($strKey);
 	}
 
 	/**
@@ -575,15 +597,16 @@ abstract class Template extends Controller
 	/**
 	 * Generate the markup for a JavaScript tag
 	 *
-	 * @param string      $src         The script path
-	 * @param boolean     $async       True to add the async attribute
-	 * @param mixed       $mtime       The file mtime
-	 * @param string|null $hash        An optional integrity hash
-	 * @param string|null $crossorigin An optional crossorigin attribute
+	 * @param string      $src            The script path
+	 * @param boolean     $async          True to add the async attribute
+	 * @param mixed       $mtime          The file mtime
+	 * @param string|null $hash           An optional integrity hash
+	 * @param string|null $crossorigin    An optional crossorigin attribute
+	 * @param string|null $referrerpolicy An optional referrerpolicy attribute
 	 *
 	 * @return string The markup string
 	 */
-	public static function generateScriptTag($src, $async=false, $mtime=false, $hash=null, $crossorigin=null)
+	public static function generateScriptTag($src, $async=false, $mtime=false, $hash=null, $crossorigin=null, $referrerpolicy=null)
 	{
 		// Add the filemtime if not given and not an external file
 		if ($mtime === null && !preg_match('@^https?://@', $src))
@@ -612,7 +635,7 @@ abstract class Template extends Controller
 			$src .= '?v=' . substr(md5($mtime), 0, 8);
 		}
 
-		return '<script src="' . $src . '"' . ($async ? ' async' : '') . ($hash ? ' integrity="' . $hash . '"' : '') . ($crossorigin ? ' crossorigin="' . $crossorigin . '"' : '') . '></script>';
+		return '<script src="' . $src . '"' . ($async ? ' async' : '') . ($hash ? ' integrity="' . $hash . '"' : '') . ($crossorigin ? ' crossorigin="' . $crossorigin . '"' : '') . ($referrerpolicy ? ' referrerpolicy="' . $referrerpolicy . '"' : '') . '></script>';
 	}
 
 	/**

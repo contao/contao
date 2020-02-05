@@ -14,7 +14,6 @@ namespace Contao\InstallationBundle\Controller;
 
 use Contao\Environment;
 use Contao\InstallationBundle\Config\ParameterDumper;
-use Contao\InstallationBundle\Database\AbstractVersionUpdate;
 use Contao\InstallationBundle\Database\ConnectionFactory;
 use Contao\InstallationBundle\Event\ContaoInstallationEvents;
 use Contao\InstallationBundle\Event\InitializeApplicationEvent;
@@ -32,6 +31,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/contao", defaults={"_scope" = "backend", "_token_check" = true})
+ *
+ * @internal
  */
 class InstallationController implements ContainerAwareInterface
 {
@@ -116,7 +117,7 @@ class InstallationController implements ContainerAwareInterface
     {
         $event = new InitializeApplicationEvent();
 
-        $this->container->get('event_dispatcher')->dispatch(ContaoInstallationEvents::INITIALIZE_APPLICATION, $event);
+        $this->container->get('event_dispatcher')->dispatch($event, ContaoInstallationEvents::INITIALIZE_APPLICATION);
 
         if ($event->hasOutput()) {
             return $this->render('initialize.html.twig', [
@@ -248,7 +249,7 @@ class InstallationController implements ContainerAwareInterface
         $ref = new \ReflectionObject($this->container);
         $containerDir = basename(\dirname($ref->getFileName()));
 
-        /** @var SplFileInfo[] $finder */
+        /** @var array<SplFileInfo> $finder */
         $finder = Finder::create()
             ->depth(0)
             ->exclude($containerDir)
@@ -317,18 +318,8 @@ class InstallationController implements ContainerAwareInterface
             return $this->render('misconfigured_database_url.html.twig');
         }
 
-        $parameters = [
-            'parameters' => [
-                'database_host' => $this->getContainerParameter('database_host'),
-                'database_port' => $this->getContainerParameter('database_port'),
-                'database_user' => $this->getContainerParameter('database_user'),
-                'database_password' => $this->getContainerParameter('database_password'),
-                'database_name' => $this->getContainerParameter('database_name'),
-            ],
-        ];
-
         if ('tl_database_login' !== $request->request->get('FORM_SUBMIT')) {
-            return $this->render('database.html.twig', $parameters);
+            return $this->render('database.html.twig');
         }
 
         $parameters = [
@@ -336,14 +327,10 @@ class InstallationController implements ContainerAwareInterface
                 'database_host' => $request->request->get('dbHost'),
                 'database_port' => $request->request->get('dbPort'),
                 'database_user' => $request->request->get('dbUser'),
-                'database_password' => $this->getContainerParameter('database_password'),
+                'database_password' => $request->request->get('dbPassword') ?: null,
                 'database_name' => $request->request->get('dbName'),
             ],
         ];
-
-        if ('*****' !== $request->request->get('dbPassword')) {
-            $parameters['parameters']['database_password'] = $request->request->get('dbPassword');
-        }
 
         if (false !== strpos($parameters['parameters']['database_name'], '.')) {
             return $this->render('database.html.twig', array_merge(
@@ -373,40 +360,10 @@ class InstallationController implements ContainerAwareInterface
 
     private function runDatabaseUpdates(): void
     {
-        if ($this->container->get('contao.install_tool')->isFreshInstallation()) {
-            return;
-        }
-
-        /** @var SplFileInfo[] $finder */
-        $finder = Finder::create()
-            ->files()
-            ->name('Version*Update.php')
-            ->sortByName()
-            ->in(__DIR__.'/../Database')
-        ;
-
-        $messages = [];
-
-        foreach ($finder as $file) {
-            $class = 'Contao\InstallationBundle\Database\\'.$file->getBasename('.php');
-
-            /** @var AbstractVersionUpdate $update */
-            $update = new $class($this->container->get('database_connection'));
-
-            if ($update instanceof AbstractVersionUpdate) {
-                $update->setContainer($this->container);
-
-                if ($update->shouldBeRun()) {
-                    $update->run();
-                }
-
-                if ($message = $update->getMessage()) {
-                    $messages[] = $message;
-                }
-            }
-        }
-
-        $this->context['sql_message'] = implode('', $messages);
+        $this->context['sql_message'] = implode(
+            '<br>',
+            array_map('htmlspecialchars', $this->container->get('contao.install_tool')->runMigrations())
+        );
     }
 
     /**

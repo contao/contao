@@ -531,6 +531,24 @@ class RouteProviderTest extends TestCase
     }
 
     /**
+     * @return Adapter&MockObject
+     */
+    private function mockConfigAdapter(array $config): Adapter
+    {
+        $configAdapter = $this->mockAdapter(['get']);
+        $configAdapter
+            ->method('get')
+            ->willReturnCallback(
+                static function ($param) use ($config) {
+                    return $config[$param] ?? null;
+                }
+            )
+        ;
+
+        return $configAdapter;
+    }
+
+    /**
      * @return Request&MockObject
      */
     private function mockRequestWithPath(string $path, array $languages = ['en']): Request
@@ -555,24 +573,6 @@ class RouteProviderTest extends TestCase
     private function mockFramework(Adapter $pageAdapter = null, Adapter $configAdapter = null): ContaoFramework
     {
         return $this->mockContaoFramework([PageModel::class => $pageAdapter, Config::class => $configAdapter]);
-    }
-
-    /**
-     * @return Adapter&MockObject
-     */
-    private function mockConfigAdapter(array $config): Adapter
-    {
-        $configAdapter = $this->mockAdapter(['get']);
-        $configAdapter
-            ->method('get')
-            ->willReturnCallback(
-                static function ($param) use ($config) {
-                    return $config[$param] ?? null;
-                }
-            )
-        ;
-
-        return $configAdapter;
     }
 
     /**

@@ -35,13 +35,11 @@ class Automator extends System
 	 */
 	public function purgeSearchTables()
 	{
-		$objDatabase = Database::getInstance();
+		// Clear the index
+		$container = System::getContainer();
+		$container->get('contao.search.indexer')->clear();
 
-		// Truncate the tables
-		$objDatabase->execute("TRUNCATE TABLE tl_search");
-		$objDatabase->execute("TRUNCATE TABLE tl_search_index");
-
-		$strCachePath = StringUtil::stripRootDir(System::getContainer()->getParameter('kernel.cache_dir'));
+		$strCachePath = StringUtil::stripRootDir($container->getParameter('kernel.cache_dir'));
 
 		// Purge the cache folder
 		$objFolder = new Folder($strCachePath . '/contao/search');
@@ -91,6 +89,20 @@ class Automator extends System
 
 		// Add a log entry
 		$this->log('Purged the system log', __METHOD__, TL_CRON);
+	}
+
+	/**
+	 * Purge the crawl queue
+	 */
+	public function purgeCrawlQueue()
+	{
+		$objDatabase = Database::getInstance();
+
+		// Truncate the table
+		$objDatabase->execute("TRUNCATE TABLE tl_crawl_queue");
+
+		// Add a log entry
+		$this->log('Purged the crawl queue', __METHOD__, TL_CRON);
 	}
 
 	/**

@@ -266,12 +266,12 @@
         <target>検索結果のテンプレートを選択します。</target>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.0">
-        <source>Column</source>
-        <target>列</target>
+        <source>Layout section</source>
+        <target>レイアウトセクション</target>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.1">
-        <source>Please choose the column whose articles you want to list.</source>
-        <target>アーティクルをリストしたい列を選択してください。</target>
+        <source>Please choose the layout section whose articles you want to list.</source>
+        <target>アーティクルを一覧したいレイアウトセクションを洗濯してください。</target>
       </trans-unit>
       <trans-unit id="tl_module.skipFirst.0">
         <source>Skip items</source>

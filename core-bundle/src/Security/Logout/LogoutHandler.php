@@ -22,9 +22,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Logout\LogoutHandlerInterface;
+use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 class LogoutHandler implements LogoutHandlerInterface
 {
+    use TargetPathTrait;
+
     /**
      * @var ContaoFramework
      */
@@ -35,17 +38,21 @@ class LogoutHandler implements LogoutHandlerInterface
      */
     private $logger;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.security.logout_handler" service instead
+     */
     public function __construct(ContaoFramework $framework, LoggerInterface $logger = null)
     {
         $this->framework = $framework;
         $this->logger = $logger;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function logout(Request $request, Response $response, TokenInterface $token): void
     {
+        if ($request->hasSession() && method_exists($token, 'getProviderKey')) {
+            $this->removeTargetPath($request->getSession(), $token->getProviderKey());
+        }
+
         $user = $token->getUser();
 
         if (!$user instanceof User || $token instanceof TwoFactorTokenInterface) {

@@ -22,9 +22,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class WidgetTest extends TestCase
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -132,7 +129,7 @@ class WidgetTest extends TestCase
         $widget = $this
             ->getMockBuilder(Widget::class)
             ->disableOriginalConstructor()
-            ->setMethods(['validator'])
+            ->onlyMethods(['validator'])
             ->getMockForAbstractClass()
         ;
 
@@ -168,6 +165,6 @@ class WidgetTest extends TestCase
         $widget
             ->setInputCallback()
             ->validate() // getPost() should be called once here
-        ;
+;
     }
 }

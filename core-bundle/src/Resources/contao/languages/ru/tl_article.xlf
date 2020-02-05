@@ -126,16 +126,16 @@
         <target>Публиковать с</target>
       </trans-unit>
       <trans-unit id="tl_article.start.1">
-        <source>Do not show the article on the website before this day.</source>
-        <target>Не показывать статью на веб-сайте до этого дня.</target>
+        <source>If you want to prevent the article from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Если хотите запретить показ статьи на веб-сайте до определенной даты/времени, введите её здесь. В противном случае оставьте поле пустым.</target>
       </trans-unit>
       <trans-unit id="tl_article.stop.0">
         <source>Show until</source>
         <target>Публиковать до</target>
       </trans-unit>
       <trans-unit id="tl_article.stop.1">
-        <source>Do not show the article on the website on and after this day.</source>
-        <target>Не показывать статью на веб-сайте после этого дня.</target>
+        <source>If you want to prevent the article from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Если хотите запретить показ статьи на веб-сайте после определенной даты/времени, введите её здесь. В противном случае оставьте поле пустым.</target>
       </trans-unit>
       <trans-unit id="tl_article.tstamp.0">
         <source>Revision date</source>

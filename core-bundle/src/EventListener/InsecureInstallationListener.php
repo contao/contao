@@ -13,8 +13,11 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Exception\InsecureInstallationException;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 
+/**
+ * @internal
+ */
 class InsecureInstallationListener
 {
     /**
@@ -22,7 +25,7 @@ class InsecureInstallationListener
      *
      * @throws InsecureInstallationException
      */
-    public function onKernelRequest(GetResponseEvent $event): void
+    public function __invoke(RequestEvent $event): void
     {
         $request = $event->getRequest();
 

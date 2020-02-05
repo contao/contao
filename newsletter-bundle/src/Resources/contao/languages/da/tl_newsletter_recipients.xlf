@@ -11,7 +11,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.active.0">
         <source>Activate recipient</source>
-        <target>Aktiver modtager</target>
+        <target>Aktiveret</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.active.1">
         <source>Recipients are usually activated automatically (double-opt-in).</source>

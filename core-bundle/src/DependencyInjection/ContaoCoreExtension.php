@@ -12,10 +12,15 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection;
 
+use Contao\CoreBundle\Crawl\Escargot\Subscriber\EscargotSubscriberInterface;
+use Contao\CoreBundle\EventListener\SearchIndexListener;
+use Contao\CoreBundle\Migration\MigrationInterface;
 use Contao\CoreBundle\Picker\PickerProviderInterface;
+use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Imagine\Exception\RuntimeException;
 use Imagine\Gd\Imagine;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
@@ -23,17 +28,11 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class ContaoCoreExtension extends Extension
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getAlias(): string
     {
         return 'contao';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getConfiguration(array $config, ContainerBuilder $container): Configuration
     {
         return new Configuration(
@@ -42,9 +41,6 @@ class ContaoCoreExtension extends Extension
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration(
@@ -62,12 +58,14 @@ class ContaoCoreExtension extends Extension
         $loader->load('commands.yml');
         $loader->load('listener.yml');
         $loader->load('services.yml');
+        $loader->load('migrations.yml');
 
         $container->setParameter('contao.web_dir', $config['web_dir']);
         $container->setParameter('contao.prepend_locale', $config['prepend_locale']);
         $container->setParameter('contao.encryption_key', $config['encryption_key']);
         $container->setParameter('contao.url_suffix', $config['url_suffix']);
         $container->setParameter('contao.upload_path', $config['upload_path']);
+        $container->setParameter('contao.editable_files', $config['editable_files']);
         $container->setParameter('contao.preview_script', $config['preview_script']);
         $container->setParameter('contao.csrf_cookie_prefix', $config['csrf_cookie_prefix']);
         $container->setParameter('contao.csrf_token_name', $config['csrf_token_name']);
@@ -85,6 +83,8 @@ class ContaoCoreExtension extends Extension
             $container->setParameter('contao.localconfig', $config['localconfig']);
         }
 
+        $this->handleSearchConfig($config, $container);
+        $this->handleCrawlConfig($config, $container);
         $this->setPredefinedImageSizes($config, $container);
         $this->setImagineService($config, $container);
         $this->overwriteImageTargetDir($config, $container);
@@ -93,6 +93,66 @@ class ContaoCoreExtension extends Extension
             ->registerForAutoconfiguration(PickerProviderInterface::class)
             ->addTag('contao.picker_provider')
         ;
+
+        $container
+            ->registerForAutoconfiguration(MigrationInterface::class)
+            ->addTag('contao.migration')
+        ;
+    }
+
+    private function handleSearchConfig(array $config, ContainerBuilder $container): void
+    {
+        $container
+            ->registerForAutoconfiguration(IndexerInterface::class)
+            ->addTag('contao.search_indexer')
+        ;
+
+        // Set the two parameters so they can be used in our legacy Config class for maximum BC
+        $container->setParameter('contao.search.default_indexer.enable', $config['search']['default_indexer']['enable']);
+        $container->setParameter('contao.search.index_protected', $config['search']['index_protected']);
+
+        if (!$config['search']['default_indexer']['enable']) {
+            // Remove the default indexer completely if it was disabled
+            $container->removeDefinition('contao.search.indexer.default');
+        } else {
+            // Configure whether to index protected pages on the default indexer
+            $defaultIndexer = $container->getDefinition('contao.search.indexer.default');
+            $defaultIndexer->setArgument(2, $config['search']['index_protected']);
+        }
+
+        $features = SearchIndexListener::FEATURE_INDEX | SearchIndexListener::FEATURE_DELETE;
+
+        if (!$config['search']['listener']['index']) {
+            $features ^= SearchIndexListener::FEATURE_INDEX;
+        }
+
+        if (!$config['search']['listener']['delete']) {
+            $features ^= SearchIndexListener::FEATURE_DELETE;
+        }
+
+        if (0 === $features) {
+            // Remove the search index listener if no features are enabled
+            $container->removeDefinition('contao.listener.search_index');
+        } else {
+            // Configure the search index listener
+            $container->getDefinition('contao.listener.search_index')->setArgument(2, $features);
+        }
+    }
+
+    private function handleCrawlConfig(array $config, ContainerBuilder $container): void
+    {
+        $container
+            ->registerForAutoconfiguration(EscargotSubscriberInterface::class)
+            ->addTag('contao.escargot_subscriber')
+        ;
+
+        if (!$container->hasDefinition('contao.crawl.escargot_factory')) {
+            return;
+        }
+
+        $factory = $container->getDefinition('contao.crawl.escargot_factory');
+        $factory->setArgument(2, $config['crawl']['additional_uris']);
+        $factory->setArgument(3, $config['crawl']['default_http_client_options']);
     }
 
     /**
@@ -107,7 +167,7 @@ class ContaoCoreExtension extends Extension
         $imageSizes = [];
 
         foreach ($config['image']['sizes'] as $name => $value) {
-            $imageSizes['_'.$name] = $value;
+            $imageSizes['_'.$name] = $this->camelizeKeys($value);
         }
 
         $services = ['contao.image.image_sizes', 'contao.image.image_factory', 'contao.image.picture_factory'];
@@ -117,6 +177,28 @@ class ContaoCoreExtension extends Extension
                 $container->getDefinition($service)->addMethodCall('setPredefinedSizes', [$imageSizes]);
             }
         }
+    }
+
+    /**
+     * Camelizes keys so "resize_mode" becomes "resizeMode".
+     */
+    private function camelizeKeys(array $config): array
+    {
+        $keys = array_keys($config);
+
+        foreach ($keys as &$key) {
+            if (\is_array($config[$key])) {
+                $config[$key] = $this->camelizeKeys($config[$key]);
+            }
+
+            if (\is_string($key)) {
+                $key = lcfirst(Container::camelize($key));
+            }
+        }
+
+        unset($key);
+
+        return array_combine($keys, $config);
     }
 
     /**

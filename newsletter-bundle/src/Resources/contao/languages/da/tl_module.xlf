@@ -88,8 +88,7 @@ Klik venligst her for at godkende din tilmelding:
 
 Linket er gyldigt i 24 timer. Du kan afmelde dig igen til enhver tid.
 
-Hvis du ikke foretaget en tilmelding til ovenstående, bedes du se bort fra denne mail.
-</target>
+Hvis du ikke foretaget en tilmelding til ovenstående, bedes du se bort fra denne mail.</target>
       </trans-unit>
       <trans-unit id="tl_module.text_unsubscribe.0">
         <source>Your subscription on %s</source>

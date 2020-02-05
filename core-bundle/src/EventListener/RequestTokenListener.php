@@ -16,12 +16,14 @@ use Contao\Config;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
  * Validates the request token if the request is a Contao request.
+ *
+ * @internal
  */
 class RequestTokenListener
 {
@@ -62,7 +64,7 @@ class RequestTokenListener
     /**
      * @throws InvalidRequestTokenException
      */
-    public function onKernelRequest(GetResponseEvent $event): void
+    public function __invoke(RequestEvent $event): void
     {
         $request = $event->getRequest();
 
@@ -77,7 +79,7 @@ class RequestTokenListener
             || false === $request->attributes->get('_token_check')
             || (!$request->attributes->has('_token_check') && !$this->scopeMatcher->isContaoRequest($request))
             || (
-                (0 === $request->cookies->count() || $request->cookies->keys() === [$this->csrfCookiePrefix.$this->csrfTokenName])
+                (0 === $request->cookies->count() || [$this->csrfCookiePrefix.$this->csrfTokenName] === $request->cookies->keys())
                 && !$request->getUserInfo()
                 && !($request->hasSession() && $request->getSession()->isStarted())
             )

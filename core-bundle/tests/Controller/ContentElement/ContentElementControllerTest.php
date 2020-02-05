@@ -24,9 +24,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ContentElementControllerTest extends TestCase
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();

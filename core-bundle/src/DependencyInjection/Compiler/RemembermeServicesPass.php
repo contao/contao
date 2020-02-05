@@ -16,6 +16,9 @@ use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
+/**
+ * @internal
+ */
 class RemembermeServicesPass implements CompilerPassInterface
 {
     public const OVERRIDE_PREFIX = 'security.authentication.rememberme.services.simplehash';
@@ -31,9 +34,6 @@ class RemembermeServicesPass implements CompilerPassInterface
         $this->firewallName = $firewallName;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function process(ContainerBuilder $container): void
     {
         $overrideId = self::OVERRIDE_PREFIX.'.'.$this->firewallName;

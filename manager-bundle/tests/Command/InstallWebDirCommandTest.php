@@ -39,9 +39,6 @@ class InstallWebDirCommandTest extends ContaoTestCase
      */
     private $webFiles;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -52,9 +49,6 @@ class InstallWebDirCommandTest extends ContaoTestCase
         $this->webFiles = Finder::create()->files()->in(__DIR__.'/../../src/Resources/skeleton/web');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function tearDown(): void
     {
         parent::tearDown();
@@ -84,24 +78,6 @@ class InstallWebDirCommandTest extends ContaoTestCase
             $expectedString = str_replace(['{root-dir}', '{vendor-dir}'], ['../app', '../vendor'], $expectedString);
 
             $this->assertStringEqualsFile($this->getTempDir().'/web/'.$file->getRelativePathname(), $expectedString);
-        }
-    }
-
-    public function testCommandDoesNotOverrideOptionals(): void
-    {
-        foreach ($this->webFiles as $file) {
-            $this->filesystem->dumpFile($this->getTempDir().'/web/'.$file->getRelativePathname(), 'foobar-content');
-        }
-
-        $commandTester = new CommandTester($this->command);
-        $commandTester->execute([]);
-
-        foreach ($this->webFiles as $file) {
-            if ('robots.txt' === $file->getRelativePathname()) {
-                $this->assertStringEqualsFile($this->getTempDir().'/web/'.$file->getFilename(), 'foobar-content');
-            } else {
-                $this->assertStringNotEqualsFile($this->getTempDir().'/web/'.$file->getFilename(), 'foobar-content');
-            }
         }
     }
 

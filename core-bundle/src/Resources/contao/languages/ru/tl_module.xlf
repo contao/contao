@@ -266,12 +266,12 @@
         <target>Вы можете выбрать шаблон результатов поиска.</target>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.0">
-        <source>Column</source>
-        <target>Колонка</target>
+        <source>Layout section</source>
+        <target>Секция макета</target>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.1">
-        <source>Please choose the column whose articles you want to list.</source>
-        <target>Выберите колонку, в которой хотите выводить статьи.</target>
+        <source>Please choose the layout section whose articles you want to list.</source>
+        <target>Выберите секцию макета, статьи которого вы хотите перечислить.</target>
       </trans-unit>
       <trans-unit id="tl_module.skipFirst.0">
         <source>Skip items</source>

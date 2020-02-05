@@ -29,6 +29,8 @@ use Symfony\Component\Finder\SplFileInfo;
 
 /**
  * Symlinks the public resources into the web directory.
+ *
+ * @internal
  */
 class SymlinksCommand extends Command
 {
@@ -88,23 +90,15 @@ class SymlinksCommand extends Command
         parent::__construct();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure(): void
     {
         $this
             ->setName('contao:symlinks')
-            ->setDefinition([
-                new InputArgument('target', InputArgument::OPTIONAL, 'The target directory', 'web'),
-            ])
+            ->addArgument('target', InputArgument::OPTIONAL, 'The target directory', 'web')
             ->setDescription('Symlinks the public resources into the web directory.')
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->io = new SymfonyStyle($input, $output);
@@ -168,7 +162,7 @@ class SymlinksCommand extends Command
 
     private function symlinkThemes(): void
     {
-        /** @var SplFileInfo[] $themes */
+        /** @var array<SplFileInfo> $themes */
         $themes = $this->resourceFinder->findIn('themes')->depth(0)->directories();
 
         foreach ($themes as $theme) {
@@ -196,7 +190,7 @@ class SymlinksCommand extends Command
     {
         $event = new GenerateSymlinksEvent();
 
-        $this->eventDispatcher->dispatch(ContaoCoreEvents::GENERATE_SYMLINKS, $event);
+        $this->eventDispatcher->dispatch($event, ContaoCoreEvents::GENERATE_SYMLINKS);
 
         foreach ($event->getSymlinks() as $target => $link) {
             $this->symlink($target, $link);
@@ -260,7 +254,7 @@ class SymlinksCommand extends Command
     /**
      * Filters nested paths so only the top folder is symlinked.
      *
-     * @return SplFileInfo[]
+     * @return array<SplFileInfo>
      */
     private function filterNestedPaths(Finder $finder, string $prepend): array
     {

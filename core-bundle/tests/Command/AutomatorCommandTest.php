@@ -31,7 +31,7 @@ class AutomatorCommandTest extends TestCase
         $code = $tester->execute(['command' => $command->getName()]);
 
         $this->assertSame(1, $code);
-        $this->assertContains('Value "4800" is invalid (see help contao:automator)', $tester->getDisplay());
+        $this->assertStringContainsString('Value "4800" is invalid (see help contao:automator)', $tester->getDisplay());
     }
 
     public function testHandlesAnInvalidTaskName(): void
@@ -47,7 +47,7 @@ class AutomatorCommandTest extends TestCase
         $code = $tester->execute($input);
 
         $this->assertSame(1, $code);
-        $this->assertContains('Invalid task "fooBar" (see help contao:automator)', $tester->getDisplay());
+        $this->assertStringContainsString('Invalid task "fooBar" (see help contao:automator)', $tester->getDisplay());
     }
 
     private function getCommand(): AutomatorCommand

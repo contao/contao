@@ -59,7 +59,7 @@ class FrontendTemplate extends Template
 	/**
 	 * Send the response to the client
 	 *
-	 * @param bool $blnCheckRequest If true, check for unsued $_GET parameters
+	 * @param bool $blnCheckRequest If true, check for unused $_GET parameters
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             Use FrontendTemplate::getResponse() instead.
@@ -74,15 +74,23 @@ class FrontendTemplate extends Template
 	/**
 	 * Return a response object
 	 *
-	 * @param bool $blnCheckRequest If true, check for unsued $_GET parameters
+	 * @param bool $blnCheckRequest      If true, check for unused $_GET parameters
+	 * @param bool $blnForceCacheHeaders
 	 *
 	 * @return Response The response object
 	 */
-	public function getResponse($blnCheckRequest=false)
+	public function getResponse($blnCheckRequest=false, $blnForceCacheHeaders=false)
 	{
 		$this->blnCheckRequest = $blnCheckRequest;
 
-		return $this->setCacheHeaders(parent::getResponse());
+		$response = parent::getResponse();
+
+		if ($blnForceCacheHeaders || 0 === strncmp('fe_', $this->strTemplate, 3))
+		{
+			return $this->setCacheHeaders($response);
+		}
+
+		return $response;
 	}
 
 	/**

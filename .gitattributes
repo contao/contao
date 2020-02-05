@@ -2,6 +2,10 @@
 /CHANGELOG.md merge=ours
 /core-bundle/src/Resources/contao/config/constants.php merge=ours
 
+# Do not merge the .github folders
+/.github/ merge=ours
+/*/.github/ merge=ours
+
 # Only merge the source language files
 /*/src/Resources/contao/languages/*/*.xlf merge=ours
 /*/src/Resources/contao/languages/en/*.xlf merge=text

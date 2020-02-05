@@ -14,21 +14,22 @@ namespace Contao\CoreBundle\Translation;
 
 use Symfony\Component\Translation\DataCollectorTranslator as SymfonyDataCollectorTranslator;
 use Symfony\Component\Translation\MessageCatalogueInterface;
-use Symfony\Component\Translation\TranslatorBagInterface;
-use Symfony\Component\Translation\TranslatorInterface as LegacyTranslatorInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Contracts\Service\ResetInterface;
 
-class DataCollectorTranslator extends SymfonyDataCollectorTranslator
+/**
+ * @internal
+ */
+class DataCollectorTranslator extends SymfonyDataCollectorTranslator implements ResetInterface
 {
     /**
-     * @var TranslatorInterface|TranslatorBagInterface|LegacyTranslatorInterface
+     * @var SymfonyDataCollectorTranslator
      */
     private $translator;
 
     private $messages = [];
 
     /**
-     * @param TranslatorInterface|TranslatorBagInterface|LegacyTranslatorInterface $translator
+     * @param SymfonyDataCollectorTranslator $translator
      */
     public function __construct($translator)
     {
@@ -57,33 +58,21 @@ class DataCollectorTranslator extends SymfonyDataCollectorTranslator
         return $translated;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function transChoice($id, $number, array $parameters = [], $domain = null, $locale = null): string
     {
         return $this->translator->transChoice($id, $number, $parameters, $domain, $locale);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setLocale($locale): ?string
+    public function setLocale($locale): void
     {
-        return $this->translator->setLocale($locale);
+        $this->translator->setLocale($locale);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLocale(): string
     {
         return $this->translator->getLocale();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCatalogue($locale = null): MessageCatalogueInterface
     {
         return $this->translator->getCatalogue($locale);
@@ -99,6 +88,11 @@ class DataCollectorTranslator extends SymfonyDataCollectorTranslator
         }
 
         return $this->messages;
+    }
+
+    public function reset(): void
+    {
+        $this->messages = [];
     }
 
     private function collectMessage(string $locale, string $domain, string $id, string $translation, array $parameters = []): void

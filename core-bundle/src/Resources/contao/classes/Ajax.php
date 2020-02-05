@@ -267,6 +267,7 @@ class Ajax extends Backend
 			// Reload the page/file picker
 			case 'reloadPagetree':
 			case 'reloadFiletree':
+			case 'reloadPicker':
 				$intId = Input::get('id');
 				$strField = $dc->inputName = Input::post('name');
 
@@ -334,7 +335,20 @@ class Ajax extends Backend
 
 				// Set the new value
 				$varValue = Input::post('value', true);
-				$strKey = ($this->strAction == 'reloadPagetree') ? 'pageTree' : 'fileTree';
+
+				switch ($this->strAction)
+				{
+					case 'reloadPicker':
+						$strKey = 'picker';
+						break;
+
+					case 'reloadPagetree':
+						$strKey = 'pageTree';
+						break;
+
+					default:
+						$strKey = 'fileTree';
+				}
 
 				// Convert the selected values
 				if ($varValue != '')
@@ -365,10 +379,10 @@ class Ajax extends Backend
 					$varValue = serialize($varValue);
 				}
 
-				/** @var FileTree|PageTree $strClass */
+				/** @var FileTree|PageTree|Picker $strClass */
 				$strClass = $GLOBALS['BE_FFL'][$strKey];
 
-				/** @var FileTree|PageTree $objWidget */
+				/** @var FileTree|PageTree|Picker $objWidget */
 				$objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField], $dc->inputName, $varValue, $strField, $dc->table, $dc));
 
 				throw new ResponseException($this->convertToResponse($objWidget->generate()));

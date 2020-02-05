@@ -184,35 +184,27 @@ abstract class DataContainer extends Backend
 		{
 			case 'id':
 				return $this->intId;
-				break;
 
 			case 'table':
 				return $this->strTable;
-				break;
 
 			case 'value':
 				return $this->varValue;
-				break;
 
 			case 'field':
 				return $this->strField;
-				break;
 
 			case 'inputName':
 				return $this->strInputName;
-				break;
 
 			case 'palette':
 				return $this->strPalette;
-				break;
 
 			case 'activeRecord':
 				return $this->objActiveRecord;
-				break;
 
 			case 'createNewVersion':
 				return $this->blnCreateNewVersion;
-				break;
 		}
 
 		return parent::__get($strKey);
@@ -302,13 +294,10 @@ abstract class DataContainer extends Backend
 					$arrData['eval']['required'] = true;
 				}
 			}
-			else
+			// Use strlen() here (see #3277)
+			elseif (!\strlen($this->varValue))
 			{
-				// Use strlen() here (see #3277)
-				if (!\strlen($this->varValue))
-				{
-					$arrData['eval']['required'] = true;
-				}
+				$arrData['eval']['required'] = true;
 			}
 		}
 
@@ -353,14 +342,10 @@ abstract class DataContainer extends Backend
 				// Use the given palette ($strPalette is an array in editAll mode)
 				$newPaletteFields = \is_array($strPalette) ? $strPalette : StringUtil::trimsplit('[,;]', $strPalette);
 
-				// Re-check the palette if the current field is a selector field
-				if (isset($GLOBALS['TL_DCA'][$this->strTable]['palettes']['__selector__']) && \in_array($this->strField, $GLOBALS['TL_DCA'][$this->strTable]['palettes']['__selector__']))
+				// Recompile the palette if the current field is a selector field and the value has changed
+				if (isset($GLOBALS['TL_DCA'][$this->strTable]['palettes']['__selector__']) && $this->varValue != Input::post($this->strInputName) && \in_array($this->strField, $GLOBALS['TL_DCA'][$this->strTable]['palettes']['__selector__']))
 				{
-					// If the field value has changed, recompile the palette
-					if ($this->varValue != Input::post($this->strInputName))
-					{
-						$newPaletteFields = StringUtil::trimsplit('[,;]', $this->getPalette());
-					}
+					$newPaletteFields = StringUtil::trimsplit('[,;]', $this->getPalette());
 				}
 			}
 
@@ -395,7 +380,7 @@ abstract class DataContainer extends Backend
 				if ($objWidget->hasErrors())
 				{
 					// Skip mandatory fields on auto-submit (see #4077)
-					if (Input::post('SUBMIT_TYPE') != 'auto' || !$objWidget->mandatory || $objWidget->value != '')
+					if (!$objWidget->mandatory || $objWidget->value != '' || Input::post('SUBMIT_TYPE') != 'auto')
 					{
 						$this->noReload = true;
 					}
@@ -605,7 +590,7 @@ abstract class DataContainer extends Backend
 		}
 
 		// Handle multi-select fields in "override all" mode
-		elseif (Input::get('act') == 'overrideAll' && ($arrData['inputType'] == 'checkbox' || $arrData['inputType'] == 'checkboxWizard') && $arrData['eval']['multiple'])
+		elseif (($arrData['inputType'] == 'checkbox' || $arrData['inputType'] == 'checkboxWizard') && $arrData['eval']['multiple'] && Input::get('act') == 'overrideAll')
 		{
 			$updateMode = '
 </div>
@@ -683,7 +668,7 @@ abstract class DataContainer extends Backend
 	{
 		$return = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][1];
 
-		if (!Config::get('showHelp') || $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'] == 'password' || $return == '')
+		if ($return == '' || $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'] == 'password' || !Config::get('showHelp'))
 		{
 			return '';
 		}
@@ -886,7 +871,7 @@ abstract class DataContainer extends Backend
 
 		foreach ($GLOBALS['TL_DCA'][$this->strTable]['list']['global_operations'] as $k=>$v)
 		{
-			if (Input::get('act') == 'select' && !$v['showOnSelect'])
+			if (!$v['showOnSelect'] && Input::get('act') == 'select')
 			{
 				continue;
 			}
@@ -1068,7 +1053,7 @@ abstract class DataContainer extends Backend
 	{
 		$provider = $picker->getCurrentProvider();
 
-		if (!$provider instanceof DcaPickerProviderInterface || $provider->getDcaTable() != $this->strTable)
+		if (!$provider instanceof DcaPickerProviderInterface || $provider->getDcaTable($picker->getConfig()) != $this->strTable)
 		{
 			return null;
 		}
@@ -1236,7 +1221,7 @@ abstract class DataContainer extends Backend
 		}
 
 		$return = '
-<form action="' . ampersand(Environment::get('request')) . '" class="tl_form" method="post" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchAndFilter']) . '">
+<form class="tl_form" method="post" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchAndFilter']) . '">
 <div class="tl_formbody">
   <input type="hidden" name="FORM_SUBMIT" value="tl_filters">
   <input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">

@@ -28,13 +28,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BackendCsvImportControllerTest extends TestCase
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -380,7 +377,7 @@ EOF;
     /**
      * Mocks a Contao framework with a file uploader.
      *
-     * @return ContaoFramework|\PHPUnit_Framework_MockObject_MockObject
+     * @return ContaoFramework&MockObject
      */
     private function mockContaoFrameworkWithUploader(): ContaoFramework
     {

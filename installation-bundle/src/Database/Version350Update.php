@@ -12,12 +12,31 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle\Database;
 
-class Version350Update extends AbstractVersionUpdate
+use Contao\CoreBundle\Migration\AbstractMigration;
+use Contao\CoreBundle\Migration\MigrationResult;
+use Doctrine\DBAL\Connection;
+
+/**
+ * @internal
+ */
+class Version350Update extends AbstractMigration
 {
     /**
-     * {@inheritdoc}
+     * @var Connection
      */
-    public function shouldBeRun(): bool
+    private $connection;
+
+    public function __construct(Connection $connection)
+    {
+        $this->connection = $connection;
+    }
+
+    public function getName(): string
+    {
+        return 'Contao 3.5.0 Update';
+    }
+
+    public function shouldRun(): bool
     {
         $schemaManager = $this->connection->getSchemaManager();
 
@@ -30,10 +49,7 @@ class Version350Update extends AbstractVersionUpdate
         return isset($columns['username']) && true === $columns['username']->getNotnull();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function run(): void
+    public function run(): MigrationResult
     {
         $this->connection->query('
             ALTER TABLE
@@ -59,5 +75,7 @@ class Version350Update extends AbstractVersionUpdate
             ADD UNIQUE KEY
                 username (username)
         ');
+
+        return $this->createResult(true);
     }
 }

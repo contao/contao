@@ -17,13 +17,13 @@ $GLOBALS['BE_MOD'] = array
 		'article' => array
 		(
 			'tables'      => array('tl_article', 'tl_content'),
-			'table'       => array('contao.controller.backend_csv_import', 'importTableWizardAction'),
-			'list'        => array('contao.controller.backend_csv_import', 'importListWizardAction')
+			'table'       => array('Contao\CoreBundle\Controller\BackendCsvImportController', 'importTableWizardAction'),
+			'list'        => array('Contao\CoreBundle\Controller\BackendCsvImportController', 'importListWizardAction')
 		),
 		'form' => array
 		(
 			'tables'      => array('tl_form', 'tl_form_field'),
-			'option'      => array('contao.controller.backend_csv_import', 'importOptionWizardAction')
+			'option'      => array('Contao\CoreBundle\Controller\BackendCsvImportController', 'importOptionWizardAction')
 		)
 	),
 
@@ -220,6 +220,7 @@ $GLOBALS['BE_FFL'] = array
 	'inputUnit'      => 'Contao\InputUnit',
 	'trbl'           => 'Contao\TrblField',
 	'chmod'          => 'Contao\ChmodTable',
+	'picker'         => 'Contao\Picker',
 	'pageTree'       => 'Contao\PageTree',
 	'pageSelector'   => 'Contao\PageSelector',
 	'fileTree'       => 'Contao\FileTree',
@@ -233,7 +234,8 @@ $GLOBALS['BE_FFL'] = array
 	'imageSize'      => 'Contao\ImageSize',
 	'timePeriod'     => 'Contao\TimePeriod',
 	'metaWizard'     => 'Contao\MetaWizard',
-	'sectionWizard'  => 'Contao\SectionWizard'
+	'sectionWizard'  => 'Contao\SectionWizard',
+	'serpPreview'    => 'Contao\SerpPreview'
 );
 
 // Front end form fields
@@ -250,6 +252,7 @@ $GLOBALS['TL_FFL'] = array
 	'radio'         => 'Contao\FormRadioButton',
 	'checkbox'      => 'Contao\FormCheckBox',
 	'upload'        => 'Contao\FormFileUpload',
+	'range'         => 'Contao\FormRange',
 	'hidden'        => 'Contao\FormHidden',
 	'captcha'       => 'Contao\FormCaptcha',
 	'submit'        => 'Contao\FormSubmit',
@@ -272,7 +275,7 @@ $GLOBALS['TL_PTY'] = array
 $GLOBALS['TL_MAINTENANCE'] = array
 (
 	'Contao\Maintenance',
-	'Contao\RebuildIndex',
+	'Contao\Crawl',
 	'Contao\PurgeData'
 );
 
@@ -300,6 +303,11 @@ $GLOBALS['TL_PURGE'] = array
 		(
 			'callback' => array('Contao\Automator', 'purgeSystemLog'),
 			'affected' => array('tl_log')
+		),
+		'crawl_queue' => array
+		(
+			'callback' => array('Contao\Automator', 'purgeCrawlQueue'),
+			'affected' => array('tl_crawl_queue')
 		)
 	),
 	'folders' => array
@@ -393,7 +401,7 @@ $GLOBALS['TL_HOOKS'] = array
 $GLOBALS['TL_AUTO_ITEM'] = array('items', 'events');
 
 // Do not index a page if one of the following parameters is set
-$GLOBALS['TL_NOINDEX_KEYS'] = array('id', 'file', 'token', 'day', 'month', 'year', 'page', 'keywords', 'PHPSESSID');
+$GLOBALS['TL_NOINDEX_KEYS'] = array('id', 'file', 'token', 'day', 'month', 'year', 'page', 'page_.*', 'keywords', 'PHPSESSID');
 
 // Register the supported CSS units
 $GLOBALS['TL_CSS_UNITS'] = array('px', '%', 'em', 'rem', 'vw', 'vh', 'vmin', 'vmax', 'ex', 'pt', 'pc', 'in', 'cm', 'mm');

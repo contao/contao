@@ -233,6 +233,10 @@
         <source>Invalid redirect target (circular reference)!</source>
         <target>Ongeldige omleiding (kringverwijzing)!</target>
       </trans-unit>
+      <trans-unit id="ERR.circularPicker">
+        <source>Invalid selection (circular reference)!</source>
+        <target>Ongeldige selectie (kringverwijzing)!</target>
+      </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
         <source>None of the active website root pages without an explicit DNS setting have the language fallback option set.</source>
         <target>Geen enkele van de actieve website root pagina's, zonder een expliciete DNS instelling heeft de optie om terug te vallen op een andere taal, ingesteld.</target>
@@ -307,7 +311,7 @@
       </trans-unit>
       <trans-unit id="ERR.moduleWithoutColumn">
         <source>Please assign all modules to a column!</source>
-        <target>Wijs alle modules aan een kolom toe!</target>
+        <target>Wijs alle modules toe aan een kolom!</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -557,6 +561,124 @@
         <source>Displays the teaser text of an article.</source>
         <target>Toont de teaser tekst van een artikel.</target>
       </trans-unit>
+      <trans-unit id="FFL.explanation.0">
+        <source>Explanation</source>
+        <target>Toelichting</target>
+      </trans-unit>
+      <trans-unit id="FFL.explanation.1">
+        <source>A custom field to insert an explanation text.</source>
+        <target>Gebruik dit veld om tekst met uitleg in te voegen.</target>
+      </trans-unit>
+      <trans-unit id="FFL.html.0">
+        <source>HTML code</source>
+        <target>HTML code</target>
+      </trans-unit>
+      <trans-unit id="FFL.html.1">
+        <source>A custom field to insert HTML code.</source>
+        <target>Aangepast veld om HTML code in te voegen.</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStart.0">
+        <source>Fieldset start</source>
+        <target>Fieldset start</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStart.1">
+        <source>The opening part of a fieldset with an optional legend.</source>
+        <target>Het begin van een fieldset met optioneel een legenda.</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStop.0">
+        <source>Fieldset stop</source>
+        <target>Fieldset stop</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStop.1">
+        <source>The closing part of a fieldset.</source>
+        <target>Het afsluitend gedeelte van een fieldset.</target>
+      </trans-unit>
+      <trans-unit id="FFL.text.0">
+        <source>Text field</source>
+        <target>Tekstveld</target>
+      </trans-unit>
+      <trans-unit id="FFL.text.1">
+        <source>A single-line input field for a short or medium text.</source>
+        <target>Veld van één regel voor een korte of middellange tekst.</target>
+      </trans-unit>
+      <trans-unit id="FFL.password.0">
+        <source>Password field</source>
+        <target>Wachtwoordveld</target>
+      </trans-unit>
+      <trans-unit id="FFL.password.1">
+        <source>A single-line input field for a password. Contao automatically adds a confirmation field.</source>
+        <target>Een veld van één regel voor een wachtwoord. Contao voegt automatisch een bevestigingsveld toe.</target>
+      </trans-unit>
+      <trans-unit id="FFL.textarea.0">
+        <source>Textarea</source>
+        <target>Tekstgebied</target>
+      </trans-unit>
+      <trans-unit id="FFL.textarea.1">
+        <source>A multi-line input field for a medium or long text.</source>
+        <target>Een invoerveld met meerdere regels voor een middellange of lange tekst.</target>
+      </trans-unit>
+      <trans-unit id="FFL.select.0">
+        <source>Select menu</source>
+        <target>Selecteer menu</target>
+      </trans-unit>
+      <trans-unit id="FFL.select.1">
+        <source>A single- or multi-line drop-down menu.</source>
+        <target>Een enkel- of uit meerdere regels bestaand drop-down menu.</target>
+      </trans-unit>
+      <trans-unit id="FFL.radio.0">
+        <source>Radio button menu</source>
+        <target>Radio button menu</target>
+      </trans-unit>
+      <trans-unit id="FFL.radio.1">
+        <source>A list of multiple options from which one can be selected.</source>
+        <target>Een lijst van meerdere opties waaruit geselecteerd kan worden.</target>
+      </trans-unit>
+      <trans-unit id="FFL.checkbox.0">
+        <source>Checkbox menu</source>
+        <target>Checkbox menu</target>
+      </trans-unit>
+      <trans-unit id="FFL.checkbox.1">
+        <source>A list of multiple options from which any can be selected.</source>
+        <target>Een lijst van meerdere opties waaruit gekozen kan worden.</target>
+      </trans-unit>
+      <trans-unit id="FFL.upload.0">
+        <source>File upload</source>
+        <target>Bestand upload</target>
+      </trans-unit>
+      <trans-unit id="FFL.upload.1">
+        <source>A single-line input field to upload a local file to the server.</source>
+        <target> Invoerveld van één regel om een lokaal bestand naar de server te laden.</target>
+      </trans-unit>
+      <trans-unit id="FFL.range.0">
+        <source>Range slider</source>
+      </trans-unit>
+      <trans-unit id="FFL.range.1">
+        <source>A range slider to select a value or range of values between a specified min and max.</source>
+      </trans-unit>
+      <trans-unit id="FFL.hidden.0">
+        <source>Hidden field</source>
+        <target>Verborgen veld</target>
+      </trans-unit>
+      <trans-unit id="FFL.hidden.1">
+        <source>A single-line input field that is not visible in the form.</source>
+        <target>Eenregelig invoerveld dat niet zichtbaar is in het formulier.</target>
+      </trans-unit>
+      <trans-unit id="FFL.captcha.0">
+        <source>Security question</source>
+        <target>Verificatievraag</target>
+      </trans-unit>
+      <trans-unit id="FFL.captcha.1">
+        <source>A simple math question to verify that the form is being submitted by a human (CAPTCHA).</source>
+        <target>Een eenvoudige wiskundige vraag om te verifiëren dat het formulier door een mens wordt ingediend (CAPTCHA).</target>
+      </trans-unit>
+      <trans-unit id="FFL.submit.0">
+        <source>Submit field</source>
+        <target>Verzendveld</target>
+      </trans-unit>
+      <trans-unit id="FFL.submit.1">
+        <source>A button to submit the form.</source>
+        <target>Een knop om het ingevulde formulier te versturen.</target>
+      </trans-unit>
       <trans-unit id="PTY.regular.0">
         <source>Regular page</source>
         <target>Standaardpagina</target>
@@ -602,24 +724,24 @@
         <target>401 Niet geverifieerd</target>
       </trans-unit>
       <trans-unit id="PTY.error_401.1">
-        <source>If a user requests a protected page without being authenticated, a 401 error page will be loaded instead.</source>
-        <target>Als een gebruiker een beveiligde pagina aanvraagt zonder te worden geverifieerd, zal er een 401-foutpagina geladen worden.</target>
+        <source>If a visitor requests a protected page without being authenticated, a 401 error page will be loaded instead.</source>
+        <target>Als een bezoeker een beveiligde pagina aanvraagt zonder te worden geverifieerd, zal er een 401-foutpagina geladen worden.</target>
       </trans-unit>
       <trans-unit id="PTY.error_403.0">
         <source>403 Access denied</source>
         <target>403 Toegang geweigerd</target>
       </trans-unit>
       <trans-unit id="PTY.error_403.1">
-        <source>If a user requests a protected page without permission, a 403 error page will be loaded instead.</source>
-        <target>Indien een gebruiker zonder voldoende rechten een beschermde pagina probeert op te roepen zal er een 403 fouten pagina worden getoond.</target>
+        <source>If a member requests a protected page without permission, a 403 error page will be loaded instead.</source>
+        <target>Indien een lid zonder voldoende rechten een beschermde pagina probeert op te roepen zal er een 403 fouten pagina worden getoond.</target>
       </trans-unit>
       <trans-unit id="PTY.error_404.0">
         <source>404 Page not found</source>
         <target>404 Pagina niet gevonden</target>
       </trans-unit>
       <trans-unit id="PTY.error_404.1">
-        <source>If a user requests a non-existent page, a 404 error page will be loaded instead.</source>
-        <target>Indien een gebruiker een niet bestaande pagina probeert op te roepen zal er een 404 fouten pagina worden getoond.</target>
+        <source>If a visitor requests a non-existent page, a 404 error page will be loaded instead.</source>
+        <target>Indien een bezoeker een niet bestaande pagina probeert op te roepen zal er een 404 fouten pagina worden getoond.</target>
       </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
@@ -1110,8 +1232,8 @@
         <target>Module</target>
       </trans-unit>
       <trans-unit id="MSC.mw_column">
-        <source>Column</source>
-        <target>Kolom</target>
+        <source>Layout section</source>
+        <target>Lay-out sectie</target>
       </trans-unit>
       <trans-unit id="MSC.mw_enable">
         <source>Enable/disable the module</source>
@@ -1361,7 +1483,7 @@
         <source>This seems to be your first login. Welcome to Contao!</source>
         <target>Dit lijkt uw eerste login te zijn. Welkom bij Contao!</target>
       </trans-unit>
-      <trans-unit id="MSC.loginCount">
+      <trans-unit id="MSC.loginAttempts">
         <source>Login attempts</source>
         <target>Login pogingen</target>
       </trans-unit>
@@ -1460,10 +1582,6 @@
       <trans-unit id="MSC.homeTitle">
         <source>Back to the back end start page</source>
         <target>Terug naar de back-end startpagina</target>
-      </trans-unit>
-      <trans-unit id="MSC.burgerTitle">
-        <source>Toggle navigation</source>
-        <target>Navigatie omschakelen</target>
       </trans-unit>
       <trans-unit id="MSC.learnMore">
         <source>Learn more on %s</source>
@@ -2445,6 +2563,30 @@
         <source>If you cannot scan the QR code, enter this key instead:</source>
         <target>Als u de QR-code niet kunt scannen, voer dan deze sleutel in:</target>
       </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesLabel">
+        <source>Backup codes</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesShow">
+        <source>Show backup codes</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesExplain">
+        <source>Backup codes can be used to access your account if you have lost your authentication device and cannot generate two-factor codes anymore. Treat your backup codes with the same level of attention as your password! We recommend saving them with a password manager such as Lastpass, 1Password or Keeper.</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesInfo">
+        <source>Put the codes in a safe spot. If you lose your authentication device and do not have backup codes, you cannot access your account anymore!</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesGenerate">
+        <source>Generate backup codes</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesRegenerate">
+        <source>Regenerate backup codes</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesRegenerateInfo">
+        <source>When you regenerate the backup codes, your old codes will not work anymore.</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorTrustDevice">
+        <source>Trust this device</source>
+      </trans-unit>
       <trans-unit id="MSC.userTemplateEditor">
         <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
         <target>Er is ten minste één normale gebruiker met toegang tot de template. Omdat templates PHP-bestanden zijn, hebben deze gebruikers volledige controle over het systeem!</target>
@@ -2452,6 +2594,12 @@
       <trans-unit id="MSC.groupTemplateEditor">
         <source>There is at least one user group granting access to the template editor. Since templates are PHP files, users of these groups implicitly have full control over the system!</source>
         <target>Er is ten minste één gebruikersgroep die toegang verleent tot de template editor. Aangezien templates PHP-bestanden zijn, hebben gebruikers van deze groepen volledige controle over het systeem!</target>
+      </trans-unit>
+      <trans-unit id="MSC.userThemeImport">
+        <source>There is at least one regular user with permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, these users implicitly have full control over the system!</source>
+      </trans-unit>
+      <trans-unit id="MSC.groupThemeImport">
+        <source>There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!</source>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
@@ -2464,6 +2612,36 @@
       <trans-unit id="MSC.internalCssEditor">
         <source>The internal CSS editor has been deprecated and will be removed in one of the next Contao versions! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
         <target>De interne CSS-editor is verouderd en wordt verwijderd in een van de volgende Contao-versies! Overweeg om uw bestaande stijlbladen te exporteren en ze opnieuw aan de pagina-indeling toe te voegen als externe stijlbladen.</target>
+      </trans-unit>
+      <trans-unit id="MSC.serpPreview.0">
+        <source>Google search results preview</source>
+        <target>Voorbeeld zoekresultaten van Google</target>
+      </trans-unit>
+      <trans-unit id="MSC.serpPreview.1">
+        <source>Here you can preview the meta data in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
+        <target>Hier kunt u een voorbeeld bekijken van de metagegevens in de zoekresultaten van Google. Andere zoekmachines kunnen langere teksten weergeven of op een andere positie bijsnijden.</target>
+      </trans-unit>
+      <trans-unit id="MSC.clearTrustedDevices">
+        <source>Clear trusted devices</source>
+      </trans-unit>
+      <trans-unit id="MSC.trustedDevices">
+        <source>Trusted devices</source>
+      </trans-unit>
+      <trans-unit id="MSC.noTrustedDevices">
+        <source>Currently there are no trusted devices.</source>
+      </trans-unit>
+      <trans-unit id="MSC.device">
+        <source>Device</source>
+      </trans-unit>
+      <trans-unit id="MSC.thisDevice">
+        <source>this device</source>
+      </trans-unit>
+      <trans-unit id="MSC.browser">
+        <source>Browser</source>
+        <target>Browser</target>
+      </trans-unit>
+      <trans-unit id="MSC.operatingSystem">
+        <source>Operating system</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2668,6 +2846,15 @@
       <trans-unit id="DCA.pastenew.1">
         <source>Create a new element after element ID %s</source>
         <target>Maak een nieuw element na element ID %s</target>
+      </trans-unit>
+      <trans-unit id="CRAWL.searchIndex.summary">
+        <source>Indexed %d URI(s) successfully. %d failed.</source>
+      </trans-unit>
+      <trans-unit id="CRAWL.searchIndex.warning">
+        <source>%d URI(s) were skipped (if you are missing one, checkout the debug log).</source>
+      </trans-unit>
+      <trans-unit id="CRAWL.brokenLinkChecker.summary">
+        <source>Checked %d link(s) successfully. %d were broken.</source>
       </trans-unit>
     </body>
   </file>

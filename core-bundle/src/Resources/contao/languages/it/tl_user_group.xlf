@@ -30,16 +30,14 @@
         <target>Attiva dal</target>
       </trans-unit>
       <trans-unit id="tl_user_group.start.1">
-        <source>Automatically activate the group on this day.</source>
-        <target>Inserisci una data per attivare il gruppo dalla data del calendario.</target>
+        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_user_group.stop.0">
         <source>Deactivate on</source>
         <target>Disattiva dal</target>
       </trans-unit>
       <trans-unit id="tl_user_group.stop.1">
-        <source>Automatically deactivate the group on this day.</source>
-        <target>Inserisci una data per disattivare il gruppo dalla data del calendario.</target>
+        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_user_group.title_legend">
         <source>Title</source>
@@ -48,6 +46,9 @@
       <trans-unit id="tl_user_group.modules_legend">
         <source>Allowed modules</source>
         <target>Moduli abilitati</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.elements_legend">
+        <source>Allowed elements</source>
       </trans-unit>
       <trans-unit id="tl_user_group.pagemounts_legend">
         <source>Pagemounts</source>
@@ -74,8 +75,7 @@
         <target>Campi abilitati</target>
       </trans-unit>
       <trans-unit id="tl_user_group.account_legend">
-        <source>Account settings</source>
-        <target>Impostazioni utente</target>
+        <source>Group settings</source>
       </trans-unit>
       <trans-unit id="tl_user_group.new.0">
         <source>New</source>

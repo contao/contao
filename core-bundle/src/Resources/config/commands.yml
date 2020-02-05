@@ -12,10 +12,22 @@ services:
         arguments:
             - '@contao.framework'
 
+    contao.command.crawl:
+        class: Contao\CoreBundle\Command\CrawlCommand
+        arguments:
+            - '@contao.crawl.escargot_factory'
+
+    Contao\CoreBundle\Command\CronCommand:
+        arguments:
+            - '@Contao\CoreBundle\Cron\Cron'
+
     contao.command.debug_dca:
         class: Contao\CoreBundle\Command\DebugDcaCommand
         arguments:
             - '@contao.framework'
+
+    contao.command.debug_fragments:
+        class: Contao\CoreBundle\Command\DebugFragmentsCommand
 
     contao.command.filesync:
         class: Contao\CoreBundle\Command\FilesyncCommand
@@ -27,6 +39,14 @@ services:
             - '%contao.upload_path%'
             - '%contao.image.target_dir%'
         public: true
+
+    Contao\CoreBundle\Command\MigrateCommand:
+        arguments:
+            - '@Contao\CoreBundle\Migration\MigrationCollection'
+            - '@contao.resource_locator'
+            - '%kernel.project_dir%'
+            - '@contao.framework'
+            - '@?contao.installer'
 
     contao.command.resize_images:
         class: Contao\CoreBundle\Command\ResizeImagesCommand

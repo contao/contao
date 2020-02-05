@@ -20,7 +20,7 @@ use Knp\Menu\ItemInterface;
 use Knp\Menu\MenuItem;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PagePickerProviderTest extends ContaoTestCase
 {
@@ -184,7 +184,7 @@ class PagePickerProviderTest extends ContaoTestCase
         $security
             ->expects(null === $accessGranted ? $this->never() : $this->atLeastOnce())
             ->method('isGranted')
-            ->willReturn($accessGranted)
+            ->willReturn($accessGranted ?? false)
         ;
 
         $menuFactory = $this->createMock(FactoryInterface::class);

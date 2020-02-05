@@ -19,6 +19,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Dotenv\Dotenv;
 
+/**
+ * @internal
+ */
 class GetDotEnvCommand extends Command
 {
     /**
@@ -33,9 +36,6 @@ class GetDotEnvCommand extends Command
         $this->projectDir = $application->getProjectDir();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure(): void
     {
         parent::configure();
@@ -47,15 +47,12 @@ class GetDotEnvCommand extends Command
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $path = $this->projectDir.'/.env';
 
         if (!file_exists($path)) {
-            return;
+            return 0;
         }
 
         $vars = (new Dotenv(false))->parse(file_get_contents($path));
@@ -68,5 +65,7 @@ class GetDotEnvCommand extends Command
         if (isset($vars[$key])) {
             $output->write($vars[$key]);
         }
+
+        return 0;
     }
 }

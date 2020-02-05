@@ -26,9 +26,6 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class ResizeImagesCommandTest extends TestCase
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function tearDown(): void
     {
         parent::tearDown();
@@ -105,11 +102,13 @@ class ResizeImagesCommandTest extends TestCase
         $resizer = $this->createMock(DeferredResizerInterface::class);
         $resizer
             ->method('resizeDeferredImage')
-            ->willReturnCallback(function () {
-                sleep(1);
+            ->willReturnCallback(
+                function () {
+                    sleep(1);
 
-                return $this->createMock(ImageInterface::class);
-            })
+                    return $this->createMock(ImageInterface::class);
+                }
+            )
         ;
 
         $storage = $this->createMock(DeferredImageStorageInterface::class);

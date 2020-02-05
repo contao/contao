@@ -12,14 +12,32 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle\Database;
 
+use Contao\CoreBundle\Migration\AbstractMigration;
+use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\StringUtil;
+use Doctrine\DBAL\Connection;
 
-class Version440Update extends AbstractVersionUpdate
+/**
+ * @internal
+ */
+class Version440Update extends AbstractMigration
 {
     /**
-     * {@inheritdoc}
+     * @var Connection
      */
-    public function shouldBeRun(): bool
+    private $connection;
+
+    public function __construct(Connection $connection)
+    {
+        $this->connection = $connection;
+    }
+
+    public function getName(): string
+    {
+        return 'Contao 4.4.0 Update';
+    }
+
+    public function shouldRun(): bool
     {
         $schemaManager = $this->connection->getSchemaManager();
 
@@ -32,10 +50,7 @@ class Version440Update extends AbstractVersionUpdate
         return !isset($columns['imagetitle']);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function run(): void
+    public function run(): MigrationResult
     {
         // Add the js_autofocus.html5 template
         $statement = $this->connection->query('
@@ -100,6 +115,8 @@ class Version440Update extends AbstractVersionUpdate
             WHERE
                 alt != '' OR imageTitle != '' OR imageUrl != '' OR caption != ''
         ");
+
+        return $this->createResult(true);
     }
 
     private function enableOverwriteMeta(string $table): void

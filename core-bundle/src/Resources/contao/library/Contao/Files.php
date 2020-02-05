@@ -326,7 +326,7 @@ class Files
 		{
 			if ($strPath == '')
 			{
-				throw new \RuntimeException('No file or folder name given');
+				throw new \RuntimeException('No file or folder name given'); // see #5795
 			}
 
 			if (Validator::isInsecurePath($strPath))

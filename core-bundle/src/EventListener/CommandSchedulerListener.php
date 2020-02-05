@@ -13,13 +13,16 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\Config;
+use Contao\CoreBundle\Cron\Cron;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\FrontendCron;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\DriverException;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\PostResponseEvent;
+use Symfony\Component\HttpKernel\Event\TerminateEvent;
 
+/**
+ * @internal
+ */
 class CommandSchedulerListener
 {
     /**
@@ -37,28 +40,30 @@ class CommandSchedulerListener
      */
     private $fragmentPath;
 
-    public function __construct(ContaoFramework $framework, Connection $connection, string $fragmentPath = '_fragment')
+    /**
+     * @var Cron
+     */
+    private $cron;
+
+    public function __construct(ContaoFramework $framework, Connection $connection, Cron $cron, string $fragmentPath = '_fragment')
     {
         $this->framework = $framework;
         $this->connection = $connection;
+        $this->cron = $cron;
         $this->fragmentPath = $fragmentPath;
     }
 
     /**
      * Runs the command scheduler.
      */
-    public function onKernelTerminate(PostResponseEvent $event): void
+    public function __invoke(TerminateEvent $event): void
     {
-        if (!$this->framework->isInitialized() || !$this->canRunController($event->getRequest())) {
-            return;
+        if ($this->framework->isInitialized() && $this->canRunCron($event->getRequest())) {
+            $this->cron->run(Cron::SCOPE_WEB);
         }
-
-        /** @var FrontendCron $controller */
-        $controller = $this->framework->createInstance(FrontendCron::class);
-        $controller->run();
     }
 
-    private function canRunController(Request $request): bool
+    private function canRunCron(Request $request): bool
     {
         $pathInfo = $request->getPathInfo();
 
@@ -79,7 +84,8 @@ class CommandSchedulerListener
     private function canRunDbQuery(): bool
     {
         try {
-            return $this->connection->isConnected() && $this->connection->getSchemaManager()->tablesExist(['tl_cron']);
+            return $this->connection->isConnected()
+                && $this->connection->getSchemaManager()->tablesExist(['tl_cron_job']);
         } catch (DriverException $e) {
             return false;
         }

@@ -161,22 +161,6 @@
         <source>Here you can enter the maximum height for image uploads in pixels.</source>
         <target>Saisir la hauteur maximale pour l'envoi des images en pixels.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.enableSearch.0">
-        <source>Enable searching</source>
-        <target>Activer le moteur de recherche</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.enableSearch.1">
-        <source>Index pages so they can be searched.</source>
-        <target>Indexer les pages du front office afin qu'elles puissent être recherchées.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.indexProtected.0">
-        <source>Index protected pages</source>
-        <target>Indexer les pages protégées</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.indexProtected.1">
-        <source>Use this option carefully and always exclude personalized pages from being indexed!</source>
-        <target>Utiliser cette option avec soin et toujours penser à exclure de l'indexation les pages personnalisées !</target>
-      </trans-unit>
       <trans-unit id="tl_settings.defaultUser.0">
         <source>Default page owner</source>
         <target>Utilisateur propriétaire par défaut</target>
@@ -231,10 +215,6 @@
       </trans-unit>
       <trans-unit id="tl_settings.cron_legend">
         <source>Cron job settings</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.search_legend">
-        <source>Search engine settings</source>
-        <target>Paramètres du moteur de recherche</target>
       </trans-unit>
       <trans-unit id="tl_settings.chmod_legend">
         <source>Default access rights</source>

@@ -35,14 +35,12 @@ var AjaxRequest =
 			parent = $(el).getParent('li');
 
 		if (item) {
-			if (parent.hasClass('node-collapsed')) {
-				item.setStyle('display', null);
-				parent.removeClass('node-collapsed').addClass('node-expanded');
+			if (parent.hasClass('collapsed')) {
+				parent.removeClass('collapsed');
 				$(el).store('tip:title', Contao.lang.collapse);
 				new Request.Contao({ url: url }).post({'action':'toggleNavigation', 'id':id, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
 			} else {
-				item.setStyle('display', 'none');
-				parent.removeClass('node-expanded').addClass('node-collapsed');
+				parent.addClass('collapsed');
 				$(el).store('tip:title', Contao.lang.expand);
 				new Request.Contao({ url: url }).post({'action':'toggleNavigation', 'id':id, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
 			}
@@ -2257,7 +2255,7 @@ var Backend =
 	/**
 	 * Meta wizard
 	 *
-	 * @param {object} el The select element
+	 * @param {object} el The submit button
 	 * @param {string} ul The DOM element
 	 */
 	metaWizard: function(el, ul) {
@@ -2304,10 +2302,9 @@ var Backend =
 		// Disable the "add language" button
 		el.getParent('div').getElement('input[type="button"]').setProperty('disabled', true);
 
-		// Disable the option and update chosen
+		// Disable the option
 		opt.options[opt.selectedIndex].setProperty('disabled', true);
 		opt.value = '';
-		opt.fireEvent('liszt:updated');
 	},
 
 	/**
@@ -2826,6 +2823,73 @@ var Backend =
 			currentHover = undefined;
 			currentHoverTime = undefined;
 		});
+	},
+
+	/**
+	 * Crawl the website
+	 */
+	crawl: function() {
+		var timeout = 2000,
+			crawl = $('tl_crawl'),
+			progressBar = crawl.getElement('div.progress-bar'),
+			progressCount = crawl.getElement('p.progress-count'),
+			results = crawl.getElement('div.results');
+
+		function updateData(response) {
+			var done = response.total - response.pending,
+				percentage = parseInt(100 / response.total * done, 10),
+				result;
+
+			progressBar.setStyle('width', percentage + '%');
+			progressBar.set('html', percentage + '%');
+			progressBar.setAttribute('aria-valuenow', percentage);
+			progressCount.set('html', done + ' / ' + response.total);
+
+			if (!response.finished) {
+				return;
+			}
+
+			progressBar.removeClass('running').addClass('finished');
+			results.removeClass('running').addClass('finished');
+
+			for (result in response.results) {
+				if (response.results.hasOwnProperty(result)) {
+					var summary = results.getElement('.result[data-subscriber="' + result + '"] p.summary'),
+						warning = results.getElement('.result[data-subscriber="' + result + '"] p.warning'),
+						log = results.getElement('.result[data-subscriber="' + result + '"] p.subscriber-log'),
+						subscriberResults = response.results[result],
+						subscriberSummary = subscriberResults.summary;
+
+					if (subscriberResults.warning) {
+						warning.set('html', subscriberResults.warning);
+					}
+
+					if (subscriberResults.hasLog) {
+						log.setStyle('display', 'block');
+					}
+
+					summary.addClass(subscriberResults.wasSuccessful ? 'success' : 'failure');
+					summary.set('html', subscriberSummary);
+				}
+			}
+		}
+
+		function execRequest() {
+			new Request({
+				url: window.location.href,
+				onSuccess: function(responseText) {
+					var response = JSON.decode(responseText);
+
+					updateData(response);
+
+					if (!response.finished) {
+						setTimeout(execRequest, timeout);
+					}
+				}
+			}).send();
+		}
+
+		execRequest();
 	}
 };
 

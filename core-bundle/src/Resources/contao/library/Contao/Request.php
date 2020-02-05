@@ -182,35 +182,27 @@ class Request
 		{
 			case 'error':
 				return $this->strError;
-				break;
 
 			case 'code':
 				return $this->intCode;
-				break;
 
 			case 'request':
 				return $this->strRequest;
-				break;
 
 			case 'response':
 				return $this->strResponse;
-				break;
 
 			case 'headers':
 				return $this->arrResponseHeaders;
-				break;
 
 			case 'username':
 				return $this->strUsername;
-				break;
 
 			case 'redirect':
 				return $this->blnFollowRedirects;
-				break;
 
 			case 'rlimit':
 				return $this->intRedirectLimit;
-				break;
 		}
 
 		return null;
@@ -278,7 +270,6 @@ class Request
 				$this->strError = 'Invalid schema ' . $uri['scheme'];
 
 				return;
-				break;
 		}
 
 		if (!\is_resource($fp))
@@ -346,7 +337,7 @@ class Request
 		{
 			list($header, $value) = explode(':', $line, 2);
 
-			if (isset($this->arrResponseHeaders[$header]) && $header == 'Set-Cookie')
+			if ($header == 'Set-Cookie' && isset($this->arrResponseHeaders[$header]))
 			{
 				$this->arrResponseHeaders[$header] .= ',' . trim($value);
 			}

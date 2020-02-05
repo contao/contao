@@ -16,7 +16,6 @@ use Contao\CoreBundle\Controller\BackendController;
 use Contao\CoreBundle\Picker\PickerBuilderInterface;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Tests\TestCase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -93,11 +92,8 @@ class BackendControllerTest extends TestCase
             ->willReturn($picker)
         ;
 
-        $container = $this->createMock(ContainerInterface::class);
-        $container
-            ->method('get')
-            ->willReturn($builder)
-        ;
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('contao.picker.builder', $builder);
 
         $controller = new BackendController();
         $controller->setContainer($container);
@@ -134,11 +130,8 @@ class BackendControllerTest extends TestCase
             ->willReturn(null)
         ;
 
-        $container = $this->createMock(ContainerInterface::class);
-        $container
-            ->method('get')
-            ->willReturn($builder)
-        ;
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('contao.picker.builder', $builder);
 
         $controller = new BackendController();
         $controller->setContainer($container);
@@ -150,26 +143,5 @@ class BackendControllerTest extends TestCase
         $this->expectExceptionMessage('Unsupported picker context');
 
         $controller->pickerAction($request);
-    }
-
-    public function testRedirectsToTheBackendIfTheTwoFactorRouteIsCalledManually(): void
-    {
-        $router = $this->createMock(RouterInterface::class);
-        $router
-            ->expects($this->once())
-            ->method('generate')
-            ->with('contao_backend')
-            ->willReturn('/contao')
-        ;
-
-        $container = $this->getContainerWithContaoConfiguration();
-        $container->set('router', $router);
-
-        $controller = new BackendController();
-        $controller->setContainer($container);
-
-        $response = $controller->twoFactorAuthenticationAction();
-
-        $this->assertInstanceOf(RedirectResponse::class, $response);
     }
 }

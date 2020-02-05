@@ -49,7 +49,7 @@ class LanguageResolver
     /**
      * Returns the first eight accepted locales.
      *
-     * @return string[]
+     * @return array<string>
      */
     private function getAcceptedLocales(): array
     {

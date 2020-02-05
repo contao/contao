@@ -14,11 +14,12 @@ namespace Contao\CoreBundle\Csrf;
 
 use Symfony\Component\Security\Csrf\Exception\TokenNotFoundException;
 use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
+use Symfony\Contracts\Service\ResetInterface;
 
-class MemoryTokenStorage implements TokenStorageInterface
+class MemoryTokenStorage implements TokenStorageInterface, ResetInterface
 {
     /**
-     * @var array
+     * @var array|null
      */
     private $tokens;
 
@@ -27,9 +28,6 @@ class MemoryTokenStorage implements TokenStorageInterface
      */
     private $usedTokens = [];
 
-    /**
-     * {@inheritdoc}
-     */
     public function getToken($tokenId): string
     {
         $this->assertInitialized();
@@ -43,9 +41,6 @@ class MemoryTokenStorage implements TokenStorageInterface
         return $this->tokens[$tokenId];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setToken($tokenId, $token): void
     {
         $this->assertInitialized();
@@ -54,9 +49,6 @@ class MemoryTokenStorage implements TokenStorageInterface
         $this->tokens[$tokenId] = $token;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasToken($tokenId): bool
     {
         $this->assertInitialized();
@@ -64,9 +56,6 @@ class MemoryTokenStorage implements TokenStorageInterface
         return !empty($this->tokens[$tokenId]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function removeToken($tokenId): ?string
     {
         $this->assertInitialized();
@@ -89,7 +78,7 @@ class MemoryTokenStorage implements TokenStorageInterface
     }
 
     /**
-     * @return mixed[]
+     * @return array<mixed>
      */
     public function getUsedTokens(): array
     {
@@ -98,6 +87,12 @@ class MemoryTokenStorage implements TokenStorageInterface
         }
 
         return array_intersect_key($this->tokens, $this->usedTokens);
+    }
+
+    public function reset(): void
+    {
+        $this->tokens = null;
+        $this->usedTokens = [];
     }
 
     /**

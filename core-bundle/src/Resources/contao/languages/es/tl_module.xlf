@@ -266,12 +266,10 @@
         <target>Por favor selecciona una plantilla de resultados de búsqueda. La plantilla por defecto se llama &lt;em&gt;search_default&lt;/em&gt;. Si quieres añadir tu propias plantillas, sube las al directorio &lt;em&gt;templates&lt;/em&gt; (la extensión de archivo debe ser &lt;em&gt;tpl&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.0">
-        <source>Column</source>
-        <target>Columna</target>
+        <source>Layout section</source>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.1">
-        <source>Please choose the column whose articles you want to list.</source>
-        <target>Por favor selecciona la columna cuyos artículos quieres listar.</target>
+        <source>Please choose the layout section whose articles you want to list.</source>
       </trans-unit>
       <trans-unit id="tl_module.skipFirst.0">
         <source>Skip items</source>
@@ -576,8 +574,7 @@ Haga clic aquí para completar su registro y activar su cuenta:
 
 El enlace de confirmación es válido por 24 horas.
 
-Si no solicitó una cuenta, ignore este correo electrónico.
-</target>
+Si no solicitó una cuenta, ignore este correo electrónico.</target>
       </trans-unit>
       <trans-unit id="tl_module.passwordText.0">
         <source>Your password request on %s</source>
@@ -598,8 +595,7 @@ Haga clic aquí para establecer la nueva contraseña:
 
 ##link##
 
-Si no solicitó este correo electrónico, comuníquese con el administrador del sitio web.
-</target>
+Si no solicitó este correo electrónico, comuníquese con el administrador del sitio web.</target>
       </trans-unit>
       <trans-unit id="tl_module.internal">
         <source>Internal file</source>

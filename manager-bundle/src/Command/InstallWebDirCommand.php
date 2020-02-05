@@ -21,6 +21,9 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
+/**
+ * @internal
+ */
 class InstallWebDirCommand extends Command
 {
     /**
@@ -45,23 +48,15 @@ class InstallWebDirCommand extends Command
         parent::__construct();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure(): void
     {
         $this
             ->setName('contao:install-web-dir')
-            ->setDefinition([
-                new InputArgument('target', InputArgument::OPTIONAL, 'The target directory', 'web'),
-            ])
+            ->addArgument('target', InputArgument::OPTIONAL, 'The target directory', 'web')
             ->setDescription('Installs the files in the "web" directory')
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->fs = new Filesystem();
@@ -106,14 +101,10 @@ class InstallWebDirCommand extends Command
      */
     private function addFiles(string $webDir): void
     {
-        /** @var SplFileInfo[] $finder */
+        /** @var array<SplFileInfo> $finder */
         $finder = Finder::create()->files()->in(__DIR__.'/../Resources/skeleton/web');
 
         foreach ($finder as $file) {
-            if ($this->isExistingOptionalFile($file, $webDir)) {
-                continue;
-            }
-
             $this->fs->copy($file->getPathname(), $webDir.'/'.$file->getRelativePathname(), true);
             $this->io->writeln(sprintf('Added the <comment>web/%s</comment> file.', $file->getFilename()));
         }
@@ -133,15 +124,5 @@ class InstallWebDirCommand extends Command
             $this->fs->remove($webDir.'/install.php');
             $this->io->writeln('Deleted the <comment>web/install.php</comment> file.');
         }
-    }
-
-    /**
-     * Checks if an optional file exists.
-     */
-    private function isExistingOptionalFile(SplFileInfo $file, string $webDir): bool
-    {
-        $path = $file->getRelativePathname();
-
-        return 'robots.txt' === $path && $this->fs->exists($webDir.'/'.$path);
     }
 }

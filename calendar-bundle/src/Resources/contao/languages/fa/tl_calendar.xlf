@@ -119,7 +119,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.feed_legend">
         <source>RSS/Atom feed</source>
-        <target>خوراک آراس‌اس/اتم</target>
+        <target>خوراک RSS/Atom</target>
       </trans-unit>
       <trans-unit id="tl_calendar.notify_admin">
         <source>System administrator</source>
@@ -143,11 +143,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.0">
         <source>RSS feeds</source>
-        <target>خوراک‌های آر‌اس‌اس</target>
+        <target>خوراک‌های RSS</target>
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.1">
         <source>Manage RSS feeds</source>
-        <target>مدیریت خوراک‌های آراس‌اس</target>
+        <target>مدیریت خوراک‌های RSS</target>
       </trans-unit>
       <trans-unit id="tl_calendar.new.0">
         <source>New</source>

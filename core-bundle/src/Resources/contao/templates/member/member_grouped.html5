@@ -10,20 +10,18 @@
     <p class="tl_confirm"><?= $this->message ?></p>
   <?php endif; ?>
 
-  <form<?php if ($this->action): ?> action="<?= $this->action ?>"<?php endif; ?> id="<?= $this->formId ?>" method="post" enctype="<?= $this->enctype ?>">
+  <form id="<?= $this->formId ?>" method="post" enctype="<?= $this->enctype ?>">
     <div class="formbody">
       <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId ?>">
       <input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}">
 
       <?php foreach ($this->categories as $legend => $category): ?>
-        <?php if (!empty($category)): ?>
-          <fieldset>
-            <?php if ($legend): ?>
-              <legend><?= $legend ?></legend>
-            <?php endif; ?>
-            <?= implode('', $category) ?>
-          </fieldset>
-        <?php endif; ?>
+        <fieldset>
+          <?php if ($legend): ?>
+            <legend><?= $legend ?></legend>
+          <?php endif; ?>
+          <?= implode('', $category) ?>
+        </fieldset>
       <?php endforeach; ?>
 
       <div class="widget widget-submit">

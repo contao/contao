@@ -89,6 +89,22 @@
         <source>Show this page if there is none that matches the visitor's language.</source>
         <target>Diese Seite anzeigen, wenn es keine in der Sprache des Besuchers gibt.</target>
       </trans-unit>
+      <trans-unit id="tl_page.favicon.0">
+        <source>Favicon</source>
+        <target>Favicon</target>
+      </trans-unit>
+      <trans-unit id="tl_page.favicon.1">
+        <source>Here you can select a favicon for the website.</source>
+        <target>Hier können Sie ein Favicon für die Webseite auswählen.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.robotsTxt.0">
+        <source>Custom robots.txt content</source>
+        <target>Individuelle robots.txt-Anweisungen</target>
+      </trans-unit>
+      <trans-unit id="tl_page.robotsTxt.1">
+        <source>Here you can enter custom robots.txt content. It may be extended automatically by extensions.</source>
+        <target>Hier können Sie individuelle robots.txt-Anweisungen hinzufügen. Diese werden ggf. automatisch durch Erweiterungen ergänzt.</target>
+      </trans-unit>
       <trans-unit id="tl_page.dns.0">
         <source>Domain name</source>
         <target>Domainname</target>
@@ -358,16 +374,16 @@
         <target>Anzeigen ab</target>
       </trans-unit>
       <trans-unit id="tl_page.start.1">
-        <source>Do not show the page on the website before this day.</source>
-        <target>Die Seite erst ab diesem Tag auf der Webseite anzeigen.</target>
+        <source>If you want to prevent the page from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Wenn Sie die Seite erst ab einem bestimmten Zeitpunkt auf der Webseite anzeigen möchten, können Sie diesen hier eingeben. Andernfalls lassen Sie das Feld leer. </target>
       </trans-unit>
       <trans-unit id="tl_page.stop.0">
         <source>Show until</source>
         <target>Anzeigen bis</target>
       </trans-unit>
       <trans-unit id="tl_page.stop.1">
-        <source>Do not show the page on the website on and after this day.</source>
-        <target>Die Seite nur bis zu diesem Tag auf der Webseite anzeigen.</target>
+        <source>If you want to prevent the page from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Wenn Sie die Seite nur bis zu einem bestimmten Zeitpunkt auf der Webseite anzeigen möchten, können Sie diesen hier eingeben. Andernfalls lassen Sie das Feld leer. </target>
       </trans-unit>
       <trans-unit id="tl_page.enforceTwoFactor.0">
         <source>Enforce two-factor authentication</source>
@@ -404,6 +420,10 @@
       <trans-unit id="tl_page.dns_legend">
         <source>DNS settings</source>
         <target>DNS-Einstellungen</target>
+      </trans-unit>
+      <trans-unit id="tl_page.website_legend">
+        <source>Website settings</source>
+        <target>Website-Einstellungen</target>
       </trans-unit>
       <trans-unit id="tl_page.global_legend">
         <source>Global settings</source>

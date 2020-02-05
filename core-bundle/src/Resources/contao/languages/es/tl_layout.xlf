@@ -539,7 +539,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.copy">
         <source>Duplicate page layout ID %s</source>
-        <target>Duplicar el diseño de página con ID %s</target>
+        <target>Duplicarel disenno de página con ID %s</target>
       </trans-unit>
       <trans-unit id="tl_layout.cut">
         <source>Move page layout ID %s</source>

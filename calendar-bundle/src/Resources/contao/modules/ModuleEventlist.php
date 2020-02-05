@@ -178,7 +178,7 @@ class ModuleEventlist extends Events
 				foreach ($events as $event)
 				{
 					// Use repeatEnd if > 0 (see #8447)
-					if (($event['repeatEnd'] ?: $event['endTime']) < $intStart || $event['startTime'] > $intEnd)
+					if ($event['startTime'] > $intEnd || ($event['repeatEnd'] ?: $event['endTime']) < $intStart)
 					{
 						continue;
 					}
@@ -273,7 +273,7 @@ class ModuleEventlist extends Events
 				$blnIsLastEvent = true;
 			}
 
-			$objTemplate = new FrontendTemplate($this->cal_template);
+			$objTemplate = new FrontendTemplate($this->cal_template ?: 'event_list');
 			$objTemplate->setData($event);
 
 			// Month header

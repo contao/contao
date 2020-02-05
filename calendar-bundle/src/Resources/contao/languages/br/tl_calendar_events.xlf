@@ -245,16 +245,14 @@
         <target>Diskouez diwar</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.start.1">
-        <source>Do not show the event on the website before this day.</source>
-        <target>Chom hep diskouez an darvoud war al lec'hienn a-raok an devezh-mañ.</target>
+        <source>If you want to prevent the event from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.0">
         <source>Show until</source>
         <target>Diskouez betek</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.1">
-        <source>Do not show the event on the website on and after this day.</source>
-        <target>Chom hep diskouez an darvoud war al lec'hienn evit ha goude an devezh-mañ.</target>
+        <source>If you want to prevent the event from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.tstamp.0">
         <source>Revision date</source>

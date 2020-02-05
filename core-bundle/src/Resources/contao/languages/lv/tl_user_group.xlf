@@ -30,16 +30,16 @@
         <target>Aktivizēt</target>
       </trans-unit>
       <trans-unit id="tl_user_group.start.1">
-        <source>Automatically activate the group on this day.</source>
-        <target>Automātiski aktivizēt grupu norādītajā dienā.</target>
+        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Ja nevēlaties ļaut grupai būt aktīvai pirms noteikta datuma / laika, varat to ievadīt šeit. Pretējā gadījumā atstājiet lauku tukšu.</target>
       </trans-unit>
       <trans-unit id="tl_user_group.stop.0">
         <source>Deactivate on</source>
         <target>Deaktivizēt</target>
       </trans-unit>
       <trans-unit id="tl_user_group.stop.1">
-        <source>Automatically deactivate the group on this day.</source>
-        <target>Automātiski deaktivizēt grupu norādītajā dienā.</target>
+        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Ja nevēlaties ļaut grupai būt aktīvai pirms noteikta datuma / laika, varat to ievadīt šeit. Pretējā gadījumā atstājiet lauku tukšu.</target>
       </trans-unit>
       <trans-unit id="tl_user_group.title_legend">
         <source>Title</source>
@@ -48,6 +48,9 @@
       <trans-unit id="tl_user_group.modules_legend">
         <source>Allowed modules</source>
         <target>Atļautie moduļi</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.elements_legend">
+        <source>Allowed elements</source>
       </trans-unit>
       <trans-unit id="tl_user_group.pagemounts_legend">
         <source>Pagemounts</source>
@@ -74,8 +77,7 @@
         <target>Atļautie lauki</target>
       </trans-unit>
       <trans-unit id="tl_user_group.account_legend">
-        <source>Account settings</source>
-        <target>Konta uzstādījumi</target>
+        <source>Group settings</source>
       </trans-unit>
       <trans-unit id="tl_user_group.new.0">
         <source>New</source>

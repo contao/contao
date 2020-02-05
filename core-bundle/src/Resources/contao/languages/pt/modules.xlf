@@ -14,8 +14,7 @@
         <target>Artigos são utilizados para agrupar elementos de conteúdo como texto, imagens ou hiperligações. Cada artigo será publicado em uma certa página. Este módulo permite a você gerenciar artigos.</target>
       </trans-unit>
       <trans-unit id="MOD.form.0">
-        <source>Form generator</source>
-        <target>Gerador de formulários</target>
+        <source>Forms</source>
       </trans-unit>
       <trans-unit id="MOD.form.1">
         <source>Create custom forms and store or send the submitted data</source>
@@ -30,8 +29,7 @@
         <target>Tema</target>
       </trans-unit>
       <trans-unit id="MOD.themes.1">
-        <source>Manage front end modules, style sheets, page layouts and templates</source>
-        <target>Este módulo permite que você configure os módulos disponíveis no site, como, folhas de estilo, layout de página e modelos.</target>
+        <source>Manage themes, front end modules, page layouts or image sizes</source>
       </trans-unit>
       <trans-unit id="MOD.page.0">
         <source>Site structure</source>
@@ -46,8 +44,7 @@
         <target>Modelos</target>
       </trans-unit>
       <trans-unit id="MOD.tpl_editor.1">
-        <source>Edit templates in the back end</source>
-        <target>Este módulo permite que você edite arquivos de modelos na área administrativa do site.</target>
+        <source>Add or edit custom templates</source>
       </trans-unit>
       <trans-unit id="MOD.accounts">
         <source>Account manager</source>
@@ -58,38 +55,34 @@
         <target>Membros</target>
       </trans-unit>
       <trans-unit id="MOD.member.1">
-        <source>Manage member accounts (front end users)</source>
-        <target>Membros são usuários registrados do seu website (ex. clientes de uma loja online, assinantes de uma newsletter ou membros de uma área protegida). Este módulo permite que você gerencie estes membros.</target>
+        <source>Manage member accounts (front end)</source>
       </trans-unit>
       <trans-unit id="MOD.mgroup.0">
         <source>Member groups</source>
         <target>Grupos de Associados</target>
       </trans-unit>
       <trans-unit id="MOD.mgroup.1">
-        <source>Manage member groups (front end user groups)</source>
-        <target>Membros podem ser atribuídos a qualquer grupo para que estes compartilhem permissões e outras características. Este módulo permite que você crie estes grupos.</target>
+        <source>Manage member groups (front end)</source>
       </trans-unit>
       <trans-unit id="MOD.user.0">
         <source>Users</source>
         <target>Usuários</target>
       </trans-unit>
       <trans-unit id="MOD.user.1">
-        <source>Manage user accounts (back end users)</source>
-        <target>Este módulo permite que você crie novos usuários do Contao e gerencie contas de usuários existentes.</target>
+        <source>Manage user accounts (back end)</source>
       </trans-unit>
       <trans-unit id="MOD.group.0">
         <source>User groups</source>
         <target>Grupos de usuários</target>
       </trans-unit>
       <trans-unit id="MOD.group.1">
-        <source>Manage user groups (back end user groups)</source>
-        <target>Usuários podem ser atribuídos a qualquer grupo para que estes compartilhem permissões e outras características. Este módulo permite que você crie estes grupos</target>
+        <source>Manage user groups (back end)</source>
       </trans-unit>
       <trans-unit id="MOD.opt_in.0">
         <source>Double opt-in</source>
       </trans-unit>
       <trans-unit id="MOD.opt_in.1">
-        <source>Manage the double opt-in tokens</source>
+        <source>Manage double opt-in tokens</source>
       </trans-unit>
       <trans-unit id="MOD.system">
         <source>System</source>
@@ -100,32 +93,28 @@
         <target>Gerenciador de arquivos</target>
       </trans-unit>
       <trans-unit id="MOD.files.1">
-        <source>Manage files and folders or upload new files to the server</source>
-        <target>Este módulo permite que você envie arquivos ao servidor ou gerencie arquivos e pastas lá existentes.</target>
+        <source>Manage files and folders</source>
       </trans-unit>
       <trans-unit id="MOD.log.0">
         <source>System log</source>
         <target>Log do sistema</target>
       </trans-unit>
       <trans-unit id="MOD.log.1">
-        <source>Browse the system log and analyze the activity on the website</source>
-        <target>Certos eventos do sistema são gravados em um arquivo de log. Este módulo permite que você analise estas entradas de log.</target>
+        <source>Browse the system log</source>
       </trans-unit>
       <trans-unit id="MOD.settings.0">
         <source>Settings</source>
         <target>Preferências</target>
       </trans-unit>
       <trans-unit id="MOD.settings.1">
-        <source>Check and optimize the Contao configuration</source>
-        <target>Este módulo permite que você modifique a instalação do Contao e pode atualizar parâmetros básicos como formato de data ou conjunto de caracteres.</target>
+        <source>Adjust the Contao configuration</source>
       </trans-unit>
       <trans-unit id="MOD.maintenance.0">
         <source>Maintenance</source>
         <target>Manutenção do sistema</target>
       </trans-unit>
       <trans-unit id="MOD.maintenance.1">
-        <source>Maintain or update Contao</source>
-        <target>Este módulo permite que você realize a manutenção da instalação do Contao.</target>
+        <source>Crawl the website or purge generated data</source>
       </trans-unit>
       <trans-unit id="MOD.security.0">
         <source>Security</source>

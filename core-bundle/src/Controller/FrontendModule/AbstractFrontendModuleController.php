@@ -19,7 +19,7 @@ use Contao\ModuleModel;
 use Contao\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class AbstractFrontendModuleController extends AbstractFragmentController
 {
@@ -40,24 +40,20 @@ abstract class AbstractFrontendModuleController extends AbstractFragmentControll
         $response = $this->getResponse($template, $model, $request);
 
         if (null === $response) {
-            $response = new Response($template->parse());
+            $response = $template->getResponse();
         }
 
         return $response;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedServices(): array
     {
-        return array_merge(
-            parent::getSubscribedServices(),
-            [
-                'translator' => TranslatorInterface::class,
-                'contao.routing.scope_matcher' => ScopeMatcher::class,
-            ]
-        );
+        $services = parent::getSubscribedServices();
+
+        $services['translator'] = TranslatorInterface::class;
+        $services['contao.routing.scope_matcher'] = ScopeMatcher::class;
+
+        return $services;
     }
 
     protected function getBackendWildcard(ModuleModel $module): Response

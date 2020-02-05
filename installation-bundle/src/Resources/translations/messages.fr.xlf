@@ -18,6 +18,7 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
+        <target>Pour des raisons de sécurité, l'outil d'installation a été verrouillé. Ceci arrive si vous entrez un mauvais mot de passe plus de trois fois d'affilée. Pour le déverrouiller, veuillez exécuter &lt;code&gt;vendor/bin/contao-console contao:install:unlock&lt;/code&gt; dans votre interface en ligne de commande.</target>
         
       </trans-unit>
       <trans-unit id="5">
@@ -391,6 +392,7 @@
       </trans-unit>
       <trans-unit id="79">
         <source>unsupported_collation_explain</source>
+        <target>Le classement configuré &lt;code&gt;%s&lt;/code&gt; n'est pas disponible sur votre serveur. Merci de l'installer (recommandé) ou configurez un jeu de caractères et de classement différents dans le fichier &lt;code&gt;app/config/config.yml&lt;/code&gt;.</target>
         
       </trans-unit>
       <trans-unit id="80">
@@ -400,6 +402,7 @@
       </trans-unit>
       <trans-unit id="81">
         <source>unsupported_engine_explain</source>
+        <target>Le moteur de la base de données &lt;code&gt;%s&lt;/code&gt; n'est pas disponible sur votre serveur. Merci de l'installer (recommandé) ou configurez un moteur de base de données différent dans le fichier &lt;code&gt;app/config/config.yml&lt;/code&gt;.</target>
         
       </trans-unit>
       <trans-unit id="82">

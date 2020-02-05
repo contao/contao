@@ -31,6 +31,7 @@ class MakeServicesPublicPassTest extends TestCase
         $container->setDefinition('security.authentication.trust_resolver', (new Definition())->setPublic(false));
         $container->setDefinition('security.firewall.map', (new Definition())->setPublic(false));
         $container->setDefinition('security.logout_url_generator', (new Definition())->setPublic(false));
+        $container->setDefinition('security.helper', (new Definition())->setPublic(false));
 
         // Aliased definitions
         $container->setDefinition('doctrine.dbal.default_connection', (new Definition())->setPublic(false));
@@ -52,6 +53,7 @@ class MakeServicesPublicPassTest extends TestCase
         $this->assertTrue($container->getDefinition('security.authentication.trust_resolver')->isPublic());
         $this->assertTrue($container->getDefinition('security.firewall.map')->isPublic());
         $this->assertTrue($container->getDefinition('security.logout_url_generator')->isPublic());
+        $this->assertTrue($container->getDefinition('security.helper')->isPublic());
 
         // Aliases
         $this->assertTrue($container->getAlias('database_connection')->isPublic());

@@ -17,6 +17,9 @@ use FOS\HttpCache\SymfonyCache\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @internal
+ */
 class StripCookiesSubscriber implements EventSubscriberInterface
 {
     private const BLACKLIST = [
@@ -81,9 +84,6 @@ class StripCookiesSubscriber implements EventSubscriberInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents(): array
     {
         return [

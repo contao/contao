@@ -266,12 +266,10 @@
         <target>您可以这里选择搜索结果模版</target>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.0">
-        <source>Column</source>
-        <target>列</target>
+        <source>Layout section</source>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.1">
-        <source>Please choose the column whose articles you want to list.</source>
-        <target>请选择要列出的文章列</target>
+        <source>Please choose the layout section whose articles you want to list.</source>
       </trans-unit>
       <trans-unit id="tl_module.skipFirst.0">
         <source>Skip items</source>

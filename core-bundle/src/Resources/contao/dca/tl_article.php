@@ -248,7 +248,10 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'options_callback'        => array('tl_article', 'getArticleTemplates'),
+			'options_callback' => static function ()
+			{
+				return Contao\Controller::getTemplateGroup('mod_article_');
+			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
@@ -540,7 +543,7 @@ class tl_article extends Contao\Backend
 
 		$unpublished = ($row['start'] != '' && $row['start'] > $time) || ($row['stop'] != '' && $row['stop'] < $time);
 
-		if (!$row['published'] || $unpublished)
+		if ($unpublished || !$row['published'])
 		{
 			$image .= '_';
 		}
@@ -651,16 +654,6 @@ class tl_article extends Contao\Backend
 		}
 
 		return Contao\Backend::convertLayoutSectionIdsToAssociativeArray($arrSections);
-	}
-
-	/**
-	 * Return all module templates as array
-	 *
-	 * @return array
-	 */
-	public function getArticleTemplates()
-	{
-		return $this->getTemplateGroup('mod_article_');
 	}
 
 	/**
@@ -810,7 +803,7 @@ class tl_article extends Contao\Backend
 		}
 
 		// Generate the aliases
-		if (Contao\Input::post('FORM_SUBMIT') == 'tl_select' && isset($_POST['alias']))
+		if (isset($_POST['alias']) && Contao\Input::post('FORM_SUBMIT') == 'tl_select')
 		{
 			/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
 			$objSession = Contao\System::getContainer()->get('session');

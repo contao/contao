@@ -14,6 +14,9 @@ namespace Contao\CoreBundle\EventListener\InsertTags;
 
 use Symfony\Component\Asset\Packages;
 
+/**
+ * @internal
+ */
 class AssetListener
 {
     /**

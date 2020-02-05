@@ -30,14 +30,14 @@ class PublishedFilter implements RouteFilterInterface
      */
     private $tokenChecker;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.routing.published_filter" service instead
+     */
     public function __construct(TokenChecker $tokenChecker)
     {
         $this->tokenChecker = $tokenChecker;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function filter(RouteCollection $collection, Request $request): RouteCollection
     {
         if ($this->tokenChecker->hasBackendUser() && $this->tokenChecker->isPreviewMode()) {

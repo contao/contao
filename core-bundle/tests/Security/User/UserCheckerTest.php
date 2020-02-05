@@ -61,12 +61,12 @@ class UserCheckerTest extends TestCase
         /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->username = 'foo';
-        $user->locked = time() + 300;
+        $user->locked = time() + 5;
 
         $userChecker = new UserChecker($this->mockContaoFramework());
 
         $this->expectException(LockedException::class);
-        $this->expectExceptionMessage('User "foo" has been locked for 5 minutes');
+        $this->expectExceptionMessage('User "foo" is still locked for 5 seconds');
 
         $userChecker->checkPreAuth($user);
     }

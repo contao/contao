@@ -12,10 +12,25 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Contao\CoreBundle\Routing\ScopeMatcher;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
 
+/**
+ * @internal
+ */
 class MakeResponsePrivateListener
 {
+    /**
+     * @var ScopeMatcher
+     */
+    private $scopeMatcher;
+
+    public function __construct(ScopeMatcher $scopeMatcher)
+    {
+        $this->scopeMatcher = $scopeMatcher;
+    }
+
     /**
      * Make sure that the current response becomes a private response if any
      * of the following conditions are true.
@@ -28,14 +43,17 @@ class MakeResponsePrivateListener
      * Some of this logic is also already implemented in the HttpCache (1, 2 and 3), but we
      * want to make sure it works for any reverse proxy without having to configure too much.
      */
-    public function onKernelResponse(FilterResponseEvent $event): void
+    public function __invoke(ResponseEvent $event): void
     {
-        if (!$event->isMasterRequest()) {
+        if (!$this->scopeMatcher->isContaoMasterRequest($event)) {
             return;
         }
 
         $request = $event->getRequest();
         $response = $event->getResponse();
+
+        // Disable the default Symfony auto cache control
+        $response->headers->set(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER, true);
 
         // If the response is not cacheable for a reverse proxy, we don't have to do anything anyway
         if (!$response->isCacheable()) {

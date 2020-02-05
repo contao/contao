@@ -23,6 +23,8 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 
 /**
  * Runs Contao automator tasks on the command line.
+ *
+ * @internal
  */
 class AutomatorCommand extends Command
 {
@@ -43,27 +45,15 @@ class AutomatorCommand extends Command
         parent::__construct();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure(): void
     {
         $this
             ->setName('contao:automator')
-            ->setDefinition([
-                new InputArgument(
-                    'task',
-                    InputArgument::OPTIONAL,
-                    sprintf("The name of the task:\n  - %s", implode("\n  - ", $this->getCommands()))
-                ),
-            ])
+            ->addArgument('task', InputArgument::OPTIONAL, "The name of the task:\n  - ".implode("\n  - ", $this->getCommands()))
             ->setDescription('Runs automator tasks on the command line.')
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->framework->initialize();
@@ -88,7 +78,7 @@ class AutomatorCommand extends Command
     }
 
     /**
-     * @return string[]
+     * @return array<string>
      */
     private function getCommands(): array
     {
@@ -100,7 +90,7 @@ class AutomatorCommand extends Command
     }
 
     /**
-     * @return string[]
+     * @return array<string>
      */
     private function generateCommandMap(): array
     {

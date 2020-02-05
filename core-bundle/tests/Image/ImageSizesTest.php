@@ -15,12 +15,14 @@ namespace Contao\CoreBundle\Tests\Image;
 use Contao\BackendUser;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\ImageSizesEvent;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\ImageSizes;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Translation\Translator;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\Service\ResetInterface;
 
 class ImageSizesTest extends TestCase
 {
@@ -40,13 +42,15 @@ class ImageSizesTest extends TestCase
     private $imageSizes;
 
     /**
+     * @var ContaoFramework&MockObject
+     */
+    private $framework;
+
+    /**
      * @var Translator
      */
     private $translator;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -65,12 +69,13 @@ class ImageSizesTest extends TestCase
 
         $this->connection = $this->createMock(Connection::class);
         $this->eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $this->framework = $this->mockContaoFramework();
         $this->translator = $this->createMock(Translator::class);
 
         $this->imageSizes = new ImageSizes(
             $this->connection,
             $this->eventDispatcher,
-            $this->mockContaoFramework(),
+            $this->framework,
             $this->translator
         );
     }
@@ -164,6 +169,29 @@ class ImageSizesTest extends TestCase
         $this->assertSame([], $options);
     }
 
+    public function testServiceIsResetable(): void
+    {
+        $this->assertInstanceOf(ResetInterface::class, $this->imageSizes);
+
+        $this->eventDispatcher
+            ->expects($this->exactly(3))
+            ->method('dispatch')
+        ;
+
+        $this->connection
+            ->expects($this->exactly(2))
+            ->method('fetchAll')
+            ->willReturn([])
+        ;
+
+        // Test that fetchAll() is only called once
+        $this->imageSizes->getAllOptions();
+        $this->imageSizes->getAllOptions();
+
+        $this->imageSizes->reset();
+        $this->imageSizes->getAllOptions();
+    }
+
     /**
      * Adds an expected method call to the event dispatcher mock object.
      */
@@ -172,7 +200,7 @@ class ImageSizesTest extends TestCase
         $this->eventDispatcher
             ->expects($this->atLeastOnce())
             ->method('dispatch')
-            ->with($event, $this->isInstanceOf(ImageSizesEvent::class))
+            ->with($this->isInstanceOf(ImageSizesEvent::class), $event)
         ;
     }
 

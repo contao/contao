@@ -21,9 +21,6 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class SymlinksCommandTest extends TestCase
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function tearDown(): void
     {
         parent::tearDown();

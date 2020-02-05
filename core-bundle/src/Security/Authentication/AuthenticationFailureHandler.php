@@ -13,15 +13,28 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Security\Authentication;
 
 use Contao\CoreBundle\Monolog\ContaoContext;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccountStatusException;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationFailureHandler;
+use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 
-class AuthenticationFailureHandler extends DefaultAuthenticationFailureHandler
+class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterface
 {
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    public function __construct(LoggerInterface $logger = null)
+    {
+        $this->logger = $logger;
+    }
+
     /**
      * Logs the security exception to the Contao back end.
      *
@@ -29,10 +42,17 @@ class AuthenticationFailureHandler extends DefaultAuthenticationFailureHandler
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
-        if (null === $this->logger) {
-            return parent::onAuthenticationFailure($request, $exception);
+        if (null !== $this->logger) {
+            $this->logException($request, $exception);
         }
 
+        $request->getSession()->set(Security::AUTHENTICATION_ERROR, $exception);
+
+        return new RedirectResponse($request->getUri());
+    }
+
+    private function logException(Request $request, AuthenticationException $exception): void
+    {
         if ($exception instanceof AccountStatusException && ($user = $exception->getUser()) instanceof UserInterface) {
             $username = $user->getUsername();
         } else {
@@ -43,7 +63,5 @@ class AuthenticationFailureHandler extends DefaultAuthenticationFailureHandler
             $exception->getMessage(),
             ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, $username)]
         );
-
-        return parent::onAuthenticationFailure($request, $exception);
     }
 }

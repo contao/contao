@@ -38,7 +38,7 @@ class PaletteManipulator
 
     public static function create(): self
     {
-        return new static();
+        return new self();
     }
 
     /**
@@ -180,7 +180,7 @@ class PaletteManipulator
     /**
      * Converts a palette string to a configuration array.
      *
-     * @return array<string,array<string,string[]|bool>>
+     * @return array<string, array<string, (array<string>|bool)>>
      */
     private function explode(string $palette): array
     {
@@ -231,7 +231,7 @@ class PaletteManipulator
             }
 
             if (!\is_int($legend)) {
-                $palette .= sprintf('{%s%s},', $legend, ($group['hide'] ? ':hide' : ''));
+                $palette .= sprintf('{%s%s},', $legend, $group['hide'] ? ':hide' : '');
             }
 
             $palette .= implode(',', $group['fields']);

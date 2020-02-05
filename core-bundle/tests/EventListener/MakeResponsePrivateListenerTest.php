@@ -13,18 +13,20 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\EventListener\MakeResponsePrivateListener;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 class MakeResponsePrivateListenerTest extends TestCase
 {
-    public function testIgnoresSubRequests(): void
+    public function testIgnoresNonContaoMasterRequests(): void
     {
         // Public response with cookie, should be turned into a private response if it was a master request
         $response = new Response();
@@ -32,15 +34,15 @@ class MakeResponsePrivateListenerTest extends TestCase
         $response->setMaxAge(600);
         $response->headers->setCookie(Cookie::create('foobar', 'foobar'));
 
-        $event = new FilterResponseEvent(
+        $event = new ResponseEvent(
             $this->createMock(KernelInterface::class),
             new Request(),
             HttpKernelInterface::SUB_REQUEST,
             $response
         );
 
-        $listener = new MakeResponsePrivateListener();
-        $listener->onKernelResponse($event);
+        $listener = new MakeResponsePrivateListener($this->createScopeMatcher(false));
+        $listener($event);
 
         $this->assertTrue($response->headers->getCacheControlDirective('public'));
     }
@@ -51,17 +53,18 @@ class MakeResponsePrivateListenerTest extends TestCase
         $response->setPublic();
         $response->setMaxAge(600);
 
-        $event = new FilterResponseEvent(
+        $event = new ResponseEvent(
             $this->createMock(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MASTER_REQUEST,
             $response
         );
 
-        $listener = new MakeResponsePrivateListener();
-        $listener->onKernelResponse($event);
+        $listener = new MakeResponsePrivateListener($this->createScopeMatcher(true));
+        $listener($event);
 
         $this->assertTrue($response->headers->getCacheControlDirective('public'));
+        $this->assertTrue($response->headers->has(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER));
         $this->assertSame('600', $response->headers->getCacheControlDirective('max-age'));
     }
 
@@ -74,16 +77,17 @@ class MakeResponsePrivateListenerTest extends TestCase
         $request = new Request();
         $request->headers->set('Authorization', 'secret-token');
 
-        $event = new FilterResponseEvent(
+        $event = new ResponseEvent(
             $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MASTER_REQUEST,
             $response
         );
 
-        $listener = new MakeResponsePrivateListener();
-        $listener->onKernelResponse($event);
+        $listener = new MakeResponsePrivateListener($this->createScopeMatcher(true));
+        $listener($event);
 
+        $this->assertTrue($response->headers->has(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER));
         $this->assertTrue($response->headers->getCacheControlDirective('private'));
     }
 
@@ -103,16 +107,17 @@ class MakeResponsePrivateListenerTest extends TestCase
         $request = new Request();
         $request->setSession($session);
 
-        $event = new FilterResponseEvent(
+        $event = new ResponseEvent(
             $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MASTER_REQUEST,
             $response
         );
 
-        $listener = new MakeResponsePrivateListener();
-        $listener->onKernelResponse($event);
+        $listener = new MakeResponsePrivateListener($this->createScopeMatcher(true));
+        $listener($event);
 
+        $this->assertTrue($response->headers->has(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER));
         $this->assertTrue($response->headers->getCacheControlDirective('private'));
     }
 
@@ -123,16 +128,17 @@ class MakeResponsePrivateListenerTest extends TestCase
         $response->setMaxAge(600);
         $response->headers->setCookie(Cookie::create('foobar', 'foobar'));
 
-        $event = new FilterResponseEvent(
+        $event = new ResponseEvent(
             $this->createMock(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MASTER_REQUEST,
             $response
         );
 
-        $listener = new MakeResponsePrivateListener();
-        $listener->onKernelResponse($event);
+        $listener = new MakeResponsePrivateListener($this->createScopeMatcher(true));
+        $listener($event);
 
+        $this->assertTrue($response->headers->has(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER));
         $this->assertTrue($response->headers->getCacheControlDirective('private'));
     }
 
@@ -143,16 +149,17 @@ class MakeResponsePrivateListenerTest extends TestCase
         $response->setMaxAge(600);
         $response->setVary('Cookie');
 
-        $event = new FilterResponseEvent(
+        $event = new ResponseEvent(
             $this->createMock(KernelInterface::class),
             new Request([], [], [], ['super-cookie' => 'value']),
             HttpKernelInterface::MASTER_REQUEST,
             $response
         );
 
-        $listener = new MakeResponsePrivateListener();
-        $listener->onKernelResponse($event);
+        $listener = new MakeResponsePrivateListener($this->createScopeMatcher(true));
+        $listener($event);
 
+        $this->assertTrue($response->headers->has(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER));
         $this->assertTrue($response->headers->getCacheControlDirective('private'));
     }
 
@@ -163,16 +170,29 @@ class MakeResponsePrivateListenerTest extends TestCase
         $response->setMaxAge(600);
         $response->setVary('Cookie');
 
-        $event = new FilterResponseEvent(
+        $event = new ResponseEvent(
             $this->createMock(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MASTER_REQUEST,
             $response
         );
 
-        $listener = new MakeResponsePrivateListener();
-        $listener->onKernelResponse($event);
+        $listener = new MakeResponsePrivateListener($this->createScopeMatcher(true));
+        $listener($event);
 
+        $this->assertTrue($response->headers->has(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER));
         $this->assertTrue($response->headers->getCacheControlDirective('public'));
+    }
+
+    private function createScopeMatcher(bool $isContaoMasterRequest): ScopeMatcher
+    {
+        $scopeMatcher = $this->createMock(ScopeMatcher::class);
+        $scopeMatcher
+            ->expects($this->once())
+            ->method('isContaoMasterRequest')
+            ->willReturn($isContaoMasterRequest)
+        ;
+
+        return $scopeMatcher;
     }
 }

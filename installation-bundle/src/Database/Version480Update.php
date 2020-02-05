@@ -12,15 +12,39 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle\Database;
 
+use Contao\CoreBundle\Migration\AbstractMigration;
+use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\File;
 use Contao\StringUtil;
+use Doctrine\DBAL\Connection;
 
-class Version480Update extends AbstractVersionUpdate
+/**
+ * @internal
+ */
+class Version480Update extends AbstractMigration
 {
     /**
-     * {@inheritdoc}
+     * @var Connection
      */
-    public function shouldBeRun(): bool
+    private $connection;
+
+    /**
+     * @var string
+     */
+    private $projectDir;
+
+    public function __construct(Connection $connection, string $projectDir)
+    {
+        $this->connection = $connection;
+        $this->projectDir = $projectDir;
+    }
+
+    public function getName(): string
+    {
+        return 'Contao 4.8.0 Update';
+    }
+
+    public function shouldRun(): bool
     {
         $schemaManager = $this->connection->getSchemaManager();
 
@@ -33,10 +57,7 @@ class Version480Update extends AbstractVersionUpdate
         return isset($columns['picturefill']);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function run(): void
+    public function run(): MigrationResult
     {
         $this->connection->query('
             ALTER TABLE
@@ -130,11 +151,9 @@ class Version480Update extends AbstractVersionUpdate
                 importantPartWidth > 0 OR importantPartHeight > 0
         ');
 
-        $rootDir = $this->container->getParameter('kernel.project_dir');
-
         // Convert the important part to relative values as fractions
         while (false !== ($file = $statement->fetch(\PDO::FETCH_OBJ))) {
-            if (!file_exists($rootDir.'/'.$file->path) || is_dir($rootDir.'/'.$file->path)) {
+            if (!file_exists($this->projectDir.'/'.$file->path) || is_dir($this->projectDir.'/'.$file->path)) {
                 continue;
             }
 
@@ -236,5 +255,7 @@ class Version480Update extends AbstractVersionUpdate
         if ($this->connection->getSchemaManager()->tablesExist(['tl_remember_me'])) {
             $this->connection->query('DROP TABLE tl_remember_me');
         }
+
+        return $this->createResult(true);
     }
 }

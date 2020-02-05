@@ -22,9 +22,6 @@ class PickerConfigTest extends TestCase
      */
     private $config;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();

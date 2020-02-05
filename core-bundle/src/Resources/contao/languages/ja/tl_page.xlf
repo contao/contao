@@ -89,6 +89,22 @@
         <source>Show this page if there is none that matches the visitor's language.</source>
         <target>サイトのアクセス者の言語に合うページがない場合に、このページを表示します。</target>
       </trans-unit>
+      <trans-unit id="tl_page.favicon.0">
+        <source>Favicon</source>
+        <target>Favicon</target>
+      </trans-unit>
+      <trans-unit id="tl_page.favicon.1">
+        <source>Here you can select a favicon for the website.</source>
+        <target>ウェブサイトのfaviconを選択できます。</target>
+      </trans-unit>
+      <trans-unit id="tl_page.robotsTxt.0">
+        <source>Custom robots.txt content</source>
+        <target>独自のrobots.txtの内容</target>
+      </trans-unit>
+      <trans-unit id="tl_page.robotsTxt.1">
+        <source>Here you can enter custom robots.txt content. It may be extended automatically by extensions.</source>
+        <target>独自のrobots.txtの内容を入力できます。機能拡張によって、自動的に拡張されることもあります。</target>
+      </trans-unit>
       <trans-unit id="tl_page.dns.0">
         <source>Domain name</source>
         <target>ドメイン名</target>
@@ -358,16 +374,16 @@
         <target>公開の開始日</target>
       </trans-unit>
       <trans-unit id="tl_page.start.1">
-        <source>Do not show the page on the website before this day.</source>
-        <target>この日より前はページをウェブサイトに表示しません。</target>
+        <source>If you want to prevent the page from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>ある特定の日時より前はページをウェブサイトに表示したくない場合は、その日時を入力します。それ以外の場合は空のままにしてください。</target>
       </trans-unit>
       <trans-unit id="tl_page.stop.0">
         <source>Show until</source>
         <target>公開の終了日</target>
       </trans-unit>
       <trans-unit id="tl_page.stop.1">
-        <source>Do not show the page on the website on and after this day.</source>
-        <target>この日から後はページをウェブサイトに表示しません。</target>
+        <source>If you want to prevent the page from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>ある特定の日時より後はページをウェブサイトに表示したくない場合は、その日時を入力します。それ以外の場合は空のままにしてください。</target>
       </trans-unit>
       <trans-unit id="tl_page.enforceTwoFactor.0">
         <source>Enforce two-factor authentication</source>
@@ -404,6 +420,10 @@
       <trans-unit id="tl_page.dns_legend">
         <source>DNS settings</source>
         <target>DNSの設定</target>
+      </trans-unit>
+      <trans-unit id="tl_page.website_legend">
+        <source>Website settings</source>
+        <target>ウェブサイトの設定</target>
       </trans-unit>
       <trans-unit id="tl_page.global_legend">
         <source>Global settings</source>

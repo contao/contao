@@ -23,6 +23,8 @@ use Symfony\Component\VarDumper\Dumper\CliDumper;
 
 /**
  * Dumps debug information about a Contao DCA.
+ *
+ * @internal
  */
 class DebugDcaCommand extends Command
 {
@@ -38,9 +40,6 @@ class DebugDcaCommand extends Command
         parent::__construct();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure(): void
     {
         $this
@@ -50,9 +49,6 @@ class DebugDcaCommand extends Command
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $table = $input->getArgument('table');

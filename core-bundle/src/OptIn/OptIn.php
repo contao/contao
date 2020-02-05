@@ -23,14 +23,14 @@ class OptIn implements OptInInterface
      */
     private $framework;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.opt-in" service instead
+     */
     public function __construct(ContaoFramework $framework)
     {
         $this->framework = $framework;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function create(string $prefix, string $email, array $related): OptInTokenInterface
     {
         if ($prefix) {
@@ -64,9 +64,6 @@ class OptIn implements OptInInterface
         return new OptInToken($optIn, $this->framework);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function find(string $identifier): ?OptInTokenInterface
     {
         /** @var OptInModel $adapter */
@@ -79,9 +76,6 @@ class OptIn implements OptInInterface
         return new OptInToken($model, $this->framework);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function purgeTokens(): void
     {
         /** @var OptInModel $adapter */

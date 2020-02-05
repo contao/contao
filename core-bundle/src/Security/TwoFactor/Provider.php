@@ -24,14 +24,14 @@ class Provider implements TwoFactorProviderInterface
      */
     private $authenticator;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.security.two_factor.provider" service instead
+     */
     public function __construct(Authenticator $authenticator)
     {
         $this->authenticator = $authenticator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function beginAuthentication(AuthenticationContextInterface $context): bool
     {
         $user = $context->getUser();
@@ -43,9 +43,6 @@ class Provider implements TwoFactorProviderInterface
         return (bool) $user->useTwoFactor;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function validateAuthenticationCode($user, string $authenticationCode): bool
     {
         if (!$user instanceof User) {
@@ -59,17 +56,11 @@ class Provider implements TwoFactorProviderInterface
         return true;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFormRenderer(): TwoFactorFormRendererInterface
     {
         throw new \RuntimeException('The "contao" two-factor provider does not support forms');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function prepareAuthentication($user): void
     {
     }

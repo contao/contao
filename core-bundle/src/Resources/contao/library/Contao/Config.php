@@ -475,7 +475,10 @@ class Config
 			'encryptionKey'    => 'contao.encryption_key',
 			'urlSuffix'        => 'contao.url_suffix',
 			'uploadPath'       => 'contao.upload_path',
+			'editableFiles'    => 'contao.editable_files',
 			'debugMode'        => 'kernel.debug',
+			'enableSearch'     => 'contao.search.default_indexer.enable',
+			'indexProtected'   => 'contao.search.index_protected',
 		);
 
 		foreach ($arrMap as $strKey=>$strParam)
@@ -506,7 +509,7 @@ class Config
 	 */
 	protected function escape($varValue)
 	{
-		if (is_numeric($varValue) && !preg_match('/e|^[+-]?0[^.]/', $varValue) && $varValue < PHP_INT_MAX)
+		if (is_numeric($varValue) && $varValue < PHP_INT_MAX && !preg_match('/e|^[+-]?0[^.]/', $varValue))
 		{
 			return $varValue;
 		}

@@ -15,6 +15,9 @@ namespace Contao\ManagerBundle\Api;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Yaml;
 
+/**
+ * @internal
+ */
 class ManagerConfig
 {
     /**
@@ -43,7 +46,7 @@ class ManagerConfig
     }
 
     /**
-     * @return mixed[]
+     * @return array<mixed>
      */
     public function all(): array
     {
@@ -55,7 +58,7 @@ class ManagerConfig
     }
 
     /**
-     * @return mixed[]
+     * @return array<mixed>
      */
     public function read(): array
     {

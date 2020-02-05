@@ -12,50 +12,26 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
-use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
-use Contao\CoreBundle\Exception\ResponseException;
-use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\FrontendCron;
+use Contao\CoreBundle\Cron\Cron;
 use Contao\FrontendIndex;
 use Contao\FrontendShare;
-use Contao\PageError401;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\LogoutException;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
  * @Route(defaults={"_scope" = "frontend", "_token_check" = true})
+ *
+ * @internal
  */
-class FrontendController
+class FrontendController extends AbstractController
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var CsrfTokenManagerInterface
-     */
-    private $tokenManager;
-
-    /**
-     * @var string
-     */
-    private $tokenName;
-
-    public function __construct(ContaoFramework $framework, CsrfTokenManagerInterface $tokenManager, string $tokenName)
-    {
-        $this->framework = $framework;
-        $this->tokenManager = $tokenManager;
-        $this->tokenName = $tokenName;
-    }
-
     public function indexAction(): Response
     {
-        $this->framework->initialize();
+        $this->initializeContaoFramework();
 
         $controller = new FrontendIndex();
 
@@ -65,13 +41,13 @@ class FrontendController
     /**
      * @Route("/_contao/cron", name="contao_frontend_cron")
      */
-    public function cronAction(): Response
+    public function cronAction(Request $request, Cron $cron): Response
     {
-        $this->framework->initialize();
+        if ($request->isMethod(Request::METHOD_GET)) {
+            $cron->run(Cron::SCOPE_WEB);
+        }
 
-        $controller = new FrontendCron();
-
-        return $controller->run();
+        return new Response('', Response::HTTP_NO_CONTENT);
     }
 
     /**
@@ -79,38 +55,11 @@ class FrontendController
      */
     public function shareAction(): RedirectResponse
     {
-        $this->framework->initialize();
+        $this->initializeContaoFramework();
 
         $controller = new FrontendShare();
 
         return $controller->run();
-    }
-
-    /**
-     * Symfony will authenticate the user automatically by calling this route.
-     *
-     * @return RedirectResponse|Response
-     *
-     * @Route("/_contao/login", name="contao_frontend_login")
-     */
-    public function loginAction(): Response
-    {
-        $this->framework->initialize();
-
-        if (!isset($GLOBALS['TL_PTY']['error_401']) || !class_exists($GLOBALS['TL_PTY']['error_401'])) {
-            throw new UnauthorizedHttpException('', 'Not authorized');
-        }
-
-        /** @var PageError401 $pageHandler */
-        $pageHandler = new $GLOBALS['TL_PTY']['error_401']();
-
-        try {
-            return $pageHandler->getResponse();
-        } catch (ResponseException $e) {
-            return $e->getResponse();
-        } catch (InsufficientAuthenticationException $e) {
-            throw new UnauthorizedHttpException('', $e->getMessage());
-        }
     }
 
     /**
@@ -156,7 +105,12 @@ class FrontendController
      */
     public function requestTokenScriptAction(): Response
     {
-        $token = $this->tokenManager->getToken($this->tokenName)->getValue();
+        $token = $this
+            ->get('contao.csrf.token_manager')
+            ->getToken($this->getParameter('contao.csrf_token_name'))
+            ->getValue()
+        ;
+
         $token = json_encode($token);
 
         $response = new Response();
@@ -168,29 +122,12 @@ class FrontendController
         return $response;
     }
 
-    /**
-     * Redirects the user to the Contao front end in case they manually call the
-     * /_contao/two-factor route. Will be intercepted by the two factor bundle otherwise.
-     *
-     * @Route("/_contao/two-factor", name="contao_frontend_two_factor")
-     */
-    public function twoFactorAuthenticationAction(): Response
+    public static function getSubscribedServices(): array
     {
-        $this->framework->initialize();
+        $services = parent::getSubscribedServices();
 
-        if (!isset($GLOBALS['TL_PTY']['error_401']) || !class_exists($GLOBALS['TL_PTY']['error_401'])) {
-            throw new UnauthorizedHttpException('', 'Not authorized');
-        }
+        $services['contao.csrf.token_manager'] = CsrfTokenManagerInterface::class;
 
-        /** @var PageError401 $pageHandler */
-        $pageHandler = new $GLOBALS['TL_PTY']['error_401']();
-
-        try {
-            return $pageHandler->getResponse();
-        } catch (ResponseException $e) {
-            return $e->getResponse();
-        } catch (InsufficientAuthenticationException $e) {
-            throw new UnauthorizedHttpException('', $e->getMessage());
-        }
+        return $services;
     }
 }

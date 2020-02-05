@@ -23,14 +23,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
+/**
+ * @internal
+ */
 class InitializeApplicationListener implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
 
-    /**
-     * Listens to the contao_installation.initialize event.
-     */
-    public function onInitialize(InitializeApplicationEvent $event): void
+    public function __invoke(InitializeApplicationEvent $event): void
     {
         $this->installAssets($event);
         $this->installContao($event);

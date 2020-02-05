@@ -16,6 +16,8 @@ namespace Contao;
  * @property array $options
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @todo Rename to FormCheckbox in Contao 5.0
  */
 class FormCheckBox extends Widget
 {
@@ -146,7 +148,7 @@ class FormCheckBox extends Widget
 	public function getAttributes($arrStrip=array())
 	{
 		// The "required" attribute only makes sense for single checkboxes
-		if (\count($this->arrOptions) == 1 && $this->mandatory)
+		if ($this->mandatory && \count($this->arrOptions) == 1)
 		{
 			$this->arrAttributes['required'] = 'required';
 		}

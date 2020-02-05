@@ -266,12 +266,12 @@
         <target>Selecteer hier de template voor zoekresultaten.</target>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.0">
-        <source>Column</source>
-        <target>Kolom</target>
+        <source>Layout section</source>
+        <target>Lay-out sectie</target>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.1">
-        <source>Please choose the column whose articles you want to list.</source>
-        <target>Gelieve een kolom te kiezen van artikelen die u wilt opsommen.</target>
+        <source>Please choose the layout section whose articles you want to list.</source>
+        <target>Kies de lay-out sectie van wiens artikelen u wilt vermelden.</target>
       </trans-unit>
       <trans-unit id="tl_module.skipFirst.0">
         <source>Skip items</source>

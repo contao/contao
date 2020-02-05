@@ -147,26 +147,20 @@ class StyleSheets extends Backend
 								   ->limit(1)
 								   ->execute($row['pid']);
 
-		if ($objTheme->vars != '')
+		if ($objTheme->vars != '' && \is_array(($tmp = StringUtil::deserialize($objTheme->vars))))
 		{
-			if (\is_array(($tmp = StringUtil::deserialize($objTheme->vars))))
+			foreach ($tmp as $v)
 			{
-				foreach ($tmp as $v)
-				{
-					$vars[$v['key']] = $v['value'];
-				}
+				$vars[$v['key']] = $v['value'];
 			}
 		}
 
 		// Merge the global style sheet variables
-		if ($row['vars'] != '')
+		if ($row['vars'] != '' && \is_array($tmp = StringUtil::deserialize($row['vars'])))
 		{
-			if (\is_array($tmp = StringUtil::deserialize($row['vars'])))
+			foreach ($tmp as $v)
 			{
-				foreach ($tmp as $v)
-				{
-					$vars[$v['key']] = $v['value'];
-				}
+				$vars[$v['key']] = $v['value'];
 			}
 		}
 
@@ -965,7 +959,7 @@ class StyleSheets extends Backend
 		}
 
 		// Replace global variables
-		if (strpos($return, '$') !== false && !empty($vars))
+		if (!empty($vars) && strpos($return, '$') !== false)
 		{
 			$return = str_replace(array_keys($vars), $vars, $return);
 		}
@@ -1312,7 +1306,7 @@ class StyleSheets extends Backend
 <div id="tl_buttons">
 <a href="' . ampersand(str_replace('&key=import', '', Environment::get('request'))) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>
-<form action="' . ampersand(Environment::get('request')) . '" id="tl_style_sheet_import" class="tl_form tl_edit_form" method="post" enctype="multipart/form-data">
+<form id="tl_style_sheet_import" class="tl_form tl_edit_form" method="post" enctype="multipart/form-data">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_style_sheet_import">
 <input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">
@@ -1362,26 +1356,20 @@ class StyleSheets extends Backend
 								   ->limit(1)
 								   ->execute($objStyleSheet->pid);
 
-		if ($objTheme->vars != '')
+		if ($objTheme->vars != '' && \is_array(($tmp = StringUtil::deserialize($objTheme->vars))))
 		{
-			if (\is_array(($tmp = StringUtil::deserialize($objTheme->vars))))
+			foreach ($tmp as $v)
 			{
-				foreach ($tmp as $v)
-				{
-					$vars[$v['key']] = $v['value'];
-				}
+				$vars[$v['key']] = $v['value'];
 			}
 		}
 
 		// Merge the global style sheet variables
-		if ($objStyleSheet->vars != '')
+		if ($objStyleSheet->vars != '' && \is_array(($tmp = StringUtil::deserialize($objStyleSheet->vars))))
 		{
-			if (\is_array(($tmp = StringUtil::deserialize($objStyleSheet->vars))))
+			foreach ($tmp as $v)
 			{
-				foreach ($tmp as $v)
-				{
-					$vars[$v['key']] = $v['value'];
-				}
+				$vars[$v['key']] = $v['value'];
 			}
 		}
 
@@ -1991,6 +1979,7 @@ class StyleSheets extends Backend
 								'unit' => $strUnit
 							);
 							break;
+
 						case 2:
 							$varValue_1 = preg_replace('/[^0-9.-]+/', '', $arrTRBL[0]);
 							$varValue_2 = preg_replace('/[^0-9.-]+/', '', $arrTRBL[1]);
@@ -2003,6 +1992,7 @@ class StyleSheets extends Backend
 								'unit' => $strUnit
 							);
 							break;
+
 						case 4:
 							$arrSet['borderwidth'] = array
 							(
@@ -2054,6 +2044,7 @@ class StyleSheets extends Backend
 								'unit' => $strUnit
 							);
 							break;
+
 						case 2:
 							$varValue_1 = preg_replace('/[^0-9.-]+/', '', $arrTRBL[0]);
 							$varValue_2 = preg_replace('/[^0-9.-]+/', '', $arrTRBL[1]);
@@ -2066,6 +2057,7 @@ class StyleSheets extends Backend
 								'unit' => $strUnit
 							);
 							break;
+
 						case 4:
 							$arrSet['borderradius'] = array
 							(

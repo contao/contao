@@ -90,11 +90,11 @@
       </trans-unit>
       <trans-unit id="tl_settings.allowedTags.0">
         <source>Allowed HTML tags</source>
-        <target>برچسب‌های اچ‌تی‌ام‌ال مجاز</target>
+        <target>برچسب‌های HTML مجاز</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedTags.1">
         <source>Here you can enter a list of allowed HTML tags that will not be stripped.</source>
-        <target>اینجا می‌توانید فهرستی از برچسب‌های اچ‌تی‌ام‌ال مجاز که نباید حذف شوند را وارد نمایید.</target>
+        <target>اینجا می‌توانید فهرستی از برچسب‌های HTML مجاز که نباید حذف شوند را وارد نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_settings.disableRefererCheck.0">
         <source>Disable request tokens</source>
@@ -160,22 +160,6 @@
         <source>Here you can enter the maximum height for image uploads in pixels.</source>
         <target>اینجا می‌توانید بیشترین ارتفاع برای بارگزاری تصویر در واحد پیکسل وارد نمایید.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.enableSearch.0">
-        <source>Enable searching</source>
-        <target>فعال کردن جستجو</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.enableSearch.1">
-        <source>Index pages so they can be searched.</source>
-        <target>برگه‌ها را فهرست می‌کند تا بتوانند جستجو شوند.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.indexProtected.0">
-        <source>Index protected pages</source>
-        <target>فهرست کردن برگه‌های محافظت شده</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.indexProtected.1">
-        <source>Use this option carefully and always exclude personalized pages from being indexed!</source>
-        <target>این گزینه را با احتیاط استفاده کنید و همیشه برگه‌های شخصی از فهرست شدن مستثنی کنید.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.defaultUser.0">
         <source>Default page owner</source>
         <target>صاحب پیش‌فرض برگه</target>
@@ -230,10 +214,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.cron_legend">
         <source>Cron job settings</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.search_legend">
-        <source>Search engine settings</source>
-        <target>تنظیمات موتور جستجو</target>
+        <target>تنظیمات کار Cron</target>
       </trans-unit>
       <trans-unit id="tl_settings.chmod_legend">
         <source>Default access rights</source>

@@ -10,16 +10,11 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Event\ContaoCoreEvents;
-use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Util\PackageUtil;
 use Knp\Bundle\TimeBundle\DateTimeFormatter;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Role\SwitchUserRole;
-use Symfony\Component\Security\Http\Firewall\SwitchUserListener;
 
 /**
  * Main back end controller.
@@ -149,12 +144,9 @@ class BackendMain extends Backend
 			{
 				$picker = System::getContainer()->get('contao.picker.builder')->createFromData(Input::get('picker', true));
 
-				if ($picker !== null)
+				if ($picker !== null && ($menu = $picker->getMenu()) && $menu->count() > 1)
 				{
-					if (($menu = $picker->getMenu()) && $menu->count() > 1)
-					{
-						$this->Template->pickerMenu = System::getContainer()->get('contao.menu.renderer')->render($menu);
-					}
+					$this->Template->pickerMenu = System::getContainer()->get('contao.menu.renderer')->render($menu);
 				}
 			}
 
@@ -226,7 +218,7 @@ class BackendMain extends Backend
 		$objSession = $container->get('session');
 
 		// File picker reference (backwards compatibility)
-		if (Input::get('popup') && Input::get('act') != 'show' && ((Input::get('do') == 'page' && $this->User->hasAccess('page', 'modules')) || (Input::get('do') == 'files' && $this->User->hasAccess('files', 'modules'))) && $objSession->get('filePickerRef'))
+		if (Input::get('popup') && Input::get('act') != 'show' && $objSession->get('filePickerRef') && ((Input::get('do') == 'page' && $this->User->hasAccess('page', 'modules')) || (Input::get('do') == 'files' && $this->User->hasAccess('files', 'modules'))))
 		{
 			$this->Template->managerHref = ampersand($objSession->get('filePickerRef'));
 			$this->Template->manager = (strpos($objSession->get('filePickerRef'), 'contao/page?') !== false) ? $GLOBALS['TL_LANG']['MSC']['pagePickerHome'] : $GLOBALS['TL_LANG']['MSC']['filePickerHome'];
@@ -238,121 +230,16 @@ class BackendMain extends Backend
 		$this->Template->title = StringUtil::specialchars(strip_tags($this->Template->title));
 		$this->Template->host = Backend::getDecodedHostname();
 		$this->Template->charset = Config::get('characterSet');
-		$this->Template->account = $GLOBALS['TL_LANG']['MOD']['login'][1];
-		$this->Template->preview = $GLOBALS['TL_LANG']['MSC']['fePreview'];
-		$this->Template->previewTitle = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['fePreviewTitle']);
-		$this->Template->profile = $GLOBALS['TL_LANG']['MSC']['profile'];
-		$this->Template->referer = base64_encode(Environment::get('queryString'));
-		$this->Template->profileTitle = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['profileTitle']);
-		$this->Template->security = $GLOBALS['TL_LANG']['MSC']['security'];
-		$this->Template->logout = $GLOBALS['TL_LANG']['MSC']['logoutBT'];
-		$this->Template->logoutLink = System::getContainer()->get('security.logout_url_generator')->getLogoutUrl();
-		$this->Template->logoutTitle = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['logoutBTTitle']);
-		$this->Template->user = $this->User;
-		$this->Template->username = $GLOBALS['TL_LANG']['MSC']['user'] . ' ' . $this->User->getUsername();
-		$this->Template->request = ampersand(Environment::get('request'));
-		$this->Template->top = $GLOBALS['TL_LANG']['MSC']['backToTop'];
-		$this->Template->modules = $this->User->navigation();
 		$this->Template->home = $GLOBALS['TL_LANG']['MSC']['home'];
-		$this->Template->homeTitle = $GLOBALS['TL_LANG']['MSC']['homeTitle'];
-		$this->Template->backToTop = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backToTopTitle']);
-		$this->Template->expandNode = $GLOBALS['TL_LANG']['MSC']['expandNode'];
-		$this->Template->collapseNode = $GLOBALS['TL_LANG']['MSC']['collapseNode'];
-		$this->Template->loadingData = $GLOBALS['TL_LANG']['MSC']['loadingData'];
 		$this->Template->isPopup = Input::get('popup');
-		$this->Template->systemMessages = $GLOBALS['TL_LANG']['MSC']['systemMessages'];
-		$this->Template->burger = $GLOBALS['TL_LANG']['MSC']['burgerTitle'];
 		$this->Template->learnMore = sprintf($GLOBALS['TL_LANG']['MSC']['learnMore'], '<a href="https://contao.org" target="_blank" rel="noreferrer noopener">contao.org</a>');
-		$this->Template->ref = $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
-		$this->Template->menu = $container->get('contao.menu.backend_menu_renderer')->render($container->get('contao.menu.backend_menu_builder')->create());
-		$this->Template->headerNavigation = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['headerNavigation']);
 
-		// TODO: This should be moved the the manager-bundle in Contao 4.9
-		$this->Template->canDebug = $this->User->isAdmin && System::getContainer()->has('contao_manager.jwt_manager');
-		$this->Template->isDebug = $container->get('kernel')->isDebug();
+		$twig = $container->get('twig');
 
-		$strSystemMessages = Backend::getSystemMessages();
-		$this->Template->systemMessagesCount = substr_count($strSystemMessages, 'class="tl_');
-		$this->Template->systemErrorMessagesCount = substr_count($strSystemMessages, 'class="tl_error"');
-
-		$this->setImpersonatedLogout();
-
-		// Front end preview links
-		if (\defined('CURRENT_ID') && CURRENT_ID != '')
-		{
-			if (Input::get('do') == 'page')
-			{
-				$this->Template->frontendFile = '?page=' . CURRENT_ID;
-			}
-			elseif (Input::get('do') == 'article' && ($objArticle = ArticleModel::findByPk(CURRENT_ID)) !== null)
-			{
-				$this->Template->frontendFile = '?page=' . $objArticle->pid;
-			}
-			elseif (Input::get('do') != '')
-			{
-				$event = new PreviewUrlCreateEvent(Input::get('do'), CURRENT_ID);
-				$container->get('event_dispatcher')->dispatch(ContaoCoreEvents::PREVIEW_URL_CREATE, $event);
-
-				if (($strQuery = $event->getQuery()) !== null)
-				{
-					$this->Template->frontendFile = '?' . $strQuery;
-				}
-			}
-		}
+		$this->Template->menu = $twig->render('@ContaoCore/Backend/be_menu.html.twig');
+		$this->Template->headerMenu = $twig->render('@ContaoCore/Backend/be_header_menu.html.twig');
 
 		return $this->Template->getResponse();
-	}
-
-	/**
-	 * Adjusts the logout link if the current user is impersonated.
-	 *
-	 * @throws \RuntimeException
-	 */
-	private function setImpersonatedLogout()
-	{
-		$token = System::getContainer()->get('security.token_storage')->getToken();
-
-		if (!$token instanceof TokenInterface)
-		{
-			return;
-		}
-
-		$impersonatorUser = null;
-
-		foreach ($token->getRoles() as $role)
-		{
-			if ($role instanceof SwitchUserRole)
-			{
-				$impersonatorUser = $role->getSource()->getUsername();
-				break;
-			}
-		}
-
-		if (!$impersonatorUser)
-		{
-			return;
-		}
-
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
-
-		if ($request === null)
-		{
-			throw new \RuntimeException('The request stack did not contain a request');
-		}
-
-		$firewallMap = System::getContainer()->get('security.firewall.map');
-
-		// Generate the "exit impersonation" path from the current request
-		if (($firewallConfig = $firewallMap->getFirewallConfig($request)) === null || ($switchUserConfig = $firewallConfig->getSwitchUser()) === null)
-		{
-			return;
-		}
-
-		// Take the use back to the "users" module
-		$arrParams = array('do' => 'user', urlencode($switchUserConfig['parameter']) => SwitchUserListener::EXIT_VALUE);
-
-		$this->Template->logout = sprintf($GLOBALS['TL_LANG']['MSC']['switchBT'], $impersonatorUser);
-		$this->Template->logoutLink = System::getContainer()->get('router')->generate('contao_backend', $arrParams);
 	}
 }
 

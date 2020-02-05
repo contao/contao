@@ -16,24 +16,14 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\System;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 use Symfony\Component\Translation\TranslatorBagInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Translation\TranslatorInterface as LegacyTranslatorInterface;
+use Symfony\Contracts\Translation\LocaleAwareInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-class Translator implements TranslatorInterface, TranslatorBagInterface
+class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleAwareInterface, LegacyTranslatorInterface
 {
-    // Reserved translation domains for the Contao bundles
-    private const CONTAO_BUNDLES = [
-        'contao_calendar',
-        'contao_comments',
-        'contao_faq',
-        'contao_installation',
-        'contao_listing',
-        'contao_manager',
-        'contao_news',
-        'contao_newsletter',
-    ];
-
     /**
-     * @var TranslatorInterface|TranslatorBagInterface
+     * @var TranslatorInterface|TranslatorBagInterface|LegacyTranslatorInterface
      */
     private $translator;
 
@@ -42,6 +32,9 @@ class Translator implements TranslatorInterface, TranslatorBagInterface
      */
     private $framework;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.translation.translator" service instead
+     */
     public function __construct(TranslatorInterface $translator, ContaoFramework $framework)
     {
         $this->translator = $translator;
@@ -57,7 +50,7 @@ class Translator implements TranslatorInterface, TranslatorBagInterface
     public function trans($id, array $parameters = [], $domain = null, $locale = null): string
     {
         // Forward to the default translator
-        if (null === $domain || 0 !== strncmp($domain, 'contao_', 7) || \in_array($domain, self::CONTAO_BUNDLES, true)) {
+        if (null === $domain || 0 !== strncmp($domain, 'contao_', 7)) {
             return $this->translator->trans($id, $parameters, $domain, $locale);
         }
 
@@ -81,33 +74,21 @@ class Translator implements TranslatorInterface, TranslatorBagInterface
         return $translated;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function transChoice($id, $number, array $parameters = [], $domain = null, $locale = null): string
     {
         return $this->translator->transChoice($id, $number, $parameters, $domain, $locale);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setLocale($locale): ?string
+    public function setLocale($locale): void
     {
-        return $this->translator->setLocale($locale);
+        $this->translator->setLocale($locale);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLocale(): string
     {
         return $this->translator->getLocale();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCatalogue($locale = null): MessageCatalogueInterface
     {
         return $this->translator->getCatalogue($locale);

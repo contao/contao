@@ -18,6 +18,9 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+/**
+ * @internal
+ */
 class PreviewUrlCreateListener
 {
     /**
@@ -41,7 +44,7 @@ class PreviewUrlCreateListener
      *
      * @throws \RuntimeException
      */
-    public function onPreviewUrlCreate(PreviewUrlCreateEvent $event): void
+    public function __invoke(PreviewUrlCreateEvent $event): void
     {
         if (!$this->framework->isInitialized() || 'calendar' !== $event->getKey()) {
             return;

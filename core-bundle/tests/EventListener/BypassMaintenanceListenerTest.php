@@ -16,7 +16,7 @@ use Contao\CoreBundle\EventListener\BypassMaintenanceListener;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -25,7 +25,7 @@ class BypassMaintenanceListenerTest extends TestCase
     public function testAddsTheRequestAttribute(): void
     {
         $kernel = $this->createMock(KernelInterface::class);
-        $event = new GetResponseEvent($kernel, new Request(), HttpKernelInterface::MASTER_REQUEST);
+        $event = new RequestEvent($kernel, new Request(), HttpKernelInterface::MASTER_REQUEST);
 
         $tokenChecker = $this->createMock(TokenChecker::class);
         $tokenChecker
@@ -35,7 +35,7 @@ class BypassMaintenanceListenerTest extends TestCase
         ;
 
         $listener = new BypassMaintenanceListener($tokenChecker);
-        $listener->onKernelRequest($event);
+        $listener($event);
 
         $this->assertTrue($event->getRequest()->attributes->get('_bypass_maintenance'));
     }
@@ -43,7 +43,7 @@ class BypassMaintenanceListenerTest extends TestCase
     public function testDoesNotAddTheRequestAttributeIfThereIsNoBackendUser(): void
     {
         $kernel = $this->createMock(KernelInterface::class);
-        $event = new GetResponseEvent($kernel, new Request(), HttpKernelInterface::MASTER_REQUEST);
+        $event = new RequestEvent($kernel, new Request(), HttpKernelInterface::MASTER_REQUEST);
 
         $tokenChecker = $this->createMock(TokenChecker::class);
         $tokenChecker
@@ -53,7 +53,7 @@ class BypassMaintenanceListenerTest extends TestCase
         ;
 
         $listener = new BypassMaintenanceListener($tokenChecker);
-        $listener->onKernelRequest($event);
+        $listener($event);
 
         $this->assertFalse($event->getRequest()->attributes->has('_bypass_maintenance'));
     }

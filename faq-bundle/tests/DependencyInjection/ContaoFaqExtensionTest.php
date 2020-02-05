@@ -18,7 +18,9 @@ use Contao\FaqBundle\EventListener\InsertTagsListener;
 use Contao\FaqBundle\Picker\FaqPickerProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
+use Symfony\Component\DependencyInjection\Reference;
 
 class ContaoFaqExtensionTest extends TestCase
 {
@@ -27,9 +29,6 @@ class ContaoFaqExtensionTest extends TestCase
      */
     private $container;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -48,7 +47,24 @@ class ContaoFaqExtensionTest extends TestCase
 
         $this->assertSame(InsertTagsListener::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
-        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
+
+        $this->assertEquals(
+            [
+                new Reference('contao.framework'),
+            ],
+            $definition->getArguments()
+        );
+
+        $this->assertSame(
+            [
+                'contao.hook' => [
+                    [
+                        'hook' => 'replaceInsertTags',
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheEventPickerProvider(): void
@@ -58,10 +74,28 @@ class ContaoFaqExtensionTest extends TestCase
         $definition = $this->container->getDefinition('contao_faq.picker.faq_provider');
 
         $this->assertSame(FaqPickerProvider::class, $definition->getClass());
-        $this->assertSame('knp_menu.factory', (string) $definition->getArgument(0));
-        $this->assertSame('router', (string) $definition->getArgument(1));
-        $this->assertSame('translator', (string) $definition->getArgument(2));
-        $this->assertSame('security.helper', (string) $definition->getArgument(3));
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('knp_menu.factory'),
+                new Reference('router'),
+                new Reference('translator', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+                new Reference('security.helper'),
+            ],
+            $definition->getArguments()
+        );
+
+        $this->assertSame(
+            [
+                'contao.picker_provider' => [
+                    [
+                        'priority' => 64,
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
 
         $conditionals = $definition->getInstanceofConditionals();
 
@@ -69,11 +103,14 @@ class ContaoFaqExtensionTest extends TestCase
 
         $childDefinition = $conditionals[FrameworkAwareInterface::class];
 
-        $this->assertSame('setFramework', $childDefinition->getMethodCalls()[0][0]);
-
-        $tags = $definition->getTags();
-
-        $this->assertArrayHasKey('contao.picker_provider', $tags);
-        $this->assertSame(64, $tags['contao.picker_provider'][0]['priority']);
+        $this->assertEquals(
+            [
+                [
+                    'setFramework',
+                    [new Reference('contao.framework')],
+                ],
+            ],
+            $childDefinition->getMethodCalls()
+        );
     }
 }

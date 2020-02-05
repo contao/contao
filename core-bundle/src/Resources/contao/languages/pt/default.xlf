@@ -231,6 +231,9 @@
         <source>Invalid redirect target (circular reference)!</source>
         <target>Alvo inválido de redireção (circular reference)!</target>
       </trans-unit>
+      <trans-unit id="ERR.circularPicker">
+        <source>Invalid selection (circular reference)!</source>
+      </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
         <source>None of the active website root pages without an explicit DNS setting have the language fallback option set.</source>
         <target>Nenhuma das páginas web activas na raiz sem uma configuração de DNS especifica tem a opção de language fallback selecionada.</target>
@@ -554,6 +557,124 @@
         <source>Displays the teaser text of an article.</source>
         <target>Este elemento permite exibir a introdução de um artigo.</target>
       </trans-unit>
+      <trans-unit id="FFL.explanation.0">
+        <source>Explanation</source>
+        <target>Explicação</target>
+      </trans-unit>
+      <trans-unit id="FFL.explanation.1">
+        <source>A custom field to insert an explanation text.</source>
+        <target>Um campo explicação pode ser utilizado para inserir texto de ajuda diante de um campo. Um campo explicação pode conter código HTML.</target>
+      </trans-unit>
+      <trans-unit id="FFL.html.0">
+        <source>HTML code</source>
+        <target>Código HTML</target>
+      </trans-unit>
+      <trans-unit id="FFL.html.1">
+        <source>A custom field to insert HTML code.</source>
+        <target>Utilize este campo para inserir código HTML no formulário.</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStart.0">
+        <source>Fieldset start</source>
+        <target>Inicio de Fieldset</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStart.1">
+        <source>The opening part of a fieldset with an optional legend.</source>
+        <target>A parte de abertura de um fieldset com uma legenda opcional.</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStop.0">
+        <source>Fieldset stop</source>
+        <target>Paragem do fieldset</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStop.1">
+        <source>The closing part of a fieldset.</source>
+        <target>A parte de fecho de um fieldset.</target>
+      </trans-unit>
+      <trans-unit id="FFL.text.0">
+        <source>Text field</source>
+        <target>Campo texto</target>
+      </trans-unit>
+      <trans-unit id="FFL.text.1">
+        <source>A single-line input field for a short or medium text.</source>
+        <target>Um campo texto suporta apenas uma linha para textos curtos ou médios.</target>
+      </trans-unit>
+      <trans-unit id="FFL.password.0">
+        <source>Password field</source>
+        <target>Campo senha</target>
+      </trans-unit>
+      <trans-unit id="FFL.password.1">
+        <source>A single-line input field for a password. Contao automatically adds a confirmation field.</source>
+        <target>Um campo senha suporta apenas uma linha de texto para senhas.</target>
+      </trans-unit>
+      <trans-unit id="FFL.textarea.0">
+        <source>Textarea</source>
+        <target>Área de texto</target>
+      </trans-unit>
+      <trans-unit id="FFL.textarea.1">
+        <source>A multi-line input field for a medium or long text.</source>
+        <target>Um campo área de texto suporta múltiplas linhas para textos médios ou longos.</target>
+      </trans-unit>
+      <trans-unit id="FFL.select.0">
+        <source>Select menu</source>
+        <target>Menu selecionar</target>
+      </trans-unit>
+      <trans-unit id="FFL.select.1">
+        <source>A single- or multi-line drop-down menu.</source>
+        <target>Um menu deste tipo contém uma lista de opções das quais apenas uma poderá ser selecionada.</target>
+      </trans-unit>
+      <trans-unit id="FFL.radio.0">
+        <source>Radio button menu</source>
+        <target>Menu de botões radiais</target>
+      </trans-unit>
+      <trans-unit id="FFL.radio.1">
+        <source>A list of multiple options from which one can be selected.</source>
+        <target>Um menu deste tipo contém múltiplas opções das quais apenas uma poderá ser selecionada.</target>
+      </trans-unit>
+      <trans-unit id="FFL.checkbox.0">
+        <source>Checkbox menu</source>
+        <target>Menu checkbox</target>
+      </trans-unit>
+      <trans-unit id="FFL.checkbox.1">
+        <source>A list of multiple options from which any can be selected.</source>
+        <target>Um menu deste tipo contém múltiplas opções e uma ou mais poderá ser selecionada.</target>
+      </trans-unit>
+      <trans-unit id="FFL.upload.0">
+        <source>File upload</source>
+        <target>Envio de arquivo</target>
+      </trans-unit>
+      <trans-unit id="FFL.upload.1">
+        <source>A single-line input field to upload a local file to the server.</source>
+        <target>Esta opção dispõe um botão para localização e seleção de um arquivo no disco local do usuário.</target>
+      </trans-unit>
+      <trans-unit id="FFL.range.0">
+        <source>Range slider</source>
+      </trans-unit>
+      <trans-unit id="FFL.range.1">
+        <source>A range slider to select a value or range of values between a specified min and max.</source>
+      </trans-unit>
+      <trans-unit id="FFL.hidden.0">
+        <source>Hidden field</source>
+        <target>Campo oculto</target>
+      </trans-unit>
+      <trans-unit id="FFL.hidden.1">
+        <source>A single-line input field that is not visible in the form.</source>
+        <target>Este campo é semelhante ao campo texto, mas não é mostrado ao usuário.</target>
+      </trans-unit>
+      <trans-unit id="FFL.captcha.0">
+        <source>Security question</source>
+        <target>Pergunta de segurança</target>
+      </trans-unit>
+      <trans-unit id="FFL.captcha.1">
+        <source>A simple math question to verify that the form is being submitted by a human (CAPTCHA).</source>
+        <target>Este campo adiciona uma pergunta matemática simples que deve ser respondida antes do envio do formulário, assim evita-se que robôs enviem dados pelo formulário.</target>
+      </trans-unit>
+      <trans-unit id="FFL.submit.0">
+        <source>Submit field</source>
+        <target>Botão enviar</target>
+      </trans-unit>
+      <trans-unit id="FFL.submit.1">
+        <source>A button to submit the form.</source>
+        <target>Este campo contém um botão para enviar o formulário e os dados de cabeçalho do mesmo.</target>
+      </trans-unit>
       <trans-unit id="PTY.regular.0">
         <source>Regular page</source>
         <target>Página normal</target>
@@ -599,24 +720,21 @@
         <target>401 Não Autenticado</target>
       </trans-unit>
       <trans-unit id="PTY.error_401.1">
-        <source>If a user requests a protected page without being authenticated, a 401 error page will be loaded instead.</source>
-        <target>Caso um utilizador solicite uma página protegida sem estar autenticado, um erro 401 será mostrado.</target>
+        <source>If a visitor requests a protected page without being authenticated, a 401 error page will be loaded instead.</source>
       </trans-unit>
       <trans-unit id="PTY.error_403.0">
         <source>403 Access denied</source>
         <target>Acesso negado (erro 403)</target>
       </trans-unit>
       <trans-unit id="PTY.error_403.1">
-        <source>If a user requests a protected page without permission, a 403 error page will be loaded instead.</source>
-        <target>Esta página é mostrada quando um usuário tenta acessar uma página protegida, sem permissão. Se esta página de erro for colocada na raiz de um website, o uso desta será limitado a este website em particular.</target>
+        <source>If a member requests a protected page without permission, a 403 error page will be loaded instead.</source>
       </trans-unit>
       <trans-unit id="PTY.error_404.0">
         <source>404 Page not found</source>
         <target>Página não encontrada (erro 404)</target>
       </trans-unit>
       <trans-unit id="PTY.error_404.1">
-        <source>If a user requests a non-existent page, a 404 error page will be loaded instead.</source>
-        <target>Esta página é mostrada quando o usuário tenta acessar uma página indisponível. Se esta página de erro for colocada na raiz de um website, o uso desta será limitado a este website em particular.</target>
+        <source>If a visitor requests a non-existent page, a 404 error page will be loaded instead.</source>
       </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
@@ -1107,8 +1225,7 @@
         <target>Módulo</target>
       </trans-unit>
       <trans-unit id="MSC.mw_column">
-        <source>Column</source>
-        <target>Coluna</target>
+        <source>Layout section</source>
       </trans-unit>
       <trans-unit id="MSC.mw_enable">
         <source>Enable/disable the module</source>
@@ -1358,7 +1475,7 @@
         <source>This seems to be your first login. Welcome to Contao!</source>
         <target>Este aparenta ser o seu primeiro inicio de sessão. Bem-Vindo ao Contao!</target>
       </trans-unit>
-      <trans-unit id="MSC.loginCount">
+      <trans-unit id="MSC.loginAttempts">
         <source>Login attempts</source>
         <target>Tentativas de inicio de sessão</target>
       </trans-unit>
@@ -1456,10 +1573,6 @@
       <trans-unit id="MSC.homeTitle">
         <source>Back to the back end start page</source>
         <target>Ir para página de inicio do back end</target>
-      </trans-unit>
-      <trans-unit id="MSC.burgerTitle">
-        <source>Toggle navigation</source>
-        <target>Activar/Desactivar navegação</target>
       </trans-unit>
       <trans-unit id="MSC.learnMore">
         <source>Learn more on %s</source>
@@ -2442,6 +2555,30 @@ Download %s</target>
         <source>If you cannot scan the QR code, enter this key instead:</source>
         <target>Caso não consiga ler o QR code, introduza esta chave:</target>
       </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesLabel">
+        <source>Backup codes</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesShow">
+        <source>Show backup codes</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesExplain">
+        <source>Backup codes can be used to access your account if you have lost your authentication device and cannot generate two-factor codes anymore. Treat your backup codes with the same level of attention as your password! We recommend saving them with a password manager such as Lastpass, 1Password or Keeper.</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesInfo">
+        <source>Put the codes in a safe spot. If you lose your authentication device and do not have backup codes, you cannot access your account anymore!</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesGenerate">
+        <source>Generate backup codes</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesRegenerate">
+        <source>Regenerate backup codes</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesRegenerateInfo">
+        <source>When you regenerate the backup codes, your old codes will not work anymore.</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorTrustDevice">
+        <source>Trust this device</source>
+      </trans-unit>
       <trans-unit id="MSC.userTemplateEditor">
         <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
         <target>Existe pelo menos um utilizador regular com acesso ao editor de templates. Uma vez que os templates são ficheiros PHP, estes utilizadores têem implicitamente controlo total sobre o sistema!</target>
@@ -2449,6 +2586,12 @@ Download %s</target>
       <trans-unit id="MSC.groupTemplateEditor">
         <source>There is at least one user group granting access to the template editor. Since templates are PHP files, users of these groups implicitly have full control over the system!</source>
         <target>Existe pelo menos um grupo de utilizadores com acesso ao editor de templates.  Uma vez que os templates são ficheiros PHP, estes grupos têem implicitamente controlo total sobre o sistema!</target>
+      </trans-unit>
+      <trans-unit id="MSC.userThemeImport">
+        <source>There is at least one regular user with permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, these users implicitly have full control over the system!</source>
+      </trans-unit>
+      <trans-unit id="MSC.groupThemeImport">
+        <source>There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!</source>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
@@ -2461,6 +2604,34 @@ Download %s</target>
       <trans-unit id="MSC.internalCssEditor">
         <source>The internal CSS editor has been deprecated and will be removed in one of the next Contao versions! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
         <target>O editor de CSS interno encontra-se descontinuado e será removido numa próxima versão do Contao! Por favor considere exportar as suas folhas de estilo e adicioná-las posteriormente ao page layout como folhas de estilo externas.</target>
+      </trans-unit>
+      <trans-unit id="MSC.serpPreview.0">
+        <source>Google search results preview</source>
+      </trans-unit>
+      <trans-unit id="MSC.serpPreview.1">
+        <source>Here you can preview the meta data in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
+      </trans-unit>
+      <trans-unit id="MSC.clearTrustedDevices">
+        <source>Clear trusted devices</source>
+      </trans-unit>
+      <trans-unit id="MSC.trustedDevices">
+        <source>Trusted devices</source>
+      </trans-unit>
+      <trans-unit id="MSC.noTrustedDevices">
+        <source>Currently there are no trusted devices.</source>
+      </trans-unit>
+      <trans-unit id="MSC.device">
+        <source>Device</source>
+      </trans-unit>
+      <trans-unit id="MSC.thisDevice">
+        <source>this device</source>
+      </trans-unit>
+      <trans-unit id="MSC.browser">
+        <source>Browser</source>
+        <target>Navegador</target>
+      </trans-unit>
+      <trans-unit id="MSC.operatingSystem">
+        <source>Operating system</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2665,6 +2836,15 @@ Colar após elemento ID %s</target>
       <trans-unit id="DCA.pastenew.1">
         <source>Create a new element after element ID %s</source>
         <target>Criar um novo elemento depois do elemento ID %s</target>
+      </trans-unit>
+      <trans-unit id="CRAWL.searchIndex.summary">
+        <source>Indexed %d URI(s) successfully. %d failed.</source>
+      </trans-unit>
+      <trans-unit id="CRAWL.searchIndex.warning">
+        <source>%d URI(s) were skipped (if you are missing one, checkout the debug log).</source>
+      </trans-unit>
+      <trans-unit id="CRAWL.brokenLinkChecker.summary">
+        <source>Checked %d link(s) successfully. %d were broken.</source>
       </trans-unit>
     </body>
   </file>

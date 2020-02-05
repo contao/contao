@@ -3,12 +3,16 @@ services:
         class: Contao\NewsBundle\EventListener\GeneratePageListener
         arguments:
             - '@contao.framework'
+        tags:
+            - { name: contao.hook, hook: generatePage }
         public: true
 
     contao_news.listener.insert_tags:
         class: Contao\NewsBundle\EventListener\InsertTagsListener
         arguments:
             - '@contao.framework'
+        tags:
+            - { name: contao.hook, hook: replaceInsertTags }
         public: true
 
     contao_news.listener.preview_url_create:
@@ -17,12 +21,11 @@ services:
             - '@request_stack'
             - '@contao.framework'
         tags:
-            - { name: kernel.event_listener, event: contao.preview_url_create, method: onPreviewUrlCreate }
+            - { name: kernel.event_listener }
 
     contao_news.listener.preview_url_convert:
         class: Contao\NewsBundle\EventListener\PreviewUrlConvertListener
         arguments:
-            - '@request_stack'
             - '@contao.framework'
         tags:
-            - { name: kernel.event_listener, event: contao.preview_url_convert, method: onPreviewUrlConvert }
+            - { name: kernel.event_listener }

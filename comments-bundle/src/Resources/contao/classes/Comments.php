@@ -102,13 +102,7 @@ class Comments extends Frontend
 		if ($objComments !== null && ($total = $objComments->count()) > 0)
 		{
 			$count = 0;
-
-			if ($objConfig->template == '')
-			{
-				$objConfig->template = 'com_default';
-			}
-
-			$objPartial = new FrontendTemplate($objConfig->template);
+			$objPartial = new FrontendTemplate($objConfig->template ?: 'com_default');
 
 			while ($objComments->next())
 			{
@@ -128,18 +122,15 @@ class Comments extends Frontend
 				$objPartial->addReply = false;
 
 				// Reply
-				if ($objComments->addReply && $objComments->reply != '')
+				if ($objComments->addReply && $objComments->reply != '' && ($objAuthor = $objComments->getRelated('author')) instanceof UserModel)
 				{
-					if (($objAuthor = $objComments->getRelated('author')) instanceof UserModel)
-					{
-						$objPartial->addReply = true;
-						$objPartial->rby = $GLOBALS['TL_LANG']['MSC']['com_reply'];
-						$objPartial->reply = $this->replaceInsertTags($objComments->reply);
-						$objPartial->author = $objAuthor;
+					$objPartial->addReply = true;
+					$objPartial->rby = $GLOBALS['TL_LANG']['MSC']['com_reply'];
+					$objPartial->reply = $this->replaceInsertTags($objComments->reply);
+					$objPartial->author = $objAuthor;
 
-						// Clean the RTE output
-						$objPartial->reply = StringUtil::toHtml5($objPartial->reply);
-					}
+					// Clean the RTE output
+					$objPartial->reply = StringUtil::toHtml5($objPartial->reply);
 				}
 
 				$arrComments[] = $objPartial->parse();
@@ -287,7 +278,6 @@ class Comments extends Frontend
 
 		$objTemplate->fields = $arrWidgets;
 		$objTemplate->submit = $GLOBALS['TL_LANG']['MSC']['com_submit'];
-		$objTemplate->action = ampersand(Environment::get('request'));
 		$objTemplate->messages = ''; // Deprecated since Contao 4.0, to be removed in Contao 5.0
 		$objTemplate->formId = $strFormId;
 		$objTemplate->hasError = $doNotSubmit;

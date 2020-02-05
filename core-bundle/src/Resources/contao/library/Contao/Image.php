@@ -68,7 +68,7 @@ class Image
 	protected $targetHeight = 0;
 
 	/**
-	 * The resize mode (defaults to crop for BC)
+	 * The resize mode (defaults to crop for backwards compatibility)
 	 *
 	 * @var string
 	 */
@@ -187,7 +187,7 @@ class Image
 	{
 		if ($importantPart !== null)
 		{
-			if (!isset($importantPart['x']) || !isset($importantPart['y']) || !isset($importantPart['width']) || !isset($importantPart['height']))
+			if (!isset($importantPart['x'], $importantPart['y'], $importantPart['width'], $importantPart['height']))
 			{
 				throw new \InvalidArgumentException('Malformed array for setting the important part!');
 			}
@@ -418,9 +418,10 @@ class Image
 		$image = $this->prepareImage();
 		$resizeConfig = $this->prepareResizeConfig();
 
-		if (!System::getContainer()->getParameter('contao.image.bypass_cache')
-			&& $this->getTargetPath()
+		if (
+			$this->getTargetPath()
 			&& !$this->getForceOverride()
+			&& !System::getContainer()->getParameter('contao.image.bypass_cache')
 			&& file_exists($this->strRootDir . '/' . $this->getTargetPath())
 			&& $this->fileObj->mtime <= filemtime($this->strRootDir . '/' . $this->getTargetPath())
 		) {
@@ -918,36 +919,28 @@ class Image
 			case '':
 			case 'px':
 				return (int) round($value);
-				break;
 
 			case 'pc':
 			case 'em':
 				return (int) round($value * 16);
-				break;
 
 			case 'ex':
 				return (int) round($value * 16 / 2);
-				break;
 
 			case 'pt':
 				return (int) round($value * 16 / 12);
-				break;
 
 			case 'in':
 				return (int) round($value * 16 * 6);
-				break;
 
 			case 'cm':
 				return (int) round($value * 16 / (2.54 / 6));
-				break;
 
 			case 'mm':
 				return (int) round($value * 16 / (25.4 / 6));
-				break;
 
 			case '%':
 				return (int) round($value * 16 / 100);
-				break;
 		}
 
 		return 0;

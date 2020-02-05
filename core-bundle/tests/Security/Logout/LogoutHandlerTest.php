@@ -13,15 +13,17 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Security\Logout;
 
 use Contao\BackendUser;
-use Contao\Controller;
 use Contao\CoreBundle\Security\Logout\LogoutHandler;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\System;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
+use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class LogoutHandlerTest extends TestCase
@@ -84,19 +86,12 @@ class LogoutHandlerTest extends TestCase
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->username = 'foobar';
 
-        $listener = $this->createPartialMock(Controller::class, ['onPostLogout']);
-        $listener
-            ->expects($this->once())
-            ->method('onPostLogout')
-            ->with($user)
-        ;
-
         $systemAdapter = $this->mockAdapter(['importStatic']);
         $systemAdapter
             ->expects($this->once())
             ->method('importStatic')
-            ->with('HookListener')
-            ->willReturn($listener)
+            ->with(static::class)
+            ->willReturn($this)
         ;
 
         $framework = $this->mockContaoFramework([System::class => $systemAdapter]);
@@ -119,11 +114,81 @@ class LogoutHandlerTest extends TestCase
             ->willReturn($user)
         ;
 
-        $GLOBALS['TL_HOOKS']['postLogout'] = [['HookListener', 'onPostLogout']];
+        $GLOBALS['TL_HOOKS']['postLogout'][] = [static::class, 'onPostLogout'];
 
         $handler = new LogoutHandler($framework, $logger);
         $handler->logout(new Request(), new Response(), $token);
 
         unset($GLOBALS['TL_HOOKS']);
+    }
+
+    public function onPostLogout(): void
+    {
+        // Dummy method to test the postLogout hook
+    }
+
+    public function testRemovesTargetPathFromSessionWithUsernamePasswordToken(): void
+    {
+        $session = $this->createMock(SessionInterface::class);
+        $session
+            ->expects($this->once())
+            ->method('remove')
+            ->with('_security.contao_frontend.target_path')
+        ;
+
+        $request = $this->createMock(Request::class);
+        $request
+            ->expects($this->once())
+            ->method('getSession')
+            ->willReturn($session)
+        ;
+
+        $request
+            ->method('hasSession')
+            ->willReturn(true)
+        ;
+
+        $token = $this->createMock(UsernamePasswordToken::class);
+        $token
+            ->expects($this->once())
+            ->method('getProviderKey')
+            ->willReturn('contao_frontend')
+        ;
+
+        $handler = new LogoutHandler($this->mockContaoFramework());
+        $handler->logout($request, $this->createMock(Response::class), $token);
+    }
+
+    public function testRemovesTargetPathFromSessionWithTwoFactorToken(): void
+    {
+        $session = $this->createMock(SessionInterface::class);
+        $session
+            ->expects($this->once())
+            ->method('remove')
+            ->with('_security.contao_frontend.target_path')
+        ;
+
+        $request = $this->createMock(Request::class);
+        $request
+            ->expects($this->once())
+            ->method('getSession')
+            ->willReturn($session)
+        ;
+
+        $request
+            ->method('hasSession')
+            ->willReturn(true)
+        ;
+
+        /** @var TwoFactorTokenInterface&MockObject $token */
+        $token = $this->createMock(TwoFactorTokenInterface::class);
+        $token
+            ->expects($this->once())
+            ->method('getProviderKey')
+            ->willReturn('contao_frontend')
+        ;
+
+        $handler = new LogoutHandler($this->mockContaoFramework());
+        $handler->logout($request, $this->createMock(Response::class), $token);
     }
 }

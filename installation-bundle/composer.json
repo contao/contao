@@ -15,22 +15,23 @@
         }
     ],
     "require": {
-        "php": "^7.1",
+        "php": "^7.2",
+        "ext-filter": "*",
         "contao/core-bundle": "self.version",
-        "doctrine/dbal": "^2.5",
+        "doctrine/dbal": "^2.10",
         "patchwork/utf8": "^1.2",
         "psr/log": "^1.0",
         "sensiolabs/ansi-to-html": "^1.1",
-        "symfony/config": "4.2.* || 4.3.*",
-        "symfony/console": "4.2.* || 4.3.*",
-        "symfony/dependency-injection": "4.2.* || 4.3.*",
-        "symfony/event-dispatcher": "4.2.* || 4.3.*",
-        "symfony/filesystem": "4.2.* || 4.3.*",
-        "symfony/finder": "4.2.* || 4.3.*",
-        "symfony/framework-bundle": "4.2.* || 4.3.*",
-        "symfony/http-foundation": "4.2.* || 4.3.*",
-        "symfony/http-kernel": "4.2.* || 4.3.*",
-        "symfony/yaml": "4.2.* || 4.3.*"
+        "symfony/config": "4.4.*",
+        "symfony/console": "4.4.*",
+        "symfony/dependency-injection": "4.4.*",
+        "symfony/event-dispatcher": "4.4.*",
+        "symfony/filesystem": "4.4.*",
+        "symfony/finder": "4.4.*",
+        "symfony/framework-bundle": "4.4.*",
+        "symfony/http-foundation": "4.4.*",
+        "symfony/http-kernel": "4.4.*",
+        "symfony/yaml": "4.4.*"
     },
     "conflict": {
         "contao/core": "*",
@@ -38,14 +39,14 @@
     },
     "require-dev": {
         "contao/manager-plugin": "^2.3.1",
-        "php-http/guzzle6-adapter": "^1.1",
-        "phpunit/phpunit": "^7.5",
-        "symfony/phpunit-bridge": "^4.3"
+        "phpunit/phpunit": "^8.4",
+        "symfony/http-client": "4.4.*",
+        "symfony/phpunit-bridge": "4.4.*"
     },
     "extra": {
         "contao-manager-plugin": "Contao\\InstallationBundle\\ContaoManager\\Plugin",
         "symfony": {
-            "require": "^4.2"
+            "require": "^4.4"
         }
     },
     "autoload": {

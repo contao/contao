@@ -22,6 +22,8 @@ namespace Contao;
  * @property integer $cols
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @todo Rename to FormTextarea in Contao 5.0
  */
 class FormTextArea extends Widget
 {
@@ -133,19 +135,15 @@ class FormTextArea extends Widget
 		{
 			case 'cols':
 				return $this->intCols;
-				break;
 
 			case 'rows':
 				return $this->intRows;
-				break;
 
 			case 'value':
 				return StringUtil::specialchars(str_replace('\n', "\n", $this->varValue), false, true);
-				break;
 
 			default:
 				return parent::__get($strKey);
-				break;
 		}
 	}
 

@@ -38,16 +38,16 @@
         <target>Aktivieren am</target>
       </trans-unit>
       <trans-unit id="tl_member_group.start.1">
-        <source>Automatically activate the group on this day.</source>
-        <target>Die Gruppe automatisch an diesem Tag aktivieren.</target>
+        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Wenn Sie die Gruppe erst ab einem bestimmten Zeitpunkt aktivieren möchten, können Sie diesen hier eingeben. Andernfalls lassen Sie das Feld leer. </target>
       </trans-unit>
       <trans-unit id="tl_member_group.stop.0">
         <source>Deactivate on</source>
         <target>Deaktivieren am</target>
       </trans-unit>
       <trans-unit id="tl_member_group.stop.1">
-        <source>Automatically deactivate the group on this day.</source>
-        <target>Die Gruppe automatisch an diesem Tag deaktivieren.</target>
+        <source>If you want to prevent the group from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Wenn Sie die Gruppe nur bis zu einem bestimmten Zeitpunkt aktivieren möchten, können Sie diesen hier eingeben. Andernfalls lassen Sie das Feld leer. </target>
       </trans-unit>
       <trans-unit id="tl_member_group.title_legend">
         <source>Title</source>
@@ -57,9 +57,9 @@
         <source>Auto-redirect</source>
         <target>Weiterleitung</target>
       </trans-unit>
-      <trans-unit id="tl_member_group.disable_legend">
-        <source>Account settings</source>
-        <target>Kontoeinstellungen</target>
+      <trans-unit id="tl_member_group.account_legend">
+        <source>Group settings</source>
+        <target>Gruppeneinstellungen</target>
       </trans-unit>
       <trans-unit id="tl_member_group.new.0">
         <source>New</source>

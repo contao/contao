@@ -84,6 +84,9 @@ class ImageFactory implements ImageFactoryInterface
      */
     private $logger;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.image.image_factory" service instead
+     */
     public function __construct(ResizerInterface $resizer, ImagineInterface $imagine, ImagineInterface $imagineSvg, Filesystem $filesystem, ContaoFramework $framework, bool $bypassCache, array $imagineOptions, array $validExtensions, string $uploadDir, ?LoggerInterface $logger = null)
     {
         $this->resizer = $resizer;
@@ -106,9 +109,6 @@ class ImageFactory implements ImageFactoryInterface
         $this->predefinedSizes = $predefinedSizes;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function create($path, $size = null, $options = null): ImageInterface
     {
         if (null !== $options && !\is_string($options) && !$options instanceof ResizeOptions) {
@@ -156,7 +156,7 @@ class ImageFactory implements ImageFactoryInterface
             [$resizeConfig, $importantPart, $options] = $this->createConfig($size, $image);
         }
 
-        if (!\is_object($path) || !($path instanceof ImageInterface)) {
+        if (!\is_object($path) || !$path instanceof ImageInterface) {
             if (null === $importantPart) {
                 $importantPart = $this->createImportantPart($image);
             }
@@ -189,9 +189,6 @@ class ImageFactory implements ImageFactoryInterface
         return $this->resizer->resize($image, $resizeConfig, $options);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getImportantPartFromLegacyMode(ImageInterface $image, $mode): ImportantPart
     {
         if (1 !== substr_count($mode, '_')) {
@@ -223,7 +220,7 @@ class ImageFactory implements ImageFactoryInterface
      *
      * @param int|array|null $size An image size or an array with width, height and resize mode
      *
-     * @return (ResizeConfiguration|ImportantPart|ResizeOptions|null)[]
+     * @return array<(ResizeConfiguration|ImportantPart|ResizeOptions|null)>
      */
     private function createConfig($size, ImageInterface $image): array
     {

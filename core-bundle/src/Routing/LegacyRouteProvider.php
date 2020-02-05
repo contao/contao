@@ -29,23 +29,20 @@ class LegacyRouteProvider implements RouteProviderInterface
      */
     private $routeProvider;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.routing.legacy_route_provider" service instead
+     */
     public function __construct(FrontendLoader $frontendLoader, RouteProviderInterface $routeProvider)
     {
         $this->frontendLoader = $frontendLoader;
         $this->routeProvider = $routeProvider;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRouteCollectionForRequest(Request $request): RouteCollection
     {
         return $this->routeProvider->getRouteCollectionForRequest($request);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRouteByName($name): Route
     {
         if ('contao_frontend' === $name || 'contao_index' === $name) {
@@ -78,9 +75,6 @@ class LegacyRouteProvider implements RouteProviderInterface
         return $this->routeProvider->getRouteByName($name);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRoutesByNames($names): array
     {
         return $this->routeProvider->getRoutesByNames($names);

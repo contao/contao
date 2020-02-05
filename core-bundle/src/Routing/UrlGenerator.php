@@ -35,6 +35,9 @@ class UrlGenerator implements UrlGeneratorInterface
      */
     private $prependLocale;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.routing.url_generator" service instead
+     */
     public function __construct(UrlGeneratorInterface $router, ContaoFramework $framework, bool $prependLocale)
     {
         $this->router = $router;
@@ -42,25 +45,16 @@ class UrlGenerator implements UrlGeneratorInterface
         $this->prependLocale = $prependLocale;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setContext(RequestContext $context): void
     {
         $this->router->setContext($context);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getContext(): RequestContext
     {
         return $this->router->getContext();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH): ?string
     {
         $this->framework->initialize();
@@ -193,7 +187,7 @@ class UrlGenerator implements UrlGeneratorInterface
     /**
      * Extracts host and port from the domain.
      *
-     * @return (string|null)[]
+     * @return array<(string|null)>
      */
     private function getHostAndPort(string $domain): array
     {
@@ -207,7 +201,7 @@ class UrlGenerator implements UrlGeneratorInterface
     /**
      * Returns the auto_item key from the parameters or the global array.
      *
-     * @return string[]
+     * @return array<string>
      */
     private function getAutoItems(array $parameters): array
     {

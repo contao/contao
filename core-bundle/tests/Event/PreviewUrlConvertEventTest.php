@@ -14,12 +14,13 @@ namespace Contao\CoreBundle\Tests\Event;
 
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\Request;
 
 class PreviewUrlConvertEventTest extends TestCase
 {
     public function testSupportsReadingAndWritingTheUrl(): void
     {
-        $event = new PreviewUrlConvertEvent();
+        $event = new PreviewUrlConvertEvent(new Request());
 
         $this->assertNull($event->getUrl());
 

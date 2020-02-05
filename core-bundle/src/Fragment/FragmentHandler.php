@@ -47,6 +47,9 @@ class FragmentHandler extends BaseFragmentHandler
      */
     private $initialized = [];
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.fragment.handler" service instead
+     */
     public function __construct(ContainerInterface $renderers, BaseFragmentHandler $fragmentHandler, RequestStack $requestStack, FragmentRegistryInterface $fragmentRegistry, ContainerInterface $preHandlers, bool $debug = false)
     {
         $this->renderers = $renderers;
@@ -57,9 +60,6 @@ class FragmentHandler extends BaseFragmentHandler
         parent::__construct($requestStack, [], $debug);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function render($uri, $renderer = 'inline', array $options = []): ?string
     {
         if (!$uri instanceof FragmentReference) {
@@ -84,9 +84,6 @@ class FragmentHandler extends BaseFragmentHandler
         return parent::render($uri, $renderer, $config->getOptions());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function deliver(Response $response): ?string
     {
         try {

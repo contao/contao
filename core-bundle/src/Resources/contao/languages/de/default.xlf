@@ -233,6 +233,10 @@
         <source>Invalid redirect target (circular reference)!</source>
         <target>Ungültiges Weiterleitungsziel (Zirkelbezug)!</target>
       </trans-unit>
+      <trans-unit id="ERR.circularPicker">
+        <source>Invalid selection (circular reference)!</source>
+        <target>Ungültige Auswahl (Zirkelbezug)!</target>
+      </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
         <source>None of the active website root pages without an explicit DNS setting have the language fallback option set.</source>
         <target>Keiner der aktiven Website-Startpunkte ohne explizite DNS-Einstellungen wurde als Sprachen-Fallback definiert.</target>
@@ -557,6 +561,126 @@
         <source>Displays the teaser text of an article.</source>
         <target>Zeigt den Teasertext eines Artikels an.</target>
       </trans-unit>
+      <trans-unit id="FFL.explanation.0">
+        <source>Explanation</source>
+        <target>Erklärung</target>
+      </trans-unit>
+      <trans-unit id="FFL.explanation.1">
+        <source>A custom field to insert an explanation text.</source>
+        <target>Ein individuelles Feld zum Einfügen eines Erklärungstexts.</target>
+      </trans-unit>
+      <trans-unit id="FFL.html.0">
+        <source>HTML code</source>
+        <target>HTML-Code</target>
+      </trans-unit>
+      <trans-unit id="FFL.html.1">
+        <source>A custom field to insert HTML code.</source>
+        <target>Ein individuelles Feld zum Einfügen von HTML-Code.</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStart.0">
+        <source>Fieldset start</source>
+        <target>Fieldset Anfang</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStart.1">
+        <source>The opening part of a fieldset with an optional legend.</source>
+        <target>Der öffnende Teil eines Fieldsets mit einer optionalen Legende.</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStop.0">
+        <source>Fieldset stop</source>
+        <target>Fieldset Ende</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStop.1">
+        <source>The closing part of a fieldset.</source>
+        <target>Der schließende Teil eines Fieldsets.</target>
+      </trans-unit>
+      <trans-unit id="FFL.text.0">
+        <source>Text field</source>
+        <target>Textfeld</target>
+      </trans-unit>
+      <trans-unit id="FFL.text.1">
+        <source>A single-line input field for a short or medium text.</source>
+        <target>Ein einzeiliges Eingabefeld für einen kurzen oder mittellangen Text.</target>
+      </trans-unit>
+      <trans-unit id="FFL.password.0">
+        <source>Password field</source>
+        <target>Passwortfeld</target>
+      </trans-unit>
+      <trans-unit id="FFL.password.1">
+        <source>A single-line input field for a password. Contao automatically adds a confirmation field.</source>
+        <target>Ein einzeiliges Eingabefeld für ein Passwort. Contao fügt automatisch ein Bestätigungsfeld hinzu.</target>
+      </trans-unit>
+      <trans-unit id="FFL.textarea.0">
+        <source>Textarea</source>
+        <target>Textarea</target>
+      </trans-unit>
+      <trans-unit id="FFL.textarea.1">
+        <source>A multi-line input field for a medium or long text.</source>
+        <target>Ein mehrzeiliges Eingabefeld für einen mittellangen oder langen Text.</target>
+      </trans-unit>
+      <trans-unit id="FFL.select.0">
+        <source>Select menu</source>
+        <target>Select-Menü</target>
+      </trans-unit>
+      <trans-unit id="FFL.select.1">
+        <source>A single- or multi-line drop-down menu.</source>
+        <target>Ein ein- oder mehrzeiliges Drop-Down-Menü.</target>
+      </trans-unit>
+      <trans-unit id="FFL.radio.0">
+        <source>Radio button menu</source>
+        <target>Radio-Button-Menü</target>
+      </trans-unit>
+      <trans-unit id="FFL.radio.1">
+        <source>A list of multiple options from which one can be selected.</source>
+        <target>Eine Liste mehrerer Optionen, von denen eine ausgewählt werden kann.</target>
+      </trans-unit>
+      <trans-unit id="FFL.checkbox.0">
+        <source>Checkbox menu</source>
+        <target>Checkbox-Menü</target>
+      </trans-unit>
+      <trans-unit id="FFL.checkbox.1">
+        <source>A list of multiple options from which any can be selected.</source>
+        <target>Eine Liste mehrerer Optionen, von denen beliebig viele ausgewählt werden können.</target>
+      </trans-unit>
+      <trans-unit id="FFL.upload.0">
+        <source>File upload</source>
+        <target>Datei-Upload</target>
+      </trans-unit>
+      <trans-unit id="FFL.upload.1">
+        <source>A single-line input field to upload a local file to the server.</source>
+        <target>Ein einzeiliges Eingabefeld zur Übertragung lokaler Dateien auf den Server.</target>
+      </trans-unit>
+      <trans-unit id="FFL.range.0">
+        <source>Range slider</source>
+        <target>Range-Slider</target>
+      </trans-unit>
+      <trans-unit id="FFL.range.1">
+        <source>A range slider to select a value or range of values between a specified min and max.</source>
+        <target>Ein Range-Slider zur Auswahl eines Wertes oder eines Wertebereichs innerhalb eines spezifizierten Min und Max.</target>
+      </trans-unit>
+      <trans-unit id="FFL.hidden.0">
+        <source>Hidden field</source>
+        <target>Verstecktes Feld</target>
+      </trans-unit>
+      <trans-unit id="FFL.hidden.1">
+        <source>A single-line input field that is not visible in the form.</source>
+        <target>Ein einzeiliges Eingabefeld, das im Formular nicht sichtbar ist.</target>
+      </trans-unit>
+      <trans-unit id="FFL.captcha.0">
+        <source>Security question</source>
+        <target>Sicherheitsfrage</target>
+      </trans-unit>
+      <trans-unit id="FFL.captcha.1">
+        <source>A simple math question to verify that the form is being submitted by a human (CAPTCHA).</source>
+        <target>Eine einfache Rechenaufgabe zur Prüfung, ob das Formular von einem Menschen abgeschickt wurde (CAPTCHA).</target>
+      </trans-unit>
+      <trans-unit id="FFL.submit.0">
+        <source>Submit field</source>
+        <target>Absendefeld</target>
+      </trans-unit>
+      <trans-unit id="FFL.submit.1">
+        <source>A button to submit the form.</source>
+        <target>Eine Absende-Schaltfläche zur Versendung des Formulars.</target>
+      </trans-unit>
       <trans-unit id="PTY.regular.0">
         <source>Regular page</source>
         <target>Reguläre Seite</target>
@@ -602,24 +726,24 @@
         <target>401 Nicht authentifiziert</target>
       </trans-unit>
       <trans-unit id="PTY.error_401.1">
-        <source>If a user requests a protected page without being authenticated, a 401 error page will be loaded instead.</source>
-        <target>Ruft ein Benutzer eine geschützte Seite ohne vorherige Anmeldung auf, wird stattdessen die 401-Fehlerseite geladen.</target>
+        <source>If a visitor requests a protected page without being authenticated, a 401 error page will be loaded instead.</source>
+        <target>Ruft ein Besucher eine geschützte Seite ohne vorherige Anmeldung auf, wird stattdessen eine 401-Fehlerseite geladen.</target>
       </trans-unit>
       <trans-unit id="PTY.error_403.0">
         <source>403 Access denied</source>
         <target>403 Zugriff verweigert</target>
       </trans-unit>
       <trans-unit id="PTY.error_403.1">
-        <source>If a user requests a protected page without permission, a 403 error page will be loaded instead.</source>
-        <target>Ruft ein Benutzer eine geschützte Seite ohne die entsprechenden Zugriffsrechte auf, wird stattdessen die 403-Fehlerseite geladen.</target>
+        <source>If a member requests a protected page without permission, a 403 error page will be loaded instead.</source>
+        <target>Ruft ein Mitglied eine geschützte Seite ohne die entsprechenden Zugriffsrechte auf, wird stattdessen eine 403-Fehlerseite geladen.</target>
       </trans-unit>
       <trans-unit id="PTY.error_404.0">
         <source>404 Page not found</source>
         <target>404 Seite nicht gefunden</target>
       </trans-unit>
       <trans-unit id="PTY.error_404.1">
-        <source>If a user requests a non-existent page, a 404 error page will be loaded instead.</source>
-        <target>Ruft ein Benutzer eine nicht vorhandene Seite auf, wird stattdessen die 404-Fehlerseite geladen.</target>
+        <source>If a visitor requests a non-existent page, a 404 error page will be loaded instead.</source>
+        <target>Ruft ein Besucher eine nicht vorhandene Seite auf, wird stattdessen eine 404-Fehlerseite geladen.</target>
       </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
@@ -1110,8 +1234,8 @@
         <target>Modul</target>
       </trans-unit>
       <trans-unit id="MSC.mw_column">
-        <source>Column</source>
-        <target>Spalte</target>
+        <source>Layout section</source>
+        <target>Layoutbereich</target>
       </trans-unit>
       <trans-unit id="MSC.mw_enable">
         <source>Enable/disable the module</source>
@@ -1361,7 +1485,7 @@
         <source>This seems to be your first login. Welcome to Contao!</source>
         <target>Dies scheint Ihre erste Anmeldung zu sein. Willkommen bei Contao!</target>
       </trans-unit>
-      <trans-unit id="MSC.loginCount">
+      <trans-unit id="MSC.loginAttempts">
         <source>Login attempts</source>
         <target>Anmeldeversuche</target>
       </trans-unit>
@@ -1395,7 +1519,7 @@
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
         <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/books/manual/current/en/02-administration-area/keyboard-shortcuts.html&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
-        <target>Wie Sie Ihren Arbeitsablauf durch die Verwendung von &lt;a href=&quot;https://docs.contao.org/books/manual/current/de/02-administrationsbereich/backend-tastaturkuerzel.html&quot; title=&quot;Übersicht der Tastaturkürzel&quot; target=&quot;_blank&quot;&gt;Tastaturkürzeln&lt;/a&gt; beschleunigen.</target>
+        <target>Wie Sie Ihren Arbeitsablauf durch die Verwendung von &lt;a href=&quot;https://docs.contao.org/manual/de/administrationsbereich/backend-tastaturkuerzel/&quot; target=&quot;_blank&quot;&gt;Tastaturkürzeln&lt;/a&gt; beschleunigen.</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -1460,10 +1584,6 @@
       <trans-unit id="MSC.homeTitle">
         <source>Back to the back end start page</source>
         <target>Zurück zur Backend-Startseite</target>
-      </trans-unit>
-      <trans-unit id="MSC.burgerTitle">
-        <source>Toggle navigation</source>
-        <target>Navigation umschalten</target>
       </trans-unit>
       <trans-unit id="MSC.learnMore">
         <source>Learn more on %s</source>
@@ -2445,13 +2565,53 @@
         <source>If you cannot scan the QR code, enter this key instead:</source>
         <target>Wenn Sie den QR-Code nicht scannen können, geben Sie stattdessen diesen Schlüssel ein:</target>
       </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesLabel">
+        <source>Backup codes</source>
+        <target>Backup-Codes</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesShow">
+        <source>Show backup codes</source>
+        <target>Backup-Codes anzeigen</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesExplain">
+        <source>Backup codes can be used to access your account if you have lost your authentication device and cannot generate two-factor codes anymore. Treat your backup codes with the same level of attention as your password! We recommend saving them with a password manager such as Lastpass, 1Password or Keeper.</source>
+        <target>Mit einem Backup-Code können Sie auf Ihr Konto zugreifen, wenn Sie Ihr Authentifizierungsgerät verlieren und keine Bestätigungscodes mehr generieren können. Behandeln Sie Ihre Backup-Codes genauso sorgfältig wie Ihr Passwort! Wir empfehlen das Speichern mit einem Passwort-Manager wie Lastpass, 1Password oder Keeper.</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesInfo">
+        <source>Put the codes in a safe spot. If you lose your authentication device and do not have backup codes, you cannot access your account anymore!</source>
+        <target>Bewahren Sie die Codes sicher auf! Wenn Sie Ihr Authentifizierungsgerät verlieren und keine Backup-Codes haben, können Sie nicht mehr auf Ihr Konto zugreifen!</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesGenerate">
+        <source>Generate backup codes</source>
+        <target>Backup-Codes generieren</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesRegenerate">
+        <source>Regenerate backup codes</source>
+        <target>Backup-Codes neu generieren</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesRegenerateInfo">
+        <source>When you regenerate the backup codes, your old codes will not work anymore.</source>
+        <target>Wenn Sie die Backup-Codes neu generieren, werden Ihre alten Codes nicht mehr funktionieren.</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorTrustDevice">
+        <source>Trust this device</source>
+        <target>Diesem Gerät vertrauen</target>
+      </trans-unit>
       <trans-unit id="MSC.userTemplateEditor">
         <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
         <target>Mindestens ein regulärer Benutzer hat Zugriff auf den Template-Editor. Da Templates PHP-Dateien sind, haben diese Benutzer implizit die volle Kontrolle über das System!</target>
       </trans-unit>
       <trans-unit id="MSC.groupTemplateEditor">
         <source>There is at least one user group granting access to the template editor. Since templates are PHP files, users of these groups implicitly have full control over the system!</source>
-        <target>Mindestens eine Benutzergruppe hat Zugriff auf den Template-Editor. Da Templates PHP-Dateien sind, haben die Benutzer dieser Gruppen implizit die volle Kontrolle über das System!</target>
+        <target>Mindestens eine Benutzergruppe gewährt Zugriff auf den Template-Editor. Da Templates PHP-Dateien sind, haben die Benutzer dieser Gruppen implizit die volle Kontrolle über das System!</target>
+      </trans-unit>
+      <trans-unit id="MSC.userThemeImport">
+        <source>There is at least one regular user with permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, these users implicitly have full control over the system!</source>
+        <target>Mindestens ein regulärer Benutzer hat das Recht, Themes zu importieren. Da Themes beliebige Templates enthalten können und Templates PHP-Dateien sind, haben diese Benutzer implizit die volle Kontrolle über das System!</target>
+      </trans-unit>
+      <trans-unit id="MSC.groupThemeImport">
+        <source>There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!</source>
+        <target>Mindestens eine Benutzergruppe gewährt das Recht, Themes zu importieren. Da Themes beliebige Templates enthalten können und Templates PHP-Dateien sind, haben die Benutzer dieser Gruppen implizit die volle Kontrolle über das System!</target>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
@@ -2464,6 +2624,42 @@
       <trans-unit id="MSC.internalCssEditor">
         <source>The internal CSS editor has been deprecated and will be removed in one of the next Contao versions! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
         <target>Der interne CSS-Editor ist veraltet und wird in einer der nächsten Contao-Versionen entfernt! Bitte erwägen Sie, Ihre bestehenden Stylesheets zu exportieren und sie als externe Stylesheets im Seitenlayout einzubinden.</target>
+      </trans-unit>
+      <trans-unit id="MSC.serpPreview.0">
+        <source>Google search results preview</source>
+        <target>Google Suchergebnis-Vorschau</target>
+      </trans-unit>
+      <trans-unit id="MSC.serpPreview.1">
+        <source>Here you can preview the meta data in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
+        <target>Hier können Sie sehen wie Google die Metadaten in den Suchergebnissen anzeigt. Andere Suchmaschinen zeigen gegebenenfalls längere Texte an oder beschneiden diese an einer anderen Position.</target>
+      </trans-unit>
+      <trans-unit id="MSC.clearTrustedDevices">
+        <source>Clear trusted devices</source>
+        <target>Vertrauenswürdige Geräte löschen</target>
+      </trans-unit>
+      <trans-unit id="MSC.trustedDevices">
+        <source>Trusted devices</source>
+        <target>Vertrauenswürdige Geräte</target>
+      </trans-unit>
+      <trans-unit id="MSC.noTrustedDevices">
+        <source>Currently there are no trusted devices.</source>
+        <target>Zurzeit sind keine vertrauenswürdige Geräte vorhanden.</target>
+      </trans-unit>
+      <trans-unit id="MSC.device">
+        <source>Device</source>
+        <target>Gerät</target>
+      </trans-unit>
+      <trans-unit id="MSC.thisDevice">
+        <source>this device</source>
+        <target>dieses Gerät</target>
+      </trans-unit>
+      <trans-unit id="MSC.browser">
+        <source>Browser</source>
+        <target>Browser</target>
+      </trans-unit>
+      <trans-unit id="MSC.operatingSystem">
+        <source>Operating system</source>
+        <target>Betriebssystem</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2668,6 +2864,18 @@
       <trans-unit id="DCA.pastenew.1">
         <source>Create a new element after element ID %s</source>
         <target>Neues Element nach dem Element ID %s erstellen</target>
+      </trans-unit>
+      <trans-unit id="CRAWL.searchIndex.summary">
+        <source>Indexed %d URI(s) successfully. %d failed.</source>
+        <target>%d URL(s) erfolgreich indexiert. %d fehlgeschlagen.</target>
+      </trans-unit>
+      <trans-unit id="CRAWL.searchIndex.warning">
+        <source>%d URI(s) were skipped (if you are missing one, checkout the debug log).</source>
+        <target>%d URL(s) wurde(n) übersprungen (wenn Sie eine URL vermissen, prüfen Sie das Debug-Log).</target>
+      </trans-unit>
+      <trans-unit id="CRAWL.brokenLinkChecker.summary">
+        <source>Checked %d link(s) successfully. %d were broken.</source>
+        <target>%d Link(s) erfolgreich geprüft. %d war(en) kaputt.</target>
       </trans-unit>
     </body>
   </file>

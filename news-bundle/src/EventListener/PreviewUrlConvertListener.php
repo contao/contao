@@ -17,36 +17,29 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\News;
 use Contao\NewsModel;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 
+/**
+ * @internal
+ */
 class PreviewUrlConvertListener
 {
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var ContaoFramework
-     */
     private $framework;
 
-    public function __construct(RequestStack $requestStack, ContaoFramework $framework)
+    public function __construct(ContaoFramework $framework)
     {
-        $this->requestStack = $requestStack;
         $this->framework = $framework;
     }
 
     /**
      * Adds the front end preview URL to the event.
      */
-    public function onPreviewUrlConvert(PreviewUrlConvertEvent $event): void
+    public function __invoke(PreviewUrlConvertEvent $event): void
     {
         if (!$this->framework->isInitialized()) {
             return;
         }
 
-        $request = $this->requestStack->getCurrentRequest();
+        $request = $event->getRequest();
 
         if (null === $request || null === ($news = $this->getNewsModel($request))) {
             return;

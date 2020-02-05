@@ -198,16 +198,16 @@
         <target>Anzeigen ab</target>
       </trans-unit>
       <trans-unit id="tl_news.start.1">
-        <source>Do not show the news item on the website before this day.</source>
-        <target>Den Beitrag erst ab diesem Tag auf der Webseite anzeigen.</target>
+        <source>If you want to prevent the news item from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Wenn Sie den Beitrag erst ab einem bestimmten Zeitpunkt auf der Webseite anzeigen möchten, können Sie diesen hier eingeben. Andernfalls lassen Sie das Feld leer. </target>
       </trans-unit>
       <trans-unit id="tl_news.stop.0">
         <source>Show until</source>
         <target>Anzeigen bis</target>
       </trans-unit>
       <trans-unit id="tl_news.stop.1">
-        <source>Do not show the news item on the website on and after this day.</source>
-        <target>Den Beitrag nur bis zu diesem Tag auf der Webseite anzeigen.</target>
+        <source>If you want to prevent the news item from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Wenn Sie den Beitrag nur bis zu einem bestimmten Zeitpunkt auf der Webseite anzeigen möchten, können Sie diesen hier eingeben. Andernfalls lassen Sie das Feld leer. </target>
       </trans-unit>
       <trans-unit id="tl_news.tstamp.0">
         <source>Revision date</source>

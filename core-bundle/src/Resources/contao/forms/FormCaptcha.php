@@ -107,15 +107,12 @@ class FormCaptcha extends Widget
 		{
 			case 'name':
 				return $this->strCaptchaKey;
-				break;
 
 			case 'question':
 				return $this->getQuestion();
-				break;
 
 			default:
 				return parent::__get($strKey);
-				break;
 		}
 	}
 
@@ -124,7 +121,7 @@ class FormCaptcha extends Widget
 	 */
 	public function validate()
 	{
-		if (!isset($_POST[$this->strCaptchaKey]) || !\in_array(Input::post($this->strCaptchaKey . '_hash'), $this->generateHashes((int) Input::post($this->strCaptchaKey)), true) || (isset($_POST[$this->strCaptchaKey . '_name']) && Input::post($this->strCaptchaKey . '_name')))
+		if (!isset($_POST[$this->strCaptchaKey]) || (isset($_POST[$this->strCaptchaKey . '_name']) && Input::post($this->strCaptchaKey . '_name')) || !\in_array(Input::post($this->strCaptchaKey . '_hash'), $this->generateHashes((int) Input::post($this->strCaptchaKey)), true))
 		{
 			$this->class = 'error';
 			$this->addError($GLOBALS['TL_LANG']['ERR']['captcha']);

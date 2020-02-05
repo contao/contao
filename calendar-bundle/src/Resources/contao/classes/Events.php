@@ -132,7 +132,7 @@ abstract class Events extends Module
 				{
 					$arrRepeat = StringUtil::deserialize($objEvents->repeatEach);
 
-					if (!\is_array($arrRepeat) || !isset($arrRepeat['unit']) || !isset($arrRepeat['value']) || $arrRepeat['value'] < 1)
+					if (!isset($arrRepeat['unit'], $arrRepeat['value']) || $arrRepeat['value'] < 1)
 					{
 						continue;
 					}
@@ -252,7 +252,7 @@ abstract class Events extends Module
 		{
 			$arrRange = StringUtil::deserialize($objEvents->repeatEach);
 
-			if (\is_array($arrRange) && isset($arrRange['unit'], $arrRange['value']))
+			if (isset($arrRange['unit'], $arrRange['value']))
 			{
 				if ($arrRange['value'] == 1)
 				{
@@ -511,7 +511,6 @@ abstract class Events extends Module
 
 			case 'cal_all': // 1970-01-01 00:00:00 - 2106-02-07 07:28:15
 				return array(0, min(4294967295, PHP_INT_MAX), $GLOBALS['TL_LANG']['MSC']['cal_empty']);
-				break;
 
 			case 'next_7':
 				return array(time(), strtotime('+7 days'), $GLOBALS['TL_LANG']['MSC']['cal_empty']);

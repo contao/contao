@@ -38,16 +38,14 @@
         <target>Activé à partir du</target>
       </trans-unit>
       <trans-unit id="tl_member_group.start.1">
-        <source>Automatically activate the group on this day.</source>
-        <target>Activer automatiquement le groupe à partir de ce jour.</target>
+        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_member_group.stop.0">
         <source>Deactivate on</source>
         <target>Désactivé à partir du</target>
       </trans-unit>
       <trans-unit id="tl_member_group.stop.1">
-        <source>Automatically deactivate the group on this day.</source>
-        <target>Désactiver automatiquement le groupe à partir de ce jour.</target>
+        <source>If you want to prevent the group from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_member_group.title_legend">
         <source>Title</source>
@@ -57,9 +55,8 @@
         <source>Auto-redirect</source>
         <target>Redirection automatique</target>
       </trans-unit>
-      <trans-unit id="tl_member_group.disable_legend">
-        <source>Account settings</source>
-        <target>Paramètres du compte</target>
+      <trans-unit id="tl_member_group.account_legend">
+        <source>Group settings</source>
       </trans-unit>
       <trans-unit id="tl_member_group.new.0">
         <source>New</source>

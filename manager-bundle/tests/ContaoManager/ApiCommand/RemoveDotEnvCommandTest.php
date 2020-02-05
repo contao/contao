@@ -40,9 +40,6 @@ class RemoveDotEnvCommandTest extends ContaoTestCase
      */
     private $command;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -60,9 +57,6 @@ class RemoveDotEnvCommandTest extends ContaoTestCase
         $this->command = new RemoveDotEnvCommand($application);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function tearDown(): void
     {
         parent::tearDown();
@@ -87,7 +81,7 @@ class RemoveDotEnvCommandTest extends ContaoTestCase
         $this->assertSame('', $tester->getDisplay());
         $this->assertSame(0, $tester->getStatusCode());
         $this->assertFileExists($this->tempfile);
-        $this->assertSame("BAR='FOO'\n", file_get_contents($this->tempfile));
+        $this->assertSame("BAR=FOO\n", file_get_contents($this->tempfile));
     }
 
     public function testRemovesDotEnvIfLastKeyIsRemoved(): void

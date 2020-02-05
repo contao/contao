@@ -24,7 +24,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BackendCsvImportController
 {
@@ -58,6 +58,9 @@ class BackendCsvImportController
      */
     private $projectDir;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "Contao\CoreBundle\Controller\BackendCsvImportController" service instead
+     */
     public function __construct(ContaoFramework $framework, Connection $connection, RequestStack $requestStack, TranslatorInterface $translator, string $projectDir)
     {
         $this->framework = $framework;
@@ -169,7 +172,6 @@ class BackendCsvImportController
 
         $template->formId = $this->getFormId($request);
         $template->backUrl = $this->getBackUrl($request);
-        $template->action = $request->getRequestUri();
         $template->fileMaxSize = $config->get('maxFileSize');
         $template->uploader = $uploader->generateMarkup();
         $template->separators = $this->getSeparators($allowLinebreak);
@@ -187,7 +189,7 @@ class BackendCsvImportController
     /**
      * Returns an array of data from the imported CSV files.
      *
-     * @return string[]
+     * @return array<string>
      */
     private function fetchData(FileUpload $uploader, string $separator, callable $callback): array
     {
@@ -269,7 +271,7 @@ class BackendCsvImportController
      *
      * @throws \RuntimeException
      *
-     * @return string[]
+     * @return array<string>
      */
     private function getFiles(FileUpload $uploader): array
     {

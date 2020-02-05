@@ -161,22 +161,6 @@
         <source>Here you can enter the maximum height for image uploads in pixels.</source>
         <target>图片最大高度像素值</target>
       </trans-unit>
-      <trans-unit id="tl_settings.enableSearch.0">
-        <source>Enable searching</source>
-        <target>允许搜索引擎</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.enableSearch.1">
-        <source>Index pages so they can be searched.</source>
-        <target>自动建立前台页面索引，以供搜索</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.indexProtected.0">
-        <source>Index protected pages</source>
-        <target>索引受保护的页面</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.indexProtected.1">
-        <source>Use this option carefully and always exclude personalized pages from being indexed!</source>
-        <target>慎用此项，注意不让私人页面被索引</target>
-      </trans-unit>
       <trans-unit id="tl_settings.defaultUser.0">
         <source>Default page owner</source>
         <target>页面默认用户</target>
@@ -232,10 +216,6 @@
       <trans-unit id="tl_settings.cron_legend">
         <source>Cron job settings</source>
         <target>定时任务</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.search_legend">
-        <source>Search engine settings</source>
-        <target>搜索引擎设置</target>
       </trans-unit>
       <trans-unit id="tl_settings.chmod_legend">
         <source>Default access rights</source>

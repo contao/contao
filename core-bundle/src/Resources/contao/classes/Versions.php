@@ -181,26 +181,6 @@ class Versions extends Controller
 			}
 		}
 
-		// Store the content if it is an editable file
-		if ($this->strTable == 'tl_files')
-		{
-			$objModel = FilesModel::findByPk($this->intPid);
-
-			if ($objModel !== null && \in_array($objModel->extension, StringUtil::trimsplit(',', strtolower(Config::get('editableFiles')))))
-			{
-				$objFile = new File($objModel->path);
-
-				if ($objFile->extension == 'svgz')
-				{
-					$data['content'] = gzdecode($objFile->getContent());
-				}
-				else
-				{
-					$data['content'] = $objFile->getContent();
-				}
-			}
-		}
-
 		$intVersion = 1;
 
 		$objVersion = $this->Database->prepare("SELECT MAX(version) AS version FROM tl_version WHERE pid=? AND fromTable=?")
@@ -299,28 +279,6 @@ class Versions extends Controller
 		if (!\is_array($data))
 		{
 			return;
-		}
-
-		// Restore the content if it is an editable file
-		if ($this->strTable == 'tl_files')
-		{
-			$objModel = FilesModel::findByPk($this->intPid);
-
-			if ($objModel !== null && \in_array($objModel->extension, StringUtil::trimsplit(',', strtolower(Config::get('editableFiles')))))
-			{
-				$objFile = new File($objModel->path);
-
-				if ($objFile->extension == 'svgz')
-				{
-					$objFile->write(gzencode($data['content']));
-				}
-				else
-				{
-					$objFile->write($data['content']);
-				}
-
-				$objFile->close();
-			}
 		}
 
 		// Get the currently available fields
@@ -533,12 +491,12 @@ class Versions extends Controller
 							else
 							{
 								// Convert serialized arrays into strings
-								if (\is_array(($tmp = StringUtil::deserialize($to[$k]))) && !\is_array($to[$k]))
+								if (!\is_array($to[$k]) && \is_array(($tmp = StringUtil::deserialize($to[$k]))))
 								{
 									$to[$k] = $this->implodeRecursive($tmp, $blnIsBinary);
 								}
 
-								if (\is_array(($tmp = StringUtil::deserialize($from[$k]))) && !\is_array($from[$k]))
+								if (!\is_array($from[$k]) && \is_array(($tmp = StringUtil::deserialize($from[$k]))))
 								{
 									$from[$k] = $this->implodeRecursive($tmp, $blnIsBinary);
 								}
@@ -572,7 +530,7 @@ class Versions extends Controller
 							$to[$k] = Date::parse(Config::get('timeFormat'), $to[$k] ?: '');
 							$from[$k] = Date::parse(Config::get('timeFormat'), $from[$k] ?: '');
 						}
-						elseif ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['rgxp'] == 'datim' || $k == 'tstamp')
+						elseif ($k == 'tstamp' || $GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['rgxp'] == 'datim')
 						{
 							$to[$k] = Date::parse(Config::get('datimFormat'), $to[$k] ?: '');
 							$from[$k] = Date::parse(Config::get('datimFormat'), $from[$k] ?: '');
@@ -625,7 +583,6 @@ class Versions extends Controller
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
 		$objTemplate->charset = Config::get('characterSet');
-		$objTemplate->action = ampersand(Environment::get('request'));
 
 		throw new ResponseException($objTemplate->getResponse());
 	}
@@ -656,7 +613,7 @@ class Versions extends Controller
 		return '
 <div class="tl_version_panel">
 
-<form action="' . ampersand(Environment::get('request')) . '" id="tl_version" class="tl_form" method="post" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['versioning']) . '">
+<form id="tl_version" class="tl_form" method="post" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['versioning']) . '">
 <div class="tl_formbody">
 <input type="hidden" name="FORM_SUBMIT" value="tl_version">
 <input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">

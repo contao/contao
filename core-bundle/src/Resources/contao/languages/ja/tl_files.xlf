@@ -142,8 +142,8 @@
         <target>この種類のファイルはアップロードできません。</target>
       </trans-unit>
       <trans-unit id="tl_files.fileLocation">
-        <source>File location: %s</source>
-        <target>ファイルの場所: %s</target>
+        <source>Path: %s</source>
+        <target>パス: %s</target>
       </trans-unit>
       <trans-unit id="tl_files.syncAdded">
         <source>Added the file or folder &quot;%s&quot;</source>
@@ -226,8 +226,8 @@
         <target>&quot;%s&quot;というファイルまたはフォルダーをドラッグ</target>
       </trans-unit>
       <trans-unit id="tl_files.source">
-        <source>Edit file &quot;%s&quot;</source>
-        <target>&quot;%s&quot;というファイルを編集</target>
+        <source>Edit the source text of file &quot;%s&quot;</source>
+        <target>&quot;%s&quot;というファイルのソースのテキストを編集</target>
       </trans-unit>
       <trans-unit id="tl_files.upload">
         <source>Upload files to folder &quot;%s&quot;</source>

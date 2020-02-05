@@ -22,7 +22,7 @@ use Contao\NewsModel;
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class NewsPickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface, FrameworkAwareInterface
 {
@@ -33,6 +33,9 @@ class NewsPickerProvider extends AbstractInsertTagPickerProvider implements DcaP
      */
     private $security;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao_news.picker.news_provider" service instead
+     */
     public function __construct(FactoryInterface $menuFactory, RouterInterface $router, ?TranslatorInterface $translator, Security $security)
     {
         parent::__construct($menuFactory, $router, $translator);
@@ -40,41 +43,26 @@ class NewsPickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         $this->security = $security;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName(): string
     {
         return 'newsPicker';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsContext($context): bool
     {
         return 'link' === $context && $this->security->isGranted('contao_user.modules', 'news');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsValue(PickerConfig $config): bool
     {
         return $this->isMatchingInsertTag($config);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDcaTable(): string
     {
         return 'tl_news';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDcaAttributes(PickerConfig $config): array
     {
         $attributes = ['fieldType' => 'radio'];
@@ -90,17 +78,11 @@ class NewsPickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return $attributes;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function convertDcaValue(PickerConfig $config, $value): string
     {
         return sprintf($this->getInsertTag($config), $value);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getRouteParameters(PickerConfig $config = null): array
     {
         $params = ['do' => 'news'];
@@ -117,9 +99,6 @@ class NewsPickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return $params;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getDefaultInsertTag(): string
     {
         return '{{news_url::%s}}';

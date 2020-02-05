@@ -59,7 +59,7 @@ class Dbafs
 		$strResource = str_replace(array('\\', '//'), '/', $strResource);
 
 		// The resource does not exist or lies outside the upload directory
-		if ($strResource == '' || strncmp($strResource, $strUploadPath, \strlen($strUploadPath)) !== 0 || !file_exists($rootDir . '/' . $strResource))
+		if ($strResource == '' || !file_exists($rootDir . '/' . $strResource) || strncmp($strResource, $strUploadPath, \strlen($strUploadPath)) !== 0)
 		{
 			throw new \InvalidArgumentException("Invalid resource $strResource");
 		}
@@ -495,8 +495,9 @@ class Dbafs
 
 		$objDatabase = Database::getInstance();
 
-		// Lock the files table
+		// Begin atomic database access
 		$objDatabase->lockTables(array('tl_files'=>'WRITE'));
+		$objDatabase->beginTransaction();
 
 		// Reset the "found" flag
 		$objDatabase->query("UPDATE tl_files SET found=''");
@@ -606,26 +607,23 @@ class Dbafs
 					$arrFoldersToHash[] = $strRelpath;
 				}
 			}
+			elseif ($objFile->isDir())
+			{
+				$arrFoldersToCompare[] = $objModel;
+			}
 			else
 			{
-				if ($objFile->isDir())
-				{
-					$arrFoldersToCompare[] = $objModel;
-				}
-				else
-				{
-					// Check whether the MD5 hash has changed
-					$strHash = (new File($strRelpath))->hash;
-					$strType = ($objModel->hash != $strHash) ? 'Changed' : 'Unchanged';
+				// Check whether the MD5 hash has changed
+				$strHash = (new File($strRelpath))->hash;
+				$strType = ($objModel->hash != $strHash) ? 'Changed' : 'Unchanged';
 
-					// Add a log entry
-					$objLog->append("[$strType] $strRelpath");
+				// Add a log entry
+				$objLog->append("[$strType] $strRelpath");
 
-					// Update the record
-					$objModel->found = 1;
-					$objModel->hash  = $strHash;
-					$objModel->save();
-				}
+				// Update the record
+				$objModel->found = 1;
+				$objModel->hash  = $strHash;
+				$objModel->save();
 			}
 		}
 
@@ -749,7 +747,8 @@ class Dbafs
 		// Reset the found flag
 		$objDatabase->query("UPDATE tl_files SET found=1 WHERE found=2");
 
-		// Unlock the tables
+		// Finalize database access
+		$objDatabase->commitTransaction();
 		$objDatabase->unlockTables();
 
 		// Return the path to the log file

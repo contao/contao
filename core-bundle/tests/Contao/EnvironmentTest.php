@@ -26,9 +26,6 @@ class EnvironmentTest extends TestCase
      */
     public $rootDir;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();

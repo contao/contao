@@ -262,12 +262,10 @@
         <target>Seleziona un modello per i risultati di ricerca. Il modello predefinito è chiamato &lt;em&gt;search_default&lt;/em&gt;. Se vuoi aggiungere un modello, caricalo nella cartella &lt;em&gt;templates&lt;/em&gt;. (l'estensione dei file deve essere &quot;.tpl&quot;)</target>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.0">
-        <source>Column</source>
-        <target>Colonna</target>
+        <source>Layout section</source>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.1">
-        <source>Please choose the column whose articles you want to list.</source>
-        <target>Seleziona la colonna in cui vuoi che appaiano gli articoli.</target>
+        <source>Please choose the layout section whose articles you want to list.</source>
       </trans-unit>
       <trans-unit id="tl_module.skipFirst.0">
         <source>Skip items</source>

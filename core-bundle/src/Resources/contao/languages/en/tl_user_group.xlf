@@ -24,19 +24,22 @@
         <source>Activate on</source>
       </trans-unit>
       <trans-unit id="tl_user_group.start.1">
-        <source>Automatically activate the group on this day.</source>
+        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_user_group.stop.0">
         <source>Deactivate on</source>
       </trans-unit>
       <trans-unit id="tl_user_group.stop.1">
-        <source>Automatically deactivate the group on this day.</source>
+        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_user_group.title_legend">
         <source>Title</source>
       </trans-unit>
       <trans-unit id="tl_user_group.modules_legend">
         <source>Allowed modules</source>
+      </trans-unit>
+      <trans-unit id="tl_user_group.elements_legend">
+        <source>Allowed elements</source>
       </trans-unit>
       <trans-unit id="tl_user_group.pagemounts_legend">
         <source>Pagemounts</source>
@@ -57,7 +60,7 @@
         <source>Allowed fields</source>
       </trans-unit>
       <trans-unit id="tl_user_group.account_legend">
-        <source>Account settings</source>
+        <source>Group settings</source>
       </trans-unit>
       <trans-unit id="tl_user_group.new.0">
         <source>New</source>

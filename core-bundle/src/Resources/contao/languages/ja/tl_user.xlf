@@ -161,6 +161,22 @@
         <source>Here you can grant access to the theme modules.</source>
         <target>テーマモジュールのアクセスを許可できます。</target>
       </trans-unit>
+      <trans-unit id="tl_user.elements.0">
+        <source>Content elements</source>
+        <target>コンテント要素</target>
+      </trans-unit>
+      <trans-unit id="tl_user.elements.1">
+        <source>Here you can select the allowed content element types.</source>
+        <target>許可するコンテント要素を洗濯できます。</target>
+      </trans-unit>
+      <trans-unit id="tl_user.fields.0">
+        <source>Form fields</source>
+        <target>フォームの項目</target>
+      </trans-unit>
+      <trans-unit id="tl_user.fields.1">
+        <source>Here you can select the allowed form field types.</source>
+        <target>許可するフォームの項目を洗濯できます。</target>
+      </trans-unit>
       <trans-unit id="tl_user.pagemounts.0">
         <source>Pagemounts</source>
         <target>ページマウント</target>
@@ -230,16 +246,16 @@
         <target>使用開始日</target>
       </trans-unit>
       <trans-unit id="tl_user.start.1">
-        <source>Automatically activate the account on this day.</source>
-        <target>この日から自動的にアカウントの使用を可能にします。</target>
+        <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>ある特定の日時より前はアカウントの使用を可能にしたくない場合は、その日時を入力します。それ以外の場合は空のままにしてください。</target>
       </trans-unit>
       <trans-unit id="tl_user.stop.0">
         <source>Deactivate on</source>
         <target>使用停止日</target>
       </trans-unit>
       <trans-unit id="tl_user.stop.1">
-        <source>Automatically deactivate the account on this day.</source>
-        <target>この日で自動的にアカウントの使用を停止します。</target>
+        <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>ある特定の日時より後はアカウントの使用を不可能にしたい場合は、その日時を入力します。それ以外の場合は空のままにしてください。</target>
       </trans-unit>
       <trans-unit id="tl_user.session.0">
         <source>Purge data</source>
@@ -276,6 +292,10 @@
       <trans-unit id="tl_user.modules_legend">
         <source>Allowed modules</source>
         <target>許可するモジュール</target>
+      </trans-unit>
+      <trans-unit id="tl_user.elements_legend">
+        <source>Allowed elements</source>
+        <target>許可するコンテント要素</target>
       </trans-unit>
       <trans-unit id="tl_user.pagemounts_legend">
         <source>Pagemounts</source>

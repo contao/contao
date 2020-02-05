@@ -365,7 +365,7 @@ abstract class System
 		}
 
 		// Return if the language file has been loaded already
-		if (isset(static::$arrLanguageFiles[$strName][$strLanguage]) && !$blnNoCache)
+		if (!$blnNoCache && isset(static::$arrLanguageFiles[$strName][$strLanguage]))
 		{
 			return;
 		}

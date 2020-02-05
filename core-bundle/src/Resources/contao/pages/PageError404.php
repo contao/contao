@@ -81,9 +81,6 @@ class PageError404 extends Frontend
 	 */
 	protected function prepare()
 	{
-		// Check the search index (see #3761)
-		Search::removeEntry(Environment::get('base') . Environment::get('relativeRequest'));
-
 		// Find the matching root page
 		$objRootPage = $this->getRootPageFromUrl();
 

@@ -53,7 +53,7 @@ class ModuleNewsReader extends ModuleNews
 		}
 
 		// Set the item from the auto_item parameter
-		if (!isset($_GET['items']) && Config::get('useAutoItem') && isset($_GET['auto_item']))
+		if (!isset($_GET['items']) && isset($_GET['auto_item']) && Config::get('useAutoItem'))
 		{
 			Input::setGet('items', Input::get('auto_item'));
 		}
@@ -93,6 +93,12 @@ class ModuleNewsReader extends ModuleNews
 		if (null === $objArticle || $objArticle->source != 'default')
 		{
 			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
+		}
+
+		// Set the default template
+		if (!$this->news_template)
+		{
+			$this->news_template = 'news_full';
 		}
 
 		$arrArticle = $this->parseArticle($objArticle);
@@ -151,14 +157,10 @@ class ModuleNewsReader extends ModuleNews
 			$arrNotifies[] = $GLOBALS['TL_ADMIN_EMAIL'];
 		}
 
-		// Notify the author
-		if ($objArchive->notify != 'notify_admin')
+		/** @var UserModel $objAuthor */
+		if ($objArchive->notify != 'notify_admin' && ($objAuthor = $objArticle->getRelated('author')) instanceof UserModel && $objAuthor->email != '')
 		{
-			/** @var UserModel $objAuthor */
-			if (($objAuthor = $objArticle->getRelated('author')) instanceof UserModel && $objAuthor->email != '')
-			{
-				$arrNotifies[] = $objAuthor->email;
-			}
+			$arrNotifies[] = $objAuthor->email;
 		}
 
 		$objConfig = new \stdClass();

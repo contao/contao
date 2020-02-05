@@ -23,9 +23,6 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class DomainFilter implements RouteFilterInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function filter(RouteCollection $collection, Request $request): RouteCollection
     {
         $hasDomainMatch = false;

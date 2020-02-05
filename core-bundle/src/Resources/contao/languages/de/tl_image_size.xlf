@@ -85,6 +85,14 @@
         <source>Note that no optimizations such as meta data stripping or JPEG compression will be applied in this case.</source>
         <target>Beachten Sie, dass in diesem Fall keine Optimierung der Metadaten oder der JPEG-Komprimierung erfolgt.</target>
       </trans-unit>
+      <trans-unit id="tl_image_size.lazyLoading.0">
+        <source>Enable lazy loading</source>
+        <target>Lazy-Loading aktivieren</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.lazyLoading.1">
+        <source>Defer loading the image until it is scrolled into the viewport.</source>
+        <target>Das Laden des Bildes verzögern bis es in den Viewport gescrollt wird.</target>
+      </trans-unit>
       <trans-unit id="tl_image_size.tstamp.0">
         <source>Revision date</source>
         <target>Änderungsdatum</target>
@@ -100,6 +108,10 @@
       <trans-unit id="tl_image_size.source_legend">
         <source>Image source settings</source>
         <target>Bildquellen-Einstellung</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.loading_legend">
+        <source>Loading options</source>
+        <target>Ladeoptionen</target>
       </trans-unit>
       <trans-unit id="tl_image_size.expert_legend">
         <source>Expert settings</source>

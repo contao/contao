@@ -35,17 +35,11 @@ class XliffFileLoader extends Loader
         $this->addToGlobals = $addToGlobals;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load($file, $type = null): string
     {
-        return $this->convertXlfToPhp((string) $file, ($type ?: 'en'));
+        return $this->convertXlfToPhp((string) $file, $type ?: 'en');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports($resource, $type = null): bool
     {
         return 'xlf' === pathinfo((string) $resource, PATHINFO_EXTENSION);
@@ -59,7 +53,7 @@ class XliffFileLoader extends Loader
         $fileNodes = $xml->getElementsByTagName('file');
         $language = strtolower($language);
 
-        /** @var \DOMElement[] $fileNodes */
+        /** @var \DOMElement $fileNode */
         foreach ($fileNodes as $fileNode) {
             $tagName = 'target';
 
@@ -79,11 +73,11 @@ class XliffFileLoader extends Loader
         $return = '';
         $units = $fileNode->getElementsByTagName('trans-unit');
 
-        /** @var \DOMElement[] $units */
+        /** @var \DOMElement $unit */
         foreach ($units as $unit) {
             $node = $unit->getElementsByTagName($tagName);
 
-            if (null === $node || null === $node->item(0)) {
+            if (null === $node->item(0)) {
                 continue;
             }
 

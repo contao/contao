@@ -19,6 +19,8 @@ use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Unlocks the install tool.
+ *
+ * @internal
  */
 class UnlockCommand extends Command
 {
@@ -34,9 +36,6 @@ class UnlockCommand extends Command
         parent::__construct();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure(): void
     {
         $this
@@ -45,9 +44,6 @@ class UnlockCommand extends Command
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if (!file_exists($this->lockFile)) {

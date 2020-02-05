@@ -1,118 +1,6 @@
 <?xml version="1.0" ?><xliff version="1.1">
   <file datatype="php" original="src/Resources/contao/languages/en/tl_form_field.php" source-language="en" target-language="zh">
     <body>
-      <trans-unit id="FFL.explanation.0">
-        <source>Explanation</source>
-        <target>解释</target>
-      </trans-unit>
-      <trans-unit id="FFL.explanation.1">
-        <source>A custom field to insert an explanation text.</source>
-        <target>支持HTML代码。</target>
-      </trans-unit>
-      <trans-unit id="FFL.html.0">
-        <source>HTML code</source>
-        <target>HTML</target>
-      </trans-unit>
-      <trans-unit id="FFL.html.1">
-        <source>A custom field to insert HTML code.</source>
-        <target>自定义区域，可插入HTML代码</target>
-      </trans-unit>
-      <trans-unit id="FFL.fieldsetStart.0">
-        <source>Fieldset start</source>
-        <target>字段组开始</target>
-      </trans-unit>
-      <trans-unit id="FFL.fieldsetStart.1">
-        <source>The opening part of a fieldset with an optional legend.</source>
-        <target>带有可选标题的字段组开始部分。</target>
-      </trans-unit>
-      <trans-unit id="FFL.fieldsetStop.0">
-        <source>Fieldset stop</source>
-        <target>字段组结束</target>
-      </trans-unit>
-      <trans-unit id="FFL.fieldsetStop.1">
-        <source>The closing part of a fieldset.</source>
-        <target>字段组结束部分。</target>
-      </trans-unit>
-      <trans-unit id="FFL.text.0">
-        <source>Text field</source>
-        <target>文字</target>
-      </trans-unit>
-      <trans-unit id="FFL.text.1">
-        <source>A single-line input field for a short or medium text.</source>
-        <target>单行输入区，适合短文字</target>
-      </trans-unit>
-      <trans-unit id="FFL.password.0">
-        <source>Password field</source>
-        <target>密码</target>
-      </trans-unit>
-      <trans-unit id="FFL.password.1">
-        <source>A single-line input field for a password. Contao automatically adds a confirmation field.</source>
-        <target>单行密码输入区，自动增加确认</target>
-      </trans-unit>
-      <trans-unit id="FFL.textarea.0">
-        <source>Textarea</source>
-        <target>文本</target>
-      </trans-unit>
-      <trans-unit id="FFL.textarea.1">
-        <source>A multi-line input field for a medium or long text.</source>
-        <target>多行文字</target>
-      </trans-unit>
-      <trans-unit id="FFL.select.0">
-        <source>Select menu</source>
-        <target>选择菜单</target>
-      </trans-unit>
-      <trans-unit id="FFL.select.1">
-        <source>A single- or multi-line drop-down menu.</source>
-        <target>单行或者多行下拉菜单</target>
-      </trans-unit>
-      <trans-unit id="FFL.radio.0">
-        <source>Radio button menu</source>
-        <target>单选按钮菜单</target>
-      </trans-unit>
-      <trans-unit id="FFL.radio.1">
-        <source>A list of multiple options from which one can be selected.</source>
-        <target>多项选择的列表</target>
-      </trans-unit>
-      <trans-unit id="FFL.checkbox.0">
-        <source>Checkbox menu</source>
-        <target>复选框菜单</target>
-      </trans-unit>
-      <trans-unit id="FFL.checkbox.1">
-        <source>A list of multiple options from which any can be selected.</source>
-        <target>多项选择的列表</target>
-      </trans-unit>
-      <trans-unit id="FFL.upload.0">
-        <source>File upload</source>
-        <target>文件上传</target>
-      </trans-unit>
-      <trans-unit id="FFL.upload.1">
-        <source>A single-line input field to upload a local file to the server.</source>
-        <target>单行输入区，可上传本地文件到服务器</target>
-      </trans-unit>
-      <trans-unit id="FFL.hidden.0">
-        <source>Hidden field</source>
-        <target>隐藏</target>
-      </trans-unit>
-      <trans-unit id="FFL.hidden.1">
-        <source>A single-line input field that is not visible in the form.</source>
-        <target>单行输入区，不可见</target>
-      </trans-unit>
-      <trans-unit id="FFL.captcha.0">
-        <source>Security question</source>
-        <target>安全问题</target>
-      </trans-unit>
-      <trans-unit id="FFL.captcha.1">
-        <source>A simple math question to verify that the form is being submitted by a human (CAPTCHA).</source>
-        <target>简单的数学问题，防止机器人注册</target>
-      </trans-unit>
-      <trans-unit id="FFL.submit.0">
-        <source>Submit field</source>
-        <target>递交</target>
-      </trans-unit>
-      <trans-unit id="FFL.submit.1">
-        <source>A button to submit the form.</source>
-        <target>表格提交按钮</target>
-      </trans-unit>
       <trans-unit id="tl_form_field.type.0">
         <source>Field type</source>
         <target>格式</target>
@@ -296,6 +184,12 @@
       <trans-unit id="tl_form_field.maxval.1">
         <source>Here you can set the maximum value for numeric fields.</source>
         <target>设置数字字段的最大值</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.step.0">
+        <source>Step</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.step.1">
+        <source>Here you can set the discrete step size of the field.</source>
       </trans-unit>
       <trans-unit id="tl_form_field.size.0">
         <source>Rows and columns</source>

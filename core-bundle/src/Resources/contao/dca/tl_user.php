@@ -111,8 +111,8 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		'admin'                       => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE;{theme_legend:hide},backendTheme,fullscreen;{password_legend:hide},pwChange,password;{admin_legend},admin;{account_legend},disable,start,stop',
 		'default'                     => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE;{theme_legend:hide},backendTheme,fullscreen;{password_legend:hide},pwChange,password;{admin_legend},admin;{groups_legend},groups,inherit;{account_legend},disable,start,stop',
 		'group'                       => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE;{theme_legend:hide},backendTheme,fullscreen;{password_legend:hide},pwChange,password;{admin_legend},admin;{groups_legend},groups,inherit;{account_legend},disable,start,stop',
-		'extend'                      => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE;{theme_legend:hide},backendTheme,fullscreen;{password_legend:hide},pwChange,password;{admin_legend},admin;{groups_legend},groups,inherit;{modules_legend},modules,themes;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{amg_legend},amg;{account_legend},disable,start,stop',
-		'custom'                      => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE;{theme_legend:hide},backendTheme,fullscreen;{password_legend:hide},pwChange,password;{admin_legend},admin;{groups_legend},groups,inherit;{modules_legend},modules,themes;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{amg_legend},amg;{account_legend},disable,start,stop'
+		'extend'                      => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE;{theme_legend:hide},backendTheme,fullscreen;{password_legend:hide},pwChange,password;{admin_legend},admin;{groups_legend},groups,inherit;{modules_legend},modules,themes;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{amg_legend},amg;{account_legend},disable,start,stop',
+		'custom'                      => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE;{theme_legend:hide},backendTheme,fullscreen;{password_legend:hide},pwChange,password;{admin_legend},admin;{groups_legend},groups,inherit;{modules_legend},modules,themes;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{amg_legend},amg;{account_legend},disable,start,stop'
 	),
 
 	// Fields
@@ -270,7 +270,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		'modules' => array
 		(
 			'exclude'                 => true,
-			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'options_callback'        => array('tl_user', 'getModules'),
 			'reference'               => &$GLOBALS['TL_LANG']['MOD'],
@@ -284,6 +283,24 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'options'                 => array('css', 'modules', 'layout', 'image_sizes', 'theme_import', 'theme_export'),
 			'reference'               => &$GLOBALS['TL_LANG']['MOD'],
 			'eval'                    => array('multiple'=>true),
+			'sql'                     => "blob NULL"
+		),
+		'elements' => array
+		(
+			'exclude'                 => true,
+			'inputType'               => 'checkbox',
+			'options_callback'        => array('tl_user', 'getContentElements'),
+			'reference'               => &$GLOBALS['TL_LANG']['CTE'],
+			'eval'                    => array('multiple'=>true, 'helpwizard'=>true),
+			'sql'                     => "blob NULL"
+		),
+		'fields' => array
+		(
+			'exclude'                 => true,
+			'inputType'               => 'checkbox',
+			'options'                 => array_keys($GLOBALS['TL_FFL']),
+			'reference'               => &$GLOBALS['TL_LANG']['FFL'],
+			'eval'                    => array('multiple'=>true, 'helpwizard'=>true),
 			'sql'                     => "blob NULL"
 		),
 		'pagemounts' => array
@@ -423,14 +440,24 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
-		'loginCount' => array
+		'loginAttempts' => array
 		(
 			'eval'                    => array('doNotCopy'=>true),
-			'sql'                     => "smallint(5) unsigned NOT NULL default 3"
+			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
 		),
 		'locked' => array
 		(
 			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
+		),
+		'backupCodes' => array
+		(
+			'eval'                    => array('doNotCopy'=>true),
+			'sql'                     => "text NULL"
+		),
+		'trustedTokenVersion' => array
+		(
+			'eval'                    => array('doNotCopy'=>true),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		)
 	)
@@ -524,7 +551,7 @@ class tl_user extends Contao\Backend
 		}
 
 		// Should not happen because of the redirect but better safe than sorry
-		if (Contao\BackendUser::getInstance()->id != Contao\Input::get('id') || Contao\Input::get('act') != 'edit')
+		if (Contao\Input::get('act') != 'edit' || Contao\BackendUser::getInstance()->id != Contao\Input::get('id'))
 		{
 			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not allowed to edit this page.');
 		}
@@ -556,11 +583,16 @@ class tl_user extends Contao\Backend
 			return;
 		}
 
-		$objResult = $this->Database->query("SELECT COUNT(*) AS cnt FROM tl_user WHERE admin='' AND modules LIKE '%\"tpl_editor\"%'");
+		$objResult = $this->Database->query("SELECT EXISTS(SELECT * FROM tl_user WHERE admin='' AND modules LIKE '%\"tpl_editor\"%') as showTemplateWarning, EXISTS(SELECT * FROM tl_user WHERE admin='' AND themes LIKE '%\"theme_import\"%') as showThemeWarning");
 
-		if ($objResult->cnt > 0)
+		if ($objResult->showTemplateWarning)
 		{
 			Contao\Message::addInfo($GLOBALS['TL_LANG']['MSC']['userTemplateEditor']);
+		}
+
+		if ($objResult->showThemeWarning)
+		{
+			Contao\Message::addInfo($GLOBALS['TL_LANG']['MSC']['userThemeImport']);
 		}
 	}
 
@@ -586,7 +618,7 @@ class tl_user extends Contao\Backend
 			$image .= '_two_factor';
 		}
 
-		if ($row['disable'] || $disabled)
+		if ($disabled || $row['disable'])
 		{
 			$image .= '_';
 		}
@@ -778,6 +810,16 @@ class tl_user extends Contao\Backend
 		}
 
 		return $arrModules;
+	}
+
+	/**
+	 * Return all content elements
+	 *
+	 * @return array
+	 */
+	public function getContentElements()
+	{
+		return array_map('array_keys', $GLOBALS['TL_CTE']);
 	}
 
 	/**

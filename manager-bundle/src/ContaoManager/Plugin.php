@@ -30,7 +30,6 @@ use Contao\ManagerPlugin\Config\ContainerBuilder as PluginContainerBuilder;
 use Contao\ManagerPlugin\Config\ExtensionPluginInterface;
 use Contao\ManagerPlugin\Dependency\DependentPluginInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
-use Contao\User;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle;
 use Doctrine\DBAL\DriverManager;
@@ -54,8 +53,10 @@ use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Security\Core\Encoder\NativePasswordEncoder;
 
+/**
+ * @internal
+ */
 class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPluginInterface, ExtensionPluginInterface, DependentPluginInterface, ApiPluginInterface
 {
     /**
@@ -81,17 +82,11 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         static::$autoloadModules = $modulePath;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPackageDependencies()
     {
         return ['contao/core-bundle'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getBundles(ParserInterface $parser)
     {
         $configs = [
@@ -113,7 +108,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
         // Autoload the legacy modules
         if (null !== static::$autoloadModules && file_exists(static::$autoloadModules)) {
-            /** @var SplFileInfo[] $modules */
+            /** @var array<SplFileInfo> $modules */
             $modules = Finder::create()
                 ->directories()
                 ->depth(0)
@@ -136,9 +131,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         return $configs;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function registerContainerConfiguration(LoaderInterface $loader, array $managerConfig): void
     {
         $loader->load(
@@ -149,15 +141,11 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                     $loader->load('@ContaoManagerBundle/Resources/skeleton/config/config_prod.yml');
                 }
 
-                $container->setParameter('container.autowiring.strict_mode', true);
                 $container->setParameter('container.dumper.inline_class_loader', true);
             }
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel): ?RouteCollection
     {
         if ('dev' !== $kernel->getEnvironment()) {
@@ -206,9 +194,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         return $collection;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getApiFeatures(): array
     {
         return [
@@ -225,9 +210,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getApiCommands(): array
     {
         return [
@@ -241,47 +223,32 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getExtensionConfig($extensionName, array $extensionConfigs, PluginContainerBuilder $container): array
     {
         switch ($extensionName) {
             case 'contao':
                 return $this->handlePrependLocale($extensionConfigs, $container);
 
+            case 'framework':
+                if (!isset($_SERVER['APP_SECRET'])) {
+                    $container->setParameter('env(APP_SECRET)', $container->getParameter('secret'));
+                }
+
+                return $extensionConfigs;
+
             case 'doctrine':
+                if (!isset($_SERVER['DATABASE_URL'])) {
+                    $container->setParameter('env(DATABASE_URL)', $this->getDatabaseUrl($container));
+                }
+
                 return $this->addDefaultServerVersion($extensionConfigs, $container);
 
-            case 'security':
-                return $this->handleSecurityEncoder($extensionConfigs, $container);
+            case 'swiftmailer':
+                if (!isset($_SERVER['MAILER_URL'])) {
+                    $container->setParameter('env(MAILER_URL)', $this->getMailerUrl($container));
+                }
 
-            default:
-                return $extensionConfigs;
-        }
-    }
-
-    /**
-     * Fall back to the bcrypt password hashing algorithm in Symfony <4.3.
-     *
-     * Backwards compatibility: This can be removed as soon as Symfony 4.3 is
-     * the minimum required version.
-     *
-     * @return array<string,array<string,mixed>>
-     */
-    private function handleSecurityEncoder(array $extensionConfigs, ContainerBuilder $container): array
-    {
-        if (class_exists(NativePasswordEncoder::class)) {
-            return $extensionConfigs;
-        }
-
-        foreach ($extensionConfigs as &$extensionConfig) {
-            if (
-                isset($extensionConfig['encoders'][User::class]['algorithm'])
-                && 'auto' === $extensionConfig['encoders'][User::class]['algorithm']
-            ) {
-                $extensionConfig['encoders'][User::class]['algorithm'] = 'bcrypt';
-            }
+                return $this->checkMailerTransport($extensionConfigs, $container);
         }
 
         return $extensionConfigs;
@@ -357,5 +324,87 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         }
 
         return $extensionConfigs;
+    }
+
+    /**
+     * Changes the mail transport from "mail" to "sendmail".
+     *
+     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     */
+    private function checkMailerTransport(array $extensionConfigs, ContainerBuilder $container): array
+    {
+        if ('mail' === $container->getParameter('mailer_transport')) {
+            $container->setParameter('mailer_transport', 'sendmail');
+        }
+
+        return $extensionConfigs;
+    }
+
+    private function getDatabaseUrl(ContainerBuilder $container): string
+    {
+        $userPassword = '';
+
+        if ($user = $container->getParameter('database_user')) {
+            $userPassword = $this->encodeUrlParameter($user);
+
+            if ($password = $container->getParameter('database_password')) {
+                $userPassword .= ':'.$this->encodeUrlParameter($password);
+            }
+
+            $userPassword .= '@';
+        }
+
+        $dbName = '';
+
+        if ($name = $container->getParameter('database_name')) {
+            $dbName = '/'.$this->encodeUrlParameter($name);
+        }
+
+        return sprintf(
+            'mysql://%s%s:%s%s',
+            $userPassword,
+            $container->getParameter('database_host'),
+            (int) $container->getParameter('database_port'),
+            $dbName
+        );
+    }
+
+    private function getMailerUrl(ContainerBuilder $container): string
+    {
+        if ('sendmail' === $container->getParameter('mailer_transport')) {
+            return 'sendmail://localhost';
+        }
+
+        $parameters = [];
+
+        if ($user = $container->getParameter('mailer_user')) {
+            $parameters[] = 'username='.$this->encodeUrlParameter($user);
+
+            if ($password = $container->getParameter('mailer_password')) {
+                $parameters[] = 'password='.$this->encodeUrlParameter($password);
+            }
+        }
+
+        if ($encryption = $container->getParameter('mailer_encryption')) {
+            $parameters[] = 'encryption='.$this->encodeUrlParameter($encryption);
+        }
+
+        $qs = '';
+
+        if (!empty($parameters)) {
+            $qs = '?'.implode('&', $parameters);
+        }
+
+        return sprintf(
+            'smtp://%s:%s%s',
+            $container->getParameter('mailer_host'),
+            (int) $container->getParameter('mailer_port'),
+            $qs
+        );
+    }
+
+    private function encodeUrlParameter(string $parameter): string
+    {
+        return str_replace('%', '%%', rawurlencode($parameter));
     }
 }

@@ -117,7 +117,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('addTime', 'addImage', 'recurring', 'addEnclosure', 'source', 'overwriteMeta'),
-		'default'                     => '{title_legend},title,alias,author;{date_legend},addTime,startDate,endDate;{meta_legend},pageTitle,description;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{source_legend:hide},source;{expert_legend:hide},cssClass,noComments;{publish_legend},published,start,stop'
+		'default'                     => '{title_legend},title,alias,author;{date_legend},addTime,startDate,endDate;{meta_legend},pageTitle,description,serpPreview;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{source_legend:hide},source;{expert_legend:hide},cssClass,noComments;{publish_legend},published,start,stop'
 	),
 
 	// Subpalettes
@@ -253,6 +253,14 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'inputType'               => 'textarea',
 			'eval'                    => array('style'=>'height:60px', 'decodeEntities'=>true, 'tl_class'=>'clr'),
 			'sql'                     => "text NULL"
+		),
+		'serpPreview' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
+			'exclude'                 => true,
+			'inputType'               => 'serpPreview',
+			'eval'                    => array('url_callback'=>array('tl_calendar_events', 'getSerpUrl'), 'titleFields'=>array('pageTitle', 'title'), 'descriptionFields'=>array('description', 'teaser')),
+			'sql'                     => null
 		),
 		'location' => array
 		(
@@ -730,6 +738,18 @@ class tl_calendar_events extends Contao\Backend
 	}
 
 	/**
+	 * Return the SERP URL
+	 *
+	 * @param Contao\CalendarEventsModel $model
+	 *
+	 * @return string
+	 */
+	public function getSerpUrl(Contao\CalendarEventsModel $model)
+	{
+		return Contao\Events::generateEventUrl($model, true);
+	}
+
+	/**
 	 * Add the type of input field
 	 *
 	 * @param array $arrRow
@@ -909,7 +929,7 @@ class tl_calendar_events extends Contao\Backend
 			{
 				$arrRange = Contao\StringUtil::deserialize($dc->activeRecord->repeatEach);
 
-				if (is_array($arrRange) && isset($arrRange['unit'], $arrRange['value']))
+				if (isset($arrRange['unit'], $arrRange['value']))
 				{
 					$arg = $arrRange['value'] * $dc->activeRecord->recurrences;
 					$unit = $arrRange['unit'];

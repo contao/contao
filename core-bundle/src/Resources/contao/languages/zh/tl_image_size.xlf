@@ -85,6 +85,12 @@
         <source>Note that no optimizations such as meta data stripping or JPEG compression will be applied in this case.</source>
         <target>注意，这种情况下，不会应用优化，如：剔除元数据或压缩JPEG</target>
       </trans-unit>
+      <trans-unit id="tl_image_size.lazyLoading.0">
+        <source>Enable lazy loading</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.lazyLoading.1">
+        <source>Defer loading the image until it is scrolled into the viewport.</source>
+      </trans-unit>
       <trans-unit id="tl_image_size.tstamp.0">
         <source>Revision date</source>
         <target>修改日期</target>
@@ -100,6 +106,9 @@
       <trans-unit id="tl_image_size.source_legend">
         <source>Image source settings</source>
         <target>图片源设置</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.loading_legend">
+        <source>Loading options</source>
       </trans-unit>
       <trans-unit id="tl_image_size.expert_legend">
         <source>Expert settings</source>

@@ -22,14 +22,14 @@ class ContaoCacheClearer implements CacheClearerInterface
      */
     private $filesystem;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.cache.clear_internal" service instead
+     */
     public function __construct(Filesystem $filesystem)
     {
         $this->filesystem = $filesystem;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function clear($cacheDir): void
     {
         $this->filesystem->remove($cacheDir.'/contao/config');

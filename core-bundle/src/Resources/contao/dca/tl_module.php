@@ -222,15 +222,21 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'options_callback'        => array('tl_module', 'getNavigationTemplates'),
-			'eval'                    => array('tl_class'=>'w50'),
+			'options_callback' => static function ()
+			{
+				return Contao\Controller::getTemplateGroup('nav_');
+			},
+			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'customTpl' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'options_callback'        => array('tl_module', 'getModuleTemplates'),
+			'options_callback' => static function (Contao\DataContainer $dc)
+			{
+				return Contao\Controller::getTemplateGroup('mod_' . $dc->activeRecord->type . '_');
+			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
@@ -299,8 +305,11 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'options_callback'        => array('tl_module', 'getMemberTemplates'),
-			'eval'                    => array('tl_class'=>'w50'),
+			'options_callback' => static function ()
+			{
+				return Contao\Controller::getTemplateGroup('member_');
+			},
+			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'form' => array
@@ -363,8 +372,11 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'options_callback'        => array('tl_module', 'getSearchTemplates'),
-			'eval'                    => array('tl_class'=>'w50'),
+			'options_callback' => static function ()
+			{
+				return Contao\Controller::getTemplateGroup('search_');
+			},
+			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'inColumn' => array
@@ -474,9 +486,12 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'options_callback'        => array('tl_module', 'getRssTemplates'),
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "varchar(64) NOT NULL default 'rss_default'"
+			'options_callback' => static function ()
+			{
+				return Contao\Controller::getTemplateGroup('rss_');
+			},
+			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'numberOfItems' => array
 		(
@@ -740,63 +755,6 @@ class tl_module extends Contao\Backend
 		}
 
 		return Contao\Backend::convertLayoutSectionIdsToAssociativeArray($arrSections);
-	}
-
-	/**
-	 * Return all navigation templates as array
-	 *
-	 * @return array
-	 */
-	public function getNavigationTemplates()
-	{
-		return $this->getTemplateGroup('nav_');
-	}
-
-	/**
-	 * Return all module templates as array
-	 *
-	 * @param Contao\DataContainer $dc
-	 *
-	 * @return array
-	 */
-	public function getModuleTemplates(Contao\DataContainer $dc)
-	{
-		if (Contao\Input::get('act') == 'overrideAll')
-		{
-			return $this->getTemplateGroup('mod_');
-		}
-
-		return $this->getTemplateGroup('mod_' . $dc->activeRecord->type . '_');
-	}
-
-	/**
-	 * Return all member templates as array
-	 *
-	 * @return array
-	 */
-	public function getMemberTemplates()
-	{
-		return $this->getTemplateGroup('member_');
-	}
-
-	/**
-	 * Return all search templates as array
-	 *
-	 * @return array
-	 */
-	public function getSearchTemplates()
-	{
-		return $this->getTemplateGroup('search_');
-	}
-
-	/**
-	 * Return all navigation templates as array
-	 *
-	 * @return array
-	 */
-	public function getRssTemplates()
-	{
-		return $this->getTemplateGroup('rss_');
 	}
 
 	/**

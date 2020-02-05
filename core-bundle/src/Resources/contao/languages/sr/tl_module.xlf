@@ -262,12 +262,10 @@
         <target>Овде можете изабрати шаблон за резултате претраге.</target>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.0">
-        <source>Column</source>
-        <target>Колона</target>
+        <source>Layout section</source>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.1">
-        <source>Please choose the column whose articles you want to list.</source>
-        <target>Изаберите колону чије артикле желиоте да излистате.</target>
+        <source>Please choose the layout section whose articles you want to list.</source>
       </trans-unit>
       <trans-unit id="tl_module.skipFirst.0">
         <source>Skip items</source>

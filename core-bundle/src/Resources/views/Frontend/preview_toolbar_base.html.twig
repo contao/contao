@@ -1,0 +1,29 @@
+<div class="cto-toolbar__open">
+    <a href="#" title="Show Contao Preview Toolbar">{{ include('@ContaoCore/Collector/contao.svg') }}</a>
+</div>
+<div class="cto-toolbar__inside">
+    <form action="{{ action }}" method="post">
+        <div class="formbody">
+            <input type="hidden" name="FORM_SUBMIT" value="tl_switch">
+            <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
+            {% if canSwitchUser %}
+                <div>
+                    <label for="ctrl_user">{{ 'MSC.feUser'|trans([], 'contao_default') }}:</label>
+                    <input type="text" name="user" id="ctrl_user" list="userlist" class="tl_text user" placeholder="{{ 'MSC.username'|trans([], 'contao_default') }}" value="{{ user }}" autocomplete="off">
+                    <datalist id="userlist">
+                        <option value="-"></option>
+                    </datalist>
+                </div>
+            {% endif %}
+            <div>
+                <label for="ctrl_unpublished">{{ 'MSC.hiddenElements'|trans([], 'contao_default') }}:</label>
+                <select name="unpublished" id="ctrl_unpublished" class="tl_select">
+                    <option value="hide">{{ 'MSC.hiddenHide'|trans([], 'contao_default') }}</option>
+                    <option value="show"{% if show %} selected{% endif %}>{{ 'MSC.hiddenShow'|trans([], 'contao_default') }}</option>
+                </select>
+                <button type="submit" class="tl_submit">{{ 'MSC.apply'|trans([], 'contao_default') }}</button>
+            </div>
+        </div>
+    </form>
+    <div class="cto-toolbar__close"><a href="#" title="{{ 'MSC.close'|trans([], 'contao_default') }}">&times;</a></div>
+</div>

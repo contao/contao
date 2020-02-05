@@ -12,12 +12,31 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle\Database;
 
-class Version410Update extends AbstractVersionUpdate
+use Contao\CoreBundle\Migration\AbstractMigration;
+use Contao\CoreBundle\Migration\MigrationResult;
+use Doctrine\DBAL\Connection;
+
+/**
+ * @internal
+ */
+class Version410Update extends AbstractMigration
 {
     /**
-     * {@inheritdoc}
+     * @var Connection
      */
-    public function shouldBeRun(): bool
+    private $connection;
+
+    public function __construct(Connection $connection)
+    {
+        $this->connection = $connection;
+    }
+
+    public function getName(): string
+    {
+        return 'Contao 4.1.0 Update';
+    }
+
+    public function shouldRun(): bool
     {
         $schemaManager = $this->connection->getSchemaManager();
 
@@ -30,20 +49,17 @@ class Version410Update extends AbstractVersionUpdate
         return !isset($columns['imagesizes']);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function run(): void
+    public function run(): MigrationResult
     {
         $crop = $GLOBALS['TL_CROP'];
 
         if (empty($crop)) {
-            return;
+            return $this->createResult(true);
         }
 
         $options = [];
 
-        foreach ($crop as $group => $modes) {
+        foreach ($crop as $modes) {
             $options[] = array_values($modes);
         }
 
@@ -86,5 +102,7 @@ class Version410Update extends AbstractVersionUpdate
         ');
 
         $stmt->execute([':options' => serialize($options)]);
+
+        return $this->createResult(true);
     }
 }

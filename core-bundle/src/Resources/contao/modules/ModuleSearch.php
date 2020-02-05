@@ -82,7 +82,6 @@ class ModuleSearch extends Module
 		$this->Template->search = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchLabel']);
 		$this->Template->matchAll = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['matchAll']);
 		$this->Template->matchAny = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['matchAny']);
-		$this->Template->action = ampersand(Environment::get('indexFreeRequest'));
 		$this->Template->advanced = ($this->searchType == 'advanced');
 
 		// Redirect page
@@ -278,7 +277,7 @@ class ModuleSearch extends Module
 			// Get the results
 			for ($i=($from-1); $i<$to && $i<$count; $i++)
 			{
-				$objTemplate = new FrontendTemplate($this->searchTpl);
+				$objTemplate = new FrontendTemplate($this->searchTpl ?: 'search_default');
 				$objTemplate->setData($arrResult[$i]);
 				$objTemplate->href = $arrResult[$i]['url'];
 				$objTemplate->link = $arrResult[$i]['title'];

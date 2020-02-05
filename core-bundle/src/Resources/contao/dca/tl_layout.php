@@ -259,8 +259,11 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'sorting'                 => true,
 			'flag'                    => 11,
 			'inputType'               => 'select',
-			'options_callback'        => array('tl_layout', 'getPageTemplates'),
-			'eval'                    => array('tl_class'=>'w50'),
+			'options_callback' => static function ()
+			{
+				return Contao\Controller::getTemplateGroup('fe_');
+			},
+			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'minifyMarkup' => array
@@ -360,7 +363,10 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'filter'                  => true,
 			'search'                  => true,
 			'inputType'               => 'checkboxWizard',
-			'options_callback'        => array('tl_layout', 'getJqueryTemplates'),
+			'options_callback' => static function ()
+			{
+				return Contao\Controller::getTemplateGroup('j_');
+			},
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "text NULL"
 		),
@@ -386,7 +392,10 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'filter'                  => true,
 			'search'                  => true,
 			'inputType'               => 'checkboxWizard',
-			'options_callback'        => array('tl_layout', 'getMooToolsTemplates'),
+			'options_callback' => static function ()
+			{
+				return Contao\Controller::getTemplateGroup('moo_');
+			},
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "text NULL"
 		),
@@ -395,7 +404,10 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'checkboxWizard',
-			'options_callback'        => array('tl_layout', 'getAnalyticsTemplates'),
+			'options_callback' => static function ()
+			{
+				return Contao\Controller::getTemplateGroup('analytics_');
+			},
 			'reference'               => &$GLOBALS['TL_LANG']['tl_layout'],
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "text NULL"
@@ -417,7 +429,10 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'checkboxWizard',
-			'options_callback'        => array('tl_layout', 'getScriptTemplates'),
+			'options_callback' => static function ()
+			{
+				return Contao\Controller::getTemplateGroup('js_');
+			},
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "text NULL"
 		),
@@ -522,56 +537,6 @@ class tl_layout extends Contao\Backend
 		}
 
 		return $return;
-	}
-
-	/**
-	 * Return all page templates as array
-	 *
-	 * @return array
-	 */
-	public function getPageTemplates()
-	{
-		return $this->getTemplateGroup('fe_');
-	}
-
-	/**
-	 * Return all MooTools templates as array
-	 *
-	 * @return array
-	 */
-	public function getMooToolsTemplates()
-	{
-		return $this->getTemplateGroup('moo_');
-	}
-
-	/**
-	 * Return all jQuery templates as array
-	 *
-	 * @return array
-	 */
-	public function getJqueryTemplates()
-	{
-		return $this->getTemplateGroup('j_');
-	}
-
-	/**
-	 * Return all script templates as array
-	 *
-	 * @return array
-	 */
-	public function getScriptTemplates()
-	{
-		return $this->getTemplateGroup('js_');
-	}
-
-	/**
-	 * Return all analytics templates as array
-	 *
-	 * @return array
-	 */
-	public function getAnalyticsTemplates()
-	{
-		return $this->getTemplateGroup('analytics_');
 	}
 
 	/**

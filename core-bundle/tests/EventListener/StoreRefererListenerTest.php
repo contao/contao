@@ -19,7 +19,7 @@ use Contao\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Security\Core\Security;
@@ -39,7 +39,7 @@ class StoreRefererListenerTest extends TestCase
         $request->setSession($session);
 
         $listener = $this->getListener($this->createMock(User::class));
-        $listener->onKernelResponse($this->getResponseEvent($request));
+        $listener($this->getResponseEvent($request));
 
         $this->assertSame($expectedReferer, $session->get('referer'));
     }
@@ -143,7 +143,7 @@ class StoreRefererListenerTest extends TestCase
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
         $request->setMethod(Request::METHOD_POST);
 
-        $responseEvent = new FilterResponseEvent(
+        $responseEvent = new ResponseEvent(
             $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MASTER_REQUEST,
@@ -151,7 +151,7 @@ class StoreRefererListenerTest extends TestCase
         );
 
         $listener = $this->getListener();
-        $listener->onKernelResponse($responseEvent);
+        $listener($responseEvent);
     }
 
     public function testDoesNotStoreTheRefererIfTheResponseStatusIsNot200(): void
@@ -159,7 +159,7 @@ class StoreRefererListenerTest extends TestCase
         $request = new Request();
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
-        $responseEvent = new FilterResponseEvent(
+        $responseEvent = new ResponseEvent(
             $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MASTER_REQUEST,
@@ -167,7 +167,7 @@ class StoreRefererListenerTest extends TestCase
         );
 
         $listener = $this->getListener();
-        $listener->onKernelResponse($responseEvent);
+        $listener($responseEvent);
     }
 
     /**
@@ -186,7 +186,7 @@ class StoreRefererListenerTest extends TestCase
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
         $listener = $this->getListener($user, true);
-        $listener->onKernelResponse($this->getResponseEvent($request));
+        $listener($this->getResponseEvent($request));
     }
 
     public function noContaoUserProvider(): \Generator
@@ -207,7 +207,7 @@ class StoreRefererListenerTest extends TestCase
         $request->setSession($session);
 
         $listener = $this->getListener();
-        $listener->onKernelResponse($this->getResponseEvent($request));
+        $listener($this->getResponseEvent($request));
     }
 
     public function testDoesNotStoreTheRefererUponSubrequests(): void
@@ -223,10 +223,10 @@ class StoreRefererListenerTest extends TestCase
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
         $kernel = $this->createMock(KernelInterface::class);
-        $event = new FilterResponseEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST, new Response());
+        $event = new ResponseEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST, new Response());
 
         $listener = $this->getListener();
-        $listener->onKernelResponse($event);
+        $listener($event);
     }
 
     public function testDoesNotStoreTheRefererIfTheBackEndSessionCannotBeModified(): void
@@ -242,7 +242,7 @@ class StoreRefererListenerTest extends TestCase
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
         $listener = $this->getListener($this->createMock(User::class));
-        $listener->onKernelResponse($this->getResponseEvent($request));
+        $listener($this->getResponseEvent($request));
     }
 
     /**
@@ -259,7 +259,7 @@ class StoreRefererListenerTest extends TestCase
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('The request did not contain a session.');
 
-        $listener->onKernelResponse($this->getResponseEvent($request));
+        $listener($this->getResponseEvent($request));
     }
 
     public function noSessionProvider(): \Generator
@@ -272,7 +272,7 @@ class StoreRefererListenerTest extends TestCase
     {
         $security = $this->createMock(Security::class);
         $security
-            ->expects(($expectsSecurityCall || null !== $user) ? $this->once() : $this->never())
+            ->expects($expectsSecurityCall || null !== $user ? $this->once() : $this->never())
             ->method('getUser')
             ->willReturn($user)
         ;
@@ -280,7 +280,7 @@ class StoreRefererListenerTest extends TestCase
         return new StoreRefererListener($security, $this->mockScopeMatcher());
     }
 
-    private function getResponseEvent(Request $request = null): FilterResponseEvent
+    private function getResponseEvent(Request $request = null): ResponseEvent
     {
         $kernel = $this->createMock(KernelInterface::class);
 
@@ -288,6 +288,6 @@ class StoreRefererListenerTest extends TestCase
             $request = new Request();
         }
 
-        return new FilterResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST, new Response());
+        return new ResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST, new Response());
     }
 }

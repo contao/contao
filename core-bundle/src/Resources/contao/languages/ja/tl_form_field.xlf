@@ -1,118 +1,6 @@
 <?xml version="1.0" ?><xliff version="1.1">
   <file datatype="php" original="src/Resources/contao/languages/en/tl_form_field.php" source-language="en" target-language="ja">
     <body>
-      <trans-unit id="FFL.explanation.0">
-        <source>Explanation</source>
-        <target>説明</target>
-      </trans-unit>
-      <trans-unit id="FFL.explanation.1">
-        <source>A custom field to insert an explanation text.</source>
-        <target>説明のテキストを入れるフォームの項目です。</target>
-      </trans-unit>
-      <trans-unit id="FFL.html.0">
-        <source>HTML code</source>
-        <target>HTMLコード</target>
-      </trans-unit>
-      <trans-unit id="FFL.html.1">
-        <source>A custom field to insert HTML code.</source>
-        <target>HTMLコードを直接入れるフォームの項目です。</target>
-      </trans-unit>
-      <trans-unit id="FFL.fieldsetStart.0">
-        <source>Fieldset start</source>
-        <target>フィールドセットの開始</target>
-      </trans-unit>
-      <trans-unit id="FFL.fieldsetStart.1">
-        <source>The opening part of a fieldset with an optional legend.</source>
-        <target>フィールドセットの開始を示し、見出しを含められます。</target>
-      </trans-unit>
-      <trans-unit id="FFL.fieldsetStop.0">
-        <source>Fieldset stop</source>
-        <target>フィールドセットの終了</target>
-      </trans-unit>
-      <trans-unit id="FFL.fieldsetStop.1">
-        <source>The closing part of a fieldset.</source>
-        <target>フィールドセットの終了を示します。</target>
-      </trans-unit>
-      <trans-unit id="FFL.text.0">
-        <source>Text field</source>
-        <target>テキスト入力</target>
-      </trans-unit>
-      <trans-unit id="FFL.text.1">
-        <source>A single-line input field for a short or medium text.</source>
-        <target>短めから中程度の長さを入力する、1行のテキスト入力の項目です。</target>
-      </trans-unit>
-      <trans-unit id="FFL.password.0">
-        <source>Password field</source>
-        <target>パスワード入力</target>
-      </trans-unit>
-      <trans-unit id="FFL.password.1">
-        <source>A single-line input field for a password. Contao automatically adds a confirmation field.</source>
-        <target>パスワード用の1行の入力項目です。Contaoは自動的にパスワードの確認の入力項目を追加します。</target>
-      </trans-unit>
-      <trans-unit id="FFL.textarea.0">
-        <source>Textarea</source>
-        <target>テキストエリア</target>
-      </trans-unit>
-      <trans-unit id="FFL.textarea.1">
-        <source>A multi-line input field for a medium or long text.</source>
-        <target>中程度から長めのテキストを入力する、複数行の入力項目です。</target>
-      </trans-unit>
-      <trans-unit id="FFL.select.0">
-        <source>Select menu</source>
-        <target>選択メニュー</target>
-      </trans-unit>
-      <trans-unit id="FFL.select.1">
-        <source>A single- or multi-line drop-down menu.</source>
-        <target>1行または複数行のドロップダウンメニューです。</target>
-      </trans-unit>
-      <trans-unit id="FFL.radio.0">
-        <source>Radio button menu</source>
-        <target>ラジオボタンメニュー</target>
-      </trans-unit>
-      <trans-unit id="FFL.radio.1">
-        <source>A list of multiple options from which one can be selected.</source>
-        <target>1つだけ選択できる、複数の選択肢のリストです。</target>
-      </trans-unit>
-      <trans-unit id="FFL.checkbox.0">
-        <source>Checkbox menu</source>
-        <target>チェックボックスメニュー</target>
-      </trans-unit>
-      <trans-unit id="FFL.checkbox.1">
-        <source>A list of multiple options from which any can be selected.</source>
-        <target>どれでも選択できる、複数の選択肢のリストです。</target>
-      </trans-unit>
-      <trans-unit id="FFL.upload.0">
-        <source>File upload</source>
-        <target>ファイルをアップロード</target>
-      </trans-unit>
-      <trans-unit id="FFL.upload.1">
-        <source>A single-line input field to upload a local file to the server.</source>
-        <target>ローカルのファイルをサーバーにアップロードするための1行の入力項目です。</target>
-      </trans-unit>
-      <trans-unit id="FFL.hidden.0">
-        <source>Hidden field</source>
-        <target>隠し入力</target>
-      </trans-unit>
-      <trans-unit id="FFL.hidden.1">
-        <source>A single-line input field that is not visible in the form.</source>
-        <target>フォームに表示されない1行のテキストの入力項目です。</target>
-      </trans-unit>
-      <trans-unit id="FFL.captcha.0">
-        <source>Security question</source>
-        <target>セキュリティ質問</target>
-      </trans-unit>
-      <trans-unit id="FFL.captcha.1">
-        <source>A simple math question to verify that the form is being submitted by a human (CAPTCHA).</source>
-        <target>(ボットのようなプログラムではなく)人間によってフォームが提出されたことを確認するための、やさしい計算問題です。(CAPTCHA)</target>
-      </trans-unit>
-      <trans-unit id="FFL.submit.0">
-        <source>Submit field</source>
-        <target>提出ボタン</target>
-      </trans-unit>
-      <trans-unit id="FFL.submit.1">
-        <source>A button to submit the form.</source>
-        <target>フォームを提出するボタンです。</target>
-      </trans-unit>
       <trans-unit id="tl_form_field.type.0">
         <source>Field type</source>
         <target>項目の種類</target>
@@ -296,6 +184,14 @@
       <trans-unit id="tl_form_field.maxval.1">
         <source>Here you can set the maximum value for numeric fields.</source>
         <target>数値の入力欄の最大値を指定できます。</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.step.0">
+        <source>Step</source>
+        <target>段階的な値</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.step.1">
+        <source>Here you can set the discrete step size of the field.</source>
+        <target>項目の段階的に変更する値を設定できます。</target>
       </trans-unit>
       <trans-unit id="tl_form_field.size.0">
         <source>Rows and columns</source>

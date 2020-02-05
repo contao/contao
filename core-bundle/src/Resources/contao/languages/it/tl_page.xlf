@@ -89,6 +89,18 @@
         <source>Show this page if there is none that matches the visitor's language.</source>
         <target>Mostra questa pagina se nessuna pagina è compatibile con la lingua del visitatore</target>
       </trans-unit>
+      <trans-unit id="tl_page.favicon.0">
+        <source>Favicon</source>
+      </trans-unit>
+      <trans-unit id="tl_page.favicon.1">
+        <source>Here you can select a favicon for the website.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.robotsTxt.0">
+        <source>Custom robots.txt content</source>
+      </trans-unit>
+      <trans-unit id="tl_page.robotsTxt.1">
+        <source>Here you can enter custom robots.txt content. It may be extended automatically by extensions.</source>
+      </trans-unit>
       <trans-unit id="tl_page.dns.0">
         <source>Domain name</source>
         <target>Nome dominio</target>
@@ -350,16 +362,14 @@
         <target>Visibile dal giorno</target>
       </trans-unit>
       <trans-unit id="tl_page.start.1">
-        <source>Do not show the page on the website before this day.</source>
-        <target>Inserendo una data la pagina sarà mostrata a partire da quel giorno</target>
+        <source>If you want to prevent the page from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_page.stop.0">
         <source>Show until</source>
         <target>Visibile fino al giorno</target>
       </trans-unit>
       <trans-unit id="tl_page.stop.1">
-        <source>Do not show the page on the website on and after this day.</source>
-        <target>Inserendo una data la pagina sarà mostrata fino a quel giorno (escluso)</target>
+        <source>If you want to prevent the page from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_page.enforceTwoFactor.0">
         <source>Enforce two-factor authentication</source>
@@ -392,6 +402,9 @@
       <trans-unit id="tl_page.dns_legend">
         <source>DNS settings</source>
         <target>Impostazioni DNS</target>
+      </trans-unit>
+      <trans-unit id="tl_page.website_legend">
+        <source>Website settings</source>
       </trans-unit>
       <trans-unit id="tl_page.global_legend">
         <source>Global settings</source>

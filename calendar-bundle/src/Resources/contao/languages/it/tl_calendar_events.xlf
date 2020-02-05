@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_calendar_events.title.0">
         <source>Title</source>
-        <target>Nome del modulo</target>
+        <target>Titolo</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.title.1">
         <source>Please enter the event title.</source>
@@ -250,16 +250,16 @@
         <target>Visibile dal giorno</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.start.1">
-        <source>Do not show the event on the website before this day.</source>
-        <target>Non mostrare l'evento prima di questo giorno.</target>
+        <source>If you want to prevent the event from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Se si desidera impedire che l'evento venga visualizzato sul sito Web prima di una determinata data/ora, è possibile inserirlo qui. Altrimenti lascia il campo vuoto.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.0">
         <source>Show until</source>
         <target>Visibile fino al giorno</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.1">
-        <source>Do not show the event on the website on and after this day.</source>
-        <target>Non mostrare l'evento a partire da questo giorno.</target>
+        <source>If you want to prevent the event from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Se si desidera impedire che l'evento venga visualizzato sul sito Web prima di una determinata data/ora, è possibile inserirlo qui. Altrimenti lascia il campo vuoto.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.tstamp.0">
         <source>Revision date</source>

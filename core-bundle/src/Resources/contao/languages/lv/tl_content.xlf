@@ -611,16 +611,14 @@
         <target>Wrapper sākums</target>
       </trans-unit>
       <trans-unit id="tl_content.start.1">
-        <source>Do not show the element on the website before this day.</source>
-        <target>Iezīmē sākumu accordion rūtī, kas aptver vairākus satura elementus.</target>
+        <source>If you want to prevent the element from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_content.stop.0">
         <source>Show until</source>
         <target>Wrapper beigas</target>
       </trans-unit>
       <trans-unit id="tl_content.stop.1">
-        <source>Do not show the element on the website on and after this day.</source>
-        <target>Iezīmē beigas accordion rūtī, kas aptver vairākus satura elementus.</target>
+        <source>If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_content.type_legend">
         <source>Element type</source>
@@ -844,7 +842,7 @@
       </trans-unit>
       <trans-unit id="tl_content.show">
         <source>Show the details of content element ID %s</source>
-        <target>Rādīt satura elemetna ID %s detaļas</target>
+        <target>Rādīt satura elementa ID %s detaļas</target>
       </trans-unit>
       <trans-unit id="tl_content.cut">
         <source>Move content element ID %s</source>
@@ -852,7 +850,7 @@
       </trans-unit>
       <trans-unit id="tl_content.copy">
         <source>Duplicate content element ID %s</source>
-        <target>Kopēt satura elementu ID %s</target>
+        <target>Dublicēt satura elementu ID %s</target>
       </trans-unit>
       <trans-unit id="tl_content.delete">
         <source>Delete content element ID %s</source>

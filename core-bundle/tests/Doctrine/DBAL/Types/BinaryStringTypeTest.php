@@ -25,9 +25,6 @@ class BinaryStringTypeTest extends TestCase
      */
     private $type;
 
-    /**
-     * {@inheritdoc}
-     */
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
@@ -35,9 +32,6 @@ class BinaryStringTypeTest extends TestCase
         Type::addType(BinaryStringType::NAME, BinaryStringType::class);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -52,7 +46,7 @@ class BinaryStringTypeTest extends TestCase
         /** @var AbstractPlatform&MockObject $platform */
         $platform = $this
             ->getMockBuilder(AbstractPlatform::class)
-            ->setMethods(['getBinaryTypeDeclarationSQL', 'getBlobTypeDeclarationSQL'])
+            ->onlyMethods(['getBinaryTypeDeclarationSQL', 'getBlobTypeDeclarationSQL'])
             ->getMockForAbstractClass()
         ;
 
@@ -77,7 +71,7 @@ class BinaryStringTypeTest extends TestCase
         /** @var AbstractPlatform&MockObject $platform */
         $platform = $this
             ->getMockBuilder(AbstractPlatform::class)
-            ->setMethods(['getBinaryTypeDeclarationSQL', 'getBlobTypeDeclarationSQL'])
+            ->onlyMethods(['getBinaryTypeDeclarationSQL', 'getBlobTypeDeclarationSQL'])
             ->getMockForAbstractClass()
         ;
 

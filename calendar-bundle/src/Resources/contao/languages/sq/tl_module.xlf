@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_startDay.1">
         <source>Here you can choose the week start day.</source>
-        <target>Zgjedh ditën e fillimit të javës.</target>
+        <target>Zgjedhoni ditën e fillimit të javës.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_format.0">
         <source>Event list format</source>
@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_order.1">
         <source>Here you can choose the sort order.</source>
-        <target>Zgjedh renditjen.</target>
+        <target>Zgjedhoni renditjen.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_readerModule.0">
         <source>Event reader module</source>

@@ -119,13 +119,15 @@
       </trans-unit>
       <trans-unit id="tl_theme.store.1">
         <source>Find more themes in the Contao theme store</source>
-        <target>پیدا کردن پوسته‌های بیشتر در فروشگاه پوسته کانتائو</target>
+        <target>پیدا کردن پوسته‌های بیشتر در فروشگاه پوسته کنتائو</target>
       </trans-unit>
       <trans-unit id="tl_theme.importTheme.0">
         <source>Import</source>
+        <target>وارد کردن</target>
       </trans-unit>
       <trans-unit id="tl_theme.importTheme.1">
         <source>Import a theme</source>
+        <target>وارد کردن یک پوسته</target>
       </trans-unit>
       <trans-unit id="tl_theme.editmeta">
         <source>Edit the theme settings</source>

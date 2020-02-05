@@ -68,11 +68,11 @@ Deixe em branco para criar um evento sem data/hora de fim definido.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.pageTitle.0">
         <source>Meta title</source>
-        <target>Campos do Cabeçalho</target>
+        <target>Titulo meta</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.pageTitle.1">
         <source>Here you can add a custom meta title to overwrite the default page title.</source>
-        <target>Aqui pode adicionar um titulo de cabeçalho para substituir o titulo de página padrão.</target>
+        <target>Aqui pode adicionar um titulo meta para substituir o titulo de página padrão.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.description.0">
         <source>Meta description</source>
@@ -251,16 +251,14 @@ Deixe em branco para criar um evento sem data/hora de fim definido.</target>
         <target>Mostrar de</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.start.1">
-        <source>Do not show the event on the website before this day.</source>
-        <target>Não mostrar o evento no website antes deste dia.</target>
+        <source>If you want to prevent the event from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.0">
         <source>Show until</source>
         <target>Até</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.1">
-        <source>Do not show the event on the website on and after this day.</source>
-        <target>Não exibir o evento no website durante e após este dia.</target>
+        <source>If you want to prevent the event from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.tstamp.0">
         <source>Revision date</source>

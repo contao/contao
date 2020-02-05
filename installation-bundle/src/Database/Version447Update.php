@@ -12,12 +12,38 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle\Database;
 
-class Version447Update extends AbstractVersionUpdate
+use Contao\CoreBundle\Migration\AbstractMigration;
+use Contao\CoreBundle\Migration\MigrationResult;
+use Doctrine\DBAL\Connection;
+use Symfony\Contracts\Translation\TranslatorInterface;
+
+/**
+ * @internal
+ */
+class Version447Update extends AbstractMigration
 {
     /**
-     * {@inheritdoc}
+     * @var Connection
      */
-    public function shouldBeRun(): bool
+    private $connection;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    public function __construct(Connection $connection, TranslatorInterface $translator)
+    {
+        $this->connection = $connection;
+        $this->translator = $translator;
+    }
+
+    public function getName(): string
+    {
+        return 'Contao 4.4.7 Update';
+    }
+
+    public function shouldRun(): bool
     {
         $schemaManager = $this->connection->getSchemaManager();
 
@@ -30,10 +56,7 @@ class Version447Update extends AbstractVersionUpdate
         return !isset($columns['pid_email']);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function run(): void
+    public function run(): MigrationResult
     {
         $schemaManager = $this->connection->getSchemaManager();
 
@@ -70,6 +93,8 @@ class Version447Update extends AbstractVersionUpdate
                 pid
         ');
 
+        $messages = [];
+
         while (false !== ($duplicate = $duplicates->fetch(\PDO::FETCH_OBJ))) {
             $count = 0;
 
@@ -102,19 +127,18 @@ class Version447Update extends AbstractVersionUpdate
                 $delete->execute(['id' => $subscription->id]);
             }
 
-            $this->addMessage(sprintf('<li>%s</li>', $duplicate->email));
+            $messages[] = $duplicate->email;
         }
 
-        if ($this->hasMessage()) {
-            $translator = $this->container->get('translator');
+        $this->connection->query('CREATE UNIQUE INDEX pid_email ON tl_newsletter_recipients (pid, email)');
 
-            $this->prependMessage(sprintf(
-                '<h3>%s</h3><p>%s</p><ul>',
-                $translator->trans('duplicate_subscriptions'),
-                $translator->trans('duplicate_subscriptions_begin')
-            ));
-
-            $this->addMessage(sprintf('</ul><p>%s</p>', $translator->trans('duplicate_subscriptions_end')));
+        if ($messages) {
+            return $this->createResult(
+                true,
+                $this->translator->trans('duplicate_subscriptions')."\n\n * ".implode("\n * ", $messages)."\n\n".$this->translator->trans('duplicates_purged')
+            );
         }
+
+        return $this->createResult(true);
     }
 }

@@ -59,6 +59,7 @@
       </trans-unit>
       <trans-unit id="ERR.extnd">
         <source>For security reasons you can not use the following characters here: #&lt;&gt;()\=</source>
+        <target>به خاطر دلایل امنیتی نمی‌توانید از این کاراکترها استفاده کنید: #&lt;&gt;()\=</target>
       </trans-unit>
       <trans-unit id="ERR.email">
         <source>Please enter a valid e-mail address!</source>
@@ -114,7 +115,7 @@
       </trans-unit>
       <trans-unit id="ERR.filesize">
         <source>The maximum size for file uploads is %s (Contao or php.ini settings)!</source>
-        <target>بیشترین حجم مجاز برای بارگزاری پرونده %s می‌باشد (تنظیمات کانتائو یا php.ini)!</target>
+        <target>بیشترین حجم مجاز برای بارگزاری پرونده %s می‌باشد (تنظیمات کنتائو یا php.ini)!</target>
       </trans-unit>
       <trans-unit id="ERR.filetype">
         <source>File type &quot;%s&quot; is not allowed to be uploaded!</source>
@@ -219,12 +220,18 @@
         <source>You can only select &quot;%s&quot; files!</source>
         <target>شما می‌توانید فقط «%s» پرونده انتخاب کنید!</target>
       </trans-unit>
+      <trans-unit id="ERR.forbiddenExtensions">
+        <source>The following file extensions are not allowed: %s</source>
+      </trans-unit>
       <trans-unit id="ERR.invalidPages">
         <source>Your selection contains invalid page IDs!</source>
       </trans-unit>
       <trans-unit id="ERR.circularReference">
         <source>Invalid redirect target (circular reference)!</source>
         <target>برگه‌ی تغییر مسیر نامعتبر (مرجع دایره‌ای)!</target>
+      </trans-unit>
+      <trans-unit id="ERR.circularPicker">
+        <source>Invalid selection (circular reference)!</source>
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
         <source>None of the active website root pages without an explicit DNS setting have the language fallback option set.</source>
@@ -327,11 +334,11 @@
       </trans-unit>
       <trans-unit id="CTE.html.0">
         <source>HTML</source>
-        <target>اچ‌تی‌ام‌ال</target>
+        <target>HTML</target>
       </trans-unit>
       <trans-unit id="CTE.html.1">
         <source>Allows you to add custom HTML code.</source>
-        <target>امکان افزودن کد اچ‌تی‌ام‌ال سفارشی را به شما می‌دهد</target>
+        <target>امکان افزودن کد HTML سفارشی را به شما می‌دهد</target>
       </trans-unit>
       <trans-unit id="CTE.list.0">
         <source>List</source>
@@ -391,7 +398,7 @@
       </trans-unit>
       <trans-unit id="CTE.markdown.1">
         <source>Generates HTML code from a markdown text.</source>
-        <target>کد اچ‌تی‌ام‌ال از یک متن نشانه‌دار تولید می‌کند.</target>
+        <target>کد HTML از یک متن نشانه‌دار تولید می‌کند.</target>
       </trans-unit>
       <trans-unit id="CTE.slider">
         <source>Content slider</source>
@@ -541,6 +548,120 @@
         <source>Displays the teaser text of an article.</source>
         <target>متن تیزر متن یک مقاله را نمایش می‌دهد.</target>
       </trans-unit>
+      <trans-unit id="FFL.explanation.0">
+        <source>Explanation</source>
+        <target>توضیح</target>
+      </trans-unit>
+      <trans-unit id="FFL.explanation.1">
+        <source>A custom field to insert an explanation text.</source>
+        <target>فیلد سفارشی برای پرج یک متن توضیحی.</target>
+      </trans-unit>
+      <trans-unit id="FFL.html.0">
+        <source>HTML code</source>
+        <target>کد HTML</target>
+      </trans-unit>
+      <trans-unit id="FFL.html.1">
+        <source>A custom field to insert HTML code.</source>
+        <target>یک فیلد سفارشی برای درج کد HTML.</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStart.0">
+        <source>Fieldset start</source>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStart.1">
+        <source>The opening part of a fieldset with an optional legend.</source>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStop.0">
+        <source>Fieldset stop</source>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStop.1">
+        <source>The closing part of a fieldset.</source>
+      </trans-unit>
+      <trans-unit id="FFL.text.0">
+        <source>Text field</source>
+        <target>فیلد متن</target>
+      </trans-unit>
+      <trans-unit id="FFL.text.1">
+        <source>A single-line input field for a short or medium text.</source>
+        <target>یک فیلد وردی تک خط برای متن کوتاه یا متوسط.</target>
+      </trans-unit>
+      <trans-unit id="FFL.password.0">
+        <source>Password field</source>
+        <target>فیلد گذرواژه</target>
+      </trans-unit>
+      <trans-unit id="FFL.password.1">
+        <source>A single-line input field for a password. Contao automatically adds a confirmation field.</source>
+        <target>یک فیلد ورودی تک خطی برای گذرواژه. کنتائو به صورت خودکار یک فیلد تایید اضافه می‌کند.</target>
+      </trans-unit>
+      <trans-unit id="FFL.textarea.0">
+        <source>Textarea</source>
+        <target>جعبه متن</target>
+      </trans-unit>
+      <trans-unit id="FFL.textarea.1">
+        <source>A multi-line input field for a medium or long text.</source>
+        <target>یک فیلد ورودی چند خطی برای متن‌های متوسط یا بلند.</target>
+      </trans-unit>
+      <trans-unit id="FFL.select.0">
+        <source>Select menu</source>
+        <target>منوی انتخابی</target>
+      </trans-unit>
+      <trans-unit id="FFL.select.1">
+        <source>A single- or multi-line drop-down menu.</source>
+        <target>یک منوی افتادنی یک یا چند خطی.</target>
+      </trans-unit>
+      <trans-unit id="FFL.radio.0">
+        <source>Radio button menu</source>
+        <target>منوی دکمه رادیویی</target>
+      </trans-unit>
+      <trans-unit id="FFL.radio.1">
+        <source>A list of multiple options from which one can be selected.</source>
+        <target>فهرستی چند گزینه‌ای که یکی از آن‌ها قابل انتخاب است.</target>
+      </trans-unit>
+      <trans-unit id="FFL.checkbox.0">
+        <source>Checkbox menu</source>
+        <target>منوی جعبه‌ای</target>
+      </trans-unit>
+      <trans-unit id="FFL.checkbox.1">
+        <source>A list of multiple options from which any can be selected.</source>
+        <target>فهرستی چند گزینه‌‌ای که هر کدام از آن‌ها قابل انتخاب هستند.</target>
+      </trans-unit>
+      <trans-unit id="FFL.upload.0">
+        <source>File upload</source>
+        <target>بارگزاری پرونده</target>
+      </trans-unit>
+      <trans-unit id="FFL.upload.1">
+        <source>A single-line input field to upload a local file to the server.</source>
+        <target>فیلد ورودی تک خط برای بارگزاری پرونده محلی در سرور</target>
+      </trans-unit>
+      <trans-unit id="FFL.range.0">
+        <source>Range slider</source>
+      </trans-unit>
+      <trans-unit id="FFL.range.1">
+        <source>A range slider to select a value or range of values between a specified min and max.</source>
+      </trans-unit>
+      <trans-unit id="FFL.hidden.0">
+        <source>Hidden field</source>
+        <target>فیلد پنهان</target>
+      </trans-unit>
+      <trans-unit id="FFL.hidden.1">
+        <source>A single-line input field that is not visible in the form.</source>
+        <target>فیلد ورودی یک خطی که در فرم قابل مشاهده نیست.</target>
+      </trans-unit>
+      <trans-unit id="FFL.captcha.0">
+        <source>Security question</source>
+        <target>پرسش امنیتی</target>
+      </trans-unit>
+      <trans-unit id="FFL.captcha.1">
+        <source>A simple math question to verify that the form is being submitted by a human (CAPTCHA).</source>
+        <target>یک سوال ریاضی ساده برای بررسی اینکه فرم توسط یک انسان ارسال شده است (CAPTCHA).</target>
+      </trans-unit>
+      <trans-unit id="FFL.submit.0">
+        <source>Submit field</source>
+        <target>فیلد ارسال</target>
+      </trans-unit>
+      <trans-unit id="FFL.submit.1">
+        <source>A button to submit the form.</source>
+        <target>دکمه‌ای برای ارسال فرم</target>
+      </trans-unit>
       <trans-unit id="PTY.regular.0">
         <source>Regular page</source>
         <target>برگه عادی</target>
@@ -583,25 +704,24 @@
       </trans-unit>
       <trans-unit id="PTY.error_401.0">
         <source>401 Not authenticated</source>
+        <target>۴۰۱ تایید نشده</target>
       </trans-unit>
       <trans-unit id="PTY.error_401.1">
-        <source>If a user requests a protected page without being authenticated, a 401 error page will be loaded instead.</source>
+        <source>If a visitor requests a protected page without being authenticated, a 401 error page will be loaded instead.</source>
       </trans-unit>
       <trans-unit id="PTY.error_403.0">
         <source>403 Access denied</source>
         <target>۴۰۳ دسترسی ممنوع است</target>
       </trans-unit>
       <trans-unit id="PTY.error_403.1">
-        <source>If a user requests a protected page without permission, a 403 error page will be loaded instead.</source>
-        <target>اگر کاربری یک برگه‌ی حفاظت شده را بدون مجوز درخواست نماید، در عوض برگه‌ی خطای ۴۰۳ بارگذاری خواهد شد.</target>
+        <source>If a member requests a protected page without permission, a 403 error page will be loaded instead.</source>
       </trans-unit>
       <trans-unit id="PTY.error_404.0">
         <source>404 Page not found</source>
         <target>۴۰۴ برگه پیدا نشد</target>
       </trans-unit>
       <trans-unit id="PTY.error_404.1">
-        <source>If a user requests a non-existent page, a 404 error page will be loaded instead.</source>
-        <target>اگر کاربری یک برگه‌ی ناموجود را درخواست نماید، در عوض برگه‌ی خطای ۴۰۴ بارگذاری خواهد شد.</target>
+        <source>If a visitor requests a non-existent page, a 404 error page will be loaded instead.</source>
       </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
@@ -1092,8 +1212,7 @@
         <target>ماژول</target>
       </trans-unit>
       <trans-unit id="MSC.mw_column">
-        <source>Column</source>
-        <target>ستون</target>
+        <source>Layout section</source>
       </trans-unit>
       <trans-unit id="MSC.mw_enable">
         <source>Enable/disable the module</source>
@@ -1281,6 +1400,7 @@
       </trans-unit>
       <trans-unit id="MSC.all.1">
         <source>Edit multiple elements at once</source>
+        <target>ویرایش چند المنت هم زمان</target>
       </trans-unit>
       <trans-unit id="MSC.all_override.0">
         <source>Override multiple</source>
@@ -1288,6 +1408,7 @@
       </trans-unit>
       <trans-unit id="MSC.all_override.1">
         <source>Override multiple elements at once</source>
+        <target>رونویسی هم‌زمان چند المنت</target>
       </trans-unit>
       <trans-unit id="MSC.all_fields.0">
         <source>Available fields</source>
@@ -1339,9 +1460,9 @@
       </trans-unit>
       <trans-unit id="MSC.firstLogin">
         <source>This seems to be your first login. Welcome to Contao!</source>
-        <target>این به نظر اولین ورود شما است. به کانتائو خوش آمدید!</target>
+        <target>این به نظر اولین ورود شما است. به کنتائو خوش آمدید!</target>
       </trans-unit>
-      <trans-unit id="MSC.loginCount">
+      <trans-unit id="MSC.loginAttempts">
         <source>Login attempts</source>
         <target>تلاش‌های ورود</target>
       </trans-unit>
@@ -1440,10 +1561,6 @@
       <trans-unit id="MSC.homeTitle">
         <source>Back to the back end start page</source>
         <target>بازگشت به برگه شروع بخش مدیریت</target>
-      </trans-unit>
-      <trans-unit id="MSC.burgerTitle">
-        <source>Toggle navigation</source>
-        <target>تعویض ناوبری</target>
       </trans-unit>
       <trans-unit id="MSC.learnMore">
         <source>Learn more on %s</source>
@@ -1622,11 +1739,11 @@
       </trans-unit>
       <trans-unit id="MSC.ppHeadline">
         <source>Contao pages</source>
-        <target>برگه‌های کانتائو</target>
+        <target>برگه‌های کنتائو</target>
       </trans-unit>
       <trans-unit id="MSC.fpHeadline">
         <source>Contao files</source>
-        <target>پرونده‌های کانتائو</target>
+        <target>پرونده‌های کنتائو</target>
       </trans-unit>
       <trans-unit id="MSC.yes">
         <source>yes</source>
@@ -1758,7 +1875,7 @@
       </trans-unit>
       <trans-unit id="MSC.updateVersion">
         <source>Contao version %s is available.</source>
-        <target>کانتائو نسخه‌ی %s موجود می‌باشد</target>
+        <target>کنتائو نسخه‌ی %s موجود می‌باشد</target>
       </trans-unit>
       <trans-unit id="MSC.maintenanceEnabled">
         <source>The maintenance mode is currently enabled.</source>
@@ -2310,6 +2427,7 @@
       </trans-unit>
       <trans-unit id="MSC.resendToken">
         <source>The token has been re-sent to %s.</source>
+        <target>توکنه به %s مجددا ارسال شده است.</target>
       </trans-unit>
       <trans-unit id="MSC.invalidTokenUrl">
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
@@ -2362,15 +2480,19 @@
       </trans-unit>
       <trans-unit id="MSC.validCharacters.unicodeLowercase">
         <source>Unicode numbers and lowercase letters</source>
+        <target>حروف کوچک و اعداد یونی‌کد</target>
       </trans-unit>
       <trans-unit id="MSC.validCharacters.unicode">
         <source>Unicode numbers and letters</source>
+        <target>حروف و اعداد یونی‌کد</target>
       </trans-unit>
       <trans-unit id="MSC.validCharacters.asciiLowercase">
         <source>ASCII numbers and lowercase letters</source>
+        <target>حروف کوچک و اعداد ASCII</target>
       </trans-unit>
       <trans-unit id="MSC.validCharacters.ascii">
         <source>ASCII numbers and letters</source>
+        <target>حروف و اعداد ASCII</target>
       </trans-unit>
       <trans-unit id="MSC.sortOrder">
         <source>Sort order</source>
@@ -2399,6 +2521,7 @@
       </trans-unit>
       <trans-unit id="MSC.twoFactorActive">
         <source>Two-factor authentication has been enabled.</source>
+        <target>احراز هویت دو-مرحله‌ای فعال شده است.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorEnforced">
         <source>Please enable up two-factor authentication before you continue.</source>
@@ -2406,11 +2529,41 @@
       <trans-unit id="MSC.twoFactorTextCode">
         <source>If you cannot scan the QR code, enter this key instead:</source>
       </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesLabel">
+        <source>Backup codes</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesShow">
+        <source>Show backup codes</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesExplain">
+        <source>Backup codes can be used to access your account if you have lost your authentication device and cannot generate two-factor codes anymore. Treat your backup codes with the same level of attention as your password! We recommend saving them with a password manager such as Lastpass, 1Password or Keeper.</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesInfo">
+        <source>Put the codes in a safe spot. If you lose your authentication device and do not have backup codes, you cannot access your account anymore!</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesGenerate">
+        <source>Generate backup codes</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesRegenerate">
+        <source>Regenerate backup codes</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesRegenerateInfo">
+        <source>When you regenerate the backup codes, your old codes will not work anymore.</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorTrustDevice">
+        <source>Trust this device</source>
+      </trans-unit>
       <trans-unit id="MSC.userTemplateEditor">
         <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
       </trans-unit>
       <trans-unit id="MSC.groupTemplateEditor">
         <source>There is at least one user group granting access to the template editor. Since templates are PHP files, users of these groups implicitly have full control over the system!</source>
+      </trans-unit>
+      <trans-unit id="MSC.userThemeImport">
+        <source>There is at least one regular user with permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, these users implicitly have full control over the system!</source>
+      </trans-unit>
+      <trans-unit id="MSC.groupThemeImport">
+        <source>There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!</source>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
@@ -2422,6 +2575,34 @@
       </trans-unit>
       <trans-unit id="MSC.internalCssEditor">
         <source>The internal CSS editor has been deprecated and will be removed in one of the next Contao versions! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
+      </trans-unit>
+      <trans-unit id="MSC.serpPreview.0">
+        <source>Google search results preview</source>
+      </trans-unit>
+      <trans-unit id="MSC.serpPreview.1">
+        <source>Here you can preview the meta data in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
+      </trans-unit>
+      <trans-unit id="MSC.clearTrustedDevices">
+        <source>Clear trusted devices</source>
+      </trans-unit>
+      <trans-unit id="MSC.trustedDevices">
+        <source>Trusted devices</source>
+      </trans-unit>
+      <trans-unit id="MSC.noTrustedDevices">
+        <source>Currently there are no trusted devices.</source>
+      </trans-unit>
+      <trans-unit id="MSC.device">
+        <source>Device</source>
+      </trans-unit>
+      <trans-unit id="MSC.thisDevice">
+        <source>this device</source>
+      </trans-unit>
+      <trans-unit id="MSC.browser">
+        <source>Browser</source>
+        <target>مرورگر</target>
+      </trans-unit>
+      <trans-unit id="MSC.operatingSystem">
+        <source>Operating system</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2549,6 +2730,7 @@
       </trans-unit>
       <trans-unit id="DCA.all.1">
         <source>Edit multiple elements at once</source>
+        <target>ویرایش هم‌زمان چند المنت</target>
       </trans-unit>
       <trans-unit id="DCA.toggleNodes.0">
         <source>Toggle all</source>
@@ -2564,33 +2746,43 @@
       </trans-unit>
       <trans-unit id="DCA.new.1">
         <source>Create a new element</source>
+        <target>ایجاد یک المنت جدید</target>
       </trans-unit>
       <trans-unit id="DCA.show">
         <source>Show the details of element ID %s</source>
+        <target>نمایش جزئیات المنت شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="DCA.edit">
         <source>Edit element ID %s</source>
+        <target>ویرایش المنت شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="DCA.cut">
         <source>Move element ID %s</source>
+        <target>جابجایی المنت شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="DCA.copy">
         <source>Duplicate element ID %s</source>
+        <target>دو نسخه کردن المنت‌ شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="DCA.delete">
         <source>Delete element ID %s</source>
+        <target>حذف المنت شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="DCA.drag">
         <source>Drag element ID %s</source>
+        <target>کشیدن المنت شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="DCA.editheader.0">
         <source>Edit the element settings</source>
+        <target>ویرایش تنظیمات المنت</target>
       </trans-unit>
       <trans-unit id="DCA.editheader.1">
         <source>Edit the settings of element ID %s</source>
+        <target>ویرایش تنظیمات المنت شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="DCA.toggle">
         <source>Publish/unpublish element ID %s</source>
+        <target>انتشار/عدم انتشار المنت شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="DCA.pasteinto.0">
         <source>Paste at the top</source>
@@ -2598,6 +2790,7 @@
       </trans-unit>
       <trans-unit id="DCA.pasteinto.1">
         <source>Paste into element ID %s</source>
+        <target>جاگذاری به المنت شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="DCA.pasteafter.0">
         <source>Paste at the top</source>
@@ -2605,12 +2798,24 @@
       </trans-unit>
       <trans-unit id="DCA.pasteafter.1">
         <source>Paste after element ID %s</source>
+        <target>جاگذاری بعد از المنت شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="DCA.pastenew.0">
         <source>Create a new element at the top</source>
+        <target>ایجاد یک المنت جدید در بالا</target>
       </trans-unit>
       <trans-unit id="DCA.pastenew.1">
         <source>Create a new element after element ID %s</source>
+        <target>ایجاد یک المنت جدید بعد از المنت شناسه‌ی %s</target>
+      </trans-unit>
+      <trans-unit id="CRAWL.searchIndex.summary">
+        <source>Indexed %d URI(s) successfully. %d failed.</source>
+      </trans-unit>
+      <trans-unit id="CRAWL.searchIndex.warning">
+        <source>%d URI(s) were skipped (if you are missing one, checkout the debug log).</source>
+      </trans-unit>
+      <trans-unit id="CRAWL.brokenLinkChecker.summary">
+        <source>Checked %d link(s) successfully. %d were broken.</source>
       </trans-unit>
     </body>
   </file>

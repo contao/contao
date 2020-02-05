@@ -57,7 +57,7 @@ class Environment
 			return static::$arrCache[$strKey];
 		}
 
-		if (\in_array($strKey, get_class_methods(__CLASS__)))
+		if (\in_array($strKey, get_class_methods(self::class)))
 		{
 			static::$arrCache[$strKey] = static::$strKey();
 		}
@@ -338,16 +338,7 @@ class Environment
 	 */
 	protected static function url()
 	{
-		$host = static::get('httpHost');
-		$xhost = static::get('httpXForwardedHost');
-
-		// SSL proxy
-		if ($xhost != '' && $xhost == Config::get('sslProxyDomain'))
-		{
-			return 'https://' . $xhost . '/' . $host;
-		}
-
-		return (static::get('ssl') ? 'https://' : 'http://') . $host;
+		return (static::get('ssl') ? 'https://' : 'http://') . static::get('httpHost');
 	}
 
 	/**

@@ -182,16 +182,14 @@
         <target>Ativar em</target>
       </trans-unit>
       <trans-unit id="tl_member.start.1">
-        <source>Automatically activate the account on this day.</source>
-        <target>Se informar uma data aqui, a conta corrente será ativada neste dia.</target>
+        <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_member.stop.0">
         <source>Deactivate on</source>
         <target>Desativar em</target>
       </trans-unit>
       <trans-unit id="tl_member.stop.1">
-        <source>Automatically deactivate the account on this day.</source>
-        <target>Se informar uma data aqui, a conta corrente será desativada neste dia.</target>
+        <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_member.useTwoFactor">
         <source>Use two-factor authentication</source>

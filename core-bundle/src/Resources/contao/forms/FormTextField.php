@@ -24,6 +24,8 @@ namespace Contao;
  * @property boolean $hideInput
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @todo Rename to FormText in Contao 5.0
  */
 class FormTextField extends Widget
 {
@@ -45,6 +47,8 @@ class FormTextField extends Widget
 	 * Template
 	 *
 	 * @var string
+	 *
+	 * @todo Rename to form_text in Contao 5.0
 	 */
 	protected $strTemplate = 'form_textfield';
 
@@ -108,6 +112,16 @@ class FormTextField extends Widget
 				break;
 
 			case 'step':
+				if ($varValue > 0 && $this->type == 'number')
+				{
+					$this->arrAttributes[$strKey] = $varValue;
+				}
+				else
+				{
+					unset($this->arrAttributes[$strKey]);
+				}
+				break;
+
 			case 'placeholder':
 				$this->arrAttributes[$strKey] = $varValue;
 				break;
@@ -171,27 +185,21 @@ class FormTextField extends Widget
 
 					case 'natural':
 						return 'number';
-						break;
 
 					case 'phone':
 						return 'tel';
-						break;
 
 					case 'email':
 						return 'email';
-						break;
 
 					case 'url':
 						return 'url';
-						break;
 				}
 
 				return 'text';
-				break;
 
 			default:
 				return parent::__get($strKey);
-				break;
 		}
 	}
 

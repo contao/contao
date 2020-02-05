@@ -27,9 +27,6 @@ class ScopeMatcherTest extends TestCase
      */
     private $matcher;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();

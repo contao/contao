@@ -387,7 +387,7 @@ class Installer extends Controller
 					}
 
 					// Default values
-					if (\in_array(strtolower($field['type']), array('text', 'tinytext', 'mediumtext', 'longtext', 'blob', 'tinyblob', 'mediumblob', 'longblob')) || stripos($field['extra'], 'auto_increment') !== false || $field['default'] === null || strtolower($field['null']) == 'null')
+					if ($field['default'] === null || stripos($field['extra'], 'auto_increment') !== false || strtolower($field['null']) == 'null' || \in_array(strtolower($field['type']), array('text', 'tinytext', 'mediumtext', 'longtext', 'blob', 'tinyblob', 'mediumblob', 'longblob')))
 					{
 						unset($field['default']);
 					}
@@ -411,8 +411,7 @@ class Installer extends Controller
 					// Quote the field names
 					$index_fields = implode(
 						', ',
-						array_map
-						(
+						array_map(
 							static function ($item) use ($quote)
 							{
 								if (strpos($item, '(') === false)

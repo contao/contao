@@ -27,25 +27,16 @@ class MemoryHeaderStorage implements HeaderStorageInterface
         $this->headers = $headers;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function all(): array
     {
         return $this->headers;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function add(string $header): void
     {
         $this->headers[] = $header;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function clear(): void
     {
         $this->headers = [];

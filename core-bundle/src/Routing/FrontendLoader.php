@@ -29,15 +29,15 @@ class FrontendLoader extends Loader
      */
     private $urlSuffix;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.routing.frontend_loader" service instead
+     */
     public function __construct(bool $prependLocale, string $urlSuffix = '.html')
     {
         $this->prependLocale = $prependLocale;
         $this->urlSuffix = $urlSuffix;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load($resource, $type = null): RouteCollection
     {
         $routes = new RouteCollection();
@@ -54,9 +54,6 @@ class FrontendLoader extends Loader
         return $routes;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports($resource, $type = null): bool
     {
         return 'contao_frontend' === $type;

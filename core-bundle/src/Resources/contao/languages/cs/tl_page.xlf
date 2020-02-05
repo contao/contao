@@ -89,6 +89,18 @@
         <source>Show this page if there is none that matches the visitor's language.</source>
         <target>Ukázat tuto stránku, pokud je operační systém návštěvníka v dané řeči či v nějaké jiné, v níž není ani jedna jazykových verzí Vaší webové stránky.</target>
       </trans-unit>
+      <trans-unit id="tl_page.favicon.0">
+        <source>Favicon</source>
+      </trans-unit>
+      <trans-unit id="tl_page.favicon.1">
+        <source>Here you can select a favicon for the website.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.robotsTxt.0">
+        <source>Custom robots.txt content</source>
+      </trans-unit>
+      <trans-unit id="tl_page.robotsTxt.1">
+        <source>Here you can enter custom robots.txt content. It may be extended automatically by extensions.</source>
+      </trans-unit>
       <trans-unit id="tl_page.dns.0">
         <source>Domain name</source>
         <target>Jméno domény</target>
@@ -350,16 +362,14 @@
         <target>Zobrazit od</target>
       </trans-unit>
       <trans-unit id="tl_page.start.1">
-        <source>Do not show the page on the website before this day.</source>
-        <target>Nezobrazovat stránku před tímto datem.</target>
+        <source>If you want to prevent the page from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_page.stop.0">
         <source>Show until</source>
         <target>Zobrazit do</target>
       </trans-unit>
       <trans-unit id="tl_page.stop.1">
-        <source>Do not show the page on the website on and after this day.</source>
-        <target>Nezobrazovat stránku po tomto datu.</target>
+        <source>If you want to prevent the page from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_page.enforceTwoFactor.0">
         <source>Enforce two-factor authentication</source>
@@ -392,6 +402,9 @@
       <trans-unit id="tl_page.dns_legend">
         <source>DNS settings</source>
         <target>Nastavení DNS</target>
+      </trans-unit>
+      <trans-unit id="tl_page.website_legend">
+        <source>Website settings</source>
       </trans-unit>
       <trans-unit id="tl_page.global_legend">
         <source>Global settings</source>

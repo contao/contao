@@ -21,12 +21,8 @@ use Contao\BackendMain;
 use Contao\BackendPage;
 use Contao\BackendPassword;
 use Contao\BackendPopup;
-use Contao\BackendPreview;
-use Contao\BackendSwitch;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Picker\PickerBuilderInterface;
 use Contao\CoreBundle\Picker\PickerConfig;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,6 +31,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route(defaults={"_scope" = "backend", "_token_check" = true})
+ *
+ * @internal
  */
 class BackendController extends AbstractController
 {
@@ -43,7 +41,7 @@ class BackendController extends AbstractController
      */
     public function mainAction(): Response
     {
-        $this->get('contao.framework')->initialize();
+        $this->initializeContaoFramework();
 
         $controller = new BackendMain();
 
@@ -55,16 +53,19 @@ class BackendController extends AbstractController
      */
     public function loginAction(Request $request): Response
     {
-        $this->get('contao.framework')->initialize();
+        $this->initializeContaoFramework();
 
         if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
-            $queryString = '';
+            if ($request->query->has('redirect')) {
+                $uriSigner = $this->get('uri_signer');
 
-            if ($request->query->has('referer')) {
-                $queryString = '?'.base64_decode($request->query->get('referer'), true);
+                // We cannot use $request->getUri() here as we want to work with the original URI (no query string reordering)
+                if ($uriSigner->check($request->getSchemeAndHttpHost().$request->getBaseUrl().$request->getPathInfo().(null !== ($qs = $request->server->get('QUERY_STRING')) ? '?'.$qs : ''))) {
+                    return new RedirectResponse($request->query->get('redirect'));
+                }
             }
 
-            return new RedirectResponse($this->generateUrl('contao_backend').$queryString);
+            return new RedirectResponse($this->generateUrl('contao_backend'));
         }
 
         $controller = new BackendIndex();
@@ -87,27 +88,9 @@ class BackendController extends AbstractController
      */
     public function passwordAction(): Response
     {
-        $this->get('contao.framework')->initialize();
+        $this->initializeContaoFramework();
 
         $controller = new BackendPassword();
-
-        return $controller->run();
-    }
-
-    /**
-     * @Route("/contao/preview", name="contao_backend_preview")
-     */
-    public function previewAction(Request $request): Response
-    {
-        $previewScript = $this->getParameter('contao.preview_script');
-
-        if ($request->getScriptName() !== $previewScript) {
-            return $this->redirect($previewScript.$request->getRequestUri());
-        }
-
-        $this->get('contao.framework')->initialize();
-
-        $controller = new BackendPreview();
 
         return $controller->run();
     }
@@ -117,7 +100,7 @@ class BackendController extends AbstractController
      */
     public function confirmAction(): Response
     {
-        $this->get('contao.framework')->initialize();
+        $this->initializeContaoFramework();
 
         $controller = new BackendConfirm();
 
@@ -129,7 +112,7 @@ class BackendController extends AbstractController
      */
     public function fileAction(): Response
     {
-        $this->get('contao.framework')->initialize();
+        $this->initializeContaoFramework();
 
         $controller = new BackendFile();
 
@@ -141,7 +124,7 @@ class BackendController extends AbstractController
      */
     public function helpAction(): Response
     {
-        $this->get('contao.framework')->initialize();
+        $this->initializeContaoFramework();
 
         $controller = new BackendHelp();
 
@@ -153,7 +136,7 @@ class BackendController extends AbstractController
      */
     public function pageAction(): Response
     {
-        $this->get('contao.framework')->initialize();
+        $this->initializeContaoFramework();
 
         $controller = new BackendPage();
 
@@ -165,21 +148,9 @@ class BackendController extends AbstractController
      */
     public function popupAction(): Response
     {
-        $this->get('contao.framework')->initialize();
+        $this->initializeContaoFramework();
 
         $controller = new BackendPopup();
-
-        return $controller->run();
-    }
-
-    /**
-     * @Route("/contao/switch", name="contao_backend_switch")
-     */
-    public function switchAction(): Response
-    {
-        $this->get('contao.framework')->initialize();
-
-        $controller = new BackendSwitch();
 
         return $controller->run();
     }
@@ -189,7 +160,7 @@ class BackendController extends AbstractController
      */
     public function alertsAction(): Response
     {
-        $this->get('contao.framework')->initialize();
+        $this->initializeContaoFramework();
 
         $controller = new BackendAlerts();
 
@@ -227,26 +198,12 @@ class BackendController extends AbstractController
         return new RedirectResponse($picker->getCurrentUrl());
     }
 
-    /**
-     * Redirects the user to the Contao back end in case they manually call the
-     * /contao/two-factor route. Will be intercepted by the two factor bundle otherwise.
-     *
-     * @Route("/contao/two-factor", name="contao_backend_two_factor")
-     */
-    public function twoFactorAuthenticationAction(): Response
-    {
-        return $this->redirectToRoute('contao_backend');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();
 
-        $services['contao.framework'] = ContaoFramework::class;
         $services['contao.picker.builder'] = PickerBuilderInterface::class;
+        $services['uri_signer'] = 'uri_signer'; // FIXME: adjust this once https://github.com/symfony/symfony/pull/35298 has been merged
 
         return $services;
     }

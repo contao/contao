@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Picker;
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface
 {
@@ -24,6 +24,9 @@ class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements D
      */
     private $security;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.picker.article_provider" service instead
+     */
     public function __construct(FactoryInterface $menuFactory, RouterInterface $router, ?TranslatorInterface $translator, Security $security)
     {
         parent::__construct($menuFactory, $router, $translator);
@@ -31,41 +34,26 @@ class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements D
         $this->security = $security;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName(): string
     {
         return 'articlePicker';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsContext($context): bool
     {
         return 'link' === $context && $this->security->isGranted('contao_user.modules', 'article');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsValue(PickerConfig $config): bool
     {
         return $this->isMatchingInsertTag($config);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDcaTable(): string
     {
         return 'tl_article';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDcaAttributes(PickerConfig $config): array
     {
         $attributes = ['fieldType' => 'radio'];
@@ -81,25 +69,16 @@ class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements D
         return $attributes;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function convertDcaValue(PickerConfig $config, $value): string
     {
         return sprintf($this->getInsertTag($config), $value);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getRouteParameters(PickerConfig $config = null): array
     {
         return ['do' => 'article'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getDefaultInsertTag(): string
     {
         return '{{article_url::%s}}';

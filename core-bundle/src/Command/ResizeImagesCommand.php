@@ -17,9 +17,9 @@ use Contao\Image\DeferredImageInterface;
 use Contao\Image\DeferredImageStorageInterface;
 use Contao\Image\DeferredResizerInterface;
 use Contao\Image\ResizerInterface;
+use Patchwork\Utf8;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -32,6 +32,8 @@ use Symfony\Component\Process\Process;
 
 /**
  * Resize deferred images that have not been processed yet.
+ *
+ * @internal
  */
 class ResizeImagesCommand extends Command
 {
@@ -77,25 +79,17 @@ class ResizeImagesCommand extends Command
         parent::__construct();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure(): void
     {
         $this
             ->setName('contao:resize-images')
-            ->setDefinition([
-                new InputOption('time-limit', 'l', InputArgument::OPTIONAL, 'Time limit in seconds', '0'),
-                new InputOption('concurrent', 'c', InputArgument::OPTIONAL, 'Run multiple processes concurrently', '1'),
-                new InputOption('throttle', 't', InputArgument::OPTIONAL, 'Pause between resizes to limit CPU utilization, 0.1 relates to 10% CPU usage', '1'),
-            ])
+            ->addOption('time-limit', 'l', InputOption::VALUE_OPTIONAL, 'Time limit in seconds', '0')
+            ->addOption('concurrent', 'c', InputOption::VALUE_OPTIONAL, 'Run multiple processes concurrently', '1')
+            ->addOption('throttle', 't', InputOption::VALUE_OPTIONAL, 'Pause between resizes to limit CPU utilization, 0.1 relates to 10% CPU usage', '1')
             ->setDescription('Resizes deferred images that have not been processed yet.')
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if (!$this->resizer instanceof DeferredResizerInterface) {
@@ -156,7 +150,7 @@ class ResizeImagesCommand extends Command
             return 0;
         }
 
-        $io->write(str_pad($path, $this->terminalWidth + \strlen($path) - mb_strlen($path, 'UTF-8') - 13, '.').' ');
+        $io->write(str_pad($path, $this->terminalWidth + \strlen($path) - Utf8::strlen($path) - 13, '.').' ');
 
         try {
             $image = $this->imageFactory->create($this->targetDir.'/'.$path);
@@ -181,7 +175,7 @@ class ResizeImagesCommand extends Command
         } catch (\Throwable $exception) {
             $io->writeln('failed');
 
-            if ($io->isVerbose() && method_exists(FlattenException::class, 'getAsString')) {
+            if ($io->isVerbose()) {
                 $io->error(FlattenException::createFromThrowable($exception)->getAsString());
             } else {
                 $io->writeln($exception->getMessage());
@@ -201,10 +195,10 @@ class ResizeImagesCommand extends Command
             throw new \RuntimeException('The php executable could not be found.');
         }
 
-        /** @var Process[] $processes */
+        /** @var array<Process> $processes */
         $processes = [];
 
-        /** @var string[] $buffers */
+        /** @var array<string> $buffers */
         $buffers = [];
 
         for ($i = 0; $i < $count; ++$i) {

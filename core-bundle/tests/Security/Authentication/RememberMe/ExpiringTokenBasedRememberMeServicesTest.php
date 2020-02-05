@@ -16,7 +16,6 @@ use Contao\CoreBundle\Entity\RememberMe;
 use Contao\CoreBundle\Repository\RememberMeRepository;
 use Contao\CoreBundle\Security\Authentication\RememberMe\ExpiringTokenBasedRememberMeServices;
 use Contao\CoreBundle\Tests\TestCase;
-use Doctrine\ORM\EntityRepository;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,7 +32,7 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
     private const SECRET = 'foobar';
 
     /**
-     * @var EntityRepository&MockObject
+     * @var RememberMeRepository&MockObject
      */
     private $repository;
 
@@ -212,11 +211,13 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
         $this->repository
             ->expects($this->once())
             ->method('persist')
-            ->willReturnCallback(static function (...$args) use (&$entity) {
-                $entity = $args[0];
+            ->willReturnCallback(
+                static function (...$args) use (&$entity) {
+                    $entity = $args[0];
 
-                return 1;
-            })
+                    return 1;
+                }
+            )
         ;
 
         $this->listener->loginSuccess($request, $response, $token);

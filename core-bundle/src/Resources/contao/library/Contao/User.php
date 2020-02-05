@@ -68,7 +68,7 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
  * @property integer     $dateAdded
  * @property integer     $lastLogin
  * @property integer     $currentLogin
- * @property integer     $loginCount
+ * @property integer     $loginAttempts
  * @property integer     $locked
  * @property string      $firstname
  * @property string      $lastname
@@ -95,6 +95,8 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
  * @property object      $objLogout
  * @property string      $useTwoFactor
  * @property string|null $secret
+ * @property string|null $backupCodes
+ * @property integer     $trustedTokenVersion
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -560,7 +562,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 			'id' => $this->id,
 			'username' => $this->username,
 			'password' => $this->password,
-			'admin' => $this->admin,
 			'disable' => $this->disable,
 			'start' => $this->start,
 			'stop' => $this->stop
@@ -576,12 +577,12 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	{
 		$data = unserialize($serialized, array('allowed_classes'=>false));
 
-		if (array_keys($data) != array('id', 'username', 'password', 'admin', 'disable', 'start', 'stop'))
+		if (array_keys($data) != array('id', 'username', 'password', 'disable', 'start', 'stop'))
 		{
 			return;
 		}
 
-		list($this->id, $this->username, $this->password, $this->admin, $this->disable, $this->start, $this->stop) = array_values($data);
+		list($this->id, $this->username, $this->password, $this->disable, $this->start, $this->stop) = array_values($data);
 	}
 
 	/**
@@ -607,11 +608,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 		}
 
 		if ($this->password !== $user->password)
-		{
-			return false;
-		}
-
-		if ((bool) $this->admin !== (bool) $user->admin)
 		{
 			return false;
 		}

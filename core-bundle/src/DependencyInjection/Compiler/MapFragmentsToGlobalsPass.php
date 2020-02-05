@@ -23,13 +23,13 @@ use Symfony\Component\DependencyInjection\Compiler\PriorityTaggedServiceTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
+/**
+ * @internal
+ */
 class MapFragmentsToGlobalsPass implements CompilerPassInterface
 {
     use PriorityTaggedServiceTrait;
 
-    /**
-     * {@inheritdoc}
-     */
     public function process(ContainerBuilder $container): void
     {
         $tags = $this->getFragmentTags($container, ContentElementReference::TAG_NAME);
@@ -62,13 +62,13 @@ class MapFragmentsToGlobalsPass implements CompilerPassInterface
     /**
      * @throws InvalidConfigurationException
      *
-     * @return string[]
+     * @return array<string>
      */
     private function getFragmentTags(ContainerBuilder $container, string $tag): array
     {
         $result = [];
 
-        foreach ($this->findAndSortTaggedServices($tag, $container) as $priority => $reference) {
+        foreach ($this->findAndSortTaggedServices($tag, $container) as $reference) {
             $definition = $container->findDefinition($reference);
 
             foreach ($definition->getTag($tag) as $attributes) {

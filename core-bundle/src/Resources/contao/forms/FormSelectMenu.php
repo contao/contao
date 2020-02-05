@@ -20,6 +20,8 @@ namespace Contao;
  * @property boolean $chosen
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @todo Rename to FormSelect in Contao 5.0
  */
 class FormSelectMenu extends Widget
 {

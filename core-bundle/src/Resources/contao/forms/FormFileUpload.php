@@ -21,6 +21,8 @@ namespace Contao;
  * @property boolean $doNotOverwrite
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @todo Rename to FormUpload in Contao 5.0
  */
 class FormFileUpload extends Widget implements \uploadable
 {
@@ -70,6 +72,14 @@ class FormFileUpload extends Widget implements \uploadable
 				{
 					$this->arrAttributes['size'] = $varValue;
 				}
+				break;
+
+			case 'extensions':
+				if ($varValue)
+				{
+					$this->arrAttributes['accept'] = '.' . implode(',.', StringUtil::trimsplit(',', strtolower($varValue)));
+				}
+				parent::__set($strKey, $varValue);
 				break;
 
 			default:

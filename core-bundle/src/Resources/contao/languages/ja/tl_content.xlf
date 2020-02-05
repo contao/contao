@@ -623,16 +623,16 @@
         <target>公開の開始日</target>
       </trans-unit>
       <trans-unit id="tl_content.start.1">
-        <source>Do not show the element on the website before this day.</source>
-        <target>この日より前は、このコンテント要素をウェブサイトに表示しません。</target>
+        <source>If you want to prevent the element from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>ある特定の日時より前はコンテント要素をウェブサイトに表示したくない場合は、その日時を入力します。それ以外の場合は空のままにしてください。</target>
       </trans-unit>
       <trans-unit id="tl_content.stop.0">
         <source>Show until</source>
         <target>公開の終了日</target>
       </trans-unit>
       <trans-unit id="tl_content.stop.1">
-        <source>Do not show the element on the website on and after this day.</source>
-        <target>この日より後は、このコンテント要素をウェブサイトに表示しません。</target>
+        <source>If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>ある特定の日時より後はコンテント要素をウェブサイトに表示したくない場合は、その日時を入力します。それ以外の場合は空のままにしてください。</target>
       </trans-unit>
       <trans-unit id="tl_content.type_legend">
         <source>Element type</source>

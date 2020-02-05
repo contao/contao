@@ -398,7 +398,7 @@ class DcaExtractor extends Controller
 			foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $field=>$config)
 			{
 				// Check whether all fields have an SQL definition
-				if (!isset($config['sql']) && isset($config['inputType']))
+				if (!\array_key_exists('sql', $config) && isset($config['inputType']))
 				{
 					$blnFromFile = true;
 				}
@@ -496,6 +496,22 @@ class DcaExtractor extends Controller
 			}
 		}
 
+		// Relations
+		if (!empty($arrRelations))
+		{
+			$this->arrRelations = array();
+
+			foreach ($arrRelations as $field=>$config)
+			{
+				$this->arrRelations[$field] = array();
+
+				foreach ($config as $k=>$v)
+				{
+					$this->arrRelations[$field][$k] = $v;
+				}
+			}
+		}
+
 		// Not a database table or no field information
 		if (empty($sql) || empty($fields))
 		{
@@ -542,7 +558,7 @@ class DcaExtractor extends Controller
 				}
 
 				// Only add order fields of binary fields (see #7785)
-				if (isset($config['inputType']) && $config['inputType'] == 'fileTree' && isset($config['eval']['orderField']))
+				if (isset($config['inputType'], $config['eval']['orderField']) && $config['inputType'] == 'fileTree')
 				{
 					$this->arrOrderFields[] = $config['eval']['orderField'];
 				}
@@ -566,22 +582,6 @@ class DcaExtractor extends Controller
 				if ($type == 'unique')
 				{
 					$this->arrUniqueFields[] = $field;
-				}
-			}
-		}
-
-		// Relations
-		if (!empty($arrRelations))
-		{
-			$this->arrRelations = array();
-
-			foreach ($arrRelations as $field=>$config)
-			{
-				$this->arrRelations[$field] = array();
-
-				foreach ($config as $k=>$v)
-				{
-					$this->arrRelations[$field][$k] = $v;
 				}
 			}
 		}

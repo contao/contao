@@ -9,14 +9,6 @@
         <source>Please select the data you want to purge or rebuild.</source>
         <target>Favor selecionar as tabelas de cache para limpar.</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance.frontendUser.0">
-        <source>Front end user</source>
-        <target>Usuário do Frontend</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.frontendUser.1">
-        <source>Automatically log in a front end user to index protected pages.</source>
-        <target>Para indexar páginas protegidas você deve criar um usuário do frontend que tenha permissão para acessar essas páginas.</target>
-      </trans-unit>
       <trans-unit id="tl_maintenance.job">
         <source>Job</source>
         <target>Tarefa</target>
@@ -36,30 +28,6 @@
       <trans-unit id="tl_maintenance.cacheCleared">
         <source>The data has been purged</source>
         <target>O cache foi limpo</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.searchIndex">
-        <source>Rebuild the search index</source>
-        <target>Recriar o índice de busca</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.indexSubmit">
-        <source>Rebuild index</source>
-        <target>Recriar o índice</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.noSearchable">
-        <source>No searchable pages found</source>
-        <target>Não foram encontradas páginas que podem ser pesquisadas.</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.indexNote">
-        <source>Please wait for the page to load completely before you proceed!</source>
-        <target>Por favor espere que a página carregue por completo antes de prosseguir!</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.indexLoading">
-        <source>Please wait while the search index is being rebuilt.</source>
-        <target>Por favor espere enquanto o índice de busca está sendo reconstruído.</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.indexComplete">
-        <source>The search index has been rebuilt. You can now proceed.</source>
-        <target>O índice de busca foi reconstruído.Você pode prosseguir agora.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.updateHelp">
         <source>Please enter your %s here.</source>
@@ -116,8 +84,7 @@
         <target>Remove versões em cache de páginas front end.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.search.0">
-        <source>Purge the search cache</source>
-        <target>Limpar cache de pesquisa</target>
+        <source>Purge the search results cache</source>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.search.1">
         <source>Removes the cached versions of the search results.</source>
@@ -143,6 +110,39 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.1">
         <source>Recreates the symlinks in the &lt;code&gt;web/&lt;/code&gt; folder (document root).</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawler">
+        <source>Crawler</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.startCrawling">
+        <source>Start crawling</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlSubscribers.0">
+        <source>Enabled features</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlSubscribers.1">
+        <source>The crawler crawls all URLs it finds. Here you can decide what to do with these results.</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlMember.0">
+        <source>Front end member</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlMember.1">
+        <source>Automatically log in a front end member to index protected pages.</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlWaitToBeFinished">
+        <source>The crawler is currently working. Please wait for it to finish to see the results.</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDownloadDebugLog">
+        <source>Download the debug log</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDownloadSubscriberLog">
+        <source>Download the log</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlSubscriberNames.search-index">
+        <source>Update the search index</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlSubscriberNames.broken-link-checker">
+        <source>Check for broken links</source>
       </trans-unit>
     </body>
   </file>

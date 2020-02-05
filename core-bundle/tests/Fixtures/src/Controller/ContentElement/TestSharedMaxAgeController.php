@@ -21,9 +21,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class TestSharedMaxAgeController extends AbstractContentElementController
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function getResponse(Template $template, ContentModel $model, Request $request): Response
     {
         $response = new JsonResponse($template->getData());

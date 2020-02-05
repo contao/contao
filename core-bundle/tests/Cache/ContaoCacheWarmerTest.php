@@ -18,7 +18,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\System;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\Statement;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Filesystem\Filesystem;
@@ -30,9 +29,6 @@ class ContaoCacheWarmerTest extends TestCase
      */
     private $warmer;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -40,9 +36,6 @@ class ContaoCacheWarmerTest extends TestCase
         $this->warmer = $this->getCacheWarmer();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function tearDown(): void
     {
         parent::tearDown();
@@ -58,26 +51,7 @@ class ContaoCacheWarmerTest extends TestCase
 
         System::setContainer($container);
 
-        $class1 = new \stdClass();
-        $class1->language = 'en-US';
-
-        $class2 = new \stdClass();
-        $class2->language = 'en';
-
-        $statement = $this->createMock(Statement::class);
-        $statement
-            ->expects($this->exactly(3))
-            ->method('fetch')
-            ->willReturnOnConsecutiveCalls($class1, $class2, false)
-        ;
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->method('prepare')
-            ->willReturn($statement)
-        ;
-
-        $warmer = $this->getCacheWarmer($connection);
+        $warmer = $this->getCacheWarmer();
         $warmer->warmUp($this->getFixturesDir().'/var/cache');
 
         $this->assertFileExists($this->getFixturesDir().'/var/cache/contao');
@@ -93,27 +67,27 @@ class ContaoCacheWarmerTest extends TestCase
         $this->assertFileExists($this->getFixturesDir().'/var/cache/contao/sql');
         $this->assertFileExists($this->getFixturesDir().'/var/cache/contao/sql/tl_test.php');
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             "\$GLOBALS['TL_TEST'] = true;",
             file_get_contents($this->getFixturesDir().'/var/cache/contao/config/config.php')
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             "'dummy' => 'templates'",
             file_get_contents($this->getFixturesDir().'/var/cache/contao/config/templates.php')
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             "\$GLOBALS['TL_DCA']['tl_test'] = [\n",
             file_get_contents($this->getFixturesDir().'/var/cache/contao/dca/tl_test.php')
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             "\$GLOBALS['TL_LANG']['MSC']['first']",
             file_get_contents($this->getFixturesDir().'/var/cache/contao/languages/en/default.php')
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             "\$this->arrFields = array (\n  'id' => 'int(10) unsigned NOT NULL auto_increment',\n);",
             file_get_contents($this->getFixturesDir().'/var/cache/contao/sql/tl_test.php')
         );
@@ -126,26 +100,7 @@ class ContaoCacheWarmerTest extends TestCase
 
     public function testDoesNotCreateTheCacheFolderIfThereAreNoContaoResources(): void
     {
-        $class1 = new \stdClass();
-        $class1->language = 'en-US';
-
-        $class2 = new \stdClass();
-        $class2->language = 'en';
-
-        $statement = $this->createMock(Statement::class);
-        $statement
-            ->expects($this->exactly(3))
-            ->method('fetch')
-            ->willReturnOnConsecutiveCalls($class1, $class2, false)
-        ;
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->method('prepare')
-            ->willReturn($statement)
-        ;
-
-        $warmer = $this->getCacheWarmer($connection, null, 'empty-bundle');
+        $warmer = $this->getCacheWarmer(null, null, 'empty-bundle');
         $warmer->warmUp($this->getFixturesDir().'/var/cache/contao');
 
         $this->assertFileNotExists($this->getFixturesDir().'/var/cache/contao');
@@ -190,7 +145,8 @@ class ContaoCacheWarmerTest extends TestCase
         $filesystem = new Filesystem();
         $finder = new ResourceFinder($fixtures);
         $locator = new FileLocator($fixtures);
+        $locales = ['en-US', 'en'];
 
-        return new ContaoCacheWarmer($filesystem, $finder, $locator, $fixtures, $connection, $framework);
+        return new ContaoCacheWarmer($filesystem, $finder, $locator, $fixtures, $connection, $framework, $locales);
     }
 }

@@ -37,9 +37,6 @@ class VersionCommandTest extends TestCase
      */
     private $command;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();

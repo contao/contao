@@ -85,6 +85,14 @@
         <source>Note that no optimizations such as meta data stripping or JPEG compression will be applied in this case.</source>
         <target>この場合、メタデータの除去やJPEGの圧縮のような最適化は行わないことに注意してください。</target>
       </trans-unit>
+      <trans-unit id="tl_image_size.lazyLoading.0">
+        <source>Enable lazy loading</source>
+        <target>遅延読み込みを有効</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.lazyLoading.1">
+        <source>Defer loading the image until it is scrolled into the viewport.</source>
+        <target>画像がウィンドウ内にスクロールされて表示されるまで読み込みを遅延します。</target>
+      </trans-unit>
       <trans-unit id="tl_image_size.tstamp.0">
         <source>Revision date</source>
         <target>改訂日</target>
@@ -100,6 +108,10 @@
       <trans-unit id="tl_image_size.source_legend">
         <source>Image source settings</source>
         <target>画像ソースの設定</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.loading_legend">
+        <source>Loading options</source>
+        <target>読み込みのオプション</target>
       </trans-unit>
       <trans-unit id="tl_image_size.expert_legend">
         <source>Expert settings</source>

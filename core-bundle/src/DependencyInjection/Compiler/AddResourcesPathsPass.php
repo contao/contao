@@ -16,28 +16,33 @@ use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
+/**
+ * @internal
+ */
 class AddResourcesPathsPass implements CompilerPassInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function process(ContainerBuilder $container): void
     {
         $container->setParameter('contao.resources_paths', $this->getResourcesPaths($container));
     }
 
     /**
-     * @return string[]
+     * @return array<string>
      */
     private function getResourcesPaths(ContainerBuilder $container): array
     {
         $paths = [];
         $rootDir = $container->getParameter('kernel.project_dir');
 
-        foreach ($container->getParameter('kernel.bundles') as $name => $class) {
+        $bundles = $container->getParameter('kernel.bundles');
+        $meta = $container->getParameter('kernel.bundles_metadata');
+
+        foreach ($bundles as $name => $class) {
             if (ContaoModuleBundle::class === $class) {
-                $paths[] = sprintf('%s/system/modules/%s', $rootDir, $name);
-            } elseif (null !== ($path = $this->getResourcesPathFromClassName($class))) {
+                $paths[] = $meta[$name]['path'];
+            } elseif (is_dir($path = $meta[$name]['path'].'/Resources/contao')) {
+                $paths[] = $path;
+            } elseif (is_dir($path = $meta[$name]['path'].'/contao')) {
                 $paths[] = $path;
             }
         }
@@ -57,16 +62,5 @@ class AddResourcesPathsPass implements CompilerPassInterface
         }
 
         return $paths;
-    }
-
-    private function getResourcesPathFromClassName(string $class): ?string
-    {
-        $reflection = new \ReflectionClass($class);
-
-        if (is_dir($dir = \dirname($reflection->getFileName()).'/Resources/contao')) {
-            return $dir;
-        }
-
-        return null;
     }
 }

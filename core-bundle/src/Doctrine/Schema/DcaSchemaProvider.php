@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Doctrine\Schema;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Database\Installer;
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\SchemaConfig;
@@ -36,6 +36,9 @@ class DcaSchemaProvider
      */
     private $doctrine;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.doctrine.schema_provider" service instead
+     */
     public function __construct(ContaoFramework $framework, Registry $doctrine)
     {
         $this->framework = $framework;
@@ -77,11 +80,6 @@ class DcaSchemaProvider
                 }
             }
 
-            // The default InnoDB row format before MySQL 5.7.9 is "Compact" but innodb_large_prefix requires "DYNAMIC"
-            if ($table->hasOption('engine') && 'InnoDB' === $table->getOption('engine')) {
-                $table->addOption('row_format', 'DYNAMIC');
-            }
-
             if (isset($definitions['SCHEMA_FIELDS'])) {
                 foreach ($definitions['SCHEMA_FIELDS'] as $fieldName => $config) {
                     $options = $config;
@@ -115,13 +113,16 @@ class DcaSchemaProvider
         /** @var EntityManagerInterface $manager */
         $manager = $this->doctrine->getManager();
 
-        /** @var ClassMetadata[] $metadata */
+        /** @var array<ClassMetadata> $metadata */
         $metadata = $manager->getMetadataFactory()->getAllMetadata();
 
+        /** @var Connection $connection */
+        $connection = $this->doctrine->getConnection();
+
         // Apply the schema filter
-        if ($filter = $this->doctrine->getConnection()->getConfiguration()->getFilterSchemaAssetsExpression()) {
+        if ($filter = $connection->getConfiguration()->getSchemaAssetsFilter()) {
             foreach ($metadata as $key => $data) {
-                if (!preg_match($filter, $data->getTableName())) {
+                if (!$filter($data->getTableName())) {
                     unset($metadata[$key]);
                 }
             }
@@ -315,20 +316,6 @@ class DcaSchemaProvider
                 $flags[] = 'fulltext';
             }
 
-            // Backwards compatibility for doctrine/dbal <2.9
-            if (array_filter($lengths) && !method_exists(AbstractPlatform::class, 'supportsColumnLengthIndexes')) {
-                $columns = array_combine(
-                    $columns,
-                    array_map(
-                        static function ($column, $length) {
-                            return $column.($length ? '('.$length.')' : '');
-                        },
-                        $columns,
-                        $lengths
-                    )
-                );
-            }
-
             $table->addIndex($columns, $matches[2], $flags, ['lengths' => $lengths]);
         }
     }
@@ -336,7 +323,7 @@ class DcaSchemaProvider
     /**
      * Returns the SQL definitions from the Contao installer.
      *
-     * @return array<string,array<string,string[]>>
+     * @return array<string, array<string, array<string>>>
      */
     private function getSqlDefinitions(): array
     {
@@ -362,10 +349,13 @@ class DcaSchemaProvider
             }
         }
 
+        /** @var Connection $connection */
+        $connection = $this->doctrine->getConnection();
+
         // Apply the schema filter (see contao/installation-bundle#78)
-        if ($filter = $this->doctrine->getConnection()->getConfiguration()->getFilterSchemaAssetsExpression()) {
+        if ($filter = $connection->getConfiguration()->getSchemaAssetsFilter()) {
             foreach (array_keys($sqlTarget) as $key) {
-                if (!preg_match($filter, $key)) {
+                if (!$filter($key)) {
                     unset($sqlTarget[$key]);
                 }
             }

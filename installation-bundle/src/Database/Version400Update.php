@@ -12,14 +12,32 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle\Database;
 
+use Contao\CoreBundle\Migration\AbstractMigration;
+use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\StringUtil;
+use Doctrine\DBAL\Connection;
 
-class Version400Update extends AbstractVersionUpdate
+/**
+ * @internal
+ */
+class Version400Update extends AbstractMigration
 {
     /**
-     * {@inheritdoc}
+     * @var Connection
      */
-    public function shouldBeRun(): bool
+    private $connection;
+
+    public function __construct(Connection $connection)
+    {
+        $this->connection = $connection;
+    }
+
+    public function getName(): string
+    {
+        return 'Contao 4.0.0 Update';
+    }
+
+    public function shouldRun(): bool
     {
         $schemaManager = $this->connection->getSchemaManager();
 
@@ -32,10 +50,7 @@ class Version400Update extends AbstractVersionUpdate
         return !isset($columns['scripts']);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function run(): void
+    public function run(): MigrationResult
     {
         $this->connection->query('
             ALTER TABLE
@@ -216,5 +231,7 @@ class Version400Update extends AbstractVersionUpdate
             WHERE
                 type = 'headline'
         ");
+
+        return $this->createResult(true);
     }
 }

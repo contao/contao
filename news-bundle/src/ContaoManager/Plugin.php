@@ -18,11 +18,11 @@ use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\NewsBundle\ContaoNewsBundle;
 
+/**
+ * @internal
+ */
 class Plugin implements BundlePluginInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getBundles(ParserInterface $parser): array
     {
         return [

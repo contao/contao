@@ -266,12 +266,12 @@
         <target>Hier können Sie das Ergebnistemplate auswählen.</target>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.0">
-        <source>Column</source>
-        <target>Spalte</target>
+        <source>Layout section</source>
+        <target>Layoutbereich</target>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.1">
-        <source>Please choose the column whose articles you want to list.</source>
-        <target>Bitte wählen Sie die Spalte, deren Artikel Sie auflisten möchten.</target>
+        <source>Please choose the layout section whose articles you want to list.</source>
+        <target>Bitte wählen Sie den Layoutbereich, dessen Artikel Sie auflisten möchten.</target>
       </trans-unit>
       <trans-unit id="tl_module.skipFirst.0">
         <source>Skip items</source>

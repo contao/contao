@@ -182,19 +182,18 @@
         <target>فعال در</target>
       </trans-unit>
       <trans-unit id="tl_member.start.1">
-        <source>Automatically activate the account on this day.</source>
-        <target>فعال کردن خودکار در این روز.</target>
+        <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_member.stop.0">
         <source>Deactivate on</source>
         <target>غیرفعال در</target>
       </trans-unit>
       <trans-unit id="tl_member.stop.1">
-        <source>Automatically deactivate the account on this day.</source>
-        <target>غیرفعال کردن خودکار در این روز.</target>
+        <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_member.useTwoFactor">
         <source>Use two-factor authentication</source>
+        <target>استفاده از احراز هویت دومرحله‌ای</target>
       </trans-unit>
       <trans-unit id="tl_member.personal_legend">
         <source>Personal data</source>

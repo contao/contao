@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Picker;
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface
 {
@@ -24,6 +24,9 @@ class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
      */
     private $security;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.picker.page_provider" service instead
+     */
     public function __construct(FactoryInterface $menuFactory, RouterInterface $router, ?TranslatorInterface $translator, Security $security)
     {
         parent::__construct($menuFactory, $router, $translator);
@@ -31,25 +34,16 @@ class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         $this->security = $security;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName(): string
     {
         return 'pagePicker';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsContext($context): bool
     {
         return \in_array($context, ['page', 'link'], true) && $this->security->isGranted('contao_user.modules', 'page');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsValue(PickerConfig $config): bool
     {
         if ('page' === $config->getContext()) {
@@ -59,17 +53,11 @@ class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return $this->isMatchingInsertTag($config);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDcaTable(): string
     {
         return 'tl_page';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDcaAttributes(PickerConfig $config): array
     {
         $value = $config->getValue();
@@ -104,9 +92,6 @@ class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return $attributes;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function convertDcaValue(PickerConfig $config, $value)
     {
         if ('page' === $config->getContext()) {
@@ -116,17 +101,11 @@ class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return sprintf($this->getInsertTag($config), $value);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getRouteParameters(PickerConfig $config = null): array
     {
         return ['do' => 'page'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getDefaultInsertTag(): string
     {
         return '{{link_url::%s}}';

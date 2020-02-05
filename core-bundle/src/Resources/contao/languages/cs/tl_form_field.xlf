@@ -1,118 +1,6 @@
 <?xml version="1.0" ?><xliff version="1.1">
   <file datatype="php" original="src/Resources/contao/languages/en/tl_form_field.php" source-language="en" target-language="cs">
     <body>
-      <trans-unit id="FFL.explanation.0">
-        <source>Explanation</source>
-        <target>Vysvětlivka</target>
-      </trans-unit>
-      <trans-unit id="FFL.explanation.1">
-        <source>A custom field to insert an explanation text.</source>
-        <target>vlastní pole pro uvedení vysvětlivky.</target>
-      </trans-unit>
-      <trans-unit id="FFL.html.0">
-        <source>HTML code</source>
-        <target>Kód HTML</target>
-      </trans-unit>
-      <trans-unit id="FFL.html.1">
-        <source>A custom field to insert HTML code.</source>
-        <target>vlastní pole pro uvedení kód HTML.</target>
-      </trans-unit>
-      <trans-unit id="FFL.fieldsetStart.0">
-        <source>Fieldset start</source>
-        <target>Začátek skupiny polí</target>
-      </trans-unit>
-      <trans-unit id="FFL.fieldsetStart.1">
-        <source>The opening part of a fieldset with an optional legend.</source>
-        <target>Zahajující část skupiny polí s možnou legendou.</target>
-      </trans-unit>
-      <trans-unit id="FFL.fieldsetStop.0">
-        <source>Fieldset stop</source>
-        <target>Konec skupiny polí</target>
-      </trans-unit>
-      <trans-unit id="FFL.fieldsetStop.1">
-        <source>The closing part of a fieldset.</source>
-        <target>Zakončující část skupiny polí. </target>
-      </trans-unit>
-      <trans-unit id="FFL.text.0">
-        <source>Text field</source>
-        <target>Textové pole</target>
-      </trans-unit>
-      <trans-unit id="FFL.text.1">
-        <source>A single-line input field for a short or medium text.</source>
-        <target>pro uvedení krátkého či delšího textu.</target>
-      </trans-unit>
-      <trans-unit id="FFL.password.0">
-        <source>Password field</source>
-        <target>Pole pro heslo</target>
-      </trans-unit>
-      <trans-unit id="FFL.password.1">
-        <source>A single-line input field for a password. Contao automatically adds a confirmation field.</source>
-        <target>jednořádkové pole pro vložení hesla. Contao k tomu automaticky přidá druhé pole, v němž se musí ještě jednou uvést před tím zadané heslo.</target>
-      </trans-unit>
-      <trans-unit id="FFL.textarea.0">
-        <source>Textarea</source>
-        <target>Textová oblast</target>
-      </trans-unit>
-      <trans-unit id="FFL.textarea.1">
-        <source>A multi-line input field for a medium or long text.</source>
-        <target>víceřádkové pole, do něhož se může zadat delší text (např. sdělení).</target>
-      </trans-unit>
-      <trans-unit id="FFL.select.0">
-        <source>Select menu</source>
-        <target>Rozvírací menu</target>
-      </trans-unit>
-      <trans-unit id="FFL.select.1">
-        <source>A single- or multi-line drop-down menu.</source>
-        <target>jedno- nebo víceřádkové rozevírací menu.</target>
-      </trans-unit>
-      <trans-unit id="FFL.radio.0">
-        <source>Radio button menu</source>
-        <target>Výběrové tlačítko</target>
-      </trans-unit>
-      <trans-unit id="FFL.radio.1">
-        <source>A list of multiple options from which one can be selected.</source>
-        <target>seznam výběrových tlačítek, z nichž jen jedno může být označeno.</target>
-      </trans-unit>
-      <trans-unit id="FFL.checkbox.0">
-        <source>Checkbox menu</source>
-        <target>Zaškrtávací políčko</target>
-      </trans-unit>
-      <trans-unit id="FFL.checkbox.1">
-        <source>A list of multiple options from which any can be selected.</source>
-        <target>seznam různých možností</target>
-      </trans-unit>
-      <trans-unit id="FFL.upload.0">
-        <source>File upload</source>
-        <target>Přenos souborů</target>
-      </trans-unit>
-      <trans-unit id="FFL.upload.1">
-        <source>A single-line input field to upload a local file to the server.</source>
-        <target>jednořádkové pole na nahrání a přenos souborů na server přes formulář.</target>
-      </trans-unit>
-      <trans-unit id="FFL.hidden.0">
-        <source>Hidden field</source>
-        <target>Skryté pole</target>
-      </trans-unit>
-      <trans-unit id="FFL.hidden.1">
-        <source>A single-line input field that is not visible in the form.</source>
-        <target>jednořádkové pole, které je skryté.</target>
-      </trans-unit>
-      <trans-unit id="FFL.captcha.0">
-        <source>Security question</source>
-        <target>Bezpečnostní otázka</target>
-      </trans-unit>
-      <trans-unit id="FFL.captcha.1">
-        <source>A simple math question to verify that the form is being submitted by a human (CAPTCHA).</source>
-        <target>Jednoduchá výpočetní otázka, kterou musí před odesláním vypočítat osoba vyplňující formulář.</target>
-      </trans-unit>
-      <trans-unit id="FFL.submit.0">
-        <source>Submit field</source>
-        <target>Tlačítko &quot;odeslat&quot;</target>
-      </trans-unit>
-      <trans-unit id="FFL.submit.1">
-        <source>A button to submit the form.</source>
-        <target>tlačítko pro odeslání formuláře.</target>
-      </trans-unit>
       <trans-unit id="tl_form_field.type.0">
         <source>Field type</source>
         <target>Typ polí</target>
@@ -291,6 +179,12 @@
       </trans-unit>
       <trans-unit id="tl_form_field.maxval.1">
         <source>Here you can set the maximum value for numeric fields.</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.step.0">
+        <source>Step</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.step.1">
+        <source>Here you can set the discrete step size of the field.</source>
       </trans-unit>
       <trans-unit id="tl_form_field.size.0">
         <source>Rows and columns</source>

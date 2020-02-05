@@ -23,10 +23,11 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-class ContaoUserProvider implements UserProviderInterface
+class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
     /**
      * @var ContaoFramework
@@ -63,9 +64,6 @@ class ContaoUserProvider implements UserProviderInterface
         $this->logger = $logger;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function loadUserByUsername($username): User
     {
         $this->framework->initialize();
@@ -81,9 +79,6 @@ class ContaoUserProvider implements UserProviderInterface
         throw new UsernameNotFoundException(sprintf('Could not find user "%s"', $username));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function refreshUser(UserInterface $user)
     {
         if (!is_a($user, $this->userClass)) {
@@ -98,12 +93,22 @@ class ContaoUserProvider implements UserProviderInterface
         return $user;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsClass($class): bool
     {
         return $this->userClass === $class;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function upgradePassword(UserInterface $user, string $newEncodedPassword): void
+    {
+        if (!is_a($user, $this->userClass)) {
+            throw new UnsupportedUserException(sprintf('Unsupported class "%s".', \get_class($user)));
+        }
+
+        $user->password = $newEncodedPassword;
+        $user->save();
     }
 
     /**
@@ -121,7 +126,7 @@ class ContaoUserProvider implements UserProviderInterface
         $config = $this->framework->getAdapter(Config::class);
         $timeout = (int) $config->get('sessionTimeout');
 
-        if ($timeout > 0 && (time() - $this->session->getMetadataBag()->getLastUsed()) < $timeout) {
+        if ($timeout > 0 && time() - $this->session->getMetadataBag()->getLastUsed() < $timeout) {
             return;
         }
 

@@ -107,7 +107,7 @@
       </trans-unit>
       <trans-unit id="tl_module.featured">
         <source>Show featured news items only</source>
-        <target>Rādīt tikai zīmīgos ziņu objektus</target>
+        <target>Rādīt tikai zīmīgos jaunumu vienumus</target>
       </trans-unit>
       <trans-unit id="tl_module.unfeatured">
         <source>Skip featured news items</source>

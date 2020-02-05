@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -39,7 +39,7 @@ class ClearSessionDataListenerTest extends TestCase
         $request = new Request();
         $request->setSession($session);
 
-        $event = new FilterResponseEvent(
+        $event = new ResponseEvent(
             $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MASTER_REQUEST,
@@ -52,7 +52,7 @@ class ClearSessionDataListenerTest extends TestCase
         $_SESSION['FORM_DATA'] = ['foo' => 'bar', 'SUBMITTED_AT' => $submittedAt];
 
         $listener = new ClearSessionDataListener();
-        $listener->onKernelResponse($event);
+        $listener($event);
 
         if ($shouldClear) {
             $this->assertArrayNotHasKey('FORM_DATA', $_SESSION);
@@ -111,7 +111,7 @@ class ClearSessionDataListenerTest extends TestCase
             ->method('isMethod')
         ;
 
-        $event = new FilterResponseEvent(
+        $event = new ResponseEvent(
             $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::SUB_REQUEST,
@@ -119,7 +119,7 @@ class ClearSessionDataListenerTest extends TestCase
         );
 
         $listener = new ClearSessionDataListener();
-        $listener->onKernelResponse($event);
+        $listener($event);
     }
 
     public function testDoesNotClearTheFormDataUponPostRequests(): void
@@ -134,7 +134,7 @@ class ClearSessionDataListenerTest extends TestCase
         $request->setSession($session);
         $request->setMethod('POST');
 
-        $event = new FilterResponseEvent(
+        $event = new ResponseEvent(
             $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MASTER_REQUEST,
@@ -142,7 +142,7 @@ class ClearSessionDataListenerTest extends TestCase
         );
 
         $listener = new ClearSessionDataListener();
-        $listener->onKernelResponse($event);
+        $listener($event);
     }
 
     public function testDoesNotClearTheFormDataIfTheSessionIsNotStarted(): void
@@ -157,7 +157,7 @@ class ClearSessionDataListenerTest extends TestCase
         $request = new Request();
         $request->setSession($session);
 
-        $event = new FilterResponseEvent(
+        $event = new ResponseEvent(
             $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MASTER_REQUEST,
@@ -167,7 +167,7 @@ class ClearSessionDataListenerTest extends TestCase
         $_SESSION['FORM_DATA'] = ['foo' => 'bar'];
 
         $listener = new ClearSessionDataListener();
-        $listener->onKernelResponse($event);
+        $listener($event);
 
         $this->assertSame(['foo' => 'bar'], $_SESSION['FORM_DATA']);
     }
@@ -184,7 +184,7 @@ class ClearSessionDataListenerTest extends TestCase
         $request = new Request();
         $request->setSession($session);
 
-        $event = new FilterResponseEvent(
+        $event = new ResponseEvent(
             $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MASTER_REQUEST,
@@ -196,7 +196,7 @@ class ClearSessionDataListenerTest extends TestCase
         $_SESSION['FE_DATA']->set('foo', 'bar');
 
         $listener = new ClearSessionDataListener();
-        $listener->onKernelResponse($event);
+        $listener($event);
 
         $this->assertArrayNotHasKey('BE_DATA', $_SESSION);
         $this->assertArrayHasKey('FE_DATA', $_SESSION);
