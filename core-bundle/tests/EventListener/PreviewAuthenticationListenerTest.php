@@ -19,8 +19,10 @@ use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PreviewAuthenticationListenerTest extends TestCase
@@ -30,14 +32,15 @@ class PreviewAuthenticationListenerTest extends TestCase
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $tokenChecker = $this->createMock(TokenChecker::class);
         $router = $this->createMock(UrlGeneratorInterface::class);
+        $uriSigner = $this->createMock(UriSigner::class);
         $previewScript = '';
 
-        $responseEvent = $this->getResponseEvent();
+        $requestEvent = $this->getRequestEvent();
 
-        $listener = new PreviewAuthenticationListener($scopeMatcher, $tokenChecker, $router, $previewScript);
-        $listener->onKernelRequest($responseEvent);
+        $listener = new PreviewAuthenticationListener($scopeMatcher, $tokenChecker, $router, $uriSigner, $previewScript);
+        $listener($requestEvent);
 
-        $this->assertNull($responseEvent->getResponse());
+        $this->assertNull($requestEvent->getResponse());
     }
 
     public function testRedirectsToLoginIfNoBackendUserIsAuthenticated(): void
@@ -64,19 +67,26 @@ class PreviewAuthenticationListenerTest extends TestCase
             ->willReturn('/contao/login')
         ;
 
+        $uriSigner = $this->createMock(UriSigner::class);
+        $uriSigner
+            ->expects($this->once())
+            ->method('sign')
+            ->willReturn('/contao/login')
+        ;
+
         $previewScript = '/preview.php';
 
         $request = new Request([], [], [], [], [], ['SCRIPT_NAME' => '/preview.php']);
 
-        $responseEvent = $this->getResponseEvent($request);
+        $requestEvent = $this->getRequestEvent($request);
 
-        $listener = new PreviewAuthenticationListener($scopeMatcher, $tokenChecker, $router, $previewScript);
-        $listener->onKernelRequest($responseEvent);
+        $listener = new PreviewAuthenticationListener($scopeMatcher, $tokenChecker, $router, $uriSigner, $previewScript);
+        $listener($requestEvent);
 
-        $this->assertInstanceOf(RedirectResponse::class, $responseEvent->getResponse());
+        $this->assertInstanceOf(RedirectResponse::class, $requestEvent->getResponse());
     }
 
-    private function getResponseEvent(Request $request = null, bool $isSubRequest = false): GetResponseEvent
+    private function getRequestEvent(Request $request = null, bool $isSubRequest = false): RequestEvent
     {
         $kernel = $this->createMock(KernelInterface::class);
 
@@ -86,6 +96,6 @@ class PreviewAuthenticationListenerTest extends TestCase
 
         $type = $isSubRequest ? HttpKernelInterface::SUB_REQUEST : HttpKernelInterface::MASTER_REQUEST;
 
-        return new GetResponseEvent($kernel, $request, $type);
+        return new RequestEvent($kernel, $request, $type);
     }
 }
