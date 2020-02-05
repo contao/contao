@@ -18,7 +18,6 @@ use Contao\ManagerBundle\DependencyInjection\ContaoManagerExtension;
 use Contao\ManagerBundle\EventListener\BackendMenuListener;
 use Contao\ManagerBundle\EventListener\InitializeApplicationListener;
 use Contao\ManagerBundle\EventListener\InstallCommandListener;
-use Contao\ManagerBundle\EventListener\PreviewAuthenticationListener;
 use Contao\ManagerBundle\Routing\RouteLoader;
 use Contao\ManagerBundle\Security\Logout\LogoutHandler;
 use PHPUnit\Framework\TestCase;
@@ -122,38 +121,6 @@ class ContaoManagerExtensionTest extends TestCase
             [
                 'kernel.event_listener' => [
                     [],
-                ],
-            ],
-            $definition->getTags()
-        );
-    }
-
-    public function testRegistersThePreviewAuthenticationListener(): void
-    {
-        $this->assertTrue($this->container->has('contao_manager.listener.preview_authentication'));
-
-        $definition = $this->container->getDefinition('contao_manager.listener.preview_authentication');
-
-        $this->assertSame(PreviewAuthenticationListener::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
-
-        $this->assertEquals(
-            [
-                new Reference('contao.routing.scope_matcher'),
-                new Reference('contao.security.token_checker'),
-                new Reference('router'),
-                new Reference('uri_signer'),
-                new Reference('%contao.preview_script%'),
-            ],
-            $definition->getArguments()
-        );
-
-        $this->assertSame(
-            [
-                'kernel.event_listener' => [
-                    [
-                        'priority' => 7,
-                    ],
                 ],
             ],
             $definition->getTags()
