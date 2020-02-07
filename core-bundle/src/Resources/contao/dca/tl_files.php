@@ -821,8 +821,9 @@ class tl_files extends Contao\Backend
 
 			$count = 0;
 			$strName = basename($strPath);
+			$strNewPath = str_replace($strName, Contao\Input::post('name'), $strPath, $count);
 
-			if ($count > 0 && ($strNewPath = str_replace($strName, Contao\Input::post('name'), $strPath, $count)) && is_dir($rootDir . '/' . $strNewPath))
+			if ($strNewPath && $count > 0 && is_dir($rootDir . '/' . $strNewPath))
 			{
 				$strPath = $strNewPath;
 			}
