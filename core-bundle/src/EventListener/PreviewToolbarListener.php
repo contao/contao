@@ -105,7 +105,7 @@ class PreviewToolbarListener
         $toolbar = $this->twig->render(
             '@ContaoCore/Frontend/preview_toolbar_base_js.html.twig',
             [
-                'action' => $this->router->generate('contao_backend_preview_switch'),
+                'action' => $this->router->generate('contao_backend_switch'),
                 'request' => $request,
             ]
         );
