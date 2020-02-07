@@ -14,6 +14,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
+use Contao\CoreBundle\Security\TwoFactor\TrustedDeviceManager;
 use ParagonIE\ConstantTime\Base32;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
@@ -54,6 +55,8 @@ class ModuleTwoFactor extends BackendModule
 			Message::addInfo($GLOBALS['TL_LANG']['MSC']['twoFactorEnforced']);
 		}
 
+		/** @var TrustedDeviceManager $trustedDeviceManager */
+		$trustedDeviceManager = $container->get('contao.security.two_factor.trusted_device_manager');
 		$ref = $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
 		$return = $container->get('router')->generate('contao_backend', array('do'=>'security', 'ref'=>$ref));
 
@@ -90,7 +93,7 @@ class ModuleTwoFactor extends BackendModule
 
 		if (Input::post('FORM_SUBMIT') == 'tl_two_factor_clear_trusted_devices')
 		{
-			$container->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
+			$trustedDeviceManager->clearTrustedDevices($user);
 		}
 
 		/** @var Request $request */
@@ -99,7 +102,7 @@ class ModuleTwoFactor extends BackendModule
 		$this->Template->isEnabled = (bool) $user->useTwoFactor;
 		$this->Template->backupCodes = json_decode((string) $user->backupCodes, true) ?? array();
 		$this->Template->trustedDevices = $container->get('contao.security.two_factor.trusted_device_manager')->getTrustedDevices($user);
-		$this->Template->currentDevice = $request->cookies->get($container->getParameter('scheb_two_factor.trusted_device.cookie_name'));
+		$this->Template->currentDevice = $trustedDeviceManager->getCurrentTrustedDevice($user);
 	}
 
 	/**

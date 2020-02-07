@@ -16,8 +16,12 @@ use Contao\CoreBundle\Entity\TrustedDevice;
 use Contao\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\JwtTokenEncoder;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManagerInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceToken;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceTokenStorage;
+use Symfony\Bundle\SecurityBundle\Security\FirewallConfig;
+use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
 use Symfony\Component\HttpFoundation\RequestStack;
 use UAParser\Parser;
 
@@ -38,11 +42,23 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
      */
     private $entityManager;
 
-    public function __construct(RequestStack $requestStack, TrustedDeviceTokenStorage $trustedTokenStorage, EntityManagerInterface $entityManager)
+    /**
+     * @var JwtTokenEncoder
+     */
+    private $jwtTokenEncoder;
+
+    /**
+     * @var FirewallMap
+     */
+    private $firewallMap;
+
+    public function __construct(RequestStack $requestStack, TrustedDeviceTokenStorage $trustedTokenStorage, EntityManagerInterface $entityManager, JwtTokenEncoder $jwtTokenEncoder, FirewallMap $firewallMap)
     {
         $this->requestStack = $requestStack;
         $this->trustedTokenStorage = $trustedTokenStorage;
         $this->entityManager = $entityManager;
+        $this->jwtTokenEncoder = $jwtTokenEncoder;
+        $this->firewallMap = $firewallMap;
     }
 
     public function addTrustedDevice($user, string $firewallName): void
@@ -52,29 +68,29 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
         }
 
         $version = (int) $user->trustedTokenVersion;
-        $oldCookieValue = $this->trustedTokenStorage->getCookieValue();
         $userAgent = $this->requestStack->getMasterRequest()->headers->get('User-Agent');
 
         $parser = Parser::create();
         $parsedUserAgent = $parser->parse($userAgent);
 
         $this->trustedTokenStorage->addTrustedToken($user->username, $firewallName, $version);
+        $currentTrustedDeviceToken = $this->getCurrentTrustedDeviceToken($user);
 
         // Check if already an earlier version of the trusted device exists
-        try {
-            $trustedDevice = $this->findExistingTrustedDevice((int) $user->id, $oldCookieValue, $version) ?? new TrustedDevice($user, $version);
-        } catch (NonUniqueResultException $exception) {
-            $trustedDevice = new TrustedDevice($user, $version);
-        }
+        $trustedDevice = $this->getCurrentTrustedDevice($user) ?? new TrustedDevice($user, $version);
 
         $trustedDevice
             ->setCreated(new \DateTime())
-            ->setCookieValue($this->trustedTokenStorage->getCookieValue())
             ->setUserAgent($userAgent)
             ->setUaFamily($parsedUserAgent->ua->family)
             ->setOsFamily($parsedUserAgent->os->family)
             ->setDeviceFamily($parsedUserAgent->device->family)
         ;
+
+        // Store the serialized cookie value if available
+        if ($currentTrustedDeviceToken instanceof TrustedDeviceToken) {
+            $trustedDevice->setCookieValue($currentTrustedDeviceToken->serialize());
+        }
 
         $this->entityManager->persist($trustedDevice);
         $this->entityManager->flush();
@@ -136,5 +152,55 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
             ->getQuery()
             ->getOneOrNullResult()
         ;
+    }
+
+    public function getCurrentTrustedDevice(User $user): ?TrustedDevice
+    {
+        $trustedDeviceToken = $this->getCurrentTrustedDeviceToken($user);
+
+        if ($trustedDeviceToken instanceof TrustedDeviceToken) {
+            try {
+                return $this->findExistingTrustedDevice((int) $user->id, $trustedDeviceToken->serialize(), (int) $user->trustedTokenVersion);
+            } catch (NonUniqueResultException $exception) {
+                return null;
+            }
+        }
+
+        return null;
+    }
+
+    public function getCurrentTrustedDeviceToken(User $user): ?TrustedDeviceToken
+    {
+        $trustedTokenList = $this->getTrustedTokenList();
+
+        /** @var FirewallConfig $firewallConfig */
+        $firewallConfig = $this->firewallMap->getFirewallConfig($this->requestStack->getMasterRequest());
+
+        /** @var TrustedDeviceToken $token */
+        foreach ($trustedTokenList as $token) {
+            if ($token->versionMatches((int) $user->trustedTokenVersion) && $token->authenticatesRealm($user->username, $firewallConfig->getName())) {
+                return $token;
+            }
+        }
+
+        return null;
+    }
+
+    private function getTrustedTokenList(): array
+    {
+        $cookie = $this->trustedTokenStorage->getCookieValue();
+
+        $trustedTokenList = [];
+        $trustedTokenEncodedList = explode(TrustedDeviceTokenStorage::TOKEN_DELIMITER, $cookie);
+
+        foreach ($trustedTokenEncodedList as $trustedTokenEncoded) {
+            $trustedToken = $this->jwtTokenEncoder->decodeToken($trustedTokenEncoded);
+
+            if ($trustedToken && !$trustedToken->isExpired()) {
+                $trustedTokenList[] = new TrustedDeviceToken($trustedToken);
+            }
+        }
+
+        return $trustedTokenList;
     }
 }

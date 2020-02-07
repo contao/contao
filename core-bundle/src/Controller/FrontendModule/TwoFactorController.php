@@ -86,6 +86,9 @@ class TwoFactorController extends AbstractFrontendModuleController
         /** @var PageModel $adapter */
         $adapter = $this->get('contao.framework')->getAdapter(PageModel::class);
 
+        /** @var TrustedDeviceManager $trustedDeviceManager */
+        $trustedDeviceManager = $this->get('contao.security.two_factor.trusted_device_manager');
+
         $redirectPage = $model->jumpTo > 0 ? $adapter->findByPk($model->jumpTo) : null;
         $return = $redirectPage instanceof PageModel ? $redirectPage->getAbsoluteUrl() : $this->page->getAbsoluteUrl();
 
@@ -130,14 +133,14 @@ class TwoFactorController extends AbstractFrontendModuleController
         }
 
         if ('tl_two_factor_clear_trusted_devices' === $request->request->get('FORM_SUBMIT')) {
-            $this->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
+            $trustedDeviceManager->clearTrustedDevices($user);
         }
 
         $template->isEnabled = (bool) $user->useTwoFactor;
         $template->href = $this->page->getAbsoluteUrl().'?2fa=enable';
         $template->backupCodes = json_decode((string) $user->backupCodes, true) ?? [];
-        $template->trustedDevices = $this->get('contao.security.two_factor.trusted_device_manager')->getTrustedDevices($user);
-        $template->currentDevice = $request->cookies->get($this->getParameter('scheb_two_factor.trusted_device.cookie_name'));
+        $template->trustedDevices = $trustedDeviceManager->getTrustedDevices($user);
+        $template->currentDevice = $trustedDeviceManager->getCurrentTrustedDevice($user);
 
         return new Response($template->parse());
     }

@@ -722,6 +722,8 @@ services:
             - '@request_stack'
             - '@scheb_two_factor.trusted_token_storage'
             - '@doctrine.orm.entity_manager'
+            - '@scheb_two_factor.trusted_jwt_encoder'
+            - '@security.firewall.map'
         public: true
 
     contao.security.user_checker:

@@ -16,7 +16,9 @@ use Contao\BackendUser;
 use Contao\CoreBundle\Security\TwoFactor\TrustedDeviceManager;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\ORM\EntityManagerInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\JwtTokenEncoder;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceTokenStorage;
+use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -40,7 +42,9 @@ class TrustedDeviceManagerTest extends TestCase
         $manager = new TrustedDeviceManager(
             $this->createMock(RequestStack::class),
             $tokenStorage,
-            $this->createMock(EntityManagerInterface::class)
+            $this->createMock(EntityManagerInterface::class),
+            $this->createMock(JwtTokenEncoder::class),
+            $this->createMock(FirewallMap::class)
         );
 
         $this->assertTrue($manager->isTrustedDevice($user, 'contao_backend'));
@@ -57,7 +61,9 @@ class TrustedDeviceManagerTest extends TestCase
         $manager = new TrustedDeviceManager(
             $this->createMock(RequestStack::class),
             $tokenStorage,
-            $this->createMock(EntityManagerInterface::class)
+            $this->createMock(EntityManagerInterface::class),
+            $this->createMock(JwtTokenEncoder::class),
+            $this->createMock(FirewallMap::class)
         );
 
         $this->assertFalse($manager->isTrustedDevice($this->createMock(UserInterface::class), 'contao_backend'));

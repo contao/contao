@@ -56,7 +56,7 @@ use Symfony\Component\VarDumper\VarDumper;
  * @property array        $backupCodes
  * @property boolean      $trustedDevicesEnabled
  * @property array        $trustedDevices
- * @property string       $currentDevice
+ * @property object       $currentDevice
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */

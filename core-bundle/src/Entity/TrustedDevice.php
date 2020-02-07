@@ -52,9 +52,9 @@ class TrustedDevice
     protected $userId;
 
     /**
-     * @var string
+     * @var string|null
      *
-     * @ORM\Column(type="text", name="cookie_value")
+     * @ORM\Column(type="text", name="cookie_value", nullable=true)
      */
     protected $cookieValue;
 
@@ -135,7 +135,7 @@ class TrustedDevice
         return $this->cookieValue;
     }
 
-    public function setCookieValue(string $cookieValue): self
+    public function setCookieValue(?string $cookieValue): self
     {
         $this->cookieValue = $cookieValue;
 
