@@ -57,7 +57,12 @@ class Crawl extends Backend implements \executable
 		$factory = System::getContainer()->get('contao.crawl.escargot_factory');
 		$subscriberNames = $factory->getSubscriberNames();
 		$subscribersWidget = $this->generateSubscribersWidget($subscriberNames);
-		$memberWidget = $this->generateMemberWidget();
+		$memberWidget = null;
+
+		if (System::getContainer()->getParameter('contao.search.index_protected'))
+		{
+			$memberWidget = $this->generateMemberWidget();
+		}
 
 		$template = new BackendTemplate('be_crawl');
 		$template->isActive = $this->isActive();
@@ -102,7 +107,7 @@ class Crawl extends Backend implements \executable
 		/** @var FrontendPreviewAuthenticator $objAuthenticator */
 		$objAuthenticator = System::getContainer()->get('contao.security.frontend_preview_authenticator');
 
-		if ($memberWidget->value)
+		if ($memberWidget && $memberWidget->value)
 		{
 			$objMember = Database::getInstance()->prepare('SELECT username FROM tl_member WHERE id=?')
 												->execute((int) $memberWidget->value);
