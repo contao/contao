@@ -64,6 +64,7 @@ use Contao\CoreBundle\EventListener\Menu\BackendMenuListener;
 use Contao\CoreBundle\EventListener\Menu\BackendPreviewListener;
 use Contao\CoreBundle\EventListener\MergeHttpHeadersListener;
 use Contao\CoreBundle\EventListener\PrettyErrorScreenListener;
+use Contao\CoreBundle\EventListener\PreviewAuthenticationListener;
 use Contao\CoreBundle\EventListener\PreviewToolbarListener;
 use Contao\CoreBundle\EventListener\PreviewUrlConvertListener;
 use Contao\CoreBundle\EventListener\RefererIdListener;
@@ -3392,6 +3393,38 @@ class ContaoCoreExtensionTest extends TestCase
         );
 
         $this->assertFalse($this->container->has('contao.listener.search_index'));
+    }
+
+    public function testRegistersThePreviewAuthenticationListener(): void
+    {
+        $this->assertTrue($this->container->has('contao.listener.preview_authentication'));
+
+        $definition = $this->container->getDefinition('contao.listener.preview_authentication');
+
+        $this->assertSame(PreviewAuthenticationListener::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('contao.routing.scope_matcher'),
+                new Reference('contao.security.token_checker'),
+                new Reference('router'),
+                new Reference('uri_signer'),
+                new Reference('%contao.preview_script%'),
+            ],
+            $definition->getArguments()
+        );
+
+        $this->assertSame(
+            [
+                'kernel.event_listener' => [
+                    [
+                        'priority' => 7,
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     /**
