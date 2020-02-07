@@ -52,13 +52,6 @@ class TrustedDevice
     protected $userId;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     */
-    protected $version;
-
-    /**
      * @var string|null
      *
      * @ORM\Column(type="text", name="user_agent", nullable=true)
@@ -86,10 +79,9 @@ class TrustedDevice
      */
     protected $deviceFamily;
 
-    public function __construct(User $user, int $version)
+    public function __construct(User $user)
     {
         $this->userId = (int) $user->id;
-        $this->version = $version;
         $this->created = new \DateTime();
         $this->userClass = \get_class($user);
     }
@@ -121,11 +113,6 @@ class TrustedDevice
     public function getUserId(): int
     {
         return $this->userId;
-    }
-
-    public function getVersion(): int
-    {
-        return $this->version;
     }
 
     public function setUserAgent(?string $userAgent): self

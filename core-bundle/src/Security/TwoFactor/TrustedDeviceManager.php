@@ -58,7 +58,7 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
 
         $this->trustedTokenStorage->addTrustedToken((string) $user->id, $firewallName, $version);
 
-        $trustedDevice = new TrustedDevice($user, $version);
+        $trustedDevice = new TrustedDevice($user);
         $trustedDevice
             ->setCreated(new \DateTime())
             ->setUserAgent($userAgent)
