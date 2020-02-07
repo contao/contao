@@ -214,6 +214,6 @@ class MemberModel extends \Model
 	{
 		$t = static::$strTable;
 
-		return static::findOneBy(array("$t.email=? AND $t.activation LIKE 'RG%'"), $strEmail, $arrOptions);
+		return static::findOneBy(array("$t.email=? AND $t.activation LIKE 'RG%' AND disable='1'"), $strEmail, $arrOptions);
 	}
 }
