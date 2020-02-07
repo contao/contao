@@ -51,7 +51,7 @@ class Result
 	 * Result set
 	 * @var array
 	 */
-	protected $resultSet = [];
+	protected $resultSet = array();
 
 	/**
 	 * Current row index
@@ -94,7 +94,8 @@ class Result
 	 */
 	public function __destruct()
 	{
-		if ($this->resResult) {
+		if ($this->resResult)
+		{
 			$this->resResult->closeCursor();
 		}
 	}
@@ -193,7 +194,8 @@ class Result
 	 */
 	public function fetchRow()
 	{
-		if ($row = $this->fetchAssoc()) {
+		if ($row = $this->fetchAssoc())
+		{
 			return array_values($row);
 		}
 
@@ -402,7 +404,7 @@ class Result
 	 */
 	private function preload($index)
 	{
-		while($this->resResult && \count($this->resultSet) <= $index)
+		while ($this->resResult && \count($this->resultSet) <= $index)
 		{
 			$row = $this->resResult->fetch(\PDO::FETCH_ASSOC);
 
