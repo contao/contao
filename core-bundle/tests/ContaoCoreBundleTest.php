@@ -18,8 +18,8 @@ use Contao\CoreBundle\DependencyInjection\Compiler\AddCronJobsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddSessionBagsPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\CrawlerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\DataContainerCallbackPass;
-use Contao\CoreBundle\DependencyInjection\Compiler\EscargotSubscriberPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\MakeServicesPublicPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\MapFragmentsToGlobalsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\PickerProviderPass;
@@ -65,7 +65,7 @@ class ContaoCoreBundleTest extends TestCase
             TranslationDataCollectorPass::class,
             RegisterHookListenersPass::class,
             SearchIndexerPass::class,
-            EscargotSubscriberPass::class,
+            CrawlerPass::class,
             AddCronJobsPass::class,
         ];
 

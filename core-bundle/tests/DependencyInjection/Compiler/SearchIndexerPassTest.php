@@ -33,6 +33,7 @@ class SearchIndexerPassTest extends TestCase
         $container->setDefinition('contao.search.super-indexer', $definition);
 
         $container->setDefinition('contao.listener.search_index', new Definition());
+        $container->setDefinition('contao.crawl.escargot_subscriber.search_index', new Definition());
 
         $pass = new SearchIndexerPass();
         $pass->process($container);
@@ -44,9 +45,11 @@ class SearchIndexerPassTest extends TestCase
         $this->assertInstanceOf(Reference::class, $methodCalls[0][1][0]);
 
         $this->assertTrue($container->hasDefinition('contao.listener.search_index'));
+        $this->assertTrue($container->hasDefinition('contao.crawl.escargot_subscriber.search_index'));
+        $this->assertTrue($container->hasAlias('contao.search.indexer'));
     }
 
-    public function testRemovesTheDelegatingIndexerAndDisablesTheListenerIfNoIndexersWereGiven(): void
+    public function testRemovesTheDelegatingIndexerAndDisablesTheListenerAndCrawlSubscriberIfNoIndexersWereGiven(): void
     {
         $container = new ContainerBuilder();
 
@@ -55,11 +58,14 @@ class SearchIndexerPassTest extends TestCase
         $container->setDefinition('contao.search.indexer.delegating', $delegatingDefinition);
 
         $container->setDefinition('contao.listener.search_index', new Definition());
+        $container->setDefinition('contao.crawl.escargot_subscriber.search_index', new Definition());
 
         $pass = new SearchIndexerPass();
         $pass->process($container);
 
         $this->assertFalse($container->hasDefinition('contao.search.indexer.delegating'));
         $this->assertFalse($container->hasDefinition('contao.listener.search_index'));
+        $this->assertFalse($container->hasDefinition('contao.crawl.escargot_subscriber.search_index'));
+        $this->assertFalse($container->hasAlias('contao.search.indexer'));
     }
 }

@@ -581,10 +581,6 @@ services:
     contao.search.indexer.delegating:
         class: Contao\CoreBundle\Search\Indexer\DelegatingIndexer
 
-    contao.search.indexer:
-        alias: 'contao.search.indexer.delegating'
-        public: true
-
     contao.security.authentication_failure_handler:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler
         arguments:
