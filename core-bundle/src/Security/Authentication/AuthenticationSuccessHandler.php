@@ -27,6 +27,7 @@ use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
@@ -136,7 +137,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
     protected function determineTargetUrl(Request $request): string
     {
         if (!$this->user instanceof FrontendUser || $request->request->get('_always_use_target_path')) {
-            return base64_decode($request->request->get('_target_path'), true);
+            return $this->decodeTargetPath($request);
         }
 
         /** @var PageModel $pageModelAdapter */
@@ -148,7 +149,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
             return $groupPage->getAbsoluteUrl();
         }
 
-        return base64_decode($request->request->get('_target_path'), true);
+        return $this->decodeTargetPath($request);
     }
 
     private function triggerPostLoginHook(): void
@@ -167,5 +168,16 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         foreach ($GLOBALS['TL_HOOKS']['postLogin'] as $callback) {
             $system->importStatic($callback[0])->{$callback[1]}($this->user);
         }
+    }
+
+    private function decodeTargetPath(Request $request): string
+    {
+        $targetPath = $request->request->get('_target_path');
+
+        if (null === $targetPath) {
+            throw new BadRequestHttpException('Missing form field "_target_path". You probably need to adjust your custom login template.');
+        }
+
+        return base64_decode($targetPath, true);
     }
 }
