@@ -126,3 +126,8 @@ fos_http_cache:
         annotations:
             enabled: false
         max_header_value_length: 4096
+
+# TwoFactor configuration
+scheb_two_factor:
+    trusted_device:
+        lifetime: 15768000 # 15768000 seconds corresponds to six months

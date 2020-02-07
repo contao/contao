@@ -113,7 +113,9 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
             /** @var FirewallConfig $firewallConfig */
             $firewallConfig = $this->firewallMap->getFirewallConfig($request);
 
-            $this->trustedDeviceManager->addTrustedDevice($token->getUser(), $firewallConfig->getName());
+            if (!$this->trustedDeviceManager->isTrustedDevice($user, $firewallConfig->getName())) {
+                $this->trustedDeviceManager->addTrustedDevice($token->getUser(), $firewallConfig->getName());
+            }
         }
 
         $response = new RedirectResponse($this->determineTargetUrl($request));

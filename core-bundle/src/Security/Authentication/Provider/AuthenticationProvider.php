@@ -123,9 +123,6 @@ class AuthenticationProvider extends DaoAuthenticationProvider
 
         // Skip two-factor authentication on trusted devices
         if ($this->trustedDeviceManager->isTrustedDevice($user, $firewallName)) {
-            // Renew the token
-            $this->trustedDeviceManager->addTrustedDevice($user, $firewallName);
-
             return $context->getToken();
         }
 

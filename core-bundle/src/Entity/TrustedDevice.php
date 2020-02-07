@@ -52,13 +52,6 @@ class TrustedDevice
     protected $userId;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(type="text", name="cookie_value")
-     */
-    protected $cookieValue;
-
-    /**
      * @var int
      *
      * @ORM\Column(type="integer")
@@ -128,18 +121,6 @@ class TrustedDevice
     public function getUserId(): int
     {
         return $this->userId;
-    }
-
-    public function getCookieValue(): string
-    {
-        return $this->cookieValue;
-    }
-
-    public function setCookieValue(string $cookieValue): self
-    {
-        $this->cookieValue = $cookieValue;
-
-        return $this;
     }
 
     public function getVersion(): int
