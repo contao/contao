@@ -50,13 +50,12 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
             return;
         }
 
-        $version = (int) $user->trustedTokenVersion;
         $userAgent = $this->requestStack->getMasterRequest()->headers->get('User-Agent');
 
         $parser = Parser::create();
         $parsedUserAgent = $parser->parse($userAgent);
 
-        $this->trustedTokenStorage->addTrustedToken((string) $user->id, $firewallName, $version);
+        $this->trustedTokenStorage->addTrustedToken((string) $user->id, $firewallName, (int) $user->trustedTokenVersion);
 
         $trustedDevice = new TrustedDevice($user);
         $trustedDevice
