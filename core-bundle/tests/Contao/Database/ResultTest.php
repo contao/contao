@@ -38,6 +38,40 @@ class ResultTest extends TestCase
         $this->assertFalse($result->fetchRow());
     }
 
+    public function testSingleRow()
+    {
+        $data = [
+            ['field' => 'value1'],
+        ];
+
+        $result = new Result(new DoctrineArrayStatement($data), 'SELECT from test');
+
+        $this->assertFalse($result->isModified);
+        $this->assertSame(1, $result->numFields);
+        $this->assertSame(1, $result->numRows);
+        $this->assertSame('SELECT from test', $result->query);
+        $this->assertSame(1, $result->count());
+        $this->assertSame($data, $result->fetchAllAssoc());
+        $this->assertSame($data[0], $result->reset()->fetchAssoc());
+        $this->assertFalse($result->fetchAssoc());
+        $this->assertSame(['value1'], $result->fetchEach('field'));
+        $this->assertSame(array_values($data[0]), $result->reset()->fetchRow());
+        $this->assertFalse($result->fetchRow());
+
+        $this->assertSame($data[0], $result->reset()->row());
+        $this->assertSame(array_values($data[0]), $result->last()->row(true));
+
+        $this->assertSame('value1', $result->first()->field);
+        $this->assertFalse($result->prev());
+        $this->assertSame('value1', $result->last()->field);
+        $this->assertFalse($result->next());
+
+        $result->field = 'new value';
+        $this->assertSame('new value', $result->field);
+        $this->assertSame(['field' => 'new value'], $result->row());
+        $this->assertSame(['new value'], $result->row(true));
+    }
+
     public function testMultipleRows()
     {
         $data = [

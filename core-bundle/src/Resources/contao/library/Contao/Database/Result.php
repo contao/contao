@@ -408,6 +408,12 @@ class Result
 	 */
 	private function preload($index)
 	{
+		// Optimize memory usage for single row results
+		if ($index === 0 && $this->resResult && $this->resResult->rowCount() === 1)
+		{
+			++$index;
+		}
+
 		while ($this->resResult && \count($this->resultSet) <= $index)
 		{
 			$row = $this->resResult->fetch(\PDO::FETCH_ASSOC);
