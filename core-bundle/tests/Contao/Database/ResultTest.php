@@ -69,6 +69,11 @@ class ResultTest extends TestCase
         $this->assertSame('value1', $result->prev()->field);
         $this->assertSame('value2', $result->last()->field);
         $this->assertFalse($result->next());
+
+        $result->field = 'new value';
+        $this->assertSame('new value', $result->field);
+        $this->assertSame(['field' => 'new value'], $result->row());
+        $this->assertSame(['new value'], $result->row(true));
     }
 
     public function testFetchRowAndAssoc()

@@ -66,16 +66,10 @@ class Result
 	private $rowCount;
 
 	/**
-	 * Modification indicator
-	 * @var boolean
-	 */
-	private $blnModified = false;
-
-	/**
-	 * Result cache
+	 * Modified values of current row
 	 * @var array
 	 */
-	protected $arrCache = array();
+	private $arrModified = array();
 
 	/**
 	 * Validate the connection resource and store the query string
@@ -108,13 +102,12 @@ class Result
 	 */
 	public function __set($strKey, $varValue)
 	{
-		if (empty($this->arrCache))
+		if ($this->intIndex === -1)
 		{
 			$this->next();
 		}
 
-		$this->blnModified = true;
-		$this->arrCache[$strKey] = $varValue;
+		$this->arrModified[$strKey] = $varValue;
 	}
 
 	/**
@@ -126,12 +119,12 @@ class Result
 	 */
 	public function __isset($strKey)
 	{
-		if (empty($this->arrCache))
+		if ($this->intIndex === -1)
 		{
 			$this->next();
 		}
 
-		return isset($this->arrCache[$strKey]);
+		return isset($this->resultSet[$this->intIndex][$strKey]) || isset($this->arrModified[$strKey]);
 	}
 
 	/**
@@ -168,18 +161,22 @@ class Result
 				break;
 
 			case 'isModified':
-				return $this->blnModified;
+				return \count($this->arrModified) !== 0;
 				break;
 
 			default:
-				if (empty($this->arrCache))
+				if ($this->intIndex === -1)
 				{
 					$this->next();
 				}
 
-				if (isset($this->arrCache[$strKey]))
+				if (isset($this->arrModified[$strKey]))
 				{
-					return $this->arrCache[$strKey];
+					return $this->arrModified[$strKey];
+				}
+				if (isset($this->resultSet[$this->intIndex][$strKey]))
+				{
+					return $this->resultSet[$this->intIndex][$strKey];
 				}
 				break;
 		}
@@ -216,9 +213,9 @@ class Result
 			return false;
 		}
 
-		$this->arrCache = $this->resultSet[++$this->intIndex];
+		$this->arrModified = array();
 
-		return $this->arrCache;
+		return $this->resultSet[++$this->intIndex];
 	}
 
 	/**
@@ -290,7 +287,7 @@ class Result
 		$this->intIndex = 0;
 		$this->preload(0);
 
-		$this->arrCache = $this->resultSet[$this->intIndex];
+		$this->arrModified = array();
 
 		return $this;
 	}
@@ -307,9 +304,9 @@ class Result
 			return false;
 		}
 
-		$this->preload($this->intIndex - 1);
+		$this->preload(--$this->intIndex);
 
-		$this->arrCache = $this->resultSet[--$this->intIndex];
+		$this->arrModified = array();
 
 		return $this;
 	}
@@ -339,7 +336,7 @@ class Result
 		$this->intIndex = $this->count() - 1;
 		$this->preload($this->intIndex);
 
-		$this->arrCache = $this->resultSet[$this->intIndex];
+		$this->arrModified = array();
 
 		return $this;
 	}
@@ -375,12 +372,19 @@ class Result
 	 */
 	public function row($blnEnumerated=false)
 	{
-		if (empty($this->arrCache))
+		if ($this->intIndex === -1)
 		{
 			$this->next();
 		}
 
-		return $blnEnumerated ? array_values($this->arrCache) : $this->arrCache;
+		if (!$this->isModified)
+		{
+			return $blnEnumerated ? array_values($this->resultSet[$this->intIndex]) : $this->resultSet[$this->intIndex];
+		}
+
+		$row = array_merge($this->resultSet[$this->intIndex], $this->arrModified);
+
+		return $blnEnumerated ? array_values($row) : $row;
 	}
 
 	/**
@@ -391,7 +395,7 @@ class Result
 	public function reset()
 	{
 		$this->intIndex = -1;
-		$this->arrCache = array();
+		$this->arrModified = array();
 
 		return $this;
 	}
