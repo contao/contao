@@ -75,7 +75,7 @@ class ControllerResolverTest extends TestCase
         $resolver->getArguments(new Request(), '');
     }
 
-    public function testIgnoresControllersThatAreNotString()
+    public function testIgnoresControllersThatAreNotString(): void
     {
         $registry = $this->createMock(FragmentRegistry::class);
         $registry
