@@ -133,7 +133,7 @@ jobs:
                   vendor/bin/phpunit -c news-bundle --colors=always
 
             - name: Run the functional tests
-              run: vendor/bin/phpunit --testsuite=functional --colors=always
+              run: vendor/bin/phpunit -c core-bundle --testsuite=functional --colors=always
               env:
                   DATABASE_URL: mysql://root:root@localhost:3306/contao_test
 
@@ -171,7 +171,7 @@ jobs:
                   vendor/bin/phpunit -c news-bundle --colors=always
 
             - name: Run the functional tests
-              run: vendor/bin/phpunit --testsuite=functional --colors=always
+              run: vendor/bin/phpunit -c core-bundle --testsuite=functional --colors=always
               env:
                   DATABASE_URL: mysql://root:root@localhost:3306/contao_test
 
