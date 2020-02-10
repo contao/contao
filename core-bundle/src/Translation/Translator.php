@@ -17,8 +17,9 @@ use Contao\System;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface as ContractsTranslatorInterface;
 
-class Translator implements TranslatorInterface, TranslatorBagInterface
+class Translator implements TranslatorInterface, ContractsTranslatorInterface, TranslatorBagInterface
 {
     // Reserved translation domains for the Contao bundles
     private const CONTAO_BUNDLES = [

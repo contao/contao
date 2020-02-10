@@ -143,7 +143,6 @@
         "doctrine/doctrine-migrations-bundle": "^1.1",
         "doctrine/event-manager": "^1.0",
         "monolog/monolog": "^1.22",
-        "php-coveralls/php-coveralls": "^2.1",
         "phpstan/extension-installer": "^1.0",
         "phpstan/phpstan": "^0.11",
         "phpstan/phpstan-phpunit": "^0.11.2",
