@@ -1835,7 +1835,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(DataCollectorTranslator::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertNull($definition->getDecoratedService()[0]);
+        $this->assertNull($definition->getDecoratedService());
         $this->assertSame('contao.translation.translator.data_collector.inner', (string) $definition->getArgument(0));
     }
 

@@ -74,7 +74,7 @@ class AddToSearchIndexListenerTest extends TestCase
 
     public function testDoesNotIndexTheResponseIfTheRequestMethodIsNotGet(): void
     {
-        $event = $this->mockPostResponseEvent(null, Request::METHOD_POST);
+        $event = $this->mockPostResponseEvent('', Request::METHOD_POST);
         $event
             ->expects($this->never())
             ->method('getResponse')
@@ -99,7 +99,7 @@ class AddToSearchIndexListenerTest extends TestCase
     /**
      * @return PostResponseEvent&MockObject
      */
-    private function mockPostResponseEvent(string $requestUri = null, string $requestMethod = Request::METHOD_GET): PostResponseEvent
+    private function mockPostResponseEvent(string $requestUri = '', string $requestMethod = Request::METHOD_GET): PostResponseEvent
     {
         $request = new Request();
         $request->setMethod($requestMethod);
