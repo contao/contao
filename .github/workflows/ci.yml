@@ -135,7 +135,10 @@ jobs:
             - name: Run the functional tests
               run: vendor/bin/phpunit -c core-bundle --testsuite=functional --colors=always
               env:
-                  DATABASE_URL: mysql://root:root@localhost:3306/contao_test
+                  DB_HOST: localhost
+                  DB_USER: root
+                  DB_PASS: root
+                  DB_NAME: contao_test
 
     prefer-lowest:
         name: Prefer Lowest
@@ -173,7 +176,10 @@ jobs:
             - name: Run the functional tests
               run: vendor/bin/phpunit -c core-bundle --testsuite=functional --colors=always
               env:
-                  DATABASE_URL: mysql://root:root@localhost:3306/contao_test
+                  DB_HOST: localhost
+                  DB_USER: root
+                  DB_PASS: root
+                  DB_NAME: contao_test
 
     bundles:
         name: Bundles
