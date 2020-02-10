@@ -252,7 +252,7 @@ fieldset.checkbox_container,fieldset.radio_container {
 	width:19%;
 }
 .tl_text,.tl_text_2,.tl_text_3,.tl_text_4,.tl_textarea,.tl_text_unit,.tl_text_trbl,.tl_text_interval {
-	margin:2px 0;
+	margin:3px 0;
 	box-sizing:border-box;
 	padding:5px 6px 6px;
 	border:1px solid #aaa;
