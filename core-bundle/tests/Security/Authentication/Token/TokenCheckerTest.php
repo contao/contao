@@ -70,7 +70,7 @@ class TokenCheckerTest extends TestCase
             $tokenStorage,
             $session,
             $this->trustResolver,
-            $this->mockRoleVoter()
+            $this->getRoleVoter()
         );
 
         if (FrontendUser::class === $class) {
@@ -120,7 +120,7 @@ class TokenCheckerTest extends TestCase
             $tokenStorage,
             $session,
             $this->trustResolver,
-            $this->mockRoleVoter()
+            $this->getRoleVoter()
         );
 
         if (FrontendUser::class === $class) {
@@ -147,7 +147,7 @@ class TokenCheckerTest extends TestCase
             $this->mockTokenStorage(FrontendUser::class),
             $this->mockSessionWithToken($token),
             $this->trustResolver,
-            $this->mockRoleVoter()
+            $this->getRoleVoter()
         );
 
         $this->assertSame('foobar', $tokenChecker->getFrontendUsername());
@@ -164,7 +164,7 @@ class TokenCheckerTest extends TestCase
             $this->mockTokenStorage(BackendUser::class),
             $this->mockSessionWithToken($token),
             $this->trustResolver,
-            $this->mockRoleVoter()
+            $this->getRoleVoter()
         );
 
         $this->assertSame('foobar', $tokenChecker->getBackendUsername());
@@ -194,7 +194,7 @@ class TokenCheckerTest extends TestCase
             $this->mockTokenStorage(BackendUser::class),
             $session,
             $this->trustResolver,
-            $this->mockRoleVoter(),
+            $this->getRoleVoter(),
             '/preview.php'
         );
 
@@ -229,7 +229,7 @@ class TokenCheckerTest extends TestCase
             $this->mockTokenStorage(BackendUser::class),
             $session,
             $this->trustResolver,
-            $this->mockRoleVoter()
+            $this->getRoleVoter()
         );
 
         $this->assertFalse($tokenChecker->hasFrontendUser());
@@ -256,7 +256,7 @@ class TokenCheckerTest extends TestCase
             $this->mockTokenStorage(FrontendUser::class),
             $session,
             $this->trustResolver,
-            $this->mockRoleVoter()
+            $this->getRoleVoter()
         );
 
         $this->assertFalse($tokenChecker->hasBackendUser());
@@ -289,7 +289,7 @@ class TokenCheckerTest extends TestCase
             $this->mockTokenStorage(BackendUser::class),
             $session,
             $this->trustResolver,
-            $this->mockRoleVoter()
+            $this->getRoleVoter()
         );
 
         $this->assertNull($tokenChecker->getFrontendUsername());
@@ -305,7 +305,7 @@ class TokenCheckerTest extends TestCase
             $this->mockTokenStorage(FrontendUser::class),
             $this->mockSessionWithToken($token),
             $this->trustResolver,
-            $this->mockRoleVoter()
+            $this->getRoleVoter()
         );
 
         $this->assertNull($tokenChecker->getBackendUsername());
@@ -321,7 +321,7 @@ class TokenCheckerTest extends TestCase
             $this->mockTokenStorage(BackendUser::class),
             $this->mockSessionWithToken($token),
             $this->trustResolver,
-            $this->mockRoleVoter()
+            $this->getRoleVoter()
         );
 
         $this->assertNull($tokenChecker->getFrontendUsername());
@@ -400,7 +400,7 @@ class TokenCheckerTest extends TestCase
         return $session;
     }
 
-    private function mockRoleVoter(): RoleVoter
+    private function getRoleVoter(): RoleVoter
     {
         return new RoleVoter('ROLE_');
     }
