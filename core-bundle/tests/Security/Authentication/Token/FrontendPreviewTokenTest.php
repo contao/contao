@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Security\Authentication\Token;
 use Contao\CoreBundle\Security\Authentication\Token\FrontendPreviewToken;
 use Contao\FrontendUser;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 
 class FrontendPreviewTokenTest extends TestCase
 {
@@ -57,30 +58,39 @@ class FrontendPreviewTokenTest extends TestCase
     public function testSerializesItself(): void
     {
         $token = new FrontendPreviewToken(null, true);
-        $serialized = $token->serialize();
+
+        if (method_exists(AbstractToken::class, '__serialize')) {
+            $serialized = serialize($token->__serialize());
+        } else {
+            $serialized = $token->serialize();
+        }
 
         switch (true) {
             case false !== strpos($serialized, '"a:4:{'):
                 // Backwards compatility with symfony/security <4.2.3
-                $expected = serialize([true, serialize(['anon.', true, [], []])]);
+                $expected = [true, serialize(['anon.', true, [], []])];
                 break;
 
             case false !== strpos($serialized, ';a:4:{'):
                 // Backwards compatility with symfony/security <4.3
-                $expected = serialize([true, ['anon.', true, [], []]]);
+                $expected = [true, ['anon.', true, [], []]];
                 break;
 
             default:
-                $expected = serialize([true, ['anon.', true, [], [], []]]);
+                $expected = [true, ['anon.', true, [], [], []]];
         }
 
-        $this->assertSame($expected, $serialized);
+        $this->assertSame(serialize($expected), $serialized);
 
         $token = new FrontendPreviewToken(null, false);
 
         $this->assertFalse($token->showUnpublished());
 
-        $token->unserialize($expected);
+        if (method_exists(AbstractToken::class, '__unserialize')) {
+            $token->__unserialize($expected);
+        } else {
+            $token->unserialize(serialize($expected));
+        }
 
         $this->assertTrue($token->showUnpublished());
     }
