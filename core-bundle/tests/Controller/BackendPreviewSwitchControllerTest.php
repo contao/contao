@@ -81,6 +81,12 @@ class BackendPreviewSwitchControllerTest extends TestCase
             ->willReturn(true)
         ;
 
+        $request
+            ->method('get')
+            ->with('path')
+            ->willReturn('/foo')
+        ;
+
         $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());

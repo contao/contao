@@ -107,6 +107,7 @@ class PreviewToolbarListener
             [
                 'action' => $this->router->generate('contao_backend_preview_switch'),
                 'request' => $request,
+                'path' => $request->getSchemeAndHttpHost() . $request->getPathInfo()
             ]
         );
 
