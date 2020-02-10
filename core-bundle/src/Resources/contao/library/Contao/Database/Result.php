@@ -174,6 +174,7 @@ class Result
 				{
 					return $this->arrModified[$strKey];
 				}
+
 				if (isset($this->resultSet[$this->intIndex][$strKey]))
 				{
 					return $this->resultSet[$this->intIndex][$strKey];
@@ -334,6 +335,7 @@ class Result
 	public function last()
 	{
 		$this->intIndex = $this->count() - 1;
+
 		$this->preload($this->intIndex);
 
 		$this->arrModified = array();
