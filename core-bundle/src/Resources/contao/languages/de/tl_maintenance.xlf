@@ -65,6 +65,14 @@
         <source>Truncates the &lt;code&gt;tl_log&lt;/code&gt; table which stores all the system log entries. This job permanently deletes these records.</source>
         <target>Leert die Tabelle &lt;code&gt;tl_log&lt;/code&gt;, in der die System-Log-Einträge gespeichert werden. Die Daten werden hierdurch endgültig gelöscht.</target>
       </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.crawl_queue.0">
+        <source>Purge the crawl queue</source>
+        <target>Die Crawl-Queue leeren</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.crawl_queue.1">
+        <source>Truncates the &lt;code&gt;tl_crawl_queue&lt;/code&gt; table which stores all the queue information from crawl processes. This job permanently deletes these records.</source>
+        <target>Leert die Tabelle &lt;code&gt;tl_crawl_queue&lt;/code&gt;, in der die Queue-Informationen des Crawl-Prozesses gespeichert werden. Die Daten werden hierdurch endgültig gelöscht.</target>
+      </trans-unit>
       <trans-unit id="tl_maintenance_jobs.images.0">
         <source>Purge the image cache</source>
         <target>Bildercache leeren</target>

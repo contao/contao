@@ -2,6 +2,32 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.0-RC2] (2020-02-11)
+
+**Fixed defects:**
+
+- [#1292] Revert the "contao_backend_switch" route name change ([richardhj])
+- [#1293] Update the back end keyboard shortcuts link ([leofeyer])
+- [#1291] Hide the member widget if searching protected sites is disabled ([leofeyer])
+- [#1286] Fix the front end preview URLs in the back end ([leofeyer])
+- [#1267] Fix possible null value in AuthenticationSuccessHandler ([bytehead])
+- [#1275] Move the PreviewAuthenticationListener to the core-bundle ([bytehead])
+- [#1257] Allow DCA filter definitions without placeholder values ([fritzmg])
+- [#1289] Improve the post update/install CLI hint ([Toflar])
+- [#1282] Correctly publish new folders ([leofeyer])
+- [#1283] Use wikimedia/less.php instead of oyejorge/less.php ([leofeyer])
+- [#1284] Add z-index:1 to the paste hint ([leofeyer])
+- [#1230] Add a "title" attribute to the debug mode menu item ([xchs])
+- [#1255] Do not use a relative font for the preview bar ([leofeyer])
+- [#1222] Do not try to register Contao 3 classes as services ([aschempp])
+- [#1246] Fix possible null value access in BackupCodeManager ([bytehead])
+- [#1237] Set the DB password to null if empty ([leofeyer])
+- [#1217] Correctly encode the DATABASE_URL parameter ([richardhj])
+- [#1232] Add the "url" parameter to the DropZone options ([bytehead])
+- [#1225] Correctly determine the Ajax URL now that our forms no longer have an action ([leofeyer])
+- [#1223] Add a crawl queue maintenance job ([Toflar])
+- [#1221] Set the row format in the default table options ([leofeyer])
+
 ## [4.9.0-RC1] (2020-01-18)
 
 **New features:**
@@ -143,19 +169,42 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.0-RC2]: https://github.com/contao/contao/releases/tag/4.9.0-RC2
 [4.9.0-RC1]: https://github.com/contao/contao/releases/tag/4.9.0-RC1
+[richardhj]: https://github.com/richardhj
+[leofeyer]: https://github.com/leofeyer
 [bytehead]: https://github.com/bytehead
-[aschempp]: https://github.com/aschempp
 [fritzmg]: https://github.com/fritzmg
 [Toflar]: https://github.com/Toflar
+[xchs]: https://github.com/xchs
+[aschempp]: https://github.com/aschempp
 [rabauss]: https://github.com/rabauss
-[richardhj]: https://github.com/richardhj
 [ausi]: https://github.com/ausi
-[leofeyer]: https://github.com/leofeyer
 [bohnmedia]: https://github.com/bohnmedia
 [m-vo]: https://github.com/m-vo
 [Tastaturberuf]: https://github.com/Tastaturberuf
 [AndreasA]: https://github.com/AndreasA
+[#1292]: https://github.com/contao/contao/pull/1292
+[#1293]: https://github.com/contao/contao/pull/1293
+[#1291]: https://github.com/contao/contao/pull/1291
+[#1286]: https://github.com/contao/contao/pull/1286
+[#1267]: https://github.com/contao/contao/pull/1267
+[#1275]: https://github.com/contao/contao/pull/1275
+[#1257]: https://github.com/contao/contao/pull/1257
+[#1289]: https://github.com/contao/contao/pull/1289
+[#1282]: https://github.com/contao/contao/pull/1282
+[#1283]: https://github.com/contao/contao/pull/1283
+[#1284]: https://github.com/contao/contao/pull/1284
+[#1230]: https://github.com/contao/contao/pull/1230
+[#1255]: https://github.com/contao/contao/pull/1255
+[#1222]: https://github.com/contao/contao/pull/1222
+[#1246]: https://github.com/contao/contao/pull/1246
+[#1237]: https://github.com/contao/contao/pull/1237
+[#1217]: https://github.com/contao/contao/pull/1217
+[#1232]: https://github.com/contao/contao/pull/1232
+[#1225]: https://github.com/contao/contao/pull/1225
+[#1223]: https://github.com/contao/contao/pull/1223
+[#1221]: https://github.com/contao/contao/pull/1221
 [#559]: https://github.com/contao/contao/pull/559
 [#1165]: https://github.com/contao/contao/pull/1165
 [#1184]: https://github.com/contao/contao/pull/1184

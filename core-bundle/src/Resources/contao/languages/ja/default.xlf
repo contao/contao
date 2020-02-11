@@ -2595,6 +2595,7 @@
       </trans-unit>
       <trans-unit id="MSC.twoFactorTrustDevice">
         <source>Trust this device</source>
+        <target>この機器を信頼</target>
       </trans-unit>
       <trans-unit id="MSC.userTemplateEditor">
         <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
@@ -2634,18 +2635,23 @@
       </trans-unit>
       <trans-unit id="MSC.clearTrustedDevices">
         <source>Clear trusted devices</source>
+        <target>信頼している機器を消去</target>
       </trans-unit>
       <trans-unit id="MSC.trustedDevices">
         <source>Trusted devices</source>
+        <target>信頼している機器</target>
       </trans-unit>
       <trans-unit id="MSC.noTrustedDevices">
         <source>Currently there are no trusted devices.</source>
+        <target>信頼している機器は現在ありません。</target>
       </trans-unit>
       <trans-unit id="MSC.device">
         <source>Device</source>
+        <target>機器</target>
       </trans-unit>
       <trans-unit id="MSC.thisDevice">
         <source>this device</source>
+        <target>の機器</target>
       </trans-unit>
       <trans-unit id="MSC.browser">
         <source>Browser</source>
@@ -2653,6 +2659,7 @@
       </trans-unit>
       <trans-unit id="MSC.operatingSystem">
         <source>Operating system</source>
+        <target>オペレーティングシステム</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
