@@ -651,9 +651,11 @@
       </trans-unit>
       <trans-unit id="FFL.range.0">
         <source>Range slider</source>
+        <target>Слайдер диапазона</target>
       </trans-unit>
       <trans-unit id="FFL.range.1">
         <source>A range slider to select a value or range of values between a specified min and max.</source>
+        <target>Слайдер для выбора значения или диапазона значений между указанными минимальными и максимальными значениями.</target>
       </trans-unit>
       <trans-unit id="FFL.hidden.0">
         <source>Hidden field</source>
@@ -2565,27 +2567,35 @@
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesLabel">
         <source>Backup codes</source>
+        <target>Резервные коды</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesShow">
         <source>Show backup codes</source>
+        <target>Показать резервные коды</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesExplain">
         <source>Backup codes can be used to access your account if you have lost your authentication device and cannot generate two-factor codes anymore. Treat your backup codes with the same level of attention as your password! We recommend saving them with a password manager such as Lastpass, 1Password or Keeper.</source>
+        <target>Резервные коды можно использовать для доступа к учетной записи, если вы потеряли устройство аутентификации и больше не можете генерировать двухфакторные коды. Относитесь к своим резервным кодам с тем же вниманием, что и к паролю! Мы рекомендуем сохранять их с помощью менеджера паролей, таких как Lastpass, 1Password или Keeper.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesInfo">
         <source>Put the codes in a safe spot. If you lose your authentication device and do not have backup codes, you cannot access your account anymore!</source>
+        <target>Поместите коды в безопасное место. Если вы потеряете свое устройство аутентификации и у вас не будет резервных кодов, вы больше не сможете получить доступ к своей учетной записи!</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesGenerate">
         <source>Generate backup codes</source>
+        <target>Создать резервные коды</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesRegenerate">
         <source>Regenerate backup codes</source>
+        <target>Регенерация резервных кодов</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesRegenerateInfo">
         <source>When you regenerate the backup codes, your old codes will not work anymore.</source>
+        <target>При регенерации резервных кодов старые коды больше работать не будут.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorTrustDevice">
         <source>Trust this device</source>
+        <target>Доверять этому устройству</target>
       </trans-unit>
       <trans-unit id="MSC.userTemplateEditor">
         <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
@@ -2597,9 +2607,11 @@
       </trans-unit>
       <trans-unit id="MSC.userThemeImport">
         <source>There is at least one regular user with permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, these users implicitly have full control over the system!</source>
+        <target>Существует как минимум один обычный пользователь с правами на импорт тем. Поскольку темы могут содержать произвольные шаблоны, а шаблоны являются файлами PHP, эти пользователи неявно имеют полный контроль над системой!</target>
       </trans-unit>
       <trans-unit id="MSC.groupThemeImport">
         <source>There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!</source>
+        <target>Существует как минимум одна группа пользователей, предоставляющая разрешение на импорт тем. Поскольку темы могут содержать произвольные шаблоны, а шаблоны - файлы PHP, пользователи этих групп неявно имеют полный контроль над системой!</target>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
@@ -2623,18 +2635,23 @@
       </trans-unit>
       <trans-unit id="MSC.clearTrustedDevices">
         <source>Clear trusted devices</source>
+        <target>Очистить доверенные устройства</target>
       </trans-unit>
       <trans-unit id="MSC.trustedDevices">
         <source>Trusted devices</source>
+        <target>Доверенные устройства</target>
       </trans-unit>
       <trans-unit id="MSC.noTrustedDevices">
         <source>Currently there are no trusted devices.</source>
+        <target>На данный момент доверенных устройств нет.</target>
       </trans-unit>
       <trans-unit id="MSC.device">
         <source>Device</source>
+        <target>Устройство</target>
       </trans-unit>
       <trans-unit id="MSC.thisDevice">
         <source>this device</source>
+        <target>это устройство</target>
       </trans-unit>
       <trans-unit id="MSC.browser">
         <source>Browser</source>
@@ -2642,6 +2659,7 @@
       </trans-unit>
       <trans-unit id="MSC.operatingSystem">
         <source>Operating system</source>
+        <target>Операционная система</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2849,12 +2867,15 @@
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.summary">
         <source>Indexed %d URI(s) successfully. %d failed.</source>
+        <target>Проиндексировано успешно: %d URI. Ошибок: %d.</target>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.warning">
         <source>%d URI(s) were skipped (if you are missing one, checkout the debug log).</source>
+        <target>%d URI был(и) пропущен(ы) (если вы пропустили один, проверьте журнал отладки).</target>
       </trans-unit>
       <trans-unit id="CRAWL.brokenLinkChecker.summary">
         <source>Checked %d link(s) successfully. %d were broken.</source>
+        <target>Проверено успешно ссылок: %d. Повреждены: %d.</target>
       </trans-unit>
     </body>
   </file>

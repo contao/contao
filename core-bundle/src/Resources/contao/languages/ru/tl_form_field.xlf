@@ -188,9 +188,11 @@
       </trans-unit>
       <trans-unit id="tl_form_field.step.0">
         <source>Step</source>
+        <target>Шаг</target>
       </trans-unit>
       <trans-unit id="tl_form_field.step.1">
         <source>Here you can set the discrete step size of the field.</source>
+        <target>Здесь можно установить дискретный размер шага поля.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.size.0">
         <source>Rows and columns</source>
