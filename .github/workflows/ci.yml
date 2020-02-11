@@ -112,10 +112,6 @@ jobs:
                   tools: prestissimo
                   coverage: none
 
-            - name: Install missing PHP 7.4 extensions
-              if: matrix.php == '7.4'
-              run: sudo apt-get install php7.4-gd php7.4-mbstring php7.4-mysql
-
             - name: Create the database
               run: mysql -uroot -proot -e "CREATE database contao_test"
 
