@@ -43,7 +43,7 @@ class CrawlerPassTest extends TestCase
         $this->assertInstanceOf(Reference::class, $methodCalls[0][1][0]);
     }
 
-    public function testIfTheFactoryAndCrawlCommandAreRemovedWhenThereAreNoSubscribers(): void
+    public function testRemovesTheFactoryAndTheCrawlCommandIfThereAreNoSubscribers(): void
     {
         $container = new ContainerBuilder();
         $container->setDefinition('contao.crawl.escargot_factory', new Definition());
