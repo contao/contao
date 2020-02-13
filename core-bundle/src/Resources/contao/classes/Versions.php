@@ -605,8 +605,19 @@ class Versions extends Controller
 							$from[$k] = explode("\n", $from[$k]);
 						}
 
+						$field = $k;
+
+						if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['label']))
+						{
+							$field = \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['label']) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['label'][0] : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['label'];
+						}
+						elseif (isset($GLOBALS['TL_LANG']['MSC'][$k]))
+						{
+							$field = \is_array($GLOBALS['TL_LANG']['MSC'][$k]) ? $GLOBALS['TL_LANG']['MSC'][$k][0] : $GLOBALS['TL_LANG']['MSC'][$k];
+						}
+
 						$objDiff = new \Diff($from[$k], $to[$k]);
-						$strBuffer .= $objDiff->render(new DiffRenderer(array('field'=>($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['label'][0] ?: (isset($GLOBALS['TL_LANG']['MSC'][$k]) ? (\is_array($GLOBALS['TL_LANG']['MSC'][$k]) ? $GLOBALS['TL_LANG']['MSC'][$k][0] : $GLOBALS['TL_LANG']['MSC'][$k]) : $k)))));
+						$strBuffer .= $objDiff->render(new DiffRenderer(array('field'=>$field)));
 					}
 				}
 			}
