@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
+use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\PriorityTaggedServiceTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -28,31 +29,36 @@ class SearchIndexerPass implements CompilerPassInterface
 
     public function process(ContainerBuilder $container): void
     {
-        if (!$container->has(self::DELEGATING_SERVICE_ID)) {
-            return;
-        }
-
-        $definition = $container->findDefinition(self::DELEGATING_SERVICE_ID);
-        $references = $this->findAndSortTaggedServices('contao.search_indexer', $container);
+        $indexers = $this->findAndSortTaggedServices('contao.search_indexer', $container);
 
         // Make sure we do not add the delegating indexer to itself to prevent endless redirects
-        $references = array_filter(
-            $references,
+        $indexers = array_filter(
+            $indexers,
             static function (Reference $reference): bool {
                 return self::DELEGATING_SERVICE_ID !== (string) $reference;
             }
         );
 
-        // Remove the service and the search index listener if there are no indexers
-        if (0 === \count($references)) {
+        if (!$container->hasDefinition(self::DELEGATING_SERVICE_ID) || 0 === \count($indexers)) {
+            // Remove delegating indexer
             $container->removeDefinition(self::DELEGATING_SERVICE_ID);
+
+            // Remove search index listener
             $container->removeDefinition('contao.listener.search_index');
+
+            // Remove search index crawl subscriber
+            $container->removeDefinition('contao.crawl.escargot_subscriber.search_index');
 
             return;
         }
 
-        foreach ($references as $reference) {
+        $definition = $container->findDefinition(self::DELEGATING_SERVICE_ID);
+
+        foreach ($indexers as $reference) {
             $definition->addMethodCall('addIndexer', [$reference]);
         }
+
+        // Add an alias for the delegating service
+        $container->setAlias('contao.search.indexer', self::DELEGATING_SERVICE_ID);
     }
 }

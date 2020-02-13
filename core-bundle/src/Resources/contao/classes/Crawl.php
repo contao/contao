@@ -53,6 +53,11 @@ class Crawl extends Backend implements \executable
 	 */
 	public function run()
 	{
+		if (!System::getContainer()->has('contao.crawl.escargot_factory'))
+		{
+			return '';
+		}
+
 		/** @var Factory $factory */
 		$factory = System::getContainer()->get('contao.crawl.escargot_factory');
 		$subscriberNames = $factory->getSubscriberNames();

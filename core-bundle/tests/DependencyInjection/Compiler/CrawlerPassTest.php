@@ -12,30 +12,47 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
-use Contao\CoreBundle\DependencyInjection\Compiler\EscargotSubscriberPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\CrawlerPass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
-class EscargotSubscriberPassTest extends TestCase
+class CrawlerPassTest extends TestCase
 {
-    public function testAddsTheSubscribers(): void
+    public function testAddsTheSubscribersIfTheFactoryExistsAndSubscribersAreRegistered(): void
     {
         $container = new ContainerBuilder();
         $container->setDefinition('contao.crawl.escargot_factory', new Definition());
+        $container->setDefinition('contao.command.crawl', new Definition());
 
         $definition = new Definition();
         $definition->addTag('contao.escargot_subscriber');
         $container->setDefinition('contao.search.subscriber.super-subscriber', $definition);
 
-        $pass = new EscargotSubscriberPass();
+        $pass = new CrawlerPass();
         $pass->process($container);
+
+        $this->assertTrue($container->hasDefinition('contao.crawl.escargot_factory'));
+        $this->assertTrue($container->hasDefinition('contao.command.crawl'));
 
         $methodCalls = $container->findDefinition('contao.crawl.escargot_factory')->getMethodCalls();
 
         $this->assertCount(1, $methodCalls);
         $this->assertSame('addSubscriber', $methodCalls[0][0]);
         $this->assertInstanceOf(Reference::class, $methodCalls[0][1][0]);
+    }
+
+    public function testRemovesTheFactoryAndTheCrawlCommandIfThereAreNoSubscribers(): void
+    {
+        $container = new ContainerBuilder();
+        $container->setDefinition('contao.crawl.escargot_factory', new Definition());
+        $container->setDefinition('contao.command.crawl', new Definition());
+
+        $pass = new CrawlerPass();
+        $pass->process($container);
+
+        $this->assertFalse($container->hasDefinition('contao.crawl.escargot_factory'));
+        $this->assertFalse($container->hasDefinition('contao.command.crawl'));
     }
 }
