@@ -1792,6 +1792,7 @@ fieldset.collapsed > legend {
 	#container {
 		display:block;
 		padding-top:40px;
+		overflow:hidden;
 	}
 	#main,#left {
 		float:none;
