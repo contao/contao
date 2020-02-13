@@ -660,7 +660,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'inputType'               => 'select',
 			'options'                 => array('auto', 'metadata', 'none'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_content']['player_preload'],
-			'eval'                    => array('nospace'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('includeBlankOption' => true, 'nospace'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(8) NOT NULL default ''"
 		),
 		'playerColor' => array
