@@ -69,28 +69,28 @@ class DefaultIndexerTest extends ContaoTestCase
         ];
 
         yield 'Test does not index if noSearch is set to true' => [
-            new Document(new Uri('https://example.com'), 200, [], '<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"PageMetaData","pageId":2,"noSearch":true,"protected":false,"groups":[],"fePreview":false}</script></body></html>'),
+            new Document(new Uri('https://example.com'), 200, [], '<html><body><script type="application/ld+json">{"@context":"https:\/\/schema.contao.org\/","@type":"RegularPage","pageId":2,"noSearch":true,"protected":false,"groups":[],"fePreview":false}</script></body></html>'),
             null,
             'Was explicitly marked "noSearch" in page settings.',
         ];
 
-        yield 'Test does not index if json ld data is not of type "PageMetaData"' => [
-            new Document(new Uri('https://example.com'), 200, [], '<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"FoobarType","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>'),
+        yield 'Test does not index if json ld data is not of type "RegularPage"' => [
+            new Document(new Uri('https://example.com'), 200, [], '<html><body><script type="application/ld+json">{"@context":"https:\/\/schema.contao.org\/","@type":"FoobarType","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>'),
             null,
             'Was explicitly marked "noSearch" in page settings.',
         ];
 
         yield 'Test does not index if protected is set to true' => [
-            new Document(new Uri('https://example.com'), 200, [], '<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"PageMetaData","pageId":2,"noSearch":false,"protected":true,"groups":[],"fePreview":false}</script></body></html>'),
+            new Document(new Uri('https://example.com'), 200, [], '<html><body><script type="application/ld+json">{"@context":"https:\/\/schema.contao.org\/","@type":"RegularPage","pageId":2,"noSearch":false,"protected":true,"groups":[],"fePreview":false}</script></body></html>'),
             null,
             'Indexing protected pages is disabled.',
         ];
 
         yield 'Test valid index when not protected' => [
-            new Document(new Uri('https://example.com'), 200, [], '<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"PageMetaData","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>'),
+            new Document(new Uri('https://example.com'), 200, [], '<html><body><script type="application/ld+json">{"@context":"https:\/\/schema.contao.org\/","@type":"RegularPage","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>'),
             [
                 'url' => 'https://example.com',
-                'content' => '<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"PageMetaData","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>',
+                'content' => '<html><body><script type="application/ld+json">{"@context":"https:\/\/schema.contao.org\/","@type":"RegularPage","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>',
                 'protected' => '',
                 'groups' => [],
                 'pid' => 2,
@@ -100,10 +100,10 @@ class DefaultIndexerTest extends ContaoTestCase
         ];
 
         yield 'Test valid index when protected and index protected is enabled' => [
-            new Document(new Uri('https://example.com'), 200, [], '<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"PageMetaData","pageId":2,"title":"Foo title","language":"de","noSearch":false,"protected":true,"groups":[42],"fePreview":false}</script></body></html>'),
+            new Document(new Uri('https://example.com'), 200, [], '<html lang="de"><head><title>Foo title</title></head><body><script type="application/ld+json">{"@context":"https:\/\/schema.contao.org\/","@type":"RegularPage","pageId":2,"noSearch":false,"protected":true,"groups":[42],"fePreview":false}</script></body></html>'),
             [
                 'url' => 'https://example.com',
-                'content' => '<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"PageMetaData","pageId":2,"title":"Foo title","language":"de","noSearch":false,"protected":true,"groups":[42],"fePreview":false}</script></body></html>',
+                'content' => '<html lang="de"><head><title>Foo title</title></head><body><script type="application/ld+json">{"@context":"https:\/\/schema.contao.org\/","@type":"RegularPage","pageId":2,"noSearch":false,"protected":true,"groups":[42],"fePreview":false}</script></body></html>',
                 'protected' => '1',
                 'groups' => [42],
                 'pid' => 2,
