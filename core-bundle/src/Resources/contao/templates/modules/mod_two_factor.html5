@@ -62,7 +62,7 @@
         <div class="message">
           <p class="info"><?= $this->trans('MSC.twoFactorBackupCodesInfo') ?></p>
         </div>
-        <ul class="recovery-codes">
+        <ul class="backup-codes">
           <?php foreach ($this->backupCodes as $backupCode): ?>
             <li><code><?= $backupCode ?></code></li>
           <?php endforeach; ?>
