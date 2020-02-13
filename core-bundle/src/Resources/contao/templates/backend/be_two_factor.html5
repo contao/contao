@@ -43,7 +43,7 @@
         </div>
       </div>
     </form>
-    <div class="tl_recovery_codes">
+    <div class="tl_backup_codes">
       <h2 class="sub_headline"><?= $this->trans('MSC.twoFactorBackupCodesLabel') ?></h2>
       <p><?= $this->trans('MSC.twoFactorBackupCodesExplain') ?></p>
       <?php if (!$this->showBackupCodes): ?>
@@ -58,7 +58,7 @@
         <div class="tl_message">
           <p class="tl_info"><?= $this->trans('MSC.twoFactorBackupCodesInfo') ?></p>
         </div>
-        <ul class="recovery-codes">
+        <ul class="backup-codes">
           <?php foreach ($this->backupCodes as $backupCode): ?>
             <li><code><?= $backupCode ?></code></li>
           <?php endforeach; ?>
