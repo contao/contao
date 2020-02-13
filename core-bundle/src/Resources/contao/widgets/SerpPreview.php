@@ -44,16 +44,18 @@ class SerpPreview extends Widget
 
 		// Get the URL with a %s placeholder for the alias or ID
 		$url = $this->getUrl($model);
-		list($baseUrl, $urlSuffix) = explode('%s', $url);
+
+		list($baseUrl) = explode('%s', $url);
+		$trail = implode(' › ', $this->convertUrlToItems($baseUrl));
 
 		// Use the base URL for the index page
 		if ($model instanceof PageModel && $alias == 'index')
 		{
-			$url = $baseUrl;
+			$url = $trail;
 		}
 		else
 		{
-			$url = sprintf($url, $alias ?: $model->id);
+			$url = implode(' › ', $this->convertUrlToItems($baseUrl . ($alias ?: $model->id)));
 		}
 
 		// Get the input field suffix (edit multiple mode)
@@ -67,16 +69,15 @@ class SerpPreview extends Widget
 
 		return <<<EOT
 <div class="serp-preview">
-  <p id="serp_title_$id" class="title">$title</p>
   <p id="serp_url_$id" class="url">$url</p>
+  <p id="serp_title_$id" class="title">$title</p>
   <p id="serp_description_$id" class="description">$description</p>
 </div>
 <script>
   window.addEvent('domready', function() {
     new Contao.SerpPreview({
       id: '$id',
-      baseUrl: '$baseUrl',
-      urlSuffix: '$urlSuffix',
+      trail: '$trail',
       titleField: '$titleField',
       titleFallbackField: '$titleFallbackField',
       aliasField: '$aliasField',
@@ -201,5 +202,18 @@ EOT;
 		}
 
 		return 'ctrl_' . $this->aliasField . $suffix;
+	}
+
+	private function convertUrlToItems($url): array
+	{
+		$chunks = parse_url($url);
+		$steps = array_filter(explode('/', $chunks['path']));
+
+		if (System::getContainer()->getParameter('contao.prepend_locale'))
+		{
+			array_shift($steps);
+		}
+
+		return array_merge(array($chunks['host']), $steps);
 	}
 }
