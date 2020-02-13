@@ -195,6 +195,9 @@ class TwoFactorController extends AbstractFrontendModuleController
         $user->backupCodes = null;
         $user->save();
 
+        // Clear all trusted devices
+        $this->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
+
         return new RedirectResponse($this->page->getAbsoluteUrl());
     }
 
