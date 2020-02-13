@@ -1425,7 +1425,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		}
 
 		// Versions overview
-		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['enableVersioning'] && !$GLOBALS['TL_DCA'][$this->strTable]['config']['hideVersionMenu'] && $this->blnIsDbAssisted && Dbafs::shouldBeSynchronized($this->intId))
+		if ($objVersions && $GLOBALS['TL_DCA'][$this->strTable]['config']['enableVersioning'] && !$GLOBALS['TL_DCA'][$this->strTable]['config']['hideVersionMenu'] && $this->blnIsDbAssisted && Dbafs::shouldBeSynchronized($this->intId))
 		{
 			$version = $objVersions->renderDropdown();
 		}
@@ -1571,7 +1571,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			}
 			else
 			{
-				$this->redirect($this->addToUrl('id=' . $this->urlEncode($this->strPath . '/' . $this->varValue) . $this->strExtension));
+				$this->redirect($this->addToUrl('id=' . $this->urlEncode($this->intId)));
 			}
 		}
 

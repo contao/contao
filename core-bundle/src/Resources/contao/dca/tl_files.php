@@ -755,6 +755,8 @@ class tl_files extends Contao\Backend
 
 					$this->import('Contao\Automator', 'Automator');
 					$this->Automator->generateSymlinks();
+
+					$this->log('Folder "' . $strPath . '" has been published', __METHOD__, TL_FILES);
 				}
 			}
 			else
@@ -766,6 +768,8 @@ class tl_files extends Contao\Backend
 
 					$this->import('Contao\Automator', 'Automator');
 					$this->Automator->generateSymlinks();
+
+					$this->log('Folder "' . $strPath . '" has been protected', __METHOD__, TL_FILES);
 				}
 			}
 		}
@@ -842,6 +846,8 @@ class tl_files extends Contao\Backend
 				{
 					$blnUnsynchronized = true;
 					$objFolder->unsynchronize();
+
+					$this->log('Synchronization of folder "' . $strPath . '" has been disabled', __METHOD__, TL_FILES);
 				}
 			}
 			else
@@ -850,6 +856,8 @@ class tl_files extends Contao\Backend
 				{
 					$blnUnsynchronized = false;
 					$objFolder->synchronize();
+
+					$this->log('Synchronization of folder "' . $strPath . '" has been enabled', __METHOD__, TL_FILES);
 				}
 			}
 		}
