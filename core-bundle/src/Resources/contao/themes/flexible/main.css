@@ -1635,6 +1635,7 @@ ul.sgallery li {
 	padding:4px 6px;
 	font-family:Arial,sans-serif;
 	font-weight:400;
+	color:#3c4043;
 	border:1px dotted #aaa;
 	border-radius:2px;
 }
@@ -1642,16 +1643,17 @@ ul.sgallery li {
 	margin-bottom:0;
 	line-height:1.3;
 }
+.serp-preview .url {
+	margin-bottom:4px;
+}
 .serp-preview .title {
+	margin-bottom:2px;
 	font-size:18px;
 	color:#1a0dab;
+	line-height:1;
 }
-.serp-preview .url {
-	color:#006621;
-}
-.serp-preview .description {
-	margin-top:2px;
-	color:#545454;
+.serp-preview .description:not(:empty) {
+	margin-top:3px;
 }
 
 /* Ajax box */
