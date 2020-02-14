@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -30,27 +32,27 @@ class DoctrineArrayStatement extends ArrayStatement implements Statement
         return $this->rowCount;
     }
 
-    public function bindValue($param, $value, $type = ParameterType::STRING)
+    public function bindValue($param, $value, $type = ParameterType::STRING): void
     {
         throw new \RuntimeException('Not implemented');
     }
 
-    public function bindParam($column, &$variable, $type = ParameterType::STRING, $length = null)
+    public function bindParam($column, &$variable, $type = ParameterType::STRING, $length = null): void
     {
         throw new \RuntimeException('Not implemented');
     }
 
-    public function errorCode()
+    public function errorCode(): void
     {
         throw new \RuntimeException('Not implemented');
     }
 
-    public function errorInfo()
+    public function errorInfo(): void
     {
         throw new \RuntimeException('Not implemented');
     }
 
-    public function execute($params = null)
+    public function execute($params = null): void
     {
         throw new \RuntimeException('Not implemented');
     }

@@ -74,12 +74,25 @@ class Result
 	/**
 	 * Validate the connection resource and store the query string
 	 *
-	 * @param DoctrineStatement $statement The database statement
-	 * @param string            $strQuery  The query string
+	 * @param DoctrineStatement|array $statement The database statement
+	 * @param string                  $strQuery  The query string
 	 */
-	public function __construct(DoctrineStatement $statement, $strQuery)
+	public function __construct($statement, $strQuery)
 	{
-		$this->resResult = $statement;
+		if ($statement instanceof DoctrineStatement)
+		{
+			$this->resResult = $statement;
+		}
+		elseif (\is_array($statement) && \count(array_filter(array_map('is_array', $statement))) === \count($statement))
+		{
+			$this->resultSet = array_values($statement);
+			$this->rowCount = \count($this->resultSet);
+		}
+		else
+		{
+			throw new \InvalidArgumentException('$statement must be a Statement object or an array');
+		}
+
 		$this->strQuery = $strQuery;
 	}
 
