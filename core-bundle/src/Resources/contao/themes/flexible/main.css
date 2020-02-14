@@ -1264,6 +1264,7 @@ label.tl_change_selected {
 }
 .selector_container .limit_height {
 	height:auto !important;
+	max-height:190px;
 }
 .selector_container .limit_toggler {
 	display:none;
