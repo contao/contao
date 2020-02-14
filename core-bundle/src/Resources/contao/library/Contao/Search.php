@@ -526,49 +526,49 @@ class Search
 
 		foreach ($arrResult as $k=>$v)
 		{
- 			$arrHighlight = array();
- 			$arrMatches = explode(',', $v['matches']);
+			$arrHighlight = array();
+			$arrMatches = explode(',', $v['matches']);
 
- 			foreach ($arrKeywords as $strKeyword)
- 			{
- 				if (\in_array($strKeyword, $arrMatches))
- 				{
- 					$arrHighlight[] = $strKeyword;
- 				}
- 			}
+			foreach ($arrKeywords as $strKeyword)
+			{
+				if (\in_array($strKeyword, $arrMatches))
+				{
+					$arrHighlight[] = $strKeyword;
+				}
+			}
 
- 			foreach ($arrIncluded as $strKeyword)
- 			{
- 				if (\in_array($strKeyword, $arrMatches))
- 				{
- 					$arrHighlight[] = $strKeyword;
- 				}
- 			}
+			foreach ($arrIncluded as $strKeyword)
+			{
+				if (\in_array($strKeyword, $arrMatches))
+				{
+					$arrHighlight[] = $strKeyword;
+				}
+			}
 
- 			// Highlight the words which matched the wildcard keywords
- 			foreach ($arrWildcards as $strKeyword)
- 			{
- 				if ($matches = preg_grep('/' . str_replace('%', '.*', $strKeyword) . '/', $arrMatches))
- 				{
- 					$arrHighlight = array_merge($arrHighlight, $matches);
- 				}
- 			}
+			// Highlight the words which matched the wildcard keywords
+			foreach ($arrWildcards as $strKeyword)
+			{
+				if ($matches = preg_grep('/' . str_replace('%', '.*', $strKeyword) . '/', $arrMatches))
+				{
+					$arrHighlight = array_merge($arrHighlight, $matches);
+				}
+			}
 
- 			// Highlight phrases if all their words have matched
- 			foreach ($arrPhrases as $strPhrase)
- 			{
- 				$strPhrase = str_replace('[^[:alnum:]]+', ' ', $strPhrase);
+			// Highlight phrases if all their words have matched
+			foreach ($arrPhrases as $strPhrase)
+			{
+				$strPhrase = str_replace('[^[:alnum:]]+', ' ', $strPhrase);
 
- 				if (!array_diff(explode(' ', $strPhrase), $arrMatches))
- 				{
- 					$arrHighlight[] = $strPhrase;
- 				}
- 			}
+				if (!array_diff(explode(' ', $strPhrase), $arrMatches))
+				{
+					$arrHighlight[] = $strPhrase;
+				}
+			}
 
- 			$arrResult[$k]['matches'] = implode(',', $arrHighlight);
+			$arrResult[$k]['matches'] = implode(',', $arrHighlight);
 		}
 
- 		return new Result($arrResult, $objResult->query);
+		return new Result($arrResult, $objResult->query);
 	}
 
 	/**
