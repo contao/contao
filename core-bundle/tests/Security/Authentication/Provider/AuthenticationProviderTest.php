@@ -334,12 +334,6 @@ class AuthenticationProviderTest extends TestCase
             ->willReturn(true)
         ;
 
-        $trustedDeviceManager
-            ->expects($this->once())
-            ->method('addTrustedDevice')
-            ->with($user, 'contao_frontend')
-        ;
-
         $provider = $this->createUsernamePasswordProvider(null, $twoFactorHandler, $trustedDeviceManager);
         $provider->authenticate($token);
     }

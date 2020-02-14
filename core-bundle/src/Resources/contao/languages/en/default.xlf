@@ -1988,9 +1988,6 @@
       <trans-unit id="MSC.device">
         <source>Device</source>
       </trans-unit>
-      <trans-unit id="MSC.thisDevice">
-        <source>this device</source>
-      </trans-unit>
       <trans-unit id="MSC.browser">
         <source>Browser</source>
       </trans-unit>

@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Security\TwoFactor;
 use Contao\CoreBundle\Entity\TrustedDevice;
 use Contao\User;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\NonUniqueResultException;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManagerInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceTokenStorage;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -51,25 +50,16 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
             return;
         }
 
-        $version = (int) $user->trustedTokenVersion;
-        $oldCookieValue = $this->trustedTokenStorage->getCookieValue();
         $userAgent = $this->requestStack->getMasterRequest()->headers->get('User-Agent');
 
         $parser = Parser::create();
         $parsedUserAgent = $parser->parse($userAgent);
 
-        $this->trustedTokenStorage->addTrustedToken($user->username, $firewallName, $version);
+        $this->trustedTokenStorage->addTrustedToken((string) $user->id, $firewallName, (int) $user->trustedTokenVersion);
 
-        // Check if already an earlier version of the trusted device exists
-        try {
-            $trustedDevice = $this->findExistingTrustedDevice((int) $user->id, $oldCookieValue, $version) ?? new TrustedDevice($user, $version);
-        } catch (NonUniqueResultException $exception) {
-            $trustedDevice = new TrustedDevice($user, $version);
-        }
-
+        $trustedDevice = new TrustedDevice($user);
         $trustedDevice
             ->setCreated(new \DateTime())
-            ->setCookieValue($this->trustedTokenStorage->getCookieValue())
             ->setUserAgent($userAgent)
             ->setUaFamily($parsedUserAgent->ua->family)
             ->setOsFamily($parsedUserAgent->os->family)
@@ -86,10 +76,7 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
             return false;
         }
 
-        $username = $user->username;
-        $version = (int) $user->trustedTokenVersion;
-
-        return $this->trustedTokenStorage->hasTrustedToken($username, $firewallName, $version);
+        return $this->trustedTokenStorage->hasTrustedToken((string) $user->id, $firewallName, (int) $user->trustedTokenVersion);
     }
 
     public function clearTrustedDevices(User $user): void
@@ -118,23 +105,6 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
             ->setParameter('userId', (int) $user->id)
             ->getQuery()
             ->execute()
-        ;
-    }
-
-    public function findExistingTrustedDevice(int $userId, string $cookieValue, int $version)
-    {
-        return $this->entityManager
-            ->createQueryBuilder()
-            ->select('td')
-            ->from(TrustedDevice::class, 'td')
-            ->andWhere('td.userId = :userId')
-            ->andWhere('td.cookieValue = :cookieValue')
-            ->andWhere('td.version = :version')
-            ->setParameter('userId', $userId)
-            ->setParameter('cookieValue', $cookieValue)
-            ->setParameter('version', $version)
-            ->getQuery()
-            ->getOneOrNullResult()
         ;
     }
 }
