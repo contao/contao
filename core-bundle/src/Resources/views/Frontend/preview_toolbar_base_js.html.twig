@@ -90,10 +90,6 @@
         -webkit-appearance: none;
     }
 
-    .cto-toolbar .published-path {
-        min-width: 300px;
-    }
-
     .cto-toolbar .tl_select {
         margin: 0;
         width: auto;
@@ -215,7 +211,7 @@
         }
 
         // Fetch toolbar
-        request('GET', '{{ action }}?path={{ path }}', null, function () {
+        request('GET', '{{ action }}', null, function () {
             if (200 === this.status) {
                 toolbar.innerHTML = this.responseText;
 
@@ -288,20 +284,5 @@
                 });
             });
         });
-
-        // copy published link to clipboard
-        window.addEventListener('cto-toolbar-loaded', function() {
-            const copyButton = toolbar.querySelector('#copyPublishedPath');
-            const pathField = toolbar.querySelector('#publishedPath');
-            copyButton.addEventListener('click', function(event) {
-                event.preventDefault();
-
-                pathField.select();
-                pathField.setSelectionRange(0, 99999);
-                document.execCommand('copy');
-
-                pathField.blur();
-            });
-        })
     })();
 </script>

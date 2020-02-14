@@ -104,7 +104,7 @@ class BackendPreviewSwitchController
         }
 
         if ($request->isMethod('GET')) {
-            return Response::create($this->renderToolbar($request));
+            return Response::create($this->renderToolbar());
         }
 
         if ('tl_switch' === $request->request->get('FORM_SUBMIT')) {
@@ -122,7 +122,7 @@ class BackendPreviewSwitchController
         return new Response('', Response::HTTP_BAD_REQUEST);
     }
 
-    private function renderToolbar(Request $request): string
+    private function renderToolbar(): string
     {
         $canSwitchUser = $this->security->isGranted('ROLE_ALLOWED_TO_SWITCH_MEMBER');
         $frontendUsername = $this->tokenChecker->getFrontendUsername();
@@ -137,7 +137,6 @@ class BackendPreviewSwitchController
                     'canSwitchUser' => $canSwitchUser,
                     'user' => $frontendUsername,
                     'show' => $showUnpublished,
-                    'path' => $request->get('path')
                 ]
             );
         } catch (TwigError $e) {
