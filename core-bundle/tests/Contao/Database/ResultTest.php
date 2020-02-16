@@ -45,6 +45,7 @@ class ResultTest extends TestCase
         $resultStatement = new Result(new DoctrineArrayStatement($data), 'SELECT * FROM test');
         $resultArray = new Result($data, 'SELECT * FROM test');
 
+        /** @var Result|object $result */
         foreach ([$resultStatement, $resultArray] as $result) {
             $this->assertFalse($result->isModified);
             $this->assertSame(1, $result->numFields);
@@ -83,6 +84,7 @@ class ResultTest extends TestCase
         $resultStatement = new Result(new DoctrineArrayStatement($data), 'SELECT * FROM test');
         $resultArray = new Result($data, 'SELECT * FROM test');
 
+        /** @var Result|object $result */
         foreach ([$resultStatement, $resultArray] as $result) {
             $this->assertFalse($result->isModified);
             $this->assertSame(1, $result->numFields);
@@ -103,7 +105,8 @@ class ResultTest extends TestCase
             $this->assertSame('value1', $result->first()->field);
             $this->assertFalse($result->prev());
             $this->assertSame('value2', $result->next()->field);
-            $this->assertSame('value1', $result->prev()->field);
+            $this->assertInstanceOf(Result::class, $result->prev());
+            $this->assertSame('value1', $result->field);
             $this->assertSame('value2', $result->last()->field);
             $this->assertFalse($result->next());
 
@@ -124,6 +127,7 @@ class ResultTest extends TestCase
         $resultStatement = new Result(new DoctrineArrayStatement($data), 'SELECT * FROM test');
         $resultArray = new Result($data, 'SELECT * FROM test');
 
+        /** @var Result|object $result */
         foreach ([$resultStatement, $resultArray] as $result) {
             $this->assertSame(['field' => 'value1'], $result->fetchAssoc());
             $this->assertSame(['field' => 'value1'], $result->row());
