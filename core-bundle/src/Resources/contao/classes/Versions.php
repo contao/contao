@@ -875,14 +875,14 @@ class Versions extends Controller
 	{
 		if (!\is_array($var))
 		{
-			return $binary ? StringUtil::binToUuid($var) : $var;
+			return $binary && Validator::isBinaryUuid($var) ? StringUtil::binToUuid($var) : $var;
 		}
 
 		if (!\is_array(current($var)))
 		{
 			if ($binary)
 			{
-				$var = array_map(static function ($v) { return $v ? StringUtil::binToUuid($v) : ''; }, $var);
+				$var = array_map(static function ($v) { return Validator::isBinaryUuid($v) ? StringUtil::binToUuid($v) : $v; }, $var);
 			}
 
 			return implode(', ', $var);
