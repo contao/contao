@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Crawl\Escargot\Factory;
+use Contao\CoreBundle\Crawl\Escargot\Subscriber\SubscriberResult;
 use Contao\CoreBundle\Crawl\Monolog\CrawlCsvLogHandler;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\GroupHandler;
@@ -129,6 +130,8 @@ class CrawlCommand extends Command
 
         foreach ($this->escargotFactory->getSubscribers($subscribers) as $subscriber) {
             $io->section($subscriber->getName());
+
+            /** @var SubscriberResult $result */
             $result = $subscriber->getResult();
 
             if ($result->wasSuccessful()) {
