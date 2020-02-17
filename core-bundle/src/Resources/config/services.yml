@@ -522,6 +522,15 @@ services:
             - ['addRouteFilter', ['@contao.routing.language_filter']]
         public: true
 
+    contao.routing.nested_404_matcher:
+        class: Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher
+        arguments:
+            - '@contao.routing.route_404_provider'
+            - '@contao.routing.final_matcher'
+        calls:
+            - ['addRouteFilter', ['@contao.routing.domain_filter']]
+            - ['addRouteFilter', ['@contao.routing.published_filter']]
+
     contao.routing.page_router:
         class: Symfony\Cmf\Component\Routing\DynamicRouter
         arguments:
@@ -535,6 +544,18 @@ services:
             - ['addRouteEnhancer', ['@contao.routing.input_enhancer']]
         tags:
             - { name: router, priority: 20 }
+
+    contao.routing.page_404_router:
+        class: Symfony\Cmf\Component\Routing\DynamicRouter
+        arguments:
+            - '@router.request_context'
+            - '@contao.routing.nested_404_matcher'
+            - '@contao.routing.route_generator'
+            - ''
+            - '@event_dispatcher'
+            - '@contao.routing.route_404_provider'
+        tags:
+            - { name: router, priority: -200 }
 
     contao.routing.published_filter:
         class: Contao\CoreBundle\Routing\Matcher\PublishedFilter
@@ -553,6 +574,12 @@ services:
             - '@contao.framework'
             - '@database_connection'
             - '%contao.url_suffix%'
+            - '%contao.prepend_locale%'
+
+    contao.routing.route_404_provider:
+        class: Contao\CoreBundle\Routing\Route404Provider
+        arguments:
+            - '@contao.framework'
             - '%contao.prepend_locale%'
 
     contao.routing.scope_matcher:
@@ -695,6 +722,7 @@ services:
             - '@security.token_storage'
             - '@session'
             - '@security.authentication.trust_resolver'
+            - '@security.access.simple_role_voter'
             - '%contao.preview_script%'
         public: true
 

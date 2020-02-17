@@ -938,7 +938,7 @@ class InsertTags extends Controller
 
 						if ($objFile !== null)
 						{
-							$arrCache[$strTag] = $objFile->path;
+							$arrCache[$strTag] = System::urlEncode($objFile->path);
 							break;
 						}
 					}

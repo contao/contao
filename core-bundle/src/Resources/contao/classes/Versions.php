@@ -11,6 +11,8 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\ResponseException;
+use Doctrine\DBAL\Types\BinaryType;
+use Doctrine\DBAL\Types\BlobType;
 
 /**
  * Provide methods to handle versioning.
@@ -463,7 +465,14 @@ class Versions extends Controller
 							continue;
 						}
 
-						$blnIsBinary = strncmp($arrFields[$k], 'binary(', 7) === 0 || strncmp($arrFields[$k], 'blob ', 5) === 0;
+						if (\is_array($arrFields[$k]))
+						{
+							$blnIsBinary = $arrFields[$k]['type'] === BinaryType::class || $arrFields[$k]['type'] === BlobType::class;
+						}
+						else
+						{
+							$blnIsBinary = strncmp($arrFields[$k], 'binary(', 7) === 0 || strncmp($arrFields[$k], 'blob ', 5) === 0;
+						}
 
 						// Decrypt the values
 						if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['encrypt'])
@@ -554,8 +563,19 @@ class Versions extends Controller
 							$from[$k] = explode("\n", $from[$k]);
 						}
 
+						$field = $k;
+
+						if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['label']))
+						{
+							$field = \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['label']) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['label'][0] : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['label'];
+						}
+						elseif (isset($GLOBALS['TL_LANG']['MSC'][$k]))
+						{
+							$field = \is_array($GLOBALS['TL_LANG']['MSC'][$k]) ? $GLOBALS['TL_LANG']['MSC'][$k][0] : $GLOBALS['TL_LANG']['MSC'][$k];
+						}
+
 						$objDiff = new \Diff($from[$k], $to[$k]);
-						$strBuffer .= $objDiff->render(new DiffRenderer(array('field'=>($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['label'][0] ?: (isset($GLOBALS['TL_LANG']['MSC'][$k]) ? (\is_array($GLOBALS['TL_LANG']['MSC'][$k]) ? $GLOBALS['TL_LANG']['MSC'][$k][0] : $GLOBALS['TL_LANG']['MSC'][$k]) : $k)))));
+						$strBuffer .= $objDiff->render(new DiffRenderer(array('field'=>$field)));
 					}
 				}
 			}
@@ -812,14 +832,14 @@ class Versions extends Controller
 	{
 		if (!\is_array($var))
 		{
-			return $binary ? StringUtil::binToUuid($var) : $var;
+			return $binary && Validator::isBinaryUuid($var) ? StringUtil::binToUuid($var) : $var;
 		}
 
 		if (!\is_array(current($var)))
 		{
 			if ($binary)
 			{
-				$var = array_map(static function ($v) { return $v ? StringUtil::binToUuid($v) : ''; }, $var);
+				$var = array_map(static function ($v) { return Validator::isBinaryUuid($v) ? StringUtil::binToUuid($v) : $v; }, $var);
 			}
 
 			return implode(', ', $var);

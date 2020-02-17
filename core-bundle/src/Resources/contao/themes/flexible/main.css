@@ -493,7 +493,7 @@ h2.sub_headline {
 }
 .tl_box h3,.tl_tbox h3,.tl_xpl h3 {
 	margin:0;
-	padding:14px 0 1px;
+	padding-top:13px;
 	font-size:.875rem;
 }
 .tl_box h4,.tl_tbox h4 {
@@ -513,7 +513,7 @@ h2.sub_headline {
 }
 .tl_help,.tl_help a {
 	margin-bottom:0;
-	line-height:1.25;
+	line-height:1.2;
 	color:#808080;
 }
 .tl_help a:hover,.tl_help a:focus,.tl_help a:active {
@@ -839,7 +839,7 @@ table.tl_listing {
 	padding:7px 0;
 }
 .tl_file_list .ellipsis {
-	height:15px;
+	height:16px;
 	text-overflow:ellipsis;
 	overflow:hidden;
 	padding-right:18px;
@@ -2116,6 +2116,7 @@ fieldset.collapsed > legend {
 	#container {
 		display:block;
 		padding-top:40px;
+		overflow:hidden;
 	}
 	#main,#left {
 		float:none;

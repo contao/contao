@@ -23,6 +23,7 @@ class ResultTest extends TestCase
         $resultStatement = new Result(new DoctrineArrayStatement([]), 'SELECT * FROM test');
         $resultArray = new Result([], 'SELECT * FROM test');
 
+        /** @var Result|object $result */
         foreach ([$resultStatement, $resultArray] as $result) {
             $this->assertFalse($result->isModified);
             $this->assertSame(0, $result->numFields);
