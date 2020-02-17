@@ -54,9 +54,21 @@ class DefaultIndexer implements IndexerInterface
             $this->throwBecause('Cannot index empty response.');
         }
 
+        try {
+            $title = $document->getContentCrawler()->filterXPath('//head/title')->first()->text();
+        } catch (\Exception $e) {
+            $title = 'undefined';
+        }
+
+        try {
+            $language = $document->getContentCrawler()->filterXPath('//html[@lang]')->first()->attr('lang');
+        } catch (\Exception $e) {
+            $language = 'en';
+        }
+
         $meta = [
-            'title' => 'undefined',
-            'language' => 'en',
+            'title' => $title,
+            'language' => $language,
             'protected' => false,
             'groups' => [],
             'pageId' => 0,
@@ -129,7 +141,7 @@ class DefaultIndexer implements IndexerInterface
 
     private function extendMetaFromJsonLdScripts(Document $document, array &$meta): void
     {
-        $jsonLds = $document->extractJsonLdScripts('https://contao.org/', 'PageMetaData');
+        $jsonLds = $document->extractJsonLdScripts('https://schema.contao.org/', 'RegularPage');
 
         if (0 === \count($jsonLds)) {
             return;

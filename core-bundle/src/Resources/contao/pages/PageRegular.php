@@ -825,23 +825,14 @@ class PageRegular extends Frontend
 
 			$meta = array
 			(
-				'@context' => 'https://contao.org/',
-				'@type' => 'PageMetaData',
+				'@context' => 'https://schema.contao.org/',
+				'@type' => 'RegularPage',
 				'pageId' => (int) $objPage->id,
-				'language' => $objPage->language,
-				'title' => $objPage->pageTitle ?: $objPage->title,
 				'noSearch' => $noSearch,
 				'protected' => (bool) $objPage->protected,
 				'groups' => array_map('intval', array_filter((array) $objPage->groups)),
 				'fePreview' => System::getContainer()->get('contao.security.token_checker')->isPreviewMode()
 			);
-
-			$token = System::getContainer()->get('security.token_storage')->getToken();
-
-			if ($token !== null && $token->getUser() instanceof FrontendUser)
-			{
-				$meta['memberId'] = (int) $token->getUser()->id;
-			}
 
 			$strScripts .= '<script type="application/ld+json">' . json_encode($meta) . '</script>';
 		}
