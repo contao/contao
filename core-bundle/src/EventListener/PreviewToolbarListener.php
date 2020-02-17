@@ -107,7 +107,7 @@ class PreviewToolbarListener
             [
                 'action' => $this->router->generate('contao_backend_preview_switch'),
                 'request' => $request,
-                'preview_script' => $this->previewScript
+                'preview_script' => $this->previewScript,
             ]
         );
 
