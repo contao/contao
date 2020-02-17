@@ -68,7 +68,34 @@ class PublishedFilterTest extends TestCase
             ->expects($this->once())
             ->method('getDefault')
             ->with('pageModel')
-            ->willReturn($this->mockClassWithProperties(PageModel::class, ['rootIsPublic' => false]))
+            ->willReturn($this->mockClassWithProperties(PageModel::class, ['isPublic' => false, 'rootIsPublic' => true]))
+        ;
+
+        $collection = $this->createMock(RouteCollection::class);
+        $collection
+            ->expects($this->once())
+            ->method('all')
+            ->willReturn(['foo' => $route])
+        ;
+
+        $collection
+            ->expects($this->once())
+            ->method('remove')
+            ->with('foo')
+        ;
+
+        $filter = new PublishedFilter($this->mockTokenChecker());
+        $filter->filter($collection, $this->createMock(Request::class));
+    }
+
+    public function testRemovesARouteIfTheRootPageHasNotBeenPublished(): void
+    {
+        $route = $this->createMock(Route::class);
+        $route
+            ->expects($this->once())
+            ->method('getDefault')
+            ->with('pageModel')
+            ->willReturn($this->mockClassWithProperties(PageModel::class, ['isPublic' => true, 'rootIsPublic' => false]))
         ;
 
         $collection = $this->createMock(RouteCollection::class);
@@ -95,7 +122,7 @@ class PublishedFilterTest extends TestCase
             ->expects($this->once())
             ->method('getDefault')
             ->with('pageModel')
-            ->willReturn($this->mockClassWithProperties(PageModel::class, ['rootIsPublic' => true]))
+            ->willReturn($this->mockClassWithProperties(PageModel::class, ['isPublic' => true, 'rootIsPublic' => true]))
         ;
 
         $collection = $this->createMock(RouteCollection::class);

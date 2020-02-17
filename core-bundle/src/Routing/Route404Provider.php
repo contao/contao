@@ -51,7 +51,7 @@ class Route404Provider implements RouteProviderInterface
 
         /** @var PageModel $pageModel */
         $pageModel = $this->framework->getAdapter(PageModel::class);
-        $pages = $pageModel->findBy(["tl_page.type = 'error_404'"], []);
+        $pages = $pageModel->findBy(['tl_page.type=?'], ['error_404']);
 
         if (null === $pages) {
             return $collection;
@@ -161,11 +161,11 @@ class Route404Provider implements RouteProviderInterface
             $localeB = '.locale' === substr(array_search($b, $routes, true), -7);
 
             if ($localeA && !$localeB) {
-                return 1;
+                return -1;
             }
 
             if ($localeB && !$localeA) {
-                return -1;
+                return 1;
             }
 
             if ('' !== $a->getHost() && '' === $b->getHost()) {
