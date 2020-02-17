@@ -146,11 +146,11 @@
       </trans-unit>
       <trans-unit id="tl_layout.framework.0">
         <source>CSS framework</source>
-        <target>چارچوب سی‌اس‌اس</target>
+        <target>چارچوب CSS</target>
       </trans-unit>
       <trans-unit id="tl_layout.framework.1">
         <source>Here you can activate the components of the Contao CSS framework.</source>
-        <target>اینجا می‌توانید اجزاء چارچوب سی‌اس‌اس کانتائو را فعال نمایید.</target>
+        <target>اینجا می‌توانید اجزاء چارچوب CSS کنتائو را فعال نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_layout.layout.css.0">
         <source>Layout builder</source>
@@ -158,7 +158,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.layout.css.1">
         <source>Generates a CSS layout based on the page layout settings. This component is required for the page layout generator to work!</source>
-        <target>یک چیدمان سی‌اس‌اس بر پایه تنظیمات چیدمان برگه تولید می‌کند. این مولفه برای اینکه تولیدکننده چیدمان برگه کار کند لازم است!</target>
+        <target>یک چیدمان CSS بر پایه تنظیمات چیدمان برگه تولید می‌کند. این مولفه برای اینکه تولیدکننده چیدمان برگه کار کند لازم است!</target>
       </trans-unit>
       <trans-unit id="tl_layout.responsive.css.0">
         <source>Responsive layout</source>
@@ -166,7 +166,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.responsive.css.1">
         <source>Adds a meta viewport tag to the page header and scales the CSS layout based on the device width.</source>
-        <target>افزودن برچسب ویوپورت متا به سربرگ و بزرگنمایی چیدمان سی‌اس‌اس بر پایه عرض دستگاه.</target>
+        <target>افزودن برچسب ویوپورت متا به سربرگ و بزرگنمایی چیدمان CSS بر پایه عرض دستگاه.</target>
       </trans-unit>
       <trans-unit id="tl_layout.grid.css.0">
         <source>12-column grid</source>
@@ -174,15 +174,15 @@
       </trans-unit>
       <trans-unit id="tl_layout.grid.css.1">
         <source>Adds a responsive 12-column grid that is triggered by the CSS classes &quot;grid1&quot; to &quot;grid12&quot; and &quot;offset1&quot; to &quot;offset12&quot;.</source>
-        <target>شبکه ۱۲-ستونی پاسخگو را اضافه می‌کند که با کلاس‌های سی‌اس‌اس &quot;grid1&quot; تا &quot;grid12&quot; و &quot;offset1&quot; تا &quot;offset12&quot; مشخص می‌شوند.</target>
+        <target>شبکه ۱۲-ستونی پاسخگو را اضافه می‌کند که با کلاس‌های CSS &quot;grid1&quot; تا &quot;grid12&quot; و &quot;offset1&quot; تا &quot;offset12&quot; مشخص می‌شوند.</target>
       </trans-unit>
       <trans-unit id="tl_layout.reset.css.0">
         <source>CSS reset</source>
-        <target>بازتنظیم سی‌اس‌اس</target>
+        <target>بازتنظیم CSS</target>
       </trans-unit>
       <trans-unit id="tl_layout.reset.css.1">
         <source>Removes the inconsistent default styling of HTML elements in different browsers.</source>
-        <target>سبک‌های پیش‌فرض متناقض عنصر‌های اچ‌تی‌ام‌ال را در مرورگرهای متفاوت حذف می‌نماید.</target>
+        <target>سبک‌های پیش‌فرض متناقض عنصر‌های HTML را در مرورگرهای متفاوت حذف می‌نماید.</target>
       </trans-unit>
       <trans-unit id="tl_layout.form.css.0">
         <source>Basic forms</source>
@@ -491,7 +491,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.html5">
         <source>HTML</source>
-        <target>اچ‌تی‌ام‌ال</target>
+        <target>HTML</target>
       </trans-unit>
       <trans-unit id="tl_layout.edit_styles">
         <source>Edit the style sheets</source>

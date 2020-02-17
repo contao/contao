@@ -130,7 +130,7 @@
       </trans-unit>
       <trans-unit id="tl_theme.store.1">
         <source>Find more themes in the Contao theme store</source>
-        <target>پیدا کردن پوسته‌های بیشتر در فروشگاه پوسته کانتائو</target>
+        <target>پیدا کردن پوسته‌های بیشتر در فروشگاه پوسته کنتائو</target>
       </trans-unit>
       <trans-unit id="tl_theme.new.0">
         <source>New theme</source>
