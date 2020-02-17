@@ -23,8 +23,7 @@ use Symfony\Component\Routing\Route;
 
 class Route404ProviderTest extends TestCase
 {
-
-    public function testGetRouteByNameThrowsException()
+    public function testGetRouteByNameThrowsException(): void
     {
         $this->expectException(RouteNotFoundException::class);
 
@@ -34,7 +33,7 @@ class Route404ProviderTest extends TestCase
         $provider->getRouteByName('foo');
     }
 
-    public function testGetRoutesByNamesReturnsEmptyArray()
+    public function testGetRoutesByNamesReturnsEmptyArray(): void
     {
         $framework = $this->mockContaoFramework();
         $provider = new Route404Provider($framework, false);
@@ -45,7 +44,7 @@ class Route404ProviderTest extends TestCase
         $this->assertEmpty($result);
     }
 
-    public function testReturnsEmptyCollectionWithout404Pages()
+    public function testReturnsEmptyCollectionWithout404Pages(): void
     {
         $pageAdapter = $this->mockAdapter(['findBy']);
         $pageAdapter
@@ -62,7 +61,7 @@ class Route404ProviderTest extends TestCase
         $this->assertEquals(0, $provider->getRouteCollectionForRequest($request)->count());
     }
 
-    public function testCreatesOneRouteWithoutLocale()
+    public function testCreatesOneRouteWithoutLocale(): void
     {
         /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
@@ -97,7 +96,7 @@ class Route404ProviderTest extends TestCase
         $this->assertSame('/{_url_fragment}', $route->getPath());
     }
 
-    public function testCreatesTwoRoutesWithLocale()
+    public function testCreatesTwoRoutesWithLocale(): void
     {
         /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
@@ -145,9 +144,10 @@ class Route404ProviderTest extends TestCase
     /**
      * @dataProvider sortRoutesProvider
      */
-    public function testCorrectlySortRoutes(array $expectedRoutes, array $languages, bool $prependLocale, array ...$pagesData)
+    public function testCorrectlySortRoutes(array $expectedRoutes, array $languages, bool $prependLocale, array ...$pagesData): void
     {
         $pages = [];
+
         foreach ($pagesData as $row) {
             $pages[] = $this->mockClassWithProperties(
                 PageModel::class,
