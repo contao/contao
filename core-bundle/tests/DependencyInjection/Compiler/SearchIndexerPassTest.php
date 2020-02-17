@@ -47,6 +47,7 @@ class SearchIndexerPassTest extends TestCase
         $this->assertTrue($container->hasDefinition('contao.listener.search_index'));
         $this->assertTrue($container->hasDefinition('contao.crawl.escargot_subscriber.search_index'));
         $this->assertTrue($container->hasAlias('contao.search.indexer'));
+        $this->assertTrue($container->getAlias('contao.search.indexer')->isPublic());
     }
 
     public function testRemovesTheDelegatingIndexerAndDisablesTheListenerAndCrawlSubscriberIfNoIndexersWereGiven(): void

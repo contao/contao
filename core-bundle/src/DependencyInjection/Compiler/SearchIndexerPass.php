@@ -59,6 +59,6 @@ class SearchIndexerPass implements CompilerPassInterface
         }
 
         // Add an alias for the delegating service
-        $container->setAlias('contao.search.indexer', self::DELEGATING_SERVICE_ID);
+        $container->setAlias('contao.search.indexer', self::DELEGATING_SERVICE_ID)->setPublic(true);
     }
 }
