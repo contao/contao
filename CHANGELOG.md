@@ -1,14 +1,27 @@
 # Change log
 
-## 4.8.7 (2019-12-17)
+## 4.8.8 (2020-02-17)
 
- * Fix the picture_default.html5 template (see #1108).
+ * Generate catch all routes for the 404 pages (see #1321).
+ * Correctly set predefined image sizes in the news and calendar bundle (see #1331).
+ * Show the field name if there is no label (see #1319).
+ * Correctly save unsynchronized files and folders (see #1318).
+ * Correctly show the field names in the diff view (see #1317).
+ * Make the "preload" attribute optional (see #1316).
+ * Correctly check the roles in the TokenChecker (see #1082).
+ * Handle array SQL definitions in version comparison (see #1251).
+ * Adjust the text line height (see #1215).
+ * Fix compatibility with knplabs/knp-time-bundle 1.11.0 (see #1140).
  * Replace document.write() in the back end templates (see #1329).
  * Fix the initial table sorting in the "table" content element (see #1315).
  * Improve the Contao\Database\Result class (see #1287).
  * Fix the top navigation overflow (see #1302).
  * Fix checking for binary strings in the version comparison (see #1294).
  * Urlencode the path returned by the "file::uuid" insert tag (see #1268).
+
+## 4.8.7 (2019-12-17)
+
+ * Fix the picture_default.html5 template (see #1108).
 
 ## 4.8.6 (2019-12-17)
 

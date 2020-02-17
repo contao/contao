@@ -139,9 +139,11 @@
       </trans-unit>
       <trans-unit id="tl_faq.pastenew.0">
         <source>Create a new question at the top</source>
+        <target>ایجاد یک سوال جدید در بالا</target>
       </trans-unit>
       <trans-unit id="tl_faq.pastenew.1">
         <source>Create a new question after question ID %s</source>
+        <target>ایجاد یک سوال بعد از سوال شناسه‌ی %s</target>
       </trans-unit>
     </body>
   </file>

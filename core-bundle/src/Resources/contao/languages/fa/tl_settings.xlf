@@ -90,11 +90,11 @@
       </trans-unit>
       <trans-unit id="tl_settings.allowedTags.0">
         <source>Allowed HTML tags</source>
-        <target>برچسب‌های اچ‌تی‌ام‌ال مجاز</target>
+        <target>برچسب‌های HTML مجاز</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedTags.1">
         <source>Here you can enter a list of allowed HTML tags that will not be stripped.</source>
-        <target>اینجا می‌توانید فهرستی از برچسب‌های اچ‌تی‌ام‌ال مجاز که نباید حذف شوند را وارد نمایید.</target>
+        <target>اینجا می‌توانید فهرستی از برچسب‌های HTML مجاز که نباید حذف شوند را وارد نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_settings.disableRefererCheck.0">
         <source>Disable request tokens</source>
@@ -230,6 +230,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.cron_legend">
         <source>Cron job settings</source>
+        <target>تنظیمات کار Cron</target>
       </trans-unit>
       <trans-unit id="tl_settings.search_legend">
         <source>Search engine settings</source>
