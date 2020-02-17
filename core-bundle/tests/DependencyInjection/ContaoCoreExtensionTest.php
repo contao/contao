@@ -86,6 +86,7 @@ use Contao\CoreBundle\Routing\Matcher\LanguageFilter;
 use Contao\CoreBundle\Routing\Matcher\LegacyMatcher;
 use Contao\CoreBundle\Routing\Matcher\PublishedFilter;
 use Contao\CoreBundle\Routing\Matcher\UrlMatcher;
+use Contao\CoreBundle\Routing\Route404Provider;
 use Contao\CoreBundle\Routing\RouteProvider;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Routing\UrlGenerator;
@@ -1441,6 +1442,18 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('contao.routing.language_filter', (string) $methodCalls[2][1][0]);
     }
 
+    public function testRegistersTheRoutingNested404Matcher(): void
+    {
+        $this->assertTrue($this->container->has('contao.routing.nested_404_matcher'));
+
+        $definition = $this->container->getDefinition('contao.routing.nested_404_matcher');
+
+        $this->assertSame(NestedMatcher::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+        $this->assertSame('contao.routing.route_404_provider', (string) $definition->getArgument(0));
+        $this->assertSame('contao.routing.final_matcher', (string) $definition->getArgument(1));
+    }
+
     public function testRegistersTheRoutingPageRouter(): void
     {
         $this->assertTrue($this->container->has('contao.routing.page_router'));
@@ -1465,6 +1478,22 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertArrayHasKey('router', $tags);
         $this->assertSame(20, $tags['router'][0]['priority']);
+    }
+
+    public function testRegistersTheRoutingPage404Router(): void
+    {
+        $this->assertTrue($this->container->has('contao.routing.page_404_router'));
+
+        $definition = $this->container->getDefinition('contao.routing.page_404_router');
+
+        $this->assertSame(DynamicRouter::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+        $this->assertSame('router.request_context', (string) $definition->getArgument(0));
+        $this->assertSame('contao.routing.nested_404_matcher', (string) $definition->getArgument(1));
+        $this->assertSame('contao.routing.route_generator', (string) $definition->getArgument(2));
+        $this->assertSame('', (string) $definition->getArgument(3));
+        $this->assertSame('event_dispatcher', (string) $definition->getArgument(4));
+        $this->assertSame('contao.routing.route_404_provider', (string) $definition->getArgument(5));
     }
 
     public function testRegistersTheRoutingPublishedFilter(): void
@@ -1502,6 +1531,18 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('database_connection', (string) $definition->getArgument(1));
         $this->assertSame('%contao.url_suffix%', (string) $definition->getArgument(2));
         $this->assertSame('%contao.prepend_locale%', (string) $definition->getArgument(3));
+    }
+
+    public function testRegistersTheRoutingRoute404Provider(): void
+    {
+        $this->assertTrue($this->container->has('contao.routing.route_404_provider'));
+
+        $definition = $this->container->getDefinition('contao.routing.route_404_provider');
+
+        $this->assertSame(Route404Provider::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
+        $this->assertSame('%contao.prepend_locale%', (string) $definition->getArgument(1));
     }
 
     public function testRegistersTheRoutingScopeMatcher(): void

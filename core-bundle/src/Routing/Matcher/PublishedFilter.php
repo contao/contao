@@ -48,11 +48,13 @@ class PublishedFilter implements RouteFilterInterface
             /** @var PageModel $pageModel */
             $pageModel = $route->getDefault('pageModel');
 
-            if (!$pageModel instanceof PageModel || $pageModel->rootIsPublic) {
+            if (!$pageModel instanceof PageModel) {
                 continue;
             }
 
-            $collection->remove($name);
+            if (!$pageModel->isPublic || !$pageModel->rootIsPublic) {
+                $collection->remove($name);
+            }
         }
 
         return $collection;

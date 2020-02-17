@@ -63,12 +63,49 @@ class PublishedFilterTest extends TestCase
 
     public function testRemovesARouteIfThePageHasNotBeenPublished(): void
     {
+        /** @var PageModel&MockObject $pageModel */
+        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel->isPublic = false;
+        $pageModel->rootIsPublic = true;
+
         $route = $this->createMock(Route::class);
         $route
             ->expects($this->once())
             ->method('getDefault')
             ->with('pageModel')
-            ->willReturn($this->mockClassWithProperties(PageModel::class, ['rootIsPublic' => false]))
+            ->willReturn($pageModel)
+        ;
+
+        $collection = $this->createMock(RouteCollection::class);
+        $collection
+            ->expects($this->once())
+            ->method('all')
+            ->willReturn(['foo' => $route])
+        ;
+
+        $collection
+            ->expects($this->once())
+            ->method('remove')
+            ->with('foo')
+        ;
+
+        $filter = new PublishedFilter($this->mockTokenChecker());
+        $filter->filter($collection, $this->createMock(Request::class));
+    }
+
+    public function testRemovesARouteIfTheRootPageHasNotBeenPublished(): void
+    {
+        /** @var PageModel&MockObject $pageModel */
+        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel->isPublic = true;
+        $pageModel->rootIsPublic = false;
+
+        $route = $this->createMock(Route::class);
+        $route
+            ->expects($this->once())
+            ->method('getDefault')
+            ->with('pageModel')
+            ->willReturn($pageModel)
         ;
 
         $collection = $this->createMock(RouteCollection::class);
@@ -90,12 +127,17 @@ class PublishedFilterTest extends TestCase
 
     public function testDoesNotRemoveARouteIfThePageHasBeenPublished(): void
     {
+        /** @var PageModel&MockObject $pageModel */
+        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel->isPublic = true;
+        $pageModel->rootIsPublic = true;
+
         $route = $this->createMock(Route::class);
         $route
             ->expects($this->once())
             ->method('getDefault')
             ->with('pageModel')
-            ->willReturn($this->mockClassWithProperties(PageModel::class, ['rootIsPublic' => true]))
+            ->willReturn($pageModel)
         ;
 
         $collection = $this->createMock(RouteCollection::class);
