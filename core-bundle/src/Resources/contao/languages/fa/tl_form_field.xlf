@@ -11,11 +11,11 @@
       </trans-unit>
       <trans-unit id="FFL.html.0">
         <source>HTML code</source>
-        <target>کد اچ‌تی‌ام‌ال</target>
+        <target>کد HTML</target>
       </trans-unit>
       <trans-unit id="FFL.html.1">
         <source>A custom field to insert HTML code.</source>
-        <target>یک فیلد سفارشی برای درج کد اچ‌تی‌ام‌ال.</target>
+        <target>یک فیلد سفارشی برای درج کد HTML.</target>
       </trans-unit>
       <trans-unit id="FFL.fieldsetStart.0">
         <source>Fieldset start</source>
@@ -43,7 +43,7 @@
       </trans-unit>
       <trans-unit id="FFL.password.1">
         <source>A single-line input field for a password. Contao automatically adds a confirmation field.</source>
-        <target>یک فیلد ورودی تک خطی برای گذرواژه. کانتائو به صورت خودکار یک فیلد تایید اضافه می‌کند.</target>
+        <target>یک فیلد ورودی تک خطی برای گذرواژه. کنتائو به صورت خودکار یک فیلد تایید اضافه می‌کند.</target>
       </trans-unit>
       <trans-unit id="FFL.textarea.0">
         <source>Textarea</source>
@@ -139,15 +139,15 @@
       </trans-unit>
       <trans-unit id="tl_form_field.text.1">
         <source>You can use HTML tags to format the text.</source>
-        <target>می‌توانید از تگ‌های اچ‌تی‌ام‌ال برای شکل دادن به متن استفاده کنید.</target>
+        <target>می‌توانید از تگ‌های HTML برای شکل دادن به متن استفاده کنید.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.html.0">
         <source>HTML</source>
-        <target>اچ‌تی‌ام‌ال</target>
+        <target>HTML</target>
       </trans-unit>
       <trans-unit id="tl_form_field.html.1">
         <source>You can modify the list of allowed HTML tags in the back end settings.</source>
-        <target>می‌توانید فهرست برچسب‌های اچ‌تی‌ام‌ال مجاز را در تنظیمات بخش مدیریت تغییر دهید.</target>
+        <target>می‌توانید فهرست برچسب‌های HTML مجاز را در تنظیمات بخش مدیریت تغییر دهید.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.options.0">
         <source>Options</source>
@@ -278,12 +278,14 @@
       </trans-unit>
       <trans-unit id="tl_form_field.minval.0">
         <source>Minimum value</source>
+        <target>مقدار کمینه</target>
       </trans-unit>
       <trans-unit id="tl_form_field.minval.1">
         <source>Here you can set the minimum value for numeric fields.</source>
       </trans-unit>
       <trans-unit id="tl_form_field.maxval.0">
         <source>Maximum value</source>
+        <target>مقدار بیشینه</target>
       </trans-unit>
       <trans-unit id="tl_form_field.maxval.1">
         <source>Here you can set the maximum value for numeric fields.</source>
@@ -361,7 +363,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.class.0">
         <source>CSS class</source>
-        <target>کلاس سی‌اس‌اس</target>
+        <target>کلاس CSS</target>
       </trans-unit>
       <trans-unit id="tl_form_field.class.1">
         <source>Here you can enter one or more classes.</source>
@@ -436,7 +438,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.text_legend">
         <source>Text/HTML</source>
-        <target>متن/اچ‌تی‌ام‌ال</target>
+        <target>متن/HTML</target>
       </trans-unit>
       <trans-unit id="tl_form_field.fconfig_legend">
         <source>Field configuration</source>
@@ -480,21 +482,26 @@
       </trans-unit>
       <trans-unit id="tl_form_field.new.1">
         <source>Create a new form field</source>
+        <target>ایجاد یک فیلد فرم جدید</target>
       </trans-unit>
       <trans-unit id="tl_form_field.show">
         <source>Show the details of form field ID %s</source>
       </trans-unit>
       <trans-unit id="tl_form_field.edit">
         <source>Edit form field ID %s</source>
+        <target>ویرایش فلید فرم شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.cut">
         <source>Move form field ID %s</source>
+        <target>جابجایی فیلد فرم شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.copy">
         <source>Duplicate form field ID %s</source>
+        <target>دو نسخه کردن فیلد فرم شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.delete">
         <source>Delete form field ID %s</source>
+        <target>حذف فیلد فرم شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.editheader">
         <source>Edit the form settings</source>
@@ -502,6 +509,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.toggle">
         <source>Hide/unhide form field ID %s</source>
+        <target>پنهان/آشکار کردن فیلد فرم شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pasteafter.0">
         <source>Paste at the top</source>
@@ -509,6 +517,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.pasteafter.1">
         <source>Paste after form field ID %s</source>
+        <target>جاگذاری بعد از فیلد فرم شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pastenew.0">
         <source>Create a new form field at the top</source>

@@ -312,6 +312,7 @@
       </trans-unit>
       <trans-unit id="tl_user.tempLabel">
         <source>Shared cache</source>
+        <target>نهان‌گاه مشترک</target>
       </trans-unit>
       <trans-unit id="tl_user.sessionPurged">
         <source>The session data has been purged</source>
@@ -330,6 +331,7 @@
       </trans-unit>
       <trans-unit id="tl_user.useTwoFactor">
         <source>Use two-factor authentication</source>
+        <target>استفاده از احراز هویت دومرحله‌ای</target>
       </trans-unit>
       <trans-unit id="tl_user.new.0">
         <source>New</source>

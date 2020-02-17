@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.template.1">
         <source>Here you can override the default e-mail template of the channel.</source>
-        <target>Hier können Sie das Standard-E-Mail-Template des Kanals überschreiben.</target>
+        <target>Hier können Sie das Standard-E-Mail-Template des Verteilers überschreiben.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendText.0">
         <source>Send as plain text</source>
@@ -79,7 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.sender.1">
         <source>Here you can override the default sender e-mail address of the channel.</source>
-        <target>Hier können Sie die Standard-E-Mail-Adresse des Absenders des Kanals überschreiben.</target>
+        <target>Hier können Sie die Standard-E-Mail-Adresse des Absenders des Verteilers überschreiben.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.senderName.0">
         <source>Custom sender name</source>
@@ -87,7 +87,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.senderName.1">
         <source>Here you can override the default sender name of the channel.</source>
-        <target>Hier können Sie den Standard-Absendernamen des Kanals überschreiben.</target>
+        <target>Hier können Sie den Standard-Absendernamen des Verteilers überschreiben.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.mailsPerCycle.0">
         <source>Mails per cycle</source>

@@ -439,7 +439,7 @@
       </trans-unit>
       <trans-unit id="tl_style.own.1">
         <source>Here you can enter custom CSS code.</source>
-        <target>اینجا می‌توانید کد سی‌اس‌اس سفارشی را وارد نمایید.</target>
+        <target>اینجا می‌توانید کد CSS سفارشی را وارد نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_style.selector_legend">
         <source>Selector and category</source>
@@ -563,6 +563,7 @@
       </trans-unit>
       <trans-unit id="tl_style.toggle">
         <source>Activate/deactivate element ID %s</source>
+        <target>فعال/غیرفعال کردن المنت شناسه‌ی %s</target>
       </trans-unit>
     </body>
   </file>

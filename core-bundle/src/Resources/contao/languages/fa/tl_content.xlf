@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_content.text.1">
         <source>You can use HTML tags to format the text.</source>
-        <target>می‌توانید از تگ‌های اچ‌تی‌ام‌ال برای شکل دادن به متن استفاده کنید.</target>
+        <target>می‌توانید از تگ‌های HTML برای شکل دادن به متن استفاده کنید.</target>
       </trans-unit>
       <trans-unit id="tl_content.addImage.0">
         <source>Add an image</source>
@@ -35,6 +35,7 @@
       </trans-unit>
       <trans-unit id="tl_content.inline.0">
         <source>Show in browser</source>
+        <target>نمایش در مرورگر</target>
       </trans-unit>
       <trans-unit id="tl_content.inline.1">
         <source>Show the file in the browser instead of opening the download dialog.</source>
@@ -120,11 +121,11 @@
       </trans-unit>
       <trans-unit id="tl_content.html.0">
         <source>HTML code</source>
-        <target>کد اچ‌تی‌ام‌ال</target>
+        <target>کد HTML</target>
       </trans-unit>
       <trans-unit id="tl_content.html.1">
         <source>You can modify the list of allowed HTML tags in the back end settings.</source>
-        <target>می‌توانید فهرست برچسب‌های اچ‌تی‌ام‌ال مجاز را در تنظیمات بخش مدیریت تغییر دهید.</target>
+        <target>می‌توانید فهرست برچسب‌های HTML مجاز را در تنظیمات بخش مدیریت تغییر دهید.</target>
       </trans-unit>
       <trans-unit id="tl_content.listtype.0">
         <source>List type</source>
@@ -244,15 +245,15 @@
       </trans-unit>
       <trans-unit id="tl_content.mooHeadline.1">
         <source>Please enter the headline of the content pane. HTML tags are allowed.</source>
-        <target>لطفا یک عنوان وارد نمایید. کدهای اچ‌تی‌ام‌ال مجاز می‌باشد.</target>
+        <target>لطفا یک عنوان وارد نمایید. کدهای HTML مجاز می‌باشد.</target>
       </trans-unit>
       <trans-unit id="tl_content.mooStyle.0">
         <source>CSS format</source>
-        <target>قالب سی‌اس‌اس</target>
+        <target>قالب CSS</target>
       </trans-unit>
       <trans-unit id="tl_content.mooStyle.1">
         <source>Here you can format the section headline using CSS code.</source>
-        <target>اینجا می‌توانید بخش سربرگ را با استفاده از کد سی‌اس‌اس شکل دهید.</target>
+        <target>اینجا می‌توانید بخش سربرگ را با استفاده از کد CSS شکل دهید.</target>
       </trans-unit>
       <trans-unit id="tl_content.mooClasses.0">
         <source>Element classes</source>
@@ -300,7 +301,7 @@
       </trans-unit>
       <trans-unit id="tl_content.titleText.1">
         <source>The link title is added as &lt;em&gt;title&lt;/em&gt; attribute in the HTML markup.</source>
-        <target>عنوان پیوند به صورت خصوصیت &lt;em&gt;title&lt;/em&gt; در نشانه‌گذاری اچ‌تی‌ام‌ال اضافه می‌شود.</target>
+        <target>عنوان پیوند به صورت خصوصیت &lt;em&gt;title&lt;/em&gt; در نشانه‌گذاری HTML اضافه می‌شود.</target>
       </trans-unit>
       <trans-unit id="tl_content.embed.0">
         <source>Embed the link</source>
@@ -472,6 +473,7 @@
       </trans-unit>
       <trans-unit id="tl_content.playerAspect.0">
         <source>Aspect ratio</source>
+        <target>نسبت ابعاد</target>
       </trans-unit>
       <trans-unit id="tl_content.playerAspect.1">
         <source>Here you can select the aspect ratio of the video to make it responsive.</source>
@@ -484,6 +486,7 @@
       </trans-unit>
       <trans-unit id="tl_content.playerColor.0">
         <source>Controls color</source>
+        <target>رنگ را کنترل می‌کند</target>
       </trans-unit>
       <trans-unit id="tl_content.playerColor.1">
         <source>Here you can enter a hexadecimal color (e.g. ff0000) for the video controls.</source>
@@ -586,7 +589,7 @@
       </trans-unit>
       <trans-unit id="tl_content.cssID.0">
         <source>CSS ID/class</source>
-        <target>شناسه/کلاس سی‌اس‌اس</target>
+        <target>شناسه/کلاس CSS</target>
       </trans-unit>
       <trans-unit id="tl_content.cssID.1">
         <source>Here you can set an ID and one or more classes.</source>
@@ -622,7 +625,7 @@
       </trans-unit>
       <trans-unit id="tl_content.text_legend">
         <source>Text/HTML/Code</source>
-        <target>متن/اچ‌تی‌ام‌ال/کد</target>
+        <target>متن/HTML/کد</target>
       </trans-unit>
       <trans-unit id="tl_content.image_legend">
         <source>Image settings</source>
@@ -678,6 +681,7 @@
       </trans-unit>
       <trans-unit id="tl_content.splash_legend">
         <source>Splash image</source>
+        <target>تصویر اسپلش</target>
       </trans-unit>
       <trans-unit id="tl_content.expert_legend">
         <source>Expert settings</source>
@@ -749,6 +753,7 @@
       </trans-unit>
       <trans-unit id="tl_content.player_loop">
         <source>Play in a loop</source>
+        <target>نمایش در یک حلقه</target>
       </trans-unit>
       <trans-unit id="tl_content.player_muted">
         <source>Mute the audio output</source>
@@ -775,18 +780,22 @@
       </trans-unit>
       <trans-unit id="tl_content.youtube_cc_load_policy">
         <source>Show captions by default</source>
+        <target>نمایش زیرنویس‌ها به صورت پیش‌فرض</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_fs">
         <source>Hide the fullscreen button</source>
+        <target>مخفی کردن دکمه نمایش تمام‌صفحه</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_hl">
         <source>Use the Contao page language</source>
       </trans-unit>
       <trans-unit id="tl_content.youtube_iv_load_policy">
         <source>Hide annotations</source>
+        <target>پنهان کردن یادداشت‌ها</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_modestbranding">
         <source>Hide the YouTube logo</source>
+        <target>پنهان کردن آرم YouTube</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_rel">
         <source>Do not show related videos at the end</source>
@@ -803,9 +812,11 @@
       </trans-unit>
       <trans-unit id="tl_content.vimeo_loop">
         <source>Play in a loop</source>
+        <target>نمایش در یک حلقه</target>
       </trans-unit>
       <trans-unit id="tl_content.vimeo_portrait">
         <source>Hide the profile image</source>
+        <target>پنهان کردن تصویر پروفایل</target>
       </trans-unit>
       <trans-unit id="tl_content.vimeo_title">
         <source>Hide the title</source>
@@ -849,6 +860,7 @@
       </trans-unit>
       <trans-unit id="tl_content.toggle">
         <source>Hide/unhide content element ID %s</source>
+        <target>پنهان/آشکار کردن المنت شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.0">
         <source>Paste at the top</source>

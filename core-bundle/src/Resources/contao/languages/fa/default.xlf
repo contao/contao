@@ -59,6 +59,7 @@
       </trans-unit>
       <trans-unit id="ERR.extnd">
         <source>For security reasons you can not use the following characters here: #&lt;&gt;()\=</source>
+        <target>به خاطر دلایل امنیتی نمی‌توانید از این کاراکترها استفاده کنید: #&lt;&gt;()\=</target>
       </trans-unit>
       <trans-unit id="ERR.email">
         <source>Please enter a valid e-mail address!</source>
@@ -114,7 +115,7 @@
       </trans-unit>
       <trans-unit id="ERR.filesize">
         <source>The maximum size for file uploads is %s (Contao or php.ini settings)!</source>
-        <target>بیشترین حجم مجاز برای بارگزاری پرونده %s می‌باشد (تنظیمات کانتائو یا php.ini)!</target>
+        <target>بیشترین حجم مجاز برای بارگزاری پرونده %s می‌باشد (تنظیمات کنتائو یا php.ini)!</target>
       </trans-unit>
       <trans-unit id="ERR.filetype">
         <source>File type &quot;%s&quot; is not allowed to be uploaded!</source>
@@ -218,6 +219,9 @@
       <trans-unit id="ERR.extensionsOnly">
         <source>You can only select &quot;%s&quot; files!</source>
         <target>شما می‌توانید فقط «%s» پرونده انتخاب کنید!</target>
+      </trans-unit>
+      <trans-unit id="ERR.forbiddenExtensions">
+        <source>The following file extensions are not allowed: %s</source>
       </trans-unit>
       <trans-unit id="ERR.invalidPages">
         <source>Your selection contains invalid page IDs!</source>
@@ -327,11 +331,11 @@
       </trans-unit>
       <trans-unit id="CTE.html.0">
         <source>HTML</source>
-        <target>اچ‌تی‌ام‌ال</target>
+        <target>HTML</target>
       </trans-unit>
       <trans-unit id="CTE.html.1">
         <source>Allows you to add custom HTML code.</source>
-        <target>امکان افزودن کد اچ‌تی‌ام‌ال سفارشی را به شما می‌دهد</target>
+        <target>امکان افزودن کد HTML سفارشی را به شما می‌دهد</target>
       </trans-unit>
       <trans-unit id="CTE.list.0">
         <source>List</source>
@@ -391,7 +395,7 @@
       </trans-unit>
       <trans-unit id="CTE.markdown.1">
         <source>Generates HTML code from a markdown text.</source>
-        <target>کد اچ‌تی‌ام‌ال از یک متن نشانه‌دار تولید می‌کند.</target>
+        <target>کد HTML از یک متن نشانه‌دار تولید می‌کند.</target>
       </trans-unit>
       <trans-unit id="CTE.slider">
         <source>Content slider</source>
@@ -583,6 +587,7 @@
       </trans-unit>
       <trans-unit id="PTY.error_401.0">
         <source>401 Not authenticated</source>
+        <target>۴۰۱ تایید نشده</target>
       </trans-unit>
       <trans-unit id="PTY.error_401.1">
         <source>If a user requests a protected page without being authenticated, a 401 error page will be loaded instead.</source>
@@ -1281,6 +1286,7 @@
       </trans-unit>
       <trans-unit id="MSC.all.1">
         <source>Edit multiple elements at once</source>
+        <target>ویرایش چند المنت هم زمان</target>
       </trans-unit>
       <trans-unit id="MSC.all_override.0">
         <source>Override multiple</source>
@@ -1288,6 +1294,7 @@
       </trans-unit>
       <trans-unit id="MSC.all_override.1">
         <source>Override multiple elements at once</source>
+        <target>رونویسی هم‌زمان چند المنت</target>
       </trans-unit>
       <trans-unit id="MSC.all_fields.0">
         <source>Available fields</source>
@@ -1339,7 +1346,7 @@
       </trans-unit>
       <trans-unit id="MSC.firstLogin">
         <source>This seems to be your first login. Welcome to Contao!</source>
-        <target>این به نظر اولین ورود شما است. به کانتائو خوش آمدید!</target>
+        <target>این به نظر اولین ورود شما است. به کنتائو خوش آمدید!</target>
       </trans-unit>
       <trans-unit id="MSC.loginCount">
         <source>Login attempts</source>
@@ -1374,8 +1381,7 @@
         <target>کلید‌های میانبر بخش مدیریت</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/books/manual/current/en/02-administration-area/keyboard-shortcuts.html&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
-        <target>برای سرعت دادن به نحوه کارتان با استفاده از &lt;a href=&quot;https://docs.contao.org/books/manual/current/en/02-administration-area/keyboard-shortcuts.html&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot;&gt; میان‌برهای صفحه کلید&lt;/a&gt; بیشتر یاد بگیرید.</target>
+        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -1622,11 +1628,11 @@
       </trans-unit>
       <trans-unit id="MSC.ppHeadline">
         <source>Contao pages</source>
-        <target>برگه‌های کانتائو</target>
+        <target>برگه‌های کنتائو</target>
       </trans-unit>
       <trans-unit id="MSC.fpHeadline">
         <source>Contao files</source>
-        <target>پرونده‌های کانتائو</target>
+        <target>پرونده‌های کنتائو</target>
       </trans-unit>
       <trans-unit id="MSC.yes">
         <source>yes</source>
@@ -1758,7 +1764,7 @@
       </trans-unit>
       <trans-unit id="MSC.updateVersion">
         <source>Contao version %s is available.</source>
-        <target>کانتائو نسخه‌ی %s موجود می‌باشد</target>
+        <target>کنتائو نسخه‌ی %s موجود می‌باشد</target>
       </trans-unit>
       <trans-unit id="MSC.maintenanceEnabled">
         <source>The maintenance mode is currently enabled.</source>
@@ -2310,6 +2316,7 @@
       </trans-unit>
       <trans-unit id="MSC.resendToken">
         <source>The token has been re-sent to %s.</source>
+        <target>توکنه به %s مجددا ارسال شد.</target>
       </trans-unit>
       <trans-unit id="MSC.invalidTokenUrl">
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
@@ -2362,15 +2369,19 @@
       </trans-unit>
       <trans-unit id="MSC.validCharacters.unicodeLowercase">
         <source>Unicode numbers and lowercase letters</source>
+        <target>حروف کوچک و اعداد یونی‌کد</target>
       </trans-unit>
       <trans-unit id="MSC.validCharacters.unicode">
         <source>Unicode numbers and letters</source>
+        <target>حروف و اعداد یونی‌کد</target>
       </trans-unit>
       <trans-unit id="MSC.validCharacters.asciiLowercase">
         <source>ASCII numbers and lowercase letters</source>
+        <target>حروف کوچک و اعداد ASCII</target>
       </trans-unit>
       <trans-unit id="MSC.validCharacters.ascii">
         <source>ASCII numbers and letters</source>
+        <target>حروف و اعداد ASCII</target>
       </trans-unit>
       <trans-unit id="MSC.sortOrder">
         <source>Sort order</source>
@@ -2399,6 +2410,7 @@
       </trans-unit>
       <trans-unit id="MSC.twoFactorActive">
         <source>Two-factor authentication has been enabled.</source>
+        <target>احراز هویت دو-مرحله‌ای فعال شده است.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorEnforced">
         <source>Please enable up two-factor authentication before you continue.</source>
@@ -2549,6 +2561,7 @@
       </trans-unit>
       <trans-unit id="DCA.all.1">
         <source>Edit multiple elements at once</source>
+        <target>ویرایش چند المنت هم زمان</target>
       </trans-unit>
       <trans-unit id="DCA.toggleNodes.0">
         <source>Toggle all</source>
@@ -2564,33 +2577,43 @@
       </trans-unit>
       <trans-unit id="DCA.new.1">
         <source>Create a new element</source>
+        <target>ایجاد یک المنت جدید</target>
       </trans-unit>
       <trans-unit id="DCA.show">
         <source>Show the details of element ID %s</source>
+        <target>نمایش جزئیات المنت شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="DCA.edit">
         <source>Edit element ID %s</source>
+        <target>ویرایش المنت شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="DCA.cut">
         <source>Move element ID %s</source>
+        <target>جابجایی المنت شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="DCA.copy">
         <source>Duplicate element ID %s</source>
+        <target>دو نسخه کردن المنت‌ شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="DCA.delete">
         <source>Delete element ID %s</source>
+        <target>حذف المنت شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="DCA.drag">
         <source>Drag element ID %s</source>
+        <target>کشیدن المنت شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="DCA.editheader.0">
         <source>Edit the element settings</source>
+        <target>ویرایش تنظیمات المنت</target>
       </trans-unit>
       <trans-unit id="DCA.editheader.1">
         <source>Edit the settings of element ID %s</source>
+        <target>ویرایش تنظیمات المنت شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="DCA.toggle">
         <source>Publish/unpublish element ID %s</source>
+        <target>انتشار/عدم انتشار المنت شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="DCA.pasteinto.0">
         <source>Paste at the top</source>
@@ -2598,6 +2621,7 @@
       </trans-unit>
       <trans-unit id="DCA.pasteinto.1">
         <source>Paste into element ID %s</source>
+        <target>جاگذاری به المنت شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="DCA.pasteafter.0">
         <source>Paste at the top</source>
@@ -2605,12 +2629,15 @@
       </trans-unit>
       <trans-unit id="DCA.pasteafter.1">
         <source>Paste after element ID %s</source>
+        <target>جاگذاری بعد از المنت شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="DCA.pastenew.0">
         <source>Create a new element at the top</source>
+        <target>ایجاد یک المنت جدید در بالا</target>
       </trans-unit>
       <trans-unit id="DCA.pastenew.1">
         <source>Create a new element after element ID %s</source>
+        <target>ایجاد یک المنت جدید بعد از المنت شناسه‌ی %s</target>
       </trans-unit>
     </body>
   </file>

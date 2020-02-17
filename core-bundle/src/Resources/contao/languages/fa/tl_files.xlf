@@ -35,6 +35,7 @@
       </trans-unit>
       <trans-unit id="tl_files.syncExclude.0">
         <source>Do not synchronize</source>
+        <target>هنگام‌سازی نکنید</target>
       </trans-unit>
       <trans-unit id="tl_files.syncExclude.1">
         <source>Do not synchronize the folder and its subfolders with the database.</source>
@@ -135,6 +136,7 @@
       </trans-unit>
       <trans-unit id="tl_files.dropzoneInvalidType">
         <source>Files of this type cannot be uploaded.</source>
+        <target>فایل‌های این نوع نمی‌توانند بارگذاری شوند.</target>
       </trans-unit>
       <trans-unit id="tl_files.fileLocation">
         <source>File location: %s</source>
@@ -218,6 +220,7 @@
       </trans-unit>
       <trans-unit id="tl_files.drag">
         <source>Drag file or folder &quot;%s&quot;</source>
+        <target>کشیدن فایل یا فولدر «%s»</target>
       </trans-unit>
       <trans-unit id="tl_files.source">
         <source>Edit file &quot;%s&quot;</source>
@@ -237,9 +240,11 @@
       </trans-unit>
       <trans-unit id="tl_files.pasteinto.0">
         <source>Paste into the root folder</source>
+        <target>جاگذاری در فولدر ریشه</target>
       </trans-unit>
       <trans-unit id="tl_files.pasteinto.1">
         <source>Paste into folder &quot;%s&quot;</source>
+        <target>جاگذاری در فولدر «%s»</target>
       </trans-unit>
     </body>
   </file>

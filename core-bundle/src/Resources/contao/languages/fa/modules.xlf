@@ -87,9 +87,11 @@
       </trans-unit>
       <trans-unit id="MOD.opt_in.0">
         <source>Double opt-in</source>
+        <target>انتخاب دوگانه</target>
       </trans-unit>
       <trans-unit id="MOD.opt_in.1">
         <source>Manage the double opt-in tokens</source>
+        <target>مدیریت توکن‌های انتخاب دوگانه</target>
       </trans-unit>
       <trans-unit id="MOD.system">
         <source>System</source>
@@ -117,7 +119,7 @@
       </trans-unit>
       <trans-unit id="MOD.settings.1">
         <source>Check and optimize the Contao configuration</source>
-        <target>بررسی و بهینه‌سازی تنظیمات کانتائو</target>
+        <target>بررسی و بهینه‌سازی تنظیمات کنتائو</target>
       </trans-unit>
       <trans-unit id="MOD.maintenance.0">
         <source>Maintenance</source>
@@ -125,7 +127,7 @@
       </trans-unit>
       <trans-unit id="MOD.maintenance.1">
         <source>Maintain or update Contao</source>
-        <target>نگهداری یا به‌روزرسانی کانتائو</target>
+        <target>نگهداری یا به‌روزرسانی کنتائو</target>
       </trans-unit>
       <trans-unit id="MOD.security.0">
         <source>Security</source>
@@ -269,6 +271,7 @@
       </trans-unit>
       <trans-unit id="FMD.sitemap.0">
         <source>HTML sitemap</source>
+        <target>نقشه‌ی سایت HTML</target>
       </trans-unit>
       <trans-unit id="FMD.sitemap.1">
         <source>Generates a list of all pages in the site structure</source>
@@ -376,11 +379,11 @@
       </trans-unit>
       <trans-unit id="FMD.html.0">
         <source>Custom HTML</source>
-        <target>اچ‌تی‌ام‌ال سفارشی</target>
+        <target>HTML سفارشی</target>
       </trans-unit>
       <trans-unit id="FMD.html.1">
         <source>Allows you to add custom HTML code</source>
-        <target>امکان افزودن کد اچ‌تی‌ام‌ال سفارشی را به شما می‌دهد</target>
+        <target>امکان افزودن کد HTML سفارشی را به شما می‌دهد</target>
       </trans-unit>
       <trans-unit id="FMD.rssReader.0">
         <source>RSS reader</source>
@@ -396,6 +399,7 @@
       </trans-unit>
       <trans-unit id="FMD.two_factor.1">
         <source>Generates a form to set up or change two-factor authentication</source>
+        <target>یک فرم برای تنظیم یا تغییر احراز هویت دومرحله‌ای ایجاد می‌کند</target>
       </trans-unit>
     </body>
   </file>

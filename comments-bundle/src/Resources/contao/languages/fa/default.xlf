@@ -124,6 +124,22 @@ The confirmation link is valid for 24 hours. You can cancel your subscription at
 
 %s
 </source>
+        <target>سلام %s,
+
+لطفا تایید کنید که شما می‌خواهید از دیدگاه‌های جدید در این صفحه آگاه شوید:
+
+%s
+
+---
+
+لینک زیر را برای تایید اشتراک‌تان کلیک کنید:
+
+%s
+
+لینک تایید برای ۲۴ ساعت معتبر است. شما می‌توانید اشتراک خود را در هر زمانی با کلیک لینک زیر لغو کنید:
+
+%s
+</target>
       </trans-unit>
       <trans-unit id="MSC.com_notifySubject">
         <source>New comment on %s</source>

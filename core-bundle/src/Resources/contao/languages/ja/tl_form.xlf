@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_form.alias.1">
         <source>The form alias is a unique reference to the form which can be called instead of its numeric ID.</source>
-        <target>フォームのエイリアスは、その数値のIDの代わりにフォームを参照できる、重複しない生枝です。</target>
+        <target>フォームのエイリアスは、その数値のIDの代わりにフォームを参照できる、重複しない名前です。</target>
       </trans-unit>
       <trans-unit id="tl_form.jumpTo.0">
         <source>Redirect page</source>
