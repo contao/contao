@@ -296,7 +296,7 @@ class Environment
 			}
 		}
 
-		return preg_replace('/[^A-Za-z0-9[\].:-]/', '', $host);
+		return preg_replace('/[^A-Za-z0-9[\].:_-]/', '', $host);
 	}
 
 	/**

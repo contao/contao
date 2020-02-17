@@ -3,6 +3,12 @@
 ## 4.8.7 (2019-12-17)
 
  * Fix the picture_default.html5 template (see #1108).
+ * Replace document.write() in the back end templates (see #1329).
+ * Fix the initial table sorting in the "table" content element (see #1315).
+ * Improve the Contao\Database\Result class (see #1287).
+ * Fix the top navigation overflow (see #1302).
+ * Fix checking for binary strings in the version comparison (see #1294).
+ * Urlencode the path returned by the "file::uuid" insert tag (see #1268).
 
 ## 4.8.6 (2019-12-17)
 
