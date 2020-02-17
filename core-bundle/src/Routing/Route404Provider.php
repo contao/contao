@@ -51,7 +51,7 @@ class Route404Provider implements RouteProviderInterface
 
         /** @var PageModel $pageModel */
         $pageModel = $this->framework->getAdapter(PageModel::class);
-        $pages = $pageModel->findBy(['tl_page.type=?'], ['error_404']);
+        $pages = $pageModel->findByType('error_404');
 
         if (null === $pages) {
             return $collection;

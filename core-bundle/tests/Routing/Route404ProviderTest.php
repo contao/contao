@@ -25,10 +25,10 @@ class Route404ProviderTest extends TestCase
 {
     public function testGetRouteByNameThrowsException(): void
     {
-        $this->expectException(RouteNotFoundException::class);
-
         $framework = $this->mockContaoFramework();
         $provider = new Route404Provider($framework, false);
+
+        $this->expectException(RouteNotFoundException::class);
 
         $provider->getRouteByName('foo');
     }
@@ -36,8 +36,8 @@ class Route404ProviderTest extends TestCase
     public function testGetRoutesByNamesReturnsEmptyArray(): void
     {
         $framework = $this->mockContaoFramework();
-        $provider = new Route404Provider($framework, false);
 
+        $provider = new Route404Provider($framework, false);
         $result = $provider->getRoutesByNames(['foo']);
 
         $this->assertIsArray($result);
@@ -46,11 +46,11 @@ class Route404ProviderTest extends TestCase
 
     public function testReturnsEmptyCollectionWithout404Pages(): void
     {
-        $pageAdapter = $this->mockAdapter(['findBy']);
+        $pageAdapter = $this->mockAdapter(['findByType']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findBy')
-            ->with(['tl_page.type=?'], ['error_404'])
+            ->method('findByType')
+            ->with('error_404')
             ->willReturn(null)
         ;
 
@@ -69,11 +69,11 @@ class Route404ProviderTest extends TestCase
         $page->domain = 'example.com';
         $page->rootUseSSL = true;
 
-        $pageAdapter = $this->mockAdapter(['findBy']);
+        $pageAdapter = $this->mockAdapter(['findByType']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findBy')
-            ->with(['tl_page.type=?'], ['error_404'])
+            ->method('findByType')
+            ->with('error_404')
             ->willReturn(new Collection([$page], 'tl_page'))
         ;
 
@@ -105,11 +105,11 @@ class Route404ProviderTest extends TestCase
         $page->rootUseSSL = true;
         $page->rootLanguage = 'de';
 
-        $pageAdapter = $this->mockAdapter(['findBy']);
+        $pageAdapter = $this->mockAdapter(['findByType']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findBy')
-            ->with(['tl_page.type=?'], ['error_404'])
+            ->method('findByType')
+            ->with('error_404')
             ->willReturn(new Collection([$page], 'tl_page'))
         ;
 
@@ -164,11 +164,11 @@ class Route404ProviderTest extends TestCase
             );
         }
 
-        $pageAdapter = $this->mockAdapter(['findBy']);
+        $pageAdapter = $this->mockAdapter(['findByType']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findBy')
-            ->with(['tl_page.type=?'], ['error_404'])
+            ->method('findByType')
+            ->with('error_404')
             ->willReturn(new Collection($pages, 'tl_page'))
         ;
 
