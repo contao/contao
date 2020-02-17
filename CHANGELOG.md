@@ -1,5 +1,16 @@
 # Change log
 
+## 4.4.47 (2020-02-17)
+
+ * Replace document.write() in the back end templates (see #1329).
+ * Fix the initial table sorting in the "table" content element (see #1315).
+ * Improve the Contao\Database\Result class (see #1287).
+ * Fix the top navigation overflow (see #1302).
+ * Fix checking for binary strings in the version comparison (see #1294).
+ * Correctly find unactivated members (see #1258).
+ * Urlencode the path returned by the "file::uuid" insert tag (see #1268).
+ * Fix the custom response status code in Symfony 3.4 (see #1204).
+
 ## 4.4.46 (2019-12-17)
 
  * Prevent information disclosure in the back end (see CVE-2019-19712).

@@ -30,7 +30,7 @@
       </trans-unit>
       <trans-unit id="XPT.errorExplain">
         <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, search the &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;Contao support page&lt;/a&gt;.</source>
-        <target>اجرای اسکریپت متوقف شد، زیرا چیزی درست کار نمی‌کند. پیغام خطای واقعی مخفی با این پیغام به دلایل امنیتی مخفی شده است و می‌تواند در  پرونده‌ی گزارش پیدا شود (بالا را ببینید). اگر شما پیغام خطاء را نفهمیدید یا ندانستید چگونه مشکل را برطرف نمایید، &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;سوالات متداول کانتائو&lt;/a&gt; را جستجو نمایید و یا از &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;برگه پشتیبانی کانتائو&lt;/a&gt; بازدید نمایید.</target>
+        <target>اجرای اسکریپت متوقف شد، زیرا چیزی درست کار نمی‌کند. پیغام خطای واقعی مخفی با این پیغام به دلایل امنیتی مخفی شده است و می‌تواند در  پرونده‌ی گزارش پیدا شود (بالا را ببینید). اگر شما پیغام خطاء را نفهمیدید یا ندانستید چگونه مشکل را برطرف نمایید، &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;سوالات متداول کنتائو&lt;/a&gt; را جستجو نمایید و یا از &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;برگه پشتیبانی کنتائو&lt;/a&gt; بازدید نمایید.</target>
       </trans-unit>
       <trans-unit id="XPT.requestToken">
         <source>Invalid request token</source>
@@ -46,11 +46,11 @@
       </trans-unit>
       <trans-unit id="XPT.tokenExplainOne">
         <source>This error occurs if there is a POST request without a valid authentication token. In Contao 2.10, the referer check has been replaced with a request token system. If the problem persists, you may be using an incompatible third-party extension or have not correctly updated your Contao installation.</source>
-        <target>این خطا زمانی رخ می‌دهد که درخواست POSTی بدون توکن تصدیق شده معتبر وجود داشته باشد. در کانتائو 2.10، بررسی ارجاعی با سامانه توکن درخواستی جایگزین شده است. اگر این مشکل ادامه یابد، شما ممکن است از یک افزونه غیرسازگار استفاده می‌کنید یا نصب کانتائو را به درستی به‌روز نکرده‌اید.</target>
+        <target>این خطا زمانی رخ می‌دهد که درخواست POSTی بدون توکن تصدیق شده معتبر وجود داشته باشد. در کنتائو 2.10، بررسی ارجاعی با سامانه توکن درخواستی جایگزین شده است. اگر این مشکل ادامه یابد، شما ممکن است از یک افزونه غیرسازگار استفاده می‌کنید یا نصب کنتائو را به درستی به‌روز نکرده‌اید.</target>
       </trans-unit>
       <trans-unit id="XPT.tokenExplainTwo">
         <source>For more information, search the &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;Contao support page&lt;/a&gt;.</source>
-        <target>برای اطلاعات بیشتر، &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;پرسش و پاسخ کانتائو&lt;/a&gt; را جستجو نمایید و یا &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;پشتیبانی کانتائو&lt;/a&gt; را مشاهده کنید.</target>
+        <target>برای اطلاعات بیشتر، &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;پرسش و پاسخ کنتائو&lt;/a&gt; را جستجو نمایید و یا &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;پشتیبانی کنتائو&lt;/a&gt; را مشاهده کنید.</target>
       </trans-unit>
       <trans-unit id="XPT.incomplete">
         <source>Incomplete installation</source>
@@ -58,14 +58,14 @@
       </trans-unit>
       <trans-unit id="XPT.incompleteInstallation">
         <source>The installation has not been completed, therefore Contao cannot work properly.</source>
-        <target>نصب تکمیل نشده است، بنابراین کانتائو به درستی کار نخواهد کرد.</target>
+        <target>نصب تکمیل نشده است، بنابراین کنتائو به درستی کار نخواهد کرد.</target>
       </trans-unit>
       <trans-unit id="XPT.incompleteFix">
         <source>Please open the Contao install tool (&lt;code&gt;/contao/install&lt;/code&gt;) in your browser.</source>
       </trans-unit>
       <trans-unit id="XPT.incompleteExplain">
         <source>For more information, please refer to the &lt;a href=&quot;https://contao.org/manual/installation.html&quot; target=&quot;_blank&quot;&gt;Contao manual&lt;/a&gt;.</source>
-        <target>لطفا برای اطلاعات بیشتر به &lt;a href=&quot;https://contao.org/manual/installation.html&quot; target=&quot;_blank&quot;&gt;راهنمای کانتائو&lt;/a&gt; مراجعه نمایید.</target>
+        <target>لطفا برای اطلاعات بیشتر به &lt;a href=&quot;https://contao.org/manual/installation.html&quot; target=&quot;_blank&quot;&gt;راهنمای کنتائو&lt;/a&gt; مراجعه نمایید.</target>
       </trans-unit>
       <trans-unit id="XPT.noForward">
         <source>Forward page not found</source>
@@ -105,7 +105,7 @@
       </trans-unit>
       <trans-unit id="XPT.noLayoutExplain">
         <source>For more information, please refer to the &lt;a href=&quot;https://contao.org/manual/managing-pages.html&quot; target=&quot;_blank&quot;&gt;Contao manual&lt;/a&gt;.</source>
-        <target>برای اطلاعات بیشتر لطفا به &lt;a href=&quot;https://contao.org/manual/managing-pages.html&quot; target=&quot;_blank&quot;&gt;راهنمای کانتائو&lt;/a&gt; مراجعه نمایید.</target>
+        <target>برای اطلاعات بیشتر لطفا به &lt;a href=&quot;https://contao.org/manual/managing-pages.html&quot; target=&quot;_blank&quot;&gt;راهنمای کنتائو&lt;/a&gt; مراجعه نمایید.</target>
       </trans-unit>
       <trans-unit id="XPT.noActive">
         <source>No active pages found</source>
@@ -141,7 +141,7 @@
       </trans-unit>
       <trans-unit id="XPT.insecureExplain">
         <source>Contao 4 no longer relies on &lt;code&gt;.htaccess&lt;/code&gt; files to protect folders and instead uses a public subfolder as document root. Anything above the document root must not be accessible via HTTP, otherwise anyone could download non-public resources including sensitive data such as configuration files.</source>
-        <target>کانتائو ۴ دیگر بر اساس پرونده‌های &lt;code&gt;.htaccess&lt;/code&gt; برای حفاظت پوشه‌ها نمی‌باشد و در عوض از یک زیرپوشه عمومی به عنوان ریشه سند استفاده می‌کند. هر چیز فراتر از ریشه سند از طریق اچ‌تی‌تی‌پی در دسترس نیست، وگرنه هر کسی می‌توانست منابع غیرعمومی شامل اطلاعات حساس مانند پرونده‌های تنظیمات را بارگیری نماید.</target>
+        <target>کنتائو ۴ دیگر بر اساس پرونده‌های &lt;code&gt;.htaccess&lt;/code&gt; برای حفاظت پوشه‌ها نمی‌باشد و در عوض از یک زیرپوشه عمومی به عنوان ریشه سند استفاده می‌کند. هر چیز فراتر از ریشه سند از طریق اچ‌تی‌تی‌پی در دسترس نیست، وگرنه هر کسی می‌توانست منابع غیرعمومی شامل اطلاعات حساس مانند پرونده‌های تنظیمات را بارگیری نماید.</target>
       </trans-unit>
     </body>
   </file>

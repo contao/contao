@@ -43,7 +43,7 @@
       </trans-unit>
       <trans-unit id="tl_article.teaserCssID.0">
         <source>Teaser CSS ID/class</source>
-        <target>شناسه/کلاس سی‌اس‌اس تیزر</target>
+        <target>شناسه/کلاس CSS تیزر</target>
       </trans-unit>
       <trans-unit id="tl_article.teaserCssID.1">
         <source>Here you can set an ID and one or more classes for the teaser element.</source>
@@ -107,7 +107,7 @@
       </trans-unit>
       <trans-unit id="tl_article.cssID.0">
         <source>CSS ID/class</source>
-        <target>شناسه/کلاس سی‌اس‌اس</target>
+        <target>شناسه/کلاس CSS</target>
       </trans-unit>
       <trans-unit id="tl_article.cssID.1">
         <source>Here you can set an ID and one or more classes.</source>

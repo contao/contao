@@ -70,7 +70,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.minifyMarkup.1">
         <source>Minify the HTML markup before it is sent to the browser.</source>
-        <target>نشانه‌گذاری اچ‌تی‌ام‌ال را قبل از ارسال به مرورگر کوچک می‌کند.</target>
+        <target>نشانه‌گذاری HTML را قبل از ارسال به مرورگر کوچک می‌کند.</target>
       </trans-unit>
       <trans-unit id="tl_settings.gzipScripts.0">
         <source>Compress scripts</source>
@@ -78,7 +78,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.gzipScripts.1">
         <source>Create a compressed version of the combined CSS and JavaScript files. Requires adjustments of the .htaccess file.</source>
-        <target>ایجاد نسخه فشرده از پرونده‌های سی‌اس‌اس و جاوا اسکریپت. به تنظیم پرونده .htaccess نیاز دارد.</target>
+        <target>ایجاد نسخه فشرده از پرونده‌های CSS و جاوا اسکریپت. به تنظیم پرونده .htaccess نیاز دارد.</target>
       </trans-unit>
       <trans-unit id="tl_settings.resultsPerPage.0">
         <source>Items per page</source>
@@ -162,11 +162,11 @@
       </trans-unit>
       <trans-unit id="tl_settings.allowedTags.0">
         <source>Allowed HTML tags</source>
-        <target>برچسب‌های اچ‌تی‌ام‌ال مجاز</target>
+        <target>برچسب‌های HTML مجاز</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedTags.1">
         <source>Here you can enter a list of allowed HTML tags that will not be stripped.</source>
-        <target>اینجا می‌توانید فهرستی از برچسب‌های اچ‌تی‌ام‌ال مجاز که نباید حذف شوند را وارد نمایید.</target>
+        <target>اینجا می‌توانید فهرستی از برچسب‌های HTML مجاز که نباید حذف شوند را وارد نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_settings.disableRefererCheck.0">
         <source>Disable request tokens</source>

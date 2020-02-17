@@ -139,7 +139,7 @@
       </trans-unit>
       <trans-unit id="tl_form.attributes.0">
         <source>CSS ID/class</source>
-        <target>شناسه/کلاس سی‌اس‌اس</target>
+        <target>شناسه/کلاس CSS</target>
       </trans-unit>
       <trans-unit id="tl_form.attributes.1">
         <source>Here you can set an ID and one or more classes.</source>
@@ -151,15 +151,15 @@
       </trans-unit>
       <trans-unit id="tl_form.formID.1">
         <source>The form ID is required to trigger a Contao module.</source>
-        <target>شناسه فرم برای استفاده در ماژول کانتائو مورد نیاز است.</target>
+        <target>شناسه فرم برای استفاده در ماژول کنتائو مورد نیاز است.</target>
       </trans-unit>
       <trans-unit id="tl_form.allowTags.0">
         <source>Allow HTML tags</source>
-        <target>تگ‌های اچ‌تی‌ام‌ال مجاز</target>
+        <target>تگ‌های HTML مجاز</target>
       </trans-unit>
       <trans-unit id="tl_form.allowTags.1">
         <source>Allow HTML tags in form fields.</source>
-        <target>تگ‌های اچ‌تی‌ام‌ال مجار در فیلد‌های فرم.</target>
+        <target>تگ‌های HTML مجار در فیلد‌های فرم.</target>
       </trans-unit>
       <trans-unit id="tl_form.tstamp.0">
         <source>Revision date</source>
