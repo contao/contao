@@ -291,10 +291,18 @@
             const input = document.getElementById('publishedPathInput');
             input.value = window.location.href.replace('{{ preview_script }}', '');
             copyButton.addEventListener('click', function(event) {
+                function clipboardFallback() {
+                    input.select();
+                    input.setSelectionRange(0, 99999);
+                    document.execCommand('copy');
+                }
                 event.preventDefault();
-                input.select();
-                input.setSelectionRange(0, 99999);
-                document.execCommand('copy');
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(input.value).catch(clipboardFallback);
+                }
+                else {
+                    clipboardFallback();
+                }
             });
         });
     })();
