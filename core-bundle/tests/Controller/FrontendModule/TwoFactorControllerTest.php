@@ -161,6 +161,15 @@ class TwoFactorControllerTest extends TestCase
             $this->mockSecurityHelper($user, true)
         );
 
+        $trustedDeviceManager = $this->createMock(TrustedDeviceManager::class);
+        $trustedDeviceManager
+            ->expects($this->once())
+            ->method('clearTrustedDevices')
+            ->with($user)
+        ;
+
+        $container->set('contao.security.two_factor.trusted_device_manager', $trustedDeviceManager);
+
         $controller = new TwoFactorController();
         $controller->setContainer($container);
 
@@ -179,6 +188,8 @@ class TwoFactorControllerTest extends TestCase
         /** @var RedirectResponse $response */
         $response = $controller($request, $module, 'main', null, $page);
 
+        $this->assertNull($user->backupCodes);
+        $this->assertSame('', $user->useTwoFactor);
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame('https://localhost.wip/foobar', $response->getTargetUrl());
     }

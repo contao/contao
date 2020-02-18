@@ -137,7 +137,6 @@ class TwoFactorController extends AbstractFrontendModuleController
         $template->href = $this->page->getAbsoluteUrl().'?2fa=enable';
         $template->backupCodes = json_decode((string) $user->backupCodes, true) ?? [];
         $template->trustedDevices = $this->get('contao.security.two_factor.trusted_device_manager')->getTrustedDevices($user);
-        $template->currentDevice = $request->cookies->get($this->getParameter('scheb_two_factor.trusted_device.cookie_name'));
 
         return new Response($template->parse());
     }
@@ -194,6 +193,9 @@ class TwoFactorController extends AbstractFrontendModuleController
         $user->useTwoFactor = '';
         $user->backupCodes = null;
         $user->save();
+
+        // Clear all trusted devices
+        $this->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
 
         return new RedirectResponse($this->page->getAbsoluteUrl());
     }

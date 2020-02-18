@@ -179,6 +179,9 @@ p {
 .widget > div > * {
 	font-size:.875rem;
 }
+.widget pre,.widget code {
+	font-size:.75rem;
+}
 .widget h3 {
 	min-height:16px;
 }
@@ -252,7 +255,7 @@ fieldset.checkbox_container,fieldset.radio_container {
 	width:19%;
 }
 .tl_text,.tl_text_2,.tl_text_3,.tl_text_4,.tl_textarea,.tl_text_unit,.tl_text_trbl,.tl_text_interval {
-	margin:2px 0;
+	margin:3px 0;
 	box-sizing:border-box;
 	padding:5px 6px 6px;
 	border:1px solid #aaa;
@@ -498,6 +501,8 @@ a.tl_submit {
 	width:calc(100% - 30px); /* see #6320 */
 }
 .wizard > a {
+	position:relative;
+	top:-2px;
 	vertical-align:middle;
 }
 .wizard .tl_text,.wizard .tl_select {
@@ -532,8 +537,12 @@ a.tl_submit {
 }
 .dcapicker .tl_text + a {
 	position:relative;
-	top:2px;
+	top:-2px;
 	margin-left:-22px;
+	vertical-align:middle;
+}
+.dcapicker .tl_text + a img {
+	margin-left:0;
 }
 
 /* Tips */

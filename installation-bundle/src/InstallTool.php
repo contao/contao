@@ -15,6 +15,7 @@ namespace Contao\InstallationBundle;
 use Contao\Backend;
 use Contao\Config;
 use Contao\CoreBundle\Migration\MigrationCollection;
+use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\File;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
@@ -451,6 +452,7 @@ class InstallTool
     {
         $messages = [];
 
+        /** @var MigrationResult $migrationResult */
         foreach ($this->migrations->run() as $migrationResult) {
             $messages[] = $migrationResult->getMessage();
         }

@@ -52,20 +52,6 @@ class TrustedDevice
     protected $userId;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(type="text", name="cookie_value")
-     */
-    protected $cookieValue;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     */
-    protected $version;
-
-    /**
      * @var string|null
      *
      * @ORM\Column(type="text", name="user_agent", nullable=true)
@@ -93,10 +79,9 @@ class TrustedDevice
      */
     protected $deviceFamily;
 
-    public function __construct(User $user, int $version)
+    public function __construct(User $user)
     {
         $this->userId = (int) $user->id;
-        $this->version = $version;
         $this->created = new \DateTime();
         $this->userClass = \get_class($user);
     }
@@ -128,23 +113,6 @@ class TrustedDevice
     public function getUserId(): int
     {
         return $this->userId;
-    }
-
-    public function getCookieValue(): string
-    {
-        return $this->cookieValue;
-    }
-
-    public function setCookieValue(string $cookieValue): self
-    {
-        $this->cookieValue = $cookieValue;
-
-        return $this;
-    }
-
-    public function getVersion(): int
-    {
-        return $this->version;
     }
 
     public function setUserAgent(?string $userAgent): self

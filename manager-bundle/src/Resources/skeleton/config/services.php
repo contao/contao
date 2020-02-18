@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Contao\Model;
+use Contao\System;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
@@ -45,6 +47,50 @@ return static function(ContainerConfigurator $configurator) use ($container) {
     foreach ($services as $id => $definition) {
         if ($definition->hasErrors()) {
             $errors[] = $id;
+            continue;
+        }
+
+        $class = $definition->getClass() ?: $id;
+
+        if (is_a($class, System::class, true) || is_a($class, Model::class, true)) {
+            $container->removeDefinition($id);
+            --$serviceCount;
+            continue;
+        }
+
+        $ref = $container->getReflectionClass($class, false);
+
+        if (null === $ref) {
+            $errors[] = $id;
+            continue;
+        }
+
+        // Class does not have a constructor, nothing to worry about
+        if (!($constructor = $ref->getConstructor())) {
+            continue;
+        }
+
+        if (!$constructor->isPublic()) {
+            $errors[] = $id;
+            continue;
+        }
+
+        foreach ($constructor->getParameters() as $parameter) {
+            if ($parameter->isDefaultValueAvailable() || $parameter->isOptional()) {
+                continue;
+            }
+
+            $type = $parameter->getType();
+
+            if (
+                $type
+                && !$type->isBuiltin()
+                && (is_a($type->getName(), System::class, true) || is_a($type->getName(), Model::class, true))
+            ) {
+                $container->removeDefinition($id);
+                --$serviceCount;
+                continue(2);
+            }
         }
     }
 

@@ -62,7 +62,7 @@
         <div class="message">
           <p class="info"><?= $this->trans('MSC.twoFactorBackupCodesInfo') ?></p>
         </div>
-        <ul class="recovery-codes">
+        <ul class="backup-codes">
           <?php foreach ($this->backupCodes as $backupCode): ?>
             <li><code><?= $backupCode ?></code></li>
           <?php endforeach; ?>
@@ -92,7 +92,7 @@
             </tr>
             <?php foreach ($this->trustedDevices as $trustedDevice): ?>
               <tr>
-                <td><?= $trustedDevice->getDeviceFamily() ?><?php if ($this->currentDevice === $trustedDevice->getCookieValue()): ?> (<?= $this->trans('MSC.thisDevice') ?>)<?php endif; ?></td>
+                <td><?= $trustedDevice->getDeviceFamily() ?></td>
                 <td><?= $trustedDevice->getUaFamily() ?></td>
                 <td><?= $trustedDevice->getOsFamily() ?></td>
                 <td><?= $trustedDevice->getCreated()->format(Contao\Config::get('datimFormat')) ?></td>

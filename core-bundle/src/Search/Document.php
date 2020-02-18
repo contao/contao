@@ -44,6 +44,11 @@ class Document
     private $body;
 
     /**
+     * @var Crawler
+     */
+    private $crawler;
+
+    /**
      * @var array|null
      */
     private $jsonLds;
@@ -76,6 +81,15 @@ class Document
         return $this->body;
     }
 
+    public function getContentCrawler(): Crawler
+    {
+        if (null === $this->crawler) {
+            $this->crawler = new Crawler($this->body);
+        }
+
+        return $this->crawler;
+    }
+
     /**
      * Extracts all <script type="application/ld+json"> script tags and returns their contents as a JSON decoded
      * array. Optionally allows to restrict it to a given context and type.
@@ -92,9 +106,7 @@ class Document
             return $this->jsonLds;
         }
 
-        $crawler = new Crawler($this->body);
-
-        $this->jsonLds = $crawler
+        $this->jsonLds = $this->getContentCrawler()
             ->filterXPath('descendant-or-self::script[@type = "application/ld+json"]')
             ->each(
                 static function (Crawler $node) {
