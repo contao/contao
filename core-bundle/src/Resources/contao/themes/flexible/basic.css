@@ -501,6 +501,8 @@ a.tl_submit {
 	width:calc(100% - 30px); /* see #6320 */
 }
 .wizard > a {
+	position:relative;
+	top:-2px;
 	vertical-align:middle;
 }
 .wizard .tl_text,.wizard .tl_select {
@@ -535,8 +537,12 @@ a.tl_submit {
 }
 .dcapicker .tl_text + a {
 	position:relative;
-	top:2px;
+	top:-2px;
 	margin-left:-22px;
+	vertical-align:middle;
+}
+.dcapicker .tl_text + a img {
+	margin-left:0;
 }
 
 /* Tips */
