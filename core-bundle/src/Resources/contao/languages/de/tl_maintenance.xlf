@@ -171,7 +171,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlSubscriberNames.broken-link-checker">
         <source>Check for broken links</source>
-        <target>Nach kaputten Links suchen</target>
+        <target>Nach defekten Links suchen</target>
       </trans-unit>
     </body>
   </file>

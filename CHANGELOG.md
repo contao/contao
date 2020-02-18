@@ -2,6 +2,22 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.0] (2020-02-18)
+
+**Fixed defects:**
+
+- [#1348] Correctly align the wizard icon ([leofeyer])
+- [#1336] Make the contao.search.indexer service public ([leofeyer])
+- [#1250] Use a custom schema for the search indexing meta data ([Toflar])
+- [#1335] Correctly highlight phrases in the search results ([leofeyer])
+- [#1323] Adjust the SERP widget to the Google search results ([leofeyer])
+- [#1299] Fix several trusted device issues ([bytehead])
+- [#1327] Fix rendering the picker preview ([leofeyer])
+- [#1324] Sort the back end menu items alphabetically by label ([leofeyer])
+- [#1322] Clear trusted devices when disabling 2FA ([bytehead])
+- [#1320] Replace "recovery codes" with "backup codes" ([leofeyer])
+- [#1295] Handle removed search indexers ([Toflar])
+
 ## [4.9.0-RC2] (2020-02-11)
 
 **Fixed defects:**
@@ -146,7 +162,6 @@ This project adheres to [Semantic Versioning].
 - [#1150] Rename "Column" to "Layout section" ([leofeyer])
 - [#1148] Rename "File location" to "Path" ([leofeyer])
 - [#1147] Add "contao.editable_files" to the configuration ([leofeyer])
-- [#1145] Re-add prestissimo to shivammathur/setup-php ([leofeyer])
 - [#1131] Fix a method name in the TwoFactorFrontendListenerTest class ([bytehead])
 - [#1128] Use the version callbacks to backup and restore file contents ([leofeyer])
 - [#1126] Remove the registerCommands() methods ([leofeyer])
@@ -169,13 +184,14 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.0]: https://github.com/contao/contao/releases/tag/4.9.0
 [4.9.0-RC2]: https://github.com/contao/contao/releases/tag/4.9.0-RC2
 [4.9.0-RC1]: https://github.com/contao/contao/releases/tag/4.9.0-RC1
-[richardhj]: https://github.com/richardhj
 [leofeyer]: https://github.com/leofeyer
-[bytehead]: https://github.com/bytehead
-[fritzmg]: https://github.com/fritzmg
 [Toflar]: https://github.com/Toflar
+[bytehead]: https://github.com/bytehead
+[richardhj]: https://github.com/richardhj
+[fritzmg]: https://github.com/fritzmg
 [xchs]: https://github.com/xchs
 [aschempp]: https://github.com/aschempp
 [rabauss]: https://github.com/rabauss
@@ -184,6 +200,17 @@ This project adheres to [Semantic Versioning].
 [m-vo]: https://github.com/m-vo
 [Tastaturberuf]: https://github.com/Tastaturberuf
 [AndreasA]: https://github.com/AndreasA
+[#1348]: https://github.com/contao/contao/pull/1348
+[#1336]: https://github.com/contao/contao/pull/1336
+[#1250]: https://github.com/contao/contao/pull/1250
+[#1335]: https://github.com/contao/contao/pull/1335
+[#1323]: https://github.com/contao/contao/pull/1323
+[#1299]: https://github.com/contao/contao/pull/1299
+[#1327]: https://github.com/contao/contao/pull/1327
+[#1324]: https://github.com/contao/contao/pull/1324
+[#1322]: https://github.com/contao/contao/pull/1322
+[#1320]: https://github.com/contao/contao/pull/1320
+[#1295]: https://github.com/contao/contao/pull/1295
 [#1292]: https://github.com/contao/contao/pull/1292
 [#1293]: https://github.com/contao/contao/pull/1293
 [#1291]: https://github.com/contao/contao/pull/1291
@@ -316,7 +343,6 @@ This project adheres to [Semantic Versioning].
 [#1150]: https://github.com/contao/contao/pull/1150
 [#1148]: https://github.com/contao/contao/pull/1148
 [#1147]: https://github.com/contao/contao/pull/1147
-[#1145]: https://github.com/contao/contao/pull/1145
 [#1131]: https://github.com/contao/contao/pull/1131
 [#1128]: https://github.com/contao/contao/pull/1128
 [#1126]: https://github.com/contao/contao/pull/1126
