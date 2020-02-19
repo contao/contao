@@ -415,6 +415,13 @@ class PluginTest extends ContaoTestCase
             'contao_test',
             'mysql://root:foobar@localhost:3306/contao_test',
         ];
+
+        yield [
+            'root',
+            'aA&3yuA?123-2ABC',
+            'contao_test',
+            'mysql://root:aA%%263yuA%%3F123-2ABC@localhost:3306/contao_test',
+        ];
     }
 
     public function testAddsTheDefaultServerVersion(): void
@@ -519,7 +526,7 @@ class PluginTest extends ContaoTestCase
             null,
             25,
             null,
-            'smtp://127.0.0.1:25?username=foo%40bar.com',
+            'smtp://127.0.0.1:25?username=foo%%40bar.com',
         ];
 
         yield [
@@ -529,7 +536,7 @@ class PluginTest extends ContaoTestCase
             'foobar',
             25,
             null,
-            'smtp://127.0.0.1:25?username=foo%40bar.com&password=foobar',
+            'smtp://127.0.0.1:25?username=foo%%40bar.com&password=foobar',
         ];
 
         yield [
@@ -549,7 +556,7 @@ class PluginTest extends ContaoTestCase
             'foobar',
             587,
             'tls',
-            'smtp://127.0.0.1:587?username=foo%40bar.com&password=foobar&encryption=tls',
+            'smtp://127.0.0.1:587?username=foo%%40bar.com&password=foobar&encryption=tls',
         ];
     }
 
@@ -564,7 +571,7 @@ class PluginTest extends ContaoTestCase
                     'connections' => [
                         'default' => [
                             'url' => '%env(DATABASE_URL)%',
-                            'password' => 'foo%%bar',
+                            'password' => '@foobar',
                         ],
                     ],
                 ],
@@ -585,8 +592,8 @@ class PluginTest extends ContaoTestCase
         $dbalConnectionFactory = function ($params) use ($connection) {
             $this->assertSame(
                 [
-                    'url' => 'mysql://root:foo%bar@localhost:3306/database',
-                    'password' => 'foo%bar',
+                    'url' => 'mysql://root:%%40foobar@localhost:3306/database',
+                    'password' => '@foobar',
                 ],
                 $params
             );
@@ -595,7 +602,7 @@ class PluginTest extends ContaoTestCase
         };
 
         $url = $_ENV['DATABASE_URL'] ?? null;
-        $_SERVER['DATABASE_URL'] = $_ENV['DATABASE_URL'] = 'mysql://root:foo%bar@localhost:3306/database';
+        $_SERVER['DATABASE_URL'] = $_ENV['DATABASE_URL'] = 'mysql://root:%%40foobar@localhost:3306/database';
 
         $plugin = new Plugin($dbalConnectionFactory);
         $plugin->getExtensionConfig('doctrine', $extensionConfigs, $container);

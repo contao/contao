@@ -932,7 +932,7 @@ abstract class Backend extends Controller
 		$label = '<a href="' . self::addToUrl('pn=' . $row['id']) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $label . '</a>';
 
 		// Return the image
-		return '<a href="contao/main.php?do=feRedirect&amp;page=' . $row['id'] . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($image, '', $imageAttribute) . '</a> ' . $label;
+		return '<a href="contao/preview.php?page=' . $row['id'] . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($image, '', $imageAttribute) . '</a> ' . $label;
 	}
 
 	/**

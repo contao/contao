@@ -327,7 +327,7 @@ class InstallationController implements ContainerAwareInterface
                 'database_host' => $request->request->get('dbHost'),
                 'database_port' => $request->request->get('dbPort'),
                 'database_user' => $request->request->get('dbUser'),
-                'database_password' => $request->request->get('dbPassword'),
+                'database_password' => $request->request->get('dbPassword') ?: null,
                 'database_name' => $request->request->get('dbName'),
             ],
         ];

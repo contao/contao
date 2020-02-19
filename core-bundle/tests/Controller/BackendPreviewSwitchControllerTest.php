@@ -161,7 +161,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $router = $this->createMock(RouterInterface::class);
         $router
             ->method('generate')
-            ->with('contao_backend_preview_switch')
+            ->with('contao_backend_switch')
             ->willReturn('/contao/preview_switch')
         ;
 

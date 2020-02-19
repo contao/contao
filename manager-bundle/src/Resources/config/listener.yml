@@ -5,6 +5,7 @@ services:
             - '@security.helper'
             - '@router'
             - '@request_stack'
+            - '@translator'
             - '%kernel.debug%'
             - '%contao_manager.manager_path%'
             - '@?contao_manager.jwt_manager'
@@ -24,15 +25,3 @@ services:
             - '%kernel.project_dir%'
         tags:
             - { name: kernel.event_listener }
-
-    contao_manager.listener.preview_authentication:
-        class: Contao\ManagerBundle\EventListener\PreviewAuthenticationListener
-        arguments:
-            - '@contao.routing.scope_matcher'
-            - '@contao.security.token_checker'
-            - '@router'
-            - '@uri_signer'
-            - '%contao.preview_script%'
-        tags:
-            # The priority must be lower than the one of the firewall listener (defaults to 8)
-            - { name: kernel.event_listener, priority: 7 }

@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Migration\MigrationCollection;
+use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\InstallationBundle\Database\Installer;
 use Symfony\Component\Config\Exception\FileLocatorFileNotFoundException;
 use Symfony\Component\Config\FileLocator;
@@ -143,6 +144,7 @@ class MigrateCommand extends Command
 
             $count = 0;
 
+            /** @var MigrationResult $result */
             foreach ($this->migrations->run() as $result) {
                 ++$count;
 

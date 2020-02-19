@@ -345,10 +345,10 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         $userPassword = '';
 
         if ($user = $container->getParameter('database_user')) {
-            $userPassword = $user;
+            $userPassword = $this->encodeUrlParameter($user);
 
             if ($password = $container->getParameter('database_password')) {
-                $userPassword .= ':'.$password;
+                $userPassword .= ':'.$this->encodeUrlParameter($password);
             }
 
             $userPassword .= '@';
@@ -357,14 +357,14 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         $dbName = '';
 
         if ($name = $container->getParameter('database_name')) {
-            $dbName = '/'.$name;
+            $dbName = '/'.$this->encodeUrlParameter($name);
         }
 
         return sprintf(
             'mysql://%s%s:%s%s',
             $userPassword,
             $container->getParameter('database_host'),
-            $container->getParameter('database_port'),
+            (int) $container->getParameter('database_port'),
             $dbName
         );
     }
@@ -378,15 +378,15 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         $parameters = [];
 
         if ($user = $container->getParameter('mailer_user')) {
-            $parameters[] = 'username='.rawurlencode($user);
+            $parameters[] = 'username='.$this->encodeUrlParameter($user);
 
             if ($password = $container->getParameter('mailer_password')) {
-                $parameters[] = 'password='.rawurlencode($password);
+                $parameters[] = 'password='.$this->encodeUrlParameter($password);
             }
         }
 
         if ($encryption = $container->getParameter('mailer_encryption')) {
-            $parameters[] = 'encryption='.rawurlencode($encryption);
+            $parameters[] = 'encryption='.$this->encodeUrlParameter($encryption);
         }
 
         $qs = '';
@@ -397,9 +397,14 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
         return sprintf(
             'smtp://%s:%s%s',
-            rawurlencode($container->getParameter('mailer_host')),
+            $container->getParameter('mailer_host'),
             (int) $container->getParameter('mailer_port'),
             $qs
         );
+    }
+
+    private function encodeUrlParameter(string $parameter): string
+    {
+        return str_replace('%', '%%', rawurlencode($parameter));
     }
 }

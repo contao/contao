@@ -64,6 +64,7 @@ use Contao\CoreBundle\EventListener\Menu\BackendMenuListener;
 use Contao\CoreBundle\EventListener\Menu\BackendPreviewListener;
 use Contao\CoreBundle\EventListener\MergeHttpHeadersListener;
 use Contao\CoreBundle\EventListener\PrettyErrorScreenListener;
+use Contao\CoreBundle\EventListener\PreviewAuthenticationListener;
 use Contao\CoreBundle\EventListener\PreviewToolbarListener;
 use Contao\CoreBundle\EventListener\PreviewUrlConvertListener;
 use Contao\CoreBundle\EventListener\RefererIdListener;
@@ -108,6 +109,7 @@ use Contao\CoreBundle\Routing\Matcher\LanguageFilter;
 use Contao\CoreBundle\Routing\Matcher\LegacyMatcher;
 use Contao\CoreBundle\Routing\Matcher\PublishedFilter;
 use Contao\CoreBundle\Routing\Matcher\UrlMatcher;
+use Contao\CoreBundle\Routing\Route404Provider;
 use Contao\CoreBundle\Routing\RouteProvider;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Routing\UrlGenerator;
@@ -2440,6 +2442,24 @@ class ContaoCoreExtensionTest extends TestCase
         );
     }
 
+    public function testRegistersTheRoutingNested404Matcher(): void
+    {
+        $this->assertTrue($this->container->has('contao.routing.nested_404_matcher'));
+
+        $definition = $this->container->getDefinition('contao.routing.nested_404_matcher');
+
+        $this->assertSame(NestedMatcher::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('contao.routing.route_404_provider'),
+                new Reference('contao.routing.final_matcher'),
+            ],
+            $definition->getArguments()
+        );
+    }
+
     public function testRegistersTheRoutingPageRouter(): void
     {
         $this->assertTrue($this->container->has('contao.routing.page_router'));
@@ -2480,6 +2500,28 @@ class ContaoCoreExtensionTest extends TestCase
                 ],
             ],
             $definition->getTags()
+        );
+    }
+
+    public function testRegistersTheRoutingPage404Router(): void
+    {
+        $this->assertTrue($this->container->has('contao.routing.page_404_router'));
+
+        $definition = $this->container->getDefinition('contao.routing.page_404_router');
+
+        $this->assertSame(DynamicRouter::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('router.request_context'),
+                new Reference('contao.routing.nested_404_matcher'),
+                new Reference('contao.routing.route_generator'),
+                null,
+                new Reference('event_dispatcher'),
+                new Reference('contao.routing.route_404_provider'),
+            ],
+            $definition->getArguments()
         );
     }
 
@@ -2532,6 +2574,24 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('contao.framework'),
                 new Reference('database_connection'),
                 new Reference('%contao.url_suffix%'),
+                new Reference('%contao.prepend_locale%'),
+            ],
+            $definition->getArguments()
+        );
+    }
+
+    public function testRegistersTheRoutingRoute404Provider(): void
+    {
+        $this->assertTrue($this->container->has('contao.routing.route_404_provider'));
+
+        $definition = $this->container->getDefinition('contao.routing.route_404_provider');
+
+        $this->assertSame(Route404Provider::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('contao.framework'),
                 new Reference('%contao.prepend_locale%'),
             ],
             $definition->getArguments()
@@ -2851,6 +2911,7 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('security.token_storage'),
                 new Reference('session'),
                 new Reference('security.authentication.trust_resolver'),
+                new Reference('security.access.simple_role_voter'),
                 new Reference('%contao.preview_script%'),
             ],
             $definition->getArguments()
@@ -3392,6 +3453,38 @@ class ContaoCoreExtensionTest extends TestCase
         );
 
         $this->assertFalse($this->container->has('contao.listener.search_index'));
+    }
+
+    public function testRegistersThePreviewAuthenticationListener(): void
+    {
+        $this->assertTrue($this->container->has('contao.listener.preview_authentication'));
+
+        $definition = $this->container->getDefinition('contao.listener.preview_authentication');
+
+        $this->assertSame(PreviewAuthenticationListener::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('contao.routing.scope_matcher'),
+                new Reference('contao.security.token_checker'),
+                new Reference('router'),
+                new Reference('uri_signer'),
+                new Reference('%contao.preview_script%'),
+            ],
+            $definition->getArguments()
+        );
+
+        $this->assertSame(
+            [
+                'kernel.event_listener' => [
+                    [
+                        'priority' => 7,
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     /**

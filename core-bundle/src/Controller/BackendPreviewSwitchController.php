@@ -93,7 +93,7 @@ class BackendPreviewSwitchController
     }
 
     /**
-     * @Route("/contao/preview_switch", name="contao_backend_preview_switch")
+     * @Route("/contao/preview_switch", name="contao_backend_switch")
      */
     public function __invoke(Request $request): Response
     {
@@ -133,7 +133,7 @@ class BackendPreviewSwitchController
                 '@ContaoCore/Frontend/preview_toolbar_base.html.twig',
                 [
                     'request_token' => $this->tokenManager->getToken($this->csrfTokenName)->getValue(),
-                    'action' => $this->router->generate('contao_backend_preview_switch'),
+                    'action' => $this->router->generate('contao_backend_switch'),
                     'canSwitchUser' => $canSwitchUser,
                     'user' => $frontendUsername,
                     'show' => $showUnpublished,

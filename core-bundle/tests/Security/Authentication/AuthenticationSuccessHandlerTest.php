@@ -27,6 +27,7 @@ use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -72,6 +73,39 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $response = $handler->onAuthenticationSuccess($request, $token);
 
         $this->assertSame('http://localhost/target', $response->getTargetUrl());
+    }
+
+    public function testThrowsExceptionIfTargetPathParameterIsMissing(): void
+    {
+        $parameters = [
+            '_always_use_target_path' => '0',
+        ];
+
+        $request = $this->createMock(Request::class);
+        $request->request = new ParameterBag($parameters);
+
+        /** @var BackendUser&MockObject $user */
+        $user = $this->createPartialMock(BackendUser::class, ['save']);
+        $user->username = 'foobar';
+        $user->lastLogin = time() - 3600;
+        $user->currentLogin = time() - 1800;
+
+        $user
+            ->expects($this->once())
+            ->method('save')
+        ;
+
+        $token = $this->createMock(TokenInterface::class);
+        $token
+            ->expects($this->once())
+            ->method('getUser')
+            ->willReturn($user)
+        ;
+
+        $this->expectException(BadRequestHttpException::class);
+
+        $handler = $this->getHandler(null, null);
+        $handler->onAuthenticationSuccess($request, $token);
     }
 
     public function testDoesNotUpdateTheUserIfNotAContaoUser(): void
