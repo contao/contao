@@ -387,12 +387,12 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		),
 		'backupCodes' => array
 		(
-			'eval'                    => array('doNotCopy'=>true),
+			'eval'                    => array('doNotCopy'=>true, 'doNotShow'=>true),
 			'sql'                     => "text NULL"
 		),
 		'trustedTokenVersion' => array
 		(
-			'eval'                    => array('doNotCopy'=>true),
+			'eval'                    => array('doNotCopy'=>true, 'doNotShow'=>true),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		)
 	)
