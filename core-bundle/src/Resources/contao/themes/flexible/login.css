@@ -49,16 +49,17 @@ body {
 	margin:0;
 }
 .tl_text {
+	margin:2px 0;
 	padding-right:24px;
 }
 .widget-checkbox {
-	margin-top:6px;
+	margin:6px 0 12px;
 }
 .tl_checkbox + label {
 	margin-left:4px;
 }
 .submit_container {
-	margin-top:12px;
+	margin-top:9px;
 }
 .submit_container a {
 	float:right;
