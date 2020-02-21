@@ -152,6 +152,12 @@
       <trans-unit id="tl_settings.chmod_legend">
         <source>Default access rights</source>
       </trans-unit>
+      <trans-unit id="tl_settings.parameterBasedSetting.0">
+        <source>Parameter based setting</source>
+      </trans-unit>
+      <trans-unit id="tl_settings.parameterBasedSetting.1">
+        <source>Setting is defined by contao.localconfig parameter.</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

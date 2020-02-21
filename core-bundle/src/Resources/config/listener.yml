@@ -273,3 +273,10 @@ services:
             - '@event_dispatcher'
         tags:
             - kernel.event_listener
+
+    Contao\CoreBundle\EventListener\DataContainer\DisableParametersBasedSettingsListener:
+        public: true
+        arguments:
+            - '@translator'
+        tags:
+          - { name: 'contao.callback', table: 'tl_settings', target: 'config.onload' }
