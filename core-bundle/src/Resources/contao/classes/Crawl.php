@@ -18,6 +18,7 @@ use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Monolog\Handler\GroupHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -91,7 +92,7 @@ class Crawl extends Backend implements \executable
 		// Make sure the subdirectory exists so logs can be written
 		if (!is_dir($crawLogsDir))
 		{
-			mkdir($crawLogsDir);
+			(new Filesystem())->mkdir($crawLogsDir);
 		}
 
 		$debugLogPath = $crawLogsDir . '/' . $jobId . '_log.csv';
