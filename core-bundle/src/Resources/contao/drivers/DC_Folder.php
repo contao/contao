@@ -2293,6 +2293,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			}
 
 			$this->varValue = $varValue;
+			$this->intId = $this->strPath . '/' . $varValue . $this->strExtension;
 		}
 		elseif ($this->blnIsDbAssisted && $this->objActiveRecord !== null)
 		{
