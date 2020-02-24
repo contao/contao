@@ -29,7 +29,7 @@ class ScriptHandler
         static::purgeCacheFolder();
         static::executeCommand('contao:install-web-dir', $event);
         static::executeCommand('cache:clear --no-warmup', $event);
-        static::executeCommand('cache:clear --no-warmup --env=dev', $event);
+        static::executeCommand('cache:clear --no-warmup', $event, 'dev');
         static::executeCommand('cache:warmup', $event);
         static::executeCommand(sprintf('assets:install %s --symlink --relative', $webDir), $event);
         static::executeCommand(sprintf('contao:install %s', $webDir), $event);
@@ -56,7 +56,7 @@ class ScriptHandler
     /**
      * @throws \RuntimeException
      */
-    private static function executeCommand(string $cmd, Event $event): void
+    private static function executeCommand(string $cmd, Event $event, string $env = 'prod'): void
     {
         $phpFinder = new PhpExecutableFinder();
 
@@ -72,7 +72,7 @@ class ScriptHandler
                 $event->getIO()->isDecorated() ? ' --ansi' : '',
                 $cmd,
                 self::getVerbosityFlag($event),
-                getenv('APP_ENV') ?: 'prod'
+                $env
             )
         );
 
