@@ -18,9 +18,8 @@ use Contao\StringUtil;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
-class DisableParametersBasedSettingsListener implements ServiceAnnotationInterface, ContainerAwareInterface
+class DisableParametersBasedSettingsListener implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
 
