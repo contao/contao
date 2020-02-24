@@ -25,7 +25,7 @@ parameters:
 
     ignoreErrors:
         # Ignore the Adapter::missingMethod() warning
-        - '#Call to an undefined method Contao\\CoreBundle\\Framework\\Adapter::missingMethod\(\)\.#'
+        - '#Call to an undefined method Contao\\CoreBundle\\Framework\\Adapter::.+\(\)\.#'
 
         # Ignore backwards compatibility layers when preferring lowest dependencies
         - '#Method Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface::dispatch\(\) invoked with 2 parameters, 1 required\.#'
