@@ -51,6 +51,7 @@ use Contao\CoreBundle\EventListener\BypassMaintenanceListener;
 use Contao\CoreBundle\EventListener\ClearSessionDataListener;
 use Contao\CoreBundle\EventListener\CommandSchedulerListener;
 use Contao\CoreBundle\EventListener\CsrfTokenCookieSubscriber;
+use Contao\CoreBundle\EventListener\DataContainer\DisableParametersBasedSettingsListener;
 use Contao\CoreBundle\EventListener\DataContainerCallbackListener;
 use Contao\CoreBundle\EventListener\DoctrineSchemaListener;
 use Contao\CoreBundle\EventListener\ExceptionConverterListener;
@@ -3576,5 +3577,35 @@ class ContaoCoreExtensionTest extends TestCase
         $extension->load($params, $container);
 
         $this->assertSame($this->getTempDir().'/my/custom/dir', $container->getParameter('contao.image.target_dir'));
+    }
+
+    public function testRegistersTheDisableParametersBasedSettingsListener(): void
+    {
+        $this->assertTrue($this->container->has(DisableParametersBasedSettingsListener::class));
+
+        $definition = $this->container->getDefinition(DisableParametersBasedSettingsListener::class);
+
+        $this->assertNull($definition->getClass());
+        $this->assertTrue($definition->isPublic());
+
+        $this->assertEquals(
+            [
+                new Reference('translator'),
+                new Reference('contao.framework'),
+            ],
+            $definition->getArguments()
+        );
+
+        $this->assertSame(
+            [
+                'contao.callback' => [
+                    [
+                        'table' => 'tl_settings',
+                        'target' => 'config.onload',
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 }

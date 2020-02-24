@@ -278,5 +278,6 @@ services:
         public: true
         arguments:
             - '@translator'
+            - '@contao.framework'
         tags:
           - { name: 'contao.callback', table: 'tl_settings', target: 'config.onload' }

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Image;
 use Contao\StringUtil;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -28,9 +29,15 @@ class DisableParametersBasedSettingsListener implements ServiceAnnotationInterfa
      */
     private $translator;
 
-    public function __construct(TranslatorInterface $translator)
+    /**
+     * @var ContaoFrameworkInterface
+     */
+    private $framework;
+
+    public function __construct(TranslatorInterface $translator, ContaoFrameworkInterface $framework)
     {
         $this->translator = $translator;
+        $this->framework = $framework;
     }
 
     public function onLoadCallback(): void
@@ -54,7 +61,9 @@ class DisableParametersBasedSettingsListener implements ServiceAnnotationInterfa
 
     public function renderHelpIcon(): string
     {
-        return Image::getHtml(
+        $adapter = $this->framework->getAdapter(Image::class);
+
+        return $adapter->getHtml(
             'important.svg',
             $this->translator->trans('tl_settings.parameterBasedSetting.0', [], 'contao_tl_settings'),
             sprintf(
