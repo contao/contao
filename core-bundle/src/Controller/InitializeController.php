@@ -13,6 +13,7 @@ namespace Contao\CoreBundle\Controller;
 use Contao\CoreBundle\Response\InitializeControllerResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
@@ -20,6 +21,8 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\HttpKernel\TerminableInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -44,6 +47,8 @@ class InitializeController extends Controller
 
         $masterRequest = $this->get('request_stack')->getMasterRequest();
         $realRequest = Request::createFromGlobals();
+        $realRequest->setSession($masterRequest->getSession());
+        $realRequest->setLocale($masterRequest->getLocale());
 
         // Necessary to generate the correct base path
         foreach (['REQUEST_URI', 'SCRIPT_NAME', 'SCRIPT_FILENAME', 'PHP_SELF'] as $name) {
@@ -76,6 +81,24 @@ class InitializeController extends Controller
 
             $this->handleException($e, $realRequest, HttpKernelInterface::MASTER_REQUEST);
         });
+
+        // Collect all output into final response
+        $response = new Response();
+        ob_start(
+            function($buffer) use ($response) {
+                $response->setContent($response->getContent().$buffer);
+
+                return '';
+            }
+        );
+
+        // register_shutdown_function() somehow can't handle $this
+        $self = $this;
+        register_shutdown_function(
+            function() use ($self, $realRequest, $response) {
+                $self->handleResponse($realRequest, $response, KernelInterface::MASTER_REQUEST);
+            }
+        );
 
         return new InitializeControllerResponse('', 204);
     }
@@ -139,7 +162,55 @@ class InitializeController extends Controller
         }
 
         $response->send();
-        $this->get('kernel')->terminate($request, $response);
+
+        $kernel = $this->get('kernel');
+
+        if ($kernel instanceof TerminableInterface) {
+            $kernel->terminate($request, $response);
+        }
+
         exit;
+    }
+
+    /**
+     * Execute kernel.response and kernel.finish_request events
+     */
+    private function handleResponse(Request $request, Response $response, $type)
+    {
+        if (!headers_sent()) {
+            $response->headers->replace([]);
+
+            foreach (headers_list() as $header) {
+                list($name, $value) = explode(':', $header, 2);
+                $response->headers->set($name, $value, false);
+            }
+
+            header_remove();
+        }
+
+        @ob_end_clean();
+
+        $event = new FilterResponseEvent($this->get('http_kernel'), $request, $type, $response);
+
+        try {
+            $this->get('event_dispatcher')->dispatch(KernelEvents::RESPONSE, $event);
+        } catch (\Throwable $e) {
+            // Ignore any errors from events
+        }
+
+        $this->get('event_dispatcher')->dispatch(
+            KernelEvents::FINISH_REQUEST,
+            new FinishRequestEvent($this->get('http_kernel'), $request, $type)
+        );
+        $this->get('request_stack')->pop();
+
+        $response = $event->getResponse();
+        $response->send();
+
+        $kernel = $this->get('kernel');
+
+        if ($kernel instanceof TerminableInterface) {
+            $kernel->terminate($request, $response);
+        }
     }
 }
