@@ -89,13 +89,16 @@ class InitializeController extends Controller
                 $response->setContent($response->getContent().$buffer);
 
                 return '';
-            }
+            },
+            0,
+            PHP_OUTPUT_HANDLER_CLEANABLE
         );
 
         // register_shutdown_function() somehow can't handle $this
         $self = $this;
         register_shutdown_function(
             function() use ($self, $realRequest, $response) {
+                @ob_end_clean();
                 $self->handleResponse($realRequest, $response, KernelInterface::MASTER_REQUEST);
             }
         );
@@ -177,24 +180,6 @@ class InitializeController extends Controller
      */
     private function handleResponse(Request $request, Response $response, $type)
     {
-        if (!headers_sent()) {
-            $response->headers->replace([]);
-
-            foreach (headers_list() as $header) {
-                if (preg_match('/^HTTP/[^ ]* (\d{3}) (.*)$/i', $header, $matches)) {
-                    $response->setStatusCode($matches[1], $matches[2]);
-                    continue;
-                }
-
-                list($name, $value) = explode(':', $header, 2);
-                $response->headers->set($name, $value, false);
-            }
-
-            header_remove();
-        }
-
-        @ob_end_clean();
-
         $event = new FilterResponseEvent($this->get('http_kernel'), $request, $type, $response);
 
         try {

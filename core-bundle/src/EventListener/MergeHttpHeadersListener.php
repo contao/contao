@@ -144,6 +144,11 @@ class MergeHttpHeadersListener
         $allowOverrides = [];
 
         foreach ($this->headers as $header) {
+            if (preg_match('/^HTTP/[^ ]* (\d{3}) (.*)$/i', $header, $matches)) {
+                $response->setStatusCode($matches[1], $matches[2]);
+                continue;
+            }
+
             list($name, $content) = explode(':', $header, 2);
 
             $uniqueKey = $this->getUniqueKey($name);
