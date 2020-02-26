@@ -247,7 +247,7 @@ class RouteProvider implements RouteProviderInterface
             $page->loadDetails();
 
             if (!$page->rootId) {
-                throw new NoRootPageFoundException();
+                return;
             }
         } catch (NoRootPageFoundException $e) {
             return;
