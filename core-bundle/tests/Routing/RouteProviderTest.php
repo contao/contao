@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Routing;
 
 use Contao\Config;
+use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\RouteProvider;
@@ -474,6 +475,11 @@ class RouteProviderTest extends TestCase
     {
         $page = $this->createPage($language, $alias, true, $domain, $scheme);
 
+        $page
+            ->expects($this->once())
+            ->method('loadDetails')
+        ;
+
         $pageAdapter = $this->mockAdapter(['findBy']);
         $pageAdapter
             ->expects($this->once())
@@ -533,6 +539,60 @@ class RouteProviderTest extends TestCase
                 }
             }
         }
+    }
+
+    public function testIgnoresRoutesWithoutRootId(): void
+    {
+        /** @var PageModel&MockObject $page */
+        $page = $this->createPage('de', 'foo');
+        $page->rootId = null;
+
+        $page
+            ->expects($this->once())
+            ->method('loadDetails')
+        ;
+
+        $pageAdapter = $this->mockAdapter(['findBy']);
+        $pageAdapter
+            ->expects($this->once())
+            ->method('findBy')
+            ->willReturn(new Collection([$page], 'tl_page'))
+        ;
+
+        $framework = $this->mockFramework($pageAdapter);
+        $request = $this->mockRequestWithPath('/foo.html');
+
+        $routes = $this->getRouteProvider($framework)->getRouteCollectionForRequest($request)->all();
+
+        $this->assertIsArray($routes);
+        $this->assertEmpty($routes);
+    }
+
+    public function testIgnoresPagesWithNoRootPageFoundException(): void
+    {
+        /** @var PageModel&MockObject $page */
+        $page = $this->createPage('de', 'foo');
+
+        $page
+            ->expects($this->once())
+            ->method('loadDetails')
+            ->willThrowException(new NoRootPageFoundException())
+        ;
+
+        $pageAdapter = $this->mockAdapter(['findBy']);
+        $pageAdapter
+            ->expects($this->once())
+            ->method('findBy')
+            ->willReturn(new Collection([$page], 'tl_page'))
+        ;
+
+        $framework = $this->mockFramework($pageAdapter);
+        $request = $this->mockRequestWithPath('/foo.html');
+
+        $routes = $this->getRouteProvider($framework)->getRouteCollectionForRequest($request)->all();
+
+        $this->assertIsArray($routes);
+        $this->assertEmpty($routes);
     }
 
     /**
