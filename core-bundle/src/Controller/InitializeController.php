@@ -181,6 +181,11 @@ class InitializeController extends Controller
             $response->headers->replace([]);
 
             foreach (headers_list() as $header) {
+                if (preg_match('/^HTTP/[^ ]* (\d{3}) (.*)$/i', $header, $matches)) {
+                    $response->setStatusCode($matches[1], $matches[2]);
+                    continue;
+                }
+
                 list($name, $value) = explode(':', $header, 2);
                 $response->headers->set($name, $value, false);
             }
