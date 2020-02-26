@@ -84,6 +84,24 @@ class CrawlCommandTest extends TestCase
         $this->assertSame(20, $command->getEscargot()->getMaxDepth());
     }
 
+    public function testEmitsWarningIfLocalhostIsInCollection(): void
+    {
+        // Make sure we never execute real requests
+        $client = new MockHttpClient();
+
+        $baseUriCollection = new BaseUriCollection([new Uri('http://localhost')]);
+
+        $escargot = Escargot::create($baseUriCollection, new InMemoryQueue(), $client);
+        $escargotFactory = $this->createValidEscargotFactory($escargot, $baseUriCollection);
+        $command = new CrawlCommand($escargotFactory);
+
+        $tester = new CommandTester($command);
+        $code = $tester->execute([]);
+
+        $this->assertSame(0, $code);
+        $this->assertStringContainsString('[WARNING] You are going to crawl localhost URIs.', $tester->getDisplay(true));
+    }
+
     private function createBaseUriCollection(): BaseUriCollection
     {
         return new BaseUriCollection([new Uri('https://contao.org')]);
@@ -92,13 +110,17 @@ class CrawlCommandTest extends TestCase
     /**
      * @return Factory&MockObject
      */
-    private function createEscargotFactory(): Factory
+    private function createEscargotFactory(BaseUriCollection $baseUriCollection = null): Factory
     {
+        if (null === $baseUriCollection) {
+            $baseUriCollection = $this->createBaseUriCollection();
+        }
+
         $escargotFactory = $this->createMock(Factory::class);
         $escargotFactory
             ->expects($this->once())
             ->method('getCrawlUriCollection')
-            ->willReturn($this->createBaseUriCollection())
+            ->willReturn($baseUriCollection)
         ;
 
         return $escargotFactory;
@@ -107,9 +129,9 @@ class CrawlCommandTest extends TestCase
     /**
      * @return Factory&MockObject
      */
-    private function createValidEscargotFactory(Escargot $escargot, bool $withExistingJobId = false): Factory
+    private function createValidEscargotFactory(Escargot $escargot, BaseUriCollection $baseUriCollection = null): Factory
     {
-        $escargotFactory = $this->createEscargotFactory();
+        $escargotFactory = $this->createEscargotFactory($baseUriCollection);
         $escargotFactory
             ->expects($this->once())
             ->method('create')
