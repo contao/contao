@@ -66,6 +66,7 @@ class Route404ProviderTest extends TestCase
         /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = 17;
+        $page->rootId = 1;
         $page->domain = 'example.com';
         $page->rootUseSSL = true;
 
@@ -101,6 +102,7 @@ class Route404ProviderTest extends TestCase
         /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = 17;
+        $page->rootId = 1;
         $page->domain = 'example.com';
         $page->rootUseSSL = true;
         $page->rootLanguage = 'de';
@@ -154,6 +156,7 @@ class Route404ProviderTest extends TestCase
                 array_merge(
                     [
                         'domain' => '',
+                        'rootId' => 1,
                         'rootUseSSL' => false,
                         'rootLanguage' => 'de',
                         'rootIsFallback' => true,

@@ -32,6 +32,7 @@ class RouteProviderTest extends TestCase
         /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = 17;
+        $page->rootId = 1;
 
         $pageAdapter = $this->mockAdapter(['findByPk']);
         $pageAdapter
@@ -79,10 +80,12 @@ class RouteProviderTest extends TestCase
         /** @var PageModel&MockObject $page1 */
         $page1 = $this->mockClassWithProperties(PageModel::class);
         $page1->id = 17;
+        $page1->rootId = 1;
 
         /** @var PageModel&MockObject $page2 */
         $page2 = $this->mockClassWithProperties(PageModel::class);
         $page2->id = 21;
+        $page2->rootId = 1;
 
         $pageAdapter = $this->mockAdapter(['findBy']);
         $pageAdapter
@@ -103,6 +106,7 @@ class RouteProviderTest extends TestCase
         /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = 17;
+        $page->rootId = 1;
         $page->domain = 'example.org';
 
         $pageAdapter = $this->mockAdapter(['findByPk']);
@@ -124,6 +128,7 @@ class RouteProviderTest extends TestCase
         /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = 17;
+        $page->rootId = 1;
         $page->domain = 'example.org:8080';
 
         $pageAdapter = $this->mockAdapter(['findByPk']);
@@ -583,6 +588,7 @@ class RouteProviderTest extends TestCase
         /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = random_int(1, 10000);
+        $page->rootId = 1;
         $page->type = 'regular';
         $page->alias = $alias;
         $page->domain = $domain;
