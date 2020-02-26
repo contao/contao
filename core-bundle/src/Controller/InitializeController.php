@@ -85,7 +85,7 @@ class InitializeController extends Controller
         // Collect all output into final response
         $response = new Response();
         ob_start(
-            function($buffer) use ($response) {
+            function ($buffer) use ($response) {
                 $response->setContent($response->getContent().$buffer);
 
                 return '';
@@ -97,7 +97,7 @@ class InitializeController extends Controller
         // register_shutdown_function() somehow can't handle $this
         $self = $this;
         register_shutdown_function(
-            function() use ($self, $realRequest, $response) {
+            function () use ($self, $realRequest, $response) {
                 @ob_end_clean();
                 $self->handleResponse($realRequest, $response, KernelInterface::MASTER_REQUEST);
             }
@@ -177,6 +177,8 @@ class InitializeController extends Controller
 
     /**
      * Execute kernel.response and kernel.finish_request events
+     *
+     * @param int $type
      */
     private function handleResponse(Request $request, Response $response, $type)
     {
