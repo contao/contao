@@ -47,8 +47,11 @@ class InitializeController extends Controller
 
         $masterRequest = $this->get('request_stack')->getMasterRequest();
         $realRequest = Request::createFromGlobals();
-        $realRequest->setSession($masterRequest->getSession());
         $realRequest->setLocale($masterRequest->getLocale());
+
+        if ($session = $masterRequest->getSession()) {
+            $realRequest->setSession($session);
+        }
 
         // Necessary to generate the correct base path
         foreach (['REQUEST_URI', 'SCRIPT_NAME', 'SCRIPT_FILENAME', 'PHP_SELF'] as $name) {
@@ -176,7 +179,7 @@ class InitializeController extends Controller
     }
 
     /**
-     * Execute kernel.response and kernel.finish_request events
+     * Execute kernel.response and kernel.finish_request events.
      *
      * @param int $type
      */
