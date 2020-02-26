@@ -185,7 +185,7 @@ class CrawlCommand extends Command
 
         $progressBar = new ProgressBar($processOutput);
         $progressBar->setFormat("%title%\n%current%/%max% [%bar%] %percent:3s%%");
-        $progressBar->setMessage('Starting to crawl...', 'title');
+        $progressBar->setMessage('Crawling…', 'title');
         $progressBar->start();
 
         $this->escargot->addSubscriber($this->getProgressSubscriber($progressBar));
@@ -222,8 +222,7 @@ class CrawlCommand extends Command
 
             public function onLastChunk(CrawlUri $crawlUri, ResponseInterface $response, ChunkInterface $chunk): void
             {
-                // We only update the message here, otherwise too many nonsense URIs will be shown
-                $this->progressBar->setMessage((string) $crawlUri->getUri(), 'title');
+                // noop
             }
 
             public function finishedCrawling(): void
