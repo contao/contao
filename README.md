@@ -46,7 +46,7 @@ composer create-project --no-install contao/managed-edition <directory> <branch>
 Replace `<directory>` with the directory you want to install the Managed
 Edition in (use `.` for the current one). Replace `<branch>` with `dev-master`
 if you want to add a new feature or with `<lts-version>.x-dev` (currently
-`4.4.x-dev`) if you want to fix a bug.
+`4.4.x-dev` and `4.9.x-dev`) if you want to fix a bug.
 
 Then adjust the `require` section in your `composer.json` file so Composer
 loads the monorepo instead of the individual bundles:
@@ -81,9 +81,16 @@ You can use Composer to run the code quality scripts:
 ```bash
 composer run all
 composer run unit-tests
-composer run functional-tests
-composer run php-cs-fixer
+composer run cs-fixer
 composer run phpstan
+```
+
+If you want to pass additional flags to the underlying commands, you can use
+the `--` argument:
+
+```bash
+composer run unit-tests -- --filter CoreBundle
+composer run cs-fixer -- --clear-cache
 ```
 
 ## Functional tests
