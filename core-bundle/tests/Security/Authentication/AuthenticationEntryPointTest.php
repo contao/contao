@@ -195,9 +195,9 @@ class AuthenticationEntryPointTest extends TestCase
         $this->assertSame('http://localhost/contao/login?_hash=%2FxSCw6cwMlws5DEhBCvs0%2F75oQA8q%2FgMkZEnYCf6QSE%3D&redirect=https%3A%2F%2Fcontao.org%2Fpreview.php%2Fabout-contao.html', $response->getTargetUrl());
     }
 
-    public function testDoesNotAddARefererToTheBackendRedirectUrlIfTheQueryIsEmpty(): void
+    public function testAddsARefererToTheBackendRedirectUrlIfTheQueryIsEmpty(): void
     {
-        $request = new Request();
+        $request = Request::create('/');
 
         $router = $this->createMock(RouterInterface::class);
         $router
@@ -225,6 +225,6 @@ class AuthenticationEntryPointTest extends TestCase
         $response = $entryPoint->start($request);
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
-        $this->assertSame('http://localhost/contao/login', $response->getTargetUrl());
+        $this->assertSame('http://localhost/contao/login?_hash=VmECH%2B5ZGFFG41uxiQVkwzSN%2F7YazPja98g5QNG4Zes%3D', $response->getTargetUrl());
     }
 }
