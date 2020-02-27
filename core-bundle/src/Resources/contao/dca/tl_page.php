@@ -1301,7 +1301,7 @@ class tl_page extends Contao\Backend
 	 */
 	public function checkDns($varValue)
 	{
-		return str_ireplace(array('http://', 'https://', 'ftp://'), '', $varValue);
+		return preg_replace('#^(?:[a-z]+://)?([a-z0-9[\].:_-]+).*$#i', '$1', $varValue);
 	}
 
 	/**
