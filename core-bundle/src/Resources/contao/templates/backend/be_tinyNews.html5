@@ -4,9 +4,8 @@ namespace Contao;
 
 if ($GLOBALS['TL_CONFIG']['useRTE']):
 
-$GLOBALS['TL_JAVASCRIPT'][] = $this->asset('js/tinymce.min.js', 'contao-components/tinymce4');
-
 ?>
+<script>window.tinymce || document.write('<script src="<?= $this->asset('js/tinymce.min.js', 'contao-components/tinymce4') ?>">\x3C/script>')</script>
 <script>
 window.tinymce && tinymce.init({
   skin: 'contao',
