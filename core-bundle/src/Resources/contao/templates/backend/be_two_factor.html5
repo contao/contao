@@ -23,7 +23,7 @@
         <div class="widget w50 clr">
           <h3><label for="verify"<?php if ($this->error): ?> class="error"<?php endif; ?>><?= $this->trans('MSC.twoFactorVerification') ?></label></h3>
           <input type="text" name="verify" id="verify" class="tl_text<?php if ($this->error): ?> error<?php endif; ?>" value="" autocapitalize="off" autocomplete="off" required>
-          <p class="<?= $this->error ? 'tl_error' : 'tl_help' ?> tl_tip"><?= $this->trans('MSC.twoFactorVerification') ?></p>
+          <p class="<?= $this->error ? 'tl_error' : 'tl_help' ?> tl_tip"><?= $this->trans('MSC.twoFactorVerificationHelp') ?></p>
         </div>
         <div class="submit_container cf">
           <button type="submit" class="tl_submit"><?= $this->trans('MSC.enable') ?></button>

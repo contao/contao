@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Routing;
 
 use Contao\Config;
+use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\RouteProvider;
@@ -32,6 +33,7 @@ class RouteProviderTest extends TestCase
         /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = 17;
+        $page->rootId = 1;
 
         $pageAdapter = $this->mockAdapter(['findByPk']);
         $pageAdapter
@@ -79,10 +81,12 @@ class RouteProviderTest extends TestCase
         /** @var PageModel&MockObject $page1 */
         $page1 = $this->mockClassWithProperties(PageModel::class);
         $page1->id = 17;
+        $page1->rootId = 1;
 
         /** @var PageModel&MockObject $page2 */
         $page2 = $this->mockClassWithProperties(PageModel::class);
         $page2->id = 21;
+        $page2->rootId = 1;
 
         $pageAdapter = $this->mockAdapter(['findBy']);
         $pageAdapter
@@ -103,6 +107,7 @@ class RouteProviderTest extends TestCase
         /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = 17;
+        $page->rootId = 1;
         $page->domain = 'example.org';
 
         $pageAdapter = $this->mockAdapter(['findByPk']);
@@ -124,6 +129,7 @@ class RouteProviderTest extends TestCase
         /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = 17;
+        $page->rootId = 1;
         $page->domain = 'example.org:8080';
 
         $pageAdapter = $this->mockAdapter(['findByPk']);
@@ -468,6 +474,10 @@ class RouteProviderTest extends TestCase
     public function testAddsRoutesForAPage(string $alias, string $language, string $domain, string $urlSuffix, bool $prependLocale, ?string $scheme): void
     {
         $page = $this->createPage($language, $alias, true, $domain, $scheme);
+        $page
+            ->expects($this->once())
+            ->method('loadDetails')
+        ;
 
         $pageAdapter = $this->mockAdapter(['findBy']);
         $pageAdapter
@@ -530,6 +540,59 @@ class RouteProviderTest extends TestCase
         }
     }
 
+    public function testIgnoresRoutesWithoutRootId(): void
+    {
+        /** @var PageModel&MockObject $page */
+        $page = $this->createPage('de', 'foo');
+        $page->rootId = null;
+
+        $page
+            ->expects($this->once())
+            ->method('loadDetails')
+        ;
+
+        $pageAdapter = $this->mockAdapter(['findBy']);
+        $pageAdapter
+            ->expects($this->once())
+            ->method('findBy')
+            ->willReturn(new Collection([$page], 'tl_page'))
+        ;
+
+        $framework = $this->mockFramework($pageAdapter);
+        $request = $this->mockRequestWithPath('/foo.html');
+
+        $routes = $this->getRouteProvider($framework)->getRouteCollectionForRequest($request)->all();
+
+        $this->assertIsArray($routes);
+        $this->assertEmpty($routes);
+    }
+
+    public function testIgnoresPagesWithNoRootPageFoundException(): void
+    {
+        /** @var PageModel&MockObject $page */
+        $page = $this->createPage('de', 'foo');
+        $page
+            ->expects($this->once())
+            ->method('loadDetails')
+            ->willThrowException(new NoRootPageFoundException())
+        ;
+
+        $pageAdapter = $this->mockAdapter(['findBy']);
+        $pageAdapter
+            ->expects($this->once())
+            ->method('findBy')
+            ->willReturn(new Collection([$page], 'tl_page'))
+        ;
+
+        $framework = $this->mockFramework($pageAdapter);
+        $request = $this->mockRequestWithPath('/foo.html');
+
+        $routes = $this->getRouteProvider($framework)->getRouteCollectionForRequest($request)->all();
+
+        $this->assertIsArray($routes);
+        $this->assertEmpty($routes);
+    }
+
     /**
      * @return Adapter&MockObject
      */
@@ -583,6 +646,7 @@ class RouteProviderTest extends TestCase
         /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = random_int(1, 10000);
+        $page->rootId = 1;
         $page->type = 'regular';
         $page->alias = $alias;
         $page->domain = $domain;

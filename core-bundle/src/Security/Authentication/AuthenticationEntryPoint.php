@@ -85,10 +85,6 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
 
     private function redirectToBackend(Request $request): RedirectResponse
     {
-        if ($request->query->count() < 1) {
-            return new RedirectResponse($this->router->generate('contao_backend_login'));
-        }
-
         $url = $this->router->generate(
             'contao_backend_login',
             ['redirect' => $request->getUri()],

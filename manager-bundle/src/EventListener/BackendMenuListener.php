@@ -106,11 +106,17 @@ class BackendMenuListener
             'ref' => $request->attributes->get('_contao_referer_id'),
         ];
 
+        $class = 'icon-debug';
+
+        if ($this->debug) {
+            $class .= ' hover';
+        }
+
         $debug = $event->getFactory()
             ->createItem('debug')
             ->setLabel('debug_mode')
             ->setUri($this->router->generate('contao_backend', $params))
-            ->setLinkAttribute('class', 'icon-debug')
+            ->setLinkAttribute('class', $class)
             ->setLinkAttribute('title', $this->translator->trans('debug_mode', [], 'ContaoManagerBundle'))
             ->setExtra('translation_domain', 'ContaoManagerBundle')
         ;
