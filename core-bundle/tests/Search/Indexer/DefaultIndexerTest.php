@@ -74,10 +74,16 @@ class DefaultIndexerTest extends ContaoTestCase
             'Was explicitly marked "noSearch" in page settings.',
         ];
 
-        yield 'Test does not index if json ld data is not of type "RegularPage"' => [
+        yield 'Test does not index if there is no JSON-LD data' => [
+            new Document(new Uri('https://example.com'), 200, [], '<html><body></body></html>'),
+            null,
+            'No JSON-LD found.',
+        ];
+
+        yield 'Test does not index if JSON-LD data is not of type "RegularPage"' => [
             new Document(new Uri('https://example.com'), 200, [], '<html><body><script type="application/ld+json">{"@context":"https:\/\/schema.contao.org\/","@type":"FoobarType","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>'),
             null,
-            'Was explicitly marked "noSearch" in page settings.',
+            'No JSON-LD found.',
         ];
 
         yield 'Test does not index if protected is set to true' => [
