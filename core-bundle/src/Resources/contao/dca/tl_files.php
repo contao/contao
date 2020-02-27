@@ -812,7 +812,7 @@ class tl_files extends Contao\Backend
 		$rootDir = Contao\System::getContainer()->getParameter('kernel.project_dir');
 
 		// Check if the folder has been renamed (see #6432, #934)
-		if (Contao\Input::post('name'))
+		if (Contao\Input::post('name') && !is_dir($rootDir . '/' . $strPath))
 		{
 			if (Contao\Validator::isInsecurePath(Contao\Input::post('name')))
 			{
