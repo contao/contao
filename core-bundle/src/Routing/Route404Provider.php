@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing;
 
 use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageModel;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
@@ -44,21 +45,7 @@ class Route404Provider implements RouteProviderInterface
         $this->framework->initialize(true);
 
         $collection = new RouteCollection();
-        $routes = [];
-
-        /** @var PageModel $pageModel */
-        $pageModel = $this->framework->getAdapter(PageModel::class);
-        $pages = $pageModel->findByType('error_404');
-
-        if (null === $pages) {
-            return $collection;
-        }
-
-        foreach ($pages as $page) {
-            $this->addRoutesForPage($page, $routes);
-        }
-
-        $this->sortRoutes($routes, $request->getLanguages());
+        $routes = $this->getRoutes($request->getLanguages());
 
         foreach ($routes as $name => $route) {
             $collection->add($name, $route);
@@ -74,12 +61,48 @@ class Route404Provider implements RouteProviderInterface
 
     public function getRoutesByNames($names): array
     {
+        // Support console and web inspector profiling
+        if (null === $names) {
+            return $this->getRoutes();
+        }
+
         return [];
+    }
+
+    private function getRoutes(array $languages = null): array
+    {
+        $this->framework->initialize(true);
+
+        /** @var PageModel $pageModel */
+        $pageModel = $this->framework->getAdapter(PageModel::class);
+        $pages = $pageModel->findByType('error_404');
+
+        if (null === $pages) {
+            return [];
+        }
+
+        $routes = [];
+
+        foreach ($pages as $page) {
+            $this->addRoutesForPage($page, $routes);
+        }
+
+        $this->sortRoutes($routes, $languages);
+
+        return $routes;
     }
 
     private function addRoutesForPage(PageModel $page, array &$routes): void
     {
-        $page->loadDetails();
+        try {
+            $page->loadDetails();
+
+            if (!$page->rootId) {
+                return;
+            }
+        } catch (NoRootPageFoundException $e) {
+            return;
+        }
 
         $defaults = [
             '_token_check' => true,
