@@ -44,8 +44,8 @@ class Route404Provider implements RouteProviderInterface
     {
         $this->framework->initialize(true);
 
-        $routes = $this->getRoutes($request->getLanguages());
         $collection = new RouteCollection();
+        $routes = $this->getRoutes($request->getLanguages());
 
         foreach ($routes as $name => $route) {
             $collection->add($name, $route);

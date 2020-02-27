@@ -474,7 +474,6 @@ class RouteProviderTest extends TestCase
     public function testAddsRoutesForAPage(string $alias, string $language, string $domain, string $urlSuffix, bool $prependLocale, ?string $scheme): void
     {
         $page = $this->createPage($language, $alias, true, $domain, $scheme);
-
         $page
             ->expects($this->once())
             ->method('loadDetails')
@@ -572,7 +571,6 @@ class RouteProviderTest extends TestCase
     {
         /** @var PageModel&MockObject $page */
         $page = $this->createPage('de', 'foo');
-
         $page
             ->expects($this->once())
             ->method('loadDetails')
