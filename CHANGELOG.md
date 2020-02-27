@@ -2,6 +2,33 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.1] (2020-02-27)
+
+**Fixed defects:**
+
+- [#1423] Revert the document.write() changes ([leofeyer])
+- [#1420] Handle the "no JSON-LD found" case separately from the "noSearch" case ([leofeyer])
+- [#1421] Update the composer run documentation in the README.md file ([leofeyer])
+- [#1411] Skip orphan pages in the route provider ([aschempp])
+- [#1419] Always append the current URL on redirect ([aschempp])
+- [#1416] Correctly check if a folder has been renamed ([leofeyer])
+- [#1417] Fix uploading files into mounted folders for regular users ([leofeyer])
+- [#1418] Add a better DNS check in the site structure ([leofeyer])
+- [#1413] Correctly calculate the crawler progress ([leofeyer])
+- [#1396] Do not show the current URI in the progress bar title when crawling ([Toflar])
+- [#1385] Warn if the crawler runs without a domain name ([Toflar])
+- [#1369] Clear the dev cache in the script handler ([Toflar])
+- [#1370] Make sure the subdirectory in the tmp folder exists ([Toflar])
+- [#1377] Fix the getAttributesFromDca() type hint ([leofeyer])
+- [#1376] Adjust the login screen again ([leofeyer])
+- [#1375] Simulate active state of the debug button in debug mode ([leofeyer])
+- [#1374] Show the correct help text for the 2FA verification field ([leofeyer])
+- [#1373] Fix the Ajax visibility toggle in the site structure ([leofeyer])
+- [#1372] Correctly save new template folders ([leofeyer])
+- [#1359] Fix the PictureFactoryInterface::create() type hint ([bytehead])
+- [#1364] Fix the login screen CSS ([leofeyer])
+- [#1354] Hide the 2FA fields in the back end info modal ([bytehead])
+
 ## [4.9.0] (2020-02-18)
 
 **Fixed defects:**
@@ -184,22 +211,45 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.1]: https://github.com/contao/contao/releases/tag/4.9.1
 [4.9.0]: https://github.com/contao/contao/releases/tag/4.9.0
 [4.9.0-RC2]: https://github.com/contao/contao/releases/tag/4.9.0-RC2
 [4.9.0-RC1]: https://github.com/contao/contao/releases/tag/4.9.0-RC1
-[leofeyer]: https://github.com/leofeyer
-[Toflar]: https://github.com/Toflar
-[bytehead]: https://github.com/bytehead
-[richardhj]: https://github.com/richardhj
-[fritzmg]: https://github.com/fritzmg
-[xchs]: https://github.com/xchs
+[AndreasA]: https://github.com/AndreasA
 [aschempp]: https://github.com/aschempp
-[rabauss]: https://github.com/rabauss
 [ausi]: https://github.com/ausi
 [bohnmedia]: https://github.com/bohnmedia
+[bytehead]: https://github.com/bytehead
+[fritzmg]: https://github.com/fritzmg
+[leofeyer]: https://github.com/leofeyer
 [m-vo]: https://github.com/m-vo
+[rabauss]: https://github.com/rabauss
+[richardhj]: https://github.com/richardhj
 [Tastaturberuf]: https://github.com/Tastaturberuf
-[AndreasA]: https://github.com/AndreasA
+[Toflar]: https://github.com/Toflar
+[xchs]: https://github.com/xchs
+[#1423]: https://github.com/contao/contao/pull/1423
+[#1420]: https://github.com/contao/contao/pull/1420
+[#1421]: https://github.com/contao/contao/pull/1421
+[#1411]: https://github.com/contao/contao/pull/1411
+[#1419]: https://github.com/contao/contao/pull/1419
+[#1416]: https://github.com/contao/contao/pull/1416
+[#1417]: https://github.com/contao/contao/pull/1417
+[#1418]: https://github.com/contao/contao/pull/1418
+[#1413]: https://github.com/contao/contao/pull/1413
+[#1396]: https://github.com/contao/contao/pull/1396
+[#1385]: https://github.com/contao/contao/pull/1385
+[#1369]: https://github.com/contao/contao/pull/1369
+[#1370]: https://github.com/contao/contao/pull/1370
+[#1377]: https://github.com/contao/contao/pull/1377
+[#1376]: https://github.com/contao/contao/pull/1376
+[#1375]: https://github.com/contao/contao/pull/1375
+[#1374]: https://github.com/contao/contao/pull/1374
+[#1373]: https://github.com/contao/contao/pull/1373
+[#1372]: https://github.com/contao/contao/pull/1372
+[#1359]: https://github.com/contao/contao/pull/1359
+[#1364]: https://github.com/contao/contao/pull/1364
+[#1354]: https://github.com/contao/contao/pull/1354
 [#1348]: https://github.com/contao/contao/pull/1348
 [#1336]: https://github.com/contao/contao/pull/1336
 [#1250]: https://github.com/contao/contao/pull/1250
