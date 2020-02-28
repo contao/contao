@@ -371,7 +371,7 @@ class FileTree extends Widget
 			$extras = $this->getPickerUrlExtras($arrValues);
 
 			$return .= '
-    <p><a' . ($this->arrConfiguration['submitOnChange'] ? ' data-submit-on-change="1"' : '') . ' href="' . ampersand(System::getContainer()->get('contao.picker.builder')->getUrl('file', $extras)) . '" class="tl_submit" id="ft_' . $this->strName . '">' . $GLOBALS['TL_LANG']['MSC']['changeSelection'] . '</a></p>
+    <p><a href="' . ampersand(System::getContainer()->get('contao.picker.builder')->getUrl('file', $extras)) . '" class="tl_submit" id="ft_' . $this->strName . '">' . $GLOBALS['TL_LANG']['MSC']['changeSelection'] . '</a></p>
     <script>
       $("ft_' . $this->strName . '").addEvent("click", function(e) {
         e.preventDefault();
@@ -386,9 +386,7 @@ class FileTree extends Widget
                 $("ctrl_' . $this->strId . '").getParent("div").set("html", json.content);
                 json.javascript && Browser.exec(json.javascript);
                 $("ctrl_' . $this->strId . '").fireEvent("change");
-                if ($("ft_' . $this->strName . '").getProperty("data-submit-on-change") === "1") {
-                  Backend.autoSubmit("' . $this->strTable . '");
-                }
+                ' . ($this->arrConfiguration['submitOnChange'] ? 'Backend.autoSubmit("' . $this->strTable . '");' : '') . '
               }
             }).post({"action":"reloadFiletree", "name":"' . $this->strName . '", "value":value.join("\t"), "REQUEST_TOKEN":"' . REQUEST_TOKEN . '"});
           }
