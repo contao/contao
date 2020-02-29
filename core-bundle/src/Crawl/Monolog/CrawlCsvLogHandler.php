@@ -46,7 +46,7 @@ class CrawlCsvLogHandler extends StreamHandler
             null === $crawlUri ? '---' : (string) $crawlUri->getFoundOn(),
             null === $crawlUri ? '---' : $crawlUri->getLevel(),
             null === $crawlUri ? '---' : implode(', ', $crawlUri->getTags()),
-            str_replace(["\n", "\r\n", "\r"], ' ', $record['message']),
+            str_replace(["\r\n", "\n", "\r"], ' ', $record['message']),
         ];
 
         fputcsv($resource, $columns);
