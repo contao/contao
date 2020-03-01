@@ -243,13 +243,37 @@ class MigrateCommand extends Command
 
             $count = 0;
 
-            foreach ($this->getCommandHashes($commands, 'yes, with deletes' === $answer) as $hash) {
-                $this->io->writeln(' * '.$commandsByHash[$hash]);
-                $this->installer->execCommand($hash);
-                ++$count;
-            }
+            $commandHashes = $this->getCommandHashes($commands, 'yes, with deletes' === $answer);
+
+            do {
+                $successCount = 0;
+                $exceptions = [];
+
+                foreach ($commandHashes as $key => $hash) {
+                    $this->io->write(' * '.$commandsByHash[$hash]);
+
+                    try {
+                        $this->installer->execCommand($hash);
+                        ++$count;
+                        ++$successCount;
+                        unset($commandHashes[$key]);
+                        $this->io->writeln('');
+                    } catch (\Throwable $e) {
+                        $this->io->writeln('......FAILED');
+                        $exceptions[] = $e;
+                    }
+                }
+            } while ($successCount > 0);
 
             $this->io->success('Executed '.$count.' SQL queries.');
+
+            if (\count($exceptions)) {
+                foreach ($exceptions as $exception) {
+                    $this->io->error($exception->getMessage());
+                }
+
+                return false;
+            }
         }
 
         return true;
