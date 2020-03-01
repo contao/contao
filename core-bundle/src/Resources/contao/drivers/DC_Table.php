@@ -6178,7 +6178,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 	}
 
 	/**
-	 * Returns the parent table for the current table, either through its DCA definition 
+	 * Returns the parent table for the current table, either through its DCA definition
 	 * or dynamically through the current back end module.
 	 */
 	protected function getPTable(): ?string
@@ -6202,10 +6202,10 @@ class DC_Table extends DataContainer implements \listable, \editable
 				{
 					if ($do === $key)
 					{
-						foreach ($module['tables'] ?? [] as $table)
+						foreach ($module['tables'] ?? array() as $table)
 						{
 							Controller::loadDataContainer($table);
-							$ctable = $GLOBALS['TL_DCA'][$table]['config']['ctable'] ?? [];
+							$ctable = $GLOBALS['TL_DCA'][$table]['config']['ctable'] ?? array();
 
 							if (\in_array($this->strTable, $ctable, true))
 							{
