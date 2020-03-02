@@ -110,6 +110,9 @@ class DcaLoader extends Controller
 			}
 		}
 
+		// Set the ptable dynamically
+		$this->setDynamicPTable();
+
 		// HOOK: allow to load custom settings
 		if (isset($GLOBALS['TL_HOOKS']['loadDataContainer']) && \is_array($GLOBALS['TL_HOOKS']['loadDataContainer']))
 		{
@@ -196,6 +199,39 @@ class DcaLoader extends Controller
 			}
 
 			unset($v);
+		}
+	}
+
+	/**
+	 * Sets the parent table for the current table, if enabled and not set.
+	 */
+	private function setDynamicPTable(): void
+	{
+		if (($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? false) && empty($GLOBALS['TL_DCA'][$this->strTable]['config']['ptable']))
+		{
+			if (null !== ($do = Input::get('do')) && isset($GLOBALS['BE_MOD']))
+			{
+				foreach ($GLOBALS['BE_MOD'] as $section)
+				{
+					foreach ($section as $key => $module)
+					{
+						if ($do === $key)
+						{
+							foreach ($module['tables'] ?? array() as $table)
+							{
+								Controller::loadDataContainer($table);
+								$ctable = $GLOBALS['TL_DCA'][$table]['config']['ctable'] ?? array();
+
+								if (\in_array($this->strTable, $ctable, true))
+								{
+									$GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] = $table;
+									return;
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 }

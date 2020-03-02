@@ -1384,7 +1384,7 @@ abstract class Controller extends System
 	protected function getParentEntries($strTable, $intId)
 	{
 		// No parent table
-		if (!isset($GLOBALS['TL_DCA'][$strTable]['config']['ptable']))
+		if (!isset($GLOBALS['TL_DCA'][$strTable]['config']['ptable']) || empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']))
 		{
 			return '';
 		}

@@ -185,7 +185,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		}
 
 		$this->strTable = $strTable;
-		$this->ptable = $this->getPTable();
+		$this->ptable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'];
 		$this->ctable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ctable'];
 		$this->treeView = \in_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'], array(5, 6));
 		$this->root = null;
@@ -6175,49 +6175,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 		}
 
 		return $attributes;
-	}
-
-	/**
-	 * Returns the parent table for the current table, either through its DCA definition
-	 * or dynamically through the current back end module.
-	 */
-	protected function getPTable(): ?string
-	{
-		if (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['ptable']))
-		{
-			return $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'];
-		}
-
-		if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'])
-		{
-			return null;
-		}
-
-		// Try to find parent table dynamically
-		if (null !== ($do = Input::get('do')) && isset($GLOBALS['BE_MOD']))
-		{
-			foreach ($GLOBALS['BE_MOD'] as $section)
-			{
-				foreach ($section as $key => $module)
-				{
-					if ($do === $key)
-					{
-						foreach ($module['tables'] ?? array() as $table)
-						{
-							Controller::loadDataContainer($table);
-							$ctable = $GLOBALS['TL_DCA'][$table]['config']['ctable'] ?? array();
-
-							if (\in_array($this->strTable, $ctable, true))
-							{
-								return $table;
-							}
-						}
-					}
-				}
-			}
-		}
-
-		return null;
 	}
 }
 
