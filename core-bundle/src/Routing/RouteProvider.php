@@ -88,7 +88,7 @@ class RouteProvider implements RouteProviderInterface
         $candidates = $this->getAliasCandidates($pathInfo);
         $pages = $this->findPages($candidates);
 
-        $this->addRoutesForPages($pages, $routes);
+        $this->addRoutesForPages($pages, $routes, $pathInfo);
 
         return $this->createCollectionForRoutes($routes, $request->getLanguages());
     }
@@ -204,10 +204,10 @@ class RouteProvider implements RouteProviderInterface
     /**
      * @param iterable<PageModel> $pages
      */
-    private function addRoutesForPages(iterable $pages, array &$routes): void
+    private function addRoutesForPages(iterable $pages, array &$routes, string $pathInfo = null): void
     {
         foreach ($pages as $page) {
-            $this->addRoutesForPage($page, $routes);
+            $this->addRoutesForPage($page, $routes, $pathInfo);
         }
     }
 
@@ -234,7 +234,7 @@ class RouteProvider implements RouteProviderInterface
         return $collection;
     }
 
-    private function addRoutesForPage(PageModel $page, array &$routes): void
+    private function addRoutesForPage(PageModel $page, array &$routes, string $pathInfo = null): void
     {
         try {
             $page->loadDetails();
@@ -253,6 +253,8 @@ class RouteProvider implements RouteProviderInterface
         $path = sprintf('/%s{parameters}%s', $page->alias ?: $page->id, $this->urlSuffix);
 
         if ($this->prependLocale) {
+            $this->addLocaleRedirect($page, $pathInfo, $defaults, $routes);
+
             $path = '/{_locale}'.$path;
             $requirements['_locale'] = $page->rootLanguage;
         }
@@ -267,6 +269,23 @@ class RouteProvider implements RouteProviderInterface
         );
 
         $this->addRoutesForRootPage($page, $routes);
+    }
+
+    private function addLocaleRedirect(PageModel $page, ?string $path, array &$routes)
+    {
+        $defaults = [
+            '_controller' => 'Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction',
+            'path' => '/'.$page->rootLanguage.($path ?: ('/'.$page->alias.$this->urlSuffix)),
+            'permanent' => true,
+        ];
+
+        $routes['tl_page.'.$page->id.'.locale'] = new Route(
+            $path,
+            $defaults,
+            [],
+            ['utf8' => true],
+            $page->domain
+        );
     }
 
     private function addRoutesForRootPage(PageModel $page, array &$routes): void
@@ -387,14 +406,27 @@ class RouteProvider implements RouteProviderInterface
         uasort(
             $routes,
             static function (Route $a, Route $b) use ($languages, $routes) {
-                $fallbackA = '.fallback' === substr(array_search($a, $routes, true), -9);
-                $fallbackB = '.fallback' === substr(array_search($b, $routes, true), -9);
+                $nameA = array_search($a, $routes, true);
+                $nameB = array_search($b, $routes, true);
+
+                $fallbackA = 0 === substr_compare($nameA, '.fallback', -9);
+                $fallbackB = 0 === substr_compare($nameB, '.fallback', -9);
+                $localeA = 0 === substr_compare($nameA, '.locale', -7);
+                $localeB = 0 === substr_compare($nameB, '.locale', -7);
 
                 if ($fallbackA && !$fallbackB) {
                     return 1;
                 }
 
                 if ($fallbackB && !$fallbackA) {
+                    return -1;
+                }
+
+                if ($localeA && !$localeB) {
+                    return 1;
+                }
+
+                if ($localeB && !$localeA) {
                     return -1;
                 }
 

@@ -84,36 +84,6 @@ class PageError404 extends Frontend
 		// Find the matching root page
 		$objRootPage = $this->getRootPageFromUrl();
 
-		// Forward if the language should be but is not set (see #4028)
-		if (Config::get('addLanguageToUrl'))
-		{
-			// Get the request string without the script name
-			$strRequest = Environment::get('relativeRequest');
-
-			// Only redirect if there is no language fragment (see #4669)
-			if ($strRequest != '' && !preg_match('@^[a-z]{2}(-[A-Z]{2})?/@', $strRequest))
-			{
-				// Handle language fragments without trailing slash (see #7666)
-				if (preg_match('@^[a-z]{2}(-[A-Z]{2})?$@', $strRequest))
-				{
-					$this->redirect(Environment::get('request') . '/', 301);
-				}
-				else
-				{
-					if ($strRequest == Environment::get('request'))
-					{
-						$strRequest = $objRootPage->language . '/' . $strRequest;
-					}
-					else
-					{
-						$strRequest = Environment::get('script') . '/' . $objRootPage->language . '/' . $strRequest;
-					}
-
-					$this->redirect($strRequest, 301);
-				}
-			}
-		}
-
 		// Look for a 404 page
 		$obj404 = PageModel::find404ByPid($objRootPage->id);
 
