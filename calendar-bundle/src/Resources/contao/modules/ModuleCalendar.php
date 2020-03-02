@@ -221,6 +221,8 @@ class ModuleCalendar extends Events
 		}
 
 		// Handle featured events
+		$blnFeatured = null;
+
 		if ($this->cal_featured == 'featured')
 		{
 			$blnFeatured = true;
@@ -228,10 +230,6 @@ class ModuleCalendar extends Events
 		elseif ($this->cal_featured == 'unfeatured')
 		{
 			$blnFeatured = false;
-		}
-		else
-		{
-			$blnFeatured = null;
 		}
 
 		$intColumnCount = -1;

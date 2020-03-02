@@ -94,6 +94,8 @@ class ModuleEventlist extends Events
 		$intDay = Input::get('day');
 
 		// Handle featured events
+		$blnFeatured = null;
+
 		if ($this->cal_featured == 'featured')
 		{
 			$blnFeatured = true;
@@ -101,10 +103,6 @@ class ModuleEventlist extends Events
 		elseif ($this->cal_featured == 'unfeatured')
 		{
 			$blnFeatured = false;
-		}
-		else
-		{
-			$blnFeatured = null;
 		}
 
 		// Jump to the current period

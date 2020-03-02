@@ -18,6 +18,7 @@ use Patchwork\Utf8;
  * @property bool   $cal_showQuantity
  * @property string $cal_order
  * @property string $cal_format
+ * @property string $cal_featured
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -84,8 +85,20 @@ class ModuleEventMenu extends ModuleCalendar
 	 */
 	protected function compileYearlyMenu()
 	{
+		// Handle featured events
+		$blnFeatured = null;
+
+		if ($this->cal_featured == 'featured')
+		{
+			$blnFeatured = true;
+		}
+		elseif ($this->cal_featured == 'unfeatured')
+		{
+			$blnFeatured = false;
+		}
+
 		$arrData = array();
-		$arrAllEvents = $this->getAllEvents($this->cal_calendar, 0, min(4294967295, PHP_INT_MAX)); // 1970-01-01 00:00:00 - 2106-02-07 07:28:15
+		$arrAllEvents = $this->getAllEvents($this->cal_calendar, 0, min(4294967295, PHP_INT_MAX), $blnFeatured); // 1970-01-01 00:00:00 - 2106-02-07 07:28:15
 
 		foreach ($arrAllEvents as $intDay=>$arrDay)
 		{
@@ -127,8 +140,20 @@ class ModuleEventMenu extends ModuleCalendar
 	 */
 	protected function compileMonthlyMenu()
 	{
+		// Handle featured events
+		$blnFeatured = null;
+
+		if ($this->cal_featured == 'featured')
+		{
+			$blnFeatured = true;
+		}
+		elseif ($this->cal_featured == 'unfeatured')
+		{
+			$blnFeatured = false;
+		}
+
 		$arrData = array();
-		$arrAllEvents = $this->getAllEvents($this->cal_calendar, 0, min(4294967295, PHP_INT_MAX)); // 1970-01-01 00:00:00 - 2106-02-07 07:28:15
+		$arrAllEvents = $this->getAllEvents($this->cal_calendar, 0, min(4294967295, PHP_INT_MAX), $blnFeatured); // 1970-01-01 00:00:00 - 2106-02-07 07:28:15
 
 		foreach ($arrAllEvents as $intDay=>$arrDay)
 		{
