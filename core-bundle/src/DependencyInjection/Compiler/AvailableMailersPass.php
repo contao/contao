@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\Swiftmailer\AvailableMailers;
@@ -17,11 +27,11 @@ class AvailableMailersPass implements CompilerPassInterface
 
         $mailers = [];
 
-        foreach ($swiftmailerConfig as $k => $v) {
+        foreach ($swiftmailerConfig as $v) {
             if (isset($v['mailers'])) {
-                foreach ($v['mailers'] as $mailerName => $mailerConfig) {
+                foreach (array_keys($v['mailers']) as $mailerName) {
                     $swiftmailerServiceId = 'swiftmailer.mailer.'.$mailerName;
-                    
+
                     if ($container->hasDefinition($swiftmailerServiceId)) {
                         $mailers[$mailerName] = new Reference($swiftmailerServiceId);
                     }

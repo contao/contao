@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\Swiftmailer;
 
 use Contao\CoreBundle\Translation\Translator;
@@ -36,7 +46,7 @@ class AvailableMailers
 
     /**
      * Sets the available mailers.
-     * 
+     *
      * @param array<string, \Swift_Mailer> $mailers
      */
     public function setMailers(array $mailers): void
@@ -53,7 +63,7 @@ class AvailableMailers
     {
         $options = [];
 
-        foreach ($this->mailers as $name => $mailer) {
+        foreach (array_keys($this->mailers) as $name) {
             $options[$name] = $this->translator->trans($name, [], 'mailers') ?: $name;
         }
 
