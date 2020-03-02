@@ -34,6 +34,9 @@ doctrine:
                     charset: utf8mb4
                     collate: utf8mb4_unicode_ci
                     engine: InnoDB
+        types:
+            binary_string:
+                class: 'Contao\CoreBundle\Doctrine\DBAL\Types\BinaryStringType'
     orm:
         auto_mapping: true
         auto_generate_proxy_classes: true
