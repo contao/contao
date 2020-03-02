@@ -90,6 +90,10 @@ class CrawlCommand extends Command
         $queue = new InMemoryQueue();
         $baseUris = $this->escargotFactory->getCrawlUriCollection();
 
+        if ($baseUris->containsHost('localhost')) {
+            $io->warning('You are going to crawl localhost URIs. This is likely not desired and due to a missing domain configuration in your root page settings. You may also configure a fallback request context using "router.request_context.*" if you want to execute all CLI commands with the same request context.');
+        }
+
         try {
             if ($jobId = $input->getArgument('job')) {
                 $this->escargot = $this->escargotFactory->createFromJobId($jobId, $queue, $subscribers);
@@ -181,7 +185,7 @@ class CrawlCommand extends Command
 
         $progressBar = new ProgressBar($processOutput);
         $progressBar->setFormat("%title%\n%current%/%max% [%bar%] %percent:3s%%");
-        $progressBar->setMessage('Starting to crawl...', 'title');
+        $progressBar->setMessage('Crawling…', 'title');
         $progressBar->start();
 
         $this->escargot->addSubscriber($this->getProgressSubscriber($progressBar));
@@ -218,8 +222,7 @@ class CrawlCommand extends Command
 
             public function onLastChunk(CrawlUri $crawlUri, ResponseInterface $response, ChunkInterface $chunk): void
             {
-                // We only update the message here, otherwise too many nonsense URIs will be shown
-                $this->progressBar->setMessage((string) $crawlUri->getUri(), 'title');
+                // noop
             }
 
             public function finishedCrawling(): void

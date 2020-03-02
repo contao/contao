@@ -18,6 +18,7 @@ use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Monolog\Handler\GroupHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -86,8 +87,16 @@ class Crawl extends Backend implements \executable
 
 		$jobId = Input::get('jobId');
 		$queue = $factory->createLazyQueue();
-		$debugLogPath = sys_get_temp_dir() . '/contao-crawl/' . $jobId . '_log.csv';
-		$resultCache = sys_get_temp_dir() . '/contao-crawl/' . $jobId . '.result-cache';
+		$crawLogsDir = sys_get_temp_dir() . '/contao-crawl';
+
+		// Make sure the subdirectory exists so logs can be written
+		if (!is_dir($crawLogsDir))
+		{
+			(new Filesystem())->mkdir($crawLogsDir);
+		}
+
+		$debugLogPath = $crawLogsDir . '/' . $jobId . '_log.csv';
+		$resultCache = $crawLogsDir . '/' . $jobId . '.result-cache';
 
 		if ($downloadLog = Input::get('downloadLog'))
 		{

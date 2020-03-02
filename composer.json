@@ -137,6 +137,7 @@
         "contao/core": "*",
         "contao/manager-plugin": "<2.0 || >=3.0",
         "doctrine/persistence": "1.3.2",
+        "phpstan/phpstan": "0.12.12",
         "symfony/config": "<4.4.2",
         "terminal42/contao-ce-access": "<3.0",
         "zendframework/zend-code": "<3.3.1"
@@ -257,9 +258,9 @@
             "@monorepo-tools"
         ],
         "cs-fixer": [
-            "vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests --config vendor/contao/easy-coding-standard/config/default.yaml --ansi",
-            "vendor/bin/ecs check *-bundle/src/Resources/contao --config vendor/contao/easy-coding-standard/config/legacy.yaml --ansi",
-            "vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config vendor/contao/easy-coding-standard/config/template.yaml --ansi"
+            "vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests --config vendor/contao/easy-coding-standard/config/default.yaml --fix --ansi",
+            "vendor/bin/ecs check *-bundle/src/Resources/contao --config vendor/contao/easy-coding-standard/config/legacy.yaml --fix --ansi",
+            "vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config vendor/contao/easy-coding-standard/config/template.yaml --fix --ansi"
         ],
         "functional-tests": [
             "vendor/bin/phpunit --testsuite=functional --colors=always"

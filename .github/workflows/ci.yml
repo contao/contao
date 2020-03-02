@@ -122,7 +122,9 @@ jobs:
               run: vendor/bin/phpunit --colors=always
 
             - name: Run the functional tests
-              run: vendor/bin/phpunit --testsuite=functional --colors=always
+              run: |
+                  sudo /etc/init.d/mysql start
+                  vendor/bin/phpunit --testsuite=functional --colors=always
               env:
                   DATABASE_URL: mysql://root:root@localhost:3306/contao_test
 
@@ -154,7 +156,9 @@ jobs:
               run: vendor/bin/phpunit --colors=always
 
             - name: Run the functional tests
-              run: vendor/bin/phpunit --testsuite=functional --colors=always
+              run: |
+                  sudo /etc/init.d/mysql start
+                  vendor/bin/phpunit --testsuite=functional --colors=always
               env:
                   DATABASE_URL: mysql://root:root@localhost:3306/contao_test
 

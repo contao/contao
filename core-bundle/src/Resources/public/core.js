@@ -505,7 +505,7 @@ var AjaxRequest =
 				} else {
 					pa = img.getParent('a');
 
-					if (pa && pa.href.indexOf('do=feRedirect') == -1) {
+					if (pa && pa.href.indexOf('contao/preview') == -1) {
 						if (next = pa.getNext('a')) {
 							img = next.getFirst('img');
 						} else {
@@ -2837,7 +2837,7 @@ var Backend =
 
 		function updateData(response) {
 			var done = response.total - response.pending,
-				percentage = parseInt(100 / response.total * done, 10),
+				percentage = response.total > 0 ? parseInt(done / response.total * 100, 10) : 100,
 				result;
 
 			progressBar.setStyle('width', percentage + '%');

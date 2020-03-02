@@ -72,7 +72,6 @@ class DefaultIndexer implements IndexerInterface
             'protected' => false,
             'groups' => [],
             'pageId' => 0,
-            'noSearch' => true, // Causes the indexer to skip this document if there is no json-ld data
         ];
 
         $this->extendMetaFromJsonLdScripts($document, $meta);
@@ -144,7 +143,7 @@ class DefaultIndexer implements IndexerInterface
         $jsonLds = $document->extractJsonLdScripts('https://schema.contao.org/', 'RegularPage');
 
         if (0 === \count($jsonLds)) {
-            return;
+            $this->throwBecause('No JSON-LD found.');
         }
 
         // Merge all entries to one meta array (the latter overrides the former)
