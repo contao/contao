@@ -74,5 +74,18 @@ services:
             - '@database_connection'
             - '@security.encoder_factory'
 
+    contao.command.user_list_command:
+        class: Contao\CoreBundle\Command\UserListCommand
+        arguments:
+            - '@contao.framework'
+
+    contao.command.user_add_command:
+        class: Contao\CoreBundle\Command\UserAddCommand
+        arguments:
+            - '@contao.framework'
+            - '@database_connection'
+            - '@security.encoder_factory'
+            - '%contao.locales%'
+
     contao.command.version:
         class: Contao\CoreBundle\Command\VersionCommand
