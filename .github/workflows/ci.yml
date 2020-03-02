@@ -21,16 +21,14 @@ jobs:
               with:
                   php-version: 7.3
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
-                  tools: prestissimo
+                  tools: prestissimo, flex
                   coverage: pcov
 
             - name: Checkout
               uses: actions/checkout@v2
 
             - name: Install the dependencies
-              run: |
-                  composer global require symfony/flex
-                  composer install --no-interaction --no-suggest
+              run: composer install --no-interaction --no-suggest
 
             - name: Generate the coverage report
               run: php -d pcov.enabled=1 vendor/bin/phpunit --testsuite=coverage --coverage-clover=clover.xml --colors=always
@@ -70,16 +68,14 @@ jobs:
               with:
                   php-version: 7.3
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
-                  tools: prestissimo
+                  tools: prestissimo, flex
                   coverage: none
 
             - name: Checkout
               uses: actions/checkout@v2
 
             - name: Install the dependencies
-              run: |
-                  composer global require symfony/flex
-                  composer install --no-interaction --no-suggest
+              run: composer install --no-interaction --no-suggest
 
             - name: Check the coding style
               run: |
@@ -104,7 +100,7 @@ jobs:
               with:
                   php-version: ${{ matrix.php }}
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
-                  tools: prestissimo
+                  tools: prestissimo, flex
                   coverage: none
 
             - name: Create the database
@@ -114,9 +110,7 @@ jobs:
               uses: actions/checkout@v2
 
             - name: Install the dependencies
-              run: |
-                  composer global require symfony/flex
-                  composer install --no-interaction --no-suggest
+              run: composer install --no-interaction --no-suggest
 
             - name: Run the unit tests
               run: vendor/bin/phpunit --colors=always
@@ -138,7 +132,7 @@ jobs:
               with:
                   php-version: 7.3
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
-                  tools: prestissimo
+                  tools: prestissimo, flex
                   coverage: none
 
             - name: Create the database
@@ -148,9 +142,7 @@ jobs:
               uses: actions/checkout@v2
 
             - name: Install the dependencies
-              run: |
-                  composer global require symfony/flex
-                  composer update --prefer-lowest --prefer-stable --no-interaction --no-suggest
+              run: composer update --prefer-lowest --prefer-stable --no-interaction --no-suggest
 
             - name: Run the unit tests
               run: vendor/bin/phpunit --colors=always
@@ -172,7 +164,7 @@ jobs:
               with:
                   php-version: 7.3
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
-                  tools: prestissimo
+                  tools: prestissimo, flex
                   coverage: none
 
             - name: Checkout
@@ -180,7 +172,6 @@ jobs:
 
             - name: Test the single bundles
               run: |
-                  composer global require symfony/flex
                   bundles=(calendar-bundle core-bundle faq-bundle manager-bundle news-bundle)
                   for bundle in "${bundles[@]}"; do
                       cd $bundle
@@ -212,7 +203,7 @@ jobs:
                   php-version: 7.3
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
                   ini-values: memory_limit=1G
-                  tools: prestissimo
+                  tools: prestissimo, flex
                   coverage: none
 
             - name: Adjust the Git autocrlf setting
@@ -222,9 +213,7 @@ jobs:
               uses: actions/checkout@v2
 
             - name: Install the dependencies
-              run: |
-                  composer global require symfony/flex --no-progress
-                  composer install --no-interaction --no-suggest --no-progress
+              run: composer install --no-interaction --no-suggest --no-progress
 
             - name: Run the unit tests
               run: vendor/bin/phpunit.bat --colors=always
