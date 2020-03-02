@@ -207,28 +207,27 @@ class DcaLoader extends Controller
 	 */
 	private function setDynamicPTable(): void
 	{
-		if (($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? false) && empty($GLOBALS['TL_DCA'][$this->strTable]['config']['ptable']))
+		if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? false) || !empty($GLOBALS['TL_DCA'][$this->strTable]['config']['ptable']) || !isset($GLOBALS['BE_MOD']))
 		{
-			if (null !== ($do = Input::get('do')) && isset($GLOBALS['BE_MOD']))
+			return;
+		}
+
+		if (null !== ($do = Input::get('do')))
+		{
+			foreach (array_merge(...array_values($GLOBALS['BE_MOD'])) as $key => $module)
 			{
-				foreach ($GLOBALS['BE_MOD'] as $section)
+				if ($do === $key)
 				{
-					foreach ($section as $key => $module)
+					foreach ($module['tables'] ?? array() as $table)
 					{
-						if ($do === $key)
+						Controller::loadDataContainer($table);
+						$ctable = $GLOBALS['TL_DCA'][$table]['config']['ctable'] ?? array();
+
+						if (\in_array($this->strTable, $ctable, true))
 						{
-							foreach ($module['tables'] ?? array() as $table)
-							{
-								Controller::loadDataContainer($table);
-								$ctable = $GLOBALS['TL_DCA'][$table]['config']['ctable'] ?? array();
+							$GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] = $table;
 
-								if (\in_array($this->strTable, $ctable, true))
-								{
-									$GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] = $table;
-
-									return;
-								}
-							}
+							return;
 						}
 					}
 				}
