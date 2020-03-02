@@ -1880,6 +1880,8 @@ abstract class Controller extends System
 		// Order the enclosures
 		if (!empty($arrItem['orderEnclosure']))
 		{
+			@trigger_error('Using orderEnclosure has been deprecated and will no longer work in Contao 5.0. Use the fileTree with isSortable instead.', E_USER_DEPRECATED);
+
 			$arrEnclosures = ArrayUtil::sortByOrderField($arrEnclosures, $arrItem['orderEnclosure']);
 		}
 

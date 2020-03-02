@@ -220,12 +220,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'fileTree',
-			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'extensions'=>'css,scss,less', 'orderField'=>'orderExt'),
-			'sql'                     => "blob NULL"
-		),
-		'orderExt' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['MSC']['sortOrder'],
+			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'extensions'=>'css,scss,less', 'isSortable'=>true),
 			'sql'                     => "blob NULL"
 		),
 		'loadingOrder' => array
@@ -416,12 +411,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'fileTree',
-			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'extensions'=>'js', 'orderField'=>'orderExtJs'),
-			'sql'                     => "blob NULL"
-		),
-		'orderExtJs' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['MSC']['sortOrder'],
+			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'extensions'=>'js', 'isSortable'=>true),
 			'sql'                     => "blob NULL"
 		),
 		'scripts' => array

@@ -31,7 +31,6 @@ use FOS\HttpCache\ResponseTagger;
  * @property string  $navigationTpl
  * @property string  $customTpl
  * @property array   $pages
- * @property string  $orderPages
  * @property boolean $showHidden
  * @property string  $customLabel
  * @property boolean $autologin

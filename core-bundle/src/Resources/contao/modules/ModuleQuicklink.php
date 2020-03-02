@@ -78,30 +78,10 @@ class ModuleQuicklink extends Module
 			return;
 		}
 
-		$arrPages = array();
-
-		// Sort the array keys according to the given order
-		if ($this->orderPages != '')
-		{
-			$tmp = StringUtil::deserialize($this->orderPages);
-
-			if (!empty($tmp) && \is_array($tmp))
-			{
-				$arrPages = array_map(static function () {}, array_flip($tmp));
-			}
-		}
-
-		// Add the items to the pre-sorted array
-		while ($objPages->next())
-		{
-			$arrPages[$objPages->id] = $objPages->current();
-		}
-
 		$items = array();
-		$arrPages = array_values(array_filter($arrPages));
 
-		/** @var PageModel[] $arrPages */
-		foreach ($arrPages as $objSubpage)
+		/** @var PageModel[] $objPages */
+		foreach ($objPages as $objSubpage)
 		{
 			$objSubpage->title = StringUtil::stripInsertTags($objSubpage->title);
 			$objSubpage->pageTitle = StringUtil::stripInsertTags($objSubpage->pageTitle);
