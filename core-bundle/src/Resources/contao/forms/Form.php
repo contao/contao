@@ -414,10 +414,10 @@ class Form extends Hybrid
 				$email->attachFileFromString($objTemplate->parse(), 'form.xml', 'application/xml');
 			}
 
-			// Attach CSV file
+			// Attach CSV file with UTF-8 BOM, see #1466
 			if ($this->format == 'csv')
 			{
-				$email->attachFileFromString(StringUtil::decodeEntities('"' . implode('";"', $keys) . '"' . "\n" . '"' . implode('";"', $values) . '"'), 'form.csv', 'text/comma-separated-values');
+				$email->attachFileFromString(chr(239) . chr(187) . chr(191) . \StringUtil::decodeEntities('"' . implode('";"', $keys) . '"' . "\n" . '"' . implode('";"', $values) . '"'), 'form.csv', 'text/comma-separated-values');
 			}
 
 			$uploaded = '';
