@@ -254,13 +254,16 @@ class MigrateCommand extends Command
 
                     try {
                         $this->installer->execCommand($hash);
+
                         ++$count;
                         $commandExecuted = true;
                         unset($commandHashes[$key]);
+
                         $this->io->writeln('');
                     } catch (\Throwable $e) {
-                        $this->io->writeln('......FAILED');
                         $exceptions[] = $e;
+
+                        $this->io->writeln('......FAILED');
                     }
                 }
             } while ($commandExecuted);
