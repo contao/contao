@@ -20,7 +20,7 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 		'markAsCopy'                  => 'title',
 		'onload_callback' => array
 		(
-			array('tl_news_archive', 'checkPermission'),
+			array('tl_news_archive', 'adjustDca'),
 			array('tl_news_archive', 'generateFeed')
 		),
 		'oncreate_callback' => array
@@ -250,16 +250,10 @@ class tl_news_archive extends Contao\Backend
 		$this->import('Contao\BackendUser', 'User');
 	}
 
-	/**
-	 * Check permissions to edit table tl_news_archive
-	 *
-	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
-	 */
-	public function checkPermission()
+	public function adjustDca()
 	{
 		$bundles = Contao\System::getContainer()->getParameter('kernel.bundles');
 
-		// HOOK: comments extension required
 		if (!isset($bundles['ContaoCommentsBundle']))
 		{
 			unset($GLOBALS['TL_DCA']['tl_news_archive']['fields']['allowComments']);
@@ -294,58 +288,6 @@ class tl_news_archive extends Contao\Backend
 		if (!$this->User->hasAccess('delete', 'newp'))
 		{
 			$GLOBALS['TL_DCA']['tl_news_archive']['config']['notDeletable'] = true;
-		}
-
-		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = Contao\System::getContainer()->get('session');
-
-		// Check current action
-		switch (Contao\Input::get('act'))
-		{
-			case 'select':
-				// Allow
-				break;
-
-			case 'create':
-				if (!$this->User->hasAccess('create', 'newp'))
-				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to create news archives.');
-				}
-				break;
-
-			case 'edit':
-			case 'copy':
-			case 'delete':
-			case 'show':
-				if (!in_array(Contao\Input::get('id'), $root) || (Contao\Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'newp')))
-				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' news archive ID ' . Contao\Input::get('id') . '.');
-				}
-				break;
-
-			case 'editAll':
-			case 'deleteAll':
-			case 'overrideAll':
-			case 'copyAll':
-				$session = $objSession->all();
-
-				if (Contao\Input::get('act') == 'deleteAll' && !$this->User->hasAccess('delete', 'newp'))
-				{
-					$session['CURRENT']['IDS'] = array();
-				}
-				else
-				{
-					$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $root);
-				}
-				$objSession->replace($session);
-				break;
-
-			default:
-				if (Contao\Input::get('act'))
-				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' news archives.');
-				}
-				break;
 		}
 	}
 

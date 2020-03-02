@@ -609,6 +609,11 @@ services:
     contao.search.indexer.delegating:
         class: Contao\CoreBundle\Search\Indexer\DelegatingIndexer
 
+    contao.security.access_decision_manager:
+        class: Contao\CoreBundle\Security\Authorization\AccessDecisionManager
+        arguments: [!tagged security.voter]
+        public: true
+
     contao.security.authentication_failure_handler:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler
         arguments:

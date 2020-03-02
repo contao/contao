@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
+use Contao\CoreBundle\Security\Authorization\DcaPermission;
 use Contao\Database\Result;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
@@ -21,6 +22,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 
 /**
  * Provide methods to manage back end controllers.
@@ -437,6 +440,9 @@ abstract class Backend extends Controller
 		// Custom action (if key is not defined in config.php the default action will be called)
 		elseif (Input::get('key') && isset($arrModule[Input::get('key')]))
 		{
+			// Check permissions
+			$this->denyAccessUnlessGranted(Input::get('key'), new DcaPermission($dc->table, (string) $dc->id));
+
 			$objCallback = System::importStatic($arrModule[Input::get('key')][0]);
 			$response = $objCallback->{$arrModule[Input::get('key')][1]}($dc);
 
@@ -641,6 +647,9 @@ abstract class Backend extends Controller
 				}
 			}
 
+			// Check permissions
+			$this->denyAccessUnlessGranted($act, new DcaPermission($dc->table, (string) $dc->id));
+
 			return $dc->$act();
 		}
 
@@ -693,6 +702,34 @@ abstract class Backend extends Controller
 		}
 
 		return $arrPages;
+	}
+
+	protected function hasAccess(array $attributes, $object = null): bool
+	{
+		/** @var AccessDecisionManagerInterface $accessDecisionManager */
+		$accessDecisionManager = System::getContainer()->get('contao.security.access_decision_manager');
+
+		/** @var TokenStorageInterface $tokenStorage */
+		$tokenStorage = System::getContainer()->get('security.token_storage');
+		$token = $tokenStorage->getToken();
+
+		if (null === $token)
+		{
+			return false;
+		}
+
+		return $accessDecisionManager->decide($token, $attributes, $object);
+	}
+
+	/**
+	 * @throws AccessDeniedException in case access was disallowed
+	 */
+	protected function denyAccessUnlessGranted(string $action, $object = null): void
+	{
+		if (!$this->hasAccess(array($action), $object))
+		{
+			throw new AccessDeniedException();
+		}
 	}
 
 	/**
