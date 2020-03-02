@@ -253,7 +253,7 @@ class RouteProvider implements RouteProviderInterface
         $path = sprintf('/%s{parameters}%s', $page->alias ?: $page->id, $this->urlSuffix);
 
         if ($this->prependLocale) {
-            $this->addLocaleRedirect($page, $pathInfo, $defaults, $routes);
+            $this->addLocaleRedirect($page, $pathInfo, $routes);
 
             $path = '/{_locale}'.$path;
             $requirements['_locale'] = $page->rootLanguage;
