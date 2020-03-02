@@ -16,6 +16,7 @@ use Contao\Image\ResizeConfiguration;
  * Provide methods to handle input field "file tree".
  *
  * @property string  $orderField
+ * @property boolean $isSortable
  * @property boolean $multiple
  * @property boolean $isGallery
  * @property boolean $isDownloads
@@ -62,6 +63,11 @@ class FileTree extends Widget
 	{
 		$this->import(Database::class, 'Database');
 		parent::__construct($arrAttributes);
+
+		if ($this->isSortable && !$this->filesOnly && !$this->orderField && ($this->isGallery || $this->isDownloads))
+		{
+			throw new \RuntimeException('File tree in gallery or downloads mode needs a configured orderField to be sortable.');
+		}
 
 		// Prepare the order field
 		if ($this->orderField != '')
@@ -330,9 +336,9 @@ class FileTree extends Widget
 
 		$return = '<input type="hidden" name="' . $this->strName . '" id="ctrl_' . $this->strId . '" value="' . $strSet . '">' . ($blnHasOrder ? '
   <input type="hidden" name="' . $this->strOrderName . '" id="ctrl_' . $this->strOrderId . '" value="' . $strOrder . '">' : '') . '
-  <div class="selector_container">' . (($blnHasOrder && \count($arrValues) > 1) ? '
+  <div class="selector_container">' . ((($blnHasOrder || $this->isSortable) && \count($arrValues) > 1) ? '
     <p class="sort_hint">' . $GLOBALS['TL_LANG']['MSC']['dragItemsHint'] . '</p>' : '') . '
-    <ul id="sort_' . $this->strId . '" class="' . trim(($blnHasOrder ? 'sortable ' : '') . ($this->isGallery ? 'sgallery' : '')) . '">';
+    <ul id="sort_' . $this->strId . '" class="' . trim(($blnHasOrder || $this->isSortable ? 'sortable ' : '') . ($this->isGallery ? 'sgallery' : '')) . '">';
 
 		foreach ($arrValues as $k=>$v)
 		{
@@ -371,8 +377,8 @@ class FileTree extends Widget
           }
         });
       });
-    </script>' . ($blnHasOrder ? '
-    <script>Backend.makeMultiSrcSortable("sort_' . $this->strId . '", "ctrl_' . $this->strOrderId . '", "ctrl_' . $this->strId . '")</script>' : '');
+    </script>' . ($blnHasOrder || $this->isSortable ? '
+    <script>Backend.makeMultiSrcSortable("sort_' . $this->strId . '", "ctrl_' . ($blnHasOrder ? $this->strOrderId : $this->strId) . '", "ctrl_' . $this->strId . '")</script>' : '');
 		}
 
 		$return = '<div>' . $return . '</div></div>';
