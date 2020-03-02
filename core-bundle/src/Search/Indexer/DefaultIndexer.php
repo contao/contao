@@ -101,6 +101,8 @@ class DefaultIndexer implements IndexerInterface
 
         $this->framework->initialize();
 
+        $pageId = 0;
+
         // Try to extract page id
         try {
             $parameters = $this->urlMatcher->match($document->getUri()->getPath());
@@ -109,7 +111,6 @@ class DefaultIndexer implements IndexerInterface
                 $pageId = (int) $parameters['pageModel']->id;
             }
         } catch (ExceptionInterface $exception) {
-            $pageId = 0;
         }
 
         /** @var Search $search */
