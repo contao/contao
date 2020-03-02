@@ -176,7 +176,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'search'                  => true,
-			'eval'                    => array('rgxp'=>'alias', 'doNotCopy'=>true, 'maxlength'=>128, 'tl_class'=>'w50 clr'),
+			'eval'                    => array('rgxp'=>'alias', 'doNotCopy'=>true, 'maxlength'=>255, 'tl_class'=>'w50 clr'),
 			'save_callback' => array
 			(
 				array('tl_article', 'generateAlias')

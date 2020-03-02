@@ -3372,6 +3372,7 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 new Reference('contao.framework'),
                 new Reference('database_connection'),
+                new Reference('router'),
                 true,
             ],
             $definition->getArguments()
