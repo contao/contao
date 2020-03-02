@@ -19,6 +19,7 @@ use Patchwork\Utf8;
  * @property int    $cal_startDay
  * @property array  $cal_calendar
  * @property string $cal_ctemplate
+ * @property string $cal_featured
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -219,9 +220,23 @@ class ModuleCalendar extends Events
 			$intFirstDayOffset += 7;
 		}
 
+		// Handle featured events
+		if ($this->cal_featured == 'featured')
+		{
+			$blnFeatured = true;
+		}
+		elseif ($this->cal_featured == 'unfeatured')
+		{
+			$blnFeatured = false;
+		}
+		else
+		{
+			$blnFeatured = null;
+		}
+
 		$intColumnCount = -1;
 		$intNumberOfRows = ceil(($intDaysInMonth + $intFirstDayOffset) / 7);
-		$arrAllEvents = $this->getAllEvents($this->cal_calendar, $this->Date->monthBegin, $this->Date->monthEnd);
+		$arrAllEvents = $this->getAllEvents($this->cal_calendar, $this->Date->monthBegin, $this->Date->monthEnd, $blnFeatured);
 		$arrDays = array();
 
 		// Compile days

@@ -278,6 +278,15 @@
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.featured.0">
+        <source>Feature item</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.featured.1">
+        <source>Show the event item in a featured event list.</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.feature">
+        <source>Feature/unfeature event item ID %s</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

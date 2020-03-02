@@ -8,6 +8,12 @@
       <trans-unit id="tl_module.cal_calendar.1">
         <source>Please select one or more calendars.</source>
       </trans-unit>
+      <trans-unit id="tl_module.cal_featured.0">
+        <source>Featured items</source>
+      </trans-unit>
+      <trans-unit id="tl_module.cal_featured.1">
+        <source>Here you can choose how featured items are handled.</source>
+      </trans-unit>
       <trans-unit id="tl_module.cal_noSpan.0">
         <source>Shortened view</source>
       </trans-unit>
@@ -166,6 +172,15 @@
       </trans-unit>
       <trans-unit id="tl_module.past_all">
         <source>All past events</source>
+      </trans-unit>
+      <trans-unit id="tl_module.events.all_items">
+        <source>Show all event items</source>
+      </trans-unit>
+      <trans-unit id="tl_module.events.featured">
+        <source>Show featured event items only</source>
+      </trans-unit>
+      <trans-unit id="tl_module.events.unfeatured">
+        <source>Skip featured event items</source>
       </trans-unit>
     </body>
   </file>
