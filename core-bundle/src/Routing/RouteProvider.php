@@ -303,14 +303,9 @@ class RouteProvider implements RouteProviderInterface
             []
         );
 
-        /** @var Config $config */
-        $config = $this->framework->getAdapter(Config::class);
-
-        if (!$config->get('doNotRedirectEmpty')) {
-            $defaults['_controller'] = 'Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction';
-            $defaults['path'] = '/'.$page->language.'/';
-            $defaults['permanent'] = true;
-        }
+        $defaults['_controller'] = 'Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction';
+        $defaults['path'] = '/'.$page->language.'/';
+        $defaults['permanent'] = true;
 
         $routes['tl_page.'.$page->id.'.fallback'] = new Route(
             '/',
