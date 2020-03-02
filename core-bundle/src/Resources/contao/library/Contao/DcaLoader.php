@@ -225,6 +225,7 @@ class DcaLoader extends Controller
 								if (\in_array($this->strTable, $ctable, true))
 								{
 									$GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] = $table;
+
 									return;
 								}
 							}
