@@ -117,7 +117,7 @@ class ContaoCoreExtension extends Extension
         } else {
             // Configure whether to index protected pages on the default indexer
             $defaultIndexer = $container->getDefinition('contao.search.indexer.default');
-            $defaultIndexer->setArgument(2, $config['search']['index_protected']);
+            $defaultIndexer->setArgument(3, $config['search']['index_protected']);
         }
 
         $features = SearchIndexListener::FEATURE_INDEX | SearchIndexListener::FEATURE_DELETE;

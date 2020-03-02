@@ -602,6 +602,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@database_connection'
+            - '@router'
         tags:
             - { name: 'contao.search_indexer' }
 
