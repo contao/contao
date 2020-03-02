@@ -16,13 +16,21 @@
                 body {
                     margin: 0;
                     padding: 0;
-                    font: 1rem/1.25 Lato,sans-serif;
-                    font-weight: 300;
-                    color: #222;
+                    font-family: -apple-system,system-ui,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+                    font-weight: 400;
+                    font-size: .875rem;
+                    color: #444;
                 }
-                @media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
+                h1, h2, h3 {
+                    font-weight: 600;
+                }
+                @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
                     body {
-                        font-family: "Lato Retina", Lato, sans-serif;
+                        color: #222;
+                        font-weight: 300;
+                    }
+                    h1, h2, h3, strong, b, th {
+                        font-weight: 500;
                     }
                 }
                 a, a:visited {
@@ -31,9 +39,6 @@
                 }
                 a:hover {
                     text-decoration: underline;
-                }
-                h1, h2, h3 {
-                    font-weight: 300;
                 }
                 h1 {
                     margin: 0;
@@ -84,7 +89,7 @@
                     color: #ccc;
                 }
                 .block-error .inner {
-                    padding-left: 13%;
+                    padding-left: 7em;
                 }
             </style>
        {% endblock %}
