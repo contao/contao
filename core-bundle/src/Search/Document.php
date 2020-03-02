@@ -211,7 +211,6 @@ class Document
                     if (0 === strncmp($value, $context, \strlen($context))) {
                         $newData[$key] = substr($value, \strlen($context));
                         $found = true;
-
                         break;
                     }
                 }
@@ -219,7 +218,6 @@ class Document
                 if (0 === strncmp($context, $key, \strlen($context))) {
                     $newData[substr($key, \strlen($context))] = $value;
                     $found = true;
-
                     break;
                 }
             }
