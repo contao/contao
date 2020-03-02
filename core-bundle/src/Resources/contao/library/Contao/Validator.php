@@ -188,7 +188,7 @@ class Validator
 	 */
 	public static function isFolderAlias($varValue)
 	{
-		return preg_match('/^[\w\/.-]+$/u', $varValue);
+		return preg_match('(^(?!/)[\w/.-]+(?<!/)$)u', $varValue);
 	}
 
 	/**
