@@ -196,7 +196,7 @@ class RouteProviderTest extends TestCase
     /**
      * @dataProvider getAliasCandidates
      */
-    public function testFindsPagesByAliasCandidates(string $path, string $urlSuffix, bool $prependLocale, bool $folderUrl, array $aliases, array $ids = []): void
+    public function testFindsPagesByAliasCandidates(string $path, string $urlSuffix, bool $prependLocale, array $aliases, array $ids = []): void
     {
         $conditions = [];
 
@@ -216,8 +216,7 @@ class RouteProviderTest extends TestCase
             ->willReturn(null)
         ;
 
-        $configAdapter = $this->mockConfigAdapter(compact('folderUrl'));
-        $framework = $this->mockFramework($pageAdapter, $configAdapter);
+        $framework = $this->mockFramework($pageAdapter);
         $request = $this->mockRequestWithPath($path);
 
         $provider = $this->getRouteProvider($framework, $urlSuffix, $prependLocale);
@@ -230,7 +229,6 @@ class RouteProviderTest extends TestCase
             '/foo.html',
             '.html',
             false,
-            false,
             ['foo'],
         ];
 
@@ -238,23 +236,13 @@ class RouteProviderTest extends TestCase
             '/bar.php',
             '.php',
             false,
-            false,
             ['bar'],
-        ];
-
-        yield [
-            '/foo/bar.html',
-            '.html',
-            false,
-            false,
-            ['foo'],
         ];
 
         yield [
             '/de/foo.html',
             '.html',
             true,
-            false,
             ['foo'],
         ];
 
@@ -262,15 +250,13 @@ class RouteProviderTest extends TestCase
             '/de/foo/bar.html',
             '.html',
             true,
-            false,
-            ['foo'],
+            ['foo/bar', 'foo'],
         ];
 
         yield [
             '/foo/bar.html',
             '.html',
             false,
-            true,
             ['foo/bar', 'foo'],
         ];
 
@@ -278,7 +264,6 @@ class RouteProviderTest extends TestCase
             '/foo/bar/baz/some/more.html',
             '.html',
             false,
-            true,
             ['foo/bar/baz/some/more', 'foo/bar/baz/some', 'foo/bar/baz', 'foo/bar', 'foo'],
         ];
 
@@ -286,14 +271,12 @@ class RouteProviderTest extends TestCase
             '/de/foo/bar.html',
             '.html',
             true,
-            true,
             ['foo/bar', 'foo'],
         ];
 
         yield [
             '/15.html',
             '.html',
-            false,
             false,
             [],
             [15],
@@ -303,7 +286,6 @@ class RouteProviderTest extends TestCase
             '/de/15.html',
             '.html',
             true,
-            false,
             [],
             [15],
         ];
@@ -312,7 +294,6 @@ class RouteProviderTest extends TestCase
             '/15/foo.html',
             '.html',
             false,
-            true,
             ['15/foo'],
             [15],
         ];
@@ -330,8 +311,7 @@ class RouteProviderTest extends TestCase
             ->willReturn(new Collection(array_values($pages), 'tl_page'))
         ;
 
-        $configAdapter = $this->mockConfigAdapter(['folderUrl' => true]);
-        $framework = $this->mockFramework($pageAdapter, $configAdapter);
+        $framework = $this->mockFramework($pageAdapter);
         $request = $this->mockRequestWithPath('/foo/bar/baz.html', $languages);
 
         $provider = $this->getRouteProvider($framework);
@@ -486,8 +466,7 @@ class RouteProviderTest extends TestCase
             ->willReturn(new Collection([$page], 'tl_page'))
         ;
 
-        $configAdapter = $this->mockConfigAdapter(['folderUrl' => true]);
-        $framework = $this->mockFramework($pageAdapter, $configAdapter);
+        $framework = $this->mockFramework($pageAdapter);
         $request = $this->mockRequestWithPath(($prependLocale ? '/'.$language : '').'/foo/bar'.$urlSuffix);
 
         $provider = $this->getRouteProvider($framework, $urlSuffix, $prependLocale);
@@ -591,24 +570,6 @@ class RouteProviderTest extends TestCase
 
         $this->assertIsArray($routes);
         $this->assertEmpty($routes);
-    }
-
-    /**
-     * @return Adapter&MockObject
-     */
-    private function mockConfigAdapter(array $config): Adapter
-    {
-        $configAdapter = $this->mockAdapter(['get']);
-        $configAdapter
-            ->method('get')
-            ->willReturnCallback(
-                static function ($param) use ($config) {
-                    return $config[$param] ?? null;
-                }
-            )
-        ;
-
-        return $configAdapter;
     }
 
     /**
