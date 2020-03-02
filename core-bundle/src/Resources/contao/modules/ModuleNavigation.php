@@ -77,17 +77,8 @@ class ModuleNavigation extends Module
 		{
 			$objRootPage = PageModel::findWithDetails($this->rootPage);
 
-			// Set the language
-			if ($objRootPage->rootLanguage != $objPage->rootLanguage && Config::get('addLanguageToUrl'))
-			{
-				$lang = $objRootPage->rootLanguage;
-			}
-
-			// Set the domain
-			if ($objRootPage->rootId != $objPage->rootId && $objRootPage->domain != '' && $objRootPage->domain != $objPage->domain)
-			{
-				$host = $objRootPage->domain;
-			}
+			$lang = $objRootPage->rootLanguage;
+			$host = $objRootPage->domain;
 		}
 
 		$this->Template->request = ampersand(Environment::get('indexFreeRequest'));
