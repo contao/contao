@@ -137,6 +137,7 @@
         "contao/core": "*",
         "contao/manager-plugin": "<2.0 || >=3.0",
         "doctrine/persistence": "1.3.2",
+        "phpstan/phpstan": "0.12.12",
         "symfony/config": "<4.4.2",
         "terminal42/contao-ce-access": "<3.0",
         "zendframework/zend-code": "<3.3.1"
