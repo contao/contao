@@ -92,7 +92,7 @@
         "symfony/process": "4.4.*",
         "symfony/routing": "4.4.*",
         "symfony/security-bundle": "4.4.*",
-        "symfony/mailer": "4.4.*",
+        "symfony/swiftmailer-bundle": "^2.6.2 || ^3.1.5",
         "symfony/translation": "4.4.*",
         "symfony/twig-bundle": "4.4.*",
         "symfony/var-dumper": "4.4.*",
