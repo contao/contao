@@ -246,7 +246,7 @@ class MigrateCommand extends Command
             $commandHashes = $this->getCommandHashes($commands, 'yes, with deletes' === $answer);
 
             do {
-                $successCount = 0;
+                $commandExecuted = false;
                 $exceptions = [];
 
                 foreach ($commandHashes as $key => $hash) {
@@ -255,7 +255,7 @@ class MigrateCommand extends Command
                     try {
                         $this->installer->execCommand($hash);
                         ++$count;
-                        ++$successCount;
+                        $commandExecuted = true;
                         unset($commandHashes[$key]);
                         $this->io->writeln('');
                     } catch (\Throwable $e) {
@@ -263,7 +263,7 @@ class MigrateCommand extends Command
                         $exceptions[] = $e;
                     }
                 }
-            } while ($successCount > 0);
+            } while ($commandExecuted);
 
             $this->io->success('Executed '.$count.' SQL queries.');
 
