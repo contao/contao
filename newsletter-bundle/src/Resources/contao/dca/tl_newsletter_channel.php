@@ -105,7 +105,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},title,jumpTo;{template_legend:hide},template;{sender_legend},sender,senderName'
+		'default'                     => '{title_legend},title,jumpTo;{template_legend:hide},template;{sender_legend},sender,senderName,mailer'
 	),
 
 	// Fields
@@ -165,6 +165,17 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 			'inputType'               => 'text',
 			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(128) NOT NULL default ''"
+		),
+		'mailer' => array
+		(
+			'exclude'                 => true,
+			'inputType'               => 'select',
+			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption'=>true),
+			'options_callback' => static function ()
+			{
+				return Contao\System::getContainer()->get(\Contao\CoreBundle\Swiftmailer\AvailableMailers::class)->getMailerOptions();
+			},
+			'sql'                     => "varchar(255) NOT NULL default ''"
 		)
 	)
 );

@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Swiftmailer\AvailableMailers;
+
 /**
  * A SwiftMailer adapter class
  *
@@ -124,7 +126,7 @@ class Email
 	 */
 	public function __construct(\Swift_Mailer $objMailer = null)
 	{
-		$this->objMailer = $objMailer ?: System::getContainer()->get('swiftmailer.mailer');
+		$this->objMailer = $objMailer ?: System::getContainer()->get(AvailableMailers::class)->getCurrentMailer();
 		$this->strCharset = Config::get('characterSet');
 
 		// Instantiate Swift_Message

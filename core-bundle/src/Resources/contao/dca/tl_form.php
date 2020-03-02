@@ -108,7 +108,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 	// Subpalettes
 	'subpalettes' => array
 	(
-		'sendViaEmail'                => 'recipient,subject,format,skipEmpty',
+		'sendViaEmail'                => 'recipient,subject,format,skipEmpty,mailer',
 		'storeValues'                 => 'targetTable'
 	),
 
@@ -258,6 +258,13 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => "char(1) NOT NULL default ''"
+		),
+		'mailer' => array
+		(
+			'exclude'                 => true,
+			'inputType'               => 'select',
+			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption'=>true),
+			'sql'                     => "varchar(255) NOT NULL default ''"
 		)
 	)
 );

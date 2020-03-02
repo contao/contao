@@ -80,6 +80,12 @@
       <trans-unit id="tl_form.skipEmtpy.1">
         <source>Hide empty fields in the e-mail.</source>
       </trans-unit>
+      <trans-unit id="tl_form.mailer.0">
+        <source>Mailer configuration</source>
+      </trans-unit>
+      <trans-unit id="tl_form.mailer.1">
+        <source>The mailer configuration used for this form.</source>
+      </trans-unit>
       <trans-unit id="tl_form.storeValues.0">
         <source>Store data</source>
       </trans-unit>

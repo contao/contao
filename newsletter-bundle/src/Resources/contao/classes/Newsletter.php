@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\InternalServerErrorException;
+use Contao\CoreBundle\Swiftmailer\AvailableMailers;
 use Contao\Database\Result;
 use Symfony\Component\HttpFoundation\Session\Session;
 
@@ -324,7 +325,10 @@ class Newsletter extends Backend
 	 */
 	protected function generateEmailObject(Result $objNewsletter, $arrAttachments)
 	{
-		$objEmail = new Email();
+		/** @var AvailableMailers $availableMailers */
+		$availableMailers = System::getContainer()->get(AvailableMailers::class);
+		$objEmail = new Email($objNewsletter->mailer ? $availableMailers->getMailer($objNewsletter->mailer) : null);
+
 		$objEmail->from = $objNewsletter->sender;
 		$objEmail->subject = $objNewsletter->subject;
 

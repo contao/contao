@@ -986,6 +986,7 @@ class PageModel extends Model
 			$this->adminEmail = $objParentPage->adminEmail;
 			$this->enforceTwoFactor = $objParentPage->enforceTwoFactor;
 			$this->twoFactorJumpTo = $objParentPage->twoFactorJumpTo;
+			$this->mailer = $objParentPage->mailer;
 
 			// Store whether the root page has been published
 			$this->rootIsPublic = ($objParentPage->published && ($objParentPage->start == '' || $objParentPage->start <= $time) && ($objParentPage->stop == '' || $objParentPage->stop > ($time + 60)));

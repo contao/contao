@@ -32,6 +32,12 @@
       <trans-unit id="tl_newsletter_channel.senderName.1">
         <source>Here you can enter an optional sender name.</source>
       </trans-unit>
+      <trans-unit id="tl_newsletter_channel.mailer.0">
+        <source>Mailer configuration</source>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.mailer.1">
+        <source>The mailer configuration used for this newsletter channel.</source>
+      </trans-unit>
       <trans-unit id="tl_newsletter_channel.tstamp.0">
         <source>Revision date</source>
       </trans-unit>

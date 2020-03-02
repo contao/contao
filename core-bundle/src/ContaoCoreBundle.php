@@ -17,6 +17,7 @@ use Contao\CoreBundle\DependencyInjection\Compiler\AddCronJobsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddSessionBagsPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\AvailableMailersPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\CrawlerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\DataContainerCallbackPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\MakeServicesPublicPass;
@@ -93,5 +94,6 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new SearchIndexerPass()); // Must be before the CrawlerPass
         $container->addCompilerPass(new CrawlerPass());
         $container->addCompilerPass(new AddCronJobsPass());
+        $container->addCompilerPass(new AvailableMailersPass());
     }
 }

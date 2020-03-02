@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Swiftmailer\AvailableMailers;
 use Patchwork\Utf8;
 
 /**
@@ -360,7 +361,9 @@ class Form extends Hybrid
 				$recipients[$k] = str_replace(array('[', ']', '"'), array('<', '>', ''), $v);
 			}
 
-			$email = new Email();
+			/** @var AvailableMailers $availableMailers */
+			$availableMailers = System::getContainer()->get(AvailableMailers::class);
+			$email = new Email($this->mailer ? $availableMailers->getMailer($this->mailer) : null);
 
 			// Get subject and message
 			if ($this->format == 'email')

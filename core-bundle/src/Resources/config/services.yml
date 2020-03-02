@@ -787,6 +787,16 @@ services:
             - '@translator'
         public: true
 
+    Contao\CoreBundle\Swiftmailer\AvailableMailers:
+        public: true
+        arguments:
+            - '@contao.translation.translator'
+            - '@request_stack'
+            - '@swiftmailer.mailer'
+        tags:
+            - { name: 'contao.callback', table: 'tl_page', target: 'fields.mailer.options', method: 'getMailerOptions' }
+            - { name: 'contao.callback', table: 'tl_form', target: 'fields.mailer.options', method: 'getMailerOptions' }
+
     contao.token_generator:
         class: Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator
         arguments:
