@@ -95,6 +95,11 @@ class ContaoCoreExtension extends Extension
         ;
 
         $container
+            ->registerForAutoconfiguration(ToolbarProviderInterface::class)
+            ->addTag('contao.preview_provider')
+        ;
+
+        $container
             ->registerForAutoconfiguration(MigrationInterface::class)
             ->addTag('contao.migration')
         ;
