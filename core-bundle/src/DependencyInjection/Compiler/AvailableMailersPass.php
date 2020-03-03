@@ -39,14 +39,13 @@ class AvailableMailersPass implements CompilerPassInterface
                     $mailerServiceId = 'swiftmailer.mailer.'.$mailerName;
 
                     if ($container->hasDefinition($mailerServiceId)) {
-
                         $availableMailersDefinition->addMethodCall(
                             'addMailer',
                             [
-                                new Definition(MailerConfig::class, 
+                                new Definition(MailerConfig::class,
                                     [
-                                        $mailerName, 
-                                        new Reference($mailerServiceId), 
+                                        $mailerName,
+                                        new Reference($mailerServiceId),
                                         $fromAddresses[$mailerName] ?? null,
                                     ]
                                 ),
