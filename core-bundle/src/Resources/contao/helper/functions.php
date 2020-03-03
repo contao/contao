@@ -247,10 +247,14 @@ function trimsplit($strPattern, $strString)
  * @param boolean $blnEncode
  *
  * @return string
+ *
+ * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.0.
  */
 function ampersand($strString, $blnEncode=true)
 {
-	return preg_replace('/&(amp;)?/i', ($blnEncode ? '&amp;' : '&'), $strString);
+	@trigger_error('Using ampersand() has been deprecated and will no longer work in Contao 5.0. Use StringUtil::ampersand() instead.', E_USER_DEPRECATED);
+
+	return Contao\StringUtil::ampersand($strString, $blnEncode);
 }
 
 /**

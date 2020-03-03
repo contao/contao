@@ -1060,7 +1060,7 @@ abstract class Controller extends System
 			$uri = str_replace('+', '%2B', $uri);
 		}
 
-		return TL_SCRIPT . ampersand($uri);
+		return TL_SCRIPT . StringUtil::ampersand($uri);
 	}
 
 	/**

@@ -377,7 +377,7 @@ abstract class ModuleNews extends Module
 		// Ampersand URIs
 		else
 		{
-			$strArticleUrl = ampersand($objArticle->url);
+			$strArticleUrl = StringUtil::ampersand($objArticle->url);
 		}
 
 		// External link

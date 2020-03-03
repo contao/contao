@@ -34,7 +34,7 @@ class ContentHyperlink extends ContentElement
 		}
 		else
 		{
-			$this->url = ampersand($this->url);
+			$this->url = StringUtil::ampersand($this->url);
 		}
 
 		$embed = explode('%s', $this->embed);
