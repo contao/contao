@@ -10,10 +10,12 @@ composer:
     require-dev:
         'contao/easy-coding-standard': '^1.0'
         'contao/monorepo-tools': 'dev-master'
-        'vimeo/psalm': '^3.9',
-        'psalm/plugin-phpunit': '^0.9.0',
-        'weirdan/doctrine-psalm-plugin': '^0.10.0',
-        'seferov/symfony-psalm-plugin': '^1.0`
+        'contao/phpstan': '^0.12'
+        'phpstan/extension-installer': '^1.0'
+        'psalm/plugin-phpunit': '^0.9.0'
+        'seferov/symfony-psalm-plugin': '^1.0'
+        'vimeo/psalm': '^3.9'
+        'weirdan/doctrine-psalm-plugin': '^0.10.0'
 
 repositories:
     core-bundle:

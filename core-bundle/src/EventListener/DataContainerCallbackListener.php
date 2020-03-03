@@ -72,7 +72,7 @@ class DataContainerCallbackListener
     }
 
     /**
-     * @param array|callable|null $dcaRef
+     * @param array|null $dcaRef
      */
     private function updateSingleton(?array &$dcaRef, array $callbacks): void
     {
@@ -85,7 +85,7 @@ class DataContainerCallbackListener
     }
 
     /**
-     * @param array|callable|null $dcaRef
+     * @param array|null $dcaRef
      */
     private function addCallbacks(?array &$dcaRef, array $callbacks): void
     {
