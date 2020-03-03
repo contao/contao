@@ -150,9 +150,10 @@ class LazySessionAccessTest extends TestCase
 
         $this->assertFalse($session->isStarted());
 
-        \count($_SESSION);
+        $count = \count($_SESSION);
 
         $this->assertTrue($session->isStarted());
+        $this->assertSame(5, $count);
         $this->assertSame($beBag, $_SESSION['BE_DATA']);
         $this->assertSame($feBag, $_SESSION['FE_DATA']);
     }

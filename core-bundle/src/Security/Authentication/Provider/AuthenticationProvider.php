@@ -110,9 +110,8 @@ class AuthenticationProvider extends DaoAuthenticationProvider
             return $token;
         }
 
-        // AnonymousToken and TwoFactorTokenInterface can be ignored. Guard
-        // might return null due to having multiple Guard authenticators.
-        if ($token instanceof AnonymousToken || $token instanceof TwoFactorTokenInterface || null === $token) {
+        // AnonymousToken and TwoFactorTokenInterface can be ignored.
+        if ($token instanceof AnonymousToken || $token instanceof TwoFactorTokenInterface) {
             return $token;
         }
 

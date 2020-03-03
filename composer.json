@@ -269,7 +269,7 @@
             "vendor/bin/monorepo-tools composer-json --validate --ansi"
         ],
         "phpstan": [
-            "vendor/bin/phpstan analyze core-bundle/src core-bundle/tests --level=3 --memory-limit=1G --ansi"
+            "vendor/bin/phpstan analyze core-bundle/src core-bundle/tests --level=4 --memory-limit=1G --ansi"
         ],
         "unit-tests": [
             "vendor/bin/phpunit --colors=always"

@@ -23,7 +23,7 @@ class CrawlCsvLogHandler extends StreamHandler
             return;
         }
 
-        /** @var CrawlUri $crawlUri */
+        /** @var CrawlUri|null $crawlUri */
         $crawlUri = $record['context']['crawlUri'] ?? null;
 
         $stat = fstat($resource);

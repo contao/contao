@@ -192,10 +192,10 @@ class Route404Provider implements RouteProviderInterface
                     return 1;
                 }
 
-                /** @var PageModel $pageA */
+                /** @var PageModel|null $pageA */
                 $pageA = $a->getDefault('pageModel');
 
-                /** @var PageModel $pageB */
+                /** @var PageModel|null $pageB */
                 $pageB = $b->getDefault('pageModel');
 
                 if (!$pageA instanceof PageModel || !$pageB instanceof PageModel) {
