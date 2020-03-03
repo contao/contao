@@ -17,8 +17,17 @@ use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
 use Contao\CoreBundle\Config\ResourceFinderInterface;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Parser\AnnotationNamespaceNormalizer;
+use Contao\CoreBundle\Parser\ImportedNamespaceParser;
 use Contao\DcaExtractor;
+use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\DBAL\Connection;
+use Laminas\Code\DeclareStatement;
+use Laminas\Code\Generator\ClassGenerator;
+use Laminas\Code\Generator\DocBlockGenerator;
+use Laminas\Code\Generator\FileGenerator;
+use Laminas\Code\Reflection\ClassReflection;
+use Laminas\Code\Reflection\DocBlockReflection;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\DelegatingLoader;
 use Symfony\Component\Config\Loader\LoaderResolver;
@@ -26,6 +35,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
+use Symplify\CodingStandard\TokenRunner\DocBlockParser;
 
 class ContaoCacheWarmer implements CacheWarmerInterface
 {
@@ -38,6 +48,11 @@ class ContaoCacheWarmer implements CacheWarmerInterface
      * @var ResourceFinderInterface
      */
     private $finder;
+
+    /**
+     * @var ResourceFinderInterface
+     */
+    private $entityFinder;
 
     /**
      * @var FileLocator
@@ -67,10 +82,11 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * @internal Do not inherit from this class; decorate the "contao.cache.warm_internal" service instead
      */
-    public function __construct(Filesystem $filesystem, ResourceFinderInterface $finder, FileLocator $locator, string $rootDir, Connection $connection, ContaoFramework $framework, array $locales)
+    public function __construct(Filesystem $filesystem, ResourceFinderInterface $finder, FileLocator $locator, ResourceFinderInterface $entityFinder, string $rootDir, Connection $connection, ContaoFramework $framework, array $locales)
     {
         $this->filesystem = $filesystem;
         $this->finder = $finder;
+        $this->entityFinder = $entityFinder;
         $this->locator = $locator;
         $this->rootDir = $rootDir;
         $this->connection = $connection;
@@ -91,11 +107,69 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         $this->generateLanguageCache($cacheDir);
         $this->generateDcaExtracts($cacheDir);
         $this->generateTemplateMapper($cacheDir);
+        $this->generateEntities($cacheDir);
     }
 
     public function isOptional(): bool
     {
         return true;
+    }
+
+    private function generateEntities(string $cacheDir): void
+    {
+        // Todo: Find all files
+        $entities = [
+            'Contao\CoreBundle\Orm\Entity\Content',
+        ];
+
+        $traits = [
+            'App\Orm\Extension\Content',
+        ];
+
+        // $generator = new ClassGenerator();
+
+        foreach ($entities as $entity) {
+            try {
+                $reflectionClass = new ClassReflection($entity);
+            } catch (\ReflectionException $e) {
+                continue;
+            }
+
+            $generator = ClassGenerator::fromReflection($reflectionClass);
+            $generator->setAbstract(false);
+
+            $parser = new ImportedNamespaceParser();
+            $uses = $parser->getNamespaces($reflectionClass);
+
+            $docBlock = new DocBlockReflection($reflectionClass);
+            $docBlockGenerator = DocBlockGenerator::fromReflection($docBlock);
+
+            foreach ($uses as $use) {
+                $generator->addUse($use['class'], $use['as']);
+            }
+
+            foreach ($traits as $trait) {
+                $generator->addTrait('\\' . $trait);
+            }
+
+            $generator->setDocBlock($docBlockGenerator);
+            $generator->setExtendedClass($entity);
+            $generator->setName($reflectionClass->getShortName());
+            $generator->setNamespaceName('Contao\CoreBundle\GeneratedEntity');
+
+            $fileDocs = new DocBlockGenerator();
+            $fileDocs->setLongDescription('This file is auto generated');
+
+            $fileGenerator = new FileGenerator();
+            $fileGenerator->setDocBlock($fileDocs);
+            $fileGenerator->setClass($generator);
+            $fileGenerator->setDeclares([
+                DeclareStatement::strictTypes(1)
+            ]);
+
+            @mkdir($this->rootDir . '/var/cache/dev/contao/entities/');
+            file_put_contents($this->rootDir . '/var/cache/dev/contao/entities/' . $reflectionClass->getShortName() . '.php', $fileGenerator->generate());
+        }
     }
 
     private function generateConfigCache(string $cacheDir): void

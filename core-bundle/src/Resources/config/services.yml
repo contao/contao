@@ -55,6 +55,7 @@ services:
             - '@filesystem'
             - '@contao.resource_finder'
             - '@contao.resource_locator'
+            - '@contao.entity_finder'
             - '%kernel.project_dir%'
             - '@database_connection'
             - '@contao.framework'
@@ -449,6 +450,12 @@ services:
         class: Symfony\Component\Config\FileLocator
         arguments:
             - '%contao.resources_paths%'
+        public: true
+
+    contao.entity_finder:
+        class: Contao\CoreBundle\Config\ResourceFinder
+        arguments:
+            - '%contao.entity_paths%'
         public: true
 
     contao.routing.backend_matcher:
