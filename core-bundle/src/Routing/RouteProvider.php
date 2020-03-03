@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing;
 
-use Contao\Config;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Framework\ContaoFramework;
