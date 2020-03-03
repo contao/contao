@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Controller;
 
 use Contao\BackendUser;
+use Contao\CoreBundle\FrontendPreview\FrontendPreviewProviderManager;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\Date;
@@ -22,9 +23,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Twig\Environment as TwigEnvironment;
 use Twig\Error\Error as TwigError;
 
@@ -46,6 +45,11 @@ class BackendPreviewSwitchController
     private $previewAuthenticator;
 
     /**
+     * @var FrontendPreviewProviderManager
+     */
+    private $previewProviderManager;
+
+    /**
      * @var TokenChecker
      */
     private $tokenChecker;
@@ -65,31 +69,14 @@ class BackendPreviewSwitchController
      */
     private $twig;
 
-    /**
-     * @var CsrfTokenManagerInterface
-     */
-    private $tokenManager;
-
-    /**
-     * @var string
-     */
-    private $csrfTokenName;
-
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    public function __construct(FrontendPreviewAuthenticator $previewAuthenticator, TokenChecker $tokenChecker, Connection $connection, Security $security, TwigEnvironment $twig, RouterInterface $router, CsrfTokenManagerInterface $tokenManager, string $csrfTokenName)
+    public function __construct(FrontendPreviewAuthenticator $previewAuthenticator, FrontendPreviewProviderManager $previewProviderManager, TokenChecker $tokenChecker, Connection $connection, Security $security, TwigEnvironment $twig)
     {
         $this->previewAuthenticator = $previewAuthenticator;
+        $this->previewProviderManager = $previewProviderManager;
         $this->tokenChecker = $tokenChecker;
         $this->connection = $connection;
         $this->security = $security;
         $this->twig = $twig;
-        $this->router = $router;
-        $this->tokenManager = $tokenManager;
-        $this->csrfTokenName = $csrfTokenName;
     }
 
     /**
@@ -99,7 +86,7 @@ class BackendPreviewSwitchController
     {
         $user = $this->security->getUser();
 
-        if (!$user instanceof BackendUser || !$request->isXmlHttpRequest()) {
+        if (!$user instanceof BackendUser) {
             return new Response('Bad Request', Response::HTTP_BAD_REQUEST);
         }
 
@@ -124,24 +111,24 @@ class BackendPreviewSwitchController
 
     private function renderToolbar(): string
     {
-        $canSwitchUser = $this->security->isGranted('ROLE_ALLOWED_TO_SWITCH_MEMBER');
-        $frontendUsername = $this->tokenChecker->getFrontendUsername();
-        $showUnpublished = $this->tokenChecker->isPreviewMode();
+        $sections = [];
+
+        foreach ($this->previewProviderManager->getProviders() as $provider) {
+            $sections[$provider->getName()] = $provider->renderToolbarSection();
+        }
 
         try {
-            return $this->twig->render(
-                '@ContaoCore/Frontend/preview_toolbar_base.html.twig',
+            $toolbar = $this->twig->render(
+                '@ContaoCore/FrontendPreview/toolbar_base.html.twig',
                 [
-                    'request_token' => $this->tokenManager->getToken($this->csrfTokenName)->getValue(),
-                    'action' => $this->router->generate('contao_backend_switch'),
-                    'canSwitchUser' => $canSwitchUser,
-                    'user' => $frontendUsername,
-                    'show' => $showUnpublished,
+                    'sections' => $sections,
                 ]
             );
         } catch (TwigError $e) {
             return 'Error while rendering twig template: '.$e->getMessage();
         }
+
+        return $toolbar;
     }
 
     private function authenticatePreview(Request $request): void

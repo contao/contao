@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\FrontendPreview;
 
-use Contao\BackendUser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Twig\Environment;
 use Twig\Error\Error as TwigError;
@@ -22,6 +22,11 @@ use Twig\Error\Error as TwigError;
 class PreviewAuthenticatorToolbarProvider implements ToolbarProviderInterface
 {
     private $tokenChecker;
+
+    /**
+     * @var Security
+     */
+    private $security;
 
     private $twig;
 
@@ -31,14 +36,10 @@ class PreviewAuthenticatorToolbarProvider implements ToolbarProviderInterface
 
     private $csrfTokenName;
 
-    public function __construct(
-        TokenChecker $tokenChecker,
-        Environment $twig,
-        RouterInterface $router,
-        CsrfTokenManagerInterface $tokenManager,
-        string $csrfTokenName
-    ) {
+    public function __construct(TokenChecker $tokenChecker, Security $security, Environment $twig, RouterInterface $router, CsrfTokenManagerInterface $tokenManager, string $csrfTokenName)
+    {
         $this->tokenChecker = $tokenChecker;
+        $this->security = $security;
         $this->twig = $twig;
         $this->router = $router;
         $this->tokenManager = $tokenManager;
@@ -50,27 +51,34 @@ class PreviewAuthenticatorToolbarProvider implements ToolbarProviderInterface
         return 'authenticator';
     }
 
-    public function getTemplateName(): string
+    public function renderToolbarSection(): ?string
     {
-        return '@ContaoCore/FrontendPreview/authenticator.html.twig';
-    }
-
-    public function renderToolbarSection(BackendUser $user): ?string
-    {
-       $canSwitchUser = $this->security->isGranted('ROLE_ALLOWED_TO_SWITCH_MEMBER');
+        $canSwitchUser = $this->security->isGranted('ROLE_ALLOWED_TO_SWITCH_MEMBER');
         $frontendUsername = $this->tokenChecker->getFrontendUsername();
         $showUnpublished = $this->tokenChecker->isPreviewMode();
 
         try {
-            return $this->twig->loadTemplate($this->getTemplateName())->renderBlock(
+            return $this->twig->loadTemplate('@ContaoCore/FrontendPreview/authenticator.html.twig')->renderBlock(
                 'toolbar',
                 [
                     'request_token' => $this->tokenManager->getToken($this->csrfTokenName)->getValue(),
-                    'action' => $this->router->generate('contao_backend_preview_switch'),
+                    'action' => $this->router->generate('contao_backend_switch'),
                     'canSwitchUser' => $canSwitchUser,
                     'user' => $frontendUsername,
                     'show' => $showUnpublished,
                 ]
+            );
+        } catch (TwigError $e) {
+            return 'Error while rendering twig template: '.$e->getMessage();
+        }
+    }
+
+    public function getToolbarScripts(): ?string
+    {
+        try {
+            return $this->twig->loadTemplate('@ContaoCore/FrontendPreview/authenticator.html.twig')->renderBlock(
+                'scripts',
+                []
             );
         } catch (TwigError $e) {
             return 'Error while rendering twig template: '.$e->getMessage();

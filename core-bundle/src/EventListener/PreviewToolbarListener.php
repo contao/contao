@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
+use Contao\CoreBundle\FrontendPreview\FrontendPreviewProviderManager;
+use Contao\CoreBundle\FrontendPreview\ToolbarProviderInterface;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -51,12 +53,18 @@ class PreviewToolbarListener
      */
     private $router;
 
-    public function __construct(string $previewScript, ScopeMatcher $scopeMatcher, TwigEnvironment $twig, RouterInterface $router)
+    /**
+     * @var FrontendPreviewProviderManager
+     */
+    private $previewProviderManager;
+
+    public function __construct(string $previewScript, ScopeMatcher $scopeMatcher, TwigEnvironment $twig, RouterInterface $router, FrontendPreviewProviderManager $previewProviderManager)
     {
         $this->previewScript = $previewScript;
         $this->scopeMatcher = $scopeMatcher;
         $this->twig = $twig;
         $this->router = $router;
+        $this->previewProviderManager = $previewProviderManager;
     }
 
     public function __invoke(ResponseEvent $event): void
@@ -107,6 +115,12 @@ class PreviewToolbarListener
             [
                 'action' => $this->router->generate('contao_backend_switch'),
                 'request' => $request,
+                'scripts' => array_map(
+                    static function (ToolbarProviderInterface $provider) {
+                        return $provider->getToolbarScripts();
+                    },
+                    $this->previewProviderManager->getProviders()
+                ),
             ]
         );
 

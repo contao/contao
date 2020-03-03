@@ -1,0 +1,7 @@
+<div class="cto-toolbar__sections">
+    {% for name,section in sections %}
+        <div class="cto-toolbar__section cto-toolbar__{{ name }}">
+            {{ section|raw }}
+        </div>
+    {% endfor %}
+</div>

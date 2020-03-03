@@ -18,23 +18,17 @@ namespace Contao\CoreBundle\FrontendPreview;
 class FrontendPreviewProviderManager
 {
     /**
-     * @var ToolbarProviderInterface[]
+     * @var array<ToolbarProviderInterface>
      */
     private $providers = [];
-
-    /**
-     * @var string[]
-     */
-    private $templates = [];
 
     public function addProvider(ToolbarProviderInterface $provider): void
     {
         $this->providers[$provider->getName()] = $provider;
-        $this->templates[$provider->getName()] = $provider->getTemplateName();
     }
 
     /**
-     * @return ToolbarProviderInterface[]
+     * @return array<ToolbarProviderInterface>
      */
     public function getProviders(): array
     {
@@ -49,10 +43,5 @@ class FrontendPreviewProviderManager
     public function getProvider($name): ?ToolbarProviderInterface
     {
         return $this->providers[$name] ?? null;
-    }
-
-    public function getTemplates(): array
-    {
-        return $this->templates;
     }
 }

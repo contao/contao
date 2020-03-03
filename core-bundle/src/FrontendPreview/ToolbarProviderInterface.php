@@ -12,13 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\FrontendPreview;
 
-use Contao\BackendUser;
-
 interface ToolbarProviderInterface
 {
     public function getName(): string;
 
-    public function getTemplateName(): string;
+    public function getToolbarScripts(): ?string;
 
-    public function renderToolbarSection(BackendUser $user): ?string;
+    public function renderToolbarSection(): ?string;
 }
