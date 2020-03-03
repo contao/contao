@@ -54,7 +54,9 @@ parameters:
                 - %currentWorkingDirectory%/core-bundle/src/Controller/AbstractController.php
         -
             message: '#Unreachable statement - code above always terminates\.#'
-            path: %currentWorkingDirectory%/core-bundle/src/Controller/AbstractController.php
+            paths:
+                - %currentWorkingDirectory%/core-bundle/src/Controller/AbstractController.php
+                - %currentWorkingDirectory%/core-bundle/src/Command/MigrateCommand.php
 
     reportUnmatchedIgnoredErrors: false
     inferPrivatePropertyTypeFromConstructor: true

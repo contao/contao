@@ -251,6 +251,8 @@ class MigrateCommand extends Command
 
             $this->io->success('Executed '.$count.' SQL queries.');
         }
+
+        return true;
     }
 
     private function getCommandHashes(array $commands, bool $withDrops): array
