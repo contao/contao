@@ -266,13 +266,15 @@ class ContentDownloads extends ContentElement
 		{
 			default:
 			case 'name_asc':
-				uksort($files, static function(): int {
+				uksort($files, static function (): int
+				{
 					return strnatcasecmp(basename($a), basename($b));
 				});
 				break;
 
 			case 'name_desc':
-				uksort($files, static function(): int {
+				uksort($files, static function (): int
+				{
 					return -strnatcasecmp(basename($a), basename($b));
 				});
 				break;

@@ -165,8 +165,9 @@ class StyleSheets extends Backend
 		}
 
 		// Sort by key length (see #3316)
-		uksort($vars, static function($a, $b): int {
-			return strlen($b) - strlen($a);
+		uksort($vars, static function ($a, $b): int
+		{
+			return \strlen($b) - \strlen($a);
 		});
 
 		// Create the file
@@ -1376,8 +1377,9 @@ class StyleSheets extends Backend
 		}
 
 		// Sort by key length (see #3316)
-		uksort($vars, static function($a, $b): int {
-			return strlen($b) - strlen($a);
+		uksort($vars, static function ($a, $b): int
+		{
+			return \strlen($b) - \strlen($a);
 		});
 
 		// Create the file

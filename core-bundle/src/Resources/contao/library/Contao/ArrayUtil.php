@@ -26,14 +26,14 @@ class ArrayUtil
 	 */
 	public static function arrayInsert(&$arrCurrent, $intIndex, $arrNew): void
 	{
-		if (!is_array($arrCurrent))
+		if (!\is_array($arrCurrent))
 		{
 			$arrCurrent = $arrNew;
 
 			return;
 		}
 
-		if (is_array($arrNew))
+		if (\is_array($arrNew))
 		{
 			$arrBuffer = array_splice($arrCurrent, 0, $intIndex);
 			$arrCurrent = array_merge_recursive($arrBuffer, $arrNew, $arrCurrent);
@@ -53,7 +53,7 @@ class ArrayUtil
 	 */
 	public static function isAssoc($arrArray): bool
 	{
-		return is_array($arrArray) && array_keys($arrArray) !== range(0, count($arrArray) - 1);
+		return \is_array($arrArray) && array_keys($arrArray) !== range(0, \count($arrArray) - 1);
 	}
 }
 
