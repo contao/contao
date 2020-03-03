@@ -120,13 +120,20 @@ class Email
 	protected $strLogFile = 'EMAIL';
 
 	/**
+	 * AvailableMailers service
+	 * @var AvailableMailers
+	 */
+	protected $objAvailableMailers;
+
+	/**
 	 * Instantiate the object and load the mailer framework
 	 *
 	 * @param \Swift_Mailer|null $objMailer
 	 */
 	public function __construct(\Swift_Mailer $objMailer = null)
 	{
-		$this->objMailer = $objMailer ?: System::getContainer()->get(AvailableMailers::class)->getCurrentMailer();
+		$this->objAvailableMailers = System::getContainer()->get(AvailableMailers::class);
+		$this->objMailer = $objMailer ?: $this->objAvailableMailers->getCurrentMailer();
 		$this->strCharset = Config::get('characterSet');
 
 		// Instantiate Swift_Message
@@ -440,6 +447,12 @@ class Email
 		if ($this->strSender == '')
 		{
 			list($this->strSenderName, $this->strSender) = StringUtil::splitFriendlyEmail(Config::get('adminEmail'));
+		}
+
+		// Override sender from configuration
+		if (null !== ($strSenderOverride = $this->objAvailableMailers->getSenderByMailer($this->objMailer)))
+		{
+			list($this->strSenderName, $this->strSender) = StringUtil::splitFriendlyEmail($strSenderOverride);
 		}
 
 		// Sender

@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class AvailableMailers
 {
     /**
-     * @var array<string, \Swift_Mailer>
+     * @var array<MailerConfig>
      */
     private $mailers = [];
 
@@ -44,14 +44,9 @@ class AvailableMailers
         $this->defaultMailer = $defaultMailer;
     }
 
-    /**
-     * Sets the available mailers.
-     *
-     * @param array<string, \Swift_Mailer> $mailers
-     */
-    public function setMailers(array $mailers): void
+    public function addMailer(MailerConfig $mailerConfig): void
     {
-        $this->mailers = $mailers;
+        $this->mailers[$mailerConfig->getName()] = $mailerConfig;
     }
 
     /**
@@ -75,7 +70,35 @@ class AvailableMailers
      */
     public function getMailer(string $name): ?\Swift_Mailer
     {
-        return $this->mailers[$name] ?? null;
+        if (isset($this->mailers[$name])) {
+            return $this->mailers[$name]->getMailer();
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns a sender address for a specific mailer, if available.
+     */
+    public function getSender(string $mailerName): ?string
+    {
+        if (isset($this->mailers[$mailerName])) {
+            return $this->mailers[$mailerName]->getSender();
+        }
+    }
+
+    /**
+     * Returns a sender address based a mailer instance, if available.
+     */
+    public function getSenderByMailer(\Swift_Mailer $mailer): ?string
+    {
+        foreach ($this->mailers as $mailerConfig) {
+            if ($mailerConfig->getMailer() === $mailer) {
+                return $mailerConfig->getSender();
+            }
+        }
+
+        return null;
     }
 
     /**

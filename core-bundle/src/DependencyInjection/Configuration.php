@@ -125,6 +125,7 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addSecurityNode())
                 ->append($this->addSearchNode())
                 ->append($this->addCrawlNode())
+                ->append($this->addMailersNode())
             ->end()
         ;
 
@@ -412,6 +413,20 @@ class Configuration implements ConfigurationInterface
                     ->info('Allows to configure the default HttpClient options (useful for proxy settings, SSL certificate validation and more).')
                     ->prototype('scalar')->end()
                     ->defaultValue([])
+                ->end()
+            ->end()
+        ;
+    }
+
+    private function addMailersNode(): NodeDefinition
+    {
+        return (new TreeBuilder('mailers'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('from_addresses')
+                    ->useAttributeAsKey('name')
+                    ->prototype('scalar')->end()
                 ->end()
             ->end()
         ;
