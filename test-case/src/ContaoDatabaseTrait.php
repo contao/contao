@@ -17,6 +17,9 @@ use Doctrine\DBAL\DriverManager;
 
 trait ContaoDatabaseTrait
 {
+    /**
+     * @var Connection
+     */
     private static $connection;
 
     protected static function loadFileIntoDatabase(string $sqlFile): void

@@ -13,11 +13,14 @@
         "php": "^7.2"
     },
     "conflict": {
+        "contao/core-bundle": "<4.9",
         "phpunit/phpunit": "<8.0"
     },
     "require-dev": {
         "ext-pdo": "*",
-        "contao/core-bundle": "^4.5",
+        "contao/core-bundle": "^4.9",
+        "doctrine/dbal": "^2.10",
+        "doctrine/orm": "^2.6.3",
         "friendsofphp/php-cs-fixer": "^2.12",
         "php-http/guzzle6-adapter": "^1.1"
     },
