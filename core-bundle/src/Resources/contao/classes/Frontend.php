@@ -322,12 +322,6 @@ abstract class Frontend extends Controller
 		// No language given
 		else
 		{
-			// Always load the language fall back root if "doNotRedirectEmpty" is enabled
-			if (Config::get('addLanguageToUrl') && Config::get('doNotRedirectEmpty'))
-			{
-				$accept_language = '-';
-			}
-
 			$strUri = Environment::get('url') . '/';
 			$strError = 'No root page found (host "' . Environment::get('host') . '", languages "' . implode(', ', Environment::get('httpAcceptLanguage')) . '")';
 		}
@@ -355,7 +349,7 @@ abstract class Frontend extends Controller
 		// Redirect to the website root or language root (e.g. en/)
 		if (Environment::get('relativeRequest') == '')
 		{
-			if (Config::get('addLanguageToUrl') && !Config::get('doNotRedirectEmpty'))
+			if (Config::get('addLanguageToUrl'))
 			{
 				$arrParams = array('_locale' => $objRootPage->language);
 
