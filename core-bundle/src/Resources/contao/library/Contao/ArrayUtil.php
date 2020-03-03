@@ -57,11 +57,11 @@ class ArrayUtil
 	}
 
 	/**
-	 * @param array        $arrItems   Items array that should ge sorted
-	 * @param string|array $strOrder   Serialized order field or array
-	 * @param string|null  $strIdField Name of the id field to be used for
-	 *                                 sorting if the items are objects
-	 * @param boolean      $blnByKey   If true the keys of the $arrItems are used
+	 * @param  array        $arrItems   Items array that should ge sorted
+	 * @param  string|array $strOrder   Serialized order field or array
+	 * @param  string|null  $strIdField Name of the id field to be used for
+	 *                                  sorting if the items are objects
+	 * @param  boolean      $blnByKey   If true the keys of the $arrItems are used
 	 * @return array
 	 */
 	public static function sortByOrderField(array $arrItems, $strOrder, ?string $strIdField = 'uuid', bool $blnByKey = false): array
@@ -76,13 +76,17 @@ class ArrayUtil
 			{
 				$strKey = $key;
 			}
-			elseif (\is_string($item))
+			elseif (\is_object($item))
 			{
-				$strKey = $item;
+				$strKey = $item->$strIdField;
+			}
+			elseif (\is_array($item))
+			{
+				$strKey = $item[$strIdField];
 			}
 			else
 			{
-				$strKey = is_object($item) ? $item->$strIdField : $item[$strIdField];
+				$strKey = $item;
 			}
 
 			if (\array_key_exists($strKey, $arrOrder))
@@ -93,9 +97,13 @@ class ArrayUtil
 		}
 
 		// Remove empty (unreplaced) entries
-		$arrOrder = array_filter($arrOrder);
+		$arrOrder = array_filter($arrOrder, static function ($item)
+		{
+			return $item !== null;
+		});
 
-		if ($blnByKey) {
+		if ($blnByKey)
+		{
 			// Append the left-over images at the end
 			return $arrOrder + $arrItems;
 		}
