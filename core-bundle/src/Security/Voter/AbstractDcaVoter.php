@@ -13,13 +13,13 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Security\Voter;
 
 use Contao\BackendUser;
-use Contao\CoreBundle\Security\Authorization\DcaSubject\ParentSubject;
 use Contao\CoreBundle\Security\Authorization\DcaSubject\RootSubject;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 abstract class AbstractDcaVoter implements VoterInterface
 {
+    public const OPERATION_LIST = 'list';
     public const OPERATION_CREATE = 'create';
     public const OPERATION_EDIT = 'edit';
     public const OPERATION_DELETE = 'delete';
@@ -54,7 +54,7 @@ abstract class AbstractDcaVoter implements VoterInterface
             // as soon as at least one attribute is supported, default is to deny access
             $vote = self::ACCESS_DENIED;
 
-            if ($this->voteOnAttribute($attribute, $subject, $user)) {
+            if ($this->voteOnAttribute($attribute, $subject, $user, $token)) {
                 // grant access as soon as at least one attribute returns a positive response
                 return self::ACCESS_GRANTED;
             }
@@ -65,7 +65,7 @@ abstract class AbstractDcaVoter implements VoterInterface
 
     abstract protected function getTable(): string;
 
-    abstract protected function voteOnAttribute(string $attribute, RootSubject $subject, BackendUser $user): bool;
+    abstract protected function voteOnAttribute(string $attribute, RootSubject $subject, BackendUser $user, TokenInterface $token): bool;
 
     abstract protected function getSubjectByAttributes(): array;
 
@@ -84,16 +84,12 @@ abstract class AbstractDcaVoter implements VoterInterface
         return true;
     }
 
-    protected function supports($attribute, RootSubject $subject, TokenInterface $token): bool
+    protected function supports($attribute, RootSubject $subject): bool
     {
         if (!$this->isSubjectOfDesiredType($attribute, $subject)) {
             return false;
         }
 
-        if ($subject instanceof ParentSubject) {
-            return $this->getTable() === $subject->getTable();
-        }
-
-        return false;
+        return $this->getTable() === $subject->getTable();
     }
 }

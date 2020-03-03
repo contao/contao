@@ -14,6 +14,9 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
+use Contao\CoreBundle\Security\Authorization\DcaSubject\RecordSubject;
+use Contao\CoreBundle\Security\Authorization\DcaSubject\RootSubject;
+use Contao\CoreBundle\Security\Voter\AbstractDcaVoter;
 use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -291,6 +294,9 @@ class DC_Table extends DataContainer implements \listable, \editable
 	 */
 	public function showAll()
 	{
+		// Check permissions
+		$this->denyAccessUnlessGranted(AbstractDcaVoter::OPERATION_LIST, new RootSubject($this->strTable));
+
 		$return = '';
 		$this->limit = '';
 
@@ -4451,6 +4457,9 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 				for ($i=0, $c=\count($row); $i<$c; $i++)
 				{
+					// Check permissions
+					$this->denyAccessUnlessGranted(AbstractDcaVoter::OPERATION_SHOW, new RecordSubject($this->strTable, (string) $row[$i]['id']));
+
 					$this->current[] = $row[$i]['id'];
 					$imagePasteAfter = Image::getHtml('pasteafter.svg', sprintf($labelPasteAfter[1], $row[$i]['id']));
 					$imagePasteNew = Image::getHtml('new.svg', sprintf($labelPasteNew[1], $row[$i]['id']));
@@ -4886,6 +4895,9 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 			foreach ($result as $row)
 			{
+				// Check permissions
+				$this->denyAccessUnlessGranted(AbstractDcaVoter::OPERATION_SHOW, new RecordSubject($this->strTable, (string) $row['id']));
+
 				$args = array();
 				$this->current[] = $row['id'];
 				$showFields = $GLOBALS['TL_DCA'][$table]['list']['label']['fields'];

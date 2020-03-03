@@ -19,6 +19,7 @@ use Contao\CoreBundle\Security\Authorization\DcaSubject\RecordSubject;
 use Contao\CoreBundle\Security\Authorization\DcaSubject\RootSubject;
 use Contao\CoreBundle\Security\Voter\AbstractDcaVoter;
 use Contao\NewsModel;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 
 class NewsAccessVoter extends AbstractDcaVoter
@@ -44,8 +45,17 @@ class NewsAccessVoter extends AbstractDcaVoter
         return 'tl_news';
     }
 
-    protected function voteOnAttribute(string $attribute, RootSubject $subject, BackendUser $user): bool
+    protected function voteOnAttribute(string $attribute, RootSubject $subject, BackendUser $user, TokenInterface $token): bool
     {
+        // Listing of news is allowed if listing of news archives is allowed too
+        if (AbstractDcaVoter::OPERATION_LIST === $attribute) {
+            return $this->accessDecisionManager->decide(
+                $token,
+                [AbstractDcaVoter::OPERATION_LIST],
+                new RootSubject('tl_news_archive')
+            );
+        }
+
         if ($subject instanceof ParentSubject) {
             $newsArchiveId = (int) $subject->getPid();
         } elseif ($subject instanceof RecordSubject) {
@@ -69,6 +79,7 @@ class NewsAccessVoter extends AbstractDcaVoter
     protected function getSubjectByAttributes(): array
     {
         return [
+            AbstractDcaVoter::OPERATION_LIST => RootSubject::class,
             AbstractDcaVoter::OPERATION_CREATE => ParentSubject::class,
             AbstractDcaVoter::OPERATION_EDIT => RecordSubject::class,
             AbstractDcaVoter::OPERATION_DELETE => RecordSubject::class,
