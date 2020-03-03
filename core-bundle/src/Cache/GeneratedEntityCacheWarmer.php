@@ -26,12 +26,14 @@ class GeneratedEntityCacheWarmer implements CacheWarmerInterface
 
     public function warmUp($cacheDir): void
     {
-        $this->ensureCacheDirectory($cacheDir);
+        $directory = sprintf('%s/contao/entities', $cacheDir);
+
+        $this->ensureCacheDirectoryExists($directory);
 
         $entities = $this->entityCollector->collect();
         $extensions = $this->extensionCollector->collect();
 
-        $this->factory->generateEntityClasses($entities, $extensions);
+        $this->factory->generateEntityClasses($directory, $entities, $extensions);
     }
 
     public function isOptional(): bool
@@ -39,7 +41,7 @@ class GeneratedEntityCacheWarmer implements CacheWarmerInterface
         return false;
     }
 
-    private function ensureCacheDirectory($cacheDir)
+    private function ensureCacheDirectoryExists($cacheDir)
     {
         $directory = sprintf('%s/contao/entities', $cacheDir);
 

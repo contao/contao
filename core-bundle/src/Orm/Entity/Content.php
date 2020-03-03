@@ -20,7 +20,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * And this text is further describing it.
  *
  * @ORM\Entity
- * @ORM\Table()
+ * @ORM\Table(name="meep_content", indexes={@ORM\Index(name="search_idx", columns={"id", "test"})})
  * @UniqueEntity("test")
  */
 abstract class Content

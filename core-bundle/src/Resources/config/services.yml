@@ -77,8 +77,14 @@ services:
         arguments:
             - '%contao.entity_paths%'
 
+    contao.orm.annotation_dumper:
+        class: Contao\CoreBundle\Orm\Annotation\AnnotationDumper
+
     contao.orm.entity_factory:
         class: Contao\CoreBundle\Orm\EntityFactory
+        arguments:
+            - '@annotation_reader'
+            - '@contao.orm.annotation_dumper'
 
     Contao\CoreBundle\Controller\BackendController: ~
 
