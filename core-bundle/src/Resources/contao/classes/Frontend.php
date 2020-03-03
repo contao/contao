@@ -227,7 +227,7 @@ abstract class Frontend extends Controller
 				return false; // see #264
 			}
 
-			array_insert($arrFragments, 1, array('auto_item'));
+			ArrayUtil::arrayInsert($arrFragments, 1, array('auto_item'));
 		}
 
 		// HOOK: add custom logic

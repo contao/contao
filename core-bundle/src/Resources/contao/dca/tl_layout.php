@@ -586,7 +586,7 @@ class tl_layout extends Contao\Backend
 
 		if (($i = array_search('responsive.css', $array)) !== false && !in_array('layout.css', $array))
 		{
-			array_insert($array, $i, 'layout.css');
+			Contao\ArrayUtil::arrayInsert($array, $i, 'layout.css');
 		}
 
 		return $array;

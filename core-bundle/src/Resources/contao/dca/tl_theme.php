@@ -321,7 +321,7 @@ class tl_theme extends Contao\Backend
 		$return = array();
 		$rootDir = Contao\System::getContainer()->getParameter('kernel.project_dir');
 
-		foreach (scan($rootDir . '/' . $path) as $file)
+		foreach (Contao\Folder::scan($rootDir . '/' . $path) as $file)
 		{
 			if (is_dir($rootDir . '/' . $path . '/' . $file))
 			{

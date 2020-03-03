@@ -154,7 +154,7 @@ class BackendPage extends Backend
 		if (Input::get('switch') && $this->User->hasAccess('files', 'modules'))
 		{
 			$objTemplate->switch = $GLOBALS['TL_LANG']['MSC']['filePicker'];
-			$objTemplate->switchHref = str_replace('contao/page?', 'contao/file?', ampersand(Environment::get('request')));
+			$objTemplate->switchHref = str_replace('contao/page?', 'contao/file?', StringUtil::ampersand(Environment::get('request')));
 		}
 
 		return $objTemplate->getResponse();

@@ -51,43 +51,14 @@ function log_message($strMessage, $strLog=null)
  * @param boolean $blnUncached
  *
  * @return array
+ *
+ * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.0.
  */
 function scan($strFolder, $blnUncached=false)
 {
-	global $arrScanCache;
+	@trigger_error('Using scan() has been deprecated and will no longer work in Contao 5.0. Use Folder::scan() instead.', E_USER_DEPRECATED);
 
-	// Add a trailing slash
-	if (substr($strFolder, -1, 1) != '/')
-	{
-		$strFolder .= '/';
-	}
-
-	// Load from cache
-	if (!$blnUncached && isset($arrScanCache[$strFolder]))
-	{
-		return $arrScanCache[$strFolder];
-	}
-
-	$arrReturn = array();
-
-	// Scan directory
-	foreach (scandir($strFolder, SCANDIR_SORT_ASCENDING) as $strFile)
-	{
-		if ($strFile == '.' || $strFile == '..')
-		{
-			continue;
-		}
-
-		$arrReturn[] = $strFile;
-	}
-
-	// Cache the result
-	if (!$blnUncached)
-	{
-		$arrScanCache[$strFolder] = $arrReturn;
-	}
-
-	return $arrReturn;
+	return Contao\Folder::scan($strFolder, $blnUncached);
 }
 
 /**
@@ -276,10 +247,14 @@ function trimsplit($strPattern, $strString)
  * @param boolean $blnEncode
  *
  * @return string
+ *
+ * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.0.
  */
 function ampersand($strString, $blnEncode=true)
 {
-	return preg_replace('/&(amp;)?/i', ($blnEncode ? '&amp;' : '&'), $strString);
+	@trigger_error('Using ampersand() has been deprecated and will no longer work in Contao 5.0. Use StringUtil::ampersand() instead.', E_USER_DEPRECATED);
+
+	return Contao\StringUtil::ampersand($strString, $blnEncode);
 }
 
 /**
@@ -289,9 +264,13 @@ function ampersand($strString, $blnEncode=true)
  * @param boolean $xhtml
  *
  * @return string
+ *
+ * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.0.
  */
 function nl2br_html5($str, $xhtml=false)
 {
+	@trigger_error('Using nl2br_html5() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 	return nl2br($str, $xhtml);
 }
 
@@ -301,9 +280,13 @@ function nl2br_html5($str, $xhtml=false)
  * @param string $str
  *
  * @return string
+ *
+ * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.0.
  */
 function nl2br_xhtml($str)
 {
+	@trigger_error('Using nl2br_xhtml() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 	return nl2br($str);
 }
 
@@ -314,25 +297,14 @@ function nl2br_xhtml($str)
  * @param boolean $xhtml
  *
  * @return string
+ *
+ * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.0.
  */
 function nl2br_pre($str, $xhtml=false)
 {
-	$str = $xhtml ? nl2br_xhtml($str) : nl2br_html5($str);
+	@trigger_error('Using nl2br_pre() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
-	if (stripos($str, '<pre') === false)
-	{
-		return $str;
-	}
-
-	$chunks = array();
-	preg_match_all('/<pre[^>]*>.*<\/pre>/Uis', $str, $chunks);
-
-	foreach ($chunks as $chunk)
-	{
-		$str = str_replace($chunk, str_ireplace(array('<br>', '<br />'), '', $chunk), $str);
-	}
-
-	return $str;
+	return preg_replace('/\r?\n/', $xhtml ? '<br />' : '<br>', $str);
 }
 
 /**
@@ -342,9 +314,13 @@ function nl2br_pre($str, $xhtml=false)
  * @param string $b
  *
  * @return integer
+ *
+ * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.0.
  */
 function basename_natcasecmp($a, $b)
 {
+	@trigger_error('Using basename_natcasecmp() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 	return strnatcasecmp(basename($a), basename($b));
 }
 
@@ -355,9 +331,13 @@ function basename_natcasecmp($a, $b)
  * @param string $b
  *
  * @return integer
+ *
+ * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.0.
  */
 function basename_natcasercmp($a, $b)
 {
+	@trigger_error('Using basename_natcasercmp() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 	return -strnatcasecmp(basename($a), basename($b));
 }
 
@@ -367,14 +347,16 @@ function basename_natcasercmp($a, $b)
  * @param array $arrArray
  *
  * @return array
+ *
+ * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.0.
  */
 function natcaseksort($arrArray)
 {
-	$arrBuffer = array_flip($arrArray);
-	natcasesort($arrBuffer);
-	$arrBuffer = array_flip($arrBuffer);
+	@trigger_error('Using natcaseksort() has been deprecated and will no longer work in Contao 5.0. Use uksort(…, \'strnatcasecmp\') instead.', E_USER_DEPRECATED);
 
-	return $arrBuffer;
+	uksort($arrArray, 'strnatcasecmp');
+
+	return $arrArray;
 }
 
 /**
@@ -384,9 +366,13 @@ function natcaseksort($arrArray)
  * @param integer $b
  *
  * @return integer
+ *
+ * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.0.
  */
 function length_sort_asc($a, $b)
 {
+	@trigger_error('Using length_sort_asc() has been deprecated and will no longer work in Contao 5.0. Use a closure instead.', E_USER_DEPRECATED);
+
 	return strlen($a) - strlen($b);
 }
 
@@ -397,9 +383,13 @@ function length_sort_asc($a, $b)
  * @param integer $b
  *
  * @return integer
+ *
+ * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.0.
  */
 function length_sort_desc($a, $b)
 {
+	@trigger_error('Using length_sort_desc() has been deprecated and will no longer work in Contao 5.0. Use a closure instead.', E_USER_DEPRECATED);
+
 	return strlen($b) - strlen($a);
 }
 
@@ -409,25 +399,14 @@ function length_sort_desc($a, $b)
  * @param array   $arrCurrent
  * @param integer $intIndex
  * @param mixed   $arrNew
+ *
+ * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.0.
  */
 function array_insert(&$arrCurrent, $intIndex, $arrNew)
 {
-	if (!is_array($arrCurrent))
-	{
-		$arrCurrent = $arrNew;
+	@trigger_error('Using array_insert() has been deprecated and will no longer work in Contao 5.0. Use ArrayUtil::arrayInsert() instead.', E_USER_DEPRECATED);
 
-		return;
-	}
-
-	if (is_array($arrNew))
-	{
-		$arrBuffer = array_splice($arrCurrent, 0, $intIndex);
-		$arrCurrent = array_merge_recursive($arrBuffer, $arrNew, $arrCurrent);
-
-		return;
-	}
-
-	array_splice($arrCurrent, $intIndex, 0, $arrNew);
+	Contao\ArrayUtil::arrayInsert($arrCurrent, $intIndex, $arrNew);
 }
 
 /**
@@ -543,10 +522,14 @@ function array_delete($arrStack, $intIndex)
  * @param array $arrArray
  *
  * @return boolean
+ *
+ * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.0.
  */
 function array_is_assoc($arrArray)
 {
-	return is_array($arrArray) && array_keys($arrArray) !== range(0, count($arrArray) - 1);
+	@trigger_error('Using array_is_assoc() has been deprecated and will no longer work in Contao 5.0. Use ArrayUtil::isAssoc() instead.', E_USER_DEPRECATED);
+
+	return Contao\ArrayUtil::isAssoc($arrArray);
 }
 
 /**

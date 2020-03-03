@@ -344,7 +344,7 @@ abstract class Template extends Controller
 		$strUrl = System::getContainer()->get('router')->generate($strName, $arrParams);
 		$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
 
-		return ampersand($strUrl);
+		return StringUtil::ampersand($strUrl);
 	}
 
 	/**
@@ -374,7 +374,7 @@ abstract class Template extends Controller
 
 		$context->setBaseUrl('');
 
-		return ampersand($strUrl);
+		return StringUtil::ampersand($strUrl);
 	}
 
 	/**

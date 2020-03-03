@@ -1123,7 +1123,7 @@ abstract class System
 	{
 		@trigger_error('Using System::getIndexFreeRequest() has been deprecated and will no longer work in Contao 5.0. Use Environment::get("indexFreeRequest") instead.', E_USER_DEPRECATED);
 
-		return ampersand(Environment::get('indexFreeRequest'), $blnAmpersand);
+		return StringUtil::ampersand(Environment::get('indexFreeRequest'), $blnAmpersand);
 	}
 
 	/**
