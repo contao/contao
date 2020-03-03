@@ -14,4 +14,9 @@ class Extension
      * @var string
      */
     public $index;
+
+    /**
+     * @var array
+     */
+    public $indexes = [];
 }

@@ -43,13 +43,11 @@ class GeneratedEntityCacheWarmer implements CacheWarmerInterface
 
     private function ensureCacheDirectoryExists($cacheDir)
     {
-        $directory = sprintf('%s/contao/entities', $cacheDir);
-
-        if (!is_dir($directory)) {
-            if (false === @mkdir($directory, 0777, true)) {
+        if (!is_dir($cacheDir)) {
+            if (false === @mkdir($cacheDir, 0777, true)) {
                 throw new \RuntimeException(sprintf('Unable to create the Contao Entity directory "%s".', $directory));
             }
-        } elseif (!is_writable($directory)) {
+        } elseif (!is_writable($cacheDir)) {
             throw new \RuntimeException(sprintf('The Contao Entity directory "%s" is not writeable for the current system user.', $directory));
         }
     }

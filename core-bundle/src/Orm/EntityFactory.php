@@ -7,6 +7,7 @@ namespace Contao\CoreBundle\Orm;
 use Contao\CoreBundle\Orm\Annotation\AnnotationDumper;
 use Contao\CoreBundle\Orm\Annotation\Extension;
 use Doctrine\Common\Annotations\Reader;
+use Doctrine\ORM\Mapping\Table;
 use Laminas\Code\DeclareStatement;
 use Laminas\Code\Generator\ClassGenerator;
 use Laminas\Code\Generator\DocBlock\Tag\GenericTag;
@@ -34,9 +35,12 @@ class EntityFactory
 
         $tree = [];
         foreach ($extensions as $extensionClass) {
+            $config = [];
+
             try {
                 $reflectionClass = new ClassReflection($extensionClass);
             } catch (\ReflectionException $e) {
+                dump($e);
                 continue;
             }
 
@@ -54,13 +58,20 @@ class EntityFactory
             }
 
             if (!array_key_exists($index, $tree)) {
-                $tree[$index] = [];
+                $tree[$index] = [
+                    'extensions' => [],
+                    'indexes' => []
+                ];
             }
 
-            $tree[$index][] = $extensionClass;
+            $tree[$index]['extensions'][] = $extensionClass;
+            $tree[$index]['indexes'] = array_merge($tree[$index]['indexes'], $extendsMetaData->indexes);
         }
 
-        foreach ($tree as $entity => $extensions) {
+        foreach ($tree as $entity => $config) {
+            $extensions = $config['extensions'];
+            $indexes = $config['indexes'];
+
             // Create entity
             try {
                 $reflectionClass = new ClassReflection($entity);
@@ -72,6 +83,14 @@ class EntityFactory
 
             $tags = [];
             foreach ($metaData as $annotation) {
+                if ($annotation instanceof Table) {
+                    if (null === $annotation->indexes) {
+                        $annotation->indexes = [];
+                    }
+
+                    $annotation->indexes = array_merge($annotation->indexes, $indexes);
+                }
+
                 $tags[] = new GenericTag(
                     get_class($annotation),
                     $this->annotationDumper->dump($annotation)
