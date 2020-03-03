@@ -586,7 +586,7 @@ class DataContainerCallbackPassTest extends TestCase
     }
 
     /**
-     * @return array<int, array<int, array<string>>>
+     * @return array<int, array<string, array<string, array<int, array<int, array<string>>>>>>
      */
     private function getCallbacksFromDefinition(ContainerBuilder $container): array
     {

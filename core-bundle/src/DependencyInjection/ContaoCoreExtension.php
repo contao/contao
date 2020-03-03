@@ -173,7 +173,7 @@ class ContaoCoreExtension extends Extension
         $services = ['contao.image.image_sizes', 'contao.image.image_factory', 'contao.image.picture_factory'];
 
         foreach ($services as $service) {
-            if (method_exists($container->getDefinition($service)->getClass(), 'setPredefinedSizes')) {
+            if (method_exists((string) $container->getDefinition($service)->getClass(), 'setPredefinedSizes')) {
                 $container->getDefinition($service)->addMethodCall('setPredefinedSizes', [$imageSizes]);
             }
         }
