@@ -44,7 +44,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertFalse($table->getColumn('id')->getFixed());
 
         if (null !== ($default = $table->getColumn('id')->getDefault())) {
-            $this->assertSame(0, (int) $default);
+            $this->assertSame(0, $default);
         }
 
         $this->assertTrue($table->hasColumn('pid'));
@@ -94,7 +94,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertFalse($table->getColumn('price')->getFixed());
         $this->assertSame(6, $table->getColumn('price')->getPrecision());
         $this->assertSame(2, $table->getColumn('price')->getScale());
-        $this->assertSame(1.99, (float) $table->getColumn('price')->getDefault());
+        $this->assertSame(1.99, $table->getColumn('price')->getDefault());
 
         $this->assertTrue($table->hasColumn('thumb'));
         $this->assertSame('blob', $table->getColumn('thumb')->getType()->getName());
