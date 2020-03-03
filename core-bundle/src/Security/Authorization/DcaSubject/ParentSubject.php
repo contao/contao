@@ -17,28 +17,28 @@ class ParentSubject extends RootSubject
     /**
      * @var string
      */
-    private $pid;
+    private $parentId;
 
     /**
      * @var string
      */
-    private $ptable;
+    private $parentTable;
 
-    public function __construct(string $table, string $pid, string $ptable)
+    public function __construct(string $table, string $parentId, string $parentTable)
     {
         parent::__construct($table);
 
-        $this->pid = $pid;
-        $this->ptable = $ptable;
+        $this->parentId = $parentId;
+        $this->parentTable = $parentTable;
     }
 
-    public function getPid(): string
+    public function getParentId(): string
     {
-        return $this->pid;
+        return $this->parentId;
     }
 
-    public function getPtable(): string
+    public function getParentTable(): string
     {
-        return $this->ptable;
+        return $this->parentTable;
     }
 }

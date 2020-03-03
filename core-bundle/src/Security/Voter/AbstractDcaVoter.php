@@ -55,13 +55,10 @@ abstract class AbstractDcaVoter implements VoterInterface
             if ($user->isAdmin) {
                 return self::ACCESS_GRANTED;
             }
-            
-            // as soon as at least one attribute is supported, default is to deny access
-            $vote = self::ACCESS_DENIED;
 
-            if ($this->voteOnAttribute($attribute, $subject, $user, $token)) {
+            if (!$this->voteOnAttribute($attribute, $subject, $user, $token)) {
                 // grant access as soon as at least one attribute returns a positive response
-                return self::ACCESS_GRANTED;
+                return self::ACCESS_DENIED;
             }
         }
 

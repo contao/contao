@@ -57,7 +57,7 @@ class NewsAccessVoter extends AbstractDcaVoter
         }
 
         if ($subject instanceof ParentSubject) {
-            $newsArchiveId = (int) $subject->getPid();
+            $newsArchiveId = (int) $subject->getParentId();
         } elseif ($subject instanceof RecordSubject) {
             $news = $this->contaoFramework->getAdapter(NewsModel::class)->findById((int) $subject->getId());
 
