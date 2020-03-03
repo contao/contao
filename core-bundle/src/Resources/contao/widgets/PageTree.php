@@ -184,27 +184,7 @@ class PageTree extends Widget
 			// Apply a custom sort order
 			if ($blnHasOrder)
 			{
-				$arrNew = array();
-
-				foreach ((array) $this->{$this->orderField} as $i)
-				{
-					if (isset($arrValues[$i]))
-					{
-						$arrNew[$i] = $arrValues[$i];
-						unset($arrValues[$i]);
-					}
-				}
-
-				if (!empty($arrValues))
-				{
-					foreach ($arrValues as $k=>$v)
-					{
-						$arrNew[$k] = $v;
-					}
-				}
-
-				$arrValues = $arrNew;
-				unset($arrNew);
+				$arrValues = ArrayUtil::sortByOrderField($arrValues, $this->{$this->orderField}, null, true);
 			}
 		}
 

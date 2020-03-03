@@ -59,11 +59,12 @@ class ArrayUtil
 	/**
 	 * @param array        $arrItems   Items array that should ge sorted
 	 * @param string|array $strOrder   Serialized order field or array
-	 * @param string       $strIdField Name of the id field to be used for
+	 * @param string|null  $strIdField Name of the id field to be used for
 	 *                                 sorting if the items are objects
+	 * @param boolean      $blnByKey   If true the keys of the $arrItems are used
 	 * @return array
 	 */
-	public static function sortByOrderField(array $arrItems, $strOrder, string $strIdField = 'uuid'): array
+	public static function sortByOrderField(array $arrItems, $strOrder, ?string $strIdField = 'uuid', bool $blnByKey = false): array
 	{
 		// Remove all values
 		$arrOrder = array_map(static function () {}, array_flip(StringUtil::deserialize($strOrder, true)));
@@ -71,10 +72,16 @@ class ArrayUtil
 		// Move the matching elements to their position in $arrOrder
 		foreach ($arrItems as $key=>$item)
 		{
-			if (\is_string($item)) {
+			if ($blnByKey)
+			{
+				$strKey = $key;
+			}
+			elseif (\is_string($item))
+			{
 				$strKey = $item;
 			}
-			else {
+			else
+			{
 				$strKey = is_object($item) ? $item->$strIdField : $item[$strIdField];
 			}
 
@@ -85,7 +92,15 @@ class ArrayUtil
 			}
 		}
 
-		// Remove empty (unreplaced) entries and append the left-over images at the end
-		return array_merge(array_values(array_filter($arrOrder)), array_values($images));
+		// Remove empty (unreplaced) entries
+		$arrOrder = array_filter($arrOrder);
+
+		if ($blnByKey) {
+			// Append the left-over images at the end
+			return $arrOrder + $arrItems;
+		}
+
+		// Append the left-over images at the end
+		return array_merge(array_values($arrOrder), array_values($arrItems));
 	}
 }
