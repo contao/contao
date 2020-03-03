@@ -51,6 +51,11 @@ abstract class AbstractDcaVoter implements VoterInterface
                 continue;
             }
 
+            // If user is admin, we allow access
+            if ($user->isAdmin) {
+                return self::ACCESS_GRANTED;
+            }
+            
             // as soon as at least one attribute is supported, default is to deny access
             $vote = self::ACCESS_DENIED;
 
