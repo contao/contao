@@ -89,5 +89,3 @@ class ArrayUtil
 		return array_merge(array_values(array_filter($arrOrder)), array_values($images));
 	}
 }
-
-class_alias(ArrayUtil::class, 'ArrayUtil');
