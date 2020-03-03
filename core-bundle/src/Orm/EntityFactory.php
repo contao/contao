@@ -14,7 +14,6 @@ use Laminas\Code\Generator\DocBlock\Tag\GenericTag;
 use Laminas\Code\Generator\DocBlockGenerator;
 use Laminas\Code\Generator\FileGenerator;
 use Laminas\Code\Reflection\ClassReflection;
-use Laminas\Code\Reflection\DocBlockReflection;
 
 class EntityFactory
 {
@@ -35,12 +34,9 @@ class EntityFactory
 
         $tree = [];
         foreach ($extensions as $extensionClass) {
-            $config = [];
-
             try {
                 $reflectionClass = new ClassReflection($extensionClass);
             } catch (\ReflectionException $e) {
-                dump($e);
                 continue;
             }
 

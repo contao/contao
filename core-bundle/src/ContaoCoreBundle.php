@@ -41,6 +41,7 @@ use Contao\CoreBundle\Event\RobotsTxtEvent;
 use Contao\CoreBundle\Event\SlugValidCharactersEvent;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
+use Contao\CoreBundle\Orm\GeneratedEntityAutoloader;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -96,5 +97,12 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new SearchIndexerPass()); // Must be before the CrawlerPass
         $container->addCompilerPass(new CrawlerPass());
         $container->addCompilerPass(new AddCronJobsPass());
+    }
+
+    public function boot()
+    {
+        $directory = sprintf('%s/contao/entities', $this->container->getParameter('kernel.cache_dir'));
+
+        GeneratedEntityAutoloader::register($directory);
     }
 }
