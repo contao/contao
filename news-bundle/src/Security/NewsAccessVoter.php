@@ -40,9 +40,9 @@ class NewsAccessVoter extends AbstractDcaVoter
         $this->contaoFramework = $contaoFramework;
     }
 
-    protected function getTable(): string
+    protected function supportsTable(string $table): string
     {
-        return 'tl_news';
+        return 'tl_news' === $table;
     }
 
     protected function voteOnAttribute(string $attribute, RootSubject $subject, BackendUser $user, TokenInterface $token): bool

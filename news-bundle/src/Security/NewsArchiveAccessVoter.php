@@ -20,9 +20,9 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class NewsArchiveAccessVoter extends AbstractDcaVoter
 {
-    protected function getTable(): string
+    protected function supportsTable(string $table): string
     {
-        return 'tl_news_archive';
+        return 'tl_news_archive' === $table;
     }
 
     protected function voteOnAttribute(string $attribute, RootSubject $subject, BackendUser $user, TokenInterface $token): bool

@@ -21,8 +21,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Provide methods to manage back end controllers.
@@ -697,21 +696,12 @@ abstract class Backend extends Controller
 		return $arrPages;
 	}
 
-	protected function hasAccess(array $attributes, $object = null): bool
+	protected function hasAccess(array $attributes, $subject = null): bool
 	{
-		/** @var AccessDecisionManagerInterface $accessDecisionManager */
-		$accessDecisionManager = System::getContainer()->get('contao.security.access_decision_manager');
+		/** @var AuthorizationCheckerInterface $authorizationChecker */
+		$authorizationChecker = System::getContainer()->get('contao.security.authorization_checker');
 
-		/** @var TokenStorageInterface $tokenStorage */
-		$tokenStorage = System::getContainer()->get('security.token_storage');
-		$token = $tokenStorage->getToken();
-
-		if (null === $token)
-		{
-			return false;
-		}
-
-		return $accessDecisionManager->decide($token, $attributes, $object);
+		return $authorizationChecker->isGranted($attributes, $subject);
 	}
 
 	/**

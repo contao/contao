@@ -33,6 +33,10 @@ class AccessDecisionManager implements AccessDecisionManagerInterface
 
     public function decide(TokenInterface $token, array $attributes, $subject = null): bool
     {
+        if (1 !== \count($attributes)) {
+            throw new \InvalidArgumentException('You cannot decide on more than one attribute!');
+        }
+
         foreach ($this->voters as $voter) {
             $result = $voter->vote($token, $subject, $attributes);
 

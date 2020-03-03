@@ -33,39 +33,42 @@ abstract class AbstractDcaVoter implements VoterInterface
         // abstain vote by default in case none of the attributes are supported
         $vote = self::ACCESS_ABSTAIN;
 
-        foreach ($attributes as $attribute) {
-            // Only DCA subjects are supported
-            if (!$subject instanceof RootSubject) {
-                continue;
-            }
-
-            // If it is not a back end user, it's not supported
-            $user = $token->getUser();
-
-            if (!$user instanceof BackendUser) {
-                continue;
-            }
-
-            // Let's still call supports() here so it can be easily extended in a child class
-            if (!$this->supports($attribute, $subject)) {
-                continue;
-            }
-
-            // If user is admin, we allow access
-            if ($user->isAdmin) {
-                return self::ACCESS_GRANTED;
-            }
-
-            if (!$this->voteOnAttribute($attribute, $subject, $user, $token)) {
-                // grant access as soon as at least one attribute returns a positive response
-                return self::ACCESS_DENIED;
-            }
+        // We only support one attribute
+        if (1 !== \count($attributes)) {
+            return $vote;
         }
 
-        return $vote;
+        // Only DCA subjects are supported
+        if (!$subject instanceof RootSubject) {
+            return $vote;
+        }
+
+        // If it is not a back end user, it's not supported
+        $user = $token->getUser();
+
+        if (!$user instanceof BackendUser) {
+            return $vote;
+        }
+
+        $attribute = $attributes[0];
+
+        if (!$this->supports($attribute, $subject)) {
+            return $vote;
+        }
+
+        // If user is admin, we allow access
+        if ($user->isAdmin) {
+            return self::ACCESS_GRANTED;
+        }
+
+        if (!$this->voteOnAttribute($attribute, $subject, $user, $token)) {
+            return self::ACCESS_DENIED;
+        }
+
+        return self::ACCESS_GRANTED;
     }
 
-    abstract protected function getTable(): string;
+    abstract protected function supportsTable(string $table): bool;
 
     abstract protected function voteOnAttribute(string $attribute, RootSubject $subject, BackendUser $user, TokenInterface $token): bool;
 
@@ -92,6 +95,6 @@ abstract class AbstractDcaVoter implements VoterInterface
             return false;
         }
 
-        return $this->getTable() === $subject->getTable();
+        return $this->supportsTable($subject->getTable());
     }
 }

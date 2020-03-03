@@ -609,6 +609,14 @@ services:
     contao.search.indexer.delegating:
         class: Contao\CoreBundle\Search\Indexer\DelegatingIndexer
 
+    contao.security.authorization_checker:
+        class: Symfony\Component\Security\Core\Authorization\AuthorizationChecker
+        arguments:
+            - '@security.token_storage'
+            - '@security.authentication.manager'
+            - '@contao.security.access_decision_manager'
+        public: true
+
     contao.security.access_decision_manager:
         class: Contao\CoreBundle\Security\Authorization\AccessDecisionManager
         arguments: [!tagged security.voter]
