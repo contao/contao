@@ -38,6 +38,7 @@ class ArrayUtilTest extends TestCase
         );
 
         $this->assertSame($expectedArrays, ArrayUtil::sortByOrderField($itemArrays, $order));
+        $this->assertSame($expectedArrays, ArrayUtil::sortByOrderField($itemArrays, serialize($order)));
 
         $itemArrays = array_map(
             static function ($item): array {
@@ -53,6 +54,7 @@ class ArrayUtilTest extends TestCase
         );
 
         $this->assertSame($expectedArrays, ArrayUtil::sortByOrderField($itemArrays, $order, 'id'));
+        $this->assertSame($expectedArrays, ArrayUtil::sortByOrderField($itemArrays, serialize($order), 'id'));
 
         $itemObjects = array_map(
             static function ($item): \stdClass {
@@ -68,6 +70,7 @@ class ArrayUtilTest extends TestCase
         );
 
         $this->assertSame(array_map('get_object_vars', $expectedObjects), array_map('get_object_vars', ArrayUtil::sortByOrderField($itemObjects, $order)));
+        $this->assertSame(array_map('get_object_vars', $expectedObjects), array_map('get_object_vars', ArrayUtil::sortByOrderField($itemObjects, serialize($order))));
 
         $itemObjects = array_map(
             static function ($item): \stdClass {
@@ -83,11 +86,13 @@ class ArrayUtilTest extends TestCase
         );
 
         $this->assertSame(array_map('get_object_vars', $expectedObjects), array_map('get_object_vars', ArrayUtil::sortByOrderField($itemObjects, $order, 'id')));
+        $this->assertSame(array_map('get_object_vars', $expectedObjects), array_map('get_object_vars', ArrayUtil::sortByOrderField($itemObjects, serialize($order), 'id')));
 
         $itemFlipped = array_map(static function () { return 'X'; }, array_flip($items));
         $expectedFlipped = array_map(static function () { return 'X'; }, array_flip($expected));
 
         $this->assertSame($expectedFlipped, ArrayUtil::sortByOrderField($itemFlipped, $order, null, true));
+        $this->assertSame($expectedFlipped, ArrayUtil::sortByOrderField($itemFlipped, serialize($order), null, true));
     }
 
     public function sortByOrderFieldProvider(): \Generator
