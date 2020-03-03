@@ -304,22 +304,7 @@ function nl2br_pre($str, $xhtml=false)
 {
 	@trigger_error('Using nl2br_pre() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
-	$str = $xhtml ? nl2br_xhtml($str) : nl2br_html5($str);
-
-	if (stripos($str, '<pre') === false)
-	{
-		return $str;
-	}
-
-	$chunks = array();
-	preg_match_all('/<pre[^>]*>.*<\/pre>/Uis', $str, $chunks);
-
-	foreach ($chunks as $chunk)
-	{
-		$str = str_replace($chunk, str_ireplace(array('<br>', '<br />'), '', $chunk), $str);
-	}
-
-	return $str;
+	return preg_replace('/\r?\n/', $xhtml ? '<br />' : '<br>', $str);
 }
 
 /**

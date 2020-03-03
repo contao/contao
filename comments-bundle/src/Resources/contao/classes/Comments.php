@@ -501,7 +501,7 @@ class Comments extends Frontend
 	 */
 	public function convertLineFeeds($strComment)
 	{
-		$strComment = nl2br_pre($strComment);
+		$strComment = preg_replace('/\r?\n/', '<br>', $strComment);
 
 		// Use paragraphs to generate new lines
 		if (strncmp('<p>', $strComment, 3) !== 0)
