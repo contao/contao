@@ -55,6 +55,39 @@ class ArrayUtil
 	{
 		return \is_array($arrArray) && array_keys($arrArray) !== range(0, \count($arrArray) - 1);
 	}
+
+	/**
+	 * @param array        $arrItems   Items array that should ge sorted
+	 * @param string|array $strOrder   Serialized order field or array
+	 * @param string       $strIdField Name of the id field to be used for
+	 *                                 sorting if the items are objects
+	 * @return array
+	 */
+	public static function sortByOrderField(array $arrItems, $strOrder, string $strIdField = 'uuid'): array
+	{
+		// Remove all values
+		$arrOrder = array_map(static function () {}, array_flip(StringUtil::deserialize($strOrder, true)));
+
+		// Move the matching elements to their position in $arrOrder
+		foreach ($arrItems as $key=>$item)
+		{
+			if (\is_string($item)) {
+				$strKey = $item;
+			}
+			else {
+				$strKey = is_object($item) ? $item->$strIdField : $item[$strIdField];
+			}
+
+			if (\array_key_exists($strKey, $arrOrder))
+			{
+				$arrOrder[$strKey] = $item;
+				unset($arrItems[$key]);
+			}
+		}
+
+		// Remove empty (unreplaced) entries and append the left-over images at the end
+		return array_merge(array_values(array_filter($arrOrder)), array_values($images));
+	}
 }
 
 class_alias(ArrayUtil::class, 'ArrayUtil');

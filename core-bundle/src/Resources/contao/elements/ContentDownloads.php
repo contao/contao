@@ -293,36 +293,7 @@ class ContentDownloads extends ContentElement
 				// no break
 
 			case 'custom':
-				if ($this->orderSRC != '')
-				{
-					$tmp = StringUtil::deserialize($this->orderSRC);
-
-					if (!empty($tmp) && \is_array($tmp))
-					{
-						// Remove all values
-						$arrOrder = array_map(static function () {}, array_flip($tmp));
-
-						// Move the matching elements to their position in $arrOrder
-						foreach ($files as $k=>$v)
-						{
-							if (\array_key_exists($v['uuid'], $arrOrder))
-							{
-								$arrOrder[$v['uuid']] = $v;
-								unset($files[$k]);
-							}
-						}
-
-						// Append the left-over files at the end
-						if (!empty($files))
-						{
-							$arrOrder = array_merge($arrOrder, array_values($files));
-						}
-
-						// Remove empty (unreplaced) entries
-						$files = array_values(array_filter($arrOrder));
-						unset($arrOrder);
-					}
-				}
+				$files = ArrayUtil::sortByOrderField($files, $this->orderSRC);
 				break;
 
 			case 'random':
