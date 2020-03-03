@@ -391,6 +391,9 @@ class DC_Table extends DataContainer implements \listable, \editable
 			return '';
 		}
 
+		// Check permissions
+		$this->denyAccessUnlessGranted(AbstractDcaVoter::OPERATION_SHOW, new RecordSubject($this->strTable, (string) $this->intId));
+
 		$objRow = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
 								 ->limit(1)
 								 ->execute($this->intId);
@@ -642,6 +645,10 @@ class DC_Table extends DataContainer implements \listable, \editable
 	 */
 	public function create($set=array())
 	{
+		// Check permissions
+		$this->denyAccessUnlessGranted(AbstractDcaVoter::OPERATION_CREATE, new RootSubject($this->strTable));
+
+		// TODO: Move to voter
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'])
 		{
 			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not creatable.');
@@ -743,6 +750,10 @@ class DC_Table extends DataContainer implements \listable, \editable
 	 */
 	public function cut($blnDoNotRedirect=false)
 	{
+		// Check permissions
+		$this->denyAccessUnlessGranted(AbstractDcaVoter::OPERATION_CUT, new RootSubject($this->strTable));
+
+		// TODO: move to voter
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'])
 		{
 			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not sortable.');
@@ -851,6 +862,9 @@ class DC_Table extends DataContainer implements \listable, \editable
 		{
 			foreach ($arrClipboard[$this->strTable]['id'] as $id)
 			{
+				// Check permissions
+				$this->denyAccessUnlessGranted(AbstractDcaVoter::OPERATION_CUT, new RecordSubject($this->strTable, (string) $id));
+
 				$this->intId = $id;
 				$this->cut(true);
 				Input::setGet('pid', $id);
@@ -872,6 +886,10 @@ class DC_Table extends DataContainer implements \listable, \editable
 	 */
 	public function copy($blnDoNotRedirect=false)
 	{
+		// Check permissions
+		$this->denyAccessUnlessGranted(AbstractDcaVoter::OPERATION_COPY, new RootSubject($this->strTable));
+
+		// TODO: move to voter
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notCopyable'])
 		{
 			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not copyable.');
@@ -1145,6 +1163,8 @@ class DC_Table extends DataContainer implements \listable, \editable
 			}
 		}
 
+		// TODO: permission check
+
 		// Duplicate the child records
 		foreach ($copy as $k=>$v)
 		{
@@ -1177,6 +1197,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 	 */
 	public function copyAll()
 	{
+		// TODO: migrate to voter
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notCopyable'])
 		{
 			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not copyable.');
@@ -1191,6 +1212,9 @@ class DC_Table extends DataContainer implements \listable, \editable
 		{
 			foreach ($arrClipboard[$this->strTable]['id'] as $id)
 			{
+				// Check permissions
+				$this->denyAccessUnlessGranted(AbstractDcaVoter::OPERATION_COPY, new RecordSubject($this->strTable, (string) $id));
+
 				$this->intId = $id;
 				$id = $this->copy(true);
 				Input::setGet('pid', $id);
@@ -1477,6 +1501,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 	 */
 	public function delete($blnDoNotRedirect=false)
 	{
+		// TODO: move to voter
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notDeletable'])
 		{
 			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not deletable.');
@@ -1486,6 +1511,9 @@ class DC_Table extends DataContainer implements \listable, \editable
 		{
 			$this->redirect($this->getReferer());
 		}
+
+		// Check permissions
+		$this->denyAccessUnlessGranted(AbstractDcaVoter::OPERATION_DELETE, new RecordSubject($this->strTable, (string) $this->intId));
 
 		$delete = array();
 
@@ -1607,6 +1635,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 	 */
 	public function deleteAll()
 	{
+		// TODO: move to voter
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notDeletable'])
 		{
 			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not deletable.');
@@ -1622,6 +1651,9 @@ class DC_Table extends DataContainer implements \listable, \editable
 		{
 			foreach ($ids as $id)
 			{
+				// Check permissions
+				$this->denyAccessUnlessGranted(AbstractDcaVoter::OPERATION_DELETE, new RecordSubject($this->strTable, (string) $id));
+
 				$this->intId = $id;
 				$this->delete(true);
 			}
@@ -1672,6 +1704,9 @@ class DC_Table extends DataContainer implements \listable, \editable
 			{
 				foreach ($objDelete->fetchAllAssoc() as $row)
 				{
+					// Check permissions
+					$this->denyAccessUnlessGranted(AbstractDcaVoter::OPERATION_DELETE, new RecordSubject($v, (string) $row['id']));
+
 					$delete[$v][] = $row['id'];
 
 					if (!empty($cctable[$v]))
@@ -1811,6 +1846,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 	 */
 	public function edit($intId=null, $ajaxId=null)
 	{
+		// TODO: move to vote
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'])
 		{
 			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not editable.');
@@ -1820,6 +1856,9 @@ class DC_Table extends DataContainer implements \listable, \editable
 		{
 			$this->intId = $intId;
 		}
+
+		// Check permissions
+		$this->denyAccessUnlessGranted(AbstractDcaVoter::OPERATION_EDIT, new RecordSubject($this->strTable, (string) $this->intId));
 
 		// Get the current record
 		$objRow = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
@@ -2325,6 +2364,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 	 */
 	public function editAll($intId=null, $ajaxId=null)
 	{
+		// TODO: move to voter
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'])
 		{
 			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not editable.');
@@ -2362,6 +2402,9 @@ class DC_Table extends DataContainer implements \listable, \editable
 			// Walk through each record
 			foreach ($ids as $id)
 			{
+				// Check permissions
+				$this->denyAccessUnlessGranted(AbstractDcaVoter::OPERATION_EDIT, new RecordSubject($this->strTable, (string) $id));
+
 				$this->intId = $id;
 				$this->procedure = array('id=?');
 				$this->values = array($this->intId);
@@ -2733,6 +2776,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 	 */
 	public function overrideAll()
 	{
+		// TODO: move to voter
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'])
 		{
 			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not editable.');
@@ -2768,6 +2812,9 @@ class DC_Table extends DataContainer implements \listable, \editable
 			{
 				foreach ($ids as $id)
 				{
+					// Check permissions
+					$this->denyAccessUnlessGranted(AbstractDcaVoter::OPERATION_EDIT, new RecordSubject($this->strTable, (string) $id));
+
 					$this->intId = $id;
 					$this->procedure = array('id=?');
 					$this->values = array($this->intId);
@@ -3784,6 +3831,9 @@ class DC_Table extends DataContainer implements \listable, \editable
 		{
 			return '';
 		}
+
+		// Check permissions
+		$this->denyAccessUnlessGranted(AbstractDcaVoter::OPERATION_SHOW, new RecordSubject($this->strTable, (string) $id));
 
 		$return = '';
 		$table = $this->strTable;
