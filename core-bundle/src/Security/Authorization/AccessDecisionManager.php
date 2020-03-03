@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Authorization;
 
-use Contao\BackendUser;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -34,11 +33,6 @@ class AccessDecisionManager implements AccessDecisionManagerInterface
 
     public function decide(TokenInterface $token, array $attributes, $subject = null): bool
     {
-        // In Contao, a back end admin user always has access to everything, there's no need to ask any voter
-        if ($token->getUser() instanceof BackendUser && $token->getUser()->isAdmin) {
-            return true;
-        }
-
         foreach ($this->voters as $voter) {
             $result = $voter->vote($token, $subject, $attributes);
 

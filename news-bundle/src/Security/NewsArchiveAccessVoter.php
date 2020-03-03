@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\NewsBundle\Security;
 
+use Contao\BackendUser;
 use Contao\CoreBundle\Security\Authorization\DcaSubject\RecordSubject;
 use Contao\CoreBundle\Security\Authorization\DcaSubject\RootSubject;
 use Contao\CoreBundle\Security\Voter\AbstractDcaVoter;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class NewsArchiveAccessVoter extends AbstractDcaVoter
 {
@@ -24,14 +24,8 @@ class NewsArchiveAccessVoter extends AbstractDcaVoter
         return 'tl_news_archive';
     }
 
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
+    protected function voteOnAttribute(string $attribute, RootSubject $subject, BackendUser $user): bool
     {
-        $user = $this->getBackendUser($token);
-
-        if (null === $user) {
-            return false;
-        }
-
         $allowedNewsArchives = array_map('intval', (array) $user->news);
 
         switch ($attribute) {
