@@ -17,10 +17,8 @@ use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
 use Contao\CoreBundle\Config\ResourceFinderInterface;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Parser\AnnotationNamespaceNormalizer;
 use Contao\CoreBundle\Parser\ImportedNamespaceParser;
 use Contao\DcaExtractor;
-use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\DBAL\Connection;
 use Laminas\Code\DeclareStatement;
 use Laminas\Code\Generator\ClassGenerator;
@@ -82,11 +80,10 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * @internal Do not inherit from this class; decorate the "contao.cache.warm_internal" service instead
      */
-    public function __construct(Filesystem $filesystem, ResourceFinderInterface $finder, FileLocator $locator, ResourceFinderInterface $entityFinder, string $rootDir, Connection $connection, ContaoFramework $framework, array $locales)
+    public function __construct(Filesystem $filesystem, ResourceFinderInterface $finder, FileLocator $locator, string $rootDir, Connection $connection, ContaoFramework $framework, array $locales)
     {
         $this->filesystem = $filesystem;
         $this->finder = $finder;
-        $this->entityFinder = $entityFinder;
         $this->locator = $locator;
         $this->rootDir = $rootDir;
         $this->connection = $connection;
@@ -107,7 +104,6 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         $this->generateLanguageCache($cacheDir);
         $this->generateDcaExtracts($cacheDir);
         $this->generateTemplateMapper($cacheDir);
-        $this->generateEntities($cacheDir);
     }
 
     public function isOptional(): bool

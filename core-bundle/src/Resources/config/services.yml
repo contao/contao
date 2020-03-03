@@ -55,11 +55,30 @@ services:
             - '@filesystem'
             - '@contao.resource_finder'
             - '@contao.resource_locator'
-            - '@contao.entity_finder'
             - '%kernel.project_dir%'
             - '@database_connection'
             - '@contao.framework'
             - '%contao.locales%'
+
+    contao.cache.warm_entites:
+        class: Contao\CoreBundle\Cache\GeneratedEntityCacheWarmer
+        arguments:
+            - '@contao.orm.entity_collector'
+            - '@contao.orm.extension_collector'
+            - '@contao.orm.entity_factory'
+
+    contao.orm.entity_collector:
+        class: Contao\CoreBundle\Orm\Collector\EntityCollector
+        arguments:
+            - '%contao.entity_paths%'
+
+    contao.orm.extension_collector:
+        class: Contao\CoreBundle\Orm\Collector\ExtensionCollector
+        arguments:
+            - '%contao.entity_paths%'
+
+    contao.orm.entity_factory:
+        class: Contao\CoreBundle\Orm\EntityFactory
 
     Contao\CoreBundle\Controller\BackendController: ~
 
