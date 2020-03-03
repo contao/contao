@@ -79,7 +79,7 @@ class StyleSheets extends Backend
 		}
 
 		// Delete old style sheets
-		foreach (scan($this->strRootDir . '/assets/css', true) as $file)
+		foreach (Folder::scan($this->strRootDir . '/assets/css', true) as $file)
 		{
 			// Skip directories
 			if (is_dir($this->strRootDir . '/assets/css/' . $file))
@@ -165,7 +165,9 @@ class StyleSheets extends Backend
 		}
 
 		// Sort by key length (see #3316)
-		uksort($vars, 'length_sort_desc');
+		uksort($vars, static function($a, $b): int {
+			return strlen($b) - strlen($a);
+		});
 
 		// Create the file
 		$objFile = new File('assets/css/' . $row['name'] . '.css');
@@ -1374,7 +1376,9 @@ class StyleSheets extends Backend
 		}
 
 		// Sort by key length (see #3316)
-		uksort($vars, 'length_sort_desc');
+		uksort($vars, static function($a, $b): int {
+			return strlen($b) - strlen($a);
+		});
 
 		// Create the file
 		$objFile = new File('system/tmp/' . md5(uniqid(mt_rand(), true)));

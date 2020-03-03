@@ -2574,7 +2574,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		// Scan directory and sort the result
 		else
 		{
-			foreach (scan($path) as $v)
+			foreach (Folder::scan($path) as $v)
 			{
 				if (strncmp($v, '.', 1) === 0)
 				{
@@ -2606,7 +2606,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		for ($f=0, $c=\count($folders); $f<$c; $f++)
 		{
 			$md5 = substr(md5($folders[$f]), 0, 8);
-			$content = scan($folders[$f]);
+			$content = Folder::scan($folders[$f]);
 			$currentFolder = StringUtil::stripRootDir($folders[$f]);
 			$session['filetree'][$md5] = is_numeric($session['filetree'][$md5]) ? $session['filetree'][$md5] : 0;
 			$currentEncoded = $this->urlEncode($currentFolder);
@@ -3015,7 +3015,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 	{
 		$arrFiles = array();
 
-		foreach (scan($this->strRootDir . '/' . $strPath) as $strFile)
+		foreach (Folder::scan($this->strRootDir . '/' . $strPath) as $strFile)
 		{
 			if (!is_dir($this->strRootDir . '/' . $strPath . '/' . $strFile))
 			{

@@ -68,7 +68,7 @@ abstract class Backend extends Controller
 	{
 		$arrReturn = array();
 		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
-		$arrThemes = scan($rootDir . '/system/themes');
+		$arrThemes = Folder::scan($rootDir . '/system/themes');
 
 		foreach ($arrThemes as $strTheme)
 		{
@@ -202,7 +202,7 @@ abstract class Backend extends Controller
 		}
 
 		$arrFiles = array();
-		$arrTemplates = scan($rootDir . '/' . $strDir);
+		$arrTemplates = Folder::scan($rootDir . '/' . $strDir);
 
 		foreach ($arrTemplates as $strFile)
 		{
@@ -1345,7 +1345,7 @@ abstract class Backend extends Controller
 		}
 
 		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
-		$arrPages = scan($rootDir . '/' . $strFolder);
+		$arrPages = Folder::scan($rootDir . '/' . $strFolder);
 
 		// Empty folder
 		if (empty($arrPages))

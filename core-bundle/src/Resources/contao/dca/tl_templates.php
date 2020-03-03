@@ -528,7 +528,7 @@ class tl_templates extends Contao\Backend
 		$strFolders = '';
 		$strPath = Contao\System::getContainer()->getParameter('kernel.project_dir') . '/' . $strFolder;
 
-		foreach (scan($strPath) as $strFile)
+		foreach (Contao\Folder::scan($strPath) as $strFile)
 		{
 			if (!is_dir($strPath . '/' . $strFile) || strncmp($strFile, '.', 1) === 0)
 			{

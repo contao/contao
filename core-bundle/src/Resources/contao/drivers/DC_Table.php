@@ -5238,7 +5238,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		}
 
 		// Sort by option values
-		$options_sorter = natcaseksort($options_sorter);
+		uksort($options_sorter, 'strnatcasecmp');
 		$active = isset($session['search'][$this->strTable]['value']);
 
 		return '

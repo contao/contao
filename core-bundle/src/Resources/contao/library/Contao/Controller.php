@@ -630,7 +630,7 @@ abstract class Controller extends System
 		System::loadLanguageFile('languages');
 
 		$return = array();
-		$langs = scan(__DIR__ . '/../../languages');
+		$langs = Folder::scan(__DIR__ . '/../../languages');
 		array_unshift($langs, $GLOBALS['TL_LANGUAGE']);
 
 		foreach ($langs as $lang)

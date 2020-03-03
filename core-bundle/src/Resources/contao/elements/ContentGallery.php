@@ -157,11 +157,15 @@ class ContentGallery extends ContentElement
 		{
 			default:
 			case 'name_asc':
-				uksort($images, 'basename_natcasecmp');
+				uksort($images, static function($a, $b): int {
+					return strnatcasecmp(basename($a), basename($b));
+				});
 				break;
 
 			case 'name_desc':
-				uksort($images, 'basename_natcasercmp');
+				uksort($images, static function($a, $b): int {
+					return -strnatcasecmp(basename($a), basename($b));
+				});
 				break;
 
 			case 'date_asc':

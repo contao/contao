@@ -1110,7 +1110,7 @@ class Theme extends Backend
 		}
 
 		// Recursively add the files and subfolders
-		foreach (scan($this->strRootDir . '/' . $strFolder) as $strFile)
+		foreach (Folder::scan($this->strRootDir . '/' . $strFolder) as $strFile)
 		{
 			// Skip hidden resources
 			if (strncmp($strFile, '.', 1) === 0)
@@ -1184,7 +1184,7 @@ class Theme extends Backend
 		}
 
 		// Add all template files to the archive (see #7048)
-		foreach (scan($this->strRootDir . '/' . $strFolder) as $strFile)
+		foreach (Folder::scan($this->strRootDir . '/' . $strFolder) as $strFile)
 		{
 			if (preg_match('/\.(html5|sql)$/', $strFile) && strncmp($strFile, 'be_', 3) !== 0 && strncmp($strFile, 'nl_', 3) !== 0)
 			{
