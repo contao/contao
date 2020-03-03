@@ -146,15 +146,17 @@
         "composer/composer": "^1.0",
         "contao/easy-coding-standard": "^1.0",
         "contao/monorepo-tools": "dev-master",
-        "contao/phpstan": "^0.12",
         "contao/test-case": "^4.0",
         "doctrine/doctrine-migrations-bundle": "^1.1",
         "doctrine/event-manager": "^1.0",
         "monolog/monolog": "^1.24",
-        "phpstan/extension-installer": "^1.0",
         "phpunit/phpunit": "^8.4",
         "symfony/browser-kit": "4.4.*",
-        "symfony/phpunit-bridge": "4.4.*"
+        "symfony/phpunit-bridge": "4.4.*",
+        "vimeo/psalm": "^3.9",
+        "psalm/plugin-phpunit": "^0.9.0",
+        "weirdan/doctrine-psalm-plugin": "^0.10.0",
+        "seferov/symfony-psalm-plugin": "^1.0"
     },
     "extra": {
         "branch-alias": {
@@ -253,7 +255,7 @@
             "@unit-tests",
             "@functional-tests",
             "@cs-fixer",
-            "@phpstan",
+            "@static-code-analysis",
             "@monorepo-tools"
         ],
         "cs-fixer": [
@@ -267,8 +269,8 @@
         "monorepo-tools": [
             "vendor/bin/monorepo-tools composer-json --validate --ansi"
         ],
-        "phpstan": [
-            "vendor/bin/phpstan analyze core-bundle/src core-bundle/tests --level=4 --memory-limit=1G --ansi"
+        "static-code-analysis": [
+            "vendor/bin/psalm --no-cache"
         ],
         "unit-tests": [
             "vendor/bin/phpunit --colors=always"

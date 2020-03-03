@@ -82,7 +82,7 @@ You can use Composer to run the code quality scripts:
 composer run all
 composer run unit-tests
 composer run cs-fixer
-composer run phpstan
+composer run static-code-analysis
 ```
 
 If you want to pass additional flags to the underlying commands, you can use

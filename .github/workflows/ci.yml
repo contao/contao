@@ -84,7 +84,9 @@ jobs:
                   vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config vendor/contao/easy-coding-standard/config/template.yaml --no-progress-bar --ansi
 
             - name: Analyze the code
-              run: vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=4 --no-progress
+              run: |
+                  vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=4 --no-progress
+                  vendor/bin/psalm --no-cache --no-progress
 
     tests:
         name: PHP ${{ matrix.php }}
