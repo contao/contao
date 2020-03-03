@@ -12,8 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\NewsBundle\Security;
 
-use Contao\CoreBundle\Security\Authorization\DcaPermission;
-use Contao\CoreBundle\Security\Authorization\DcaSubject\ParentSubject;
 use Contao\CoreBundle\Security\Authorization\DcaSubject\RecordSubject;
 use Contao\CoreBundle\Security\Authorization\DcaSubject\RootSubject;
 use Contao\CoreBundle\Security\Voter\AbstractDcaVoter;
@@ -26,9 +24,6 @@ class NewsArchiveAccessVoter extends AbstractDcaVoter
         return 'tl_news_archive';
     }
 
-    /**
-     * @param DcaPermission $subject
-     */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
     {
         $user = $this->getBackendUser($token);

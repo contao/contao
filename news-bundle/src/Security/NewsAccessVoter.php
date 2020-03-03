@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\NewsBundle\Security;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Security\Authorization\DcaPermission;
 use Contao\CoreBundle\Security\Authorization\DcaSubject\ParentSubject;
 use Contao\CoreBundle\Security\Authorization\DcaSubject\RecordSubject;
 use Contao\CoreBundle\Security\Voter\AbstractDcaVoter;
@@ -28,9 +27,15 @@ class NewsAccessVoter extends AbstractDcaVoter
      */
     private $accessDecisionManager;
 
-    public function __construct(AccessDecisionManagerInterface $accessDecisionManager)
+    /**
+     * @var ContaoFramework
+     */
+    private $contaoFramework;
+
+    public function __construct(AccessDecisionManagerInterface $accessDecisionManager, ContaoFramework $contaoFramework)
     {
         $this->accessDecisionManager = $accessDecisionManager;
+        $this->contaoFramework = $contaoFramework;
     }
 
     protected function getTable(): string
@@ -46,26 +51,24 @@ class NewsAccessVoter extends AbstractDcaVoter
             return false;
         }
 
+        if ($subject instanceof ParentSubject) {
+            $newsArchiveId = (int) $subject->getPid();
+        } elseif ($subject instanceof RecordSubject) {
+            $news = $this->contaoFramework->getAdapter(NewsModel::class)->findById((int) $subject->getId());
 
-        switch ($attribute) {
-            case AbstractDcaVoter::OPERATION_CREATE:
-            case AbstractDcaVoter::OPERATION_PASTE:
-                // Creating and pasting is based on whether we are allowed
-                /** @var ParentSubject $subject */
-                return $this->accessDecisionManager->decide($token, [AbstractDcaVoter::OPERATION_SHOW],);
-
-            case AbstractDcaVoter::OPERATION_EDIT:
-            case AbstractDcaVoter::OPERATION_DELETE:
-            case AbstractDcaVoter::OPERATION_COPY:
-            case AbstractDcaVoter::OPERATION_CUT:
-            case AbstractDcaVoter::OPERATION_SHOW:
-                /** @var RecordSubject $subject */
-                $subject = 'foo';
+            if (null !== $news) {
+                $newsArchiveId = $news->pid;
+            }
+        } else {
+            $newsArchiveId = 0;
         }
 
-        // News 
-
-        return false;
+        // All operations are allowed if the user is allowed to see (aka "work with") the news archive
+        return $this->accessDecisionManager->decide(
+            $token,
+            [AbstractDcaVoter::OPERATION_SHOW],
+            new RecordSubject('tl_news_archive', (string) $newsArchiveId)
+        );
     }
 
     protected function getSubjectByAttributes(): array
