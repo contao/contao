@@ -253,7 +253,7 @@ class RouteProvider implements RouteProviderInterface
         $path = sprintf('/%s{parameters}%s', $page->alias ?: $page->id, $this->urlSuffix);
 
         if ($this->prependLocale) {
-            $this->addLocaleRedirect($page, $pathInfo, $routes);
+            $this->addLocaleRedirect($page, $path, $requirements, $pathInfo, $routes);
 
             $path = '/{_locale}'.$path;
             $requirements['_locale'] = $page->rootLanguage;
@@ -271,18 +271,18 @@ class RouteProvider implements RouteProviderInterface
         $this->addRoutesForRootPage($page, $routes);
     }
 
-    private function addLocaleRedirect(PageModel $page, ?string $path, array &$routes)
+    private function addLocaleRedirect(PageModel $page, string $path, array $requirements, ?string $pathInfo, array &$routes)
     {
         $defaults = [
             '_controller' => 'Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction',
-            'path' => '/'.$page->rootLanguage.($path ?: ('/'.$page->alias.$this->urlSuffix)),
+            'path' => '/'.$page->rootLanguage.($pathInfo ?: ('/'.$page->alias.$this->urlSuffix)),
             'permanent' => true,
         ];
 
         $routes['tl_page.'.$page->id.'.locale'] = new Route(
             $path,
             $defaults,
-            [],
+            $requirements,
             ['utf8' => true],
             $page->domain
         );
