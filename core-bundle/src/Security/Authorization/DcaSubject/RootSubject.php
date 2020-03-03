@@ -10,9 +10,9 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Security\Authorization;
+namespace Contao\CoreBundle\Security\Authorization\DcaSubject;
 
-class DcaPermission
+class RootSubject
 {
     /**
      * @var string
@@ -20,23 +20,15 @@ class DcaPermission
     private $table;
 
     /**
-     * @var string|null
+     * RootSubject constructor.
      */
-    private $id;
-
-    public function __construct(string $table, string $id = null)
+    public function __construct(string $table)
     {
         $this->table = $table;
-        $this->id = $id;
     }
 
     public function getTable(): string
     {
         return $this->table;
-    }
-
-    public function getId(): ?string
-    {
-        return $this->id;
     }
 }

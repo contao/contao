@@ -13,13 +13,21 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Security\Voter;
 
 use Contao\BackendUser;
-use Contao\CoreBundle\Security\Authorization\DcaPermission;
+use Contao\CoreBundle\Security\Authorization\DcaSubject\ParentSubject;
 use Contao\FrontendUser;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 abstract class AbstractDcaVoter extends Voter
 {
+    public const OPERATION_CREATE = 'create';
+    public const OPERATION_EDIT = 'edit';
+    public const OPERATION_DELETE = 'delete';
+    public const OPERATION_COPY = 'copy';
+    public const OPERATION_CUT = 'cut';
+    public const OPERATION_SHOW = 'show';
+    public const OPERATION_PASTE = 'paste';
+
     public function getFrontendUser(TokenInterface $token): ?FrontendUser
     {
         return $token->getUser() instanceof FrontendUser ? $token->getUser() : null;
@@ -32,47 +40,33 @@ abstract class AbstractDcaVoter extends Voter
 
     abstract protected function getTable(): string;
 
-    protected function supports($attribute, $subject): bool
+    abstract protected function getSubjectByAttributes(): array;
+
+    protected function isSubjectOfDesiredType(string $attribute, $subject)
     {
-        if (!$subject instanceof DcaPermission) {
+        $supportedSubjects = $this->getSubjectByAttributes();
+
+        if (!\array_key_exists($attribute, $supportedSubjects)) {
             return false;
         }
 
-        return $this->getTable() === $subject->getTable() && \in_array($attribute, $this->getValidOperations(), true);
+        if (!is_a($subject, $supportedSubjects[$attribute], true)) {
+            return false;
+        }
+
+        return true;
     }
 
-    protected function isCollectionOperation(string $operation): bool
+    protected function supports($attribute, $subject): bool
     {
-        return \in_array($operation, $this->getCollectionOperations(), true);
-    }
+        if (!$this->isSubjectOfDesiredType($attribute, $subject)) {
+            return false;
+        }
 
-    protected function getCollectionOperations(): array
-    {
-        return [
-            'paste',
-            'select',
-            'editAll',
-            'deleteAll',
-            'overrideAll',
-            'cutAll',
-            'copyAll',
-            'showAll',
-        ];
-    }
+        if ($subject instanceof ParentSubject) {
+            return $this->getTable() === $subject->getTable();
+        }
 
-    protected function getItemOperations(): array
-    {
-        return [
-            'create',
-            'edit',
-            'copy',
-            'delete',
-            'show',
-        ];
-    }
-
-    private function getValidOperations(): array
-    {
-        return array_unique(array_merge($this->getCollectionOperations(), $this->getItemOperations()));
+        return false;
     }
 }

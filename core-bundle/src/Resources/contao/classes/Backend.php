@@ -440,9 +440,6 @@ abstract class Backend extends Controller
 		// Custom action (if key is not defined in config.php the default action will be called)
 		elseif (Input::get('key') && isset($arrModule[Input::get('key')]))
 		{
-			// Check permissions
-			$this->denyAccessUnlessGranted(Input::get('key'), new DcaPermission($dc->table, (string) $dc->id));
-
 			$objCallback = System::importStatic($arrModule[Input::get('key')][0]);
 			$response = $objCallback->{$arrModule[Input::get('key')][1]}($dc);
 
@@ -646,9 +643,6 @@ abstract class Backend extends Controller
 					}
 				}
 			}
-
-			// Check permissions
-			$this->denyAccessUnlessGranted($act, new DcaPermission($dc->table, (string) $dc->id));
 
 			return $dc->$act();
 		}

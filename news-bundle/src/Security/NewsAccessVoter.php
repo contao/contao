@@ -14,6 +14,8 @@ namespace Contao\NewsBundle\Security;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\Authorization\DcaPermission;
+use Contao\CoreBundle\Security\Authorization\DcaSubject\ParentSubject;
+use Contao\CoreBundle\Security\Authorization\DcaSubject\RecordSubject;
 use Contao\CoreBundle\Security\Voter\AbstractDcaVoter;
 use Contao\NewsModel;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -26,18 +28,9 @@ class NewsAccessVoter extends AbstractDcaVoter
      */
     private $accessDecisionManager;
 
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * NewsAccessVoter constructor.
-     */
-    public function __construct(AccessDecisionManagerInterface $accessDecisionManager, ContaoFramework $framework)
+    public function __construct(AccessDecisionManagerInterface $accessDecisionManager)
     {
         $this->accessDecisionManager = $accessDecisionManager;
-        $this->framework = $framework;
     }
 
     protected function getTable(): string
@@ -45,9 +38,6 @@ class NewsAccessVoter extends AbstractDcaVoter
         return 'tl_news';
     }
 
-    /**
-     * @param DcaPermission $subject
-     */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
     {
         $user = $this->getBackendUser($token);
@@ -56,33 +46,38 @@ class NewsAccessVoter extends AbstractDcaVoter
             return false;
         }
 
-        $allowedNewsArchives = array_map('intval', (array) $user->news);
 
-        if (0 === \count($allowedNewsArchives)) {
-            return true;
+        switch ($attribute) {
+            case AbstractDcaVoter::OPERATION_CREATE:
+            case AbstractDcaVoter::OPERATION_PASTE:
+                // Creating and pasting is based on whether we are allowed
+                /** @var ParentSubject $subject */
+                return $this->accessDecisionManager->decide($token, [AbstractDcaVoter::OPERATION_SHOW],);
+
+            case AbstractDcaVoter::OPERATION_EDIT:
+            case AbstractDcaVoter::OPERATION_DELETE:
+            case AbstractDcaVoter::OPERATION_COPY:
+            case AbstractDcaVoter::OPERATION_CUT:
+            case AbstractDcaVoter::OPERATION_SHOW:
+                /** @var RecordSubject $subject */
+                $subject = 'foo';
         }
 
-        $newsId = (int) $subject->getId();
+        // News 
 
-        if (0 === $newsId) {
-            return true;
-        }
-
-        if ($this->isCollectionOperation($attribute)) {
-            return $this->accessDecisionManager->decide($token, [$attribute], new DcaPermission('tl_news_archive', $subject->getId()));
-        }
-
-        $news = $this->framework->getAdapter(NewsModel::class)->findById($newsId);
-
-        if (null === $news) {
-            return false;
-        }
-
-        return $this->accessDecisionManager->decide($token, [$attribute], new DcaPermission('tl_news_archive', $news->pid));
+        return false;
     }
 
-    protected function getItemOperations(): array
+    protected function getSubjectByAttributes(): array
     {
-        return array_merge(parent::getItemOperations(), ['toggle', 'feature']);
+        return [
+            AbstractDcaVoter::OPERATION_CREATE => ParentSubject::class,
+            AbstractDcaVoter::OPERATION_EDIT => RecordSubject::class,
+            AbstractDcaVoter::OPERATION_DELETE => RecordSubject::class,
+            AbstractDcaVoter::OPERATION_COPY => RecordSubject::class,
+            AbstractDcaVoter::OPERATION_CUT => RecordSubject::class,
+            AbstractDcaVoter::OPERATION_SHOW => RecordSubject::class,
+            AbstractDcaVoter::OPERATION_PASTE => ParentSubject::class,
+        ];
     }
 }
