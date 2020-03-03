@@ -21,18 +21,18 @@ class MemoryHeaderStorageTest extends TestCase
     {
         $storage = new MemoryHeaderStorage(['Foo: Bar']);
 
-        $this->assertSame(['Foo' => 'Bar'], $storage->all());
+        $this->assertSame(['Foo: Bar'], $storage->all());
 
         $storage->add('Bar: Baz');
 
-        $this->assertSame(['Foo' => 'Bar', 'Bar' => 'Baz'], $storage->all());
+        $this->assertSame(['Foo: Bar', 'Bar: Baz'], $storage->all());
     }
 
     public function testClearsExistingHeaders(): void
     {
         $storage = new MemoryHeaderStorage(['Foo: Bar']);
 
-        $this->assertSame(['Foo' => 'Bar'], $storage->all());
+        $this->assertSame(['Foo: Bar'], $storage->all());
 
         $storage->clear();
 

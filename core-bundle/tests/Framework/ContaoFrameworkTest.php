@@ -483,9 +483,9 @@ class ContaoFrameworkTest extends TestCase
         $framework->setContainer($this->getContainerWithContaoConfiguration());
         $framework->initialize();
 
-        $this->assertSame(LazySessionAccess::class, \get_class($_SESSION));
-        $this->assertSame(ArrayAttributeBag::class, \get_class($_SESSION['BE_DATA']));
-        $this->assertSame(ArrayAttributeBag::class, \get_class($_SESSION['FE_DATA']));
+        $this->assertInstanceOf(LazySessionAccess::class, $_SESSION);
+        $this->assertInstanceOf(ArrayAttributeBag::class, $_SESSION['BE_DATA']);
+        $this->assertInstanceOf(ArrayAttributeBag::class, $_SESSION['FE_DATA']);
     }
 
     public function testCreatesAnObjectInstance(): void
@@ -494,11 +494,9 @@ class ContaoFrameworkTest extends TestCase
         $framework = $this->mockFramework();
 
         $class = LegacyClass::class;
-
-        /** @var object $instance */
         $instance = $framework->createInstance($class, [1, 2]);
 
-        $this->assertSame($class, \get_class($instance));
+        $this->assertInstanceOf($class, $instance);
         $this->assertSame([1, 2], $instance->constructorArgs);
     }
 
@@ -508,11 +506,9 @@ class ContaoFrameworkTest extends TestCase
         $framework = $this->mockFramework();
 
         $class = LegacySingletonClass::class;
-
-        /** @var object $instance */
         $instance = $framework->createInstance($class, [1, 2]);
 
-        $this->assertSame($class, \get_class($instance));
+        $this->assertInstanceOf($class, $instance);
         $this->assertSame([1, 2], $instance->constructorArgs);
     }
 

@@ -34,9 +34,9 @@ parameters:
         # Ignore possible null return type
         - '#Method Contao\\CoreBundle\\Picker\\AbstractPickerProvider::generateUrl\(\) never returns null so it can be removed from the return typehint\.#'
 
-        # Ignore constant errors (due to bootstrap.php in contao/contao-phpstan)
+        # Ignore constant errors (due to bootstrap.php in contao/contao-phpstan, see https://github.com/contao/contao/pull/1451)
         -
-            message: '#Call to method PHPUnit\\Framework\\Assert::assert(Same|Null|True)\(\) with .* will always evaluate to false\.#'
+            message: '#Call to method PHPUnit\\Framework\\Assert::assert(Same|Null|True|InstanceOf)\(\) with .* will always evaluate to false\.#'
             path: %currentWorkingDirectory%/core-bundle/tests/Framework/ContaoFrameworkTest.php
         -
             message: '#Result of && is always false\.#'
