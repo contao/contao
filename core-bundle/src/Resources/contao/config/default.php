@@ -13,7 +13,7 @@ $GLOBALS['TL_CONFIG']['characterSet']   = 'utf-8';
 $GLOBALS['TL_CONFIG']['adminEmail']     = '';
 $GLOBALS['TL_CONFIG']['enableSearch']   = true;
 $GLOBALS['TL_CONFIG']['indexProtected'] = false;
-$GLOBALS['TL_CONFIG']['folderUrl']      = false;
+$GLOBALS['TL_CONFIG']['folderUrl']      = true;
 
 // Date and time
 $GLOBALS['TL_CONFIG']['datimFormat'] = 'Y-m-d H:i';
