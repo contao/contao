@@ -825,13 +825,12 @@ class PageRegular extends Frontend
 
 			$meta = array
 			(
-				'@context' => 'https://schema.contao.org/',
-				'@type' => 'RegularPage',
-				'pageId' => (int) $objPage->id,
-				'noSearch' => $noSearch,
-				'protected' => (bool) $objPage->protected,
-				'groups' => array_map('intval', array_filter((array) $objPage->groups)),
-				'fePreview' => System::getContainer()->get('contao.security.token_checker')->isPreviewMode()
+				'@context' => array('contao' => 'https://schema.contao.org/'),
+				'@type' => 'contao:RegularPage',
+				'contao:noSearch' => $noSearch,
+				'contao:protected' => (bool) $objPage->protected,
+				'contao:groups' => array_map('intval', array_filter((array) $objPage->groups)),
+				'contao:fePreview' => System::getContainer()->get('contao.security.token_checker')->isPreviewMode()
 			);
 
 			$strScripts .= '<script type="application/ld+json">' . json_encode($meta) . '</script>';

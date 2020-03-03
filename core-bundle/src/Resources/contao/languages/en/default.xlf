@@ -1994,6 +1994,9 @@
       <trans-unit id="MSC.operatingSystem">
         <source>Operating system</source>
       </trans-unit>
+      <trans-unit id="MSC.showPreviewToolbar">
+        <source>Show Contao Preview Toolbar</source>
+      </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
       </trans-unit>
