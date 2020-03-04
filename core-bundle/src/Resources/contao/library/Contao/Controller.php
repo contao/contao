@@ -956,6 +956,20 @@ abstract class Controller extends System
 			}
 		}
 
+		$strScripts = '<script>function contaoLoadAsyncScript(src) {
+			var script = document.createElement(\'script\');
+			script.async = false;
+			if (typeof src === \'function\') {
+				script.src = \'data:text/javascript,\';
+				script.onload = src;
+			}
+			else {
+				script.src = src;
+			}
+			var scripts = document.querySelectorAll(\'script\');
+			scripts[scripts.length - 1].parentNode.insertBefore(script, scripts[scripts.length - 1]);
+		}</script>'.$strScripts;
+
 		// Add the internal <head> tags
 		if (!empty($GLOBALS['TL_HEAD']) && \is_array($GLOBALS['TL_HEAD']))
 		{
