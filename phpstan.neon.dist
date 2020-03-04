@@ -15,9 +15,6 @@ parameters:
         - %currentWorkingDirectory%/core-bundle/tests/Functional/var/*
 
     ignoreErrors:
-        # Ignore the missing TL_SCRIPT constant in the InitializeController class
-        - '#Constant TL_SCRIPT not found\.#'
-
         # Ignore the Adapter::missingMethod() warning
         - '#Call to an undefined method Contao\\CoreBundle\\Framework\\Adapter::missingMethod\(\)\.#'
 
@@ -31,5 +28,36 @@ parameters:
         - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition::children\(\)\.#'
         - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition::addDefaultsIfNotSet\(\)\.#'
 
+        # Ignore $_SESSION type errors in the lazy session access test
+        - '#Instanceof between array<string, mixed> and Contao\\CoreBundle\\Session\\LazySessionAccess will always evaluate to false\.#'
+
+        # Ignore the wrong return type hint of the UrlGeneratorInterface::generate() method
+        - '#Method Contao\\CoreBundle\\Picker\\AbstractPickerProvider::generateUrl\(\) never returns null so it can be removed from the return typehint\.#'
+
+        # Ignore constant errors due to bootstrap.php in contao/contao-phpstan (see https://github.com/contao/contao/pull/1451)
+        - message: '#Call to method PHPUnit\\Framework\\Assert::assert(Same|Null|True|InstanceOf)\(\) with .* will always evaluate to false\.#'
+          paths:
+              - %currentWorkingDirectory%/core-bundle/tests/Framework/ContaoFrameworkTest.php
+              - %currentWorkingDirectory%/core-bundle/tests/Doctrine/Schema/DcaSchemaProviderTest.php
+
+        - message: '#Result of && is always false\.#'
+          path: %currentWorkingDirectory%/core-bundle/src/DataCollector/ContaoDataCollector.php
+
+        - message: '#Strict comparison using === between true and false will always evaluate to false\.#'
+          path: %currentWorkingDirectory%/core-bundle/src/DataCollector/ContaoDataCollector.php
+
+        # Ignore that $container->get() always returns false (see https://github.com/phpstan/phpstan-symfony/issues/74)
+        - message: '#Negated boolean expression is always (false|true)\.#'
+          paths:
+              - %currentWorkingDirectory%/core-bundle/src/Monolog/ContaoTableHandler.php
+              - %currentWorkingDirectory%/core-bundle/src/DependencyInjection/Compiler/*Pass.php
+              - %currentWorkingDirectory%/core-bundle/src/Controller/AbstractController.php
+
+        - message: '#Unreachable statement - code above always terminates\.#'
+          paths:
+              - %currentWorkingDirectory%/core-bundle/src/Controller/AbstractController.php
+              - %currentWorkingDirectory%/core-bundle/src/Command/MigrateCommand.php
+
     reportUnmatchedIgnoredErrors: false
     inferPrivatePropertyTypeFromConstructor: true
+    treatPhpDocTypesAsCertain: false

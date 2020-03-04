@@ -142,17 +142,87 @@ class Document
         $matching = [];
 
         foreach ($jsonLds as $data) {
-            if ('' !== $context && (!isset($data['@context']) || $data['@context'] !== $context)) {
+            $data = $this->expandJsonLdContexts($data);
+
+            if ('' !== $type && (!isset($data['@type']) || $data['@type'] !== $context.$type)) {
                 continue;
             }
 
-            if ('' !== $type && (!isset($data['@type']) || $data['@type'] !== $type)) {
-                continue;
+            if (\count($filtered = $this->filterJsonLdContexts($data, [$context]))) {
+                $matching[] = $filtered;
             }
-
-            $matching[] = $data;
         }
 
         return $matching;
+    }
+
+    private function expandJsonLdContexts(array $data): array
+    {
+        if (empty($data['@context'])) {
+            return $data;
+        }
+
+        if (\is_string($data['@context'])) {
+            foreach ($data as $key => $value) {
+                if ('@type' === $key) {
+                    $data[$key] = $data['@context'].$value;
+                    continue;
+                }
+
+                if ('@' !== $key[0]) {
+                    unset($data[$key]);
+                    $data[$data['@context'].$key] = $value;
+                }
+            }
+
+            return $data;
+        }
+
+        if (\is_array($data['@context'])) {
+            foreach ($data['@context'] as $prefix => $context) {
+                if (isset($data['@type']) && 0 === strncmp($data['@type'], $prefix.':', \strlen($prefix) + 1)) {
+                    $data['@type'] = substr($data['@type'], \strlen($prefix) + 1);
+                }
+
+                foreach ($data as $key => $value) {
+                    if (0 === strncmp($prefix.':', $key, \strlen($prefix) + 1)) {
+                        unset($data[$key]);
+                        $data[$context.substr($key, \strlen($prefix) + 1)] = $value;
+                    }
+                }
+            }
+
+            return $data;
+        }
+
+        throw new \RuntimeException('Unable to expand JSON-LD data');
+    }
+
+    private function filterJsonLdContexts(array $data, array $contexts): array
+    {
+        $newData = [];
+        $found = false;
+
+        foreach ($data as $key => $value) {
+            foreach ($contexts as $context) {
+                if ('@type' === $key) {
+                    $newData[$key] = $value;
+
+                    if (0 === strncmp($value, $context, \strlen($context))) {
+                        $newData[$key] = substr($value, \strlen($context));
+                        $found = true;
+                        break;
+                    }
+                }
+
+                if (0 === strncmp($context, $key, \strlen($context))) {
+                    $newData[substr($key, \strlen($context))] = $value;
+                    $found = true;
+                    break;
+                }
+            }
+        }
+
+        return $found ? $newData : [];
     }
 }

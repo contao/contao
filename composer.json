@@ -137,7 +137,6 @@
         "contao/core": "*",
         "contao/manager-plugin": "<2.0 || >=3.0",
         "doctrine/persistence": "1.3.2",
-        "phpstan/phpstan": "0.12.12",
         "symfony/config": "<4.4.2",
         "terminal42/contao-ce-access": "<3.0",
         "zendframework/zend-code": "<3.3.1"
@@ -269,7 +268,7 @@
             "vendor/bin/monorepo-tools composer-json --validate --ansi"
         ],
         "phpstan": [
-            "vendor/bin/phpstan analyze core-bundle/src core-bundle/tests --level=3 --memory-limit=1G --ansi"
+            "vendor/bin/phpstan analyze core-bundle/src core-bundle/tests --level=4 --memory-limit=1G --ansi"
         ],
         "unit-tests": [
             "vendor/bin/phpunit --colors=always"

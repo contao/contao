@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing;
 
-use Contao\Config;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Framework\ContaoFramework;
@@ -296,14 +295,9 @@ class RouteProvider implements RouteProviderInterface
             []
         );
 
-        /** @var Config $config */
-        $config = $this->framework->getAdapter(Config::class);
-
-        if (!$config->get('doNotRedirectEmpty')) {
-            $defaults['_controller'] = 'Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction';
-            $defaults['path'] = '/'.$page->language.'/';
-            $defaults['permanent'] = true;
-        }
+        $defaults['_controller'] = 'Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction';
+        $defaults['path'] = '/'.$page->language.'/';
+        $defaults['permanent'] = true;
 
         $routes['tl_page.'.$page->id.'.fallback'] = new Route(
             '/',
@@ -406,10 +400,10 @@ class RouteProvider implements RouteProviderInterface
                     return 1;
                 }
 
-                /** @var PageModel $pageA */
+                /** @var PageModel|null $pageA */
                 $pageA = $a->getDefault('pageModel');
 
-                /** @var PageModel $pageB */
+                /** @var PageModel|null $pageB */
                 $pageB = $b->getDefault('pageModel');
 
                 // Check if the page models are valid (should always be the case, as routes are generated from pages)

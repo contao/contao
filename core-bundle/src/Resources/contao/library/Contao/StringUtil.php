@@ -1120,6 +1120,19 @@ class StringUtil
 
 		return (string) substr($path, $length + 1);
 	}
+
+	/**
+	 * Convert all ampersands into their HTML entity (default) or unencoded value
+	 *
+	 * @param string  $strString
+	 * @param boolean $blnEncode
+	 *
+	 * @return string
+	 */
+	public static function ampersand($strString, $blnEncode=true): string
+	{
+		return preg_replace('/&(amp;)?/i', ($blnEncode ? '&amp;' : '&'), $strString);
+	}
 }
 
 class_alias(StringUtil::class, 'StringUtil');

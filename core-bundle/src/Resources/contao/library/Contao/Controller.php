@@ -630,7 +630,7 @@ abstract class Controller extends System
 		System::loadLanguageFile('languages');
 
 		$return = array();
-		$langs = scan(__DIR__ . '/../../languages');
+		$langs = Folder::scan(__DIR__ . '/../../languages');
 		array_unshift($langs, $GLOBALS['TL_LANGUAGE']);
 
 		foreach ($langs as $lang)
@@ -1060,7 +1060,7 @@ abstract class Controller extends System
 			$uri = str_replace('+', '%2B', $uri);
 		}
 
-		return TL_SCRIPT . ampersand($uri);
+		return TL_SCRIPT . StringUtil::ampersand($uri);
 	}
 
 	/**
@@ -1880,33 +1880,7 @@ abstract class Controller extends System
 		// Order the enclosures
 		if (!empty($arrItem['orderEnclosure']))
 		{
-			$tmp = StringUtil::deserialize($arrItem['orderEnclosure']);
-
-			if (!empty($tmp) && \is_array($tmp))
-			{
-				// Remove all values
-				$arrOrder = array_map(static function () {}, array_flip($tmp));
-
-				// Move the matching elements to their position in $arrOrder
-				foreach ($arrEnclosures as $k=>$v)
-				{
-					if (\array_key_exists($v['uuid'], $arrOrder))
-					{
-						$arrOrder[$v['uuid']] = $v;
-						unset($arrEnclosures[$k]);
-					}
-				}
-
-				// Append the left-over enclosures at the end
-				if (!empty($arrEnclosures))
-				{
-					$arrOrder = array_merge($arrOrder, array_values($arrEnclosures));
-				}
-
-				// Remove empty (unreplaced) entries
-				$arrEnclosures = array_values(array_filter($arrOrder));
-				unset($arrOrder);
-			}
+			$arrEnclosures = ArrayUtil::sortByOrderField($arrEnclosures, $arrItem['orderEnclosure']);
 		}
 
 		$objTemplate->enclosure = $arrEnclosures;

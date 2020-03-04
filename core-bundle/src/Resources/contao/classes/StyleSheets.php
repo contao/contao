@@ -79,7 +79,7 @@ class StyleSheets extends Backend
 		}
 
 		// Delete old style sheets
-		foreach (scan($this->strRootDir . '/assets/css', true) as $file)
+		foreach (Folder::scan($this->strRootDir . '/assets/css', true) as $file)
 		{
 			// Skip directories
 			if (is_dir($this->strRootDir . '/assets/css/' . $file))
@@ -165,7 +165,10 @@ class StyleSheets extends Backend
 		}
 
 		// Sort by key length (see #3316)
-		uksort($vars, 'length_sort_desc');
+		uksort($vars, static function ($a, $b): int
+		{
+			return \strlen($b) - \strlen($a);
+		});
 
 		// Create the file
 		$objFile = new File('assets/css/' . $row['name'] . '.css');
@@ -1304,7 +1307,7 @@ class StyleSheets extends Backend
 		// Return form
 		return Message::generate() . '
 <div id="tl_buttons">
-<a href="' . ampersand(str_replace('&key=import', '', Environment::get('request'))) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
+<a href="' . StringUtil::ampersand(str_replace('&key=import', '', Environment::get('request'))) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>
 <form id="tl_style_sheet_import" class="tl_form tl_edit_form" method="post" enctype="multipart/form-data">
 <div class="tl_formbody_edit">
@@ -1374,7 +1377,10 @@ class StyleSheets extends Backend
 		}
 
 		// Sort by key length (see #3316)
-		uksort($vars, 'length_sort_desc');
+		uksort($vars, static function ($a, $b): int
+		{
+			return \strlen($b) - \strlen($a);
+		});
 
 		// Create the file
 		$objFile = new File('system/tmp/' . md5(uniqid(mt_rand(), true)));

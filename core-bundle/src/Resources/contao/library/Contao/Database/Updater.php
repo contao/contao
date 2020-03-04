@@ -10,6 +10,7 @@
 
 namespace Contao\Database;
 
+use Contao\ArrayUtil;
 use Contao\Config;
 use Contao\Controller;
 use Contao\Database;
@@ -17,6 +18,7 @@ use Contao\Dbafs;
 use Contao\File;
 use Contao\Files;
 use Contao\FilesModel;
+use Contao\Folder;
 use Contao\StringUtil;
 use Contao\System;
 use Symfony\Component\Finder\SplFileInfo;
@@ -556,7 +558,7 @@ class Updater extends Controller
 			{
 				if (($key = array_search('layout.css', $tmp)) !== false)
 				{
-					array_insert($tmp, $key + 1, 'responsive.css');
+					ArrayUtil::arrayInsert($tmp, $key + 1, 'responsive.css');
 				}
 
 				$strFramework = serialize(array_values(array_unique($tmp)));
@@ -650,7 +652,7 @@ class Updater extends Controller
 		$arrFolders = array();
 		$arrFiles = array();
 		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
-		$arrScan = scan($rootDir . '/' . $strPath);
+		$arrScan = Folder::scan($rootDir . '/' . $strPath);
 
 		foreach ($arrScan as $strFile)
 		{

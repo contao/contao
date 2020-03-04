@@ -388,7 +388,7 @@ class RegisterHookListenersPassTest extends TestCase
     }
 
     /**
-     * @return array<int, array<int, array<string>>>
+     * @return array<int, array<string, array<int, array<int, array<string>>>>>
      */
     private function getHookListenersFromDefinition(ContainerBuilder $container): array
     {
