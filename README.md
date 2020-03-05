@@ -83,6 +83,7 @@ composer run all
 composer run unit-tests
 composer run cs-fixer
 composer run phpstan
+composer run psalm
 ```
 
 If you want to pass additional flags to the underlying commands, you can use
