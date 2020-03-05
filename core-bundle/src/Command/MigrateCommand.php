@@ -242,7 +242,6 @@ class MigrateCommand extends Command
             $this->io->section('Execute database migrations');
 
             $count = 0;
-
             $commandHashes = $this->getCommandHashes($commands, 'yes, with deletes' === $answer);
 
             do {
@@ -278,6 +277,8 @@ class MigrateCommand extends Command
                 return false;
             }
         }
+
+        throw new \RuntimeException('This should never happen');
     }
 
     private function getCommandHashes(array $commands, bool $withDrops): array

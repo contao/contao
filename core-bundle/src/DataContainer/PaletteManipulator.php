@@ -180,7 +180,7 @@ class PaletteManipulator
     /**
      * Converts a palette string to a configuration array.
      *
-     * @return array<string, array<string, (array<string>|bool)>>
+     * @return array<int|string, array<mixed>>
      */
     private function explode(string $palette): array
     {

@@ -40,7 +40,7 @@ class PhpFileLoader extends Loader
     /**
      * Parses a file and returns the code and namespace.
      *
-     * @return array<string>
+     * @return array<string|false>
      */
     private function parseFile(string $file): array
     {
