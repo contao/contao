@@ -119,7 +119,7 @@ class AutomatorCommand extends Command
         $commands = $this->getCommands();
         $task = $input->getArgument('task');
 
-        if (null !== $task) {
+        if (\is_string($task)) {
             if (!\in_array($task, $commands, true)) {
                 throw new \InvalidArgumentException(sprintf('Invalid task "%s"', $task)); // no full stop here
             }

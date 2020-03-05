@@ -323,7 +323,7 @@ class DcaSchemaProvider
     /**
      * Returns the SQL definitions from the Contao installer.
      *
-     * @return array<string, array<string, array<string>>>
+     * @return array<string, array<string, string|array<string>>>
      */
     private function getSqlDefinitions(): array
     {

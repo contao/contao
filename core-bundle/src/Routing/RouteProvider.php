@@ -454,7 +454,7 @@ class RouteProvider implements RouteProviderInterface
     /**
      * Finds the page models keeping the candidates order.
      *
-     * @return array<Model>
+     * @return array<PageModel>
      */
     private function findPages(array $candidates): array
     {

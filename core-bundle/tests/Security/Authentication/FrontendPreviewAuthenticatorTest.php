@@ -252,7 +252,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
 
     /**
      * @param Security&MockObject              $security
-     * @param SessionInterface&MockObject      $session
+     * @param SessionInterface                 $session
      * @param UserProviderInterface&MockObject $userProvider
      * @param LoggerInterface&MockObject       $logger
      */

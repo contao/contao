@@ -22,6 +22,7 @@ use Contao\File;
 use Contao\FilesModel;
 use Contao\Image\PictureGenerator;
 use Contao\Image\ResizeCalculator;
+use Contao\ImageSizeItemModel;
 use Contao\ImagineSvg\Imagine as ImagineSvg;
 use Contao\Picture;
 use Contao\System;
@@ -132,22 +133,21 @@ class PictureTest extends TestCase
             'zoom' => 0,
         ]);
 
-        $picture->setImageSizeItems([
-            (object) [
-                'width' => 50,
-                'height' => 50,
-                'resizeMode' => 'crop',
-                'zoom' => 0,
-                'media' => '(max-width: 900px)',
-            ],
-            (object) [
-                'width' => 25,
-                'height' => 25,
-                'resizeMode' => 'crop',
-                'zoom' => 0,
-                'media' => '(max-width: 600px)',
-            ],
-        ]);
+        $item1 = new ImageSizeItemModel();
+        $item1->width = 50;
+        $item1->height = 50;
+        $item1->resizeMode = 'crop';
+        $item1->zoom = 0;
+        $item1->media = '(max-width: 900px)';
+
+        $item2 = new ImageSizeItemModel();
+        $item2->width = 25;
+        $item2->height = 25;
+        $item2->resizeMode = 'crop';
+        $item2->zoom = 0;
+        $item2->media = '(max-width: 600px)';
+
+        $picture->setImageSizeItems([$item1, $item2]);
 
         $pictureData = $picture->getTemplateData();
 

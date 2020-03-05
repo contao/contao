@@ -45,7 +45,7 @@ class Installer
     }
 
     /**
-     * @return array<string>
+     * @return array<string,array<string>>
      */
     public function getCommands(): array
     {
