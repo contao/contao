@@ -491,8 +491,6 @@ services:
 
     contao.routing.language_filter:
         class: Contao\CoreBundle\Routing\Matcher\LanguageFilter
-        arguments:
-            - '%contao.prepend_locale%'
 
     contao.routing.legacy_matcher:
         class: Contao\CoreBundle\Routing\Matcher\LegacyMatcher
