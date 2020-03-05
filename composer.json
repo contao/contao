@@ -153,8 +153,12 @@
         "monolog/monolog": "^1.24",
         "phpstan/extension-installer": "^1.0",
         "phpunit/phpunit": "^8.4",
+        "psalm/plugin-phpunit": "^0.9",
+        "seferov/symfony-psalm-plugin": "^1.0",
         "symfony/browser-kit": "4.4.*",
-        "symfony/phpunit-bridge": "4.4.*"
+        "symfony/phpunit-bridge": "4.4.*",
+        "vimeo/psalm": "^3.9",
+        "weirdan/doctrine-psalm-plugin": "^0.10"
     },
     "extra": {
         "branch-alias": {
@@ -254,6 +258,7 @@
             "@functional-tests",
             "@cs-fixer",
             "@phpstan",
+            "@psalm",
             "@monorepo-tools"
         ],
         "cs-fixer": [
@@ -269,6 +274,9 @@
         ],
         "phpstan": [
             "vendor/bin/phpstan analyze core-bundle/src core-bundle/tests --level=4 --memory-limit=1G --ansi"
+        ],
+        "psalm": [
+            "vendor/bin/psalm --threads=4"
         ],
         "unit-tests": [
             "vendor/bin/phpunit --colors=always"
