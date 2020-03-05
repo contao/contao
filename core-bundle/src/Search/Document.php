@@ -181,7 +181,7 @@ class Document
         if (\is_array($data['@context'])) {
             foreach ($data['@context'] as $prefix => $context) {
                 if (isset($data['@type']) && 0 === strncmp($data['@type'], $prefix.':', \strlen($prefix) + 1)) {
-                    $data['@type'] = substr($data['@type'], \strlen($prefix) + 1);
+                    $data['@type'] = $context.substr($data['@type'], \strlen($prefix) + 1);
                 }
 
                 foreach ($data as $key => $value) {
