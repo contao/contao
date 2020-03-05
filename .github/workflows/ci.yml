@@ -86,7 +86,7 @@ jobs:
             - name: Analyze the code
               run: |
                   vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=4 --no-progress
-                  vendor/bin/psalm --no-cache --no-progress
+                  vendor/bin/psalm --threads=4 --no-progress
 
     tests:
         name: PHP ${{ matrix.php }}

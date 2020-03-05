@@ -153,12 +153,12 @@
         "monolog/monolog": "^1.24",
         "phpstan/extension-installer": "^1.0",
         "phpunit/phpunit": "^8.4",
+        "psalm/plugin-phpunit": "^0.9",
+        "seferov/symfony-psalm-plugin": "^1.0",
         "symfony/browser-kit": "4.4.*",
         "symfony/phpunit-bridge": "4.4.*",
         "vimeo/psalm": "^3.9",
-        "psalm/plugin-phpunit": "^0.9.0",
-        "weirdan/doctrine-psalm-plugin": "^0.10.0",
-        "seferov/symfony-psalm-plugin": "^1.0"
+        "weirdan/doctrine-psalm-plugin": "^0.10"
     },
     "extra": {
         "branch-alias": {
@@ -257,7 +257,8 @@
             "@unit-tests",
             "@functional-tests",
             "@cs-fixer",
-            "@static-code-analysis",
+            "@phpstan",
+            "@psalm",
             "@monorepo-tools"
         ],
         "cs-fixer": [
@@ -271,9 +272,11 @@
         "monorepo-tools": [
             "vendor/bin/monorepo-tools composer-json --validate --ansi"
         ],
-        "static-code-analysis": [
-            "vendor/bin/phpstan analyze core-bundle/src core-bundle/tests --level=4 --memory-limit=1G --ansi",
-            "vendor/bin/psalm --no-cache"
+        "phpstan": [
+            "vendor/bin/phpstan analyze core-bundle/src core-bundle/tests --level=4 --memory-limit=1G --ansi"
+        ],
+        "psalm": [
+            "vendor/bin/psalm --threads=4"
         ],
         "unit-tests": [
             "vendor/bin/phpunit --colors=always"

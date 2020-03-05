@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <psalm
-    totallyTyped="false"
     errorLevel="7"
     resolveFromConfigFile="true"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -25,7 +24,7 @@
     <issueHandlers>
         <UndefinedConstant>
             <errorLevel type="suppress">
-                <file name="core-bundle/src/Controller/InitializeController.php" />  <!-- all InvalidReturnType issues in this file are suppressed -->
+                <file name="core-bundle/src/Controller/InitializeController.php" />
             </errorLevel>
         </UndefinedConstant>
     </issueHandlers>
