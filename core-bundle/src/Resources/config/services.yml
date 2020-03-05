@@ -488,7 +488,6 @@ services:
         class: Contao\CoreBundle\Routing\Enhancer\InputEnhancer
         arguments:
             - '@contao.framework'
-            - '%contao.prepend_locale%'
 
     contao.routing.language_filter:
         class: Contao\CoreBundle\Routing\Matcher\LanguageFilter
