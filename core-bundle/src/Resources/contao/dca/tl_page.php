@@ -156,8 +156,8 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'regular'                     => '{title_legend},title,alias,type;{meta_legend},pageTitle,robots,description,serpPreview;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,noSearch,guests,requireItem;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
 		'forward'                     => '{title_legend},title,alias,type;{meta_legend},pageTitle;{redirect_legend},jumpTo,redirect;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,guests;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
 		'redirect'                    => '{title_legend},title,alias,type;{meta_legend},pageTitle;{redirect_legend},redirect,url,target;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,guests;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
-		'root'                        => '{title_legend},title,alias,type;{meta_legend},pageTitle;{dns_legend},dns,useSSL,language,fallback;{global_legend:hide},dateFormat,timeFormat,datimFormat,adminEmail,staticFiles,staticPlugins;{alias_legend:hide},validAliasCharacters,useFolderUrl;{sitemap_legend:hide},createSitemap;{protected_legend:hide},protected;{layout_legend},includeLayout;{twoFactor_legend:hide},enforceTwoFactor;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{publish_legend},published,start,stop',
-		'rootfallback'                => '{title_legend},title,alias,type;{meta_legend},pageTitle;{dns_legend},dns,useSSL,language,fallback;{website_legend},favicon,robotsTxt;{global_legend:hide},dateFormat,timeFormat,datimFormat,adminEmail,staticFiles,staticPlugins;{alias_legend:hide},validAliasCharacters,useFolderUrl;{sitemap_legend:hide},createSitemap;{protected_legend:hide},protected;{layout_legend},includeLayout;{twoFactor_legend:hide},enforceTwoFactor;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{publish_legend},published,start,stop',
+		'root'                        => '{title_legend},title,alias,type;{meta_legend},pageTitle;{url_legend},dns,useSSL,languagePrefix,urlSuffix,validAliasCharacters,useFolderUrl;{global_legend:hide},language,fallback,dateFormat,timeFormat,datimFormat,adminEmail,staticFiles,staticPlugins;{sitemap_legend:hide},createSitemap;{protected_legend:hide},protected;{layout_legend},includeLayout;{twoFactor_legend:hide},enforceTwoFactor;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{publish_legend},published,start,stop',
+		'rootfallback'                => '{title_legend},title,alias,type;{meta_legend},pageTitle;{url_legend},dns,useSSL,languagePrefix,urlSuffix,validAliasCharacters,useFolderUrl;{website_legend:hide},favicon,robotsTxt;{global_legend:hide},language,fallback,dateFormat,timeFormat,datimFormat,adminEmail,staticFiles,staticPlugins;{sitemap_legend:hide},createSitemap;{protected_legend:hide},protected;{layout_legend},includeLayout;{twoFactor_legend:hide},enforceTwoFactor;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{publish_legend},published,start,stop',
 		'logout'                      => '{title_legend},title,alias,type;{forward_legend},jumpTo,redirectBack;{protected_legend:hide},protected;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
 		'error_401'                   => '{title_legend},title,alias,type;{meta_legend},pageTitle,robots,description;{forward_legend},autoforward;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass;{publish_legend},published,start,stop',
 		'error_403'                   => '{title_legend},title,alias,type;{meta_legend},pageTitle,robots,description;{forward_legend},autoforward;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass;{publish_legend},published,start,stop',
@@ -427,6 +427,20 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
 			'sql'                     => "char(1) NOT NULL default ''"
+		),
+		'languagePrefix' => array
+		(
+			'exclude'                 => true,
+			'inputType'               => 'text',
+			'eval'                    => array('rgxp'=>'folderalias', 'doNotCopy'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(128) BINARY NOT NULL default ''"
+		),
+		'urlSuffix' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_page']['urlSuffix'],
+			'inputType'               => 'text',
+			'eval'                    => array('nospace'=>'true', 'maxlength'=>16, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(16) NOT NULL default '.html'"
 		),
 		'createSitemap' => array
 		(

@@ -46,6 +46,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string  $timeFormat
  * @property string  $datimFormat
  * @property string  $validAliasCharacters
+ * @property string  $languagePrefix
+ * @property string  $urlSuffix
  * @property string  $createSitemap
  * @property string  $sitemapName
  * @property string  $useSSL
