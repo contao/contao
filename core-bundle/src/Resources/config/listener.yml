@@ -8,6 +8,15 @@ services:
             calls:
                 - ['setContainer', ['@service_container']]
 
+    Contao\CoreBundle\EventListener\DataContainer\LegacyRoutingListener:
+        arguments:
+            - '@translator'
+            - '%contao.legacy_routing%'
+            - '%contao.prepend_locale%'
+            - '%contao.url_suffix%'
+        tags:
+            - { name: terminal42_service_annotation }
+
     contao.listener.backend_locale:
         class: Contao\CoreBundle\EventListener\BackendLocaleListener
         arguments:
