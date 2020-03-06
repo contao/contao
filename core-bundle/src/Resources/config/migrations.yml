@@ -8,3 +8,7 @@ services:
         arguments:
             - '@database_connection'
             - '@contao.framework'
+
+    Contao\CoreBundle\Migration\Version410\OrderFieldMigration:
+        arguments:
+            - '@database_connection'

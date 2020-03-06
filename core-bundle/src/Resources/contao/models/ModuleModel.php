@@ -30,7 +30,6 @@ use Contao\Model\Collection;
  * @property string  $navigationTpl
  * @property string  $customTpl
  * @property string  $pages
- * @property string  $orderPages
  * @property boolean $showHidden
  * @property string  $customLabel
  * @property boolean $autologin
@@ -98,7 +97,6 @@ use Contao\Model\Collection;
  * @method static ModuleModel|null findOneByNavigationTpl($val, array $opt=array())
  * @method static ModuleModel|null findOneByCustomTpl($val, array $opt=array())
  * @method static ModuleModel|null findOneByPages($val, array $opt=array())
- * @method static ModuleModel|null findOneByOrderPages($val, array $opt=array())
  * @method static ModuleModel|null findOneByShowHidden($val, array $opt=array())
  * @method static ModuleModel|null findOneByCustomLabel($val, array $opt=array())
  * @method static ModuleModel|null findOneByAutologin($val, array $opt=array())
@@ -162,7 +160,6 @@ use Contao\Model\Collection;
  * @method static Collection|ModuleModel[]|ModuleModel|null findByNavigationTpl($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByCustomTpl($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByPages($val, array $opt=array())
- * @method static Collection|ModuleModel[]|ModuleModel|null findByOrderPages($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByShowHidden($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByCustomLabel($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByAutologin($val, array $opt=array())
@@ -230,7 +227,6 @@ use Contao\Model\Collection;
  * @method static integer countByNavigationTpl($val, array $opt=array())
  * @method static integer countByCustomTpl($val, array $opt=array())
  * @method static integer countByPages($val, array $opt=array())
- * @method static integer countByOrderPages($val, array $opt=array())
  * @method static integer countByShowHidden($val, array $opt=array())
  * @method static integer countByCustomLabel($val, array $opt=array())
  * @method static integer countByAutologin($val, array $opt=array())

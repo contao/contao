@@ -602,38 +602,6 @@ class PageRegular extends Frontend
 		// External style sheets
 		if (!empty($arrExternal) && \is_array($arrExternal))
 		{
-			// Consider the sorting order (see #5038)
-			if ($objLayout->orderExt != '')
-			{
-				$tmp = StringUtil::deserialize($objLayout->orderExt);
-
-				if (!empty($tmp) && \is_array($tmp))
-				{
-					// Remove all values
-					$arrOrder = array_map(static function () {}, array_flip($tmp));
-
-					// Move the matching elements to their position in $arrOrder
-					foreach ($arrExternal as $k=>$v)
-					{
-						if (\array_key_exists($v, $arrOrder))
-						{
-							$arrOrder[$v] = $v;
-							unset($arrExternal[$k]);
-						}
-					}
-
-					// Append the left-over style sheets at the end
-					if (!empty($arrExternal))
-					{
-						$arrOrder = array_merge($arrOrder, array_values($arrExternal));
-					}
-
-					// Remove empty (unreplaced) entries
-					$arrExternal = array_values(array_filter($arrOrder));
-					unset($arrOrder);
-				}
-			}
-
 			// Get the file entries from the database
 			$objFiles = FilesModel::findMultipleByUuids($arrExternal);
 			$rootDir = System::getContainer()->getParameter('kernel.project_dir');
@@ -764,38 +732,6 @@ class PageRegular extends Frontend
 
 		// Add the external JavaScripts
 		$arrExternalJs = StringUtil::deserialize($objLayout->externalJs);
-
-		// Consider the sorting order (see #5038)
-		if (!empty($arrExternalJs) && \is_array($arrExternalJs) && $objLayout->orderExtJs != '')
-		{
-			$tmp = StringUtil::deserialize($objLayout->orderExtJs);
-
-			if (!empty($tmp) && \is_array($tmp))
-			{
-				// Remove all values
-				$arrOrder = array_map(static function () {}, array_flip($tmp));
-
-				// Move the matching elements to their position in $arrOrder
-				foreach ($arrExternalJs as $k=>$v)
-				{
-					if (\array_key_exists($v, $arrOrder))
-					{
-						$arrOrder[$v] = $v;
-						unset($arrExternalJs[$k]);
-					}
-				}
-
-				// Append the left-over JavaScripts at the end
-				if (!empty($arrExternalJs))
-				{
-					$arrOrder = array_merge($arrOrder, array_values($arrExternalJs));
-				}
-
-				// Remove empty (unreplaced) entries
-				$arrExternalJs = array_values(array_filter($arrOrder));
-				unset($arrOrder);
-			}
-		}
 
 		// Get the file entries from the database
 		$objFiles = FilesModel::findMultipleByUuids($arrExternalJs);
