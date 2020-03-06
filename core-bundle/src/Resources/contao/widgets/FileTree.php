@@ -66,7 +66,7 @@ class FileTree extends Widget
 
 		if ($this->isSortable && !$this->filesOnly && !$this->orderField && ($this->isGallery || $this->isDownloads))
 		{
-			throw new \RuntimeException('File tree in gallery or downloads mode needs a configured orderField to be sortable.');
+			throw new \RuntimeException('A file tree in gallery or downloads mode needs an "orderField" to be sortable');
 		}
 
 		// Prepare the order field

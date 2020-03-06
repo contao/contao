@@ -104,10 +104,10 @@ class OrderFieldMigration extends AbstractMigration
                 $orderFieldQuoted, $fieldQuoted
             FROM
                 $tableQuoted
-            WHERE 
-                $orderFieldQuoted IS NOT NULL 
+            WHERE
+                $orderFieldQuoted IS NOT NULL
                 AND $orderFieldQuoted != ''
-                AND $fieldQuoted IS NOT NULL 
+                AND $fieldQuoted IS NOT NULL
                 AND $fieldQuoted != ''
         ");
 
@@ -124,17 +124,18 @@ class OrderFieldMigration extends AbstractMigration
 
             $items = array_merge(array_values(array_filter($order)), array_values($items));
 
-            $this->connection->prepare("
-                UPDATE
-                    $tableQuoted
-                SET
-                    $fieldQuoted = :items,
-                    $orderFieldQuoted = ''
-            ")->execute([':items' => serialize($items)]);
+            $this->connection
+                ->prepare("
+                    UPDATE
+                        $tableQuoted
+                    SET
+                        $fieldQuoted = :items,
+                        $orderFieldQuoted = ''
+                ")
+                ->execute([':items' => serialize($items)])
+            ;
         }
 
-        $this->connection->query("
-            ALTER TABLE $tableQuoted DROP $orderFieldQuoted
-        ");
+        $this->connection->query("ALTER TABLE $tableQuoted DROP $orderFieldQuoted");
     }
 }
