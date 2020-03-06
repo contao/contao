@@ -11,7 +11,7 @@ use Symfony\Component\Yaml\Yaml;
 
 abstract class FunctionalTestCase extends WebTestCase
 {
-    protected function loadFixture(string $yamlFile, bool $resetDatabase = true): void
+    protected static function loadFixtures(array $yamlFiles, bool $truncateTables = true): void
     {
         self::bootKernel();
 
@@ -20,11 +20,47 @@ abstract class FunctionalTestCase extends WebTestCase
         /** @var Connection $connection */
         $connection = $doctrine->getConnection();
 
-        if ($resetDatabase) {
-            $this->resetDatabase();
+        if ($truncateTables) {
+            $platform = $connection->getDatabasePlatform();
+
+            /** @var Table $table */
+            foreach ($connection->getSchemaManager()->listTables() as $table) {
+                $connection->exec($platform->getTruncateTableSQL($table->getName()));
+            }
         }
 
-        $data = Yaml::parseFile($yamlFile);
+        foreach ($yamlFiles as $file) {
+            self::importFixture($connection, $file);
+        }
+    }
+
+    protected static function resetDatabaseSchema(): void
+    {
+        self::bootKernel();
+
+        $doctrine = self::$container->get('doctrine');
+
+        /** @var Connection $connection */
+        $connection = $doctrine->getConnection();
+        $schemaManager = $connection->getSchemaManager();
+        $platform = $connection->getDatabasePlatform();
+
+        /** @var Table $table */
+        foreach ($schemaManager->listTables() as $table) {
+            $connection->exec($platform->getDropTableSQL($table));
+        }
+
+        /** @var EntityManagerInterface $manager */
+        $manager = $doctrine->getManager();
+        $metadata = $manager->getMetadataFactory()->getAllMetadata();
+
+        $tool = new SchemaTool($manager);
+        $tool->createSchema($metadata);
+    }
+
+    private static function importFixture(Connection $connection, string $file)
+    {
+        $data = Yaml::parseFile($file);
 
         foreach ($data as $table => $rows) {
             foreach ($rows as $row) {
@@ -36,26 +72,5 @@ abstract class FunctionalTestCase extends WebTestCase
                 $connection->insert($table, $row);
             }
         }
-    }
-
-    private function resetDatabase(): void
-    {
-        $doctrine = self::$container->get('doctrine');
-
-        /** @var Connection $connection */
-        $connection = $doctrine->getConnection();
-        $schemaManager = $connection->getSchemaManager();
-
-        /** @var Table $table */
-        foreach ($schemaManager->listTables() as $table) {
-            $connection->exec('DROP TABLE '.$table->getName());
-        }
-
-        /** @var EntityManagerInterface $manager */
-        $manager = $doctrine->getManager();
-        $metadata = $manager->getMetadataFactory()->getAllMetadata();
-
-        $tool = new SchemaTool($manager);
-        $tool->createSchema($metadata);
     }
 }
