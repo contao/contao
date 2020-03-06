@@ -10,7 +10,7 @@ framework:
     translator: { fallbacks: ['%locale%'] }
     secret: '%env(APP_SECRET)%'
     router:
-        resource: '%kernel.project_dir%/../src/Resources/config/routing.yml'
+        resource: '%kernel.project_dir%/../src/Resources/config/routes.yml'
         strict_requirements: '%kernel.debug%'
     csrf_protection: ~
     default_locale: '%locale%'

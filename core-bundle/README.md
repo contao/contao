@@ -63,7 +63,7 @@ your application routes.
 
 ```yml
 ContaoCoreBundle:
-    resource: "@ContaoCoreBundle/Resources/config/routing.yml"
+    resource: "@ContaoCoreBundle/Resources/config/routes.yml"
 ```
 
 Edit your `config/security.yml` file and merge all the `providers`, `encoders`,
