@@ -4,45 +4,18 @@ tl_article:
       sorting: 128
       tstamp: 1539686711
       title: 'Home'
-      alias: ''
       author: 1
       inColumn: 'main'
-      keywords: NULL
-      showTeaser: ''
-      teaserCssID: 'a:2:{i:0;s:0:"";i:1;s:0:"";}'
-      teaser: NULL
-      printable: ''
-      customTpl: ''
-      protected: ''
-      groups: NULL
-      guests: ''
-      cssID: 'a:2:{i:0;s:0:"";i:1;s:0:"";}'
       published: '1'
-      start: ''
-      stop: ''
 
     - id: 13
       pid: 8
       sorting: 128
       tstamp: 1539686843
       title: 'Home'
-      alias: ''
       author: 1
       inColumn: 'main'
-      keywords: NULL
-      showTeaser: ''
-      teaserCssID: 'a:2:{i:0;s:0:"";i:1;s:0:"";}'
-      teaser: NULL
-      printable: ''
-      customTpl: ''
-      protected: ''
-      groups: NULL
-      guests: ''
-      cssID: 'a:2:{i:0;s:0:"";i:1;s:0:"";}'
       published: '1'
-      start: ''
-      stop: ''
-
 
 tl_content:
     - id: 9
@@ -51,71 +24,7 @@ tl_content:
       sorting: 128
       tstamp: 1539686688
       type: 'module'
-      headline: 'a:2:{s:5:"value";s:0:"";s:4:"unit";s:2:"h2";}'
-      addImage: ''
-      alt: ''
-      imageTitle: ''
-      size: ''
-      imagemargin: ''
-      imageUrl: ''
-      fullsize: ''
-      caption: ''
-      floating: 'above'
-      listtype: ''
-      summary: ''
-      thead: ''
-      tfoot: ''
-      tleft: ''
-      sortable: ''
-      sortIndex: 0
-      sortOrder: 'ascending'
-      mooHeadline: ''
-      mooStyle: ''
-      mooClasses: ''
-      highlight: ''
-      url: ''
-      target: ''
-      titleText: ''
-      linkTitle: ''
-      embed: ''
-      rel: ''
-      useImage: ''
-      useHomeDir: ''
-      perRow: 4
-      perPage: 0
-      numberOfItems: 0
-      sortBy: ''
-      metaIgnore: ''
-      galleryTpl: ''
-      customTpl: ''
-      youtube: ''
-      playerSize: ''
-      sliderDelay: 0
-      sliderSpeed: 300
-      sliderStartSlide: 0
-      sliderContinuous: ''
-      cteAlias: 0
-      articleAlias: 0
-      article: 0
-      form: 0
       module: 1
-      protected: ''
-      guests: ''
-      cssID: 'a:2:{i:0;s:0:"";i:1;s:0:"";}'
-      invisible: ''
-      start: ''
-      stop: ''
-      overwriteMeta: ''
-      vimeo: ''
-      playerStart: 0
-      playerStop: 0
-      playerColor: ''
-      playerPreload: ''
-      playerAspect: 'none'
-      playerCaption: ''
-      overwriteLink: ''
-      inline: ''
-      splashImage: ''
 
     - id: 10
       pid: 13
@@ -123,71 +32,7 @@ tl_content:
       sorting: 128
       tstamp: 1539686730
       type: 'module'
-      headline: 'a:2:{s:5:"value";s:0:"";s:4:"unit";s:2:"h2";}'
-      addImage: ''
-      alt: ''
-      imageTitle: ''
-      size: ''
-      imagemargin: ''
-      imageUrl: ''
-      fullsize: ''
-      caption: ''
-      floating: 'above'
-      listtype: ''
-      summary: ''
-      thead: ''
-      tfoot: ''
-      tleft: ''
-      sortable: ''
-      sortIndex: 0
-      sortOrder: 'ascending'
-      mooHeadline: ''
-      mooStyle: ''
-      mooClasses: ''
-      highlight: ''
-      url: ''
-      target: ''
-      titleText: ''
-      linkTitle: ''
-      embed: ''
-      rel: ''
-      useImage: ''
-      useHomeDir: ''
-      perRow: 4
-      perPage: 0
-      numberOfItems: 0
-      sortBy: ''
-      metaIgnore: ''
-      galleryTpl: ''
-      customTpl: ''
-      youtube: ''
-      playerSize: ''
-      sliderDelay: 0
-      sliderSpeed: 300
-      sliderStartSlide: 0
-      sliderContinuous: ''
-      cteAlias: 0
-      articleAlias: 0
-      article: 0
-      form: 0
       module: 1
-      protected: ''
-      guests: ''
-      cssID: 'a:2:{i:0;s:0:"";i:1;s:0:"";}'
-      invisible: ''
-      start: ''
-      stop: ''
-      overwriteMeta: ''
-      vimeo: ''
-      playerStart: 0
-      playerStop: 0
-      playerColor: ''
-      playerPreload: ''
-      playerAspect: 'none'
-      playerCaption: ''
-      overwriteLink: ''
-      inline: ''
-      splashImage: ''
 
 tl_layout:
     - id: 1
@@ -195,93 +40,16 @@ tl_layout:
       tstamp: 1539617638
       name: 'Default'
       rows: '1rw'
-      headerHeight: 'a:2:{s:4:"unit";s:0:"";s:5:"value";s:0:"";}'
-      footerHeight: ''
       cols: '1cl'
-      widthLeft: 'a:2:{s:4:"unit";s:0:"";s:5:"value";s:0:"";}'
-      widthRight: ''
-      sections: 'a:1:{i:0;a:4:{s:5:"title";s:0:"";s:2:"id";s:0:"";s:8:"template";s:13:"block_section";s:8:"position";s:3:"top";}}'
-      framework: ''
-      loadingOrder: 'external_first'
       modules: 'a:1:{i:0;a:3:{s:3:"mod";s:1:"0";s:3:"col";s:4:"main";s:6:"enable";s:1:"1";}}'
       template: 'fe_page'
-      webfonts: ''
-      viewport: ''
-      titleTag: ''
-      cssClass: ''
-      onload: ''
-      head: NULL
-      addJQuery: ''
-      jSource: ''
-      jquery: NULL
-      addMooTools: ''
-      mooSource: 'moo_local'
-      static: ''
-      width: ''
-      align: 'center'
-      combineScripts: '1'
-      minifyMarkup: ''
-      defaultImageDensities: ''
-      lightboxSize: ''
 
 tl_module:
     - id: 1
       pid: 1
       tstamp: 1539616752
       name: 'News archive'
-      headline: 'a:2:{s:4:"unit";s:2:"h2";s:5:"value";s:0:"";}'
       type: 'newsarchive'
-      levelOffset: 0
-      showLevel: 0
-      hardLimit: ''
-      showProtected: ''
-      defineRoot: ''
-      rootPage: 0
-      navigationTpl: ''
-      customTpl: ''
-      pages: NULL
-      orderPages: NULL
-      showHidden: ''
-      customLabel: ''
-      autologin: ''
-      jumpTo: 0
-      redirectBack: ''
-      editable: NULL
-      memberTpl: ''
-      form: 0
-      queryType: 'and'
-      fuzzy: ''
-      contextLength: '48'
-      minKeywordLength: 1000
-      perPage: 0
-      searchType: 'simple'
-      searchTpl: ''
-      inColumn: 'main'
-      skipFirst: 0
-      loadFirst: ''
-      singleSRC: NULL
-      url: ''
-      imgSize: 'a:3:{i:0;s:0:"";i:1;s:0:"";i:2;s:0:"";}'
-      useCaption: ''
-      fullsize: ''
-      multiSRC: NULL
-      orderSRC: NULL
-      html: NULL
-      rss_cache: 3600
-      rss_feed: NULL
-      rss_template: 'rss_default'
-      numberOfItems: 3
-      disableCaptcha: ''
-      reg_groups: NULL
-      reg_allowLogin: ''
-      reg_skipName: ''
-      reg_close: ''
-      reg_assignDir: ''
-      reg_activate: ''
-      reg_jumpTo: 0
-      protected: ''
-      guests: ''
-      cssID: 'a:2:{i:0;s:0:"";i:1;s:0:"";}'
       news_archives: 'a:1:{i:0;s:1:"1";}'
       news_featured: 'all_items'
       news_jumpToCurrent: 'hide_module'
@@ -289,7 +57,6 @@ tl_module:
       news_metaFields: 'a:2:{i:0;s:4:"date";i:1;s:6:"author";}'
       news_template: 'news_latest'
       news_format: 'news_month'
-      news_startDay: 0
       news_order: 'order_date_desc'
       news_showQuantity: ''
 
@@ -297,71 +64,12 @@ tl_module:
       pid: 1
       tstamp: 1539616572
       name: 'News reader'
-      headline: 'a:2:{s:4:"unit";s:2:"h2";s:5:"value";s:0:"";}'
       type: 'newsreader'
-      levelOffset: 0
-      showLevel: 0
-      hardLimit: ''
-      showProtected: ''
-      defineRoot: ''
-      rootPage: 0
-      navigationTpl: ''
-      customTpl: ''
-      pages: NULL
-      orderPages: NULL
-      showHidden: ''
-      customLabel: ''
-      autologin: ''
-      jumpTo: 0
-      redirectBack: ''
-      editable: NULL
-      memberTpl: ''
-      form: 0
-      queryType: 'and'
-      fuzzy: ''
-      contextLength: '48'
-      minKeywordLength: 1000
-      perPage: 0
-      searchType: 'simple'
-      searchTpl: ''
-      inColumn: 'main'
-      skipFirst: 0
-      loadFirst: ''
-      singleSRC: NULL
-      url: ''
-      imgSize: 'a:3:{i:0;s:0:"";i:1;s:0:"";i:2;s:0:"";}'
-      useCaption: ''
-      fullsize: ''
-      multiSRC: NULL
-      orderSRC: NULL
-      html: NULL
-      rss_cache: 3600
-      rss_feed: NULL
-      rss_template: 'rss_default'
-      numberOfItems: 3
-      disableCaptcha: ''
-      reg_groups: NULL
-      reg_allowLogin: ''
-      reg_skipName: ''
-      reg_close: ''
-      reg_assignDir: ''
-      reg_homeDir: NULL
-      reg_activate: ''
-      reg_jumpTo: 0
-      reg_text: NULL
-      reg_password: NULL
-      protected: ''
-      groups: NULL
-      guests: ''
-      cssID: 'a:2:{i:0;s:0:"";i:1;s:0:"";}'
       news_archives: 'a:1:{i:0;s:1:"1";}'
       news_featured: 'all_items'
-      news_jumpToCurrent: ''
-      news_readerModule: 0
       news_metaFields: 'a:2:{i:0;s:4:"date";i:1;s:6:"author";}'
       news_template: 'news_latest'
       news_format: 'news_month'
-      news_startDay: 0
       news_order: 'order_date_desc'
       news_showQuantity: ''
 
@@ -374,51 +82,14 @@ tl_news:
       author: 1
       date: 1539616560
       time: 1539616560
-      subheadline: ''
-      teaser: NULL
-      addImage: ''
-      singleSRC: NULL
-      alt: ''
-      size: ''
-      imagemargin: ''
-      imageUrl: ''
-      fullsize: ''
-      caption: ''
-      floating: 'above'
-      addEnclosure: ''
-      enclosure: NULL
       source: 'default'
-      jumpTo: 0
-      articleId: 0
-      url: ''
-      target: ''
-      cssClass: ''
-      noComments: ''
-      featured: ''
       published: '1'
-      start: ''
-      stop: ''
-      overwriteMeta: ''
-      orderEnclosure: NULL
-      imageTitle: ''
-      description: NULL
-      pageTitle: ''
 
 tl_news_archive:
     - id: 1
       tstamp: 1539616536
       title: 'Test'
       jumpTo: 2
-      protected: ''
-      groups: NULL
-      allowComments: ''
-      notify: 'notify_admin'
-      sortOrder: 'ascending'
-      perPage: 0
-      moderate: ''
-      bbcode: ''
-      requireLogin: ''
-      disableCaptcha: ''
 
 tl_page:
     - id: 1
@@ -428,53 +99,12 @@ tl_page:
       title: 'Root with index page'
       alias: 'root-with-index-page'
       type: 'root'
-      pageTitle: ''
       language: 'en'
-      robots: ''
-      description: NULL
-      redirect: 'permanent'
-      jumpTo: 0
-      url: ''
-      target: ''
       dns: 'root-with-index.local'
-      staticFiles: ''
-      staticPlugins: ''
       fallback: '1'
-      adminEmail: ''
-      dateFormat: ''
-      timeFormat: ''
-      datimFormat: ''
-      createSitemap: ''
-      sitemapName: ''
-      useSSL: ''
-      autoforward: ''
-      protected: ''
-      groups: NULL
       includeLayout: '1'
       layout: 1
-      includeCache: ''
-      cache: 0
-      includeChmod: ''
-      cuser: 0
-      cgroup: 0
-      chmod: 'a:9:{i:0;s:2:"u1";i:1;s:2:"u2";i:2;s:2:"u3";i:3;s:2:"u4";i:4;s:2:"u5";i:5;s:2:"u6";i:6;s:2:"g4";i:7;s:2:"g5";i:8;s:2:"g6";}'
-      noSearch: ''
-      cssClass: ''
-      sitemap: ''
-      hide: ''
-      guests: ''
-      tabindex: 0
-      accesskey: ''
       published: '1'
-      start: ''
-      stop: ''
-      requireItem: ''
-      clientCache: 0
-      validAliasCharacters: ''
-      redirectBack: ''
-      alwaysLoadFromCache: ''
-      twoFactorJumpTo: 0
-      enforceTwoFactor: ''
 
     - id: 2
       pid: 1
@@ -483,53 +113,7 @@ tl_page:
       title: 'Index'
       alias: 'index'
       type: 'regular'
-      pageTitle: ''
-      language: ''
-      robots: 'index,follow'
-      description: NULL
-      redirect: 'permanent'
-      jumpTo: 0
-      url: ''
-      target: ''
-      dns: ''
-      staticFiles: ''
-      staticPlugins: ''
-      fallback: ''
-      adminEmail: ''
-      dateFormat: ''
-      timeFormat: ''
-      datimFormat: ''
-      createSitemap: ''
-      sitemapName: ''
-      useSSL: ''
-      autoforward: ''
-      protected: ''
-      groups: NULL
-      includeLayout: ''
-      layout: 0
-      includeCache: ''
-      cache: 0
-      includeChmod: ''
-      cuser: 0
-      cgroup: 0
-      chmod: 'a:9:{i:0;s:2:"u1";i:1;s:2:"u2";i:2;s:2:"u3";i:3;s:2:"u4";i:4;s:2:"u5";i:5;s:2:"u6";i:6;s:2:"g4";i:7;s:2:"g5";i:8;s:2:"g6";}'
-      noSearch: '1'
-      cssClass: ''
-      sitemap: 'map_default'
-      hide: ''
-      guests: ''
-      tabindex: 0
-      accesskey: ''
       published: '1'
-      start: ''
-      stop: ''
-      requireItem: ''
-      clientCache: 0
-      validAliasCharacters: ''
-      redirectBack: ''
-      alwaysLoadFromCache: ''
-      twoFactorJumpTo: 0
-      enforceTwoFactor: ''
 
     - id: 3
       pid: 0
@@ -538,53 +122,12 @@ tl_page:
       title: 'Root with home page'
       alias: 'root-with-home-page'
       type: 'root'
-      pageTitle: ''
       language: 'en'
-      robots: ''
-      description: NULL
-      redirect: 'permanent'
-      jumpTo: 0
-      url: ''
-      target: ''
       dns: 'root-with-home.local'
-      staticFiles: ''
-      staticPlugins: ''
       fallback: '1'
-      adminEmail: ''
-      dateFormat: ''
-      timeFormat: ''
-      datimFormat: ''
-      createSitemap: ''
-      sitemapName: ''
-      useSSL: ''
-      autoforward: ''
-      protected: ''
-      groups: NULL
       includeLayout: '1'
       layout: 1
-      includeCache: ''
-      cache: 0
-      includeChmod: ''
-      cuser: 0
-      cgroup: 0
-      chmod: 'a:9:{i:0;s:2:"u1";i:1;s:2:"u2";i:2;s:2:"u3";i:3;s:2:"u4";i:4;s:2:"u5";i:5;s:2:"u6";i:6;s:2:"g4";i:7;s:2:"g5";i:8;s:2:"g6";}'
-      noSearch: ''
-      cssClass: ''
-      sitemap: ''
-      hide: ''
-      guests: ''
-      tabindex: 0
-      accesskey: ''
       published: '1'
-      start: ''
-      stop: ''
-      requireItem: ''
-      clientCache: 0
-      validAliasCharacters: ''
-      redirectBack: ''
-      alwaysLoadFromCache: ''
-      twoFactorJumpTo: 0
-      enforceTwoFactor: ''
 
     - id: 4
       pid: 3
@@ -593,53 +136,7 @@ tl_page:
       title: 'Home'
       alias: 'home'
       type: 'regular'
-      pageTitle: ''
-      language: ''
-      robots: 'index,follow'
-      description: NULL
-      redirect: 'permanent'
-      jumpTo: 0
-      url: ''
-      target: ''
-      dns: ''
-      staticFiles: ''
-      staticPlugins: ''
-      fallback: ''
-      adminEmail: ''
-      dateFormat: ''
-      timeFormat: ''
-      datimFormat: ''
-      createSitemap: ''
-      sitemapName: ''
-      useSSL: ''
-      autoforward: ''
-      protected: ''
-      groups: NULL
-      includeLayout: ''
-      layout: 0
-      includeCache: ''
-      cache: 0
-      includeChmod: ''
-      cuser: 0
-      cgroup: 0
-      chmod: 'a:9:{i:0;s:2:"u1";i:1;s:2:"u2";i:2;s:2:"u3";i:3;s:2:"u4";i:4;s:2:"u5";i:5;s:2:"u6";i:6;s:2:"g4";i:7;s:2:"g5";i:8;s:2:"g6";}'
-      noSearch: '1'
-      cssClass: ''
-      sitemap: 'map_default'
-      hide: ''
-      guests: ''
-      tabindex: 0
-      accesskey: ''
       published: '1'
-      start: ''
-      stop: ''
-      requireItem: ''
-      clientCache: 0
-      validAliasCharacters: ''
-      redirectBack: ''
-      alwaysLoadFromCache: ''
-      twoFactorJumpTo: 0
-      enforceTwoFactor: ''
 
     - id: 5
       pid: 0
@@ -648,53 +145,12 @@ tl_page:
       title: 'Root with special chars'
       alias: 'root-with-special-chars'
       type: 'root'
-      pageTitle: ''
       language: 'en'
-      robots: ''
-      description: NULL
-      redirect: 'permanent'
-      jumpTo: 0
-      url: ''
-      target: ''
       dns: 'root-with-special-chars.local'
-      staticFiles: ''
-      staticPlugins: ''
       fallback: '1'
-      adminEmail: ''
-      dateFormat: ''
-      timeFormat: ''
-      datimFormat: ''
-      createSitemap: ''
-      sitemapName: ''
-      useSSL: ''
-      autoforward: ''
-      protected: ''
-      groups: NULL
       includeLayout: '1'
       layout: 1
-      includeCache: ''
-      cache: 0
-      includeChmod: ''
-      cuser: 0
-      cgroup: 0
-      chmod: 'a:9:{i:0;s:2:"u1";i:1;s:2:"u2";i:2;s:2:"u3";i:3;s:2:"u4";i:4;s:2:"u5";i:5;s:2:"u6";i:6;s:2:"g4";i:7;s:2:"g5";i:8;s:2:"g6";}'
-      noSearch: ''
-      cssClass: ''
-      sitemap: ''
-      hide: ''
-      guests: ''
-      tabindex: 0
-      accesskey: ''
       published: '1'
-      start: ''
-      stop: ''
-      requireItem: ''
-      clientCache: 0
-      validAliasCharacters: ''
-      redirectBack: ''
-      alwaysLoadFromCache: ''
-      twoFactorJumpTo: 0
-      enforceTwoFactor: ''
 
     - id: 6
       pid: 5
@@ -703,53 +159,7 @@ tl_page:
       title: 'Höme'
       alias: 'höme'
       type: 'regular'
-      pageTitle: ''
-      language: ''
-      robots: 'index,follow'
-      description: NULL
-      redirect: 'permanent'
-      jumpTo: 0
-      url: ''
-      target: ''
-      dns: ''
-      staticFiles: ''
-      staticPlugins: ''
-      fallback: ''
-      adminEmail: ''
-      dateFormat: ''
-      timeFormat: ''
-      datimFormat: ''
-      createSitemap: ''
-      sitemapName: ''
-      useSSL: ''
-      autoforward: ''
-      protected: ''
-      groups: NULL
-      includeLayout: ''
-      layout: 0
-      includeCache: ''
-      cache: 0
-      includeChmod: ''
-      cuser: 0
-      cgroup: 0
-      chmod: 'a:9:{i:0;s:2:"u1";i:1;s:2:"u2";i:2;s:2:"u3";i:3;s:2:"u4";i:4;s:2:"u5";i:5;s:2:"u6";i:6;s:2:"g4";i:7;s:2:"g5";i:8;s:2:"g6";}'
-      noSearch: '1'
-      cssClass: ''
-      sitemap: 'map_default'
-      hide: ''
-      guests: ''
-      tabindex: 0
-      accesskey: ''
       published: '1'
-      start: ''
-      stop: ''
-      requireItem: ''
-      clientCache: 0
-      validAliasCharacters: ''
-      redirectBack: ''
-      alwaysLoadFromCache: ''
-      twoFactorJumpTo: 0
-      enforceTwoFactor: ''
 
     - id: 7
       pid: 0
@@ -758,53 +168,11 @@ tl_page:
       title: 'Root with folder URLs'
       alias: 'root-with-folder-urls'
       type: 'root'
-      pageTitle: ''
       language: 'en'
-      robots: ''
-      description: NULL
-      redirect: 'permanent'
-      jumpTo: 0
-      url: ''
-      target: ''
       dns: 'root-with-folder-urls.local'
-      staticFiles: ''
-      staticPlugins: ''
-      fallback: '1'
-      adminEmail: ''
-      dateFormat: ''
-      timeFormat: ''
-      datimFormat: ''
-      createSitemap: ''
-      sitemapName: ''
-      useSSL: ''
-      autoforward: ''
-      protected: ''
-      groups: NULL
       includeLayout: '1'
       layout: 1
-      includeCache: ''
-      cache: 0
-      includeChmod: ''
-      cuser: 0
-      cgroup: 0
-      chmod: 'a:9:{i:0;s:2:"u1";i:1;s:2:"u2";i:2;s:2:"u3";i:3;s:2:"u4";i:4;s:2:"u5";i:5;s:2:"u6";i:6;s:2:"g4";i:7;s:2:"g5";i:8;s:2:"g6";}'
-      noSearch: ''
-      cssClass: ''
-      sitemap: ''
-      hide: ''
-      guests: ''
-      tabindex: 0
-      accesskey: ''
       published: '1'
-      start: ''
-      stop: ''
-      requireItem: ''
-      clientCache: 0
-      validAliasCharacters: ''
-      redirectBack: ''
-      alwaysLoadFromCache: ''
-      twoFactorJumpTo: 0
-      enforceTwoFactor: ''
 
     - id: 8
       pid: 7
@@ -813,53 +181,7 @@ tl_page:
       title: 'Home'
       alias: 'folder/url/home'
       type: 'regular'
-      pageTitle: ''
-      language: ''
-      robots: 'index,follow'
-      description: NULL
-      redirect: 'permanent'
-      jumpTo: 0
-      url: ''
-      target: ''
-      dns: ''
-      staticFiles: ''
-      staticPlugins: ''
-      fallback: ''
-      adminEmail: ''
-      dateFormat: ''
-      timeFormat: ''
-      datimFormat: ''
-      createSitemap: ''
-      sitemapName: ''
-      useSSL: ''
-      autoforward: ''
-      protected: ''
-      groups: NULL
-      includeLayout: ''
-      layout: 0
-      includeCache: ''
-      cache: 0
-      includeChmod: ''
-      cuser: 0
-      cgroup: 0
-      chmod: 'a:9:{i:0;s:2:"u1";i:1;s:2:"u2";i:2;s:2:"u3";i:3;s:2:"u4";i:4;s:2:"u5";i:5;s:2:"u6";i:6;s:2:"g4";i:7;s:2:"g5";i:8;s:2:"g6";}'
-      noSearch: '1'
-      cssClass: ''
-      sitemap: 'map_default'
-      hide: ''
-      guests: ''
-      tabindex: 0
-      accesskey: ''
       published: '1'
-      start: ''
-      stop: ''
-      requireItem: ''
-      clientCache: 0
-      validAliasCharacters: ''
-      redirectBack: ''
-      alwaysLoadFromCache: ''
-      twoFactorJumpTo: 0
-      enforceTwoFactor: ''
 
     - id: 9
       pid: 0
@@ -868,53 +190,11 @@ tl_page:
       title: 'Root without fallback language'
       alias: 'root-without-fallback-language'
       type: 'root'
-      pageTitle: ''
       language: 'en'
-      robots: ''
-      description: NULL
-      redirect: 'permanent'
-      jumpTo: 0
-      url: ''
-      target: ''
       dns: 'root-without-fallback-language.local'
-      staticFiles: ''
-      staticPlugins: ''
-      fallback: ''
-      adminEmail: ''
-      dateFormat: ''
-      timeFormat: ''
-      datimFormat: ''
-      createSitemap: ''
-      sitemapName: ''
-      useSSL: ''
-      autoforward: ''
-      protected: ''
-      groups: NULL
       includeLayout: '1'
       layout: 1
-      includeCache: ''
-      cache: 0
-      includeChmod: ''
-      cuser: 0
-      cgroup: 0
-      chmod: 'a:9:{i:0;s:2:"u1";i:1;s:2:"u2";i:2;s:2:"u3";i:3;s:2:"u4";i:4;s:2:"u5";i:5;s:2:"u6";i:6;s:2:"g4";i:7;s:2:"g5";i:8;s:2:"g6";}'
-      noSearch: ''
-      cssClass: ''
-      sitemap: ''
-      hide: ''
-      guests: ''
-      tabindex: 0
-      accesskey: ''
       published: '1'
-      start: ''
-      stop: ''
-      requireItem: ''
-      clientCache: 0
-      validAliasCharacters: ''
-      redirectBack: ''
-      alwaysLoadFromCache: ''
-      twoFactorJumpTo: 0
-      enforceTwoFactor: ''
 
     - id: 10
       pid: 9
@@ -923,53 +203,7 @@ tl_page:
       title: 'English'
       alias: 'index'
       type: 'regular'
-      pageTitle: ''
-      language: ''
-      robots: 'index,follow'
-      description: NULL
-      redirect: 'permanent'
-      jumpTo: 0
-      url: ''
-      target: ''
-      dns: ''
-      staticFiles: ''
-      staticPlugins: ''
-      fallback: ''
-      adminEmail: ''
-      dateFormat: ''
-      timeFormat: ''
-      datimFormat: ''
-      createSitemap: ''
-      sitemapName: ''
-      useSSL: ''
-      autoforward: ''
-      protected: ''
-      groups: NULL
-      includeLayout: ''
-      layout: 0
-      includeCache: ''
-      cache: 0
-      includeChmod: ''
-      cuser: 0
-      cgroup: 0
-      chmod: 'a:9:{i:0;s:2:"u1";i:1;s:2:"u2";i:2;s:2:"u3";i:3;s:2:"u4";i:4;s:2:"u5";i:5;s:2:"u6";i:6;s:2:"g4";i:7;s:2:"g5";i:8;s:2:"g6";}'
-      noSearch: '1'
-      cssClass: ''
-      sitemap: 'map_default'
-      hide: ''
-      guests: ''
-      tabindex: 0
-      accesskey: ''
       published: '1'
-      start: ''
-      stop: ''
-      requireItem: ''
-      clientCache: 0
-      validAliasCharacters: ''
-      redirectBack: ''
-      alwaysLoadFromCache: ''
-      twoFactorJumpTo: 0
-      enforceTwoFactor: ''
 
     - id: 11
       pid: 0
@@ -978,53 +212,12 @@ tl_page:
       title: 'Same domain root English'
       alias: 'same-domain-root-english'
       type: 'root'
-      pageTitle: ''
       language: 'en'
-      robots: ''
-      description: NULL
-      redirect: 'permanent'
-      jumpTo: 0
-      url: ''
-      target: ''
       dns: 'same-domain-root.local'
-      staticFiles: ''
-      staticPlugins: ''
       fallback: '1'
-      adminEmail: ''
-      dateFormat: ''
-      timeFormat: ''
-      datimFormat: ''
-      createSitemap: ''
-      sitemapName: ''
-      useSSL: ''
-      autoforward: ''
-      protected: ''
-      groups: NULL
       includeLayout: '1'
       layout: 1
-      includeCache: ''
-      cache: 0
-      includeChmod: ''
-      cuser: 0
-      cgroup: 0
-      chmod: 'a:9:{i:0;s:2:"u1";i:1;s:2:"u2";i:2;s:2:"u3";i:3;s:2:"u4";i:4;s:2:"u5";i:5;s:2:"u6";i:6;s:2:"g4";i:7;s:2:"g5";i:8;s:2:"g6";}'
-      noSearch: ''
-      cssClass: ''
-      sitemap: ''
-      hide: ''
-      guests: ''
-      tabindex: 0
-      accesskey: ''
       published: '1'
-      start: ''
-      stop: ''
-      requireItem: ''
-      clientCache: 0
-      validAliasCharacters: ''
-      redirectBack: ''
-      alwaysLoadFromCache: ''
-      twoFactorJumpTo: 0
-      enforceTwoFactor: ''
 
     - id: 12
       pid: 11
@@ -1033,53 +226,7 @@ tl_page:
       title: 'English site'
       alias: 'english-site'
       type: 'regular'
-      pageTitle: ''
-      language: ''
-      robots: 'index,follow'
-      description: NULL
-      redirect: 'permanent'
-      jumpTo: 0
-      url: ''
-      target: ''
-      dns: ''
-      staticFiles: ''
-      staticPlugins: ''
-      fallback: ''
-      adminEmail: ''
-      dateFormat: ''
-      timeFormat: ''
-      datimFormat: ''
-      createSitemap: ''
-      sitemapName: ''
-      useSSL: ''
-      autoforward: ''
-      protected: ''
-      groups: NULL
-      includeLayout: ''
-      layout: 0
-      includeCache: ''
-      cache: 0
-      includeChmod: ''
-      cuser: 0
-      cgroup: 0
-      chmod: 'a:9:{i:0;s:2:"u1";i:1;s:2:"u2";i:2;s:2:"u3";i:3;s:2:"u4";i:4;s:2:"u5";i:5;s:2:"u6";i:6;s:2:"g4";i:7;s:2:"g5";i:8;s:2:"g6";}'
-      noSearch: '1'
-      cssClass: ''
-      sitemap: 'map_default'
-      hide: ''
-      guests: ''
-      tabindex: 0
-      accesskey: ''
       published: '1'
-      start: ''
-      stop: ''
-      requireItem: ''
-      clientCache: 0
-      validAliasCharacters: ''
-      redirectBack: ''
-      alwaysLoadFromCache: ''
-      twoFactorJumpTo: 0
-      enforceTwoFactor: ''
 
     - id: 13
       pid: 0
@@ -1088,53 +235,11 @@ tl_page:
       title: 'Same domain root German'
       alias: 'same-domain-root-german'
       type: 'root'
-      pageTitle: ''
       language: 'de'
-      robots: ''
-      description: NULL
-      redirect: 'permanent'
-      jumpTo: 0
-      url: ''
-      target: ''
       dns: 'same-domain-root.local'
-      staticFiles: ''
-      staticPlugins: ''
-      fallback: ''
-      adminEmail: ''
-      dateFormat: ''
-      timeFormat: ''
-      datimFormat: ''
-      createSitemap: ''
-      sitemapName: ''
-      useSSL: ''
-      autoforward: ''
-      protected: ''
-      groups: NULL
       includeLayout: '1'
       layout: 1
-      includeCache: ''
-      cache: 0
-      includeChmod: ''
-      cuser: 0
-      cgroup: 0
-      chmod: 'a:9:{i:0;s:2:"u1";i:1;s:2:"u2";i:2;s:2:"u3";i:3;s:2:"u4";i:4;s:2:"u5";i:5;s:2:"u6";i:6;s:2:"g4";i:7;s:2:"g5";i:8;s:2:"g6";}'
-      noSearch: ''
-      cssClass: ''
-      sitemap: ''
-      hide: ''
-      guests: ''
-      tabindex: 0
-      accesskey: ''
       published: '1'
-      start: ''
-      stop: ''
-      requireItem: ''
-      clientCache: 0
-      validAliasCharacters: ''
-      redirectBack: ''
-      alwaysLoadFromCache: ''
-      twoFactorJumpTo: 0
-      enforceTwoFactor: ''
 
     - id: 14
       pid: 13
@@ -1143,53 +248,7 @@ tl_page:
       title: 'German site'
       alias: 'german-site'
       type: 'regular'
-      pageTitle: ''
-      language: ''
-      robots: 'index,follow'
-      description: NULL
-      redirect: 'permanent'
-      jumpTo: 0
-      url: ''
-      target: ''
-      dns: ''
-      staticFiles: ''
-      staticPlugins: ''
-      fallback: ''
-      adminEmail: ''
-      dateFormat: ''
-      timeFormat: ''
-      datimFormat: ''
-      createSitemap: ''
-      sitemapName: ''
-      useSSL: ''
-      autoforward: ''
-      protected: ''
-      groups: NULL
-      includeLayout: ''
-      layout: 0
-      includeCache: ''
-      cache: 0
-      includeChmod: ''
-      cuser: 0
-      cgroup: 0
-      chmod: 'a:9:{i:0;s:2:"u1";i:1;s:2:"u2";i:2;s:2:"u3";i:3;s:2:"u4";i:4;s:2:"u5";i:5;s:2:"u6";i:6;s:2:"g4";i:7;s:2:"g5";i:8;s:2:"g6";}'
-      noSearch: '1'
-      cssClass: ''
-      sitemap: 'map_default'
-      hide: ''
-      guests: ''
-      tabindex: 0
-      accesskey: ''
       published: '1'
-      start: ''
-      stop: ''
-      requireItem: ''
-      clientCache: 0
-      validAliasCharacters: ''
-      redirectBack: ''
-      alwaysLoadFromCache: ''
-      twoFactorJumpTo: 0
-      enforceTwoFactor: ''
 
     - id: 15
       pid: 0
@@ -1198,53 +257,12 @@ tl_page:
       title: 'Same domain root English with index'
       alias: 'same-domain-root-english-with-index'
       type: 'root'
-      pageTitle: ''
       language: 'en'
-      robots: ''
-      description: NULL
-      redirect: 'permanent'
-      jumpTo: 0
-      url: ''
-      target: ''
       dns: 'same-domain-root-with-index.local'
-      staticFiles: ''
-      staticPlugins: ''
       fallback: '1'
-      adminEmail: ''
-      dateFormat: ''
-      timeFormat: ''
-      datimFormat: ''
-      createSitemap: ''
-      sitemapName: ''
-      useSSL: ''
-      autoforward: ''
-      protected: ''
-      groups: NULL
       includeLayout: '1'
       layout: 1
-      includeCache: ''
-      cache: 0
-      includeChmod: ''
-      cuser: 0
-      cgroup: 0
-      chmod: 'a:9:{i:0;s:2:"u1";i:1;s:2:"u2";i:2;s:2:"u3";i:3;s:2:"u4";i:4;s:2:"u5";i:5;s:2:"u6";i:6;s:2:"g4";i:7;s:2:"g5";i:8;s:2:"g6";}'
-      noSearch: ''
-      cssClass: ''
-      sitemap: ''
-      hide: ''
-      guests: ''
-      tabindex: 0
-      accesskey: ''
       published: '1'
-      start: ''
-      stop: ''
-      requireItem: ''
-      clientCache: 0
-      validAliasCharacters: ''
-      redirectBack: ''
-      alwaysLoadFromCache: ''
-      twoFactorJumpTo: 0
-      enforceTwoFactor: ''
 
     - id: 16
       pid: 15
@@ -1253,53 +271,7 @@ tl_page:
       title: 'English site'
       alias: 'index'
       type: 'regular'
-      pageTitle: ''
-      language: ''
-      robots: 'index,follow'
-      description: NULL
-      redirect: 'permanent'
-      jumpTo: 0
-      url: ''
-      target: ''
-      dns: ''
-      staticFiles: ''
-      staticPlugins: ''
-      fallback: ''
-      adminEmail: ''
-      dateFormat: ''
-      timeFormat: ''
-      datimFormat: ''
-      createSitemap: ''
-      sitemapName: ''
-      useSSL: ''
-      autoforward: ''
-      protected: ''
-      groups: NULL
-      includeLayout: ''
-      layout: 0
-      includeCache: ''
-      cache: 0
-      includeChmod: ''
-      cuser: 0
-      cgroup: 0
-      chmod: 'a:9:{i:0;s:2:"u1";i:1;s:2:"u2";i:2;s:2:"u3";i:3;s:2:"u4";i:4;s:2:"u5";i:5;s:2:"u6";i:6;s:2:"g4";i:7;s:2:"g5";i:8;s:2:"g6";}'
-      noSearch: '1'
-      cssClass: ''
-      sitemap: 'map_default'
-      hide: ''
-      guests: ''
-      tabindex: 0
-      accesskey: ''
       published: '1'
-      start: ''
-      stop: ''
-      requireItem: ''
-      clientCache: 0
-      validAliasCharacters: ''
-      redirectBack: ''
-      alwaysLoadFromCache: ''
-      twoFactorJumpTo: 0
-      enforceTwoFactor: ''
 
     - id: 17
       pid: 0
@@ -1308,53 +280,11 @@ tl_page:
       title: 'Same domain root German with index'
       alias: 'same-domain-root-german-with-index'
       type: 'root'
-      pageTitle: ''
       language: 'de'
-      robots: ''
-      description: NULL
-      redirect: 'permanent'
-      jumpTo: 0
-      url: ''
-      target: ''
       dns: 'same-domain-root-with-index.local'
-      staticFiles: ''
-      staticPlugins: ''
-      fallback: ''
-      adminEmail: ''
-      dateFormat: ''
-      timeFormat: ''
-      datimFormat: ''
-      createSitemap: ''
-      sitemapName: ''
-      useSSL: ''
-      autoforward: ''
-      protected: ''
-      groups: NULL
       includeLayout: '1'
       layout: 1
-      includeCache: ''
-      cache: 0
-      includeChmod: ''
-      cuser: 0
-      cgroup: 0
-      chmod: 'a:9:{i:0;s:2:"u1";i:1;s:2:"u2";i:2;s:2:"u3";i:3;s:2:"u4";i:4;s:2:"u5";i:5;s:2:"u6";i:6;s:2:"g4";i:7;s:2:"g5";i:8;s:2:"g6";}'
-      noSearch: ''
-      cssClass: ''
-      sitemap: ''
-      hide: ''
-      guests: ''
-      tabindex: 0
-      accesskey: ''
       published: '1'
-      start: ''
-      stop: ''
-      requireItem: ''
-      clientCache: 0
-      validAliasCharacters: ''
-      redirectBack: ''
-      alwaysLoadFromCache: ''
-      twoFactorJumpTo: 0
-      enforceTwoFactor: ''
 
     - id: 18
       pid: 17
@@ -1363,53 +293,7 @@ tl_page:
       title: 'German site'
       alias: 'index'
       type: 'regular'
-      pageTitle: ''
-      language: ''
-      robots: 'index,follow'
-      description: NULL
-      redirect: 'permanent'
-      jumpTo: 0
-      url: ''
-      target: ''
-      dns: ''
-      staticFiles: ''
-      staticPlugins: ''
-      fallback: ''
-      adminEmail: ''
-      dateFormat: ''
-      timeFormat: ''
-      datimFormat: ''
-      createSitemap: ''
-      sitemapName: ''
-      useSSL: ''
-      autoforward: ''
-      protected: ''
-      groups: NULL
-      includeLayout: ''
-      layout: 0
-      includeCache: ''
-      cache: 0
-      includeChmod: ''
-      cuser: 0
-      cgroup: 0
-      chmod: 'a:9:{i:0;s:2:"u1";i:1;s:2:"u2";i:2;s:2:"u3";i:3;s:2:"u4";i:4;s:2:"u5";i:5;s:2:"u6";i:6;s:2:"g4";i:7;s:2:"g5";i:8;s:2:"g6";}'
-      noSearch: '1'
-      cssClass: ''
-      sitemap: 'map_default'
-      hide: ''
-      guests: ''
-      tabindex: 0
-      accesskey: ''
       published: '1'
-      start: ''
-      stop: ''
-      requireItem: ''
-      clientCache: 0
-      validAliasCharacters: ''
-      redirectBack: ''
-      alwaysLoadFromCache: ''
-      twoFactorJumpTo: 0
-      enforceTwoFactor: ''
 
     - id: 19
       pid: 0
@@ -1418,53 +302,11 @@ tl_page:
       title: 'Domain without hostname'
       alias: 'domain-without-hostname'
       type: 'root'
-      pageTitle: ''
       language: 'en'
-      robots: ''
-      description: NULL
-      redirect: 'permanent'
-      jumpTo: 0
-      url: ''
-      target: ''
-      dns: ''
-      staticFiles: ''
-      staticPlugins: ''
       fallback: '1'
-      adminEmail: ''
-      dateFormat: ''
-      timeFormat: ''
-      datimFormat: ''
-      createSitemap: ''
-      sitemapName: ''
-      useSSL: ''
-      autoforward: ''
-      protected: ''
-      groups: NULL
       includeLayout: '1'
       layout: 1
-      includeCache: ''
-      cache: 0
-      includeChmod: ''
-      cuser: 0
-      cgroup: 0
-      chmod: 'a:9:{i:0;s:2:"u1";i:1;s:2:"u2";i:2;s:2:"u3";i:3;s:2:"u4";i:4;s:2:"u5";i:5;s:2:"u6";i:6;s:2:"g4";i:7;s:2:"g5";i:8;s:2:"g6";}'
-      noSearch: ''
-      cssClass: ''
-      sitemap: ''
-      hide: ''
-      guests: ''
-      tabindex: 0
-      accesskey: ''
       published: '1'
-      start: ''
-      stop: ''
-      requireItem: ''
-      clientCache: 0
-      validAliasCharacters: ''
-      redirectBack: ''
-      alwaysLoadFromCache: ''
-      twoFactorJumpTo: 0
-      enforceTwoFactor: ''
 
     - id: 20
       pid: 19
@@ -1473,53 +315,7 @@ tl_page:
       title: 'Home'
       alias: 'index'
       type: 'regular'
-      pageTitle: ''
-      language: ''
-      robots: 'index,follow'
-      description: NULL
-      redirect: 'permanent'
-      jumpTo: 0
-      url: ''
-      target: ''
-      dns: ''
-      staticFiles: ''
-      staticPlugins: ''
-      fallback: ''
-      adminEmail: ''
-      dateFormat: ''
-      timeFormat: ''
-      datimFormat: ''
-      createSitemap: ''
-      sitemapName: ''
-      useSSL: ''
-      autoforward: ''
-      protected: ''
-      groups: NULL
-      includeLayout: ''
-      layout: 0
-      includeCache: ''
-      cache: 0
-      includeChmod: ''
-      cuser: 0
-      cgroup: 0
-      chmod: 'a:9:{i:0;s:2:"u1";i:1;s:2:"u2";i:2;s:2:"u3";i:3;s:2:"u4";i:4;s:2:"u5";i:5;s:2:"u6";i:6;s:2:"g4";i:7;s:2:"g5";i:8;s:2:"g6";}'
-      noSearch: '1'
-      cssClass: ''
-      sitemap: 'map_default'
-      hide: ''
-      guests: ''
-      tabindex: 0
-      accesskey: ''
       published: '1'
-      start: ''
-      stop: ''
-      requireItem: ''
-      clientCache: 0
-      validAliasCharacters: ''
-      redirectBack: ''
-      alwaysLoadFromCache: ''
-      twoFactorJumpTo: 0
-      enforceTwoFactor: ''
 
     - id: 21
       pid: 0
@@ -1528,53 +324,12 @@ tl_page:
       title: 'Domain with port'
       alias: 'domain-with-port'
       type: 'root'
-      pageTitle: ''
       language: 'en'
-      robots: ''
-      description: NULL
-      redirect: 'permanent'
-      jumpTo: 0
-      url: ''
-      target: ''
       dns: 'domain-with-port.local:8080'
-      staticFiles: ''
-      staticPlugins: ''
       fallback: '1'
-      adminEmail: ''
-      dateFormat: ''
-      timeFormat: ''
-      datimFormat: ''
-      createSitemap: ''
-      sitemapName: ''
-      useSSL: ''
-      autoforward: ''
-      protected: ''
-      groups: NULL
       includeLayout: '1'
       layout: 1
-      includeCache: ''
-      cache: 0
-      includeChmod: ''
-      cuser: 0
-      cgroup: 0
-      chmod: 'a:9:{i:0;s:2:"u1";i:1;s:2:"u2";i:2;s:2:"u3";i:3;s:2:"u4";i:4;s:2:"u5";i:5;s:2:"u6";i:6;s:2:"g4";i:7;s:2:"g5";i:8;s:2:"g6";}'
-      noSearch: ''
-      cssClass: ''
-      sitemap: ''
-      hide: ''
-      guests: ''
-      tabindex: 0
-      accesskey: ''
       published: '1'
-      start: ''
-      stop: ''
-      requireItem: ''
-      clientCache: 0
-      validAliasCharacters: ''
-      redirectBack: ''
-      alwaysLoadFromCache: ''
-      twoFactorJumpTo: 0
-      enforceTwoFactor: ''
 
     - id: 22
       pid: 21
@@ -1583,53 +338,7 @@ tl_page:
       title: 'Home'
       alias: 'index'
       type: 'regular'
-      pageTitle: ''
-      language: ''
-      robots: 'index,follow'
-      description: NULL
-      redirect: 'permanent'
-      jumpTo: 0
-      url: ''
-      target: ''
-      dns: ''
-      staticFiles: ''
-      staticPlugins: ''
-      fallback: ''
-      adminEmail: ''
-      dateFormat: ''
-      timeFormat: ''
-      datimFormat: ''
-      createSitemap: ''
-      sitemapName: ''
-      useSSL: ''
-      autoforward: ''
-      protected: ''
-      groups: NULL
-      includeLayout: ''
-      layout: 0
-      includeCache: ''
-      cache: 0
-      includeChmod: ''
-      cuser: 0
-      cgroup: 0
-      chmod: 'a:9:{i:0;s:2:"u1";i:1;s:2:"u2";i:2;s:2:"u3";i:3;s:2:"u4";i:4;s:2:"u5";i:5;s:2:"u6";i:6;s:2:"g4";i:7;s:2:"g5";i:8;s:2:"g6";}'
-      noSearch: '1'
-      cssClass: ''
-      sitemap: 'map_default'
-      hide: ''
-      guests: ''
-      tabindex: 0
-      accesskey: ''
       published: '1'
-      start: ''
-      stop: ''
-      requireItem: ''
-      clientCache: 0
-      validAliasCharacters: ''
-      redirectBack: ''
-      alwaysLoadFromCache: ''
-      twoFactorJumpTo: 0
-      enforceTwoFactor: ''
 
     - id: 23
       pid: 0
@@ -1638,53 +347,12 @@ tl_page:
       title: 'Root ZH'
       alias: 'root-zh'
       type: 'root'
-      pageTitle: ''
       language: 'zh'
-      robots: ''
-      description: NULL
-      redirect: 'permanent'
-      jumpTo: 0
-      url: ''
-      target: ''
       dns: 'root-zh.local'
-      staticFiles: ''
-      staticPlugins: ''
       fallback: '1'
-      adminEmail: ''
-      dateFormat: ''
-      timeFormat: ''
-      datimFormat: ''
-      createSitemap: ''
-      sitemapName: ''
-      useSSL: ''
-      autoforward: ''
-      protected: ''
-      groups: NULL
       includeLayout: '1'
       layout: 1
-      includeCache: ''
-      cache: 0
-      includeChmod: ''
-      cuser: 0
-      cgroup: 0
-      chmod: 'a:12:{i:0;s:2:"u1";i:1;s:2:"u2";i:2;s:2:"u3";i:3;s:2:"u4";i:4;s:2:"u5";i:5;s:2:"u6";i:6;s:2:"g1";i:7;s:2:"g2";i:8;s:2:"g3";i:9;s:2:"g4";i:10;s:2:"g5";i:11;s:2:"g6";}'
-      noSearch: ''
-      cssClass: ''
-      sitemap: ''
-      hide: ''
-      guests: ''
-      tabindex: 0
-      accesskey: ''
       published: '1'
-      start: ''
-      stop: ''
-      requireItem: ''
-      clientCache: 0
-      validAliasCharacters: ''
-      redirectBack: ''
-      alwaysLoadFromCache: ''
-      twoFactorJumpTo: 0
-      enforceTwoFactor: ''
 
     - id: 24
       pid: 23
@@ -1693,53 +361,7 @@ tl_page:
       title: 'Main-zh'
       alias: 'main'
       type: 'regular'
-      pageTitle: ''
-      language: ''
-      robots: 'index,follow'
-      description: NULL
-      redirect: 'permanent'
-      jumpTo: 0
-      url: ''
-      target: ''
-      dns: ''
-      staticFiles: ''
-      staticPlugins: ''
-      fallback: ''
-      adminEmail: ''
-      dateFormat: ''
-      timeFormat: ''
-      datimFormat: ''
-      createSitemap: ''
-      sitemapName: ''
-      useSSL: ''
-      autoforward: ''
-      protected: ''
-      groups: NULL
-      includeLayout: ''
-      layout: 0
-      includeCache: ''
-      cache: 0
-      includeChmod: ''
-      cuser: 0
-      cgroup: 0
-      chmod: 'a:12:{i:0;s:2:"u1";i:1;s:2:"u2";i:2;s:2:"u3";i:3;s:2:"u4";i:4;s:2:"u5";i:5;s:2:"u6";i:6;s:2:"g1";i:7;s:2:"g2";i:8;s:2:"g3";i:9;s:2:"g4";i:10;s:2:"g5";i:11;s:2:"g6";}'
-      noSearch: '1'
-      cssClass: ''
-      sitemap: 'map_default'
-      hide: ''
-      guests: ''
-      tabindex: 0
-      accesskey: ''
       published: '1'
-      start: ''
-      stop: ''
-      requireItem: ''
-      clientCache: 0
-      validAliasCharacters: ''
-      redirectBack: ''
-      alwaysLoadFromCache: ''
-      twoFactorJumpTo: 0
-      enforceTwoFactor: ''
 
     - id: 25
       pid: 0
@@ -1748,53 +370,12 @@ tl_page:
       title: 'Root FR'
       alias: 'foot-fr'
       type: 'root'
-      pageTitle: ''
       language: 'fr'
-      robots: ''
-      description: NULL
-      redirect: 'permanent'
-      jumpTo: 0
-      url: ''
-      target: ''
       dns: 'root-fr.local'
-      staticFiles: ''
-      staticPlugins: ''
       fallback: '1'
-      adminEmail: ''
-      dateFormat: ''
-      timeFormat: ''
-      datimFormat: ''
-      createSitemap: ''
-      sitemapName: ''
-      useSSL: ''
-      autoforward: ''
-      protected: ''
-      groups: NULL
       includeLayout: '1'
       layout: 1
-      includeCache: ''
-      cache: 0
-      includeChmod: ''
-      cuser: 0
-      cgroup: 0
-      chmod: 'a:12:{i:0;s:2:"u1";i:1;s:2:"u2";i:2;s:2:"u3";i:3;s:2:"u4";i:4;s:2:"u5";i:5;s:2:"u6";i:6;s:2:"g1";i:7;s:2:"g2";i:8;s:2:"g3";i:9;s:2:"g4";i:10;s:2:"g5";i:11;s:2:"g6";}'
-      noSearch: ''
-      cssClass: ''
-      sitemap: ''
-      hide: ''
-      guests: ''
-      tabindex: 0
-      accesskey: ''
       published: '1'
-      start: ''
-      stop: ''
-      requireItem: ''
-      clientCache: 0
-      validAliasCharacters: ''
-      redirectBack: ''
-      alwaysLoadFromCache: ''
-      twoFactorJumpTo: 0
-      enforceTwoFactor: ''
 
     - id: 26
       pid: 25
@@ -1803,53 +384,7 @@ tl_page:
       title: 'Main-fr'
       alias: 'main'
       type: 'regular'
-      pageTitle: ''
-      language: ''
-      robots: 'index,follow'
-      description: NULL
-      redirect: 'permanent'
-      jumpTo: 0
-      url: ''
-      target: ''
-      dns: ''
-      staticFiles: ''
-      staticPlugins: ''
-      fallback: ''
-      adminEmail: ''
-      dateFormat: ''
-      timeFormat: ''
-      datimFormat: ''
-      createSitemap: ''
-      sitemapName: ''
-      useSSL: ''
-      autoforward: ''
-      protected: ''
-      groups: NULL
-      includeLayout: ''
-      layout: 0
-      includeCache: ''
-      cache: 0
-      includeChmod: ''
-      cuser: 0
-      cgroup: 0
-      chmod: 'a:12:{i:0;s:2:"u1";i:1;s:2:"u2";i:2;s:2:"u3";i:3;s:2:"u4";i:4;s:2:"u5";i:5;s:2:"u6";i:6;s:2:"g1";i:7;s:2:"g2";i:8;s:2:"g3";i:9;s:2:"g4";i:10;s:2:"g5";i:11;s:2:"g6";}'
-      noSearch: '1'
-      cssClass: ''
-      sitemap: 'map_default'
-      hide: ''
-      guests: ''
-      tabindex: 0
-      accesskey: ''
       published: '1'
-      start: ''
-      stop: ''
-      requireItem: ''
-      clientCache: 0
-      validAliasCharacters: ''
-      redirectBack: ''
-      alwaysLoadFromCache: ''
-      twoFactorJumpTo: 0
-      enforceTwoFactor: ''
 
     - id: 27
       pid: 26
@@ -1858,53 +393,7 @@ tl_page:
       title: 'Sub-fr'
       alias: 'main/sub-fr'
       type: 'regular'
-      pageTitle: ''
-      language: ''
-      robots: 'index,follow'
-      description: NULL
-      redirect: 'permanent'
-      jumpTo: 0
-      url: ''
-      target: ''
-      dns: ''
-      staticFiles: ''
-      staticPlugins: ''
-      fallback: ''
-      adminEmail: ''
-      dateFormat: ''
-      timeFormat: ''
-      datimFormat: ''
-      createSitemap: ''
-      sitemapName: ''
-      useSSL: ''
-      autoforward: ''
-      protected: ''
-      groups: NULL
-      includeLayout: ''
-      layout: 0
-      includeCache: ''
-      cache: 0
-      includeChmod: ''
-      cuser: 0
-      cgroup: 0
-      chmod: 'a:12:{i:0;s:2:"u1";i:1;s:2:"u2";i:2;s:2:"u3";i:3;s:2:"u4";i:4;s:2:"u5";i:5;s:2:"u6";i:6;s:2:"g1";i:7;s:2:"g2";i:8;s:2:"g3";i:9;s:2:"g4";i:10;s:2:"g5";i:11;s:2:"g6";}'
-      noSearch: '1'
-      cssClass: ''
-      sitemap: 'map_default'
-      hide: ''
-      guests: ''
-      tabindex: 0
-      accesskey: ''
       published: '1'
-      start: ''
-      stop: ''
-      requireItem: ''
-      clientCache: 0
-      validAliasCharacters: ''
-      redirectBack: ''
-      alwaysLoadFromCache: ''
-      twoFactorJumpTo: 0
-      enforceTwoFactor: ''
 
     - id: 28
       pid: 24
@@ -1913,63 +402,13 @@ tl_page:
       title: 'Sub-zh'
       alias: 'main/sub-zh'
       type: 'regular'
-      pageTitle: ''
-      language: ''
-      robots: 'index,follow'
-      description: NULL
-      redirect: 'permanent'
-      jumpTo: 0
-      url: ''
-      target: ''
-      dns: ''
-      staticFiles: ''
-      staticPlugins: ''
-      fallback: ''
-      adminEmail: ''
-      dateFormat: ''
-      timeFormat: ''
-      datimFormat: ''
-      createSitemap: ''
-      sitemapName: ''
-      useSSL: ''
-      autoforward: ''
-      protected: ''
-      groups: NULL
-      includeLayout: ''
-      layout: 0
-      includeCache: ''
-      cache: 0
-      includeChmod: ''
-      cuser: 0
-      cgroup: 0
-      chmod: 'a:12:{i:0;s:2:"u1";i:1;s:2:"u2";i:2;s:2:"u3";i:3;s:2:"u4";i:4;s:2:"u5";i:5;s:2:"u6";i:6;s:2:"g1";i:7;s:2:"g2";i:8;s:2:"g3";i:9;s:2:"g4";i:10;s:2:"g5";i:11;s:2:"g6";}'
-      noSearch: '1'
-      cssClass: ''
-      sitemap: 'map_default'
-      hide: ''
-      guests: ''
-      tabindex: 0
-      accesskey: ''
       published: '1'
-      start: ''
-      stop: ''
-      requireItem: ''
-      clientCache: 0
-      validAliasCharacters: ''
-      redirectBack: ''
-      alwaysLoadFromCache: ''
-      twoFactorJumpTo: 0
-      enforceTwoFactor: ''
 
 tl_theme:
     - id: 1
       tstamp: 1539598899
       name: 'Default'
       author: 'Leo Feyer'
-      folders: NULL
-      screenshot: NULL
-      templates: ''
-      vars: 'a:0:{}'
 
 tl_user:
     - id: 1
@@ -1978,40 +417,8 @@ tl_user:
       name: 'Kevin Jones'
       email: 'k.jones@example.com'
       language: 'de'
-      backendTheme: 'flexible'
-      uploader: ''
-      showHelp: '1'
-      thumbnails: '1'
-      useRTE: '1'
-      useCE: '1'
       password: '$2y$10$i41Nwj6cjYGqdVh2sDJ0b.XueJpD4kEu20EfNULFw2d/0C8bJr9/.'
-      pwChange: ''
       admin: '1'
-      groups: NULL
-      inherit: ''
-      modules: NULL
-      themes: NULL
-      pagemounts: 'a:0:{}'
-      alpty: NULL
-      filemounts: 'a:0:{}'
-      fop: NULL
-      forms: NULL
-      formp: NULL
-      disable: ''
-      start: ''
-      stop: ''
-      session: NULL
       dateAdded: 1539598726
       lastLogin: 1539686648
       currentLogin: 1539694637
-      loginAttempts: 3
-      locked: 0
-      news: NULL
-      newp: NULL
-      newsfeeds: NULL
-      newsfeedp: NULL
-      imageSizes: NULL
-      amg: NULL
-      fullscreen: ''
-      useTwoFactor: ''
-      secret: NULL
