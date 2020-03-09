@@ -18,18 +18,18 @@ use Contao\Input;
 use Contao\InsertTags;
 use Contao\System;
 use Contao\TestCase\ContaoDatabaseTrait;
+use Contao\TestCase\FunctionalTestCase;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
-class RoutingTest extends WebTestCase
+class RoutingTest extends FunctionalTestCase
 {
-    use ContaoDatabaseTrait;
-
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 
-        static::loadFileIntoDatabase(__DIR__.'/app/Resources/contao_test.sql');
+        static::resetDatabaseSchema();
+        static::loadFixtures([__DIR__.'/../Fixtures/Functional/routing.yml']);
     }
 
     protected function setUp(): void
