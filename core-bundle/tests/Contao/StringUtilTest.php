@@ -218,6 +218,12 @@ class StringUtilTest extends TestCase
             '{if token=="foo"}',
         ];
 
+        yield 'Test escaping works correctly' => [
+            '{if value=="f\"oo"}match{endif}',
+            ['value' => 'f"oo'],
+            'match',
+        ];
+
         yield 'Test else (match)' => [
             'This is my {if value=="foo"}match{else}else-match{endif}',
             ['value' => 'foo'],
