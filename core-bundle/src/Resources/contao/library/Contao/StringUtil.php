@@ -12,6 +12,7 @@ namespace Contao;
 
 use Patchwork\Utf8;
 use Psr\Log\LogLevel;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 /**
  * Provides string manipulation methods
@@ -558,117 +559,55 @@ class StringUtil
 	{
 		$strReturn = '';
 
-		$replaceTokens = static function ($strSubject) use ($arrData)
+		// Make sure we use proper token names so the expression language can handle them
+		$arrTokenKeyHashes = array();
+
+		foreach ($arrData as $k => $v)
+		{
+			$hashedKey = 't' . sha1($k); // Make sure we prefix with a letter, otherwise it's not considered a valid variable
+
+			$arrTokenKeyHashes[$k] = $hashedKey;
+			$arrData[$hashedKey] = $v;
+			unset($arrData[$k]);
+		}
+
+		$replaceTokens = static function ($strSubject) use ($arrTokenKeyHashes, $arrData)
 		{
 			// Replace tokens
 			return preg_replace_callback
 			(
 				'/##([^=!<>\s]+?)##/',
-				static function (array $matches) use ($arrData)
+				static function (array $matches) use ($arrTokenKeyHashes, $arrData)
 				{
-					if (!\array_key_exists($matches[1], $arrData))
+					if (!\array_key_exists($matches[1], $arrTokenKeyHashes))
 					{
 						System::getContainer()
 							->get('monolog.logger.contao')
-							->log(LogLevel::INFO, sprintf('Tried to parse unknown simple token "%s".', $matches[1]))
-						;
+							->log(LogLevel::INFO, sprintf('Tried to parse unknown simple token "%s".', $matches[1]));
 
 						return '##' . $matches[1] . '##';
 					}
 
-					return $arrData[$matches[1]];
+					return $arrData[$arrTokenKeyHashes[$matches[1]]];
 				},
 				$strSubject
 			);
 		};
 
-		$evaluateExpression = static function ($strExpression) use ($arrData)
+		$el = new ExpressionLanguage();
+
+		$evaluateExpression = static function ($strExpression) use ($el, $arrTokenKeyHashes, $arrData)
 		{
-			if (!preg_match('/^([^=!<>\s]+) *([=!<>]+)(.+)$/s', $strExpression, $arrMatches))
+			// Replace with hashes
+			$strExpression = str_replace(array_keys($arrTokenKeyHashes), array_values($arrTokenKeyHashes), $strExpression);
+
+			try
 			{
-				return false;
+				return $el->evaluate($strExpression, $arrData);
 			}
-
-			$strToken = $arrMatches[1];
-			$strOperator = $arrMatches[2];
-			$strValue = trim($arrMatches[3], ' ');
-
-			if (!\array_key_exists($strToken, $arrData))
+			catch (\Exception $e)
 			{
-				System::getContainer()
-					->get('monolog.logger.contao')
-					->log(LogLevel::INFO, sprintf('Tried to evaluate unknown simple token "%s".', $strToken))
-				;
-
-				return false;
-			}
-
-			$varTokenValue = $arrData[$strToken];
-
-			if (is_numeric($strValue))
-			{
-				if (strpos($strValue, '.') === false)
-				{
-					$varValue = (int) $strValue;
-				}
-				else
-				{
-					$varValue = (float) $strValue;
-				}
-			}
-			elseif (strtolower($strValue) === 'true')
-			{
-				$varValue = true;
-			}
-			elseif (strtolower($strValue) === 'false')
-			{
-				$varValue = false;
-			}
-			elseif (strtolower($strValue) === 'null')
-			{
-				$varValue = null;
-			}
-			elseif (0 === strncmp($strValue, '"', 1) && substr($strValue, -1) === '"')
-			{
-				$varValue = str_replace('\"', '"', substr($strValue, 1, -1));
-			}
-			elseif (0 === strncmp($strValue, "'", 1) && substr($strValue, -1) === "'")
-			{
-				$varValue = str_replace("\\'", "'", substr($strValue, 1, -1));
-			}
-			else
-			{
-				throw new \InvalidArgumentException(sprintf('Unknown data type of comparison value "%s".', $strValue));
-			}
-
-			switch ($strOperator)
-			{
-				case '==':
-					return $varTokenValue == $varValue;
-
-				case '!=':
-					return $varTokenValue != $varValue;
-
-				case '===':
-					return $varTokenValue === $varValue;
-
-				case '!==':
-					return $varTokenValue !== $varValue;
-
-				case '<':
-					return $varTokenValue < $varValue;
-
-				case '>':
-					return $varTokenValue > $varValue;
-
-				case '<=':
-					return $varTokenValue <= $varValue;
-
-				case '>=':
-					return $varTokenValue >= $varValue;
-
-				default:
-					throw new \InvalidArgumentException(sprintf('Unknown simple token comparison operator "%s".', $strOperator));
+				throw new \InvalidArgumentException($e->getMessage());
 			}
 		};
 

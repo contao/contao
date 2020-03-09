@@ -218,12 +218,6 @@ class StringUtilTest extends TestCase
             '{if token=="foo"}',
         ];
 
-        yield 'Test nested if-tag with " in value (match)' => [
-            '{if value=="f"oo"}1{endif}{if value=="f\"oo"}2{endif}',
-            ['value' => 'f"oo'],
-            '12',
-        ];
-
         yield 'Test else (match)' => [
             'This is my {if value=="foo"}match{else}else-match{endif}',
             ['value' => 'foo'],
@@ -308,16 +302,40 @@ class StringUtilTest extends TestCase
             'This is my match',
         ];
 
-        yield 'Test does not support tabs in expressions' => [
-            "This is my {if number\t>\t5}match{endif}",
-            ['number' => 6],
-            'This is my ',
+        yield 'Test if value in array' => [
+            '{if value in ["foobar", "test", "other-value"]}match{else}no-match{endif}',
+            ['value' => 'foobar'],
+            'match',
         ];
 
-        yield 'Test does not support line breaks in expressions' => [
-            "This is my {if number\n>\n5}match{endif}",
-            ['number' => 6],
-            'This is my ',
+        yield 'Test if value not in array' => [
+            '{if value not in ["foobar", "test", "other-value"]}match{else}no-match{endif}',
+            ['value' => 'whatever'],
+            'match',
+        ];
+
+        yield 'Test OR operator (match)' => [
+            '{if value == "whatever" || value == "foobar"}match{else}no-match{endif}',
+            ['value' => 'whatever'],
+            'match',
+        ];
+
+        yield 'Test OR operator (no-match)' => [
+            '{if value == "whatever" || value == "foobar"}match{else}no-match{endif}',
+            ['value' => 'irrelevant'],
+            'no-match',
+        ];
+
+        yield 'Test AND operator (match)' => [
+            '{if value == "whatever" && value matches "/whatever/"}match{else}no-match{endif}',
+            ['value' => 'whatever'],
+            'match',
+        ];
+
+        yield 'Test AND operator (no-match)' => [
+            '{if value == "irrelevant" && value matches "/whatever/"}match{else}no-match{endif}',
+            ['value' => 'irrelevant'],
+            'no-match',
         ];
     }
 
