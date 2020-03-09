@@ -17,9 +17,7 @@ use Contao\Environment;
 use Contao\Input;
 use Contao\InsertTags;
 use Contao\System;
-use Contao\TestCase\ContaoDatabaseTrait;
 use Contao\TestCase\FunctionalTestCase;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
 class RoutingTest extends FunctionalTestCase
