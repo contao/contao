@@ -10,10 +10,19 @@
         <directory name="core-bundle/src"/>
         <directory name="core-bundle/tests"/>
         <ignoreFiles>
-            <directory name="vendor"/>
             <directory name="core-bundle/src/Resources"/>
             <directory name="core-bundle/tests/Fixtures"/>
-            <directory name="core-bundle/tests/Functional/app"/>
+            <!--
+            Symfony's ForwardCompatTestTrait definition makes Psalm fail with a
+            "Could not locate trait statement" exception, therefore we have to
+            ignore the RoutingTest.php file for now.
+
+            The ForwardCompatTestTrait has been removed in Symfony 5, so as
+            soon as we are compatible, this can be removed again.
+
+            @see https://github.com/symfony/symfony/blob/4.4/src/Symfony/Bundle/FrameworkBundle/Test/ForwardCompatTestTrait.php
+            -->
+            <file name="core-bundle/tests/Functional/RoutingTest.php"/>
         </ignoreFiles>
     </projectFiles>
     <plugins>
