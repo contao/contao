@@ -216,9 +216,9 @@ class DcaLoader extends Controller
 		{
 			foreach (array_merge(...array_values($GLOBALS['BE_MOD'])) as $key => $module)
 			{
-				if ($do === $key)
+				if ($do === $key && isset($module['tables']) && is_array($module['tables']))
 				{
-					foreach ($module['tables'] ?? array() as $table)
+					foreach ($module['tables'] as $table)
 					{
 						Controller::loadDataContainer($table);
 						$ctable = $GLOBALS['TL_DCA'][$table]['config']['ctable'] ?? array();
