@@ -216,7 +216,7 @@ class DcaLoader extends Controller
 		{
 			foreach (array_merge(...array_values($GLOBALS['BE_MOD'])) as $key => $module)
 			{
-				if ($do === $key && isset($module['tables']) && is_array($module['tables']))
+				if ($do === $key && isset($module['tables']) && \is_array($module['tables']))
 				{
 					foreach ($module['tables'] as $table)
 					{
