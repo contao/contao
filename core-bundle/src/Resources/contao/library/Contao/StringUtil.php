@@ -597,6 +597,13 @@ class StringUtil
 		}
 
 		$el = new ExpressionLanguage();
+		$el->register('constant', static function ()
+		{
+			return "throw new \\InvalidArgumentException('Cannot use the constant() function in the expression for security reasons.');";
+		}, static function ()
+		{
+			throw new \InvalidArgumentException('Cannot use the constant() function in the expression for security reasons.');
+		});
 
 		$evaluateExpression = static function ($strExpression) use ($arrData, $canUseExpressionLanguage, $el)
 		{

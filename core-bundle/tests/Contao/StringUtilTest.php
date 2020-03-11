@@ -507,6 +507,14 @@ class StringUtilTest extends TestCase
         );
     }
 
+    public function testConstantFunctionOfExpressionLanguageIsDisabled(): void
+    {
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('Cannot use the constant() function in the expression for security reasons.');
+
+        StringUtil::parseSimpleTokens('{if constant("PHP_VERSION") > 7}match{else}no-match{endif}', []);
+    }
+
     /**
      * @dataProvider parseSimpleTokensInvalidComparison
      */
