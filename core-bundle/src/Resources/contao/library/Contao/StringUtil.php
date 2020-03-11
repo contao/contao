@@ -559,55 +559,145 @@ class StringUtil
 	{
 		$strReturn = '';
 
-		// Make sure we use proper token names so the expression language can handle them
-		$arrTokenKeyHashes = array();
-
-		foreach ($arrData as $k => $v)
-		{
-			$hashedKey = 't' . sha1($k); // Make sure we prefix with a letter, otherwise it's not considered a valid variable
-
-			$arrTokenKeyHashes[$k] = $hashedKey;
-			$arrData[$hashedKey] = $v;
-			unset($arrData[$k]);
-		}
-
-		$replaceTokens = static function ($strSubject) use ($arrTokenKeyHashes, $arrData)
+		$replaceTokens = static function ($strSubject) use ($arrData)
 		{
 			// Replace tokens
 			return preg_replace_callback
 			(
 				'/##([^=!<>\s]+?)##/',
-				static function (array $matches) use ($arrTokenKeyHashes, $arrData)
+				static function (array $matches) use ($arrData)
 				{
-					if (!\array_key_exists($matches[1], $arrTokenKeyHashes))
+					if (!\array_key_exists($matches[1], $arrData))
 					{
 						System::getContainer()
 							->get('monolog.logger.contao')
-							->log(LogLevel::INFO, sprintf('Tried to parse unknown simple token "%s".', $matches[1]));
+							->log(LogLevel::INFO, sprintf('Tried to parse unknown simple token "%s".', $matches[1]))
+						;
 
 						return '##' . $matches[1] . '##';
 					}
 
-					return $arrData[$arrTokenKeyHashes[$matches[1]]];
+					return $arrData[$matches[1]];
 				},
 				$strSubject
 			);
 		};
 
+		// Check if we can use the expression language or if legacy tokens have been used
+		$canUseExpressionLanguage = true;
+
+		foreach (array_keys($arrData) as $token)
+		{
+			if (!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $token))
+			{
+				$canUseExpressionLanguage = false;
+				@trigger_error('Using tokens that are not valid PHP variables is deprecated. Falling back to legacy token parsing.', E_USER_DEPRECATED);
+				break;
+			}
+		}
+
 		$el = new ExpressionLanguage();
 
-		$evaluateExpression = static function ($strExpression) use ($el, $arrTokenKeyHashes, $arrData)
+		$evaluateExpression = static function ($strExpression) use ($arrData, $canUseExpressionLanguage, $el)
 		{
-			// Replace with hashes
-			$strExpression = str_replace(array_keys($arrTokenKeyHashes), array_values($arrTokenKeyHashes), $strExpression);
-
-			try
+			if ($canUseExpressionLanguage)
 			{
-				return $el->evaluate($strExpression, $arrData);
+				try
+				{
+					return $el->evaluate($strExpression, $arrData);
+				}
+				catch (\Exception $e)
+				{
+					throw new \InvalidArgumentException($e->getMessage());
+				}
 			}
-			catch (\Exception $e)
+
+			// Legacy code
+			if (!preg_match('/^([^=!<>\s]+) *([=!<>]+)(.+)$/s', $strExpression, $arrMatches))
 			{
-				throw new \InvalidArgumentException($e->getMessage());
+				return false;
+			}
+
+			$strToken = $arrMatches[1];
+			$strOperator = $arrMatches[2];
+			$strValue = trim($arrMatches[3], ' ');
+
+			if (!\array_key_exists($strToken, $arrData))
+			{
+				System::getContainer()
+					->get('monolog.logger.contao')
+					->log(LogLevel::INFO, sprintf('Tried to evaluate unknown simple token "%s".', $strToken))
+				;
+
+				return false;
+			}
+
+			$varTokenValue = $arrData[$strToken];
+
+			if (is_numeric($strValue))
+			{
+				if (strpos($strValue, '.') === false)
+				{
+					$varValue = (int) $strValue;
+				}
+				else
+				{
+					$varValue = (float) $strValue;
+				}
+			}
+			elseif (strtolower($strValue) === 'true')
+			{
+				$varValue = true;
+			}
+			elseif (strtolower($strValue) === 'false')
+			{
+				$varValue = false;
+			}
+			elseif (strtolower($strValue) === 'null')
+			{
+				$varValue = null;
+			}
+			elseif (0 === strncmp($strValue, '"', 1) && substr($strValue, -1) === '"')
+			{
+				$varValue = str_replace('\"', '"', substr($strValue, 1, -1));
+			}
+			elseif (0 === strncmp($strValue, "'", 1) && substr($strValue, -1) === "'")
+			{
+				$varValue = str_replace("\\'", "'", substr($strValue, 1, -1));
+			}
+			else
+			{
+				throw new \InvalidArgumentException(sprintf('Unknown data type of comparison value "%s".', $strValue));
+			}
+
+			switch ($strOperator)
+			{
+				case '==':
+					return $varTokenValue == $varValue;
+
+				case '!=':
+					return $varTokenValue != $varValue;
+
+				case '===':
+					return $varTokenValue === $varValue;
+
+				case '!==':
+					return $varTokenValue !== $varValue;
+
+				case '<':
+					return $varTokenValue < $varValue;
+
+				case '>':
+					return $varTokenValue > $varValue;
+
+				case '<=':
+					return $varTokenValue <= $varValue;
+
+				case '>=':
+					return $varTokenValue >= $varValue;
+
+				default:
+					throw new \InvalidArgumentException(sprintf('Unknown simple token comparison operator "%s".', $strOperator));
 			}
 		};
 
