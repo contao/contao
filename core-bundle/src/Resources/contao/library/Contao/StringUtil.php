@@ -615,7 +615,7 @@ class StringUtil
 				}
 				catch (\Exception $e)
 				{
-					throw new \InvalidArgumentException($e->getMessage());
+					throw new \InvalidArgumentException($e->getMessage(), 0, $e);
 				}
 			}
 
