@@ -437,11 +437,11 @@ class RouteProvider implements RouteProviderInterface
                     $langB = $languages[$pageB->rootLanguage] ?? null;
 
                     if (null === $langA && null === $langB) {
-                        if ($pageA->rootIsFallback) {
+                        if ($pageA->rootIsFallback && !$pageB->rootIsFallback) {
                             return -1;
                         }
 
-                        if ($pageB->rootIsFallback) {
+                        if ($pageB->rootIsFallback && !$pageA->rootIsFallback) {
                             return 1;
                         }
 
@@ -465,23 +465,18 @@ class RouteProvider implements RouteProviderInterface
     }
 
     /**
-     * Finds the page models keeping the candidates order.
-     *
      * @return array<Model>
      */
     private function findPages(array $candidates): array
     {
         $ids = [];
         $aliases = [];
-        $models = [];
 
         foreach ($candidates as $candidate) {
             if (is_numeric($candidate)) {
                 $ids[] = (int) $candidate;
-                $models['id|'.$candidate] = false;
             } else {
                 $aliases[] = $this->database->quote($candidate);
-                $models['alias|'.$candidate] = [];
             }
         }
 
@@ -503,25 +498,7 @@ class RouteProvider implements RouteProviderInterface
             return [];
         }
 
-        foreach ($pages as $page) {
-            if (isset($models['id|'.$page->id])) {
-                $models['id|'.$page->id] = $page;
-            } elseif (isset($models['alias|'.$page->alias])) {
-                $models['alias|'.$page->alias][] = $page;
-            }
-        }
-
-        $return = [];
-        $models = array_filter($models);
-
-        array_walk_recursive(
-            $models,
-            static function ($i) use (&$return): void {
-                $return[] = $i;
-            }
-        );
-
-        return $return;
+        return $pages->getModels();
     }
 
     /**
