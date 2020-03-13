@@ -18,7 +18,10 @@ use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Session\LazySessionAccess;
+use Contao\Environment;
 use Contao\Input;
+use Contao\InsertTags;
+use Contao\Model\Registry;
 use Contao\RequestToken;
 use Contao\System;
 use Contao\TemplateLoader;
@@ -99,6 +102,16 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     {
         $this->adapterCache = [];
         $this->isFrontend = false;
+
+        if (!$this->isInitialized()) {
+            return;
+        }
+
+        Environment::reset();
+        Input::resetCache();
+        Input::resetUnusedGet();
+        InsertTags::reset();
+        Registry::getInstance()->reset();
     }
 
     public function isInitialized(): bool
