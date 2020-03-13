@@ -16,55 +16,23 @@ use Contao\CoreBundle\EventListener\DataContainer\DisableBundleConfiguredSetting
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DisableBundleConfiguredSettingsListenerTest extends TestCase
 {
     public function testLoadCallbackExitsOnMissingLocalconfigParameter(): void
     {
-        $container = $this->mockContainer();
-        $container
-            ->expects($this->once())
-            ->method('hasParameter')
-            ->with('contao.localconfig')
-            ->willReturn(false)
-        ;
+        $GLOBALS['TL_DCA']['tl_settings'] = [];
+        $before = $GLOBALS['TL_DCA']['tl_settings'];
 
-        $container
-            ->expects($this->never())
-            ->method('getParameter')
-            ->withAnyParameters()
-        ;
-
-        $listener = $this->createListener($container);
+        $listener = $this->createListener();
         $listener->onLoadCallback();
+
+        $this->assertSame($before, $GLOBALS['TL_DCA']['tl_settings']);
     }
 
     public function testLoadCallbackDisablesSettingsConfiguredByBundleConfiguration(): void
     {
-        $container = $this->mockContainer();
-        $container
-            ->expects($this->once())
-            ->method('hasParameter')
-            ->with('contao.localconfig')
-            ->willReturn(true)
-        ;
-
-        $container
-            ->expects($this->once())
-            ->method('getParameter')
-            ->with('contao.localconfig')
-            ->willReturn(
-                [
-                    'adminEmail' => 'admin@example.org',
-                    'dateFormat' => 'd.M.Y',
-                    'fooBar' => false,
-                ]
-            )
-        ;
-
         $GLOBALS['TL_DCA']['tl_settings']['fields'] = [
             'adminEmail' => [
                 'inputType' => 'text',
@@ -87,7 +55,13 @@ class DisableBundleConfiguredSettingsListenerTest extends TestCase
             ],
         ];
 
-        $listener = $this->createListener($container);
+        $listener = $this->createListener(
+            [
+                'adminEmail' => 'admin@example.org',
+                'dateFormat' => 'd.M.Y',
+                'fooBar' => false,
+            ]
+        );
         $listener->onLoadCallback();
 
         $this->assertSame(
@@ -144,40 +118,22 @@ class DisableBundleConfiguredSettingsListenerTest extends TestCase
         );
     }
 
-    private function createListener(?ContainerInterface $container = null, ?TranslatorInterface $translator = null, array $adapters = []): DisableBundleConfiguredSettingsListener
+    private function createListener(array $localConfig = null, ?TranslatorInterface $translator = null, array $adapters = []): DisableBundleConfiguredSettingsListener
     {
         $this->mockContaoFramework()->initialize();
-
-        if (null === $container) {
-            $container = $this->mockContainer();
-        }
 
         if (null === $translator) {
             $translator = $this->mockTranslator();
         }
 
         $framework = $this->mockContaoFramework($adapters);
-        $listener = new DisableBundleConfiguredSettingsListener($translator, $framework);
-        $listener->setContainer($container);
 
-        return $listener;
+        return new DisableBundleConfiguredSettingsListener($translator, $framework, $localConfig ?: []);
     }
 
     /** @return MockObject|TranslatorInterface */
     private function mockTranslator(): MockObject
     {
         return $this->createMock(TranslatorInterface::class);
-    }
-
-    /** @return MockObject|ContainerInterface */
-    private function mockContainer(?array $localConfig = null): MockObject
-    {
-        $container = $this->createMock(Container::class);
-
-        if (null !== $localConfig) {
-            $container->setParameter('contao.localconfig', $localConfig);
-        }
-
-        return $container;
     }
 }

@@ -15,14 +15,10 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Image;
 use Contao\StringUtil;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class DisableBundleConfiguredSettingsListener implements ContainerAwareInterface
+class DisableBundleConfiguredSettingsListener
 {
-    use ContainerAwareTrait;
-
     /**
      * @var TranslatorInterface
      */
@@ -33,21 +29,23 @@ class DisableBundleConfiguredSettingsListener implements ContainerAwareInterface
      */
     private $framework;
 
-    public function __construct(TranslatorInterface $translator, ContaoFrameworkInterface $framework)
+    /**
+     * Local config setting defined by parameter.
+     *
+     * @var array
+     */
+    private $localConfig;
+
+    public function __construct(TranslatorInterface $translator, ContaoFrameworkInterface $framework, array $localConfig)
     {
         $this->translator = $translator;
         $this->framework = $framework;
+        $this->localConfig = $localConfig;
     }
 
     public function onLoadCallback(): void
     {
-        if (!$this->container->hasParameter('contao.localconfig')) {
-            return;
-        }
-
-        $localConfig = $this->container->getParameter('contao.localconfig');
-
-        foreach (array_keys($localConfig) as $field) {
+        foreach (array_keys($this->localConfig) as $field) {
             if (!isset($GLOBALS['TL_DCA']['tl_settings']['fields'][$field])) {
                 continue;
             }
