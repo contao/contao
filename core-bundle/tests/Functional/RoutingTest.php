@@ -1032,10 +1032,13 @@ class RoutingTest extends FunctionalTestCase
         $this->assertStringContainsString('', $title);
     }
 
-    private function loadFixtureFiles(array $fileNames)
+    private function loadFixtureFiles(array $fileNames): void
     {
-        static::loadFixtures(array_map(static function ($file) {
-            return __DIR__.'/../Fixtures/Functional/Routing/'.$file.'.yml';
-        }, $fileNames));
+        static::loadFixtures(array_map(
+            static function ($file) {
+                return __DIR__.'/../Fixtures/Functional/Routing/'.$file.'.yml';
+            },
+            $fileNames
+        ));
     }
 }
