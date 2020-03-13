@@ -181,7 +181,7 @@ class FrontendIndex extends \Frontend
 		if ($objPage->alias != '')
 		{
 			$language = \Config::get('addLanguageToUrl') ? '[a-z]{2}(-[A-Z]{2})?/' : '';
-			$suffix = \Config::get('urlSuffix') ? preg_quote(\Config::get('urlSuffix'), '#') : '';
+			$suffix = preg_quote(\Config::get('urlSuffix'), '#');
 
 			if (preg_match('#^' . $language . $objPage->id . '(' . $suffix . '($|\?)|/)#', \Environment::get('relativeRequest')))
 			{
