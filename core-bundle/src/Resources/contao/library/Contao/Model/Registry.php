@@ -165,12 +165,12 @@ class Registry implements \Countable
 
 		$strTable = $objModel->getTable();
 
-		if (!\is_array($this->arrAliases[$strTable] ?? null))
+		if (!isset($this->arrAliases[$strTable]))
 		{
 			$this->arrAliases[$strTable] = array();
 		}
 
-		if (!\is_array($this->arrRegistry[$strTable] ?? null))
+		if (!isset($this->arrRegistry[$strTable]))
 		{
 			$this->arrRegistry[$strTable] = array();
 		}
