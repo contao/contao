@@ -44,6 +44,15 @@ body:not(.fullscreen) #header .inner {
 		font-weight:300;
 	}
 }
+#environment {
+	border: 1px solid #fff;
+	border-radius: 8px;
+	font-weight: bold;
+	margin-left: 110px;
+	padding: 3px 8px;
+	position: absolute;
+	top: 10px;
+}
 #tmenu {
 	display:flex;
 	justify-content:flex-end;

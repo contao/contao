@@ -44,13 +44,18 @@
   <?php $this->endblock(); ?>
 
 </head>
-<body id="top" class="<?= $this->ua ?><?php if ($this->isPopup): ?> popup<?php endif; ?>">
+<body id="top" class="<?= $this->ua ?><?php if ($this->isPopup): ?> popup<?php endif; ?><?php if(null !== $this->environment):?> <?= ' ' . $this->environment ?><?php endif; ?>">
 
   <?php $this->block('header'); ?>
     <?php if (!$this->isPopup): ?>
       <header id="header">
         <div class="inner">
           <h1><a href="<?= $this->route('contao_backend') ?>" accesskey="h" id="home" title="<?= $this->home ?>">Contao</a></h1>
+          <?php if (null !== $this->environment): ?>
+            <div id="environment" class="<?= $this->environment ?>">
+              <?= $this->environment ?>
+            </div>
+          <?php endif; ?>
           <?= $this->headerMenu ?>
         </div>
       </header>

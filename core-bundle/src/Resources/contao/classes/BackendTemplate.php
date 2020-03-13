@@ -134,6 +134,14 @@ class BackendTemplate extends Template
 			$this->mootools .= $strMootools;
 		}
 
+		// Add environment name to template @see #403
+		if (System::getContainer()->hasParameter('contao')) {
+			$contaoParameters = System::getContainer()->getParameter('contao');
+			if (!empty($contaoParameters['environment'])) {
+				$this->environment = $contaoParameters['environment'];
+			}
+		}
+
 		$strBuffer = $this->parse();
 		$strBuffer = static::replaceOldBePaths($strBuffer);
 
