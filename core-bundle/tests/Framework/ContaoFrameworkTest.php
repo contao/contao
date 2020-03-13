@@ -23,11 +23,11 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\CoreBundle\Session\LazySessionAccess;
 use Contao\CoreBundle\Session\MockNativeSessionStorage;
-use Contao\CoreBundle\Tests\Fixtures\FooModel;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Environment;
 use Contao\Input;
 use Contao\Model\Registry;
+use Contao\PageModel;
 use Contao\RequestToken;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
@@ -666,8 +666,17 @@ class ContaoFrameworkTest extends TestCase
         // setup state in framework classes
         Environment::set('scriptFilename', 'bar');
         Input::setUnusedGet('foo', 'bar');
+
+        /** @var PageModel&MockObject $model */
+        $model = $this
+            ->getMockBuilder(PageModel::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['onRegister'])
+            ->getMockForAbstractClass()
+        ;
+        $model->id = 1;
         $registry = Registry::getInstance();
-        $registry->register(new FooModel());
+        $registry->register($model);
 
         $this->assertSame('bar', Environment::get('scriptFilename'));
         $this->assertNotEmpty(Input::getUnusedGet());
