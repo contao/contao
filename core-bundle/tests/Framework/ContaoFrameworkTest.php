@@ -23,8 +23,11 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\CoreBundle\Session\LazySessionAccess;
 use Contao\CoreBundle\Session\MockNativeSessionStorage;
+use Contao\CoreBundle\Tests\Fixtures\FooModel;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\Environment;
 use Contao\Input;
+use Contao\Model\Registry;
 use Contao\RequestToken;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
@@ -648,6 +651,33 @@ class ContaoFrameworkTest extends TestCase
         $framework->reset();
 
         $this->assertNotSame($adapter, $framework->getAdapter(Input::class));
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testDelegatesResetCalls(): void
+    {
+        $framework = $this->mockFramework();
+        $framework->setContainer($this->getContainerWithContaoConfiguration());
+        $framework->initialize();
+
+        // setup state in framework classes
+        Environment::set('scriptFilename', 'bar');
+        Input::setUnusedGet('foo', 'bar');
+        $registry = Registry::getInstance();
+        $registry->register(new FooModel());
+
+        $this->assertNotEmpty(Environment::get('scriptFilename'));
+        $this->assertNotEmpty(Input::getUnusedGet());
+        $this->assertSame(1, $registry->count());
+
+        $framework->reset();
+
+        $this->assertEmpty(Input::getUnusedGet());
+        $this->assertEmpty(Environment::get('scriptFilename'));
+        $this->assertSame(0, $registry->count());
     }
 
     /**
