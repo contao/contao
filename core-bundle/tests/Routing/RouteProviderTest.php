@@ -348,14 +348,20 @@ class RouteProviderTest extends TestCase
 
             $this->assertInstanceOf(PageModel::class, $routedPage);
             $this->assertSame('tl_page.'.$routedPage->id, $name);
-            $this->assertSame($pages[$i], $routedPage, sprintf(
-                'Position %s should be %s/%s but is %s/%s',
-                $i,
-                $pages[$i]->rootLanguage,
-                $pages[$i]->alias,
-                $routedPage->rootLanguage,
-                $routedPage->alias
-            ));
+
+            $this->assertSame(
+                $pages[$i],
+                $routedPage,
+                sprintf(
+                    'Position %s should be %s/%s but is %s/%s',
+                    $i,
+                    $pages[$i]->rootLanguage,
+                    $pages[$i]->alias,
+                    $routedPage->rootLanguage,
+                    $routedPage->alias
+                )
+            );
+
             ++$i;
         }
     }
