@@ -356,7 +356,7 @@ class RouteProviderTest extends TestCase
                 $routedPage->rootLanguage,
                 $routedPage->alias
             ));
-            $i++;
+            ++$i;
         }
     }
 
