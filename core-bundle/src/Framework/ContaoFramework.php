@@ -70,6 +70,11 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     private $errorLevel;
 
     /**
+     * @var bool
+     */
+    private $legacyRouting;
+
+    /**
      * @var Request
      */
     private $request;
@@ -89,13 +94,14 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      */
     private $hookListeners = [];
 
-    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker, string $rootDir, int $errorLevel)
+    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker, string $rootDir, int $errorLevel, bool $legacyRouting)
     {
         $this->requestStack = $requestStack;
         $this->scopeMatcher = $scopeMatcher;
         $this->tokenChecker = $tokenChecker;
         $this->rootDir = $rootDir;
         $this->errorLevel = $errorLevel;
+        $this->legacyRouting = $legacyRouting;
     }
 
     public function reset(): void
@@ -165,6 +171,15 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         }
 
         return $this->adapterCache[$class];
+    }
+
+    public function isLegacyRouting()
+    {
+        $this->initialize();
+
+        return $this->legacyRouting
+            || !empty($GLOBALS['TL_HOOKS']['getPageIdFromUrl'])
+            || !empty($GLOBALS['TL_HOOKS']['getRootPageFromUrl']);
     }
 
     /**

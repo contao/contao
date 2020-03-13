@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\DataContainer;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -26,9 +27,9 @@ class LegacyRoutingListener implements ServiceAnnotationInterface
     private $translator;
 
     /**
-     * @var bool
+     * @var ContaoFramework
      */
-    private $legacyRouting;
+    private $framework;
 
     /**
      * @var bool
@@ -40,10 +41,10 @@ class LegacyRoutingListener implements ServiceAnnotationInterface
      */
     private $urlSuffix;
 
-    public function __construct(TranslatorInterface $translator, bool $legacyRouting, bool $prependLocale = false, string $urlSuffix = '.html')
+    public function __construct(TranslatorInterface $translator, ContaoFramework $framework, bool $prependLocale = false, string $urlSuffix = '.html')
     {
         $this->translator = $translator;
-        $this->legacyRouting = $legacyRouting;
+        $this->framework = $framework;
         $this->prependLocale = $prependLocale;
         $this->urlSuffix = $urlSuffix;
     }
@@ -53,7 +54,7 @@ class LegacyRoutingListener implements ServiceAnnotationInterface
      */
     public function disableRoutingFields(): void
     {
-        if (!$this->isLegacyRouting()) {
+        if (!$this->framework->isLegacyRouting()) {
             return;
         }
 
@@ -83,7 +84,7 @@ class LegacyRoutingListener implements ServiceAnnotationInterface
      */
     public function overrideLanguagePrefix($value, DataContainer $dc)
     {
-        if (!$this->isLegacyRouting()) {
+        if (!$this->framework->isLegacyRouting()) {
             return $value;
         }
 
@@ -95,17 +96,10 @@ class LegacyRoutingListener implements ServiceAnnotationInterface
      */
     public function overrideUrlSuffix($value)
     {
-        if (!$this->isLegacyRouting()) {
+        if (!$this->framework->isLegacyRouting()) {
             return $value;
         }
 
         return $this->urlSuffix;
-    }
-
-    private function isLegacyRouting(): bool
-    {
-        return $this->legacyRouting
-            || !empty($GLOBALS['TL_HOOKS']['getPageIdFromUrl'])
-            || !empty($GLOBALS['TL_HOOKS']['getRootPageFromUrl']);
     }
 }

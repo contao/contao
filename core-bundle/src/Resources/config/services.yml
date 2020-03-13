@@ -256,6 +256,7 @@ services:
             - '@contao.security.token_checker'
             - '%kernel.project_dir%'
             - '%contao.error_level%'
+            - '%contao.legacy_routing%'
         public: true
         tags:
             - { name: kernel.reset, method: reset }
