@@ -669,14 +669,14 @@ class ContaoFrameworkTest extends TestCase
         $registry = Registry::getInstance();
         $registry->register(new FooModel());
 
-        $this->assertNotEmpty(Environment::get('scriptFilename'));
+        $this->assertSame('bar', Environment::get('scriptFilename'));
         $this->assertNotEmpty(Input::getUnusedGet());
         $this->assertSame(1, $registry->count());
 
         $framework->reset();
 
+        $this->assertNotSame('bar', Environment::get('scriptFilename'));
         $this->assertEmpty(Input::getUnusedGet());
-        $this->assertEmpty(Environment::get('scriptFilename'));
         $this->assertSame(0, $registry->count());
     }
 
