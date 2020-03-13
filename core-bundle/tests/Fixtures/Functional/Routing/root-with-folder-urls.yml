@@ -3,11 +3,11 @@ tl_page:
       pid: 0
       sorting: 128
       tstamp: 1539680468
-      title: 'Root with folder URLs'
-      alias: 'root-with-folder-urls'
-      type: 'root'
-      language: 'en'
-      dns: 'root-with-folder-urls.local'
+      title: Root with folder URLs
+      alias: root-with-folder-urls
+      type: root
+      language: en
+      dns: root-with-folder-urls.local
       includeLayout: '1'
       layout: 1
       published: '1'
@@ -16,7 +16,7 @@ tl_page:
       pid: 1
       sorting: 128
       tstamp: 1539698035
-      title: 'Home'
-      alias: 'folder/url/home'
-      type: 'regular'
+      title: Home
+      alias: folder/url/home
+      type: regular
       published: '1'
