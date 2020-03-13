@@ -657,13 +657,12 @@ class ContaoFrameworkTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testDelegatesResetCalls(): void
+    public function testDelegatesTheResetCalls(): void
     {
         $framework = $this->mockFramework();
         $framework->setContainer($this->getContainerWithContaoConfiguration());
         $framework->initialize();
 
-        // setup state in framework classes
         Environment::set('scriptFilename', 'bar');
         Input::setUnusedGet('foo', 'bar');
 
@@ -672,9 +671,11 @@ class ContaoFrameworkTest extends TestCase
             ->getMockBuilder(PageModel::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['onRegister'])
-            ->getMockForAbstractClass()
+            ->getMock()
         ;
+
         $model->id = 1;
+
         $registry = Registry::getInstance();
         $registry->register($model);
 
