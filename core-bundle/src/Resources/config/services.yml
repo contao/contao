@@ -334,6 +334,15 @@ services:
             - '@?contao.image.resize_calculator'
         public: true
 
+    contao.image.helper:
+        class: Contao\CoreBundle\Image\Helper\ImageHelper
+        arguments:
+            - '@contao.image.picture_factory'
+            - '%kernel.project_dir%'
+            - '@contao.assets.files_context'
+            - '@request_stack'
+            - '@contao.framework'
+
     contao.menu.backend_menu_builder:
         class: Contao\CoreBundle\Menu\BackendMenuBuilder
         arguments:
