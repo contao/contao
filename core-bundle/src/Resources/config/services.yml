@@ -457,6 +457,14 @@ services:
         calls:
             - ['matchAttribute', ['_scope', 'backend']]
 
+    contao.routing.candidates:
+        class: Contao\CoreBundle\Routing\Candidates\Candidates
+        arguments:
+            - '@contao.framework'
+            - '@database_connection'
+            - '%contao.url_suffix%'
+            - '%contao.prepend_locale%'
+
     contao.routing.domain_filter:
         class: Contao\CoreBundle\Routing\Matcher\DomainFilter
 
