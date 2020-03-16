@@ -989,6 +989,8 @@ class PageModel extends Model
 			$this->timeFormat = $objParentPage->timeFormat;
 			$this->datimFormat = $objParentPage->datimFormat;
 			$this->validAliasCharacters = $objParentPage->validAliasCharacters;
+			$this->languagePrefix = $objParentPage->languagePrefix;
+			$this->urlSuffix = $objParentPage->urlSuffix;
 			$this->adminEmail = $objParentPage->adminEmail;
 			$this->enforceTwoFactor = $objParentPage->enforceTwoFactor;
 			$this->twoFactorJumpTo = $objParentPage->twoFactorJumpTo;
@@ -999,6 +1001,12 @@ class PageModel extends Model
 			$this->rootIsFallback = true;
 			$this->rootUseSSL = $objParentPage->useSSL;
 			$this->rootFallbackLanguage = $objParentPage->language;
+
+			if (System::getContainer()->get('contao.framework')->isLegacyRouting())
+			{
+				$this->languagePrefix = System::getContainer()->getParameter('contao.prepend_locale') ? $objParentPage->language : '';
+				$this->urlSuffix = System::getContainer()->getParameter('contao.url_suffix');
+			}
 
 			// Store the fallback language (see #6874)
 			if (!$objParentPage->fallback)
