@@ -20,6 +20,7 @@ use Contao\Model\Collection;
 use Contao\PageModel;
 use Contao\System;
 use Doctrine\DBAL\Connection;
+use Symfony\Cmf\Component\Routing\Candidates\CandidatesInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -39,9 +40,9 @@ class RouteProvider implements RouteProviderInterface
     private $database;
 
     /**
-     * @var string
+     * @var CandidatesInterface
      */
-    private $urlSuffix;
+    private $candidates;
 
     /**
      * @var bool
@@ -51,11 +52,11 @@ class RouteProvider implements RouteProviderInterface
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.route_provider" service instead
      */
-    public function __construct(ContaoFramework $framework, Connection $database, string $urlSuffix, bool $prependLocale)
+    public function __construct(ContaoFramework $framework, Connection $database, CandidatesInterface $candidates, bool $prependLocale)
     {
         $this->framework = $framework;
         $this->database = $database;
-        $this->urlSuffix = $urlSuffix;
+        $this->candidates = $candidates;
         $this->prependLocale = $prependLocale;
     }
 
@@ -72,19 +73,18 @@ class RouteProvider implements RouteProviderInterface
 
         $routes = [];
 
-        if ('/' === $pathInfo || ($this->prependLocale && preg_match('@^/([a-z]{2}(-[A-Z]{2})?)/$@', $pathInfo))) {
+        if ('/' === $pathInfo || ($this->framework->isLegacyRouting() && $this->prependLocale && preg_match('@^/([a-z]{2}(-[A-Z]{2})?)/$@', $pathInfo))) {
             $this->addRoutesForRootPages($this->findRootPages($request->getHttpHost()), $routes);
 
             return $this->createCollectionForRoutes($routes, $request->getLanguages());
         }
 
-        $pathInfo = $this->removeSuffixAndLanguage($pathInfo);
+        $candidates = $this->candidates->getCandidates($request);
 
-        if (null === $pathInfo) {
+        if (0 === \count($candidates)) {
             return new RouteCollection();
         }
 
-        $candidates = $this->getAliasCandidates($pathInfo);
         $pages = $this->findPages($candidates);
 
         $this->addRoutesForPages($pages, $routes);
@@ -148,58 +148,6 @@ class RouteProvider implements RouteProviderInterface
         return $routes;
     }
 
-    private function removeSuffixAndLanguage(string $pathInfo): ?string
-    {
-        $suffixLength = \strlen($this->urlSuffix);
-
-        if (0 !== $suffixLength) {
-            if (substr($pathInfo, -$suffixLength) !== $this->urlSuffix) {
-                return null;
-            }
-
-            $pathInfo = substr($pathInfo, 0, -$suffixLength);
-        }
-
-        if (0 === strncmp($pathInfo, '/', 1)) {
-            $pathInfo = substr($pathInfo, 1);
-        }
-
-        if ($this->prependLocale) {
-            $matches = [];
-
-            if (!preg_match('@^([a-z]{2}(-[A-Z]{2})?)/(.+)$@', $pathInfo, $matches)) {
-                return null;
-            }
-
-            $pathInfo = $matches[3];
-        }
-
-        return $pathInfo;
-    }
-
-    /**
-     * Compiles all possible aliases by applying dirname() to the request (e.g. news/archive/item, news/archive, news).
-     *
-     * @return array<string>
-     */
-    private function getAliasCandidates(string $pathInfo): array
-    {
-        $pos = strpos($pathInfo, '/');
-
-        if (false === $pos) {
-            return [$pathInfo];
-        }
-
-        $candidates = [$pathInfo];
-
-        while ('/' !== $pathInfo && false !== strpos($pathInfo, '/')) {
-            $pathInfo = \dirname($pathInfo);
-            $candidates[] = $pathInfo;
-        }
-
-        return $candidates;
-    }
-
     /**
      * @param iterable<PageModel> $pages
      */
@@ -249,7 +197,7 @@ class RouteProvider implements RouteProviderInterface
         $defaults['parameters'] = '';
 
         $requirements = ['parameters' => '(/.+)?'];
-        $path = sprintf('/%s{parameters}%s', $page->alias ?: $page->id, $this->urlSuffix);
+        $path = sprintf('/%s{parameters}%s', $page->alias ?: $page->id, $page->urlSuffix);
 
         if ($this->prependLocale) {
             $path = '/{_locale}'.$path;

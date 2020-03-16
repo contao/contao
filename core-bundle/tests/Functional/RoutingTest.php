@@ -293,6 +293,26 @@ class RoutingTest extends FunctionalTestCase
             'root-with-folder-urls.local',
             true,
         ];
+
+        yield 'Renders the page if the URL contains a page ID and the page has no alias' => [
+            ['theme', 'page-without-alias'],
+            '/15.html',
+            200,
+            'Home - Page without alias',
+            ['language' => 'en'],
+            'localhost',
+            true,
+        ];
+
+        yield 'Renders the 404 page if the URL contains a page ID but the page has an alias' => [
+            ['theme', 'root-with-home'],
+            '/2.html',
+            404,
+            '(404 Not Found)',
+            [],
+            'root-with-home.local',
+            true,
+        ];
     }
 
     /**
@@ -541,6 +561,26 @@ class RoutingTest extends FunctionalTestCase
             '(404 Not Found)',
             ['language' => 'en'],
             'root-with-folder-urls.local',
+            true,
+        ];
+
+        yield 'Renders the page if the URL contains a page ID and the page has no alias' => [
+            ['theme', 'page-without-alias'],
+            '/en/15.html',
+            200,
+            'Home - Page without alias',
+            ['language' => 'en'],
+            'localhost',
+            true,
+        ];
+
+        yield 'Renders the 404 page if the URL contains a page ID but the page has an alias' => [
+            ['theme', 'root-with-home'],
+            '/en/2.html',
+            404,
+            '(404 Not Found)',
+            [],
+            'root-with-home.local',
             true,
         ];
     }

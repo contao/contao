@@ -579,7 +579,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@database_connection'
-            - '%contao.url_suffix%'
+            - '@contao.routing.candidates'
             - '%contao.prepend_locale%'
 
     contao.routing.route_404_provider:
