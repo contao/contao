@@ -48,7 +48,34 @@ class RoutingTest extends FunctionalTestCase
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
 
+        /** @var  $client */
         $client = $this->createClient([], $_SERVER);
+        System::setContainer($client->getContainer());
+
+        $crawler = $client->request('GET', $request);
+        $title = trim($crawler->filterXPath('//head/title')->text());
+
+        /** @var Response $response */
+        $response = $client->getResponse();
+
+        $this->assertSame($statusCode, $response->getStatusCode());
+        $this->assertSame($query, $_GET);
+        $this->assertStringContainsString($pageTitle, $title);
+    }
+
+    /**
+     * @dataProvider getAliases
+     */
+    public function testResolvesAliasesInLegacyMode(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
+    {
+        $this->loadFixtureFiles($fixtures);
+
+        Config::set('useAutoItem', $autoItem);
+
+        $_SERVER['REQUEST_URI'] = $request;
+        $_SERVER['HTTP_HOST'] = $host;
+
+        $client = $this->createClient(['environment' => 'legacy'], $_SERVER);
         System::setContainer($client->getContainer());
 
         $crawler = $client->request('GET', $request);
@@ -69,7 +96,7 @@ class RoutingTest extends FunctionalTestCase
             '/',
             200,
             'Index - Root with index page',
-            [],
+            ['language' => 'en'],
             'root-with-index.local',
             false,
         ];
@@ -79,7 +106,7 @@ class RoutingTest extends FunctionalTestCase
             '/',
             302,
             'Redirecting to http://root-with-home.local/home.html',
-            [],
+            ['language' => 'en'],
             'root-with-home.local',
             false,
         ];
@@ -89,7 +116,7 @@ class RoutingTest extends FunctionalTestCase
             '/home.html',
             200,
             'Home - Root with home page',
-            [],
+            ['language' => 'en'],
             'root-with-home.local',
             false,
         ];
@@ -99,7 +126,7 @@ class RoutingTest extends FunctionalTestCase
             '/home//.html',
             404,
             '(404 Not Found)',
-            [],
+            ['language' => 'en'],
             'root-with-home.local',
             false,
         ];
@@ -129,7 +156,7 @@ class RoutingTest extends FunctionalTestCase
             '/home/foo/bar1/foo/bar2.html',
             404,
             '(404 Not Found)',
-            ['foo' => 'bar1'],
+            ['language' => 'en', 'foo' => 'bar1'],
             'root-with-home.local',
             false,
         ];
@@ -139,7 +166,7 @@ class RoutingTest extends FunctionalTestCase
             '/home/foo/bar.html',
             404,
             '(404 Not Found)',
-            ['foo' => 'bar'],
+            ['language' => 'en', 'foo' => 'bar'],
             'root-with-home.local',
             false,
         ];
@@ -149,7 +176,7 @@ class RoutingTest extends FunctionalTestCase
             '/home/foo.html',
             404,
             '(404 Not Found)',
-            [],
+            ['language' => 'en'],
             'root-with-home.local',
             false,
         ];
@@ -159,7 +186,7 @@ class RoutingTest extends FunctionalTestCase
             '/home/foo/.html',
             404,
             '(404 Not Found)',
-            ['foo' => ''],
+            ['language' => 'en', 'foo' => ''],
             'root-with-home.local',
             false,
         ];
@@ -169,7 +196,7 @@ class RoutingTest extends FunctionalTestCase
             '/home/items/foobar.html',
             200,
             'Foobar - Root with home page',
-            ['items' => 'foobar'],
+            ['language' => 'en', 'items' => 'foobar'],
             'root-with-home.local',
             false,
         ];
@@ -179,7 +206,7 @@ class RoutingTest extends FunctionalTestCase
             '/home//foo.html',
             404,
             '(404 Not Found)',
-            [],
+            ['language' => 'en'],
             'root-with-home.local',
             false,
         ];
@@ -199,7 +226,7 @@ class RoutingTest extends FunctionalTestCase
             '/h%C3%B6me.html',
             200,
             'Höme - Root with special chars',
-            [],
+            ['language' => 'en'],
             'root-with-special-chars.local',
             false,
         ];
@@ -209,7 +236,7 @@ class RoutingTest extends FunctionalTestCase
             '/home/foobar.html',
             200,
             'Foobar - Root with home page',
-            ['auto_item' => 'foobar', 'items' => 'foobar'],
+            ['language' => 'en', 'auto_item' => 'foobar', 'items' => 'foobar'],
             'root-with-home.local',
             true,
         ];
@@ -229,7 +256,7 @@ class RoutingTest extends FunctionalTestCase
             '/home/items/foobar.html',
             404,
             '(404 Not Found)',
-            [],
+            ['language' => 'en'],
             'root-with-home.local',
             true,
         ];
@@ -239,7 +266,7 @@ class RoutingTest extends FunctionalTestCase
             '/',
             302,
             'Redirecting to http://root-with-folder-urls.local/folder/url/home.html',
-            [],
+            ['language' => 'en'],
             'root-with-folder-urls.local',
             false,
         ];
@@ -249,7 +276,7 @@ class RoutingTest extends FunctionalTestCase
             '/folder/url/home.html',
             200,
             'Home - Root with folder URLs',
-            [],
+            ['language' => 'en'],
             'root-with-folder-urls.local',
             false,
         ];
@@ -259,7 +286,7 @@ class RoutingTest extends FunctionalTestCase
             '/folder/url/home/items/foobar.html',
             200,
             'Foobar - Root with folder URLs',
-            ['items' => 'foobar'],
+            ['language' => 'en', 'items' => 'foobar'],
             'root-with-folder-urls.local',
             false,
         ];
@@ -269,7 +296,7 @@ class RoutingTest extends FunctionalTestCase
             '/folder/url/home/foobar.html',
             200,
             'Foobar - Root with folder URLs',
-            ['auto_item' => 'foobar', 'items' => 'foobar'],
+            ['language' => 'en', 'auto_item' => 'foobar', 'items' => 'foobar'],
             'root-with-folder-urls.local',
             true,
         ];
@@ -289,7 +316,7 @@ class RoutingTest extends FunctionalTestCase
             '/folder/url/home/items/foobar.html',
             404,
             '(404 Not Found)',
-            [],
+            ['language' => 'en'],
             'root-with-folder-urls.local',
             true,
         ];
@@ -320,6 +347,33 @@ class RoutingTest extends FunctionalTestCase
      */
     public function testResolvesAliasesWithLocale(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
     {
+        $fixtures[] = 'locale';
+        $this->loadFixtureFiles($fixtures);
+
+        Config::set('useAutoItem', $autoItem);
+
+        $_SERVER['REQUEST_URI'] = $request;
+        $_SERVER['HTTP_HOST'] = $host;
+
+        $client = $this->createClient([], $_SERVER);
+        System::setContainer($client->getContainer());
+
+        $crawler = $client->request('GET', $request);
+        $title = trim($crawler->filterXPath('//head/title')->text());
+
+        /** @var Response $response */
+        $response = $client->getResponse();
+
+        $this->assertSame($statusCode, $response->getStatusCode());
+        $this->assertSame($query, $_GET);
+        $this->assertStringContainsString($pageTitle, $title);
+    }
+
+    /**
+     * @dataProvider getAliasesWithLocale
+     */
+    public function testResolvesAliasesWithLocaleInLegacyMode(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
+    {
         $this->loadFixtureFiles($fixtures);
 
         Config::set('useAutoItem', $autoItem);
@@ -336,6 +390,10 @@ class RoutingTest extends FunctionalTestCase
 
         /** @var Response $response */
         $response = $client->getResponse();
+
+        if (!isset($query['language'])) {
+            unset($_GET['language']);
+        }
 
         $this->assertSame($statusCode, $response->getStatusCode());
         $this->assertSame($query, $_GET);
@@ -389,7 +447,7 @@ class RoutingTest extends FunctionalTestCase
             '/en/home.xml',
             404,
             '(404 Not Found)',
-            ['language' => 'en'],
+            [],
             'root-with-home.local',
             false,
         ];
@@ -399,7 +457,7 @@ class RoutingTest extends FunctionalTestCase
             '/en/home/auto_item/foo.html',
             404,
             '(404 Not Found)',
-            ['language' => 'en'],
+            [],
             'root-with-home.local',
             false,
         ];
@@ -449,7 +507,7 @@ class RoutingTest extends FunctionalTestCase
             '/en/.html',
             404,
             '(404 Not Found)',
-            ['language' => 'en'],
+            [],
             'root-with-home.local',
             false,
         ];
@@ -499,7 +557,7 @@ class RoutingTest extends FunctionalTestCase
             '/en/home/auto_item/foo.html',
             404,
             '(404 Not Found)',
-            ['language' => 'en'],
+            [],
             'root-with-home.local',
             true,
         ];
@@ -549,7 +607,7 @@ class RoutingTest extends FunctionalTestCase
             '/en/folder/url/home/auto_item/foo.html',
             404,
             '(404 Not Found)',
-            ['language' => 'en'],
+            [],
             'root-with-folder-urls.local',
             true,
         ];
@@ -590,6 +648,33 @@ class RoutingTest extends FunctionalTestCase
      */
     public function testResolvesAliasesWithoutUrlSuffix(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
     {
+        $fixtures[] = 'suffix';
+        $this->loadFixtureFiles($fixtures);
+
+        Config::set('useAutoItem', $autoItem);
+
+        $_SERVER['REQUEST_URI'] = $request;
+        $_SERVER['HTTP_HOST'] = $host;
+
+        $client = $this->createClient([], $_SERVER);
+        System::setContainer($client->getContainer());
+
+        $crawler = $client->request('GET', $request);
+        $title = trim($crawler->filterXPath('//head/title')->text());
+
+        /** @var Response $response */
+        $response = $client->getResponse();
+
+        $this->assertSame($statusCode, $response->getStatusCode());
+        $this->assertSame($query, $_GET);
+        $this->assertStringContainsString($pageTitle, $title);
+    }
+
+    /**
+     * @dataProvider getAliasesWithoutUrlSuffix
+     */
+    public function testResolvesAliasesWithoutUrlSuffixInLegacyMode(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
+    {
         $this->loadFixtureFiles($fixtures);
 
         Config::set('useAutoItem', $autoItem);
@@ -618,7 +703,7 @@ class RoutingTest extends FunctionalTestCase
             '/',
             200,
             'Index - Root with index page',
-            [],
+            ['language' => 'en'],
             'root-with-index.local',
             false,
         ];
@@ -628,7 +713,7 @@ class RoutingTest extends FunctionalTestCase
             '/',
             302,
             'Redirecting to http://root-with-home.local/home',
-            [],
+            ['language' => 'en'],
             'root-with-home.local',
             false,
         ];
@@ -638,7 +723,7 @@ class RoutingTest extends FunctionalTestCase
             '/home',
             200,
             'Home - Root with home page',
-            [],
+            ['language' => 'en'],
             'root-with-home.local',
             false,
         ];
@@ -668,7 +753,7 @@ class RoutingTest extends FunctionalTestCase
             '/home/foo/bar1/foo/bar2',
             404,
             '(404 Not Found)',
-            ['foo' => 'bar1'],
+            ['language' => 'en', 'foo' => 'bar1'],
             'root-with-home.local',
             false,
         ];
@@ -678,7 +763,7 @@ class RoutingTest extends FunctionalTestCase
             '/home/foo/bar',
             404,
             '(404 Not Found)',
-            ['foo' => 'bar'],
+            ['language' => 'en', 'foo' => 'bar'],
             'root-with-home.local',
             false,
         ];
@@ -688,7 +773,7 @@ class RoutingTest extends FunctionalTestCase
             '/home/items/foobar',
             200,
             'Foobar - Root with home page',
-            ['items' => 'foobar'],
+            ['language' => 'en', 'items' => 'foobar'],
             'root-with-home.local',
             false,
         ];
@@ -698,7 +783,7 @@ class RoutingTest extends FunctionalTestCase
             '/home//foo',
             404,
             '(404 Not Found)',
-            [],
+            ['language' => 'en'],
             'root-with-home.local',
             false,
         ];
@@ -708,7 +793,7 @@ class RoutingTest extends FunctionalTestCase
             '/h%C3%B6me',
             200,
             'Höme - Root with special chars',
-            [],
+            ['language' => 'en'],
             'root-with-special-chars.local',
             false,
         ];
@@ -718,7 +803,7 @@ class RoutingTest extends FunctionalTestCase
             '/home/foobar',
             200,
             'Foobar - Root with home page',
-            ['auto_item' => 'foobar', 'items' => 'foobar'],
+            ['language' => 'en', 'auto_item' => 'foobar', 'items' => 'foobar'],
             'root-with-home.local',
             true,
         ];
@@ -738,7 +823,7 @@ class RoutingTest extends FunctionalTestCase
             '/home/items/foobar',
             404,
             '(404 Not Found)',
-            [],
+            ['language' => 'en'],
             'root-with-home.local',
             true,
         ];
@@ -748,7 +833,7 @@ class RoutingTest extends FunctionalTestCase
             '/',
             302,
             'Redirecting to http://root-with-folder-urls.local/folder/url/home',
-            [],
+            ['language' => 'en'],
             'root-with-folder-urls.local',
             false,
         ];
@@ -758,7 +843,7 @@ class RoutingTest extends FunctionalTestCase
             '/folder/url/home',
             200,
             'Home - Root with folder URLs',
-            [],
+            ['language' => 'en'],
             'root-with-folder-urls.local',
             false,
         ];
@@ -768,7 +853,7 @@ class RoutingTest extends FunctionalTestCase
             '/folder/url/home/items/foobar',
             200,
             'Foobar - Root with folder URLs',
-            ['items' => 'foobar'],
+            ['language' => 'en', 'items' => 'foobar'],
             'root-with-folder-urls.local',
             false,
         ];
@@ -778,7 +863,7 @@ class RoutingTest extends FunctionalTestCase
             '/folder/url/home/foobar',
             200,
             'Foobar - Root with folder URLs',
-            ['auto_item' => 'foobar', 'items' => 'foobar'],
+            ['language' => 'en', 'auto_item' => 'foobar', 'items' => 'foobar'],
             'root-with-folder-urls.local',
             true,
         ];
@@ -798,7 +883,7 @@ class RoutingTest extends FunctionalTestCase
             '/folder/url/home/items/foobar',
             404,
             '(404 Not Found)',
-            [],
+            ['language' => 'en'],
             'root-with-folder-urls.local',
             true,
         ];
@@ -907,6 +992,31 @@ class RoutingTest extends FunctionalTestCase
      * @dataProvider getRootAliasesWithLocale
      */
     public function testResolvesTheRootPageWithLocale(array $fixtures, string $request, int $statusCode, string $pageTitle, string $acceptLanguages, string $host): void
+    {
+        $fixtures[] = 'locale';
+        $this->loadFixtureFiles($fixtures);
+
+        $_SERVER['REQUEST_URI'] = $request;
+        $_SERVER['HTTP_HOST'] = $host;
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptLanguages;
+
+        $client = $this->createClient([], $_SERVER);
+        System::setContainer($client->getContainer());
+
+        $crawler = $client->request('GET', $request);
+        $title = trim($crawler->filterXPath('//head/title')->text());
+
+        /** @var Response $response */
+        $response = $client->getResponse();
+
+        $this->assertSame($statusCode, $response->getStatusCode());
+        $this->assertStringContainsString($pageTitle, $title);
+    }
+
+    /**
+     * @dataProvider getRootAliasesWithLocale
+     */
+    public function testResolvesTheRootPageWithLocaleInLegacyMode(array $fixtures, string $request, int $statusCode, string $pageTitle, string $acceptLanguages, string $host): void
     {
         $this->loadFixtureFiles($fixtures);
 
