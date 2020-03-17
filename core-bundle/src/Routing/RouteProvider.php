@@ -242,27 +242,24 @@ class RouteProvider implements RouteProviderInterface
 
         $page->loadDetails();
 
-        $path = '/';
-        $requirements = [];
         $defaults = $this->getRouteDefaults($page);
 
-        if ($this->prependLocale) {
-            $path = '/{_locale}'.$path;
-            $requirements['_locale'] = $page->rootLanguage;
-        }
-
         $routes['tl_page.'.$page->id.'.root'] = new Route(
-            $path,
+            $page->languagePrefix ? '/'.$page->languagePrefix.'/' : '/',
             $defaults,
-            $requirements,
+            [],
             [],
             $page->domain,
             $page->rootUseSSL ? 'https' : null,
             []
         );
 
+        if (!$page->languagePrefix) {
+            return;
+        }
+
         $defaults['_controller'] = 'Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction';
-        $defaults['path'] = '/'.$page->language.'/';
+        $defaults['path'] = '/'.$page->languagePrefix.'/';
         $defaults['permanent'] = true;
 
         $routes['tl_page.'.$page->id.'.fallback'] = new Route(
