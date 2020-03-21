@@ -10,11 +10,10 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Image\Helper;
+namespace Contao\CoreBundle\Image;
 
 use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Image\PictureFactoryInterface;
 use Contao\FilesModel;
 use Contao\Frontend;
 use Contao\Image\PictureConfiguration;
@@ -23,6 +22,10 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class ImageHelper
 {
+    public const PICTURE_IMAGE = 'img';
+    public const PICTURE_SOURCES = 'sources';
+    public const PICTURE_ALT = 'alt';
+
     /** @var PictureFactoryInterface */
     private $pictureFactory;
 
@@ -53,7 +56,7 @@ class ImageHelper
      * @param string                                     $fileIdentifier    can be a file's uuid or id or path
      * @param int|string|array|PictureConfiguration|null $sizeConfiguration
      */
-    public function createPicture(string $fileIdentifier, $sizeConfiguration): Picture
+    public function createPicture(string $fileIdentifier, $sizeConfiguration): array
     {
         $file = $this->getFile($fileIdentifier);
 
@@ -66,14 +69,14 @@ class ImageHelper
             $sizeConfiguration
         );
 
-        return new Picture(
-            $picture->getImg($this->rootDir, $this->staticUrl),
-            $picture->getSources($this->rootDir, $this->staticUrl),
-            $this->getAltAttribute($file)
-        );
+        return [
+            self::PICTURE_IMAGE => $picture->getImg($this->rootDir, $this->staticUrl),
+            self::PICTURE_SOURCES => $picture->getSources($this->rootDir, $this->staticUrl),
+            self::PICTURE_ALT => $this->getAltAttribute($file),
+        ];
     }
 
-    public function createImage(string $fileIdentifier, $sizeConfiguration): Image
+    public function createImage(string $fileIdentifier, $sizeConfiguration): array
     {
         // todo
         throw new \RuntimeException('not implemented');

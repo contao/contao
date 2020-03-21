@@ -335,7 +335,7 @@ services:
         public: true
 
     contao.image.helper:
-        class: Contao\CoreBundle\Image\Helper\ImageHelper
+        class: Contao\CoreBundle\Image\ImageHelper
         arguments:
             - '@contao.image.picture_factory'
             - '%kernel.project_dir%'
