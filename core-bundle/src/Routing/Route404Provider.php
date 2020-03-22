@@ -29,15 +29,9 @@ class Route404Provider implements RouteProviderInterface
      */
     private $framework;
 
-    /**
-     * @var bool
-     */
-    private $prependLocale;
-
-    public function __construct(ContaoFramework $framework, bool $prependLocale)
+    public function __construct(ContaoFramework $framework)
     {
         $this->framework = $framework;
-        $this->prependLocale = $prependLocale;
     }
 
     public function getRouteCollectionForRequest(Request $request): RouteCollection
@@ -124,12 +118,11 @@ class Route404Provider implements RouteProviderInterface
             $page->rootUseSSL ? 'https' : null
         );
 
-        if (!$this->prependLocale) {
+        if (!$page->languagePrefix) {
             return;
         }
 
-        $path = '/{_locale}'.$path;
-        $requirements['_locale'] = $page->rootLanguage;
+        $path = '/'.$page->languagePrefix.$path;
 
         $routes['tl_page.'.$page->id.'.error_404.locale'] = new Route(
             $path,

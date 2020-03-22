@@ -27,7 +27,7 @@ class Route404ProviderTest extends TestCase
     public function testGetRouteByNameThrowsException(): void
     {
         $framework = $this->mockContaoFramework();
-        $provider = new Route404Provider($framework, false);
+        $provider = new Route404Provider($framework);
 
         $this->expectException(RouteNotFoundException::class);
 
@@ -44,7 +44,7 @@ class Route404ProviderTest extends TestCase
 
         $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
 
-        $provider = new Route404Provider($framework, false);
+        $provider = new Route404Provider($framework);
         $result = $provider->getRoutesByNames(['foo']);
 
         $this->assertIsArray($result);
@@ -68,7 +68,7 @@ class Route404ProviderTest extends TestCase
 
         $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
 
-        $provider = new Route404Provider($framework, false);
+        $provider = new Route404Provider($framework);
         $result = $provider->getRoutesByNames(null);
 
         $this->assertIsArray($result);
@@ -88,7 +88,7 @@ class Route404ProviderTest extends TestCase
         $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
         $request = $this->mockRequestWithPath('/');
 
-        $provider = new Route404Provider($framework, false);
+        $provider = new Route404Provider($framework);
         $this->assertSame(0, $provider->getRouteCollectionForRequest($request)->count());
     }
 
@@ -112,7 +112,7 @@ class Route404ProviderTest extends TestCase
         $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
         $request = $this->mockRequestWithPath('/');
 
-        $provider = new Route404Provider($framework, false);
+        $provider = new Route404Provider($framework);
         $routes = $provider->getRouteCollectionForRequest($request)->all();
 
         $this->assertCount(1, $routes);
@@ -137,6 +137,7 @@ class Route404ProviderTest extends TestCase
         $page->domain = 'example.com';
         $page->rootUseSSL = true;
         $page->rootLanguage = 'de';
+        $page->languagePrefix = 'de';
 
         $pageAdapter = $this->mockAdapter(['findByType']);
         $pageAdapter
@@ -149,7 +150,7 @@ class Route404ProviderTest extends TestCase
         $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
         $request = $this->mockRequestWithPath('/');
 
-        $provider = new Route404Provider($framework, true);
+        $provider = new Route404Provider($framework);
         $routes = $provider->getRouteCollectionForRequest($request)->all();
 
         $this->assertCount(2, $routes);
@@ -167,17 +168,16 @@ class Route404ProviderTest extends TestCase
         $route = $routes['tl_page.17.error_404.locale'];
         $this->assertInstanceOf(Route::class, $route);
         $this->assertSame('.*', $route->getRequirement('_url_fragment'));
-        $this->assertSame('de', $route->getRequirement('_locale'));
         $this->assertTrue($route->getOption('utf8'));
         $this->assertSame('example.com', $route->getHost());
         $this->assertSame(['https'], $route->getSchemes());
-        $this->assertSame('/{_locale}/{_url_fragment}', $route->getPath());
+        $this->assertSame('/de/{_url_fragment}', $route->getPath());
     }
 
     /**
      * @dataProvider sortRoutesProvider
      */
-    public function testCorrectlySortRoutes(array $expectedRoutes, array $languages, bool $prependLocale, array ...$pagesData): void
+    public function testCorrectlySortRoutes(array $expectedRoutes, array $languages, array ...$pagesData): void
     {
         $pages = [];
 
@@ -209,7 +209,7 @@ class Route404ProviderTest extends TestCase
         $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
         $request = $this->mockRequestWithPath('/', $languages);
 
-        $provider = new Route404Provider($framework, $prependLocale);
+        $provider = new Route404Provider($framework);
         $routes = $provider->getRouteCollectionForRequest($request)->all();
 
         $this->assertCount(\count($expectedRoutes), $routes);
@@ -224,39 +224,34 @@ class Route404ProviderTest extends TestCase
         yield 'adds page' => [
             ['tl_page.42.error_404'],
             ['en'],
-            false,
-            ['id' => 42],
+            ['id' => 42, 'languagePrefix' => ''],
         ];
 
         yield 'sorts page with locale first' => [
             ['tl_page.42.error_404.locale', 'tl_page.42.error_404'],
             ['en'],
-            true,
-            ['id' => 42],
+            ['id' => 42, 'languagePrefix' => 'en'],
         ];
 
         yield 'sorts page with domain first' => [
             ['tl_page.42.error_404', 'tl_page.17.error_404'],
             ['en'],
-            false,
-            ['id' => 17],
-            ['id' => 42, 'domain' => 'example.com'],
+            ['id' => 17, 'languagePrefix' => ''],
+            ['id' => 42, 'domain' => 'example.com', 'languagePrefix' => ''],
         ];
 
         yield 'sorts pages with locales first' => [
             ['tl_page.42.error_404.locale', 'tl_page.17.error_404.locale', 'tl_page.42.error_404', 'tl_page.17.error_404'],
             ['en'],
-            true,
-            ['id' => 17],
-            ['id' => 42, 'domain' => 'example.com'],
+            ['id' => 17, 'languagePrefix' => 'en'],
+            ['id' => 42, 'domain' => 'example.com', 'languagePrefix' => 'en'],
         ];
 
         yield 'sorts pages by preferred locale' => [
             ['tl_page.42.error_404', 'tl_page.17.error_404'],
             ['de'],
-            false,
-            ['id' => 17, 'rootLanguage' => 'en'],
-            ['id' => 42, 'rootLanguage' => 'de'],
+            ['id' => 17, 'rootLanguage' => 'en', 'languagePrefix' => ''],
+            ['id' => 42, 'rootLanguage' => 'de', 'languagePrefix' => ''],
         ];
     }
 
@@ -282,7 +277,7 @@ class Route404ProviderTest extends TestCase
         $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
         $request = $this->mockRequestWithPath('/');
 
-        $provider = new Route404Provider($framework, false);
+        $provider = new Route404Provider($framework);
         $routes = $provider->getRouteCollectionForRequest($request)->all();
 
         $this->assertIsArray($routes);
@@ -313,7 +308,7 @@ class Route404ProviderTest extends TestCase
         $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
         $request = $this->mockRequestWithPath('/');
 
-        $provider = new Route404Provider($framework, false);
+        $provider = new Route404Provider($framework);
         $routes = $provider->getRouteCollectionForRequest($request)->all();
 
         $this->assertIsArray($routes);
