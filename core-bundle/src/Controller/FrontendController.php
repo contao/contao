@@ -33,6 +33,8 @@ class FrontendController extends AbstractController
     {
         $this->initializeContaoFramework();
 
+        @trigger_error('Using FrontendController::indexAction() has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.', E_USER_DEPRECATED);
+
         $controller = new FrontendIndex();
 
         return $controller->run();

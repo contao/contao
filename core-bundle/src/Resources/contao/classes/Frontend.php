@@ -65,6 +65,21 @@ abstract class Frontend extends Controller
 	 */
 	public static function getPageIdFromUrl()
 	{
+		$objRequest = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($objRequest instanceof Request && $objRequest->attributes->get('pageModel') instanceof PageModel)
+		{
+			/** @var PageModel $objPage */
+			$objPage = $objRequest->attributes->get('pageModel');
+
+			return $objPage->alias ?: $objPage->id;
+		}
+
+		if (!System::getContainer()->get('contao.framework')->isLegacyRouting())
+		{
+			throw new \RuntimeException('Frontend::getPageIdFromUrl() requires legacy routing. Configure "prepend_locale" or "url_suffix" in the Contao bundle.');
+		}
+
 		@trigger_error('Using Frontend::getPageIdFromUrl() has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.', E_USER_DEPRECATED);
 
 		$strRequest = Environment::get('relativeRequest');
@@ -294,6 +309,21 @@ abstract class Frontend extends Controller
 	 */
 	public static function getRootPageFromUrl()
 	{
+		$objRequest = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($objRequest instanceof Request && $objRequest->attributes->get('pageModel') instanceof PageModel)
+		{
+			/** @var PageModel $objPage */
+			$objPage = $objRequest->attributes->get('pageModel');
+
+			return PageModel::findByPk($objPage->rootId);
+		}
+
+		if (!System::getContainer()->get('contao.framework')->isLegacyRouting())
+		{
+			throw new \RuntimeException('Frontend::getRootPageFromUrl() requires legacy routing. Configure "prepend_locale" or "url_suffix" in the Contao bundle.');
+		}
+
 		$host = Environment::get('host');
 		$logger = System::getContainer()->get('monolog.logger.contao');
 		$accept_language = Environment::get('httpAcceptLanguage');
