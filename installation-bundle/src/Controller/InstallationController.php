@@ -17,6 +17,7 @@ use Contao\InstallationBundle\Database\ConnectionFactory;
 use Contao\InstallationBundle\Event\ContaoInstallationEvents;
 use Contao\InstallationBundle\Event\InitializeApplicationEvent;
 use Contao\Validator;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Patchwork\Utf8;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -87,7 +88,11 @@ class InstallationController implements ContainerAwareInterface
             return $this->login();
         }
 
-        if (!$installTool->canConnectToDatabase($this->getContainerParameter('database_name'))) {
+        $connection = $this->container->get('database_connection');
+
+        if ($connection instanceof Connection) {
+            $installTool->setConnection($connection);
+        } elseif (!$installTool->canConnectToDatabase($this->getContainerParameter('database_name'))) {
             return $this->setUpDatabaseConnection();
         }
 
