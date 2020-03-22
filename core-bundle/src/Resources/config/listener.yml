@@ -10,8 +10,8 @@ services:
 
     Contao\CoreBundle\EventListener\DataContainer\LegacyRoutingListener:
         arguments:
+            - '@contao.framework'
             - '@translator'
-            - '%contao.legacy_routing%'
             - '%contao.prepend_locale%'
             - '%contao.url_suffix%'
         tags:

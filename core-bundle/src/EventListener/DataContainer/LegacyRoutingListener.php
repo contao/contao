@@ -22,14 +22,14 @@ use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 class LegacyRoutingListener implements ServiceAnnotationInterface
 {
     /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
      * @var ContaoFramework
      */
     private $framework;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
 
     /**
      * @var bool
@@ -41,10 +41,10 @@ class LegacyRoutingListener implements ServiceAnnotationInterface
      */
     private $urlSuffix;
 
-    public function __construct(TranslatorInterface $translator, ContaoFramework $framework, bool $prependLocale = false, string $urlSuffix = '.html')
+    public function __construct(ContaoFramework $framework, TranslatorInterface $translator, bool $prependLocale = false, string $urlSuffix = '.html')
     {
-        $this->translator = $translator;
         $this->framework = $framework;
+        $this->translator = $translator;
         $this->prependLocale = $prependLocale;
         $this->urlSuffix = $urlSuffix;
     }
