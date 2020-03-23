@@ -14,6 +14,7 @@ use Contao\InstallationBundle\Event\InitializeApplicationEvent;
 use Symfony\Bundle\FrameworkBundle\Command\AssetsInstallCommand;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -120,14 +121,16 @@ class InitializeApplicationListener implements ContainerAwareInterface
     /**
      * Runs a command and returns the error (if any).
      *
-     * @param ContainerAwareCommand $command
-     * @param InputInterface        $input
+     * @param Command        $command
+     * @param InputInterface $input
      *
      * @return string|null
      */
-    private function runCommand(ContainerAwareCommand $command, InputInterface $input)
+    private function runCommand(Command $command, InputInterface $input)
     {
-        $command->setContainer($this->container);
+        if ($command instanceof ContainerAwareCommand) {
+            $command->setContainer($this->container);
+        }
 
         $output = new BufferedOutput(OutputInterface::VERBOSITY_NORMAL, true);
         $status = $command->run($input, $output);
