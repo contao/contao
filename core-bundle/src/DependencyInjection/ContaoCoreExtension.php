@@ -267,7 +267,7 @@ class ContaoCoreExtension extends Extension
         $tokenChecker = $container->getDefinition('contao.security.token_checker');
         $tokenChecker->replaceArgument(5, new Reference('security.access.simple_role_voter'));
 
-        if ($container->hasParameter('security.role_hierarchy.roles') && 0 < \count($container->getParameter('security.role_hierarchy.roles'))) {
+        if ($container->hasParameter('security.role_hierarchy.roles') && \count($container->getParameter('security.role_hierarchy.roles')) > 0) {
             $tokenChecker->replaceArgument(5, new Reference('security.access.role_hierarchy_voter'));
         }
     }
