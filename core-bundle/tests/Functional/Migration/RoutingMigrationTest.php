@@ -61,7 +61,7 @@ class RoutingMigrationTest extends FunctionalTestCase
         ];
     }
 
-    public function testRun()
+    public function testMigratesSchema(): void
     {
         static::resetDatabaseSchema();
 
@@ -83,5 +83,78 @@ class RoutingMigrationTest extends FunctionalTestCase
         $columns = $connection->getSchemaManager()->listTableColumns('tl_page');
         $this->assertTrue(isset($columns['languageprefix']));
         $this->assertTrue(isset($columns['urlsuffix']));
+    }
+
+    /**
+     * @dataProvider migrationDataProvider
+     */
+    public function testMigratesData(bool $prependLocale, string $urlSuffix): void
+    {
+        static::resetDatabaseSchema();
+        static::loadFixtures([__DIR__.'/../../Fixtures/Functional/Migration/routing.yml'], false);
+
+        /** @var Connection $connection */
+        $connection = static::$container->get('database_connection');
+
+        $connection->exec('ALTER TABLE tl_page DROP languagePrefix, DROP urlSuffix');
+
+        $migration = new RoutingMigration($connection, $urlSuffix, $prependLocale);
+        $migration->run();
+
+        $rows = $connection->fetchAll("SELECT type, language, languagePrefix, urlSuffix FROM tl_page");
+
+        foreach ($rows as $row) {
+            if ($row['type'] !== 'root') {
+                $this->assertSame('', $row['languagePrefix']);
+                $this->assertSame('.html', $row['urlSuffix']);
+                continue;
+            }
+
+            $this->assertSame($prependLocale ? $row['language'] : '', $row['languagePrefix']);
+            $this->assertSame($urlSuffix, $row['urlSuffix']);
+        }
+    }
+
+    public function migrationDataProvider(): \Generator
+    {
+        yield [
+            false,
+            '.html',
+        ];
+
+        yield [
+            true,
+            '.html',
+        ];
+
+        yield [
+            false,
+            '.json',
+        ];
+
+        yield [
+            true,
+            '.json',
+        ];
+
+        yield [
+            false,
+            '/',
+        ];
+
+        yield [
+            true,
+            '/',
+        ];
+
+        yield [
+            false,
+            '',
+        ];
+
+        yield [
+            true,
+            '',
+        ];
     }
 }

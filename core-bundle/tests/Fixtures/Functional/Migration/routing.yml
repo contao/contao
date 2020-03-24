@@ -1,0 +1,10 @@
+tl_page:
+    - id: 1
+      type: root
+      language: de
+    - id: 2
+      type: regular
+      language: de
+    - id: 3
+      type: root
+      language: de
