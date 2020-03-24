@@ -125,6 +125,7 @@ class Candidates implements CandidatesInterface
     {
         if ('' === $url) {
             $candidates[] = 'index';
+
             return;
         }
 

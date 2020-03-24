@@ -48,7 +48,7 @@ class RoutingTest extends FunctionalTestCase
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
 
-        /** @var  $client */
+        /** @var $client */
         $client = $this->createClient([], $_SERVER);
         System::setContainer($client->getContainer());
 

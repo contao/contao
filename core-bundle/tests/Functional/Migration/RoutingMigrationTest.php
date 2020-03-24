@@ -22,7 +22,7 @@ class RoutingMigrationTest extends FunctionalTestCase
     /**
      * @dataProvider shouldRunProvider
      */
-    public function testShouldRun(array $dropFields, bool $expected)
+    public function testShouldRun(array $dropFields, bool $expected): void
     {
         static::resetDatabaseSchema();
 

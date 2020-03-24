@@ -119,16 +119,20 @@ class PageUrlListenerTest extends TestCase
         $slug
             ->expects($this->once())
             ->method('generate')
-            ->with($activeRecord['title'], $activeRecord['id'], $this->callback(
-                function (callable $callback) use ($generated, $expectExists) {
-                    $this->assertSame(
-                        $expectExists,
-                        $callback($generated)
-                    );
+            ->with(
+                $activeRecord['title'],
+                $activeRecord['id'],
+                $this->callback(
+                    function (callable $callback) use ($generated, $expectExists) {
+                        $this->assertSame(
+                            $expectExists,
+                            $callback($generated)
+                        );
 
-                    return true;
-                }
-            ))
+                        return true;
+                    }
+                )
+            )
             ->willReturn($generated)
         ;
 
@@ -219,7 +223,7 @@ class PageUrlListenerTest extends TestCase
             'foo',
             'foo',
             'foo',
-            false
+            false,
         ];
 
         yield 'in same root' => [
@@ -247,7 +251,7 @@ class PageUrlListenerTest extends TestCase
             'foo',
             'foo',
             'foo',
-            true
+            true,
         ];
 
         yield 'in same root with prefix' => [
@@ -262,20 +266,20 @@ class PageUrlListenerTest extends TestCase
                 'urlSuffix' => '',
             ],
             [[
-                 'id' => 2,
-                 'title' => 'Foo',
-                 'alias' => 'foo',
-                 'rootId' => 1,
-                 'useFolderUrl' => false,
-                 'domain' => '',
-                 'languagePrefix' => 'de',
-                 'urlSuffix' => '',
-             ]],
+                'id' => 2,
+                'title' => 'Foo',
+                'alias' => 'foo',
+                'rootId' => 1,
+                'useFolderUrl' => false,
+                'domain' => '',
+                'languagePrefix' => 'de',
+                'urlSuffix' => '',
+            ]],
             [2],
             'foo',
             'foo',
             'foo',
-            true
+            true,
         ];
 
         yield 'in same root with suffix' => [
@@ -290,20 +294,20 @@ class PageUrlListenerTest extends TestCase
                 'urlSuffix' => '.html',
             ],
             [[
-                 'id' => 2,
-                 'title' => 'Foo',
-                 'alias' => 'foo',
-                 'rootId' => 1,
-                 'useFolderUrl' => false,
-                 'domain' => '',
-                 'languagePrefix' => '',
-                 'urlSuffix' => '.html',
-             ]],
+                'id' => 2,
+                'title' => 'Foo',
+                'alias' => 'foo',
+                'rootId' => 1,
+                'useFolderUrl' => false,
+                'domain' => '',
+                'languagePrefix' => '',
+                'urlSuffix' => '.html',
+            ]],
             [2],
             'foo',
             'foo',
             'foo',
-            true
+            true,
         ];
 
         yield 'in same root with prefix and suffix' => [
@@ -318,20 +322,20 @@ class PageUrlListenerTest extends TestCase
                 'urlSuffix' => '.html',
             ],
             [[
-                 'id' => 2,
-                 'title' => 'Foo',
-                 'alias' => 'foo',
-                 'rootId' => 1,
-                 'useFolderUrl' => false,
-                 'domain' => '',
-                 'languagePrefix' => 'de',
-                 'urlSuffix' => '.html',
-             ]],
+                'id' => 2,
+                'title' => 'Foo',
+                'alias' => 'foo',
+                'rootId' => 1,
+                'useFolderUrl' => false,
+                'domain' => '',
+                'languagePrefix' => 'de',
+                'urlSuffix' => '.html',
+            ]],
             [2],
             'foo',
             'foo',
             'foo',
-            true
+            true,
         ];
 
         yield 'in separate root without language prefix' => [
@@ -346,20 +350,20 @@ class PageUrlListenerTest extends TestCase
                 'urlSuffix' => '',
             ],
             [[
-                 'id' => 2,
-                 'title' => 'Foo',
-                 'alias' => 'foo',
-                 'rootId' => 2,
-                 'useFolderUrl' => false,
-                 'domain' => '',
-                 'languagePrefix' => '',
-                 'urlSuffix' => '',
-             ]],
+                'id' => 2,
+                'title' => 'Foo',
+                'alias' => 'foo',
+                'rootId' => 2,
+                'useFolderUrl' => false,
+                'domain' => '',
+                'languagePrefix' => '',
+                'urlSuffix' => '',
+            ]],
             [2],
             'foo',
             'foo',
             'foo',
-            true
+            true,
         ];
 
         yield 'in separate root with language prefix' => [
@@ -374,20 +378,20 @@ class PageUrlListenerTest extends TestCase
                 'urlSuffix' => '',
             ],
             [[
-                 'id' => 2,
-                 'title' => 'Foo',
-                 'alias' => 'foo',
-                 'rootId' => 2,
-                 'useFolderUrl' => false,
-                 'domain' => '',
-                 'languagePrefix' => 'fr',
-                 'urlSuffix' => '',
-             ]],
+                'id' => 2,
+                'title' => 'Foo',
+                'alias' => 'foo',
+                'rootId' => 2,
+                'useFolderUrl' => false,
+                'domain' => '',
+                'languagePrefix' => 'fr',
+                'urlSuffix' => '',
+            ]],
             [2],
             'foo',
             'foo',
             'foo',
-            false
+            false,
         ];
 
         yield 'in separate domain' => [
@@ -402,20 +406,20 @@ class PageUrlListenerTest extends TestCase
                 'urlSuffix' => '',
             ],
             [[
-                 'id' => 2,
-                 'title' => 'Foo',
-                 'alias' => 'foo',
-                 'rootId' => 2,
-                 'useFolderUrl' => false,
-                 'domain' => 'example.com',
-                 'languagePrefix' => '',
-                 'urlSuffix' => '',
-             ]],
+                'id' => 2,
+                'title' => 'Foo',
+                'alias' => 'foo',
+                'rootId' => 2,
+                'useFolderUrl' => false,
+                'domain' => 'example.com',
+                'languagePrefix' => '',
+                'urlSuffix' => '',
+            ]],
             [2],
             'foo',
             'foo',
             'foo',
-            false
+            false,
         ];
 
         yield 'with separate url suffix' => [
@@ -430,20 +434,20 @@ class PageUrlListenerTest extends TestCase
                 'urlSuffix' => '.html',
             ],
             [[
-                 'id' => 2,
-                 'title' => 'Foo',
-                 'alias' => 'foo',
-                 'rootId' => 2,
-                 'useFolderUrl' => false,
-                 'domain' => '',
-                 'languagePrefix' => '',
-                 'urlSuffix' => '',
-             ]],
+                'id' => 2,
+                'title' => 'Foo',
+                'alias' => 'foo',
+                'rootId' => 2,
+                'useFolderUrl' => false,
+                'domain' => '',
+                'languagePrefix' => '',
+                'urlSuffix' => '',
+            ]],
             [2],
             'foo',
             'foo',
             'foo',
-            false
+            false,
         ];
 
         yield 'with same prefix but separate url suffix' => [
@@ -458,20 +462,20 @@ class PageUrlListenerTest extends TestCase
                 'urlSuffix' => '.html',
             ],
             [[
-                 'id' => 2,
-                 'title' => 'Foo',
-                 'alias' => 'foo',
-                 'rootId' => 2,
-                 'useFolderUrl' => false,
-                 'domain' => '',
-                 'languagePrefix' => 'de',
-                 'urlSuffix' => '',
-             ]],
+                'id' => 2,
+                'title' => 'Foo',
+                'alias' => 'foo',
+                'rootId' => 2,
+                'useFolderUrl' => false,
+                'domain' => '',
+                'languagePrefix' => 'de',
+                'urlSuffix' => '',
+            ]],
             [2],
             'foo',
             'foo',
             'foo',
-            false
+            false,
         ];
 
         yield 'with prefix fragment' => [
@@ -486,20 +490,20 @@ class PageUrlListenerTest extends TestCase
                 'urlSuffix' => '.html',
             ],
             [[
-                 'id' => 2,
-                 'title' => 'Foo',
-                 'alias' => 'ch/foo',
-                 'rootId' => 2,
-                 'useFolderUrl' => false,
-                 'domain' => '',
-                 'languagePrefix' => 'de',
-                 'urlSuffix' => '.html',
-             ]],
+                'id' => 2,
+                'title' => 'Foo',
+                'alias' => 'ch/foo',
+                'rootId' => 2,
+                'useFolderUrl' => false,
+                'domain' => '',
+                'languagePrefix' => 'de',
+                'urlSuffix' => '.html',
+            ]],
             [2],
             'foo',
             'foo',
             'foo',
-            true
+            true,
         ];
 
         yield 'with prefix fragment inverted' => [
@@ -514,20 +518,20 @@ class PageUrlListenerTest extends TestCase
                 'urlSuffix' => '.html',
             ],
             [[
-                 'id' => 2,
-                 'title' => 'Foo',
-                 'alias' => 'foo',
-                 'rootId' => 2,
-                 'useFolderUrl' => false,
-                 'domain' => '',
-                 'languagePrefix' => 'de/ch',
-                 'urlSuffix' => '.html',
-             ]],
+                'id' => 2,
+                'title' => 'Foo',
+                'alias' => 'foo',
+                'rootId' => 2,
+                'useFolderUrl' => false,
+                'domain' => '',
+                'languagePrefix' => 'de/ch',
+                'urlSuffix' => '.html',
+            ]],
             [2],
             'ch/foo',
             'ch/foo',
             'foo',
-            true
+            true,
         ];
 
         yield 'with suffix fragment' => [
@@ -542,20 +546,20 @@ class PageUrlListenerTest extends TestCase
                 'urlSuffix' => '.html',
             ],
             [[
-                 'id' => 2,
-                 'title' => 'Foo',
-                 'alias' => 'foo.ht',
-                 'rootId' => 2,
-                 'useFolderUrl' => false,
-                 'domain' => '',
-                 'languagePrefix' => '',
-                 'urlSuffix' => 'ml',
-             ]],
+                'id' => 2,
+                'title' => 'Foo',
+                'alias' => 'foo.ht',
+                'rootId' => 2,
+                'useFolderUrl' => false,
+                'domain' => '',
+                'languagePrefix' => '',
+                'urlSuffix' => 'ml',
+            ]],
             [2],
             'foo',
             'foo',
             'foo',
-            true
+            true,
         ];
 
         yield 'with suffix fragment inverted' => [
@@ -570,20 +574,20 @@ class PageUrlListenerTest extends TestCase
                 'urlSuffix' => 'ml',
             ],
             [[
-                 'id' => 2,
-                 'title' => 'Foo',
-                 'alias' => 'foo',
-                 'rootId' => 2,
-                 'useFolderUrl' => false,
-                 'domain' => '',
-                 'languagePrefix' => '',
-                 'urlSuffix' => '.html',
-             ]],
+                'id' => 2,
+                'title' => 'Foo',
+                'alias' => 'foo',
+                'rootId' => 2,
+                'useFolderUrl' => false,
+                'domain' => '',
+                'languagePrefix' => '',
+                'urlSuffix' => '.html',
+            ]],
             [2],
             'foo.ht',
             'foo.ht',
             'foo',
-            true
+            true,
         ];
 
         yield 'with folderUrl match' => [
@@ -599,21 +603,21 @@ class PageUrlListenerTest extends TestCase
                 'urlSuffix' => '.html',
             ],
             [[
-                 'id' => 2,
-                 'title' => 'Foo',
-                 'alias' => 'bar/foo',
-                 'rootId' => 2,
-                 'useFolderUrl' => true,
-                 'folderUrl' => '',
-                 'domain' => '',
-                 'languagePrefix' => '',
-                 'urlSuffix' => '.html',
-             ]],
+                'id' => 2,
+                'title' => 'Foo',
+                'alias' => 'bar/foo',
+                'rootId' => 2,
+                'useFolderUrl' => true,
+                'folderUrl' => '',
+                'domain' => '',
+                'languagePrefix' => '',
+                'urlSuffix' => '.html',
+            ]],
             [2],
             'bar/foo',
             'foo',
             'bar/foo',
-            true
+            true,
         ];
 
         yield 'with folderUrl mismatch' => [
@@ -629,21 +633,21 @@ class PageUrlListenerTest extends TestCase
                 'urlSuffix' => '.html',
             ],
             [[
-                 'id' => 2,
-                 'title' => 'Foo',
-                 'alias' => 'bar/foo',
-                 'rootId' => 2,
-                 'useFolderUrl' => true,
-                 'folderUrl' => '',
-                 'domain' => '',
-                 'languagePrefix' => '',
-                 'urlSuffix' => '.html',
-             ]],
+                'id' => 2,
+                'title' => 'Foo',
+                'alias' => 'bar/foo',
+                'rootId' => 2,
+                'useFolderUrl' => true,
+                'folderUrl' => '',
+                'domain' => '',
+                'languagePrefix' => '',
+                'urlSuffix' => '.html',
+            ]],
             [2],
             'baz/foo',
             'foo',
             'baz/foo',
-            false
+            false,
         ];
 
         yield 'everything' => [
@@ -659,21 +663,21 @@ class PageUrlListenerTest extends TestCase
                 'urlSuffix' => '.html',
             ],
             [[
-                 'id' => 2,
-                 'title' => 'Foo',
-                 'alias' => 'de/bar/foo.ht',
-                 'rootId' => 2,
-                 'useFolderUrl' => true,
-                 'folderUrl' => '',
-                 'domain' => '',
-                 'languagePrefix' => 'ch',
-                 'urlSuffix' => 'ml',
-             ]],
+                'id' => 2,
+                'title' => 'Foo',
+                'alias' => 'de/bar/foo.ht',
+                'rootId' => 2,
+                'useFolderUrl' => true,
+                'folderUrl' => '',
+                'domain' => '',
+                'languagePrefix' => 'ch',
+                'urlSuffix' => 'ml',
+            ]],
             [2],
             'bar/foo',
             'foo',
             'bar/foo',
-            true
+            true,
         ];
 
         yield 'ignores alias page not found' => [
@@ -689,21 +693,21 @@ class PageUrlListenerTest extends TestCase
                 'urlSuffix' => '.html',
             ],
             [[
-                 'id' => 2,
-                 'title' => 'Foo',
-                 'alias' => 'bar/foo',
-                 'rootId' => 2,
-                 'useFolderUrl' => true,
-                 'folderUrl' => '',
-                 'domain' => '',
-                 'languagePrefix' => '',
-                 'urlSuffix' => '.html',
-             ]],
+                'id' => 2,
+                'title' => 'Foo',
+                'alias' => 'bar/foo',
+                'rootId' => 2,
+                'useFolderUrl' => true,
+                'folderUrl' => '',
+                'domain' => '',
+                'languagePrefix' => '',
+                'urlSuffix' => '.html',
+            ]],
             [3],
             'baz/foo',
             'foo',
             'baz/foo',
-            false
+            false,
         ];
     }
 
@@ -733,7 +737,7 @@ class PageUrlListenerTest extends TestCase
             [
                 'id' => 17,
                 'activeRecord' => (object) [
-                    'alias' => 'foo'
+                    'alias' => 'foo',
                 ],
             ]
         );
@@ -762,7 +766,7 @@ class PageUrlListenerTest extends TestCase
             [
                 'id' => 17,
                 'activeRecord' => (object) [
-                    'alias' => 'foo'
+                    'alias' => 'foo',
                 ],
             ]
         );
@@ -818,26 +822,26 @@ class PageUrlListenerTest extends TestCase
             ->withConsecutive(
                 ["SELECT languagePrefix, urlSuffix FROM tl_page WHERE type='root'"],
                 [
-                    "SELECT id FROM tl_page WHERE alias LIKE :alias AND id!=:id",
+                    'SELECT id FROM tl_page WHERE alias LIKE :alias AND id!=:id',
                     [
                         'alias' => '%foo%',
                         'id' => 1,
-                    ]
+                    ],
                 ],
                 [
-                    "SELECT id FROM tl_page WHERE alias LIKE :alias AND id!=:id",
+                    'SELECT id FROM tl_page WHERE alias LIKE :alias AND id!=:id',
                     [
                         'alias' => '%bar%',
                         'id' => 2,
-                    ]
+                    ],
                 ],
                 ["SELECT languagePrefix, urlSuffix FROM tl_page WHERE type='root'"],
                 [
-                    "SELECT id FROM tl_page WHERE alias LIKE :alias AND id!=:id",
+                    'SELECT id FROM tl_page WHERE alias LIKE :alias AND id!=:id',
                     [
                         'alias' => '%baz%',
                         'id' => 3,
-                    ]
+                    ],
                 ]
             )
             ->willReturn($statement)
@@ -1096,7 +1100,7 @@ class PageUrlListenerTest extends TestCase
         $listener->validateLanguagePrefix('de/ch', $dc);
     }
 
-    public function testReturnsValueWhenValidatingUrlSuffix()
+    public function testReturnsValueWhenValidatingUrlSuffix(): void
     {
         $framework = $this->mockFrameworkWithPages(
             [
@@ -1344,11 +1348,11 @@ class PageUrlListenerTest extends TestCase
 
         foreach ($ids as $k => $id) {
             $args[] = [
-                "SELECT id FROM tl_page WHERE alias LIKE :alias AND id!=:id",
+                'SELECT id FROM tl_page WHERE alias LIKE :alias AND id!=:id',
                 [
                     'alias' => '%'.$aliases[$k].'%',
                     'id' => $id,
-                ]
+                ],
             ];
 
             $statement = $this->createMock(Statement::class);
@@ -1365,7 +1369,7 @@ class PageUrlListenerTest extends TestCase
         $connection = $this->createMock(Connection::class);
 
         $connection
-            ->expects($this->exactly(count($statements)))
+            ->expects($this->exactly(\count($statements)))
             ->method('executeQuery')
             ->withConsecutive(...$args)
             ->willReturnOnConsecutiveCalls(...$statements)
@@ -1395,31 +1399,39 @@ class PageUrlListenerTest extends TestCase
 
         $pageAdapter
             ->method('findByPk')
-            ->willReturnCallback(static function (int $id) use ($pagesById) {
-                return $pagesById[$id] ?? null;
-            })
+            ->willReturnCallback(
+                static function (int $id) use ($pagesById) {
+                    return $pagesById[$id] ?? null;
+                }
+            )
         ;
 
         $pageAdapter
             ->method('findWithDetails')
-            ->willReturnCallback(static function (int $id) use ($pagesById) {
-                return $pagesById[$id] ?? null;
-            })
+            ->willReturnCallback(
+                static function (int $id) use ($pagesById) {
+                    return $pagesById[$id] ?? null;
+                }
+            )
         ;
 
         $pageAdapter
             ->method('findByPid')
-            ->willReturnCallback(static function (int $pid) use ($pagesByPid) {
-                return $pagesByPid[$pid] ?? null;
-            })
+            ->willReturnCallback(
+                static function (int $pid) use ($pagesByPid) {
+                    return $pagesByPid[$pid] ?? null;
+                }
+            )
         ;
 
         $inputAdapter = $this->mockAdapter(['post']);
         $inputAdapter
             ->method('post')
-            ->willReturnCallback(static function ($key) use ($inputData) {
-                return $inputData[$key] ?? null;
-            });
+            ->willReturnCallback(
+                static function ($key) use ($inputData) {
+                    return $inputData[$key] ?? null;
+                }
+            )
         ;
 
         return $this->mockContaoFramework(
@@ -1438,7 +1450,10 @@ class PageUrlListenerTest extends TestCase
         $translator = $this->createMock(TranslatorInterface::class);
 
         if (null === $messageKey || null === $url) {
-            $translator->expects($this->never())->method('trans');
+            $translator
+                ->expects($this->never())
+                ->method('trans')
+            ;
 
             return $translator;
         }

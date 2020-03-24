@@ -47,7 +47,6 @@ class CandidatesTest extends TestCase
         $this->assertSame($expected, $candidates);
     }
 
-
     /**
      * @dataProvider getCandidatesProvider
      */
@@ -73,7 +72,7 @@ class CandidatesTest extends TestCase
             ->method($this->anything())
         ;
 
-        $candidates = (new Candidates($framework, $connection, $urlSuffix[0] ?? '', 0 !== count($languages)))->getCandidates($request);
+        $candidates = (new Candidates($framework, $connection, $urlSuffix[0] ?? '', 0 !== \count($languages)))->getCandidates($request);
 
         $this->assertSame($expected, $candidates);
     }

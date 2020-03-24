@@ -74,15 +74,11 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
         /** @var PageModel $page */
         $page = $this->getPageAdapter()->findWithDetails($dc->id);
 
-        if ($value !== '') {
+        if ('' !== $value) {
             try {
                 $this->aliasExists($value, (int) $page->id, $page, true);
             } catch (DuplicateAliasException $exception) {
-                throw new \RuntimeException(
-                    $this->translator->trans('ERR.pageUrlExists', [$exception->getUrl()], 'contao_default'),
-                    $exception->getCode(),
-                    $exception
-                );
+                throw new \RuntimeException($this->translator->trans('ERR.pageUrlExists', [$exception->getUrl()], 'contao_default'), $exception->getCode(), $exception);
             }
 
             return $value;
@@ -132,7 +128,7 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
      */
     public function validateLanguagePrefix(string $value, DataContainer $dc): string
     {
-        if ($dc->activeRecord->type !== 'root' || $dc->activeRecord->languagePrefix === $value) {
+        if ('root' !== $dc->activeRecord->type || $dc->activeRecord->languagePrefix === $value) {
             return $value;
         }
 
@@ -145,11 +141,7 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
         try {
             $this->recursiveValidatePages((int) $rootPage->id, $rootPage);
         } catch (DuplicateAliasException $exception) {
-            throw new \RuntimeException(
-                $this->translator->trans('ERR.pageUrlPrefix', [$exception->getUrl()], 'contao_default'),
-                $exception->getCode(),
-                $exception
-            );
+            throw new \RuntimeException($this->translator->trans('ERR.pageUrlPrefix', [$exception->getUrl()], 'contao_default'), $exception->getCode(), $exception);
         }
 
         return $value;
@@ -160,7 +152,7 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
      */
     public function validateUrlSuffix($value, DataContainer $dc)
     {
-        if ($dc->activeRecord->type !== 'root' || $dc->activeRecord->urlSuffix === $value) {
+        if ('root' !== $dc->activeRecord->type || $dc->activeRecord->urlSuffix === $value) {
             return $value;
         }
 
@@ -173,15 +165,13 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
         try {
             $this->recursiveValidatePages((int) $rootPage->id, $rootPage);
         } catch (DuplicateAliasException $exception) {
-            throw new \RuntimeException(
-                $this->translator->trans('ERR.pageUrlSuffix', [$exception->getUrl()], 'contao_default')
-            );
+            throw new \RuntimeException($this->translator->trans('ERR.pageUrlSuffix', [$exception->getUrl()], 'contao_default'));
         }
 
         return $value;
     }
 
-    public function reset()
+    public function reset(): void
     {
         $this->prefixes = null;
         $this->suffixes = null;
@@ -237,7 +227,7 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
             )->fetchAll(FetchMode::COLUMN)
         ;
 
-        if (0 === count($aliasIds)) {
+        if (0 === \count($aliasIds)) {
             return false;
         }
 
@@ -299,7 +289,7 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
                 ->fetchAll()
             ;
 
-            if (0 === ($prefixLength = strlen($languagePrefix))) {
+            if (0 === ($prefixLength = \strlen($languagePrefix))) {
                 $this->prefixes = array_column($rows, 'languagePrefix');
             } else {
                 foreach (array_column($rows, 'languagePrefix') as $prefix) {
@@ -313,7 +303,7 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
                 }
             }
 
-            if (0 === ($suffixLength = strlen($urlSuffix))) {
+            if (0 === ($suffixLength = \strlen($urlSuffix))) {
                 $this->suffixes = array_column($rows, 'urlSuffix');
             } else {
                 foreach (array_column($rows, 'urlSuffix') as $suffix) {
@@ -339,7 +329,7 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
     {
         $data = array_filter(array_unique($data));
 
-        if (0 === count($data)) {
+        if (0 === \count($data)) {
             return null;
         }
 
