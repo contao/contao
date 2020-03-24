@@ -17,6 +17,17 @@ services:
         tags:
             - { name: terminal42_service_annotation }
 
+    Contao\CoreBundle\EventListener\DataContainer\PageUrlListener:
+        arguments:
+            - '@contao.framework'
+            - '@contao.slug'
+            - '@translator'
+            - '@database_connection'
+        public: true
+        tags:
+            - { name: terminal42_service_annotation }
+            - { name: kernel.reset, method: reset }
+
     contao.listener.backend_locale:
         class: Contao\CoreBundle\EventListener\BackendLocaleListener
         arguments:

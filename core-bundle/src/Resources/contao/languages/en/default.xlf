@@ -140,6 +140,15 @@
       <trans-unit id="ERR.aliasExists">
         <source>The alias "%s" already exists!</source>
       </trans-unit>
+      <trans-unit id="ERR.pageUrlExists">
+        <source>A page with URL "%s" already exists!</source>
+      </trans-unit>
+      <trans-unit id="ERR.pageUrlSuffix">
+        <source>This URL suffix leads to duplicate URLs (e.g. %s)!</source>
+      </trans-unit>
+      <trans-unit id="ERR.pageUrlPrefix">
+        <source>This language prefix leads to duplicate URLs (e.g. %s)!</source>
+      </trans-unit>
       <trans-unit id="ERR.importFolder">
         <source>The folder "%s" cannot be imported!</source>
       </trans-unit>

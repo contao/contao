@@ -211,10 +211,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'folderalias', 'doNotCopy'=>true, 'maxlength'=>255, 'tl_class'=>'w50 clr'),
-			'save_callback' => array
-			(
-				array('tl_page', 'generateAlias')
-			),
 			'sql'                     => "varchar(255) BINARY NOT NULL default ''"
 		),
 		'type' => array
@@ -1109,76 +1105,12 @@ class tl_page extends Contao\Backend
 	 */
 	public function generateAlias($varValue, Contao\DataContainer $dc)
 	{
-		$objPage = Contao\PageModel::findWithDetails($dc->id);
+		@trigger_error('tl_page::generateAlias() is deprecated, use the \Contao\CoreBundle\EventListener\DataContainer\PageAliasListener instead.', E_USER_DEPRECATED);
 
-		$aliasExists = function (string $alias) use ($dc, $objPage): bool
-		{
-			$objAliasIds = $this->Database->prepare("SELECT id FROM tl_page WHERE alias=? AND id!=?")
-										  ->execute($alias, $dc->id);
+		$listener = Contao\System::getContainer()->get(\Contao\CoreBundle\EventListener\DataContainer\PageAliasListener::class);
 
-			if (!$objAliasIds->numRows)
-			{
-				return false;
-			}
-
-			$strCurrentDomain = $objPage->domain;
-			$strCurrentLanguage = $objPage->rootLanguage;
-
-			if ($objPage->type == 'root')
-			{
-				$strCurrentDomain = Contao\Input::post('dns');
-				$strCurrentLanguage = Contao\Input::post('language');
-			}
-
-			while ($objAliasIds->next())
-			{
-				$objAliasPage = Contao\PageModel::findWithDetails($objAliasIds->id);
-
-				if ($objAliasPage->domain != $strCurrentDomain)
-				{
-					continue;
-				}
-
-				if ($objAliasPage->rootLanguage != $strCurrentLanguage && Contao\Config::get('addLanguageToUrl'))
-				{
-					continue;
-				}
-
-				// Duplicate alias found
-				return true;
-			}
-
-			return false;
-		};
-
-		// Generate an alias if there is none
-		if ($varValue == '')
-		{
-			$varValue = Contao\System::getContainer()->get('contao.slug')->generate
-			(
-				$dc->activeRecord->title,
-				$dc->activeRecord->id,
-				static function ($alias) use ($objPage, $aliasExists)
-				{
-					return $aliasExists(($objPage->useFolderUrl ? $objPage->folderUrl : '') . $alias);
-				}
-			);
-
-			// Generate folder URL aliases (see #4933)
-			if ($objPage->useFolderUrl && $objPage->folderUrl != '')
-			{
-				$varValue = $objPage->folderUrl . $varValue;
-			}
-		}
-		elseif ($aliasExists($varValue))
-		{
-			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
-		}
-
-		if ($varValue != $dc->activeRecord->alias)
-		{
-			$this->purgeSearchIndex($dc);
-		}
+		$varValue = $listener->generateAlias($varValue, $dc);
+		$varValue = $listener->purgeSearchIndexOnAliasChange($varValue, $dc);
 
 		return $varValue;
 	}
