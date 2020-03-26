@@ -69,8 +69,15 @@ class AddToSearchIndexListener
             return;
         }
 
+        $response = $event->getResponse();
+
+        // Only index successful responses (see #1091)
+        if (200 !== $response->getStatusCode()) {
+            return;
+        }
+
         /** @var Frontend $frontend */
         $frontend = $this->framework->getAdapter(Frontend::class);
-        $frontend->indexPageIfApplicable($event->getResponse());
+        $frontend->indexPageIfApplicable($response);
     }
 }
