@@ -30,7 +30,9 @@
           p = f;
         }
 
+        e.required = false;
         p.style.display = 'none';
+
         setTimeout(function() { e.value = '<?= $this->getSum() ?>'; }, 5000);
       })();
     </script>
