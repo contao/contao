@@ -439,7 +439,7 @@ class tl_templates extends Backend
 		}
 
 		// Unset a custom prefix to show all templates in the drop-down menu (see #784)
-		if ($strPrefix && \count(TemplateLoader::getPrefixedFiles($strPrefix)) < 1)
+		if ($strPrefix && count(TemplateLoader::getPrefixedFiles($strPrefix)) < 1)
 		{
 			$strPrefix = '';
 		}
