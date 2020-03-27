@@ -384,7 +384,25 @@ class tl_faq extends Backend
 				break;
 
 			case 'create':
-				if (!strlen(Input::get('pid')) || !in_array(Input::get('pid'), $root))
+				if (Input::get('mode') == 1)
+				{
+					$objFaq = $this->Database->prepare("SELECT pid FROM tl_faq WHERE id=?")
+											 ->limit(1)
+											 ->execute(Input::get('pid'));
+
+					if ($objFaq->numRows < 1)
+					{
+						throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid FAQ ID ' . Input::get('pid') . '.');
+					}
+
+					$pid = $objFaq->pid;
+				}
+				else
+				{
+					$pid = Input::get('pid');
+				}
+
+				if (!in_array($pid, $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to create FAQs in FAQ category ID ' . Input::get('pid') . '.');
 				}
