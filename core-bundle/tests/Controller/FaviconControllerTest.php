@@ -44,14 +44,37 @@ class FaviconControllerTest extends TestCase
         $this->assertSame(Response::HTTP_NOT_FOUND, $response->getStatusCode());
     }
 
-    public function testRobotsTxt(): void
+    public function testRegularFavicon(): void
+    {
+        $controller = $this->getController(__DIR__.'/../Fixtures/images/favicon.ico');
+
+        $request = Request::create('/favicon.ico');
+        $response = $controller($request);
+
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertSame('image/x-icon', $response->headers->get('Content-Type'));
+    }
+
+    public function testSvgFavicon(): void
+    {
+        $controller = $this->getController(__DIR__.'/../Fixtures/images/favicon.svg');
+
+        $request = Request::create('/favicon.ico');
+        $response = $controller($request);
+
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertSame('image/svg+xml', $response->headers->get('Content-Type'));
+    }
+
+    private function getController(string $iconPath): FaviconController
     {
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->id = 42;
         $pageModel->favicon = 'favicon-uuid';
 
         $faviconModel = $this->mockClassWithProperties(FilesModel::class);
-        $faviconModel->path = __DIR__.'/../Fixtures/images/favicon.ico';
+        $faviconModel->path = $iconPath;
+        $faviconModel->extension = substr($iconPath, -3);
 
         $pageModelAdapter = $this->mockAdapter(['findPublishedFallbackByHostname']);
         $pageModelAdapter
@@ -85,10 +108,6 @@ class FaviconControllerTest extends TestCase
             ->with(['contao.db.tl_page.42'])
         ;
 
-        $request = Request::create('/favicon.ico');
-        $controller = new FaviconController($framework, $responseTagger);
-        $response = $controller($request);
-
-        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+        return new FaviconController($framework, $responseTagger);
     }
 }
