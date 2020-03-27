@@ -14,8 +14,8 @@
     <?php $this->endblock(); ?>
 
     <?= $this->viewport ?>
-    <?= $this->framework ?>
     <?= $this->stylesheets ?>
+    <?= $this->framework ?>
     <?= $this->mooScripts ?>
     <?= $this->head ?>
   <?php $this->endblock(); ?>
