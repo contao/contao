@@ -877,7 +877,7 @@ abstract class DataContainer extends \Backend
 					$v['icon'] = \Image::getPath($v['icon']);
 				}
 
-				$attributes = sprintf('style="background-image:url(\'%s%s\')"', TL_ASSETS_URL, $v['icon']) . $attributes;
+				$attributes = sprintf(' style="background-image:url(\'%s%s\')"', TL_ASSETS_URL, $v['icon']) . $attributes;
 			}
 
 			if ($label == '')
