@@ -11,9 +11,7 @@
                 <div>
                     <label for="ctrl_user">{{ 'MSC.feUser'|trans }}:</label>
                     <input type="text" name="user" id="ctrl_user" list="userlist" class="tl_text user" placeholder="{{ 'MSC.username'|trans }}" value="{{ user }}" autocomplete="off">
-                    <datalist id="userlist">
-                        <option value="-"></option>
-                    </datalist>
+                    <datalist id="userlist"></datalist>
                 </div>
             {% endif %}
             <div>
