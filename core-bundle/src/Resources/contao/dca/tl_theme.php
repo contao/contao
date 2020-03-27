@@ -379,7 +379,7 @@ class tl_theme extends Backend
 	 */
 	public function themeStore()
 	{
-		return '<a href="https://themes.contao.org" target="_blank" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['tl_theme']['store'][1]) . '" class="header_store">' . $GLOBALS['TL_LANG']['tl_theme']['store'][0] . '</a>';
+		return '<a href="https://themes.contao.org" target="_blank" rel="noreferrer noopener" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['tl_theme']['store'][1]) . '" class="header_store">' . $GLOBALS['TL_LANG']['tl_theme']['store'][0] . '</a>';
 	}
 
 	/**

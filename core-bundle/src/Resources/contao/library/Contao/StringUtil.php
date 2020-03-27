@@ -486,7 +486,7 @@ class StringUtil
 			'<u>'              => '<span style="text-decoration:underline">',
 			'</u>'             => '</span>',
 			' target="_self"'  => '',
-			' target="_blank"' => ' onclick="return !window.open(this.href)"'
+			' target="_blank"' => ' onclick="return !window.open(this.href)"' //hier braucht man ja kein rel="noreferrer noopener"?
 		);
 
 		$strString = preg_replace(array_keys($arrPregReplace), array_values($arrPregReplace), $strString);
@@ -516,9 +516,9 @@ class StringUtil
 			'<u>'                                              => '<span style="text-decoration:underline">',
 			'</u>'                                             => '</span>',
 			' target="_self"'                                  => '',
-			' onclick="window.open(this.href); return false"'  => ' target="_blank"',
-			' onclick="window.open(this.href);return false"'   => ' target="_blank"',
-			' onclick="window.open(this.href); return false;"' => ' target="_blank"'
+			' onclick="window.open(this.href); return false"'  => ' target="_blank" rel="noreferrer noopener"',
+			' onclick="window.open(this.href);return false"'   => ' target="_blank" rel="noreferrer noopener"',
+			' onclick="window.open(this.href); return false;"' => ' target="_blank" rel="noreferrer noopener"'
 		);
 
 		$strString = preg_replace(array_keys($arrPregReplace), array_values($arrPregReplace), $strString);

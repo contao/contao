@@ -1627,7 +1627,7 @@ abstract class Controller extends \System
 				}
 				else
 				{
-					$objTemplate->attributes = ' target="_blank"';
+					$objTemplate->attributes = ' target="_blank"'; // Hier bin ich mir wegen  rel="noreferrer noopener" nicht sicher!
 				}
 			}
 		}

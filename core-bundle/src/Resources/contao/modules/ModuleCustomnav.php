@@ -174,7 +174,7 @@ class ModuleCustomnav extends \Module
 					// Override the link target
 					if ($objModel->type == 'redirect' && $objModel->target)
 					{
-						$row['target'] = ' target="_blank"';
+						$row['target'] = ' target="_blank" rel="noreferrer noopener"';
 					}
 
 					$items[] = $row;
@@ -200,7 +200,7 @@ class ModuleCustomnav extends \Module
 					// Override the link target
 					if ($objModel->type == 'redirect' && $objModel->target)
 					{
-						$row['target'] = ' target="_blank"';
+						$row['target'] = ' target="_blank" rel="noreferrer noopener"';
 					}
 
 					$items[] = $row;
