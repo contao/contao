@@ -56,7 +56,6 @@
       <trans-unit id="tl_settings.doNotCollapse.1">
         <source>Do not collapse elements in the back end preview.</source>
       </trans-unit>
-      </trans-unit>
       <trans-unit id="tl_settings.allowedTags.0">
         <source>Allowed HTML tags</source>
       </trans-unit>
