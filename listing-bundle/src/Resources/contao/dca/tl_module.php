@@ -120,9 +120,9 @@ class tl_module_listing extends Backend
 	 *
 	 * @return array
 	 */
-	public function getListTemplates()
+	public function getListTemplates(Contao\DataContainer $dc)
 	{
-		return $this->getTemplateGroup('list_');
+		return $this->getTemplateGroup('list_', $dc->activeRecord->pid);
 	}
 
 	/**
@@ -130,8 +130,8 @@ class tl_module_listing extends Backend
 	 *
 	 * @return array
 	 */
-	public function getInfoTemplates()
+	public function getInfoTemplates(Contao\DataContainer $dc)
 	{
-		return $this->getTemplateGroup('info_');
+		return $this->getTemplateGroup('info_', $dc->activeRecord->pid);
 	}
 }

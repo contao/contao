@@ -267,9 +267,9 @@ class tl_module_calendar extends Backend
 	 *
 	 * @return array
 	 */
-	public function getEventTemplates()
+	public function getEventTemplates(Contao\DataContainer $dc)
 	{
-		return $this->getTemplateGroup('event_');
+		return $this->getTemplateGroup('event_', $dc->activeRecord->pid);
 	}
 
 	/**
@@ -277,8 +277,8 @@ class tl_module_calendar extends Backend
 	 *
 	 * @return array
 	 */
-	public function getCalendarTemplates()
+	public function getCalendarTemplates(Contao\DataContainer $dc)
 	{
-		return $this->getTemplateGroup('cal_');
+		return $this->getTemplateGroup('cal_', $dc->activeRecord->pid);
 	}
 }

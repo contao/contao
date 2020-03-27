@@ -172,8 +172,8 @@ class tl_module_newsletter extends Backend
 	 *
 	 * @return array
 	 */
-	public function getNewsletterTemplates()
+	public function getNewsletterTemplates(Contao\DataContainer $dc)
 	{
-		return $this->getTemplateGroup('nl_');
+		return $this->getTemplateGroup('nl_', $dc->activeRecord->pid);
 	}
 }

@@ -85,11 +85,12 @@ abstract class Controller extends \System
 	/**
 	 * Return all template files of a particular group as array
 	 *
-	 * @param string $strPrefix The template name prefix (e.g. "ce_")
+	 * @param string  $strPrefix The template name prefix (e.g. "ce_")
+	 * @param integer $intTheme  An optional theme ID
 	 *
 	 * @return array An array of template names
 	 */
-	public static function getTemplateGroup($strPrefix)
+	public static function getTemplateGroup($strPrefix, $intTheme=0)
 	{
 		$arrTemplates = array();
 
@@ -118,7 +119,14 @@ abstract class Controller extends \System
 			// Try to select the themes (see #5210)
 			try
 			{
-				$objTheme = \ThemeModel::findAll(array('order'=>'name'));
+				if ($intTheme > 0)
+				{
+					$objTheme = ThemeModel::findByPk($intTheme, array('return'=>'Collection'));
+				}
+				else
+				{
+					$objTheme = ThemeModel::findAll(array('order'=>'name'));
+				}
 			}
 			catch (\Exception $e)
 			{

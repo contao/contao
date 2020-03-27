@@ -896,21 +896,19 @@ class tl_module extends Backend
 	 *
 	 * @return array
 	 */
-	public function getNavigationTemplates()
+	public function getNavigationTemplates(Contao\DataContainer $dc)
 	{
-		return $this->getTemplateGroup('nav_');
+		return $this->getTemplateGroup('nav_', $dc->activeRecord->pid);
 	}
 
 	/**
 	 * Return all module templates as array
 	 *
-	 * @param DataContainer $dc
-	 *
 	 * @return array
 	 */
-	public function getModuleTemplates(DataContainer $dc)
+	public function getModuleTemplates(Contao\DataContainer $dc)
 	{
-		return $this->getTemplateGroup('mod_' . $dc->activeRecord->type);
+		return $this->getTemplateGroup('mod_' . $dc->activeRecord->type, $dc->activeRecord->pid);
 	}
 
 	/**
@@ -918,9 +916,9 @@ class tl_module extends Backend
 	 *
 	 * @return array
 	 */
-	public function getMemberTemplates()
+	public function getMemberTemplates(Contao\DataContainer $dc)
 	{
-		return $this->getTemplateGroup('member_');
+		return $this->getTemplateGroup('member_', $dc->activeRecord->pid);
 	}
 
 	/**
@@ -928,9 +926,9 @@ class tl_module extends Backend
 	 *
 	 * @return array
 	 */
-	public function getSearchTemplates()
+	public function getSearchTemplates(Contao\DataContainer $dc)
 	{
-		return $this->getTemplateGroup('search_');
+		return $this->getTemplateGroup('search_', $dc->activeRecord->pid);
 	}
 
 	/**
@@ -938,9 +936,9 @@ class tl_module extends Backend
 	 *
 	 * @return array
 	 */
-	public function getRssTemplates()
+	public function getRssTemplates(Contao\DataContainer $dc)
 	{
-		return $this->getTemplateGroup('rss_');
+		return $this->getTemplateGroup('rss_', $dc->activeRecord->pid);
 	}
 
 	/**

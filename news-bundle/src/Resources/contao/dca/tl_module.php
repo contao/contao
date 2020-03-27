@@ -232,8 +232,8 @@ class tl_module_news extends Backend
 	 *
 	 * @return array
 	 */
-	public function getNewsTemplates()
+	public function getNewsTemplates(Contao\DataContainer $dc)
 	{
-		return $this->getTemplateGroup('news_');
+		return $this->getTemplateGroup('news_', $dc->activeRecord->pid);
 	}
 }

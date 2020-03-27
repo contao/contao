@@ -81,12 +81,12 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['com_template'] = array
 class tl_module_comments extends Backend
 {
 	/**
-	 * Return all navigation templates as array
+	 * Return all comment templates as array
 	 *
 	 * @return array
 	 */
-	public function getCommentTemplates()
+	public function getCommentTemplates(Contao\DataContainer $dc)
 	{
-		return $this->getTemplateGroup('com_');
+		return $this->getTemplateGroup('com_', $dc->activeRecord->pid);
 	}
 }
