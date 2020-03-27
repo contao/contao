@@ -59,6 +59,20 @@ class Crawl extends Backend implements \executable
 			return '';
 		}
 
+		try
+		{
+			$driver = System::getContainer()->get('lexik_maintenance.driver.factory')->getDriver();
+
+			// Hide the crawler in maintenance mode (see #1379)
+			if ($driver->isExists())
+			{
+				return '';
+			}
+		}
+		catch (\Exception $e)
+		{
+		}
+
 		/** @var Factory $factory */
 		$factory = System::getContainer()->get('contao.crawl.escargot_factory');
 		$subscriberNames = $factory->getSubscriberNames();
