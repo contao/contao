@@ -45,7 +45,7 @@ class RobotsTxtListener
         // Get all directives for user-agent: *
         $directiveList = $inspector->getDirectives();
 
-        // If no directive for user-agent: * exists, we add the user-agent directive
+        // If no directive for user-agent: * exists, we add the record
         if (0 === $directiveList->getLength()) {
             $record = new Record();
 
