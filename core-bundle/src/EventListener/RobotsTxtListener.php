@@ -16,6 +16,7 @@ use Contao\CoreBundle\Event\RobotsTxtEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageModel;
 use webignition\RobotsTxt\Directive\Directive;
+use webignition\RobotsTxt\Directive\UserAgentDirective;
 use webignition\RobotsTxt\Inspector\Inspector;
 use webignition\RobotsTxt\Record\Record;
 
@@ -39,11 +40,18 @@ class RobotsTxtListener
         $this->contaoFramework->initialize();
 
         $file = $event->getFile();
+        $inspector = new Inspector($file, '*');
 
-        // If no directive for user-agent: * exists, we add the record
-        if (0 === count($file->getRecords())) {
+        // Get all directives for user-agent: *
+        $directiveList = $inspector->getDirectives();
+
+        // If no directive for user-agent: * exists, we add the user-agent directive
+        if (0 === $directiveList->getLength()) {
             $record = new Record();
-            $this->addContaoDisallowDirectivesToRecord($record);
+
+            $userAgentDirectiveList = $record->getUserAgentDirectiveList();
+            $userAgentDirectiveList->add(new UserAgentDirective('*'));
+
             $file->addRecord($record);
         }
 
