@@ -39,13 +39,9 @@ class RobotsTxtListener
         $this->contaoFramework->initialize();
 
         $file = $event->getFile();
-        $inspector = new Inspector($file);
-
-        // Get all directives for user-agent: *
-        $directiveList = $inspector->getDirectives();
 
         // If no directive for user-agent: * exists, we add the record
-        if (0 === $directiveList->getLength()) {
+        if (0 === count($file->getRecords())) {
             $record = new Record();
             $this->addContaoDisallowDirectivesToRecord($record);
             $file->addRecord($record);
