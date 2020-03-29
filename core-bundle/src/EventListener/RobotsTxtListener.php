@@ -58,7 +58,8 @@ class RobotsTxtListener
         $records = $file->getRecords();
 
         foreach ($records as $record) {
-            $this->addContaoDisallowDirectivesToRecord($record);
+            $directiveList = $record->getDirectiveList();
+            $directiveList->add(new Directive('Disallow', '/contao/'));
         }
 
         /** @var PageModel $pageModel */
@@ -80,11 +81,5 @@ class RobotsTxtListener
 
             $event->getFile()->getNonGroupDirectives()->add(new Directive('Sitemap', $sitemap));
         }
-    }
-
-    private function addContaoDisallowDirectivesToRecord(Record $record): void
-    {
-        $directiveList = $record->getDirectiveList();
-        $directiveList->add(new Directive('Disallow', '/contao/'));
     }
 }
