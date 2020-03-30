@@ -24,6 +24,7 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class ContaoCoreExtension extends Extension
@@ -88,6 +89,7 @@ class ContaoCoreExtension extends Extension
         $this->setPredefinedImageSizes($config, $container);
         $this->setImagineService($config, $container);
         $this->overwriteImageTargetDir($config, $container);
+        $this->handleTokenCheckerConfig($config, $container);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -254,5 +256,19 @@ class ContaoCoreExtension extends Extension
         );
 
         @trigger_error('Using the "contao.image.target_path" parameter has been deprecated and will no longer work in Contao 5.0. Use the "contao.image.target_dir" parameter instead.', E_USER_DEPRECATED);
+    }
+
+    private function handleTokenCheckerConfig(array $config, ContainerBuilder $container): void
+    {
+        if (!$container->hasDefinition('contao.security.token_checker')) {
+            return;
+        }
+
+        $tokenChecker = $container->getDefinition('contao.security.token_checker');
+        $tokenChecker->replaceArgument(5, new Reference('security.access.simple_role_voter'));
+
+        if ($container->hasParameter('security.role_hierarchy.roles') && \count($container->getParameter('security.role_hierarchy.roles')) > 0) {
+            $tokenChecker->replaceArgument(5, new Reference('security.access.role_hierarchy_voter'));
+        }
     }
 }
