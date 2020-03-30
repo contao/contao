@@ -12,12 +12,17 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing;
 
+use Contao\CoreBundle\Routing\Content\ContentResolverInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-class LegacyRouteProvider implements RouteProviderInterface
+/**
+ * @internal
+ */
+class LegacyRouteProvider implements ContentResolverInterface, RouteProviderInterface
 {
     /**
      * @var FrontendLoader
@@ -29,27 +34,26 @@ class LegacyRouteProvider implements RouteProviderInterface
      */
     private $routeProvider;
 
-    /**
-     * @internal Do not inherit from this class; decorate the "contao.routing.legacy_route_provider" service instead
-     */
     public function __construct(FrontendLoader $frontendLoader, RouteProviderInterface $routeProvider)
     {
         $this->frontendLoader = $frontendLoader;
         $this->routeProvider = $routeProvider;
     }
 
-    public function getRouteCollectionForRequest(Request $request): RouteCollection
+    public function supportsContent($content): bool
     {
-        return $this->routeProvider->getRouteCollectionForRequest($request);
+        $routes = ['contao_frontend', 'contao_index', 'contao_root', 'contao_catch_all'];
+
+        return \is_string($content) && \in_array($content, $routes);
     }
 
-    public function getRouteByName($name): Route
+    public function resolveContent($content): Route
     {
-        if ('contao_frontend' === $name || 'contao_index' === $name) {
-            return $this->frontendLoader->load('.', 'contao_frontend')->get($name);
+        if ('contao_frontend' === $content || 'contao_index' === $content) {
+            return $this->frontendLoader->load('.', 'contao_frontend')->get($content);
         }
 
-        if ('contao_root' === $name) {
+        if ('contao_root' === $content) {
             return new Route(
                 '/',
                 [
@@ -60,7 +64,7 @@ class LegacyRouteProvider implements RouteProviderInterface
             );
         }
 
-        if ('contao_catch_all' === $name) {
+        if ('contao_catch_all' === $content) {
             return new Route(
                 '/{_url_fragment}',
                 [
@@ -72,11 +76,32 @@ class LegacyRouteProvider implements RouteProviderInterface
             );
         }
 
-        return $this->routeProvider->getRouteByName($name);
+        throw new RouteNotFoundException('No route for '.$content);
+    }
+
+
+    public function getRouteCollectionForRequest(Request $request): RouteCollection
+    {
+        @trigger_error(__METHOD__.' has been deprecated in Contao 4.10', E_USER_DEPRECATED);
+
+        return $this->routeProvider->getRouteCollectionForRequest($request);
+    }
+
+    public function getRouteByName($name): Route
+    {
+        @trigger_error(__METHOD__.' has been deprecated in Contao 4.10', E_USER_DEPRECATED);
+
+        try {
+            return $this->resolveContent($name);
+        } catch (RouteNotFoundException $e) {
+            return $this->routeProvider->getRouteByName($name);
+        }
     }
 
     public function getRoutesByNames($names): array
     {
+        @trigger_error(__METHOD__.' has been deprecated in Contao 4.10', E_USER_DEPRECATED);
+
         return $this->routeProvider->getRoutesByNames($names);
     }
 }

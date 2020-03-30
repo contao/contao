@@ -512,10 +512,11 @@ services:
 
     contao.routing.legacy_route_provider:
         class: Contao\CoreBundle\Routing\LegacyRouteProvider
-        decorates: contao.routing.route_provider
         arguments:
             - '@contao.routing.frontend_loader'
-            - '@contao.routing.legacy_route_provider.inner'
+            - '@contao.routing.route_provider'
+        tags:
+            - contao.content_resolver
 
     contao.routing.nested_matcher:
         class: Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher
@@ -569,9 +570,9 @@ services:
             - '@contao.security.token_checker'
 
     contao.routing.route_generator:
-        class: Symfony\Cmf\Component\Routing\ProviderBasedGenerator
+        class: Contao\CoreBundle\Routing\DelegatingUrlGenerator
         arguments:
-            - '@contao.routing.route_provider'
+            - !tagged_iterator contao.content_resolver
             - '@?logger'
 
     contao.routing.route_provider:
