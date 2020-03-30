@@ -260,6 +260,7 @@ class Crawl extends Backend implements \executable
 		foreach ($factory->getSubscribers($activeSubscribers) as $subscriber)
 		{
 			$subscriberHandler = new CrawlCsvLogHandler($this->getSubscriberLogFilePath($subscriber->getName(), $jobId), Logger::INFO);
+			$subscriberHandler->setFilterSource(\get_class($subscriber));
 			$handlers[] = $subscriberHandler;
 		}
 
