@@ -486,7 +486,7 @@ class StringUtil
 			'<u>'              => '<span style="text-decoration:underline">',
 			'</u>'             => '</span>',
 			' target="_self"'  => '',
-			' target="_blank"' => ' onclick="return !window.open(this.href)"' //hier braucht man ja kein rel="noreferrer noopener"?
+			' target="_blank"' => ' onclick="return !window.open(this.href)"'
 		);
 
 		$strString = preg_replace(array_keys($arrPregReplace), array_values($arrPregReplace), $strString);
