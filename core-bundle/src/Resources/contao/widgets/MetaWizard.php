@@ -149,7 +149,7 @@ class MetaWizard extends Widget
 					// DCA picker
 					if (isset($fieldConfig['dcaPicker']) && (\is_array($fieldConfig['dcaPicker']) || $fieldConfig['dcaPicker'] === true))
 					{
-						$return .= Backend::getDcaPickerWizard($fieldConfig['dcaPicker'], $this->strTable, $this->strField,  $this->strId . '_' . $field . '_' . $count);
+						$return .= Backend::getDcaPickerWizard($fieldConfig['dcaPicker'], $this->strTable, $this->strField, $this->strId . '_' . $field . '_' . $count);
 					}
 
 					$return .= '<br>';
