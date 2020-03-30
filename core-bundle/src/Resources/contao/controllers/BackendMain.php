@@ -135,7 +135,7 @@ class BackendMain extends Backend
 		elseif (!Input::get('do') && !Input::get('act'))
 		{
 			$this->Template->main .= $this->welcomeScreen();
-			$this->Template->title = $GLOBALS['TL_LANG']['MSC']['home'];
+			$this->Template->title = $GLOBALS['TL_LANG']['MSC']['dashboard'];
 		}
 		// Open a module
 		elseif (Input::get('do'))
