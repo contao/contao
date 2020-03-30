@@ -170,9 +170,6 @@
       <trans-unit id="tl_news.date_legend">
         <source>Date and time</source>
       </trans-unit>
-      <trans-unit id="tl_news.meta_legend">
-        <source>Meta data</source>
-      </trans-unit>
       <trans-unit id="tl_news.teaser_legend">
         <source>Subheadline and teaser</source>
       </trans-unit>

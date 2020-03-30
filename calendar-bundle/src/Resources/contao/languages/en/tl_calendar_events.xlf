@@ -209,9 +209,6 @@
       <trans-unit id="tl_calendar_events.date_legend">
         <source>Date and time</source>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.meta_legend">
-        <source>Meta data</source>
-      </trans-unit>
       <trans-unit id="tl_calendar_events.details_legend">
         <source>Event details</source>
       </trans-unit>
