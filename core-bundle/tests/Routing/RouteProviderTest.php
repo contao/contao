@@ -328,7 +328,21 @@ class RouteProviderTest extends TestCase
 
             $this->assertInstanceOf(PageModel::class, $routedPage);
             $this->assertSame('tl_page.'.$routedPage->id, $name);
-            $this->assertSame($pages[$i++], $routedPage);
+
+            $this->assertSame(
+                $pages[$i],
+                $routedPage,
+                sprintf(
+                    'Position %s should be %s/%s but is %s/%s',
+                    $i,
+                    $pages[$i]->rootLanguage,
+                    $pages[$i]->alias,
+                    $routedPage->rootLanguage,
+                    $routedPage->alias
+                )
+            );
+
+            ++$i;
         }
     }
 
@@ -408,6 +422,17 @@ class RouteProviderTest extends TestCase
                 3 => $this->createPage('en', 'foo/bar', false),
             ],
             ['de', 'fr'],
+        ];
+
+        // createPage() generates a rootSorting value from the language, so the test order is by language
+        yield 'Sorts by root page sorting if all of the languages are fallback' => [
+            [
+                1 => $this->createPage('en', 'foo', true),
+                3 => $this->createPage('ru', 'foo', true),
+                2 => $this->createPage('fr', 'foo', true),
+                0 => $this->createPage('en', 'foo/bar', true),
+            ],
+            ['de'],
         ];
 
         // createPage() generates a rootSorting value from the language, so the test order is by language

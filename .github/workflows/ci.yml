@@ -86,8 +86,10 @@ jobs:
                   tools: prestissimo, flex
                   coverage: none
 
-            - name: Create the database
-              run: mysql -uroot -proot -e "CREATE database contao_test"
+            - name: Initialize the database
+              run: |
+                  sudo /etc/init.d/mysql start
+                  mysql -uroot -proot -e "CREATE database contao_test"
 
             - name: Checkout
               uses: actions/checkout@v2
@@ -99,9 +101,7 @@ jobs:
               run: vendor/bin/phpunit --colors=always
 
             - name: Run the functional tests
-              run: |
-                  sudo /etc/init.d/mysql start
-                  vendor/bin/phpunit --testsuite=functional --colors=always
+              run: vendor/bin/phpunit --testsuite=functional --colors=always
               env:
                   DATABASE_URL: mysql://root:root@localhost:3306/contao_test
 
@@ -118,8 +118,10 @@ jobs:
                   tools: prestissimo, flex
                   coverage: none
 
-            - name: Create the database
-              run: mysql -uroot -proot -e "CREATE database contao_test"
+            - name: Initialize the database
+              run: |
+                  sudo /etc/init.d/mysql start
+                  mysql -uroot -proot -e "CREATE database contao_test"
 
             - name: Checkout
               uses: actions/checkout@v2
@@ -131,9 +133,7 @@ jobs:
               run: vendor/bin/phpunit --colors=always
 
             - name: Run the functional tests
-              run: |
-                  sudo /etc/init.d/mysql start
-                  vendor/bin/phpunit --testsuite=functional --colors=always
+              run: vendor/bin/phpunit --testsuite=functional --colors=always
               env:
                   DATABASE_URL: mysql://root:root@localhost:3306/contao_test
 

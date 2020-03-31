@@ -34,11 +34,11 @@ class StripCookiesSubscriber implements EventSubscriberInterface
         '_gac_.+',
 
         // Matomo (https://matomo.org/faq/general/faq_146/)
-        '_pk_id',
-        '_pk_ref',
-        '_pk_ses',
-        '_pk_cvar',
-        '_pk_hsr',
+        '_pk_id.*',
+        '_pk_ref.*',
+        '_pk_ses.*',
+        '_pk_cvar.*',
+        '_pk_hsr.*',
 
         // Cloudflare
         '__cfduid',
