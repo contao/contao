@@ -44,7 +44,7 @@
   <?php $this->endblock(); ?>
 
 </head>
-<body id="top" class="<?= $this->ua ?><?php if ($this->isPopup): ?> popup<?php endif; ?><?php if(null !== $this->environment):?> <?= ' ' . $this->environment ?><?php endif; ?>">
+<body id="top" class="<?= $this->ua ?><?php if ($this->isPopup): ?> popup<?php endif; ?><?php if (null !== $this->environment):?> <?= ' '.$this->environment ?><?php endif; ?>">
 
   <?php $this->block('header'); ?>
     <?php if (!$this->isPopup): ?>
