@@ -42,8 +42,14 @@ class CrawlCsvLogHandlerTest extends TestCase
 
     public function testSourceFilter(): void
     {
-        $record = ['level' => Logger::DEBUG, 'message' => 'foobar', 'extra' => [], 'context' => [
-            'source' => 'source', 'crawlUri' => new CrawlUri(new Uri('https://contao.org'), 0), ],
+        $record = [
+            'level' => Logger::DEBUG,
+            'message' => 'foobar',
+            'extra' => [],
+            'context' => [
+                'source' => 'source',
+                'crawlUri' => new CrawlUri(new Uri('https://contao.org'), 0),
+            ],
         ];
 
         $stream = fopen('php://memory', 'r+');
@@ -61,6 +67,7 @@ class CrawlCsvLogHandlerTest extends TestCase
 
         rewind($stream);
         $content = stream_get_contents($stream);
+
         $this->assertSame('Source,URI,"Found on URI","Found on level",Tags,Message'."\n".'source,https://contao.org/,,0,,foobar'."\n", $content);
     }
 
