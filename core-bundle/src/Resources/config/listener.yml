@@ -37,7 +37,7 @@ services:
             - '@security.logout_url_generator'
             - '@translator'
         tags:
-            - { name: kernel.event_listener }
+            - kernel.event_listener
 
     contao.listener.menu.backend_preview:
         class: Contao\CoreBundle\EventListener\Menu\BackendPreviewListener
@@ -49,7 +49,7 @@ services:
             - '@event_dispatcher'
             - '@contao.framework'
         tags:
-            - { name: kernel.event_listener }
+            - kernel.event_listener
 
     contao.listener.bypass_maintenance:
         class: Contao\CoreBundle\EventListener\BypassMaintenanceListener
@@ -73,7 +73,7 @@ services:
             - '@Contao\CoreBundle\Cron\Cron'
             - '%fragment.path%'
         tags:
-            - { name: kernel.event_listener }
+            - kernel.event_listener
 
     contao.listener.csrf_token_cookie:
         class: Contao\CoreBundle\EventListener\CsrfTokenCookieSubscriber
@@ -81,7 +81,7 @@ services:
             - '@contao.csrf.token_storage'
             - '%contao.csrf_cookie_prefix%'
         tags:
-            - { name: kernel.event_subscriber }
+            - kernel.event_subscriber
 
     contao.listener.data_container_callback:
         class: Contao\CoreBundle\EventListener\DataContainerCallbackListener
@@ -104,7 +104,7 @@ services:
     contao.listener.insecure_installation:
         class: Contao\CoreBundle\EventListener\InsecureInstallationListener
         tags:
-            - { name: kernel.event_listener }
+            - kernel.event_listener
 
     contao.listener.insert_tags.asset:
         class: Contao\CoreBundle\EventListener\InsertTags\AssetListener
@@ -127,7 +127,7 @@ services:
             - '@contao.routing.scope_matcher'
             - '%contao.locales%'
         tags:
-            - { name: kernel.event_subscriber }
+            - kernel.event_subscriber
 
     contao.listener.make_response_private:
         class: Contao\CoreBundle\EventListener\MakeResponsePrivateListener
@@ -135,7 +135,7 @@ services:
             - '@contao.routing.scope_matcher'
         tags:
             # The priority must be lower than the one of MergeHttpHeadersListener (defaults to 256)
-            - { name: kernel.event_listener }
+            - kernel.event_listener
 
     contao.listener.merge_http_headers:
         class: Contao\CoreBundle\EventListener\MergeHttpHeadersListener
@@ -164,14 +164,14 @@ services:
             - '@twig'
             - '@router'
         tags:
-            - { name: kernel.event_listener }
+            - kernel.event_listener
 
     contao.listener.preview_url_convert:
         class: Contao\CoreBundle\EventListener\PreviewUrlConvertListener
         arguments:
             - '@contao.framework'
         tags:
-            - { name: kernel.event_listener }
+            - kernel.event_listener
 
     contao.listener.preview_authentication:
         class: Contao\CoreBundle\EventListener\PreviewAuthenticationListener
@@ -217,7 +217,7 @@ services:
         arguments:
             - '@contao.framework'
         tags:
-            - { name: kernel.event_listener }
+            - kernel.event_listener
 
     contao.listener.search_index:
         class: Contao\CoreBundle\EventListener\SearchIndexListener
@@ -225,7 +225,7 @@ services:
             - '@contao.search.indexer'
             - '%fragment.path%'
         tags:
-            - { name: kernel.event_listener }
+            - kernel.event_listener
 
     contao.listener.store_referer:
         class: Contao\CoreBundle\EventListener\StoreRefererListener
@@ -233,12 +233,12 @@ services:
             - '@security.helper'
             - '@contao.routing.scope_matcher'
         tags:
-            - { name: kernel.event_listener }
+            - kernel.event_listener
 
     contao.listener.subrequest_cache:
         class: Contao\CoreBundle\EventListener\SubrequestCacheSubscriber
         tags:
-            - { name: kernel.event_subscriber }
+            - kernel.event_subscriber
             - { name: kernel.reset, method: reset }
 
     contao.listener.switch_user:
@@ -247,7 +247,7 @@ services:
             - '@security.token_storage'
             - '@logger'
         tags:
-            - { name: kernel.event_listener }
+            - kernel.event_listener
 
     contao.listener.two_factor.frontend:
         class: Contao\CoreBundle\EventListener\TwoFactorFrontendListener
@@ -257,7 +257,7 @@ services:
             - '@security.token_storage'
             - '%scheb_two_factor.security_tokens%'
         tags:
-            - { name: kernel.event_listener }
+            - kernel.event_listener
 
     contao.listener.user_session:
         class: Contao\CoreBundle\EventListener\UserSessionListener
@@ -267,4 +267,4 @@ services:
             - '@contao.routing.scope_matcher'
             - '@event_dispatcher'
         tags:
-            - { name: kernel.event_listener }
+            - kernel.event_listener

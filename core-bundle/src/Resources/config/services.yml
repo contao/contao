@@ -97,7 +97,7 @@ services:
     # Backwards compatibility
     contao.controller.backend_csv_import:
         alias: Contao\CoreBundle\Controller\BackendCsvImportController
-        deprecated: 'Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\BackendCsvImportController" instead.'
+        deprecated: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\BackendCsvImportController" instead.
         public: true
 
     Contao\CoreBundle\Controller\FaviconController:
@@ -109,7 +109,7 @@ services:
 
     Contao\CoreBundle\Controller\FrontendController:
         tags:
-            - { name: 'controller.service_arguments' }
+            - controller.service_arguments
 
     Contao\CoreBundle\Controller\FrontendModule\TwoFactorController:
         tags:
@@ -127,7 +127,7 @@ services:
     # Backwards compatibility
     contao.controller.images:
         alias: Contao\CoreBundle\Controller\ImagesController
-        deprecated: 'Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\ImagesController" instead.'
+        deprecated: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\ImagesController" instead.
         public: true
 
     Contao\CoreBundle\Controller\InsertTagsController:
@@ -139,7 +139,7 @@ services:
     # Backwards compatibility
     contao.controller.insert_tags:
         alias: Contao\CoreBundle\Controller\InsertTagsController
-        deprecated: 'Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\InsertTagsController" instead.'
+        deprecated: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\InsertTagsController" instead.
         public: true
 
     Contao\CoreBundle\Controller\RobotsTxtController:
@@ -175,7 +175,7 @@ services:
         arguments:
             - '@translator'
         tags:
-            - { name: 'contao.escargot_subscriber' }
+            - contao.escargot_subscriber
 
     contao.crawl.escargot_subscriber.search_index:
         class: Contao\CoreBundle\Crawl\Escargot\Subscriber\SearchIndexSubscriber
@@ -183,7 +183,7 @@ services:
             - '@contao.search.indexer'
             - '@translator'
         tags:
-            - { name: 'contao.escargot_subscriber' }
+            - contao.escargot_subscriber
 
     Contao\CoreBundle\Cron\Cron:
         arguments:
@@ -211,7 +211,7 @@ services:
     contao.data_collector:
         class: Contao\CoreBundle\DataCollector\ContaoDataCollector
         tags:
-            - { name: data_collector, template: '@ContaoCore/Collector/contao.html.twig', id: 'contao' }
+            - { name: data_collector, template: '@ContaoCore/Collector/contao.html.twig', id: contao }
 
     contao.doctrine.schema_provider:
         class: Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider
@@ -428,7 +428,7 @@ services:
             - '@translator'
             - '@database_connection'
         tags:
-            - { name: contao.picker_provider }
+            - contao.picker_provider
 
     Contao\CoreBundle\Repository\CronJobRepository:
         arguments:
@@ -604,7 +604,7 @@ services:
             - '@database_connection'
             - '@router'
         tags:
-            - { name: 'contao.search_indexer' }
+            - contao.search_indexer
 
     contao.search.indexer.delegating:
         class: Contao\CoreBundle\Search\Indexer\DelegatingIndexer
@@ -778,7 +778,7 @@ services:
     contao.slug.generator:
         class: Ausi\SlugGenerator\SlugGenerator
         arguments:
-            - { validChars: '0-9a-z' }
+            - { validChars: 0-9a-z }
         public: true
 
     contao.slug.valid_characters:
