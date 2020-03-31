@@ -28,6 +28,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string  $pageTitle
  * @property string  $language
  * @property boolean $useFolderUrl
+ * @property boolean $useAutoItem
  * @property string  $robots
  * @property string  $description
  * @property string  $redirect
@@ -995,6 +996,7 @@ class PageModel extends Model
 			$this->enforceTwoFactor = $objParentPage->enforceTwoFactor;
 			$this->twoFactorJumpTo = $objParentPage->twoFactorJumpTo;
 			$this->useFolderUrl = $objParentPage->useFolderUrl;
+			$this->useAutoItem = Config::get('useAutoItem');
 
 			// Store whether the root page has been published
 			$this->rootIsPublic = ($objParentPage->published && ($objParentPage->start == '' || $objParentPage->start <= $time) && ($objParentPage->stop == '' || $objParentPage->stop > ($time + 60)));
