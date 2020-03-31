@@ -497,6 +497,8 @@ services:
         class: Contao\CoreBundle\Routing\Enhancer\InputEnhancer
         arguments:
             - '@contao.framework'
+        tags:
+            - contao.page_router_enhancer
 
     contao.routing.language_filter:
         class: Contao\CoreBundle\Routing\Matcher\LanguageFilter
@@ -547,8 +549,6 @@ services:
             - ''
             - '@event_dispatcher'
             - '@contao.routing.route_provider'
-        calls:
-            - ['addRouteEnhancer', ['@contao.routing.input_enhancer']]
         tags:
             - { name: router, priority: 20 }
 

@@ -40,6 +40,7 @@ use Contao\CoreBundle\Event\SlugValidCharactersEvent;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
+use Symfony\Cmf\Component\Routing\DependencyInjection\Compiler\RegisterRouteEnhancersPass;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\EventDispatcher\DependencyInjection\AddEventAliasesPass;
@@ -93,5 +94,9 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new SearchIndexerPass()); // Must be before the CrawlerPass
         $container->addCompilerPass(new CrawlerPass());
         $container->addCompilerPass(new AddCronJobsPass());
+
+        $container->addCompilerPass(
+            new RegisterRouteEnhancersPass('contao.routing.page_router', 'contao.page_router_enhancer')
+        );
     }
 }
