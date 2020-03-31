@@ -4,5 +4,7 @@ coverage:
         project:
             default:
                 threshold: 0.2%
+codecov:
+    require_ci_to_pass: false
 
 comment: false
