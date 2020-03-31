@@ -122,6 +122,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->scalarNode('environment')
+                    ->defaultValue('')
                     ->end()
                 ->append($this->addImageNode())
                 ->append($this->addSecurityNode())
