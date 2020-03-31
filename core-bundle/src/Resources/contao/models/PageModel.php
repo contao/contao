@@ -1086,25 +1086,26 @@ class PageModel extends Model
 	 */
 	public function getFrontendUrl($strParams=null, $strForceLang=null)
 	{
+		$page = $this;
+		$page->loadDetails();
+
 		if ($strForceLang !== null)
 		{
 			@trigger_error('Using PageModel::getFrontendUrl() with $strForceLang has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
+			$page = $page->cloneOriginal();
+			$page->preventSaving(false);
+			$page->language = $strForceLang;
+			$page->rootLanguage = $strForceLang;
+
+			if (System::getContainer()->get('contao.framework')->isLegacyRouting())
+			{
+				$page->languagePrefix = System::getContainer()->getParameter('contao.prepend_locale') ? $strForceLang : '';
+			}
 		}
 
-		$this->loadDetails();
-
-		$objUrlGenerator = System::getContainer()->get('contao.routing.url_generator');
-
-		$strUrl = $objUrlGenerator->generate
-		(
-			($this->alias ?: $this->id) . $strParams,
-			array
-			(
-				'_locale' => ($strForceLang ?: $this->rootLanguage),
-				'_domain' => $this->domain,
-				'_ssl' => (bool) $this->rootUseSSL,
-			)
-		);
+		$objRouter = System::getContainer()->get('router');
+		$strUrl = $objRouter->generate($page, array('parameters' => $strParams));
 
 		// Make the URL relative to the base path
 		if (0 === strncmp($strUrl, '/', 1))
@@ -1126,19 +1127,8 @@ class PageModel extends Model
 	{
 		$this->loadDetails();
 
-		$objUrlGenerator = System::getContainer()->get('contao.routing.url_generator');
-
-		$strUrl = $objUrlGenerator->generate
-		(
-			($this->alias ?: $this->id) . $strParams,
-			array
-			(
-				'_locale' => $this->rootLanguage,
-				'_domain' => $this->domain,
-				'_ssl' => (bool) $this->rootUseSSL,
-			),
-			UrlGeneratorInterface::ABSOLUTE_URL
-		);
+		$objRouter = System::getContainer()->get('router');
+		$strUrl = $objRouter->generate($this, array('parameters' => $strParams), UrlGeneratorInterface::ABSOLUTE_URL);
 
 		return $this->applyLegacyLogic($strUrl, $strParams);
 	}
@@ -1159,25 +1149,16 @@ class PageModel extends Model
 			return $this->getAbsoluteUrl($strParams);
 		}
 
+		$this->loadDetails();
+
 		$context = $container->get('router')->getContext();
 		$baseUrl = $context->getBaseUrl();
 
 		// Add the preview script
 		$context->setBaseUrl($previewScript);
 
-		$objUrlGenerator = $container->get('contao.routing.url_generator');
-
-		$strUrl = $objUrlGenerator->generate
-		(
-			($this->alias ?: $this->id) . $strParams,
-			array
-			(
-				'_locale' => $this->rootLanguage,
-				'_domain' => $this->domain,
-				'_ssl' => (bool) $this->rootUseSSL,
-			),
-			UrlGeneratorInterface::ABSOLUTE_URL
-		);
+		$objRouter = System::getContainer()->get('router');
+		$strUrl = $objRouter->generate($this, array('parameters' => $strParams), UrlGeneratorInterface::ABSOLUTE_URL);
 
 		$context->setBaseUrl($baseUrl);
 
