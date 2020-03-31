@@ -218,8 +218,8 @@ jobs:
             - name: Cache the monorepo split
               uses: actions/cache@v1
               with:
-                path: .monorepo-split-cache
-                key: dev-${GITHUB_REF##*/}
+                  path: .monorepo-split-cache
+                  key: dev-${GITHUB_REF##*/}
 
             - name: Install the dependencies
               run: composer global require contao/monorepo-tools:dev-master

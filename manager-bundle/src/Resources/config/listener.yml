@@ -10,7 +10,7 @@ services:
             - '%contao_manager.manager_path%'
             - '@?contao_manager.jwt_manager'
         tags:
-            - { name: kernel.event_listener }
+            - kernel.event_listener
 
     contao_manager.listener.initialize_application:
         class: Contao\ManagerBundle\EventListener\InitializeApplicationListener
@@ -24,4 +24,4 @@ services:
         arguments:
             - '%kernel.project_dir%'
         tags:
-            - { name: kernel.event_listener }
+            - kernel.event_listener

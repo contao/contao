@@ -19,7 +19,7 @@ services:
     # Backwards compatibility
     contao_manager.controller.debug:
         alias: Contao\ManagerBundle\Controller\DebugController
-        deprecated: 'Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\ManagerBundle\Controller\DebugController" instead.'
+        deprecated: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\ManagerBundle\Controller\DebugController" instead.
         public: true
 
     contao_manager.jwt_manager:
@@ -46,6 +46,6 @@ services:
 
     contao_manager.twig.file_extension_filter_iterator:
         class: Contao\ManagerBundle\Twig\FileExtensionFilterIterator
-        decorates: 'twig.template_iterator'
+        decorates: twig.template_iterator
         arguments:
             - '@contao_manager.twig.file_extension_filter_iterator.inner'
