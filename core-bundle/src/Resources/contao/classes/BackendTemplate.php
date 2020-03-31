@@ -135,9 +135,12 @@ class BackendTemplate extends Template
 		}
 
 		// Add environment name to template @see #403
-		if (System::getContainer()->hasParameter('contao')) {
+		if (System::getContainer()->hasParameter('contao'))
+		{
 			$contaoParameters = System::getContainer()->getParameter('contao');
-			if (!empty($contaoParameters['environment'])) {
+
+			if (!empty($contaoParameters['environment']))
+			{
 				$this->environment = $contaoParameters['environment'];
 			}
 		}
