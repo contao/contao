@@ -21,7 +21,11 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
+use Symfony\Component\HttpClient\Chunk\LastChunk;
+use Symfony\Component\HttpClient\Exception\ClientException;
+use Symfony\Component\HttpClient\Exception\TransportException;
 use Symfony\Contracts\HttpClient\ChunkInterface;
+use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Terminal42\Escargot\BaseUriCollection;
@@ -300,6 +304,152 @@ class SearchIndexSubscriberTest extends TestCase
             new IndexerException('Major failure!'),
             LogLevel::DEBUG,
             'Forwarded to the search indexer. Did not index because of the following reason: Major failure!',
+            ['ok' => 0, 'warning' => 0, 'error' => 2],
+            ['ok' => 0, 'warning' => 0, 'error' => 1],
+        ];
+    }
+
+    /**
+     * @dataProvider onTransportExceptionProvider
+     */
+    public function testOnTransportException(TransportException $exception, ResponseInterface $response, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = []): void
+    {
+        $logger = $this->createMock(LoggerInterface::class);
+
+        if ('' !== $expectedLogLevel) {
+            $logger
+                ->expects($this->once())
+                ->method('log')
+                ->with(
+                    $expectedLogLevel,
+                    $expectedLogMessage,
+                    $this->callback(
+                        function (array $context) {
+                            $this->assertInstanceOf(CrawlUri::class, $context['crawlUri']);
+                            $this->assertSame(SearchIndexSubscriber::class, $context['source']);
+
+                            return true;
+                        }
+                    )
+                )
+            ;
+        } else {
+            $logger
+                ->expects($this->never())
+                ->method('log')
+            ;
+        }
+
+        $indexer = $this->createMock(IndexerInterface::class);
+        $indexer
+            ->expects($this->never())
+            ->method('index')
+        ;
+
+        $escargot = Escargot::create(new BaseUriCollection([new Uri('https://contao.org')]), new InMemoryQueue());
+        $escargot = $escargot->withLogger($logger);
+
+        $subscriber = new SearchIndexSubscriber($indexer, $this->getTranslator());
+        $subscriber->setEscargot($escargot);
+        $subscriber->setLogger(new SubscriberLogger($logger, \get_class($subscriber)));
+        $subscriber->onTransportException(new CrawlUri(new Uri('https://contao.org'), 0), $exception, $response);
+
+        $previousResult = null;
+
+        if (0 !== \count($previousStats)) {
+            $previousResult = new SubscriberResult(true, 'foobar');
+            $previousResult->addInfo('stats', $previousStats);
+        }
+
+        $result = $subscriber->getResult($previousResult);
+        $this->assertSame($expectedStats, $result->getInfo('stats'));
+    }
+
+    public function onTransportExceptionProvider(): \Generator
+    {
+        yield 'Test reports transport exception responses' => [
+            new TransportException('Could not resolve host or timeout'),
+            $this->getResponse(true, 404),
+            LogLevel::ERROR,
+            'Broken link! Could not request properly: Could not resolve host or timeout.',
+            ['ok' => 0, 'warning' => 0, 'error' => 2],
+            ['ok' => 0, 'warning' => 0, 'error' => 1],
+        ];
+    }
+
+    /**
+     * @dataProvider onHttpExceptionProvider
+     */
+    public function testOnHttpException(HttpExceptionInterface $exception, ResponseInterface $response, ChunkInterface $chunk, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = []): void
+    {
+        $logger = $this->createMock(LoggerInterface::class);
+
+        if ('' !== $expectedLogLevel) {
+            $logger
+                ->expects($this->once())
+                ->method('log')
+                ->with(
+                    $expectedLogLevel,
+                    $expectedLogMessage,
+                    $this->callback(
+                        function (array $context) {
+                            $this->assertInstanceOf(CrawlUri::class, $context['crawlUri']);
+                            $this->assertSame(SearchIndexSubscriber::class, $context['source']);
+
+                            return true;
+                        }
+                    )
+                )
+            ;
+        } else {
+            $logger
+                ->expects($this->never())
+                ->method('log')
+            ;
+        }
+
+        $indexer = $this->createMock(IndexerInterface::class);
+        $indexer
+            ->expects($this->never())
+            ->method('index')
+        ;
+
+        $escargot = Escargot::create(new BaseUriCollection([new Uri('https://contao.org')]), new InMemoryQueue());
+        $escargot = $escargot->withLogger($logger);
+
+        $subscriber = new SearchIndexSubscriber($indexer, $this->getTranslator());
+        $subscriber->setEscargot($escargot);
+        $subscriber->setLogger(new SubscriberLogger($logger, \get_class($subscriber)));
+        $subscriber->onHttpException(new CrawlUri(new Uri('https://contao.org'), 0), $exception, $response, $chunk);
+
+        $previousResult = null;
+
+        if (0 !== \count($previousStats)) {
+            $previousResult = new SubscriberResult(true, 'foobar');
+            $previousResult->addInfo('stats', $previousStats);
+        }
+
+        $result = $subscriber->getResult($previousResult);
+        $this->assertSame($expectedStats, $result->getInfo('stats'));
+    }
+
+    public function onHttpExceptionProvider(): \Generator
+    {
+        yield 'Test reports responses that were not successful' => [
+            new ClientException($this->getResponse(true, 404)),
+            $this->getResponse(true, 404),
+            new LastChunk(),
+            LogLevel::ERROR,
+            'Broken link! HTTP Status Code: 404.',
+            ['ok' => 0, 'warning' => 0, 'error' => 1],
+        ];
+
+        yield 'Test reports responses that were not successful (with previous result)' => [
+            new ClientException($this->getResponse(true, 404)),
+            $this->getResponse(true, 404),
+            new LastChunk(),
+            LogLevel::ERROR,
+            'Broken link! HTTP Status Code: 404.',
             ['ok' => 0, 'warning' => 0, 'error' => 2],
             ['ok' => 0, 'warning' => 0, 'error' => 1],
         ];
