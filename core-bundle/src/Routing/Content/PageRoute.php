@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\Routing\Content;
 
 use Contao\CoreBundle\ContaoCoreBundle;
@@ -16,10 +26,8 @@ class PageRoute extends Route implements RouteObjectInterface
 
     /**
      * The referenced content object.
-     *
-     * @var object|null
      */
-    protected $content;
+    private $content;
 
     public function __construct(PageModel $page, string $parameters = '', $content = null)
     {
@@ -69,8 +77,6 @@ class PageRoute extends Route implements RouteObjectInterface
 
     /**
      * Set the object this url points to.
-     *
-     * @param mixed $object
      */
     public function setContent($object): self
     {

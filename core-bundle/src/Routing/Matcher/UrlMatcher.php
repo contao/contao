@@ -59,7 +59,7 @@ class UrlMatcher extends RedirectableUrlMatcher implements FinalMatcherInterface
 
     protected function getAttributes(Route $route, $name, array $attributes): array
     {
-        if ($route instanceof RouteObjectInterface && is_string($route->getRouteKey())) {
+        if ($route instanceof RouteObjectInterface && \is_string($route->getRouteKey())) {
             $name = $route->getRouteKey();
         }
 

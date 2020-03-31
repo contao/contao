@@ -75,11 +75,11 @@ class RoutingMigration extends AbstractMigration
             $this->connection->exec($statement);
         }
 
-        $prefix = $this->prependLocale ? 'language': "''";
+        $prefix = $this->prependLocale ? 'language' : "''";
         $this->connection
             ->prepare("UPDATE tl_page SET languagePrefix=$prefix, urlSuffix=:suffix WHERE type='root'")
             ->execute([
-                'suffix' => $this->urlSuffix
+                'suffix' => $this->urlSuffix,
             ])
         ;
 

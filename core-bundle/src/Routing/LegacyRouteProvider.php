@@ -44,7 +44,7 @@ class LegacyRouteProvider implements ContentResolverInterface, RouteProviderInte
     {
         $routes = ['contao_frontend', 'contao_index', 'contao_root', 'contao_catch_all'];
 
-        return \is_string($content) && \in_array($content, $routes);
+        return \is_string($content) && \in_array($content, $routes, true);
     }
 
     public function resolveContent($content): Route
@@ -78,7 +78,6 @@ class LegacyRouteProvider implements ContentResolverInterface, RouteProviderInte
 
         throw new RouteNotFoundException('No route for '.$content);
     }
-
 
     public function getRouteCollectionForRequest(Request $request): RouteCollection
     {
