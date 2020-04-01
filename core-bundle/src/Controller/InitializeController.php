@@ -94,7 +94,7 @@ class InitializeController extends Controller
                 return '';
             },
             0,
-            PHP_OUTPUT_HANDLER_CLEANABLE
+            PHP_OUTPUT_HANDLER_REMOVABLE | PHP_OUTPUT_HANDLER_CLEANABLE
         );
 
         // register_shutdown_function() somehow can't handle $this
