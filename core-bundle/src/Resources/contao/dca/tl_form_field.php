@@ -170,6 +170,10 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'fieldname', 'spaceToUnderscore'=>true, 'maxlength'=>64, 'tl_class'=>'w50 clr'),
+			'save_callback' => array
+			(
+				array('tl_form_field', 'checkFieldName')
+			),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'text' => array
@@ -663,6 +667,32 @@ class tl_form_field extends Contao\Backend
 	public function optionImportWizard()
 	{
 		return ' <a href="' . $this->addToUrl('key=option') . '" title="' . Contao\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['ow_import'][1]) . '" onclick="Backend.getScrollOffset()">' . Contao\Image::getHtml('tablewizard.svg', $GLOBALS['TL_LANG']['MSC']['ow_import'][0]) . '</a>';
+	}
+
+	/**
+	 * Check the configured field name
+	 *
+	 * @param mixed                $varValue
+	 * @param Contao\DataContainer $dc
+	 *
+	 * @return string
+	 */
+	public function checkFieldName($varValue, Contao\DataContainer $dc)
+	{
+		if (!$dc->activeRecord || substr($varValue, -2) == '[]')
+		{
+			return $varValue;
+		}
+
+		$objField = $this->Database->prepare("SELECT COUNT(*) AS cnt FROM tl_form_field WHERE name=? AND pid=? AND id!=?")
+								   ->execute($varValue, $dc->activeRecord->pid, $dc->activeRecord->id);
+
+		if ($objField->cnt > 0)
+		{
+			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['duplicateFieldName'], $varValue));
+		}
+
+		return $varValue;
 	}
 
 	/**
