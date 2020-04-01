@@ -270,7 +270,7 @@ class ContaoCoreExtensionTest extends TestCase
     }
 
     /**
-     * Tests the contao.listener.insecure_installation service.
+     * Tests the contao.listener.initialize_controller service.
      */
     public function testRegistersTheInitializeControllerListener()
     {
