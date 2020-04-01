@@ -37,7 +37,7 @@ class MakeResponsePrivateListener
      *
      *   1. An Authorization header is present
      *   2. The session was started
-     *   3. The response sets a cookie (same reason as 1 but for other cookies than the session cookie)
+     *   3. The response sets a cookie (same reason as 2 but for other cookies than the session cookie)
      *   4. The response has a "Vary: Cookie" header and the request provides at least one cookie
      *
      * Some of this logic is also already implemented in the HttpCache (1, 2 and 3), but we
