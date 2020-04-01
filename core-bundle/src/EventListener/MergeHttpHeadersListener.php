@@ -144,8 +144,9 @@ class MergeHttpHeadersListener
         $allowOverrides = [];
 
         foreach ($this->headers as $header) {
-            if (preg_match('/^HTTP\/[^ ]* (\d{3}) (.*)$/i', $header, $matches)) {
-                $response->setStatusCode($matches[1], $matches[2]);
+            if (preg_match('/^HTTP\/[^ ]+ (\d{3})( (.+))?$/i', $header, $matches)) {
+                $text = isset($matches[3]) ? $matches[3] : '';
+                $response->setStatusCode($matches[1], $text);
                 continue;
             }
 
