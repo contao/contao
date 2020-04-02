@@ -58,7 +58,7 @@ abstract class FunctionalTestCase extends WebTestCase
         $tool->createSchema($metadata);
     }
 
-    private static function importFixture(Connection $connection, string $file)
+    private static function importFixture(Connection $connection, string $file): void
     {
         $data = Yaml::parseFile($file);
 
@@ -69,7 +69,13 @@ abstract class FunctionalTestCase extends WebTestCase
                     continue;
                 }
 
-                $connection->insert($table, $row);
+                $data = [];
+
+                foreach ($row as $key => $value) {
+                    $data[$connection->quoteIdentifier($key)] = $value;
+                }
+
+                $connection->insert($connection->quoteIdentifier($table), $data);
             }
         }
     }
