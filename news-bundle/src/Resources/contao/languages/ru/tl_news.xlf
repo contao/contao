@@ -225,10 +225,6 @@
         <source>Date and time</source>
         <target>Дата и время</target>
       </trans-unit>
-      <trans-unit id="tl_news.meta_legend">
-        <source>Meta data</source>
-        <target>Метаданные</target>
-      </trans-unit>
       <trans-unit id="tl_news.teaser_legend">
         <source>Subheadline and teaser</source>
         <target>Подзаголовок и анонс</target>
@@ -300,6 +296,10 @@
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
         <target>Вставить в этот архив новостей</target>
+      </trans-unit>
+      <trans-unit id="tl_news.editmeta">
+        <source>Edit the news item settings</source>
+        <target>Редактировать настройки элемента</target>
       </trans-unit>
     </body>
   </file>

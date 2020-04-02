@@ -846,6 +846,7 @@
       </trans-unit>
       <trans-unit id="tl_content.new.0">
         <source>New</source>
+        <target>Ново</target>
       </trans-unit>
       <trans-unit id="tl_content.new.1">
         <source>Add a new content element</source>

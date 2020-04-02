@@ -275,10 +275,6 @@
         <source>Date and time</source>
         <target>Datum a čas</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.meta_legend">
-        <source>Meta data</source>
-        <target>Meta informace</target>
-      </trans-unit>
       <trans-unit id="tl_calendar_events.details_legend">
         <source>Event details</source>
         <target>Zobrazit podrobnosti</target>
@@ -364,6 +360,10 @@
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>
         <target>Vložit do tohto kalenáře</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.editmeta">
+        <source>Edit the event settings</source>
+        <target>Upravit nastavení události</target>
       </trans-unit>
     </body>
   </file>

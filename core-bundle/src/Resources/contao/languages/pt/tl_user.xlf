@@ -161,6 +161,7 @@
       </trans-unit>
       <trans-unit id="tl_user.elements.0">
         <source>Content elements</source>
+        <target>Elementos de Conteúdo</target>
       </trans-unit>
       <trans-unit id="tl_user.elements.1">
         <source>Here you can select the allowed content element types.</source>
@@ -201,6 +202,7 @@
       </trans-unit>
       <trans-unit id="tl_user.imageSizes.1">
         <source>Here you can grant access to one or more image sizes.</source>
+        <target>Aqui pode dar acesso a um ou mais tamanhos de imagem.</target>
       </trans-unit>
       <trans-unit id="tl_user.forms.0">
         <source>Allowed forms</source>
@@ -224,6 +226,7 @@
       </trans-unit>
       <trans-unit id="tl_user.amg.1">
         <source>Members of these groups can be used in the front end preview.</source>
+        <target>Membros destes grupos podem ser usados na pré-visualização do front end.</target>
       </trans-unit>
       <trans-unit id="tl_user.disable.0">
         <source>Deactivate</source>
@@ -342,6 +345,7 @@
       </trans-unit>
       <trans-unit id="tl_user.useTwoFactor">
         <source>Use two-factor authentication</source>
+        <target>Usar autenticação em dois passos</target>
       </trans-unit>
       <trans-unit id="tl_user.new.0">
         <source>New</source>

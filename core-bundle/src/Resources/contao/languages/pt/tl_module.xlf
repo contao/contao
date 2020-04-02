@@ -227,15 +227,19 @@
       </trans-unit>
       <trans-unit id="tl_module.contextLength.0">
         <source>Context length</source>
+        <target>Largura de contexto</target>
       </trans-unit>
       <trans-unit id="tl_module.contextLength.1">
         <source>The first field defines the number of characters on the left and right side of each keyword and the second one the overall context length per result.</source>
+        <target>O primeiro campo define o numero de caracteres à esquerda e à direita de cada palavra chave e o segundo campo define a largura de contexto geral por resultado.</target>
       </trans-unit>
       <trans-unit id="tl_module.minKeywordLength.0">
         <source>Minimum keyword length</source>
+        <target>Cumprimento mínimo para palavra chave</target>
       </trans-unit>
       <trans-unit id="tl_module.minKeywordLength.1">
         <source>Keywords deceeding the minimum length will be ignored in the search results. Set to 0 to disable.</source>
+        <target>Palavras Chave com menos que a dimensão em caracteres que o valor mínimo serão ignoradas nos resultados de pesquisa. Definir como 0 para desativar.</target>
       </trans-unit>
       <trans-unit id="tl_module.perPage.0">
         <source>Items per page</source>
@@ -617,6 +621,7 @@ Caso receba este e-mail por engano, pedimos que contacte um administrador.
       </trans-unit>
       <trans-unit id="tl_module.new.1">
         <source>Create a new module</source>
+        <target>Criar um novo modulo</target>
       </trans-unit>
       <trans-unit id="tl_module.show">
         <source>Show the details of module ID %s</source>

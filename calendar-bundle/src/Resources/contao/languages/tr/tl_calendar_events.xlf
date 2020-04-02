@@ -275,10 +275,6 @@
         <source>Date and time</source>
         <target>Tarih ve saat</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.meta_legend">
-        <source>Meta data</source>
-        <target>Meta bilgileri</target>
-      </trans-unit>
       <trans-unit id="tl_calendar_events.details_legend">
         <source>Event details</source>
         <target>Etkinlik ayrıntıları</target>
@@ -365,6 +361,10 @@
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>
         <target>Bu takvimin içine yapıştır</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.editmeta">
+        <source>Edit the event settings</source>
+        <target>Etkinliğin ayarlarını düzenle</target>
       </trans-unit>
     </body>
   </file>

@@ -223,10 +223,6 @@
         <source>Date and time</source>
         <target>Tarih ve saat</target>
       </trans-unit>
-      <trans-unit id="tl_news.meta_legend">
-        <source>Meta data</source>
-        <target>Meta bilgileri</target>
-      </trans-unit>
       <trans-unit id="tl_news.teaser_legend">
         <source>Subheadline and teaser</source>
         <target>Alt başlık ve fragman</target>
@@ -298,6 +294,10 @@
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
         <target>Bu haber arşivinin içine ekle</target>
+      </trans-unit>
+      <trans-unit id="tl_news.editmeta">
+        <source>Edit the news item settings</source>
+        <target>Haber öğesi ayarlarını düzenle</target>
       </trans-unit>
     </body>
   </file>

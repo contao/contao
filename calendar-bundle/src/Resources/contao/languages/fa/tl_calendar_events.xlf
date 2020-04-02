@@ -277,10 +277,6 @@
         <source>Date and time</source>
         <target>تاریخ و ساعت</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.meta_legend">
-        <source>Meta data</source>
-        <target>اطلاعات متا</target>
-      </trans-unit>
       <trans-unit id="tl_calendar_events.details_legend">
         <source>Event details</source>
         <target>جزئیات رویداد</target>
@@ -368,6 +364,10 @@
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>
         <target>جاگذاری در این سالنما</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.editmeta">
+        <source>Edit the event settings</source>
+        <target>ویرایش تنظیمات رویداد</target>
       </trans-unit>
     </body>
   </file>

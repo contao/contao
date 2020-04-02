@@ -71,6 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.toggle">
         <source>Activate/deactivate media query ID %s</source>
+        <target>Ativar/Desativar o media query ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pasteafter.0">
         <source>Paste at the top</source>
@@ -82,9 +83,11 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.pastenew.0">
         <source>Create a new media query at the top</source>
+        <target>Criar um novo media query no topo</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pastenew.1">
         <source>Create a new media query after media query ID %s</source>
+        <target>Criar um novo media query após media query ID </target>
       </trans-unit>
     </body>
   </file>

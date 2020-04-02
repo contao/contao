@@ -225,10 +225,6 @@
         <source>Date and time</source>
         <target>日付と時刻</target>
       </trans-unit>
-      <trans-unit id="tl_news.meta_legend">
-        <source>Meta data</source>
-        <target>メタデータ</target>
-      </trans-unit>
       <trans-unit id="tl_news.teaser_legend">
         <source>Subheadline and teaser</source>
         <target>小見出しとティーザー</target>
@@ -299,6 +295,10 @@
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
+        <target>ニュース項目の設定を変更</target>
+      </trans-unit>
+      <trans-unit id="tl_news.editmeta">
+        <source>Edit the news item settings</source>
         <target>ニュース項目の設定を変更</target>
       </trans-unit>
     </body>

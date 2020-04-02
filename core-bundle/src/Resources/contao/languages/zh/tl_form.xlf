@@ -87,6 +87,7 @@
       </trans-unit>
       <trans-unit id="tl_form.skipEmpty.1">
         <source>Do not include empty fields in the form data.</source>
+        <target>不要在表单数据中包含空字段。</target>
       </trans-unit>
       <trans-unit id="tl_form.email.0">
         <source>E-mail</source>

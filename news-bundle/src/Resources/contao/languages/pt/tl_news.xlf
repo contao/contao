@@ -223,10 +223,6 @@
         <source>Date and time</source>
         <target>Data e hora</target>
       </trans-unit>
-      <trans-unit id="tl_news.meta_legend">
-        <source>Meta data</source>
-        <target>Dados meta</target>
-      </trans-unit>
       <trans-unit id="tl_news.teaser_legend">
         <source>Subheadline and teaser</source>
         <target>Subtítulo e amostra</target>
@@ -297,6 +293,10 @@
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
         <target>Colar para dentro deste artigo de noticias</target>
+      </trans-unit>
+      <trans-unit id="tl_news.editmeta">
+        <source>Edit the news item settings</source>
+        <target>Editar configurações do artigo de noticias</target>
       </trans-unit>
     </body>
   </file>

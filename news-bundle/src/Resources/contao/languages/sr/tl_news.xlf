@@ -223,10 +223,6 @@
         <source>Date and time</source>
         <target>Датум и време</target>
       </trans-unit>
-      <trans-unit id="tl_news.meta_legend">
-        <source>Meta data</source>
-        <target>Мета подаци</target>
-      </trans-unit>
       <trans-unit id="tl_news.teaser_legend">
         <source>Subheadline and teaser</source>
         <target>Поднаслов и тизер</target>
@@ -257,6 +253,7 @@
       </trans-unit>
       <trans-unit id="tl_news.new.0">
         <source>New</source>
+        <target>Ново</target>
       </trans-unit>
       <trans-unit id="tl_news.new.1">
         <source>Create a new news item</source>
@@ -296,6 +293,10 @@
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
         <target>Налепи у архиву вести</target>
+      </trans-unit>
+      <trans-unit id="tl_news.editmeta">
+        <source>Edit the news item settings</source>
+        <target>Уреди подешавања ставке вести</target>
       </trans-unit>
     </body>
   </file>

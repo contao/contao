@@ -14,8 +14,7 @@
         <target>Jaunumu barotnes</target>
       </trans-unit>
       <trans-unit id="MOD.tl_news">
-        <source>Articles</source>
-        <target>Raksti</target>
+        <source>Items</source>
       </trans-unit>
       <trans-unit id="FMD.news">
         <source>News</source>

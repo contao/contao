@@ -139,9 +139,11 @@
       </trans-unit>
       <trans-unit id="tl_faq.pastenew.0">
         <source>Create a new question at the top</source>
+        <target>在顶部创建新问题</target>
       </trans-unit>
       <trans-unit id="tl_faq.pastenew.1">
         <source>Create a new question after question ID %s</source>
+        <target>创建问题ID为 %s 的问题</target>
       </trans-unit>
     </body>
   </file>
