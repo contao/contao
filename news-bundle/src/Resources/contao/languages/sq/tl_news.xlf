@@ -223,10 +223,6 @@
         <source>Date and time</source>
         <target>Data dhe koha</target>
       </trans-unit>
-      <trans-unit id="tl_news.meta_legend">
-        <source>Meta data</source>
-        <target>Të dhënat në nivel meta</target>
-      </trans-unit>
       <trans-unit id="tl_news.teaser_legend">
         <source>Subheadline and teaser</source>
         <target>Nëtitull dhe ngacmues</target>
@@ -298,6 +294,10 @@
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
         <target>Fut në këtë arkiva </target>
+      </trans-unit>
+      <trans-unit id="tl_news.editmeta">
+        <source>Edit the news item settings</source>
+        <target>Përpuno kryen e këtij lajmi</target>
       </trans-unit>
     </body>
   </file>

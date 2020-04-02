@@ -277,10 +277,6 @@
         <source>Date and time</source>
         <target>Datums un laiks</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.meta_legend">
-        <source>Meta data</source>
-        <target>Meta dati</target>
-      </trans-unit>
       <trans-unit id="tl_calendar_events.details_legend">
         <source>Event details</source>
         <target>Notikuma detaļas</target>
@@ -368,6 +364,10 @@
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>
         <target>Ielīmēt šajā kalendārā</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.editmeta">
+        <source>Edit the event settings</source>
+        <target>Rediģēt notikuma iestatījumus</target>
       </trans-unit>
     </body>
   </file>

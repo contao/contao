@@ -252,6 +252,7 @@ Deixe em branco para criar um evento sem data/hora de fim definido.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.start.1">
         <source>If you want to prevent the event from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Caso pretenda prevenir que o evento surja no website antes de uma determinada data/hora, pode defini-lo aqui. Caso contrário, deixe este campo em branco.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.0">
         <source>Show until</source>
@@ -259,6 +260,7 @@ Deixe em branco para criar um evento sem data/hora de fim definido.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.1">
         <source>If you want to prevent the event from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Caso pretenda prevenir que o evento surja no website antes de uma determinada data/hora, pode defini-lo aqui. Caso contrário, deixe este campo em branco.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.tstamp.0">
         <source>Revision date</source>
@@ -275,10 +277,6 @@ Deixe em branco para criar um evento sem data/hora de fim definido.</target>
       <trans-unit id="tl_calendar_events.date_legend">
         <source>Date and time</source>
         <target>Data e hora</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.meta_legend">
-        <source>Meta data</source>
-        <target>Dados meta</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.details_legend">
         <source>Event details</source>
@@ -367,6 +365,10 @@ Deixe em branco para criar um evento sem data/hora de fim definido.</target>
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>
         <target>Colar neste calendário</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.editmeta">
+        <source>Edit the event settings</source>
+        <target>Edite as configurações de eventos</target>
       </trans-unit>
     </body>
   </file>

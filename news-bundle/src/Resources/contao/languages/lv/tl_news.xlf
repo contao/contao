@@ -225,10 +225,6 @@
         <source>Date and time</source>
         <target>Datums un laiks</target>
       </trans-unit>
-      <trans-unit id="tl_news.meta_legend">
-        <source>Meta data</source>
-        <target>Meta dati</target>
-      </trans-unit>
       <trans-unit id="tl_news.teaser_legend">
         <source>Subheadline and teaser</source>
         <target>Apakšvirsraksts un ievads</target>
@@ -300,6 +296,10 @@
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
         <target>Ielīmēt šajā jaunumu arhīvā</target>
+      </trans-unit>
+      <trans-unit id="tl_news.editmeta">
+        <source>Edit the news item settings</source>
+        <target>Rediģēt jaunumu vienuma iestatījumus</target>
       </trans-unit>
     </body>
   </file>

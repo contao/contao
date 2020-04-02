@@ -475,11 +475,11 @@
       </trans-unit>
       <trans-unit id="tl_content.playerCaption.0">
         <source>Caption</source>
-        <target>Bildunterschrift</target>
+        <target>Untertitel</target>
       </trans-unit>
       <trans-unit id="tl_content.playerCaption.1">
         <source>Here you can enter a caption.</source>
-        <target>Hier können Sie eine Bildunterschrift eingeben.</target>
+        <target>Hier können Sie einen Untertitel eingeben.</target>
       </trans-unit>
       <trans-unit id="tl_content.playerAspect.0">
         <source>Aspect ratio</source>

@@ -2,6 +2,55 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.2] (2020-04-02)
+
+**Fixed defects:**
+
+- [#1615] Add additional Google Analytics cookies to the cookie blacklist ([Mynyx])
+- [#1614] Fix a comment in the MakeResponsePrivateListener class ([Mynyx])
+- [#1613] Fix the Contao toolbar labels ([leofeyer])
+- [#1612] Ensure that the login icons are always visible in Firefox ([leofeyer])
+- [#1608] Increase the split button breakpoint ([leofeyer])
+- [#1600] Correctly filter subscriber specific crawl logs ([Toflar])
+- [#1599] Fixed broken URIs not being reported as error in search index subscriber ([Toflar])
+- [#1598] Hide the metadata fields if a news/event points to an external source ([leofeyer])
+- [#1549] Dynamically configure the TokenChecker service ([bytehead])
+- [#1592] Fix the picker in the meta wizard ([leofeyer])
+- [#1596] Handle the "toggle nodes" command in the main back end method ([leofeyer])
+- [#1597] Correctly check whether a group is allowed to import themes ([leofeyer])
+- [#1542] Keep the sorting of the selected IDs for actions ([rabauss])
+- [#1595] Use the correct page title on the back end dashboard page ([leofeyer])
+- [#1593] Re-add the "edit meta" label in the news and calendar bundles ([leofeyer])
+- [#1591] Show all files in the template editor ([leofeyer])
+- [#1579] Fix the preview bar alignment ([leofeyer])
+- [#1586] Correctly check for loaded languages when adding the default labels ([leofeyer])
+- [#1584] Show "-" if the device family is "Other" ([leofeyer])
+- [#1582] Remove the default preview bar datalist option ([leofeyer])
+- [#1581] Disable the "switch user" button if it would impersonate the original user ([leofeyer])
+- [#1580] Fix the tl_content.listtype DCA definition ([leofeyer])
+- [#1554] Send the correct content type for SVG favicons ([Toflar])
+- [#1551] Allow SVG images in favicons ([Toflar])
+- [#1541] Show label instead of ID in the picker widget ([ausi])
+- [#1525] Remove string type hint as there can be an array value ([bytehead])
+- [#1182] Allow clearing the model registry ([m-vo])
+- [#1534] Port the 'handle URL suffix when redirecting page IDs' changes ([leofeyer])
+- [#1533] Correctly sort if both root pages are fallback ([aschempp])
+- [#1532] Fixed some Piwik/Matomo cookie regex ([aschempp])
+- [#1520] Optimize MSC.twoFactorBackupCodesExplain ([Mynyx])
+- [#1513] Fix a "toggle element" permission check ([rabauss])
+- [#1493] Adjust the JSON-LD data in the default indexer test ([leofeyer])
+- [#877] Fix memory leaks in the "resize images" command ([ausi])
+- [#1475] Register custom types in functional tests ([aschempp])
+- [#1456] Do not redirect to the language URL ([aschempp])
+- [#1437] Translate the "show preview toolbar" title ([richardhj])
+- [#1457] Use a context prefix in the JSON-LD schema ([ausi])
+- [#1455] Do not expose the page ID in the JSON-LD context ([Toflar])
+- [#1450] Use the native font stack in the layout.html.twig template ([fritzmg])
+- [#1439] Fix missing image sizes with numeric theme names ([ausi])
+- [#1444] Make sure log messages are in proper CSV format ([Toflar])
+- [#1445] Retry failed schema diff migrations ([ausi])
+- [#1453] Fix the input length of the alias fields ([aschempp])
+
 ## [4.9.1] (2020-02-27)
 
 **Fixed defects:**
@@ -211,6 +260,7 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.2]: https://github.com/contao/contao/releases/tag/4.9.2
 [4.9.1]: https://github.com/contao/contao/releases/tag/4.9.1
 [4.9.0]: https://github.com/contao/contao/releases/tag/4.9.0
 [4.9.0-RC2]: https://github.com/contao/contao/releases/tag/4.9.0-RC2
@@ -223,11 +273,56 @@ This project adheres to [Semantic Versioning].
 [fritzmg]: https://github.com/fritzmg
 [leofeyer]: https://github.com/leofeyer
 [m-vo]: https://github.com/m-vo
+[Mynyx]: https://github.com/Mynyx
 [rabauss]: https://github.com/rabauss
 [richardhj]: https://github.com/richardhj
 [Tastaturberuf]: https://github.com/Tastaturberuf
 [Toflar]: https://github.com/Toflar
 [xchs]: https://github.com/xchs
+[#1615]: https://github.com/contao/contao/pull/1615
+[#1614]: https://github.com/contao/contao/pull/1614
+[#1613]: https://github.com/contao/contao/pull/1613
+[#1612]: https://github.com/contao/contao/pull/1612
+[#1608]: https://github.com/contao/contao/pull/1608
+[#1600]: https://github.com/contao/contao/pull/1600
+[#1599]: https://github.com/contao/contao/pull/1599
+[#1598]: https://github.com/contao/contao/pull/1598
+[#1549]: https://github.com/contao/contao/pull/1549
+[#1592]: https://github.com/contao/contao/pull/1592
+[#1596]: https://github.com/contao/contao/pull/1596
+[#1597]: https://github.com/contao/contao/pull/1597
+[#1542]: https://github.com/contao/contao/pull/1542
+[#1595]: https://github.com/contao/contao/pull/1595
+[#1593]: https://github.com/contao/contao/pull/1593
+[#1591]: https://github.com/contao/contao/pull/1591
+[#1579]: https://github.com/contao/contao/pull/1579
+[#1586]: https://github.com/contao/contao/pull/1586
+[#1584]: https://github.com/contao/contao/pull/1584
+[#1582]: https://github.com/contao/contao/pull/1582
+[#1581]: https://github.com/contao/contao/pull/1581
+[#1580]: https://github.com/contao/contao/pull/1580
+[#1554]: https://github.com/contao/contao/pull/1554
+[#1551]: https://github.com/contao/contao/pull/1551
+[#1541]: https://github.com/contao/contao/pull/1541
+[#1525]: https://github.com/contao/contao/pull/1525
+[#1182]: https://github.com/contao/contao/pull/1182
+[#1534]: https://github.com/contao/contao/pull/1534
+[#1533]: https://github.com/contao/contao/pull/1533
+[#1532]: https://github.com/contao/contao/pull/1532
+[#1520]: https://github.com/contao/contao/pull/1520
+[#1513]: https://github.com/contao/contao/pull/1513
+[#1493]: https://github.com/contao/contao/pull/1493
+[#877]: https://github.com/contao/contao/pull/877
+[#1475]: https://github.com/contao/contao/pull/1475
+[#1456]: https://github.com/contao/contao/pull/1456
+[#1437]: https://github.com/contao/contao/pull/1437
+[#1457]: https://github.com/contao/contao/pull/1457
+[#1455]: https://github.com/contao/contao/pull/1455
+[#1450]: https://github.com/contao/contao/pull/1450
+[#1439]: https://github.com/contao/contao/pull/1439
+[#1444]: https://github.com/contao/contao/pull/1444
+[#1445]: https://github.com/contao/contao/pull/1445
+[#1453]: https://github.com/contao/contao/pull/1453
 [#1423]: https://github.com/contao/contao/pull/1423
 [#1420]: https://github.com/contao/contao/pull/1420
 [#1421]: https://github.com/contao/contao/pull/1421

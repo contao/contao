@@ -23,6 +23,7 @@
       </trans-unit>
       <trans-unit id="MSC.com_notify">
         <source>Notify me of new comments by e-mail (you can cancel your subscription at any time)</source>
+        <target>通过电子邮件通知我新评论（您可以随时取消订阅）</target>
       </trans-unit>
       <trans-unit id="MSC.com_submit">
         <source>Submit comment</source>
@@ -69,6 +70,22 @@ Click here to edit or answer the comment:
 
 %s
 </source>
+        <target>%s 已经在网站中创建了一个新的评论:
+
+---
+
+%s
+
+---
+
+点击这里查看评论:
+
+%s
+
+点击这里编辑或者回复评论:
+
+%s
+</target>
       </trans-unit>
       <trans-unit id="MSC.com_moderated">
         <source>This comment has to be published in the back end before it will appear on the website!</source>
@@ -107,6 +124,22 @@ The confirmation link is valid for 24 hours. You can cancel your subscription at
 
 %s
 </source>
+        <target>您好 %s,
+
+请确认您希望通过此页面上的电子邮件收到新评论的通知请确认:
+
+%s
+
+---
+
+点击这里确认您的订阅:
+
+%s
+
+确认链接24小时有效。可以随时点击这里取消您的订阅:
+
+%s
+</target>
       </trans-unit>
       <trans-unit id="MSC.com_notifySubject">
         <source>New comment on %s</source>
@@ -127,6 +160,20 @@ Click here to cancel your subscription:
 
 %s
 </source>
+        <target>您好 %s,
+
+您订阅的页面已有一条新的评论:
+
+---
+
+%s
+
+---
+
+点击这里取消您的订阅:
+
+%s
+</target>
       </trans-unit>
       <trans-unit id="MSC.com_notifyReplySubject">
         <source>New reply to a comment on %s</source>
@@ -147,6 +194,20 @@ Click here to cancel your subscription:
 
 %s
 </source>
+        <target>您好 %s,
+
+您订阅的页面中已添加一条新的评论回复:
+
+---
+
+%s
+
+---
+
+点击这里取消您的订阅:
+
+%s
+</target>
       </trans-unit>
     </body>
   </file>
