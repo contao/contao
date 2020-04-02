@@ -30,6 +30,7 @@ use Contao\CoreBundle\EventListener\BypassMaintenanceListener;
 use Contao\CoreBundle\EventListener\CommandSchedulerListener;
 use Contao\CoreBundle\EventListener\DoctrineSchemaListener;
 use Contao\CoreBundle\EventListener\ExceptionConverterListener;
+use Contao\CoreBundle\EventListener\InitializeControllerListener;
 use Contao\CoreBundle\EventListener\InsecureInstallationListener;
 use Contao\CoreBundle\EventListener\LocaleListener;
 use Contao\CoreBundle\EventListener\MergeHttpHeadersListener;
@@ -266,6 +267,25 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('kernel.exception', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onKernelException', $tags['kernel.event_listener'][0]['method']);
         $this->assertSame(96, $tags['kernel.event_listener'][0]['priority']);
+    }
+
+    /**
+     * Tests the contao.listener.initialize_controller service.
+     */
+    public function testRegistersTheInitializeControllerListener()
+    {
+        $this->assertTrue($this->container->has('contao.listener.initialize_controller'));
+
+        $definition = $this->container->getDefinition('contao.listener.initialize_controller');
+
+        $this->assertSame(InitializeControllerListener::class, $definition->getClass());
+
+        $tags = $definition->getTags();
+
+        $this->assertArrayHasKey('kernel.event_listener', $tags);
+        $this->assertSame('kernel.response', $tags['kernel.event_listener'][0]['event']);
+        $this->assertSame(1000, $tags['kernel.event_listener'][0]['priority']);
+        $this->assertSame('onKernelResponse', $tags['kernel.event_listener'][0]['method']);
     }
 
     /**
