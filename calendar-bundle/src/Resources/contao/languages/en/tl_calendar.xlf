@@ -108,10 +108,10 @@
         <source>Full articles</source>
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.0">
-        <source>RSS feeds</source>
+        <source>Calendar feeds</source>
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.1">
-        <source>Manage RSS feeds</source>
+        <source>Manage calendar feeds</source>
       </trans-unit>
       <trans-unit id="tl_calendar.new.0">
         <source>New</source>

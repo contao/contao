@@ -101,6 +101,11 @@ services:
             # The priority must be higher than the one of the response exception listener (defaults to 64)
             - { name: kernel.event_listener, priority: 96 }
 
+    contao.listener.initialize_controller:
+        class: Contao\CoreBundle\EventListener\InitializeControllerListener
+        tags:
+            - { name: kernel.event_listener, priority: 1000 }
+
     contao.listener.insecure_installation:
         class: Contao\CoreBundle\EventListener\InsecureInstallationListener
         tags:
