@@ -4,4 +4,4 @@ services:
         calls:
             - ['setContainer', ['@service_container']]
         tags:
-            - { name: kernel.event_listener }
+            - kernel.event_listener

@@ -259,7 +259,7 @@ class Picker extends Widget
 			return $labelConfig['label_callback']($arrRow, $label, $dc, $arrRow);
 		}
 
-		return $arrRow['id'];
+		return $label ?: $arrRow['id'];
 	}
 
 	protected function getRelatedTable(): string

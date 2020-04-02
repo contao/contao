@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -485,23 +484,11 @@ class BackendUser extends User
 	 */
 	public function navigation($blnShowAll=false)
 	{
-		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
-
 		/** @var RouterInterface $router */
 		$router = System::getContainer()->get('router');
 
 		$arrModules = array();
-		$session = $objSessionBag->all();
-
-		// Toggle nodes
-		if (Input::get('mtg'))
-		{
-			$session['backend_modules'][Input::get('mtg')] = (isset($session['backend_modules'][Input::get('mtg')]) && $session['backend_modules'][Input::get('mtg')] == 0) ? 1 : 0;
-			$objSessionBag->replace($session);
-			Controller::redirect(preg_replace('/(&(amp;)?|\?)mtg=[^& ]*/i', '', Environment::get('request')));
-		}
-
+		$arrStatus = System::getContainer()->get('session')->getBag('contao_backend')->get('backend_modules');
 		$strRefererId = System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
 
 		foreach ($GLOBALS['BE_MOD'] as $strGroupName=>$arrGroupModules)
@@ -549,7 +536,7 @@ class BackendUser extends User
 			$arrModules[$strGroupName]['isClosed'] = false;
 
 			// Do not show the modules if the group is closed
-			if (!$blnShowAll && isset($session['backend_modules'][$strGroupName]) && $session['backend_modules'][$strGroupName] < 1)
+			if (!$blnShowAll && isset($arrStatus[$strGroupName]) && $arrStatus[$strGroupName] < 1)
 			{
 				$arrModules[$strGroupName]['class'] = str_replace('node-expanded', '', $arrModules[$strGroupName]['class']) . ' node-collapsed';
 				$arrModules[$strGroupName]['title'] = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['expandNode']);

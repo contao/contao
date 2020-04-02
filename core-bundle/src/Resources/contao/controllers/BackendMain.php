@@ -14,6 +14,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Util\PackageUtil;
 use Knp\Bundle\TimeBundle\DateTimeFormatter;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -123,8 +124,19 @@ class BackendMain extends Backend
 			$this->objAjax->executePreActions();
 		}
 
+		// Toggle nodes
+		if (Input::get('mtg'))
+		{
+			/** @var AttributeBagInterface $objSessionBag */
+			$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+			$session = $objSessionBag->all();
+			$session['backend_modules'][Input::get('mtg')] = (isset($session['backend_modules'][Input::get('mtg')]) && $session['backend_modules'][Input::get('mtg')] == 0) ? 1 : 0;
+			$objSessionBag->replace($session);
+
+			Controller::redirect(preg_replace('/(&(amp;)?|\?)mtg=[^& ]*/i', '', Environment::get('request')));
+		}
 		// Error
-		if (Input::get('act') == 'error')
+		elseif (Input::get('act') == 'error')
 		{
 			$this->Template->error = $GLOBALS['TL_LANG']['ERR']['general'];
 			$this->Template->title = $GLOBALS['TL_LANG']['ERR']['general'];
@@ -135,7 +147,7 @@ class BackendMain extends Backend
 		elseif (!Input::get('do') && !Input::get('act'))
 		{
 			$this->Template->main .= $this->welcomeScreen();
-			$this->Template->title = $GLOBALS['TL_LANG']['MSC']['home'];
+			$this->Template->title = $GLOBALS['TL_LANG']['MSC']['dashboard'];
 		}
 		// Open a module
 		elseif (Input::get('do'))

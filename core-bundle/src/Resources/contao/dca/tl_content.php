@@ -307,6 +307,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'inputType'               => 'select',
 			'options'                 => array('ordered', 'unordered'),
 			'eval'                    => array('tl_class'=>'w50'),
+			'reference'               => &$GLOBALS['TL_LANG']['tl_content'],
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'listitems' => array
@@ -1136,7 +1137,7 @@ class tl_content extends Contao\Backend
 					$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE id IN(" . implode(',', array_map('\intval', $session['CURRENT']['IDS'])) . ") AND type IN(" . implode(',', array_fill(0, count($this->User->elements), '?')) . ")")
 											 ->execute(...$this->User->elements);
 
-					$session['CURRENT']['IDS'] = $objCes->fetchEach('id');
+					$session['CURRENT']['IDS'] = array_intersect($session['CURRENT']['IDS'], $objCes->fetchEach('id'));
 				}
 
 				$objSession->replace($session);
@@ -1159,7 +1160,7 @@ class tl_content extends Contao\Backend
 					$objCes = $this->Database->prepare("SELECT id, type FROM tl_content WHERE id IN(" . implode(',', array_map('\intval', $session['CLIPBOARD']['tl_content']['id'])) . ") AND type IN(" . implode(',', array_fill(0, count($this->User->elements), '?')) . ")")
 											 ->execute(...$this->User->elements);
 
-					$session['CLIPBOARD']['tl_content']['id'] = $objCes->fetchEach('id');
+					$session['CLIPBOARD']['tl_content']['id'] = array_intersect($session['CLIPBOARD']['tl_content']['id'], $objCes->fetchEach('id'));
 				}
 
 				$objSession->replace($session);

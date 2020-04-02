@@ -2605,9 +2605,16 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		// Folders
 		for ($f=0, $c=\count($folders); $f<$c; $f++)
 		{
+			$currentFolder = StringUtil::stripRootDir($folders[$f]);
+
+			// Hide unsynchronized folders in the picker (see #919)
+			if ($this->strPickerFieldType && !Dbafs::shouldBeSynchronized($currentFolder))
+			{
+				continue;
+			}
+
 			$md5 = substr(md5($folders[$f]), 0, 8);
 			$content = Folder::scan($folders[$f]);
-			$currentFolder = StringUtil::stripRootDir($folders[$f]);
 			$session['filetree'][$md5] = is_numeric($session['filetree'][$md5]) ? $session['filetree'][$md5] : 0;
 			$currentEncoded = $this->urlEncode($currentFolder);
 			$countFiles = \count($content);

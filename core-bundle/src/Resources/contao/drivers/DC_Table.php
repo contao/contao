@@ -4268,10 +4268,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 											   ->limit(1)
 											   ->execute($_v);
 
-					if ($objLabel->numRows)
-					{
-						$_v = $objLabel->value;
-					}
+					$_v = $objLabel->numRows ? $objLabel->value : '-';
 				}
 				elseif (\is_array($GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['reference'][$_v]))
 				{
