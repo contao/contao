@@ -115,9 +115,11 @@
       </trans-unit>
       <trans-unit id="tl_settings.sslProxyDomain.0">
         <source>SSL proxy domain</source>
+        <target>Domínio SSL proxy</target>
       </trans-unit>
       <trans-unit id="tl_settings.sslProxyDomain.1">
         <source>If your website is available via an SSL proxy server, please enter its domain here (e.g. &lt;em&gt;sslsites.de&lt;/em&gt;).</source>
+        <target>Se o seu site está disponível via servidor SSL proxy, por favor introduza o domínio aqui (ex. &lt;em&gt;sslsites.de&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_settings.privacyAnonymizeIp.0">
         <source>Anonymize IP addresses</source>
@@ -213,6 +215,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.maxImageWidth.1">
         <source>If the width of an image or movie exceeds this value, it will be adjusted automatically. Set to 0 to disable the limit.</source>
+        <target>Se o tamanho de uma imagem ou filme exceder este valor, será ajustado automaticamente. Definir como 0 para remover o limite.</target>
       </trans-unit>
       <trans-unit id="tl_settings.gdMaxImgWidth.0">
         <source>Maximum GD image width</source>
@@ -364,6 +367,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.proxy_legend">
         <source>Proxy configuration</source>
+        <target>Configuração proxy</target>
       </trans-unit>
       <trans-unit id="tl_settings.privacy_legend">
         <source>Privacy settings</source>

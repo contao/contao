@@ -190,12 +190,12 @@
         <target>Показать комментарии архива ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.0">
-        <source>RSS feeds</source>
-        <target>RSS-каналы</target>
+        <source>News feeds</source>
+        <target>Каналы новостей</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.1">
-        <source>Manage RSS feeds</source>
-        <target>Управление RSS-каналами</target>
+        <source>Manage news feeds</source>
+        <target>Управление новостными каналами</target>
       </trans-unit>
     </body>
   </file>

@@ -39,6 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.1">
         <source>Overwrite the image meta data from the file manager.</source>
+        <target>Substitui a meta data de imagem a partir do file manager.</target>
       </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
         <source>Source file</source>
@@ -310,6 +311,7 @@
       </trans-unit>
       <trans-unit id="tl_content.rel.1">
         <source>To trigger the lightbox, enter a &lt;em&gt;rel&lt;/em&gt; attribute here.</source>
+        <target>Para accionar a lightbox, introduza um atributo &lt;em&gt;rel&lt;/em&gt; aqui.</target>
       </trans-unit>
       <trans-unit id="tl_content.useImage.0">
         <source>Create an image link</source>
@@ -685,6 +687,7 @@
       </trans-unit>
       <trans-unit id="tl_content.random">
         <source>Random order without pagination</source>
+        <target>Ordem aleatória sem paginação.</target>
       </trans-unit>
       <trans-unit id="tl_content.includeTemplate">
         <source>The &lt;em&gt;%s&lt;/em&gt; template needs to be included in the page layout.</source>

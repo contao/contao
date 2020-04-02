@@ -190,12 +190,11 @@
         <target>Skasuj kalendarz ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.0">
-        <source>RSS feeds</source>
-        <target>Kanały RSS</target>
+        <source>Calendar feeds</source>
+        <target>Kanały RSS kalendarza</target>
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.1">
-        <source>Manage RSS feeds</source>
-        <target>Zarządzaj kanałami RSS</target>
+        <source>Manage calendar feeds</source>
       </trans-unit>
     </body>
   </file>

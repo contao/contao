@@ -43,9 +43,11 @@
       </trans-unit>
       <trans-unit id="tl_user.limitWidth.0">
         <source>Limit width</source>
+        <target>Largura limite</target>
       </trans-unit>
       <trans-unit id="tl_user.limitWidth.1">
         <source>Limit the maximum width of the back end to 1140px.</source>
+        <target>Limitar largura máxima do back end em 1140px.</target>
       </trans-unit>
       <trans-unit id="tl_user.uploader.0">
         <source>File uploader</source>
@@ -189,6 +191,7 @@
       </trans-unit>
       <trans-unit id="tl_user.imageSizes.1">
         <source>Here you can grant access to one or more image sizes.</source>
+        <target>Aqui pode dar acesso a um ou mais tamanhos de imagem.</target>
       </trans-unit>
       <trans-unit id="tl_user.forms.0">
         <source>Allowed forms</source>
@@ -212,6 +215,7 @@
       </trans-unit>
       <trans-unit id="tl_user.amg.1">
         <source>Members of these groups can be used in the front end preview.</source>
+        <target>Membros destes grupos podem ser usados na pré-visualização do front end.</target>
       </trans-unit>
       <trans-unit id="tl_user.disable.0">
         <source>Deactivate</source>

@@ -39,15 +39,15 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.startTime.1">
         <source>Please enter the start time according to the global time format.</source>
-        <target>Унесите датум почетка у складу са глобалним форматом датума</target>
+        <target>Унесите време почетка у складу са глобалним форматом за време.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.endTime.0">
         <source>End time</source>
-        <target>Датум завршетка</target>
+        <target>Време завршетка</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.endTime.1">
         <source>Use the same value for start and end time to create an open-ended event.</source>
-        <target>Користите исту вредност датума почетка и завршетка за дешавање чији завршетак није дефинисан.</target>
+        <target>Користите исту вредност времена почетка и завршетка за дешавање чији завршетак није дефинисан.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.startDate.0">
         <source>Start date</source>
@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.startDate.1">
         <source>Please enter the start date according to the global date format.</source>
-        <target>Унесите датум почетка у складу са глобалним форматом датума</target>
+        <target>Унесите датум почетка у складу са глобалним форматом датума.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.endDate.0">
         <source>End date</source>
@@ -63,7 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.endDate.1">
         <source>Leave blank to create a single day event.</source>
-        <target>Остави празно ради креирања једнодневног дешавања.</target>
+        <target>Оставите празно ради креирања једнодневног дешавања.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.location.0">
         <source>Event location</source>
@@ -95,7 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.addImage.1">
         <source>Add an image to the event.</source>
-        <target>Додај слику уз дешавање.</target>
+        <target>Додајте слику уз дешавање.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.recurring.0">
         <source>Repeat event</source>

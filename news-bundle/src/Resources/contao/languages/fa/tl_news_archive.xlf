@@ -190,12 +190,11 @@
         <target>نمایش دیدگاه‌ها بایگانی شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.0">
-        <source>RSS feeds</source>
-        <target>خوراک‌های آر‌اس‌اس</target>
+        <source>News feeds</source>
+        <target>خوراک‌های اخبار</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.1">
-        <source>Manage RSS feeds</source>
-        <target>مدیریت خوراک‌های آراس‌اس</target>
+        <source>Manage news feeds</source>
       </trans-unit>
     </body>
   </file>

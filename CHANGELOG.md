@@ -1,5 +1,20 @@
 # Change log
 
+## 4.4.48 (2020-04-02)
+
+ * Correctly execute kernel events for initialize.php (see #1410).
+ * Ensure that the login icons are always visible in Firefox (see #1611).
+ * Add a 5 seconds timeout to the CAPTCHA widget (see #1560).
+ * Hide unsynchronized folders in the picker (see #1571).
+ * Consistently use "news feed" and "calendar feed" instead of "RSS feed" (see #1567).
+ * Correctly check the permissions to create new FAQs (see #1566).
+ * Fix duplicate version numbers (see #1564).
+ * Only index successful responses (see #1559).
+ * Allow to compare against any template if a prefix is unknown (see #1555).
+ * Check if DBAL connection is available from .env configuration (see #1547).
+ * Correctly handle URL suffix when redirecting page IDs (see #1503).
+ * Revert the document.write() changes (see #1424).
+
 ## 4.4.47 (2020-02-17)
 
  * Replace document.write() in the back end templates (see #1329).

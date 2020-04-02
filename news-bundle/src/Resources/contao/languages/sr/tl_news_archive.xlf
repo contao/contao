@@ -190,12 +190,11 @@
         <target>Прикажи коментаре архиве ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.0">
-        <source>RSS feeds</source>
-        <target>RSS сажеци</target>
+        <source>News feeds</source>
+        <target>Сажеци вести</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.1">
-        <source>Manage RSS feeds</source>
-        <target>Управљај RSS сажецима</target>
+        <source>Manage news feeds</source>
       </trans-unit>
     </body>
   </file>

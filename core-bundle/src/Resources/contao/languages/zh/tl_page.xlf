@@ -275,9 +275,11 @@
       </trans-unit>
       <trans-unit id="tl_page.sitemap.0">
         <source>Show in HTML sitemap</source>
+        <target>在 HTML 站点地图显示</target>
       </trans-unit>
       <trans-unit id="tl_page.sitemap.1">
         <source>Here you can define whether the page is shown in the HTML sitemap.</source>
+        <target>在这里定义页面是否显示在 HTML 站点地图。</target>
       </trans-unit>
       <trans-unit id="tl_page.hide.0">
         <source>Hide from navigation</source>
@@ -292,8 +294,7 @@
         <target>仅向来宾显示</target>
       </trans-unit>
       <trans-unit id="tl_page.guests.1">
-        <source>Hide the page if there is an authenticated user.</source>
-        <target>对认证用户隐藏此页面。</target>
+        <source>Hide the page if a member is logged in.</source>
       </trans-unit>
       <trans-unit id="tl_page.tabindex.0">
         <source>Tab index</source>

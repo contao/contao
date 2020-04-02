@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.jumpTo.1">
         <source>Please choose the event reader page to which visitors will be redirected when clicking an event.</source>
-        <target>Bitte wählen Sie die Eventleser-Seite aus, zu der Besucher weitergeleitet werden, wenn Sie einen Event anklicken.</target>
+        <target>Bitte wählen Sie die Eventleser-Seite aus, zu der Besucher weitergeleitet werden, wenn Sie ein Event anklicken.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.allowComments.0">
         <source>Enable comments</source>
@@ -190,12 +190,12 @@
         <target>Kalender ID %s löschen</target>
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.0">
-        <source>RSS feeds</source>
-        <target>RSS-Feeds</target>
+        <source>Calendar feeds</source>
+        <target>Kalender-Feeds</target>
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.1">
-        <source>Manage RSS feeds</source>
-        <target>RSS-Feeds verwalten</target>
+        <source>Manage calendar feeds</source>
+        <target>Kalender-Feeds verwalten</target>
       </trans-unit>
     </body>
   </file>

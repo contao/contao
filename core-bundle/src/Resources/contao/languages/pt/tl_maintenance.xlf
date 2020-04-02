@@ -87,6 +87,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.undo.1">
         <source>Truncates the &lt;code&gt;tl_undo&lt;/code&gt; table which stores the deleted records. This job permanently deletes these records.</source>
+        <target>Trunca a tabela &lt;code&gt;tl_undo&lt;/code&gt; a qual regista elementos removidos. Esta tarefa permanentemente remove esses registos de elementos.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.versions.0">
         <source>Purge the version table</source>
@@ -94,6 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.versions.1">
         <source>Truncates the &lt;code&gt;tl_version&lt;/code&gt; table which stores the previous versions of a record. This job permanently deletes these records.</source>
+        <target>Trunca a tabela &lt;code&gt;tl_version&lt;/code&gt; a qual contém versões anteriores de registos. Esta tarefa permanentemente remove esse conteúdo.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.log.0">
         <source>Purge the system log</source>
@@ -101,6 +103,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.log.1">
         <source>Truncates the &lt;code&gt;tl_log&lt;/code&gt; table which stores all the system log entries. This job permanently deletes these records.</source>
+        <target>Trunca a tabela &lt;code&gt;tl_log&lt;/code&gt; a qual guarda todos os logs de sistema. Esta tarefa permanentemente remove esses mesmos logs.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.images.0">
         <source>Purge the image cache</source>
@@ -116,6 +119,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.1">
         <source>Removes the automatically generated &lt;code&gt;.css&lt;/code&gt; and &lt;code&gt;.js&lt;/code&gt; files, recreates the internal style sheets and then purges the page cache.</source>
+        <target>Remove ficheiros &lt;code&gt;.css&lt;/code&gt; e &lt;code&gt;.js&lt;/code&gt; gerados automaticamente, em seguida recria as folhas de estilo internas e remove a cache.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.pages.0">
         <source>Purge the page cache</source>
@@ -151,9 +155,11 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.0">
         <source>Recreate the symlinks</source>
+        <target>Recriar symlinks</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.1">
         <source>Recreates the symlinks in the &lt;code&gt;web/&lt;/code&gt; folder (document root).</source>
+        <target>Recria symlinks na pasta &lt;code&gt;web/&lt;/code&gt; (root de documentos).</target>
       </trans-unit>
     </body>
   </file>

@@ -274,12 +274,12 @@
         <target>Jeśli wprowadzisz tu nazwę klasy, będzie ona użyta (jako klasa CSS) w nawigacji i tagu &amp;lt;body&amp;gt;.</target>
       </trans-unit>
       <trans-unit id="tl_page.sitemap.0">
-        <source>Show in sitemap</source>
-        <target>Pokaż w mapie strony</target>
+        <source>Show in HTML sitemap</source>
+        <target>Pokaż w mapie strony HTML</target>
       </trans-unit>
       <trans-unit id="tl_page.sitemap.1">
-        <source>Here you can define whether the page is shown in the sitemap.</source>
-        <target>Tu możesz zdefiniować czy dana strona pojawi się w mapie strony.</target>
+        <source>Here you can define whether the page is shown in the HTML sitemap.</source>
+        <target>Tutaj możesz określić, czy strona ma być wyświetlana w mapie strony HTML.</target>
       </trans-unit>
       <trans-unit id="tl_page.hide.0">
         <source>Hide from navigation</source>
@@ -294,8 +294,7 @@
         <target>Pokaż tylko dla osób niezalogowanych</target>
       </trans-unit>
       <trans-unit id="tl_page.guests.1">
-        <source>Hide the page if there is an authenticated user.</source>
-        <target>Nie pokazuj strony w menu dla osób zalogowanych.</target>
+        <source>Hide the page if a member is logged in.</source>
       </trans-unit>
       <trans-unit id="tl_page.tabindex.0">
         <source>Tab index</source>

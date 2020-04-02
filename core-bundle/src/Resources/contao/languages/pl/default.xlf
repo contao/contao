@@ -58,8 +58,8 @@
         <target>Wpisz prawidłowy numer telefonu!</target>
       </trans-unit>
       <trans-unit id="ERR.extnd">
-        <source>For security reasons you can not use the following characters here: =&lt;&gt;&amp;/()#</source>
-        <target>Z przyczyn bezpieczeństwa nie można tutaj używać znaków: =&lt;&gt;&amp;/()#</target>
+        <source>For security reasons you can not use the following characters here: #&lt;&gt;()\=</source>
+        <target>Ze względów bezpieczeństwa nie można tu używać następujących znaków:: #&lt;&gt;()\=</target>
       </trans-unit>
       <trans-unit id="ERR.email">
         <source>Please enter a valid e-mail address!</source>
@@ -221,6 +221,10 @@
         <source>You can only select &quot;%s&quot; files!</source>
         <target>Możesz wybrać tylko pliki &quot;%s&quot;!</target>
       </trans-unit>
+      <trans-unit id="ERR.forbiddenExtensions">
+        <source>The following file extensions are not allowed: %s</source>
+        <target>Następujące rozszerzenia plików są niedozwolone: %s</target>
+      </trans-unit>
       <trans-unit id="ERR.invalidPages">
         <source>Your selection contains invalid page IDs!</source>
         <target>Twój wybór zawiera nieprawidłowy ID stron!</target>
@@ -231,12 +235,15 @@
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
         <source>None of the active website root pages without an explicit DNS setting have the language fallback option set.</source>
+        <target>Żaden z aktywnych punktów startowych bez ustawień DNS nie ma zaznaczonej opcji awaryjnego języka.</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackDns">
         <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; have the language fallback option set.</source>
+        <target>Żadna z aktywnych stron głównych witryny &lt;strong&gt;%s&lt;/strong&gt; nie ma ustawionej opcji domyślnego języka.</target>
       </trans-unit>
       <trans-unit id="ERR.multipleFallback">
         <source>You can only define one website root page per domain as the language fallback.</source>
+        <target>Możesz określić tylko jeden punkt startowy na domenę jako awaryjny język.</target>
       </trans-unit>
       <trans-unit id="ERR.topLevelRoot">
         <source>Top-level pages must be website root pages!</source>
@@ -280,12 +287,19 @@
       </trans-unit>
       <trans-unit id="ERR.emptyTitleOrId">
         <source>Please enter both title and ID!</source>
+        <target>Wprowadź zarówno tytuł jak i ID!</target>
       </trans-unit>
       <trans-unit id="ERR.duplicateSectionTitle">
         <source>Duplicate layout section title &quot;%s&quot;!</source>
+        <target>Zduplikowany tytuł sekcji układu „%s”!</target>
       </trans-unit>
       <trans-unit id="ERR.duplicateSectionId">
         <source>Duplicate layout section ID &quot;%s&quot;!</source>
+        <target>Zduplikowana sekcja układu &quot;%s&quot;!</target>
+      </trans-unit>
+      <trans-unit id="ERR.moduleWithoutColumn">
+        <source>Please assign all modules to a column!</source>
+        <target>Przypisz wszystkie moduły do ​​kolumny!</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -1324,8 +1338,7 @@
         <target>Skróty klawiszowe</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/books/manual/current/en/02-administration-area/keyboard-shortcuts.html&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
-        <target>Dowiedz się więcej o przyspieszaniu pracy używając &lt;a href=&quot;https://docs.contao.org/books/manual/current/en/02-administration-area/keyboard-shortcuts.html&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot;&gt;skrótów klawiatury&lt;/a&gt;.</target>
+        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>

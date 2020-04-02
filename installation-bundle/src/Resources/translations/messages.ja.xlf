@@ -376,6 +376,11 @@
         <target>重複した項目を自動的に除去しました。原本の登録は&lt;code&gt;tl_newsletter_recipients_backup&lt;/code&gt;に保存しました。</target>
         
       </trans-unit>
+      <trans-unit id="76">
+        <source>misconfigured_database_url_explain</source>
+        <target>環境変数&lt;code&gt;DATABASE_URL&lt;/code&gt;による接続のURLを使用してデータベースに接続できませんでした。</target>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>

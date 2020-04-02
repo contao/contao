@@ -211,15 +211,19 @@
       </trans-unit>
       <trans-unit id="tl_page.cache.0">
         <source>Server cache timeout</source>
+        <target>Timeout de server cache</target>
       </trans-unit>
       <trans-unit id="tl_page.cache.1">
         <source>The number of seconds after which the page should no longer be considered fresh by shared caches.</source>
+        <target>O número de segundos após os quais a página não deverá ser considerada atual pelas caches partilhadas.</target>
       </trans-unit>
       <trans-unit id="tl_page.clientCache.0">
         <source>Client cache timeout</source>
+        <target>Timeout de cache cliente</target>
       </trans-unit>
       <trans-unit id="tl_page.clientCache.1">
         <source>The number of seconds after which the page should no longer be considered fresh by the browser.</source>
+        <target>O número de segundos após os quais a página não deverá ser considerada atual pelo browser.</target>
       </trans-unit>
       <trans-unit id="tl_page.includeChmod.0">
         <source>Assign access rights</source>
@@ -271,9 +275,11 @@
       </trans-unit>
       <trans-unit id="tl_page.sitemap.0">
         <source>Show in HTML sitemap</source>
+        <target>Mostrar em HTML sitemap.</target>
       </trans-unit>
       <trans-unit id="tl_page.sitemap.1">
         <source>Here you can define whether the page is shown in the HTML sitemap.</source>
+        <target>Aqui pode definir se pretende que a página seja mostrada em HTML sitemap.</target>
       </trans-unit>
       <trans-unit id="tl_page.hide.0">
         <source>Hide from navigation</source>
@@ -288,8 +294,7 @@
         <target>Mostrar apenas para visitantes</target>
       </trans-unit>
       <trans-unit id="tl_page.guests.1">
-        <source>Hide the page if there is an authenticated user.</source>
-        <target>Ocultar esta página no menu de navegação dos usuários conectados.</target>
+        <source>Hide the page if a member is logged in.</source>
       </trans-unit>
       <trans-unit id="tl_page.tabindex.0">
         <source>Tab index</source>

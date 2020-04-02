@@ -190,12 +190,11 @@
         <target>显示ID为%s的档案的评论详情</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.0">
-        <source>RSS feeds</source>
-        <target>RSS源</target>
+        <source>News feeds</source>
+        <target>新闻源</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.1">
-        <source>Manage RSS feeds</source>
-        <target>管理RSS源</target>
+        <source>Manage news feeds</source>
       </trans-unit>
     </body>
   </file>
