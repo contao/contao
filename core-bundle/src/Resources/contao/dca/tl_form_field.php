@@ -27,7 +27,8 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
-				'pid' => 'index'
+				'pid' => 'index',
+				'name' => 'index'
 			)
 		)
 	),
@@ -684,7 +685,20 @@ class tl_form_field extends Contao\Backend
 			return $varValue;
 		}
 
-		$objField = $this->Database->prepare("SELECT COUNT(*) AS cnt FROM tl_form_field WHERE name=? AND pid=? AND id!=?")
+		/** @var Doctrine\DBAL\Connection $conn */
+		$conn = Contao\System::getContainer()->get('database_connection');
+		$types = array();
+
+		// Find all form field types with the "name" field in their palette
+		foreach ($GLOBALS['TL_DCA']['tl_form_field']['palettes'] as $type=>$palette)
+		{
+			if (preg_match('/[,;]name[,;]/', $palette))
+			{
+				$types[] = $conn->quote($type);
+			}
+		}
+
+		$objField = $this->Database->prepare("SELECT COUNT(*) AS cnt FROM tl_form_field WHERE name=? AND pid=? AND id!=? AND type IN(" . implode(',', $types) . ")")
 								   ->execute($varValue, $dc->activeRecord->pid, $dc->activeRecord->id);
 
 		if ($objField->cnt > 0)
