@@ -190,12 +190,11 @@
         <target>Slet kalender-ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.0">
-        <source>RSS feeds</source>
-        <target>RSS feeds</target>
+        <source>Calendar feeds</source>
+        <target>RSS kalenderfeeds</target>
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.1">
-        <source>Manage RSS feeds</source>
-        <target>Håndter RSS feeds</target>
+        <source>Manage calendar feeds</source>
       </trans-unit>
     </body>
   </file>

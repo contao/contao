@@ -18,16 +18,16 @@
         <target>Hier können Sie die Archivrechte festlegen.</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeeds.0">
-        <source>Allowed RSS feeds</source>
-        <target>Erlaubte RSS-Feeds</target>
+        <source>Allowed news feeds</source>
+        <target>Erlaubte News-Feeds</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeeds.1">
         <source>Here you can grant access to one or more news feeds.</source>
         <target>Hier können Sie den Zugriff auf einen oder mehrere RSS-Feeds erlauben.</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeedp.0">
-        <source>RSS feed permissions</source>
-        <target>RSS-Feed-Rechte</target>
+        <source>News feed permissions</source>
+        <target>News-Feed-Rechte</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeedp.1">
         <source>Here you can define the news feed permissions.</source>

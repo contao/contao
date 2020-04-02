@@ -63,6 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.cssClass.1">
         <source>The CSS classes will be applied to the image tag.</source>
+        <target>As classes CSS serão aplicadas à tag de imagem.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.tstamp.0">
         <source>Revision date</source>
@@ -106,6 +107,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.new.0">
         <source>New image size</source>
+        <target>Novo tamanho de imagem</target>
       </trans-unit>
       <trans-unit id="tl_image_size.new.1">
         <source>Create a new image size</source>
@@ -113,6 +115,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.show.0">
         <source>Image size details</source>
+        <target>Detalhes de tamanho de imagem</target>
       </trans-unit>
       <trans-unit id="tl_image_size.show.1">
         <source>Show the details of image size ID %s</source>
@@ -136,6 +139,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.cut.0">
         <source>Move image size</source>
+        <target>Mover tamanho de imagem</target>
       </trans-unit>
       <trans-unit id="tl_image_size.cut.1">
         <source>Move image size ID %s</source>
@@ -143,6 +147,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.copy.0">
         <source>Duplicate image size</source>
+        <target>Duplicar tamanho de imagem</target>
       </trans-unit>
       <trans-unit id="tl_image_size.copy.1">
         <source>Duplicate image size ID %s</source>
@@ -150,6 +155,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.delete.0">
         <source>Delete image size</source>
+        <target>Remove tamanho de imagem</target>
       </trans-unit>
       <trans-unit id="tl_image_size.delete.1">
         <source>Delete image size ID %s</source>
@@ -157,6 +163,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.picturefill">
         <source>The &lt;em&gt;%s&lt;/em&gt; option needs to be enabled in the page layout.</source>
+        <target>A opção &lt;em&gt;%s&lt;/em&gt; necessita estar ativada no page layout.</target>
       </trans-unit>
     </body>
   </file>

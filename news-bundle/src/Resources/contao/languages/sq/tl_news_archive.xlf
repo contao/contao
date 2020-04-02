@@ -190,12 +190,11 @@
         <target>Trego komentet e arkivit ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.0">
-        <source>RSS feeds</source>
-        <target>Furnizimet RSS</target>
+        <source>News feeds</source>
+        <target>Furnizim lajmesh</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.1">
-        <source>Manage RSS feeds</source>
-        <target>Rregullo furnizimin RSS</target>
+        <source>Manage news feeds</source>
       </trans-unit>
     </body>
   </file>

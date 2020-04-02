@@ -18,16 +18,16 @@
         <target>ニュースの権限を設定できます。</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeeds.0">
-        <source>Allowed RSS feeds</source>
-        <target>許可するRSSフィード</target>
+        <source>Allowed news feeds</source>
+        <target>許可するニュースのフィード</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeeds.1">
         <source>Here you can grant access to one or more news feeds.</source>
         <target>1つ以上のニュースフィードにアクセスを許可できます。</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeedp.0">
-        <source>RSS feed permissions</source>
-        <target>RSSフィードの権限</target>
+        <source>News feed permissions</source>
+        <target>ニュースのフィードの権限</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeedp.1">
         <source>Here you can define the news feed permissions.</source>

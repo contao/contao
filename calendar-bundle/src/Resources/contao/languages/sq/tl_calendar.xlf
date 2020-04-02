@@ -190,12 +190,11 @@
         <target>Shlyen kalendarin ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.0">
-        <source>RSS feeds</source>
-        <target>Furnizimet RSS</target>
+        <source>Calendar feeds</source>
+        <target>Furnizimi kalendarit</target>
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.1">
-        <source>Manage RSS feeds</source>
-        <target>Rregullo furnizimin RSS</target>
+        <source>Manage calendar feeds</source>
       </trans-unit>
     </body>
   </file>

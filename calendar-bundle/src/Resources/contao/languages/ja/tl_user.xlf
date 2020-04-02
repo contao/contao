@@ -18,16 +18,16 @@
         <target>カレンダーの権限を設定できます。</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeeds.0">
-        <source>Allowed RSS feeds</source>
-        <target>許可するRSSフィード</target>
+        <source>Allowed calendar feeds</source>
+        <target>許可するカレンダーのフィード</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeeds.1">
         <source>Here you can grant access to one or more calendar feeds.</source>
         <target>1つ以上のカレンダーのフィードにアクセスを許可できます。</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeedp.0">
-        <source>RSS feed permissions</source>
-        <target>RSSフィードの権限</target>
+        <source>Calendar feed permissions</source>
+        <target>カレンダーのフィードの権限</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeedp.1">
         <source>Here you can define the calendar feed permissions.</source>

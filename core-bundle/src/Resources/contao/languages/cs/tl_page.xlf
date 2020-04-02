@@ -292,8 +292,7 @@
         <target>Ukázat pouze hostům</target>
       </trans-unit>
       <trans-unit id="tl_page.guests.1">
-        <source>Hide the page if there is an authenticated user.</source>
-        <target>Skrýt stránku z navigačního menu pokud je uživatel přihlášen</target>
+        <source>Hide the page if a member is logged in.</source>
       </trans-unit>
       <trans-unit id="tl_page.tabindex.0">
         <source>Tab index</source>

@@ -215,6 +215,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.orderExt.1">
         <source>The sort order of the style sheets.</source>
+        <target>A ordenação das folhas de estilo.</target>
       </trans-unit>
       <trans-unit id="tl_layout.loadingOrder.0">
         <source>Loading order</source>
@@ -230,6 +231,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.combineScripts.1">
         <source>Combine the .css and .js files (do not enable for HTTP/2).</source>
+        <target>Compinar ficheiros .css e .js (não ativar para HTTP/2). </target>
       </trans-unit>
       <trans-unit id="tl_layout.external_first">
         <source>Load external style sheets first</source>
@@ -285,6 +287,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.viewport.1">
         <source>Here you can set the viewport tag.</source>
+        <target>Aqui pode definir a tag viewport.</target>
       </trans-unit>
       <trans-unit id="tl_layout.titleTag.0">
         <source>Title tag</source>
@@ -292,6 +295,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.titleTag.1">
         <source>Here you can set a custom title tag.</source>
+        <target>Aqui pode definir uma tag de título personalizada.</target>
       </trans-unit>
       <trans-unit id="tl_layout.onload.0">
         <source>Body onload</source>
@@ -359,9 +363,11 @@
       </trans-unit>
       <trans-unit id="tl_layout.picturefill.0">
         <source>Load the image polyfill</source>
+        <target>Carregar polyfill de imagem</target>
       </trans-unit>
       <trans-unit id="tl_layout.picturefill.1">
         <source>Include the image polyfill (&lt;em&gt;respimage.js&lt;/em&gt;) in the layout.</source>
+        <target>Incluir o plyfill de imagem (&lt;em&gt;respimage.js&lt;/em&gt;) no layout.</target>
       </trans-unit>
       <trans-unit id="tl_layout.scripts.0">
         <source>JavaScript templates</source>
@@ -437,6 +443,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.picturefill_legend">
         <source>Responsive images</source>
+        <target>Imagens interativas</target>
       </trans-unit>
       <trans-unit id="tl_layout.modules_legend">
         <source>Front end modules</source>

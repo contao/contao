@@ -375,6 +375,11 @@
         <target>Duplikované položky byly automaticky odstraněné. Původní stav byl uložen jako záloha do &lt;code&gt;tl_newsletter_recipients_backup&lt;/code&gt;.</target>
         
       </trans-unit>
+      <trans-unit id="76">
+        <source>misconfigured_database_url_explain</source>
+        <target>Nelze se přihlásit k databance použitím cesty &lt;code&gt;DATABASE_URL&lt;/code&gt; uvedené v nastavovacím souboru.</target>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>
