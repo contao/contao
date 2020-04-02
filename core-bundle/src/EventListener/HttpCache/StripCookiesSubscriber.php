@@ -26,12 +26,20 @@ class StripCookiesSubscriber implements EventSubscriberInterface
         // Modals are always for JS only
         '(.*)?modal(.*)?',
 
-        // Google Analytics (https://developers.google.com/analytics/devguides/collection/analyticsjs/cookie-usage)
+        // Google Analytics gtag.js and analytics.js (https://developers.google.com/analytics/devguides/collection/analyticsjs/cookie-usage#analyticsjs)
         '_ga',
         '_gid',
         '_gat',
         'AMP_TOKEN',
         '_gac_.+',
+
+        // Google Analytics ga.js (https://developers.google.com/analytics/devguides/collection/analyticsjs/cookie-usage#gajs)
+        '__utma',
+        '__utmt',
+        '__utmb',
+        '__utmc',
+        '__utmz',
+        '__utmv',
 
         // Matomo (https://matomo.org/faq/general/faq_146/)
         '_pk_id.*',
