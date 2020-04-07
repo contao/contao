@@ -75,7 +75,7 @@ class ModelArgumentResolver implements ArgumentValueResolverInterface
         $value = $request->attributes->get($name);
         $type = $argument->getType();
 
-        if ($value instanceof $type) {
+        if ($type && $value instanceof $type) {
             return $value;
         }
 
