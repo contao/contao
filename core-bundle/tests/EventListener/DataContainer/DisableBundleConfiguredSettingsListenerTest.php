@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
-use Contao\CoreBundle\EventListener\DataContainer\DisableParametersBasedSettingsListener;
+use Contao\CoreBundle\EventListener\DataContainer\DisableBundleConfiguredSettingsListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -20,7 +20,7 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class DisableParametersBasedSettingsListenerTest extends TestCase
+class DisableBundleConfiguredSettingsListenerTest extends TestCase
 {
     public function testLoadCallbackExitsOnMissingLocalconfigParameter(): void
     {
@@ -42,7 +42,7 @@ class DisableParametersBasedSettingsListenerTest extends TestCase
         $listener->onLoadCallback();
     }
 
-    public function testLoadCallbackDisablesSettingsConfiguredByParameter(): void
+    public function testLoadCallbackDisablesSettingsConfiguredByBundleConfiguration(): void
     {
         $container = $this->mockContainer();
         $container
@@ -102,7 +102,7 @@ class DisableParametersBasedSettingsListenerTest extends TestCase
                         'disabled' => true,
                         'helpwizard' => false,
                     ],
-                    'xlabel' => [[DisableParametersBasedSettingsListener::class, 'renderHelpIcon']],
+                    'xlabel' => [[DisableBundleConfiguredSettingsListener::class, 'renderHelpIcon']],
                 ],
                 'dateFormat' => [
                     'inputType' => 'text',
@@ -114,7 +114,7 @@ class DisableParametersBasedSettingsListenerTest extends TestCase
                         'disabled' => true,
                     ],
                     'explanation' => 'dateFormat',
-                    'xlabel' => [[DisableParametersBasedSettingsListener::class, 'renderHelpIcon']],
+                    'xlabel' => [[DisableBundleConfiguredSettingsListener::class, 'renderHelpIcon']],
                 ],
             ],
             $GLOBALS['TL_DCA']['tl_settings']['fields']
@@ -144,7 +144,7 @@ class DisableParametersBasedSettingsListenerTest extends TestCase
         );
     }
 
-    private function createListener(?ContainerInterface $container = null, ?TranslatorInterface $translator = null, array $adapters = []): DisableParametersBasedSettingsListener
+    private function createListener(?ContainerInterface $container = null, ?TranslatorInterface $translator = null, array $adapters = []): DisableBundleConfiguredSettingsListener
     {
         $this->mockContaoFramework()->initialize();
 
@@ -157,7 +157,7 @@ class DisableParametersBasedSettingsListenerTest extends TestCase
         }
 
         $framework = $this->mockContaoFramework($adapters);
-        $listener = new DisableParametersBasedSettingsListener($translator, $framework);
+        $listener = new DisableBundleConfiguredSettingsListener($translator, $framework);
         $listener->setContainer($container);
 
         return $listener;

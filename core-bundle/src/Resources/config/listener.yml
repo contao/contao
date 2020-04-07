@@ -274,7 +274,7 @@ services:
         tags:
             - kernel.event_listener
 
-    Contao\CoreBundle\EventListener\DataContainer\DisableParametersBasedSettingsListener:
+    Contao\CoreBundle\EventListener\DataContainer\DisableBundleConfiguredSettingsListener:
         public: true
         arguments:
             - '@translator'

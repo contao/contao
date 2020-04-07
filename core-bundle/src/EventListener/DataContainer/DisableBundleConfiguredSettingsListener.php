@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class DisableParametersBasedSettingsListener implements ContainerAwareInterface
+class DisableBundleConfiguredSettingsListener implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
 
@@ -64,11 +64,11 @@ class DisableParametersBasedSettingsListener implements ContainerAwareInterface
 
         return $adapter->getHtml(
             'important.svg',
-            $this->translator->trans('tl_settings.parameterBasedSetting.0', [], 'contao_tl_settings'),
+            $this->translator->trans('tl_settings.configuredInBundle.0', [], 'contao_tl_settings'),
             sprintf(
                 'title="%s"',
                 StringUtil::specialchars(
-                    $this->translator->trans('tl_settings.parameterBasedSetting.1', [], 'contao_tl_settings')
+                    $this->translator->trans('tl_settings.configuredInBundle.1', [], 'contao_tl_settings')
                 )
             )
         );
