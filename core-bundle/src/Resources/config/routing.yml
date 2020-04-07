@@ -2,10 +2,6 @@ services:
     _defaults:
         autoconfigure: true
 
-    Contao\CoreBundle\Routing\Content\ArticleResolver:
-        tags:
-            - contao.content_resolver
+    Contao\CoreBundle\Routing\Content\ArticleUrlResolver:
 
-    Contao\CoreBundle\Routing\Content\PageResolver:
-        tags:
-            - contao.content_resolver
+    Contao\CoreBundle\Routing\Content\PageUrlResolver:

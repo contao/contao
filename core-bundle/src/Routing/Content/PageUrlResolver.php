@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Routing\Content;
 use Contao\PageModel;
 use Symfony\Component\Routing\Route;
 
-class PageResolver implements ContentResolverInterface
+class PageUrlResolver implements ContentUrlResolverInterface
 {
     /**
      * @param PageModel $page

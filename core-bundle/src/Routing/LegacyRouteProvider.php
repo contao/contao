@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing;
 
-use Contao\CoreBundle\Routing\Content\ContentResolverInterface;
+use Contao\CoreBundle\Routing\Content\ContentUrlResolverInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -22,7 +22,7 @@ use Symfony\Component\Routing\RouteCollection;
 /**
  * @internal
  */
-class LegacyRouteProvider implements ContentResolverInterface, RouteProviderInterface
+class LegacyRouteProvider implements ContentUrlResolverInterface, RouteProviderInterface
 {
     /**
      * @var FrontendLoader

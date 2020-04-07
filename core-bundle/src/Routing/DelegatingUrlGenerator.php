@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing;
 
-use Contao\CoreBundle\Routing\Content\ContentResolverInterface;
+use Contao\CoreBundle\Routing\Content\ContentUrlResolverInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Cmf\Component\Routing\VersatileGeneratorInterface;
@@ -25,7 +25,7 @@ use Symfony\Component\Routing\RouteCollection;
 class DelegatingUrlGenerator extends SymfonyUrlGenerator implements VersatileGeneratorInterface
 {
     /**
-     * @var array<ContentResolverInterface>
+     * @var array<ContentUrlResolverInterface>
      */
     private $resolvers;
 
@@ -106,7 +106,7 @@ class DelegatingUrlGenerator extends SymfonyUrlGenerator implements VersatileGen
                 $route = $resolver->resolveContent($content);
 
                 if ($route instanceof Route) {
-                    $route->setDefault(ContentResolverInterface::ATTRIBUTE, $resolver);
+                    $route->setDefault(ContentUrlResolverInterface::ATTRIBUTE, $resolver);
                 }
                 break;
             }

@@ -17,7 +17,7 @@ use Contao\PageModel;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
 
-class ArticleResolver implements ContentResolverInterface
+class ArticleUrlResolver implements ContentUrlResolverInterface
 {
     /**
      * @param ArticleModel $article
