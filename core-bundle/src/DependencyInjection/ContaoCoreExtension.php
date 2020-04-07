@@ -17,6 +17,7 @@ use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Migration\MigrationInterface;
 use Contao\CoreBundle\Picker\PickerProviderInterface;
 use Contao\CoreBundle\Routing\Content\ContentUrlResolverInterface;
+use Contao\CoreBundle\Routing\Content\PageProviderInterface;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Imagine\Exception\RuntimeException;
 use Imagine\Gd\Imagine;
@@ -105,6 +106,11 @@ class ContaoCoreExtension extends Extension
         $container
             ->registerForAutoconfiguration(ContentUrlResolverInterface::class)
             ->addTag('contao.content_resolver')
+        ;
+
+        $container
+            ->registerForAutoconfiguration(PageProviderInterface::class)
+            ->addTag('contao.page_provider')
         ;
     }
 
