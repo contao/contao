@@ -218,13 +218,8 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'select',
-			'options_callback'        => array('tl_page', 'getPageTypes'),
 			'eval'                    => array('helpwizard'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['PTY'],
-			'save_callback' => array
-			(
-				array('tl_page', 'checkRootType')
-			),
 			'sql'                     => "varchar(64) NOT NULL default 'regular'"
 		),
 		'pageTitle' => array
@@ -988,6 +983,8 @@ class tl_page extends Contao\Backend
 	 */
 	public function checkRootType($varValue, Contao\DataContainer $dc)
 	{
+		@trigger_error('Deprecated since Contao 4.10, to be removed in Contao 5.', E_USER_DEPRECATED);
+
 		if ($varValue != 'root' && $dc->activeRecord->pid == 0)
 		{
 			throw new Exception($GLOBALS['TL_LANG']['ERR']['topLevelRoot']);
@@ -1310,24 +1307,9 @@ class tl_page extends Contao\Backend
 	 */
 	public function getPageTypes(Contao\DataContainer $dc)
 	{
-		$arrOptions = array();
+		@trigger_error('Deprecated', E_USER_DEPRECATED);
 
-		foreach (array_keys($GLOBALS['TL_PTY']) as $pty)
-		{
-			// Root pages are allowed on the first level only (see #6360)
-			if ($pty == 'root' && $dc->activeRecord && $dc->activeRecord->pid > 0)
-			{
-				continue;
-			}
-
-			// Allow the currently selected option and anything the user has access to
-			if ($pty == $dc->value || $this->User->hasAccess($pty, 'alpty'))
-			{
-				$arrOptions[] = $pty;
-			}
-		}
-
-		return $arrOptions;
+		return System::getContainer()->get(\Contao\CoreBundle\EventListener\DataContainer\PageTypeOptionsListener::class)($dc);
 	}
 
 	/**

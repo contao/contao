@@ -17,6 +17,15 @@ services:
         tags:
             - { name: terminal42_service_annotation }
 
+    Contao\CoreBundle\EventListener\DataContainer\PageTypeOptionsListener:
+        arguments:
+            - !tagged_locator { tag: contao.page_provider, index_by: type, default_index_method: getPageType }
+            - '@security.helper'
+            - '@?event_dispatcher'
+        public: true
+        tags:
+            - { name: terminal42_service_annotation }
+
     Contao\CoreBundle\EventListener\DataContainer\PageUrlListener:
         arguments:
             - '@contao.framework'
@@ -27,6 +36,10 @@ services:
         tags:
             - { name: terminal42_service_annotation }
             - { name: kernel.reset, method: reset }
+
+    Contao\CoreBundle\EventListener\FilterPageTypeListener:
+        tags:
+            - { name: kernel.event_listener }
 
     contao.listener.backend_locale:
         class: Contao\CoreBundle\EventListener\BackendLocaleListener
