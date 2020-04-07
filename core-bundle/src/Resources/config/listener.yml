@@ -8,6 +8,18 @@ services:
             calls:
                 - ['setContainer', ['@service_container']]
 
+    Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener:
+        arguments:
+            - '@contao.framework'
+            - '@security.helper'
+            - !tagged_locator { tag: contao.page_provider, index_by: type, default_index_method: getPageType }
+            - '@translator'
+            - '@database_connection'
+            - '@request_stack'
+        public: true
+        tags:
+            - { name: terminal42_service_annotation }
+
     Contao\CoreBundle\EventListener\DataContainer\LegacyRoutingListener:
         arguments:
             - '@contao.framework'

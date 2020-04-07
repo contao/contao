@@ -38,7 +38,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'onsubmit_callback' => array
 		(
 			array('tl_page', 'scheduleUpdate'),
-			array('tl_page', 'generateArticle')
 		),
 		'sql' => array
 		(
@@ -133,8 +132,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'articles' => array
 			(
 				'href'                => 'do=article',
-				'icon'                => 'article.svg',
-				'button_callback'     => array('tl_page', 'editArticles')
+				'icon'                => 'article.svg'
 			)
 		)
 	),
@@ -980,10 +978,12 @@ class tl_page extends Contao\Backend
 	 * @return mixed
 	 *
 	 * @throws Exception
+	 *
+	 * @deprecated
 	 */
 	public function checkRootType($varValue, Contao\DataContainer $dc)
 	{
-		@trigger_error('Deprecated since Contao 4.10, to be removed in Contao 5.', E_USER_DEPRECATED);
+		@trigger_error('tl_page::checkRootType() is deprecated since Contao 4.10', E_USER_DEPRECATED);
 
 		if ($varValue != 'root' && $dc->activeRecord->pid == 0)
 		{
@@ -1116,52 +1116,16 @@ class tl_page extends Contao\Backend
 	 * Automatically create an article in the main column of a new page
 	 *
 	 * @param Contao\DataContainer $dc
+	 * @deprecated
 	 */
 	public function generateArticle(Contao\DataContainer $dc)
 	{
-		// Return if there is no active record (override all)
-		if (!$dc->activeRecord)
-		{
-			return;
-		}
+		@trigger_error('tl_page::generateArticle() is deprecated, use \Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener::generateArticleForPage instead.', E_USER_DEPRECATED);
 
-		// No title or not a regular page
-		if ($dc->activeRecord->title == '' || !in_array($dc->activeRecord->type, array('regular', 'error_401', 'error_403', 'error_404')))
-		{
-			return;
-		}
-
-		/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
-		$objSessionBag = Contao\System::getContainer()->get('session')->getBag('contao_backend');
-
-		$new_records = $objSessionBag->get('new_records');
-
-		// Not a new page
-		if (!$new_records || !is_array($new_records[$dc->table]) || !in_array($dc->id, $new_records[$dc->table]))
-		{
-			return;
-		}
-
-		// Check whether there are articles (e.g. on copied pages)
-		$objTotal = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_article WHERE pid=?")
-								   ->execute($dc->id);
-
-		if ($objTotal->count > 0)
-		{
-			return;
-		}
-
-		// Create article
-		$arrSet['pid'] = $dc->id;
-		$arrSet['sorting'] = 128;
-		$arrSet['tstamp'] = time();
-		$arrSet['author'] = $this->User->id;
-		$arrSet['inColumn'] = 'main';
-		$arrSet['title'] = $dc->activeRecord->title;
-		$arrSet['alias'] = str_replace('/', '-', $dc->activeRecord->alias); // see #5168
-		$arrSet['published'] = $dc->activeRecord->published;
-
-		$this->Database->prepare("INSERT INTO tl_article %s")->set($arrSet)->execute();
+		System::getContainer()
+			->get(\Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener::class)
+			->generateArticleForPage($dc)
+		;
 	}
 
 	/**
@@ -1304,10 +1268,11 @@ class tl_page extends Contao\Backend
 	 * @param Contao\DataContainer $dc
 	 *
 	 * @return array
+	 * @deprecated
 	 */
 	public function getPageTypes(Contao\DataContainer $dc)
 	{
-		@trigger_error('Deprecated', E_USER_DEPRECATED);
+		@trigger_error('tl_page::getPageTypes() is deprecated, use the \Contao\CoreBundle\EventListener\DataContainer\PageTypeOptionsListener instead.', E_USER_DEPRECATED);
 
 		return System::getContainer()->get(\Contao\CoreBundle\EventListener\DataContainer\PageTypeOptionsListener::class)($dc);
 	}
@@ -1550,15 +1515,16 @@ class tl_page extends Contao\Backend
 	 * @param string $icon
 	 *
 	 * @return string
+	 * @deprecated
 	 */
 	public function editArticles($row, $href, $label, $title, $icon)
 	{
-		if (!$this->User->hasAccess('article', 'modules'))
-		{
-			return '';
-		}
+		@trigger_error('tl_page::editArticles() is deprecated, use \Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener::renderPageArticlesOperation instead.', E_USER_DEPRECATED);
 
-		return ($row['type'] == 'regular' || $row['type'] == 'error_401' || $row['type'] == 'error_403' || $row['type'] == 'error_404') ? '<a href="' . $this->addToUrl($href . '&amp;pn=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '">' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return System::getContainer()
+			->get(\Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener::class)
+			->renderPageArticlesOperation($row, $href, $label, $title, $icon)
+		;
 	}
 
 	/**

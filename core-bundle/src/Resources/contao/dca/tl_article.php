@@ -44,7 +44,6 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		'sorting' => array
 		(
 			'mode'                    => 6,
-			'paste_button_callback'   => array('tl_article', 'pasteArticle'),
 			'panelLayout'             => 'filter;search'
 		),
 		'label' => array
@@ -756,17 +755,12 @@ class tl_article extends Contao\Backend
 	 */
 	public function pasteArticle(Contao\DataContainer $dc, $row, $table, $cr, $arrClipboard=null)
 	{
-		$imagePasteAfter = Contao\Image::getHtml('pasteafter.svg', sprintf($GLOBALS['TL_LANG'][$dc->table]['pasteafter'][1], $row['id']));
-		$imagePasteInto = Contao\Image::getHtml('pasteinto.svg', sprintf($GLOBALS['TL_LANG'][$dc->table]['pasteinto'][1], $row['id']));
+		@trigger_error('Deprecated since Contao 4.10, to be removed in Contao 5. Use Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener::renderArticlePasteButton instead.', E_USER_DEPRECATED);
 
-		if ($table == $GLOBALS['TL_DCA'][$dc->table]['config']['ptable'])
-		{
-			return ($row['type'] == 'root' || !$this->User->isAllowed(Contao\BackendUser::CAN_EDIT_ARTICLE_HIERARCHY, $row) || $cr) ? Contao\Image::getHtml('pasteinto_.svg') . ' ' : '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $row['id'] . (!is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . Contao\StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$dc->table]['pasteinto'][1], $row['id'])) . '" onclick="Backend.getScrollOffset()">' . $imagePasteInto . '</a> ';
-		}
-
-		$objPage = Contao\PageModel::findById($row['pid']);
-
-		return (($arrClipboard['mode'] == 'cut' && $arrClipboard['id'] == $row['id']) || ($arrClipboard['mode'] == 'cutAll' && in_array($row['id'], $arrClipboard['id'])) || !$this->User->isAllowed(Contao\BackendUser::CAN_EDIT_ARTICLE_HIERARCHY, $objPage->row()) || $cr) ? Contao\Image::getHtml('pasteafter_.svg') . ' ' : '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $row['id'] . (!is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . Contao\StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$dc->table]['pasteafter'][1], $row['id'])) . '" onclick="Backend.getScrollOffset()">' . $imagePasteAfter . '</a> ';
+		return System::getContainer()
+			->get(\Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener::class)
+			->renderArticlePasteButton($dc, $row, $table, $cr, $arrClipboard)
+		;
 	}
 
 	/**
