@@ -541,7 +541,7 @@ services:
             - ['addRouteFilter', ['@contao.routing.published_filter']]
 
     contao.routing.page_router:
-        class: Symfony\Cmf\Component\Routing\DynamicRouter
+        class: Symfony\Cmf\Bundle\RoutingBundle\Routing\DynamicRouter
         arguments:
             - '@router.request_context'
             - '@contao.routing.nested_matcher'
