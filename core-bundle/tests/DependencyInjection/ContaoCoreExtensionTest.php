@@ -140,6 +140,9 @@ use Contao\CoreBundle\Security\TwoFactor\TrustedDeviceManager;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
 use Contao\CoreBundle\Security\User\UserChecker;
 use Contao\CoreBundle\Security\Voter\BackendAccessVoter;
+use Contao\CoreBundle\Security\Voter\ContentModelAccessVoter;
+use Contao\CoreBundle\Security\Voter\ModuleModelAccessVoter;
+use Contao\CoreBundle\Security\Voter\PageModelAccessVoter;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\CoreBundle\Slug\Slug;
 use Contao\CoreBundle\Slug\ValidCharacters;
@@ -3182,7 +3185,30 @@ class ContaoCoreExtensionTest extends TestCase
 
         $definition = $container->getDefinition('contao.security.backend_access_voter');
 
-        $this->assertSame(BackendAccessVoter::class, $definition->getClass());
+    public function testRegistersTheSecurityPageModelAccessVoter(): void
+    {
+        $this->assertTrue($this->container->has(PageModelAccessVoter::class));
+
+        $definition = $this->container->getDefinition(PageModelAccessVoter::class);
+
+        $this->assertTrue($definition->isPrivate());
+    }
+
+    public function testRegistersTheSecurityContentModelAccessVoter(): void
+    {
+        $this->assertTrue($this->container->has(ContentModelAccessVoter::class));
+
+        $definition = $this->container->getDefinition(ContentModelAccessVoter::class);
+
+        $this->assertTrue($definition->isPrivate());
+    }
+
+    public function testRegistersTheSecurityModuleModelAccessVoter(): void
+    {
+        $this->assertTrue($this->container->has(ModuleModelAccessVoter::class));
+
+        $definition = $this->container->getDefinition(ModuleModelAccessVoter::class);
+
         $this->assertTrue($definition->isPrivate());
     }
 
