@@ -16,11 +16,15 @@ use Contao\CoreBundle\Routing\Content\ContentUrlResolverInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Cmf\Component\Routing\VersatileGeneratorInterface;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGenerator as SymfonyUrlGenerator;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
+
+use Contao\CoreBundle\Routing\Content\PageProviderInterface;
+use Contao\CoreBundle\Routing\Content\PageRoute;
 
 class DelegatingUrlGenerator extends SymfonyUrlGenerator implements VersatileGeneratorInterface
 {
@@ -29,11 +33,17 @@ class DelegatingUrlGenerator extends SymfonyUrlGenerator implements VersatileGen
      */
     private $resolvers;
 
-    public function __construct($resolvers, LoggerInterface $logger = null)
+    /**
+     * @var ServiceLocator
+     */
+    private $pageProviders;
+
+    public function __construct(iterable $resolvers, ServiceLocator $pageProviders, LoggerInterface $logger = null)
     {
         parent::__construct(new RouteCollection(), new RequestContext(), $logger);
 
         $this->resolvers = $resolvers;
+        $this->pageProviders = $pageProviders;
     }
 
     /**
@@ -109,6 +119,19 @@ class DelegatingUrlGenerator extends SymfonyUrlGenerator implements VersatileGen
                     $route->setDefault(ContentUrlResolverInterface::ATTRIBUTE, $resolver);
                 }
                 break;
+            }
+        }
+
+        if ($route instanceof PageRoute) {
+            $page = $route->getPage();
+
+            if ($this->pageProviders->has($page->type)) {
+
+                /** @var PageProviderInterface $pageProvider */
+                $pageProvider = $this->pageProviders->get($page->type);
+
+                $route = $pageProvider->getRouteForPage($route->getPage(), $route->getContent());
+                $route->setDefault(PageProviderInterface::ATTRIBUTE, $pageProvider);
             }
         }
 

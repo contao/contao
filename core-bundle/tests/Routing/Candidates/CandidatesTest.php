@@ -14,9 +14,13 @@ namespace Contao\CoreBundle\Tests\Routing\Candidates;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Candidates\Candidates;
+use Contao\CoreBundle\Routing\Content\PageProviderInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\FetchMode;
 use Doctrine\DBAL\Statement;
+use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpFoundation\Request;
 
 class CandidatesTest extends TestCase
@@ -40,9 +44,10 @@ class CandidatesTest extends TestCase
             ->willReturn(false)
         ;
 
-        $connection = $this->mockConnectionWithConfig($urlSuffix, $languages);
+        $connection = $this->mockConnectionWithLanguages($languages);
+        $providers = $this->mockPageProvidersWithUrlSuffix($urlSuffix);
 
-        $candidates = (new Candidates($framework, $connection, '.html', false))->getCandidates($request);
+        $candidates = (new Candidates($framework, $connection, $providers, '.html', false))->getCandidates($request);
 
         $this->assertSame($expected, $candidates);
     }
@@ -72,7 +77,13 @@ class CandidatesTest extends TestCase
             ->method($this->anything())
         ;
 
-        $candidates = (new Candidates($framework, $connection, $urlSuffix[0] ?? '', 0 !== \count($languages)))->getCandidates($request);
+        $providers = $this->createMock(ServiceLocator::class);
+        $providers
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
+        $candidates = (new Candidates($framework, $connection, $providers, $urlSuffix[0] ?? '', 0 !== \count($languages)))->getCandidates($request);
 
         $this->assertSame($expected, $candidates);
     }
@@ -272,34 +283,57 @@ class CandidatesTest extends TestCase
         ];
     }
 
-    private function mockConnectionWithConfig(array $urlSuffix, array $languages)
+    /**
+     * @return Connection&MockObject
+     */
+    private function mockConnectionWithLanguages(array $languages): Connection
     {
-        $rows = [];
-
-        foreach ($urlSuffix as $suffix) {
-            $language = array_shift($languages);
-            $rows[] = ['urlSuffix' => $suffix, 'languagePrefix' => (string) $language];
-        }
-
-        foreach ($languages as $language) {
-            $rows[] = ['urlSuffix' => '', 'languagePrefix' => $language];
-        }
-
         $statement = $this->createMock(Statement::class);
         $statement
             ->expects($this->once())
             ->method('fetchAll')
-            ->willReturn($rows)
+            ->with(FetchMode::COLUMN)
+            ->willReturn($languages)
         ;
 
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
             ->method('query')
-            ->with('SELECT urlSuffix, languagePrefix FROM tl_page')
+            ->with("SELECT DISTINCT languagePrefix FROM tl_page WHERE type='root'")
             ->willReturn($statement)
         ;
 
         return $connection;
+    }
+
+    /**
+     * @return ServiceLocator&MockObject
+     */
+    private function mockPageProvidersWithUrlSuffix(array $urlSuffix): ServiceLocator
+    {
+        $provider = $this->createMock(PageProviderInterface::class);
+        $provider
+            ->expects($this->atLeastOnce())
+            ->method('getUrlSuffixes')
+            ->willReturn($urlSuffix)
+        ;
+
+        $locator = $this->createMock(ServiceLocator::class);
+
+        $locator
+            ->expects($this->atLeastOnce())
+            ->method('getProvidedServices')
+            ->willReturn(['root' => '\Foo\BarPageProvider'])
+        ;
+
+        $locator
+            ->expects($this->atLeastOnce())
+            ->method('get')
+            ->with('root')
+            ->willReturn($provider)
+        ;
+
+        return $locator;
     }
 }

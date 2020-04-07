@@ -462,6 +462,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@database_connection'
+            - !tagged_locator { tag: contao.page_provider, index_by: type, default_index_method: getPageType }
             - '%contao.url_suffix%'
             - '%contao.prepend_locale%'
 
@@ -573,6 +574,7 @@ services:
         class: Contao\CoreBundle\Routing\DelegatingUrlGenerator
         arguments:
             - !tagged_iterator contao.content_resolver
+            - !tagged_locator { tag: contao.page_provider, index_by: type, default_index_method: getPageType }
             - '@?logger'
 
     contao.routing.route_provider:
@@ -581,6 +583,7 @@ services:
             - '@contao.framework'
             - '@database_connection'
             - '@contao.routing.candidates'
+            - !tagged_locator { tag: contao.page_provider, index_by: type, default_index_method: getPageType }
             - '%contao.prepend_locale%'
 
     contao.routing.route_404_provider:

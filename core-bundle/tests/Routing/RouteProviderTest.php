@@ -22,7 +22,9 @@ use Contao\Model\Collection;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bundle\FrameworkBundle\Controller\RedirectController;
 use Symfony\Cmf\Component\Routing\Candidates\CandidatesInterface;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
@@ -35,6 +37,7 @@ class RouteProviderTest extends TestCase
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = 17;
         $page->rootId = 1;
+        $page->languagePrefix = '';
 
         $pageAdapter = $this->mockAdapter(['findByPk']);
         $pageAdapter
@@ -83,11 +86,13 @@ class RouteProviderTest extends TestCase
         $page1 = $this->mockClassWithProperties(PageModel::class);
         $page1->id = 17;
         $page1->rootId = 1;
+        $page1->languagePrefix = '';
 
         /** @var PageModel&MockObject $page2 */
         $page2 = $this->mockClassWithProperties(PageModel::class);
         $page2->id = 21;
         $page2->rootId = 1;
+        $page2->languagePrefix = '';
 
         $pageAdapter = $this->mockAdapter(['findBy']);
         $pageAdapter
@@ -110,6 +115,7 @@ class RouteProviderTest extends TestCase
         $page->id = 17;
         $page->rootId = 1;
         $page->domain = 'example.org';
+        $page->languagePrefix = '';
 
         $pageAdapter = $this->mockAdapter(['findByPk']);
         $pageAdapter
@@ -132,6 +138,7 @@ class RouteProviderTest extends TestCase
         $page->id = 17;
         $page->rootId = 1;
         $page->domain = 'example.org:8080';
+        $page->languagePrefix = '';
 
         $pageAdapter = $this->mockAdapter(['findByPk']);
         $pageAdapter
@@ -190,7 +197,7 @@ class RouteProviderTest extends TestCase
     public function testReturnsAnEmptyCollectionIfTheLanguageIsNotGiven(): void
     {
         $request = $this->mockRequestWithPath('/foo.html');
-        $provider = $this->getRouteProvider($this->mockFramework($this->mockAdapter(['findBy'])), '.html', true);
+        $provider = $this->getRouteProvider($this->mockFramework($this->mockAdapter(['findBy'])), true);
 
         $this->assertEmpty($provider->getRouteCollectionForRequest($request));
     }
@@ -375,8 +382,9 @@ class RouteProviderTest extends TestCase
     public function testAddsRoutesForAPage(string $alias, string $language, string $domain, string $urlSuffix, bool $prependLocale, ?string $scheme): void
     {
         $page = $this->createPage($language, $alias, true, $domain, $scheme, $urlSuffix);
+        $page->languagePrefix = $prependLocale ? $language : '';
         $page
-            ->expects($this->once())
+            ->expects($this->atLeastOnce())
             ->method('loadDetails')
         ;
 
@@ -390,10 +398,10 @@ class RouteProviderTest extends TestCase
         $framework = $this->mockFramework($pageAdapter);
         $request = $this->mockRequestWithPath(($prependLocale ? '/'.$language : '').'/foo/bar'.$urlSuffix);
 
-        $provider = $this->getRouteProvider($framework, $urlSuffix, $prependLocale);
+        $provider = $this->getRouteProvider($framework, $prependLocale);
         $collection = $provider->getRouteCollectionForRequest($request);
 
-        $this->assertCount(1, $collection);
+        $this->assertCount($prependLocale ? 2 : 1, $collection);
 
         $route = $collection->get('tl_page.'.$page->id);
 
@@ -409,11 +417,35 @@ class RouteProviderTest extends TestCase
         }
 
         if ($prependLocale) {
-            $this->assertSame('/{_locale}/'.$alias.'{parameters}'.$urlSuffix, $route->getPath());
-            $this->assertSame($language, $route->getRequirement('_locale'));
+            $this->assertSame('/'.$language.'/'.$alias.'{parameters}'.$urlSuffix, $route->getPath());
+            $this->assertSame($language, $route->getDefault('_locale'));
         } else {
             $this->assertSame('/'.$alias.'{parameters}'.$urlSuffix, $route->getPath());
         }
+
+        if (!$prependLocale) {
+            return;
+        }
+
+        $route = $collection->get('tl_page.'.$page->id.'.locale');
+
+        $this->assertInstanceOf(Route::class, $route);
+        $this->assertSame('(/.+)?', $route->getRequirement('parameters'));
+        $this->assertTrue($route->getOption('utf8'));
+        $this->assertSame($domain, $route->getHost());
+
+        if ('https' === $scheme) {
+            $this->assertSame(['https'], $route->getSchemes());
+        } else {
+            $this->assertSame([], $route->getSchemes());
+        }
+
+        $this->assertSame('/'.$alias.'{parameters}'.$urlSuffix, $route->getPath());
+        $this->assertSame(RedirectController::class.'::urlRedirectAction', $route->getDefault('_controller'));
+        $this->assertTrue($route->getDefault('permanent'));
+
+        // It's correct to test for the language twice here: the prefix is added *to the current request URL*
+        $this->assertSame('/'.$language.'/'.$language.'/foo/bar'.$urlSuffix, $route->getDefault('path'));
     }
 
     public function getPageRoutes(): \Generator
@@ -532,6 +564,7 @@ class RouteProviderTest extends TestCase
         $page->type = 'regular';
         $page->alias = $alias;
         $page->domain = $domain;
+        $page->languagePrefix = '';
         $page->urlSuffix = $urlSuffix;
         $page->rootLanguage = $language;
         $page->rootIsFallback = $fallback;
@@ -544,7 +577,7 @@ class RouteProviderTest extends TestCase
     /**
      * @param ContaoFramework&MockObject $framework
      */
-    private function getRouteProvider(ContaoFramework $framework = null, string $urlSuffix = '.html', bool $prependLocale = false): RouteProvider
+    private function getRouteProvider(ContaoFramework $framework = null, bool $prependLocale = false): RouteProvider
     {
         if (null === $framework) {
             $framework = $this->mockContaoFramework();
@@ -563,6 +596,8 @@ class RouteProviderTest extends TestCase
             ->willReturn(['foo'])
         ;
 
-        return new RouteProvider($framework, $connection, $candidates, $prependLocale);
+        $providers = $this->createMock(ServiceLocator::class);
+
+        return new RouteProvider($framework, $connection, $candidates, $providers, $prependLocale);
     }
 }

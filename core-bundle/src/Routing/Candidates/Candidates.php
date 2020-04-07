@@ -13,8 +13,11 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing\Candidates;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\Content\PageProviderInterface;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\FetchMode;
 use Symfony\Cmf\Component\Routing\Candidates\CandidatesInterface;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpFoundation\Request;
 
 class Candidates implements CandidatesInterface
@@ -59,11 +62,16 @@ class Candidates implements CandidatesInterface
      * @var array
      */
     private $urlSuffix;
+    /**
+     * @var ServiceLocator
+     */
+    private $pageProviders;
 
-    public function __construct(ContaoFramework $framework, Connection $database, string $urlSuffix, bool $prependLocale)
+    public function __construct(ContaoFramework $framework, Connection $database, ServiceLocator $pageProviders, string $urlSuffix, bool $prependLocale)
     {
         $this->framework = $framework;
         $this->database = $database;
+        $this->pageProviders = $pageProviders;
         $this->prependLocale = $prependLocale;
 
         $this->languagePrefix = [];
@@ -189,25 +197,20 @@ class Candidates implements CandidatesInterface
             return;
         }
 
-        $urlSuffix = [];
-        $languagePrefix = [];
-
-        $pages = $this->database
-            ->query('SELECT urlSuffix, languagePrefix FROM tl_page')
-            ->fetchAll()
+        $languagePrefix = $this->database
+            ->query("SELECT DISTINCT languagePrefix FROM tl_page WHERE type='root'")
+            ->fetchAll(FetchMode::COLUMN)
         ;
 
-        foreach ($pages as $page) {
-            if ($page['urlSuffix']) {
-                $urlSuffix[] = $page['urlSuffix'];
-            }
+        $urlSuffix = [];
 
-            if ($page['languagePrefix']) {
-                $languagePrefix[] = $page['languagePrefix'];
-            }
+        foreach ($this->pageProviders->getProvidedServices() as $type => $v) {
+            /** @var PageProviderInterface $provider */
+            $provider = $this->pageProviders->get($type);
+            $urlSuffix[] = $provider->getUrlSuffixes();
         }
 
-        $this->urlSuffix = array_unique($urlSuffix);
-        $this->languagePrefix = array_unique($languagePrefix);
+        $this->urlSuffix = array_filter(array_unique(array_merge(...$urlSuffix)));
+        $this->languagePrefix = array_filter($languagePrefix);
     }
 }
