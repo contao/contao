@@ -316,7 +316,8 @@ class FrontendIndex extends Frontend
 					return $objHandler->getResponse();
 
 				default:
-					$objHandler = new $GLOBALS['TL_PTY'][$objPage->type]();
+					$pageType = $GLOBALS['TL_PTY'][$objPage->type] ?? PageRegular::class;
+					$objHandler = new $pageType();
 
 					// Backwards compatibility
 					if (!method_exists($objHandler, 'getResponse'))
