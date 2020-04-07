@@ -1,0 +1,14 @@
+services:
+    _defaults:
+        autoconfigure: true
+
+    # Backwards Compatibility
+    contao.security.backend_access_voter: '@Contao\CoreBundle\Security\Voter\BackendAccessVoter'
+
+    Contao\CoreBundle\Security\Voter\ContentModelAccessVoter:
+
+    Contao\CoreBundle\Security\Voter\BackendAccessVoter:
+
+    Contao\CoreBundle\Security\Voter\ModuleModelAccessVoter:
+
+    Contao\CoreBundle\Security\Voter\PageModelAccessVoter:

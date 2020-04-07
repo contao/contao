@@ -66,6 +66,7 @@ class ContaoCoreExtension extends Extension
         $loader->load('services.yml');
         $loader->load('routing.yml');
         $loader->load('migrations.yml');
+        $loader->load('voters.yml');
 
         $container->setParameter('contao.web_dir', $config['web_dir']);
         $container->setParameter('contao.encryption_key', $config['encryption_key']);
