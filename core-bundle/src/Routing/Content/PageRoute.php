@@ -25,11 +25,21 @@ class PageRoute extends Route implements RouteObjectInterface
     private $page;
 
     /**
+     * @var string
+     */
+    private $languagePrefix;
+
+    /**
+     * @var string
+     */
+    private $urlSuffix;
+
+    /**
      * The referenced content object.
      */
     private $content;
 
-    public function __construct(PageModel $page, string $parameters = '', $content = null)
+    public function __construct(PageModel $page, $content = null)
     {
         $page->loadDetails();
 
@@ -38,41 +48,68 @@ class PageRoute extends Route implements RouteObjectInterface
             '_controller' => 'Contao\FrontendIndex::renderPage',
             '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
             '_locale' => $page->rootLanguage,
+            '_format' => 'html',
             'pageModel' => $page,
         ];
 
-        $requirements = [];
-        $path = sprintf('/%s%s', $page->alias, $page->urlSuffix);
-
-        if (!$page->parameters) {
-            $requirements = ['parameters' => $page->requireItem ? '/.+' : '(/.+)?'];
-            $defaults['parameters'] = $parameters;
-            $path = sprintf('/%s{parameters}%s', $page->alias, $page->urlSuffix);
-        }
-
-        if ('' !== $page->languagePrefix) {
-            $path = '/'.$page->languagePrefix.$path;
-        }
-
         parent::__construct(
-            $path,
+            '/'.$page->alias,
             $defaults,
-            $requirements,
+            [],
             ['utf8' => true],
             $page->domain,
             $page->rootUseSSL ? 'https' : null
         );
 
         $this->page = $page;
-
-        if (null !== $content) {
-            $this->setContent($content);
-        }
+        $this->languagePrefix = $page->languagePrefix;
+        $this->urlSuffix = $page->urlSuffix;
+        $this->content = $content;
     }
 
     public function getRouteKey()
     {
         return 'tl_page.'.$this->page->id;
+    }
+
+    public function getPage(): PageModel
+    {
+        return $this->page;
+    }
+
+    public function getPath()
+    {
+        $path = parent::getPath();
+
+        if ('' !== $this->getLanguagePrefix()) {
+            $path = '/'.$this->getLanguagePrefix().$path;
+        }
+
+        return $path.$this->getUrlSuffix();
+    }
+
+    public function getLanguagePrefix(): string
+    {
+        return $this->languagePrefix;
+    }
+
+    public function setLanguagePrefix(string $languagePrefix): self
+    {
+        $this->languagePrefix = $languagePrefix;
+
+        return $this;
+    }
+
+    public function getUrlSuffix(): string
+    {
+        return $this->urlSuffix;
+    }
+
+    public function setUrlSuffix(string $urlSuffix): self
+    {
+        $this->urlSuffix = $urlSuffix;
+
+        return $this;
     }
 
     /**
@@ -93,8 +130,14 @@ class PageRoute extends Route implements RouteObjectInterface
         return $this->content;
     }
 
-    public function getPage(): PageModel
+    public static function createWithParameters(PageModel $page, string $parameters = '', $content = null)
     {
-        return $this->page;
+        $route = new self($page, $content);
+
+        $route->setPath(sprintf('/%s{parameters}', $page->alias));
+        $route->setDefault('parameters', $parameters);
+        $route->setRequirement('parameters', $page->requireItem ? '/.+' : '(/.+)?');
+
+        return $route;
     }
 }

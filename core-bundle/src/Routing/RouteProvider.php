@@ -510,7 +510,7 @@ class RouteProvider implements RouteProviderInterface
     private function getRouteForPage(PageModel $page, ?Request $request): Route
     {
         if (!$this->pageProviders->has($page->type)) {
-            return new PageRoute($page);
+            return PageRoute::createWithParameters($page);
         }
 
         /** @var PageProviderInterface $provider */

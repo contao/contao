@@ -31,7 +31,7 @@ class ArticleUrlResolver implements ContentUrlResolverInterface
             throw new RouteNotFoundException(sprintf('Page ID %s for article ID %s not found', $article->id, $article->pid));
         }
 
-        return new PageRoute($page, '/articles/'.($article->alias ?: $article->id), $article);
+        return PageRoute::createWithParameters($page, '/articles/'.($article->alias ?: $article->id), $article);
     }
 
     public function supportsContent($content): bool
