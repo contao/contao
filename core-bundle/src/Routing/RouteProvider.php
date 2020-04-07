@@ -21,6 +21,7 @@ use Contao\Model\Collection;
 use Contao\PageModel;
 use Contao\System;
 use Doctrine\DBAL\Connection;
+use Symfony\Bundle\FrameworkBundle\Controller\RedirectController;
 use Symfony\Cmf\Component\Routing\Candidates\CandidatesInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\DependencyInjection\ServiceLocator;
@@ -235,7 +236,7 @@ class RouteProvider implements RouteProviderInterface
         }
 
         $redirect->addDefaults([
-            '_controller' => 'Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction',
+            '_controller' => RedirectController::class.'::urlRedirectAction',
             'path' => $path,
             'permanent' => true,
         ]);

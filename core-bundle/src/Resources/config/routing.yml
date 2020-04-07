@@ -5,3 +5,8 @@ services:
     Contao\CoreBundle\Routing\Content\ArticleUrlResolver:
 
     Contao\CoreBundle\Routing\Content\PageUrlResolver:
+
+    Contao\CoreBundle\Routing\Content\RootPageProvider:
+        arguments:
+            - '@contao.framework'
+            - '@database_connection'
