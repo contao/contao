@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\ManagerBundle\HttpKernel;
 
 use Contao\CoreBundle\EventListener\HttpCache\StripCookiesSubscriber;
+use Contao\CoreBundle\EventListener\HttpCache\StripQueryParametersSubscriber;
 use FOS\HttpCache\SymfonyCache\CacheInvalidation;
 use FOS\HttpCache\SymfonyCache\CleanupCacheTagsListener;
 use FOS\HttpCache\SymfonyCache\EventDispatchingHttpCache;
@@ -34,9 +35,14 @@ class ContaoCache extends HttpCache implements CacheInvalidation
     {
         parent::__construct($kernel, $cacheDir);
 
-        $whitelist = array_filter(explode(',', $_SERVER['COOKIE_WHITELIST'] ?? ''));
+        $stripCookies = new StripCookiesSubscriber($this->getFromCsvEnvVar('COOKIE_WHITELIST'));
+        $stripCookies->disableFromBlacklist($this->getFromCsvEnvVar('COOKIE_DISABLE_FROM_BLACKLIST'));
 
-        $this->addSubscriber(new StripCookiesSubscriber($whitelist));
+        $stripQueryParams = new StripQueryParametersSubscriber($this->getFromCsvEnvVar('QUERY_PARAMS_WHITELIST'));
+        $stripQueryParams->disableFromBlacklist($this->getFromCsvEnvVar('QUERY_PARAMS_DISABLE_FROM_BLACKLIST'));
+
+        $this->addSubscriber($stripCookies);
+        $this->addSubscriber($stripQueryParams);
         $this->addSubscriber(new PurgeListener());
         $this->addSubscriber(new PurgeTagsListener());
         $this->addSubscriber(new CleanupCacheTagsListener());
@@ -67,5 +73,10 @@ class ContaoCache extends HttpCache implements CacheInvalidation
             'cache_tags_header' => TagHeaderFormatter::DEFAULT_HEADER_NAME,
             'prune_threshold' => 5000,
         ]);
+    }
+
+    private function getFromCsvEnvVar(string $key): array
+    {
+        return array_filter(explode(',', $_SERVER[$key] ?? ''));
     }
 }

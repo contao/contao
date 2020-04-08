@@ -170,9 +170,6 @@
       <trans-unit id="tl_news.date_legend">
         <source>Date and time</source>
       </trans-unit>
-      <trans-unit id="tl_news.meta_legend">
-        <source>Meta data</source>
-      </trans-unit>
       <trans-unit id="tl_news.teaser_legend">
         <source>Subheadline and teaser</source>
       </trans-unit>
@@ -226,6 +223,9 @@
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
+      </trans-unit>
+      <trans-unit id="tl_news.editmeta">
+        <source>Edit the news item settings</source>
       </trans-unit>
     </body>
   </file>

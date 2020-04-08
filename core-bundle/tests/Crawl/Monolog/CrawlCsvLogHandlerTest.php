@@ -40,6 +40,37 @@ class CrawlCsvLogHandlerTest extends TestCase
         $this->assertSame($expectedContent, $content);
     }
 
+    public function testSourceFilter(): void
+    {
+        $record = [
+            'level' => Logger::DEBUG,
+            'message' => 'foobar',
+            'extra' => [],
+            'context' => [
+                'source' => 'source',
+                'crawlUri' => new CrawlUri(new Uri('https://contao.org'), 0),
+            ],
+        ];
+
+        $stream = fopen('php://memory', 'r+');
+        $handler = new CrawlCsvLogHandler($stream);
+        $handler->setFilterSource('foobar');
+        $handler->handle($record);
+
+        rewind($stream);
+        $content = stream_get_contents($stream);
+        $this->assertSame('', $content);
+
+        $handler = new CrawlCsvLogHandler($stream);
+        $handler->setFilterSource('source');
+        $handler->handle($record);
+
+        rewind($stream);
+        $content = stream_get_contents($stream);
+
+        $this->assertSame('Source,URI,"Found on URI","Found on level",Tags,Message'."\n".'source,https://contao.org/,,0,,foobar'."\n", $content);
+    }
+
     public function writesCsvStreamProvider(): \Generator
     {
         yield 'Should not write anything if the source is missing' => [

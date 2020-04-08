@@ -17,8 +17,8 @@ services:
             - { name: contao.migration, priority: 99 }
 
     Contao\InstallationBundle\Database\:
-        resource: '../../Database/Version*'
-        exclude: '../../Database/Version{480,447}Update.php'
+        resource: ../../Database/Version*
+        exclude: ../../Database/Version{480,447}Update.php
         arguments:
             - '@database_connection'
         tags:

@@ -20,39 +20,32 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * @internal
  */
-class StripCookiesSubscriber implements EventSubscriberInterface
+class StripQueryParametersSubscriber implements EventSubscriberInterface
 {
     private const BLACKLIST = [
-        // Modals are always for JS only
-        '(.*)?modal(.*)?',
+        // Google click identifier
+        'gclid',
+        'dclid', // Used to be DoubleClick
 
-        // Google Analytics (https://developers.google.com/analytics/devguides/collection/analyticsjs/cookie-usage)
-        '_ga',
-        '_gid',
-        '_gat',
-        '_dc_gtm_.+',
-        'AMP_TOKEN',
-        '_gac_.+',
-        '__utm.+',
+        // Facebook click identifier
+        'fbclid',
 
-        // Matomo (https://matomo.org/faq/general/faq_146/)
-        '_pk_id.*',
-        '_pk_ref.*',
-        '_pk_ses.*',
-        '_pk_cvar.*',
-        '_pk_hsr.*',
+        // Awin click identifier
+        'zanpid', // Used to be Zanox
 
-        // Cloudflare
-        '__cfduid',
-        'cf_clearance',
-        'cf_use_ob',
-        'cf_ob_info',
+        // Google custom search engine
+        'cx',
+        'ie',
+        'cof',
 
-        // Facebook Pixel
-        '_fbp',
+        // Google search analytics
+        'siteurl',
 
-        // Blackfire
-        '__blackfire',
+        // Google Ads
+        'gclsrc',
+
+        //  Urchin Tracking Module (UTM) parameters
+        'utm_[a-z]+',
     ];
 
     /**
@@ -86,15 +79,15 @@ class StripCookiesSubscriber implements EventSubscriberInterface
     {
         $request = $event->getRequest();
 
-        if (!$request->cookies->count()) {
+        if (!$request->query->count()) {
             return;
         }
 
         // Use a custom whitelist if present, otherwise use the default blacklist
         if (0 !== \count($this->whitelist)) {
-            $this->filterCookies($request, $this->whitelist, true);
+            $this->filterQueryParams($request, $this->whitelist, true);
         } else {
-            $this->filterCookies($request, array_diff(self::BLACKLIST, $this->disabledFromBlacklist));
+            $this->filterQueryParams($request, array_diff(self::BLACKLIST, $this->disabledFromBlacklist));
         }
     }
 
@@ -105,16 +98,16 @@ class StripCookiesSubscriber implements EventSubscriberInterface
         ];
     }
 
-    private function filterCookies(Request $request, array $list, bool $isWhitelist = false): void
+    private function filterQueryParams(Request $request, array $list, bool $isWhitelist = false): void
     {
-        $removeCookies = preg_grep(
+        $removeParams = preg_grep(
             '/^(?:'.implode(')$|^(?:', $list).')$/i',
-            array_keys($request->cookies->all()),
+            array_keys($request->query->all()),
             $isWhitelist ? PREG_GREP_INVERT : 0
         );
 
-        foreach ($removeCookies as $name) {
-            $request->cookies->remove($name);
+        foreach ($removeParams as $name) {
+            $request->query->remove($name);
         }
     }
 }

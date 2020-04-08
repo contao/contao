@@ -21,11 +21,11 @@ services:
             - '@request_stack'
             - '@contao.framework'
         tags:
-            - { name: kernel.event_listener }
+            - kernel.event_listener
 
     contao_news.listener.preview_url_convert:
         class: Contao\NewsBundle\EventListener\PreviewUrlConvertListener
         arguments:
             - '@contao.framework'
         tags:
-            - { name: kernel.event_listener }
+            - kernel.event_listener

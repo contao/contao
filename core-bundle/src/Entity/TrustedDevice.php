@@ -148,6 +148,10 @@ class TrustedDevice
 
     public function getDeviceFamily(): ?string
     {
+        if ('Other' === $this->deviceFamily) {
+            return '-';
+        }
+
         return $this->deviceFamily;
     }
 

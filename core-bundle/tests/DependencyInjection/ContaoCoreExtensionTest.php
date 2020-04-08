@@ -54,6 +54,7 @@ use Contao\CoreBundle\EventListener\CsrfTokenCookieSubscriber;
 use Contao\CoreBundle\EventListener\DataContainerCallbackListener;
 use Contao\CoreBundle\EventListener\DoctrineSchemaListener;
 use Contao\CoreBundle\EventListener\ExceptionConverterListener;
+use Contao\CoreBundle\EventListener\InitializeControllerListener;
 use Contao\CoreBundle\EventListener\InsecureInstallationListener;
 use Contao\CoreBundle\EventListener\InsertTags\AssetListener;
 use Contao\CoreBundle\EventListener\InsertTags\TranslationListener;
@@ -555,6 +556,27 @@ class ContaoCoreExtensionTest extends TestCase
                 'kernel.event_listener' => [
                     [
                         'priority' => 96,
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
+    }
+
+    public function testRegistersTheInitializeControllerListener(): void
+    {
+        $this->assertTrue($this->container->has('contao.listener.initialize_controller'));
+
+        $definition = $this->container->getDefinition('contao.listener.initialize_controller');
+
+        $this->assertSame(InitializeControllerListener::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertSame(
+            [
+                'kernel.event_listener' => [
+                    [
+                        'priority' => 1000,
                     ],
                 ],
             ],
@@ -2895,7 +2917,7 @@ class ContaoCoreExtensionTest extends TestCase
         );
     }
 
-    public function testRegistersTheSecurityTokenChecker(): void
+    public function testRegistersTheSecurityTokenCheckerWithSimpleRoleVoter(): void
     {
         $this->assertTrue($this->container->has('contao.security.token_checker'));
 
@@ -2912,6 +2934,39 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('session'),
                 new Reference('security.authentication.trust_resolver'),
                 new Reference('security.access.simple_role_voter'),
+                new Reference('%contao.preview_script%'),
+            ],
+            $definition->getArguments()
+        );
+    }
+
+    public function testRegistersTheSecurityTokenCheckerWithRoleHierarchyVoter(): void
+    {
+        // Populate security configuration
+        $this->container->setParameter('security.role_hierarchy.roles', [
+            'ROLE_ADMIN' => ['ROLE_USER'],
+            'ROLE_SUPER_ADMIN' => ['ROLE_ADMIN', 'ROLE_ALLOWED_TO_SWITCH'],
+        ]);
+
+        // Reload container
+        $extension = new ContaoCoreExtension();
+        $extension->load([], $this->container);
+
+        $this->assertTrue($this->container->has('contao.security.token_checker'));
+
+        $definition = $this->container->getDefinition('contao.security.token_checker');
+
+        $this->assertSame(TokenChecker::class, $definition->getClass());
+        $this->assertTrue($definition->isPublic());
+
+        $this->assertEquals(
+            [
+                new Reference('request_stack'),
+                new Reference('security.firewall.map'),
+                new Reference('security.token_storage'),
+                new Reference('session'),
+                new Reference('security.authentication.trust_resolver'),
+                new Reference('security.access.role_hierarchy_voter'),
                 new Reference('%contao.preview_script%'),
             ],
             $definition->getArguments()
