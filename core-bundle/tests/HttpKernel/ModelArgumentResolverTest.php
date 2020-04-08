@@ -29,8 +29,7 @@ class ModelArgumentResolverTest extends TestCase
     {
         System::setContainer($this->getContainerWithContaoConfiguration());
 
-        $pageModel = new PageModel();
-        $pageModel->setRow(['id' => 42]);
+        $pageModel = $this->createMock(PageModel::class);
 
         $adapter = $this->mockConfiguredAdapter(['findByPk' => $pageModel]);
         $framework = $this->mockContaoFramework([$class => $adapter]);
@@ -54,6 +53,27 @@ class ModelArgumentResolverTest extends TestCase
         yield ['pageModel', PageModel::class];
         yield ['foobar', PageModel::class];
         yield ['foobar', 'PageModel'];
+    }
+
+    public function testResolvesAttributeInstances(): void
+    {
+        System::setContainer($this->getContainerWithContaoConfiguration());
+
+        $pageModel = $this->createMock(PageModel::class);
+        $framework = $this->mockContaoFramework();
+
+        $request = Request::create('/foobar');
+        $request->attributes->set('pageModel', $pageModel);
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
+
+        $metadata = new ArgumentMetadata('pageModel', PageModel::class, false, false, '');
+
+        $resolver = new ModelArgumentResolver($framework, $this->mockScopeMatcher());
+        $generator = $resolver->resolve($request, $metadata);
+
+        foreach ($generator as $resolved) {
+            $this->assertSame($pageModel, $resolved);
+        }
     }
 
     public function testDoesNothingIfOutsideTheContaoScope(): void
