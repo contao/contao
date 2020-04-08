@@ -55,7 +55,7 @@ class ModelArgumentResolverTest extends TestCase
         yield ['foobar', 'PageModel'];
     }
 
-    public function testResolvesAttributeInstances()
+    public function testResolvesAttributeInstances(): void
     {
         System::setContainer($this->getContainerWithContaoConfiguration());
 
