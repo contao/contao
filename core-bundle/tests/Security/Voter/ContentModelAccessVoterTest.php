@@ -16,7 +16,6 @@ use Contao\BackendUser;
 use Contao\ContentModel;
 use Contao\CoreBundle\Security\Voter\AbstractFrontendAccessVoter;
 use Contao\CoreBundle\Security\Voter\ContentModelAccessVoter;
-use Contao\CoreBundle\Security\Voter\PageModelAccessVoter;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Contao\LayoutModel;
@@ -27,7 +26,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 class ContentModelAccessVoterTest extends TestCase
 {
     /**
-     * @var PageModelAccessVoter
+     * @var ContentModelAccessVoter
      */
     private $voter;
 
