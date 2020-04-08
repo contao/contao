@@ -31,6 +31,11 @@ class Installer
     private $commands;
 
     /**
+     * @var array
+     */
+    private $commandOrder;
+
+    /**
      * @var DcaSchemaProvider
      */
     private $schemaProvider;
@@ -47,13 +52,37 @@ class Installer
     /**
      * @return array<string>
      */
-    public function getCommands(): array
+    public function getCommands(bool $byGroup = true): array
     {
         if (null === $this->commands) {
             $this->compileCommands();
         }
 
-        return $this->commands;
+        if ($byGroup || !$this->commands) {
+            return $this->commands;
+        }
+
+        $commandsByHash = array_merge(...array_values($this->commands));
+
+        uksort(
+            $commandsByHash,
+            function ($a, $b) {
+                $indexA = array_search($a, $this->commandOrder, true);
+                $indexB = array_search($b, $this->commandOrder, true);
+
+                if (false === $indexA) {
+                    $indexA = \count($this->commandOrder);
+                }
+
+                if (false === $indexB) {
+                    $indexB = \count($this->commandOrder);
+                }
+
+                return $indexA - $indexB;
+            }
+        );
+
+        return $commandsByHash;
     }
 
     /**
@@ -89,6 +118,7 @@ class Installer
             'DROP' => [],
             'ALTER_DROP' => [],
         ];
+        $order = [];
 
         // The schema assets filter is a callable as of Doctrine DBAL 2.9
         $filter = static function (string $assetName): bool {
@@ -114,20 +144,24 @@ class Installer
             switch (true) {
                 case 0 === strncmp($sql, 'CREATE TABLE ', 13):
                     $return['CREATE'][md5($sql)] = $sql;
+                    $order[] = md5($sql);
                     break;
 
                 case 0 === strncmp($sql, 'DROP TABLE ', 11):
                     $return['DROP'][md5($sql)] = $sql;
+                    $order[] = md5($sql);
                     break;
 
                 case 0 === strncmp($sql, 'CREATE INDEX ', 13):
                 case 0 === strncmp($sql, 'CREATE UNIQUE INDEX ', 20):
                 case 0 === strncmp($sql, 'CREATE FULLTEXT INDEX ', 22):
                     $return['ALTER_ADD'][md5($sql)] = $sql;
+                    $order[] = md5($sql);
                     break;
 
                 case 0 === strncmp($sql, 'DROP INDEX', 10):
                     $return['ALTER_CHANGE'][md5($sql)] = $sql;
+                    $order[] = md5($sql);
                     break;
 
                 case preg_match('/^(ALTER TABLE [^ ]+) /', $sql, $matches):
@@ -142,15 +176,18 @@ class Installer
                         switch (true) {
                             case 0 === strncmp($part, 'DROP ', 5):
                                 $return['ALTER_DROP'][md5($command)] = $command;
+                                $order[] = md5($sql);
                                 break;
 
                             case 0 === strncmp($part, 'ADD ', 4):
                                 $return['ALTER_ADD'][md5($command)] = $command;
+                                $order[] = md5($sql);
                                 break;
 
                             case 0 === strncmp($part, 'CHANGE ', 7):
                             case 0 === strncmp($part, 'RENAME ', 7):
                                 $return['ALTER_CHANGE'][md5($command)] = $command;
+                                $order[] = md5($sql);
                                 break;
 
                             default:
@@ -165,7 +202,7 @@ class Installer
             }
         }
 
-        $this->checkEngineAndCollation($return, $fromSchema, $toSchema);
+        $this->checkEngineAndCollation($return, $order, $fromSchema, $toSchema);
 
         $return = array_filter($return);
 
@@ -177,12 +214,13 @@ class Installer
         }
 
         $this->commands = $return;
+        $this->commandOrder = $order;
     }
 
     /**
      * Checks engine and collation and adds the ALTER TABLE queries.
      */
-    private function checkEngineAndCollation(array &$sql, Schema $fromSchema, Schema $toSchema): void
+    private function checkEngineAndCollation(array &$sql, array &$order, Schema $fromSchema, Schema $toSchema): void
     {
         $tables = $toSchema->getTables();
         $dynamic = $this->hasDynamicRowFormat();
@@ -257,15 +295,22 @@ class Installer
                     $strKey = md5($indexCommand);
 
                     if (isset($sql['ALTER_CHANGE'][$strKey])) {
-                        unset($sql['ALTER_CHANGE'][$strKey]);
+                        unset(
+                            $sql['ALTER_CHANGE'][$strKey],
+                            $order[array_search($strKey, $order, true)]
+                        );
+
+                        $order = array_values($order);
                     }
 
                     $sql['ALTER_TABLE'][$strKey] = $indexCommand;
+                    $order[] = $strKey;
                 }
             }
 
             foreach ($alterTables as $k => $alterTable) {
                 $sql['ALTER_TABLE'][$k] = $alterTable;
+                $order[] = $k;
             }
         }
     }
