@@ -156,7 +156,7 @@
         <source>Configured in bundle configuration</source>
       </trans-unit>
       <trans-unit id="tl_settings.configuredInBundle.1">
-        <source>Setting is defined by contao core bundle configuration.</source>
+        <source>Setting is defined by Contao core bundle configuration.</source>
       </trans-unit>
     </body>
   </file>
