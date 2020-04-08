@@ -36,5 +36,10 @@
                 <file name="core-bundle/src/Controller/InitializeController.php" />
             </errorLevel>
         </UndefinedConstant>
+        <UndefinedDocblockClass>
+            <errorLevel type="suppress">
+                <referencedClass name="Stringable"/>
+            </errorLevel>
+        </UndefinedDocblockClass>
     </issueHandlers>
 </psalm>
