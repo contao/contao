@@ -438,13 +438,19 @@ class tl_templates extends Backend
 			$strBuffer .= '<p class="tl_info">' . $GLOBALS['TL_LANG']['tl_templates']['pleaseSelect'] . '</p>';
 		}
 
+		// Unset a custom prefix to show all templates in the drop-down menu (see #784)
+		if ($strPrefix && count(TemplateLoader::getPrefixedFiles($strPrefix)) < 1)
+		{
+			$strPrefix = '';
+		}
+
 		// Templates to compare against
 		$arrComparable = array();
 		$intPrefixLength = strlen($strPrefix);
 
 		foreach ($arrTemplates as $k => $v)
 		{
-			if (substr($k, 0, $intPrefixLength) === $strPrefix)
+			if (!$intPrefixLength || strncmp($k, $strPrefix, $intPrefixLength) === 0)
 			{
 				$arrComparable[$k] = array
 				(

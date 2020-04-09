@@ -294,4 +294,31 @@ class MergeHttpHeadersListenerTest extends TestCase
         $this->assertTrue($response->headers->has('Cache-Control'));
         $this->assertSame('no-cache, private', $response->headers->get('Cache-Control'));
     }
+
+    public function testSetsTheStatusCodeFromHttpHeader()
+    {
+        $responseEvent = new FilterResponseEvent(
+            $this->mockKernel(),
+            new Request(),
+            HttpKernelInterface::MASTER_REQUEST,
+            new Response()
+        );
+
+        $framework = $this->createMock(ContaoFrameworkInterface::class);
+
+        $framework
+            ->expects($this->once())
+            ->method('isInitialized')
+            ->willReturn(true)
+        ;
+
+        $storage = new MemoryHeaderStorage(['HTTP/1.1 404 Not Found']);
+
+        $listener = new MergeHttpHeadersListener($framework, $storage);
+        $listener->onKernelResponse($responseEvent);
+
+        $response = $responseEvent->getResponse();
+
+        $this->assertSame(404, $response->getStatusCode());
+    }
 }

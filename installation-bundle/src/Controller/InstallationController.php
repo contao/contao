@@ -312,6 +312,11 @@ class InstallationController implements ContainerAwareInterface
             return $this->render('database.html.twig', $parameters);
         }
 
+        // Only warn the user if the connection fails and the env component is used
+        if (false !== getenv('DATABASE_URL')) {
+            return $this->render('misconfigured_database_url.html.twig');
+        }
+
         $parameters['parameters'] = [
             'database_host' => $request->request->get('dbHost'),
             'database_port' => $request->request->get('dbPort'),

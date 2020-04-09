@@ -190,12 +190,11 @@
         <target>حذف سالنمای شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.0">
-        <source>RSS feeds</source>
-        <target>خوراک‌های آر‌اس‌اس</target>
+        <source>Calendar feeds</source>
+        <target>خوراک‌های سالنما</target>
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.1">
-        <source>Manage RSS feeds</source>
-        <target>مدیریت خوراک‌های آراس‌اس</target>
+        <source>Manage calendar feeds</source>
       </trans-unit>
     </body>
   </file>

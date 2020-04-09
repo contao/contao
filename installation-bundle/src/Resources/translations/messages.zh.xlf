@@ -376,6 +376,11 @@
         <target>重复的条目已自动被删除。原始的订阅备份存储在数据表 &lt;code&gt;tl_newsletter_recipients_backup&lt;/code&gt;.</target>
         
       </trans-unit>
+      <trans-unit id="76">
+        <source>misconfigured_database_url_explain</source>
+        <target>使用 &lt;code&gt;DATABASE_URL&lt;/code&gt; 环境变量中配置的连接URL，无法连接数据库。</target>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>

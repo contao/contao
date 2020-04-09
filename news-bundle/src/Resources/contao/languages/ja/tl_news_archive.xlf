@@ -190,12 +190,12 @@
         <target>ID %sのアーカイブのコメントを表示</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.0">
-        <source>RSS feeds</source>
-        <target>RSSフィード</target>
+        <source>News feeds</source>
+        <target>ニュースのフィード</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.1">
-        <source>Manage RSS feeds</source>
-        <target>RSSフィードを管理</target>
+        <source>Manage news feeds</source>
+        <target>ニュースのフィードを管理</target>
       </trans-unit>
     </body>
   </file>

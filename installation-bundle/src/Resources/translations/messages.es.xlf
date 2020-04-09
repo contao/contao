@@ -376,6 +376,11 @@
         <target>Las entradas duplicadas se han purgado automáticamente. Se ha almacenado una copia de seguridad de las suscripciones originales en &lt;code&gt;tl_newsletter_recipients_backup&lt;/code&gt;.</target>
         
       </trans-unit>
+      <trans-unit id="76">
+        <source>misconfigured_database_url_explain</source>
+        <target>No se pudo conectar a la base de datos utilizando la URL de conexión que se encuentra en la variable de entorno &lt;code&gt;DATABASE_URL&lt;/code&gt;.</target>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>

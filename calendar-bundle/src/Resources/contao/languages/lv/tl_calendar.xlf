@@ -190,12 +190,11 @@
         <target>Dzēst kalendāru ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.0">
-        <source>RSS feeds</source>
-        <target>RSS barotnes</target>
+        <source>Calendar feeds</source>
+        <target>Kalendāru barotnes</target>
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.1">
-        <source>Manage RSS feeds</source>
-        <target>Pārvaldīt RSS barotnes</target>
+        <source>Manage calendar feeds</source>
       </trans-unit>
     </body>
   </file>

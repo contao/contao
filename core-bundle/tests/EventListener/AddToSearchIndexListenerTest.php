@@ -144,6 +144,35 @@ class AddToSearchIndexListenerTest extends TestCase
     }
 
     /**
+     * Tests that the listener does nothing if the response was not successful.
+     */
+    public function testDoesNotIndexTheResponseIfItWasNotSuccessful()
+    {
+        $framework = $this->createMock(ContaoFrameworkInterface::class);
+
+        $framework
+            ->method('isInitialized')
+            ->willReturn(true)
+        ;
+
+        $framework
+            ->expects($this->never())
+            ->method('getAdapter')
+        ;
+
+        $event = $this->mockPostResponseEvent();
+
+        $event
+            ->expects($this->once())
+            ->method('getResponse')
+            ->willReturn(new Response('', 500))
+        ;
+
+        $listener = new AddToSearchIndexListener($framework);
+        $listener->onKernelTerminate($event);
+    }
+
+    /**
      * Returns a PostResponseEvent mock object.
      *
      * @param string|null $requestUri

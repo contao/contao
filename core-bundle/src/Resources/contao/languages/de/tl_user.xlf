@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_user.backendTheme.1">
         <source>Here you can override the global back end theme.</source>
-        <target>Hier können Sie das globale Backendmotiv überschreiben.</target>
+        <target>Hier können Sie das globale Backend-Theme überschreiben.</target>
       </trans-unit>
       <trans-unit id="tl_user.limitWidth.0">
         <source>Limit width</source>

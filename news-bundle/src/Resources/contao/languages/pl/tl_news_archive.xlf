@@ -190,12 +190,11 @@
         <target>Pokaż komentarze z archiwum ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.0">
-        <source>RSS feeds</source>
-        <target>Kanały RSS</target>
+        <source>News feeds</source>
+        <target>Kanały RSS aktualności</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.1">
-        <source>Manage RSS feeds</source>
-        <target>Zarządzaj kanałami RSS</target>
+        <source>Manage news feeds</source>
       </trans-unit>
     </body>
   </file>

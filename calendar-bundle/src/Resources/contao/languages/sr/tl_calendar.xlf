@@ -190,12 +190,12 @@
         <target>Обриши календар ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.0">
-        <source>RSS feeds</source>
-        <target>RSS сажетак</target>
+        <source>Calendar feeds</source>
+        <target>Сажеци календара</target>
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.1">
-        <source>Manage RSS feeds</source>
-        <target>Управљај RSS сажецима</target>
+        <source>Manage calendar feeds</source>
+        <target>Управљај сажецима календара</target>
       </trans-unit>
     </body>
   </file>

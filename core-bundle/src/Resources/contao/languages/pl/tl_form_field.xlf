@@ -198,8 +198,8 @@
         <target>Rozszerzone znaki alfanumeryczne</target>
       </trans-unit>
       <trans-unit id="tl_form_field.extnd.1">
-        <source>Allows everything except special characters which are usually encoded for security reasons (#/()&lt;=&gt;).</source>
-        <target>dozwolone są wszystkie znaki, oprócz (#&amp;()/), np. po to by uniknąć problemów z polem do wprowadzania hasła.</target>
+        <source>Allows everything except special characters which are usually encoded for security reasons: #&lt;&gt;()\=</source>
+        <target>Dozwolone jest wszystko z wyjątkiem znaków specjalnych, które są zwykle kodowane ze względów bezpieczeństwa: #&lt;&gt;()\=</target>
       </trans-unit>
       <trans-unit id="tl_form_field.date.0">
         <source>Date</source>
@@ -439,6 +439,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.invisible.1">
         <source>Hide the form field on the website.</source>
+        <target>Ukryj pole formularza na stronie internetowej.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.type_legend">
         <source>Field type and name</source>

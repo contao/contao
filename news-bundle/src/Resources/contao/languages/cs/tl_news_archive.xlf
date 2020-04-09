@@ -190,12 +190,11 @@
         <target>Zobrazit komentáře archivu ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.0">
-        <source>RSS feeds</source>
-        <target>Kanály RSS</target>
+        <source>News feeds</source>
+        <target>Kanály Novinek</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.1">
-        <source>Manage RSS feeds</source>
-        <target>Spravovat kanály RSS</target>
+        <source>Manage news feeds</source>
       </trans-unit>
     </body>
   </file>
