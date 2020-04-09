@@ -561,15 +561,13 @@ class DC_Folder extends DataContainer implements \listable, \editable
 						'FORM_SUBMIT' => 'tl_upload',
 						'action' => 'fileupload',
 					),
-				)) . ')</script>'
-			;
+				)) . ')</script>';
 		}
 
 		$return .= '<script>'
 			. 'Backend.enableFileTreeDragAndDrop($("tl_listing").getChildren(".tl_file_manager")[0], ' . json_encode(array(
 				'url' => html_entity_decode($this->addToUrl('act=cut&mode=2&pid=' . urlencode($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'][0] ?? Config::get('uploadPath')))),
-			)) . ')</script>'
-		;
+			)) . ')</script>';
 
 		return $return;
 	}

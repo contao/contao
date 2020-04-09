@@ -2488,8 +2488,7 @@ var Backend =
 						widthInput.readOnly = false;
 						heightInput.readOnly = false;
 					}
-				}
-			;
+				};
 
 			update();
 			select.addEvent('change', update);
@@ -2725,8 +2724,7 @@ var Backend =
 					touchcancel: stop,
 					resize: updateImage
 				});
-			}
-		;
+			};
 
 		window.addEvent('domready', init);
 	},

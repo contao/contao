@@ -19,7 +19,7 @@ use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
 abstract class AbstractController extends SymfonyAbstractController implements ServiceAnnotationInterface
 {
-    public static function getSubscribedServices()
+    public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();
 
