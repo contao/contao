@@ -177,18 +177,18 @@ class Installer
                         switch (true) {
                             case 0 === strncmp($part, 'DROP ', 5):
                                 $return['ALTER_DROP'][md5($command)] = $command;
-                                $order[] = md5($sql);
+                                $order[] = md5($command);
                                 break;
 
                             case 0 === strncmp($part, 'ADD ', 4):
                                 $return['ALTER_ADD'][md5($command)] = $command;
-                                $order[] = md5($sql);
+                                $order[] = md5($command);
                                 break;
 
                             case 0 === strncmp($part, 'CHANGE ', 7):
                             case 0 === strncmp($part, 'RENAME ', 7):
                                 $return['ALTER_CHANGE'][md5($command)] = $command;
-                                $order[] = md5($sql);
+                                $order[] = md5($command);
                                 break;
 
                             default:
