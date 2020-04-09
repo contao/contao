@@ -415,6 +415,9 @@ abstract class Frontend extends Controller
 	 */
 	public static function addToUrl($strRequest, $blnIgnoreParams=false, $arrUnset=array())
 	{
+		/** @var PageModel $objPage */
+		global $objPage;
+
 		$arrGet = $blnIgnoreParams ? array() : $_GET;
 
 		// Clean the $_GET values (thanks to thyon)
@@ -441,10 +444,7 @@ abstract class Frontend extends Controller
 		}
 
 		// Unset the language parameter
-		if (Config::get('addLanguageToUrl'))
-		{
-			unset($arrGet['language']);
-		}
+		unset($arrGet['language']);
 
 		$strParams    = '';
 		$strConnector = '/';
@@ -454,7 +454,7 @@ abstract class Frontend extends Controller
 		foreach ($arrGet as $k=>$v)
 		{
 			// Omit the key if it is an auto_item key (see #5037)
-			if (Config::get('useAutoItem') && ($k == 'auto_item' || \in_array($k, $GLOBALS['TL_AUTO_ITEM'])))
+			if ($objPage->useAutoItem && ($k == 'auto_item' || \in_array($k, $GLOBALS['TL_AUTO_ITEM'])))
 			{
 				$strParams = $strConnector . urlencode($v) . $strParams;
 			}
@@ -464,26 +464,7 @@ abstract class Frontend extends Controller
 			}
 		}
 
-		/** @var PageModel $objPage */
-		global $objPage;
-
-		$pageId = $objPage->alias ?: $objPage->id;
-
-		// Get the page ID from URL if not set
-		if (empty($pageId))
-		{
-			$pageId = static::getPageIdFromUrl();
-		}
-
-		$arrParams = array();
-		$arrParams['alias'] = $pageId . $strParams;
-
-		if (Config::get('addLanguageToUrl'))
-		{
-			$arrParams['_locale'] = $objPage->rootLanguage;
-		}
-
-		$strUrl = System::getContainer()->get('router')->generate('contao_frontend', $arrParams);
+		$strUrl = System::getContainer()->get('router')->generate($objPage, array('parameters' => $strParams));
 		$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
 
 		return $strUrl;

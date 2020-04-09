@@ -14,9 +14,13 @@ namespace Contao\CoreBundle\Routing;
 
 use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\PageModel;
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\Route;
+
+@trigger_error('The Contao\CoreBundle\Routing\UrlGenerator is deprecated. Use the Symfony router instead.', E_USER_DEPRECATED);
 
 class UrlGenerator implements UrlGeneratorInterface
 {
@@ -36,13 +40,19 @@ class UrlGenerator implements UrlGeneratorInterface
     private $prependLocale;
 
     /**
+     * @var string
+     */
+    private $urlSuffix;
+
+    /**
      * @internal Do not inherit from this class; decorate the "contao.routing.url_generator" service instead
      */
-    public function __construct(UrlGeneratorInterface $router, ContaoFramework $framework, bool $prependLocale)
+    public function __construct(UrlGeneratorInterface $router, ContaoFramework $framework, bool $prependLocale, string $urlSuffix)
     {
         $this->router = $router;
         $this->framework = $framework;
         $this->prependLocale = $prependLocale;
+        $this->urlSuffix = $urlSuffix;
     }
 
     public function setContext(RequestContext $context): void
@@ -71,14 +81,15 @@ class UrlGenerator implements UrlGeneratorInterface
         $httpPort = $context->getHttpPort();
         $httpsPort = $context->getHttpsPort();
 
-        $this->prepareLocale($parameters);
+        $route = $this->getRoute($name, $parameters);
+
         $this->prepareAlias($name, $parameters);
         $this->prepareDomain($context, $parameters, $referenceType);
 
         unset($parameters['auto_item']);
 
         $url = $this->router->generate(
-            'index' === $name ? 'contao_index' : 'contao_frontend',
+            $route,
             $parameters,
             $referenceType
         );
@@ -90,16 +101,6 @@ class UrlGenerator implements UrlGeneratorInterface
         $context->setHttpsPort($httpsPort);
 
         return $url;
-    }
-
-    /**
-     * Removes the locale parameter if it is disabled.
-     */
-    private function prepareLocale(array &$parameters): void
-    {
-        if (!$this->prependLocale && \array_key_exists('_locale', $parameters)) {
-            unset($parameters['_locale']);
-        }
     }
 
     /**
@@ -214,5 +215,58 @@ class UrlGenerator implements UrlGeneratorInterface
         }
 
         return [];
+    }
+
+    private function getRoute(string $name, array &$parameters)
+    {
+        $languagePrefix = '';
+        $requirements = [];
+
+        if ($this->framework->isLegacyRouting()) {
+            $urlSuffix = $this->urlSuffix;
+
+            if ($this->prependLocale) {
+                $languagePrefix = '/{_locale}';
+                $requirements['_locale'] = '[a-z]{2}(\-[A-Z]{2})?';
+            } else {
+                unset($parameters['_locale']);
+            }
+        } else {
+            $rootPage = $this->findRootPage($parameters);
+            $urlSuffix = $rootPage->urlSuffix;
+
+            if ($rootPage->languagePrefix) {
+                $languagePrefix = '/'.$rootPage->languagePrefix;
+            }
+
+            unset($parameters['_locale']);
+        }
+
+        if ('index' === $name) {
+            return new Route($languagePrefix.'/', [], $requirements);
+        }
+
+        $requirements['alias'] = '.+';
+
+        return new Route($languagePrefix.'/{alias}'.$urlSuffix, [], $requirements);
+    }
+
+    private function findRootPage(array $parameters): PageModel
+    {
+        /** @var PageModel $pageAdapter */
+        $pageAdapter = $this->framework->getAdapter(PageModel::class);
+
+        $rootPage = $pageAdapter->findFirstPublishedRootByHostAndLanguage(
+            $parameters['_domain'] ?? '',
+            $parameters['_locale'] ?? ''
+        );
+
+        if (null === $rootPage) {
+            throw new \RuntimeException('The Contao\CoreBundle\Routing\UrlGenerator requires a domain and locale or legacy routing. Configure "prepend_locale" or "url_suffix" in the Contao bundle.');
+        }
+
+        $rootPage->loadDetails();
+
+        return $rootPage;
     }
 }

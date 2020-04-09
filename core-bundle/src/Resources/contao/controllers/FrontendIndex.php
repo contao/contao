@@ -128,7 +128,7 @@ class FrontendIndex extends Frontend
 			}
 
 			// Use the first result (see #4872)
-			if (!Config::get('addLanguageToUrl'))
+			if (!System::getContainer()->get('contao.framework')->isLegacyRouting() || !Config::get('addLanguageToUrl'))
 			{
 				$objNewPage = current($arrLangs);
 			}

@@ -475,6 +475,7 @@ services:
     contao.routing.frontend_loader:
         class: Contao\CoreBundle\Routing\FrontendLoader
         arguments:
+            - '@contao.framework'
             - '%contao.prepend_locale%'
             - '%contao.url_suffix%'
         tags:
@@ -604,6 +605,7 @@ services:
             - '@router'
             - '@contao.framework'
             - '%contao.prepend_locale%'
+            - '%contao.url_suffix%'
         public: true
 
     contao.search.indexer.default:
