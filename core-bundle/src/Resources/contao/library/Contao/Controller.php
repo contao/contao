@@ -1633,7 +1633,7 @@ abstract class Controller extends \System
 
 					if ($blnIsExternal)
 					{
-							$objTemplate->attributes .= ' rel="noreferrer noopener"';
+						$objTemplate->attributes .= ' rel="noreferrer noopener"';
 					}
 				}
 			}
