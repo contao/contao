@@ -118,6 +118,7 @@ class Installer
             'DROP' => [],
             'ALTER_DROP' => [],
         ];
+
         $order = [];
 
         // The schema assets filter is a callable as of Doctrine DBAL 2.9
