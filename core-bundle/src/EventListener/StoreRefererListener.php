@@ -162,12 +162,14 @@ class StoreRefererListener
 
     private function canModifyFrontendSession(Request $request, array $referer = null): bool
     {
+        $route = $request->attributes->get('_route');
+
         return null !== $referer
             && !$request->query->has('pdf')
             && !$request->query->has('file')
             && !$request->query->has('id')
             && isset($referer['current'])
-            && 'contao_frontend' === $request->attributes->get('_route')
+            && ('contao_frontend' === $route || 0 === strncmp($route, 'tl_page.', 8))
             && $this->getRelativeRequestUri($request) !== $referer['current']
             && !$request->isXmlHttpRequest();
     }
