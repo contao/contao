@@ -27,8 +27,8 @@
     </projectFiles>
     <plugins>
         <pluginClass class="Psalm\PhpUnitPlugin\Plugin"/>
+        <pluginClass class="Psalm\SymfonyPsalmPlugin\Plugin"/>
         <pluginClass class="Weirdan\DoctrinePsalmPlugin\Plugin"/>
-        <pluginClass class="Seferov\SymfonyPsalmPlugin\Plugin"/>
     </plugins>
     <issueHandlers>
         <UndefinedConstant>
