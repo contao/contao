@@ -655,7 +655,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'options'                 => array('16:9', '16:10', '21:9', '4:3', '3:2'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_content']['player_aspect'],
 			'eval'                    => array('includeBlankOption' => true, 'nospace'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(8) NOT NULL default 'none'"
+			'sql'                     => "varchar(8) NOT NULL default ''"
 		),
 		'splashImage' => array
 		(
