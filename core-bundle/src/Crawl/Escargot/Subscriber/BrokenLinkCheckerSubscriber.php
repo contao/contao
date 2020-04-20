@@ -80,8 +80,16 @@ class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, Escarg
     {
         if ($response->getStatusCode() < 200 || $response->getStatusCode() >= 400) {
             $this->logError($crawlUri, 'HTTP Status Code: '.$response->getStatusCode());
-        } else {
-            ++$this->stats['ok'];
+
+            return SubscriberInterface::DECISION_NEGATIVE;
+        }
+
+        ++$this->stats['ok'];
+
+        // When URI is part of the base uri collection, request content.
+        // This is needed to make sure HtmlCrawlerSubscriber::onLastChunk() is triggered.
+        if ($this->escargot->getBaseUris()->containsHost($crawlUri->getUri()->getHost())) {
+            return SubscriberInterface::DECISION_POSITIVE;
         }
 
         return SubscriberInterface::DECISION_NEGATIVE;
