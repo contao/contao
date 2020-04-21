@@ -75,13 +75,13 @@ class DefaultIndexerTest extends ContaoTestCase
         ;
 
         $urlMatcher
-            ->expects((null === $expectedMessage || ('/no-page-id' === $uri->getPath())) ? $this->once() : $this->never())
+            ->expects(null === $expectedMessage || ('/no-page-id' === $uri->getPath()) ? $this->once() : $this->never())
             ->method('getContext')
-            ->willReturn($oldRequestContext);
+            ->willReturn($oldRequestContext)
         ;
 
         $urlMatcher
-            ->expects((null === $expectedMessage || ('/no-page-id' === $uri->getPath())) ? $this->exactly(2) : $this->never())
+            ->expects(null === $expectedMessage || ('/no-page-id' === $uri->getPath()) ? $this->exactly(2) : $this->never())
             ->method('setContext')
             ->withConsecutive([$newRequestContext], [$oldRequestContext])
         ;

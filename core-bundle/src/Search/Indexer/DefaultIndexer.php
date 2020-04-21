@@ -124,7 +124,7 @@ class DefaultIndexer implements IndexerInterface
         // Restore the original request context
         $this->urlMatcher->setContext($oldRequestContext);
 
-        if ($pageId === 0) {
+        if (0 === $pageId) {
             $this->throwBecause('No page ID could be determined.');
         }
 
