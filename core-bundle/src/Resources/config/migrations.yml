@@ -12,3 +12,8 @@ services:
     Contao\CoreBundle\Migration\Version410\OrderFieldMigration:
         arguments:
             - '@database_connection'
+
+    Contao\CoreBundle\Migration\Version410\SearchWordsMigration:
+        arguments:
+            - '@database_connection'
+            - '@contao.doctrine.schema_provider'

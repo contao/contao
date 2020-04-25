@@ -413,12 +413,12 @@ class Search
 		$arrValues = array();
 
 		// Remember found words so we can highlight them later
-		$strQuery = "SELECT * FROM (SELECT tl_search_index.pid AS sid, GROUP_CONCAT(tl_search_index.word) AS matches";
+		$strQuery = "SELECT * FROM (SELECT tl_search_index.pid AS sid, GROUP_CONCAT(tl_search_words.word) AS matches";
 
 		// Get the number of wildcard matches if wildcards and keywords are mixed
 		if (!$blnOrSearch && $intWildcards && (\count($arrKeywords) || $intIncluded || $intPhrases))
 		{
-			$strQuery .= ", (SELECT COUNT(*) FROM tl_search_index WHERE (" . implode(' OR ', array_fill(0, $intWildcards, 'word LIKE ?')) . ") AND pid=sid) AS wildcards";
+			$strQuery .= ", (SELECT COUNT(*) FROM tl_search_words JOIN tl_search_index ON tl_search_index.wordId = tl_search_words.id WHERE (" . implode(' OR ', array_fill(0, $intWildcards, 'word LIKE ?')) . ") AND pid=sid) AS wildcards";
 			$arrValues = array_merge($arrValues, $arrWildcards);
 		}
 
@@ -466,7 +466,7 @@ class Search
 			$arrValues = array_merge($arrValues, $arrWildcards);
 		}
 
-		$strQuery .= " FROM (SELECT word FROM tl_search_index WHERE (" . implode(' OR ', $arrAllKeywords) . ") GROUP BY word) words JOIN tl_search_index ON tl_search_index.word = words.word WHERE 1";
+		$strQuery .= " FROM tl_search_words JOIN tl_search_index ON tl_search_index.wordId = tl_search_words.id WHERE (" . implode(' OR ', $arrAllKeywords) . ")";
 
 		// Get phrases
 		if ($intPhrases)
