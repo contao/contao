@@ -415,8 +415,8 @@ class Search
 		// Remember found words so we can highlight them later
 		$strQuery = "SELECT * FROM (SELECT tl_search_index.pid AS sid, GROUP_CONCAT(tl_search_index.word) AS matches";
 
-		// Get the number of wildcard matches
-		if (!$blnOrSearch && $intWildcards)
+		// Get the number of wildcard matches if wildcards and keywords are mixed
+		if (!$blnOrSearch && $intWildcards && (\count($arrKeywords) || $intIncluded || $intPhrases))
 		{
 			$strQuery .= ", (SELECT COUNT(*) FROM tl_search_index WHERE (" . implode(' OR ', array_fill(0, $intWildcards, 'word LIKE ?')) . ") AND pid=sid) AS wildcards";
 			$arrValues = array_merge($arrValues, $arrWildcards);
@@ -509,7 +509,14 @@ class Search
 			// Dynamically add the number of wildcard matches
 			if ($intWildcards)
 			{
-				$strQuery .= " + IF(matches.wildcards>" . $intWildcards . ", matches.wildcards, " . $intWildcards . ")";
+				if ($intKeywords)
+				{
+					$strQuery .= " + IF(matches.wildcards>" . $intWildcards . ", matches.wildcards, " . $intWildcards . ")";
+				}
+				else
+				{
+					$strQuery .= " + " . $intWildcards;
+				}
 			}
 		}
 
