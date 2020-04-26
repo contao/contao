@@ -403,122 +403,115 @@ class Search
 			$arrKeywords = array();
 		}
 
-		// Count keywords
-		$intPhrases = \count($arrPhrases);
-		$intWildcards = \count($arrWildcards);
-		$intIncluded = \count($arrIncluded);
-		$intExcluded = \count($arrExcluded);
-
-		$intKeywords = 0;
-		$arrValues = array();
+		$strQuery = "SELECT * FROM (SELECT tl_search_index.pid AS sid";
 
 		// Remember found words so we can highlight them later
-		$strQuery = "SELECT * FROM (SELECT tl_search_index.pid AS sid, GROUP_CONCAT(tl_search_words.word) AS matches";
-
-		// Get the number of wildcard matches if wildcards and keywords are mixed
-		if (!$blnOrSearch && $intWildcards && (\count($arrKeywords) || $intIncluded || $intPhrases))
-		{
-			$strQuery .= ", (SELECT COUNT(*) FROM tl_search_words JOIN tl_search_index ON tl_search_index.wordId = tl_search_words.id WHERE (" . implode(' OR ', array_fill(0, $intWildcards, 'word LIKE ?')) . ") AND pid=sid) AS wildcards";
-			$arrValues = array_merge($arrValues, $arrWildcards);
-		}
-
-		// Count the number of matches
-		$strQuery .= ", COUNT(*) AS count";
+		$strQuery .= ", GROUP_CONCAT(matchedWords.word) AS matches";
 
 		// Get the relevance
 		$strQuery .= ", SUM(relevance) AS relevance";
 
-		// Prepare keywords array
+		$arrValues = array();
 		$arrAllKeywords = array();
+		$arrMatches = array();
+		$arrRequiredMatches = array();
+		$arrExcludedMatches = array();
 
 		// Get keywords
-		if (!empty($arrKeywords))
+		foreach ($arrKeywords as $strKeyword)
 		{
-			$arrAllKeywords[] = implode(' OR ', array_fill(0, \count($arrKeywords), 'word=?'));
-			$arrValues = array_merge($arrValues, $arrKeywords);
-			$intKeywords += \count($arrKeywords);
+			$arrMatches[] = \count($arrAllKeywords);
+			$arrAllKeywords[] = 'word=?';
+			$arrValues[] = $strKeyword;
 		}
 
 		// Get included keywords
-		if ($intIncluded)
+		foreach ($arrIncluded as $strKeyword)
 		{
-			$arrAllKeywords[] = implode(' OR ', array_fill(0, $intIncluded, 'word=?'));
-			$arrValues = array_merge($arrValues, $arrIncluded);
-			$intKeywords += $intIncluded;
+			$arrRequiredMatches[] = \count($arrAllKeywords);
+			$arrAllKeywords[] = 'word=?';
+			$arrValues[] = $strKeyword;
+		}
+
+		// Get excluded keywords
+		foreach ($arrExcluded as $strKeyword)
+		{
+			$arrExcludedMatches[] = \count($arrAllKeywords);
+			$arrAllKeywords[] = 'word=?';
+			$arrValues[] = $strKeyword;
 		}
 
 		// Get keywords from phrases
-		if ($intPhrases)
+		foreach ($arrPhrases as $strPhrase)
 		{
-			foreach ($arrPhrases as $strPhrase)
+			foreach (self::splitIntoWords(str_replace('[^[:alnum:]]+', ' ', $strPhrase), $GLOBALS['TL_LANGUAGE']) as $strKeyword)
 			{
-				$arrWords = self::splitIntoWords(str_replace('[^[:alnum:]]+', ' ', $strPhrase), $GLOBALS['TL_LANGUAGE']);
-				$arrAllKeywords[] = implode(' OR ', array_fill(0, \count($arrWords), 'word=?'));
-				$arrValues = array_merge($arrValues, $arrWords);
-				$intKeywords += \count($arrWords);
+				$arrMatches[] = \count($arrAllKeywords);
+				$arrAllKeywords[] = 'word=?';
+				$arrValues[] = $strKeyword;
 			}
 		}
 
 		// Get wildcards
-		if ($intWildcards)
+		foreach ($arrWildcards as $strKeyword)
 		{
-			$arrAllKeywords[] = implode(' OR ', array_fill(0, $intWildcards, 'word LIKE ?'));
-			$arrValues = array_merge($arrValues, $arrWildcards);
+			$arrMatches[] = \count($arrAllKeywords);
+			$arrAllKeywords[] = 'word LIKE ?';
+			$arrValues[] = $strKeyword;
 		}
 
-		$strQuery .= " FROM tl_search_words JOIN tl_search_index ON tl_search_index.wordId = tl_search_words.id WHERE (" . implode(' OR ', $arrAllKeywords) . ")";
+		$strQuery .= " FROM (SELECT id, word";
+
+		// Store the match of every keyword and wildcard in its own column match0, match1, ...
+		foreach ($arrAllKeywords as $index => $strKeywordExpression)
+		{
+			$strQuery .= ", IF($strKeywordExpression, 1, null) AS match$index";
+		}
+
+		$strQuery .= " FROM tl_search_words HAVING";
+
+		// Select all words in the sub query that match any of the keywords or wildcards
+		$strQuery .= " match" . implode(" = 1 OR match", array_keys($arrAllKeywords)) . " = 1";
+
+		$strQuery .= ") matchedWords JOIN tl_search_index ON tl_search_index.wordId = matchedWords.id";
+
+		$strQuery .= " GROUP BY tl_search_index.pid";
+		$arrHaving = array();
+
+		// Check that all required keywords match
+		foreach ($blnOrSearch ? $arrRequiredMatches : array_merge($arrMatches, $arrRequiredMatches) as $intMatch)
+		{
+			$arrHaving[] = "COUNT(matchedWords.match$intMatch) > 0";
+		}
+
+		// Check that none of the excluded keywords match
+		foreach ($arrExcludedMatches as $intMatch)
+		{
+			$arrHaving[] = "COUNT(matchedWords.match$intMatch) = 0";
+		}
+
+		if (\count($arrHaving))
+		{
+			$strQuery .= " HAVING " . implode(" AND ", $arrHaving);
+		}
+
+		$strQuery .= ") matches LEFT JOIN tl_search ON(matches.sid=tl_search.id) WHERE 1";
 
 		// Get phrases
-		if ($intPhrases)
+		if (\count($arrPhrases))
 		{
-			$strQuery .= " AND (" . implode(($blnOrSearch ? ' OR ' : ' AND '), array_fill(0, $intPhrases, 'tl_search_index.pid IN(SELECT id FROM tl_search WHERE text REGEXP ?)')) . ")";
+			$strQuery .= " AND (" . implode(($blnOrSearch ? ' OR ' : ' AND '), array_fill(0, \count($arrPhrases), 'tl_search.text REGEXP ?')) . ')';
 			$arrValues = array_merge($arrValues, $arrPhrases);
-		}
-
-		// Include keywords
-		if ($intIncluded)
-		{
-			$strQuery .= " AND tl_search_index.pid IN(SELECT pid FROM tl_search_index WHERE " . implode(' OR ', array_fill(0, $intIncluded, 'word=?')) . ")";
-			$arrValues = array_merge($arrValues, $arrIncluded);
-		}
-
-		// Exclude keywords
-		if ($intExcluded)
-		{
-			$strQuery .= " AND tl_search_index.pid NOT IN(SELECT pid FROM tl_search_index WHERE " . implode(' OR ', array_fill(0, $intExcluded, 'word=?')) . ")";
-			$arrValues = array_merge($arrValues, $arrExcluded);
 		}
 
 		// Limit results to a particular set of pages
 		if (!empty($arrPid) && \is_array($arrPid))
 		{
-			$strQuery .= " AND tl_search_index.pid IN(SELECT id FROM tl_search WHERE pid IN(" . implode(',', array_map('\intval', $arrPid)) . "))";
+			$strQuery .= " AND tl_search.pid IN(" . implode(',', array_map('\intval', $arrPid)) . ")";
 		}
-
-		$strQuery .= " GROUP BY tl_search_index.pid";
 
 		// Sort by relevance
-		$strQuery .= " ORDER BY relevance DESC) matches LEFT JOIN tl_search ON(matches.sid=tl_search.id)";
-
-		// Make sure to find all words
-		if (!$blnOrSearch)
-		{
-			// Number of keywords without wildcards
-			$strQuery .= " WHERE matches.count >= " . $intKeywords;
-
-			// Dynamically add the number of wildcard matches
-			if ($intWildcards)
-			{
-				if ($intKeywords)
-				{
-					$strQuery .= " + IF(matches.wildcards>" . $intWildcards . ", matches.wildcards, " . $intWildcards . ")";
-				}
-				else
-				{
-					$strQuery .= " + " . $intWildcards;
-				}
-			}
-		}
+		$strQuery .= " ORDER BY relevance DESC";
 
 		// Return result
 		$objResultStmt = Database::getInstance()->prepare($strQuery);
