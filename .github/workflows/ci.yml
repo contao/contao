@@ -67,6 +67,11 @@ jobs:
             - name: Analyze the code
               run: vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
 
+            - name: Analyze the YAML files
+              run: |
+                  pip install --user yamllint
+                  yamllint .
+
     tests:
         name: PHP ${{ matrix.php }}
         runs-on: ubuntu-latest

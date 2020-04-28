@@ -2,11 +2,11 @@ services:
     _instanceof:
         Contao\CoreBundle\Framework\FrameworkAwareInterface:
             calls:
-                - ['setFramework', ['@contao.framework']]
+                - [setFramework, ['@contao.framework']]
 
         Symfony\Component\DependencyInjection\ContainerAwareInterface:
             calls:
-                - ['setContainer', ['@service_container']]
+                - [setContainer, ['@service_container']]
 
     contao.listener.backend_locale:
         class: Contao\CoreBundle\EventListener\BackendLocaleListener
