@@ -70,7 +70,7 @@ jobs:
             - name: Analyze the YAML files
               run: |
                   python3 -m pip install --upgrade pip
-                  pip3 install yamllint
+                  python3 -m pip install yamllint
                   /home/runner/.local/bin/yamllint .
 
     tests:
