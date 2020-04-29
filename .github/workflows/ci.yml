@@ -69,8 +69,9 @@ jobs:
 
             - name: Analyze the YAML files
               run: |
-                  pip install --user yamllint
-                  yamllint .
+                  python3 -m pip install --upgrade pip
+                  pip3 install yamllint
+                  /home/runner/.local/bin/yamllint .
 
     tests:
         name: PHP ${{ matrix.php }}
