@@ -116,7 +116,7 @@ class ModuleCustomnav extends \Module
 		/** @var FrontendTemplate|object $objTemplate */
 		$objTemplate = new \FrontendTemplate($this->navigationTpl);
 
-		$objTemplate->type = \get_class($this);
+		$objTemplate->type = static::class;
 		$objTemplate->cssID = $this->cssID; // see #4897 and 6129
 		$objTemplate->level = 'level_1';
 
