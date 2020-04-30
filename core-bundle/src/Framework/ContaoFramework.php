@@ -427,12 +427,14 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      */
     private function triggerInitializeSystemHook()
     {
-        if (empty($GLOBALS['TL_HOOKS']['initializeSystem']) || !is_dir($this->rootDir.'/system/tmp')) {
+        if (!is_dir($this->rootDir.'/system/tmp')) {
             return;
         }
 
-        foreach ($GLOBALS['TL_HOOKS']['initializeSystem'] as $callback) {
-            System::importStatic($callback[0])->{$callback[1]}();
+        if (isset($GLOBALS['TL_HOOKS']['initializeSystem']) && \is_array($GLOBALS['TL_HOOKS']['initializeSystem'])) {
+            foreach ($GLOBALS['TL_HOOKS']['initializeSystem'] as $callback) {
+                System::importStatic($callback[0])->{$callback[1]}();
+            }
         }
 
         if (file_exists($this->rootDir.'/system/config/initconfig.php')) {
