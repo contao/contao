@@ -83,7 +83,7 @@ class ContentHyperlink extends \ContentElement
 		// Override the link target
 		if ($this->target)
 		{
-			$this->Template->target = ' target="_blank"';
+			$this->Template->target = ' target="_blank" rel="noreferrer noopener"';
 		}
 
 		// Unset the title attributes in the back end (see #6258)

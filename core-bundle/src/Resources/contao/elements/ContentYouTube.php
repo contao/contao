@@ -37,7 +37,7 @@ class ContentYouTube extends \ContentElement
 
 		if (TL_MODE == 'BE')
 		{
-			$return = '<p><a href="https://youtu.be/' . $this->youtube . '" target="_blank">youtu.be/' . $this->youtube . '</a></p>';
+			$return = '<p><a href="https://youtu.be/' . $this->youtube . '" target="_blank" rel="noreferrer noopener">youtu.be/' . $this->youtube . '</a></p>';
 
 			if ($this->headline != '')
 			{

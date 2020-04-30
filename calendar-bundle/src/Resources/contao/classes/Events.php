@@ -289,7 +289,7 @@ abstract class Events extends \Module
 		// Override the link target
 		if ($objEvents->source == 'external' && $objEvents->target)
 		{
-			$arrEvent['target'] = ' target="_blank"';
+			$arrEvent['target'] = ' target="_blank" rel="noreferrer noopener"';
 		}
 
 		// Clean the RTE output
