@@ -288,7 +288,7 @@ abstract class Module extends \Frontend
 		$objTemplate = new \FrontendTemplate($this->navigationTpl);
 
 		$objTemplate->pid = $pid;
-		$objTemplate->type = \get_class($this);
+		$objTemplate->type = static::class;
 		$objTemplate->cssID = $this->cssID; // see #4897
 		$objTemplate->level = 'level_' . $level++;
 
@@ -407,7 +407,7 @@ abstract class Module extends \Frontend
 				// Override the link target
 				if ($objSubpage->type == 'redirect' && $objSubpage->target)
 				{
-					$row['target'] = ' target="_blank"';
+					$row['target'] = ' target="_blank" rel="noreferrer noopener"';
 				}
 
 				$items[] = $row;

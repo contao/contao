@@ -1521,7 +1521,7 @@ class ImageTest extends TestCase
     public function testExecutesTheResizeHook()
     {
         $GLOBALS['TL_HOOKS'] = [
-            'executeResize' => [[\get_class($this), 'executeResizeHookCallback']],
+            'executeResize' => [[static::class, 'executeResizeHookCallback']],
         ];
 
         $file = new File('dummy.jpg');
@@ -1604,7 +1604,7 @@ class ImageTest extends TestCase
         $imageObj->executeResize();
 
         $GLOBALS['TL_HOOKS'] = [
-            'getImage' => [[\get_class($this), 'getImageHookCallback']],
+            'getImage' => [[static::class, 'getImageHookCallback']],
         ];
 
         $imageObj = new Image($file);

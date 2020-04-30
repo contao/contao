@@ -1614,11 +1614,13 @@ abstract class Controller extends \System
 
 			if ($arrItem['fullsize'])
 			{
+				$blnIsExternal = strncmp($arrItem['imageUrl'], 'http://', 7) === 0 || strncmp($arrItem['imageUrl'], 'https://', 8) === 0;
+
 				// Open images in the lightbox
 				if (preg_match('/\.(jpe?g|gif|png)$/', $arrItem['imageUrl']))
 				{
 					// Do not add the TL_FILES_URL to external URLs (see #4923)
-					if (strncmp($arrItem['imageUrl'], 'http://', 7) !== 0 && strncmp($arrItem['imageUrl'], 'https://', 8) !== 0)
+					if (!$blnIsExternal)
 					{
 						$objTemplate->$strHrefKey = TL_FILES_URL . \System::urlEncode($arrItem['imageUrl']);
 					}
@@ -1628,6 +1630,11 @@ abstract class Controller extends \System
 				else
 				{
 					$objTemplate->attributes = ' target="_blank"';
+
+					if ($blnIsExternal)
+					{
+						$objTemplate->attributes .= ' rel="noreferrer noopener"';
+					}
 				}
 			}
 		}
