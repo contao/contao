@@ -110,7 +110,7 @@ services:
     Contao\CoreBundle\Controller\FrontendController:
         tags:
             - controller.service_arguments
-            - { name: 'container.service_subscriber', id: 'contao.csrf.token_manager' }
+            - { name: container.service_subscriber, id: contao.csrf.token_manager }
 
     Contao\CoreBundle\Controller\FrontendModule\TwoFactorController:
         tags:
