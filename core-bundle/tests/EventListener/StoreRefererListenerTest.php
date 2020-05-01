@@ -67,6 +67,9 @@ class StoreRefererListenerTest extends TestCase
         $requestWithRefInUrlFrontend->attributes->set('_route', 'contao_frontend');
         $requestWithRefInUrlFrontend->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
 
+        $requestFrontendPage = clone $requestWithRefInUrlFrontend;
+        $requestFrontendPage->attributes->set('_route', 'tl_page.19');
+
         yield 'Test current referer null returns correct new referer for back end scope' => [
             $request,
             null,
@@ -100,18 +103,6 @@ class StoreRefererListenerTest extends TestCase
             null,
         ];
 
-        yield 'Test referer returns correct new referer for front end scope' => [
-            $requestWithRefInUrlFrontend,
-            [
-                'last' => '',
-                'current' => 'hi/I/am/your_current_referer.html',
-            ],
-            [
-                'last' => 'hi/I/am/your_current_referer.html',
-                'current' => 'path/of/contao?having&query&string=1',
-            ],
-        ];
-
         yield 'Test referers are correctly added to the referers array (see #143)' => [
             $requestWithRefInUrl,
             [
@@ -133,6 +124,30 @@ class StoreRefererListenerTest extends TestCase
                     'last' => '',
                     'current' => 'hi/I/am/your_current_referer.html',
                 ],
+            ],
+        ];
+
+        yield 'Test referer returns correct new referer for front end scope' => [
+            $requestWithRefInUrlFrontend,
+            [
+                'last' => '',
+                'current' => 'hi/I/am/your_current_referer.html',
+            ],
+            [
+                'last' => 'hi/I/am/your_current_referer.html',
+                'current' => 'path/of/contao?having&query&string=1',
+            ],
+        ];
+
+        yield 'Test referer also handles tl_page.* routes in the front end' => [
+            $requestFrontendPage,
+            [
+                'last' => '',
+                'current' => 'hi/I/am/your_current_referer.html',
+            ],
+            [
+                'last' => 'hi/I/am/your_current_referer.html',
+                'current' => 'path/of/contao?having&query&string=1',
             ],
         ];
     }
