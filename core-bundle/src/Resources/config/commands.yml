@@ -5,7 +5,7 @@ services:
     _instanceof:
         Contao\CoreBundle\Framework\FrameworkAwareInterface:
             calls:
-                - ['setFramework', ['@contao.framework']]
+                - [setFramework, ['@contao.framework']]
 
     contao.command.automator:
         class: Contao\CoreBundle\Command\AutomatorCommand

@@ -681,13 +681,13 @@ class ContaoFrameworkTest extends TestCase
 
         $this->assertSame('bar', Environment::get('scriptFilename'));
         $this->assertNotEmpty(Input::getUnusedGet());
-        $this->assertSame(1, $registry->count());
+        $this->assertCount(1, $registry);
 
         $framework->reset();
 
         $this->assertNotSame('bar', Environment::get('scriptFilename'));
         $this->assertEmpty(Input::getUnusedGet());
-        $this->assertSame(0, $registry->count());
+        $this->assertCount(0, $registry);
     }
 
     /**
