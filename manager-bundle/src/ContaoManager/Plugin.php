@@ -82,7 +82,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         static::$autoloadModules = $modulePath;
     }
 
-    public function getPackageDependencies()
+    public function getPackageDependencies(): array
     {
         return ['contao/core-bundle'];
     }

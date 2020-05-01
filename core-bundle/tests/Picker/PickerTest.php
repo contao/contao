@@ -56,7 +56,7 @@ class PickerTest extends TestCase
         $menu = $this->picker->getMenu();
 
         $this->assertSame('picker', $menu->getName());
-        $this->assertSame(1, $menu->count());
+        $this->assertCount(1, $menu);
 
         $pagePicker = $menu->getChild('pagePicker');
 
