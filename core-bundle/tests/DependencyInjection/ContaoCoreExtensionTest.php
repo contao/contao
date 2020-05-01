@@ -1305,6 +1305,9 @@ class ContaoCoreExtensionTest extends TestCase
                 'controller.service_arguments' => [
                     [],
                 ],
+                'container.service_subscriber' => [
+                    ['id' => 'contao.csrf.token_manager'],
+                ],
             ],
             $definition->getTags()
         );
