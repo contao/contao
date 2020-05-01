@@ -72,7 +72,9 @@ class BackendPreviewController
      */
     public function __invoke(Request $request): Response
     {
-        if ($request->getScriptName() !== $this->previewScript) {
+        // Skip the redirect if there is no preview script, otherwise we will
+        // end up in an endless loop (see #1511)
+        if ($this->previewScript && $request->getScriptName() !== $this->previewScript) {
             return new RedirectResponse($this->previewScript.$request->getRequestUri());
         }
 
