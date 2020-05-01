@@ -23,6 +23,9 @@ use Symfony\Component\HttpFoundation\Request;
 class StripCookiesSubscriber implements EventSubscriberInterface
 {
     private const BLACKLIST = [
+        // Contao Manager
+        'contao_manager_auth',
+
         // Modals are always for JS only
         '(.*)?modal(.*)?',
 
