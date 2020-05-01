@@ -116,7 +116,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
     /**
      * @dataProvider needsContentProvider
      */
-    public function testNeedsContent(ResponseInterface $response, string $expectedDecision, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = []): void
+    public function testNeedsContent(CrawlUri $crawlUri, ResponseInterface $response, string $expectedDecision, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = []): void
     {
         $logger = $this->createMock(LoggerInterface::class);
 
@@ -151,11 +151,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
         $subscriber->setEscargot($escargot);
         $subscriber->setLogger(new SubscriberLogger($logger, \get_class($subscriber)));
 
-        $decision = $subscriber->needsContent(
-            new CrawlUri(new Uri('https://contao.org'), 0),
-            $response,
-            $this->createMock(ChunkInterface::class)
-        );
+        $decision = $subscriber->needsContent($crawlUri, $response, $this->createMock(ChunkInterface::class));
 
         $this->assertSame($expectedDecision, $decision);
 
@@ -173,6 +169,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
     public function needsContentProvider(): \Generator
     {
         yield 'Test reports responses that were not successful' => [
+            new CrawlUri(new Uri('https://contao.org'), 0),
             $this->getResponse(404),
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::ERROR,
@@ -181,6 +178,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
         ];
 
         yield 'Test reports responses that were not successful (with previous stats)' => [
+            new CrawlUri(new Uri('https://contao.org'), 0),
             $this->getResponse(404),
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::ERROR,
@@ -189,7 +187,17 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
             ['ok' => 0, 'error' => 1],
         ];
 
-        yield 'Test does not report successful responses' => [
+        yield 'Test does report successful responses' => [
+            new CrawlUri(new Uri('https://contao.org'), 0),
+            $this->getResponse(),
+            SubscriberInterface::DECISION_POSITIVE,
+            '',
+            '',
+            ['ok' => 1, 'error' => 0],
+        ];
+
+        yield 'Test does not report successful responses if url not in base collection' => [
+            new CrawlUri(new Uri('https://github.com'), 0),
             $this->getResponse(),
             SubscriberInterface::DECISION_NEGATIVE,
             '',
@@ -198,8 +206,9 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
         ];
 
         yield 'Test does not report successful responses (with previous stats)' => [
+            new CrawlUri(new Uri('https://contao.org'), 0),
             $this->getResponse(),
-            SubscriberInterface::DECISION_NEGATIVE,
+            SubscriberInterface::DECISION_POSITIVE,
             '',
             '',
             ['ok' => 2, 'error' => 0],
