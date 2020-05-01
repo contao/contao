@@ -124,7 +124,7 @@ class Result
 			$this->next();
 		}
 
-		// Use array_key_exists() instead of isset(), because the value might be null
+		// If the modified value is null, return false even if the original value is not null (see #1689)
 		return \array_key_exists($strKey, $this->arrModified) ? isset($this->arrModified[$strKey]) : isset($this->resultSet[$this->intIndex][$strKey]);
 	}
 
