@@ -20,7 +20,9 @@ use Contao\Search;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Driver\Connection;
 use Nyholm\Psr7\Uri;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
+use Symfony\Component\Routing\RequestContext;
 
 class DefaultIndexerTest extends ContaoTestCase
 {
@@ -58,12 +60,30 @@ class DefaultIndexerTest extends ContaoTestCase
             $this->expectExceptionMessage($expectedMessage);
         }
 
+        $uri = $document->getUri();
+        $oldRequestContext = new RequestContext();
+        $newRequestContext = (new RequestContext())->fromRequest(Request::create((string) $uri));
+
         $urlMatcher = $this->createMock(UrlMatcherInterface::class);
         $urlMatcher
-            ->expects('/valid' === $document->getUri()->getPath() ? $this->once() : $this->never())
+            ->expects($uri->getPath() ? $this->once() : $this->never())
             ->method('match')
-            ->with('/valid')
-            ->willReturn(['pageModel' => $this->mockClassWithProperties(PageModel::class, ['id' => 2])])
+            ->willReturnMap([
+                ['/valid', ['pageModel' => $this->mockClassWithProperties(PageModel::class, ['id' => 2])]],
+                ['/no-page-id', ['pageModel' => null]],
+            ])
+        ;
+
+        $urlMatcher
+            ->expects(null === $expectedMessage || ('/no-page-id' === $uri->getPath()) ? $this->once() : $this->never())
+            ->method('getContext')
+            ->willReturn($oldRequestContext)
+        ;
+
+        $urlMatcher
+            ->expects(null === $expectedMessage || ('/no-page-id' === $uri->getPath()) ? $this->exactly(2) : $this->never())
+            ->method('setContext')
+            ->withConsecutive([$newRequestContext], [$oldRequestContext])
         ;
 
         $indexer = new DefaultIndexer($framework, $this->createMock(Connection::class), $urlMatcher, $indexProtected);
@@ -100,6 +120,12 @@ class DefaultIndexerTest extends ContaoTestCase
             new Document(new Uri('https://example.com'), 200, [], '<html><body><script type="application/ld+json">{"@context":{"contao":"https:\/\/schema.contao.org\/"},"@type":"contao:RegularPage","contao:noSearch":false,"contao:protected":true,"contao:groups":[],"contao:fePreview":false}</script></body></html>'),
             null,
             'Indexing protected pages is disabled.',
+        ];
+
+        yield 'Test does not index if page ID could not be determined' => [
+            new Document(new Uri('https://example.com/no-page-id'), 200, [], '<html><body><script type="application/ld+json">{"@context":{"contao":"https:\/\/schema.contao.org\/"},"@type":"contao:RegularPage","contao:noSearch":false,"contao:protected":false,"contao:groups":[],"contao:fePreview":false}</script></body></html>'),
+            null,
+            'No page ID could be determined.',
         ];
 
         yield 'Test valid index when not protected' => [

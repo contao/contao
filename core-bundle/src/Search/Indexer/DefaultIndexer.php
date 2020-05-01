@@ -17,8 +17,10 @@ use Contao\CoreBundle\Search\Document;
 use Contao\PageModel;
 use Contao\Search;
 use Doctrine\DBAL\Driver\Connection;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
+use Symfony\Component\Routing\RequestContext;
 
 class DefaultIndexer implements IndexerInterface
 {
@@ -100,17 +102,30 @@ class DefaultIndexer implements IndexerInterface
         }
 
         $this->framework->initialize();
-
+        $uri = $document->getUri();
         $pageId = 0;
+
+        // Preserve the old request context
+        $oldRequestContext = $this->urlMatcher->getContext();
+
+        // Create a new request context so the routes are matched correctly
+        $this->urlMatcher->setContext((new RequestContext())->fromRequest(Request::create((string) $uri)));
 
         // Try to extract page id
         try {
-            $parameters = $this->urlMatcher->match($document->getUri()->getPath());
+            $parameters = $this->urlMatcher->match($uri->getPath());
 
             if (\array_key_exists('pageModel', $parameters) && $parameters['pageModel'] instanceof PageModel) {
                 $pageId = (int) $parameters['pageModel']->id;
             }
         } catch (ExceptionInterface $exception) {
+        }
+
+        // Restore the original request context
+        $this->urlMatcher->setContext($oldRequestContext);
+
+        if (0 === $pageId) {
+            $this->throwBecause('No page ID could be determined.');
         }
 
         /** @var Search $search */
