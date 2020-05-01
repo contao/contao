@@ -125,7 +125,7 @@ class Result
 		}
 
 		// Use array_key_exists() instead of isset(), because the value might be null
-		return \array_key_exists($strKey, $this->resultSet[$this->intIndex]) || \array_key_exists($strKey, $this->arrModified);
+		return \array_key_exists($strKey, $this->arrModified) ? isset($this->arrModified[$strKey]) : isset($this->resultSet[$this->intIndex][$strKey]);
 	}
 
 	/**
