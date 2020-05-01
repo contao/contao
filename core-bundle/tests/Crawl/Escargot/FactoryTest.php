@@ -98,7 +98,8 @@ class FactoryTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('You have to specify at least one valid subscriber name. Valid subscribers are: subscriber-1');
 
-        $factory->create($uriCollection, new InMemoryQueue(), ['subscriber-8']);
+        $escargot = $factory->create($uriCollection, new InMemoryQueue(), ['subscriber-8']);
+        $this->assertSame(Factory::USER_AGENT, $escargot->getUserAgent());
     }
 
     public function testCreatesEscargotCorrectlyWithExistingJobId(): void
@@ -122,6 +123,7 @@ class FactoryTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('You have to specify at least one valid subscriber name. Valid subscribers are: subscriber-1');
 
-        $factory->createFromJobId($jobId, $queue, ['subscriber-8']);
+        $escargot = $factory->createFromJobId($jobId, $queue, ['subscriber-8']);
+        $this->assertSame(Factory::USER_AGENT, $escargot->getUserAgent());
     }
 }
