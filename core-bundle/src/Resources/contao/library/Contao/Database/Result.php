@@ -124,7 +124,8 @@ class Result
 			$this->next();
 		}
 
-		return isset($this->resultSet[$this->intIndex][$strKey]) || isset($this->arrModified[$strKey]);
+		// Use array_key_exists() instead of isset(), because the value might be null
+		return \array_key_exists($strKey, $this->resultSet[$this->intIndex]) || \array_key_exists($strKey, $this->arrModified);
 	}
 
 	/**
@@ -170,12 +171,14 @@ class Result
 					$this->next();
 				}
 
-				if (isset($this->arrModified[$strKey]))
+				// Use array_key_exists() instead of isset(), because the value might be null
+				if (\array_key_exists($strKey, $this->arrModified))
 				{
 					return $this->arrModified[$strKey];
 				}
 
-				if (isset($this->resultSet[$this->intIndex][$strKey]))
+				// Use array_key_exists() instead of isset(), because the value might be null
+				if (\array_key_exists($strKey, $this->resultSet[$this->intIndex]))
 				{
 					return $this->resultSet[$this->intIndex][$strKey];
 				}
