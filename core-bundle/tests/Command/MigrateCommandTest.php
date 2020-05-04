@@ -96,13 +96,16 @@ class MigrateCommandTest extends TestCase
         $installer
             ->expects($this->atLeastOnce())
             ->method('getCommands')
+            ->with(false)
             ->willReturn(
                 [
-                    'CREATE' => ['hash1' => 'First call QUERY 1', 'hash2' => 'First call QUERY 2'],
+                    'hash1' => 'First call QUERY 1',
+                    'hash2' => 'First call QUERY 2',
                 ],
                 [
-                    'CREATE' => ['hash3' => 'Second call QUERY 1', 'hash4' => 'Second call QUERY 2'],
-                    'DROP' => ['hash5' => 'DROP QUERY'],
+                    'hash3' => 'Second call QUERY 1',
+                    'hash4' => 'Second call QUERY 2',
+                    'hash5' => 'DROP QUERY',
                 ],
                 []
             )
