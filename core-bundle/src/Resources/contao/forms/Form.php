@@ -61,6 +61,18 @@ class Form extends \Hybrid
 	protected $strTemplate = 'form_wrapper';
 
 	/**
+	 * {@inheritdoc}
+	 */
+	public function __construct($objElement, $strColumn = 'main')
+	{
+		if ($objElement instanceof FormModel) {
+			$this->strKey = 'id';
+		}
+
+		parent::__construct($objElement, $strColumn);
+	}
+
+	/**
 	 * Remove name attributes in the back end so the form is not validated
 	 *
 	 * @return string
