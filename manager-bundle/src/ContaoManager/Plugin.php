@@ -169,6 +169,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         try {
             $connection = DriverManager::getConnection($params);
             $connection->connect();
+            $connection->query('SHOW TABLES');
             $connection->close();
         } catch (DriverException $e) {
             $extensionConfigs[] = [
