@@ -66,7 +66,14 @@ class Form extends \Hybrid
 	public function __construct($objElement, $strColumn = 'main')
 	{
 		if ($objElement instanceof FormModel) {
-			$this->strKey = 'id';
+			if (!$objElement->form)
+			{
+				$objElement->form = $objElement->id;
+			}
+			if (!$objElement->typePrefix)
+			{
+				$objElement->typePrefix = 'ce_';
+			}
 		}
 
 		parent::__construct($objElement, $strColumn);
