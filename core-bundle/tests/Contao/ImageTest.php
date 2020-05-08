@@ -31,6 +31,11 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class ImageTest extends TestCase
 {
+    /**
+     * @var Filesystem
+     */
+    private $filesystem;
+
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
@@ -51,7 +56,8 @@ class ImageTest extends TestCase
     {
         parent::setUp();
 
-        copy(__DIR__.'/../Fixtures/images/dummy.jpg', $this->getTempDir().'/dummy.jpg');
+        $this->filesystem = new Filesystem();
+        $this->filesystem->copy(__DIR__.'/../Fixtures/images/dummy.jpg', $this->getTempDir().'/dummy.jpg');
 
         $GLOBALS['TL_CONFIG']['debugMode'] = false;
         $GLOBALS['TL_CONFIG']['gdMaxImgWidth'] = 3000;
@@ -1112,7 +1118,7 @@ class ImageTest extends TestCase
      */
     public function testResizesSvgImages(): void
     {
-        file_put_contents(
+        $this->filesystem->dumpFile(
             $this->getTempDir().'/dummy1.svg',
             '<?xml version="1.0" encoding="utf-8"?>
             <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
@@ -1156,7 +1162,7 @@ class ImageTest extends TestCase
      */
     public function testResizesSvgImagesWithPercentageDimensions(): void
     {
-        file_put_contents(
+        $this->filesystem->dumpFile(
             $this->getTempDir().'/dummy2.svg',
             '<?xml version="1.0" encoding="utf-8"?>
             <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
@@ -1200,7 +1206,7 @@ class ImageTest extends TestCase
      */
     public function testResizesSvgImagesWithoutDimensions(): void
     {
-        file_put_contents(
+        $this->filesystem->dumpFile(
             $this->getTempDir().'/dummy3.svg',
             '<?xml version="1.0" encoding="utf-8"?>
             <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
@@ -1242,7 +1248,7 @@ class ImageTest extends TestCase
      */
     public function testResizesSvgImagesWithoutViewBox(): void
     {
-        file_put_contents(
+        $this->filesystem->dumpFile(
             $this->getTempDir().'/dummy4.svg',
             '<?xml version="1.0" encoding="utf-8"?>
             <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
@@ -1285,7 +1291,7 @@ class ImageTest extends TestCase
      */
     public function testResizesSvgImagesWithoutViewBoxAndDimensions(): void
     {
-        file_put_contents(
+        $this->filesystem->dumpFile(
             $this->getTempDir().'/dummy5.svg',
             '<?xml version="1.0" encoding="utf-8"?>
             <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
@@ -1313,7 +1319,7 @@ class ImageTest extends TestCase
      */
     public function testResizesSvgzImages(): void
     {
-        file_put_contents(
+        $this->filesystem->dumpFile(
             $this->getTempDir().'/dummy.svgz',
             gzencode(
                 '<?xml version="1.0" encoding="utf-8"?>
@@ -1386,7 +1392,7 @@ class ImageTest extends TestCase
         $imageObj = new Image($file);
         $imageObj->setTargetWidth($file->width)->setTargetHeight($file->height);
 
-        file_put_contents($this->getTempDir().'/target.jpg', '');
+        $this->filesystem->dumpFile($this->getTempDir().'/target.jpg', '');
 
         $imageObj->setTargetPath('target.jpg');
         $imageObj->executeResize();
@@ -1412,7 +1418,8 @@ class ImageTest extends TestCase
             .'_'.str_replace('\\', '-', \get_class($imageObj))
             .'.jpg';
 
-        file_put_contents(System::getContainer()->getParameter('kernel.project_dir').'/'.$path, '');
+        $fs = new Filesystem();
+        $fs->dumpFile(System::getContainer()->getParameter('kernel.project_dir').'/'.$path, '');
 
         return $path;
     }
@@ -1489,7 +1496,8 @@ class ImageTest extends TestCase
             .'_'.str_replace('\\', '-', \get_class($imageObj))
             .'.jpg';
 
-        file_put_contents(System::getContainer()->getParameter('kernel.project_dir').'/'.$path, '');
+        $fs = new Filesystem();
+        $fs->dumpFile(System::getContainer()->getParameter('kernel.project_dir').'/'.$path, '');
 
         return $path;
     }

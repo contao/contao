@@ -16,6 +16,7 @@ services:
         class: Contao\CoreBundle\Command\CrawlCommand
         arguments:
             - '@contao.crawl.escargot_factory'
+            - '@filesystem'
 
     Contao\CoreBundle\Command\CronCommand:
         arguments:
