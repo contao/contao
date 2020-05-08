@@ -4,3 +4,6 @@
 
 # PhpUnit
 /phpunit.xml
+
+# Upstream compatibility
+/var/
