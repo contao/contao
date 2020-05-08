@@ -44,7 +44,7 @@ class StoreRefererListener
      */
     public function __invoke(ResponseEvent $event): void
     {
-        if (!$this->scopeMatcher->isContaoMasterRequest($event)) {
+        if (!$this->scopeMatcher->isBackendMasterRequest($event)) {
             return;
         }
 
@@ -66,14 +66,6 @@ class StoreRefererListener
             return;
         }
 
-        $this->storeBackendReferer($request);
-    }
-
-    /**
-     * @throws \RuntimeException
-     */
-    private function storeBackendReferer(Request $request): void
-    {
         if (!$this->canModifyBackendSession($request)) {
             return;
         }
