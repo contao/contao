@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\LegacyRoutingException;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Search\Document;
@@ -65,22 +66,12 @@ abstract class Frontend extends Controller
 	 */
 	public static function getPageIdFromUrl()
 	{
-		$objRequest = System::getContainer()->get('request_stack')->getCurrentRequest();
-
-		if ($objRequest instanceof Request && $objRequest->attributes->get('pageModel') instanceof PageModel)
-		{
-			/** @var PageModel $objPage */
-			$objPage = $objRequest->attributes->get('pageModel');
-
-			return $objPage->alias ?: $objPage->id;
-		}
-
-		if (!System::getContainer()->get('contao.framework')->isLegacyRouting())
-		{
-			throw new \RuntimeException('Frontend::getPageIdFromUrl() requires legacy routing. Configure "prepend_locale" or "url_suffix" in the Contao bundle.');
-		}
-
 		@trigger_error('Using Frontend::getPageIdFromUrl() has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.', E_USER_DEPRECATED);
+
+		if (!System::getContainer()->getParameter('contao.legacy_routing'))
+		{
+			throw new LegacyRoutingException('Frontend::getPageIdFromUrl() requires legacy routing. Configure "prepend_locale" or "url_suffix" in the Contao bundle.');
+		}
 
 		$strRequest = Environment::get('relativeRequest');
 
@@ -309,19 +300,23 @@ abstract class Frontend extends Controller
 	 */
 	public static function getRootPageFromUrl()
 	{
-		$objRequest = System::getContainer()->get('request_stack')->getCurrentRequest();
-
-		if ($objRequest instanceof Request && $objRequest->attributes->get('pageModel') instanceof PageModel)
+		if (!System::getContainer()->getParameter('contao.legacy_routing'))
 		{
-			/** @var PageModel $objPage */
-			$objPage = $objRequest->attributes->get('pageModel');
+			$objRequest = System::getContainer()->get('request_stack')->getCurrentRequest();
 
-			return PageModel::findByPk($objPage->rootId);
-		}
+			if ($objRequest instanceof Request)
+			{
+				$objPage = $objRequest->attributes->get('pageModel');
 
-		if (!System::getContainer()->get('contao.framework')->isLegacyRouting())
-		{
-			throw new \RuntimeException('Frontend::getRootPageFromUrl() requires legacy routing. Configure "prepend_locale" or "url_suffix" in the Contao bundle.');
+				if ($objPage instanceof PageModel)
+				{
+					$objPage->loadDetails();
+
+					return PageModel::findByPk($objPage->rootId);
+				}
+			}
+
+			throw new NoRootPageFoundException('No root page found');
 		}
 
 		$host = Environment::get('host');

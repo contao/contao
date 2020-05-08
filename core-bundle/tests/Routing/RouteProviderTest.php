@@ -598,6 +598,6 @@ class RouteProviderTest extends TestCase
 
         $providers = $this->createMock(ServiceLocator::class);
 
-        return new RouteProvider($framework, $connection, $candidates, $providers, $prependLocale);
+        return new RouteProvider($framework, $connection, $candidates, $providers, false, $prependLocale);
     }
 }

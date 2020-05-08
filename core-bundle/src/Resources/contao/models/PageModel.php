@@ -1004,7 +1004,7 @@ class PageModel extends Model
 			$this->rootUseSSL = $objParentPage->useSSL;
 			$this->rootFallbackLanguage = $objParentPage->language;
 
-			if (System::getContainer()->get('contao.framework')->isLegacyRouting())
+			if (System::getContainer()->getParameter('contao.legacy_routing'))
 			{
 				$this->languagePrefix = System::getContainer()->getParameter('contao.prepend_locale') ? $objParentPage->language : '';
 				$this->urlSuffix = System::getContainer()->getParameter('contao.url_suffix');
@@ -1098,7 +1098,7 @@ class PageModel extends Model
 			$page->language = $strForceLang;
 			$page->rootLanguage = $strForceLang;
 
-			if (System::getContainer()->get('contao.framework')->isLegacyRouting())
+			if (System::getContainer()->getParameter('contao.legacy_routing'))
 			{
 				$page->languagePrefix = System::getContainer()->getParameter('contao.prepend_locale') ? $strForceLang : '';
 			}

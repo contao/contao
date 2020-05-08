@@ -41,6 +41,10 @@ class RoutingTest extends ContaoTestCase
 
         Environment::reset();
 
+        $container = new ContainerBuilder();
+        $container->setParameter('contao.legacy_routing', true);
+        System::setContainer($container);
+
         $_GET = [];
         $GLOBALS['TL_AUTO_ITEM'] = ['items'];
     }
@@ -66,10 +70,7 @@ class RoutingTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $container = new ContainerBuilder();
-        $container->set('request_stack', $requestStack);
-
-        System::setContainer($container);
+        System::getContainer()->set('request_stack', $requestStack);
 
         $this->assertSame('home', Frontend::getPageIdFromUrl());
         $this->assertEmpty($_GET);
@@ -82,10 +83,7 @@ class RoutingTest extends ContaoTestCase
     {
         $_SERVER['REQUEST_URI'] = '/';
 
-        $container = new ContainerBuilder();
-        $container->set('request_stack', new RequestStack());
-
-        System::setContainer($container);
+        System::getContainer()->set('request_stack', new RequestStack());
 
         $this->assertNull(Frontend::getPageIdFromUrl());
         $this->assertEmpty($_GET);
@@ -112,10 +110,7 @@ class RoutingTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $container = new ContainerBuilder();
-        $container->set('request_stack', $requestStack);
-
-        System::setContainer($container);
+        System::getContainer()->set('request_stack', $requestStack);
 
         $this->assertFalse(Frontend::getPageIdFromUrl());
         $this->assertEmpty($_GET);
@@ -142,10 +137,7 @@ class RoutingTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $container = new ContainerBuilder();
-        $container->set('request_stack', $requestStack);
-
-        System::setContainer($container);
+        System::getContainer()->set('request_stack', $requestStack);
 
         $this->assertFalse(Frontend::getPageIdFromUrl());
         $this->assertEmpty($_GET);
@@ -172,11 +164,8 @@ class RoutingTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $container = new ContainerBuilder();
-        $container->set('request_stack', $requestStack);
-        $container->set('contao.framework', $this->mockFrameworkWithPageAdapter());
-
-        System::setContainer($container);
+        System::getContainer()->set('request_stack', $requestStack);
+        System::getContainer()->set('contao.framework', $this->mockFrameworkWithPageAdapter());
 
         $this->assertFalse(Frontend::getPageIdFromUrl());
         $this->assertSame(['foo' => 'bar1'], $_GET);
@@ -203,11 +192,8 @@ class RoutingTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $container = new ContainerBuilder();
-        $container->set('request_stack', $requestStack);
-        $container->set('contao.framework', $this->mockFrameworkWithPageAdapter());
-
-        System::setContainer($container);
+        System::getContainer()->set('request_stack', $requestStack);
+        System::getContainer()->set('contao.framework', $this->mockFrameworkWithPageAdapter());
         Config::set('useAutoItem', true);
 
         $this->assertFalse(Frontend::getPageIdFromUrl());
@@ -235,11 +221,8 @@ class RoutingTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $container = new ContainerBuilder();
-        $container->set('request_stack', $requestStack);
-        $container->set('contao.framework', $this->mockFrameworkWithPageAdapter());
-
-        System::setContainer($container);
+        System::getContainer()->set('request_stack', $requestStack);
+        System::getContainer()->set('contao.framework', $this->mockFrameworkWithPageAdapter());
 
         $this->assertFalse(Frontend::getPageIdFromUrl());
         $this->assertEmpty($_GET);
@@ -266,10 +249,7 @@ class RoutingTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $container = new ContainerBuilder();
-        $container->set('request_stack', $requestStack);
-
-        System::setContainer($container);
+        System::getContainer()->set('request_stack', $requestStack);
 
         $this->assertSame('höme', Frontend::getPageIdFromUrl());
         $this->assertEmpty($_GET);
@@ -303,11 +283,8 @@ class RoutingTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $container = new ContainerBuilder();
-        $container->set('request_stack', $requestStack);
-        $container->set('contao.framework', $this->mockFrameworkWithPageAdapter());
-
-        System::setContainer($container);
+        System::getContainer()->set('request_stack', $requestStack);
+        System::getContainer()->set('contao.framework', $this->mockFrameworkWithPageAdapter());
         Config::set('useAutoItem', true);
 
         $this->assertSame('home', Frontend::getPageIdFromUrl());
@@ -335,10 +312,7 @@ class RoutingTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $container = new ContainerBuilder();
-        $container->set('request_stack', $requestStack);
-
-        System::setContainer($container);
+        System::getContainer()->set('request_stack', $requestStack);
         Config::set('addLanguageToUrl', true);
 
         $this->assertNull(Frontend::getPageIdFromUrl());
@@ -366,10 +340,7 @@ class RoutingTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $container = new ContainerBuilder();
-        $container->set('request_stack', $requestStack);
-
-        System::setContainer($container);
+        System::getContainer()->set('request_stack', $requestStack);
         Config::set('addLanguageToUrl', true);
 
         $this->assertFalse(Frontend::getPageIdFromUrl());
@@ -397,11 +368,8 @@ class RoutingTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $container = new ContainerBuilder();
-        $container->set('request_stack', $requestStack);
-        $container->set('contao.framework', $this->mockFrameworkWithPageAdapter());
-
-        System::setContainer($container);
+        System::getContainer()->set('request_stack', $requestStack);
+        System::getContainer()->set('contao.framework', $this->mockFrameworkWithPageAdapter());
         Config::set('addLanguageToUrl', true);
         Config::set('useAutoItem', true);
 
@@ -436,11 +404,8 @@ class RoutingTest extends ContaoTestCase
             ->willReturn(null)
         ;
 
-        $container = new ContainerBuilder();
-        $container->set('request_stack', $requestStack);
-        $container->set('contao.framework', $this->mockFrameworkWithPageAdapter($pageModel));
-
-        System::setContainer($container);
+        System::getContainer()->set('request_stack', $requestStack);
+        System::getContainer()->set('contao.framework', $this->mockFrameworkWithPageAdapter($pageModel));
 
         $this->assertFalse(Frontend::getPageIdFromUrl());
         $this->assertEmpty($_GET);
@@ -495,11 +460,8 @@ class RoutingTest extends ContaoTestCase
 
         $framework = $this->mockContaoFramework([PageModel::class => $pageModel]);
 
-        $container = new ContainerBuilder();
-        $container->set('request_stack', $requestStack);
-        $container->set('contao.framework', $framework);
-
-        System::setContainer($container);
+        System::getContainer()->set('request_stack', $requestStack);
+        System::getContainer()->set('contao.framework', $framework);
 
         $this->assertSame('foo/bar/home', Frontend::getPageIdFromUrl());
         $this->assertEmpty($_GET);
@@ -563,11 +525,8 @@ class RoutingTest extends ContaoTestCase
 
         $framework = $this->mockContaoFramework([PageModel::class => $pageModel]);
 
-        $container = new ContainerBuilder();
-        $container->set('request_stack', $requestStack);
-        $container->set('contao.framework', $framework);
-
-        System::setContainer($container);
+        System::getContainer()->set('request_stack', $requestStack);
+        System::getContainer()->set('contao.framework', $framework);
         Config::set('addLanguageToUrl', true);
 
         $this->assertSame('foo/bar/home', Frontend::getPageIdFromUrl());
@@ -623,11 +582,8 @@ class RoutingTest extends ContaoTestCase
 
         $framework = $this->mockContaoFramework([PageModel::class => $pageModel]);
 
-        $container = new ContainerBuilder();
-        $container->set('request_stack', $requestStack);
-        $container->set('contao.framework', $framework);
-
-        System::setContainer($container);
+        System::getContainer()->set('request_stack', $requestStack);
+        System::getContainer()->set('contao.framework', $framework);
 
         $this->assertFalse(Frontend::getPageIdFromUrl());
         $this->assertEmpty($_GET);

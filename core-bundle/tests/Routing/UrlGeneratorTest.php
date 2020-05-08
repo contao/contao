@@ -27,7 +27,7 @@ class UrlGeneratorTest extends TestCase
     public function testCanWriteTheContext(): void
     {
         $router = new ParentUrlGenerator(new RouteCollection(), new RequestContext());
-        $generator = new UrlGenerator($router, $this->mockContaoFramework(), false);
+        $generator = new UrlGenerator($router, $this->mockContaoFramework(), false, false, '.html');
 
         $context = new RequestContext();
         $generator->setContext($context);
@@ -195,7 +195,7 @@ class UrlGeneratorTest extends TestCase
         $routes->add('contao_index', new Route('/'));
 
         $router = new ParentUrlGenerator($routes, new RequestContext());
-        $generator = new UrlGenerator($router, $this->mockContaoFramework(), false);
+        $generator = new UrlGenerator($router, $this->mockContaoFramework(), false, false, '.html');
 
         $this->assertSame(
             'https://contao.org/',
@@ -232,7 +232,7 @@ class UrlGeneratorTest extends TestCase
         $context->setScheme('https');
 
         $router = new ParentUrlGenerator($routes, $context);
-        $generator = new UrlGenerator($router, $this->mockContaoFramework(), false);
+        $generator = new UrlGenerator($router, $this->mockContaoFramework(), false, false, '.html');
 
         $this->assertSame(
             'https://contao.org/',
@@ -254,7 +254,7 @@ class UrlGeneratorTest extends TestCase
 
         $GLOBALS['TL_CONFIG']['useAutoItem'] = $useAutoItem;
 
-        return new UrlGenerator($router, $framework, $prependLocale);
+        return new UrlGenerator($router, $framework, false, $prependLocale, '.html');
     }
 
     /**

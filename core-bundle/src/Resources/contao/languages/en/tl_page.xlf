@@ -426,7 +426,7 @@
         <source>Edit the articles of page ID %s</source>
       </trans-unit>
       <trans-unit id="tl_page.legacyRouting">
-        <source><![CDATA[Some URL settings are disabled because Contao is in <strong>legacy routing mode</strong>. Legacy routing is active if <code>prepend_locale</code> or <code>url_suffix</code> is set in the configuration files, or an extension uses the <code>getPageIdFromUrl</code> or <code>getRootPageFromUrl</code> hooks.]]></source>
+        <source><![CDATA[Some URL settings are disabled because Contao is in <em>legacy routing mode</em>. <a href="https://docs.contao.org/manual/en/system/legacy-routing/" target="_blank" rel="noreferrer noopener">Learn more</a>]]></source>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

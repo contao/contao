@@ -13,18 +13,12 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing;
 
 use Contao\CoreBundle\ContaoCoreBundle;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 class FrontendLoader extends Loader
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
     /**
      * @var bool
      */
@@ -38,19 +32,14 @@ class FrontendLoader extends Loader
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.frontend_loader" service instead
      */
-    public function __construct(ContaoFramework $framework, bool $prependLocale, string $urlSuffix = '.html')
+    public function __construct(bool $prependLocale, string $urlSuffix = '.html')
     {
-        $this->framework = $framework;
         $this->prependLocale = $prependLocale;
         $this->urlSuffix = $urlSuffix;
     }
 
     public function load($resource, $type = null): RouteCollection
     {
-        if (!$this->framework->isLegacyRouting()) {
-            throw new \RuntimeException('The "contao_frontend" and "contao_index" routes require legacy routing. Configure "prepend_locale" or "url_suffix" in the Contao bundle.');
-        }
-
         $routes = new RouteCollection();
 
         $defaults = [

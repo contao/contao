@@ -460,9 +460,9 @@ services:
     contao.routing.candidates:
         class: Contao\CoreBundle\Routing\Candidates\Candidates
         arguments:
-            - '@contao.framework'
             - '@database_connection'
             - !tagged_locator { tag: contao.page_provider, index_by: type, default_index_method: getPageType }
+            - '%contao.legacy_routing%'
             - '%contao.url_suffix%'
             - '%contao.prepend_locale%'
 
@@ -471,15 +471,6 @@ services:
 
     contao.routing.final_matcher:
         class: Contao\CoreBundle\Routing\Matcher\UrlMatcher
-
-    contao.routing.frontend_loader:
-        class: Contao\CoreBundle\Routing\FrontendLoader
-        arguments:
-            - '@contao.framework'
-            - '%contao.prepend_locale%'
-            - '%contao.url_suffix%'
-        tags:
-            - routing.loader
 
     contao.routing.frontend_matcher:
         class: Symfony\Component\HttpFoundation\RequestMatcher
@@ -505,19 +496,10 @@ services:
     contao.routing.language_filter:
         class: Contao\CoreBundle\Routing\Matcher\LanguageFilter
 
-    contao.routing.legacy_matcher:
-        class: Contao\CoreBundle\Routing\Matcher\LegacyMatcher
-        decorates: contao.routing.nested_matcher
-        arguments:
-            - '@contao.framework'
-            - '@contao.routing.legacy_matcher.inner'
-            - '%contao.url_suffix%'
-            - '%contao.prepend_locale%'
-
     contao.routing.legacy_route_provider:
         class: Contao\CoreBundle\Routing\LegacyRouteProvider
         arguments:
-            - '@contao.routing.frontend_loader'
+            - '@?contao.routing.frontend_loader'
             - '@contao.routing.route_provider'
         tags:
             - contao.content_resolver
@@ -585,6 +567,7 @@ services:
             - '@database_connection'
             - '@contao.routing.candidates'
             - !tagged_locator { tag: contao.page_provider, index_by: type, default_index_method: getPageType }
+            - '%contao.legacy_routing%'
             - '%contao.prepend_locale%'
 
     contao.routing.route_404_provider:
@@ -604,6 +587,7 @@ services:
         arguments:
             - '@router'
             - '@contao.framework'
+            - '%contao.legacy_routing%'
             - '%contao.prepend_locale%'
             - '%contao.url_suffix%'
         public: true

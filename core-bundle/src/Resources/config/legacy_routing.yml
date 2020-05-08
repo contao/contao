@@ -1,0 +1,28 @@
+services:
+    _defaults:
+        autoconfigure: true
+        autowire: false
+        public: false
+
+    contao.routing.frontend_loader:
+        class: Contao\CoreBundle\Routing\FrontendLoader
+        arguments:
+            - '%contao.prepend_locale%'
+            - '%contao.url_suffix%'
+        tags:
+            - routing.loader
+
+    contao.routing.legacy_matcher:
+        class: Contao\CoreBundle\Routing\Matcher\LegacyMatcher
+        decorates: contao.routing.nested_matcher
+        arguments:
+            - '@contao.framework'
+            - '@contao.routing.legacy_matcher.inner'
+            - '%contao.url_suffix%'
+            - '%contao.prepend_locale%'
+
+    Contao\CoreBundle\EventListener\DataContainer\LegacyRoutingListener:
+        arguments:
+            - '@translator'
+            - '%contao.prepend_locale%'
+            - '%contao.url_suffix%'

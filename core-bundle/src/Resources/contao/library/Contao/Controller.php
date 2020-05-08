@@ -1169,7 +1169,7 @@ abstract class Controller extends System
 			$page->language = $strForceLang;
 			$page->rootLanguage = $strForceLang;
 
-			if (System::getContainer()->get('contao.framework')->isLegacyRouting())
+			if (System::getContainer()->getParameter('contao.legacy_routing'))
 			{
 				$page->languagePrefix = System::getContainer()->getParameter('contao.prepend_locale') ? $strForceLang : '';
 			}

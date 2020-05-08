@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\DataContainer;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -21,11 +20,6 @@ use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
 class LegacyRoutingListener implements ServiceAnnotationInterface
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
     /**
      * @var TranslatorInterface
      */
@@ -41,9 +35,8 @@ class LegacyRoutingListener implements ServiceAnnotationInterface
      */
     private $urlSuffix;
 
-    public function __construct(ContaoFramework $framework, TranslatorInterface $translator, bool $prependLocale = false, string $urlSuffix = '.html')
+    public function __construct(TranslatorInterface $translator, bool $prependLocale = false, string $urlSuffix = '.html')
     {
-        $this->framework = $framework;
         $this->translator = $translator;
         $this->prependLocale = $prependLocale;
         $this->urlSuffix = $urlSuffix;
@@ -54,10 +47,6 @@ class LegacyRoutingListener implements ServiceAnnotationInterface
      */
     public function disableRoutingFields(): void
     {
-        if (!$this->framework->isLegacyRouting()) {
-            return;
-        }
-
         $translator = $this->translator;
 
         $GLOBALS['TL_DCA']['tl_page']['fields']['languagePrefix']['eval']['disabled'] = true;
@@ -84,10 +73,6 @@ class LegacyRoutingListener implements ServiceAnnotationInterface
      */
     public function overrideLanguagePrefix($value, DataContainer $dc)
     {
-        if (!$this->framework->isLegacyRouting()) {
-            return $value;
-        }
-
         return $this->prependLocale ? $dc->activeRecord->language : '';
     }
 
@@ -96,10 +81,6 @@ class LegacyRoutingListener implements ServiceAnnotationInterface
      */
     public function overrideUrlSuffix($value)
     {
-        if (!$this->framework->isLegacyRouting()) {
-            return $value;
-        }
-
         return $this->urlSuffix;
     }
 }

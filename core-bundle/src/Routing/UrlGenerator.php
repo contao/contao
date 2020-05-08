@@ -37,6 +37,11 @@ class UrlGenerator implements UrlGeneratorInterface
     /**
      * @var bool
      */
+    private $legacyRouting;
+
+    /**
+     * @var bool
+     */
     private $prependLocale;
 
     /**
@@ -47,10 +52,11 @@ class UrlGenerator implements UrlGeneratorInterface
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.url_generator" service instead
      */
-    public function __construct(UrlGeneratorInterface $router, ContaoFramework $framework, bool $prependLocale, string $urlSuffix)
+    public function __construct(UrlGeneratorInterface $router, ContaoFramework $framework, bool $legacyRouting, bool $prependLocale, string $urlSuffix)
     {
         $this->router = $router;
         $this->framework = $framework;
+        $this->legacyRouting = $legacyRouting;
         $this->prependLocale = $prependLocale;
         $this->urlSuffix = $urlSuffix;
     }
@@ -222,7 +228,7 @@ class UrlGenerator implements UrlGeneratorInterface
         $languagePrefix = '';
         $requirements = [];
 
-        if ($this->framework->isLegacyRouting()) {
+        if ($this->legacyRouting) {
             $urlSuffix = $this->urlSuffix;
 
             if ($this->prependLocale) {

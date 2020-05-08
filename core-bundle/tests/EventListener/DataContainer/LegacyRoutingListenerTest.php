@@ -10,10 +10,9 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\EventListener;
+namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\CoreBundle\EventListener\DataContainer\LegacyRoutingListener;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -29,31 +28,9 @@ class LegacyRoutingListenerTest extends TestCase
         $GLOBALS['TL_DCA'] = [];
     }
 
-    public function testDoesNothingInNonLegacyMode(): void
+    public function testDisabledThePageFields(): void
     {
-        $listener = new LegacyRoutingListener(
-            $this->mockContaoFrameworkWithLegacyRouting(false),
-            $this->createMock(TranslatorInterface::class)
-        );
-
-        $GLOBALS['TL_DCA']['tl_page']['palettes'] = ['root' => '', 'rootfallback' => ''];
-        $GLOBALS['TL_DCA']['tl_page']['fields'] = [
-            'languagePrefix' => [],
-            'urlSuffix' => [],
-        ];
-
-        $listener->disableRoutingFields();
-
-        $this->assertEmpty($GLOBALS['TL_DCA']['tl_page']['fields']['languagePrefix']);
-        $this->assertEmpty($GLOBALS['TL_DCA']['tl_page']['fields']['urlSuffix']);
-    }
-
-    public function testDisabledThePageFieldsInLegacyMode(): void
-    {
-        $listener = new LegacyRoutingListener(
-            $this->mockContaoFrameworkWithLegacyRouting(true),
-            $this->createMock(TranslatorInterface::class)
-        );
+        $listener = new LegacyRoutingListener($this->createMock(TranslatorInterface::class));
 
         $GLOBALS['TL_DCA']['tl_page']['palettes'] = ['root' => '', 'rootfallback' => ''];
         $GLOBALS['TL_DCA']['tl_page']['fields'] = [
@@ -67,7 +44,7 @@ class LegacyRoutingListenerTest extends TestCase
         $this->assertTrue($GLOBALS['TL_DCA']['tl_page']['fields']['urlSuffix']['eval']['disabled']);
     }
 
-    public function testAddsTheRoutingWarningInLegacyMode(): void
+    public function testAddsTheRoutingWarning(): void
     {
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
@@ -77,10 +54,7 @@ class LegacyRoutingListenerTest extends TestCase
             ->willReturn('warning')
         ;
 
-        $listener = new LegacyRoutingListener(
-            $this->mockContaoFrameworkWithLegacyRouting(true),
-            $translator
-        );
+        $listener = new LegacyRoutingListener($translator);
 
         $GLOBALS['TL_DCA']['tl_page']['palettes'] = ['root' => '', 'rootfallback' => ''];
         $GLOBALS['TL_DCA']['tl_page']['fields'] = [
@@ -99,25 +73,20 @@ class LegacyRoutingListenerTest extends TestCase
 
     public function testOverridesTheLanguagePrefixWithPrependLocale(): void
     {
-        $listener = new LegacyRoutingListener(
-            $this->mockContaoFrameworkWithLegacyRouting(true),
-            $this->createMock(TranslatorInterface::class),
-            true
-        );
+        $listener = new LegacyRoutingListener($this->createMock(TranslatorInterface::class), true);
 
         /** @var DataContainer&MockObject $dc */
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['activeRecord' => (object) ['language' => 'en-US']]);
+        $dc = $this->mockClassWithProperties(
+            DataContainer::class,
+            ['activeRecord' => (object)['language' => 'en-US']]
+        );
 
         $this->assertSame('en-US', $listener->overrideLanguagePrefix('foo', $dc));
     }
 
     public function testOverridesTheLanguagePrefixWithoutPrependLocale(): void
     {
-        $listener = new LegacyRoutingListener(
-            $this->mockContaoFrameworkWithLegacyRouting(true),
-            $this->createMock(TranslatorInterface::class),
-            false
-        );
+        $listener = new LegacyRoutingListener($this->createMock(TranslatorInterface::class), false);
 
         /** @var DataContainer&MockObject $dc */
         $dc = $this->mockClassWithProperties(DataContainer::class, ['activeRecord' => (object) ['language' => 'en-US']]);
@@ -128,39 +97,11 @@ class LegacyRoutingListenerTest extends TestCase
     public function testOverridesTheUrlSuffix(): void
     {
         $listener = new LegacyRoutingListener(
-            $this->mockContaoFrameworkWithLegacyRouting(true),
             $this->createMock(TranslatorInterface::class),
             false,
             '.bar'
         );
 
-        $this->assertSame('.bar', $listener->overrideUrlSuffix('foo'));
-    }
-
-    public function testReturnsTheOriginalFieldValuesWithoutLegacyMode(): void
-    {
-        $listener = new LegacyRoutingListener(
-            $this->mockContaoFrameworkWithLegacyRouting(false),
-            $this->createMock(TranslatorInterface::class)
-        );
-
-        $dc = $this->createMock(DataContainer::class);
-        $dc->activeRecord = (object) ['language' => 'en-US'];
-
-        $this->assertSame('foo', $listener->overrideLanguagePrefix('foo', $dc));
-        $this->assertSame('foo', $listener->overrideUrlSuffix('foo'));
-    }
-
-    private function mockContaoFrameworkWithLegacyRouting(bool $legacyRouting)
-    {
-        $framework = $this->createMock(ContaoFramework::class);
-
-        $framework
-            ->expects($this->atLeastOnce())
-            ->method('isLegacyRouting')
-            ->willReturn($legacyRouting)
-        ;
-
-        return $framework;
+        $this->assertSame('.bar', $listener->overrideUrlSuffix());
     }
 }

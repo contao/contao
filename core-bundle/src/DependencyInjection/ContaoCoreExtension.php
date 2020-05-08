@@ -91,7 +91,7 @@ class ContaoCoreExtension extends Extension
         $this->setImagineService($config, $container);
         $this->overwriteImageTargetDir($config, $container);
         $this->handleTokenCheckerConfig($config, $container);
-        $this->handleLegacyRouting($config, $container);
+        $this->handleLegacyRouting($config, $container, $loader);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -284,7 +284,7 @@ class ContaoCoreExtension extends Extension
         }
     }
 
-    private function handleLegacyRouting(array $config, ContainerBuilder $container): void
+    private function handleLegacyRouting(array $config, ContainerBuilder $container, YamlFileLoader $loader): void
     {
         $count = 0;
 
@@ -298,8 +298,14 @@ class ContaoCoreExtension extends Extension
             $config['url_suffix'] = '.html';
         }
 
+        $legacyRouting = 2 !== $count;
+
         $container->setParameter('contao.prepend_locale', $config['prepend_locale']);
         $container->setParameter('contao.url_suffix', $config['url_suffix']);
-        $container->setParameter('contao.legacy_routing', 2 !== $count);
+        $container->setParameter('contao.legacy_routing', $legacyRouting);
+
+        if ($legacyRouting) {
+            $loader->load('legacy_routing.yml');
+        }
     }
 }

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing;
 
+use Contao\CoreBundle\Exception\LegacyRoutingException;
 use Contao\CoreBundle\Routing\Content\ContentUrlResolverInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,7 +26,7 @@ use Symfony\Component\Routing\RouteCollection;
 class LegacyRouteProvider implements ContentUrlResolverInterface, RouteProviderInterface
 {
     /**
-     * @var FrontendLoader
+     * @var FrontendLoader|null
      */
     private $frontendLoader;
 
@@ -34,7 +35,7 @@ class LegacyRouteProvider implements ContentUrlResolverInterface, RouteProviderI
      */
     private $routeProvider;
 
-    public function __construct(FrontendLoader $frontendLoader, RouteProviderInterface $routeProvider)
+    public function __construct(?FrontendLoader $frontendLoader, RouteProviderInterface $routeProvider)
     {
         $this->frontendLoader = $frontendLoader;
         $this->routeProvider = $routeProvider;
@@ -50,6 +51,10 @@ class LegacyRouteProvider implements ContentUrlResolverInterface, RouteProviderI
     public function resolveContent($content): Route
     {
         if ('contao_frontend' === $content || 'contao_index' === $content) {
+            if (null === $this->frontendLoader) {
+                throw new LegacyRoutingException('The "contao_frontend" and "contao_index" routes require legacy routing. Configure "prepend_locale" or "url_suffix" in the Contao bundle.');
+            }
+
             return $this->frontendLoader->load('.', 'contao_frontend')->get($content);
         }
 

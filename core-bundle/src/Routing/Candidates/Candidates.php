@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\Candidates;
 
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Content\PageProviderInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\FetchMode;
@@ -34,11 +33,6 @@ class Candidates implements CandidatesInterface
     private const LIMIT = 20;
 
     /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
      * @var Connection
      */
     private $database;
@@ -47,6 +41,11 @@ class Candidates implements CandidatesInterface
      * @var bool
      */
     private $prependLocale;
+
+    /**
+     * @var bool
+     */
+    private $legacyRouting;
 
     /**
      * @var bool
@@ -62,16 +61,17 @@ class Candidates implements CandidatesInterface
      * @var array
      */
     private $urlSuffix;
+
     /**
      * @var ServiceLocator
      */
     private $pageProviders;
 
-    public function __construct(ContaoFramework $framework, Connection $database, ServiceLocator $pageProviders, string $urlSuffix, bool $prependLocale)
+    public function __construct(Connection $database, ServiceLocator $pageProviders, bool $legacyRouting, string $urlSuffix, bool $prependLocale)
     {
-        $this->framework = $framework;
         $this->database = $database;
         $this->pageProviders = $pageProviders;
+        $this->legacyRouting = $legacyRouting;
         $this->prependLocale = $prependLocale;
 
         $this->languagePrefix = [];
@@ -95,7 +95,7 @@ class Candidates implements CandidatesInterface
         $url = rawurldecode(ltrim($url, '/'));
         $candidates = [];
 
-        if ($this->framework->isLegacyRouting()) {
+        if ($this->legacyRouting) {
             $url = $this->removeSuffixAndLanguage($url);
 
             if (null === $url) {
@@ -193,7 +193,7 @@ class Candidates implements CandidatesInterface
 
         $this->initialized = true;
 
-        if ($this->framework->isLegacyRouting()) {
+        if ($this->legacyRouting) {
             return;
         }
 

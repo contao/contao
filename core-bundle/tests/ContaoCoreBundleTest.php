@@ -38,6 +38,7 @@ use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Event\RobotsTxtEvent;
 use Contao\CoreBundle\Event\SlugValidCharactersEvent;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
+use Symfony\Cmf\Component\Routing\DependencyInjection\Compiler\RegisterRouteEnhancersPass;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\EventDispatcher\DependencyInjection\AddEventAliasesPass;
@@ -45,7 +46,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\FragmentRendererPass;
 
 class ContaoCoreBundleTest extends TestCase
 {
-    public function testAddsTheCompilerPaths(): void
+    public function testAddsTheCompilerPasses(): void
     {
         $passes = [
             AddEventAliasesPass::class,
@@ -67,6 +68,7 @@ class ContaoCoreBundleTest extends TestCase
             SearchIndexerPass::class,
             CrawlerPass::class,
             AddCronJobsPass::class,
+            RegisterRouteEnhancersPass::class,
         ];
 
         $security = $this->createMock(SecurityExtension::class);

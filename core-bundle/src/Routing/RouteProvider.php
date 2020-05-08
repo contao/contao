@@ -55,17 +55,23 @@ class RouteProvider implements RouteProviderInterface
     /**
      * @var bool
      */
+    private $legacyRouting;
+
+    /**
+     * @var bool
+     */
     private $prependLocale;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.route_provider" service instead
      */
-    public function __construct(ContaoFramework $framework, Connection $database, CandidatesInterface $candidates, ServiceLocator $pageProviders, bool $prependLocale)
+    public function __construct(ContaoFramework $framework, Connection $database, CandidatesInterface $candidates, ServiceLocator $pageProviders, bool $legacyRouting, bool $prependLocale)
     {
         $this->framework = $framework;
         $this->database = $database;
         $this->candidates = $candidates;
         $this->pageProviders = $pageProviders;
+        $this->legacyRouting = $legacyRouting;
         $this->prependLocale = $prependLocale;
     }
 
@@ -82,7 +88,7 @@ class RouteProvider implements RouteProviderInterface
 
         $routes = [];
 
-        if ('/' === $pathInfo || ($this->framework->isLegacyRouting() && $this->prependLocale && preg_match('@^/([a-z]{2}(-[A-Z]{2})?)/$@', $pathInfo))) {
+        if ('/' === $pathInfo || ($this->legacyRouting && $this->prependLocale && preg_match('@^/([a-z]{2}(-[A-Z]{2})?)/$@', $pathInfo))) {
             $this->addRoutesForRootPages($this->findRootPages($request->getHttpHost()), $routes, $request);
 
             return $this->createCollectionForRoutes($routes, $request->getLanguages());

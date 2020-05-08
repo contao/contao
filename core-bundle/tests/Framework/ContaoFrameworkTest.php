@@ -382,7 +382,8 @@ class ContaoFrameworkTest extends TestCase
             $this->mockScopeMatcher(),
             $this->createMock(TokenChecker::class),
             $this->getTempDir(),
-            error_reporting()
+            error_reporting(),
+            false
         );
 
         $framework->setContainer($this->getContainerWithContaoConfiguration());
@@ -418,7 +419,8 @@ class ContaoFrameworkTest extends TestCase
             $this->mockScopeMatcher(),
             $this->createMock(TokenChecker::class),
             $this->getTempDir(),
-            error_reporting()
+            error_reporting(),
+            false
         );
 
         $framework->setContainer($this->getContainerWithContaoConfiguration());
@@ -706,7 +708,8 @@ class ContaoFrameworkTest extends TestCase
             $scopeMatcher ?? $this->mockScopeMatcher(),
             $tokenChecker ?? $this->createMock(TokenChecker::class),
             $this->getTempDir(),
-            error_reporting()
+            error_reporting(),
+            false
         );
 
         $adapters = [

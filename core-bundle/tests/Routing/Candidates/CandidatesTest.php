@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Routing\Candidates;
 
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Candidates\Candidates;
 use Contao\CoreBundle\Routing\Content\PageProviderInterface;
 use Contao\CoreBundle\Tests\TestCase;
@@ -37,17 +36,10 @@ class CandidatesTest extends TestCase
             ->willReturn($pathInfo)
         ;
 
-        $framework = $this->createMock(ContaoFramework::class);
-        $framework
-            ->expects($this->atLeastOnce())
-            ->method('isLegacyRouting')
-            ->willReturn(false)
-        ;
-
         $connection = $this->mockConnectionWithLanguages($languages);
         $providers = $this->mockPageProvidersWithUrlSuffix($urlSuffix);
 
-        $candidates = (new Candidates($framework, $connection, $providers, '.html', false))->getCandidates($request);
+        $candidates = (new Candidates($connection, $providers, false, '.html', false))->getCandidates($request);
 
         $this->assertSame($expected, $candidates);
     }
@@ -64,13 +56,6 @@ class CandidatesTest extends TestCase
             ->willReturn($pathInfo)
         ;
 
-        $framework = $this->createMock(ContaoFramework::class);
-        $framework
-            ->expects($this->atLeastOnce())
-            ->method('isLegacyRouting')
-            ->willReturn(true)
-        ;
-
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->never())
@@ -83,7 +68,7 @@ class CandidatesTest extends TestCase
             ->method($this->anything())
         ;
 
-        $candidates = (new Candidates($framework, $connection, $providers, $urlSuffix[0] ?? '', 0 !== \count($languages)))->getCandidates($request);
+        $candidates = (new Candidates($connection, $providers, true, $urlSuffix[0] ?? '', 0 !== \count($languages)))->getCandidates($request);
 
         $this->assertSame($expected, $candidates);
     }
