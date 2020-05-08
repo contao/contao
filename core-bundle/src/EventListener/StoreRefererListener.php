@@ -66,11 +66,7 @@ class StoreRefererListener
             return;
         }
 
-        if ($this->scopeMatcher->isBackendRequest($request)) {
-            $this->storeBackendReferer($request);
-        } else {
-            $this->storeFrontendReferer($request);
-        }
+        $this->storeBackendReferer($request);
     }
 
     /**
@@ -134,42 +130,6 @@ class StoreRefererListener
         }
 
         return $referers;
-    }
-
-    /**
-     * @throws \RuntimeException
-     */
-    private function storeFrontendReferer(Request $request): void
-    {
-        if (!$request->hasSession()) {
-            throw new \RuntimeException('The request did not contain a session.');
-        }
-
-        $session = $request->getSession();
-        $refererOld = $session->get('referer');
-
-        if (!$this->canModifyFrontendSession($request, $refererOld)) {
-            return;
-        }
-
-        $refererNew = [
-            'last' => (string) $refererOld['current'],
-            'current' => $this->getRelativeRequestUri($request),
-        ];
-
-        $session->set('referer', $refererNew);
-    }
-
-    private function canModifyFrontendSession(Request $request, array $referer = null): bool
-    {
-        return null !== $referer
-            && !$request->query->has('pdf')
-            && !$request->query->has('file')
-            && !$request->query->has('id')
-            && isset($referer['current'])
-            && 'contao_frontend' === $request->attributes->get('_route')
-            && $this->getRelativeRequestUri($request) !== $referer['current']
-            && !$request->isXmlHttpRequest();
     }
 
     /**
