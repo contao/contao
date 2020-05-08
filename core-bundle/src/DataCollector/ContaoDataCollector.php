@@ -18,6 +18,8 @@ use Contao\CoreBundle\Util\PackageUtil;
 use Contao\LayoutModel;
 use Contao\Model\Registry;
 use Contao\PageModel;
+use Contao\System;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
@@ -29,11 +31,22 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
 {
     use FrameworkAwareTrait;
 
+    /**
+     * @var ParameterBagInterface
+     */
+    private $parameterBag;
+
+    public function __construct(ParameterBagInterface $parameterBag)
+    {
+        $this->parameterBag = $parameterBag;
+    }
+
     public function collect(Request $request, Response $response, \Exception $exception = null): void
     {
         $this->data = ['contao_version' => PackageUtil::getContaoVersion()];
 
         $this->addSummaryData();
+        $this->addLegacyRoutingData();
 
         if (isset($GLOBALS['TL_DEBUG'])) {
             $this->data = array_merge($this->data, $GLOBALS['TL_DEBUG']);
@@ -87,6 +100,11 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         ksort($data);
 
         return $data;
+    }
+
+    public function getLegacyRouting()
+    {
+        return $this->getData('legacy_routing');
     }
 
     /**
@@ -148,6 +166,45 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
             'preview' => \defined('BE_USER_LOGGED_IN') && true === BE_USER_LOGGED_IN,
             'layout' => $this->getLayoutName(),
             'template' => $this->getTemplateName(),
+            'legacy_routing' => $this->parameterBag->get('contao.legacy_routing'),
+        ];
+    }
+
+    private function addLegacyRoutingData(): void
+    {
+        $hooks = [];
+
+        foreach (['getPageIdFromUrl', 'getRootPageFromUrl'] as $name) {
+            if (empty($GLOBALS['TL_HOOKS'][$name]) || !\is_array($GLOBALS['TL_HOOKS'][$name])) {
+                continue;
+            }
+
+            /** @var System $systemAdapter */
+            $systemAdapter = $this->framework->getAdapter(System::class);
+
+            foreach ($GLOBALS['TL_HOOKS'][$name] as $callback) {
+                $class = $systemAdapter->importStatic($callback[0]);
+                $r = new \ReflectionClass($class);
+                $file = $r->getFileName();
+                $base = $this->parameterBag->get('kernel.project_dir').'/vendor/';
+                $baseLength = strlen($base);
+
+                $hook = ['name' => $name, 'class' => get_class($class), 'method' => $callback[1], 'package' => ''];
+
+                if (0 === strncmp($file, $base, $baseLength)) {
+                    [$vendor, $package] = explode('/', substr($file, $baseLength), 3);
+                    $hook['package'] = $vendor.'/'.$package;
+                }
+
+                $hooks[] = $hook;
+            }
+        }
+
+        $this->data['legacy_routing'] = [
+            'enabled' => $this->parameterBag->get('contao.legacy_routing'),
+            'prepend_locale' => $this->parameterBag->get('contao.prepend_locale'),
+            'url_suffix' => $this->parameterBag->get('contao.url_suffix'),
+            'hooks' => $hooks,
         ];
     }
 
