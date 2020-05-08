@@ -222,7 +222,7 @@ class BackendUser extends User
 			return false;
 		}
 
-		$url = System::getContainer()->get('router')->generate('contao_backend_login', ['redirect' => $request->getUri()], UrlGeneratorInterface::ABSOLUTE_URL);
+		$url = System::getContainer()->get('router')->generate('contao_backend_login', array('redirect' => $request->getUri()), UrlGeneratorInterface::ABSOLUTE_URL);
 
 		throw new RedirectResponseException(System::getContainer()->get('uri_signer')->sign($url));
 	}
