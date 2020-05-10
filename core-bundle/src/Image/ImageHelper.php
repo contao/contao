@@ -19,6 +19,7 @@ use Contao\Frontend;
 use Contao\Image\PictureConfiguration;
 use Contao\Validator;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Webmozart\PathUtil\Path;
 
 class ImageHelper
 {
@@ -63,26 +64,22 @@ class ImageHelper
     }
 
     /**
-     * @param string                                     $fileIdentifier    can be a file's uuid or id or path
-     * @param int|string|array|PictureConfiguration|null $sizeConfiguration
+     * @param string                                     $fileIdentifier    can be a tl_files uuid/id/path or an absolute path
+     * @param int|string|array|PictureConfiguration|null $sizeConfiguration a picture size configuration or reference
+     * @param string|null                                $alt               overwrite alt attribute, set to null for defaults
      */
-    public function createPicture(string $fileIdentifier, $sizeConfiguration): array
+    public function createPicture(string $fileIdentifier, $sizeConfiguration, string $alt = null): array
     {
-        $file = $this->getFile($fileIdentifier);
+        $this->framework->initialize();
 
-        if (null === $file || 'file' !== $file->type) {
-            throw new \InvalidArgumentException("Could not retrieve file for identifier '$fileIdentifier'");
-        }
+        $filePath = $this->getFilepath($fileIdentifier, $filesModel);
 
-        $picture = $this->pictureFactory->create(
-            $this->rootDir.'/'.$file->path,
-            $sizeConfiguration
-        );
+        $picture = $this->pictureFactory->create($filePath, $sizeConfiguration);
 
         return [
             self::PICTURE_IMAGE => $picture->getImg($this->rootDir, $this->staticUrl),
             self::PICTURE_SOURCES => $picture->getSources($this->rootDir, $this->staticUrl),
-            self::PICTURE_ALT => $this->getAltAttribute($file),
+            self::PICTURE_ALT => $alt ?? $this->getAltAttribute($filesModel),
         ];
     }
 
@@ -92,33 +89,58 @@ class ImageHelper
         throw new \RuntimeException('not implemented');
     }
 
-    private function getFile(string $uuidOrIdOrPath): ?FilesModel
+    /**
+     * Try to locate a file by querying the DBAFS ($identifier = uuid/id/path),
+     * fallback to interpret $identifier as absolute/relative file path.
+     */
+    private function getFilepath(string $identifier, FilesModel &$filesModel = null): string
     {
-        $this->framework->initialize();
+        /** @var Validator $validatorAdapter */
+        $validatorAdapter = $this->framework->getAdapter(Validator::class);
 
-        /** @var Validator $validator */
-        $validator = $this->framework->getAdapter(Validator::class);
+        /** @var FilesModel $filesModelAdapter */
+        $filesModelAdapter = $this->framework->getAdapter(FilesModel::class);
 
-        /** @var FilesModel $filesModel */
-        $filesModel = $this->framework->getAdapter(FilesModel::class);
-
-        if ($validator->isUuid($uuidOrIdOrPath)) {
-            return $filesModel->findByUuid($uuidOrIdOrPath);
+        if ($validatorAdapter->isUuid($identifier)) {
+            $filesModel = $filesModelAdapter->findByUuid($identifier);
+            $dbafsItem = true;
+        } elseif (is_numeric($identifier)) {
+            $filesModel = $filesModelAdapter->findById((int) $identifier);
+            $dbafsItem = true;
+        } else {
+            $filesModel = $filesModelAdapter->findByPath($identifier);
+            $dbafsItem = null !== $filesModel;
         }
 
-        if (is_numeric($uuidOrIdOrPath)) {
-            return $filesModel->findById($uuidOrIdOrPath);
+        if ($dbafsItem) {
+            if (null === $filesModel) {
+                throw new \InvalidArgumentException("DBAFS item '$identifier' could not be found.");
+            }
+
+            if ('file' !== $filesModel->type) {
+                throw new \InvalidArgumentException("DBAFS item '$identifier' was found but is not a file.");
+            }
+
+            return Path::makeAbsolute($filesModel->path, $this->rootDir);
         }
 
-        return $filesModel->findByPath($uuidOrIdOrPath);
+        if (Path::isAbsolute($identifier)) {
+            return Path::canonicalize($identifier);
+        }
+
+        return Path::makeAbsolute($identifier, $this->rootDir);
     }
 
-    private function getAltAttribute(FilesModel $file): ?string
+    private function getAltAttribute(?FilesModel $filesModel): ?string
     {
+        if (null === $filesModel) {
+            return null;
+        }
+
         /** @var Frontend $frontend */
         $frontend = $this->framework->getAdapter(Frontend::class);
 
-        $metaData = $frontend->getMetaData($file->meta, $this->locale);
+        $metaData = $frontend->getMetaData($filesModel->meta, $this->locale);
 
         return $metaData['alt'] ?? null;
     }
