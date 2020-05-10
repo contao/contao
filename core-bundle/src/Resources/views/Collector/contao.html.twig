@@ -89,8 +89,9 @@
         </div>
     </div>
 
-    {% if collector.summary.legacy_routing %}
+    {% if collector.summary.legacy_routing or collector.legacyrouting.hooks %}
     <h2>Legacy Routing</h2>
+    {% if collector.summary.legacy_routing %}
     <div class="metrics">
         <div class="metric">
         <span class="value">{% if collector.legacyrouting.prepend_locale %}yes{% else %}no{% endif %}</span>
@@ -101,6 +102,7 @@
             <span class="label">URL Suffix</span>
         </div>
     </div>
+    {% endif %}
     {% if collector.legacyrouting.hooks %}
     <table>
         <thead>
