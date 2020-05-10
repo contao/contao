@@ -98,14 +98,22 @@ class UserPasswordCommand extends ContainerAwareCommand
             return 1;
         }
 
-        $hash = $this->validateAndHashPassword($input->getOption('password'));
+        $this->framework->initialize();
+
+        /** @var Config $config */
+        $config = $this->framework->getAdapter(Config::class);
+
+        $hash = $this->validateAndHashPassword(
+            $input->getOption('password'),
+            $config->get('minPasswordLength') ?: 8
+        );
 
         $affected = $this
             ->getContainer()
             ->get('database_connection')
             ->update(
                 'tl_user',
-                ['password' => $hash],
+                ['password' => $hash, 'locked' => 0, 'loginCount' => $config->get('loginCount')],
                 ['username' => $input->getArgument('username')]
             )
         ;
@@ -145,21 +153,16 @@ class UserPasswordCommand extends ContainerAwareCommand
      * Validates the password length and creates the password hash.
      *
      * @param string $password
+     * @param int    $minLength
      *
      * @throws InvalidArgumentException
      *
      * @return string
      */
-    private function validateAndHashPassword($password)
+    private function validateAndHashPassword($password, $minLength)
     {
-        $this->framework->initialize();
-
-        /** @var Config $config */
-        $config = $this->framework->getAdapter(Config::class);
-        $passwordLength = $config->get('minPasswordLength') ?: 8;
-
-        if (Utf8::strlen($password) < $passwordLength) {
-            throw new InvalidArgumentException(sprintf('The password must be at least %s characters long.', $passwordLength));
+        if (Utf8::strlen($password) < $minLength) {
+            throw new InvalidArgumentException(sprintf('The password must be at least %s characters long.', $minLength));
         }
 
         return password_hash($password, PASSWORD_DEFAULT);
