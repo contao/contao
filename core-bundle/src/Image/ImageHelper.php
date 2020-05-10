@@ -51,7 +51,7 @@ class ImageHelper
      */
     private $framework;
 
-    public function __construct(PictureFactoryInterface $pictureFactory, string $rootDir, ContaoContext $fileContext, RequestStack $requestStack, ContaoFramework $framework)
+    public function __construct(PictureFactoryInterface $pictureFactory, string $rootDir, ContaoContext $fileContext, RequestStack $requestStack, string $defaultLocale, ContaoFramework $framework)
     {
         $this->pictureFactory = $pictureFactory;
         $this->rootDir = $rootDir;
@@ -59,7 +59,7 @@ class ImageHelper
         $this->framework = $framework;
 
         $request = $requestStack->getCurrentRequest();
-        $this->locale = null !== $request ? $request->getLocale() : '';
+        $this->locale = null !== $request ? $request->getLocale() : $defaultLocale;
     }
 
     /**

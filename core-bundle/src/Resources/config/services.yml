@@ -341,6 +341,7 @@ services:
             - '%kernel.project_dir%'
             - '@contao.assets.files_context'
             - '@request_stack'
+            - '%kernel.default_locale%'
             - '@contao.framework'
 
     contao.menu.backend_menu_builder:
