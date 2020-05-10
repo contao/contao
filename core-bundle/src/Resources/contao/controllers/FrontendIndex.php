@@ -175,7 +175,7 @@ class FrontendIndex extends Frontend
 		// If the page has an alias, it can no longer be called via ID (see #7661)
 		if ($objPage->alias != '')
 		{
-			$language = $objPage->languagePrefix ? preg_quote($objPage->languagePrefix.'/', '#') : '';
+			$language = $objPage->urlPrefix ? preg_quote($objPage->urlPrefix.'/', '#') : '';
 			$suffix = preg_quote($objPage->urlSuffix, '#');
 
 			if (preg_match('#^' . $language . $objPage->id . '(' . $suffix . '($|\?)|/)#', Environment::get('relativeRequest')))

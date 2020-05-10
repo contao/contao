@@ -180,7 +180,7 @@ class PageTree extends Widget
 				{
 					$objPage->loadDetails();
 					$arrSet[] = $objPage->id;
-					$arrValues[$objPage->id] = Image::getHtml($this->getPageStatusIcon($objPage)) . ' ' . $objPage->title . ' (' . ($objPage->languagePrefix ? ($objPage->languagePrefix . '/') : '') . $objPage->alias . $objPage->urlSuffix . ')';
+					$arrValues[$objPage->id] = Image::getHtml($this->getPageStatusIcon($objPage)) . ' ' . $objPage->title . ' (' . ($objPage->urlPrefix ? ($objPage->urlPrefix . '/') : '') . $objPage->alias . $objPage->urlSuffix . ')';
 				}
 			}
 

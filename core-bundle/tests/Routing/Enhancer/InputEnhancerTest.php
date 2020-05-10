@@ -45,11 +45,11 @@ class InputEnhancerTest extends TestCase
     /**
      * @dataProvider getLocales
      */
-    public function testSetsTheLanguageWithLanguagePrefix(string $languagePrefix, string $language): void
+    public function testSetsTheLanguageWithUrlPrefix(string $urlPrefix, string $language): void
     {
         $input = $this->mockAdapter(['setGet']);
         $input
-            ->expects('' !== $languagePrefix ? $this->once() : $this->never())
+            ->expects('' !== $urlPrefix ? $this->once() : $this->never())
             ->method('setGet')
             ->with('language', $language)
         ;
@@ -57,7 +57,7 @@ class InputEnhancerTest extends TestCase
         $framework = $this->mockContaoFramework([Input::class => $input]);
 
         $defaults = [
-            'pageModel' => $this->mockPageModel($language, $languagePrefix),
+            'pageModel' => $this->mockPageModel($language, $urlPrefix),
         ];
 
         $enhancer = new InputEnhancer($framework);
@@ -230,13 +230,13 @@ class InputEnhancerTest extends TestCase
     /**
      * @return PageModel&MockObject
      */
-    private function mockPageModel(string $language, string $languagePrefix): PageModel
+    private function mockPageModel(string $language, string $urlPrefix): PageModel
     {
         return $this->mockClassWithProperties(
             PageModel::class,
             [
                 'rootLanguage' => $language,
-                'languagePrefix' => $languagePrefix,
+                'urlPrefix' => $urlPrefix,
             ]
         );
     }

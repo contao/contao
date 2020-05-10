@@ -118,11 +118,11 @@ class Route404Provider implements RouteProviderInterface
             $page->rootUseSSL ? 'https' : null
         );
 
-        if (!$page->languagePrefix) {
+        if (!$page->urlPrefix) {
             return;
         }
 
-        $path = '/'.$page->languagePrefix.$path;
+        $path = '/'.$page->urlPrefix.$path;
 
         $routes['tl_page.'.$page->id.'.error_404.locale'] = new Route(
             $path,

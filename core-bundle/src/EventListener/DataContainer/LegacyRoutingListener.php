@@ -49,7 +49,7 @@ class LegacyRoutingListener implements ServiceAnnotationInterface
     {
         $translator = $this->translator;
 
-        $GLOBALS['TL_DCA']['tl_page']['fields']['languagePrefix']['eval']['disabled'] = true;
+        $GLOBALS['TL_DCA']['tl_page']['fields']['urlPrefix']['eval']['disabled'] = true;
         $GLOBALS['TL_DCA']['tl_page']['fields']['urlSuffix']['eval']['disabled'] = true;
 
         $GLOBALS['TL_DCA']['tl_page']['fields']['legacy_routing'] = [
@@ -69,9 +69,9 @@ class LegacyRoutingListener implements ServiceAnnotationInterface
     }
 
     /**
-     * @Callback(table="tl_page", target="fields.languagePrefix.load")
+     * @Callback(table="tl_page", target="fields.urlPrefix.load")
      */
-    public function overrideLanguagePrefix($value, DataContainer $dc)
+    public function overrideUrlPrefix($value, DataContainer $dc)
     {
         return $this->prependLocale ? $dc->activeRecord->language : '';
     }
@@ -79,7 +79,7 @@ class LegacyRoutingListener implements ServiceAnnotationInterface
     /**
      * @Callback(table="tl_page", target="fields.urlSuffix.load")
      */
-    public function overrideUrlSuffix($value)
+    public function overrideUrlSuffix()
     {
         return $this->urlSuffix;
     }

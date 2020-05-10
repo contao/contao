@@ -134,11 +134,11 @@
       <trans-unit id="tl_page.useFolderUrl.1">
         <source>Generate folder-style page aliases like &lt;em&gt;docs/install/download.html&lt;/em&gt; instead of &lt;em&gt;docs-install-download.html&lt;/em&gt;.</source>
       </trans-unit>
-      <trans-unit id="tl_page.languagePrefix.0">
-        <source>Language prefix</source>
+      <trans-unit id="tl_page.urlPrefix.0">
+        <source>URL prefix</source>
       </trans-unit>
-      <trans-unit id="tl_page.languagePrefix.1">
-        <source>Enter a URL prefix that will be prepended to aliases for this root page.</source>
+      <trans-unit id="tl_page.urlPrefix.1">
+        <source>Enter a URL prefix (e.g. the language) that will be prepended to aliases for this root page.</source>
       </trans-unit>
       <trans-unit id="tl_page.urlSuffix.0">
         <source>URL suffix</source>

@@ -494,7 +494,7 @@ class Config
 		/** @var PageModel $objPage */
 		if (null !== $objRequest && ($objPage = $objRequest->attributes->get('pageModel')) instanceof PageModel)
 		{
-			$GLOBALS['TL_CONFIG']['addLanguageToUrl'] = $objPage->languagePrefix !== '';
+			$GLOBALS['TL_CONFIG']['addLanguageToUrl'] = $objPage->urlPrefix !== '';
 			$GLOBALS['TL_CONFIG']['urlSuffix'] = $objPage->urlSuffix;
 		}
 

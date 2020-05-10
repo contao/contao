@@ -1,2 +1,2 @@
 sql:
-    - "UPDATE tl_page SET languagePrefix=language"
+    - "UPDATE tl_page SET urlPrefix=language"

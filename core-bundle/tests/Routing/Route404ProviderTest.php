@@ -137,7 +137,7 @@ class Route404ProviderTest extends TestCase
         $page->domain = 'example.com';
         $page->rootUseSSL = true;
         $page->rootLanguage = 'de';
-        $page->languagePrefix = 'de';
+        $page->urlPrefix = 'de';
 
         $pageAdapter = $this->mockAdapter(['findByType']);
         $pageAdapter
@@ -224,34 +224,34 @@ class Route404ProviderTest extends TestCase
         yield 'adds page' => [
             ['tl_page.42.error_404'],
             ['en'],
-            ['id' => 42, 'languagePrefix' => ''],
+            ['id' => 42, 'urlPrefix' => ''],
         ];
 
         yield 'sorts page with locale first' => [
             ['tl_page.42.error_404.locale', 'tl_page.42.error_404'],
             ['en'],
-            ['id' => 42, 'languagePrefix' => 'en'],
+            ['id' => 42, 'urlPrefix' => 'en'],
         ];
 
         yield 'sorts page with domain first' => [
             ['tl_page.42.error_404', 'tl_page.17.error_404'],
             ['en'],
-            ['id' => 17, 'languagePrefix' => ''],
-            ['id' => 42, 'domain' => 'example.com', 'languagePrefix' => ''],
+            ['id' => 17, 'urlPrefix' => ''],
+            ['id' => 42, 'domain' => 'example.com', 'urlPrefix' => ''],
         ];
 
         yield 'sorts pages with locales first' => [
             ['tl_page.42.error_404.locale', 'tl_page.17.error_404.locale', 'tl_page.42.error_404', 'tl_page.17.error_404'],
             ['en'],
-            ['id' => 17, 'languagePrefix' => 'en'],
-            ['id' => 42, 'domain' => 'example.com', 'languagePrefix' => 'en'],
+            ['id' => 17, 'urlPrefix' => 'en'],
+            ['id' => 42, 'domain' => 'example.com', 'urlPrefix' => 'en'],
         ];
 
         yield 'sorts pages by preferred locale' => [
             ['tl_page.42.error_404', 'tl_page.17.error_404'],
             ['de'],
-            ['id' => 17, 'rootLanguage' => 'en', 'languagePrefix' => ''],
-            ['id' => 42, 'rootLanguage' => 'de', 'languagePrefix' => ''],
+            ['id' => 17, 'rootLanguage' => 'en', 'urlPrefix' => ''],
+            ['id' => 42, 'rootLanguage' => 'de', 'urlPrefix' => ''],
         ];
     }
 

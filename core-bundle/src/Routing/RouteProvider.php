@@ -220,8 +220,8 @@ class RouteProvider implements RouteProviderInterface
 
     private function addLocaleRedirect(PageRoute $route, ?Request $request, array &$routes): void
     {
-        $length = strlen($route->getLanguagePrefix());
-        if (0 === $length || substr($route->getPath(), 1, $length) !== $route->getLanguagePrefix()) {
+        $length = strlen($route->getUrlPrefix());
+        if (0 === $length || substr($route->getPath(), 1, $length) !== $route->getUrlPrefix()) {
             return;
         }
 
@@ -238,7 +238,7 @@ class RouteProvider implements RouteProviderInterface
         $path = $route->getPath();
 
         if (null !== $request) {
-            $path = '/'.$route->getLanguagePrefix().$request->getPathInfo();
+            $path = '/'.$route->getUrlPrefix().$request->getPathInfo();
         }
 
         $redirect->addDefaults([
@@ -258,14 +258,14 @@ class RouteProvider implements RouteProviderInterface
 
         $page->loadDetails();
         $route = $this->getRouteForPage($page, $request);
-        $languagePrefix = '';
+        $urlPrefix = '';
 
         if ($route instanceof PageRoute) {
-            $languagePrefix = $route->getLanguagePrefix();
+            $urlPrefix = $route->getUrlPrefix();
         }
 
         $routes['tl_page.'.$page->id.'.root'] = new Route(
-            $languagePrefix ? '/'.$languagePrefix.'/' : '/',
+            $urlPrefix ? '/'.$urlPrefix.'/' : '/',
             $route->getDefaults(),
             [],
             $route->getOptions(),
@@ -274,7 +274,7 @@ class RouteProvider implements RouteProviderInterface
             $route->getMethods()
         );
 
-        if (!$languagePrefix) {
+        if (!$urlPrefix) {
             return;
         }
 
@@ -284,7 +284,7 @@ class RouteProvider implements RouteProviderInterface
                 $route->getDefaults(),
                 [
                     '_controller' => 'Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction',
-                    'path' => '/'.$languagePrefix.'/',
+                    'path' => '/'.$urlPrefix.'/',
                     'permanent' => true,
                 ]
             ),

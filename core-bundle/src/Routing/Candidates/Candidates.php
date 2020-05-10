@@ -55,12 +55,12 @@ class Candidates implements CandidatesInterface
     /**
      * @var array
      */
-    private $languagePrefix;
+    private $urlPrefixes;
 
     /**
      * @var array
      */
-    private $urlSuffix;
+    private $urlSuffixes;
 
     /**
      * @var ServiceLocator
@@ -74,8 +74,8 @@ class Candidates implements CandidatesInterface
         $this->legacyRouting = $legacyRouting;
         $this->prependLocale = $prependLocale;
 
-        $this->languagePrefix = [];
-        $this->urlSuffix = [$urlSuffix];
+        $this->urlPrefixes = [];
+        $this->urlSuffixes = [$urlSuffix];
     }
 
     public function isCandidate($name)
@@ -109,11 +109,11 @@ class Candidates implements CandidatesInterface
 
         $this->addCandidatesFor($url, $candidates);
 
-        foreach ($this->urlSuffix as $suffix) {
+        foreach ($this->urlSuffixes as $suffix) {
             $this->addUrlWithoutSuffix($url, $suffix, $candidates);
         }
 
-        foreach ($this->languagePrefix as $prefix) {
+        foreach ($this->urlPrefixes as $prefix) {
             if (0 !== strncmp($url, $prefix.'/', \strlen($prefix) + 1)) {
                 continue;
             }
@@ -121,7 +121,7 @@ class Candidates implements CandidatesInterface
             $for = substr($url, \strlen($prefix) + 1);
             $this->addCandidatesFor($for, $candidates);
 
-            foreach ($this->urlSuffix as $suffix) {
+            foreach ($this->urlSuffixes as $suffix) {
                 $this->addUrlWithoutSuffix($for, $suffix, $candidates);
             }
         }
@@ -162,10 +162,10 @@ class Candidates implements CandidatesInterface
 
     private function removeSuffixAndLanguage(string $pathInfo): ?string
     {
-        $suffixLength = \strlen($this->urlSuffix[0]);
+        $suffixLength = \strlen($this->urlSuffixes[0]);
 
         if (0 !== $suffixLength) {
-            if (substr($pathInfo, -$suffixLength) !== $this->urlSuffix[0]) {
+            if (substr($pathInfo, -$suffixLength) !== $this->urlSuffixes[0]) {
                 return null;
             }
 
@@ -197,8 +197,8 @@ class Candidates implements CandidatesInterface
             return;
         }
 
-        $languagePrefix = $this->database
-            ->query("SELECT DISTINCT languagePrefix FROM tl_page WHERE type='root'")
+        $urlPrefix = $this->database
+            ->query("SELECT DISTINCT urlPrefix FROM tl_page WHERE type='root'")
             ->fetchAll(FetchMode::COLUMN)
         ;
 
@@ -210,7 +210,7 @@ class Candidates implements CandidatesInterface
             $urlSuffix[] = $provider->getUrlSuffixes();
         }
 
-        $this->urlSuffix = array_filter(array_unique(array_merge(...$urlSuffix)));
-        $this->languagePrefix = array_filter($languagePrefix);
+        $this->urlSuffixes = array_filter(array_unique(array_merge(...$urlSuffix)));
+        $this->urlPrefixes = array_filter($urlPrefix);
     }
 }

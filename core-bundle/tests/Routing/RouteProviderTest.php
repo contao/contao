@@ -37,7 +37,7 @@ class RouteProviderTest extends TestCase
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = 17;
         $page->rootId = 1;
-        $page->languagePrefix = '';
+        $page->urlPrefix = '';
 
         $pageAdapter = $this->mockAdapter(['findByPk']);
         $pageAdapter
@@ -86,13 +86,13 @@ class RouteProviderTest extends TestCase
         $page1 = $this->mockClassWithProperties(PageModel::class);
         $page1->id = 17;
         $page1->rootId = 1;
-        $page1->languagePrefix = '';
+        $page1->urlPrefix = '';
 
         /** @var PageModel&MockObject $page2 */
         $page2 = $this->mockClassWithProperties(PageModel::class);
         $page2->id = 21;
         $page2->rootId = 1;
-        $page2->languagePrefix = '';
+        $page2->urlPrefix = '';
 
         $pageAdapter = $this->mockAdapter(['findBy']);
         $pageAdapter
@@ -115,7 +115,7 @@ class RouteProviderTest extends TestCase
         $page->id = 17;
         $page->rootId = 1;
         $page->domain = 'example.org';
-        $page->languagePrefix = '';
+        $page->urlPrefix = '';
 
         $pageAdapter = $this->mockAdapter(['findByPk']);
         $pageAdapter
@@ -138,7 +138,7 @@ class RouteProviderTest extends TestCase
         $page->id = 17;
         $page->rootId = 1;
         $page->domain = 'example.org:8080';
-        $page->languagePrefix = '';
+        $page->urlPrefix = '';
 
         $pageAdapter = $this->mockAdapter(['findByPk']);
         $pageAdapter
@@ -382,7 +382,7 @@ class RouteProviderTest extends TestCase
     public function testAddsRoutesForAPage(string $alias, string $language, string $domain, string $urlSuffix, bool $prependLocale, ?string $scheme): void
     {
         $page = $this->createPage($language, $alias, true, $domain, $scheme, $urlSuffix);
-        $page->languagePrefix = $prependLocale ? $language : '';
+        $page->urlPrefix = $prependLocale ? $language : '';
         $page
             ->expects($this->atLeastOnce())
             ->method('loadDetails')
@@ -564,7 +564,7 @@ class RouteProviderTest extends TestCase
         $page->type = 'regular';
         $page->alias = $alias;
         $page->domain = $domain;
-        $page->languagePrefix = '';
+        $page->urlPrefix = '';
         $page->urlSuffix = $urlSuffix;
         $page->rootLanguage = $language;
         $page->rootIsFallback = $fallback;

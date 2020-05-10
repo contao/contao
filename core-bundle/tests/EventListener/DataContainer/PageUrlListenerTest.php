@@ -191,8 +191,8 @@ class PageUrlListenerTest extends TestCase
             ]
         );
 
-        $languagePrefix = $activeRecord['languagePrefix'] ? $activeRecord['languagePrefix'].'/' : '';
-        $url = '/'.$languagePrefix.$value.$activeRecord['urlSuffix'];
+        $urlPrefix = $activeRecord['urlPrefix'] ? $activeRecord['urlPrefix'].'/' : '';
+        $url = '/'.$urlPrefix.$value.$activeRecord['urlSuffix'];
         $translator = $this->mockTranslator('ERR.pageUrlExists', $expectExists ? $url : null);
 
         $listener = new PageUrlListener(
@@ -215,7 +215,7 @@ class PageUrlListenerTest extends TestCase
                 'rootId' => 1,
                 'useFolderUrl' => false,
                 'domain' => '',
-                'languagePrefix' => '',
+                'urlPrefix' => '',
                 'urlSuffix' => '',
             ],
             [],
@@ -234,7 +234,7 @@ class PageUrlListenerTest extends TestCase
                 'rootId' => 1,
                 'useFolderUrl' => false,
                 'domain' => '',
-                'languagePrefix' => '',
+                'urlPrefix' => '',
                 'urlSuffix' => '',
             ],
             [[
@@ -244,7 +244,7 @@ class PageUrlListenerTest extends TestCase
                 'rootId' => 1,
                 'useFolderUrl' => false,
                 'domain' => '',
-                'languagePrefix' => '',
+                'urlPrefix' => '',
                 'urlSuffix' => '',
             ]],
             [2],
@@ -262,7 +262,7 @@ class PageUrlListenerTest extends TestCase
                 'rootId' => 1,
                 'useFolderUrl' => false,
                 'domain' => '',
-                'languagePrefix' => 'de',
+                'urlPrefix' => 'de',
                 'urlSuffix' => '',
             ],
             [[
@@ -272,7 +272,7 @@ class PageUrlListenerTest extends TestCase
                 'rootId' => 1,
                 'useFolderUrl' => false,
                 'domain' => '',
-                'languagePrefix' => 'de',
+                'urlPrefix' => 'de',
                 'urlSuffix' => '',
             ]],
             [2],
@@ -290,7 +290,7 @@ class PageUrlListenerTest extends TestCase
                 'rootId' => 1,
                 'useFolderUrl' => false,
                 'domain' => '',
-                'languagePrefix' => '',
+                'urlPrefix' => '',
                 'urlSuffix' => '.html',
             ],
             [[
@@ -300,7 +300,7 @@ class PageUrlListenerTest extends TestCase
                 'rootId' => 1,
                 'useFolderUrl' => false,
                 'domain' => '',
-                'languagePrefix' => '',
+                'urlPrefix' => '',
                 'urlSuffix' => '.html',
             ]],
             [2],
@@ -318,7 +318,7 @@ class PageUrlListenerTest extends TestCase
                 'rootId' => 1,
                 'useFolderUrl' => false,
                 'domain' => '',
-                'languagePrefix' => 'de',
+                'urlPrefix' => 'de',
                 'urlSuffix' => '.html',
             ],
             [[
@@ -328,7 +328,7 @@ class PageUrlListenerTest extends TestCase
                 'rootId' => 1,
                 'useFolderUrl' => false,
                 'domain' => '',
-                'languagePrefix' => 'de',
+                'urlPrefix' => 'de',
                 'urlSuffix' => '.html',
             ]],
             [2],
@@ -346,7 +346,7 @@ class PageUrlListenerTest extends TestCase
                 'rootId' => 1,
                 'useFolderUrl' => false,
                 'domain' => '',
-                'languagePrefix' => '',
+                'urlPrefix' => '',
                 'urlSuffix' => '',
             ],
             [[
@@ -356,7 +356,7 @@ class PageUrlListenerTest extends TestCase
                 'rootId' => 2,
                 'useFolderUrl' => false,
                 'domain' => '',
-                'languagePrefix' => '',
+                'urlPrefix' => '',
                 'urlSuffix' => '',
             ]],
             [2],
@@ -374,7 +374,7 @@ class PageUrlListenerTest extends TestCase
                 'rootId' => 1,
                 'useFolderUrl' => false,
                 'domain' => '',
-                'languagePrefix' => 'de',
+                'urlPrefix' => 'de',
                 'urlSuffix' => '',
             ],
             [[
@@ -384,7 +384,7 @@ class PageUrlListenerTest extends TestCase
                 'rootId' => 2,
                 'useFolderUrl' => false,
                 'domain' => '',
-                'languagePrefix' => 'fr',
+                'urlPrefix' => 'fr',
                 'urlSuffix' => '',
             ]],
             [2],
@@ -402,7 +402,7 @@ class PageUrlListenerTest extends TestCase
                 'rootId' => 1,
                 'useFolderUrl' => false,
                 'domain' => '',
-                'languagePrefix' => '',
+                'urlPrefix' => '',
                 'urlSuffix' => '',
             ],
             [[
@@ -412,7 +412,7 @@ class PageUrlListenerTest extends TestCase
                 'rootId' => 2,
                 'useFolderUrl' => false,
                 'domain' => 'example.com',
-                'languagePrefix' => '',
+                'urlPrefix' => '',
                 'urlSuffix' => '',
             ]],
             [2],
@@ -430,7 +430,7 @@ class PageUrlListenerTest extends TestCase
                 'rootId' => 1,
                 'useFolderUrl' => false,
                 'domain' => '',
-                'languagePrefix' => '',
+                'urlPrefix' => '',
                 'urlSuffix' => '.html',
             ],
             [[
@@ -440,7 +440,7 @@ class PageUrlListenerTest extends TestCase
                 'rootId' => 2,
                 'useFolderUrl' => false,
                 'domain' => '',
-                'languagePrefix' => '',
+                'urlPrefix' => '',
                 'urlSuffix' => '',
             ]],
             [2],
@@ -458,7 +458,7 @@ class PageUrlListenerTest extends TestCase
                 'rootId' => 1,
                 'useFolderUrl' => false,
                 'domain' => '',
-                'languagePrefix' => 'de',
+                'urlPrefix' => 'de',
                 'urlSuffix' => '.html',
             ],
             [[
@@ -468,7 +468,7 @@ class PageUrlListenerTest extends TestCase
                 'rootId' => 2,
                 'useFolderUrl' => false,
                 'domain' => '',
-                'languagePrefix' => 'de',
+                'urlPrefix' => 'de',
                 'urlSuffix' => '',
             ]],
             [2],
@@ -486,7 +486,7 @@ class PageUrlListenerTest extends TestCase
                 'rootId' => 1,
                 'useFolderUrl' => false,
                 'domain' => '',
-                'languagePrefix' => 'de/ch',
+                'urlPrefix' => 'de/ch',
                 'urlSuffix' => '.html',
             ],
             [[
@@ -496,7 +496,7 @@ class PageUrlListenerTest extends TestCase
                 'rootId' => 2,
                 'useFolderUrl' => false,
                 'domain' => '',
-                'languagePrefix' => 'de',
+                'urlPrefix' => 'de',
                 'urlSuffix' => '.html',
             ]],
             [2],
@@ -514,7 +514,7 @@ class PageUrlListenerTest extends TestCase
                 'rootId' => 1,
                 'useFolderUrl' => false,
                 'domain' => '',
-                'languagePrefix' => 'de',
+                'urlPrefix' => 'de',
                 'urlSuffix' => '.html',
             ],
             [[
@@ -524,7 +524,7 @@ class PageUrlListenerTest extends TestCase
                 'rootId' => 2,
                 'useFolderUrl' => false,
                 'domain' => '',
-                'languagePrefix' => 'de/ch',
+                'urlPrefix' => 'de/ch',
                 'urlSuffix' => '.html',
             ]],
             [2],
@@ -542,7 +542,7 @@ class PageUrlListenerTest extends TestCase
                 'rootId' => 1,
                 'useFolderUrl' => false,
                 'domain' => '',
-                'languagePrefix' => '',
+                'urlPrefix' => '',
                 'urlSuffix' => '.html',
             ],
             [[
@@ -552,7 +552,7 @@ class PageUrlListenerTest extends TestCase
                 'rootId' => 2,
                 'useFolderUrl' => false,
                 'domain' => '',
-                'languagePrefix' => '',
+                'urlPrefix' => '',
                 'urlSuffix' => 'ml',
             ]],
             [2],
@@ -570,7 +570,7 @@ class PageUrlListenerTest extends TestCase
                 'rootId' => 1,
                 'useFolderUrl' => false,
                 'domain' => '',
-                'languagePrefix' => '',
+                'urlPrefix' => '',
                 'urlSuffix' => 'ml',
             ],
             [[
@@ -580,7 +580,7 @@ class PageUrlListenerTest extends TestCase
                 'rootId' => 2,
                 'useFolderUrl' => false,
                 'domain' => '',
-                'languagePrefix' => '',
+                'urlPrefix' => '',
                 'urlSuffix' => '.html',
             ]],
             [2],
@@ -599,7 +599,7 @@ class PageUrlListenerTest extends TestCase
                 'useFolderUrl' => true,
                 'folderUrl' => 'bar/',
                 'domain' => '',
-                'languagePrefix' => '',
+                'urlPrefix' => '',
                 'urlSuffix' => '.html',
             ],
             [[
@@ -610,7 +610,7 @@ class PageUrlListenerTest extends TestCase
                 'useFolderUrl' => true,
                 'folderUrl' => '',
                 'domain' => '',
-                'languagePrefix' => '',
+                'urlPrefix' => '',
                 'urlSuffix' => '.html',
             ]],
             [2],
@@ -629,7 +629,7 @@ class PageUrlListenerTest extends TestCase
                 'useFolderUrl' => true,
                 'folderUrl' => 'baz/',
                 'domain' => '',
-                'languagePrefix' => '',
+                'urlPrefix' => '',
                 'urlSuffix' => '.html',
             ],
             [[
@@ -640,7 +640,7 @@ class PageUrlListenerTest extends TestCase
                 'useFolderUrl' => true,
                 'folderUrl' => '',
                 'domain' => '',
-                'languagePrefix' => '',
+                'urlPrefix' => '',
                 'urlSuffix' => '.html',
             ]],
             [2],
@@ -659,7 +659,7 @@ class PageUrlListenerTest extends TestCase
                 'useFolderUrl' => true,
                 'folderUrl' => 'bar/',
                 'domain' => '',
-                'languagePrefix' => 'ch/de',
+                'urlPrefix' => 'ch/de',
                 'urlSuffix' => '.html',
             ],
             [[
@@ -670,7 +670,7 @@ class PageUrlListenerTest extends TestCase
                 'useFolderUrl' => true,
                 'folderUrl' => '',
                 'domain' => '',
-                'languagePrefix' => 'ch',
+                'urlPrefix' => 'ch',
                 'urlSuffix' => 'ml',
             ]],
             [2],
@@ -689,7 +689,7 @@ class PageUrlListenerTest extends TestCase
                 'useFolderUrl' => true,
                 'folderUrl' => 'baz/',
                 'domain' => '',
-                'languagePrefix' => '',
+                'urlPrefix' => '',
                 'urlSuffix' => '.html',
             ],
             [[
@@ -700,7 +700,7 @@ class PageUrlListenerTest extends TestCase
                 'useFolderUrl' => true,
                 'folderUrl' => '',
                 'domain' => '',
-                'languagePrefix' => '',
+                'urlPrefix' => '',
                 'urlSuffix' => '.html',
             ]],
             [3],
@@ -789,21 +789,21 @@ class PageUrlListenerTest extends TestCase
                 'id' => 1,
                 'alias' => 'foo',
                 'domain' => '',
-                'languagePrefix' => '',
+                'urlPrefix' => '',
                 'urlSuffix' => '',
             ],
             [
                 'id' => 2,
                 'alias' => 'bar',
                 'domain' => '',
-                'languagePrefix' => '',
+                'urlPrefix' => '',
                 'urlSuffix' => '',
             ],
             [
                 'id' => 3,
                 'alias' => 'baz',
                 'domain' => '',
-                'languagePrefix' => '',
+                'urlPrefix' => '',
                 'urlSuffix' => '',
             ]
         );
@@ -820,7 +820,7 @@ class PageUrlListenerTest extends TestCase
             ->expects($this->exactly(5))
             ->method('executeQuery')
             ->withConsecutive(
-                ["SELECT languagePrefix, urlSuffix FROM tl_page WHERE type='root'"],
+                ["SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'"],
                 [
                     'SELECT id FROM tl_page WHERE alias LIKE :alias AND id!=:id',
                     [
@@ -835,7 +835,7 @@ class PageUrlListenerTest extends TestCase
                         'id' => 2,
                     ],
                 ],
-                ["SELECT languagePrefix, urlSuffix FROM tl_page WHERE type='root'"],
+                ["SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'"],
                 [
                     'SELECT id FROM tl_page WHERE alias LIKE :alias AND id!=:id',
                     [
@@ -870,12 +870,12 @@ class PageUrlListenerTest extends TestCase
         $listener->generateAlias('baz', $dc3);
     }
 
-    public function testReturnsValueWhenValidatingLanguagePrefix(): void
+    public function testReturnsValueWhenValidatingUrlPrefix(): void
     {
         $framework = $this->mockFrameworkWithPages(
             [
                 'dns' => '',
-                'languagePrefix' => 'de',
+                'urlPrefix' => 'de',
                 'urlSuffix' => '.html',
             ],
             [
@@ -883,20 +883,20 @@ class PageUrlListenerTest extends TestCase
                 'pid' => 0,
                 'type' => 'root',
                 'alias' => 'root',
-                'languagePrefix' => '',
+                'urlPrefix' => '',
                 'urlSuffix' => '.html',
             ],
             [
                 'id' => 2,
                 'pid' => 1,
                 'alias' => 'foo',
-                'languagePrefix' => '',
+                'urlPrefix' => '',
                 'urlSuffix' => '.html',
             ]
         );
 
         $connection = $this->mockConnection(
-            [['languagePrefix' => 'de', 'urlSuffix' => '.html']],
+            [['urlPrefix' => 'de', 'urlSuffix' => '.html']],
             [2],
             ['foo'],
             [[]]
@@ -914,19 +914,19 @@ class PageUrlListenerTest extends TestCase
             DataContainer::class,
             [
                 'id' => 1,
-                'activeRecord' => (object) ['type' => 'root', 'languagePrefix' => 'de', 'urlSuffix' => ''],
+                'activeRecord' => (object) ['type' => 'root', 'urlPrefix' => 'de', 'urlSuffix' => ''],
             ]
         );
 
-        $listener->validateLanguagePrefix('en', $dc);
+        $listener->validateUrlPrefix('en', $dc);
     }
 
-    public function testThrowsExceptionOnDuplicateLanguagePrefix(): void
+    public function testThrowsExceptionOnDuplicateUrlPrefix(): void
     {
         $framework = $this->mockFrameworkWithPages(
             [
                 'dns' => '',
-                'languagePrefix' => 'de',
+                'urlPrefix' => 'de',
                 'urlSuffix' => '.html',
             ],
             [
@@ -934,42 +934,42 @@ class PageUrlListenerTest extends TestCase
                 'pid' => 0,
                 'type' => 'root',
                 'alias' => 'root',
-                'languagePrefix' => '',
+                'urlPrefix' => '',
                 'urlSuffix' => '.html',
             ],
             [
                 'id' => 2,
                 'pid' => 1,
                 'alias' => 'foo',
-                'languagePrefix' => '',
+                'urlPrefix' => '',
                 'urlSuffix' => '.html',
             ],
             [
                 'id' => 3,
                 'pid' => 1,
                 'alias' => 'bar',
-                'languagePrefix' => '',
+                'urlPrefix' => '',
                 'urlSuffix' => '.html',
             ],
             [
                 'id' => 4,
                 'pid' => 3,
                 'alias' => 'bar/foo',
-                'languagePrefix' => '',
+                'urlPrefix' => '',
                 'urlSuffix' => '.html',
             ],
             [
                 'id' => 5,
                 'pid' => 0,
                 'type' => 'root',
-                'languagePrefix' => 'de',
+                'urlPrefix' => 'de',
                 'urlSuffix' => '.html',
             ],
             [
                 'id' => 6,
                 'pid' => 5,
                 'alias' => 'bar/foo',
-                'languagePrefix' => 'de',
+                'urlPrefix' => 'de',
                 'urlSuffix' => '.html',
             ]
         );
@@ -977,7 +977,7 @@ class PageUrlListenerTest extends TestCase
         $translator = $this->mockTranslator('ERR.pageUrlPrefix', '/de/bar/foo.html');
 
         $connection = $this->mockConnection(
-            [['languagePrefix' => 'de', 'urlSuffix' => '.html']],
+            [['urlPrefix' => 'de', 'urlSuffix' => '.html']],
             [2, 3, 4],
             ['foo', 'bar', 'bar/foo'],
             [[], [], [6]]
@@ -995,14 +995,14 @@ class PageUrlListenerTest extends TestCase
             DataContainer::class,
             [
                 'id' => 1,
-                'activeRecord' => (object) ['type' => 'root', 'languagePrefix' => 'de', 'urlSuffix' => ''],
+                'activeRecord' => (object) ['type' => 'root', 'urlPrefix' => 'de', 'urlSuffix' => ''],
             ]
         );
 
-        $listener->validateLanguagePrefix('en', $dc);
+        $listener->validateUrlPrefix('en', $dc);
     }
 
-    public function testDoesNotValidateTheLanguagePrefixIfPageTypeIsNotRoot(): void
+    public function testDoesNotValidateTheUrlPrefixIfPageTypeIsNotRoot(): void
     {
         $pageAdapter = $this->mockAdapter(['findByPk']);
         $pageAdapter
@@ -1026,15 +1026,15 @@ class PageUrlListenerTest extends TestCase
                 'id' => 1,
                 'activeRecord' => (object) [
                     'type' => 'regular',
-                    'languagePrefix' => 'en',
+                    'urlPrefix' => 'en',
                 ],
             ]
         );
 
-        $listener->validateLanguagePrefix('de/ch', $dc);
+        $listener->validateUrlPrefix('de/ch', $dc);
     }
 
-    public function testDoesNotValidateTheLanguagePrefixIfTheValueHasNotChanged(): void
+    public function testDoesNotValidateTheUrlPrefixIfTheValueHasNotChanged(): void
     {
         $pageAdapter = $this->mockAdapter(['findByPk']);
         $pageAdapter
@@ -1058,15 +1058,15 @@ class PageUrlListenerTest extends TestCase
                 'id' => 1,
                 'activeRecord' => (object) [
                     'type' => 'root',
-                    'languagePrefix' => 'de/ch',
+                    'urlPrefix' => 'de/ch',
                 ],
             ]
         );
 
-        $listener->validateLanguagePrefix('de/ch', $dc);
+        $listener->validateUrlPrefix('de/ch', $dc);
     }
 
-    public function testDoesNotValidateTheLanguagePrefixIfTheRootPageIsNotFound(): void
+    public function testDoesNotValidateTheUrlPrefixIfTheRootPageIsNotFound(): void
     {
         $pageAdapter = $this->mockAdapter(['findByPk']);
         $pageAdapter
@@ -1092,12 +1092,12 @@ class PageUrlListenerTest extends TestCase
                 'id' => 1,
                 'activeRecord' => (object) [
                     'type' => 'root',
-                    'languagePrefix' => 'en',
+                    'urlPrefix' => 'en',
                 ],
             ]
         );
 
-        $listener->validateLanguagePrefix('de/ch', $dc);
+        $listener->validateUrlPrefix('de/ch', $dc);
     }
 
     public function testReturnsValueWhenValidatingUrlSuffix(): void
@@ -1105,7 +1105,7 @@ class PageUrlListenerTest extends TestCase
         $framework = $this->mockFrameworkWithPages(
             [
                 'dns' => '',
-                'languagePrefix' => 'de',
+                'urlPrefix' => 'de',
                 'urlSuffix' => '.html',
             ],
             [
@@ -1113,20 +1113,20 @@ class PageUrlListenerTest extends TestCase
                 'pid' => 0,
                 'type' => 'root',
                 'alias' => 'root',
-                'languagePrefix' => '',
+                'urlPrefix' => '',
                 'urlSuffix' => '',
             ],
             [
                 'id' => 2,
                 'pid' => 1,
                 'alias' => 'foo',
-                'languagePrefix' => '',
+                'urlPrefix' => '',
                 'urlSuffix' => '.html',
             ]
         );
 
         $connection = $this->mockConnection(
-            [['languagePrefix' => 'de', 'urlSuffix' => '.html']],
+            [['urlPrefix' => 'de', 'urlSuffix' => '.html']],
             [2],
             ['foo'],
             [[]]
@@ -1144,7 +1144,7 @@ class PageUrlListenerTest extends TestCase
             DataContainer::class,
             [
                 'id' => 1,
-                'activeRecord' => (object) ['type' => 'root', 'languagePrefix' => 'de', 'urlSuffix' => ''],
+                'activeRecord' => (object) ['type' => 'root', 'urlPrefix' => 'de', 'urlSuffix' => ''],
             ]
         );
 
@@ -1156,7 +1156,7 @@ class PageUrlListenerTest extends TestCase
         $framework = $this->mockFrameworkWithPages(
             [
                 'dns' => '',
-                'languagePrefix' => 'de',
+                'urlPrefix' => 'de',
                 'urlSuffix' => '.html',
             ],
             [
@@ -1164,42 +1164,42 @@ class PageUrlListenerTest extends TestCase
                 'pid' => 0,
                 'type' => 'root',
                 'alias' => 'root',
-                'languagePrefix' => '',
+                'urlPrefix' => '',
                 'urlSuffix' => '',
             ],
             [
                 'id' => 2,
                 'pid' => 1,
                 'alias' => 'foo',
-                'languagePrefix' => '',
+                'urlPrefix' => '',
                 'urlSuffix' => '.html',
             ],
             [
                 'id' => 3,
                 'pid' => 1,
                 'alias' => 'bar',
-                'languagePrefix' => '',
+                'urlPrefix' => '',
                 'urlSuffix' => '.html',
             ],
             [
                 'id' => 4,
                 'pid' => 3,
                 'alias' => 'bar/foo',
-                'languagePrefix' => '',
+                'urlPrefix' => '',
                 'urlSuffix' => '.html',
             ],
             [
                 'id' => 5,
                 'pid' => 0,
                 'type' => 'root',
-                'languagePrefix' => 'de',
+                'urlPrefix' => 'de',
                 'urlSuffix' => '.html',
             ],
             [
                 'id' => 6,
                 'pid' => 5,
                 'alias' => 'bar/foo',
-                'languagePrefix' => 'de',
+                'urlPrefix' => 'de',
                 'urlSuffix' => '.html',
             ]
         );
@@ -1207,7 +1207,7 @@ class PageUrlListenerTest extends TestCase
         $translator = $this->mockTranslator('ERR.pageUrlSuffix', '/de/bar/foo.html');
 
         $connection = $this->mockConnection(
-            [['languagePrefix' => 'de', 'urlSuffix' => '.html']],
+            [['urlPrefix' => 'de', 'urlSuffix' => '.html']],
             [2, 3, 4],
             ['foo', 'bar', 'bar/foo'],
             [[], [], [6]]
@@ -1225,7 +1225,7 @@ class PageUrlListenerTest extends TestCase
             DataContainer::class,
             [
                 'id' => 1,
-                'activeRecord' => (object) ['type' => 'root', 'languagePrefix' => 'de', 'urlSuffix' => ''],
+                'activeRecord' => (object) ['type' => 'root', 'urlPrefix' => 'de', 'urlSuffix' => ''],
             ]
         );
 
@@ -1261,7 +1261,7 @@ class PageUrlListenerTest extends TestCase
             ]
         );
 
-        $listener->validateLanguagePrefix('.html', $dc);
+        $listener->validateUrlPrefix('.html', $dc);
     }
 
     public function testDoesNotValidateTheUrlSuffixIfTheValueHasNotChanged(): void
@@ -1288,12 +1288,12 @@ class PageUrlListenerTest extends TestCase
                 'id' => 1,
                 'activeRecord' => (object) [
                     'type' => 'root',
-                    'languagePrefix' => '.html',
+                    'urlPrefix' => '.html',
                 ],
             ]
         );
 
-        $listener->validateLanguagePrefix('.html', $dc);
+        $listener->validateUrlPrefix('.html', $dc);
     }
 
     public function testDoesNotValidateTheUrlSuffixIfTheRootPageIsNotFound(): void
@@ -1322,12 +1322,12 @@ class PageUrlListenerTest extends TestCase
                 'id' => 1,
                 'activeRecord' => (object) [
                     'type' => 'root',
-                    'languagePrefix' => '',
+                    'urlPrefix' => '',
                 ],
             ]
         );
 
-        $listener->validateLanguagePrefix('.html', $dc);
+        $listener->validateUrlPrefix('.html', $dc);
     }
 
     /**
@@ -1338,7 +1338,7 @@ class PageUrlListenerTest extends TestCase
         $args = [];
         $statements = [];
 
-        $args[] = ["SELECT languagePrefix, urlSuffix FROM tl_page WHERE type='root'"];
+        $args[] = ["SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'"];
         $statements[] = $this->createMock(Statement::class);
         $statements[0]
             ->expects($this->once())

@@ -56,18 +56,18 @@ class RoutingMigration extends AbstractMigration
 
         $columns = $schemaManager->listTableColumns('tl_page');
 
-        return !isset($columns['languageprefix']) && !isset($columns['urlsuffix']);
+        return !isset($columns['urlprefix']) && !isset($columns['urlsuffix']);
     }
 
     public function run(): MigrationResult
     {
-        $languagePrefix = new Column('languagePrefix', new StringType());
-        $languagePrefix->setColumnDefinition("varchar(128) BINARY NOT NULL default ''");
+        $urlPrefix = new Column('urlPrefix', new StringType());
+        $urlPrefix->setColumnDefinition("varchar(128) BINARY NOT NULL default ''");
 
         $urlSuffix = new Column('urlSuffix', new StringType());
         $urlSuffix->setColumnDefinition("varchar(16) NOT NULL default '.html'");
 
-        $diff = new TableDiff('tl_page', [$languagePrefix, $urlSuffix]);
+        $diff = new TableDiff('tl_page', [$urlPrefix, $urlSuffix]);
 
         $sql = $this->connection->getDatabasePlatform()->getAlterTableSQL($diff);
 
@@ -77,7 +77,7 @@ class RoutingMigration extends AbstractMigration
 
         $prefix = $this->prependLocale ? 'language' : "''";
         $this->connection
-            ->prepare("UPDATE tl_page SET languagePrefix=$prefix, urlSuffix=:suffix WHERE type='root'")
+            ->prepare("UPDATE tl_page SET urlPrefix=$prefix, urlSuffix=:suffix WHERE type='root'")
             ->execute([
                 'suffix' => $this->urlSuffix,
             ])

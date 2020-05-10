@@ -47,7 +47,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string  $timeFormat
  * @property string  $datimFormat
  * @property string  $validAliasCharacters
- * @property string  $languagePrefix
+ * @property string  $urlPrefix
  * @property string  $urlSuffix
  * @property string  $createSitemap
  * @property string  $sitemapName
@@ -990,7 +990,7 @@ class PageModel extends Model
 			$this->timeFormat = $objParentPage->timeFormat;
 			$this->datimFormat = $objParentPage->datimFormat;
 			$this->validAliasCharacters = $objParentPage->validAliasCharacters;
-			$this->languagePrefix = $objParentPage->languagePrefix;
+			$this->urlPrefix = $objParentPage->urlPrefix;
 			$this->urlSuffix = $objParentPage->urlSuffix;
 			$this->adminEmail = $objParentPage->adminEmail;
 			$this->enforceTwoFactor = $objParentPage->enforceTwoFactor;
@@ -1006,7 +1006,7 @@ class PageModel extends Model
 
 			if (System::getContainer()->getParameter('contao.legacy_routing'))
 			{
-				$this->languagePrefix = System::getContainer()->getParameter('contao.prepend_locale') ? $objParentPage->language : '';
+				$this->urlPrefix = System::getContainer()->getParameter('contao.prepend_locale') ? $objParentPage->language : '';
 				$this->urlSuffix = System::getContainer()->getParameter('contao.url_suffix');
 			}
 
@@ -1100,7 +1100,7 @@ class PageModel extends Model
 
 			if (System::getContainer()->getParameter('contao.legacy_routing'))
 			{
-				$page->languagePrefix = System::getContainer()->getParameter('contao.prepend_locale') ? $strForceLang : '';
+				$page->urlPrefix = System::getContainer()->getParameter('contao.prepend_locale') ? $strForceLang : '';
 			}
 		}
 

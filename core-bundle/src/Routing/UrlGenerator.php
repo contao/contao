@@ -225,14 +225,14 @@ class UrlGenerator implements UrlGeneratorInterface
 
     private function getRoute(string $name, array &$parameters)
     {
-        $languagePrefix = '';
+        $urlPrefix = '';
         $requirements = [];
 
         if ($this->legacyRouting) {
             $urlSuffix = $this->urlSuffix;
 
             if ($this->prependLocale) {
-                $languagePrefix = '/{_locale}';
+                $urlPrefix = '/{_locale}';
                 $requirements['_locale'] = '[a-z]{2}(\-[A-Z]{2})?';
             } else {
                 unset($parameters['_locale']);
@@ -241,20 +241,20 @@ class UrlGenerator implements UrlGeneratorInterface
             $rootPage = $this->findRootPage($parameters);
             $urlSuffix = $rootPage->urlSuffix;
 
-            if ($rootPage->languagePrefix) {
-                $languagePrefix = '/'.$rootPage->languagePrefix;
+            if ($rootPage->urlPrefix) {
+                $urlPrefix = '/'.$rootPage->urlPrefix;
             }
 
             unset($parameters['_locale']);
         }
 
         if ('index' === $name) {
-            return new Route($languagePrefix.'/', [], $requirements);
+            return new Route($urlPrefix.'/', [], $requirements);
         }
 
         $requirements['alias'] = '.+';
 
-        return new Route($languagePrefix.'/{alias}'.$urlSuffix, [], $requirements);
+        return new Route($urlPrefix.'/{alias}'.$urlSuffix, [], $requirements);
     }
 
     private function findRootPage(array $parameters): PageModel

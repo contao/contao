@@ -27,7 +27,7 @@ class CandidatesTest extends TestCase
     /**
      * @dataProvider getCandidatesProvider
      */
-    public function testGetCandidates(string $pathInfo, array $urlSuffix, array $languages, array $expected): void
+    public function testGetCandidates(string $pathInfo, array $urlSuffixes, array $languages, array $expected): void
     {
         $request = $this->createMock(Request::class);
         $request
@@ -37,7 +37,7 @@ class CandidatesTest extends TestCase
         ;
 
         $connection = $this->mockConnectionWithLanguages($languages);
-        $providers = $this->mockPageProvidersWithUrlSuffix($urlSuffix);
+        $providers = $this->mockPageProvidersWithUrlSuffix($urlSuffixes);
 
         $candidates = (new Candidates($connection, $providers, false, '.html', false))->getCandidates($request);
 
@@ -47,7 +47,7 @@ class CandidatesTest extends TestCase
     /**
      * @dataProvider getCandidatesProvider
      */
-    public function testGetCandidatesInLegacyMode(string $pathInfo, array $urlSuffix, array $languages, array $expectedRegular, array $expected): void
+    public function testGetCandidatesInLegacyMode(string $pathInfo, array $urlSuffixes, array $languages, array $expectedRegular, array $expected): void
     {
         $request = $this->createMock(Request::class);
         $request
@@ -68,7 +68,7 @@ class CandidatesTest extends TestCase
             ->method($this->anything())
         ;
 
-        $candidates = (new Candidates($connection, $providers, true, $urlSuffix[0] ?? '', 0 !== \count($languages)))->getCandidates($request);
+        $candidates = (new Candidates($connection, $providers, true, $urlSuffixes[0] ?? '', 0 !== \count($languages)))->getCandidates($request);
 
         $this->assertSame($expected, $candidates);
     }
@@ -285,7 +285,7 @@ class CandidatesTest extends TestCase
         $connection
             ->expects($this->once())
             ->method('query')
-            ->with("SELECT DISTINCT languagePrefix FROM tl_page WHERE type='root'")
+            ->with("SELECT DISTINCT urlPrefix FROM tl_page WHERE type='root'")
             ->willReturn($statement)
         ;
 

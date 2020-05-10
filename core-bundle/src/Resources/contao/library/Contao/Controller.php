@@ -1171,7 +1171,7 @@ abstract class Controller extends System
 
 			if (System::getContainer()->getParameter('contao.legacy_routing'))
 			{
-				$page->languagePrefix = System::getContainer()->getParameter('contao.prepend_locale') ? $strForceLang : '';
+				$page->urlPrefix = System::getContainer()->getParameter('contao.prepend_locale') ? $strForceLang : '';
 			}
 		}
 

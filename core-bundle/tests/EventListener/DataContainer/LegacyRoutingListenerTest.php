@@ -34,13 +34,13 @@ class LegacyRoutingListenerTest extends TestCase
 
         $GLOBALS['TL_DCA']['tl_page']['palettes'] = ['root' => '', 'rootfallback' => ''];
         $GLOBALS['TL_DCA']['tl_page']['fields'] = [
-            'languagePrefix' => [],
+            'urlPrefix' => [],
             'urlSuffix' => [],
         ];
 
         $listener->disableRoutingFields();
 
-        $this->assertTrue($GLOBALS['TL_DCA']['tl_page']['fields']['languagePrefix']['eval']['disabled']);
+        $this->assertTrue($GLOBALS['TL_DCA']['tl_page']['fields']['urlPrefix']['eval']['disabled']);
         $this->assertTrue($GLOBALS['TL_DCA']['tl_page']['fields']['urlSuffix']['eval']['disabled']);
     }
 
@@ -58,7 +58,7 @@ class LegacyRoutingListenerTest extends TestCase
 
         $GLOBALS['TL_DCA']['tl_page']['palettes'] = ['root' => '', 'rootfallback' => ''];
         $GLOBALS['TL_DCA']['tl_page']['fields'] = [
-            'languagePrefix' => [],
+            'urlPrefix' => [],
             'urlSuffix' => [],
         ];
 
@@ -71,7 +71,7 @@ class LegacyRoutingListenerTest extends TestCase
         );
     }
 
-    public function testOverridesTheLanguagePrefixWithPrependLocale(): void
+    public function testOverridesTheUrlPrefixWithPrependLocale(): void
     {
         $listener = new LegacyRoutingListener($this->createMock(TranslatorInterface::class), true);
 
@@ -81,17 +81,17 @@ class LegacyRoutingListenerTest extends TestCase
             ['activeRecord' => (object)['language' => 'en-US']]
         );
 
-        $this->assertSame('en-US', $listener->overrideLanguagePrefix('foo', $dc));
+        $this->assertSame('en-US', $listener->overrideUrlPrefix('foo', $dc));
     }
 
-    public function testOverridesTheLanguagePrefixWithoutPrependLocale(): void
+    public function testOverridesTheUrlPrefixWithoutPrependLocale(): void
     {
         $listener = new LegacyRoutingListener($this->createMock(TranslatorInterface::class), false);
 
         /** @var DataContainer&MockObject $dc */
         $dc = $this->mockClassWithProperties(DataContainer::class, ['activeRecord' => (object) ['language' => 'en-US']]);
 
-        $this->assertSame('', $listener->overrideLanguagePrefix('foo', $dc));
+        $this->assertSame('', $listener->overrideUrlPrefix('foo', $dc));
     }
 
     public function testOverridesTheUrlSuffix(): void

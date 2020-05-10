@@ -124,11 +124,11 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
     }
 
     /**
-     * @Callback(table="tl_page", target="fields.languagePrefix.save")
+     * @Callback(table="tl_page", target="fields.urlPrefix.save")
      */
-    public function validateLanguagePrefix(string $value, DataContainer $dc): string
+    public function validateUrlPrefix(string $value, DataContainer $dc): string
     {
-        if ('root' !== $dc->activeRecord->type || $dc->activeRecord->languagePrefix === $value) {
+        if ('root' !== $dc->activeRecord->type || $dc->activeRecord->urlPrefix === $value) {
             return $value;
         }
 
@@ -204,7 +204,7 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
         $currentPage->loadDetails();
 
         $currentDomain = $currentPage->domain;
-        $currentPrefix = $currentPage->languagePrefix;
+        $currentPrefix = $currentPage->urlPrefix;
         $currentSuffix = $currentPage->urlSuffix;
 
         if ('root' === $currentPage->type) {
@@ -213,7 +213,7 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
 
             // TODO: this won't work in edit-all, in legacy mode or if user does not have access to these fields
             $currentDomain = $input->post('dns');
-            $currentPrefix = $input->post('languagePrefix');
+            $currentPrefix = $input->post('urlPrefix');
             $currentSuffix = $input->post('urlSuffix');
         }
 
@@ -241,7 +241,7 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
             }
 
             $aliasDomain = $aliasPage->domain;
-            $aliasPrefix = $aliasPage->languagePrefix;
+            $aliasPrefix = $aliasPage->urlPrefix;
             $aliasSuffix = $aliasPage->urlSuffix;
 
             if ($currentPage->rootId === $aliasPage->rootId) {
@@ -267,33 +267,33 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
         return false;
     }
 
-    private function buildUrl(string $alias, string $languagePrefix, string $urlSuffix): string
+    private function buildUrl(string $alias, string $urlPrefix, string $urlSuffix): string
     {
         $url = '/'.$alias.$urlSuffix;
 
-        if ($languagePrefix) {
-            $url = '/'.$languagePrefix.$url;
+        if ($urlPrefix) {
+            $url = '/'.$urlPrefix.$url;
         }
 
         return $url;
     }
 
-    private function stripPrefixesAndSuffixes(string $alias, string $languagePrefix, string $urlSuffix): string
+    private function stripPrefixesAndSuffixes(string $alias, string $urlPrefix, string $urlSuffix): string
     {
         if (null === $this->prefixes || null === $this->suffixes) {
             $this->prefixes = [];
             $this->suffixes = [];
 
             $rows = $this->connection
-                ->executeQuery("SELECT languagePrefix, urlSuffix FROM tl_page WHERE type='root'")
+                ->executeQuery("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'")
                 ->fetchAll()
             ;
 
-            if (0 === ($prefixLength = \strlen($languagePrefix))) {
-                $this->prefixes = array_column($rows, 'languagePrefix');
+            if (0 === ($prefixLength = \strlen($urlPrefix))) {
+                $this->prefixes = array_column($rows, 'urlPrefix');
             } else {
-                foreach (array_column($rows, 'languagePrefix') as $prefix) {
-                    if (0 === substr_compare($prefix, $languagePrefix, 0, $prefixLength, true)) {
+                foreach (array_column($rows, 'urlPrefix') as $prefix) {
+                    if (0 === substr_compare($prefix, $urlPrefix, 0, $prefixLength, true)) {
                         $prefix = trim(substr($prefix, $prefixLength), '/');
 
                         if ('' !== $prefix) {

@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Functional;
+namespace Contao\CoreBundle\Tests\Functional\Migration;
 
 use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\CoreBundle\Migration\Version410\RoutingMigration;
@@ -46,17 +46,17 @@ class RoutingMigrationTest extends FunctionalTestCase
         ];
 
         yield 'should not run if urlSuffix exist' => [
-            ['languagePrefix'],
+            ['urlPrefix'],
             false,
         ];
 
-        yield 'should not run if languagePrefix exist' => [
+        yield 'should not run if urlPrefix exist' => [
             ['urlSuffix'],
             false,
         ];
 
         yield 'should run if both fields do not exist' => [
-            ['languagePrefix', 'urlSuffix'],
+            ['urlPrefix', 'urlSuffix'],
             true,
         ];
     }
@@ -68,9 +68,9 @@ class RoutingMigrationTest extends FunctionalTestCase
         /** @var Connection $connection */
         $connection = static::$container->get('database_connection');
 
-        $connection->exec('ALTER TABLE tl_page DROP languagePrefix, DROP urlSuffix');
+        $connection->exec('ALTER TABLE tl_page DROP urlPrefix, DROP urlSuffix');
         $columns = $connection->getSchemaManager()->listTableColumns('tl_page');
-        $this->assertFalse(isset($columns['languageprefix']));
+        $this->assertFalse(isset($columns['urlPrefix']));
         $this->assertFalse(isset($columns['urlsuffix']));
 
         $migration = new RoutingMigration($connection);
@@ -81,7 +81,7 @@ class RoutingMigrationTest extends FunctionalTestCase
         $this->assertTrue($result->isSuccessful());
 
         $columns = $connection->getSchemaManager()->listTableColumns('tl_page');
-        $this->assertTrue(isset($columns['languageprefix']));
+        $this->assertTrue(isset($columns['urlPrefix']));
         $this->assertTrue(isset($columns['urlsuffix']));
     }
 
@@ -96,21 +96,21 @@ class RoutingMigrationTest extends FunctionalTestCase
         /** @var Connection $connection */
         $connection = static::$container->get('database_connection');
 
-        $connection->exec('ALTER TABLE tl_page DROP languagePrefix, DROP urlSuffix');
+        $connection->exec('ALTER TABLE tl_page DROP urlPrefix, DROP urlSuffix');
 
         $migration = new RoutingMigration($connection, $urlSuffix, $prependLocale);
         $migration->run();
 
-        $rows = $connection->fetchAll("SELECT type, language, languagePrefix, urlSuffix FROM tl_page");
+        $rows = $connection->fetchAll("SELECT type, language, urlPrefix, urlSuffix FROM tl_page");
 
         foreach ($rows as $row) {
             if ($row['type'] !== 'root') {
-                $this->assertSame('', $row['languagePrefix']);
+                $this->assertSame('', $row['urlPrefix']);
                 $this->assertSame('.html', $row['urlSuffix']);
                 continue;
             }
 
-            $this->assertSame($prependLocale ? $row['language'] : '', $row['languagePrefix']);
+            $this->assertSame($prependLocale ? $row['language'] : '', $row['urlPrefix']);
             $this->assertSame($urlSuffix, $row['urlSuffix']);
         }
     }

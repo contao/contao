@@ -27,7 +27,7 @@ class PageRoute extends Route implements RouteObjectInterface
     /**
      * @var string
      */
-    private $languagePrefix;
+    private $urlPrefix;
 
     /**
      * @var string
@@ -62,7 +62,7 @@ class PageRoute extends Route implements RouteObjectInterface
         );
 
         $this->page = $page;
-        $this->languagePrefix = $page->languagePrefix;
+        $this->urlPrefix = $page->urlPrefix;
         $this->urlSuffix = $page->urlSuffix;
         $this->content = $content;
     }
@@ -81,21 +81,21 @@ class PageRoute extends Route implements RouteObjectInterface
     {
         $path = parent::getPath();
 
-        if ('' !== $this->getLanguagePrefix()) {
-            $path = '/'.$this->getLanguagePrefix().$path;
+        if ('' !== $this->getUrlPrefix()) {
+            $path = '/'.$this->getUrlPrefix().$path;
         }
 
         return $path.$this->getUrlSuffix();
     }
 
-    public function getLanguagePrefix(): string
+    public function getUrlPrefix(): string
     {
-        return $this->languagePrefix;
+        return $this->urlPrefix;
     }
 
-    public function setLanguagePrefix(string $languagePrefix): self
+    public function setUrlPrefix(string $urlPrefix): self
     {
-        $this->languagePrefix = $languagePrefix;
+        $this->urlPrefix = $urlPrefix;
 
         return $this;
     }
