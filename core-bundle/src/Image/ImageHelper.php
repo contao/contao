@@ -26,19 +26,29 @@ class ImageHelper
     public const PICTURE_SOURCES = 'sources';
     public const PICTURE_ALT = 'alt';
 
-    /** @var PictureFactoryInterface */
+    /**
+     * @var PictureFactoryInterface
+     */
     private $pictureFactory;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     private $rootDir;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     private $staticUrl;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     private $locale;
 
-    /** @var ContaoFramework */
+    /**
+     * @var ContaoFramework
+     */
     private $framework;
 
     public function __construct(PictureFactoryInterface $pictureFactory, string $rootDir, ContaoContext $fileContext, RequestStack $requestStack, ContaoFramework $framework)
