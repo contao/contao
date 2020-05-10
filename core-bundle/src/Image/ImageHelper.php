@@ -84,6 +84,8 @@ class ImageHelper
 
     private function getFile(string $uuidOrIdOrPath): ?FilesModel
     {
+        $this->framework->initialize();
+
         /** @var Validator $validator */
         $validator = $this->framework->getAdapter(Validator::class);
 
