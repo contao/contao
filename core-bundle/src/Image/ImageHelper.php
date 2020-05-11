@@ -45,7 +45,7 @@ class ImageHelper
     /**
      * @var string
      */
-    private $locale;
+    private $fallbackLocale;
 
     /**
      * @var ContaoFramework
@@ -60,15 +60,16 @@ class ImageHelper
         $this->framework = $framework;
 
         $request = $requestStack->getCurrentRequest();
-        $this->locale = null !== $request ? $request->getLocale() : $defaultLocale;
+        $this->fallbackLocale = null !== $request ? $request->getLocale() : $defaultLocale;
     }
 
     /**
      * @param string                                     $fileIdentifier    can be a tl_files uuid/id/path or an absolute path
      * @param int|string|array|PictureConfiguration|null $sizeConfiguration a picture size configuration or reference
-     * @param string|null                                $alt               overwrite alt attribute, set to null for defaults
+     * @param string|null                                $locale            locale - set to null to use default
+     * @param string|null                                $alt               alt attribute - set to null to use default
      */
-    public function createPicture(string $fileIdentifier, $sizeConfiguration, string $alt = null): array
+    public function createPicture(string $fileIdentifier, $sizeConfiguration, string $locale = null, string $alt = null): array
     {
         $this->framework->initialize();
 
@@ -79,7 +80,7 @@ class ImageHelper
         return [
             self::PICTURE_IMAGE => $picture->getImg($this->rootDir, $this->staticUrl),
             self::PICTURE_SOURCES => $picture->getSources($this->rootDir, $this->staticUrl),
-            self::PICTURE_ALT => $alt ?? $this->getAltAttribute($filesModel),
+            self::PICTURE_ALT => $alt ?? $this->getAltAttribute($filesModel, $locale),
         ];
     }
 
@@ -131,7 +132,7 @@ class ImageHelper
         return Path::makeAbsolute($identifier, $this->rootDir);
     }
 
-    private function getAltAttribute(?FilesModel $filesModel): ?string
+    private function getAltAttribute(?FilesModel $filesModel, ?string $locale): ?string
     {
         if (null === $filesModel) {
             return null;
@@ -140,7 +141,7 @@ class ImageHelper
         /** @var Frontend $frontend */
         $frontend = $this->framework->getAdapter(Frontend::class);
 
-        $metaData = $frontend->getMetaData($filesModel->meta, $this->locale);
+        $metaData = $frontend->getMetaData($filesModel->meta, $locale ?? $this->fallbackLocale);
 
         return $metaData['alt'] ?? null;
     }
