@@ -81,10 +81,11 @@ abstract class Controller extends System
 	 *
 	 * @param string $strPrefix           The template name prefix (e.g. "ce_")
 	 * @param array  $arrAdditionalMapper An additional mapper array
+	 * @param string $strDefaultTemplate  An optional default template
 	 *
 	 * @return array An array of template names
 	 */
-	public static function getTemplateGroup($strPrefix, array $arrAdditionalMapper=array())
+	public static function getTemplateGroup($strPrefix, array $arrAdditionalMapper=array(), $strDefaultTemplate='')
 	{
 		$arrTemplates = array();
 		$arrBundleTemplates = array();
@@ -144,7 +145,7 @@ abstract class Controller extends System
 		$arrCustomized = self::braceGlob($rootDir . '/templates/' . $strGlobPrefix . '*.html5');
 
 		// Add the customized templates
-		if (\is_array($arrCustomized))
+		if (!empty($arrCustomized) && \is_array($arrCustomized))
 		{
 			$blnIsGroupPrefix = preg_match('/^[a-z]+_$/', $strPrefix);
 
@@ -180,6 +181,13 @@ abstract class Controller extends System
 			}
 		}
 
+		$arrDefaultPlaces = array();
+
+		if ($strDefaultTemplate && file_exists($rootDir . '/templates/' . $strDefaultTemplate . '.html5'))
+		{
+			$arrDefaultPlaces[] = $GLOBALS['TL_LANG']['MSC']['global'];
+		}
+
 		// Do not look for back end templates in theme folders (see #5379)
 		if ($strPrefix != 'be_' && $strPrefix != 'mail_')
 		{
@@ -198,17 +206,24 @@ abstract class Controller extends System
 			{
 				while ($objTheme->next())
 				{
-					if ($objTheme->templates != '')
+					if (!$objTheme->templates)
 					{
-						$arrThemeTemplates = self::braceGlob($rootDir . '/' . $objTheme->templates . '/' . $strGlobPrefix . '*.html5');
+						continue;
+					}
 
-						if (\is_array($arrThemeTemplates))
+					if ($strDefaultTemplate && file_exists($rootDir . '/' . $objTheme->templates . '/' . $strDefaultTemplate . '.html5'))
+					{
+						$arrDefaultPlaces[] = $objTheme->name;
+					}
+
+					$arrThemeTemplates = self::braceGlob($rootDir . '/' . $objTheme->templates . '/' . $strGlobPrefix . '*.html5');
+
+					if (!empty($arrThemeTemplates) && \is_array($arrThemeTemplates))
+					{
+						foreach ($arrThemeTemplates as $strFile)
 						{
-							foreach ($arrThemeTemplates as $strFile)
-							{
-								$strTemplate = basename($strFile, strrchr($strFile, '.'));
-								$arrTemplates[$strTemplate][] = $objTheme->name;
-							}
+							$strTemplate = basename($strFile, strrchr($strFile, '.'));
+							$arrTemplates[$strTemplate][] = $objTheme->name;
 						}
 					}
 				}
@@ -235,6 +250,16 @@ abstract class Controller extends System
 
 		// Sort the template names
 		ksort($arrTemplates);
+
+		if ($strDefaultTemplate)
+		{
+			if (!empty($arrDefaultPlaces))
+			{
+				$strDefaultTemplate .= ' (' . implode(', ', $arrDefaultPlaces) . ')';
+			}
+
+			$arrTemplates = array('' => $strDefaultTemplate) + $arrTemplates;
+		}
 
 		return $arrTemplates;
 	}
@@ -2452,7 +2477,7 @@ abstract class Controller extends System
 	 *
 	 * @param string $pattern
 	 *
-	 * @return array
+	 * @return array|false
 	 */
 	protected static function braceGlob($pattern)
 	{
