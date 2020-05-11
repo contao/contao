@@ -334,14 +334,19 @@ services:
             - '@?contao.image.resize_calculator'
         public: true
 
-    contao.image.helper:
-        class: Contao\CoreBundle\Image\ImageHelper
+    Contao\CoreBundle\Image\MetaDataFactory:
+        arguments:
+            - '@request_stack'
+            - '%kernel.default_locale%'
+            - '@contao.framework'
+
+    Contao\CoreBundle\Image\ImageHelper:
         arguments:
             - '@contao.image.picture_factory'
             - '%kernel.project_dir%'
             - '@contao.assets.files_context'
+            - '@Contao\CoreBundle\Image\MetaDataFactory'
             - '@request_stack'
-            - '%kernel.default_locale%'
             - '@contao.framework'
 
     contao.menu.backend_menu_builder:

@@ -15,8 +15,10 @@ namespace Contao\CoreBundle\Image;
 use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\FilesModel;
-use Contao\Frontend;
 use Contao\Image\PictureConfiguration;
+use Contao\LayoutModel;
+use Contao\PageModel;
+use Contao\StringUtil;
 use Contao\Validator;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Webmozart\PathUtil\Path;
@@ -25,7 +27,8 @@ class ImageHelper
 {
     public const PICTURE_IMAGE = 'img';
     public const PICTURE_SOURCES = 'sources';
-    public const PICTURE_ALT = 'alt';
+    public const META_DATA = 'metadata';
+    public const TEMPLATE_DATA = 'template_data';
 
     /**
      * @var PictureFactoryInterface
@@ -43,74 +46,139 @@ class ImageHelper
     private $staticUrl;
 
     /**
-     * @var string
+     * @var MetaDataFactory
      */
-    private $fallbackLocale;
+    private $metaDataFactory;
+
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
 
     /**
      * @var ContaoFramework
      */
     private $framework;
 
-    public function __construct(PictureFactoryInterface $pictureFactory, string $rootDir, ContaoContext $fileContext, RequestStack $requestStack, string $defaultLocale, ContaoFramework $framework)
+    public function __construct(PictureFactoryInterface $pictureFactory, string $rootDir, ContaoContext $fileContext, MetaDataFactory $metaDataFactory, RequestStack $requestStack, ContaoFramework $framework)
     {
         $this->pictureFactory = $pictureFactory;
         $this->rootDir = $rootDir;
         $this->staticUrl = $fileContext->getStaticUrl();
+        $this->metaDataFactory = $metaDataFactory;
+        $this->requestStack = $requestStack;
         $this->framework = $framework;
-
-        $request = $requestStack->getCurrentRequest();
-        $this->fallbackLocale = null !== $request ? $request->getLocale() : $defaultLocale;
     }
 
     /**
-     * @param string                                     $fileIdentifier    can be a tl_files uuid/id/path or an absolute path
+     * Create a resized picture and get available metadata. The template data
+     * key contains data ready to use with the default image template.
+     *
+     * @param string|FilesModel                          $identifier        can be a tl_files uuid/id/path or an absolute path
      * @param int|string|array|PictureConfiguration|null $sizeConfiguration a picture size configuration or reference
      * @param string|null                                $locale            locale - set to null to use default
-     * @param string|null                                $alt               alt attribute - set to null to use default
+     *
+     * @return array<string, mixed> the processed picture and template data
      */
-    public function createPicture(string $fileIdentifier, $sizeConfiguration, string $locale = null, string $alt = null): array
+    public function createPicture($identifier, $sizeConfiguration, string $locale = null, MetaData $metaDataOverwrite = null): array
     {
-        $this->framework->initialize();
+        $filePath = $this->getFilepath($identifier, $filesModel);
+        $picture = $this->pictureFactory->create($filePath, $this->normalizeSizeConfiguration($sizeConfiguration));
 
-        $filePath = $this->getFilepath($fileIdentifier, $filesModel);
+        $image = $picture->getImg($this->rootDir, $this->staticUrl);
+        $sources = $picture->getSources($this->rootDir, $this->staticUrl);
 
-        $picture = $this->pictureFactory->create($filePath, $sizeConfiguration);
+        $metaData = $this->getMetaData($filesModel, $locale, $metaDataOverwrite);
+
+        $templateData = array_merge(
+            $metaData->getAll(),
+            [
+                'picture' => [
+                    'img' => $image,
+                    'sources' => $sources,
+                    'alt' => $metaData->getAlt(),
+                ],
+            ]
+        );
 
         return [
-            self::PICTURE_IMAGE => $picture->getImg($this->rootDir, $this->staticUrl),
-            self::PICTURE_SOURCES => $picture->getSources($this->rootDir, $this->staticUrl),
-            self::PICTURE_ALT => $alt ?? $this->getAltAttribute($filesModel, $locale),
+            self::PICTURE_IMAGE => $image,
+            self::PICTURE_SOURCES => $sources,
+            self::META_DATA => $metaData,
+            self::TEMPLATE_DATA => $templateData,
         ];
     }
 
-    public function createImage(string $fileIdentifier, $sizeConfiguration): array
+    /**
+     * // todo.
+     */
+    public function createLightboxPicture($identifier, $sizeConfiguration = null, string $lightBoxId = null): array
     {
-        // todo
-        throw new \RuntimeException('not implemented');
+        if (null === $sizeConfiguration) {
+            $sizeConfiguration = $this->getLightboxSizeConfiguration();
+        } else {
+            $sizeConfiguration = $this->normalizeSizeConfiguration($sizeConfiguration);
+        }
+
+        $filePath = $this->getFilepath($identifier);
+        $picture = $this->pictureFactory->create($filePath, $sizeConfiguration);
+
+        $image = $picture->getImg($this->rootDir, $this->staticUrl);
+        $sources = $picture->getSources($this->rootDir, $this->staticUrl);
+
+        if (null === $lightBoxId) {
+            $lightBoxId = substr(md5($filePath), 0, 6); // fixme
+        }
+
+        // todo: all that lightbox magic, maybe refactor things to metadata
+
+        return [
+            self::PICTURE_IMAGE => $image,
+            self::PICTURE_SOURCES => $sources,
+            self::TEMPLATE_DATA => [
+                'lightboxPicture' => [
+                    'img' => $image,
+                    'sources' => $sources,
+                ],
+                'src' => $image['src'],
+                'attributes' => sprintf(' data-lightbox="%s"', $lightBoxId),
+            ],
+        ];
+    }
+
+    private function normalizeSizeConfiguration($sizeConfiguration)
+    {
+        // todo: maybe move to PictureFactory or drop?
+        return StringUtil::deserialize($sizeConfiguration);
     }
 
     /**
      * Try to locate a file by querying the DBAFS ($identifier = uuid/id/path),
      * fallback to interpret $identifier as absolute/relative file path.
      */
-    private function getFilepath(string $identifier, FilesModel &$filesModel = null): string
+    private function getFilepath($identifier, FilesModel &$filesModel = null): string
     {
-        /** @var Validator $validatorAdapter */
-        $validatorAdapter = $this->framework->getAdapter(Validator::class);
+        $dbafsItem = true;
 
-        /** @var FilesModel $filesModelAdapter */
-        $filesModelAdapter = $this->framework->getAdapter(FilesModel::class);
-
-        if ($validatorAdapter->isUuid($identifier)) {
-            $filesModel = $filesModelAdapter->findByUuid($identifier);
-            $dbafsItem = true;
-        } elseif (is_numeric($identifier)) {
-            $filesModel = $filesModelAdapter->findById((int) $identifier);
-            $dbafsItem = true;
+        if ($identifier instanceof FilesModel) {
+            $filesModel = $identifier;
         } else {
-            $filesModel = $filesModelAdapter->findByPath($identifier);
-            $dbafsItem = null !== $filesModel;
+            $this->framework->initialize();
+
+            /** @var Validator $validatorAdapter */
+            $validatorAdapter = $this->framework->getAdapter(Validator::class);
+
+            /** @var FilesModel $filesModelAdapter */
+            $filesModelAdapter = $this->framework->getAdapter(FilesModel::class);
+
+            if ($validatorAdapter->isUuid($identifier)) {
+                $filesModel = $filesModelAdapter->findByUuid($identifier);
+            } elseif (is_numeric($identifier)) {
+                $filesModel = $filesModelAdapter->findById((int) $identifier);
+            } else {
+                $filesModel = $filesModelAdapter->findByPath($identifier);
+                $dbafsItem = null !== $filesModel;
+            }
         }
 
         if ($dbafsItem) {
@@ -119,7 +187,7 @@ class ImageHelper
             }
 
             if ('file' !== $filesModel->type) {
-                throw new \InvalidArgumentException("DBAFS item '$identifier' was found but is not a file.");
+                throw new \InvalidArgumentException("DBAFS item '$identifier' is not a file.");
             }
 
             return Path::makeAbsolute($filesModel->path, $this->rootDir);
@@ -132,17 +200,49 @@ class ImageHelper
         return Path::makeAbsolute($identifier, $this->rootDir);
     }
 
-    private function getAltAttribute(?FilesModel $filesModel, ?string $locale): ?string
+    /**
+     * Retrieve meta data from files model (if available), allow overwriting and
+     * fallback to an empty container if no data is present.
+     */
+    private function getMetaData($filesModel, ?string $locale, ?MetaData $metaDataOverwrite): MetaData
     {
         if (null === $filesModel) {
-            return null;
+            return $metaDataOverwrite ?? $this->metaDataFactory->createEmpty();
         }
 
-        /** @var Frontend $frontend */
-        $frontend = $this->framework->getAdapter(Frontend::class);
+        $metaData = $this->metaDataFactory->createFromFilesModel($filesModel, $locale);
 
-        $metaData = $frontend->getMetaData($filesModel->meta, $locale ?? $this->fallbackLocale);
+        if (null !== $metaDataOverwrite) {
+            $metaData = $metaData->withOverwrites($metaData);
+        }
 
-        return $metaData['alt'] ?? null;
+        return $metaData;
+    }
+
+    /**
+     * Try to get a lightbox configuration for the current page.
+     */
+    private function getLightboxSizeConfiguration(): array
+    {
+        $request = $this->requestStack->getCurrentRequest();
+
+        if (null !== $request && $request->attributes->has('pageModel')) {
+            $this->framework->initialize();
+
+            /** @var PageModel $page */
+            $page = $request->attributes->get('pageModel');
+
+            /** @var LayoutModel $layoutModelAdapter */
+            $layoutModelAdapter = $this->framework->getAdapter(LayoutModel::class);
+
+            /** @var LayoutModel $layoutModel */
+            $layoutModel = $layoutModelAdapter->findByPk($page->layoutId);
+
+            if (null !== $layoutModel) {
+                return StringUtil::deserialize($layoutModel->lightboxSize, true);
+            }
+        }
+
+        throw new \RuntimeException('Could not retrieve layout model. Please provide a size configuration.');
     }
 }
