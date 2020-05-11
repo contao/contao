@@ -307,6 +307,12 @@ class StringUtilTest extends TestCase
             ['name' => 'myname mylastname', 'firstname' => 'myname'],
             'match',
         ];
+
+        yield 'Test ignores unknown tokens' => [
+            "This is my ##token## that ##remains##",
+            ['token' => 'value'],
+            'This is my value that ##remains##',
+        ];
     }
 
     /**
