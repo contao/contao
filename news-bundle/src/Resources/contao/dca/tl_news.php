@@ -123,8 +123,11 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'__selector__'                => array('addImage', 'addEnclosure', 'source', 'overwriteMeta'),
-		'default'                     => '{title_legend},headline,alias,author;{date_legend},date,time;{teaser_legend},subheadline,teaser;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{source_legend},source;{expert_legend:hide},cssClass,noComments,featured;{publish_legend},published,start,stop'
+		'__selector__'                => array('source', 'addImage', 'addEnclosure', 'overwriteMeta'),
+		'default'                     => '{title_legend},headline,alias,author;{date_legend},date,time;{source_legend:hide},source;{meta_legend},pageTitle,description,serpPreview;{teaser_legend},subheadline,teaser;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments,featured;{publish_legend},published,start,stop',
+		'internal'                    => '{title_legend},headline,alias,author;{date_legend},date,time;{source_legend},source,jumpTo;{teaser_legend},subheadline,teaser;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments,featured;{publish_legend},published,start,stop',
+		'article'                     => '{title_legend},headline,alias,author;{date_legend},date,time;{source_legend},source,articleId;{teaser_legend},subheadline,teaser;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments,featured;{publish_legend},published,start,stop',
+		'external'                    => '{title_legend},headline,alias,author;{date_legend},date,time;{source_legend},source,url,target;{teaser_legend},subheadline,teaser;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments,featured;{publish_legend},published,start,stop'
 	),
 
 	// Subpalettes
@@ -132,10 +135,6 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 	(
 		'addImage'                    => 'singleSRC,size,floating,imagemargin,fullsize,overwriteMeta',
 		'addEnclosure'                => 'enclosure',
-		'source_default'              => 'pageTitle,description,serpPreview',
-		'source_internal'             => 'jumpTo',
-		'source_article'              => 'articleId',
-		'source_external'             => 'url,target',
 		'overwriteMeta'               => 'alt,imageTitle,imageUrl,caption'
 	),
 
