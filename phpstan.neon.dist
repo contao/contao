@@ -1,3 +1,15 @@
+includes:
+    - vendor/contao/phpstan/extension.neon
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor/phpstan/phpstan-phpunit/rules.neon
+    - vendor/phpstan/phpstan-symfony/extension.neon
+    - vendor/phpstan/phpstan-symfony/rules.neon
+
+rules:
+    - SlamPhpStan\SymfonyFilesystemRule
+    - SlamPhpStan\SymfonyProcessRule
+    - TheCodingMachine\PHPStan\Rules\Exceptions\ThrowMustBundlePreviousExceptionRule
+
 parameters:
     autoload_files:
         - %currentWorkingDirectory%/vendor/autoload.php
@@ -31,5 +43,12 @@ parameters:
         - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition::children\(\)\.#'
         - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition::addDefaultsIfNotSet\(\)\.#'
 
+        # Ignore unused variables in the ArrayAttributeBagTest class
+        - '#Function testDoesNotReferenceValues\(\) has an unused variable#'
+
+        # Ignore test case classes not starting with "Abstract" (backwards compatibility)
+        - '#Abstract class Contao\\CoreBundle\\Tests\\.*TestCase should start with "Abstract" prefix\.#'
+
     reportUnmatchedIgnoredErrors: false
+    checkGenericClassInNonGenericObjectType: false
     inferPrivatePropertyTypeFromConstructor: true

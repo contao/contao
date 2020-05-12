@@ -52,10 +52,6 @@ class StoreRefererListenerTest extends TestCase
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
         $request->server->set('REQUEST_URI', '/path/of/contao?having&query&string=1');
 
-        $requestFrontend = clone $request;
-        $requestFrontend->attributes->set('_route', 'contao_frontend');
-        $requestFrontend->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
-
         $requestWithRefInUrl = new Request();
         $requestWithRefInUrl->attributes->set('_route', 'contao_backend');
         $requestWithRefInUrl->attributes->set('_contao_referer_id', 'dummyTestRefererId');
@@ -63,11 +59,7 @@ class StoreRefererListenerTest extends TestCase
         $requestWithRefInUrl->server->set('REQUEST_URI', '/path/of/contao?having&query&string=1');
         $requestWithRefInUrl->query->set('ref', 'dummyTestRefererId');
 
-        $requestWithRefInUrlFrontend = clone $requestWithRefInUrl;
-        $requestWithRefInUrlFrontend->attributes->set('_route', 'contao_frontend');
-        $requestWithRefInUrlFrontend->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
-
-        yield 'Test current referer null returns correct new referer for back end scope' => [
+        yield 'Test current referer null returns correct new referer' => [
             $request,
             null,
             [
@@ -78,7 +70,7 @@ class StoreRefererListenerTest extends TestCase
             ],
         ];
 
-        yield 'Test referer returns correct new referer for back end scope' => [
+        yield 'Test referer returns correct new referer' => [
             $requestWithRefInUrl,
             [
                 'dummyTestRefererId' => [
@@ -91,24 +83,6 @@ class StoreRefererListenerTest extends TestCase
                     'last' => 'hi/I/am/your_current_referer.html',
                     'current' => 'path/of/contao?having&query&string=1',
                 ],
-            ],
-        ];
-
-        yield 'Test current referer null returns null for front end scope' => [
-            $requestFrontend,
-            null,
-            null,
-        ];
-
-        yield 'Test referer returns correct new referer for front end scope' => [
-            $requestWithRefInUrlFrontend,
-            [
-                'last' => '',
-                'current' => 'hi/I/am/your_current_referer.html',
-            ],
-            [
-                'last' => 'hi/I/am/your_current_referer.html',
-                'current' => 'path/of/contao?having&query&string=1',
             ],
         ];
 
@@ -245,14 +219,11 @@ class StoreRefererListenerTest extends TestCase
         $listener($this->getResponseEvent($request));
     }
 
-    /**
-     * @dataProvider noSessionProvider
-     */
-    public function testFailsToStoreTheRefererIfThereIsNoSession(string $scope): void
+    public function testFailsToStoreTheRefererIfThereIsNoSession(): void
     {
         $request = new Request();
         $request->attributes->set('_route', 'contao_backend');
-        $request->attributes->set('_scope', $scope);
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
         $listener = $this->getListener($this->createMock(User::class));
 
@@ -260,12 +231,6 @@ class StoreRefererListenerTest extends TestCase
         $this->expectExceptionMessage('The request did not contain a session.');
 
         $listener($this->getResponseEvent($request));
-    }
-
-    public function noSessionProvider(): \Generator
-    {
-        yield [ContaoCoreBundle::SCOPE_BACKEND];
-        yield [ContaoCoreBundle::SCOPE_FRONTEND];
     }
 
     private function getListener(UserInterface $user = null, $expectsSecurityCall = false): StoreRefererListener

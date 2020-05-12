@@ -21,6 +21,7 @@ use Contao\InstallationBundle\Database\Installer;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\Filesystem\Filesystem;
 
 class MigrateCommandTest extends TestCase
 {
@@ -66,7 +67,7 @@ class MigrateCommandTest extends TestCase
     {
         $runOnceFile = $this->getFixturesDir().'/runonceFile.php';
 
-        file_put_contents($runOnceFile, '<?php $GLOBALS["test_'.self::class.'"] = "executed";');
+        (new Filesystem())->dumpFile($runOnceFile, '<?php $GLOBALS["test_'.self::class.'"] = "executed";');
 
         $command = $this->getCommand([], [], [[$runOnceFile]]);
 

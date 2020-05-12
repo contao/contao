@@ -11,7 +11,7 @@ composer:
         contao/easy-coding-standard: ^1.0
         contao/monorepo-tools: dev-master
         contao/phpstan: ^0.12
-        phpstan/extension-installer: ^1.0
+        slam/phpstan-extensions: ^5.0
 
 repositories:
     core-bundle:

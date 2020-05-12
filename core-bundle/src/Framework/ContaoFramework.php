@@ -27,6 +27,7 @@ use Contao\System;
 use Contao\TemplateLoader;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -60,6 +61,11 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     private $tokenChecker;
 
     /**
+     * @var Filesystem
+     */
+    private $filesystem;
+
+    /**
      * @var string
      */
     private $rootDir;
@@ -89,11 +95,12 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      */
     private $hookListeners = [];
 
-    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker, string $rootDir, int $errorLevel)
+    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker, Filesystem $filesystem, string $rootDir, int $errorLevel)
     {
         $this->requestStack = $requestStack;
         $this->scopeMatcher = $scopeMatcher;
         $this->tokenChecker = $tokenChecker;
+        $this->filesystem = $filesystem;
         $this->rootDir = $rootDir;
         $this->errorLevel = $errorLevel;
     }
@@ -382,7 +389,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
             }
         }
 
-        if (file_exists($this->rootDir.'/system/config/initconfig.php')) {
+        if ($this->filesystem->exists($this->rootDir.'/system/config/initconfig.php')) {
             @trigger_error('Using the "initconfig.php" file has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
             include $this->rootDir.'/system/config/initconfig.php';
         }
