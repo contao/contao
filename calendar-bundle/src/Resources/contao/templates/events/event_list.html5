@@ -28,7 +28,7 @@
   <?php else: ?>
     <div class="ce_text block" itemprop="description">
       <?= $this->teaser ?>
-  </div>
+    </div>
   <?php endif; ?>
 
 </div>
