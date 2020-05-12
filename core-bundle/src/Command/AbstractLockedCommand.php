@@ -19,8 +19,8 @@ use Symfony\Component\Lock\Factory;
 use Symfony\Component\Lock\Store\FlockStore;
 
 /**
- * @deprecated Deprecated since Contao 4.7, to be removed in Contao 5.0; Use
- *             the Symfony Lock component instead.
+ * @deprecated Deprecated since Contao 4.7, to be removed in Contao 5.0; use
+ *             the Symfony Lock component instead
  */
 abstract class AbstractLockedCommand extends ContainerAwareCommand
 {
