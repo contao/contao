@@ -333,7 +333,6 @@ abstract class Events extends Module
 		// Display the "read more" button for external/article links
 		if ($objEvents->source != 'default')
 		{
-			$arrEvent['details'] = true;
 			$arrEvent['hasDetails'] = true;
 		}
 
