@@ -23,7 +23,7 @@
     <?php $this->insert('image', $this->arrData); ?>
   <?php endif; ?>
 
-  <?php if ($this->hasDetails): ?>
+  <?php if ($this->details): ?>
     <?= $this->details ?>
   <?php else: ?>
     <div class="ce_text block" itemprop="description">
