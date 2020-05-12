@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Exception\RedirectResponseException;
 use Patchwork\Utf8;
 
 /**
@@ -89,10 +90,40 @@ class ModuleNewsReader extends ModuleNews
 		// Get the news item
 		$objArticle = NewsModel::findPublishedByParentAndIdOrAlias(Input::get('items'), $this->news_archives);
 
-		// The news item does not exist or has an external target (see #33)
-		if (null === $objArticle || $objArticle->source != 'default')
+		// The news item does not exist (see #33)
+		if ($objArticle === null)
 		{
 			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
+		}
+
+		// Redirect if the news item has a target URL (see #1498)
+		switch ($objArticle->source) {
+			case 'internal':
+				if ($page = PageModel::findPublishedById($objArticle->jumpTo))
+				{
+					throw new RedirectResponseException($page->getAbsoluteUrl(), 301);
+				}
+
+				throw new InternalServerErrorException('Invalid "jumpTo" value or target page not public');
+				break;
+
+			case 'article':
+				if (($article = ArticleModel::findByPk($objArticle->articleId)) && ($page = PageModel::findPublishedById($article->pid)))
+				{
+					throw new RedirectResponseException($page->getAbsoluteUrl('/articles/' . ($article->alias ?: $article->id)), 301);
+				}
+
+				throw new InternalServerErrorException('Invalid "articleId" value or target page not public');
+				break;
+
+			case 'external':
+				if ($objArticle->url)
+				{
+					throw new RedirectResponseException($objArticle->url, 301);
+				}
+
+				throw new InternalServerErrorException('Empty target URL');
+				break;
 		}
 
 		// Set the default template
