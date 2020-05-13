@@ -81,7 +81,7 @@ class InputEnhancer implements RouteEnhancerInterface
             }
 
             // Abort if there is a duplicate parameter (duplicate content) (see #4277)
-            if ($request->query->has($fragments[$i]) || \in_array($fragments[$i], $inputKeys)) {
+            if ($request->query->has($fragments[$i]) || \in_array($fragments[$i], $inputKeys, true)) {
                 throw new ResourceNotFoundException(sprintf('Duplicate parameter "%s" in path', $fragments[$i]));
             }
 
