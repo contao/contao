@@ -604,7 +604,6 @@ services:
         arguments:
             - '@contao.framework'
             - '@database_connection'
-            - '@router'
         tags:
             - contao.search_indexer
 
