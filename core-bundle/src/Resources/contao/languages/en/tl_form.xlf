@@ -87,10 +87,10 @@
         <source>Store the submitted data in the database.</source>
       </trans-unit>
       <trans-unit id="tl_form.customTpl.0">
-        <source>Custom form template</source>
+        <source>Form template</source>
       </trans-unit>
       <trans-unit id="tl_form.customTpl.1">
-        <source>Here you can overwrite the default form template.</source>
+        <source>Here you can select the form template.</source>
       </trans-unit>
       <trans-unit id="tl_form.targetTable.0">
         <source>Target table</source>
