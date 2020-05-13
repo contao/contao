@@ -20,9 +20,7 @@ use Contao\Search;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Driver\Connection;
 use Nyholm\Psr7\Uri;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
-use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 
 class DefaultIndexerTest extends ContaoTestCase
 {
@@ -61,32 +59,17 @@ class DefaultIndexerTest extends ContaoTestCase
         }
 
         $uri = $document->getUri();
-        $oldRequestContext = new RequestContext();
-        $newRequestContext = (new RequestContext())->fromRequest(Request::create((string) $uri));
 
-        $urlMatcher = $this->createMock(UrlMatcherInterface::class);
-        $urlMatcher
+        $page = '/valid' === $uri->getPath() ? $this->mockClassWithProperties(PageModel::class, ['id' => 2]) : null;
+
+        $requestMatcher = $this->createMock(RequestMatcherInterface::class);
+        $requestMatcher
             ->expects($uri->getPath() ? $this->once() : $this->never())
-            ->method('match')
-            ->willReturnMap([
-                ['/valid', ['pageModel' => $this->mockClassWithProperties(PageModel::class, ['id' => 2])]],
-                ['/no-page-id', ['pageModel' => null]],
-            ])
+            ->method('matchRequest')
+            ->willReturn(['pageModel' => $page])
         ;
 
-        $urlMatcher
-            ->expects(null === $expectedMessage || ('/no-page-id' === $uri->getPath()) ? $this->once() : $this->never())
-            ->method('getContext')
-            ->willReturn($oldRequestContext)
-        ;
-
-        $urlMatcher
-            ->expects(null === $expectedMessage || ('/no-page-id' === $uri->getPath()) ? $this->exactly(2) : $this->never())
-            ->method('setContext')
-            ->withConsecutive([$newRequestContext], [$oldRequestContext])
-        ;
-
-        $indexer = new DefaultIndexer($framework, $this->createMock(Connection::class), $urlMatcher, $indexProtected);
+        $indexer = new DefaultIndexer($framework, $this->createMock(Connection::class), $requestMatcher, $indexProtected);
         $indexer->index($document);
     }
 
@@ -172,7 +155,7 @@ class DefaultIndexerTest extends ContaoTestCase
             ->method('initialize')
         ;
 
-        $indexer = new DefaultIndexer($framework, $this->createMock(Connection::class), $this->createMock(UrlMatcherInterface::class));
+        $indexer = new DefaultIndexer($framework, $this->createMock(Connection::class), $this->createMock(RequestMatcherInterface::class));
         $indexer->delete(new Document(new Uri('https://example.com'), 200, [], ''));
     }
 
@@ -190,7 +173,7 @@ class DefaultIndexerTest extends ContaoTestCase
             )
         ;
 
-        $indexer = new DefaultIndexer($framework, $connection, $this->createMock(UrlMatcherInterface::class));
+        $indexer = new DefaultIndexer($framework, $connection, $this->createMock(RequestMatcherInterface::class));
         $indexer->clear();
     }
 }

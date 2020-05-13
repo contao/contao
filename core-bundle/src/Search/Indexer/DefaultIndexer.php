@@ -19,8 +19,7 @@ use Contao\Search;
 use Doctrine\DBAL\Driver\Connection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
-use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
-use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 
 class DefaultIndexer implements IndexerInterface
 {
@@ -35,9 +34,9 @@ class DefaultIndexer implements IndexerInterface
     private $connection;
 
     /**
-     * @var UrlMatcherInterface
+     * @var RequestMatcherInterface
      */
-    private $urlMatcher;
+    private $requestMatcher;
 
     /**
      * @var bool
@@ -47,11 +46,11 @@ class DefaultIndexer implements IndexerInterface
     /**
      * @internal Do not inherit from this class; decorate the "contao.search.indexer.default" service instead
      */
-    public function __construct(ContaoFramework $framework, Connection $connection, UrlMatcherInterface $urlMatcher, bool $indexProtected = false)
+    public function __construct(ContaoFramework $framework, Connection $connection, RequestMatcherInterface $requestMatcher, bool $indexProtected = false)
     {
         $this->framework = $framework;
         $this->connection = $connection;
-        $this->urlMatcher = $urlMatcher;
+        $this->requestMatcher = $requestMatcher;
         $this->indexProtected = $indexProtected;
     }
 
@@ -105,24 +104,15 @@ class DefaultIndexer implements IndexerInterface
         $uri = $document->getUri();
         $pageId = 0;
 
-        // Preserve the old request context
-        $oldRequestContext = $this->urlMatcher->getContext();
-
-        // Create a new request context so the routes are matched correctly
-        $this->urlMatcher->setContext((new RequestContext())->fromRequest(Request::create((string) $uri)));
-
         // Try to extract page id
         try {
-            $parameters = $this->urlMatcher->match($uri->getPath());
+            $parameters = $this->requestMatcher->matchRequest(Request::create((string) $uri));
 
             if (\array_key_exists('pageModel', $parameters) && $parameters['pageModel'] instanceof PageModel) {
                 $pageId = (int) $parameters['pageModel']->id;
             }
         } catch (ExceptionInterface $exception) {
         }
-
-        // Restore the original request context
-        $this->urlMatcher->setContext($oldRequestContext);
 
         if (0 === $pageId) {
             $this->throwBecause('No page ID could be determined.');
