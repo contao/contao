@@ -137,7 +137,8 @@ class Result
 			$this->next();
 		}
 
-		return isset($this->resultSet[$this->intIndex][$strKey]) || isset($this->arrModified[$strKey]);
+		// If the modified value is null, return false even if the original value is not null (see #1689)
+		return \array_key_exists($strKey, $this->arrModified) ? isset($this->arrModified[$strKey]) : isset($this->resultSet[$this->intIndex][$strKey]);
 	}
 
 	/**
@@ -179,12 +180,14 @@ class Result
 					$this->next();
 				}
 
-				if (isset($this->arrModified[$strKey]))
+				// Use array_key_exists() instead of isset(), because the value might be null
+				if (\array_key_exists($strKey, $this->arrModified))
 				{
 					return $this->arrModified[$strKey];
 				}
 
-				if (isset($this->resultSet[$this->intIndex][$strKey]))
+				// Use array_key_exists() instead of isset(), because the value might be null
+				if (\array_key_exists($strKey, $this->resultSet[$this->intIndex]))
 				{
 					return $this->resultSet[$this->intIndex][$strKey];
 				}

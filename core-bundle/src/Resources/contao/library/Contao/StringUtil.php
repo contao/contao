@@ -331,9 +331,9 @@ class StringUtil
 			$strEncoded = '';
 			$arrCharacters = Utf8::str_split($strEmail);
 
-			foreach ($arrCharacters as $strCharacter)
+			foreach ($arrCharacters as $index => $strCharacter)
 			{
-				$strEncoded .= sprintf((random_int(0, 1) ? '&#x%X;' : '&#%s;'), Utf8::ord($strCharacter));
+				$strEncoded .= sprintf(($index % 2) ? '&#x%X;' : '&#%s;', Utf8::ord($strCharacter));
 			}
 
 			$strString = str_replace($strEmail, $strEncoded, $strString);
