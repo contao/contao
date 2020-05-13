@@ -187,7 +187,7 @@ class Result
 				}
 
 				// Use array_key_exists() instead of isset(), because the value might be null
-				if (\array_key_exists($strKey, $this->resultSet[$this->intIndex]))
+				if (isset($this->resultSet[$this->intIndex]) && \array_key_exists($strKey, $this->resultSet[$this->intIndex]))
 				{
 					return $this->resultSet[$this->intIndex][$strKey];
 				}
