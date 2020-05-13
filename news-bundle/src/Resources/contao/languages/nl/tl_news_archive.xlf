@@ -195,6 +195,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.1">
         <source>Manage news feeds</source>
+        <target>Beheer nieuws feeds</target>
       </trans-unit>
     </body>
   </file>

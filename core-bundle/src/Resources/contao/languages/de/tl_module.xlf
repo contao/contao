@@ -75,11 +75,11 @@
       </trans-unit>
       <trans-unit id="tl_module.navigationTpl.0">
         <source>Navigation template</source>
-        <target>Navigationstemplate</target>
+        <target>Navigations-Template</target>
       </trans-unit>
       <trans-unit id="tl_module.navigationTpl.1">
         <source>Here you can select the navigation template.</source>
-        <target>Hier können Sie das Navigationstemplate auswählen.</target>
+        <target>Hier können Sie das Navigations-Template auswählen.</target>
       </trans-unit>
       <trans-unit id="tl_module.customTpl.0">
         <source>Custom module template</source>
@@ -171,11 +171,11 @@
       </trans-unit>
       <trans-unit id="tl_module.memberTpl.0">
         <source>Form template</source>
-        <target>Formulartemplate</target>
+        <target>Formular-Template</target>
       </trans-unit>
       <trans-unit id="tl_module.memberTpl.1">
         <source>Here you can select the form template.</source>
-        <target>Hier können Sie das Formulartemplate auswählen.</target>
+        <target>Hier können Sie das Formular-Template auswählen.</target>
       </trans-unit>
       <trans-unit id="tl_module.form.0">
         <source>Form</source>
@@ -267,11 +267,11 @@
       </trans-unit>
       <trans-unit id="tl_module.searchTpl.0">
         <source>Search results template</source>
-        <target>Ergebnistemplate</target>
+        <target>Ergebnis-Template</target>
       </trans-unit>
       <trans-unit id="tl_module.searchTpl.1">
         <source>Here you can select the search results template.</source>
-        <target>Hier können Sie das Ergebnistemplate auswählen.</target>
+        <target>Hier können Sie das Ergebnis-Template auswählen.</target>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.0">
         <source>Column</source>

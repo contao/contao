@@ -30,8 +30,7 @@
         <target>Abra o ficheiro de relatório de erros em &lt;code&gt;var/logs &lt;/code&gt; ou &lt;code&gt;app/logs&lt;/code&gt; e encontre a mensagem de erro associada (normalmente a última).</target>
       </trans-unit>
       <trans-unit id="XPT.errorExplain">
-        <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, search the &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;Contao support page&lt;/a&gt;.</source>
-        <target>Algo correu mal e a execução do script parou. O erro real está escondido por esta mensagem por motivos de segurança e pode ser encontrado no log file actual (ver acima). Se não entender esta mensagem de erro ou não souber resolver o problema,  procure em &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt; FAQ Contao &lt;/a&gt; ou visite a &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;Página de suporte do Contao&lt;/a&gt;.</target>
+        <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, search the &lt;a href=&quot;https://contao.org/en/frequently-asked.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/en/support.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="XPT.requestToken">
         <source>Invalid request token</source>
@@ -50,8 +49,7 @@
         <target>Este erro ocorre quando existe um pedido POST sem um token de autenticação válido. No Contao 2.10 a verificação por &quot;referer&quot; foi substituída por uma verificação por tokens. Caso o problema persista, pode estar a utilizar uma extensão de terceiros não compatível ou não ter correctamente actualizado a sua instalação Contao.</target>
       </trans-unit>
       <trans-unit id="XPT.tokenExplainTwo">
-        <source>For more information, search the &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;Contao support page&lt;/a&gt;.</source>
-        <target>Para mais informações, procure o &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;FAQ Contao &lt;/a&gt;ou visite a &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;Página de Suporte Contao&lt;/a&gt;.</target>
+        <source>For more information, search the &lt;a href=&quot;https://contao.org/en/frequently-asked.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/en/support.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="XPT.incomplete">
         <source>Incomplete installation</source>
@@ -66,8 +64,7 @@
         <target>Por favor abra a ferramenta de instalação do Contao (&lt;code&gt;/contao/install&lt;/code&gt;) no seu browser.</target>
       </trans-unit>
       <trans-unit id="XPT.incompleteExplain">
-        <source>For more information, please refer to the &lt;a href=&quot;https://contao.org/manual/installation.html&quot; target=&quot;_blank&quot;&gt;Contao manual&lt;/a&gt;.</source>
-        <target>Para mais informações, por favor consulte o &lt;a href=&quot;https://contao.org/manual/installation.html&quot; target=&quot;_blank&quot;&gt;Manual do Contao&lt;/a&gt;.</target>
+        <source>For more information, please refer to the &lt;a href=&quot;https://contao.org/manual/installation.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao manual&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="XPT.noForward">
         <source>Forward page not found</source>
@@ -106,8 +103,7 @@
         <target>Certifique-se que atribuiu um page layout a cada página web em root na estrutura do site.</target>
       </trans-unit>
       <trans-unit id="XPT.noLayoutExplain">
-        <source>For more information, please refer to the &lt;a href=&quot;https://contao.org/manual/managing-pages.html&quot; target=&quot;_blank&quot;&gt;Contao manual&lt;/a&gt;.</source>
-        <target>Para mais informações, consulte o &lt;a href=&quot;https://contao.org/manual/managing-pages.html&quot; target=&quot;_blank&quot;&gt;Manual do Contao&lt;/a&gt;.</target>
+        <source>For more information, please refer to the &lt;a href=&quot;https://contao.org/manual/managing-pages.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao manual&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="XPT.noActive">
         <source>No active pages found</source>

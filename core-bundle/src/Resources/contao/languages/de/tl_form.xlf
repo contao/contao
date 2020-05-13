@@ -107,11 +107,11 @@
       </trans-unit>
       <trans-unit id="tl_form.customTpl.0">
         <source>Form template</source>
-        <target>Formulartemplate</target>
+        <target>Formular-Template</target>
       </trans-unit>
       <trans-unit id="tl_form.customTpl.1">
         <source>Here you can select the form template.</source>
-        <target>Hier können Sie das Formulartemplate auswählen.</target>
+        <target>Hier können Sie das Formular-Template auswählen.</target>
       </trans-unit>
       <trans-unit id="tl_form.targetTable.0">
         <source>Target table</source>

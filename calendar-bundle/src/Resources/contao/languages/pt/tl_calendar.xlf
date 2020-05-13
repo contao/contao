@@ -195,6 +195,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.1">
         <source>Manage calendar feeds</source>
+        <target>Gerir feeds de calendário</target>
       </trans-unit>
     </body>
   </file>

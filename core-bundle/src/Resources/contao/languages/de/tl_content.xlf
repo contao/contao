@@ -387,11 +387,11 @@
       </trans-unit>
       <trans-unit id="tl_content.galleryTpl.0">
         <source>Gallery template</source>
-        <target>Galerietemplate</target>
+        <target>Galerie-Template</target>
       </trans-unit>
       <trans-unit id="tl_content.galleryTpl.1">
         <source>Here you can select the gallery template.</source>
-        <target>Hier können Sie das Galerietemplate auswählen.</target>
+        <target>Hier können Sie das Galerie-Template auswählen.</target>
       </trans-unit>
       <trans-unit id="tl_content.customTpl.0">
         <source>Custom element template</source>
