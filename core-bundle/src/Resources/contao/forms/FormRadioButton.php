@@ -79,6 +79,8 @@ class FormRadioButton extends Widget
 			case 'rgxp':
 			case 'minlength':
 			case 'maxlength':
+			case 'minval':
+			case 'maxval':
 				// Ignore
 				break;
 
