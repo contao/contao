@@ -309,7 +309,7 @@ class StringUtilTest extends TestCase
         ];
 
         yield 'Test ignores unknown tokens' => [
-            "This is my ##token## that ##remains##",
+            'This is my ##token## that ##remains##',
             ['token' => 'value'],
             'This is my value that ##remains##',
         ];
