@@ -19,6 +19,7 @@
       </trans-unit>
       <trans-unit id="tl_user.calendarfeeds.0">
         <source>Allowed calendar feeds</source>
+        <target>Feeds de Calendário Permitidos</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeeds.1">
         <source>Here you can grant access to one or more calendar feeds.</source>
@@ -26,6 +27,7 @@
       </trans-unit>
       <trans-unit id="tl_user.calendarfeedp.0">
         <source>Calendar feed permissions</source>
+        <target>Permissões de Feed de Calendário</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeedp.1">
         <source>Here you can define the calendar feed permissions.</source>

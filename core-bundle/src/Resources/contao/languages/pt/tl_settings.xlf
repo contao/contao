@@ -391,15 +391,15 @@
       </trans-unit>
       <trans-unit id="tl_settings.timeout_legend">
         <source>Timeout values</source>
-        <target>Valores de tempo limite</target>
+        <target>Valores de timeout</target>
       </trans-unit>
       <trans-unit id="tl_settings.chmod_legend">
         <source>Default access rights</source>
-        <target>Direitos de acesso padrão</target>
+        <target>Direitos de acesso predefinidos</target>
       </trans-unit>
       <trans-unit id="tl_settings.edit">
         <source>Edit the local configuration</source>
-        <target>Editar configuração local.</target>
+        <target>Editar configuração local</target>
       </trans-unit>
     </body>
   </file>

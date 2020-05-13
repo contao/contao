@@ -43,11 +43,11 @@
       </trans-unit>
       <trans-unit id="tl_module.nl_template.0">
         <source>Newsletter template</source>
-        <target>Newslettertemplate</target>
+        <target>Newsletter-Template</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_template.1">
         <source>Here you can select the newsletter template.</source>
-        <target>Hier können Sie das Newslettertemplate auswählen.</target>
+        <target>Hier können Sie das Newsletter-Template auswählen.</target>
       </trans-unit>
       <trans-unit id="tl_module.text_subscribe.0">
         <source>Your subscription on %s</source>

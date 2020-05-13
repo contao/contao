@@ -7,15 +7,15 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.subject.1">
         <source>Please enter the newsletter subject.</source>
-        <target>Favor digitar o assunto da newsletter.</target>
+        <target>Por favor especifique o assunto da newsletter.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.alias.0">
         <source>Newsletter alias</source>
-        <target>Pseudônimo da Newsletter</target>
+        <target>Nome curto da Newsletter</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.alias.1">
         <source>The newsletter alias is a unique reference to the newsletter which can be called instead of its numeric ID.</source>
-        <target>O Pseudônimo da Newsletter é uma referência única para a newsletter e esta pode ser referenciada pelo pseudônimo em vez do seu ID.</target>
+        <target>O nome curto da Newsletter é uma referência única para a newsletter e esta pode ser identificada pelo nome curto em vez do seu ID numérico.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.content.0">
         <source>HTML content</source>
@@ -23,15 +23,15 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.content.1">
         <source>Here you can enter the HTML content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient's e-mail address.</source>
-        <target>Favor inserir o conteúdo da newsletter. Use o curinga &lt;em&gt;##email##&lt;/em&gt; para inserir o e-mail do destinatário. Gere um link de cancelamento de assinatura deste modo: &lt;em&gt;http://www.domain.com/unsubscribe-page.html?email=##email##&lt;/em&gt;.</target>
+        <target>Por favor insira o conteúdo HTML da newsletter. Utilize o wildcard &lt;em&gt;##email##&lt;/em&gt; para inserir o endereço e-mail do destinatário.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.text.0">
         <source>Text content</source>
-        <target>Texto do conteúdo</target>
+        <target>Conteúdo da newsletter em forma de texto</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.text.1">
         <source>Here you can enter the text content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient's e-mail address.</source>
-        <target>Por favor insira o texto do conteúdo da newsletter. Use o wildcard &lt;em&gt;##email##&lt;/em&gt; para inserir o endereço de email do destinatário. Gerar links para desinscrição como &lt;em&gt;http://www.domain.com/unsubscribe-page.html?email=##email##&lt;/em&gt;.</target>
+        <target>Aqui pode inserir o conteúdo da newsletter em formato texto. Utilize o wildcard &lt;em&gt;##email##&lt;/em&gt; para inserir o endereço de e-mail do destinatário.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.addFile.0">
         <source>Add attachments</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.addFile.1">
         <source>Attach one or more files to the newsletter.</source>
-        <target>Anexe um ou mais arquivos à newsletter.</target>
+        <target>Anexe um ou mais ficheiros à newsletter.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.files.0">
         <source>Attachments</source>
@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.files.1">
         <source>Please choose the files to be attached from the files directory.</source>
-        <target>Por favor, selecione os arquivos que deseja anexar à newsletter.</target>
+        <target>Seleccione os ficheiros a adicionar a partir do directório de ficheiros.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.0">
         <source>Custom e-mail template</source>
@@ -63,7 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.sendText.1">
         <source>Send the newsletter as plain text e-mail without the HTML content.</source>
-        <target>Se você selecionar esta opção, o e-mail será enviado como texto puro.</target>
+        <target>Enviar a newsletter como texto simples, sem conteúdo HTML.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.externalImages.0">
         <source>External images</source>
@@ -71,7 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.externalImages.1">
         <source>Do not embed images in HTML newsletters.</source>
-        <target>Não embutir as imagens em HTML newsletters.</target>
+        <target>Não embutir as imagens em newsletters HTML.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sender.0">
         <source>Custom sender e-mail address</source>
@@ -79,7 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.sender.1">
         <source>Here you can override the default sender e-mail address of the channel.</source>
-        <target>Aqui pode alterar o endereço de e-mail do remetetente padrão do canal para um da sua escolha.</target>
+        <target>Aqui pode alterar o endereço de e-mail do remetente padrão do canal para um da sua escolha.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.senderName.0">
         <source>Custom sender name</source>
@@ -91,19 +91,19 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.mailsPerCycle.0">
         <source>Mails per cycle</source>
-        <target>Correios por ciclo</target>
+        <target>Numero de e-mails por ciclo</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.mailsPerCycle.1">
         <source>The sending process is split into several cycles to prevent the script from timing out.</source>
-        <target>Para evitar que o script exceda o limite de tempo, o envio é dividido em vários ciclos. Aqui você pode definir o número de emails por ciclo dependendo do tempo máximo de execução definido no seu php.ini.</target>
+        <target>Para evitar que o script exceda o limite de tempo, o envio é dividido em vários ciclos.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.timeout.0">
         <source>Timeout in seconds</source>
-        <target>Tempo Esgotado em segundos</target>
+        <target>Timeout em segundos</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.timeout.1">
         <source>Here you can modify the waiting time between each cycle to control the number of e-mails per minute.</source>
-        <target>Alguns servidores limitam o número de emails que uma pessoa pode enviar por minuto. Aqui você pode modificar o Tempo Esgotado entre cada ciclo em segundos para ter mais controle sobre a margem de tempo.</target>
+        <target>Alguns servidores limitam o número de e-mails que uma pessoa pode enviar por minuto. Aqui você pode definir o tempo entre cada ciclo em segundos para evitar atingir esse mesmo número.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.start.0">
         <source>Offset</source>
@@ -115,11 +115,11 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.sendPreviewTo.0">
         <source>Send preview to</source>
-        <target>Enviar prévia para</target>
+        <target>Enviar pré-visualização para</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendPreviewTo.1">
         <source>Send the preview of the newsletter to this e-mail address.</source>
-        <target>Enviar uma amostra da newsletter para este endereço de email.</target>
+        <target>Enviar uma pré-visualização da newsletter para este endereço de email.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.title_legend">
         <source>Title and subject</source>
@@ -131,7 +131,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.text_legend">
         <source>Text content</source>
-        <target>Texto do conteúdo</target>
+        <target>Conteúdo em texto</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.attachment_legend">
         <source>Attachments</source>
@@ -143,7 +143,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.sender_legend">
         <source>Sender settings</source>
-        <target>Configurações do remtente</target>
+        <target>Configurações do remetente</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.expert_legend">
         <source>Expert settings</source>
@@ -171,7 +171,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.rejected">
         <source>%s invalid e-mail address(es) has/have been disabled (see system log).</source>
-        <target>%s endereço(s) de e-mail inválido tem/têm sido desabilitada (veja log do sistema).</target>
+        <target>%s endereço(s) de e-mail inválido foi/foram desactivados (veja log do sistema).</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.error">
         <source>There are no active subscribers to the channel.</source>
@@ -187,11 +187,11 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.preview">
         <source>Send preview</source>
-        <target>Enviar prévia</target>
+        <target>Enviar pré-visualização</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendConfirm">
         <source>Do you really want to send the newsletter?</source>
-        <target>Você realmente deseja enviar a newsletter?</target>
+        <target>Tem a certeza que pretende enviar a newsletter?</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.new.0">
         <source>New newsletter</source>
@@ -219,7 +219,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.copy.0">
         <source>Duplicate newsletter</source>
-        <target>Copiar newsletter</target>
+        <target>Duplicar newsletter</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.copy.1">
         <source>Duplicate newsletter ID %s</source>
@@ -255,7 +255,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.pasteafter.1">
         <source>Paste after newsletter ID %s</source>
-        <target>Colar para canal ID %s</target>
+        <target>Colar para newsletter ID %s</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.send.0">
         <source>Send newsletter</source>

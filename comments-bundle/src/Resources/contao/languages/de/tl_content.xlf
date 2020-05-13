@@ -51,11 +51,11 @@
       </trans-unit>
       <trans-unit id="tl_content.com_template.0">
         <source>Comments template</source>
-        <target>Kommentartemplate</target>
+        <target>Kommentar-Template</target>
       </trans-unit>
       <trans-unit id="tl_content.com_template.1">
         <source>Here you can select the comments template.</source>
-        <target>Hier können Sie das Kommentartemplate auswählen.</target>
+        <target>Hier können Sie das Kommentar-Template auswählen.</target>
       </trans-unit>
       <trans-unit id="tl_content.comment_legend">
         <source>Comment settings</source>

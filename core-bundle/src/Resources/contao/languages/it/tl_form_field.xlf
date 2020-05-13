@@ -218,7 +218,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.datim.0">
         <source>Date and time</source>
-        <target>Data e tempo</target>
+        <target>Data e ora</target>
       </trans-unit>
       <trans-unit id="tl_form_field.datim.1">
         <source>Checks whether the input matches the global date and time format.</source>

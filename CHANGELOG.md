@@ -1,5 +1,17 @@
 # Change log
 
+## 4.4.49 (2020-05-13)
+
+ * Do not flush the template output buffer (see #1728).
+ * Add a "rawValue" property to the TextArea class (see #1714).
+ * Deprecate the "group" option in the query builder (see #1704).
+ * Set "information_schema_stats_expiry=0" in MySQL 8 (see #1700).
+ * Do not set the X-Mailer header in emails anymore (see #1688).
+ * Skip the "initializeSystem" hook if the temp folder does not yet exist (see #1685).
+ * Do not randomly encode email addresses (see #1687).
+ * Improve the search query performance (see #1678).
+ * Add rel="noreferrer noopener" to external targets (see #1415).
+
 ## 4.4.48 (2020-04-02)
 
  * Correctly execute kernel events for initialize.php (see #1410).

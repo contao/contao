@@ -195,6 +195,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.1">
         <source>Manage calendar feeds</source>
+        <target>Beheer agenda feeds</target>
       </trans-unit>
     </body>
   </file>

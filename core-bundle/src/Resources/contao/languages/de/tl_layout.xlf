@@ -259,11 +259,11 @@
       </trans-unit>
       <trans-unit id="tl_layout.template.0">
         <source>Page template</source>
-        <target>Seitentemplate</target>
+        <target>Seiten-Template</target>
       </trans-unit>
       <trans-unit id="tl_layout.template.1">
         <source>Here you can select the page template.</source>
-        <target>Hier können Sie das Seitentemplate auswählen.</target>
+        <target>Hier können Sie das Seiten-Template auswählen.</target>
       </trans-unit>
       <trans-unit id="tl_layout.doctype.0">
         <source>Output format</source>
