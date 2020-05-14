@@ -18,16 +18,14 @@
         <target>您可以在这里定义新闻权限</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeeds.0">
-        <source>Allowed RSS feeds</source>
-        <target>允许RSS种子</target>
+        <source>Allowed news feeds</source>
       </trans-unit>
       <trans-unit id="tl_user.newsfeeds.1">
         <source>Here you can grant access to one or more news feeds.</source>
         <target>您可以在这里创建1个或多个新闻种子访问权限。</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeedp.0">
-        <source>RSS feed permissions</source>
-        <target>RSS种子权限</target>
+        <source>News feed permissions</source>
       </trans-unit>
       <trans-unit id="tl_user.newsfeedp.1">
         <source>Here you can define the news feed permissions.</source>

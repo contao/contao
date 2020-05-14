@@ -35,11 +35,11 @@
       </trans-unit>
       <trans-unit id="tl_content.inline.0">
         <source>Show in browser</source>
-        <target>Mostra nel browser</target>
+        <target>Visualizza nel browser</target>
       </trans-unit>
       <trans-unit id="tl_content.inline.1">
         <source>Show the file in the browser instead of opening the download dialog.</source>
-        <target>Mostra il file nel browser invece di aprire la finestra di dialogo di download.</target>
+        <target>Visualizza il file all'interno del browser invece di aprire la finestra di dialogo del download.</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.0">
         <source>Overwrite meta data</source>
@@ -390,16 +390,13 @@
         <target>Template galley</target>
       </trans-unit>
       <trans-unit id="tl_content.galleryTpl.1">
-        <source>Here you can select the gallery template.</source>
-        <target>Selezionare il template della gallery</target>
+        <source>Here you can select a gallery template.</source>
       </trans-unit>
       <trans-unit id="tl_content.customTpl.0">
-        <source>Custom element template</source>
-        <target>Template personalizzato dell'elemento</target>
+        <source>Content element template</source>
       </trans-unit>
       <trans-unit id="tl_content.customTpl.1">
-        <source>Here you can overwrite the default element template.</source>
-        <target>E' possibile sovrascrivere il tamplate di default dell'elemento</target>
+        <source>Here you can select the content element template.</source>
       </trans-unit>
       <trans-unit id="tl_content.playerSRC.0">
         <source>Video/audio files</source>

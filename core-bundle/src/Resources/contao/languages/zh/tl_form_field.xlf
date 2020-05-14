@@ -298,12 +298,10 @@
         <target>此处您可以输入上载域的大小 (&lt;em&gt;size&lt;/em&gt; 属性).</target>
       </trans-unit>
       <trans-unit id="tl_form_field.customTpl.0">
-        <source>Custom form field template</source>
-        <target>自定义表单字段模板</target>
+        <source>Form field template</source>
       </trans-unit>
       <trans-unit id="tl_form_field.customTpl.1">
-        <source>Here you can overwrite the default form field template.</source>
-        <target>在这里覆盖默认的表单字段模板。</target>
+        <source>Here you can select the form field template.</source>
       </trans-unit>
       <trans-unit id="tl_form_field.slabel.0">
         <source>Submit button label</source>

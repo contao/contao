@@ -1518,8 +1518,8 @@
         <target>Комбинации клавиш панели управления</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
-        <target>Узнайте больше об ускорении рабочего процесса при помощи &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Обзор комбинаций клавиш&quot; target=&quot;_blank&quot;&gt;комбинаций клавиш&lt;/a&gt;.</target>
+        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <target>Узнайте больше об ускорении рабочего процесса с помощью &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Обзор комбинаций клавиш&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;комбинаций клавиш&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -2575,6 +2575,7 @@
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesExplain">
         <source>Backup codes can be used to access your account if you have lost your authentication device and cannot generate two-factor codes anymore. Treat your backup codes with the same level of attention as your password! It is recommended to save them with a password manager such as Lastpass, 1Password or Keeper.</source>
+        <target>Резервные коды можно использовать для доступа к учетной записи, если вы потеряли устройство аутентификации вы больше не сможете генерировать двухфакторные коды. Относитесь к своим резервным кодам с тем же вниманием, что и к паролю! Рекомендуется сохранять их с помощью менеджера паролей, таких как Lastpass, 1Password или Keeper.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesInfo">
         <source>Put the codes in a safe spot. If you lose your authentication device and do not have backup codes, you cannot access your account anymore!</source>
@@ -2658,9 +2659,11 @@
       </trans-unit>
       <trans-unit id="MSC.openToolbar">
         <source>Open the Contao toolbar</source>
+        <target>Открыть панель инструментов Contao</target>
       </trans-unit>
       <trans-unit id="MSC.closeToolbar">
         <source>Close the Contao toolbar</source>
+        <target>Закрыть панель инструментов Contao</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

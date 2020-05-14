@@ -82,12 +82,10 @@
         <target>Wybierz szablon menu. Możesz dodać własne szablony wydarzeń do katalogu templates. Pliki szablonów wydarzeń muszą zaczynać się od nav_ i muszą mieć rozszerzenie .tpl.</target>
       </trans-unit>
       <trans-unit id="tl_module.customTpl.0">
-        <source>Custom module template</source>
-        <target>Własny szablon modułu</target>
+        <source>Module template</source>
       </trans-unit>
       <trans-unit id="tl_module.customTpl.1">
-        <source>Here you can overwrite the default module template.</source>
-        <target>Tutaj możesz wybrać własny szablon modułu.</target>
+        <source>Here you can select the module template.</source>
       </trans-unit>
       <trans-unit id="tl_module.pages.0">
         <source>Pages</source>
@@ -410,12 +408,10 @@
         <target>Jeśli potrzebujesz osobnej definicji do formatowania tego modułu w stylach CSS, możesz tu wprowadzić ID. To ID będzie przypisane do tego modułu i można je modyfikować w arkuszu CSS.</target>
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>Wyłącz pytanie kontrolne</target>
+        <source>Disable spam protection</source>
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.1">
-        <source>Here you can disable the security question (not recommended).</source>
-        <target>Tu możesz wyłączyć pytanie kontrolne (nie zalecane).</target>
+        <source>Here you can disable the spam protection (not recommended).</source>
       </trans-unit>
       <trans-unit id="tl_module.reg_groups.0">
         <source>Member groups</source>

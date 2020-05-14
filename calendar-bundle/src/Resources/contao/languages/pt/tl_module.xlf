@@ -78,16 +78,14 @@
         <target>Modelo de evento</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_template.1">
-        <source>Here you can select the event template.</source>
-        <target>Favor escolher um layout para lista de evento. Você pode adicionar layout personalizados de eventos na pasta&lt;em&gt;templates&lt;/em&gt;. Arquivos de modelos de eventos começam com &lt;em&gt;event_&lt;/em&gt; e devem ter a extensão de arquivo &lt;em&gt;.tpl&lt;/em&gt;.</target>
+        <source>Here you can select an event template.</source>
       </trans-unit>
       <trans-unit id="tl_module.cal_ctemplate.0">
         <source>Calendar template</source>
         <target>Modelo de calendário</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_ctemplate.1">
-        <source>Here you can select the calendar template.</source>
-        <target>Selecione o modelo de calendário.</target>
+        <source>Here you can select a calendar template.</source>
       </trans-unit>
       <trans-unit id="tl_module.cal_showQuantity.0">
         <source>Show number of events</source>

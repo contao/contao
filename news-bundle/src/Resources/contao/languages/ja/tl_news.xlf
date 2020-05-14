@@ -245,6 +245,10 @@
         <source>Redirect target</source>
         <target>リダイレクト先</target>
       </trans-unit>
+      <trans-unit id="tl_news.meta_legend">
+        <source>Meta data</source>
+        <target>メタデータ</target>
+      </trans-unit>
       <trans-unit id="tl_news.expert_legend">
         <source>Expert settings</source>
         <target>専門的な設定</target>

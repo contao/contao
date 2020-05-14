@@ -82,12 +82,10 @@
         <target>Slēpt rakstu, ja biedrs ir pieslēdzies.</target>
       </trans-unit>
       <trans-unit id="tl_article.customTpl.0">
-        <source>Custom article template</source>
-        <target>Pielāgotas raksta veidnes</target>
+        <source>Article template</source>
       </trans-unit>
       <trans-unit id="tl_article.customTpl.1">
-        <source>Here you can overwrite the default article template.</source>
-        <target>Šeit jūs varat pārrakstīt rakstu noklusējuma veidni.</target>
+        <source>Here you can select the article template.</source>
       </trans-unit>
       <trans-unit id="tl_article.protected.0">
         <source>Protect article</source>

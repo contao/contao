@@ -245,6 +245,10 @@
         <source>Redirect target</source>
         <target>Novirzīšanas mērķis</target>
       </trans-unit>
+      <trans-unit id="tl_news.meta_legend">
+        <source>Meta data</source>
+        <target>Meta dati</target>
+      </trans-unit>
       <trans-unit id="tl_news.expert_legend">
         <source>Expert settings</source>
         <target>Eksperta iestatījumi</target>

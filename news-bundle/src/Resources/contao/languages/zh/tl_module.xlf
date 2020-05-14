@@ -46,8 +46,7 @@
         <target>新闻布局</target>
       </trans-unit>
       <trans-unit id="tl_module.news_template.1">
-        <source>Here you can select the news template.</source>
-        <target>选择新闻布局模板，您可以添加自定义的&lt;em&gt;news_&lt;/em&gt;布局模板到 &lt;em&gt;templates&lt;/em&gt;文件夹</target>
+        <source>Here you can select a news template.</source>
       </trans-unit>
       <trans-unit id="tl_module.news_format.0">
         <source>Archive format</source>

@@ -82,12 +82,10 @@
         <target>Favor selecionar o modelo de navegação (estes modelos iniciam por &lt;em&gt;nav_&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_module.customTpl.0">
-        <source>Custom module template</source>
-        <target>Modelo personalizado de módulo</target>
+        <source>Module template</source>
       </trans-unit>
       <trans-unit id="tl_module.customTpl.1">
-        <source>Here you can overwrite the default module template.</source>
-        <target>Aqui pode substituir o modelo padrão de módulo.</target>
+        <source>Here you can select the module template.</source>
       </trans-unit>
       <trans-unit id="tl_module.pages.0">
         <source>Pages</source>
@@ -267,9 +265,11 @@
       </trans-unit>
       <trans-unit id="tl_module.inColumn.0">
         <source>Layout section</source>
+        <target>Secção de Esquema</target>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.1">
         <source>Please choose the layout section whose articles you want to list.</source>
+        <target>Por favor escolha a secção de esquema cujos artigos pretende listar.</target>
       </trans-unit>
       <trans-unit id="tl_module.skipFirst.0">
         <source>Skip items</source>
@@ -345,7 +345,7 @@
       </trans-unit>
       <trans-unit id="tl_module.rss_cache.0">
         <source>Cache timeout</source>
-        <target>Expiração de cache</target>
+        <target>Timeout de cache</target>
       </trans-unit>
       <trans-unit id="tl_module.rss_cache.1">
         <source>Here you can define how long the RSS feed is being cached.</source>
@@ -408,12 +408,10 @@
         <target>Aqui você pode inserir o ID de folha de estilo (atributo ID) ou uma ou mais classes de folha de estilo (atributo class) para formatar o módulo utilizando CSS.</target>
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>Disabilitar pergunta de segurança</target>
+        <source>Disable spam protection</source>
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.1">
-        <source>Here you can disable the security question (not recommended).</source>
-        <target>Escolha essa opção para desabilitar a pergunta de segurança (não recomendado)</target>
+        <source>Here you can disable the spam protection (not recommended).</source>
       </trans-unit>
       <trans-unit id="tl_module.reg_groups.0">
         <source>Member groups</source>

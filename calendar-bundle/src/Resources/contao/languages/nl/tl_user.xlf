@@ -18,16 +18,16 @@
         <target>Hier kunt u kalender permissies opgeven.</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeeds.0">
-        <source>Allowed RSS feeds</source>
-        <target>Toegestane RSS feeds</target>
+        <source>Allowed calendar feeds</source>
+        <target>Toegestane agenda feeds</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeeds.1">
         <source>Here you can grant access to one or more calendar feeds.</source>
         <target>Hier kunt u toegang verlenen tot een of meer kalender-feeds.</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeedp.0">
-        <source>RSS feed permissions</source>
-        <target>RSS feed permissies</target>
+        <source>Calendar feed permissions</source>
+        <target>Machtingen agenda feeds</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeedp.1">
         <source>Here you can define the calendar feed permissions.</source>

@@ -260,7 +260,7 @@ Deixe em branco para criar um evento sem data/hora de fim definido.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.1">
         <source>If you want to prevent the event from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Caso pretenda prevenir que o evento surja no website antes de uma determinada data/hora, pode defini-lo aqui. Caso contrário, deixe este campo em branco.</target>
+        <target>Caso pretenda prevenir que o evento surja no website depois de uma determinada data/hora, pode defini-lo aqui. Caso contrário, deixe este campo em branco.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.tstamp.0">
         <source>Revision date</source>
@@ -301,6 +301,10 @@ Deixe em branco para criar um evento sem data/hora de fim definido.</target>
       <trans-unit id="tl_calendar_events.source_legend">
         <source>Redirect target</source>
         <target>Redireccionar para</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.meta_legend">
+        <source>Meta data</source>
+        <target>Dados meta</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.expert_legend">
         <source>Expert settings</source>

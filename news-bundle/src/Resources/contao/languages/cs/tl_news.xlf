@@ -243,6 +243,10 @@
         <source>Redirect target</source>
         <target>Cíl přesměrování</target>
       </trans-unit>
+      <trans-unit id="tl_news.meta_legend">
+        <source>Meta data</source>
+        <target>Meta informace</target>
+      </trans-unit>
       <trans-unit id="tl_news.expert_legend">
         <source>Expert settings</source>
         <target>Rozšířená nastavení</target>

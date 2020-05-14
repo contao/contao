@@ -336,8 +336,7 @@
         <target>Mostrar apenas para visitantes</target>
       </trans-unit>
       <trans-unit id="tl_page.guests.1">
-        <source>Hide the page if there is an authenticated user.</source>
-        <target>Ocultar esta página no menu de navegação dos usuários conectados.</target>
+        <source>Hide the page if a member is logged in.</source>
       </trans-unit>
       <trans-unit id="tl_page.tabindex.0">
         <source>Tab index</source>
@@ -369,6 +368,7 @@
       </trans-unit>
       <trans-unit id="tl_page.start.1">
         <source>If you want to prevent the page from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Caso pretenda prevenir que a página surja no website antes de uma determinada data/hora, pode defini-lo aqui. Caso contrário, deixe este campo em branco.</target>
       </trans-unit>
       <trans-unit id="tl_page.stop.0">
         <source>Show until</source>
@@ -376,6 +376,7 @@
       </trans-unit>
       <trans-unit id="tl_page.stop.1">
         <source>If you want to prevent the page from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Caso pretenda prevenir que a página surja no website depois de uma determinada data/hora, pode defini-lo aqui. Caso contrário, deixe este campo em branco.</target>
       </trans-unit>
       <trans-unit id="tl_page.enforceTwoFactor.0">
         <source>Enforce two-factor authentication</source>

@@ -243,6 +243,10 @@
         <source>Redirect target</source>
         <target>Pagina obbiettivo</target>
       </trans-unit>
+      <trans-unit id="tl_news.meta_legend">
+        <source>Meta data</source>
+        <target>Meta dati</target>
+      </trans-unit>
       <trans-unit id="tl_news.expert_legend">
         <source>Expert settings</source>
         <target>Impostazioni avanzate</target>

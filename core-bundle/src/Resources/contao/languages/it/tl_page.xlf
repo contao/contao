@@ -313,9 +313,11 @@
       </trans-unit>
       <trans-unit id="tl_page.sitemap.0">
         <source>Show in HTML sitemap</source>
+        <target>Mostra nella mappa del sito (sitemap)</target>
       </trans-unit>
       <trans-unit id="tl_page.sitemap.1">
         <source>Here you can define whether the page is shown in the HTML sitemap.</source>
+        <target>Puoi definire se visualizzare la pagina nella mappa del sito (sitemap)</target>
       </trans-unit>
       <trans-unit id="tl_page.hide.0">
         <source>Hide from navigation</source>
@@ -330,8 +332,7 @@
         <target>Mostra solo agli utenti che non hanno effettuato il login (guest/ospiti)</target>
       </trans-unit>
       <trans-unit id="tl_page.guests.1">
-        <source>Hide the page if there is an authenticated user.</source>
-        <target>Nasconde la pagina dal menu di navigazione se l'utente ha effettuato il login</target>
+        <source>Hide the page if a member is logged in.</source>
       </trans-unit>
       <trans-unit id="tl_page.tabindex.0">
         <source>Tab index</source>

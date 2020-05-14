@@ -1518,8 +1518,8 @@
         <target>Backend-Tastaturkürzel</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
-        <target>Wie Sie Ihren Arbeitsablauf durch die Verwendung von &lt;a href=&quot;https://docs.contao.org/manual/de/administrationsbereich/backend-tastaturkuerzel/&quot; target=&quot;_blank&quot;&gt;Tastaturkürzeln&lt;/a&gt; beschleunigen.</target>
+        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <target>Wie Sie Ihren Arbeitsablauf durch die Verwendung von &lt;a href=&quot;https://docs.contao.org/books/manual/current/de/02-administrationsbereich/backend-tastaturkuerzel.html&quot; title=&quot;Übersicht der Tastaturkürzel&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Tastaturkürzeln&lt;/a&gt; beschleunigen.</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>

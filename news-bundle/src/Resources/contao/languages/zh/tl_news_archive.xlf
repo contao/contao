@@ -74,8 +74,7 @@
         <target>仅允许认证用户发表评论。</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>禁用安全问题</target>
+        <source>Disable spam protection</source>
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>
@@ -134,12 +133,11 @@
         <target>作者和系统管理员</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.0">
-        <source>RSS feeds</source>
-        <target>RSS源</target>
+        <source>News feeds</source>
+        <target>新闻源</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.1">
-        <source>Manage RSS feeds</source>
-        <target>管理RSS源</target>
+        <source>Manage news feeds</source>
       </trans-unit>
       <trans-unit id="tl_news_archive.new.0">
         <source>New</source>

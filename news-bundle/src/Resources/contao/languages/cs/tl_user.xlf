@@ -18,16 +18,14 @@
         <target>Zde můžete zadat práva novinek.</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeeds.0">
-        <source>Allowed RSS feeds</source>
-        <target>Povolené kanály RSS</target>
+        <source>Allowed news feeds</source>
       </trans-unit>
       <trans-unit id="tl_user.newsfeeds.1">
         <source>Here you can grant access to one or more news feeds.</source>
         <target>Zde můžete zaručit přístup k jednomu nebo více kanálům zpráv.</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeedp.0">
-        <source>RSS feed permissions</source>
-        <target>Přístupová práva ke kanálu RSS</target>
+        <source>News feed permissions</source>
       </trans-unit>
       <trans-unit id="tl_user.newsfeedp.1">
         <source>Here you can define the news feed permissions.</source>

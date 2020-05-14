@@ -70,8 +70,7 @@
         <target>Remove a lista de espera crawl</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.crawl_queue.1">
-        <source>Truncates the &lt;code&gt;tl_crawl_queue&lt;/code&gt; table which stores all the queue information from crawl processes. This job permanently deletes these records.</source>
-        <target>Trunca a tabela &lt;code&gt;tl_crawl_queue&lt;/code&gt; a qual guarda toda a informação sobre listas de espera de processos crawl. Esta tarefa remove esta mesma informação.</target>
+        <source>Truncates the &lt;code&gt;tl_crawl_queue&lt;/code&gt; table which stores all the queue information from crawl processes.</source>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.images.0">
         <source>Purge the image cache</source>

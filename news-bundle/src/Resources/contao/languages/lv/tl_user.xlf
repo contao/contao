@@ -18,16 +18,14 @@
         <target>Šeit jūs varat noteikt jaunumu atļaujas.</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeeds.0">
-        <source>Allowed RSS feeds</source>
-        <target>Atļautās RSS barotnes</target>
+        <source>Allowed news feeds</source>
       </trans-unit>
       <trans-unit id="tl_user.newsfeeds.1">
         <source>Here you can grant access to one or more news feeds.</source>
         <target>Šeit jūs varat dot piekļuvi vienai vai vairākām jaunumu barotnēm.</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeedp.0">
-        <source>RSS feed permissions</source>
-        <target>RSS barotņes atļaujas</target>
+        <source>News feed permissions</source>
       </trans-unit>
       <trans-unit id="tl_user.newsfeedp.1">
         <source>Here you can define the news feed permissions.</source>

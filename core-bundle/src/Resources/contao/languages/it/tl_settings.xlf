@@ -187,7 +187,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.date_legend">
         <source>Date and time</source>
-        <target>Data e tempo</target>
+        <target>Data e ora</target>
       </trans-unit>
       <trans-unit id="tl_settings.global_legend">
         <source>Global configuration</source>

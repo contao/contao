@@ -62,16 +62,14 @@
         <target>Předloha seznamu</target>
       </trans-unit>
       <trans-unit id="tl_module.list_layout.1">
-        <source>Here you can select the list template.</source>
-        <target>Zde můžete zvolit předlohu seznamů.</target>
+        <source>Here you can select a list template.</source>
       </trans-unit>
       <trans-unit id="tl_module.list_info_layout.0">
         <source>Details page template</source>
         <target>Detaily k předloze stránky</target>
       </trans-unit>
       <trans-unit id="tl_module.list_info_layout.1">
-        <source>Here you can select the details page template.</source>
-        <target>Zde můžete zvolit detaily k předloze stránky.</target>
+        <source>Here you can select a details page template.</source>
       </trans-unit>
     </body>
   </file>
