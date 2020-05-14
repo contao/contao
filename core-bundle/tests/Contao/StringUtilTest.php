@@ -318,7 +318,8 @@ class StringUtilTest extends TestCase
     /**
      * @group legacy
      * @dataProvider parseSimpleTokensLegacyProvider
-     * @expectedDeprecation Using tokens that are not valid PHP variables is deprecated. Falling back to legacy token parsing.
+     *
+     * @expectedDeprecation Using tokens that are not valid PHP variables has been deprecated %s.
      */
     public function testParsesSimpleTokensLegacy(string $string, array $tokens, string $expected): void
     {

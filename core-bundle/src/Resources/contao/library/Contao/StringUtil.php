@@ -590,8 +590,9 @@ class StringUtil
 		{
 			if (!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $token))
 			{
+				@trigger_error('Using tokens that are not valid PHP variables has been deprecated and will no longer work in Contao 5.0. Falling back to legacy token parsing.', E_USER_DEPRECATED);
+
 				$canUseExpressionLanguage = false;
-				@trigger_error('Using tokens that are not valid PHP variables is deprecated. Falling back to legacy token parsing.', E_USER_DEPRECATED);
 				break;
 			}
 		}
@@ -601,13 +602,17 @@ class StringUtil
 		if ($canUseExpressionLanguage)
 		{
 			$expressionLanguage = new ExpressionLanguage();
-			$expressionLanguage->register('constant', static function ()
-			{
-				return "throw new \\InvalidArgumentException('Cannot use the constant() function in the expression for security reasons.');";
-			}, static function ()
-			{
-				throw new \InvalidArgumentException('Cannot use the constant() function in the expression for security reasons.');
-			});
+			$expressionLanguage->register(
+				'constant',
+				static function ()
+				{
+					return "throw new \\InvalidArgumentException('Cannot use the constant() function in the expression for security reasons.');";
+				},
+				static function ()
+				{
+					throw new \InvalidArgumentException('Cannot use the constant() function in the expression for security reasons.');
+				}
+			);
 		}
 
 		$evaluateExpression = static function ($strExpression) use ($arrData, $expressionLanguage)
