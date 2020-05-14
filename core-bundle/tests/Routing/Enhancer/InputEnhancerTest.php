@@ -139,6 +139,29 @@ class InputEnhancerTest extends TestCase
     {
         $input = $this->mockAdapter(['setGet']);
         $input
+            ->expects($this->once())
+            ->method('setGet')
+        ;
+
+        $framework = $this->mockContaoFramework([Input::class => $input]);
+
+        $defaults = [
+            'pageModel' => $this->createMock(PageModel::class),
+            'parameters' => '/foo/bar/foo/bar',
+        ];
+
+        $enhancer = new InputEnhancer($framework, false);
+
+        $this->expectException(ResourceNotFoundException::class);
+        $this->expectExceptionMessage('Duplicate parameter "foo" in path');
+
+        $enhancer->enhance($defaults, Request::create('/'));
+    }
+
+    public function testThrowsAnExceptionUponParametersInQuery(): void
+    {
+        $input = $this->mockAdapter(['setGet']);
+        $input
             ->expects($this->never())
             ->method('setGet')
         ;
@@ -150,14 +173,12 @@ class InputEnhancerTest extends TestCase
             'parameters' => '/foo/bar',
         ];
 
-        $_GET = ['foo' => 'baz'];
-
         $enhancer = new InputEnhancer($framework, false);
 
         $this->expectException(ResourceNotFoundException::class);
         $this->expectExceptionMessage('Duplicate parameter "foo" in path');
 
-        $enhancer->enhance($defaults, Request::create('/'));
+        $enhancer->enhance($defaults, Request::create('/?foo=bar'));
     }
 
     public function testThrowsAnExceptionIfAnAutoItemKeywordIsPresent(): void
