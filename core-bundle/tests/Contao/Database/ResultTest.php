@@ -53,7 +53,7 @@ class ResultTest extends TestCase
         }
 
         $this->expectException(Notice::class);
-        $result->fetchField();
+        $resultStatement->fetchField();
     }
 
     public function testSingleRow(): void
