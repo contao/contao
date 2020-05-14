@@ -187,7 +187,7 @@ class Result
 				}
 
 				// Use array_key_exists() instead of isset(), because the value might be null
-				if (\array_key_exists($strKey, $this->resultSet[$this->intIndex]))
+				if (isset($this->resultSet[$this->intIndex]) && \array_key_exists($strKey, $this->resultSet[$this->intIndex]))
 				{
 					return $this->resultSet[$this->intIndex][$strKey];
 				}
@@ -392,10 +392,15 @@ class Result
 
 		if (!$this->isModified)
 		{
+			if (!isset($this->resultSet[$this->intIndex]))
+			{
+				return array();
+			}
+
 			return $blnEnumerated ? array_values($this->resultSet[$this->intIndex]) : $this->resultSet[$this->intIndex];
 		}
 
-		$row = array_merge($this->resultSet[$this->intIndex], $this->arrModified);
+		$row = array_merge(isset($this->resultSet[$this->intIndex]) ? $this->resultSet[$this->intIndex] : array(), $this->arrModified);
 
 		return $blnEnumerated ? array_values($row) : $row;
 	}
