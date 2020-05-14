@@ -27,15 +27,33 @@ class ResultTest extends TestCase
     {
         $result = new Result(new DoctrineArrayStatement([]), 'SELECT from test');
 
-        $this->assertFalse($result->isModified);
-        $this->assertSame(0, $result->numFields);
-        $this->assertSame(0, $result->numRows);
-        $this->assertSame('SELECT from test', $result->query);
-        $this->assertSame(0, $result->count());
-        $this->assertSame([], $result->fetchAllAssoc());
-        $this->assertFalse($result->fetchAssoc());
-        $this->assertSame([], $result->fetchEach('test'));
-        $this->assertFalse($result->fetchRow());
+        foreach ([null, 'first', 'last', 'reset'] as $methodName) {
+            if ($methodName) {
+                $this->assertSame($result, $result->$methodName());
+            }
+            $this->assertFalse($result->isModified);
+            $this->assertSame(0, $result->numFields);
+            $this->assertSame(0, $result->numRows);
+            $this->assertSame('SELECT from test', $result->query);
+            $this->assertSame(0, $result->count());
+            $this->assertSame([], $result->fetchAllAssoc());
+            $this->assertFalse($result->fetchAssoc());
+            $this->assertSame([], $result->fetchEach('test'));
+            $this->assertFalse($result->fetchRow());
+            $this->assertSame([], $result->row());
+            $this->assertSame([], $result->row(true));
+            $this->assertFalse(isset($result->modifiedKey));
+            $this->assertNull($result->modifiedKey);
+            $result->modifiedKey = 'value';
+            $this->assertSame(['modifiedKey' => 'value'], $result->row());
+            $this->assertSame(['modifiedKey' => 'value'], $result->row(false));
+            $this->assertSame(['value'], $result->row(true));
+            $this->assertTrue(isset($result->modifiedKey));
+            $this->assertSame('value', $result->modifiedKey);
+        }
+
+        $this->expectException('PHPUnit_Framework_Error_Notice');
+        $result->fetchField();
     }
 
     public function testSingleRow()
@@ -70,6 +88,11 @@ class ResultTest extends TestCase
         $this->assertSame('new value', $result->field);
         $this->assertSame(['field' => 'new value'], $result->row());
         $this->assertSame(['new value'], $result->row(true));
+        $this->assertSame('value1', $result->fetchField());
+        $this->assertSame('value1', $result->fetchField(0));
+
+        $this->expectException('PHPUnit_Framework_Error_Notice');
+        $result->fetchField(1);
     }
 
     public function testMultipleRows()
@@ -108,6 +131,11 @@ class ResultTest extends TestCase
         $this->assertSame('new value', $result->field);
         $this->assertSame(['field' => 'new value'], $result->row());
         $this->assertSame(['new value'], $result->row(true));
+        $this->assertSame('value2', $result->fetchField());
+        $this->assertSame('value2', $result->fetchField(0));
+
+        $this->expectException('PHPUnit_Framework_Error_Notice');
+        $result->fetchField(1);
     }
 
     public function testFetchRowAndAssoc()
