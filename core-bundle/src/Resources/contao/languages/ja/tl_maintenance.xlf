@@ -71,8 +71,8 @@
         <target>クローラーのキューを消去</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.crawl_queue.1">
-        <source>Truncates the &lt;code&gt;tl_crawl_queue&lt;/code&gt; table which stores all the queue information from crawl processes. This job permanently deletes these records.</source>
-        <target> クロールのプロセスのキューの情報を保持している&lt;code&gt;tl_crawl_queue&lt;/code&gt;のテーブルの内容を消去します。この処理によってテーブルのレコードを永続的に削除します。</target>
+        <source>Truncates the &lt;code&gt;tl_crawl_queue&lt;/code&gt; table which stores all the queue information from crawl processes.</source>
+        <target> クロールのプロセスのキューの情報を保持している&lt;code&gt;tl_crawl_queue&lt;/code&gt;のテーブルの内容を消去します。</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.images.0">
         <source>Purge the image cache</source>

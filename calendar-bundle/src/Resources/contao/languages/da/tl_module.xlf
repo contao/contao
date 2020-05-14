@@ -78,16 +78,14 @@
         <target>Begivenhedsskabelon</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_template.1">
-        <source>Here you can select the event template.</source>
-        <target>Vælg et begivenhedslayout. Du kan tilføje tilpassede layouts til folderen &lt;em&gt;templates&lt;/em&gt;. Filnavne for begivenhedsskabelonfiler begynder med &lt;em&gt;event_&lt;/em&gt; og skal have filendelse &lt;em&gt;.tpl&lt;/em&gt;.</target>
+        <source>Here you can select an event template.</source>
       </trans-unit>
       <trans-unit id="tl_module.cal_ctemplate.0">
         <source>Calendar template</source>
         <target>Kalender skabelon</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_ctemplate.1">
-        <source>Here you can select the calendar template.</source>
-        <target>Her kan du vælge kalender skabelon.</target>
+        <source>Here you can select a calendar template.</source>
       </trans-unit>
       <trans-unit id="tl_module.cal_showQuantity.0">
         <source>Show number of events</source>

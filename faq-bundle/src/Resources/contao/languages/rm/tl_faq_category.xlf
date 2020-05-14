@@ -82,8 +82,7 @@
         <target>Lubir be ad utilisaders annunziads da crear commentaris.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>Deactivar la dumonda da segirezza</target>
+        <source>Disable spam protection</source>
       </trans-unit>
       <trans-unit id="tl_faq_category.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>

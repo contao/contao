@@ -67,9 +67,11 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.crawl_queue.0">
         <source>Purge the crawl queue</source>
+        <target>Verwijder de crawl-wachtrij</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.crawl_queue.1">
-        <source>Truncates the &lt;code&gt;tl_crawl_queue&lt;/code&gt; table which stores all the queue information from crawl processes. This job permanently deletes these records.</source>
+        <source>Truncates the &lt;code&gt;tl_crawl_queue&lt;/code&gt; table which stores all the queue information from crawl processes.</source>
+        <target>Kapt de &lt;code&gt;tl_crawl_queue&lt;/code&gt; tabel af, die alle wachtrijinformatie van crawlprocessen opslaat.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.images.0">
         <source>Purge the image cache</source>
@@ -97,6 +99,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.search.0">
         <source>Purge the search results cache</source>
+        <target>Verwijder de cache met zoekresultaten</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.search.1">
         <source>Removes the cached versions of the search results.</source>
@@ -128,36 +131,47 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.crawler">
         <source>Crawler</source>
+        <target>Crawler</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.startCrawling">
         <source>Start crawling</source>
+        <target>Begin met crawlen</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlSubscribers.0">
         <source>Enabled features</source>
+        <target>Ingeschakelde functies</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlSubscribers.1">
         <source>The crawler crawls all URLs it finds. Here you can decide what to do with these results.</source>
+        <target>De crawler crawlt alle gevonden URL's. Hier kunt u beslissen wat u met deze resultaten wilt doen.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlMember.0">
         <source>Front end member</source>
+        <target>Front-end lid</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlMember.1">
         <source>Automatically log in a front end member to index protected pages.</source>
+        <target>Automatisch inloggen van front-end member om beveiligde pagina's te indexeren.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlWaitToBeFinished">
         <source>The crawler is currently working. Please wait for it to finish to see the results.</source>
+        <target>De crawler werkt momenteel. Wacht tot het klaar is om de resultaten te zien.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlDownloadDebugLog">
         <source>Download the debug log</source>
+        <target>Download het foutopsporingslogboek</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlDownloadSubscriberLog">
         <source>Download the log</source>
+        <target>Download het logboek</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlSubscriberNames.search-index">
         <source>Update the search index</source>
+        <target>Update de zoekindex</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlSubscriberNames.broken-link-checker">
         <source>Check for broken links</source>
+        <target>Controleer op gebroken links</target>
       </trans-unit>
     </body>
   </file>

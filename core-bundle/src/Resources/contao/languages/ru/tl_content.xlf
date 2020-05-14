@@ -390,16 +390,16 @@
         <target>Галерея шаблонов</target>
       </trans-unit>
       <trans-unit id="tl_content.galleryTpl.1">
-        <source>Here you can select the gallery template.</source>
-        <target>Вы можете выбрать галерею шаблонов.</target>
+        <source>Here you can select a gallery template.</source>
+        <target>Здесь можно выбрать шаблон галереи.</target>
       </trans-unit>
       <trans-unit id="tl_content.customTpl.0">
-        <source>Custom element template</source>
-        <target>Пользовательский шаблон элемента</target>
+        <source>Content element template</source>
+        <target>Шаблон элемента контента</target>
       </trans-unit>
       <trans-unit id="tl_content.customTpl.1">
-        <source>Here you can overwrite the default element template.</source>
-        <target>Вы можете переписать шаблон элемента по умолчанию.</target>
+        <source>Here you can select the content element template.</source>
+        <target>Выберите шаблон элемента контента.</target>
       </trans-unit>
       <trans-unit id="tl_content.playerSRC.0">
         <source>Video/audio files</source>

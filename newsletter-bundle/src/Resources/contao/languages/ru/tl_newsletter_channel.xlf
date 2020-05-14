@@ -22,8 +22,8 @@
         <target>Шаблон е-mail письма</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.template.1">
-        <source>Here you can choose the e-mail template.</source>
-        <target>Выберите шаблон e-mail письма.</target>
+        <source>Here you can select an e-mail template.</source>
+        <target>Вы можете выбрать шаблон электронной почты.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.sender.0">
         <source>Sender e-mail address</source>

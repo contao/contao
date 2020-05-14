@@ -42,20 +42,20 @@
         <target>Nur angemeldeten Benutzern das Erstellen von Kommentaren erlauben.</target>
       </trans-unit>
       <trans-unit id="tl_content.com_disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>Sicherheitsfrage deaktivieren</target>
+        <source>Disable spam protection</source>
+        <target>Spam-Schutz deaktivieren</target>
       </trans-unit>
       <trans-unit id="tl_content.com_disableCaptcha.1">
-        <source>Here you can disable the security question (not recommended).</source>
-        <target>Hier können Sie die Sicherheitsfrage abschalten (nicht empfohlen).</target>
+        <source>Here you can disable the spam protection (not recommended).</source>
+        <target>Hier können Sie den Spam-Schutz deaktivieren (nicht empfohlen).</target>
       </trans-unit>
       <trans-unit id="tl_content.com_template.0">
         <source>Comments template</source>
-        <target>Kommentartemplate</target>
+        <target>Kommentar-Template</target>
       </trans-unit>
       <trans-unit id="tl_content.com_template.1">
-        <source>Here you can select the comments template.</source>
-        <target>Hier können Sie das Kommentartemplate auswählen.</target>
+        <source>Here you can select a comments template.</source>
+        <target>Hier können Sie ein Kommentar-Template auswählen.</target>
       </trans-unit>
       <trans-unit id="tl_content.comment_legend">
         <source>Comment settings</source>

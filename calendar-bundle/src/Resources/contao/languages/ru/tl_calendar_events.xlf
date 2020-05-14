@@ -301,6 +301,10 @@
         <source>Redirect target</source>
         <target>Переадресация</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.meta_legend">
+        <source>Meta data</source>
+        <target>Метаданные</target>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.expert_legend">
         <source>Expert settings</source>
         <target>Экспертные настройки</target>

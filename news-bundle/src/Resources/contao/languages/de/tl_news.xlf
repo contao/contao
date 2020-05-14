@@ -151,7 +151,7 @@
       </trans-unit>
       <trans-unit id="tl_news.jumpTo.1">
         <source>Please choose the page to which visitors will be redirected when clicking the news item.</source>
-        <target>Bitte wählen Sie die Seite aus, zu der Besucher weitergeleitet werden, wenn Sie einen Beitrag anklicken.</target>
+        <target>Bitte wählen Sie die Seite aus, zu der Besucher weitergeleitet werden, wenn sie einen Beitrag anklicken.</target>
       </trans-unit>
       <trans-unit id="tl_news.articleId.0">
         <source>Article</source>
@@ -159,7 +159,7 @@
       </trans-unit>
       <trans-unit id="tl_news.articleId.1">
         <source>Please choose the article to which visitors will be redirected when clicking the news item.</source>
-        <target>Bitte wählen Sie den Artikel aus, zu der Besucher weitergeleitet werden, wenn Sie einen Beitrag anklicken.</target>
+        <target>Bitte wählen Sie den Artikel aus, zu der Besucher weitergeleitet werden, wenn sie einen Beitrag anklicken.</target>
       </trans-unit>
       <trans-unit id="tl_news.cssClass.0">
         <source>CSS class</source>
@@ -244,6 +244,10 @@
       <trans-unit id="tl_news.source_legend">
         <source>Redirect target</source>
         <target>Weiterleitungsziel</target>
+      </trans-unit>
+      <trans-unit id="tl_news.meta_legend">
+        <source>Meta data</source>
+        <target>Metadaten</target>
       </trans-unit>
       <trans-unit id="tl_news.expert_legend">
         <source>Expert settings</source>

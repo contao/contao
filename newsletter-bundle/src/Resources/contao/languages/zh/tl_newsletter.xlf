@@ -50,12 +50,11 @@
         <target>请在文件目录中选择文件作为附件。</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.0">
-        <source>Custom e-mail template</source>
-        <target>自定义电子邮件模板</target>
+        <source>E-mail template</source>
+        <target>电子邮件模板</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.1">
-        <source>Here you can override the default e-mail template of the channel.</source>
-        <target>您可以在这里覆盖该频道的默认电子邮件模板.</target>
+        <source>Here you can override the e-mail template of the channel.</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendText.0">
         <source>Send as plain text</source>

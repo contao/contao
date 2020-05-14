@@ -294,6 +294,10 @@
         <source>Redirect target</source>
         <target>Preusmeritveni cilj</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.meta_legend">
+        <source>Meta data</source>
+        <target>Meta podatki</target>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.expert_legend">
         <source>Expert settings</source>
         <target>Napredne nastavitve</target>

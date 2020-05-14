@@ -514,7 +514,7 @@
       </trans-unit>
       <trans-unit id="CTE.downloads.1">
         <source>Generates multiple links to download files.</source>
-        <target>Este elemento contém múltiplos arquivos que podem ser baixados pelos visitantes do seu website.</target>
+        <target>Cria múltiplos links para download de ficheiros.</target>
       </trans-unit>
       <trans-unit id="CTE.includes">
         <source>Include elements</source>
@@ -1229,6 +1229,7 @@
       </trans-unit>
       <trans-unit id="MSC.mw_column">
         <source>Layout section</source>
+        <target>Secção de Esquema</target>
       </trans-unit>
       <trans-unit id="MSC.mw_enable">
         <source>Enable/disable the module</source>
@@ -1511,8 +1512,7 @@
         <target>Back-end atalhos de teclado</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
-        <target>Aprenda mais como acelerar a sua produtividade ao usar &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot;&gt;atalhos de teclado&lt;/a&gt;.</target>
+        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>

@@ -74,8 +74,7 @@
         <target>Consentire solo agli utenti autenticati di creare commenti.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>Disattivare la domanda di sicurezza</target>
+        <source>Disable spam protection</source>
       </trans-unit>
       <trans-unit id="tl_calendar.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>
@@ -142,12 +141,11 @@
         <target>Articoli completi</target>
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.0">
-        <source>RSS feeds</source>
-        <target>RSS feeds</target>
+        <source>Calendar feeds</source>
+        <target>Feed RSS Eventi</target>
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.1">
-        <source>Manage RSS feeds</source>
-        <target>Gestisci il feed RSS</target>
+        <source>Manage calendar feeds</source>
       </trans-unit>
       <trans-unit id="tl_calendar.new.0">
         <source>New</source>

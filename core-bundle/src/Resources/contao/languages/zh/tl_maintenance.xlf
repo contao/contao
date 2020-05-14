@@ -70,8 +70,7 @@
         <target>清除爬虫队列</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.crawl_queue.1">
-        <source>Truncates the &lt;code&gt;tl_crawl_queue&lt;/code&gt; table which stores all the queue information from crawl processes. This job permanently deletes these records.</source>
-        <target>清空 &lt;code&gt;tl_crawl_queue&lt;/code&gt; 数据表，该表中存储来自于爬虫进程的所有队列信息。该操作会永久删除这些记录。</target>
+        <source>Truncates the &lt;code&gt;tl_crawl_queue&lt;/code&gt; table which stores all the queue information from crawl processes.</source>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.images.0">
         <source>Purge the image cache</source>

@@ -46,8 +46,8 @@
         <target>Новый шаблон</target>
       </trans-unit>
       <trans-unit id="tl_module.news_template.1">
-        <source>Here you can select the news template.</source>
-        <target>Вы можете выбрать шаблон новости.</target>
+        <source>Here you can select a news template.</source>
+        <target>Вы можете выбрать шаблон новостей.</target>
       </trans-unit>
       <trans-unit id="tl_module.news_format.0">
         <source>Archive format</source>

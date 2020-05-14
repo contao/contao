@@ -70,8 +70,7 @@
         <target>Wyczyść kolejkę indeksowania</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.crawl_queue.1">
-        <source>Truncates the &lt;code&gt;tl_crawl_queue&lt;/code&gt; table which stores all the queue information from crawl processes. This job permanently deletes these records.</source>
-        <target>Czyści tabelę &lt;code&gt;tl_crawl_queue&lt;/code&gt;, która przechowuje wszystkie informacje o kolejce z procesów przeszukiwania. To zadanie trwale usuwa te rekordy.</target>
+        <source>Truncates the &lt;code&gt;tl_crawl_queue&lt;/code&gt; table which stores all the queue information from crawl processes.</source>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.images.0">
         <source>Purge the image cache</source>

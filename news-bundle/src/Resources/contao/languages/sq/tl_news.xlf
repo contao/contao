@@ -243,6 +243,10 @@
         <source>Redirect target</source>
         <target>Burimi faqes</target>
       </trans-unit>
+      <trans-unit id="tl_news.meta_legend">
+        <source>Meta data</source>
+        <target>Të dhënat në nivel meta</target>
+      </trans-unit>
       <trans-unit id="tl_news.expert_legend">
         <source>Expert settings</source>
         <target>Cilësit për ekspert</target>

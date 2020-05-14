@@ -299,6 +299,10 @@
         <source>Redirect target</source>
         <target>Kilde</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.meta_legend">
+        <source>Meta data</source>
+        <target>Metadata</target>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.expert_legend">
         <source>Expert settings</source>
         <target>Ekspert indstillinger</target>

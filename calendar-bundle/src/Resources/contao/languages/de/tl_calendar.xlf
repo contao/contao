@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.jumpTo.1">
         <source>Please choose the event reader page to which visitors will be redirected when clicking an event.</source>
-        <target>Bitte wählen Sie die Eventleser-Seite aus, zu der Besucher weitergeleitet werden, wenn Sie ein Event anklicken.</target>
+        <target>Bitte wählen Sie die Eventleser-Seite aus, zu der Besucher weitergeleitet werden, wenn sie ein Event anklicken.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.allowComments.0">
         <source>Enable comments</source>
@@ -74,8 +74,8 @@
         <target>Nur angemeldeten Benutzern das Erstellen von Kommentaren erlauben.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>Sicherheitsfrage deaktivieren</target>
+        <source>Disable spam protection</source>
+        <target>Spam-Schutz deaktivieren</target>
       </trans-unit>
       <trans-unit id="tl_calendar.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>
@@ -142,12 +142,12 @@
         <target>Komplette Beiträge</target>
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.0">
-        <source>RSS feeds</source>
-        <target>RSS-Feeds</target>
+        <source>Calendar feeds</source>
+        <target>Kalender-Feeds</target>
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.1">
-        <source>Manage RSS feeds</source>
-        <target>RSS-Feeds verwalten</target>
+        <source>Manage calendar feeds</source>
+        <target>Kalender-Feeds verwalten</target>
       </trans-unit>
       <trans-unit id="tl_calendar.new.0">
         <source>New</source>

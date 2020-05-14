@@ -211,7 +211,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.jumpTo.1">
         <source>Please choose the page to which visitors will be redirected when clicking the event.</source>
-        <target>Bitte wählen Sie die Seite aus, zu der Besucher weitergeleitet werden, wenn Sie das Event anklicken.</target>
+        <target>Bitte wählen Sie die Seite aus, zu der Besucher weitergeleitet werden, wenn sie das Event anklicken.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.articleId.0">
         <source>Article</source>
@@ -219,7 +219,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.articleId.1">
         <source>Please choose the article to which visitors will be redirected when clicking the event.</source>
-        <target>Bitte wählen Sie den Artikel aus, zu dem Besucher weitergeleitet werden, wenn Sie das Event anklicken.</target>
+        <target>Bitte wählen Sie den Artikel aus, zu dem Besucher weitergeleitet werden, wenn sie das Event anklicken.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.cssClass.0">
         <source>CSS class</source>
@@ -300,6 +300,10 @@
       <trans-unit id="tl_calendar_events.source_legend">
         <source>Redirect target</source>
         <target>Weiterleitungsziel</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.meta_legend">
+        <source>Meta data</source>
+        <target>Metadaten</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.expert_legend">
         <source>Expert settings</source>
