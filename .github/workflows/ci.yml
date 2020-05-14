@@ -69,6 +69,12 @@ jobs:
                   vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=4 --no-progress
                   vendor/bin/psalm --no-suggestions --threads=4 --no-progress
 
+            - name: Analyze the YAML files
+              run: |
+                  python3 -m pip install --upgrade pip
+                  python3 -m pip install yamllint
+                  /home/runner/.local/bin/yamllint .
+
     tests:
         name: PHP ${{ matrix.php }}
         runs-on: ubuntu-latest

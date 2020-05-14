@@ -567,7 +567,7 @@ class InstallationController implements ContainerAwareInterface
 
     private function trans(string $key): string
     {
-        return $this->container->get('translator')->trans($key);
+        return $this->container->get('translator')->trans($key, [], 'ContaoInstallationBundle');
     }
 
     /**

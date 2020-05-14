@@ -82,7 +82,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         static::$autoloadModules = $modulePath;
     }
 
-    public function getPackageDependencies()
+    public function getPackageDependencies(): array
     {
         return ['contao/core-bundle'];
     }
@@ -310,6 +310,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         try {
             $connection = \call_user_func($this->dbalConnectionFactory, $params);
             $connection->connect();
+            $connection->query('SHOW TABLES');
             $connection->close();
         } catch (DriverException $e) {
             $extensionConfigs[] = [

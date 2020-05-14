@@ -89,7 +89,7 @@ class Route404ProviderTest extends TestCase
         $request = $this->mockRequestWithPath('/');
 
         $provider = new Route404Provider($framework, false);
-        $this->assertSame(0, $provider->getRouteCollectionForRequest($request)->count());
+        $this->assertCount(0, $provider->getRouteCollectionForRequest($request));
     }
 
     public function testCreatesOneRouteWithoutLocale(): void

@@ -43,14 +43,14 @@ class RobotsTxtListenerTest extends TestCase
 
         $pageModelAdapter = $this->mockAdapter(['findPublishedRootPages']);
         $pageModelAdapter
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('findPublishedRootPages')
             ->willReturn([$rootPage, $otherRootPage])
         ;
 
         $framework = $this->mockContaoFramework([PageModel::class => $pageModelAdapter]);
         $framework
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('initialize')
         ;
 
@@ -61,6 +61,9 @@ class RobotsTxtListenerTest extends TestCase
         $event = new RobotsTxtEvent($file, new Request(), $rootPage);
 
         $listener = new RobotsTxtListener($framework);
+        $listener($event);
+
+        // Output should be the same, if there is another listener
         $listener($event);
 
         $this->assertSame($expectedRobotsTxt, (string) $event->getFile());

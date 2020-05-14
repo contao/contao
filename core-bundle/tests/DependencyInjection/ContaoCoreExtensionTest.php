@@ -1305,6 +1305,9 @@ class ContaoCoreExtensionTest extends TestCase
                 'controller.service_arguments' => [
                     [],
                 ],
+                'container.service_subscriber' => [
+                    ['id' => 'contao.csrf.token_manager'],
+                ],
             ],
             $definition->getTags()
         );
@@ -1722,6 +1725,7 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('request_stack'),
                 new Reference('contao.routing.scope_matcher'),
                 new Reference('contao.security.token_checker'),
+                new Reference('filesystem'),
                 new Reference('%kernel.project_dir%'),
                 new Reference('%contao.error_level%'),
             ],
@@ -3427,7 +3431,6 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 new Reference('contao.framework'),
                 new Reference('database_connection'),
-                new Reference('router'),
                 true,
             ],
             $definition->getArguments()

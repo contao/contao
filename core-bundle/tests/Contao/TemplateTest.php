@@ -23,12 +23,17 @@ use Symfony\Component\VarDumper\VarDumper;
 
 class TemplateTest extends TestCase
 {
+    /**
+     * @var Filesystem
+     */
+    private $filesystem;
+
     protected function setUp(): void
     {
         parent::setUp();
 
-        $fs = new Filesystem();
-        $fs->mkdir($this->getFixturesDir().'/templates');
+        $this->filesystem = new Filesystem();
+        $this->filesystem->mkdir($this->getFixturesDir().'/templates');
 
         System::setContainer($this->getContainerWithContaoConfiguration($this->getFixturesDir()));
     }
@@ -37,15 +42,14 @@ class TemplateTest extends TestCase
     {
         parent::tearDown();
 
-        $fs = new Filesystem();
-        $fs->remove($this->getFixturesDir().'/templates');
+        $this->filesystem->remove($this->getFixturesDir().'/templates');
     }
 
     public function testReplacesTheVariables(): void
     {
         Config::set('debugMode', false);
 
-        file_put_contents(
+        $this->filesystem->dumpFile(
             $this->getFixturesDir().'/templates/test_template.html5',
             '<?= $this->value ?>'
         );
@@ -60,7 +64,7 @@ class TemplateTest extends TestCase
 
     public function testHandlesExceptions(): void
     {
-        file_put_contents(
+        $this->filesystem->dumpFile(
             $this->getFixturesDir().'/templates/test_template.html5',
             'test<?php throw new Exception ?>'
         );
@@ -83,7 +87,7 @@ class TemplateTest extends TestCase
 
     public function testHandlesExceptionsInsideBlocks(): void
     {
-        file_put_contents(
+        $this->filesystem->dumpFile(
             $this->getFixturesDir().'/templates/test_template.html5',
             <<<'EOF'
 <?php
@@ -116,7 +120,7 @@ EOF
 
     public function testHandlesExceptionsInParentTemplate(): void
     {
-        file_put_contents(
+        $this->filesystem->dumpFile(
             $this->getFixturesDir().'/templates/test_parent.html5',
             <<<'EOF'
 <?php
@@ -137,7 +141,7 @@ EOF
 EOF
         );
 
-        file_put_contents(
+        $this->filesystem->dumpFile(
             $this->getFixturesDir().'/templates/test_template.html5',
             <<<'EOF'
 <?php
@@ -175,9 +179,9 @@ EOF
 
     public function testParsesNestedBlocks(): void
     {
-        file_put_contents($this->getFixturesDir().'/templates/test_parent.html5', '');
+        $this->filesystem->dumpFile($this->getFixturesDir().'/templates/test_parent.html5', '');
 
-        file_put_contents(
+        $this->filesystem->dumpFile(
             $this->getFixturesDir().'/templates/test_template.html5',
             <<<'EOF'
 <?php

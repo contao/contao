@@ -385,7 +385,7 @@ abstract class ModuleNews extends Module
 			'<a href="%s" title="%s"%s itemprop="url"><span itemprop="headline">%s</span></a>',
 			$strArticleUrl,
 			StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['open'], $strArticleUrl)),
-			($objArticle->target ? ' target="_blank"' : ''),
+			($objArticle->target ? ' target="_blank" rel="noreferrer noopener"' : ''),
 			$strLink
 		);
 	}
