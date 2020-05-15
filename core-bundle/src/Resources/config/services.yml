@@ -336,6 +336,26 @@ services:
             - '@?contao.image.resize_calculator'
         public: true
 
+    Contao\CoreBundle\Image\Studio\StudioFactory:
+
+    contao.image.studio:
+        class: Contao\CoreBundle\Image\Studio\Studio
+        shared: false
+        public: true
+        arguments:
+            - '@Psr\Container\ContainerInterface'
+        tags:
+            - { name: container.service_subscriber, id: contao.image.studio }
+            - { name: container.service_subscriber, id: contao.image.metadata_factory }
+            - { name: container.service_subscriber, id: contao.assets.files_context }
+
+    contao.image.metadata_factory:
+        class: Contao\CoreBundle\Image\Studio\MetaDataFactory
+        arguments:
+            - '@request_stack'
+            - '%kernel.default_locale%'
+            - '@contao.framework'
+
     contao.menu.backend_menu_builder:
         class: Contao\CoreBundle\Menu\BackendMenuBuilder
         arguments:
