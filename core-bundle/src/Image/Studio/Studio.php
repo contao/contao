@@ -17,10 +17,13 @@ use Contao\ContentModel;
 use Contao\Controller;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Image\ImageFactory;
+use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\Image\PictureFactoryInterface;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\File;
 use Contao\FilesModel;
+use Contao\Image\ImageDimensions;
 use Contao\Image\Picture;
 use Contao\Image\PictureConfiguration;
 use Contao\LayoutModel;
@@ -252,7 +255,7 @@ final class Studio implements ServiceSubscriberInterface
         $controllerAdapter = $this->getAdapter(Controller::class);
 
         // Primary image
-        [$originalWidth, $originalHeight] = $this->getOriginalSize();
+        $originalSize = $this->getOriginalDimensions()->getSize();
         $floating = $metaData->getFloatingProperty();
 
         $templateData = array_merge(
@@ -263,10 +266,10 @@ final class Studio implements ServiceSubscriberInterface
                     'sources' => $this->getSources(),
                     'alt' => $metaData->getAlt(),
                 ],
-                'width' => $originalWidth,
-                'height' => $originalHeight,
-                'arrSize' => [$originalWidth, $originalHeight],
-                'imgSize' => sprintf(' width="%d" height="%d"', $originalWidth, $originalHeight),
+                'width' => $originalSize->getWidth(),
+                'height' => $originalSize->getHeight(),
+                'arrSize' => [$originalSize->getWidth(), $originalSize->getHeight()],
+                'imgSize' => sprintf(' width="%d" height="%d"', $originalSize->getWidth(), $originalSize->getHeight()),
                 'singleSRC' => $this->filePath,
                 'fullsize' => $metaData->shouldDisplayFullSize() ?? false,
                 'margin' => $controllerAdapter->generateMargin($metaData->getMarginProperty()),
@@ -368,6 +371,7 @@ final class Studio implements ServiceSubscriberInterface
         return [
             'contao.image.studio' => self::class,
             'contao.image.picture_factory' => PictureFactoryInterface::class,
+            'contao.image.image_factory' => ImageFactoryInterface::class,
             'contao.image.metadata_factory' => MetaDataFactory::class,
             'request_stack' => RequestStack::class,
             'parameter_bag' => ParameterBagInterface::class,
@@ -442,16 +446,16 @@ final class Studio implements ServiceSubscriberInterface
         return preg_match('#^https?://#', $uri);
     }
 
-    private function getOriginalSize(): array
+    private function getOriginalDimensions(): ImageDimensions
     {
         if (null === $this->filePath) {
             throw new \LogicException('You need to call `from()` to set a resource before querying the size.');
         }
 
-        $relativePath = Path::makeRelative($this->filePath, $this->getProjectDir());
+        /** @var ImageFactory $imageFactory */
+        $imageFactory = $this->locator->get('contao.image.image_factory');
 
-        // todo: Can we do this any better?
-        return (new File($relativePath))->imageSize;
+        return $imageFactory->create($this->filePath)->getDimensions();
     }
 
     private function getLightboxSizeConfiguration(): ?array
