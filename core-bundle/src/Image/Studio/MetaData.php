@@ -69,7 +69,7 @@ final class MetaData
             return null;
         }
 
-        return array_values($this->handleSpecialChars([$key => $value]))[0];
+        return current($this->handleSpecialChars([$key => $value]));
     }
 
     public function getAlt(): ?string
