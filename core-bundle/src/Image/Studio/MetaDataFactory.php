@@ -87,11 +87,7 @@ class MetaDataFactory
         $controller = $this->framework->getAdapter(Controller::class);
         $controller->loadDataContainer('tl_files');
 
-        $fileModelDefaults = array_keys($GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields'] ?? []);
-        // todo: check if we need these - and if: here?
-        $imageTemplateDefaults = []; // ['floatClass', 'margin', 'href', 'linkTitle', 'attributes', 'caption', 'alt'];
-
-        return array_unique(array_merge($fileModelDefaults, $imageTemplateDefaults));
+        return array_keys($GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields'] ?? []);
     }
 
     /**
@@ -119,9 +115,9 @@ class MetaDataFactory
      */
     public function createFromContentModel(ContentModel $model): MetaData
     {
-        $values = MetaData::normalize($model->row(), [
-            'imageTitle' => 'title',
-            'imageUrl' => 'link',
+        $values = MetaData::remap($model->row(), [
+            'imageTitle' => MetaData::VALUE_TITLE,
+            'imageUrl' => MetaData::VALUE_URL,
         ]);
 
         // todo: handle `metaIgnore`?

@@ -24,6 +24,12 @@ final class MetaData
     public const PROPERTY_MARGIN = 'margin';
     public const PROPERTY_FLOATING = 'floating';
 
+    public const VALUE_ALT = 'alt';
+    public const VALUE_CAPTION = 'caption';
+    public const VALUE_LINK_TITLE = 'linkTitle';
+    public const VALUE_TITLE = 'title';
+    public const VALUE_URL = 'link';
+
     /**
      * @var array
      */
@@ -68,27 +74,36 @@ final class MetaData
 
     public function getAlt(): ?string
     {
-        return $this->getValue('alt');
+        return $this->getValue(self::VALUE_ALT);
     }
 
-    public function getUrl(): ?string
+    public function getCaption(): ?string
     {
-        return $this->getValue('link') ?: null;
+        return $this->getValue(self::VALUE_CAPTION);
+    }
+
+    public function getLinkTitle(): ?string
+    {
+        return $this->getValue(self::VALUE_LINK_TITLE);
     }
 
     public function getTitle(): ?string
     {
-        return $this->getValue('title');
+        return $this->getValue(self::VALUE_TITLE);
+    }
+
+    public function getUrl(): ?string
+    {
+        return $this->getValue(self::VALUE_URL) ?: null;
     }
 
     public function getAllValues(): array
     {
         $values = $this->handleSpecialChars($this->values);
 
-        // Normalize names
-        return self::normalize($values, [
-            'title' => 'imageTitle',
-            'link' => 'imageUrl',
+        return self::remap($values, [
+            self::VALUE_TITLE => 'imageTitle',
+            self::VALUE_URL => 'imageUrl',
         ]);
     }
 
@@ -116,20 +131,11 @@ final class MetaData
         return $this->properties[self::PROPERTY_MARGIN] ?? null;
     }
 
-    public static function normalize(array $values, array $mapping, $move = true): array
+    public static function remap(array $values, array $mapping): array
     {
         foreach (array_intersect_key($mapping, $values) as $from => $to) {
-            // todo: remove array conversion if not necessary anymore
-            if (preg_match('/^(.*)\[]$/', $to, $matches)) {
-                $to = $matches[1];
-                $values[$from] = StringUtil::deserialize($values[$from]);
-            }
-
             $values[$to] = $values[$from];
-
-            if ($to !== $from && $move) {
-                unset($values[$from]);
-            }
+            unset($values[$from]);
         }
 
         return $values;
@@ -137,7 +143,12 @@ final class MetaData
 
     private function handleSpecialChars(array $values): array
     {
-        $candidates = ['alt', 'title', 'linkTitle'];
+        $candidates = [
+            self::VALUE_ALT,
+            self::VALUE_TITLE,
+            self::VALUE_LINK_TITLE,
+            self::VALUE_CAPTION,
+        ];
 
         foreach (array_intersect_key($candidates, $values) as $key => $value) {
             $values[$key] = StringUtil::specialchars($value);
