@@ -403,19 +403,32 @@ class Search
 			$arrKeywords = array();
 		}
 
-		$strQuery = "SELECT * FROM (SELECT tl_search_index.pid AS sid";
+		$strQuery = "SELECT *, (relevance / vectorLength) AS cosineSimilarity FROM (SELECT tl_search_index.pid AS sid";
 
 		// Remember found words so we can highlight them later
 		$strQuery .= ", GROUP_CONCAT(matchedWords.word) AS matches";
-
-		// Get the relevance
-		$strQuery .= ", SUM(relevance) AS relevance";
 
 		$arrValues = array();
 		$arrAllKeywords = array();
 		$arrMatches = array();
 		$arrRequiredMatches = array();
 		$arrExcludedMatches = array();
+
+		// Get wildcards
+		foreach ($arrWildcards as $strKeyword)
+		{
+			$arrMatches[] = \count($arrAllKeywords);
+			$arrAllKeywords[] = 'word LIKE ?';
+		}
+
+		// Wildcard values are required three times in the query
+		for ($i = 0; $i < 3; $i++)
+		{
+			foreach ($arrWildcards as $strKeyword)
+			{
+				$arrValues[] = $strKeyword;
+			}
+		}
 
 		// Get keywords
 		foreach ($arrKeywords as $strKeyword)
@@ -452,15 +465,72 @@ class Search
 			}
 		}
 
-		// Get wildcards
-		foreach ($arrWildcards as $strKeyword)
+		// Get the relevance
+		$strQuery .= ", (0";
+
+		foreach ($arrAllKeywords as $index => $strKeywordExpression)
 		{
-			$arrMatches[] = \count($arrAllKeywords);
-			$arrAllKeywords[] = 'word LIKE ?';
-			$arrValues[] = $strKeyword;
+			if (\in_array($index, $arrExcludedMatches, true))
+			{
+				continue;
+			}
+
+			if (isset($arrWildcards[$index]))
+			{
+				$strQuery .= "+ (
+					(1+LOG(SUM(match$index * relevance))) * POW(LOG((
+						SELECT COUNT(*) FROM tl_search
+					) / (
+						SELECT COUNT(DISTINCT pid) 
+						FROM tl_search_words 
+						JOIN tl_search_index ON tl_search_index.wordId = tl_search_words.id
+						WHERE word LIKE ?
+					)), 2) / ".(\count($arrAllKeywords) - \count($arrExcludedMatches))."
+				)";
+			}
+			else
+			{
+				$strQuery .= "+ (
+					(1+LOG(SUM(match$index * relevance))) 
+					* POW(MIN(match$index * matchedWords.idf), 2) 
+					/ ".(\count($arrAllKeywords) - \count($arrExcludedMatches))."
+				)";
+			}
 		}
 
+		$strQuery .= ") / sqrt(0";
+
+		foreach ($arrAllKeywords as $index => $strKeywordExpression)
+		{
+			if (\in_array($index, $arrExcludedMatches, true))
+			{
+				continue;
+			}
+
+			if (isset($arrWildcards[$index]))
+			{
+				$strQuery .= " + POW(LOG((
+						SELECT COUNT(*) FROM tl_search
+					) / (
+						SELECT COUNT(DISTINCT pid) 
+						FROM tl_search_words 
+						JOIN tl_search_index ON tl_search_index.wordId = tl_search_words.id
+						WHERE word LIKE ?
+					)
+				) / ".(\count($arrAllKeywords) - \count($arrExcludedMatches)).", 2)";
+			}
+			else
+			{
+				$strQuery .= "+ POW(MIN(match$index * matchedWords.idf) / ".(\count($arrAllKeywords) - \count($arrExcludedMatches)).", 2)";
+			}
+		}
+
+		$strQuery .= ") AS relevance";
+
 		$strQuery .= " FROM (SELECT id, word";
+
+		// Calculate inverse document frequency of every matching word
+		$strQuery .= ", LOG((SELECT COUNT(*) FROM tl_search) / documentFrequency) AS idf";
 
 		// Store the match of every keyword and wildcard in its own column match0, match1, ...
 		foreach ($arrAllKeywords as $index => $strKeywordExpression)
@@ -511,7 +581,7 @@ class Search
 		}
 
 		// Sort by relevance
-		$strQuery .= " ORDER BY relevance DESC";
+		$strQuery .= " ORDER BY cosineSimilarity DESC";
 
 		// Return result
 		$objResultStmt = Database::getInstance()->prepare($strQuery);

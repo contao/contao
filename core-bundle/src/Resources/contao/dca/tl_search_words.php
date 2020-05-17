@@ -33,6 +33,10 @@ $GLOBALS['TL_DCA']['tl_search_words'] = array
 		'word' => array
 		(
 			'sql'                     => "varchar(64) BINARY NOT NULL default ''"
+		),
+		'documentFrequency' => array
+		(
+			'sql'                     => "int(10) unsigned NOT NULL"
 		)
 	)
 );
