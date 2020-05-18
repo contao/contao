@@ -103,6 +103,9 @@ final class Studio implements ServiceSubscriberInterface
         // todo: maybe move this normalization to PictureFactory or drop?
         $this->sizeConfiguration = StringUtil::deserialize($size);
 
+        // todo: can/should we normalize this to a PictureConfiguration here? (check on set vs. fail late)
+        //       or: validate
+
         return $this;
     }
 
