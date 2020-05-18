@@ -68,30 +68,6 @@ class StringUtilTest extends TestCase
             'This is my test@foobar.com,foo@test.com',
         ];
 
-        yield 'Test token replacement with special characters (-)' => [
-            'This is my ##e-mail##',
-            ['e-mail' => 'test@foobar.com'],
-            'This is my test@foobar.com',
-        ];
-
-        yield 'Test token replacement with special characters (&)' => [
-            'This is my ##e&mail##',
-            ['e&mail' => 'test@foobar.com'],
-            'This is my test@foobar.com',
-        ];
-
-        yield 'Test token replacement with special characters (#)' => [
-            'This is my ##e#mail##',
-            ['e#mail' => 'test@foobar.com'],
-            'This is my test@foobar.com',
-        ];
-
-        yield 'Test token replacement with token delimiter (##)' => [
-            'This is my ##e##mail##',
-            ['e##mail' => 'test@foobar.com'],
-            'This is my ##e##mail##',
-        ];
-
         yield 'Test comparisons (==) with regular characters (match)' => [
             'This is my {if email==""}match{endif}',
             ['email' => ''],
@@ -164,18 +140,6 @@ class StringUtilTest extends TestCase
             'This is my ',
         ];
 
-        yield 'Test comparisons (<) with special characters (match)' => [
-            'This is my {if val&#ue<0}match{endif}',
-            ['val&#ue' => -5],
-            'This is my match',
-        ];
-
-        yield 'Test comparisons (<) with special characters (no match)' => [
-            'This is my {if val&#ue<0}match{endif}',
-            ['val&#ue' => 9],
-            'This is my ',
-        ];
-
         yield 'Test comparisons (===) with regular characters (match)' => [
             'This is my {if value===5}match{endif}',
             ['value' => 5],
@@ -200,12 +164,6 @@ class StringUtilTest extends TestCase
             'This is my ',
         ];
 
-        yield 'Test whitespace in tokens not allowed and ignored' => [
-            'This is my ##dumb token## you know',
-            ['dumb token' => 'foobar'],
-            'This is my ##dumb token## you know',
-        ];
-
         yield 'Test if-tags insertion not evaluated' => [
             '##token##',
             ['token' => '{if token=="foo"}'],
@@ -218,10 +176,10 @@ class StringUtilTest extends TestCase
             '{if token=="foo"}',
         ];
 
-        yield 'Test nested if-tag with " in value (match)' => [
-            '{if value=="f"oo"}1{endif}{if value=="f\"oo"}2{endif}',
+        yield 'Test escaping works correctly' => [
+            '{if value=="f\"oo"}match{endif}',
             ['value' => 'f"oo'],
-            '12',
+            'match',
         ];
 
         yield 'Test else (match)' => [
@@ -308,15 +266,107 @@ class StringUtilTest extends TestCase
             'This is my match',
         ];
 
-        yield 'Test does not support tabs in expressions' => [
-            "This is my {if number\t>\t5}match{endif}",
-            ['number' => 6],
-            'This is my ',
+        yield 'Test if value in array' => [
+            '{if value in ["foobar", "test", "other-value"]}match{else}no-match{endif}',
+            ['value' => 'foobar'],
+            'match',
         ];
 
-        yield 'Test does not support line breaks in expressions' => [
-            "This is my {if number\n>\n5}match{endif}",
-            ['number' => 6],
+        yield 'Test if value not in array' => [
+            '{if value not in ["foobar", "test", "other-value"]}match{else}no-match{endif}',
+            ['value' => 'whatever'],
+            'match',
+        ];
+
+        yield 'Test OR operator (match)' => [
+            '{if value == "whatever" || value == "foobar"}match{else}no-match{endif}',
+            ['value' => 'whatever'],
+            'match',
+        ];
+
+        yield 'Test OR operator (no-match)' => [
+            '{if value == "whatever" || value == "foobar"}match{else}no-match{endif}',
+            ['value' => 'irrelevant'],
+            'no-match',
+        ];
+
+        yield 'Test AND operator (match)' => [
+            '{if value == "whatever" && value matches "/whatever/"}match{else}no-match{endif}',
+            ['value' => 'whatever'],
+            'match',
+        ];
+
+        yield 'Test AND operator (no-match)' => [
+            '{if value == "irrelevant" && value matches "/whatever/"}match{else}no-match{endif}',
+            ['value' => 'irrelevant'],
+            'no-match',
+        ];
+
+        yield 'Test tokens in tokens are handled correctly' => [
+            '{if firstname == "myname"}match{else}no-match{endif}',
+            ['name' => 'myname mylastname', 'firstname' => 'myname'],
+            'match',
+        ];
+
+        yield 'Test ignores unknown tokens' => [
+            'This is my ##token## that ##remains##',
+            ['token' => 'value'],
+            'This is my value that ##remains##',
+        ];
+    }
+
+    /**
+     * @group legacy
+     * @dataProvider parseSimpleTokensLegacyProvider
+     *
+     * @expectedDeprecation Using tokens that are not valid PHP variables has been deprecated %s.
+     */
+    public function testParsesSimpleTokensLegacy(string $string, array $tokens, string $expected): void
+    {
+        $this->assertSame($expected, StringUtil::parseSimpleTokens($string, $tokens));
+    }
+
+    public function parseSimpleTokensLegacyProvider(): \Generator
+    {
+        yield 'Test token replacement with token delimiter (##)' => [
+            'This is my ##e##mail##',
+            ['e##mail' => 'test@foobar.com'],
+            'This is my ##e##mail##',
+        ];
+
+        yield 'Test whitespace in tokens not allowed and ignored' => [
+            'This is my ##dumb token## you know',
+            ['dumb token' => 'foobar'],
+            'This is my ##dumb token## you know',
+        ];
+
+        yield 'Test token replacement with special characters (-)' => [
+            'This is my ##e-mail##',
+            ['e-mail' => 'test@foobar.com'],
+            'This is my test@foobar.com',
+        ];
+
+        yield 'Test token replacement with special characters (&)' => [
+            'This is my ##e&mail##',
+            ['e&mail' => 'test@foobar.com'],
+            'This is my test@foobar.com',
+        ];
+
+        yield 'Test token replacement with special characters (#)' => [
+            'This is my ##e#mail##',
+            ['e#mail' => 'test@foobar.com'],
+            'This is my test@foobar.com',
+        ];
+
+        yield 'Test comparisons (<) with special characters (match)' => [
+            'This is my {if val&#ue<0}match{endif}',
+            ['val&#ue' => -5],
+            'This is my match',
+        ];
+
+        yield 'Test comparisons (<) with special characters (no match)' => [
+            'This is my {if val&#ue<0}match{endif}',
+            ['val&#ue' => 9],
             'This is my ',
         ];
     }
@@ -462,6 +512,14 @@ class StringUtilTest extends TestCase
             'This is <?php echo "I am evil";?> evil',
             StringUtil::parseSimpleTokens('This is ##open####open2####close## evil', $data)
         );
+    }
+
+    public function testConstantFunctionOfExpressionLanguageIsDisabled(): void
+    {
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('Cannot use the constant() function in the expression for security reasons.');
+
+        StringUtil::parseSimpleTokens('{if constant("PHP_VERSION") > 7}match{else}no-match{endif}', []);
     }
 
     /**

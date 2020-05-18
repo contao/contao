@@ -12,6 +12,7 @@ namespace Contao;
 
 use Patchwork\Utf8;
 use Psr\Log\LogLevel;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 /**
  * Provides string manipulation methods
@@ -582,8 +583,53 @@ class StringUtil
 			);
 		};
 
-		$evaluateExpression = static function ($strExpression) use ($arrData)
+		// Check if we can use the expression language or if legacy tokens have been used
+		$canUseExpressionLanguage = true;
+
+		foreach (array_keys($arrData) as $token)
 		{
+			if (!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $token))
+			{
+				@trigger_error('Using tokens that are not valid PHP variables has been deprecated and will no longer work in Contao 5.0. Falling back to legacy token parsing.', E_USER_DEPRECATED);
+
+				$canUseExpressionLanguage = false;
+				break;
+			}
+		}
+
+		$expressionLanguage = null;
+
+		if ($canUseExpressionLanguage)
+		{
+			$expressionLanguage = new ExpressionLanguage();
+			$expressionLanguage->register(
+				'constant',
+				static function ()
+				{
+					return "throw new \\InvalidArgumentException('Cannot use the constant() function in the expression for security reasons.');";
+				},
+				static function ()
+				{
+					throw new \InvalidArgumentException('Cannot use the constant() function in the expression for security reasons.');
+				}
+			);
+		}
+
+		$evaluateExpression = static function ($strExpression) use ($arrData, $expressionLanguage)
+		{
+			if (null !== $expressionLanguage)
+			{
+				try
+				{
+					return $expressionLanguage->evaluate($strExpression, $arrData);
+				}
+				catch (\Exception $e)
+				{
+					throw new \InvalidArgumentException($e->getMessage(), 0, $e);
+				}
+			}
+
+			// Legacy code
 			if (!preg_match('/^([^=!<>\s]+) *([=!<>]+)(.+)$/s', $strExpression, $arrMatches))
 			{
 				return false;
