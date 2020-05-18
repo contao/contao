@@ -125,7 +125,7 @@ class ModuleNewsletterReader extends Module
 
 		// Parse simple tokens and insert tags
 		$strContent = $this->replaceInsertTags($strContent);
-		$strContent = System::getContainer()->get('contao.simple_tokens.parser')->parse($strContent, array());
+		$strContent = System::getContainer()->get('contao.util.simple_token_parser')->parse($strContent, array());
 
 		// Encode e-mail addresses
 		$strContent = StringUtil::encodeEmail($strContent);

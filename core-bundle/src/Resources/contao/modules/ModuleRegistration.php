@@ -507,7 +507,7 @@ class ModuleRegistration extends Module
 
 		// Send the token
 		$text = System::getContainer()
-			->get('contao.simple_tokens.parser')
+			->get('contao.util.simple_token_parser')
 			->parseTokens($this->reg_text, $arrTokenData);
 
 		$optInToken->send(sprintf($GLOBALS['TL_LANG']['MSC']['emailSubject'], Idna::decode(Environment::get('host'))), $text);

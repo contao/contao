@@ -10,14 +10,13 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\SimpleTokens;
+namespace Contao\CoreBundle\Tests\Util;
 
-use Contao\CoreBundle\SimpleTokens\Parser;
+use Contao\CoreBundle\Util\SimpleTokenParser;
 use PHPUnit\Framework\TestCase;
-use Psr\Log\NullLogger;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
-class ParserTest extends TestCase
+class SimpleTokenParserTest extends TestCase
 {
     /**
      * @dataProvider parseSimpleTokensProvider
@@ -539,8 +538,8 @@ class ParserTest extends TestCase
         yield 'Unknown operator (<==)' => ['{if foo<=="bar"}{endif}'];
     }
 
-    private function getParser(ExpressionLanguage $expressionLanguage = null): Parser
+    private function getParser(ExpressionLanguage $expressionLanguage = null): SimpleTokenParser
     {
-        return new Parser(new NullLogger(), $expressionLanguage);
+        return new SimpleTokenParser($expressionLanguage);
     }
 }
