@@ -681,7 +681,8 @@ abstract class Controller extends System
 	public static function getPageStatusIcon($objPage)
 	{
 		$sub = 0;
-		$image = $objPage->type . '.svg';
+		$type = \in_array($objPage->type, array('regular', 'root', 'forward', 'redirect', 'error_401', 'error_403', 'error_404'), true) ? $objPage->type : 'regular';
+		$image = $type . '.svg';
 
 		// Page not published or not active
 		if (!$objPage->published || ($objPage->start != '' && $objPage->start > time()) || ($objPage->stop != '' && $objPage->stop < time()))
@@ -690,13 +691,13 @@ abstract class Controller extends System
 		}
 
 		// Page hidden from menu
-		if ($objPage->hide && !\in_array($objPage->type, array('root', 'error_401', 'error_403', 'error_404')))
+		if ($objPage->hide && !\in_array($type, array('root', 'error_401', 'error_403', 'error_404')))
 		{
 			$sub += 2;
 		}
 
 		// Page protected
-		if ($objPage->protected && !\in_array($objPage->type, array('root', 'error_401', 'error_403', 'error_404')))
+		if ($objPage->protected && !\in_array($type, array('root', 'error_401', 'error_403', 'error_404')))
 		{
 			$sub += 4;
 		}
@@ -704,7 +705,7 @@ abstract class Controller extends System
 		// Get the image name
 		if ($sub > 0)
 		{
-			$image = $objPage->type . '_' . $sub . '.svg';
+			$image = $type . '_' . $sub . '.svg';
 		}
 
 		// HOOK: add custom logic
