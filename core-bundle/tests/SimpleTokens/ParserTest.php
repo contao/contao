@@ -495,6 +495,26 @@ class ParserTest extends TestCase
         $this->getParser()->parseTokens('{if constant("PHP_VERSION") > 7}match{else}no-match{endif}', []);
     }
 
+    public function testEvaluatesCustomExpressionLanguageFunction(): void
+    {
+        $expressionLanguage = new ExpressionLanguage();
+
+        $expressionLanguage->register(
+            'concat',
+            static function (): void {
+                throw new \RuntimeException('not implemented');
+            },
+            static function ($arguments, $a, $b) {
+                return $a.$b;
+            });
+
+        $this->assertSame(
+            'Foobar? Yes!',
+            $this->getParser($expressionLanguage)
+                ->parseTokens("Foobar? {if concat('foo', value) == 'foobar'}Yes!{endif}", ['value' => 'bar'])
+        );
+    }
+
     /**
      * @dataProvider parseSimpleTokensInvalidComparison
      */
