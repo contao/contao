@@ -279,7 +279,7 @@ class ModuleUnsubscribe extends Module
 		$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
 		$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'];
 		$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['nl_subject'], Idna::decode(Environment::get('host')));
-		$objEmail->text = StringUtil::parseSimpleTokens($this->nl_unsubscribe, $arrData);
+		$objEmail->text = System::getContainer()->get('contao.simple_tokens.parser')->parse($this->nl_unsubscribe, $arrData);
 		$objEmail->sendTo($strEmail);
 
 		// Redirect to the jumpTo page

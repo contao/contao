@@ -506,7 +506,11 @@ class ModuleRegistration extends Module
 		$arrTokenData['channel'] = $arrTokenData['channels'];
 
 		// Send the token
-		$optInToken->send(sprintf($GLOBALS['TL_LANG']['MSC']['emailSubject'], Idna::decode(Environment::get('host'))), StringUtil::parseSimpleTokens($this->reg_text, $arrTokenData));
+		$text = System::getContainer()
+			->get('contao.simple_tokens.parser')
+			->parseTokens($this->reg_text, $arrTokenData);
+
+		$optInToken->send(sprintf($GLOBALS['TL_LANG']['MSC']['emailSubject'], Idna::decode(Environment::get('host'))), $text);
 	}
 
 	/**
