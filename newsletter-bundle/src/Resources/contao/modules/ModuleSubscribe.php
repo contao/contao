@@ -375,7 +375,11 @@ class ModuleSubscribe extends Module
 		$arrData['channel'] = $arrData['channels'] = implode("\n", $objChannel->fetchEach('title'));
 
 		// Send the token
-		$optInToken->send(sprintf($GLOBALS['TL_LANG']['MSC']['nl_subject'], Idna::decode(Environment::get('host'))), StringUtil::parseSimpleTokens($this->nl_subscribe, $arrData));
+		$text = System::getContainer()
+			->get('contao.simple_tokens.parser')
+			->parseTokens($this->nl_subscribe, $arrData);
+
+		$optInToken->send(sprintf($GLOBALS['TL_LANG']['MSC']['nl_subject'], Idna::decode(Environment::get('host'))), $text);
 
 		// Redirect to the jumpTo page
 		if (($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)

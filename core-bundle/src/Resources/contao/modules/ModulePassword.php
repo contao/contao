@@ -317,7 +317,11 @@ class ModulePassword extends Module
 		$arrData['link'] = Idna::decode(Environment::get('base')) . Environment::get('request') . ((strpos(Environment::get('request'), '?') !== false) ? '&' : '?') . 'token=' . $optInToken->getIdentifier();
 
 		// Send the token
-		$optInToken->send(sprintf($GLOBALS['TL_LANG']['MSC']['passwordSubject'], Idna::decode(Environment::get('host'))), StringUtil::parseSimpleTokens($this->reg_password, $arrData));
+		$text = System::getContainer()
+			->get('contao.simple_tokens.parser')
+			->parseTokens($this->reg_password, $arrData);
+
+		$optInToken->send(sprintf($GLOBALS['TL_LANG']['MSC']['passwordSubject'], Idna::decode(Environment::get('host'))), $text);
 
 		$this->log('A new password has been requested for user ID ' . $objMember->id . ' (' . Idna::decodeEmail($objMember->email) . ')', __METHOD__, TL_ACCESS);
 
