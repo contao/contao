@@ -769,10 +769,6 @@ services:
         calls:
             - [setName, [contao_frontend]]
 
-    contao.simple_tokens.parser:
-        class: Contao\CoreBundle\SimpleTokens\Parser
-        public: true
-
     contao.slug:
         class: Contao\CoreBundle\Slug\Slug
         arguments:
@@ -819,3 +815,7 @@ services:
             - '@request_stack'
             - '@contao.framework'
             - '@contao.routing.scope_matcher'
+
+    contao.util.simple_token_parser:
+        class: Contao\CoreBundle\Util\SimpleTokenParser
+        public: true

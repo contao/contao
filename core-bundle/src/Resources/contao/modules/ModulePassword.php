@@ -318,7 +318,7 @@ class ModulePassword extends Module
 
 		// Send the token
 		$text = System::getContainer()
-			->get('contao.simple_tokens.parser')
+			->get('contao.util.simple_token_parser')
 			->parseTokens($this->reg_password, $arrData);
 
 		$optInToken->send(sprintf($GLOBALS['TL_LANG']['MSC']['passwordSubject'], Idna::decode(Environment::get('host'))), $text);

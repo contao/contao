@@ -554,14 +554,14 @@ class StringUtil
 	 * @throws \InvalidArgumentException If there are incorrectly formatted if-tags
 	 *
 	 * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.
-	 *             Use the contao.simple_tokens.parser service instead.
+	 *             Use the contao.util.simple_token_parser service instead.
 	 */
 	public static function parseSimpleTokens($strString, $arrData)
 	{
-		@trigger_error('Using StringUtil::parseSimpleTokens() has been deprecated and will no longer work in Contao 5.0. Use the contao.simple_tokens.parser service instead.', E_USER_DEPRECATED);
+		@trigger_error('Using StringUtil::parseSimpleTokens() has been deprecated and will no longer work in Contao 5.0. Use the contao.util.simple_token_parser service instead.', E_USER_DEPRECATED);
 
 		return System::getContainer()
-			->get('contao.simple_tokens.parser')
+			->get('contao.util.simple_token_parser')
 			->parseTokens($strString, $arrData);
 	}
 

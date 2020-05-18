@@ -2250,14 +2250,14 @@ abstract class Controller extends System
 	 * @return string The text with the replaced tokens
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use the contao.simple_tokens.parser service instead.
+	 *             Use the contao.util.simple_token_parser service instead.
 	 */
 	protected function parseSimpleTokens($strBuffer, $arrData)
 	{
-		@trigger_error('Using Controller::parseSimpleTokens() has been deprecated and will no longer work in Contao 5.0. Use the contao.simple_tokens.parser service instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Controller::parseSimpleTokens() has been deprecated and will no longer work in Contao 5.0. Use the contao.util.simple_token_parser service instead.', E_USER_DEPRECATED);
 
 		return System::getContainer()
-			->get('contao.simple_tokens.parser')
+			->get('contao.util.simple_token_parser')
 			->parseTokens($strBuffer, $arrData);
 	}
 

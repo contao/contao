@@ -11,7 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\InternalServerErrorException;
-use Contao\CoreBundle\SimpleTokens\Parser;
+use Contao\CoreBundle\Util\SimpleTokenParser;
 use Contao\Database\Result;
 use Symfony\Component\HttpFoundation\Session\Session;
 
@@ -364,8 +364,8 @@ class Newsletter extends Backend
 	 */
 	protected function sendNewsletter(Email $objEmail, Result $objNewsletter, $arrRecipient, $text, $html, $css=null)
 	{
-		/** @var Parser $simpleTokenParser */
-		$simpleTokenParser = System::getContainer()->get('contao.simple_tokens.parser');
+		/** @var SimpleTokenParser $simpleTokenParser */
+		$simpleTokenParser = System::getContainer()->get('contao.util.simple_token_parser');
 
 		// Prepare the text content
 		$objEmail->text = $simpleTokenParser->parseTokens($text, $arrRecipient);

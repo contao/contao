@@ -10,14 +10,14 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\SimpleTokens;
+namespace Contao\CoreBundle\Util;
 
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LogLevel;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
-class Parser implements LoggerAwareInterface
+class SimpleTokenParser implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
