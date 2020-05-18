@@ -769,6 +769,12 @@ services:
         calls:
             - [setName, [contao_frontend]]
 
+    contao.simple_tokens.parser:
+        class: Contao\CoreBundle\SimpleTokens\Parser
+        arguments:
+            - '@?logger'
+        public: true
+
     contao.slug:
         class: Contao\CoreBundle\Slug\Slug
         arguments:
