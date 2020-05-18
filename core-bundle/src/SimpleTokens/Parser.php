@@ -12,23 +12,21 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\SimpleTokens;
 
-use Psr\Log\LoggerInterface;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LogLevel;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
-class Parser
+class Parser implements LoggerAwareInterface
 {
-    /**
-     * @var LoggerInterface|null
-     */
-    private $logger;
+    use LoggerAwareTrait;
 
     /**
      * @var ExpressionLanguage
      */
     private $expressionLanguage;
 
-    public function __construct(LoggerInterface $logger = null, ExpressionLanguage $expressionLanguage = null)
+    public function __construct(ExpressionLanguage $expressionLanguage = null)
     {
         if (null === $expressionLanguage) {
             $expressionLanguage = new ExpressionLanguage();
@@ -46,7 +44,6 @@ class Parser
         );
 
         $this->expressionLanguage = $expressionLanguage;
-        $this->logger = $logger;
     }
 
     /**

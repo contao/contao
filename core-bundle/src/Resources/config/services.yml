@@ -771,8 +771,6 @@ services:
 
     contao.simple_tokens.parser:
         class: Contao\CoreBundle\SimpleTokens\Parser
-        arguments:
-            - '@?logger'
         public: true
 
     contao.slug:
