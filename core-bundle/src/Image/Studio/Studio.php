@@ -21,11 +21,11 @@ use Contao\CoreBundle\Image\ImageFactory;
 use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\Image\PictureFactoryInterface;
 use Contao\CoreBundle\Routing\ScopeMatcher;
-use Contao\File;
 use Contao\FilesModel;
 use Contao\Image\ImageDimensions;
 use Contao\Image\Picture;
 use Contao\Image\PictureConfiguration;
+use Contao\Image\PictureInterface;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\StringUtil;
@@ -67,7 +67,7 @@ final class Studio implements ServiceSubscriberInterface
     private $locale;
 
     /**
-     * @var Picture|null
+     * @var PictureInterface|null
      */
     private $picture;
 
@@ -153,7 +153,7 @@ final class Studio implements ServiceSubscriberInterface
     /**
      * Create a picture with the current configuration.
      */
-    public function getPicture(): Picture
+    public function getPicture(): PictureInterface
     {
         if (null === $this->filePath) {
             throw new \LogicException('You need to call `from()` to set a resource before creating an image.');
@@ -469,7 +469,7 @@ final class Studio implements ServiceSubscriberInterface
         /** @var PageModel $pageAdapter */
         $pageAdapter = $this->getAdapter(PageModel::class);
 
-        /** @var PageModel $page */
+        /** @var PageModel|null $page */
         $page = $pageAdapter->findByPk($request->attributes->get('pageModel'));
 
         if (null === $page || null === $page->layout) {
@@ -479,7 +479,7 @@ final class Studio implements ServiceSubscriberInterface
         /** @var LayoutModel $layoutModelAdapter */
         $layoutModelAdapter = $this->getAdapter(LayoutModel::class);
 
-        /** @var LayoutModel $layoutModel */
+        /** @var LayoutModel|null $layoutModel */
         $layoutModel = $layoutModelAdapter->findByPk($page->layout);
 
         if (null === $layoutModel || empty($layoutModel->lightboxSize)) {
