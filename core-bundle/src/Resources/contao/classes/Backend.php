@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Provide methods to manage back end controllers.
@@ -693,6 +694,25 @@ abstract class Backend extends Controller
 		}
 
 		return $arrPages;
+	}
+
+	protected function hasAccess(array $attributes, $subject = null): bool
+	{
+		/** @var AuthorizationCheckerInterface $authorizationChecker */
+		$authorizationChecker = System::getContainer()->get('contao.security.authorization_checker');
+
+		return $authorizationChecker->isGranted($attributes, $subject);
+	}
+
+	/**
+	 * @throws AccessDeniedException in case access was disallowed
+	 */
+	protected function denyAccessUnlessGranted(string $action, $object = null): void
+	{
+		if (!$this->hasAccess(array($action), $object))
+		{
+			throw new AccessDeniedException();
+		}
 	}
 
 	/**

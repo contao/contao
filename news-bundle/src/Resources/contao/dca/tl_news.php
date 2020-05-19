@@ -23,7 +23,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		'markAsCopy'                  => 'headline',
 		'onload_callback' => array
 		(
-			array('tl_news', 'checkPermission'),
+			array('tl_news', 'adjustDca'),
 			array('tl_news', 'generateFeed')
 		),
 		'oncut_callback' => array
@@ -483,16 +483,10 @@ class tl_news extends Contao\Backend
 		$this->import('Contao\BackendUser', 'User');
 	}
 
-	/**
-	 * Check permissions to edit table tl_news
-	 *
-	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
-	 */
-	public function checkPermission()
+	public function adjustDca()
 	{
 		$bundles = Contao\System::getContainer()->getParameter('kernel.bundles');
 
-		// HOOK: comments extension required
 		if (!isset($bundles['ContaoCommentsBundle']))
 		{
 			$key = array_search('allowComments', $GLOBALS['TL_DCA']['tl_news']['list']['sorting']['headerFields']);
@@ -502,117 +496,6 @@ class tl_news extends Contao\Backend
 		if ($this->User->isAdmin)
 		{
 			return;
-		}
-
-		// Set the root IDs
-		if (empty($this->User->news) || !is_array($this->User->news))
-		{
-			$root = array(0);
-		}
-		else
-		{
-			$root = $this->User->news;
-		}
-
-		$id = strlen(Contao\Input::get('id')) ? Contao\Input::get('id') : CURRENT_ID;
-
-		// Check current action
-		switch (Contao\Input::get('act'))
-		{
-			case 'paste':
-			case 'select':
-				// Check CURRENT_ID here (see #247)
-				if (!in_array(CURRENT_ID, $root))
-				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access news archive ID ' . $id . '.');
-				}
-				break;
-
-			case 'create':
-				if (!Contao\Input::get('pid') || !in_array(Contao\Input::get('pid'), $root))
-				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to create news items in news archive ID ' . Contao\Input::get('pid') . '.');
-				}
-				break;
-
-			case 'cut':
-			case 'copy':
-				if (Contao\Input::get('act') == 'cut' && Contao\Input::get('mode') == 1)
-				{
-					$objArchive = $this->Database->prepare("SELECT pid FROM tl_news WHERE id=?")
-												 ->limit(1)
-												 ->execute(Contao\Input::get('pid'));
-
-					if ($objArchive->numRows < 1)
-					{
-						throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid news item ID ' . Contao\Input::get('pid') . '.');
-					}
-
-					$pid = $objArchive->pid;
-				}
-				else
-				{
-					$pid = Contao\Input::get('pid');
-				}
-
-				if (!in_array($pid, $root))
-				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' news item ID ' . $id . ' to news archive ID ' . $pid . '.');
-				}
-				// no break
-
-			case 'edit':
-			case 'show':
-			case 'delete':
-			case 'toggle':
-			case 'feature':
-				$objArchive = $this->Database->prepare("SELECT pid FROM tl_news WHERE id=?")
-											 ->limit(1)
-											 ->execute($id);
-
-				if ($objArchive->numRows < 1)
-				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid news item ID ' . $id . '.');
-				}
-
-				if (!in_array($objArchive->pid, $root))
-				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' news item ID ' . $id . ' of news archive ID ' . $objArchive->pid . '.');
-				}
-				break;
-
-			case 'editAll':
-			case 'deleteAll':
-			case 'overrideAll':
-			case 'cutAll':
-			case 'copyAll':
-				if (!in_array($id, $root))
-				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access news archive ID ' . $id . '.');
-				}
-
-				$objArchive = $this->Database->prepare("SELECT id FROM tl_news WHERE pid=?")
-											 ->execute($id);
-
-				/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-				$objSession = Contao\System::getContainer()->get('session');
-
-				$session = $objSession->all();
-				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objArchive->fetchEach('id'));
-				$objSession->replace($session);
-				break;
-
-			default:
-				if (Contao\Input::get('act'))
-				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid command "' . Contao\Input::get('act') . '".');
-				}
-
-				if (!in_array($id, $root))
-				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access news archive ID ' . $id . '.');
-				}
-				break;
 		}
 	}
 
@@ -913,8 +796,6 @@ class tl_news extends Contao\Backend
 		// Check permissions to edit
 		Contao\Input::setGet('id', $intId);
 		Contao\Input::setGet('act', 'feature');
-
-		$this->checkPermission();
 
 		// Check permissions to feature
 		if (!$this->User->hasAccess('tl_news::featured', 'alexf'))

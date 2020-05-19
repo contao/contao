@@ -13,3 +13,16 @@ services:
             - '@security.helper'
         tags:
             - { name: contao.picker_provider, priority: 128 }
+
+    contao_news.security.news_archive_voter:
+        class: Contao\NewsBundle\Security\NewsArchiveAccessVoter
+        tags:
+            - { name: 'security.voter' }
+
+    contao_news.security.news_voter:
+        class: Contao\NewsBundle\Security\NewsAccessVoter
+        arguments:
+            - '@contao.security.access_decision_manager'
+            - '@contao.framework'
+        tags:
+            - { name: 'security.voter' }
