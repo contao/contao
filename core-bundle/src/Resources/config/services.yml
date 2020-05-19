@@ -819,3 +819,11 @@ services:
     contao.util.simple_token_parser:
         class: Contao\CoreBundle\Util\SimpleTokenParser
         public: true
+        arguments:
+            - '@contao.util.simple_token_parser.expression_language'
+
+    contao.util.simple_token_parser.expression_language:
+        class: Contao\CoreBundle\Util\SimpleTokenExpressionLanguage
+        arguments:
+            - ~
+            - !tagged_iterator 'contao.simple_token_extension'

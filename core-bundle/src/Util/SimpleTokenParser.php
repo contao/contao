@@ -26,23 +26,8 @@ class SimpleTokenParser implements LoggerAwareInterface
      */
     private $expressionLanguage;
 
-    public function __construct(ExpressionLanguage $expressionLanguage = null)
+    public function __construct(ExpressionLanguage $expressionLanguage)
     {
-        if (null === $expressionLanguage) {
-            $expressionLanguage = new ExpressionLanguage();
-        }
-
-        // Disable `constant()` function for security reasons.
-        $expressionLanguage->register(
-            'constant',
-            static function () {
-                return "throw new \\InvalidArgumentException('Cannot use the constant() function in the expression for security reasons.');";
-            },
-            static function (): void {
-                throw new \InvalidArgumentException('Cannot use the constant() function in the expression for security reasons.');
-            }
-        );
-
         $this->expressionLanguage = $expressionLanguage;
     }
 
