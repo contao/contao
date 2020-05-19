@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Util;
 
+use Contao\CoreBundle\Util\SimpleTokenExpressionLanguage;
 use Contao\CoreBundle\Util\SimpleTokenParser;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 class SimpleTokenParserTest extends TestCase
 {
@@ -494,26 +494,6 @@ class SimpleTokenParserTest extends TestCase
         $this->getParser()->parseTokens('{if constant("PHP_VERSION") > 7}match{else}no-match{endif}', []);
     }
 
-    public function testEvaluatesCustomExpressionLanguageFunction(): void
-    {
-        $expressionLanguage = new ExpressionLanguage();
-
-        $expressionLanguage->register(
-            'concat',
-            static function (): void {
-                throw new \RuntimeException('not implemented');
-            },
-            static function ($arguments, $a, $b) {
-                return $a.$b;
-            });
-
-        $this->assertSame(
-            'Foobar? Yes!',
-            $this->getParser($expressionLanguage)
-                ->parseTokens("Foobar? {if concat('foo', value) == 'foobar'}Yes!{endif}", ['value' => 'bar'])
-        );
-    }
-
     /**
      * @dataProvider parseSimpleTokensInvalidComparison
      */
@@ -538,8 +518,10 @@ class SimpleTokenParserTest extends TestCase
         yield 'Unknown operator (<==)' => ['{if foo<=="bar"}{endif}'];
     }
 
-    private function getParser(ExpressionLanguage $expressionLanguage = null): SimpleTokenParser
+    private function getParser(): SimpleTokenParser
     {
-        return new SimpleTokenParser($expressionLanguage);
+        return new SimpleTokenParser(
+            new SimpleTokenExpressionLanguage()
+        );
     }
 }
