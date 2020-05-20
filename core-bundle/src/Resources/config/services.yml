@@ -826,4 +826,4 @@ services:
         class: Contao\CoreBundle\Util\SimpleTokenExpressionLanguage
         arguments:
             - ~
-            - !tagged_iterator 'contao.simple_token_extension'
+            - !tagged_iterator contao.simple_token_extension
