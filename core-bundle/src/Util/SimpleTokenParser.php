@@ -181,12 +181,12 @@ class SimpleTokenParser implements LoggerAwareInterface
         // Evaluate
         switch ($operator) {
             case '==':
-                // todo: find a way to stop the CS fixer to change this to ===
-                return $tokenValue == $value;
+                // We explicitly want to compare with type juggling here
+                return \in_array($tokenValue, [$value], false);
 
             case '!=':
-                // todo: find a way to stop the CS fixer to change this to !==
-                return $tokenValue != $value;
+                // We explicitly want to compare with type juggling here
+                return !\in_array($tokenValue, [$value], false);
 
             case '===':
                 return $tokenValue === $value;
