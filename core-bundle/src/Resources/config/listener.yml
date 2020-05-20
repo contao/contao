@@ -111,6 +111,11 @@ services:
         tags:
             - kernel.event_listener
 
+    Contao\CoreBundle\EventListener\DataContainer\PageCallbackListener:
+        autoconfigure: true
+        arguments:
+            - '@contao.framework'
+
     contao.listener.insert_tags.asset:
         class: Contao\CoreBundle\EventListener\InsertTags\AssetListener
         arguments:
