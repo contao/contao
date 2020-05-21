@@ -56,6 +56,9 @@ class StripCookiesSubscriber implements EventSubscriberInterface
 
         // Blackfire
         '__blackfire',
+
+        // Osano Cookie Consent
+        'cookieconsent_status',
     ];
 
     /**
