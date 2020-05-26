@@ -23,7 +23,7 @@ use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 /**
  * Provides a {{date_format::*::*}} Insert Tag. The second parameter is the date
  * string to be parsed or a UNIX timestamp while the third parameter is the date
- * format. If the third parameter is ommitted, the datimFormat page or config setting
+ * format. If the third parameter is omitted, the datimFormat page or config setting
  * will be used.
  *
  * Usage:
