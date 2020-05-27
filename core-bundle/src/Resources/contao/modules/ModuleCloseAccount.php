@@ -86,6 +86,7 @@ class ModuleCloseAccount extends \Module
 			{
 				$objWidget->value = '';
 				$objWidget->addError($GLOBALS['TL_LANG']['ERR']['invalidPass']);
+				sleep(2); // Wait 2 seconds while brute forcing :)
 			}
 
 			// Close account
