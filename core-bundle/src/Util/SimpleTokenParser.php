@@ -34,18 +34,15 @@ class SimpleTokenParser implements LoggerAwareInterface
     /**
      * Parse simple tokens.
      *
-     * @param string $subject The string to be parsed
-     * @param array  $data    The replacement data
+     * @param array $tokens Key value pairs ([token => value, ...])
      *
      * @throws \RuntimeException         If $subject cannot be parsed
      * @throws \InvalidArgumentException If there are incorrectly formatted if-tags
-     *
-     * @return string The converted string
      */
-    public function parseTokens(string $subject, array $data): string
+    public function parseTokens(string $subject, array $tokens): string
     {
         // Check if we can use the expression language or if legacy tokens have been used
-        $canUseExpressionLanguage = $this->canUseExpressionLanguage($data);
+        $canUseExpressionLanguage = $this->canUseExpressionLanguage($tokens);
 
         // The last item is true if it is inside a matching if-tag
         $stack = [true];
@@ -65,11 +62,11 @@ class SimpleTokenParser implements LoggerAwareInterface
             $currentIf = $ifStack[\count($ifStack) - 1];
 
             if (0 === strncmp($tag, '{if ', 4)) {
-                $expression = $this->evaluateExpression(substr($tag, 4, -1), $data, $canUseExpressionLanguage);
+                $expression = $this->evaluateExpression(substr($tag, 4, -1), $tokens, $canUseExpressionLanguage);
                 $stack[] = $current && $expression;
                 $ifStack[] = $expression;
             } elseif (0 === strncmp($tag, '{elseif ', 8)) {
-                $expression = $this->evaluateExpression(substr($tag, 8, -1), $data, $canUseExpressionLanguage);
+                $expression = $this->evaluateExpression(substr($tag, 8, -1), $tokens, $canUseExpressionLanguage);
                 array_pop($stack);
                 array_pop($ifStack);
                 $stack[] = !$currentIf && $stack[\count($stack) - 1] && $expression;
@@ -83,7 +80,7 @@ class SimpleTokenParser implements LoggerAwareInterface
                 array_pop($stack);
                 array_pop($ifStack);
             } elseif ($current) {
-                $return .= $this->replaceTokens($tag, $data);
+                $return .= $this->replaceTokens($tag, $tokens);
             }
         }
 
