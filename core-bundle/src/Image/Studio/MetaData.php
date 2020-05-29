@@ -16,14 +16,17 @@ use Contao\StringUtil;
 
 /**
  * @psalm-immutable
+ *
+ * This class is as a container for image meta data as typically defined in
+ * tl_files / tl_content. It's underlying data structure is a key-value store
+ * with added getters/setters and special char formatting for convenience.
+ *
+ * The data must be stored in a normalized form. It's your responsibility to
+ * ensure this is the case when creating an instance of this class. You can
+ * use the public class constants as keys for a better DX.
  */
 final class MetaData
 {
-    public const PROPERTY_DOMINANT_VALUES = 'overwriteMeta';
-    public const PROPERTY_FULLSIZE = 'fullsize';
-    public const PROPERTY_MARGIN = 'margin';
-    public const PROPERTY_FLOATING = 'floating';
-
     public const VALUE_ALT = 'alt';
     public const VALUE_CAPTION = 'caption';
     public const VALUE_LINK_TITLE = 'linkTitle';
@@ -35,33 +38,26 @@ final class MetaData
      */
     private $values;
 
-    /**
-     * @var array
-     */
-    private $properties;
-
-    public function __construct(array $values, array $properties = [])
+    public function __construct(array $values)
     {
         $this->values = $values;
-        $this->properties = array_unique($properties);
-    }
-
-    public function withOther(self $metaData, bool $forceMergingValues = false): self
-    {
-        $values = $forceMergingValues || false !== $metaData->hasDominantValues() ?
-            array_merge($this->values, $metaData->values) :
-            $this->values;
-
-        return new self(
-            $values,
-            array_merge($this->properties, $metaData->properties)
-        );
     }
 
     /**
+     * Get a new meta data container that is the result of merging this
+     * container's data with the data of the specified one.
+     */
+    public function withOther(self $metaData): self
+    {
+        return new self(array_merge($this->values, $metaData->values));
+    }
+
+    /**
+     * Get a value. Returns null if the value was not found.
+     *
      * @return mixed|null
      */
-    public function getValue(string $key)
+    public function get(string $key)
     {
         $value = $this->values[$key] ?? null;
 
@@ -74,30 +70,37 @@ final class MetaData
 
     public function getAlt(): ?string
     {
-        return $this->getValue(self::VALUE_ALT);
+        return $this->get(self::VALUE_ALT);
     }
 
     public function getCaption(): ?string
     {
-        return $this->getValue(self::VALUE_CAPTION);
+        return $this->get(self::VALUE_CAPTION);
     }
 
     public function getLinkTitle(): ?string
     {
-        return $this->getValue(self::VALUE_LINK_TITLE);
+        return $this->get(self::VALUE_LINK_TITLE);
     }
 
     public function getTitle(): ?string
     {
-        return $this->getValue(self::VALUE_TITLE);
+        return $this->get(self::VALUE_TITLE);
     }
 
     public function getUrl(): ?string
     {
-        return $this->getValue(self::VALUE_URL) ?: null;
+        return $this->get(self::VALUE_URL) ?: null;
     }
 
-    public function getAllValues(): array
+    /**
+     * Return the whole data set as an associative array.
+     *
+     * Note that this representation is optimized for the use in Contao
+     * templates and therefore contains special key names that differ from
+     * the internal normalized representation.
+     */
+    public function getAll(): array
     {
         $values = $this->handleSpecialChars($this->values);
 
@@ -107,30 +110,13 @@ final class MetaData
         ]);
     }
 
-    public function hasDominantValues(): ?bool
-    {
-        $property = $this->properties[self::PROPERTY_DOMINANT_VALUES] ?? null;
-
-        return null !== $property ? (bool) $property : null;
-    }
-
-    public function shouldDisplayFullSize(): ?bool
-    {
-        $property = $this->properties[self::PROPERTY_FULLSIZE] ?? null;
-
-        return null !== $property ? (bool) $property : null;
-    }
-
-    public function getFloatingProperty(): ?string
-    {
-        return$this->properties[self::PROPERTY_FLOATING] ?? null;
-    }
-
-    public function getMarginProperty(): ?array
-    {
-        return $this->properties[self::PROPERTY_MARGIN] ?? null;
-    }
-
+    /**
+     * Helper function to change the name of array keys.
+     *
+     * Example:
+     *   $values = ['a' => 1, 'b' => 2];
+     *   remap($values, ['b' => 'foo']); // ['a' => 1, 'foo' => 2]
+     */
     public static function remap(array $values, array $mapping): array
     {
         foreach (array_intersect_key($mapping, $values) as $from => $to) {
@@ -141,6 +127,9 @@ final class MetaData
         return $values;
     }
 
+    /**
+     * Apply `StringUtil::specialchars()` to a known list of candidates.
+     */
     private function handleSpecialChars(array $values): array
     {
         $candidates = [

@@ -19,9 +19,14 @@ class StudioFactory implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
 
+    /**
+     * Create a new image studio instance.
+     *
+     * As `contao.image.studio` is a non-shared service you can also directly
+     * use the dependency injection container to get a single new instance.
+     */
     public function __invoke(): Studio
     {
-        // The service is non-shared, so we'll get a new instance every time.
         return $this->container->get('contao.image.studio');
     }
 }

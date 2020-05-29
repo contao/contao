@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Image\Studio\MetaData;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
 
@@ -393,6 +394,30 @@ class FilesModel extends Model
 	 */
 	protected function postSave($intType)
 	{
+	}
+
+	/**
+	 * Get image meta data for this file. Specify one or more locales - meta
+	 * data of the first matching one will be returned or null if none was
+	 * found.
+	 */
+	public function getMetaData(string ...$locales): ?MetaData
+	{
+		$metaDataCollection = StringUtil::deserialize($this->meta, true);
+
+		foreach ($locales as $locale)
+		{
+			$metaData = $metaDataCollection[$locale] ?? array();
+
+			if (!empty($metaData))
+			{
+				return System::getContainer()
+					->get('contao.image.metadata_factory')
+					->create($metaData);
+			}
+		}
+
+		return null;
 	}
 }
 

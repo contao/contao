@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Image\Studio\MetaData;
 use Contao\Model\Collection;
 
 /**
@@ -431,6 +432,28 @@ class ContentModel extends Model
 		}
 
 		return static::countBy($arrColumns, array($intPid, $strParentTable), $arrOptions);
+	}
+
+	/**
+	 * Get image meta data for this content element or null if not applicable.
+	 */
+	public function getMetaData(): ?MetaData
+	{
+		// Ignore if `overwriteMeta` isn't set
+		if ('' === $this->overwriteMeta)
+		{
+			return null;
+		}
+
+		// Normalize names
+		$values = MetaData::remap($this->row(), array(
+			'imageTitle' => MetaData::VALUE_TITLE,
+			'imageUrl' => MetaData::VALUE_URL,
+		));
+
+		return System::getContainer()
+			->get('contao.image.metadata_factory')
+			->create($values);
 	}
 }
 

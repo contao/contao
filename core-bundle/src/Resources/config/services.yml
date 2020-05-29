@@ -351,9 +351,8 @@ services:
 
     contao.image.metadata_factory:
         class: Contao\CoreBundle\Image\Studio\MetaDataFactory
+        public: true
         arguments:
-            - '@request_stack'
-            - '%kernel.default_locale%'
             - '@contao.framework'
 
     contao.menu.backend_menu_builder:
