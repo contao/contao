@@ -37,6 +37,8 @@ use Contao\Model\Collection;
  * @property string  $enclosure
  * @property boolean $noComments
  * @property boolean $published
+ * @property string  $pageTitle
+ * @property string  $description
  *
  * @method static FaqModel|null findById($id, $opt=array())
  * @method static FaqModel|null findByPk($id, array $opt=array())
