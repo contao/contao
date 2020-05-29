@@ -141,7 +141,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('source', 'addTime', 'addImage', 'recurring', 'addEnclosure', 'overwriteMeta'),
-		'default'                     => '{title_legend},title,alias,author;{date_legend},addTime,startDate,endDate;{source_legend:hide},source;{meta_legend},pageTitle,description,serpPreview;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments,featured;{publish_legend},published,start,stop',
+		'default'                     => '{title_legend},title,alias,author;{date_legend},addTime,startDate,endDate;{source_legend:hide},source;{meta_legend},pageTitle,robots,description,serpPreview;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments,featured;{publish_legend},published,start,stop',
 		'internal'                    => '{title_legend},title,alias,author;{date_legend},addTime,startDate,endDate;{source_legend},source,jumpTo;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments,featured;{publish_legend},published,start,stop',
 		'article'                     => '{title_legend},title,alias,author;{date_legend},addTime,startDate,endDate;{source_legend},source,articleId;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments,featured;{publish_legend},published,start,stop',
 		'external'                    => '{title_legend},title,alias,author;{date_legend},addTime,startDate,endDate;{source_legend},source,url,target;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments,featured;{publish_legend},published,start,stop'
@@ -269,6 +269,15 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
+		),
+		'robots' => array
+		(
+			'exclude'                 => true,
+			'search'                  => true,
+			'inputType'               => 'select',
+			'options'                 => array('index,follow', 'index,nofollow', 'noindex,follow', 'noindex,nofollow'),
+			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption' => true),
+			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'description' => array
 		(

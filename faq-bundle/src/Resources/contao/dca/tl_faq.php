@@ -108,7 +108,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('addImage', 'addEnclosure', 'overwriteMeta'),
-		'default'                     => '{title_legend},question,alias,author;{answer_legend},answer;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},noComments;{publish_legend},published'
+		'default'                     => '{title_legend},question,alias,author;{answer_legend},answer;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},robots,noComments;{publish_legend},published'
 	),
 
 	// Subpalettes
@@ -302,6 +302,15 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'inputType'               => 'fileTree',
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'isDownloads'=>true, 'extensions'=>Config::get('allowedDownload'), 'mandatory'=>true, 'isSortable'=>true),
 			'sql'                     => "blob NULL"
+		),
+		'robots' => array
+		(
+			'exclude'                 => true,
+			'search'                  => true,
+			'inputType'               => 'select',
+			'options'                 => array('index,follow', 'index,nofollow', 'noindex,follow', 'noindex,nofollow'),
+			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption' => true),
+			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'noComments' => array
 		(

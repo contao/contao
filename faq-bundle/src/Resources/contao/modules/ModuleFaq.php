@@ -103,6 +103,11 @@ class ModuleFaq extends Frontend
 				{
 					while ($objItems->next())
 					{
+						if ($blnIsSitemap && $objItems->robots === 'noindex,nofollow')
+						{
+							continue;
+						}
+
 						$arrPages[] = sprintf(preg_replace('/%(?!s)/', '%%', $strUrl), ($objItems->alias ?: $objItems->id));
 					}
 				}

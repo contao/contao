@@ -57,6 +57,7 @@ use Contao\Model\Collection;
  * @property boolean $published
  * @property string  $start
  * @property string  $stop
+ * @property string  $robots
  *
  * @method static CalendarEventsModel|null findById($id, array $opt=array())
  * @method static CalendarEventsModel|null findByPk($id, array $opt=array())

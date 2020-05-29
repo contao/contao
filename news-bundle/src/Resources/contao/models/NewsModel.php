@@ -49,6 +49,7 @@ use Contao\Model\Collection;
  * @property boolean $published
  * @property string  $start
  * @property string  $stop
+ * @property string  $robots
  *
  * @method static NewsModel|null findById($id, array $opt=array())
  * @method static NewsModel|null findByPk($id, array $opt=array())
