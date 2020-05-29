@@ -60,7 +60,7 @@
         <source>Robots tag</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.robots.1">
-        <source>Here you can override how search engines handle the page. If empty the page setting is used.</source>
+        <source>Here you can override how search engines handle the event. If empty the page setting is used.</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.description.0">
         <source>Meta description</source>

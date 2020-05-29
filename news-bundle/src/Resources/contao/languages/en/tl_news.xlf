@@ -42,7 +42,7 @@
         <source>Robots tag</source>
       </trans-unit>
       <trans-unit id="tl_news.robots.1">
-        <source>Here you can override how search engines handle the page. If empty the page setting is used.</source>
+        <source>Here you can override how search engines handle the news. If empty the page setting is used.</source>
       </trans-unit>
       <trans-unit id="tl_news.description.0">
         <source>Meta description</source>
