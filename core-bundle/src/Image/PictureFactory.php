@@ -107,7 +107,9 @@ class PictureFactory implements PictureFactoryInterface
         }
 
         // Support arrays in a serialized form
-        $size = StringUtil::deserialize($size);
+        if (\is_string($size)) {
+            $size = StringUtil::deserialize($size);
+        }
 
         if (
             \is_array($size)
