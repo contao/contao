@@ -279,6 +279,9 @@ final class Studio implements ServiceSubscriberInterface
         return $this->cache[self::CACHE_META_DATA] = $metaData;
     }
 
+    /**
+     * Get the image dimensions of the source file.
+     */
     public function getOriginalDimensions(): ImageDimensions
     {
         if (isset($this->cache[self::CACHE_ORIGINAL_DIMENSIONS])) {
