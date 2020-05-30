@@ -34,7 +34,9 @@ final class MetaData
     public const VALUE_URL = 'link';
 
     /**
-     * @var array
+     * Key-value pairs of meta data.
+     *
+     * @var array<string, mixed>
      */
     private $values;
 
@@ -111,7 +113,9 @@ final class MetaData
     }
 
     /**
-     * Helper function to change the name of array keys.
+     * @psalm-pure
+     *
+     * Modify the name of array keys by a given mapping.
      *
      * Example:
      *   $values = ['a' => 1, 'b' => 2];
@@ -128,6 +132,9 @@ final class MetaData
     }
 
     /**
+     * @psalm-pure
+     * @psalm-suppress ImpureMethodCall
+     *
      * Apply `StringUtil::specialchars()` to a known list of candidates.
      */
     private function handleSpecialChars(array $values): array

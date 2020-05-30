@@ -75,6 +75,8 @@ final class Studio implements ServiceSubscriberInterface
     private const CACHE_ORIGINAL_DIMENSIONS = 'dimensions';
 
     /**
+     * @readonly
+     *
      * @var ContainerInterface
      */
     private $locator;
@@ -82,7 +84,7 @@ final class Studio implements ServiceSubscriberInterface
     /**
      * Simple internal key-value cache to allow cheap subsequent value access.
      *
-     * @var array
+     * @var array<string, mixed>
      */
     private $cache = [];
 
@@ -462,6 +464,9 @@ final class Studio implements ServiceSubscriberInterface
 
     private function getProjectDir(): string
     {
+        // todo: Handle PHPStan locator false positives. In this case we could also
+        //       directly use constructor injection for the parameters, though.
+        //       see https://github.com/phpstan/phpstan-symfony/issues/76
         return $this->locator
             ->get('parameter_bag')
             ->get('kernel.project_dir')
