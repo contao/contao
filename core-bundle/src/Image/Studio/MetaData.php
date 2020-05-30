@@ -67,7 +67,7 @@ final class MetaData
             return null;
         }
 
-        return current($this->handleSpecialChars([$key => $value]));
+        return current(self::handleSpecialChars([$key => $value]));
     }
 
     public function getAlt(): ?string
@@ -104,7 +104,7 @@ final class MetaData
      */
     public function getAll(): array
     {
-        $values = $this->handleSpecialChars($this->values);
+        $values = self::handleSpecialChars($this->values);
 
         return self::remap($values, [
             self::VALUE_TITLE => 'imageTitle',
@@ -137,7 +137,7 @@ final class MetaData
      *
      * Apply `StringUtil::specialchars()` to a known list of candidates.
      */
-    private function handleSpecialChars(array $values): array
+    private static function handleSpecialChars(array $values): array
     {
         $candidates = [
             self::VALUE_ALT,
