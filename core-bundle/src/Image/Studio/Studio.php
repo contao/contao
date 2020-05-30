@@ -273,7 +273,7 @@ final class Studio implements ServiceSubscriberInterface
         if (null === $metaData) {
             /** @var MetaDataFactory $metaDataFactory */
             $metaDataFactory = $this->locator->get('contao.image.metadata_factory');
-            $metaData = $this->metaData = $metaDataFactory->createEmpty();
+            $metaData = $metaDataFactory->createEmpty();
         }
 
         return $this->cache[self::CACHE_META_DATA] = $metaData;
