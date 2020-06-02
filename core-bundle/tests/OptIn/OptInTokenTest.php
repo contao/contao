@@ -95,6 +95,7 @@ class OptInTokenTest extends ContaoTestCase
             ->willReturn(['tl_user' => [2]])
         ;
 
+        /** @var OptInModel&MockObject $adapter */
         $adapter = $this->mockAdapter(['findByRelatedTableAndIds']);
         $adapter
             ->expects($this->once())
@@ -143,6 +144,7 @@ class OptInTokenTest extends ContaoTestCase
             ->willReturn(['tl_user' => [2, 3]])
         ;
 
+        /** @var OptInModel&MockObject $adapter */
         $adapter = $this->mockAdapter(['findByRelatedTableAndIds']);
         $adapter
             ->expects($this->once())
