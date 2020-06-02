@@ -489,6 +489,7 @@ class TwoFactorControllerTest extends TestCase
             ->willReturn(new Response())
         ;
 
+        /** @var PageModel&MockObject $adapter */
         $adapter = $this->mockAdapter(['findByPk']);
         $adapter
             ->method('findByPk')

@@ -19,6 +19,7 @@ use Contao\Search;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Driver\Connection;
 use Nyholm\Psr7\Uri;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class DefaultIndexerTest extends ContaoTestCase
 {
@@ -27,6 +28,7 @@ class DefaultIndexerTest extends ContaoTestCase
      */
     public function testIndexesADocument(Document $document, ?array $expectedIndexParams, string $expectedMessage = null, bool $indexProtected = false): void
     {
+        /** @var Search&MockObject $searchAdapter */
         $searchAdapter = $this->mockAdapter(['indexPage']);
 
         if (null === $expectedIndexParams) {
@@ -129,6 +131,7 @@ class DefaultIndexerTest extends ContaoTestCase
 
     public function testDeletesADocument(): void
     {
+        /** @var Search&MockObject $searchAdapter */
         $searchAdapter = $this->mockAdapter(['removeEntry']);
         $searchAdapter
             ->expects($this->once())
