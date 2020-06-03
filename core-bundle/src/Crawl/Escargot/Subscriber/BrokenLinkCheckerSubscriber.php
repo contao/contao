@@ -29,6 +29,8 @@ use Terminal42\Escargot\SubscriberLoggerTrait;
 
 class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, EscargotAwareInterface, ExceptionSubscriberInterface, LoggerAwareInterface
 {
+    public const TAG_SKIP = 'skip-broken-link-checker';
+
     use EscargotAwareTrait;
     use LoggerAwareTrait;
     use SubscriberLoggerTrait;
@@ -55,6 +57,16 @@ class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, Escarg
 
     public function shouldRequest(CrawlUri $crawlUri): string
     {
+        if ($crawlUri->hasTag(self::TAG_SKIP)) {
+            $this->logWithCrawlUri(
+                $crawlUri,
+                LogLevel::DEBUG,
+                'Did not check because it was marked to be skipped using the data-skip-broken-link-checker attribute.'
+            );
+
+            return SubscriberInterface::DECISION_NEGATIVE;
+        }
+
         // Only check URIs that are part of our base collection or were found on one
         $fromBaseUriCollection = $this->escargot->getBaseUris()->containsHost($crawlUri->getUri()->getHost());
 
