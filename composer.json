@@ -46,7 +46,7 @@
         "contao-components/tablesorter": "^2.1",
         "contao-components/tinymce4": "^4.7",
         "contao/image": "^1.0",
-        "contao/imagine-svg": "^0.1.2 || ^0.2",
+        "contao/imagine-svg": "^0.2.3",
         "contao/manager-plugin": "^2.6.2",
         "doctrine/dbal": "^2.10",
         "doctrine/doctrine-bundle": "^1.8",
