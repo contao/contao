@@ -32,6 +32,7 @@ class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, Escarg
     use EscargotAwareTrait;
     use LoggerAwareTrait;
     use SubscriberLoggerTrait;
+
     public const TAG_SKIP = 'skip-broken-link-checker';
 
     /**
