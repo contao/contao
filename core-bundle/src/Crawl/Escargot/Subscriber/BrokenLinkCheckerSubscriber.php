@@ -29,11 +29,10 @@ use Terminal42\Escargot\SubscriberLoggerTrait;
 
 class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, EscargotAwareInterface, ExceptionSubscriberInterface, LoggerAwareInterface
 {
-    public const TAG_SKIP = 'skip-broken-link-checker';
-
     use EscargotAwareTrait;
     use LoggerAwareTrait;
     use SubscriberLoggerTrait;
+    public const TAG_SKIP = 'skip-broken-link-checker';
 
     /**
      * @var TranslatorInterface
