@@ -59,18 +59,15 @@ class Crawl extends Backend implements \executable
 			return '';
 		}
 
+		// Hide the crawler in maintenance mode (see #1379)
 		try
 		{
 			$driver = System::getContainer()->get('lexik_maintenance.driver.factory')->getDriver();
-
-			// Hide the crawler in maintenance mode (see #1379)
-			if ($driver->isExists())
-			{
-				return '';
-			}
+			$blnMaintenance = $driver->isExists();
 		}
 		catch (\Exception $e)
 		{
+			$blnMaintenance = false;
 		}
 
 		/** @var Factory $factory */
@@ -85,6 +82,7 @@ class Crawl extends Backend implements \executable
 		}
 
 		$template = new BackendTemplate('be_crawl');
+		$template->isMaintenance = $blnMaintenance;
 		$template->isActive = $this->isActive();
 		$template->subscribersWidget = $subscribersWidget;
 		$template->memberWidget = $memberWidget;
