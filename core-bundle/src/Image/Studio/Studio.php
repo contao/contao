@@ -18,7 +18,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\ImageFactory;
 use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\Image\PictureFactoryInterface;
-use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\FilesModel;
 use Contao\Image\ImageDimensions;
 use Contao\Image\PictureConfiguration;
@@ -341,8 +340,7 @@ final class Studio implements ServiceSubscriberInterface
             return [TemplateData::LINK_NONE, null];
         };
 
-        // todo: Do we really need the scope check? We probably shouldn't do that here.
-        if ($this->allowSecondary && $this->isFrontendScope()) {
+        if ($this->allowSecondary) {
             [$linkMode, $lightBoxStudio] = $getLightBoxConfig();
 
             $templateData = new TemplateData($this, $linkMode, $lightBoxStudio);
@@ -398,7 +396,6 @@ final class Studio implements ServiceSubscriberInterface
             'request_stack' => RequestStack::class,
             'parameter_bag' => ParameterBagInterface::class,
             'contao.assets.files_context' => ContextInterface::class,
-            'contao.routing.scope_matcher' => ScopeMatcher::class,
             'contao.framework' => ContaoFramework::class,
         ];
     }
@@ -497,16 +494,6 @@ final class Studio implements ServiceSubscriberInterface
         return $this->locator
             ->get('request_stack')
             ->getCurrentRequest()
-        ;
-    }
-
-    private function isFrontendScope(): bool
-    {
-        $request = $this->getRequest();
-
-        return null !== $request && $this->locator
-            ->get('contao.routing.scope_matcher')
-            ->isFrontendRequest($request)
         ;
     }
 
