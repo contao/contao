@@ -330,7 +330,7 @@ final class TemplateData
     private function getFallbackLightBoxId(): string
     {
         // Try to generate a unique identifier that is stable across calls
-        $identifier = $this->studio->getMetaData()->getUrl() ?? $this->studio->getFilePath();
+        $identifier = $this->secondaryStudio->getFilePath() ?? $this->studio->getMetaData()->getUrl() ?? $this->studio->getFilePath();
 
         return substr(md5($identifier), 0, 6);
     }
