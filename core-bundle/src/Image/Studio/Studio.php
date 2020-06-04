@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Image\Studio;
 
-use Contao\Config;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\ImageFactory;
@@ -506,12 +505,12 @@ final class Studio implements ServiceSubscriberInterface
             return null;
         }
 
-        /** @var Config $configAdapter */
-        $configAdapter = $this->getAdapter(Config::class);
+        $validExtensions = $this->locator
+            ->get('parameter_bag')
+            ->get('contao.image.valid_extensions')
+        ;
 
-        $validImageTypes = explode(',', $configAdapter->get('validImageTypes'));
-
-        return \in_array(Path::getExtension($uri), $validImageTypes, true);
+        return \in_array(Path::getExtension($uri), $validExtensions, true);
     }
 
     private function isExternalUrl(?string $uri): ?bool
