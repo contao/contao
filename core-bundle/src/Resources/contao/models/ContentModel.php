@@ -445,15 +445,24 @@ class ContentModel extends Model
 			return null;
 		}
 
-		// Normalize names
-		$values = MetaData::remap($this->row(), array(
-			'imageTitle' => MetaData::VALUE_TITLE,
-			'imageUrl' => MetaData::VALUE_URL,
-		));
+		$mapping = $this->row();
+
+		// Normalize keys
+		if (isset($mapping['imageTitle']))
+		{
+			$mapping[MetaData::VALUE_TITLE] = $mapping['imageTitle'];
+		}
+
+		if (isset($mapping['imageUrl']))
+		{
+			$mapping[MetaData::VALUE_URL] = $mapping['imageUrl'];
+		}
+
+		unset($mapping['imageTitle'], $mapping['imageUrl']);
 
 		return System::getContainer()
 			->get('contao.image.metadata_factory')
-			->create($values);
+			->create($mapping);
 	}
 }
 

@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Image\Studio;
 
 use Contao\Image\ImageDimensions;
+use Contao\StringUtil;
 use Contao\Template;
 
 /**
@@ -217,12 +218,12 @@ final class TemplateData
 
         // Primary image and meta data
         $templateData = array_merge(
-            $metaData->getAll(),
+            $this->getNormalizedMetaDataMapping($metaData),
             [
                 'picture' => [
                     'img' => $this->getImg(),
                     'sources' => $this->getSources(),
-                    'alt' => $metaData->getAlt(),
+                    'alt' => StringUtil::specialchars($metaData->getAlt()),
                 ],
                 'width' => $originalSize->getWidth(),
                 'height' => $originalSize->getHeight(),
@@ -237,7 +238,7 @@ final class TemplateData
         );
 
         // Context sensitive properties
-        if (null !== ($title = $metaData->getTitle())) {
+        if (null !== ($title = StringUtil::specialchars($metaData->getTitle()))) {
             $templateData['picture']['title'] = $title;
         }
 
@@ -299,6 +300,31 @@ final class TemplateData
         }
 
         $template->setData(array_replace_recursive($existing, $new));
+    }
+
+    private function getNormalizedMetaDataMapping(MetaData $metaData): array
+    {
+        $mapping = $metaData->getAll();
+
+        // Handle special chars
+        foreach ([MetaData::VALUE_ALT, MetaData::VALUE_TITLE, MetaData::VALUE_LINK_TITLE, MetaData::VALUE_CAPTION] as $key) {
+            if (isset($mapping[$key])) {
+                $mapping[$key] = StringUtil::specialchars($mapping[$key]);
+            }
+        }
+
+        // Rename certain keys (as used in the Contao templates)
+        if (isset($mapping[MetaData::VALUE_TITLE])) {
+            $mapping['imageTitle'] = $mapping[MetaData::VALUE_TITLE];
+        }
+
+        if (isset($mapping[MetaData::VALUE_URL])) {
+            $mapping['imageUrl'] = $mapping[MetaData::VALUE_URL];
+        }
+
+        unset($mapping[MetaData::VALUE_TITLE], $mapping[MetaData::VALUE_URL]);
+
+        return $mapping;
     }
 
     private function getFallbackLightBoxId(): string
