@@ -127,7 +127,7 @@ final class Studio implements ServiceSubscriberInterface
      *
      * @var bool
      */
-    private $allowSecondary;
+    private $enableSecondary;
 
     public function __construct(ContainerInterface $locator)
     {
@@ -190,9 +190,9 @@ final class Studio implements ServiceSubscriberInterface
      * Enable/disable the creation of secondary image content (e.g. a light box
      * or fullsize image). This setting is disabled by default.
      */
-    public function allowSecondary(bool $allow = true): self
+    public function enableSecondary(bool $enable = true): self
     {
-        $this->allowSecondary = $allow;
+        $this->enableSecondary = $enable;
 
         $this->invalidateCache(self::CACHE_TEMPLATE_DATA);
 
@@ -340,7 +340,7 @@ final class Studio implements ServiceSubscriberInterface
             return [TemplateData::LINK_NONE, null];
         };
 
-        if ($this->allowSecondary) {
+        if ($this->enableSecondary) {
             [$linkMode, $lightBoxStudio] = $getLightBoxConfig();
 
             $templateData = new TemplateData($this, $linkMode, $lightBoxStudio);
