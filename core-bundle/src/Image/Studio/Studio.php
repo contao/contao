@@ -472,6 +472,14 @@ final class Studio implements ServiceSubscriberInterface
         ;
     }
 
+    private function getUploadPath(): string
+    {
+        return $this->locator
+            ->get('parameter_bag')
+            ->get('contao.upload_path')
+        ;
+    }
+
     private function getSystemLocale(): string
     {
         return $this->locator
@@ -563,7 +571,13 @@ final class Studio implements ServiceSubscriberInterface
      */
     private function locateResource($identifier, FilesModel &$filesModel = null): string
     {
-        $dbafsItem = true;
+        $isInsideUploadPath = function (string $path): bool {
+            $uploadPath = $this->getUploadPath();
+
+            return 0 === strncmp($path, $uploadPath.'/', \strlen($uploadPath) + 1);
+        };
+
+        $isDbafsResource = true;
 
         if ($identifier instanceof FilesModel) {
             $filesModel = $identifier;
@@ -580,13 +594,17 @@ final class Studio implements ServiceSubscriberInterface
                 $filesModel = $filesModelAdapter->findByUuid($identifier);
             } elseif (is_numeric($identifier)) {
                 $filesModel = $filesModelAdapter->findById((int) $identifier);
-            } else {
+            } elseif ($isInsideUploadPath($identifier)) {
+                // todo: Do we also want to support absolute paths to DBAFS resources?
+
                 $filesModel = $filesModelAdapter->findByPath($identifier);
-                $dbafsItem = null !== $filesModel;
+                $isDbafsResource = null !== $filesModel;
+            } else {
+                $isDbafsResource = false;
             }
         }
 
-        if ($dbafsItem) {
+        if ($isDbafsResource) {
             if (null === $filesModel) {
                 throw new \InvalidArgumentException("DBAFS item '$identifier' could not be found . ");
             }
