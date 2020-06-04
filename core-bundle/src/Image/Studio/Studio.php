@@ -142,7 +142,7 @@ final class Studio implements ServiceSubscriberInterface
     {
         $this->filePath = $this->locateResource($identifier, $this->filesModel);
 
-        $this->invalidateCache(self::CACHE_PICTURE);
+        $this->invalidateCache();
 
         return $this;
     }
@@ -156,7 +156,7 @@ final class Studio implements ServiceSubscriberInterface
     {
         $this->sizeConfiguration = $size;
 
-        $this->invalidateCache(self::CACHE_PICTURE);
+        $this->invalidateCache();
 
         return $this;
     }
@@ -180,7 +180,7 @@ final class Studio implements ServiceSubscriberInterface
     {
         $this->locale = $locale;
 
-        $this->invalidateCache(self::CACHE_META_DATA);
+        $this->invalidateCache();
 
         return $this;
     }
@@ -193,7 +193,7 @@ final class Studio implements ServiceSubscriberInterface
     {
         $this->enableSecondary = $enable;
 
-        $this->invalidateCache(self::CACHE_TEMPLATE_DATA);
+        $this->invalidateCache();
 
         return $this;
     }
@@ -400,23 +400,11 @@ final class Studio implements ServiceSubscriberInterface
     }
 
     /**
-     * Recursively invalidate a cache entry and it's dependencies.
+     * Remove all cached entries.
      */
-    private function invalidateCache(string $key): void
+    private function invalidateCache(): void
     {
-        // Cache dependencies: if the `key` is invalidated, all `values` will be as well
-        $dependencies = [
-            self::CACHE_PICTURE => [self::CACHE_META_DATA, self::CACHE_ORIGINAL_DIMENSIONS],
-            self::CACHE_META_DATA => [self::CACHE_TEMPLATE_DATA],
-        ];
-
-        unset($this->cache[$key]);
-
-        foreach ($dependencies[$key] ?? [] as $element) {
-            if (isset($this->cache[$element])) {
-                $this->invalidateCache($element);
-            }
-        }
+        $this->cache = [];
     }
 
     /**
