@@ -58,7 +58,7 @@ use Webmozart\PathUtil\Path;
  *
  *        // Get sources and template data
  *        $sources = $studio->getSources();
- *        $data = $studio->getTemplateData();
+ *        $data = $studio->getStudioImage();
  *
  *        // Create another size variant with the same resource/meta data
  *        $sourcesB = $studio
@@ -69,7 +69,7 @@ final class Studio implements ServiceSubscriberInterface
 {
     private const CACHE_PICTURE = 'picture';
     private const CACHE_META_DATA = 'metaData';
-    private const CACHE_TEMPLATE_DATA = 'templateData';
+    private const CACHE_STUDIO_IMAGE = 'studioImage';
     private const CACHE_ORIGINAL_DIMENSIONS = 'dimensions';
 
     /**
@@ -299,14 +299,14 @@ final class Studio implements ServiceSubscriberInterface
     /**
      * Create a data set, ready to be used in templates.
      */
-    public function getTemplateData(): TemplateData
+    public function getStudioImage(): StudioImage
     {
-        if (isset($this->cache[self::CACHE_TEMPLATE_DATA])) {
-            return $this->cache[self::CACHE_TEMPLATE_DATA];
+        if (isset($this->cache[self::CACHE_STUDIO_IMAGE])) {
+            return $this->cache[self::CACHE_STUDIO_IMAGE];
         }
 
         // todo: Check responsibilities. We could move all of this method's
-        //       logic into `TemplateData` and let it decide if it needs a
+        //       logic into `StudioImage` and let it decide if it needs a
         //       secondary studio and which link mode to use. Or the other
         //       way round so that it does not need to rely on this class
         //       (would probably worsen the 'lazyness' quite a bit).
@@ -317,14 +317,14 @@ final class Studio implements ServiceSubscriberInterface
 
             // A url was set but points to an unsupported image type: Open target in a new window (no lightbox)
             if (false === $validImageType) {
-                return [TemplateData::LINK_NEW_WINDOW, null];
+                return [StudioImage::LINK_NEW_WINDOW, null];
             }
 
             // A url was not set OR it was set and points to a supported image type: Create a lightbox
             if (null === $url || $validImageType) {
                 // Do not resize external resources.
                 if ($this->isExternalUrl($url)) {
-                    return [TemplateData::LINK_LIGHTBOX, null];
+                    return [StudioImage::LINK_LIGHTBOX, null];
                 }
 
                 $lightBoxStudio = $this->createDerived($url);
@@ -333,21 +333,21 @@ final class Studio implements ServiceSubscriberInterface
                     $lightBoxStudio->setSize($sizeConfiguration);
                 }
 
-                return [TemplateData::LINK_LIGHTBOX, $lightBoxStudio];
+                return [StudioImage::LINK_LIGHTBOX, $lightBoxStudio];
             }
 
-            return [TemplateData::LINK_NONE, null];
+            return [StudioImage::LINK_NONE, null];
         };
 
         if ($this->enableSecondary) {
             [$linkMode, $lightBoxStudio] = $getLightBoxConfig();
 
-            $templateData = new TemplateData($this, $linkMode, $lightBoxStudio);
+            $studioImage = new StudioImage($this, $linkMode, $lightBoxStudio);
         } else {
-            $templateData = new TemplateData($this);
+            $studioImage = new StudioImage($this);
         }
 
-        return $this->cache[self::CACHE_TEMPLATE_DATA] = $templateData;
+        return $this->cache[self::CACHE_STUDIO_IMAGE] = $studioImage;
     }
 
     /**

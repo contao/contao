@@ -23,7 +23,7 @@ use Contao\Template;
  * value pairs) as well as in a preprocessed form ready to use in Contao
  * templates (e.g. get HTML attributes as a rendered string).
  */
-final class TemplateData
+final class StudioImage
 {
     public const LINK_NONE = 0;
     public const LINK_LIGHTBOX = 1;
