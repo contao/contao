@@ -317,14 +317,14 @@ final class Studio implements ServiceSubscriberInterface
 
             // A url was set but points to an unsupported image type: Open target in a new window (no lightbox)
             if (false === $validImageType) {
-                return [StudioImage::LINK_NEW_WINDOW, null];
+                return [['target' => '_blank'], null];
             }
 
             // A url was not set OR it was set and points to a supported image type: Create a lightbox
             if (null === $url || $validImageType) {
                 // Do not resize external resources.
                 if ($this->isExternalUrl($url)) {
-                    return [StudioImage::LINK_LIGHTBOX, null];
+                    return [['data-lightbox' => ''], null];
                 }
 
                 $lightBoxStudio = $this->createDerived($url);
@@ -333,10 +333,10 @@ final class Studio implements ServiceSubscriberInterface
                     $lightBoxStudio->setSize($sizeConfiguration);
                 }
 
-                return [StudioImage::LINK_LIGHTBOX, $lightBoxStudio];
+                return [['data-lightbox' => ''], $lightBoxStudio];
             }
 
-            return [StudioImage::LINK_NONE, null];
+            return [[], null];
         };
 
         if ($this->enableSecondary) {

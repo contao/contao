@@ -25,10 +25,6 @@ use Contao\Template;
  */
 final class StudioImage
 {
-    public const LINK_NONE = 0;
-    public const LINK_LIGHTBOX = 1;
-    public const LINK_NEW_WINDOW = 2;
-
     /**
      * @var Studio
      */
@@ -40,84 +36,26 @@ final class StudioImage
     private $secondaryStudio;
 
     /**
-     * The mode on how to interpret url data (e.g. open in a new window vs. in a light box).
+     * Link attributes in addition to linkHref.
      *
-     * @var int
+     * @var array<string,string>
      */
-    private $linkMode;
+    private $linkAttributes = [];
 
-    /**
-     * User defined custom light box identifier (used in `data-lightbox` attribute).
-     *
-     * @var string|null
-     */
-    private $lightBoxId;
-
-    /**
-     * Legacy floating property.
-     *
-     * @var string|null
-     */
-    private $floatingProperty;
-
-    /**
-     * Legacy margin property.
-     *
-     * @var string|null
-     */
-    private $marginProperty;
-
-    public function __construct(Studio $studio, int $linkMode = self::LINK_NONE, ?Studio $secondaryStudio = null)
+    public function __construct(Studio $studio, array $linkAttributes = [], ?Studio $secondaryStudio = null)
     {
         $this->studio = $studio;
-        $this->linkMode = $linkMode;
+        $this->linkAttributes = $linkAttributes;
         $this->secondaryStudio = $secondaryStudio;
     }
 
-    /**
-     * Overwrite the default mode on how to interpret url data.
-     */
-    public function setLinkMode(int $linkMode): self
+    public function setLinkAttribute(string $attribute, ?string $value): self
     {
-        $this->linkMode = $linkMode;
-
-        return $this;
-    }
-
-    /**
-     * Define a custom light box id. By default a random id is generated.
-     */
-    public function setLightBoxId(?string $id): self
-    {
-        $this->lightBoxId = $id;
-
-        return $this;
-    }
-
-    /**
-     * Set the legacy floating property (used to set a `float_*` class and to
-     * determine the `addBefore` property when exporting the data for Contao
-     * templates).
-     */
-    public function setFloating(?string $direction): self
-    {
-        // todo: Should we trigger a deprecation warning here?
-
-        $this->floatingProperty = $direction;
-
-        return $this;
-    }
-
-    /**
-     * Set the legacy margin property (transparently being output as the `margin`
-     * when exporting the data for Contao templates).
-     */
-    public function setMargin(?string $cssValues): self
-    {
-        // todo: Should we trigger a deprecation warning here?
-        //       Should we drop this option and only handle it in `Controller::addImageToTemplate`?
-
-        $this->marginProperty = $cssValues;
+        if (null === $value) {
+            unset($this->linkAttributes[$attribute]);
+        } else {
+            $this->linkAttributes[$attribute] = $value;
+        }
 
         return $this;
     }
@@ -165,47 +103,24 @@ final class StudioImage
         return $this->secondaryStudio->getSources();
     }
 
-    public function getLinkMode(): int
-    {
-        return $this->linkMode;
-    }
-
     /**
      * Get the link/light box attributes as key value pairs.
      */
-    public function getAttributes(): array
+    public function getLinkAttributes(): array
     {
-        if (self::LINK_NEW_WINDOW === $this->linkMode) {
-            return ['target' => '_blank'];
-        }
-
-        if (self::LINK_LIGHTBOX === $this->linkMode) {
-            return ['data-lightbox' => $this->lightBoxId ?? $this->getFallbackLightBoxId()];
-        }
-
-        return [];
+        return $this->linkAttributes;
     }
 
     /**
      * Get the link uri or null if none exists.
      */
-    public function getHref(): ?string
+    public function getLinkHref(): ?string
     {
-        if (self::LINK_NONE === $this->linkMode) {
-            return null;
-        }
-
-        if (self::LINK_NEW_WINDOW === $this->linkMode) {
-            return $this->studio->getMetaData()->getUrl();
-        }
-
         if (null !== $this->secondaryStudio) {
-            $img = $this->secondaryStudio->getImg();
-
-            return $img['src'];
+            return $this->secondaryStudio->getImg()['src'];
         }
 
-        return null;
+        return $this->studio->getMetaData()->getUrl() ?: null;
     }
 
     /**
@@ -259,7 +174,7 @@ final class StudioImage
         }
 
         // Link target
-        if (null !== ($href = $this->getHref())) {
+        if (null !== ($href = $this->getLinkHref())) {
             $templateData['href'] = $href;
         }
 
@@ -325,13 +240,5 @@ final class StudioImage
         unset($mapping[MetaData::VALUE_TITLE], $mapping[MetaData::VALUE_URL]);
 
         return $mapping;
-    }
-
-    private function getFallbackLightBoxId(): string
-    {
-        // Try to generate a unique identifier that is stable across calls
-        $identifier = $this->secondaryStudio->getFilePath() ?? $this->studio->getMetaData()->getUrl() ?? $this->studio->getFilePath();
-
-        return substr(md5($identifier), 0, 6);
     }
 }
