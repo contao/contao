@@ -526,7 +526,7 @@ class RouteProvider implements RouteProviderInterface
             $rootPages = $pages->getModels();
         }
 
-        $pages = $pageModel->findBy(["tl_page.alias IN ('index', '/')"], null);
+        $pages = $pageModel->findBy(["tl_page.alias='index' OR tl_page.alias='/'"], null);
 
         if ($pages instanceof Collection) {
             $indexPages = $pages->getModels();
