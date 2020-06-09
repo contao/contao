@@ -487,6 +487,7 @@ class RouteProviderTest extends TestCase
      */
     public function testSortsTheRootRoutes(array $pages, array $languages, array $expectedNames): void
     {
+        /** @var (Adapter|PageModel)&MockObject $pageAdapter */
         $pageAdapter = $this->mockAdapter(['findBy']);
         $pageAdapter
             ->expects($this->exactly(2))
