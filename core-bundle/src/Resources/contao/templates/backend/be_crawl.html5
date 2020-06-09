@@ -5,7 +5,7 @@
 
   <?php if ($this->isMaintenance): ?>
     <div class="tl_message">
-      <p class="tl_error"><?= $this->trans('tl_maintenance.crawlMaintenance') ?></p>
+      <p class="tl_info"><?= $this->trans('tl_maintenance.crawlMaintenance') ?></p>
     </div>
   <?php elseif ($this->isRunning): ?>
     <div class="inner">
