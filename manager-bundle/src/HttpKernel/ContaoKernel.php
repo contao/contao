@@ -152,9 +152,11 @@ class ContaoKernel extends Kernel
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        if (file_exists($this->getRootDir().'/config/parameters.yml')) {
-            $loader->load($this->getRootDir().'/config/parameters.yml');
-        }
+        $loader->load(function (ContainerBuilder $container) use ($loader) {
+            if ($container->fileExists($this->getRootDir().'/config/parameters.yml')) {
+                $loader->load($this->getRootDir().'/config/parameters.yml');
+            }
+        });
 
         /** @var ConfigPluginInterface[] $plugins */
         $plugins = $this->getPluginLoader()->getInstancesOf(PluginLoader::CONFIG_PLUGINS);
@@ -163,16 +165,16 @@ class ContaoKernel extends Kernel
             $plugin->registerContainerConfiguration($loader, []);
         }
 
-        if (file_exists($this->getRootDir().'/config/parameters.yml')) {
-            $loader->load($this->getRootDir().'/config/parameters.yml');
-        }
-
         $loader->load(function (ContainerBuilder $container) use ($loader) {
+            if ($container->fileExists($this->getRootDir().'/config/parameters.yml')) {
+                $loader->load($this->getRootDir().'/config/parameters.yml');
+            }
+
             $environment = $container->getParameter('kernel.environment');
 
-            if (file_exists($this->getRootDir().'/config/config_'.$environment.'.yml')) {
+            if ($container->fileExists($this->getRootDir().'/config/config_'.$environment.'.yml')) {
                 $loader->load($this->getRootDir().'/config/config_'.$environment.'.yml');
-            } elseif (file_exists($this->getRootDir().'/config/config.yml')) {
+            } elseif ($container->fileExists($this->getRootDir().'/config/config.yml')) {
                 $loader->load($this->getRootDir().'/config/config.yml');
             }
         });
