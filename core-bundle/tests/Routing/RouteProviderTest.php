@@ -512,13 +512,15 @@ class RouteProviderTest extends TestCase
 
             if ($i > $c - 1) {
                 $suffix = '.fallback';
-                $page = $pages[$i-$c];
+                $page = $pages[$i - $c];
             } else {
                 $suffix = '.root';
                 $page = $pages[$i];
             }
 
             $this->assertInstanceOf(PageModel::class, $routedPage);
+            $this->assertSame('tl_page.'.$page->id.$suffix, $name);
+
             $this->assertSame(
                 $page,
                 $routedPage,
@@ -531,13 +533,12 @@ class RouteProviderTest extends TestCase
                     $routedPage->alias
                 )
             );
-            $this->assertSame('tl_page.'.$page->id.$suffix, $name);
 
             ++$i;
         }
     }
 
-    public function getRootRoutes()
+    public function getRootRoutes(): \Generator
     {
         $pages = [
             2 => $this->createRootPage('en', 'english-root', true),
