@@ -17,6 +17,8 @@ use Terminal42\Escargot\CrawlUri;
 
 class CrawlCsvLogHandler extends StreamHandler
 {
+    public const DATETIME_FORMAT = 'Y-m-d H:i:s.u';
+
     /**
      * @var string
      */
@@ -52,6 +54,7 @@ class CrawlCsvLogHandler extends StreamHandler
 
         if (0 === $size) {
             fputcsv($resource, [
+                'Time',
                 'Source',
                 'URI',
                 'Found on URI',
@@ -62,6 +65,7 @@ class CrawlCsvLogHandler extends StreamHandler
         }
 
         $columns = [
+            $record['datetime']->format(self::DATETIME_FORMAT),
             $record['context']['source'],
             null === $crawlUri ? '---' : (string) $crawlUri->getUri(),
             null === $crawlUri ? '---' : (string) $crawlUri->getFoundOn(),
