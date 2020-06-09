@@ -1430,7 +1430,7 @@ class ImageTest extends TestCase
         $doc = new \DOMDocument();
         $doc->loadXML($resultFile->getContent());
 
-        $this->assertSame('0 0 200.1 100.1', $doc->documentElement->firstChild->getAttribute('viewBox'));
+        $this->assertSame('0 0 3202 1602', $doc->documentElement->firstChild->getAttribute('viewBox'));
         $this->assertSame('-50', $doc->documentElement->firstChild->getAttribute('x'));
         $this->assertSame('0', $doc->documentElement->firstChild->getAttribute('y'));
         $this->assertSame('200', $doc->documentElement->firstChild->getAttribute('width'));
