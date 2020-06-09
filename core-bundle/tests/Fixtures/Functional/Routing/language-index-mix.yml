@@ -7,7 +7,7 @@ tl_page:
       alias: english-root
       type: root
       language: en
-      dns: 'example.com'
+      dns: example.com
       fallback: '1'
       includeLayout: '1'
       layout: 1
@@ -30,7 +30,7 @@ tl_page:
       alias: german-root
       type: root
       language: de
-      dns: 'example.com'
+      dns: example.com
       fallback: ''
       includeLayout: '1'
       layout: 1
