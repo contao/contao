@@ -35,6 +35,7 @@ class RouteProviderTest extends TestCase
         $page->id = 17;
         $page->rootId = 1;
 
+        /** @var PageModel&MockObject $pageAdapter */
         $pageAdapter = $this->mockAdapter(['findByPk']);
         $pageAdapter
             ->expects($this->once())
@@ -61,6 +62,7 @@ class RouteProviderTest extends TestCase
 
     public function testThrowsAnExceptionIfThePageIdIsInvalid(): void
     {
+        /** @var PageModel&MockObject $pageAdapter */
         $pageAdapter = $this->mockAdapter(['findByPk']);
         $pageAdapter
             ->expects($this->once())
@@ -88,6 +90,7 @@ class RouteProviderTest extends TestCase
         $page2->id = 21;
         $page2->rootId = 1;
 
+        /** @var PageModel&MockObject $pageAdapter */
         $pageAdapter = $this->mockAdapter(['findBy']);
         $pageAdapter
             ->expects($this->once())
@@ -110,6 +113,7 @@ class RouteProviderTest extends TestCase
         $page->rootId = 1;
         $page->domain = 'example.org';
 
+        /** @var PageModel&MockObject $pageAdapter */
         $pageAdapter = $this->mockAdapter(['findByPk']);
         $pageAdapter
             ->expects($this->once())
@@ -132,6 +136,7 @@ class RouteProviderTest extends TestCase
         $page->rootId = 1;
         $page->domain = 'example.org:8080';
 
+        /** @var PageModel&MockObject $pageAdapter */
         $pageAdapter = $this->mockAdapter(['findByPk']);
         $pageAdapter
             ->expects($this->once())
@@ -148,6 +153,7 @@ class RouteProviderTest extends TestCase
 
     public function testSelectsAllPagesIfNoPageNamesAreGiven(): void
     {
+        /** @var PageModel&MockObject $pageAdapter */
         $pageAdapter = $this->mockAdapter(['findAll']);
         $pageAdapter
             ->expects($this->once())
@@ -160,6 +166,7 @@ class RouteProviderTest extends TestCase
 
     public function testReturnsAnEmptyArrayIfThereAreNoMatchingPages(): void
     {
+        /** @var PageModel&MockObject $pageAdapter */
         $pageAdapter = $this->mockAdapter(['findBy']);
         $pageAdapter
             ->expects($this->never())
@@ -208,6 +215,7 @@ class RouteProviderTest extends TestCase
             $conditions[] = 'tl_page.alias IN ('.implode(',', $aliases).')';
         }
 
+        /** @var PageModel&MockObject $pageAdapter */
         $pageAdapter = $this->mockAdapter(['findBy']);
         $pageAdapter
             ->expects($this->once())
@@ -323,6 +331,7 @@ class RouteProviderTest extends TestCase
      */
     public function testSortsTheRoutes(array $pages, array $languages): void
     {
+        /** @var PageModel&MockObject $pageAdapter */
         $pageAdapter = $this->mockAdapter(['findBy']);
         $pageAdapter
             ->expects($this->once())
@@ -504,6 +513,7 @@ class RouteProviderTest extends TestCase
             ->method('loadDetails')
         ;
 
+        /** @var PageModel&MockObject $pageAdapter */
         $pageAdapter = $this->mockAdapter(['findBy']);
         $pageAdapter
             ->expects($this->once())
@@ -576,6 +586,7 @@ class RouteProviderTest extends TestCase
             ->method('loadDetails')
         ;
 
+        /** @var PageModel&MockObject $pageAdapter */
         $pageAdapter = $this->mockAdapter(['findBy']);
         $pageAdapter
             ->expects($this->once())
@@ -602,6 +613,7 @@ class RouteProviderTest extends TestCase
             ->willThrowException(new NoRootPageFoundException())
         ;
 
+        /** @var PageModel&MockObject $pageAdapter */
         $pageAdapter = $this->mockAdapter(['findBy']);
         $pageAdapter
             ->expects($this->once())
@@ -618,11 +630,9 @@ class RouteProviderTest extends TestCase
         $this->assertEmpty($routes);
     }
 
-    /**
-     * @return Adapter&MockObject
-     */
     private function mockConfigAdapter(array $config): Adapter
     {
+        /** @var (Adapter|Config)&MockObject $configAdapter */
         $configAdapter = $this->mockAdapter(['get']);
         $configAdapter
             ->method('get')
@@ -656,6 +666,9 @@ class RouteProviderTest extends TestCase
     }
 
     /**
+     * @param Adapter&MockObject $pageAdapter
+     * @param Adapter&MockObject $configAdapter
+     *
      * @return ContaoFramework&MockObject
      */
     private function mockFramework(Adapter $pageAdapter = null, Adapter $configAdapter = null): ContaoFramework

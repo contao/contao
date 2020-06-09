@@ -20,6 +20,7 @@ use Contao\CoreBundle\Repository\CronJobRepository;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\System;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class LegacyCronTest extends TestCase
 {
@@ -61,7 +62,7 @@ class LegacyCronTest extends TestCase
             'monthly' => [['TestCron', 'onMonthly']],
         ];
 
-        // Mock the System adapter and return the simple object
+        /** @var System&MockObject $systemAdapter */
         $systemAdapter = $this->mockAdapter(['importStatic', 'loadLanguageFile']);
         $systemAdapter
             ->expects($this->exactly(5))

@@ -36,6 +36,7 @@ class Route404ProviderTest extends TestCase
 
     public function testGetRoutesByNamesWithValueReturnsEmptyArray(): void
     {
+        /** @var PageModel&MockObject $pageAdapter */
         $pageAdapter = $this->mockAdapter(['findByType']);
         $pageAdapter
             ->expects($this->never())
@@ -58,6 +59,7 @@ class Route404ProviderTest extends TestCase
         $page->id = 17;
         $page->rootId = 1;
 
+        /** @var PageModel&MockObject $pageAdapter */
         $pageAdapter = $this->mockAdapter(['findByType']);
         $pageAdapter
             ->expects($this->once())
@@ -77,6 +79,7 @@ class Route404ProviderTest extends TestCase
 
     public function testReturnsEmptyCollectionWithout404Pages(): void
     {
+        /** @var PageModel&MockObject $pageAdapter */
         $pageAdapter = $this->mockAdapter(['findByType']);
         $pageAdapter
             ->expects($this->once())
@@ -101,6 +104,7 @@ class Route404ProviderTest extends TestCase
         $page->domain = 'example.com';
         $page->rootUseSSL = true;
 
+        /** @var PageModel&MockObject $pageAdapter */
         $pageAdapter = $this->mockAdapter(['findByType']);
         $pageAdapter
             ->expects($this->once())
@@ -138,6 +142,7 @@ class Route404ProviderTest extends TestCase
         $page->rootUseSSL = true;
         $page->rootLanguage = 'de';
 
+        /** @var PageModel&MockObject $pageAdapter */
         $pageAdapter = $this->mockAdapter(['findByType']);
         $pageAdapter
             ->expects($this->once())
@@ -198,6 +203,7 @@ class Route404ProviderTest extends TestCase
             );
         }
 
+        /** @var PageModel&MockObject $pageAdapter */
         $pageAdapter = $this->mockAdapter(['findByType']);
         $pageAdapter
             ->expects($this->once())
@@ -271,6 +277,7 @@ class Route404ProviderTest extends TestCase
             ->method('loadDetails')
         ;
 
+        /** @var PageModel&MockObject $pageAdapter */
         $pageAdapter = $this->mockAdapter(['findByType']);
         $pageAdapter
             ->expects($this->once())
@@ -302,6 +309,7 @@ class Route404ProviderTest extends TestCase
             ->willThrowException(new NoRootPageFoundException())
         ;
 
+        /** @var PageModel&MockObject $pageAdapter */
         $pageAdapter = $this->mockAdapter(['findByType']);
         $pageAdapter
             ->expects($this->once())
