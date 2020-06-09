@@ -8,6 +8,8 @@ daysUntilClose: 7
 exemptLabels:
     - feature
     - up for discussion
+    - easy pick
+    - help wanted
 
 # Label to use when marking an issue as stale
 staleLabel: stale
