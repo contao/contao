@@ -61,6 +61,7 @@ class News extends \Frontend
 	{
 		$this->import('Automator');
 		$this->Automator->purgeXmlFiles();
+		$this->Automator->generateSitemap();
 
 		$objFeed = \NewsFeedModel::findAll();
 
