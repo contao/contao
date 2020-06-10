@@ -154,12 +154,11 @@ class ModuleArticle extends \Module
 
 		if ($objCte !== null)
 		{
-			$intLast = $objCte->count() - 1;
-			$arrRows = $objCte->fetchAll();
+			$arrRows = $objCte->getModels();
 			$objLastRow = null;
 
 			/** @var ContentModel $objRow */
-			foreach ($arrRows as $i => $objRow)
+			while ($objRow = array_shift($arrRows))
 			{
 				$arrCss = array();
 
@@ -169,7 +168,7 @@ class ModuleArticle extends \Module
 					$arrCss[] = 'first';
 				}
 
-				if ($i == $intLast)
+				if (empty($arrRows))
 				{
 					$arrCss[] = 'last';
 				}
@@ -182,12 +181,11 @@ class ModuleArticle extends \Module
 					$arrElements[] = $strElement;
 					$objLastRow = $objRow;
 				}
-				elseif ($intLast == $i && $objLastRow != null && $objLastRow !== $objRow)
+				elseif (empty($arrRows) && $objLastRow != null && $objLastRow !== $objRow)
 				{
 					// Re-generate the last successful element with "last" class
 					array_pop($arrElements);
 					$arrRows[] = $objLastRow;
-					$intLast++;
 				}
 			}
 		}

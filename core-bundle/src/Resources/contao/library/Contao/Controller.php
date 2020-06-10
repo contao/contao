@@ -248,14 +248,13 @@ abstract class Controller extends \System
 				return '';
 			}
 
-			$arrArticles = [];
+			$arrArticles = array();
 			$blnMultiMode = ($objArticles->count() > 1);
-			$intLast = $objArticles->count() - 1;
-			$arrRows = $objArticles->fetchAll();
+			$arrRows = $objArticles->getModels();
 			$objLastRow = null;
 
 			/** @var ArticleModel $objRow */
-			foreach ($arrRows as $i => $objRow)
+			while ($objRow = array_shift($arrRows))
 			{
 				// Add the "first" and "last" classes (see #2583)
 				$arrCss = array();
@@ -265,7 +264,7 @@ abstract class Controller extends \System
 					$arrCss[] = 'first';
 				}
 
-				if ($i == $intLast)
+				if (empty($arrRows))
 				{
 					$arrCss[] = 'last';
 				}
@@ -278,12 +277,11 @@ abstract class Controller extends \System
 					$arrArticles[] = $strArticle;
 					$objLastRow = $objRow;
 				}
-				elseif ($intLast == $i && $objLastRow != null && $objLastRow !== $objRow)
+				elseif (empty($arrRows) && $objLastRow != null && $objLastRow !== $objRow)
 				{
 					// Re-generate the last successful article with "last" class
 					array_pop($arrArticles);
 					$arrRows[] = $objLastRow;
-					$intLast++;
 				}
 			}
 
