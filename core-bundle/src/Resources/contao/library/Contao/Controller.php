@@ -1695,7 +1695,7 @@ abstract class Controller extends System
 		$objTemplate->picture = $picture;
 
 		// Provide an ID for single lightbox images in HTML5 (see #3742)
-		if ($strLightboxId === null && $arrItem['fullsize'])
+		if ($strLightboxId === null && $arrItem['fullsize'] && $objTemplate instanceof Template && !empty($arrItem['id']))
 		{
 			$strLightboxId = substr(md5($objTemplate->getName() . '_' . $arrItem['id']), 0, 6);
 		}
