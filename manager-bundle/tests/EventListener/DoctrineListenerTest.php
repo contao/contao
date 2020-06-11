@@ -15,17 +15,17 @@ use Doctrine\DBAL\Event\SchemaAlterTableRenameColumnEventArgs;
 use Doctrine\DBAL\Platforms\MySQL57Platform;
 use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Schema\TableDiff;
-use Doctrine\DBAL\Types\IntegerType;
+use Doctrine\DBAL\Types\Type;
 use PHPUnit\Framework\TestCase;
 
 class DoctrineListenerTest extends TestCase
 {
     public function testConvertsRenameToDropAndAdd()
     {
-        $column = new Column('bar', new IntegerType());
+        $column = new Column('bar', Type::getType(Type::INTEGER));
 
         $tableDiff = new TableDiff('tl_member');
-        $tableDiff->renamedColumns['foo'] = new Column('foo', new IntegerType());
+        $tableDiff->renamedColumns['foo'] = new Column('foo', Type::getType(Type::INTEGER));
 
         $args = new SchemaAlterTableRenameColumnEventArgs('foo', $column, $tableDiff, new MySQL57Platform());
 
