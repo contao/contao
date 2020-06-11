@@ -15,8 +15,7 @@ namespace Contao\CoreBundle\File;
 /**
  * @psalm-immutable
  *
- * // todo description
- * This class is as a container for image meta data as typically defined in
+ * This class is as a container for file meta data as typically defined in
  * tl_files / tl_content. It's underlying data structure is a key-value store
  * with added getters/setters for convenience.
  *
