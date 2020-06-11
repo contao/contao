@@ -16,7 +16,7 @@ use Doctrine\DBAL\Schema\TableDiff;
 /**
  * @internal
  */
-class DoctrineListener
+class DoctrineAlterTableListener
 {
     /**
      * Prevents renaming arbitrary columns by explicitly dropping the old ones

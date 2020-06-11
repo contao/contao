@@ -10,7 +10,7 @@
 
 namespace Contao\ManagerBundle\Tests\EventListener;
 
-use Contao\ManagerBundle\EventListener\DoctrineListener;
+use Contao\ManagerBundle\EventListener\DoctrineAlterTableListener;
 use Doctrine\DBAL\Event\SchemaAlterTableRenameColumnEventArgs;
 use Doctrine\DBAL\Platforms\MySQL57Platform;
 use Doctrine\DBAL\Schema\Column;
@@ -19,7 +19,7 @@ use Doctrine\DBAL\Schema\TableDiff;
 use Doctrine\DBAL\Types\Type;
 use PHPUnit\Framework\TestCase;
 
-class DoctrineListenerTest extends TestCase
+class DoctrineAlterTableListenerTest extends TestCase
 {
     public function testConvertsRenameToDropAndAdd()
     {
@@ -36,7 +36,7 @@ class DoctrineListenerTest extends TestCase
 
         $this->assertEmpty($args->getSql());
 
-        $listener = new DoctrineListener();
+        $listener = new DoctrineAlterTableListener();
         $listener->onSchemaAlterTableRenameColumn($args);
 
         $this->assertSame(['ALTER TABLE tl_member ADD foo INT NOT NULL, DROP bar'], $args->getSql());
