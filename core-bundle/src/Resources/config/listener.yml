@@ -111,7 +111,7 @@ services:
         tags:
             - kernel.event_listener
 
-    Contao\CoreBundle\EventListener\DataContainer\PageCallbackListener:
+    Contao\CoreBundle\EventListener\DataContainer\Page\AdjustAutoforwardSubpaletteListener:
         autoconfigure: true
         arguments:
             - '@contao.framework'
