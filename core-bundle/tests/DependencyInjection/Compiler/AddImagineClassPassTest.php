@@ -29,6 +29,7 @@ class AddImagineClassPassTest extends TestCase
     {
         $container = new ContainerBuilder();
         $container->setDefinition('contao.image.imagine', new Definition());
+        $container->setParameter('contao.image.valid_extensions', []);
 
         $pass = new AddImagineClassPass();
         $pass->process($container);
@@ -41,5 +42,19 @@ class AddImagineClassPassTest extends TestCase
                 'Imagine\Imagick\Imagine',
             ]
         );
+    }
+
+    public function testWarnsForUnsupportedImageTypes()
+    {
+        $container = new ContainerBuilder();
+        $container->setDefinition('contao.image.imagine', new Definition());
+        $container->setParameter('contao.image.valid_extensions', ['txt']);
+
+        $pass = new AddImagineClassPass();
+
+        $this->expectException('PHPUnit_Framework_Error_Warning');
+        $this->expectExceptionMessageRegExp('/txt .* not supported/');
+
+        $pass->process($container);
     }
 }

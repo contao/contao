@@ -12,6 +12,8 @@ namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
 use Imagine\Exception\RuntimeException;
 use Imagine\Gd\Imagine;
+use Imagine\Image\Box;
+use Imagine\Image\ImagineInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -33,6 +35,7 @@ class AddImagineClassPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         $container->getDefinition('contao.image.imagine')->setClass($this->getImagineImplementation());
+        $this->verifyValidFileExtensions($container->getParameter('contao.image.valid_extensions'));
     }
 
     /**
@@ -56,5 +59,35 @@ class AddImagineClassPass implements CompilerPassInterface
         }
 
         return Imagine::class; // see #616
+    }
+
+    private function verifyValidFileExtensions(array $extensions)
+    {
+        $imagineClass = $this->getImagineImplementation();
+
+        /** @var ImagineInterface $imagine */
+        $imagine = new $imagineClass();
+
+        $extensions = array_map('strtolower', $extensions);
+        $unsupportedExtensions = [];
+
+        foreach ($extensions as $extension) {
+            if (\in_array($extension, ['svg', 'svgz'], true)) {
+                continue;
+            }
+
+            // Try to create an image with the specified format
+            try {
+                $imagine->create(new Box(1, 1))->get($extension);
+            } catch (\Exception $e) {
+                $unsupportedExtensions[] = $extension;
+            } catch (\Throwable $e) {
+                $unsupportedExtensions[] = $extension;
+            }
+        }
+
+        if (\count($unsupportedExtensions) > 0) {
+            trigger_error(sprintf('The image types %s from contao.image.valid_extensions are not supported in %s on this environment.', implode(',', $unsupportedExtensions), $imagineClass), E_USER_WARNING);
+        }
     }
 }
