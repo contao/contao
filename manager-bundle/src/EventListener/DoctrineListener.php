@@ -11,6 +11,7 @@
 namespace Contao\ManagerBundle\EventListener;
 
 use Doctrine\DBAL\Event\SchemaAlterTableRenameColumnEventArgs;
+use Doctrine\DBAL\Schema\TableDiff;
 
 /**
  * @internal
@@ -21,24 +22,19 @@ class DoctrineListener
      * Prevents renaming arbitrary columns by explicitly dropping the old ones
      * and adding the new ones (see #1716).
      */
-    public function onSchemaAlterTableRenameColumn(SchemaAlterTableRenameColumnEventArgs $args): void
+    public function onSchemaAlterTableRenameColumn(SchemaAlterTableRenameColumnEventArgs $args)
     {
         $args->preventDefault();
 
         $platform = $args->getPlatform();
-        $table = $args->getTableDiff()->getName($platform)->getQuotedName($platform);
+        $table = $args->getTableDiff()->getName($platform);
+        $oldColumn = $args->getTableDiff()->fromTable->getColumn($args->getOldColumnName());
         $column = $args->getColumn();
 
-        $args->addSql(sprintf(
-            'ALTER TABLE %s DROP %s',
-            $table,
-            $platform->quoteIdentifier($args->getOldColumnName())
-        ));
+        $tableDiff = new TableDiff($table->getName());
+        $tableDiff->removedColumns[$args->getOldColumnName()] = $oldColumn;
+        $tableDiff->addedColumns[$column->getName()] = $column;
 
-        $args->addSql(sprintf(
-            'ALTER TABLE %s ADD %s',
-            $table,
-            $platform->getColumnDeclarationSQL($column->getQuotedName($platform), $column->toArray())
-        ));
+        $args->addSql($platform->getAlterTableSQL($tableDiff));
     }
 }

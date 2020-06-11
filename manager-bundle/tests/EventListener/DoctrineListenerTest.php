@@ -14,6 +14,7 @@ use Contao\ManagerBundle\EventListener\DoctrineListener;
 use Doctrine\DBAL\Event\SchemaAlterTableRenameColumnEventArgs;
 use Doctrine\DBAL\Platforms\MySQL57Platform;
 use Doctrine\DBAL\Schema\Column;
+use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Schema\TableDiff;
 use Doctrine\DBAL\Types\Type;
 use PHPUnit\Framework\TestCase;
@@ -22,24 +23,22 @@ class DoctrineListenerTest extends TestCase
 {
     public function testConvertsRenameToDropAndAdd()
     {
-        $column = new Column('bar', Type::getType(Type::INTEGER));
+        $table = new Table('tl_member');
+        $table->addColumn('bar', Type::INTEGER);
+
+        $column = new Column('foo', Type::getType(Type::INTEGER));
 
         $tableDiff = new TableDiff('tl_member');
-        $tableDiff->renamedColumns['foo'] = new Column('foo', Type::getType(Type::INTEGER));
+        $tableDiff->renamedColumns['bar'] = $column;
+        $tableDiff->fromTable = $table;
 
-        $args = new SchemaAlterTableRenameColumnEventArgs('foo', $column, $tableDiff, new MySQL57Platform());
+        $args = new SchemaAlterTableRenameColumnEventArgs('bar', $column, $tableDiff, new MySQL57Platform());
 
         $this->assertEmpty($args->getSql());
 
         $listener = new DoctrineListener();
         $listener->onSchemaAlterTableRenameColumn($args);
 
-        $this->assertSame(
-            [
-                'ALTER TABLE tl_member DROP `foo`',
-                'ALTER TABLE tl_member ADD bar INT NOT NULL',
-            ],
-            $args->getSql()
-        );
+        $this->assertSame(['ALTER TABLE tl_member ADD foo INT NOT NULL, DROP bar'], $args->getSql());
     }
 }
