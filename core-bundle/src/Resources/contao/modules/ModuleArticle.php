@@ -154,33 +154,39 @@ class ModuleArticle extends \Module
 
 		if ($objCte !== null)
 		{
-			$intCount = 0;
-			$intLast = $objCte->count() - 1;
+			$arrRows = $objCte->getModels();
+			$objLastRow = null;
 
-			while ($objCte->next())
+			/** @var ContentModel $objRow */
+			while ($objRow = array_shift($arrRows))
 			{
 				$arrCss = array();
 
-				/** @var ContentModel $objRow */
-				$objRow = $objCte->current();
-
 				// Add the "first" and "last" classes (see #2583)
-				if ($intCount == 0 || $intCount == $intLast)
+				if (empty($arrElements))
 				{
-					if ($intCount == 0)
-					{
-						$arrCss[] = 'first';
-					}
+					$arrCss[] = 'first';
+				}
 
-					if ($intCount == $intLast)
-					{
-						$arrCss[] = 'last';
-					}
+				if (empty($arrRows))
+				{
+					$arrCss[] = 'last';
 				}
 
 				$objRow->classes = $arrCss;
-				$arrElements[] = $this->getContentElement($objRow, $this->strColumn);
-				++$intCount;
+				$strElement = $this->getContentElement($objRow, $this->strColumn);
+
+				if ($strElement != '')
+				{
+					$arrElements[] = $strElement;
+					$objLastRow = $objRow;
+				}
+				elseif (empty($arrRows) && $objLastRow != null && $objLastRow !== $objRow)
+				{
+					// Re-generate the last successful element with "last" class
+					array_pop($arrElements);
+					$arrRows[] = $objLastRow;
+				}
 			}
 		}
 
