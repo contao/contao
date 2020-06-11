@@ -5,15 +5,15 @@ services:
     _instanceof:
         Contao\CoreBundle\Framework\FrameworkAwareInterface:
             calls:
-                - ['setFramework', ['@contao.framework']]
+                - [setFramework, ['@contao.framework']]
 
         Symfony\Bundle\FrameworkBundle\Controller\AbstractController:
             calls:
-                - ['setContainer', ['@Psr\Container\ContainerInterface']]
+                - [setContainer, ['@Psr\Container\ContainerInterface']]
 
         Symfony\Component\DependencyInjection\ContainerAwareInterface:
             calls:
-                - ['setContainer', ['@service_container']]
+                - [setContainer, ['@service_container']]
 
     Contao\CoreBundle\Framework\ContaoFramework: '@contao.framework'
     Contao\CoreBundle\Image\ImageFactoryInterface: '@contao.image.image_factory'
@@ -32,7 +32,7 @@ services:
         class: Contao\CoreBundle\Asset\ContaoContext
         arguments:
             - '@request_stack'
-            - 'staticPlugins'
+            - staticPlugins
             - '%kernel.debug%'
         public: true
 
@@ -40,7 +40,7 @@ services:
         class: Contao\CoreBundle\Asset\ContaoContext
         arguments:
             - '@request_stack'
-            - 'staticFiles'
+            - staticFiles
             - '%kernel.debug%'
         public: true
 
@@ -97,7 +97,7 @@ services:
     # Backwards compatibility
     contao.controller.backend_csv_import:
         alias: Contao\CoreBundle\Controller\BackendCsvImportController
-        deprecated: 'Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\BackendCsvImportController" instead.'
+        deprecated: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\BackendCsvImportController" instead.
         public: true
 
     Contao\CoreBundle\Controller\FaviconController:
@@ -109,7 +109,8 @@ services:
 
     Contao\CoreBundle\Controller\FrontendController:
         tags:
-            - { name: 'controller.service_arguments' }
+            - controller.service_arguments
+            - { name: container.service_subscriber, id: contao.csrf.token_manager }
 
     Contao\CoreBundle\Controller\FrontendModule\TwoFactorController:
         tags:
@@ -127,7 +128,7 @@ services:
     # Backwards compatibility
     contao.controller.images:
         alias: Contao\CoreBundle\Controller\ImagesController
-        deprecated: 'Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\ImagesController" instead.'
+        deprecated: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\ImagesController" instead.
         public: true
 
     Contao\CoreBundle\Controller\InsertTagsController:
@@ -139,7 +140,7 @@ services:
     # Backwards compatibility
     contao.controller.insert_tags:
         alias: Contao\CoreBundle\Controller\InsertTagsController
-        deprecated: 'Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\InsertTagsController" instead.'
+        deprecated: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\InsertTagsController" instead.
         public: true
 
     Contao\CoreBundle\Controller\RobotsTxtController:
@@ -175,7 +176,7 @@ services:
         arguments:
             - '@translator'
         tags:
-            - { name: 'contao.escargot_subscriber' }
+            - contao.escargot_subscriber
 
     contao.crawl.escargot_subscriber.search_index:
         class: Contao\CoreBundle\Crawl\Escargot\Subscriber\SearchIndexSubscriber
@@ -183,7 +184,7 @@ services:
             - '@contao.search.indexer'
             - '@translator'
         tags:
-            - { name: 'contao.escargot_subscriber' }
+            - contao.escargot_subscriber
 
     Contao\CoreBundle\Cron\Cron:
         arguments:
@@ -211,7 +212,7 @@ services:
     contao.data_collector:
         class: Contao\CoreBundle\DataCollector\ContaoDataCollector
         tags:
-            - { name: data_collector, template: '@ContaoCore/Collector/contao.html.twig', id: 'contao' }
+            - { name: data_collector, template: '@ContaoCore/Collector/contao.html.twig', id: contao }
 
     contao.doctrine.schema_provider:
         class: Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider
@@ -244,7 +245,7 @@ services:
             - '@http_kernel'
             - '@event_dispatcher'
         calls:
-            - ['setFragmentPath', ['%fragment.path%']]
+            - [setFragmentPath, ['%fragment.path%']]
         tags:
             - { name: kernel.fragment_renderer, alias: forward }
 
@@ -254,6 +255,7 @@ services:
             - '@request_stack'
             - '@contao.routing.scope_matcher'
             - '@contao.security.token_checker'
+            - '@filesystem'
             - '%kernel.project_dir%'
             - '%contao.error_level%'
         public: true
@@ -428,7 +430,7 @@ services:
             - '@translator'
             - '@database_connection'
         tags:
-            - { name: contao.picker_provider }
+            - contao.picker_provider
 
     Contao\CoreBundle\Repository\CronJobRepository:
         arguments:
@@ -454,7 +456,7 @@ services:
     contao.routing.backend_matcher:
         class: Symfony\Component\HttpFoundation\RequestMatcher
         calls:
-            - ['matchAttribute', ['_scope', 'backend']]
+            - [matchAttribute, [_scope, backend]]
 
     contao.routing.domain_filter:
         class: Contao\CoreBundle\Routing\Matcher\DomainFilter
@@ -473,7 +475,7 @@ services:
     contao.routing.frontend_matcher:
         class: Symfony\Component\HttpFoundation\RequestMatcher
         calls:
-            - ['matchAttribute', ['_scope', 'frontend']]
+            - [matchAttribute, [_scope, frontend]]
 
     contao.routing.images_loader:
         class: Contao\CoreBundle\Routing\ImagesLoader
@@ -517,9 +519,9 @@ services:
             - '@contao.routing.route_provider'
             - '@contao.routing.final_matcher'
         calls:
-            - ['addRouteFilter', ['@contao.routing.domain_filter']]
-            - ['addRouteFilter', ['@contao.routing.published_filter']]
-            - ['addRouteFilter', ['@contao.routing.language_filter']]
+            - [addRouteFilter, ['@contao.routing.domain_filter']]
+            - [addRouteFilter, ['@contao.routing.published_filter']]
+            - [addRouteFilter, ['@contao.routing.language_filter']]
         public: true
 
     contao.routing.nested_404_matcher:
@@ -528,8 +530,8 @@ services:
             - '@contao.routing.route_404_provider'
             - '@contao.routing.final_matcher'
         calls:
-            - ['addRouteFilter', ['@contao.routing.domain_filter']]
-            - ['addRouteFilter', ['@contao.routing.published_filter']]
+            - [addRouteFilter, ['@contao.routing.domain_filter']]
+            - [addRouteFilter, ['@contao.routing.published_filter']]
 
     contao.routing.page_router:
         class: Symfony\Cmf\Component\Routing\DynamicRouter
@@ -541,7 +543,7 @@ services:
             - '@event_dispatcher'
             - '@contao.routing.route_provider'
         calls:
-            - ['addRouteEnhancer', ['@contao.routing.input_enhancer']]
+            - [addRouteEnhancer, ['@contao.routing.input_enhancer']]
         tags:
             - { name: router, priority: 20 }
 
@@ -602,9 +604,8 @@ services:
         arguments:
             - '@contao.framework'
             - '@database_connection'
-            - '@router'
         tags:
-            - { name: 'contao.search_indexer' }
+            - contao.search_indexer
 
     contao.search.indexer.delegating:
         class: Contao\CoreBundle\Search\Indexer\DelegatingIndexer
@@ -662,7 +663,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@session'
-            - 'Contao\BackendUser'
+            - Contao\BackendUser
             - '@?logger'
 
     contao.security.entry_point:
@@ -700,7 +701,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@session'
-            - 'Contao\FrontendUser'
+            - Contao\FrontendUser
             - '@?logger'
 
     contao.security.logout_handler:
@@ -757,16 +758,16 @@ services:
     contao.session.contao_backend:
         class: Contao\CoreBundle\Session\Attribute\ArrayAttributeBag
         arguments:
-            - '_contao_be_attributes'
+            - _contao_be_attributes
         calls:
-            - ['setName', ['contao_backend']]
+            - [setName, [contao_backend]]
 
     contao.session.contao_frontend:
         class: Contao\CoreBundle\Session\Attribute\ArrayAttributeBag
         arguments:
-            - '_contao_fe_attributes'
+            - _contao_fe_attributes
         calls:
-            - ['setName', ['contao_frontend']]
+            - [setName, [contao_frontend]]
 
     contao.slug:
         class: Contao\CoreBundle\Slug\Slug
@@ -778,7 +779,7 @@ services:
     contao.slug.generator:
         class: Ausi\SlugGenerator\SlugGenerator
         arguments:
-            - { validChars: '0-9a-z' }
+            - { validChars: 0-9a-z }
         public: true
 
     contao.slug.valid_characters:

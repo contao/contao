@@ -4268,10 +4268,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 											   ->limit(1)
 											   ->execute($_v);
 
-					if ($objLabel->numRows)
-					{
-						$_v = $objLabel->value;
-					}
+					$_v = $objLabel->numRows ? $objLabel->value : '-';
 				}
 				elseif (\is_array($GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['reference'][$_v]))
 				{
@@ -5239,7 +5236,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 		// Sort by option values
 		$options_sorter = natcaseksort($options_sorter);
-		$active = isset($session['search'][$this->strTable]['value']);
+		$active = isset($session['search'][$this->strTable]['value']) && $session['search'][$this->strTable]['value'] != '';
 
 		return '
 <div class="tl_search tl_subpanel">

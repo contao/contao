@@ -82,12 +82,10 @@
         <target>Ne pas afficher l'article si un membre est connecté.</target>
       </trans-unit>
       <trans-unit id="tl_article.customTpl.0">
-        <source>Custom article template</source>
-        <target>Modèle personnalisé de l'article</target>
+        <source>Article template</source>
       </trans-unit>
       <trans-unit id="tl_article.customTpl.1">
-        <source>Here you can overwrite the default article template.</source>
-        <target>Ici, vous pouvez remplacer le modèle de l'article par défaut.</target>
+        <source>Here you can select the article template.</source>
       </trans-unit>
       <trans-unit id="tl_article.protected.0">
         <source>Protect article</source>

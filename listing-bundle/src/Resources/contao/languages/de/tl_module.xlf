@@ -59,19 +59,19 @@
       </trans-unit>
       <trans-unit id="tl_module.list_layout.0">
         <source>List template</source>
-        <target>Listentemplate</target>
+        <target>Listen-Template</target>
       </trans-unit>
       <trans-unit id="tl_module.list_layout.1">
-        <source>Here you can select the list template.</source>
-        <target>Hier können Sie das Listentemplate auswählen.</target>
+        <source>Here you can select a list template.</source>
+        <target>Hier können Sie ein Listen-Template auswählen.</target>
       </trans-unit>
       <trans-unit id="tl_module.list_info_layout.0">
         <source>Details page template</source>
-        <target>Detailseitentemplate</target>
+        <target>Detailseiten-Template</target>
       </trans-unit>
       <trans-unit id="tl_module.list_info_layout.1">
-        <source>Here you can select the details page template.</source>
-        <target>Hier können Sie das Detailseitentemplate auswählen.</target>
+        <source>Here you can select a details page template.</source>
+        <target>Hier können Sie ein Detailseiten-Template auswählen.</target>
       </trans-unit>
     </body>
   </file>

@@ -126,10 +126,7 @@ class Email
 	{
 		$this->objMailer = $objMailer ?: System::getContainer()->get('swiftmailer.mailer');
 		$this->strCharset = Config::get('characterSet');
-
-		// Instantiate Swift_Message
 		$this->objMessage = new \Swift_Message();
-		$this->objMessage->getHeaders()->addTextHeader('X-Mailer', 'Contao Open Source CMS');
 	}
 
 	/**

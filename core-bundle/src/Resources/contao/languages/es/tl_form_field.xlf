@@ -296,12 +296,10 @@
         <target>Aquí puedes introducir el tamaño del campo a subir (&lt;em&gt;tamaño&lt;/em&gt; atributo).</target>
       </trans-unit>
       <trans-unit id="tl_form_field.customTpl.0">
-        <source>Custom form field template</source>
-        <target>Personalizar plantilla del campo del formulario</target>
+        <source>Form field template</source>
       </trans-unit>
       <trans-unit id="tl_form_field.customTpl.1">
-        <source>Here you can overwrite the default form field template.</source>
-        <target>Aquí puedes sobreescribir la plantilla por defecto del campo del formulario</target>
+        <source>Here you can select the form field template.</source>
       </trans-unit>
       <trans-unit id="tl_form_field.slabel.0">
         <source>Submit button label</source>

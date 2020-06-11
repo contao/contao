@@ -50,12 +50,11 @@
         <target>Zgjedhoni skedaret për t'i fut si shtojcë.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.0">
-        <source>Custom e-mail template</source>
-        <target>Shablloni E-Mailit</target>
+        <source>E-mail template</source>
+        <target>Shablloni E-Mail-it</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.1">
-        <source>Here you can override the default e-mail template of the channel.</source>
-        <target>Këtu mund të zëvendësohet E-Maili i shabllonit për kanalin. </target>
+        <source>Here you can override the e-mail template of the channel.</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendText.0">
         <source>Send as plain text</source>

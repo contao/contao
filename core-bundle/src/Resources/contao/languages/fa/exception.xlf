@@ -29,8 +29,7 @@
         <source>Open the current log file in the &lt;code&gt;var/logs&lt;/code&gt; directory and find the associated error message (usually the last one).</source>
       </trans-unit>
       <trans-unit id="XPT.errorExplain">
-        <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, search the &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;Contao support page&lt;/a&gt;.</source>
-        <target>اجرای اسکریپت متوقف شد، زیرا چیزی درست کار نمی‌کند. پیغام خطای واقعی مخفی با این پیغام به دلایل امنیتی مخفی شده است و می‌تواند در  پرونده‌ی گزارش پیدا شود (بالا را ببینید). اگر شما پیغام خطاء را نفهمیدید یا ندانستید چگونه مشکل را برطرف نمایید، &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;سوالات متداول کنتائو&lt;/a&gt; را جستجو نمایید و یا از &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;برگه پشتیبانی کنتائو&lt;/a&gt; بازدید نمایید.</target>
+        <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, search the &lt;a href=&quot;https://contao.org/en/frequently-asked.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/en/support.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="XPT.requestToken">
         <source>Invalid request token</source>
@@ -49,8 +48,7 @@
         <target>این خطا زمانی رخ می‌دهد که درخواست POSTی بدون توکن تصدیق شده معتبر وجود داشته باشد. در کنتائو 2.10، بررسی ارجاعی با سامانه توکن درخواستی جایگزین شده است. اگر این مشکل ادامه یابد، شما ممکن است از یک افزونه غیرسازگار استفاده می‌کنید یا نصب کنتائو را به درستی به‌روز نکرده‌اید.</target>
       </trans-unit>
       <trans-unit id="XPT.tokenExplainTwo">
-        <source>For more information, search the &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;Contao support page&lt;/a&gt;.</source>
-        <target>برای اطلاعات بیشتر، &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;پرسش و پاسخ کنتائو&lt;/a&gt; را جستجو نمایید و یا &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;پشتیبانی کنتائو&lt;/a&gt; را مشاهده کنید.</target>
+        <source>For more information, search the &lt;a href=&quot;https://contao.org/en/frequently-asked.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/en/support.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="XPT.unavailable">
         <source>Service unavailable</source>

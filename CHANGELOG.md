@@ -2,9 +2,94 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.3] (2020-05-14)
+
+**Fixed issues:**
+
+- [#1745] Replace ocramius/package-versions with composer/package-versions-deprecated ([leofeyer])
+- [#1742] Fix notices for empty database result sets ([ausi])
+- [#1743] Correctly check for duplicate input parameters ([aschempp])
+- [#1740] Rename "security question" to "spam protection" ([leofeyer])
+- [#1699] Ignore minval/maxval in checkbox/radio/select fields ([aschempp])
+- [#1738] Re-add the page ID to the JSON-LD context ([leofeyer])
+- [#1729] Always show the default template in the drop-down menu ([leofeyer])
+- [#1701] Improve the deprecation message of the AbstractLockedCommand ([Blog404DE])
+- [#1733] Fix the indentation in the event_list.html5 template ([leofeyer])
+- [#1732] Redirect if a news/event has an external target and is called via the default URL ([leofeyer])
+- [#1727] Move the meta data fields back up in the news/events module ([leofeyer])
+- [#1715] Re-add the redirect in the BackendUser::authenticate() method ([leofeyer])
+- [#1712] Remove the broken storeFrontendReferer() method ([leofeyer])
+- [#1711] Fix fixed position of toolbar elements ([fritzmg])
+- [#1651] Execute schema diff queries in the correct order ([ausi])
+- [#1694] Handle invalid language codes in the meta wizard ([leofeyer])
+- [#1692] Skip the preview redirect if the preview script is not set ([leofeyer])
+- [#1691] Add the translation domain in the installation controller ([leofeyer])
+- [#1625] Fix the wrong CSRF token storage being wired ([Toflar])
+- [#1628] Adjust the FrontendController::checkCookiesAction() comment ([Mynyx])
+- [#1638] Correctly check if the search panel is active ([dmolineus])
+- [#1658] Add the Contao Manager cookie to the cookie blacklist ([Mynyx])
+- [#1663] Fix the playerAspect default value ([fritzmg])
+- [#1668] Fix running the broken link checker ([richardhj])
+- [#1670] Fix the search indexer page detection ([qzminski])
+- [#1673] Do not update the search index if contao itself is crawling ([Toflar])
+- [#1642] Fix the tl_maintenance_jobs.crawl_queue explanation ([Mynyx])
+- [#1640] Return the request argument if it has the correct type ([aschempp])
+- [#1634] Verify TOTP with a window of 1 for better UX ([Toflar])
+- [#1623] Also add z-index to the .cto-toolbar__open element ([leofeyer])
+- [#1590] Change how to count records in RobotsTxtListener ([fritzmg])
+
+## [4.9.2] (2020-04-02)
+
+**Fixed issues:**
+
+- [#1615] Add additional Google Analytics cookies to the cookie blacklist ([Mynyx])
+- [#1614] Fix a comment in the MakeResponsePrivateListener class ([Mynyx])
+- [#1613] Fix the Contao toolbar labels ([leofeyer])
+- [#1612] Ensure that the login icons are always visible in Firefox ([leofeyer])
+- [#1608] Increase the split button breakpoint ([leofeyer])
+- [#1600] Correctly filter subscriber specific crawl logs ([Toflar])
+- [#1599] Fixed broken URIs not being reported as error in search index subscriber ([Toflar])
+- [#1598] Hide the metadata fields if a news/event points to an external source ([leofeyer])
+- [#1549] Dynamically configure the TokenChecker service ([bytehead])
+- [#1592] Fix the picker in the meta wizard ([leofeyer])
+- [#1596] Handle the "toggle nodes" command in the main back end method ([leofeyer])
+- [#1597] Correctly check whether a group is allowed to import themes ([leofeyer])
+- [#1542] Keep the sorting of the selected IDs for actions ([rabauss])
+- [#1595] Use the correct page title on the back end dashboard page ([leofeyer])
+- [#1593] Re-add the "edit meta" label in the news and calendar bundles ([leofeyer])
+- [#1591] Show all files in the template editor ([leofeyer])
+- [#1579] Fix the preview bar alignment ([leofeyer])
+- [#1586] Correctly check for loaded languages when adding the default labels ([leofeyer])
+- [#1584] Show "-" if the device family is "Other" ([leofeyer])
+- [#1582] Remove the default preview bar datalist option ([leofeyer])
+- [#1581] Disable the "switch user" button if it would impersonate the original user ([leofeyer])
+- [#1580] Fix the tl_content.listtype DCA definition ([leofeyer])
+- [#1554] Send the correct content type for SVG favicons ([Toflar])
+- [#1551] Allow SVG images in favicons ([Toflar])
+- [#1541] Show label instead of ID in the picker widget ([ausi])
+- [#1525] Remove string type hint as there can be an array value ([bytehead])
+- [#1182] Allow clearing the model registry ([m-vo])
+- [#1534] Port the 'handle URL suffix when redirecting page IDs' changes ([leofeyer])
+- [#1533] Correctly sort if both root pages are fallback ([aschempp])
+- [#1532] Fixed some Piwik/Matomo cookie regex ([aschempp])
+- [#1520] Optimize MSC.twoFactorBackupCodesExplain ([Mynyx])
+- [#1513] Fix a "toggle element" permission check ([rabauss])
+- [#1493] Adjust the JSON-LD data in the default indexer test ([leofeyer])
+- [#877] Fix memory leaks in the "resize images" command ([ausi])
+- [#1475] Register custom types in functional tests ([aschempp])
+- [#1456] Do not redirect to the language URL ([aschempp])
+- [#1437] Translate the "show preview toolbar" title ([richardhj])
+- [#1457] Use a context prefix in the JSON-LD schema ([ausi])
+- [#1455] Do not expose the page ID in the JSON-LD context ([Toflar])
+- [#1450] Use the native font stack in the layout.html.twig template ([fritzmg])
+- [#1439] Fix missing image sizes with numeric theme names ([ausi])
+- [#1444] Make sure log messages are in proper CSV format ([Toflar])
+- [#1445] Retry failed schema diff migrations ([ausi])
+- [#1453] Fix the input length of the alias fields ([aschempp])
+
 ## [4.9.1] (2020-02-27)
 
-**Fixed defects:**
+**Fixed issues:**
 
 - [#1423] Revert the document.write() changes ([leofeyer])
 - [#1420] Handle the "no JSON-LD found" case separately from the "noSearch" case ([leofeyer])
@@ -31,7 +116,7 @@ This project adheres to [Semantic Versioning].
 
 ## [4.9.0] (2020-02-18)
 
-**Fixed defects:**
+**Fixed issues:**
 
 - [#1348] Correctly align the wizard icon ([leofeyer])
 - [#1336] Make the contao.search.indexer service public ([leofeyer])
@@ -47,7 +132,7 @@ This project adheres to [Semantic Versioning].
 
 ## [4.9.0-RC2] (2020-02-11)
 
-**Fixed defects:**
+**Fixed issues:**
 
 - [#1292] Revert the "contao_backend_switch" route name change ([richardhj])
 - [#1293] Update the back end keyboard shortcuts link ([leofeyer])
@@ -147,7 +232,7 @@ This project adheres to [Semantic Versioning].
 - [#717] Dynamically add robots.txt and favicon.ico per root page ([Toflar])
 - [#703] Add support for lazy loading images ([ausi])
 
-**Fixed defects:**
+**Fixed issues:**
 
 - [#1212] Tag the old version update classes as migrations ([leofeyer])
 - [#1213] Change the allowed status codes for preview bar injection ([richardhj])
@@ -211,6 +296,8 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.3]: https://github.com/contao/contao/releases/tag/4.9.3
+[4.9.2]: https://github.com/contao/contao/releases/tag/4.9.2
 [4.9.1]: https://github.com/contao/contao/releases/tag/4.9.1
 [4.9.0]: https://github.com/contao/contao/releases/tag/4.9.0
 [4.9.0-RC2]: https://github.com/contao/contao/releases/tag/4.9.0-RC2
@@ -218,16 +305,95 @@ This project adheres to [Semantic Versioning].
 [AndreasA]: https://github.com/AndreasA
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
+[Blog404DE]: https://github.com/Blog404DE
 [bohnmedia]: https://github.com/bohnmedia
 [bytehead]: https://github.com/bytehead
+[dmolineus]: https://github.com/dmolineus
 [fritzmg]: https://github.com/fritzmg
 [leofeyer]: https://github.com/leofeyer
 [m-vo]: https://github.com/m-vo
+[Mynyx]: https://github.com/Mynyx
+[qzminski]: https://github.com/qzminski
 [rabauss]: https://github.com/rabauss
 [richardhj]: https://github.com/richardhj
 [Tastaturberuf]: https://github.com/Tastaturberuf
 [Toflar]: https://github.com/Toflar
 [xchs]: https://github.com/xchs
+[#1745]: https://github.com/contao/contao/pull/1745
+[#1742]: https://github.com/contao/contao/pull/1742
+[#1743]: https://github.com/contao/contao/pull/1743
+[#1740]: https://github.com/contao/contao/pull/1740
+[#1699]: https://github.com/contao/contao/pull/1699
+[#1738]: https://github.com/contao/contao/pull/1738
+[#1729]: https://github.com/contao/contao/pull/1729
+[#1701]: https://github.com/contao/contao/pull/1701
+[#1733]: https://github.com/contao/contao/pull/1733
+[#1732]: https://github.com/contao/contao/pull/1732
+[#1727]: https://github.com/contao/contao/pull/1727
+[#1715]: https://github.com/contao/contao/pull/1715
+[#1712]: https://github.com/contao/contao/pull/1712
+[#1711]: https://github.com/contao/contao/pull/1711
+[#1651]: https://github.com/contao/contao/pull/1651
+[#1694]: https://github.com/contao/contao/pull/1694
+[#1692]: https://github.com/contao/contao/pull/1692
+[#1691]: https://github.com/contao/contao/pull/1691
+[#1625]: https://github.com/contao/contao/pull/1625
+[#1628]: https://github.com/contao/contao/pull/1628
+[#1638]: https://github.com/contao/contao/pull/1638
+[#1658]: https://github.com/contao/contao/pull/1658
+[#1663]: https://github.com/contao/contao/pull/1663
+[#1668]: https://github.com/contao/contao/pull/1668
+[#1670]: https://github.com/contao/contao/pull/1670
+[#1673]: https://github.com/contao/contao/pull/1673
+[#1642]: https://github.com/contao/contao/pull/1642
+[#1640]: https://github.com/contao/contao/pull/1640
+[#1634]: https://github.com/contao/contao/pull/1634
+[#1623]: https://github.com/contao/contao/pull/1623
+[#1590]: https://github.com/contao/contao/pull/1590
+[#1615]: https://github.com/contao/contao/pull/1615
+[#1614]: https://github.com/contao/contao/pull/1614
+[#1613]: https://github.com/contao/contao/pull/1613
+[#1612]: https://github.com/contao/contao/pull/1612
+[#1608]: https://github.com/contao/contao/pull/1608
+[#1600]: https://github.com/contao/contao/pull/1600
+[#1599]: https://github.com/contao/contao/pull/1599
+[#1598]: https://github.com/contao/contao/pull/1598
+[#1549]: https://github.com/contao/contao/pull/1549
+[#1592]: https://github.com/contao/contao/pull/1592
+[#1596]: https://github.com/contao/contao/pull/1596
+[#1597]: https://github.com/contao/contao/pull/1597
+[#1542]: https://github.com/contao/contao/pull/1542
+[#1595]: https://github.com/contao/contao/pull/1595
+[#1593]: https://github.com/contao/contao/pull/1593
+[#1591]: https://github.com/contao/contao/pull/1591
+[#1579]: https://github.com/contao/contao/pull/1579
+[#1586]: https://github.com/contao/contao/pull/1586
+[#1584]: https://github.com/contao/contao/pull/1584
+[#1582]: https://github.com/contao/contao/pull/1582
+[#1581]: https://github.com/contao/contao/pull/1581
+[#1580]: https://github.com/contao/contao/pull/1580
+[#1554]: https://github.com/contao/contao/pull/1554
+[#1551]: https://github.com/contao/contao/pull/1551
+[#1541]: https://github.com/contao/contao/pull/1541
+[#1525]: https://github.com/contao/contao/pull/1525
+[#1182]: https://github.com/contao/contao/pull/1182
+[#1534]: https://github.com/contao/contao/pull/1534
+[#1533]: https://github.com/contao/contao/pull/1533
+[#1532]: https://github.com/contao/contao/pull/1532
+[#1520]: https://github.com/contao/contao/pull/1520
+[#1513]: https://github.com/contao/contao/pull/1513
+[#1493]: https://github.com/contao/contao/pull/1493
+[#877]: https://github.com/contao/contao/pull/877
+[#1475]: https://github.com/contao/contao/pull/1475
+[#1456]: https://github.com/contao/contao/pull/1456
+[#1437]: https://github.com/contao/contao/pull/1437
+[#1457]: https://github.com/contao/contao/pull/1457
+[#1455]: https://github.com/contao/contao/pull/1455
+[#1450]: https://github.com/contao/contao/pull/1450
+[#1439]: https://github.com/contao/contao/pull/1439
+[#1444]: https://github.com/contao/contao/pull/1444
+[#1445]: https://github.com/contao/contao/pull/1445
+[#1453]: https://github.com/contao/contao/pull/1453
 [#1423]: https://github.com/contao/contao/pull/1423
 [#1420]: https://github.com/contao/contao/pull/1420
 [#1421]: https://github.com/contao/contao/pull/1421

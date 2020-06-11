@@ -390,16 +390,13 @@
         <target>画廊模板</target>
       </trans-unit>
       <trans-unit id="tl_content.galleryTpl.1">
-        <source>Here you can select the gallery template.</source>
-        <target>此处您可以选择画廊模板。</target>
+        <source>Here you can select a gallery template.</source>
       </trans-unit>
       <trans-unit id="tl_content.customTpl.0">
-        <source>Custom element template</source>
-        <target>自定义元素模板</target>
+        <source>Content element template</source>
       </trans-unit>
       <trans-unit id="tl_content.customTpl.1">
-        <source>Here you can overwrite the default element template.</source>
-        <target>在这里重写默认元素模板</target>
+        <source>Here you can select the content element template.</source>
       </trans-unit>
       <trans-unit id="tl_content.playerSRC.0">
         <source>Video/audio files</source>
@@ -623,6 +620,7 @@
       </trans-unit>
       <trans-unit id="tl_content.start.1">
         <source>If you want to prevent the element from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>如果需要在一个特定日期/时间前不显示元素，请在这里录入。否则该字段留空。</target>
       </trans-unit>
       <trans-unit id="tl_content.stop.0">
         <source>Show until</source>
@@ -630,6 +628,7 @@
       </trans-unit>
       <trans-unit id="tl_content.stop.1">
         <source>If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>如果需要在一个特定日期/时间后不显示元素，请在这里录入。否则该字段留空。</target>
       </trans-unit>
       <trans-unit id="tl_content.type_legend">
         <source>Element type</source>

@@ -48,4 +48,8 @@ rules:
     octal-values:
         forbid-implicit-octal: true
 
+    quoted-strings:
+        quote-type: single
+        required: only-when-needed
+
     truthy: disable

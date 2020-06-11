@@ -31,6 +31,11 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class PictureTest extends TestCase
 {
+    /**
+     * @var Filesystem
+     */
+    private $filesystem;
+
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
@@ -51,7 +56,8 @@ class PictureTest extends TestCase
     {
         parent::setUp();
 
-        copy(__DIR__.'/../Fixtures/images/dummy.jpg', $this->getTempDir().'/dummy.jpg');
+        $this->filesystem = new Filesystem();
+        $this->filesystem->copy(__DIR__.'/../Fixtures/images/dummy.jpg', $this->getTempDir().'/dummy.jpg');
 
         $GLOBALS['TL_CONFIG']['debugMode'] = false;
         $GLOBALS['TL_CONFIG']['gdMaxImgWidth'] = 3000;
@@ -248,7 +254,7 @@ class PictureTest extends TestCase
      */
     public function testEncodesFileNames(): void
     {
-        copy(__DIR__.'/../Fixtures/images/dummy.jpg', $this->getTempDir().'/dummy with spaces.jpg');
+        $this->filesystem->copy(__DIR__.'/../Fixtures/images/dummy.jpg', $this->getTempDir().'/dummy with spaces.jpg');
 
         $picture = new Picture(new File('dummy with spaces.jpg'));
 

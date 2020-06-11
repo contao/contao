@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener;
 
+use Contao\CoreBundle\Crawl\Escargot\Factory;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Search\Document;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
@@ -67,6 +68,14 @@ class SearchIndexListenerTest extends TestCase
 
         yield 'Should be skipped because it is not a GET request' => [
             Request::create('/foobar', 'POST'),
+            new Response(),
+            SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
+            false,
+            false,
+        ];
+
+        yield 'Should be skipped because it was requested by our own crawler' => [
+            Request::create('/foobar', 'GET', [], [], [], ['HTTP_USER_AGENT' => Factory::USER_AGENT]),
             new Response(),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,

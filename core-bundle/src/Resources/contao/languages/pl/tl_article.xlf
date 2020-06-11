@@ -82,12 +82,10 @@
         <target>Ukryj artykuł, jeśli użytkownik jest zalogowany.</target>
       </trans-unit>
       <trans-unit id="tl_article.customTpl.0">
-        <source>Custom article template</source>
-        <target>Własny szablon artykułu</target>
+        <source>Article template</source>
       </trans-unit>
       <trans-unit id="tl_article.customTpl.1">
-        <source>Here you can overwrite the default article template.</source>
-        <target>Tutaj możesz wybrać własny szablon artykułu.</target>
+        <source>Here you can select the article template.</source>
       </trans-unit>
       <trans-unit id="tl_article.protected.0">
         <source>Protect article</source>

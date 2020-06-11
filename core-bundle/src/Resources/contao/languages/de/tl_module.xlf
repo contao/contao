@@ -75,19 +75,19 @@
       </trans-unit>
       <trans-unit id="tl_module.navigationTpl.0">
         <source>Navigation template</source>
-        <target>Navigationstemplate</target>
+        <target>Navigations-Template</target>
       </trans-unit>
       <trans-unit id="tl_module.navigationTpl.1">
         <source>Here you can select the navigation template.</source>
-        <target>Hier können Sie das Navigationstemplate auswählen.</target>
+        <target>Hier können Sie das Navigations-Template auswählen.</target>
       </trans-unit>
       <trans-unit id="tl_module.customTpl.0">
-        <source>Custom module template</source>
-        <target>Individuelles Template</target>
+        <source>Module template</source>
+        <target>Modul-Template</target>
       </trans-unit>
       <trans-unit id="tl_module.customTpl.1">
-        <source>Here you can overwrite the default module template.</source>
-        <target>Hier können Sie das Standard-Template überschreiben.</target>
+        <source>Here you can select the module template.</source>
+        <target>Hier können Sie das Modul-Template auswählen.</target>
       </trans-unit>
       <trans-unit id="tl_module.pages.0">
         <source>Pages</source>
@@ -163,11 +163,11 @@
       </trans-unit>
       <trans-unit id="tl_module.memberTpl.0">
         <source>Form template</source>
-        <target>Formulartemplate</target>
+        <target>Formular-Template</target>
       </trans-unit>
       <trans-unit id="tl_module.memberTpl.1">
         <source>Here you can select the form template.</source>
-        <target>Hier können Sie das Formulartemplate auswählen.</target>
+        <target>Hier können Sie das Formular-Template auswählen.</target>
       </trans-unit>
       <trans-unit id="tl_module.form.0">
         <source>Form</source>
@@ -259,11 +259,11 @@
       </trans-unit>
       <trans-unit id="tl_module.searchTpl.0">
         <source>Search results template</source>
-        <target>Ergebnistemplate</target>
+        <target>Ergebnis-Template</target>
       </trans-unit>
       <trans-unit id="tl_module.searchTpl.1">
         <source>Here you can select the search results template.</source>
-        <target>Hier können Sie das Ergebnistemplate auswählen.</target>
+        <target>Hier können Sie das Ergebnis-Template auswählen.</target>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.0">
         <source>Layout section</source>
@@ -410,12 +410,12 @@
         <target>Hier können Sie eine ID und beliebig viele Klassen eingeben.</target>
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>Sicherheitsfrage deaktivieren</target>
+        <source>Disable spam protection</source>
+        <target>Spam-Schutz deaktivieren</target>
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.1">
-        <source>Here you can disable the security question (not recommended).</source>
-        <target>Hier können Sie die Sicherheitsfrage abschalten (nicht empfohlen).</target>
+        <source>Here you can disable the spam protection (not recommended).</source>
+        <target>Hier können Sie den Spam-Schutz deaktivieren (nicht empfohlen).</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_groups.0">
         <source>Member groups</source>

@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Exception\RedirectResponseException;
 use FOS\HttpCache\ResponseTagger;
 use Patchwork\Utf8;
 
@@ -91,10 +92,40 @@ class ModuleEventReader extends Events
 		// Get the current event
 		$objEvent = CalendarEventsModel::findPublishedByParentAndIdOrAlias(Input::get('events'), $this->cal_calendar);
 
-		// The event does not exist or has an external target (see #33)
-		if (null === $objEvent || $objEvent->source != 'default')
+		// The event does not exist (see #33)
+		if ($objEvent === null)
 		{
 			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
+		}
+
+		// Redirect if the event has a target URL (see #1498)
+		switch ($objEvent->source) {
+			case 'internal':
+				if ($page = PageModel::findPublishedById($objEvent->jumpTo))
+				{
+					throw new RedirectResponseException($page->getAbsoluteUrl(), 301);
+				}
+
+				throw new InternalServerErrorException('Invalid "jumpTo" value or target page not public');
+				break;
+
+			case 'article':
+				if (($article = ArticleModel::findByPk($objEvent->articleId)) && ($page = PageModel::findPublishedById($article->pid)))
+				{
+					throw new RedirectResponseException($page->getAbsoluteUrl('/articles/' . ($article->alias ?: $article->id)), 301);
+				}
+
+				throw new InternalServerErrorException('Invalid "articleId" value or target page not public');
+				break;
+
+			case 'external':
+				if ($objEvent->url)
+				{
+					throw new RedirectResponseException($objEvent->url, 301);
+				}
+
+				throw new InternalServerErrorException('Empty target URL');
+				break;
 		}
 
 		// Overwrite the page title (see #2853, #4955 and #87)
@@ -228,7 +259,6 @@ class ModuleEventReader extends Events
 		// Display the "read more" button for external/article links
 		if ($objEvent->source != 'default')
 		{
-			$objTemplate->details = true;
 			$objTemplate->hasDetails = true;
 		}
 

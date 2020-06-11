@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.jumpTo.1">
         <source>Please choose the FAQ reader page to which visitors will be redirected when clicking a FAQ.</source>
-        <target>Bitte wählen Sie die FAQ-Leser-Seite aus, zu der Besucher weitergeleitet werden, wenn Sie eine FAQ anklicken.</target>
+        <target>Bitte wählen Sie die FAQ-Leser-Seite aus, zu der Besucher weitergeleitet werden, wenn sie eine FAQ anklicken.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.allowComments.0">
         <source>Enable comments</source>
@@ -82,8 +82,8 @@
         <target>Nur angemeldeten Benutzern das Erstellen von Kommentaren erlauben.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>Sicherheitsfrage deaktivieren</target>
+        <source>Disable spam protection</source>
+        <target>Spam-Schutz deaktivieren</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>

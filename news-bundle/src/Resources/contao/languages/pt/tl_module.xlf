@@ -46,8 +46,7 @@
         <target>Formato de Notícias</target>
       </trans-unit>
       <trans-unit id="tl_module.news_template.1">
-        <source>Here you can select the news template.</source>
-        <target>Favor escolher um formato de notícias. Você pode adicionar novos formatos a pasta &lt;em&gt;templates&lt;/em&gt;. Arquivos de modelos de notícias começam com &lt;em&gt;news_&lt;/em&gt; e necessitam de extensão &lt;em&gt;.tpl&lt;/em&gt;</target>
+        <source>Here you can select a news template.</source>
       </trans-unit>
       <trans-unit id="tl_module.news_format.0">
         <source>Archive format</source>
@@ -115,6 +114,7 @@
       </trans-unit>
       <trans-unit id="tl_module.featured_first">
         <source>Show featured news items first</source>
+        <target>Mostrar artigos de notícia em destaque em primeiro lugar</target>
       </trans-unit>
       <trans-unit id="tl_module.order_date_asc">
         <source>Date ascending</source>

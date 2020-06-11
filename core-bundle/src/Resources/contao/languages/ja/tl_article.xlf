@@ -79,15 +79,15 @@
       </trans-unit>
       <trans-unit id="tl_article.guests.1">
         <source>Hide the article if a member is logged in.</source>
-        <target>メンバーがログインしている場合はアーティクルを表示しない。</target>
+        <target>メンバーがログインしている場合はアーティクルを表示しません。</target>
       </trans-unit>
       <trans-unit id="tl_article.customTpl.0">
-        <source>Custom article template</source>
-        <target>独自のアーティクルのテンプレート</target>
+        <source>Article template</source>
+        <target>アーティクルのテンプレート</target>
       </trans-unit>
       <trans-unit id="tl_article.customTpl.1">
-        <source>Here you can overwrite the default article template.</source>
-        <target>初期設定のアーティクルのテンプレートを上書きできます。</target>
+        <source>Here you can select the article template.</source>
+        <target>アーティクルのテンプレートを選択できます。</target>
       </trans-unit>
       <trans-unit id="tl_article.protected.0">
         <source>Protect article</source>

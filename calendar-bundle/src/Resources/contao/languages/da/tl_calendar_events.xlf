@@ -275,10 +275,6 @@
         <source>Date and time</source>
         <target>Dato og tid</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.meta_legend">
-        <source>Meta data</source>
-        <target>Metadata</target>
-      </trans-unit>
       <trans-unit id="tl_calendar_events.details_legend">
         <source>Event details</source>
         <target>Begivenhedsdetaljer</target>
@@ -302,6 +298,10 @@
       <trans-unit id="tl_calendar_events.source_legend">
         <source>Redirect target</source>
         <target>Kilde</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.meta_legend">
+        <source>Meta data</source>
+        <target>Metadata</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.expert_legend">
         <source>Expert settings</source>
@@ -366,6 +366,10 @@
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>
         <target>Sæt ind i denne kalnder</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.editmeta">
+        <source>Edit the event settings</source>
+        <target>Rediger begivenhedens indstillinger</target>
       </trans-unit>
     </body>
   </file>

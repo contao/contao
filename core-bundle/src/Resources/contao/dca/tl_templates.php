@@ -445,13 +445,19 @@ class tl_templates extends Contao\Backend
 			$strBuffer .= '<p class="tl_info">' . $GLOBALS['TL_LANG']['tl_templates']['pleaseSelect'] . '</p>';
 		}
 
+		// Unset a custom prefix to show all templates in the drop-down menu (see #784)
+		if ($strPrefix && count(Contao\TemplateLoader::getPrefixedFiles($strPrefix)) < 1)
+		{
+			$strPrefix = '';
+		}
+
 		// Templates to compare against
 		$arrComparable = array();
 		$intPrefixLength = strlen($strPrefix);
 
 		foreach ($arrTemplates as $k => $v)
 		{
-			if (0 === strncmp($k, $strPrefix, $intPrefixLength))
+			if (!$intPrefixLength || 0 === strncmp($k, $strPrefix, $intPrefixLength))
 			{
 				$arrComparable[$k] = array
 				(

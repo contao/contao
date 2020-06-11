@@ -82,12 +82,10 @@
         <target>Овде можете одабрати шаблон навигације.</target>
       </trans-unit>
       <trans-unit id="tl_module.customTpl.0">
-        <source>Custom module template</source>
-        <target>Додатни шаблон модула</target>
+        <source>Module template</source>
       </trans-unit>
       <trans-unit id="tl_module.customTpl.1">
-        <source>Here you can overwrite the default module template.</source>
-        <target>Овде можете прегазити подразумевани шаблон модула.</target>
+        <source>Here you can select the module template.</source>
       </trans-unit>
       <trans-unit id="tl_module.pages.0">
         <source>Pages</source>
@@ -263,6 +261,7 @@
       </trans-unit>
       <trans-unit id="tl_module.inColumn.0">
         <source>Layout section</source>
+        <target>Секција распореда</target>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.1">
         <source>Please choose the layout section whose articles you want to list.</source>
@@ -404,12 +403,10 @@
         <target>Овде можете да доделите ID и једну или више класа.</target>
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>Искључи сигурносно питање.</target>
+        <source>Disable spam protection</source>
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.1">
-        <source>Here you can disable the security question (not recommended).</source>
-        <target>Овде можете искључити сигурносно питање (не препоручује се).</target>
+        <source>Here you can disable the spam protection (not recommended).</source>
       </trans-unit>
       <trans-unit id="tl_module.reg_groups.0">
         <source>Member groups</source>
@@ -613,6 +610,7 @@ If you did not request this e-mail, please contact the website administrator.
       </trans-unit>
       <trans-unit id="tl_module.new.0">
         <source>New</source>
+        <target>Ново</target>
       </trans-unit>
       <trans-unit id="tl_module.new.1">
         <source>Create a new module</source>

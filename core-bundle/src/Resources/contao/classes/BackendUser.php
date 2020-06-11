@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\RedirectResponseException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -202,7 +204,27 @@ class BackendUser extends User
 	{
 		@trigger_error('Using BackendUser::authenticate() has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.', E_USER_DEPRECATED);
 
-		return System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
+		// Do not redirect if authentication is successful
+		if (System::getContainer()->get('contao.security.token_checker')->hasBackendUser())
+		{
+			return true;
+		}
+
+		if (!$request = System::getContainer()->get('request_stack')->getCurrentRequest())
+		{
+			return false;
+		}
+
+		$route = $request->attributes->get('_route');
+
+		if ($route == 'contao_backend_login')
+		{
+			return false;
+		}
+
+		$url = System::getContainer()->get('router')->generate('contao_backend_login', array('redirect' => $request->getUri()), UrlGeneratorInterface::ABSOLUTE_URL);
+
+		throw new RedirectResponseException(System::getContainer()->get('uri_signer')->sign($url));
 	}
 
 	/**

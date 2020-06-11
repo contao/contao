@@ -74,8 +74,7 @@
         <target>Lejo vetëm përdoruesit e autorizuar për të komentuar.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>ç'aktivizo pyetjen e sigurisë</target>
+        <source>Disable spam protection</source>
       </trans-unit>
       <trans-unit id="tl_calendar.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>
@@ -142,12 +141,11 @@
         <target>Plotë artikuj</target>
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.0">
-        <source>RSS feeds</source>
-        <target>Furnizimet RSS</target>
+        <source>Calendar feeds</source>
+        <target>Furnizimi kalendarit</target>
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.1">
-        <source>Manage RSS feeds</source>
-        <target>Rregullo furnizimin RSS</target>
+        <source>Manage calendar feeds</source>
       </trans-unit>
       <trans-unit id="tl_calendar.new.0">
         <source>New</source>

@@ -17,6 +17,7 @@ use Contao\CoreBundle\Routing\Enhancer\InputEnhancer;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Input;
 use Contao\PageModel;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
@@ -46,6 +47,7 @@ class InputEnhancerTest extends TestCase
      */
     public function testAddsTheLocaleIfEnabled(bool $prependLocale, string $locale): void
     {
+        /** @var Input&MockObject $input */
         $input = $this->mockAdapter(['setGet']);
         $input
             ->expects($prependLocale ? $this->once() : $this->never())
@@ -74,6 +76,7 @@ class InputEnhancerTest extends TestCase
 
     public function testDoesNotAddTheLocaleIfItIsNotPresent(): void
     {
+        /** @var Input&MockObject $input */
         $input = $this->mockAdapter(['setGet']);
         $input
             ->expects($this->never())
@@ -103,6 +106,7 @@ class InputEnhancerTest extends TestCase
             }
         );
 
+        /** @var Input&MockObject $input */
         $input = $this->mockAdapter(['setGet']);
         $input
             ->expects($this->exactly(\count($setters)))
@@ -137,6 +141,31 @@ class InputEnhancerTest extends TestCase
 
     public function testThrowsAnExceptionUponDuplicateParameters(): void
     {
+        /** @var Input&MockObject $input */
+        $input = $this->mockAdapter(['setGet']);
+        $input
+            ->expects($this->once())
+            ->method('setGet')
+        ;
+
+        $framework = $this->mockContaoFramework([Input::class => $input]);
+
+        $defaults = [
+            'pageModel' => $this->createMock(PageModel::class),
+            'parameters' => '/foo/bar/foo/bar',
+        ];
+
+        $enhancer = new InputEnhancer($framework, false);
+
+        $this->expectException(ResourceNotFoundException::class);
+        $this->expectExceptionMessage('Duplicate parameter "foo" in path');
+
+        $enhancer->enhance($defaults, Request::create('/'));
+    }
+
+    public function testThrowsAnExceptionUponParametersInQuery(): void
+    {
+        /** @var Input&MockObject $input */
         $input = $this->mockAdapter(['setGet']);
         $input
             ->expects($this->never())
@@ -150,18 +179,17 @@ class InputEnhancerTest extends TestCase
             'parameters' => '/foo/bar',
         ];
 
-        $_GET = ['foo' => 'baz'];
-
         $enhancer = new InputEnhancer($framework, false);
 
         $this->expectException(ResourceNotFoundException::class);
         $this->expectExceptionMessage('Duplicate parameter "foo" in path');
 
-        $enhancer->enhance($defaults, Request::create('/'));
+        $enhancer->enhance($defaults, Request::create('/?foo=bar'));
     }
 
     public function testThrowsAnExceptionIfAnAutoItemKeywordIsPresent(): void
     {
+        /** @var Input&MockObject $input */
         $input = $this->mockAdapter(['setGet']);
         $input
             ->expects($this->once())
@@ -188,6 +216,7 @@ class InputEnhancerTest extends TestCase
 
     public function testThrowsAnExceptionIfTheNumberOfArgumentsIsInvalid(): void
     {
+        /** @var Input&MockObject $input */
         $input = $this->mockAdapter(['setGet']);
         $input
             ->expects($this->never())
@@ -216,6 +245,7 @@ class InputEnhancerTest extends TestCase
 
     public function testThrowsAnExceptionIfAFragmentKeyIsEmpty(): void
     {
+        /** @var Input&MockObject $input */
         $input = $this->mockAdapter(['setGet']);
         $input
             ->expects($this->once())

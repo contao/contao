@@ -223,10 +223,6 @@
         <source>Date and time</source>
         <target>Datum a čas</target>
       </trans-unit>
-      <trans-unit id="tl_news.meta_legend">
-        <source>Meta data</source>
-        <target>Meta informace</target>
-      </trans-unit>
       <trans-unit id="tl_news.teaser_legend">
         <source>Subheadline and teaser</source>
         <target>Podnadpis a ukázka</target>
@@ -246,6 +242,10 @@
       <trans-unit id="tl_news.source_legend">
         <source>Redirect target</source>
         <target>Cíl přesměrování</target>
+      </trans-unit>
+      <trans-unit id="tl_news.meta_legend">
+        <source>Meta data</source>
+        <target>Meta informace</target>
       </trans-unit>
       <trans-unit id="tl_news.expert_legend">
         <source>Expert settings</source>
@@ -296,6 +296,10 @@
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
         <target>Vložit do tohto archivu</target>
+      </trans-unit>
+      <trans-unit id="tl_news.editmeta">
+        <source>Edit the news item settings</source>
+        <target>Upravit nastavení příspěvku novinek</target>
       </trans-unit>
     </body>
   </file>

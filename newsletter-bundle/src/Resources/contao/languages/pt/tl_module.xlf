@@ -54,8 +54,7 @@
         <target>Layout de módulos</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_template.1">
-        <source>Here you can select the newsletter template.</source>
-        <target>Favor selecionar um layout de módulos. Você pode adicionar layouts personalizados de notícias na pasta &lt;em&gt;templates&lt;/em&gt;. Arquivos de modelos de newsletters começam com &lt;em&gt;nl_&lt;/em&gt; e requerem a extensão de arquivo &lt;em&gt;.tpl&lt;/em&gt;.</target>
+        <source>Here you can select a newsletter template.</source>
       </trans-unit>
       <trans-unit id="tl_module.text_legend">
         <source>Custom text</source>

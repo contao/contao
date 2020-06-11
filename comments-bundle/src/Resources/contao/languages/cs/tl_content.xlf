@@ -42,20 +42,17 @@
         <target>Povolit přidávat komentáře jen přihlášeným uživatelům.</target>
       </trans-unit>
       <trans-unit id="tl_content.com_disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>Vypnout bezpečnostní otázku.</target>
+        <source>Disable spam protection</source>
       </trans-unit>
       <trans-unit id="tl_content.com_disableCaptcha.1">
-        <source>Here you can disable the security question (not recommended).</source>
-        <target>Zde můžete vypnout bezpečnostní otázku (nedoporučeno).</target>
+        <source>Here you can disable the spam protection (not recommended).</source>
       </trans-unit>
       <trans-unit id="tl_content.com_template.0">
         <source>Comments template</source>
         <target>Předloha komentářů</target>
       </trans-unit>
       <trans-unit id="tl_content.com_template.1">
-        <source>Here you can select the comments template.</source>
-        <target>Zde můžete vybrat předlohu komentářů.</target>
+        <source>Here you can select a comments template.</source>
       </trans-unit>
       <trans-unit id="tl_content.comment_legend">
         <source>Comment settings</source>

@@ -42,20 +42,20 @@
         <target>Разрешить только авторизованным пользователям создавать комментарии.</target>
       </trans-unit>
       <trans-unit id="tl_content.com_disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>Отключить контрольный вопрос</target>
+        <source>Disable spam protection</source>
+        <target>Отключить защиту от спама</target>
       </trans-unit>
       <trans-unit id="tl_content.com_disableCaptcha.1">
-        <source>Here you can disable the security question (not recommended).</source>
-        <target>Вы можете отключить контрольный вопрос (не рекомендуется).</target>
+        <source>Here you can disable the spam protection (not recommended).</source>
+        <target>Вы можете отключить защиту от спама (не рекомендуется).</target>
       </trans-unit>
       <trans-unit id="tl_content.com_template.0">
         <source>Comments template</source>
         <target>Шаблон комментариев</target>
       </trans-unit>
       <trans-unit id="tl_content.com_template.1">
-        <source>Here you can select the comments template.</source>
-        <target>Выберите шаблон комментариев.</target>
+        <source>Here you can select a comments template.</source>
+        <target>Вы можете выбрать шаблон комментариев.</target>
       </trans-unit>
       <trans-unit id="tl_content.comment_legend">
         <source>Comment settings</source>

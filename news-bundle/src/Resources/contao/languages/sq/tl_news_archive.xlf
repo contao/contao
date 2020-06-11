@@ -74,8 +74,7 @@
         <target>Lejo vetëm përdoruesit e autorizuar për të komentuar.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>ç'aktivizo pyetjen e sigurisë</target>
+        <source>Disable spam protection</source>
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>
@@ -134,12 +133,11 @@
         <target>Autor dhe drejtori sistemit</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.0">
-        <source>RSS feeds</source>
-        <target>Furnizimet RSS</target>
+        <source>News feeds</source>
+        <target>Furnizim lajmesh</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.1">
-        <source>Manage RSS feeds</source>
-        <target>Rregullo furnizimin RSS</target>
+        <source>Manage news feeds</source>
       </trans-unit>
       <trans-unit id="tl_news_archive.new.0">
         <source>New</source>

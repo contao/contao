@@ -22,8 +22,7 @@
         <target>Email predloga</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.template.1">
-        <source>Here you can choose the e-mail template.</source>
-        <target>Tukaj lahko izberete e-mail predlogo.</target>
+        <source>Here you can select an e-mail template.</source>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.sender.0">
         <source>Sender e-mail address</source>

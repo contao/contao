@@ -342,8 +342,8 @@
         <target>Nur Gästen anzeigen</target>
       </trans-unit>
       <trans-unit id="tl_page.guests.1">
-        <source>Hide the page if there is an authenticated user.</source>
-        <target>Diese Seite ausblenden, sobald ein Benutzer angemeldet ist.</target>
+        <source>Hide the page if a member is logged in.</source>
+        <target>Die Seite verstecken, sobald ein Mitglied angemeldet ist.</target>
       </trans-unit>
       <trans-unit id="tl_page.tabindex.0">
         <source>Tab index</source>
@@ -399,7 +399,7 @@
       </trans-unit>
       <trans-unit id="tl_page.twoFactorJumpTo.1">
         <source>Please choose the page to which visitors will be redirected when setting up two-factor authentication.</source>
-        <target>Bitte wählen Sie die Seite aus, zu der Besucher weitergeleitet werden, wenn Sie die Zwei-Faktor-Authentifizierung einrichten.</target>
+        <target>Bitte wählen Sie die Seite aus, zu der Besucher weitergeleitet werden, wenn sie die Zwei-Faktor-Authentifizierung einrichten.</target>
       </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>

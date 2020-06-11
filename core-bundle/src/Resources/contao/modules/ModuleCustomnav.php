@@ -172,14 +172,31 @@ class ModuleCustomnav extends Module
 					$row['pageTitle'] = StringUtil::specialchars($objModel->pageTitle, true);
 					$row['link'] = $objModel->title;
 					$row['href'] = $href;
+					$row['rel'] = '';
 					$row['nofollow'] = (strncmp($objModel->robots, 'noindex,nofollow', 16) === 0);
 					$row['target'] = '';
 					$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objModel->description);
 
+					$arrRel = array();
+
+					if (strncmp($objModel->robots, 'noindex,nofollow', 16) === 0)
+					{
+						$arrRel[] = 'nofollow';
+					}
+
 					// Override the link target
 					if ($objModel->type == 'redirect' && $objModel->target)
 					{
+						$arrRel[] = 'noreferrer';
+						$arrRel[] = 'noopener';
+
 						$row['target'] = ' target="_blank"';
+					}
+
+					// Set the rel attribute
+					if (!empty($arrRel))
+					{
+						$row['rel'] = ' rel="' . implode(' ', $arrRel) . '"';
 					}
 
 					$items[] = $row;
@@ -198,14 +215,31 @@ class ModuleCustomnav extends Module
 					$row['pageTitle'] = StringUtil::specialchars($objModel->pageTitle, true);
 					$row['link'] = $objModel->title;
 					$row['href'] = $href;
+					$row['rel'] = '';
 					$row['nofollow'] = (strncmp($objModel->robots, 'noindex,nofollow', 16) === 0);
 					$row['target'] = '';
 					$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objModel->description);
 
+					$arrRel = array();
+
+					if (strncmp($objModel->robots, 'noindex,nofollow', 16) === 0)
+					{
+						$arrRel[] = 'nofollow';
+					}
+
 					// Override the link target
 					if ($objModel->type == 'redirect' && $objModel->target)
 					{
+						$arrRel[] = 'noreferrer';
+						$arrRel[] = 'noopener';
+
 						$row['target'] = ' target="_blank"';
+					}
+
+					// Set the rel attribute
+					if (!empty($arrRel))
+					{
+						$row['rel'] = ' rel="' . implode(' ', $arrRel) . '"';
 					}
 
 					$items[] = $row;

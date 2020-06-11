@@ -291,12 +291,10 @@
         <target>Овде можете дефинисати величину поља за прилагање фајлова (атрибут &lt;em&gt;size&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_form_field.customTpl.0">
-        <source>Custom form field template</source>
-        <target>Прилагођени шаблон поља формулара</target>
+        <source>Form field template</source>
       </trans-unit>
       <trans-unit id="tl_form_field.customTpl.1">
-        <source>Here you can overwrite the default form field template.</source>
-        <target>Овде можете прегазити подразумевани шаблон поља формулара.</target>
+        <source>Here you can select the form field template.</source>
       </trans-unit>
       <trans-unit id="tl_form_field.slabel.0">
         <source>Submit button label</source>
@@ -376,6 +374,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.new.0">
         <source>New</source>
+        <target>Ново</target>
       </trans-unit>
       <trans-unit id="tl_form_field.new.1">
         <source>Create a new form field</source>

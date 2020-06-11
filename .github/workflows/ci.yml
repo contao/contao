@@ -67,6 +67,12 @@ jobs:
             - name: Analyze the code
               run: vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
 
+            - name: Analyze the YAML files
+              run: |
+                  python3 -m pip install --upgrade pip
+                  python3 -m pip install yamllint
+                  /home/runner/.local/bin/yamllint .
+
     tests:
         name: PHP ${{ matrix.php }}
         runs-on: ubuntu-latest
@@ -218,8 +224,8 @@ jobs:
             - name: Cache the monorepo split
               uses: actions/cache@v1
               with:
-                path: .monorepo-split-cache
-                key: dev-${GITHUB_REF##*/}
+                  path: .monorepo-split-cache
+                  key: dev-${GITHUB_REF##*/}
 
             - name: Install the dependencies
               run: composer global require contao/monorepo-tools:dev-master

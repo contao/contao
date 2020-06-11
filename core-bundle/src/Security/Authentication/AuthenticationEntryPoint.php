@@ -79,7 +79,7 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
         } catch (ResponseException $e) {
             return $e->getResponse();
         } catch (InsufficientAuthenticationException $e) {
-            throw new UnauthorizedHttpException('', $e->getMessage());
+            throw new UnauthorizedHttpException('', $e->getMessage(), $e);
         }
     }
 
