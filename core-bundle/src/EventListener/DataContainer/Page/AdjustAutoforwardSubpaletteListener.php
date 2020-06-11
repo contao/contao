@@ -36,7 +36,7 @@ class AdjustAutoforwardSubpaletteListener implements ServiceAnnotationInterface
 
     public function __invoke(DataContainer $dc): void
     {
-        if ('tl_page' !== $dc->table || empty($dc->id)) {
+        if ('tl_page' !== $dc->table || !$dc->id) {
             return;
         }
 
