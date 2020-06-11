@@ -111,11 +111,6 @@ services:
         tags:
             - kernel.event_listener
 
-    Contao\CoreBundle\EventListener\DataContainer\Page\AdjustAutoforwardSubpaletteListener:
-        autoconfigure: true
-        arguments:
-            - '@contao.framework'
-
     contao.listener.insert_tags.asset:
         class: Contao\CoreBundle\EventListener\InsertTags\AssetListener
         arguments:
@@ -154,6 +149,11 @@ services:
         tags:
             - { name: kernel.event_listener, priority: 256 }
             - { name: kernel.reset, method: reset }
+
+    Contao\CoreBundle\EventListener\DataContainer\Page\AdjustAutoforwardSubpaletteListener:
+        autoconfigure: true
+        arguments:
+            - '@contao.framework'
 
     contao.listener.pretty_error_screens:
         class: Contao\CoreBundle\EventListener\PrettyErrorScreenListener
