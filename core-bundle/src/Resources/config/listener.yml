@@ -58,6 +58,11 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
 
+    Contao\CoreBundle\EventListener\DataContainer\Page\AdjustAutoforwardSubpaletteListener:
+        public: true
+        arguments:
+            - '@contao.framework'
+
     contao.listener.doctrine_schema:
         class: Contao\CoreBundle\EventListener\DoctrineSchemaListener
         arguments:
