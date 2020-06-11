@@ -19,6 +19,7 @@ use Contao\CoreBundle\EventListener\Menu\BackendMenuListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\MenuFactory;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
@@ -219,6 +220,7 @@ class BackendMenuListenerTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
+        /** @var Backend&MockObject $systemMessages */
         $systemMessages = $this->mockAdapter(['getSystemMessages']);
         $systemMessages
             ->expects($this->once())

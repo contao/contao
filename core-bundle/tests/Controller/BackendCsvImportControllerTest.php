@@ -326,6 +326,7 @@ EOF;
             ->willReturn($files)
         ;
 
+        /** @var Message&MockObject $adapter */
         $adapter = $this->mockAdapter(['addError']);
         $adapter
             ->expects($expectError ? $this->once() : $this->never())
