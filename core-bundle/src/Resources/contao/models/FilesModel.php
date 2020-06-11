@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Image\Studio\MetaData;
+use Contao\CoreBundle\File\MetaData;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
 
@@ -397,23 +397,33 @@ class FilesModel extends Model
 	}
 
 	/**
-	 * Get image meta data for this file. Specify one or more locales - meta
+	 * Get the meta fields defined in `tl_files.meta.eval.metaFields`.
+	 */
+	public static function getMetaFields(): array
+	{
+		Controller::loadDataContainer('tl_files');
+
+		return array_keys($GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields'] ?? array());
+	}
+
+	/**
+	 * Get the meta data for this file. Specify one or more locales - meta
 	 * data of the first matching one will be returned or null if none was
 	 * found.
 	 */
 	public function getMetaData(string ...$locales): ?MetaData
 	{
-		$metaDataCollection = StringUtil::deserialize($this->meta, true);
+		$dataCollection = StringUtil::deserialize($this->meta, true);
 
 		foreach ($locales as $locale)
 		{
-			$metaData = $metaDataCollection[$locale] ?? array();
+			$data = $dataCollection[$locale] ?? array();
 
-			if (!empty($metaData))
+			if (!empty($data))
 			{
-				return System::getContainer()
-					->get('contao.image.metadata_factory')
-					->create($metaData);
+				// todo: should we strip additional fields here as well or is the serialized
+				//       array considered to be 'in line' with the current config?
+				return new MetaData($data);
 			}
 		}
 

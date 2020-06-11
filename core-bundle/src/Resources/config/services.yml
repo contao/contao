@@ -349,12 +349,6 @@ services:
             - { name: container.service_subscriber, id: contao.image.metadata_factory }
             - { name: container.service_subscriber, id: contao.assets.files_context }
 
-    contao.image.metadata_factory:
-        class: Contao\CoreBundle\Image\Studio\MetaDataFactory
-        public: true
-        arguments:
-            - '@contao.framework'
-
     contao.menu.backend_menu_builder:
         class: Contao\CoreBundle\Menu\BackendMenuBuilder
         arguments:

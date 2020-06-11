@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Image\Studio;
 
+use Contao\CoreBundle\File\MetaData;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\ImageFactory;
@@ -269,9 +270,7 @@ final class Studio implements ServiceSubscriberInterface
 
         // Fallback to a empty set
         if (null === $metaData) {
-            /** @var MetaDataFactory $metaDataFactory */
-            $metaDataFactory = $this->locator->get('contao.image.metadata_factory');
-            $metaData = $metaDataFactory->createEmpty();
+            $metaData = new MetaData([]);
         }
 
         return $this->cache[self::CACHE_META_DATA] = $metaData;
@@ -391,7 +390,6 @@ final class Studio implements ServiceSubscriberInterface
             'contao.image.studio' => self::class,
             'contao.image.picture_factory' => PictureFactoryInterface::class,
             'contao.image.image_factory' => ImageFactoryInterface::class,
-            'contao.image.metadata_factory' => MetaDataFactory::class,
             'request_stack' => RequestStack::class,
             'parameter_bag' => ParameterBagInterface::class,
             'contao.assets.files_context' => ContextInterface::class,

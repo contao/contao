@@ -10,11 +10,12 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Image\Studio;
+namespace Contao\CoreBundle\File;
 
 /**
  * @psalm-immutable
  *
+ * // todo description
  * This class is as a container for image meta data as typically defined in
  * tl_files / tl_content. It's underlying data structure is a key-value store
  * with added getters/setters for convenience.
@@ -23,11 +24,10 @@ namespace Contao\CoreBundle\Image\Studio;
  * ensure this is the case when creating an instance of this class. You can
  * use the public class constants as keys for a better DX.
  */
-final class MetaData
+class MetaData
 {
     public const VALUE_ALT = 'alt';
     public const VALUE_CAPTION = 'caption';
-    public const VALUE_LINK_TITLE = 'linkTitle';
     public const VALUE_TITLE = 'title';
     public const VALUE_URL = 'link';
 
@@ -62,35 +62,30 @@ final class MetaData
         return $this->values[$key] ?? null;
     }
 
-    public function getAlt(): ?string
+    public function getAlt(): string
     {
-        return $this->get(self::VALUE_ALT);
+        return $this->values[self::VALUE_ALT] ?? '';
     }
 
-    public function getCaption(): ?string
+    public function getCaption(): string
     {
-        return $this->get(self::VALUE_CAPTION);
+        return $this->values[self::VALUE_CAPTION] ?? '';
     }
 
-    public function getLinkTitle(): ?string
+    public function getTitle(): string
     {
-        return $this->get(self::VALUE_LINK_TITLE);
+        return $this->values[self::VALUE_TITLE] ?? '';
     }
 
-    public function getTitle(): ?string
+    public function getUrl(): string
     {
-        return $this->get(self::VALUE_TITLE);
-    }
-
-    public function getUrl(): ?string
-    {
-        return $this->get(self::VALUE_URL) ?: null;
+        return $this->values[self::VALUE_URL] ?? '';
     }
 
     /**
      * Return the whole data set as an associative array.
      */
-    public function getAll(): array
+    public function all(): array
     {
         return $this->values;
     }

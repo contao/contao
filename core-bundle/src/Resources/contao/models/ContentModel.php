@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Image\Studio\MetaData;
+use Contao\CoreBundle\File\MetaData;
 use Contao\Model\Collection;
 
 /**
@@ -435,7 +435,10 @@ class ContentModel extends Model
 	}
 
 	/**
-	 * Get image meta data for this content element or null if not applicable.
+	 * Get the default meta data or null if not applicable.
+	 *
+	 * todo: we could also put this into the content elements that actually use
+	 *       the columns, but would probably need that in quite some places
 	 */
 	public function getMetaData(): ?MetaData
 	{
@@ -445,24 +448,23 @@ class ContentModel extends Model
 			return null;
 		}
 
-		$mapping = $this->row();
+		$data = $this->row();
 
 		// Normalize keys
-		if (isset($mapping['imageTitle']))
+		if (isset($data['imageTitle']))
 		{
-			$mapping[MetaData::VALUE_TITLE] = $mapping['imageTitle'];
+			$data[MetaData::VALUE_TITLE] = $data['imageTitle'];
 		}
 
-		if (isset($mapping['imageUrl']))
+		if (isset($data['imageUrl']))
 		{
-			$mapping[MetaData::VALUE_URL] = $mapping['imageUrl'];
+			$data[MetaData::VALUE_URL] = $data['imageUrl'];
 		}
 
-		unset($mapping['imageTitle'], $mapping['imageUrl']);
+		unset($data['imageTitle'], $data['imageUrl']);
 
-		return System::getContainer()
-			->get('contao.image.metadata_factory')
-			->create($mapping);
+		// Strip superfluous fields by intersecting with `tl_files.meta.eval.metaFields`
+		return new MetaData(array_intersect_key($data, array_flip(FilesModel::getMetaFields())));
 	}
 }
 
