@@ -8,7 +8,7 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\InstallationBundle\EventListener;
+namespace Contao\ManagerBundle\EventListener;
 
 use Doctrine\DBAL\Event\SchemaAlterTableRenameColumnEventArgs;
 
