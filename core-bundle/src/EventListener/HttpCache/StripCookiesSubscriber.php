@@ -95,9 +95,9 @@ class StripCookiesSubscriber implements EventSubscriberInterface
 
         // Use a custom whitelist if present, otherwise use the default blacklist
         if (0 !== \count($this->whitelist)) {
-            $this->filterCookies($request, $this->whitelist, true);
+            $this->filterCookies($request, $this->whitelist);
         } else {
-            $this->filterCookies($request, array_diff(self::BLACKLIST, $this->disabledFromBlacklist));
+            $this->filterCookies($request, $this->disabledFromBlacklist, self::BLACKLIST);
         }
     }
 
@@ -108,12 +108,19 @@ class StripCookiesSubscriber implements EventSubscriberInterface
         ];
     }
 
-    private function filterCookies(Request $request, array $list, bool $isWhitelist = false): void
+    private function filterCookies(Request $request, array $allowList = [], array $denyList = []): void
     {
+        // Remove cookies that match the deny list or all if no deny list was set
         $removeCookies = preg_grep(
-            '/^(?:'.implode(')$|^(?:', $list).')$/i',
-            array_keys($request->cookies->all()),
-            $isWhitelist ? PREG_GREP_INVERT : 0
+            '/^(?:'.implode(')$|^(?:', $denyList ?: ['.*']).')$/i',
+            array_keys($request->cookies->all())
+        );
+
+        // Do not remove cookies that match the allow list
+        $removeCookies = preg_grep(
+            '/^(?:'.implode(')$|^(?:', $allowList).')$/i',
+            $removeCookies,
+            PREG_GREP_INVERT
         );
 
         foreach ($removeCookies as $name) {
