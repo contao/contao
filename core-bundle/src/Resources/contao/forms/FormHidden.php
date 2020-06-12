@@ -41,7 +41,6 @@ class FormHidden extends Widget
 	{
 		switch ($strKey)
 		{
-			case 'rgxp':
 			case 'minlength':
 			case 'maxlength':
 			case 'minval':
