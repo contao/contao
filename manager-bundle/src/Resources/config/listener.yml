@@ -1,4 +1,9 @@
 services:
+    contao_manager.listener.doctrine_listener:
+         class: Contao\ManagerBundle\EventListener\DoctrineAlterTableListener
+         tags:
+             - { name: doctrine.event_listener, event: onSchemaAlterTableRenameColumn }
+
     contao_manager.listener.initialize_application:
         class: Contao\ManagerBundle\EventListener\InitializeApplicationListener
         arguments:
