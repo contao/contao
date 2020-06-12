@@ -2384,7 +2384,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 					break;
 
 				default:
-					$arrMessages[] = '<p class="tl_error">' . \StringUtil::specialchars($buffer) . '</p>';
+					$arrMessages[] = '<p class="tl_error">' . StringUtil::specialchars($buffer) . '</p>';
 					break;
 			}
 
