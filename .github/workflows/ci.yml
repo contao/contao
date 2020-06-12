@@ -25,7 +25,7 @@ jobs:
                   coverage: pcov
 
             - name: Checkout
-              uses: actions/checkout@v2
+              uses: actions/checkout@v1
 
             - name: Install the dependencies
               run: composer install --no-interaction --no-suggest
@@ -53,7 +53,7 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v2
+              uses: actions/checkout@v1
 
             - name: Install the dependencies
               run: composer install --no-interaction --no-suggest
@@ -96,7 +96,7 @@ jobs:
                   mysql -uroot -proot -e "CREATE database contao_test"
 
             - name: Checkout
-              uses: actions/checkout@v2
+              uses: actions/checkout@v1
 
             - name: Install the dependencies
               run: composer install --no-interaction --no-suggest
@@ -128,7 +128,7 @@ jobs:
                   mysql -uroot -proot -e "CREATE database contao_test"
 
             - name: Checkout
-              uses: actions/checkout@v2
+              uses: actions/checkout@v1
 
             - name: Install the dependencies
               run: composer update --prefer-lowest --prefer-stable --no-interaction --no-suggest
@@ -155,7 +155,7 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v2
+              uses: actions/checkout@v1
 
             - name: Test the single bundles
               run: |
@@ -197,7 +197,7 @@ jobs:
               run: git config --global core.autocrlf false
 
             - name: Checkout
-              uses: actions/checkout@v2
+              uses: actions/checkout@v1
 
             - name: Install the dependencies
               run: composer install --no-interaction --no-suggest --no-progress
@@ -219,7 +219,7 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v2
+              uses: actions/checkout@v1
 
             - name: Cache the monorepo split
               uses: actions/cache@v1
