@@ -32,7 +32,6 @@ use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MonologBundle\MonologBundle;
 use Symfony\Bundle\SecurityBundle\SecurityBundle;
-use Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Bundle\WebProfilerBundle\WebProfilerBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -84,7 +83,7 @@ class PluginTest extends ContaoTestCase
         /** @var array<BundleConfig> $bundles */
         $bundles = $plugin->getBundles(new DelegatingParser());
 
-        $this->assertCount(14, $bundles);
+        $this->assertCount(13, $bundles);
 
         $this->assertSame(FrameworkBundle::class, $bundles[0]->getName());
         $this->assertSame([], $bundles[0]->getReplace());
@@ -102,47 +101,43 @@ class PluginTest extends ContaoTestCase
         $this->assertSame([], $bundles[3]->getReplace());
         $this->assertSame([], $bundles[3]->getLoadAfter());
 
-        $this->assertSame(SwiftmailerBundle::class, $bundles[4]->getName());
+        $this->assertSame(DoctrineBundle::class, $bundles[4]->getName());
         $this->assertSame([], $bundles[4]->getReplace());
         $this->assertSame([], $bundles[4]->getLoadAfter());
 
-        $this->assertSame(DoctrineBundle::class, $bundles[5]->getName());
+        $this->assertSame(DoctrineCacheBundle::class, $bundles[5]->getName());
         $this->assertSame([], $bundles[5]->getReplace());
         $this->assertSame([], $bundles[5]->getLoadAfter());
 
-        $this->assertSame(DoctrineCacheBundle::class, $bundles[6]->getName());
+        $this->assertSame(LexikMaintenanceBundle::class, $bundles[6]->getName());
         $this->assertSame([], $bundles[6]->getReplace());
         $this->assertSame([], $bundles[6]->getLoadAfter());
 
-        $this->assertSame(LexikMaintenanceBundle::class, $bundles[7]->getName());
+        $this->assertSame(NelmioCorsBundle::class, $bundles[7]->getName());
         $this->assertSame([], $bundles[7]->getReplace());
         $this->assertSame([], $bundles[7]->getLoadAfter());
 
-        $this->assertSame(NelmioCorsBundle::class, $bundles[8]->getName());
-        $this->assertSame([], $bundles[8]->getReplace());
-        $this->assertSame([], $bundles[8]->getLoadAfter());
-
-        $this->assertSame(NelmioSecurityBundle::class, $bundles[9]->getName());
+        $this->assertSame(NelmioSecurityBundle::class, $bundles[8]->getName());
         $this->assertSame([], $bundles[9]->getReplace());
         $this->assertSame([], $bundles[9]->getLoadAfter());
 
-        $this->assertSame(FOSHttpCacheBundle::class, $bundles[10]->getName());
+        $this->assertSame(FOSHttpCacheBundle::class, $bundles[9]->getName());
+        $this->assertSame([], $bundles[9]->getReplace());
+        $this->assertSame([], $bundles[9]->getLoadAfter());
+
+        $this->assertSame(ContaoManagerBundle::class, $bundles[10]->getName());
         $this->assertSame([], $bundles[10]->getReplace());
-        $this->assertSame([], $bundles[10]->getLoadAfter());
+        $this->assertSame([ContaoCoreBundle::class], $bundles[10]->getLoadAfter());
 
-        $this->assertSame(ContaoManagerBundle::class, $bundles[11]->getName());
+        $this->assertSame(DebugBundle::class, $bundles[11]->getName());
         $this->assertSame([], $bundles[11]->getReplace());
-        $this->assertSame([ContaoCoreBundle::class], $bundles[11]->getLoadAfter());
+        $this->assertSame([], $bundles[11]->getLoadAfter());
+        $this->assertFalse($bundles[11]->loadInProduction());
 
-        $this->assertSame(DebugBundle::class, $bundles[12]->getName());
+        $this->assertSame(WebProfilerBundle::class, $bundles[12]->getName());
         $this->assertSame([], $bundles[12]->getReplace());
         $this->assertSame([], $bundles[12]->getLoadAfter());
         $this->assertFalse($bundles[12]->loadInProduction());
-
-        $this->assertSame(WebProfilerBundle::class, $bundles[13]->getName());
-        $this->assertSame([], $bundles[13]->getReplace());
-        $this->assertSame([], $bundles[13]->getLoadAfter());
-        $this->assertFalse($bundles[13]->loadInProduction());
     }
 
     public function testRegistersModuleBundles(): void
@@ -167,7 +162,7 @@ class PluginTest extends ContaoTestCase
         $plugin = new Plugin();
         $configs = $plugin->getBundles($parser);
 
-        $this->assertCount(16, $configs);
+        $this->assertCount(15, $configs);
         $this->assertContains('foo1', $configs);
         $this->assertContains('foo2', $configs);
         $this->assertNotContains('foo3', $configs);
@@ -462,7 +457,7 @@ class PluginTest extends ContaoTestCase
         $container = $this->getContainer();
         $container->setParameter('mailer_transport', 'mail');
 
-        (new Plugin())->getExtensionConfig('swiftmailer', [], $container);
+        (new Plugin())->getExtensionConfig('framework', [], $container);
 
         $this->assertSame('sendmail', $container->getParameter('mailer_transport'));
     }
@@ -480,11 +475,11 @@ class PluginTest extends ContaoTestCase
         $container->setParameter('mailer_port', $port);
         $container->setParameter('mailer_encryption', $encryption);
 
-        (new Plugin())->getExtensionConfig('swiftmailer', [], $container);
+        (new Plugin())->getExtensionConfig('framework', [], $container);
 
         $bag = $container->getParameterBag()->all();
 
-        $this->assertSame($expected, $bag['env(MAILER_URL)']);
+        $this->assertSame($expected, $bag['env(MAILER_DSN)']);
     }
 
     public function getMailerParameters(): \Generator
@@ -506,7 +501,7 @@ class PluginTest extends ContaoTestCase
             null,
             25,
             null,
-            'sendmail://localhost',
+            'sendmail+smtp://default',
         ];
 
         yield [
@@ -536,7 +531,7 @@ class PluginTest extends ContaoTestCase
             null,
             25,
             null,
-            'smtp://127.0.0.1:25?username=foo%%40bar.com',
+            'smtp://foo%%40bar.com@127.0.0.1:25',
         ];
 
         yield [
@@ -546,7 +541,7 @@ class PluginTest extends ContaoTestCase
             'foobar',
             25,
             null,
-            'smtp://127.0.0.1:25?username=foo%%40bar.com&password=foobar',
+            'smtp://foo%%40bar.com:foobar@127.0.0.1:25',
         ];
 
         yield [
@@ -556,7 +551,7 @@ class PluginTest extends ContaoTestCase
             null,
             587,
             'tls',
-            'smtp://127.0.0.1:587?encryption=tls',
+            'smtps://127.0.0.1:587',
         ];
 
         yield [
@@ -566,7 +561,7 @@ class PluginTest extends ContaoTestCase
             'foobar',
             587,
             'tls',
-            'smtp://127.0.0.1:587?username=foo%%40bar.com&password=foobar&encryption=tls',
+            'smtps://foo%%40bar.com:foobar@127.0.0.1:587',
         ];
     }
 

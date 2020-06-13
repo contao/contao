@@ -10,10 +10,14 @@
 
 namespace Contao;
 
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email as EmailMessage;
+
 /**
- * A SwiftMailer adapter class
+ * A Mailer adapter class
  *
- * The class functions as an adapter for the Swift mailer framework. It can be
+ * The class functions as an adapter for the Symfony mailer framework. It can be
  * used to send e-mails via the PHP mail function or an SMTP server.
  *
  * Usage:
@@ -41,13 +45,13 @@ class Email
 {
 	/**
 	 * Mailer object
-	 * @var \Swift_Mailer
+	 * @var MailerInterface
 	 */
 	protected $objMailer;
 
 	/**
 	 * Message object
-	 * @var \Swift_Message
+	 * @var EmailMessage
 	 */
 	protected $objMessage;
 
@@ -120,13 +124,13 @@ class Email
 	/**
 	 * Instantiate the object and load the mailer framework
 	 *
-	 * @param \Swift_Mailer|null $objMailer
+	 * @param MailerInterface|null $objMailer
 	 */
-	public function __construct(\Swift_Mailer $objMailer = null)
+	public function __construct(MailerInterface $objMailer = null)
 	{
-		$this->objMailer = $objMailer ?: System::getContainer()->get('swiftmailer.mailer');
+		$this->objMailer = $objMailer ?: System::getContainer()->get('mailer');
 		$this->strCharset = Config::get('characterSet');
-		$this->objMessage = new \Swift_Message();
+		$this->objMessage = new EmailMessage();
 	}
 
 	/**
@@ -290,7 +294,7 @@ class Email
 	 */
 	public function sendCc()
 	{
-		$this->objMessage->setCc($this->compileRecipients(\func_get_args()));
+		$this->objMessage->cc($this->compileRecipients(\func_get_args()));
 	}
 
 	/**
@@ -301,7 +305,7 @@ class Email
 	 */
 	public function sendBcc()
 	{
-		$this->objMessage->setBcc($this->compileRecipients(\func_get_args()));
+		$this->objMessage->bcc($this->compileRecipients(\func_get_args()));
 	}
 
 	/**
@@ -312,7 +316,7 @@ class Email
 	 */
 	public function replyTo()
 	{
-		$this->objMessage->setReplyTo($this->compileRecipients(\func_get_args()));
+		$this->objMessage->replyTo($this->compileRecipients(\func_get_args()));
 	}
 
 	/**
@@ -321,9 +325,9 @@ class Email
 	 * @param string $strFile The file path
 	 * @param string $strMime The MIME type (defaults to "application/octet-stream")
 	 */
-	public function attachFile($strFile, $strMime='application/octet-stream')
+	public function attachFile($strFile, $strMime=null)
 	{
-		$this->objMessage->attach(\Swift_Attachment::fromPath($strFile, $strMime)->setFilename(basename($strFile)));
+		$this->objMessage->attachFromPath($strFile, basename($strFile), $strMime);
 	}
 
 	/**
@@ -333,9 +337,9 @@ class Email
 	 * @param string $strFilename The file name
 	 * @param string $strMime     The MIME type (defaults to "application/octet-stream")
 	 */
-	public function attachFileFromString($strContent, $strFilename, $strMime='application/octet-stream')
+	public function attachFileFromString($strContent, $strFilename, $strMime=null)
 	{
-		$this->objMessage->attach(new \Swift_Attachment($strContent, $strFilename, $strMime));
+		$this->objMessage->attach($strContent, $strFilename, $strMime);
 	}
 
 	/**
@@ -355,13 +359,12 @@ class Email
 			return false;
 		}
 
-		$this->objMessage->setTo($arrRecipients);
-		$this->objMessage->setCharset($this->strCharset);
+		$this->objMessage->to(...$arrRecipients);
 
 		// Add the priority if it has been set (see #608)
 		if ($this->intPriority !== null)
 		{
-			$this->objMessage->setPriority($this->intPriority);
+			$this->objMessage->priority($this->intPriority);
 		}
 
 		// Default subject
@@ -370,7 +373,7 @@ class Email
 			$this->strSubject = 'No subject';
 		}
 
-		$this->objMessage->setSubject($this->strSubject);
+		$this->objMessage->subject($this->strSubject);
 
 		// HTML e-mail
 		if ($this->strHtml != '')
@@ -406,7 +409,7 @@ class Email
 						{
 							if (!isset($arrCid[$src]))
 							{
-								$arrCid[$src] = $this->objMessage->embed(\Swift_EmbeddedFile::fromPath($this->strImageDir . $src));
+								$arrCid[$src] = $this->objMessage->embedFromPath($this->strImageDir . $src);
 							}
 
 							$this->strHtml = str_replace($arrMatches[1][$i] . $arrMatches[3][$i] . $arrMatches[5][$i], $arrMatches[1][$i] . $arrCid[$src] . $arrMatches[5][$i], $this->strHtml);
@@ -415,20 +418,13 @@ class Email
 				}
 			}
 
-			$this->objMessage->setBody($this->strHtml, 'text/html');
+			$this->objMessage->html($this->strHtml, $this->strCharset);
 		}
 
 		// Text content
 		if ($this->strText != '')
 		{
-			if ($this->strHtml != '')
-			{
-				$this->objMessage->addPart($this->strText, 'text/plain');
-			}
-			else
-			{
-				$this->objMessage->setBody($this->strText, 'text/plain');
-			}
+			$this->objMessage->text($this->strText, $this->strCharset);
 		}
 
 		// Add the administrator e-mail as default sender
@@ -438,32 +434,13 @@ class Email
 		}
 
 		// Sender
-		if ($this->strSenderName != '')
-		{
-			$this->objMessage->setFrom(array($this->strSender=>$this->strSenderName));
-		}
-		else
-		{
-			$this->objMessage->setFrom($this->strSender);
-		}
+		$this->objMessage->from(new Address($this->strSender, $this->strSenderName ?? ''));
 
 		// Set the return path (see #5004)
-		$this->objMessage->setReturnPath($this->strSender);
+		$this->objMessage->returnPath($this->strSender);
 
 		// Send the e-mail
-		$intSent = $this->objMailer->send($this->objMessage, $this->arrFailures);
-
-		// Log failures
-		if (!empty($this->arrFailures))
-		{
-			System::log('E-mail address rejected: ' . implode(', ', $this->arrFailures), __METHOD__, $this->strLogFile);
-		}
-
-		// Return if no e-mails have been sent
-		if ($intSent < 1)
-		{
-			return false;
-		}
+		$this->objMailer->send($this->objMessage);
 
 		$arrCc = $this->objMessage->getCc();
 		$arrBcc = $this->objMessage->getBcc();

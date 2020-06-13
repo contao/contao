@@ -42,7 +42,6 @@ use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MonologBundle\MonologBundle;
 use Symfony\Bundle\SecurityBundle\SecurityBundle;
-use Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Bundle\WebProfilerBundle\WebProfilerBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -94,7 +93,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             BundleConfig::create(SecurityBundle::class),
             BundleConfig::create(TwigBundle::class),
             BundleConfig::create(MonologBundle::class),
-            BundleConfig::create(SwiftmailerBundle::class),
             BundleConfig::create(DoctrineBundle::class),
             BundleConfig::create(DoctrineCacheBundle::class),
             BundleConfig::create(LexikMaintenanceBundle::class),
@@ -234,23 +232,18 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                     $container->setParameter('env(APP_SECRET)', $container->getParameter('secret'));
                 }
 
-                return $extensionConfigs;
+                if (!isset($_SERVER['MAILER_DSN'])) {
+                    $container->setParameter('env(MAILER_DSN)', $this->getMailerUrl($container));
+                }
+
+                return $this->checkMailerTransport($extensionConfigs, $container);
 
             case 'doctrine':
                 if (!isset($_SERVER['DATABASE_URL'])) {
                     $container->setParameter('env(DATABASE_URL)', $this->getDatabaseUrl($container));
                 }
 
-                return $this->addDefaultServerVersion($extensionConfigs, $container);
-
-            case 'swiftmailer':
-                $extensionConfigs = $this->checkMailerTransport($extensionConfigs, $container);
-
-                if (!isset($_SERVER['MAILER_URL'])) {
-                    $container->setParameter('env(MAILER_URL)', $this->getMailerUrl($container));
-                }
-
-                return $extensionConfigs;
+                return $this->addDefaultServerVersion($extensionConfigs, $container);   
         }
 
         return $extensionConfigs;
@@ -375,34 +368,34 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     private function getMailerUrl(ContainerBuilder $container): string
     {
         if ('sendmail' === $container->getParameter('mailer_transport')) {
-            return 'sendmail://localhost';
+            return 'sendmail+smtp://default';
         }
 
-        $parameters = [];
+        $protocol = 'smtp';
+        $credentials = '';
 
         if ($user = $container->getParameter('mailer_user')) {
-            $parameters[] = 'username='.$this->encodeUrlParameter($user);
+            $credentials .= $this->encodeUrlParameter($user);
 
             if ($password = $container->getParameter('mailer_password')) {
-                $parameters[] = 'password='.$this->encodeUrlParameter($password);
+                $credentials .= ':'.$this->encodeUrlParameter($password);
             }
+
+            $credentials .= '@';
         }
 
         if ($encryption = $container->getParameter('mailer_encryption')) {
-            $parameters[] = 'encryption='.$this->encodeUrlParameter($encryption);
-        }
-
-        $qs = '';
-
-        if (!empty($parameters)) {
-            $qs = '?'.implode('&', $parameters);
+            if ('ssl' === $encryption) {
+                $protocol = 'smtps';
+            }
         }
 
         return sprintf(
-            'smtp://%s:%s%s',
+            '%s://%s%s:%s',
+            $protocol,
+            $credentials,
             $container->getParameter('mailer_host'),
-            (int) $container->getParameter('mailer_port'),
-            $qs
+            (int) $container->getParameter('mailer_port')
         );
     }
 
