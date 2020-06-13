@@ -622,7 +622,7 @@ abstract class DataContainer extends Backend
 
 				$image = Image::getPath('placeholder.svg');
 
-				if ($blnCanResize)
+				if ($blnCanResize && $objFile->viewWidth && $objFile->viewHeight)
 				{
 					$container = System::getContainer();
 					$rootDir = $container->getParameter('kernel.project_dir');
