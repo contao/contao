@@ -22,6 +22,9 @@ framework:
     session:
         handler_id: ~
     fragments: { path: /_fragment }
+    mailer:
+        transports:
+            default: '%env(MAILER_DSN)%'
 
 # Contao configuration
 contao:

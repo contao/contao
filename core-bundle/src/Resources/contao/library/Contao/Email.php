@@ -358,7 +358,7 @@ class Email
 	 * @param string $strFile The file path
 	 * @param string $strMime The MIME type (defaults to "application/octet-stream")
 	 */
-	public function attachFile($strFile, $strMime='application/octet-stream')
+	public function attachFile($strFile, $strMime=null)
 	{
 		if ($this->objMessage instanceof EmailMessage)
 		{
@@ -377,7 +377,7 @@ class Email
 	 * @param string $strFilename The file name
 	 * @param string $strMime     The MIME type (defaults to "application/octet-stream")
 	 */
-	public function attachFileFromString($strContent, $strFilename, $strMime='application/octet-stream')
+	public function attachFileFromString($strContent, $strFilename, $strMime=null)
 	{
 		if ($this->objMessage instanceof EmailMessage)
 		{
