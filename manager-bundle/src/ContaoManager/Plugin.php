@@ -228,6 +228,9 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 return $this->handlePrependLocale($extensionConfigs, $container);
 
             case 'framework':
+                $extensionConfigs = $this->checkMailerTransport($extensionConfigs, $container);
+                $extensionConfigs = $this->addDefaultMailer($extensionConfigs, $container);
+
                 if (!isset($_SERVER['APP_SECRET'])) {
                     $container->setParameter('env(APP_SECRET)', $container->getParameter('secret'));
                 }
@@ -236,7 +239,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                     $container->setParameter('env(MAILER_URL)', $this->getMailerUrl($container));
                 }
 
-                return $this->checkMailerTransport($extensionConfigs, $container);
+                return $extensionConfigs;
 
             case 'doctrine':
                 if (!isset($_SERVER['DATABASE_URL'])) {
@@ -332,6 +335,28 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         if ('mail' === $container->getParameter('mailer_transport')) {
             $container->setParameter('mailer_transport', 'sendmail');
         }
+
+        return $extensionConfigs;
+    }
+
+    /**
+     * Dynamically adds a default mailer to the config, if no mailer is defined.
+     *
+     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     */
+    private function addDefaultMailer(array $extensionConfigs, ContainerBuilder $container): array
+    {
+        foreach ($extensionConfigs as $config) {
+            if (isset($config['mailer']) && (isset($config['mailer']['transports']) || $config['mailer']['dsn'])) {
+                return $extensionConfigs;
+            }
+        }
+
+        $extensionConfigs[] = [
+            'mailer' => [
+                'dsn' => '%env(MAILER_URL)%'
+            ]
+        ];
 
         return $extensionConfigs;
     }

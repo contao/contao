@@ -462,10 +462,61 @@ class PluginTest extends ContaoTestCase
         $this->assertSame('sendmail', $container->getParameter('mailer_transport'));
     }
 
+    public function testAddsDefaultMailer(): void
+    {
+        $expect = [
+            [
+                'mailer' => [
+                    'dsn' => '%env(MAILER_URL)%',
+                ],
+            ],
+        ];
+
+        $container = $this->getContainer();
+        $extensionConfig = (new Plugin())->getExtensionConfig('framework', [], $container);
+
+        $this->assertSame($expect, $extensionConfig);
+    }
+
+    public function testDoesNotAddDefaultMailerIfDefined(): void
+    {
+        $extensionConfigs = [
+            [
+                'mailer' => [
+                    'dsn' => 'smtp://localhost',
+                ],
+            ],
+        ];
+
+        $expect = $extensionConfigs;
+
+        $container = $this->getContainer();
+        $extensionConfig = (new Plugin())->getExtensionConfig('framework', $extensionConfigs, $container);
+
+        $this->assertSame($expect, $extensionConfig);
+
+        $extensionConfigs = [
+            [
+                'mailer' => [
+                    'transports' => [
+                        'default' => 'smtp://localhost',
+                    ],
+                ],
+            ],
+        ];
+
+        $expect = $extensionConfigs;
+
+        $container = $this->getContainer();
+        $extensionConfig = (new Plugin())->getExtensionConfig('framework', $extensionConfigs, $container);
+
+        $this->assertSame($expect, $extensionConfig);
+    }
+
     /**
      * @dataProvider getMailerParameters
      */
-    public function testSetsTheMailerUrl(string $transport, string $host, ?string $user, ?string $password, ?int $port, ?string $encryption, string $expected): void
+    public function testSetsTheMailerUrl(string $transport, ?string $host, ?string $user, ?string $password, ?int $port, ?string $encryption, string $expected): void
     {
         $container = $this->getContainer();
         $container->setParameter('mailer_transport', $transport);
@@ -486,12 +537,12 @@ class PluginTest extends ContaoTestCase
     {
         yield [
             'mail',
-            '127.0.0.1',
             null,
             null,
-            25,
             null,
-            'sendmail://localhost',
+            null,
+            null,
+            'sendmail+smtp://default',
         ];
 
         yield [
