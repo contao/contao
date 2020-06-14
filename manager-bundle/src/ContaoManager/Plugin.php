@@ -373,6 +373,13 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
         $protocol = 'smtp';
         $credentials = '';
+        $port = '';
+
+        if ($encryption = $container->getParameter('mailer_encryption')) {
+            if ('ssl' === $encryption) {
+                $protocol = 'smtps';
+            }
+        }
 
         if ($user = $container->getParameter('mailer_user')) {
             $credentials .= $this->encodeUrlParameter($user);
@@ -384,18 +391,16 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             $credentials .= '@';
         }
 
-        if ($encryption = $container->getParameter('mailer_encryption')) {
-            if ('ssl' === $encryption) {
-                $protocol = 'smtps';
-            }
+        if ($port = $container->getParameter('mailer_port')) {
+            $port = ':'.$port;
         }
 
         return sprintf(
-            '%s://%s%s:%s',
+            '%s://%s%s%s',
             $protocol,
             $credentials,
             $container->getParameter('mailer_host'),
-            (int) $container->getParameter('mailer_port')
+            $port
         );
     }
 

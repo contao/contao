@@ -465,7 +465,7 @@ class PluginTest extends ContaoTestCase
     /**
      * @dataProvider getMailerParameters
      */
-    public function testSetsTheMailerUrl(string $transport, string $host, ?string $user, ?string $password, int $port, ?string $encryption, string $expected): void
+    public function testSetsTheMailerUrl(string $transport, string $host, ?string $user, ?string $password, ?int $port, ?string $encryption, string $expected): void
     {
         $container = $this->getContainer();
         $container->setParameter('mailer_transport', $transport);
@@ -547,11 +547,31 @@ class PluginTest extends ContaoTestCase
         yield [
             'smtp',
             '127.0.0.1',
+            'foo@bar.com',
+            'foobar',
+            null,
+            'ssl',
+            'smtps://foo%%40bar.com:foobar@127.0.0.1',
+        ];
+
+        yield [
+            'smtp',
+            '127.0.0.1',
+            'foo@bar.com',
+            'foobar',
+            465,
+            'ssl',
+            'smtps://foo%%40bar.com:foobar@127.0.0.1:465',
+        ];
+
+        yield [
+            'smtp',
+            '127.0.0.1',
             null,
             null,
             587,
             'tls',
-            'smtps://127.0.0.1:587',
+            'smtp://127.0.0.1:587',
         ];
 
         yield [
@@ -561,7 +581,7 @@ class PluginTest extends ContaoTestCase
             'foobar',
             587,
             'tls',
-            'smtps://foo%%40bar.com:foobar@127.0.0.1:587',
+            'smtp://foo%%40bar.com:foobar@127.0.0.1:587',
         ];
     }
 
