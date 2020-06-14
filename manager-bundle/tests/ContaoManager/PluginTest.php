@@ -490,6 +490,16 @@ class PluginTest extends ContaoTestCase
     public function getMailerParameters(): \Generator
     {
         yield [
+            'mail',
+            '127.0.0.1',
+            null,
+            null,
+            25,
+            null,
+            'sendmail://localhost',
+        ];
+
+        yield [
             'sendmail',
             '127.0.0.1',
             null,
