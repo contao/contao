@@ -246,7 +246,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                     $container->setParameter('env(DATABASE_URL)', $this->getDatabaseUrl($container));
                 }
 
-                return $this->addDefaultServerVersion($extensionConfigs, $container);   
+                return $this->addDefaultServerVersion($extensionConfigs, $container);
         }
 
         return $extensionConfigs;
@@ -354,8 +354,8 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
         $extensionConfigs[] = [
             'mailer' => [
-                'dsn' => '%env(MAILER_URL)%'
-            ]
+                'dsn' => '%env(MAILER_URL)%',
+            ],
         ];
 
         return $extensionConfigs;
