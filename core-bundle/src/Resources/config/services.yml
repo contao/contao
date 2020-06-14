@@ -335,6 +335,20 @@ services:
             - '@?contao.image.resize_calculator'
         public: true
 
+    Contao\CoreBundle\Mailer\AvailableTransports:
+        arguments:
+            - '@?translator'
+        tags:
+            - { name: 'contao.callback', table: 'tl_page', target: 'fields.mailer_transport.options', method: 'getTransportOptions' }
+            - { name: 'contao.callback', table: 'tl_form', target: 'fields.mailer_transport.options', method: 'getTransportOptions' }
+
+    Contao\CoreBundle\Mailer\ContaoMailer:
+        decorates: mailer
+        arguments:
+            - '@Contao\CoreBundle\Mailer\ContaoMailer.inner'
+            - '@Contao\CoreBundle\Mailer\AvailableTransports'
+            - '@request_stack'
+
     contao.menu.backend_menu_builder:
         class: Contao\CoreBundle\Menu\BackendMenuBuilder
         arguments:

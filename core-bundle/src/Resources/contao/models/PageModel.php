@@ -102,6 +102,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string  $templateGroup
  * @property string  $enforceTwoFactor
  * @property integer $twoFactorJumpTo
+ * @property string  $mailer_transport
  *
  * @method static PageModel|null findById($id, array $opt=array())
  * @method static PageModel|null findByPk($id, array $opt=array())
@@ -991,6 +992,7 @@ class PageModel extends Model
 			$this->enforceTwoFactor = $objParentPage->enforceTwoFactor;
 			$this->twoFactorJumpTo = $objParentPage->twoFactorJumpTo;
 			$this->useFolderUrl = $objParentPage->useFolderUrl;
+			$this->mailer_transport = $objParentPage->mailer_transport;
 
 			// Store whether the root page has been published
 			$this->rootIsPublic = ($objParentPage->published && ($objParentPage->start == '' || $objParentPage->start <= $time) && ($objParentPage->stop == '' || $objParentPage->stop > ($time + 60)));

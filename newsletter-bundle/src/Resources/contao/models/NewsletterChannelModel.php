@@ -22,6 +22,7 @@ use Contao\Model\Collection;
  * @property string  $template
  * @property string  $sender
  * @property string  $senderName
+ * @property string  $mailer_transport
  *
  * @method static NewsletterChannelModel|null findById($id, array $opt=array())
  * @method static NewsletterChannelModel|null findByPk($id, array $opt=array())

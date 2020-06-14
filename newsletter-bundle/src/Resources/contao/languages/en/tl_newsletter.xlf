@@ -68,6 +68,12 @@
       <trans-unit id="tl_newsletter.senderName.1">
         <source>Here you can override the default sender name of the channel.</source>
       </trans-unit>
+      <trans-unit id="tl_newsletter.mailer_transport.0">
+        <source>Mailer configuration</source>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.mailer_transport.1">
+        <source>The mailer configuration used for this newsletter channel.</source>
+      </trans-unit>
       <trans-unit id="tl_newsletter.mailsPerCycle.0">
         <source>Mails per cycle</source>
       </trans-unit>

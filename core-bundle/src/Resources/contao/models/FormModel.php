@@ -32,6 +32,7 @@ use Contao\Model\Collection;
  * @property string  $attributes
  * @property string  $formID
  * @property boolean $allowTags
+ * @property string  $mailer_transport
  *
  * @method static FormModel|null findById($id, array $opt=array())
  * @method static FormModel|null findByPk($id, array $opt=array())

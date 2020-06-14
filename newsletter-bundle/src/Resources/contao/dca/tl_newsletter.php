@@ -21,6 +21,7 @@ use Contao\NewsletterChannelModel;
 use Contao\StringUtil;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Contao\CoreBundle\Mailer\AvailableTransports;
 
 $GLOBALS['TL_DCA']['tl_newsletter'] = array
 (
@@ -105,7 +106,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('addFile'),
-		'default'                     => '{title_legend},subject,alias;{html_legend},content;{text_legend:hide},text;{attachment_legend},addFile;{template_legend:hide},template;{sender_legend:hide},sender,senderName;{expert_legend:hide},sendText,externalImages'
+		'default'                     => '{title_legend},subject,alias;{html_legend},content;{text_legend:hide},text;{attachment_legend},addFile;{template_legend:hide},template;{sender_legend:hide},sender,senderName,mailer_transport;{expert_legend:hide},sendText,externalImages'
 	),
 
 	// Subpalettes
@@ -245,6 +246,14 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 				array('tl_newsletter', 'addSenderNamePlaceholder')
 			),
 			'sql'                     => "varchar(128) NOT NULL default ''"
+		),
+		'mailer_transport' => array
+		(
+			'exclude'                 => true,
+			'inputType'               => 'select',
+			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption'=>true),
+			'options_callback'        => array(AvailableTransports::class, 'getTransportOptions'),
+			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'sent' => array
 		(
