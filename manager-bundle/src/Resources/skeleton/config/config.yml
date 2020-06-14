@@ -24,7 +24,7 @@ framework:
     fragments: { path: /_fragment }
     mailer:
         transports:
-            default: '%env(MAILER_DSN)%'
+            default: '%env(MAILER_URL)%'
 
 # Contao configuration
 contao:
