@@ -155,6 +155,7 @@
         "phpunit/phpunit": "^8.4",
         "psalm/plugin-phpunit": "^0.9",
         "psalm/plugin-symfony": "^1.0",
+        "psr/event-dispatcher": "^1.0",
         "slam/phpstan-extensions": "^5.0",
         "symfony/browser-kit": "4.4.*",
         "symfony/phpunit-bridge": "4.4.*",
