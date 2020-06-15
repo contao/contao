@@ -379,7 +379,7 @@ class FigureBuilder
     }
 
     /**
-     * Define the secondary image result based on the source setting [on demand].
+     * Define the light box if it is enabled [on demand].
      */
     private function onDefineLightBoxResult(self $settings, Figure $result): ?LightBoxResult
     {
