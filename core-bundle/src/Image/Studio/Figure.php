@@ -211,7 +211,7 @@ final class Figure
                 'arrSize' => [$originalSize->getWidth(), $originalSize->getHeight()],
                 'imgSize' => sprintf(' width="%d" height="%d"', $originalSize->getWidth(), $originalSize->getHeight()),
                 'singleSRC' => $img->getFilePath(),
-                'fullsize' => ('blank' === $linkAttributes['target'] ?? false) || $this->hasLightBox(),
+                'fullsize' => ('blank' === $linkAttributes['target'] ?? null) || $this->hasLightBox(),
                 'margin' => $marginProperty ?? '',
                 'addBefore' => 'below' !== $floatingProperty,
                 'addImage' => true,
