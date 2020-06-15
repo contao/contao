@@ -481,7 +481,8 @@ class Email
 							{
 								if ($this->objMessage instanceof EmailMessage)
 								{
-									$arrCid[$src] = $this->objMessage->embedFromPath($this->strImageDir . $src);
+									$this->objMessage->embedFromPath($this->strImageDir . $src, $src);
+									$arrCid[$src] = 'cid:' . $src;
 								}
 								else
 								{
