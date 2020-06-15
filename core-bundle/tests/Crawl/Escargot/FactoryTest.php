@@ -18,6 +18,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use Nyholm\Psr7\Uri;
+use PHPUnit\Framework\MockObject\MockObject;
 use Terminal42\Escargot\BaseUriCollection;
 use Terminal42\Escargot\Queue\InMemoryQueue;
 
@@ -56,6 +57,7 @@ class FactoryTest extends TestCase
             ->willReturn('https://contao.org')
         ;
 
+        /** @var PageModel&MockObject $pageModelAdapter */
         $pageModelAdapter = $this->mockAdapter(['findPublishedRootPages']);
         $pageModelAdapter
             ->method('findPublishedRootPages')
@@ -98,7 +100,8 @@ class FactoryTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('You have to specify at least one valid subscriber name. Valid subscribers are: subscriber-1');
 
-        $factory->create($uriCollection, new InMemoryQueue(), ['subscriber-8']);
+        $escargot = $factory->create($uriCollection, new InMemoryQueue(), ['subscriber-8']);
+        $this->assertSame(Factory::USER_AGENT, $escargot->getUserAgent());
     }
 
     public function testCreatesEscargotCorrectlyWithExistingJobId(): void
@@ -122,6 +125,7 @@ class FactoryTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('You have to specify at least one valid subscriber name. Valid subscribers are: subscriber-1');
 
-        $factory->createFromJobId($jobId, $queue, ['subscriber-8']);
+        $escargot = $factory->createFromJobId($jobId, $queue, ['subscriber-8']);
+        $this->assertSame(Factory::USER_AGENT, $escargot->getUserAgent());
     }
 }

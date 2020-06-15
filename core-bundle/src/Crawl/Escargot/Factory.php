@@ -32,6 +32,8 @@ use Terminal42\Escargot\Subscriber\RobotsSubscriber;
 
 class Factory
 {
+    public const USER_AGENT = 'contao/crawler';
+
     /**
      * @var Connection
      */
@@ -164,6 +166,7 @@ class Factory
     public function create(BaseUriCollection $baseUris, QueueInterface $queue, array $selectedSubscribers, array $clientOptions = []): Escargot
     {
         $escargot = Escargot::create($baseUris, $queue, $this->createHttpClient($clientOptions));
+        $escargot = $escargot->withUserAgent(self::USER_AGENT);
 
         $this->registerDefaultSubscribers($escargot);
         $this->registerSubscribers($escargot, $this->validateSubscribers($selectedSubscribers));
@@ -178,6 +181,7 @@ class Factory
     public function createFromJobId(string $jobId, QueueInterface $queue, array $selectedSubscribers, array $clientOptions = []): Escargot
     {
         $escargot = Escargot::createFromJobId($jobId, $queue, $this->createHttpClient($clientOptions));
+        $escargot = $escargot->withUserAgent(self::USER_AGENT);
 
         $this->registerDefaultSubscribers($escargot);
         $this->registerSubscribers($escargot, $this->validateSubscribers($selectedSubscribers));

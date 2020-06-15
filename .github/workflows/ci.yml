@@ -21,16 +21,14 @@ jobs:
               with:
                   php-version: 7.3
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
-                  tools: prestissimo
+                  tools: prestissimo, flex
                   coverage: pcov
 
             - name: Checkout
-              uses: actions/checkout@v2
+              uses: actions/checkout@v1
 
             - name: Install the dependencies
-              run: |
-                  composer global require symfony/flex
-                  composer install --no-interaction --no-suggest
+              run: composer install --no-interaction --no-suggest
 
             - name: Generate the coverage report
               run: php -d pcov.enabled=1 vendor/bin/phpunit --testsuite=coverage --coverage-clover=clover.xml --colors=always
@@ -38,25 +36,6 @@ jobs:
             - name: Upload the coverage report
               uses: codecov/codecov-action@v1
               with:
-                  # Yes, this is our upload token in plain text and yes, we should
-                  # set it as a secret instead. However, this is currently the
-                  # only way to allow coverage uploads from fork repository PRs:
-                  #
-                  # https://github.com/codecov/codecov-node/issues/118
-                  # https://github.community/t5/GitHub-Actions/Make-secrets-available-to-builds-of-forks/m-p/33885#M1696
-                  #
-                  # If you stumble across this, here is what you should do:
-                  #
-                  # * If the problems mentioned above have been solved and we did
-                  #   not notice, please give us a heads-up.
-                  #
-                  # * If you think about doing the same, make sure to be aware of
-                  #   the implications. This is a trial and error shot on our end
-                  #   and the odds are that the outcome is error.
-                  #
-                  # * If you have an idea how to solve this in a better way, please
-                  #   let us know.
-                  token: e129b38e-acf2-484c-97bc-1cde6b4a0693
                   file: ./clover.xml
                   fail_ci_if_error: true
 
@@ -70,16 +49,14 @@ jobs:
               with:
                   php-version: 7.3
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
-                  tools: prestissimo
+                  tools: prestissimo, flex
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v2
+              uses: actions/checkout@v1
 
             - name: Install the dependencies
-              run: |
-                  composer global require symfony/flex
-                  composer install --no-interaction --no-suggest
+              run: composer install --no-interaction --no-suggest
 
             - name: Check the coding style
               run: |
@@ -88,7 +65,15 @@ jobs:
                   vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config vendor/contao/easy-coding-standard/config/template.yaml --no-progress-bar --ansi
 
             - name: Analyze the code
-              run: vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
+              run: |
+                  vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=4 --no-progress
+                  vendor/bin/psalm --no-suggestions --threads=4 --no-progress
+
+            - name: Analyze the YAML files
+              run: |
+                  python3 -m pip install --upgrade pip
+                  python3 -m pip install yamllint
+                  /home/runner/.local/bin/yamllint .
 
     tests:
         name: PHP ${{ matrix.php }}
@@ -104,27 +89,25 @@ jobs:
               with:
                   php-version: ${{ matrix.php }}
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
-                  tools: prestissimo
+                  tools: prestissimo, flex
                   coverage: none
 
-            - name: Create the database
-              run: mysql -uroot -proot -e "CREATE database contao_test"
+            - name: Initialize the database
+              run: |
+                  sudo /etc/init.d/mysql start
+                  mysql -uroot -proot -e "CREATE database contao_test"
 
             - name: Checkout
-              uses: actions/checkout@v2
+              uses: actions/checkout@v1
 
             - name: Install the dependencies
-              run: |
-                  composer global require symfony/flex
-                  composer install --no-interaction --no-suggest
+              run: composer install --no-interaction --no-suggest
 
             - name: Run the unit tests
               run: vendor/bin/phpunit --colors=always
 
             - name: Run the functional tests
-              run: |
-                  sudo /etc/init.d/mysql start
-                  vendor/bin/phpunit --testsuite=functional --colors=always
+              run: vendor/bin/phpunit --testsuite=functional --colors=always
               env:
                   DATABASE_URL: mysql://root:root@localhost:3306/contao_test
 
@@ -138,27 +121,25 @@ jobs:
               with:
                   php-version: 7.3
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
-                  tools: prestissimo
+                  tools: prestissimo, flex
                   coverage: none
 
-            - name: Create the database
-              run: mysql -uroot -proot -e "CREATE database contao_test"
+            - name: Initialize the database
+              run: |
+                  sudo /etc/init.d/mysql start
+                  mysql -uroot -proot -e "CREATE database contao_test"
 
             - name: Checkout
-              uses: actions/checkout@v2
+              uses: actions/checkout@v1
 
             - name: Install the dependencies
-              run: |
-                  composer global require symfony/flex
-                  composer update --prefer-lowest --prefer-stable --no-interaction --no-suggest
+              run: composer update --prefer-lowest --prefer-stable --no-interaction --no-suggest
 
             - name: Run the unit tests
               run: vendor/bin/phpunit --colors=always
 
             - name: Run the functional tests
-              run: |
-                  sudo /etc/init.d/mysql start
-                  vendor/bin/phpunit --testsuite=functional --colors=always
+              run: vendor/bin/phpunit --testsuite=functional --colors=always
               env:
                   DATABASE_URL: mysql://root:root@localhost:3306/contao_test
 
@@ -172,15 +153,14 @@ jobs:
               with:
                   php-version: 7.3
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
-                  tools: prestissimo
+                  tools: prestissimo, flex
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v2
+              uses: actions/checkout@v1
 
             - name: Test the single bundles
               run: |
-                  composer global require symfony/flex
                   bundles=(calendar-bundle core-bundle faq-bundle manager-bundle news-bundle)
                   for bundle in "${bundles[@]}"; do
                       cd $bundle
@@ -212,19 +192,17 @@ jobs:
                   php-version: 7.3
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
                   ini-values: memory_limit=1G
-                  tools: prestissimo
+                  tools: prestissimo, flex
                   coverage: none
 
             - name: Adjust the Git autocrlf setting
               run: git config --global core.autocrlf false
 
             - name: Checkout
-              uses: actions/checkout@v2
+              uses: actions/checkout@v1
 
             - name: Install the dependencies
-              run: |
-                  composer global require symfony/flex --no-progress
-                  composer install --no-interaction --no-suggest --no-progress
+              run: composer install --no-interaction --no-suggest --no-progress
 
             - name: Run the unit tests
               run: vendor/bin/phpunit.bat --colors=always
@@ -243,13 +221,13 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v2
+              uses: actions/checkout@v1
 
             - name: Cache the monorepo split
               uses: actions/cache@v1
               with:
-                path: .monorepo-split-cache
-                key: dev-${GITHUB_REF##*/}
+                  path: .monorepo-split-cache
+                  key: dev-${GITHUB_REF##*/}
 
             - name: Install the dependencies
               run: composer global require contao/monorepo-tools:dev-master

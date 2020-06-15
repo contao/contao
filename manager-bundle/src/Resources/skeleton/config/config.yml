@@ -13,7 +13,7 @@ framework:
     translator: { fallbacks: ['%locale%'] }
     secret: '%env(APP_SECRET)%'
     router:
-        resource: 'contao_manager.routing_loader::loadFromPlugins'
+        resource: contao_manager.routing_loader::loadFromPlugins
         type: service
         strict_requirements: '%kernel.debug%'
     csrf_protection: ~
@@ -25,7 +25,7 @@ framework:
 
 # Contao configuration
 contao:
-    preview_script: '/preview.php'
+    preview_script: /preview.php
 
 # Twig configuration
 twig:
@@ -50,7 +50,7 @@ doctrine:
                     !php/const PDO::MYSQL_ATTR_MULTI_STATEMENTS: false
         types:
             binary_string:
-                class: 'Contao\CoreBundle\Doctrine\DBAL\Types\BinaryStringType'
+                class: Contao\CoreBundle\Doctrine\DBAL\Types\BinaryStringType
     orm:
         auto_mapping: true
         auto_generate_proxy_classes: false
@@ -70,15 +70,15 @@ doctrine_cache:
     providers:
         doctrine_metadata_cache:
             file_system:
-                extension: '.cache'
+                extension: .cache
                 directory: '%kernel.cache_dir%/doctrine/metadata'
         doctrine_result_cache:
             file_system:
-                extension: '.cache'
+                extension: .cache
                 directory: '%kernel.cache_dir%/doctrine/result'
         doctrine_query_cache:
             file_system:
-                extension: '.cache'
+                extension: .cache
                 directory: '%kernel.cache_dir%/doctrine/query'
 
 # SwiftMailer configuration
@@ -95,7 +95,7 @@ lexik_maintenance:
         attributes:
             _bypass_maintenance: true
     driver:
-        class: 'Lexik\Bundle\MaintenanceBundle\Drivers\FileDriver'
+        class: Lexik\Bundle\MaintenanceBundle\Drivers\FileDriver
         options: { file_path: '%kernel.project_dir%/var/maintenance_lock' }
 
 # Security configuration
@@ -108,8 +108,8 @@ nelmio_security:
     referrer_policy:
         enabled: true
         policies:
-            - 'no-referrer-when-downgrade'
-            - 'strict-origin-when-cross-origin'
+            - no-referrer-when-downgrade
+            - strict-origin-when-cross-origin
     xss_protection:
         enabled: true
         mode_block: true

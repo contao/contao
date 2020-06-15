@@ -24,9 +24,13 @@ use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\CoreBundle\Session\LazySessionAccess;
 use Contao\CoreBundle\Session\MockNativeSessionStorage;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\Environment;
 use Contao\Input;
+use Contao\Model\Registry;
+use Contao\PageModel;
 use Contao\RequestToken;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -378,6 +382,7 @@ class ContaoFrameworkTest extends TestCase
             $requestStack,
             $this->mockScopeMatcher(),
             $this->createMock(TokenChecker::class),
+            new Filesystem(),
             $this->getTempDir(),
             error_reporting()
         );
@@ -414,6 +419,7 @@ class ContaoFrameworkTest extends TestCase
             $requestStack,
             $this->mockScopeMatcher(),
             $this->createMock(TokenChecker::class),
+            new Filesystem(),
             $this->getTempDir(),
             error_reporting()
         );
@@ -651,6 +657,43 @@ class ContaoFrameworkTest extends TestCase
     }
 
     /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testDelegatesTheResetCalls(): void
+    {
+        $framework = $this->mockFramework();
+        $framework->setContainer($this->getContainerWithContaoConfiguration());
+        $framework->initialize();
+
+        Environment::set('scriptFilename', 'bar');
+        Input::setUnusedGet('foo', 'bar');
+
+        /** @var PageModel&MockObject $model */
+        $model = $this
+            ->getMockBuilder(PageModel::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['onRegister'])
+            ->getMock()
+        ;
+
+        $model->id = 1;
+
+        $registry = Registry::getInstance();
+        $registry->register($model);
+
+        $this->assertSame('bar', Environment::get('scriptFilename'));
+        $this->assertNotEmpty(Input::getUnusedGet());
+        $this->assertCount(1, $registry);
+
+        $framework->reset();
+
+        $this->assertNotSame('bar', Environment::get('scriptFilename'));
+        $this->assertEmpty(Input::getUnusedGet());
+        $this->assertCount(0, $registry);
+    }
+
+    /**
      * @param TokenChecker&MockObject $tokenChecker
      */
     private function mockFramework(Request $request = null, ScopeMatcher $scopeMatcher = null, TokenChecker $tokenChecker = null): ContaoFramework
@@ -665,6 +708,7 @@ class ContaoFrameworkTest extends TestCase
             $requestStack,
             $scopeMatcher ?? $this->mockScopeMatcher(),
             $tokenChecker ?? $this->createMock(TokenChecker::class),
+            new Filesystem(),
             $this->getTempDir(),
             error_reporting()
         );
@@ -684,6 +728,7 @@ class ContaoFrameworkTest extends TestCase
 
     private function mockConfigAdapter(bool $complete = true): Adapter
     {
+        /** @var (Adapter|Config)&MockObject $config */
         $config = $this->mockAdapter(['preload', 'isComplete', 'getInstance', 'get']);
         $config
             ->method('isComplete')
@@ -706,6 +751,7 @@ class ContaoFrameworkTest extends TestCase
 
     private function mockRequestTokenAdapter(bool $valid = true): Adapter
     {
+        /** @var (Adapter|RequestToken)&MockObject $adapter */
         $adapter = $this->mockAdapter(['get', 'validate']);
         $adapter
             ->method('get')

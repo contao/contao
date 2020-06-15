@@ -1658,10 +1658,12 @@ ul.sgallery li {
 
 /* Ajax box */
 #tl_ajaxBox {
-	width:20%;
+	width:300px;
 	padding:2em;
+	box-sizing:border-box;
 	position:absolute;
-	left:40%;
+	left:50%;
+	margin-left:-150px;
 	background:#fff url("icons/loading.svg") no-repeat right 2em center;
 	border:2px solid #111;
 	border-radius:2px;

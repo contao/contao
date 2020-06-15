@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing;
 
-use Contao\Config;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Framework\ContaoFramework;
@@ -191,13 +190,6 @@ class RouteProvider implements RouteProviderInterface
             return [$pathInfo];
         }
 
-        /** @var Config $config */
-        $config = $this->framework->getAdapter(Config::class);
-
-        if (!$config->get('folderUrl')) {
-            return [substr($pathInfo, 0, $pos)];
-        }
-
         $candidates = [$pathInfo];
 
         while ('/' !== $pathInfo && false !== strpos($pathInfo, '/')) {
@@ -303,14 +295,9 @@ class RouteProvider implements RouteProviderInterface
             []
         );
 
-        /** @var Config $config */
-        $config = $this->framework->getAdapter(Config::class);
-
-        if (!$config->get('doNotRedirectEmpty')) {
-            $defaults['_controller'] = 'Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction';
-            $defaults['path'] = '/'.$page->language.'/';
-            $defaults['permanent'] = true;
-        }
+        $defaults['_controller'] = 'Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction';
+        $defaults['path'] = '/'.$page->language.'/';
+        $defaults['permanent'] = true;
 
         $routes['tl_page.'.$page->id.'.fallback'] = new Route(
             '/',
@@ -413,10 +400,10 @@ class RouteProvider implements RouteProviderInterface
                     return 1;
                 }
 
-                /** @var PageModel $pageA */
+                /** @var PageModel|null $pageA */
                 $pageA = $a->getDefault('pageModel');
 
-                /** @var PageModel $pageB */
+                /** @var PageModel|null $pageB */
                 $pageB = $b->getDefault('pageModel');
 
                 // Check if the page models are valid (should always be the case, as routes are generated from pages)
@@ -424,24 +411,16 @@ class RouteProvider implements RouteProviderInterface
                     return 0;
                 }
 
-                if ('root' !== $pageA->type && 'root' === $pageB->type) {
-                    return -1;
-                }
-
-                if ('root' === $pageA->type && 'root' !== $pageB->type) {
-                    return 1;
-                }
-
                 if (null !== $languages && $pageA->rootLanguage !== $pageB->rootLanguage) {
                     $langA = $languages[$pageA->rootLanguage] ?? null;
                     $langB = $languages[$pageB->rootLanguage] ?? null;
 
                     if (null === $langA && null === $langB) {
-                        if ($pageA->rootIsFallback) {
+                        if ($pageA->rootIsFallback && !$pageB->rootIsFallback) {
                             return -1;
                         }
 
-                        if ($pageB->rootIsFallback) {
+                        if ($pageB->rootIsFallback && !$pageA->rootIsFallback) {
                             return 1;
                         }
 
@@ -456,7 +435,21 @@ class RouteProvider implements RouteProviderInterface
                         return -1;
                     }
 
-                    return $langA < $langB ? -1 : 1;
+                    if ($langA < $langB) {
+                        return -1;
+                    }
+
+                    if ($langA > $langB) {
+                        return 1;
+                    }
+                }
+
+                if ('root' !== $pageA->type && 'root' === $pageB->type) {
+                    return -1;
+                }
+
+                if ('root' === $pageA->type && 'root' !== $pageB->type) {
+                    return 1;
                 }
 
                 return strnatcasecmp((string) $pageB->alias, (string) $pageA->alias);
@@ -465,23 +458,18 @@ class RouteProvider implements RouteProviderInterface
     }
 
     /**
-     * Finds the page models keeping the candidates order.
-     *
      * @return array<Model>
      */
     private function findPages(array $candidates): array
     {
         $ids = [];
         $aliases = [];
-        $models = [];
 
         foreach ($candidates as $candidate) {
             if (is_numeric($candidate)) {
                 $ids[] = (int) $candidate;
-                $models['id|'.$candidate] = false;
             } else {
                 $aliases[] = $this->database->quote($candidate);
-                $models['alias|'.$candidate] = [];
             }
         }
 
@@ -503,25 +491,7 @@ class RouteProvider implements RouteProviderInterface
             return [];
         }
 
-        foreach ($pages as $page) {
-            if (isset($models['id|'.$page->id])) {
-                $models['id|'.$page->id] = $page;
-            } elseif (isset($models['alias|'.$page->alias])) {
-                $models['alias|'.$page->alias][] = $page;
-            }
-        }
-
-        $return = [];
-        $models = array_filter($models);
-
-        array_walk_recursive(
-            $models,
-            static function ($i) use (&$return): void {
-                $return[] = $i;
-            }
-        );
-
-        return $return;
+        return $pages->getModels();
     }
 
     /**

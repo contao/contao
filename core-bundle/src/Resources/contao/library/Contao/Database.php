@@ -14,6 +14,7 @@ use Contao\Database\Result;
 use Contao\Database\Statement;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Exception\DriverException;
 
 /**
  * Handle the database communication
@@ -538,7 +539,7 @@ class Database
 				foreach (array_reverse(array_keys($arrOrdered)) as $pid)
 				{
 					$pos = (int) array_search($pid, $arrReturn);
-					array_insert($arrReturn, $pos+1, $arrOrdered[$pid]);
+					ArrayUtil::arrayInsert($arrReturn, $pos+1, $arrOrdered[$pid]);
 				}
 
 				$arrReturn = $this->getChildRecords($arrChilds, $strTable, $blnSorting, $arrReturn, $strWhere);
@@ -645,6 +646,15 @@ class Database
 	 */
 	public function getSizeOf($strTable)
 	{
+		try
+		{
+			// MySQL 8 compatibility
+			$this->resConnection->executeQuery('SET @@SESSION.information_schema_stats_expiry = 0');
+		}
+		catch (DriverException $e)
+		{
+		}
+
 		$statement = $this->resConnection->executeQuery('SHOW TABLE STATUS LIKE ' . $this->resConnection->quote($strTable));
 		$status = $statement->fetch(\PDO::FETCH_ASSOC);
 
@@ -660,6 +670,15 @@ class Database
 	 */
 	public function getNextId($strTable)
 	{
+		try
+		{
+			// MySQL 8 compatibility
+			$this->resConnection->executeQuery('SET @@SESSION.information_schema_stats_expiry = 0');
+		}
+		catch (DriverException $e)
+		{
+		}
+
 		$statement = $this->resConnection->executeQuery('SHOW TABLE STATUS LIKE ' . $this->resConnection->quote($strTable));
 		$status = $statement->fetch(\PDO::FETCH_ASSOC);
 

@@ -17,6 +17,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\FilesModel;
 use Contao\PageModel;
 use FOS\HttpCache\ResponseTagger;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -24,6 +25,7 @@ class FaviconControllerTest extends TestCase
 {
     public function testNotFoundIfNoFaviconProvided(): void
     {
+        /** @var PageModel&MockObject $pageModelAdapter */
         $pageModelAdapter = $this->mockAdapter(['findPublishedFallbackByHostname']);
         $pageModelAdapter
             ->expects($this->once())
@@ -44,15 +46,39 @@ class FaviconControllerTest extends TestCase
         $this->assertSame(Response::HTTP_NOT_FOUND, $response->getStatusCode());
     }
 
-    public function testRobotsTxt(): void
+    public function testRegularFavicon(): void
+    {
+        $controller = $this->getController(__DIR__.'/../Fixtures/images/favicon.ico');
+
+        $request = Request::create('/favicon.ico');
+        $response = $controller($request);
+
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertSame('image/x-icon', $response->headers->get('Content-Type'));
+    }
+
+    public function testSvgFavicon(): void
+    {
+        $controller = $this->getController(__DIR__.'/../Fixtures/images/favicon.svg');
+
+        $request = Request::create('/favicon.ico');
+        $response = $controller($request);
+
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertSame('image/svg+xml', $response->headers->get('Content-Type'));
+    }
+
+    private function getController(string $iconPath): FaviconController
     {
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->id = 42;
         $pageModel->favicon = 'favicon-uuid';
 
         $faviconModel = $this->mockClassWithProperties(FilesModel::class);
-        $faviconModel->path = __DIR__.'/../Fixtures/images/favicon.ico';
+        $faviconModel->path = $iconPath;
+        $faviconModel->extension = substr($iconPath, -3);
 
+        /** @var PageModel&MockObject $pageModelAdapter */
         $pageModelAdapter = $this->mockAdapter(['findPublishedFallbackByHostname']);
         $pageModelAdapter
             ->expects($this->once())
@@ -60,6 +86,7 @@ class FaviconControllerTest extends TestCase
             ->willReturn($pageModel)
         ;
 
+        /** @var FilesModel&MockObject $filesModelAdapter */
         $filesModelAdapter = $this->mockAdapter(['findByUuid']);
         $filesModelAdapter
             ->expects($this->once())
@@ -85,10 +112,6 @@ class FaviconControllerTest extends TestCase
             ->with(['contao.db.tl_page.42'])
         ;
 
-        $request = Request::create('/favicon.ico');
-        $controller = new FaviconController($framework, $responseTagger);
-        $response = $controller($request);
-
-        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+        return new FaviconController($framework, $responseTagger);
     }
 }

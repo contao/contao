@@ -377,7 +377,7 @@ class News extends Frontend
 				}
 				else
 				{
-					self::$arrUrlCache[$strCacheKey] = ampersand($objItem->url);
+					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($objItem->url);
 				}
 				break;
 
@@ -386,7 +386,7 @@ class News extends Frontend
 				if (($objTarget = $objItem->getRelated('jumpTo')) instanceof PageModel)
 				{
 					/** @var PageModel $objTarget */
-					self::$arrUrlCache[$strCacheKey] = ampersand($blnAbsolute ? $objTarget->getAbsoluteUrl() : $objTarget->getFrontendUrl());
+					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($blnAbsolute ? $objTarget->getAbsoluteUrl() : $objTarget->getFrontendUrl());
 				}
 				break;
 
@@ -397,7 +397,7 @@ class News extends Frontend
 					$params = '/articles/' . ($objArticle->alias ?: $objArticle->id);
 
 					/** @var PageModel $objPid */
-					self::$arrUrlCache[$strCacheKey] = ampersand($blnAbsolute ? $objPid->getAbsoluteUrl($params) : $objPid->getFrontendUrl($params));
+					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($blnAbsolute ? $objPid->getAbsoluteUrl($params) : $objPid->getFrontendUrl($params));
 				}
 				break;
 		}
@@ -409,13 +409,13 @@ class News extends Frontend
 
 			if (!$objPage instanceof PageModel)
 			{
-				self::$arrUrlCache[$strCacheKey] = ampersand(Environment::get('request'));
+				self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand(Environment::get('request'));
 			}
 			else
 			{
 				$params = (Config::get('useAutoItem') ? '/' : '/items/') . ($objItem->alias ?: $objItem->id);
 
-				self::$arrUrlCache[$strCacheKey] = ampersand($blnAbsolute ? $objPage->getAbsoluteUrl($params) : $objPage->getFrontendUrl($params));
+				self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($blnAbsolute ? $objPage->getAbsoluteUrl($params) : $objPage->getFrontendUrl($params));
 			}
 
 			// Add the current archive parameter (news archive)
@@ -459,7 +459,7 @@ class News extends Frontend
 				if (($objArticle = ArticleModel::findByPk($objItem->articleId)) instanceof ArticleModel && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
 				{
 					/** @var PageModel $objPid */
-					return ampersand($objPid->getAbsoluteUrl('/articles/' . ($objArticle->alias ?: $objArticle->id)));
+					return StringUtil::ampersand($objPid->getAbsoluteUrl('/articles/' . ($objArticle->alias ?: $objArticle->id)));
 				}
 				break;
 		}

@@ -176,7 +176,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'search'                  => true,
-			'eval'                    => array('rgxp'=>'alias', 'doNotCopy'=>true, 'maxlength'=>128, 'tl_class'=>'w50 clr'),
+			'eval'                    => array('rgxp'=>'alias', 'doNotCopy'=>true, 'maxlength'=>255, 'tl_class'=>'w50 clr'),
 			'save_callback' => array
 			(
 				array('tl_article', 'generateAlias')
@@ -250,9 +250,9 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			'inputType'               => 'select',
 			'options_callback' => static function ()
 			{
-				return Contao\Controller::getTemplateGroup('mod_article_');
+				return Contao\Controller::getTemplateGroup('mod_article_', array(), 'mod_article');
 			},
-			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'protected' => array

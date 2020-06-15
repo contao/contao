@@ -2687,7 +2687,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			// Return the select menu
 			$return .= '
 
-<form action="' . ampersand(Environment::get('request')) . '&amp;fields=1" id="' . $this->strTable . '_all" class="tl_form tl_edit_form" method="post">
+<form action="' . StringUtil::ampersand(Environment::get('request')) . '&amp;fields=1" id="' . $this->strTable . '_all" class="tl_form tl_edit_form" method="post">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '_all">
 <input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">' . ($blnIsError ? '
@@ -3010,7 +3010,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 			// Return the select menu
 			$return .= '
-<form action="' . ampersand(Environment::get('request')) . '&amp;fields=1" id="' . $this->strTable . '_all" class="tl_form tl_edit_form" method="post">
+<form action="' . StringUtil::ampersand(Environment::get('request')) . '&amp;fields=1" id="' . $this->strTable . '_all" class="tl_form tl_edit_form" method="post">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '_all">
 <input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">' . ($blnIsError ? '
@@ -4268,10 +4268,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 											   ->limit(1)
 											   ->execute($_v);
 
-					if ($objLabel->numRows)
-					{
-						$_v = $objLabel->value;
-					}
+					$_v = $objLabel->numRows ? $objLabel->value : '-';
 				}
 				elseif (\is_array($GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['reference'][$_v]))
 				{
@@ -5238,8 +5235,8 @@ class DC_Table extends DataContainer implements \listable, \editable
 		}
 
 		// Sort by option values
-		$options_sorter = natcaseksort($options_sorter);
-		$active = isset($session['search'][$this->strTable]['value']);
+		uksort($options_sorter, 'strnatcasecmp');
+		$active = isset($session['search'][$this->strTable]['value']) && $session['search'][$this->strTable]['value'] != '';
 
 		return '
 <div class="tl_search tl_subpanel">

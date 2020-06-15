@@ -144,7 +144,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'alias', 'doNotCopy'=>true, 'unique'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp'=>'alias', 'doNotCopy'=>true, 'unique'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 			'save_callback' => array
 			(
 				array('tl_faq', 'generateAlias')
@@ -286,12 +286,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'fileTree',
-			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'isDownloads'=>true, 'extensions'=>Contao\Config::get('allowedDownload'), 'mandatory'=>true, 'orderField'=>'orderEnclosure'),
-			'sql'                     => "blob NULL"
-		),
-		'orderEnclosure' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['MSC']['sortOrder'],
+			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'isDownloads'=>true, 'extensions'=>Contao\Config::get('allowedDownload'), 'mandatory'=>true, 'isSortable'=>true),
 			'sql'                     => "blob NULL"
 		),
 		'noComments' => array
@@ -373,7 +368,25 @@ class tl_faq extends Contao\Backend
 				break;
 
 			case 'create':
-				if (!strlen(Contao\Input::get('pid')) || !in_array(Contao\Input::get('pid'), $root))
+				if (Contao\Input::get('mode') == 1)
+				{
+					$objFaq = $this->Database->prepare("SELECT pid FROM tl_faq WHERE id=?")
+											 ->limit(1)
+											 ->execute(Contao\Input::get('pid'));
+
+					if ($objFaq->numRows < 1)
+					{
+						throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid FAQ ID ' . Contao\Input::get('pid') . '.');
+					}
+
+					$pid = $objFaq->pid;
+				}
+				else
+				{
+					$pid = Contao\Input::get('pid');
+				}
+
+				if (!in_array($pid, $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to create FAQs in FAQ category ID ' . Contao\Input::get('pid') . '.');
 				}

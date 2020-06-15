@@ -27,6 +27,7 @@
         "ext-zlib": "*",
         "ausi/slug-generator": "^1.1",
         "bacon/bacon-qr-code": "^2.0",
+        "composer/package-versions-deprecated": "^1.8",
         "contao-components/ace": "^1.2",
         "contao-components/chosen": "^1.2",
         "contao-components/colorbox": "^1.6",
@@ -45,7 +46,7 @@
         "contao-components/tablesorter": "^2.1",
         "contao-components/tinymce4": "^4.7",
         "contao/image": "^1.0",
-        "contao/imagine-svg": "^0.1.2 || ^0.2",
+        "contao/imagine-svg": "^0.2.3",
         "contao/manager-plugin": "^2.6.2",
         "doctrine/dbal": "^2.10",
         "doctrine/doctrine-bundle": "^1.8",
@@ -66,7 +67,6 @@
         "nelmio/cors-bundle": "^1.5.3",
         "nelmio/security-bundle": "^2.2",
         "nyholm/psr7": "^1.2",
-        "ocramius/package-versions": "^1.2",
         "ocramius/proxy-manager": "^2.1",
         "paragonie/constant_time_encoding": "^2.2",
         "patchwork/utf8": "^1.2",
@@ -137,8 +137,8 @@
         "contao/core": "*",
         "contao/manager-plugin": "<2.0 || >=3.0",
         "doctrine/persistence": "1.3.2",
-        "phpstan/phpstan": "0.12.12",
         "symfony/config": "<4.4.2",
+        "symfony/security-bundle": "4.4.* <4.4.5",
         "terminal42/contao-ce-access": "<3.0",
         "zendframework/zend-code": "<3.3.1"
     },
@@ -148,14 +148,19 @@
         "contao/easy-coding-standard": "^1.0",
         "contao/monorepo-tools": "dev-master",
         "contao/phpstan": "^0.12",
-        "contao/test-case": "^4.0",
+        "contao/test-case": "^4.1",
         "doctrine/doctrine-migrations-bundle": "^1.1",
         "doctrine/event-manager": "^1.0",
         "monolog/monolog": "^1.24",
-        "phpstan/extension-installer": "^1.0",
         "phpunit/phpunit": "^8.4",
+        "psalm/plugin-phpunit": "^0.9",
+        "psalm/plugin-symfony": "^1.0",
+        "psr/event-dispatcher": "^1.0",
+        "slam/phpstan-extensions": "^5.0",
         "symfony/browser-kit": "4.4.*",
-        "symfony/phpunit-bridge": "4.4.*"
+        "symfony/phpunit-bridge": "4.4.*",
+        "vimeo/psalm": "^3.9",
+        "weirdan/doctrine-psalm-plugin": "^0.10"
     },
     "extra": {
         "branch-alias": {
@@ -255,6 +260,7 @@
             "@functional-tests",
             "@cs-fixer",
             "@phpstan",
+            "@psalm",
             "@monorepo-tools"
         ],
         "cs-fixer": [
@@ -269,7 +275,10 @@
             "vendor/bin/monorepo-tools composer-json --validate --ansi"
         ],
         "phpstan": [
-            "vendor/bin/phpstan analyze core-bundle/src core-bundle/tests --level=3 --memory-limit=1G --ansi"
+            "vendor/bin/phpstan analyze core-bundle/src core-bundle/tests --level=4 --memory-limit=1G --ansi"
+        ],
+        "psalm": [
+            "vendor/bin/psalm --no-suggestions --threads=4"
         ],
         "unit-tests": [
             "vendor/bin/phpunit --colors=always"

@@ -83,6 +83,7 @@ class BackendPreviewListenerTest extends ContaoTestCase
         $article = $this->mockClassWithProperties(ArticleModel::class);
         $article->pid = 3;
 
+        /** @var ArticleModel&MockObject $adapter */
         $adapter = $this->mockAdapter(['findByPk']);
         $adapter
             ->expects('article' === $do ? $this->once() : $this->never())

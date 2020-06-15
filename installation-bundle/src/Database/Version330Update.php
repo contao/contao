@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle\Database;
 
+use Contao\ArrayUtil;
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\StringUtil;
@@ -67,7 +68,7 @@ class Version330Update extends AbstractMigration
 
             if (!empty($tmp) && \is_array($tmp)) {
                 if (false !== ($key = array_search('layout.css', $tmp, true))) {
-                    array_insert($tmp, $key + 1, 'responsive.css');
+                    ArrayUtil::arrayInsert($tmp, $key + 1, 'responsive.css');
                 }
 
                 $framework = serialize(array_values(array_unique($tmp)));

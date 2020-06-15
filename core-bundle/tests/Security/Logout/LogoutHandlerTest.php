@@ -86,6 +86,7 @@ class LogoutHandlerTest extends TestCase
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->username = 'foobar';
 
+        /** @var System&MockObject $systemAdapter */
         $systemAdapter = $this->mockAdapter(['importStatic']);
         $systemAdapter
             ->expects($this->once())

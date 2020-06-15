@@ -892,7 +892,7 @@ abstract class DataContainer extends Backend
 					$v['icon'] = Image::getPath($v['icon']);
 				}
 
-				$attributes = sprintf('style="background-image:url(\'%s\')"', Controller::addAssetsUrlTo($v['icon'])) . $attributes;
+				$attributes = sprintf(' style="background-image:url(\'%s\')"', Controller::addAssetsUrlTo($v['icon'])) . $attributes;
 			}
 
 			if ($label == '')

@@ -17,13 +17,34 @@ use Terminal42\Escargot\CrawlUri;
 
 class CrawlCsvLogHandler extends StreamHandler
 {
+    /**
+     * @var string
+     */
+    private $filterSource;
+
+    public function getFilterSource(): string
+    {
+        return $this->filterSource;
+    }
+
+    public function setFilterSource(string $filterSource): self
+    {
+        $this->filterSource = $filterSource;
+
+        return $this;
+    }
+
     protected function streamWrite($resource, array $record): void
     {
         if (!isset($record['context']['source'])) {
             return;
         }
 
-        /** @var CrawlUri $crawlUri */
+        if ($this->filterSource && $this->filterSource !== $record['context']['source']) {
+            return;
+        }
+
+        /** @var CrawlUri|null $crawlUri */
         $crawlUri = $record['context']['crawlUri'] ?? null;
 
         $stat = fstat($resource);
@@ -46,7 +67,7 @@ class CrawlCsvLogHandler extends StreamHandler
             null === $crawlUri ? '---' : (string) $crawlUri->getFoundOn(),
             null === $crawlUri ? '---' : $crawlUri->getLevel(),
             null === $crawlUri ? '---' : implode(', ', $crawlUri->getTags()),
-            $record['message'],
+            preg_replace('/\r\n|\n|\r/', ' ', $record['message']),
         ];
 
         fputcsv($resource, $columns);
