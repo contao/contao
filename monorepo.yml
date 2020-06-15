@@ -7,7 +7,6 @@ composer:
     require-dev:
         'contao/monorepo-tools': 'dev-master'
         'contao/php-cs-fixer': '^1.0'
-        'php-coveralls/php-coveralls': '^2.1'
 
 repositories:
     core-bundle:
