@@ -379,7 +379,7 @@ class FigureBuilder
     }
 
     /**
-     * Define the light box if it is enabled [on demand].
+     * Define the light box result if it is enabled [on demand].
      */
     private function onDefineLightBoxResult(self $settings, Figure $result): ?LightBoxResult
     {
@@ -410,7 +410,7 @@ class FigureBuilder
     /**
      * @return Validator&Adapter
      */
-    private function validatorAdapter(): Validator
+    private function validatorAdapter()
     {
         $framework = $this->locator->get('contao.framework');
         $framework->initialize();
