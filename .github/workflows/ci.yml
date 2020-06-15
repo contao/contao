@@ -257,7 +257,9 @@ jobs:
                   key: dev-${GITHUB_REF##*/}
 
             - name: Install the dependencies
-              run: composer global require contao/monorepo-tools:dev-master
+              run: |
+                  composer global require contao/monorepo-tools:dev-master
+                  composer install --no-interaction --no-suggest
 
             - name: Validate the composer.json files
               run: $HOME/.composer/vendor/bin/monorepo-tools composer-json --validate --ansi
