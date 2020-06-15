@@ -530,7 +530,7 @@ class PluginTest extends ContaoTestCase
 
         $bag = $container->getParameterBag()->all();
 
-        $this->assertSame($expected, $bag['env(MAILER_URL)']);
+        $this->assertSame($expected, $bag['env(MAILER_DSN)']);
     }
 
     public function getMailerParameters(): \Generator
