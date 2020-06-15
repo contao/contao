@@ -136,7 +136,7 @@ final class Figure
             $lightBox = $this->getLightBox();
             $this->linkAttributes['data-lightbox'] = $lightBox->getGroupId();
 
-            if (!$lightBox->hasImage()) {
+            if (!isset($this->linkAttributes['target']) && !$lightBox->hasImage()) {
                 $this->linkAttributes['target'] = '_blank';
             }
         }
