@@ -23,11 +23,11 @@ class AvailableTransportsTest extends TestCase
         $availableTransports = new AvailableTransports();
 
         $availableTransports->addTransport(new TransportConfig('foobar'));
-        $availableTransports->addTransport(new TransportConfig('lorem', 'Lorem Ipsum <lorem.ipsum@example.org'));
+        $availableTransports->addTransport(new TransportConfig('lorem', 'Lorem Ipsum <lorem.ipsum@example.org>'));
 
         $this->assertSame([
             'foobar' => 'foobar',
-            'lorem' => 'lorem',
+            'lorem' => 'lorem (Lorem Ipsum &lt;lorem.ipsum@example.org&gt;)',
         ], $availableTransports->getTransportOptions());
 
         $this->assertCount(2, $availableTransports->getTransports());
@@ -36,6 +36,6 @@ class AvailableTransportsTest extends TestCase
         $this->assertSame('foobar', $availableTransports->getTransport('foobar')->getName());
         $this->assertNull($availableTransports->getTransport('foobar')->getFrom());
         $this->assertSame('lorem', $availableTransports->getTransport('lorem')->getName());
-        $this->assertSame('Lorem Ipsum <lorem.ipsum@example.org', $availableTransports->getTransport('lorem')->getFrom());
+        $this->assertSame('Lorem Ipsum <lorem.ipsum@example.org>', $availableTransports->getTransport('lorem')->getFrom());
     }
 }
