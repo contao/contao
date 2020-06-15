@@ -235,8 +235,12 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                     $container->setParameter('env(APP_SECRET)', $container->getParameter('secret'));
                 }
 
-                if (!isset($_SERVER['MAILER_URL'])) {
-                    $container->setParameter('env(MAILER_URL)', $this->getMailerUrl($container));
+                if (!isset($_SERVER['MAILER_DSN'])) {
+                    if (isset($_SERVER['MAILER_URL'])) {
+                        $container->setParameter('env(MAILER_DSN)', $this->getMailerDsnFromMailerUrl($_SERVER['MAILER_URL']));
+                    } else {
+                        $container->setParameter('env(MAILER_DSN)', $this->getMailerDsn($container));
+                    }
                 }
 
                 return $extensionConfigs;
@@ -354,7 +358,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
         $extensionConfigs[] = [
             'mailer' => [
-                'dsn' => '%env(MAILER_URL)%',
+                'dsn' => '%env(MAILER_DSN)%',
             ],
         ];
 
@@ -390,19 +394,103 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         );
     }
 
-    private function getMailerUrl(ContainerBuilder $container): string
+    private function getMailerDsnFromMailerUrl(string $mailerUrl): string
+    {
+        $options = [];
+
+        if (false === $parts = parse_url($mailerUrl)) {
+            throw new \InvalidArgumentException(sprintf('The MAILER_URL "%s" is not valid.', $mailerUrl));
+        }
+
+        if (isset($parts['scheme'])) {
+            $options['transport'] = $parts['scheme'];
+        }
+
+        if (isset($parts['user'])) {
+            $options['username'] = rawurldecode($parts['user']);
+        }
+
+        if (isset($parts['pass'])) {
+            $options['password'] = rawurldecode($parts['pass']);
+        }
+
+        if (isset($parts['host'])) {
+            $options['host'] = rawurldecode($parts['host']);
+        }
+
+        if (isset($parts['port'])) {
+            $options['port'] = $parts['port'];
+        }
+
+        if (isset($parts['query'])) {
+            parse_str($parts['query'], $query);
+
+            foreach ($query as $key => $value) {
+                $options[$key] = $value;
+            }
+        }
+
+        if (empty($options['transport'])) {
+            throw new \InvalidArgumentException(sprintf('The MAILER_URL "%s" is not valid.', $mailerUrl));
+        }
+
+        if (\in_array($options['transport'], ['mail', 'sendmail'], true)) {
+            return 'sendmail+smtp://default';
+        }
+
+        if ('gmail' === $options['transport']) {
+            $options['host'] = 'smtp.gmail.com';
+            $options['transport'] = 'smtps';
+        }
+
+        if (empty($options['host']) || !\in_array($options['transport'], ['smtp', 'smtps'], true)) {
+            throw new \InvalidArgumentException(sprintf('The MAILER_URL "%s" is not valid.', $mailerUrl));
+        }
+
+        $transport = $options['transport'];
+        $credentials = '';
+        $port = '';
+
+        if (!empty($options['encryption']) && 'ssl' === $options['encryption']) {
+            $transport = 'smtps';
+        }
+
+        if (!empty($options['username'])) {
+            $credentials .= $this->encodeUrlParameter($options['username']);
+
+            if (!empty($options['password'])) {
+                $credentials .= ':'.$this->encodeUrlParameter($options['password']);
+            }
+
+            $credentials .= '@';
+        }
+
+        if (!empty($options['port'])) {
+            $port = ':'.$options['port'];
+        }
+
+        return sprintf(
+            '%s://%s%s%s',
+            $transport,
+            $credentials,
+            $options['host'],
+            $port
+        );
+    }
+
+    private function getMailerDsn(ContainerBuilder $container): string
     {
         if ('sendmail' === $container->getParameter('mailer_transport')) {
             return 'sendmail+smtp://default';
         }
 
-        $protocol = 'smtp';
+        $transport = 'smtp';
         $credentials = '';
         $port = '';
 
         if ($encryption = $container->getParameter('mailer_encryption')) {
             if ('ssl' === $encryption) {
-                $protocol = 'smtps';
+                $transport = 'smtps';
             }
         }
 
@@ -422,7 +510,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
         return sprintf(
             '%s://%s%s%s',
-            $protocol,
+            $transport,
             $credentials,
             $container->getParameter('mailer_host'),
             $port
