@@ -14,6 +14,8 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email as EmailMessage;
 
+@trigger_error('Using the "Contao\Email" class has been deprecated and will no longer work in Contao 5.0. Use Symfony\Component\Mime\Email and Symfony\Component\Mailer\Mailer instead.', E_USER_DEPRECATED);
+
 /**
  * A Mailer adapter class
  *
@@ -40,6 +42,9 @@ use Symfony\Component\Mime\Email as EmailMessage;
  * @property array   $failures    An array of rejected e-mail addresses
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.
+ *             Use Symfony\Component\Mime\Email and Symfony\Component\Mailer\Mailer instead.
  */
 class Email
 {
@@ -358,7 +363,7 @@ class Email
 	 * @param string $strFile The file path
 	 * @param string $strMime The MIME type (defaults to "application/octet-stream")
 	 */
-	public function attachFile($strFile, $strMime=null)
+	public function attachFile($strFile, $strMime='application/octet-stream')
 	{
 		if ($this->objMessage instanceof EmailMessage)
 		{
@@ -377,7 +382,7 @@ class Email
 	 * @param string $strFilename The file name
 	 * @param string $strMime     The MIME type (defaults to "application/octet-stream")
 	 */
-	public function attachFileFromString($strContent, $strFilename, $strMime=null)
+	public function attachFileFromString($strContent, $strFilename, $strMime='application/octet-stream')
 	{
 		if ($this->objMessage instanceof EmailMessage)
 		{
