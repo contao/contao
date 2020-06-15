@@ -32,6 +32,29 @@ class FormHidden extends Widget
 	protected $strTemplate = 'form_hidden';
 
 	/**
+	 * Add specific attributes
+	 *
+	 * @param string $strKey   The attribute key
+	 * @param mixed  $varValue The attribute value
+	 */
+	public function __set($strKey, $varValue)
+	{
+		switch ($strKey)
+		{
+			case 'minlength':
+			case 'maxlength':
+			case 'minval':
+			case 'maxval':
+				// Ignore
+				break;
+
+			default:
+				parent::__set($strKey, $varValue);
+				break;
+		}
+	}
+
+	/**
 	 * Generate the widget and return it as string
 	 *
 	 * @return string The widget markup
