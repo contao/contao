@@ -14,6 +14,8 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email as EmailMessage;
 
+@trigger_error('Using the "Contao\Email" class has been deprecated and will no longer work in Contao 5.0. Use Symfony\Component\Mime\Email and Symfony\Component\Mailer\Mailer instead.', E_USER_DEPRECATED);
+
 /**
  * A Mailer adapter class
  *
@@ -40,18 +42,21 @@ use Symfony\Component\Mime\Email as EmailMessage;
  * @property array   $failures    An array of rejected e-mail addresses
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.
+ *             Use Symfony\Component\Mime\Email and Symfony\Component\Mailer\Mailer instead.
  */
 class Email
 {
 	/**
 	 * Mailer object
-	 * @var MailerInterface
+	 * @var \Swift_Mailer|MailerInterface
 	 */
 	protected $objMailer;
 
 	/**
 	 * Message object
-	 * @var EmailMessage
+	 * @var \Swift_Message|EmailMessage
 	 */
 	protected $objMessage;
 
@@ -124,13 +129,21 @@ class Email
 	/**
 	 * Instantiate the object and load the mailer framework
 	 *
-	 * @param MailerInterface|null $objMailer
+	 * @param \Swift_Mailer|MailerInterface|null $objMailer
 	 */
-	public function __construct(MailerInterface $objMailer = null)
+	public function __construct($objMailer = null)
 	{
 		$this->objMailer = $objMailer ?: System::getContainer()->get('mailer');
 		$this->strCharset = Config::get('characterSet');
-		$this->objMessage = new EmailMessage();
+
+		if ($this->objMailer instanceof MailerInterface)
+		{
+			$this->objMessage = new EmailMessage();
+		}
+		else
+		{
+			$this->objMessage = new \Swift_Message();
+		}
 	}
 
 	/**
@@ -294,7 +307,14 @@ class Email
 	 */
 	public function sendCc()
 	{
-		$this->objMessage->cc($this->compileRecipients(\func_get_args()));
+		if ($this->objMessage instanceof EmailMessage)
+		{
+			$this->objMessage->cc(...$this->compileRecipients(\func_get_args()));
+		}
+		else
+		{
+			$this->objMessage->setCc($this->compileRecipients(\func_get_args()));
+		}
 	}
 
 	/**
@@ -305,7 +325,14 @@ class Email
 	 */
 	public function sendBcc()
 	{
-		$this->objMessage->bcc($this->compileRecipients(\func_get_args()));
+		if ($this->objMessage instanceof EmailMessage)
+		{
+			$this->objMessage->bcc(...$this->compileRecipients(\func_get_args()));
+		}
+		else
+		{
+			$this->objMessage->setBcc($this->compileRecipients(\func_get_args()));
+		}
 	}
 
 	/**
@@ -316,7 +343,14 @@ class Email
 	 */
 	public function replyTo()
 	{
-		$this->objMessage->replyTo($this->compileRecipients(\func_get_args()));
+		if ($this->objMessage instanceof EmailMessage)
+		{
+			$this->objMessage->replyTo(...$this->compileRecipients(\func_get_args()));
+		}
+		else
+		{
+			$this->objMessage->setReplyTo($this->compileRecipients(\func_get_args()));
+		}
 	}
 
 	/**
@@ -325,9 +359,16 @@ class Email
 	 * @param string $strFile The file path
 	 * @param string $strMime The MIME type (defaults to "application/octet-stream")
 	 */
-	public function attachFile($strFile, $strMime=null)
+	public function attachFile($strFile, $strMime='application/octet-stream')
 	{
-		$this->objMessage->attachFromPath($strFile, basename($strFile), $strMime);
+		if ($this->objMessage instanceof EmailMessage)
+		{
+			$this->objMessage->attachFromPath($strFile, basename($strFile), $strMime);
+		}
+		else
+		{
+			$this->objMessage->attach(\Swift_Attachment::fromPath($strFile, $strMime)->setFilename(basename($strFile)));
+		}
 	}
 
 	/**
@@ -337,9 +378,16 @@ class Email
 	 * @param string $strFilename The file name
 	 * @param string $strMime     The MIME type (defaults to "application/octet-stream")
 	 */
-	public function attachFileFromString($strContent, $strFilename, $strMime=null)
+	public function attachFileFromString($strContent, $strFilename, $strMime='application/octet-stream')
 	{
-		$this->objMessage->attach($strContent, $strFilename, $strMime);
+		if ($this->objMessage instanceof EmailMessage)
+		{
+			$this->objMessage->attach($strContent, $strFilename, $strMime);
+		}
+		else
+		{
+			$this->objMessage->attach(new \Swift_Attachment($strContent, $strFilename, $strMime));
+		}
 	}
 
 	/**
@@ -359,12 +407,27 @@ class Email
 			return false;
 		}
 
-		$this->objMessage->to(...$arrRecipients);
+		if ($this->objMessage instanceof EmailMessage)
+		{
+			$this->objMessage->to(...$arrRecipients);
+		}
+		else
+		{
+			$this->objMessage->setTo($arrRecipients);
+			$this->objMessage->setCharset($this->strCharset);
+		}
 
 		// Add the priority if it has been set (see #608)
 		if ($this->intPriority !== null)
 		{
-			$this->objMessage->priority($this->intPriority);
+			if ($this->objMessage instanceof EmailMessage)
+			{
+				$this->objMessage->priority($this->intPriority);
+			}
+			else
+			{
+				$this->objMessage->setPriority($this->intPriority);
+			}
 		}
 
 		// Default subject
@@ -373,7 +436,14 @@ class Email
 			$this->strSubject = 'No subject';
 		}
 
-		$this->objMessage->subject($this->strSubject);
+		if ($this->objMessage instanceof EmailMessage)
+		{
+			$this->objMessage->subject($this->strSubject);
+		}
+		else
+		{
+			$this->objMessage->setSubject($this->strSubject);
+		}
 
 		// HTML e-mail
 		if ($this->strHtml != '')
@@ -409,7 +479,14 @@ class Email
 						{
 							if (!isset($arrCid[$src]))
 							{
-								$arrCid[$src] = $this->objMessage->embedFromPath($this->strImageDir . $src);
+								if ($this->objMessage instanceof EmailMessage)
+								{
+									$arrCid[$src] = $this->objMessage->embedFromPath($this->strImageDir . $src);
+								}
+								else
+								{
+									$arrCid[$src] = $this->objMessage->embed(\Swift_EmbeddedFile::fromPath($this->strImageDir . $src));
+								}
 							}
 
 							$this->strHtml = str_replace($arrMatches[1][$i] . $arrMatches[3][$i] . $arrMatches[5][$i], $arrMatches[1][$i] . $arrCid[$src] . $arrMatches[5][$i], $this->strHtml);
@@ -418,13 +495,34 @@ class Email
 				}
 			}
 
-			$this->objMessage->html($this->strHtml, $this->strCharset);
+			if ($this->objMessage instanceof EmailMessage)
+			{
+				$this->objMessage->html($this->strHtml, $this->strCharset);
+			}
+			else
+			{
+				$this->objMessage->setBody($this->strHtml, 'text/html');
+			}
 		}
 
 		// Text content
 		if ($this->strText != '')
 		{
-			$this->objMessage->text($this->strText, $this->strCharset);
+			if ($this->objMessage instanceof EmailMessage)
+			{
+				$this->objMessage->text($this->strText, $this->strCharset);
+			}
+			else
+			{
+				if ($this->strHtml != '')
+				{
+					$this->objMessage->addPart($this->strText, 'text/plain');
+				}
+				else
+				{
+					$this->objMessage->setBody($this->strText, 'text/plain');
+				}
+			}
 		}
 
 		// Add the administrator e-mail as default sender
@@ -434,10 +532,31 @@ class Email
 		}
 
 		// Sender
-		$this->objMessage->from(new Address($this->strSender, $this->strSenderName ?? ''));
+		if ($this->objMessage instanceof EmailMessage)
+		{
+			$this->objMessage->from(new Address($this->strSender, $this->strSenderName ?? ''));
+		}
+		else
+		{
+			if ($this->strSenderName != '')
+			{
+				$this->objMessage->setFrom(array($this->strSender=>$this->strSenderName));
+			}
+			else
+			{
+				$this->objMessage->setFrom($this->strSender);
+			}
+		}
 
 		// Set the return path (see #5004)
-		$this->objMessage->returnPath($this->strSender);
+		if ($this->objMessage instanceof EmailMessage)
+		{
+			$this->objMessage->returnPath($this->strSender);
+		}
+		else
+		{
+			$this->objMessage->setReturnPath($this->strSender);
+		}
 
 		// Send the e-mail
 		$this->objMailer->send($this->objMessage);
@@ -446,16 +565,40 @@ class Email
 		$arrBcc = $this->objMessage->getBcc();
 
 		// Add a log entry
-		$strMessage = 'An e-mail has been sent to ' . implode(', ', array_keys($this->objMessage->getTo()));
+		$strMessage = 'An e-mail has been sent to ';
 
-		if (!empty($arrCc))
+		if ($this->objMessage instanceof EmailMessage)
 		{
-			$strMessage .= ', CC to ' . implode(', ', array_keys($arrCc));
+			$addresscb = static function (Address $address)
+			{
+				return $address->getAddress();
+			};
+
+			$strMessage .= implode(', ', array_map($addresscb, $this->objMessage->getTo()));
+
+			if (!empty($arrCc))
+			{
+				$strMessage .= ', CC to ' . implode(', ', array_map($addresscb, $arrCc));
+			}
+
+			if (!empty($arrBcc))
+			{
+				$strMessage .= ', BCC to ' . implode(', ', array_map($addresscb, $arrBcc));
+			}
 		}
-
-		if (!empty($arrBcc))
+		else
 		{
-			$strMessage .= ', BCC to ' . implode(', ', array_keys($arrBcc));
+			$strMessage .= implode(', ', array_keys($this->objMessage->getTo()));
+
+			if (!empty($arrCc))
+			{
+				$strMessage .= ', CC to ' . implode(', ', array_keys($arrCc));
+			}
+
+			if (!empty($arrBcc))
+			{
+				$strMessage .= ', BCC to ' . implode(', ', array_keys($arrBcc));
+			}
 		}
 
 		System::log($strMessage, __METHOD__, $this->strLogFile);
@@ -489,13 +632,20 @@ class Email
 				$strName = trim($strName, ' "');
 				$strEmail = Idna::encodeEmail($strEmail);
 
-				if ($strName != '')
+				if ($this->objMessage instanceof EmailMessage)
 				{
-					$arrReturn[$strEmail] = $strName;
+					$arrReturn[] = new Address($strEmail, $strName);
 				}
 				else
 				{
-					$arrReturn[] = $strEmail;
+					if ($strName != '')
+					{
+						$arrReturn[$strEmail] = $strName;
+					}
+					else
+					{
+						$arrReturn[] = $strEmail;
+					}
 				}
 			}
 		}
