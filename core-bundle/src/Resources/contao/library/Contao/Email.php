@@ -481,6 +481,7 @@ class Email
 							{
 								if ($this->objMessage instanceof EmailMessage)
 								{
+									// See https://symfony.com/doc/current/mailer.html#embedding-images
 									$this->objMessage->embedFromPath($this->strImageDir . $src, $src);
 									$arrCid[$src] = 'cid:' . $src;
 								}
