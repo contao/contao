@@ -29,6 +29,7 @@ use Contao\Model\Collection;
  * @property boolean $externalImages
  * @property string  $sender
  * @property string  $senderName
+ * @property string  $mailer_transport
  * @property boolean $sent
  * @property string  $date
  * @property integer $channel
