@@ -125,11 +125,12 @@ class File extends System
 	/**
 	 * Instantiate a new file object
 	 *
-	 * @param string $strFile The file path
+	 * @param string $strFile 		 The file path
+	 * @param bool   $blnValidateDir Ensures that the provided file path is not a directory
 	 *
 	 * @throws \Exception If $strFile is a directory
 	 */
-	public function __construct($strFile)
+	public function __construct($strFile, $blnValidateDir = true)
 	{
 		// Handle open_basedir restrictions
 		if ($strFile == '.')
@@ -140,7 +141,7 @@ class File extends System
 		$this->strRootDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Make sure we are not pointing to a directory
-		if (is_dir($this->strRootDir . '/' . $strFile))
+		if ($blnValidateDir && is_dir($this->strRootDir . '/' . $strFile))
 		{
 			throw new \Exception(sprintf('Directory "%s" is not a file', $strFile));
 		}

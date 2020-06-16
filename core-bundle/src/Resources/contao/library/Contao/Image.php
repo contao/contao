@@ -706,7 +706,8 @@ class Image
 			}
 		}
 
-		$objFile = new File($src);
+		// We know it's a file here so we can disable the directory check for performance reasons
+		$objFile = new File($src, false);
 
 		// Strip the web/ prefix (see #337)
 		if (strncmp($src, $webDir . '/', \strlen($webDir) + 1) === 0)
