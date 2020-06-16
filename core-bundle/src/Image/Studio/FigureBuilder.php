@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Image\Studio;
 
+use Closure;
 use Contao\Controller;
 use Contao\CoreBundle\File\MetaData;
 use Contao\CoreBundle\Framework\Adapter;
@@ -349,50 +350,54 @@ class FigureBuilder
         // We're defining some values via a Closure to make their evaluation lazy
         return new Figure(
             $imageResult,
-            function (Figure $figure) use ($settings): ?MetaData {
-                return $this->onDefineMetaData($settings);
-            },
+            Closure::bind(
+                function (Figure $figure): ?MetaData {
+                    return $this->onDefineMetaData();
+                }, $settings
+            ),
             $settings->additionalLinkAttributes,
-            function (Figure $figure) use ($settings): ?LightBoxResult {
-                return $this->onDefineLightBoxResult($settings, $figure);
-            }
+            Closure::bind(
+                function (Figure $figure): ?LightBoxResult {
+                    return $this->onDefineLightBoxResult($figure);
+                }, $settings
+            )
         );
     }
 
     /**
      * Define meta data [on demand].
      */
-    private function onDefineMetaData(self $settings): ?MetaData
+    private function onDefineMetaData(): ?MetaData
     {
-        if (null !== $settings->metaData) {
-            return $settings->metaData;
+        if (null !== $this->metaData) {
+            return $this->metaData;
         }
 
-        if (null === $settings->filesModel) {
+        if (null === $this->filesModel) {
             return null;
         }
 
         // Get fallback locale list or use without fallbacks if explicitly set
-        $locales = null !== $settings->locale ? [$settings->locale] : $this->getFallbackLocaleList();
+        $locales = null !== $this->locale ? [$this->locale] : $this->getFallbackLocaleList();
 
-        return $settings->filesModel->getMetaData(...$locales);
+        return $this->filesModel->getMetaData(...$locales);
     }
 
     /**
      * Define the light box result if it is enabled [on demand].
      */
-    private function onDefineLightBoxResult(self $settings, Figure $result): ?LightBoxResult
+    private function onDefineLightBoxResult(Figure $result): ?LightBoxResult
     {
-        if (!$settings->enableLightBox) {
+        if (!$this->enableLightBox) {
             return null;
         }
 
         // Use explicitly set uri (1), fall back to using meta data (2) or use the base resource (3) if empty.
-        $lightBoxUri = $settings->lightBoxUri ?? Controller::replaceInsertTags($result->getMetaData()->getUrl()) ?: $settings->filePath;
+        $lightBoxUri = $this->lightBoxUri ?? Controller::replaceInsertTags($result->getMetaData()->getUrl()) ?: $this->filePath;
 
         return $this->locator
             ->get('contao.image.studio')
-            ->createLightBoxImage($lightBoxUri, $settings->lightBoxSizeConfiguration, $this->lightBoxGroupIdentifier)
+            ->createLightBoxImage($lightBoxUri, $this->lightBoxSizeConfiguration, $this->lightBoxGroupIdentifier)
         ;
     }
 
