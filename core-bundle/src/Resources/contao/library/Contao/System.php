@@ -85,6 +85,12 @@ abstract class System
 	protected static $arrStaticObjects = array();
 
 	/**
+	 * Singletons
+	 * @var array
+	 */
+	protected static $arrSingletons = array();
+
+	/**
 	 * Available languages
 	 * @var array
 	 */
@@ -164,6 +170,10 @@ abstract class System
 			{
 				$this->arrObjects[$strKey] = $strClass;
 			}
+			elseif (isset(static::$arrSingletons[$strKey]))
+			{
+				$this->arrObjects[$strKey] = static::$arrSingletons[$strKey];
+			}
 			elseif ($container->has($strClass) && (strpos($strClass, '\\') !== false || !class_exists($strClass)))
 			{
 				$this->arrObjects[$strKey] = $container->get($strClass);
@@ -174,7 +184,7 @@ abstract class System
 			}
 			elseif (\in_array('getInstance', get_class_methods($strClass)))
 			{
-				$this->arrObjects[$strKey] = \call_user_func(array($strClass, 'getInstance'));
+				static::$arrStaticObjects[$strKey] = static::$arrSingletons[$strKey] = $this->arrObjects[$strKey] = \call_user_func(array($strClass, 'getInstance'));
 			}
 			else
 			{
@@ -221,7 +231,7 @@ abstract class System
 			}
 			elseif (\in_array('getInstance', get_class_methods($strClass)))
 			{
-				static::$arrStaticObjects[$strKey] = \call_user_func(array($strClass, 'getInstance'));
+				static::$arrStaticObjects[$strKey] = static::$arrSingletons[$strKey] = \call_user_func(array($strClass, 'getInstance'));
 			}
 			else
 			{
