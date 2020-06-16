@@ -280,4 +280,4 @@ services:
             - '@translator'
             - '@contao.framework'
         tags:
-            - { name: 'contao.callback', table: 'tl_settings', target: 'config.onload' }
+            - { name: contao.callback, table: tl_settings, target: config.onload }
