@@ -130,7 +130,6 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $pageModel->enforceTwoFactor = '1';
         $pageModel->twoFactorJumpTo = 0;
 
-        /** @var PageModel&MockObject $adapter */
         $adapter = $this->mockAdapter(['findPublishedById']);
         $adapter
             ->expects($this->once())
@@ -166,7 +165,6 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $pageModel->enforceTwoFactor = '1';
         $pageModel->twoFactorJumpTo = 1;
 
-        /** @var PageModel&MockObject $adapter */
         $adapter = $this->mockAdapter(['findPublishedById']);
         $adapter
             ->expects($this->once())
@@ -211,7 +209,6 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
             ->willReturn('http://localhost/two_factor')
         ;
 
-        /** @var PageModel&MockObject $adapter */
         $adapter = $this->mockAdapter(['findPublishedById']);
         $adapter
             ->expects($this->once())
@@ -248,7 +245,6 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         /** @var PageModel&MockObject $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class);
 
-        /** @var PageModel&MockObject $adapter */
         $adapter = $this->mockAdapter(['find401ByPid']);
         $adapter
             ->expects($this->never())
@@ -294,7 +290,6 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
             ->willReturn('http://localhost/foobar')
         ;
 
-        /** @var PageModel&MockObject $adapter */
         $adapter = $this->mockAdapter(['find401ByPid']);
         $adapter
             ->expects($this->once())
@@ -343,7 +338,6 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $page401->autoforward = '1';
         $page401->jumpTo = 1;
 
-        /** @var PageModel&MockObject $adapter */
         $adapter = $this->mockAdapter(['find401ByPid']);
         $adapter
             ->expects($this->once())
@@ -378,7 +372,6 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $pageModel->id = 1;
         $pageModel->enforceTwoFactor = '';
 
-        /** @var PageModel&MockObject $adapter */
         $adapter = $this->mockAdapter(['find401ByPid']);
         $adapter
             ->expects($this->once())
@@ -420,7 +413,6 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
             ->willReturn('http://:')
         ;
 
-        /** @var PageModel&MockObject $adapter */
         $adapter = $this->mockAdapter(['find401ByPid']);
         $adapter
             ->expects($this->once())
@@ -466,7 +458,6 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
             ->willReturn('http://localhost/foobar')
         ;
 
-        /** @var PageModel&MockObject $adapter */
         $adapter = $this->mockAdapter(['find401ByPid']);
         $adapter
             ->expects($this->once())

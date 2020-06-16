@@ -341,39 +341,44 @@ abstract class Controller extends System
 				return '';
 			}
 
-			$return = '';
-			$intCount = 0;
+			$arrArticles = array();
 			$blnMultiMode = ($objArticles->count() > 1);
-			$intLast = $objArticles->count() - 1;
+			$arrRows = $objArticles->getModels();
+			$objLastRow = null;
 
-			while ($objArticles->next())
+			/** @var ArticleModel $objRow */
+			while ($objRow = array_shift($arrRows))
 			{
-				/** @var ArticleModel $objRow */
-				$objRow = $objArticles->current();
-
 				// Add the "first" and "last" classes (see #2583)
-				if ($intCount == 0 || $intCount == $intLast)
+				$arrCss = array();
+
+				if (empty($arrArticles))
 				{
-					$arrCss = array();
-
-					if ($intCount == 0)
-					{
-						$arrCss[] = 'first';
-					}
-
-					if ($intCount == $intLast)
-					{
-						$arrCss[] = 'last';
-					}
-
-					$objRow->classes = $arrCss;
+					$arrCss[] = 'first';
 				}
 
-				$return .= static::getArticle($objRow, $blnMultiMode, false, $strColumn);
-				++$intCount;
+				if (empty($arrRows))
+				{
+					$arrCss[] = 'last';
+				}
+
+				$objRow->classes = $arrCss;
+				$strArticle = static::getArticle($objRow, $blnMultiMode, false, $strColumn);
+
+				if ($strArticle != '')
+				{
+					$arrArticles[] = $strArticle;
+					$objLastRow = $objRow;
+				}
+				elseif (empty($arrRows) && $objLastRow != null && $objLastRow !== $objRow)
+				{
+					// Re-generate the last successful article with "last" class
+					array_pop($arrArticles);
+					$arrRows[] = $objLastRow;
+				}
 			}
 
-			return $return;
+			return implode('', $arrArticles);
 		}
 
 		// Other modules
@@ -1696,7 +1701,7 @@ abstract class Controller extends System
 		$objTemplate->picture = $picture;
 
 		// Provide an ID for single lightbox images in HTML5 (see #3742)
-		if ($strLightboxId === null && $arrItem['fullsize'])
+		if ($strLightboxId === null && $arrItem['fullsize'] && $objTemplate instanceof Template && !empty($arrItem['id']))
 		{
 			$strLightboxId = substr(md5($objTemplate->getName() . '_' . $arrItem['id']), 0, 6);
 		}

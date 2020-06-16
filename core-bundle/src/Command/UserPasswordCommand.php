@@ -96,11 +96,22 @@ class UserPasswordCommand extends Command
             return 1;
         }
 
-        $hash = $this->validateAndHashPassword($input->getOption('password'));
+        $this->framework->initialize();
+
+        /** @var Config $config */
+        $config = $this->framework->getAdapter(Config::class);
+        $minLength = $config->get('minPasswordLength') ?: 8;
+
+        if (Utf8::strlen($input->getOption('password')) < $minLength) {
+            throw new InvalidArgumentException(sprintf('The password must be at least %s characters long.', $minLength));
+        }
+
+        $encoder = $this->encoderFactory->getEncoder(BackendUser::class);
+        $hash = $encoder->encodePassword($input->getOption('password'), null);
 
         $affected = $this->connection->update(
             'tl_user',
-            ['password' => $hash],
+            ['password' => $hash, 'locked' => 0, 'loginAttempts' => $config->get('loginAttempts')],
             ['username' => $input->getArgument('username')]
         );
 
@@ -127,25 +138,5 @@ class UserPasswordCommand extends Command
         $helper = $this->getHelper('question');
 
         return $helper->ask($input, $output, $question);
-    }
-
-    /**
-     * @throws InvalidArgumentException
-     */
-    private function validateAndHashPassword(string $password): string
-    {
-        $this->framework->initialize();
-
-        /** @var Config $config */
-        $config = $this->framework->getAdapter(Config::class);
-        $passwordLength = $config->get('minPasswordLength') ?: 8;
-
-        if (Utf8::strlen($password) < $passwordLength) {
-            throw new InvalidArgumentException(sprintf('The password must be at least %s characters long.', $passwordLength));
-        }
-
-        $encoder = $this->encoderFactory->getEncoder(BackendUser::class);
-
-        return $encoder->encodePassword($password, null);
     }
 }

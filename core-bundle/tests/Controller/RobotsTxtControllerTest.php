@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\Controller;
 use Contao\CoreBundle\Controller\RobotsTxtController;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,7 +23,6 @@ class RobotsTxtControllerTest extends TestCase
 {
     public function testRobotsTxtIfNoRootPageFound(): void
     {
-        /** @var PageModel&MockObject $pageModelAdapter */
         $pageModelAdapter = $this->mockAdapter(['findPublishedFallbackByHostname']);
         $pageModelAdapter
             ->expects($this->once())
@@ -55,7 +53,6 @@ class RobotsTxtControllerTest extends TestCase
     {
         $pageModel = $this->mockClassWithProperties(PageModel::class);
 
-        /** @var PageModel&MockObject $pageModelAdapter */
         $pageModelAdapter = $this->mockAdapter(['findPublishedFallbackByHostname']);
         $pageModelAdapter
             ->expects($this->once())

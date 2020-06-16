@@ -57,7 +57,7 @@ class CrawlCommandTest extends TestCase
         $client = new MockHttpClient();
 
         // Test defaults
-        $escargot = Escargot::create($this->createBaseUriCollection(), new InMemoryQueue(), $client);
+        $escargot = Escargot::create($this->createBaseUriCollection(), new InMemoryQueue())->withHttpClient($client);
         $escargotFactory = $this->createValidEscargotFactory($escargot);
         $command = new CrawlCommand($escargotFactory, new Filesystem());
 
@@ -71,7 +71,7 @@ class CrawlCommandTest extends TestCase
         $this->assertSame(0, $command->getEscargot()->getMaxDepth());
 
         // Test options
-        $escargot = Escargot::create($this->createBaseUriCollection(), new InMemoryQueue(), $client);
+        $escargot = Escargot::create($this->createBaseUriCollection(), new InMemoryQueue())->withHttpClient($client);
         $escargotFactory = $this->createValidEscargotFactory($escargot);
         $command = new CrawlCommand($escargotFactory, new Filesystem());
 
@@ -92,7 +92,7 @@ class CrawlCommandTest extends TestCase
 
         $baseUriCollection = new BaseUriCollection([new Uri('http://localhost')]);
 
-        $escargot = Escargot::create($baseUriCollection, new InMemoryQueue(), $client);
+        $escargot = Escargot::create($baseUriCollection, new InMemoryQueue())->withHttpClient($client);
         $escargotFactory = $this->createValidEscargotFactory($escargot, $baseUriCollection);
         $command = new CrawlCommand($escargotFactory, new Filesystem());
 
