@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Image\Studio;
 
 use Closure;
-use Contao\Controller;
 use Contao\CoreBundle\File\MetaData;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\FilesModel;
@@ -393,7 +392,7 @@ class FigureBuilder
         }
 
         // Use explicitly set uri (1), fall back to using meta data (2) or use the base resource (3) if empty.
-        $lightBoxUri = $this->lightBoxUri ?? Controller::replaceInsertTags($result->getMetaData()->getUrl()) ?: $this->filePath;
+        $lightBoxUri = $this->lightBoxUri ?? $result->getMetaData()->getUrl() ?: $this->filePath;
 
         return $this->locator
             ->get('contao.image.studio')

@@ -421,6 +421,12 @@ class FilesModel extends Model
 
 			if (!empty($data))
 			{
+				// Make sure we resolve insert tags pointing to files.
+				if (isset($data[MetaData::VALUE_URL]))
+				{
+					$data[MetaData::VALUE_URL] = Controller::replaceInsertTags($data[MetaData::VALUE_URL]);
+				}
+
 				return new MetaData($data);
 			}
 		}

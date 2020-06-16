@@ -463,6 +463,12 @@ class ContentModel extends Model
 
 		unset($data['imageTitle'], $data['imageUrl']);
 
+		// Make sure we resolve insert tags pointing to files.
+		if (isset($data[MetaData::VALUE_URL]))
+		{
+			$data[MetaData::VALUE_URL] = Controller::replaceInsertTags($data[MetaData::VALUE_URL]);
+		}
+
 		// Strip superfluous fields by intersecting with `tl_files.meta.eval.metaFields`
 		return new MetaData(array_intersect_key($data, array_flip(FilesModel::getMetaFields())));
 	}
