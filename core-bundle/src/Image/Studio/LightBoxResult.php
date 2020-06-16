@@ -12,12 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Image\Studio;
 
+use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Psr\Container\ContainerInterface;
-use Webmozart\PathUtil\Path;
 
 class LightBoxResult
 {
@@ -50,24 +50,25 @@ class LightBoxResult
     private $groupIdentifier;
 
     /**
+     * @param string|ImageInterface|null                 $filePathOrImageInterface
      * @param array|PictureConfiguration|int|string|null $sizeConfiguration
      *
      * @internal Use the `contao.image.studio` factory to get an instance of this class.
      */
-    public function __construct(ContainerInterface $locator, string $uri, $sizeConfiguration = null, string $groupIdentifier = null)
+    public function __construct(ContainerInterface $locator, $filePathOrImageInterface, ?string $uri, $sizeConfiguration = null, string $groupIdentifier = null)
     {
+        if (1 !== \count(array_filter([$filePathOrImageInterface, $uri]))) {
+            throw new \InvalidArgumentException('A lightbox must be either constructed with a resource or an uri.');
+        }
+
         $this->locator = $locator;
         $this->uri = $uri;
         $this->groupIdentifier = $groupIdentifier;
 
-        if ($this->isValidForResizing($uri)) {
-            $filePath = Path::isAbsolute($uri) ?
-                Path::canonicalize($uri) :
-                Path::makeAbsolute($uri, $this->projectDir());
-
+        if (null !== $filePathOrImageInterface) {
             $this->image = $locator
                 ->get('contao.image.studio')
-                ->createImage($filePath, $sizeConfiguration ?? $this->getDefaultLightBoxSizeConfiguration())
+                ->createImage($filePathOrImageInterface, $sizeConfiguration ?? $this->getDefaultLightBoxSizeConfiguration())
             ;
         }
     }
@@ -106,33 +107,6 @@ class LightBoxResult
     public function getGroupId(): string
     {
         return $this->groupIdentifier ?? $this->createFallbackGroupIdentifier();
-    }
-
-    private function projectDir(): string
-    {
-        return $this->locator
-            ->get('parameter_bag')
-            ->get('kernel.project_dir')
-            ;
-    }
-
-    /**
-     * todo: who is responsible for this? can we maybe move this to the ImageFactory?
-     */
-    private function isValidForResizing(string $uri): bool
-    {
-        // Reject external urls
-        if (preg_match('#^https?://#', $uri)) {
-            return false;
-        }
-
-        $validExtensions = $this->locator
-            ->get('parameter_bag')
-            ->get('contao.image.valid_extensions')
-        ;
-
-        // Only accept valid image extensions
-        return \in_array(Path::getExtension($uri), $validExtensions, true);
     }
 
     /**

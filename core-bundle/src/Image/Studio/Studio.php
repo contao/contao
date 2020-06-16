@@ -15,12 +15,14 @@ namespace Contao\CoreBundle\Image\Studio;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\Image\PictureFactoryInterface;
+use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Asset\Context\ContextInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
+use Webmozart\PathUtil\Path;
 
 class Studio implements ServiceSubscriberInterface
 {
@@ -51,11 +53,47 @@ class Studio implements ServiceSubscriberInterface
     }
 
     /**
+     * @param string|ImageInterface                      $target
      * @param array|PictureConfiguration|int|string|null $sizeConfiguration
      */
-    public function createLightBoxImage(string $uri, $sizeConfiguration = null, string $groupIdentifier = null): LightBoxResult
+    public function createLightBoxImage(string $target, $sizeConfiguration = null, string $groupIdentifier = null): LightBoxResult
     {
-        return new LightBoxResult($this->locator, $uri, $sizeConfiguration, $groupIdentifier);
+        // todo: this logic isn't at it's final place -> should we move it to the FigureBuilder?
+        //       can we still maintain reusability? (somewhere we need to distinguish between urls
+        //       and local image resources - $uri isn't a good name, because it could be both btw.)
+        $getResourceOrUri = function ($target): array {
+            if ($target instanceof ImageInterface) {
+                return [$target, null];
+            }
+
+            if (preg_match('#^https?://#', $target)) {
+                return [null, $target];
+            }
+
+            $validExtensions = $this->locator
+                ->get('parameter_bag')
+                ->get('contao.image.valid_extensions')
+            ;
+
+            if (!\in_array(Path::getExtension($target), $validExtensions, true)) {
+                return [null, $target];
+            }
+
+            $projectDir = $this->locator
+                ->get('parameter_bag')
+                ->get('kernel.project_dir')
+            ;
+
+            $filePath = Path::isAbsolute($target) ?
+                Path::canonicalize($target) :
+                Path::makeAbsolute($target, $projectDir);
+
+            return [$filePath, null];
+        };
+
+        [$filePathOrImageInterface, $uri] = $getResourceOrUri($target);
+
+        return new LightBoxResult($this->locator, $filePathOrImageInterface, $uri, $sizeConfiguration, $groupIdentifier);
     }
 
     public static function getSubscribedServices(): array
