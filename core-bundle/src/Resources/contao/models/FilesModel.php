@@ -421,8 +421,6 @@ class FilesModel extends Model
 
 			if (!empty($data))
 			{
-				// todo: should we strip additional fields here as well or is the serialized
-				//       array considered to be 'in line' with the current config?
 				return new MetaData($data);
 			}
 		}
