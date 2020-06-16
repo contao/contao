@@ -192,7 +192,7 @@ class FigureBuilder
     /**
      * Set the image resource by guessing the identifier type.
      *
-     * @param string|FilesModel $identifier Can be a FilesModel, a tl_files uuid/id/path or a file system path
+     * @param int|string|FilesModel $identifier Can be a FilesModel, a tl_files uuid/id/path or a file system path
      */
     public function from($identifier): self
     {
