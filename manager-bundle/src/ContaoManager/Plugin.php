@@ -396,11 +396,20 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
     private function getMailerDsnFromMailerUrl(string $mailerUrl): string
     {
-        $options = [];
-
         if (false === $parts = parse_url($mailerUrl)) {
             throw new \InvalidArgumentException(sprintf('The MAILER_URL "%s" is not valid.', $mailerUrl));
         }
+
+        $options = [
+            'transport' => null,
+            'username' => null,
+            'password' => null,
+            'host' => null,
+            'port' => null,
+            'encryption' => null,
+        ];
+
+        $queryOptions = [];
 
         if (isset($parts['scheme'])) {
             $options['transport'] = $parts['scheme'];
@@ -426,7 +435,15 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             parse_str($parts['query'], $query);
 
             foreach ($query as $key => $value) {
-                $options[$key] = $value;
+                if (empty($key)) {
+                    continue;
+                }
+
+                if (\in_array($key, array_keys($options), true)) {
+                    $options[$key] = $value;
+                } else {
+                    $queryOptions[$key] = $value;
+                }
             }
         }
 
@@ -470,11 +487,12 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         }
 
         return sprintf(
-            '%s://%s%s%s',
+            '%s://%s%s%s%s',
             $transport,
             $credentials,
             $options['host'],
-            $port
+            $port,
+            !empty($queryOptions) ? '?'.http_build_query($queryOptions) : ''
         );
     }
 
