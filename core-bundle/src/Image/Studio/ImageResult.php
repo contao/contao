@@ -58,15 +58,15 @@ class ImageResult
     protected $originalDimensions;
 
     /**
-     * @param string|ImageInterface                      $filePathOrImageInterface
+     * @param string|ImageInterface                      $filePathOrImage
      * @param array|PictureConfiguration|int|string|null $sizeConfiguration
      *
      * @internal Use the `contao.image.studio` factory to get an instance of this class.
      */
-    public function __construct(ContainerInterface $locator, $filePathOrImageInterface, $sizeConfiguration = null)
+    public function __construct(ContainerInterface $locator, $filePathOrImage, $sizeConfiguration = null)
     {
         $this->locator = $locator;
-        $this->filePathOrImageInterface = $filePathOrImageInterface;
+        $this->filePathOrImageInterface = $filePathOrImage;
         $this->sizeConfiguration = $sizeConfiguration;
     }
 

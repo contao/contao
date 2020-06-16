@@ -50,14 +50,14 @@ class LightBoxResult
     private $groupIdentifier;
 
     /**
-     * @param string|ImageInterface|null                 $filePathOrImageInterface
+     * @param string|ImageInterface|null                 $filePathOrImage
      * @param array|PictureConfiguration|int|string|null $sizeConfiguration
      *
      * @internal Use the `contao.image.studio` factory to get an instance of this class.
      */
-    public function __construct(ContainerInterface $locator, $filePathOrImageInterface, ?string $uri, $sizeConfiguration = null, string $groupIdentifier = null)
+    public function __construct(ContainerInterface $locator, $filePathOrImage, ?string $uri, $sizeConfiguration = null, string $groupIdentifier = null)
     {
-        if (1 !== \count(array_filter([$filePathOrImageInterface, $uri]))) {
+        if (1 !== \count(array_filter([$filePathOrImage, $uri]))) {
             throw new \InvalidArgumentException('A lightbox must be either constructed with a resource or an uri.');
         }
 
@@ -65,10 +65,10 @@ class LightBoxResult
         $this->uri = $uri;
         $this->groupIdentifier = $groupIdentifier;
 
-        if (null !== $filePathOrImageInterface) {
+        if (null !== $filePathOrImage) {
             $this->image = $locator
                 ->get('contao.image.studio')
-                ->createImage($filePathOrImageInterface, $sizeConfiguration ?? $this->getDefaultLightBoxSizeConfiguration())
+                ->createImage($filePathOrImage, $sizeConfiguration ?? $this->getDefaultLightBoxSizeConfiguration())
             ;
         }
     }
