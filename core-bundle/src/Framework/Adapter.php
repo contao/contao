@@ -17,14 +17,19 @@ namespace Contao\CoreBundle\Framework;
  * these classes in the unit tests.
  *
  * @internal Do not use this class in your code; use ContaoFramework::getAdapter() instead
+ * @template T
+ * @mixin T
  */
 class Adapter
 {
     /**
-     * @var string
+     * @var class-string<T>
      */
     private $class;
 
+    /**
+     * @param class-string<T> $class
+     */
     public function __construct(string $class)
     {
         $this->class = $class;
