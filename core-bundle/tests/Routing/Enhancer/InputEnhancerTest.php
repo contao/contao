@@ -17,7 +17,6 @@ use Contao\CoreBundle\Routing\Enhancer\InputEnhancer;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Input;
 use Contao\PageModel;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
@@ -47,7 +46,6 @@ class InputEnhancerTest extends TestCase
      */
     public function testAddsTheLocaleIfEnabled(bool $prependLocale, string $locale): void
     {
-        /** @var Input&MockObject $input */
         $input = $this->mockAdapter(['setGet']);
         $input
             ->expects($prependLocale ? $this->once() : $this->never())
@@ -76,7 +74,6 @@ class InputEnhancerTest extends TestCase
 
     public function testDoesNotAddTheLocaleIfItIsNotPresent(): void
     {
-        /** @var Input&MockObject $input */
         $input = $this->mockAdapter(['setGet']);
         $input
             ->expects($this->never())
@@ -106,7 +103,6 @@ class InputEnhancerTest extends TestCase
             }
         );
 
-        /** @var Input&MockObject $input */
         $input = $this->mockAdapter(['setGet']);
         $input
             ->expects($this->exactly(\count($setters)))
@@ -141,7 +137,6 @@ class InputEnhancerTest extends TestCase
 
     public function testThrowsAnExceptionUponDuplicateParameters(): void
     {
-        /** @var Input&MockObject $input */
         $input = $this->mockAdapter(['setGet']);
         $input
             ->expects($this->once())
@@ -165,7 +160,6 @@ class InputEnhancerTest extends TestCase
 
     public function testThrowsAnExceptionUponParametersInQuery(): void
     {
-        /** @var Input&MockObject $input */
         $input = $this->mockAdapter(['setGet']);
         $input
             ->expects($this->never())
@@ -189,7 +183,6 @@ class InputEnhancerTest extends TestCase
 
     public function testThrowsAnExceptionIfAnAutoItemKeywordIsPresent(): void
     {
-        /** @var Input&MockObject $input */
         $input = $this->mockAdapter(['setGet']);
         $input
             ->expects($this->once())
@@ -216,7 +209,6 @@ class InputEnhancerTest extends TestCase
 
     public function testThrowsAnExceptionIfTheNumberOfArgumentsIsInvalid(): void
     {
-        /** @var Input&MockObject $input */
         $input = $this->mockAdapter(['setGet']);
         $input
             ->expects($this->never())
@@ -245,7 +237,6 @@ class InputEnhancerTest extends TestCase
 
     public function testThrowsAnExceptionIfAFragmentKeyIsEmpty(): void
     {
-        /** @var Input&MockObject $input */
         $input = $this->mockAdapter(['setGet']);
         $input
             ->expects($this->once())

@@ -632,7 +632,6 @@ class LegacyMatcherTest extends TestCase
             $callbacks[] = $callback;
         }
 
-        /** @var System&MockObject $systemAdapter */
         $systemAdapter = $this->mockAdapter(['importStatic']);
         $systemAdapter
             ->expects($this->exactly(\count($hooks)))
@@ -641,7 +640,6 @@ class LegacyMatcherTest extends TestCase
             ->willReturnOnConsecutiveCalls(...$callbacks)
         ;
 
-        /** @var Input&MockObject $inputAdapter */
         $inputAdapter = $this->mockAdapter(['setGet']);
         $inputAdapter
             ->expects(null === $language ? $this->never() : $this->once())
@@ -685,7 +683,6 @@ class LegacyMatcherTest extends TestCase
 
     private function mockConfigAdapter(array $config): Adapter
     {
-        /** @var (Adapter|Config)&MockObject $configAdapter */
         $configAdapter = $this->mockAdapter(['get']);
         $configAdapter
             ->method('get')

@@ -107,7 +107,6 @@ class CommandSchedulerListenerTest extends TestCase
 
     public function testDoesNotRunTheCommandSchedulerIfTheInstallationIsIncomplete(): void
     {
-        /** @var Config&MockObject $adapter */
         $adapter = $this->mockAdapter(['isComplete', 'get']);
         $adapter
             ->method('isComplete')
@@ -131,7 +130,6 @@ class CommandSchedulerListenerTest extends TestCase
 
     public function testDoesNotRunTheCommandSchedulerIfCronjobsAreDisabled(): void
     {
-        /** @var Config&MockObject $adapter */
         $adapter = $this->mockAdapter(['isComplete', 'get']);
         $adapter
             ->method('isComplete')
