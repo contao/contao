@@ -131,7 +131,9 @@ class DisableBundleConfiguredSettingsListenerTest extends TestCase
         return new DisableBundleConfiguredSettingsListener($translator, $framework, $localConfig ?: []);
     }
 
-    /** @return MockObject|TranslatorInterface */
+    /**
+     * @return MockObject|TranslatorInterface
+     */
     private function mockTranslator(): MockObject
     {
         return $this->createMock(TranslatorInterface::class);
