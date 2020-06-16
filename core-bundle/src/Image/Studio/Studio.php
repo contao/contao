@@ -42,11 +42,12 @@ class Studio implements ServiceSubscriberInterface
     }
 
     /**
+     * @param string|ImageInterface                      $filePathOrImageInterface
      * @param array|PictureConfiguration|int|string|null $sizeConfiguration
      */
-    public function createImage(string $filePath, $sizeConfiguration): ImageResult
+    public function createImage($filePathOrImageInterface, $sizeConfiguration): ImageResult
     {
-        return new ImageResult($this->locator, $filePath, $sizeConfiguration);
+        return new ImageResult($this->locator, $filePathOrImageInterface, $sizeConfiguration);
     }
 
     /**
