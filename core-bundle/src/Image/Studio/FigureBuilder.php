@@ -164,17 +164,15 @@ class FigureBuilder
      */
     public function fromPath(string $path, bool $autoDetectDbafsPaths = true): self
     {
-        $isInsideUploadPath = function (string $path): bool {
-            $uploadPath = $this->locator
-                ->get('parameter_bag')
-                ->get('contao.upload_path')
-            ;
+        $projectDir = $this->projectDir();
 
-            return 0 === strncmp($path, $uploadPath.'/', \strlen($uploadPath) + 1);
-        };
+        // Make sure path is absolute and in a canonical form
+        $path = Path::isAbsolute($path) ?
+            Path::canonicalize($path) :
+            Path::makeAbsolute($path, $projectDir);
 
-        if ($autoDetectDbafsPaths && $isInsideUploadPath($path)) {
-            // todo: Do we also want to support absolute paths to DBAFS resources?
+        // Only check for a FilesModel if requested if resource is inside upload path
+        if ($autoDetectDbafsPaths && Path::isBasePath(Path::join($projectDir, $this->uploadPath()), $path)) {
             $filesModel = $this->filesModelAdapter()->findByPath($path);
 
             if (null !== $filesModel) {
@@ -182,9 +180,7 @@ class FigureBuilder
             }
         }
 
-        $this->filePath = Path::isAbsolute($path) ?
-            Path::canonicalize($path) :
-            Path::makeAbsolute($path, $this->projectDir());
+        $this->filePath = $path;
 
         return $this;
     }
@@ -427,6 +423,14 @@ class FigureBuilder
         return $this->locator
             ->get('parameter_bag')
             ->get('kernel.project_dir')
+        ;
+    }
+
+    private function uploadPath(): string
+    {
+        return $this->locator
+            ->get('parameter_bag')
+            ->get('contao.upload_path')
         ;
     }
 
