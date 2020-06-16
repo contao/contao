@@ -18,7 +18,6 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use Nyholm\Psr7\Uri;
-use PHPUnit\Framework\MockObject\MockObject;
 use Terminal42\Escargot\BaseUriCollection;
 use Terminal42\Escargot\Queue\InMemoryQueue;
 
@@ -57,7 +56,6 @@ class FactoryTest extends TestCase
             ->willReturn('https://contao.org')
         ;
 
-        /** @var PageModel&MockObject $pageModelAdapter */
         $pageModelAdapter = $this->mockAdapter(['findPublishedRootPages']);
         $pageModelAdapter
             ->method('findPublishedRootPages')

@@ -479,7 +479,6 @@ class AuthenticationProviderTest extends TestCase
             ->willReturn('bar')
         ;
 
-        /** @var System&MockObject $systemAdapter */
         $systemAdapter = $this->mockAdapter(['importStatic']);
         $systemAdapter
             ->method('importStatic')

@@ -728,7 +728,6 @@ class ContaoFrameworkTest extends TestCase
 
     private function mockConfigAdapter(bool $complete = true): Adapter
     {
-        /** @var (Adapter|Config)&MockObject $config */
         $config = $this->mockAdapter(['preload', 'isComplete', 'getInstance', 'get']);
         $config
             ->method('isComplete')
@@ -751,7 +750,6 @@ class ContaoFrameworkTest extends TestCase
 
     private function mockRequestTokenAdapter(bool $valid = true): Adapter
     {
-        /** @var (Adapter|RequestToken)&MockObject $adapter */
         $adapter = $this->mockAdapter(['get', 'validate']);
         $adapter
             ->method('get')

@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\Translation;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Translation\Translator;
 use Contao\System;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Translation\Translator as BaseTranslator;
 
 class TranslatorTest extends TestCase
@@ -88,7 +87,6 @@ class TranslatorTest extends TestCase
 
     public function testReadsFromTheGlobalLanguageArray(): void
     {
-        /** @var System&MockObject $adapter */
         $adapter = $this->mockAdapter(['loadLanguageFile']);
         $adapter
             ->expects($this->atLeastOnce())
@@ -141,7 +139,6 @@ class TranslatorTest extends TestCase
             ->willReturn('de')
         ;
 
-        /** @var System&MockObject $adapter */
         $adapter = $this->mockAdapter(['loadLanguageFile']);
         $adapter
             ->expects($this->atLeastOnce())
