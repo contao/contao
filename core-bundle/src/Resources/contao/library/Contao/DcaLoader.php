@@ -212,24 +212,28 @@ class DcaLoader extends Controller
 			return;
 		}
 
-		if (null !== ($do = Input::get('do')))
+		if (!$do = Input::get('do'))
 		{
-			foreach (array_merge(...array_values($GLOBALS['BE_MOD'])) as $key => $module)
+			return;
+		}
+
+		foreach (array_merge(...array_values($GLOBALS['BE_MOD'])) as $key => $module)
+		{
+			if ($do !== $key || !isset($module['tables']) || !\is_array($module['tables']))
 			{
-				if ($do === $key && isset($module['tables']) && \is_array($module['tables']))
+				continue;
+			}
+
+			foreach ($module['tables'] as $table)
+			{
+				Controller::loadDataContainer($table);
+				$ctable = $GLOBALS['TL_DCA'][$table]['config']['ctable'] ?? array();
+
+				if (\in_array($this->strTable, $ctable, true))
 				{
-					foreach ($module['tables'] as $table)
-					{
-						Controller::loadDataContainer($table);
-						$ctable = $GLOBALS['TL_DCA'][$table]['config']['ctable'] ?? array();
+					$GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] = $table;
 
-						if (\in_array($this->strTable, $ctable, true))
-						{
-							$GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] = $table;
-
-							return;
-						}
-					}
+					return;
 				}
 			}
 		}
