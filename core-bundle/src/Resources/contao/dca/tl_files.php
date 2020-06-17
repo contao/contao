@@ -385,7 +385,7 @@ class tl_files extends Contao\Backend
 					{
 						$finder = Symfony\Component\Finder\Finder::create()->in($rootDir . '/' . $strFile);
 
-						if (!$canDeleteRecursive && $finder->count() > 0)
+						if (!$canDeleteRecursive && $finder->hasResults())
 						{
 							throw new Contao\CoreBundle\Exception\AccessDeniedException('No permission to delete folder "' . $strFile . '" recursively.');
 						}
@@ -730,7 +730,7 @@ class tl_files extends Contao\Backend
 
 		$finder = Symfony\Component\Finder\Finder::create()->in($path);
 
-		if ($finder->count() > 0)
+		if ($finder->hasResults())
 		{
 			return $this->User->hasAccess('f4', 'fop') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 		}
