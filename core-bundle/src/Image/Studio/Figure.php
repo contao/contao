@@ -219,7 +219,7 @@ final class Figure
         );
 
         // Context sensitive properties
-        if (null !== ($title = StringUtil::specialchars($metaData->getTitle()))) {
+        if ('' !== ($title = StringUtil::specialchars($metaData->getTitle()))) {
             $templateData['picture']['title'] = $title;
         }
 
