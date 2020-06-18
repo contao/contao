@@ -157,11 +157,17 @@ class ContentGallery extends ContentElement
 		{
 			default:
 			case 'name_asc':
-				uksort($images, 'basename_natcasecmp');
+				uksort($images, static function ($a, $b): int
+				{
+					return strnatcasecmp(basename($a), basename($b));
+				});
 				break;
 
 			case 'name_desc':
-				uksort($images, 'basename_natcasercmp');
+				uksort($images, static function ($a, $b): int
+				{
+					return -strnatcasecmp(basename($a), basename($b));
+				});
 				break;
 
 			case 'date_asc':
@@ -178,36 +184,7 @@ class ContentGallery extends ContentElement
 				// no break
 
 			case 'custom':
-				if ($this->orderSRC != '')
-				{
-					$tmp = StringUtil::deserialize($this->orderSRC);
-
-					if (!empty($tmp) && \is_array($tmp))
-					{
-						// Remove all values
-						$arrOrder = array_map(static function () {}, array_flip($tmp));
-
-						// Move the matching elements to their position in $arrOrder
-						foreach ($images as $k=>$v)
-						{
-							if (\array_key_exists($v['uuid'], $arrOrder))
-							{
-								$arrOrder[$v['uuid']] = $v;
-								unset($images[$k]);
-							}
-						}
-
-						// Append the left-over images at the end
-						if (!empty($images))
-						{
-							$arrOrder = array_merge($arrOrder, array_values($images));
-						}
-
-						// Remove empty (unreplaced) entries
-						$images = array_values(array_filter($arrOrder));
-						unset($arrOrder);
-					}
-				}
+				$images = ArrayUtil::sortByOrderField($images, $this->orderSRC);
 				break;
 
 			case 'random':

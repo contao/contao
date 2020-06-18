@@ -395,10 +395,10 @@ class Pagination
 	{
 		if ($intPage <= 1 && !$this->blnForceParam)
 		{
-			return ampersand($this->strUrl);
+			return StringUtil::ampersand($this->strUrl);
 		}
 
-		return ampersand($this->strUrl) . $this->strVarConnector . $this->strParameter . '=' . $intPage;
+		return StringUtil::ampersand($this->strUrl) . $this->strVarConnector . $this->strParameter . '=' . $intPage;
 	}
 }
 

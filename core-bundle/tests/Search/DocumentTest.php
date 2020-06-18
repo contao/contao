@@ -50,7 +50,7 @@ class DocumentTest extends TestCase
         $this->assertSame('https://example.com', (string) $document->getUri());
         $this->assertSame(200, $document->getStatusCode());
         $this->assertSame(['content-type' => ['text/html']], $document->getHeaders());
-        $this->assertSame($expectedJsonLds, $document->extractJsonLdScripts());
+        $this->assertSame($expectedJsonLds, $document->extractJsonLdScripts('https://contao.org/'));
     }
 
     public function documentProvider(): \Generator
@@ -64,7 +64,26 @@ class DocumentTest extends TestCase
             '<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"PageMetaData","foobar":true}</script></body></html>',
             [
                 [
-                    '@context' => 'https://contao.org/',
+                    '@type' => 'PageMetaData',
+                    'foobar' => true,
+                ],
+            ],
+        ];
+
+        yield 'Test with one valid json ld element without context' => [
+            '<html><body><script type="application/ld+json">{"@type":"https:\/\/contao.org\/PageMetaData","https:\/\/contao.org\/foobar":true}</script></body></html>',
+            [
+                [
+                    '@type' => 'PageMetaData',
+                    'foobar' => true,
+                ],
+            ],
+        ];
+
+        yield 'Test with one valid json ld element with context prefix' => [
+            '<html><body><script type="application/ld+json">{"@context":{"contao":"https:\/\/contao.org\/"},"@type":"contao:PageMetaData","contao:foobar":true}</script></body></html>',
+            [
+                [
                     '@type' => 'PageMetaData',
                     'foobar' => true,
                 ],
@@ -75,12 +94,10 @@ class DocumentTest extends TestCase
             '<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"PageMetaData","foobar":true}</script><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"PageMetaData","foobar":false}</script></body></html>',
             [
                 [
-                    '@context' => 'https://contao.org/',
                     '@type' => 'PageMetaData',
                     'foobar' => true,
                 ],
                 [
-                    '@context' => 'https://contao.org/',
                     '@type' => 'PageMetaData',
                     'foobar' => false,
                 ],
@@ -91,7 +108,6 @@ class DocumentTest extends TestCase
             '<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"PageMetaData","foobar":true}</script><script type="application/ld+json">{"@context":"https:\/\/contao.org\/", ...</script></body></html>',
             [
                 [
-                    '@context' => 'https://contao.org/',
                     '@type' => 'PageMetaData',
                     'foobar' => true,
                 ],

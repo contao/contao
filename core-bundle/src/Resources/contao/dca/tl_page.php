@@ -210,7 +210,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'folderalias', 'doNotCopy'=>true, 'maxlength'=>128, 'tl_class'=>'w50 clr'),
+			'eval'                    => array('rgxp'=>'folderalias', 'doNotCopy'=>true, 'maxlength'=>255, 'tl_class'=>'w50 clr'),
 			'save_callback' => array
 			(
 				array('tl_page', 'generateAlias')
@@ -368,7 +368,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'fileTree',
-			'eval'                    => array('filesOnly'=>true, 'fieldType'=>'radio', 'extensions'=>'ico'),
+			'eval'                    => array('filesOnly'=>true, 'fieldType'=>'radio', 'extensions'=>'ico,svg'),
 			'sql'                     => "binary(16) NULL"
 		),
 		'robotsTxt' => array

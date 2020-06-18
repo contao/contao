@@ -9,8 +9,14 @@ jobs:
             - name: Autoclose
               uses: roots/issue-closer@v1.1
               with:
-                  issue-pattern: "^$"
-                  issue-close-message: "Thank you for your contribution.\n\nUnfortunately, you have created your issue in the wrong repository, as this is a read-only split repository. Please go to https://github.com/contao/contao and create your issue there."
-                  pr-pattern: "^$"
-                  pr-close-message: "Thank you for your contribution.\n\nUnfortunately, you have created your pull request in the wrong repository, as this is a read-only split repository. Please go to https://github.com/contao/contao and create your pull request there."
+                  issue-pattern: ^$
+                  issue-close-message: |
+                      Thank you for your contribution.
+
+                      Unfortunately, you have created your issue in the wrong repository, as this is a read-only split repository. Please go to https://github.com/contao/contao and create your issue there.
+                  pr-pattern: ^$
+                  pr-close-message: |
+                      Thank you for your contribution.
+
+                      Unfortunately, you have created your pull request in the wrong repository, as this is a read-only split repository. Please go to https://github.com/contao/contao and create your pull request there.
                   repo-token: ${{ secrets.GITHUB_TOKEN }}

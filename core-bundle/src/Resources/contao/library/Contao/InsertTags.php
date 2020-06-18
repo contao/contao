@@ -450,7 +450,7 @@ class InsertTags extends Controller
 						}
 
 						$strName = $objNextPage->title;
-						$strTarget = $objNextPage->target ? ' target="_blank"' : '';
+						$strTarget = $objNextPage->target ? ' target="_blank" rel="noreferrer noopener"' : '';
 						$strClass = $objNextPage->cssClass ? sprintf(' class="%s"', $objNextPage->cssClass) : '';
 						$strTitle = $objNextPage->pageTitle ?: $objNextPage->title;
 					}
@@ -1023,8 +1023,6 @@ class InsertTags extends Controller
 						case 'standardize':
 						case 'ampersand':
 						case 'specialchars':
-						case 'nl2br':
-						case 'nl2br_pre':
 						case 'strtolower':
 						case 'utf8_strtolower':
 						case 'strtoupper':
@@ -1039,6 +1037,14 @@ class InsertTags extends Controller
 						case 'urlencode':
 						case 'rawurlencode':
 							$arrCache[$strTag] = $flag($arrCache[$strTag]);
+							break;
+
+						case 'nl2br_pre':
+							@trigger_error('Using nl2br_pre() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+							// no break
+
+						case 'nl2br':
+							$arrCache[$strTag] = preg_replace('/\r?\n/', '<br>', $arrCache[$strTag]);
 							break;
 
 						case 'encodeEmail':

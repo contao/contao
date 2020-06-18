@@ -37,11 +37,6 @@ class DebugFragmentsCommand extends Command
      */
     private $attributes = [];
 
-    /**
-     * @var SymfonyStyle
-     */
-    private $io;
-
     public function add(string $identifier, FragmentConfig $config, array $attributes): void
     {
         $this->identifiers[] = $identifier;
@@ -58,8 +53,6 @@ class DebugFragmentsCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->io = new SymfonyStyle($input, $output);
-
         $rows = [];
         $identifiers = $this->identifiers;
         natsort($identifiers);
@@ -74,8 +67,9 @@ class DebugFragmentsCommand extends Command
             ];
         }
 
-        $this->io->title('Contao Fragments');
-        $this->io->table(['Identifier', 'Controller', 'Renderer', 'Render Options', 'Fragment Options'], $rows);
+        $io = new SymfonyStyle($input, $output);
+        $io->title('Contao Fragments');
+        $io->table(['Identifier', 'Controller', 'Renderer', 'Render Options', 'Fragment Options'], $rows);
 
         return 0;
     }

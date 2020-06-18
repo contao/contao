@@ -59,6 +59,8 @@ class PageTree extends Widget
 		// Prepare the order field
 		if ($this->orderField != '')
 		{
+			@trigger_error('Using "orderField" for the page tree has been deprecated and will no longer work in Contao 5.0. Use "isSortable" instead.', E_USER_DEPRECATED);
+
 			$this->strOrderId = $this->orderField . str_replace($this->strField, '', $this->strId);
 			$this->strOrderName = $this->orderField . str_replace($this->strField, '', $this->strName);
 
@@ -184,35 +186,15 @@ class PageTree extends Widget
 			// Apply a custom sort order
 			if ($blnHasOrder)
 			{
-				$arrNew = array();
-
-				foreach ((array) $this->{$this->orderField} as $i)
-				{
-					if (isset($arrValues[$i]))
-					{
-						$arrNew[$i] = $arrValues[$i];
-						unset($arrValues[$i]);
-					}
-				}
-
-				if (!empty($arrValues))
-				{
-					foreach ($arrValues as $k=>$v)
-					{
-						$arrNew[$k] = $v;
-					}
-				}
-
-				$arrValues = $arrNew;
-				unset($arrNew);
+				$arrValues = ArrayUtil::sortByOrderField($arrValues, $this->{$this->orderField}, null, true);
 			}
 		}
 
 		$return = '<input type="hidden" name="' . $this->strName . '" id="ctrl_' . $this->strId . '" value="' . implode(',', $arrSet) . '">' . ($blnHasOrder ? '
   <input type="hidden" name="' . $this->strOrderName . '" id="ctrl_' . $this->strOrderId . '" value="' . $this->{$this->orderField} . '">' : '') . '
-  <div class="selector_container">' . (($blnHasOrder && \count($arrValues) > 1) ? '
+  <div class="selector_container">' . ((($blnHasOrder || $this->isSortable) && \count($arrValues) > 1) ? '
     <p class="sort_hint">' . $GLOBALS['TL_LANG']['MSC']['dragItemsHint'] . '</p>' : '') . '
-    <ul id="sort_' . $this->strId . '" class="' . ($blnHasOrder ? 'sortable' : '') . '">';
+    <ul id="sort_' . $this->strId . '" class="' . ($blnHasOrder || $this->isSortable ? 'sortable' : '') . '">';
 
 		foreach ($arrValues as $k=>$v)
 		{
@@ -231,7 +213,7 @@ class PageTree extends Widget
 			$extras = $this->getPickerUrlExtras($arrValues);
 
 			$return .= '
-    <p><a href="' . ampersand(System::getContainer()->get('contao.picker.builder')->getUrl('page', $extras)) . '" class="tl_submit" id="pt_' . $this->strName . '">' . $GLOBALS['TL_LANG']['MSC']['changeSelection'] . '</a></p>
+    <p><a href="' . StringUtil::ampersand(System::getContainer()->get('contao.picker.builder')->getUrl('page', $extras)) . '" class="tl_submit" id="pt_' . $this->strName . '">' . $GLOBALS['TL_LANG']['MSC']['changeSelection'] . '</a></p>
     <script>
       $("pt_' . $this->strName . '").addEvent("click", function(e) {
         e.preventDefault();
@@ -251,8 +233,8 @@ class PageTree extends Widget
           }
         });
       });
-    </script>' . ($blnHasOrder ? '
-    <script>Backend.makeMultiSrcSortable("sort_' . $this->strId . '", "ctrl_' . $this->strOrderId . '", "ctrl_' . $this->strId . '")</script>' : '');
+    </script>' . ($blnHasOrder || $this->isSortable ? '
+    <script>Backend.makeMultiSrcSortable("sort_' . $this->strId . '", "ctrl_' . ($blnHasOrder ? $this->strOrderId : $this->strId) . '", "ctrl_' . $this->strId . '")</script>' : '');
 		}
 
 		$return = '<div>' . $return . '</div></div>';

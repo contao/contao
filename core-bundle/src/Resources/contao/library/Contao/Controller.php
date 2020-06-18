@@ -81,10 +81,11 @@ abstract class Controller extends System
 	 *
 	 * @param string $strPrefix           The template name prefix (e.g. "ce_")
 	 * @param array  $arrAdditionalMapper An additional mapper array
+	 * @param string $strDefaultTemplate  An optional default template
 	 *
 	 * @return array An array of template names
 	 */
-	public static function getTemplateGroup($strPrefix, array $arrAdditionalMapper=array())
+	public static function getTemplateGroup($strPrefix, array $arrAdditionalMapper=array(), $strDefaultTemplate='')
 	{
 		$arrTemplates = array();
 		$arrBundleTemplates = array();
@@ -144,7 +145,7 @@ abstract class Controller extends System
 		$arrCustomized = self::braceGlob($rootDir . '/templates/' . $strGlobPrefix . '*.html5');
 
 		// Add the customized templates
-		if (\is_array($arrCustomized))
+		if (!empty($arrCustomized) && \is_array($arrCustomized))
 		{
 			$blnIsGroupPrefix = preg_match('/^[a-z]+_$/', $strPrefix);
 
@@ -180,6 +181,13 @@ abstract class Controller extends System
 			}
 		}
 
+		$arrDefaultPlaces = array();
+
+		if ($strDefaultTemplate && file_exists($rootDir . '/templates/' . $strDefaultTemplate . '.html5'))
+		{
+			$arrDefaultPlaces[] = $GLOBALS['TL_LANG']['MSC']['global'];
+		}
+
 		// Do not look for back end templates in theme folders (see #5379)
 		if ($strPrefix != 'be_' && $strPrefix != 'mail_')
 		{
@@ -198,17 +206,24 @@ abstract class Controller extends System
 			{
 				while ($objTheme->next())
 				{
-					if ($objTheme->templates != '')
+					if (!$objTheme->templates)
 					{
-						$arrThemeTemplates = self::braceGlob($rootDir . '/' . $objTheme->templates . '/' . $strGlobPrefix . '*.html5');
+						continue;
+					}
 
-						if (\is_array($arrThemeTemplates))
+					if ($strDefaultTemplate && file_exists($rootDir . '/' . $objTheme->templates . '/' . $strDefaultTemplate . '.html5'))
+					{
+						$arrDefaultPlaces[] = $objTheme->name;
+					}
+
+					$arrThemeTemplates = self::braceGlob($rootDir . '/' . $objTheme->templates . '/' . $strGlobPrefix . '*.html5');
+
+					if (!empty($arrThemeTemplates) && \is_array($arrThemeTemplates))
+					{
+						foreach ($arrThemeTemplates as $strFile)
 						{
-							foreach ($arrThemeTemplates as $strFile)
-							{
-								$strTemplate = basename($strFile, strrchr($strFile, '.'));
-								$arrTemplates[$strTemplate][] = $objTheme->name;
-							}
+							$strTemplate = basename($strFile, strrchr($strFile, '.'));
+							$arrTemplates[$strTemplate][] = $objTheme->name;
 						}
 					}
 				}
@@ -235,6 +250,16 @@ abstract class Controller extends System
 
 		// Sort the template names
 		ksort($arrTemplates);
+
+		if ($strDefaultTemplate)
+		{
+			if (!empty($arrDefaultPlaces))
+			{
+				$strDefaultTemplate .= ' (' . implode(', ', $arrDefaultPlaces) . ')';
+			}
+
+			$arrTemplates = array('' => $strDefaultTemplate) + $arrTemplates;
+		}
 
 		return $arrTemplates;
 	}
@@ -316,39 +341,44 @@ abstract class Controller extends System
 				return '';
 			}
 
-			$return = '';
-			$intCount = 0;
+			$arrArticles = array();
 			$blnMultiMode = ($objArticles->count() > 1);
-			$intLast = $objArticles->count() - 1;
+			$arrRows = $objArticles->getModels();
+			$objLastRow = null;
 
-			while ($objArticles->next())
+			/** @var ArticleModel $objRow */
+			while ($objRow = array_shift($arrRows))
 			{
-				/** @var ArticleModel $objRow */
-				$objRow = $objArticles->current();
-
 				// Add the "first" and "last" classes (see #2583)
-				if ($intCount == 0 || $intCount == $intLast)
+				$arrCss = array();
+
+				if (empty($arrArticles))
 				{
-					$arrCss = array();
-
-					if ($intCount == 0)
-					{
-						$arrCss[] = 'first';
-					}
-
-					if ($intCount == $intLast)
-					{
-						$arrCss[] = 'last';
-					}
-
-					$objRow->classes = $arrCss;
+					$arrCss[] = 'first';
 				}
 
-				$return .= static::getArticle($objRow, $blnMultiMode, false, $strColumn);
-				++$intCount;
+				if (empty($arrRows))
+				{
+					$arrCss[] = 'last';
+				}
+
+				$objRow->classes = $arrCss;
+				$strArticle = static::getArticle($objRow, $blnMultiMode, false, $strColumn);
+
+				if ($strArticle != '')
+				{
+					$arrArticles[] = $strArticle;
+					$objLastRow = $objRow;
+				}
+				elseif (empty($arrRows) && $objLastRow != null && $objLastRow !== $objRow)
+				{
+					// Re-generate the last successful article with "last" class
+					array_pop($arrArticles);
+					$arrRows[] = $objLastRow;
+				}
 			}
 
-			return $return;
+			return implode('', $arrArticles);
 		}
 
 		// Other modules
@@ -630,7 +660,7 @@ abstract class Controller extends System
 		System::loadLanguageFile('languages');
 
 		$return = array();
-		$langs = scan(__DIR__ . '/../../languages');
+		$langs = Folder::scan(__DIR__ . '/../../languages');
 		array_unshift($langs, $GLOBALS['TL_LANGUAGE']);
 
 		foreach ($langs as $lang)
@@ -656,7 +686,8 @@ abstract class Controller extends System
 	public static function getPageStatusIcon($objPage)
 	{
 		$sub = 0;
-		$image = $objPage->type . '.svg';
+		$type = \in_array($objPage->type, array('regular', 'root', 'forward', 'redirect', 'error_401', 'error_403', 'error_404'), true) ? $objPage->type : 'regular';
+		$image = $type . '.svg';
 
 		// Page not published or not active
 		if (!$objPage->published || ($objPage->start != '' && $objPage->start > time()) || ($objPage->stop != '' && $objPage->stop < time()))
@@ -665,13 +696,13 @@ abstract class Controller extends System
 		}
 
 		// Page hidden from menu
-		if ($objPage->hide && !\in_array($objPage->type, array('root', 'error_401', 'error_403', 'error_404')))
+		if ($objPage->hide && !\in_array($type, array('root', 'error_401', 'error_403', 'error_404')))
 		{
 			$sub += 2;
 		}
 
 		// Page protected
-		if ($objPage->protected && !\in_array($objPage->type, array('root', 'error_401', 'error_403', 'error_404')))
+		if ($objPage->protected && !\in_array($type, array('root', 'error_401', 'error_403', 'error_404')))
 		{
 			$sub += 4;
 		}
@@ -679,7 +710,7 @@ abstract class Controller extends System
 		// Get the image name
 		if ($sub > 0)
 		{
-			$image = $objPage->type . '_' . $sub . '.svg';
+			$image = $type . '_' . $sub . '.svg';
 		}
 
 		// HOOK: add custom logic
@@ -1060,7 +1091,7 @@ abstract class Controller extends System
 			$uri = str_replace('+', '%2B', $uri);
 		}
 
-		return TL_SCRIPT . ampersand($uri);
+		return TL_SCRIPT . StringUtil::ampersand($uri);
 	}
 
 	/**
@@ -1670,7 +1701,7 @@ abstract class Controller extends System
 		$objTemplate->picture = $picture;
 
 		// Provide an ID for single lightbox images in HTML5 (see #3742)
-		if ($strLightboxId === null && $arrItem['fullsize'])
+		if ($strLightboxId === null && $arrItem['fullsize'] && $objTemplate instanceof Template && !empty($arrItem['id']))
 		{
 			$strLightboxId = substr(md5($objTemplate->getName() . '_' . $arrItem['id']), 0, 6);
 		}
@@ -1698,11 +1729,13 @@ abstract class Controller extends System
 
 			if ($arrItem['fullsize'])
 			{
+				$blnIsExternal = strncmp($arrItem['imageUrl'], 'http://', 7) === 0 || strncmp($arrItem['imageUrl'], 'https://', 8) === 0;
+
 				// Open images in the lightbox
 				if (preg_match('/\.(' . strtr(preg_quote(Config::get('validImageTypes'), '/'), ',', '|') . ')$/i', $arrItem['imageUrl']))
 				{
 					// Do not add the TL_FILES_URL to external URLs (see #4923)
-					if (strncmp($arrItem['imageUrl'], 'http://', 7) !== 0 && strncmp($arrItem['imageUrl'], 'https://', 8) !== 0)
+					if (!$blnIsExternal)
 					{
 						try
 						{
@@ -1730,6 +1763,11 @@ abstract class Controller extends System
 				else
 				{
 					$objTemplate->attributes = ' target="_blank"';
+
+					if ($blnIsExternal)
+					{
+						$objTemplate->attributes .= ' rel="noreferrer noopener"';
+					}
 				}
 			}
 		}
@@ -1880,33 +1918,9 @@ abstract class Controller extends System
 		// Order the enclosures
 		if (!empty($arrItem['orderEnclosure']))
 		{
-			$tmp = StringUtil::deserialize($arrItem['orderEnclosure']);
+			@trigger_error('Using "orderEnclosure" has been deprecated and will no longer work in Contao 5.0. Use a file tree with "isSortable" instead.', E_USER_DEPRECATED);
 
-			if (!empty($tmp) && \is_array($tmp))
-			{
-				// Remove all values
-				$arrOrder = array_map(static function () {}, array_flip($tmp));
-
-				// Move the matching elements to their position in $arrOrder
-				foreach ($arrEnclosures as $k=>$v)
-				{
-					if (\array_key_exists($v['uuid'], $arrOrder))
-					{
-						$arrOrder[$v['uuid']] = $v;
-						unset($arrEnclosures[$k]);
-					}
-				}
-
-				// Append the left-over enclosures at the end
-				if (!empty($arrEnclosures))
-				{
-					$arrOrder = array_merge($arrOrder, array_values($arrEnclosures));
-				}
-
-				// Remove empty (unreplaced) entries
-				$arrEnclosures = array_values(array_filter($arrOrder));
-				unset($arrOrder);
-			}
+			$arrEnclosures = ArrayUtil::sortByOrderField($arrEnclosures, $arrItem['orderEnclosure']);
 		}
 
 		$objTemplate->enclosure = $arrEnclosures;
@@ -2452,7 +2466,7 @@ abstract class Controller extends System
 	 *
 	 * @param string $pattern
 	 *
-	 * @return array
+	 * @return array|false
 	 */
 	protected static function braceGlob($pattern)
 	{

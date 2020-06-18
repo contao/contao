@@ -264,7 +264,7 @@
         <source>Show to guests only</source>
       </trans-unit>
       <trans-unit id="tl_page.guests.1">
-        <source>Hide the page if there is an authenticated user.</source>
+        <source>Hide the page if a member is logged in.</source>
       </trans-unit>
       <trans-unit id="tl_page.tabindex.0">
         <source>Tab index</source>
@@ -306,7 +306,7 @@
         <source>Two-factor redirect page</source>
       </trans-unit>
       <trans-unit id="tl_page.twoFactorJumpTo.1">
-        <source>Please choose the page to which visitors will be redirected when setting up two-factor authentication.</source>
+        <source>Please choose the page to which members will be redirected to set up two-factor authentication.</source>
       </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
