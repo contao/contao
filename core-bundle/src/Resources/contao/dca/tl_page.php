@@ -368,7 +368,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'fileTree',
-			'eval'                    => array('filesOnly'=>true, 'fieldType'=>'radio', 'extensions'=>'ico'),
+			'eval'                    => array('filesOnly'=>true, 'fieldType'=>'radio', 'extensions'=>'ico,svg'),
 			'sql'                     => "binary(16) NULL"
 		),
 		'robotsTxt' => array

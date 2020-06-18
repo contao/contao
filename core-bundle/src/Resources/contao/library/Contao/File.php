@@ -334,7 +334,7 @@ class File extends System
 								(int) $dimensions->getSize()->getHeight()
 							);
 
-							if (!$this->arrImageViewSize[0] || !$this->arrImageViewSize[1])
+							if (!$this->arrImageViewSize[0] || !$this->arrImageViewSize[1] || $dimensions->isUndefined())
 							{
 								$this->arrImageViewSize = false;
 							}

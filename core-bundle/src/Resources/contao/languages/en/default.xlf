@@ -1140,7 +1140,7 @@
         <source>Back end keyboard shortcuts</source>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href="https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/" title="Keyboard shortcuts overview" target="_blank"&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <source>Learn more about speeding up your workflow by using &lt;a href="https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/" title="Keyboard shortcuts overview" target="_blank" rel="noreferrer noopener"&gt;keyboard shortcuts&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -1994,8 +1994,11 @@
       <trans-unit id="MSC.operatingSystem">
         <source>Operating system</source>
       </trans-unit>
-      <trans-unit id="MSC.showPreviewToolbar">
-        <source>Show Contao Preview Toolbar</source>
+      <trans-unit id="MSC.openToolbar">
+        <source>Open the Contao toolbar</source>
+      </trans-unit>
+      <trans-unit id="MSC.closeToolbar">
+        <source>Close the Contao toolbar</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

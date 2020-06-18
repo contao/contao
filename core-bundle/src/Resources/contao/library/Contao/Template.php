@@ -307,9 +307,6 @@ abstract class Template extends Controller
 		header('Content-Type: ' . $this->strContentType . '; charset=' . Config::get('characterSet'));
 
 		echo $this->strBuffer;
-
-		// Flush the output buffers (see #6962)
-		$this->flushAllData();
 	}
 
 	/**

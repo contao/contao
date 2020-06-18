@@ -581,7 +581,7 @@ a.tl_submit {
 }
 
 /* Split button */
-@media (min-width:1236px) {
+@media (min-width:1280px) {
 	#sbtog {
 		display:none;
 	}
@@ -599,7 +599,7 @@ a.tl_submit {
 	}
 }
 
-@media (max-width:1235px) {
+@media (max-width:1279px) {
 	.split-button ul {
 		position:absolute;
 		right:0;

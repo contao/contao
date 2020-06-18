@@ -61,7 +61,6 @@ class LegacyCronTest extends TestCase
             'monthly' => [['TestCron', 'onMonthly']],
         ];
 
-        // Mock the System adapter and return the simple object
         $systemAdapter = $this->mockAdapter(['importStatic', 'loadLanguageFile']);
         $systemAdapter
             ->expects($this->exactly(5))

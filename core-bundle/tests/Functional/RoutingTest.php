@@ -1007,6 +1007,15 @@ class RoutingTest extends FunctionalTestCase
             'de,fr',
             'root-without-fallback-language.local',
         ];
+
+        yield 'Redirects to the correct language if first page does not have index alias' => [
+            ['theme', 'language-index-mix'],
+            '/',
+            301,
+            'Redirecting to http://example.com/de/',
+            'de,en',
+            'example.com',
+        ];
     }
 
     public function testOrdersThePageModelsByCandidates(): void

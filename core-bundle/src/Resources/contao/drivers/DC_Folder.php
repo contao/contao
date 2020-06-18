@@ -2449,6 +2449,10 @@ class DC_Folder extends DataContainer implements \listable, \editable
 				case 'Deleted':
 					$arrMessages[] = '<p class="tl_error">' . sprintf($GLOBALS['TL_LANG']['tl_files']['syncDeleted'], StringUtil::specialchars($file)) . '</p>';
 					break;
+
+				default:
+					$arrMessages[] = '<p class="tl_error">' . StringUtil::specialchars($buffer) . '</p>';
+					break;
 			}
 
 			++$arrCounts[$type];
@@ -2581,6 +2585,12 @@ class DC_Folder extends DataContainer implements \listable, \editable
 					continue;
 				}
 
+				if (preg_match('//u', $v) !== 1)
+				{
+					trigger_error(sprintf('Path "%s" contains malformed UTF-8 characters.', $path . '/' . $v), E_USER_WARNING);
+					continue;
+				}
+
 				if (is_file($path . '/' . $v))
 				{
 					$files[] = $path . '/' . $v;
@@ -2605,9 +2615,16 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		// Folders
 		for ($f=0, $c=\count($folders); $f<$c; $f++)
 		{
+			$currentFolder = StringUtil::stripRootDir($folders[$f]);
+
+			// Hide unsynchronized folders in the picker (see #919)
+			if ($this->strPickerFieldType && !Dbafs::shouldBeSynchronized($currentFolder))
+			{
+				continue;
+			}
+
 			$md5 = substr(md5($folders[$f]), 0, 8);
 			$content = Folder::scan($folders[$f]);
-			$currentFolder = StringUtil::stripRootDir($folders[$f]);
 			$session['filetree'][$md5] = is_numeric($session['filetree'][$md5]) ? $session['filetree'][$md5] : 0;
 			$currentEncoded = $this->urlEncode($currentFolder);
 			$countFiles = \count($content);
@@ -2896,7 +2913,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			$this->values[] = $session['search'][$this->strTable]['value'];
 		}
 
-		$active = isset($session['search'][$this->strTable]['value']);
+		$active = isset($session['search'][$this->strTable]['value']) && $session['search'][$this->strTable]['value'] != '';
 
 		return '
     <div class="tl_search tl_subpanel">

@@ -28,6 +28,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\HttpClient\ChunkInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 use Terminal42\Escargot\CrawlUri;
@@ -47,13 +48,19 @@ class CrawlCommand extends Command
     private $escargotFactory;
 
     /**
+     * @var Filesystem
+     */
+    private $filesystem;
+
+    /**
      * @var Escargot
      */
     private $escargot;
 
-    public function __construct(Factory $escargotFactory)
+    public function __construct(Factory $escargotFactory, Filesystem $filesystem)
     {
         $this->escargotFactory = $escargotFactory;
+        $this->filesystem = $filesystem;
 
         parent::__construct();
     }
@@ -159,8 +166,8 @@ class CrawlCommand extends Command
 
         if ($input->getOption('enable-debug-csv')) {
             // Delete file if it already exists
-            if (file_exists($input->getOption('debug-csv-path'))) {
-                unlink($input->getOption('debug-csv-path'));
+            if ($this->filesystem->exists($input->getOption('debug-csv-path'))) {
+                $this->filesystem->remove($input->getOption('debug-csv-path'));
             }
 
             $csvDebugHandler = new CrawlCsvLogHandler($input->getOption('debug-csv-path'), Logger::DEBUG);

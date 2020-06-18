@@ -23,11 +23,11 @@ tl_module:
       tstamp: 1539616752
       name: News archive
       type: newsarchive
-      news_archives: 'a:1:{i:0;s:1:"1";}'
+      news_archives: a:1:{i:0;s:1:"1";}
       news_featured: all_items
       news_jumpToCurrent: hide_module
       news_readerModule: 2
-      news_metaFields: 'a:2:{i:0;s:4:"date";i:1;s:6:"author";}'
+      news_metaFields: a:2:{i:0;s:4:"date";i:1;s:6:"author";}
       news_template: news_latest
       news_format: news_month
       news_order: order_date_desc
@@ -38,9 +38,9 @@ tl_module:
       tstamp: 1539616572
       name: News reader
       type: newsreader
-      news_archives: 'a:1:{i:0;s:1:"1";}'
+      news_archives: a:1:{i:0;s:1:"1";}
       news_featured: all_items
-      news_metaFields: 'a:2:{i:0;s:4:"date";i:1;s:6:"author";}'
+      news_metaFields: a:2:{i:0;s:4:"date";i:1;s:6:"author";}
       news_template: news_latest
       news_format: news_month
       news_order: order_date_desc

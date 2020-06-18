@@ -41,9 +41,16 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class ImageFactoryTest extends TestCase
 {
+    /**
+     * @var Filesystem
+     */
+    private $filesystem;
+
     protected function setUp(): void
     {
         parent::setUp();
+
+        $this->filesystem = new Filesystem();
 
         System::setContainer($this->getContainerWithContaoConfiguration());
     }
@@ -52,8 +59,8 @@ class ImageFactoryTest extends TestCase
     {
         parent::tearDown();
 
-        if (file_exists($this->getFixturesDir().'/assets/images')) {
-            (new Filesystem())->remove($this->getFixturesDir().'/assets/images');
+        if ($this->filesystem->exists($this->getFixturesDir().'/assets/images')) {
+            $this->filesystem->remove($this->getFixturesDir().'/assets/images');
         }
     }
 
@@ -106,11 +113,11 @@ class ImageFactoryTest extends TestCase
 
         $path = $this->getFixturesDir().'/assets/images/dummy.svg';
 
-        if (!file_exists(\dirname($path))) {
-            mkdir(\dirname($path), 0777, true);
+        if (!$this->filesystem->exists(\dirname($path))) {
+            $this->filesystem->mkdir(\dirname($path), 0777);
         }
 
-        file_put_contents($path, '');
+        $this->filesystem->dumpFile($path, '');
 
         $image = $imageFactory->create($path, [100, 200, ResizeConfiguration::MODE_BOX]);
 
@@ -687,13 +694,14 @@ class ImageFactoryTest extends TestCase
             .'_'.str_replace('\\', '-', \get_class($imageObj))
             .'.jpg';
 
+        $fs = new Filesystem();
         $rootDir = System::getContainer()->getParameter('kernel.project_dir');
 
-        if (!file_exists(\dirname($rootDir.'/'.$path))) {
-            mkdir(\dirname($rootDir.'/'.$path), 0777, true);
+        if (!$fs->exists(\dirname($rootDir.'/'.$path))) {
+            $fs->mkdir(\dirname($rootDir.'/'.$path), 0777);
         }
 
-        file_put_contents($rootDir.'/'.$path, '');
+        $fs->dumpFile($rootDir.'/'.$path, '');
 
         return $path;
     }
@@ -774,13 +782,14 @@ class ImageFactoryTest extends TestCase
             .'_'.str_replace('\\', '-', \get_class($imageObj))
             .'.jpg';
 
+        $fs = new Filesystem();
         $rootDir = System::getContainer()->getParameter('kernel.project_dir');
 
-        if (!file_exists(\dirname($rootDir.'/'.$path))) {
-            mkdir(\dirname($rootDir.'/'.$path), 0777, true);
+        if (!$fs->exists(\dirname($rootDir.'/'.$path))) {
+            $fs->mkdir(\dirname($rootDir.'/'.$path), 0777);
         }
 
-        file_put_contents($rootDir.'/'.$path, '');
+        $fs->dumpFile($rootDir.'/'.$path, '');
 
         return $path;
     }

@@ -175,7 +175,11 @@ class UserPasswordCommandTest extends TestCase
             ->method('update')
             ->with(
                 'tl_user',
-                ['password' => '$argon2id$v=19$m=65536,t=6,p=1$T+WK0xPOk21CQ2dX9AFplw$2uCrfvt7Tby81Dhc8Y7wHQQGP1HnPC3nDEb4FtXsfrQ'],
+                [
+                    'password' => '$argon2id$v=19$m=65536,t=6,p=1$T+WK0xPOk21CQ2dX9AFplw$2uCrfvt7Tby81Dhc8Y7wHQQGP1HnPC3nDEb4FtXsfrQ',
+                    'locked' => 0,
+                    'loginAttempts' => 0,
+                ],
                 ['username' => $username]
             )
             ->willReturn(1)

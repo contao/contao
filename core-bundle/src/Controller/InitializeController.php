@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Controller;
 use Contao\CoreBundle\Response\InitializeControllerResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
@@ -53,6 +54,11 @@ class InitializeController extends AbstractController
         }
 
         $realRequest = Request::createFromGlobals();
+        $realRequest->setLocale($masterRequest->getLocale());
+
+        if ($masterRequest->hasSession()) {
+            $realRequest->setSession($masterRequest->getSession());
+        }
 
         // Necessary to generate the correct base path
         foreach (['REQUEST_URI', 'SCRIPT_NAME', 'SCRIPT_FILENAME', 'PHP_SELF'] as $name) {
@@ -85,6 +91,29 @@ class InitializeController extends AbstractController
                 }
 
                 $this->handleException($e, $realRequest, HttpKernelInterface::MASTER_REQUEST);
+            }
+        );
+
+        // Collect all output into final response
+        $response = new Response();
+
+        ob_start(
+            static function ($buffer) use ($response) {
+                $response->setContent($response->getContent().$buffer);
+
+                return '';
+            },
+            0,
+            PHP_OUTPUT_HANDLER_REMOVABLE | PHP_OUTPUT_HANDLER_CLEANABLE
+        );
+
+        // register_shutdown_function() somehow can't handle $this
+        $self = $this;
+
+        register_shutdown_function(
+            static function () use ($self, $realRequest, $response): void {
+                @ob_end_clean();
+                $self->handleResponse($realRequest, $response, KernelInterface::MASTER_REQUEST);
             }
         );
 
@@ -144,10 +173,44 @@ class InitializeController extends AbstractController
 
         $response->send();
 
-        /** @var KernelInterface&TerminableInterface $kernel */
         $kernel = $this->get('kernel');
-        $kernel->terminate($request, $response);
+
+        if ($kernel instanceof TerminableInterface) {
+            $kernel->terminate($request, $response);
+        }
 
         exit;
+    }
+
+    /**
+     * Execute kernel.response and kernel.finish_request events.
+     *
+     * @param int $type
+     */
+    private function handleResponse(Request $request, Response $response, $type): void
+    {
+        $event = new ResponseEvent($this->get('http_kernel'), $request, $type, $response);
+
+        try {
+            $this->get('event_dispatcher')->dispatch($event, KernelEvents::RESPONSE);
+        } catch (\Throwable $e) {
+            // Ignore any errors from events
+        }
+
+        $this->get('event_dispatcher')->dispatch(
+            new FinishRequestEvent($this->get('http_kernel'), $request, $type),
+            KernelEvents::FINISH_REQUEST
+        );
+
+        $this->get('request_stack')->pop();
+
+        $response = $event->getResponse();
+        $response->send();
+
+        $kernel = $this->get('kernel');
+
+        if ($kernel instanceof TerminableInterface) {
+            $kernel->terminate($request, $response);
+        }
     }
 }
