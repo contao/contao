@@ -24,14 +24,8 @@ parameters:
         - %currentWorkingDirectory%/core-bundle/tests/Functional/var/*
 
     ignoreErrors:
-        # Ignore the Adapter::missingMethod() warning
-        - '#Call to an undefined method Contao\\CoreBundle\\Framework\\Adapter<Contao\\CoreBundle\\Fixtures\\Adapter\\LegacyClass>::missingMethod\(\)\.#'
-
         # Ignore backwards compatibility layers when preferring lowest dependencies
         - '#Method Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface::dispatch\(\) invoked with 2 parameters, 1 required\.#'
-
-        # Ingore forward compatibility layers
-        - '#Method Symfony\\Component\\HttpFoundation\\ResponseHeaderBag::all\(\) invoked with 1 parameter, 0 required\.#'
 
         # Ignore configuration tree errors
         - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition::children\(\)\.#'
@@ -43,12 +37,6 @@ parameters:
         # Ignore the wrong return type hint of the UrlGeneratorInterface::generate() method
         - '#Method Contao\\CoreBundle\\Picker\\AbstractPickerProvider::generateUrl\(\) never returns null so it can be removed from the return typehint\.#'
 
-        # Ignore unused variables in the ArrayAttributeBagTest class
-        - '#Function testDoesNotReferenceValues\(\) has an unused variable#'
-
-        # Ignore test case classes not starting with "Abstract" (backwards compatibility)
-        - '#Abstract class Contao\\CoreBundle\\Tests\\.*TestCase should start with "Abstract" prefix\.#'
-
         # Ignore constant errors due to bootstrap.php in contao/contao-phpstan (see https://github.com/contao/contao/pull/1451)
         - message: '#Call to method PHPUnit\\Framework\\Assert::assert(Same|Null|True|InstanceOf)\(\) with .* will always evaluate to false\.#'
           paths:
@@ -56,7 +44,9 @@ parameters:
               - %currentWorkingDirectory%/core-bundle/tests/Doctrine/Schema/DcaSchemaProviderTest.php
 
         - message: '#Result of && is always false\.#'
-          path: %currentWorkingDirectory%/core-bundle/src/DataCollector/ContaoDataCollector.php
+          paths:
+              - %currentWorkingDirectory%/core-bundle/src/DataCollector/ContaoDataCollector.php
+              - %currentWorkingDirectory%/core-bundle/src/Image/ImageFactory.php
 
         - message: '#Strict comparison using === between true and false will always evaluate to false\.#'
           path: %currentWorkingDirectory%/core-bundle/src/DataCollector/ContaoDataCollector.php
@@ -76,4 +66,3 @@ parameters:
     reportUnmatchedIgnoredErrors: false
     checkGenericClassInNonGenericObjectType: false
     inferPrivatePropertyTypeFromConstructor: true
-    treatPhpDocTypesAsCertain: false
