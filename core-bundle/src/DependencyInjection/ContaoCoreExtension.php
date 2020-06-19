@@ -19,7 +19,6 @@ use Contao\CoreBundle\Picker\PickerProviderInterface;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Imagine\Exception\RuntimeException;
 use Imagine\Gd\Imagine;
-use Imagine\Image\Box;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -220,42 +219,6 @@ class ContaoCoreExtension extends Extension
         }
 
         $container->setAlias('contao.image.imagine', $imagineServiceId)->setPublic(true);
-
-        $this->verifyValidImageFileExtensions(
-            $container->getDefinition($imagineServiceId)->getClass(),
-            $container->getParameter('contao.image.valid_extensions')
-        );
-    }
-
-    /**
-     * @param array<string> $extensions
-     */
-    private function verifyValidImageFileExtensions(string $imagineClass, array $extensions): void
-    {
-        /** @var ImagineInterface $imagine */
-        $imagine = new $imagineClass();
-
-        $extensions = array_map('strtolower', $extensions);
-        $unsupportedExtensions = [];
-
-        foreach ($extensions as $extension) {
-            if (\in_array($extension, ['svg', 'svgz'], true)) {
-                continue;
-            }
-
-            // Try to create an image with the specified format
-            try {
-                $imagine->create(new Box(1, 1))->get($extension);
-            } catch (\Exception $e) {
-                $unsupportedExtensions[] = $extension;
-            } catch (\Throwable $e) {
-                $unsupportedExtensions[] = $extension;
-            }
-        }
-
-        if (\count($unsupportedExtensions) > 0) {
-            trigger_error(sprintf('The image types %s from contao.image.valid_extensions are not supported in %s on this environment.', implode(',', $unsupportedExtensions), $imagineClass), E_USER_WARNING);
-        }
     }
 
     private function getImagineImplementation(): string
