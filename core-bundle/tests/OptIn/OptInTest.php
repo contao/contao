@@ -72,7 +72,6 @@ class OptInTest extends ContaoTestCase
         $model = $this->mockClassWithProperties(OptInModel::class);
         $model->token = 'foobar';
 
-        /** @var OptInModel&MockObject $adapter */
         $adapter = $this->mockAdapter(['findByToken']);
         $adapter
             ->expects($this->exactly(2))
@@ -104,7 +103,6 @@ class OptInTest extends ContaoTestCase
             ->method($method)
         ;
 
-        /** @var OptInModel&MockObject $optInAdapter */
         $optInAdapter = $this->mockAdapter(['findExpiredTokens']);
         $optInAdapter
             ->expects($this->once())
@@ -112,7 +110,6 @@ class OptInTest extends ContaoTestCase
             ->willReturn([$token])
         ;
 
-        /** @var Model&MockObject $modelAdapter */
         $modelAdapter = $this->mockAdapter(['getClassFromTable']);
         $modelAdapter
             ->expects($this->once())
@@ -120,7 +117,6 @@ class OptInTest extends ContaoTestCase
             ->willReturn(MemberModel::class)
         ;
 
-        /** @var MemberModel&MockObject $memberAdapter */
         $memberAdapter = $this->mockAdapter(['findMultipleByIds']);
         $memberAdapter
             ->expects($this->once())

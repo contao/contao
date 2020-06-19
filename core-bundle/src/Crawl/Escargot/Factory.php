@@ -165,8 +165,10 @@ class Factory
      */
     public function create(BaseUriCollection $baseUris, QueueInterface $queue, array $selectedSubscribers, array $clientOptions = []): Escargot
     {
-        $escargot = Escargot::create($baseUris, $queue, $this->createHttpClient($clientOptions));
-        $escargot = $escargot->withUserAgent(self::USER_AGENT);
+        $escargot = Escargot::create($baseUris, $queue)
+            ->withHttpClient($this->createHttpClient($clientOptions))
+            ->withUserAgent(self::USER_AGENT)
+        ;
 
         $this->registerDefaultSubscribers($escargot);
         $this->registerSubscribers($escargot, $this->validateSubscribers($selectedSubscribers));
@@ -180,8 +182,10 @@ class Factory
      */
     public function createFromJobId(string $jobId, QueueInterface $queue, array $selectedSubscribers, array $clientOptions = []): Escargot
     {
-        $escargot = Escargot::createFromJobId($jobId, $queue, $this->createHttpClient($clientOptions));
-        $escargot = $escargot->withUserAgent(self::USER_AGENT);
+        $escargot = Escargot::createFromJobId($jobId, $queue)
+            ->withHttpClient($this->createHttpClient($clientOptions))
+            ->withUserAgent(self::USER_AGENT)
+        ;
 
         $this->registerDefaultSubscribers($escargot);
         $this->registerSubscribers($escargot, $this->validateSubscribers($selectedSubscribers));

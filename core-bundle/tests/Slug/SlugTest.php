@@ -17,7 +17,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Slug\Slug;
 use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
-use PHPUnit\Framework\MockObject\MockObject;
 
 class SlugTest extends ContaoTestCase
 {
@@ -30,7 +29,6 @@ class SlugTest extends ContaoTestCase
             ->willReturn([])
         ;
 
-        /** @var PageModel&MockObject $pageModelAdapter */
         $pageModelAdapter = $this->mockAdapter(['findWithDetails']);
         $pageModelAdapter
             ->expects($this->atLeastOnce())

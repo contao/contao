@@ -430,7 +430,6 @@ class RoutingTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        /** @var PageModel&MockObject $pageModel */
         $pageModel = $this->mockAdapter(['findByAliases']);
         $pageModel
             ->method('findByAliases')
@@ -481,7 +480,6 @@ class RoutingTest extends ContaoTestCase
             ->willReturn($page)
         ;
 
-        /** @var PageModel&MockObject $pageModel */
         $pageModel = $this->mockAdapter(['findByAliases']);
         $pageModel
             ->method('findByAliases')
@@ -541,7 +539,6 @@ class RoutingTest extends ContaoTestCase
             ->willReturn($page)
         ;
 
-        /** @var PageModel&MockObject $pageModel */
         $pageModel = $this->mockAdapter(['findByAliases']);
         $pageModel
             ->method('findByAliases')
@@ -611,7 +608,6 @@ class RoutingTest extends ContaoTestCase
             ->willReturn($page)
         ;
 
-        /** @var PageModel&MockObject $pageModel */
         $pageModel = $this->mockAdapter(['findByAliases']);
         $pageModel
             ->method('findByAliases')
@@ -643,7 +639,6 @@ class RoutingTest extends ContaoTestCase
     private function mockFrameworkWithPageAdapter(Adapter $pageAdapter = null): ContaoFramework
     {
         if (null === $pageAdapter) {
-            /** @var PageModel&MockObject $pageAdapter */
             $pageAdapter = $this->mockAdapter(['findByAliases']);
             $pageAdapter
                 ->expects($this->once())

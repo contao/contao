@@ -614,19 +614,32 @@ abstract class DataContainer extends Backend
 			{
 				$blnCanResize = true;
 
-				// Check the maximum width and height if the GDlib is used to resize images
-				if (!$objFile->isSvgImage && System::getContainer()->get('contao.image.imagine') instanceof Imagine)
+				if ($objFile->isSvgImage)
 				{
-					$blnCanResize = $objFile->height <= Config::get('gdMaxImgHeight') && $objFile->width <= Config::get('gdMaxImgWidth');
+					// SVG images with undefined sizes cannot be resized
+					if (!$objFile->viewWidth || !$objFile->viewHeight)
+					{
+						$blnCanResize= false;
+					}
 				}
-
-				$image = Image::getPath('placeholder.svg');
+				elseif (System::getContainer()->get('contao.image.imagine') instanceof Imagine)
+				{
+					// Check the maximum width and height if the GDlib is used to resize images
+					if ($objFile->height > Config::get('gdMaxImgHeight') || $objFile->width > Config::get('gdMaxImgWidth'))
+					{
+						$blnCanResize = false;
+					}
+				}
 
 				if ($blnCanResize)
 				{
 					$container = System::getContainer();
 					$rootDir = $container->getParameter('kernel.project_dir');
 					$image = rawurldecode($container->get('contao.image.image_factory')->create($rootDir . '/' . $objFile->path, array(699, 524, ResizeConfiguration::MODE_BOX))->getUrl($rootDir));
+				}
+				else
+				{
+					$image = Image::getPath('placeholder.svg');
 				}
 
 				$objImage = new File($image);

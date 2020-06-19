@@ -16,6 +16,9 @@ namespace Contao\CoreBundle\Framework;
  * Wraps legacy classes and delegates the method calls, which allows mocking
  * these classes in the unit tests.
  *
+ * @template T
+ * @mixin T
+ *
  * @internal Do not use this class in your code; use ContaoFramework::getAdapter() instead
  * @template T
  * @mixin T
