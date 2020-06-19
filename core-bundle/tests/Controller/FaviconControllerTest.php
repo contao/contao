@@ -17,7 +17,6 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\FilesModel;
 use Contao\PageModel;
 use FOS\HttpCache\ResponseTagger;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -25,7 +24,6 @@ class FaviconControllerTest extends TestCase
 {
     public function testNotFoundIfNoFaviconProvided(): void
     {
-        /** @var PageModel&MockObject $pageModelAdapter */
         $pageModelAdapter = $this->mockAdapter(['findPublishedFallbackByHostname']);
         $pageModelAdapter
             ->expects($this->once())
@@ -78,7 +76,6 @@ class FaviconControllerTest extends TestCase
         $faviconModel->path = $iconPath;
         $faviconModel->extension = substr($iconPath, -3);
 
-        /** @var PageModel&MockObject $pageModelAdapter */
         $pageModelAdapter = $this->mockAdapter(['findPublishedFallbackByHostname']);
         $pageModelAdapter
             ->expects($this->once())
@@ -86,7 +83,6 @@ class FaviconControllerTest extends TestCase
             ->willReturn($pageModel)
         ;
 
-        /** @var FilesModel&MockObject $filesModelAdapter */
         $filesModelAdapter = $this->mockAdapter(['findByUuid']);
         $filesModelAdapter
             ->expects($this->once())

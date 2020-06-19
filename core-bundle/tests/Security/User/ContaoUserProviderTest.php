@@ -76,7 +76,6 @@ class ContaoUserProviderTest extends TestCase
 
         $userAdapter = $this->mockConfiguredAdapter(['loadUserByUsername' => $user]);
 
-        /** @var Config&MockObject $configAdapter */
         $configAdapter = $this->mockAdapter(['get']);
         $configAdapter
             ->expects($this->once())
@@ -131,7 +130,6 @@ class ContaoUserProviderTest extends TestCase
 
         $userAdapter = $this->mockConfiguredAdapter(['loadUserByUsername' => $user]);
 
-        /** @var Config&MockObject $configAdapter */
         $configAdapter = $this->mockAdapter(['get']);
         $configAdapter
             ->expects($this->once())
@@ -249,7 +247,6 @@ class ContaoUserProviderTest extends TestCase
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->username = 'foobar';
 
-        /** @var System&MockObject $systemAdapter */
         $systemAdapter = $this->mockAdapter(['importStatic']);
         $systemAdapter
             ->expects($this->once())

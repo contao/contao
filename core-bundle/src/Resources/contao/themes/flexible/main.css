@@ -588,6 +588,15 @@ h2.sub_headline {
 		background-position-x:1rem;
 	}
 }
+#tl_crawl .tl_message {
+	margin-bottom:24px;
+}
+#tl_crawl .tl_message > p {
+	padding-top:0;
+	padding-bottom:0;
+	background-color:transparent;
+	background-position-y:center;
+}
 #tl_crawl .tl_tbox {
 	padding-top:0;
 }

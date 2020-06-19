@@ -11,9 +11,6 @@ rules:
     - TheCodingMachine\PHPStan\Rules\Exceptions\ThrowMustBundlePreviousExceptionRule
 
 parameters:
-    autoload_files:
-        - %currentWorkingDirectory%/vendor/autoload.php
-
     contao:
         services_yml_path: %currentWorkingDirectory%/core-bundle/src/Resources/config/services.yml
 

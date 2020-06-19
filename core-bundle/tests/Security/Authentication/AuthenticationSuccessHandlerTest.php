@@ -171,7 +171,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->willReturn($user)
         ;
 
-        /** @var System&MockObject $systemAdapter */
         $systemAdapter = $this->mockAdapter(['importStatic']);
         $systemAdapter
             ->expects($this->once())
@@ -208,7 +207,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->willReturn('http://localhost/page')
         ;
 
-        /** @var PageModel&MockObject $adapter */
         $adapter = $this->mockAdapter(['findFirstActiveByMemberGroups']);
         $adapter
             ->expects($this->once())
@@ -244,7 +242,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
     public function testUsesTheDefaultUrlIfNotAPageModel(): void
     {
-        /** @var PageModel&MockObject $adapter */
         $adapter = $this->mockAdapter(['findFirstActiveByMemberGroups']);
         $adapter
             ->expects($this->once())
@@ -288,7 +285,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
     public function testUsesTheTargetPath(): void
     {
-        /** @var PageModel&MockObject $adapter */
         $adapter = $this->mockAdapter(['findFirstActiveByMemberGroups']);
         $adapter
             ->expects($this->never())

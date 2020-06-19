@@ -33,6 +33,7 @@ class AdapterTest extends TestCase
         $this->expectException('TypeError');
 
         /* @noinspection PhpUndefinedMethodInspection */
+        /* @phpstan-ignore-next-line */
         $adapter->missingMethod();
     }
 }
