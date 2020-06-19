@@ -29,9 +29,14 @@ abstract class FunctionalTestCase extends WebTestCase
             }
         }
 
+        // Start a transaction, otherwise each single statement will be autocommited
+        $connection->beginTransaction();
+
         foreach ($yamlFiles as $file) {
             self::importFixture($connection, $file);
         }
+
+        $connection->commit();
     }
 
     protected static function resetDatabaseSchema(): void
