@@ -255,6 +255,7 @@ fieldset.checkbox_container,fieldset.radio_container {
 	width:19%;
 }
 .tl_text,.tl_text_2,.tl_text_3,.tl_text_4,.tl_textarea,.tl_text_unit,.tl_text_trbl,.tl_text_interval {
+	height:30px;
 	margin:3px 0;
 	box-sizing:border-box;
 	padding:5px 6px 6px;
@@ -337,7 +338,8 @@ select[multiple] {
 	width:50%;
 }
 .tl_select,.tl_mselect,.tl_select_column,.tl_select_unit,.tl_select_interval {
-	margin:2px 0;
+	height:30px;
+	margin:3px 0;
 	box-sizing:border-box;
 	border:1px solid #aaa;
 	padding:5px 22px 6px 6px;
@@ -495,7 +497,7 @@ a.tl_submit {
 .w50 {
 	width:calc(50% - 30px);
 	float:left;
-	min-height:80px;
+	min-height:81px;
 }
 .long {
 	width:calc(100% - 30px); /* see #6320 */
@@ -518,10 +520,15 @@ a.tl_submit {
 	width:100%;
 }
 .m12 {
-	margin:17px 15px;
+	margin:0 15px;
+	padding:17px 0;
 }
 .cbx {
-	min-height:46px;
+	min-height:47px;
+}
+.cbx.m12 {
+	min-height:81px;
+	box-sizing: border-box;
 }
 .subpal {
 	clear:both;
