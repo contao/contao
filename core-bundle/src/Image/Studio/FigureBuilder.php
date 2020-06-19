@@ -187,14 +187,26 @@ class FigureBuilder
     }
 
     /**
+     * Set the image resource from an ImageInterface.
+     */
+    public function fromImage(ImageInterface $image): self
+    {
+        return $this->fromPath($image->getPath());
+    }
+
+    /**
      * Set the image resource by guessing the identifier type.
      *
-     * @param int|string|FilesModel $identifier Can be a FilesModel, a tl_files uuid/id/path or a file system path
+     * @param int|string|FilesModel $identifier Can be a FilesModel, an ImageInterface, a tl_files uuid/id/path or a file system path
      */
     public function from($identifier): self
     {
         if ($identifier instanceof FilesModel) {
             return $this->fromFilesModel($identifier);
+        }
+
+        if ($identifier instanceof ImageInterface) {
+            return $this->fromImage($identifier);
         }
 
         if ($this->validatorAdapter()->isUuid($identifier)) {
