@@ -16,6 +16,7 @@ use Closure;
 use Contao\CoreBundle\File\MetaData;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\FilesModel;
+use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
 use Contao\PageModel;
 use Contao\Validator;
@@ -79,11 +80,11 @@ class FigureBuilder
     private $additionalLinkAttributes = [];
 
     /**
-     * User defined light box uri (overwriting the default).
+     * User defined light box resource or url (overwriting the default).
      *
-     * @var string|null
+     * @var string|ImageInterface|null
      */
-    private $lightBoxUri;
+    private $lightBoxResourceOrUrl;
 
     /**
      * User defined light box size configuration (overwriting the default).
@@ -261,24 +262,26 @@ class FigureBuilder
      * Set the link href attribute. Set the value to null to use the auto
      * generated default.
      */
-    public function setLinkHref(?string $uri): self
+    public function setLinkHref(?string $url): self
     {
-        $this->setLinkAttribute('href', $uri);
+        $this->setLinkAttribute('href', $url);
 
         return $this;
     }
 
     /**
-     * Set a custom light box uri. By default or if the argument is set to
-     * null the uri will be automatically determined from the meta data
-     * or base resource.
+     * Set a custom light box resource (file path or ImageInterface) or url.
+     * By default or if the argument is set to null the image/target will be
+     * automatically determined from the meta data or base resource.
      *
      * For this setting to take effect make sure you enabled the creation of a
      * light box by calling `enableLightBox()`.
+     *
+     * @param string|ImageInterface|null $resourceOrUrl
      */
-    public function setLightBoxUri(?string $uri): self
+    public function setLightBoxResourceOrUrl($resourceOrUrl): self
     {
-        $this->lightBoxUri = $uri;
+        $this->lightBoxResourceOrUrl = $resourceOrUrl;
 
         return $this;
     }
@@ -387,12 +390,44 @@ class FigureBuilder
             return null;
         }
 
-        // Use explicitly set uri (1), fall back to using meta data (2) or use the base resource (3) if empty.
-        $lightBoxUri = $this->lightBoxUri ?? $result->getMetaData()->getUrl() ?: $this->filePath;
+        $getResourceOrUrl = function ($target): array {
+            if ($target instanceof ImageInterface) {
+                return [$target, null];
+            }
+
+            if (preg_match('#^https?://#', $target)) {
+                return [null, $target];
+            }
+
+            $validExtensions = $this->locator
+                ->get('parameter_bag')
+                ->get('contao.image.valid_extensions')
+            ;
+
+            if (!\in_array(Path::getExtension($target), $validExtensions, true)) {
+                return [null, $target];
+            }
+
+            $projectDir = $this->locator
+                ->get('parameter_bag')
+                ->get('kernel.project_dir')
+            ;
+
+            $filePath = Path::isAbsolute($target) ?
+                Path::canonicalize($target) :
+                Path::makeAbsolute($target, $projectDir);
+
+            return [$filePath, null];
+        };
+
+        // Use explicitly set data (1), fall back to using meta data (2) or use the base resource (3) if empty.
+        $lightBoxResourceOrUrl = $this->lightBoxResourceOrUrl ?? $result->getMetaData()->getUrl() ?: $this->filePath;
+
+        [$filePathOrImage, $url] = $getResourceOrUrl($lightBoxResourceOrUrl);
 
         return $this->locator
             ->get('contao.image.studio')
-            ->createLightBoxImage($lightBoxUri, $this->lightBoxSizeConfiguration, $this->lightBoxGroupIdentifier)
+            ->createLightBoxImage($filePathOrImage, $url, $this->lightBoxSizeConfiguration, $this->lightBoxGroupIdentifier)
         ;
     }
 

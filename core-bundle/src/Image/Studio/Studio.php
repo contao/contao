@@ -22,7 +22,6 @@ use Symfony\Component\Asset\Context\ContextInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
-use Webmozart\PathUtil\Path;
 
 class Studio implements ServiceSubscriberInterface
 {
@@ -53,47 +52,12 @@ class Studio implements ServiceSubscriberInterface
     }
 
     /**
-     * @param string|ImageInterface                      $target
+     * @param string|ImageInterface|null                 $filePathOrImage
      * @param array|PictureConfiguration|int|string|null $sizeConfiguration
      */
-    public function createLightBoxImage(string $target, $sizeConfiguration = null, string $groupIdentifier = null): LightBoxResult
+    public function createLightBoxImage($filePathOrImage, string $url = null, $sizeConfiguration = null, string $groupIdentifier = null): LightBoxResult
     {
-        // todo: this logic isn't at it's final place -> should we move it to the FigureBuilder?
-        //       can we still maintain reusability? (somewhere we need to distinguish between urls
-        //       and local image resources - $uri isn't a good name, because it could be both btw.)
-        $getResourceOrUri = function ($target): array {
-            if ($target instanceof ImageInterface) {
-                return [$target, null];
-            }
-
-            if (preg_match('#^https?://#', $target)) {
-                return [null, $target];
-            }
-
-            $validExtensions = $this->locator
-                ->get('parameter_bag')
-                ->get('contao.image.valid_extensions')
-            ;
-
-            if (!\in_array(Path::getExtension($target), $validExtensions, true)) {
-                return [null, $target];
-            }
-
-            $projectDir = $this->locator
-                ->get('parameter_bag')
-                ->get('kernel.project_dir')
-            ;
-
-            $filePath = Path::isAbsolute($target) ?
-                Path::canonicalize($target) :
-                Path::makeAbsolute($target, $projectDir);
-
-            return [$filePath, null];
-        };
-
-        [$filePathOrImageInterface, $uri] = $getResourceOrUri($target);
-
-        return new LightBoxResult($this->locator, $filePathOrImageInterface, $uri, $sizeConfiguration, $groupIdentifier);
+        return new LightBoxResult($this->locator, $filePathOrImage, $url, $sizeConfiguration, $groupIdentifier);
     }
 
     public static function getSubscribedServices(): array

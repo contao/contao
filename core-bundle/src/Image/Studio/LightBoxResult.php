@@ -40,7 +40,7 @@ class LightBoxResult
      *
      * @var string|null
      */
-    private $uri;
+    private $url;
 
     /**
      * @readonly
@@ -55,14 +55,14 @@ class LightBoxResult
      *
      * @internal Use the `contao.image.studio` factory to get an instance of this class.
      */
-    public function __construct(ContainerInterface $locator, $filePathOrImage, ?string $uri, $sizeConfiguration = null, string $groupIdentifier = null)
+    public function __construct(ContainerInterface $locator, $filePathOrImage, ?string $url, $sizeConfiguration = null, string $groupIdentifier = null)
     {
-        if (1 !== \count(array_filter([$filePathOrImage, $uri]))) {
-            throw new \InvalidArgumentException('A lightbox must be either constructed with a resource or an uri.');
+        if (1 !== \count(array_filter([$filePathOrImage, $url]))) {
+            throw new \InvalidArgumentException('A lightbox must be either constructed with a resource or an url.');
         }
 
         $this->locator = $locator;
-        $this->uri = $uri;
+        $this->url = $url;
         $this->groupIdentifier = $groupIdentifier;
 
         if (null !== $filePathOrImage) {
@@ -98,7 +98,7 @@ class LightBoxResult
      */
     public function getLinkHref(): string
     {
-        return $this->hasImage() ? $this->image->getImageSrc() : $this->uri;
+        return $this->hasImage() ? $this->image->getImageSrc() : $this->url;
     }
 
     /**
