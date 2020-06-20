@@ -58,7 +58,7 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
 
-    Contao\CoreBundle\EventListener\DataContainer\Page\AdjustAutoforwardSubpaletteListener:
+    Contao\CoreBundle\EventListener\DataContainer\AdjustAutoforwardSubpaletteListener:
         public: true
         arguments:
             - '@contao.framework'

@@ -8,7 +8,7 @@
  * @license LGPL-3.0-or-later
  */
 
-use Contao\CoreBundle\EventListener\DataContainer\Page\AdjustAutoforwardSubpaletteListener;
+use Contao\CoreBundle\EventListener\DataContainer\AdjustAutoforwardSubpaletteListener;
 
 $GLOBALS['TL_DCA']['tl_page'] = array
 (
