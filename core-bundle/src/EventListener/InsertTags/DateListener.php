@@ -110,7 +110,7 @@ class DateListener implements ServiceAnnotationInterface
             return $tag[1];
         }
 
-        /** @var Date $dateAdapter */
+        /** @var Date $date */
         $date = $this->framework->getAdapter(Date::class);
 
         return $date->parse($this->getDateFormat($tag[2] ?? 'datim'), $timestamp);
@@ -131,7 +131,7 @@ class DateListener implements ServiceAnnotationInterface
             return $tag[1];
         }
 
-        /** @var Date $dateAdapter */
+        /** @var Date $date */
         $date = $this->framework->getAdapter(Date::class);
 
         return $date->parse($this->getDateFormat($tag[3]), $parsedDate->getTimestamp());
