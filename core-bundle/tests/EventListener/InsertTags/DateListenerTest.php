@@ -92,6 +92,9 @@ class DateListenerTest extends TestCase
         yield ['format_date::foobar::d.m.Y', 'foobar'];
         yield ['convert_date::foobar::d.m.Y::datim', 'foobar'];
         yield ['convert_date::2020-05-26::foobar::datim', '2020-05-26'];
+
+        yield ['formatted_datetime::'.strtotime('2020-05-26T00:00:00+00:00').'::c', '2020-05-26T00:00:00+00:00'];
+        yield ['convert_dateformat::2020-05-26T00:00:00+00:00::Y-m-d\TH:i:sT::j. F Y, H:i:s, P', 'May 26th 2020, 00:00:00, +00:00'];
     }
 
     public function getInvalidInsertTagParameters(): \Generator
