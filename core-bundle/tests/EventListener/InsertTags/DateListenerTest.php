@@ -26,7 +26,7 @@ class DateListenerTest extends TestCase
     /**
      * @dataProvider getConvertedInsertTags
      */
-    public function testFormatsAndConvertsDate(string $insertTag, string $expected): void
+    public function testReplacedInsertTag(string $insertTag, $expected): void
     {
         $listener = new DateListener($this->getFramework(), new RequestStack());
 
@@ -73,16 +73,6 @@ class DateListenerTest extends TestCase
         $this->assertSame('26.05.2020 00:00', $listener('convert_date::2020-05-26::Y-m-d::datim'));
     }
 
-    /**
-     * @dataProvider getInvalidInsertTagParameters
-     */
-    public function testReturnsFalseWithoutValidParameters(string $insertTag): void
-    {
-        $listener = new DateListener($this->mockContaoFramework(), new RequestStack());
-
-        $this->assertFalse($listener($insertTag));
-    }
-
     public function getConvertedInsertTags(): \Generator
     {
         yield ['format_date::2020-05-26::d.m.Y', '26.05.2020'];
@@ -95,14 +85,11 @@ class DateListenerTest extends TestCase
 
         yield ['formatted_datetime::'.strtotime('2020-05-26T00:00:00+00:00').'::c', '2020-05-26T00:00:00+00:00'];
         yield ['convert_dateformat::2020-05-26T00:00:00+00:00::Y-m-d\TH:i:sT::j. F Y, H:i:s, P', 'May 26th 2020, 00:00:00, +00:00'];
-    }
 
-    public function getInvalidInsertTagParameters(): \Generator
-    {
-        yield ['format_date'];
-        yield ['convert_date'];
-        yield ['convert_date::2020-05-26'];
-        yield ['convert_date::2020-05-26::Y-m-d'];
+        yield ['format_date', false];
+        yield ['convert_date', false];
+        yield ['convert_date::2020-05-26', false];
+        yield ['convert_date::2020-05-26::Y-m-d', false];
     }
 
     private function getFramework(array $adapters = []): ContaoFramework
