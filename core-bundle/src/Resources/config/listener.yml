@@ -128,8 +128,7 @@ services:
         tags:
             - { name: contao.hook, hook: replaceInsertTags }
 
-    Contao\CoreBundle\EventListener\InsertTags\DateFormatListener:
-        autoconfigure: true
+    Contao\CoreBundle\EventListener\InsertTags\DateListener:
         arguments:
             - '@contao.framework'
             - '@request_stack'
