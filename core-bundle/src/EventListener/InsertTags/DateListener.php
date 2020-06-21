@@ -154,7 +154,7 @@ class DateListener implements ServiceAnnotationInterface
                 }
             }
 
-            /** @var Config $configAdapter */
+            /** @var Config $config */
             $config = $this->framework->getAdapter(Config::class);
 
             return $config->get($key);
