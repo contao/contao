@@ -75,13 +75,11 @@ services:
             - '@database_connection'
             - '@security.encoder_factory'
 
-    contao.command.user_list_command:
-        class: Contao\CoreBundle\Command\UserListCommand
+    Contao\CoreBundle\Command\UserListCommand:
         arguments:
             - '@contao.framework'
 
-    contao.command.user_add_command:
-        class: Contao\CoreBundle\Command\UserAddCommand
+    Contao\CoreBundle\Command\UserCreateCommand:
         arguments:
             - '@contao.framework'
             - '@database_connection'

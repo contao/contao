@@ -18,7 +18,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\UserGroupModel;
 use Contao\Validator;
 use Doctrine\DBAL\Connection;
-use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
@@ -69,14 +68,14 @@ class UserCreateCommand extends Command
     {
         $this
             ->setName('contao:user:create')
-            ->addOption('username', 'u', InputOption::VALUE_REQUIRED, 'The username')
-            ->addOption('name', null, InputOption::VALUE_REQUIRED, 'The name')
+            ->addOption('username', 'u', InputOption::VALUE_REQUIRED, 'The username to create')
+            ->addOption('name', null, InputOption::VALUE_REQUIRED, 'The full name')
             ->addOption('email', null, InputOption::VALUE_REQUIRED, 'The email address')
-            ->addOption('password', 'p', InputOption::VALUE_REQUIRED, 'The username')
-            ->addOption('language', null, InputOption::VALUE_REQUIRED, 'The user language')
-            ->addOption('admin', null, InputOption::VALUE_NONE, 'Give new user admin permissions?')
-            ->addOption('groups', null, InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'The groups to add the assign the user to')
-            ->addOption('pwChange', null, InputOption::VALUE_NONE, 'Require password change')
+            ->addOption('password', 'p', InputOption::VALUE_REQUIRED, 'The password')
+            ->addOption('language', null, InputOption::VALUE_REQUIRED, 'The user language (ISO 639-1 language code)')
+            ->addOption('admin', null, InputOption::VALUE_NONE, 'Give admin permissions to the new user')
+            ->addOption('group', null, InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'The groups to assign the user to')
+            ->addOption('change-password', null, InputOption::VALUE_NONE, 'Require user to change the password on the first back end login')
             ->setDescription('Create a new Contao back end user.')
         ;
     }
@@ -90,14 +89,14 @@ class UserCreateCommand extends Command
         }
 
         if (null === $input->getOption('name')) {
-            $name = $this->ask('Please enter the name: ', $input, $output);
+            $name = $this->ask('Please enter the full name: ', $input, $output);
 
             $input->setOption('name', $name);
         }
 
         $emailCallback = static function ($value) {
             if (!Validator::isEmail($value)) {
-                throw new RuntimeException('The email address is invalid.');
+                throw new \RuntimeException('The email address is invalid.');
             }
 
             return $value;
@@ -124,15 +123,15 @@ class UserCreateCommand extends Command
 
         $passwordCallback = static function ($value) use ($username, $minLength): string {
             if ('' === trim($value)) {
-                throw new RuntimeException('The password cannot be empty');
+                throw new \RuntimeException('The password cannot be empty');
             }
 
             if (grapheme_strlen($value) < $minLength) {
-                throw new RuntimeException(sprintf('Please use at least %d characters.', $minLength));
+                throw new \RuntimeException(sprintf('Please use at least %d characters.', $minLength));
             }
 
             if ($value === $username) {
-                throw new RuntimeException(sprintf('Username and password must not be equal.'));
+                throw new \RuntimeException(sprintf('Username and password must not be equal.'));
             }
 
             return $value;
@@ -143,7 +142,7 @@ class UserCreateCommand extends Command
 
             $confirmCallback = static function ($value) use ($password): string {
                 if ($password !== $value) {
-                    throw new RuntimeException('The passwords do not match.');
+                    throw new \RuntimeException('The passwords do not match.');
                 }
 
                 return $value;
@@ -193,15 +192,15 @@ class UserCreateCommand extends Command
 
         $isAdmin = $input->getOption('admin');
 
-        $this->persistAdminUser(
+        $this->persistUser(
             $username = $input->getOption('username'),
             $name,
             $email,
             $password,
             $input->getOption('language') ?? 'en',
             $isAdmin,
-            $input->getOption('groups'),
-            $input->getOption('pwChange')
+            $input->getOption('group'),
+            $input->getOption('change-password')
         );
 
         $io->success(sprintf('User %s%s created.', $username, $isAdmin ? ' with admin permissions' : ''));
@@ -278,7 +277,7 @@ class UserCreateCommand extends Command
         return $groups->fetchEach('name');
     }
 
-    private function persistAdminUser(
+    private function persistUser(
         string $username,
         string $name,
         string $email,

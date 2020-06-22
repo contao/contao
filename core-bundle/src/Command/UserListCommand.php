@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\Date;
 use Contao\Model\Collection;
 use Contao\UserModel;
 use Symfony\Component\Console\Command\Command;
@@ -45,7 +44,7 @@ class UserListCommand extends Command
     {
         $this
             ->setName('contao:user:list')
-            ->addOption('fields', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'The header fields to display in the table')
+            ->addOption('column', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'The columns display in the table')
             ->addOption('admins', null, InputOption::VALUE_NONE, 'Return only amdins')
             ->setDescription('Lists Contao back end users.')
         ;
@@ -67,10 +66,10 @@ class UserListCommand extends Command
             return 1;
         }
 
-        $fields = $input->getOption('fields');
+        $columns = $input->getOption('column');
 
-        if ([] === $fields) {
-            $fields = ['username', 'name', 'admin', 'dateAdded'];
+        if ([] === $columns) {
+            $columns = ['username', 'name', 'admin', 'dateAdded', 'lastLogin'];
         }
 
         $rows = [];
@@ -88,11 +87,11 @@ class UserListCommand extends Command
 
                     return $user[$field] ?? '';
                 },
-                $fields
+                $columns
             );
         }
 
-        $io->table($fields, $rows);
+        $io->table($columns, $rows);
 
         return 0;
     }
