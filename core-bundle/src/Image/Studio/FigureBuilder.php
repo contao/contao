@@ -354,7 +354,7 @@ class FigureBuilder
 
         $imageResult = $this->locator
             ->get('contao.image.studio')
-            ->createImage($settings->filePath, $this->sizeConfiguration)
+            ->createImage($settings->filePath, $settings->sizeConfiguration)
         ;
 
         // We're defining some values via a Closure to make their evaluation lazy
