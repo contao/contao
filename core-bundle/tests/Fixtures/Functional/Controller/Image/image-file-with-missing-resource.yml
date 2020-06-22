@@ -1,0 +1,14 @@
+tl_files:
+    - id: 1
+      uuid: 'uuid-public'
+      name: 'public'
+      type: 'folder'
+      path: '../tests/Fixtures/files/public'
+
+    - id: 2
+      pid: 1
+      uuid: 'uuid-dummy'
+      name: 'dummy.jpg'
+      extension: 'jpg'
+      type: 'file'
+      path: '../tests/Fixtures/files/this/does/not/exist/dummy.jpg'

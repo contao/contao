@@ -93,7 +93,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
             'size' => [150, 100, 'crop'],
         ];
 
-        // An image from tl_files but without specifying the `FilesModel` (= no meta data)
+        // An image without specifying the `FilesModel` (= no meta data)
         yield 'simple image' => [
             ['image-file-with-metadata'],
             static function () use ($baseRowData) {
@@ -117,9 +117,9 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
             $baseExpectedTemplateData,
         ];
 
-        // An image from tl_files containing meta data for 'en' and a default page with a root page with 'language=en'
+        // An image with a `FilesModel` containing meta data for 'en' + a default page under a root page with 'language=en'
         yield 'image with meta data from tl_files' => [
-            ['image-file-with-metadata', 'root-with-language-and-page'],
+            ['image-file-with-metadata', 'root-and-regular-page_en'],
             function () use ($baseRowData) {
                 $this->loadGlobalObjPage(2);
 
@@ -147,9 +147,39 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
             ),
         ];
 
-        // Meta data like before but additionally containing a link
+        // An image with meta data like before but not available in the page's language
+        yield 'image with meta data from tl_files not present in current language' => [
+            ['image-file-with-metadata', 'root-and-regular-page_fr'],
+            function () use ($baseRowData) {
+                $this->loadGlobalObjPage(2);
+
+                return [
+                    new FrontendTemplate('ce_image'),
+                    $baseRowData,
+                    null,
+                    null,
+                    FilesModel::findById(2),
+                ];
+            },
+            array_replace_recursive(
+                $baseExpectedTemplateData,
+                [
+                    'picture' => [
+                        'alt' => '',
+                        'title' => '',
+                    ],
+                    'alt' => '',
+                    'imageTitle' => '',
+                    'linkTitle' => '',
+                    'imageUrl' => '',
+                    'caption' => '',
+                ]
+            ),
+        ];
+
+        // An image with meta data like before but additionally containing a link
         yield 'image with meta data from tl_files containing a link' => [
-            ['image-file-with-metadata-containing-link', 'root-with-language-and-page'],
+            ['image-file-with-metadata-containing-link', 'root-and-regular-page_en'],
             function () use ($baseRowData) {
                 $this->loadGlobalObjPage(2);
 
@@ -178,8 +208,64 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
             ),
         ];
 
+        // An image with a `FilesModel` that has no meta data and points to a non existing file
+        yield 'missing image resource' => [
+            ['image-file-with-missing-resource'],
+            static function () use ($baseRowData) {
+                return [
+                    new FrontendTemplate('ce_image'),
+                    $baseRowData,
+                    null,
+                    null,
+                    FilesModel::findById(2),
+                ];
+            },
+            array_replace_recursive(
+                $baseExpectedTemplateData,
+                [
+                    'picture' => [
+                        'title' => '',
+                    ],
+                    'alt' => '',
+                    'imageTitle' => '',
+                    'linkTitle' => '',
+                    'imageUrl' => '',
+                    'caption' => '',
+                ]
+            ),
+        ];
+
+        // An invalid image resource (singleSRC points to non existing file)
+        yield 'invalid image resource' => [
+            [],
+            static function () use ($baseRowData) {
+                return [
+                    new FrontendTemplate('ce_image'),
+                    array_merge($baseRowData, ['singleSRC' => 'this/does/not/exist/dummy.jpg']),
+                ];
+            },
+            [
+                'width' => null,
+                'height' => null,
+                'picture' => [
+                    'img' => [
+                        'src' => '',
+                        'srcset' => '',
+                    ],
+                    'sources' => [],
+                    'alt' => '',
+                ],
+                'singleSRC' => 'this/does/not/exist/dummy.jpg',
+                'src' => '',
+                'linkTitle' => '',
+                'margin' => '',
+                'addImage' => true,
+                'addBefore' => true,
+                'fullsize' => false,
+            ],
+        ];
+
         // todo:
-        //    - + empty meta data
         //    - + insert tag in link
         //    - + custom template overwrite protection
         //    - with content element (basic)
@@ -187,7 +273,8 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
         //    - with content element + fullsize/lightbox (various)
         //    - with content element + meta data overwrites
         //     ...
-        //    - no file / bad preconditions
+        //    -  bad preconditions
+        //    - legacy attributes
         //     ...
     }
 
