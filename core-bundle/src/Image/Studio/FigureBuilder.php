@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Image\Studio;
 
 use Closure;
+use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\File\MetaData;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\FilesModel;
@@ -123,11 +124,15 @@ class FigureBuilder
     public function fromFilesModel(FilesModel $filesModel): self
     {
         if ('file' !== $filesModel->type) {
-            throw new \InvalidArgumentException("DBAFS item '{$filesModel->path}' is not a file.");
+            throw new InvalidResourceException("DBAFS item '{$filesModel->path}' is not a file.");
         }
 
         $this->filePath = Path::makeAbsolute($filesModel->path, $this->projectDir());
         $this->filesModel = $filesModel;
+
+        if (!file_exists($this->filePath)) {
+            throw new InvalidResourceException("No resource could be located at path '{$this->filePath}'.");
+        }
 
         return $this;
     }
@@ -140,7 +145,7 @@ class FigureBuilder
         $filesModel = $this->filesModelAdapter()->findByUuid($uuid);
 
         if (null === $filesModel) {
-            throw new \InvalidArgumentException("DBAFS item with uuid '$uuid' could not be found.");
+            throw new InvalidResourceException("DBAFS item with uuid '$uuid' could not be found.");
         }
 
         return $this->fromFilesModel($filesModel);
@@ -154,7 +159,7 @@ class FigureBuilder
         $filesModel = $this->filesModelAdapter()->findByPk($id);
 
         if (null === $filesModel) {
-            throw new \InvalidArgumentException("DBAFS item with id '$id' could not be found.");
+            throw new InvalidResourceException("DBAFS item with id '$id' could not be found.");
         }
 
         return $this->fromFilesModel($filesModel);
@@ -184,6 +189,10 @@ class FigureBuilder
         }
 
         $this->filePath = $path;
+
+        if (!file_exists($this->filePath)) {
+            throw new InvalidResourceException("No resource could be located at path '{$this->filePath}'.");
+        }
 
         return $this;
     }
@@ -349,10 +358,6 @@ class FigureBuilder
     {
         if (null === $this->filePath) {
             throw new \LogicException('You need to set a resource before building the result.');
-        }
-
-        if (!file_exists($this->filePath)) {
-            throw new \RuntimeException("The resource '{$this->filePath}' could not be found.");
         }
 
         // Freeze settings to allow reusing this builder object.
