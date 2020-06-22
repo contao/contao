@@ -43,15 +43,6 @@ class MetaData
     }
 
     /**
-     * Get a new meta data container that is the result of merging this
-     * container's data with the data of the specified one.
-     */
-    public function withOther(self $metaData): self
-    {
-        return new self(array_merge($this->values, $metaData->values));
-    }
-
-    /**
      * Get a value. Returns null if the value was not found.
      *
      * @return mixed|null
