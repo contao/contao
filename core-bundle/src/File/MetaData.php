@@ -16,7 +16,7 @@ namespace Contao\CoreBundle\File;
  * @psalm-immutable
  *
  * This class is as a container for file meta data as typically defined in
- * tl_files / tl_content. It's underlying data structure is a key-value store
+ * tl_files / tl_content. Its underlying data structure is a key-value store
  * with added getters/setters for convenience.
  *
  * The data must be stored in a normalized form. It's your responsibility to
