@@ -54,6 +54,8 @@ class FigureBuilder
     /**
      * User defined size configuration.
      *
+     * @phpcsSuppress SlevomatCodingStandard.Classes.UnusedPrivateElements
+     *
      * @var mixed|null
      */
     private $sizeConfiguration;
