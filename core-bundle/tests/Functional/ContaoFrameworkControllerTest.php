@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Functional;
 
-use Closure;
 use Contao\Controller;
 use Contao\FilesModel;
 use Contao\FrontendTemplate;
@@ -34,7 +33,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
     /**
      * @dataProvider provideImageConfigurations
      */
-    public function testAddImageToTemplate(array $databaseFixtures, Closure $argumentCallback, array $expectedTemplateData): void
+    public function testAddImageToTemplate(array $databaseFixtures, \Closure $argumentCallback, array $expectedTemplateData): void
     {
         Registry::getInstance()->reset();
 
@@ -56,75 +55,84 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
 
     public function provideImageConfigurations(): \Generator
     {
-        $getBaseTemplateData = static function (array $originalDimensions, array $targetDimensions, string $sourcePath) {
-            return [
-                'width' => $originalDimensions[0],
-                'height' => $originalDimensions[1],
-                'imgSize' => sprintf(' width="%d" height="%d"', ...$targetDimensions),
-                'arrSize' => [
-                    0 => $targetDimensions[0],
-                    1 => $targetDimensions[1],
-                    2 => 2,
-                    3 => sprintf('width="%d" height="%d"', ...$targetDimensions),
-                    'bits' => 8,
-                    'channels' => 3,
-                    'mime' => 'image/jpeg',
+        $baseExpectedTemplateData = [
+            'width' => 200,
+            'height' => 200,
+            'imgSize' => ' width="150" height="100"',
+            'arrSize' => [
+                0 => 150,
+                1 => 100,
+                2 => 2,
+                3 => 'width="150" height="100"',
+                'bits' => 8,
+                'channels' => 3,
+                'mime' => 'image/jpeg',
+            ],
+            'picture' => [
+                'img' => [
+                    'width' => 150,
+                    'height' => 100,
+                    'hasSingleAspectRatio' => true,
+                    'src' => 'assets/images/<anything>',
+                    'srcset' => 'assets/images/<anything>',
                 ],
-                'picture' => [
-                    'img' => [
-                        'width' => $targetDimensions[0],
-                        'height' => $targetDimensions[1],
-                        'hasSingleAspectRatio' => true,
-                        'src' => 'assets/images/<anything>',
-                        'srcset' => 'assets/images/<anything>',
-                    ],
-                    'sources' => [],
-                    'alt' => '',
-                ],
-                'src' => 'assets/images/<anything>',
-                'singleSRC' => $sourcePath,
-                'linkTitle' => '',
-                'margin' => '',
-                'addBefore' => true,
-                'addImage' => true,
-                'fullsize' => false,
-            ];
-        };
+                'sources' => [],
+                'alt' => '',
+            ],
+            'src' => 'assets/images/<anything>',
+            'singleSRC' => '../tests/Fixtures/files/public/dummy.jpg',
+            'linkTitle' => '',
+            'margin' => '',
+            'addBefore' => true,
+            'addImage' => true,
+            'fullsize' => false,
+        ];
+
+        $baseRowData = [
+            'singleSRC' => '../tests/Fixtures/files/public/dummy.jpg',
+            'size' => [150, 100, 'crop'],
+        ];
 
         // An image from tl_files but without specifying the `FilesModel` (= no meta data)
         yield 'simple image' => [
             ['image-file-with-metadata'],
-            static function () {
+            static function () use ($baseRowData) {
                 return [
                     new FrontendTemplate('ce_image'),
-                    [
-                        'singleSRC' => '../tests/Fixtures/files/public/dummy.jpg',
-                        'size' => [150, 100, 'crop'],
-                    ],
+                    $baseRowData,
                 ];
             },
-            $getBaseTemplateData([200, 200], [150, 100], '../tests/Fixtures/files/public/dummy.jpg'),
+            $baseExpectedTemplateData,
+        ];
+
+        // An image like before but applied to a \stdClass instead of a Template
+        yield 'simple image, no template object' => [
+            ['image-file-with-metadata'],
+            static function () use ($baseRowData) {
+                return [
+                    new \stdClass(),
+                    $baseRowData,
+                ];
+            },
+            $baseExpectedTemplateData,
         ];
 
         // An image from tl_files containing meta data for 'en' and a default page with a root page with 'language=en'
         yield 'image with meta data from tl_files' => [
             ['image-file-with-metadata', 'root-with-language-and-page'],
-            function () {
+            function () use ($baseRowData) {
                 $this->loadGlobalObjPage(2);
 
                 return [
                     new FrontendTemplate('ce_image'),
-                    [
-                        'singleSRC' => '../tests/Fixtures/files/public/dummy.jpg',
-                        'size' => [150, 100, 'crop'],
-                    ],
+                    $baseRowData,
                     null,
                     null,
                     FilesModel::findById(2),
                 ];
             },
             array_replace_recursive(
-                $getBaseTemplateData([200, 200], [150, 100], '../tests/Fixtures/files/public/dummy.jpg'),
+                $baseExpectedTemplateData,
                 [
                     'picture' => [
                         'alt' => 'foo alt',
@@ -142,22 +150,19 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
         // Meta data like before but additionally containing a link
         yield 'image with meta data from tl_files containing a link' => [
             ['image-file-with-metadata-containing-link', 'root-with-language-and-page'],
-            function () {
+            function () use ($baseRowData) {
                 $this->loadGlobalObjPage(2);
 
                 return [
                     new FrontendTemplate('ce_image'),
-                    [
-                        'singleSRC' => '../tests/Fixtures/files/public/dummy.jpg',
-                        'size' => [150, 100, 'crop'],
-                    ],
+                    $baseRowData,
                     null,
                     null,
                     FilesModel::findById(2),
                 ];
             },
             array_replace_recursive(
-                $getBaseTemplateData([200, 200], [150, 100], '../tests/Fixtures/files/public/dummy.jpg'),
+                $baseExpectedTemplateData,
                 [
                     'picture' => [
                         'alt' => 'foo alt',
@@ -176,6 +181,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
         // todo:
         //    - + empty meta data
         //    - + insert tag in link
+        //    - + custom template overwrite protection
         //    - with content element (basic)
         //    - with content element + floating/margin
         //    - with content element + fullsize/lightbox (various)
