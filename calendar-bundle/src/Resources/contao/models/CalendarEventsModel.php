@@ -234,10 +234,10 @@ class CalendarEventsModel extends Model
 	/**
 	 * Find events of the current period by their parent ID
 	 *
-	 * @param integer $intPid      The calendar ID
-	 * @param integer $intStart    The start date as Unix timestamp
-	 * @param integer $intEnd      The end date as Unix timestamp
-	 * @param array   $arrOptions  An optional options array
+	 * @param integer $intPid     The calendar ID
+	 * @param integer $intStart   The start date as Unix timestamp
+	 * @param integer $intEnd     The end date as Unix timestamp
+	 * @param array   $arrOptions An optional options array
 	 *
 	 * @return Collection|CalendarEventsModel[]|CalendarEventsModel|null A collection of models or null if there are no events
 	 */
@@ -249,12 +249,13 @@ class CalendarEventsModel extends Model
 
 		$arrColumns = array("$t.pid=? AND (($t.startTime>=$intStart AND $t.startTime<=$intEnd) OR ($t.endTime>=$intStart AND $t.endTime<=$intEnd) OR ($t.startTime<=$intStart AND $t.endTime>=$intEnd) OR ($t.recurring='1' AND ($t.recurrences=0 OR $t.repeatEnd>=$intStart) AND $t.startTime<=$intEnd))");
 
-		if (isset($arrOptions['showFeatured'])) {
+		if (isset($arrOptions['showFeatured']))
+		{
 			if ($arrOptions['showFeatured'] === true)
 			{
 				$arrColumns[] = "$t.featured='1'";
 			}
-			else if ($arrOptions['showFeatured'] === false)
+			elseif ($arrOptions['showFeatured'] === false)
 			{
 				$arrColumns[] = "$t.featured=''";
 			}
