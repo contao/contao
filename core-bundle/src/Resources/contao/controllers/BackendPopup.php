@@ -126,8 +126,8 @@ class BackendPopup extends Backend
 			if ($objFile->isImage)
 			{
 				$objTemplate->isImage = true;
-				$objTemplate->width = $objFile->viewWidth;
-				$objTemplate->height = $objFile->viewHeight;
+				$objTemplate->width = $objFile->width;
+				$objTemplate->height = $objFile->height;
 				$objTemplate->src = $this->urlEncode($this->strFile);
 				$objTemplate->dataUri = $objFile->dataUri;
 			}
@@ -146,7 +146,7 @@ class BackendPopup extends Backend
 				}
 			}
 
-			$objTemplate->href = ampersand(Environment::get('request')) . '&amp;download=1';
+			$objTemplate->href = StringUtil::ampersand(Environment::get('request')) . '&amp;download=1';
 			$objTemplate->filesize = $this->getReadableSize($objFile->filesize) . ' (' . number_format($objFile->filesize, 0, $GLOBALS['TL_LANG']['MSC']['decimalSeparator'], $GLOBALS['TL_LANG']['MSC']['thousandsSeparator']) . ' Byte)';
 		}
 

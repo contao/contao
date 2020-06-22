@@ -16,6 +16,7 @@ use Contao\Image\ResizeConfiguration;
  * Provide methods to handle input field "file tree".
  *
  * @property string  $orderField
+ * @property boolean $isSortable
  * @property boolean $multiple
  * @property boolean $isGallery
  * @property boolean $isDownloads
@@ -62,6 +63,11 @@ class FileTree extends Widget
 	{
 		$this->import(Database::class, 'Database');
 		parent::__construct($arrAttributes);
+
+		if ($this->isSortable && !$this->filesOnly && !$this->orderField && ($this->isGallery || $this->isDownloads))
+		{
+			throw new \RuntimeException('A file tree in gallery or downloads mode needs an "orderField" to be sortable');
+		}
 
 		// Prepare the order field
 		if ($this->orderField != '')
@@ -320,27 +326,7 @@ class FileTree extends Widget
 			// Apply a custom sort order
 			if ($blnHasOrder)
 			{
-				$arrNew = array();
-
-				foreach ((array) $this->{$this->orderField} as $i)
-				{
-					if (isset($arrValues[$i]))
-					{
-						$arrNew[$i] = $arrValues[$i];
-						unset($arrValues[$i]);
-					}
-				}
-
-				if (!empty($arrValues))
-				{
-					foreach ($arrValues as $k=>$v)
-					{
-						$arrNew[$k] = $v;
-					}
-				}
-
-				$arrValues = $arrNew;
-				unset($arrNew);
+				$arrValues = ArrayUtil::sortByOrderField($arrValues, $this->{$this->orderField}, null, true);
 			}
 		}
 
@@ -350,9 +336,9 @@ class FileTree extends Widget
 
 		$return = '<input type="hidden" name="' . $this->strName . '" id="ctrl_' . $this->strId . '" value="' . $strSet . '">' . ($blnHasOrder ? '
   <input type="hidden" name="' . $this->strOrderName . '" id="ctrl_' . $this->strOrderId . '" value="' . $strOrder . '">' : '') . '
-  <div class="selector_container">' . (($blnHasOrder && \count($arrValues) > 1) ? '
+  <div class="selector_container">' . ((($blnHasOrder || $this->isSortable) && \count($arrValues) > 1) ? '
     <p class="sort_hint">' . $GLOBALS['TL_LANG']['MSC']['dragItemsHint'] . '</p>' : '') . '
-    <ul id="sort_' . $this->strId . '" class="' . trim(($blnHasOrder ? 'sortable ' : '') . ($this->isGallery ? 'sgallery' : '')) . '">';
+    <ul id="sort_' . $this->strId . '" class="' . trim(($blnHasOrder || $this->isSortable ? 'sortable ' : '') . ($this->isGallery ? 'sgallery' : '')) . '">';
 
 		foreach ($arrValues as $k=>$v)
 		{
@@ -371,7 +357,7 @@ class FileTree extends Widget
 			$extras = $this->getPickerUrlExtras($arrValues);
 
 			$return .= '
-    <p><a href="' . ampersand(System::getContainer()->get('contao.picker.builder')->getUrl('file', $extras)) . '" class="tl_submit" id="ft_' . $this->strName . '">' . $GLOBALS['TL_LANG']['MSC']['changeSelection'] . '</a></p>
+    <p><a href="' . StringUtil::ampersand(System::getContainer()->get('contao.picker.builder')->getUrl('file', $extras)) . '" class="tl_submit" id="ft_' . $this->strName . '">' . $GLOBALS['TL_LANG']['MSC']['changeSelection'] . '</a></p>
     <script>
       $("ft_' . $this->strName . '").addEvent("click", function(e) {
         e.preventDefault();
@@ -391,8 +377,8 @@ class FileTree extends Widget
           }
         });
       });
-    </script>' . ($blnHasOrder ? '
-    <script>Backend.makeMultiSrcSortable("sort_' . $this->strId . '", "ctrl_' . $this->strOrderId . '", "ctrl_' . $this->strId . '")</script>' : '');
+    </script>' . ($blnHasOrder || $this->isSortable ? '
+    <script>Backend.makeMultiSrcSortable("sort_' . $this->strId . '", "ctrl_' . ($blnHasOrder ? $this->strOrderId : $this->strId) . '", "ctrl_' . $this->strId . '")</script>' : '');
 		}
 
 		$return = '<div>' . $return . '</div></div>';

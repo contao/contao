@@ -116,8 +116,11 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'__selector__'                => array('addTime', 'addImage', 'recurring', 'addEnclosure', 'source', 'overwriteMeta'),
-		'default'                     => '{title_legend},title,alias,author;{date_legend},addTime,startDate,endDate;{meta_legend},pageTitle,description,serpPreview;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{source_legend:hide},source;{expert_legend:hide},cssClass,noComments;{publish_legend},published,start,stop'
+		'__selector__'                => array('source', 'addTime', 'addImage', 'recurring', 'addEnclosure', 'overwriteMeta'),
+		'default'                     => '{title_legend},title,alias,author;{date_legend},addTime,startDate,endDate;{source_legend:hide},source;{meta_legend},pageTitle,description,serpPreview;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments;{publish_legend},published,start,stop',
+		'internal'                    => '{title_legend},title,alias,author;{date_legend},addTime,startDate,endDate;{source_legend},source,jumpTo;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments;{publish_legend},published,start,stop',
+		'article'                     => '{title_legend},title,alias,author;{date_legend},addTime,startDate,endDate;{source_legend},source,articleId;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments;{publish_legend},published,start,stop',
+		'external'                    => '{title_legend},title,alias,author;{date_legend},addTime,startDate,endDate;{source_legend},source,url,target;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments;{publish_legend},published,start,stop'
 	),
 
 	// Subpalettes
@@ -127,9 +130,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		'addImage'                    => 'singleSRC,size,floating,imagemargin,fullsize,overwriteMeta',
 		'recurring'                   => 'repeatEach,recurrences',
 		'addEnclosure'                => 'enclosure',
-		'source_internal'             => 'jumpTo',
-		'source_article'              => 'articleId',
-		'source_external'             => 'url,target',
 		'overwriteMeta'               => 'alt,imageTitle,imageUrl,caption'
 	),
 
@@ -165,7 +165,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'alias', 'doNotCopy'=>true, 'unique'=>true, 'maxlength'=>128, 'tl_class'=>'w50 clr'),
+			'eval'                    => array('rgxp'=>'alias', 'doNotCopy'=>true, 'unique'=>true, 'maxlength'=>255, 'tl_class'=>'w50 clr'),
 			'save_callback' => array
 			(
 				array('tl_calendar_events', 'generateAlias')
@@ -424,12 +424,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'fileTree',
-			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'isDownloads'=>true, 'extensions'=>Contao\Config::get('allowedDownload'), 'mandatory'=>true, 'orderField'=>'orderEnclosure'),
-			'sql'                     => "blob NULL"
-		),
-		'orderEnclosure' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['MSC']['sortOrder'],
+			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'isDownloads'=>true, 'extensions'=>Contao\Config::get('allowedDownload'), 'mandatory'=>true, 'isSortable'=>true),
 			'sql'                     => "blob NULL"
 		),
 		'source' => array

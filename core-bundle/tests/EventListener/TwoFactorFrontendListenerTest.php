@@ -20,6 +20,7 @@ use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
+use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -489,11 +490,11 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
     }
 
     /**
-     * @return TokenInterface&MockObject
+     * @return TokenInterface&TwoFactorTokenInterface&MockObject
      */
     private function mockToken(string $class, bool $withFrontendUser = false, FrontendUser $user = null): TokenInterface
     {
-        /** @var TokenInterface&MockObject $token */
+        /** @var TokenInterface&TwoFactorTokenInterface&MockObject $token */
         $token = $this->createMock($class);
 
         if (null === $user) {

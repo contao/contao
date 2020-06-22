@@ -471,6 +471,11 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 class tl_user extends Contao\Backend
 {
 	/**
+	 * @var int
+	 */
+	private static $origUserId;
+
+	/**
 	 * Import the back end user object
 	 */
 	public function __construct()
@@ -700,14 +705,40 @@ class tl_user extends Contao\Backend
 	 */
 	public function switchUser($row, $href, $label, $title, $icon)
 	{
-		$authorizationChecker = Contao\System::getContainer()->get('security.authorization_checker');
+		$security = Contao\System::getContainer()->get('security.helper');
 
-		if (!$authorizationChecker->isGranted('ROLE_ALLOWED_TO_SWITCH') || $authorizationChecker->isGranted('ROLE_PREVIOUS_ADMIN'))
+		if (!$security->isGranted('ROLE_ALLOWED_TO_SWITCH'))
 		{
 			return '';
 		}
 
+		$disabled = false;
+
 		if ($this->User->id == $row['id'])
+		{
+			$disabled = true;
+		}
+		elseif ($security->isGranted('ROLE_PREVIOUS_ADMIN'))
+		{
+			if (self::$origUserId === null)
+			{
+				/** @var Symfony\Component\Security\Core\Authentication\Token\TokenInterface $origToken */
+				$origToken = $security->getToken()->getOriginalToken();
+				$origUser = $origToken->getUser();
+
+				if ($origUser instanceof Contao\BackendUser)
+				{
+					self::$origUserId = $origUser->id;
+				}
+			}
+
+			if (self::$origUserId == $row['id'])
+			{
+				$disabled = true;
+			}
+		}
+
+		if ($disabled)
 		{
 			return Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 		}

@@ -2,7 +2,7 @@ services:
     _instanceof:
         Contao\CoreBundle\Framework\FrameworkAwareInterface:
             calls:
-                - ['setFramework', ['@contao.framework']]
+                - [setFramework, ['@contao.framework']]
 
     contao_calendar.picker.event_provider:
         class: Contao\CalendarBundle\Picker\EventPickerProvider

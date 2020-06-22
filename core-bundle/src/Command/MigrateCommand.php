@@ -206,13 +206,13 @@ class MigrateCommand extends Command
         while (true) {
             $this->installer->compileCommands();
 
-            if (!$commands = $this->installer->getCommands()) {
+            if (!$commands = $this->installer->getCommands(false)) {
                 return true;
             }
 
             $hasNewCommands = \count(
                 array_filter(
-                    array_keys(array_merge(...array_values($commands))),
+                    array_keys($commands),
                     static function ($hash) use ($commandsByHash) {
                         return !isset($commandsByHash[$hash]);
                     }
@@ -225,7 +225,7 @@ class MigrateCommand extends Command
 
             $this->io->section('Pending database migrations');
 
-            $commandsByHash = array_merge(...array_values($commands));
+            $commandsByHash = $commands;
 
             $this->io->listing($commandsByHash);
 
@@ -243,32 +243,56 @@ class MigrateCommand extends Command
 
             $count = 0;
 
-            foreach ($this->getCommandHashes($commands, 'yes, with deletes' === $answer) as $hash) {
-                $this->io->writeln(' * '.$commandsByHash[$hash]);
-                $this->installer->execCommand($hash);
-                ++$count;
-            }
+            $commandHashes = $this->getCommandHashes($commands, 'yes, with deletes' === $answer);
+
+            do {
+                $commandExecuted = false;
+                $exceptions = [];
+
+                foreach ($commandHashes as $key => $hash) {
+                    $this->io->write(' * '.$commandsByHash[$hash]);
+
+                    try {
+                        $this->installer->execCommand($hash);
+
+                        ++$count;
+                        $commandExecuted = true;
+                        unset($commandHashes[$key]);
+
+                        $this->io->writeln('');
+                    } catch (\Throwable $e) {
+                        $exceptions[] = $e;
+
+                        $this->io->writeln('......FAILED');
+                    }
+                }
+            } while ($commandExecuted);
 
             $this->io->success('Executed '.$count.' SQL queries.');
-        }
 
-        return true;
+            if (\count($exceptions)) {
+                foreach ($exceptions as $exception) {
+                    $this->io->error($exception->getMessage());
+                }
+
+                return false;
+            }
+        }
     }
 
     private function getCommandHashes(array $commands, bool $withDrops): array
     {
         if (!$withDrops) {
-            unset($commands['ALTER_DROP']);
-
-            foreach ($commands as $category => $commandsByHash) {
-                foreach ($commandsByHash as $hash => $command) {
-                    if ('DROP' === $category && false === strpos($command, 'DROP INDEX')) {
-                        unset($commands[$category][$hash]);
-                    }
+            foreach ($commands as $hash => $command) {
+                if (
+                    (0 === strncmp($command, 'DROP ', 5) && 0 !== strncmp($command, 'DROP INDEX', 10))
+                    || preg_match('/^ALTER TABLE [^ ]+ DROP /', $command, $matches)
+                ) {
+                    unset($commands[$hash]);
                 }
             }
         }
 
-        return \count($commands) ? array_keys(array_merge(...array_values($commands))) : [];
+        return array_keys($commands);
     }
 }

@@ -68,7 +68,7 @@ abstract class Backend extends Controller
 	{
 		$arrReturn = array();
 		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
-		$arrThemes = scan($rootDir . '/system/themes');
+		$arrThemes = Folder::scan($rootDir . '/system/themes');
 
 		foreach ($arrThemes as $strTheme)
 		{
@@ -202,7 +202,7 @@ abstract class Backend extends Controller
 		}
 
 		$arrFiles = array();
-		$arrTemplates = scan($rootDir . '/' . $strDir);
+		$arrTemplates = Folder::scan($rootDir . '/' . $strDir);
 
 		foreach ($arrTemplates as $strFile)
 		{
@@ -1118,7 +1118,7 @@ abstract class Backend extends Controller
 			return '';
 		}
 
-		return ' <a href="' . ampersand($factory->getUrl($context, $extras)) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pagepicker']) . '" id="pp_' . $inputName . '">' . Image::getHtml((\is_array($extras) && isset($extras['icon']) ? $extras['icon'] : 'pickpage.svg'), $GLOBALS['TL_LANG']['MSC']['pagepicker']) . '</a>
+		return ' <a href="' . StringUtil::ampersand($factory->getUrl($context, $extras)) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pagepicker']) . '" id="pp_' . $inputName . '">' . Image::getHtml((\is_array($extras) && isset($extras['icon']) ? $extras['icon'] : 'pickpage.svg'), $GLOBALS['TL_LANG']['MSC']['pagepicker']) . '</a>
   <script>
     $("pp_' . $inputName . '").addEvent("click", function(e) {
       e.preventDefault();
@@ -1345,7 +1345,7 @@ abstract class Backend extends Controller
 		}
 
 		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
-		$arrPages = scan($rootDir . '/' . $strFolder);
+		$arrPages = Folder::scan($rootDir . '/' . $strFolder);
 
 		// Empty folder
 		if (empty($arrPages))

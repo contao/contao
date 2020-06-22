@@ -19,18 +19,21 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LogLevel;
 use Symfony\Contracts\HttpClient\ChunkInterface;
+use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Terminal42\Escargot\CrawlUri;
 use Terminal42\Escargot\EscargotAwareInterface;
 use Terminal42\Escargot\EscargotAwareTrait;
+use Terminal42\Escargot\Subscriber\ExceptionSubscriberInterface;
 use Terminal42\Escargot\Subscriber\HtmlCrawlerSubscriber;
 use Terminal42\Escargot\Subscriber\RobotsSubscriber;
 use Terminal42\Escargot\Subscriber\SubscriberInterface;
 use Terminal42\Escargot\Subscriber\Util;
 use Terminal42\Escargot\SubscriberLoggerTrait;
 
-class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwareInterface, LoggerAwareInterface
+class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwareInterface, ExceptionSubscriberInterface, LoggerAwareInterface
 {
     use EscargotAwareTrait;
     use LoggerAwareTrait;
@@ -204,5 +207,22 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
         $result->addInfo('stats', $stats);
 
         return $result;
+    }
+
+    public function onTransportException(CrawlUri $crawlUri, TransportExceptionInterface $exception, ResponseInterface $response): void
+    {
+        $this->logError($crawlUri, 'Could not request properly: '.$exception->getMessage());
+    }
+
+    public function onHttpException(CrawlUri $crawlUri, HttpExceptionInterface $exception, ResponseInterface $response, ChunkInterface $chunk): void
+    {
+        $this->logError($crawlUri, 'HTTP Status Code: '.$response->getStatusCode());
+    }
+
+    private function logError(CrawlUri $crawlUri, string $message): void
+    {
+        ++$this->stats['error'];
+
+        $this->logWithCrawlUri($crawlUri, LogLevel::ERROR, sprintf('Broken link! %s.', $message));
     }
 }

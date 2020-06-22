@@ -71,10 +71,13 @@ class DefaultIndexer implements IndexerInterface
             'language' => $language,
             'protected' => false,
             'groups' => [],
-            'pageId' => 0,
         ];
 
         $this->extendMetaFromJsonLdScripts($document, $meta);
+
+        if (!isset($meta['pageId']) || 0 === $meta['pageId']) {
+            $this->throwBecause('No page ID could be determined.');
+        }
 
         // If search was disabled in the page settings, we do not index
         if (isset($meta['noSearch']) && true === $meta['noSearch']) {

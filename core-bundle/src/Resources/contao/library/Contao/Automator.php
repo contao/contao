@@ -115,7 +115,7 @@ class Automator extends System
 		$strRootDir = $container->getParameter('kernel.project_dir');
 
 		// Walk through the subfolders
-		foreach (scan($strRootDir . '/' . $strTargetPath) as $dir)
+		foreach (Folder::scan($strRootDir . '/' . $strTargetPath) as $dir)
 		{
 			if (strncmp($dir, '.', 1) !== 0)
 			{
@@ -295,7 +295,7 @@ class Automator extends System
 		{
 			$shareDir = System::getContainer()->getParameter('contao.web_dir') . '/share';
 
-			foreach (scan($shareDir) as $file)
+			foreach (Folder::scan($shareDir) as $file)
 			{
 				if (is_dir($shareDir . '/' . $file))
 				{
@@ -376,7 +376,7 @@ class Automator extends System
 				}
 
 				$strUrl = implode('/', $strUrl);
-				$strUrl = ampersand($strUrl);
+				$strUrl = StringUtil::ampersand($strUrl);
 
 				$objFile->append('  <url><loc>' . $strUrl . '</loc></url>');
 			}
@@ -460,7 +460,7 @@ class Automator extends System
 		@trigger_error('Using Automator::rotateLogs() has been deprecated and will no longer work in Contao 5.0. Use the logger service instead, which rotates its log files automatically.', E_USER_DEPRECATED);
 
 		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
-		$arrFiles = preg_grep('/\.log$/', scan($rootDir . '/system/logs'));
+		$arrFiles = preg_grep('/\.log$/', Folder::scan($rootDir . '/system/logs'));
 
 		foreach ($arrFiles as $strFile)
 		{

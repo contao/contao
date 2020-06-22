@@ -238,6 +238,27 @@ class MergeHttpHeadersListenerTest extends TestCase
         $this->assertSame('no-cache, private', $response->headers->get('Cache-Control'));
     }
 
+    public function testSetsTheStatusCodeFromHttpHeader(): void
+    {
+        $responseEvent = $this->getResponseEvent();
+
+        $framework = $this->createMock(ContaoFramework::class);
+        $framework
+            ->expects($this->once())
+            ->method('isInitialized')
+            ->willReturn(true)
+        ;
+
+        $storage = new MemoryHeaderStorage(['HTTP/1.1 404 Not Found']);
+
+        $listener = new MergeHttpHeadersListener($framework, $storage);
+        $listener($responseEvent);
+
+        $response = $responseEvent->getResponse();
+
+        $this->assertSame(404, $response->getStatusCode());
+    }
+
     public function testServiceIsResetable(): void
     {
         $response = new Response();

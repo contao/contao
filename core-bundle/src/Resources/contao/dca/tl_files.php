@@ -330,7 +330,7 @@ class tl_files extends Contao\Backend
 					{
 						$folders[] = $id;
 
-						if ($canDeleteRecursive || ($canDeleteOne && count(scan($rootDir . '/' . $id)) < 1))
+						if ($canDeleteRecursive || ($canDeleteOne && count(Contao\Folder::scan($rootDir . '/' . $id)) < 1))
 						{
 							$delete_all[] = $id;
 						}

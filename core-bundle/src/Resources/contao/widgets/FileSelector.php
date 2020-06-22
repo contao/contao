@@ -232,7 +232,7 @@ class FileSelector extends Widget
 				if (empty($root))
 				{
 					// Set all folders inside the custom path as root nodes
-					$root = array_map(function ($el) { return $this->path . '/' . $el; }, scan($rootDir . '/' . $this->path));
+					$root = array_map(function ($el) { return $this->path . '/' . $el; }, Folder::scan($rootDir . '/' . $this->path));
 
 					// Hide the breadcrumb
 					$GLOBALS['TL_DCA']['tl_file']['list']['sorting']['breadcrumb'] = '';
@@ -403,7 +403,7 @@ class FileSelector extends Widget
 		// Scan directory and sort the result
 		else
 		{
-			foreach (scan($path) as $v)
+			foreach (Folder::scan($path) as $v)
 			{
 				if (strncmp($v, '.', 1) === 0)
 				{
@@ -439,7 +439,7 @@ class FileSelector extends Widget
 		// Process folders
 		for ($f=0, $c=\count($folders); $f<$c; $f++)
 		{
-			$content = scan($folders[$f]);
+			$content = Folder::scan($folders[$f]);
 			$currentFolder = StringUtil::stripRootDir($folders[$f]);
 			$countFiles = \count($content);
 
