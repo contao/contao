@@ -436,9 +436,6 @@ class ContentModel extends Model
 
 	/**
 	 * Get the default meta data or null if not applicable.
-	 *
-	 * todo: we could also put this into the content elements that actually use
-	 *       the columns, but would probably need that in quite some places
 	 */
 	public function getMetaData(): ?MetaData
 	{
