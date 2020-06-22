@@ -162,7 +162,7 @@ abstract class System
 
 			if (null === $container)
 			{
-				throw new \RuntimeException('The Symfony container is not available, did you initialize the ContaoFramework?');
+				throw new \RuntimeException('The Symfony container is not available, did you initialize the Contao framework?');
 			}
 
 			if (\is_object($strClass))
@@ -214,7 +214,7 @@ abstract class System
 
 			if (null === $container)
 			{
-				throw new \RuntimeException('The Symfony container is not available, did you initialize the ContaoFramework?');
+				throw new \RuntimeException('The Symfony container is not available, did you initialize the Contao framework?');
 			}
 
 			if (\is_object($strClass))
