@@ -351,6 +351,10 @@ class FigureBuilder
             throw new \LogicException('You need to set a resource before building the result.');
         }
 
+        if (!file_exists($this->filePath)) {
+            throw new \RuntimeException("The resource '{$this->filePath}' could not be found.");
+        }
+
         // Freeze settings to allow reusing this builder object.
         $settings = clone $this;
 
