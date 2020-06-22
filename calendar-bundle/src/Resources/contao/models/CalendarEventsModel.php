@@ -238,11 +238,10 @@ class CalendarEventsModel extends Model
 	 * @param integer $intStart    The start date as Unix timestamp
 	 * @param integer $intEnd      The end date as Unix timestamp
 	 * @param array   $arrOptions  An optional options array
-	 * @param string  $blnFeatured If true, return only featured events, if false, return only unfeatured events
 	 *
 	 * @return Collection|CalendarEventsModel[]|CalendarEventsModel|null A collection of models or null if there are no events
 	 */
-	public static function findCurrentByPid($intPid, $intStart, $intEnd, array $arrOptions=array(), $blnFeatured = null)
+	public static function findCurrentByPid($intPid, $intStart, $intEnd, array $arrOptions=array())
 	{
 		$t = static::$strTable;
 		$intStart = (int) $intStart;
@@ -250,13 +249,15 @@ class CalendarEventsModel extends Model
 
 		$arrColumns = array("$t.pid=? AND (($t.startTime>=$intStart AND $t.startTime<=$intEnd) OR ($t.endTime>=$intStart AND $t.endTime<=$intEnd) OR ($t.startTime<=$intStart AND $t.endTime>=$intEnd) OR ($t.recurring='1' AND ($t.recurrences=0 OR $t.repeatEnd>=$intStart) AND $t.startTime<=$intEnd))");
 
-		if ($blnFeatured === true)
-		{
-			$arrColumns[] = "$t.featured='1'";
-		}
-		elseif ($blnFeatured === false)
-		{
-			$arrColumns[] = "$t.featured=''";
+		if (isset($arrOptions['showFeatured'])) {
+			if ($arrOptions['showFeatured'] === true)
+			{
+				$arrColumns[] = "$t.featured='1'";
+			}
+			else if ($arrOptions['showFeatured'] === false)
+			{
+				$arrColumns[] = "$t.featured=''";
+			}
 		}
 
 		if (!static::isPreviewMode($arrOptions))
