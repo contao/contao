@@ -42,5 +42,6 @@ doctrine:
         auto_generate_proxy_classes: true
 
 contao:
+    upload_path: '../tests/Fixtures/files'
     localconfig:
         licenseAccepted: true

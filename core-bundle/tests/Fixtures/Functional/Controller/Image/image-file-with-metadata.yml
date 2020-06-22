@@ -1,0 +1,15 @@
+tl_files:
+    - id: 1
+      uuid: 'uuid-public'
+      name: 'public'
+      type: 'folder'
+      path: '../tests/Fixtures/files/public'
+
+    - id: 2
+      pid: 1
+      uuid: 'uuid-dummy'
+      name: 'dummy.jpg'
+      extension: 'jpg'
+      type: 'file'
+      path: '../tests/Fixtures/files/public/dummy.jpg'
+      meta: 'a:1:{s:2:"en";a:3:{s:5:"title";s:9:"foo title";s:3:"alt";s:7:"foo alt";s:7:"caption";s:11:"foo caption";}}'
