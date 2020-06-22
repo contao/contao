@@ -56,7 +56,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
 
     public function provideImageConfigurations(): \Generator
     {
-        $getBaseTemplateData = static function (array $originalDimensions, array $targetDimensions, string $sourcePath, string $assetPath) {
+        $getBaseTemplateData = static function (array $originalDimensions, array $targetDimensions, string $sourcePath) {
             return [
                 'width' => $originalDimensions[0],
                 'height' => $originalDimensions[1],
@@ -75,13 +75,13 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                         'width' => $targetDimensions[0],
                         'height' => $targetDimensions[1],
                         'hasSingleAspectRatio' => true,
-                        'src' => $assetPath,
-                        'srcset' => $assetPath,
+                        'src' => 'assets/images/<anything>',
+                        'srcset' => 'assets/images/<anything>',
                     ],
                     'sources' => [],
                     'alt' => '',
                 ],
-                'src' => $assetPath,
+                'src' => 'assets/images/<anything>',
                 'singleSRC' => $sourcePath,
                 'linkTitle' => '',
                 'margin' => '',
@@ -103,7 +103,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                     ],
                 ];
             },
-            $getBaseTemplateData([200, 200], [150, 100], '../tests/Fixtures/files/public/dummy.jpg', 'assets/images/3/dummy-f134771a.jpg'),
+            $getBaseTemplateData([200, 200], [150, 100], '../tests/Fixtures/files/public/dummy.jpg'),
         ];
 
         // An image from tl_files containing meta data for 'en' and a default page with a root page with 'language=en'
@@ -124,7 +124,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                 ];
             },
             array_replace_recursive(
-                $getBaseTemplateData([200, 200], [150, 100], '../tests/Fixtures/files/public/dummy.jpg', 'assets/images/3/dummy-f134771a.jpg'),
+                $getBaseTemplateData([200, 200], [150, 100], '../tests/Fixtures/files/public/dummy.jpg'),
                 [
                     'picture' => [
                         'alt' => 'foo alt',
@@ -157,7 +157,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                 ];
             },
             array_replace_recursive(
-                $getBaseTemplateData([200, 200], [150, 100], '../tests/Fixtures/files/public/dummy.jpg', 'assets/images/3/dummy-f134771a.jpg'),
+                $getBaseTemplateData([200, 200], [150, 100], '../tests/Fixtures/files/public/dummy.jpg'),
                 [
                     'picture' => [
                         'alt' => 'foo alt',
@@ -210,6 +210,16 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
 
         $sortByKeyRecursive($expected);
         $sortByKeyRecursive($templateData);
+
+        // Ignore generated asset paths as they differ across systems
+        array_walk_recursive(
+            $templateData,
+            static function (&$value): void {
+                if (\is_string($value) && 0 === strpos($value, 'assets/images/')) {
+                    $value = 'assets/images/<anything>';
+                }
+            }
+        );
 
         $this->assertSame($expected, $templateData);
     }
