@@ -36,6 +36,8 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
  */
 class UserPasswordCommand extends Command
 {
+    protected static $defaultName = 'contao:user:password';
+
     /**
      * @var ContaoFramework
      */
@@ -63,7 +65,6 @@ class UserPasswordCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('contao:user:password')
             ->addArgument('username', InputArgument::REQUIRED, 'The username of the back end user')
             ->addOption('password', 'p', InputOption::VALUE_REQUIRED, 'The new password (using this option is not recommended for security reasons)')
             ->setDescription('Changes the password of a Contao back end user.')

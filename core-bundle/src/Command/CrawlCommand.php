@@ -42,6 +42,8 @@ use Terminal42\Escargot\Subscriber\SubscriberInterface;
 
 class CrawlCommand extends Command
 {
+    protected static $defaultName = 'contao:crawl';
+
     /**
      * @var Factory
      */
@@ -73,7 +75,6 @@ class CrawlCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('contao:crawl')
             ->addArgument('job', InputArgument::OPTIONAL, 'An optional existing job ID')
             ->addOption('subscribers', 's', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'A list of subscribers to enable', $this->escargotFactory->getSubscriberNames())
             ->addOption('concurrency', 'c', InputOption::VALUE_REQUIRED, 'The number of concurrent requests that are going to be executed', 10)
