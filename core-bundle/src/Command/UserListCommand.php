@@ -45,7 +45,8 @@ class UserListCommand extends Command
         $this
             ->setName('contao:user:list')
             ->addOption('column', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'The columns display in the table')
-            ->addOption('admins', null, InputOption::VALUE_NONE, 'Return only amdins')
+            ->addOption('admins', null, InputOption::VALUE_NONE, 'Return only admins')
+            ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The output format', 'text')
             ->setDescription('Lists Contao back end users.')
         ;
     }
@@ -68,30 +69,22 @@ class UserListCommand extends Command
 
         $columns = $input->getOption('column');
 
-        if ([] === $columns) {
-            $columns = ['username', 'name', 'admin', 'dateAdded', 'lastLogin'];
+        switch ($input->getOption('format')) {
+            case 'text':
+                $rows = $this->formatTableRows($users, $columns);
+
+                $io->table($columns, $rows);
+                break;
+
+            case 'json':
+                $data = $this->formatJson($users, $columns);
+
+                $io->write(json_encode($data));
+                break;
+
+            default:
+                throw new \LogicException('What kind of crazy format is that!?');
         }
-
-        $rows = [];
-
-        foreach ($users->fetchAll() as $user) {
-            $rows[] = array_map(
-                static function (string $field) use ($user) {
-                    if (\in_array($field, ['tstamp', 'dateAdded'], true)) {
-                        return $user[$field] ? date('Y-m-d H:i:s', (int) $user[$field]) : '';
-                    }
-
-                    if ('admin' === $field) {
-                        return $user[$field] ? '✔' : '';
-                    }
-
-                    return $user[$field] ?? '';
-                },
-                $columns
-            );
-        }
-
-        $io->table($columns, $rows);
 
         return 0;
     }
@@ -108,5 +101,54 @@ class UserListCommand extends Command
         }
 
         return $userModel->findAll();
+    }
+
+    private function formatTableRows(Collection $users, array &$columns): array
+    {
+        if ([] === $columns) {
+            $columns = ['username', 'name', 'admin', 'dateAdded', 'lastLogin'];
+        }
+
+        $rows = [];
+
+        foreach ($users->fetchAll() as $user) {
+            $rows[] = array_map(
+                static function (string $field) use ($user) {
+                    if (\in_array($field, ['tstamp', 'dateAdded', 'lastLogin'], true)) {
+                        return $user[$field] ? date('Y-m-d H:i:s', (int) $user[$field]) : '';
+                    }
+
+                    if ('admin' === $field) {
+                        return $user[$field] ? '✔' : '';
+                    }
+
+                    return $user[$field] ?? '';
+                },
+                $columns
+            );
+        }
+
+        return $rows;
+    }
+
+    private function formatJson(Collection $users, array $columns): array
+    {
+        if ([] === $columns) {
+            return $users->fetchAll();
+        }
+
+        $data = [];
+
+        foreach ($users->fetchAll() as $user) {
+            $data[] = array_filter(
+                $user,
+                static function ($key) use ($columns) {
+                    return \in_array($key, $columns, true);
+                },
+                ARRAY_FILTER_USE_KEY
+            );
+        }
+
+        return $data;
     }
 }
