@@ -178,16 +178,18 @@ class UserCreateCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $io = new SymfonyStyle($input, $output);
+
         if (
             null === $input->getOption('username')
             || (null === $name = $input->getOption('name'))
             || (null === $email = $input->getOption('email'))
             || (null === $password = $input->getOption('password'))
         ) {
+            $io->error('Please provide at least and each of: username, name, email, password');
+
             return 1;
         }
-
-        $io = new SymfonyStyle($input, $output);
 
         $isAdmin = $input->getOption('admin');
 
