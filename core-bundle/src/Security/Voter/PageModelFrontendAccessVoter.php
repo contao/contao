@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Security\Voter;
 use Contao\FrontendUser;
 use Contao\PageModel;
 
-class PageModelAccessVoter extends AbstractFrontendAccessVoter
+class PageModelFrontendAccessVoter extends AbstractFrontendAccessVoter
 {
     protected function supportsSubject($subject): bool
     {

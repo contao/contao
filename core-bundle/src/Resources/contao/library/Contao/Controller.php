@@ -21,6 +21,7 @@ use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Monolog\ContaoContext as ContaoMonologContext;
 use Contao\CoreBundle\Routing\Page\PageRoute;
+use Contao\CoreBundle\Security\Voter\AbstractFrontendAccessVoter;
 use Contao\CoreBundle\Util\SimpleTokenParser;
 use Contao\Database\Result;
 use Contao\Image\PictureConfiguration;
@@ -316,7 +317,7 @@ abstract class Controller extends System
 					}
 
 					// Send a 403 header if the article cannot be accessed
-					if (!static::isVisibleElement($objArticle))
+					if (TL_MODE === 'FE' && !System::getContainer()->get('security.helper')->isGranted(AbstractFrontendAccessVoter::ATTRIBUTE, $objArticle))
 					{
 						throw new AccessDeniedException('Access denied: ' . Environment::get('uri'));
 					}
@@ -406,7 +407,7 @@ abstract class Controller extends System
 		}
 
 		// Check the visibility (see #6311)
-		if (!static::isVisibleElement($objRow))
+		if (TL_MODE === 'FE' && !System::getContainer()->get('security.helper')->isGranted(AbstractFrontendAccessVoter::ATTRIBUTE, $objRow))
 		{
 			return '';
 		}
@@ -480,7 +481,7 @@ abstract class Controller extends System
 		}
 
 		// Check the visibility (see #6311)
-		if (!static::isVisibleElement($objRow))
+		if (TL_MODE === 'FE' && !System::getContainer()->get('security.helper')->isGranted(AbstractFrontendAccessVoter::ATTRIBUTE, $objRow))
 		{
 			return '';
 		}
@@ -562,7 +563,7 @@ abstract class Controller extends System
 		}
 
 		// Check the visibility (see #6311)
-		if (!static::isVisibleElement($objRow))
+		if (TL_MODE === 'FE' && !System::getContainer()->get('security.helper')->isGranted(AbstractFrontendAccessVoter::ATTRIBUTE, $objRow))
 		{
 			return '';
 		}
@@ -740,9 +741,13 @@ abstract class Controller extends System
 	 * @param Model|ContentModel|ModuleModel $objElement The element model
 	 *
 	 * @return boolean True if the element is visible
+	 *
+	 * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5. Use Symfony security voters instead.
 	 */
 	public static function isVisibleElement(Model $objElement)
 	{
+		@trigger_error('Using Controller::isVisibleElement() has been deprecated and will no longer work in Contao 5.0. Use Symfony security voters instead.', E_USER_DEPRECATED);
+
 		$blnReturn = true;
 
 		// Only apply the restrictions in the front end

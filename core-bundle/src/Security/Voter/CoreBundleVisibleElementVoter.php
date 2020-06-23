@@ -12,14 +12,18 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Voter;
 
+use Contao\ArticleModel;
 use Contao\ContentModel;
 use Contao\FrontendUser;
+use Contao\ModuleModel;
 
-class ContentModelAccessVoter extends AbstractFrontendAccessVoter
+class CoreBundleVisibleElementVoter extends AbstractFrontendAccessVoter
 {
     protected function supportsSubject($subject): bool
     {
-        return $subject instanceof ContentModel;
+        return $subject instanceof ContentModel
+            || $subject instanceof ModuleModel
+            || $subject instanceof ArticleModel;
     }
 
     /**
@@ -27,14 +31,6 @@ class ContentModelAccessVoter extends AbstractFrontendAccessVoter
      */
     protected function voteOnSubject($contentModel, ?FrontendUser $user): bool
     {
-        if ($contentModel->guests && null !== $user) {
-            return false;
-        }
-
-        if (!$contentModel->protected) {
-            return true;
-        }
-
-        return $this->userHasGroups($user, $contentModel->groups);
+        return $this->isVisibleElement($contentModel, $user);
     }
 }

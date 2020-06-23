@@ -140,9 +140,8 @@ use Contao\CoreBundle\Security\TwoFactor\TrustedDeviceManager;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
 use Contao\CoreBundle\Security\User\UserChecker;
 use Contao\CoreBundle\Security\Voter\BackendAccessVoter;
-use Contao\CoreBundle\Security\Voter\ContentModelAccessVoter;
-use Contao\CoreBundle\Security\Voter\ModuleModelAccessVoter;
-use Contao\CoreBundle\Security\Voter\PageModelAccessVoter;
+use Contao\CoreBundle\Security\Voter\CoreBundleVisibleElementVoter;
+use Contao\CoreBundle\Security\Voter\PageModelFrontendAccessVoter;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\CoreBundle\Slug\Slug;
 use Contao\CoreBundle\Slug\ValidCharacters;
@@ -3185,29 +3184,20 @@ class ContaoCoreExtensionTest extends TestCase
 
         $definition = $container->getDefinition('contao.security.backend_access_voter');
 
-    public function testRegistersTheSecurityPageModelAccessVoter(): void
+    public function testRegistersTheSecurityPageModelFrontendAccessVoter(): void
     {
-        $this->assertTrue($this->container->has(PageModelAccessVoter::class));
+        $this->assertTrue($this->container->has(PageModelFrontendAccessVoter::class));
 
-        $definition = $this->container->getDefinition(PageModelAccessVoter::class);
+        $definition = $this->container->getDefinition(PageModelFrontendAccessVoter::class);
 
         $this->assertTrue($definition->isPrivate());
     }
 
-    public function testRegistersTheSecurityContentModelAccessVoter(): void
+    public function testRegistersTheSecurityVisibleElementAccessVoter(): void
     {
-        $this->assertTrue($this->container->has(ContentModelAccessVoter::class));
+        $this->assertTrue($this->container->has(CoreBundleVisibleElementVoter::class));
 
-        $definition = $this->container->getDefinition(ContentModelAccessVoter::class);
-
-        $this->assertTrue($definition->isPrivate());
-    }
-
-    public function testRegistersTheSecurityModuleModelAccessVoter(): void
-    {
-        $this->assertTrue($this->container->has(ModuleModelAccessVoter::class));
-
-        $definition = $this->container->getDefinition(ModuleModelAccessVoter::class);
+        $definition = $this->container->getDefinition(CoreBundleVisibleElementVoter::class);
 
         $this->assertTrue($definition->isPrivate());
     }

@@ -12,13 +12,20 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Voter;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\FrontendUser;
+use Contao\Model;
 use Contao\StringUtil;
+use Contao\System;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
-abstract class AbstractFrontendAccessVoter extends Voter
+abstract class AbstractFrontendAccessVoter extends Voter implements ServiceSubscriberInterface
 {
+    use ContainerAwareTrait;
+
     public const ATTRIBUTE = 'contao_frontend.access';
 
     protected function supports($attribute, $subject): bool
@@ -54,5 +61,43 @@ abstract class AbstractFrontendAccessVoter extends Voter
             && \is_array($groups)
             && \is_array($userGroups)
             && \count(array_intersect($groups, $userGroups)) > 0;
+    }
+
+    protected function isVisibleElement(Model $model, ?FrontendUser $user)
+    {
+        if ($model->guests && null !== $user) {
+            return $this->executeIsVisibleHook($model, false);
+        }
+
+        if (!$model->protected) {
+            return $this->executeIsVisibleHook($model, true);
+        }
+
+        return $this->executeIsVisibleHook($model, $this->userHasGroups($user, $model->groups));
+    }
+
+    protected function executeIsVisibleHook(Model $model, bool $accessGranted)
+    {
+        $framework = $this->container->get('contao.framework');
+        $framework->initialize();
+
+        if (isset($GLOBALS['TL_HOOKS']['isVisibleElement']) && \is_array($GLOBALS['TL_HOOKS']['isVisibleElement'])) {
+            @trigger_error('Using the "isVisibleElement" hook has been deprecated and will no longer work in Contao 5.0. Use Symfony security voters instead.', E_USER_DEPRECATED);
+
+            $systemAdapter = $framework->getAdapter(System::class);
+
+            foreach ($GLOBALS['TL_HOOKS']['isVisibleElement'] as $callback) {
+                $accessGranted = $systemAdapter->importStatic($callback[0])->{$callback[1]}($model, $accessGranted);
+            }
+        }
+
+        return $accessGranted;
+    }
+
+    public static function getSubscribedServices()
+    {
+        return [
+            'contao.framework' => ContaoFramework::class,
+        ];
     }
 }

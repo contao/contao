@@ -14,19 +14,19 @@ namespace Contao\CoreBundle\Tests\Security\Voter;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Security\Voter\AbstractFrontendAccessVoter;
-use Contao\CoreBundle\Security\Voter\ModuleModelAccessVoter;
+use Contao\CoreBundle\Security\Voter\PageModelFrontendAccessVoter;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Contao\LayoutModel;
-use Contao\ModuleModel;
+use Contao\PageModel;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class ModuleModelAccessVoterTest extends TestCase
+class PageModelFrontendAccessVoterTest extends TestCase
 {
     /**
-     * @var ModuleModelAccessVoter
+     * @var PageModelFrontendAccessVoter
      */
     private $voter;
 
@@ -34,7 +34,7 @@ class ModuleModelAccessVoterTest extends TestCase
     {
         parent::setUp();
 
-        $this->voter = new ModuleModelAccessVoter();
+        $this->voter = new PageModelFrontendAccessVoter();
     }
 
     public function testAbstainsIfTheAttributeIsNotAString(): void
@@ -64,7 +64,7 @@ class ModuleModelAccessVoterTest extends TestCase
         $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $this->voter->vote($token, $subject, $attributes));
     }
 
-    public function testGrantsAccessIfElementIsNotProtected(): void
+    public function testGrantsAccessIfPageIsNotProtected(): void
     {
         $token = $this->mockToken();
         $subject = $this->mockSubject(false);
@@ -73,17 +73,7 @@ class ModuleModelAccessVoterTest extends TestCase
         $this->assertSame(VoterInterface::ACCESS_GRANTED, $this->voter->vote($token, $subject, $attributes));
     }
 
-    public function testDeniesAccessIfElementIsForGuestsWithUser(): void
-    {
-        $user = $this->mockFrontendUser();
-        $token = $this->mockToken($user);
-        $subject = $this->mockSubject(false, [], true);
-        $attributes = [AbstractFrontendAccessVoter::ATTRIBUTE];
-
-        $this->assertSame(VoterInterface::ACCESS_DENIED, $this->voter->vote($token, $subject, $attributes));
-    }
-
-    public function testDeniesAccessIfElementIsProtectedWithoutUser(): void
+    public function testDeniesAccessIfPageIsProtectedWithoutUser(): void
     {
         $token = $this->mockToken();
         $subject = $this->mockSubject(true);
@@ -101,7 +91,7 @@ class ModuleModelAccessVoterTest extends TestCase
         $this->assertSame(VoterInterface::ACCESS_DENIED, $this->voter->vote($token, $subject, $attributes));
     }
 
-    public function testDeniesAccessIfElementIsProtectedWithoutFrontendUser(): void
+    public function testDeniesAccessIfPageIsProtectedWithoutFrontendUser(): void
     {
         $token = $this->mockToken($this->createMock(BackendUser::class));
         $subject = $this->mockSubject(true);
@@ -140,14 +130,13 @@ class ModuleModelAccessVoterTest extends TestCase
         $this->assertSame(VoterInterface::ACCESS_GRANTED, $this->voter->vote($token, $subject, $attributes));
     }
 
-    private function mockSubject(bool $protected = false, array $groups = [], bool $guests = false)
+    private function mockSubject(bool $protected = false, array $groups = [])
     {
         return $this->mockClassWithProperties(
-            ModuleModel::class,
+            PageModel::class,
             [
                 'protected' => $protected,
                 'groups' => $groups,
-                'guests' => $guests,
             ]
         );
     }
