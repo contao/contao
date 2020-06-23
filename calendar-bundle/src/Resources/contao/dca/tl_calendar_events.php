@@ -1039,9 +1039,9 @@ class tl_calendar_events extends Backend
 	 */
 	public function iconFeatured($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (Contao\Input::get('fid'))
+		if (Input::get('fid'))
 		{
-			$this->toggleFeatured(Contao\Input::get('fid'), (Contao\Input::get('state') == 1), (@func_get_arg(12) ?: null));
+			$this->toggleFeatured(Input::get('fid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
 			$this->redirect($this->getReferer());
 		}
 
@@ -1058,33 +1058,33 @@ class tl_calendar_events extends Backend
 			$icon = 'featured_.svg';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label, 'data-state="' . ($row['featured'] ? 1 : 0) . '"') . '</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label, 'data-state="' . ($row['featured'] ? 1 : 0) . '"') . '</a> ';
 	}
 
 	/**
 	 * Feature/unfeature a event item
 	 *
-	 * @param integer              $intId
-	 * @param boolean              $blnVisible
-	 * @param Contao\DataContainer $dc
+	 * @param integer       $intId
+	 * @param boolean       $blnVisible
+	 * @param DataContainer $dc
 	 *
-	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
+	 * @throws AccessDeniedException
 	 */
-	public function toggleFeatured($intId, $blnVisible, Contao\DataContainer $dc=null)
+	public function toggleFeatured($intId, $blnVisible, DataContainer $dc=null)
 	{
 		// Check permissions to edit
-		Contao\Input::setGet('id', $intId);
-		Contao\Input::setGet('act', 'feature');
+		Input::setGet('id', $intId);
+		Input::setGet('act', 'feature');
 
 		$this->checkPermission();
 
 		// Check permissions to feature
 		if (!$this->User->hasAccess('tl_calendar_events::featured', 'alexf'))
 		{
-			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to feature/unfeature event item ID ' . $intId . '.');
+			throw new AccessDeniedException('Not enough permissions to feature/unfeature event item ID ' . $intId . '.');
 		}
 
-		$objVersions = new Contao\Versions('tl_calendar_events', $intId);
+		$objVersions = new Versions('tl_calendar_events', $intId);
 		$objVersions->initialize();
 
 		// Trigger the save_callback
