@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Functional;
 
+use Contao\ContentModel;
 use Contao\Controller;
 use Contao\FilesModel;
 use Contao\FrontendTemplate;
@@ -32,6 +33,8 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
 
     /**
      * @dataProvider provideImageConfigurations
+     *
+     * @group legacy
      */
     public function testAddImageToTemplate(array $databaseFixtures, \Closure $argumentCallback, array $expectedTemplateData): void
     {
@@ -121,7 +124,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                 $this->loadGlobalObjPage(2);
 
                 return [
-                    new FrontendTemplate('ce_image'),
+                    new \stdClass(),
                     $baseRowData,
                     null,
                     null,
@@ -150,7 +153,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                 $this->loadGlobalObjPage(2);
 
                 return [
-                    new FrontendTemplate('ce_image'),
+                    new \stdClass(),
                     array_merge($baseRowData, [
                         'overwriteMeta' => '1',
                         'alt' => 'bar alt',
@@ -185,7 +188,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                 $this->loadGlobalObjPage(2);
 
                 return [
-                    new FrontendTemplate('ce_image'),
+                    new \stdClass(),
                     array_merge($baseRowData, [
                         'overwriteMeta' => '1',
                         'alt' => 'bar alt',
@@ -221,7 +224,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                 $this->loadGlobalObjPage(2);
 
                 return [
-                    new FrontendTemplate('ce_image'),
+                    new \stdClass(),
                     $baseRowData,
                     null,
                     null,
@@ -250,7 +253,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                 $this->loadGlobalObjPage(2);
 
                 return [
-                    new FrontendTemplate('ce_image'),
+                    new \stdClass(),
                     $baseRowData,
                     null,
                     null,
@@ -278,7 +281,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
             ['image-file-with-missing-resource'],
             static function () use ($baseRowData) {
                 return [
-                    new FrontendTemplate('ce_image'),
+                    new \stdClass(),
                     $baseRowData,
                     null,
                     null,
@@ -304,7 +307,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
             [],
             static function () use ($baseRowData) {
                 return [
-                    new FrontendTemplate('ce_image'),
+                    new \stdClass(),
                     array_merge($baseRowData, ['singleSRC' => 'this/does/not/exist/dummy.jpg']),
                 ];
             },
@@ -333,7 +336,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
             [],
             static function () use ($baseRowData) {
                 return [
-                    new FrontendTemplate('ce_image'),
+                    new \stdClass(),
                     array_merge($baseRowData, [
                         'imagemargin' => serialize(['top' => 1, 'right' => 2, 'bottom' => 3, 'left' => 4, 'unit' => 'px']),
                         'floating' => 'below',
@@ -429,23 +432,252 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
             ),
         ];
 
+        yield 'image content element 1' => [
+            ['ce_image', 'image-file'],
+            function () {
+                [$rowData, $filesModel] = $this->getContentElementData(1);
+
+                return [
+                    new FrontendTemplate('ce_image'),
+                    $rowData,
+                    null,
+                    null,
+                    $filesModel,
+                ];
+            },
+            array_replace_recursive(
+                $baseExpectedTemplateData,
+                [
+                    'picture' => [
+                        'title' => '',
+                    ],
+                    'alt' => '',
+                    'imageTitle' => '',
+                    'imageUrl' => '',
+                    'caption' => '',
+                    'linkTitle' => '',
+                    'floatClass' => ' float_above',
+                    'margin' => '',
+                ]
+            ),
+        ];
+
+        yield 'image content element 2 (overwriting metadata)' => [
+            ['ce_image-with-metadata', 'image-file'],
+            function () {
+                [$rowData, $filesModel] = $this->getContentElementData(1);
+
+                return [
+                    new FrontendTemplate('ce_image'),
+                    $rowData,
+                    null,
+                    null,
+                    $filesModel,
+                ];
+            },
+            array_replace_recursive(
+                $baseExpectedTemplateData,
+                [
+                    'picture' => [
+                        'alt' => 'bar alt',
+                        'title' => 'bar title',
+                    ],
+                    'alt' => 'bar alt',
+                    'imageTitle' => 'bar title',
+                    'imageUrl' => '',
+                    'caption' => 'bar caption',
+                    'linkTitle' => '',
+                    'floatClass' => ' float_above',
+                    'margin' => '',
+                ]
+            ),
+        ];
+
+        yield 'image content element 3 (fullsize/lightbox without size)' => [
+            ['ce_image-with-fullsize', 'image-file-with-metadata'],
+            function () {
+                [$rowData, $filesModel] = $this->getContentElementData(1);
+
+                return [
+                    new FrontendTemplate('ce_image'),
+                    $rowData,
+                    null,
+                    null,
+                    $filesModel,
+                ];
+            },
+            array_replace_recursive(
+                $baseExpectedTemplateData,
+                [
+                    'picture' => [
+                        'alt' => 'foo alt',
+                    ],
+                    'lightboxPicture' => [
+                        'img' => [
+                            'src' => '../tests/Fixtures/files/public/dummy.jpg',
+                            'srcset' => '../tests/Fixtures/files/public/dummy.jpg',
+                        ],
+                        'sources' => [],
+                    ],
+                    'alt' => 'foo alt',
+                    'imageTitle' => null,
+                    'imageUrl' => '',
+                    'caption' => 'foo caption',
+                    'linkTitle' => 'foo title',
+                    'href' => '../tests/Fixtures/files/public/dummy.jpg',
+                    'fullsize' => true,
+                    'attributes' => ' data-lightbox="<anything>"',
+                    'floatClass' => ' float_above',
+                    'margin' => '',
+                ]
+            ),
+        ];
+
+        yield 'image content element 4 (lightbox + size from layout)' => [
+            ['ce_image-with-fullsize', 'image-file-with-metadata', 'root-and-regular-page_en', 'layout-with-lightbox-size'],
+            function () {
+                $this->loadGlobalObjPage(2);
+                [$rowData, $filesModel] = $this->getContentElementData(1);
+
+                return [
+                    new FrontendTemplate('ce_image'),
+                    $rowData,
+                    null,
+                    null,
+                    $filesModel,
+                ];
+            },
+            array_replace_recursive(
+                $baseExpectedTemplateData,
+                [
+                    'picture' => [
+                        'alt' => 'foo alt',
+                    ],
+                    'lightboxPicture' => [
+                        'img' => [
+                            'src' => 'assets/images/<anything>',
+                            'srcset' => 'assets/images/<anything>',
+                            'hasSingleAspectRatio' => true,
+                            'height' => 30,
+                            'width' => 40,
+                        ],
+                        'sources' => [],
+                    ],
+                    'alt' => 'foo alt',
+                    'imageTitle' => null,
+                    'imageUrl' => '',
+                    'caption' => 'foo caption',
+                    'linkTitle' => 'foo title',
+                    'href' => 'assets/images/<anything>',
+                    'fullsize' => true,
+                    'attributes' => ' data-lightbox="<anything>"',
+                    'floatClass' => ' float_above',
+                    'margin' => '',
+                ]
+            ),
+        ];
+
+        yield 'image content element 5 (complex with link)' => [
+            ['ce_image-complex', 'image-file-with-metadata', 'root-and-regular-page_en'],
+            function () {
+                $this->loadGlobalObjPage(2);
+                [$rowData, $filesModel] = $this->getContentElementData(1);
+
+                return [
+                    new FrontendTemplate('ce_image'),
+                    $rowData,
+                    null,
+                    null,
+                    $filesModel,
+                ];
+            },
+            array_replace_recursive(
+                $baseExpectedTemplateData,
+                [
+                    'picture' => [
+                        'alt' => 'bar alt',
+                    ],
+                    'alt' => 'bar alt',
+                    'imageTitle' => null,
+                    'imageUrl' => 'bar://foo',
+                    'caption' => 'bar caption',
+                    'linkTitle' => 'bar title',
+                    'href' => 'bar://foo',
+                    'fullsize' => true,
+                    'attributes' => ' target="_blank"',
+                    'floatClass' => ' float_above',
+                    'margin' => 'margin:1px 2px 3px 4px;',
+                ]
+            ),
+        ];
+
+        yield 'image content element 6 (complex with lightbox)' => [
+            ['ce_image-complex-with-lightbox', 'image-file-with-metadata', 'root-and-regular-page_en', 'layout-with-lightbox-size'],
+            function () {
+                $this->loadGlobalObjPage(2);
+                [$rowData, $filesModel] = $this->getContentElementData(1);
+
+                return [
+                    new FrontendTemplate('ce_image'),
+                    $rowData,
+                    null,
+                    null,
+                    $filesModel,
+                ];
+            },
+            array_replace_recursive(
+                $baseExpectedTemplateData,
+                [
+                    'picture' => [
+                        'alt' => 'bar alt',
+                    ],
+                    'lightboxPicture' => [
+                        'img' => [
+                            'src' => 'assets/images/<anything>',
+                            'srcset' => 'assets/images/<anything>',
+                            'hasSingleAspectRatio' => true,
+                            'height' => 30,
+                            'width' => 40,
+                        ],
+                        'sources' => [],
+                    ],
+                    'alt' => 'bar alt',
+                    'imageTitle' => null,
+                    'imageUrl' => '',
+                    'caption' => 'bar caption',
+                    'linkTitle' => 'bar title',
+                    'href' => 'assets/images/<anything>',
+                    'fullsize' => true,
+                    'attributes' => ' data-lightbox="<anything>"',
+                    'floatClass' => ' float_above',
+                    'margin' => 'margin:1px 2px 3px 4px;',
+                ]
+            ),
+        ];
+
         // todo:
-        //    - + insert tag in link
-        //    - with content element (basic)
-        //    - with content element + fullsize/lightbox (various)
-        //    - with content element + meta data overwrites
-        //     ...
+        //    - insert tag in link
         //    -  bad preconditions
-        //    - legacy attributes
         //     ...
     }
 
     private function loadGlobalObjPage(int $id): void
     {
         global $objPage;
+
         $objPage = PageModel::findById($id);
 
         $objPage->loadDetails();
+        $objPage->layoutId = $objPage->layout;
+    }
+
+    private function getContentElementData(int $id): array
+    {
+        $rowData = ContentModel::findById($id)->row();
+        $filesModel = FilesModel::findByUuid($rowData['singleSRC']);
+        $rowData['singleSRC'] = $filesModel->path;
+
+        return [$rowData, $filesModel];
     }
 
     private function assertSameTemplateData(array $expected, object $template): void
@@ -466,13 +698,16 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
         $sortByKeyRecursive($expected);
         $sortByKeyRecursive($templateData);
 
-        // Ignore generated asset paths as they differ across systems
+        // Ignore generated asset paths + light box identifiers
         array_walk_recursive(
             $templateData,
             static function (&$value): void {
-                if (\is_string($value) && 0 === strpos($value, 'assets/images/')) {
-                    $value = 'assets/images/<anything>';
+                if (!\is_string($value)) {
+                    return;
                 }
+
+                $value = preg_replace('#^(assets/images/).*$#', '$1<anything>', $value);
+                $value = preg_replace('#(data-lightbox=").*(")#', '$1<anything>$2', $value);
             }
         );
 

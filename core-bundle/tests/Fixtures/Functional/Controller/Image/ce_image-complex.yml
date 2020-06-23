@@ -1,0 +1,19 @@
+tl_article:
+    - id: 1
+      pid: 2
+      published: '1'
+
+tl_content:
+    - id: 1
+      pid: 1
+      ptable: 'tl_article'
+      type: 'image'
+      singleSRC: 'uuid-dummy'
+      size: 'a:3:{i:0;s:3:"150";i:1;s:3:"100";i:2;s:4:"crop";}'
+      overwriteMeta: '1'
+      alt: 'bar alt'
+      imageTitle: 'bar title'
+      imageUrl: 'bar://foo'
+      caption: 'bar caption'
+      fullsize: '1'
+      imagemargin: 'a:5:{s:6:"bottom";s:1:"3";s:4:"left";s:1:"4";s:5:"right";s:1:"2";s:3:"top";s:1:"1";s:4:"unit";s:2:"px";}'

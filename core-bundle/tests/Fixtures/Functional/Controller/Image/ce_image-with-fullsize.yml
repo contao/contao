@@ -1,0 +1,13 @@
+tl_article:
+    - id: 1
+      pid: 2
+      published: '1'
+
+tl_content:
+    - id: 1
+      pid: 1
+      ptable: 'tl_article'
+      type: 'image'
+      singleSRC: 'uuid-dummy'
+      size: 'a:3:{i:0;s:3:"150";i:1;s:3:"100";i:2;s:4:"crop";}'
+      fullsize: '1'
