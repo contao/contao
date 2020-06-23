@@ -8,7 +8,21 @@
  * @license LGPL-3.0-or-later
  */
 
-Contao\System::loadLanguageFile('tl_content');
+use Contao\Backend;
+use Contao\BackendUser;
+use Contao\Config;
+use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\DataContainer;
+use Contao\Date;
+use Contao\FaqCategoryModel;
+use Contao\Image;
+use Contao\Input;
+use Contao\StringUtil;
+use Contao\System;
+use Contao\Versions;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
+System::loadLanguageFile('tl_content');
 
 $GLOBALS['TL_DCA']['tl_faq'] = array
 (
@@ -153,7 +167,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		),
 		'author' => array
 		(
-			'default'                 => Contao\BackendUser::getInstance()->id,
+			'default'                 => BackendUser::getInstance()->id,
 			'exclude'                 => true,
 			'search'                  => true,
 			'filter'                  => true,
@@ -195,7 +209,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['singleSRC'],
 			'exclude'                 => true,
 			'inputType'               => 'fileTree',
-			'eval'                    => array('fieldType'=>'radio', 'filesOnly'=>true, 'extensions'=>Contao\Config::get('validImageTypes'), 'mandatory'=>true),
+			'eval'                    => array('fieldType'=>'radio', 'filesOnly'=>true, 'extensions'=>Config::get('validImageTypes'), 'mandatory'=>true),
 			'sql'                     => "binary(16) NULL"
 		),
 		'alt' => array
@@ -225,7 +239,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
 			'options_callback' => static function ()
 			{
-				return Contao\System::getContainer()->get('contao.image.image_sizes')->getOptionsForUser(Contao\BackendUser::getInstance());
+				return System::getContainer()->get('contao.image.image_sizes')->getOptionsForUser(BackendUser::getInstance());
 			},
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
@@ -286,7 +300,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'fileTree',
-			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'isDownloads'=>true, 'extensions'=>Contao\Config::get('allowedDownload'), 'mandatory'=>true, 'isSortable'=>true),
+			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'isDownloads'=>true, 'extensions'=>Config::get('allowedDownload'), 'mandatory'=>true, 'isSortable'=>true),
 			'sql'                     => "blob NULL"
 		),
 		'noComments' => array
@@ -313,7 +327,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_faq extends Contao\Backend
+class tl_faq extends Backend
 {
 	/**
 	 * Import the back end user object
@@ -321,7 +335,7 @@ class tl_faq extends Contao\Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('Contao\BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 	}
 
 	/**
@@ -329,7 +343,7 @@ class tl_faq extends Contao\Backend
 	 */
 	public function checkPermission()
 	{
-		$bundles = Contao\System::getContainer()->getParameter('kernel.bundles');
+		$bundles = System::getContainer()->getParameter('kernel.bundles');
 
 		// HOOK: comments extension required
 		if (!isset($bundles['ContaoCommentsBundle']))
@@ -353,68 +367,68 @@ class tl_faq extends Contao\Backend
 			$root = $this->User->faqs;
 		}
 
-		$id = strlen(Contao\Input::get('id')) ? Contao\Input::get('id') : CURRENT_ID;
+		$id = strlen(Input::get('id')) ? Input::get('id') : CURRENT_ID;
 
 		// Check current action
-		switch (Contao\Input::get('act'))
+		switch (Input::get('act'))
 		{
 			case 'paste':
 			case 'select':
 				// Check CURRENT_ID here (see #247)
 				if (!in_array(CURRENT_ID, $root))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access FAQ category ID ' . $id . '.');
+					throw new AccessDeniedException('Not enough permissions to access FAQ category ID ' . $id . '.');
 				}
 				break;
 
 			case 'create':
-				if (Contao\Input::get('mode') == 1)
+				if (Input::get('mode') == 1)
 				{
 					$objFaq = $this->Database->prepare("SELECT pid FROM tl_faq WHERE id=?")
 											 ->limit(1)
-											 ->execute(Contao\Input::get('pid'));
+											 ->execute(Input::get('pid'));
 
 					if ($objFaq->numRows < 1)
 					{
-						throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid FAQ ID ' . Contao\Input::get('pid') . '.');
+						throw new AccessDeniedException('Invalid FAQ ID ' . Input::get('pid') . '.');
 					}
 
 					$pid = $objFaq->pid;
 				}
 				else
 				{
-					$pid = Contao\Input::get('pid');
+					$pid = Input::get('pid');
 				}
 
 				if (!in_array($pid, $root))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to create FAQs in FAQ category ID ' . Contao\Input::get('pid') . '.');
+					throw new AccessDeniedException('Not enough permissions to create FAQs in FAQ category ID ' . Input::get('pid') . '.');
 				}
 				break;
 
 			case 'cut':
 			case 'copy':
-				if (Contao\Input::get('act') == 'cut' && Contao\Input::get('mode') == 1)
+				if (Input::get('act') == 'cut' && Input::get('mode') == 1)
 				{
 					$objFaq = $this->Database->prepare("SELECT pid FROM tl_faq WHERE id=?")
 											 ->limit(1)
-											 ->execute(Contao\Input::get('pid'));
+											 ->execute(Input::get('pid'));
 
 					if ($objFaq->numRows < 1)
 					{
-						throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid FAQ ID ' . Contao\Input::get('pid') . '.');
+						throw new AccessDeniedException('Invalid FAQ ID ' . Input::get('pid') . '.');
 					}
 
 					$pid = $objFaq->pid;
 				}
 				else
 				{
-					$pid = Contao\Input::get('pid');
+					$pid = Input::get('pid');
 				}
 
 				if (!in_array($pid, $root))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' FAQ ID ' . $id . ' to FAQ category ID ' . $pid . '.');
+					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' FAQ ID ' . $id . ' to FAQ category ID ' . $pid . '.');
 				}
 				// no break
 
@@ -428,12 +442,12 @@ class tl_faq extends Contao\Backend
 
 				if ($objFaq->numRows < 1)
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid FAQ ID ' . $id . '.');
+					throw new AccessDeniedException('Invalid FAQ ID ' . $id . '.');
 				}
 
 				if (!in_array($objFaq->pid, $root))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' FAQ ID ' . $id . ' of FAQ category ID ' . $objFaq->pid . '.');
+					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' FAQ ID ' . $id . ' of FAQ category ID ' . $objFaq->pid . '.');
 				}
 				break;
 
@@ -444,14 +458,14 @@ class tl_faq extends Contao\Backend
 			case 'copyAll':
 				if (!in_array($id, $root))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access FAQ category ID ' . $id . '.');
+					throw new AccessDeniedException('Not enough permissions to access FAQ category ID ' . $id . '.');
 				}
 
 				$objFaq = $this->Database->prepare("SELECT id FROM tl_faq WHERE pid=?")
 										 ->execute($id);
 
-				/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-				$objSession = Contao\System::getContainer()->get('session');
+				/** @var SessionInterface $objSession */
+				$objSession = System::getContainer()->get('session');
 
 				$session = $objSession->all();
 				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objFaq->fetchEach('id'));
@@ -459,14 +473,14 @@ class tl_faq extends Contao\Backend
 				break;
 
 			default:
-				if (strlen(Contao\Input::get('act')))
+				if (strlen(Input::get('act')))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid command "' . Contao\Input::get('act') . '".');
+					throw new AccessDeniedException('Invalid command "' . Input::get('act') . '".');
 				}
 
 				if (!in_array($id, $root))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access FAQ category ID ' . $id . '.');
+					throw new AccessDeniedException('Not enough permissions to access FAQ category ID ' . $id . '.');
 				}
 				break;
 		}
@@ -475,14 +489,14 @@ class tl_faq extends Contao\Backend
 	/**
 	 * Auto-generate the FAQ alias if it has not been set yet
 	 *
-	 * @param mixed                $varValue
-	 * @param Contao\DataContainer $dc
+	 * @param mixed         $varValue
+	 * @param DataContainer $dc
 	 *
 	 * @return mixed
 	 *
 	 * @throws Exception
 	 */
-	public function generateAlias($varValue, Contao\DataContainer $dc)
+	public function generateAlias($varValue, DataContainer $dc)
 	{
 		$aliasExists = function (string $alias) use ($dc): bool
 		{
@@ -492,7 +506,7 @@ class tl_faq extends Contao\Backend
 		// Generate alias if there is none
 		if ($varValue == '')
 		{
-			$varValue = Contao\System::getContainer()->get('contao.slug')->generate($dc->activeRecord->question, Contao\FaqCategoryModel::findByPk($dc->activeRecord->pid)->jumpTo, $aliasExists);
+			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->question, FaqCategoryModel::findByPk($dc->activeRecord->pid)->jumpTo, $aliasExists);
 		}
 		elseif ($aliasExists($varValue))
 		{
@@ -512,13 +526,13 @@ class tl_faq extends Contao\Backend
 	public function listQuestions($arrRow)
 	{
 		$key = $arrRow['published'] ? 'published' : 'unpublished';
-		$date = Contao\Date::parse(Contao\Config::get('datimFormat'), $arrRow['tstamp']);
+		$date = Date::parse(Config::get('datimFormat'), $arrRow['tstamp']);
 
 		return '
 <div class="cte_type ' . $key . '">' . $date . '</div>
-<div class="limit_height' . (!Contao\Config::get('doNotCollapse') ? ' h40' : '') . '">
+<div class="limit_height' . (!Config::get('doNotCollapse') ? ' h40' : '') . '">
 <h2>' . $arrRow['question'] . '</h2>
-' . Contao\StringUtil::insertTagToSrc($arrRow['answer']) . '
+' . StringUtil::insertTagToSrc($arrRow['answer']) . '
 </div>' . "\n";
 	}
 
@@ -536,9 +550,9 @@ class tl_faq extends Contao\Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (Contao\Input::get('tid'))
+		if (Input::get('tid'))
 		{
-			$this->toggleVisibility(Contao\Input::get('tid'), (Contao\Input::get('state') == 1), (@func_get_arg(12) ?: null));
+			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
 			$this->redirect($this->getReferer());
 		}
 
@@ -555,23 +569,23 @@ class tl_faq extends Contao\Backend
 			$icon = 'invisible.svg';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label, 'data-state="' . ($row['published'] ? 1 : 0) . '"') . '</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label, 'data-state="' . ($row['published'] ? 1 : 0) . '"') . '</a> ';
 	}
 
 	/**
 	 * Disable/enable a user group
 	 *
-	 * @param integer              $intId
-	 * @param boolean              $blnVisible
-	 * @param Contao\DataContainer $dc
+	 * @param integer       $intId
+	 * @param boolean       $blnVisible
+	 * @param DataContainer $dc
 	 *
-	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
+	 * @throws AccessDeniedException
 	 */
-	public function toggleVisibility($intId, $blnVisible, Contao\DataContainer $dc=null)
+	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
 	{
 		// Set the ID and action
-		Contao\Input::setGet('id', $intId);
-		Contao\Input::setGet('act', 'toggle');
+		Input::setGet('id', $intId);
+		Input::setGet('act', 'toggle');
 
 		if ($dc)
 		{
@@ -598,7 +612,7 @@ class tl_faq extends Contao\Backend
 		// Check the field access
 		if (!$this->User->hasAccess('tl_faq::published', 'alexf'))
 		{
-			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to publish/unpublish FAQ ID ' . $intId . '.');
+			throw new AccessDeniedException('Not enough permissions to publish/unpublish FAQ ID ' . $intId . '.');
 		}
 
 		// Set the current record
@@ -614,7 +628,7 @@ class tl_faq extends Contao\Backend
 			}
 		}
 
-		$objVersions = new Contao\Versions('tl_faq', $intId);
+		$objVersions = new Versions('tl_faq', $intId);
 		$objVersions->initialize();
 
 		// Trigger the save_callback

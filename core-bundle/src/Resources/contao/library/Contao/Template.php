@@ -11,7 +11,8 @@
 namespace Contao;
 
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
-use MatthiasMullie\Minify;
+use MatthiasMullie\Minify\CSS;
+use MatthiasMullie\Minify\JS;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\VarDumper\VarDumper;
 
@@ -514,13 +515,13 @@ abstract class Template extends Controller
 				// Minify inline scripts
 				if ($strType == 'js')
 				{
-					$objMinify = new Minify\JS();
+					$objMinify = new JS();
 					$objMinify->add($strChunk);
 					$strChunk = $objMinify->minify();
 				}
 				elseif ($strType == 'css')
 				{
-					$objMinify = new Minify\CSS();
+					$objMinify = new CSS();
 					$objMinify->add($strChunk);
 					$strChunk = $objMinify->minify();
 				}

@@ -8,6 +8,20 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\Backend;
+use Contao\BackendUser;
+use Contao\Config;
+use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\DataContainer;
+use Contao\Date;
+use Contao\Idna;
+use Contao\Image;
+use Contao\Input;
+use Contao\StringUtil;
+use Contao\System;
+use Contao\Versions;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
 $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 (
 	// Config
@@ -161,7 +175,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_newsletter_recipients extends Contao\Backend
+class tl_newsletter_recipients extends Backend
 {
 	/**
 	 * Import the back end user object
@@ -169,13 +183,13 @@ class tl_newsletter_recipients extends Contao\Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('Contao\BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 	}
 
 	/**
 	 * Check permissions to edit table tl_newsletter_recipients
 	 *
-	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
+	 * @throws AccessDeniedException
 	 */
 	public function checkPermission()
 	{
@@ -194,32 +208,32 @@ class tl_newsletter_recipients extends Contao\Backend
 			$root = $this->User->newsletters;
 		}
 
-		$id = strlen(Contao\Input::get('id')) ? Contao\Input::get('id') : CURRENT_ID;
+		$id = strlen(Input::get('id')) ? Input::get('id') : CURRENT_ID;
 
 		// Check current action
-		switch (Contao\Input::get('act'))
+		switch (Input::get('act'))
 		{
 			case 'paste':
 			case 'select':
 				// Check CURRENT_ID here (see #247)
 				if (!in_array(CURRENT_ID, $root))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access newsletter channel ID ' . $id . '.');
+					throw new AccessDeniedException('Not enough permissions to access newsletter channel ID ' . $id . '.');
 				}
 				break;
 
 			case 'create':
-				if (!Contao\Input::get('pid') || !in_array(Contao\Input::get('pid'), $root))
+				if (!Input::get('pid') || !in_array(Input::get('pid'), $root))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to create newsletters recipients in channel ID ' . Contao\Input::get('pid') . '.');
+					throw new AccessDeniedException('Not enough permissions to create newsletters recipients in channel ID ' . Input::get('pid') . '.');
 				}
 				break;
 
 			case 'cut':
 			case 'copy':
-				if (!in_array(Contao\Input::get('pid'), $root))
+				if (!in_array(Input::get('pid'), $root))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' newsletter recipient ID ' . $id . ' to channel ID ' . Contao\Input::get('pid') . '.');
+					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' newsletter recipient ID ' . $id . ' to channel ID ' . Input::get('pid') . '.');
 				}
 				// no break
 
@@ -233,12 +247,12 @@ class tl_newsletter_recipients extends Contao\Backend
 
 				if ($objRecipient->numRows < 1)
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid newsletter recipient ID ' . $id . '.');
+					throw new AccessDeniedException('Invalid newsletter recipient ID ' . $id . '.');
 				}
 
 				if (!in_array($objRecipient->pid, $root))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' recipient ID ' . $id . ' of newsletter channel ID ' . $objRecipient->pid . '.');
+					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' recipient ID ' . $id . ' of newsletter channel ID ' . $objRecipient->pid . '.');
 				}
 				break;
 
@@ -249,14 +263,14 @@ class tl_newsletter_recipients extends Contao\Backend
 			case 'copyAll':
 				if (!in_array($id, $root))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access newsletter channel ID ' . $id . '.');
+					throw new AccessDeniedException('Not enough permissions to access newsletter channel ID ' . $id . '.');
 				}
 
 				$objRecipient = $this->Database->prepare("SELECT id FROM tl_newsletter_recipients WHERE pid=?")
 											 ->execute($id);
 
-				/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-				$objSession = Contao\System::getContainer()->get('session');
+				/** @var SessionInterface $objSession */
+				$objSession = System::getContainer()->get('session');
 
 				$session = $objSession->all();
 				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objRecipient->fetchEach('id'));
@@ -264,14 +278,14 @@ class tl_newsletter_recipients extends Contao\Backend
 				break;
 
 			default:
-				if (Contao\Input::get('act'))
+				if (Input::get('act'))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid command "' . Contao\Input::get('act') . '".');
+					throw new AccessDeniedException('Invalid command "' . Input::get('act') . '".');
 				}
 
 				if (!in_array($id, $root))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access newsletter recipient ID ' . $id . '.');
+					throw new AccessDeniedException('Not enough permissions to access newsletter recipient ID ' . $id . '.');
 				}
 				break;
 		}
@@ -280,9 +294,9 @@ class tl_newsletter_recipients extends Contao\Backend
 	/**
 	 * Set the recipient status to "added manually" if they are moved to another channel
 	 *
-	 * @param Contao\DataContainer $dc
+	 * @param DataContainer $dc
 	 */
-	public function clearOptInData(Contao\DataContainer $dc)
+	public function clearOptInData(DataContainer $dc)
 	{
 		$this->Database->prepare("UPDATE tl_newsletter_recipients SET addedOn='' WHERE id=?")
 					   ->execute($dc->id);
@@ -291,14 +305,14 @@ class tl_newsletter_recipients extends Contao\Backend
 	/**
 	 * Check if recipients are unique per channel
 	 *
-	 * @param mixed                $varValue
-	 * @param Contao\DataContainer $dc
+	 * @param mixed         $varValue
+	 * @param DataContainer $dc
 	 *
 	 * @return mixed
 	 *
 	 * @throws Exception
 	 */
-	public function checkUniqueRecipient($varValue, Contao\DataContainer $dc)
+	public function checkUniqueRecipient($varValue, DataContainer $dc)
 	{
 		$objRecipient = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_recipients WHERE email=? AND pid=(SELECT pid FROM tl_newsletter_recipients WHERE id=?) AND id!=?")
 									   ->execute($varValue, $dc->id, $dc->id);
@@ -314,14 +328,14 @@ class tl_newsletter_recipients extends Contao\Backend
 	/**
 	 * Check if a recipient is blacklisted for a channel
 	 *
-	 * @param mixed                $varValue
-	 * @param Contao\DataContainer $dc
+	 * @param mixed         $varValue
+	 * @param DataContainer $dc
 	 *
 	 * @return mixed
 	 *
 	 * @throws Exception
 	 */
-	public function checkBlacklistedRecipient($varValue, Contao\DataContainer $dc)
+	public function checkBlacklistedRecipient($varValue, DataContainer $dc)
 	{
 		$objBlacklist = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_blacklist WHERE hash=? AND pid=(SELECT pid FROM tl_newsletter_recipients WHERE id=?) AND id!=?")
 									   ->execute(md5($varValue), $dc->id, $dc->id);
@@ -343,18 +357,18 @@ class tl_newsletter_recipients extends Contao\Backend
 	 */
 	public function listRecipient($row)
 	{
-		$label = Contao\Idna::decodeEmail($row['email']);
+		$label = Idna::decodeEmail($row['email']);
 
 		if ($row['addedOn'])
 		{
-			$label .= ' <span style="color:#999;padding-left:3px">(' . sprintf($GLOBALS['TL_LANG']['tl_newsletter_recipients']['subscribed'], Contao\Date::parse(Contao\Config::get('datimFormat'), $row['addedOn'])) . ')</span>';
+			$label .= ' <span style="color:#999;padding-left:3px">(' . sprintf($GLOBALS['TL_LANG']['tl_newsletter_recipients']['subscribed'], Date::parse(Config::get('datimFormat'), $row['addedOn'])) . ')</span>';
 		}
 		else
 		{
 			$label .= ' <span style="color:#999;padding-left:3px">(' . $GLOBALS['TL_LANG']['tl_newsletter_recipients']['manually'] . ')</span>';
 		}
 
-		return sprintf('<div class="tl_content_left"><div class="list_icon" style="background-image:url(\'%ssystem/themes/%s/icons/%s.svg\')" data-icon="member.svg" data-icon-disabled="member_.svg">%s</div></div>', Contao\System::getContainer()->get('contao.assets.assets_context')->getStaticUrl(), Contao\Backend::getTheme(), ($row['active'] ? 'member' : 'member_'), $label) . "\n";
+		return sprintf('<div class="tl_content_left"><div class="list_icon" style="background-image:url(\'%ssystem/themes/%s/icons/%s.svg\')" data-icon="member.svg" data-icon-disabled="member_.svg">%s</div></div>', System::getContainer()->get('contao.assets.assets_context')->getStaticUrl(), Backend::getTheme(), ($row['active'] ? 'member' : 'member_'), $label) . "\n";
 	}
 
 	/**
@@ -371,9 +385,9 @@ class tl_newsletter_recipients extends Contao\Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (Contao\Input::get('tid'))
+		if (Input::get('tid'))
 		{
-			$this->toggleVisibility(Contao\Input::get('tid'), (Contao\Input::get('state') == 1), (@func_get_arg(12) ?: null));
+			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
 			$this->redirect($this->getReferer());
 		}
 
@@ -390,23 +404,23 @@ class tl_newsletter_recipients extends Contao\Backend
 			$icon = 'invisible.svg';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label, 'data-state="' . ($row['active'] ? 1 : 0) . '"') . '</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label, 'data-state="' . ($row['active'] ? 1 : 0) . '"') . '</a> ';
 	}
 
 	/**
 	 * Disable/enable a user group
 	 *
-	 * @param integer              $intId
-	 * @param boolean              $blnVisible
-	 * @param Contao\DataContainer $dc
+	 * @param integer       $intId
+	 * @param boolean       $blnVisible
+	 * @param DataContainer $dc
 	 *
-	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
+	 * @throws AccessDeniedException
 	 */
-	public function toggleVisibility($intId, $blnVisible, Contao\DataContainer $dc=null)
+	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
 	{
 		// Set the ID and action
-		Contao\Input::setGet('id', $intId);
-		Contao\Input::setGet('act', 'toggle');
+		Input::setGet('id', $intId);
+		Input::setGet('act', 'toggle');
 
 		if ($dc)
 		{
@@ -433,7 +447,7 @@ class tl_newsletter_recipients extends Contao\Backend
 		// Check the field access
 		if (!$this->User->hasAccess('tl_newsletter_recipients::active', 'alexf'))
 		{
-			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to publish/unpublish newsletter recipient ID ' . $intId . '.');
+			throw new AccessDeniedException('Not enough permissions to publish/unpublish newsletter recipient ID ' . $intId . '.');
 		}
 
 		// Set the current record
@@ -449,7 +463,7 @@ class tl_newsletter_recipients extends Contao\Backend
 			}
 		}
 
-		$objVersions = new Contao\Versions('tl_newsletter_recipients', $intId);
+		$objVersions = new Versions('tl_newsletter_recipients', $intId);
 		$objVersions->initialize();
 
 		// Trigger the save_callback
