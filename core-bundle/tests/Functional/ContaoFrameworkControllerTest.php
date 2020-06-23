@@ -93,8 +93,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
             'size' => [150, 100, 'crop'],
         ];
 
-        // An image without specifying the `FilesModel` (= no meta data)
-        yield 'simple image' => [
+        yield 'applying to FrontendTemplate' => [
             ['image-file-with-metadata'],
             static function () use ($baseRowData) {
                 return [
@@ -105,8 +104,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
             $baseExpectedTemplateData,
         ];
 
-        // An image like before but applied to a \stdClass instead of a Template
-        yield 'simple image, no template object' => [
+        yield 'applying to \stdClass()' => [
             ['image-file-with-metadata'],
             static function () use ($baseRowData) {
                 return [
@@ -117,8 +115,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
             $baseExpectedTemplateData,
         ];
 
-        // An image with a `FilesModel` containing meta data for 'en' + a default page under a root page with 'language=en'
-        yield 'image with meta data from tl_files' => [
+        yield 'meta data from tl_files' => [
             ['image-file-with-metadata', 'root-and-regular-page_en'],
             function () use ($baseRowData) {
                 $this->loadGlobalObjPage(2);
@@ -147,8 +144,78 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
             ),
         ];
 
-        // An image with meta data like before but not available in the page's language
-        yield 'image with meta data from tl_files not present in current language' => [
+        yield 'overwriting meta data' => [
+            ['image-file-with-metadata', 'root-and-regular-page_en'],
+            function () use ($baseRowData) {
+                $this->loadGlobalObjPage(2);
+
+                return [
+                    new FrontendTemplate('ce_image'),
+                    array_merge($baseRowData, [
+                        'overwriteMeta' => '1',
+                        'alt' => 'bar alt',
+                        'imageTitle' => '',
+                        'imageUrl' => '',
+                        'caption' => 'bar caption',
+                    ]),
+                    null,
+                    null,
+                    FilesModel::findById(2),
+                ];
+            },
+            array_replace_recursive(
+                $baseExpectedTemplateData,
+                [
+                    'picture' => [
+                        'alt' => 'bar alt',
+                        'title' => '',
+                    ],
+                    'alt' => 'bar alt',
+                    'imageTitle' => '',
+                    'linkTitle' => '',
+                    'imageUrl' => '',
+                    'caption' => 'bar caption',
+                ]
+            ),
+        ];
+
+        yield 'overwriting meta data with link' => [
+            ['image-file-with-metadata', 'root-and-regular-page_en'],
+            function () use ($baseRowData) {
+                $this->loadGlobalObjPage(2);
+
+                return [
+                    new FrontendTemplate('ce_image'),
+                    array_merge($baseRowData, [
+                        'overwriteMeta' => '1',
+                        'alt' => 'bar alt',
+                        'imageTitle' => 'bar title',
+                        'imageUrl' => 'bar://foo',
+                        'caption' => 'bar caption',
+                    ]),
+                    null,
+                    null,
+                    FilesModel::findById(2),
+                ];
+            },
+            array_replace_recursive(
+                $baseExpectedTemplateData,
+                [
+                    'picture' => [
+                        'alt' => 'bar alt',
+                    ],
+                    'alt' => 'bar alt',
+                    'imageTitle' => null,
+                    'linkTitle' => 'bar title',
+                    'imageUrl' => 'bar://foo',
+                    'caption' => 'bar caption',
+                    'attributes' => '',
+                    'href' => 'bar://foo',
+                ]
+            ),
+        ];
+
+        yield 'meta data from tl_files not present in current language' => [
             ['image-file-with-metadata', 'root-and-regular-page_fr'],
             function () use ($baseRowData) {
                 $this->loadGlobalObjPage(2);
@@ -177,8 +244,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
             ),
         ];
 
-        // An image with meta data like before but additionally containing a link
-        yield 'image with meta data from tl_files containing a link' => [
+        yield 'meta data from tl_files containing a link' => [
             ['image-file-with-metadata-containing-link', 'root-and-regular-page_en'],
             function () use ($baseRowData) {
                 $this->loadGlobalObjPage(2);
@@ -208,7 +274,6 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
             ),
         ];
 
-        // An image with a `FilesModel` that has no meta data and points to a non existing file
         yield 'missing image resource' => [
             ['image-file-with-missing-resource'],
             static function () use ($baseRowData) {
@@ -235,8 +300,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
             ),
         ];
 
-        // An invalid image resource (singleSRC points to non existing file)
-        yield 'invalid image resource' => [
+        yield 'invalid singleSRC' => [
             [],
             static function () use ($baseRowData) {
                 return [
@@ -265,11 +329,109 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
             ],
         ];
 
+        yield 'margin/floating attributes' => [
+            [],
+            static function () use ($baseRowData) {
+                return [
+                    new FrontendTemplate('ce_image'),
+                    array_merge($baseRowData, [
+                        'imagemargin' => serialize(['top' => 1, 'right' => 2, 'bottom' => 3, 'left' => 4, 'unit' => 'px']),
+                        'floating' => 'below',
+                    ]),
+                ];
+            },
+            array_replace_recursive(
+                $baseExpectedTemplateData,
+                [
+                    'addBefore' => false,
+                    'margin' => 'margin:1px 2px 3px 4px;',
+                    'floatClass' => ' float_below',
+                ]
+            ),
+        ];
+
+        yield 'preserving existing href key' => [
+            ['image-file-with-metadata-containing-link', 'root-and-regular-page_en'],
+            function () use ($baseRowData) {
+                $this->loadGlobalObjPage(2);
+
+                $template = new FrontendTemplate('ce_image');
+                $template->href = 'do://not/overwrite/me';
+
+                return [
+                    $template,
+                    array_merge($baseRowData, [
+                        'overwriteMeta' => '1',
+                        'alt' => 'bar alt',
+                        'imageTitle' => 'bar title',
+                        'imageUrl' => '',
+                        'caption' => 'bar caption',
+                    ]),
+                    null,
+                    null,
+                    FilesModel::findById(2),
+                ];
+            },
+            array_replace_recursive(
+                $baseExpectedTemplateData,
+                [
+                    'picture' => [
+                        'alt' => 'bar alt',
+                        'title' => 'bar title',
+                    ],
+                    'alt' => 'bar alt',
+                    'imageTitle' => 'bar title',
+                    'imageUrl' => '',
+                    'caption' => 'bar caption',
+                    'linkTitle' => '',
+                    'href' => 'do://not/overwrite/me',
+                ]
+            ),
+        ];
+
+        yield 'preserving existing href key when overwriting link' => [
+            ['image-file-with-metadata-containing-link', 'root-and-regular-page_en'],
+            function () use ($baseRowData) {
+                $this->loadGlobalObjPage(2);
+
+                $template = new FrontendTemplate('ce_image');
+                $template->href = 'do://not/overwrite/me';
+
+                return [
+                    $template,
+                    array_merge($baseRowData, [
+                        'overwriteMeta' => '1',
+                        'alt' => 'bar alt',
+                        'imageTitle' => 'bar title',
+                        'imageUrl' => 'bar://foo',
+                        'caption' => 'bar caption',
+                    ]),
+                    null,
+                    null,
+                    FilesModel::findById(2),
+                ];
+            },
+            array_replace_recursive(
+                $baseExpectedTemplateData,
+                [
+                    'picture' => [
+                        'alt' => 'bar alt',
+                    ],
+                    'alt' => 'bar alt',
+                    'imageTitle' => null,
+                    'imageUrl' => 'bar://foo',
+                    'caption' => 'bar caption',
+                    'linkTitle' => 'bar title',
+                    'imageHref' => 'bar://foo',
+                    'attributes' => '',
+                    'href' => 'do://not/overwrite/me',
+                ]
+            ),
+        ];
+
         // todo:
         //    - + insert tag in link
-        //    - + custom template overwrite protection
         //    - with content element (basic)
-        //    - with content element + floating/margin
         //    - with content element + fullsize/lightbox (various)
         //    - with content element + meta data overwrites
         //     ...
