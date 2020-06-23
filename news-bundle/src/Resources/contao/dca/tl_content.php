@@ -8,8 +8,21 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\Automator;
+use Contao\Backend;
+use Contao\BackendUser;
+use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\DataContainer;
+use Contao\Image;
+use Contao\Input;
+use Contao\News;
+use Contao\StringUtil;
+use Contao\System;
+use Contao\Versions;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
 // Dynamically add the permission check and parent table
-if (Contao\Input::get('do') == 'news')
+if (Input::get('do') == 'news')
 {
 	$GLOBALS['TL_DCA']['tl_content']['config']['ptable'] = 'tl_news';
 	array_unshift($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'], array('tl_content_news', 'checkPermission'));
@@ -20,11 +33,11 @@ if (Contao\Input::get('do') == 'news')
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
- * @property Contao\News $News
+ * @property News $News
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_content_news extends Contao\Backend
+class tl_content_news extends Backend
 {
 	/**
 	 * Import the back end user object
@@ -32,7 +45,7 @@ class tl_content_news extends Contao\Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('Contao\BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 	}
 
 	/**
@@ -56,7 +69,7 @@ class tl_content_news extends Contao\Backend
 		}
 
 		// Check the current action
-		switch (Contao\Input::get('act'))
+		switch (Input::get('act'))
 		{
 			case '': // empty
 			case 'paste':
@@ -72,16 +85,16 @@ class tl_content_news extends Contao\Backend
 			case 'cutAll':
 			case 'copyAll':
 				// Check access to the parent element if a content element is moved
-				if (in_array(Contao\Input::get('act'), array('cutAll', 'copyAll')))
+				if (in_array(Input::get('act'), array('cutAll', 'copyAll')))
 				{
-					$this->checkAccessToElement(Contao\Input::get('pid'), $root, (Contao\Input::get('mode') == 2));
+					$this->checkAccessToElement(Input::get('pid'), $root, (Input::get('mode') == 2));
 				}
 
 				$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE ptable='tl_news' AND pid=?")
 										 ->execute(CURRENT_ID);
 
-				/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-				$objSession = Contao\System::getContainer()->get('session');
+				/** @var SessionInterface $objSession */
+				$objSession = System::getContainer()->get('session');
 
 				$session = $objSession->all();
 				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objCes->fetchEach('id'));
@@ -91,12 +104,12 @@ class tl_content_news extends Contao\Backend
 			case 'cut':
 			case 'copy':
 				// Check access to the parent element if a content element is moved
-				$this->checkAccessToElement(Contao\Input::get('pid'), $root, (Contao\Input::get('mode') == 2));
+				$this->checkAccessToElement(Input::get('pid'), $root, (Input::get('mode') == 2));
 				// no break
 
 			default:
 				// Check access to the content element
-				$this->checkAccessToElement(Contao\Input::get('id'), $root);
+				$this->checkAccessToElement(Input::get('id'), $root);
 				break;
 		}
 	}
@@ -108,7 +121,7 @@ class tl_content_news extends Contao\Backend
 	 * @param array   $root
 	 * @param boolean $blnIsPid
 	 *
-	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
+	 * @throws AccessDeniedException
 	 */
 	protected function checkAccessToElement($id, $root, $blnIsPid=false)
 	{
@@ -128,13 +141,13 @@ class tl_content_news extends Contao\Backend
 		// Invalid ID
 		if ($objArchive->numRows < 1)
 		{
-			throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid news content element ID ' . $id . '.');
+			throw new AccessDeniedException('Invalid news content element ID ' . $id . '.');
 		}
 
 		// The news archive is not mounted
 		if (!in_array($objArchive->id, $root))
 		{
-			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to modify article ID ' . $objArchive->nid . ' in news archive ID ' . $objArchive->id . '.');
+			throw new AccessDeniedException('Not enough permissions to modify article ID ' . $objArchive->nid . ' in news archive ID ' . $objArchive->id . '.');
 		}
 	}
 
@@ -143,8 +156,8 @@ class tl_content_news extends Contao\Backend
 	 */
 	public function generateFeed()
 	{
-		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = Contao\System::getContainer()->get('session');
+		/** @var SessionInterface $objSession */
+		$objSession = System::getContainer()->get('session');
 
 		$session = $objSession->get('news_feed_updater');
 
@@ -153,14 +166,14 @@ class tl_content_news extends Contao\Backend
 			return;
 		}
 
-		$this->import('Contao\News', 'News');
+		$this->import('News', 'News');
 
 		foreach ($session as $id)
 		{
 			$this->News->generateFeedsByArchive($id);
 		}
 
-		$this->import('Contao\Automator', 'Automator');
+		$this->import(Automator::class, 'Automator');
 		$this->Automator->generateSitemap();
 
 		$objSession->set('news_feed_updater', null);
@@ -180,9 +193,9 @@ class tl_content_news extends Contao\Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (Contao\Input::get('cid'))
+		if (Input::get('cid'))
 		{
-			$this->toggleVisibility(Contao\Input::get('cid'), (Contao\Input::get('state') == 1), (@func_get_arg(12) ?: null));
+			$this->toggleVisibility(Input::get('cid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
 			$this->redirect($this->getReferer());
 		}
 
@@ -192,28 +205,28 @@ class tl_content_news extends Contao\Backend
 			return '';
 		}
 
-		$href .= '&amp;id=' . Contao\Input::get('id') . '&amp;cid=' . $row['id'] . '&amp;state=' . $row['invisible'];
+		$href .= '&amp;id=' . Input::get('id') . '&amp;cid=' . $row['id'] . '&amp;state=' . $row['invisible'];
 
 		if ($row['invisible'])
 		{
 			$icon = 'invisible.svg';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . Contao\StringUtil::specialchars($title) . '" data-tid="cid"' . $attributes . '>' . Contao\Image::getHtml($icon, $label, 'data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" data-tid="cid"' . $attributes . '>' . Image::getHtml($icon, $label, 'data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
 	}
 
 	/**
 	 * Toggle the visibility of an element
 	 *
-	 * @param integer              $intId
-	 * @param boolean              $blnVisible
-	 * @param Contao\DataContainer $dc
+	 * @param integer       $intId
+	 * @param boolean       $blnVisible
+	 * @param DataContainer $dc
 	 */
-	public function toggleVisibility($intId, $blnVisible, Contao\DataContainer $dc=null)
+	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
 	{
 		// Set the ID and action
-		Contao\Input::setGet('id', $intId);
-		Contao\Input::setGet('act', 'toggle');
+		Input::setGet('id', $intId);
+		Input::setGet('act', 'toggle');
 
 		if ($dc)
 		{
@@ -240,7 +253,7 @@ class tl_content_news extends Contao\Backend
 		// Check the field access
 		if (!$this->User->hasAccess('tl_content::invisible', 'alexf'))
 		{
-			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to publish/unpublish content element ID ' . $intId . '.');
+			throw new AccessDeniedException('Not enough permissions to publish/unpublish content element ID ' . $intId . '.');
 		}
 
 		// Set the current record
@@ -256,7 +269,7 @@ class tl_content_news extends Contao\Backend
 			}
 		}
 
-		$objVersions = new Contao\Versions('tl_content', $intId);
+		$objVersions = new Versions('tl_content', $intId);
 		$objVersions->initialize();
 
 		// Reverse the logic (elements have invisible=1)

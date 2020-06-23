@@ -8,6 +8,116 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\Automator;
+use Contao\CheckBox;
+use Contao\CheckBoxWizard;
+use Contao\ChmodTable;
+use Contao\ContentAccordion;
+use Contao\ContentAccordionStart;
+use Contao\ContentAccordionStop;
+use Contao\ContentAlias;
+use Contao\ContentArticle;
+use Contao\ContentCode;
+use Contao\ContentDownload;
+use Contao\ContentDownloads;
+use Contao\ContentGallery;
+use Contao\ContentHeadline;
+use Contao\ContentHtml;
+use Contao\ContentHyperlink;
+use Contao\ContentImage;
+use Contao\ContentList;
+use Contao\ContentMarkdown;
+use Contao\ContentMedia;
+use Contao\ContentModule;
+use Contao\ContentSliderStart;
+use Contao\ContentSliderStop;
+use Contao\ContentTable;
+use Contao\ContentTeaser;
+use Contao\ContentText;
+use Contao\ContentToplink;
+use Contao\ContentVimeo;
+use Contao\ContentYouTube;
+use Contao\CoreBundle\Controller\BackendCsvImportController;
+use Contao\Crawl;
+use Contao\FileSelector;
+use Contao\FileTree;
+use Contao\Form;
+use Contao\FormCaptcha;
+use Contao\FormCheckBox;
+use Contao\FormExplanation;
+use Contao\FormFieldsetStart;
+use Contao\FormFieldsetStop;
+use Contao\FormFileUpload;
+use Contao\FormHidden;
+use Contao\FormHtml;
+use Contao\FormPassword;
+use Contao\FormRadioButton;
+use Contao\FormRange;
+use Contao\FormSelectMenu;
+use Contao\FormSubmit;
+use Contao\FormTextArea;
+use Contao\FormTextField;
+use Contao\ImageSize;
+use Contao\InputUnit;
+use Contao\KeyValueWizard;
+use Contao\ListWizard;
+use Contao\Maintenance;
+use Contao\Messages;
+use Contao\MetaWizard;
+use Contao\ModuleArticleList;
+use Contao\ModuleArticlenav;
+use Contao\ModuleBooknav;
+use Contao\ModuleBreadcrumb;
+use Contao\ModuleChangePassword;
+use Contao\ModuleCloseAccount;
+use Contao\ModuleCustomnav;
+use Contao\ModuleHtml;
+use Contao\ModuleLogin;
+use Contao\ModuleLogout;
+use Contao\ModuleMaintenance;
+use Contao\ModuleNavigation;
+use Contao\ModulePassword;
+use Contao\ModulePersonalData;
+use Contao\ModuleQuicklink;
+use Contao\ModuleQuicknav;
+use Contao\ModuleRandomImage;
+use Contao\ModuleRegistration;
+use Contao\ModuleRssReader;
+use Contao\ModuleSearch;
+use Contao\ModuleSitemap;
+use Contao\ModuleTwoFactor;
+use Contao\ModuleWizard;
+use Contao\OptionWizard;
+use Contao\PageError401;
+use Contao\PageError403;
+use Contao\PageError404;
+use Contao\PageForward;
+use Contao\PageLogout;
+use Contao\PageRedirect;
+use Contao\PageRegular;
+use Contao\PageRoot;
+use Contao\PageSelector;
+use Contao\PageTree;
+use Contao\Password;
+use Contao\Picker;
+use Contao\PurgeData;
+use Contao\RadioButton;
+use Contao\RadioTable;
+use Contao\SectionWizard;
+use Contao\SelectMenu;
+use Contao\SerpPreview;
+use Contao\StringUtil;
+use Contao\StyleSheets;
+use Contao\System;
+use Contao\TableWizard;
+use Contao\TextArea;
+use Contao\TextField;
+use Contao\TextStore;
+use Contao\Theme;
+use Contao\TimePeriod;
+use Contao\TrblField;
+use Contao\Upload;
+
 // Back end modules
 $GLOBALS['BE_MOD'] = array
 (
@@ -17,13 +127,13 @@ $GLOBALS['BE_MOD'] = array
 		'article' => array
 		(
 			'tables'      => array('tl_article', 'tl_content'),
-			'table'       => array('Contao\CoreBundle\Controller\BackendCsvImportController', 'importTableWizardAction'),
-			'list'        => array('Contao\CoreBundle\Controller\BackendCsvImportController', 'importListWizardAction')
+			'table'       => array(BackendCsvImportController::class, 'importTableWizardAction'),
+			'list'        => array(BackendCsvImportController::class, 'importListWizardAction')
 		),
 		'form' => array
 		(
 			'tables'      => array('tl_form', 'tl_form_field'),
-			'option'      => array('Contao\CoreBundle\Controller\BackendCsvImportController', 'importOptionWizardAction')
+			'option'      => array(BackendCsvImportController::class, 'importOptionWizardAction')
 		)
 	),
 
@@ -33,10 +143,10 @@ $GLOBALS['BE_MOD'] = array
 		'themes' => array
 		(
 			'tables'      => array('tl_theme', 'tl_module', 'tl_style_sheet', 'tl_style', 'tl_layout', 'tl_image_size', 'tl_image_size_item'),
-			'importTheme' => array('Contao\Theme', 'importTheme'),
-			'exportTheme' => array('Contao\Theme', 'exportTheme'),
-			'import'      => array('Contao\StyleSheets', 'importStyleSheet'),
-			'export'      => array('Contao\StyleSheets', 'exportStyleSheet')
+			'importTheme' => array(Theme::class, 'importTheme'),
+			'exportTheme' => array(Theme::class, 'exportTheme'),
+			'import'      => array(StyleSheets::class, 'importStyleSheet'),
+			'export'      => array(StyleSheets::class, 'exportStyleSheet')
 		),
 		'page' => array
 		(
@@ -77,7 +187,7 @@ $GLOBALS['BE_MOD'] = array
 		),
 		'security' => array
 		(
-			'callback'                => 'Contao\ModuleTwoFactor',
+			'callback'                => ModuleTwoFactor::class,
 			'hideInNavigation'        => true,
 			'disablePermissionChecks' => true
 		)
@@ -96,7 +206,7 @@ $GLOBALS['BE_MOD'] = array
 		),
 		'maintenance' => array
 		(
-			'callback'                => 'Contao\ModuleMaintenance'
+			'callback'                => ModuleMaintenance::class
 		),
 		'log' => array
 		(
@@ -118,38 +228,37 @@ $GLOBALS['BE_MOD'] = array
 // Front end modules
 $GLOBALS['FE_MOD'] = array
 (
-	'navigationMenu' => array
-	(
-		'navigation'     => 'Contao\ModuleNavigation',
-		'customnav'      => 'Contao\ModuleCustomnav',
-		'breadcrumb'     => 'Contao\ModuleBreadcrumb',
-		'quicknav'       => 'Contao\ModuleQuicknav',
-		'quicklink'      => 'Contao\ModuleQuicklink',
-		'booknav'        => 'Contao\ModuleBooknav',
-		'articlenav'     => 'Contao\ModuleArticlenav',
-		'sitemap'        => 'Contao\ModuleSitemap'
+	'navigationMenu' => array(
+		'navigation'     => ModuleNavigation::class,
+		'customnav'      => ModuleCustomnav::class,
+		'breadcrumb'     => ModuleBreadcrumb::class,
+		'quicknav'       => ModuleQuicknav::class,
+		'quicklink'      => ModuleQuicklink::class,
+		'booknav'        => ModuleBooknav::class,
+		'articlenav'     => ModuleArticlenav::class,
+		'sitemap'        => ModuleSitemap::class
 	),
 	'user' => array
 	(
-		'login'          => 'Contao\ModuleLogin',
-		'logout'         => 'Contao\ModuleLogout',
-		'personalData'   => 'Contao\ModulePersonalData',
-		'registration'   => 'Contao\ModuleRegistration',
-		'changePassword' => 'Contao\ModuleChangePassword',
-		'lostPassword'   => 'Contao\ModulePassword',
-		'closeAccount'   => 'Contao\ModuleCloseAccount'
+		'login'          => ModuleLogin::class,
+		'logout'         => ModuleLogout::class,
+		'personalData'   => ModulePersonalData::class,
+		'registration'   => ModuleRegistration::class,
+		'changePassword' => ModuleChangePassword::class,
+		'lostPassword'   => ModulePassword::class,
+		'closeAccount'   => ModuleCloseAccount::class
 	),
 	'application' => array
 	(
-		'form'           => 'Contao\Form',
-		'search'         => 'Contao\ModuleSearch'
+		'form'           => Form::class,
+		'search'         => ModuleSearch::class
 	),
 	'miscellaneous' => array
 	(
-		'articlelist'    => 'Contao\ModuleArticleList',
-		'randomImage'    => 'Contao\ModuleRandomImage',
-		'html'           => 'Contao\ModuleHtml',
-		'rssReader'      => 'Contao\ModuleRssReader'
+		'articlelist'    => ModuleArticleList::class,
+		'randomImage'    => ModuleRandomImage::class,
+		'html'           => ModuleHtml::class,
+		'rssReader'      => ModuleRssReader::class
 	)
 );
 
@@ -158,125 +267,125 @@ $GLOBALS['TL_CTE'] = array
 (
 	'texts' => array
 	(
-		'headline'        => 'Contao\ContentHeadline',
-		'text'            => 'Contao\ContentText',
-		'html'            => 'Contao\ContentHtml',
-		'list'            => 'Contao\ContentList',
-		'table'           => 'Contao\ContentTable',
-		'code'            => 'Contao\ContentCode',
-		'markdown'        => 'Contao\ContentMarkdown'
+		'headline'        => ContentHeadline::class,
+		'text'            => ContentText::class,
+		'html'            => ContentHtml::class,
+		'list'            => ContentList::class,
+		'table'           => ContentTable::class,
+		'code'            => ContentCode::class,
+		'markdown'        => ContentMarkdown::class
 	),
 	'accordion' => array
 	(
-		'accordionSingle' => 'Contao\ContentAccordion',
-		'accordionStart'  => 'Contao\ContentAccordionStart',
-		'accordionStop'   => 'Contao\ContentAccordionStop'
+		'accordionSingle' => ContentAccordion::class,
+		'accordionStart'  => ContentAccordionStart::class,
+		'accordionStop'   => ContentAccordionStop::class
 	),
 	'slider' => array
 	(
-		'sliderStart'     => 'Contao\ContentSliderStart',
-		'sliderStop'      => 'Contao\ContentSliderStop'
+		'sliderStart'     => ContentSliderStart::class,
+		'sliderStop'      => ContentSliderStop::class
 	),
 	'links' => array
 	(
-		'hyperlink'       => 'Contao\ContentHyperlink',
-		'toplink'         => 'Contao\ContentToplink'
+		'hyperlink'       => ContentHyperlink::class,
+		'toplink'         => ContentToplink::class
 	),
 	'media' => array
 	(
-		'image'           => 'Contao\ContentImage',
-		'gallery'         => 'Contao\ContentGallery',
-		'player'          => 'Contao\ContentMedia',
-		'youtube'         => 'Contao\ContentYouTube',
-		'vimeo'           => 'Contao\ContentVimeo'
+		'image'           => ContentImage::class,
+		'gallery'         => ContentGallery::class,
+		'player'          => ContentMedia::class,
+		'youtube'         => ContentYouTube::class,
+		'vimeo'           => ContentVimeo::class
 	),
 	'files' => array
 	(
-		'download'        => 'Contao\ContentDownload',
-		'downloads'       => 'Contao\ContentDownloads'
+		'download'        => ContentDownload::class,
+		'downloads'       => ContentDownloads::class
 	),
 	'includes' => array
 	(
-		'article'         => 'Contao\ContentArticle',
-		'alias'           => 'Contao\ContentAlias',
-		'form'            => 'Contao\Form',
-		'module'          => 'Contao\ContentModule',
-		'teaser'          => 'Contao\ContentTeaser'
+		'article'         => ContentArticle::class,
+		'alias'           => ContentAlias::class,
+		'form'            => Form::class,
+		'module'          => ContentModule::class,
+		'teaser'          => ContentTeaser::class
 	)
 );
 
 // Back end form fields
 $GLOBALS['BE_FFL'] = array
 (
-	'text'           => 'Contao\TextField',
-	'password'       => 'Contao\Password',
-	'textStore'      => 'Contao\TextStore',
-	'textarea'       => 'Contao\TextArea',
-	'select'         => 'Contao\SelectMenu',
-	'checkbox'       => 'Contao\CheckBox',
-	'checkboxWizard' => 'Contao\CheckBoxWizard',
-	'radio'          => 'Contao\RadioButton',
-	'radioTable'     => 'Contao\RadioTable',
-	'inputUnit'      => 'Contao\InputUnit',
-	'trbl'           => 'Contao\TrblField',
-	'chmod'          => 'Contao\ChmodTable',
-	'picker'         => 'Contao\Picker',
-	'pageTree'       => 'Contao\PageTree',
-	'pageSelector'   => 'Contao\PageSelector',
-	'fileTree'       => 'Contao\FileTree',
-	'fileSelector'   => 'Contao\FileSelector',
-	'fileUpload'     => 'Contao\Upload',
-	'tableWizard'    => 'Contao\TableWizard',
-	'listWizard'     => 'Contao\ListWizard',
-	'optionWizard'   => 'Contao\OptionWizard',
-	'moduleWizard'   => 'Contao\ModuleWizard',
-	'keyValueWizard' => 'Contao\KeyValueWizard',
-	'imageSize'      => 'Contao\ImageSize',
-	'timePeriod'     => 'Contao\TimePeriod',
-	'metaWizard'     => 'Contao\MetaWizard',
-	'sectionWizard'  => 'Contao\SectionWizard',
-	'serpPreview'    => 'Contao\SerpPreview'
+	'text'           => TextField::class,
+	'password'       => Password::class,
+	'textStore'      => TextStore::class,
+	'textarea'       => TextArea::class,
+	'select'         => SelectMenu::class,
+	'checkbox'       => CheckBox::class,
+	'checkboxWizard' => CheckBoxWizard::class,
+	'radio'          => RadioButton::class,
+	'radioTable'     => RadioTable::class,
+	'inputUnit'      => InputUnit::class,
+	'trbl'           => TrblField::class,
+	'chmod'          => ChmodTable::class,
+	'picker'         => Picker::class,
+	'pageTree'       => PageTree::class,
+	'pageSelector'   => PageSelector::class,
+	'fileTree'       => FileTree::class,
+	'fileSelector'   => FileSelector::class,
+	'fileUpload'     => Upload::class,
+	'tableWizard'    => TableWizard::class,
+	'listWizard'     => ListWizard::class,
+	'optionWizard'   => OptionWizard::class,
+	'moduleWizard'   => ModuleWizard::class,
+	'keyValueWizard' => KeyValueWizard::class,
+	'imageSize'      => ImageSize::class,
+	'timePeriod'     => TimePeriod::class,
+	'metaWizard'     => MetaWizard::class,
+	'sectionWizard'  => SectionWizard::class,
+	'serpPreview'    => SerpPreview::class
 );
 
 // Front end form fields
 $GLOBALS['TL_FFL'] = array
 (
-	'explanation'   => 'Contao\FormExplanation',
-	'html'          => 'Contao\FormHtml',
-	'fieldsetStart' => 'Contao\FormFieldsetStart',
-	'fieldsetStop'  => 'Contao\FormFieldsetStop',
-	'text'          => 'Contao\FormTextField',
-	'password'      => 'Contao\FormPassword',
-	'textarea'      => 'Contao\FormTextArea',
-	'select'        => 'Contao\FormSelectMenu',
-	'radio'         => 'Contao\FormRadioButton',
-	'checkbox'      => 'Contao\FormCheckBox',
-	'upload'        => 'Contao\FormFileUpload',
-	'range'         => 'Contao\FormRange',
-	'hidden'        => 'Contao\FormHidden',
-	'captcha'       => 'Contao\FormCaptcha',
-	'submit'        => 'Contao\FormSubmit',
+	'explanation'   => FormExplanation::class,
+	'html'          => FormHtml::class,
+	'fieldsetStart' => FormFieldsetStart::class,
+	'fieldsetStop'  => FormFieldsetStop::class,
+	'text'          => FormTextField::class,
+	'password'      => FormPassword::class,
+	'textarea'      => FormTextArea::class,
+	'select'        => FormSelectMenu::class,
+	'radio'         => FormRadioButton::class,
+	'checkbox'      => FormCheckBox::class,
+	'upload'        => FormFileUpload::class,
+	'range'         => FormRange::class,
+	'hidden'        => FormHidden::class,
+	'captcha'       => FormCaptcha::class,
+	'submit'        => FormSubmit::class,
 );
 
 // Page types
 $GLOBALS['TL_PTY'] = array
 (
-	'regular'   => 'Contao\PageRegular',
-	'forward'   => 'Contao\PageForward',
-	'redirect'  => 'Contao\PageRedirect',
-	'root'      => 'Contao\PageRoot',
-	'logout'    => 'Contao\PageLogout',
-	'error_401' => 'Contao\PageError401',
-	'error_403' => 'Contao\PageError403',
-	'error_404' => 'Contao\PageError404'
+	'regular'   => PageRegular::class,
+	'forward'   => PageForward::class,
+	'redirect'  => PageRedirect::class,
+	'root'      => PageRoot::class,
+	'logout'    => PageLogout::class,
+	'error_401' => PageError401::class,
+	'error_403' => PageError403::class,
+	'error_404' => PageError404::class
 );
 
 // Maintenance
 $GLOBALS['TL_MAINTENANCE'] = array
 (
-	'Contao\Maintenance',
-	'Contao\Crawl',
-	'Contao\PurgeData'
+	Maintenance::class,
+	Crawl::class,
+	PurgeData::class
 );
 
 // Purge jobs
@@ -286,27 +395,27 @@ $GLOBALS['TL_PURGE'] = array
 	(
 		'index' => array
 		(
-			'callback' => array('Contao\Automator', 'purgeSearchTables'),
+			'callback' => array(Automator::class, 'purgeSearchTables'),
 			'affected' => array('tl_search', 'tl_search_index')
 		),
 		'undo' => array
 		(
-			'callback' => array('Contao\Automator', 'purgeUndoTable'),
+			'callback' => array(Automator::class, 'purgeUndoTable'),
 			'affected' => array('tl_undo')
 		),
 		'versions' => array
 		(
-			'callback' => array('Contao\Automator', 'purgeVersionTable'),
+			'callback' => array(Automator::class, 'purgeVersionTable'),
 			'affected' => array('tl_version')
 		),
 		'log' => array
 		(
-			'callback' => array('Contao\Automator', 'purgeSystemLog'),
+			'callback' => array(Automator::class, 'purgeSystemLog'),
 			'affected' => array('tl_log')
 		),
 		'crawl_queue' => array
 		(
-			'callback' => array('Contao\Automator', 'purgeCrawlQueue'),
+			'callback' => array(Automator::class, 'purgeCrawlQueue'),
 			'affected' => array('tl_crawl_queue')
 		)
 	),
@@ -314,22 +423,22 @@ $GLOBALS['TL_PURGE'] = array
 	(
 		'images' => array
 		(
-			'callback' => array('Contao\Automator', 'purgeImageCache'),
-			'affected' => array(Contao\StringUtil::stripRootDir(Contao\System::getContainer()->getParameter('contao.image.target_dir')))
+			'callback' => array(Automator::class, 'purgeImageCache'),
+			'affected' => array(StringUtil::stripRootDir(System::getContainer()->getParameter('contao.image.target_dir')))
 		),
 		'scripts' => array
 		(
-			'callback' => array('Contao\Automator', 'purgeScriptCache'),
+			'callback' => array(Automator::class, 'purgeScriptCache'),
 			'affected' => array('assets/js', 'assets/css')
 		),
 		'search' => array
 		(
-			'callback' => array('Contao\Automator', 'purgeSearchCache'),
+			'callback' => array(Automator::class, 'purgeSearchCache'),
 			'affected' => array('%s/contao/search')
 		),
 		'temp' => array
 		(
-			'callback' => array('Contao\Automator', 'purgeTempFolder'),
+			'callback' => array(Automator::class, 'purgeTempFolder'),
 			'affected' => array('system/tmp')
 		)
 	),
@@ -337,15 +446,15 @@ $GLOBALS['TL_PURGE'] = array
 	(
 		'pages' => array
 		(
-			'callback' => array('Contao\Automator', 'purgePageCache'),
+			'callback' => array(Automator::class, 'purgePageCache'),
 		),
 		'xml' => array
 		(
-			'callback' => array('Contao\Automator', 'generateXmlFiles')
+			'callback' => array(Automator::class, 'generateXmlFiles')
 		),
 		'symlinks' => array
 		(
-			'callback' => array('Contao\Automator', 'generateSymlinks')
+			'callback' => array(Automator::class, 'generateSymlinks')
 		)
 	)
 );
@@ -377,11 +486,11 @@ $GLOBALS['TL_CRON'] = array
 	'weekly' => array(),
 	'daily' => array
 	(
-		'purgeTempFolder' => array('Contao\Automator', 'purgeTempFolder'),
-		'purgeSearchCache' => array('Contao\Automator', 'purgeSearchCache'),
-		'generateSitemap' => array('Contao\Automator', 'generateSitemap'),
-		'purgeRegistrations' => array('Contao\Automator', 'purgeRegistrations'),
-		'purgeOptInTokens' => array('Contao\Automator', 'purgeOptInTokens')
+		'purgeTempFolder' => array(Automator::class, 'purgeTempFolder'),
+		'purgeSearchCache' => array(Automator::class, 'purgeSearchCache'),
+		'generateSitemap' => array(Automator::class, 'generateSitemap'),
+		'purgeRegistrations' => array(Automator::class, 'purgeRegistrations'),
+		'purgeOptInTokens' => array(Automator::class, 'purgeOptInTokens')
 	),
 	'hourly' => array(),
 	'minutely' => array()
@@ -392,8 +501,8 @@ $GLOBALS['TL_HOOKS'] = array
 (
 	'getSystemMessages' => array
 	(
-		array('Contao\Messages', 'maintenanceCheck'),
-		array('Contao\Messages', 'languageFallback')
+		array(Messages::class, 'maintenanceCheck'),
+		array(Messages::class, 'languageFallback')
 	)
 );
 

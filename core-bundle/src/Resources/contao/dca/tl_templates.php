@@ -8,7 +8,26 @@
  * @license LGPL-3.0-or-later
  */
 
-Contao\System::loadLanguageFile('tl_files');
+use Contao\Backend;
+use Contao\BackendTemplate;
+use Contao\Config;
+use Contao\CoreBundle\Exception\InternalServerErrorException;
+use Contao\CoreBundle\Exception\ResponseException;
+use Contao\DataContainer;
+use Contao\DiffRenderer;
+use Contao\Environment;
+use Contao\File;
+use Contao\Files;
+use Contao\Folder;
+use Contao\Image;
+use Contao\Input;
+use Contao\StringUtil;
+use Contao\System;
+use Contao\TemplateLoader;
+use Contao\Validator;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+
+System::loadLanguageFile('tl_files');
 
 $GLOBALS['TL_DCA']['tl_templates'] = array
 (
@@ -131,15 +150,15 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_templates extends Contao\Backend
+class tl_templates extends Backend
 {
 	/**
 	 * Adjust some global settings in the template editor
 	 */
 	public function adjustSettings()
 	{
-		Contao\Config::set('uploadPath', 'templates');
-		Contao\Config::set('editableFiles', 'html5');
+		Config::set('uploadPath', 'templates');
+		Config::set('editableFiles', 'html5');
 	}
 
 	/**
@@ -149,20 +168,20 @@ class tl_templates extends Contao\Backend
 	 */
 	public function addBreadcrumb()
 	{
-		/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
-		$objSessionBag = Contao\System::getContainer()->get('session')->getBag('contao_backend');
+		/** @var AttributeBagInterface $objSessionBag */
+		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 
 		// Set a new node
 		if (isset($_GET['fn']))
 		{
 			// Check the path (thanks to Arnaud Buchoux)
-			if (Contao\Validator::isInsecurePath(Contao\Input::get('fn', true)))
+			if (Validator::isInsecurePath(Input::get('fn', true)))
 			{
-				throw new RuntimeException('Insecure path ' . Contao\Input::get('fn', true));
+				throw new RuntimeException('Insecure path ' . Input::get('fn', true));
 			}
 
-			$objSessionBag->set('tl_templates_node', Contao\Input::get('fn', true));
-			$this->redirect(preg_replace('/[?&]fn=[^&]*/', '', Contao\Environment::get('request')));
+			$objSessionBag->set('tl_templates_node', Input::get('fn', true));
+			$this->redirect(preg_replace('/[?&]fn=[^&]*/', '', Environment::get('request')));
 		}
 
 		$strNode = $objSessionBag->get('tl_templates_node');
@@ -173,12 +192,12 @@ class tl_templates extends Contao\Backend
 		}
 
 		// Check the path (thanks to Arnaud Buchoux)
-		if (Contao\Validator::isInsecurePath($strNode))
+		if (Validator::isInsecurePath($strNode))
 		{
 			throw new RuntimeException('Insecure path ' . $strNode);
 		}
 
-		$rootDir = Contao\System::getContainer()->getParameter('kernel.project_dir');
+		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Currently selected folder does not exist
 		if (!is_dir($rootDir . '/' . $strNode))
@@ -193,7 +212,7 @@ class tl_templates extends Contao\Backend
 		$arrLinks = array();
 
 		// Add root link
-		$arrLinks[] = Contao\Image::getHtml('filemounts.svg') . ' <a href="' . $this->addToUrl('fn=') . '" title="' . Contao\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']) . '">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
+		$arrLinks[] = Image::getHtml('filemounts.svg') . ' <a href="' . $this->addToUrl('fn=') . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']) . '">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
 
 		// Generate breadcrumb trail
 		foreach ($arrNodes as $strFolder)
@@ -203,11 +222,11 @@ class tl_templates extends Contao\Backend
 			// No link for the active folder
 			if ($strFolder == basename($strNode))
 			{
-				$arrLinks[] = Contao\Image::getHtml('folderC.svg') . ' ' . $strFolder;
+				$arrLinks[] = Image::getHtml('folderC.svg') . ' ' . $strFolder;
 			}
 			else
 			{
-				$arrLinks[] = Contao\Image::getHtml('folderC.svg') . ' <a href="' . $this->addToUrl('fn=' . $strPath) . '" title="' . Contao\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $strFolder . '</a>';
+				$arrLinks[] = Image::getHtml('folderC.svg') . ' <a href="' . $this->addToUrl('fn=' . $strPath) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $strFolder . '</a>';
 			}
 		}
 
@@ -234,11 +253,11 @@ class tl_templates extends Contao\Backend
 		$arrAllTemplates = array();
 
 		/** @var SplFileInfo[] $files */
-		$files = Contao\System::getContainer()->get('contao.resource_finder')->findIn('templates')->files()->name('/\.html5$/');
+		$files = System::getContainer()->get('contao.resource_finder')->findIn('templates')->files()->name('/\.html5$/');
 
 		foreach ($files as $file)
 		{
-			$strRelpath = Contao\StringUtil::stripRootDir($file->getPathname());
+			$strRelpath = StringUtil::stripRootDir($file->getPathname());
 			$strModule = preg_replace('@^(vendor/([^/]+/[^/]+)/|system/modules/([^/]+)/).*$@', '$2$3', strtr($strRelpath, '\\', '/'));
 			$arrAllTemplates[$strModule][$strRelpath] = basename($strRelpath);
 		}
@@ -246,23 +265,23 @@ class tl_templates extends Contao\Backend
 		$strError = '';
 
 		// Copy an existing template
-		if (Contao\Input::post('FORM_SUBMIT') == 'tl_create_template')
+		if (Input::post('FORM_SUBMIT') == 'tl_create_template')
 		{
-			$strOriginal = Contao\Input::post('original', true);
+			$strOriginal = Input::post('original', true);
 
-			if (Contao\Validator::isInsecurePath($strOriginal))
+			if (Validator::isInsecurePath($strOriginal))
 			{
 				throw new RuntimeException('Invalid path ' . $strOriginal);
 			}
 
-			$strTarget = Contao\Input::post('target', true);
+			$strTarget = Input::post('target', true);
 
-			if (Contao\Validator::isInsecurePath($strTarget))
+			if (Validator::isInsecurePath($strTarget))
 			{
 				throw new RuntimeException('Invalid path ' . $strTarget);
 			}
 
-			$rootDir = Contao\System::getContainer()->getParameter('kernel.project_dir');
+			$rootDir = System::getContainer()->getParameter('kernel.project_dir');
 
 			// Validate the target path
 			if (strncmp($strTarget, 'templates', 9) !== 0 || !is_dir($rootDir . '/' . $strTarget))
@@ -298,7 +317,7 @@ class tl_templates extends Contao\Backend
 					}
 					else
 					{
-						$this->import('Contao\Files', 'Files');
+						$this->import(Files::class, 'Files');
 						$this->Files->copy($strOriginal, $strTarget);
 						$this->redirect($this->getReferer());
 					}
@@ -315,7 +334,7 @@ class tl_templates extends Contao\Backend
 
 			foreach ($v as $kk=>$vv)
 			{
-				$strAllTemplates .= sprintf('<option value="%s"%s>%s</option>', $kk, ((Contao\Input::post('original') == $kk) ? ' selected="selected"' : ''), $vv);
+				$strAllTemplates .= sprintf('<option value="%s"%s>%s</option>', $kk, ((Input::post('original') == $kk) ? ' selected="selected"' : ''), $vv);
 			}
 
 			$strAllTemplates .= '</optgroup>';
@@ -328,7 +347,7 @@ class tl_templates extends Contao\Backend
 </div>' : '') . '
 
 <div id="tl_buttons">
-<a href="' . $this->getReferer(true) . '" class="header_back" title="' . Contao\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
+<a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>
 
 <form id="tl_create_template" class="tl_form tl_edit_form" method="post">
@@ -338,12 +357,12 @@ class tl_templates extends Contao\Backend
 <div class="tl_tbox cf">
 <div class="w50 widget">
   <h3><label for="ctrl_original">' . $GLOBALS['TL_LANG']['tl_templates']['original'][0] . '</label></h3>
-  <select name="original" id="ctrl_original" class="tl_select tl_chosen" onfocus="Backend.getScrollOffset()">' . $strAllTemplates . '</select>' . (($GLOBALS['TL_LANG']['tl_templates']['original'][1] && Contao\Config::get('showHelp')) ? '
+  <select name="original" id="ctrl_original" class="tl_select tl_chosen" onfocus="Backend.getScrollOffset()">' . $strAllTemplates . '</select>' . (($GLOBALS['TL_LANG']['tl_templates']['original'][1] && Config::get('showHelp')) ? '
   <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_templates']['original'][1] . '</p>' : '') . '
 </div>
 <div class="w50 widget">
   <h3><label for="ctrl_target">' . $GLOBALS['TL_LANG']['tl_templates']['target'][0] . '</label></h3>
-  <select name="target" id="ctrl_target" class="tl_select" onfocus="Backend.getScrollOffset()"><option value="templates">templates</option>' . $this->getTargetFolders('templates') . '</select>' . (($GLOBALS['TL_LANG']['tl_templates']['target'][1] && Contao\Config::get('showHelp')) ? '
+  <select name="target" id="ctrl_target" class="tl_select" onfocus="Backend.getScrollOffset()"><option value="templates">templates</option>' . $this->getTargetFolders('templates') . '</select>' . (($GLOBALS['TL_LANG']['tl_templates']['target'][1] && Config::get('showHelp')) ? '
   <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_templates']['target'][1] . '</p>' : '') . '
 </div>
 </div>
@@ -360,16 +379,16 @@ class tl_templates extends Contao\Backend
 	/**
 	 * Compares the current to the original template
 	 *
-	 * @param Contao\DataContainer $dc
+	 * @param DataContainer $dc
 	 *
-	 * @throws Contao\CoreBundle\Exception\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 */
-	public function compareTemplate(Contao\DataContainer $dc)
+	public function compareTemplate(DataContainer $dc)
 	{
-		$objCurrentFile = new Contao\File($dc->id);
+		$objCurrentFile = new File($dc->id);
 		$strName = $objCurrentFile->filename;
 		$strExtension = $objCurrentFile->extension;
-		$arrTemplates = Contao\TemplateLoader::getFiles();
+		$arrTemplates = TemplateLoader::getFiles();
 		$blnOverridesAnotherTpl = isset($arrTemplates[$strName]);
 
 		$strPrefix = '';
@@ -411,24 +430,24 @@ class tl_templates extends Contao\Backend
 		}
 
 		// User selected template to compare against
-		if (Contao\Input::post('from') && isset($arrTemplates[Contao\Input::post('from')]))
+		if (Input::post('from') && isset($arrTemplates[Input::post('from')]))
 		{
-			$strCompareName = Contao\Input::post('from');
+			$strCompareName = Input::post('from');
 			$strComparePath = $arrTemplates[$strCompareName] . '/' . $strCompareName . '.' . $strExtension;
 		}
 
 		if ($strComparePath !== null)
 		{
-			$objCompareFile = new Contao\File($strComparePath);
+			$objCompareFile = new File($strComparePath);
 
 			// Abort if one file is missing
 			if (!$objCurrentFile->exists() || !$objCompareFile->exists())
 			{
-				throw new Contao\CoreBundle\Exception\InternalServerErrorException('The source or target file does not exist.');
+				throw new InternalServerErrorException('The source or target file does not exist.');
 			}
 
 			$objDiff = new Diff($objCompareFile->getContentAsArray(), $objCurrentFile->getContentAsArray());
-			$strDiff = $objDiff->render(new Contao\DiffRenderer(array('field'=>$dc->id)));
+			$strDiff = $objDiff->render(new DiffRenderer(array('field'=>$dc->id)));
 
 			// Identical versions
 			if ($strDiff == '')
@@ -446,7 +465,7 @@ class tl_templates extends Contao\Backend
 		}
 
 		// Unset a custom prefix to show all templates in the drop-down menu (see #784)
-		if ($strPrefix && count(Contao\TemplateLoader::getPrefixedFiles($strPrefix)) < 1)
+		if ($strPrefix && count(TemplateLoader::getPrefixedFiles($strPrefix)) < 1)
 		{
 			$strPrefix = '';
 		}
@@ -469,21 +488,21 @@ class tl_templates extends Contao\Backend
 
 		ksort($arrComparable);
 
-		$objTemplate = new Contao\BackendTemplate('be_diff');
+		$objTemplate = new BackendTemplate('be_diff');
 		$objTemplate->staticTo = $dc->id;
 		$objTemplate->versions = $arrComparable;
 		$objTemplate->from = $strCompareName;
-		$objTemplate->showLabel = Contao\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
+		$objTemplate->showLabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
 		$objTemplate->content = $strBuffer;
-		$objTemplate->theme = Contao\Backend::getTheme();
-		$objTemplate->base = Contao\Environment::get('base');
+		$objTemplate->theme = Backend::getTheme();
+		$objTemplate->base = Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
-		$objTemplate->title = Contao\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
-		$objTemplate->charset = Contao\Config::get('characterSet');
+		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
+		$objTemplate->charset = Config::get('characterSet');
 
-		Contao\Config::set('debugMode', false);
+		Config::set('debugMode', false);
 
-		throw new Contao\CoreBundle\Exception\ResponseException($objTemplate->getResponse());
+		throw new ResponseException($objTemplate->getResponse());
 	}
 
 	/**
@@ -500,7 +519,7 @@ class tl_templates extends Contao\Backend
 	 */
 	public function compareButton($row, $href, $label, $title, $icon, $attributes)
 	{
-		return substr($row['id'], -6) == '.html5' && is_file(Contao\System::getContainer()->getParameter('kernel.project_dir') . '/' . rawurldecode($row['id'])) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . Contao\StringUtil::specialchars(str_replace("'", "\\'", rawurldecode($row['id']))) . '\',\'url\':this.href});return false"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return substr($row['id'], -6) == '.html5' && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . rawurldecode($row['id'])) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", rawurldecode($row['id']))) . '\',\'url\':this.href});return false"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -517,7 +536,7 @@ class tl_templates extends Contao\Backend
 	 */
 	public function dragFile($row, $href, $label, $title, $icon, $attributes)
 	{
-		return '<button type="button" title="' . Contao\StringUtil::specialchars($title) . '" ' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</button> ';
+		return '<button type="button" title="' . StringUtil::specialchars($title) . '" ' . $attributes . '>' . Image::getHtml($icon, $label) . '</button> ';
 	}
 
 	/**
@@ -531,9 +550,9 @@ class tl_templates extends Contao\Backend
 	protected function getTargetFolders($strFolder, $intLevel=1)
 	{
 		$strFolders = '';
-		$strPath = Contao\System::getContainer()->getParameter('kernel.project_dir') . '/' . $strFolder;
+		$strPath = System::getContainer()->getParameter('kernel.project_dir') . '/' . $strFolder;
 
-		foreach (Contao\Folder::scan($strPath) as $strFile)
+		foreach (Folder::scan($strPath) as $strFile)
 		{
 			if (!is_dir($strPath . '/' . $strFile) || strncmp($strFile, '.', 1) === 0)
 			{
@@ -541,7 +560,7 @@ class tl_templates extends Contao\Backend
 			}
 
 			$strRelPath = $strFolder . '/' . $strFile;
-			$strFolders .= sprintf('<option value="%s"%s>%s%s</option>', $strRelPath, ((Contao\Input::post('target') == $strRelPath) ? ' selected="selected"' : ''), str_repeat(' &nbsp; ', $intLevel), basename($strRelPath));
+			$strFolders .= sprintf('<option value="%s"%s>%s%s</option>', $strRelPath, ((Input::post('target') == $strRelPath) ? ' selected="selected"' : ''), str_repeat(' &nbsp; ', $intLevel), basename($strRelPath));
 			$strFolders .= $this->getTargetFolders($strRelPath, ($intLevel + 1));
 		}
 
@@ -562,17 +581,17 @@ class tl_templates extends Contao\Backend
 	 */
 	public function editSource($row, $href, $label, $title, $icon, $attributes)
 	{
-		return substr($row['id'], -6) == '.html5' && is_file(Contao\System::getContainer()->getParameter('kernel.project_dir') . '/' . rawurldecode($row['id'])) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return substr($row['id'], -6) == '.html5' && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . rawurldecode($row['id'])) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
 	 * Add the file location instead of the help text (see #6503)
 	 *
-	 * @param Contao\DataContainer $dc
+	 * @param DataContainer $dc
 	 *
 	 * @return string
 	 */
-	public function addFileLocation(Contao\DataContainer $dc)
+	public function addFileLocation(DataContainer $dc)
 	{
 		// Unset the default help text
 		unset($GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['label'][1]);

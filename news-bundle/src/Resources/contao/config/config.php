@@ -8,25 +8,33 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\ListWizard;
+use Contao\ModuleNewsArchive;
+use Contao\ModuleNewsList;
+use Contao\ModuleNewsMenu;
+use Contao\ModuleNewsReader;
+use Contao\News;
+use Contao\TableWizard;
+
 // Back end modules
 $GLOBALS['BE_MOD']['content']['news'] = array
 (
 	'tables'      => array('tl_news_archive', 'tl_news', 'tl_news_feed', 'tl_content'),
-	'table'       => array('Contao\TableWizard', 'importTable'),
-	'list'        => array('Contao\ListWizard', 'importList')
+	'table'       => array(TableWizard::class, 'importTable'),
+	'list'        => array(ListWizard::class, 'importList')
 );
 
 // Front end modules
 $GLOBALS['FE_MOD']['news'] = array
 (
-	'newslist'    => 'Contao\ModuleNewsList',
-	'newsreader'  => 'Contao\ModuleNewsReader',
-	'newsarchive' => 'Contao\ModuleNewsArchive',
-	'newsmenu'    => 'Contao\ModuleNewsMenu'
+	'newslist'    => ModuleNewsList::class,
+	'newsreader'  => ModuleNewsReader::class,
+	'newsarchive' => ModuleNewsArchive::class,
+	'newsmenu'    => ModuleNewsMenu::class
 );
 
 // Cron jobs
-$GLOBALS['TL_CRON']['daily']['generateNewsFeeds'] = array('Contao\News', 'generateFeeds');
+$GLOBALS['TL_CRON']['daily']['generateNewsFeeds'] = array(News::class, 'generateFeeds');
 
 // Style sheet
 if (defined('TL_MODE') && TL_MODE == 'BE')
@@ -35,9 +43,9 @@ if (defined('TL_MODE') && TL_MODE == 'BE')
 }
 
 // Register hooks
-$GLOBALS['TL_HOOKS']['removeOldFeeds'][] = array('Contao\News', 'purgeOldFeeds');
-$GLOBALS['TL_HOOKS']['getSearchablePages'][] = array('Contao\News', 'getSearchablePages');
-$GLOBALS['TL_HOOKS']['generateXmlFiles'][] = array('Contao\News', 'generateFeeds');
+$GLOBALS['TL_HOOKS']['removeOldFeeds'][] = array(News::class, 'purgeOldFeeds');
+$GLOBALS['TL_HOOKS']['getSearchablePages'][] = array(News::class, 'getSearchablePages');
+$GLOBALS['TL_HOOKS']['generateXmlFiles'][] = array(News::class, 'generateFeeds');
 
 // Add permissions
 $GLOBALS['TL_PERMISSIONS'][] = 'news';

@@ -8,6 +8,19 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\Automator;
+use Contao\Backend;
+use Contao\BackendUser;
+use Contao\Calendar;
+use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\DataContainer;
+use Contao\Image;
+use Contao\Input;
+use Contao\StringUtil;
+use Contao\System;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
 $GLOBALS['TL_DCA']['tl_calendar'] = array
 (
 	// Config
@@ -235,11 +248,11 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
- * @property Contao\Calendar $Calendar
+ * @property Calendar $Calendar
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_calendar extends Contao\Backend
+class tl_calendar extends Backend
 {
 	/**
 	 * Import the back end user object
@@ -247,17 +260,17 @@ class tl_calendar extends Contao\Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('Contao\BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 	}
 
 	/**
 	 * Check permissions to edit table tl_calendar
 	 *
-	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
+	 * @throws AccessDeniedException
 	 */
 	public function checkPermission()
 	{
-		$bundles = Contao\System::getContainer()->getParameter('kernel.bundles');
+		$bundles = System::getContainer()->getParameter('kernel.bundles');
 
 		// HOOK: comments extension required
 		if (!isset($bundles['ContaoCommentsBundle']))
@@ -296,11 +309,11 @@ class tl_calendar extends Contao\Backend
 			$GLOBALS['TL_DCA']['tl_calendar']['config']['notDeletable'] = true;
 		}
 
-		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = Contao\System::getContainer()->get('session');
+		/** @var SessionInterface $objSession */
+		$objSession = System::getContainer()->get('session');
 
 		// Check current action
-		switch (Contao\Input::get('act'))
+		switch (Input::get('act'))
 		{
 			case 'select':
 				// Allow
@@ -309,7 +322,7 @@ class tl_calendar extends Contao\Backend
 			case 'create':
 				if (!$this->User->hasAccess('create', 'calendarp'))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to create calendars.');
+					throw new AccessDeniedException('Not enough permissions to create calendars.');
 				}
 				break;
 
@@ -317,9 +330,9 @@ class tl_calendar extends Contao\Backend
 			case 'copy':
 			case 'delete':
 			case 'show':
-				if (!in_array(Contao\Input::get('id'), $root) || (Contao\Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'calendarp')))
+				if (!in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'calendarp')))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' calendar ID ' . Contao\Input::get('id') . '.');
+					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' calendar ID ' . Input::get('id') . '.');
 				}
 				break;
 
@@ -329,7 +342,7 @@ class tl_calendar extends Contao\Backend
 			case 'copyAll':
 				$session = $objSession->all();
 
-				if (Contao\Input::get('act') == 'deleteAll' && !$this->User->hasAccess('delete', 'calendarp'))
+				if (Input::get('act') == 'deleteAll' && !$this->User->hasAccess('delete', 'calendarp'))
 				{
 					$session['CURRENT']['IDS'] = array();
 				}
@@ -341,9 +354,9 @@ class tl_calendar extends Contao\Backend
 				break;
 
 			default:
-				if (Contao\Input::get('act'))
+				if (Input::get('act'))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' calendars.');
+					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' calendars.');
 				}
 				break;
 		}
@@ -383,8 +396,8 @@ class tl_calendar extends Contao\Backend
 			return;
 		}
 
-		/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
-		$objSessionBag = Contao\System::getContainer()->get('session')->getBag('contao_backend');
+		/** @var AttributeBagInterface $objSessionBag */
+		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 
 		$arrNew = $objSessionBag->get('new_records');
 
@@ -397,11 +410,11 @@ class tl_calendar extends Contao\Backend
 
 				while ($objGroup->next())
 				{
-					$arrCalendarp = Contao\StringUtil::deserialize($objGroup->calendarp);
+					$arrCalendarp = StringUtil::deserialize($objGroup->calendarp);
 
 					if (is_array($arrCalendarp) && in_array('create', $arrCalendarp))
 					{
-						$arrCalendars = Contao\StringUtil::deserialize($objGroup->calendars, true);
+						$arrCalendars = StringUtil::deserialize($objGroup->calendars, true);
 						$arrCalendars[] = $insertId;
 
 						$this->Database->prepare("UPDATE tl_user_group SET calendars=? WHERE id=?")
@@ -417,11 +430,11 @@ class tl_calendar extends Contao\Backend
 										   ->limit(1)
 										   ->execute($this->User->id);
 
-				$arrCalendarp = Contao\StringUtil::deserialize($objUser->calendarp);
+				$arrCalendarp = StringUtil::deserialize($objUser->calendarp);
 
 				if (is_array($arrCalendarp) && in_array('create', $arrCalendarp))
 				{
-					$arrCalendars = Contao\StringUtil::deserialize($objUser->calendars, true);
+					$arrCalendars = StringUtil::deserialize($objUser->calendars, true);
 					$arrCalendars[] = $insertId;
 
 					$this->Database->prepare("UPDATE tl_user SET calendars=? WHERE id=?")
@@ -440,8 +453,8 @@ class tl_calendar extends Contao\Backend
 	 */
 	public function generateFeed()
 	{
-		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = Contao\System::getContainer()->get('session');
+		/** @var SessionInterface $objSession */
+		$objSession = System::getContainer()->get('session');
 
 		$session = $objSession->get('calendar_feed_updater');
 
@@ -450,14 +463,14 @@ class tl_calendar extends Contao\Backend
 			return;
 		}
 
-		$this->import('Contao\Calendar', 'Calendar');
+		$this->import('Calendar', 'Calendar');
 
 		foreach ($session as $id)
 		{
 			$this->Calendar->generateFeedsByCalendar($id);
 		}
 
-		$this->import('Contao\Automator', 'Automator');
+		$this->import(Automator::class, 'Automator');
 		$this->Automator->generateSitemap();
 
 		$objSession->set('calendar_feed_updater', null);
@@ -469,9 +482,9 @@ class tl_calendar extends Contao\Backend
 	 * This method is triggered when a single calendar or multiple calendars
 	 * are modified (edit/editAll).
 	 *
-	 * @param Contao\DataContainer $dc
+	 * @param DataContainer $dc
 	 */
-	public function scheduleUpdate(Contao\DataContainer $dc)
+	public function scheduleUpdate(DataContainer $dc)
 	{
 		// Return if there is no ID
 		if (!$dc->id)
@@ -479,8 +492,8 @@ class tl_calendar extends Contao\Backend
 			return;
 		}
 
-		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = Contao\System::getContainer()->get('session');
+		/** @var SessionInterface $objSession */
+		$objSession = System::getContainer()->get('session');
 
 		// Store the ID in the session
 		$session = $objSession->get('calendar_feed_updater');
@@ -501,7 +514,7 @@ class tl_calendar extends Contao\Backend
 	 */
 	public function manageFeeds($href, $label, $title, $class, $attributes)
 	{
-		return ($this->User->isAdmin || !empty($this->User->calendarfeeds) || !empty($this->User->calendarfeedp)) ? '<a href="' . $this->addToUrl($href) . '" class="' . $class . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ' : '';
+		return ($this->User->isAdmin || !empty($this->User->calendarfeeds) || !empty($this->User->calendarfeedp)) ? '<a href="' . $this->addToUrl($href) . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ' : '';
 	}
 
 	/**
@@ -518,7 +531,7 @@ class tl_calendar extends Contao\Backend
 	 */
 	public function editHeader($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->canEditFieldsOf('tl_calendar') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)) . ' ';
+		return $this->User->canEditFieldsOf('tl_calendar') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -535,7 +548,7 @@ class tl_calendar extends Contao\Backend
 	 */
 	public function copyCalendar($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('create', 'calendarp') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)) . ' ';
+		return $this->User->hasAccess('create', 'calendarp') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -552,6 +565,6 @@ class tl_calendar extends Contao\Backend
 	 */
 	public function deleteCalendar($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('delete', 'calendarp') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)) . ' ';
+		return $this->User->hasAccess('delete', 'calendarp') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)) . ' ';
 	}
 }
