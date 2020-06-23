@@ -290,39 +290,21 @@ class UserCreateCommand extends Command
         $time = time();
         $hash = $this->encoderFactory->getEncoder(BackendUser::class)->encodePassword($password, null);
 
-        $this->connection->createQueryBuilder()
-            ->insert('tl_user')
-            ->values(
-                [
-                    'tstamp' => '?',
-                    'name' => '?',
-                    'email' => '?',
-                    'username' => '?',
-                    'password' => '?',
-                    'language' => '?',
-                    'backendTheme' => '?',
-                    'admin' => '?',
-                    'pwChange' => '?',
-                    'dateAdded' => '?',
-                    'groups' => '?',
-                ]
-            )
-            ->setParameters(
-                [
-                    $time,
-                    $name,
-                    $email,
-                    $username,
-                    $hash,
-                    $language,
-                    'flexible',
-                    $isAdmin,
-                    $pwChange,
-                    $time,
-                    !$isAdmin && !empty($groups) ? serialize(array_map('strval', $groups)) : '',
-                ]
-            )
-            ->execute()
-        ;
+        $this->connection->insert(
+            'tl_user',
+            [
+                'tstamp'       => $time,
+                'name'         => $name,
+                'email'        => $email,
+                'username'     => $username,
+                'password'     => $hash,
+                'language'     => $language,
+                'backendTheme' => 'flexible',
+                'admin'        => $isAdmin,
+                'pwChange'     => $pwChange,
+                'dateAdded'    => $time,
+                'groups'       => !$isAdmin && !empty($groups) ? serialize(array_map('strval', $groups)) : '',
+            ]
+        );
     }
 }
