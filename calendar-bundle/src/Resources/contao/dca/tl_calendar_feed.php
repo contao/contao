@@ -455,7 +455,7 @@ class tl_calendar_feed extends Backend
 			return;
 		}
 
-		$this->import('Calendar', 'Calendar');
+		$this->import(Calendar::class, 'Calendar');
 
 		foreach ($session as $id)
 		{
@@ -542,7 +542,7 @@ class tl_calendar_feed extends Backend
 
 		$varValue = StringUtil::standardize($varValue); // see #5096
 
-		$this->import('Automator', 'Automator');
+		$this->import(Automator::class, 'Automator');
 		$arrFeeds = $this->Automator->purgeXmlFiles(true);
 
 		// Alias exists

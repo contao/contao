@@ -455,7 +455,7 @@ class tl_news_feed extends Backend
 			return;
 		}
 
-		$this->import('News', 'News');
+		$this->import(News::class, 'News');
 
 		foreach ($session as $id)
 		{
