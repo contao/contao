@@ -8,6 +8,11 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\ModuleFaq;
+use Contao\ModuleFaqList;
+use Contao\ModuleFaqPage;
+use Contao\ModuleFaqReader;
+
 // Add back end modules
 $GLOBALS['BE_MOD']['content']['faq'] = array
 (
@@ -17,9 +22,9 @@ $GLOBALS['BE_MOD']['content']['faq'] = array
 // Front end modules
 $GLOBALS['FE_MOD']['faq'] = array
 (
-	'faqlist'   => 'Contao\ModuleFaqList',
-	'faqreader' => 'Contao\ModuleFaqReader',
-	'faqpage'   => 'Contao\ModuleFaqPage'
+	'faqlist'   => ModuleFaqList::class,
+	'faqreader' => ModuleFaqReader::class,
+	'faqpage'   => ModuleFaqPage::class
 );
 
 // Style sheet
@@ -29,7 +34,7 @@ if (defined('TL_MODE') && TL_MODE == 'BE')
 }
 
 // Register hooks
-$GLOBALS['TL_HOOKS']['getSearchablePages'][] = array('Contao\ModuleFaq', 'getSearchablePages');
+$GLOBALS['TL_HOOKS']['getSearchablePages'][] = array(ModuleFaq::class, 'getSearchablePages');
 
 // Add permissions
 $GLOBALS['TL_PERMISSIONS'][] = 'faqs';

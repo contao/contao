@@ -8,6 +8,9 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\ArrayUtil;
+use Contao\Folder;
+use Contao\StringUtil;
 use Contao\System;
 use Patchwork\Utf8;
 
@@ -58,7 +61,7 @@ function scan($strFolder, $blnUncached=false)
 {
 	@trigger_error('Using scan() has been deprecated and will no longer work in Contao 5.0. Use Folder::scan() instead.', E_USER_DEPRECATED);
 
-	return Contao\Folder::scan($strFolder, $blnUncached);
+	return Folder::scan($strFolder, $blnUncached);
 }
 
 /**
@@ -115,7 +118,7 @@ function standardize($strString, $blnPreserveUppercase=false)
 
 	if (!$blnPreserveUppercase)
 	{
-		$strString = Patchwork\Utf8::strtolower($strString);
+		$strString = Utf8::strtolower($strString);
 	}
 
 	return trim($strString, '-');
@@ -254,7 +257,7 @@ function ampersand($strString, $blnEncode=true)
 {
 	@trigger_error('Using ampersand() has been deprecated and will no longer work in Contao 5.0. Use StringUtil::ampersand() instead.', E_USER_DEPRECATED);
 
-	return Contao\StringUtil::ampersand($strString, $blnEncode);
+	return StringUtil::ampersand($strString, $blnEncode);
 }
 
 /**
@@ -406,7 +409,7 @@ function array_insert(&$arrCurrent, $intIndex, $arrNew)
 {
 	@trigger_error('Using array_insert() has been deprecated and will no longer work in Contao 5.0. Use ArrayUtil::arrayInsert() instead.', E_USER_DEPRECATED);
 
-	Contao\ArrayUtil::arrayInsert($arrCurrent, $intIndex, $arrNew);
+	ArrayUtil::arrayInsert($arrCurrent, $intIndex, $arrNew);
 }
 
 /**
@@ -529,7 +532,7 @@ function array_is_assoc($arrArray)
 {
 	@trigger_error('Using array_is_assoc() has been deprecated and will no longer work in Contao 5.0. Use ArrayUtil::isAssoc() instead.', E_USER_DEPRECATED);
 
-	return Contao\ArrayUtil::isAssoc($arrArray);
+	return ArrayUtil::isAssoc($arrArray);
 }
 
 /**

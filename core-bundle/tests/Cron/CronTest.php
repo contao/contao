@@ -20,7 +20,6 @@ use Contao\CoreBundle\Fixtures\Cron\TestInvokableCronJob;
 use Contao\CoreBundle\Repository\CronJobRepository;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\ORM\EntityManagerInterface;
-use InvalidArgumentException;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
@@ -139,11 +138,11 @@ class CronTest extends TestCase
         try {
             $cron->run(Cron::SCOPE_CLI);
             $cron->run(Cron::SCOPE_WEB);
-        } catch (InvalidArgumentException $e) {
+        } catch (\InvalidArgumentException $e) {
             $this->fail();
         }
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $cron->run('invalid_scope');
     }
 
