@@ -172,7 +172,7 @@ class UserCreateCommand extends Command
                 $output
             );
 
-            $input->setOption('groups', array_values(array_intersect_key(array_flip($options), array_flip($answer))));
+            $input->setOption('group', array_values(array_intersect_key(array_flip($options), array_flip($answer))));
         }
     }
 
