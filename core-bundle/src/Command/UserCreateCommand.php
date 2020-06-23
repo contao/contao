@@ -49,6 +49,7 @@ class UserCreateCommand extends Command
      * @var EncoderFactoryInterface
      */
     private $encoderFactory;
+
     /**
      * @var array
      */
@@ -163,9 +164,7 @@ class UserCreateCommand extends Command
             $input->setOption('admin', 'yes' === $answer);
         }
 
-        if (false === $input->getOption('admin')) {
-            $options = $this->getGroups();
-
+        if (false === $input->getOption('admin') && ($options = $this->getGroups()) && 0 !== \count($options)) {
             $answer = $this->askMultipleChoice(
                 'Assign which groups to the user (select multiple comma-separated)?',
                 $options,
@@ -293,17 +292,17 @@ class UserCreateCommand extends Command
         $this->connection->insert(
             'tl_user',
             [
-                'tstamp'       => $time,
-                'name'         => $name,
-                'email'        => $email,
-                'username'     => $username,
-                'password'     => $hash,
-                'language'     => $language,
+                'tstamp' => $time,
+                'name' => $name,
+                'email' => $email,
+                'username' => $username,
+                'password' => $hash,
+                'language' => $language,
                 'backendTheme' => 'flexible',
-                'admin'        => $isAdmin,
-                'pwChange'     => $pwChange,
-                'dateAdded'    => $time,
-                'groups'       => !$isAdmin && !empty($groups) ? serialize(array_map('strval', $groups)) : '',
+                'admin' => $isAdmin,
+                'pwChange' => $pwChange,
+                'dateAdded' => $time,
+                'groups' => !$isAdmin && !empty($groups) ? serialize(array_map('strval', $groups)) : '',
             ]
         );
     }
