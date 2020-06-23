@@ -16,6 +16,7 @@ use Contao\CoreBundle\Command\UserListCommand;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Model\Collection;
 use Contao\UserModel;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -33,31 +34,46 @@ class UserListCommandTest extends TestCase
         $this->assertTrue($definition->hasOption('admins'));
     }
 
-//    public function testTakesAdminsFlagAsArgument(): void
-//    {
-//        $command = $this->getCommand();
-//
-//        $input = [
-//            '--admins' => true,
-//        ];
-//
-//        $code = (new CommandTester($command))->execute($input);
-//
-//        $this->assertSame(0, $code);
-//    }
-//
-//    public function testReturnsErrorCodeOnEmptyResult(): void
-//    {
-//        $command = $this->getCommand();
-//
-//        $input = [];
-//
-//        //todo override UserModel::findAll() to return null
-//
-//        $code = (new CommandTester($command))->execute($input);
-//
-//        $this->assertSame(0, $code);
-//    }
+    public function testTakesAdminsFlagAsArgument(): void
+    {
+        $command = $this->getCommand();
+
+        $input = [
+            '--admins' => true,
+        ];
+
+        $code = (new CommandTester($command))->execute($input);
+
+        $this->assertSame(0, $code);
+    }
+
+    public function testReturnsValidJson(): void
+    {
+        $command = $this->getCommand();
+
+        $input = [
+            '--format' => 'json',
+        ];
+
+        $commandTester = new CommandTester($command);
+
+        $code = $commandTester->execute($input);
+        $output = $commandTester->getDisplay();
+
+        $this->assertSame(0, $code);
+        $this->assertNotNull(json_decode($output, true));
+    }
+
+    public function testReturnsErrorCodeOnEmptyResult(): void
+    {
+        $command = $this->getCommand(true);
+
+        $input = [];
+
+        $code = (new CommandTester($command))->execute($input);
+
+        $this->assertSame(1, $code);
+    }
 
     public function testTakesColumnAsArgument(): void
     {
@@ -72,19 +88,22 @@ class UserListCommandTest extends TestCase
         $this->assertSame(0, $code);
     }
 
-    private function getCommand(): UserListCommand
+    private function getCommand(bool $noResult = false): UserListCommand
     {
+        $collection = new Collection([$this->mockAdminUser(), $this->mockContaoUser()], 'tl_user');
         $userModelAdapter = $this->mockAdapter(['findBy', 'findAll']);
         $userModelAdapter
             //->expects($this->once())
             ->method('findAll')
-            ->willReturn(new Collection([$this->mockAdminUser(), $this->mockContaoUser()], 'tl_user'), null)
+            ->willReturn($noResult ? null : $collection, null)
         ;
+
+        $collection = new Collection([$this->mockAdminUser()], 'tl_user');
         $userModelAdapter
             //->expects($this->once())
             ->method('findBy')
             ->with('admin', '1')
-            ->willReturn(new Collection([$this->mockAdminUser()], 'tl_user'), null)
+            ->willReturn($noResult ? null : $collection, null)
         ;
 
         $command = new UserListCommand($this->mockContaoFramework([UserModel::class => $userModelAdapter]));

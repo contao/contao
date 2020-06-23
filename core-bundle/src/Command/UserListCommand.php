@@ -111,18 +111,18 @@ class UserListCommand extends Command
 
         $rows = [];
 
-        foreach ($users->fetchAll() as $user) {
+        foreach ($users as $user) {
             $rows[] = array_map(
                 static function (string $field) use ($user) {
                     if (\in_array($field, ['tstamp', 'dateAdded', 'lastLogin'], true)) {
-                        return $user[$field] ? date('Y-m-d H:i:s', (int) $user[$field]) : '';
+                        return $user->{$field} ? date('Y-m-d H:i:s', (int) $user[$field]) : '';
                     }
 
                     if ('admin' === $field) {
-                        return $user[$field] ? '✔' : '';
+                        return $user->{$field} ? '✔' : '';
                     }
 
-                    return $user[$field] ?? '';
+                    return $user->{$field} ?? '';
                 },
                 $columns
             );
