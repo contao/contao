@@ -29,42 +29,42 @@ class UserListCommandTest extends TestCase
 
         $definition = $command->getDefinition();
 
-        $this->assertTrue($definition->hasOption('fields'));
+        $this->assertTrue($definition->hasOption('column'));
         $this->assertTrue($definition->hasOption('admins'));
     }
 
-    public function testTakesAdminsFlagAsArgument(): void
+//    public function testTakesAdminsFlagAsArgument(): void
+//    {
+//        $command = $this->getCommand();
+//
+//        $input = [
+//            '--admins' => true,
+//        ];
+//
+//        $code = (new CommandTester($command))->execute($input);
+//
+//        $this->assertSame(0, $code);
+//    }
+//
+//    public function testReturnsErrorCodeOnEmptyResult(): void
+//    {
+//        $command = $this->getCommand();
+//
+//        $input = [];
+//
+//        //todo override UserModel::findAll() to return null
+//
+//        $code = (new CommandTester($command))->execute($input);
+//
+//        $this->assertSame(0, $code);
+//    }
+
+    public function testTakesColumnAsArgument(): void
     {
         $command = $this->getCommand();
 
         $input = [
-            '--admins' => true,
-        ];
-
-        $code = (new CommandTester($command))->execute($input);
-
-        $this->assertSame(0, $code);
-    }
-
-    public function testReturnsErrorCodeOnEmptyResult(): void
-    {
-        $command = $this->getCommand();
-
-        $input = [];
-
-        //todo override UserModel::findAll() to return null
-
-        $code = (new CommandTester($command))->execute($input);
-
-        $this->assertSame(0, $code);
-    }
-
-    public function testTakesFieldsAsArgument(): void
-    {
-        $command = $this->getCommand();
-
-        $input = [
-            '--fields' => ['username', 'name'],
+            '--column' => ['username', 'name'],
         ];
 
         $code = (new CommandTester($command))->execute($input);
