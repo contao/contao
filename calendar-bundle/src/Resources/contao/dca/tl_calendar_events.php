@@ -8,7 +8,25 @@
  * @license LGPL-3.0-or-later
  */
 
-Contao\System::loadLanguageFile('tl_content');
+use Contao\Automator;
+use Contao\Backend;
+use Contao\BackendUser;
+use Contao\Calendar;
+use Contao\CalendarEventsModel;
+use Contao\CalendarModel;
+use Contao\Config;
+use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\DataContainer;
+use Contao\Date;
+use Contao\Events;
+use Contao\Image;
+use Contao\Input;
+use Contao\StringUtil;
+use Contao\System;
+use Contao\Versions;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
+System::loadLanguageFile('tl_content');
 
 $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 (
@@ -174,7 +192,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'author' => array
 		(
-			'default'                 => Contao\BackendUser::getInstance()->id,
+			'default'                 => BackendUser::getInstance()->id,
 			'exclude'                 => true,
 			'search'                  => true,
 			'filter'                  => true,
@@ -306,7 +324,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['singleSRC'],
 			'exclude'                 => true,
 			'inputType'               => 'fileTree',
-			'eval'                    => array('filesOnly'=>true, 'fieldType'=>'radio', 'extensions'=>Contao\Config::get('validImageTypes'), 'mandatory'=>true),
+			'eval'                    => array('filesOnly'=>true, 'fieldType'=>'radio', 'extensions'=>Config::get('validImageTypes'), 'mandatory'=>true),
 			'sql'                     => "binary(16) NULL"
 		),
 		'alt' => array
@@ -336,7 +354,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
 			'options_callback' => static function ()
 			{
-				return Contao\System::getContainer()->get('contao.image.image_sizes')->getOptionsForUser(Contao\BackendUser::getInstance());
+				return System::getContainer()->get('contao.image.image_sizes')->getOptionsForUser(BackendUser::getInstance());
 			},
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
@@ -424,7 +442,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'fileTree',
-			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'isDownloads'=>true, 'extensions'=>Contao\Config::get('allowedDownload'), 'mandatory'=>true, 'isSortable'=>true),
+			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'isDownloads'=>true, 'extensions'=>Config::get('allowedDownload'), 'mandatory'=>true, 'isSortable'=>true),
 			'sql'                     => "blob NULL"
 		),
 		'source' => array
@@ -516,11 +534,11 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
- * @property Contao\Calendar $Calendar
+ * @property Calendar $Calendar
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_calendar_events extends Contao\Backend
+class tl_calendar_events extends Backend
 {
 	/**
 	 * Import the back end user object
@@ -528,17 +546,17 @@ class tl_calendar_events extends Contao\Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('Contao\BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 	}
 
 	/**
 	 * Check permissions to edit table tl_calendar_events
 	 *
-	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
+	 * @throws AccessDeniedException
 	 */
 	public function checkPermission()
 	{
-		$bundles = Contao\System::getContainer()->getParameter('kernel.bundles');
+		$bundles = System::getContainer()->getParameter('kernel.bundles');
 
 		// HOOK: comments extension required
 		if (!isset($bundles['ContaoCommentsBundle']))
@@ -562,32 +580,32 @@ class tl_calendar_events extends Contao\Backend
 			$root = $this->User->calendars;
 		}
 
-		$id = strlen(Contao\Input::get('id')) ? Contao\Input::get('id') : CURRENT_ID;
+		$id = strlen(Input::get('id')) ? Input::get('id') : CURRENT_ID;
 
 		// Check current action
-		switch (Contao\Input::get('act'))
+		switch (Input::get('act'))
 		{
 			case 'paste':
 			case 'select':
 				// Check CURRENT_ID here (see #247)
 				if (!in_array(CURRENT_ID, $root))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access calendar ID ' . $id . '.');
+					throw new AccessDeniedException('Not enough permissions to access calendar ID ' . $id . '.');
 				}
 				break;
 
 			case 'create':
-				if (!Contao\Input::get('pid') || !in_array(Contao\Input::get('pid'), $root))
+				if (!Input::get('pid') || !in_array(Input::get('pid'), $root))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to create events in calendar ID ' . Contao\Input::get('pid') . '.');
+					throw new AccessDeniedException('Not enough permissions to create events in calendar ID ' . Input::get('pid') . '.');
 				}
 				break;
 
 			case 'cut':
 			case 'copy':
-				if (!in_array(Contao\Input::get('pid'), $root))
+				if (!in_array(Input::get('pid'), $root))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' event ID ' . $id . ' to calendar ID ' . Contao\Input::get('pid') . '.');
+					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' event ID ' . $id . ' to calendar ID ' . Input::get('pid') . '.');
 				}
 				// no break
 
@@ -601,12 +619,12 @@ class tl_calendar_events extends Contao\Backend
 
 				if ($objCalendar->numRows < 1)
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid event ID ' . $id . '.');
+					throw new AccessDeniedException('Invalid event ID ' . $id . '.');
 				}
 
 				if (!in_array($objCalendar->pid, $root))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' event ID ' . $id . ' of calendar ID ' . $objCalendar->pid . '.');
+					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' event ID ' . $id . ' of calendar ID ' . $objCalendar->pid . '.');
 				}
 				break;
 
@@ -617,14 +635,14 @@ class tl_calendar_events extends Contao\Backend
 			case 'copyAll':
 				if (!in_array($id, $root))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access calendar ID ' . $id . '.');
+					throw new AccessDeniedException('Not enough permissions to access calendar ID ' . $id . '.');
 				}
 
 				$objCalendar = $this->Database->prepare("SELECT id FROM tl_calendar_events WHERE pid=?")
 											  ->execute($id);
 
-				/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-				$objSession = Contao\System::getContainer()->get('session');
+				/** @var SessionInterface $objSession */
+				$objSession = System::getContainer()->get('session');
 
 				$session = $objSession->all();
 				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objCalendar->fetchEach('id'));
@@ -632,14 +650,14 @@ class tl_calendar_events extends Contao\Backend
 				break;
 
 			default:
-				if (Contao\Input::get('act'))
+				if (Input::get('act'))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid command "' . Contao\Input::get('act') . '".');
+					throw new AccessDeniedException('Invalid command "' . Input::get('act') . '".');
 				}
 
 				if (!in_array($id, $root))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access calendar ID ' . $id . '.');
+					throw new AccessDeniedException('Not enough permissions to access calendar ID ' . $id . '.');
 				}
 				break;
 		}
@@ -648,14 +666,14 @@ class tl_calendar_events extends Contao\Backend
 	/**
 	 * Auto-generate the event alias if it has not been set yet
 	 *
-	 * @param mixed                $varValue
-	 * @param Contao\DataContainer $dc
+	 * @param mixed         $varValue
+	 * @param DataContainer $dc
 	 *
 	 * @return mixed
 	 *
 	 * @throws Exception
 	 */
-	public function generateAlias($varValue, Contao\DataContainer $dc)
+	public function generateAlias($varValue, DataContainer $dc)
 	{
 		$aliasExists = function (string $alias) use ($dc): bool
 		{
@@ -665,7 +683,7 @@ class tl_calendar_events extends Contao\Backend
 		// Generate the alias if there is none
 		if ($varValue == '')
 		{
-			$varValue = Contao\System::getContainer()->get('contao.slug')->generate($dc->activeRecord->title, Contao\CalendarModel::findByPk($dc->activeRecord->pid)->jumpTo, $aliasExists);
+			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->title, CalendarModel::findByPk($dc->activeRecord->pid)->jumpTo, $aliasExists);
 		}
 		elseif ($aliasExists($varValue))
 		{
@@ -690,12 +708,12 @@ class tl_calendar_events extends Contao\Backend
 	/**
 	 * Set the end time to an empty string (see #23)
 	 *
-	 * @param integer              $value
-	 * @param Contao\DataContainer $dc
+	 * @param integer       $value
+	 * @param DataContainer $dc
 	 *
 	 * @return integer
 	 */
-	public function loadEndTime($value, Contao\DataContainer $dc)
+	public function loadEndTime($value, DataContainer $dc)
 	{
 		$return = strtotime('1970-01-01 ' . date('H:i:s', $value));
 
@@ -717,12 +735,12 @@ class tl_calendar_events extends Contao\Backend
 	/**
 	 * Automatically set the end time if not set
 	 *
-	 * @param mixed                $varValue
-	 * @param Contao\DataContainer $dc
+	 * @param mixed         $varValue
+	 * @param DataContainer $dc
 	 *
 	 * @return string
 	 */
-	public function setEmptyEndTime($varValue, Contao\DataContainer $dc)
+	public function setEmptyEndTime($varValue, DataContainer $dc)
 	{
 		if ($varValue === null)
 		{
@@ -735,13 +753,13 @@ class tl_calendar_events extends Contao\Backend
 	/**
 	 * Return the SERP URL
 	 *
-	 * @param Contao\CalendarEventsModel $model
+	 * @param CalendarEventsModel $model
 	 *
 	 * @return string
 	 */
-	public function getSerpUrl(Contao\CalendarEventsModel $model)
+	public function getSerpUrl(CalendarEventsModel $model)
 	{
-		return Contao\Events::generateEventUrl($model, true);
+		return Events::generateEventUrl($model, true);
 	}
 
 	/**
@@ -753,19 +771,19 @@ class tl_calendar_events extends Contao\Backend
 	 */
 	public function listEvents($arrRow)
 	{
-		$span = Contao\Calendar::calculateSpan($arrRow['startTime'], $arrRow['endTime']);
+		$span = Calendar::calculateSpan($arrRow['startTime'], $arrRow['endTime']);
 
 		if ($span > 0)
 		{
-			$date = Contao\Date::parse(Contao\Config::get(($arrRow['addTime'] ? 'datimFormat' : 'dateFormat')), $arrRow['startTime']) . $GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'] . Contao\Date::parse(Contao\Config::get(($arrRow['addTime'] ? 'datimFormat' : 'dateFormat')), $arrRow['endTime']);
+			$date = Date::parse(Config::get(($arrRow['addTime'] ? 'datimFormat' : 'dateFormat')), $arrRow['startTime']) . $GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'] . Date::parse(Config::get(($arrRow['addTime'] ? 'datimFormat' : 'dateFormat')), $arrRow['endTime']);
 		}
 		elseif ($arrRow['startTime'] == $arrRow['endTime'])
 		{
-			$date = Contao\Date::parse(Contao\Config::get('dateFormat'), $arrRow['startTime']) . ($arrRow['addTime'] ? ' ' . Contao\Date::parse(Contao\Config::get('timeFormat'), $arrRow['startTime']) : '');
+			$date = Date::parse(Config::get('dateFormat'), $arrRow['startTime']) . ($arrRow['addTime'] ? ' ' . Date::parse(Config::get('timeFormat'), $arrRow['startTime']) : '');
 		}
 		else
 		{
-			$date = Contao\Date::parse(Contao\Config::get('dateFormat'), $arrRow['startTime']) . ($arrRow['addTime'] ? ' ' . Contao\Date::parse(Contao\Config::get('timeFormat'), $arrRow['startTime']) . $GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'] . Contao\Date::parse(Contao\Config::get('timeFormat'), $arrRow['endTime']) : '');
+			$date = Date::parse(Config::get('dateFormat'), $arrRow['startTime']) . ($arrRow['addTime'] ? ' ' . Date::parse(Config::get('timeFormat'), $arrRow['startTime']) . $GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'] . Date::parse(Config::get('timeFormat'), $arrRow['endTime']) : '');
 		}
 
 		return '<div class="tl_content_left">' . $arrRow['title'] . ' <span style="color:#999;padding-left:3px">[' . $date . ']</span></div>';
@@ -774,11 +792,11 @@ class tl_calendar_events extends Contao\Backend
 	/**
 	 * Get all articles and return them as array
 	 *
-	 * @param Contao\DataContainer $dc
+	 * @param DataContainer $dc
 	 *
 	 * @return array
 	 */
-	public function getArticleAlias(Contao\DataContainer $dc)
+	public function getArticleAlias(DataContainer $dc)
 	{
 		$arrPids = array();
 		$arrAlias = array();
@@ -811,7 +829,7 @@ class tl_calendar_events extends Contao\Backend
 
 		if ($objAlias->numRows)
 		{
-			Contao\System::loadLanguageFile('tl_article');
+			System::loadLanguageFile('tl_article');
 
 			while ($objAlias->next())
 			{
@@ -825,11 +843,11 @@ class tl_calendar_events extends Contao\Backend
 	/**
 	 * Add the source options depending on the allowed fields (see #5498)
 	 *
-	 * @param Contao\DataContainer $dc
+	 * @param DataContainer $dc
 	 *
 	 * @return array
 	 */
-	public function getSourceOptions(Contao\DataContainer $dc)
+	public function getSourceOptions(DataContainer $dc)
 	{
 		if ($this->User->isAdmin)
 		{
@@ -869,9 +887,9 @@ class tl_calendar_events extends Contao\Backend
 	/**
 	 * Adjust start end end time of the event based on date, span, startTime and endTime
 	 *
-	 * @param Contao\DataContainer $dc
+	 * @param DataContainer $dc
 	 */
-	public function adjustTime(Contao\DataContainer $dc)
+	public function adjustTime(DataContainer $dc)
 	{
 		// Return if there is no active record (override all)
 		if (!$dc->activeRecord)
@@ -922,7 +940,7 @@ class tl_calendar_events extends Contao\Backend
 			}
 			else
 			{
-				$arrRange = Contao\StringUtil::deserialize($dc->activeRecord->repeatEach);
+				$arrRange = StringUtil::deserialize($dc->activeRecord->repeatEach);
 
 				if (isset($arrRange['unit'], $arrRange['value']))
 				{
@@ -943,8 +961,8 @@ class tl_calendar_events extends Contao\Backend
 	 */
 	public function generateFeed()
 	{
-		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = Contao\System::getContainer()->get('session');
+		/** @var SessionInterface $objSession */
+		$objSession = System::getContainer()->get('session');
 
 		$session = $objSession->get('calendar_feed_updater');
 
@@ -953,14 +971,14 @@ class tl_calendar_events extends Contao\Backend
 			return;
 		}
 
-		$this->import('Contao\Calendar', 'Calendar');
+		$this->import('Calendar', 'Calendar');
 
 		foreach ($session as $id)
 		{
 			$this->Calendar->generateFeedsByCalendar($id);
 		}
 
-		$this->import('Contao\Automator', 'Automator');
+		$this->import(Automator::class, 'Automator');
 		$this->Automator->generateSitemap();
 
 		$objSession->set('calendar_feed_updater', null);
@@ -974,18 +992,18 @@ class tl_calendar_events extends Contao\Backend
 	 * Since duplicated events are unpublished by default, it is not necessary
 	 * to schedule updates on copyAll as well.
 	 *
-	 * @param Contao\DataContainer $dc
+	 * @param DataContainer $dc
 	 */
-	public function scheduleUpdate(Contao\DataContainer $dc)
+	public function scheduleUpdate(DataContainer $dc)
 	{
 		// Return if there is no ID
-		if (!$dc->activeRecord || !$dc->activeRecord->pid || Contao\Input::get('act') == 'copy')
+		if (!$dc->activeRecord || !$dc->activeRecord->pid || Input::get('act') == 'copy')
 		{
 			return;
 		}
 
-		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = Contao\System::getContainer()->get('session');
+		/** @var SessionInterface $objSession */
+		$objSession = System::getContainer()->get('session');
 
 		// Store the ID in the session
 		$session = $objSession->get('calendar_feed_updater');
@@ -1007,9 +1025,9 @@ class tl_calendar_events extends Contao\Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (Contao\Input::get('tid'))
+		if (Input::get('tid'))
 		{
-			$this->toggleVisibility(Contao\Input::get('tid'), (Contao\Input::get('state') == 1), (@func_get_arg(12) ?: null));
+			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
 			$this->redirect($this->getReferer());
 		}
 
@@ -1026,23 +1044,23 @@ class tl_calendar_events extends Contao\Backend
 			$icon = 'invisible.svg';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label, 'data-state="' . ($row['published'] ? 1 : 0) . '"') . '</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label, 'data-state="' . ($row['published'] ? 1 : 0) . '"') . '</a> ';
 	}
 
 	/**
 	 * Disable/enable a user group
 	 *
-	 * @param integer              $intId
-	 * @param boolean              $blnVisible
-	 * @param Contao\DataContainer $dc
+	 * @param integer       $intId
+	 * @param boolean       $blnVisible
+	 * @param DataContainer $dc
 	 *
-	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
+	 * @throws AccessDeniedException
 	 */
-	public function toggleVisibility($intId, $blnVisible, Contao\DataContainer $dc=null)
+	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
 	{
 		// Set the ID and action
-		Contao\Input::setGet('id', $intId);
-		Contao\Input::setGet('act', 'toggle');
+		Input::setGet('id', $intId);
+		Input::setGet('act', 'toggle');
 
 		if ($dc)
 		{
@@ -1069,7 +1087,7 @@ class tl_calendar_events extends Contao\Backend
 		// Check the field access
 		if (!$this->User->hasAccess('tl_calendar_events::published', 'alexf'))
 		{
-			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to publish/unpublish event ID ' . $intId . '.');
+			throw new AccessDeniedException('Not enough permissions to publish/unpublish event ID ' . $intId . '.');
 		}
 
 		// Set the current record
@@ -1085,7 +1103,7 @@ class tl_calendar_events extends Contao\Backend
 			}
 		}
 
-		$objVersions = new Contao\Versions('tl_calendar_events', $intId);
+		$objVersions = new Versions('tl_calendar_events', $intId);
 		$objVersions->initialize();
 
 		// Trigger the save_callback

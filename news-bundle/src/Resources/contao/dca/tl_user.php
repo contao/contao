@@ -8,10 +8,12 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\CoreBundle\DataContainer\PaletteManipulator;
+
 // Extend the default palettes
-Contao\CoreBundle\DataContainer\PaletteManipulator::create()
-	->addLegend('news_legend', 'amg_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_BEFORE)
-	->addField(array('news', 'newp', 'newsfeeds', 'newsfeedp'), 'news_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_APPEND)
+PaletteManipulator::create()
+	->addLegend('news_legend', 'amg_legend', PaletteManipulator::POSITION_BEFORE)
+	->addField(array('news', 'newp', 'newsfeeds', 'newsfeedp'), 'news_legend', PaletteManipulator::POSITION_APPEND)
 	->applyToPalette('extend', 'tl_user')
 	->applyToPalette('custom', 'tl_user')
 ;

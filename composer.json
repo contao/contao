@@ -145,7 +145,7 @@
     "require-dev": {
         "ext-fileinfo": "*",
         "composer/composer": "^1.0",
-        "contao/easy-coding-standard": "^1.0",
+        "contao/easy-coding-standard": "^2.0",
         "contao/monorepo-tools": "dev-master",
         "contao/phpstan": "^0.12",
         "contao/test-case": "^4.1",
