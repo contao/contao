@@ -419,15 +419,7 @@ class Search
 		{
 			$arrMatches[] = \count($arrAllKeywords);
 			$arrAllKeywords[] = 'word LIKE ?';
-		}
-
-		// Wildcard values are required three times in the query
-		for ($i = 0; $i < 3; $i++)
-		{
-			foreach ($arrWildcards as $strKeyword)
-			{
-				$arrValues[] = $strKeyword;
-			}
+			$arrValues[] = $strKeyword;
 		}
 
 		// Get keywords
@@ -478,14 +470,7 @@ class Search
 			if (isset($arrWildcards[$index]))
 			{
 				$strQuery .= "+ (
-					(1+LOG(SUM(match$index * relevance))) * POW(LOG((
-						SELECT COUNT(*) FROM tl_search
-					) / (
-						SELECT COUNT(DISTINCT pid) 
-						FROM tl_search_words 
-						JOIN tl_search_index ON tl_search_index.wordId = tl_search_words.id
-						WHERE word LIKE ?
-					)), 2) / ".(\count($arrAllKeywords) - \count($arrExcludedMatches))."
+					(1+LOG(SUM(match$index * tl_search_index.relevance))) * POW(LOG(@searchCount / @wildcardCount$index), 2) / ".(\count($arrAllKeywords) - \count($arrExcludedMatches))."
 				)";
 			}
 			else
@@ -509,15 +494,7 @@ class Search
 
 			if (isset($arrWildcards[$index]))
 			{
-				$strQuery .= " + POW(LOG((
-						SELECT COUNT(*) FROM tl_search
-					) / (
-						SELECT COUNT(DISTINCT pid) 
-						FROM tl_search_words 
-						JOIN tl_search_index ON tl_search_index.wordId = tl_search_words.id
-						WHERE word LIKE ?
-					)
-				) / ".(\count($arrAllKeywords) - \count($arrExcludedMatches)).", 2)";
+				$strQuery .= " + POW(LOG(@searchCount / @wildcardCount$index) / ".(\count($arrAllKeywords) - \count($arrExcludedMatches)).", 2)";
 			}
 			else
 			{
@@ -530,7 +507,7 @@ class Search
 		$strQuery .= " FROM (SELECT id, word";
 
 		// Calculate inverse document frequency of every matching word
-		$strQuery .= ", LOG((SELECT COUNT(*) FROM tl_search) / documentFrequency) AS idf";
+		$strQuery .= ", LOG(@searchCount / documentFrequency) AS idf";
 
 		// Store the match of every keyword and wildcard in its own column match0, match1, ...
 		foreach ($arrAllKeywords as $index => $strKeywordExpression)
@@ -538,7 +515,22 @@ class Search
 			$strQuery .= ", IF($strKeywordExpression, 1, null) AS match$index";
 		}
 
-		$strQuery .= " FROM tl_search_words HAVING";
+		$strQuery .= " FROM ( SELECT ";
+		$strQuery .= "@searchCount := (SELECT COUNT(*) FROM tl_search)";
+
+		foreach ($arrWildcards as $index => $strKeyword)
+		{
+			$strQuery .= ", @wildcardCount$index := (
+				SELECT COUNT(*) FROM (
+					SELECT DISTINCT pid FROM tl_search_words 
+					JOIN tl_search_index ON tl_search_index.wordId = tl_search_words.id
+					WHERE word LIKE ?
+				) distinctPids$index
+			)";
+			$arrValues[] = $strKeyword;
+		}
+
+		$strQuery .= ") variables, tl_search_words HAVING";
 
 		// Select all words in the sub query that match any of the keywords or wildcards
 		$strQuery .= " match" . implode(" = 1 OR match", array_keys($arrAllKeywords)) . " = 1";
