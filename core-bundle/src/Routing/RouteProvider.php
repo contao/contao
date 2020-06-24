@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Routing;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Content\PageProviderInterface;
-use Contao\CoreBundle\Routing\Content\PageRoute;
+use Contao\CoreBundle\Routing\Content\ContentRoute;
 use Contao\Model;
 use Contao\Model\Collection;
 use Contao\PageModel;
@@ -211,14 +211,14 @@ class RouteProvider implements RouteProviderInterface
         $route = $this->getRouteForPage($page, $request);
         $routes['tl_page.'.$page->id] = $route;
 
-        if ($route instanceof PageRoute) {
+        if ($route instanceof ContentRoute) {
             $this->addLocaleRedirect($route, $request, $routes);
         }
 
         $this->addRoutesForRootPage($page, $routes, $request);
     }
 
-    private function addLocaleRedirect(PageRoute $route, ?Request $request, array &$routes): void
+    private function addLocaleRedirect(ContentRoute $route, ?Request $request, array &$routes): void
     {
         $length = strlen($route->getUrlPrefix());
         if (0 === $length || substr($route->getPath(), 1, $length) !== $route->getUrlPrefix()) {
@@ -260,7 +260,7 @@ class RouteProvider implements RouteProviderInterface
         $route = $this->getRouteForPage($page, $request);
         $urlPrefix = '';
 
-        if ($route instanceof PageRoute) {
+        if ($route instanceof ContentRoute) {
             $urlPrefix = $route->getUrlPrefix();
         }
 
@@ -517,7 +517,7 @@ class RouteProvider implements RouteProviderInterface
     private function getRouteForPage(PageModel $page, ?Request $request): Route
     {
         if (!$this->pageProviders->has($page->type)) {
-            return PageRoute::createWithParameters($page);
+            return ContentRoute::createWithParameters($page);
         }
 
         /** @var PageProviderInterface $provider */

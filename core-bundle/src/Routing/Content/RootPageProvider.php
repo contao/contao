@@ -54,7 +54,7 @@ class RootPageProvider extends AbstractPageProvider
             throw new RouteNotFoundException('No active page found under root page.');
         }
 
-        $route = new PageRoute($pageModel);
+        $route = new ContentRoute($pageModel);
         $route->addDefaults([
             '_controller' => RedirectController::class.'::urlRedirectAction',
             'path' => $nextPage->getAbsoluteUrl(),

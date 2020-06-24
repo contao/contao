@@ -101,7 +101,7 @@ use Contao\CoreBundle\Picker\PickerBuilder;
 use Contao\CoreBundle\Picker\TablePickerProvider;
 use Contao\CoreBundle\Repository\CronJobRepository;
 use Contao\CoreBundle\Repository\RememberMeRepository;
-use Contao\CoreBundle\Routing\DelegatingUrlGenerator;
+use Contao\CoreBundle\Routing\ContentResolvingGenerator;
 use Contao\CoreBundle\Routing\Enhancer\InputEnhancer;
 use Contao\CoreBundle\Routing\FrontendLoader;
 use Contao\CoreBundle\Routing\ImagesLoader;
@@ -2556,7 +2556,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $definition = $this->container->getDefinition('contao.routing.route_generator');
 
-        $this->assertSame(DelegatingUrlGenerator::class, $definition->getClass());
+        $this->assertSame(ContentResolvingGenerator::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
 
         $this->assertEquals(

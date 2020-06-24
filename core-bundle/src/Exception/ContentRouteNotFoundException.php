@@ -2,7 +2,7 @@
 
 namespace Contao\CoreBundle\Exception;
 
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Contao\Model;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
 use Throwable;
@@ -24,12 +24,12 @@ class ContentRouteNotFoundException extends RouteNotFoundException
             return serialize($content);
         }
 
-        if ($content instanceof RouteObjectInterface) {
-            return 'key '.$content->getRouteKey();
-        }
-
         if ($content instanceof Route) {
             return 'path '.$content->getPath();
+        }
+
+        if ($content instanceof Model) {
+            return $content::getTable().'.'.$content->{$content::getPk()};
         }
 
         if (\is_object($content)) {

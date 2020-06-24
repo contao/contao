@@ -516,7 +516,7 @@ services:
             - ['addRouteFilter', ['@contao.routing.published_filter']]
 
     contao.routing.page_router:
-        class: Symfony\Cmf\Bundle\RoutingBundle\Routing\DynamicRouter
+        class: Symfony\Cmf\Component\Routing\DynamicRouter
         arguments:
             - '@router.request_context'
             - '@contao.routing.nested_matcher'
@@ -545,7 +545,7 @@ services:
             - '@contao.security.token_checker'
 
     contao.routing.route_generator:
-        class: Contao\CoreBundle\Routing\DelegatingUrlGenerator
+        class: Contao\CoreBundle\Routing\ContentResolvingGenerator
         arguments:
             - !tagged_iterator contao.content_resolver
             - !tagged_locator { tag: contao.page_provider, index_by: type, default_index_method: getPageType }

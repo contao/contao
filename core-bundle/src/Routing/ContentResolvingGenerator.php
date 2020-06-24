@@ -15,16 +15,15 @@ namespace Contao\CoreBundle\Routing;
 use Contao\CoreBundle\Exception\ContentRouteNotFoundException;
 use Contao\CoreBundle\Routing\Content\ContentUrlResolverInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Cmf\Component\Routing\VersatileGeneratorInterface;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\Routing\Generator\UrlGenerator as SymfonyUrlGenerator;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Contao\CoreBundle\Routing\Content\PageProviderInterface;
-use Contao\CoreBundle\Routing\Content\PageRoute;
+use Contao\CoreBundle\Routing\Content\ContentRoute;
 
-class DelegatingUrlGenerator extends SymfonyUrlGenerator implements VersatileGeneratorInterface
+class ContentResolvingGenerator extends SymfonyUrlGenerator
 {
     /**
      * @var array<ContentUrlResolverInterface>
@@ -45,40 +44,26 @@ class DelegatingUrlGenerator extends SymfonyUrlGenerator implements VersatileGen
     }
 
     /**
-     * @param array $parameters
-     * @param int   $referenceType
+     * @param string $name
+     * @param array  $parameters
+     * @param int    $referenceType
      */
-    public function generate($content, $parameters = [], $referenceType = self::ABSOLUTE_PATH): string
+    public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH): string
     {
-        $route = $this->resolveContent($content);
+        if (ContentRoute::ROUTE_NAME !== $name || !isset($parameters[ContentRoute::CONTENT_PARAMETER])) {
+            throw new ContentRouteNotFoundException($name);
+        }
+
+        $route = $this->resolveContent($parameters[ContentRoute::CONTENT_PARAMETER]);
+        unset($parameters[ContentRoute::CONTENT_PARAMETER]);
 
         // the Route has a cache of its own and is not recompiled as long as it does not get modified
         $compiledRoute = $route->compile();
         $hostTokens = $compiledRoute->getHostTokens();
 
-        $debug_message = $this->getRouteDebugMessage($content);
+        $debug_message = ContentRouteNotFoundException::getRouteDebugMessage($name);
 
         return $this->doGenerate($compiledRoute->getVariables(), $route->getDefaults(), $route->getRequirements(), $compiledRoute->getTokens(), $parameters, $debug_message, $referenceType, $hostTokens);
-    }
-
-    public function supports($content): bool
-    {
-        if ($content instanceof Route) {
-            return true;
-        }
-
-        foreach ($this->resolvers as $provider) {
-            if ($provider->supportsContent($content)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public function getRouteDebugMessage($name, array $parameters = []): string
-    {
-        return ContentRouteNotFoundException::getRouteDebugMessage($name);
     }
 
     private function resolveContent($content): Route
@@ -97,7 +82,7 @@ class DelegatingUrlGenerator extends SymfonyUrlGenerator implements VersatileGen
             }
         }
 
-        if ($route instanceof PageRoute) {
+        if ($route instanceof ContentRoute) {
             $page = $route->getPage();
 
             if ($this->pageProviders->has($page->type)) {
@@ -110,6 +95,10 @@ class DelegatingUrlGenerator extends SymfonyUrlGenerator implements VersatileGen
             }
         }
 
-        return $route;
+        if ($route instanceof Route) {
+            return $route;
+        }
+
+        throw new ContentRouteNotFoundException($content);
     }
 }

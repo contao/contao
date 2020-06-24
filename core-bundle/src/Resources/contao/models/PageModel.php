@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
+use Contao\CoreBundle\Routing\Content\ContentRoute;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -1105,7 +1106,7 @@ class PageModel extends Model
 		}
 
 		$objRouter = System::getContainer()->get('router');
-		$strUrl = $objRouter->generate($page, array('parameters' => $strParams));
+		$strUrl = $objRouter->generate(ContentRoute::ROUTE_NAME, array(ContentRoute::CONTENT_PARAMETER => $this, 'parameters' => $strParams));
 
 		// Make the URL relative to the base path
 		if (0 === strncmp($strUrl, '/', 1))
@@ -1128,7 +1129,7 @@ class PageModel extends Model
 		$this->loadDetails();
 
 		$objRouter = System::getContainer()->get('router');
-		$strUrl = $objRouter->generate($this, array('parameters' => $strParams), UrlGeneratorInterface::ABSOLUTE_URL);
+		$strUrl = $objRouter->generate(ContentRoute::ROUTE_NAME, array(ContentRoute::CONTENT_PARAMETER => $this, 'parameters' => $strParams), UrlGeneratorInterface::ABSOLUTE_URL);
 
 		return $this->applyLegacyLogic($strUrl, $strParams);
 	}
@@ -1158,7 +1159,7 @@ class PageModel extends Model
 		$context->setBaseUrl($previewScript);
 
 		$objRouter = System::getContainer()->get('router');
-		$strUrl = $objRouter->generate($this, array('parameters' => $strParams), UrlGeneratorInterface::ABSOLUTE_URL);
+		$strUrl = $objRouter->generate(ContentRoute::ROUTE_NAME, array(ContentRoute::CONTENT_PARAMETER => $this, 'parameters' => $strParams), UrlGeneratorInterface::ABSOLUTE_URL);
 
 		$context->setBaseUrl($baseUrl);
 

@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\Matcher;
 
+use Contao\CoreBundle\Routing\Content\ContentRoute;
 use Symfony\Cmf\Component\Routing\NestedMatcher\FinalMatcherInterface;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Matcher\RedirectableUrlMatcher;
 use Symfony\Component\Routing\RequestContext;
@@ -59,12 +59,8 @@ class UrlMatcher extends RedirectableUrlMatcher implements FinalMatcherInterface
 
     protected function getAttributes(Route $route, $name, array $attributes): array
     {
-        if ($route instanceof RouteObjectInterface && \is_string($route->getRouteKey())) {
-            $name = $route->getRouteKey();
-        }
-
-        $attributes[RouteObjectInterface::ROUTE_NAME] = $name;
-        $attributes[RouteObjectInterface::ROUTE_OBJECT] = $route;
+        $attributes[ContentRoute::ROUTE_NAME_PARAMETER] = $name;
+        $attributes[ContentRoute::ROUTE_OBJECT_PARAMETER] = $route;
 
         return $this->mergeDefaults($attributes, $route->getDefaults());
     }

@@ -22,7 +22,7 @@ class PageUrlResolver implements ContentUrlResolverInterface
      */
     public function resolveContent($page): Route
     {
-        return PageRoute::createWithParameters($page);
+        return ContentRoute::createWithParameters($page);
     }
 
     public function supportsContent($content): bool
