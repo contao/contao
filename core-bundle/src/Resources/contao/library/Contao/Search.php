@@ -470,7 +470,7 @@ class Search
 			if (isset($arrWildcards[$index]))
 			{
 				$strQuery .= "+ (
-					(1+LOG(SUM(match$index * tl_search_index.relevance))) * POW(LOG(@searchCount / @wildcardCount$index), 2) / ".(\count($arrAllKeywords) - \count($arrExcludedMatches))."
+					(1+LOG(SUM(match$index * tl_search_index.relevance))) * POW(LOG(@searchCount / @wildcardCount$index), 2) / " . (\count($arrAllKeywords) - \count($arrExcludedMatches)) . "
 				)";
 			}
 			else
@@ -478,7 +478,7 @@ class Search
 				$strQuery .= "+ (
 					(1+LOG(SUM(match$index * tl_search_index.relevance))) 
 					* POW(MIN(match$index * matchedWords.idf), 2) 
-					/ ".(\count($arrAllKeywords) - \count($arrExcludedMatches))."
+					/ " . (\count($arrAllKeywords) - \count($arrExcludedMatches)) . "
 				)";
 			}
 		}
@@ -494,11 +494,11 @@ class Search
 
 			if (isset($arrWildcards[$index]))
 			{
-				$strQuery .= " + POW(LOG(@searchCount / @wildcardCount$index) / ".(\count($arrAllKeywords) - \count($arrExcludedMatches)).", 2)";
+				$strQuery .= " + POW(LOG(@searchCount / @wildcardCount$index) / " . (\count($arrAllKeywords) - \count($arrExcludedMatches)) . ", 2)";
 			}
 			else
 			{
-				$strQuery .= "+ POW(MIN(match$index * matchedWords.idf) / ".(\count($arrAllKeywords) - \count($arrExcludedMatches)).", 2)";
+				$strQuery .= "+ POW(MIN(match$index * matchedWords.idf) / " . (\count($arrAllKeywords) - \count($arrExcludedMatches)) . ", 2)";
 			}
 		}
 
