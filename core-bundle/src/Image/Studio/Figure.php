@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Image\Studio;
 
 use Closure;
 use Contao\CoreBundle\File\MetaData;
+use Contao\File;
 use Contao\StringUtil;
 use Contao\Template;
 
@@ -192,9 +193,10 @@ final class Figure
             return $mapping;
         };
 
-        $metaData = $this->getMetaData();
         $img = $this->getImage();
         $originalSize = $img->getOriginalDimensions()->getSize();
+        $fileInfoImageSize = (new File($img->getImageSrc()))->imageSize;
+        $metaData = $this->getMetaData();
         $linkAttributes = $this->getLinkAttributes();
 
         // Primary image and meta data
@@ -208,9 +210,10 @@ final class Figure
                 ],
                 'width' => $originalSize->getWidth(),
                 'height' => $originalSize->getHeight(),
-                'arrSize' => [$originalSize->getWidth(), $originalSize->getHeight()],
-                'imgSize' => sprintf(' width="%d" height="%d"', $originalSize->getWidth(), $originalSize->getHeight()),
+                'arrSize' => $fileInfoImageSize,
+                'imgSize' => sprintf(' width="%d" height="%d"', $fileInfoImageSize[0], $fileInfoImageSize[1]),
                 'singleSRC' => $img->getFilePath(),
+                'src' => $img->getImageSrc(),
                 'fullsize' => ('blank' === $linkAttributes['target'] ?? null) || $this->hasLightBox(),
                 'margin' => $marginProperty ?? '',
                 'addBefore' => 'below' !== $floatingProperty,
