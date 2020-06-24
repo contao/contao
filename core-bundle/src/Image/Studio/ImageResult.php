@@ -19,6 +19,7 @@ use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureInterface;
 use Psr\Container\ContainerInterface;
+use Webmozart\PathUtil\Path;
 
 class ImageResult
 {
@@ -132,12 +133,15 @@ class ImageResult
     }
 
     /**
-     * Return the absolute file path of the base resource.
+     * Return the file path of the base resource. Set $absolute to true to
+     * return an absolute path instead of a path relative to the project dir.
      */
-    public function getFilePath(): string
+    public function getFilePath($absolute = false): string
     {
-        return $this->filePathOrImageInterface instanceof ImageInterface ?
+        $path = $this->filePathOrImageInterface instanceof ImageInterface ?
             $this->filePathOrImageInterface->getPath() : $this->filePathOrImageInterface;
+
+        return $absolute ? $path : Path::makeRelative($path, $this->projectDir());
     }
 
     protected function imageFactory(): ImageFactoryInterface
