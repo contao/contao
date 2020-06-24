@@ -50,12 +50,19 @@ class ContentResolvingGenerator extends SymfonyUrlGenerator
      */
     public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH): string
     {
-        if (ContentRoute::ROUTE_NAME !== $name || !isset($parameters[ContentRoute::CONTENT_PARAMETER])) {
+        if (ContentRoute::ROUTE_NAME === $name && isset($parameters[ContentRoute::CONTENT_PARAMETER])) {
+            $route = $this->resolveContent($parameters[ContentRoute::CONTENT_PARAMETER]);
+            unset($parameters[ContentRoute::CONTENT_PARAMETER]);
+        } elseif (
+            ContentRoute::ROUTE_NAME === $name
+            && isset($parameters[ContentRoute::ROUTE_OBJECT_PARAMETER])
+            && $parameters[ContentRoute::ROUTE_OBJECT_PARAMETER] instanceof Route
+        ) {
+            $route = $parameters[ContentRoute::ROUTE_OBJECT_PARAMETER];
+            unset($parameters[ContentRoute::ROUTE_OBJECT_PARAMETER]);
+        } else {
             throw new ContentRouteNotFoundException($name);
         }
-
-        $route = $this->resolveContent($parameters[ContentRoute::CONTENT_PARAMETER]);
-        unset($parameters[ContentRoute::CONTENT_PARAMETER]);
 
         // the Route has a cache of its own and is not recompiled as long as it does not get modified
         $compiledRoute = $route->compile();

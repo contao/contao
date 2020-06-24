@@ -88,7 +88,7 @@ class ContentCompositionListener implements ServiceAnnotationInterface
     /**
      * @Callback(table="tl_page", target="list.operations.articles.button")
      */
-    public function renderPageArticlesOperation(array $row, string $href, string $label, string $title, string $icon)
+    public function renderPageArticlesOperation(array $row, string $href, string $label, string $title, string $icon): string
     {
         if (!$this->security->isGranted('contao_user.modules', 'article')) {
             return '';
@@ -115,7 +115,7 @@ class ContentCompositionListener implements ServiceAnnotationInterface
      *
      * @Callback(table="tl_page", target="config.onsubmit")
      */
-    public function generateArticleForPage(DataContainer $dc)
+    public function generateArticleForPage(DataContainer $dc): void
     {
         $request = $this->requestStack->getCurrentRequest();
 
@@ -172,7 +172,7 @@ class ContentCompositionListener implements ServiceAnnotationInterface
     /**
      * @Callback(table="tl_article", target="list.sorting.paste_button")
      */
-    public function renderArticlePasteButton(DataContainer $dc, array $row, string $table, bool $cr, array $clipboard = null)
+    public function renderArticlePasteButton(DataContainer $dc, array $row, string $table, bool $cr, array $clipboard = null): string
     {
         $user = $this->security->getUser();
         if (!$user instanceof BackendUser) {
@@ -234,7 +234,7 @@ class ContentCompositionListener implements ServiceAnnotationInterface
         );
     }
 
-    private function supportsComposition(PageModel $pageModel)
+    private function supportsComposition(PageModel $pageModel): bool
     {
         if (!$this->pageProviders->has($pageModel->type)) {
             return true;
@@ -246,7 +246,7 @@ class ContentCompositionListener implements ServiceAnnotationInterface
         return $provider->supportsContentComposition($pageModel);
     }
 
-    private function hasArticlesInLayout(PageModel $pageModel)
+    private function hasArticlesInLayout(PageModel $pageModel): bool
     {
         $pageModel->loadDetails();
 

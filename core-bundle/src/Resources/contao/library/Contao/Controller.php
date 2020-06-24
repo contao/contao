@@ -15,6 +15,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\CoreBundle\Routing\Content\ContentRoute;
 use Contao\Database\Result;
 use Contao\Image\PictureConfiguration;
 use Contao\Model\Collection;
@@ -1183,7 +1184,7 @@ abstract class Controller extends System
 		}
 
 		$objRouter = System::getContainer()->get('router');
-		$strUrl = $objRouter->generate($page, array('parameters' => $strParams));
+		$strUrl = $objRouter->generate(ContentRoute::ROUTE_NAME, array(ContentRoute::CONTENT_PARAMETER => $page, 'parameters' => $strParams));
 
 		// Remove path from absolute URLs
 		if (0 === strncmp($strUrl, '/', 1))

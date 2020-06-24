@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Routing;
 
 use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\Content\ContentRoute;
 use Contao\PageModel;
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -87,7 +88,7 @@ class UrlGenerator implements UrlGeneratorInterface
         $httpPort = $context->getHttpPort();
         $httpsPort = $context->getHttpsPort();
 
-        $route = $this->getRoute($name, $parameters);
+        $parameters[ContentRoute::ROUTE_OBJECT_PARAMETER] = $this->getRoute($name, $parameters);
 
         $this->prepareAlias($name, $parameters);
         $this->prepareDomain($context, $parameters, $referenceType);
@@ -95,7 +96,7 @@ class UrlGenerator implements UrlGeneratorInterface
         unset($parameters['auto_item']);
 
         $url = $this->router->generate(
-            $route,
+            ContentRoute::ROUTE_NAME,
             $parameters,
             $referenceType
         );

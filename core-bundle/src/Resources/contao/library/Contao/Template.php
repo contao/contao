@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
+use Contao\CoreBundle\Routing\Content\ContentRoute;
 use MatthiasMullie\Minify;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\VarDumper\VarDumper;
@@ -348,6 +349,21 @@ abstract class Template extends Controller
 	}
 
 	/**
+	 * Return a content route relative to the base URL
+	 *
+	 * @param mixed $content   The content
+	 * @param array $arrParams The route parameters
+	 *
+	 * @return string The route
+	 */
+	public function routeContent($content, $arrParams=array())
+	{
+		$arrParams[ContentRoute::CONTENT_PARAMETER] = $content;
+
+		return $this->route(ContentRoute::ROUTE_NAME, $arrParams);
+	}
+
+	/**
 	 * Return the preview route
 	 *
 	 * @param string $strName   The route name
@@ -375,6 +391,21 @@ abstract class Template extends Controller
 		$context->setBaseUrl('');
 
 		return StringUtil::ampersand($strUrl);
+	}
+
+	/**
+	 * Return the preview content route
+	 *
+	 * @param mixed $content   The content
+	 * @param array $arrParams The route parameters
+	 *
+	 * @return string The route
+	 */
+	public function previewContentRoute($content, $arrParams = array())
+	{
+		$arrParams[ContentRoute::CONTENT_PARAMETER] = $content;
+
+		return $this->routeContent(ContentRoute::ROUTE_NAME, $arrParams);
 	}
 
 	/**

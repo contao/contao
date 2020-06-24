@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Exception\LegacyRoutingException;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\CoreBundle\Routing\Content\ContentRoute;
 use Contao\CoreBundle\Search\Document;
 use Psr\Log\LogLevel;
 use Symfony\Component\HttpFoundation\Request;
@@ -459,7 +460,7 @@ abstract class Frontend extends Controller
 			}
 		}
 
-		$strUrl = System::getContainer()->get('router')->generate($objPage, array('parameters' => $strParams));
+		$strUrl = System::getContainer()->get('router')->generate(ContentRoute::ROUTE_NAME, array(ContentRoute::CONTENT_PARAMETER => $objPage, 'parameters' => $strParams));
 		$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
 
 		return $strUrl;
