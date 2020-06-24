@@ -403,7 +403,7 @@ class Search
 			$arrKeywords = array();
 		}
 
-		$strQuery = "SELECT *, (similarity / vectorLength) AS relevance FROM (SELECT tl_search_index.pid AS sid";
+		$strQuery = "SELECT *, (similarity / IF(vectorLength <= 0, 1, vectorLength)) AS relevance FROM (SELECT tl_search_index.pid AS sid";
 
 		// Remember found words so we can highlight them later
 		$strQuery .= ", GROUP_CONCAT(matchedWords.word) AS matches";
