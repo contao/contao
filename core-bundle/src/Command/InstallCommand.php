@@ -63,6 +63,11 @@ class InstallCommand extends Command
     /**
      * @var array
      */
+    private $bundles;
+
+    /**
+     * @var array
+     */
     private $emptyDirs = [
         'system',
         'system/config',
@@ -90,11 +95,12 @@ class InstallCommand extends Command
      * @param string $uploadPath
      * @param string $imageDir
      */
-    public function __construct($rootDir, $uploadPath, $imageDir)
+    public function __construct($rootDir, $uploadPath, $imageDir, $bundles)
     {
         $this->rootDir = $rootDir;
         $this->uploadPath = $uploadPath;
         $this->imageDir = $imageDir;
+        $this->bundles = $bundles;
 
         parent::__construct();
     }
@@ -239,12 +245,20 @@ EOF
      */
     private function symlinkTcpdfConfig()
     {
+        $coreBundle = new \ReflectionClass($this->bundles['ContaoCoreBundle']);
+        $relPath = $this->getRelativePath(\dirname($coreBundle->getFileName()));
+
         SymlinkUtil::symlink(
-            'vendor/contao/core-bundle/src/Resources/contao/config/tcpdf.php',
+            $relPath.'/Resources/contao/config/tcpdf.php', 
             'system/config/tcpdf.php',
             $this->rootDir
         );
 
         $this->io->writeln('Symlinked the <comment>system/config/tcpdf.php</comment> file.');
+    }
+
+    private function getRelativePath(string $path): string
+    {
+        return str_replace(strtr($this->rootDir, '\\', '/').'/', '', strtr($path, '\\', '/'));
     }
 }
