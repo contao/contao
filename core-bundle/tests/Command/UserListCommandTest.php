@@ -91,14 +91,12 @@ class UserListCommandTest extends TestCase
 
         $userModelAdapter = $this->mockAdapter(['findBy', 'findAll']);
         $userModelAdapter
-            //->expects($this->once())
             ->method('findAll')
             ->willReturn($noResult ? null : $collection, null)
         ;
 
         $collection = new Collection([$this->mockAdminUser()], 'tl_user');
         $userModelAdapter
-            //->expects($this->once())
             ->method('findBy')
             ->with('admin', '1')
             ->willReturn($noResult ? null : $collection, null)
