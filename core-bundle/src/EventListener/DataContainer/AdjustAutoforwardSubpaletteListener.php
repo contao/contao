@@ -43,11 +43,13 @@ class AdjustAutoforwardSubpaletteListener implements ServiceAnnotationInterface
         /** @var PageModel $pageAdapter */
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
 
-        if (null !== ($page = $pageAdapter->findByPk($dc->id)) && \in_array($page->type, ['error_401', 'error_403'], true)) {
-            PaletteManipulator::create()
-                ->removeField('redirect')
-                ->applyToSubpalette('autoforward', 'tl_page')
-            ;
+        if (!($page = $pageAdapter->findByPk($dc->id)) || !\in_array($page->type, ['error_401', 'error_403'], true)) {
+            return;
         }
+
+        PaletteManipulator::create()
+            ->removeField('redirect')
+            ->applyToSubpalette('autoforward', 'tl_page')
+        ;
     }
 }
