@@ -28,6 +28,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 class UserListCommand extends Command
 {
+    protected static $defaultName = 'contao:user:list';
+
     /**
      * @var ContaoFramework
      */
@@ -43,7 +45,6 @@ class UserListCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('contao:user:list')
             ->addOption('column', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'The columns display in the table')
             ->addOption('admins', null, InputOption::VALUE_NONE, 'Return only admins')
             ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The output format', 'text')

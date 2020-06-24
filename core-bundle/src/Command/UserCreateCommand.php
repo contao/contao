@@ -35,6 +35,8 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
  */
 class UserCreateCommand extends Command
 {
+    protected static $defaultName = 'contao:user:create';
+
     /**
      * @var ContaoFramework
      */
@@ -68,7 +70,6 @@ class UserCreateCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('contao:user:create')
             ->addOption('username', 'u', InputOption::VALUE_REQUIRED, 'The username to create')
             ->addOption('name', null, InputOption::VALUE_REQUIRED, 'The full name')
             ->addOption('email', null, InputOption::VALUE_REQUIRED, 'The email address')
