@@ -495,37 +495,21 @@ class FigureBuilder
     /**
      * Return a list of locales (if available) in the following order:
      *  1. language of current page,
-     *  2. root page fallback language,
-     *  3. request locale,
-     *  4. system locale.
+     *  2. root page fallback language.
      */
     private function getFallbackLocaleList(): array
     {
-        $locales = [
-            $this->locator
-                ->get('parameter_bag')
-                ->get('kernel.default_locale'),
-        ];
+        $page = $GLOBALS['objPage'] ?? null;
 
-        $request = $this->locator
-            ->get('request_stack')
-            ->getCurrentRequest()
-        ;
-
-        if (null === $request) {
-            return $locales;
+        if (!$page instanceof PageModel) {
+            return [];
         }
 
-        array_unshift($locales, $request->getLocale());
+        $locales = [];
 
-        if ($request->attributes->has('pageModel')) {
-            /** @var PageModel $page */
-            $page = $request->attributes->get('pageModel');
-
-            foreach ([$page->rootFallbackLanguage, $page->language] as $value) {
-                if (!empty($value)) {
-                    array_unshift($locales, str_replace('-', '_', $page->language));
-                }
+        foreach ([$page->rootFallbackLanguage, $page->language] as $value) {
+            if (!empty($value)) {
+                array_unshift($locales, str_replace('-', '_', $value));
             }
         }
 

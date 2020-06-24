@@ -116,34 +116,14 @@ class LightBoxResult
      */
     private function getDefaultLightBoxSizeConfiguration(): ?array
     {
-        $request = $this->locator
-            ->get('request_stack')
-            ->getCurrentRequest()
-        ;
-
-        if (null === $request || !$request->attributes->has('pageModel')) {
-            return null;
-        }
-
         $framework = $this->locator->get('contao.framework');
         $framework->initialize();
 
-        // Try to get page model // todo: what's the right way to do this?
-        $page = $request->attributes->get('pageModel');
+        $page = $GLOBALS['objPage'] ?? null;
 
-        if (!$page instanceof PageModel) {
-            /** @var PageModel $pageAdapter */
-            $pageAdapter = $framework->getAdapter(PageModel::class);
-
-            /** @var PageModel|null $page */
-            $page = $pageAdapter->findByPk($request->attributes->get('pageModel'));
-        }
-
-        if (null === $page || null === $page->layout) {
+        if (!$page instanceof PageModel || null === $page->layout) {
             return null;
         }
-
-        $page->loadDetails();
 
         // Try to get layout
         /** @var LayoutModel $layoutModelAdapter */
