@@ -79,4 +79,12 @@ class MetaData
     {
         return $this->values;
     }
+
+    /**
+     * Returns true if this container holds no values, false otherwise.
+     */
+    public function empty(): bool
+    {
+        return empty($this->values);
+    }
 }

@@ -17,12 +17,14 @@ use PHPUnit\Framework\TestCase;
 
 class MetaDataTest extends TestCase
 {
-    public function testCreatesMetaDataContainer(): void
+    public function testCreateAndAccessMetaDataContainer(): void
     {
         $metaData = new MetaData([
             'link' => 'foo://bar',
             'foo' => 'bar',
         ]);
+
+        $this->assertFalse($metaData->empty());
 
         $this->assertSame('foo://bar', $metaData->getUrl());
         $this->assertSame('', $metaData->getTitle());
@@ -32,5 +34,12 @@ class MetaDataTest extends TestCase
             MetaData::VALUE_URL => 'foo://bar',
             'foo' => 'bar',
         ], $metaData->all());
+    }
+
+    public function testEmptyMetaDataContainer(): void
+    {
+        $metaData = new MetaData([]);
+
+        $this->assertTrue($metaData->empty());
     }
 }
