@@ -257,7 +257,10 @@ EOF
         $this->io->writeln('Symlinked the <comment>system/config/tcpdf.php</comment> file.');
     }
 
-    private function getRelativePath(string $path): string
+    /**
+     * @return string
+     */
+    private function getRelativePath(string $path)
     {
         return str_replace(strtr($this->rootDir, '\\', '/').'/', '', strtr($path, '\\', '/'));
     }
