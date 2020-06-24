@@ -204,7 +204,7 @@ class CoreBundleVisibleElementVoterTest extends TestCase
     /**
      * @dataProvider modelClassProvider
      */
-    public function testExecutesIsVisibleElementHook(string $modelClass)
+    public function testExecutesIsVisibleElementHook(string $modelClass): void
     {
         $token = $this->mockToken();
         $subject = $this->mockSubject($modelClass);
@@ -234,7 +234,6 @@ class CoreBundleVisibleElementVoterTest extends TestCase
 
         $this->assertSame(VoterInterface::ACCESS_DENIED, $this->voter->vote($token, $subject, $attributes));
     }
-
 
     public function modelClassProvider(): \Generator
     {
@@ -271,8 +270,9 @@ class CoreBundleVisibleElementVoterTest extends TestCase
     }
 
     /**
-     * @param null $user
-     * @param array|string[] $roles
+     * @param null          $user
+     * @param array<string> $roles
+     *
      * @return TokenInterface&MockObject
      */
     private function mockToken($user = null, array $roles = ['ROLE_MEMBER']): TokenInterface

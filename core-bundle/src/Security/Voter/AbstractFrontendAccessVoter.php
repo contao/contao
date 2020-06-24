@@ -28,6 +28,13 @@ abstract class AbstractFrontendAccessVoter extends Voter implements ServiceSubsc
 
     public const ATTRIBUTE = 'contao_frontend.access';
 
+    public static function getSubscribedServices()
+    {
+        return [
+            'contao.framework' => ContaoFramework::class,
+        ];
+    }
+
     protected function supports($attribute, $subject): bool
     {
         return self::ATTRIBUTE === $attribute && $this->supportsSubject($subject);
@@ -92,12 +99,5 @@ abstract class AbstractFrontendAccessVoter extends Voter implements ServiceSubsc
         }
 
         return $accessGranted;
-    }
-
-    public static function getSubscribedServices()
-    {
-        return [
-            'contao.framework' => ContaoFramework::class,
-        ];
     }
 }
