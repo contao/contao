@@ -165,7 +165,7 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
         try {
             $this->recursiveValidatePages((int) $rootPage->id, $rootPage);
         } catch (DuplicateAliasException $exception) {
-            throw new \RuntimeException($this->translator->trans('ERR.pageUrlSuffix', [$exception->getUrl()], 'contao_default'));
+            throw new \RuntimeException($this->translator->trans('ERR.pageUrlSuffix', [$exception->getUrl()], 'contao_default'), 0, $exception);
         }
 
         return $value;
