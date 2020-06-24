@@ -287,6 +287,28 @@ class Search
 		$objDatabase->prepare("INSERT INTO tl_search_index (pid, wordId, relevance) VALUES " . implode(', ', $arrQuery))
 					->execute($arrValues);
 
+		list($intMinId, $intMaxId, $intCount) = array_map('intval', $objDatabase->prepare("
+			SELECT IFNULL(MIN(id), 0), IFNULL(MAX(id), 0), COUNT(*) FROM tl_search
+		")->execute()->fetchRow());
+
+		if ($intCount <= 105)
+		{
+			$arrRandomIds = $objDatabase->prepare("SELECT id FROM tl_search")->execute()->fetchEach('id');
+		}
+		else
+		{
+			$arrRandomIds = array();
+
+			while (\count($arrRandomIds) < ($intMaxId - $intMinId) / $intCount * 100)
+			{
+				$arrRandomIds[random_int($intMinId, $intMaxId)] = true;
+			}
+
+			$arrRandomIds = array_keys($arrRandomIds);
+		}
+
+		$arrDocumentIds = array_merge(array($intInsertId), $arrRandomIds);
+
 		// Set or update vector length
 		$objDatabase->prepare("
 			UPDATE tl_search
@@ -302,11 +324,10 @@ class Search
 				FROM tl_search_index
 				JOIN tl_search_words
 					ON tl_search_index.wordId = tl_search_words.id
-				WHERE tl_search_index.pid = ?
+				WHERE tl_search_index.pid IN (" . implode(',', array_map('intval', $arrDocumentIds)) . ")
 			) si ON si.pid = tl_search.id
 			SET tl_search.vectorLength = si.vectorLength
-		")
-			->execute($intInsertId);
+		")->execute();
 
 		return true;
 	}
