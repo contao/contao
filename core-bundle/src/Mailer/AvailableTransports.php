@@ -54,7 +54,7 @@ class AvailableTransports
         $options = [];
 
         foreach ($this->transports as $name => $config) {
-            $label = null !== $this->translator ? $this->translator->trans($name, [], 'contao.transports') : $name;
+            $label = null !== $this->translator ? $this->translator->trans($name, [], 'mailer_transports') : $name;
 
             if (null !== ($from = $config->getFrom())) {
                 $label .= ' ('.$from.')';
