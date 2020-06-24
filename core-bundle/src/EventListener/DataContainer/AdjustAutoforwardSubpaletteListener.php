@@ -37,8 +37,10 @@ class AdjustAutoforwardSubpaletteListener
         /** @var PageModel $pageAdapter */
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
 
-        if (null !== ($page = $pageAdapter->findByPk($dc->id)) && 'error_403' === $page->type) {
-            $GLOBALS['TL_DCA'][$dc->table]['subpalettes']['autoforward'] = str_replace(',redirect', '', $GLOBALS['TL_DCA'][$dc->table]['subpalettes']['autoforward']);
+        if (!($page = $pageAdapter->findByPk($dc->id)) || 'error_403' === $page->type) {
+            return;
         }
+
+        $GLOBALS['TL_DCA'][$dc->table]['subpalettes']['autoforward'] = str_replace(',redirect', '', $GLOBALS['TL_DCA'][$dc->table]['subpalettes']['autoforward']);
     }
 }
