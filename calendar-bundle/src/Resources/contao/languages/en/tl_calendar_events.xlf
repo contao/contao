@@ -179,6 +179,12 @@
       <trans-unit id="tl_calendar_events.noComments.1">
         <source>Do not allow comments for this particular event.</source>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.featured.0">
+        <source>Feature event</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.featured.1">
+        <source>Show the event in a featured event list.</source>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.published.0">
         <source>Publish event</source>
       </trans-unit>
@@ -272,20 +278,15 @@
       <trans-unit id="tl_calendar_events.toggle">
         <source>Publish/unpublish event ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.feature">
+        <source>Feature/unfeature event ID %s</source>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.editheader">
         <source>Edit the settings of event ID %s</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.featured.0">
-        <source>Feature item</source>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.featured.1">
-        <source>Show the event item in a featured event list.</source>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.feature">
-        <source>Feature/unfeature event item ID %s</source>
       <trans-unit id="tl_calendar_events.editmeta">
         <source>Edit the event settings</source>
       </trans-unit>

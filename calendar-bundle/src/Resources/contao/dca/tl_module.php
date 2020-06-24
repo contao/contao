@@ -18,11 +18,11 @@ use Contao\System;
 $GLOBALS['TL_DCA']['tl_module']['palettes']['__selector__'][] = 'cal_format';
 
 // Add palettes to tl_module
-$GLOBALS['TL_DCA']['tl_module']['palettes']['calendar']         = '{title_legend},name,headline,type;{config_legend},cal_calendar,cal_startDay,cal_noSpan,cal_featured;{redirect_legend},jumpTo;{template_legend:hide},cal_ctemplate,customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
-$GLOBALS['TL_DCA']['tl_module']['palettes']['eventlist']        = '{title_legend},name,headline,type;{config_legend},cal_calendar,cal_format,cal_noSpan,cal_order,cal_readerModule,cal_limit,perPage,cal_featured,cal_ignoreDynamic,cal_hideRunning;{template_legend:hide},cal_template,customTpl;{image_legend:hide},imgSize;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['calendar']         = '{title_legend},name,headline,type;{config_legend},cal_calendar,cal_noSpan,cal_startDay,cal_featured;{redirect_legend},jumpTo;{template_legend:hide},cal_ctemplate,customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['eventlist']        = '{title_legend},name,headline,type;{config_legend},cal_calendar,cal_noSpan,cal_format,cal_featured,cal_order,cal_readerModule,cal_limit,perPage,cal_ignoreDynamic,cal_hideRunning;{template_legend:hide},cal_template,customTpl;{image_legend:hide},imgSize;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
 $GLOBALS['TL_DCA']['tl_module']['palettes']['eventreader']      = '{title_legend},name,headline,type;{config_legend},cal_calendar,cal_hideRunning;{template_legend:hide},cal_template,customTpl;{image_legend},imgSize;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
-$GLOBALS['TL_DCA']['tl_module']['palettes']['eventmenu']        = '{title_legend},name,headline,type;{config_legend},cal_calendar,cal_format,cal_noSpan,cal_order,cal_showQuantity,cal_featured;{redirect_legend},jumpTo;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
-$GLOBALS['TL_DCA']['tl_module']['palettes']['eventmenucal_day'] = '{title_legend},name,headline,type;{config_legend},cal_calendar,cal_format,cal_noSpan,cal_startDay,cal_showQuantity,cal_featured;{redirect_legend},jumpTo;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['eventmenu']        = '{title_legend},name,headline,type;{config_legend},cal_calendar,cal_noSpan,cal_format,cal_featured,cal_order,cal_showQuantity;{redirect_legend},jumpTo;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['eventmenucal_day'] = '{title_legend},name,headline,type;{config_legend},cal_calendar,cal_noSpan,cal_format,cal_featured,cal_startDay,cal_showQuantity;{redirect_legend},jumpTo;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
 
 // Add fields to tl_module
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_calendar'] = array
@@ -38,7 +38,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_noSpan'] = array
 (
 	'exclude'                 => true,
 	'inputType'               => 'checkbox',
-	'eval'                    => array('tl_class'=>'w50 m12'),
+	'eval'                    => array('tl_class'=>'w50'),
 	'sql'                     => "char(1) NOT NULL default ''"
 );
 
@@ -46,7 +46,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_hideRunning'] = array
 (
 	'exclude'                 => true,
 	'inputType'               => 'checkbox',
-	'eval'                    => array('tl_class'=>'w50 clr'),
+	'eval'                    => array('tl_class'=>'w50'),
 	'sql'                     => "char(1) NOT NULL default ''"
 );
 
@@ -56,7 +56,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_startDay'] = array
 	'inputType'               => 'select',
 	'options'                 => array(0, 1, 2, 3, 4, 5, 6),
 	'reference'               => &$GLOBALS['TL_LANG']['DAYS'],
-	'eval'                    => array('tl_class'=>'w50'),
+	'eval'                    => array('tl_class'=>'w50 clr'),
 	'sql'                     => "smallint(5) unsigned NOT NULL default 1"
 );
 
@@ -66,7 +66,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_format'] = array
 	'inputType'               => 'select',
 	'options_callback'        => array('tl_module_calendar', 'getFormats'),
 	'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
-	'eval'                    => array('tl_class'=>'w50', 'submitOnChange'=>true),
+	'eval'                    => array('tl_class'=>'w50 clr', 'submitOnChange'=>true),
 	'sql'                     => "varchar(32) NOT NULL default 'cal_month'"
 );
 
@@ -144,7 +144,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_featured'] = array
 	'inputType'               => 'select',
 	'options'                 => array('all_items', 'featured', 'unfeatured'),
 	'reference'               => &$GLOBALS['TL_LANG']['tl_module']['events'],
-	'eval'                    => array('tl_class'=>'w50 clr'),
+	'eval'                    => array('tl_class'=>'w50'),
 	'sql'                     => "varchar(16) NOT NULL default 'all_items'"
 );
 

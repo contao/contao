@@ -412,7 +412,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		'recurring' => array
 		(
 			'exclude'                 => true,
-			'filter'                  => true,
+			'search'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
 			'sql'                     => "char(1) NOT NULL default ''"
@@ -508,7 +508,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50 clr'),
 			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'featured' => array
@@ -1062,7 +1062,7 @@ class tl_calendar_events extends Backend
 	}
 
 	/**
-	 * Feature/unfeature a event item
+	 * Feature/unfeature an event
 	 *
 	 * @param integer       $intId
 	 * @param boolean       $blnVisible
@@ -1081,7 +1081,7 @@ class tl_calendar_events extends Backend
 		// Check permissions to feature
 		if (!$this->User->hasAccess('tl_calendar_events::featured', 'alexf'))
 		{
-			throw new AccessDeniedException('Not enough permissions to feature/unfeature event item ID ' . $intId . '.');
+			throw new AccessDeniedException('Not enough permissions to feature/unfeature event ID ' . $intId . '.');
 		}
 
 		$objVersions = new Versions('tl_calendar_events', $intId);
@@ -1106,7 +1106,7 @@ class tl_calendar_events extends Backend
 
 		// Update the database
 		$this->Database->prepare("UPDATE tl_calendar_events SET tstamp=" . time() . ", featured='" . ($blnVisible ? 1 : '') . "' WHERE id=?")
-			->execute($intId);
+					   ->execute($intId);
 
 		$objVersions->create();
 	}
