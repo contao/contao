@@ -3,7 +3,7 @@ tl_files:
       uuid: 'uuid-public'
       name: 'public'
       type: 'folder'
-      path: '../tests/Fixtures/files/public'
+      path: 'files/public'
 
     - id: 2
       pid: 1
@@ -11,4 +11,4 @@ tl_files:
       name: 'dummy.jpg'
       extension: 'jpg'
       type: 'file'
-      path: '../tests/Fixtures/files/public/dummy.jpg'
+      path: 'files/public/dummy.jpg'

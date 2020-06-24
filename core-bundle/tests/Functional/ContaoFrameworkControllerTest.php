@@ -29,6 +29,9 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
 
         parent::setUpBeforeClass();
         static::resetDatabaseSchema();
+
+        // Make demo resources available in the upload path
+        (new Filesystem())->symlink(__DIR__.'/../Fixtures/files', __DIR__.'/../../var/files');
     }
 
     /**
@@ -83,7 +86,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                 'alt' => '',
             ],
             'src' => 'assets/images/<anything>',
-            'singleSRC' => '../tests/Fixtures/files/public/dummy.jpg',
+            'singleSRC' => 'files/public/dummy.jpg',
             'linkTitle' => '',
             'margin' => '',
             'addBefore' => true,
@@ -92,7 +95,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
         ];
 
         $baseRowData = [
-            'singleSRC' => '../tests/Fixtures/files/public/dummy.jpg',
+            'singleSRC' => 'files/public/dummy.jpg',
             'size' => [150, 100, 'crop'],
         ];
 
@@ -514,8 +517,11 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                     ],
                     'lightboxPicture' => [
                         'img' => [
-                            'src' => '../tests/Fixtures/files/public/dummy.jpg',
-                            'srcset' => '../tests/Fixtures/files/public/dummy.jpg',
+                            'src' => 'files/public/dummy.jpg',
+                            'srcset' => 'files/public/dummy.jpg',
+                            'hasSingleAspectRatio' => true,
+                            'height' => 200,
+                            'width' => 200,
                         ],
                         'sources' => [],
                     ],
@@ -524,7 +530,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                     'imageUrl' => '',
                     'caption' => 'foo caption',
                     'linkTitle' => 'foo title',
-                    'href' => '../tests/Fixtures/files/public/dummy.jpg',
+                    'href' => 'files/public/dummy.jpg',
                     'fullsize' => true,
                     'attributes' => ' data-lightbox="<anything>"',
                     'floatClass' => ' float_above',
