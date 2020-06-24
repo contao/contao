@@ -28,7 +28,7 @@ class ArticleUrlResolver implements ContentUrlResolverInterface
         $page = $article->getRelated('pid');
 
         if (!$page instanceof PageModel) {
-            throw new RouteNotFoundException(sprintf('Page ID %s for article ID %s not found', $article->id, $article->pid));
+            throw new RouteNotFoundException(sprintf('Page ID %s for article ID %s not found', $article->pid, $article->id));
         }
 
         return ContentRoute::createWithParameters($page, '/articles/'.($article->alias ?: $article->id), $article);
