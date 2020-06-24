@@ -268,7 +268,7 @@ class UrlGenerator implements UrlGeneratorInterface
         );
 
         if (null === $rootPage) {
-            throw new \RuntimeException('The Contao\CoreBundle\Routing\UrlGenerator requires a domain and locale or legacy routing. Configure "prepend_locale" or "url_suffix" in the Contao bundle.');
+            throw new \RuntimeException(static::class.' requires a domain and locale or legacy routing. Configure "prepend_locale" or "url_suffix" in the Contao bundle.');
         }
 
         $rootPage->loadDetails();
