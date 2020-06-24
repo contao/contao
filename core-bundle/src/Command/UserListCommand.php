@@ -84,7 +84,7 @@ class UserListCommand extends Command
                 break;
 
             default:
-                throw new \LogicException('What kind of crazy format is that!?');
+                throw new \LogicException('Invalid format: '.$input->getOption('format'));
         }
 
         return 0;
