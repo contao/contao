@@ -1,0 +1,7 @@
+services:
+    _defaults:
+        autoconfigure: true
+        autowire: true
+
+    Contao\CalendarBundle\Security\Voter\:
+        resource: ../../Security/Voter/*
