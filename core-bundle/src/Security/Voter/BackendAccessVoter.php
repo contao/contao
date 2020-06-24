@@ -13,11 +13,21 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Security\Voter;
 
 use Contao\BackendUser;
+use Contao\PageModel;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class BackendAccessVoter extends Voter
 {
+    private const ALLOWED_FLAGS = [
+        'can_edit_page' => BackendUser::CAN_EDIT_PAGE,
+        'can_edit_page_hierarchy' => BackendUser::CAN_EDIT_PAGE_HIERARCHY,
+        'can_delete_page' => BackendUser::CAN_DELETE_PAGE,
+        'can_edit_articles' => BackendUser::CAN_EDIT_ARTICLES,
+        'can_edit_article_hierarchy' => BackendUser::CAN_EDIT_ARTICLE_HIERARCHY,
+        'can_delete_articles' => BackendUser::CAN_DELETE_ARTICLES,
+    ];
+
     protected function supports($attribute, $subject): bool
     {
         return \is_string($attribute) && 0 === strncmp($attribute, 'contao_user.', 12);
@@ -28,10 +38,50 @@ class BackendAccessVoter extends Voter
         $user = $token->getUser();
         [, $field] = explode('.', $attribute, 2);
 
-        if (!$user instanceof BackendUser || (!is_scalar($subject) && !\is_array($subject))) {
+        if (!$user instanceof BackendUser) {
+            return false;
+        }
+
+        if ('can_edit_fields' === $field) {
+            return $this->canEditFieldsOf($subject, $user);
+        }
+
+        if (isset(self::ALLOWED_FLAGS[$field])) {
+            return $this->isAllowed($subject, self::ALLOWED_FLAGS[$field], $user);
+        }
+
+        return $this->hasAccess($subject, $field, $user);
+    }
+
+    private function hasAccess($subject, string $field, BackendUser $user): bool
+    {
+        if (!is_scalar($subject) && !\is_array($subject)) {
             return false;
         }
 
         return $user->hasAccess($subject, $field);
+    }
+
+    private function isAllowed($subject, int $flag, BackendUser $user): bool
+    {
+        if ($subject instanceof PageModel) {
+            $subject->loadDetails();
+            $subject = $subject->row();
+        }
+
+        if (!\is_array($subject)) {
+            return false;
+        }
+
+        return $user->isAllowed($flag, $subject);
+    }
+
+    private function canEditFieldsOf($subject, BackendUser $user): bool
+    {
+        if (!\is_string($subject)) {
+            return false;
+        }
+
+        return $user->canEditFieldsOf($subject);
     }
 }
