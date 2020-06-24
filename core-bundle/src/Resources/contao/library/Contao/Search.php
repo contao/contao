@@ -248,16 +248,36 @@ class Search
 			$arrIndex[$strWord] = 1;
 		}
 
+		// Decrement document frequency counts
+		$objDatabase->prepare("
+			UPDATE tl_search_words 
+			INNER JOIN tl_search_index ON tl_search_words.id = tl_search_index.wordId AND tl_search_index.pid = ?
+			SET documentFrequency = GREATEST(0, documentFrequency - 1)
+		")
+			->execute($intInsertId);
+
 		// Remove the existing index
 		$objDatabase->prepare("DELETE FROM tl_search_index WHERE pid=?")
 					->execute($intInsertId);
+
+		// Add new words and increment frequency counts of existing words
+		$objDatabase->prepare("
+			INSERT INTO tl_search_words (word, documentFrequency) 
+			VALUES " . implode(', ', array_fill(0, \count($arrIndex), '(?, 1)')) . "
+			ON DUPLICATE KEY UPDATE documentFrequency = documentFrequency + 1
+		")
+			->execute(array_keys($arrIndex));
+
+		// Remove obsolete words
+		$objDatabase->prepare("DELETE FROM tl_search_words WHERE documentFrequency = 0")
+					->execute();
 
 		$arrQuery = array();
 		$arrValues = array();
 
 		foreach ($arrIndex as $k=>$v)
 		{
-			$arrQuery[] = '(?, ?, ?, ?)';
+			$arrQuery[] = '(?, (SELECT id FROM tl_search_words WHERE word = ?), ?, ?)';
 			$arrValues[] = $intInsertId;
 			$arrValues[] = $k;
 			$arrValues[] = $v;
@@ -265,8 +285,29 @@ class Search
 		}
 
 		// Create the new index
-		$objDatabase->prepare("INSERT INTO tl_search_index (pid, word, relevance, language) VALUES " . implode(', ', $arrQuery))
+		$objDatabase->prepare("INSERT INTO tl_search_index (pid, wordId, relevance, language) VALUES " . implode(', ', $arrQuery))
 					->execute($arrValues);
+
+		// Set or update vector length
+		$objDatabase->prepare("
+			UPDATE tl_search
+			INNER JOIN (
+				SELECT 
+					tl_search_index.pid,
+					SQRT(SUM(POW(
+						(1 + LOG(relevance)) * LOG((
+							SELECT COUNT(*) FROM tl_search
+						) / documentFrequency),
+						2
+					))) as vectorLength
+				FROM tl_search_index
+				JOIN tl_search_words
+					ON tl_search_index.wordId = tl_search_words.id
+				WHERE tl_search_index.pid = ?
+			) si ON si.pid = tl_search.id
+			SET tl_search.vectorLength = si.vectorLength
+		")
+			->execute($intInsertId);
 
 		return true;
 	}
