@@ -76,6 +76,13 @@ class FigureBuilder
     private $metaData;
 
     /**
+     * Determines if an empty meta data should be created as a fallback.
+     *
+     * @var bool
+     */
+    private $alwaysCreateMetaData;
+
+    /**
      * User defined link attributes (adding to or overwriting the default attributes).
      *
      * @var array<string, string|null>
@@ -255,6 +262,17 @@ class FigureBuilder
     }
 
     /**
+     * Enable/disable returning an empty meta data container if no meta data
+     * was found or explicitly set. This setting is disabled by default.
+     */
+    public function alwaysCreateMetaData(bool $enable = true): self
+    {
+        $this->alwaysCreateMetaData = $enable;
+
+        return $this;
+    }
+
+    /**
      * Set a custom locale. By default or if the argument is set to null, the
      * locale is determined from the request context and/or system settings.
      */
@@ -394,14 +412,16 @@ class FigureBuilder
             return $this->metaData;
         }
 
-        if (null === $this->filesModel) {
-            return null;
+        if (null !== $this->filesModel) {
+            // Get fallback locale list or use without fallbacks if explicitly set
+            $locales = null !== $this->locale ? [$this->locale] : $this->getFallbackLocaleList();
+
+            if (null !== $metaData = $this->filesModel->getMetaData(...$locales)) {
+                return $metaData;
+            }
         }
 
-        // Get fallback locale list or use without fallbacks if explicitly set
-        $locales = null !== $this->locale ? [$this->locale] : $this->getFallbackLocaleList();
-
-        return $this->filesModel->getMetaData(...$locales);
+        return $this->alwaysCreateMetaData ? new MetaData([]) : null;
     }
 
     /**
@@ -443,8 +463,16 @@ class FigureBuilder
             return [$filePath, null];
         };
 
+        $getMetaDataUrl = static function (Figure $result): ?string {
+            if (!$result->hasMetaData()) {
+                return null;
+            }
+
+            return $result->getMetaData()->getUrl() ?: null;
+        };
+
         // Use explicitly set data (1), fall back to using meta data (2) or use the base resource (3) if empty.
-        $lightBoxResourceOrUrl = $this->lightBoxResourceOrUrl ?? $result->getMetaData()->getUrl() ?: $this->filePath;
+        $lightBoxResourceOrUrl = $this->lightBoxResourceOrUrl ?? $getMetaDataUrl($result) ?? $this->filePath;
 
         [$filePathOrImage, $url] = $getResourceOrUrl($lightBoxResourceOrUrl);
 

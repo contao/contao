@@ -101,17 +101,23 @@ final class Figure
         return $this->lightBox;
     }
 
+    public function hasMetaData(): bool
+    {
+        $this->resolveIfClosure($this->metaData);
+
+        return $this->metaData instanceof MetaData;
+    }
+
     /**
      * Return the main resource's meta data.
      */
     public function getMetaData(): MetaData
     {
-        $this->resolveIfClosure($this->metaData);
-
-        if (null === $this->metaData) {
-            $this->metaData = new MetaData([]);
+        if (!$this->hasMetaData()) {
+            throw new \LogicException('This result container does not include meta data.');
         }
 
+        // Safely return as Closure will be evaluated by this point
         return $this->metaData;
     }
 
@@ -128,8 +134,19 @@ final class Figure
 
         // Generate href attribute (on demand)
         if (!isset($this->linkAttributes['href']) && !$excludeHref) {
-            $this->linkAttributes['href'] = $this->hasLightBox() ?
-                $this->getLightBox()->getLinkHref() : $this->getMetaData()->getUrl();
+            $this->linkAttributes['href'] = (
+                function () {
+                    if ($this->hasLightBox()) {
+                        return $this->getLightBox()->getLinkHref();
+                    }
+
+                    if ($this->hasMetaData()) {
+                        return $this->getMetaData()->getUrl();
+                    }
+
+                    return '';
+                }
+            )();
         }
 
         // Add light box attributes
@@ -166,11 +183,23 @@ final class Figure
      */
     public function getLegacyTemplateData($floatingProperty = null, $marginProperty = null): array
     {
-        // Create a key-value list of the meta data and apply some renaming and formatting transformations
-        $createLegacyMetaDataMapping = static function (MetaData $metaData): array {
-            // todo: do we need to make sure all default values are actually
-            //       there in case someone unset any? (check template)
-            $mapping = $metaData->all();
+        // Create a key-value list of the meta data, apply some renaming and
+        // formatting transformations and add default values based on the
+        // context.
+        $createLegacyMetaDataMapping = function (): array {
+            if (!$this->hasMetaData()) {
+                return [
+                    'linkTitle' => '',
+                ];
+            }
+
+            // Get mapping of all meta data; fill missing with empty values
+            $metaFields = array_merge(FilesModel::getMetaFields(), ['linkTitle']);
+
+            $mapping = array_merge(
+                array_combine($metaFields, array_fill(0, \count($metaFields), '')),
+                $this->metaData->all()
+            );
 
             // Handle special chars
             foreach ([MetaData::VALUE_ALT, MetaData::VALUE_TITLE, MetaData::VALUE_CAPTION] as $key) {
@@ -198,6 +227,7 @@ final class Figure
         $fileInfoImageSize = (new File($img->getImageSrc()))->imageSize;
         $metaData = $this->getMetaData();
         $linkAttributes = $this->getLinkAttributes();
+        $metaData = $this->hasMetaData() ? $this->getMetaData() : new MetaData([]);
 
         // Primary image and meta data
         $templateData = array_merge(
