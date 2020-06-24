@@ -277,15 +277,14 @@ class Search
 
 		foreach ($arrIndex as $k=>$v)
 		{
-			$arrQuery[] = '(?, (SELECT id FROM tl_search_words WHERE word = ?), ?, ?)';
+			$arrQuery[] = '(?, (SELECT id FROM tl_search_words WHERE word = ?), ?)';
 			$arrValues[] = $intInsertId;
 			$arrValues[] = $k;
 			$arrValues[] = $v;
-			$arrValues[] = $arrData['language'];
 		}
 
 		// Create the new index
-		$objDatabase->prepare("INSERT INTO tl_search_index (pid, wordId, relevance, language) VALUES " . implode(', ', $arrQuery))
+		$objDatabase->prepare("INSERT INTO tl_search_index (pid, wordId, relevance) VALUES " . implode(', ', $arrQuery))
 					->execute($arrValues);
 
 		// Set or update vector length

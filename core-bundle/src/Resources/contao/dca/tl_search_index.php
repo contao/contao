@@ -42,10 +42,6 @@ $GLOBALS['TL_DCA']['tl_search_index'] = array
 		'relevance' => array
 		(
 			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
-		),
-		'language' => array
-		(
-			'sql'                     => "varchar(5) NOT NULL default ''"
 		)
 	)
 );
