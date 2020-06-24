@@ -304,26 +304,40 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
         yield 'missing image resource' => [
             ['image-file-with-missing-resource'],
             static function () use ($baseRowData) {
+                $filesModel = FilesModel::findById(2);
+
                 return [
                     new \stdClass(),
-                    $baseRowData,
+                    array_merge($baseRowData, ['singleSRC' => $filesModel->path]),
                     null,
                     null,
-                    FilesModel::findById(2),
+                    $filesModel,
                 ];
             },
-            array_replace_recursive(
-                $baseExpectedTemplateData,
-                [
-                    'picture' => [
-                        'title' => '',
+            [
+                'width' => null,
+                'height' => null,
+                'picture' => [
+                    'img' => [
+                        'src' => '',
+                        'srcset' => '',
                     ],
+                    'sources' => [],
                     'alt' => '',
-                    'imageTitle' => '',
-                    'imageUrl' => '',
-                    'caption' => '',
-                ]
-            ),
+                    'title' => '',
+                ],
+                'singleSRC' => 'files/this/does/not/exist/dummy.jpg',
+                'src' => '',
+                'alt' => '',
+                'caption' => '',
+                'imageTitle' => '',
+                'imageUrl' => '',
+                'linkTitle' => '',
+                'margin' => '',
+                'addImage' => true,
+                'addBefore' => true,
+                'fullsize' => false,
+            ],
         ];
 
         yield 'invalid singleSRC' => [

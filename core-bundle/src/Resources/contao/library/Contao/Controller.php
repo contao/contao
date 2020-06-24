@@ -1517,7 +1517,7 @@ abstract class Controller extends System
 		return $arrPages;
 	}
 
-	public static function addImageToTemplate_new(object $template, array $dataRow, ?int $maxWidth = null, ?string $lightBoxGroupIdentifier = null, FilesModel $filesModel = null): void
+	public static function addImageToTemplate_new(object $template, array $rowData, ?int $maxWidth = null, ?string $lightBoxGroupIdentifier = null, FilesModel $filesModel = null): void
 	{
 		/** @var FigureBuilder $figureBuilder */
 		$figureBuilder = System::getContainer()->get(Studio::class)->createFigureBuilder();
@@ -1527,48 +1527,90 @@ abstract class Controller extends System
 		{
 			if (null !== $filesModel)
 			{
-				$figureBuilder->fromFilesModel($filesModel);
+				// Use meta data from files model by default,
+				// always fall back to empty meta data (BC)
+				$figureBuilder
+					->fromFilesModel($filesModel)
+					->alwaysCreateMetaData();
 			}
 			else
 			{
 				// Ignore file meta data when loading from path (BC)
-				$figureBuilder->fromPath($dataRow['singleSRC'], false);
+				$figureBuilder
+					->fromPath($rowData['singleSRC'], false);
 			}
 		}
 		catch (InvalidResourceException $e)
 		{
-			// todo
-			throw new \RuntimeException('not implemented yet (1)');
+			// Fallback to applying a sparse data set (BC)
+			$templateData = array(
+				'width' => null,
+				'height' => null,
+				'picture' => array(
+					'img' => array(
+						'src' => '',
+						'srcset' => '',
+					),
+					'sources' => array(),
+					'alt' => '',
+				),
+				'singleSRC' => $rowData['singleSRC'],
+				'src' => '',
+				'linkTitle' => '',
+				'margin' => '',
+				'addImage' => true,
+				'addBefore' => true,
+				'fullsize' => false,
+			);
+
+			if (null !== $filesModel)
+			{
+				// Set empty meta data (this is actually a minor BC break)
+				$templateData = array_replace_recursive($templateData, array(
+					'picture' => array(
+						'title' => '',
+					),
+					'alt' => '',
+					'caption' => '',
+					'imageTitle' => '',
+					'imageUrl' => '',
+				));
+			}
+
+			foreach ($templateData as $key => $value)
+			{
+				$template->$key = $value;
+			}
+
+			return;
 		}
 
-		// Set meta data
-		$getMetaDataFromRowData = static function (array $data): ?MetaData
+		// Set size, light box configuration + meta data overwrites
+		$size = $rowData['size'] ?? null;
+		$enableLightBox = '1' === ($rowData['fullsize'] ?? null);
+
+		$metaData = (static function () use ($rowData): ?MetaData
 		{
 			// Assume a structure like in a ContentModel
 			/** @var ContentModel $contentModel */
-			$contentModel = (new ReflectionClass(ContentModel::class))->newInstanceWithoutConstructor();
+			$contentModel = (new ReflectionClass(ContentModel::class))
+				->newInstanceWithoutConstructor();
 
-			$metaData = $contentModel->setRow($data)->getMetaData();
+			$metaData = $contentModel->setRow($rowData)->getMetaData();
+			unset($contentModel);
 
 			return null !== $metaData && !$metaData->empty() ? $metaData : null;
-		};
-
-		$figureBuilder
-			->setMetaData($getMetaDataFromRowData($dataRow))
-			->alwaysCreateMetaData(null !== $filesModel);
-
-		// Set size + light box configuration
-		$size = $dataRow['size'] ?? null;
-		$enableLightBox = '1' === ($dataRow['fullsize'] ?? null);
+		})();
 
 		$figureBuilder
 			->setSize($size)
 			->setLightBoxGroupIdentifier($lightBoxGroupIdentifier)
-			->enableLightBox($enableLightBox);
+			->enableLightBox($enableLightBox)
+			->setMetaData($metaData);
 
 		// Acquire legacy parameters
-		$floating = $dataRow['floating'] ?? null;
-		$marginValues = StringUtil::deserialize($dataRow['imagemargin'] ?? null, true);
+		$floating = $rowData['floating'] ?? null;
+		$marginValues = StringUtil::deserialize($rowData['imagemargin'] ?? null, true);
 		$margin = static::generateMargin($marginValues);
 
 		if ($maxWidth > 0)
