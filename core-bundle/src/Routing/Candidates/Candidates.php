@@ -38,14 +38,9 @@ class Candidates implements CandidatesInterface
     private $database;
 
     /**
-     * @var bool
+     * @var ServiceLocator
      */
-    private $prependLocale;
-
-    /**
-     * @var bool
-     */
-    private $legacyRouting;
+    private $pageProviders;
 
     /**
      * @var bool
@@ -62,20 +57,10 @@ class Candidates implements CandidatesInterface
      */
     private $urlSuffixes;
 
-    /**
-     * @var ServiceLocator
-     */
-    private $pageProviders;
-
-    public function __construct(Connection $database, ServiceLocator $pageProviders, bool $legacyRouting, string $urlSuffix, bool $prependLocale)
+    public function __construct(Connection $database, ServiceLocator $pageProviders)
     {
         $this->database = $database;
         $this->pageProviders = $pageProviders;
-        $this->legacyRouting = $legacyRouting;
-        $this->prependLocale = $prependLocale;
-
-        $this->urlPrefixes = [];
-        $this->urlSuffixes = [$urlSuffix];
     }
 
     public function isCandidate($name)
@@ -94,18 +79,6 @@ class Candidates implements CandidatesInterface
         $url = $request->getPathInfo();
         $url = rawurldecode(ltrim($url, '/'));
         $candidates = [];
-
-        if ($this->legacyRouting) {
-            $url = $this->removeSuffixAndLanguage($url);
-
-            if (null === $url) {
-                return [];
-            }
-
-            $this->addCandidatesFor($url, $candidates);
-
-            return array_values(array_unique($candidates));
-        }
 
         $this->addCandidatesFor($url, $candidates);
 
@@ -160,31 +133,6 @@ class Candidates implements CandidatesInterface
         }
     }
 
-    private function removeSuffixAndLanguage(string $pathInfo): ?string
-    {
-        $suffixLength = \strlen($this->urlSuffixes[0]);
-
-        if (0 !== $suffixLength) {
-            if (substr($pathInfo, -$suffixLength) !== $this->urlSuffixes[0]) {
-                return null;
-            }
-
-            $pathInfo = substr($pathInfo, 0, -$suffixLength);
-        }
-
-        if ($this->prependLocale) {
-            $matches = [];
-
-            if (!preg_match('@^([a-z]{2}(-[A-Z]{2})?)/(.+)$@', $pathInfo, $matches)) {
-                return null;
-            }
-
-            $pathInfo = $matches[3];
-        }
-
-        return $pathInfo;
-    }
-
     private function initialize(): void
     {
         if ($this->initialized) {
@@ -192,10 +140,6 @@ class Candidates implements CandidatesInterface
         }
 
         $this->initialized = true;
-
-        if ($this->legacyRouting) {
-            return;
-        }
 
         $urlPrefix = $this->database
             ->query("SELECT DISTINCT urlPrefix FROM tl_page WHERE type='root'")

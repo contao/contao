@@ -464,9 +464,6 @@ services:
         arguments:
             - '@database_connection'
             - !tagged_locator { tag: contao.page_provider, index_by: type, default_index_method: getPageType }
-            - '%contao.legacy_routing%'
-            - '%contao.url_suffix%'
-            - '%contao.prepend_locale%'
 
     contao.routing.domain_filter:
         class: Contao\CoreBundle\Routing\Matcher\DomainFilter

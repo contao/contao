@@ -12,6 +12,13 @@ services:
         tags:
             - routing.loader
 
+    contao.routing.legacy_candidates:
+        class: Contao\CoreBundle\Routing\Candidates\LegacyCandidates
+        decorates: contao.routing.candidates
+        arguments:
+            - '%contao.prepend_locale%'
+            - '%contao.url_suffix%'
+
     contao.routing.legacy_matcher:
         class: Contao\CoreBundle\Routing\Matcher\LegacyMatcher
         decorates: contao.routing.nested_matcher
