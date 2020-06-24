@@ -37,6 +37,25 @@ class AuthenticatorTest extends TestCase
         $this->assertFalse($authenticator->validateCode($user, 'foobar'));
     }
 
+    public function testValidatesTheCodeOfPreviousWindow(): void
+    {
+        $secret = random_bytes(128);
+        $now = 1586161036;
+        $fourtySecondsAgo = $now - 40;
+
+        $totp = TOTP::create(Base32::encodeUpperUnpadded($secret));
+
+        /** @var BackendUser&MockObject $user */
+        $user = $this->mockClassWithProperties(BackendUser::class);
+        $user->secret = $secret;
+
+        $authenticator = new Authenticator();
+
+        $this->assertTrue($authenticator->validateCode($user, $totp->at($now), $now));
+        $this->assertTrue($authenticator->validateCode($user, $totp->at($fourtySecondsAgo), $now));
+        $this->assertFalse($authenticator->validateCode($user, 'foobar', $now));
+    }
+
     public function testGeneratesTheProvisionUri(): void
     {
         $secret = random_bytes(128);

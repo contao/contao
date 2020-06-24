@@ -8,6 +8,16 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\Backend;
+use Contao\BackendUser;
+use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\Image;
+use Contao\Input;
+use Contao\StringUtil;
+use Contao\System;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
 $GLOBALS['TL_DCA']['tl_faq_category'] = array
 (
 	// Config
@@ -215,7 +225,7 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_faq_category extends Contao\Backend
+class tl_faq_category extends Backend
 {
 	/**
 	 * Import the back end user object
@@ -223,17 +233,17 @@ class tl_faq_category extends Contao\Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('Contao\BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 	}
 
 	/**
 	 * Check permissions to edit table tl_faq_category
 	 *
-	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
+	 * @throws AccessDeniedException
 	 */
 	public function checkPermission()
 	{
-		$bundles = Contao\System::getContainer()->getParameter('kernel.bundles');
+		$bundles = System::getContainer()->getParameter('kernel.bundles');
 
 		// HOOK: comments extension required
 		if (!isset($bundles['ContaoCommentsBundle']))
@@ -272,11 +282,11 @@ class tl_faq_category extends Contao\Backend
 			$GLOBALS['TL_DCA']['tl_faq_category']['config']['notDeletable'] = true;
 		}
 
-		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = Contao\System::getContainer()->get('session');
+		/** @var SessionInterface $objSession */
+		$objSession = System::getContainer()->get('session');
 
 		// Check current action
-		switch (Contao\Input::get('act'))
+		switch (Input::get('act'))
 		{
 			case 'select':
 				// Allow
@@ -285,7 +295,7 @@ class tl_faq_category extends Contao\Backend
 			case 'create':
 				if (!$this->User->hasAccess('create', 'faqp'))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to create FAQ categories.');
+					throw new AccessDeniedException('Not enough permissions to create FAQ categories.');
 				}
 				break;
 
@@ -293,9 +303,9 @@ class tl_faq_category extends Contao\Backend
 			case 'copy':
 			case 'delete':
 			case 'show':
-				if (!in_array(Contao\Input::get('id'), $root) || (Contao\Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'faqp')))
+				if (!in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'faqp')))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' FAQ category ID ' . Contao\Input::get('id') . '.');
+					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' FAQ category ID ' . Input::get('id') . '.');
 				}
 				break;
 
@@ -305,7 +315,7 @@ class tl_faq_category extends Contao\Backend
 			case 'copyAll':
 				$session = $objSession->all();
 
-				if (Contao\Input::get('act') == 'deleteAll' && !$this->User->hasAccess('delete', 'faqp'))
+				if (Input::get('act') == 'deleteAll' && !$this->User->hasAccess('delete', 'faqp'))
 				{
 					$session['CURRENT']['IDS'] = array();
 				}
@@ -317,9 +327,9 @@ class tl_faq_category extends Contao\Backend
 				break;
 
 			default:
-				if (Contao\Input::get('act'))
+				if (Input::get('act'))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' FAQ categories.');
+					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' FAQ categories.');
 				}
 				break;
 		}
@@ -359,8 +369,8 @@ class tl_faq_category extends Contao\Backend
 			return;
 		}
 
-		/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
-		$objSessionBag = Contao\System::getContainer()->get('session')->getBag('contao_backend');
+		/** @var AttributeBagInterface $objSessionBag */
+		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 
 		$arrNew = $objSessionBag->get('new_records');
 
@@ -373,11 +383,11 @@ class tl_faq_category extends Contao\Backend
 
 				while ($objGroup->next())
 				{
-					$arrFaqp = Contao\StringUtil::deserialize($objGroup->faqp);
+					$arrFaqp = StringUtil::deserialize($objGroup->faqp);
 
 					if (is_array($arrFaqp) && in_array('create', $arrFaqp))
 					{
-						$arrFaqs = Contao\StringUtil::deserialize($objGroup->faqs, true);
+						$arrFaqs = StringUtil::deserialize($objGroup->faqs, true);
 						$arrFaqs[] = $insertId;
 
 						$this->Database->prepare("UPDATE tl_user_group SET faqs=? WHERE id=?")
@@ -393,11 +403,11 @@ class tl_faq_category extends Contao\Backend
 										   ->limit(1)
 										   ->execute($this->User->id);
 
-				$arrFaqp = Contao\StringUtil::deserialize($objUser->faqp);
+				$arrFaqp = StringUtil::deserialize($objUser->faqp);
 
 				if (is_array($arrFaqp) && in_array('create', $arrFaqp))
 				{
-					$arrFaqs = Contao\StringUtil::deserialize($objUser->faqs, true);
+					$arrFaqs = StringUtil::deserialize($objUser->faqs, true);
 					$arrFaqs[] = $insertId;
 
 					$this->Database->prepare("UPDATE tl_user SET faqs=? WHERE id=?")
@@ -425,7 +435,7 @@ class tl_faq_category extends Contao\Backend
 	 */
 	public function editHeader($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->canEditFieldsOf('tl_faq_category') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return $this->User->canEditFieldsOf('tl_faq_category') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -442,7 +452,7 @@ class tl_faq_category extends Contao\Backend
 	 */
 	public function copyCategory($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('create', 'faqp') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return $this->User->hasAccess('create', 'faqp') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -459,6 +469,6 @@ class tl_faq_category extends Contao\Backend
 	 */
 	public function deleteCategory($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('delete', 'faqp') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return $this->User->hasAccess('delete', 'faqp') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 }

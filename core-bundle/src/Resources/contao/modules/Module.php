@@ -422,12 +422,6 @@ abstract class Module extends Frontend
 		$row['target'] = '';
 		$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objSubpage->description);
 
-		// Override the link target
-		if ($objSubpage->type == 'redirect' && $objSubpage->target)
-		{
-			$row['target'] = ' target="_blank"';
-		}
-
 		$arrRel = array();
 
 		if (strncmp($objSubpage->robots, 'noindex,nofollow', 16) === 0)
@@ -435,13 +429,16 @@ abstract class Module extends Frontend
 			$arrRel[] = 'nofollow';
 		}
 
+		// Override the link target
 		if ($objSubpage->type == 'redirect' && $objSubpage->target)
 		{
 			$arrRel[] = 'noreferrer';
 			$arrRel[] = 'noopener';
+
+			$row['target'] = ' target="_blank"';
 		}
 
-		// Override the rel attribute
+		// Set the rel attribute
 		if (!empty($arrRel))
 		{
 			$row['rel'] = ' rel="' . implode(' ', $arrRel) . '"';

@@ -72,5 +72,12 @@ class StripCookiesSubscriberTest extends TestCase
             [],
             ['_ga'],
         ];
+
+        yield [
+            ['PHPSESSID' => 'foobar', 'bimodal_transport' => 'value', 'modal_123_closed' => 'value'],
+            ['PHPSESSID' => 'foobar', 'bimodal_transport' => 'value'],
+            [],
+            ['bimodal_.*'],
+        ];
     }
 }

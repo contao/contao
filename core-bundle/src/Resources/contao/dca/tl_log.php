@@ -8,6 +8,8 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\Backend;
+
 $GLOBALS['TL_DCA']['tl_log'] = array
 (
 	// Config
@@ -126,7 +128,7 @@ $GLOBALS['TL_DCA']['tl_log'] = array
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_log extends Contao\Backend
+class tl_log extends Backend
 {
 	/**
 	 * Colorize the log entries depending on their category

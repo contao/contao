@@ -53,6 +53,7 @@ use Contao\Model\Collection;
  * @property boolean $target
  * @property string  $cssClass
  * @property boolean $noComments
+ * @property boolean $featured
  * @property boolean $published
  * @property string  $start
  * @property string  $stop
@@ -98,6 +99,7 @@ use Contao\Model\Collection;
  * @method static CalendarEventsModel|null findOneByTarget($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByCssClass($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByNoComments($val, array $opt=array())
+ * @method static CalendarEventsModel|null findOneByFeatured($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByPublished($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByStart($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByStop($val, array $opt=array())
@@ -139,6 +141,7 @@ use Contao\Model\Collection;
  * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByTarget($val, array $opt=array())
  * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByCssClass($val, array $opt=array())
  * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByNoComments($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByFeatured($val, array $opt=array())
  * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByPublished($val, array $opt=array())
  * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByStart($val, array $opt=array())
  * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByStop($val, array $opt=array())
@@ -184,6 +187,7 @@ use Contao\Model\Collection;
  * @method static integer countByTarget($val, array $opt=array())
  * @method static integer countByCssClass($val, array $opt=array())
  * @method static integer countByNoComments($val, array $opt=array())
+ * @method static integer countByFeatured($val, array $opt=array())
  * @method static integer countByPublished($val, array $opt=array())
  * @method static integer countByStart($val, array $opt=array())
  * @method static integer countByStop($val, array $opt=array())
@@ -244,6 +248,18 @@ class CalendarEventsModel extends Model
 		$intEnd = (int) $intEnd;
 
 		$arrColumns = array("$t.pid=? AND (($t.startTime>=$intStart AND $t.startTime<=$intEnd) OR ($t.endTime>=$intStart AND $t.endTime<=$intEnd) OR ($t.startTime<=$intStart AND $t.endTime>=$intEnd) OR ($t.recurring='1' AND ($t.recurrences=0 OR $t.repeatEnd>=$intStart) AND $t.startTime<=$intEnd))");
+
+		if (isset($arrOptions['showFeatured']))
+		{
+			if ($arrOptions['showFeatured'] === true)
+			{
+				$arrColumns[] = "$t.featured='1'";
+			}
+			elseif ($arrOptions['showFeatured'] === false)
+			{
+				$arrColumns[] = "$t.featured=''";
+			}
+		}
 
 		if (!static::isPreviewMode($arrOptions))
 		{

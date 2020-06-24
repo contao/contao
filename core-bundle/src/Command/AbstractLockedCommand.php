@@ -20,13 +20,13 @@ use Symfony\Component\Lock\Store\FlockStore;
 
 /**
  * @deprecated Deprecated since Contao 4.7, to be removed in Contao 5.0; use
- *             the lock service instead
+ *             the Symfony Lock component instead
  */
 abstract class AbstractLockedCommand extends ContainerAwareCommand
 {
     final protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        @trigger_error('Using the "AbstractLockedCommand" has been deprecated and will no longer work in Contao 5.0. Use the lock service instead.', E_USER_DEPRECATED);
+        @trigger_error('Using the "AbstractLockedCommand" has been deprecated and will no longer work in Contao 5.0. Use the Symfony Lock component instead.', E_USER_DEPRECATED);
 
         $store = new FlockStore($this->getTempDir());
         $factory = new Factory($store);

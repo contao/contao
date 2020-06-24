@@ -152,7 +152,6 @@ class ModulePassword extends Module
 
 			if ($objMember === null)
 			{
-				sleep(2); // Wait 2 seconds while brute forcing :)
 				$this->Template->error = $GLOBALS['TL_LANG']['MSC']['accountNotFound'];
 			}
 			else

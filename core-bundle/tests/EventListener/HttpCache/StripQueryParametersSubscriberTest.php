@@ -72,5 +72,12 @@ class StripQueryParametersSubscriberTest extends TestCase
             [],
             ['utm_[a-z]+'],
         ];
+
+        yield [
+            ['page' => 42, 'utm_foo' => 'foo', 'utm_bar' => 'bar'],
+            ['page' => 42, 'utm_foo' => 'foo'],
+            [],
+            ['utm_fo+'],
+        ];
     }
 }

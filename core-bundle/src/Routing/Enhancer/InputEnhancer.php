@@ -63,6 +63,7 @@ class InputEnhancer implements RouteEnhancerInterface
         /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
         $fragments = explode('/', substr($defaults['parameters'], 1));
+        $inputKeys = [];
 
         // Add the second fragment as auto_item if the number of fragments is even
         if (0 !== \count($fragments) % 2) {
@@ -80,8 +81,7 @@ class InputEnhancer implements RouteEnhancerInterface
             }
 
             // Abort if there is a duplicate parameter (duplicate content) (see #4277)
-            // Do not use the request here, as we only need to make sure not to overwrite globals with Input::setGet()
-            if (isset($_GET[$fragments[$i]])) {
+            if ($request->query->has($fragments[$i]) || \in_array($fragments[$i], $inputKeys, true)) {
                 throw new ResourceNotFoundException(sprintf('Duplicate parameter "%s" in path', $fragments[$i]));
             }
 
@@ -94,6 +94,7 @@ class InputEnhancer implements RouteEnhancerInterface
                 throw new ResourceNotFoundException(sprintf('"%s" is an auto_item keyword (duplicate content)', $fragments[$i]));
             }
 
+            $inputKeys[] = $fragments[$i];
             $input->setGet($fragments[$i], $fragments[$i + 1], true);
         }
 

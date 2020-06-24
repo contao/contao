@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
+use Contao\CoreBundle\Crawl\Escargot\Factory;
 use Contao\CoreBundle\Search\Document;
 use Contao\CoreBundle\Search\Indexer\IndexerException;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
@@ -57,6 +58,11 @@ class SearchIndexListener
 
         // Only handle GET requests (see #1194)
         if (!$request->isMethod(Request::METHOD_GET)) {
+            return;
+        }
+
+        // Do not index if called by crawler
+        if (Factory::USER_AGENT === $request->headers->get('User-Agent')) {
             return;
         }
 
