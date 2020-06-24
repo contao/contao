@@ -76,7 +76,6 @@ services:
             - '%contao.preview_script%'
             - '@contao.security.frontend_preview_authenticator'
             - '@event_dispatcher'
-            - '@router'
             - '@security.authorization_checker'
         tags:
             - controller.service_arguments
