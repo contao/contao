@@ -18,6 +18,10 @@ use Contao\DataContainer;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
+/**
+ * @internal
+ * @deprecated
+ */
 class LegacyRoutingListener implements ServiceAnnotationInterface
 {
     /**

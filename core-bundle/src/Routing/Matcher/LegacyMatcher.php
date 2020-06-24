@@ -21,6 +21,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 
+/**
+ * @deprecated
+ */
 class LegacyMatcher implements RequestMatcherInterface
 {
     /**

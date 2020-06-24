@@ -18,8 +18,11 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
+@trigger_error('The following routes are deprecated: contao_frontend, contao_index, contao_root, contao_catch_all', E_USER_DEPRECATED);
+
 /**
  * @internal
+ * @deprecated
  */
 class LegacyRouteProvider implements RouteProviderInterface
 {

@@ -23,6 +23,9 @@ use Symfony\Component\Routing\Route;
 
 @trigger_error('The Contao\CoreBundle\Routing\UrlGenerator is deprecated. Use the Symfony router instead.', E_USER_DEPRECATED);
 
+/**
+ * @deprecated The Contao\CoreBundle\Routing\UrlGenerator is deprecated. Use the Symfony router instead.
+ */
 class UrlGenerator implements UrlGeneratorInterface
 {
     /**
