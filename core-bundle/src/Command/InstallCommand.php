@@ -260,7 +260,7 @@ EOF
     /**
      * @return string
      */
-    private function getRelativePath(string $path)
+    private function getRelativePath($path)
     {
         return str_replace(strtr($this->rootDir, '\\', '/').'/', '', strtr($path, '\\', '/'));
     }
