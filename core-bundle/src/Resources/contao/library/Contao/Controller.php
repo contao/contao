@@ -13,12 +13,17 @@ namespace Contao;
 use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
+use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\CoreBundle\File\MetaData;
+use Contao\CoreBundle\Image\Studio\FigureBuilder;
+use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\Database\Result;
 use Contao\Image\PictureConfiguration;
 use Contao\Model\Collection;
 use League\Uri\Components\Query;
+use ReflectionClass;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\Glob;
 
@@ -1510,6 +1515,73 @@ abstract class Controller extends System
 		$arrPages = array_values(array_diff($arrPages, $this->Database->getChildRecords($arrPages, $strTable, $blnSorting)));
 
 		return $arrPages;
+	}
+
+	public static function addImageToTemplate_new(object $template, array $dataRow, ?int $maxWidth = null, ?string $lightBoxGroupIdentifier = null, FilesModel $filesModel = null): void
+	{
+		/** @var FigureBuilder $figureBuilder */
+		$figureBuilder = System::getContainer()->get(Studio::class)->createFigureBuilder();
+
+		// Set image resource
+		try
+		{
+			if (null !== $filesModel)
+			{
+				$figureBuilder->fromFilesModel($filesModel);
+			}
+			else
+			{
+				// Ignore file meta data when loading from path (BC)
+				$figureBuilder->fromPath($dataRow['singleSRC'], false);
+			}
+		}
+		catch (InvalidResourceException $e)
+		{
+			// todo
+			throw new \RuntimeException('not implemented yet (1)');
+		}
+
+		// Set meta data
+		$getMetaDataFromRowData = static function (array $data): ?MetaData
+		{
+			// Assume a structure like in a ContentModel
+			/** @var ContentModel $contentModel */
+			$contentModel = (new ReflectionClass(ContentModel::class))->newInstanceWithoutConstructor();
+
+			$metaData = $contentModel->setRow($data)->getMetaData();
+
+			return null !== $metaData && !$metaData->empty() ? $metaData : null;
+		};
+
+		$figureBuilder
+			->setMetaData($getMetaDataFromRowData($dataRow))
+			->alwaysCreateMetaData(null !== $filesModel);
+
+		// Set size + light box configuration
+		$size = $dataRow['size'] ?? null;
+		$enableLightBox = '1' === ($dataRow['fullsize'] ?? null);
+
+		$figureBuilder
+			->setSize($size)
+			->setLightBoxGroupIdentifier($lightBoxGroupIdentifier)
+			->enableLightBox($enableLightBox);
+
+		// Acquire legacy parameters
+		$floating = $dataRow['floating'] ?? null;
+		$marginValues = StringUtil::deserialize($dataRow['imagemargin'] ?? null, true);
+		$margin = static::generateMargin($marginValues);
+
+		if ($maxWidth > 0)
+		{
+			@trigger_error('Using a maximum front end width has been deprecated and will no longer work in Contao 5.0. Remove the "maxImageWidth" configuration and use responsive images instead.', E_USER_DEPRECATED);
+
+			// todo
+			throw new \RuntimeException('not implemented yet (2)');
+		}
+
+		// Build result and apply it to the template
+		$figure = $figureBuilder->build();
+		$figure->applyLegacyTemplateData($template, $floating, $margin);
 	}
 
 	/**

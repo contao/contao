@@ -20,6 +20,7 @@ use Contao\PageModel;
 use Contao\Template;
 use Contao\TestCase\FunctionalTestCase;
 use Model\Registry;
+use Symfony\Component\Filesystem\Filesystem;
 
 class ContaoFrameworkControllerTest extends FunctionalTestCase
 {
@@ -55,6 +56,29 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
         [$template, $dataRow, $maxWidth, $lightBoxGroupIdentifier, $filesModel] = $argumentCallback();
 
         Controller::addImageToTemplate($template, $dataRow, $maxWidth, $lightBoxGroupIdentifier, $filesModel);
+
+        $this->assertSameTemplateData($expectedTemplateData, $template);
+    }
+
+    /**
+     * @dataProvider provideImageConfigurations
+     */
+    public function testAddImageToTemplateNew(array $databaseFixtures, \Closure $argumentCallback, array $expectedTemplateData): void
+    {
+        Registry::getInstance()->reset();
+
+        static::loadFixtures(
+            array_map(
+                static function (string $fixture): string {
+                    return __DIR__."/../Fixtures/Functional/Controller/Image/$fixture.yml";
+                },
+                $databaseFixtures
+            )
+        );
+
+        [$template, $dataRow, $maxWidth, $lightBoxGroupIdentifier, $filesModel] = $argumentCallback();
+
+        Controller::addImageToTemplate_new($template, $dataRow, $maxWidth, $lightBoxGroupIdentifier, $filesModel);
 
         $this->assertSameTemplateData($expectedTemplateData, $template);
     }
@@ -143,7 +167,6 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                     ],
                     'alt' => 'foo alt',
                     'imageTitle' => 'foo title',
-                    'linkTitle' => '',
                     'imageUrl' => '',
                     'caption' => 'foo caption',
                 ]
@@ -178,7 +201,6 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                     ],
                     'alt' => 'bar alt',
                     'imageTitle' => '',
-                    'linkTitle' => '',
                     'imageUrl' => '',
                     'caption' => 'bar caption',
                 ]
@@ -243,7 +265,6 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                     ],
                     'alt' => '',
                     'imageTitle' => '',
-                    'linkTitle' => '',
                     'imageUrl' => '',
                     'caption' => '',
                 ]
@@ -299,7 +320,6 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                     ],
                     'alt' => '',
                     'imageTitle' => '',
-                    'linkTitle' => '',
                     'imageUrl' => '',
                     'caption' => '',
                 ]
@@ -389,7 +409,6 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                     'imageTitle' => 'bar title',
                     'imageUrl' => '',
                     'caption' => 'bar caption',
-                    'linkTitle' => '',
                     'href' => 'do://not/overwrite/me',
                 ]
             ),
@@ -458,7 +477,6 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                     'imageTitle' => '',
                     'imageUrl' => '',
                     'caption' => '',
-                    'linkTitle' => '',
                     'floatClass' => ' float_above',
                     'margin' => '',
                 ]
@@ -489,7 +507,6 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                     'imageTitle' => 'bar title',
                     'imageUrl' => '',
                     'caption' => 'bar caption',
-                    'linkTitle' => '',
                     'floatClass' => ' float_above',
                     'margin' => '',
                 ]
@@ -663,7 +680,10 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
 
         // todo:
         //    - insert tag in link
-        //    -  bad preconditions
+        //    - external url (attr: rel="noreferrer noopener")
+        //    - maxWidth legacy setting
+        //    - defining lightbox id
+        //    - bad preconditions
         //     ...
     }
 
