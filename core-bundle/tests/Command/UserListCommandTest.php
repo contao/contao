@@ -96,6 +96,7 @@ class UserListCommandTest extends TestCase
         ;
 
         $collection = new Collection([$this->mockAdminUser()], 'tl_user');
+
         $userModelAdapter
             ->method('findBy')
             ->with('admin', '1')
