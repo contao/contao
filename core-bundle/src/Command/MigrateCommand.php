@@ -27,6 +27,8 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class MigrateCommand extends Command
 {
+    protected static $defaultName = 'contao:migrate';
+
     /**
      * @var MigrationCollection
      */
@@ -71,7 +73,6 @@ class MigrateCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('contao:migrate')
             ->addOption('with-deletes', null, InputOption::VALUE_NONE, 'Execute all database migrations including DROP queries. Can be used together with --no-interaction.')
             ->addOption('schema-only', null, InputOption::VALUE_NONE, 'Execute database schema migration only.')
             ->setDescription('Executes migrations and the database schema diff.')

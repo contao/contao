@@ -26,6 +26,8 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class InstallCommand extends Command
 {
+    protected static $defaultName = 'contao:install';
+
     /**
      * @var Filesystem
      */
@@ -73,7 +75,6 @@ class InstallCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('contao:install')
             ->addArgument('target', InputArgument::OPTIONAL, 'The target directory', 'web')
             ->setDescription('Installs the required Contao directories')
         ;

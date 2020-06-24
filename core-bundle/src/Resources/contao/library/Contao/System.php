@@ -166,6 +166,11 @@ abstract class System
 		{
 			$container = static::getContainer();
 
+			if (null === $container)
+			{
+				throw new \RuntimeException('The Symfony container is not available, did you initialize the Contao framework?');
+			}
+
 			if (\is_object($strClass))
 			{
 				$this->arrObjects[$strKey] = $strClass;
@@ -216,6 +221,11 @@ abstract class System
 		if ($blnForce || !isset(static::$arrStaticObjects[$strKey]))
 		{
 			$container = static::getContainer();
+
+			if (null === $container)
+			{
+				throw new \RuntimeException('The Symfony container is not available, did you initialize the Contao framework?');
+			}
 
 			if (\is_object($strClass))
 			{
