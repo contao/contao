@@ -53,7 +53,7 @@ class AddAvailableTransportsPassTest extends TestCase
         $this->assertEmpty($definition->getMethodCalls());
     }
 
-    public function testAddsAvailableTransports(): void
+    public function testDoesNothingIfNoTransportIsConfigured(): void
     {
         $container = $this->getContainerBuilder();
         $container->prependExtensionConfig('contao', []);
@@ -62,6 +62,36 @@ class AddAvailableTransportsPassTest extends TestCase
                 'transports' => [
                     'main' => 'smtp://localhost',
                     'foobar' => 'smtp://localhost',
+                    'lorem' => 'smtp://localhost',
+                ],
+            ],
+        ]);
+
+        $pass = new AddAvailableTransportsPass();
+        $pass->process($container);
+
+        $definition = $container->getDefinition(AvailableTransports::class);
+
+        $this->assertEmpty($definition->getMethodCalls());
+    }
+
+    public function testAddsConfiguredTransports(): void
+    {
+        $container = $this->getContainerBuilder();
+        $container->prependExtensionConfig('contao', [
+            'mailer' => [
+                'transports' => [
+                    'main' => null,
+                    'foobar' => null,
+                ],
+            ],
+        ]);
+        $container->prependExtensionConfig('framework', [
+            'mailer' => [
+                'transports' => [
+                    'main' => 'smtp://localhost',
+                    'foobar' => 'smtp://localhost',
+                    'lorem' => 'smtp://localhost',
                 ],
             ],
         ]);
@@ -88,9 +118,14 @@ class AddAvailableTransportsPassTest extends TestCase
         $container = $this->getContainerBuilder();
         $container->prependExtensionConfig('contao', [
             'mailer' => [
-                'from_addresses' => [
-                    'main' => 'main@example.org',
-                    'na' => 'na@example.org',
+                'transports' => [
+                    'main' => [
+                        'from' => 'main@example.org',
+                    ],
+                    'foobar' => null,
+                    'no_transport' => [
+                        'from' => 'na@example.org',
+                    ],
                 ],
             ],
         ]);
@@ -99,6 +134,7 @@ class AddAvailableTransportsPassTest extends TestCase
                 'transports' => [
                     'main' => 'smtp://localhost',
                     'foobar' => 'smtp://localhost',
+                    'lorem' => 'smtp://localhost',
                 ],
             ],
         ]);

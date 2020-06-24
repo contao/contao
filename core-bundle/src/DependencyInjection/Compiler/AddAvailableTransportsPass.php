@@ -27,26 +27,37 @@ class AddAvailableTransportsPass implements CompilerPassInterface
         }
 
         $contaoConfig = array_merge(...$container->getExtensionConfig('contao'));
-        $fromAddresses = [];
+        $contaoMailerConfig = [];
 
-        if (isset($contaoConfig['mailer'], $contaoConfig['mailer']['from_addresses'])) {
-            $fromAddresses = $contaoConfig['mailer']['from_addresses'];
+        if (isset($contaoConfig['mailer'], $contaoConfig['mailer']['transports'])) {
+            $contaoMailerConfig = $contaoConfig['mailer']['transports'];
+        }
+
+        if (empty($contaoMailerConfig)) {
+            return;
         }
 
         $frameworkConfig = $container->getExtensionConfig('framework');
         $definition = $container->findDefinition(AvailableTransports::class);
 
         foreach ($frameworkConfig as $v) {
-            if (isset($v['mailer'], $v['mailer']['transports'])) {
-                foreach (array_keys($v['mailer']['transports']) as $transportName) {
-                    $from = $fromAddresses[$transportName] ?? null;
-                    $definition->addMethodCall(
-                        'addTransport',
-                        [
-                            new Definition(TransportConfig::class, [$transportName, $from]),
-                        ]
-                    );
+            if (!isset($v['mailer']) || !isset($v['mailer']['transports'])) {
+                continue;
+            }
+
+            foreach (array_keys($v['mailer']['transports']) as $transportName) {
+                if (!array_key_exists($transportName, $contaoMailerConfig)) {
+                    continue;
                 }
+
+                $from = $contaoMailerConfig[$transportName]['from'] ?? null;
+
+                $definition->addMethodCall(
+                    'addTransport',
+                    [
+                        new Definition(TransportConfig::class, [$transportName, $from]),
+                    ]
+                );
             }
         }
     }
