@@ -33,3 +33,28 @@ services:
             - '@translator'
             - '%contao.prepend_locale%'
             - '%contao.url_suffix%'
+
+    contao.routing.legacy_router:
+        class: Symfony\Cmf\Component\Routing\DynamicRouter
+        arguments:
+            - '@router.request_context'
+            - '@contao.routing.empty_matcher'
+            - '@contao.routing.legacy_route_generator'
+            - ''
+            - '@event_dispatcher'
+        tags:
+            - { name: router }
+
+    contao.routing.empty_matcher:
+        class: Contao\CoreBundle\Routing\Matcher\UrlMatcher
+
+    contao.routing.legacy_route_generator:
+        class: Symfony\Cmf\Component\Routing\ProviderBasedGenerator
+        arguments:
+            - '@contao.routing.legacy_route_provider'
+            - '@logger'
+
+    contao.routing.legacy_route_provider:
+        class: Contao\CoreBundle\Routing\LegacyRouteProvider
+        arguments:
+            - '@contao.routing.frontend_loader'
