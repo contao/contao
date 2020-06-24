@@ -203,6 +203,9 @@ class CoreBundleVisibleElementVoterTest extends TestCase
 
     /**
      * @dataProvider modelClassProvider
+     *
+     * @group legacy
+     * @expectedDeprecation Using the "isVisibleElement" hook has been deprecated and will no longer work in Contao 5.0. Use Symfony security voters instead.
      */
     public function testExecutesIsVisibleElementHook(string $modelClass): void
     {
