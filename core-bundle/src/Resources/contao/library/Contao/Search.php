@@ -403,7 +403,7 @@ class Search
 			$arrKeywords = array();
 		}
 
-		$strQuery = "SELECT *, (relevance / vectorLength) AS cosineSimilarity FROM (SELECT tl_search_index.pid AS sid";
+		$strQuery = "SELECT *, (similarity / vectorLength) AS relevance FROM (SELECT tl_search_index.pid AS sid";
 
 		// Remember found words so we can highlight them later
 		$strQuery .= ", GROUP_CONCAT(matchedWords.word) AS matches";
@@ -491,7 +491,7 @@ class Search
 			else
 			{
 				$strQuery .= "+ (
-					(1+LOG(SUM(match$index * relevance))) 
+					(1+LOG(SUM(match$index * tl_search_index.relevance))) 
 					* POW(MIN(match$index * matchedWords.idf), 2) 
 					/ ".(\count($arrAllKeywords) - \count($arrExcludedMatches))."
 				)";
@@ -525,7 +525,7 @@ class Search
 			}
 		}
 
-		$strQuery .= ") AS relevance";
+		$strQuery .= ") AS similarity";
 
 		$strQuery .= " FROM (SELECT id, word";
 
@@ -581,7 +581,7 @@ class Search
 		}
 
 		// Sort by relevance
-		$strQuery .= " ORDER BY cosineSimilarity DESC";
+		$strQuery .= " ORDER BY relevance DESC";
 
 		// Return result
 		$objResultStmt = Database::getInstance()->prepare($strQuery);
