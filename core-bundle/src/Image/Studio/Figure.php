@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Image\Studio;
 use Closure;
 use Contao\CoreBundle\File\MetaData;
 use Contao\File;
+use Contao\FilesModel;
 use Contao\StringUtil;
 use Contao\Template;
 
@@ -225,13 +226,13 @@ final class Figure
         $img = $this->getImage();
         $originalSize = $img->getOriginalDimensions()->getSize();
         $fileInfoImageSize = (new File($img->getImageSrc()))->imageSize;
-        $metaData = $this->getMetaData();
+
         $linkAttributes = $this->getLinkAttributes();
         $metaData = $this->hasMetaData() ? $this->getMetaData() : new MetaData([]);
 
         // Primary image and meta data
         $templateData = array_merge(
-            $createLegacyMetaDataMapping($metaData),
+            $createLegacyMetaDataMapping(),
             [
                 'picture' => [
                     'img' => $img->getImg(),
@@ -244,23 +245,19 @@ final class Figure
                 'imgSize' => sprintf(' width="%d" height="%d"', $fileInfoImageSize[0], $fileInfoImageSize[1]),
                 'singleSRC' => $img->getFilePath(),
                 'src' => $img->getImageSrc(),
-                'fullsize' => ('blank' === $linkAttributes['target'] ?? null) || $this->hasLightBox(),
+                'fullsize' => ('blank' === ($linkAttributes['target'] ?? null)) || $this->hasLightBox(),
                 'margin' => $marginProperty ?? '',
                 'addBefore' => 'below' !== $floatingProperty,
                 'addImage' => true,
             ]
         );
 
-        // Context sensitive properties
-        if ('' !== ($title = StringUtil::specialchars($metaData->getTitle()))) {
-            $templateData['picture']['title'] = $title;
-        }
-
-        if (null !== $floatingProperty) {
-            $templateData['floatClass'] = " float_{$floatingProperty}";
-        }
-
         // Link attributes
+        if ('' !== ($href = $this->getLinkHref())) {
+            $templateData['href'] = $href;
+            $templateData['attributes'] = '';
+        }
+
         if (!empty($linkAttributes)) {
             $htmlAttributes = array_map(
                 static function (string $attribute, string $value) {
@@ -272,17 +269,8 @@ final class Figure
             $templateData['attributes'] = ' '.implode(' ', $htmlAttributes);
         }
 
-        if ('' !== ($href = $this->getLinkHref())) {
-            $templateData['href'] = $href;
-        }
-
         // Light box
         if ($this->hasLightBox()) {
-            if (!empty($templateData['imageTitle']) && empty($templateData['linkTitle'])) {
-                $templateData['linkTitle'] = $templateData['imageTitle'];
-                unset($templateData['imageTitle']);
-            }
-
             $lightBox = $this->getLightBox();
 
             if ($lightBox->hasImage()) {
@@ -293,6 +281,20 @@ final class Figure
                     'sources' => $image->getSources(),
                 ];
             }
+        }
+
+        // Context sensitive properties
+        if ('' !== $this->getLinkHref()) {
+            $templateData['linkTitle'] = $templateData['imageTitle'];
+            $templateData['imageTitle'] = null;
+        }
+
+        if ('' === $templateData['linkTitle'] && $this->hasMetaData()) {
+            $templateData['picture']['title'] = StringUtil::specialchars($metaData->getTitle());
+        }
+
+        if (null !== $floatingProperty) {
+            $templateData['floatClass'] = " float_{$floatingProperty}";
         }
 
         return $templateData;
@@ -318,6 +320,7 @@ final class Figure
         }
 
         // Append attributes instead of replacing
+        // todo: where was this from? remove?
         if (isset($new['attributes'], $existing['attributes'])) {
             $new['attributes'] = ($existing['attributes'] ?? '').$new['attributes'];
         }
