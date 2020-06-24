@@ -158,9 +158,7 @@ class UserCreateCommand extends Command
         }
 
         if (false === $input->getOption('admin')) {
-            $options = ['no', 'yes'];
-
-            $answer = $this->askChoice('Give user admin permissions?', $options, $input, $output);
+            $answer = $this->askChoice('Give user admin permissions?', ['no', 'yes'], $input, $output);
 
             $input->setOption('admin', 'yes' === $answer);
         }
@@ -214,7 +212,6 @@ class UserCreateCommand extends Command
     {
         $question = new Question($label);
         $question->setMaxAttempts(3);
-
         $question->setValidator($callback);
 
         /** @var QuestionHelper $helper */
@@ -228,7 +225,6 @@ class UserCreateCommand extends Command
         $question = new Question($label);
         $question->setHidden(true);
         $question->setMaxAttempts(3);
-
         $question->setValidator($callback);
 
         /** @var QuestionHelper $helper */
@@ -248,12 +244,8 @@ class UserCreateCommand extends Command
         return $helper->ask($input, $output, $question);
     }
 
-    private function askMultipleChoice(
-        string $label,
-        array $options,
-        InputInterface $input,
-        OutputInterface $output
-    ): array {
+    private function askMultipleChoice(string $label, array $options, InputInterface $input, OutputInterface $output): array
+    {
         $question = new ChoiceQuestion($label, $options);
         $question->setAutocompleterValues($options);
         $question->setMultiselect(true);
@@ -279,16 +271,8 @@ class UserCreateCommand extends Command
         return $groups->fetchEach('name');
     }
 
-    private function persistUser(
-        string $username,
-        string $name,
-        string $email,
-        string $password,
-        string $language,
-        bool $isAdmin = false,
-        array $groups = null,
-        bool $pwChange = false
-    ): void {
+    private function persistUser(string $username, string $name, string $email, string $password, string $language, bool $isAdmin = false, array $groups = null, bool $pwChange = false): void
+    {
         $time = time();
         $hash = $this->encoderFactory->getEncoder(BackendUser::class)->encodePassword($password, null);
 

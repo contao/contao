@@ -67,10 +67,7 @@ class UserListCommandTest extends TestCase
     public function testReturnsErrorCodeOnEmptyResult(): void
     {
         $command = $this->getCommand(true);
-
-        $input = [];
-
-        $code = (new CommandTester($command))->execute($input);
+        $code = (new CommandTester($command))->execute([]);
 
         $this->assertSame(1, $code);
     }
@@ -91,6 +88,7 @@ class UserListCommandTest extends TestCase
     private function getCommand(bool $noResult = false): UserListCommand
     {
         $collection = new Collection([$this->mockAdminUser(), $this->mockContaoUser()], 'tl_user');
+
         $userModelAdapter = $this->mockAdapter(['findBy', 'findAll']);
         $userModelAdapter
             //->expects($this->once())
@@ -116,7 +114,6 @@ class UserListCommandTest extends TestCase
     {
         /** @var UserModel&MockObject $userModel */
         $userModel = $this->mockClassWithProperties(UserModel::class);
-
         $userModel->id = '2';
         $userModel->username = 'j.doe';
         $userModel->name = 'John Doe';
@@ -128,7 +125,6 @@ class UserListCommandTest extends TestCase
     {
         /** @var UserModel&MockObject $userModel */
         $userModel = $this->mockClassWithProperties(UserModel::class);
-
         $userModel->id = '1';
         $userModel->username = 'j.doe';
         $userModel->name = 'John Doe';

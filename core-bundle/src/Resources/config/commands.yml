@@ -68,23 +68,23 @@ services:
             - '@event_dispatcher'
         public: true
 
-    contao.command.user_password_command:
-        class: Contao\CoreBundle\Command\UserPasswordCommand
-        arguments:
-            - '@contao.framework'
-            - '@database_connection'
-            - '@security.encoder_factory'
-
-    Contao\CoreBundle\Command\UserListCommand:
-        arguments:
-            - '@contao.framework'
-
     Contao\CoreBundle\Command\UserCreateCommand:
         arguments:
             - '@contao.framework'
             - '@database_connection'
             - '@security.encoder_factory'
             - '%contao.locales%'
+
+    Contao\CoreBundle\Command\UserListCommand:
+        arguments:
+            - '@contao.framework'
+
+    contao.command.user_password_command:
+        class: Contao\CoreBundle\Command\UserPasswordCommand
+        arguments:
+            - '@contao.framework'
+            - '@database_connection'
+            - '@security.encoder_factory'
 
     contao.command.version:
         class: Contao\CoreBundle\Command\VersionCommand
