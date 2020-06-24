@@ -166,7 +166,7 @@ class tl_content_calendar extends Backend
 			return;
 		}
 
-		$this->import('Calendar', 'Calendar');
+		$this->import(Calendar::class, 'Calendar');
 
 		foreach ($session as $id)
 		{

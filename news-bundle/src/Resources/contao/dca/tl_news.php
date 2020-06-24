@@ -840,7 +840,7 @@ class tl_news extends Backend
 			return;
 		}
 
-		$this->import('News', 'News');
+		$this->import(News::class, 'News');
 
 		foreach ($session as $id)
 		{
