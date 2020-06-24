@@ -94,6 +94,7 @@ class InstallCommand extends Command
      * @param string $rootDir
      * @param string $uploadPath
      * @param string $imageDir
+     * @param array  $bundles
      */
     public function __construct($rootDir, $uploadPath, $imageDir, $bundles)
     {
@@ -249,7 +250,7 @@ EOF
         $relPath = $this->getRelativePath(\dirname($coreBundle->getFileName()));
 
         SymlinkUtil::symlink(
-            $relPath.'/Resources/contao/config/tcpdf.php', 
+            $relPath.'/Resources/contao/config/tcpdf.php',
             'system/config/tcpdf.php',
             $this->rootDir
         );
@@ -258,6 +259,8 @@ EOF
     }
 
     /**
+     * @param string $path
+     *
      * @return string
      */
     private function getRelativePath($path)
