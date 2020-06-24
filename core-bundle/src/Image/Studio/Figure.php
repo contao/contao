@@ -273,10 +273,10 @@ final class Figure
      *       add this object to your template's context and directly access the
      *       specific data you need.
      */
-    public function applyLegacyTemplateData(Template $template, $floatingProperty = null, $marginProperty = null): void
+    public function applyLegacyTemplateData($template, $floatingProperty = null, $marginProperty = null): void
     {
         $new = $this->getLegacyTemplateData($floatingProperty, $marginProperty);
-        $existing = $template->getData();
+        $existing = $template instanceof Template ? $template->getData() : get_object_vars($template);
 
         // Do not override the "href" key (see #6468)
         if (isset($new['href'], $existing['href'])) {
@@ -289,7 +289,16 @@ final class Figure
             $new['attributes'] = ($existing['attributes'] ?? '').$new['attributes'];
         }
 
-        $template->setData(array_replace_recursive($existing, $new));
+        // Apply data
+        if ($template instanceof Template) {
+            $template->setData(array_replace_recursive($existing, $new));
+
+            return;
+        }
+
+        foreach ($new as $key => $value) {
+            $template->$key = $value;
+        }
     }
 
     /**
