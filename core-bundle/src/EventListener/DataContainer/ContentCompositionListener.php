@@ -243,7 +243,7 @@ class ContentCompositionListener implements ServiceAnnotationInterface
         /** @var PageProviderInterface $provider */
         $provider = $this->pageProviders->get($pageModel->type);
 
-        return $provider->supportContentComposition($pageModel);
+        return $provider->supportsContentComposition($pageModel);
     }
 
     private function hasArticlesInLayout(PageModel $pageModel)

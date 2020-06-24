@@ -62,7 +62,7 @@ interface PageProviderInterface
      * The optional $pageModel might tell if a particular page supports composition,
      * for example a 404 page that redirects cannot have articles, but a regular 404 does.
      */
-    public function supportContentComposition(PageModel $pageModel = null): bool;
+    public function supportsContentComposition(PageModel $pageModel = null): bool;
 
     /**
      * Gets the page type of this provider.

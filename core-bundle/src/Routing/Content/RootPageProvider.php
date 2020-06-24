@@ -72,7 +72,7 @@ class RootPageProvider extends AbstractPageProvider
         ;
     }
 
-    public function supportContentComposition(PageModel $pageModel = null): bool
+    public function supportsContentComposition(PageModel $pageModel = null): bool
     {
         return false;
     }
