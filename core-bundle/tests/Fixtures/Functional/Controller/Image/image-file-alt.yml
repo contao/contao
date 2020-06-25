@@ -1,0 +1,8 @@
+tl_files:
+    - id: 3
+      pid: 1
+      uuid: 'ec706e95'
+      name: 'bar.jpg'
+      extension: 'jpg'
+      type: 'file'
+      path: 'files/public/bar.jpg'

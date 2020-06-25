@@ -76,13 +76,6 @@ class FigureBuilder
     private $metaData;
 
     /**
-     * Determines if an empty meta data should be created as a fallback.
-     *
-     * @var bool
-     */
-    private $alwaysCreateMetaData;
-
-    /**
      * User defined link attributes (adding to or overwriting the default attributes).
      *
      * @var array<string, string|null>
@@ -262,17 +255,6 @@ class FigureBuilder
     }
 
     /**
-     * Enable/disable returning an empty meta data container if no meta data
-     * was found or explicitly set. This setting is disabled by default.
-     */
-    public function alwaysCreateMetaData(bool $enable = true): self
-    {
-        $this->alwaysCreateMetaData = $enable;
-
-        return $this;
-    }
-
-    /**
      * Set a custom locale. By default or if the argument is set to null, the
      * locale is determined from the request context and/or system settings.
      */
@@ -412,16 +394,25 @@ class FigureBuilder
             return $this->metaData;
         }
 
-        if (null !== $this->filesModel) {
-            // Get fallback locale list or use without fallbacks if explicitly set
-            $locales = null !== $this->locale ? [$this->locale] : $this->getFallbackLocaleList();
-
-            if (null !== $metaData = $this->filesModel->getMetaData(...$locales)) {
-                return $metaData;
-            }
+        if (null === $this->filesModel) {
+            return null;
         }
 
-        return $this->alwaysCreateMetaData ? new MetaData([]) : null;
+        // Get fallback locale list or use without fallbacks if explicitly set
+        $locales = null !== $this->locale ? [$this->locale] : $this->getFallbackLocaleList();
+
+        $metaData = $this->filesModel->getMetaData(...$locales);
+
+        if (null !== $metaData) {
+            return $metaData;
+        }
+
+        // Create fallback meta data with empty values
+        $metaFields = $this->filesModelAdapter()->getMetaFields();
+
+        return new MetaData(
+            array_combine($metaFields, array_fill(0, \count($metaFields), ''))
+        );
     }
 
     /**

@@ -427,6 +427,13 @@ class FilesModel extends Model
 					$data[MetaData::VALUE_URL] = Controller::replaceInsertTags($data[MetaData::VALUE_URL]);
 				}
 
+				// Fill missing meta fields with empty values
+				$metaFields = self::getMetaFields();
+				$data = array_merge(
+					array_combine($metaFields, array_fill(0, \count($metaFields), '')),
+					$data
+				);
+
 				return new MetaData($data);
 			}
 		}

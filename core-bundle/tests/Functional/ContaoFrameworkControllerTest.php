@@ -85,6 +85,18 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
 
     public function provideImageConfigurations(): \Generator
     {
+        $baseRowData = [
+            'singleSRC' => 'files/public/foo.jpg',
+            'size' => [150, 100, 'crop'],
+            'imageTitle' => '',
+            'linkTitle' => '',
+            'imageUrl' => '',
+            'fullsize' => '',
+            'imagemargin' => '',
+            'floating' => '',
+            'overwriteMeta' => '',
+        ];
+
         $baseExpectedTemplateData = [
             'width' => 200,
             'height' => 200,
@@ -110,7 +122,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                 'alt' => '',
             ],
             'src' => 'assets/images/<anything>',
-            'singleSRC' => 'files/public/dummy.jpg',
+            'singleSRC' => 'files/public/foo.jpg',
             'linkTitle' => '',
             'margin' => '',
             'addBefore' => true,
@@ -118,31 +130,40 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
             'fullsize' => false,
         ];
 
-        $baseRowData = [
-            'singleSRC' => 'files/public/dummy.jpg',
-            'size' => [150, 100, 'crop'],
-        ];
-
         yield 'applying to FrontendTemplate' => [
-            ['image-file-with-metadata'],
+            ['image-file'],
             static function () use ($baseRowData) {
                 return [
                     new FrontendTemplate('ce_image'),
                     $baseRowData,
                 ];
             },
-            $baseExpectedTemplateData,
+            array_replace_recursive(
+                $baseExpectedTemplateData,
+                [
+                    'picture' => [
+                        'title' => '',
+                    ],
+                ]
+            ),
         ];
 
         yield 'applying to \stdClass()' => [
-            ['image-file-with-metadata'],
+            ['image-file'],
             static function () use ($baseRowData) {
                 return [
                     new \stdClass(),
                     $baseRowData,
                 ];
             },
-            $baseExpectedTemplateData,
+            array_replace_recursive(
+                $baseExpectedTemplateData,
+                [
+                    'picture' => [
+                        'title' => '',
+                    ],
+                ]
+            ),
         ];
 
         yield 'meta data from tl_files' => [
@@ -173,7 +194,30 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
             ),
         ];
 
-        yield 'overwriting meta data' => [
+        yield 'overwriting/setting meta data (implicit)' => [
+            ['image-file'],
+            static function () use ($baseRowData) {
+                return [
+                    new \stdClass(),
+                    array_merge($baseRowData, [
+                        'alt' => 'a',
+                        'imageTitle' => 't',
+                        'caption' => 'c',
+                    ]),
+                ];
+            },
+            array_replace_recursive(
+                $baseExpectedTemplateData,
+                [
+                    'picture' => [
+                        'alt' => 'a',
+                        'title' => 't',
+                    ],
+                ]
+            ),
+        ];
+
+        yield 'overwriting meta data (explicit)' => [
             ['image-file-with-metadata', 'root-and-regular-page_en'],
             function () use ($baseRowData) {
                 $this->loadGlobalObjPage(2);
@@ -326,7 +370,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                     'alt' => '',
                     'title' => '',
                 ],
-                'singleSRC' => 'files/this/does/not/exist/dummy.jpg',
+                'singleSRC' => 'files/this/does/not/exist/foo.jpg',
                 'src' => '',
                 'alt' => '',
                 'caption' => '',
@@ -345,7 +389,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
             static function () use ($baseRowData) {
                 return [
                     new \stdClass(),
-                    array_merge($baseRowData, ['singleSRC' => 'this/does/not/exist/dummy.jpg']),
+                    array_merge($baseRowData, ['singleSRC' => 'this/does/not/exist/foo.jpg']),
                 ];
             },
             [
@@ -358,8 +402,9 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                     ],
                     'sources' => [],
                     'alt' => '',
+                    'title' => '',
                 ],
-                'singleSRC' => 'this/does/not/exist/dummy.jpg',
+                'singleSRC' => 'this/does/not/exist/foo.jpg',
                 'src' => '',
                 'linkTitle' => '',
                 'margin' => '',
@@ -386,6 +431,9 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                     'addBefore' => false,
                     'margin' => 'margin:1px 2px 3px 4px;',
                     'floatClass' => ' float_below',
+                    'picture' => [
+                        'title' => '',
+                    ],
                 ]
             ),
         ];
@@ -464,6 +512,157 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                     'imageHref' => 'bar://foo',
                     'attributes' => '',
                     'href' => 'do://not/overwrite/me',
+                ]
+            ),
+        ];
+
+        yield 'fullsize/lightbox with external url (invalid image extension)' => [
+            ['image-file'],
+            static function () use ($baseRowData) {
+                return [
+                    new \stdClass(),
+                    array_merge($baseRowData, [
+                        'overwriteMeta' => '1',
+                        'fullsize' => '1',
+                        'imageUrl' => 'https://example.com/invalid/end.point',
+                        'alt' => '',
+                        'imageTitle' => '',
+                        'caption' => '',
+                    ]),
+                ];
+            },
+            array_replace_recursive(
+                $baseExpectedTemplateData,
+                [
+                    'picture' => [
+                        'title' => '',
+                    ],
+                    'href' => 'https://example.com/invalid/end.point',
+                    'attributes' => ' target="_blank" rel="noreferrer noopener"',
+                    'fullsize' => true,
+                ]
+            ),
+        ];
+
+        yield 'fullsize/lightbox with external url (valid image extension)' => [
+            ['image-file'],
+            static function () use ($baseRowData) {
+                return [
+                    new \stdClass(),
+                    array_merge($baseRowData, [
+                        'overwriteMeta' => '1',
+                        'fullsize' => '1',
+                        'imageUrl' => 'https://example.com/valid/image.png',
+                        'alt' => '',
+                        'imageTitle' => '',
+                        'caption' => '',
+                    ]),
+                ];
+            },
+            array_replace_recursive(
+                $baseExpectedTemplateData,
+                [
+                    'picture' => [
+                        'title' => '',
+                    ],
+                    'href' => 'https://example.com/valid/image.png',
+                    'attributes' => ' data-lightbox="<anything>"',
+                    'fullsize' => true,
+                ]
+            ),
+        ];
+
+        yield 'fullsize/lightbox with file insert tag (valid resource)' => [
+            ['image-file', 'image-file-alt'],
+            static function () use ($baseRowData) {
+                return [
+                    new \stdClass(),
+                    array_merge($baseRowData, [
+                        'overwriteMeta' => '1',
+                        'fullsize' => '1',
+                        'imageUrl' => '{{file::ec706e95}}', // 'bar.jpg'
+                        'alt' => '',
+                        'imageTitle' => '',
+                        'caption' => '',
+                    ]),
+                ];
+            },
+            array_replace_recursive(
+                $baseExpectedTemplateData,
+                [
+                    'picture' => [
+                        'title' => '',
+                    ],
+                    'href' => '{{file::ec706e95}}',
+                    'attributes' => ' target="_blank"',
+                    'fullsize' => true,
+                ]
+            ),
+        ];
+
+        yield 'fullsize/lightbox with file insert tag (invalid resource)' => [
+            ['image-file'],
+            static function () use ($baseRowData) {
+                return [
+                    new \stdClass(),
+                    array_merge($baseRowData, [
+                        'overwriteMeta' => '1',
+                        'fullsize' => '1',
+                        'imageUrl' => '{{file::0da63b5df}}', // 'a folder'
+                        'alt' => '',
+                        'imageTitle' => '',
+                        'caption' => '',
+                    ]),
+                ];
+            },
+            array_replace_recursive(
+                $baseExpectedTemplateData,
+                [
+                    'picture' => [
+                        'title' => '',
+                    ],
+                    'href' => '{{file::0da63b5df}}',
+                    'attributes' => ' target="_blank"',
+                    'fullsize' => true,
+                ]
+            ),
+        ];
+
+        yield 'fullsize/lightbox with path to valid resource' => [
+            ['image-file'],
+            static function () use ($baseRowData) {
+                return [
+                    new \stdClass(),
+                    array_merge($baseRowData, [
+                        'overwriteMeta' => '1',
+                        'fullsize' => '1',
+                        'imageUrl' => 'files/public/bar.jpg',
+                        'alt' => 'a',
+                        'imageTitle' => 'i',
+                        'caption' => 'c',
+                    ]),
+                ];
+            },
+            array_replace_recursive(
+                $baseExpectedTemplateData,
+                [
+                    'picture' => [
+                        'alt' => 'a',
+                    ],
+                    'lightboxPicture' => [
+                        'img' => [
+                            'src' => 'files/public/bar.jpg',
+                            'srcset' => 'files/public/bar.jpg',
+                            'hasSingleAspectRatio' => true,
+                            'height' => 200,
+                            'width' => 200,
+                        ],
+                        'sources' => [],
+                    ],
+                    'linkTitle' => 'i',
+                    'href' => 'files/public/bar.jpg',
+                    'attributes' => ' data-lightbox="<anything>"',
+                    'fullsize' => true,
                 ]
             ),
         ];
@@ -548,8 +747,8 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                     ],
                     'lightboxPicture' => [
                         'img' => [
-                            'src' => 'files/public/dummy.jpg',
-                            'srcset' => 'files/public/dummy.jpg',
+                            'src' => 'files/public/foo.jpg',
+                            'srcset' => 'files/public/foo.jpg',
                             'hasSingleAspectRatio' => true,
                             'height' => 200,
                             'width' => 200,
@@ -561,7 +760,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                     'imageUrl' => '',
                     'caption' => 'foo caption',
                     'linkTitle' => 'foo title',
-                    'href' => 'files/public/dummy.jpg',
+                    'href' => 'files/public/foo.jpg',
                     'fullsize' => true,
                     'attributes' => ' data-lightbox="<anything>"',
                     'floatClass' => ' float_above',
@@ -693,12 +892,11 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
         ];
 
         // todo:
-        //    - insert tag in link
-        //    - external url (attr: rel="noreferrer noopener")
         //    - maxWidth legacy setting
         //    - defining lightbox id
         //    - bad preconditions
         //     ...
+        //   $arrItem['title'] fallback
     }
 
     private function loadGlobalObjPage(int $id): void
@@ -746,8 +944,8 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                     return;
                 }
 
-                $value = preg_replace('#^(assets/images/).*$#', '$1<anything>', $value);
-                $value = preg_replace('#(data-lightbox=").*(")#', '$1<anything>$2', $value);
+                $value = preg_replace('#^(assets/images/)\S*$#', '$1<anything>', $value);
+                $value = preg_replace('#(data-lightbox=)"\S*"#', '$1"<anything>"', $value);
             }
         );
 

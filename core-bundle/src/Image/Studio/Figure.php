@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Image\Studio;
 use Closure;
 use Contao\CoreBundle\File\MetaData;
 use Contao\File;
-use Contao\FilesModel;
 use Contao\StringUtil;
 use Contao\Template;
 
@@ -182,25 +181,16 @@ final class Figure
      *       add this object to your template's context and directly access the
      *       specific data you need.
      */
-    public function getLegacyTemplateData($floatingProperty = null, $marginProperty = null): array
+    public function getLegacyTemplateData(bool $includeFullMetaData = true, string $floatingProperty = null, string $marginProperty = null): array
     {
-        // Create a key-value list of the meta data, apply some renaming and
-        // formatting transformations and add default values based on the
-        // context.
-        $createLegacyMetaDataMapping = function (): array {
-            if (!$this->hasMetaData()) {
-                return [
-                    'linkTitle' => '',
-                ];
+        // Create a key-value list of the meta data and apply some renaming and
+        // formatting transformations to fit the legacy templates.
+        $createLegacyMetaDataMapping = static function (MetaData $metaData): array {
+            if ($metaData->empty()) {
+                return [];
             }
 
-            // Get mapping of all meta data; fill missing with empty values
-            $metaFields = array_merge(FilesModel::getMetaFields(), ['linkTitle']);
-
-            $mapping = array_merge(
-                array_combine($metaFields, array_fill(0, \count($metaFields), '')),
-                $this->metaData->all()
-            );
+            $mapping = $metaData->all();
 
             // Handle special chars
             foreach ([MetaData::VALUE_ALT, MetaData::VALUE_TITLE, MetaData::VALUE_CAPTION] as $key) {
@@ -232,12 +222,13 @@ final class Figure
 
         // Primary image and meta data
         $templateData = array_merge(
-            $createLegacyMetaDataMapping(),
+            $includeFullMetaData ? $createLegacyMetaDataMapping($metaData) : [],
             [
                 'picture' => [
                     'img' => $img->getImg(),
                     'sources' => $img->getSources(),
                     'alt' => StringUtil::specialchars($metaData->getAlt()),
+                    'title' => StringUtil::specialchars($metaData->getTitle()),
                 ],
                 'width' => $originalSize->getWidth(),
                 'height' => $originalSize->getHeight(),
@@ -245,6 +236,7 @@ final class Figure
                 'imgSize' => sprintf(' width="%d" height="%d"', $fileInfoImageSize[0], $fileInfoImageSize[1]),
                 'singleSRC' => $img->getFilePath(),
                 'src' => $img->getImageSrc(),
+                'linkTitle' => '',
                 'fullsize' => ('blank' === ($linkAttributes['target'] ?? null)) || $this->hasLightBox(),
                 'margin' => $marginProperty ?? '',
                 'addBefore' => 'below' !== $floatingProperty,
@@ -256,6 +248,11 @@ final class Figure
         if ('' !== ($href = $this->getLinkHref())) {
             $templateData['href'] = $href;
             $templateData['attributes'] = '';
+
+            // Define link title
+            $templateData['linkTitle'] = StringUtil::specialchars($metaData->getTitle());
+            $templateData['imageTitle'] = null;
+            unset($templateData['picture']['title']);
         }
 
         if (!empty($linkAttributes)) {
@@ -283,16 +280,7 @@ final class Figure
             }
         }
 
-        // Context sensitive properties
-        if ('' !== $this->getLinkHref()) {
-            $templateData['linkTitle'] = $templateData['imageTitle'];
-            $templateData['imageTitle'] = null;
-        }
-
-        if ('' === $templateData['linkTitle'] && $this->hasMetaData()) {
-            $templateData['picture']['title'] = StringUtil::specialchars($metaData->getTitle());
-        }
-
+        // Other
         if (null !== $floatingProperty) {
             $templateData['floatClass'] = " float_{$floatingProperty}";
         }
@@ -308,9 +296,9 @@ final class Figure
      *       add this object to your template's context and directly access the
      *       specific data you need.
      */
-    public function applyLegacyTemplateData($template, $floatingProperty = null, $marginProperty = null): void
+    public function applyLegacyTemplateData($template, $includeFullMetaData = true, $floatingProperty = null, $marginProperty = null): void
     {
-        $new = $this->getLegacyTemplateData($floatingProperty, $marginProperty);
+        $new = $this->getLegacyTemplateData($includeFullMetaData, $floatingProperty, $marginProperty);
         $existing = $template instanceof Template ? $template->getData() : get_object_vars($template);
 
         // Do not override the "href" key (see #6468)

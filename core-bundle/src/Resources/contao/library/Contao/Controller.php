@@ -1519,30 +1519,33 @@ abstract class Controller extends System
 
 	public static function addImageToTemplate_new(object $template, array $rowData, ?int $maxWidth = null, ?string $lightBoxGroupIdentifier = null, FilesModel $filesModel = null): void
 	{
-		/** @var FigureBuilder $figureBuilder */
-		$figureBuilder = System::getContainer()->get(Studio::class)->createFigureBuilder();
+		// Helper: Create MetaData from the specified row data
+		$createMetaDataFromRowData = static function (bool $dynamic) use ($rowData)
+		{
+			if (!$dynamic)
+			{
+				// Create a limited container that always contains certain properties
+				return new MetaData(
+					array_filter(array(
+						MetaData::VALUE_ALT => $rowData['alt'] ?? '',
+						MetaData::VALUE_TITLE => $rowData['imageTitle'] ?? '',
+						MetaData::VALUE_URL => $rowData['imageUrl'] ?? null,
+					))
+				);
+			}
 
-		// Set image resource
-		try
+			// Interpret structure as ContentModel and create a container.
+			// This will be null if `overwriteMeta` isn't set.
+			/** @var ContentModel $contentModel */
+			$contentModel = (new ReflectionClass(ContentModel::class))
+				->newInstanceWithoutConstructor();
+
+			return $contentModel->setRow($rowData)->getMetaData();
+		};
+
+		// Helper: Create template data with (mostly) empty fields for when resource acquisition fails
+		$createFallBackTemplateData = static function () use ($filesModel, $rowData)
 		{
-			if (null !== $filesModel)
-			{
-				// Use meta data from files model by default,
-				// always fall back to empty meta data (BC)
-				$figureBuilder
-					->fromFilesModel($filesModel)
-					->alwaysCreateMetaData();
-			}
-			else
-			{
-				// Ignore file meta data when loading from path (BC)
-				$figureBuilder
-					->fromPath($rowData['singleSRC'], false);
-			}
-		}
-		catch (InvalidResourceException $e)
-		{
-			// Fallback to applying a sparse data set (BC)
 			$templateData = array(
 				'width' => null,
 				'height' => null,
@@ -1553,6 +1556,7 @@ abstract class Controller extends System
 					),
 					'sources' => array(),
 					'alt' => '',
+					'title' => '',
 				),
 				'singleSRC' => $rowData['singleSRC'],
 				'src' => '',
@@ -1567,9 +1571,6 @@ abstract class Controller extends System
 			{
 				// Set empty meta data (this is actually a minor BC break)
 				$templateData = array_replace_recursive($templateData, array(
-					'picture' => array(
-						'title' => '',
-					),
 					'alt' => '',
 					'caption' => '',
 					'imageTitle' => '',
@@ -1577,7 +1578,100 @@ abstract class Controller extends System
 				));
 			}
 
-			foreach ($templateData as $key => $value)
+			return $templateData;
+		};
+
+		// Helper: Get size and compiled margins and handle legacy $maxWidth option
+		$getDimensionProperties = static function () use ($rowData, $maxWidth)
+		{
+			$size = $rowData['size'] ?? null;
+
+			$margin = StringUtil::deserialize($rowData['imagemargin'] ?? null, true);
+
+			if ($maxWidth > 0)
+			{
+				@trigger_error('Using a maximum front end width has been deprecated and will no longer work in Contao 5.0. Remove the "maxImageWidth" configuration and use responsive images instead.', E_USER_DEPRECATED);
+
+				// Adjust margins if needed
+				if ('px' === ($margin['unit'] ?? null))
+				{
+					$horizontalMargin = (int) ($margin['left'] ?? 0) + (int) ($margin['right'] ?? 0);
+
+					if ($maxWidth - $horizontalMargin < 1)
+					{
+						$margin['left'] = '';
+						$margin['right'] = '';
+					}
+					else
+					{
+						$maxWidth -= $horizontalMargin;
+					}
+				}
+
+				// Adjust size configuration
+				if (is_numeric($size))
+				{
+					$size = array(0, 0, (int) $size);
+				}
+
+				if (\is_array($size))
+				{
+					$container = System::getContainer();
+
+					$originalSize = $container
+						->get('contao.image.image_factory')
+						->create($container->getParameter('kernel.project_dir') . '/' . $rowData['singleSRC'])
+						->getDimensions()
+						->getSize();
+
+					if ($size[0] > $maxWidth || (0 === $size[0] && 0 === $size[1] && $originalSize->getWidth() > $maxWidth))
+					{
+						if ($size[0] > 0 && $size[1] > 0)
+						{
+							$size[0] = $maxWidth;
+							$size[1] = floor($maxWidth * ($size[1] / $size[0]));
+						}
+						elseif ($originalSize->getWidth() > 0)
+						{
+							$size[0] = $maxWidth;
+							$size[1] = floor($maxWidth * ($originalSize->getHeight() / $originalSize->getWidth()));
+						}
+					}
+				}
+			}
+
+			return array($size, static::generateMargin($margin));
+		};
+
+		/** @var FigureBuilder $figureBuilder */
+		$figureBuilder = System::getContainer()->get(Studio::class)->createFigureBuilder();
+
+		// Set image resource
+		try
+		{
+			if (null !== $filesModel)
+			{
+				// Use source + meta data from files model (if not overwritten)
+				$figureBuilder
+					->fromFilesModel($filesModel)
+					->setMetaData($createMetaDataFromRowData(true));
+
+				$includeFullMetaData = true;
+			}
+			else
+			{
+				// Always ignore file meta data when building from path (BC)
+				$figureBuilder
+					->fromPath($rowData['singleSRC'], false)
+					->setMetaData($createMetaDataFromRowData(false));
+
+				$includeFullMetaData = false;
+			}
+		}
+		catch (InvalidResourceException $e)
+		{
+			// Fall back to apply a sparse data set instead of failing (BC)
+			foreach ($createFallBackTemplateData() as $key => $value)
 			{
 				$template->$key = $value;
 			}
@@ -1585,45 +1679,23 @@ abstract class Controller extends System
 			return;
 		}
 
-		// Set size, light box configuration + meta data overwrites
-		$size = $rowData['size'] ?? null;
-		$enableLightBox = '1' === ($rowData['fullsize'] ?? null);
-
-		$metaData = (static function () use ($rowData): ?MetaData
-		{
-			// Assume a structure like in a ContentModel
-			/** @var ContentModel $contentModel */
-			$contentModel = (new ReflectionClass(ContentModel::class))
-				->newInstanceWithoutConstructor();
-
-			$metaData = $contentModel->setRow($rowData)->getMetaData();
-			unset($contentModel);
-
-			return null !== $metaData && !$metaData->empty() ? $metaData : null;
-		})();
+		// Set size and light box configuration
+		list($size, $margin) = $getDimensionProperties();
 
 		$figureBuilder
 			->setSize($size)
 			->setLightBoxGroupIdentifier($lightBoxGroupIdentifier)
-			->enableLightBox($enableLightBox)
-			->setMetaData($metaData);
-
-		// Acquire legacy parameters
-		$floating = $rowData['floating'] ?? null;
-		$marginValues = StringUtil::deserialize($rowData['imagemargin'] ?? null, true);
-		$margin = static::generateMargin($marginValues);
-
-		if ($maxWidth > 0)
-		{
-			@trigger_error('Using a maximum front end width has been deprecated and will no longer work in Contao 5.0. Remove the "maxImageWidth" configuration and use responsive images instead.', E_USER_DEPRECATED);
-
-			// todo
-			throw new \RuntimeException('not implemented yet (2)');
-		}
+			->enableLightBox('1' === ($rowData['fullsize'] ?? null));
 
 		// Build result and apply it to the template
-		$figure = $figureBuilder->build();
-		$figure->applyLegacyTemplateData($template, $floating, $margin);
+		$figureBuilder
+			->build()
+			->applyLegacyTemplateData(
+				$template,
+				$includeFullMetaData,
+				$rowData['floating'] ?: null,
+				$margin
+			);
 	}
 
 	/**
