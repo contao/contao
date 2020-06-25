@@ -287,9 +287,12 @@ class Search
 		$objDatabase->prepare("INSERT INTO tl_search_index (pid, wordId, relevance) VALUES " . implode(', ', $arrQuery))
 					->execute($arrValues);
 
-		list($intMinId, $intMaxId, $intCount) = array_map('intval', $objDatabase->prepare("
-			SELECT IFNULL(MIN(id), 0), IFNULL(MAX(id), 0), COUNT(*) FROM tl_search
-		")->execute()->fetchRow());
+		$row = $objDatabase
+			->prepare("SELECT IFNULL(MIN(id), 0), IFNULL(MAX(id), 0), COUNT(*) FROM tl_search")
+			->execute()
+			->fetchRow();
+
+		list($intMinId, $intMaxId, $intCount) = array_map('intval', $row);
 
 		if ($intCount <= 105)
 		{
