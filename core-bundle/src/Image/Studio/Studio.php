@@ -12,13 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Image\Studio;
 
+use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\Image\PictureFactoryInterface;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
 use Psr\Container\ContainerInterface;
-use Symfony\Component\Asset\Context\ContextInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
@@ -68,7 +68,7 @@ class Studio implements ServiceSubscriberInterface
             'contao.image.image_factory' => ImageFactoryInterface::class,
             'request_stack' => RequestStack::class,
             'parameter_bag' => ParameterBagInterface::class,
-            'contao.assets.files_context' => ContextInterface::class,
+            'contao.assets.files_context' => ContaoContext::class,
             'contao.framework' => ContaoFramework::class,
         ];
     }
