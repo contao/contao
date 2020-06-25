@@ -11,7 +11,6 @@
 namespace Contao\CoreBundle\Tests\Command;
 
 use Contao\CoreBundle\Command\InstallCommand;
-use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
@@ -68,7 +67,7 @@ class InstallCommandTest extends TestCase
      */
     public function testCreatesTheContaoFolders()
     {
-        $command = new InstallCommand($this->getRootDir(), 'files', $this->getRootDir().'/assets/images', ['ContaoCoreBundle' => ContaoCoreBundle::class]);
+        $command = new InstallCommand($this->getRootDir(), 'files', $this->getRootDir().'/assets/images', $this->getBundlesMetadata());
         $tester = new CommandTester($command);
         $code = $tester->execute([]);
         $output = $tester->getDisplay();
@@ -89,7 +88,7 @@ class InstallCommandTest extends TestCase
      */
     public function testHandlesCustomFilesAndImagesPaths()
     {
-        $command = new InstallCommand($this->getRootDir(), 'files_test', $this->getRootDir().'/assets/images_test', ['ContaoCoreBundle' => ContaoCoreBundle::class]);
+        $command = new InstallCommand($this->getRootDir(), 'files_test', $this->getRootDir().'/assets/images_test', $this->getBundlesMetadata());
         $tester = new CommandTester($command);
         $code = $tester->execute([]);
         $display = $tester->getDisplay();
@@ -97,5 +96,17 @@ class InstallCommandTest extends TestCase
         $this->assertSame(0, $code);
         $this->assertContains(' * files_test', $display);
         $this->assertContains(' * assets/images_test', $display);
+    }
+
+    /**
+     * @return array<string,array<string,string>>
+     */
+    private function getBundlesMetadata()
+    {
+        return [
+            'ContaoCoreBundle' => [
+                'path' => $this->getRootDir().'/vendor/contao/core-bundle/src',
+            ],
+        ];
     }
 }

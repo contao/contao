@@ -61,9 +61,9 @@ class InstallCommand extends Command
     private $webDir;
 
     /**
-     * @var array<string,string>
+     * @var array<string,array<string,string>>
      */
-    private $bundles;
+    private $bundlesMeta;
 
     /**
      * @var array
@@ -94,14 +94,14 @@ class InstallCommand extends Command
      * @param string $rootDir
      * @param string $uploadPath
      * @param string $imageDir
-     * @param array  $bundles
+     * @param array  $bundlesMeta
      */
-    public function __construct($rootDir, $uploadPath, $imageDir, $bundles)
+    public function __construct($rootDir, $uploadPath, $imageDir, $bundlesMeta)
     {
         $this->rootDir = $rootDir;
         $this->uploadPath = $uploadPath;
         $this->imageDir = $imageDir;
-        $this->bundles = $bundles;
+        $this->bundlesMeta = $bundlesMeta;
 
         parent::__construct();
     }
@@ -246,8 +246,7 @@ EOF
      */
     private function symlinkTcpdfConfig()
     {
-        $coreBundle = new \ReflectionClass($this->bundles['ContaoCoreBundle']);
-        $relPath = $this->getRelativePath(\dirname($coreBundle->getFileName()));
+        $relPath = $this->getRelativePath($this->bundlesMeta['ContaoCoreBundle']['path']);
 
         SymlinkUtil::symlink(
             $relPath.'/Resources/contao/config/tcpdf.php',
