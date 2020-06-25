@@ -15,13 +15,12 @@ namespace Contao\CoreBundle\Tests\Cron;
 use Contao\CoreBundle\Cron\CronJob;
 use Contao\CoreBundle\Fixtures\Cron\TestCronJob;
 use Contao\CoreBundle\Tests\TestCase;
-use InvalidArgumentException;
 
 class CronJobTest extends TestCase
 {
     public function testThrowsExceptionIfNoMethodIsGivenAndServiceIsNotInvokable(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
 
         new CronJob(new TestCronJob(), '@hourly');
     }

@@ -8,16 +8,12 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\CoreBundle\DataContainer\PaletteManipulator;
+
 // Extend default palette
-Contao\CoreBundle\DataContainer\PaletteManipulator::create()
-	->addLegend('feed_legend', 'modules_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_BEFORE)
-	->addField(
-		'newsfeeds',
-		'calendarfeeds',
-		Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_BEFORE,
-		'feed_legend',
-		Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_PREPEND
-	)
+PaletteManipulator::create()
+	->addLegend('feed_legend', 'modules_legend', PaletteManipulator::POSITION_BEFORE)
+	->addField('newsfeeds', 'calendarfeeds', PaletteManipulator::POSITION_BEFORE, 'feed_legend', PaletteManipulator::POSITION_PREPEND)
 	->applyToPalette('default', 'tl_layout')
 ;
 

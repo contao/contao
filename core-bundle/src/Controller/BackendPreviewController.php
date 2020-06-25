@@ -20,8 +20,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -49,21 +47,15 @@ class BackendPreviewController
     private $dispatcher;
 
     /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
      * @var AuthorizationCheckerInterface
      */
     private $authorizationChecker;
 
-    public function __construct(string $previewScript, FrontendPreviewAuthenticator $previewAuthenticator, EventDispatcherInterface $dispatcher, RouterInterface $router, AuthorizationCheckerInterface $authorizationChecker)
+    public function __construct(string $previewScript, FrontendPreviewAuthenticator $previewAuthenticator, EventDispatcherInterface $dispatcher, AuthorizationCheckerInterface $authorizationChecker)
     {
         $this->previewScript = $previewScript;
         $this->previewAuthenticator = $previewAuthenticator;
         $this->dispatcher = $dispatcher;
-        $this->router = $router;
         $this->authorizationChecker = $authorizationChecker;
     }
 
@@ -98,6 +90,6 @@ class BackendPreviewController
             return new RedirectResponse($targetUrl);
         }
 
-        return new RedirectResponse($this->router->generate('contao_root', [], UrlGeneratorInterface::ABSOLUTE_URL));
+        return new RedirectResponse('/');
     }
 }
