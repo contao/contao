@@ -437,7 +437,7 @@ class ContentModel extends Model
 	/**
 	 * Get the default meta data or null if not applicable.
 	 */
-	public function getMetaData(): ?MetaData
+	public function getOverwriteMetaData(): ?MetaData
 	{
 		// Ignore if `overwriteMeta` isn't set
 		if ('' === $this->overwriteMeta)

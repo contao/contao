@@ -1541,7 +1541,7 @@ abstract class Controller extends System
 			$contentModel = (new ReflectionClass(ContentModel::class))
 				->newInstanceWithoutConstructor();
 
-			return $contentModel->setRow($rowData)->getMetaData();
+			return $contentModel->setRow($rowData)->getOverwriteMetaData();
 		};
 
 		// Helper: Create template data with (mostly) empty fields for when resource acquisition fails

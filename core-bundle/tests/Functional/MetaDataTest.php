@@ -52,7 +52,7 @@ class MetaDataTest extends KernelTestCase
             MetaData::VALUE_CAPTION => 'foo caption',
             MetaData::VALUE_TITLE => 'foo title',
             MetaData::VALUE_URL => 'foo://bar',
-        ], $model->getMetaData()->all());
+        ], $model->getOverwriteMetaData()->all());
     }
 
     public function testDoesNotCreateMetaDataContainerFromContentModelIfOverwriteIsDisabled(): void
@@ -69,7 +69,7 @@ class MetaDataTest extends KernelTestCase
             'alt' => 'foo alt',
         ]);
 
-        $this->assertNull($model->getMetaData());
+        $this->assertNull($model->getOverwriteMetaData());
     }
 
     public function testCreatesMetaDataContainerFromFilesModel(): void
