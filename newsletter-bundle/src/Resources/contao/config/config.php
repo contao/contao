@@ -8,33 +8,39 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\ModuleNewsletterList;
+use Contao\ModuleNewsletterReader;
+use Contao\ModuleSubscribe;
+use Contao\ModuleUnsubscribe;
+use Contao\Newsletter;
+
 // Back end modules
 $GLOBALS['BE_MOD']['content']['newsletter'] = array
 (
 	'tables'     => array('tl_newsletter_channel', 'tl_newsletter', 'tl_newsletter_recipients'),
-	'send'       => array('Contao\Newsletter', 'send'),
-	'import'     => array('Contao\Newsletter', 'importRecipients'),
+	'send'       => array(Newsletter::class, 'send'),
+	'import'     => array(Newsletter::class, 'importRecipients'),
 	'stylesheet' => 'bundles/contaonewsletter/newsletter.min.css'
 );
 
 // Front end modules
 $GLOBALS['FE_MOD']['newsletter'] = array
 (
-	'subscribe'        => 'Contao\ModuleSubscribe',
-	'unsubscribe'      => 'Contao\ModuleUnsubscribe',
-	'newsletterlist'   => 'Contao\ModuleNewsletterList',
-	'newsletterreader' => 'Contao\ModuleNewsletterReader'
+	'subscribe'        => ModuleSubscribe::class,
+	'unsubscribe'      => ModuleUnsubscribe::class,
+	'newsletterlist'   => ModuleNewsletterList::class,
+	'newsletterreader' => ModuleNewsletterReader::class
 );
 
 // Register hooks
-$GLOBALS['TL_HOOKS']['createNewUser'][] = array('Contao\Newsletter', 'createNewUser');
-$GLOBALS['TL_HOOKS']['activateAccount'][] = array('Contao\Newsletter', 'activateAccount');
-$GLOBALS['TL_HOOKS']['getSearchablePages'][] = array('Contao\Newsletter', 'getSearchablePages');
-$GLOBALS['TL_HOOKS']['closeAccount'][] = array('Contao\Newsletter', 'removeSubscriptions');
+$GLOBALS['TL_HOOKS']['createNewUser'][] = array(Newsletter::class, 'createNewUser');
+$GLOBALS['TL_HOOKS']['activateAccount'][] = array(Newsletter::class, 'activateAccount');
+$GLOBALS['TL_HOOKS']['getSearchablePages'][] = array(Newsletter::class, 'getSearchablePages');
+$GLOBALS['TL_HOOKS']['closeAccount'][] = array(Newsletter::class, 'removeSubscriptions');
 
 // Add permissions
 $GLOBALS['TL_PERMISSIONS'][] = 'newsletters';
 $GLOBALS['TL_PERMISSIONS'][] = 'newsletterp';
 
 // Cron jobs
-$GLOBALS['TL_CRON']['daily']['purgeNewsletterSubscriptions'] = array('Contao\Newsletter', 'purgeSubscriptions');
+$GLOBALS['TL_CRON']['daily']['purgeNewsletterSubscriptions'] = array(Newsletter::class, 'purgeSubscriptions');

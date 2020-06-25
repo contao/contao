@@ -8,6 +8,19 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\Backend;
+use Contao\BackendUser;
+use Contao\Config;
+use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\DataContainer;
+use Contao\Image;
+use Contao\StringUtil;
+use Contao\System;
+use Imagine\Gd\Imagine as GdImagine;
+use Imagine\Gmagick\Imagine as GmagickImagine;
+use Imagine\Imagick\Imagine as ImagickImagine;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+
 $GLOBALS['TL_DCA']['tl_image_size'] = array
 (
 	// Config
@@ -217,7 +230,7 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_image_size extends Contao\Backend
+class tl_image_size extends Backend
 {
 	/**
 	 * Import the back end user object
@@ -225,13 +238,13 @@ class tl_image_size extends Contao\Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('Contao\BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 	}
 
 	/**
 	 * Check permissions to edit the table
 	 *
-	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
+	 * @throws AccessDeniedException
 	 */
 	public function checkPermission()
 	{
@@ -242,7 +255,7 @@ class tl_image_size extends Contao\Backend
 
 		if (!$this->User->hasAccess('image_sizes', 'themes'))
 		{
-			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access the image sizes module.');
+			throw new AccessDeniedException('Not enough permissions to access the image sizes module.');
 		}
 	}
 
@@ -280,8 +293,8 @@ class tl_image_size extends Contao\Backend
 			return;
 		}
 
-		/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
-		$objSessionBag = Contao\System::getContainer()->get('session')->getBag('contao_backend');
+		/** @var AttributeBagInterface $objSessionBag */
+		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 
 		$arrNew = $objSessionBag->get('new_records');
 
@@ -294,11 +307,11 @@ class tl_image_size extends Contao\Backend
 
 				while ($objGroup->next())
 				{
-					$arrThemes = Contao\StringUtil::deserialize($objGroup->themes);
+					$arrThemes = StringUtil::deserialize($objGroup->themes);
 
 					if (is_array($arrThemes) && in_array('image_sizes', $arrThemes))
 					{
-						$arrImageSizes = Contao\StringUtil::deserialize($objGroup->imageSizes, true);
+						$arrImageSizes = StringUtil::deserialize($objGroup->imageSizes, true);
 						$arrImageSizes[] = $insertId;
 
 						$this->Database->prepare("UPDATE tl_user_group SET imageSizes=? WHERE id=?")
@@ -314,11 +327,11 @@ class tl_image_size extends Contao\Backend
 										   ->limit(1)
 										   ->execute($this->User->id);
 
-				$arrThemes = Contao\StringUtil::deserialize($objUser->themes);
+				$arrThemes = StringUtil::deserialize($objUser->themes);
 
 				if (is_array($arrThemes) && in_array('image_sizes', $arrThemes))
 				{
-					$arrImageSizes = Contao\StringUtil::deserialize($objUser->imageSizes, true);
+					$arrImageSizes = StringUtil::deserialize($objUser->imageSizes, true);
 					$arrImageSizes[] = $insertId;
 
 					$this->Database->prepare("UPDATE tl_user SET imageSizes=? WHERE id=?")
@@ -373,26 +386,26 @@ class tl_image_size extends Contao\Backend
 	 */
 	public function editHeader($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->canEditFieldsOf('tl_image_size') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return $this->User->canEditFieldsOf('tl_image_size') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
 	 * Return the image format options
 	 *
-	 * @param Contao\DataContainer $dc
+	 * @param DataContainer $dc
 	 *
 	 * @return array
 	 */
-	public function getFormats(Contao\DataContainer $dc=null)
+	public function getFormats(DataContainer $dc=null)
 	{
 		$formats = array();
 
 		if ($dc->value)
 		{
-			$formats = Contao\StringUtil::deserialize($dc->value, true);
+			$formats = StringUtil::deserialize($dc->value, true);
 		}
 
-		if (!in_array('webp', Contao\StringUtil::trimsplit(',', Contao\Config::get('validImageTypes'))))
+		if (!in_array('webp', StringUtil::trimsplit(',', Config::get('validImageTypes'))))
 		{
 			return $formats;
 		}
@@ -418,19 +431,19 @@ class tl_image_size extends Contao\Backend
 	 */
 	private function supportsWebp()
 	{
-		$imagine = Contao\System::getContainer()->get('contao.image.imagine');
+		$imagine = System::getContainer()->get('contao.image.imagine');
 
-		if ($imagine instanceof Imagine\Imagick\Imagine)
+		if ($imagine instanceof ImagickImagine)
 		{
 			return in_array('WEBP', Imagick::queryFormats('WEBP'), true);
 		}
 
-		if ($imagine instanceof Imagine\Gmagick\Imagine)
+		if ($imagine instanceof GmagickImagine)
 		{
 			return in_array('WEBP', (new Gmagick())->queryformats('WEBP'), true);
 		}
 
-		if ($imagine instanceof Imagine\Gd\Imagine)
+		if ($imagine instanceof GdImagine)
 		{
 			return function_exists('imagewebp');
 		}

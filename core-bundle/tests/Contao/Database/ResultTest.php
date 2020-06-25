@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Contao\Database;
 
 use Contao\CoreBundle\Tests\Fixtures\Database\DoctrineArrayStatement;
 use Contao\Database\Result;
+use PHPUnit\Framework\Error\Notice;
 use PHPUnit\Framework\TestCase;
 
 class ResultTest extends TestCase
@@ -25,16 +26,34 @@ class ResultTest extends TestCase
 
         /** @var Result|object $result */
         foreach ([$resultStatement, $resultArray] as $result) {
-            $this->assertFalse($result->isModified);
-            $this->assertSame(0, $result->numFields);
-            $this->assertSame(0, $result->numRows);
-            $this->assertSame('SELECT * FROM test', $result->query);
-            $this->assertSame(0, $result->count());
-            $this->assertSame([], $result->fetchAllAssoc());
-            $this->assertFalse($result->fetchAssoc());
-            $this->assertSame([], $result->fetchEach('test'));
-            $this->assertFalse($result->fetchRow());
+            foreach ([null, 'first', 'last', 'reset'] as $methodName) {
+                if ($methodName) {
+                    $this->assertSame($result, $result->$methodName());
+                }
+                $this->assertFalse($result->isModified);
+                $this->assertSame(0, $result->numFields);
+                $this->assertSame(0, $result->numRows);
+                $this->assertSame('SELECT * FROM test', $result->query);
+                $this->assertSame(0, $result->count());
+                $this->assertSame([], $result->fetchAllAssoc());
+                $this->assertFalse($result->fetchAssoc());
+                $this->assertSame([], $result->fetchEach('test'));
+                $this->assertFalse($result->fetchRow());
+                $this->assertSame([], $result->row());
+                $this->assertSame([], $result->row(true));
+                $this->assertFalse(isset($result->modifiedKey));
+                $this->assertNull($result->modifiedKey);
+                $result->modifiedKey = 'value';
+                $this->assertSame(['modifiedKey' => 'value'], $result->row());
+                $this->assertSame(['modifiedKey' => 'value'], $result->row(false));
+                $this->assertSame(['value'], $result->row(true));
+                $this->assertTrue(isset($result->modifiedKey));
+                $this->assertSame('value', $result->modifiedKey);
+            }
         }
+
+        $this->expectException(Notice::class);
+        $resultStatement->fetchField();
     }
 
     public function testSingleRow(): void
@@ -72,7 +91,12 @@ class ResultTest extends TestCase
             $this->assertSame('new value', $result->field);
             $this->assertSame(['field' => 'new value'], $result->row());
             $this->assertSame(['new value'], $result->row(true));
+            $this->assertSame('value1', $result->fetchField());
+            $this->assertSame('value1', $result->fetchField(0));
         }
+
+        $this->expectException(Notice::class);
+        $result->fetchField(1);
     }
 
     public function testMultipleRows(): void
@@ -115,7 +139,12 @@ class ResultTest extends TestCase
             $this->assertSame('new value', $result->field);
             $this->assertSame(['field' => 'new value'], $result->row());
             $this->assertSame(['new value'], $result->row(true));
+            $this->assertSame('value2', $result->fetchField());
+            $this->assertSame('value2', $result->fetchField(0));
         }
+
+        $this->expectException(Notice::class);
+        $result->fetchField(1);
     }
 
     public function testFetchRowAndAssoc(): void

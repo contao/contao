@@ -5236,7 +5236,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 		// Sort by option values
 		uksort($options_sorter, 'strnatcasecmp');
-		$active = isset($session['search'][$this->strTable]['value']);
+		$active = isset($session['search'][$this->strTable]['value']) && $session['search'][$this->strTable]['value'] != '';
 
 		return '
 <div class="tl_search tl_subpanel">

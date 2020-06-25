@@ -2,11 +2,11 @@ services:
     _instanceof:
         Contao\CoreBundle\Framework\FrameworkAwareInterface:
             calls:
-                - ['setFramework', ['@contao.framework']]
+                - [setFramework, ['@contao.framework']]
 
         Symfony\Component\DependencyInjection\ContainerAwareInterface:
             calls:
-                - ['setContainer', ['@service_container']]
+                - [setContainer, ['@service_container']]
 
     Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener:
         arguments:

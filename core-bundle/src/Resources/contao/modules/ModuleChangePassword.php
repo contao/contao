@@ -150,7 +150,6 @@ class ModuleChangePassword extends Module
 					{
 						$objWidget->value = '';
 						$objWidget->addError($GLOBALS['TL_LANG']['MSC']['oldPasswordWrong']);
-						sleep(2); // Wait 2 seconds while brute forcing :)
 					}
 				}
 

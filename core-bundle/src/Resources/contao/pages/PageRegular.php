@@ -763,6 +763,7 @@ class PageRegular extends Frontend
 			(
 				'@context' => array('contao' => 'https://schema.contao.org/'),
 				'@type' => 'contao:RegularPage',
+				'contao:pageId' => (int) $objPage->id,
 				'contao:noSearch' => $noSearch,
 				'contao:protected' => (bool) $objPage->protected,
 				'contao:groups' => array_map('intval', array_filter((array) $objPage->groups)),

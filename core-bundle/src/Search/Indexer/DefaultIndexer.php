@@ -14,11 +14,8 @@ namespace Contao\CoreBundle\Search\Indexer;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Search\Document;
-use Contao\PageModel;
 use Contao\Search;
 use Doctrine\DBAL\Driver\Connection;
-use Symfony\Component\Routing\Exception\ExceptionInterface;
-use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 
 class DefaultIndexer implements IndexerInterface
 {
@@ -33,11 +30,6 @@ class DefaultIndexer implements IndexerInterface
     private $connection;
 
     /**
-     * @var UrlMatcherInterface
-     */
-    private $urlMatcher;
-
-    /**
      * @var bool
      */
     private $indexProtected;
@@ -45,11 +37,10 @@ class DefaultIndexer implements IndexerInterface
     /**
      * @internal Do not inherit from this class; decorate the "contao.search.indexer.default" service instead
      */
-    public function __construct(ContaoFramework $framework, Connection $connection, UrlMatcherInterface $urlMatcher, bool $indexProtected = false)
+    public function __construct(ContaoFramework $framework, Connection $connection, bool $indexProtected = false)
     {
         $this->framework = $framework;
         $this->connection = $connection;
-        $this->urlMatcher = $urlMatcher;
         $this->indexProtected = $indexProtected;
     }
 
@@ -84,6 +75,10 @@ class DefaultIndexer implements IndexerInterface
 
         $this->extendMetaFromJsonLdScripts($document, $meta);
 
+        if (!isset($meta['pageId']) || 0 === $meta['pageId']) {
+            $this->throwBecause('No page ID could be determined.');
+        }
+
         // If search was disabled in the page settings, we do not index
         if (isset($meta['noSearch']) && true === $meta['noSearch']) {
             $this->throwBecause('Was explicitly marked "noSearch" in page settings.');
@@ -101,18 +96,6 @@ class DefaultIndexer implements IndexerInterface
 
         $this->framework->initialize();
 
-        $pageId = 0;
-
-        // Try to extract page id
-        try {
-            $parameters = $this->urlMatcher->match($document->getUri()->getPath());
-
-            if (\array_key_exists('pageModel', $parameters) && $parameters['pageModel'] instanceof PageModel) {
-                $pageId = (int) $parameters['pageModel']->id;
-            }
-        } catch (ExceptionInterface $exception) {
-        }
-
         /** @var Search $search */
         $search = $this->framework->getAdapter(Search::class);
 
@@ -122,7 +105,7 @@ class DefaultIndexer implements IndexerInterface
                 'content' => $document->getBody(),
                 'protected' => $meta['protected'] ? '1' : '',
                 'groups' => $meta['groups'],
-                'pid' => $pageId,
+                'pid' => $meta['pageId'],
                 'title' => $meta['title'],
                 'language' => $meta['language'],
             ]);

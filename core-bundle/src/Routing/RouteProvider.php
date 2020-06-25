@@ -396,14 +396,6 @@ class RouteProvider implements RouteProviderInterface
                     return 0;
                 }
 
-                if ('root' !== $pageA->type && 'root' === $pageB->type) {
-                    return -1;
-                }
-
-                if ('root' === $pageA->type && 'root' !== $pageB->type) {
-                    return 1;
-                }
-
                 if (null !== $languages && $pageA->rootLanguage !== $pageB->rootLanguage) {
                     $langA = $languages[$pageA->rootLanguage] ?? null;
                     $langB = $languages[$pageB->rootLanguage] ?? null;
@@ -428,7 +420,21 @@ class RouteProvider implements RouteProviderInterface
                         return -1;
                     }
 
-                    return $langA < $langB ? -1 : 1;
+                    if ($langA < $langB) {
+                        return -1;
+                    }
+
+                    if ($langA > $langB) {
+                        return 1;
+                    }
+                }
+
+                if ('root' !== $pageA->type && 'root' === $pageB->type) {
+                    return -1;
+                }
+
+                if ('root' === $pageA->type && 'root' !== $pageB->type) {
+                    return 1;
                 }
 
                 return strnatcasecmp((string) $pageB->alias, (string) $pageA->alias);

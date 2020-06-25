@@ -8,6 +8,17 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\ArrayUtil;
+use Contao\Backend;
+use Contao\BackendUser;
+use Contao\Controller;
+use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\DataContainer;
+use Contao\Image;
+use Contao\Input;
+use Contao\StringUtil;
+use Contao\System;
+
 $GLOBALS['TL_DCA']['tl_layout'] = array
 (
 	// Config
@@ -256,7 +267,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'inputType'               => 'select',
 			'options_callback' => static function ()
 			{
-				return Contao\Controller::getTemplateGroup('fe_');
+				return Controller::getTemplateGroup('fe_');
 			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
@@ -284,7 +295,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
 			'options_callback' => static function ()
 			{
-				return Contao\System::getContainer()->get('contao.image.image_sizes')->getOptionsForUser(Contao\BackendUser::getInstance());
+				return System::getContainer()->get('contao.image.image_sizes')->getOptionsForUser(BackendUser::getInstance());
 			},
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
@@ -360,7 +371,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'inputType'               => 'checkboxWizard',
 			'options_callback' => static function ()
 			{
-				return Contao\Controller::getTemplateGroup('j_');
+				return Controller::getTemplateGroup('j_');
 			},
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "text NULL"
@@ -389,7 +400,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'inputType'               => 'checkboxWizard',
 			'options_callback' => static function ()
 			{
-				return Contao\Controller::getTemplateGroup('moo_');
+				return Controller::getTemplateGroup('moo_');
 			},
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "text NULL"
@@ -401,7 +412,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'inputType'               => 'checkboxWizard',
 			'options_callback' => static function ()
 			{
-				return Contao\Controller::getTemplateGroup('analytics_');
+				return Controller::getTemplateGroup('analytics_');
 			},
 			'reference'               => &$GLOBALS['TL_LANG']['tl_layout'],
 			'eval'                    => array('multiple'=>true),
@@ -421,7 +432,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'inputType'               => 'checkboxWizard',
 			'options_callback' => static function ()
 			{
-				return Contao\Controller::getTemplateGroup('js_');
+				return Controller::getTemplateGroup('js_');
 			},
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "text NULL"
@@ -466,7 +477,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_layout extends Contao\Backend
+class tl_layout extends Backend
 {
 	/**
 	 * Import the back end user object
@@ -474,13 +485,13 @@ class tl_layout extends Contao\Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('Contao\BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 	}
 
 	/**
 	 * Check permissions to edit the table
 	 *
-	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
+	 * @throws AccessDeniedException
 	 */
 	public function checkPermission()
 	{
@@ -491,24 +502,24 @@ class tl_layout extends Contao\Backend
 
 		if (!$this->User->hasAccess('layout', 'themes'))
 		{
-			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access the page layout module.');
+			throw new AccessDeniedException('Not enough permissions to access the page layout module.');
 		}
 	}
 
 	/**
 	 * Return all style sheets of the current theme
 	 *
-	 * @param Contao\DataContainer $dc
+	 * @param DataContainer $dc
 	 *
 	 * @return array
 	 */
-	public function getStyleSheets(Contao\DataContainer $dc)
+	public function getStyleSheets(DataContainer $dc)
 	{
 		$intPid = $dc->activeRecord->pid;
 
-		if (Contao\Input::get('act') == 'overrideAll')
+		if (Input::get('act') == 'overrideAll')
 		{
-			$intPid = Contao\Input::get('id');
+			$intPid = Input::get('id');
 		}
 
 		$objStyleSheet = $this->Database->prepare("SELECT id, name FROM tl_style_sheet WHERE pid=?")
@@ -544,13 +555,13 @@ class tl_layout extends Contao\Backend
 	/**
 	 * Add a link to edit the stylesheets of the theme
 	 *
-	 * @param Contao\DataContainer $dc
+	 * @param DataContainer $dc
 	 *
 	 * @return string
 	 */
-	public function styleSheetLink(Contao\DataContainer $dc)
+	public function styleSheetLink(DataContainer $dc)
 	{
-		return ' <a href="contao/main.php?do=themes&amp;table=tl_style_sheet&amp;id=' . $dc->activeRecord->pid . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . Contao\StringUtil::specialchars($GLOBALS['TL_LANG']['tl_layout']['edit_styles']) . '" onclick="Backend.openModalIframe({\'title\':\'' . Contao\StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_layout']['edit_styles'])) . '\',\'url\':this.href});return false">' . Contao\Image::getHtml('edit.svg') . '</a>';
+		return ' <a href="contao/main.php?do=themes&amp;table=tl_style_sheet&amp;id=' . $dc->activeRecord->pid . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['tl_layout']['edit_styles']) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_layout']['edit_styles'])) . '\',\'url\':this.href});return false">' . Image::getHtml('edit.svg') . '</a>';
 	}
 
 	/**
@@ -567,7 +578,7 @@ class tl_layout extends Contao\Backend
 			return '';
 		}
 
-		$array = Contao\StringUtil::deserialize($value);
+		$array = StringUtil::deserialize($value);
 
 		if (empty($array) || !is_array($array))
 		{
@@ -576,7 +587,7 @@ class tl_layout extends Contao\Backend
 
 		if (($i = array_search('responsive.css', $array)) !== false && !in_array('layout.css', $array))
 		{
-			Contao\ArrayUtil::arrayInsert($array, $i, 'layout.css');
+			ArrayUtil::arrayInsert($array, $i, 'layout.css');
 		}
 
 		return $array;

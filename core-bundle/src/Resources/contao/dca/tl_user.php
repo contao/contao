@@ -8,6 +8,23 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\Automator;
+use Contao\Backend;
+use Contao\BackendUser;
+use Contao\Config;
+use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\DataContainer;
+use Contao\Date;
+use Contao\Image;
+use Contao\Input;
+use Contao\Message;
+use Contao\StringUtil;
+use Contao\System;
+use Contao\Versions;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+
 $GLOBALS['TL_DCA']['tl_user'] = array
 (
 	// Config
@@ -163,7 +180,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'eval'                    => array('rgxp'=>'locale', 'tl_class'=>'w50'),
 			'options_callback' => static function ()
 			{
-				return Contao\System::getLanguages(true);
+				return System::getLanguages(true);
 			},
 			'sql'                     => "varchar(5) NOT NULL default ''"
 		),
@@ -173,7 +190,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'inputType'               => 'select',
 			'options_callback' => static function ()
 			{
-				return Contao\Backend::getThemes();
+				return Backend::getThemes();
 			},
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => "varchar(32) NOT NULL default ''"
@@ -227,7 +244,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['password'],
 			'exclude'                 => true,
 			'inputType'               => 'password',
-			'eval'                    => array('mandatory'=>true, 'preserveTags'=>true, 'minlength'=>Contao\Config::get('minPasswordLength')),
+			'eval'                    => array('mandatory'=>true, 'preserveTags'=>true, 'minlength'=>Config::get('minPasswordLength')),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'pwChange' => array
@@ -346,7 +363,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'eval'                    => array('multiple'=>true),
 			'options_callback' => static function ()
 			{
-				return Contao\System::getContainer()->get('contao.image.image_sizes')->getAllOptions();
+				return System::getContainer()->get('contao.image.image_sizes')->getAllOptions();
 			},
 			'sql'                     => "blob NULL"
 		),
@@ -468,7 +485,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_user extends Contao\Backend
+class tl_user extends Backend
 {
 	/**
 	 * @var int
@@ -481,13 +498,13 @@ class tl_user extends Contao\Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('Contao\BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 	}
 
 	/**
 	 * Check permissions to edit table tl_user
 	 *
-	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
+	 * @throws AccessDeniedException
 	 */
 	public function checkPermission()
 	{
@@ -500,7 +517,7 @@ class tl_user extends Contao\Backend
 		unset($GLOBALS['TL_DCA']['tl_user']['fields']['admin']);
 
 		// Check current action
-		switch (Contao\Input::get('act'))
+		switch (Input::get('act'))
 		{
 			case 'create':
 			case 'select':
@@ -509,9 +526,9 @@ class tl_user extends Contao\Backend
 				break;
 
 			case 'delete':
-				if (Contao\Input::get('id') == $this->User->id)
+				if (Input::get('id') == $this->User->id)
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Attempt to delete own account ID ' . Contao\Input::get('id') . '.');
+					throw new AccessDeniedException('Attempt to delete own account ID ' . Input::get('id') . '.');
 				}
 				// no break
 
@@ -521,19 +538,19 @@ class tl_user extends Contao\Backend
 			default:
 				$objUser = $this->Database->prepare("SELECT `admin` FROM tl_user WHERE id=?")
 										  ->limit(1)
-										  ->execute(Contao\Input::get('id'));
+										  ->execute(Input::get('id'));
 
-				if ($objUser->admin && Contao\Input::get('act') != '')
+				if ($objUser->admin && Input::get('act') != '')
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' administrator account ID ' . Contao\Input::get('id') . '.');
+					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' administrator account ID ' . Input::get('id') . '.');
 				}
 				break;
 
 			case 'editAll':
 			case 'deleteAll':
 			case 'overrideAll':
-				/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-				$objSession = Contao\System::getContainer()->get('session');
+				/** @var SessionInterface $objSession */
+				$objSession = System::getContainer()->get('session');
 
 				$session = $objSession->all();
 				$objUser = $this->Database->execute("SELECT id FROM tl_user WHERE `admin`=1");
@@ -546,19 +563,19 @@ class tl_user extends Contao\Backend
 	/**
 	 * Handle the profile page.
 	 *
-	 * @param Contao\DataContainer $dc
+	 * @param DataContainer $dc
 	 */
-	public function handleUserProfile(Contao\DataContainer $dc)
+	public function handleUserProfile(DataContainer $dc)
 	{
-		if (Contao\Input::get('do') != 'login')
+		if (Input::get('do') != 'login')
 		{
 			return;
 		}
 
 		// Should not happen because of the redirect but better safe than sorry
-		if (Contao\Input::get('act') != 'edit' || Contao\BackendUser::getInstance()->id != Contao\Input::get('id'))
+		if (Input::get('act') != 'edit' || BackendUser::getInstance()->id != Input::get('id'))
 		{
-			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not allowed to edit this page.');
+			throw new AccessDeniedException('Not allowed to edit this page.');
 		}
 
 		$GLOBALS['TL_DCA'][$dc->table]['config']['closed'] = true;
@@ -570,7 +587,7 @@ class tl_user extends Contao\Backend
 			'default' => $GLOBALS['TL_DCA'][$dc->table]['palettes']['login']
 		);
 
-		$arrFields = Contao\StringUtil::trimsplit('[,;]', $GLOBALS['TL_DCA'][$dc->table]['palettes']['default']);
+		$arrFields = StringUtil::trimsplit('[,;]', $GLOBALS['TL_DCA'][$dc->table]['palettes']['default']);
 
 		foreach ($arrFields as $strField)
 		{
@@ -583,7 +600,7 @@ class tl_user extends Contao\Backend
 	 */
 	public function addTemplateWarning()
 	{
-		if (Contao\Input::get('act') && Contao\Input::get('act') != 'select')
+		if (Input::get('act') && Input::get('act') != 'select')
 		{
 			return;
 		}
@@ -592,29 +609,29 @@ class tl_user extends Contao\Backend
 
 		if ($objResult->showTemplateWarning)
 		{
-			Contao\Message::addInfo($GLOBALS['TL_LANG']['MSC']['userTemplateEditor']);
+			Message::addInfo($GLOBALS['TL_LANG']['MSC']['userTemplateEditor']);
 		}
 
 		if ($objResult->showThemeWarning)
 		{
-			Contao\Message::addInfo($GLOBALS['TL_LANG']['MSC']['userThemeImport']);
+			Message::addInfo($GLOBALS['TL_LANG']['MSC']['userThemeImport']);
 		}
 	}
 
 	/**
 	 * Add an image to each record
 	 *
-	 * @param array                $row
-	 * @param string               $label
-	 * @param Contao\DataContainer $dc
-	 * @param array                $args
+	 * @param array         $row
+	 * @param string        $label
+	 * @param DataContainer $dc
+	 * @param array         $args
 	 *
 	 * @return array
 	 */
-	public function addIcon($row, $label, Contao\DataContainer $dc, $args)
+	public function addIcon($row, $label, DataContainer $dc, $args)
 	{
 		$image = $row['admin'] ? 'admin' : 'user';
-		$time = Contao\Date::floorToMinute();
+		$time = Date::floorToMinute();
 
 		$disabled = ($row['start'] !== '' && $row['start'] > $time) || ($row['stop'] !== '' && $row['stop'] < $time);
 
@@ -628,7 +645,7 @@ class tl_user extends Contao\Backend
 			$image .= '_';
 		}
 
-		$args[0] = sprintf('<div class="list_icon_new" style="background-image:url(\'%ssystem/themes/%s/icons/%s.svg\')" data-icon="%s.svg" data-icon-disabled="%s.svg">&nbsp;</div>', Contao\System::getContainer()->get('contao.assets.assets_context')->getStaticUrl(), Contao\Backend::getTheme(), $image, $disabled ? $image : rtrim($image, '_'), rtrim($image, '_') . '_');
+		$args[0] = sprintf('<div class="list_icon_new" style="background-image:url(\'%ssystem/themes/%s/icons/%s.svg\')" data-icon="%s.svg" data-icon-disabled="%s.svg">&nbsp;</div>', System::getContainer()->get('contao.assets.assets_context')->getStaticUrl(), Backend::getTheme(), $image, $disabled ? $image : rtrim($image, '_'), rtrim($image, '_') . '_');
 
 		return $args;
 	}
@@ -647,7 +664,7 @@ class tl_user extends Contao\Backend
 	 */
 	public function editUser($row, $href, $label, $title, $icon, $attributes)
 	{
-		return ($this->User->isAdmin || !$row['admin']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return ($this->User->isAdmin || !$row['admin']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -670,7 +687,7 @@ class tl_user extends Contao\Backend
 			return '';
 		}
 
-		return ($this->User->isAdmin || !$row['admin']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return ($this->User->isAdmin || !$row['admin']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -687,7 +704,7 @@ class tl_user extends Contao\Backend
 	 */
 	public function deleteUser($row, $href, $label, $title, $icon, $attributes)
 	{
-		return ($this->User->isAdmin || !$row['admin']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return ($this->User->isAdmin || !$row['admin']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -705,7 +722,7 @@ class tl_user extends Contao\Backend
 	 */
 	public function switchUser($row, $href, $label, $title, $icon)
 	{
-		$security = Contao\System::getContainer()->get('security.helper');
+		$security = System::getContainer()->get('security.helper');
 
 		if (!$security->isGranted('ROLE_ALLOWED_TO_SWITCH'))
 		{
@@ -722,11 +739,11 @@ class tl_user extends Contao\Backend
 		{
 			if (self::$origUserId === null)
 			{
-				/** @var Symfony\Component\Security\Core\Authentication\Token\TokenInterface $origToken */
+				/** @var TokenInterface $origToken */
 				$origToken = $security->getToken()->getOriginalToken();
 				$origUser = $origToken->getUser();
 
-				if ($origUser instanceof Contao\BackendUser)
+				if ($origUser instanceof BackendUser)
 				{
 					self::$origUserId = $origUser->id;
 				}
@@ -740,50 +757,50 @@ class tl_user extends Contao\Backend
 
 		if ($disabled)
 		{
-			return Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 		}
 
-		$router = Contao\System::getContainer()->get('router');
+		$router = System::getContainer()->get('router');
 		$url = $router->generate('contao_backend', array('_switch_user'=>$row['username']));
 
-		return '<a href="' . $url . '" title="' . Contao\StringUtil::specialchars($title) . '">' . Contao\Image::getHtml($icon, $label) . '</a> ';
+		return '<a href="' . $url . '" title="' . StringUtil::specialchars($title) . '">' . Image::getHtml($icon, $label) . '</a> ';
 	}
 
 	/**
 	 * Return a checkbox to delete session data
 	 *
-	 * @param Contao\DataContainer $dc
+	 * @param DataContainer $dc
 	 *
 	 * @return string
 	 */
-	public function sessionField(Contao\DataContainer $dc)
+	public function sessionField(DataContainer $dc)
 	{
-		if (Contao\Input::post('FORM_SUBMIT') == 'tl_user')
+		if (Input::post('FORM_SUBMIT') == 'tl_user')
 		{
-			$arrPurge = Contao\Input::post('purge');
+			$arrPurge = Input::post('purge');
 
 			if (is_array($arrPurge))
 			{
-				$this->import('Contao\Automator', 'Automator');
+				$this->import(Automator::class, 'Automator');
 
 				if (in_array('purge_session', $arrPurge))
 				{
-					/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
-					$objSessionBag = Contao\System::getContainer()->get('session')->getBag('contao_backend');
+					/** @var AttributeBagInterface $objSessionBag */
+					$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 					$objSessionBag->clear();
-					Contao\Message::addConfirmation($GLOBALS['TL_LANG']['tl_user']['sessionPurged']);
+					Message::addConfirmation($GLOBALS['TL_LANG']['tl_user']['sessionPurged']);
 				}
 
 				if (in_array('purge_images', $arrPurge))
 				{
 					$this->Automator->purgeImageCache();
-					Contao\Message::addConfirmation($GLOBALS['TL_LANG']['tl_user']['htmlPurged']);
+					Message::addConfirmation($GLOBALS['TL_LANG']['tl_user']['htmlPurged']);
 				}
 
 				if (in_array('purge_pages', $arrPurge))
 				{
 					$this->Automator->purgePageCache();
-					Contao\Message::addConfirmation($GLOBALS['TL_LANG']['tl_user']['tempPurged']);
+					Message::addConfirmation($GLOBALS['TL_LANG']['tl_user']['tempPurged']);
 				}
 
 				$this->reload();
@@ -805,11 +822,11 @@ class tl_user extends Contao\Backend
 	/**
 	 * Return all modules except profile modules
 	 *
-	 * @param Contao\DataContainer $dc
+	 * @param DataContainer $dc
 	 *
 	 * @return array
 	 */
-	public function getModules(Contao\DataContainer $dc)
+	public function getModules(DataContainer $dc)
 	{
 		$arrModules = array();
 
@@ -831,7 +848,7 @@ class tl_user extends Contao\Backend
 			$arrModules[$k] = array_keys($v);
 		}
 
-		$modules = Contao\StringUtil::deserialize($dc->activeRecord->modules);
+		$modules = StringUtil::deserialize($dc->activeRecord->modules);
 
 		// Unset the template editor unless the user is an administrator or has been granted access to the template editor
 		if (!$this->User->isAdmin && (!is_array($modules) || !in_array('tpl_editor', $modules)) && ($key = array_search('tpl_editor', $arrModules['design'])) !== false)
@@ -856,12 +873,12 @@ class tl_user extends Contao\Backend
 	/**
 	 * Prevent administrators from downgrading their own account
 	 *
-	 * @param mixed                $varValue
-	 * @param Contao\DataContainer $dc
+	 * @param mixed         $varValue
+	 * @param DataContainer $dc
 	 *
 	 * @return mixed
 	 */
-	public function checkAdminStatus($varValue, Contao\DataContainer $dc)
+	public function checkAdminStatus($varValue, DataContainer $dc)
 	{
 		if ($varValue == '' && $this->User->id == $dc->id)
 		{
@@ -874,12 +891,12 @@ class tl_user extends Contao\Backend
 	/**
 	 * Prevent administrators from disabling their own account
 	 *
-	 * @param mixed                $varValue
-	 * @param Contao\DataContainer $dc
+	 * @param mixed         $varValue
+	 * @param DataContainer $dc
 	 *
 	 * @return mixed
 	 */
-	public function checkAdminDisable($varValue, Contao\DataContainer $dc)
+	public function checkAdminDisable($varValue, DataContainer $dc)
 	{
 		if ($varValue == 1 && $this->User->id == $dc->id)
 		{
@@ -892,9 +909,9 @@ class tl_user extends Contao\Backend
 	/**
 	 * Store the date when the account has been added
 	 *
-	 * @param Contao\DataContainer $dc
+	 * @param DataContainer $dc
 	 */
-	public function storeDateAdded(Contao\DataContainer $dc)
+	public function storeDateAdded(DataContainer $dc)
 	{
 		// Return if there is no active record (override all)
 		if (!$dc->activeRecord || $dc->activeRecord->dateAdded > 0)
@@ -920,9 +937,9 @@ class tl_user extends Contao\Backend
 	 * Update the current user if something changes, otherwise they would be
 	 * logged out automatically
 	 *
-	 * @param Contao\DataContainer $dc
+	 * @param DataContainer $dc
 	 */
-	public function updateCurrentUser(Contao\DataContainer $dc)
+	public function updateCurrentUser(DataContainer $dc)
 	{
 		if ($this->User->id == $dc->id)
 		{
@@ -944,9 +961,9 @@ class tl_user extends Contao\Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (Contao\Input::get('tid'))
+		if (Input::get('tid'))
 		{
-			$this->toggleVisibility(Contao\Input::get('tid'), (Contao\Input::get('state') == 1), (@func_get_arg(12) ?: null));
+			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
 			$this->redirect($this->getReferer());
 		}
 
@@ -966,26 +983,26 @@ class tl_user extends Contao\Backend
 		// Protect admin accounts
 		if (!$this->User->isAdmin && $row['admin'])
 		{
-			return Contao\Image::getHtml($icon) . ' ';
+			return Image::getHtml($icon) . ' ';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label, 'data-state="' . ($row['disable'] ? 0 : 1) . '"') . '</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label, 'data-state="' . ($row['disable'] ? 0 : 1) . '"') . '</a> ';
 	}
 
 	/**
 	 * Disable/enable a user group
 	 *
-	 * @param integer              $intId
-	 * @param boolean              $blnVisible
-	 * @param Contao\DataContainer $dc
+	 * @param integer       $intId
+	 * @param boolean       $blnVisible
+	 * @param DataContainer $dc
 	 *
-	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
+	 * @throws AccessDeniedException
 	 */
-	public function toggleVisibility($intId, $blnVisible, Contao\DataContainer $dc=null)
+	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
 	{
 		// Set the ID and action
-		Contao\Input::setGet('id', $intId);
-		Contao\Input::setGet('act', 'toggle');
+		Input::setGet('id', $intId);
+		Input::setGet('act', 'toggle');
 
 		if ($dc)
 		{
@@ -1018,7 +1035,7 @@ class tl_user extends Contao\Backend
 		// Check the field access
 		if (!$this->User->hasAccess('tl_user::disable', 'alexf'))
 		{
-			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to activate/deactivate user ID ' . $intId . '.');
+			throw new AccessDeniedException('Not enough permissions to activate/deactivate user ID ' . $intId . '.');
 		}
 
 		// Get the current record
@@ -1034,7 +1051,7 @@ class tl_user extends Contao\Backend
 			}
 		}
 
-		$objVersions = new Contao\Versions('tl_user', $intId);
+		$objVersions = new Versions('tl_user', $intId);
 		$objVersions->initialize();
 
 		// Reverse the logic (users have disable=1)
