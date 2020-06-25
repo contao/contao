@@ -294,10 +294,12 @@ class Search
 
 		list($intMinId, $intMaxId, $intCount) = array_map('intval', $row);
 
-		if ($intCount <= 105)
+		// If the whole corpus has few documents we want to update the vector length of all documents
+		if ($intCount <= 200)
 		{
 			$arrRandomIds = $objDatabase->prepare("SELECT id FROM tl_search")->execute()->fetchEach('id');
 		}
+		// Otherwise we select approximately 100 random documents that get updated
 		else
 		{
 			$arrRandomIds = array();
