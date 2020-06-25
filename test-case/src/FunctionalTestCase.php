@@ -13,8 +13,6 @@ abstract class FunctionalTestCase extends WebTestCase
 {
     protected static function loadFixtures(array $yamlFiles, bool $truncateTables = true): void
     {
-        self::bootKernel();
-
         $doctrine = self::$container->get('doctrine');
 
         /** @var Connection $connection */
@@ -41,8 +39,6 @@ abstract class FunctionalTestCase extends WebTestCase
 
     protected static function resetDatabaseSchema(): void
     {
-        self::bootKernel();
-
         $doctrine = self::$container->get('doctrine');
 
         /** @var Connection $connection */
