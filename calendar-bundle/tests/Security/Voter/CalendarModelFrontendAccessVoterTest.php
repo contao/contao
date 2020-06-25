@@ -10,24 +10,24 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Security\Voter;
+namespace Contao\CalendarBundle\Tests\Security\Voter;
 
 use Contao\BackendUser;
+use Contao\CalendarBundle\Security\Voter\CalendarModelFrontendAccessVoter;
+use Contao\CalendarModel;
 use Contao\CoreBundle\Security\Voter\AbstractFrontendAccessVoter;
-use Contao\CoreBundle\Security\Voter\PageModelFrontendAccessVoter;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Contao\LayoutModel;
-use Contao\PageModel;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class PageModelFrontendAccessVoterTest extends TestCase
+class CalendarModelFrontendAccessVoterTest extends TestCase
 {
     /**
-     * @var PageModelFrontendAccessVoter
+     * @var CalendarModelFrontendAccessVoter
      */
     private $voter;
 
@@ -35,7 +35,7 @@ class PageModelFrontendAccessVoterTest extends TestCase
     {
         parent::setUp();
 
-        $this->voter = new PageModelFrontendAccessVoter();
+        $this->voter = new CalendarModelFrontendAccessVoter();
     }
 
     public function testAbstainsIfTheAttributeIsNotAString(): void
@@ -134,7 +134,7 @@ class PageModelFrontendAccessVoterTest extends TestCase
     private function mockSubject(bool $protected = false, array $groups = [])
     {
         return $this->mockClassWithProperties(
-            PageModel::class,
+            CalendarModel::class,
             [
                 'protected' => $protected,
                 'groups' => $groups,

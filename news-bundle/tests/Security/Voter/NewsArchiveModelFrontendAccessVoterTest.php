@@ -10,24 +10,24 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Security\Voter;
+namespace Contao\NewsBundle\Tests\Security\Voter;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Security\Voter\AbstractFrontendAccessVoter;
-use Contao\CoreBundle\Security\Voter\PageModelFrontendAccessVoter;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Contao\LayoutModel;
-use Contao\PageModel;
+use Contao\NewsArchiveModel;
+use Contao\NewsBundle\Security\Voter\NewsArchiveModelFrontendAccessVoter;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class PageModelFrontendAccessVoterTest extends TestCase
+class NewsArchiveModelFrontendAccessVoterTest extends TestCase
 {
     /**
-     * @var PageModelFrontendAccessVoter
+     * @var NewsArchiveModelFrontendAccessVoter
      */
     private $voter;
 
@@ -35,7 +35,7 @@ class PageModelFrontendAccessVoterTest extends TestCase
     {
         parent::setUp();
 
-        $this->voter = new PageModelFrontendAccessVoter();
+        $this->voter = new NewsArchiveModelFrontendAccessVoter();
     }
 
     public function testAbstainsIfTheAttributeIsNotAString(): void
@@ -134,7 +134,7 @@ class PageModelFrontendAccessVoterTest extends TestCase
     private function mockSubject(bool $protected = false, array $groups = [])
     {
         return $this->mockClassWithProperties(
-            PageModel::class,
+            NewsArchiveModel::class,
             [
                 'protected' => $protected,
                 'groups' => $groups,

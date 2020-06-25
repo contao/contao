@@ -16,7 +16,7 @@ use Contao\CoreBundle\Security\Voter\AbstractFrontendAccessVoter;
 use Contao\FrontendUser;
 use Contao\NewsArchiveModel;
 
-class NewsArchiveFrontendAccessVoter extends AbstractFrontendAccessVoter
+class NewsArchiveModelFrontendAccessVoter extends AbstractFrontendAccessVoter
 {
     protected function supportsSubject($subject): bool
     {
