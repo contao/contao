@@ -1524,13 +1524,14 @@ abstract class Controller extends System
 		{
 			if (!$dynamic)
 			{
-				// Create a limited container that always contains certain properties
+				// Manually create meta data that always contains certain properties (BC)
 				return new MetaData(
-					array_filter(array(
+					array(
 						MetaData::VALUE_ALT => $rowData['alt'] ?? '',
 						MetaData::VALUE_TITLE => $rowData['imageTitle'] ?? '',
-						MetaData::VALUE_URL => $rowData['imageUrl'] ?? null,
-					))
+						MetaData::VALUE_URL => self::replaceInsertTags($rowData['imageUrl'] ?? ''),
+						'linkTitle' => $rowData['linkTitle'] ?: '',
+					)
 				);
 			}
 
@@ -1588,6 +1589,7 @@ abstract class Controller extends System
 
 			$margin = StringUtil::deserialize($rowData['imagemargin'] ?? null, true);
 
+			// todo: resolve from config
 			if ($maxWidth > 0)
 			{
 				@trigger_error('Using a maximum front end width has been deprecated and will no longer work in Contao 5.0. Remove the "maxImageWidth" configuration and use responsive images instead.', E_USER_DEPRECATED);

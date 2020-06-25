@@ -376,7 +376,11 @@ class FigureBuilder
                     return $this->onDefineMetaData();
                 }, $settings
             ),
-            $settings->additionalLinkAttributes,
+            Closure::bind(
+                function (Figure $figure): array {
+                    return $this->onDefineLinkAttributes($figure);
+                }, $settings
+            ),
             Closure::bind(
                 function (Figure $figure): ?LightBoxResult {
                     return $this->onDefineLightBoxResult($figure);
@@ -416,6 +420,21 @@ class FigureBuilder
     }
 
     /**
+     * Define link attributes [on demand].
+     */
+    private function onDefineLinkAttributes(Figure $result): array
+    {
+        $linkAttributes = [];
+
+        // Open in a new window if light box was requested but is invalid (fullsize)
+        if ($this->enableLightBox && !$result->hasLightBox()) {
+            $linkAttributes['target'] = '_blank';
+        }
+
+        return array_merge($linkAttributes, $this->additionalLinkAttributes);
+    }
+
+    /**
      * Define the light box result if it is enabled [on demand].
      */
     private function onDefineLightBoxResult(Figure $result): ?LightBoxResult
@@ -424,13 +443,17 @@ class FigureBuilder
             return null;
         }
 
-        $getResourceOrUrl = function ($target): array {
-            if ($target instanceof ImageInterface) {
-                return [$target, null];
+        $getMetaDataUrl = static function () use ($result): ?string {
+            if (!$result->hasMetaData()) {
+                return null;
             }
 
-            if (preg_match('#^https?://#', $target)) {
-                return [null, $target];
+            return $result->getMetaData()->getUrl() ?: null;
+        };
+
+        $getResourceOrUrl = function ($target): array {
+            if ($target instanceof ImageInterface) {
+                [$target, null];
             }
 
             $validExtensions = $this->locator
@@ -438,7 +461,14 @@ class FigureBuilder
                 ->get('contao.image.valid_extensions')
             ;
 
-            if (!\in_array(Path::getExtension($target), $validExtensions, true)) {
+            $validExtension = \in_array(Path::getExtension($target), $validExtensions, true);
+            $externalUrl = 1 === preg_match('#^https?://#', $target);
+
+            if ($externalUrl) {
+                return $validExtension ? [null, $target] : [null, null];
+            }
+
+            if (!$validExtension) {
                 return [null, $target];
             }
 
@@ -451,21 +481,21 @@ class FigureBuilder
                 Path::canonicalize($target) :
                 Path::makeAbsolute($target, $projectDir);
 
+            if (!is_file($filePath)) {
+                $filePath = null;
+            }
+
             return [$filePath, null];
         };
 
-        $getMetaDataUrl = static function (Figure $result): ?string {
-            if (!$result->hasMetaData()) {
-                return null;
-            }
-
-            return $result->getMetaData()->getUrl() ?: null;
-        };
-
         // Use explicitly set data (1), fall back to using meta data (2) or use the base resource (3) if empty.
-        $lightBoxResourceOrUrl = $this->lightBoxResourceOrUrl ?? $getMetaDataUrl($result) ?? $this->filePath;
+        $lightBoxResourceOrUrl = $this->lightBoxResourceOrUrl ?? $getMetaDataUrl() ?? $this->filePath;
 
         [$filePathOrImage, $url] = $getResourceOrUrl($lightBoxResourceOrUrl);
+
+        if (null === $filePathOrImage && null === $url) {
+            return null;
+        }
 
         return $this->locator
             ->get('contao.image.studio')

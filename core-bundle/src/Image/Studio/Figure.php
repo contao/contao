@@ -132,31 +132,32 @@ final class Figure
             $this->linkAttributes = [];
         }
 
-        // Generate href attribute (on demand)
-        if (!isset($this->linkAttributes['href']) && !$excludeHref) {
+        // Generate href attribute
+        if (!isset($this->linkAttributes['href'])) {
             $this->linkAttributes['href'] = (
-                function () {
-                    if ($this->hasLightBox()) {
-                        return $this->getLightBox()->getLinkHref();
-                    }
-
-                    if ($this->hasMetaData()) {
-                        return $this->getMetaData()->getUrl();
-                    }
-
-                    return '';
+            function () {
+                if ($this->hasLightBox()) {
+                    return $this->getLightBox()->getLinkHref();
                 }
+
+                if ($this->hasMetaData()) {
+                    return $this->getMetaData()->getUrl();
+                }
+
+                return '';
+            }
             )();
+        }
+
+        // Add rel attribute ("noreferrer noopener") to external links
+        if (!isset($this->linkAttributes['rel']) && preg_match('#^https?://#', $this->linkAttributes['href'])) {
+            $this->linkAttributes['rel'] = 'noreferrer noopener';
         }
 
         // Add light box attributes
         if (!isset($this->linkAttributes['data-lightbox']) && $this->hasLightBox()) {
             $lightBox = $this->getLightBox();
             $this->linkAttributes['data-lightbox'] = $lightBox->getGroupId();
-
-            if (!isset($this->linkAttributes['target']) && !$lightBox->hasImage()) {
-                $this->linkAttributes['target'] = '_blank';
-            }
         }
 
         // Allow removing attributes by setting them to `null`
@@ -222,13 +223,11 @@ final class Figure
 
         // Primary image and meta data
         $templateData = array_merge(
-            $includeFullMetaData ? $createLegacyMetaDataMapping($metaData) : [],
             [
                 'picture' => [
                     'img' => $img->getImg(),
                     'sources' => $img->getSources(),
                     'alt' => StringUtil::specialchars($metaData->getAlt()),
-                    'title' => StringUtil::specialchars($metaData->getTitle()),
                 ],
                 'width' => $originalSize->getWidth(),
                 'height' => $originalSize->getHeight(),
@@ -236,12 +235,13 @@ final class Figure
                 'imgSize' => sprintf(' width="%d" height="%d"', $fileInfoImageSize[0], $fileInfoImageSize[1]),
                 'singleSRC' => $img->getFilePath(),
                 'src' => $img->getImageSrc(),
-                'linkTitle' => '',
-                'fullsize' => ('blank' === ($linkAttributes['target'] ?? null)) || $this->hasLightBox(),
+                'fullsize' => ('_blank' === ($linkAttributes['target'] ?? null)) || $this->hasLightBox(),
                 'margin' => $marginProperty ?? '',
                 'addBefore' => 'below' !== $floatingProperty,
                 'addImage' => true,
-            ]
+                'linkTitle' => '', // always there if not explicitly removed (BC)
+            ],
+            $includeFullMetaData ? $createLegacyMetaDataMapping($metaData) : []
         );
 
         // Link attributes
@@ -249,10 +249,11 @@ final class Figure
             $templateData['href'] = $href;
             $templateData['attributes'] = '';
 
-            // Define link title
-            $templateData['linkTitle'] = StringUtil::specialchars($metaData->getTitle());
-            $templateData['imageTitle'] = null;
-            unset($templateData['picture']['title']);
+            // Set/move link title
+            $templateData['linkTitle'] = ($templateData['imageTitle'] ?? null) ?? StringUtil::specialchars($metaData->getTitle());
+            unset($templateData['imageTitle']);
+        } elseif ($metaData->has(MetaData::VALUE_TITLE)) {
+            $templateData['picture']['title'] = StringUtil::specialchars($metaData->getTitle());
         }
 
         if (!empty($linkAttributes)) {
