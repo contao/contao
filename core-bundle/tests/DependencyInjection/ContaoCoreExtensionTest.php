@@ -848,7 +848,6 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('%contao.preview_script%'),
                 new Reference('contao.security.frontend_preview_authenticator'),
                 new Reference('event_dispatcher'),
-                new Reference('router'),
                 new Reference('security.authorization_checker'),
             ],
             $definition->getArguments()
