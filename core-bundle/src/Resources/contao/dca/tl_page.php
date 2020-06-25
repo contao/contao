@@ -13,6 +13,7 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener;
+use Contao\CoreBundle\EventListener\DataContainer\PageUrlListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\DataContainer;
 use Contao\Image;
@@ -24,7 +25,6 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Versions;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 $GLOBALS['TL_DCA']['tl_page'] = array
@@ -1121,9 +1121,9 @@ class tl_page extends Backend
 	 */
 	public function generateAlias($varValue, DataContainer $dc)
 	{
-		@trigger_error('tl_page::generateAlias() is deprecated, use the \Contao\CoreBundle\EventListener\DataContainer\PageAliasListener instead.', E_USER_DEPRECATED);
+		@trigger_error('tl_page::generateAlias() is deprecated, use the \Contao\CoreBundle\EventListener\DataContainer\PageUrlListener instead.', E_USER_DEPRECATED);
 
-		$listener = System::getContainer()->get(\Contao\CoreBundle\EventListener\DataContainer\PageAliasListener::class);
+		$listener = System::getContainer()->get(PageUrlListener::class);
 
 		$varValue = $listener->generateAlias($varValue, $dc);
 		$varValue = $listener->purgeSearchIndexOnAliasChange($varValue, $dc);
