@@ -157,7 +157,7 @@ final class Figure
         // Add light box attributes
         if (!isset($this->linkAttributes['data-lightbox']) && $this->hasLightBox()) {
             $lightBox = $this->getLightBox();
-            $this->linkAttributes['data-lightbox'] = $lightBox->getGroupId();
+            $this->linkAttributes['data-lightbox'] = $lightBox->getGroupIdentifier();
         }
 
         // Allow removing attributes by setting them to `null`

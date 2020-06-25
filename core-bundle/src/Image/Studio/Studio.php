@@ -43,8 +43,7 @@ class Studio implements ServiceSubscriberInterface
     }
 
     /**
-     * @param string|ImageInterface                      $filePathOrImage
-     * @param array|PictureConfiguration|int|string|null $sizeConfiguration
+     * @param string|ImageInterface $filePathOrImage
      */
     public function createImage($filePathOrImage, $sizeConfiguration): ImageResult
     {
@@ -63,7 +62,7 @@ class Studio implements ServiceSubscriberInterface
     public static function getSubscribedServices(): array
     {
         return [
-            'contao.image.studio' => self::class,
+            self::class,
             'contao.image.picture_factory' => PictureFactoryInterface::class,
             'contao.image.image_factory' => ImageFactoryInterface::class,
             'request_stack' => RequestStack::class,

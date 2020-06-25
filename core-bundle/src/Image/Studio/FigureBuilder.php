@@ -118,7 +118,7 @@ class FigureBuilder
     private $enableLightBox;
 
     /**
-     * @internal Use the `contao.image.studio` factory to get an instance of this class.
+     * @internal use the `\Contao\Image\Studio\Studio` factory to get an instance of this class
      */
     public function __construct(ContainerInterface $locator)
     {
@@ -383,7 +383,7 @@ class FigureBuilder
         $settings = clone $this;
 
         $imageResult = $this->locator
-            ->get('contao.image.studio')
+            ->get(Studio::class)
             ->createImage($settings->filePath, $settings->sizeConfiguration)
         ;
 
@@ -522,7 +522,7 @@ class FigureBuilder
         }
 
         return $this->locator
-            ->get('contao.image.studio')
+            ->get(Studio::class)
             ->createLightBoxImage($filePathOrImage, $url, $this->lightBoxSizeConfiguration, $this->lightBoxGroupIdentifier)
         ;
     }

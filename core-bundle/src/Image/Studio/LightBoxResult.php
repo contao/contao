@@ -53,7 +53,7 @@ class LightBoxResult
      * @param string|ImageInterface|null                 $filePathOrImage
      * @param array|PictureConfiguration|int|string|null $sizeConfiguration
      *
-     * @internal Use the `contao.image.studio` factory to get an instance of this class.
+     * @internal use the `\Contao\Image\Studio\Studio` factory to get an instance of this class
      */
     public function __construct(ContainerInterface $locator, $filePathOrImage, ?string $url, $sizeConfiguration = null, string $groupIdentifier = null)
     {
@@ -67,7 +67,7 @@ class LightBoxResult
 
         if (null !== $filePathOrImage) {
             $this->image = $locator
-                ->get('contao.image.studio')
+                ->get(Studio::class)
                 ->createImage($filePathOrImage, $sizeConfiguration ?? $this->getDefaultLightBoxSizeConfiguration())
             ;
         }
@@ -104,7 +104,7 @@ class LightBoxResult
     /**
      * Return the light box group identifier.
      */
-    public function getGroupId(): string
+    public function getGroupIdentifier(): string
     {
         return $this->groupIdentifier ?? $this->createFallbackGroupIdentifier();
     }
@@ -117,7 +117,6 @@ class LightBoxResult
     private function getDefaultLightBoxSizeConfiguration(): ?array
     {
         $framework = $this->locator->get('contao.framework');
-        $framework->initialize();
 
         $page = $GLOBALS['objPage'] ?? null;
 
