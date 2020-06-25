@@ -249,7 +249,7 @@ EOF
         $relPath = $this->fs->makePathRelative($this->bundlesMeta['ContaoCoreBundle']['path'], $this->rootDir);
 
         SymlinkUtil::symlink(
-            trim($relPath, '/').'/Resources/contao/config/tcpdf.php',
+            $relPath.'Resources/contao/config/tcpdf.php',
             'system/config/tcpdf.php',
             $this->rootDir
         );
