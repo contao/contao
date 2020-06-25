@@ -27,10 +27,18 @@ class CoreBundleVisibleElementVoter extends AbstractFrontendAccessVoter
     }
 
     /**
-     * @param ContentModel $contentModel
+     * @param ContentModel|ModuleModel|ArticleModel $model
      */
-    protected function voteOnSubject($contentModel, ?FrontendUser $user): bool
+    protected function voteOnSubject($model, ?FrontendUser $user): bool
     {
-        return $this->isVisibleElement($contentModel, $user);
+        if ($model->guests && null !== $user) {
+            return $this->isVisibleElement($model, false);
+        }
+
+        if (!$model->protected) {
+            return $this->isVisibleElement($model, true);
+        }
+
+        return $this->isVisibleElement($model, $this->userHasGroups($user, $model->groups));
     }
 }

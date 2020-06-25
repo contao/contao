@@ -70,20 +70,7 @@ abstract class AbstractFrontendAccessVoter extends Voter implements ServiceSubsc
             && \count(array_intersect($groups, $userGroups)) > 0;
     }
 
-    protected function isVisibleElement(Model $model, ?FrontendUser $user)
-    {
-        if ($model->guests && null !== $user) {
-            return $this->executeIsVisibleHook($model, false);
-        }
-
-        if (!$model->protected) {
-            return $this->executeIsVisibleHook($model, true);
-        }
-
-        return $this->executeIsVisibleHook($model, $this->userHasGroups($user, $model->groups));
-    }
-
-    protected function executeIsVisibleHook(Model $model, bool $accessGranted)
+    protected function isVisibleElement(Model $model, bool $accessGranted)
     {
         $framework = $this->container->get('contao.framework');
         $framework->initialize();

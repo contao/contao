@@ -2,6 +2,7 @@ services:
     _defaults:
         autoconfigure: true
         autowire: true
+        public: false
 
     Contao\CoreBundle\Security\Voter\:
         resource: ../../Security/Voter/*
