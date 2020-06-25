@@ -41,6 +41,6 @@ class AdjustAutoforwardSubpaletteListener
             return;
         }
 
-        $GLOBALS['TL_DCA'][$dc->table]['subpalettes']['autoforward'] = str_replace(',redirect', '', $GLOBALS['TL_DCA'][$dc->table]['subpalettes']['autoforward']);
+        $GLOBALS['TL_DCA']['tl_page']['subpalettes']['autoforward'] = str_replace(',redirect', '', $GLOBALS['TL_DCA']['tl_page']['subpalettes']['autoforward']);
     }
 }
