@@ -36,10 +36,22 @@ class MetaDataTest extends TestCase
         ], $metaData->all());
     }
 
-    public function testEmptyMetaDataContainer(): void
+    public function testEmpty(): void
     {
         $metaData = new MetaData([]);
 
         $this->assertTrue($metaData->empty());
+    }
+
+    public function testHas(): void
+    {
+        $metaData = new MetaData([
+            MetaData::VALUE_ALT => '',
+            'foo' => 'bar',
+        ]);
+
+        $this->assertTrue($metaData->has(MetaData::VALUE_ALT));
+        $this->assertTrue($metaData->has('foo'));
+        $this->assertFalse($metaData->has('bar'));
     }
 }

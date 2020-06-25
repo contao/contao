@@ -73,6 +73,14 @@ class MetaData
     }
 
     /**
+     * Returns true if this container contains a given value, false otherwise.
+     */
+    public function has(string $key): bool
+    {
+        return isset($this->values[$key]);
+    }
+
+    /**
      * Return the whole data set as an associative array.
      */
     public function all(): array
