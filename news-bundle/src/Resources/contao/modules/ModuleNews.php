@@ -255,11 +255,22 @@ abstract class ModuleNews extends Module
 		$count = 0;
 		$arrArticles = array();
 
-		while ($objArticles->next())
-		{
-			/** @var NewsModel $objArticle */
-			$objArticle = $objArticles->current();
+		// Performance: Preload all images in one query so they are loaded into the model registry before actually rendering them
+		$uuids = array();
 
+		foreach ($objArticles as $objArticle)
+		{
+			if ($objArticle->addImage && $objArticle->singleSRC != '')
+			{
+				$uuids[] = $objArticle->singleSRC;
+			}
+		}
+
+		FilesModel::findMultipleByUuids($uuids);
+
+		// Actually render the articles
+		foreach ($objArticles as $objArticle)
+		{
 			$arrArticles[] = $this->parseArticle($objArticle, $blnAddArchive, ((++$count == 1) ? ' first' : '') . (($count == $limit) ? ' last' : '') . ((($count % 2) == 0) ? ' odd' : ' even'), $count);
 		}
 
