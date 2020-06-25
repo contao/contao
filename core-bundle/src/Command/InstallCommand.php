@@ -246,7 +246,7 @@ EOF
      */
     private function symlinkTcpdfConfig()
     {
-        $relPath = (new Filesystem())->makePathRelative($this->bundlesMeta['ContaoCoreBundle']['path'], $this->rootDir);
+        $relPath = $this->fs->makePathRelative($this->bundlesMeta['ContaoCoreBundle']['path'], $this->rootDir);
 
         SymlinkUtil::symlink(
             trim($relPath, '/').'/Resources/contao/config/tcpdf.php',
