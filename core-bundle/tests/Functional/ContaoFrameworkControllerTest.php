@@ -31,6 +31,9 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
         parent::setUpBeforeClass();
         static::resetDatabaseSchema();
 
+        // Register replacement for file insert tag (real UUIDs currently aren't supported by our fixture loader)
+        $GLOBALS['TL_HOOKS']['replaceInsertTags'][] = [self::class, 'replaceFileTestInsertTag'];
+
         // Make demo resources available in the upload path
         (new Filesystem())->symlink(__DIR__.'/../Fixtures/files', __DIR__.'/../../var/files');
     }
@@ -131,7 +134,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
         ];
 
         yield 'applying to FrontendTemplate' => [
-            ['image-file'],
+            ['folder', 'image-file-1'],
             static function () use ($baseRowData) {
                 return [
                     new FrontendTemplate('ce_image'),
@@ -149,7 +152,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
         ];
 
         yield 'applying to \stdClass()' => [
-            ['image-file'],
+            ['folder', 'image-file-1'],
             static function () use ($baseRowData) {
                 return [
                     new \stdClass(),
@@ -167,7 +170,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
         ];
 
         yield 'meta data from tl_files' => [
-            ['image-file-with-metadata', 'root-and-regular-page_en'],
+            ['folder', 'image-file-3-with-metadata', 'root-and-regular-page_en'],
             function () use ($baseRowData) {
                 $this->loadGlobalObjPage(2);
 
@@ -176,7 +179,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                     $baseRowData,
                     null,
                     null,
-                    FilesModel::findById(2),
+                    FilesModel::findById(3),
                 ];
             },
             array_replace_recursive(
@@ -195,7 +198,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
         ];
 
         yield 'overwriting/setting meta data (implicit)' => [
-            ['image-file'],
+            ['folder', 'image-file-1'],
             static function () use ($baseRowData) {
                 return [
                     new \stdClass(),
@@ -218,7 +221,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
         ];
 
         yield 'overwriting meta data (explicit)' => [
-            ['image-file-with-metadata', 'root-and-regular-page_en'],
+            ['folder', 'image-file-3-with-metadata', 'root-and-regular-page_en'],
             function () use ($baseRowData) {
                 $this->loadGlobalObjPage(2);
 
@@ -233,7 +236,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                     ]),
                     null,
                     null,
-                    FilesModel::findById(2),
+                    FilesModel::findById(3),
                 ];
             },
             array_replace_recursive(
@@ -252,7 +255,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
         ];
 
         yield 'overwriting meta data with link' => [
-            ['image-file-with-metadata', 'root-and-regular-page_en'],
+            ['folder', 'image-file-3-with-metadata', 'root-and-regular-page_en'],
             function () use ($baseRowData) {
                 $this->loadGlobalObjPage(2);
 
@@ -267,7 +270,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                     ]),
                     null,
                     null,
-                    FilesModel::findById(2),
+                    FilesModel::findById(3),
                 ];
             },
             array_replace_recursive(
@@ -277,7 +280,6 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                         'alt' => 'bar alt',
                     ],
                     'alt' => 'bar alt',
-                    'imageTitle' => null,
                     'linkTitle' => 'bar title',
                     'imageUrl' => 'bar://foo',
                     'caption' => 'bar caption',
@@ -288,7 +290,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
         ];
 
         yield 'meta data from tl_files not present in current language' => [
-            ['image-file-with-metadata', 'root-and-regular-page_fr'],
+            ['folder', 'image-file-3-with-metadata', 'root-and-regular-page_fr'],
             function () use ($baseRowData) {
                 $this->loadGlobalObjPage(2);
 
@@ -297,7 +299,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                     $baseRowData,
                     null,
                     null,
-                    FilesModel::findById(2),
+                    FilesModel::findById(3),
                 ];
             },
             array_replace_recursive(
@@ -316,7 +318,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
         ];
 
         yield 'meta data from tl_files containing a link' => [
-            ['image-file-with-metadata-containing-link', 'root-and-regular-page_en'],
+            ['folder', 'image-file-4-with-metadata-containing-link', 'root-and-regular-page_en'],
             function () use ($baseRowData) {
                 $this->loadGlobalObjPage(2);
 
@@ -325,7 +327,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                     $baseRowData,
                     null,
                     null,
-                    FilesModel::findById(2),
+                    FilesModel::findById(4),
                 ];
             },
             array_replace_recursive(
@@ -335,7 +337,6 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                         'alt' => 'foo alt',
                     ],
                     'alt' => 'foo alt',
-                    'imageTitle' => null,
                     'linkTitle' => 'foo title',
                     'imageUrl' => 'foo://bar',
                     'caption' => 'foo caption',
@@ -346,9 +347,9 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
         ];
 
         yield 'missing image resource' => [
-            ['image-file-with-missing-resource'],
+            ['folder', 'image-file-5-with-missing-resource'],
             static function () use ($baseRowData) {
-                $filesModel = FilesModel::findById(2);
+                $filesModel = FilesModel::findById(5);
 
                 return [
                     new \stdClass(),
@@ -439,7 +440,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
         ];
 
         yield 'preserving existing href key' => [
-            ['image-file-with-metadata-containing-link', 'root-and-regular-page_en'],
+            ['folder', 'image-file-4-with-metadata-containing-link', 'root-and-regular-page_en'],
             function () use ($baseRowData) {
                 $this->loadGlobalObjPage(2);
 
@@ -457,7 +458,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                     ]),
                     null,
                     null,
-                    FilesModel::findById(2),
+                    FilesModel::findById(4),
                 ];
             },
             array_replace_recursive(
@@ -477,7 +478,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
         ];
 
         yield 'preserving existing href key when overwriting link' => [
-            ['image-file-with-metadata-containing-link', 'root-and-regular-page_en'],
+            ['folder', 'image-file-4-with-metadata-containing-link', 'root-and-regular-page_en'],
             function () use ($baseRowData) {
                 $this->loadGlobalObjPage(2);
 
@@ -495,7 +496,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                     ]),
                     null,
                     null,
-                    FilesModel::findById(2),
+                    FilesModel::findById(4),
                 ];
             },
             array_replace_recursive(
@@ -505,7 +506,6 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                         'alt' => 'bar alt',
                     ],
                     'alt' => 'bar alt',
-                    'imageTitle' => null,
                     'imageUrl' => 'bar://foo',
                     'caption' => 'bar caption',
                     'linkTitle' => 'bar title',
@@ -517,7 +517,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
         ];
 
         yield 'fullsize/lightbox with external url (invalid image extension)' => [
-            ['image-file'],
+            ['folder', 'image-file-1'],
             static function () use ($baseRowData) {
                 return [
                     new \stdClass(),
@@ -525,9 +525,9 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                         'overwriteMeta' => '1',
                         'fullsize' => '1',
                         'imageUrl' => 'https://example.com/invalid/end.point',
-                        'alt' => '',
-                        'imageTitle' => '',
-                        'caption' => '',
+                        'alt' => 'a',
+                        'imageTitle' => 'i',
+                        'caption' => 'c',
                     ]),
                 ];
             },
@@ -535,8 +535,9 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                 $baseExpectedTemplateData,
                 [
                     'picture' => [
-                        'title' => '',
+                        'alt' => 'a',
                     ],
+                    'linkTitle' => 'i',
                     'href' => 'https://example.com/invalid/end.point',
                     'attributes' => ' target="_blank" rel="noreferrer noopener"',
                     'fullsize' => true,
@@ -545,7 +546,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
         ];
 
         yield 'fullsize/lightbox with external url (valid image extension)' => [
-            ['image-file'],
+            ['folder', 'image-file-1'],
             static function () use ($baseRowData) {
                 return [
                     new \stdClass(),
@@ -554,7 +555,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                         'fullsize' => '1',
                         'imageUrl' => 'https://example.com/valid/image.png',
                         'alt' => '',
-                        'imageTitle' => '',
+                        'imageTitle' => 'i',
                         'caption' => '',
                     ]),
                 ];
@@ -562,27 +563,25 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
             array_replace_recursive(
                 $baseExpectedTemplateData,
                 [
-                    'picture' => [
-                        'title' => '',
-                    ],
                     'href' => 'https://example.com/valid/image.png',
-                    'attributes' => ' data-lightbox="<anything>"',
+                    'attributes' => ' rel="noreferrer noopener" data-lightbox="<anything>"',
+                    'linkTitle' => 'i',
                     'fullsize' => true,
                 ]
             ),
         ];
 
         yield 'fullsize/lightbox with file insert tag (valid resource)' => [
-            ['image-file', 'image-file-alt'],
+            ['folder', 'image-file-2'],
             static function () use ($baseRowData) {
                 return [
                     new \stdClass(),
                     array_merge($baseRowData, [
                         'overwriteMeta' => '1',
                         'fullsize' => '1',
-                        'imageUrl' => '{{file::ec706e95}}', // 'bar.jpg'
+                        'imageUrl' => '{{file_test::files/public/bar.jpg}}',
                         'alt' => '',
-                        'imageTitle' => '',
+                        'imageTitle' => 'i',
                         'caption' => '',
                     ]),
                 ];
@@ -590,27 +589,35 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
             array_replace_recursive(
                 $baseExpectedTemplateData,
                 [
-                    'picture' => [
-                        'title' => '',
+                    'lightboxPicture' => [
+                        'img' => [
+                            'src' => 'files/public/bar.jpg',
+                            'srcset' => 'files/public/bar.jpg',
+                            'hasSingleAspectRatio' => true,
+                            'height' => 200,
+                            'width' => 200,
+                        ],
+                        'sources' => [],
                     ],
-                    'href' => '{{file::ec706e95}}',
-                    'attributes' => ' target="_blank"',
+                    'href' => 'files/public/bar.jpg',
+                    'attributes' => ' data-lightbox="<anything>"',
                     'fullsize' => true,
+                    'linkTitle' => 'i',
                 ]
             ),
         ];
 
         yield 'fullsize/lightbox with file insert tag (invalid resource)' => [
-            ['image-file'],
+            ['folder', 'image-file-1', 'image-file-5-with-missing-resource'],
             static function () use ($baseRowData) {
                 return [
                     new \stdClass(),
                     array_merge($baseRowData, [
                         'overwriteMeta' => '1',
                         'fullsize' => '1',
-                        'imageUrl' => '{{file::0da63b5df}}', // 'a folder'
+                        'imageUrl' => '{{file_test::files/this/does/not/exist/foo.jpg}}',
                         'alt' => '',
-                        'imageTitle' => '',
+                        'imageTitle' => 'i',
                         'caption' => '',
                     ]),
                 ];
@@ -618,18 +625,16 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
             array_replace_recursive(
                 $baseExpectedTemplateData,
                 [
-                    'picture' => [
-                        'title' => '',
-                    ],
-                    'href' => '{{file::0da63b5df}}',
+                    'href' => 'files/this/does/not/exist/foo.jpg',
                     'attributes' => ' target="_blank"',
                     'fullsize' => true,
+                    'linkTitle' => 'i',
                 ]
             ),
         ];
 
         yield 'fullsize/lightbox with path to valid resource' => [
-            ['image-file'],
+            ['folder', 'image-file-1'],
             static function () use ($baseRowData) {
                 return [
                     new \stdClass(),
@@ -668,7 +673,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
         ];
 
         yield 'image content element 1' => [
-            ['ce_image', 'image-file'],
+            ['ce_image', 'folder', 'image-file-1'],
             function () {
                 [$rowData, $filesModel] = $this->getContentElementData(1);
 
@@ -696,8 +701,8 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
             ),
         ];
 
-        yield 'image content element 2 (overwriting metadata)' => [
-            ['ce_image-with-metadata', 'image-file'],
+        yield 'image content element 2 (overwriting meta data)' => [
+            ['ce_image-with-metadata', 'folder', 'image-file-1'],
             function () {
                 [$rowData, $filesModel] = $this->getContentElementData(1);
 
@@ -727,7 +732,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
         ];
 
         yield 'image content element 3 (fullsize/lightbox without size)' => [
-            ['ce_image-with-fullsize', 'image-file-with-metadata'],
+            ['ce_image-with-fullsize', 'folder', 'image-file-3-with-metadata'],
             function () {
                 [$rowData, $filesModel] = $this->getContentElementData(1);
 
@@ -756,7 +761,6 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                         'sources' => [],
                     ],
                     'alt' => 'foo alt',
-                    'imageTitle' => null,
                     'imageUrl' => '',
                     'caption' => 'foo caption',
                     'linkTitle' => 'foo title',
@@ -770,7 +774,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
         ];
 
         yield 'image content element 4 (lightbox + size from layout)' => [
-            ['ce_image-with-fullsize', 'image-file-with-metadata', 'root-and-regular-page_en', 'layout-with-lightbox-size'],
+            ['ce_image-with-fullsize', 'folder', 'image-file-3-with-metadata', 'root-and-regular-page_en', 'layout-with-lightbox-size'],
             function () {
                 $this->loadGlobalObjPage(2);
                 [$rowData, $filesModel] = $this->getContentElementData(1);
@@ -800,7 +804,6 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                         'sources' => [],
                     ],
                     'alt' => 'foo alt',
-                    'imageTitle' => null,
                     'imageUrl' => '',
                     'caption' => 'foo caption',
                     'linkTitle' => 'foo title',
@@ -814,7 +817,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
         ];
 
         yield 'image content element 5 (complex with link)' => [
-            ['ce_image-complex', 'image-file-with-metadata', 'root-and-regular-page_en'],
+            ['ce_image-complex', 'folder', 'image-file-3-with-metadata', 'root-and-regular-page_en'],
             function () {
                 $this->loadGlobalObjPage(2);
                 [$rowData, $filesModel] = $this->getContentElementData(1);
@@ -834,13 +837,12 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                         'alt' => 'bar alt',
                     ],
                     'alt' => 'bar alt',
-                    'imageTitle' => null,
-                    'imageUrl' => 'bar://foo',
+                    'imageUrl' => 'https://example.com/resource',
                     'caption' => 'bar caption',
                     'linkTitle' => 'bar title',
-                    'href' => 'bar://foo',
+                    'href' => 'https://example.com/resource',
                     'fullsize' => true,
-                    'attributes' => ' target="_blank"',
+                    'attributes' => ' target="_blank" rel="noreferrer noopener"',
                     'floatClass' => ' float_above',
                     'margin' => 'margin:1px 2px 3px 4px;',
                 ]
@@ -848,7 +850,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
         ];
 
         yield 'image content element 6 (complex with lightbox)' => [
-            ['ce_image-complex-with-lightbox', 'image-file-with-metadata', 'root-and-regular-page_en', 'layout-with-lightbox-size'],
+            ['ce_image-complex-with-lightbox', 'folder', 'image-file-3-with-metadata', 'root-and-regular-page_en', 'layout-with-lightbox-size'],
             function () {
                 $this->loadGlobalObjPage(2);
                 [$rowData, $filesModel] = $this->getContentElementData(1);
@@ -878,7 +880,6 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                         'sources' => [],
                     ],
                     'alt' => 'bar alt',
-                    'imageTitle' => null,
                     'imageUrl' => '',
                     'caption' => 'bar caption',
                     'linkTitle' => 'bar title',
@@ -899,6 +900,19 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
         //   $arrItem['title'] fallback
     }
 
+    public function replaceFileTestInsertTag(string $tag)
+    {
+        $parts = explode('::', $tag);
+
+        if ('file_test' !== $parts[0]) {
+            return false;
+        }
+
+        $filesModel = FilesModel::findByPath($parts[1]);
+
+        return null !== $filesModel ? $filesModel->path : false;
+    }
+
     private function loadGlobalObjPage(int $id): void
     {
         global $objPage;
@@ -912,7 +926,9 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
     private function getContentElementData(int $id): array
     {
         $rowData = ContentModel::findById($id)->row();
-        $filesModel = FilesModel::findByUuid($rowData['singleSRC']);
+
+        // uuid == hash in our test data / working around the fact that we did not set real UUIDs
+        $filesModel = FilesModel::findOneByHash($rowData['singleSRC']);
         $rowData['singleSRC'] = $filesModel->path;
 
         return [$rowData, $filesModel];

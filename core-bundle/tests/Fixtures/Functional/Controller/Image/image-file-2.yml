@@ -1,7 +1,8 @@
 tl_files:
-    - id: 3
-      pid: 1
+    - id: 2
+      pid: 100
       uuid: 'ec706e95'
+      hash: 'ec706e95'
       name: 'bar.jpg'
       extension: 'jpg'
       type: 'file'

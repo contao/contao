@@ -1,0 +1,6 @@
+tl_files:
+    - id: 100
+      uuid: '0da63b5df'
+      name: 'public'
+      type: 'folder'
+      path: 'files/public'

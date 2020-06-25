@@ -1,13 +1,8 @@
 tl_files:
-    - id: 1
-      uuid: '0da63b5df'
-      name: 'public'
-      type: 'folder'
-      path: 'files/public'
-
-    - id: 2
-      pid: 1
+    - id: 4
+      pid: 100
       uuid: '663e868a'
+      hash: '663e868a'
       name: 'foo.jpg'
       extension: 'jpg'
       type: 'file'

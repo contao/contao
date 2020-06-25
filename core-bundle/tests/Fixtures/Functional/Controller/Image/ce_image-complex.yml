@@ -13,7 +13,7 @@ tl_content:
       overwriteMeta: '1'
       alt: 'bar alt'
       imageTitle: 'bar title'
-      imageUrl: 'bar://foo'
+      imageUrl: 'https://example.com/resource'
       caption: 'bar caption'
       fullsize: '1'
       imagemargin: 'a:5:{s:6:"bottom";s:1:"3";s:4:"left";s:1:"4";s:5:"right";s:1:"2";s:3:"top";s:1:"1";s:4:"unit";s:2:"px";}'
