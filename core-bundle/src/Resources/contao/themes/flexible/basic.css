@@ -288,6 +288,11 @@ fieldset.checkbox_container,fieldset.radio_container {
 .tl_imageSize_0 {
 	margin-left:1%;
 }
+input[type="search"] {
+	height:26px;
+	padding-top:0;
+	padding-bottom:2px;
+}
 input[type="search"]::-webkit-search-decoration {
 	-webkit-appearance:none;
 }
@@ -298,13 +303,17 @@ input[type="search"]::-webkit-search-decoration {
 	.tl_text::placeholder,.tl_text_2::placeholder,.tl_text_3::placeholder,.tl_text_4::placeholder,.tl_textarea::placeholder,.tl_text_unit::placeholder,.tl_text_trbl::placeholder,.tl_text_interval::placeholder {
 		line-height:18px;
 	}
+	input[type="search"] {
+		padding-top:1px;
+		padding-bottom:1px;
+	}
 }
 @media not all and (min-resolution:.001dpcm) { @supports (-webkit-appearance:none) {
 	.tl_text::placeholder,.tl_text_2::placeholder,.tl_text_3::placeholder,.tl_text_4::placeholder,.tl_textarea::placeholder,.tl_text_unit::placeholder,.tl_text_trbl::placeholder,.tl_text_interval::placeholder {
 		line-height:16px;
 	}
 	input[type="search"] {
-		padding:2px 0 4px 6px;
+		padding-right:0;
 	}
 	input[type="search"]:focus {
 		outline-offset:-2px;
