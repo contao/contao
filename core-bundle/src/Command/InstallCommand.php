@@ -246,24 +246,14 @@ EOF
      */
     private function symlinkTcpdfConfig()
     {
-        $relPath = $this->getRelativePath($this->bundlesMeta['ContaoCoreBundle']['path']);
+        $relPath = (new Filesystem())->makePathRelative($this->bundlesMeta['ContaoCoreBundle']['path'], $this->rootDir);
 
         SymlinkUtil::symlink(
-            $relPath.'/Resources/contao/config/tcpdf.php',
+            trim($relPath, '/').'/Resources/contao/config/tcpdf.php',
             'system/config/tcpdf.php',
             $this->rootDir
         );
 
         $this->io->writeln('Symlinked the <comment>system/config/tcpdf.php</comment> file.');
-    }
-
-    /**
-     * @param string $path
-     *
-     * @return string
-     */
-    private function getRelativePath($path)
-    {
-        return str_replace(strtr($this->rootDir, '\\', '/').'/', '', strtr($path, '\\', '/'));
     }
 }
