@@ -76,6 +76,13 @@ class FigureBuilder
     private $metaData;
 
     /**
+     * Determines if a meta data should never be present in the output.
+     *
+     * @var bool
+     */
+    private $disableMetaData;
+
+    /**
      * User defined link attributes (adding to or overwriting the default attributes).
      *
      * @var array<string, string|null>
@@ -255,6 +262,18 @@ class FigureBuilder
     }
 
     /**
+     * Disable/allow creation of meta data in the output even if it is present.
+     * This setting is not active by default (= meta data will be created if
+     * possible).
+     */
+    public function disableMetaData(bool $disable = true): self
+    {
+        $this->disableMetaData = $disable;
+
+        return $this;
+    }
+
+    /**
      * Set a custom locale. By default or if the argument is set to null, the
      * locale is determined from the request context and/or system settings.
      */
@@ -394,6 +413,10 @@ class FigureBuilder
      */
     private function onDefineMetaData(): ?MetaData
     {
+        if ($this->disableMetaData) {
+            return null;
+        }
+
         if (null !== $this->metaData) {
             return $this->metaData;
         }
@@ -411,7 +434,8 @@ class FigureBuilder
             return $metaData;
         }
 
-        // Create fallback meta data with empty values
+        // If no meta data can be obtained from the model, we create a
+        // container from the default meta fields with empty values instead.
         $metaFields = $this->filesModelAdapter()->getMetaFields();
 
         return new MetaData(
