@@ -23,7 +23,7 @@ use Contao\Template;
  * template's context. (If you're using the "old way" you can still use the
  * provided legacy helper methods to manually apply the data to your template).
  *
- * Wherever possible the actual data is only requested/build on access (lazy).
+ * Wherever possible the actual data is only requested/built on access (lazy).
  */
 final class Figure
 {
