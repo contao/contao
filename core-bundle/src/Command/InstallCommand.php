@@ -61,7 +61,7 @@ class InstallCommand extends Command
     private $webDir;
 
     /**
-     * @var array
+     * @var array<string,string>
      */
     private $bundles;
 
