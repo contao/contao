@@ -104,7 +104,7 @@ class FigureTest extends TestCase
 
         $called = 0;
 
-        $metaDataClosure = function (Figure $figure) use (&$called, $metaData): ?MetaData {
+        $metaDataClosure = function (Figure $figure) use (&$called, $metaData): MetaData {
             $this->assertInstanceOf(Figure::class, $figure);
             ++$called;
 

@@ -40,7 +40,7 @@ final class Figure
     private $metaData;
 
     /**
-     * @var array<string, string|null>|(Closure(self):array<string, string|null>|null
+     * @var array<string, string|null>|(Closure(self):array<string, string|null>)|null
      */
     private $linkAttributes;
 

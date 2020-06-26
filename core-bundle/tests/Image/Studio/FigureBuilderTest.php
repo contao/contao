@@ -857,7 +857,7 @@ class FigureBuilderTest extends TestCase
         /** @var LightBoxResult&MockObject $lightBox */
         $lightBox = $this->createMock(LightBoxResult::class);
 
-        /** @var ContainerInterface&MockObject $studio */
+        /** @var Studio&MockObject $studio */
         $studio = $this->createMock(Studio::class);
         $studio
             ->expects($this->once())
@@ -869,7 +869,7 @@ class FigureBuilderTest extends TestCase
         return $studio;
     }
 
-    private function getFigureBuilder(Studio $studio = null, ContaoFramework $framework = null, string $projectDir = null, string $uploadPath = null, array $validExtensions = []): FigureBuilder
+    private function getFigureBuilder(Studio $studio = null, ContaoFramework $framework = null, string $projectDir = null, string $uploadPath = null, array $validExtensions = null): FigureBuilder
     {
         /** @var ContainerInterface&MockObject $locator */
         $locator = $this->createMock(ContainerInterface::class);

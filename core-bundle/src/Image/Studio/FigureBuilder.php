@@ -12,10 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Image\Studio;
 
-use Closure;
 use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\File\MetaData;
-use Contao\CoreBundle\Framework\Adapter;
 use Contao\FilesModel;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
@@ -225,7 +223,7 @@ class FigureBuilder
     /**
      * Set the image resource by guessing the identifier type.
      *
-     * @param int|string|FilesModel $identifier Can be a FilesModel, an ImageInterface, a tl_files uuid/id/path or a file system path
+     * @param int|string|FilesModel|ImageInterface $identifier Can be a FilesModel, an ImageInterface, a tl_files uuid/id/path or a file system path
      */
     public function from($identifier): self
     {
@@ -537,9 +535,6 @@ class FigureBuilder
         ;
     }
 
-    /**
-     * @return FilesModel&Adapter
-     */
     private function filesModelAdapter()
     {
         $framework = $this->locator->get('contao.framework');
@@ -548,9 +543,6 @@ class FigureBuilder
         return $framework->getAdapter(FilesModel::class);
     }
 
-    /**
-     * @return Validator&Adapter
-     */
     private function validatorAdapter()
     {
         $framework = $this->locator->get('contao.framework');

@@ -68,7 +68,7 @@ class LightBoxResultTest extends TestCase
 
         $GLOBALS['objPage'] = $pageModel;
 
-        /** @var MockObject&Studio $studio */
+        /** @var MockObject&ImageResult $image */
         $image = $this->createMock(ImageResult::class);
 
         /** @var MockObject&Studio $studio */
@@ -99,7 +99,7 @@ class LightBoxResultTest extends TestCase
         $resource = 'foo/bar.png';
         $size = [100, 200, 'crop'];
 
-        /** @var MockObject&Studio $studio */
+        /** @var MockObject&Studio ImageResult */
         $image = $this->createMock(ImageResult::class);
 
         /** @var MockObject&Studio $studio */
@@ -140,7 +140,7 @@ class LightBoxResultTest extends TestCase
         $resource = 'foo/bar.png';
         $size = [100, 200, 'crop'];
 
-        /** @var MockObject&Studio $studio */
+        /** @var MockObject&ImageResult $image */
         $image = $this->createMock(ImageResult::class);
 
         /** @var MockObject&Studio $studio */
@@ -183,7 +183,7 @@ class LightBoxResultTest extends TestCase
         $resource = 'foo/bar.png';
         $size = [100, 200, 'crop'];
 
-        /** @var MockObject&Studio $studio */
+        /** @var MockObject&ImageResult $image */
         $image = $this->createMock(ImageResult::class);
         $image
             ->expects($this->once())
