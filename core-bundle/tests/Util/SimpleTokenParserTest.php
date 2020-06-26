@@ -520,8 +520,6 @@ class SimpleTokenParserTest extends TestCase
 
     private function getParser(): SimpleTokenParser
     {
-        return new SimpleTokenParser(
-            new SimpleTokenExpressionLanguage()
-        );
+        return new SimpleTokenParser(new SimpleTokenExpressionLanguage());
     }
 }

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Functional;
 
+use Contao\CoreBundle\Util\SimpleTokenParser;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class SimpleTokenExtensionTest extends KernelTestCase
@@ -20,11 +21,13 @@ class SimpleTokenExtensionTest extends KernelTestCase
     {
         self::bootKernel();
 
-        $simpleTokenParser = self::$container->get('contao.util.simple_token_parser');
+        $simpleTokenParser = self::$container->get(SimpleTokenParser::class);
 
-        $this->assertSame(
-            'Custom function evaluated!',
-            $simpleTokenParser->parseTokens("Custom function {if strtoupper(token) === 'FOO'}evaluated!{endif}", ['token' => 'foo'])
+        $out = $simpleTokenParser->parseTokens(
+            "Custom function {if strtoupper(token) === 'FOO'}evaluated!{endif}",
+            ['token' => 'foo']
         );
+
+        $this->assertSame('Custom function evaluated!', $out);
     }
 }

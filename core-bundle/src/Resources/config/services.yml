@@ -814,14 +814,12 @@ services:
             - '@contao.framework'
             - '@contao.routing.scope_matcher'
 
-    contao.util.simple_token_parser:
-        class: Contao\CoreBundle\Util\SimpleTokenParser
-        public: true
-        arguments:
-            - '@contao.util.simple_token_parser.expression_language'
-
-    contao.util.simple_token_parser.expression_language:
-        class: Contao\CoreBundle\Util\SimpleTokenExpressionLanguage
+    Contao\CoreBundle\Util\SimpleTokenExpressionLanguage:
         arguments:
             - ~
             - !tagged_iterator contao.simple_token_extension
+
+    Contao\CoreBundle\Util\SimpleTokenParser:
+        arguments:
+            - '@Contao\CoreBundle\Util\SimpleTokenExpressionLanguage'
+        public: true
