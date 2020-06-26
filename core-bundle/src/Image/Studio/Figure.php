@@ -331,7 +331,7 @@ final class Figure
      */
     private function resolveIfClosure(&$property): void
     {
-        if ($property instanceof Closure) {
+        if ($property instanceof \Closure) {
             $property = $property($this);
         }
     }

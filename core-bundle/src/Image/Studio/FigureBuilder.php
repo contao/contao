@@ -390,17 +390,17 @@ class FigureBuilder
         // We're defining some values via a Closure to make their evaluation lazy
         return new Figure(
             $imageResult,
-            Closure::bind(
+            \Closure::bind(
                 function (Figure $figure): ?MetaData {
                     return $this->onDefineMetaData();
                 }, $settings
             ),
-            Closure::bind(
+            \Closure::bind(
                 function (Figure $figure): array {
                     return $this->onDefineLinkAttributes($figure);
                 }, $settings
             ),
-            Closure::bind(
+            \Closure::bind(
                 function (Figure $figure): ?LightBoxResult {
                     return $this->onDefineLightBoxResult($figure);
                 }, $settings

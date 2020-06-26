@@ -23,7 +23,6 @@ use Contao\Database\Result;
 use Contao\Image\PictureConfiguration;
 use Contao\Model\Collection;
 use League\Uri\Components\Query;
-use ReflectionClass;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\Glob;
 
@@ -1538,7 +1537,7 @@ abstract class Controller extends System
 			// Interpret structure as ContentModel and create a container.
 			// This will be null if `overwriteMeta` isn't set.
 			/** @var ContentModel $contentModel */
-			$contentModel = (new ReflectionClass(ContentModel::class))
+			$contentModel = (new \ReflectionClass(ContentModel::class))
 				->newInstanceWithoutConstructor();
 
 			return $contentModel->setRow($rowData)->getOverwriteMetaData();

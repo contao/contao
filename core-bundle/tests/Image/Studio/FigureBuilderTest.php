@@ -28,7 +28,6 @@ use Contao\System;
 use Contao\Validator;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
-use ReflectionClass;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Webmozart\PathUtil\Path;
 
@@ -425,7 +424,7 @@ class FigureBuilderTest extends TestCase
         $projectDir = __DIR__;
 
         /** @var FilesModel $filesModel */
-        $filesModel = (new ReflectionClass(FilesModel::class))
+        $filesModel = (new \ReflectionClass(FilesModel::class))
             ->newInstanceWithoutConstructor()
         ;
 
@@ -813,13 +812,8 @@ class FigureBuilderTest extends TestCase
         $this->assertSame($lightBoxImageResult, $figure2->getLightBox());
     }
 
-    private function getFigure(
-        \Closure $configureBuilderCallback = null,
-        Studio $studio = null,
-        string $projectDir = '/path/to/project',
-        string $uploadPath = 'files',
-        array $validExtensions = []
-    ): Figure {
+    private function getFigure(\Closure $configureBuilderCallback = null, Studio $studio = null, string $projectDir = '/path/to/project', string $uploadPath = 'files', array $validExtensions = []): Figure
+    {
         if (null === $studio) {
             $studio = $this->getStudioMockForImage(__FILE__);
         }

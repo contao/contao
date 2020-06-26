@@ -17,7 +17,6 @@ use Contao\CoreBundle\File\MetaData;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FilesModel;
 use Contao\System;
-use ReflectionClass;
 
 class MetaDataTest extends TestCase
 {
@@ -73,7 +72,7 @@ class MetaDataTest extends TestCase
     public function testCreatesMetaDataContainerFromContentModel(): void
     {
         /** @var ContentModel $model */
-        $model = (new ReflectionClass(ContentModel::class))
+        $model = (new \ReflectionClass(ContentModel::class))
             ->newInstanceWithoutConstructor()
         ;
 
@@ -98,7 +97,7 @@ class MetaDataTest extends TestCase
     public function testDoesNotCreateMetaDataContainerFromContentModelIfOverwriteIsDisabled(): void
     {
         /** @var ContentModel $model */
-        $model = (new ReflectionClass(ContentModel::class))
+        $model = (new \ReflectionClass(ContentModel::class))
             ->newInstanceWithoutConstructor()
         ;
 
@@ -115,7 +114,7 @@ class MetaDataTest extends TestCase
     public function testCreatesMetaDataContainerFromFilesModel(): void
     {
         /** @var FilesModel $model */
-        $model = (new ReflectionClass(FilesModel::class))
+        $model = (new \ReflectionClass(FilesModel::class))
             ->newInstanceWithoutConstructor()
         ;
 
