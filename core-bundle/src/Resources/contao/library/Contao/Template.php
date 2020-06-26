@@ -400,7 +400,8 @@ abstract class Template extends Controller
 	{
 		$container = System::getContainer();
 
-		if (!$container->has('assets.packages')) {
+		if (!$container->has('assets.packages'))
+		{
 			throw new \RuntimeException('You need to enable "framework.assets" in your config in order to use Template::asset.');
 		}
 
