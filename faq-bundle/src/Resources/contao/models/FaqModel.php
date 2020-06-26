@@ -106,7 +106,6 @@ use Contao\Model\Collection;
  * @method static integer countByAddEnclosure($val, $opt=array())
  * @method static integer countByEnclosure($val, $opt=array())
  * @method static integer countByNoComments($val, $opt=array())
- * @method static integer countByRobots($val, $opt=array())
  * @method static integer countByPublished($val, $opt=array())
  *
  * @author Leo Feyer <https://github.com/leofeyer>
