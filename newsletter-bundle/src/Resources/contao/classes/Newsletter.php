@@ -365,7 +365,7 @@ class Newsletter extends Backend
 	protected function sendNewsletter(Email $objEmail, Result $objNewsletter, $arrRecipient, $text, $html, $css=null)
 	{
 		/** @var SimpleTokenParser $simpleTokenParser */
-		$simpleTokenParser = System::getContainer()->get('contao.util.simple_token_parser');
+		$simpleTokenParser = System::getContainer()->get(SimpleTokenParser::class);
 
 		// Prepare the text content
 		$objEmail->text = $simpleTokenParser->parseTokens($text, $arrRecipient);

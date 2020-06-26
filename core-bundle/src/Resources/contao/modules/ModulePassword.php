@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\OptIn\OptIn;
+use Contao\CoreBundle\Util\SimpleTokenParser;
 use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\Session\Session;
 
@@ -317,11 +318,10 @@ class ModulePassword extends Module
 		$arrData['link'] = Idna::decode(Environment::get('base')) . Environment::get('request') . ((strpos(Environment::get('request'), '?') !== false) ? '&' : '?') . 'token=' . $optInToken->getIdentifier();
 
 		// Send the token
-		$text = System::getContainer()
-			->get('contao.util.simple_token_parser')
-			->parseTokens($this->reg_password, $arrData);
-
-		$optInToken->send(sprintf($GLOBALS['TL_LANG']['MSC']['passwordSubject'], Idna::decode(Environment::get('host'))), $text);
+		$optInToken->send(
+			sprintf($GLOBALS['TL_LANG']['MSC']['passwordSubject'], Idna::decode(Environment::get('host'))),
+			System::getContainer()->get(SimpleTokenParser::class)->parseTokens($this->reg_password, $arrData)
+		);
 
 		$this->log('A new password has been requested for user ID ' . $objMember->id . ' (' . Idna::decodeEmail($objMember->email) . ')', __METHOD__, TL_ACCESS);
 

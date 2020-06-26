@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\OptIn\OptIn;
+use Contao\CoreBundle\Util\SimpleTokenParser;
 use Patchwork\Utf8;
 
 /**
@@ -506,11 +507,10 @@ class ModuleRegistration extends Module
 		$arrTokenData['channel'] = $arrTokenData['channels'];
 
 		// Send the token
-		$text = System::getContainer()
-			->get('contao.util.simple_token_parser')
-			->parseTokens($this->reg_text, $arrTokenData);
-
-		$optInToken->send(sprintf($GLOBALS['TL_LANG']['MSC']['emailSubject'], Idna::decode(Environment::get('host'))), $text);
+		$optInToken->send(
+			sprintf($GLOBALS['TL_LANG']['MSC']['emailSubject'], Idna::decode(Environment::get('host'))),
+			System::getContainer()->get(SimpleTokenParser::class)->parseTokens($this->reg_text, $arrTokenData)
+		);
 	}
 
 	/**

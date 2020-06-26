@@ -84,7 +84,6 @@ class SimpleTokenParser implements LoggerAwareInterface
             }
         }
 
-        // Throw an exception if there is an error
         if (1 !== \count($stack)) {
             throw new \RuntimeException('Error parsing simple tokens');
         }
