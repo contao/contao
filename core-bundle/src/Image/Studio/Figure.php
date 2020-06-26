@@ -55,8 +55,6 @@ final class Figure
      * All arguments but the main image result can also be set via a Closure
      * that returns the value instead (lazily evaluated when needed).
      *
-     * todo: is there a nicer way to implement 'A|Closure():A'? promise/future wrapper? or 2 separate args?
-     *
      * @param ImageResult                                                                $image          Main image
      * @param MetaData|(Closure(self):MetaData|null)|null                                $metaData       Meta data container
      * @param array<string, string|null>|(Closure(self):array<string, string|null>)|null $linkAttributes Link attributes
@@ -124,7 +122,7 @@ final class Figure
     /**
      * Return a key-value list of all link attributes (excluding `href` by default).
      */
-    public function getLinkAttributes(bool $excludeHref = true): array
+    public function getLinkAttributes(bool $includeHref = false): array
     {
         $this->resolveIfClosure($this->linkAttributes);
 
@@ -133,7 +131,7 @@ final class Figure
         }
 
         // Generate href attribute
-        if (!isset($this->linkAttributes['href'])) {
+        if (!\array_key_exists('href', $this->linkAttributes)) {
             $this->linkAttributes['href'] = (
             function () {
                 if ($this->hasLightBox()) {
@@ -150,21 +148,29 @@ final class Figure
         }
 
         // Add rel attribute ("noreferrer noopener") to external links
-        if (!isset($this->linkAttributes['rel']) && preg_match('#^https?://#', $this->linkAttributes['href'])) {
+        if (
+            !empty($this->linkAttributes['href']) &&
+            !\array_key_exists('rel', $this->linkAttributes) && preg_match('#^https?://#', $this->linkAttributes['href'])
+        ) {
             $this->linkAttributes['rel'] = 'noreferrer noopener';
         }
 
         // Add light box attributes
-        if (!isset($this->linkAttributes['data-lightbox']) && $this->hasLightBox()) {
+        if (!\array_key_exists('data-lightbox', $this->linkAttributes) && $this->hasLightBox()) {
             $lightBox = $this->getLightBox();
             $this->linkAttributes['data-lightbox'] = $lightBox->getGroupIdentifier();
         }
 
         // Allow removing attributes by setting them to `null`
-        $linkAttributes = array_filter($this->linkAttributes);
+        $linkAttributes = array_filter(
+            $this->linkAttributes,
+            static function ($attribute): bool {
+                return null !== $attribute;
+            }
+        );
 
         // Optionally strip href attribute
-        return $excludeHref ? array_diff_key($linkAttributes, ['href' => null]) : $linkAttributes;
+        return $includeHref ? $linkAttributes : array_diff_key($linkAttributes, ['href' => null]);
     }
 
     /**
@@ -172,7 +178,7 @@ final class Figure
      */
     public function getLinkHref(): string
     {
-        return $this->getLinkAttributes(false)['href'] ?? '';
+        return $this->getLinkAttributes(true)['href'] ?? '';
     }
 
     /**
@@ -306,12 +312,6 @@ final class Figure
         if (isset($new['href'], $existing['href'])) {
             $new['imageHref'] = $new['href'];
             unset($new['href']);
-        }
-
-        // Append attributes instead of replacing
-        // todo: where was this from? remove?
-        if (isset($new['attributes'], $existing['attributes'])) {
-            $new['attributes'] = ($existing['attributes'] ?? '').$new['attributes'];
         }
 
         // Apply data
