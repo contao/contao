@@ -38,6 +38,7 @@ use Contao\Model\Collection;
  * @property boolean $noComments
  * @property boolean $published
  * @property string  $pageTitle
+ * @property string  $robots
  * @property string  $description
  *
  * @method static FaqModel|null findById($id, $opt=array())
@@ -51,6 +52,9 @@ use Contao\Model\Collection;
  * @method static FaqModel|null findOneByAlias($val, $opt=array())
  * @method static FaqModel|null findOneByAuthor($val, $opt=array())
  * @method static FaqModel|null findOneByAnswer($val, $opt=array())
+ * @method static FaqModel|null findOneByPageTitle($val, $opt=array())
+ * @method static FaqModel|null findOneByRobots($val, $opt=array())
+ * @method static FaqModel|null findOneByDescription($val, $opt=array())
  * @method static FaqModel|null findOneByAddImage($val, $opt=array())
  * @method static FaqModel|null findOneBySingleSRC($val, $opt=array())
  * @method static FaqModel|null findOneByAlt($val, $opt=array())
@@ -72,6 +76,9 @@ use Contao\Model\Collection;
  * @method static Collection|FaqModel[]|FaqModel|null findByAlias($val, $opt=array())
  * @method static Collection|FaqModel[]|FaqModel|null findByAuthor($val, $opt=array())
  * @method static Collection|FaqModel[]|FaqModel|null findByAnswer($val, $opt=array())
+ * @method static Collection|FaqModel[]|FaqModel|null findByPageTitle($val, $opt=array())
+ * @method static Collection|FaqModel[]|FaqModel|null findByRobots($val, $opt=array())
+ * @method static Collection|FaqModel[]|FaqModel|null findByDescription($val, $opt=array())
  * @method static Collection|FaqModel[]|FaqModel|null findByAddImage($val, $opt=array())
  * @method static Collection|FaqModel[]|FaqModel|null findBySingleSRC($val, $opt=array())
  * @method static Collection|FaqModel[]|FaqModel|null findByAlt($val, $opt=array())

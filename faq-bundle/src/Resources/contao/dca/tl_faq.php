@@ -108,7 +108,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('addImage', 'addEnclosure', 'overwriteMeta'),
-		'default'                     => '{title_legend},question,alias,author;{answer_legend},answer;{meta_legend},pageTitle,description;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},noComments;{publish_legend},published'
+		'default'                     => '{title_legend},question,alias,author;{answer_legend},answer;{meta_legend},pageTitle,robots,description;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},noComments;{publish_legend},published'
 	),
 
 	// Subpalettes
@@ -195,6 +195,15 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
+		),
+		'robots' => array
+		(
+			'exclude'                 => true,
+			'search'                  => true,
+			'inputType'               => 'select',
+			'options'                 => array('index,follow', 'index,nofollow', 'noindex,follow', 'noindex,nofollow'),
+			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption' => true),
+			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'description' => array
 		(
