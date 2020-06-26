@@ -17,16 +17,13 @@ use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image;
 use Doctrine\Common\Annotations\AnnotationReader;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
 class DisableBundleConfiguredSettingsListenerTest extends TestCase
 {
     public function testAnnotatedCallbacks(): void
     {
         $listener = $this->createListener();
-        $this->assertInstanceOf(ServiceAnnotationInterface::class, $listener);
 
         $annotationReader = new AnnotationReader();
         $annotation = $annotationReader->getClassAnnotation(new \ReflectionClass($listener), Callback::class);
@@ -118,23 +115,24 @@ class DisableBundleConfiguredSettingsListenerTest extends TestCase
 
     public function testRenderHelpIcon(): void
     {
-        $translator = $this->mockTranslator();
+        $translator = $this->createMock(TranslatorInterface::class);
         $translator
-            ->expects($this->exactly(2))
+            ->expects($this->once())
             ->method('trans')
+            ->with('tl_settings.configuredInBundle', [], 'contao_tl_settings')
         ;
 
         $imageAdapter = $this->mockAdapter(['getHtml']);
         $imageAdapter
             ->expects($this->once())
             ->method('getHtml')
-            ->willReturn('<img src="system/themes/icons/important.svg" alt="Alt text" title="title">')
+            ->willReturn('<img src="system/themes/icons/show.svg" alt="" title="title">')
         ;
 
         $listener = $this->createListener(null, $translator, [Image::class => $imageAdapter]);
 
         $this->assertSame(
-            '<img src="system/themes/icons/important.svg" alt="Alt text" title="title">',
+            '<img src="system/themes/icons/show.svg" alt="" title="title">',
             $listener->renderHelpIcon()
         );
     }
@@ -144,19 +142,11 @@ class DisableBundleConfiguredSettingsListenerTest extends TestCase
         $this->mockContaoFramework()->initialize();
 
         if (null === $translator) {
-            $translator = $this->mockTranslator();
+            $translator = $this->createMock(TranslatorInterface::class);
         }
 
         $framework = $this->mockContaoFramework($adapters);
 
         return new DisableBundleConfiguredSettingsListener($translator, $framework, $localConfig ?: []);
-    }
-
-    /**
-     * @return MockObject|TranslatorInterface
-     */
-    private function mockTranslator(): MockObject
-    {
-        return $this->createMock(TranslatorInterface::class);
     }
 }

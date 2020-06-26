@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\Image;
+use Contao\StringUtil;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
@@ -64,8 +65,12 @@ class DisableBundleConfiguredSettingsListener implements ServiceAnnotationInterf
         $adapter = $this->framework->getAdapter(Image::class);
 
         return $adapter->getHtml(
-            'important.svg',
-            $this->translator->trans('tl_settings.configuredInBundle', [], 'contao_tl_settings'),
+            'show.svg',
+            '',
+            sprintf(
+                'title="%s"',
+                StringUtil::specialchars($this->translator->trans('tl_settings.configuredInBundle', [], 'contao_tl_settings'))
+            )
         );
     }
 }
