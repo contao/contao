@@ -13,11 +13,16 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\Image;
 use Contao\StringUtil;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
-class DisableBundleConfiguredSettingsListener
+/**
+ * @Callback(table="tl_settings", target="config.onload")
+ */
+class DisableBundleConfiguredSettingsListener implements ServiceAnnotationInterface
 {
     /**
      * @var TranslatorInterface

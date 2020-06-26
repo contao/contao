@@ -13,13 +13,34 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\CoreBundle\EventListener\DataContainer\DisableBundleConfiguredSettingsListener;
+use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image;
+use Doctrine\Common\Annotations\AnnotationReader;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
 class DisableBundleConfiguredSettingsListenerTest extends TestCase
 {
+    public function testAnnotatedCallbacks(): void
+    {
+        $listener = $this->createListener();
+        $this->assertInstanceOf(ServiceAnnotationInterface::class, $listener);
+
+        $annotationReader = new AnnotationReader();
+        $annotation = $annotationReader->getClassAnnotation(new \ReflectionClass($listener), Callback::class);
+
+        $this->assertSame(
+            [
+                'table' => 'tl_settings',
+                'target' => 'config.onload',
+                'priority' => null,
+            ],
+            (array) $annotation
+        );
+    }
+
     public function testLoadCallbackExitsOnMissingLocalconfigParameter(): void
     {
         $GLOBALS['TL_DCA']['tl_settings'] = [];

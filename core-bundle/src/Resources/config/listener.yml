@@ -1,4 +1,7 @@
 services:
+    _defaults:
+        autoconfigure: true
+
     _instanceof:
         Contao\CoreBundle\Framework\FrameworkAwareInterface:
             calls:
@@ -279,5 +282,3 @@ services:
         arguments:
             - '@translator'
             - '@contao.framework'
-        tags:
-            - { name: contao.callback, table: tl_settings, target: config.onload }

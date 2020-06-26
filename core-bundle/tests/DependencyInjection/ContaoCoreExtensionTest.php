@@ -3595,17 +3595,5 @@ class ContaoCoreExtensionTest extends TestCase
             ],
             $definition->getArguments()
         );
-
-        $this->assertSame(
-            [
-                'contao.callback' => [
-                    [
-                        'table' => 'tl_settings',
-                        'target' => 'config.onload',
-                    ],
-                ],
-            ],
-            $definition->getTags()
-        );
     }
 }
