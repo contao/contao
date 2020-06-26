@@ -8,6 +8,11 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\Backend;
+use Contao\BackendUser;
+use Contao\Controller;
+use Contao\DataContainer;
+
 // Add palettes to tl_module
 $GLOBALS['TL_DCA']['tl_module']['palettes']['personalData']     = str_replace(',editable', ',editable,newsletters', $GLOBALS['TL_DCA']['tl_module']['palettes']['personalData']);
 $GLOBALS['TL_DCA']['tl_module']['palettes']['subscribe']        = '{title_legend},name,headline,type;{config_legend},nl_channels,nl_hideChannels,disableCaptcha;{text_legend},nl_text;{redirect_legend},jumpTo;{email_legend:hide},nl_subscribe;{template_legend:hide},nl_template;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
@@ -80,7 +85,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_template'] = array
 	'inputType'               => 'select',
 	'options_callback' => static function ()
 	{
-		return Contao\Controller::getTemplateGroup('nl_');
+		return Controller::getTemplateGroup('nl_');
 	},
 	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
 	'sql'                     => "varchar(64) NOT NULL default ''"
@@ -91,7 +96,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_template'] = array
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_module_newsletter extends Contao\Backend
+class tl_module_newsletter extends Backend
 {
 	/**
 	 * Import the back end user object
@@ -99,7 +104,7 @@ class tl_module_newsletter extends Contao\Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('Contao\BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 	}
 
 	/**
@@ -141,7 +146,7 @@ class tl_module_newsletter extends Contao\Backend
 	 *
 	 * @return array
 	 */
-	public function getChannels(Contao\DataContainer $dc)
+	public function getChannels(DataContainer $dc)
 	{
 		if (!$this->User->isAdmin && !is_array($this->User->newsletters))
 		{

@@ -101,10 +101,11 @@ abstract class Events extends Module
 	 * @param array   $arrCalendars
 	 * @param integer $intStart
 	 * @param integer $intEnd
+	 * @param boolean $blnFeatured
 	 *
 	 * @return array
 	 */
-	protected function getAllEvents($arrCalendars, $intStart, $intEnd)
+	protected function getAllEvents($arrCalendars, $intStart, $intEnd, $blnFeatured = null)
 	{
 		if (!\is_array($arrCalendars))
 		{
@@ -116,7 +117,7 @@ abstract class Events extends Module
 		foreach ($arrCalendars as $id)
 		{
 			// Get the events of the current period
-			$objEvents = CalendarEventsModel::findCurrentByPid($id, $intStart, $intEnd);
+			$objEvents = CalendarEventsModel::findCurrentByPid($id, $intStart, $intEnd, array('showFeatured' => $blnFeatured));
 
 			if ($objEvents === null)
 			{
@@ -386,6 +387,11 @@ abstract class Events extends Module
 		else
 		{
 			$arrEvent['class'] .= ' current';
+		}
+
+		if ($arrEvent['featured'] == 1)
+		{
+			$arrEvent['class'] .= ' featured';
 		}
 
 		$this->arrEvents[$intKey][$intStart][] = $arrEvent;
