@@ -477,7 +477,7 @@ class FigureBuilder
 
         $getResourceOrUrl = function ($target): array {
             if ($target instanceof ImageInterface) {
-                [$target, null];
+                return [$target, null];
             }
 
             $validExtensions = $this->locator
