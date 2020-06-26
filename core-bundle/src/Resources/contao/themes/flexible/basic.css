@@ -185,12 +185,11 @@ p {
 .widget h3 {
 	min-height:16px;
 }
-.widget h3 label {
+.widget h3 label,.widget h3 img {
 	margin-right:3px;
 }
-.widget h3 img {
-	vertical-align:bottom;
-	margin-right:3px;
+.widget legend img {
+	vertical-align:-3px;
 }
 .widget-captcha {
 	display:initial !important;
