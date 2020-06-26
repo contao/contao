@@ -8,6 +8,15 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\Backend;
+use Contao\Controller;
+use Contao\DataContainer;
+use Contao\Image;
+use Contao\Message;
+use Contao\OptInModel;
+use Contao\StringUtil;
+use Contao\System;
+
 $GLOBALS['TL_DCA']['tl_opt_in'] = array
 (
 	// Config
@@ -135,7 +144,7 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_opt_in extends Contao\Backend
+class tl_opt_in extends Backend
 {
 	/**
 	 * Show the related records
@@ -145,8 +154,8 @@ class tl_opt_in extends Contao\Backend
 	 */
 	public function showRelatedRecords($data, $row)
 	{
-		Contao\System::loadLanguageFile('tl_opt_in_related');
-		Contao\Controller::loadDataContainer('tl_opt_in_related');
+		System::loadLanguageFile('tl_opt_in_related');
+		Controller::loadDataContainer('tl_opt_in_related');
 
 		$objRelated = $this->Database->prepare("SELECT * FROM tl_opt_in_related WHERE pid=?")
 									 ->execute($row['id']);
@@ -172,15 +181,15 @@ class tl_opt_in extends Contao\Backend
 	/**
 	 * Resend the double opt-in token
 	 *
-	 * @param Contao\DataContainer $dc
+	 * @param DataContainer $dc
 	 */
-	public function resendToken(Contao\DataContainer $dc)
+	public function resendToken(DataContainer $dc)
 	{
-		$model = Contao\OptInModel::findByPk($dc->id);
+		$model = OptInModel::findByPk($dc->id);
 
-		Contao\System::getContainer()->get('contao.opt-in')->find($model->token)->send();
-		Contao\Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['MSC']['resendToken'], $model->email));
-		Contao\Controller::redirect($this->getReferer());
+		System::getContainer()->get('contao.opt-in')->find($model->token)->send();
+		Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['MSC']['resendToken'], $model->email));
+		Controller::redirect($this->getReferer());
 	}
 
 	/**
@@ -197,6 +206,6 @@ class tl_opt_in extends Contao\Backend
 	 */
 	public function resendButton($row, $href, $label, $title, $icon, $attributes)
 	{
-		return (!$row['confirmedOn'] &&!$row['invalidatedThrough'] && $row['emailSubject'] && $row['emailText'] && $row['createdOn'] > strtotime('-24 hours')) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : '';
+		return (!$row['confirmedOn'] &&!$row['invalidatedThrough'] && $row['emailSubject'] && $row['emailText'] && $row['createdOn'] > strtotime('-24 hours')) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : '';
 	}
 }

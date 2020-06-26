@@ -155,6 +155,11 @@ class ModuleNewsReader extends ModuleNews
 			$objPage->description = $this->prepareMetaDescription($objArticle->teaser);
 		}
 
+		if ($objArticle->robots)
+		{
+			$objPage->robots = $objArticle->robots;
+		}
+
 		$bundles = System::getContainer()->getParameter('kernel.bundles');
 
 		// HOOK: comments extension required

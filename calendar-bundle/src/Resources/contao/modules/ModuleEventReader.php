@@ -148,6 +148,11 @@ class ModuleEventReader extends Events
 			$objPage->description = $this->prepareMetaDescription($objEvent->teaser);
 		}
 
+		if ($objEvent->robots)
+		{
+			$objPage->robots = $objEvent->robots;
+		}
+
 		$intStartTime = $objEvent->startTime;
 		$intEndTime = $objEvent->endTime;
 		$span = Calendar::calculateSpan($intStartTime, $intEndTime);

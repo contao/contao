@@ -8,6 +8,19 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\Backend;
+use Contao\BackendUser;
+use Contao\Config;
+use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\DataContainer;
+use Contao\Image;
+use Contao\Input;
+use Contao\StringUtil;
+use Contao\System;
+use Contao\Versions;
+use Contao\Widget;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
 $GLOBALS['TL_DCA']['tl_form_field'] = array
 (
 	// Config
@@ -402,7 +415,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_form_field extends Contao\Backend
+class tl_form_field extends Backend
 {
 	/**
 	 * Import the back end user object
@@ -410,13 +423,13 @@ class tl_form_field extends Contao\Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('Contao\BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 	}
 
 	/**
 	 * Check permissions to edit table tl_form_field
 	 *
-	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
+	 * @throws AccessDeniedException
 	 */
 	public function checkPermission()
 	{
@@ -425,8 +438,8 @@ class tl_form_field extends Contao\Backend
 			return;
 		}
 
-		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = Contao\System::getContainer()->get('session');
+		/** @var SessionInterface $objSession */
+		$objSession = System::getContainer()->get('session');
 
 		// Set root IDs
 		if (empty($this->User->forms) || !is_array($this->User->forms))
@@ -438,35 +451,35 @@ class tl_form_field extends Contao\Backend
 			$root = $this->User->forms;
 		}
 
-		$id = strlen(Contao\Input::get('id')) ? Contao\Input::get('id') : CURRENT_ID;
+		$id = strlen(Input::get('id')) ? Input::get('id') : CURRENT_ID;
 
 		// Check current action
-		switch (Contao\Input::get('act'))
+		switch (Input::get('act'))
 		{
 			case 'paste':
 			case 'select':
 				// Check CURRENT_ID here (see #247)
 				if (!in_array(CURRENT_ID, $root))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access form ID ' . $id . '.');
+					throw new AccessDeniedException('Not enough permissions to access form ID ' . $id . '.');
 				}
 				break;
 
 			case 'create':
 			case 'cut':
 			case 'copy':
-				$pid = Contao\Input::get('pid');
+				$pid = Input::get('pid');
 
 				// Get form ID
-				if (Contao\Input::get('mode') == 1)
+				if (Input::get('mode') == 1)
 				{
 					$objField = $this->Database->prepare("SELECT pid FROM tl_form_field WHERE id=?")
 											   ->limit(1)
-											   ->execute(Contao\Input::get('pid'));
+											   ->execute(Input::get('pid'));
 
 					if ($objField->numRows < 1)
 					{
-						throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid form field ID ' . Contao\Input::get('pid') . '.');
+						throw new AccessDeniedException('Invalid form field ID ' . Input::get('pid') . '.');
 					}
 
 					$pid = $objField->pid;
@@ -474,10 +487,10 @@ class tl_form_field extends Contao\Backend
 
 				if (!in_array($pid, $root))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' form field ID ' . $id . ' to form ID ' . $pid . '.');
+					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' form field ID ' . $id . ' to form ID ' . $pid . '.');
 				}
 
-				if (Contao\Input::get('act') == 'create')
+				if (Input::get('act') == 'create')
 				{
 					break;
 				}
@@ -493,12 +506,12 @@ class tl_form_field extends Contao\Backend
 
 				if ($objField->numRows < 1)
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid form field ID ' . $id . '.');
+					throw new AccessDeniedException('Invalid form field ID ' . $id . '.');
 				}
 
 				if (!in_array($objField->pid, $root))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' form field ID ' . $id . ' of form ID ' . $objField->pid . '.');
+					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' form field ID ' . $id . ' of form ID ' . $objField->pid . '.');
 				}
 				break;
 
@@ -509,7 +522,7 @@ class tl_form_field extends Contao\Backend
 			case 'copyAll':
 				if (!in_array($id, $root))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access form ID ' . $id . '.');
+					throw new AccessDeniedException('Not enough permissions to access form ID ' . $id . '.');
 				}
 
 				$objForm = $this->Database->prepare("SELECT id FROM tl_form_field WHERE pid=?")
@@ -521,14 +534,14 @@ class tl_form_field extends Contao\Backend
 				break;
 
 			default:
-				if (Contao\Input::get('act'))
+				if (Input::get('act'))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid command "' . Contao\Input::get('act') . '".');
+					throw new AccessDeniedException('Invalid command "' . Input::get('act') . '".');
 				}
 
 				if (!in_array($id, $root))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access form ID ' . $id . '.');
+					throw new AccessDeniedException('Not enough permissions to access form ID ' . $id . '.');
 				}
 				break;
 		}
@@ -554,23 +567,23 @@ class tl_form_field extends Contao\Backend
 			$GLOBALS['TL_DCA']['tl_form_field']['fields']['type']['default'] = $this->User->fields[0];
 		}
 
-		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = Contao\System::getContainer()->get('session');
+		/** @var SessionInterface $objSession */
+		$objSession = System::getContainer()->get('session');
 
 		// Prevent editing form fields with not allowed types
-		if (Contao\Input::get('act') == 'edit' || Contao\Input::get('act') == 'delete' || (Contao\Input::get('act') == 'paste' && Contao\Input::get('mode') == 'copy'))
+		if (Input::get('act') == 'edit' || Input::get('act') == 'delete' || (Input::get('act') == 'paste' && Input::get('mode') == 'copy'))
 		{
 			$objField = $this->Database->prepare("SELECT type FROM tl_form_field WHERE id=?")
-									   ->execute(Contao\Input::get('id'));
+									   ->execute(Input::get('id'));
 
 			if ($objField->numRows && !in_array($objField->type, $this->User->fields))
 			{
-				throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to modify form fields of type "' . $objField->type . '".');
+				throw new AccessDeniedException('Not enough permissions to modify form fields of type "' . $objField->type . '".');
 			}
 		}
 
 		// Prevent editing content elements with not allowed types
-		if (Contao\Input::get('act') == 'editAll' || Contao\Input::get('act') == 'overrideAll' || Contao\Input::get('act') == 'deleteAll')
+		if (Input::get('act') == 'editAll' || Input::get('act') == 'overrideAll' || Input::get('act') == 'deleteAll')
 		{
 			$session = $objSession->all();
 
@@ -593,7 +606,7 @@ class tl_form_field extends Contao\Backend
 		}
 
 		// Prevent copying content elements with not allowed types
-		if (Contao\Input::get('act') == 'copyAll')
+		if (Input::get('act') == 'copyAll')
 		{
 			$session = $objSession->all();
 
@@ -630,7 +643,7 @@ class tl_form_field extends Contao\Backend
 
 		$strType = '
 <div class="cte_type ' . $key . '">' . $GLOBALS['TL_LANG']['FFL'][$arrRow['type']][0] . ($arrRow['name'] ? ' (' . $arrRow['name'] . ')' : '') . '</div>
-<div class="limit_height' . (!Contao\Config::get('doNotCollapse') ? ' h32' : '') . '">';
+<div class="limit_height' . (!Config::get('doNotCollapse') ? ' h32' : '') . '">';
 
 		$strClass = $GLOBALS['TL_FFL'][$arrRow['type']];
 
@@ -639,7 +652,7 @@ class tl_form_field extends Contao\Backend
 			return '';
 		}
 
-		/** @var Contao\Widget $objWidget */
+		/** @var Widget $objWidget */
 		$objWidget = new $strClass($arrRow);
 
 		$strWidget = $objWidget->parse();
@@ -651,7 +664,7 @@ class tl_form_field extends Contao\Backend
 			return $strType . "\n" . $objWidget->value . "\n</div>\n";
 		}
 
-		return $strType . Contao\StringUtil::insertTagToSrc($strWidget) . '
+		return $strType . StringUtil::insertTagToSrc($strWidget) . '
 </div>' . "\n";
 	}
 
@@ -662,23 +675,23 @@ class tl_form_field extends Contao\Backend
 	 */
 	public function optionImportWizard()
 	{
-		return ' <a href="' . $this->addToUrl('key=option') . '" title="' . Contao\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['ow_import'][1]) . '" onclick="Backend.getScrollOffset()">' . Contao\Image::getHtml('tablewizard.svg', $GLOBALS['TL_LANG']['MSC']['ow_import'][0]) . '</a>';
+		return ' <a href="' . $this->addToUrl('key=option') . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['ow_import'][1]) . '" onclick="Backend.getScrollOffset()">' . Image::getHtml('tablewizard.svg', $GLOBALS['TL_LANG']['MSC']['ow_import'][0]) . '</a>';
 	}
 
 	/**
 	 * Check the configured extensions against the upload types
 	 *
-	 * @param mixed                $varValue
-	 * @param Contao\DataContainer $dc
+	 * @param mixed         $varValue
+	 * @param DataContainer $dc
 	 *
 	 * @return string
 	 */
-	public function checkExtensions($varValue, Contao\DataContainer $dc)
+	public function checkExtensions($varValue, DataContainer $dc)
 	{
 		// Convert the extensions to lowercase
 		$varValue = strtolower($varValue);
-		$arrExtensions = Contao\StringUtil::trimsplit(',', $varValue);
-		$arrUploadTypes = Contao\StringUtil::trimsplit(',', strtolower(Contao\Config::get('uploadTypes')));
+		$arrExtensions = StringUtil::trimsplit(',', $varValue);
+		$arrUploadTypes = StringUtil::trimsplit(',', strtolower(Config::get('uploadTypes')));
 		$arrNotAllowed = array_diff($arrExtensions, $arrUploadTypes);
 
 		if (0 !== count($arrNotAllowed))
@@ -712,13 +725,13 @@ class tl_form_field extends Contao\Backend
 	/**
 	 * Return all form field templates as array
 	 *
-	 * @param Contao\DataContainer $dc
+	 * @param DataContainer $dc
 	 *
 	 * @return array
 	 */
-	public function getFormFieldTemplates(Contao\DataContainer $dc)
+	public function getFormFieldTemplates(DataContainer $dc)
 	{
-		if (Contao\Input::get('act') == 'overrideAll')
+		if (Input::get('act') == 'overrideAll')
 		{
 			return $this->getTemplateGroup('form_');
 		}
@@ -748,7 +761,7 @@ class tl_form_field extends Contao\Backend
 	 */
 	public function disableButton($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess($row['type'], 'fields') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return $this->User->hasAccess($row['type'], 'fields') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -768,12 +781,12 @@ class tl_form_field extends Contao\Backend
 		// Disable the button if the element type is not allowed
 		if (!$this->User->hasAccess($row['type'], 'fields'))
 		{
-			return Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 		}
 
-		if (Contao\Input::get('tid'))
+		if (Input::get('tid'))
 		{
-			$this->toggleVisibility(Contao\Input::get('tid'), (Contao\Input::get('state') == 1), (@func_get_arg(12) ?: null));
+			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
 			$this->redirect($this->getReferer());
 		}
 
@@ -790,21 +803,21 @@ class tl_form_field extends Contao\Backend
 			$icon = 'invisible.svg';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label, 'data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label, 'data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
 	}
 
 	/**
 	 * Toggle the visibility of a form field
 	 *
-	 * @param integer              $intId
-	 * @param boolean              $blnVisible
-	 * @param Contao\DataContainer $dc
+	 * @param integer       $intId
+	 * @param boolean       $blnVisible
+	 * @param DataContainer $dc
 	 */
-	public function toggleVisibility($intId, $blnVisible, Contao\DataContainer $dc=null)
+	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
 	{
 		// Set the ID and action
-		Contao\Input::setGet('id', $intId);
-		Contao\Input::setGet('act', 'toggle');
+		Input::setGet('id', $intId);
+		Input::setGet('act', 'toggle');
 
 		if ($dc)
 		{
@@ -831,7 +844,7 @@ class tl_form_field extends Contao\Backend
 		// Check the field access
 		if (!$this->User->hasAccess('tl_form_field::invisible', 'alexf'))
 		{
-			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to publish/unpublish form field ID ' . $intId . '.');
+			throw new AccessDeniedException('Not enough permissions to publish/unpublish form field ID ' . $intId . '.');
 		}
 
 		// Set the current record
@@ -847,12 +860,12 @@ class tl_form_field extends Contao\Backend
 
 				if (!$this->User->hasAccess($objRow->type, 'fields'))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to modify form fields of type "' . $objRow->type . '".');
+					throw new AccessDeniedException('Not enough permissions to modify form fields of type "' . $objRow->type . '".');
 				}
 			}
 		}
 
-		$objVersions = new Contao\Versions('tl_form_field', $intId);
+		$objVersions = new Versions('tl_form_field', $intId);
 		$objVersions->initialize();
 
 		// Reverse the logic (form fields have invisible=1)
