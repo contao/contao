@@ -60,4 +60,12 @@ class AssetListenerTest extends TestCase
 
         $this->assertFalse($listener->onReplaceInsertTags('env::pageTitle'));
     }
+
+    public function testThrowsExceptionIfAssetsDisabled(): void
+    {
+        $this->expectException(\RuntimeException::class);
+
+        $listener = new AssetListener(null);
+        $listener->onReplaceInsertTags('asset::foo/bar');
+    }
 }
