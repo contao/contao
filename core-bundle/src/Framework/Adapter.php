@@ -20,8 +20,6 @@ namespace Contao\CoreBundle\Framework;
  * @mixin T
  *
  * @internal Do not use this class in your code; use ContaoFramework::getAdapter() instead
- * @template T
- * @mixin T
  */
 class Adapter
 {
