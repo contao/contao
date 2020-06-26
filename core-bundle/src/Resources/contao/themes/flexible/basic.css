@@ -505,7 +505,7 @@ a.tl_submit {
 .w50 {
 	width:calc(50% - 30px);
 	float:left;
-	min-height:81px;
+	min-height:80px;
 }
 .long {
 	width:calc(100% - 30px); /* see #6320 */
@@ -528,15 +528,10 @@ a.tl_submit {
 	width:100%;
 }
 .m12 {
-	margin:0 15px;
-	padding:17px 0;
+	margin:17px 15px;
 }
 .cbx {
-	min-height:47px;
-}
-.cbx.m12 {
-	min-height:81px;
-	box-sizing: border-box;
+	min-height:46px;
 }
 .subpal {
 	clear:both;
