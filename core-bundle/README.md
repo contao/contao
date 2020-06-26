@@ -123,7 +123,6 @@ security:
 
             logout:
                 path: contao_frontend_logout
-                target: contao_root
                 handlers:
                     - contao.security.logout_handler
                 success_handler: contao.security.logout_success_handler

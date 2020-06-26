@@ -22,7 +22,10 @@ class RoutingTest extends FunctionalTestCase
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
+
+        static::bootKernel();
         static::resetDatabaseSchema();
+        static::ensureKernelShutdown();
     }
 
     protected function setUp(): void
@@ -41,8 +44,6 @@ class RoutingTest extends FunctionalTestCase
      */
     public function testResolvesAliases(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
     {
-        $this->loadFixtureFiles($fixtures);
-
         Config::set('useAutoItem', $autoItem);
 
         $_SERVER['REQUEST_URI'] = $request;
@@ -50,6 +51,8 @@ class RoutingTest extends FunctionalTestCase
 
         $client = $this->createClient([], $_SERVER);
         System::setContainer($client->getContainer());
+
+        $this->loadFixtureFiles($fixtures);
 
         $crawler = $client->request('GET', $request);
         $title = trim($crawler->filterXPath('//head/title')->text());
@@ -300,8 +303,6 @@ class RoutingTest extends FunctionalTestCase
      */
     public function testResolvesAliasesWithLocale(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
     {
-        $this->loadFixtureFiles($fixtures);
-
         Config::set('useAutoItem', $autoItem);
         Config::set('addLanguageToUrl', true);
 
@@ -310,6 +311,8 @@ class RoutingTest extends FunctionalTestCase
 
         $client = $this->createClient(['environment' => 'locale'], $_SERVER);
         System::setContainer($client->getContainer());
+
+        $this->loadFixtureFiles($fixtures);
 
         $crawler = $client->request('GET', $request);
         $title = trim($crawler->filterXPath('//head/title')->text());
@@ -550,8 +553,6 @@ class RoutingTest extends FunctionalTestCase
      */
     public function testResolvesAliasesWithoutUrlSuffix(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
     {
-        $this->loadFixtureFiles($fixtures);
-
         Config::set('useAutoItem', $autoItem);
 
         $_SERVER['REQUEST_URI'] = $request;
@@ -559,6 +560,8 @@ class RoutingTest extends FunctionalTestCase
 
         $client = $this->createClient(['environment' => 'suffix'], $_SERVER);
         System::setContainer($client->getContainer());
+
+        $this->loadFixtureFiles($fixtures);
 
         $crawler = $client->request('GET', $request);
         $title = trim($crawler->filterXPath('//head/title')->text());
@@ -769,14 +772,14 @@ class RoutingTest extends FunctionalTestCase
      */
     public function testResolvesTheRootPage(array $fixtures, string $request, int $statusCode, string $pageTitle, string $acceptLanguages, string $host): void
     {
-        $this->loadFixtureFiles($fixtures);
-
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptLanguages;
 
         $client = $this->createClient([], $_SERVER);
         System::setContainer($client->getContainer());
+
+        $this->loadFixtureFiles($fixtures);
 
         $crawler = $client->request('GET', $request);
         $title = trim($crawler->filterXPath('//head/title')->text());
@@ -868,8 +871,6 @@ class RoutingTest extends FunctionalTestCase
      */
     public function testResolvesTheRootPageWithLocale(array $fixtures, string $request, int $statusCode, string $pageTitle, string $acceptLanguages, string $host): void
     {
-        $this->loadFixtureFiles($fixtures);
-
         Config::set('addLanguageToUrl', true);
 
         $_SERVER['REQUEST_URI'] = $request;
@@ -878,6 +879,8 @@ class RoutingTest extends FunctionalTestCase
 
         $client = $this->createClient(['environment' => 'locale'], $_SERVER);
         System::setContainer($client->getContainer());
+
+        $this->loadFixtureFiles($fixtures);
 
         $crawler = $client->request('GET', $request);
         $title = trim($crawler->filterXPath('//head/title')->text());
@@ -1020,8 +1023,6 @@ class RoutingTest extends FunctionalTestCase
 
     public function testOrdersThePageModelsByCandidates(): void
     {
-        $this->loadFixtureFiles(['theme', 'language-sorting']);
-
         Config::set('folderUrl', true);
 
         $_SERVER['REQUEST_URI'] = '/main/sub-zh.html';
@@ -1030,6 +1031,8 @@ class RoutingTest extends FunctionalTestCase
 
         $client = $this->createClient([], $_SERVER);
         System::setContainer($client->getContainer());
+
+        $this->loadFixtureFiles(['theme', 'language-sorting']);
 
         $crawler = $client->request('GET', '/main/sub-zh.html');
         $title = trim($crawler->filterXPath('//head/title')->text());

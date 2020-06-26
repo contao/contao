@@ -8,6 +8,8 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\System;
+
 $GLOBALS['TL_DCA']['tl_settings'] = array
 (
 	// Config
@@ -47,7 +49,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 			'inputType'               => 'select',
 			'options_callback' => static function ()
 			{
-				return Contao\System::getTimeZones();
+				return System::getTimeZones();
 			},
 			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50')
 		),
