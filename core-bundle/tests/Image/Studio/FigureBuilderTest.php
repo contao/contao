@@ -807,8 +807,8 @@ class FigureBuilderTest extends TestCase
         $this->assertSame($metaData, $figure1->getMetaData());
         $this->assertFalse($figure1->hasLightBox());
 
-        $this->assertSame($imageResult2, $figure1->getImage()); // other image
-        $this->assertSame('bar', $figure2->getLinkAttributes()['custom']); // other link href
+        $this->assertSame($imageResult2, $figure2->getImage()); // other image
+        $this->assertSame('bar', $figure2->getLinkAttributes()['custom']); // other link attribute
         $this->assertSame($metaData, $figure2->getMetaData()); // same meta data
         $this->assertSame($lightBoxImageResult, $figure2->getLightBox());
     }

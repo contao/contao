@@ -28,7 +28,7 @@ class FigureTest extends TestCase
 
         $figure = new Figure($image);
 
-        $this->assertSame($figure, $figure->getImage());
+        $this->assertSame($image, $figure->getImage());
     }
 
     public function testHasNoLightBoxOrMetaDataByDefault(): void
@@ -38,8 +38,8 @@ class FigureTest extends TestCase
 
         $figure = new Figure($image);
 
-        $this->assertFalse($figure, $figure->hasLightBox());
-        $this->assertFalse($figure, $figure->hasMetaData());
+        $this->assertFalse($figure->hasLightBox());
+        $this->assertFalse($figure->hasMetaData());
     }
 
     public function testGetLightBox(): void
@@ -91,7 +91,7 @@ class FigureTest extends TestCase
 
         $figure = new Figure($image, $metaData);
 
-        $this->assertTrue($figure->hasLightBox());
+        $this->assertTrue($figure->hasMetaData());
         $this->assertSame($metaData, $figure->getMetaData());
     }
 
@@ -133,7 +133,7 @@ class FigureTest extends TestCase
         $figure = new Figure($image, $metaData, $attributes, $lightBox);
 
         $this->assertSame($expectedAttributes, $figure->getLinkAttributes());
-        $this->assertSame($expectedHref, $figure->getLinkHref());
+        $this->assertSame($expectedHref ?? '', $figure->getLinkHref());
         $this->assertSame($expectedHref, $figure->getLinkAttributes(true)['href'] ?? null);
     }
 
