@@ -112,11 +112,6 @@ class ModuleFaqReader extends Module
 			$objPage->description = $this->prepareMetaDescription($objFaq->question);
 		}
 
-		if ($objFaq->robots)
-		{
-			$objPage->robots = $objFaq->robots;
-		}
-
 		$this->Template->question = $objFaq->question;
 
 		// Clean the RTE output

@@ -35,7 +35,6 @@ use Contao\Model\Collection;
  * @property boolean $addEnclosure
  * @property string  $enclosure
  * @property boolean $noComments
- * @property string  $robots
  * @property boolean $published
  *
  * @method static FaqModel|null findById($id, $opt=array())
@@ -61,7 +60,6 @@ use Contao\Model\Collection;
  * @method static FaqModel|null findOneByAddEnclosure($val, $opt=array())
  * @method static FaqModel|null findOneByEnclosure($val, $opt=array())
  * @method static FaqModel|null findOneByNoComments($val, $opt=array())
- * @method static FaqModel|null findOneByRobots($val, $opt=array())
  * @method static FaqModel|null findOneByPublished($val, $opt=array())
  *
  * @method static Collection|FaqModel[]|FaqModel|null findByPid($val, $opt=array())
@@ -83,7 +81,6 @@ use Contao\Model\Collection;
  * @method static Collection|FaqModel[]|FaqModel|null findByAddEnclosure($val, $opt=array())
  * @method static Collection|FaqModel[]|FaqModel|null findByEnclosure($val, $opt=array())
  * @method static Collection|FaqModel[]|FaqModel|null findByNoComments($val, $opt=array())
- * @method static Collection|FaqModel[]|FaqModel|null findByRobots($val, $opt=array())
  * @method static Collection|FaqModel[]|FaqModel|null findByPublished($val, $opt=array())
  * @method static Collection|FaqModel[]|FaqModel|null findMultipleByIds($val, array $opt=array())
  * @method static Collection|FaqModel[]|FaqModel|null findBy($col, $val, array $opt=array())

@@ -44,12 +44,6 @@
       <trans-unit id="tl_faq.enclosure.1">
         <source>Please choose the files you want to attach.</source>
       </trans-unit>
-      <trans-unit id="tl_faq.robots.0">
-        <source>Robots tag</source>
-      </trans-unit>
-      <trans-unit id="tl_faq.robots.1">
-        <source>Here you can overwrite how search engines handle the FAQ.</source>
-      </trans-unit>
       <trans-unit id="tl_faq.noComments.0">
         <source>Disable comments</source>
       </trans-unit>
