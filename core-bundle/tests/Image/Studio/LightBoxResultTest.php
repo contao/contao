@@ -239,7 +239,7 @@ class LightBoxResultTest extends TestCase
         /** @var MockObject&ContainerInterface $locator */
         $locator = $this->createMock(ContainerInterface::class);
 
-        $lightBoxResult = new LightBoxResult($locator, null, 'foo://bar', );
+        $lightBoxResult = new LightBoxResult($locator, null, 'foo://bar');
 
         $this->assertSame('588f2f', $lightBoxResult->getGroupIdentifier());
     }
