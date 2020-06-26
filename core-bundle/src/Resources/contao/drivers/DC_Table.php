@@ -666,7 +666,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		// Get the new position
 		$this->getNewPosition('new', Input::get('pid'), Input::get('mode') == '2');
 
-		// Dynamically set the parent table of tl_content
+		// Dynamically set the parent table
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'])
 		{
 			$this->set['ptable'] = $this->ptable;
