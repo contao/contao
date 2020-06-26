@@ -22,6 +22,7 @@ use Contao\Image\PictureConfiguration;
 use Contao\PageModel;
 use Contao\Validator;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Webmozart\PathUtil\Path;
 
 /**
@@ -37,6 +38,13 @@ class FigureBuilder
      * @var ContainerInterface
      */
     private $locator;
+
+    /**
+     * @readonly
+     *
+     * @var Filesystem
+     */
+    private $filesystem;
 
     /**
      * The resource's absolute file path.
@@ -123,6 +131,8 @@ class FigureBuilder
     public function __construct(ContainerInterface $locator)
     {
         $this->locator = $locator;
+
+        $this->filesystem = new Filesystem();
     }
 
     /**
@@ -137,7 +147,7 @@ class FigureBuilder
         $this->filePath = Path::makeAbsolute($filesModel->path, $this->projectDir());
         $this->filesModel = $filesModel;
 
-        if (!file_exists($this->filePath)) {
+        if (!$this->filesystem->exists($this->filePath)) {
             throw new InvalidResourceException("No resource could be located at path '{$this->filePath}'.");
         }
 
@@ -197,7 +207,7 @@ class FigureBuilder
 
         $this->filePath = $path;
 
-        if (!file_exists($this->filePath)) {
+        if (!$this->filesystem->exists($this->filePath)) {
             throw new InvalidResourceException("No resource could be located at path '{$this->filePath}'.");
         }
 
