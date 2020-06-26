@@ -12,10 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\Image;
-use Contao\StringUtil;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
@@ -30,18 +29,16 @@ class DisableBundleConfiguredSettingsListener implements ServiceAnnotationInterf
     private $translator;
 
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
     /**
-     * Local config setting defined by parameter.
-     *
      * @var array
      */
     private $localConfig;
 
-    public function __construct(TranslatorInterface $translator, ContaoFrameworkInterface $framework, array $localConfig)
+    public function __construct(TranslatorInterface $translator, ContaoFramework $framework, array $localConfig)
     {
         $this->translator = $translator;
         $this->framework = $framework;
@@ -63,17 +60,12 @@ class DisableBundleConfiguredSettingsListener implements ServiceAnnotationInterf
 
     public function renderHelpIcon(): string
     {
+        /** @var Image $adapter */
         $adapter = $this->framework->getAdapter(Image::class);
 
         return $adapter->getHtml(
             'important.svg',
-            $this->translator->trans('tl_settings.configuredInBundle.0', [], 'contao_tl_settings'),
-            sprintf(
-                'title="%s"',
-                StringUtil::specialchars(
-                    $this->translator->trans('tl_settings.configuredInBundle.1', [], 'contao_tl_settings')
-                )
-            )
+            $this->translator->trans('tl_settings.configuredInBundle', [], 'contao_tl_settings'),
         );
     }
 }

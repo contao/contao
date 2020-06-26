@@ -86,6 +86,13 @@ services:
         tags:
             - kernel.event_subscriber
 
+    Contao\CoreBundle\EventListener\DataContainer\DisableBundleConfiguredSettingsListener:
+        arguments:
+            - '@translator'
+            - '@contao.framework'
+            - '%contao.localconfig%'
+        public: true
+
     contao.listener.data_container_callback:
         class: Contao\CoreBundle\EventListener\DataContainerCallbackListener
         tags:
@@ -276,9 +283,3 @@ services:
             - '@event_dispatcher'
         tags:
             - kernel.event_listener
-
-    Contao\CoreBundle\EventListener\DataContainer\DisableBundleConfiguredSettingsListener:
-        public: true
-        arguments:
-            - '@translator'
-            - '@contao.framework'

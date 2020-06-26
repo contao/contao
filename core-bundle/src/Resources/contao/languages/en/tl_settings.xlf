@@ -152,11 +152,8 @@
       <trans-unit id="tl_settings.chmod_legend">
         <source>Default access rights</source>
       </trans-unit>
-      <trans-unit id="tl_settings.configuredInBundle.0">
-        <source>Configured in bundle configuration</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.configuredInBundle.1">
-        <source>Setting is defined by Contao core bundle configuration.</source>
+      <trans-unit id="tl_settings.configuredInBundle">
+        <source>This setting has been defined in the app configuration and cannot be changed here anymore.</source>
       </trans-unit>
     </body>
   </file>

@@ -494,6 +494,25 @@ class ContaoCoreExtensionTest extends TestCase
         );
     }
 
+    public function testRegistersTheDisableBundleConfiguredSettingsListener(): void
+    {
+        $this->assertTrue($this->container->has(DisableBundleConfiguredSettingsListener::class));
+
+        $definition = $this->container->getDefinition(DisableBundleConfiguredSettingsListener::class);
+
+        $this->assertNull($definition->getClass());
+        $this->assertTrue($definition->isPublic());
+
+        $this->assertEquals(
+            [
+                new Reference('translator'),
+                new Reference('contao.framework'),
+                new Reference('%contao.localconfig%'),
+            ],
+            $definition->getArguments()
+        );
+    }
+
     public function testRegistersTheDataContainerCallbackListener(): void
     {
         $this->assertTrue($this->container->has('contao.listener.data_container_callback'));
@@ -3577,23 +3596,5 @@ class ContaoCoreExtensionTest extends TestCase
         $extension->load($params, $container);
 
         $this->assertSame($this->getTempDir().'/my/custom/dir', $container->getParameter('contao.image.target_dir'));
-    }
-
-    public function testRegistersTheDisableParametersBasedSettingsListener(): void
-    {
-        $this->assertTrue($this->container->has(DisableBundleConfiguredSettingsListener::class));
-
-        $definition = $this->container->getDefinition(DisableBundleConfiguredSettingsListener::class);
-
-        $this->assertNull($definition->getClass());
-        $this->assertTrue($definition->isPublic());
-
-        $this->assertEquals(
-            [
-                new Reference('translator'),
-                new Reference('contao.framework'),
-            ],
-            $definition->getArguments()
-        );
     }
 }
