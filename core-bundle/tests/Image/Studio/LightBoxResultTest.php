@@ -92,6 +92,8 @@ class LightBoxResultTest extends TestCase
         ;
 
         new LightBoxResult($locator, $resource, null);
+
+        unset($GLOBALS['objPage']);
     }
 
     public function testHasImage(): void

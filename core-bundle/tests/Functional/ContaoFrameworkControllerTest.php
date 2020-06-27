@@ -43,7 +43,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
 
     public static function tearDownAfterClass(): void
     {
-        unset($GLOBALS['TL_HOOKS']);
+        unset($GLOBALS['TL_HOOKS'], $GLOBALS['objPage']);
 
         parent::tearDownAfterClass();
     }
