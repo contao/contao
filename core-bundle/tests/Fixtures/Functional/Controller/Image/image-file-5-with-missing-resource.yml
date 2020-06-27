@@ -1,8 +1,8 @@
 tl_files:
     - id: 5
       pid: 100
-      uuid: '47df2aa1'
-      name: 'foo.jpg'
-      extension: 'jpg'
-      type: 'file'
-      path: 'files/this/does/not/exist/foo.jpg'
+      uuid: 47df2aa1
+      name: foo.jpg
+      extension: jpg
+      type: file
+      path: files/this/does/not/exist/foo.jpg

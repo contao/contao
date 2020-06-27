@@ -4,4 +4,4 @@ tl_theme:
 tl_layout:
     - id: 1
       pid: 1
-      lightboxSize: 'a:3:{i:0;s:2:"40";i:1;s:2:"30";i:2;s:13:"center_center";}'
+      lightboxSize: a:3:{i:0;s:2:"40";i:1;s:2:"30";i:2;s:13:"center_center";}

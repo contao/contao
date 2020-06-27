@@ -6,12 +6,12 @@ tl_article:
 tl_content:
     - id: 1
       pid: 1
-      ptable: 'tl_article'
-      type: 'image'
-      singleSRC: '663e868a'
-      size: 'a:3:{i:0;s:3:"150";i:1;s:3:"100";i:2;s:4:"crop";}'
+      ptable: tl_article
+      type: image
+      singleSRC: 663e868a
+      size: a:3:{i:0;s:3:"150";i:1;s:3:"100";i:2;s:4:"crop";}'
       overwriteMeta: '1'
-      alt: 'bar alt'
-      imageTitle: 'bar title'
+      alt: bar alt
+      imageTitle: bar title
       imageUrl: ''
-      caption: 'bar caption'
+      caption: bar caption

@@ -1,10 +1,10 @@
 tl_files:
     - id: 3
       pid: 100
-      uuid: '663e868a'
-      hash: '663e868a'
-      name: 'foo.jpg'
-      extension: 'jpg'
-      type: 'file'
-      path: 'files/public/foo.jpg'
-      meta: 'a:1:{s:2:"en";a:3:{s:5:"title";s:9:"foo title";s:3:"alt";s:7:"foo alt";s:7:"caption";s:11:"foo caption";}}'
+      uuid: 663e868a
+      hash: 663e868a
+      name: foo.jpg
+      extension: jpg
+      type: file
+      path: files/public/foo.jpg
+      meta: a:1:{s:2:"en";a:3:{s:5:"title";s:9:"foo title";s:3:"alt";s:7:"foo alt";s:7:"caption";s:11:"foo caption";}}
