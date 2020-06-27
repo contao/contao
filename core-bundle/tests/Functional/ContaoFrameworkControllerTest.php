@@ -26,16 +26,34 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
 {
     public static function setUpBeforeClass(): void
     {
+        parent::setUpBeforeClass();
+
         \define('TL_MODE', 'FE');
 
-        parent::setUpBeforeClass();
+        static::bootKernel();
         static::resetDatabaseSchema();
+        static::ensureKernelShutdown();
 
         // Register replacement for file insert tag (real UUIDs currently aren't supported by our fixture loader)
         $GLOBALS['TL_HOOKS']['replaceInsertTags'][] = [self::class, 'replaceFileTestInsertTag'];
 
         // Make demo resources available in the upload path
         (new Filesystem())->symlink(__DIR__.'/../Fixtures/files', __DIR__.'/../../var/files');
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        unset($GLOBALS['TL_HOOKS']);
+
+        parent::tearDownAfterClass();
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        static::bootKernel();
+        Registry::getInstance()->reset();
     }
 
     /**
@@ -45,8 +63,6 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
      */
     public function testAddImageToTemplate(array $databaseFixtures, \Closure $argumentCallback, array $expectedTemplateData): void
     {
-        Registry::getInstance()->reset();
-
         static::loadFixtures(
             array_map(
                 static function (string $fixture): string {
@@ -68,8 +84,6 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
      */
     public function testAddImageToTemplateNew(array $databaseFixtures, \Closure $argumentCallback, array $expectedTemplateData): void
     {
-        Registry::getInstance()->reset();
-
         static::loadFixtures(
             array_map(
                 static function (string $fixture): string {
