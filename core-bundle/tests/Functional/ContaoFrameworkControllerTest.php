@@ -61,6 +61,32 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
      *
      * @group legacy
      */
+    public function testAddImageToTemplateOld(array $databaseFixtures, \Closure $argumentCallback, array $expectedTemplateData): void
+    {
+        // fixme: Remove the following line to test against old implementation / also see #1862.
+        $this->markTestSkipped();
+
+        static::loadFixtures(
+            array_map(
+                static function (string $fixture): string {
+                    return __DIR__."/../Fixtures/Functional/Controller/Image/$fixture.yml";
+                },
+                $databaseFixtures
+            )
+        );
+
+        [$template, $dataRow, $maxWidth, $lightBoxGroupIdentifier, $filesModel] = $argumentCallback();
+
+        Controller::addImageToTemplate__old($template, $dataRow, $maxWidth, $lightBoxGroupIdentifier, $filesModel);
+
+        $this->assertSameTemplateData($expectedTemplateData, $template);
+    }
+
+    /**
+     * @dataProvider provideImageConfigurations
+     *
+     * @group legacy
+     */
     public function testAddImageToTemplate(array $databaseFixtures, \Closure $argumentCallback, array $expectedTemplateData): void
     {
         static::loadFixtures(
@@ -75,27 +101,6 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
         [$template, $dataRow, $maxWidth, $lightBoxGroupIdentifier, $filesModel] = $argumentCallback();
 
         Controller::addImageToTemplate($template, $dataRow, $maxWidth, $lightBoxGroupIdentifier, $filesModel);
-
-        $this->assertSameTemplateData($expectedTemplateData, $template);
-    }
-
-    /**
-     * @dataProvider provideImageConfigurations
-     */
-    public function testAddImageToTemplateNew(array $databaseFixtures, \Closure $argumentCallback, array $expectedTemplateData): void
-    {
-        static::loadFixtures(
-            array_map(
-                static function (string $fixture): string {
-                    return __DIR__."/../Fixtures/Functional/Controller/Image/$fixture.yml";
-                },
-                $databaseFixtures
-            )
-        );
-
-        [$template, $dataRow, $maxWidth, $lightBoxGroupIdentifier, $filesModel] = $argumentCallback();
-
-        Controller::addImageToTemplate_new($template, $dataRow, $maxWidth, $lightBoxGroupIdentifier, $filesModel);
 
         $this->assertSameTemplateData($expectedTemplateData, $template);
     }

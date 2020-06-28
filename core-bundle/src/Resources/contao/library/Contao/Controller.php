@@ -1518,7 +1518,10 @@ abstract class Controller extends System
 		return $arrPages;
 	}
 
-	public static function addImageToTemplate_new(object $template, array $rowData, ?int $maxWidth = null, ?string $lightBoxGroupIdentifier = null, FilesModel $filesModel = null): void
+	/**
+	 * Add an image to a template
+	 */
+	public static function addImageToTemplate(object $template, array $rowData, ?int $maxWidth = null, ?string $lightBoxGroupIdentifier = null, FilesModel $filesModel = null): void
 	{
 		// Helper: Create MetaData from the specified row data
 		$createMetaDataOverwriteFromRowData = static function (bool $interpretAsContentModel) use ($rowData)
@@ -1582,7 +1585,7 @@ abstract class Controller extends System
 			return $templateData;
 		};
 
-		// Helper: Get size and compiled margins and handle legacy $maxWidth option
+		// Helper: Get size and margins and handle legacy $maxWidth option
 		$getSizeAndMargin = static function () use ($rowData, $maxWidth)
 		{
 			$size = $rowData['size'] ?? null;
@@ -1739,7 +1742,7 @@ abstract class Controller extends System
 	 * @param string     $strLightboxId An optional lightbox ID
 	 * @param FilesModel $objModel      An optional files model
 	 */
-	public static function addImageToTemplate($objTemplate, $arrItem, $intMaxWidth=null, $strLightboxId=null, FilesModel $objModel=null)
+	public static function addImageToTemplate__old($objTemplate, $arrItem, $intMaxWidth=null, $strLightboxId=null, FilesModel $objModel=null)
 	{
 		try
 		{
