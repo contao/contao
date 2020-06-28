@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Functional;
 
+use Contao\Config;
 use Contao\ContentModel;
 use Contao\Controller;
 use Contao\FilesModel;
@@ -19,7 +20,6 @@ use Contao\FrontendTemplate;
 use Contao\PageModel;
 use Contao\Template;
 use Contao\TestCase\FunctionalTestCase;
-use Model\Registry;
 use Symfony\Component\Filesystem\Filesystem;
 
 class ContaoFrameworkControllerTest extends FunctionalTestCase
@@ -28,32 +28,32 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
     {
         parent::setUpBeforeClass();
 
-        \define('TL_MODE', 'FE');
-
         static::bootKernel();
         static::resetDatabaseSchema();
-        static::ensureKernelShutdown();
-
-        // Register replacement for file insert tag (real UUIDs currently aren't supported by our fixture loader)
-        $GLOBALS['TL_HOOKS']['replaceInsertTags'][] = [self::class, 'replaceFileTestInsertTag'];
 
         // Make demo resources available in the upload path
         (new Filesystem())->symlink(__DIR__.'/../Fixtures/files', __DIR__.'/../../var/files');
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        unset($GLOBALS['TL_HOOKS'], $GLOBALS['objPage']);
-
-        parent::tearDownAfterClass();
     }
 
     protected function setUp(): void
     {
         parent::setUp();
 
+        \define('TL_MODE', 'FE');
+
         static::bootKernel();
-        Registry::getInstance()->reset();
+
+        // Register replacement for file insert tag (real UUIDs currently aren't supported by our fixture loader)
+        $GLOBALS['TL_HOOKS']['replaceInsertTags'][] = [self::class, 'replaceFileTestInsertTag'];
+    }
+
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_HOOKS'], $GLOBALS['TL_CONFIG'], $GLOBALS['objPage']);
+
+        static::$container->get('contao.framework')->reset();
+
+        parent::tearDown();
     }
 
     /**
@@ -686,9 +686,170 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
             ),
         ];
 
+        yield 'fullsize/lightbox with path to valid resource (overwriting id)' => [
+            ['folder', 'image-file-1'],
+            static function () use ($baseRowData) {
+                return [
+                    new \stdClass(),
+                    array_merge($baseRowData, [
+                        'overwriteMeta' => '1',
+                        'fullsize' => '1',
+                        'imageUrl' => 'files/public/bar.jpg',
+                        'alt' => 'a',
+                        'imageTitle' => 'i',
+                        'caption' => 'c',
+                    ]),
+                    null,
+                    '<custom>',
+                ];
+            },
+            array_replace_recursive(
+                $baseExpectedTemplateData,
+                [
+                    'picture' => [
+                        'alt' => 'a',
+                    ],
+                    'lightboxPicture' => [
+                        'img' => [
+                            'src' => 'files/public/bar.jpg',
+                            'srcset' => 'files/public/bar.jpg',
+                            'hasSingleAspectRatio' => true,
+                            'height' => 200,
+                            'width' => 200,
+                        ],
+                        'sources' => [],
+                    ],
+                    'linkTitle' => 'i',
+                    'href' => 'files/public/bar.jpg',
+                    'attributes' => ' data-lightbox="<custom>"',
+                    'fullsize' => true,
+                ]
+            ),
+        ];
+
+        yield 'defining max-width via config' => [
+            ['folder', 'image-file-1'],
+            static function () use ($baseRowData) {
+                Config::set('maxImageWidth', 90);
+
+                return [
+                    new \stdClass(),
+                    $baseRowData,
+                ];
+            },
+            array_replace_recursive(
+                $baseExpectedTemplateData,
+                [
+                    'arrSize' => [
+                        0 => 90,
+                        1 => 60,
+                        3 => 'width="90" height="60"',
+                    ],
+                    'imgSize' => ' width="90" height="60"',
+                    'picture' => [
+                        'img' => [
+                            'width' => 90,
+                            'height' => 60,
+                        ],
+                        'title' => '',
+                    ],
+                ]
+            ),
+        ];
+
+        yield 'defining max-width explicitly' => [
+            ['folder', 'image-file-1'],
+            static function () use ($baseRowData) {
+                return [
+                    new \stdClass(),
+                    $baseRowData,
+                    90,
+                ];
+            },
+            array_replace_recursive(
+                $baseExpectedTemplateData,
+                [
+                    'arrSize' => [
+                        0 => 90,
+                        1 => 60,
+                        3 => 'width="90" height="60"',
+                    ],
+                    'imgSize' => ' width="90" height="60"',
+                    'picture' => [
+                        'img' => [
+                            'width' => 90,
+                            'height' => 60,
+                        ],
+                        'title' => '',
+                    ],
+                ]
+            ),
+        ];
+
+        yield 'defining max-width and margin' => [
+            ['folder', 'image-file-1'],
+            static function () use ($baseRowData) {
+                return [
+                    new \stdClass(),
+                    array_merge(
+                        $baseRowData,
+                        [
+                            'imagemargin' => serialize([
+                                'left' => 30,
+                                'right' => 30,
+                                'top' => 0,
+                                'bottom' => 0,
+                                'unit' => 'px',
+                            ]),
+                        ]
+                    ),
+                    90,
+                ];
+            },
+            array_replace_recursive(
+                $baseExpectedTemplateData,
+                [
+                    'arrSize' => [
+                        0 => 30,
+                        1 => 20,
+                        3 => 'width="30" height="20"',
+                    ],
+                    'imgSize' => ' width="30" height="20"',
+                    'picture' => [
+                        'img' => [
+                            'width' => 30,
+                            'height' => 20,
+                        ],
+                        'title' => '',
+                    ],
+                    'margin' => 'margin-right:30px;margin-left:30px;',
+                ]
+            ),
+        ];
+
+        yield 'setting link title fallback via title key' => [
+            ['folder', 'image-file-1'],
+            static function () use ($baseRowData) {
+                return [
+                    new \stdClass(),
+                    array_merge($baseRowData, ['title' => 'special']),
+                ];
+            },
+            array_replace_recursive(
+                $baseExpectedTemplateData,
+                [
+                    'picture' => [
+                        'title' => '',
+                    ],
+                    'linkTitle' => 'special',
+                ]
+            ),
+        ];
+
         yield 'image content element 1' => [
-            ['ce_image', 'folder', 'image-file-1'],
+            ['ce_image', 'folder', 'image-file-1', 'root-and-regular-page_en'],
             function () {
+                $this->loadGlobalObjPage(2);
                 [$rowData, $filesModel] = $this->getContentElementData(1);
 
                 return [
@@ -716,8 +877,9 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
         ];
 
         yield 'image content element 2 (overwriting meta data)' => [
-            ['ce_image-with-metadata', 'folder', 'image-file-1'],
+            ['ce_image-with-metadata', 'folder', 'image-file-1', 'root-and-regular-page_en'],
             function () {
+                $this->loadGlobalObjPage(2);
                 [$rowData, $filesModel] = $this->getContentElementData(1);
 
                 return [
@@ -746,8 +908,9 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
         ];
 
         yield 'image content element 3 (fullsize/lightbox without size)' => [
-            ['ce_image-with-fullsize', 'folder', 'image-file-3-with-metadata'],
+            ['ce_image-with-fullsize', 'folder', 'image-file-3-with-metadata', 'root-and-regular-page_en'],
             function () {
+                $this->loadGlobalObjPage(2);
                 [$rowData, $filesModel] = $this->getContentElementData(1);
 
                 return [
@@ -905,13 +1068,6 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                 ]
             ),
         ];
-
-        // todo:
-        //    - maxWidth legacy setting
-        //    - defining lightbox id
-        //    - bad preconditions
-        //     ...
-        //   $arrItem['title'] fallback
     }
 
     public function replaceFileTestInsertTag(string $tag)
@@ -975,7 +1131,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
                 }
 
                 $value = preg_replace('#^(assets/images/)\S*$#', '$1<anything>', $value);
-                $value = preg_replace('#(data-lightbox=)"\S*"#', '$1"<anything>"', $value);
+                $value = preg_replace('#(data-lightbox=)"(?!<custom>")\S*"#', '$1"<anything>"', $value);
             }
         );
 
