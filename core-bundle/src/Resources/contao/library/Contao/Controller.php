@@ -1668,6 +1668,10 @@ abstract class Controller extends System
 		{
 			if (null !== $filesModel)
 			{
+				// Make sure model points to the same resource (BC)
+				$filesModel = clone $filesModel;
+				$filesModel->path = $rowData['singleSRC'];
+
 				// Use source + meta data from files model (if not overwritten)
 				$figureBuilder
 					->fromFilesModel($filesModel)
