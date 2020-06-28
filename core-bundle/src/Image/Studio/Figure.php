@@ -226,7 +226,7 @@ final class Figure
 
         $image = $this->getImage();
         $originalSize = $image->getOriginalDimensions()->getSize();
-        $fileInfoImageSize = (new File($image->getImageSrc()))->imageSize;
+        $fileInfoImageSize = (new File(rawurldecode($image->getImageSrc())))->imageSize;
 
         $linkAttributes = $this->getLinkAttributes();
         $metaData = $this->hasMetaData() ? $this->getMetaData() : new MetaData([]);
