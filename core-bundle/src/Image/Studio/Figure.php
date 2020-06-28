@@ -224,9 +224,9 @@ final class Figure
             return $mapping;
         };
 
-        $img = $this->getImage();
-        $originalSize = $img->getOriginalDimensions()->getSize();
-        $fileInfoImageSize = (new File($img->getImageSrc()))->imageSize;
+        $image = $this->getImage();
+        $originalSize = $image->getOriginalDimensions()->getSize();
+        $fileInfoImageSize = (new File($image->getImageSrc()))->imageSize;
 
         $linkAttributes = $this->getLinkAttributes();
         $metaData = $this->hasMetaData() ? $this->getMetaData() : new MetaData([]);
@@ -235,16 +235,16 @@ final class Figure
         $templateData = array_merge(
             [
                 'picture' => [
-                    'img' => $img->getImg(),
-                    'sources' => $img->getSources(),
+                    'img' => $image->getImg(),
+                    'sources' => $image->getSources(),
                     'alt' => StringUtil::specialchars($metaData->getAlt()),
                 ],
                 'width' => $originalSize->getWidth(),
                 'height' => $originalSize->getHeight(),
                 'arrSize' => $fileInfoImageSize,
                 'imgSize' => sprintf(' width="%d" height="%d"', $fileInfoImageSize[0], $fileInfoImageSize[1]),
-                'singleSRC' => $img->getFilePath(),
-                'src' => $img->getImageSrc(),
+                'singleSRC' => $image->getFilePath(),
+                'src' => $image->getImageSrc(),
                 'fullsize' => ('_blank' === ($linkAttributes['target'] ?? null)) || $this->hasLightBox(),
                 'margin' => $marginProperty ?? '',
                 'addBefore' => 'below' !== $floatingProperty,
@@ -256,9 +256,9 @@ final class Figure
         // Link attributes (+ title)
         if ('' !== ($href = $this->getLinkHref())) {
             $templateData['href'] = $href;
-            $templateData['attributes'] = '';
+            $templateData['attributes'] = ''; // always define attributes key if href is set
 
-            // Set/move link title
+            // Move 'imageTitle' -> 'linkTitle'
             $templateData['linkTitle'] = ($templateData['imageTitle'] ?? null) ?? StringUtil::specialchars($metaData->getTitle());
             unset($templateData['imageTitle']);
         } elseif ($metaData->has(MetaData::VALUE_TITLE)) {
@@ -281,11 +281,11 @@ final class Figure
             $lightBox = $this->getLightBox();
 
             if ($lightBox->hasImage()) {
-                $image = $lightBox->getImage();
+                $lightBoxImage = $lightBox->getImage();
 
                 $templateData['lightboxPicture'] = [
-                    'img' => $image->getImg(),
-                    'sources' => $image->getSources(),
+                    'img' => $lightBoxImage->getImg(),
+                    'sources' => $lightBoxImage->getSources(),
                 ];
             }
         }
