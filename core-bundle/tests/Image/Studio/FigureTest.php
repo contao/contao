@@ -17,7 +17,12 @@ use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\ImageResult;
 use Contao\CoreBundle\Image\Studio\LightBoxResult;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\FrontendTemplate;
+use Contao\Image\ImageDimensions;
+use Contao\System;
+use Imagine\Image\BoxInterface;
 use PHPUnit\Framework\MockObject\MockObject;
+use Webmozart\PathUtil\Path;
 
 class FigureTest extends TestCase
 {
@@ -259,13 +264,291 @@ class FigureTest extends TestCase
         ];
     }
 
-//    public function testGetLegacyTemplateData(): void
-//    {
-//          // todo
-//    }
-//
-//    public function testApplyLegacyTemplateData(): void
-//    {
-//          // todo
-//    }
+    /**
+     * @dataProvider provideLegacyTemplateDataScenarios
+     */
+    public function testGetLegacyTemplateData(array $preconditions, array $buildAttributes, \Closure $assert): void
+    {
+        [$metaData, $linkAttributes, $lightBox] = $preconditions;
+        [$includeFullMetaData, $floatingProperty, $marginProperty] = $buildAttributes;
+
+        System::setContainer($this->getContainerWithContaoConfiguration());
+
+        $figure = new Figure($this->getImageMock(), $metaData, $linkAttributes, $lightBox);
+        $data = $figure->getLegacyTemplateData($includeFullMetaData, $floatingProperty, $marginProperty);
+
+        $assert($data);
+    }
+
+    public function provideLegacyTemplateDataScenarios(): \Generator
+    {
+        $imageSrc = Path::canonicalize(__DIR__.'/../../Fixtures/files/public/foo.jpg');
+
+        yield 'basic image data' => [
+            [null, null, null],
+            [false, null, null],
+            function (array $data) use ($imageSrc): void {
+                $this->assertSame(['img foo'], $data['picture']['img']);
+                $this->assertSame(['sources foo'], $data['picture']['sources']);
+                $this->assertSame($imageSrc, $data['src']);
+                $this->assertSame('path/to/resource.jpg', $data['singleSRC']);
+                $this->assertSame(100, $data['width']);
+                $this->assertSame(50, $data['height']);
+
+                $this->assertTrue($data['addImage']);
+                $this->assertFalse($data['fullsize']);
+            },
+        ];
+
+        $simpleMetaData = new MetaData([
+            MetaData::VALUE_ALT => 'a',
+            MetaData::VALUE_TITLE => 't',
+            'foo' => 'bar',
+        ]);
+
+        $metaDataWithLink = new MetaData([
+            MetaData::VALUE_TITLE => 't',
+            MetaData::VALUE_URL => 'foo://meta',
+        ]);
+
+        yield 'with meta data' => [
+            [$simpleMetaData, null, null],
+            [false, null, null],
+            function (array $data): void {
+                $this->assertSame('a', $data['picture']['alt']);
+                $this->assertSame('t', $data['picture']['title']);
+                $this->assertArrayNotHasKey('foo', $data);
+            },
+        ];
+
+        yield 'with full meta data' => [
+            [$simpleMetaData, null, null],
+            [true, null, null],
+            function (array $data): void {
+                $this->assertSame('a', $data['alt']);
+                $this->assertSame('t', $data['imageTitle']);
+                $this->assertSame('bar', $data['foo']);
+            },
+        ];
+
+        yield 'with meta data containing link' => [
+            [$metaDataWithLink, null, null],
+            [true, null, null],
+            function (array $data): void {
+                $this->assertSame('t', $data['linkTitle']);
+                $this->assertSame('foo://meta', $data['imageUrl']);
+                $this->assertSame('foo://meta', $data['href']);
+                $this->assertSame('', $data['attributes']);
+
+                $this->assertArrayNotHasKey('title', $data['picture']);
+            },
+        ];
+
+        $basicLinkAttributes = [
+            'href' => 'foo://bar',
+        ];
+
+        $extendedLinkAttributes = [
+            'href' => 'foo://bar',
+            'target' => '_blank',
+            'foo' => 'bar',
+        ];
+
+        yield 'with href link attribute' => [
+            [null, $basicLinkAttributes, null],
+            [false, null, null],
+            function (array $data): void {
+                $this->assertSame('', $data['linkTitle']);
+                $this->assertSame('foo://bar', $data['href']);
+                $this->assertSame('', $data['attributes']);
+
+                $this->assertArrayNotHasKey('title', $data['picture']);
+            },
+        ];
+
+        yield 'with full meta data and href link attribute' => [
+            [$metaDataWithLink, $basicLinkAttributes, null],
+            [true, null, null],
+            function (array $data): void {
+                $this->assertSame('foo://meta', $data['imageUrl']);
+                $this->assertSame('foo://bar', $data['href']);
+            },
+        ];
+
+        yield 'with extended link attributes' => [
+            [null, $extendedLinkAttributes, null],
+            [false, null, null],
+            function (array $data): void {
+                $this->assertTrue($data['fullsize']);
+                $this->assertSame(' target="_blank" foo="bar"', $data['attributes']);
+            },
+        ];
+
+        /** @var ImageResult&MockObject $lightBoxImage */
+        $lightBoxImage = $this->createMock(ImageResult::class);
+
+        $lightBoxImage
+            ->method('getImg')
+            ->willReturn(['light box img'])
+        ;
+
+        $lightBoxImage
+            ->method('getSources')
+            ->willReturn(['light box sources'])
+        ;
+
+        /** @var LightBoxResult&MockObject $lightBox */
+        $lightBox = $this->createMock(LightBoxResult::class);
+
+        $lightBox
+            ->method('hasImage')
+            ->willReturn(true)
+        ;
+
+        $lightBox
+            ->method('getImage')
+            ->willReturn($lightBoxImage)
+        ;
+
+        $lightBox
+            ->method('getGroupIdentifier')
+            ->willReturn('12345')
+        ;
+
+        $lightBox
+            ->method('getLinkHref')
+            ->willReturn('foo://bar')
+        ;
+
+        yield 'with light box' => [
+            [null, null, $lightBox],
+            [false, null, null],
+            function (array $data): void {
+                $this->assertSame(['light box img'], $data['lightboxPicture']['img']);
+                $this->assertSame(['light box sources'], $data['lightboxPicture']['sources']);
+
+                $this->assertSame('foo://bar', $data['href']);
+                $this->assertSame(' data-lightbox="12345"', $data['attributes']);
+
+                $this->assertTrue($data['fullsize']);
+                $this->assertSame('', $data['linkTitle']);
+                $this->assertArrayNotHasKey('title', $data['picture']);
+            },
+        ];
+
+        yield 'with legacy properties 1' => [
+            [null, null, null],
+            [false, 'above', '<some margin>'],
+            function (array $data): void {
+                $this->assertTrue($data['addBefore']);
+                $this->assertSame('<some margin>', $data['margin']);
+            },
+        ];
+
+        yield 'with legacy properties 2' => [
+            [null, null, null],
+            [false, 'below', null],
+            function (array $data): void {
+                $this->assertFalse($data['addBefore']);
+            },
+        ];
+    }
+
+    public function testApplyLegacyTemplate(): void
+    {
+        System::setContainer($this->getContainerWithContaoConfiguration());
+
+        $figure = new Figure($this->getImageMock());
+
+        $template = new FrontendTemplate('ce_image');
+        $figure->applyLegacyTemplateData($template);
+        $this->assertSame(['img foo'], $template->getData()['picture']['img']);
+
+        $template = new \stdClass();
+        $figure->applyLegacyTemplateData($template);
+        $this->assertSame(['img foo'], $template->picture['img']);
+    }
+
+    public function testApplyLegacyTemplateDataDoesNotOverwriteHref(): void
+    {
+        System::setContainer($this->getContainerWithContaoConfiguration());
+
+        $figure = new Figure($this->getImageMock(), null, ['href' => 'foo://bar']);
+
+        $template = new \stdClass();
+        $figure->applyLegacyTemplateData($template);
+
+        $this->assertSame('foo://bar', $template->href);
+
+        $template = new \stdClass();
+        $template->href = 'do-not-overwrite';
+        $figure->applyLegacyTemplateData($template);
+
+        $this->assertSame('do-not-overwrite', $template->href);
+        $this->assertSame('foo://bar', $template->imageHref);
+    }
+
+    /**
+     * @return ImageResult&MockObject
+     */
+    private function getImageMock()
+    {
+        $img = ['img foo'];
+        $sources = ['sources foo'];
+        $filePath = 'path/to/resource.jpg';
+        $imageSrc = Path::canonicalize(__DIR__.'/../../Fixtures/files/public/foo.jpg'); // use existing file so that we can read the file info
+        $originalWidth = 100;
+        $originalHeight = 50;
+
+        /** @var BoxInterface&MockObject $originalSize */
+        $originalSize = $this->createMock(BoxInterface::class);
+
+        $originalSize
+            ->method('getWidth')
+            ->willReturn($originalWidth)
+        ;
+
+        $originalSize
+            ->method('getHeight')
+            ->willReturn($originalHeight)
+        ;
+
+        /** @var ImageDimensions&MockObject $originalDimensions */
+        $originalDimensions = $this->createMock(ImageDimensions::class);
+
+        $originalDimensions
+            ->method('getSize')
+            ->willReturn($originalSize)
+        ;
+
+        /** @var ImageResult&MockObject $image */
+        $image = $this->createMock(ImageResult::class);
+
+        $image
+            ->method('getOriginalDimensions')
+            ->willReturn($originalDimensions)
+        ;
+
+        $image
+            ->method('getImg')
+            ->willReturn($img)
+        ;
+
+        $image
+            ->method('getSources')
+            ->willReturn($sources)
+        ;
+
+        $image
+            ->method('getFilePath')
+            ->willReturn($filePath)
+        ;
+
+        $image
+            ->method('getImageSrc')
+            ->willReturn($imageSrc)
+        ;
+
+        return $image;
+    }
 }
