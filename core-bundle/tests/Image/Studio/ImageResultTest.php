@@ -142,6 +142,9 @@ class ImageResultTest extends TestCase
         $imageResult = new ImageResult($locator, $filePath);
 
         $this->assertSame($dimensions, $imageResult->getOriginalDimensions());
+
+        // Expect result to be cached on second call
+        $imageResult->getOriginalDimensions();
     }
 
     public function testGetOriginalDimensionsFromImageResource(): void

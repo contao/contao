@@ -20,7 +20,6 @@ use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
 class Studio implements ServiceSubscriberInterface
@@ -65,7 +64,6 @@ class Studio implements ServiceSubscriberInterface
             self::class,
             'contao.image.picture_factory' => PictureFactoryInterface::class,
             'contao.image.image_factory' => ImageFactoryInterface::class,
-            'request_stack' => RequestStack::class,
             'parameter_bag' => ParameterBagInterface::class,
             'contao.assets.files_context' => ContaoContext::class,
             'contao.framework' => ContaoFramework::class,

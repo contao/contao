@@ -87,6 +87,18 @@ class FigureTest extends TestCase
         $this->assertSame(1, $called);
     }
 
+    public function testGetLightBoxFailsIfNotSet(): void
+    {
+        /** @var ImageResult&MockObject $image */
+        $image = $this->createMock(ImageResult::class);
+
+        $figure = new Figure($image);
+
+        $this->expectException(\LogicException::class);
+
+        $figure->getLightBox();
+    }
+
     public function testGetMetaData(): void
     {
         /** @var ImageResult&MockObject $image */
@@ -123,6 +135,18 @@ class FigureTest extends TestCase
 
         $figure->getMetaData(); // second call should be cached
         $this->assertSame(1, $called);
+    }
+
+    public function testGetMetaDataFailsIfNotSet(): void
+    {
+        /** @var ImageResult&MockObject $image */
+        $image = $this->createMock(ImageResult::class);
+
+        $figure = new Figure($image);
+
+        $this->expectException(\LogicException::class);
+
+        $figure->getMetaData();
     }
 
     /**

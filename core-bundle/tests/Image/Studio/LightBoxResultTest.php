@@ -96,6 +96,91 @@ class LightBoxResultTest extends TestCase
         unset($GLOBALS['objPage']);
     }
 
+    public function testFallBackLightBoxSizeConfigurationFailsIfNoLightBoxSizeSet(): void
+    {
+        $resource = 'foo/bar.png';
+        $layoutId = '1';
+
+        /** @var MockObject&LayoutModel $layoutModel */
+        $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
+        $layoutModel->lightboxSize = '';
+
+        $layoutModelAdapter = $this->mockAdapter(['findByPk']);
+        $layoutModelAdapter
+            ->method('findByPk')
+            ->with($layoutId)
+            ->willReturn($layoutModel)
+        ;
+
+        $framework = $this->mockContaoFramework([LayoutModel::class => $layoutModelAdapter]);
+
+        /** @var MockObject&PageModel $pageModel */
+        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel->layout = $layoutId;
+
+        $GLOBALS['objPage'] = $pageModel;
+
+        /** @var MockObject&ImageResult $image */
+        $image = $this->createMock(ImageResult::class);
+
+        /** @var MockObject&Studio $studio */
+        $studio = $this->createMock(Studio::class);
+        $studio
+            ->expects($this->once())
+            ->method('createImage')
+            ->with($resource, null)
+            ->willReturn($image)
+        ;
+
+        /** @var MockObject&ContainerInterface $locator */
+        $locator = $this->createMock(ContainerInterface::class);
+        $locator
+            ->expects($this->exactly(2))
+            ->method('get')
+            ->willReturnMap([
+                ['contao.framework', $framework],
+                [Studio::class, $studio],
+            ])
+        ;
+
+        new LightBoxResult($locator, $resource, null);
+
+        unset($GLOBALS['objPage']);
+    }
+
+    public function testFallBackLightBoxSizeConfigurationFailsIfNoPage(): void
+    {
+        $resource = 'foo/bar.png';
+
+        $framework = $this->mockContaoFramework();
+
+        /** @var MockObject&ImageResult $image */
+        $image = $this->createMock(ImageResult::class);
+
+        /** @var MockObject&Studio $studio */
+        $studio = $this->createMock(Studio::class);
+        $studio
+            ->expects($this->once())
+            ->method('createImage')
+            ->with($resource, null)
+            ->willReturn($image)
+        ;
+
+        /** @var MockObject&ContainerInterface $locator */
+        $locator = $this->createMock(ContainerInterface::class);
+        $locator
+            ->expects($this->exactly(2))
+            ->method('get')
+            ->willReturnMap([
+                ['contao.framework', $framework],
+                [Studio::class, $studio],
+            ])
+        ;
+
+        // Note: $GLOBALS['objPage'] is not set at this point
+        new LightBoxResult($locator, $resource, null);
+    }
+
     public function testHasImage(): void
     {
         $resource = 'foo/bar.png';

@@ -65,7 +65,7 @@ class FigureBuilderTest extends TestCase
     {
         /** @var FileSModel&MockObject $model */
         $model = $this->mockClassWithProperties(FilesModel::class);
-        $model->type = 'path';
+        $model->type = 'file';
         $model->path = 'this/does/not/exist.jpg';
 
         $this->expectException(InvalidResourceException::class);
@@ -538,6 +538,53 @@ class FigureBuilderTest extends TestCase
         ];
     }
 
+    public function testAutoFetchMetaDataFromFilesModelFailsIfNoPage(): void
+    {
+        System::setContainer($this->getContainerWithContaoConfiguration());
+
+        $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields'] = [
+            'title' => '', 'alt' => '', 'link' => '', 'caption' => '',
+        ];
+
+        [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
+
+        /** @var FilesModel $filesModel */
+        $filesModel = (new \ReflectionClass(FilesModel::class))
+            ->newInstanceWithoutConstructor()
+        ;
+
+        $filesModel->setRow([
+            'type' => 'file',
+            'path' => $relativeFilePath,
+            'meta' => '',
+        ]);
+
+        $filesModelAdapter = $this->mockAdapter(['getMetaFields']);
+        $filesModelAdapter
+            ->method('getMetaFields')
+            ->willReturn(array_keys($GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']))
+        ;
+
+        $framework = $this->mockContaoFramework([FilesModel::class => $filesModelAdapter]);
+
+        $studio = $this->getStudioMockForImage($absoluteFilePath);
+
+        $figure = $this->getFigureBuilder($studio, $framework)
+            ->fromFilesModel($filesModel)
+            ->build()
+        ;
+
+        $emptyMetaData = [
+            MetaData::VALUE_TITLE => '',
+            MetaData::VALUE_ALT => '',
+            MetaData::VALUE_URL => '',
+            MetaData::VALUE_CAPTION => '',
+        ];
+
+        // Note: $GLOBALS['objPage'] is not set at this point
+        $this->assertSame($emptyMetaData, $figure->getMetaData()->all());
+    }
+
     public function testSetLinkAttribute(): void
     {
         $figure = $this->getFigure(
@@ -549,15 +596,42 @@ class FigureBuilderTest extends TestCase
         $this->assertSame(['foo' => 'bar'], $figure->getLinkAttributes());
     }
 
+    public function testUnsetLinkAttribute(): void
+    {
+        $figure = $this->getFigure(
+            static function (FigureBuilder $builder): void {
+                $builder->setLinkAttribute('foo', 'bar');
+                $builder->setLinkAttribute('foobar', 'test');
+                $builder->setLinkAttribute('foo', null);
+            }
+        );
+
+        $this->assertSame(['foobar' => 'test'], $figure->getLinkAttributes());
+    }
+
     public function testSetLinkHref(): void
     {
         $figure = $this->getFigure(
             static function (FigureBuilder $builder): void {
-                $builder->setLinkAttribute('href', 'https://example.com');
+                $builder->setLinkHref('https://example.com');
             }
         );
 
         $this->assertSame('https://example.com', $figure->getLinkHref());
+    }
+
+    public function testSetsTargetAttributeIfFullsizeWithoutLightBox(): void
+    {
+        $figure = $this->getFigure(
+            static function (FigureBuilder $builder): void {
+                $builder
+                    ->setLightBoxResourceOrUrl('https://exampe.com/this-is-no-image')
+                    ->enableLightBox()
+                ;
+            }
+        );
+
+        $this->assertSame('_blank', $figure->getLinkAttributes()['target']);
     }
 
     public function testLightBoxIsDisabledByDefault(): void

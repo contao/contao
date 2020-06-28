@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Image\Studio;
 
-use Closure;
 use Contao\CoreBundle\File\MetaData;
 use Contao\File;
 use Contao\StringUtil;

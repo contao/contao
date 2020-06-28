@@ -34,20 +34,40 @@ class MetaDataTest extends TestCase
     public function testCreateAndAccessMetaDataContainer(): void
     {
         $metaData = new MetaData([
-            'link' => 'foo://bar',
+            MetaData::VALUE_ALT => 'alt',
+            MetaData::VALUE_CAPTION => 'caption',
+            MetaData::VALUE_TITLE => 'title',
+            MetaData::VALUE_URL => 'url',
             'foo' => 'bar',
         ]);
 
         $this->assertFalse($metaData->empty());
 
-        $this->assertSame('foo://bar', $metaData->getUrl());
-        $this->assertSame('', $metaData->getTitle());
+        $this->assertSame('alt', $metaData->getAlt());
+        $this->assertSame('caption', $metaData->getCaption());
+        $this->assertSame('title', $metaData->getTitle());
+        $this->assertSame('url', $metaData->getUrl());
         $this->assertSame('bar', $metaData->get('foo'));
 
         $this->assertSame([
-            MetaData::VALUE_URL => 'foo://bar',
+            MetaData::VALUE_ALT => 'alt',
+            MetaData::VALUE_CAPTION => 'caption',
+            MetaData::VALUE_TITLE => 'title',
+            MetaData::VALUE_URL => 'url',
             'foo' => 'bar',
         ], $metaData->all());
+    }
+
+    public function testGetEmpty(): void
+    {
+        $metaData = new MetaData([]);
+
+        $this->assertSame('', $metaData->getAlt());
+        $this->assertSame('', $metaData->getCaption());
+        $this->assertSame('', $metaData->getTitle());
+        $this->assertSame('', $metaData->getUrl());
+
+        $this->assertNull($metaData->get('foo'));
     }
 
     public function testEmpty(): void
