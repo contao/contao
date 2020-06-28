@@ -55,31 +55,31 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
         $GLOBALS['TL_HOOKS']['replaceInsertTags'][] = [self::class, 'replaceFileTestInsertTag'];
     }
 
-    /**
-     * @dataProvider provideImageConfigurations
-     *
-     * @group legacy
-     */
-    public function testAddImageToTemplateOld(array $databaseFixtures, \Closure $argumentCallback, array $expectedTemplateData): void
-    {
-        // fixme: Uncomment the following line to test + compare against old implementation / also see #1862.
-        $this->markTestSkipped();
+    // fixme: Uncomment the following method to test + compare against old implementation / also see #1862.
 
-        static::loadFixtures(
-            array_map(
-                static function (string $fixture): string {
-                    return __DIR__."/../Fixtures/Functional/Controller/Image/$fixture.yml";
-                },
-                $databaseFixtures
-            )
-        );
-
-        [$template, $dataRow, $maxWidth, $lightBoxGroupIdentifier, $filesModel] = $argumentCallback();
-
-        Controller::addImageToTemplate__old($template, $dataRow, $maxWidth, $lightBoxGroupIdentifier, $filesModel);
-
-        $this->assertSameTemplateData($expectedTemplateData, $template);
-    }
+//    /**
+//     * @dataProvider provideImageConfigurations
+//     *
+//     * @group legacy
+//     */
+//    public function testAddImageToTemplateOld(array $databaseFixtures, \Closure $argumentCallback, array $expectedTemplateData): void
+//    {
+//
+//        static::loadFixtures(
+//            array_map(
+//                static function (string $fixture): string {
+//                    return __DIR__."/../Fixtures/Functional/Controller/Image/$fixture.yml";
+//                },
+//                $databaseFixtures
+//            )
+//        );
+//
+//        [$template, $dataRow, $maxWidth, $lightBoxGroupIdentifier, $filesModel] = $argumentCallback();
+//
+//        Controller::addImageToTemplate__old($template, $dataRow, $maxWidth, $lightBoxGroupIdentifier, $filesModel);
+//
+//        $this->assertSameTemplateData($expectedTemplateData, $template);
+//    }
 
     /**
      * @dataProvider provideImageConfigurations
