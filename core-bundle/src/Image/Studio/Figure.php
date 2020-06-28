@@ -249,7 +249,6 @@ final class Figure
                 'margin' => $marginProperty ?? '',
                 'addBefore' => 'below' !== $floatingProperty,
                 'addImage' => true,
-                'linkTitle' => '', // always there if not explicitly removed (BC)
             ],
             $includeFullMetaData ? $createLegacyMetaDataMapping($metaData) : []
         );

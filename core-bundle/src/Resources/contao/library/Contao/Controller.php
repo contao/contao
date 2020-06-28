@@ -1697,6 +1697,9 @@ abstract class Controller extends System
 				$rowData['floating'] ?: null,
 				$margin
 			);
+
+		// Fall back to manually specified link title or empty string if not set (BC)
+		$template->linkTitle = $template->linkTitle ?? StringUtil::specialchars($rowData['title'] ?? null) ?? '';
 	}
 
 	/**
