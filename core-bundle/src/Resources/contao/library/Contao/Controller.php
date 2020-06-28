@@ -24,6 +24,7 @@ use Contao\Image\PictureConfiguration;
 use Contao\Model\Collection;
 use Imagine\Image\BoxInterface;
 use League\Uri\Components\Query;
+use Psr\Log\LogLevel;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\Glob;
 
@@ -1687,6 +1688,14 @@ abstract class Controller extends System
 		}
 		catch (InvalidResourceException $e)
 		{
+			System::getContainer()
+				->get('monolog.logger.contao')
+				->log(
+					LogLevel::ERROR,
+					sprintf('Image "%s" could not be processed: %s', $rowData['singleSRC'], $e->getMessage()),
+					array('contao' => new \Contao\CoreBundle\Monolog\ContaoContext(__METHOD__, TL_ERROR))
+				);
+
 			// Fall back to apply a sparse data set instead of failing (BC)
 			foreach ($createFallBackTemplateData() as $key => $value)
 			{
