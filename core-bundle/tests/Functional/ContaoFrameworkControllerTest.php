@@ -17,7 +17,9 @@ use Contao\ContentModel;
 use Contao\Controller;
 use Contao\FilesModel;
 use Contao\FrontendTemplate;
+use Contao\Model\Registry;
 use Contao\PageModel;
+use Contao\System;
 use Contao\Template;
 use Contao\TestCase\FunctionalTestCase;
 use Symfony\Component\Filesystem\Filesystem;
@@ -28,8 +30,11 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
     {
         parent::setUpBeforeClass();
 
+        \define('TL_MODE', 'FE');
+
         static::bootKernel();
         static::resetDatabaseSchema();
+        static::ensureKernelShutdown();
 
         // Make demo resources available in the upload path
         (new Filesystem())->symlink(__DIR__.'/../Fixtures/files', __DIR__.'/../../var/files');
@@ -39,21 +44,15 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
     {
         parent::setUp();
 
-        \define('TL_MODE', 'FE');
+        // Reset state & config
+        Registry::getInstance()->reset();
+        Config::set('maxImageWidth', 0);
+        unset($GLOBALS['TL_HOOKS'], $GLOBALS['objPage']);
 
-        static::bootKernel();
+        System::setContainer(static::bootKernel()->getContainer());
 
         // Register replacement for file insert tag (real UUIDs currently aren't supported by our fixture loader)
         $GLOBALS['TL_HOOKS']['replaceInsertTags'][] = [self::class, 'replaceFileTestInsertTag'];
-    }
-
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['TL_HOOKS'], $GLOBALS['TL_CONFIG'], $GLOBALS['objPage']);
-
-        static::$container->get('contao.framework')->reset();
-
-        parent::tearDown();
     }
 
     /**
@@ -63,7 +62,7 @@ class ContaoFrameworkControllerTest extends FunctionalTestCase
      */
     public function testAddImageToTemplateOld(array $databaseFixtures, \Closure $argumentCallback, array $expectedTemplateData): void
     {
-        // fixme: Remove the following line to test against old implementation / also see #1862.
+        // fixme: Uncomment the following line to test + compare against old implementation / also see #1862.
         $this->markTestSkipped();
 
         static::loadFixtures(
