@@ -34,17 +34,17 @@ final class Figure
     private $image;
 
     /**
-     * @var MetaData|(Closure(self):MetaData|null)|null
+     * @var MetaData|(\Closure(self):MetaData|null)|null
      */
     private $metaData;
 
     /**
-     * @var array<string, string|null>|(Closure(self):array<string, string|null>)|null
+     * @var array<string, string|null>|(\Closure(self):array<string, string|null>)|null
      */
     private $linkAttributes;
 
     /**
-     * @var LightBoxResult|(Closure(self):LightBoxResult|null)|null
+     * @var LightBoxResult|(\Closure(self):LightBoxResult|null)|null
      */
     private $lightBox;
 
@@ -54,10 +54,10 @@ final class Figure
      * All arguments but the main image result can also be set via a Closure
      * that returns the value instead (lazily evaluated when needed).
      *
-     * @param ImageResult                                                                $image          Main image
-     * @param MetaData|(Closure(self):MetaData|null)|null                                $metaData       Meta data container
-     * @param array<string, string|null>|(Closure(self):array<string, string|null>)|null $linkAttributes Link attributes
-     * @param LightBoxResult|(Closure(self):LightBoxResult|null)|null                    $lightBox       Light box
+     * @param ImageResult                                                                 $image          Main image
+     * @param MetaData|(\Closure(self):MetaData|null)|null                                $metaData       Meta data container
+     * @param array<string, string|null>|(\Closure(self):array<string, string|null>)|null $linkAttributes Link attributes
+     * @param LightBoxResult|(\Closure(self):LightBoxResult|null)|null                    $lightBox       Light box
      */
     public function __construct(ImageResult $image, $metaData = null, $linkAttributes = null, $lightBox = null)
     {
