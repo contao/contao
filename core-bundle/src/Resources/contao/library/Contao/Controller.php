@@ -1521,28 +1521,27 @@ abstract class Controller extends System
 	public static function addImageToTemplate_new(object $template, array $rowData, ?int $maxWidth = null, ?string $lightBoxGroupIdentifier = null, FilesModel $filesModel = null): void
 	{
 		// Helper: Create MetaData from the specified row data
-		$createMetaDataFromRowData = static function (bool $dynamic) use ($rowData)
+		$createMetaDataOverwriteFromRowData = static function (bool $interpretAsContentModel) use ($rowData)
 		{
-			if (!$dynamic)
+			if ($interpretAsContentModel)
 			{
-				// Manually create meta data that always contains certain properties (BC)
-				return new MetaData(
-					array(
-						MetaData::VALUE_ALT => $rowData['alt'] ?? '',
-						MetaData::VALUE_TITLE => $rowData['imageTitle'] ?? '',
-						MetaData::VALUE_URL => self::replaceInsertTags($rowData['imageUrl'] ?? ''),
-						'linkTitle' => $rowData['linkTitle'] ?: '',
-					)
-				);
+				/** @var ContentModel $contentModel */
+				$contentModel = (new \ReflectionClass(ContentModel::class))
+					->newInstanceWithoutConstructor();
+
+				// This will be null if `overwriteMeta` isn't set
+				return $contentModel->setRow($rowData)->getOverwriteMetaData();
 			}
 
-			// Interpret structure as ContentModel and create a container.
-			// This will be null if `overwriteMeta` isn't set.
-			/** @var ContentModel $contentModel */
-			$contentModel = (new \ReflectionClass(ContentModel::class))
-				->newInstanceWithoutConstructor();
-
-			return $contentModel->setRow($rowData)->getOverwriteMetaData();
+			// Manually create meta data that always contains certain properties (BC)
+			return new MetaData(
+				array(
+					MetaData::VALUE_ALT => $rowData['alt'] ?? '',
+					MetaData::VALUE_TITLE => $rowData['imageTitle'] ?? '',
+					MetaData::VALUE_URL => self::replaceInsertTags($rowData['imageUrl'] ?? ''),
+					'linkTitle' => $rowData['linkTitle'] ?: '',
+				)
+			);
 		};
 
 		// Helper: Create fallback template data with (mostly) empty fields (used if resource acquisition fails)
@@ -1672,7 +1671,7 @@ abstract class Controller extends System
 				// Use source + meta data from files model (if not overwritten)
 				$figureBuilder
 					->fromFilesModel($filesModel)
-					->setMetaData($createMetaDataFromRowData(true));
+					->setMetaData($createMetaDataOverwriteFromRowData(true));
 
 				$includeFullMetaData = true;
 			}
@@ -1681,7 +1680,7 @@ abstract class Controller extends System
 				// Always ignore file meta data when building from path (BC)
 				$figureBuilder
 					->fromPath($rowData['singleSRC'], false)
-					->setMetaData($createMetaDataFromRowData(false));
+					->setMetaData($createMetaDataOverwriteFromRowData(false));
 
 				$includeFullMetaData = false;
 			}
