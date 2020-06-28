@@ -22,6 +22,7 @@ use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\Database\Result;
 use Contao\Image\PictureConfiguration;
 use Contao\Model\Collection;
+use Imagine\Image\BoxInterface;
 use League\Uri\Components\Query;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\Glob;
@@ -1543,7 +1544,7 @@ abstract class Controller extends System
 			return $contentModel->setRow($rowData)->getOverwriteMetaData();
 		};
 
-		// Helper: Create template data with (mostly) empty fields for when resource acquisition fails
+		// Helper: Create fallback template data with (mostly) empty fields (used if resource acquisition fails)
 		$createFallBackTemplateData = static function () use ($filesModel, $rowData)
 		{
 			$templateData = array(
@@ -1582,66 +1583,81 @@ abstract class Controller extends System
 		};
 
 		// Helper: Get size and compiled margins and handle legacy $maxWidth option
-		$getDimensionProperties = static function () use ($rowData, $maxWidth)
+		$getSizeAndMargin = static function () use ($rowData, $maxWidth)
 		{
 			$size = $rowData['size'] ?? null;
-
 			$margin = StringUtil::deserialize($rowData['imagemargin'] ?? null, true);
+			$maxWidth = (int) ($maxWidth ?? Config::get('maxImageWidth'));
 
-			// todo: resolve from config
-			if ($maxWidth > 0)
+			if (0 === $maxWidth)
 			{
-				@trigger_error('Using a maximum front end width has been deprecated and will no longer work in Contao 5.0. Remove the "maxImageWidth" configuration and use responsive images instead.', E_USER_DEPRECATED);
+				return array($size, $margin);
+			}
 
-				// Adjust margins if needed
-				if ('px' === ($margin['unit'] ?? null))
+			@trigger_error('Using a maximum front end width has been deprecated and will no longer work in Contao 5.0. Remove the "maxImageWidth" configuration and use responsive images instead.', E_USER_DEPRECATED);
+
+			// Adjust margins if needed
+			if ('px' === ($margin['unit'] ?? null))
+			{
+				$horizontalMargin = (int) ($margin['left'] ?? 0) + (int) ($margin['right'] ?? 0);
+
+				if ($maxWidth - $horizontalMargin < 1)
 				{
-					$horizontalMargin = (int) ($margin['left'] ?? 0) + (int) ($margin['right'] ?? 0);
-
-					if ($maxWidth - $horizontalMargin < 1)
-					{
-						$margin['left'] = '';
-						$margin['right'] = '';
-					}
-					else
-					{
-						$maxWidth -= $horizontalMargin;
-					}
+					$margin['left'] = '';
+					$margin['right'] = '';
 				}
-
-				// Adjust size configuration
-				if (is_numeric($size))
+				else
 				{
-					$size = array(0, 0, (int) $size);
-				}
-
-				if (\is_array($size))
-				{
-					$container = System::getContainer();
-
-					$originalSize = $container
-						->get('contao.image.image_factory')
-						->create($container->getParameter('kernel.project_dir') . '/' . $rowData['singleSRC'])
-						->getDimensions()
-						->getSize();
-
-					if ($size[0] > $maxWidth || (0 === $size[0] && 0 === $size[1] && $originalSize->getWidth() > $maxWidth))
-					{
-						if ($size[0] > 0 && $size[1] > 0)
-						{
-							$size[0] = $maxWidth;
-							$size[1] = floor($maxWidth * ($size[1] / $size[0]));
-						}
-						elseif ($originalSize->getWidth() > 0)
-						{
-							$size[0] = $maxWidth;
-							$size[1] = floor($maxWidth * ($originalSize->getHeight() / $originalSize->getWidth()));
-						}
-					}
+					$maxWidth -= $horizontalMargin;
 				}
 			}
 
-			return array($size, static::generateMargin($margin));
+			// Normalize size
+			if ($size instanceof PictureConfiguration)
+			{
+				return array($size, $margin);
+			}
+
+			if (is_numeric($size))
+			{
+				$size = array(0, 0, (int) $size);
+			}
+			else
+			{
+				$size = (\is_array($size) ? $size : array()) + array(0, 0, 'crop');
+				$size[0] = (int) $size[0];
+				$size[1] = (int) $size[1];
+			}
+
+			// Adjust image size configuration if it exceeds the max width
+			if ($size[0] > 0 && $size[1] > 0)
+			{
+				list($width, $height) = $size;
+			}
+			else
+			{
+				$container = System::getContainer();
+
+				/** @var BoxInterface $originalSize */
+				$originalSize = $container
+					->get('contao.image.image_factory')
+					->create($container->getParameter('kernel.project_dir') . '/' . $rowData['singleSRC'])
+					->getDimensions()
+					->getSize();
+
+				$width = $originalSize->getWidth();
+				$height = $originalSize->getHeight();
+			}
+
+			if ($width <= $maxWidth)
+			{
+				return array($size, $margin);
+			}
+
+			$size[0] = $maxWidth;
+			$size[1] = floor($maxWidth * ($height / $width));
+
+			return array($size, $margin);
 		};
 
 		/** @var FigureBuilder $figureBuilder */
@@ -1681,7 +1697,7 @@ abstract class Controller extends System
 		}
 
 		// Set size and light box configuration
-		list($size, $margin) = $getDimensionProperties();
+		list($size, $margin) = $getSizeAndMargin();
 
 		$figureBuilder
 			->setSize($size)
@@ -1695,7 +1711,7 @@ abstract class Controller extends System
 				$template,
 				$includeFullMetaData,
 				$rowData['floating'] ?: null,
-				$margin
+				static::generateMargin($margin)
 			);
 
 		// Fall back to manually specified link title or empty string if not set (BC)
