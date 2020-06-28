@@ -204,6 +204,7 @@ class FigureBuilder
         }
 
         $this->filePath = $path;
+        $this->filesModel = null;
 
         if (!$this->filesystem->exists($this->filePath)) {
             throw new InvalidResourceException("No resource could be located at path '{$this->filePath}'.");
