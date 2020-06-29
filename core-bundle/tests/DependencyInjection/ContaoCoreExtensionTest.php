@@ -614,7 +614,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertEquals(
             [
-                new Reference('assets.packages', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+                new Reference('assets.packages'),
             ],
             $definition->getArguments()
         );

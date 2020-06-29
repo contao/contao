@@ -114,7 +114,7 @@ services:
     contao.listener.insert_tags.asset:
         class: Contao\CoreBundle\EventListener\InsertTags\AssetListener
         arguments:
-            - '@?assets.packages'
+            - '@assets.packages'
         tags:
             - { name: contao.hook, hook: replaceInsertTags }
 

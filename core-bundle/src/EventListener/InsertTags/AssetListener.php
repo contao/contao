@@ -20,11 +20,11 @@ use Symfony\Component\Asset\Packages;
 class AssetListener
 {
     /**
-     * @var Packages|null
+     * @var Packages
      */
     private $packages;
 
-    public function __construct(?Packages $packages)
+    public function __construct(Packages $packages)
     {
         $this->packages = $packages;
     }
@@ -40,10 +40,6 @@ class AssetListener
 
         if ('asset' !== $chunks[0]) {
             return false;
-        }
-
-        if (null === $this->packages) {
-            throw new \RuntimeException('You need to enable "framework.assets" in your config in order to use the {{asset::*::*}} Insert Tag.');
         }
 
         $url = $this->packages->getUrl($chunks[1], $chunks[2] ?? null);

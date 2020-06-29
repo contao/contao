@@ -398,14 +398,7 @@ abstract class Template extends Controller
 	 */
 	public function asset($path, $packageName = null)
 	{
-		$container = System::getContainer();
-
-		if (!$container->has('assets.packages'))
-		{
-			throw new \RuntimeException('You need to enable "framework.assets" in your config in order to use Template::asset.');
-		}
-
-		$url = $container->get('assets.packages')->getUrl($path, $packageName);
+		$url = System::getContainer()->get('assets.packages')->getUrl($path, $packageName);
 
 		// Contao paths are relative to the <base> tag, so remove leading slashes
 		return ltrim($url, '/');
