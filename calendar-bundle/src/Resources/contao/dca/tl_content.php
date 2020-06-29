@@ -21,10 +21,9 @@ use Contao\System;
 use Contao\Versions;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
-// Dynamically add the permission check and parent table
+// Dynamically add the permission check and other callbacks
 if (Input::get('do') == 'calendar')
 {
-	$GLOBALS['TL_DCA']['tl_content']['config']['ptable'] = 'tl_calendar_events';
 	array_unshift($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'], array('tl_content_calendar', 'checkPermission'));
 	$GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = array('tl_content_calendar', 'generateFeed');
 	$GLOBALS['TL_DCA']['tl_content']['list']['operations']['toggle']['button_callback'] = array('tl_content_calendar', 'toggleIcon');
