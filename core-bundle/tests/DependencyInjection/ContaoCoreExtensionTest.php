@@ -51,6 +51,7 @@ use Contao\CoreBundle\EventListener\BypassMaintenanceListener;
 use Contao\CoreBundle\EventListener\ClearSessionDataListener;
 use Contao\CoreBundle\EventListener\CommandSchedulerListener;
 use Contao\CoreBundle\EventListener\CsrfTokenCookieSubscriber;
+use Contao\CoreBundle\EventListener\DataContainer\DisableAppConfiguredSettingsListener;
 use Contao\CoreBundle\EventListener\DataContainerCallbackListener;
 use Contao\CoreBundle\EventListener\DoctrineSchemaListener;
 use Contao\CoreBundle\EventListener\ExceptionConverterListener;
@@ -490,6 +491,25 @@ class ContaoCoreExtensionTest extends TestCase
                 'kernel.response' => 'onKernelResponse',
             ],
             CsrfTokenCookieSubscriber::getSubscribedEvents()
+        );
+    }
+
+    public function testRegistersTheDisableAppConfiguredSettingsListener(): void
+    {
+        $this->assertTrue($this->container->has(DisableAppConfiguredSettingsListener::class));
+
+        $definition = $this->container->getDefinition(DisableAppConfiguredSettingsListener::class);
+
+        $this->assertNull($definition->getClass());
+        $this->assertTrue($definition->isPublic());
+
+        $this->assertEquals(
+            [
+                new Reference('translator'),
+                new Reference('contao.framework'),
+                new Reference('%contao.localconfig%'),
+            ],
+            $definition->getArguments()
         );
     }
 
