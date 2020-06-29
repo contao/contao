@@ -336,7 +336,7 @@ class InsertTags extends Controller
 						{
 							$arrCache[$strTag] = implode(', ', $value);
 						}
-						elseif (\is_array($opts) && array_is_assoc($opts))
+						elseif (\is_array($opts) && ArrayUtil::isAssoc($opts))
 						{
 							$arrCache[$strTag] = $opts[$value] ?? $value;
 						}
