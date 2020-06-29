@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
-use Contao\CoreBundle\EventListener\DataContainer\DisableBundleConfiguredSettingsListener;
+use Contao\CoreBundle\EventListener\DataContainer\DisableAppConfiguredSettingsListener;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image;
@@ -20,7 +20,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
-class DisableBundleConfiguredSettingsListenerTest extends TestCase
+class DisableAppConfiguredSettingsListenerTest extends TestCase
 {
     public function testAnnotatedCallbacks(): void
     {
@@ -97,7 +97,7 @@ class DisableBundleConfiguredSettingsListenerTest extends TestCase
                         'disabled' => true,
                         'helpwizard' => false,
                     ],
-                    'xlabel' => [[DisableBundleConfiguredSettingsListener::class, 'renderHelpIcon']],
+                    'xlabel' => [[DisableAppConfiguredSettingsListener::class, 'renderHelpIcon']],
                 ],
                 'dateFormat' => [
                     'inputType' => 'text',
@@ -109,7 +109,7 @@ class DisableBundleConfiguredSettingsListenerTest extends TestCase
                         'disabled' => true,
                     ],
                     'explanation' => 'dateFormat',
-                    'xlabel' => [[DisableBundleConfiguredSettingsListener::class, 'renderHelpIcon']],
+                    'xlabel' => [[DisableAppConfiguredSettingsListener::class, 'renderHelpIcon']],
                 ],
             ],
             $GLOBALS['TL_DCA']['tl_settings']['fields']
@@ -122,7 +122,7 @@ class DisableBundleConfiguredSettingsListenerTest extends TestCase
         $translator
             ->expects($this->once())
             ->method('trans')
-            ->with('tl_settings.configuredInBundle', [], 'contao_tl_settings')
+            ->with('tl_settings.configuredInApp', [], 'contao_tl_settings')
         ;
 
         $imageAdapter = $this->mockAdapter(['getHtml']);
@@ -140,7 +140,7 @@ class DisableBundleConfiguredSettingsListenerTest extends TestCase
         );
     }
 
-    private function createListener(array $localConfig = null, ?TranslatorInterface $translator = null, array $adapters = []): DisableBundleConfiguredSettingsListener
+    private function createListener(array $localConfig = null, ?TranslatorInterface $translator = null, array $adapters = []): DisableAppConfiguredSettingsListener
     {
         $this->mockContaoFramework()->initialize();
 
@@ -150,6 +150,6 @@ class DisableBundleConfiguredSettingsListenerTest extends TestCase
 
         $framework = $this->mockContaoFramework($adapters);
 
-        return new DisableBundleConfiguredSettingsListener($translator, $framework, $localConfig ?: []);
+        return new DisableAppConfiguredSettingsListener($translator, $framework, $localConfig ?: []);
     }
 }

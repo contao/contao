@@ -22,7 +22,7 @@ use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 /**
  * @Callback(table="tl_settings", target="config.onload")
  */
-class DisableBundleConfiguredSettingsListener implements ServiceAnnotationInterface
+class DisableAppConfiguredSettingsListener implements ServiceAnnotationInterface
 {
     /**
      * @var TranslatorInterface
@@ -69,7 +69,7 @@ class DisableBundleConfiguredSettingsListener implements ServiceAnnotationInterf
             '',
             sprintf(
                 'title="%s"',
-                StringUtil::specialchars($this->translator->trans('tl_settings.configuredInBundle', [], 'contao_tl_settings'))
+                StringUtil::specialchars($this->translator->trans('tl_settings.configuredInApp', [], 'contao_tl_settings'))
             )
         );
     }

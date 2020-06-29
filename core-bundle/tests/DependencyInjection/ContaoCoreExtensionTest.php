@@ -51,7 +51,7 @@ use Contao\CoreBundle\EventListener\BypassMaintenanceListener;
 use Contao\CoreBundle\EventListener\ClearSessionDataListener;
 use Contao\CoreBundle\EventListener\CommandSchedulerListener;
 use Contao\CoreBundle\EventListener\CsrfTokenCookieSubscriber;
-use Contao\CoreBundle\EventListener\DataContainer\DisableBundleConfiguredSettingsListener;
+use Contao\CoreBundle\EventListener\DataContainer\DisableAppConfiguredSettingsListener;
 use Contao\CoreBundle\EventListener\DataContainerCallbackListener;
 use Contao\CoreBundle\EventListener\DoctrineSchemaListener;
 use Contao\CoreBundle\EventListener\ExceptionConverterListener;
@@ -494,11 +494,11 @@ class ContaoCoreExtensionTest extends TestCase
         );
     }
 
-    public function testRegistersTheDisableBundleConfiguredSettingsListener(): void
+    public function testRegistersTheDisableAppConfiguredSettingsListener(): void
     {
-        $this->assertTrue($this->container->has(DisableBundleConfiguredSettingsListener::class));
+        $this->assertTrue($this->container->has(DisableAppConfiguredSettingsListener::class));
 
-        $definition = $this->container->getDefinition(DisableBundleConfiguredSettingsListener::class);
+        $definition = $this->container->getDefinition(DisableAppConfiguredSettingsListener::class);
 
         $this->assertNull($definition->getClass());
         $this->assertTrue($definition->isPublic());

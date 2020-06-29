@@ -86,7 +86,7 @@ services:
         tags:
             - kernel.event_subscriber
 
-    Contao\CoreBundle\EventListener\DataContainer\DisableBundleConfiguredSettingsListener:
+    Contao\CoreBundle\EventListener\DataContainer\DisableAppConfiguredSettingsListener:
         arguments:
             - '@translator'
             - '@contao.framework'
