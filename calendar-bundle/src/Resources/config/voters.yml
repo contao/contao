@@ -1,7 +1,12 @@
 services:
     _defaults:
         autoconfigure: true
-        autowire: true
+        autowire: false
+
+    _instanceof:
+        Contao\CoreBundle\Security\Voter\AbstractFrontendAccessVoter:
+            calls:
+                - ['setContainer', ['@Psr\Container\ContainerInterface']]
 
     Contao\CalendarBundle\Security\Voter\:
         resource: ../../Security/Voter/*

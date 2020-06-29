@@ -17,16 +17,31 @@ use Contao\FrontendUser;
 use Contao\Model;
 use Contao\StringUtil;
 use Contao\System;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
 abstract class AbstractFrontendAccessVoter extends Voter implements ServiceSubscriberInterface
 {
-    use ContainerAwareTrait;
-
     public const ATTRIBUTE = 'contao_frontend.access';
+
+    /**
+     * @var ContainerInterface
+     */
+    protected $container;
+
+    /**
+     * @internal
+     * @required
+     */
+    public function setContainer(ContainerInterface $container): ?ContainerInterface
+    {
+        $previous = $this->container;
+        $this->container = $container;
+
+        return $previous;
+    }
 
     public static function getSubscribedServices()
     {
