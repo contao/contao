@@ -8,8 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-use Contao\CoreBundle\EventListener\DataContainer\AdjustAutoforwardSubpaletteListener;
-
 $GLOBALS['TL_DCA']['tl_page'] = array
 (
 	// Config
@@ -27,7 +25,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			array('tl_page', 'showFallbackWarning'),
 			array('tl_page', 'makeRedirectPageMandatory'),
 			array('tl_page', 'generateSitemap'),
-			array(AdjustAutoforwardSubpaletteListener::class, '__invoke'),
 		),
 		'oncut_callback' => array
 		(
@@ -177,7 +174,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 	// Subpalettes
 	'subpalettes' => array
 	(
-		'autoforward'                 => 'jumpTo,redirect',
+		'autoforward'                 => 'jumpTo',
 		'protected'                   => 'groups',
 		'createSitemap'               => 'sitemapName',
 		'includeLayout'               => 'layout,mobileLayout',
