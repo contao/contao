@@ -143,23 +143,23 @@ class DateListener implements ServiceAnnotationInterface
      */
     private function getDateFormat(string $dateFormat): string
     {
-        if (\in_array($dateFormat, ['date', 'datim', 'time'], true)) {
-            $key = $dateFormat.'Format';
-
-            if (null !== ($request = $this->requestStack->getCurrentRequest())) {
-                $attributes = $request->attributes;
-
-                if ($attributes->has('pageModel') && ($page = $attributes->get('pageModel')) instanceof PageModel) {
-                    return $page->{$key};
-                }
-            }
-
-            /** @var Config $config */
-            $config = $this->framework->getAdapter(Config::class);
-
-            return $config->get($key);
+        if (!\in_array($dateFormat, ['date', 'datim', 'time'], true)) {
+            return $dateFormat;
         }
 
-        return $dateFormat;
+        $key = $dateFormat.'Format';
+
+        if (null !== ($request = $this->requestStack->getCurrentRequest())) {
+            $attributes = $request->attributes;
+
+            if ($attributes->has('pageModel') && ($page = $attributes->get('pageModel')) instanceof PageModel) {
+                return $page->{$key};
+            }
+        }
+
+        /** @var Config $config */
+        $config = $this->framework->getAdapter(Config::class);
+
+        return $config->get($key);
     }
 }
