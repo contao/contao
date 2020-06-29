@@ -347,8 +347,8 @@ class TablePickerProviderTest extends ContaoTestCase
             'config' => [
                 'dataContainer' => 'Table',
                 'ptable' => 'tl_article',
-                'dynamicPtable' => true
-            ]
+                'dynamicPtable' => true,
+            ],
         ];
 
         $params = [
