@@ -37,7 +37,7 @@ class DropSearchMigration extends AbstractMigration
 
         if (
             !$schemaManager->tablesExist('tl_search_index')
-            || $schemaManager->tablesExist('tl_search_words')
+            || $schemaManager->tablesExist('tl_search_term')
         ) {
             return false;
         }

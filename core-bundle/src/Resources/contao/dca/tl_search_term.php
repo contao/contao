@@ -8,7 +8,7 @@
  * @license LGPL-3.0-or-later
  */
 
-$GLOBALS['TL_DCA']['tl_search_words'] = array
+$GLOBALS['TL_DCA']['tl_search_term'] = array
 (
 	// Config
 	'config' => array
@@ -18,7 +18,7 @@ $GLOBALS['TL_DCA']['tl_search_words'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
-				'word' => 'unique'
+				'term' => 'unique'
 			)
 		)
 	),
@@ -30,7 +30,7 @@ $GLOBALS['TL_DCA']['tl_search_words'] = array
 		(
 			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
 		),
-		'word' => array
+		'term' => array
 		(
 			'sql'                     => "varchar(64) BINARY NOT NULL"
 		),
