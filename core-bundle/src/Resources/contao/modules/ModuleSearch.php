@@ -284,7 +284,7 @@ class ModuleSearch extends Module
 				$objTemplate->url = StringUtil::specialchars(urldecode($arrResult[$i]['url']), true, true);
 				$objTemplate->title = StringUtil::specialchars(StringUtil::stripInsertTags($arrResult[$i]['title']));
 				$objTemplate->class = (($i == ($from - 1)) ? 'first ' : '') . (($i == ($to - 1) || $i == ($count - 1)) ? 'last ' : '') . (($i % 2 == 0) ? 'even' : 'odd');
-				$objTemplate->relevance = sprintf($GLOBALS['TL_LANG']['MSC']['relevance'], number_format(($arrResult[$i]['relevance'] ?: 0) / ($arrResult[0]['relevance'] ?: 1) * 100, 2) . '%');
+				$objTemplate->relevance = sprintf($GLOBALS['TL_LANG']['MSC']['relevance'], number_format($arrResult[$i]['relevance'] / $arrResult[0]['relevance'] * 100, 2) . '%');
 
 				$arrContext = array();
 				$strText = StringUtil::stripInsertTags($arrResult[$i]['text']);

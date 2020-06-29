@@ -654,6 +654,11 @@ class Search
 
 		foreach ($arrResult as $k=>$v)
 		{
+			if ((float) $v['relevance'] === 0.0)
+			{
+				$arrResult[$k]['relevance'] = PHP_FLOAT_EPSILON;
+			}
+
 			$arrHighlight = array();
 			$arrMatches = explode(',', $v['matches']);
 
