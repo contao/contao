@@ -1,7 +1,4 @@
 services:
-    _defaults:
-        autoconfigure: true
-
     _instanceof:
         Contao\CoreBundle\Framework\FrameworkAwareInterface:
             calls:
@@ -90,10 +87,6 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainerCallbackListener
         tags:
             - { name: contao.hook, hook: loadDataContainer }
-
-    Contao\CoreBundle\EventListener\DataContainer\AdjustAutoforwardSubpaletteListener:
-        arguments:
-            - '@contao.framework'
 
     contao.listener.doctrine_schema:
         class: Contao\CoreBundle\EventListener\DoctrineSchemaListener
