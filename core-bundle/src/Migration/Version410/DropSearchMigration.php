@@ -44,7 +44,7 @@ class DropSearchMigration extends AbstractMigration
 
         $columns = $schemaManager->listTableColumns('tl_search_index');
 
-        if (isset($columns['wordid'])) {
+        if (isset($columns['termid'])) {
             return false;
         }
 
