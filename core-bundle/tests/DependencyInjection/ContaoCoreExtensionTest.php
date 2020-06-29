@@ -657,7 +657,7 @@ class ContaoCoreExtensionTest extends TestCase
         );
     }
 
-    public function testRegistersTheDateFormatInsertTagListener(): void
+    public function testContainerHasDateFormatInsertTagListener(): void
     {
         $this->assertTrue($this->container->has(DateListener::class));
 

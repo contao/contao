@@ -15,14 +15,32 @@ namespace Contao\CoreBundle\Tests\EventListener\InsertTags;
 use Contao\Config;
 use Contao\CoreBundle\EventListener\InsertTags\DateListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Date;
 use Contao\PageModel;
+use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class DateListenerTest extends TestCase
 {
+    public function testAnnotatedCallbacks(): void
+    {
+        $listener = new DateListener($this->getFramework(), new RequestStack());
+
+        $annotationReader = new AnnotationReader();
+        $annotation = $annotationReader->getClassAnnotation(new \ReflectionClass($listener), Hook::class);
+
+        $this->assertSame(
+            [
+                'value' => 'replaceInsertTags',
+                'priority' => null,
+            ],
+            (array) $annotation
+        );
+    }
+
     /**
      * @dataProvider getConvertedInsertTags
      */
