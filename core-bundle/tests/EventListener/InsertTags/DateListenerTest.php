@@ -65,9 +65,7 @@ class DateListenerTest extends TestCase
             Config::class => $configAdapter,
         ]);
 
-        $requestStack = new RequestStack();
-
-        $listener = new DateListener($framework, $requestStack);
+        $listener = new DateListener($framework, new RequestStack());
 
         $this->assertSame('26.05.2020 00:00', $listener('format_date::2020-05-26'));
         $this->assertSame('26.05.2020 00:00', $listener('convert_date::2020-05-26::Y-m-d::datim'));
