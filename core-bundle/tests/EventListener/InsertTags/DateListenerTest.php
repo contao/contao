@@ -114,7 +114,6 @@ class DateListenerTest extends TestCase
     {
         $dateAdapter = $this->mockAdapter(['parse']);
         $dateAdapter
-            ->expects($this->any())
             ->method('parse')
             ->willReturnMap([
                 ['d.m.Y', strtotime('2020-05-26'), '26.05.2020'],
