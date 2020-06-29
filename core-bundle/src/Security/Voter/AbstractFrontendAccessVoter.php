@@ -31,10 +31,6 @@ abstract class AbstractFrontendAccessVoter extends Voter implements ServiceSubsc
      */
     protected $container;
 
-    /**
-     * @internal
-     * @required
-     */
     public function setContainer(ContainerInterface $container): ?ContainerInterface
     {
         $previous = $this->container;
