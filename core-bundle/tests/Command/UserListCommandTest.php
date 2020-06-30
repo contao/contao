@@ -64,6 +64,24 @@ class UserListCommandTest extends TestCase
         $this->assertNotNull(json_decode($output, true));
     }
 
+    public function testReturnsValidJsonWithSubset(): void
+    {
+        $command = $this->getCommand();
+
+        $input = [
+            '--format' => 'json',
+            '--column' => ['name', 'username'],
+        ];
+
+        $commandTester = new CommandTester($command);
+
+        $code = $commandTester->execute($input);
+        $output = $commandTester->getDisplay();
+
+        $this->assertSame(0, $code);
+        $this->assertNotNull(json_decode($output, true));
+    }
+
     public function testReturnsErrorCodeOnEmptyResult(): void
     {
         $command = $this->getCommand(true);
@@ -117,6 +135,11 @@ class UserListCommandTest extends TestCase
         $userModel->username = 'j.doe';
         $userModel->name = 'John Doe';
 
+        $userModel
+            ->method('row')
+            ->willReturn((array) $userModel)
+        ;
+
         return $userModel;
     }
 
@@ -128,6 +151,11 @@ class UserListCommandTest extends TestCase
         $userModel->username = 'j.doe';
         $userModel->name = 'John Doe';
         $userModel->admin = '1';
+
+        $userModel
+            ->method('row')
+            ->willReturn((array) $userModel)
+        ;
 
         return $userModel;
     }

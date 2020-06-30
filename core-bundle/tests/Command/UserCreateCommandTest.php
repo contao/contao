@@ -61,6 +61,49 @@ class UserCreateCommandTest extends TestCase
         $this->assertSame(0, $code);
     }
 
+    public function testAsksForTheNameIfNotGiven(): void
+    {
+        $command = $this->getCommand();
+
+        $question = $this->createMock(QuestionHelper::class);
+        $question
+            ->method('ask')
+            ->willReturn('John Doe')
+        ;
+
+        $command->getHelperSet()->set($question, 'question');
+
+        $code = (new CommandTester($command))->execute(['--username' => 'j.doe', '--password' => '12345678']);
+
+        $this->assertSame(0, $code);
+    }
+
+    public function testAsksForThePasswordIfNotGiven(): void
+    {
+        $command = $this->getCommand();
+
+        $question = $this->createMock(QuestionHelper::class);
+        $question
+            ->method('ask')
+            ->willReturn('12345678')
+        ;
+
+        $command->getHelperSet()->set($question, 'question');
+
+        $code = (new CommandTester($command))->execute(['--username' => 'j.doe', '--name' => 'John Doe']);
+
+        $this->assertSame(0, $code);
+    }
+
+    public function testFailsWithInvalidEmail(): void
+    {
+        $command = $this->getCommand();
+
+        $this->expectException(\InvalidArgumentException::class);
+
+        (new CommandTester($command))->execute(['--username' => 'j.doe', '--name' => 'John Doe', '--password' => '12345678', '--email' => 'test@example']);
+    }
+
     public function testFailsWithoutParametersIfNotInteractive(): void
     {
         $command = $this->getCommand();

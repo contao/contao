@@ -98,7 +98,7 @@ class UserCreateCommand extends Command
 
         $emailCallback = static function ($value) {
             if (!Validator::isEmail($value)) {
-                throw new \RuntimeException('The email address is invalid.');
+                throw new \InvalidArgumentException('The email address is invalid.');
             }
 
             return $value;
