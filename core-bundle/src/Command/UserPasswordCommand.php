@@ -116,7 +116,7 @@ class UserPasswordCommand extends Command
                 'password' => $hash,
                 'locked' => 0,
                 'loginAttempts' => 0,
-                'pwChange' => $input->getOption('require-change'),
+                'pwChange' => $input->getOption('require-change') ? '1' : '',
             ],
             ['username' => $input->getArgument('username')]
         );
