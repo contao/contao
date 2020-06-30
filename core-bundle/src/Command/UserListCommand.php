@@ -115,12 +115,14 @@ class UserListCommand extends Command
         foreach ($users as $user) {
             $rows[] = array_map(
                 static function (string $field) use ($user) {
+                    $check = '\\' === \DIRECTORY_SEPARATOR ? '1' : "\xE2\x9C\x94";
+
                     if (\in_array($field, ['tstamp', 'dateAdded', 'lastLogin'], true)) {
                         return $user->{$field} ? date('Y-m-d H:i:s', (int) $user->{$field}) : '';
                     }
 
-                    if ('admin' === $field) {
-                        return $user->{$field} ? '✔' : '';
+                    if (\in_array($field, ['admin', 'pwChange', 'disable', 'useTwoFactor', 'locked'], true)) {
+                        return $user->{$field} ? $check : '';
                     }
 
                     return $user->{$field} ?? '';
