@@ -82,14 +82,6 @@ class UserListCommandTest extends TestCase
         $this->assertNotNull(json_decode($output, true));
     }
 
-    public function testReturnsErrorCodeOnEmptyResult(): void
-    {
-        $command = $this->getCommand(true);
-        $code = (new CommandTester($command))->execute([]);
-
-        $this->assertSame(1, $code);
-    }
-
     public function testTakesColumnAsArgument(): void
     {
         $command = $this->getCommand();

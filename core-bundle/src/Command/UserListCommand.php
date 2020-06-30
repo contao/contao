@@ -61,17 +61,16 @@ class UserListCommand extends Command
         }
 
         $users = $this->getUsers($input->getOption('admins'));
-
-        if (null === $users) {
-            $io->error('No accounts found.');
-
-            return 1;
-        }
-
         $columns = $input->getOption('column');
 
         switch ($input->getOption('format')) {
             case 'text':
+                if (null === $users) {
+                    $io->note('No accounts found.');
+
+                    return 0;
+                }
+
                 $rows = $this->formatTableRows($users, $columns);
 
                 $io->table($columns, $rows);
