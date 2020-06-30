@@ -1,4 +1,7 @@
 services:
+    _defaults:
+        autoconfigure: true
+
     _instanceof:
         Contao\CoreBundle\Framework\FrameworkAwareInterface:
             calls:
@@ -82,6 +85,13 @@ services:
             - '%contao.csrf_cookie_prefix%'
         tags:
             - kernel.event_subscriber
+
+    Contao\CoreBundle\EventListener\DataContainer\DisableAppConfiguredSettingsListener:
+        arguments:
+            - '@translator'
+            - '@contao.framework'
+            - '%contao.localconfig%'
+        public: true
 
     contao.listener.data_container_callback:
         class: Contao\CoreBundle\EventListener\DataContainerCallbackListener

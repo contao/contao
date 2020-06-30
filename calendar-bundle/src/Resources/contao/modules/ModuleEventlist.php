@@ -25,6 +25,7 @@ use Patchwork\Utf8;
  * @property bool   $cal_ignoreDynamic
  * @property int    $cal_readerModule
  * @property bool   $cal_hideRunning
+ * @property string $cal_featured
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -92,6 +93,18 @@ class ModuleEventlist extends Events
 		$intMonth = Input::get('month');
 		$intDay = Input::get('day');
 
+		// Handle featured events
+		$blnFeatured = null;
+
+		if ($this->cal_featured == 'featured')
+		{
+			$blnFeatured = true;
+		}
+		elseif ($this->cal_featured == 'unfeatured')
+		{
+			$blnFeatured = false;
+		}
+
 		// Jump to the current period
 		if (!isset($_GET['year']) && !isset($_GET['month']) && !isset($_GET['day']))
 		{
@@ -149,7 +162,8 @@ class ModuleEventlist extends Events
 		list($intStart, $intEnd, $strEmpty) = $this->getDatesFromFormat($this->Date, $this->cal_format);
 
 		// Get all events
-		$arrAllEvents = $this->getAllEvents($this->cal_calendar, $intStart, $intEnd);
+		$arrAllEvents = $this->getAllEvents($this->cal_calendar, $intStart, $intEnd, $blnFeatured);
+
 		$sort = ($this->cal_order == 'descending') ? 'krsort' : 'ksort';
 
 		// Sort the days

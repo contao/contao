@@ -51,6 +51,7 @@ use Contao\CoreBundle\EventListener\BypassMaintenanceListener;
 use Contao\CoreBundle\EventListener\ClearSessionDataListener;
 use Contao\CoreBundle\EventListener\CommandSchedulerListener;
 use Contao\CoreBundle\EventListener\CsrfTokenCookieSubscriber;
+use Contao\CoreBundle\EventListener\DataContainer\DisableAppConfiguredSettingsListener;
 use Contao\CoreBundle\EventListener\DataContainerCallbackListener;
 use Contao\CoreBundle\EventListener\DoctrineSchemaListener;
 use Contao\CoreBundle\EventListener\ExceptionConverterListener;
@@ -493,6 +494,25 @@ class ContaoCoreExtensionTest extends TestCase
         );
     }
 
+    public function testRegistersTheDisableAppConfiguredSettingsListener(): void
+    {
+        $this->assertTrue($this->container->has(DisableAppConfiguredSettingsListener::class));
+
+        $definition = $this->container->getDefinition(DisableAppConfiguredSettingsListener::class);
+
+        $this->assertNull($definition->getClass());
+        $this->assertTrue($definition->isPublic());
+
+        $this->assertEquals(
+            [
+                new Reference('translator'),
+                new Reference('contao.framework'),
+                new Reference('%contao.localconfig%'),
+            ],
+            $definition->getArguments()
+        );
+    }
+
     public function testRegistersTheDataContainerCallbackListener(): void
     {
         $this->assertTrue($this->container->has('contao.listener.data_container_callback'));
@@ -848,7 +868,6 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('%contao.preview_script%'),
                 new Reference('contao.security.frontend_preview_authenticator'),
                 new Reference('event_dispatcher'),
-                new Reference('router'),
                 new Reference('security.authorization_checker'),
             ],
             $definition->getArguments()

@@ -191,7 +191,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'options'                 => array('raw', 'xml', 'csv', 'email'),
+			'options'                 => array('raw', 'xml', 'csv', 'csv_excel', 'email'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_form'],
 			'eval'                    => array('helpwizard'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(12) NOT NULL default 'raw'"

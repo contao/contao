@@ -38,6 +38,12 @@
       <trans-unit id="tl_news.pageTitle.1">
         <source>Here you can add a custom meta title to overwrite the default page title.</source>
       </trans-unit>
+      <trans-unit id="tl_news.robots.0">
+        <source>Robots tag</source>
+      </trans-unit>
+      <trans-unit id="tl_news.robots.1">
+        <source>Here you can overwrite how search engines handle the news item.</source>
+      </trans-unit>
       <trans-unit id="tl_news.description.0">
         <source>Meta description</source>
       </trans-unit>

@@ -337,6 +337,11 @@ class News extends Frontend
 				{
 					while ($objArticle->next())
 					{
+						if ($blnIsSitemap && $objArticle->robots === 'noindex,nofollow')
+						{
+							continue;
+						}
+
 						$arrPages[] = $this->getLink($objArticle, $strUrl);
 					}
 				}
