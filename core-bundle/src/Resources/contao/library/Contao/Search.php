@@ -278,7 +278,7 @@ class Search
 				VALUES " . implode(', ', array_fill(0, \count($arrIndex), '(?, 1)')) . "
 				ON DUPLICATE KEY UPDATE documentFrequency = documentFrequency + 1
 			")
-			->execute(array_keys($arrIndex));
+			->execute(array_map('strval', array_keys($arrIndex)));
 
 		// Remove obsolete terms
 		$objDatabase->query("DELETE FROM tl_search_term WHERE documentFrequency = 0");
@@ -290,7 +290,7 @@ class Search
 		{
 			$arrQuery[] = '(?, (SELECT id FROM tl_search_term WHERE term = ?), ?)';
 			$arrValues[] = $intInsertId;
-			$arrValues[] = $k;
+			$arrValues[] = (string) $k;
 			$arrValues[] = $v;
 		}
 
