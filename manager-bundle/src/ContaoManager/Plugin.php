@@ -476,6 +476,16 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             return 'sendmail+smtp://default';
         }
 
+        /**
+         * Check for gmail transport.
+         * 
+         * With Swiftmailer a DSN like "gmail://username:password@localhost" was
+         * supported out-of-the-box. See https://symfony.com/doc/4.4/email.html#using-gmail-to-send-emails
+         * Symfony Mailer supports something similar, but only with an additional
+         * dependency. See https://symfony.com/doc/4.4/components/mailer.html#transport
+         * 
+         * Thus we add backwards compatibility for the "gmail" transport here.
+         */
         if ('gmail' === $options['transport']) {
             $options['host'] = 'smtp.gmail.com';
             $options['transport'] = 'smtps';
