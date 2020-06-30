@@ -345,6 +345,27 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
     /**
      * Dynamically adds a default mailer to the config, if no mailer is defined.
+     * 
+     * We cannot add a default mailer configuration to the skeleton config.yml, 
+     * since different types of configurations are not allowed.
+     * 
+     * For example, if the Manager Bundle defined
+     * 
+     *     framework:
+     *         mailer:
+     *             dsn: '%env(MAILER_DSN)%'
+     * 
+     * in the skeleton config.yml and the user adds
+     * 
+     *     framework:
+     *         mailer:
+     *             transports:
+     *                 foobar: 'smtps://smtp.example.com'
+     * 
+     * to their config.yml, the merged configuration will lead to an error, since 
+     * you cannot use "framework.mailer.dsn" together with "framework.mailer.transports".
+     * Thus the default mailer configuration needs to be added dynamically, if 
+     * not already present.
      *
      * @return array<string,array<string,array<string,array<string,mixed>>>>
      */
