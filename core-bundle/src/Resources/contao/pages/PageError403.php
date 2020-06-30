@@ -120,7 +120,7 @@ class PageError403 extends \Frontend
 				throw new ForwardPageNotFoundException('Forward page not found');
 			}
 
-			$this->redirect($objNextPage->getFrontendUrl(), (($obj403->redirect == 'temporary') ? 302 : 301));
+			$this->redirect($objNextPage->getFrontendUrl());
 		}
 
 		return $obj403;
