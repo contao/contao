@@ -67,6 +67,7 @@ class UserPasswordCommand extends Command
         $this
             ->addArgument('username', InputArgument::REQUIRED, 'The username of the back end user')
             ->addOption('password', 'p', InputOption::VALUE_REQUIRED, 'The new password (using this option is not recommended for security reasons)')
+            ->addOption('require-change', 'r', InputOption::VALUE_NONE, 'Require the user to change the password on their next login.')
             ->setDescription('Changes the password of a Contao back end user.')
         ;
     }
@@ -112,7 +113,12 @@ class UserPasswordCommand extends Command
 
         $affected = $this->connection->update(
             'tl_user',
-            ['password' => $hash, 'locked' => 0, 'loginAttempts' => $config->get('loginAttempts')],
+            [
+                'password' => $hash,
+                'locked' => 0,
+                'loginAttempts' => 0,
+                'pwChange' => $input->getOption('require-change') ? '1' : '',
+            ],
             ['username' => $input->getArgument('username')]
         );
 
