@@ -13,6 +13,7 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Search\Document;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\Input;
@@ -23,6 +24,7 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Versions;
+use Nyholm\Psr7\Uri;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -1251,31 +1253,15 @@ class tl_page extends Backend
 			return;
 		}
 
-		$objResult = $this->Database->prepare("SELECT id FROM tl_search WHERE pid=?")
+		$objResult = $this->Database->prepare("SELECT url FROM tl_search WHERE pid=?")
 									->execute($dc->id);
 
-		// TODO: Should we call contao.search.indexer.default delete() here instead of the duplicated code?
+		$indexer = System::getContainer()->get('contao.search.indexer');
 
 		while ($objResult->next())
 		{
-			// Decrement document frequency counts
-			$this->Database
-				->prepare("
-					UPDATE tl_search_term
-					INNER JOIN tl_search_index ON tl_search_term.id = tl_search_index.termId AND tl_search_index.pid = ?
-					SET documentFrequency = GREATEST(0, documentFrequency - 1)
-				")
-				->execute($objResult->id);
-
-			$this->Database->prepare("DELETE FROM tl_search WHERE id=?")
-						   ->execute($objResult->id);
-
-			$this->Database->prepare("DELETE FROM tl_search_index WHERE pid=?")
-						   ->execute($objResult->id);
+			$indexer->delete(new Document(new Uri($objResult->url), 200));
 		}
-
-		// Remove obsolete terms
-		$this->Database->query("DELETE FROM tl_search_term WHERE documentFrequency = 0");
 	}
 
 	/**
