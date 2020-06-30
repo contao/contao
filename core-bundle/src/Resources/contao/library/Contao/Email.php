@@ -135,9 +135,13 @@ class Email
 		{
 			$this->objMessage = new EmailMessage();
 		}
-		else
+		elseif ($this->objMailer instanceof \Swift_Mailer)
 		{
 			$this->objMessage = new \Swift_Message();
+		}
+		else
+		{
+			throw new \InvalidArgumentException('Invalid mailer instance given. Only Swift_Mailer and instances of ' . MailerInterface::class . ' are supported.');
 		}
 	}
 
