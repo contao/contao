@@ -260,6 +260,18 @@ class ModuleEventlist extends Events
 		}
 
 		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$uuids = array();
+
+		for ($i=$offset; $i<$limit; $i++)
+		{
+			if ($arrEvents[$i]['addImage'] && $arrEvents[$i]['singleSRC'] != '')
+			{
+				$uuids[] = $arrEvents[$i]['singleSRC'];
+			}
+		}
+
+		// Preload all images in one query so they are loaded into the model registry
+		FilesModel::findMultipleByUuids($uuids);
 
 		// Parse events
 		for ($i=$offset; $i<$limit; $i++)
