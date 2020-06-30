@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\Database\Result;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Patchwork\Utf8;
 
 /**
@@ -230,11 +231,30 @@ class Search
 		}
 		else
 		{
-			$objInsertStmt = $objDatabase->prepare("INSERT INTO tl_search %s")
-										 ->set($arrSet)
-										 ->execute();
+			try
+			{
+				$objInsertStmt = $objDatabase->prepare("INSERT INTO tl_search %s")
+					->set($arrSet)
+					->execute();
 
-			$intInsertId = $objInsertStmt->insertId;
+				$intInsertId = $objInsertStmt->insertId;
+			}
+			catch (UniqueConstraintViolationException $exception)
+			{
+				$intTimestamp = $objDatabase
+					->prepare("SELECT tstamp FROM tl_search WHERE url=?")
+					->limit(1)
+					->execute($arrSet['url'])
+					->tstamp;
+
+				// Ignore concurrent indexing of the same page
+				if ($intTimestamp > $arrSet['tstamp'] - 10)
+				{
+					return false;
+				}
+
+				throw $exception;
+			}
 		}
 
 		// Remove quotes
