@@ -249,11 +249,12 @@ class Search
 		}
 
 		// Decrement document frequency counts
-		$objDatabase->prepare("
-			UPDATE tl_search_term 
-			INNER JOIN tl_search_index ON tl_search_term.id = tl_search_index.termId AND tl_search_index.pid = ?
-			SET documentFrequency = GREATEST(0, documentFrequency - 1)
-		")
+		$objDatabase
+			->prepare("
+				UPDATE tl_search_term
+				INNER JOIN tl_search_index ON tl_search_term.id = tl_search_index.termId AND tl_search_index.pid = ?
+				SET documentFrequency = GREATEST(0, documentFrequency - 1)
+			")
 			->execute($intInsertId);
 
 		// Remove the existing index
@@ -261,16 +262,16 @@ class Search
 					->execute($intInsertId);
 
 		// Add new terms and increment frequency counts of existing terms
-		$objDatabase->prepare("
-			INSERT INTO tl_search_term (term, documentFrequency) 
-			VALUES " . implode(', ', array_fill(0, \count($arrIndex), '(?, 1)')) . "
-			ON DUPLICATE KEY UPDATE documentFrequency = documentFrequency + 1
-		")
+		$objDatabase
+			->prepare("
+				INSERT INTO tl_search_term (term, documentFrequency)
+				VALUES " . implode(', ', array_fill(0, \count($arrIndex), '(?, 1)')) . "
+				ON DUPLICATE KEY UPDATE documentFrequency = documentFrequency + 1
+			")
 			->execute(array_keys($arrIndex));
 
 		// Remove obsolete terms
-		$objDatabase->prepare("DELETE FROM tl_search_term WHERE documentFrequency = 0")
-					->execute();
+		$objDatabase->query("DELETE FROM tl_search_term WHERE documentFrequency = 0");
 
 		$arrQuery = array();
 		$arrValues = array();
@@ -287,17 +288,14 @@ class Search
 		$objDatabase->prepare("INSERT INTO tl_search_index (pid, termId, relevance) VALUES " . implode(', ', $arrQuery))
 					->execute($arrValues);
 
-		$row = $objDatabase
-			->prepare("SELECT IFNULL(MIN(id), 0), IFNULL(MAX(id), 0), COUNT(*) FROM tl_search")
-			->execute()
-			->fetchRow();
+		$row = $objDatabase->query("SELECT IFNULL(MIN(id), 0), IFNULL(MAX(id), 0), COUNT(*) FROM tl_search")->fetchRow();
 
 		list($intMinId, $intMaxId, $intCount) = array_map('intval', $row);
 
 		// If the whole corpus has few documents we want to update the vector length of all documents
 		if ($intCount <= 200)
 		{
-			$arrRandomIds = $objDatabase->prepare("SELECT id FROM tl_search")->execute()->fetchEach('id');
+			$arrRandomIds = $objDatabase->query("SELECT id FROM tl_search")->fetchEach('id');
 		}
 		// Otherwise we select approximately 100 random documents that get updated
 		else
@@ -315,10 +313,10 @@ class Search
 		$arrDocumentIds = array_merge(array($intInsertId), $arrRandomIds);
 
 		// Set or update vector length
-		$objDatabase->prepare("
+		$objDatabase->query("
 			UPDATE tl_search
 			INNER JOIN (
-				SELECT 
+				SELECT
 					tl_search_index.pid,
 					SQRT(SUM(POW(
 						(1 + LOG(relevance)) * LOG((
@@ -332,7 +330,7 @@ class Search
 				WHERE tl_search_index.pid IN (" . implode(',', array_map('intval', $arrDocumentIds)) . ")
 			) si ON si.pid = tl_search.id
 			SET tl_search.vectorLength = si.vectorLength
-		")->execute();
+		");
 
 		return true;
 	}
@@ -535,17 +533,11 @@ class Search
 
 			if (isset($arrWildcards[$index]))
 			{
-				$strQuery .= "+ (
-					(1+LOG(SUM(match$index * tl_search_index.relevance))) * POW(LOG(@searchCount / @wildcardCount$index), 2) / " . (\count($arrAllKeywords) - \count($arrExcludedMatches)) . "
-				)";
+				$strQuery .= "+ ((1+LOG(SUM(match$index * tl_search_index.relevance))) * POW(LOG(@searchCount / @wildcardCount$index), 2) / " . (\count($arrAllKeywords) - \count($arrExcludedMatches)) . ")";
 			}
 			else
 			{
-				$strQuery .= "+ (
-					(1+LOG(SUM(match$index * tl_search_index.relevance))) 
-					* POW(MIN(match$index * matchedTerm.idf), 2) 
-					/ " . (\count($arrAllKeywords) - \count($arrExcludedMatches)) . "
-				)";
+				$strQuery .= "+ ((1+LOG(SUM(match$index * tl_search_index.relevance))) * POW(MIN(match$index * matchedTerm.idf), 2) / " . (\count($arrAllKeywords) - \count($arrExcludedMatches)) . ")";
 			}
 		}
 
@@ -569,7 +561,6 @@ class Search
 		}
 
 		$strQuery .= ") AS similarity";
-
 		$strQuery .= " FROM (SELECT id, term";
 
 		// Calculate inverse document frequency of every matching term
@@ -588,11 +579,12 @@ class Search
 		{
 			$strQuery .= ", @wildcardCount$index := (
 				SELECT COUNT(*) FROM (
-					SELECT DISTINCT pid FROM tl_search_term 
+					SELECT DISTINCT pid FROM tl_search_term
 					JOIN tl_search_index ON tl_search_index.termId = tl_search_term.id
 					WHERE term LIKE ?
 				) distinctPids$index
 			)";
+
 			$arrValues[] = $strKeyword;
 		}
 
@@ -600,10 +592,9 @@ class Search
 
 		// Select all terms in the sub query that match any of the keywords or wildcards
 		$strQuery .= " match" . implode(" = 1 OR match", array_keys($arrAllKeywords)) . " = 1";
-
 		$strQuery .= ") matchedTerm JOIN tl_search_index ON tl_search_index.termId = matchedTerm.id";
-
 		$strQuery .= " GROUP BY tl_search_index.pid";
+
 		$arrHaving = array();
 
 		// Check that all required keywords match
