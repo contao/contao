@@ -193,7 +193,7 @@ class Search
 					->prepare("
 						UPDATE tl_search_term
 						INNER JOIN tl_search_index ON tl_search_term.id = tl_search_index.termId AND tl_search_index.pid = ?
-						SET documentFrequency = GREATEST(0, documentFrequency - 1)
+						SET documentFrequency = GREATEST(1, documentFrequency) - 1
 					")
 					->execute($objIndex->id);
 
@@ -263,7 +263,7 @@ class Search
 			->prepare("
 				UPDATE tl_search_term
 				INNER JOIN tl_search_index ON tl_search_term.id = tl_search_index.termId AND tl_search_index.pid = ?
-				SET documentFrequency = GREATEST(0, documentFrequency - 1)
+				SET documentFrequency = GREATEST(1, documentFrequency) - 1
 			")
 			->execute($intInsertId);
 
@@ -725,7 +725,7 @@ class Search
 				->prepare("
 					UPDATE tl_search_term
 					INNER JOIN tl_search_index ON tl_search_term.id = tl_search_index.termId AND tl_search_index.pid = ?
-					SET documentFrequency = GREATEST(0, documentFrequency - 1)
+					SET documentFrequency = GREATEST(1, documentFrequency) - 1
 				")
 				->execute($objResult->id);
 
