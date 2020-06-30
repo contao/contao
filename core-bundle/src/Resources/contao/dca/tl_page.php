@@ -1254,14 +1254,28 @@ class tl_page extends Backend
 		$objResult = $this->Database->prepare("SELECT id FROM tl_search WHERE pid=?")
 									->execute($dc->id);
 
+		// TODO: Should we call contao.search.indexer.default delete() here instead of the duplicated code?
+
 		while ($objResult->next())
 		{
+			// Decrement document frequency counts
+			$this->Database
+				->prepare("
+					UPDATE tl_search_term
+					INNER JOIN tl_search_index ON tl_search_term.id = tl_search_index.termId AND tl_search_index.pid = ?
+					SET documentFrequency = GREATEST(0, documentFrequency - 1)
+				")
+				->execute($objResult->id);
+
 			$this->Database->prepare("DELETE FROM tl_search WHERE id=?")
 						   ->execute($objResult->id);
 
 			$this->Database->prepare("DELETE FROM tl_search_index WHERE pid=?")
 						   ->execute($objResult->id);
 		}
+
+		// Remove obsolete terms
+		$this->Database->query("DELETE FROM tl_search_term WHERE documentFrequency = 0");
 	}
 
 	/**

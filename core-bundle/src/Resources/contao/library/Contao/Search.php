@@ -187,6 +187,16 @@ class Search
 			if (strpos($objIndex->url, '?') !== false && strpos($arrSet['url'], '?') === false)
 			{
 				// The new URL is more canonical (no query string)
+
+				// Decrement document frequency counts
+				$objDatabase
+					->prepare("
+						UPDATE tl_search_term
+						INNER JOIN tl_search_index ON tl_search_term.id = tl_search_index.termId AND tl_search_index.pid = ?
+						SET documentFrequency = GREATEST(0, documentFrequency - 1)
+					")
+					->execute($objIndex->id);
+
 				$objDatabase->prepare("DELETE FROM tl_search WHERE id=?")
 							->execute($objIndex->id);
 
@@ -709,12 +719,24 @@ class Search
 
 		while ($objResult->next())
 		{
+			// Decrement document frequency counts
+			$objDatabase
+				->prepare("
+					UPDATE tl_search_term
+					INNER JOIN tl_search_index ON tl_search_term.id = tl_search_index.termId AND tl_search_index.pid = ?
+					SET documentFrequency = GREATEST(0, documentFrequency - 1)
+				")
+				->execute($objResult->id);
+
 			$objDatabase->prepare("DELETE FROM tl_search WHERE id=?")
 						->execute($objResult->id);
 
 			$objDatabase->prepare("DELETE FROM tl_search_index WHERE pid=?")
 						->execute($objResult->id);
 		}
+
+		// Remove obsolete terms
+		$objDatabase->query("DELETE FROM tl_search_term WHERE documentFrequency = 0");
 	}
 
 	/**
