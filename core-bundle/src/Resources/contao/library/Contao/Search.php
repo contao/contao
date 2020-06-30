@@ -322,6 +322,9 @@ class Search
 
 		$arrDocumentIds = array_merge(array($intInsertId), $arrRandomIds);
 
+		// Prevent deadlocks
+		$objDatabase->query("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED");
+
 		// Set or update vector length
 		$objDatabase->query("
 			UPDATE tl_search
@@ -342,6 +345,9 @@ class Search
 			) si ON si.pid = tl_search.id
 			SET tl_search.vectorLength = si.vectorLength
 		");
+
+		// Reset transaction isolation level
+		$objDatabase->query("COMMIT");
 
 		return true;
 	}
