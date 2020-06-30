@@ -207,7 +207,6 @@ class UserPasswordCommandTest extends TestCase
         $username = 'foobar';
         $password = '12345678';
 
-        /** @var Connection&MockObject $connection */
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
