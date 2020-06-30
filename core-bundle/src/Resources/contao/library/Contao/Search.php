@@ -338,6 +338,7 @@ class Search
 				JOIN tl_search_term
 					ON tl_search_index.termId = tl_search_term.id
 				WHERE tl_search_index.pid IN (" . implode(',', array_map('intval', $arrDocumentIds)) . ")
+				GROUP BY tl_search_index.pid
 			) si ON si.pid = tl_search.id
 			SET tl_search.vectorLength = si.vectorLength
 		");
