@@ -156,7 +156,7 @@ class DefaultIndexerTest extends ContaoTestCase
             ->method('exec')
             ->withConsecutive(
                 ['TRUNCATE TABLE tl_search'],
-                ['TRUNCATE TABLE tl_search_index']
+                ['TRUNCATE TABLE tl_search_index'],
                 ['TRUNCATE TABLE tl_search_term']
             )
         ;
