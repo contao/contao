@@ -24,7 +24,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			array('tl_page', 'setRootType'),
 			array('tl_page', 'showFallbackWarning'),
 			array('tl_page', 'makeRedirectPageMandatory'),
-			array('tl_page', 'generateSitemap'),
+			array('tl_page', 'generateSitemap')
 		),
 		'oncut_callback' => array
 		(
