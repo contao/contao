@@ -315,7 +315,7 @@ class Search
 		}
 
 		// Create the new index
-		$objDatabase->prepare("INSERT INTO tl_search_index (pid, termId, relevance) VALUES " . implode(', ', $arrQuery))
+		$objDatabase->prepare("INSERT IGNORE INTO tl_search_index (pid, termId, relevance) VALUES " . implode(', ', $arrQuery))
 					->execute($arrValues);
 
 		$row = $objDatabase->query("SELECT IFNULL(MIN(id), 0), IFNULL(MAX(id), 0), COUNT(*) FROM tl_search")->fetchRow();
