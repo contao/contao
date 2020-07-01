@@ -12,13 +12,13 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Mailer\AvailableTransports;
 use Contao\Image;
 use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Contao\CoreBundle\Mailer\AvailableTransports;
 
 $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 (

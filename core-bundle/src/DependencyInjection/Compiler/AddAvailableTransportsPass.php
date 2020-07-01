@@ -46,7 +46,7 @@ class AddAvailableTransportsPass implements CompilerPassInterface
             }
 
             foreach (array_keys($v['mailer']['transports']) as $transportName) {
-                if (!array_key_exists($transportName, $contaoMailerConfig)) {
+                if (!\array_key_exists($transportName, $contaoMailerConfig)) {
                     continue;
                 }
 
