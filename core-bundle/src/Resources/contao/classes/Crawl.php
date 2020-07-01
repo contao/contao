@@ -24,6 +24,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Terminal42\Escargot\Exception\InvalidJobIdException;
+use Webmozart\PathUtil\Path;
 
 /**
  * Maintenance module "crawl".
@@ -99,7 +100,7 @@ class Crawl extends Backend implements \executable
 
 		$jobId = Input::get('jobId');
 		$queue = $factory->createLazyQueue();
-		$crawLogsDir = sys_get_temp_dir() . '/contao-crawl';
+		$crawLogsDir = Path::join(sys_get_temp_dir(), md5(System::getContainer()->getParameter('kernel.project_dir')), 'contao-crawl');
 
 		// Make sure the subdirectory exists so logs can be written
 		if (!is_dir($crawLogsDir))
@@ -107,8 +108,8 @@ class Crawl extends Backend implements \executable
 			(new Filesystem())->mkdir($crawLogsDir);
 		}
 
-		$debugLogPath = $crawLogsDir . '/' . $jobId . '_log.csv';
-		$resultCache = $crawLogsDir . '/' . $jobId . '.result-cache';
+		$debugLogPath = Path::join($crawLogsDir, $jobId . '_log.csv');
+		$resultCache = Path::join($crawLogsDir, $jobId . '.result-cache');
 
 		if ($downloadLog = Input::get('downloadLog'))
 		{
@@ -286,7 +287,7 @@ class Crawl extends Backend implements \executable
 
 	private function getSubscriberLogFilePath(string $subscriberName, string $jobId): string
 	{
-		return sys_get_temp_dir() . '/contao-crawl/' . $jobId . '_' . $subscriberName . '_log.csv';
+		return Path::join(sys_get_temp_dir(), md5(System::getContainer()->getParameter('kernel.project_dir')), 'contao-crawl', $jobId . '_' . $subscriberName . '_log.csv');
 	}
 
 	private function generateSubscribersWidget(array $subscriberNames): Widget
