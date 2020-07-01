@@ -24,7 +24,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Terminal42\Escargot\Exception\InvalidJobIdException;
-use Webmozart\PathUtil\Path;
 
 /**
  * Maintenance module "crawl".
@@ -37,6 +36,11 @@ class Crawl extends Backend implements \executable
 	 * @var bool
 	 */
 	private $valid = true;
+
+	/**
+	 * @var string
+	 */
+	private $logDir;
 
 	/**
 	 * Return true if the module is active
@@ -100,16 +104,9 @@ class Crawl extends Backend implements \executable
 
 		$jobId = Input::get('jobId');
 		$queue = $factory->createLazyQueue();
-		$crawLogsDir = Path::join(sys_get_temp_dir(), md5(System::getContainer()->getParameter('kernel.project_dir')), 'contao-crawl');
 
-		// Make sure the subdirectory exists so logs can be written
-		if (!is_dir($crawLogsDir))
-		{
-			(new Filesystem())->mkdir($crawLogsDir);
-		}
-
-		$debugLogPath = Path::join($crawLogsDir, $jobId . '_log.csv');
-		$resultCache = Path::join($crawLogsDir, $jobId . '.result-cache');
+		$debugLogPath = $this->getLogDir() . '/' . $jobId . '_log.csv';
+		$resultCache = $this->getLogDir() . '/' . $jobId . '.result-cache';
 
 		if ($downloadLog = Input::get('downloadLog'))
 		{
@@ -285,9 +282,26 @@ class Crawl extends Backend implements \executable
 		return $logger;
 	}
 
+	private function getLogDir(): string
+	{
+		if (null !== $this->logDir)
+		{
+			return $this->logDir;
+		}
+
+		$this->logDir = sprintf('%s/%s/contao-crawl', sys_get_temp_dir(), md5(System::getContainer()->getParameter('kernel.project_dir')));
+
+		if (!is_dir($this->logDir))
+		{
+			(new Filesystem())->mkdir($this->logDir);
+		}
+
+		return $this->logDir;
+	}
+
 	private function getSubscriberLogFilePath(string $subscriberName, string $jobId): string
 	{
-		return Path::join(sys_get_temp_dir(), md5(System::getContainer()->getParameter('kernel.project_dir')), 'contao-crawl', $jobId . '_' . $subscriberName . '_log.csv');
+		return $this->getLogDir() . '/' . $jobId . '_' . $subscriberName . '_log.csv';
 	}
 
 	private function generateSubscribersWidget(array $subscriberNames): Widget
