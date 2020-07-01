@@ -274,7 +274,7 @@ input[type=search]::-webkit-search-decoration {
 		line-height:16px;
 	}
 	input[type=search] {
-		padding:2px 0 4px 6px;
+		padding-right:0;
 	}
 }}
 
