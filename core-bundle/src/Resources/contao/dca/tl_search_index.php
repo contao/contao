@@ -19,7 +19,6 @@ $GLOBALS['TL_DCA']['tl_search_index'] = array
 			(
 				'id' => 'primary',
 				'pid' => 'index',
-				'termId' => 'index',
 				'termId,pid' => 'unique'
 			)
 		)
