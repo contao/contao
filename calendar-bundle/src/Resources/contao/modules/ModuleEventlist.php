@@ -259,7 +259,7 @@ class ModuleEventlist extends Events
 			}
 		}
 
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 		$uuids = array();
 
 		for ($i=$offset; $i<$limit; $i++)
@@ -338,7 +338,7 @@ class ModuleEventlist extends Events
 			{
 				$objModel = FilesModel::findByUuid($event['singleSRC']);
 
-				if ($objModel !== null && is_file($rootDir . '/' . $objModel->path))
+				if ($objModel !== null && is_file($projectDir . '/' . $objModel->path))
 				{
 					if ($imgSize)
 					{

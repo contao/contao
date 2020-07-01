@@ -217,7 +217,7 @@ class FileSelector extends Widget
 			Backend::addFilesBreadcrumb('tl_files_picker');
 		}
 
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Root nodes (breadcrumb menu)
 		if (!empty($GLOBALS['TL_DCA']['tl_files']['list']['sorting']['root']))
@@ -232,7 +232,7 @@ class FileSelector extends Widget
 				if (empty($root))
 				{
 					// Set all folders inside the custom path as root nodes
-					$root = array_map(function ($el) { return $this->path . '/' . $el; }, scan($rootDir . '/' . $this->path));
+					$root = array_map(function ($el) { return $this->path . '/' . $el; }, scan($projectDir . '/' . $this->path));
 
 					// Hide the breadcrumb
 					$GLOBALS['TL_DCA']['tl_file']['list']['sorting']['breadcrumb'] = '';
@@ -243,20 +243,20 @@ class FileSelector extends Widget
 
 			foreach ($nodes as $node)
 			{
-				$tree .= $this->renderFiletree($rootDir . '/' . $node, 0, true, true, $arrFound);
+				$tree .= $this->renderFiletree($projectDir . '/' . $node, 0, true, true, $arrFound);
 			}
 		}
 
 		// Show a custom path (see #4926)
 		elseif ($this->path != '')
 		{
-			$tree .= $this->renderFiletree($rootDir . '/' . $this->path, 0, false, $this->isProtectedPath($this->path), $arrFound);
+			$tree .= $this->renderFiletree($projectDir . '/' . $this->path, 0, false, $this->isProtectedPath($this->path), $arrFound);
 		}
 
 		// Start from root
 		elseif ($this->User->isAdmin)
 		{
-			$tree .= $this->renderFiletree($rootDir . '/' . Config::get('uploadPath'), 0, false, true, $arrFound);
+			$tree .= $this->renderFiletree($projectDir . '/' . Config::get('uploadPath'), 0, false, true, $arrFound);
 		}
 
 		// Show mounted files to regular users
@@ -266,7 +266,7 @@ class FileSelector extends Widget
 
 			foreach ($nodes as $node)
 			{
-				$tree .= $this->renderFiletree($rootDir . '/' . $node, 0, true, true, $arrFound);
+				$tree .= $this->renderFiletree($projectDir . '/' . $node, 0, true, true, $arrFound);
 			}
 		}
 
@@ -557,13 +557,13 @@ class FileSelector extends Widget
 				// Generate thumbnail
 				if ($objFile->isImage && $objFile->viewHeight > 0 && Config::get('thumbnails') && ($objFile->isSvgImage || ($objFile->height <= Config::get('gdMaxImgHeight') && $objFile->width <= Config::get('gdMaxImgWidth'))))
 				{
-					$rootDir = System::getContainer()->getParameter('kernel.project_dir');
-					$thumbnail .= '<br>' . Image::getHtml(System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . rawurldecode($currentEncoded), array(100, 75, ResizeConfiguration::MODE_BOX))->getUrl($rootDir), '', 'style="margin:0 0 2px -18px"');
-					$importantPart = System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . rawurldecode($currentEncoded))->getImportantPart();
+					$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+					$thumbnail .= '<br>' . Image::getHtml(System::getContainer()->get('contao.image.image_factory')->create($projectDir . '/' . rawurldecode($currentEncoded), array(100, 75, ResizeConfiguration::MODE_BOX))->getUrl($projectDir), '', 'style="margin:0 0 2px -18px"');
+					$importantPart = System::getContainer()->get('contao.image.image_factory')->create($projectDir . '/' . rawurldecode($currentEncoded))->getImportantPart();
 
 					if ($importantPart->getX() > 0 || $importantPart->getY() > 0 || $importantPart->getWidth() < 1 || $importantPart->getHeight() < 1)
 					{
-						$thumbnail .= ' ' . Image::getHtml(System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . rawurldecode($currentEncoded), (new ResizeConfiguration())->setWidth(80)->setHeight(60)->setMode(ResizeConfiguration::MODE_BOX)->setZoomLevel(100))->getUrl($rootDir), '', 'style="margin:0 0 2px 0;vertical-align:bottom"');
+						$thumbnail .= ' ' . Image::getHtml(System::getContainer()->get('contao.image.image_factory')->create($projectDir . '/' . rawurldecode($currentEncoded), (new ResizeConfiguration())->setWidth(80)->setHeight(60)->setMode(ResizeConfiguration::MODE_BOX)->setZoomLevel(100))->getUrl($projectDir), '', 'style="margin:0 0 2px 0;vertical-align:bottom"');
 					}
 				}
 
@@ -648,11 +648,11 @@ class FileSelector extends Widget
 	 */
 	protected function isProtectedPath($path)
 	{
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		do
 		{
-			if (file_exists($rootDir . '/' . $path . '/.public'))
+			if (file_exists($projectDir . '/' . $path . '/.public'))
 			{
 				return false;
 			}

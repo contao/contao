@@ -302,7 +302,7 @@ class tl_files extends Contao\Backend
 		}
 
 		$container = Contao\System::getContainer();
-		$rootDir = $container->getParameter('kernel.project_dir');
+		$projectDir = $container->getParameter('kernel.project_dir');
 		$objSession = $container->get('session');
 
 		$session = $objSession->all();
@@ -326,11 +326,11 @@ class tl_files extends Contao\Backend
 
 				foreach ($session['CURRENT']['IDS'] as $id)
 				{
-					if (is_dir($rootDir . '/' . $id))
+					if (is_dir($projectDir . '/' . $id))
 					{
 						$folders[] = $id;
 
-						if ($canDeleteRecursive || ($canDeleteOne && count(scan($rootDir . '/' . $id)) < 1))
+						if ($canDeleteRecursive || ($canDeleteOne && count(scan($projectDir . '/' . $id)) < 1))
 						{
 							$delete_all[] = $id;
 						}
@@ -381,9 +381,9 @@ class tl_files extends Contao\Backend
 				case 'delete':
 					$strFile = Contao\Input::get('id', true);
 
-					if (is_dir($rootDir . '/' . $strFile))
+					if (is_dir($projectDir . '/' . $strFile))
 					{
-						$finder = Symfony\Component\Finder\Finder::create()->in($rootDir . '/' . $strFile);
+						$finder = Symfony\Component\Finder\Finder::create()->in($projectDir . '/' . $strFile);
 
 						if (!$canDeleteRecursive && $finder->hasResults())
 						{
@@ -445,8 +445,8 @@ class tl_files extends Contao\Backend
 			return;
 		}
 
-		$rootDir = Contao\System::getContainer()->getParameter('kernel.project_dir');
-		$blnIsFolder = is_dir($rootDir . '/' . $dc->id);
+		$projectDir = Contao\System::getContainer()->getParameter('kernel.project_dir');
+		$blnIsFolder = is_dir($projectDir . '/' . $dc->id);
 
 		// Remove the meta data when editing folders
 		if ($blnIsFolder)
@@ -720,8 +720,8 @@ class tl_files extends Contao\Backend
 	 */
 	public function deleteFile($row, $href, $label, $title, $icon, $attributes)
 	{
-		$rootDir = Contao\System::getContainer()->getParameter('kernel.project_dir');
-		$path = $rootDir . '/' . urldecode($row['id']);
+		$projectDir = Contao\System::getContainer()->getParameter('kernel.project_dir');
+		$path = $projectDir . '/' . urldecode($row['id']);
 
 		if (!is_dir($path))
 		{
@@ -758,9 +758,9 @@ class tl_files extends Contao\Backend
 		}
 
 		$strDecoded = rawurldecode($row['id']);
-		$rootDir = Contao\System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = Contao\System::getContainer()->getParameter('kernel.project_dir');
 
-		if (is_dir($rootDir . '/' . $strDecoded))
+		if (is_dir($projectDir . '/' . $strDecoded))
 		{
 			return '';
 		}
@@ -809,10 +809,10 @@ class tl_files extends Contao\Backend
 	public function protectFolder(Contao\DataContainer $dc)
 	{
 		$strPath = $dc->id;
-		$rootDir = Contao\System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = Contao\System::getContainer()->getParameter('kernel.project_dir');
 
 		// Check if the folder has been renamed (see #6432, #934)
-		if (Contao\Input::post('name') && !is_dir($rootDir . '/' . $strPath))
+		if (Contao\Input::post('name') && !is_dir($projectDir . '/' . $strPath))
 		{
 			if (Contao\Validator::isInsecurePath(Contao\Input::post('name')))
 			{
@@ -823,14 +823,14 @@ class tl_files extends Contao\Backend
 			$strName = basename($strPath);
 			$strNewPath = str_replace($strName, Contao\Input::post('name'), $strPath, $count);
 
-			if ($strNewPath && $count > 0 && is_dir($rootDir . '/' . $strNewPath))
+			if ($strNewPath && $count > 0 && is_dir($projectDir . '/' . $strNewPath))
 			{
 				$strPath = $strNewPath;
 			}
 		}
 
 		// Only show for folders (see #5660)
-		if (!is_dir($rootDir . '/' . $strPath))
+		if (!is_dir($projectDir . '/' . $strPath))
 		{
 			return '';
 		}
@@ -841,7 +841,7 @@ class tl_files extends Contao\Backend
 		$blnUnprotected = $objFolder->isUnprotected();
 
 		// Disable the checkbox if a parent folder is public (see #712)
-		$blnDisable = $blnUnprotected && !file_exists($rootDir . '/' . $strPath . '/.public');
+		$blnDisable = $blnUnprotected && !file_exists($projectDir . '/' . $strPath . '/.public');
 
 		// Protect or unprotect the folder
 		if (!$blnDisable && Contao\Input::post('FORM_SUBMIT') == 'tl_files')
@@ -901,7 +901,7 @@ class tl_files extends Contao\Backend
 	public function excludeFolder(Contao\DataContainer $dc)
 	{
 		$strPath = $dc->id;
-		$rootDir = Contao\System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = Contao\System::getContainer()->getParameter('kernel.project_dir');
 
 		// Check if the folder has been renamed (see #6432, #934)
 		if (Contao\Input::post('name'))
@@ -914,14 +914,14 @@ class tl_files extends Contao\Backend
 			$count = 0;
 			$strName = basename($strPath);
 
-			if ($count > 0 && ($strNewPath = str_replace($strName, Contao\Input::post('name'), $strPath, $count)) && is_dir($rootDir . '/' . $strNewPath))
+			if ($count > 0 && ($strNewPath = str_replace($strName, Contao\Input::post('name'), $strPath, $count)) && is_dir($projectDir . '/' . $strNewPath))
 			{
 				$strPath = $strNewPath;
 			}
 		}
 
 		// Only show for folders (see #5660)
-		if (!is_dir($rootDir . '/' . $strPath))
+		if (!is_dir($projectDir . '/' . $strPath))
 		{
 			return '';
 		}
@@ -932,7 +932,7 @@ class tl_files extends Contao\Backend
 		$blnUnsynchronized = $objFolder->isUnsynchronized();
 
 		// Disable the checkbox if a parent folder is unsynchronized
-		$blnDisable = $blnUnsynchronized && !file_exists($rootDir . '/' . $strPath . '/.nosync');
+		$blnDisable = $blnUnsynchronized && !file_exists($projectDir . '/' . $strPath . '/.nosync');
 
 		// Synchronize or unsynchronize the folder
 		if (!$blnDisable && Contao\Input::post('FORM_SUBMIT') == 'tl_files')

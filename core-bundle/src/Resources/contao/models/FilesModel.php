@@ -253,12 +253,12 @@ class FilesModel extends Model
 	 */
 	public static function findByPath($path, array $arrOptions=array())
 	{
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 		$uploadPath = System::getContainer()->getParameter('contao.upload_path');
 
-		if (strncmp($path, $rootDir . '/', \strlen($rootDir) + 1) === 0)
+		if (strncmp($path, $projectDir . '/', \strlen($projectDir) + 1) === 0)
 		{
-			$path = substr($path, \strlen($rootDir) + 1);
+			$path = substr($path, \strlen($projectDir) + 1);
 		}
 
 		if (strncmp($path, $uploadPath . '/', \strlen($uploadPath) + 1) !== 0)

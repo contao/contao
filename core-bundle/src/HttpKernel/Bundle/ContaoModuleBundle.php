@@ -24,10 +24,15 @@ final class ContaoModuleBundle extends Bundle
      *
      * @throws \LogicException
      */
-    public function __construct(string $name, string $rootDir)
+    public function __construct(string $name, string $projectDir)
     {
         $this->name = $name;
-        $this->path = \dirname($rootDir).'/system/modules/'.$this->name;
+        $this->path = $projectDir.'/system/modules/'.$this->name;
+
+        // Backwards compatibility, $projectDir was previously set from kernel $rootDir
+        if (!is_dir($this->path)) {
+            $this->path = \dirname($projectDir).'/system/modules/'.$this->name;
+        }
 
         if (!is_dir($this->path)) {
             throw new \LogicException(sprintf('The module folder "system/modules/%s" does not exist.', $this->name));

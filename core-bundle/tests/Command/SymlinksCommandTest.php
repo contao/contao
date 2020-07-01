@@ -61,10 +61,10 @@ class SymlinksCommandTest extends TestCase
     {
         $command = (new \ReflectionClass(SymlinksCommand::class))->newInstanceWithoutConstructor();
 
-        // Use \ as directory separator in $rootDir
-        $rootDir = new \ReflectionProperty(SymlinksCommand::class, 'rootDir');
-        $rootDir->setAccessible(true);
-        $rootDir->setValue($command, strtr($this->getFixturesDir(), '/', '\\'));
+        // Use \ as directory separator in $projectDir
+        $projectDir = new \ReflectionProperty(SymlinksCommand::class, 'projectDir');
+        $projectDir->setAccessible(true);
+        $projectDir->setValue($command, strtr($this->getFixturesDir(), '/', '\\'));
 
         // Use / as directory separator in $path
         $method = new \ReflectionMethod(SymlinksCommand::class, 'getRelativePath');
