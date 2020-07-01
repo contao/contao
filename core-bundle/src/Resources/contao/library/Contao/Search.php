@@ -354,7 +354,7 @@ class Search
 					SQRT(SUM(POW(
 						(1 + LOG(relevance)) * LOG((
 							SELECT COUNT(*) FROM tl_search
-						) / documentFrequency),
+						) / GREATEST(1, documentFrequency)),
 						2
 					))) as vectorLength
 				FROM tl_search_index
@@ -601,7 +601,7 @@ class Search
 		$strQuery .= " FROM (SELECT id, term";
 
 		// Calculate inverse document frequency of every matching term
-		$strQuery .= ", LOG(@searchCount / documentFrequency) AS idf";
+		$strQuery .= ", LOG(@searchCount / GREATEST(1, documentFrequency)) AS idf";
 
 		// Store the match of every keyword and wildcard in its own column match0, match1, ...
 		foreach ($arrAllKeywords as $index => $strKeywordExpression)
