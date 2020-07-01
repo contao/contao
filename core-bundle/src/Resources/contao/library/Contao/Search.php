@@ -223,15 +223,9 @@ class Search
 		// Add the page to the tl_search table
 		if ($objIndex->numRows)
 		{
-			// Prevent deadlocks
-			$objDatabase->query("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED");
-
 			$objDatabase->prepare("UPDATE tl_search %s WHERE id=?")
 						->set($arrSet)
 						->execute($objIndex->id);
-
-			// Reset transaction isolation level
-			$objDatabase->query("COMMIT");
 
 			$intInsertId = $objIndex->id;
 		}
