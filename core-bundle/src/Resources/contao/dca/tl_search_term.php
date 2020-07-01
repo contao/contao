@@ -18,7 +18,8 @@ $GLOBALS['TL_DCA']['tl_search_term'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
-				'term' => 'unique'
+				'term' => 'unique',
+				'documentFrequency' => 'index'
 			)
 		)
 	),
