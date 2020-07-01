@@ -345,26 +345,26 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
     /**
      * Dynamically adds a default mailer to the config, if no mailer is defined.
-     * 
-     * We cannot add a default mailer configuration to the skeleton config.yml, 
+     *
+     * We cannot add a default mailer configuration to the skeleton config.yml,
      * since different types of configurations are not allowed.
-     * 
+     *
      * For example, if the Manager Bundle defined
-     * 
+     *
      *     framework:
      *         mailer:
      *             dsn: '%env(MAILER_DSN)%'
-     * 
+     *
      * in the skeleton config.yml and the user adds
-     * 
+     *
      *     framework:
      *         mailer:
      *             transports:
      *                 foobar: 'smtps://smtp.example.com'
-     * 
-     * to their config.yml, the merged configuration will lead to an error, since 
+     *
+     * to their config.yml, the merged configuration will lead to an error, since
      * you cannot use "framework.mailer.dsn" together with "framework.mailer.transports".
-     * Thus the default mailer configuration needs to be added dynamically, if 
+     * Thus the default mailer configuration needs to be added dynamically, if
      * not already present.
      *
      * @return array<string,array<string,array<string,array<string,mixed>>>>
@@ -476,14 +476,14 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             return 'sendmail+smtp://default';
         }
 
-        /**
+        /*
          * Check for gmail transport.
-         * 
+         *
          * With Swiftmailer a DSN like "gmail://username:password@localhost" was
          * supported out-of-the-box. See https://symfony.com/doc/4.4/email.html#using-gmail-to-send-emails
          * Symfony Mailer supports something similar, but only with an additional
          * dependency. See https://symfony.com/doc/4.4/components/mailer.html#transport
-         * 
+         *
          * Thus we add backwards compatibility for the "gmail" transport here.
          */
         if ('gmail' === $options['transport']) {
