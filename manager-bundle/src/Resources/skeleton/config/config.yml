@@ -81,13 +81,6 @@ doctrine_cache:
                 extension: .cache
                 directory: '%kernel.cache_dir%/doctrine/query'
 
-# SwiftMailer configuration
-swiftmailer:
-    default_mailer: default
-    mailers:
-        default:
-            url: '%env(MAILER_URL)%'
-
 # Lexik configuration
 lexik_maintenance:
     authorized:
