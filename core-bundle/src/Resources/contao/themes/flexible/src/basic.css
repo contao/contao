@@ -162,18 +162,17 @@ p {
 .widget h3 {
 	min-height:16px;
 }
-.widget h3 label {
+.widget h3 label,.widget h3 img {
 	margin-right:3px;
 }
-.widget h3 img {
-	vertical-align:bottom;
-	margin-right:3px;
+.widget legend img {
+	vertical-align:-3px;
 }
 .widget-captcha {
 	display:initial !important;
 }
 .widget .mce-tinymce {
-	margin:2px 0;
+	margin:3px 0;
 }
 
 /* Forms */
@@ -227,7 +226,8 @@ fieldset.checkbox_container,fieldset.radio_container {
 	width:19%;
 }
 .tl_text,.tl_text_2,.tl_text_3,.tl_text_4,.tl_textarea,.tl_text_unit,.tl_text_trbl,.tl_text_interval {
-	margin:2px 0;
+	height:30px;
+	margin:3px 0;
 	box-sizing:border-box;
 	padding:5px 6px 6px;
 	border:1px solid #aaa;
@@ -256,13 +256,15 @@ fieldset.checkbox_container,fieldset.radio_container {
 .tl_imageSize_0 {
 	margin-left:1%;
 }
+input[type="search"] {
+	height:26px;
+	padding-top:0;
+	padding-bottom:2px;
+}
 input[type=search]::-webkit-search-decoration {
 	-webkit-appearance:none;
 }
 @-moz-document url-prefix() {
-	.tl_text,.tl_text_2,.tl_text_3,.tl_text_4,.tl_textarea,.tl_text_unit,.tl_text_trbl,.tl_text_interval {
-		padding:5px 6px;
-	}
 	.tl_text::placeholder,.tl_text_2::placeholder,.tl_text_3::placeholder,.tl_text_4::placeholder,.tl_textarea::placeholder,.tl_text_unit::placeholder,.tl_text_trbl::placeholder,.tl_text_interval::placeholder {
 		line-height:18px;
 	}
@@ -272,7 +274,7 @@ input[type=search]::-webkit-search-decoration {
 		line-height:16px;
 	}
 	input[type=search] {
-		padding:2px 0 4px 6px;
+		padding-right:0;
 	}
 }}
 
@@ -299,7 +301,8 @@ select[multiple] {
 	width:50%;
 }
 .tl_select,.tl_mselect,.tl_select_column,.tl_select_unit,.tl_select_interval {
-	margin:2px 0;
+	height:30px;
+	margin:3px 0;
 	box-sizing:border-box;
 	border:1px solid #aaa;
 	padding:5px 22px 6px 6px;
@@ -320,7 +323,7 @@ select[multiple] {
 }
 @-moz-document url-prefix() {
 	.tl_select,.tl_mselect,.tl_select_column,.tl_select_unit,.tl_select_interval {
-		padding:4px 18px 4px 2px;
+		padding-left:2px;
 	}
 }
 
@@ -385,6 +388,7 @@ select[multiple] {
 
 /* Submit buttons */
 .tl_submit {
+	height:30px;
 	padding:7px 12px;
 	border:1px solid #aaa;
 	border-radius:2px;
@@ -536,10 +540,15 @@ a.tl_submit {
 	width:100%;
 }
 .m12 {
-	margin:16px 15px 8px;
+	margin:0 15px;
+	padding:17px 0;
 }
 .cbx {
-	min-height:56px;
+	min-height:46px;
+}
+.cbx.m12 {
+	min-height:80px;
+	box-sizing: border-box;
 }
 .subpal {
 	clear:both;
