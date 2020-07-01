@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class StripQueryParametersSubscriber implements EventSubscriberInterface
 {
-    private const BLACKLIST = [
+    private const DENY_LIST = [
         // Google click identifier
         'gclid',
         'dclid', // Used to be DoubleClick
@@ -51,26 +51,37 @@ class StripQueryParametersSubscriber implements EventSubscriberInterface
     /**
      * @var array
      */
-    private $whitelist = [];
+    private $allowList;
 
     /**
      * @var array
      */
-    private $disabledFromBlacklist = [];
+    private $removeFromDenyList = [];
 
-    public function __construct(array $whitelist = [])
+    public function __construct(array $allowList = [])
     {
-        $this->whitelist = $whitelist;
+        $this->allowList = $allowList;
     }
 
+    /**
+     * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.0; use the
+     *             getAllowList() method instead
+     */
     public function getWhitelist(): array
     {
-        return $this->whitelist;
+        @trigger_error('Using the "getWhitelist()" method has been deprecated and will no longer work in Contao 5.0. Use the "getAllowList()" method instead.', E_USER_DEPRECATED);
+
+        return $this->getAllowList();
     }
 
-    public function disableFromBlacklist(array $disableFromBlacklist): self
+    public function getAllowList(): array
     {
-        $this->disabledFromBlacklist = $disableFromBlacklist;
+        return $this->allowList;
+    }
+
+    public function removeFromDenyList(array $removeFromDenyList): self
+    {
+        $this->removeFromDenyList = $removeFromDenyList;
 
         return $this;
     }
@@ -83,11 +94,11 @@ class StripQueryParametersSubscriber implements EventSubscriberInterface
             return;
         }
 
-        // Use a custom whitelist if present, otherwise use the default blacklist
-        if (0 !== \count($this->whitelist)) {
-            $this->filterQueryParams($request, $this->whitelist);
+        // Use a custom allow list if present, otherwise use the default deny list
+        if (0 !== \count($this->allowList)) {
+            $this->filterQueryParams($request, $this->allowList);
         } else {
-            $this->filterQueryParams($request, $this->disabledFromBlacklist, self::BLACKLIST);
+            $this->filterQueryParams($request, $this->removeFromDenyList, self::DENY_LIST);
         }
     }
 

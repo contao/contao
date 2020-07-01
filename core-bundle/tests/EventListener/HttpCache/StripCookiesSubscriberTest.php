@@ -31,13 +31,13 @@ class StripCookiesSubscriberTest extends TestCase
     /**
      * @dataProvider cookiesProvider
      */
-    public function testCookiesAreStrippedCorrectly(array $cookies, array $expectedCookies, array $whitelist = [], array $disabledFromBlacklist = []): void
+    public function testCookiesAreStrippedCorrectly(array $cookies, array $expectedCookies, array $whitelist = [], array $removeFromDenyList = []): void
     {
         $request = Request::create('/', 'GET', [], $cookies);
         $event = new CacheEvent($this->createMock(CacheInvalidation::class), $request);
 
         $subscriber = new StripCookiesSubscriber($whitelist);
-        $subscriber->disableFromBlacklist($disabledFromBlacklist);
+        $subscriber->removeFromDenyList($removeFromDenyList);
         $subscriber->preHandle($event);
 
         $this->assertSame($expectedCookies, $request->cookies->all());
