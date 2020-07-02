@@ -147,7 +147,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 			'save_callback' => array
 			(
 				array('tl_newsletter_recipients', 'checkUniqueRecipient'),
-				array('tl_newsletter_recipients', 'checkBlacklistedRecipient')
+				array('tl_newsletter_recipients', 'checkDenylistedRecipient')
 			),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
@@ -326,7 +326,7 @@ class tl_newsletter_recipients extends Backend
 	}
 
 	/**
-	 * Check if a recipient is blacklisted for a channel
+	 * Check if a recipient was added to the denylist for a channel
 	 *
 	 * @param mixed         $varValue
 	 * @param DataContainer $dc
@@ -335,14 +335,14 @@ class tl_newsletter_recipients extends Backend
 	 *
 	 * @throws Exception
 	 */
-	public function checkBlacklistedRecipient($varValue, DataContainer $dc)
+	public function checkDenylistedRecipient($varValue, DataContainer $dc)
 	{
-		$objBlacklist = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_blacklist WHERE hash=? AND pid=(SELECT pid FROM tl_newsletter_recipients WHERE id=?) AND id!=?")
+		$objDenylist = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_denylist WHERE hash=? AND pid=(SELECT pid FROM tl_newsletter_recipients WHERE id=?) AND id!=?")
 									   ->execute(md5($varValue), $dc->id, $dc->id);
 
-		if ($objBlacklist->count > 0)
+		if ($objDenylist->count > 0)
 		{
-			throw new Exception($GLOBALS['TL_LANG']['ERR']['blacklisted']);
+			throw new Exception($GLOBALS['TL_LANG']['ERR']['denylisted']);
 		}
 
 		return $varValue;
