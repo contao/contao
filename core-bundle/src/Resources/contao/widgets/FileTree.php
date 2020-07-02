@@ -166,19 +166,19 @@ class FileTree extends Widget
 			return;
 		}
 
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		foreach ($objFiles as $objFile)
 		{
 			// Only files can be selected
-			if ($this->filesOnly && is_dir($rootDir . '/' . $objFile->path))
+			if ($this->filesOnly && is_dir($projectDir . '/' . $objFile->path))
 			{
 				$this->addError($GLOBALS['TL_LANG']['ERR']['filesOnly']);
 				break;
 			}
 
 			// Only folders can be selected
-			if ($this->files === false && !is_dir($rootDir . '/' . $objFile->path))
+			if ($this->files === false && !is_dir($projectDir . '/' . $objFile->path))
 			{
 				$this->addError($GLOBALS['TL_LANG']['ERR']['foldersOnly']);
 				break;
@@ -192,7 +192,7 @@ class FileTree extends Widget
 			}
 
 			// Only certain file types can be selected
-			if ($this->extensions && !is_dir($rootDir . '/' . $objFile->path))
+			if ($this->extensions && !is_dir($projectDir . '/' . $objFile->path))
 			{
 				$objFile = new File($objFile->path);
 				$extensions = StringUtil::trimsplit(',', $this->extensions);
@@ -222,14 +222,14 @@ class FileTree extends Widget
 		{
 			$objFiles = FilesModel::findMultipleByUuids((array) $this->varValue);
 			$allowedDownload = StringUtil::trimsplit(',', strtolower(Config::get('allowedDownload')));
-			$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+			$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 			if ($objFiles !== null)
 			{
 				while ($objFiles->next())
 				{
 					// File system and database seem not in sync
-					if (!file_exists($rootDir . '/' . $objFiles->path))
+					if (!file_exists($projectDir . '/' . $objFiles->path))
 					{
 						continue;
 					}
@@ -455,8 +455,8 @@ class FileTree extends Widget
 			}
 			else
 			{
-				$rootDir = System::getContainer()->getParameter('kernel.project_dir');
-				$image = System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . $objFile->path, array(100, 75, ResizeConfiguration::MODE_BOX))->getUrl($rootDir);
+				$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+				$image = System::getContainer()->get('contao.image.image_factory')->create($projectDir . '/' . $objFile->path, array(100, 75, ResizeConfiguration::MODE_BOX))->getUrl($projectDir);
 			}
 		}
 		else

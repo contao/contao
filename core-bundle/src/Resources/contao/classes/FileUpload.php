@@ -336,8 +336,8 @@ class FileUpload extends Backend
 		if ($blnResize)
 		{
 			$container = System::getContainer();
-			$rootDir = $container->getParameter('kernel.project_dir');
-			$container->get('contao.image.image_factory')->create($rootDir . '/' . $strImage, array($arrImageSize[0], $arrImageSize[1]), $rootDir . '/' . $strImage);
+			$projectDir = $container->getParameter('kernel.project_dir');
+			$container->get('contao.image.image_factory')->create($projectDir . '/' . $strImage, array($arrImageSize[0], $arrImageSize[1]), $projectDir . '/' . $strImage);
 
 			Message::addInfo(sprintf($GLOBALS['TL_LANG']['MSC']['fileResized'], $objFile->basename));
 			$this->log('File "' . $strImage . '" was scaled down to the maximum dimensions', __METHOD__, TL_FILES);

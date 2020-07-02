@@ -46,7 +46,7 @@ class InstallCommand extends Command
     /**
      * @var string
      */
-    private $rootDir;
+    private $projectDir;
 
     /**
      * @var string
@@ -63,9 +63,9 @@ class InstallCommand extends Command
      */
     private $webDir;
 
-    public function __construct(string $rootDir, string $uploadPath, string $imageDir)
+    public function __construct(string $projectDir, string $uploadPath, string $imageDir)
     {
-        $this->rootDir = $rootDir;
+        $this->projectDir = $projectDir;
         $this->uploadPath = $uploadPath;
         $this->imageDir = $imageDir;
 
@@ -113,11 +113,11 @@ class InstallCommand extends Command
         ];
 
         foreach ($emptyDirs as $path) {
-            $this->addEmptyDir($this->rootDir.'/'.sprintf($path, $this->webDir));
+            $this->addEmptyDir($this->projectDir.'/'.sprintf($path, $this->webDir));
         }
 
         $this->addEmptyDir($this->imageDir);
-        $this->addEmptyDir($this->rootDir.'/'.$this->uploadPath);
+        $this->addEmptyDir($this->projectDir.'/'.$this->uploadPath);
     }
 
     private function addEmptyDir(string $path): void
@@ -128,6 +128,6 @@ class InstallCommand extends Command
 
         $this->fs->mkdir($path);
 
-        $this->rows[] = str_replace($this->rootDir.'/', '', $path);
+        $this->rows[] = str_replace($this->projectDir.'/', '', $path);
     }
 }

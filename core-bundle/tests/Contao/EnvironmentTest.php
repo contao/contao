@@ -24,13 +24,13 @@ class EnvironmentTest extends TestCase
     /**
      * @var string
      */
-    public $rootDir;
+    public $projectDir;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->rootDir = strtr($this->getFixturesDir(), '\\', '/');
+        $this->projectDir = strtr($this->getFixturesDir(), '\\', '/');
 
         Environment::reset();
         Environment::set('path', '/core');
@@ -67,8 +67,8 @@ class EnvironmentTest extends TestCase
         $_SERVER['HTTPS'] = 'on';
         $_SERVER['SERVER_NAME'] = 'localhost';
         $_SERVER['SERVER_ADDR'] = '127.0.0.1';
-        $_SERVER['DOCUMENT_ROOT'] = $this->rootDir;
-        $_SERVER['SCRIPT_FILENAME'] = $this->rootDir.'/core/index.php';
+        $_SERVER['DOCUMENT_ROOT'] = $this->projectDir;
+        $_SERVER['SCRIPT_FILENAME'] = $this->projectDir.'/core/index.php';
         $_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
         $_SERVER['QUERY_STRING'] = 'do=test';
         $_SERVER['REQUEST_URI'] = '/core/en/academy.html?do=test';
@@ -93,8 +93,8 @@ class EnvironmentTest extends TestCase
         $_SERVER['HTTPS'] = 'on';
         $_SERVER['SERVER_NAME'] = 'localhost';
         $_SERVER['SERVER_ADDR'] = '127.0.0.1';
-        $_SERVER['DOCUMENT_ROOT'] = $this->rootDir;
-        $_SERVER['SCRIPT_FILENAME'] = $this->rootDir.'/core/index.php';
+        $_SERVER['DOCUMENT_ROOT'] = $this->projectDir;
+        $_SERVER['SCRIPT_FILENAME'] = $this->projectDir.'/core/index.php';
         $_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
         $_SERVER['QUERY_STRING'] = 'do=test';
         $_SERVER['REQUEST_URI'] = '/core/en/academy.html?do=test';
@@ -123,8 +123,8 @@ class EnvironmentTest extends TestCase
         $_SERVER['HTTPS'] = 'on';
         $_SERVER['SERVER_NAME'] = 'localhost';
         $_SERVER['SERVER_ADDR'] = '127.0.0.1';
-        $_SERVER['DOCUMENT_ROOT'] = $this->rootDir;
-        $_SERVER['SCRIPT_FILENAME'] = $this->rootDir.'/core/index.php';
+        $_SERVER['DOCUMENT_ROOT'] = $this->projectDir;
+        $_SERVER['SCRIPT_FILENAME'] = $this->projectDir.'/core/index.php';
         $_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
         $_SERVER['QUERY_STRING'] = 'do=test';
         $_SERVER['REQUEST_URI'] = 'http://localhost/core/en/academy.html?do=test'; // see #8661
@@ -150,9 +150,9 @@ class EnvironmentTest extends TestCase
         $this->assertFalse($agent->mobile);
 
         $this->assertSame('HTTP/1.1', Environment::get('serverProtocol'));
-        $this->assertSame($this->rootDir.'/core/index.php', Environment::get('scriptFilename'));
+        $this->assertSame($this->projectDir.'/core/index.php', Environment::get('scriptFilename'));
         $this->assertSame('/core/index.php', Environment::get('scriptName'));
-        $this->assertSame($this->rootDir, Environment::get('documentRoot'));
+        $this->assertSame($this->projectDir, Environment::get('documentRoot'));
         $this->assertSame('/core/en/academy.html?do=test', Environment::get('requestUri'));
         $this->assertSame(['de-DE', 'de', 'en-GB', 'en'], Environment::get('httpAcceptLanguage'));
         $this->assertSame(['gzip', 'deflate', 'sdch'], Environment::get('httpAcceptEncoding'));

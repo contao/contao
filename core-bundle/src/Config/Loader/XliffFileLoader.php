@@ -22,16 +22,16 @@ class XliffFileLoader extends Loader
     /**
      * @var string
      */
-    private $rootDir;
+    private $projectDir;
 
     /**
      * @var bool
      */
     private $addToGlobals;
 
-    public function __construct(string $rootDir, bool $addToGlobals = false)
+    public function __construct(string $projectDir, bool $addToGlobals = false)
     {
-        $this->rootDir = $rootDir;
+        $this->projectDir = $projectDir;
         $this->addToGlobals = $addToGlobals;
     }
 
@@ -49,7 +49,7 @@ class XliffFileLoader extends Loader
     {
         $xml = $this->getDomDocumentFromFile($name);
 
-        $return = "\n// ".str_replace(strtr($this->rootDir, '\\', '/').'/', '', strtr($name, '\\', '/'))."\n";
+        $return = "\n// ".str_replace(strtr($this->projectDir, '\\', '/').'/', '', strtr($name, '\\', '/'))."\n";
         $fileNodes = $xml->getElementsByTagName('file');
         $language = strtolower($language);
 
