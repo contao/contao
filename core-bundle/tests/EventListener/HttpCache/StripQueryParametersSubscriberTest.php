@@ -31,12 +31,12 @@ class StripQueryParametersSubscriberTest extends TestCase
     /**
      * @dataProvider queryParametersProvider
      */
-    public function testQueryParametersAreStrippedCorrectly(array $parameters, array $expectedParameters, array $whitelist = [], array $removeFromDenyList = []): void
+    public function testQueryParametersAreStrippedCorrectly(array $parameters, array $expectedParameters, array $allowList = [], array $removeFromDenyList = []): void
     {
         $request = Request::create('/', 'GET', $parameters);
         $event = new CacheEvent($this->createMock(CacheInvalidation::class), $request);
 
-        $subscriber = new StripQueryParametersSubscriber($whitelist);
+        $subscriber = new StripQueryParametersSubscriber($allowList);
         $subscriber->removeFromDenyList($removeFromDenyList);
         $subscriber->preHandle($event);
 

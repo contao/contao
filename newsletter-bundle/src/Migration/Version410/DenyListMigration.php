@@ -19,7 +19,7 @@ use Doctrine\DBAL\Connection;
 /**
  * @internal
  */
-class DenylistMigration extends AbstractMigration
+class DenyListMigration extends AbstractMigration
 {
     /**
      * @var Connection

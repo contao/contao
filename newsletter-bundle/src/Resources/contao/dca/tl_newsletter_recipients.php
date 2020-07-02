@@ -147,7 +147,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 			'save_callback' => array
 			(
 				array('tl_newsletter_recipients', 'checkUniqueRecipient'),
-				array('tl_newsletter_recipients', 'checkDenylistedRecipient')
+				array('tl_newsletter_recipients', 'checkDenyList')
 			),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
@@ -335,7 +335,7 @@ class tl_newsletter_recipients extends Backend
 	 *
 	 * @throws Exception
 	 */
-	public function checkDenylistedRecipient($varValue, DataContainer $dc)
+	public function checkDenyList($varValue, DataContainer $dc)
 	{
 		$objDenyList = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_deny_list WHERE hash=? AND pid=(SELECT pid FROM tl_newsletter_recipients WHERE id=?) AND id!=?")
 									   ->execute(md5($varValue), $dc->id, $dc->id);
