@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\Database\Result;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Patchwork\Utf8;
 
 /**
@@ -178,6 +177,9 @@ class Search
 		// Calculate the checksum
 		$arrSet['checksum'] = md5($arrSet['text']);
 
+		// Prevent deadlocks
+		$objDatabase->query("LOCK TABLES tl_search WRITE, tl_search_index WRITE, tl_search_term WRITE");
+
 		$objIndex = $objDatabase->prepare("SELECT id, url FROM tl_search WHERE checksum=? AND pid=?")
 								->limit(1)
 								->execute($arrSet['checksum'], $arrSet['pid']);
@@ -211,6 +213,8 @@ class Search
 			}
 			else
 			{
+				$objDatabase->query("UNLOCK TABLES");
+
 				// The same page has been indexed under a different URL already (see #8460)
 				return false;
 			}
@@ -231,30 +235,11 @@ class Search
 		}
 		else
 		{
-			try
-			{
-				$objInsertStmt = $objDatabase->prepare("INSERT INTO tl_search %s")
-					->set($arrSet)
-					->execute();
+			$objInsertStmt = $objDatabase->prepare("INSERT INTO tl_search %s")
+				->set($arrSet)
+				->execute();
 
-				$intInsertId = $objInsertStmt->insertId;
-			}
-			catch (UniqueConstraintViolationException $exception)
-			{
-				$intTimestamp = $objDatabase
-					->prepare("SELECT tstamp FROM tl_search WHERE url=?")
-					->limit(1)
-					->execute($arrSet['url'])
-					->tstamp;
-
-				// Ignore concurrent indexing of the same page
-				if ($intTimestamp > $arrSet['tstamp'] - 10)
-				{
-					return false;
-				}
-
-				throw $exception;
-			}
+			$intInsertId = $objInsertStmt->insertId;
 		}
 
 		// Remove quotes
@@ -303,19 +288,39 @@ class Search
 		// Remove obsolete terms
 		$objDatabase->query("DELETE FROM tl_search_term WHERE documentFrequency = 0");
 
+		$objTermIds = $objDatabase
+			->prepare("
+				SELECT term, id AS termId 
+				FROM tl_search_term 
+				WHERE term IN (" . implode(',', array_fill(0, \count($arrIndex), '?')) . ")
+			")
+			->execute(array_map('strval', array_keys($arrIndex)));
+
+		$arrTermIds = array();
+
+		foreach ($objTermIds->fetchAllAssoc() as $arrTermId)
+		{
+			$arrTermIds[$arrTermId['term']] = (int) $arrTermId['termId'];
+		}
+
 		$arrQuery = array();
 		$arrValues = array();
 
 		foreach ($arrIndex as $k=>$v)
 		{
-			$arrQuery[] = '(?, (SELECT id FROM tl_search_term WHERE term = ?), ?)';
+			if (empty($arrTermIds[$k]))
+			{
+				continue;
+			}
+
+			$arrQuery[] = '(?, ?, ?)';
 			$arrValues[] = $intInsertId;
-			$arrValues[] = (string) $k;
+			$arrValues[] = $arrTermIds[$k];
 			$arrValues[] = $v;
 		}
 
 		// Create the new index
-		$objDatabase->prepare("INSERT IGNORE INTO tl_search_index (pid, termId, relevance) VALUES " . implode(', ', $arrQuery))
+		$objDatabase->prepare("INSERT INTO tl_search_index (pid, termId, relevance) VALUES " . implode(', ', $arrQuery))
 					->execute($arrValues);
 
 		$row = $objDatabase->query("SELECT IFNULL(MIN(id), 0), IFNULL(MAX(id), 0), COUNT(*) FROM tl_search")->fetchRow();
@@ -342,9 +347,6 @@ class Search
 
 		$arrDocumentIds = array_merge(array($intInsertId), $arrRandomIds);
 
-		// Prevent deadlocks
-		$objDatabase->query("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED");
-
 		// Set or update vector length
 		$objDatabase->query("
 			UPDATE tl_search
@@ -353,7 +355,7 @@ class Search
 					tl_search_index.pid,
 					SQRT(SUM(POW(
 						(1 + LOG(relevance)) * LOG((
-							SELECT COUNT(*) FROM tl_search
+							" . (int) $objDatabase->query("SELECT COUNT(*) as count FROM tl_search")->count . "
 						) / GREATEST(1, documentFrequency)),
 						2
 					))) as vectorLength
@@ -366,8 +368,7 @@ class Search
 			SET tl_search.vectorLength = si.vectorLength
 		");
 
-		// Reset transaction isolation level
-		$objDatabase->query("COMMIT");
+		$objDatabase->query("UNLOCK TABLES");
 
 		return true;
 	}
