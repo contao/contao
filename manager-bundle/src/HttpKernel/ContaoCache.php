@@ -38,8 +38,8 @@ class ContaoCache extends HttpCache implements CacheInvalidation
         $stripCookies = new StripCookiesSubscriber($this->readEnvCsv('COOKIE_ALLOW_LIST', 'COOKIE_WHITELIST'));
         $stripCookies->removeFromDenyList($this->readEnvCsv('COOKIE_REMOVE_FROM_DENY_LIST', 'COOKIE_DISABLE_FROM_BLACKLIST'));
 
-        $stripQueryParams = new StripQueryParametersSubscriber($this->readEnvCsv('QUERY_PARAMS_ALLOW_LIST', 'QUERY_PARAMS_WHITELIST'));
-        $stripQueryParams->removeFromDenyList($this->readEnvCsv('QUERY_PARAMS_REMOVE_FROM_DENY_LIST', 'QUERY_PARAMS_DISABLE_FROM_BLACKLIST'));
+        $stripQueryParams = new StripQueryParametersSubscriber($this->readEnvCsv('QUERY_PARAMS_ALLOW_LIST'));
+        $stripQueryParams->removeFromDenyList($this->readEnvCsv('QUERY_PARAMS_REMOVE_FROM_DENY_LIST'));
 
         $this->addSubscriber($stripCookies);
         $this->addSubscriber($stripQueryParams);

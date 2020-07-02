@@ -63,17 +63,6 @@ class StripQueryParametersSubscriber implements EventSubscriberInterface
         $this->allowList = $allowList;
     }
 
-    /**
-     * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.0; use the
-     *             getAllowList() method instead
-     */
-    public function getWhitelist(): array
-    {
-        @trigger_error('Using the "getWhitelist()" method has been deprecated and will no longer work in Contao 5.0. Use the "getAllowList()" method instead.', E_USER_DEPRECATED);
-
-        return $this->getAllowList();
-    }
-
     public function getAllowList(): array
     {
         return $this->allowList;
