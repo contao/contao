@@ -61,9 +61,3 @@ class NewsletterDenylistModel extends Model
 		return static::findOneBy(array("($t.hash=? AND $t.pid=?)"), array($strHash, $intPid), $arrOptions);
 	}
 }
-
-// BC
-class NewsletterBlacklistModel extends NewsletterDenylistModel
-{
-}
-class_alias(NewsletterBlacklistModel::class, 'NewsletterBlacklistModel');
