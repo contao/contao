@@ -1,8 +1,6 @@
 services:
     _defaults:
         autoconfigure: true
-        autowire: false
-        public: false
 
     contao.routing.frontend_loader:
         class: Contao\CoreBundle\Routing\FrontendLoader
