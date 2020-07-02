@@ -11,7 +11,7 @@
 namespace Contao;
 
 // BC
-class NewsletterBlacklistModel extends NewsletterDenylistModel
+class NewsletterBlacklistModel extends NewsletterDenyListModel
 {
 	public function __construct($objResult = null)
 	{

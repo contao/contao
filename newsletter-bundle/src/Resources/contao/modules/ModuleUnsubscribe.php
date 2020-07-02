@@ -242,13 +242,13 @@ class ModuleUnsubscribe extends Module
 			{
 				$strHash = md5($objRemove->email);
 
-				// Add a denylist entry (see #4999)
-				if (($objDenylist = NewsletterDenylistModel::findByHashAndPid($strHash, $objRemove->pid)) === null)
+				// Add a deny list entry (see #4999)
+				if (($objDenyList = NewsletterDenyListModel::findByHashAndPid($strHash, $objRemove->pid)) === null)
 				{
-					$objDenylist = new NewsletterDenylistModel();
-					$objDenylist->pid = $objRemove->pid;
-					$objDenylist->hash = $strHash;
-					$objDenylist->save();
+					$objDenyList = new NewsletterDenyListModel();
+					$objDenyList->pid = $objRemove->pid;
+					$objDenyList->hash = $strHash;
+					$objDenyList->save();
 				}
 
 				$objRemove->delete();

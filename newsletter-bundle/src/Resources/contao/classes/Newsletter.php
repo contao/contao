@@ -504,11 +504,11 @@ class Newsletter extends Backend
 						continue;
 					}
 
-					// Check whether the e-mail address has been added to the denylist
-					$objDenylist = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_denylist WHERE pid=? AND hash=?")
+					// Check whether the e-mail address has been added to the deny list
+					$objDenyList = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_deny_list WHERE pid=? AND hash=?")
 												   ->execute(Input::get('id'), md5($strRecipient));
 
-					if ($objDenylist->count > 0)
+					if ($objDenyList->count > 0)
 					{
 						$this->log('Recipient "' . $strRecipient . '" has unsubscribed from channel ID "' . Input::get('id') . '" and was not imported', __METHOD__, TL_ERROR);
 						continue;

@@ -326,7 +326,7 @@ class tl_newsletter_recipients extends Backend
 	}
 
 	/**
-	 * Check if a recipient was added to the denylist for a channel
+	 * Check if a recipient was added to the deny list for a channel
 	 *
 	 * @param mixed         $varValue
 	 * @param DataContainer $dc
@@ -337,12 +337,12 @@ class tl_newsletter_recipients extends Backend
 	 */
 	public function checkDenylistedRecipient($varValue, DataContainer $dc)
 	{
-		$objDenylist = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_denylist WHERE hash=? AND pid=(SELECT pid FROM tl_newsletter_recipients WHERE id=?) AND id!=?")
+		$objDenyList = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_deny_list WHERE hash=? AND pid=(SELECT pid FROM tl_newsletter_recipients WHERE id=?) AND id!=?")
 									   ->execute(md5($varValue), $dc->id, $dc->id);
 
-		if ($objDenylist->count > 0)
+		if ($objDenyList->count > 0)
 		{
-			throw new Exception($GLOBALS['TL_LANG']['ERR']['denylisted']);
+			throw new Exception($GLOBALS['TL_LANG']['ERR']['onDenyList']);
 		}
 
 		return $varValue;

@@ -13,23 +13,23 @@ namespace Contao;
 use Contao\Model\Collection;
 
 /**
- * Reads and writes newsletter denylist entries
+ * Reads and writes newsletter deny list entries
  *
  * @property integer $id
  * @property integer $pid
  * @property string  $hash
  *
- * @method static NewsletterDenylistModel|null findById($id, array $opt=array())
- * @method static NewsletterDenylistModel|null findByPk($id, array $opt=array())
- * @method static NewsletterDenylistModel|null findOneBy($col, $val, array $opt=array())
- * @method static NewsletterDenylistModel|null findOneByPid($val, array $opt=array())
- * @method static NewsletterDenylistModel|null findOneByHash($val, array $opt=array())
+ * @method static NewsletterDenyListModel|null findById($id, array $opt=array())
+ * @method static NewsletterDenyListModel|null findByPk($id, array $opt=array())
+ * @method static NewsletterDenyListModel|null findOneBy($col, $val, array $opt=array())
+ * @method static NewsletterDenyListModel|null findOneByPid($val, array $opt=array())
+ * @method static NewsletterDenyListModel|null findOneByHash($val, array $opt=array())
  *
- * @method static Collection|NewsletterDenylistModel|null findByPid($val, array $opt=array())
- * @method static Collection|NewsletterDenylistModel|null findByHash($val, array $opt=array())
- * @method static Collection|NewsletterDenylistModel|null findMultipleByIds($val, array $opt=array())
- * @method static Collection|NewsletterDenylistModel|null findBy($col, $val, array $opt=array())
- * @method static Collection|NewsletterDenylistModel|null findAll(array $opt=array())
+ * @method static Collection|NewsletterDenyListModel|null findByPid($val, array $opt=array())
+ * @method static Collection|NewsletterDenyListModel|null findByHash($val, array $opt=array())
+ * @method static Collection|NewsletterDenyListModel|null findMultipleByIds($val, array $opt=array())
+ * @method static Collection|NewsletterDenyListModel|null findBy($col, $val, array $opt=array())
+ * @method static Collection|NewsletterDenyListModel|null findAll(array $opt=array())
  *
  * @method static integer countById($id, array $opt=array())
  * @method static integer countByPid($val, array $opt=array())
@@ -37,16 +37,16 @@ use Contao\Model\Collection;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class NewsletterDenylistModel extends Model
+class NewsletterDenyListModel extends Model
 {
 	/**
 	 * Table name
 	 * @var string
 	 */
-	protected static $strTable = 'tl_newsletter_denylist';
+	protected static $strTable = 'tl_newsletter_deny_list';
 
 	/**
-	 * Find a denylist entry by its hash and PID.
+	 * Find a deny list entry by its hash and PID.
 	 *
 	 * @param string  $strHash    The hash
 	 * @param integer $intPid     The page ID
