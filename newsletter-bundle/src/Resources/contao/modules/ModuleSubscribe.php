@@ -351,10 +351,10 @@ class ModuleSubscribe extends Module
 			$objRecipient->addedOn = $time;
 			$objRecipient->save();
 
-			// Remove the blacklist entry (see #4999)
-			if (($objBlacklist = NewsletterBlacklistModel::findByHashAndPid(md5($strEmail), $id)) !== null)
+			// Remove the deny list entry (see #4999)
+			if (($objDenyList = NewsletterDenyListModel::findByHashAndPid(md5($strEmail), $id)) !== null)
 			{
-				$objBlacklist->delete();
+				$objDenyList->delete();
 			}
 
 			$arrRelated['tl_newsletter_recipients'][] = $objRecipient->id;
