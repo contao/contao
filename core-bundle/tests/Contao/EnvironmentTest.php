@@ -24,7 +24,7 @@ class EnvironmentTest extends TestCase
     /**
      * @var string
      */
-    public $projectDir;
+    private $projectDir;
 
     protected function setUp(): void
     {
