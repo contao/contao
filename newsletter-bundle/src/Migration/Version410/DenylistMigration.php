@@ -35,7 +35,8 @@ class DenylistMigration extends AbstractMigration
     {
         $schemaManager = $this->connection->getSchemaManager();
 
-        return $schemaManager->tablesExist('tl_newsletter_blacklist');
+        return $schemaManager->tablesExist('tl_newsletter_blacklist')
+            && !$schemaManager->tablesExist('tl_newsletter_denylist');
     }
 
     public function run(): MigrationResult
