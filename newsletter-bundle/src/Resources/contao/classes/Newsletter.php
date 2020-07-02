@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\Database\Result;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Mime\Exception\RfcComplianceException;
 
 /**
  * Provide methods to handle newsletters.
@@ -388,7 +389,7 @@ class Newsletter extends Backend
 		{
 			$objEmail->sendTo($arrRecipient['email']);
 		}
-		catch (\Swift_RfcComplianceException $e)
+		catch (RfcComplianceException $e)
 		{
 			$_SESSION['REJECTED_RECIPIENTS'][] = $arrRecipient['email'];
 		}
