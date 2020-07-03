@@ -29,7 +29,7 @@ final class ContaoModuleBundle extends Bundle
         $this->name = $name;
         $this->path = $projectDir.'/system/modules/'.$this->name;
 
-        if (\is_dir($this->path)) {
+        if (is_dir($this->path)) {
             return;
         }
 
