@@ -8,7 +8,7 @@
  * @license LGPL-3.0-or-later
  */
 
-$GLOBALS['TL_DCA']['tl_search_index'] = array
+$GLOBALS['TL_DCA']['tl_search_term'] = array
 (
 	// Config
 	'config' => array
@@ -18,8 +18,8 @@ $GLOBALS['TL_DCA']['tl_search_index'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
-				'pid' => 'index',
-				'termId,pid' => 'unique'
+				'term' => 'unique',
+				'documentFrequency' => 'index'
 			)
 		)
 	),
@@ -31,17 +31,13 @@ $GLOBALS['TL_DCA']['tl_search_index'] = array
 		(
 			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
 		),
-		'pid' => array
+		'term' => array
+		(
+			'sql'                     => "varchar(64) BINARY NOT NULL"
+		),
+		'documentFrequency' => array
 		(
 			'sql'                     => "int(10) unsigned NOT NULL"
-		),
-		'termId' => array
-		(
-			'sql'                     => "int(10) unsigned NOT NULL"
-		),
-		'relevance' => array
-		(
-			'sql'                     => "smallint(5) unsigned NOT NULL"
 		)
 	)
 );

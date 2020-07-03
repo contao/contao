@@ -396,7 +396,7 @@ $GLOBALS['TL_PURGE'] = array
 		'index' => array
 		(
 			'callback' => array(Automator::class, 'purgeSearchTables'),
-			'affected' => array('tl_search', 'tl_search_index')
+			'affected' => array('tl_search', 'tl_search_index', 'tl_search_term')
 		),
 		'undo' => array
 		(

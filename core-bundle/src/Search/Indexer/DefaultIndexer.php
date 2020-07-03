@@ -127,6 +127,7 @@ class DefaultIndexer implements IndexerInterface
     {
         $this->connection->exec('TRUNCATE TABLE tl_search');
         $this->connection->exec('TRUNCATE TABLE tl_search_index');
+        $this->connection->exec('TRUNCATE TABLE tl_search_term');
     }
 
     /**
