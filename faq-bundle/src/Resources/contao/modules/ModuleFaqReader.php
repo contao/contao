@@ -119,7 +119,7 @@ class ModuleFaqReader extends Module
 
 		if ($objFaq->description)
 		{
-			$objPage->description = $this->prepareMetaDescription($objFaq->description);
+			$objPage->description = $objFaq->description;
 		}
 		elseif ($objFaq->question)
 		{
