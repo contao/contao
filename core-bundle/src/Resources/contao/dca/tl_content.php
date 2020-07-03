@@ -32,7 +32,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 	(
 		'dataContainer'               => 'Table',
 		'enableVersioning'            => true,
-		'ptable'                      => '',
+		'ptable'                      => 'tl_article',
 		'dynamicPtable'               => true,
 		'markAsCopy'                  => 'headline',
 		'onload_callback'             => array
@@ -863,10 +863,9 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 	)
 );
 
-// Dynamically add the permission check and parent table (see #5241)
-if (in_array(Input::get('do'), array('article', 'page')))
+// Dynamically add the permission check
+if (Input::get('do') == 'article')
 {
-	$GLOBALS['TL_DCA']['tl_content']['config']['ptable'] = 'tl_article';
 	array_unshift($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'], array('tl_content', 'checkPermission'));
 }
 

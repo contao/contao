@@ -152,6 +152,9 @@
       <trans-unit id="tl_settings.chmod_legend">
         <source>Default access rights</source>
       </trans-unit>
+      <trans-unit id="tl_settings.configuredInApp">
+        <source>This setting has been defined in the app configuration and cannot be changed here anymore.</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>
