@@ -36,7 +36,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		'onload_callback' => array
 		(
 			array('tl_faq', 'checkPermission'),
-			array('tl_faq', 'addSerpPreview')
+			array('tl_faq', 'checkSerpPreview')
 		),
 		'sql' => array
 		(
@@ -109,7 +109,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('addImage', 'addEnclosure', 'overwriteMeta'),
-		'default'                     => '{title_legend},question,alias,author;{answer_legend},answer;{meta_legend},pageTitle,robots,description;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},noComments;{publish_legend},published'
+		'default'                     => '{title_legend},question,alias,author;{answer_legend},answer;{meta_legend},pageTitle,robots,description,serpPreview;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},noComments;{publish_legend},published'
 	),
 
 	// Subpalettes
@@ -520,17 +520,16 @@ class tl_faq extends Backend
 		}
 	}
 
-	public function addSerpPreview()
+	public function checkSerpPreview()
 	{
 		$objFaqCategory = \Contao\FaqCategoryModel::findByPk(CURRENT_ID);
+
 		if ($objFaqCategory === null || $objFaqCategory->jumpTo < 1 || $objFaqCategory->getRelated('jumpTo') === null)
 		{
-			return;
+			\Contao\CoreBundle\DataContainer\PaletteManipulator::create()
+				->removeField('serpPreview', 'meta_legend')
+				->applyToPalette('default', 'tl_faq');
 		}
-
-		\Contao\CoreBundle\DataContainer\PaletteManipulator::create()
-			->addField('serpPreview', 'description')
-			->applyToPalette('default', 'tl_faq');
 	}
 
 	/**
@@ -570,7 +569,7 @@ class tl_faq extends Backend
 	/**
 	 * Return the SERP URL
 	 *
-	 * @param Contao\FaqModel $model
+	 * @param Contao\FaqModel $objFaq
 	 *
 	 * @return string
 	 */
