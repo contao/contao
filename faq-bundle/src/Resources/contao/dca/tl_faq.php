@@ -35,7 +35,8 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		'markAsCopy'                  => 'question',
 		'onload_callback' => array
 		(
-			array('tl_faq', 'checkPermission')
+			array('tl_faq', 'checkPermission'),
+			array('tl_faq', 'addSerpPreview')
 		),
 		'sql' => array
 		(
@@ -212,6 +213,14 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'inputType'               => 'textarea',
 			'eval'                    => array('style'=>'height:60px', 'decodeEntities'=>true, 'tl_class'=>'clr'),
 			'sql'                     => "text NULL"
+		),
+		'serpPreview' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
+			'exclude'                 => true,
+			'inputType'               => 'serpPreview',
+			'eval'                    => array('url_callback'=>array('tl_faq', 'getSerpUrl'), 'titleFields'=>array('pageTitle', 'question'), 'descriptionFields'=>array('description', 'answer')),
+			'sql'                     => null
 		),
 		'addImage' => array
 		(
@@ -511,6 +520,19 @@ class tl_faq extends Backend
 		}
 	}
 
+	public function addSerpPreview()
+	{
+		$objFaqCategory = \Contao\FaqCategoryModel::findByPk(CURRENT_ID);
+		if ($objFaqCategory === null || $objFaqCategory->jumpTo < 1 || $objFaqCategory->getRelated('jumpTo') === null)
+		{
+			return;
+		}
+
+		\Contao\CoreBundle\DataContainer\PaletteManipulator::create()
+			->addField('serpPreview', 'description')
+			->applyToPalette('default', 'tl_faq');
+	}
+
 	/**
 	 * Auto-generate the FAQ alias if it has not been set yet
 	 *
@@ -543,6 +565,35 @@ class tl_faq extends Backend
 		}
 
 		return $varValue;
+	}
+
+	/**
+	 * Return the SERP URL
+	 *
+	 * @param Contao\FaqModel $model
+	 *
+	 * @return string
+	 */
+	public function getSerpUrl(Contao\FaqModel $objFaq)
+	{
+		/** @var \Contao\FaqCategoryModel $objCategory */
+		$objCategory = $objFaq->getRelated('pid');
+		$jumpTo = (int) $objCategory->jumpTo;
+
+		// A jumpTo page is not mandatory for FAQ categories (see #6226) but required for the FAQ list module
+		if ($jumpTo < 1)
+		{
+			throw new \Exception("FAQ categories without redirect page cannot be used in an FAQ list");
+		}
+
+		if (($objTarget = \Contao\PageModel::findByPk($jumpTo)) !== null)
+		{
+			$strSuffix = \Contao\StringUtil::ampersand($objTarget->getFrontendUrl(\Contao\Config::get('useAutoItem') ? '/%s' : '/items/%s'));
+
+			return sprintf(preg_replace('/%(?!s)/', '%%', $strSuffix), ($objFaq->alias ?: $objFaq->id));
+		}
+
+		throw new \Exception("FAQ categories without existing redirect page cannot be used in an FAQ list");
 	}
 
 	/**
