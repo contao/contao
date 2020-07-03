@@ -8,7 +8,7 @@
  * @license LGPL-3.0-or-later
  */
 
-$GLOBALS['TL_DCA']['tl_newsletter_blacklist'] = array
+$GLOBALS['TL_DCA']['tl_newsletter_deny_list'] = array
 (
 	// Config
 	'config' => array

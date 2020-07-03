@@ -35,11 +35,11 @@ class ContaoCache extends HttpCache implements CacheInvalidation
     {
         parent::__construct($kernel, $cacheDir);
 
-        $stripCookies = new StripCookiesSubscriber($this->getFromCsvEnvVar('COOKIE_WHITELIST'));
-        $stripCookies->disableFromBlacklist($this->getFromCsvEnvVar('COOKIE_DISABLE_FROM_BLACKLIST'));
+        $stripCookies = new StripCookiesSubscriber($this->readEnvCsv('COOKIE_ALLOW_LIST', 'COOKIE_WHITELIST'));
+        $stripCookies->removeFromDenyList($this->readEnvCsv('COOKIE_REMOVE_FROM_DENY_LIST', 'COOKIE_DISABLE_FROM_BLACKLIST'));
 
-        $stripQueryParams = new StripQueryParametersSubscriber($this->getFromCsvEnvVar('QUERY_PARAMS_WHITELIST'));
-        $stripQueryParams->disableFromBlacklist($this->getFromCsvEnvVar('QUERY_PARAMS_DISABLE_FROM_BLACKLIST'));
+        $stripQueryParams = new StripQueryParametersSubscriber($this->readEnvCsv('QUERY_PARAMS_ALLOW_LIST'));
+        $stripQueryParams->removeFromDenyList($this->readEnvCsv('QUERY_PARAMS_REMOVE_FROM_DENY_LIST'));
 
         $this->addSubscriber($stripCookies);
         $this->addSubscriber($stripQueryParams);
@@ -75,8 +75,14 @@ class ContaoCache extends HttpCache implements CacheInvalidation
         ]);
     }
 
-    private function getFromCsvEnvVar(string $key): array
+    private function readEnvCsv(string $key, string $oldName = ''): array
     {
+        if ('' !== $oldName && isset($_SERVER[$oldName])) {
+            @trigger_error(sprintf('Using the "%s" environment variable has been deprecated. Use "%s" instead.', $oldName, $key), E_USER_DEPRECATED);
+
+            $key = $oldName;
+        }
+
         return array_filter(explode(',', $_SERVER[$key] ?? ''));
     }
 }

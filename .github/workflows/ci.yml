@@ -207,6 +207,30 @@ jobs:
             - name: Run the unit tests
               run: vendor/bin/phpunit.bat --colors=always
 
+    composer:
+        name: Composer
+        runs-on: ubuntu-latest
+        if: github.event_name != 'push'
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 7.3
+                  extensions: json, zlib
+                  tools: prestissimo
+                  coverage: none
+
+            - name: Checkout
+              uses: actions/checkout@v1
+
+            - name: Install the dependencies
+              run: |
+                  composer global require contao/monorepo-tools:dev-master
+                  composer install --no-interaction --no-suggest
+
+            - name: Validate the composer.json files
+              run: $HOME/.composer/vendor/bin/monorepo-tools composer-json --validate --ansi
+
     monorepo-split:
         name: Monorepo Split
         runs-on: ubuntu-latest
@@ -230,12 +254,7 @@ jobs:
                   key: dev-${GITHUB_REF##*/}
 
             - name: Install the dependencies
-              run: |
-                  composer global require contao/monorepo-tools:dev-master
-                  composer install --no-interaction --no-suggest
-
-            - name: Validate the composer.json files
-              run: $HOME/.composer/vendor/bin/monorepo-tools composer-json --validate --ansi
+              run: composer global require contao/monorepo-tools:dev-master
 
             - name: Split the monorepo
               run: $HOME/.composer/vendor/bin/monorepo-tools split ${GITHUB_REF##*/}
