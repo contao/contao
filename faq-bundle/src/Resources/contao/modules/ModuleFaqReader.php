@@ -110,7 +110,7 @@ class ModuleFaqReader extends Module
 		// Overwrite the page title and description (see #2853 and #4955)
 		if ($objFaq->pageTitle)
 		{
-			$objPage->pageTitle = strip_tags(StringUtil::stripInsertTags($objFaq->pageTitle));
+			$objPage->pageTitle = $objFaq->pageTitle;
 		}
 		elseif ($objFaq->question)
 		{
