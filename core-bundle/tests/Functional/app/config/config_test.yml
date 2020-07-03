@@ -1,6 +1,5 @@
 imports:
     - { resource: security.yml }
-    - { resource: services.yml }
 
 parameters:
     locale: en

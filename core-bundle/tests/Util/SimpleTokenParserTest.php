@@ -14,7 +14,10 @@ namespace Contao\CoreBundle\Tests\Util;
 
 use Contao\CoreBundle\Util\SimpleTokenExpressionLanguage;
 use Contao\CoreBundle\Util\SimpleTokenParser;
+use Contao\ManagerBundle\Tests\Fixtures\IteratorAggregateStub;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\ExpressionLanguage\ExpressionFunction;
+use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
 
 class SimpleTokenParserTest extends TestCase
 {
@@ -518,8 +521,33 @@ class SimpleTokenParserTest extends TestCase
         yield 'Unknown operator (<==)' => ['{if foo<=="bar"}{endif}'];
     }
 
-    private function getParser(): SimpleTokenParser
+    public function testParseSimpleTokenWithCustomExtensionProvider(): void
     {
-        return new SimpleTokenParser(new SimpleTokenExpressionLanguage());
+        $stringExtensionProvider = new class() implements ExpressionFunctionProviderInterface {
+            public function getFunctions()
+            {
+                return [
+                    ExpressionFunction::fromPhp('strtoupper'),
+                ];
+            }
+        };
+
+        $simpleTokenParser = $this->getParser(
+            new SimpleTokenExpressionLanguage(null, new IteratorAggregateStub([$stringExtensionProvider]))
+        );
+
+        $this->assertSame(
+            'Custom function evaluated!',
+            $simpleTokenParser->parseTokens("Custom function {if strtoupper(token) === 'FOO'}evaluated!{endif}", ['token' => 'foo'])
+        );
+    }
+
+    private function getParser(SimpleTokenExpressionLanguage $expressionLanguage = null): SimpleTokenParser
+    {
+        if (null === $expressionLanguage) {
+            $expressionLanguage = new SimpleTokenExpressionLanguage();
+        }
+
+        return new SimpleTokenParser($expressionLanguage);
     }
 }

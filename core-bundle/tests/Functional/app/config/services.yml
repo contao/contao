@@ -1,4 +1,0 @@
-services:
-    Contao\CoreBundle\Tests\Functional\Util\SimpleToken\StringExtensionProvider:
-        tags:
-            - { name: contao.simple_token_extension }
