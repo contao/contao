@@ -187,10 +187,9 @@ class Search
 		// Update the URL if the new URL is shorter or the current URL is not canonical
 		if ($objIndex->numRows && $objIndex->url != $arrSet['url'])
 		{
+			// The new URL is more canonical (no query string)
 			if (strpos($objIndex->url, '?') !== false && strpos($arrSet['url'], '?') === false)
 			{
-				// The new URL is more canonical (no query string)
-
 				// Decrement document frequency counts
 				$objDatabase
 					->prepare("
@@ -206,16 +205,18 @@ class Search
 				$objDatabase->prepare("DELETE FROM tl_search_index WHERE pid=?")
 							->execute($objIndex->id);
 			}
+
+			// The current URL is more canonical (shorter and/or less fragments)
 			elseif (substr_count($arrSet['url'], '/') > substr_count($objIndex->url, '/') || (strpos($arrSet['url'], '?') !== false && strpos($objIndex->url, '?') === false) || \strlen($arrSet['url']) > \strlen($objIndex->url))
 			{
-				// The current URL is more canonical (shorter and/or less fragments)
 				$arrSet['url'] = $objIndex->url;
 			}
+
+			// The same page has been indexed under a different URL already (see #8460)
 			else
 			{
 				$objDatabase->query("UNLOCK TABLES");
 
-				// The same page has been indexed under a different URL already (see #8460)
 				return false;
 			}
 		}
@@ -236,8 +237,8 @@ class Search
 		else
 		{
 			$objInsertStmt = $objDatabase->prepare("INSERT INTO tl_search %s")
-				->set($arrSet)
-				->execute();
+										 ->set($arrSet)
+										 ->execute();
 
 			$intInsertId = $objInsertStmt->insertId;
 		}
@@ -290,8 +291,8 @@ class Search
 
 		$objTermIds = $objDatabase
 			->prepare("
-				SELECT term, id AS termId 
-				FROM tl_search_term 
+				SELECT term, id AS termId
+				FROM tl_search_term
 				WHERE term IN (" . implode(',', array_fill(0, \count($arrIndex), '?')) . ")
 			")
 			->execute(array_map('strval', array_keys($arrIndex)));
@@ -332,6 +333,7 @@ class Search
 		{
 			$arrRandomIds = $objDatabase->query("SELECT id FROM tl_search")->fetchEach('id');
 		}
+
 		// Otherwise we select approximately 100 random documents that get updated
 		else
 		{
