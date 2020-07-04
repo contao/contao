@@ -1,9 +1,0 @@
-tl_files:
-    - id: 1
-      pid: 100
-      uuid: 663e868a
-      hash: 663e868a
-      name: foo.jpg
-      extension: jpg
-      type: file
-      path: files/public/foo.jpg
