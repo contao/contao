@@ -85,23 +85,23 @@ class IntegrationTest extends TestCase
 
     // fixme: Uncomment the following method to test + compare against old implementation / also see #1862.
 
-//    /**
-//     * @dataProvider provideControllerAddImageToTemplateTestCases
-//     *
-//     * @group legacy
-//     */
-//    public function testControllerAddImageToTemplateOld(Closure $testCase, array $expectedTemplateData): void
-//    {
-//        [$template, $dataRow, $maxWidth, $lightBoxGroupIdentifier, $filesModel] = $this->setUpTestCase($testCase);
-//
-//        // suppress E_NOTICE warnings
-//        $errorLevel = error_reporting();
-//        error_reporting($errorLevel & ~E_NOTICE);
-//        Controller::addImageToTemplate__old($template, $dataRow, $maxWidth, $lightBoxGroupIdentifier, $filesModel);
-//        error_reporting($errorLevel);
-//
-//        $this->assertSameTemplateData($expectedTemplateData, $template);
-//    }
+    /**
+     * @dataProvider provideControllerAddImageToTemplateTestCases
+     *
+     * @group legacy
+     */
+    public function testControllerAddImageToTemplateOld(Closure $testCase, array $expectedTemplateData): void
+    {
+        [$template, $dataRow, $maxWidth, $lightBoxGroupIdentifier, $filesModel] = $this->setUpTestCase($testCase);
+
+        // suppress E_NOTICE warnings
+        $errorLevel = error_reporting();
+        error_reporting($errorLevel & ~E_NOTICE);
+        Controller::addImageToTemplate__old($template, $dataRow, $maxWidth, $lightBoxGroupIdentifier, $filesModel);
+        error_reporting($errorLevel);
+
+        $this->assertSameTemplateData($expectedTemplateData, $template);
+    }
 
     /**
      * Returns test cases in the following form:
@@ -838,6 +838,51 @@ class IntegrationTest extends TestCase
                     'linkTitle' => 'i',
                     'href' => 'files/public/bar.jpg',
                     'attributes' => ' data-lightbox="<custom>"',
+                    'fullsize' => true,
+                ]
+            ),
+        ];
+
+        yield 'fullsize/lightbox with custom size' => [
+            static function () use ($baseRowData) {
+                return [
+                    null,
+                    [
+                        new \stdClass(),
+                        array_merge($baseRowData, [
+                            'overwriteMeta' => '1',
+                            'fullsize' => '1',
+                            'imageUrl' => 'files/public/bar.jpg',
+                            'alt' => 'a',
+                            'imageTitle' => 'i',
+                            'caption' => 'c',
+                            'lightboxSize' => 'a:3:{i:0;s:3:"150";i:1;s:3:"100";i:2;s:4:"crop";}',
+                        ]),
+                        null,
+                        null,
+                        null,
+                    ],
+                ];
+            },
+            array_replace_recursive(
+                $baseExpectedTemplateData,
+                [
+                    'picture' => [
+                        'alt' => 'a',
+                    ],
+                    'lightboxPicture' => [
+                        'img' => [
+                            'src' => 'assets/images/<anything>',
+                            'srcset' => 'assets/images/<anything>',
+                            'hasSingleAspectRatio' => true,
+                            'height' => 100,
+                            'width' => 150,
+                        ],
+                        'sources' => [],
+                    ],
+                    'linkTitle' => 'i',
+                    'href' => 'assets/images/<anything>',
+                    'attributes' => ' data-lightbox="<anything>"',
                     'fullsize' => true,
                 ]
             ),

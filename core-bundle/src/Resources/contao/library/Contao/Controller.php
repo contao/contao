@@ -1714,9 +1714,12 @@ abstract class Controller extends System
 		// Set size and light box configuration
 		list($size, $margin) = $getSizeAndMargin();
 
+		$lightBoxSize = StringUtil::deserialize($rowData['lightboxSize'] ?? null) ?: null;
+
 		$figureBuilder
 			->setSize($size)
 			->setLightBoxGroupIdentifier($lightBoxGroupIdentifier)
+			->setLightBoxSize($lightBoxSize)
 			->enableLightBox('1' === ($rowData['fullsize'] ?? null));
 
 		// todo: $rowData['lightboxSize'] + test
