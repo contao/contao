@@ -17,9 +17,8 @@ $GLOBALS['TL_DCA']['tl_search_index'] = array
 		(
 			'keys' => array
 			(
-				'id' => 'primary',
-				'pid' => 'index',
-				'termId,pid' => 'unique'
+				'termId,pid' => 'primary',
+				'pid' => 'index'
 			)
 		)
 	),
@@ -27,10 +26,6 @@ $GLOBALS['TL_DCA']['tl_search_index'] = array
 	// Fields
 	'fields' => array
 	(
-		'id' => array
-		(
-			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
-		),
 		'pid' => array
 		(
 			'sql'                     => "int(10) unsigned NOT NULL"
