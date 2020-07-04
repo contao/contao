@@ -1589,7 +1589,7 @@ abstract class Controller extends System
 		$getSizeAndMargin = static function () use ($rowData, $maxWidth)
 		{
 			$size = $rowData['size'] ?? null;
-			$margin = StringUtil::deserialize($rowData['imagemargin'] ?? null, true);
+			$margin = StringUtil::deserialize($rowData['imagemargin'] ?? null);
 			$maxWidth = (int) ($maxWidth ?? Config::get('maxImageWidth'));
 
 			if (0 === $maxWidth)
@@ -1718,6 +1718,8 @@ abstract class Controller extends System
 			->setSize($size)
 			->setLightBoxGroupIdentifier($lightBoxGroupIdentifier)
 			->enableLightBox('1' === ($rowData['fullsize'] ?? null));
+
+		// todo: $rowData['lightboxSize'] + test
 
 		// Build result and apply it to the template
 		$figureBuilder
