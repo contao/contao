@@ -96,8 +96,9 @@ class CustomTemplateOptionsCallback implements ServiceAnnotationInterface, Reset
     /**
      * Registers a custom default template for fragments.
      *
-     * @param $type The fragment type.
-     * @param $template The custom template definition.
+     * @param string $table    The data container table
+     * @param string $type     The type of the Fragment
+     * @param string $template The name of the custom default template
      */
     public function setFragmentTemplate(string $table, string $type, string $template): void
     {
