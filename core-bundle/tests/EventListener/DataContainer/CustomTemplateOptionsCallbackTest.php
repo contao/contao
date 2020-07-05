@@ -26,15 +26,21 @@ class CustomTemplateOptionsCallbackTest extends TestCase
     {
         $callback = new CustomTemplateOptionsCallback($this->getFramework(), new RequestStack());
 
-        $this->assertSame(['' => 'ce_default'], $callback($this->mockDataContainer()));
+        $this->assertSame(['' => 'mod_article'], $callback($this->mockDataContainer('tl_article')));
+        $this->assertSame(['' => 'ce_default'], $callback($this->mockDataContainer('tl_content')));
+        $this->assertSame(['' => 'form_wrapper'], $callback($this->mockDataContainer('tl_form')));
+        $this->assertSame(['' => 'form_default'], $callback($this->mockDataContainer('tl_form_field')));
+        $this->assertSame(['' => 'mod_default'], $callback($this->mockDataContainer('tl_module')));
     }
 
     public function testReturnsCustomTemplate(): void
     {
         $callback = new CustomTemplateOptionsCallback($this->getFramework(), new RequestStack());
         $callback->setFragmentTemplate('tl_content', 'default', 'ce_foo');
+        $callback->setFragmentTemplate('tl_module', 'default', 'mod_foo');
 
-        $this->assertSame(['' => 'ce_foo'], $callback($this->mockDataContainer()));
+        $this->assertSame(['' => 'ce_foo'], $callback($this->mockDataContainer('tl_content')));
+        $this->assertSame(['' => 'mod_foo'], $callback($this->mockDataContainer('tl_module')));
     }
 
     private function getFramework(array $adapters = []): ContaoFramework
@@ -45,22 +51,29 @@ class CustomTemplateOptionsCallbackTest extends TestCase
             ->willReturnMap([
                 ['ce_default_', [], 'ce_default', ['' => 'ce_default']],
                 ['ce_foo_', [], 'ce_foo', ['' => 'ce_foo']],
+                ['mod_default_', [], 'mod_default', ['' => 'mod_default']],
+                ['mod_foo_', [], 'mod_foo', ['' => 'mod_foo']],
+                ['mod_article_', [], 'mod_article', ['' => 'mod_article']],
+                ['form_wrapper_', [], 'form_wrapper', ['' => 'form_wrapper']],
+                ['form_default_', [], 'form_default', ['' => 'form_default']],
             ])
         ;
 
         return $this->mockContaoFramework(array_merge([Controller::class => $controllerAdapter], $adapters));
     }
 
-    private function mockDataContainer(): DataContainer
+    private function mockDataContainer(string $table): DataContainer
     {
-        /** @var Result&MockObject $activeRecord */
-        $activeRecord = $this->mockClassWithProperties(Result::class);
-        $activeRecord->type = 'default';
-
         /** @var DataContainer&MockObject $dc */
         $dc = $this->mockClassWithProperties(DataContainer::class);
-        $dc->table = 'tl_content';
-        $dc->activeRecord = $activeRecord;
+        $dc->table = $table;
+
+        if (\in_array($table, ['tl_content', 'tl_module', 'tl_form_field'], true)) {
+            /** @var Result&MockObject $activeRecord */
+            $activeRecord = $this->mockClassWithProperties(Result::class);
+            $activeRecord->type = 'default';
+            $dc->activeRecord = $activeRecord;
+        }
 
         return $dc;
     }
