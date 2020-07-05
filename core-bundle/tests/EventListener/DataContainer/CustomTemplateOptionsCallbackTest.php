@@ -18,6 +18,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database\Result;
 use Contao\DataContainer;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class CustomTemplateOptionsCallbackTest extends TestCase
@@ -43,6 +44,19 @@ class CustomTemplateOptionsCallbackTest extends TestCase
         $this->assertSame(['' => 'mod_foo'], $callback->onModule($this->mockDataContainer('tl_module')));
     }
 
+    public function testReturnsAllTemplatesInOverrideAllMode(): void
+    {
+        $request = new Request(['act' => 'overrideAll']);
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $callback = new CustomTemplateOptionsCallback($this->getFramework(), $requestStack);
+
+        $this->assertSame(['' => '-', 'ce_custom' => 'ce_custom (global)'], $callback->onContent($this->mockDataContainer('tl_content')));
+        $this->assertSame(['' => '-', 'mod_custom' => 'mod_custom (global)'], $callback->onModule($this->mockDataContainer('tl_module')));
+        $this->assertSame(['' => '-', 'form_custom' => 'form_custom (global)'], $callback->onFormField($this->mockDataContainer('tl_form_field')));
+    }
+
     private function getFramework(array $adapters = []): ContaoFramework
     {
         $controllerAdapter = $this->mockAdapter(['getTemplateGroup']);
@@ -51,11 +65,14 @@ class CustomTemplateOptionsCallbackTest extends TestCase
             ->willReturnMap([
                 ['ce_default_', [], 'ce_default', ['' => 'ce_default']],
                 ['ce_foo_', [], 'ce_foo', ['' => 'ce_foo']],
+                ['ce_', ['ce_custom' => 'ce_custom (global)']],
                 ['mod_default_', [], 'mod_default', ['' => 'mod_default']],
                 ['mod_foo_', [], 'mod_foo', ['' => 'mod_foo']],
+                ['mod_', ['mod_custom' => 'mod_custom (global)']],
                 ['mod_article_', [], 'mod_article', ['' => 'mod_article']],
                 ['form_wrapper_', [], 'form_wrapper', ['' => 'form_wrapper']],
                 ['form_default_', [], 'form_default', ['' => 'form_default']],
+                ['form_', ['form_custom' => 'form_custom (global)']],
             ])
         ;
 

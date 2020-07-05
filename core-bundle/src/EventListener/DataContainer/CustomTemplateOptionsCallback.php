@@ -39,7 +39,9 @@ class CustomTemplateOptionsCallback implements ServiceAnnotationInterface, Reset
 
     public function __construct(ContaoFramework $framework, RequestStack $requestStack)
     {
-        $this->controller = $framework->getAdapter(Controller::class);
+        /** @var Controller $controllerAdapter */
+        $controllerAdapter = $framework->getAdapter(Controller::class);
+        $this->controller = $controllerAdapter;
         $this->requestStack = $requestStack;
     }
 
@@ -58,7 +60,7 @@ class CustomTemplateOptionsCallback implements ServiceAnnotationInterface, Reset
     {
         // Return all ce_ templates in overrideAll mode
         if ($this->isOverrideAll()) {
-            return $this->controller->getTemplateGroup('ce_');
+            return $this->getOverrideAllTemplates('ce_');
         }
 
         return $this->getTemplateGroup($dc, 'ce_'.$dc->activeRecord->type);
@@ -79,7 +81,7 @@ class CustomTemplateOptionsCallback implements ServiceAnnotationInterface, Reset
     {
         // Return all form_ templates in overrideAll mode
         if ($this->isOverrideAll()) {
-            return $this->controller->getTemplateGroup('form_');
+            return $this->getOverrideAllTemplates('form_');
         }
 
         // Backwards compatibility
@@ -97,7 +99,7 @@ class CustomTemplateOptionsCallback implements ServiceAnnotationInterface, Reset
     {
         // Return all mod_ templates in overrideAll mode
         if ($this->isOverrideAll()) {
-            return $this->controller->getTemplateGroup('mod_');
+            return $this->getOverrideAllTemplates('mod_');
         }
 
         return $this->getTemplateGroup($dc, 'mod_'.$dc->activeRecord->type);
@@ -127,6 +129,11 @@ class CustomTemplateOptionsCallback implements ServiceAnnotationInterface, Reset
         }
 
         return $this->controller->getTemplateGroup($template.'_', [], $template);
+    }
+
+    private function getOverrideAllTemplates(string $prefix): array
+    {
+        return array_merge(['' => '-'], $this->controller->getTemplateGroup($prefix));
     }
 
     /**
