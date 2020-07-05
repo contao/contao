@@ -497,11 +497,11 @@ class FigureBuilder
             $validExtension = \in_array(Path::getExtension($target), $validExtensions, true);
             $externalUrl = 1 === preg_match('#^https?://#', $target);
 
-            if ($externalUrl) {
-                return $validExtension ? [null, $target] : [null, null];
+            if (!$validExtension) {
+                return [null, null];
             }
 
-            if (!$validExtension) {
+            if ($externalUrl) {
                 return [null, $target];
             }
 

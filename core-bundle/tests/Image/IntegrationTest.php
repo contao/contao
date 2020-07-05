@@ -613,6 +613,81 @@ class IntegrationTest extends TestCase
             ),
         ];
 
+        yield 'fullsize/lightbox with internal url (invalid image extension)' => [
+            static function () use ($baseRowData) {
+                return [
+                    null,
+                    [
+                        new \stdClass(),
+                        array_merge($baseRowData, [
+                            'overwriteMeta' => '1',
+                            'fullsize' => '1',
+                            'imageUrl' => 'files/data.csv',
+                            'alt' => 'a',
+                            'imageTitle' => 'i',
+                            'caption' => 'c',
+                        ]),
+                        null,
+                        null,
+                        null,
+                    ],
+                ];
+            },
+            array_replace_recursive(
+                $baseExpectedTemplateData,
+                [
+                    'picture' => [
+                        'alt' => 'a',
+                    ],
+                    'linkTitle' => 'i',
+                    'href' => 'files/data.csv',
+                    'attributes' => ' target="_blank"',
+                    'fullsize' => true,
+                ]
+            ),
+        ];
+
+        yield 'fullsize/lightbox with internal url (valid image extension)' => [
+            static function () use ($baseRowData) {
+                return [
+                    null,
+                    [
+                        new \stdClass(),
+                        array_merge($baseRowData, [
+                            'overwriteMeta' => '',
+                            'fullsize' => '1',
+                            'imageUrl' => 'files/public/foo.jpg',
+                            'alt' => '',
+                            'imageTitle' => '',
+                            'caption' => '',
+                        ]),
+                        null,
+                        null,
+                        null,
+                    ],
+                ];
+            },
+            array_replace_recursive(
+                $baseExpectedTemplateData,
+                [
+                    'lightboxPicture' => [
+                        'img' => [
+                            'src' => 'files/public/foo.jpg',
+                            'srcset' => 'files/public/foo.jpg',
+                            'hasSingleAspectRatio' => true,
+                            'height' => 200,
+                            'width' => 200,
+                        ],
+                        'sources' => [],
+                    ],
+                    'href' => 'files/public/foo.jpg',
+                    'attributes' => ' data-lightbox=""',
+                    'fullsize' => true,
+                    'linkTitle' => '',
+                ]
+            ),
+        ];
+
         yield 'fullsize/lightbox with external url (invalid image extension)' => [
             static function () use ($baseRowData) {
                 return [

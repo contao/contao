@@ -689,11 +689,11 @@ class FigureBuilderTest extends TestCase
         ];
 
         yield 'absolute file path with invalid extension' => [
-            $absoluteFilePathWithInvalidExtension, [null, $absoluteFilePathWithInvalidExtension],
+            $absoluteFilePathWithInvalidExtension, [null, $absoluteFilePathWithInvalidExtension], false,
         ];
 
         yield 'relative file path with invalid extension' => [
-            $relativeFilePathWithInvalidExtension, [null, $relativeFilePathWithInvalidExtension],
+            $relativeFilePathWithInvalidExtension, [null, $relativeFilePathWithInvalidExtension], false,
         ];
 
         yield 'external url/path with valid extension' => [
