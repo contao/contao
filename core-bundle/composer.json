@@ -103,6 +103,7 @@
         "twig/twig": "^2.7",
         "ua-parser/uap-php": "^3.9",
         "webignition/robots-txt-file": "^3.0",
+        "webmozart/path-util": "^2.0",
         "wikimedia/less.php": "^1.7"
     },
     "conflict": {
