@@ -1447,7 +1447,7 @@ class IntegrationTest extends TestCase
             return 'files/public/bar.jpg';
         }
 
-        if ('file_test::files/this/does/not/exist/foo.jpg') {
+        if ('file_test::files/this/does/not/exist/foo.jpg' === $tag) {
             return 'files/this/does/not/exist/foo.jpg';
         }
 
