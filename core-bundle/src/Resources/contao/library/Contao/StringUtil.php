@@ -1060,7 +1060,7 @@ class StringUtil
 	 * @param mixed   $varValue      The serialized string
 	 * @param boolean $blnForceArray True to always return an array
 	 *
-	 * @return array|string|null The array, an empty string or null
+	 * @return mixed the unprocessed input or unserialized/empty array
 	 */
 	public static function deserialize($varValue, $blnForceArray=false)
 	{
