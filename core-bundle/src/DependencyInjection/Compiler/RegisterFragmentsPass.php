@@ -16,6 +16,8 @@ use Contao\CoreBundle\EventListener\DataContainer\CustomTemplateOptionsCallback;
 use Contao\CoreBundle\Fragment\FragmentConfig;
 use Contao\CoreBundle\Fragment\FragmentOptionsAwareInterface;
 use Contao\CoreBundle\Fragment\FragmentPreHandlerInterface;
+use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
+use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\PriorityTaggedServiceTrait;
@@ -69,6 +71,18 @@ class RegisterFragmentsPass implements CompilerPassInterface
         $command = $container->findDefinition('contao.command.debug_fragments');
         $customTemplateOptionsCallback = $container->findDefinition(CustomTemplateOptionsCallback::class);
 
+        $table = null;
+
+        switch ($tag) {
+            case ContentElementReference::TAG_NAME:
+                $table = 'tl_content';
+                break;
+
+            case FrontendModuleReference::TAG_NAME:
+                $table = 'tl_module';
+                break;
+        }
+
         foreach ($this->findAndSortTaggedServices($tag, $container) as $reference) {
             $definition = $container->findDefinition($reference);
             $definition->setPublic(true);
@@ -94,8 +108,8 @@ class RegisterFragmentsPass implements CompilerPassInterface
                 $command->addMethodCall('add', [$identifier, $config, $attributes]);
                 $definition->addTag($tag, $attributes);
 
-                if (isset($attributes['template'])) {
-                    $customTemplateOptionsCallback->addMethodCall('addCustomFragmentTemplate', [$tag, $attributes['type'], $attributes['template']]);
+                if (null !== $table && isset($attributes['template'])) {
+                    $customTemplateOptionsCallback->addMethodCall('setFragmentTemplate', [$table, $attributes['type'], $attributes['template']]);
                 }
             }
         }

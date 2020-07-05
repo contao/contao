@@ -14,25 +14,25 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\Controller;
 use Contao\CoreBundle\EventListener\DataContainer\CustomTemplateOptionsCallback;
-use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database\Result;
 use Contao\DataContainer;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class CustomTemplateOptionsCallbackTest extends TestCase
 {
     public function testReturnsDefaultTemplate(): void
     {
-        $callback = new CustomTemplateOptionsCallback($this->getFramework());
+        $callback = new CustomTemplateOptionsCallback($this->getFramework(), new RequestStack());
 
         $this->assertSame(['' => 'ce_default'], $callback($this->mockDataContainer()));
     }
 
     public function testReturnsCustomTemplate(): void
     {
-        $callback = new CustomTemplateOptionsCallback($this->getFramework());
-        $callback->addCustomFragmentTemplate(ContentElementReference::TAG_NAME, 'default', 'ce_foo');
+        $callback = new CustomTemplateOptionsCallback($this->getFramework(), new RequestStack());
+        $callback->setFragmentTemplate('tl_content', 'default', 'ce_foo');
 
         $this->assertSame(['' => 'ce_foo'], $callback($this->mockDataContainer()));
     }

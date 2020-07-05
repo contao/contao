@@ -199,17 +199,17 @@ class RegisterFragmentsPassTest extends TestCase
 
         $this->assertSame([
             [
-                'addCustomFragmentTemplate',
+                'setFragmentTemplate',
                 [
-                    'contao.content_element',
+                    'tl_content',
                     'text',
                     'ce_foo',
                 ],
             ],
             [
-                'addCustomFragmentTemplate',
+                'setFragmentTemplate',
                 [
-                    'contao.frontend_module',
+                    'tl_module',
                     'login',
                     'mod_foo',
                 ],

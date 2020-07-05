@@ -280,3 +280,4 @@ services:
     Contao\CoreBundle\EventListener\DataContainer\CustomTemplateOptionsCallback:
         arguments:
             - '@contao.framework'
+            - '@request_stack'

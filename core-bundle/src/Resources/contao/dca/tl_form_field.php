@@ -362,7 +362,6 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'options_callback'        => array('tl_form_field', 'getFormFieldTemplates'),
 			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
@@ -707,31 +706,6 @@ class tl_form_field extends Contao\Backend
 		}
 
 		return $fields;
-	}
-
-	/**
-	 * Return all form field templates as array
-	 *
-	 * @param Contao\DataContainer $dc
-	 *
-	 * @return array
-	 */
-	public function getFormFieldTemplates(Contao\DataContainer $dc)
-	{
-		if (Contao\Input::get('act') == 'overrideAll')
-		{
-			return $this->getTemplateGroup('form_');
-		}
-
-		$arrTemplates = $this->getTemplateGroup('form_' . $dc->activeRecord->type . '_', array(), 'form_' . $dc->activeRecord->type);
-
-		// Backwards compatibility
-		if ($dc->activeRecord->type == 'text')
-		{
-			$arrTemplates += $this->getTemplateGroup('form_textfield_');
-		}
-
-		return $arrTemplates;
 	}
 
 	/**
