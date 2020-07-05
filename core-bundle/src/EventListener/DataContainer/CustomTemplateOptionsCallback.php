@@ -50,7 +50,7 @@ class CustomTemplateOptionsCallback implements ServiceAnnotationInterface, Reset
      */
     public function onArticle(DataContainer $dc): array
     {
-        return $this->getTemplateGroup($dc, 'mod_article');
+        return $this->getTemplates($dc, 'mod_article');
     }
 
     /**
@@ -63,7 +63,7 @@ class CustomTemplateOptionsCallback implements ServiceAnnotationInterface, Reset
             return $this->getOverrideAllTemplates('ce_');
         }
 
-        return $this->getTemplateGroup($dc, 'ce_'.$dc->activeRecord->type);
+        return $this->getTemplates($dc, 'ce_'.$dc->activeRecord->type);
     }
 
     /**
@@ -71,7 +71,7 @@ class CustomTemplateOptionsCallback implements ServiceAnnotationInterface, Reset
      */
     public function onForm(DataContainer $dc): array
     {
-        return $this->getTemplateGroup($dc, 'form_wrapper');
+        return $this->getTemplates($dc, 'form_wrapper');
     }
 
     /**
@@ -86,10 +86,10 @@ class CustomTemplateOptionsCallback implements ServiceAnnotationInterface, Reset
 
         // Backwards compatibility
         if ('text' === $dc->activeRecord->type) {
-            return $this->getTemplateGroup($dc, 'form_textfield');
+            return $this->getTemplates($dc, 'form_textfield');
         }
 
-        return $this->getTemplateGroup($dc, 'form_'.$dc->activeRecord->type);
+        return $this->getTemplates($dc, 'form_'.$dc->activeRecord->type);
     }
 
     /**
@@ -102,7 +102,7 @@ class CustomTemplateOptionsCallback implements ServiceAnnotationInterface, Reset
             return $this->getOverrideAllTemplates('mod_');
         }
 
-        return $this->getTemplateGroup($dc, 'mod_'.$dc->activeRecord->type);
+        return $this->getTemplates($dc, 'mod_'.$dc->activeRecord->type);
     }
 
     /**
@@ -122,7 +122,7 @@ class CustomTemplateOptionsCallback implements ServiceAnnotationInterface, Reset
         $this->fragmentTemplates = [];
     }
 
-    private function getTemplateGroup(DataContainer $dc, string $template): array
+    private function getTemplates(DataContainer $dc, string $template): array
     {
         if (isset($dc->activeRecord->type, $this->fragmentTemplates[$dc->table][$dc->activeRecord->type])) {
             $template = $this->fragmentTemplates[$dc->table][$dc->activeRecord->type];
