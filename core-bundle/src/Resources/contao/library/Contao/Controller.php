@@ -1722,8 +1722,6 @@ abstract class Controller extends System
 			->setLightBoxSize($lightBoxSize)
 			->enableLightBox('1' === ($rowData['fullsize'] ?? null));
 
-		// todo: $rowData['lightboxSize'] + test
-
 		// Build result and apply it to the template
 		$figureBuilder
 			->build()
