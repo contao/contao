@@ -321,13 +321,13 @@ class LightBoxResultTest extends TestCase
         $this->assertSame('12345', $lightBoxResult->getGroupIdentifier());
     }
 
-    public function testGetGeneratedGroupIdentifier(): void
+    public function testGroupIdentifierIsEmptyIfNotExplicitlySet(): void
     {
         /** @var MockObject&ContainerInterface $locator */
         $locator = $this->createMock(ContainerInterface::class);
 
         $lightBoxResult = new LightBoxResult($locator, null, 'foo://bar');
 
-        $this->assertSame('588f2f', $lightBoxResult->getGroupIdentifier());
+        $this->assertSame('', $lightBoxResult->getGroupIdentifier());
     }
 }

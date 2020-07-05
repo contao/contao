@@ -671,7 +671,7 @@ class IntegrationTest extends TestCase
                 $baseExpectedTemplateData,
                 [
                     'href' => 'https://example.com/valid/image.png',
-                    'attributes' => ' rel="noreferrer noopener" data-lightbox="<anything>"',
+                    'attributes' => ' rel="noreferrer noopener" data-lightbox=""',
                     'linkTitle' => 'i',
                     'fullsize' => true,
                 ]
@@ -712,7 +712,7 @@ class IntegrationTest extends TestCase
                         'sources' => [],
                     ],
                     'href' => 'files/public/bar.jpg',
-                    'attributes' => ' data-lightbox="<anything>"',
+                    'attributes' => ' data-lightbox=""',
                     'fullsize' => true,
                     'linkTitle' => 'i',
                 ]
@@ -793,13 +793,13 @@ class IntegrationTest extends TestCase
                     ],
                     'linkTitle' => 'i',
                     'href' => 'files/public/bar.jpg',
-                    'attributes' => ' data-lightbox="<anything>"',
+                    'attributes' => ' data-lightbox=""',
                     'fullsize' => true,
                 ]
             ),
         ];
 
-        yield 'fullsize/lightbox with path to valid resource (overwriting id)' => [
+        yield 'fullsize/lightbox with path to valid resource (setting custom id)' => [
             static function () use ($baseRowData) {
                 return [
                     null,
@@ -882,7 +882,7 @@ class IntegrationTest extends TestCase
                     ],
                     'linkTitle' => 'i',
                     'href' => 'assets/images/<anything>',
-                    'attributes' => ' data-lightbox="<anything>"',
+                    'attributes' => ' data-lightbox=""',
                     'fullsize' => true,
                 ]
             ),
@@ -1174,7 +1174,7 @@ class IntegrationTest extends TestCase
                     'linkTitle' => 'foo title',
                     'href' => 'files/public/foo.jpg',
                     'fullsize' => true,
-                    'attributes' => ' data-lightbox="<anything>"',
+                    'attributes' => ' data-lightbox=""',
                     'floatClass' => ' float_below',
                     'addBefore' => false,
                     'margin' => '',
@@ -1241,7 +1241,7 @@ class IntegrationTest extends TestCase
                     'linkTitle' => 'foo title',
                     'href' => 'assets/images/<anything>',
                     'fullsize' => true,
-                    'attributes' => ' data-lightbox="<anything>"',
+                    'attributes' => ' data-lightbox=""',
                     'margin' => '',
                 ]
             ),
@@ -1356,7 +1356,7 @@ class IntegrationTest extends TestCase
                     'linkTitle' => 'bar title',
                     'href' => 'assets/images/<anything>',
                     'fullsize' => true,
-                    'attributes' => ' data-lightbox="<anything>"',
+                    'attributes' => ' data-lightbox=""',
                     'floatClass' => ' float_above',
                     'margin' => 'margin:1px 2px 3px 4px;',
                 ]
@@ -1588,7 +1588,7 @@ class IntegrationTest extends TestCase
         $sortByKeyRecursive($expected);
         $sortByKeyRecursive($templateData);
 
-        // Ignore generated asset paths + light box identifiers
+        // Ignore generated asset paths
         array_walk_recursive(
             $templateData,
             static function (&$value): void {
@@ -1597,7 +1597,6 @@ class IntegrationTest extends TestCase
                 }
 
                 $value = preg_replace('#^(assets/images/)\S*$#', '$1<anything>', $value);
-                $value = preg_replace('#(data-lightbox=)"(?!<custom>")\S*"#', '$1"<anything>"', $value);
             }
         );
 

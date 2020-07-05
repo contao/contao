@@ -106,7 +106,7 @@ class LightBoxResult
      */
     public function getGroupIdentifier(): string
     {
-        return $this->groupIdentifier ?? $this->createFallbackGroupIdentifier();
+        return $this->groupIdentifier ?? '';
     }
 
     /**
@@ -136,14 +136,5 @@ class LightBoxResult
         }
 
         return StringUtil::deserialize($layoutModel->lightboxSize, true);
-    }
-
-    /**
-     * Create a pseudo-unique identifier. This prevents independent images
-     * being grouped under the same (empty) identifier.
-     */
-    private function createFallbackGroupIdentifier(): string
-    {
-        return substr(md5($this->getLinkHref()), 0, 6);
     }
 }
