@@ -74,7 +74,7 @@ class IntegrationTest extends TestCase
      *
      * @group legacy
      */
-    public function testControllerAddImageToTemplate(Closure $testCase, array $expectedTemplateData): void
+    public function testControllerAddImageToTemplate(\Closure $testCase, array $expectedTemplateData): void
     {
         [$template, $dataRow, $maxWidth, $lightBoxGroupIdentifier, $filesModel] = $this->setUpTestCase($testCase);
 
@@ -1377,7 +1377,7 @@ class IntegrationTest extends TestCase
         return false;
     }
 
-    private function setUpTestCase(Closure $testCase): array
+    private function setUpTestCase(\Closure $testCase): array
     {
         // Evaluate preconditions and setup container
         $container = $this->getContainerWithContaoConfiguration(self::$testRoot);
@@ -1388,7 +1388,7 @@ class IntegrationTest extends TestCase
         $filesAdapter = null;
         $setupCallback = null;
 
-        if ($preConditions instanceof Closure) {
+        if ($preConditions instanceof \Closure) {
             $setupCallback = $preConditions;
         } elseif ($preConditions instanceof Adapter) {
             $filesAdapter = $preConditions;
