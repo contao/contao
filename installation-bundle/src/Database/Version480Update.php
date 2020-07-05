@@ -17,6 +17,7 @@ use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\File;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
+use Webmozart\PathUtil\Path;
 
 /**
  * @internal
@@ -153,7 +154,9 @@ class Version480Update extends AbstractMigration
 
         // Convert the important part to relative values as fractions
         while (false !== ($file = $statement->fetch(\PDO::FETCH_OBJ))) {
-            if (!file_exists($this->projectDir.'/'.$file->path) || is_dir($this->projectDir.'/'.$file->path)) {
+            $path = Path::join($this->projectDir, $file->path);
+
+            if (!file_exists($path) || is_dir($path)) {
                 continue;
             }
 

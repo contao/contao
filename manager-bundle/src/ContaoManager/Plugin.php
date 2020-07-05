@@ -52,6 +52,7 @@ use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
+use Webmozart\PathUtil\Path;
 
 /**
  * @internal
@@ -116,7 +117,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             $iniConfigs = [];
 
             foreach ($modules as $module) {
-                if (!file_exists($module->getPathname().'/.skip')) {
+                if (!file_exists(Path::join($module->getPathname(), '.skip'))) {
                     $iniConfigs[] = $parser->parse($module->getFilename(), 'ini');
                 }
             }

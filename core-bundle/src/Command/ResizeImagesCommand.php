@@ -29,6 +29,7 @@ use Symfony\Component\Debug\Exception\FlattenException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
+use Webmozart\PathUtil\Path;
 
 /**
  * Resize deferred images that have not been processed yet.
@@ -153,7 +154,7 @@ class ResizeImagesCommand extends Command
         $io->write(str_pad($path, $this->terminalWidth + \strlen($path) - Utf8::strlen($path) - 13, '.').' ');
 
         try {
-            $image = $this->imageFactory->create($this->targetDir.'/'.$path);
+            $image = $this->imageFactory->create(Path::join($this->targetDir, $path));
             $resizer = $this->resizer;
 
             if ($image instanceof DeferredImageInterface) {

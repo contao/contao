@@ -19,6 +19,7 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
+use Webmozart\PathUtil\Path;
 
 class Configuration implements ConfigurationInterface
 {
@@ -422,38 +423,10 @@ class Configuration implements ConfigurationInterface
      */
     private function canonicalize(string $value): string
     {
-        $resolved = [];
-        $chunks = preg_split('#([\\\\/]+)#', $value, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        $windowsPath = false !== strpos($value, '\\');
+        $path = Path::canonicalize($value);
 
-        for ($i = 0, $c = \count($chunks); $i < $c; ++$i) {
-            if ('.' === $chunks[$i]) {
-                ++$i;
-                continue;
-            }
-
-            // Reduce multiple slashes to one
-            if (0 === strncmp($chunks[$i], '/', 1)) {
-                $resolved[] = '/';
-                continue;
-            }
-
-            // Reduce multiple backslashes to one
-            if (0 === strncmp($chunks[$i], '\\', 1)) {
-                $resolved[] = '\\';
-                continue;
-            }
-
-            if ('..' === $chunks[$i]) {
-                ++$i;
-                array_pop($resolved);
-                array_pop($resolved);
-                continue;
-            }
-
-            $resolved[] = $chunks[$i];
-        }
-
-        return rtrim(implode('', $resolved), '\/');
+        return $windowsPath ? str_replace('/', '\\', $path) : $path;
     }
 
     /**
@@ -463,13 +436,13 @@ class Configuration implements ConfigurationInterface
     {
         $dirs = [__DIR__.'/../Resources/contao/languages'];
 
-        if (is_dir($this->projectDir.'/contao/languages')) {
-            $dirs[] = $this->projectDir.'/contao/languages';
+        if (is_dir(Path::join($this->projectDir, 'contao/languages'))) {
+            $dirs[] = Path::join($this->projectDir, 'contao/languages');
         }
 
         // Backwards compatibility
-        if (is_dir($this->projectDir.'/app/Resources/contao/languages')) {
-            $dirs[] = $this->projectDir.'/app/Resources/contao/languages';
+        if (is_dir(Path::join($this->projectDir, 'app/Resources/contao/languages'))) {
+            $dirs[] = Path::join($this->projectDir, 'app/Resources/contao/languages');
         }
 
         // The default locale must be the first supported language (see contao/core#6533)

@@ -24,6 +24,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
+use Webmozart\PathUtil\Path;
 
 class MigrateCommand extends Command
 {
@@ -178,7 +179,7 @@ class MigrateCommand extends Command
 
         return array_map(
             function ($path) {
-                return rtrim((new Filesystem())->makePathRelative($path, $this->projectDir), '/');
+                return Path::makeRelative($path, $this->projectDir);
             },
             $files
         );
@@ -188,9 +189,11 @@ class MigrateCommand extends Command
     {
         $this->framework->initialize();
 
-        include $this->projectDir.'/'.$file;
+        $filePath = Path::join($this->projectDir, $file);
 
-        (new Filesystem())->remove($this->projectDir.'/'.$file);
+        include $filePath;
+
+        (new Filesystem())->remove($filePath);
     }
 
     private function executeSchemaDiff(bool $withDeletesOption): bool

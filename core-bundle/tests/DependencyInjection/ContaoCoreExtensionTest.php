@@ -2522,7 +2522,6 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 new Reference('%kernel.project_dir%'),
                 new Reference('%contao.image.target_dir%'),
-                new Reference('filesystem'),
             ],
             $definition->getArguments()
         );

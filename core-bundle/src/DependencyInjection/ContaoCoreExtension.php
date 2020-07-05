@@ -26,6 +26,7 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Webmozart\PathUtil\Path;
 
 class ContaoCoreExtension extends Extension
 {
@@ -249,7 +250,7 @@ class ContaoCoreExtension extends Extension
 
         $container->setParameter(
             'contao.image.target_dir',
-            $container->getParameter('kernel.project_dir').'/'.$config['image']['target_path']
+            Path::join($container->getParameter('kernel.project_dir'), $config['image']['target_path'])
         );
 
         @trigger_error('Using the "contao.image.target_path" parameter has been deprecated and will no longer work in Contao 5.0. Use the "contao.image.target_dir" parameter instead.', E_USER_DEPRECATED);

@@ -26,6 +26,7 @@ use Symfony\Component\Cache\Adapter\TagAwareAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Toflar\Psr6HttpCacheStore\Psr6Store;
+use Webmozart\PathUtil\Path;
 
 class ContaoCache extends HttpCache implements CacheInvalidation
 {
@@ -65,7 +66,7 @@ class ContaoCache extends HttpCache implements CacheInvalidation
 
     protected function createStore(): Psr6Store
     {
-        $cacheDir = $this->cacheDir ?: $this->kernel->getCacheDir().'/http_cache';
+        $cacheDir = $this->cacheDir ?: Path::join($this->kernel->getCacheDir(), 'http_cache');
 
         return new Psr6Store([
             'cache_directory' => $cacheDir,

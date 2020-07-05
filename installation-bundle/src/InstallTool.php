@@ -23,6 +23,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
+use Webmozart\PathUtil\Path;
 
 class InstallTool
 {
@@ -59,13 +60,13 @@ class InstallTool
 
     public function isLocked(): bool
     {
-        $file = $this->rootDir.'/var/install_lock';
+        $file = Path::join($this->rootDir, 'var/install_lock');
 
         if (!file_exists($file)) {
             return false;
         }
 
-        $count = file_get_contents($this->rootDir.'/var/install_lock');
+        $count = file_get_contents($file);
 
         return (int) $count >= 3;
     }
@@ -83,10 +84,10 @@ class InstallTool
     public function increaseLoginCount(): void
     {
         $count = 0;
-        $file = $this->rootDir.'/var/install_lock';
+        $file = Path::join($this->rootDir, 'var/install_lock');
 
         if (file_exists($file)) {
-            $count = file_get_contents($this->rootDir.'/var/install_lock');
+            $count = file_get_contents($file);
         }
 
         $fs = new Filesystem();
@@ -326,7 +327,7 @@ class InstallTool
         $finder = Finder::create()
             ->files()
             ->name('*.sql')
-            ->in($this->rootDir.'/templates')
+            ->in(Path::join($this->rootDir, 'templates'))
         ;
 
         $templates = [];
@@ -350,7 +351,7 @@ class InstallTool
             }
         }
 
-        $data = file($this->rootDir.'/templates/'.$template);
+        $data = file(Path::join($this->rootDir, 'templates', $template));
 
         foreach (preg_grep('/^INSERT /', $data) as $query) {
             $this->connection->query($query);
