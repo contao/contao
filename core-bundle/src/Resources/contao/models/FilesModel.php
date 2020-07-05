@@ -417,25 +417,25 @@ class FilesModel extends Model
 
 		foreach ($locales as $locale)
 		{
-			$data = $dataCollection[$locale] ?? array();
-
-			if (!empty($data))
+			if (!\is_array($data = $dataCollection[$locale] ?? null))
 			{
-				// Make sure we resolve insert tags pointing to files.
-				if (isset($data[MetaData::VALUE_URL]))
-				{
-					$data[MetaData::VALUE_URL] = Controller::replaceInsertTags($data[MetaData::VALUE_URL]);
-				}
-
-				// Fill missing meta fields with empty values
-				$metaFields = self::getMetaFields();
-				$data = array_merge(
-					array_combine($metaFields, array_fill(0, \count($metaFields), '')),
-					$data
-				);
-
-				return new MetaData($data);
+				continue;
 			}
+
+			// Make sure we resolve insert tags pointing to files.
+			if (isset($data[MetaData::VALUE_URL]))
+			{
+				$data[MetaData::VALUE_URL] = Controller::replaceInsertTags($data[MetaData::VALUE_URL]);
+			}
+
+			// Fill missing meta fields with empty values
+			$metaFields = self::getMetaFields();
+			$data = array_merge(
+				array_combine($metaFields, array_fill(0, \count($metaFields), '')),
+				$data
+			);
+
+			return new MetaData($data);
 		}
 
 		return null;
