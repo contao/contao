@@ -281,3 +281,5 @@ services:
         arguments:
             - '@contao.framework'
             - '@request_stack'
+        tags:
+            - { name: kernel.reset, method: reset }
