@@ -26,11 +26,11 @@ class CustomTemplateOptionsCallbackTest extends TestCase
     {
         $callback = new CustomTemplateOptionsCallback($this->getFramework(), new RequestStack());
 
-        $this->assertSame(['' => 'mod_article'], $callback($this->mockDataContainer('tl_article')));
-        $this->assertSame(['' => 'ce_default'], $callback($this->mockDataContainer('tl_content')));
-        $this->assertSame(['' => 'form_wrapper'], $callback($this->mockDataContainer('tl_form')));
-        $this->assertSame(['' => 'form_default'], $callback($this->mockDataContainer('tl_form_field')));
-        $this->assertSame(['' => 'mod_default'], $callback($this->mockDataContainer('tl_module')));
+        $this->assertSame(['' => 'mod_article'], $callback->onArticle($this->mockDataContainer('tl_article')));
+        $this->assertSame(['' => 'ce_default'], $callback->onContent($this->mockDataContainer('tl_content')));
+        $this->assertSame(['' => 'form_wrapper'], $callback->onForm($this->mockDataContainer('tl_form')));
+        $this->assertSame(['' => 'form_default'], $callback->onFormField($this->mockDataContainer('tl_form_field')));
+        $this->assertSame(['' => 'mod_default'], $callback->onModule($this->mockDataContainer('tl_module')));
     }
 
     public function testReturnsCustomTemplate(): void
@@ -39,8 +39,8 @@ class CustomTemplateOptionsCallbackTest extends TestCase
         $callback->setFragmentTemplate('tl_content', 'default', 'ce_foo');
         $callback->setFragmentTemplate('tl_module', 'default', 'mod_foo');
 
-        $this->assertSame(['' => 'ce_foo'], $callback($this->mockDataContainer('tl_content')));
-        $this->assertSame(['' => 'mod_foo'], $callback($this->mockDataContainer('tl_module')));
+        $this->assertSame(['' => 'ce_foo'], $callback->onContent($this->mockDataContainer('tl_content')));
+        $this->assertSame(['' => 'mod_foo'], $callback->onModule($this->mockDataContainer('tl_module')));
     }
 
     private function getFramework(array $adapters = []): ContaoFramework

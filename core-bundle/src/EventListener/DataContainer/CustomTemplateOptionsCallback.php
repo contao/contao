@@ -20,19 +20,12 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Service\ResetInterface;
 use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
-/**
- * @Callback(table="tl_article", target="fields.customTpl.options")
- * @Callback(table="tl_content", target="fields.customTpl.options")
- * @Callback(table="tl_form", target="fields.customTpl.options")
- * @Callback(table="tl_form_field", target="fields.customTpl.options")
- * @Callback(table="tl_module", target="fields.customTpl.options")
- */
 class CustomTemplateOptionsCallback implements ServiceAnnotationInterface, ResetInterface
 {
     /**
-     * @var ContaoFramework
+     * @var Controller
      */
-    private $framework;
+    private $controller;
 
     /**
      * @var RequestStack
@@ -46,55 +39,58 @@ class CustomTemplateOptionsCallback implements ServiceAnnotationInterface, Reset
 
     public function __construct(ContaoFramework $framework, RequestStack $requestStack)
     {
-        $this->framework = $framework;
+        $this->controller = $framework->getAdapter(Controller::class);
         $this->requestStack = $requestStack;
     }
 
-    public function __invoke(DataContainer $dc): array
+    /**
+     * @Callback(table="tl_article", target="fields.customTpl.options")
+     */
+    public function onArticle(DataContainer $dc): array
     {
-        /** @var Controller $controllerAdapter */
-        $controllerAdapter = $this->framework->getAdapter(Controller::class);
+        return $this->getTemplateGroup($dc, 'mod_article');
+    }
 
-        switch ($dc->table) {
-            case 'tl_article':
-                $template = 'mod_article';
-                break;
+    /**
+     * @Callback(table="tl_form", target="fields.customTpl.options")
+     */
+    public function onForm(DataContainer $dc): array
+    {
+        return $this->getTemplateGroup($dc, 'form_wrapper');
+    }
 
-            case 'tl_form':
-                $template = 'form_wrapper';
-                break;
-
-            case 'tl_form_field':
-                // Return all form_ templates in overrideAll mode
-                if ($this->isOverrideAll()) {
-                    return $controllerAdapter->getTemplateGroup('form_');
-                }
-
-                // Backwards compatibility
-                if ('text' === $dc->activeRecord->type) {
-                    $template = 'form_textfield';
-                } else {
-                    $template = 'form_'.$dc->activeRecord->type;
-                }
-
-                break;
-
-            case 'tl_content':
-            case 'tl_module':
-                $type = $dc->activeRecord->type;
-                $template = ('tl_content' === $dc->table ? 'ce_' : 'mod_').$type;
-
-                if (isset($this->fragmentTemplates[$dc->table][$type])) {
-                    $template = $this->fragmentTemplates[$dc->table][$type];
-                }
-
-                break;
-
-            default:
-                throw new \RuntimeException('Unsupported table "'.$dc->table.'".');
+    /**
+     * @Callback(table="tl_form_field", target="fields.customTpl.options")
+     */
+    public function onFormField(DataContainer $dc): array
+    {
+        // Return all form_ templates in overrideAll mode
+        if ($this->isOverrideAll()) {
+            return $this->controller->getTemplateGroup('form_');
         }
 
-        return $controllerAdapter->getTemplateGroup($template.'_', [], $template);
+        // Backwards compatibility
+        if ('text' === $dc->activeRecord->type) {
+            return $this->getTemplateGroup($dc, 'form_textfield');
+        }
+
+        return $this->getTemplateGroup($dc, 'form_'.$dc->activeRecord->type);
+    }
+
+    /**
+     * @Callback(table="tl_content", target="fields.customTpl.options")
+     */
+    public function onContent(DataContainer $dc): array
+    {
+        return $this->getTemplateGroup($dc, 'ce_'.$dc->activeRecord->type);
+    }
+
+    /**
+     * @Callback(table="tl_module", target="fields.customTpl.options")
+     */
+    public function onModule(DataContainer $dc): array
+    {
+        return $this->getTemplateGroup($dc, 'mod_'.$dc->activeRecord->type);
     }
 
     /**
@@ -111,6 +107,15 @@ class CustomTemplateOptionsCallback implements ServiceAnnotationInterface, Reset
     public function reset(): void
     {
         $this->fragmentTemplates = [];
+    }
+
+    private function getTemplateGroup(DataContainer $dc, string $template): array
+    {
+        if (isset($dc->activeRecord->type, $this->fragmentTemplates[$dc->table][$dc->activeRecord->type])) {
+            $template = $this->fragmentTemplates[$dc->table][$dc->activeRecord->type];
+        }
+
+        return $this->controller->getTemplateGroup($template.'_', [], $template);
     }
 
     /**
