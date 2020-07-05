@@ -1437,6 +1437,8 @@ class IntegrationTest extends TestCase
                 ]
             ),
         ];
+
+        // todo: add a gallery/text element test case
     }
 
     public function replaceFileTestInsertTag(string $tag)
