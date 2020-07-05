@@ -52,6 +52,19 @@ class CustomTemplateOptionsCallback implements ServiceAnnotationInterface, Reset
     }
 
     /**
+     * @Callback(table="tl_content", target="fields.customTpl.options")
+     */
+    public function onContent(DataContainer $dc): array
+    {
+        // Return all ce_ templates in overrideAll mode
+        if ($this->isOverrideAll()) {
+            return $this->controller->getTemplateGroup('ce_');
+        }
+
+        return $this->getTemplateGroup($dc, 'ce_'.$dc->activeRecord->type);
+    }
+
+    /**
      * @Callback(table="tl_form", target="fields.customTpl.options")
      */
     public function onForm(DataContainer $dc): array
@@ -78,18 +91,15 @@ class CustomTemplateOptionsCallback implements ServiceAnnotationInterface, Reset
     }
 
     /**
-     * @Callback(table="tl_content", target="fields.customTpl.options")
-     */
-    public function onContent(DataContainer $dc): array
-    {
-        return $this->getTemplateGroup($dc, 'ce_'.$dc->activeRecord->type);
-    }
-
-    /**
      * @Callback(table="tl_module", target="fields.customTpl.options")
      */
     public function onModule(DataContainer $dc): array
     {
+        // Return all mod_ templates in overrideAll mode
+        if ($this->isOverrideAll()) {
+            return $this->controller->getTemplateGroup('mod_');
+        }
+
         return $this->getTemplateGroup($dc, 'mod_'.$dc->activeRecord->type);
     }
 
