@@ -1,4 +1,7 @@
 services:
+    _defaults:
+        autoconfigure: true
+
     _instanceof:
         Contao\CoreBundle\Framework\FrameworkAwareInterface:
             calls:
@@ -273,3 +276,7 @@ services:
             - '@event_dispatcher'
         tags:
             - kernel.event_listener
+
+    Contao\CoreBundle\EventListener\DataContainer\CustomTemplateOptionsCallback:
+        arguments:
+            - '@contao.framework'
