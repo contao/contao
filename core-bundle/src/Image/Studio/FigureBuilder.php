@@ -581,15 +581,11 @@ class FigureBuilder
             return [];
         }
 
-        $locales = [];
+        $locales = [
+            str_replace('-', '_', $page->language),
+            str_replace('-', '_', $page->rootFallbackLanguage),
+        ];
 
-        foreach ([$page->rootFallbackLanguage, $page->language] as $value) {
-            if (!empty($value)) {
-                array_unshift($locales, str_replace('-', '_', $value));
-            }
-        }
-
-        // only keep first occurrences
-        return array_unique($locales);
+        return array_unique(array_filter($locales));
     }
 }
