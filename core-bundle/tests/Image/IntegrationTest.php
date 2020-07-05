@@ -85,23 +85,23 @@ class IntegrationTest extends TestCase
 
     // fixme: Uncomment the following method to test + compare against old implementation / also see #1862.
 
-    /**
-     * @dataProvider provideControllerAddImageToTemplateTestCases
-     *
-     * @group legacy
-     */
-    public function testControllerAddImageToTemplateOld(Closure $testCase, array $expectedTemplateData): void
-    {
-        [$template, $dataRow, $maxWidth, $lightBoxGroupIdentifier, $filesModel] = $this->setUpTestCase($testCase);
-
-        // suppress E_NOTICE warnings
-        $errorLevel = error_reporting();
-        error_reporting($errorLevel & ~E_NOTICE);
-        Controller::addImageToTemplate__old($template, $dataRow, $maxWidth, $lightBoxGroupIdentifier, $filesModel);
-        error_reporting($errorLevel);
-
-        $this->assertSameTemplateData($expectedTemplateData, $template);
-    }
+//    /**
+//     * @dataProvider provideControllerAddImageToTemplateTestCases
+//     *
+//     * @group legacy
+//     */
+//    public function testControllerAddImageToTemplateOld(Closure $testCase, array $expectedTemplateData): void
+//    {
+//        [$template, $dataRow, $maxWidth, $lightBoxGroupIdentifier, $filesModel] = $this->setUpTestCase($testCase);
+//
+//        // suppress E_NOTICE warnings
+//        $errorLevel = error_reporting();
+//        error_reporting($errorLevel & ~E_NOTICE);
+//        Controller::addImageToTemplate__old($template, $dataRow, $maxWidth, $lightBoxGroupIdentifier, $filesModel);
+//        error_reporting($errorLevel);
+//
+//        $this->assertSameTemplateData($expectedTemplateData, $template);
+//    }
 
     /**
      * Returns test cases in the following form:
