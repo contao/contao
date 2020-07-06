@@ -37,7 +37,6 @@ class InitializeApplicationListener
     public function __invoke(InitializeApplicationEvent $event): void
     {
         $filesystem = new Filesystem();
-
         $targetPath = Path::join($this->projectDir, 'system/initialize.php');
 
         if ($filesystem->exists($targetPath)) {
