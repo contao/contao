@@ -47,9 +47,6 @@ class SymlinkUtil
      */
     public static function validateSymlink(string $target, string $link, string $rootDir): void
     {
-        $target = Path::normalize($target);
-        $link = Path::normalize($link);
-
         if ('' === $target) {
             throw new \InvalidArgumentException('The symlink target must not be empty.');
         }
@@ -57,6 +54,8 @@ class SymlinkUtil
         if ('' === $link) {
             throw new \InvalidArgumentException('The symlink path must not be empty.');
         }
+
+        $link = Path::normalize($link);
 
         if (false !== strpos($link, '../')) {
             throw new \InvalidArgumentException('The symlink path must not be relative.');
