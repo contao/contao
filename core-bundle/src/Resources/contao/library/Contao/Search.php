@@ -405,7 +405,8 @@ class Search
 		$wordVariants = array();
 		$iterator = \IntlRuleBasedBreakIterator::createCharacterInstance($strLocale);
 
-		foreach ($arrWords as $word) {
+		foreach ($arrWords as $word)
+		{
 			$iterator->setText($word);
 			$variants = array();
 
