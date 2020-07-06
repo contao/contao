@@ -16,7 +16,7 @@ if ($MatomoSite > 0 && '//www.example.com/matomo/' != $MatomoPath && !BE_USER_LO
     _paq.push(['setTrackerUrl', u+'matomo.php']);
     _paq.push(['setSiteId', <?= $MatomoSite ?>]);
     var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+    g.async=true; g.defer=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
   })();
 </script>
 
