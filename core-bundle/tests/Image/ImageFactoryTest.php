@@ -742,8 +742,8 @@ class ImageFactoryTest extends TestCase
         $image = $imageFactory->create($path, [100, 100, ResizeConfiguration::MODE_CROP]);
 
         $this->assertSame(
-            $this->getFixturesDir().'/assets/images/dummy.jpg&getImage_100_100_crop_Contao-File__Contao-Image.jpg',
-            $image->getPath()
+            Path::normalize($this->getFixturesDir()).'/assets/images/dummy.jpg&getImage_100_100_crop_Contao-File__Contao-Image.jpg',
+            Path::normalize($image->getPath())
         );
 
         $image = $imageFactory->create($path, [50, 50, ResizeConfiguration::MODE_CROP]);
@@ -761,8 +761,8 @@ class ImageFactoryTest extends TestCase
         );
 
         $this->assertSame(
-            $this->getFixturesDir().'/images/dummy.jpg',
-            $image->getPath(),
+            Path::normalize($this->getFixturesDir()).'/images/dummy.jpg',
+            Path::normalize($image->getPath()),
             'Hook should not get called if no resize is necessary'
         );
 
