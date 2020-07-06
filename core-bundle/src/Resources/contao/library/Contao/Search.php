@@ -248,8 +248,9 @@ class Search
 
 		unset($arrSet);
 
-		// Split words
+		// Split words and create all variants of it
 		$arrWords = self::splitIntoWords(Utf8::strtolower($strText), $arrData['language']);
+		$arrWords = self::createWordVariants($arrWords, $arrData['language']);
 		$arrIndex = array();
 
 		// Index words
@@ -397,6 +398,32 @@ class Search
 	}
 
 	/**
+	 * @return string[]
+	 */
+	private static function createWordVariants(array $arrWords, string $strLocale)
+	{
+		$wordVariants = array();
+		$iterator = \IntlRuleBasedBreakIterator::createCharacterInstance($strLocale);
+
+		foreach ($arrWords as $word) {
+			$iterator->setText($word);
+			$variants = array();
+
+			foreach ($iterator->getPartsIterator() as $character)
+			{
+				$prev = end($variants) ?: '';
+				$variants[] = $prev . $character;
+			}
+
+			$wordVariants = array_merge($wordVariants, $variants);
+		}
+
+		$wordVariants = array_unique($wordVariants);
+
+		return $wordVariants;
+	}
+
+	/**
 	 * Search the index and return the result object
 	 *
 	 * @param string  $strKeywords  The keyword string
@@ -501,7 +528,7 @@ class Search
 		{
 			foreach ($arrKeywords as $strKeyword)
 			{
-				$arrWildcards[] = '%' . $strKeyword . '%';
+				$arrWildcards[] = $strKeyword . '%';
 			}
 
 			$arrKeywords = array();
