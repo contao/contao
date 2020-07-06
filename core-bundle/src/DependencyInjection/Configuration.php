@@ -441,8 +441,8 @@ class Configuration implements ConfigurationInterface
         }
 
         // Backwards compatibility
-        if (is_dir(Path::join($this->projectDir, 'app/Resources/contao/languages'))) {
-            $dirs[] = Path::join($this->projectDir, 'app/Resources/contao/languages');
+        if (is_dir($path = Path::join($this->projectDir, 'app/Resources/contao/languages'))) {
+            $dirs[] = $path;
         }
 
         // The default locale must be the first supported language (see contao/core#6533)
