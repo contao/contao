@@ -272,12 +272,12 @@ OUTPUT;
 Registered Bundles in Loading Order
 ===================================
 
- ------------------ ------------------------------------------ 
+ ------------------ ----------------------------------------- 
   Bundle Name        Contao Resources Path                     
- ------------------ ------------------------------------------ 
-  ContaoCoreBundle   contao/core-bundle/src/Resources/contao/  
-  ContaoNewsBundle   contao/news-bundle/src/Resources/contao/  
- ------------------ ------------------------------------------ 
+ ------------------ ----------------------------------------- 
+  ContaoCoreBundle   contao/core-bundle/src/Resources/contao  
+  ContaoNewsBundle   contao/news-bundle/src/Resources/contao  
+ ------------------ ----------------------------------------- 
 
 
 OUTPUT;

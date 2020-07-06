@@ -140,7 +140,7 @@ class DebugPluginsCommand extends Command
                 }
             }
 
-            $rows[] = [$bundle->getName(), $path.'/'];
+            $rows[] = [$bundle->getName(), $path];
         }
 
         $this->io->title($title);
