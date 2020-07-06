@@ -1159,7 +1159,7 @@ class StringUtil
 	{
 		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
 
-		if(!Path::isBasePath($rootDir, $path) || Path::normalize($path) === Path::normalize($rootDir))
+		if (!Path::isBasePath($rootDir, $path) || Path::normalize($path) === Path::normalize($rootDir))
 		{
 			throw new \InvalidArgumentException(sprintf('Path "%s" is not inside the Contao root dir "%s"', $path, $rootDir));
 		}
