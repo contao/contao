@@ -436,8 +436,8 @@ class Configuration implements ConfigurationInterface
     {
         $dirs = [__DIR__.'/../Resources/contao/languages'];
 
-        if (is_dir(Path::join($this->projectDir, 'contao/languages'))) {
-            $dirs[] = Path::join($this->projectDir, 'contao/languages');
+        if (is_dir($path = Path::join($this->projectDir, 'contao/languages'))) {
+            $dirs[] = $path;
         }
 
         // Backwards compatibility
