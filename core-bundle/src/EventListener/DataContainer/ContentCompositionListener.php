@@ -94,7 +94,7 @@ class ContentCompositionListener implements ServiceAnnotationInterface
             return '';
         }
 
-        $pageModel = new PageModel();
+        $pageModel = $this->framework->createInstance(PageModel::class);
         $pageModel->preventSaving(false);
         $pageModel->setRow($row);
 
@@ -125,7 +125,7 @@ class ContentCompositionListener implements ServiceAnnotationInterface
             return;
         }
 
-        $pageModel = new PageModel();
+        $pageModel = $this->framework->createInstance(PageModel::class);
         $pageModel->preventSaving(false);
         $pageModel->setRow((array) $dc->activeRecord);
 
@@ -141,7 +141,7 @@ class ContentCompositionListener implements ServiceAnnotationInterface
         $new_records = $sessionBag->get('new_records');
 
         // Not a new page
-        if (!$new_records || !\is_array($new_records[$dc->table]) || !\in_array($dc->id, $new_records[$dc->table], true)) {
+        if (!$new_records || !\is_array($new_records[$dc->table] ?? null) || !\in_array($dc->id, $new_records[$dc->table], true)) {
             return;
         }
 
@@ -175,6 +175,7 @@ class ContentCompositionListener implements ServiceAnnotationInterface
      */
     public function renderArticlePasteButton(DataContainer $dc, array $row, string $table, bool $cr, array $clipboard = null): string
     {
+        // TODO: remove once https://github.com/contao/contao/pull/1864 is merged
         $user = $this->security->getUser();
 
         if (!$user instanceof BackendUser) {
@@ -182,39 +183,55 @@ class ContentCompositionListener implements ServiceAnnotationInterface
         }
 
         if ($table === $GLOBALS['TL_DCA'][$dc->table]['config']['ptable']) {
-            $pageModel = new PageModel();
-            $pageModel->preventSaving(false);
-            $pageModel->setRow($row);
-
-            // Do not show paste button for pages without content composition or articles in layout
-            if (!$this->supportsComposition($pageModel) || !$this->hasArticlesInLayout($pageModel)) {
-                return '';
-            }
-
-            if ($cr || !$user->isAllowed(BackendUser::CAN_EDIT_ARTICLE_HIERARCHY, $row)) {
-                return $this->image->getHtml('pasteinto_.svg');
-            }
-
-            return sprintf(
-                '<a href="%s" title="%s" onclick="Backend.getScrollOffset()">%s</a> ',
-                $this->backend->addToUrl('act='.$clipboard['mode'].'&amp;mode=2&amp;pid='.$row['id'].(!\is_array($clipboard['id']) ? '&amp;id='.$clipboard['id'] : '')),
-                StringUtil::specialchars($this->translator->trans($dc->table.'.pasteinto.1', [$row['id']], 'contao_'.$dc->table)),
-                $this->image->getHtml(
-                    'pasteinto.svg',
-                    $this->translator->trans($dc->table.'.pasteinto.1', [$row['id']], 'contao_'.$dc->table)
-                )
-            );
+            return $this->renderArticlePasteIntoButton($dc, $row, $cr, $clipboard);
         }
 
+        return $this->renderArticlePasteAfterButton($dc, $row, $cr, $clipboard);
+    }
+
+    private function renderArticlePasteIntoButton(DataContainer $dc, array $row, bool $cr, array $clipboard = null)
+    {
+        $pageModel = $this->framework->createInstance(PageModel::class);
+        $pageModel->preventSaving(false);
+        $pageModel->setRow($row);
+
+        // Do not show paste button for pages without content composition or articles in layout
+        if (!$this->supportsComposition($pageModel) || !$this->hasArticlesInLayout($pageModel)) {
+            return '';
+        }
+
+        // TODO: use Security::isGranted() when https://github.com/contao/contao/pull/1864 is merged
+        $user = $this->security->getUser();
+
+        if ($cr || !$user->isAllowed(BackendUser::CAN_EDIT_ARTICLE_HIERARCHY, $row)) {
+            return $this->image->getHtml('pasteinto_.svg').' ';
+        }
+
+        return sprintf(
+            '<a href="%s" title="%s" onclick="Backend.getScrollOffset()">%s</a> ',
+            $this->backend->addToUrl('act='.$clipboard['mode'].'&amp;mode=2&amp;pid='.$row['id'].(!\is_array($clipboard['id'] ?? null) ? '&amp;id='.$clipboard['id'] : '')),
+            StringUtil::specialchars($this->translator->trans($dc->table.'.pasteinto.1', [$row['id']], 'contao_'.$dc->table)),
+            $this->image->getHtml(
+                'pasteinto.svg',
+                $this->translator->trans($dc->table.'.pasteinto.1', [$row['id']], 'contao_'.$dc->table)
+            )
+        );
+    }
+
+    private function renderArticlePasteAfterButton(DataContainer $dc, array $row, bool $cr, array $clipboard = null)
+    {
         /** @var PageModel $pageAdapter */
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
 
-        $pageModel = $pageAdapter->findById($row['pid']);
+        $pageModel = $pageAdapter->findByPk($row['pid']);
 
         // Do not show paste button for pages without content composition or articles in layout
         if (null === $pageModel || !$this->supportsComposition($pageModel) || !$this->hasArticlesInLayout($pageModel)) {
             return '';
         }
+
+        // TODO: use Security::isGranted() when https://github.com/contao/contao/pull/1864 is merged
+        $user = $this->security->getUser();
 
         if (
             ('cut' === $clipboard['mode'] && $clipboard['id'] === $row['id'])
