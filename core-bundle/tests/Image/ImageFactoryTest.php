@@ -38,6 +38,7 @@ use Imagine\Image\ImageInterface as ImagineImageInterface;
 use Imagine\Image\ImagineInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Filesystem\Filesystem;
+use Webmozart\PathUtil\Path;
 
 class ImageFactoryTest extends TestCase
 {
@@ -656,14 +657,14 @@ class ImageFactoryTest extends TestCase
         $image = $imageFactory->create($path, [100, 100, ResizeConfiguration::MODE_CROP]);
 
         $this->assertSame(
-            $this->getFixturesDir().'/assets/images/dummy.jpg&executeResize_100_100_crop__Contao-Image.jpg',
+            Path::normalize($this->getFixturesDir()).'/assets/images/dummy.jpg&executeResize_100_100_crop__Contao-Image.jpg',
             $image->getPath()
         );
 
         $image = $imageFactory->create($path, [200, 200, ResizeConfiguration::MODE_CROP]);
 
         $this->assertSame(
-            $this->getFixturesDir().'/assets/images/dummy.jpg&executeResize_200_200_crop__Contao-Image.jpg',
+            Path::normalize($this->getFixturesDir()).'/assets/images/dummy.jpg&executeResize_200_200_crop__Contao-Image.jpg',
             $image->getPath()
         );
 
@@ -674,7 +675,7 @@ class ImageFactoryTest extends TestCase
         );
 
         $this->assertSame(
-            $this->getFixturesDir().'/assets/images/dummy.jpg&executeResize_200_200_crop_target.jpg_Contao-Image.jpg',
+            Path::normalize($this->getFixturesDir()).'/assets/images/dummy.jpg&executeResize_200_200_crop_target.jpg_Contao-Image.jpg',
             $image->getPath()
         );
 
