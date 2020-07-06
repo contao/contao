@@ -1699,7 +1699,7 @@ abstract class Controller extends System
 				->log(
 					LogLevel::ERROR,
 					sprintf('Image "%s" could not be processed: %s', $rowData['singleSRC'], $e->getMessage()),
-					array('contao' => new \Contao\CoreBundle\Monolog\ContaoContext(__METHOD__, TL_ERROR))
+					array('contao' => new \Contao\CoreBundle\Monolog\ContaoContext(__METHOD__, 'ERROR'))
 				);
 
 			// Fall back to apply a sparse data set instead of failing (BC)

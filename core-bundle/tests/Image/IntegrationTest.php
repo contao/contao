@@ -12,10 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Image;
 
-use Closure;
 use Contao\Config;
 use Contao\Controller;
-use Contao\CoreBundle\File\MetaData;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Image\ImageFactory;
 use Contao\CoreBundle\Image\LegacyResizer;
@@ -48,18 +46,6 @@ class IntegrationTest extends TestCase
     {
         parent::setUpBeforeClass();
 
-        // Define constants and globals
-        \define('TL_MODE', 'FE');
-        \define('TL_ERROR', 'ERROR');
-
-        $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] = '';
-        $GLOBALS['TL_LANG']['MSC']['deleteConfirmFile'] = '';
-        $GLOBALS['TL_CSS_UNITS'] = [''];
-
-        $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields'] = [
-            'title' => '', 'alt' => '', 'link' => '', 'caption' => '',
-        ];
-
         // Make resources available in test root
         self::$testRoot = self::getTempDir();
 
@@ -90,8 +76,17 @@ class IntegrationTest extends TestCase
 //     *
 //     * @group legacy
 //     */
-//    public function testControllerAddImageToTemplateOld(Closure $testCase, array $expectedTemplateData): void
+//    public function testControllerAddImageToTemplateOld(\Closure $testCase, array $expectedTemplateData): void
 //    {
+//        // Define constants and globals
+//        if (!\defined('TL_MODE')) {
+//            \define('TL_MODE', 'FE');
+//        }
+//
+//        if (!\defined('TL_ERROR')) {
+//            \define('TL_ERROR', 'ERROR');
+//        }
+//
 //        [$template, $dataRow, $maxWidth, $lightBoxGroupIdentifier, $filesModel] = $this->setUpTestCase($testCase);
 //
 //        // suppress E_NOTICE warnings
@@ -1473,10 +1468,13 @@ class IntegrationTest extends TestCase
             [$filesAdapter, $setupCallback] = $preConditions;
         }
 
-        $this->configureContainerWithImageServices($container, $filesAdapter);
+        $this->configureContainer($container, $filesAdapter);
 
         // Setup global environment
         Config::getInstance();
+
+        Controller::loadLanguageFile('default');
+        Controller::loadLanguageFile('tl_files');
 
         $GLOBALS['TL_HOOKS']['replaceInsertTags'][] = [self::class, 'replaceFileTestInsertTag'];
 
@@ -1486,6 +1484,9 @@ class IntegrationTest extends TestCase
 
         $GLOBALS['objPage'] = $page;
 
+        // Reset config
+        Config::set('maxImageWidth', 0);
+
         if (null !== $setupCallback) {
             $setupCallback();
         }
@@ -1493,12 +1494,15 @@ class IntegrationTest extends TestCase
         return $arguments;
     }
 
+    /**
+     * Return a files adapter capable of finding multiple files models.
+     */
     private function getFilesAdapter(array $filesModelPropertyCollection, &$firstFilesModel = null)
     {
         $filesModelsByPath = [];
 
-        foreach ($filesModelPropertyCollection as $key => $filesModelProperties) {
-            $filesModelPropertyCollection[$key] = array_merge([
+        foreach ($filesModelPropertyCollection as $filesModelProperties) {
+            $data = array_merge([
                 'id' => 1,
                 'type' => 'file',
                 'path' => 'files/foo',
@@ -1508,43 +1512,34 @@ class IntegrationTest extends TestCase
                 'importantPartWidth' => 0.0,
             ], $filesModelProperties);
 
-            $filesModel = $this->mockClassWithProperties(FilesModel::class);
+            // We're using a child class of FilesModel to benefit from
+            // realistic MetaData creation while being able to disable
+            // object registration.
+            $filesModel = new class($data) extends FilesModel {
+                /**
+                 * @noinspection PhpMissingParentConstructorInspection
+                 */
+                public function __construct($data)
+                {
+                    $this->setRow($data);
+                }
+            };
 
-            $filesModel
-                ->method('getMetaData')
-                ->willReturnCallback(
-                    static function (string ...$locales) use ($filesModelProperties): ?MetaData {
-                        /** @var FilesModel $model */
-                        $model = (new \ReflectionClass(FilesModel::class))
-                            ->newInstanceWithoutConstructor()
-                        ;
-
-                        $model->setRow(['meta' => $filesModelProperties['meta'] ?? '']);
-
-                        return $model->getMetaData(...$locales);
-                    }
-                )
-            ;
-
-            foreach ($filesModelPropertyCollection[$key] as $property => $value) {
-                $filesModel->$property = $value;
-            }
-
-            $filesModelsByPath[$filesModelPropertyCollection[$key]['path']] = $filesModel;
+            $filesModelsByPath[$data['path']] = $filesModel;
         }
 
         $filesAdapter = $this->mockAdapter(['getMetaFields', 'getMetaData', 'findByPath']);
 
         $filesAdapter
             ->method('getMetaFields')
-            ->willReturn(array_keys($GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']))
+            ->willReturn(['title', 'alt', 'link', 'caption'])
         ;
 
         $filesAdapter
             ->method('findByPath')
             ->willReturnCallback(
                 static function (string $path) use ($filesModelsByPath) {
-                    // allow absolute or relative paths
+                    // Allow absolute or relative paths
                     return $filesModelsByPath[Path::makeRelative($path, self::$testRoot)] ?? null;
                 }
             )
@@ -1555,6 +1550,9 @@ class IntegrationTest extends TestCase
         return $filesAdapter;
     }
 
+    /**
+     * Get a layout adapter that can find the default layout model.
+     */
     private function getLayoutAdapter(): Adapter
     {
         // Get layout model and register it in the registry (needed for legacy code)
@@ -1563,6 +1561,9 @@ class IntegrationTest extends TestCase
             'lightboxSize' => 'a:3:{i:0;s:2:"40";i:1;s:2:"30";i:2;s:13:"center_center";}',
         ];
 
+        // We're using a child class of LayoutModel so that we can push it
+        // into the registry cache and therefore make it available for the
+        // legacy code.
         $layoutModel = new class($data) extends LayoutModel {
             /**
              * @noinspection PhpMissingParentConstructorInspection
@@ -1593,7 +1594,10 @@ class IntegrationTest extends TestCase
         return $layoutAdapter;
     }
 
-    private function configureContainerWithImageServices(ContainerBuilder $container, ?Adapter $filesAdapter): void
+    /**
+     * Configure container with parameters + services needed for the tests.
+     */
+    private function configureContainer(ContainerBuilder $container, ?Adapter $filesAdapter): void
     {
         $container->setParameter('contao.image.target_dir', Path::join(self::$testRoot, 'assets/images'));
         $container->setParameter('contao.web_dir', Path::join(self::$testRoot, 'web'));
@@ -1634,15 +1638,13 @@ class IntegrationTest extends TestCase
             'contao.image.valid_extensions' => $container->getParameter('contao.image.valid_extensions'),
         ]);
 
-        $requestStack = new RequestStack();
-
         $container->set('contao.framework', $framework);
         $container->set(Studio::class, $studio);
         $container->set('contao.image.resizer', $resizer);
         $container->set('contao.image.image_factory', $imageFactory);
         $container->set('contao.image.picture_factory', $pictureFactory);
         $container->set('parameter_bag', $parameterBag);
-        $container->set('request_stack', $requestStack);
+        $container->set('request_stack', new RequestStack());
         $container->set('filesystem', new Filesystem());
         $container->set('monolog.logger.contao', new NullLogger());
     }
