@@ -574,16 +574,6 @@ services:
             - '@contao.routing.frontend_matcher'
         public: true
 
-    contao.routing.url_generator:
-        class: Contao\CoreBundle\Routing\UrlGenerator
-        arguments:
-            - '@router'
-            - '@contao.framework'
-            - '%contao.legacy_routing%'
-            - '%contao.prepend_locale%'
-            - '%contao.url_suffix%'
-        public: true
-
     contao.search.indexer.default:
         class: Contao\CoreBundle\Search\Indexer\DefaultIndexer
         arguments:

@@ -52,3 +52,11 @@ services:
         class: Contao\CoreBundle\Routing\LegacyRouteProvider
         arguments:
             - '@contao.routing.frontend_loader'
+
+    contao.routing.url_generator:
+        class: Contao\CoreBundle\Routing\UrlGenerator
+        arguments:
+            - '@router'
+            - '@contao.framework'
+            - '%contao.prepend_locale%'
+        public: true
