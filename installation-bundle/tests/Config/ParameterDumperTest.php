@@ -27,7 +27,6 @@ class ParameterDumperTest extends TestCase
         $fixtureDir = Path::canonicalize(__DIR__.'/../Fixtures');
 
         $filesystem = $this->createMock(Filesystem::class);
-
         $filesystem
             ->method('exists')
             ->willReturnMap([
@@ -43,7 +42,6 @@ class ParameterDumperTest extends TestCase
         ;
 
         $dumper = new ParameterDumper($fixtureDir, $filesystem);
-
         $dumper->dump();
     }
 
