@@ -18,8 +18,6 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-@trigger_error('The following routes are deprecated: contao_frontend, contao_index, contao_root, contao_catch_all', E_USER_DEPRECATED);
-
 /**
  * @internal
  *
@@ -43,6 +41,20 @@ class LegacyRouteProvider implements RouteProviderInterface
     }
 
     public function getRouteByName($name): Route
+    {
+        $route = $this->loadRoute($name);
+
+        @trigger_error(sprintf('The %s route is deprecated and only available in legacy routing mode.', $name), E_USER_DEPRECATED);
+
+        return $route;
+    }
+
+    public function getRoutesByNames($names): array
+    {
+        return [];
+    }
+
+    public function loadRoute($name): Route
     {
         if ('contao_frontend' === $name || 'contao_index' === $name) {
             return $this->frontendLoader->load('.', 'contao_frontend')->get($name);
@@ -72,10 +84,5 @@ class LegacyRouteProvider implements RouteProviderInterface
         }
 
         throw new RouteNotFoundException('No route for '.$name);
-    }
-
-    public function getRoutesByNames($names): array
-    {
-        return [];
     }
 }
