@@ -85,8 +85,8 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue('')
                     ->validate()
                         ->always(
-                            function (string $value): string {
-                                return $this->canonicalize($value);
+                            static function (string $value): string {
+                                return Path::canonicalize($value);
                             }
                         )
                     ->end()
@@ -113,11 +113,11 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('web_dir')
                     ->info('Absolute path to the web directory. Defaults to %kernel.project_dir%/web.')
                     ->cannotBeEmpty()
-                    ->defaultValue($this->canonicalize($this->projectDir.'/web'))
+                    ->defaultValue(Path::join($this->projectDir, 'web'))
                     ->validate()
                         ->always(
-                            function (string $value): string {
-                                return $this->canonicalize($value);
+                            static function (string $value): string {
+                                return Path::canonicalize($value);
                             }
                         )
                     ->end()
@@ -308,11 +308,11 @@ class Configuration implements ConfigurationInterface
                     ->info('The target directory for the cached images processed by Contao.')
                     ->example('%kernel.project_dir%/assets/images')
                     ->cannotBeEmpty()
-                    ->defaultValue($this->canonicalize($this->projectDir.'/assets/images'))
+                    ->defaultValue(Path::join($this->projectDir, 'assets/images'))
                     ->validate()
                         ->always(
-                            function (string $value): string {
-                                return $this->canonicalize($value);
+                            static function (string $value): string {
+                                return Path::canonicalize($value);
                             }
                         )
                     ->end()
@@ -416,17 +416,6 @@ class Configuration implements ConfigurationInterface
                 ->end()
             ->end()
         ;
-    }
-
-    /**
-     * Canonicalizes a path preserving the directory separators.
-     */
-    private function canonicalize(string $value): string
-    {
-        $windowsPath = false !== strpos($value, '\\');
-        $path = Path::canonicalize($value);
-
-        return $windowsPath ? str_replace('/', '\\', $path) : $path;
     }
 
     /**

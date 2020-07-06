@@ -72,7 +72,7 @@ class ConfigurationTest extends TestCase
         $configuration = (new Processor())->processConfiguration($this->configuration, $params);
 
         $this->assertSame('/tmp/contao', $configuration['web_dir']);
-        $this->assertSame('C:\Temp\contao', $configuration['image']['target_dir']);
+        $this->assertSame('C:/Temp/contao', $configuration['image']['target_dir']);
     }
 
     public function getPaths(): \Generator
