@@ -100,6 +100,8 @@ class PageError404 extends Frontend
 				}
 				else
 				{
+					Input::setGet('language', $objRootPage->language);
+
 					if ($strRequest == Environment::get('request'))
 					{
 						$strRequest = $objRootPage->language . '/' . $strRequest;

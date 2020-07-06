@@ -96,7 +96,7 @@ class RoutingTest extends FunctionalTestCase
             '/',
             200,
             'Index - Root with index page',
-            ['language' => 'en'],
+            [],
             'root-with-index.local',
             false,
         ];
@@ -106,7 +106,7 @@ class RoutingTest extends FunctionalTestCase
             '/',
             302,
             'Redirecting to http://root-with-home.local/home.html',
-            ['language' => 'en'],
+            [],
             'root-with-home.local',
             false,
         ];
@@ -116,7 +116,7 @@ class RoutingTest extends FunctionalTestCase
             '/home.html',
             200,
             'Home - Root with home page',
-            ['language' => 'en'],
+            [],
             'root-with-home.local',
             false,
         ];
@@ -126,7 +126,7 @@ class RoutingTest extends FunctionalTestCase
             '/home//.html',
             404,
             '(404 Not Found)',
-            ['language' => 'en'],
+            [],
             'root-with-home.local',
             false,
         ];
@@ -156,7 +156,7 @@ class RoutingTest extends FunctionalTestCase
             '/home/foo/bar1/foo/bar2.html',
             404,
             '(404 Not Found)',
-            ['language' => 'en', 'foo' => 'bar1'],
+            ['foo' => 'bar1'],
             'root-with-home.local',
             false,
         ];
@@ -166,7 +166,7 @@ class RoutingTest extends FunctionalTestCase
             '/home/foo/bar.html',
             404,
             '(404 Not Found)',
-            ['language' => 'en', 'foo' => 'bar'],
+            ['foo' => 'bar'],
             'root-with-home.local',
             false,
         ];
@@ -176,7 +176,7 @@ class RoutingTest extends FunctionalTestCase
             '/home/foo.html',
             404,
             '(404 Not Found)',
-            ['language' => 'en'],
+            [],
             'root-with-home.local',
             false,
         ];
@@ -186,7 +186,7 @@ class RoutingTest extends FunctionalTestCase
             '/home/foo/.html',
             404,
             '(404 Not Found)',
-            ['language' => 'en', 'foo' => ''],
+            ['foo' => ''],
             'root-with-home.local',
             false,
         ];
@@ -196,7 +196,7 @@ class RoutingTest extends FunctionalTestCase
             '/home/items/foobar.html',
             200,
             'Foobar - Root with home page',
-            ['language' => 'en', 'items' => 'foobar'],
+            ['items' => 'foobar'],
             'root-with-home.local',
             false,
         ];
@@ -206,7 +206,7 @@ class RoutingTest extends FunctionalTestCase
             '/home//foo.html',
             404,
             '(404 Not Found)',
-            ['language' => 'en'],
+            [],
             'root-with-home.local',
             false,
         ];
@@ -226,7 +226,7 @@ class RoutingTest extends FunctionalTestCase
             '/h%C3%B6me.html',
             200,
             'Höme - Root with special chars',
-            ['language' => 'en'],
+            [],
             'root-with-special-chars.local',
             false,
         ];
@@ -236,7 +236,7 @@ class RoutingTest extends FunctionalTestCase
             '/home/foobar.html',
             200,
             'Foobar - Root with home page',
-            ['language' => 'en', 'auto_item' => 'foobar', 'items' => 'foobar'],
+            ['auto_item' => 'foobar', 'items' => 'foobar'],
             'root-with-home.local',
             true,
         ];
@@ -256,7 +256,7 @@ class RoutingTest extends FunctionalTestCase
             '/home/items/foobar.html',
             404,
             '(404 Not Found)',
-            ['language' => 'en'],
+            [],
             'root-with-home.local',
             true,
         ];
@@ -266,7 +266,7 @@ class RoutingTest extends FunctionalTestCase
             '/',
             302,
             'Redirecting to http://root-with-folder-urls.local/folder/url/home.html',
-            ['language' => 'en'],
+            [],
             'root-with-folder-urls.local',
             false,
         ];
@@ -276,7 +276,7 @@ class RoutingTest extends FunctionalTestCase
             '/folder/url/home.html',
             200,
             'Home - Root with folder URLs',
-            ['language' => 'en'],
+            [],
             'root-with-folder-urls.local',
             false,
         ];
@@ -286,7 +286,7 @@ class RoutingTest extends FunctionalTestCase
             '/folder/url/home/items/foobar.html',
             200,
             'Foobar - Root with folder URLs',
-            ['language' => 'en', 'items' => 'foobar'],
+            ['items' => 'foobar'],
             'root-with-folder-urls.local',
             false,
         ];
@@ -296,7 +296,7 @@ class RoutingTest extends FunctionalTestCase
             '/folder/url/home/foobar.html',
             200,
             'Foobar - Root with folder URLs',
-            ['language' => 'en', 'auto_item' => 'foobar', 'items' => 'foobar'],
+            ['auto_item' => 'foobar', 'items' => 'foobar'],
             'root-with-folder-urls.local',
             true,
         ];
@@ -316,7 +316,7 @@ class RoutingTest extends FunctionalTestCase
             '/folder/url/home/items/foobar.html',
             404,
             '(404 Not Found)',
-            ['language' => 'en'],
+            [],
             'root-with-folder-urls.local',
             true,
         ];
@@ -326,7 +326,7 @@ class RoutingTest extends FunctionalTestCase
             '/15.html',
             200,
             'Home - Page without alias',
-            ['language' => 'en'],
+            [],
             'localhost',
             true,
         ];
@@ -437,7 +437,7 @@ class RoutingTest extends FunctionalTestCase
             '/home.html',
             301,
             'Redirecting to http://root-with-home.local/en/home.html',
-            [],
+            ['language' => 'en'],
             'root-with-home.local',
             false,
         ];
@@ -703,7 +703,7 @@ class RoutingTest extends FunctionalTestCase
             '/',
             200,
             'Index - Root with index page',
-            ['language' => 'en'],
+            [],
             'root-with-index.local',
             false,
         ];
@@ -713,7 +713,7 @@ class RoutingTest extends FunctionalTestCase
             '/',
             302,
             'Redirecting to http://root-with-home.local/home',
-            ['language' => 'en'],
+            [],
             'root-with-home.local',
             false,
         ];
@@ -723,7 +723,7 @@ class RoutingTest extends FunctionalTestCase
             '/home',
             200,
             'Home - Root with home page',
-            ['language' => 'en'],
+            [],
             'root-with-home.local',
             false,
         ];
@@ -753,7 +753,7 @@ class RoutingTest extends FunctionalTestCase
             '/home/foo/bar1/foo/bar2',
             404,
             '(404 Not Found)',
-            ['language' => 'en', 'foo' => 'bar1'],
+            ['foo' => 'bar1'],
             'root-with-home.local',
             false,
         ];
@@ -763,7 +763,7 @@ class RoutingTest extends FunctionalTestCase
             '/home/foo/bar',
             404,
             '(404 Not Found)',
-            ['language' => 'en', 'foo' => 'bar'],
+            ['foo' => 'bar'],
             'root-with-home.local',
             false,
         ];
@@ -773,7 +773,7 @@ class RoutingTest extends FunctionalTestCase
             '/home/items/foobar',
             200,
             'Foobar - Root with home page',
-            ['language' => 'en', 'items' => 'foobar'],
+            ['items' => 'foobar'],
             'root-with-home.local',
             false,
         ];
@@ -783,7 +783,7 @@ class RoutingTest extends FunctionalTestCase
             '/home//foo',
             404,
             '(404 Not Found)',
-            ['language' => 'en'],
+            [],
             'root-with-home.local',
             false,
         ];
@@ -793,7 +793,7 @@ class RoutingTest extends FunctionalTestCase
             '/h%C3%B6me',
             200,
             'Höme - Root with special chars',
-            ['language' => 'en'],
+            [],
             'root-with-special-chars.local',
             false,
         ];
@@ -803,7 +803,7 @@ class RoutingTest extends FunctionalTestCase
             '/home/foobar',
             200,
             'Foobar - Root with home page',
-            ['language' => 'en', 'auto_item' => 'foobar', 'items' => 'foobar'],
+            ['auto_item' => 'foobar', 'items' => 'foobar'],
             'root-with-home.local',
             true,
         ];
@@ -823,7 +823,7 @@ class RoutingTest extends FunctionalTestCase
             '/home/items/foobar',
             404,
             '(404 Not Found)',
-            ['language' => 'en'],
+            [],
             'root-with-home.local',
             true,
         ];
@@ -833,7 +833,7 @@ class RoutingTest extends FunctionalTestCase
             '/',
             302,
             'Redirecting to http://root-with-folder-urls.local/folder/url/home',
-            ['language' => 'en'],
+            [],
             'root-with-folder-urls.local',
             false,
         ];
@@ -843,7 +843,7 @@ class RoutingTest extends FunctionalTestCase
             '/folder/url/home',
             200,
             'Home - Root with folder URLs',
-            ['language' => 'en'],
+            [],
             'root-with-folder-urls.local',
             false,
         ];
@@ -853,7 +853,7 @@ class RoutingTest extends FunctionalTestCase
             '/folder/url/home/items/foobar',
             200,
             'Foobar - Root with folder URLs',
-            ['language' => 'en', 'items' => 'foobar'],
+            ['items' => 'foobar'],
             'root-with-folder-urls.local',
             false,
         ];
@@ -863,7 +863,7 @@ class RoutingTest extends FunctionalTestCase
             '/folder/url/home/foobar',
             200,
             'Foobar - Root with folder URLs',
-            ['language' => 'en', 'auto_item' => 'foobar', 'items' => 'foobar'],
+            ['auto_item' => 'foobar', 'items' => 'foobar'],
             'root-with-folder-urls.local',
             true,
         ];
@@ -883,7 +883,7 @@ class RoutingTest extends FunctionalTestCase
             '/folder/url/home/items/foobar',
             404,
             '(404 Not Found)',
-            ['language' => 'en'],
+            [],
             'root-with-folder-urls.local',
             true,
         ];

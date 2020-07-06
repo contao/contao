@@ -57,7 +57,7 @@ class ContentRoute extends Route
         ];
 
         parent::__construct(
-            '/'.$page->alias,
+            '/'.($page->alias ?: $page->id),
             $defaults,
             [],
             ['utf8' => true],
@@ -135,7 +135,7 @@ class ContentRoute extends Route
     {
         $route = new self($page, $content);
 
-        $route->setPath(sprintf('/%s{parameters}', $page->alias));
+        $route->setPath(sprintf('/%s{parameters}', $page->alias ?: $page->id));
         $route->setDefault('parameters', $parameters);
         $route->setRequirement('parameters', $page->requireItem ? '/.+' : '(/.+)?');
 

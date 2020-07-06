@@ -81,7 +81,7 @@ class RoutingMigrationTest extends FunctionalTestCase
         $this->assertTrue($result->isSuccessful());
 
         $columns = $connection->getSchemaManager()->listTableColumns('tl_page');
-        $this->assertTrue(isset($columns['urlPrefix']));
+        $this->assertTrue(isset($columns['urlprefix']));
         $this->assertTrue(isset($columns['urlsuffix']));
     }
 
