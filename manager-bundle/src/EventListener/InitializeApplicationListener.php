@@ -43,11 +43,6 @@ class InitializeApplicationListener
             return;
         }
 
-        $filesystem->copy(
-                __DIR__.'/../Resources/skeleton/system/initialize.php',
-                $targetPath,
-                true
-            )
-        ;
+        $filesystem->copy(__DIR__.'/../Resources/skeleton/system/initialize.php', $targetPath, true);
     }
 }
