@@ -444,6 +444,28 @@ class RouteProviderTest extends TestCase
             'tl_page.'.$pages[0]->id.'.root',
             'tl_page.'.$pages[1]->id.'.root',
             'tl_page.'.$pages[2]->id.'.root',
+        ];
+
+        yield [
+            $pages,
+            ['de', 'en'],
+            $routeNames,
+        ];
+
+        $pages = [
+            2 => $this->createRootPage('en', 'english-root', true),
+            1 => $this->createPage('en', 'index', true),
+            0 => $this->createRootPage('de', 'german-root', false),
+        ];
+
+        $pages[0]->urlPrefix = 'en';
+        $pages[1]->urlPrefix = 'en';
+        $pages[2]->urlPrefix = 'de';
+
+        $routeNames = [
+            'tl_page.'.$pages[0]->id.'.root',
+            'tl_page.'.$pages[1]->id.'.root',
+            'tl_page.'.$pages[2]->id.'.root',
             'tl_page.'.$pages[0]->id.'.fallback',
             'tl_page.'.$pages[1]->id.'.fallback',
             'tl_page.'.$pages[2]->id.'.fallback',
@@ -671,6 +693,8 @@ class RouteProviderTest extends TestCase
         $page->type = 'root';
         $page->alias = $alias;
         $page->domain = $domain;
+        $page->urlPrefix = '';
+        $page->urlSuffix = '.html';
         $page->rootLanguage = $language;
         $page->rootIsFallback = $fallback;
         $page->rootUseSSL = 'https' === $scheme;

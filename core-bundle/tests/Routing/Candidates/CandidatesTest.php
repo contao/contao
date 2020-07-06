@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Routing\Candidates;
 
 use Contao\CoreBundle\Routing\Candidates\Candidates;
+use Contao\CoreBundle\Routing\Candidates\LegacyCandidates;
 use Contao\CoreBundle\Routing\Content\PageProviderInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
@@ -39,7 +40,7 @@ class CandidatesTest extends TestCase
         $connection = $this->mockConnectionWithLanguages($languages);
         $providers = $this->mockPageProvidersWithUrlSuffix($urlSuffixes);
 
-        $candidates = (new Candidates($connection, $providers, false, '.html', false))->getCandidates($request);
+        $candidates = (new Candidates($connection, $providers))->getCandidates($request);
 
         $this->assertSame($expected, $candidates);
     }
@@ -68,7 +69,7 @@ class CandidatesTest extends TestCase
             ->method($this->anything())
         ;
 
-        $candidates = (new Candidates($connection, $providers, true, $urlSuffixes[0] ?? '', 0 !== \count($languages)))->getCandidates($request);
+        $candidates = (new LegacyCandidates(0 !== \count($languages), $urlSuffixes[0] ?? ''))->getCandidates($request);
 
         $this->assertSame($expected, $candidates);
     }
@@ -88,7 +89,7 @@ class CandidatesTest extends TestCase
             ['.html'],
             [],
             ['index'],
-            [],
+            ['index'],
         ];
 
         yield [
@@ -96,7 +97,7 @@ class CandidatesTest extends TestCase
             [],
             ['en'],
             ['index'],
-            [],
+            ['index'],
         ];
 
         yield [

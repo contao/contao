@@ -32,6 +32,8 @@ class LegacyCandidates extends Candidates
 
     public function __construct(bool $prependLocale, string $urlSuffix)
     {
+        // Do not call the parent constructor
+
         $this->prependLocale = $prependLocale;
         $this->urlSuffix = $urlSuffix;
     }
@@ -55,6 +57,10 @@ class LegacyCandidates extends Candidates
 
     private function removeSuffixAndLanguage(string $pathInfo): ?string
     {
+        if ('' === $pathInfo) {
+            return '';
+        }
+
         $suffixLength = \strlen($this->urlSuffix);
 
         if (0 !== $suffixLength) {

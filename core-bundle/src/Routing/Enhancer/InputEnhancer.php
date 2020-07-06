@@ -48,7 +48,7 @@ class InputEnhancer implements RouteEnhancerInterface
         /** @var Input $input */
         $input = $this->framework->getAdapter(Input::class);
 
-        if ('' !== $page->urlPrefix) {
+        if (!empty($page->urlPrefix)) {
             $input->setGet('language', $page->rootLanguage);
         }
 

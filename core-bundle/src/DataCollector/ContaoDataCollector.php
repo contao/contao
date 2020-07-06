@@ -120,7 +120,8 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
             $data['classes_set'],
             $data['classes_aliased'],
             $data['classes_composerized'],
-            $data['database_queries']
+            $data['database_queries'],
+            $data['legacy_routing']
         );
 
         return $data;

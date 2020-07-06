@@ -3631,4 +3631,29 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame($this->getTempDir().'/my/custom/dir', $container->getParameter('contao.image.target_dir'));
     }
+
+    private function getContainerBuilder(array $params = null): ContainerBuilder
+    {
+        $container = new ContainerBuilder(
+            new ParameterBag([
+                'kernel.debug' => false,
+                'kernel.project_dir' => $this->getTempDir(),
+                'kernel.default_locale' => 'en',
+            ])
+        );
+
+        if (null === $params) {
+            $params = [
+                'contao' => [
+                    'encryption_key' => 'foobar',
+                    'localconfig' => ['foo' => 'bar'],
+                ],
+            ];
+        }
+
+        $extension = new ContaoCoreExtension();
+        $extension->load($params, $container);
+
+        return $container;
+    }
 }

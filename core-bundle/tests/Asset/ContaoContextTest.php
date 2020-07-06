@@ -164,6 +164,7 @@ class ContaoContextTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.resource_finder', $finder);
+        $container->set('request_stack', new RequestStack());
 
         System::setContainer($container);
 
