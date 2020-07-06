@@ -113,8 +113,6 @@ class ContentRoute extends Route
 
     /**
      * Set the object this url points to.
-     *
-     * @param mixed $object
      */
     public function setContent($object): self
     {
@@ -123,15 +121,12 @@ class ContentRoute extends Route
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getContent()
     {
         return $this->content;
     }
 
-    public static function createWithParameters(PageModel $page, string $parameters = '', $content = null): ContentRoute
+    public static function createWithParameters(PageModel $page, string $parameters = '', $content = null): self
     {
         $route = new self($page, $content);
 

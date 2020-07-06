@@ -78,7 +78,7 @@ class LegacyRoutingListenerTest extends TestCase
         /** @var DataContainer&MockObject $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
-            ['activeRecord' => (object)['language' => 'en-US']]
+            ['activeRecord' => (object) ['language' => 'en-US']]
         );
 
         $this->assertSame('en-US', $listener->overrideUrlPrefix('foo', $dc));

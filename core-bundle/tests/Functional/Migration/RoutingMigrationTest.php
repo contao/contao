@@ -101,10 +101,10 @@ class RoutingMigrationTest extends FunctionalTestCase
         $migration = new RoutingMigration($connection, $urlSuffix, $prependLocale);
         $migration->run();
 
-        $rows = $connection->fetchAll("SELECT type, language, urlPrefix, urlSuffix FROM tl_page");
+        $rows = $connection->fetchAll('SELECT type, language, urlPrefix, urlSuffix FROM tl_page');
 
         foreach ($rows as $row) {
-            if ($row['type'] !== 'root') {
+            if ('root' !== $row['type']) {
                 $this->assertSame('', $row['urlPrefix']);
                 $this->assertSame('.html', $row['urlSuffix']);
                 continue;

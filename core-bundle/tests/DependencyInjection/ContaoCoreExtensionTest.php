@@ -2406,7 +2406,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(LanguageFilter::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
 
-        $this->assertEquals([], $definition->getArguments());
+        $this->assertSame([], $definition->getArguments());
     }
 
     public function testRegistersTheRoutingLegacyMatcher(): void
@@ -2565,7 +2565,7 @@ class ContaoCoreExtensionTest extends TestCase
             $definition->getArguments()
         );
 
-        $this->assertEquals([], $definition->getMethodCalls());
+        $this->assertSame([], $definition->getMethodCalls());
 
         $this->assertSame(
             [

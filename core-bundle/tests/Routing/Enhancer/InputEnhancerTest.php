@@ -134,7 +134,7 @@ class InputEnhancerTest extends TestCase
             'parameters' => '/foo/bar/foo/bar',
         ];
 
-        $enhancer = new InputEnhancer($framework, false);
+        $enhancer = new InputEnhancer($framework);
 
         $this->expectException(ResourceNotFoundException::class);
         $this->expectExceptionMessage('Duplicate parameter "foo" in path');

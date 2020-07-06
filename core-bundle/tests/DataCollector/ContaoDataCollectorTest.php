@@ -140,7 +140,7 @@ class ContaoDataCollectorTest extends TestCase
         yield [true, true, '.php'];
     }
 
-    public function testIncludesTheLegacyRoutingHooks()
+    public function testIncludesTheLegacyRoutingHooks(): void
     {
         $GLOBALS['TL_HOOKS'] = [
             'getPageIdFromUrl' => [
@@ -153,8 +153,8 @@ class ContaoDataCollectorTest extends TestCase
             ],
         ];
 
-        require_once(__DIR__.'/../Fixtures/DataCollector/TestClass.php');
-        require_once(__DIR__.'/../Fixtures/DataCollector/vendor/foo/bar/BundleTestClass.php');
+        require_once __DIR__.'/../Fixtures/DataCollector/TestClass.php';
+        require_once __DIR__.'/../Fixtures/DataCollector/vendor/foo/bar/BundleTestClass.php';
 
         $systemAdapter = $this->mockAdapter(['importStatic']);
         $systemAdapter
@@ -196,9 +196,6 @@ class ContaoDataCollectorTest extends TestCase
         $this->assertSame([], $method->invokeArgs($collector, ['foo']));
     }
 
-    /**
-     * @return ParameterBagInterface
-     */
     private function createParameterBag(bool $legacyRouting = false, bool $prependLocale = false, string $urlSuffix = '.html'): ParameterBagInterface
     {
         return new ParameterBag([

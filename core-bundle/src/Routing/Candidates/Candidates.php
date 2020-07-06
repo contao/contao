@@ -63,9 +63,9 @@ class Candidates implements CandidatesInterface
         $this->pageProviders = $pageProviders;
     }
 
-    public function isCandidate($name)
+    public function isCandidate($name): bool
     {
-        return strncmp($name, 'tl_page.', 8);
+        return 0 === strncmp($name, 'tl_page.', 8);
     }
 
     public function restrictQuery($queryBuilder): void
@@ -148,7 +148,7 @@ class Candidates implements CandidatesInterface
 
         $urlSuffix = [];
 
-        foreach ($this->pageProviders->getProvidedServices() as $type => $v) {
+        foreach (array_keys($this->pageProviders->getProvidedServices()) as $type) {
             /** @var PageProviderInterface $provider */
             $provider = $this->pageProviders->get($type);
             $urlSuffix[] = $provider->getUrlSuffixes();

@@ -13,15 +13,15 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing;
 
 use Contao\CoreBundle\Exception\ContentRouteNotFoundException;
+use Contao\CoreBundle\Routing\Content\ContentRoute;
 use Contao\CoreBundle\Routing\Content\ContentUrlResolverInterface;
+use Contao\CoreBundle\Routing\Content\PageProviderInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\Routing\Generator\UrlGenerator as SymfonyUrlGenerator;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
-use Contao\CoreBundle\Routing\Content\PageProviderInterface;
-use Contao\CoreBundle\Routing\Content\ContentRoute;
 
 class ContentResolvingGenerator extends SymfonyUrlGenerator
 {
@@ -93,7 +93,6 @@ class ContentResolvingGenerator extends SymfonyUrlGenerator
             $page = $route->getPage();
 
             if ($this->pageProviders->has($page->type)) {
-
                 /** @var PageProviderInterface $pageProvider */
                 $pageProvider = $this->pageProviders->get($page->type);
 

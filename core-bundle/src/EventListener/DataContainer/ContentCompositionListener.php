@@ -99,28 +99,29 @@ class ContentCompositionListener implements ServiceAnnotationInterface
         $pageModel->setRow($row);
 
         if (!$this->supportsComposition($pageModel) || !$this->hasArticlesInLayout($pageModel)) {
-            return $this->image->getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+            return $this->image->getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
         }
 
         return sprintf(
             '<a href="%s" title="%s">%s</a> ',
-            $this->backend->addToUrl($href . '&amp;pn=' . $row['id']),
+            $this->backend->addToUrl($href.'&amp;pn='.$row['id']),
             StringUtil::specialchars($title),
             $this->image->getHtml($icon, $label)
         );
     }
 
     /**
-     * Automatically create an article in the main column of a new page
+     * Automatically create an article in the main column of a new page.
      *
      * @Callback(table="tl_page", target="config.onsubmit")
      */
     public function generateArticleForPage(DataContainer $dc): void
     {
         $request = $this->requestStack->getCurrentRequest();
+        $user = $this->security->getUser();
 
         // Return if there is no active record (override all)
-        if (!$dc->activeRecord || null === $request || !$request->hasSession()) {
+        if (!$dc->activeRecord || null === $request || !$request->hasSession() || !$user instanceof BackendUser) {
             return;
         }
 
@@ -140,13 +141,13 @@ class ContentCompositionListener implements ServiceAnnotationInterface
         $new_records = $sessionBag->get('new_records');
 
         // Not a new page
-        if (!$new_records || !is_array($new_records[$dc->table]) || !in_array($dc->id, $new_records[$dc->table])) {
+        if (!$new_records || !\is_array($new_records[$dc->table]) || !\in_array($dc->id, $new_records[$dc->table], true)) {
             return;
         }
 
         // Check whether there are articles (e.g. on copied pages)
         $total = $this->connection->executeQuery(
-            "SELECT COUNT(*) AS count FROM tl_article WHERE pid=:pid",
+            'SELECT COUNT(*) AS count FROM tl_article WHERE pid=:pid',
             ['pid' => $dc->id]
         )->fetchColumn();
 
@@ -159,7 +160,7 @@ class ContentCompositionListener implements ServiceAnnotationInterface
             'pid' => $dc->id,
             'sorting' => 128,
             'tstamp' => time(),
-            'author' => $this->security->getUser()->id,
+            'author' => $user->id,
             'inColumn' => 'main',
             'title' => $dc->activeRecord->title,
             'alias' => str_replace('/', '-', $dc->activeRecord->alias), // see #516
@@ -175,6 +176,7 @@ class ContentCompositionListener implements ServiceAnnotationInterface
     public function renderArticlePasteButton(DataContainer $dc, array $row, string $table, bool $cr, array $clipboard = null): string
     {
         $user = $this->security->getUser();
+
         if (!$user instanceof BackendUser) {
             return '';
         }
@@ -195,7 +197,7 @@ class ContentCompositionListener implements ServiceAnnotationInterface
 
             return sprintf(
                 '<a href="%s" title="%s" onclick="Backend.getScrollOffset()">%s</a> ',
-                $this->backend->addToUrl('act=' . $clipboard['mode'] . '&amp;mode=2&amp;pid=' . $row['id'] . (!is_array($clipboard['id']) ? '&amp;id=' . $clipboard['id'] : '')),
+                $this->backend->addToUrl('act='.$clipboard['mode'].'&amp;mode=2&amp;pid='.$row['id'].(!\is_array($clipboard['id']) ? '&amp;id='.$clipboard['id'] : '')),
                 StringUtil::specialchars($this->translator->trans($dc->table.'.pasteinto.1', [$row['id']], 'contao_'.$dc->table)),
                 $this->image->getHtml(
                     'pasteinto.svg',
@@ -215,17 +217,17 @@ class ContentCompositionListener implements ServiceAnnotationInterface
         }
 
         if (
-            ($clipboard['mode'] === 'cut' && $clipboard['id'] === $row['id'])
-            || ($clipboard['mode'] === 'cutAll' && in_array($row['id'], $clipboard['id']))
+            ('cut' === $clipboard['mode'] && $clipboard['id'] === $row['id'])
+            || ('cutAll' === $clipboard['mode'] && \in_array($row['id'], $clipboard['id'], true))
             || !$user->isAllowed(BackendUser::CAN_EDIT_ARTICLE_HIERARCHY, $pageModel->row())
             || $cr
         ) {
-            return $this->image->getHtml('pasteafter_.svg') . ' ';
+            return $this->image->getHtml('pasteafter_.svg').' ';
         }
 
         return sprintf(
             '<a href="%s" title="%s" onclick="Backend.getScrollOffset()">%s</a> ',
-            $this->backend->addToUrl('act=' . $clipboard['mode'] . '&amp;mode=1&amp;pid=' . $row['id'] . (!is_array($clipboard['id']) ? '&amp;id=' . $clipboard['id'] : '')),
+            $this->backend->addToUrl('act='.$clipboard['mode'].'&amp;mode=1&amp;pid='.$row['id'].(!\is_array($clipboard['id']) ? '&amp;id='.$clipboard['id'] : '')),
             StringUtil::specialchars($this->translator->trans($dc->table.'.pasteafter.1', [$row['id']], 'contao_'.$dc->table)),
             $this->image->getHtml(
                 'pasteafter.svg',

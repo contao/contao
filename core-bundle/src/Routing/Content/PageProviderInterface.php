@@ -36,8 +36,6 @@ interface PageProviderInterface
      *
      * When matching URLs, $content is empty and $request is present. When generating URLs,
      * $content _might_ be there, but there's never a "current" $request.
-     *
-     * @param mixed $content
      */
     public function getRouteForPage(PageModel $pageModel, $content = null, Request $request = null): Route;
 

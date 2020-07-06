@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @internal
+ *
  * @deprecated
  */
 class LegacyCandidates extends Candidates

@@ -188,9 +188,9 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
                 $r = new \ReflectionClass($class);
                 $file = $r->getFileName();
                 $base = $this->parameterBag->get('kernel.project_dir').'/vendor/';
-                $baseLength = strlen($base);
+                $baseLength = \strlen($base);
 
-                $hook = ['name' => $name, 'class' => get_class($class), 'method' => $callback[1], 'package' => ''];
+                $hook = ['name' => $name, 'class' => \get_class($class), 'method' => $callback[1], 'package' => ''];
 
                 if (0 === strncmp($file, $base, $baseLength)) {
                     [$vendor, $package] = explode('/', substr($file, $baseLength), 3);

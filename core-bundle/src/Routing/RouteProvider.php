@@ -14,8 +14,8 @@ namespace Contao\CoreBundle\Routing;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Routing\Content\PageProviderInterface;
 use Contao\CoreBundle\Routing\Content\ContentRoute;
+use Contao\CoreBundle\Routing\Content\PageProviderInterface;
 use Contao\Model;
 use Contao\Model\Collection;
 use Contao\PageModel;
@@ -220,7 +220,8 @@ class RouteProvider implements RouteProviderInterface
 
     private function addLocaleRedirect(ContentRoute $route, ?Request $request, array &$routes): void
     {
-        $length = strlen($route->getUrlPrefix());
+        $length = \strlen($route->getUrlPrefix());
+
         if (0 === $length || substr($route->getPath(), 1, $length) !== $route->getUrlPrefix()) {
             return;
         }

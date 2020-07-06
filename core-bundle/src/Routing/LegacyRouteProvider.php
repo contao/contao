@@ -22,6 +22,7 @@ use Symfony\Component\Routing\RouteCollection;
 
 /**
  * @internal
+ *
  * @deprecated
  */
 class LegacyRouteProvider implements RouteProviderInterface
