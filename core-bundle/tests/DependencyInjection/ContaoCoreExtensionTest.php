@@ -2894,9 +2894,29 @@ class ContaoCoreExtensionTest extends TestCase
         );
     }
 
-    public function testRegistersTheRoutingUrlGenerator(): void
+    public function testRegistersTheRoutingUrlGeneratorInLegacyMode(): void
     {
         $container = $this->getContainerBuilder();
+
+        $this->assertFalse($container->has('contao.routing.url_generator'));
+
+        $container = $this->getContainerBuilder([
+            'contao' => [
+                'encryption_key' => 'foobar',
+                'localconfig' => ['foo' => 'bar'],
+                'prepend_locale' => true,
+            ],
+        ]);
+
+        $this->assertTrue($container->has('contao.routing.url_generator'));
+
+        $container = $this->getContainerBuilder([
+            'contao' => [
+                'encryption_key' => 'foobar',
+                'localconfig' => ['foo' => 'bar'],
+                'url_suffix' => '.php',
+            ],
+        ]);
 
         $this->assertTrue($container->has('contao.routing.url_generator'));
 
@@ -2909,9 +2929,7 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 new Reference('router'),
                 new Reference('contao.framework'),
-                new Reference('%contao.legacy_routing%'),
                 new Reference('%contao.prepend_locale%'),
-                new Reference('%contao.url_suffix%'),
             ],
             $definition->getArguments()
         );
