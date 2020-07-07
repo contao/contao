@@ -497,6 +497,85 @@ class ContentCompositionListenerTest extends TestCase
         $this->listener->generateArticleForPage($dc);
     }
 
+    /**
+     * @dataProvider moduleConfigProvider
+     */
+    public function testUsesTheLayoutColumnForNewArticle(array $modules, string $expectedColumn): void
+    {
+        $this->expectRequest(true, ['tl_foo' => [17]]);
+        $this->expectUser();
+        $page = $this->expectPageWithRow($this->pageRecord);
+        $this->mockPageProvider(true, true, $page);
+        $this->expectArticleCount(0);
+
+        $page
+            ->expects($this->once())
+            ->method('getRelated')
+            ->with('layout')
+            ->willReturn(
+                $this->mockClassWithProperties(LayoutModel::class, ['modules' => serialize($modules)])
+            )
+        ;
+
+        $article = [
+            'pid' => 17,
+            'sorting' => 128,
+            'tstamp' => time(),
+            'author' => 1,
+            'inColumn' => $expectedColumn,
+            'title' => 'foo',
+            'alias' => 'foo-bar', // Expect folder alias conversion
+            'published' => '1',
+        ];
+
+        $this->connection
+            ->expects($this->once())
+            ->method('insert')
+            ->with('tl_article', $article)
+        ;
+
+        /** @var DataContainer&MockObject $dc */
+        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_foo', 'activeRecord' => (object) $this->pageRecord]);
+
+        $this->listener->generateArticleForPage($dc);
+    }
+
+    public function moduleConfigProvider(): \Generator
+    {
+        yield [
+            [
+                ['mod' => 0, 'col' => 'main'],
+            ],
+            'main'
+        ];
+
+        yield [
+            [
+                ['mod' => 1, 'col' => 'foo'],
+                ['mod' => 0, 'col' => 'main'],
+            ],
+            'main'
+        ];
+
+        yield [
+            [
+                ['mod' => 1, 'col' => 'main'],
+                ['mod' => 0, 'col' => 'foo'],
+            ],
+            'foo'
+        ];
+
+        yield [
+            [
+                ['mod' => 1, 'col' => 'main'],
+                ['mod' => 2, 'col' => 'foo'],
+                ['mod' => 0, 'col' => 'bar'],
+                ['mod' => 0, 'col' => 'foo'],
+            ],
+            'bar'
+        ];
+    }
+
     public function testCannotPasteArticleWithoutBackendUser(): void
     {
         $this->expectUser(FrontendUser::class);
@@ -935,7 +1014,7 @@ class ContentCompositionListenerTest extends TestCase
                 $moduleId = $this->mockClassWithProperties(
                     LayoutModel::class, [
                         'modules' => serialize([
-                            ['mod' => $moduleId],
+                            ['mod' => $moduleId, 'col' => 'main'],
                         ]),
                     ]
                 );
@@ -978,7 +1057,7 @@ class ContentCompositionListenerTest extends TestCase
                 $moduleId = $this->mockClassWithProperties(
                     LayoutModel::class, [
                         'modules' => serialize([
-                            ['mod' => $moduleId],
+                            ['mod' => $moduleId, 'col' => 'main'],
                         ]),
                     ]
                 );

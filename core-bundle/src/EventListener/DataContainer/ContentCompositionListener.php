@@ -133,7 +133,7 @@ class ContentCompositionListener implements ServiceAnnotationInterface
         if (
             empty($pageModel->title)
             || !$this->supportsComposition($pageModel)
-            || !$this->hasArticlesInLayout($pageModel)
+            || null === ($column = $this->getArticleColumnInLayout($pageModel))
         ) {
             return;
         }
@@ -167,7 +167,7 @@ class ContentCompositionListener implements ServiceAnnotationInterface
             'sorting' => 128,
             'tstamp' => time(),
             'author' => $user->id,
-            'inColumn' => 'main',
+            'inColumn' => $column,
             'title' => $dc->activeRecord->title,
             'alias' => str_replace('/', '-', $dc->activeRecord->alias), // see #516
             'published' => $dc->activeRecord->published,
@@ -275,21 +275,38 @@ class ContentCompositionListener implements ServiceAnnotationInterface
 
     private function hasArticlesInLayout(PageModel $pageModel): bool
     {
+        return null !== $this->getArticleColumnInLayout($pageModel);
+    }
+
+    private function getArticleColumnInLayout(PageModel $pageModel): ?string
+    {
         $pageModel->loadDetails();
 
         /** @var LayoutModel $layout */
         $layout = $pageModel->getRelated('layout');
 
         if (null === $layout) {
-            return false;
+            return null;
         }
+
+        $columns = [];
 
         foreach (StringUtil::deserialize($layout->modules, true) as $config) {
             if (0 === (int) $config['mod']) {
-                return true;
+                $columns[] = $config['col'];
             }
         }
 
-        return false;
+        $columns = array_filter(array_unique($columns));
+
+        if (empty($columns)) {
+            return null;
+        }
+
+        if (\in_array('main', $columns, true)) {
+            return 'main';
+        }
+
+        return reset($columns);
     }
 }
