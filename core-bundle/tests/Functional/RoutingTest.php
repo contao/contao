@@ -19,10 +19,18 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RoutingTest extends FunctionalTestCase
 {
+    /**
+     * @var array
+     */
+    private static $lastImport;
+
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
+
+        static::bootKernel();
         static::resetDatabaseSchema();
+        static::ensureKernelShutdown();
     }
 
     protected function setUp(): void
@@ -41,8 +49,6 @@ class RoutingTest extends FunctionalTestCase
      */
     public function testResolvesAliases(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
     {
-        $this->loadFixtureFiles($fixtures);
-
         Config::set('useAutoItem', $autoItem);
 
         $_SERVER['REQUEST_URI'] = $request;
@@ -50,6 +56,8 @@ class RoutingTest extends FunctionalTestCase
 
         $client = $this->createClient([], $_SERVER);
         System::setContainer($client->getContainer());
+
+        $this->loadFixtureFiles($fixtures);
 
         $crawler = $client->request('GET', $request);
         $title = trim($crawler->filterXPath('//head/title')->text());
@@ -384,6 +392,8 @@ class RoutingTest extends FunctionalTestCase
         $client = $this->createClient(['environment' => 'locale'], $_SERVER);
         System::setContainer($client->getContainer());
 
+        $this->loadFixtureFiles($fixtures);
+
         $crawler = $client->request('GET', $request);
         $title = trim($crawler->filterXPath('//head/title')->text());
 
@@ -684,6 +694,8 @@ class RoutingTest extends FunctionalTestCase
         $client = $this->createClient(['environment' => 'suffix'], $_SERVER);
         System::setContainer($client->getContainer());
 
+        $this->loadFixtureFiles($fixtures);
+
         $crawler = $client->request('GET', $request);
         $title = trim($crawler->filterXPath('//head/title')->text());
 
@@ -893,14 +905,14 @@ class RoutingTest extends FunctionalTestCase
      */
     public function testResolvesTheRootPage(array $fixtures, string $request, int $statusCode, string $pageTitle, string $acceptLanguages, string $host): void
     {
-        $this->loadFixtureFiles($fixtures);
-
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptLanguages;
 
         $client = $this->createClient([], $_SERVER);
         System::setContainer($client->getContainer());
+
+        $this->loadFixtureFiles($fixtures);
 
         $crawler = $client->request('GET', $request);
         $title = trim($crawler->filterXPath('//head/title')->text());
@@ -1027,6 +1039,8 @@ class RoutingTest extends FunctionalTestCase
 
         $client = $this->createClient(['environment' => 'locale'], $_SERVER);
         System::setContainer($client->getContainer());
+
+        $this->loadFixtureFiles($fixtures);
 
         $crawler = $client->request('GET', $request);
         $title = trim($crawler->filterXPath('//head/title')->text());
@@ -1169,8 +1183,6 @@ class RoutingTest extends FunctionalTestCase
 
     public function testOrdersThePageModelsByCandidates(): void
     {
-        $this->loadFixtureFiles(['theme', 'language-sorting']);
-
         Config::set('folderUrl', true);
 
         $_SERVER['REQUEST_URI'] = '/main/sub-zh.html';
@@ -1179,6 +1191,8 @@ class RoutingTest extends FunctionalTestCase
 
         $client = $this->createClient([], $_SERVER);
         System::setContainer($client->getContainer());
+
+        $this->loadFixtureFiles(['theme', 'language-sorting']);
 
         $crawler = $client->request('GET', '/main/sub-zh.html');
         $title = trim($crawler->filterXPath('//head/title')->text());
@@ -1192,6 +1206,13 @@ class RoutingTest extends FunctionalTestCase
 
     private function loadFixtureFiles(array $fileNames): void
     {
+        // Do not reload the fixtures if they have not changed
+        if (self::$lastImport && self::$lastImport === $fileNames) {
+            return;
+        }
+
+        self::$lastImport = $fileNames;
+
         static::loadFixtures(array_map(
             static function ($file) {
                 return __DIR__.'/../Fixtures/Functional/Routing/'.$file.'.yml';

@@ -41,11 +41,11 @@ class ContaoCacheTest extends ContaoTestCase
     }
 
     /**
-     * @dataProvider cookeWhitelistProvider
+     * @dataProvider cookieAllowListProvider
      */
-    public function testCookieWhiteListEnvVariable(string $env, array $expectedList): void
+    public function testCookieAllowListEnvVariable(string $env, array $expectedList): void
     {
-        $_SERVER['COOKIE_WHITELIST'] = $env;
+        $_SERVER['COOKIE_ALLOW_LIST'] = $env;
 
         $cache = new ContaoCache($this->createMock(ContaoKernel::class), $this->getTempDir());
         $dispatcher = $cache->getEventDispatcher();
@@ -54,10 +54,10 @@ class ContaoCacheTest extends ContaoTestCase
         /** @var StripCookiesSubscriber $cookieSubscriber */
         $cookieSubscriber = $preHandle[0][0];
 
-        $this->assertSame($expectedList, $cookieSubscriber->getWhitelist());
+        $this->assertSame($expectedList, $cookieSubscriber->getAllowList());
 
         // Cleanup
-        unset($_SERVER['COOKIE_WHITELIST']);
+        unset($_SERVER['COOKIE_ALLOW_LIST']);
     }
 
     public function testCreatesTheCacheStore(): void
@@ -67,7 +67,7 @@ class ContaoCacheTest extends ContaoTestCase
         $this->assertInstanceOf(Psr6Store::class, $cache->getStore());
     }
 
-    public function cookeWhitelistProvider(): \Generator
+    public function cookieAllowListProvider(): \Generator
     {
         yield [
             '',

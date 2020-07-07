@@ -36,7 +36,7 @@ class MakeServicesPublicPass implements CompilerPassInterface
 
     private const ALIASES = [
         'database_connection',
-        'swiftmailer.mailer',
+        'mailer',
         'security.encoder_factory',
     ];
 

@@ -35,11 +35,11 @@ class MakeServicesPublicPassTest extends TestCase
 
         // Aliased definitions
         $container->setDefinition('doctrine.dbal.default_connection', (new Definition())->setPublic(false));
-        $container->setDefinition('swiftmailer.mailer.default', (new Definition())->setPublic(false));
+        $container->setDefinition('mailer.mailer', (new Definition())->setPublic(false));
 
         // Aliases
         $container->setAlias('database_connection', 'doctrine.dbal.default_connection');
-        $container->setAlias('swiftmailer.mailer', 'swiftmailer.mailer.default');
+        $container->setAlias('mailer', 'mailer.mailer');
         $container->setAlias('security.encoder_factory', 'security.encoder_factory.generic');
 
         $pass = new MakeServicesPublicPass();
@@ -57,7 +57,7 @@ class MakeServicesPublicPassTest extends TestCase
 
         // Aliases
         $this->assertTrue($container->getAlias('database_connection')->isPublic());
-        $this->assertTrue($container->getAlias('swiftmailer.mailer')->isPublic());
+        $this->assertTrue($container->getAlias('mailer')->isPublic());
         $this->assertTrue($container->getAlias('security.encoder_factory')->isPublic());
     }
 }

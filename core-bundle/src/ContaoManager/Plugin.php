@@ -28,7 +28,6 @@ use Scheb\TwoFactorBundle\SchebTwoFactorBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MonologBundle\MonologBundle;
 use Symfony\Bundle\SecurityBundle\SecurityBundle;
-use Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
@@ -57,7 +56,6 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface
                         SecurityBundle::class,
                         TwigBundle::class,
                         MonologBundle::class,
-                        SwiftmailerBundle::class,
                         DoctrineBundle::class,
                         DoctrineCacheBundle::class,
                         KnpMenuBundle::class,

@@ -250,7 +250,6 @@ Bundles Registered by Plugin "Contao\CoreBundle\ContaoManager\Plugin"
                                                                                     Symfony\Bundle\SecurityBundle\SecurityBundle                           
                                                                                     Symfony\Bundle\TwigBundle\TwigBundle                                   
                                                                                     Symfony\Bundle\MonologBundle\MonologBundle                             
-                                                                                    Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle                     
                                                                                     Doctrine\Bundle\DoctrineBundle\DoctrineBundle                          
                                                                                     Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle                
                                                                                     Knp\Bundle\MenuBundle\KnpMenuBundle                                    

@@ -56,6 +56,12 @@
       <trans-unit id="tl_calendar_events.pageTitle.1">
         <source>Here you can add a custom meta title to overwrite the default page title.</source>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.robots.0">
+        <source>Robots tag</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.robots.1">
+        <source>Here you can overwrite how search engines handle the event.</source>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.description.0">
         <source>Meta description</source>
       </trans-unit>

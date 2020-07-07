@@ -152,11 +152,12 @@ class DefaultIndexerTest extends ContaoTestCase
 
         $connection = $this->createMock(Connection::class);
         $connection
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(3))
             ->method('exec')
             ->withConsecutive(
                 ['TRUNCATE TABLE tl_search'],
-                ['TRUNCATE TABLE tl_search_index']
+                ['TRUNCATE TABLE tl_search_index'],
+                ['TRUNCATE TABLE tl_search_term']
             )
         ;
 

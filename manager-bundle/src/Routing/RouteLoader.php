@@ -14,11 +14,12 @@ namespace Contao\ManagerBundle\Routing;
 
 use Contao\ManagerPlugin\PluginLoader;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
+use Symfony\Bundle\FrameworkBundle\Routing\RouteLoaderInterface;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\RouteCollection;
 
-class RouteLoader
+class RouteLoader implements RouteLoaderInterface
 {
     /**
      * @var LoaderInterface

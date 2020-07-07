@@ -27,6 +27,7 @@ use Contao\Model\Collection;
  * @property integer $startDate
  * @property integer $endDate
  * @property string  $pageTitle
+ * @property string  $robots
  * @property string  $description
  * @property string  $location
  * @property string  $address
@@ -73,6 +74,7 @@ use Contao\Model\Collection;
  * @method static CalendarEventsModel|null findOneByStartDate($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByEndDate($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByPageTitle($val, array $opt=array())
+ * @method static CalendarEventsModel|null findOneByRobots($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByDescription($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByLocation($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByAddress($val, array $opt=array())
@@ -115,6 +117,7 @@ use Contao\Model\Collection;
  * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByStartDate($val, array $opt=array())
  * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByEndDate($val, array $opt=array())
  * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByPageTitle($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByRobots($val, array $opt=array())
  * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByDescription($val, array $opt=array())
  * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByLocation($val, array $opt=array())
  * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByAddress($val, array $opt=array())
@@ -161,6 +164,7 @@ use Contao\Model\Collection;
  * @method static integer countByStartDate($val, array $opt=array())
  * @method static integer countByEndDate($val, array $opt=array())
  * @method static integer countByPageTitle($val, array $opt=array())
+ * @method static integer countByRobots($val, array $opt=array())
  * @method static integer countByDescription($val, array $opt=array())
  * @method static integer countByLocation($val, array $opt=array())
  * @method static integer countByAddress($val, array $opt=array())

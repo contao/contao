@@ -345,7 +345,7 @@ class Form extends Hybrid
 				}
 
 				// Prepare CSV file
-				if ($this->format == 'csv')
+				if ($this->format == 'csv' || $this->format == 'csv_excel')
 				{
 					$keys[] = $k;
 					$values[] = (\is_array($v) ? implode(',', $v) : $v);
@@ -418,6 +418,10 @@ class Form extends Hybrid
 			if ($this->format == 'csv')
 			{
 				$email->attachFileFromString(StringUtil::decodeEntities('"' . implode('";"', $keys) . '"' . "\n" . '"' . implode('";"', $values) . '"'), 'form.csv', 'text/comma-separated-values');
+			}
+			elseif ($this->format == 'csv_excel')
+			{
+				$email->attachFileFromString(mb_convert_encoding("\u{FEFF}sep=;\n" . StringUtil::decodeEntities('"' . implode('";"', $keys) . '"' . "\n" . '"' . implode('";"', $values) . '"'), 'UTF-16LE', 'UTF-8'), 'form.csv', 'text/comma-separated-values');
 			}
 
 			$uploaded = '';
