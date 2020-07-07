@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\DependencyInjection\Compiler;
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Webmozart\PathUtil\Path;
 
 /**
  * @internal
@@ -40,25 +41,25 @@ class AddResourcesPathsPass implements CompilerPassInterface
         foreach ($bundles as $name => $class) {
             if (ContaoModuleBundle::class === $class) {
                 $paths[] = $meta[$name]['path'];
-            } elseif (is_dir($path = $meta[$name]['path'].'/Resources/contao')) {
+            } elseif (is_dir($path = Path::join($meta[$name]['path'], 'Resources/contao'))) {
                 $paths[] = $path;
-            } elseif (is_dir($path = $meta[$name]['path'].'/contao')) {
+            } elseif (is_dir($path = Path::join($meta[$name]['path'], 'contao'))) {
                 $paths[] = $path;
             }
         }
 
-        if (is_dir($rootDir.'/contao')) {
-            $paths[] = $rootDir.'/contao';
+        if (is_dir($path = Path::join($rootDir, 'contao'))) {
+            $paths[] = $path;
         }
 
-        if (is_dir($rootDir.'/app/Resources/contao')) {
+        if (is_dir($path = Path::join($rootDir, 'app/Resources/contao'))) {
             @trigger_error('Using "app/Resources/contao" has been deprecated and will no longer work in Contao 5.0. Use the "contao" folder instead.', E_USER_DEPRECATED);
-            $paths[] = $rootDir.'/app/Resources/contao';
+            $paths[] = $path;
         }
 
-        if (is_dir($rootDir.'/src/Resources/contao')) {
+        if (is_dir($path = Path::join($rootDir, 'src/Resources/contao'))) {
             @trigger_error('Using "src/Resources/contao" has been deprecated and will no longer work in Contao 5.0. Use the "contao" folder instead.', E_USER_DEPRECATED);
-            $paths[] = $rootDir.'/src/Resources/contao';
+            $paths[] = $path;
         }
 
         return $paths;

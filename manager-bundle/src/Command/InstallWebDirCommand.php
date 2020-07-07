@@ -20,6 +20,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
+use Webmozart\PathUtil\Path;
 
 /**
  * @internal
@@ -62,7 +63,7 @@ class InstallWebDirCommand extends Command
         $this->fs = new Filesystem();
         $this->io = new SymfonyStyle($input, $output);
 
-        $webDir = $this->rootDir.'/'.rtrim($input->getArgument('target'), '/');
+        $webDir = Path::join($this->rootDir, $input->getArgument('target'));
 
         $this->addHtaccess($webDir);
         $this->addFiles($webDir);
@@ -76,23 +77,24 @@ class InstallWebDirCommand extends Command
      */
     private function addHtaccess(string $webDir): void
     {
-        $htaccess = __DIR__.'/../Resources/skeleton/web/.htaccess';
+        $sourcePath = __DIR__.'/../Resources/skeleton/web/.htaccess';
+        $targetPath = Path::join($webDir, '.htaccess');
 
-        if (!file_exists($webDir.'/.htaccess')) {
-            $this->fs->copy($htaccess, $webDir.'/.htaccess', true);
+        if (!$this->fs->exists($targetPath)) {
+            $this->fs->copy($sourcePath, $targetPath, true);
             $this->io->writeln('Added the <comment>web/.htaccess</comment> file.');
 
             return;
         }
 
-        $existingContent = file_get_contents($webDir.'/.htaccess');
+        $existingContent = file_get_contents($targetPath);
 
         // Return if there already is a rewrite rule
         if (preg_match('/^\s*RewriteRule\s/im', $existingContent)) {
             return;
         }
 
-        $this->fs->dumpFile($webDir.'/.htaccess', $existingContent."\n\n".file_get_contents($htaccess));
+        $this->fs->dumpFile($targetPath, $existingContent."\n\n".file_get_contents($sourcePath));
         $this->io->writeln('Updated the <comment>web/.htaccess</comment> file.');
     }
 
@@ -101,11 +103,11 @@ class InstallWebDirCommand extends Command
      */
     private function addFiles(string $webDir): void
     {
-        /** @var array<SplFileInfo> $finder */
         $finder = Finder::create()->files()->in(__DIR__.'/../Resources/skeleton/web');
 
+        /** @var SplFileInfo $file */
         foreach ($finder as $file) {
-            $this->fs->copy($file->getPathname(), $webDir.'/'.$file->getRelativePathname(), true);
+            $this->fs->copy($file->getPathname(), Path::join($webDir, $file->getRelativePathname()), true);
             $this->io->writeln(sprintf('Added the <comment>web/%s</comment> file.', $file->getFilename()));
         }
     }
@@ -115,14 +117,11 @@ class InstallWebDirCommand extends Command
      */
     private function purgeOldFiles(string $webDir): void
     {
-        if (file_exists($webDir.'/app_dev.php')) {
-            $this->fs->remove($webDir.'/app_dev.php');
-            $this->io->writeln('Deleted the <comment>web/app_dev.php</comment> file.');
-        }
-
-        if (file_exists($webDir.'/install.php')) {
-            $this->fs->remove($webDir.'/install.php');
-            $this->io->writeln('Deleted the <comment>web/install.php</comment> file.');
+        foreach (['app_dev.php', 'install.php'] as $file) {
+            if ($this->fs->exists($path = Path::join($webDir, $file))) {
+                $this->fs->remove($path);
+                $this->io->writeln("Deleted the <comment>web/$file</comment> file.");
+            }
         }
     }
 }

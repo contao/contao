@@ -32,6 +32,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Contracts\Service\ResetInterface;
+use Webmozart\PathUtil\Path;
 
 /**
  * @internal Do not use this class in your code; use the "contao.framework" service instead
@@ -386,16 +387,16 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         if (
             !empty($GLOBALS['TL_HOOKS']['initializeSystem'])
             && \is_array($GLOBALS['TL_HOOKS']['initializeSystem'])
-            && is_dir($this->rootDir.'/system/tmp')
+            && is_dir(Path::join($this->rootDir, 'system/tmp'))
         ) {
             foreach ($GLOBALS['TL_HOOKS']['initializeSystem'] as $callback) {
                 System::importStatic($callback[0])->{$callback[1]}();
             }
         }
 
-        if ($this->filesystem->exists($this->rootDir.'/system/config/initconfig.php')) {
+        if ($this->filesystem->exists($filePath = Path::join($this->rootDir, 'system/config/initconfig.php'))) {
             @trigger_error('Using the "initconfig.php" file has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
-            include $this->rootDir.'/system/config/initconfig.php';
+            include $filePath;
         }
     }
 

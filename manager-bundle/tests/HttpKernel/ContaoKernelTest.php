@@ -28,6 +28,7 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
+use Webmozart\PathUtil\Path;
 
 class ContaoKernelTest extends ContaoTestCase
 {
@@ -135,21 +136,30 @@ class ContaoKernelTest extends ContaoTestCase
     {
         $kernel = $this->getKernel($this->getTempDir());
 
-        $this->assertSame($kernel->getProjectDir().'/app', $kernel->getRootDir());
+        $this->assertSame(
+            Path::normalize($kernel->getProjectDir()).'/app',
+            Path::normalize($kernel->getRootDir())
+        );
     }
 
     public function testGetCacheDir(): void
     {
         $kernel = $this->getKernel($this->getTempDir());
 
-        $this->assertSame($kernel->getProjectDir().'/var/cache/prod', $kernel->getCacheDir());
+        $this->assertSame(
+            Path::normalize($kernel->getProjectDir()).'/var/cache/prod',
+            Path::normalize($kernel->getCacheDir())
+        );
     }
 
     public function testGetLogDir(): void
     {
         $kernel = $this->getKernel($this->getTempDir());
 
-        $this->assertSame($kernel->getProjectDir().'/var/logs', $kernel->getLogDir());
+        $this->assertSame(
+            Path::normalize($kernel->getProjectDir()).'/var/logs',
+            Path::normalize($kernel->getLogDir())
+        );
     }
 
     public function testSetsDisabledPackagesInPluginLoader(): void

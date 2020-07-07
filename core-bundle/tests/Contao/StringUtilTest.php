@@ -579,7 +579,7 @@ class StringUtilTest extends TestCase
         StringUtil::stripRootDir($this->getFixturesDir().'foo/');
     }
 
-    public function testFailsIfThePathHasNoTrailingSlash(): void
+    public function testFailsIfThePathEqualsTheRootDirectory(): void
     {
         $this->expectException('InvalidArgumentException');
 
