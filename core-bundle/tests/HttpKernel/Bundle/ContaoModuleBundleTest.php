@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\HttpKernel\Bundle;
 
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Contao\CoreBundle\Tests\TestCase;
+use Webmozart\PathUtil\Path;
 
 class ContaoModuleBundleTest extends TestCase
 {
@@ -26,12 +27,12 @@ class ContaoModuleBundleTest extends TestCase
     {
         parent::setUp();
 
-        $this->bundle = new ContaoModuleBundle('foobar', $this->getFixturesDir().'/app');
+        $this->bundle = new ContaoModuleBundle('foobar', Path::normalize($this->getFixturesDir()).'/app');
     }
 
     public function testReturnsTheModulePath(): void
     {
-        $this->assertSame($this->getFixturesDir().'/system/modules/foobar', $this->bundle->getPath());
+        $this->assertSame(Path::normalize($this->getFixturesDir()).'/system/modules/foobar', $this->bundle->getPath());
     }
 
     public function testFailsIfTheModuleFolderDoesNotExist(): void

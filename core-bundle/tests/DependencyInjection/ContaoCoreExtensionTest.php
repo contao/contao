@@ -165,6 +165,7 @@ use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator;
 use Symfony\Component\Security\Http\Firewall;
+use Webmozart\PathUtil\Path;
 
 class ContaoCoreExtensionTest extends TestCase
 {
@@ -2545,7 +2546,6 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 new Reference('%kernel.project_dir%'),
                 new Reference('%contao.image.target_dir%'),
-                new Reference('filesystem'),
             ],
             $definition->getArguments()
         );
@@ -3904,7 +3904,7 @@ class ContaoCoreExtensionTest extends TestCase
         $container = new ContainerBuilder(
             new ParameterBag([
                 'kernel.debug' => false,
-                'kernel.project_dir' => $this->getTempDir(),
+                'kernel.project_dir' => Path::normalize($this->getTempDir()),
                 'kernel.default_locale' => 'en',
             ])
         );
@@ -3912,7 +3912,7 @@ class ContaoCoreExtensionTest extends TestCase
         $extension = new ContaoCoreExtension();
         $extension->load([], $container);
 
-        $this->assertSame($this->getTempDir().'/assets/images', $container->getParameter('contao.image.target_dir'));
+        $this->assertSame(Path::normalize($this->getTempDir()).'/assets/images', $container->getParameter('contao.image.target_dir'));
 
         $params = [
             'contao' => [
@@ -3923,7 +3923,7 @@ class ContaoCoreExtensionTest extends TestCase
         $extension = new ContaoCoreExtension();
         $extension->load($params, $container);
 
-        $this->assertSame($this->getTempDir().'/my/custom/dir', $container->getParameter('contao.image.target_dir'));
+        $this->assertSame(Path::normalize($this->getTempDir()).'/my/custom/dir', $container->getParameter('contao.image.target_dir'));
     }
 
     private function getContainerBuilder(array $params = null): ContainerBuilder

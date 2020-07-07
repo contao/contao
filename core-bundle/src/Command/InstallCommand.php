@@ -18,6 +18,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
+use Webmozart\PathUtil\Path;
 
 /**
  * Installs the required Contao directories.
@@ -83,7 +84,7 @@ class InstallCommand extends Command
     {
         $this->fs = new Filesystem();
         $this->io = new SymfonyStyle($input, $output);
-        $this->webDir = rtrim($input->getArgument('target'), '/');
+        $this->webDir = $input->getArgument('target');
 
         $this->addEmptyDirs();
 
@@ -112,11 +113,11 @@ class InstallCommand extends Command
         ];
 
         foreach ($emptyDirs as $path) {
-            $this->addEmptyDir($this->rootDir.'/'.sprintf($path, $this->webDir));
+            $this->addEmptyDir(Path::join($this->rootDir, sprintf($path, $this->webDir)));
         }
 
         $this->addEmptyDir($this->imageDir);
-        $this->addEmptyDir($this->rootDir.'/'.$this->uploadPath);
+        $this->addEmptyDir(Path::join($this->rootDir, $this->uploadPath));
     }
 
     private function addEmptyDir(string $path): void
@@ -127,6 +128,6 @@ class InstallCommand extends Command
 
         $this->fs->mkdir($path);
 
-        $this->rows[] = str_replace($this->rootDir.'/', '', $path);
+        $this->rows[] = Path::makeRelative($path, $this->rootDir);
     }
 }

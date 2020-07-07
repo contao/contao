@@ -14,6 +14,7 @@ namespace Contao\ManagerBundle\EventListener;
 
 use Contao\InstallationBundle\Event\InitializeApplicationEvent;
 use Symfony\Component\Filesystem\Filesystem;
+use Webmozart\PathUtil\Path;
 
 /**
  * @internal
@@ -35,16 +36,13 @@ class InitializeApplicationListener
      */
     public function __invoke(InitializeApplicationEvent $event): void
     {
-        if (file_exists($this->projectDir.'/system/initialize.php')) {
+        $filesystem = new Filesystem();
+        $targetPath = Path::join($this->projectDir, 'system/initialize.php');
+
+        if ($filesystem->exists($targetPath)) {
             return;
         }
 
-        (new Filesystem())
-            ->copy(
-                __DIR__.'/../Resources/skeleton/system/initialize.php',
-                $this->projectDir.'/system/initialize.php',
-                true
-            )
-        ;
+        $filesystem->copy(__DIR__.'/../Resources/skeleton/system/initialize.php', $targetPath, true);
     }
 }

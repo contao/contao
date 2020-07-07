@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Config\Loader;
 
 use Symfony\Component\Config\Loader\Loader;
+use Webmozart\PathUtil\Path;
 
 /**
  * Reads PHP files and returns the content without the opening and closing PHP tags.
@@ -34,7 +35,7 @@ class PhpFileLoader extends Loader
 
     public function supports($resource, $type = null): bool
     {
-        return 'php' === pathinfo((string) $resource, PATHINFO_EXTENSION);
+        return 'php' === Path::getExtension((string) $resource, true);
     }
 
     /**

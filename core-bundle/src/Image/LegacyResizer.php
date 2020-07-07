@@ -24,6 +24,7 @@ use Contao\Image\ResizeCoordinates;
 use Contao\Image\ResizeOptions;
 use Contao\System;
 use Imagine\Gd\Imagine as GdImagine;
+use Webmozart\PathUtil\Path;
 
 /**
  * Resizes image objects and executes the legacy hooks.
@@ -49,19 +50,16 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
             $this->legacyImage = null;
             $legacyPath = $image->getPath();
 
-            if (0 === strpos($legacyPath, $rootDir.'/') || 0 === strpos($legacyPath, $rootDir.'\\')) {
-                $legacyPath = substr($legacyPath, \strlen($rootDir) + 1);
+            if (Path::isBasePath($rootDir, $legacyPath)) {
+                $legacyPath = Path::makeRelative($legacyPath, $rootDir);
                 $this->legacyImage = new LegacyImage(new File($legacyPath));
                 $this->legacyImage->setTargetWidth($config->getWidth());
                 $this->legacyImage->setTargetHeight($config->getHeight());
                 $this->legacyImage->setResizeMode($config->getMode());
                 $this->legacyImage->setZoomLevel($config->getZoomLevel());
 
-                if (
-                    ($targetPath = $options->getTargetPath())
-                    && (0 === strpos($targetPath, $rootDir.'/') || 0 === strpos($targetPath, $rootDir.'\\'))
-                ) {
-                    $this->legacyImage->setTargetPath(substr($targetPath, \strlen($rootDir) + 1));
+                if (($targetPath = $options->getTargetPath()) && Path::isBasePath($rootDir, $targetPath)) {
+                    $this->legacyImage->setTargetPath(Path::makeRelative($targetPath, $rootDir));
                 }
 
                 $importantPart = $image->getImportantPart();
@@ -81,7 +79,7 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
                 $return = System::importStatic($callback[0])->{$callback[1]}($this->legacyImage);
 
                 if (\is_string($return)) {
-                    return $this->createImage($image, $rootDir.'/'.$return);
+                    return $this->createImage($image, Path::join($rootDir, $return));
                 }
             }
         }
@@ -107,7 +105,7 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
                 );
 
                 if (\is_string($return)) {
-                    return $this->createImage($image, $rootDir.'/'.$return);
+                    return $this->createImage($image, Path::join($rootDir, $return));
                 }
             }
         }

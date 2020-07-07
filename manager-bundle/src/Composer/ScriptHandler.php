@@ -16,6 +16,7 @@ use Composer\Script\Event;
 use Composer\Util\Filesystem;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
+use Webmozart\PathUtil\Path;
 
 class ScriptHandler
 {
@@ -41,7 +42,7 @@ class ScriptHandler
     public static function purgeCacheFolder(): void
     {
         $filesystem = new Filesystem();
-        $filesystem->removeDirectory(getcwd().'/var/cache/prod');
+        $filesystem->removeDirectory(Path::join(getcwd(), 'var/cache/prod'));
     }
 
     /**
@@ -50,7 +51,7 @@ class ScriptHandler
     public static function addAppDirectory(): void
     {
         $filesystem = new Filesystem();
-        $filesystem->ensureDirectoryExists(getcwd().'/app');
+        $filesystem->ensureDirectoryExists(Path::join(getcwd(), 'app'));
     }
 
     /**

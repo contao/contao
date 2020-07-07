@@ -1,0 +1,32 @@
+
+Bundles Registered by Plugin "Contao\CoreBundle\ContaoManager\Plugin"
+=====================================================================
+
+ ---------------------------------------------------------------------- ---------- --------------------------------------------------------- ------------- 
+  Bundle                                                                 Replaces   Load After                                                Environment  
+ ---------------------------------------------------------------------- ---------- --------------------------------------------------------- ------------- 
+  Knp\Bundle\MenuBundle\KnpMenuBundle                                                                                                         All          
+ ---------------------------------------------------------------------- ---------- --------------------------------------------------------- ------------- 
+  Knp\Bundle\TimeBundle\KnpTimeBundle                                                                                                         All          
+ ---------------------------------------------------------------------- ---------- --------------------------------------------------------- ------------- 
+  Scheb\TwoFactorBundle\SchebTwoFactorBundle                                                                                                  All          
+ ---------------------------------------------------------------------- ---------- --------------------------------------------------------- ------------- 
+  Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle                                                                                           All          
+ ---------------------------------------------------------------------- ---------- --------------------------------------------------------- ------------- 
+  Terminal42\ServiceAnnotationBundle\Terminal42ServiceAnnotationBundle                                                                        All          
+ ---------------------------------------------------------------------- ---------- --------------------------------------------------------- ------------- 
+  Contao\CoreBundle\ContaoCoreBundle                                     core       Symfony\Bundle\FrameworkBundle\FrameworkBundle            All          
+                                                                                    Symfony\Bundle\SecurityBundle\SecurityBundle                           
+                                                                                    Symfony\Bundle\TwigBundle\TwigBundle                                   
+                                                                                    Symfony\Bundle\MonologBundle\MonologBundle                             
+                                                                                    Doctrine\Bundle\DoctrineBundle\DoctrineBundle                          
+                                                                                    Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle                
+                                                                                    Knp\Bundle\MenuBundle\KnpMenuBundle                                    
+                                                                                    Knp\Bundle\TimeBundle\KnpTimeBundle                                    
+                                                                                    Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle                  
+                                                                                    Nelmio\CorsBundle\NelmioCorsBundle                                     
+                                                                                    Nelmio\SecurityBundle\NelmioSecurityBundle                             
+                                                                                    Scheb\TwoFactorBundle\SchebTwoFactorBundle                             
+                                                                                    Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle                      
+ ---------------------------------------------------------------------- ---------- --------------------------------------------------------- ------------- 
+

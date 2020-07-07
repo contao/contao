@@ -20,6 +20,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Webmozart\PathUtil\Path;
 
 /**
  * @internal
@@ -60,7 +61,7 @@ class ImagesController
     public function __invoke(string $path): Response
     {
         try {
-            $image = $this->imageFactory->create($this->targetDir.'/'.$path);
+            $image = $this->imageFactory->create(Path::join($this->targetDir, $path));
             $resizer = $this->resizer;
 
             if ($image instanceof DeferredImageInterface && $resizer instanceof DeferredResizerInterface) {

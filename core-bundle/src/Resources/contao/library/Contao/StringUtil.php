@@ -13,6 +13,7 @@ namespace Contao;
 use Patchwork\Utf8;
 use Psr\Log\LogLevel;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use Webmozart\PathUtil\Path;
 
 /**
  * Provides string manipulation methods
@@ -1157,14 +1158,13 @@ class StringUtil
 	public static function stripRootDir($path)
 	{
 		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
-		$length = \strlen($rootDir);
 
-		if (strncmp($path, $rootDir, $length) !== 0 || \strlen($path) <= $length || ($path[$length] !== '/' && $path[$length] !== '\\'))
+		if (!Path::isBasePath($rootDir, $path) || Path::normalize($path) === Path::normalize($rootDir))
 		{
 			throw new \InvalidArgumentException(sprintf('Path "%s" is not inside the Contao root dir "%s"', $path, $rootDir));
 		}
 
-		return (string) substr($path, $length + 1);
+		return (string) substr($path, \strlen($rootDir) + 1);
 	}
 
 	/**

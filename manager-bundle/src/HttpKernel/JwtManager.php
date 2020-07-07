@@ -20,6 +20,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Webmozart\PathUtil\Path;
 
 class JwtManager
 {
@@ -55,7 +56,7 @@ class JwtManager
             $filesystem = new Filesystem();
         }
 
-        $secretFile = $projectDir.'/var/jwt_secret';
+        $secretFile = Path::join($projectDir, 'var/jwt_secret');
 
         if ($filesystem->exists($secretFile)) {
             $this->secret = file_get_contents($secretFile);
