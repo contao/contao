@@ -36,11 +36,6 @@ use Webmozart\PathUtil\Path;
 class SymlinksCommand extends Command
 {
     /**
-     * @var SymfonyStyle
-     */
-    private $io;
-
-    /**
      * @var array
      */
     private $rows = [];
@@ -102,14 +97,14 @@ class SymlinksCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->io = new SymfonyStyle($input, $output);
         $this->webDir = $input->getArgument('target');
 
         $this->generateSymlinks();
 
         if (!empty($this->rows)) {
-            $this->io->newLine();
-            $this->io->table(['', 'Symlink', 'Target / Error'], $this->rows);
+            $io = new SymfonyStyle($input, $output);
+            $io->newLine();
+            $io->table(['', 'Symlink', 'Target / Error'], $this->rows);
         }
 
         return $this->statusCode;

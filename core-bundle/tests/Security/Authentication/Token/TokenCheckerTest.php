@@ -73,13 +73,15 @@ class TokenCheckerTest extends TestCase
             $this->getRoleVoter()
         );
 
+        $hasRoles = \count($roles);
+
         if (FrontendUser::class === $class) {
-            if (\count($roles)) {
+            if ($hasRoles) {
                 $this->assertTrue($tokenChecker->hasFrontendUser());
             } else {
                 $this->assertFalse($tokenChecker->hasFrontendUser());
             }
-        } elseif (\count($roles)) {
+        } elseif ($hasRoles) {
             $this->assertTrue($tokenChecker->hasBackendUser());
         } else {
             $this->assertFalse($tokenChecker->hasBackendUser());

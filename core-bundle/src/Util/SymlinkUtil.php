@@ -63,7 +63,7 @@ class SymlinkUtil
 
         $linkPath = Path::join($rootDir, $link);
 
-        if ((new Filesystem())->exists($linkPath) && !is_link($linkPath)) {
+        if (!is_link($linkPath) && (new Filesystem())->exists($linkPath)) {
             throw new \LogicException(sprintf('The path "%s" exists and is not a symlink.', $link));
         }
     }

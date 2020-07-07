@@ -23,12 +23,12 @@ class ScriptHandler
 
     public static function addDirectories(Event $event): void
     {
-        self::executeCommand('contao:install', $event);
+        self::executeCommand(['contao:install'], $event);
     }
 
     public static function generateSymlinks(Event $event): void
     {
-        self::executeCommand('contao:symlinks', $event);
+        self::executeCommand(['contao:symlinks'], $event);
     }
 
     /**
@@ -52,7 +52,7 @@ class ScriptHandler
     /**
      * @throws \RuntimeException
      */
-    private static function executeCommand(string $cmd, Event $event): void
+    private static function executeCommand(array $cmd, Event $event): void
     {
         $phpFinder = new PhpExecutableFinder();
 
@@ -60,17 +60,17 @@ class ScriptHandler
             throw new \RuntimeException('The php executable could not be found.');
         }
 
-        $process = new Process(
-            sprintf(
-                '%s %s/console %s %s%s%s',
-                $phpPath,
-                self::getBinDir($event),
-                $cmd,
-                self::getWebDir($event),
-                $event->getIO()->isDecorated() ? ' --ansi' : '',
-                self::getVerbosityFlag($event)
-            )
+        $command = array_merge(
+            [$phpPath, Path::join(self::getBinDir($event), 'console')],
+            $cmd,
+            [self::getWebDir($event), $event->getIO()->isDecorated() ? '--ansi' : '--no-ansi']
         );
+
+        if ($verbose = self::getVerbosityFlag($event)) {
+            $command[] = $verbose;
+        }
+
+        $process = new Process($command);
 
         $process->run(
             static function (string $type, string $buffer) use ($event): void {
@@ -108,13 +108,13 @@ class ScriptHandler
 
         switch (true) {
             case $io->isDebug():
-                return ' -vvv';
+                return '-vvv';
 
             case $io->isVeryVerbose():
-                return ' -vv';
+                return '-vv';
 
             case $io->isVerbose():
-                return ' -v';
+                return '-v';
 
             default:
                 return '';

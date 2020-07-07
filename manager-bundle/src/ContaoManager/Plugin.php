@@ -461,7 +461,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                     continue;
                 }
 
-                if (\in_array($key, array_keys($options), true)) {
+                if (\array_key_exists($key, $options)) {
                     $options[$key] = $value;
                 } else {
                     $queryOptions[$key] = $value;
@@ -536,12 +536,10 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
         $transport = 'smtp';
         $credentials = '';
-        $port = '';
+        $portSuffix = '';
 
-        if ($encryption = $container->getParameter('mailer_encryption')) {
-            if ('ssl' === $encryption) {
-                $transport = 'smtps';
-            }
+        if (($encryption = $container->getParameter('mailer_encryption')) && 'ssl' === $encryption) {
+            $transport = 'smtps';
         }
 
         if ($user = $container->getParameter('mailer_user')) {
@@ -555,7 +553,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         }
 
         if ($port = $container->getParameter('mailer_port')) {
-            $port = ':'.$port;
+            $portSuffix = ':'.$port;
         }
 
         return sprintf(
@@ -563,7 +561,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             $transport,
             $credentials,
             $container->getParameter('mailer_host'),
-            $port
+            $portSuffix
         );
     }
 
