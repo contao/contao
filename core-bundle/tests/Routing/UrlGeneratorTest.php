@@ -24,10 +24,11 @@ use Symfony\Component\Routing\RouteCollection;
 
 class UrlGeneratorTest extends TestCase
 {
+    /**
+     * @expectedDeprecation The Contao\CoreBundle\Routing\UrlGenerator is deprecated. Use the Symfony router instead.
+     */
     public function testCanWriteTheContext(): void
     {
-        $this->expectDeprecationMessage('The Contao\CoreBundle\Routing\UrlGenerator is deprecated. Use the Symfony router instead.');
-
         $router = new ParentUrlGenerator(new RouteCollection(), new RequestContext());
         $generator = new UrlGenerator($router, $this->mockContaoFramework(), false);
 

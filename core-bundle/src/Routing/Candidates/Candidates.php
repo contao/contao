@@ -114,7 +114,8 @@ class Candidates implements CandidatesInterface
         $count = 0;
 
         while (false !== ($pos = strrpos($part, '/'))) {
-            if (++$count > self::LIMIT) {
+            ++$count;
+            if ($count > self::LIMIT) {
                 return;
             }
             $candidates[] = $part;
