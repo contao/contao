@@ -16,6 +16,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\FaqCategoryModel;
+use Contao\FaqModel;
 use Contao\Image;
 use Contao\Input;
 use Contao\PageModel;
@@ -571,11 +572,11 @@ class tl_faq extends Backend
 	/**
 	 * Return the SERP URL
 	 *
-	 * @param Contao\FaqModel $objFaq
+	 * @param FaqModel $objFaq
 	 *
 	 * @return string
 	 */
-	public function getSerpUrl(Contao\FaqModel $objFaq)
+	public function getSerpUrl(FaqModel $objFaq)
 	{
 		/** @var FaqCategoryModel $objCategory */
 		$objCategory = $objFaq->getRelated('pid');
@@ -584,17 +585,17 @@ class tl_faq extends Backend
 		// A jumpTo page is not mandatory for FAQ categories (see #6226) but required for the FAQ list module
 		if ($jumpTo < 1)
 		{
-			throw new \Exception("FAQ categories without redirect page cannot be used in an FAQ list");
+			throw new Exception("FAQ categories without redirect page cannot be used in an FAQ list");
 		}
 
 		if (($objTarget = PageModel::findByPk($jumpTo)) !== null)
 		{
-			$strSuffix = StringUtil::ampersand($objTarget->getFrontendUrl(\Contao\Config::get('useAutoItem') ? '/%s' : '/items/%s'));
+			$strSuffix = StringUtil::ampersand($objTarget->getFrontendUrl(Config::get('useAutoItem') ? '/%s' : '/items/%s'));
 
 			return sprintf(preg_replace('/%(?!s)/', '%%', $strSuffix), ($objFaq->alias ?: $objFaq->id));
 		}
 
-		throw new \Exception("FAQ categories without existing redirect page cannot be used in an FAQ list");
+		throw new Exception("FAQ categories without existing redirect page cannot be used in an FAQ list");
 	}
 
 	/**
