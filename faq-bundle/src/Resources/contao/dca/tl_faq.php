@@ -11,12 +11,14 @@
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
+use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\FaqCategoryModel;
 use Contao\Image;
 use Contao\Input;
+use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Versions;
@@ -522,11 +524,11 @@ class tl_faq extends Backend
 
 	public function checkSerpPreview()
 	{
-		$objFaqCategory = \Contao\FaqCategoryModel::findByPk(CURRENT_ID);
+		$objFaqCategory = FaqCategoryModel::findByPk(CURRENT_ID);
 
 		if ($objFaqCategory === null || $objFaqCategory->jumpTo < 1 || $objFaqCategory->getRelated('jumpTo') === null)
 		{
-			\Contao\CoreBundle\DataContainer\PaletteManipulator::create()
+			PaletteManipulator::create()
 				->removeField('serpPreview', 'meta_legend')
 				->applyToPalette('default', 'tl_faq');
 		}
@@ -575,7 +577,7 @@ class tl_faq extends Backend
 	 */
 	public function getSerpUrl(Contao\FaqModel $objFaq)
 	{
-		/** @var \Contao\FaqCategoryModel $objCategory */
+		/** @var FaqCategoryModel $objCategory */
 		$objCategory = $objFaq->getRelated('pid');
 		$jumpTo = (int) $objCategory->jumpTo;
 
@@ -585,9 +587,9 @@ class tl_faq extends Backend
 			throw new \Exception("FAQ categories without redirect page cannot be used in an FAQ list");
 		}
 
-		if (($objTarget = \Contao\PageModel::findByPk($jumpTo)) !== null)
+		if (($objTarget = PageModel::findByPk($jumpTo)) !== null)
 		{
-			$strSuffix = \Contao\StringUtil::ampersand($objTarget->getFrontendUrl(\Contao\Config::get('useAutoItem') ? '/%s' : '/items/%s'));
+			$strSuffix = StringUtil::ampersand($objTarget->getFrontendUrl(\Contao\Config::get('useAutoItem') ? '/%s' : '/items/%s'));
 
 			return sprintf(preg_replace('/%(?!s)/', '%%', $strSuffix), ($objFaq->alias ?: $objFaq->id));
 		}
