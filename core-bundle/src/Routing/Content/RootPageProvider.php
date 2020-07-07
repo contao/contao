@@ -56,7 +56,7 @@ class RootPageProvider extends AbstractPageProvider
 
         $route = new ContentRoute($pageModel);
         $route->addDefaults([
-            '_controller' => RedirectController::class.'::urlRedirectAction',
+            '_controller' => RedirectController::class,
             'path' => $nextPage->getAbsoluteUrl(),
             'permanent' => false,
         ]);

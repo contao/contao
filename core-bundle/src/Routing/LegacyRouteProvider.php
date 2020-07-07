@@ -40,6 +40,11 @@ class LegacyRouteProvider implements RouteProviderInterface
         return new RouteCollection();
     }
 
+    public function getRoutesByNames($names): array
+    {
+        return [];
+    }
+
     public function getRouteByName($name): Route
     {
         $route = $this->loadRoute($name);
@@ -49,12 +54,7 @@ class LegacyRouteProvider implements RouteProviderInterface
         return $route;
     }
 
-    public function getRoutesByNames($names): array
-    {
-        return [];
-    }
-
-    public function loadRoute($name): Route
+    private function loadRoute($name): Route
     {
         if ('contao_frontend' === $name || 'contao_index' === $name) {
             return $this->frontendLoader->load('.', 'contao_frontend')->get($name);
