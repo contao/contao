@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Composer;
 use Composer\Script\Event;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
+use Webmozart\PathUtil\Path;
 
 class ScriptHandler
 {
@@ -161,7 +162,7 @@ class ScriptHandler
         $path = $composer->getInstallationManager()->getInstaller('library')->getInstallPath($package);
 
         foreach ($autoload['files'] as $file) {
-            include_once $path.'/'.$file;
+            include_once Path::join($path, $file);
         }
     }
 }

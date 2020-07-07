@@ -162,7 +162,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
                 $subfiles = $this->finder
                     ->findIn(Path::join('languages', $language))
                     ->files()
-                    ->name('/^'.$name.'\.(php|xlf)$/')
+                    ->name("/^$name\\.(php|xlf)$/")
                 ;
 
                 try {
