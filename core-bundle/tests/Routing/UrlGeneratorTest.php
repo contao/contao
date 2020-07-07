@@ -26,6 +26,8 @@ class UrlGeneratorTest extends TestCase
 {
     public function testCanWriteTheContext(): void
     {
+        $this->expectDeprecationMessage('The Contao\CoreBundle\Routing\UrlGenerator is deprecated. Use the Symfony router instead.');
+
         $router = new ParentUrlGenerator(new RouteCollection(), new RequestContext());
         $generator = new UrlGenerator($router, $this->mockContaoFramework(), false);
 

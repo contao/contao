@@ -24,6 +24,8 @@ class FrontendLoaderTest extends TestCase
 {
     public function testSupportsTheContaoFrontEndRoute(): void
     {
+        $this->expectDeprecationMessage('The Contao\CoreBundle\Routing\FrontendLoader is deprecated. Use Symfony routing instead.');
+
         $loader = new FrontendLoader(false);
 
         $this->assertTrue($loader->supports('.', 'contao_frontend'));

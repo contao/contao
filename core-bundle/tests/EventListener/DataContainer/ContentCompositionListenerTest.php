@@ -546,7 +546,7 @@ class ContentCompositionListenerTest extends TestCase
             [
                 ['mod' => 0, 'col' => 'main'],
             ],
-            'main'
+            'main',
         ];
 
         yield [
@@ -554,7 +554,7 @@ class ContentCompositionListenerTest extends TestCase
                 ['mod' => 1, 'col' => 'foo'],
                 ['mod' => 0, 'col' => 'main'],
             ],
-            'main'
+            'main',
         ];
 
         yield [
@@ -562,7 +562,7 @@ class ContentCompositionListenerTest extends TestCase
                 ['mod' => 1, 'col' => 'main'],
                 ['mod' => 0, 'col' => 'foo'],
             ],
-            'foo'
+            'foo',
         ];
 
         yield [
@@ -572,7 +572,7 @@ class ContentCompositionListenerTest extends TestCase
                 ['mod' => 0, 'col' => 'bar'],
                 ['mod' => 0, 'col' => 'foo'],
             ],
-            'bar'
+            'bar',
         ];
     }
 
