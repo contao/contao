@@ -31,7 +31,6 @@ use Contao\ManagerPlugin\Config\ExtensionPluginInterface;
 use Contao\ManagerPlugin\Dependency\DependentPluginInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
-use Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Exception\DriverException;
 use FOS\HttpCacheBundle\FOSHttpCacheBundle;
@@ -95,7 +94,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             BundleConfig::create(TwigBundle::class),
             BundleConfig::create(MonologBundle::class),
             BundleConfig::create(DoctrineBundle::class),
-            BundleConfig::create(DoctrineCacheBundle::class),
             BundleConfig::create(LexikMaintenanceBundle::class),
             BundleConfig::create(NelmioCorsBundle::class),
             BundleConfig::create(NelmioSecurityBundle::class),

@@ -18,7 +18,6 @@ use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
-use Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle;
 use Knp\Bundle\MenuBundle\KnpMenuBundle;
 use Knp\Bundle\TimeBundle\KnpTimeBundle;
 use Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle;
@@ -57,7 +56,6 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface
                         TwigBundle::class,
                         MonologBundle::class,
                         DoctrineBundle::class,
-                        DoctrineCacheBundle::class,
                         KnpMenuBundle::class,
                         KnpTimeBundle::class,
                         LexikMaintenanceBundle::class,
