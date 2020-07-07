@@ -115,6 +115,7 @@ class Candidates implements CandidatesInterface
 
         while (false !== ($pos = strrpos($part, '/'))) {
             ++$count;
+
             if ($count > self::LIMIT) {
                 return;
             }
