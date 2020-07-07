@@ -44,7 +44,7 @@ class ContentCompositionListenerTest extends TestCase
         'alias' => 'foo/bar',
         'type' => 'foo',
         'title' => 'foo',
-        'published' => '1'
+        'published' => '1',
     ];
 
     private $articleRecord = [
@@ -52,7 +52,7 @@ class ContentCompositionListenerTest extends TestCase
         'pid' => 17,
         'alias' => 'foo-bar',
         'title' => 'foo',
-        'published' => '1'
+        'published' => '1',
     ];
 
     /**
@@ -100,7 +100,7 @@ class ContentCompositionListenerTest extends TestCase
      */
     private $listener;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $GLOBALS['TL_DCA']['tl_article']['config']['ptable'] = 'tl_page';
 
@@ -132,7 +132,7 @@ class ContentCompositionListenerTest extends TestCase
         );
     }
 
-    public function testDoesNotRenderThePageArticlesOperationIfUserDoesNotHaveAccess()
+    public function testDoesNotRenderThePageArticlesOperationIfUserDoesNotHaveAccess(): void
     {
         $this->security
             ->expects($this->once())
@@ -174,7 +174,7 @@ class ContentCompositionListenerTest extends TestCase
         );
     }
 
-    public function testRendersEmptyArticlesOperationIfPageLayoutIsNotFoundWithoutProvider()
+    public function testRendersEmptyArticlesOperationIfPageLayoutIsNotFoundWithoutProvider(): void
     {
         $this->security
             ->expects($this->once())
@@ -204,7 +204,7 @@ class ContentCompositionListenerTest extends TestCase
         );
     }
 
-    public function testRendersEmptyArticlesOperationIfPageLayoutIsNotFound()
+    public function testRendersEmptyArticlesOperationIfPageLayoutIsNotFound(): void
     {
         $this->security
             ->expects($this->once())
@@ -850,6 +850,7 @@ class ContentCompositionListenerTest extends TestCase
      */
     private function expectUser(string $userClass = BackendUser::class): User
     {
+        /** @var User&MockObject $user */
         $user = $this->mockClassWithProperties($userClass, ['id' => 1]);
 
         $this->security
@@ -909,7 +910,8 @@ class ContentCompositionListenerTest extends TestCase
     }
 
     /**
-     * @param int|null|false $moduleId
+     * @param int|false|null $moduleId
+     *
      * @return PageModel&MockObject
      */
     private function expectPageWithRow(array $row, $moduleId = false): PageModel
@@ -933,8 +935,8 @@ class ContentCompositionListenerTest extends TestCase
                 $moduleId = $this->mockClassWithProperties(
                     LayoutModel::class, [
                         'modules' => serialize([
-                            ['mod' => $moduleId]
-                        ])
+                            ['mod' => $moduleId],
+                        ]),
                     ]
                 );
             }
@@ -958,7 +960,8 @@ class ContentCompositionListenerTest extends TestCase
     }
 
     /**
-     * @param int|null|false $moduleId
+     * @param int|false|null $moduleId
+     *
      * @return PageModel&MockObject
      */
     private function expectPageFindByPk(int $id, array $row, $moduleId = false): PageModel
@@ -975,8 +978,8 @@ class ContentCompositionListenerTest extends TestCase
                 $moduleId = $this->mockClassWithProperties(
                     LayoutModel::class, [
                         'modules' => serialize([
-                            ['mod' => $moduleId]
-                        ])
+                            ['mod' => $moduleId],
+                        ]),
                     ]
                 );
             }

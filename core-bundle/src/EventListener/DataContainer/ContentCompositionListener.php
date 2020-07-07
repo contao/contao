@@ -26,6 +26,7 @@ use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
@@ -63,12 +64,12 @@ class ContentCompositionListener implements ServiceAnnotationInterface
     private $requestStack;
 
     /**
-     * @var Adapter&Image
+     * @var Image&Adapter
      */
     private $image;
 
     /**
-     * @var Adapter&Backend
+     * @var Backend&Adapter
      */
     private $backend;
 
@@ -138,6 +139,11 @@ class ContentCompositionListener implements ServiceAnnotationInterface
         }
 
         $sessionBag = $request->getSession()->getBag('contao_backend');
+
+        if (!$sessionBag instanceof AttributeBagInterface) {
+            return;
+        }
+
         $new_records = $sessionBag->get('new_records');
 
         // Not a new page
@@ -201,6 +207,7 @@ class ContentCompositionListener implements ServiceAnnotationInterface
         }
 
         // TODO: use Security::isGranted() when https://github.com/contao/contao/pull/1864 is merged
+        /** @var BackendUser $user */
         $user = $this->security->getUser();
 
         if ($cr || !$user->isAllowed(BackendUser::CAN_EDIT_ARTICLE_HIERARCHY, $row)) {
@@ -231,6 +238,7 @@ class ContentCompositionListener implements ServiceAnnotationInterface
         }
 
         // TODO: use Security::isGranted() when https://github.com/contao/contao/pull/1864 is merged
+        /** @var BackendUser $user */
         $user = $this->security->getUser();
 
         if (

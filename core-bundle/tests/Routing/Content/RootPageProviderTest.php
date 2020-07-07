@@ -1,9 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\Tests\Routing\Content;
 
 use Contao\CoreBundle\Framework\Adapter;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Content\ContentRoute;
 use Contao\CoreBundle\Routing\Content\RootPageProvider;
 use Contao\CoreBundle\Tests\TestCase;
@@ -23,12 +32,7 @@ class RootPageProviderTest extends TestCase
     private $pageModelAdapter;
 
     /**
-     * @var ContaoFramework|MockObject
-     */
-    private $framework;
-
-    /**
-     * @var Connection|MockObject
+     * @var Connection&MockObject
      */
     private $connection;
 
@@ -40,11 +44,11 @@ class RootPageProviderTest extends TestCase
     protected function setUp(): void
     {
         $this->pageModelAdapter = $this->mockAdapter(['findFirstPublishedByPid']);
-
-        $this->framework = $this->mockContaoFramework([PageModel::class => $this->pageModelAdapter]);
         $this->connection = $this->createMock(Connection::class);
 
-        $this->provider = new RootPageProvider($this->framework, $this->connection);
+        $framework = $this->mockContaoFramework([PageModel::class => $this->pageModelAdapter]);
+
+        $this->provider = new RootPageProvider($framework, $this->connection);
     }
 
     public function testThrowsExceptionIfPageTypeIsNotSupported(): void
@@ -104,7 +108,7 @@ class RootPageProviderTest extends TestCase
         $this->assertFalse($route->getDefault('permanent'));
     }
 
-    public function testReturnsUrlSuffixesFromDatabase()
+    public function testReturnsUrlSuffixesFromDatabase(): void
     {
         $statement = $this->createMock(Statement::class);
         $statement

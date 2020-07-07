@@ -15,8 +15,8 @@ namespace Contao\CoreBundle\Tests\DataCollector;
 use Contao\ContentImage;
 use Contao\ContentText;
 use Contao\CoreBundle\DataCollector\ContaoDataCollector;
-use Contao\CoreBundle\Tests\Fixtures\DataCollector\BundleTestClass;
 use Contao\CoreBundle\Tests\Fixtures\DataCollector\TestClass;
+use Contao\CoreBundle\Tests\Fixtures\DataCollector\vendor\foo\bar\BundleTestClass;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Util\PackageUtil;
 use Contao\LayoutModel;
@@ -152,9 +152,6 @@ class ContaoDataCollectorTest extends TestCase
                 ['bar.service', 'onGetRootPageFromUrl'],
             ],
         ];
-
-        require_once __DIR__.'/../Fixtures/DataCollector/TestClass.php';
-        require_once __DIR__.'/../Fixtures/DataCollector/vendor/foo/bar/BundleTestClass.php';
 
         $systemAdapter = $this->mockAdapter(['importStatic']);
         $systemAdapter

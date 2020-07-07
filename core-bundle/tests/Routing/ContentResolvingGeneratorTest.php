@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\Tests\Routing;
 
 use Contao\CoreBundle\Exception\ContentRouteNotFoundException;
@@ -178,7 +188,7 @@ class ContentResolvingGeneratorTest extends TestCase
             'domain' => 'www.example.com',
             'rootUseSSL' => true,
             'urlPrefix' => 'some-language',
-            'urlSuffix' => '.html'
+            'urlSuffix' => '.html',
         ]);
 
         $route = new ContentRoute($page, $content);
@@ -235,7 +245,7 @@ class ContentResolvingGeneratorTest extends TestCase
             'domain' => 'www.example.com',
             'rootUseSSL' => true,
             'urlPrefix' => 'some-language',
-            'urlSuffix' => '.html'
+            'urlSuffix' => '.html',
         ]);
 
         $route = new ContentRoute($page, $content);

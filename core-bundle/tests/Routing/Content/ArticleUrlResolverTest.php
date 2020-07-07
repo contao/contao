@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\Tests\Routing\Content;
 
 use Contao\ArticleModel;
@@ -48,8 +58,6 @@ class ArticleUrlResolverTest extends TestCase
         $this->assertSame('/foo/bar{parameters}.baz', $route->getPath());
         $this->assertSame('/articles/foobar', $route->getDefault('parameters'));
     }
-
-
 
     public function testCreatesParameterdContentRouteWithIdIfArticleHasNoAlias(): void
     {

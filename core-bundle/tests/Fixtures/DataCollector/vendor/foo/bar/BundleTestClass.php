@@ -1,6 +1,6 @@
 <?php
 
-namespace Contao\CoreBundle\Tests\Fixtures\DataCollector;
+namespace Contao\CoreBundle\Tests\Fixtures\DataCollector\vendor\foo\bar;
 
 class BundleTestClass
 {
