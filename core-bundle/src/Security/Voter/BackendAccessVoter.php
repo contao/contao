@@ -19,7 +19,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class BackendAccessVoter extends Voter
 {
-    private const ALLOWED_FLAGS = [
+    private const PAGE_PERMISSIONS = [
         'can_edit_page' => BackendUser::CAN_EDIT_PAGE,
         'can_edit_page_hierarchy' => BackendUser::CAN_EDIT_PAGE_HIERARCHY,
         'can_delete_page' => BackendUser::CAN_DELETE_PAGE,
@@ -36,7 +36,18 @@ class BackendAccessVoter extends Voter
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
-        [, $field] = explode('.', $attribute, 2);
+
+        $permission = explode('.', $attribute, 3);
+
+        if ('contao_user' !== $permission[0] || !isset($permission[1])) {
+            return false;
+        }
+
+        $field = $permission[1];
+
+        if (!$subject && isset($permission[2])) {
+            $subject = $permission[2];
+        }
 
         if (!$user instanceof BackendUser) {
             return false;
@@ -46,8 +57,8 @@ class BackendAccessVoter extends Voter
             return $this->canEditFieldsOf($subject, $user);
         }
 
-        if (isset(self::ALLOWED_FLAGS[$field])) {
-            return $this->isAllowed($subject, self::ALLOWED_FLAGS[$field], $user);
+        if (isset(self::PAGE_PERMISSIONS[$field])) {
+            return $this->isAllowed($subject, self::PAGE_PERMISSIONS[$field], $user);
         }
 
         return $this->hasAccess($subject, $field, $user);
