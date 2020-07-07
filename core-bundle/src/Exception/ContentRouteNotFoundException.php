@@ -15,11 +15,10 @@ namespace Contao\CoreBundle\Exception;
 use Contao\Model;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
-use Throwable;
 
 class ContentRouteNotFoundException extends RouteNotFoundException
 {
-    public function __construct($content, $code = 0, Throwable $previous = null)
+    public function __construct($content, $code = 0, \Throwable $previous = null)
     {
         parent::__construct('No route found for '.static::getRouteDebugMessage($content), $code, $previous);
     }

@@ -720,7 +720,6 @@ class RouteProviderTest extends TestCase
 
         $candidates = $this->createMock(CandidatesInterface::class);
         $candidates
-            ->expects($this->any())
             ->method('getCandidates')
             ->willReturn(['foo'])
         ;
