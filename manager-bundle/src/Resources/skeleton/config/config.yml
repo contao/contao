@@ -1,6 +1,7 @@
 imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
+    - { resource: services.yml }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
@@ -63,23 +64,13 @@ doctrine:
         naming_strategy: doctrine.orm.naming_strategy.default
         metadata_cache_driver:
             type: service
-            id: doctrine.system_cache_provider
+            id: app.doctrine_system_cache_provider
         query_cache_driver:
             type: service
-            id: doctrine.system_cache_provider
+            id: app.doctrine_system_cache_provider
         result_cache_driver:
             type: service
-            id: doctrine.result_cache_provider
-
-services:
-    doctrine.result_cache_provider:
-        class: Symfony\Component\Cache\DoctrineProvider
-        arguments:
-            - '@doctrine.result_cache_pool'
-    doctrine.system_cache_provider:
-        class: Symfony\Component\Cache\DoctrineProvider
-        arguments:
-            - '@doctrine.system_cache_pool'
+            id: app.doctrine_result_cache_provider
 
 # Lexik configuration
 lexik_maintenance:
