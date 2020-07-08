@@ -310,6 +310,19 @@ class FigureBuilder
     }
 
     /**
+     * Set all custom link attributes as an associative array. This will
+     * overwrite previously set attributes. If you want to explicitly remove a
+     * value (including auto generated defaults) set the respective attribute
+     * to null.
+     */
+    public function setLinkAttributes(array $attributes): self
+    {
+        $this->additionalLinkAttributes = $attributes;
+
+        return $this;
+    }
+
+    /**
      * Set the link href attribute. Set the value to null to use the auto
      * generated default.
      */
