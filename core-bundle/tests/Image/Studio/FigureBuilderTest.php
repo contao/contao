@@ -609,6 +609,34 @@ class FigureBuilderTest extends TestCase
         $this->assertSame(['foobar' => 'test'], $figure->getLinkAttributes());
     }
 
+    public function testSetLinkAttributes(): void
+    {
+        $figure = $this->getFigure(
+            static function (FigureBuilder $builder): void {
+                $builder->setLinkAttributes(['foo' => 'bar', 'foobar' => 'test']);
+            }
+        );
+
+        $this->assertSame(['foo' => 'bar', 'foobar' => 'test'], $figure->getLinkAttributes());
+    }
+
+    /**
+     * @dataProvider provideInvalidLinkAttributes
+     */
+    public function testSetLinkAttributesFailsWithInvalidArray(array $attributes): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $this->getFigureBuilder()->setLinkAttributes($attributes);
+    }
+
+    public function provideInvalidLinkAttributes(): \Generator
+    {
+        yield 'non-string keys' => [['foo', 'bar']];
+
+        yield 'non-string values' => [['foo' => new \stdClass()]];
+    }
+
     public function testSetLinkHref(): void
     {
         $figure = $this->getFigure(
@@ -618,6 +646,19 @@ class FigureBuilderTest extends TestCase
         );
 
         $this->assertSame('https://example.com', $figure->getLinkHref());
+    }
+
+    public function testSetFigureAttributes(): void
+    {
+        $object = new \stdClass();
+
+        $figure = $this->getFigure(
+            static function (FigureBuilder $builder) use ($object): void {
+                $builder->setFigureAttributes(['class' => 'foo', 'custom' => $object]);
+            }
+        );
+
+        $this->assertSame(['class' => 'foo', 'custom' => $object], $figure->getAttributes());
     }
 
     public function testSetsTargetAttributeIfFullsizeWithoutLightBox(): void

@@ -288,6 +288,52 @@ class FigureTest extends TestCase
         ];
     }
 
+    public function testGetAttributes(): void
+    {
+        /** @var ImageResult&MockObject $image */
+        $image = $this->createMock(ImageResult::class);
+
+        $attributes = ['class' => 'foo', 'custom' => new \stdClass()];
+
+        $figure = new Figure($image, null, null, null, $attributes);
+
+        $this->assertSame($attributes, $figure->getAttributes());
+    }
+
+    public function testGetAttributesSetViaCallback(): void
+    {
+        /** @var ImageResult&MockObject $image */
+        $image = $this->createMock(ImageResult::class);
+
+        $attributes = ['class' => 'foo', 'custom' => new \stdClass()];
+
+        $called = 0;
+
+        $attributesClosure = function (Figure $figure) use (&$called, $attributes): array {
+            $this->assertInstanceOf(Figure::class, $figure);
+            ++$called;
+
+            return $attributes;
+        };
+
+        $figure = new Figure($image, null, null, null, $attributesClosure);
+
+        $this->assertSame($attributes, $figure->getAttributes());
+
+        $figure->getAttributes(); // second call should be cached
+        $this->assertSame(1, $called);
+    }
+
+    public function testGetAttributesReturnsEmptySetIfNotDefined(): void
+    {
+        /** @var ImageResult&MockObject $image */
+        $image = $this->createMock(ImageResult::class);
+
+        $figure = new Figure($image);
+
+        $this->assertSame([], $figure->getAttributes());
+    }
+
     /**
      * @dataProvider provideLegacyTemplateDataScenarios
      */
