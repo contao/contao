@@ -2449,6 +2449,10 @@ class DC_Folder extends DataContainer implements \listable, \editable
 				case 'Deleted':
 					$arrMessages[] = '<p class="tl_error">' . sprintf($GLOBALS['TL_LANG']['tl_files']['syncDeleted'], StringUtil::specialchars($file)) . '</p>';
 					break;
+
+				default:
+					$arrMessages[] = '<p class="tl_error">' . StringUtil::specialchars($buffer) . '</p>';
+					break;
 			}
 
 			++$arrCounts[$type];
@@ -2578,6 +2582,12 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			{
 				if (strncmp($v, '.', 1) === 0)
 				{
+					continue;
+				}
+
+				if (preg_match('//u', $v) !== 1)
+				{
+					trigger_error(sprintf('Path "%s" contains malformed UTF-8 characters.', $path . '/' . $v), E_USER_WARNING);
 					continue;
 				}
 

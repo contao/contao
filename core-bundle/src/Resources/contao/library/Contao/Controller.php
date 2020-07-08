@@ -141,8 +141,8 @@ abstract class Controller extends System
 			$strGlobPrefix = substr($strGlobPrefix, 0, -1) . '[_-]';
 		}
 
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
-		$arrCustomized = self::braceGlob($rootDir . '/templates/' . $strGlobPrefix . '*.html5');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+		$arrCustomized = self::braceGlob($projectDir . '/templates/' . $strGlobPrefix . '*.html5');
 
 		// Add the customized templates
 		if (!empty($arrCustomized) && \is_array($arrCustomized))
@@ -183,7 +183,7 @@ abstract class Controller extends System
 
 		$arrDefaultPlaces = array();
 
-		if ($strDefaultTemplate && file_exists($rootDir . '/templates/' . $strDefaultTemplate . '.html5'))
+		if ($strDefaultTemplate && file_exists($projectDir . '/templates/' . $strDefaultTemplate . '.html5'))
 		{
 			$arrDefaultPlaces[] = $GLOBALS['TL_LANG']['MSC']['global'];
 		}
@@ -211,12 +211,12 @@ abstract class Controller extends System
 						continue;
 					}
 
-					if ($strDefaultTemplate && file_exists($rootDir . '/' . $objTheme->templates . '/' . $strDefaultTemplate . '.html5'))
+					if ($strDefaultTemplate && file_exists($projectDir . '/' . $objTheme->templates . '/' . $strDefaultTemplate . '.html5'))
 					{
 						$arrDefaultPlaces[] = $objTheme->name;
 					}
 
-					$arrThemeTemplates = self::braceGlob($rootDir . '/' . $objTheme->templates . '/' . $strGlobPrefix . '*.html5');
+					$arrThemeTemplates = self::braceGlob($projectDir . '/' . $objTheme->templates . '/' . $strGlobPrefix . '*.html5');
 
 					if (!empty($arrThemeTemplates) && \is_array($arrThemeTemplates))
 					{
@@ -341,39 +341,44 @@ abstract class Controller extends System
 				return '';
 			}
 
-			$return = '';
-			$intCount = 0;
+			$arrArticles = array();
 			$blnMultiMode = ($objArticles->count() > 1);
-			$intLast = $objArticles->count() - 1;
+			$arrRows = $objArticles->getModels();
+			$objLastRow = null;
 
-			while ($objArticles->next())
+			/** @var ArticleModel $objRow */
+			while ($objRow = array_shift($arrRows))
 			{
-				/** @var ArticleModel $objRow */
-				$objRow = $objArticles->current();
-
 				// Add the "first" and "last" classes (see #2583)
-				if ($intCount == 0 || $intCount == $intLast)
+				$arrCss = array();
+
+				if (empty($arrArticles))
 				{
-					$arrCss = array();
-
-					if ($intCount == 0)
-					{
-						$arrCss[] = 'first';
-					}
-
-					if ($intCount == $intLast)
-					{
-						$arrCss[] = 'last';
-					}
-
-					$objRow->classes = $arrCss;
+					$arrCss[] = 'first';
 				}
 
-				$return .= static::getArticle($objRow, $blnMultiMode, false, $strColumn);
-				++$intCount;
+				if (empty($arrRows))
+				{
+					$arrCss[] = 'last';
+				}
+
+				$objRow->classes = $arrCss;
+				$strArticle = static::getArticle($objRow, $blnMultiMode, false, $strColumn);
+
+				if ($strArticle != '')
+				{
+					$arrArticles[] = $strArticle;
+					$objLastRow = $objRow;
+				}
+				elseif (empty($arrRows) && $objLastRow != null && $objLastRow !== $objRow)
+				{
+					// Re-generate the last successful article with "last" class
+					array_pop($arrArticles);
+					$arrRows[] = $objLastRow;
+				}
 			}
 
-			return $return;
+			return implode('', $arrArticles);
 		}
 
 		// Other modules
@@ -1314,10 +1319,10 @@ abstract class Controller extends System
 			throw new PageNotFoundException('Invalid path');
 		}
 
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Check whether the file exists
-		if (!file_exists($rootDir . '/' . $strFile))
+		if (!file_exists($projectDir . '/' . $strFile))
 		{
 			throw new PageNotFoundException('File not found');
 		}
@@ -1590,14 +1595,14 @@ abstract class Controller extends System
 
 		try
 		{
-			$rootDir = $container->getParameter('kernel.project_dir');
+			$projectDir = $container->getParameter('kernel.project_dir');
 			$staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
-			$picture = $container->get('contao.image.picture_factory')->create($rootDir . '/' . $arrItem['singleSRC'], $size);
+			$picture = $container->get('contao.image.picture_factory')->create($projectDir . '/' . $arrItem['singleSRC'], $size);
 
 			$picture = array
 			(
-				'img' => $picture->getImg($rootDir, $staticUrl),
-				'sources' => $picture->getSources($rootDir, $staticUrl)
+				'img' => $picture->getImg($projectDir, $staticUrl),
+				'sources' => $picture->getSources($projectDir, $staticUrl)
 			);
 
 			$src = $picture['img']['src'];
@@ -1695,7 +1700,7 @@ abstract class Controller extends System
 		$objTemplate->picture = $picture;
 
 		// Provide an ID for single lightbox images in HTML5 (see #3742)
-		if ($strLightboxId === null && $arrItem['fullsize'])
+		if ($strLightboxId === null && $arrItem['fullsize'] && $objTemplate instanceof Template && !empty($arrItem['id']))
 		{
 			$strLightboxId = substr(md5($objTemplate->getName() . '_' . $arrItem['id']), 0, 6);
 		}
@@ -1733,14 +1738,14 @@ abstract class Controller extends System
 					{
 						try
 						{
-							$rootDir = $container->getParameter('kernel.project_dir');
+							$projectDir = $container->getParameter('kernel.project_dir');
 							$staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
-							$picture = $container->get('contao.image.picture_factory')->create($rootDir . '/' . $arrItem['imageUrl'], $lightboxSize);
+							$picture = $container->get('contao.image.picture_factory')->create($projectDir . '/' . $arrItem['imageUrl'], $lightboxSize);
 
 							$objTemplate->lightboxPicture = array
 							(
-								'img' => $picture->getImg($rootDir, $staticUrl),
-								'sources' => $picture->getSources($rootDir, $staticUrl)
+								'img' => $picture->getImg($projectDir, $staticUrl),
+								'sources' => $picture->getSources($projectDir, $staticUrl)
 							);
 
 							$objTemplate->$strHrefKey = $objTemplate->lightboxPicture['img']['src'];
@@ -1771,14 +1776,14 @@ abstract class Controller extends System
 		{
 			try
 			{
-				$rootDir = $container->getParameter('kernel.project_dir');
+				$projectDir = $container->getParameter('kernel.project_dir');
 				$staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
-				$picture = $container->get('contao.image.picture_factory')->create($rootDir . '/' . $arrItem['singleSRC'], $lightboxSize);
+				$picture = $container->get('contao.image.picture_factory')->create($projectDir . '/' . $arrItem['singleSRC'], $lightboxSize);
 
 				$objTemplate->lightboxPicture = array
 				(
-					'img' => $picture->getImg($rootDir, $staticUrl),
-					'sources' => $picture->getSources($rootDir, $staticUrl)
+					'img' => $picture->getImg($projectDir, $staticUrl),
+					'sources' => $picture->getSources($projectDir, $staticUrl)
 				);
 
 				$objTemplate->$strHrefKey = $objTemplate->lightboxPicture['img']['src'];
@@ -1858,9 +1863,9 @@ abstract class Controller extends System
 		{
 			if ($objFiles->type == 'file')
 			{
-				$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+				$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
-				if (!\in_array($objFiles->extension, $allowedDownload) || !is_file($rootDir . '/' . $objFiles->path))
+				if (!\in_array($objFiles->extension, $allowedDownload) || !is_file($projectDir . '/' . $objFiles->path))
 				{
 					continue;
 				}

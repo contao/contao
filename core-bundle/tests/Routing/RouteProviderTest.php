@@ -618,9 +618,6 @@ class RouteProviderTest extends TestCase
         $this->assertEmpty($routes);
     }
 
-    /**
-     * @return Adapter&MockObject
-     */
     private function mockConfigAdapter(array $config): Adapter
     {
         $configAdapter = $this->mockAdapter(['get']);

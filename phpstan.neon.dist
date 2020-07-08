@@ -11,9 +11,6 @@ rules:
     - TheCodingMachine\PHPStan\Rules\Exceptions\ThrowMustBundlePreviousExceptionRule
 
 parameters:
-    autoload_files:
-        - %currentWorkingDirectory%/vendor/autoload.php
-
     contao:
         services_yml_path: %currentWorkingDirectory%/core-bundle/src/Resources/config/services.yml
 
@@ -29,9 +26,6 @@ parameters:
     ignoreErrors:
         # Ignore the missing TL_SCRIPT constant in the InitializeController class
         - '#Constant TL_SCRIPT not found\.#'
-
-        # Ignore the Adapter::missingMethod() warning
-        - '#Call to an undefined method Contao\\CoreBundle\\Framework\\Adapter::missingMethod\(\)\.#'
 
         # Ignore backwards compatibility layers when preferring lowest dependencies
         - '#Method Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface::dispatch\(\) invoked with 2 parameters, 1 required\.#'

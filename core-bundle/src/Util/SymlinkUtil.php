@@ -22,18 +22,18 @@ class SymlinkUtil
      * The method will try to generate relative symlinks and fall back to generating
      * absolute symlinks if relative symlinks are not supported (see #208).
      */
-    public static function symlink(string $target, string $link, string $rootDir): void
+    public static function symlink(string $target, string $link, string $projectDir): void
     {
-        static::validateSymlink($target, $link, $rootDir);
+        static::validateSymlink($target, $link, $projectDir);
 
         $fs = new Filesystem();
 
         if (!$fs->isAbsolutePath($target)) {
-            $target = $rootDir.'/'.$target;
+            $target = $projectDir.'/'.$target;
         }
 
         if (!$fs->isAbsolutePath($link)) {
-            $link = $rootDir.'/'.$link;
+            $link = $projectDir.'/'.$link;
         }
 
         if ('\\' === \DIRECTORY_SEPARATOR) {
@@ -49,7 +49,7 @@ class SymlinkUtil
      * @throws \InvalidArgumentException
      * @throws \LogicException
      */
-    public static function validateSymlink(string $target, string $link, string $rootDir): void
+    public static function validateSymlink(string $target, string $link, string $projectDir): void
     {
         if ('' === $target) {
             throw new \InvalidArgumentException('The symlink target must not be empty.');
@@ -65,7 +65,7 @@ class SymlinkUtil
 
         $fs = new Filesystem();
 
-        if ($fs->exists($rootDir.'/'.$link) && !is_link($rootDir.'/'.$link)) {
+        if ($fs->exists($projectDir.'/'.$link) && !is_link($projectDir.'/'.$link)) {
             throw new \LogicException(sprintf('The path "%s" exists and is not a symlink.', $link));
         }
     }

@@ -1277,7 +1277,7 @@ class ImageTest extends TestCase
         /** @var \DOMElement $firstChild */
         $firstChild = $doc->documentElement->firstChild;
 
-        $this->assertSame('0 0 200.1 100.1', $firstChild->getAttribute('viewBox'));
+        $this->assertSame('0 0 3202 1602', $firstChild->getAttribute('viewBox'));
         $this->assertSame('-50', $firstChild->getAttribute('x'));
         $this->assertSame('0', $firstChild->getAttribute('y'));
         $this->assertSame('200', $firstChild->getAttribute('width'));

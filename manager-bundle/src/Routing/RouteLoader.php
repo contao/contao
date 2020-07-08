@@ -38,17 +38,17 @@ class RouteLoader
     /**
      * @var string
      */
-    private $rootDir;
+    private $projectDir;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao_manager.routing_loader" service instead
      */
-    public function __construct(LoaderInterface $loader, PluginLoader $pluginLoader, KernelInterface $kernel, string $rootDir)
+    public function __construct(LoaderInterface $loader, PluginLoader $pluginLoader, KernelInterface $kernel, string $projectDir)
     {
         $this->loader = $loader;
         $this->pluginLoader = $pluginLoader;
         $this->kernel = $kernel;
-        $this->rootDir = $rootDir;
+        $this->projectDir = $projectDir;
     }
 
     /**
@@ -92,21 +92,21 @@ class RouteLoader
     private function getConfigFile(): ?string
     {
         foreach (['routes.yaml', 'routes.yml', 'routing.yaml', 'routing.yml'] as $file) {
-            if (file_exists($this->rootDir.'/config/'.$file)) {
+            if (file_exists($this->projectDir.'/config/'.$file)) {
                 if (0 === strncmp($file, 'routing.', 8)) {
                     @trigger_error(sprintf('Using a "%s" file has been deprecated and will no longer work in Contao 5.0. Rename it to "routes.yaml" instead.', $file), E_USER_DEPRECATED);
                 }
 
-                return $this->rootDir.'/config/'.$file;
+                return $this->projectDir.'/config/'.$file;
             }
         }
 
         // Fallback to the legacy config file (see #566)
         foreach (['routes.yaml', 'routes.yml', 'routing.yaml', 'routing.yml'] as $file) {
-            if (file_exists($this->rootDir.'/app/config/'.$file)) {
+            if (file_exists($this->projectDir.'/app/config/'.$file)) {
                 @trigger_error(sprintf('Storing the "%s" file in the "app/config" folder has been deprecated and will no longer work in Contao 5.0. Move it to the "config" folder instead.', $file), E_USER_DEPRECATED);
 
-                return $this->rootDir.'/app/config/'.$file;
+                return $this->projectDir.'/app/config/'.$file;
             }
         }
 

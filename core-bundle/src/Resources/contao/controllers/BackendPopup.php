@@ -78,10 +78,10 @@ class BackendPopup extends Backend
 			die('Invalid path');
 		}
 
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Check whether the file exists
-		if (!file_exists($rootDir . '/' . $this->strFile))
+		if (!file_exists($projectDir . '/' . $this->strFile))
 		{
 			die('File not found');
 		}
@@ -113,7 +113,7 @@ class BackendPopup extends Backend
 		}
 
 		// Add the file info
-		if (is_dir($rootDir . '/' . $this->strFile))
+		if (is_dir($projectDir . '/' . $this->strFile))
 		{
 			$objFile = new Folder($this->strFile);
 			$objTemplate->filesize = $this->getReadableSize($objFile->size) . ' (' . number_format($objFile->size, 0, $GLOBALS['TL_LANG']['MSC']['decimalSeparator'], $GLOBALS['TL_LANG']['MSC']['thousandsSeparator']) . ' Byte)';
@@ -126,8 +126,8 @@ class BackendPopup extends Backend
 			if ($objFile->isImage)
 			{
 				$objTemplate->isImage = true;
-				$objTemplate->width = $objFile->viewWidth;
-				$objTemplate->height = $objFile->viewHeight;
+				$objTemplate->width = $objFile->width;
+				$objTemplate->height = $objFile->height;
 				$objTemplate->src = $this->urlEncode($this->strFile);
 				$objTemplate->dataUri = $objFile->dataUri;
 			}

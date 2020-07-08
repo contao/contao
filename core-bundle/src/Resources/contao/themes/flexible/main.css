@@ -494,6 +494,7 @@ h2.sub_headline {
 .tl_box h3,.tl_tbox h3,.tl_xpl h3 {
 	margin:0;
 	padding-top:13px;
+	height:16px;
 	font-size:.875rem;
 }
 .tl_box h4,.tl_tbox h4 {
@@ -587,6 +588,15 @@ h2.sub_headline {
 	0% {
 		background-position-x:1rem;
 	}
+}
+#tl_crawl .tl_message {
+	margin-bottom:24px;
+}
+#tl_crawl .tl_message > p {
+	padding-top:0;
+	padding-bottom:0;
+	background-color:transparent;
+	background-position-y:center;
 }
 #tl_crawl .tl_tbox {
 	padding-top:0;

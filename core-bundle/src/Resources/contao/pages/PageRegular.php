@@ -375,7 +375,7 @@ class PageRegular extends Frontend
 		}
 
 		$container = System::getContainer();
-		$rootDir = $container->getParameter('kernel.project_dir');
+		$projectDir = $container->getParameter('kernel.project_dir');
 
 		// jQuery scripts
 		if ($objLayout->addJQuery)
@@ -390,7 +390,7 @@ class PageRegular extends Frontend
 
 					if (!$hash->isHit())
 					{
-						$hash->set('sha256-' . base64_encode(hash_file('sha256', $rootDir . '/assets/jquery/js/jquery.min.js', true)));
+						$hash->set('sha256-' . base64_encode(hash_file('sha256', $projectDir . '/assets/jquery/js/jquery.min.js', true)));
 						$cache->save($hash);
 					}
 
@@ -636,7 +636,7 @@ class PageRegular extends Frontend
 
 			// Get the file entries from the database
 			$objFiles = FilesModel::findMultipleByUuids($arrExternal);
-			$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+			$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 			if ($objFiles !== null)
 			{
@@ -644,7 +644,7 @@ class PageRegular extends Frontend
 
 				while ($objFiles->next())
 				{
-					if (file_exists($rootDir . '/' . $objFiles->path))
+					if (file_exists($projectDir . '/' . $objFiles->path))
 					{
 						$arrFiles[] = $objFiles->path . '|static';
 					}
@@ -799,13 +799,13 @@ class PageRegular extends Frontend
 
 		// Get the file entries from the database
 		$objFiles = FilesModel::findMultipleByUuids($arrExternalJs);
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		if ($objFiles !== null)
 		{
 			while ($objFiles->next())
 			{
-				if (file_exists($rootDir . '/' . $objFiles->path))
+				if (file_exists($projectDir . '/' . $objFiles->path))
 				{
 					$strScripts .= Template::generateScriptTag($objFiles->path, false, null);
 				}

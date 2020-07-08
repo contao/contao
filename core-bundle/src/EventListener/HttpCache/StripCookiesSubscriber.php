@@ -56,6 +56,15 @@ class StripCookiesSubscriber implements EventSubscriberInterface
 
         // Blackfire
         '__blackfire',
+
+        // Tideways
+        'TIDEWAYS_SESSION',
+
+        // Litespeed HTTP2 Smart Push
+        'ls_smartpush',
+
+        // Osano Cookie Consent
+        'cookieconsent_status',
     ];
 
     /**

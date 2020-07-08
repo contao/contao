@@ -16,6 +16,7 @@ use Contao\CoreBundle\Event\RobotsTxtEvent;
 use Contao\CoreBundle\EventListener\RobotsTxtListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use webignition\RobotsTxt\File\Parser;
 
@@ -26,13 +27,13 @@ class RobotsTxtListenerTest extends TestCase
      */
     public function testRobotsTxt(string $providedRobotsTxt, string $expectedRobotsTxt): void
     {
-        /** @var PageModel $rootPage */
+        /** @var PageModel&MockObject $rootPage */
         $rootPage = $this->mockClassWithProperties(PageModel::class);
         $rootPage->id = 42;
         $rootPage->fallback = '1';
         $rootPage->dns = 'www.foobar.com';
 
-        /** @var PageModel $otherRootPage */
+        /** @var PageModel&MockObject $otherRootPage */
         $otherRootPage = $this->mockClassWithProperties(PageModel::class);
         $otherRootPage->id = 99;
         $otherRootPage->fallback = '';

@@ -389,8 +389,8 @@
       <trans-unit id="tl_layout.analytics_google">
         <source>Google Analytics</source>
       </trans-unit>
-      <trans-unit id="tl_layout.analytics_piwik">
-        <source>Piwik</source>
+      <trans-unit id="tl_layout.analytics_matomo">
+        <source>Matomo</source>
       </trans-unit>
       <trans-unit id="tl_layout.new.0">
         <source>New</source>

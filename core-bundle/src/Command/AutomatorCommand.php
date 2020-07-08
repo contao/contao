@@ -28,6 +28,8 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
  */
 class AutomatorCommand extends Command
 {
+    protected static $defaultName = 'contao:automator';
+
     /**
      * @var array
      */
@@ -48,7 +50,6 @@ class AutomatorCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('contao:automator')
             ->addArgument('task', InputArgument::OPTIONAL, "The name of the task:\n  - ".implode("\n  - ", $this->getCommands()))
             ->setDescription('Runs automator tasks on the command line.')
         ;

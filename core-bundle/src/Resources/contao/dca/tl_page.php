@@ -167,7 +167,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 	// Subpalettes
 	'subpalettes' => array
 	(
-		'autoforward'                 => 'jumpTo,redirect',
+		'autoforward'                 => 'jumpTo',
 		'protected'                   => 'groups',
 		'createSitemap'               => 'sitemapName',
 		'includeLayout'               => 'layout',

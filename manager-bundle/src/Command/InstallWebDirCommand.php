@@ -39,11 +39,11 @@ class InstallWebDirCommand extends Command
     /**
      * @var string
      */
-    private $rootDir;
+    private $projectDir;
 
-    public function __construct(string $rootDir)
+    public function __construct(string $projectDir)
     {
-        $this->rootDir = $rootDir;
+        $this->projectDir = $projectDir;
 
         parent::__construct();
     }
@@ -62,7 +62,7 @@ class InstallWebDirCommand extends Command
         $this->fs = new Filesystem();
         $this->io = new SymfonyStyle($input, $output);
 
-        $webDir = $this->rootDir.'/'.rtrim($input->getArgument('target'), '/');
+        $webDir = $this->projectDir.'/'.rtrim($input->getArgument('target'), '/');
 
         $this->addHtaccess($webDir);
         $this->addFiles($webDir);

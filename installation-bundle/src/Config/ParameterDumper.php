@@ -32,14 +32,14 @@ class ParameterDumper
      */
     private $parameters = ['parameters' => []];
 
-    public function __construct(string $rootDir, Filesystem $filesystem = null)
+    public function __construct(string $projectDir, Filesystem $filesystem = null)
     {
-        $this->configFile = $rootDir.'/config/parameters.yml';
+        $this->configFile = $projectDir.'/config/parameters.yml';
         $this->filesystem = $filesystem ?: new Filesystem();
 
         // Fallback to the legacy config file (see #566)
-        if (file_exists($rootDir.'/app/config/parameters.yml') && !file_exists($rootDir.'/config/parameters.yml')) {
-            $this->configFile = $rootDir.'/app/config/parameters.yml';
+        if (file_exists($projectDir.'/app/config/parameters.yml') && !file_exists($projectDir.'/config/parameters.yml')) {
+            $this->configFile = $projectDir.'/app/config/parameters.yml';
         } elseif (!file_exists($this->configFile)) {
             return;
         }

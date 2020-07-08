@@ -259,8 +259,8 @@ class tl_theme extends Contao\Backend
 
 			if ($objFile !== null && file_exists(TL_ROOT . '/' . $objFile->path))
 			{
-				$rootDir = Contao\System::getContainer()->getParameter('kernel.project_dir');
-				$label = Contao\Image::getHtml(Contao\System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . $objFile->path, array(75, 50, 'center_top'))->getUrl($rootDir), '', 'class="theme_preview"') . ' ' . $label;
+				$projectDir = Contao\System::getContainer()->getParameter('kernel.project_dir');
+				$label = Contao\Image::getHtml(Contao\System::getContainer()->get('contao.image.image_factory')->create($projectDir . '/' . $objFile->path, array(75, 50, 'center_top'))->getUrl($projectDir), '', 'class="theme_preview"') . ' ' . $label;
 			}
 		}
 
@@ -319,11 +319,11 @@ class tl_theme extends Contao\Backend
 	protected function doGetTemplateFolders($path, $level=0)
 	{
 		$return = array();
-		$rootDir = Contao\System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = Contao\System::getContainer()->getParameter('kernel.project_dir');
 
-		foreach (scan($rootDir . '/' . $path) as $file)
+		foreach (scan($projectDir . '/' . $path) as $file)
 		{
-			if (is_dir($rootDir . '/' . $path . '/' . $file))
+			if (is_dir($projectDir . '/' . $path . '/' . $file))
 			{
 				$return[$path . '/' . $file] = str_repeat(' &nbsp; &nbsp; ', $level) . $file;
 				$return = array_merge($return, $this->doGetTemplateFolders($path . '/' . $file, $level+1));

@@ -9,6 +9,7 @@ parameters:
 
 # Framework configuration
 framework:
+    assets: true
     esi: { enabled: true }
     translator: { fallbacks: ['%locale%'] }
     secret: '%env(APP_SECRET)%'

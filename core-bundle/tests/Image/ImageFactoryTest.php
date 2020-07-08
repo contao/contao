@@ -695,13 +695,13 @@ class ImageFactoryTest extends TestCase
             .'.jpg';
 
         $fs = new Filesystem();
-        $rootDir = System::getContainer()->getParameter('kernel.project_dir');
+        $projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
-        if (!$fs->exists(\dirname($rootDir.'/'.$path))) {
-            $fs->mkdir(\dirname($rootDir.'/'.$path), 0777);
+        if (!$fs->exists(\dirname($projectDir.'/'.$path))) {
+            $fs->mkdir(\dirname($projectDir.'/'.$path), 0777);
         }
 
-        $fs->dumpFile($rootDir.'/'.$path, '');
+        $fs->dumpFile($projectDir.'/'.$path, '');
 
         return $path;
     }
@@ -783,13 +783,13 @@ class ImageFactoryTest extends TestCase
             .'.jpg';
 
         $fs = new Filesystem();
-        $rootDir = System::getContainer()->getParameter('kernel.project_dir');
+        $projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
-        if (!$fs->exists(\dirname($rootDir.'/'.$path))) {
-            $fs->mkdir(\dirname($rootDir.'/'.$path), 0777);
+        if (!$fs->exists(\dirname($projectDir.'/'.$path))) {
+            $fs->mkdir(\dirname($projectDir.'/'.$path), 0777);
         }
 
-        $fs->dumpFile($rootDir.'/'.$path, '');
+        $fs->dumpFile($projectDir.'/'.$path, '');
 
         return $path;
     }

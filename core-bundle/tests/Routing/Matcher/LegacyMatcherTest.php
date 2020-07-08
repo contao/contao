@@ -681,9 +681,6 @@ class LegacyMatcherTest extends TestCase
         return $matcher;
     }
 
-    /**
-     * @return Adapter&MockObject
-     */
     private function mockConfigAdapter(array $config): Adapter
     {
         $configAdapter = $this->mockAdapter(['get']);
