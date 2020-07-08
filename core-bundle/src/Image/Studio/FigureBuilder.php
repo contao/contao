@@ -324,6 +324,12 @@ class FigureBuilder
      */
     public function setLinkAttributes(array $attributes): self
     {
+        foreach ($attributes as $key => $value) {
+            if (!\is_string($key) || !\is_string($value)) {
+                throw new \InvalidArgumentException('Link attributes must be an array of type <string, string>.');
+            }
+        }
+
         $this->additionalLinkAttributes = $attributes;
 
         return $this;
