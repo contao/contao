@@ -765,12 +765,6 @@ class tl_form_field extends Contao\Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		// Disable the button if the element type is not allowed
-		if (!$this->User->hasAccess($row['type'], 'fields'))
-		{
-			return Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
-		}
-
 		if (Contao\Input::get('tid'))
 		{
 			$this->toggleVisibility(Contao\Input::get('tid'), (Contao\Input::get('state') == 1), (@func_get_arg(12) ?: null));
@@ -781,6 +775,12 @@ class tl_form_field extends Contao\Backend
 		if (!$this->User->hasAccess('tl_form_field::invisible', 'alexf'))
 		{
 			return '';
+		}
+
+		// Disable the button if the element type is not allowed
+		if (!$this->User->hasAccess($row['type'], 'fields'))
+		{
+			return Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 		}
 
 		$href .= '&amp;tid=' . $row['id'] . '&amp;state=' . $row['invisible'];
