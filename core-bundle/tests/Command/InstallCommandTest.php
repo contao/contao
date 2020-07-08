@@ -99,6 +99,20 @@ class InstallCommandTest extends TestCase
     }
 
     /**
+     * Tests adding the initialize.php file and tcpdf.php symlink.
+     */
+    public function testCreatesInitializeFileAndTcpdfSymlink()
+    {
+        $command = new InstallCommand($this->getRootDir(), 'files_test', $this->getRootDir().'/assets/images_test', $this->getBundlesMetadata());
+        $tester = new CommandTester($command);
+        $tester->execute([]);
+
+        $this->assertFileExists($this->getRootDir().'/system/initialize.php');
+        $this->assertTrue(is_link($this->getRootDir().'/system/config/tcpdf.php'));
+        $this->assertFileExists($this->getRootDir().'/system/config/tcpdf.php');
+    }
+
+    /**
      * @return array<string,array<string,string>>
      */
     private function getBundlesMetadata()
