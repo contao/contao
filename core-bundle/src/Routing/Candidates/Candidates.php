@@ -12,11 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\Candidates;
 
-use Contao\CoreBundle\ContentRouting\PageProviderInterface;
+use Contao\CoreBundle\Routing\Page\UrlSuffixProviderInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\FetchMode;
 use Symfony\Cmf\Component\Routing\Candidates\CandidatesInterface;
-use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpFoundation\Request;
 
 class Candidates implements CandidatesInterface
@@ -35,12 +34,12 @@ class Candidates implements CandidatesInterface
     /**
      * @var Connection
      */
-    private $database;
+    private $connection;
 
     /**
-     * @var ServiceLocator
+     * @var array<UrlSuffixProviderInterface>
      */
-    private $pageProviders;
+    private $suffixProviders = [];
 
     /**
      * @var bool
@@ -57,10 +56,14 @@ class Candidates implements CandidatesInterface
      */
     private $urlSuffixes;
 
-    public function __construct(Connection $database, ServiceLocator $pageProviders)
+    public function __construct(Connection $connection)
     {
-        $this->database = $database;
-        $this->pageProviders = $pageProviders;
+        $this->connection = $connection;
+    }
+
+    public function addUrlSuffixProvider(UrlSuffixProviderInterface $provider): void
+    {
+        $this->suffixProviders[] = $provider;
     }
 
     public function isCandidate($name): bool
@@ -143,16 +146,14 @@ class Candidates implements CandidatesInterface
 
         $this->initialized = true;
 
-        $urlPrefix = $this->database
+        $urlPrefix = $this->connection
             ->query("SELECT DISTINCT urlPrefix FROM tl_page WHERE type='root'")
             ->fetchAll(FetchMode::COLUMN)
         ;
 
         $urlSuffix = [];
 
-        foreach (array_keys($this->pageProviders->getProvidedServices()) as $type) {
-            /** @var PageProviderInterface $provider */
-            $provider = $this->pageProviders->get($type);
+        foreach ($this->suffixProviders as $provider) {
             $urlSuffix[] = $provider->getUrlSuffixes();
         }
 

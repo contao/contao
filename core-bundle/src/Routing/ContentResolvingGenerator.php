@@ -12,12 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing;
 
-use Contao\CoreBundle\ContentRouting\ContentRoute;
-use Contao\CoreBundle\ContentRouting\ContentUrlResolverInterface;
-use Contao\CoreBundle\ContentRouting\PageProviderInterface;
 use Contao\CoreBundle\Exception\ContentRouteNotFoundException;
+use Contao\CoreBundle\Routing\Content\ContentRouteProviderInterface;
+use Contao\CoreBundle\Routing\Page\PageRoute;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\Routing\Generator\UrlGenerator as SymfonyUrlGenerator;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Route;
@@ -26,21 +24,15 @@ use Symfony\Component\Routing\RouteCollection;
 class ContentResolvingGenerator extends SymfonyUrlGenerator
 {
     /**
-     * @var array<ContentUrlResolverInterface>
+     * @var array<ContentRouteProviderInterface>
      */
-    private $resolvers;
+    private $providers;
 
-    /**
-     * @var ServiceLocator
-     */
-    private $pageProviders;
-
-    public function __construct(iterable $resolvers, ServiceLocator $pageProviders, LoggerInterface $logger = null)
+    public function __construct(iterable $resolvers, LoggerInterface $logger = null)
     {
         parent::__construct(new RouteCollection(), new RequestContext(), $logger);
 
-        $this->resolvers = $resolvers;
-        $this->pageProviders = $pageProviders;
+        $this->providers = $resolvers;
     }
 
     /**
@@ -50,12 +42,12 @@ class ContentResolvingGenerator extends SymfonyUrlGenerator
      */
     public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH): string
     {
-        if (ContentRoute::ROUTE_NAME !== $name || !isset($parameters[ContentRoute::CONTENT_PARAMETER])) {
+        if (PageRoute::ROUTE_NAME !== $name || !isset($parameters[PageRoute::CONTENT_PARAMETER])) {
             throw new ContentRouteNotFoundException($name);
         }
 
-        $route = $this->resolveContent($parameters[ContentRoute::CONTENT_PARAMETER]);
-        unset($parameters[ContentRoute::CONTENT_PARAMETER]);
+        $route = $this->resolveContent($parameters[PageRoute::CONTENT_PARAMETER]);
+        unset($parameters[PageRoute::CONTENT_PARAMETER]);
 
         // the Route has a cache of its own and is not recompiled as long as it does not get modified
         $compiledRoute = $route->compile();
@@ -71,30 +63,10 @@ class ContentResolvingGenerator extends SymfonyUrlGenerator
             return $content;
         }
 
-        $route = null;
-
-        foreach ($this->resolvers as $resolver) {
+        foreach ($this->providers as $resolver) {
             if ($resolver->supportsContent($content)) {
-                $route = $resolver->resolveContent($content);
-                $route->setDefault(ContentUrlResolverInterface::ATTRIBUTE, $resolver);
-                break;
+                return $resolver->getRouteForContent($content);
             }
-        }
-
-        if ($route instanceof ContentRoute) {
-            $page = $route->getPage();
-
-            if ($this->pageProviders->has($page->type)) {
-                /** @var PageProviderInterface $pageProvider */
-                $pageProvider = $this->pageProviders->get($page->type);
-
-                $route = $pageProvider->getRouteForPage($route->getPage(), $route->getContent());
-                $route->setDefault(PageProviderInterface::ATTRIBUTE, $pageProvider);
-            }
-        }
-
-        if ($route instanceof Route) {
-            return $route;
         }
 
         throw new ContentRouteNotFoundException($content);

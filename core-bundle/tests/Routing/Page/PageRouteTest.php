@@ -10,27 +10,27 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\ContentRouting;
+namespace Contao\CoreBundle\Tests\Routing\Page;
 
-use Contao\CoreBundle\ContentRouting\ContentRoute;
+use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class ContentRouteTest extends TestCase
+class PageRouteTest extends TestCase
 {
     public function testReturnsThePageModel(): void
     {
-        $page = $this->mockPage();
+        $pageModel = $this->mockPageModel();
 
-        $route = new ContentRoute($page);
+        $route = new PageRoute($pageModel);
 
-        $this->assertSame($page, $route->getPage());
+        $this->assertSame($pageModel, $route->getPageModel());
     }
 
     public function testRoutePathMergesPageAliasWithUrlPrefixAndSuffix(): void
     {
-        $route = new ContentRoute($this->mockPage());
+        $route = new PageRoute($this->mockPageModel());
 
         $this->assertSame('/foo/bar.baz', $route->getPath());
 
@@ -46,7 +46,7 @@ class ContentRouteTest extends TestCase
 
     public function testReturnsTheUrlPrefix(): void
     {
-        $route = new ContentRoute($this->mockPage());
+        $route = new PageRoute($this->mockPageModel());
 
         $this->assertSame('foo', $route->getUrlPrefix());
 
@@ -57,7 +57,7 @@ class ContentRouteTest extends TestCase
 
     public function testReturnsTheUrlSuffix(): void
     {
-        $route = new ContentRoute($this->mockPage());
+        $route = new PageRoute($this->mockPageModel());
 
         $this->assertSame('.baz', $route->getUrlSuffix());
 
@@ -70,7 +70,7 @@ class ContentRouteTest extends TestCase
     {
         $content = (object) ['foo' => 'bar'];
 
-        $route = new ContentRoute($this->mockPage(), $content);
+        $route = new PageRoute($this->mockPageModel());
 
         $this->assertSame($content, $route->getContent());
 
@@ -80,49 +80,51 @@ class ContentRouteTest extends TestCase
 
     public function testAddsPageLanguageAsLocaleToRouteDefaults(): void
     {
-        $route = new ContentRoute($this->mockPage());
+        $route = new PageRoute($this->mockPageModel());
 
         $this->assertSame('xy', $route->getDefault('_locale'));
 
-        $route = new ContentRoute($this->mockPage(['rootLanguage' => 'en']));
+        $route = new PageRoute($this->mockPageModel(['rootLanguage' => 'en']));
 
         $this->assertSame('en', $route->getDefault('_locale'));
     }
 
     public function testSetsPageDomainAsRouteHost(): void
     {
-        $route = new ContentRoute($this->mockPage());
+        $route = new PageRoute($this->mockPageModel());
         $this->assertSame('www.example.com', $route->getHost());
     }
 
     public function testSetsProtocolIfRootPageUsesSSL(): void
     {
-        $route = new ContentRoute($this->mockPage(['rootUseSSL' => false]));
+        $route = new PageRoute($this->mockPageModel(['rootUseSSL' => false]));
         $this->assertEmpty($route->getSchemes());
 
-        $route = new ContentRoute($this->mockPage(['rootUseSSL' => true]));
+        $route = new PageRoute($this->mockPageModel(['rootUseSSL' => true]));
         $this->assertSame(['https'], $route->getSchemes());
     }
 
-    public function testCreatePageWithParametersAndRequiresItemIfConfigured(): void
-    {
-        $route = ContentRoute::createWithParameters($this->mockPage(['requireItem' => false]), '/items/news');
-
-        $this->assertSame('/foo/bar{parameters}.baz', $route->getPath());
-        $this->assertSame('/items/news', $route->getDefault('parameters'));
-        $this->assertSame('(/.+)?', $route->getRequirement('parameters'));
-
-        $route = ContentRoute::createWithParameters($this->mockPage(['requireItem' => true]), '/items/news');
-
-        $this->assertSame('/foo/bar{parameters}.baz', $route->getPath());
-        $this->assertSame('/items/news', $route->getDefault('parameters'));
-        $this->assertSame('/.+', $route->getRequirement('parameters'));
-    }
+//    TODO: this test belongs in PageRouteFactoryTest
+//
+//    public function testCreatePageWithParametersAndRequiresItemIfConfigured(): void
+//    {
+//        $route = PageRoute::createWithParameters($this->mockPageModel(['requireItem' => false]), '/items/news');
+//
+//        $this->assertSame('/foo/bar{parameters}.baz', $route->getPath());
+//        $this->assertSame('/items/news', $route->getDefault('parameters'));
+//        $this->assertSame('(/.+)?', $route->getRequirement('parameters'));
+//
+//        $route = PageRoute::createWithParameters($this->mockPageModel(['requireItem' => true]), '/items/news');
+//
+//        $this->assertSame('/foo/bar{parameters}.baz', $route->getPath());
+//        $this->assertSame('/items/news', $route->getDefault('parameters'));
+//        $this->assertSame('/.+', $route->getRequirement('parameters'));
+//    }
 
     /**
      * @return PageModel&MockObject $page
      */
-    private function mockPage(array $properties = []): PageModel
+    private function mockPageModel(array $properties = []): PageModel
     {
         return $this->mockClassWithProperties(
             PageModel::class,

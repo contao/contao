@@ -14,9 +14,9 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\Backend;
 use Contao\BackendUser;
-use Contao\CoreBundle\ContentRouting\PageProviderInterface;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\Page\CompositionAwareInterface;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\DataContainer;
 use Contao\Image;
@@ -46,7 +46,7 @@ class ContentCompositionListener implements ServiceAnnotationInterface
     /**
      * @var ServiceLocator
      */
-    private $pageProviders;
+    private $pages;
 
     /**
      * @var TranslatorInterface
@@ -73,11 +73,11 @@ class ContentCompositionListener implements ServiceAnnotationInterface
      */
     private $backend;
 
-    public function __construct(ContaoFramework $framework, Security $security, ServiceLocator $pageProviders, TranslatorInterface $translator, Connection $connection, RequestStack $requestStack)
+    public function __construct(ContaoFramework $framework, Security $security, ServiceLocator $pages, TranslatorInterface $translator, Connection $connection, RequestStack $requestStack)
     {
         $this->framework = $framework;
         $this->security = $security;
-        $this->pageProviders = $pageProviders;
+        $this->pages = $pages;
         $this->translator = $translator;
         $this->connection = $connection;
         $this->requestStack = $requestStack;
@@ -263,12 +263,12 @@ class ContentCompositionListener implements ServiceAnnotationInterface
 
     private function supportsComposition(PageModel $pageModel): bool
     {
-        if (!$this->pageProviders->has($pageModel->type)) {
+        if (!$this->pages->has($pageModel->type)) {
             return true;
         }
 
-        /** @var PageProviderInterface $provider */
-        $provider = $this->pageProviders->get($pageModel->type);
+        /** @var CompositionAwareInterface $provider */
+        $provider = $this->pages->get($pageModel->type);
 
         return $provider->supportsContentComposition($pageModel);
     }

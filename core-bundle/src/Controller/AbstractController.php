@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
-use Contao\CoreBundle\ContentRouting\ContentRoute;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\Page\PageRoute;
 use FOS\HttpCacheBundle\Http\SymfonyResponseTagger;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as SymfonyAbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -48,10 +48,10 @@ abstract class AbstractController extends SymfonyAbstractController implements S
 
     protected function generateContentUrl($content, array $parameters = [], int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH): string
     {
-        $parameters[ContentRoute::CONTENT_PARAMETER] = $content;
+        $parameters[PageRoute::CONTENT_PARAMETER] = $content;
 
         return $this->container->get('router')->generate(
-            ContentRoute::ROUTE_NAME,
+            PageRoute::ROUTE_NAME,
             $parameters,
             $referenceType
         );

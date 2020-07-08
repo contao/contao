@@ -10,13 +10,13 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\ContentRouting;
+namespace Contao\CoreBundle\Routing\Page;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\PageModel;
 use Symfony\Component\Routing\Route;
 
-class ContentRoute extends Route
+class PageRoute extends Route
 {
     public const ROUTE_NAME = 'contao_routing_object';
     public const ROUTE_NAME_PARAMETER = '_route';
@@ -26,7 +26,7 @@ class ContentRoute extends Route
     /**
      * @var PageModel
      */
-    private $page;
+    private $pageModel;
 
     /**
      * @var string
@@ -43,37 +43,45 @@ class ContentRoute extends Route
      */
     private $content;
 
-    public function __construct(PageModel $page, $content = null)
+    public function __construct(PageModel $pageModel, array $defaults = [], array $requirements = [], array $options = [], array $methods = [])
     {
-        $page->loadDetails();
+        $pageModel->loadDetails();
 
-        $defaults = [
-            '_token_check' => true,
-            '_controller' => 'Contao\FrontendIndex::renderPage',
-            '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
-            '_locale' => $page->rootLanguage,
-            '_format' => 'html',
-            'pageModel' => $page,
-        ];
-
-        parent::__construct(
-            '/'.($page->alias ?: $page->id),
-            $defaults,
-            [],
-            ['utf8' => true],
-            $page->domain,
-            $page->rootUseSSL ? 'https' : null
+        $defaults = array_merge(
+            [
+                '_token_check' => true,
+                '_controller' => 'Contao\FrontendIndex:renderPage',
+                '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
+                '_locale' => $pageModel->rootLanguage,
+                '_format' => 'html',
+            ],
+            $defaults
         );
 
-        $this->page = $page;
-        $this->urlPrefix = $page->urlPrefix;
-        $this->urlSuffix = $page->urlSuffix;
-        $this->content = $content;
+        $defaults['pageModel'] = $pageModel;
+
+        if (!isset($options['utf8'])) {
+            $options['utf8'] = true;
+        }
+
+        parent::__construct(
+            '/'.($pageModel->alias ?: $pageModel->id),
+            $defaults,
+            $requirements,
+            $options,
+            $pageModel->domain,
+            $pageModel->rootUseSSL ? 'https' : null,
+            $methods
+        );
+
+        $this->pageModel = $pageModel;
+        $this->urlPrefix = $pageModel->urlPrefix;
+        $this->urlSuffix = $pageModel->urlSuffix;
     }
 
-    public function getPage(): PageModel
+    public function getPageModel(): PageModel
     {
-        return $this->page;
+        return $this->pageModel;
     }
 
     public function getPath(): string
@@ -124,16 +132,5 @@ class ContentRoute extends Route
     public function getContent()
     {
         return $this->content;
-    }
-
-    public static function createWithParameters(PageModel $page, string $parameters = '', $content = null): self
-    {
-        $route = new self($page, $content);
-
-        $route->setPath(sprintf('/%s{parameters}', $page->alias ?: $page->id));
-        $route->setDefault('parameters', $parameters);
-        $route->setRequirement('parameters', $page->requireItem ? '/.+' : '(/.+)?');
-
-        return $route;
     }
 }

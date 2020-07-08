@@ -464,7 +464,6 @@ services:
         class: Contao\CoreBundle\Routing\Candidates\Candidates
         arguments:
             - '@database_connection'
-            - !tagged_locator { tag: contao.page_provider, index_by: type, default_index_method: getPageType }
 
     contao.routing.domain_filter:
         class: Contao\CoreBundle\Routing\Matcher\DomainFilter
@@ -515,6 +514,9 @@ services:
             - [addRouteFilter, ['@contao.routing.domain_filter']]
             - [addRouteFilter, ['@contao.routing.published_filter']]
 
+    contao.routing.page_route_factory:
+        class: Contao\CoreBundle\Routing\Page\PageRouteFactory
+
     contao.routing.page_router:
         class: Symfony\Cmf\Component\Routing\DynamicRouter
         arguments:
@@ -548,7 +550,6 @@ services:
         class: Contao\CoreBundle\Routing\ContentResolvingGenerator
         arguments:
             - !tagged_iterator contao.content_resolver
-            - !tagged_locator { tag: contao.page_provider, index_by: type, default_index_method: getPageType }
             - '@?logger'
 
     contao.routing.route_provider:
@@ -557,7 +558,7 @@ services:
             - '@contao.framework'
             - '@database_connection'
             - '@contao.routing.candidates'
-            - !tagged_locator { tag: contao.page_provider, index_by: type, default_index_method: getPageType }
+            - '@contao.routing.page_route_factory'
             - '%contao.legacy_routing%'
             - '%contao.prepend_locale%'
 

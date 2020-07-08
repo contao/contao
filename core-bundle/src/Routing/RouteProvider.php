@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing;
 
-use Contao\CoreBundle\ContentRouting\ContentRoute;
-use Contao\CoreBundle\ContentRouting\PageProviderInterface;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\Page\PageRoute;
+use Contao\CoreBundle\Routing\Page\PageRouteFactory;
 use Contao\Model;
 use Contao\Model\Collection;
 use Contao\PageModel;
@@ -24,7 +24,6 @@ use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\Controller\RedirectController;
 use Symfony\Cmf\Component\Routing\Candidates\CandidatesInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
-use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
@@ -48,9 +47,9 @@ class RouteProvider implements RouteProviderInterface
     private $candidates;
 
     /**
-     * @var ServiceLocator
+     * @var PageRouteFactory
      */
-    private $pageProviders;
+    private $routeFactory;
 
     /**
      * @var bool
@@ -65,12 +64,12 @@ class RouteProvider implements RouteProviderInterface
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.route_provider" service instead
      */
-    public function __construct(ContaoFramework $framework, Connection $database, CandidatesInterface $candidates, ServiceLocator $pageProviders, bool $legacyRouting, bool $prependLocale)
+    public function __construct(ContaoFramework $framework, Connection $database, CandidatesInterface $candidates, PageRouteFactory $routeFactory, bool $legacyRouting, bool $prependLocale)
     {
         $this->framework = $framework;
         $this->database = $database;
         $this->candidates = $candidates;
-        $this->pageProviders = $pageProviders;
+        $this->routeFactory = $routeFactory;
         $this->legacyRouting = $legacyRouting;
         $this->prependLocale = $prependLocale;
     }
@@ -89,7 +88,7 @@ class RouteProvider implements RouteProviderInterface
         $routes = [];
 
         if ('/' === $pathInfo || ($this->legacyRouting && $this->prependLocale && preg_match('@^/([a-z]{2}(-[A-Z]{2})?)/$@', $pathInfo))) {
-            $this->addRoutesForRootPages($this->findRootPages($request->getHttpHost()), $routes, $request);
+            $this->addRoutesForRootPages($this->findRootPages($request->getHttpHost()), $routes);
 
             return $this->createCollectionForRoutes($routes, $request->getLanguages());
         }
@@ -176,10 +175,10 @@ class RouteProvider implements RouteProviderInterface
     /**
      * @param array<PageModel> $pages
      */
-    private function addRoutesForRootPages(array $pages, array &$routes, Request $request = null): void
+    private function addRoutesForRootPages(array $pages, array &$routes): void
     {
         foreach ($pages as $page) {
-            $this->addRoutesForRootPage($page, $routes, $request);
+            $this->addRoutesForRootPage($page, $routes);
         }
     }
 
@@ -208,17 +207,17 @@ class RouteProvider implements RouteProviderInterface
             return;
         }
 
-        $route = $this->getRouteForPage($page, $request);
+        $route = $this->routeFactory->createRoute($page);
         $routes['tl_page.'.$page->id] = $route;
 
-        if ($route instanceof ContentRoute) {
+        if ($route instanceof PageRoute) {
             $this->addLocaleRedirect($route, $request, $routes);
         }
 
-        $this->addRoutesForRootPage($page, $routes, $request);
+        $this->addRoutesForRootPage($page, $routes);
     }
 
-    private function addLocaleRedirect(ContentRoute $route, ?Request $request, array &$routes): void
+    private function addLocaleRedirect(PageRoute $route, ?Request $request, array &$routes): void
     {
         $length = \strlen($route->getUrlPrefix());
 
@@ -248,20 +247,20 @@ class RouteProvider implements RouteProviderInterface
             'permanent' => true,
         ]);
 
-        $routes['tl_page.'.$route->getPage()->id.'.locale'] = $redirect;
+        $routes['tl_page.'.$route->getPageModel()->id.'.locale'] = $redirect;
     }
 
-    private function addRoutesForRootPage(PageModel $page, array &$routes, Request $request = null): void
+    private function addRoutesForRootPage(PageModel $page, array &$routes): void
     {
         if ('root' !== $page->type && 'index' !== $page->alias && '/' !== $page->alias) {
             return;
         }
 
         $page->loadDetails();
-        $route = $this->getRouteForPage($page, $request);
+        $route = $this->routeFactory->createRoute($page);
         $urlPrefix = '';
 
-        if ($route instanceof ContentRoute) {
+        if ($route instanceof PageRoute) {
             $urlPrefix = $route->getUrlPrefix();
         }
 
@@ -519,19 +518,5 @@ class RouteProvider implements RouteProviderInterface
         }
 
         return array_merge($rootPages, $indexPages);
-    }
-
-    private function getRouteForPage(PageModel $page, ?Request $request): Route
-    {
-        if (!$this->pageProviders->has($page->type)) {
-            return ContentRoute::createWithParameters($page);
-        }
-
-        /** @var PageProviderInterface $provider */
-        $provider = $this->pageProviders->get($page->type);
-        $route = $provider->getRouteForPage($page, null, $request);
-        $route->setDefault(PageProviderInterface::ATTRIBUTE, $provider);
-
-        return $route;
     }
 }

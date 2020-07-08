@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\ContentRouting\ContentRoute;
+use Contao\CoreBundle\ContentRouting\PageRoute;
 use Contao\CoreBundle\Exception\LegacyRoutingException;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Monolog\ContaoContext;
@@ -460,7 +460,7 @@ abstract class Frontend extends Controller
 			}
 		}
 
-		$strUrl = System::getContainer()->get('router')->generate(ContentRoute::ROUTE_NAME, array(ContentRoute::CONTENT_PARAMETER => $objPage, 'parameters' => $strParams));
+		$strUrl = System::getContainer()->get('router')->generate(PageRoute::ROUTE_NAME, array(PageRoute::CONTENT_PARAMETER => $objPage, 'parameters' => $strParams));
 		$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
 
 		return $strUrl;

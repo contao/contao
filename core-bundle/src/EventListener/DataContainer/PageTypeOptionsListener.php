@@ -13,9 +13,9 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\CoreBundle\Event\FilterPageTypeEvent;
+use Contao\CoreBundle\Routing\Page\PageRouteFactory;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\DataContainer;
-use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Security;
 use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
@@ -26,9 +26,9 @@ use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 class PageTypeOptionsListener implements ServiceAnnotationInterface
 {
     /**
-     * @var ServiceLocator
+     * @var PageRouteFactory
      */
-    private $contentTypes;
+    private $routeFactory;
 
     /**
      * @var Security
@@ -40,19 +40,16 @@ class PageTypeOptionsListener implements ServiceAnnotationInterface
      */
     private $eventDispatcher;
 
-    public function __construct(ServiceLocator $contentTypes, Security $security, EventDispatcherInterface $eventDispatcher = null)
+    public function __construct(PageRouteFactory $routeFactory, Security $security, EventDispatcherInterface $eventDispatcher = null)
     {
-        $this->contentTypes = $contentTypes;
+        $this->routeFactory = $routeFactory;
         $this->security = $security;
         $this->eventDispatcher = $eventDispatcher;
     }
 
     public function __invoke(DataContainer $dc)
     {
-        $pageTypes = array_keys($GLOBALS['TL_PTY']);
-        $contentTypes = array_keys($this->contentTypes->getProvidedServices());
-
-        $options = array_unique(array_merge($pageTypes, $contentTypes));
+        $options = array_unique(array_merge(array_keys($GLOBALS['TL_PTY']), $this->routeFactory->getPageTypes()));
 
         if (null !== $this->eventDispatcher) {
             $options = $this->eventDispatcher

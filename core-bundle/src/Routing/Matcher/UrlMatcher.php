@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\Matcher;
 
-use Contao\CoreBundle\ContentRouting\ContentRoute;
+use Contao\CoreBundle\Routing\Page\PageRoute;
 use Symfony\Cmf\Component\Routing\NestedMatcher\FinalMatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Matcher\RedirectableUrlMatcher;
@@ -59,8 +59,8 @@ class UrlMatcher extends RedirectableUrlMatcher implements FinalMatcherInterface
 
     protected function getAttributes(Route $route, $name, array $attributes): array
     {
-        $attributes[ContentRoute::ROUTE_NAME_PARAMETER] = $name;
-        $attributes[ContentRoute::ROUTE_OBJECT_PARAMETER] = $route;
+        $attributes[PageRoute::ROUTE_NAME_PARAMETER] = $name;
+        $attributes[PageRoute::ROUTE_OBJECT_PARAMETER] = $route;
 
         return $this->mergeDefaults($attributes, $route->getDefaults());
     }

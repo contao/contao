@@ -13,22 +13,21 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\ContentRouting;
 
 use Contao\ArticleModel;
-use Contao\CoreBundle\ContentRouting\ContentRoute;
-use Contao\CoreBundle\ContentRouting\PageUrlResolver;
+use Contao\CoreBundle\Routing\Content\PageRouteProvider;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class PageUrlResolverTest extends TestCase
+class PageRouteProviderTest extends TestCase
 {
     /**
-     * @var PageUrlResolver
+     * @var PageRouteProvider
      */
     private $resolver;
 
     protected function setUp(): void
     {
-        $this->resolver = new PageUrlResolver();
+        $this->resolver = new PageRouteProvider();
     }
 
     public function testSupportsPages(): void
@@ -41,10 +40,10 @@ class PageUrlResolverTest extends TestCase
     {
         $page = $this->mockPage();
 
-        /** @var ContentRoute $route */
+        /** @var PageRoute $route */
         $route = $this->resolver->resolveContent($page);
 
-        $this->assertInstanceOf(ContentRoute::class, $route);
+        $this->assertInstanceOf(PageRoute::class, $route);
         $this->assertSame($page, $route->getPage());
         $this->assertSame('/foo/bar{parameters}.baz', $route->getPath());
         $this->assertSame('', $route->getDefault('parameters'));

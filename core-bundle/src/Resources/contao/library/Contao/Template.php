@@ -10,8 +10,8 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\ContentRouting\ContentRoute;
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
+use Contao\CoreBundle\Routing\Page\PageRoute;
 use MatthiasMullie\Minify\CSS;
 use MatthiasMullie\Minify\JS;
 use Symfony\Component\HttpFoundation\Response;
@@ -356,9 +356,9 @@ abstract class Template extends Controller
 	 */
 	public function routeContent($content, $arrParams=array())
 	{
-		$arrParams[ContentRoute::CONTENT_PARAMETER] = $content;
+		$arrParams[PageRoute::CONTENT_PARAMETER] = $content;
 
-		return $this->route(ContentRoute::ROUTE_NAME, $arrParams);
+		return $this->route(PageRoute::ROUTE_NAME, $arrParams);
 	}
 
 	/**
@@ -401,9 +401,9 @@ abstract class Template extends Controller
 	 */
 	public function previewContentRoute($content, $arrParams = array())
 	{
-		$arrParams[ContentRoute::CONTENT_PARAMETER] = $content;
+		$arrParams[PageRoute::CONTENT_PARAMETER] = $content;
 
-		return $this->routeContent(ContentRoute::ROUTE_NAME, $arrParams);
+		return $this->routeContent(PageRoute::ROUTE_NAME, $arrParams);
 	}
 
 	/**

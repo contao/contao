@@ -10,10 +10,9 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\ContentRouting;
+namespace Contao\CoreBundle\Tests\Controller\Page;
 
-use Contao\CoreBundle\ContentRouting\ContentRoute;
-use Contao\CoreBundle\ContentRouting\RootPageProvider;
+use Contao\CoreBundle\Controller\Page\RootController;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
@@ -24,7 +23,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\FrameworkBundle\Controller\RedirectController;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
-class RootPageProviderTest extends TestCase
+class RootControllerTest extends TestCase
 {
     /**
      * @var PageModel&Adapter&MockObject
@@ -37,9 +36,9 @@ class RootPageProviderTest extends TestCase
     private $connection;
 
     /**
-     * @var RootPageProvider
+     * @var RootController
      */
-    private $provider;
+    private $controller;
 
     protected function setUp(): void
     {
@@ -48,7 +47,7 @@ class RootPageProviderTest extends TestCase
 
         $framework = $this->mockContaoFramework([PageModel::class => $this->pageModelAdapter]);
 
-        $this->provider = new RootPageProvider($framework, $this->connection);
+        $this->controller = new RootController($framework, $this->connection);
     }
 
     public function testThrowsExceptionIfPageTypeIsNotSupported(): void
@@ -58,7 +57,7 @@ class RootPageProviderTest extends TestCase
         /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class, ['type' => 'foobar']);
 
-        $this->provider->getRouteForPage($page);
+        $this->controller->getRouteForPage($page);
     }
 
     public function testThrowsExceptionIfFirstPageOfRootIsNotFound(): void
@@ -75,7 +74,7 @@ class RootPageProviderTest extends TestCase
             ->willReturn(null)
         ;
 
-        $this->provider->getRouteForPage($page);
+        $this->controller->getRouteForPage($page);
     }
 
     public function testCreatesRedirectRouteToFirstPage(): void
@@ -98,9 +97,9 @@ class RootPageProviderTest extends TestCase
             ->willReturn($nextPage)
         ;
 
-        $route = $this->provider->getRouteForPage($page);
+        $route = $this->controller->getRouteForPage($page);
 
-        $this->assertInstanceOf(ContentRoute::class, $route);
+        $this->assertInstanceOf(PageRoute::class, $route);
 
         $this->assertSame('/en/root.html', $route->getPath());
         $this->assertSame(RedirectController::class, $route->getDefault('_controller'));
@@ -125,11 +124,11 @@ class RootPageProviderTest extends TestCase
             ->willReturn($statement)
         ;
 
-        $this->assertSame(['foo', 'bar'], $this->provider->getUrlSuffixes());
+        $this->assertSame(['foo', 'bar'], $this->controller->getUrlSuffixes());
     }
 
     public function testDoesNotSupportContentComposition(): void
     {
-        $this->assertFalse($this->provider->supportsContentComposition());
+        $this->assertFalse($this->controller->supportsContentComposition());
     }
 }

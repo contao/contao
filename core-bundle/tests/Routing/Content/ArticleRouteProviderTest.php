@@ -10,32 +10,31 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\ContentRouting;
+namespace Contao\CoreBundle\Tests\Routing\Content;
 
 use Contao\ArticleModel;
-use Contao\CoreBundle\ContentRouting\ArticleUrlResolver;
-use Contao\CoreBundle\ContentRouting\ContentRoute;
+use Contao\CoreBundle\Routing\Content\ArticleRouteProvider;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
-class ArticleUrlResolverTest extends TestCase
+class ArticleRouteProviderTest extends TestCase
 {
     /**
-     * @var ArticleUrlResolver
+     * @var ArticleRouteProvider
      */
-    private $resolver;
+    private $provider;
 
     protected function setUp(): void
     {
-        $this->resolver = new ArticleUrlResolver();
+        $this->provider = new ArticleRouteProvider();
     }
 
     public function testSupportsArticles(): void
     {
-        $this->assertTrue($this->resolver->supportsContent($this->mockArticle()));
-        $this->assertFalse($this->resolver->supportsContent($this->mockClassWithProperties(PageModel::class)));
+        $this->assertTrue($this->provider->supportsContent($this->mockArticle()));
+        $this->assertFalse($this->provider->supportsContent($this->mockClassWithProperties(PageModel::class)));
     }
 
     public function testCreatesParameterdContentRouteForArticle(): void
@@ -50,10 +49,10 @@ class ArticleUrlResolverTest extends TestCase
             ->willReturn($page)
         ;
 
-        /** @var ContentRoute $route */
-        $route = $this->resolver->resolveContent($article);
+        /** @var PageRoute $route */
+        $route = $this->provider->resolveContent($article);
 
-        $this->assertInstanceOf(ContentRoute::class, $route);
+        $this->assertInstanceOf(PageRoute::class, $route);
         $this->assertSame($page, $route->getPage());
         $this->assertSame('/foo/bar{parameters}.baz', $route->getPath());
         $this->assertSame('/articles/foobar', $route->getDefault('parameters'));
@@ -71,10 +70,10 @@ class ArticleUrlResolverTest extends TestCase
             ->willReturn($page)
         ;
 
-        /** @var ContentRoute $route */
-        $route = $this->resolver->resolveContent($article);
+        /** @var PageRoute $route */
+        $route = $this->provider->resolveContent($article);
 
-        $this->assertInstanceOf(ContentRoute::class, $route);
+        $this->assertInstanceOf(PageRoute::class, $route);
         $this->assertSame($page, $route->getPage());
         $this->assertSame('/foo/bar{parameters}.baz', $route->getPath());
         $this->assertSame('/articles/17', $route->getDefault('parameters'));
@@ -93,7 +92,7 @@ class ArticleUrlResolverTest extends TestCase
 
         $this->expectException(RouteNotFoundException::class);
 
-        $this->resolver->resolveContent($article);
+        $this->provider->resolveContent($article);
     }
 
     /**

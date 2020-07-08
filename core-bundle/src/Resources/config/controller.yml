@@ -1,0 +1,13 @@
+services:
+    _defaults:
+        autoconfigure: true
+        public: true
+
+    Contao\CoreBundle\Controller\Page\RootController:
+        arguments:
+            - '@contao.framework'
+            - '@database_connection'
+            - '@monolog.logger'
+        tags:
+            - { name: contao.page }
+            - { name: monolog.logger, channel: contao }
