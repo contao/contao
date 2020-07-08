@@ -67,7 +67,13 @@ class InstallCommandTest extends TestCase
      */
     public function testCreatesTheContaoFolders()
     {
-        $command = new InstallCommand($this->getRootDir(), 'files', $this->getRootDir().'/assets/images', $this->getBundlesMetadata());
+        $command = new InstallCommand(
+            $this->getRootDir(),
+            'files',
+            $this->getRootDir().'/assets/images',
+            $this->getBundlesMetadata()
+        );
+
         $tester = new CommandTester($command);
         $code = $tester->execute([]);
         $output = $tester->getDisplay();
@@ -88,7 +94,13 @@ class InstallCommandTest extends TestCase
      */
     public function testHandlesCustomFilesAndImagesPaths()
     {
-        $command = new InstallCommand($this->getRootDir(), 'files_test', $this->getRootDir().'/assets/images_test', $this->getBundlesMetadata());
+        $command = new InstallCommand(
+            $this->getRootDir(),
+            'files_test',
+            $this->getRootDir().'/assets/images_test',
+            $this->getBundlesMetadata()
+        );
+
         $tester = new CommandTester($command);
         $code = $tester->execute([]);
         $display = $tester->getDisplay();
@@ -103,13 +115,18 @@ class InstallCommandTest extends TestCase
      */
     public function testCreatesInitializeFileAndTcpdfSymlink()
     {
-        $command = new InstallCommand($this->getRootDir(), 'files_test', $this->getRootDir().'/assets/images_test', $this->getBundlesMetadata());
+        $command = new InstallCommand(
+            $this->getRootDir(),
+            'files_test',
+            $this->getRootDir().'/assets/images_test',
+            $this->getBundlesMetadata()
+        );
+
         $tester = new CommandTester($command);
         $tester->execute([]);
 
         $this->assertFileExists($this->getRootDir().'/system/initialize.php');
         $this->assertTrue(is_link($this->getRootDir().'/system/config/tcpdf.php'));
-        $this->assertFileExists($this->getRootDir().'/system/config/tcpdf.php');
     }
 
     /**
