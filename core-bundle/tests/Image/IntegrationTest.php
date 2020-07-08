@@ -1528,7 +1528,7 @@ class IntegrationTest extends TestCase
             $filesModelsByPath[$data['path']] = $filesModel;
         }
 
-        $filesAdapter = $this->mockAdapter(['getMetaFields', 'getMetaData', 'findByPath']);
+        $filesAdapter = $this->mockAdapter(['getMetaFields', 'findByPath']);
 
         $filesAdapter
             ->method('getMetaFields')
@@ -1555,7 +1555,6 @@ class IntegrationTest extends TestCase
      */
     private function getLayoutAdapter(): Adapter
     {
-        // Get layout model and register it in the registry (needed for legacy code)
         $data = [
             'id' => 1,
             'lightboxSize' => 'a:3:{i:0;s:2:"40";i:1;s:2:"30";i:2;s:13:"center_center";}',
@@ -1608,8 +1607,6 @@ class IntegrationTest extends TestCase
             LayoutModel::class => $this->getLayoutAdapter(),
         ]);
 
-        $studio = new Studio($container);
-
         $resizer = new LegacyResizer($container->getParameter('contao.image.target_dir'), new ResizeCalculator());
         $resizer->setFramework($framework);
 
@@ -1638,8 +1635,8 @@ class IntegrationTest extends TestCase
             'contao.image.valid_extensions' => $container->getParameter('contao.image.valid_extensions'),
         ]);
 
+        $container->set(Studio::class, new Studio($container));
         $container->set('contao.framework', $framework);
-        $container->set(Studio::class, $studio);
         $container->set('contao.image.resizer', $resizer);
         $container->set('contao.image.image_factory', $imageFactory);
         $container->set('contao.image.picture_factory', $pictureFactory);
@@ -1675,7 +1672,7 @@ class IntegrationTest extends TestCase
                     return;
                 }
 
-                $value = preg_replace('#^(assets/images/)\S*$#', '$1<anything>', $value);
+                $value = preg_replace('#^(assets/images/)\\S*$#', '$1<anything>', $value);
             }
         );
 
