@@ -127,11 +127,7 @@ class InstallCommandTest extends TestCase
 
         $this->assertFileExists($this->getRootDir().'/system/initialize.php');
 
-        /*
-         * We need to check both if the tcpdf.php is a symlink and is in fact a file,
-         * because is_link() returns true, even if the symlink is invalid and
-         * file_exists() returns false, if the symlink is invalid.
-         */
+        // is_link() returns true even if the symlink target does not exist, therefore also check file_exists()
         $this->assertTrue(is_link($this->getRootDir().'/system/config/tcpdf.php'));
         $this->assertFileExists($this->getRootDir().'/system/config/tcpdf.php');
     }
