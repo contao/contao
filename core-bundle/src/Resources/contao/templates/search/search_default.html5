@@ -7,6 +7,6 @@
     <p class="context"><?= $this->context ?></p>
   <?php endif; ?>
 
-  <p class="url"><?= $this->url ?><span class="filesize"> - <?= $this->filesize ?> kB</span></p>
+  <p class="url"><?= $this->url ?><span class="filesize"> - <?= $this->filesize ?> <?= $this->unit ?></span></p>
 
 </div>
