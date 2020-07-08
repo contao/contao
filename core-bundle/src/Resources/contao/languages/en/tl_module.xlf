@@ -102,7 +102,7 @@
         <source>Redirect to last page visited</source>
       </trans-unit>
       <trans-unit id="tl_module.redirectBack.1">
-        <source>Redirect the visitor back to the last page visited instead of the redirect page.</source>
+        <source>Redirect the member back to the last page visited instead of the redirect page.</source>
       </trans-unit>
       <trans-unit id="tl_module.cols.0">
         <source>Number of columns</source>
