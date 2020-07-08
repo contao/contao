@@ -401,7 +401,7 @@ class Combiner extends System
 			$objCompiler = new Compiler();
 			$objCompiler->setImportPaths($this->strRootDir . '/' . \dirname($arrFile['name']));
 			$objCompiler->setFormatter((Config::get('debugMode') ? Expanded::class : Compressed::class));
-			
+
 			if (Config::get('debugMode'))
 			{
 				$objCompiler->setSourceMap(Compiler::SOURCE_MAP_INLINE);
