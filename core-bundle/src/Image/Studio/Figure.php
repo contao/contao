@@ -49,6 +49,11 @@ final class Figure
     private $lightBox;
 
     /**
+     * @var array<string, mixed>|(\Closure(self):array<string, mixed>)|null
+     */
+    private $attributes;
+
+    /**
      * Create a figure container.
      *
      * All arguments but the main image result can also be set via a Closure
@@ -58,13 +63,15 @@ final class Figure
      * @param MetaData|(\Closure(self):MetaData|null)|null                                $metaData       Meta data container
      * @param array<string, string|null>|(\Closure(self):array<string, string|null>)|null $linkAttributes Link attributes
      * @param LightBoxResult|(\Closure(self):LightBoxResult|null)|null                    $lightBox       Light box
+     * @param array<string, mixed>|(\Closure(self):array<string, mixed>)|null             $attributes     Figure attributes
      */
-    public function __construct(ImageResult $image, $metaData = null, $linkAttributes = null, $lightBox = null)
+    public function __construct(ImageResult $image, $metaData = null, $linkAttributes = null, $lightBox = null, $attributes = null)
     {
         $this->image = $image;
         $this->metaData = $metaData;
         $this->linkAttributes = $linkAttributes;
         $this->lightBox = $lightBox;
+        $this->attributes = $attributes;
     }
 
     /**
@@ -178,6 +185,16 @@ final class Figure
     public function getLinkHref(): string
     {
         return $this->getLinkAttributes(true)['href'] ?? '';
+    }
+
+    /**
+     * Return a key-value list of (figure) attributes.
+     */
+    public function getAttributes(): array
+    {
+        $this->resolveIfClosure($this->attributes);
+
+        return $this->attributes ?? [];
     }
 
     /**

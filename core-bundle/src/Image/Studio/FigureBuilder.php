@@ -124,6 +124,13 @@ class FigureBuilder
     private $enableLightBox;
 
     /**
+     * User defined figure attributes.
+     *
+     * @var array<string, mixed>
+     */
+    private $figureAttributes = [];
+
+    /**
      * @internal use the `\Contao\Image\Studio\Studio` factory to get an instance of this class
      */
     public function __construct(ContainerInterface $locator)
@@ -393,6 +400,16 @@ class FigureBuilder
     }
 
     /**
+     * Set all figure attributes as an associative array.
+     */
+    public function setFigureAttributes(array $attributes): self
+    {
+        $this->figureAttributes = $attributes;
+
+        return $this;
+    }
+
+    /**
      * Create a result object with the current settings.
      */
     public function build(): Figure
@@ -426,7 +443,8 @@ class FigureBuilder
                 function (Figure $figure): ?LightBoxResult {
                     return $this->onDefineLightBoxResult($figure);
                 }, $settings
-            )
+            ),
+            $this->figureAttributes
         );
     }
 
