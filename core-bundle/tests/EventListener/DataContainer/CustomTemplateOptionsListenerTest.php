@@ -87,11 +87,7 @@ class CustomTemplateOptionsListenerTest extends TestCase
         $dc->table = $table;
 
         if (\in_array($table, ['tl_content', 'tl_module', 'tl_form_field'], true)) {
-            /** @var Result&MockObject $activeRecord */
-            $activeRecord = $this->mockClassWithProperties(Result::class);
-            $activeRecord->type = 'default';
-
-            $dc->activeRecord = $activeRecord;
+            $dc->activeRecord = $this->mockClassWithProperties(Result::class, ['type' => 'default']);
         }
 
         return $dc;
