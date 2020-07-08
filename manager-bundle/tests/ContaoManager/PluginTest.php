@@ -92,7 +92,7 @@ class PluginTest extends ContaoTestCase
 
         $this->assertSame(SecurityBundle::class, $bundles[1]->getName());
         $this->assertSame([], $bundles[1]->getReplace());
-        $this->assertSame([], $bundles[1]->getLoadAfter());
+        $this->assertSame([FrameworkBundle::class], $bundles[1]->getLoadAfter());
 
         $this->assertSame(TwigBundle::class, $bundles[2]->getName());
         $this->assertSame([], $bundles[2]->getReplace());
