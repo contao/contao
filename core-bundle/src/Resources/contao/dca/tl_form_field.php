@@ -834,21 +834,21 @@ class tl_form_field extends Contao\Backend
 			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to publish/unpublish form field ID ' . $intId . '.');
 		}
 
-		// Set the current record
-		if ($dc)
-		{
-			$objRow = $this->Database->prepare("SELECT * FROM tl_form_field WHERE id=?")
-									 ->limit(1)
-									 ->execute($intId);
+		$objRow = $this->Database->prepare("SELECT * FROM tl_form_field WHERE id=?")
+								 ->limit(1)
+								 ->execute($intId);
 
-			if ($objRow->numRows)
+		if ($objRow->numRows)
+		{
+			if (!$this->User->hasAccess($objRow->type, 'fields'))
+			{
+				throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to modify form fields of type "' . $objRow->type . '".');
+			}
+
+			// Set the current record
+			if ($dc)
 			{
 				$dc->activeRecord = $objRow;
-
-				if (!$this->User->hasAccess($objRow->type, 'fields'))
-				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to modify form fields of type "' . $objRow->type . '".');
-				}
 			}
 		}
 

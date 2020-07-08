@@ -2021,21 +2021,21 @@ class tl_content extends Contao\Backend
 			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to show/hide content element ID ' . $intId . '.');
 		}
 
-		// Set the current record
-		if ($dc)
-		{
-			$objRow = $this->Database->prepare("SELECT * FROM tl_content WHERE id=?")
-									 ->limit(1)
-									 ->execute($intId);
+		$objRow = $this->Database->prepare("SELECT * FROM tl_content WHERE id=?")
+								 ->limit(1)
+								 ->execute($intId);
 
-			if ($objRow->numRows)
+		if ($objRow->numRows)
+		{
+			if (!$this->User->hasAccess($objRow->type, 'elements'))
+			{
+				throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to modify content elements of type "' . $objRow->type . '".');
+			}
+
+			// Set the current record
+			if ($dc)
 			{
 				$dc->activeRecord = $objRow;
-
-				if (!$this->User->hasAccess($objRow->type, 'elements'))
-				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to modify content elements of type "' . $objRow->type . '".');
-				}
 			}
 		}
 
