@@ -2025,18 +2025,20 @@ class tl_content extends Contao\Backend
 								 ->limit(1)
 								 ->execute($intId);
 
-		if ($objRow->numRows)
+		if ($objRow->numRows < 1)
 		{
-			if (!$this->User->hasAccess($objRow->type, 'elements'))
-			{
-				throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to modify content elements of type "' . $objRow->type . '".');
-			}
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid content element ID ' . $intId . '.');
+		}
 
-			// Set the current record
-			if ($dc)
-			{
-				$dc->activeRecord = $objRow;
-			}
+		if (!$this->User->hasAccess($objRow->type, 'elements'))
+		{
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to modify content elements of type "' . $objRow->type . '".');
+		}
+
+		// Set the current record
+		if ($dc)
+		{
+			$dc->activeRecord = $objRow;
 		}
 
 		$objVersions = new Contao\Versions('tl_content', $intId);

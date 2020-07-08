@@ -838,18 +838,20 @@ class tl_form_field extends Contao\Backend
 								 ->limit(1)
 								 ->execute($intId);
 
-		if ($objRow->numRows)
+		if ($objRow->numRows < 1)
 		{
-			if (!$this->User->hasAccess($objRow->type, 'fields'))
-			{
-				throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to modify form fields of type "' . $objRow->type . '".');
-			}
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid form field ID ' . $intId . '.');
+		}
 
-			// Set the current record
-			if ($dc)
-			{
-				$dc->activeRecord = $objRow;
-			}
+		if (!$this->User->hasAccess($objRow->type, 'fields'))
+		{
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to modify form fields of type "' . $objRow->type . '".');
+		}
+
+		// Set the current record
+		if ($dc)
+		{
+			$dc->activeRecord = $objRow;
 		}
 
 		$objVersions = new Contao\Versions('tl_form_field', $intId);
