@@ -49,9 +49,16 @@ class IntegrationTest extends TestCase
         // Make resources available in test root
         self::$testRoot = self::getTempDir();
 
-        (new Filesystem())->symlink(
+        $filesystem = new Filesystem();
+
+        $filesystem->symlink(
             Path::canonicalize(__DIR__.'/../Fixtures/files'),
             Path::join(self::$testRoot, 'files')
+        );
+
+        $filesystem->symlink(
+            Path::canonicalize(__DIR__.'/../../src/Resources/contao'),
+            Path::join(self::$testRoot, 'contao')
         );
     }
 
@@ -1600,7 +1607,7 @@ class IntegrationTest extends TestCase
     {
         $container->setParameter('contao.image.target_dir', Path::join(self::$testRoot, 'assets/images'));
         $container->setParameter('contao.web_dir', Path::join(self::$testRoot, 'web'));
-        $container->setParameter('contao.resources_paths', [Path::canonicalize(__DIR__.'/../../src/Resources/contao')]);
+        $container->setParameter('contao.resources_paths', [Path::join(self::$testRoot, 'contao')]);
 
         $framework = $this->mockContaoFramework([
             FilesModel::class => $filesAdapter ?? $this->mockAdapter(['findByPath']),
