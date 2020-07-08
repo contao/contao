@@ -17,7 +17,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
-use Webmozart\PathUtil\Path;
 
 /**
  * Installs the required Contao directories.
@@ -247,10 +246,10 @@ EOF
      */
     private function symlinkTcpdfConfig()
     {
-        $relPath = $this->fs->makePathRelative($this->bundlesMeta['ContaoCoreBundle']['path'], $this->rootDir);
+        $relPath = rtrim($this->fs->makePathRelative($this->bundlesMeta['ContaoCoreBundle']['path'], $this->rootDir), '/');
 
         SymlinkUtil::symlink(
-            Path::join($relPath, 'Resources/contao/config/tcpdf.php'),
+            $relPath.'/Resources/contao/config/tcpdf.php',
             'system/config/tcpdf.php',
             $this->rootDir
         );
