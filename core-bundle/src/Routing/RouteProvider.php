@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing;
 
+use Contao\CoreBundle\ContentRouting\ContentRoute;
+use Contao\CoreBundle\ContentRouting\PageProviderInterface;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Routing\Content\ContentRoute;
-use Contao\CoreBundle\Routing\Content\PageProviderInterface;
 use Contao\Model;
 use Contao\Model\Collection;
 use Contao\PageModel;

@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Routing\Candidates;
 
+use Contao\CoreBundle\ContentRouting\PageProviderInterface;
 use Contao\CoreBundle\Routing\Candidates\Candidates;
 use Contao\CoreBundle\Routing\Candidates\LegacyCandidates;
-use Contao\CoreBundle\Routing\Content\PageProviderInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\FetchMode;

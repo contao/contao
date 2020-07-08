@@ -11,11 +11,11 @@
 namespace Contao;
 
 use Contao\CoreBundle\Asset\ContaoContext;
+use Contao\CoreBundle\ContentRouting\ContentRoute;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
-use Contao\CoreBundle\Routing\Content\ContentRoute;
 use Contao\Database\Result;
 use Contao\Image\PictureConfiguration;
 use Contao\Model\Collection;

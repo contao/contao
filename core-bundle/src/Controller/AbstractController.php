@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
+use Contao\CoreBundle\ContentRouting\ContentRoute;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Routing\Content\ContentRoute;
 use FOS\HttpCacheBundle\Http\SymfonyResponseTagger;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as SymfonyAbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;

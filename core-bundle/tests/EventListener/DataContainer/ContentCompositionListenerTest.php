@@ -14,10 +14,10 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\Backend;
 use Contao\BackendUser;
+use Contao\CoreBundle\ContentRouting\PageProviderInterface;
 use Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Routing\Content\PageProviderInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Contao\DC_Table;

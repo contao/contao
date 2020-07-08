@@ -12,12 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection;
 
+use Contao\CoreBundle\ContentRouting\ContentUrlResolverInterface;
+use Contao\CoreBundle\ContentRouting\PageProviderInterface;
 use Contao\CoreBundle\Crawl\Escargot\Subscriber\EscargotSubscriberInterface;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Migration\MigrationInterface;
 use Contao\CoreBundle\Picker\PickerProviderInterface;
-use Contao\CoreBundle\Routing\Content\ContentUrlResolverInterface;
-use Contao\CoreBundle\Routing\Content\PageProviderInterface;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Imagine\Exception\RuntimeException;
 use Imagine\Gd\Imagine;

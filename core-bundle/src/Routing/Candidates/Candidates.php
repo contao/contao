@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\Candidates;
 
-use Contao\CoreBundle\Routing\Content\PageProviderInterface;
+use Contao\CoreBundle\ContentRouting\PageProviderInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\FetchMode;
 use Symfony\Cmf\Component\Routing\Candidates\CandidatesInterface;

@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Routing;
 
+use Contao\CoreBundle\ContentRouting\ContentRoute;
+use Contao\CoreBundle\ContentRouting\ContentUrlResolverInterface;
+use Contao\CoreBundle\ContentRouting\PageProviderInterface;
 use Contao\CoreBundle\Exception\ContentRouteNotFoundException;
-use Contao\CoreBundle\Routing\Content\ContentRoute;
-use Contao\CoreBundle\Routing\Content\ContentUrlResolverInterface;
-use Contao\CoreBundle\Routing\Content\PageProviderInterface;
 use Contao\CoreBundle\Routing\ContentResolvingGenerator;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;

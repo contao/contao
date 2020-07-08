@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Routing\Content;
+namespace Contao\CoreBundle\ContentRouting;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageModel;

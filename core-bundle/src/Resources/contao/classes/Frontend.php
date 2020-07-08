@@ -10,10 +10,10 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\ContentRouting\ContentRoute;
 use Contao\CoreBundle\Exception\LegacyRoutingException;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Monolog\ContaoContext;
-use Contao\CoreBundle\Routing\Content\ContentRoute;
 use Contao\CoreBundle\Search\Document;
 use Psr\Log\LogLevel;
 use Symfony\Component\HttpFoundation\Request;

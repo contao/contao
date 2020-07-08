@@ -10,8 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\ContentRouting\ContentRoute;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
-use Contao\CoreBundle\Routing\Content\ContentRoute;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;

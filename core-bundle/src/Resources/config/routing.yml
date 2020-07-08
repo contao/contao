@@ -2,11 +2,11 @@ services:
     _defaults:
         autoconfigure: true
 
-    Contao\CoreBundle\Routing\Content\ArticleUrlResolver:
+    Contao\CoreBundle\ContentRouting\ArticleUrlResolver:
 
-    Contao\CoreBundle\Routing\Content\PageUrlResolver:
+    Contao\CoreBundle\ContentRouting\PageUrlResolver:
 
-    Contao\CoreBundle\Routing\Content\RootPageProvider:
+    Contao\CoreBundle\ContentRouting\RootPageProvider:
         arguments:
             - '@contao.framework'
             - '@database_connection'

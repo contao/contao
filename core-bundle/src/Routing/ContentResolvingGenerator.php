@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing;
 
+use Contao\CoreBundle\ContentRouting\ContentRoute;
+use Contao\CoreBundle\ContentRouting\ContentUrlResolverInterface;
+use Contao\CoreBundle\ContentRouting\PageProviderInterface;
 use Contao\CoreBundle\Exception\ContentRouteNotFoundException;
-use Contao\CoreBundle\Routing\Content\ContentRoute;
-use Contao\CoreBundle\Routing\Content\ContentUrlResolverInterface;
-use Contao\CoreBundle\Routing\Content\PageProviderInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\Routing\Generator\UrlGenerator as SymfonyUrlGenerator;

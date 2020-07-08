@@ -10,11 +10,11 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Routing\Content;
+namespace Contao\CoreBundle\Tests\ContentRouting;
 
 use Contao\ArticleModel;
-use Contao\CoreBundle\Routing\Content\ContentRoute;
-use Contao\CoreBundle\Routing\Content\PageUrlResolver;
+use Contao\CoreBundle\ContentRouting\ContentRoute;
+use Contao\CoreBundle\ContentRouting\PageUrlResolver;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use PHPUnit\Framework\MockObject\MockObject;

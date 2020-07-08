@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\Matcher;
 
-use Contao\CoreBundle\Routing\Content\ContentRoute;
+use Contao\CoreBundle\ContentRouting\ContentRoute;
 use Symfony\Cmf\Component\Routing\NestedMatcher\FinalMatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Matcher\RedirectableUrlMatcher;

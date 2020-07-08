@@ -14,9 +14,9 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\Backend;
 use Contao\BackendUser;
+use Contao\CoreBundle\ContentRouting\PageProviderInterface;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Routing\Content\PageProviderInterface;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\DataContainer;
 use Contao\Image;

@@ -10,8 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\ContentRouting\ContentRoute;
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
-use Contao\CoreBundle\Routing\Content\ContentRoute;
 use MatthiasMullie\Minify\CSS;
 use MatthiasMullie\Minify\JS;
 use Symfony\Component\HttpFoundation\Response;
