@@ -91,6 +91,13 @@ services:
         tags:
             - { name: contao.hook, hook: loadDataContainer }
 
+    Contao\CoreBundle\EventListener\DataContainer\CustomTemplateOptionsListener:
+        arguments:
+            - '@contao.framework'
+            - '@request_stack'
+        tags:
+            - { name: kernel.reset, method: reset }
+
     contao.listener.doctrine_schema:
         class: Contao\CoreBundle\EventListener\DoctrineSchemaListener
         arguments:
@@ -276,10 +283,3 @@ services:
             - '@event_dispatcher'
         tags:
             - kernel.event_listener
-
-    Contao\CoreBundle\EventListener\DataContainer\CustomTemplateOptionsCallback:
-        arguments:
-            - '@contao.framework'
-            - '@request_stack'
-        tags:
-            - { name: kernel.reset, method: reset }

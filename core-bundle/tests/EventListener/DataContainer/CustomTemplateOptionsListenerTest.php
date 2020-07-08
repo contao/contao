@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\Controller;
-use Contao\CoreBundle\EventListener\DataContainer\CustomTemplateOptionsCallback;
+use Contao\CoreBundle\EventListener\DataContainer\CustomTemplateOptionsListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database\Result;
@@ -22,11 +22,11 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class CustomTemplateOptionsCallbackTest extends TestCase
+class CustomTemplateOptionsListenerTest extends TestCase
 {
-    public function testReturnsDefaultTemplate(): void
+    public function testReturnsTheDefaultTemplate(): void
     {
-        $callback = new CustomTemplateOptionsCallback($this->getFramework(), new RequestStack());
+        $callback = new CustomTemplateOptionsListener($this->getFramework(), new RequestStack());
 
         $this->assertSame(['' => 'mod_article'], $callback->onArticle($this->mockDataContainer('tl_article')));
         $this->assertSame(['' => 'ce_default'], $callback->onContent($this->mockDataContainer('tl_content')));
@@ -35,9 +35,9 @@ class CustomTemplateOptionsCallbackTest extends TestCase
         $this->assertSame(['' => 'mod_default'], $callback->onModule($this->mockDataContainer('tl_module')));
     }
 
-    public function testReturnsCustomTemplate(): void
+    public function testReturnsTheCustomTemplate(): void
     {
-        $callback = new CustomTemplateOptionsCallback($this->getFramework(), new RequestStack());
+        $callback = new CustomTemplateOptionsListener($this->getFramework(), new RequestStack());
         $callback->setFragmentTemplate('tl_content', 'default', 'ce_foo');
         $callback->setFragmentTemplate('tl_module', 'default', 'mod_foo');
 
@@ -51,7 +51,7 @@ class CustomTemplateOptionsCallbackTest extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $callback = new CustomTemplateOptionsCallback($this->getFramework(), $requestStack);
+        $callback = new CustomTemplateOptionsListener($this->getFramework(), $requestStack);
 
         $this->assertSame(['' => '-', 'ce_custom' => 'ce_custom (global)'], $callback->onContent($this->mockDataContainer('tl_content')));
         $this->assertSame(['' => '-', 'mod_custom' => 'mod_custom (global)'], $callback->onModule($this->mockDataContainer('tl_module')));
@@ -90,6 +90,7 @@ class CustomTemplateOptionsCallbackTest extends TestCase
             /** @var Result&MockObject $activeRecord */
             $activeRecord = $this->mockClassWithProperties(Result::class);
             $activeRecord->type = 'default';
+
             $dc->activeRecord = $activeRecord;
         }
 

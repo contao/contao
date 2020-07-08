@@ -51,6 +51,7 @@ use Contao\CoreBundle\EventListener\BypassMaintenanceListener;
 use Contao\CoreBundle\EventListener\ClearSessionDataListener;
 use Contao\CoreBundle\EventListener\CommandSchedulerListener;
 use Contao\CoreBundle\EventListener\CsrfTokenCookieSubscriber;
+use Contao\CoreBundle\EventListener\DataContainer\CustomTemplateOptionsListener;
 use Contao\CoreBundle\EventListener\DataContainerCallbackListener;
 use Contao\CoreBundle\EventListener\DoctrineSchemaListener;
 use Contao\CoreBundle\EventListener\ExceptionConverterListener;
@@ -507,6 +508,34 @@ class ContaoCoreExtensionTest extends TestCase
                 'contao.hook' => [
                     [
                         'hook' => 'loadDataContainer',
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
+    }
+
+    public function testRegistersTheCustomTemplateOptionsListener(): void
+    {
+        $this->assertTrue($this->container->has(CustomTemplateOptionsListener::class));
+
+        $definition = $this->container->getDefinition(CustomTemplateOptionsListener::class);
+
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('contao.framework'),
+                new Reference('request_stack'),
+            ],
+            $definition->getArguments()
+        );
+
+        $this->assertSame(
+            [
+                'kernel.reset' => [
+                    [
+                        'method' => 'reset',
                     ],
                 ],
             ],

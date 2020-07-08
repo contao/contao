@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Service\ResetInterface;
 use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
-class CustomTemplateOptionsCallback implements ServiceAnnotationInterface, ResetInterface
+class CustomTemplateOptionsListener implements ServiceAnnotationInterface, ResetInterface
 {
     /**
      * @var Controller
@@ -39,9 +39,10 @@ class CustomTemplateOptionsCallback implements ServiceAnnotationInterface, Reset
 
     public function __construct(ContaoFramework $framework, RequestStack $requestStack)
     {
-        /** @var Controller $controllerAdapter */
-        $controllerAdapter = $framework->getAdapter(Controller::class);
-        $this->controller = $controllerAdapter;
+        /** @var Controller $controller */
+        $controller = $framework->getAdapter(Controller::class);
+
+        $this->controller = $controller;
         $this->requestStack = $requestStack;
     }
 
@@ -58,7 +59,6 @@ class CustomTemplateOptionsCallback implements ServiceAnnotationInterface, Reset
      */
     public function onContent(DataContainer $dc): array
     {
-        // Return all ce_ templates in overrideAll mode
         if ($this->isOverrideAll()) {
             return $this->getOverrideAllTemplates('ce_');
         }
@@ -79,7 +79,6 @@ class CustomTemplateOptionsCallback implements ServiceAnnotationInterface, Reset
      */
     public function onFormField(DataContainer $dc): array
     {
-        // Return all form_ templates in overrideAll mode
         if ($this->isOverrideAll()) {
             return $this->getOverrideAllTemplates('form_');
         }
@@ -97,7 +96,6 @@ class CustomTemplateOptionsCallback implements ServiceAnnotationInterface, Reset
      */
     public function onModule(DataContainer $dc): array
     {
-        // Return all mod_ templates in overrideAll mode
         if ($this->isOverrideAll()) {
             return $this->getOverrideAllTemplates('mod_');
         }
@@ -133,21 +131,15 @@ class CustomTemplateOptionsCallback implements ServiceAnnotationInterface, Reset
 
     private function getOverrideAllTemplates(string $prefix): array
     {
+        // Add a blank option that allows us to reset all custom templates to the default one
         return array_merge(['' => '-'], $this->controller->getTemplateGroup($prefix));
     }
 
-    /**
-     * Checks whether act=overrideAll query parameter is set.
-     */
     private function isOverrideAll(): bool
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if (null === $request) {
-            return false;
-        }
-
-        if (!$request->query->has('act')) {
+        if (null === $request || !$request->query->has('act')) {
             return false;
         }
 

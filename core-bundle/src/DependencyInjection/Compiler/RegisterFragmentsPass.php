@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
-use Contao\CoreBundle\EventListener\DataContainer\CustomTemplateOptionsCallback;
+use Contao\CoreBundle\EventListener\DataContainer\CustomTemplateOptionsListener;
 use Contao\CoreBundle\Fragment\FragmentConfig;
 use Contao\CoreBundle\Fragment\FragmentOptionsAwareInterface;
 use Contao\CoreBundle\Fragment\FragmentPreHandlerInterface;
@@ -69,8 +69,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
         $preHandlers = [];
         $registry = $container->findDefinition('contao.fragment.registry');
         $command = $container->findDefinition('contao.command.debug_fragments');
-        $customTemplateOptionsCallback = $container->findDefinition(CustomTemplateOptionsCallback::class);
-
+        $callback = $container->findDefinition(CustomTemplateOptionsListener::class);
         $table = null;
 
         switch ($tag) {
@@ -109,7 +108,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
                 $definition->addTag($tag, $attributes);
 
                 if (null !== $table && isset($attributes['template'])) {
-                    $customTemplateOptionsCallback->addMethodCall('setFragmentTemplate', [$table, $attributes['type'], $attributes['template']]);
+                    $callback->addMethodCall('setFragmentTemplate', [$table, $attributes['type'], $attributes['template']]);
                 }
             }
         }
