@@ -67,7 +67,13 @@ class InstallCommandTest extends TestCase
      */
     public function testCreatesTheContaoFolders()
     {
-        $command = new InstallCommand($this->getRootDir(), 'files', $this->getRootDir().'/assets/images');
+        $command = new InstallCommand(
+            $this->getRootDir(),
+            'files',
+            $this->getRootDir().'/assets/images',
+            $this->getBundlesMetadata()
+        );
+
         $tester = new CommandTester($command);
         $code = $tester->execute([]);
         $output = $tester->getDisplay();
@@ -88,7 +94,13 @@ class InstallCommandTest extends TestCase
      */
     public function testHandlesCustomFilesAndImagesPaths()
     {
-        $command = new InstallCommand($this->getRootDir(), 'files_test', $this->getRootDir().'/assets/images_test');
+        $command = new InstallCommand(
+            $this->getRootDir(),
+            'files_test',
+            $this->getRootDir().'/assets/images_test',
+            $this->getBundlesMetadata()
+        );
+
         $tester = new CommandTester($command);
         $code = $tester->execute([]);
         $display = $tester->getDisplay();
@@ -96,5 +108,39 @@ class InstallCommandTest extends TestCase
         $this->assertSame(0, $code);
         $this->assertContains(' * files_test', $display);
         $this->assertContains(' * assets/images_test', $display);
+    }
+
+    /**
+     * Tests adding the initialize.php file and tcpdf.php symlink.
+     */
+    public function testCreatesInitializeFileAndTcpdfSymlink()
+    {
+        $command = new InstallCommand(
+            $this->getRootDir(),
+            'files_test',
+            $this->getRootDir().'/assets/images_test',
+            $this->getBundlesMetadata()
+        );
+
+        $tester = new CommandTester($command);
+        $tester->execute([]);
+
+        $this->assertFileExists($this->getRootDir().'/system/initialize.php');
+
+        // is_link() returns true even if the symlink target does not exist, therefore also check file_exists()
+        $this->assertTrue(is_link($this->getRootDir().'/system/config/tcpdf.php'));
+        $this->assertFileExists($this->getRootDir().'/system/config/tcpdf.php');
+    }
+
+    /**
+     * @return array<string,array<string,string>>
+     */
+    private function getBundlesMetadata()
+    {
+        return [
+            'ContaoCoreBundle' => [
+                'path' => $this->getRootDir().'/vendor/contao/core-bundle/src',
+            ],
+        ];
     }
 }

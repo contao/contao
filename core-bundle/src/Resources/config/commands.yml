@@ -19,6 +19,7 @@ services:
             - '%kernel.project_dir%'
             - '%contao.upload_path%'
             - '%contao.image.target_dir%'
+            - '%kernel.bundles_metadata%'
 
     contao.command.symlinks:
         class: Contao\CoreBundle\Command\SymlinksCommand
