@@ -13,6 +13,7 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener;
+use Contao\CoreBundle\EventListener\DataContainer\PageTypeOptionsListener;
 use Contao\CoreBundle\EventListener\DataContainer\PageUrlListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Search\Document;
@@ -1293,7 +1294,7 @@ class tl_page extends Backend
 	{
 		@trigger_error('tl_page::getPageTypes() is deprecated, use the \Contao\CoreBundle\EventListener\DataContainer\PageTypeOptionsListener instead.', E_USER_DEPRECATED);
 
-		return System::getContainer()->get(\Contao\CoreBundle\EventListener\DataContainer\PageTypeOptionsListener::class)($dc);
+		return System::getContainer()->get(PageTypeOptionsListener::class)($dc);
 	}
 
 	/**
