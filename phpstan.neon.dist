@@ -63,6 +63,6 @@ parameters:
               - %currentWorkingDirectory%/core-bundle/src/Controller/AbstractController.php
               - %currentWorkingDirectory%/core-bundle/src/Command/MigrateCommand.php
 
-    reportUnmatchedIgnoredErrors: false
+    reportUnmatchedIgnoredErrors: true
     checkGenericClassInNonGenericObjectType: false
     inferPrivatePropertyTypeFromConstructor: true
