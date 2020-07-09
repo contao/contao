@@ -18,8 +18,6 @@ use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
 
-@trigger_error('The Contao\CoreBundle\Routing\UrlGenerator is deprecated. Use the Symfony router instead.', E_USER_DEPRECATED);
-
 /**
  * @deprecated The Contao\CoreBundle\Routing\UrlGenerator is deprecated. Use the Symfony router instead.
  */
@@ -45,6 +43,8 @@ class UrlGenerator implements UrlGeneratorInterface
      */
     public function __construct(UrlGeneratorInterface $router, ContaoFramework $framework, bool $prependLocale)
     {
+        @trigger_error('The Contao\CoreBundle\Routing\UrlGenerator is deprecated. Use the Symfony router instead.', E_USER_DEPRECATED);
+
         $this->router = $router;
         $this->framework = $framework;
         $this->prependLocale = $prependLocale;

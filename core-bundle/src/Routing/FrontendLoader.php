@@ -17,8 +17,6 @@ use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-@trigger_error('The Contao\CoreBundle\Routing\FrontendLoader is deprecated. Use Symfony routing instead.', E_USER_DEPRECATED);
-
 /**
  * @deprecated The Contao\CoreBundle\Routing\FrontendLoader is deprecated. Use Symfony routing instead.
  */
@@ -39,6 +37,8 @@ class FrontendLoader extends Loader
      */
     public function __construct(bool $prependLocale, string $urlSuffix = '.html')
     {
+        @trigger_error('The Contao\CoreBundle\Routing\FrontendLoader is deprecated. Use Symfony routing instead.', E_USER_DEPRECATED);
+
         $this->prependLocale = $prependLocale;
         $this->urlSuffix = $urlSuffix;
     }
