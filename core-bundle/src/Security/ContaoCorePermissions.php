@@ -68,7 +68,7 @@ final class ContaoCorePermissions
     /**
      * Access is granted if the current user can delete folders including all files and subfolders.
      */
-    public const USER_CAN_DELETE_FOLDERS = 'contao_user.fop.f4';
+    public const USER_CAN_DELETE_RECURSIVELY = 'contao_user.fop.f4';
 
     /**
      * Access is granted if the current user can edit files in the source editor.
