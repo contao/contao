@@ -74,10 +74,9 @@ class RoutingTest extends FunctionalTestCase
     /**
      * @dataProvider getAliases
      *
-     * @legacy
+     * @group legacy
      *
      * @expectedDeprecation The Contao\CoreBundle\Routing\FrontendLoader is deprecated. Use Symfony routing instead.
-     * @expectedDeprecation The Contao\CoreBundle\Routing\UrlGenerator is deprecated. Use the Symfony router instead.
      */
     public function testResolvesAliasesInLegacyMode(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
     {
