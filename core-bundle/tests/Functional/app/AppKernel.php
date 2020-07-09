@@ -20,7 +20,6 @@ use Knp\Bundle\TimeBundle\KnpTimeBundle;
 use Psr\Log\NullLogger;
 use Scheb\TwoFactorBundle\SchebTwoFactorBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
-use Symfony\Bundle\MonologBundle\MonologBundle;
 use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle;
@@ -36,7 +35,6 @@ class AppKernel extends Kernel
             new FrameworkBundle(),
             new SecurityBundle(),
             new TwigBundle(),
-            new MonologBundle(),
             new DoctrineBundle(),
             new SchebTwoFactorBundle(),
             new KnpTimeBundle(),
