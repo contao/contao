@@ -52,7 +52,7 @@ class RegisterPagesPass implements CompilerPassInterface
      */
     protected function registerPages(ContainerBuilder $container): void
     {
-        $registry = $container->findDefinition('contao.routing.page_registry');
+        $registry = $container->findDefinition(PageRegistry::class);
         $candidates = $container->findDefinition('contao.routing.candidates');
 
         foreach ($this->findAndSortTaggedServices(self::TAG_NAME, $container) as $reference) {
