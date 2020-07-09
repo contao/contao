@@ -14,9 +14,10 @@ namespace Contao\NewsBundle\EventListener;
 
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\News;
+use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\NewsModel;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @internal
@@ -25,9 +26,15 @@ class PreviewUrlConvertListener
 {
     private $framework;
 
-    public function __construct(ContaoFramework $framework)
+    /**
+     * @var UrlGeneratorInterface
+     */
+    private $router;
+
+    public function __construct(ContaoFramework $framework, UrlGeneratorInterface $router)
     {
         $this->framework = $framework;
+        $this->router = $router;
     }
 
     /**
@@ -45,10 +52,11 @@ class PreviewUrlConvertListener
             return;
         }
 
-        /** @var News $newsAdapter */
-        $newsAdapter = $this->framework->getAdapter(News::class);
-
-        $event->setUrl($request->getSchemeAndHttpHost().'/'.$newsAdapter->generateNewsUrl($news));
+        $event->setUrl($this->router->generate(
+            PageRoute::ROUTE_NAME,
+            [PageRoute::CONTENT_PARAMETER => $news],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        ));
     }
 
     private function getNewsModel(Request $request): ?NewsModel

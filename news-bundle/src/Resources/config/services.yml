@@ -1,4 +1,7 @@
 services:
+    _defaults:
+        autoconfigure: true
+
     _instanceof:
         Contao\CoreBundle\Framework\FrameworkAwareInterface:
             calls:
@@ -13,3 +16,8 @@ services:
             - '@security.helper'
         tags:
             - { name: contao.picker_provider, priority: 128 }
+
+    Contao\NewsBundle\Routing\Content\NewsRouteProvider:
+        arguments:
+            - '@contao.framework'
+            - '@Contao\CoreBundle\Routing\RouteFactory'

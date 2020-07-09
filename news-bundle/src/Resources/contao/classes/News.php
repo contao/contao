@@ -10,6 +10,9 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Routing\Page\PageRoute;
+use Symfony\Component\Routing\RouterInterface;
+
 /**
  * Provide methods regarding news archives.
  *
@@ -17,12 +20,6 @@ namespace Contao;
  */
 class News extends Frontend
 {
-	/**
-	 * URL cache array
-	 * @var array
-	 */
-	private static $arrUrlCache = array();
-
 	/**
 	 * Update a particular RSS feed
 	 *
@@ -359,79 +356,31 @@ class News extends Frontend
 	 * @param boolean   $blnAbsolute
 	 *
 	 * @return string
+	 *
+	 * @deprecated Deprecated since Contao 4.10. Use the Symfony router instead.
 	 */
 	public static function generateNewsUrl($objItem, $blnAddArchive=false, $blnAbsolute=false)
 	{
-		$strCacheKey = 'id_' . $objItem->id . ($blnAbsolute ? '_absolute' : '');
+		@trigger_error(__METHOD__.' is deprecated since Contao 4.10. Use the Symfony router instead.', E_USER_DEPRECATED);
 
-		// Load the URL from cache
-		if (isset(self::$arrUrlCache[$strCacheKey]))
+		$strUrl =  System::getContainer()->get('router')->generate(
+			PageRoute::ROUTE_NAME,
+			[PageRoute::CONTENT_PARAMETER => $objItem],
+			$blnAbsolute ? RouterInterface::ABSOLUTE_URL : RouterInterface::ABSOLUTE_PATH
+		);
+
+		if (!$blnAbsolute && 0 === strncmp($strUrl, '/', 1))
 		{
-			return self::$arrUrlCache[$strCacheKey];
+			$strUrl = substr($strUrl, 1);
 		}
 
-		// Initialize the cache
-		self::$arrUrlCache[$strCacheKey] = null;
-
-		switch ($objItem->source)
+		// Add the current archive parameter (news archive)
+		if ($blnAddArchive && Input::get('month') != '')
 		{
-			// Link to an external page
-			case 'external':
-				if (0 === strncmp($objItem->url, 'mailto:', 7))
-				{
-					self::$arrUrlCache[$strCacheKey] = StringUtil::encodeEmail($objItem->url);
-				}
-				else
-				{
-					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($objItem->url);
-				}
-				break;
-
-			// Link to an internal page
-			case 'internal':
-				if (($objTarget = $objItem->getRelated('jumpTo')) instanceof PageModel)
-				{
-					/** @var PageModel $objTarget */
-					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($blnAbsolute ? $objTarget->getAbsoluteUrl() : $objTarget->getFrontendUrl());
-				}
-				break;
-
-			// Link to an article
-			case 'article':
-				if (($objArticle = ArticleModel::findByPk($objItem->articleId)) instanceof ArticleModel && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
-				{
-					$params = '/articles/' . ($objArticle->alias ?: $objArticle->id);
-
-					/** @var PageModel $objPid */
-					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($blnAbsolute ? $objPid->getAbsoluteUrl($params) : $objPid->getFrontendUrl($params));
-				}
-				break;
+			$strUrl .= '?month=' . Input::get('month');
 		}
 
-		// Link to the default page
-		if (self::$arrUrlCache[$strCacheKey] === null)
-		{
-			$objPage = PageModel::findByPk($objItem->getRelated('pid')->jumpTo);
-
-			if (!$objPage instanceof PageModel)
-			{
-				self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand(Environment::get('request'));
-			}
-			else
-			{
-				$params = (Config::get('useAutoItem') ? '/' : '/items/') . ($objItem->alias ?: $objItem->id);
-
-				self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($blnAbsolute ? $objPage->getAbsoluteUrl($params) : $objPage->getFrontendUrl($params));
-			}
-
-			// Add the current archive parameter (news archive)
-			if ($blnAddArchive && Input::get('month') != '')
-			{
-				self::$arrUrlCache[$strCacheKey] .= '?month=' . Input::get('month');
-			}
-		}
-
-		return self::$arrUrlCache[$strCacheKey];
+		return $strUrl;
 	}
 
 	/**

@@ -27,5 +27,6 @@ services:
         class: Contao\NewsBundle\EventListener\PreviewUrlConvertListener
         arguments:
             - '@contao.framework'
+            - '@router'
         tags:
             - kernel.event_listener
