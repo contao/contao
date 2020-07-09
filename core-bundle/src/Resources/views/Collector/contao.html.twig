@@ -84,7 +84,11 @@
         {% endif %}
 
         <div class="metric">
-            <span class="value status-warning">{% if collector.summary.legacy_routing %}enabled{% else %}disabled{% endif %}</span>
+            {% if collector.summary.legacy_routing %}
+            <span class="value status-warning">enabled</span>
+            {% else %}
+            <span class="value">disabled</span>
+            {% endif %}
             <span class="label">Legacy Routing</span>
         </div>
     </div>
