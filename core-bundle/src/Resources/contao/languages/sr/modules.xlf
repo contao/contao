@@ -277,24 +277,21 @@
         <target>Аутоматска одјава</target>
       </trans-unit>
       <trans-unit id="FMD.logout.1">
-        <source>Automatically logs out a user</source>
-        <target>Аутоматско одјављивање корисника</target>
+        <source>Automatically logs out a member</source>
       </trans-unit>
       <trans-unit id="FMD.personalData.0">
         <source>Personal data</source>
         <target>Лични подаци</target>
       </trans-unit>
       <trans-unit id="FMD.personalData.1">
-        <source>Generates a form to edit a user's personal data</source>
-        <target>Израда формулара за уређивање личних података корисника</target>
+        <source>Generates a form to edit a member's personal data</source>
       </trans-unit>
       <trans-unit id="FMD.registration.0">
         <source>Registration</source>
         <target>Регистрација</target>
       </trans-unit>
       <trans-unit id="FMD.registration.1">
-        <source>Generates a user registration form</source>
-        <target>Израда формулара за регистрацију корисника</target>
+        <source>Generates a member registration form</source>
       </trans-unit>
       <trans-unit id="FMD.changePassword.0">
         <source>Change password</source>

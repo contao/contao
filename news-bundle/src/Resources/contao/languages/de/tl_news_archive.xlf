@@ -70,8 +70,8 @@
         <target>Login zum Kommentieren benötigt</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.requireLogin.1">
-        <source>Allow only authenticated users to create comments.</source>
-        <target>Nur angemeldeten Benutzern das Erstellen von Kommentaren erlauben.</target>
+        <source>Allow only authenticated members to create comments.</source>
+        <target>Nur angemeldeten Mitgliedern das Erstellen von Kommentaren erlauben.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.0">
         <source>Disable the security question</source>

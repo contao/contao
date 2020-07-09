@@ -78,8 +78,7 @@
         <target>Reindirizza all'ultima pagina visitata</target>
       </trans-unit>
       <trans-unit id="tl_page.redirectBack.1">
-        <source>Redirect the user back to the last page visited instead of the redirect page.</source>
-        <target>Reindirizza l'utente all'ultima pagina visitata dopo il login/logout</target>
+        <source>Redirect the member back to the last page visited instead of the redirect page.</source>
       </trans-unit>
       <trans-unit id="tl_page.fallback.0">
         <source>Language fallback</source>

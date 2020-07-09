@@ -278,24 +278,21 @@
         <target>Automatisch afmelden</target>
       </trans-unit>
       <trans-unit id="FMD.logout.1">
-        <source>Automatically logs out a user</source>
-        <target>Logt een gebruiker automatisch uit.</target>
+        <source>Automatically logs out a member</source>
       </trans-unit>
       <trans-unit id="FMD.personalData.0">
         <source>Personal data</source>
         <target>Persoonlijke gegevens</target>
       </trans-unit>
       <trans-unit id="FMD.personalData.1">
-        <source>Generates a form to edit a user's personal data</source>
-        <target>Genereert een frontend formulier, dat een gebruiker toelaat om zijn persoonlijke gegevens te wijzigen.</target>
+        <source>Generates a form to edit a member's personal data</source>
       </trans-unit>
       <trans-unit id="FMD.registration.0">
         <source>Registration</source>
         <target>Registratie</target>
       </trans-unit>
       <trans-unit id="FMD.registration.1">
-        <source>Generates a user registration form</source>
-        <target>Maakt een formulier om bezoekers van uw website te registreren als lid.</target>
+        <source>Generates a member registration form</source>
       </trans-unit>
       <trans-unit id="FMD.changePassword.0">
         <source>Change password</source>

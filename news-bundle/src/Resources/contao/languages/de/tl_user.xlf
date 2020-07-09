@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_user.newsfeeds.1">
         <source>Here you can grant access to one or more news feeds.</source>
-        <target>Hier können Sie den Zugriff auf einen oder mehrere RSS-Feeds erlauben.</target>
+        <target>Hier können Sie den Zugriff auf einen oder mehrere News-Feeds erlauben.</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeedp.0">
         <source>News feed permissions</source>
@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_user.newsfeedp.1">
         <source>Here you can define the news feed permissions.</source>
-        <target>Hier können Sie die RSS-Feed-Rechte festlegen.</target>
+        <target>Hier können Sie die News-Feed-Rechte festlegen.</target>
       </trans-unit>
       <trans-unit id="tl_user.news_legend">
         <source>News permissions</source>

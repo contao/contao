@@ -46,8 +46,8 @@
         <target>大きさの属性</target>
       </trans-unit>
       <trans-unit id="tl_image_size.sizes.1">
-        <source>Here you can define the displayed image width(s), e.g. &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;.</source>
-        <target>表示する画像の(複数も可能な)幅を指定できます。例: &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;</target>
+        <source>Here you can define the intended layout width of the image, the actual size should be defined via CSS. Example: &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;.</source>
+        <target>表示する画像に意図する配置の幅を指定できます、実際の幅はCSSで指定しなければなりません。例: &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;</target>
       </trans-unit>
       <trans-unit id="tl_image_size.densities.0">
         <source>Pixel densities/scale factors</source>

@@ -70,8 +70,7 @@
         <target>Richiedere il login per poter aggiungere dei commenti</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.requireLogin.1">
-        <source>Allow only authenticated users to create comments.</source>
-        <target>Consentire solo agli utenti autenticati di creare commenti.</target>
+        <source>Allow only authenticated members to create comments.</source>
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.0">
         <source>Disable the security question</source>
@@ -195,6 +194,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.1">
         <source>Manage news feeds</source>
+        <target>Gestisci i feed delle news</target>
       </trans-unit>
     </body>
   </file>
