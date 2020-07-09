@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
-use Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener;
 use Contao\CoreBundle\Routing\Page\CompositionAwareInterface;
+use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRouteProviderInterface;
 use Contao\CoreBundle\Routing\Page\RouteConfig;
 use Contao\CoreBundle\Routing\Page\UrlSuffixProviderInterface;
@@ -25,7 +25,6 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\DependencyInjection\ServiceLocator;
 
 /**
  * Registers Contao pages in the registry.
@@ -41,7 +40,7 @@ class RegisterPagesPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container): void
     {
-        if (!$container->has('contao.routing.page_route_factory') || !$container->has('contao.routing.candidates')) {
+        if (!$container->has(PageRegistry::class) || !$container->has('contao.routing.candidates')) {
             return;
         }
 
@@ -53,14 +52,11 @@ class RegisterPagesPass implements CompilerPassInterface
      */
     protected function registerPages(ContainerBuilder $container): void
     {
-        $factory = $container->findDefinition('contao.routing.page_route_factory');
+        $registry = $container->findDefinition('contao.routing.page_registry');
         $candidates = $container->findDefinition('contao.routing.candidates');
-
-        $compositionAware = [];
 
         foreach ($this->findAndSortTaggedServices(self::TAG_NAME, $container) as $reference) {
             $definition = $container->findDefinition($reference);
-            $definition->setPublic(true);
 
             $tags = $definition->getTag(self::TAG_NAME);
             $definition->clearTag(self::TAG_NAME);
@@ -70,43 +66,33 @@ class RegisterPagesPass implements CompilerPassInterface
                 unset($attributes['type']);
 
                 $routeProvider = null;
+                $compositionAware = null;
                 $class = $definition->getClass();
 
                 if (is_a($definition->getClass(), PageRouteProviderInterface::class, true)) {
                     $routeProvider = $reference;
                 }
 
+                if (is_a($class, CompositionAwareInterface::class, true)) {
+                    $compositionAware = $reference;
+                }
+
                 if (is_a($class, UrlSuffixProviderInterface::class, true)) {
                     $candidates->addMethodCall('addUrlSuffixProvider', [$reference]);
                 }
 
-                if (is_a($class, CompositionAwareInterface::class, true)) {
-                    $compositionAware[] = $reference;
-                }
-
-                $config = $this->getRouteConfig($reference, $class, $attributes);
-                $factory->addMethodCall('add', [$type, $config, $routeProvider]);
+                $config = $this->getRouteConfig($reference, $definition, $attributes);
+                $registry->addMethodCall('add', [$type, $config, $routeProvider, $compositionAware]);
 
                 $definition->addTag(self::TAG_NAME, $attributes);
             }
         }
-
-        $container
-            ->findDefinition(ContentCompositionListener::class)
-            ->replaceArgument(
-                2,
-                new Definition(
-                    ServiceLocator::class,
-                    $compositionAware
-                )
-            )
-        ;
     }
 
-    protected function getRouteConfig(Reference $reference, string $class, array $attributes): Definition
+    protected function getRouteConfig(Reference $reference, Definition $definition, array $attributes): Definition
     {
         $defaults = $attributes['defaults'] ?? [];
-        $defaults['_controller'] = $this->getControllerName($reference, $class, $attributes);
+        $defaults['_controller'] = $this->getControllerName($reference, $definition, $attributes);
 
         return new Definition(
             RouteConfig::class,
@@ -122,7 +108,7 @@ class RegisterPagesPass implements CompilerPassInterface
     /**
      * Returns the controller name from the service and method name.
      */
-    private function getControllerName(Reference $reference, string $class, array $attributes): string
+    private function getControllerName(Reference $reference, Definition $definition, array $attributes): string
     {
         if (isset($attributes['defaults']['_controller'])) {
             return $attributes['defaults']['_controller'];
@@ -132,10 +118,14 @@ class RegisterPagesPass implements CompilerPassInterface
 
         // Support a specific method on the controller
         if (isset($attributes['method'])) {
+            $definition->setPublic(true);
+
             return $controller.':'.$attributes['method'];
         }
 
-        if (method_exists($class, '__invoke')) {
+        if (method_exists($definition->getClass(), '__invoke')) {
+            $definition->setPublic(true);
+
             return $controller;
         }
 

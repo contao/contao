@@ -19,14 +19,14 @@ use Symfony\Component\Routing\Route;
 class PageRouteFactory
 {
     /**
-     * @var array
+     * @var PageRegistry
      */
-    private $routeConfigs = [];
+    private $pageRegistry;
 
-    /**
-     * @var array<PageRouteProviderInterface>
-     */
-    private $routeProviders = [];
+    public function __construct(PageRegistry $pageRegistry)
+    {
+        $this->pageRegistry = $pageRegistry;
+    }
 
     public function createRoute(PageModel $pageModel, $content = null): Route
     {
@@ -34,10 +34,7 @@ class PageRouteFactory
             return $route;
         }
 
-        $route = new PageRoute($pageModel, $this->routeConfigs[$pageModel->type] ?? []);
-        $route->setContent($content);
-
-        return $route;
+        return $this->getRouteFromConfig($pageModel, $content);
     }
 
     public function createRouteWithParameters(PageModel $pageModel, string $parameters = '', $content = null): Route
@@ -54,42 +51,11 @@ class PageRouteFactory
         return $route;
     }
 
-    public function add(string $type, RouteConfig $config, PageRouteProviderInterface $routeProvider = null): self
-    {
-        // Override existing pages with the same identifier
-        $this->routeConfigs[$type] = $config;
-
-        if (null !== $routeProvider) {
-            $this->routeProviders[$type] = $routeProvider;
-        }
-
-        return $this;
-    }
-
-    public function remove(string $type): self
-    {
-        unset($this->routeConfigs[$type], $this->routeProviders[$type]);
-
-        return $this;
-    }
-
-    public function has(string $type): bool
-    {
-        return isset($this->routeConfigs[$type]);
-    }
-
-    public function getPageTypes(): array
-    {
-        return array_keys($this->routeConfigs);
-    }
-
     private function getRouteFromProvider(PageModel $pageModel, $content = null): ?Route
     {
         try {
-            $provider = $this->routeProviders[$pageModel->type] ?? null;
-
-            if ($provider instanceof PageRouteProviderInterface) {
-                return $provider->getRouteForPage($pageModel, $content);
+            if ($this->pageRegistry->hasRouteProvider($pageModel)) {
+                return $this->pageRegistry->getRouteForPage($pageModel, $content);
             }
         } catch (RouteNotFoundException $e) {
             return null;
@@ -100,7 +66,7 @@ class PageRouteFactory
 
     private function getRouteFromConfig(PageModel $pageModel, $content = null): PageRoute
     {
-        $config = $this->routeConfigs[$pageModel->type] ?? new RouteConfig();
+        $config = $this->pageRegistry->getRouteConfig($pageModel->type) ?: new RouteConfig();
 
         $route = new PageRoute($pageModel, $config->getDefault(), $config->getRequirements(), $config->getOptions(), $config->getMethods());
         $route->setContent($content);

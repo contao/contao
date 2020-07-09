@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\CoreBundle\Event\FilterPageTypeEvent;
-use Contao\CoreBundle\Routing\Page\PageRouteFactory;
+use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\DataContainer;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -26,9 +26,9 @@ use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 class PageTypeOptionsListener implements ServiceAnnotationInterface
 {
     /**
-     * @var PageRouteFactory
+     * @var PageRegistry
      */
-    private $routeFactory;
+    private $pageRegistry;
 
     /**
      * @var Security
@@ -40,16 +40,16 @@ class PageTypeOptionsListener implements ServiceAnnotationInterface
      */
     private $eventDispatcher;
 
-    public function __construct(PageRouteFactory $routeFactory, Security $security, EventDispatcherInterface $eventDispatcher = null)
+    public function __construct(PageRegistry $pageRegistry, Security $security, EventDispatcherInterface $eventDispatcher = null)
     {
-        $this->routeFactory = $routeFactory;
+        $this->pageRegistry = $pageRegistry;
         $this->security = $security;
         $this->eventDispatcher = $eventDispatcher;
     }
 
     public function __invoke(DataContainer $dc)
     {
-        $options = array_unique(array_merge(array_keys($GLOBALS['TL_PTY']), $this->routeFactory->getPageTypes()));
+        $options = array_unique(array_merge(array_keys($GLOBALS['TL_PTY']), $this->pageRegistry->keys()));
 
         if (null !== $this->eventDispatcher) {
             $options = $this->eventDispatcher

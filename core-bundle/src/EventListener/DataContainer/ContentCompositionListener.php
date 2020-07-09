@@ -16,7 +16,7 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Routing\Page\CompositionAwareInterface;
+use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\DataContainer;
 use Contao\Image;
@@ -24,7 +24,6 @@ use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
-use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\Security\Core\Security;
@@ -44,9 +43,9 @@ class ContentCompositionListener implements ServiceAnnotationInterface
     private $security;
 
     /**
-     * @var ServiceLocator
+     * @var PageRegistry
      */
-    private $pages;
+    private $pageRegistry;
 
     /**
      * @var TranslatorInterface
@@ -73,11 +72,11 @@ class ContentCompositionListener implements ServiceAnnotationInterface
      */
     private $backend;
 
-    public function __construct(ContaoFramework $framework, Security $security, ServiceLocator $pages, TranslatorInterface $translator, Connection $connection, RequestStack $requestStack)
+    public function __construct(ContaoFramework $framework, Security $security, PageRegistry $pageRegistry, TranslatorInterface $translator, Connection $connection, RequestStack $requestStack)
     {
         $this->framework = $framework;
         $this->security = $security;
-        $this->pages = $pages;
+        $this->pageRegistry = $pageRegistry;
         $this->translator = $translator;
         $this->connection = $connection;
         $this->requestStack = $requestStack;
@@ -99,7 +98,7 @@ class ContentCompositionListener implements ServiceAnnotationInterface
         $pageModel->preventSaving(false);
         $pageModel->setRow($row);
 
-        if (!$this->supportsComposition($pageModel) || !$this->hasArticlesInLayout($pageModel)) {
+        if (!$this->pageRegistry->supportsContentComposition($pageModel) || !$this->hasArticlesInLayout($pageModel)) {
             return $this->image->getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
         }
 
@@ -132,7 +131,7 @@ class ContentCompositionListener implements ServiceAnnotationInterface
 
         if (
             empty($pageModel->title)
-            || !$this->supportsComposition($pageModel)
+            || !$this->pageRegistry->supportsContentComposition($pageModel)
             || null === ($column = $this->getArticleColumnInLayout($pageModel))
         ) {
             return;
@@ -202,7 +201,7 @@ class ContentCompositionListener implements ServiceAnnotationInterface
         $pageModel->setRow($row);
 
         // Do not show paste button for pages without content composition or articles in layout
-        if (!$this->supportsComposition($pageModel) || !$this->hasArticlesInLayout($pageModel)) {
+        if (!$this->pageRegistry->supportsContentComposition($pageModel) || !$this->hasArticlesInLayout($pageModel)) {
             return '';
         }
 
@@ -233,7 +232,11 @@ class ContentCompositionListener implements ServiceAnnotationInterface
         $pageModel = $pageAdapter->findByPk($row['pid']);
 
         // Do not show paste button for pages without content composition or articles in layout
-        if (null === $pageModel || !$this->supportsComposition($pageModel) || !$this->hasArticlesInLayout($pageModel)) {
+        if (
+            null === $pageModel
+            || !$this->pageRegistry->supportsContentComposition($pageModel)
+            || !$this->hasArticlesInLayout($pageModel)
+        ) {
             return '';
         }
 
@@ -259,18 +262,6 @@ class ContentCompositionListener implements ServiceAnnotationInterface
                 $this->translator->trans($dc->table.'.pasteafter.1', [$row['id']], 'contao_'.$dc->table)
             )
         );
-    }
-
-    private function supportsComposition(PageModel $pageModel): bool
-    {
-        if (!$this->pages->has($pageModel->type)) {
-            return true;
-        }
-
-        /** @var CompositionAwareInterface $provider */
-        $provider = $this->pages->get($pageModel->type);
-
-        return $provider->supportsContentComposition($pageModel);
     }
 
     private function hasArticlesInLayout(PageModel $pageModel): bool

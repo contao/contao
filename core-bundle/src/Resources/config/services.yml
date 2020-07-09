@@ -514,8 +514,11 @@ services:
             - [addRouteFilter, ['@contao.routing.domain_filter']]
             - [addRouteFilter, ['@contao.routing.published_filter']]
 
-    contao.routing.page_route_factory:
-        class: Contao\CoreBundle\Routing\Page\PageRouteFactory
+    Contao\CoreBundle\Routing\Page\PageRegistry: ~
+
+    Contao\CoreBundle\Routing\Page\PageRouteFactory:
+        arguments:
+            - '@Contao\CoreBundle\Routing\Page\PageRegistry'
 
     contao.routing.page_router:
         class: Symfony\Cmf\Component\Routing\DynamicRouter
@@ -558,7 +561,7 @@ services:
             - '@contao.framework'
             - '@database_connection'
             - '@contao.routing.candidates'
-            - '@contao.routing.page_route_factory'
+            - '@Contao\CoreBundle\Routing\Page\PageRouteFactory'
             - '%contao.legacy_routing%'
             - '%contao.prepend_locale%'
 

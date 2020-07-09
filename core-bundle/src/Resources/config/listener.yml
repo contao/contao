@@ -15,7 +15,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@security.helper'
-            - ~
+            - '@Contao\CoreBundle\Routing\Page\PageRegistry'
             - '@translator'
             - '@database_connection'
             - '@request_stack'
@@ -25,7 +25,7 @@ services:
 
     Contao\CoreBundle\EventListener\DataContainer\PageTypeOptionsListener:
         arguments:
-            - '@contao.routing.page_route_factory'
+            - '@Contao\CoreBundle\Routing\Page\PageRegistry'
             - '@security.helper'
             - '@?event_dispatcher'
         public: true
