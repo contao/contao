@@ -66,8 +66,6 @@ class BackendAccessVoter extends Voter
 
     /**
      * Checks the user permissions against a field in tl_user(_group).
-     *
-     * @param string|array $subject
      */
     private function hasAccess($subject, string $field, BackendUser $user): bool
     {
@@ -80,8 +78,6 @@ class BackendAccessVoter extends Voter
 
     /**
      * Checks if the user has access to a given page (tl_page.includeChmod et al).
-     *
-     * @param array|PageModel $subject
      */
     private function isAllowed($subject, int $flag, BackendUser $user): bool
     {
@@ -99,8 +95,6 @@ class BackendAccessVoter extends Voter
 
     /**
      * Checks if the user has access to any field of a table (against tl_user(_group).alexf).
-     *
-     * @param string $subject
      */
     private function canEditFieldsOf($subject, BackendUser $user): bool
     {
