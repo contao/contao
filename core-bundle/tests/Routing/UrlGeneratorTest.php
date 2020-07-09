@@ -240,14 +240,6 @@ class UrlGeneratorTest extends TestCase
         );
     }
 
-    public function testHandlesNonArrayParameters(): void
-    {
-        $this
-            ->getUrlGenerator($this->mockRouterWithContext(['alias' => 'foo']))
-            ->generate('foo', 'bar')
-        ;
-    }
-
     private function getUrlGenerator(UrlGeneratorInterface $router, bool $prependLocale = false, bool $useAutoItem = true): UrlGenerator
     {
         $framework = $this->mockContaoFramework();
