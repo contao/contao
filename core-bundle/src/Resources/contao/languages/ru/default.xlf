@@ -2091,7 +2091,7 @@
       </trans-unit>
       <trans-unit id="MSC.jsDisabled">
         <source>It seems that you have disabled JavaScript in your browser. The Contao back end will not work properly without JavaScript.</source>
-        <target>Вероятно, в вашем браузере отключен JavaScript. Панель управления Contao не сможет работать без JavaScript как положено.</target>
+        <target>Вероятно, в вашем браузере отключен JavaScript. Панель управления Contao не сможет работать без JavaScript надлежащим образом.</target>
       </trans-unit>
       <trans-unit id="MSC.copyOf">
         <source>%s (copy)</source>

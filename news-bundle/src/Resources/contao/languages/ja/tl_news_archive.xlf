@@ -75,7 +75,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.0">
         <source>Disable spam protection</source>
-        <target>spam対策を不使用</target>
+        <target>spam防護を不使用</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>

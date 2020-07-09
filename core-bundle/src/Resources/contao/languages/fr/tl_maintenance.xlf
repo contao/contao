@@ -155,6 +155,9 @@
       <trans-unit id="tl_maintenance.crawlSubscriberNames.broken-link-checker">
         <source>Check for broken links</source>
       </trans-unit>
+      <trans-unit id="tl_maintenance.crawlMaintenance">
+        <source>Crawling is not possible while the maintenance mode is enabled.</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

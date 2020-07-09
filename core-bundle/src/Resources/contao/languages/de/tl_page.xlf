@@ -398,8 +398,8 @@
         <target>Zwei-Faktor-Weiterleitungsseite</target>
       </trans-unit>
       <trans-unit id="tl_page.twoFactorJumpTo.1">
-        <source>Please choose the page to which visitors will be redirected when setting up two-factor authentication.</source>
-        <target>Bitte wählen Sie die Seite aus, zu der Besucher weitergeleitet werden, wenn sie die Zwei-Faktor-Authentifizierung einrichten.</target>
+        <source>Please choose the page to which members will be redirected to set up two-factor authentication.</source>
+        <target>Bitte wählen Sie die Seite aus, zu der Mitglieder weitergeleitet werden, um die Zwei-Faktor-Authentifizierung einzurichten.</target>
       </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>

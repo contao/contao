@@ -398,8 +398,8 @@
         <target>Перейти на страницу двухфакторной авторизации</target>
       </trans-unit>
       <trans-unit id="tl_page.twoFactorJumpTo.1">
-        <source>Please choose the page to which visitors will be redirected when setting up two-factor authentication.</source>
-        <target>Выберите страницу, к которой будут перенаправлены посетители при настройке двухфакторной авторизации.</target>
+        <source>Please choose the page to which members will be redirected to set up two-factor authentication.</source>
+        <target>Выберите страницу, к которой будут перенаправлены посетители, чтобы настроить двухфакторную аутентификацию.</target>
       </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
