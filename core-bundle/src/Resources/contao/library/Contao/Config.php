@@ -373,8 +373,8 @@ class Config
 	/**
 	 * Temporarily set a configuration value
 	 *
-	 * @param string $strKey   The short key
-	 * @param string $varValue The configuration value
+	 * @param string     $strKey   The short key
+	 * @param mixed|null $varValue The configuration value
 	 */
 	public static function set($strKey, $varValue)
 	{

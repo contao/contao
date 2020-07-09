@@ -227,7 +227,7 @@ class Image
 	/**
 	 * Set the target height
 	 *
-	 * @param integer $targetHeight The target height
+	 * @param integer|float $targetHeight The target height
 	 *
 	 * @return $this The image object
 	 */
@@ -251,7 +251,7 @@ class Image
 	/**
 	 * Set the target width
 	 *
-	 * @param integer $targetWidth The target width
+	 * @param integer|float $targetWidth The target width
 	 *
 	 * @return $this The image object
 	 */
