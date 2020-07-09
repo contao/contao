@@ -75,6 +75,6 @@ class AppKernel extends Kernel
 
     protected function build(ContainerBuilder $container): void
     {
-        $container->register('monolog.logger.contao', NullLogger::class);
+        $container->register('logger', NullLogger::class);
     }
 }
