@@ -173,6 +173,10 @@
         <source>Check for broken links</source>
         <target>Nach defekten Links suchen</target>
       </trans-unit>
+      <trans-unit id="tl_maintenance.crawlMaintenance">
+        <source>Crawling is not possible while the maintenance mode is enabled.</source>
+        <target>Der Crawler ist im Wartungsmodus nicht verfügbar.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

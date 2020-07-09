@@ -173,6 +173,10 @@
         <source>Check for broken links</source>
         <target>Проверить битые ссылки</target>
       </trans-unit>
+      <trans-unit id="tl_maintenance.crawlMaintenance">
+        <source>Crawling is not possible while the maintenance mode is enabled.</source>
+        <target>Работа поискового робота невозможна при включении режима обслуживания.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

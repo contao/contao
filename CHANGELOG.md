@@ -2,6 +2,47 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.4] (2020-07-09)
+
+**Fixed issues:**
+
+- [#1920] Fix the toggle visibility checks ([leofeyer])
+- [#1894] Revert the $rootDir changes in the ContaoModuleBundle class ([leofeyer])
+- [#1919] Revert the alphabetical sorting of the back end menu ([leofeyer])
+- [#1903] Load the security bundle after the framework bundle ([baumannsven])
+- [#1667] Add SCSS source maps in debug mode ([denniserdmann])
+- [#1914] Remove the symfony/monolog-bundle dependency from functional tests ([bytehead])
+- [#1908] Rename Piwik to Matomo and updated the tracking code ([rabauss])
+- [#1865] Store the crawl logs in a unique subfolder per installation ([bohnmedia])
+- [#1892] Fix the visibility of the EnvironmentTest::$projectDir property ([leofeyer])
+- [#1891] Rename all occurrences of rootDir to projectDir ([aschempp])
+- [#1754] Allow forcing a password change upon login in the contao:user:password command ([m-vo])
+- [#1762] Remove the redirect status type from 401 and 403 pages ([fritzmg])
+- [#1871] Reduce the file queries by preloading image models ([Toflar])
+- [#1883] Enable framework.assets by default in Managed Edition ([fritzmg])
+- [#1880] Let the user disable 2FA if it is enforced ([bytehead])
+- [#1886] Increase the margin for TinyMCE fields ([fritzmg])
+- [#1879] Fix the back end layout yet again ([fritzmg])
+- [#1877] Fix the widget headline and help wizard alignment ([leofeyer])
+- [#1875] Fix the search field height in the back end ([leofeyer])
+- [#1844] Lazy-load commands ([aschempp])
+- [#1823] Fix back end layout problems in various browsers ([fritzmg])
+- [#1815] Show error 500 for unsupported image types ([ausi])
+- [#1843] Added Tideways profiler cookie to the cookie deny list ([Toflar])
+- [#1840] Improve the legacy class import performance ([Toflar])
+- [#1839] Improve the performance of the file manager ([Toflar])
+- [#1828] Correctly fix the mailer transport ([fritzmg])
+- [#1827] Add compatibility with imagine-svg 1.0 ([ausi])
+- [#1817] Ignore minlength/maxlength/minval/maxval in hidden fields ([qzminski])
+- [#1763] Add the Osano Cookie Consent cookie to the cookie deny list ([Mynyx])
+- [#1771] Replace "visitors" with "members" in the 2FA explanation ([Mynyx])
+- [#1774] Fix addImageToTemplate with fullsize ([fritzmg])
+- [#1788] Fix Escargot 0.6 compat and skip broken link checker ([Toflar])
+- [#1583] Hide the crawler in maintenance mode ([leofeyer])
+- [#1776] Correctly redirect to the preferred language if there is no index alias ([aschempp])
+- [#1790] Ignore the Litespeed HTTP2 Smart Push cookie ([Toflar])
+- [#1761] Use the createResult() method in CeAccessMigration ([fritzmg])
+
 ## [4.9.3] (2020-05-14)
 
 **Fixed issues:**
@@ -27,7 +68,7 @@ This project adheres to [Semantic Versioning].
 - [#1625] Fix the wrong CSRF token storage being wired ([Toflar])
 - [#1628] Adjust the FrontendController::checkCookiesAction() comment ([Mynyx])
 - [#1638] Correctly check if the search panel is active ([dmolineus])
-- [#1658] Add the Contao Manager cookie to the cookie blacklist ([Mynyx])
+- [#1658] Add the Contao Manager cookie to the cookie deny list ([Mynyx])
 - [#1663] Fix the playerAspect default value ([fritzmg])
 - [#1668] Fix running the broken link checker ([richardhj])
 - [#1670] Fix the search indexer page detection ([qzminski])
@@ -42,7 +83,7 @@ This project adheres to [Semantic Versioning].
 
 **Fixed issues:**
 
-- [#1615] Add additional Google Analytics cookies to the cookie blacklist ([Mynyx])
+- [#1615] Add additional Google Analytics cookies to the cookie deny list ([Mynyx])
 - [#1614] Fix a comment in the MakeResponsePrivateListener class ([Mynyx])
 - [#1613] Fix the Contao toolbar labels ([leofeyer])
 - [#1612] Ensure that the login icons are always visible in Firefox ([leofeyer])
@@ -75,9 +116,7 @@ This project adheres to [Semantic Versioning].
 - [#1520] Optimize MSC.twoFactorBackupCodesExplain ([Mynyx])
 - [#1513] Fix a "toggle element" permission check ([rabauss])
 - [#1493] Adjust the JSON-LD data in the default indexer test ([leofeyer])
-- [#877] Fix memory leaks in the "resize images" command ([ausi])
 - [#1475] Register custom types in functional tests ([aschempp])
-- [#1456] Do not redirect to the language URL ([aschempp])
 - [#1437] Translate the "show preview toolbar" title ([richardhj])
 - [#1457] Use a context prefix in the JSON-LD schema ([ausi])
 - [#1455] Do not expose the page ID in the JSON-LD context ([Toflar])
@@ -225,7 +264,6 @@ This project adheres to [Semantic Versioning].
 - [#730] Implement a search indexer abstraction ([Toflar])
 - [#604] Pass the mime type to the download element links ([Toflar])
 - [#672] Optimize DBAFS file sync ([m-vo])
-- [#605] Use environment variables for app config ([aschempp])
 - [#768] Support using env(DATABASE_URL) ([leofeyer])
 - [#762] Do not install the tests with "prefer-dist" ([leofeyer])
 - [#776] Simplify registering custom fragment types ([aschempp])
@@ -284,7 +322,6 @@ This project adheres to [Semantic Versioning].
 - [#1114] Fix a typo in the FrontendTemplate class ([leofeyer])
 - [#1100] Do not use array_insert to inject modules and menu items ([leofeyer])
 - [#1102] Make sure we have the correct type when a search document is created ([Toflar])
-- [#1103] Fixed incorrect service tag ([Toflar])
 - [#1095] Also test if the number of service tags matches ([leofeyer])
 - [#1097] Clean up the Composer conflicts ([leofeyer])
 - [#1054] Fix the page type descriptions ([leofeyer])
@@ -296,6 +333,7 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.4]: https://github.com/contao/contao/releases/tag/4.9.4
 [4.9.3]: https://github.com/contao/contao/releases/tag/4.9.3
 [4.9.2]: https://github.com/contao/contao/releases/tag/4.9.2
 [4.9.1]: https://github.com/contao/contao/releases/tag/4.9.1
@@ -305,9 +343,11 @@ This project adheres to [Semantic Versioning].
 [AndreasA]: https://github.com/AndreasA
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
+[baumannsven]: https://github.com/baumannsven
 [Blog404DE]: https://github.com/Blog404DE
 [bohnmedia]: https://github.com/bohnmedia
 [bytehead]: https://github.com/bytehead
+[denniserdmann]: https://github.com/denniserdmann
 [dmolineus]: https://github.com/dmolineus
 [fritzmg]: https://github.com/fritzmg
 [leofeyer]: https://github.com/leofeyer
@@ -319,6 +359,42 @@ This project adheres to [Semantic Versioning].
 [Tastaturberuf]: https://github.com/Tastaturberuf
 [Toflar]: https://github.com/Toflar
 [xchs]: https://github.com/xchs
+[#1920]: https://github.com/contao/contao/pull/1920
+[#1894]: https://github.com/contao/contao/pull/1894
+[#1919]: https://github.com/contao/contao/pull/1919
+[#1903]: https://github.com/contao/contao/pull/1903
+[#1667]: https://github.com/contao/contao/pull/1667
+[#1914]: https://github.com/contao/contao/pull/1914
+[#1908]: https://github.com/contao/contao/pull/1908
+[#1865]: https://github.com/contao/contao/pull/1865
+[#1892]: https://github.com/contao/contao/pull/1892
+[#1891]: https://github.com/contao/contao/pull/1891
+[#1754]: https://github.com/contao/contao/pull/1754
+[#1762]: https://github.com/contao/contao/pull/1762
+[#1871]: https://github.com/contao/contao/pull/1871
+[#1883]: https://github.com/contao/contao/pull/1883
+[#1880]: https://github.com/contao/contao/pull/1880
+[#1886]: https://github.com/contao/contao/pull/1886
+[#1879]: https://github.com/contao/contao/pull/1879
+[#1877]: https://github.com/contao/contao/pull/1877
+[#1875]: https://github.com/contao/contao/pull/1875
+[#1844]: https://github.com/contao/contao/pull/1844
+[#1823]: https://github.com/contao/contao/pull/1823
+[#1815]: https://github.com/contao/contao/pull/1815
+[#1843]: https://github.com/contao/contao/pull/1843
+[#1840]: https://github.com/contao/contao/pull/1840
+[#1839]: https://github.com/contao/contao/pull/1839
+[#1828]: https://github.com/contao/contao/pull/1828
+[#1827]: https://github.com/contao/contao/pull/1827
+[#1817]: https://github.com/contao/contao/pull/1817
+[#1763]: https://github.com/contao/contao/pull/1763
+[#1771]: https://github.com/contao/contao/pull/1771
+[#1774]: https://github.com/contao/contao/pull/1774
+[#1788]: https://github.com/contao/contao/pull/1788
+[#1583]: https://github.com/contao/contao/pull/1583
+[#1776]: https://github.com/contao/contao/pull/1776
+[#1790]: https://github.com/contao/contao/pull/1790
+[#1761]: https://github.com/contao/contao/pull/1761
 [#1745]: https://github.com/contao/contao/pull/1745
 [#1742]: https://github.com/contao/contao/pull/1742
 [#1743]: https://github.com/contao/contao/pull/1743
@@ -383,9 +459,7 @@ This project adheres to [Semantic Versioning].
 [#1520]: https://github.com/contao/contao/pull/1520
 [#1513]: https://github.com/contao/contao/pull/1513
 [#1493]: https://github.com/contao/contao/pull/1493
-[#877]: https://github.com/contao/contao/pull/877
 [#1475]: https://github.com/contao/contao/pull/1475
-[#1456]: https://github.com/contao/contao/pull/1456
 [#1437]: https://github.com/contao/contao/pull/1437
 [#1457]: https://github.com/contao/contao/pull/1457
 [#1455]: https://github.com/contao/contao/pull/1455
@@ -513,7 +587,6 @@ This project adheres to [Semantic Versioning].
 [#730]: https://github.com/contao/contao/pull/730
 [#604]: https://github.com/contao/contao/pull/604
 [#672]: https://github.com/contao/contao/pull/672
-[#605]: https://github.com/contao/contao/pull/605
 [#768]: https://github.com/contao/contao/pull/768
 [#762]: https://github.com/contao/contao/pull/762
 [#776]: https://github.com/contao/contao/pull/776
@@ -569,7 +642,6 @@ This project adheres to [Semantic Versioning].
 [#1114]: https://github.com/contao/contao/pull/1114
 [#1100]: https://github.com/contao/contao/pull/1100
 [#1102]: https://github.com/contao/contao/pull/1102
-[#1103]: https://github.com/contao/contao/pull/1103
 [#1095]: https://github.com/contao/contao/pull/1095
 [#1097]: https://github.com/contao/contao/pull/1097
 [#1054]: https://github.com/contao/contao/pull/1054

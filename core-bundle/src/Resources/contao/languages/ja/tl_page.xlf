@@ -398,8 +398,8 @@
         <target>2ファクター認証のリダイレクトページ</target>
       </trans-unit>
       <trans-unit id="tl_page.twoFactorJumpTo.1">
-        <source>Please choose the page to which visitors will be redirected when setting up two-factor authentication.</source>
-        <target>2ファクター認証を設定した時に移動するページを選択してください。</target>
+        <source>Please choose the page to which members will be redirected to set up two-factor authentication.</source>
+        <target>メンバーが2ファクター認証を設定するために移動するページを選択してください。</target>
       </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
