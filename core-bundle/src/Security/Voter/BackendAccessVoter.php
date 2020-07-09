@@ -98,7 +98,7 @@ class BackendAccessVoter extends Voter
     }
 
     /**
-     * Checks if the user has access to any field of a table (against tl_user(_group).alexf)
+     * Checks if the user has access to any field of a table (against tl_user(_group).alexf).
      *
      * @param string $subject
      */
