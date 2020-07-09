@@ -72,7 +72,7 @@ class RootController extends AbstractController implements PageRouteEnhancerInte
         ;
     }
 
-    public function supportsContentComposition(PageModel $pageModel = null): bool
+    public function supportsContentComposition(PageModel $pageModel): bool
     {
         return false;
     }

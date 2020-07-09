@@ -153,6 +153,9 @@ class RootControllerTest extends TestCase
 
     public function testDoesNotSupportContentComposition(): void
     {
-        $this->assertFalse($this->controller->supportsContentComposition());
+        /** @var PageModel&MockObject $page */
+        $page = $this->mockClassWithProperties(PageModel::class);
+
+        $this->assertFalse($this->controller->supportsContentComposition($page));
     }
 }

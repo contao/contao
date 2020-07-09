@@ -73,7 +73,10 @@ class PageRegistry
             return true;
         }
 
-        return $this->compositionAware[$pageModel->type]->supportsContentComposition($pageModel);
+        /** @var CompositionAwareInterface $service */
+        $service = $this->compositionAware[$pageModel->type];
+
+        return $service->supportsContentComposition($pageModel);
     }
 
     public function add(string $type, RouteConfig $config, PageRouteEnhancerInterface $routeEnhancer = null, CompositionAwareInterface $compositionAware = null): self
