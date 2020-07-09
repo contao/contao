@@ -383,6 +383,10 @@ class RoutingTest extends FunctionalTestCase
 
     /**
      * @dataProvider getAliasesWithLocale
+     *
+     * @group legacy
+     *
+     * @expectedDeprecation The Contao\CoreBundle\Routing\FrontendLoader is deprecated. Use Symfony routing instead.
      */
     public function testResolvesAliasesWithLocaleInLegacyMode(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
     {
@@ -686,6 +690,10 @@ class RoutingTest extends FunctionalTestCase
 
     /**
      * @dataProvider getAliasesWithoutUrlSuffix
+     *
+     * @group legacy
+     *
+     * @expectedDeprecation The Contao\CoreBundle\Routing\FrontendLoader is deprecated. Use Symfony routing instead.
      */
     public function testResolvesAliasesWithoutUrlSuffixInLegacyMode(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
     {
@@ -1031,6 +1039,10 @@ class RoutingTest extends FunctionalTestCase
 
     /**
      * @dataProvider getRootAliasesWithLocale
+     *
+     * @group legacy
+     *
+     * @expectedDeprecation The Contao\CoreBundle\Routing\FrontendLoader is deprecated. Use Symfony routing instead.
      */
     public function testResolvesTheRootPageWithLocaleInLegacyMode(array $fixtures, string $request, int $statusCode, string $pageTitle, string $acceptLanguages, string $host): void
     {

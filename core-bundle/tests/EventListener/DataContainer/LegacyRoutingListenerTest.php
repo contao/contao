@@ -33,10 +33,8 @@ class LegacyRoutingListenerTest extends TestCase
         $listener = new LegacyRoutingListener($this->createMock(TranslatorInterface::class));
 
         $GLOBALS['TL_DCA']['tl_page']['palettes'] = ['root' => '', 'rootfallback' => ''];
-        $GLOBALS['TL_DCA']['tl_page']['fields'] = [
-            'urlPrefix' => [],
-            'urlSuffix' => [],
-        ];
+        $GLOBALS['TL_DCA']['tl_page']['fields']['urlPrefix']['eval']['disabled'] = false;
+        $GLOBALS['TL_DCA']['tl_page']['fields']['urlSuffix']['eval']['disabled'] = false;
 
         $listener->disableRoutingFields();
 
