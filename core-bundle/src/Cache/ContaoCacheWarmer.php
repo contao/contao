@@ -48,7 +48,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * @var string
      */
-    private $rootDir;
+    private $projectDir;
 
     /**
      * @var Connection
@@ -68,12 +68,12 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * @internal Do not inherit from this class; decorate the "contao.cache.warm_internal" service instead
      */
-    public function __construct(Filesystem $filesystem, ResourceFinderInterface $finder, FileLocator $locator, string $rootDir, Connection $connection, ContaoFramework $framework, array $locales)
+    public function __construct(Filesystem $filesystem, ResourceFinderInterface $finder, FileLocator $locator, string $projectDir, Connection $connection, ContaoFramework $framework, array $locales)
     {
         $this->filesystem = $filesystem;
         $this->finder = $finder;
         $this->locator = $locator;
-        $this->rootDir = $rootDir;
+        $this->projectDir = $projectDir;
         $this->connection = $connection;
         $this->framework = $framework;
         $this->locales = $locales;
@@ -140,7 +140,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     {
         $dumper = new CombinedFileDumper(
             $this->filesystem,
-            new DelegatingLoader(new LoaderResolver([new PhpFileLoader(), new XliffFileLoader($this->rootDir)])),
+            new DelegatingLoader(new LoaderResolver([new PhpFileLoader(), new XliffFileLoader($this->projectDir)])),
             Path::join($cacheDir, 'contao')
         );
 
@@ -162,7 +162,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
                 $subfiles = $this->finder
                     ->findIn(Path::join('languages', $language))
                     ->files()
-                    ->name('/^'.$name.'\.(php|xlf)$/')
+                    ->name("/^$name\\.(php|xlf)$/")
                 ;
 
                 try {
@@ -223,7 +223,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         $mapper = [];
 
         foreach ($files as $file) {
-            $mapper[$file->getBasename('.html5')] = Path::makeRelative($file->getPath(), $this->rootDir);
+            $mapper[$file->getBasename('.html5')] = Path::makeRelative($file->getPath(), $this->projectDir);
         }
 
         $this->filesystem->dumpFile(
@@ -256,7 +256,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     }
 
     /**
-     * @return Finder|array<SplFileInfo>|array
+     * @return Finder|array<SplFileInfo>
      */
     private function findDcaFiles()
     {
@@ -268,7 +268,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     }
 
     /**
-     * @return Finder|array<SplFileInfo>|array
+     * @return Finder|array<SplFileInfo>
      */
     private function findLanguageFiles(string $language)
     {
@@ -284,7 +284,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     }
 
     /**
-     * @return Finder|array<SplFileInfo>|array
+     * @return Finder|array<SplFileInfo>
      */
     private function findTemplateFiles()
     {

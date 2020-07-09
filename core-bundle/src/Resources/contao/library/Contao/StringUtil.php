@@ -1157,14 +1157,17 @@ class StringUtil
 	 */
 	public static function stripRootDir($path)
 	{
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		// Compare normalized version of the paths
+		$projectDir = Path::normalize(System::getContainer()->getParameter('kernel.project_dir'));
+		$normalizedPath = Path::normalize($path);
+		$length = \strlen($projectDir);
 
-		if (!Path::isBasePath($rootDir, $path) || Path::normalize($path) === Path::normalize($rootDir))
+		if (strncmp($normalizedPath, $projectDir, $length) !== 0 || \strlen($normalizedPath) <= $length || $normalizedPath[$length] !== '/')
 		{
-			throw new \InvalidArgumentException(sprintf('Path "%s" is not inside the Contao root dir "%s"', $path, $rootDir));
+			throw new \InvalidArgumentException(sprintf('Path "%s" is not inside the Contao root dir "%s"', $path, $projectDir));
 		}
 
-		return (string) substr($path, \strlen($rootDir) + 1);
+		return (string) substr($path, $length + 1);
 	}
 
 	/**

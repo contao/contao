@@ -31,7 +31,6 @@ use Contao\ManagerPlugin\Config\ExtensionPluginInterface;
 use Contao\ManagerPlugin\Dependency\DependentPluginInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
-use Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Exception\DriverException;
 use FOS\HttpCacheBundle\FOSHttpCacheBundle;
@@ -91,11 +90,10 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     {
         $configs = [
             BundleConfig::create(FrameworkBundle::class),
-            BundleConfig::create(SecurityBundle::class),
+            BundleConfig::create(SecurityBundle::class)->setLoadAfter([FrameworkBundle::class]),
             BundleConfig::create(TwigBundle::class),
             BundleConfig::create(MonologBundle::class),
             BundleConfig::create(DoctrineBundle::class),
-            BundleConfig::create(DoctrineCacheBundle::class),
             BundleConfig::create(LexikMaintenanceBundle::class),
             BundleConfig::create(NelmioCorsBundle::class),
             BundleConfig::create(NelmioSecurityBundle::class),
@@ -461,7 +459,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                     continue;
                 }
 
-                if (\in_array($key, array_keys($options), true)) {
+                if (\array_key_exists($key, $options)) {
                     $options[$key] = $value;
                 } else {
                     $queryOptions[$key] = $value;
@@ -536,12 +534,10 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
         $transport = 'smtp';
         $credentials = '';
-        $port = '';
+        $portSuffix = '';
 
-        if ($encryption = $container->getParameter('mailer_encryption')) {
-            if ('ssl' === $encryption) {
-                $transport = 'smtps';
-            }
+        if (($encryption = $container->getParameter('mailer_encryption')) && 'ssl' === $encryption) {
+            $transport = 'smtps';
         }
 
         if ($user = $container->getParameter('mailer_user')) {
@@ -555,7 +551,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         }
 
         if ($port = $container->getParameter('mailer_port')) {
-            $port = ':'.$port;
+            $portSuffix = ':'.$port;
         }
 
         return sprintf(
@@ -563,7 +559,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             $transport,
             $credentials,
             $container->getParameter('mailer_host'),
-            $port
+            $portSuffix
         );
     }
 

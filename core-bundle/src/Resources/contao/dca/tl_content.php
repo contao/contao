@@ -1966,12 +1966,6 @@ class tl_content extends Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		// Disable the button if the element type is not allowed
-		if (!$this->User->hasAccess($row['type'], 'elements'))
-		{
-			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
-		}
-
 		if (Input::get('cid'))
 		{
 			$this->toggleVisibility(Input::get('cid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
@@ -1982,6 +1976,12 @@ class tl_content extends Backend
 		if (!$this->User->hasAccess('tl_content::invisible', 'alexf'))
 		{
 			return '';
+		}
+
+		// Disable the button if the element type is not allowed
+		if (!$this->User->hasAccess($row['type'], 'elements'))
+		{
+			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 		}
 
 		$href .= '&amp;id=' . Input::get('id') . '&amp;cid=' . $row['id'] . '&amp;state=' . $row['invisible'];
@@ -2037,22 +2037,24 @@ class tl_content extends Backend
 			throw new AccessDeniedException('Not enough permissions to show/hide content element ID ' . $intId . '.');
 		}
 
+		$objRow = $this->Database->prepare("SELECT * FROM tl_content WHERE id=?")
+								 ->limit(1)
+								 ->execute($intId);
+
+		if ($objRow->numRows < 1)
+		{
+			throw new AccessDeniedException('Invalid content element ID ' . $intId . '.');
+		}
+
+		if (!$this->User->hasAccess($objRow->type, 'elements'))
+		{
+			throw new AccessDeniedException('Not enough permissions to modify content elements of type "' . $objRow->type . '".');
+		}
+
 		// Set the current record
 		if ($dc)
 		{
-			$objRow = $this->Database->prepare("SELECT * FROM tl_content WHERE id=?")
-									 ->limit(1)
-									 ->execute($intId);
-
-			if ($objRow->numRows)
-			{
-				$dc->activeRecord = $objRow;
-
-				if (!$this->User->hasAccess($objRow->type, 'elements'))
-				{
-					throw new AccessDeniedException('Not enough permissions to modify content elements of type "' . $objRow->type . '".');
-				}
-			}
+			$dc->activeRecord = $objRow;
 		}
 
 		$objVersions = new Versions('tl_content', $intId);

@@ -321,7 +321,7 @@ class tl_files extends Backend
 		}
 
 		$container = System::getContainer();
-		$rootDir = $container->getParameter('kernel.project_dir');
+		$projectDir = $container->getParameter('kernel.project_dir');
 		$objSession = $container->get('session');
 
 		$session = $objSession->all();
@@ -345,11 +345,11 @@ class tl_files extends Backend
 
 				foreach ($session['CURRENT']['IDS'] as $id)
 				{
-					if (is_dir($rootDir . '/' . $id))
+					if (is_dir($projectDir . '/' . $id))
 					{
 						$folders[] = $id;
 
-						if ($canDeleteRecursive || ($canDeleteOne && count(Folder::scan($rootDir . '/' . $id)) < 1))
+						if ($canDeleteRecursive || ($canDeleteOne && count(Folder::scan($projectDir . '/' . $id)) < 1))
 						{
 							$delete_all[] = $id;
 						}
@@ -400,11 +400,11 @@ class tl_files extends Backend
 				case 'delete':
 					$strFile = Input::get('id', true);
 
-					if (is_dir($rootDir . '/' . $strFile))
+					if (is_dir($projectDir . '/' . $strFile))
 					{
-						$finder = Finder::create()->in($rootDir . '/' . $strFile);
+						$finder = Finder::create()->in($projectDir . '/' . $strFile);
 
-						if (!$canDeleteRecursive && $finder->count() > 0)
+						if (!$canDeleteRecursive && $finder->hasResults())
 						{
 							throw new AccessDeniedException('No permission to delete folder "' . $strFile . '" recursively.');
 						}
@@ -464,8 +464,8 @@ class tl_files extends Backend
 			return;
 		}
 
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
-		$blnIsFolder = is_dir($rootDir . '/' . $dc->id);
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+		$blnIsFolder = is_dir($projectDir . '/' . $dc->id);
 
 		// Remove the meta data when editing folders
 		if ($blnIsFolder)
@@ -739,8 +739,8 @@ class tl_files extends Backend
 	 */
 	public function deleteFile($row, $href, $label, $title, $icon, $attributes)
 	{
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
-		$path = $rootDir . '/' . urldecode($row['id']);
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+		$path = $projectDir . '/' . urldecode($row['id']);
 
 		if (!is_dir($path))
 		{
@@ -749,7 +749,7 @@ class tl_files extends Backend
 
 		$finder = Finder::create()->in($path);
 
-		if ($finder->count() > 0)
+		if ($finder->hasResults())
 		{
 			return $this->User->hasAccess('f4', 'fop') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 		}
@@ -777,9 +777,9 @@ class tl_files extends Backend
 		}
 
 		$strDecoded = rawurldecode($row['id']);
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
-		if (is_dir($rootDir . '/' . $strDecoded))
+		if (is_dir($projectDir . '/' . $strDecoded))
 		{
 			return '';
 		}
@@ -828,10 +828,10 @@ class tl_files extends Backend
 	public function protectFolder(DataContainer $dc)
 	{
 		$strPath = $dc->id;
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Check if the folder has been renamed (see #6432, #934)
-		if (Input::post('name') && !is_dir($rootDir . '/' . $strPath))
+		if (Input::post('name') && !is_dir($projectDir . '/' . $strPath))
 		{
 			if (Validator::isInsecurePath(Input::post('name')))
 			{
@@ -842,14 +842,14 @@ class tl_files extends Backend
 			$strName = basename($strPath);
 			$strNewPath = str_replace($strName, Input::post('name'), $strPath, $count);
 
-			if ($strNewPath && $count > 0 && is_dir($rootDir . '/' . $strNewPath))
+			if ($strNewPath && $count > 0 && is_dir($projectDir . '/' . $strNewPath))
 			{
 				$strPath = $strNewPath;
 			}
 		}
 
 		// Only show for folders (see #5660)
-		if (!is_dir($rootDir . '/' . $strPath))
+		if (!is_dir($projectDir . '/' . $strPath))
 		{
 			return '';
 		}
@@ -860,7 +860,7 @@ class tl_files extends Backend
 		$blnUnprotected = $objFolder->isUnprotected();
 
 		// Disable the checkbox if a parent folder is public (see #712)
-		$blnDisable = $blnUnprotected && !file_exists($rootDir . '/' . $strPath . '/.public');
+		$blnDisable = $blnUnprotected && !file_exists($projectDir . '/' . $strPath . '/.public');
 
 		// Protect or unprotect the folder
 		if (!$blnDisable && Input::post('FORM_SUBMIT') == 'tl_files')
@@ -920,7 +920,7 @@ class tl_files extends Backend
 	public function excludeFolder(DataContainer $dc)
 	{
 		$strPath = $dc->id;
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Check if the folder has been renamed (see #6432, #934)
 		if (Input::post('name'))
@@ -933,14 +933,14 @@ class tl_files extends Backend
 			$count = 0;
 			$strName = basename($strPath);
 
-			if ($count > 0 && ($strNewPath = str_replace($strName, Input::post('name'), $strPath, $count)) && is_dir($rootDir . '/' . $strNewPath))
+			if ($count > 0 && ($strNewPath = str_replace($strName, Input::post('name'), $strPath, $count)) && is_dir($projectDir . '/' . $strNewPath))
 			{
 				$strPath = $strNewPath;
 			}
 		}
 
 		// Only show for folders (see #5660)
-		if (!is_dir($rootDir . '/' . $strPath))
+		if (!is_dir($projectDir . '/' . $strPath))
 		{
 			return '';
 		}
@@ -951,7 +951,7 @@ class tl_files extends Backend
 		$blnUnsynchronized = $objFolder->isUnsynchronized();
 
 		// Disable the checkbox if a parent folder is unsynchronized
-		$blnDisable = $blnUnsynchronized && !file_exists($rootDir . '/' . $strPath . '/.nosync');
+		$blnDisable = $blnUnsynchronized && !file_exists($projectDir . '/' . $strPath . '/.nosync');
 
 		// Synchronize or unsynchronize the folder
 		if (!$blnDisable && Input::post('FORM_SUBMIT') == 'tl_files')

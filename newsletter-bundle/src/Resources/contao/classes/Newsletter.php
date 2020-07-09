@@ -80,11 +80,11 @@ class Newsletter extends Backend
 
 				if ($objFiles !== null)
 				{
-					$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+					$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 					while ($objFiles->next())
 					{
-						if (is_file($rootDir . '/' . $objFiles->path))
+						if (is_file($projectDir . '/' . $objFiles->path))
 						{
 							$arrAttachments[] = $objFiles->path;
 						}
@@ -341,11 +341,11 @@ class Newsletter extends Backend
 		// Attachments
 		if (!empty($arrAttachments) && \is_array($arrAttachments))
 		{
-			$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+			$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 			foreach ($arrAttachments as $strAttachment)
 			{
-				$objEmail->attachFile($rootDir . '/' . $strAttachment);
+				$objEmail->attachFile($projectDir . '/' . $strAttachment);
 			}
 		}
 
