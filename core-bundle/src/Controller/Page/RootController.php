@@ -17,14 +17,16 @@ use Contao\CoreBundle\Exception\NoActivePageFoundException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Routing\Page\CompositionAwareInterface;
-use Contao\CoreBundle\Routing\Page\UrlSuffixProviderInterface;
+use Contao\CoreBundle\Routing\Page\PageRoute;
+use Contao\CoreBundle\Routing\Page\PageRouteEnhancerInterface;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\FetchMode;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Route;
 
-class RootController extends AbstractController implements UrlSuffixProviderInterface, CompositionAwareInterface
+class RootController extends AbstractController implements PageRouteEnhancerInterface, CompositionAwareInterface
 {
     /**
      * @var ContaoFramework
@@ -57,6 +59,11 @@ class RootController extends AbstractController implements UrlSuffixProviderInte
         return $this->redirectToContent($this->getNextPage($pageModel->id));
     }
 
+    public function enhancePageRoute(PageRoute $route): Route
+    {
+        return $route;
+    }
+
     public function getUrlSuffixes(): array
     {
         return $this->connection
@@ -72,6 +79,8 @@ class RootController extends AbstractController implements UrlSuffixProviderInte
 
     private function getNextPage($rootPageId): PageModel
     {
+        $this->framework->initialize();
+
         /** @var PageModel $pageAdapter */
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
 

@@ -26,13 +26,13 @@ class ContentResolvingGenerator extends SymfonyUrlGenerator
     /**
      * @var array<ContentRouteProviderInterface>
      */
-    private $providers;
+    private $routeProviders;
 
-    public function __construct(iterable $resolvers, LoggerInterface $logger = null)
+    public function __construct(iterable $routeProviders, LoggerInterface $logger = null)
     {
         parent::__construct(new RouteCollection(), new RequestContext(), $logger);
 
-        $this->providers = $resolvers;
+        $this->routeProviders = $routeProviders;
     }
 
     /**
@@ -63,9 +63,9 @@ class ContentResolvingGenerator extends SymfonyUrlGenerator
             return $content;
         }
 
-        foreach ($this->providers as $resolver) {
-            if ($resolver->supportsContent($content)) {
-                return $resolver->getRouteForContent($content);
+        foreach ($this->routeProviders as $provider) {
+            if ($provider->supportsContent($content)) {
+                return $provider->getRouteForContent($content);
             }
         }
 

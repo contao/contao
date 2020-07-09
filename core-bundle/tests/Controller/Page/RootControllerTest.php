@@ -17,7 +17,7 @@ use Contao\CoreBundle\Exception\NoActivePageFoundException;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Routing\Page\CompositionAwareInterface;
 use Contao\CoreBundle\Routing\Page\PageRoute;
-use Contao\CoreBundle\Routing\Page\UrlSuffixProviderInterface;
+use Contao\CoreBundle\Routing\Page\PageRouteEnhancerInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
@@ -71,7 +71,7 @@ class RootControllerTest extends TestCase
 
     public function testImplementsTheInterfaces(): void
     {
-        $this->assertInstanceOf(UrlSuffixProviderInterface::class, $this->controller);
+        $this->assertInstanceOf(PageRouteEnhancerInterface::class, $this->controller);
         $this->assertInstanceOf(CompositionAwareInterface::class, $this->controller);
     }
 

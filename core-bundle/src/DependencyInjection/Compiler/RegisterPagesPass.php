@@ -16,7 +16,6 @@ use Contao\CoreBundle\Routing\Page\CompositionAwareInterface;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRouteEnhancerInterface;
 use Contao\CoreBundle\Routing\Page\RouteConfig;
-use Contao\CoreBundle\Routing\Page\UrlSuffixProviderInterface;
 use Contao\FrontendIndex;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -53,7 +52,6 @@ class RegisterPagesPass implements CompilerPassInterface
     protected function registerPages(ContainerBuilder $container): void
     {
         $registry = $container->findDefinition(PageRegistry::class);
-        $candidates = $container->findDefinition('contao.routing.candidates');
 
         foreach ($this->findAndSortTaggedServices(self::TAG_NAME, $container) as $reference) {
             $definition = $container->findDefinition($reference);
@@ -75,10 +73,6 @@ class RegisterPagesPass implements CompilerPassInterface
 
                 if (is_a($class, CompositionAwareInterface::class, true)) {
                     $compositionAware = $reference;
-                }
-
-                if (is_a($class, UrlSuffixProviderInterface::class, true)) {
-                    $candidates->addMethodCall('addUrlSuffixProvider', [$reference]);
                 }
 
                 $config = $this->getRouteConfig($reference, $definition, $attributes);

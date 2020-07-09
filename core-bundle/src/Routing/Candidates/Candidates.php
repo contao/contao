@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\Candidates;
 
-use Contao\CoreBundle\Routing\Page\UrlSuffixProviderInterface;
+use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\FetchMode;
 use Symfony\Cmf\Component\Routing\Candidates\CandidatesInterface;
@@ -37,9 +37,9 @@ class Candidates implements CandidatesInterface
     private $connection;
 
     /**
-     * @var array<UrlSuffixProviderInterface>
+     * @var PageRegistry
      */
-    private $suffixProviders = [];
+    private $pageRegistry;
 
     /**
      * @var bool
@@ -56,14 +56,10 @@ class Candidates implements CandidatesInterface
      */
     private $urlSuffixes;
 
-    public function __construct(Connection $connection)
+    public function __construct(Connection $connection, PageRegistry $pageRegistry)
     {
         $this->connection = $connection;
-    }
-
-    public function addUrlSuffixProvider(UrlSuffixProviderInterface $provider): void
-    {
-        $this->suffixProviders[] = $provider;
+        $this->pageRegistry = $pageRegistry;
     }
 
     public function isCandidate($name): bool
@@ -151,13 +147,7 @@ class Candidates implements CandidatesInterface
             ->fetchAll(FetchMode::COLUMN)
         ;
 
-        $urlSuffix = [];
-
-        foreach ($this->suffixProviders as $provider) {
-            $urlSuffix[] = $provider->getUrlSuffixes();
-        }
-
-        $this->urlSuffixes = array_filter(array_unique(array_merge(...$urlSuffix)));
+        $this->urlSuffixes = $this->pageRegistry->getUrlSuffixes();
         $this->urlPrefixes = array_filter($urlPrefix);
     }
 }

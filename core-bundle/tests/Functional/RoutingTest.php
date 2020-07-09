@@ -36,6 +36,7 @@ class RoutingTest extends FunctionalTestCase
     protected function setUp(): void
     {
         parent::setUp();
+        static::bootKernel();
 
         $_GET = [];
 

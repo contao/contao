@@ -54,11 +54,7 @@ abstract class AbstractController extends SymfonyAbstractController implements S
     {
         $parameters[PageRoute::CONTENT_PARAMETER] = $content;
 
-        return $this->container->get('router')->generate(
-            PageRoute::ROUTE_NAME,
-            $parameters,
-            $referenceType
-        );
+        return $this->generateUrl(PageRoute::ROUTE_NAME, $parameters, $referenceType);
     }
 
     /**
@@ -67,6 +63,6 @@ abstract class AbstractController extends SymfonyAbstractController implements S
      */
     protected function redirectToContent($content, array $parameters = [], int $status = 302): RedirectResponse
     {
-        return $this->redirect($this->generateContentUrl($content, $parameters), $status);
+        return $this->redirect($this->generateContentUrl($content, $parameters, UrlGeneratorInterface::ABSOLUTE_URL), $status);
     }
 }

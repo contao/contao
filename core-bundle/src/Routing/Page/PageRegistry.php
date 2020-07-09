@@ -56,6 +56,17 @@ class PageRegistry
         return $enhancer->enhancePageRoute($route);
     }
 
+    public function getUrlSuffixes(): array
+    {
+        $urlSuffixes = [];
+
+        foreach ($this->routeEnhancers as $enhancer) {
+            $urlSuffixes[] = $enhancer->getUrlSuffixes();
+        }
+
+        return array_filter(array_unique(array_merge(...$urlSuffixes)));
+    }
+
     public function supportsContentComposition(PageModel $pageModel): bool
     {
         if (!isset($this->compositionAware[$pageModel->type])) {

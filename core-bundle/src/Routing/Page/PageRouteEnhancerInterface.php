@@ -31,4 +31,15 @@ interface PageRouteEnhancerInterface
      * so the route can be generated even if no parameters have been passed to the router generate() method.
      */
     public function enhancePageRoute(PageRoute $route): Route;
+
+    /**
+     * URL suffixes are used to generate alias candidates, which means
+     * stripping the URL suffix from a request path to find pages with
+     * the remaining path as an alias.
+     *
+     * Only return a non-empty array if this page does not use the global
+     * URL suffix as configured in the root page, e.g if this is a "feed" page type,
+     * it could return ".rss" and ".atom" as the URL suffixes.
+     */
+    public function getUrlSuffixes(): array;
 }

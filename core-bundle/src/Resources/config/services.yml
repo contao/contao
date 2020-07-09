@@ -464,6 +464,7 @@ services:
         class: Contao\CoreBundle\Routing\Candidates\Candidates
         arguments:
             - '@database_connection'
+            - '@Contao\CoreBundle\Routing\Page\PageRegistry'
 
     contao.routing.domain_filter:
         class: Contao\CoreBundle\Routing\Matcher\DomainFilter
@@ -552,7 +553,7 @@ services:
     contao.routing.route_generator:
         class: Contao\CoreBundle\Routing\ContentResolvingGenerator
         arguments:
-            - !tagged_iterator contao.content_resolver
+            - !tagged_iterator contao.content_route_provider
             - '@?logger'
 
     contao.routing.route_provider:

@@ -103,7 +103,7 @@ class ContaoCoreExtension extends Extension
 
         $container
             ->registerForAutoconfiguration(ContentRouteProviderInterface::class)
-            ->addTag('contao.content_resolver')
+            ->addTag('contao.content_route_provider')
         ;
     }
 

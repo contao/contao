@@ -19,6 +19,11 @@ use Doctrine\DBAL\Connection;
 
 class RoutingMigrationTest extends FunctionalTestCase
 {
+    protected function setUp(): void
+    {
+        static::bootKernel();
+    }
+
     /**
      * @dataProvider shouldRunProvider
      */

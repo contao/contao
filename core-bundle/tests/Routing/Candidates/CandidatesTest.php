@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Tests\Routing\Candidates;
 
 use Contao\CoreBundle\Routing\Candidates\Candidates;
 use Contao\CoreBundle\Routing\Candidates\LegacyCandidates;
-use Contao\CoreBundle\Routing\Page\UrlSuffixProviderInterface;
+use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\FetchMode;
@@ -39,15 +39,14 @@ class CandidatesTest extends TestCase
 
         $connection = $this->mockConnectionWithLanguages($languages);
 
-        $provider = $this->createMock(UrlSuffixProviderInterface::class);
-        $provider
-            ->expects($this->atLeastOnce())
+        $pageRegistry = $this->createMock(PageRegistry::class);
+        $pageRegistry
+            ->expects($this->once())
             ->method('getUrlSuffixes')
             ->willReturn($urlSuffixes)
         ;
 
-        $candidates = new Candidates($connection);
-        $candidates->addUrlSuffixProvider($provider);
+        $candidates = new Candidates($connection, $pageRegistry);
 
         $this->assertSame($expected, $candidates->getCandidates($request));
     }

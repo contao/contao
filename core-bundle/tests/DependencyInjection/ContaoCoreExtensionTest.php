@@ -2823,7 +2823,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertEquals(
             [
-                new TaggedIteratorArgument('contao.content_resolver'),
+                new TaggedIteratorArgument('contao.content_route_provider'),
                 new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
             ],
             $definition->getArguments()
