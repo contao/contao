@@ -10,43 +10,53 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\ContentRouting;
+namespace Contao\CoreBundle\Tests\Routing\Content;
 
 use Contao\ArticleModel;
 use Contao\CoreBundle\Routing\Content\PageRouteProvider;
+use Contao\CoreBundle\Routing\Page\PageRouteFactory;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\Routing\Route;
 
 class PageRouteProviderTest extends TestCase
 {
     /**
+     * @var PageRouteFactory|MockObject
+     */
+    private $routeFactory;
+
+    /**
      * @var PageRouteProvider
      */
-    private $resolver;
+    private $provider;
 
     protected function setUp(): void
     {
-        $this->resolver = new PageRouteProvider();
+        $this->routeFactory = $this->createMock(PageRouteFactory::class);
+        $this->provider = new PageRouteProvider($this->routeFactory);
     }
 
     public function testSupportsPages(): void
     {
-        $this->assertTrue($this->resolver->supportsContent($this->mockPage()));
-        $this->assertFalse($this->resolver->supportsContent($this->mockClassWithProperties(ArticleModel::class)));
+        $this->assertTrue($this->provider->supportsContent($this->mockPage()));
+        $this->assertFalse($this->provider->supportsContent($this->mockClassWithProperties(ArticleModel::class)));
     }
 
-    public function testCreatesParameterdContentRoute(): void
+    public function testCreatesParameteredContentRoute(): void
     {
         $page = $this->mockPage();
+        $route = new Route('/');
 
-        /** @var PageRoute $route */
-        $route = $this->resolver->resolveContent($page);
+        $this->routeFactory
+            ->expects($this->once())
+            ->method('createRoute')
+            ->with($page)
+            ->willReturn($route)
+        ;
 
-        $this->assertInstanceOf(PageRoute::class, $route);
-        $this->assertSame($page, $route->getPage());
-        $this->assertSame('/foo/bar{parameters}.baz', $route->getPath());
-        $this->assertSame('', $route->getDefault('parameters'));
+        $this->assertSame($route, $this->provider->getRouteForContent($page));
     }
 
     /**

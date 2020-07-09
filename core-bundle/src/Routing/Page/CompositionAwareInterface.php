@@ -17,7 +17,7 @@ use Contao\PageModel;
 interface CompositionAwareInterface
 {
     /**
-     * If the page supports content composition, it's layout is defined by a Contao
+     * If the page supports content composition, its layout is defined by a Contao
      * page layout, and it supports articles and content elements.
      *
      * Most Contao page types do support composition. Pages that do not support composition

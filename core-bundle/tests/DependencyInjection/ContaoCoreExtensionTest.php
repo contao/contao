@@ -112,6 +112,7 @@ use Contao\CoreBundle\Routing\Matcher\LanguageFilter;
 use Contao\CoreBundle\Routing\Matcher\LegacyMatcher;
 use Contao\CoreBundle\Routing\Matcher\PublishedFilter;
 use Contao\CoreBundle\Routing\Matcher\UrlMatcher;
+use Contao\CoreBundle\Routing\Page\PageRouteFactory;
 use Contao\CoreBundle\Routing\Route404Provider;
 use Contao\CoreBundle\Routing\RouteProvider;
 use Contao\CoreBundle\Routing\ScopeMatcher;
@@ -150,7 +151,6 @@ use Knp\Menu\Renderer\ListRenderer;
 use Symfony\Cmf\Component\Routing\DynamicRouter;
 use Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\Argument\ServiceLocatorArgument;
 use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -2824,7 +2824,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEquals(
             [
                 new TaggedIteratorArgument('contao.content_resolver'),
-                new ServiceLocatorArgument(new TaggedIteratorArgument('contao.page_provider', 'type', 'getPageType', true)),
                 new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
             ],
             $definition->getArguments()
@@ -2847,7 +2846,7 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('contao.framework'),
                 new Reference('database_connection'),
                 new Reference('contao.routing.candidates'),
-                new ServiceLocatorArgument(new TaggedIteratorArgument('contao.page_provider', 'type', 'getPageType', true)),
+                new Reference(PageRouteFactory::class),
                 new Reference('%contao.legacy_routing%'),
                 new Reference('%contao.prepend_locale%'),
             ],

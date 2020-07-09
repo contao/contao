@@ -46,6 +46,10 @@ abstract class AbstractController extends SymfonyAbstractController implements S
         $this->get('fos_http_cache.http.symfony_response_tagger')->addTags($tags);
     }
 
+    /**
+     * Uses the Symfony router to generate a URL for the given content.
+     * _Content_ in this case should be any supported model/entity of Contao, e.g. a PageModel, NewsModel or similar.
+     */
     protected function generateContentUrl($content, array $parameters = [], int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH): string
     {
         $parameters[PageRoute::CONTENT_PARAMETER] = $content;
@@ -57,6 +61,10 @@ abstract class AbstractController extends SymfonyAbstractController implements S
         );
     }
 
+    /**
+     * Uses the Symfony router to generate redirect response to the URL of the given content.
+     * _Content_ in this case should be any supported model/entity of Contao, e.g. a PageModel, NewsModel or similar.
+     */
     protected function redirectToContent($content, array $parameters = [], int $status = 302): RedirectResponse
     {
         return $this->redirect($this->generateContentUrl($content, $parameters), $status);

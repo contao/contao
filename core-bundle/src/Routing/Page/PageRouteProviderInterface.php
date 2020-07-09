@@ -23,7 +23,7 @@ use Symfony\Component\Routing\Route;
 interface PageRouteProviderInterface
 {
     /**
-     * While matching URLs, contao generates alias candidates and looks for matching page models.
+     * While matching URLs, Contao generates alias candidates and looks for matching page models.
      * Based on these page's "type" property, the respective provider is asked for the route,
      * as only the route provider knows about requirements and defaults.
      *

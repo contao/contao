@@ -221,7 +221,7 @@ class RouteProvider implements RouteProviderInterface
     {
         $length = \strlen($route->getUrlPrefix());
 
-        if (0 === $length || substr($route->getPath(), 1, $length) !== $route->getUrlPrefix()) {
+        if (0 === $length) {
             return;
         }
 

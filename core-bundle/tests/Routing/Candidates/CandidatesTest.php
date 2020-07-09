@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Routing\Candidates;
 
-use Contao\CoreBundle\ContentRouting\PageProviderInterface;
 use Contao\CoreBundle\Routing\Candidates\Candidates;
 use Contao\CoreBundle\Routing\Candidates\LegacyCandidates;
+use Contao\CoreBundle\Routing\Page\UrlSuffixProviderInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\FetchMode;
@@ -38,11 +38,18 @@ class CandidatesTest extends TestCase
         ;
 
         $connection = $this->mockConnectionWithLanguages($languages);
-        $providers = $this->mockPageProvidersWithUrlSuffix($urlSuffixes);
 
-        $candidates = (new Candidates($connection, $providers))->getCandidates($request);
+        $provider = $this->createMock(UrlSuffixProviderInterface::class);
+        $provider
+            ->expects($this->atLeastOnce())
+            ->method('getUrlSuffixes')
+            ->willReturn($urlSuffixes)
+        ;
 
-        $this->assertSame($expected, $candidates);
+        $candidates = new Candidates($connection);
+        $candidates->addUrlSuffixProvider($provider);
+
+        $this->assertSame($expected, $candidates->getCandidates($request));
     }
 
     /**
@@ -291,35 +298,5 @@ class CandidatesTest extends TestCase
         ;
 
         return $connection;
-    }
-
-    /**
-     * @return ServiceLocator&MockObject
-     */
-    private function mockPageProvidersWithUrlSuffix(array $urlSuffix): ServiceLocator
-    {
-        $provider = $this->createMock(PageProviderInterface::class);
-        $provider
-            ->expects($this->atLeastOnce())
-            ->method('getUrlSuffixes')
-            ->willReturn($urlSuffix)
-        ;
-
-        $locator = $this->createMock(ServiceLocator::class);
-
-        $locator
-            ->expects($this->atLeastOnce())
-            ->method('getProvidedServices')
-            ->willReturn(['root' => '\Foo\BarPageProvider'])
-        ;
-
-        $locator
-            ->expects($this->atLeastOnce())
-            ->method('get')
-            ->with('root')
-            ->willReturn($provider)
-        ;
-
-        return $locator;
     }
 }

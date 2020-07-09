@@ -13,15 +13,20 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller\Page;
 
 use Contao\CoreBundle\Controller\Page\RootController;
+use Contao\CoreBundle\Exception\NoActivePageFoundException;
 use Contao\CoreBundle\Framework\Adapter;
+use Contao\CoreBundle\Routing\Page\CompositionAwareInterface;
+use Contao\CoreBundle\Routing\Page\PageRoute;
+use Contao\CoreBundle\Routing\Page\UrlSuffixProviderInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\FetchMode;
 use Doctrine\DBAL\Statement;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Bundle\FrameworkBundle\Controller\RedirectController;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Psr\Container\ContainerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class RootControllerTest extends TestCase
 {
@@ -36,6 +41,11 @@ class RootControllerTest extends TestCase
     private $connection;
 
     /**
+     * @var UrlGeneratorInterface&MockObject
+     */
+    private $router;
+
+    /**
      * @var RootController
      */
     private $controller;
@@ -44,25 +54,40 @@ class RootControllerTest extends TestCase
     {
         $this->pageModelAdapter = $this->mockAdapter(['findFirstPublishedByPid']);
         $this->connection = $this->createMock(Connection::class);
+        $this->router = $this->createMock(UrlGeneratorInterface::class);
 
         $framework = $this->mockContaoFramework([PageModel::class => $this->pageModelAdapter]);
 
+        $container = $this->createMock(ContainerInterface::class);
+        $container
+            ->method('get')
+            ->with('router')
+            ->willReturn($this->router)
+        ;
+
         $this->controller = new RootController($framework, $this->connection);
+        $this->controller->setContainer($container);
+    }
+
+    public function testImplementsTheInterfaces(): void
+    {
+        $this->assertInstanceOf(UrlSuffixProviderInterface::class, $this->controller);
+        $this->assertInstanceOf(CompositionAwareInterface::class, $this->controller);
     }
 
     public function testThrowsExceptionIfPageTypeIsNotSupported(): void
     {
-        $this->expectException(RouteNotFoundException::class);
+        $this->expectException(\InvalidArgumentException::class);
 
         /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class, ['type' => 'foobar']);
 
-        $this->controller->getRouteForPage($page);
+        $this->controller->__invoke($page);
     }
 
     public function testThrowsExceptionIfFirstPageOfRootIsNotFound(): void
     {
-        $this->expectException(RouteNotFoundException::class);
+        $this->expectException(NoActivePageFoundException::class);
 
         /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class, ['id' => 17, 'type' => 'root']);
@@ -74,21 +99,16 @@ class RootControllerTest extends TestCase
             ->willReturn(null)
         ;
 
-        $this->controller->getRouteForPage($page);
+        $this->controller->__invoke($page);
     }
 
-    public function testCreatesRedirectRouteToFirstPage(): void
+    public function testCreatesRedirectResponseToFirstPage(): void
     {
         /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class, ['id' => 17, 'type' => 'root', 'alias' => 'root', 'urlPrefix' => 'en', 'urlSuffix' => '.html']);
 
         /** @var PageModel&MockObject $nextPage */
         $nextPage = $this->mockClassWithProperties(PageModel::class, ['id' => 18, 'pid' => 17, 'type' => 'root']);
-        $nextPage
-            ->expects($this->once())
-            ->method('getAbsoluteUrl')
-            ->willReturn('https://www.example.org/en/foobar.html')
-        ;
 
         $this->pageModelAdapter
             ->expects($this->once())
@@ -97,14 +117,18 @@ class RootControllerTest extends TestCase
             ->willReturn($nextPage)
         ;
 
-        $route = $this->controller->getRouteForPage($page);
+        $this->router
+            ->expects($this->once())
+            ->method('generate')
+            ->with(PageRoute::ROUTE_NAME, [PageRoute::CONTENT_PARAMETER => $nextPage])
+            ->willReturn('https://www.example.org/en/foobar.html')
+        ;
 
-        $this->assertInstanceOf(PageRoute::class, $route);
+        /** @var RedirectResponse $response */
+        $response = $this->controller->__invoke($page);
 
-        $this->assertSame('/en/root.html', $route->getPath());
-        $this->assertSame(RedirectController::class, $route->getDefault('_controller'));
-        $this->assertSame('https://www.example.org/en/foobar.html', $route->getDefault('path'));
-        $this->assertFalse($route->getDefault('permanent'));
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+        $this->assertSame('https://www.example.org/en/foobar.html', $response->getTargetUrl());
     }
 
     public function testReturnsUrlSuffixesFromDatabase(): void

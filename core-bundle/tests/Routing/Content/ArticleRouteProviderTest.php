@@ -14,13 +14,20 @@ namespace Contao\CoreBundle\Tests\Routing\Content;
 
 use Contao\ArticleModel;
 use Contao\CoreBundle\Routing\Content\ArticleRouteProvider;
+use Contao\CoreBundle\Routing\Page\PageRouteFactory;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Symfony\Component\Routing\Route;
 
 class ArticleRouteProviderTest extends TestCase
 {
+    /**
+     * @var PageRouteFactory|MockObject
+     */
+    private $routeFactory;
+
     /**
      * @var ArticleRouteProvider
      */
@@ -28,7 +35,8 @@ class ArticleRouteProviderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->provider = new ArticleRouteProvider();
+        $this->routeFactory = $this->createMock(PageRouteFactory::class);
+        $this->provider = new ArticleRouteProvider($this->routeFactory);
     }
 
     public function testSupportsArticles(): void
@@ -37,9 +45,10 @@ class ArticleRouteProviderTest extends TestCase
         $this->assertFalse($this->provider->supportsContent($this->mockClassWithProperties(PageModel::class)));
     }
 
-    public function testCreatesParameterdContentRouteForArticle(): void
+    public function testCreatesParameteredContentRouteForArticle(): void
     {
         $page = $this->mockPage();
+        $route = new Route('/');
         $article = $this->mockArticle(['alias' => 'foobar']);
 
         $article
@@ -49,18 +58,20 @@ class ArticleRouteProviderTest extends TestCase
             ->willReturn($page)
         ;
 
-        /** @var PageRoute $route */
-        $route = $this->provider->resolveContent($article);
+        $this->routeFactory
+            ->expects($this->once())
+            ->method('createRoute')
+            ->with($page, '/articles/foobar', $article)
+            ->willReturn($route)
+        ;
 
-        $this->assertInstanceOf(PageRoute::class, $route);
-        $this->assertSame($page, $route->getPage());
-        $this->assertSame('/foo/bar{parameters}.baz', $route->getPath());
-        $this->assertSame('/articles/foobar', $route->getDefault('parameters'));
+        $this->assertSame($route, $this->provider->getRouteForContent($article));
     }
 
-    public function testCreatesParameterdContentRouteWithIdIfArticleHasNoAlias(): void
+    public function testCreatesParameteredContentRouteWithIdIfArticleHasNoAlias(): void
     {
         $page = $this->mockPage();
+        $route = new Route('/');
         $article = $this->mockArticle(['id' => 17, 'alias' => '']);
 
         $article
@@ -70,13 +81,14 @@ class ArticleRouteProviderTest extends TestCase
             ->willReturn($page)
         ;
 
-        /** @var PageRoute $route */
-        $route = $this->provider->resolveContent($article);
+        $this->routeFactory
+            ->expects($this->once())
+            ->method('createRoute')
+            ->with($page, '/articles/17', $article)
+            ->willReturn($route)
+        ;
 
-        $this->assertInstanceOf(PageRoute::class, $route);
-        $this->assertSame($page, $route->getPage());
-        $this->assertSame('/foo/bar{parameters}.baz', $route->getPath());
-        $this->assertSame('/articles/17', $route->getDefault('parameters'));
+        $this->assertSame($route, $this->provider->getRouteForContent($article));
     }
 
     public function testThrowsExceptionIfPageIsNotFound(): void
@@ -92,7 +104,7 @@ class ArticleRouteProviderTest extends TestCase
 
         $this->expectException(RouteNotFoundException::class);
 
-        $this->provider->resolveContent($article);
+        $this->provider->getRouteForContent($article);
     }
 
     /**

@@ -50,12 +50,13 @@ class PageRegistry
     public function getRouteForPage(PageModel $pageModel, $content = null): Route
     {
         if (!isset($this->routeProviders[$pageModel->type])) {
-            throw new \InvalidArgumentException(
-                sprintf('Page of type "%s" does not have a route provider.', $pageModel->type)
-            );
+            throw new \InvalidArgumentException(sprintf('Page of type "%s" does not have a route provider.', $pageModel->type));
         }
 
-        return $this->routeProviders[$pageModel->type]->getRouteForPage($pageModel, $content);
+        /** @var PageRouteProviderInterface $provider */
+        $provider = $this->routeProviders[$pageModel->type];
+
+        return $provider->getRouteForPage($pageModel, $content);
     }
 
     public function supportsContentComposition(PageModel $pageModel): bool

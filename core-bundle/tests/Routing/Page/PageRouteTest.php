@@ -71,7 +71,9 @@ class PageRouteTest extends TestCase
         $content = (object) ['foo' => 'bar'];
 
         $route = new PageRoute($this->mockPageModel());
+        $this->assertNull($route->getContent());
 
+        $route->setContent($content);
         $this->assertSame($content, $route->getContent());
 
         $route->setContent('foo');

@@ -16,6 +16,8 @@ use Contao\Config;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\Page\PageRoute;
+use Contao\CoreBundle\Routing\Page\PageRouteFactory;
 use Contao\CoreBundle\Routing\RouteProvider;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Model\Collection;
@@ -24,7 +26,6 @@ use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\FrameworkBundle\Controller\RedirectController;
 use Symfony\Cmf\Component\Routing\Candidates\CandidatesInterface;
-use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
@@ -33,6 +34,8 @@ class RouteProviderTest extends TestCase
 {
     public function testGetsARouteByName(): void
     {
+        $route = new Route('/');
+
         /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = 17;
@@ -47,10 +50,16 @@ class RouteProviderTest extends TestCase
             ->willReturn($page)
         ;
 
-        $framework = $this->mockFramework($pageAdapter);
-        $route = $this->getRouteProvider($framework)->getRouteByName('tl_page.17');
+        $routeFactory = $this->createMock(PageRouteFactory::class);
+        $routeFactory
+            ->expects($this->once())
+            ->method('createRoute')
+            ->with($page)
+            ->willReturn($route)
+        ;
 
-        $this->assertSame($page, $route->getDefault('pageModel'));
+        $framework = $this->mockFramework($pageAdapter);
+        $this->assertSame($route, $this->getRouteProvider($framework, $routeFactory)->getRouteByName('tl_page.17'));
     }
 
     public function testThrowsAnExceptionIfTheRouteNameDoesNotMatchAPageId(): void
@@ -102,7 +111,15 @@ class RouteProviderTest extends TestCase
             ->willReturn(new Collection([$page1, $page2], 'tl_page'))
         ;
 
-        $provider = $this->getRouteProvider($this->mockFramework($pageAdapter));
+        $routeFactory = $this->createMock(PageRouteFactory::class);
+        $routeFactory
+            ->expects($this->exactly(2))
+            ->method('createRoute')
+            ->withConsecutive([$page1], [$page2])
+            ->willReturn(new Route('/'))
+        ;
+
+        $provider = $this->getRouteProvider($this->mockFramework($pageAdapter), $routeFactory);
         $routes = $provider->getRoutesByNames(['tl_page.17', 'tl_page.21']);
 
         $this->assertCount(2, $routes);
@@ -110,6 +127,8 @@ class RouteProviderTest extends TestCase
 
     public function testHandlesRoutesWithDomain(): void
     {
+        $route = new Route('/');
+
         /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = 17;
@@ -125,14 +144,22 @@ class RouteProviderTest extends TestCase
             ->willReturn($page)
         ;
 
-        $framework = $this->mockFramework($pageAdapter);
-        $route = $this->getRouteProvider($framework)->getRouteByName('tl_page.17');
+        $routeFactory = $this->createMock(PageRouteFactory::class);
+        $routeFactory
+            ->expects($this->once())
+            ->method('createRoute')
+            ->with($page)
+            ->willReturn($route)
+        ;
 
-        $this->assertSame('example.org', $route->getHost());
+        $framework = $this->mockFramework($pageAdapter);
+        $this->assertSame($route, $this->getRouteProvider($framework, $routeFactory)->getRouteByName('tl_page.17'));
     }
 
     public function testHandlesRoutesWithDomainAndPort(): void
     {
+        $route = new Route('/');
+
         /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = 17;
@@ -148,10 +175,16 @@ class RouteProviderTest extends TestCase
             ->willReturn($page)
         ;
 
-        $framework = $this->mockFramework($pageAdapter);
-        $route = $this->getRouteProvider($framework)->getRouteByName('tl_page.17');
+        $routeFactory = $this->createMock(PageRouteFactory::class);
+        $routeFactory
+            ->expects($this->once())
+            ->method('createRoute')
+            ->with($page)
+            ->willReturn($route)
+        ;
 
-        $this->assertSame('example.org:8080', $route->getHost());
+        $framework = $this->mockFramework($pageAdapter);
+        $this->assertSame($route, $this->getRouteProvider($framework, $routeFactory)->getRouteByName('tl_page.17'));
     }
 
     public function testSelectsAllPagesIfNoPageNamesAreGiven(): void
@@ -197,7 +230,7 @@ class RouteProviderTest extends TestCase
     public function testReturnsAnEmptyCollectionIfTheLanguageIsNotGiven(): void
     {
         $request = $this->mockRequestWithPath('/foo.html');
-        $provider = $this->getRouteProvider($this->mockFramework($this->mockAdapter(['findBy'])), true);
+        $provider = $this->getRouteProvider($this->mockFramework($this->mockAdapter(['findBy'])), null, true);
 
         $this->assertEmpty($provider->getRouteCollectionForRequest($request));
     }
@@ -217,7 +250,23 @@ class RouteProviderTest extends TestCase
         $framework = $this->mockFramework($pageAdapter);
         $request = $this->mockRequestWithPath('/foo/bar/baz.html', $languages);
 
-        $provider = $this->getRouteProvider($framework);
+        $args = [];
+        $routes = [];
+
+        foreach ($pages as $page) {
+            $args[] = [$page];
+            $routes[] = new PageRoute($page);
+        }
+
+        $routeFactory = $this->createMock(PageRouteFactory::class);
+        $routeFactory
+            ->expects($this->exactly(\count($pages)))
+            ->method('createRoute')
+            ->withConsecutive(...$args)
+            ->willReturnOnConsecutiveCalls(...$routes)
+        ;
+
+        $provider = $this->getRouteProvider($framework, $routeFactory);
         $collection = $provider->getRouteCollectionForRequest($request);
 
         $this->assertCount(\count($pages), $collection);
@@ -391,7 +440,23 @@ class RouteProviderTest extends TestCase
         $framework = $this->mockFramework($pageAdapter);
         $request = $this->mockRequestWithPath('/', $languages);
 
-        $provider = $this->getRouteProvider($framework);
+        $args = [];
+        $routes = [];
+
+        foreach ($pages as $page) {
+            $args[] = [$page];
+            $routes[] = new PageRoute($page);
+        }
+
+        $routeFactory = $this->createMock(PageRouteFactory::class);
+        $routeFactory
+            ->expects($this->exactly(\count($pages)))
+            ->method('createRoute')
+            ->withConsecutive(...$args)
+            ->willReturnOnConsecutiveCalls(...$routes)
+        ;
+
+        $provider = $this->getRouteProvider($framework, $routeFactory);
         $collection = $provider->getRouteCollectionForRequest($request);
 
         $this->assertCount(\count($expectedNames), $collection);
@@ -483,9 +548,9 @@ class RouteProviderTest extends TestCase
      */
     public function testAddsRoutesForAPage(string $alias, string $language, string $domain, string $urlSuffix, bool $prependLocale, ?string $scheme): void
     {
-        $page = $this->createPage($language, $alias, true, $domain, $scheme, $urlSuffix);
-        $page->urlPrefix = $prependLocale ? $language : '';
-        $page
+        $pageModel = $this->createPage($language, $alias, true, $domain, $scheme, $urlSuffix);
+        $pageModel->urlPrefix = $prependLocale ? $language : '';
+        $pageModel
             ->expects($this->atLeastOnce())
             ->method('loadDetails')
         ;
@@ -494,45 +559,43 @@ class RouteProviderTest extends TestCase
         $pageAdapter
             ->expects($this->once())
             ->method('findBy')
-            ->willReturn(new Collection([$page], 'tl_page'))
+            ->willReturn(new Collection([$pageModel], 'tl_page'))
         ;
 
         $framework = $this->mockFramework($pageAdapter);
         $request = $this->mockRequestWithPath(($prependLocale ? '/'.$language : '').'/foo/bar'.$urlSuffix);
 
-        $provider = $this->getRouteProvider($framework, $prependLocale);
+        $route = new PageRoute($pageModel);
+        $route->setPath(sprintf('/%s{parameters}', $pageModel->alias ?: $pageModel->id));
+        $route->setDefault('parameters', '/foo/bar');
+        $route->setRequirement('parameters', $pageModel->requireItem ? '/.+' : '(/.+)?');
+
+        $routeFactory = $this->createMock(PageRouteFactory::class);
+        $routeFactory
+            ->expects($this->once())
+            ->method('createRoute')
+            ->with($pageModel)
+            ->willReturn($route)
+        ;
+
+        $provider = $this->getRouteProvider($framework, $routeFactory, $prependLocale);
         $collection = $provider->getRouteCollectionForRequest($request);
 
         $this->assertCount($prependLocale ? 2 : 1, $collection);
 
-        $route = $collection->get('tl_page.'.$page->id);
-
-        $this->assertInstanceOf(Route::class, $route);
-        $this->assertSame('(/.+)?', $route->getRequirement('parameters'));
-        $this->assertTrue($route->getOption('utf8'));
-        $this->assertSame($domain, $route->getHost());
-
-        if ('https' === $scheme) {
-            $this->assertSame(['https'], $route->getSchemes());
-        } else {
-            $this->assertSame([], $route->getSchemes());
-        }
-
-        if ($prependLocale) {
-            $this->assertSame('/'.$language.'/'.$alias.'{parameters}'.$urlSuffix, $route->getPath());
-            $this->assertSame($language, $route->getDefault('_locale'));
-        } else {
-            $this->assertSame('/'.$alias.'{parameters}'.$urlSuffix, $route->getPath());
-        }
+        $this->assertArrayHasKey('tl_page.'.$pageModel->id, $collection->all());
+        $this->assertSame($route, $collection->get('tl_page.'.$pageModel->id));
 
         if (!$prependLocale) {
             return;
         }
 
-        $route = $collection->get('tl_page.'.$page->id.'.locale');
+        $this->assertArrayHasKey('tl_page.'.$pageModel->id.'.locale', $collection->all());
+        $route = $collection->get('tl_page.'.$pageModel->id.'.locale');
 
         $this->assertInstanceOf(Route::class, $route);
         $this->assertSame('(/.+)?', $route->getRequirement('parameters'));
+        $this->assertSame('/foo/bar', $route->getDefault('parameters'));
         $this->assertTrue($route->getOption('utf8'));
         $this->assertSame($domain, $route->getHost());
 
@@ -706,7 +769,7 @@ class RouteProviderTest extends TestCase
     /**
      * @param ContaoFramework&MockObject $framework
      */
-    private function getRouteProvider(ContaoFramework $framework = null, bool $prependLocale = false): RouteProvider
+    private function getRouteProvider(ContaoFramework $framework = null, PageRouteFactory $routeFactory = null, bool $prependLocale = false): RouteProvider
     {
         if (null === $framework) {
             $framework = $this->mockContaoFramework();
@@ -724,8 +787,10 @@ class RouteProviderTest extends TestCase
             ->willReturn(['foo'])
         ;
 
-        $providers = $this->createMock(ServiceLocator::class);
+        if (null === $routeFactory) {
+            $routeFactory = $this->createMock(PageRouteFactory::class);
+        }
 
-        return new RouteProvider($framework, $connection, $candidates, $providers, false, $prependLocale);
+        return new RouteProvider($framework, $connection, $candidates, $routeFactory, false, $prependLocale);
     }
 }
