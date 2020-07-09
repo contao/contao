@@ -265,7 +265,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
 			'exclude'                 => true,
 			'inputType'               => 'serpPreview',
-			'eval'                    => array('url_callback'=>array('tl_news', 'getSerpUrl'), 'titleFields'=>array('pageTitle', 'headline'), 'descriptionFields'=>array('description', 'teaser')),
+			'eval'                    => array('titleFields'=>array('pageTitle', 'headline'), 'descriptionFields'=>array('description', 'teaser')),
 			'sql'                     => null
 		),
 		'subheadline' => array
