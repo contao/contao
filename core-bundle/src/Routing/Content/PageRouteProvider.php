@@ -12,18 +12,18 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\Content;
 
-use Contao\CoreBundle\Routing\Page\PageRouteFactory;
+use Contao\CoreBundle\Routing\RouteFactory;
 use Contao\PageModel;
 use Symfony\Component\Routing\Route;
 
 class PageRouteProvider implements ContentRouteProviderInterface
 {
     /**
-     * @var PageRouteFactory
+     * @var RouteFactory
      */
     private $routeFactory;
 
-    public function __construct(PageRouteFactory $routeFactory)
+    public function __construct(RouteFactory $routeFactory)
     {
         $this->routeFactory = $routeFactory;
     }
@@ -33,7 +33,7 @@ class PageRouteProvider implements ContentRouteProviderInterface
      */
     public function getRouteForContent($page): Route
     {
-        return $this->routeFactory->createRoute($page);
+        return $this->routeFactory->createRouteForPage($page);
     }
 
     public function supportsContent($content): bool

@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Routing;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRoute;
-use Contao\CoreBundle\Routing\Page\PageRouteFactory;
 use Contao\Model;
 use Contao\Model\Collection;
 use Contao\PageModel;
@@ -47,7 +46,7 @@ class RouteProvider implements RouteProviderInterface
     private $candidates;
 
     /**
-     * @var PageRouteFactory
+     * @var RouteFactory
      */
     private $routeFactory;
 
@@ -64,7 +63,7 @@ class RouteProvider implements RouteProviderInterface
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.route_provider" service instead
      */
-    public function __construct(ContaoFramework $framework, Connection $database, CandidatesInterface $candidates, PageRouteFactory $routeFactory, bool $legacyRouting, bool $prependLocale)
+    public function __construct(ContaoFramework $framework, Connection $database, CandidatesInterface $candidates, RouteFactory $routeFactory, bool $legacyRouting, bool $prependLocale)
     {
         $this->framework = $framework;
         $this->database = $database;
@@ -207,7 +206,7 @@ class RouteProvider implements RouteProviderInterface
             return;
         }
 
-        $route = $this->routeFactory->createRoute($page);
+        $route = $this->routeFactory->createRouteForPage($page);
         $routes['tl_page.'.$page->id] = $route;
 
         if ($route instanceof PageRoute) {
@@ -257,7 +256,7 @@ class RouteProvider implements RouteProviderInterface
         }
 
         $page->loadDetails();
-        $route = $this->routeFactory->createRoute($page);
+        $route = $this->routeFactory->createRouteForPage($page);
         $urlPrefix = '';
 
         if ($route instanceof PageRoute) {

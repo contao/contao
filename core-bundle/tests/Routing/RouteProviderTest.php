@@ -17,7 +17,7 @@ use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRoute;
-use Contao\CoreBundle\Routing\Page\PageRouteFactory;
+use Contao\CoreBundle\Routing\RouteFactory;
 use Contao\CoreBundle\Routing\RouteProvider;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Model\Collection;
@@ -50,10 +50,10 @@ class RouteProviderTest extends TestCase
             ->willReturn($page)
         ;
 
-        $routeFactory = $this->createMock(PageRouteFactory::class);
+        $routeFactory = $this->createMock(RouteFactory::class);
         $routeFactory
             ->expects($this->once())
-            ->method('createRoute')
+            ->method('createRouteForPage')
             ->with($page)
             ->willReturn($route)
         ;
@@ -111,10 +111,10 @@ class RouteProviderTest extends TestCase
             ->willReturn(new Collection([$page1, $page2], 'tl_page'))
         ;
 
-        $routeFactory = $this->createMock(PageRouteFactory::class);
+        $routeFactory = $this->createMock(RouteFactory::class);
         $routeFactory
             ->expects($this->exactly(2))
-            ->method('createRoute')
+            ->method('createRouteForPage')
             ->withConsecutive([$page1], [$page2])
             ->willReturn(new Route('/'))
         ;
@@ -144,10 +144,10 @@ class RouteProviderTest extends TestCase
             ->willReturn($page)
         ;
 
-        $routeFactory = $this->createMock(PageRouteFactory::class);
+        $routeFactory = $this->createMock(RouteFactory::class);
         $routeFactory
             ->expects($this->once())
-            ->method('createRoute')
+            ->method('createRouteForPage')
             ->with($page)
             ->willReturn($route)
         ;
@@ -175,10 +175,10 @@ class RouteProviderTest extends TestCase
             ->willReturn($page)
         ;
 
-        $routeFactory = $this->createMock(PageRouteFactory::class);
+        $routeFactory = $this->createMock(RouteFactory::class);
         $routeFactory
             ->expects($this->once())
-            ->method('createRoute')
+            ->method('createRouteForPage')
             ->with($page)
             ->willReturn($route)
         ;
@@ -258,10 +258,10 @@ class RouteProviderTest extends TestCase
             $routes[] = new PageRoute($page);
         }
 
-        $routeFactory = $this->createMock(PageRouteFactory::class);
+        $routeFactory = $this->createMock(RouteFactory::class);
         $routeFactory
             ->expects($this->exactly(\count($pages)))
-            ->method('createRoute')
+            ->method('createRouteForPage')
             ->withConsecutive(...$args)
             ->willReturnOnConsecutiveCalls(...$routes)
         ;
@@ -448,10 +448,10 @@ class RouteProviderTest extends TestCase
             $routes[] = new PageRoute($page);
         }
 
-        $routeFactory = $this->createMock(PageRouteFactory::class);
+        $routeFactory = $this->createMock(RouteFactory::class);
         $routeFactory
             ->expects($this->exactly(\count($pages)))
-            ->method('createRoute')
+            ->method('createRouteForPage')
             ->withConsecutive(...$args)
             ->willReturnOnConsecutiveCalls(...$routes)
         ;
@@ -570,10 +570,10 @@ class RouteProviderTest extends TestCase
         $route->setDefault('parameters', '/foo/bar');
         $route->setRequirement('parameters', $pageModel->requireItem ? '/.+' : '(/.+)?');
 
-        $routeFactory = $this->createMock(PageRouteFactory::class);
+        $routeFactory = $this->createMock(RouteFactory::class);
         $routeFactory
             ->expects($this->once())
-            ->method('createRoute')
+            ->method('createRouteForPage')
             ->with($pageModel)
             ->willReturn($route)
         ;
@@ -769,7 +769,7 @@ class RouteProviderTest extends TestCase
     /**
      * @param ContaoFramework&MockObject $framework
      */
-    private function getRouteProvider(ContaoFramework $framework = null, PageRouteFactory $routeFactory = null, bool $prependLocale = false): RouteProvider
+    private function getRouteProvider(ContaoFramework $framework = null, RouteFactory $routeFactory = null, bool $prependLocale = false): RouteProvider
     {
         if (null === $framework) {
             $framework = $this->mockContaoFramework();
@@ -788,7 +788,7 @@ class RouteProviderTest extends TestCase
         ;
 
         if (null === $routeFactory) {
-            $routeFactory = $this->createMock(PageRouteFactory::class);
+            $routeFactory = $this->createMock(RouteFactory::class);
         }
 
         return new RouteProvider($framework, $connection, $candidates, $routeFactory, false, $prependLocale);

@@ -10,21 +10,32 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Routing\Page;
+namespace Contao\CoreBundle\Routing;
 
+use Contao\CoreBundle\Exception\ContentRouteNotFoundException;
+use Contao\CoreBundle\Routing\Content\ContentRouteProviderInterface;
+use Contao\CoreBundle\Routing\Page\PageRegistry;
+use Contao\CoreBundle\Routing\Page\PageRoute;
+use Contao\CoreBundle\Routing\Page\RouteConfig;
 use Contao\PageModel;
 use Symfony\Component\Routing\Route;
 
-class PageRouteFactory
+class RouteFactory
 {
     /**
      * @var PageRegistry
      */
     private $pageRegistry;
 
-    public function __construct(PageRegistry $pageRegistry)
+    /**
+     * @var array<ContentRouteProviderInterface>
+     */
+    private $routeProviders;
+
+    public function __construct(PageRegistry $pageRegistry, iterable $routeProviders)
     {
         $this->pageRegistry = $pageRegistry;
+        $this->routeProviders = $routeProviders;
     }
 
     /**
@@ -38,7 +49,7 @@ class PageRouteFactory
      *
      * A route enhancer might change or replace the route for a specific page.
      */
-    public function createRoute(PageModel $pageModel, string $defaultParameters = '', $content = null): Route
+    public function createRouteForPage(PageModel $pageModel, string $defaultParameters = '', $content = null): Route
     {
         $config = $this->pageRegistry->getRouteConfig($pageModel->type) ?: new RouteConfig();
         $pathParameters = $config->getPathParameters();
@@ -57,5 +68,20 @@ class PageRouteFactory
         $route->setContent($content);
 
         return $this->pageRegistry->enhancePageRoute($route);
+    }
+
+    public function createRouteForContent($content): Route
+    {
+        if ($content instanceof Route) {
+            return $content;
+        }
+
+        foreach ($this->routeProviders as $provider) {
+            if ($provider->supportsContent($content)) {
+                return $provider->getRouteForContent($content);
+            }
+        }
+
+        throw new ContentRouteNotFoundException($content);
     }
 }

@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing\Content;
 
 use Contao\ArticleModel;
-use Contao\CoreBundle\Routing\Page\PageRouteFactory;
+use Contao\CoreBundle\Routing\RouteFactory;
 use Contao\PageModel;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
@@ -21,11 +21,11 @@ use Symfony\Component\Routing\Route;
 class ArticleRouteProvider implements ContentRouteProviderInterface
 {
     /**
-     * @var PageRouteFactory
+     * @var RouteFactory
      */
     private $routeFactory;
 
-    public function __construct(PageRouteFactory $routeFactory)
+    public function __construct(RouteFactory $routeFactory)
     {
         $this->routeFactory = $routeFactory;
     }
@@ -42,7 +42,7 @@ class ArticleRouteProvider implements ContentRouteProviderInterface
             throw new RouteNotFoundException(sprintf('Page ID %s for article ID %s not found', $article->pid, $article->id));
         }
 
-        return $this->routeFactory->createRoute($page, '/articles/'.($article->alias ?: $article->id), $article);
+        return $this->routeFactory->createRouteForPage($page, '/articles/'.($article->alias ?: $article->id), $article);
     }
 
     public function supportsContent($content): bool

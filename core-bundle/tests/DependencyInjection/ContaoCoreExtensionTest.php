@@ -112,8 +112,8 @@ use Contao\CoreBundle\Routing\Matcher\LanguageFilter;
 use Contao\CoreBundle\Routing\Matcher\LegacyMatcher;
 use Contao\CoreBundle\Routing\Matcher\PublishedFilter;
 use Contao\CoreBundle\Routing\Matcher\UrlMatcher;
-use Contao\CoreBundle\Routing\Page\PageRouteFactory;
 use Contao\CoreBundle\Routing\Route404Provider;
+use Contao\CoreBundle\Routing\RouteFactory;
 use Contao\CoreBundle\Routing\RouteProvider;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Routing\UrlGenerator;
@@ -2846,7 +2846,7 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('contao.framework'),
                 new Reference('database_connection'),
                 new Reference('contao.routing.candidates'),
-                new Reference(PageRouteFactory::class),
+                new Reference(RouteFactory::class),
                 new Reference('%contao.legacy_routing%'),
                 new Reference('%contao.prepend_locale%'),
             ],

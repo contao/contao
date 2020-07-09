@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Tests\Routing\Content;
 
 use Contao\ArticleModel;
 use Contao\CoreBundle\Routing\Content\ArticleRouteProvider;
-use Contao\CoreBundle\Routing\Page\PageRouteFactory;
+use Contao\CoreBundle\Routing\RouteFactory;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -24,7 +24,7 @@ use Symfony\Component\Routing\Route;
 class ArticleRouteProviderTest extends TestCase
 {
     /**
-     * @var PageRouteFactory|MockObject
+     * @var RouteFactory|MockObject
      */
     private $routeFactory;
 
@@ -35,7 +35,7 @@ class ArticleRouteProviderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->routeFactory = $this->createMock(PageRouteFactory::class);
+        $this->routeFactory = $this->createMock(RouteFactory::class);
         $this->provider = new ArticleRouteProvider($this->routeFactory);
     }
 
@@ -60,7 +60,7 @@ class ArticleRouteProviderTest extends TestCase
 
         $this->routeFactory
             ->expects($this->once())
-            ->method('createRoute')
+            ->method('createRouteForPage')
             ->with($page, '/articles/foobar', $article)
             ->willReturn($route)
         ;
@@ -83,7 +83,7 @@ class ArticleRouteProviderTest extends TestCase
 
         $this->routeFactory
             ->expects($this->once())
-            ->method('createRoute')
+            ->method('createRouteForPage')
             ->with($page, '/articles/17', $article)
             ->willReturn($route)
         ;
