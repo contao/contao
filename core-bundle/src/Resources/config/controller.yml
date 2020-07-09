@@ -7,7 +7,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@database_connection'
-            - '@monolog.logger'
+            - '?@logger'
         tags:
             - { name: contao.page }
             - { name: monolog.logger, channel: contao }
