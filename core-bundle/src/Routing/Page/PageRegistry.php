@@ -23,9 +23,9 @@ class PageRegistry
     private $routeConfigs = [];
 
     /**
-     * @var array<PageRouteProviderInterface>
+     * @var array<PageRouteEnhancerInterface>
      */
-    private $routeProviders = [];
+    private $routeEnhancers = [];
 
     /**
      * @var array<CompositionAwareInterface>
@@ -42,21 +42,18 @@ class PageRegistry
         return $this->routeConfigs[$type] ?? null;
     }
 
-    public function hasRouteProvider(PageModel $pageModel): bool
+    public function enhancePageRoute(PageRoute $route): Route
     {
-        return isset($this->routeConfigs[$pageModel->type]);
-    }
+        $type = $route->getPageModel()->type;
 
-    public function getRouteForPage(PageModel $pageModel, $content = null): Route
-    {
-        if (!isset($this->routeProviders[$pageModel->type])) {
-            throw new \InvalidArgumentException(sprintf('Page of type "%s" does not have a route provider.', $pageModel->type));
+        if (!isset($this->routeEnhancers[$type])) {
+            return $route;
         }
 
-        /** @var PageRouteProviderInterface $provider */
-        $provider = $this->routeProviders[$pageModel->type];
+        /** @var PageRouteEnhancerInterface $enhancer */
+        $enhancer = $this->routeEnhancers[$type];
 
-        return $provider->getRouteForPage($pageModel, $content);
+        return $enhancer->enhancePageRoute($route);
     }
 
     public function supportsContentComposition(PageModel $pageModel): bool
@@ -68,13 +65,13 @@ class PageRegistry
         return $this->compositionAware[$pageModel->type]->supportsContentComposition($pageModel);
     }
 
-    public function add(string $type, RouteConfig $config, PageRouteProviderInterface $routeProvider = null, CompositionAwareInterface $compositionAware = null): self
+    public function add(string $type, RouteConfig $config, PageRouteEnhancerInterface $routeEnhancer = null, CompositionAwareInterface $compositionAware = null): self
     {
         // Override existing pages with the same identifier
         $this->routeConfigs[$type] = $config;
 
-        if (null !== $routeProvider) {
-            $this->routeProviders[$type] = $routeProvider;
+        if (null !== $routeEnhancer) {
+            $this->routeEnhancers[$type] = $routeEnhancer;
         }
 
         if (null !== $compositionAware) {
@@ -88,7 +85,7 @@ class PageRegistry
     {
         unset(
             $this->routeConfigs[$type],
-            $this->routeProviders[$type],
+            $this->routeEnhancers[$type],
             $this->compositionAware[$type]
         );
 

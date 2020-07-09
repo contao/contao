@@ -25,6 +25,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property integer $tstamp
  * @property string  $title
  * @property string  $alias
+ * @property string  $parameters
  * @property string  $type
  * @property string  $pageTitle
  * @property string  $language

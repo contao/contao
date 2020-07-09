@@ -15,6 +15,11 @@ namespace Contao\CoreBundle\Routing\Page;
 final class RouteConfig
 {
     /**
+     * @var string|null
+     */
+    private $pathParameters;
+
+    /**
      * @var array
      */
     private $requirements;
@@ -34,12 +39,18 @@ final class RouteConfig
      */
     private $methods;
 
-    public function __construct(array $requirements = [], array $options = [], array $default = [], array $methods = [])
+    public function __construct(string $pathParameters = null, array $requirements = [], array $options = [], array $default = [], array $methods = [])
     {
+        $this->pathParameters = $pathParameters;
         $this->requirements = $requirements;
         $this->options = $options;
         $this->default = $default;
         $this->methods = $methods;
+    }
+
+    public function getPathParameters(): ?string
+    {
+        return $this->pathParameters;
     }
 
     public function getRequirements(): array

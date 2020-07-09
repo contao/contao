@@ -42,7 +42,7 @@ class ArticleRouteProvider implements ContentRouteProviderInterface
             throw new RouteNotFoundException(sprintf('Page ID %s for article ID %s not found', $article->pid, $article->id));
         }
 
-        return $this->routeFactory->createRouteWithParameters($page, '/articles/'.($article->alias ?: $article->id), $article);
+        return $this->routeFactory->createRoute($page, '/articles/'.($article->alias ?: $article->id), $article);
     }
 
     public function supportsContent($content): bool

@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\Routing\Page\CompositionAwareInterface;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
-use Contao\CoreBundle\Routing\Page\PageRouteProviderInterface;
+use Contao\CoreBundle\Routing\Page\PageRouteEnhancerInterface;
 use Contao\CoreBundle\Routing\Page\RouteConfig;
 use Contao\CoreBundle\Routing\Page\UrlSuffixProviderInterface;
 use Contao\FrontendIndex;
@@ -65,12 +65,12 @@ class RegisterPagesPass implements CompilerPassInterface
                 $type = $this->getPageType($definition, $attributes);
                 unset($attributes['type']);
 
-                $routeProvider = null;
+                $routeEnhancer = null;
                 $compositionAware = null;
                 $class = $definition->getClass();
 
-                if (is_a($definition->getClass(), PageRouteProviderInterface::class, true)) {
-                    $routeProvider = $reference;
+                if (is_a($definition->getClass(), PageRouteEnhancerInterface::class, true)) {
+                    $routeEnhancer = $reference;
                 }
 
                 if (is_a($class, CompositionAwareInterface::class, true)) {
@@ -82,7 +82,7 @@ class RegisterPagesPass implements CompilerPassInterface
                 }
 
                 $config = $this->getRouteConfig($reference, $definition, $attributes);
-                $registry->addMethodCall('add', [$type, $config, $routeProvider, $compositionAware]);
+                $registry->addMethodCall('add', [$type, $config, $routeEnhancer, $compositionAware]);
 
                 $definition->addTag(self::TAG_NAME, $attributes);
             }
@@ -97,6 +97,7 @@ class RegisterPagesPass implements CompilerPassInterface
         return new Definition(
             RouteConfig::class,
             [
+                $attributes['parameters'] ?? null,
                 $attributes['requirements'] ?? [],
                 $attributes['options'] ?? [],
                 $defaults,
