@@ -20,8 +20,6 @@ services:
             - '@database_connection'
             - '@request_stack'
         public: true
-        tags:
-            - { name: terminal42_service_annotation }
 
     Contao\CoreBundle\EventListener\DataContainer\PageTypeOptionsListener:
         arguments:
@@ -29,8 +27,6 @@ services:
             - '@security.helper'
             - '@?event_dispatcher'
         public: true
-        tags:
-            - { name: terminal42_service_annotation }
 
     Contao\CoreBundle\EventListener\DataContainer\PageUrlListener:
         arguments:
@@ -39,9 +35,6 @@ services:
             - '@translator'
             - '@database_connection'
         public: true
-        tags:
-            - { name: terminal42_service_annotation }
-            - { name: kernel.reset, method: reset }
 
     Contao\CoreBundle\EventListener\FilterPageTypeListener:
         tags:
