@@ -468,6 +468,8 @@ class TablePickerProviderTest extends ContaoTestCase
 
         if ($menu) {
             $expectedItems[] = ['picker'];
+        } else {
+            $menu = $this->createMock(ItemInterface::class);
         }
 
         foreach ($modules as $module) {
