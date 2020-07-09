@@ -1,8 +1,18 @@
 <?php
 
-namespace Contao\CoreBundle\Security\Voter;
+declare(strict_types=1);
 
-final class BackendPermissions
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
+namespace Contao\CoreBundle\Security;
+
+final class ContaoCorePermissions
 {
     /**
      * Access is granted if the current user can edit the given page.
@@ -40,47 +50,45 @@ final class BackendPermissions
      */
     public const USER_CAN_DELETE_ARTICLES = 'contao_user.can_delete_articles';
 
-
     /**
      * Access is granted if the current user can upload files to the server.
      */
     public const USER_CAN_UPLOAD_FILES = 'contao_user.fop.f1';
 
     /**
-     * Access is granted if the current user can edit, copy or move files and folders
+     * Access is granted if the current user can edit, copy or move files and folders.
      */
     public const USER_CAN_RENAME_FILE = 'contao_user.fop.f2';
 
     /**
-     * Access is granted if the current user can delete single files and empty folders
+     * Access is granted if the current user can delete single files and empty folders.
      */
     public const USER_CAN_DELETE_FILE = 'contao_user.fop.f3';
 
     /**
-     * Access is granted if the current user can delete folders including all files and subfolders
+     * Access is granted if the current user can delete folders including all files and subfolders.
      */
     public const USER_CAN_DELETE_FOLDERS = 'contao_user.fop.f4';
 
     /**
-     * Access is granted if the current user can edit files in the source editor
+     * Access is granted if the current user can edit files in the source editor.
      */
     public const USER_CAN_EDIT_FILE = 'contao_user.fop.f5';
 
     /**
-     * Access is granted if the current user can synchronize the file system with the database
+     * Access is granted if the current user can synchronize the file system with the database.
      */
     public const USER_CAN_SYNC_DBAFS = 'contao_user.fop.f6';
 
-
     /**
      * Access is granted if the current user can edit at least one field of the table.
-     * Subject must be a table name (e.g. "tl_page")
+     * Subject must be a table name (e.g. "tl_page").
      */
     public const USER_CAN_EDIT_FIELDS_OF_TABLE = 'contao_user.can_edit_fields';
 
     /**
      * Access is granted if the current user can edit the field of a table.
-     * Subject must be a table and field separated by two colons (e.g. "tl_page::title")
+     * Subject must be a table and field separated by two colons (e.g. "tl_page::title").
      */
     public const USER_CAN_EDIT_FIELD_OF_TABLE = 'contao_user.alexf';
 
@@ -116,7 +124,7 @@ final class BackendPermissions
 
     /**
      * Access is granted if the given path is mounted for the current user.
-     * Subject must be path as string (e.g. "files/content/foo")
+     * Subject must be path as string (e.g. "files/content/foo").
      */
     public const USER_CAN_ACCESS_PATH = 'contao_user.filemounts';
 
