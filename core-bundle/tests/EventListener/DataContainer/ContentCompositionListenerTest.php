@@ -25,7 +25,6 @@ use Contao\FrontendUser;
 use Contao\Image;
 use Contao\LayoutModel;
 use Contao\PageModel;
-use Contao\User;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Statement;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -326,7 +325,15 @@ class ContentCompositionListenerTest extends TestCase
     public function testDoesNotGenerateArticleWithoutBackendUser(): void
     {
         $this->expectRequest(true);
-        $this->expectUser(FrontendUser::class);
+
+        /** @var FrontendUser&MockObject $user */
+        $user = $this->mockClassWithProperties(FrontendUser::class, ['id' => 1]);
+
+        $this->security
+            ->expects($this->atLeastOnce())
+            ->method('getUser')
+            ->willReturn($user)
+        ;
 
         $this->framework
             ->expects($this->never())
@@ -547,7 +554,14 @@ class ContentCompositionListenerTest extends TestCase
 
     public function testCannotPasteArticleWithoutBackendUser(): void
     {
-        $this->expectUser(FrontendUser::class);
+        /** @var FrontendUser&MockObject $user */
+        $user = $this->mockClassWithProperties(FrontendUser::class, ['id' => 1]);
+
+        $this->security
+            ->expects($this->atLeastOnce())
+            ->method('getUser')
+            ->willReturn($user)
+        ;
 
         /** @var DataContainer&MockObject $dc */
         $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article', 'activeRecord' => (object) $this->pageRecord]);
@@ -894,12 +908,11 @@ class ContentCompositionListenerTest extends TestCase
     }
 
     /**
-     * @return User&MockObject
+     * @return BackendUser&MockObject
      */
-    private function expectUser(string $userClass = BackendUser::class)
+    private function expectUser(): BackendUser
     {
-        /** @var User&MockObject $user */
-        $user = $this->mockClassWithProperties($userClass, ['id' => 1]);
+        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 1]);
 
         $this->security
             ->expects($this->atLeastOnce())
