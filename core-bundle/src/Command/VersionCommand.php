@@ -25,10 +25,11 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class VersionCommand extends Command
 {
+    protected static $defaultName = 'contao:version';
+
     protected function configure(): void
     {
         $this
-            ->setName('contao:version')
             ->setDescription('Outputs the contao/core-bundle version (deprecated).')
         ;
     }

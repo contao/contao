@@ -12,13 +12,9 @@ use Contao\Automator;
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\DataContainer;
-use Contao\Image;
 use Contao\Input;
 use Contao\News;
-use Contao\StringUtil;
 use Contao\System;
-use Contao\Versions;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 // Dynamically add the permission check and other callbacks
@@ -26,7 +22,6 @@ if (Input::get('do') == 'news')
 {
 	array_unshift($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'], array('tl_content_news', 'checkPermission'));
 	$GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = array('tl_content_news', 'generateFeed');
-	$GLOBALS['TL_DCA']['tl_content']['list']['operations']['toggle']['button_callback'] = array('tl_content_news', 'toggleIcon');
 }
 
 /**
@@ -176,150 +171,5 @@ class tl_content_news extends Backend
 		$this->Automator->generateSitemap();
 
 		$objSession->set('news_feed_updater', null);
-	}
-
-	/**
-	 * Return the "toggle visibility" button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
-	{
-		if (Input::get('cid'))
-		{
-			$this->toggleVisibility(Input::get('cid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
-			$this->redirect($this->getReferer());
-		}
-
-		// Check permissions AFTER checking the cid, so hacking attempts are logged
-		if (!$this->User->hasAccess('tl_content::invisible', 'alexf'))
-		{
-			return '';
-		}
-
-		$href .= '&amp;id=' . Input::get('id') . '&amp;cid=' . $row['id'] . '&amp;state=' . $row['invisible'];
-
-		if ($row['invisible'])
-		{
-			$icon = 'invisible.svg';
-		}
-
-		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" data-tid="cid"' . $attributes . '>' . Image::getHtml($icon, $label, 'data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
-	}
-
-	/**
-	 * Toggle the visibility of an element
-	 *
-	 * @param integer       $intId
-	 * @param boolean       $blnVisible
-	 * @param DataContainer $dc
-	 */
-	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
-	{
-		// Set the ID and action
-		Input::setGet('id', $intId);
-		Input::setGet('act', 'toggle');
-
-		if ($dc)
-		{
-			$dc->id = $intId; // see #8043
-		}
-
-		// Trigger the onload_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback']))
-		{
-			foreach ($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'] as $callback)
-			{
-				if (is_array($callback))
-				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($dc);
-				}
-				elseif (is_callable($callback))
-				{
-					$callback($dc);
-				}
-			}
-		}
-
-		// Check the field access
-		if (!$this->User->hasAccess('tl_content::invisible', 'alexf'))
-		{
-			throw new AccessDeniedException('Not enough permissions to publish/unpublish content element ID ' . $intId . '.');
-		}
-
-		// Set the current record
-		if ($dc)
-		{
-			$objRow = $this->Database->prepare("SELECT * FROM tl_content WHERE id=?")
-									 ->limit(1)
-									 ->execute($intId);
-
-			if ($objRow->numRows)
-			{
-				$dc->activeRecord = $objRow;
-			}
-		}
-
-		$objVersions = new Versions('tl_content', $intId);
-		$objVersions->initialize();
-
-		// Reverse the logic (elements have invisible=1)
-		$blnVisible = !$blnVisible;
-
-		// Trigger the save_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_content']['fields']['invisible']['save_callback']))
-		{
-			foreach ($GLOBALS['TL_DCA']['tl_content']['fields']['invisible']['save_callback'] as $callback)
-			{
-				if (is_array($callback))
-				{
-					$this->import($callback[0]);
-					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, $dc);
-				}
-				elseif (is_callable($callback))
-				{
-					$blnVisible = $callback($blnVisible, $dc);
-				}
-			}
-		}
-
-		$time = time();
-
-		// Update the database
-		$this->Database->prepare("UPDATE tl_content SET tstamp=$time, invisible='" . ($blnVisible ? '1' : '') . "' WHERE id=?")
-					   ->execute($intId);
-
-		if ($dc)
-		{
-			$dc->activeRecord->tstamp = $time;
-			$dc->activeRecord->invisible = ($blnVisible ? '1' : '');
-		}
-
-		// Trigger the onsubmit_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_content']['config']['onsubmit_callback']))
-		{
-			foreach ($GLOBALS['TL_DCA']['tl_content']['config']['onsubmit_callback'] as $callback)
-			{
-				if (is_array($callback))
-				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($dc);
-				}
-				elseif (is_callable($callback))
-				{
-					$callback($dc);
-				}
-			}
-		}
-
-		$objVersions->create();
 	}
 }

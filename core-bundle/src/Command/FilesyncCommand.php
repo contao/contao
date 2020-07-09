@@ -28,10 +28,11 @@ class FilesyncCommand extends Command implements FrameworkAwareInterface
 {
     use FrameworkAwareTrait;
 
+    protected static $defaultName = 'contao:filesync';
+
     protected function configure(): void
     {
         $this
-            ->setName('contao:filesync')
             ->setDescription('Synchronizes the file system with the database.')
         ;
     }

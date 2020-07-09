@@ -23,16 +23,16 @@ class XliffFileLoader extends Loader
     /**
      * @var string
      */
-    private $rootDir;
+    private $projectDir;
 
     /**
      * @var bool
      */
     private $addToGlobals;
 
-    public function __construct(string $rootDir, bool $addToGlobals = false)
+    public function __construct(string $projectDir, bool $addToGlobals = false)
     {
-        $this->rootDir = $rootDir;
+        $this->projectDir = $projectDir;
         $this->addToGlobals = $addToGlobals;
     }
 
@@ -50,7 +50,7 @@ class XliffFileLoader extends Loader
     {
         $xml = $this->getDomDocumentFromFile($name);
 
-        $return = "\n// ".Path::makeRelative($name, $this->rootDir)."\n";
+        $return = "\n// ".Path::makeRelative($name, $this->projectDir)."\n";
         $fileNodes = $xml->getElementsByTagName('file');
         $language = strtolower($language);
 

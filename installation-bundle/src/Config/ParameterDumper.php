@@ -33,14 +33,14 @@ class ParameterDumper
      */
     private $parameters = ['parameters' => []];
 
-    public function __construct(string $rootDir, Filesystem $filesystem = null)
+    public function __construct(string $projectDir, Filesystem $filesystem = null)
     {
-        $this->configFile = Path::join($rootDir, 'config/parameters.yml');
+        $this->configFile = Path::join($projectDir, 'config/parameters.yml');
         $this->filesystem = $filesystem ?: new Filesystem();
 
         if (!$this->filesystem->exists($this->configFile)) {
             // Fallback to the legacy config file (see #566)
-            $fallbackConfigFile = Path::join($rootDir, 'app/config/parameters.yml');
+            $fallbackConfigFile = Path::join($projectDir, 'app/config/parameters.yml');
 
             if (!$this->filesystem->exists($fallbackConfigFile)) {
                 return;
