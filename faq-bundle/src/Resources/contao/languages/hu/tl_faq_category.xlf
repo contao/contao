@@ -78,8 +78,7 @@
         <target>Hozzászóláshoz belépés szükséges</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.requireLogin.1">
-        <source>Allow only authenticated users to create comments.</source>
-        <target>Csak regisztrált felhasználók írhatnak hozzászólást.</target>
+        <source>Allow only authenticated members to create comments.</source>
       </trans-unit>
       <trans-unit id="tl_faq_category.disableCaptcha.0">
         <source>Disable the security question</source>

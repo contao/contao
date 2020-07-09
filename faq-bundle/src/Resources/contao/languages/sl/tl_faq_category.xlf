@@ -78,8 +78,7 @@
         <target>Zahtevaj prijavo za komentiranje</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.requireLogin.1">
-        <source>Allow only authenticated users to create comments.</source>
-        <target>Komentiranje dovoli samo prijavljenim uporabnikom.</target>
+        <source>Allow only authenticated members to create comments.</source>
       </trans-unit>
       <trans-unit id="tl_faq_category.disableCaptcha.0">
         <source>Disable the security question</source>

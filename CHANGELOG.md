@@ -1,5 +1,19 @@
 # Change log
 
+## 4.4.50 (2020-07-09)
+
+ * Correctly symlink the TCPDF config file in the monorepo (see #1868).
+ * Correct "user" to "member" or "visitor" (see #1601).
+ * Use the filesize units translation in search results (see #1910).
+ * Fix back end layout problems in various browsers (see #1824).
+ * Remove the redirect status type from the 403 and 404 page (see #1810).
+ * Skip invalid UTF-8 path names in the file manager (see #1825).
+ * Prevent arbitrary column renaming in the schema update (see #1731).
+ * Correctly generate the "first" and "last" class for articles and elements (see #1803).
+ * Reset the lock timeout and login count when resetting a password (see #1724).
+ * Correctly track if the container config files exist (see #1772).
+ * Fix notices for empty database result sets (see #1741).
+
 ## 4.4.49 (2020-05-13)
 
  * Do not flush the template output buffer (see #1728).

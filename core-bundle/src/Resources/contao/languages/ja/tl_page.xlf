@@ -78,8 +78,7 @@
         <target>最後に参照していたページに移動</target>
       </trans-unit>
       <trans-unit id="tl_page.redirectBack.1">
-        <source>Redirect the user back to the last page visited instead of the redirect page.</source>
-        <target>リダイレクト先のページの代わりに、ユーザーが最後に参照していたページに移動します。</target>
+        <source>Redirect the member back to the last page visited instead of the redirect page.</source>
       </trans-unit>
       <trans-unit id="tl_page.fallback.0">
         <source>Language fallback</source>
@@ -295,7 +294,7 @@
       </trans-unit>
       <trans-unit id="tl_page.guests.1">
         <source>Hide the page if a member is logged in.</source>
-        <target>ログインしているメンバーにページを表示しない</target>
+        <target>ログインしているメンバーにページを表示しません。</target>
       </trans-unit>
       <trans-unit id="tl_page.tabindex.0">
         <source>Tab index</source>
