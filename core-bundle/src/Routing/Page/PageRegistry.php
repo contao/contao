@@ -59,6 +59,10 @@ class PageRegistry
             $urlSuffixes[] = $enhancer->getUrlSuffixes();
         }
 
+        if (0 === \count($urlSuffixes)) {
+            return [];
+        }
+
         return array_filter(array_unique(array_merge(...$urlSuffixes)));
     }
 
