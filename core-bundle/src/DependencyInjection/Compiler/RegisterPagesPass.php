@@ -60,14 +60,14 @@ class RegisterPagesPass implements CompilerPassInterface
             $definition->clearTag(self::TAG_NAME);
 
             foreach ($tags as $attributes) {
-                $type = $this->getPageType($definition, $attributes);
-                unset($attributes['type']);
-
                 $routeEnhancer = null;
                 $compositionAware = null;
                 $class = $definition->getClass();
+                $type = $this->getPageType($class, $attributes);
 
-                if (is_a($definition->getClass(), PageRouteEnhancerInterface::class, true)) {
+                unset($attributes['type']);
+
+                if (is_a($class, PageRouteEnhancerInterface::class, true)) {
                     $routeEnhancer = $reference;
                 }
 
@@ -127,13 +127,12 @@ class RegisterPagesPass implements CompilerPassInterface
         return FrontendIndex::class.'::renderPage';
     }
 
-    private function getPageType(Definition $definition, array $attributes): string
+    private function getPageType(string $className, array $attributes): string
     {
         if (isset($attributes['type'])) {
             return (string) $attributes['type'];
         }
 
-        $className = $definition->getClass();
         $className = ltrim(strrchr($className, '\\'), '\\');
 
         if ('Controller' === substr($className, -10)) {
