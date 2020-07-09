@@ -273,7 +273,7 @@ class ContentCompositionListener implements ServiceAnnotationInterface
     {
         $pageModel->loadDetails();
 
-        /** @var LayoutModel $layout */
+        /** @var LayoutModel|null $layout */
         $layout = $pageModel->getRelated('layout');
 
         if (null === $layout) {

@@ -894,7 +894,7 @@ class ContentCompositionListenerTest extends TestCase
     }
 
     /**
-     * @return User&MockObject
+     * @return BackendUser|FrontendUser|MockObject
      */
     private function expectUser(string $userClass = BackendUser::class): User
     {

@@ -71,12 +71,15 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
      */
     public function generateAlias(string $value, DataContainer $dc): string
     {
-        /** @var PageModel $page */
-        $page = $this->getPageAdapter()->findWithDetails($dc->id);
+        /** @var PageModel|Adapter $pageAdapter */
+        $pageAdapter = $this->framework->getAdapter(PageModel::class);
+
+        /** @var PageModel $pageModel */
+        $pageModel = $pageAdapter->findWithDetails($dc->id);
 
         if ('' !== $value) {
             try {
-                $this->aliasExists($value, (int) $page->id, $page, true);
+                $this->aliasExists($value, (int) $pageModel->id, $pageModel, true);
             } catch (DuplicateAliasException $exception) {
                 throw new \RuntimeException($this->translator->trans('ERR.pageUrlExists', [$exception->getUrl()], 'contao_default'), $exception->getCode(), $exception);
             }
@@ -88,14 +91,14 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
         $value = $this->slug->generate(
             $dc->activeRecord->title,
             $dc->activeRecord->id,
-            function ($alias) use ($page) {
-                return $this->aliasExists(($page->useFolderUrl ? $page->folderUrl : '').$alias, (int) $page->id, $page);
+            function ($alias) use ($pageModel) {
+                return $this->aliasExists(($pageModel->useFolderUrl ? $pageModel->folderUrl : '').$alias, (int) $pageModel->id, $pageModel);
             }
         );
 
         // Generate folder URL aliases (see #4933)
-        if ($page->useFolderUrl) {
-            $value = $page->folderUrl.$value;
+        if ($pageModel->useFolderUrl) {
+            $value = $pageModel->folderUrl.$value;
         }
 
         return $value;
@@ -132,7 +135,10 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
             return $value;
         }
 
-        $rootPage = $this->getPageAdapter()->findByPk($dc->id);
+        /** @var PageModel|Adapter $pageAdapter */
+        $pageAdapter = $this->framework->getAdapter(PageModel::class);
+
+        $rootPage = $pageAdapter->findByPk($dc->id);
 
         if (null === $rootPage) {
             return $value;
@@ -156,7 +162,10 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
             return $value;
         }
 
-        $rootPage = $this->getPageAdapter()->findByPk($dc->id);
+        /** @var PageModel|Adapter $pageAdapter */
+        $pageAdapter = $this->framework->getAdapter(PageModel::class);
+
+        $rootPage = $pageAdapter->findByPk($dc->id);
 
         if (null === $rootPage) {
             return $value;
@@ -182,7 +191,10 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
      */
     private function recursiveValidatePages(int $pid, PageModel $rootPage): void
     {
-        $pages = $this->getPageAdapter()->findByPid($pid);
+        /** @var PageModel|Adapter $pageAdapter */
+        $pageAdapter = $this->framework->getAdapter(PageModel::class);
+
+        $pages = $pageAdapter->findByPid($pid);
 
         if (null === $pages) {
             return;
@@ -231,10 +243,13 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
             return false;
         }
 
+        /** @var PageModel|Adapter $pageAdapter */
+        $pageAdapter = $this->framework->getAdapter(PageModel::class);
+
         $currentUrl = $this->buildUrl($currentAlias, $currentPrefix, $currentSuffix);
 
         foreach ($aliasIds as $aliasId) {
-            $aliasPage = $this->getPageAdapter()->findWithDetails($aliasId);
+            $aliasPage = $pageAdapter->findWithDetails($aliasId);
 
             if (null === $aliasPage) {
                 continue;
@@ -338,13 +353,5 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
         }
 
         return '('.implode('|', $data).')';
-    }
-
-    /**
-     * @return PageModel|Adapter
-     */
-    private function getPageAdapter(): Adapter
-    {
-        return $this->framework->getAdapter(PageModel::class);
     }
 }

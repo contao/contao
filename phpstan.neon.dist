@@ -48,6 +48,10 @@ parameters:
               - %currentWorkingDirectory%/core-bundle/src/DataCollector/ContaoDataCollector.php
               - %currentWorkingDirectory%/core-bundle/src/Image/ImageFactory.php
 
+        - message: '#Result of || is always false\.#'
+          paths:
+              - %currentWorkingDirectory%/core-bundle/src/DependencyInjection/Compiler/RegisterPagesPass.php
+
         - message: '#Strict comparison using === between true and false will always evaluate to false\.#'
           path: %currentWorkingDirectory%/core-bundle/src/DataCollector/ContaoDataCollector.php
 
