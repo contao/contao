@@ -63,12 +63,12 @@ class ContentCompositionListener implements ServiceAnnotationInterface
     private $requestStack;
 
     /**
-     * @var Image&Adapter
+     * @var Image|Adapter
      */
     private $image;
 
     /**
-     * @var Backend&Adapter
+     * @var Backend|Adapter
      */
     private $backend;
 

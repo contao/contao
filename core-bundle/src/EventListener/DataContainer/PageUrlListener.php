@@ -341,7 +341,7 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
     }
 
     /**
-     * @return Adapter&PageModel
+     * @return PageModel|Adapter
      */
     private function getPageAdapter(): Adapter
     {

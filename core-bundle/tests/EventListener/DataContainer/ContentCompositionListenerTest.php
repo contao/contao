@@ -60,17 +60,17 @@ class ContentCompositionListenerTest extends TestCase
     private $security;
 
     /**
-     * @var Image&Adapter&MockObject
+     * @var Image|Adapter|MockObject
      */
     private $imageAdapter;
 
     /**
-     * @var Backend&Adapter&MockObject
+     * @var Backend|Adapter|MockObject
      */
     private $backendAdapter;
 
     /**
-     * @var PageModel&Adapter&MockObject
+     * @var PageModel|Adapter|MockObject
      */
     private $pageModelAdapter;
 
