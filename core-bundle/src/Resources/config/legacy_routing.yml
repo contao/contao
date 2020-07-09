@@ -37,12 +37,12 @@ services:
         arguments:
             - '@router.request_context'
             - !service
-                class: Contao\CoreBundle\Routing\Matcher\UrlMatcher
+              class: Contao\CoreBundle\Routing\Matcher\UrlMatcher
             - !service
-                class: Symfony\Cmf\Component\Routing\ProviderBasedGenerator
-                arguments:
-                    - '@contao.routing.legacy_route_provider'
-                    - '@logger'
+              class: Symfony\Cmf\Component\Routing\ProviderBasedGenerator
+              arguments:
+                  - '@contao.routing.legacy_route_provider'
+                  - '@logger'
             - ''
             - '@event_dispatcher'
         tags:
