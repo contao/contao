@@ -32,14 +32,9 @@ class PageRegistry
      */
     private $compositionAware = [];
 
-    public function hasRouteConfig(string $type): bool
+    public function getRouteConfig(string $type): RouteConfig
     {
-        return isset($this->routeConfigs[$type]);
-    }
-
-    public function getRouteConfig(string $type): ?RouteConfig
-    {
-        return $this->routeConfigs[$type] ?? null;
+        return $this->routeConfigs[$type] ?? new RouteConfig();
     }
 
     public function enhancePageRoute(PageRoute $route): Route

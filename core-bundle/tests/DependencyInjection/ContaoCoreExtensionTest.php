@@ -151,7 +151,6 @@ use Knp\Menu\Renderer\ListRenderer;
 use Symfony\Cmf\Component\Routing\DynamicRouter;
 use Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
@@ -2823,7 +2822,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertEquals(
             [
-                new TaggedIteratorArgument('contao.content_route_provider'),
+                new Reference(RouteFactory::class),
                 new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
             ],
             $definition->getArguments()

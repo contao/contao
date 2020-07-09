@@ -4,8 +4,8 @@ services:
 
     Contao\CoreBundle\Routing\Content\ArticleRouteProvider:
         arguments:
-            - '@Contao\CoreBundle\Routing\Page\PageRouteFactory'
+            - '@Contao\CoreBundle\Routing\RouteFactory'
 
     Contao\CoreBundle\Routing\Content\PageRouteProvider:
         arguments:
-            - '@Contao\CoreBundle\Routing\Page\PageRouteFactory'
+            - '@Contao\CoreBundle\Routing\RouteFactory'

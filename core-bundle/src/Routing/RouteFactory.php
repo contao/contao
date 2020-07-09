@@ -16,7 +16,6 @@ use Contao\CoreBundle\Exception\ContentRouteNotFoundException;
 use Contao\CoreBundle\Routing\Content\ContentRouteProviderInterface;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
-use Contao\CoreBundle\Routing\Page\RouteConfig;
 use Contao\PageModel;
 use Symfony\Component\Routing\Route;
 
@@ -51,7 +50,7 @@ class RouteFactory
      */
     public function createRouteForPage(PageModel $pageModel, string $defaultParameters = '', $content = null): Route
     {
-        $config = $this->pageRegistry->getRouteConfig($pageModel->type) ?: new RouteConfig();
+        $config = $this->pageRegistry->getRouteConfig($pageModel->type);
         $pathParameters = $config->getPathParameters();
         $defaults = $config->getDefault();
         $requirements = $config->getRequirements();

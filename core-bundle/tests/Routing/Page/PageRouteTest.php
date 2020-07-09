@@ -106,23 +106,6 @@ class PageRouteTest extends TestCase
         $this->assertSame(['https'], $route->getSchemes());
     }
 
-//    TODO: this test belongs in PageRouteFactoryTest
-//
-//    public function testCreatePageWithParametersAndRequiresItemIfConfigured(): void
-//    {
-//        $route = PageRoute::createWithParameters($this->mockPageModel(['requireItem' => false]), '/items/news');
-//
-//        $this->assertSame('/foo/bar{parameters}.baz', $route->getPath());
-//        $this->assertSame('/items/news', $route->getDefault('parameters'));
-//        $this->assertSame('(/.+)?', $route->getRequirement('parameters'));
-//
-//        $route = PageRoute::createWithParameters($this->mockPageModel(['requireItem' => true]), '/items/news');
-//
-//        $this->assertSame('/foo/bar{parameters}.baz', $route->getPath());
-//        $this->assertSame('/items/news', $route->getDefault('parameters'));
-//        $this->assertSame('/.+', $route->getRequirement('parameters'));
-//    }
-
     /**
      * @return PageModel&MockObject $page
      */
