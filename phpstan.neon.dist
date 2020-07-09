@@ -43,14 +43,6 @@ parameters:
               - %currentWorkingDirectory%/core-bundle/tests/Framework/ContaoFrameworkTest.php
               - %currentWorkingDirectory%/core-bundle/tests/Doctrine/Schema/DcaSchemaProviderTest.php
 
-        - message: '#Result of && is always false\.#'
-          paths:
-              - %currentWorkingDirectory%/core-bundle/src/DataCollector/ContaoDataCollector.php
-              - %currentWorkingDirectory%/core-bundle/src/Image/ImageFactory.php
-
-        - message: '#Strict comparison using === between true and false will always evaluate to false\.#'
-          path: %currentWorkingDirectory%/core-bundle/src/DataCollector/ContaoDataCollector.php
-
         # Ignore that $container->get() always returns false (see https://github.com/phpstan/phpstan-symfony/issues/74)
         - message: '#Negated boolean expression is always (false|true)\.#'
           paths:
@@ -61,7 +53,6 @@ parameters:
         - message: '#Unreachable statement - code above always terminates\.#'
           paths:
               - %currentWorkingDirectory%/core-bundle/src/Controller/AbstractController.php
-              - %currentWorkingDirectory%/core-bundle/src/Command/MigrateCommand.php
 
     reportUnmatchedIgnoredErrors: true
     checkGenericClassInNonGenericObjectType: false
