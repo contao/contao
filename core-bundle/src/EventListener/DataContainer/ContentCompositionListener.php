@@ -113,7 +113,7 @@ class ContentCompositionListener implements ServiceAnnotationInterface
     /**
      * Automatically create an article in the main column of a new page.
      *
-     * @Callback(table="tl_page", target="config.onsubmit")
+     * @Callback(table="tl_page", target="config.onsubmit", priority=-16)
      */
     public function generateArticleForPage(DataContainer $dc): void
     {

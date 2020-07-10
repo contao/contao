@@ -34,6 +34,7 @@ services:
             - '@contao.slug'
             - '@translator'
             - '@database_connection'
+            - '@contao.search.indexer'
         public: true
 
     Contao\CoreBundle\EventListener\FilterPageTypeListener:

@@ -16,7 +16,6 @@ use Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener;
 use Contao\CoreBundle\EventListener\DataContainer\PageTypeOptionsListener;
 use Contao\CoreBundle\EventListener\DataContainer\PageUrlListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Search\Document;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\Input;
@@ -27,7 +26,6 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Versions;
-use Nyholm\Psr7\Uri;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 $GLOBALS['TL_DCA']['tl_page'] = array
@@ -54,7 +52,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		),
 		'ondelete_callback' => array
 		(
-			array('tl_page', 'purgeSearchIndex'),
 			array('tl_page', 'scheduleUpdate')
 		),
 		'onsubmit_callback' => array
@@ -1132,14 +1129,11 @@ class tl_page extends Backend
 	 */
 	public function generateAlias($varValue, DataContainer $dc)
 	{
-		@trigger_error('tl_page::generateAlias() is deprecated, use the \Contao\CoreBundle\EventListener\DataContainer\PageUrlListener instead.', E_USER_DEPRECATED);
+		@trigger_error('tl_page::generateAlias() is deprecated, use PageUrlListener::generateAlias() instead.', E_USER_DEPRECATED);
 
-		$listener = System::getContainer()->get(PageUrlListener::class);
-
-		$varValue = $listener->generateAlias($varValue, $dc);
-		$varValue = $listener->purgeSearchIndexOnAliasChange($varValue, $dc);
-
-		return $varValue;
+		return System::getContainer()
+			->get(PageUrlListener::class)
+			->generateAlias($varValue, $dc);
 	}
 
 	/**
@@ -1150,7 +1144,7 @@ class tl_page extends Backend
 	 */
 	public function generateArticle(DataContainer $dc)
 	{
-		@trigger_error('tl_page::generateArticle() is deprecated, use \Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener::generateArticleForPage instead.', E_USER_DEPRECATED);
+		@trigger_error('tl_page::generateArticle() is deprecated, use ContentCompositionListener::generateArticleForPage() instead.', E_USER_DEPRECATED);
 
 		System::getContainer()
 			->get(ContentCompositionListener::class)
@@ -1162,23 +1156,15 @@ class tl_page extends Backend
 	 * Purge the search index if a page is being deleted
 	 *
 	 * @param DataContainer $dc
+	 * @deprecated
 	 */
 	public function purgeSearchIndex(DataContainer $dc)
 	{
-		if (!$dc->id)
-		{
-			return;
-		}
+		@trigger_error('tl_page::purgeSearchIndex() is deprecated, use PageUrlListener::purgeSearchIndex() instead.', E_USER_DEPRECATED);
 
-		$objResult = $this->Database->prepare("SELECT url FROM tl_search WHERE pid=?")
-									->execute($dc->id);
-
-		$indexer = System::getContainer()->get('contao.search.indexer');
-
-		while ($objResult->next())
-		{
-			$indexer->delete(new Document(new Uri($objResult->url), 200));
-		}
+		System::getContainer()
+			->get(PageUrlListener::class)
+			->purgeSearchIndex($dc);
 	}
 
 	/**

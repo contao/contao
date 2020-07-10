@@ -15,6 +15,8 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 use Contao\CoreBundle\Exception\DuplicateAliasException;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Search\Document;
+use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\CoreBundle\Slug\Slug;
 use Contao\DataContainer;
@@ -22,6 +24,7 @@ use Contao\Input;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\FetchMode;
+use Nyholm\Psr7\Uri;
 use Symfony\Contracts\Service\ResetInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
@@ -49,6 +52,11 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
     private $connection;
 
     /**
+     * @var IndexerInterface
+     */
+    private $searchIndexer;
+
+    /**
      * @var array|null
      */
     private $prefixes;
@@ -58,12 +66,13 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
      */
     private $suffixes;
 
-    public function __construct(ContaoFramework $framework, Slug $slug, TranslatorInterface $translator, Connection $connection)
+    public function __construct(ContaoFramework $framework, Slug $slug, TranslatorInterface $translator, Connection $connection, IndexerInterface $searchIndexer)
     {
         $this->framework = $framework;
         $this->slug = $slug;
         $this->translator = $translator;
         $this->connection = $connection;
+        $this->searchIndexer = $searchIndexer;
     }
 
     /**
@@ -113,17 +122,21 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
             return $value;
         }
 
-        $this->connection
-            ->prepare('DELETE FROM tl_search_index WHERE pid IN (SELECT id FROM tl_search WHERE pid=:pageId)')
-            ->execute(['pageId' => $dc->id])
-        ;
-
-        $this->connection
-            ->prepare('DELETE FROM tl_search WHERE pid=:pageId')
-            ->execute(['pageId' => $dc->id])
-        ;
+        $this->purgeSearchIndex((int) $dc->id);
 
         return $value;
+    }
+
+    /**
+     * @Callback(table="tl_page", target="config.ondelete", priority=16)
+     */
+    public function purgeSearchIndexOnDelete(DataContainer $dc): void
+    {
+        if (!$dc->id) {
+            return;
+        }
+
+        $this->purgeSearchIndex((int) $dc->id);
     }
 
     /**
@@ -184,6 +197,18 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
     {
         $this->prefixes = null;
         $this->suffixes = null;
+    }
+
+    private function purgeSearchIndex(int $pageId): void
+    {
+        $urls = $this->connection->executeQuery(
+            'SELECT url FROM tl_search WHERE pid=:pageId',
+            ['pageId' => $pageId]
+        )->fetchAll(FetchMode::COLUMN);
+
+        foreach ($urls as $url) {
+            $this->searchIndexer->delete(new Document(new Uri($url), 200));
+        }
     }
 
     /**
