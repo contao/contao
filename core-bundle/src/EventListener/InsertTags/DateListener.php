@@ -84,11 +84,11 @@ class DateListener implements ServiceAnnotationInterface
     {
         $tag = explode('::', $insertTag);
 
-        if (\in_array($tag[0], ['format_date', 'formatted_datetime'], true)) {
+        if ('format_date' === $tag[0]) {
             return $this->replaceFormatDate($tag);
         }
 
-        if (\in_array($tag[0], ['convert_date', 'convert_dateformat'], true)) {
+        if ('convert_date' === $tag[0]) {
             return $this->replaceConvertDate($tag);
         }
 
