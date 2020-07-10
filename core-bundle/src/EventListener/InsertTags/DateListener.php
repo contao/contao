@@ -22,7 +22,7 @@ use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
 /**
  * Provides a {{format_date::<timestamp>::<format>}} and a
- * {{convert_date::<date>::<source_format>::<target_format>}} Insert Tag.
+ * {{convert_date::<date>::<source_format>::<target_format>}} insert tag.
  *
  * {{format_date::<timestamp>::<format>}}:
  *

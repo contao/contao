@@ -61,10 +61,7 @@ class DateListenerTest extends TestCase
             ->willReturn('d.m.Y H:i')
         ;
 
-        $framework = $this->getFramework([
-            Config::class => $configAdapter,
-        ]);
-
+        $framework = $this->getFramework([Config::class => $configAdapter]);
         $listener = new DateListener($framework, new RequestStack());
 
         $this->assertSame('26.05.2020 00:00', $listener('format_date::2020-05-26'));
@@ -73,8 +70,6 @@ class DateListenerTest extends TestCase
 
     public function testUsesPageFormat(): void
     {
-        $framework = $this->getFramework();
-
         $pageModel = $this->mockClassWithProperties(PageModel::class, ['datimFormat' => 'd.m.Y H:i']);
 
         $request = new Request();
@@ -83,7 +78,7 @@ class DateListenerTest extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $listener = new DateListener($framework, $requestStack);
+        $listener = new DateListener($this->getFramework(), $requestStack);
 
         $this->assertSame('26.05.2020 00:00', $listener('format_date::2020-05-26'));
         $this->assertSame('26.05.2020 00:00', $listener('convert_date::2020-05-26::Y-m-d::datim'));
