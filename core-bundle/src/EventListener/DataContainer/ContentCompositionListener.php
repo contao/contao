@@ -153,7 +153,7 @@ class ContentCompositionListener implements ServiceAnnotationInterface
 
         // Check whether there are articles (e.g. on copied pages)
         $total = $this->connection->executeQuery(
-            'SELECT COUNT(*) AS count FROM tl_article WHERE pid=:pid',
+            'SELECT COUNT(*) FROM tl_article WHERE pid=:pid',
             ['pid' => $dc->id]
         )->fetchColumn();
 

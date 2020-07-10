@@ -1087,7 +1087,7 @@ class ContentCompositionListenerTest extends TestCase
         $this->connection
             ->expects($this->once())
             ->method('executeQuery')
-            ->with('SELECT COUNT(*) AS count FROM tl_article WHERE pid=:pid')
+            ->with('SELECT COUNT(*) FROM tl_article WHERE pid=:pid')
             ->willReturn($statement)
         ;
     }
