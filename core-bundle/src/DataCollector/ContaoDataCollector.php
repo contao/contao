@@ -23,6 +23,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
+use Webmozart\PathUtil\Path;
 
 /**
  * @internal
@@ -187,13 +188,12 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
                 $class = $systemAdapter->importStatic($callback[0]);
                 $r = new \ReflectionClass($class);
                 $file = $r->getFileName();
-                $base = $this->parameterBag->get('kernel.project_dir').'/vendor/';
-                $baseLength = \strlen($base);
+                $vendorDir = $this->parameterBag->get('kernel.project_dir').'/vendor/';
 
                 $hook = ['name' => $name, 'class' => \get_class($class), 'method' => $callback[1], 'package' => ''];
 
-                if (0 === strncmp($file, $base, $baseLength)) {
-                    [$vendor, $package] = explode('/', substr($file, $baseLength), 3);
+                if (Path::isBasePath($vendorDir, $file)) {
+                    [$vendor, $package] = explode('/', Path::makeRelative($file, $vendorDir), 3);
                     $hook['package'] = $vendor.'/'.$package;
                 }
 
