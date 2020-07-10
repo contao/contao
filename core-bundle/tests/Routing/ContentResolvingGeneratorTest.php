@@ -12,13 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Routing;
 
-use Contao\CoreBundle\Exception\ContentRouteNotFoundException;
 use Contao\CoreBundle\Routing\ContentResolvingGenerator;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Routing\RouteFactory;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ContentResolvingGeneratorTest extends TestCase
@@ -42,14 +42,16 @@ class ContentResolvingGeneratorTest extends TestCase
 
     public function testThrowsExceptionIfRouteNameIsNotSupported(): void
     {
-        $this->expectException(ContentRouteNotFoundException::class);
+        $this->expectException(RouteNotFoundException::class);
+        $this->expectExceptionMessage('Route name is not "contao_routing_object"');
 
         $this->generator->generate('foo');
     }
 
     public function testThrowsExceptionIfContentParameterIsNotSet(): void
     {
-        $this->expectException(ContentRouteNotFoundException::class);
+        $this->expectException(RouteNotFoundException::class);
+        $this->expectExceptionMessage('Missing parameter "_content" for content route (contao_routing_object).');
 
         $this->generator->generate(PageRoute::ROUTE_NAME);
     }

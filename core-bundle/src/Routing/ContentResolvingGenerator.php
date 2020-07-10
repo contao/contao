@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing;
 
-use Contao\CoreBundle\Exception\ContentRouteNotFoundException;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGenerator as SymfonyUrlGenerator;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
@@ -40,8 +40,12 @@ class ContentResolvingGenerator extends SymfonyUrlGenerator
      */
     public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH): string
     {
-        if (PageRoute::ROUTE_NAME !== $name || !isset($parameters[PageRoute::CONTENT_PARAMETER])) {
-            throw new ContentRouteNotFoundException($name);
+        if (PageRoute::ROUTE_NAME !== $name) {
+            throw new RouteNotFoundException('Route name is not "'.PageRoute::ROUTE_NAME.'"');
+        }
+
+        if (!isset($parameters[PageRoute::CONTENT_PARAMETER])) {
+            throw new RouteNotFoundException(sprintf('Missing parameter "%s" for content route (%s).', PageRoute::CONTENT_PARAMETER, PageRoute::ROUTE_NAME));
         }
 
         $route = $this->routeFactory->createRouteForContent($parameters[PageRoute::CONTENT_PARAMETER]);
@@ -50,8 +54,6 @@ class ContentResolvingGenerator extends SymfonyUrlGenerator
         // the Route has a cache of its own and is not recompiled as long as it does not get modified
         $compiledRoute = $route->compile();
 
-        $debug_message = ContentRouteNotFoundException::getRouteDebugMessage($name);
-
-        return $this->doGenerate($compiledRoute->getVariables(), $route->getDefaults(), $route->getRequirements(), $compiledRoute->getTokens(), $parameters, $debug_message, $referenceType, $compiledRoute->getHostTokens(), $route->getSchemes());
+        return $this->doGenerate($compiledRoute->getVariables(), $route->getDefaults(), $route->getRequirements(), $compiledRoute->getTokens(), $parameters, $name, $referenceType, $compiledRoute->getHostTokens(), $route->getSchemes());
     }
 }
