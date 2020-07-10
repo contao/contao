@@ -124,7 +124,7 @@ class PageRegistryTest extends TestCase
         $enhancer3
             ->expects($this->once())
             ->method('getUrlSuffixes')
-            ->willReturn(['foo', ''])
+            ->willReturn(['', 'foo'])
         ;
 
         $registry = new PageRegistry();
@@ -132,7 +132,7 @@ class PageRegistryTest extends TestCase
         $registry->add('bar', new RouteConfig(), $enhancer2);
         $registry->add('baz', new RouteConfig(), $enhancer3);
 
-        $this->assertSame(['foo', 'bar', 'baz'], $registry->getUrlSuffixes());
+        $this->assertSame(['foo', 'bar', 'baz', ''], $registry->getUrlSuffixes());
     }
 
     public function testSupportsContentCompositionReturnsTrueForUnknownType(): void

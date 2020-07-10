@@ -53,6 +53,8 @@ class CandidatesTest extends TestCase
 
     /**
      * @dataProvider getCandidatesProvider
+     *
+     * @group legacy
      */
     public function testGetCandidatesInLegacyMode(string $pathInfo, array $urlSuffixes, array $languages, array $expectedRegular, array $expected): void
     {
@@ -75,7 +77,7 @@ class CandidatesTest extends TestCase
             ->method($this->anything())
         ;
 
-        $candidates = (new LegacyCandidates(0 !== \count($languages), $urlSuffixes[0] ?? ''))->getCandidates($request);
+        $candidates = (new LegacyCandidates('' !== $languages[0], $urlSuffixes[0]))->getCandidates($request);
 
         $this->assertSame($expected, $candidates);
     }
@@ -83,34 +85,18 @@ class CandidatesTest extends TestCase
     public function getCandidatesProvider()
     {
         yield [
-            '/',
-            [],
-            [],
-            ['index'],
-            ['index'],
-        ];
-
-        yield [
-            '/',
+            '/foo.html',
             ['.html'],
-            [],
-            ['index'],
-            ['index'],
-        ];
-
-        yield [
-            '/',
-            [],
-            ['en'],
-            ['index'],
-            ['index'],
+            [''],
+            ['foo'],
+            ['foo'],
         ];
 
         yield [
             '/foo.html',
-            ['.html'],
-            [],
-            ['foo.html', 'foo'],
+            ['.html', ''],
+            [''],
+            ['foo', 'foo.html'],
             ['foo'],
         ];
 
@@ -118,14 +104,14 @@ class CandidatesTest extends TestCase
             '/foo.html',
             ['.html'],
             ['en'],
-            ['foo.html', 'foo'],
+            [],
             [],
         ];
 
         yield [
             '/foo/bar',
-            [],
-            [],
+            [''],
+            [''],
             ['foo/bar', 'foo'],
             ['foo/bar', 'foo'],
         ];
@@ -133,32 +119,40 @@ class CandidatesTest extends TestCase
         yield [
             '/foo/bar.json',
             ['.html'],
+            [''],
             [],
-            ['foo/bar.json', 'foo'],
             [],
         ];
 
         yield [
             '/foo/bar.html',
             ['.html'],
-            [],
-            ['foo/bar.html', 'foo', 'foo/bar'],
+            [''],
+            ['foo/bar', 'foo'],
+            ['foo/bar', 'foo'],
+        ];
+
+        yield [
+            '/foo/bar.html',
+            ['.html', ''],
+            [''],
+            ['foo/bar', 'foo', 'foo/bar.html'],
             ['foo/bar', 'foo'],
         ];
 
         yield [
             '/foo/bar.html',
             ['.html', '.json'],
-            [],
-            ['foo/bar.html', 'foo', 'foo/bar'],
+            [''],
+            ['foo/bar', 'foo'],
             ['foo/bar', 'foo'],
         ];
 
         yield [
             '/foo/bar/',
             ['/', '.html'],
-            [],
-            ['foo/bar/', 'foo/bar', 'foo'],
+            [''],
+            ['foo/bar', 'foo'],
             ['foo/bar', 'foo'],
         ];
 
@@ -166,7 +160,15 @@ class CandidatesTest extends TestCase
             '/foo/bar.html',
             ['.html'],
             ['en'],
-            ['foo/bar.html', 'foo', 'foo/bar'],
+            [],
+            [],
+        ];
+
+        yield [
+            '/foo/bar.html',
+            ['.html'],
+            ['en', ''],
+            ['foo/bar', 'foo'],
             [],
         ];
 
@@ -174,7 +176,23 @@ class CandidatesTest extends TestCase
             '/en/foo/bar.html',
             ['.html'],
             ['en'],
-            ['en/foo/bar.html', 'en/foo', 'en', 'en/foo/bar', 'foo/bar.html', 'foo', 'foo/bar'],
+            ['foo/bar', 'foo'],
+            ['foo/bar', 'foo'],
+        ];
+
+        yield [
+            '/en/foo/bar.html',
+            ['.html'],
+            ['en', ''],
+            ['foo/bar', 'foo', 'en/foo/bar', 'en/foo', 'en'],
+            ['foo/bar', 'foo'],
+        ];
+
+        yield [
+            '/en/foo/bar.html',
+            ['.html', ''],
+            ['en', ''],
+            ['foo/bar', 'foo', 'foo/bar.html', 'en/foo/bar', 'en/foo', 'en', 'en/foo/bar.html'],
             ['foo/bar', 'foo'],
         ];
 
@@ -182,7 +200,15 @@ class CandidatesTest extends TestCase
             '/de-DE/foo/bar.html',
             ['.html'],
             ['en', 'de-DE'],
-            ['de-DE/foo/bar.html', 'de-DE/foo', 'de-DE', 'de-DE/foo/bar', 'foo/bar.html', 'foo', 'foo/bar'],
+            ['foo/bar', 'foo'],
+            ['foo/bar', 'foo'],
+        ];
+
+        yield [
+            '/de-DE/foo/bar.html',
+            ['.html', ''],
+            ['en', 'de-DE', ''],
+            ['foo/bar', 'foo', 'foo/bar.html', 'de-DE/foo/bar', 'de-DE/foo', 'de-DE', 'de-DE/foo/bar.html'],
             ['foo/bar', 'foo'],
         ];
 
@@ -190,7 +216,7 @@ class CandidatesTest extends TestCase
             '/de-DE/foo.html',
             ['.html'],
             ['en', 'de-DE'],
-            ['de-DE/foo.html', 'de-DE', 'de-DE/foo', 'foo.html', 'foo'],
+            ['foo'],
             ['foo'],
         ];
 
@@ -198,15 +224,15 @@ class CandidatesTest extends TestCase
             '/en/',
             ['.html'],
             ['en'],
-            ['en/', 'en', 'index'],
+            ['index'],
             [],
         ];
 
         yield [
             '/bar.php',
             ['.php'],
-            [],
-            ['bar.php', 'bar'],
+            [''],
+            ['bar'],
             ['bar'],
         ];
 
@@ -214,7 +240,7 @@ class CandidatesTest extends TestCase
             '/de/foo.html',
             ['.html'],
             ['de'],
-            ['de/foo.html', 'de', 'de/foo', 'foo.html', 'foo'],
+            ['foo'],
             ['foo'],
         ];
 
@@ -222,23 +248,31 @@ class CandidatesTest extends TestCase
             '/de/foo/bar.html',
             ['.html'],
             ['de'],
-            ['de/foo/bar.html', 'de/foo', 'de', 'de/foo/bar', 'foo/bar.html', 'foo', 'foo/bar'],
+            ['foo/bar', 'foo'],
             ['foo/bar', 'foo'],
         ];
 
         yield [
             '/foo/bar.html',
             ['.html'],
-            [],
-            ['foo/bar.html', 'foo', 'foo/bar'],
+            [''],
+            ['foo/bar', 'foo'],
             ['foo/bar', 'foo'],
         ];
 
         yield [
             '/foo/bar/baz/some/more.html',
             ['.html'],
-            [],
-            ['foo/bar/baz/some/more.html', 'foo/bar/baz/some', 'foo/bar/baz', 'foo/bar', 'foo', 'foo/bar/baz/some/more'],
+            [''],
+            ['foo/bar/baz/some/more', 'foo/bar/baz/some', 'foo/bar/baz', 'foo/bar', 'foo'],
+            ['foo/bar/baz/some/more', 'foo/bar/baz/some', 'foo/bar/baz', 'foo/bar', 'foo'],
+        ];
+
+        yield [
+            '/foo/bar/baz/some/more.html',
+            ['.html', ''],
+            [''],
+            ['foo/bar/baz/some/more', 'foo/bar/baz/some', 'foo/bar/baz', 'foo/bar', 'foo', 'foo/bar/baz/some/more.html'],
             ['foo/bar/baz/some/more', 'foo/bar/baz/some', 'foo/bar/baz', 'foo/bar', 'foo'],
         ];
 
@@ -246,15 +280,23 @@ class CandidatesTest extends TestCase
             '/de/foo/bar.html',
             ['.html'],
             ['de'],
-            ['de/foo/bar.html', 'de/foo', 'de', 'de/foo/bar', 'foo/bar.html', 'foo', 'foo/bar'],
+            ['foo/bar', 'foo'],
             ['foo/bar', 'foo'],
         ];
 
         yield [
             '/15.html',
             ['.html'],
-            [],
-            ['15.html', '15'],
+            [''],
+            ['15'],
+            ['15'],
+        ];
+
+        yield [
+            '/15.html',
+            ['.html', ''],
+            [''],
+            ['15', '15.html'],
             ['15'],
         ];
 
@@ -262,15 +304,15 @@ class CandidatesTest extends TestCase
             '/de/15.html',
             ['.html'],
             ['de'],
-            ['de/15.html', 'de', 'de/15', '15.html', '15'],
+            ['15'],
             ['15'],
         ];
 
         yield [
             '/15/foo.html',
             ['.html'],
-            [],
-            ['15/foo.html', '15', '15/foo'],
+            [''],
+            ['15/foo', '15'],
             ['15/foo', '15'],
         ];
     }

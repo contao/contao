@@ -39,7 +39,7 @@ class LegacyCandidates extends Candidates
         $this->urlSuffix = $urlSuffix;
     }
 
-    public function getCandidates(Request $request)
+    public function getCandidates(Request $request): array
     {
         $url = $request->getPathInfo();
         $url = rawurldecode(ltrim($url, '/'));

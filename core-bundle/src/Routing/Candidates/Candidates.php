@@ -71,7 +71,34 @@ class Candidates implements CandidatesInterface
     {
     }
 
-    public function getCandidates(Request $request)
+    /**
+     * Generates possible page aliases from the request path by
+     * removing prefixes, suffixes and parameters.
+     *
+     * Example 1:
+     *   Path: /en/alias/foo/bar.html
+     *   Prefixes: [en, de]
+     *   Suffixes: [.html]
+     *   Possible aliases:
+     *     - alias/foo/bar
+     *     - alias/foo
+     *     - alias
+     *
+     * Example 2:
+     *   Path: /en/alias/foo/bar.html
+     *   Prefixes: [en, '']
+     *   Suffixes: [.html, '']
+     *   Possible aliases:
+     *     - en/alias/foo/bar.html
+     *     - en/alias/foo/bar
+     *     - en/alias/foo
+     *     - en/alias
+     *     - alias/foo/bar.html
+     *     - alias/foo/bar
+     *     - alias/foo
+     *     - alias
+     */
+    public function getCandidates(Request $request): array
     {
         $this->initialize();
 
@@ -79,22 +106,39 @@ class Candidates implements CandidatesInterface
         $url = rawurldecode(ltrim($url, '/'));
         $candidates = [];
 
-        $this->addCandidatesFor($url, $candidates);
-
-        foreach ($this->urlSuffixes as $suffix) {
-            $this->addUrlWithoutSuffix($url, $suffix, $candidates);
+        if (empty($url)) {
+            throw new \RuntimeException(__METHOD__.' cannot handle empty path');
         }
 
         foreach ($this->urlPrefixes as $prefix) {
-            if (0 !== strncmp($url, $prefix.'/', \strlen($prefix) + 1)) {
+            // Language prefix only (e.g. URL = /en/)
+            if ($url === $prefix.'/') {
+                $candidates[] = 'index';
                 continue;
             }
 
-            $for = substr($url, \strlen($prefix) + 1);
-            $this->addCandidatesFor($for, $candidates);
+            $withoutPrefix = $url;
+
+            if ('' !== $prefix) {
+                if (0 !== strncmp($url, $prefix.'/', \strlen($prefix) + 1)) {
+                    continue;
+                }
+
+                $withoutPrefix = substr($url, \strlen($prefix) + 1);
+            }
 
             foreach ($this->urlSuffixes as $suffix) {
-                $this->addUrlWithoutSuffix($for, $suffix, $candidates);
+                $withoutSuffix = $withoutPrefix;
+
+                if ('' !== $suffix) {
+                    if (0 !== substr_compare($withoutPrefix, $suffix, -\strlen($suffix))) {
+                        continue;
+                    }
+
+                    $withoutSuffix = substr($withoutPrefix, 0, -\strlen($suffix));
+                }
+
+                $this->addCandidatesFor($withoutSuffix, $candidates);
             }
         }
 
@@ -125,15 +169,6 @@ class Candidates implements CandidatesInterface
         $candidates[] = $part;
     }
 
-    private function addUrlWithoutSuffix(string $url, string $suffix, array &$candidates): void
-    {
-        $offset = -\strlen($suffix);
-
-        if (0 === substr_compare($url, $suffix, $offset)) {
-            $candidates[] = substr($url, 0, $offset);
-        }
-    }
-
     private function initialize(): void
     {
         if ($this->initialized) {
@@ -148,6 +183,6 @@ class Candidates implements CandidatesInterface
         ;
 
         $this->urlSuffixes = $this->pageRegistry->getUrlSuffixes();
-        $this->urlPrefixes = array_filter($urlPrefix);
+        $this->urlPrefixes = $urlPrefix;
     }
 }

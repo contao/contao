@@ -63,7 +63,7 @@ class PageRegistry
             return [];
         }
 
-        return array_filter(array_unique(array_merge(...$urlSuffixes)));
+        return array_unique(array_merge(...$urlSuffixes));
     }
 
     public function supportsContentComposition(PageModel $pageModel): bool
