@@ -231,10 +231,10 @@ class ContentCompositionListener implements ServiceAnnotationInterface
         }
 
         if (
-            ('cut' === $clipboard['mode'] && $clipboard['id'] === $row['id'])
+            $cr
+            || ('cut' === $clipboard['mode'] && $clipboard['id'] === $row['id'])
             || ('cutAll' === $clipboard['mode'] && \in_array($row['id'], $clipboard['id'], true))
-            || !$this->security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, $row)
-            || $cr
+            || !$this->security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, $pageModel)
         ) {
             return $this->image->getHtml('pasteafter_.svg').' ';
         }

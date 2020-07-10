@@ -52,7 +52,7 @@ class RouteFactory
     {
         $config = $this->pageRegistry->getRouteConfig($pageModel->type);
         $pathParameters = $config->getPathParameters();
-        $defaults = $config->getDefault();
+        $defaults = $config->getDefaults();
         $requirements = $config->getRequirements();
 
         if (null === $pathParameters) {

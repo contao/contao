@@ -18,6 +18,7 @@ use Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Contao\DC_Table;
@@ -552,34 +553,8 @@ class ContentCompositionListenerTest extends TestCase
         ];
     }
 
-    public function testCannotPasteArticleWithoutBackendUser(): void
-    {
-        /** @var FrontendUser&MockObject $user */
-        $user = $this->mockClassWithProperties(FrontendUser::class, ['id' => 1]);
-
-        $this->security
-            ->expects($this->atLeastOnce())
-            ->method('getUser')
-            ->willReturn($user)
-        ;
-
-        /** @var DataContainer&MockObject $dc */
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article', 'activeRecord' => (object) $this->pageRecord]);
-
-        $this->imageAdapter
-            ->expects($this->never())
-            ->method('getHtml')
-        ;
-
-        $this->assertSame(
-            '',
-            $this->listener->renderArticlePasteButton($dc, $this->pageRecord, 'tl_page', false)
-        );
-    }
-
     public function testCannotPasteIntoArticleIfProviderDoesNotSupportContentComposition(): void
     {
-        $this->expectUser();
         $page = $this->expectPageWithRow($this->pageRecord);
         $this->expectSupportsContentComposition(false, $page);
 
@@ -591,6 +566,11 @@ class ContentCompositionListenerTest extends TestCase
             ->method('getHtml')
         ;
 
+        $this->security
+            ->expects($this->never())
+            ->method('isGranted')
+        ;
+
         $this->assertSame(
             '',
             $this->listener->renderArticlePasteButton($dc, $this->pageRecord, 'tl_page', false)
@@ -599,7 +579,6 @@ class ContentCompositionListenerTest extends TestCase
 
     public function testCannotPasteIntoArticleIfPageLayoutDoesNotHaveArticles(): void
     {
-        $this->expectUser();
         $page = $this->expectPageWithRow($this->pageRecord, 1);
         $this->expectSupportsContentComposition(true, $page);
 
@@ -611,6 +590,11 @@ class ContentCompositionListenerTest extends TestCase
             ->method('getHtml')
         ;
 
+        $this->security
+            ->expects($this->never())
+            ->method('isGranted')
+        ;
+
         $this->assertSame(
             '',
             $this->listener->renderArticlePasteButton($dc, $this->pageRecord, 'tl_page', false)
@@ -619,7 +603,6 @@ class ContentCompositionListenerTest extends TestCase
 
     public function testDisablesPasteIntoArticleOnCircularReference(): void
     {
-        $this->expectUser();
         $page = $this->expectPageWithRow($this->pageRecord, 0);
         $this->expectSupportsContentComposition(true, $page);
 
@@ -628,6 +611,11 @@ class ContentCompositionListenerTest extends TestCase
             ->method('getHtml')
             ->with('pasteinto_.svg')
             ->willReturn('<img src="pasteinto_.svg">')
+        ;
+
+        $this->security
+            ->expects($this->never())
+            ->method('isGranted')
         ;
 
         /** @var DataContainer&MockObject $dc */
@@ -641,14 +629,13 @@ class ContentCompositionListenerTest extends TestCase
 
     public function testDisablesPasteIntoArticleIfUserDoesNotHavePermission(): void
     {
-        $user = $this->expectUser();
         $page = $this->expectPageWithRow($this->pageRecord, 0);
         $this->expectSupportsContentComposition(true, $page);
 
-        $user
+        $this->security
             ->expects($this->once())
-            ->method('isAllowed')
-            ->with(BackendUser::CAN_EDIT_ARTICLE_HIERARCHY, $this->pageRecord)
+            ->method('isGranted')
+            ->with(ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, $this->pageRecord)
             ->willReturn(false)
         ;
 
@@ -670,14 +657,13 @@ class ContentCompositionListenerTest extends TestCase
 
     public function testCanPasteIntoArticle(): void
     {
-        $user = $this->expectUser();
         $page = $this->expectPageWithRow($this->pageRecord, 0);
         $this->expectSupportsContentComposition(true, $page);
 
-        $user
+        $this->security
             ->expects($this->once())
-            ->method('isAllowed')
-            ->with(BackendUser::CAN_EDIT_ARTICLE_HIERARCHY, $this->pageRecord)
+            ->method('isGranted')
+            ->with(ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, $this->pageRecord)
             ->willReturn(true)
         ;
 
@@ -705,8 +691,6 @@ class ContentCompositionListenerTest extends TestCase
 
     public function testCannotPasteAfterArticleIfPageIsNotFound(): void
     {
-        $this->expectUser();
-
         $this->pageModelAdapter
             ->expects($this->once())
             ->method('findByPk')
@@ -716,6 +700,11 @@ class ContentCompositionListenerTest extends TestCase
         $this->pageRegistry
             ->expects($this->never())
             ->method('supportsContentComposition')
+        ;
+
+        $this->security
+            ->expects($this->never())
+            ->method('isGranted')
         ;
 
         /** @var DataContainer&MockObject $dc */
@@ -734,13 +723,16 @@ class ContentCompositionListenerTest extends TestCase
 
     public function testCannotPasteAfterArticleIfProviderDoesNotSupportContentComposition(): void
     {
-        $this->expectUser();
-
         $page = $this->expectPageFindByPk(17, $this->pageRecord);
         $this->expectSupportsContentComposition(false, $page);
 
         /** @var DataContainer&MockObject $dc */
         $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article', 'activeRecord' => (object) $this->articleRecord]);
+
+        $this->security
+            ->expects($this->never())
+            ->method('isGranted')
+        ;
 
         $this->imageAdapter
             ->expects($this->never())
@@ -755,13 +747,16 @@ class ContentCompositionListenerTest extends TestCase
 
     public function testCannotPasteAfterArticleIfPageLayoutDoesNotHaveArticles(): void
     {
-        $this->expectUser();
-
         $page = $this->expectPageFindByPk(17, $this->pageRecord, 17);
         $this->expectSupportsContentComposition(true, $page);
 
         /** @var DataContainer&MockObject $dc */
         $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article', 'activeRecord' => (object) $this->articleRecord]);
+
+        $this->security
+            ->expects($this->never())
+            ->method('isGranted')
+        ;
 
         $this->imageAdapter
             ->expects($this->never())
@@ -776,13 +771,16 @@ class ContentCompositionListenerTest extends TestCase
 
     public function testDisablesPasteAfterArticleOnCutCurrentRecord(): void
     {
-        $this->expectUser();
-
         $page = $this->expectPageFindByPk(17, $this->pageRecord, 0);
         $this->expectSupportsContentComposition(true, $page);
 
         /** @var DataContainer&MockObject $dc */
         $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article', 'activeRecord' => (object) $this->articleRecord]);
+
+        $this->security
+            ->expects($this->never())
+            ->method('isGranted')
+        ;
 
         $this->imageAdapter
             ->expects($this->once())
@@ -799,13 +797,16 @@ class ContentCompositionListenerTest extends TestCase
 
     public function testDisablesPasteAfterArticleOnCutAllCurrentRecord(): void
     {
-        $this->expectUser();
-
         $page = $this->expectPageFindByPk(17, $this->pageRecord, 0);
         $this->expectSupportsContentComposition(true, $page);
 
         /** @var DataContainer&MockObject $dc */
         $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article', 'activeRecord' => (object) $this->articleRecord]);
+
+        $this->security
+            ->expects($this->never())
+            ->method('isGranted')
+        ;
 
         $this->imageAdapter
             ->expects($this->once())
@@ -822,13 +823,16 @@ class ContentCompositionListenerTest extends TestCase
 
     public function testDisablesPasteAfterArticleOnCircularReference(): void
     {
-        $this->expectUser();
-
         $page = $this->expectPageFindByPk(17, $this->pageRecord, 0);
         $this->expectSupportsContentComposition(true, $page);
 
         /** @var DataContainer&MockObject $dc */
         $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article', 'activeRecord' => (object) $this->articleRecord]);
+
+        $this->security
+            ->expects($this->never())
+            ->method('isGranted')
+        ;
 
         $this->imageAdapter
             ->expects($this->once())
@@ -839,25 +843,24 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->assertSame(
             '<img src="pasteafter_.svg"> ',
-            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false, ['mode' => 'paste', 'id' => 17])
+            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', true, ['mode' => 'paste', 'id' => 17])
         );
     }
 
     public function testDisablesPasteAfterArticleIfUserDoesNotHavePermission(): void
     {
-        $user = $this->expectUser();
-        $user
-            ->expects($this->once())
-            ->method('isAllowed')
-            ->with(BackendUser::CAN_EDIT_ARTICLE_HIERARCHY, $this->pageRecord)
-            ->willReturn(false)
-        ;
-
         $page = $this->expectPageFindByPk(17, $this->pageRecord, 0);
         $this->expectSupportsContentComposition(true, $page);
 
         /** @var DataContainer&MockObject $dc */
         $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article', 'activeRecord' => (object) $this->articleRecord]);
+
+        $this->security
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with(ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, $page)
+            ->willReturn(false)
+        ;
 
         $this->imageAdapter
             ->expects($this->once())
@@ -874,19 +877,18 @@ class ContentCompositionListenerTest extends TestCase
 
     public function testCanPasteAfterArticle(): void
     {
-        $user = $this->expectUser();
-        $user
-            ->expects($this->once())
-            ->method('isAllowed')
-            ->with(BackendUser::CAN_EDIT_ARTICLE_HIERARCHY, $this->pageRecord)
-            ->willReturn(true)
-        ;
-
-        $page = $this->expectPageFindByPk(17, $this->pageRecord, 0);
-        $this->expectSupportsContentComposition(true, $page);
+        $pageModel = $this->expectPageFindByPk(17, $this->pageRecord, 0);
+        $this->expectSupportsContentComposition(true, $pageModel);
 
         /** @var DataContainer&MockObject $dc */
         $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article', 'activeRecord' => (object) $this->articleRecord]);
+
+        $this->security
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with(ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, $pageModel)
+            ->willReturn(true)
+        ;
 
         $this->imageAdapter
             ->expects($this->once())

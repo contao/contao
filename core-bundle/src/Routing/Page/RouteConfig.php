@@ -32,19 +32,19 @@ final class RouteConfig
     /**
      * @var array
      */
-    private $default;
+    private $defaults;
 
     /**
      * @var array
      */
     private $methods;
 
-    public function __construct(string $pathParameters = null, array $requirements = [], array $options = [], array $default = [], array $methods = [])
+    public function __construct(string $pathParameters = null, array $requirements = [], array $options = [], array $defaults = [], array $methods = [])
     {
         $this->pathParameters = $pathParameters;
         $this->requirements = $requirements;
         $this->options = $options;
-        $this->default = $default;
+        $this->defaults = $defaults;
         $this->methods = $methods;
     }
 
@@ -63,9 +63,9 @@ final class RouteConfig
         return $this->options;
     }
 
-    public function getDefault(): array
+    public function getDefaults(): array
     {
-        return $this->default;
+        return $this->defaults;
     }
 
     public function getMethods(): array

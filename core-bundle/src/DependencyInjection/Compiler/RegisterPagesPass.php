@@ -39,7 +39,7 @@ class RegisterPagesPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container): void
     {
-        if (!$container->has(PageRegistry::class) || !$container->has('contao.routing.candidates')) {
+        if (!$container->has(PageRegistry::class)) {
             return;
         }
 
