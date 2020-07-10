@@ -84,8 +84,8 @@ class PageError404 extends Frontend
 		// Find the matching root page
 		$objRootPage = $this->getRootPageFromUrl();
 
-		// Forward if the language should be but is not set (see #4028). CMF Routing will take care of this in non-legacy mode.
-		if (System::getContainer()->getParameter('contao.legacy_routing') && Config::get('addLanguageToUrl'))
+		// Forward if the language should be but is not set (see #4028).
+		if ($objRootPage->urlPrefix)
 		{
 			// Get the request string without the script name
 			$strRequest = Environment::get('relativeRequest');
@@ -100,8 +100,6 @@ class PageError404 extends Frontend
 				}
 				else
 				{
-					Input::setGet('language', $objRootPage->language);
-
 					if ($strRequest == Environment::get('request'))
 					{
 						$strRequest = $objRootPage->language . '/' . $strRequest;

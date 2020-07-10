@@ -391,6 +391,17 @@ class CandidatesTest extends TestCase
                 'default' => ['15/foo', '15'],
             ],
         ];
+
+        yield [
+            '/foo/bar/baz.html',
+            ['.html'],
+            ['foo/bar'],
+            [
+                'default' => ['baz'],
+                'locale' => ['foo/bar/baz', 'foo/bar', 'foo'],
+                'legacy' => [],
+            ],
+        ];
     }
 
     /**

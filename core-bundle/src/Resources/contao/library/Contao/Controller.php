@@ -1172,8 +1172,7 @@ abstract class Controller extends System
 	 *
 	 * @return string An URL that can be used in the front end
 	 *
-	 * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.0.
-	 *             Use the Symfony router instead.
+	 * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.0. Use the Symfony router instead.
 	 */
 	public static function generateFrontendUrl(array $arrRow, $strParams=null, $strForceLang=null, $blnFixDomain=false)
 	{

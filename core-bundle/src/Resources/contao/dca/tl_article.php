@@ -773,7 +773,7 @@ class tl_article extends Backend
 	 */
 	public function pasteArticle(DataContainer $dc, $row, $table, $cr, $arrClipboard=null)
 	{
-		@trigger_error('Deprecated since Contao 4.10, to be removed in Contao 5. Use Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener::renderArticlePasteButton instead.', E_USER_DEPRECATED);
+		@trigger_error('tl_article::pasteArticle() is deprecated since Contao 4.10, to be removed in Contao 5. Use ContentCompositionListener::renderArticlePasteButton() instead.', E_USER_DEPRECATED);
 
 		return System::getContainer()
 			->get(ContentCompositionListener::class)

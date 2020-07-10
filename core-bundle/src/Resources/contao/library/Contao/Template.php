@@ -349,14 +349,14 @@ abstract class Template extends Controller
 	/**
 	 * Return a content route relative to the base URL
 	 *
-	 * @param mixed $content   The content
-	 * @param array $arrParams The route parameters
+	 * @param mixed $objContent The content
+	 * @param array $arrParams  The route parameters
 	 *
 	 * @return string The route
 	 */
-	public function routeContent($content, $arrParams=array())
+	public function contentRoute($objContent, $arrParams=array())
 	{
-		$arrParams[PageRoute::CONTENT_PARAMETER] = $content;
+		$arrParams[PageRoute::CONTENT_PARAMETER] = $objContent;
 
 		return $this->route(PageRoute::ROUTE_NAME, $arrParams);
 	}
@@ -394,16 +394,16 @@ abstract class Template extends Controller
 	/**
 	 * Return the preview content route
 	 *
-	 * @param mixed $content   The content
-	 * @param array $arrParams The route parameters
+	 * @param mixed $objContent The content
+	 * @param array $arrParams  The route parameters
 	 *
 	 * @return string The route
 	 */
-	public function previewContentRoute($content, $arrParams = array())
+	public function previewContentRoute($objContent, $arrParams = array())
 	{
-		$arrParams[PageRoute::CONTENT_PARAMETER] = $content;
+		$arrParams[PageRoute::CONTENT_PARAMETER] = $objContent;
 
-		return $this->routeContent(PageRoute::ROUTE_NAME, $arrParams);
+		return $this->contentRoute(PageRoute::ROUTE_NAME, $arrParams);
 	}
 
 	/**

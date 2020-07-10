@@ -359,8 +359,13 @@ class RoutingTest extends FunctionalTestCase
      */
     public function testResolvesAliasesWithLocale(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
     {
-        $fixtures[] = 'locale';
         $this->loadFixtureFiles($fixtures);
+
+        self::$container
+            ->get('doctrine')
+            ->getConnection()
+            ->exec('UPDATE tl_page SET urlPrefix=language')
+        ;
 
         Config::set('useAutoItem', $autoItem);
 
@@ -666,8 +671,13 @@ class RoutingTest extends FunctionalTestCase
      */
     public function testResolvesAliasesWithoutUrlSuffix(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
     {
-        $fixtures[] = 'suffix';
         $this->loadFixtureFiles($fixtures);
+
+        self::$container
+            ->get('doctrine')
+            ->getConnection()
+            ->exec("UPDATE tl_page SET urlSuffix=''")
+        ;
 
         Config::set('useAutoItem', $autoItem);
 
@@ -1017,8 +1027,13 @@ class RoutingTest extends FunctionalTestCase
      */
     public function testResolvesTheRootPageWithLocale(array $fixtures, string $request, int $statusCode, string $pageTitle, string $acceptLanguages, string $host): void
     {
-        $fixtures[] = 'locale';
         $this->loadFixtureFiles($fixtures);
+
+        self::$container
+            ->get('doctrine')
+            ->getConnection()
+            ->exec('UPDATE tl_page SET urlPrefix=language')
+        ;
 
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;

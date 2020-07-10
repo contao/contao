@@ -9,3 +9,10 @@ services:
     Contao\CoreBundle\Routing\Content\PageRouteProvider:
         arguments:
             - '@Contao\CoreBundle\Routing\RouteFactory'
+
+    Contao\CoreBundle\Routing\Page\PageRegistry: ~
+
+    Contao\CoreBundle\Routing\RouteFactory:
+        arguments:
+            - '@Contao\CoreBundle\Routing\Page\PageRegistry'
+            - !tagged_iterator contao.content_route_provider

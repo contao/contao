@@ -440,7 +440,10 @@ abstract class Frontend extends Controller
 		}
 
 		// Unset the language parameter
-		unset($arrGet['language']);
+		if ($objPage->urlPrefix)
+		{
+			unset($arrGet['language']);
+		}
 
 		$strParams    = '';
 		$strConnector = '/';

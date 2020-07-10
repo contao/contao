@@ -19,14 +19,13 @@ use Symfony\Component\Routing\Route;
  * A content route provider converts content to a URL (represented by a route object).
  *
  * - Resolve to a Contao\CoreBundle\Routing\Page\PageRoute if the
- *    content is embedded on a page (e.g. through a "reader" module).
+ *   content is embedded on a page (e.g. through a "reader" module).
  *
  * - Resolve to a Symfony\Component\Routing\Route if the content's URL
- *    is not within the CMS (e.g. an absolute URL).
+ *   is not within the CMS (e.g. an absolute URL).
  *
  * If a provider is responsible for a content object but cannot convert it to a route,
- * a Symfony\Component\Routing\Exception\RouteNotFoundException or
- * Contao\CoreBundle\Exception\ContentRouteNotFoundException should be thrown
+ * a Contao\CoreBundle\Exception\ContentRouteNotFoundException should be thrown.
  */
 interface ContentRouteProviderInterface
 {

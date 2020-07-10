@@ -180,8 +180,6 @@ class FrontendIndex extends Frontend
 
 			if (preg_match('#^' . $language . $objPage->id . '(' . $suffix . '($|\?)|/)#', Environment::get('relativeRequest')))
 			{
-				@trigger_error('Checking for duplicate URLs with ID/alias in FrontendIndex::renderPage() has been deprecated and will no longer work Contao 5.0. Use the Symfony routing instead.', E_USER_DEPRECATED);
-
 				throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 			}
 		}
@@ -209,8 +207,6 @@ class FrontendIndex extends Frontend
 
 			if (!$hasItem)
 			{
-				@trigger_error('Checking for "requireItem" in FrontendIndex::renderPage() has been deprecated and will no longer work Contao 5.0. Use the Symfony routing instead.', E_USER_DEPRECATED);
-
 				throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 			}
 		}
@@ -221,8 +217,6 @@ class FrontendIndex extends Frontend
 		// Trigger the 404 page if the page is not published and the front end preview is not active (see #374)
 		if (!BE_USER_LOGGED_IN && !$objPage->isPublic)
 		{
-			@trigger_error('Checking for published pages in FrontendIndex::renderPage() has been deprecated and will no longer work Contao 5.0. Use the Symfony routing instead.', E_USER_DEPRECATED);
-
 			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
 
@@ -248,16 +242,12 @@ class FrontendIndex extends Frontend
 		// Do not try to load the 404 page, it can cause an infinite loop!
 		if (!BE_USER_LOGGED_IN && !$objPage->rootIsPublic)
 		{
-			@trigger_error('Checking for published root page in FrontendIndex::renderPage() has been deprecated and will no longer work Contao 5.0. Use the Symfony routing instead.', E_USER_DEPRECATED);
-
 			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
 
 		// Check wether the language matches the root page language
 		if (isset($_GET['language']) && Config::get('addLanguageToUrl') && Input::get('language') != $objPage->rootLanguage)
 		{
-			@trigger_error('Checking for page language in FrontendIndex::renderPage() has been deprecated and will no longer work Contao 5.0. Use the Symfony routing instead.', E_USER_DEPRECATED);
-
 			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
 
