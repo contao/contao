@@ -24,7 +24,6 @@ use Contao\Model\Collection;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Bundle\FrameworkBundle\Controller\RedirectController;
 use Symfony\Cmf\Component\Routing\Candidates\CandidatesInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -581,36 +580,10 @@ class RouteProviderTest extends TestCase
         $provider = $this->getRouteProvider($framework, $routeFactory, $prependLocale);
         $collection = $provider->getRouteCollectionForRequest($request);
 
-        $this->assertCount($prependLocale ? 2 : 1, $collection);
+        $this->assertCount(1, $collection);
 
         $this->assertArrayHasKey('tl_page.'.$pageModel->id, $collection->all());
         $this->assertSame($route, $collection->get('tl_page.'.$pageModel->id));
-
-        if (!$prependLocale) {
-            return;
-        }
-
-        $this->assertArrayHasKey('tl_page.'.$pageModel->id.'.locale', $collection->all());
-        $route = $collection->get('tl_page.'.$pageModel->id.'.locale');
-
-        $this->assertInstanceOf(Route::class, $route);
-        $this->assertSame('(/.+)?', $route->getRequirement('parameters'));
-        $this->assertSame('/foo/bar', $route->getDefault('parameters'));
-        $this->assertTrue($route->getOption('utf8'));
-        $this->assertSame($domain, $route->getHost());
-
-        if ('https' === $scheme) {
-            $this->assertSame(['https'], $route->getSchemes());
-        } else {
-            $this->assertSame([], $route->getSchemes());
-        }
-
-        $this->assertSame('/'.$alias.'{parameters}'.$urlSuffix, $route->getPath());
-        $this->assertSame(RedirectController::class.'::urlRedirectAction', $route->getDefault('_controller'));
-        $this->assertTrue($route->getDefault('permanent'));
-
-        // It's correct to test for the language twice here: the prefix is added *to the current request URL*
-        $this->assertSame('/'.$language.'/'.$language.'/foo/bar'.$urlSuffix, $route->getDefault('path'));
     }
 
     public function getPageRoutes(): \Generator

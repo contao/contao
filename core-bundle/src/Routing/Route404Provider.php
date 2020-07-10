@@ -15,7 +15,11 @@ namespace Contao\CoreBundle\Routing;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\PageModel;
+use Doctrine\DBAL\Connection;
+use Symfony\Bundle\FrameworkBundle\Controller\RedirectController;
+use Symfony\Cmf\Component\Routing\Candidates\CandidatesInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -24,14 +28,19 @@ use Symfony\Component\Routing\RouteCollection;
 
 class Route404Provider implements RouteProviderInterface
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
+    use CandidatePagesTrait;
 
-    public function __construct(ContaoFramework $framework)
+    /**
+     * @var RouteFactory
+     */
+    private $routeFactory;
+
+    public function __construct(ContaoFramework $framework, Connection $connection, CandidatesInterface $candidates, RouteFactory $routeFactory)
     {
         $this->framework = $framework;
+        $this->connection = $connection;
+        $this->candidates = $candidates;
+        $this->routeFactory = $routeFactory;
     }
 
     public function getRouteCollectionForRequest(Request $request): RouteCollection
@@ -39,7 +48,13 @@ class Route404Provider implements RouteProviderInterface
         $this->framework->initialize(true);
 
         $collection = new RouteCollection();
-        $routes = $this->getRoutes($request->getLanguages());
+
+        $routes = array_merge(
+            $this->getNotFoundRoutes(),
+            $this->getLocaleFallbackRoutes($request)
+        );
+
+        $this->sortRoutes($routes, $request->getLanguages());
 
         foreach ($routes as $name => $route) {
             $collection->add($name, $route);
@@ -57,13 +72,13 @@ class Route404Provider implements RouteProviderInterface
     {
         // Support console and web inspector profiling
         if (null === $names) {
-            return $this->getRoutes();
+            return $this->getNotFoundRoutes();
         }
 
         return [];
     }
 
-    private function getRoutes(array $languages = null): array
+    private function getNotFoundRoutes(): array
     {
         $this->framework->initialize(true);
 
@@ -78,15 +93,13 @@ class Route404Provider implements RouteProviderInterface
         $routes = [];
 
         foreach ($pages as $page) {
-            $this->addRoutesForPage($page, $routes);
+            $this->addNotFoundRoutesForPage($page, $routes);
         }
-
-        $this->sortRoutes($routes, $languages);
 
         return $routes;
     }
 
-    private function addRoutesForPage(PageModel $page, array &$routes): void
+    private function addNotFoundRoutesForPage(PageModel $page, array &$routes): void
     {
         try {
             $page->loadDetails();
@@ -134,6 +147,59 @@ class Route404Provider implements RouteProviderInterface
         );
     }
 
+    private function getLocaleFallbackRoutes(Request $request): array
+    {
+        if ('/' === $request->getPathInfo()) {
+            return [];
+        }
+
+        $routes = [];
+        $pages = $this->findCandidatePages($request);
+
+        foreach ($pages as $page) {
+            $route = $this->routeFactory->createRouteForPage($page);
+
+            if ($route instanceof PageRoute) {
+                $this->addLocaleRedirectRoute($route, $request, $routes);
+            }
+        }
+
+        return $routes;
+    }
+
+    private function addLocaleRedirectRoute(PageRoute $route, ?Request $request, array &$routes): void
+    {
+        $length = \strlen($route->getUrlPrefix());
+
+        if (0 === $length) {
+            return;
+        }
+
+        $redirect = new Route(
+            substr($route->getPath(), $length + 1),
+            $route->getDefaults(),
+            $route->getRequirements(),
+            $route->getOptions(),
+            $route->getHost(),
+            $route->getSchemes(),
+            $route->getMethods()
+        );
+
+        $path = $route->getPath();
+
+        if (null !== $request) {
+            $path = '/'.$route->getUrlPrefix().$request->getPathInfo();
+        }
+
+        $redirect->addDefaults([
+            '_controller' => RedirectController::class.'::urlRedirectAction',
+            'path' => $path,
+            'permanent' => true,
+        ]);
+
+        $routes['tl_page.'.$route->getPageModel()->id.'.locale'] = $redirect;
+    }
+
     /**
      * Sorts routes so that the FinalMatcher will correctly resolve them.
      *
@@ -166,8 +232,18 @@ class Route404Provider implements RouteProviderInterface
         uasort(
             $routes,
             static function (Route $a, Route $b) use ($languages, $routes) {
+                $errorA = false !== strpos('.error_404', array_search($a, $routes, true));
+                $errorB = false !== strpos('.error_404', array_search($a, $routes, true), -7);
                 $localeA = '.locale' === substr(array_search($a, $routes, true), -7);
                 $localeB = '.locale' === substr(array_search($b, $routes, true), -7);
+
+                if ($errorA && !$errorB) {
+                    return 1;
+                }
+
+                if ($errorB && !$errorA) {
+                    return -1;
+                }
 
                 if ($localeA && !$localeB) {
                     return -1;

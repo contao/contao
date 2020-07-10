@@ -2867,6 +2867,9 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEquals(
             [
                 new Reference('contao.framework'),
+                new Reference('database_connection'),
+                new Reference('contao.routing.locale_candidates'),
+                new Reference(RouteFactory::class),
             ],
             $definition->getArguments()
         );

@@ -42,7 +42,7 @@ class RootPageController extends AbstractController implements PageRouteEnhancer
             throw new \InvalidArgumentException('Invalid page type');
         }
 
-        return $this->redirectToContent($this->getNextPage((int) $pageModel->id), [], 303);
+        return $this->redirectToContent($this->getNextPage((int) $pageModel->id));
     }
 
     public function enhancePageRoute(PageRoute $route): Route

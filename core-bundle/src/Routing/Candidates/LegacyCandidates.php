@@ -19,69 +19,51 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @deprecated
  */
-class LegacyCandidates extends Candidates
+class LegacyCandidates extends AbstractCandidates
 {
     /**
      * @var bool
      */
     private $prependLocale;
 
-    /**
-     * @var string
-     */
-    private $urlSuffix;
-
     public function __construct(bool $prependLocale, string $urlSuffix)
     {
-        // Do not call the parent constructor
+        parent::__construct([], [$urlSuffix]);
 
         $this->prependLocale = $prependLocale;
-        $this->urlSuffix = $urlSuffix;
     }
 
+    /**
+     * Override the URL prefix based on the current request.
+     */
     public function getCandidates(Request $request): array
     {
-        $url = $request->getPathInfo();
-        $url = rawurldecode(ltrim($url, '/'));
-        $candidates = [];
+        $prefix = $this->getPrefixFromUrl($request);
 
-        $url = $this->removeSuffixAndLanguage($url);
-
-        if (null === $url) {
+        if (null === $prefix) {
             return [];
         }
 
-        $this->addCandidatesFor($url, $candidates);
+        $this->setUrlPrefixes([$prefix]);
 
-        return array_values(array_unique($candidates));
+        return parent::getCandidates($request);
     }
 
-    private function removeSuffixAndLanguage(string $pathInfo): ?string
+    private function getPrefixFromUrl(Request $request): ?string
     {
-        if ('' === $pathInfo) {
+        if (!$this->prependLocale) {
             return '';
         }
 
-        $suffixLength = \strlen($this->urlSuffix);
+        $url = $request->getPathInfo();
+        $url = rawurldecode(ltrim($url, '/'));
 
-        if (0 !== $suffixLength) {
-            if (substr($pathInfo, -$suffixLength) !== $this->urlSuffix) {
-                return null;
-            }
+        $matches = [];
 
-            $pathInfo = substr($pathInfo, 0, -$suffixLength);
+        if (!preg_match('@^([a-z]{2}(-[A-Z]{2})?)/(.+)$@', $url, $matches)) {
+            return null;
         }
 
-        if ($this->prependLocale) {
-            $matches = [];
-
-            if (!preg_match('@^([a-z]{2}(-[A-Z]{2})?)/(.+)$@', $pathInfo, $matches)) {
-                return null;
-            }
-
-            $pathInfo = $matches[3];
-        }
-
-        return $pathInfo;
+        return $matches[1];
     }
 }

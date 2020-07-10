@@ -455,7 +455,7 @@ class RoutingTest extends FunctionalTestCase
             '/home.html',
             301,
             'Redirecting to http://root-with-home.local/en/home.html',
-            ['language' => 'en'],
+            [],
             'root-with-home.local',
             false,
         ];

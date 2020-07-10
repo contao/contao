@@ -461,9 +461,14 @@ services:
             - [matchAttribute, [_scope, backend]]
 
     contao.routing.candidates:
-        class: Contao\CoreBundle\Routing\Candidates\Candidates
+        class: Contao\CoreBundle\Routing\Candidates\PageCandidates
         arguments:
             - '@database_connection'
+            - '@Contao\CoreBundle\Routing\Page\PageRegistry'
+
+    contao.routing.locale_candidates:
+        class: Contao\CoreBundle\Routing\Candidates\LocaleCandidates
+        arguments:
             - '@Contao\CoreBundle\Routing\Page\PageRegistry'
 
     contao.routing.domain_filter:
@@ -571,6 +576,9 @@ services:
         class: Contao\CoreBundle\Routing\Route404Provider
         arguments:
             - '@contao.framework'
+            - '@database_connection'
+            - '@contao.routing.locale_candidates'
+            - '@Contao\CoreBundle\Routing\RouteFactory'
 
     contao.routing.scope_matcher:
         class: Contao\CoreBundle\Routing\ScopeMatcher

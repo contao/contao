@@ -10,9 +10,8 @@ services:
         tags:
             - routing.loader
 
-    contao.routing.legacy_candidates:
+    contao.routing.candidates:
         class: Contao\CoreBundle\Routing\Candidates\LegacyCandidates
-        decorates: contao.routing.candidates
         arguments:
             - '%contao.prepend_locale%'
             - '%contao.url_suffix%'

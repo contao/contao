@@ -20,7 +20,6 @@ use Contao\Model\Collection;
 use Contao\PageModel;
 use Contao\System;
 use Doctrine\DBAL\Connection;
-use Symfony\Bundle\FrameworkBundle\Controller\RedirectController;
 use Symfony\Cmf\Component\Routing\Candidates\CandidatesInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,20 +29,7 @@ use Symfony\Component\Routing\RouteCollection;
 
 class RouteProvider implements RouteProviderInterface
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var Connection
-     */
-    private $database;
-
-    /**
-     * @var CandidatesInterface
-     */
-    private $candidates;
+    use CandidatePagesTrait;
 
     /**
      * @var RouteFactory
@@ -63,10 +49,10 @@ class RouteProvider implements RouteProviderInterface
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.route_provider" service instead
      */
-    public function __construct(ContaoFramework $framework, Connection $database, CandidatesInterface $candidates, RouteFactory $routeFactory, bool $legacyRouting, bool $prependLocale)
+    public function __construct(ContaoFramework $framework, Connection $connection, CandidatesInterface $candidates, RouteFactory $routeFactory, bool $legacyRouting, bool $prependLocale)
     {
         $this->framework = $framework;
-        $this->database = $database;
+        $this->connection = $connection;
         $this->candidates = $candidates;
         $this->routeFactory = $routeFactory;
         $this->legacyRouting = $legacyRouting;
@@ -92,15 +78,13 @@ class RouteProvider implements RouteProviderInterface
             return $this->createCollectionForRoutes($routes, $request->getLanguages());
         }
 
-        $candidates = $this->candidates->getCandidates($request);
+        $pages = $this->findCandidatePages($request);
 
-        if (0 === \count($candidates)) {
+        if (empty($pages)) {
             return new RouteCollection();
         }
 
-        $pages = $this->findPages($candidates);
-
-        $this->addRoutesForPages($pages, $routes, $request);
+        $this->addRoutesForPages($pages, $routes);
 
         return $this->createCollectionForRoutes($routes, $request->getLanguages());
     }
@@ -164,10 +148,10 @@ class RouteProvider implements RouteProviderInterface
     /**
      * @param iterable<PageModel> $pages
      */
-    private function addRoutesForPages(iterable $pages, array &$routes, Request $request = null): void
+    private function addRoutesForPages(iterable $pages, array &$routes): void
     {
         foreach ($pages as $page) {
-            $this->addRoutesForPage($page, $routes, $request);
+            $this->addRoutesForPage($page, $routes);
         }
     }
 
@@ -194,7 +178,7 @@ class RouteProvider implements RouteProviderInterface
         return $collection;
     }
 
-    private function addRoutesForPage(PageModel $page, array &$routes, Request $request = null): void
+    private function addRoutesForPage(PageModel $page, array &$routes): void
     {
         try {
             $page->loadDetails();
@@ -209,44 +193,7 @@ class RouteProvider implements RouteProviderInterface
         $route = $this->routeFactory->createRouteForPage($page);
         $routes['tl_page.'.$page->id] = $route;
 
-        if ($route instanceof PageRoute) {
-            $this->addLocaleRedirect($route, $request, $routes);
-        }
-
         $this->addRoutesForRootPage($page, $routes);
-    }
-
-    private function addLocaleRedirect(PageRoute $route, ?Request $request, array &$routes): void
-    {
-        $length = \strlen($route->getUrlPrefix());
-
-        if (0 === $length) {
-            return;
-        }
-
-        $redirect = new Route(
-            substr($route->getPath(), $length + 1),
-            $route->getDefaults(),
-            $route->getRequirements(),
-            $route->getOptions(),
-            $route->getHost(),
-            $route->getSchemes(),
-            $route->getMethods()
-        );
-
-        $path = $route->getPath();
-
-        if (null !== $request) {
-            $path = '/'.$route->getUrlPrefix().$request->getPathInfo();
-        }
-
-        $redirect->addDefaults([
-            '_controller' => RedirectController::class.'::urlRedirectAction',
-            'path' => $path,
-            'permanent' => true,
-        ]);
-
-        $routes['tl_page.'.$route->getPageModel()->id.'.locale'] = $redirect;
     }
 
     private function addRoutesForRootPage(PageModel $page, array &$routes): void
@@ -357,22 +304,12 @@ class RouteProvider implements RouteProviderInterface
 
                 $fallbackA = 0 === substr_compare($nameA, '.fallback', -9);
                 $fallbackB = 0 === substr_compare($nameB, '.fallback', -9);
-                $localeA = 0 === substr_compare($nameA, '.locale', -7);
-                $localeB = 0 === substr_compare($nameB, '.locale', -7);
 
                 if ($fallbackA && !$fallbackB) {
                     return 1;
                 }
 
                 if ($fallbackB && !$fallbackA) {
-                    return -1;
-                }
-
-                if ($localeA && !$localeB) {
-                    return 1;
-                }
-
-                if ($localeB && !$localeA) {
                     return -1;
                 }
 
@@ -439,43 +376,6 @@ class RouteProvider implements RouteProviderInterface
                 return strnatcasecmp((string) $pageB->alias, (string) $pageA->alias);
             }
         );
-    }
-
-    /**
-     * @return array<Model>
-     */
-    private function findPages(array $candidates): array
-    {
-        $ids = [];
-        $aliases = [];
-
-        foreach ($candidates as $candidate) {
-            if (is_numeric($candidate)) {
-                $ids[] = (int) $candidate;
-            } else {
-                $aliases[] = $this->database->quote($candidate);
-            }
-        }
-
-        $conditions = [];
-
-        if (!empty($ids)) {
-            $conditions[] = 'tl_page.id IN ('.implode(',', $ids).')';
-        }
-
-        if (!empty($aliases)) {
-            $conditions[] = 'tl_page.alias IN ('.implode(',', $aliases).')';
-        }
-
-        /** @var PageModel $pageModel */
-        $pageModel = $this->framework->getAdapter(PageModel::class);
-        $pages = $pageModel->findBy([implode(' OR ', $conditions)], []);
-
-        if (!$pages instanceof Collection) {
-            return [];
-        }
-
-        return $pages->getModels();
     }
 
     /**

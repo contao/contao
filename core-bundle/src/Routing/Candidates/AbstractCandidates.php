@@ -12,13 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\Candidates;
 
-use Contao\CoreBundle\Routing\Page\PageRegistry;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\FetchMode;
 use Symfony\Cmf\Component\Routing\Candidates\CandidatesInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class Candidates implements CandidatesInterface
+class AbstractCandidates implements CandidatesInterface
 {
     /**
      * A limit to apply to the number of candidates generated.
@@ -32,21 +29,6 @@ class Candidates implements CandidatesInterface
     private const LIMIT = 20;
 
     /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var PageRegistry
-     */
-    private $pageRegistry;
-
-    /**
-     * @var bool
-     */
-    private $initialized = false;
-
-    /**
      * @var array
      */
     private $urlPrefixes;
@@ -56,10 +38,10 @@ class Candidates implements CandidatesInterface
      */
     private $urlSuffixes;
 
-    public function __construct(Connection $connection, PageRegistry $pageRegistry)
+    public function __construct(array $urlPrefixes, array $urlSuffixes)
     {
-        $this->connection = $connection;
-        $this->pageRegistry = $pageRegistry;
+        $this->urlPrefixes = $urlPrefixes;
+        $this->urlSuffixes = $urlSuffixes;
     }
 
     public function isCandidate($name): bool
@@ -100,8 +82,6 @@ class Candidates implements CandidatesInterface
      */
     public function getCandidates(Request $request): array
     {
-        $this->initialize();
-
         $url = $request->getPathInfo();
         $url = rawurldecode(ltrim($url, '/'));
         $candidates = [];
@@ -145,7 +125,17 @@ class Candidates implements CandidatesInterface
         return array_values(array_unique($candidates));
     }
 
-    protected function addCandidatesFor(string $url, array &$candidates): void
+    protected function setUrlPrefixes(array $urlPrefixes): void
+    {
+        $this->urlPrefixes = $urlPrefixes;
+    }
+
+    protected function setUrlSuffixes(array $urlSuffixes): void
+    {
+        $this->urlSuffixes = $urlSuffixes;
+    }
+
+    private function addCandidatesFor(string $url, array &$candidates): void
     {
         if ('' === $url) {
             $candidates[] = 'index';
@@ -167,22 +157,5 @@ class Candidates implements CandidatesInterface
         }
 
         $candidates[] = $part;
-    }
-
-    private function initialize(): void
-    {
-        if ($this->initialized) {
-            return;
-        }
-
-        $this->initialized = true;
-
-        $urlPrefix = $this->connection
-            ->query("SELECT DISTINCT urlPrefix FROM tl_page WHERE type='root'")
-            ->fetchAll(FetchMode::COLUMN)
-        ;
-
-        $this->urlSuffixes = $this->pageRegistry->getUrlSuffixes();
-        $this->urlPrefixes = $urlPrefix;
     }
 }

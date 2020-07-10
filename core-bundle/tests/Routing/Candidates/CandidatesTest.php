@@ -12,8 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Routing\Candidates;
 
-use Contao\CoreBundle\Routing\Candidates\Candidates;
 use Contao\CoreBundle\Routing\Candidates\LegacyCandidates;
+use Contao\CoreBundle\Routing\Candidates\LocaleCandidates;
+use Contao\CoreBundle\Routing\Candidates\PageCandidates;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
@@ -46,9 +47,33 @@ class CandidatesTest extends TestCase
             ->willReturn($urlSuffixes)
         ;
 
-        $candidates = new Candidates($connection, $pageRegistry);
+        $candidates = new PageCandidates($connection, $pageRegistry);
 
-        $this->assertSame($expected, $candidates->getCandidates($request));
+        $this->assertSame($expected['default'], $candidates->getCandidates($request));
+    }
+
+    /**
+     * @dataProvider getCandidatesProvider
+     */
+    public function testGetLocaleCandidates(string $pathInfo, array $urlSuffixes, array $languages, array $expected): void
+    {
+        $request = $this->createMock(Request::class);
+        $request
+            ->expects($this->once())
+            ->method('getPathinfo')
+            ->willReturn($pathInfo)
+        ;
+
+        $pageRegistry = $this->createMock(PageRegistry::class);
+        $pageRegistry
+            ->expects($this->once())
+            ->method('getUrlSuffixes')
+            ->willReturn($urlSuffixes)
+        ;
+
+        $candidates = new LocaleCandidates($pageRegistry);
+
+        $this->assertSame($expected['locale'] ?? $expected['default'], $candidates->getCandidates($request));
     }
 
     /**
@@ -56,11 +81,11 @@ class CandidatesTest extends TestCase
      *
      * @group legacy
      */
-    public function testGetCandidatesInLegacyMode(string $pathInfo, array $urlSuffixes, array $languages, array $expectedRegular, array $expected): void
+    public function testGetCandidatesInLegacyMode(string $pathInfo, array $urlSuffixes, array $languages, array $expected): void
     {
         $request = $this->createMock(Request::class);
         $request
-            ->expects($this->once())
+            ->expects($this->atLeastOnce())
             ->method('getPathinfo')
             ->willReturn($pathInfo)
         ;
@@ -79,241 +104,292 @@ class CandidatesTest extends TestCase
 
         $candidates = (new LegacyCandidates('' !== $languages[0], $urlSuffixes[0]))->getCandidates($request);
 
-        $this->assertSame($expected, $candidates);
+        $this->assertSame($expected['legacy'] ?? $expected['default'], $candidates);
     }
 
-    public function getCandidatesProvider()
+    public function getCandidatesProvider(): \Generator
     {
         yield [
             '/foo.html',
             ['.html'],
             [''],
-            ['foo'],
-            ['foo'],
+            [
+                'default' => ['foo'],
+            ],
         ];
 
         yield [
             '/foo.html',
             ['.html', ''],
             [''],
-            ['foo', 'foo.html'],
-            ['foo'],
+            [
+                'default' => ['foo', 'foo.html'],
+                'legacy' => ['foo'],
+            ],
         ];
 
         yield [
             '/foo.html',
             ['.html'],
             ['en'],
-            [],
-            [],
+            [
+                'default' => [],
+                'locale' => ['foo'],
+            ],
         ];
 
         yield [
             '/foo/bar',
             [''],
             [''],
-            ['foo/bar', 'foo'],
-            ['foo/bar', 'foo'],
+            [
+                'default' => ['foo/bar', 'foo'],
+            ],
         ];
 
         yield [
             '/foo/bar.json',
             ['.html'],
             [''],
-            [],
-            [],
+            [
+                'default' => [],
+            ],
         ];
 
         yield [
             '/foo/bar.html',
             ['.html'],
             [''],
-            ['foo/bar', 'foo'],
-            ['foo/bar', 'foo'],
+            [
+                'default' => ['foo/bar', 'foo'],
+            ],
         ];
 
         yield [
             '/foo/bar.html',
             ['.html', ''],
             [''],
-            ['foo/bar', 'foo', 'foo/bar.html'],
-            ['foo/bar', 'foo'],
+            [
+                'default' => ['foo/bar', 'foo', 'foo/bar.html'],
+                'legacy' => ['foo/bar', 'foo'],
+            ],
         ];
 
         yield [
             '/foo/bar.html',
             ['.html', '.json'],
             [''],
-            ['foo/bar', 'foo'],
-            ['foo/bar', 'foo'],
+            [
+                'default' => ['foo/bar', 'foo'],
+            ],
         ];
 
         yield [
             '/foo/bar/',
             ['/', '.html'],
             [''],
-            ['foo/bar', 'foo'],
-            ['foo/bar', 'foo'],
+            [
+                'default' => ['foo/bar', 'foo'],
+            ],
         ];
 
         yield [
             '/foo/bar.html',
             ['.html'],
             ['en'],
-            [],
-            [],
+            [
+                'default' => [],
+                'locale' => ['foo/bar', 'foo'],
+            ],
         ];
 
         yield [
             '/foo/bar.html',
             ['.html'],
             ['en', ''],
-            ['foo/bar', 'foo'],
-            [],
+            [
+                'default' => ['foo/bar', 'foo'],
+                'legacy' => [],
+            ],
         ];
 
         yield [
             '/en/foo/bar.html',
             ['.html'],
             ['en'],
-            ['foo/bar', 'foo'],
-            ['foo/bar', 'foo'],
+            [
+                'default' => ['foo/bar', 'foo'],
+                'locale' => ['en/foo/bar', 'en/foo', 'en'],
+            ],
         ];
 
         yield [
             '/en/foo/bar.html',
             ['.html'],
             ['en', ''],
-            ['foo/bar', 'foo', 'en/foo/bar', 'en/foo', 'en'],
-            ['foo/bar', 'foo'],
+            [
+                'default' => ['foo/bar', 'foo', 'en/foo/bar', 'en/foo', 'en'],
+                'legacy' => ['foo/bar', 'foo'],
+                'locale' => ['en/foo/bar', 'en/foo', 'en'],
+            ],
         ];
 
         yield [
             '/en/foo/bar.html',
             ['.html', ''],
             ['en', ''],
-            ['foo/bar', 'foo', 'foo/bar.html', 'en/foo/bar', 'en/foo', 'en', 'en/foo/bar.html'],
-            ['foo/bar', 'foo'],
+            [
+                'default' => ['foo/bar', 'foo', 'foo/bar.html', 'en/foo/bar', 'en/foo', 'en', 'en/foo/bar.html'],
+                'legacy' => ['foo/bar', 'foo'],
+                'locale' => ['en/foo/bar', 'en/foo', 'en', 'en/foo/bar.html'],
+            ],
         ];
 
         yield [
             '/de-DE/foo/bar.html',
             ['.html'],
             ['en', 'de-DE'],
-            ['foo/bar', 'foo'],
-            ['foo/bar', 'foo'],
+            [
+                'default' => ['foo/bar', 'foo'],
+                'locale' => ['de-DE/foo/bar', 'de-DE/foo', 'de-DE'],
+            ],
         ];
 
         yield [
             '/de-DE/foo/bar.html',
             ['.html', ''],
             ['en', 'de-DE', ''],
-            ['foo/bar', 'foo', 'foo/bar.html', 'de-DE/foo/bar', 'de-DE/foo', 'de-DE', 'de-DE/foo/bar.html'],
-            ['foo/bar', 'foo'],
+            [
+                'default' => ['foo/bar', 'foo', 'foo/bar.html', 'de-DE/foo/bar', 'de-DE/foo', 'de-DE', 'de-DE/foo/bar.html'],
+                'legacy' => ['foo/bar', 'foo'],
+                'locale' => ['de-DE/foo/bar', 'de-DE/foo', 'de-DE', 'de-DE/foo/bar.html'],
+            ],
         ];
 
         yield [
             '/de-DE/foo.html',
             ['.html'],
             ['en', 'de-DE'],
-            ['foo'],
-            ['foo'],
+            [
+                'default' => ['foo'],
+                'locale' => ['de-DE/foo', 'de-DE'],
+            ],
         ];
 
         yield [
             '/en/',
             ['.html'],
             ['en'],
-            ['index'],
-            [],
+            [
+                'default' => ['index'],
+                'legacy' => [],
+                'locale' => [],
+            ],
         ];
 
         yield [
             '/bar.php',
             ['.php'],
             [''],
-            ['bar'],
-            ['bar'],
+            [
+                'default' => ['bar'],
+            ],
         ];
 
         yield [
             '/de/foo.html',
             ['.html'],
             ['de'],
-            ['foo'],
-            ['foo'],
+            [
+                'default' => ['foo'],
+                'locale' => ['de/foo', 'de'],
+            ],
         ];
 
         yield [
             '/de/foo/bar.html',
             ['.html'],
             ['de'],
-            ['foo/bar', 'foo'],
-            ['foo/bar', 'foo'],
+            [
+                'default' => ['foo/bar', 'foo'],
+                'locale' => ['de/foo/bar', 'de/foo', 'de'],
+            ],
         ];
 
         yield [
             '/foo/bar.html',
             ['.html'],
             [''],
-            ['foo/bar', 'foo'],
-            ['foo/bar', 'foo'],
+            [
+                'default' => ['foo/bar', 'foo'],
+            ],
         ];
 
         yield [
             '/foo/bar/baz/some/more.html',
             ['.html'],
             [''],
-            ['foo/bar/baz/some/more', 'foo/bar/baz/some', 'foo/bar/baz', 'foo/bar', 'foo'],
-            ['foo/bar/baz/some/more', 'foo/bar/baz/some', 'foo/bar/baz', 'foo/bar', 'foo'],
+            [
+                'default' => ['foo/bar/baz/some/more', 'foo/bar/baz/some', 'foo/bar/baz', 'foo/bar', 'foo'],
+            ],
         ];
 
         yield [
             '/foo/bar/baz/some/more.html',
             ['.html', ''],
             [''],
-            ['foo/bar/baz/some/more', 'foo/bar/baz/some', 'foo/bar/baz', 'foo/bar', 'foo', 'foo/bar/baz/some/more.html'],
-            ['foo/bar/baz/some/more', 'foo/bar/baz/some', 'foo/bar/baz', 'foo/bar', 'foo'],
+            [
+                'default' => ['foo/bar/baz/some/more', 'foo/bar/baz/some', 'foo/bar/baz', 'foo/bar', 'foo', 'foo/bar/baz/some/more.html'],
+                'legacy' => ['foo/bar/baz/some/more', 'foo/bar/baz/some', 'foo/bar/baz', 'foo/bar', 'foo'],
+            ],
         ];
 
         yield [
             '/de/foo/bar.html',
             ['.html'],
             ['de'],
-            ['foo/bar', 'foo'],
-            ['foo/bar', 'foo'],
+            [
+                'default' => ['foo/bar', 'foo'],
+                'locale' => ['de/foo/bar', 'de/foo', 'de'],
+            ],
         ];
 
         yield [
             '/15.html',
             ['.html'],
             [''],
-            ['15'],
-            ['15'],
+            [
+                'default' => ['15'],
+            ],
         ];
 
         yield [
             '/15.html',
             ['.html', ''],
             [''],
-            ['15', '15.html'],
-            ['15'],
+            [
+                'default' => ['15', '15.html'],
+                'legacy' => ['15'],
+            ],
         ];
 
         yield [
             '/de/15.html',
             ['.html'],
             ['de'],
-            ['15'],
-            ['15'],
+            [
+                'default' => ['15'],
+                'locale' => ['de/15', 'de'],
+            ],
         ];
 
         yield [
             '/15/foo.html',
             ['.html'],
             [''],
-            ['15/foo', '15'],
-            ['15/foo', '15'],
+            [
+                'default' => ['15/foo', '15'],
+            ],
         ];
     }
 
