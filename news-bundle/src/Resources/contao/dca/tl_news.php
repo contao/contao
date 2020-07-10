@@ -697,18 +697,6 @@ class tl_news extends Backend
 	}
 
 	/**
-	 * Return the SERP URL
-	 *
-	 * @param NewsModel $model
-	 *
-	 * @return string
-	 */
-	public function getSerpUrl(NewsModel $model)
-	{
-		return News::generateNewsUrl($model, false, true);
-	}
-
-	/**
 	 * List a news article
 	 *
 	 * @param array $arrRow

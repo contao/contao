@@ -774,18 +774,6 @@ class tl_calendar_events extends Backend
 	}
 
 	/**
-	 * Return the SERP URL
-	 *
-	 * @param CalendarEventsModel $model
-	 *
-	 * @return string
-	 */
-	public function getSerpUrl(CalendarEventsModel $model)
-	{
-		return Events::generateEventUrl($model, true);
-	}
-
-	/**
 	 * Add the type of input field
 	 *
 	 * @param array $arrRow
