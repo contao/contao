@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\Model;
 use Contao\Model\Collection;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
@@ -37,7 +38,7 @@ trait CandidatePagesTrait
     private $candidates;
 
     /**
-     * @return array<string>
+     * @return array<Model>
      */
     private function findCandidatePages(Request $request): array
     {
