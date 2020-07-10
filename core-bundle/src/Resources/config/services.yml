@@ -813,3 +813,13 @@ services:
             - '@request_stack'
             - '@contao.framework'
             - '@contao.routing.scope_matcher'
+
+    Contao\CoreBundle\Util\SimpleTokenExpressionLanguage:
+        arguments:
+            - ~
+            - !tagged_iterator contao.simple_token_extension
+
+    Contao\CoreBundle\Util\SimpleTokenParser:
+        arguments:
+            - '@Contao\CoreBundle\Util\SimpleTokenExpressionLanguage'
+        public: true

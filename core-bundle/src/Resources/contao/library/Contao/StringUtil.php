@@ -10,9 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Util\SimpleTokenParser;
 use Patchwork\Utf8;
-use Psr\Log\LogLevel;
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Webmozart\PathUtil\Path;
 
 /**
@@ -553,227 +552,17 @@ class StringUtil
 	 *
 	 * @return string The converted string
 	 *
-	 * @throws \Exception                If $strString cannot be parsed
+	 * @throws \RuntimeException         If $strString cannot be parsed
 	 * @throws \InvalidArgumentException If there are incorrectly formatted if-tags
+	 *
+	 * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.
+	 *             Use the SimpleTokenParser::class service instead.
 	 */
 	public static function parseSimpleTokens($strString, $arrData)
 	{
-		$strReturn = '';
+		@trigger_error('Using StringUtil::parseSimpleTokens() has been deprecated and will no longer work in Contao 5.0. Use the SimpleTokenParser::class service instead.', E_USER_DEPRECATED);
 
-		$replaceTokens = static function ($strSubject) use ($arrData)
-		{
-			// Replace tokens
-			return preg_replace_callback
-			(
-				'/##([^=!<>\s]+?)##/',
-				static function (array $matches) use ($arrData)
-				{
-					if (!\array_key_exists($matches[1], $arrData))
-					{
-						System::getContainer()
-							->get('monolog.logger.contao')
-							->log(LogLevel::INFO, sprintf('Tried to parse unknown simple token "%s".', $matches[1]))
-						;
-
-						return '##' . $matches[1] . '##';
-					}
-
-					return $arrData[$matches[1]];
-				},
-				$strSubject
-			);
-		};
-
-		// Check if we can use the expression language or if legacy tokens have been used
-		$canUseExpressionLanguage = true;
-
-		foreach (array_keys($arrData) as $token)
-		{
-			if (!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $token))
-			{
-				@trigger_error('Using tokens that are not valid PHP variables has been deprecated and will no longer work in Contao 5.0. Falling back to legacy token parsing.', E_USER_DEPRECATED);
-
-				$canUseExpressionLanguage = false;
-				break;
-			}
-		}
-
-		$expressionLanguage = null;
-
-		if ($canUseExpressionLanguage)
-		{
-			$expressionLanguage = new ExpressionLanguage();
-			$expressionLanguage->register(
-				'constant',
-				static function ()
-				{
-					return "throw new \\InvalidArgumentException('Cannot use the constant() function in the expression for security reasons.');";
-				},
-				static function ()
-				{
-					throw new \InvalidArgumentException('Cannot use the constant() function in the expression for security reasons.');
-				}
-			);
-		}
-
-		$evaluateExpression = static function ($strExpression) use ($arrData, $expressionLanguage)
-		{
-			if (null !== $expressionLanguage)
-			{
-				try
-				{
-					return $expressionLanguage->evaluate($strExpression, $arrData);
-				}
-				catch (\Exception $e)
-				{
-					throw new \InvalidArgumentException($e->getMessage(), 0, $e);
-				}
-			}
-
-			// Legacy code
-			if (!preg_match('/^([^=!<>\s]+) *([=!<>]+)(.+)$/s', $strExpression, $arrMatches))
-			{
-				return false;
-			}
-
-			$strToken = $arrMatches[1];
-			$strOperator = $arrMatches[2];
-			$strValue = trim($arrMatches[3], ' ');
-
-			if (!\array_key_exists($strToken, $arrData))
-			{
-				System::getContainer()
-					->get('monolog.logger.contao')
-					->log(LogLevel::INFO, sprintf('Tried to evaluate unknown simple token "%s".', $strToken))
-				;
-
-				return false;
-			}
-
-			$varTokenValue = $arrData[$strToken];
-
-			if (is_numeric($strValue))
-			{
-				if (strpos($strValue, '.') === false)
-				{
-					$varValue = (int) $strValue;
-				}
-				else
-				{
-					$varValue = (float) $strValue;
-				}
-			}
-			elseif (strtolower($strValue) === 'true')
-			{
-				$varValue = true;
-			}
-			elseif (strtolower($strValue) === 'false')
-			{
-				$varValue = false;
-			}
-			elseif (strtolower($strValue) === 'null')
-			{
-				$varValue = null;
-			}
-			elseif (0 === strncmp($strValue, '"', 1) && substr($strValue, -1) === '"')
-			{
-				$varValue = str_replace('\"', '"', substr($strValue, 1, -1));
-			}
-			elseif (0 === strncmp($strValue, "'", 1) && substr($strValue, -1) === "'")
-			{
-				$varValue = str_replace("\\'", "'", substr($strValue, 1, -1));
-			}
-			else
-			{
-				throw new \InvalidArgumentException(sprintf('Unknown data type of comparison value "%s".', $strValue));
-			}
-
-			switch ($strOperator)
-			{
-				case '==':
-					return $varTokenValue == $varValue;
-
-				case '!=':
-					return $varTokenValue != $varValue;
-
-				case '===':
-					return $varTokenValue === $varValue;
-
-				case '!==':
-					return $varTokenValue !== $varValue;
-
-				case '<':
-					return $varTokenValue < $varValue;
-
-				case '>':
-					return $varTokenValue > $varValue;
-
-				case '<=':
-					return $varTokenValue <= $varValue;
-
-				case '>=':
-					return $varTokenValue >= $varValue;
-
-				default:
-					throw new \InvalidArgumentException(sprintf('Unknown simple token comparison operator "%s".', $strOperator));
-			}
-		};
-
-		// The last item is true if it is inside a matching if-tag
-		$arrStack = array(true);
-
-		// The last item is true if any if/elseif at that level was true
-		$arrIfStack = array(true);
-
-		// Tokenize the string into tag and text blocks
-		$arrTags = preg_split('/({[^{}]+})\n?/', $strString, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
-
-		// Parse the tokens
-		foreach ($arrTags as $strTag)
-		{
-			// True if it is inside a matching if-tag
-			$blnCurrent = $arrStack[\count($arrStack) - 1];
-			$blnCurrentIf = $arrIfStack[\count($arrIfStack) - 1];
-
-			if (strncmp($strTag, '{if ', 4) === 0)
-			{
-				$blnExpression = $evaluateExpression(substr($strTag, 4, -1));
-				$arrStack[] = $blnCurrent && $blnExpression;
-				$arrIfStack[] = $blnExpression;
-			}
-			elseif (strncmp($strTag, '{elseif ', 8) === 0)
-			{
-				$blnExpression = $evaluateExpression(substr($strTag, 8, -1));
-				array_pop($arrStack);
-				array_pop($arrIfStack);
-				$arrStack[] = !$blnCurrentIf && $arrStack[\count($arrStack) - 1] && $blnExpression;
-				$arrIfStack[] = $blnCurrentIf || $blnExpression;
-			}
-			elseif (strncmp($strTag, '{else}', 6) === 0)
-			{
-				array_pop($arrStack);
-				array_pop($arrIfStack);
-				$arrStack[] = !$blnCurrentIf && $arrStack[\count($arrStack) - 1];
-				$arrIfStack[] = true;
-			}
-			elseif (strncmp($strTag, '{endif}', 7) === 0)
-			{
-				array_pop($arrStack);
-				array_pop($arrIfStack);
-			}
-			elseif ($blnCurrent)
-			{
-				$strReturn .= $replaceTokens($strTag);
-			}
-		}
-
-		// Throw an exception if there is an error
-		if (\count($arrStack) !== 1)
-		{
-			throw new \Exception('Error parsing simple tokens');
-		}
-
-		return $strReturn;
+		return System::getContainer()->get(SimpleTokenParser::class)->parseTokens($strString, $arrData);
 	}
 
 	/**
