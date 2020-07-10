@@ -61,11 +61,15 @@ class RootPageControllerTest extends TestCase
         $container = $this->createMock(ContainerInterface::class);
         $container
             ->method('get')
-            ->with('router')
-            ->willReturn($this->router)
+            ->willReturnMap(
+                [
+                    ['router', $this->router],
+                    ['contao.framework', $framework],
+                ]
+            )
         ;
 
-        $this->controller = new RootPageController($framework, $this->connection);
+        $this->controller = new RootPageController($this->connection);
         $this->controller->setContainer($container);
     }
 
