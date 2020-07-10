@@ -17,6 +17,7 @@ use Contao\BackendUser;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\DataContainer;
 use Contao\Image;
@@ -180,13 +181,6 @@ class ContentCompositionListener implements ServiceAnnotationInterface
      */
     public function renderArticlePasteButton(DataContainer $dc, array $row, string $table, bool $cr, array $clipboard = null): string
     {
-        // TODO: remove once https://github.com/contao/contao/pull/1864 is merged
-        $user = $this->security->getUser();
-
-        if (!$user instanceof BackendUser) {
-            return '';
-        }
-
         if ($table === $GLOBALS['TL_DCA'][$dc->table]['config']['ptable']) {
             return $this->renderArticlePasteIntoButton($dc, $row, $cr, $clipboard);
         }
@@ -205,11 +199,7 @@ class ContentCompositionListener implements ServiceAnnotationInterface
             return '';
         }
 
-        // TODO: use Security::isGranted() when https://github.com/contao/contao/pull/1864 is merged
-        /** @var BackendUser $user */
-        $user = $this->security->getUser();
-
-        if ($cr || !$user->isAllowed(BackendUser::CAN_EDIT_ARTICLE_HIERARCHY, $row)) {
+        if ($cr || !$this->security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, $row)) {
             return $this->image->getHtml('pasteinto_.svg').' ';
         }
 
@@ -240,14 +230,10 @@ class ContentCompositionListener implements ServiceAnnotationInterface
             return '';
         }
 
-        // TODO: use Security::isGranted() when https://github.com/contao/contao/pull/1864 is merged
-        /** @var BackendUser $user */
-        $user = $this->security->getUser();
-
         if (
             ('cut' === $clipboard['mode'] && $clipboard['id'] === $row['id'])
             || ('cutAll' === $clipboard['mode'] && \in_array($row['id'], $clipboard['id'], true))
-            || !$user->isAllowed(BackendUser::CAN_EDIT_ARTICLE_HIERARCHY, $pageModel->row())
+            || !$this->security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, $row)
             || $cr
         ) {
             return $this->image->getHtml('pasteafter_.svg').' ';
