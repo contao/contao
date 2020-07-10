@@ -16,6 +16,7 @@ use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Filesystem\Filesystem;
+use Webmozart\PathUtil\Path;
 
 /**
  * @internal
@@ -92,8 +93,8 @@ class Version470Update extends AbstractMigration
             $folders = array_map('trim', explode(',', $GLOBALS['TL_CONFIG']['fileSyncExclude']));
 
             foreach ($folders as $folder) {
-                if (is_dir($this->projectDir.'/'.$this->uploadPath.'/'.$folder)) {
-                    $this->filesystem->touch($this->projectDir.'/'.$this->uploadPath.'/'.$folder.'/.nosync');
+                if (is_dir($path = Path::join($this->projectDir, $this->uploadPath, $folder))) {
+                    $this->filesystem->touch(Path::join($path, '.nosync'));
                 }
             }
         }

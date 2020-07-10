@@ -26,6 +26,7 @@ use Contao\ImageSizeModel;
 use Imagine\Image\ImagineInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Webmozart\PathUtil\Path;
 
 class ImageFactory implements ImageFactoryInterface
 {
@@ -119,7 +120,7 @@ class ImageFactory implements ImageFactoryInterface
             $image = $path;
         } else {
             $path = (string) $path;
-            $fileExtension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+            $fileExtension = Path::getExtension($path, true);
 
             if (\in_array($fileExtension, ['svg', 'svgz'], true)) {
                 $imagine = $this->imagineSvg;
@@ -131,7 +132,7 @@ class ImageFactory implements ImageFactoryInterface
                 throw new \InvalidArgumentException(sprintf('Image type "%s" was not allowed to be processed', $fileExtension));
             }
 
-            if (!$this->filesystem->isAbsolutePath($path)) {
+            if (!Path::isAbsolute($path)) {
                 throw new \InvalidArgumentException(sprintf('Image path "%s" must be absolute', $path));
             }
 
@@ -302,7 +303,7 @@ class ImageFactory implements ImageFactoryInterface
      */
     private function createImportantPart(ImageInterface $image): ?ImportantPart
     {
-        if (0 !== strncmp($image->getPath(), $this->uploadDir.'/', \strlen($this->uploadDir) + 1)) {
+        if (!Path::isBasePath($this->uploadDir, $image->getPath())) {
             return null;
         }
 

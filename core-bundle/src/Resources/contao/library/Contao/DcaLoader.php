@@ -123,13 +123,13 @@ class DcaLoader extends Controller
 			}
 		}
 
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Local configuration file
-		if (file_exists($rootDir . '/system/config/dcaconfig.php'))
+		if (file_exists($projectDir . '/system/config/dcaconfig.php'))
 		{
 			@trigger_error('Using the "dcaconfig.php" file has been deprecated and will no longer work in Contao 5.0. Create custom DCA files in the "contao/dca" folder instead.', E_USER_DEPRECATED);
-			include $rootDir . '/system/config/dcaconfig.php';
+			include $projectDir . '/system/config/dcaconfig.php';
 		}
 	}
 
@@ -207,7 +207,7 @@ class DcaLoader extends Controller
 	 */
 	private function setDynamicPTable(): void
 	{
-		if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? false) || !empty($GLOBALS['TL_DCA'][$this->strTable]['config']['ptable']) || !isset($GLOBALS['BE_MOD']))
+		if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? false) || !isset($GLOBALS['BE_MOD']))
 		{
 			return;
 		}

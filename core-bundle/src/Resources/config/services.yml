@@ -481,7 +481,6 @@ services:
         arguments:
             - '%kernel.project_dir%'
             - '%contao.image.target_dir%'
-            - '@filesystem'
         tags:
             - routing.loader
 

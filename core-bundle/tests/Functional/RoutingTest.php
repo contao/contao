@@ -19,6 +19,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RoutingTest extends FunctionalTestCase
 {
+    /**
+     * @var array
+     */
+    private static $lastImport;
+
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
@@ -1046,6 +1051,13 @@ class RoutingTest extends FunctionalTestCase
 
     private function loadFixtureFiles(array $fileNames): void
     {
+        // Do not reload the fixtures if they have not changed
+        if (self::$lastImport && self::$lastImport === $fileNames) {
+            return;
+        }
+
+        self::$lastImport = $fileNames;
+
         static::loadFixtures(array_map(
             static function ($file) {
                 return __DIR__.'/../Fixtures/Functional/Routing/'.$file.'.yml';

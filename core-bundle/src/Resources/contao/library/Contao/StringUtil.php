@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Util\SimpleTokenParser;
 use Patchwork\Utf8;
+use Webmozart\PathUtil\Path;
 
 /**
  * Provides string manipulation methods
@@ -945,12 +946,14 @@ class StringUtil
 	 */
 	public static function stripRootDir($path)
 	{
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
-		$length = \strlen($rootDir);
+		// Compare normalized version of the paths
+		$projectDir = Path::normalize(System::getContainer()->getParameter('kernel.project_dir'));
+		$normalizedPath = Path::normalize($path);
+		$length = \strlen($projectDir);
 
-		if (strncmp($path, $rootDir, $length) !== 0 || \strlen($path) <= $length || ($path[$length] !== '/' && $path[$length] !== '\\'))
+		if (strncmp($normalizedPath, $projectDir, $length) !== 0 || \strlen($normalizedPath) <= $length || $normalizedPath[$length] !== '/')
 		{
-			throw new \InvalidArgumentException(sprintf('Path "%s" is not inside the Contao root dir "%s"', $path, $rootDir));
+			throw new \InvalidArgumentException(sprintf('Path "%s" is not inside the Contao root dir "%s"', $path, $projectDir));
 		}
 
 		return (string) substr($path, $length + 1);

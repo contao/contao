@@ -17,9 +17,8 @@ $GLOBALS['TL_DCA']['tl_search_index'] = array
 		(
 			'keys' => array
 			(
-				'id' => 'primary',
-				'pid' => 'index',
-				'word' => 'index'
+				'termId,pid' => 'primary',
+				'pid' => 'index'
 			)
 		)
 	),
@@ -27,25 +26,17 @@ $GLOBALS['TL_DCA']['tl_search_index'] = array
 	// Fields
 	'fields' => array
 	(
-		'id' => array
-		(
-			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
-		),
 		'pid' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => "int(10) unsigned NOT NULL"
 		),
-		'word' => array
+		'termId' => array
 		(
-			'sql'                     => "varchar(64) BINARY NOT NULL default ''"
+			'sql'                     => "int(10) unsigned NOT NULL"
 		),
 		'relevance' => array
 		(
-			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
-		),
-		'language' => array
-		(
-			'sql'                     => "varchar(5) NOT NULL default ''"
+			'sql'                     => "smallint(5) unsigned NOT NULL"
 		)
 	)
 );

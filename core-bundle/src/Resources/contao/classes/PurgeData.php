@@ -85,7 +85,7 @@ class PurgeData extends Backend implements \executable
 		}
 
 		$container = System::getContainer();
-		$rootDir = $container->getParameter('kernel.project_dir');
+		$projectDir = $container->getParameter('kernel.project_dir');
 		$strCachePath = StringUtil::stripRootDir($container->getParameter('kernel.cache_dir'));
 
 		// Folders
@@ -107,9 +107,9 @@ class PurgeData extends Backend implements \executable
 				$folder = sprintf($folder, $strCachePath);
 
 				// Only check existing folders
-				if (is_dir($rootDir . '/' . $folder))
+				if (is_dir($projectDir . '/' . $folder))
 				{
-					$objFiles = Finder::create()->in($rootDir . '/' . $folder)->files();
+					$objFiles = Finder::create()->in($projectDir . '/' . $folder)->files();
 
 					// Do not count the deferred images JSON files
 					if ($key == 'images')

@@ -31,7 +31,8 @@
         "symfony/framework-bundle": "4.4.*",
         "symfony/http-foundation": "4.4.*",
         "symfony/http-kernel": "4.4.*",
-        "symfony/yaml": "4.4.*"
+        "symfony/yaml": "4.4.*",
+        "webmozart/path-util": "^2.0"
     },
     "conflict": {
         "contao/core": "*",

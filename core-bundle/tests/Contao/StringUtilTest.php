@@ -56,6 +56,7 @@ class StringUtilTest extends TestCase
         $this->assertSame('foo\\', StringUtil::stripRootDir($this->getFixturesDir().'\foo\\'));
         $this->assertSame('foo/bar', StringUtil::stripRootDir($this->getFixturesDir().'/foo/bar'));
         $this->assertSame('foo\bar', StringUtil::stripRootDir($this->getFixturesDir().'\foo\bar'));
+        $this->assertSame('../../foo/bar', StringUtil::stripRootDir($this->getFixturesDir().'/../../foo/bar'));
     }
 
     public function testFailsIfThePathIsOutsideTheRootDirectory(): void
@@ -79,7 +80,7 @@ class StringUtilTest extends TestCase
         StringUtil::stripRootDir($this->getFixturesDir().'foo/');
     }
 
-    public function testFailsIfThePathHasNoTrailingSlash(): void
+    public function testFailsIfThePathEqualsTheRootDirectory(): void
     {
         $this->expectException('InvalidArgumentException');
 

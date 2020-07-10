@@ -778,12 +778,6 @@ class tl_form_field extends Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		// Disable the button if the element type is not allowed
-		if (!$this->User->hasAccess($row['type'], 'fields'))
-		{
-			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
-		}
-
 		if (Input::get('tid'))
 		{
 			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
@@ -794,6 +788,12 @@ class tl_form_field extends Backend
 		if (!$this->User->hasAccess('tl_form_field::invisible', 'alexf'))
 		{
 			return '';
+		}
+
+		// Disable the button if the element type is not allowed
+		if (!$this->User->hasAccess($row['type'], 'fields'))
+		{
+			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 		}
 
 		$href .= '&amp;tid=' . $row['id'] . '&amp;state=' . $row['invisible'];
@@ -847,22 +847,24 @@ class tl_form_field extends Backend
 			throw new AccessDeniedException('Not enough permissions to publish/unpublish form field ID ' . $intId . '.');
 		}
 
+		$objRow = $this->Database->prepare("SELECT * FROM tl_form_field WHERE id=?")
+								 ->limit(1)
+								 ->execute($intId);
+
+		if ($objRow->numRows < 1)
+		{
+			throw new AccessDeniedException('Invalid form field ID ' . $intId . '.');
+		}
+
+		if (!$this->User->hasAccess($objRow->type, 'fields'))
+		{
+			throw new AccessDeniedException('Not enough permissions to modify form fields of type "' . $objRow->type . '".');
+		}
+
 		// Set the current record
 		if ($dc)
 		{
-			$objRow = $this->Database->prepare("SELECT * FROM tl_form_field WHERE id=?")
-									 ->limit(1)
-									 ->execute($intId);
-
-			if ($objRow->numRows)
-			{
-				$dc->activeRecord = $objRow;
-
-				if (!$this->User->hasAccess($objRow->type, 'fields'))
-				{
-					throw new AccessDeniedException('Not enough permissions to modify form fields of type "' . $objRow->type . '".');
-				}
-			}
+			$dc->activeRecord = $objRow;
 		}
 
 		$objVersions = new Versions('tl_form_field', $intId);

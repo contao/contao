@@ -17,7 +17,6 @@ use Contao\CoreBundle\ContaoManager\Plugin;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\DelegatingParser;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
-use Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle;
 use Knp\Bundle\MenuBundle\KnpMenuBundle;
 use Knp\Bundle\TimeBundle\KnpTimeBundle;
 use Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle;
@@ -28,7 +27,6 @@ use Scheb\TwoFactorBundle\SchebTwoFactorBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MonologBundle\MonologBundle;
 use Symfony\Bundle\SecurityBundle\SecurityBundle;
-use Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -76,9 +74,7 @@ class PluginTest extends TestCase
                 SecurityBundle::class,
                 TwigBundle::class,
                 MonologBundle::class,
-                SwiftmailerBundle::class,
                 DoctrineBundle::class,
-                DoctrineCacheBundle::class,
                 KnpMenuBundle::class,
                 KnpTimeBundle::class,
                 LexikMaintenanceBundle::class,

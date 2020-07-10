@@ -28,6 +28,7 @@ use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Webmozart\PathUtil\Path;
 
 /**
  * @Route("/contao", defaults={"_scope" = "backend", "_token_check" = true})
@@ -247,7 +248,7 @@ class InstallationController implements ContainerAwareInterface
         $filesystem = new Filesystem();
         $cacheDir = $this->getContainerParameter('kernel.cache_dir');
         $ref = new \ReflectionObject($this->container);
-        $containerDir = basename(\dirname($ref->getFileName()));
+        $containerDir = Path::getFilename(Path::getDirectory($ref->getFileName()));
 
         /** @var array<SplFileInfo> $finder */
         $finder = Finder::create()
@@ -277,7 +278,7 @@ class InstallationController implements ContainerAwareInterface
     {
         $cacheDir = $this->getContainerParameter('kernel.cache_dir');
 
-        if (file_exists($cacheDir.'/contao/config/config.php')) {
+        if (file_exists(Path::join($cacheDir, 'contao/config/config.php'))) {
             return;
         }
 

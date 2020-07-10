@@ -23,6 +23,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
+use Webmozart\PathUtil\Path;
 
 class InstallTool
 {
@@ -34,7 +35,7 @@ class InstallTool
     /**
      * @var string
      */
-    private $rootDir;
+    private $projectDir;
 
     /**
      * @var LoggerInterface
@@ -49,23 +50,23 @@ class InstallTool
     /**
      * @internal Do not inherit from this class; decorate the "contao.install_tool" service instead
      */
-    public function __construct(Connection $connection, string $rootDir, LoggerInterface $logger, MigrationCollection $migrations)
+    public function __construct(Connection $connection, string $projectDir, LoggerInterface $logger, MigrationCollection $migrations)
     {
         $this->connection = $connection;
-        $this->rootDir = $rootDir;
+        $this->projectDir = $projectDir;
         $this->logger = $logger;
         $this->migrations = $migrations;
     }
 
     public function isLocked(): bool
     {
-        $file = $this->rootDir.'/var/install_lock';
+        $file = Path::join($this->projectDir, 'var/install_lock');
 
         if (!file_exists($file)) {
             return false;
         }
 
-        $count = file_get_contents($this->rootDir.'/var/install_lock');
+        $count = file_get_contents($file);
 
         return (int) $count >= 3;
     }
@@ -83,10 +84,10 @@ class InstallTool
     public function increaseLoginCount(): void
     {
         $count = 0;
-        $file = $this->rootDir.'/var/install_lock';
+        $file = Path::join($this->projectDir, 'var/install_lock');
 
         if (file_exists($file)) {
-            $count = file_get_contents($this->rootDir.'/var/install_lock');
+            $count = file_get_contents($file);
         }
 
         $fs = new Filesystem();
@@ -326,7 +327,7 @@ class InstallTool
         $finder = Finder::create()
             ->files()
             ->name('*.sql')
-            ->in($this->rootDir.'/templates')
+            ->in(Path::join($this->projectDir, 'templates'))
         ;
 
         $templates = [];
@@ -350,7 +351,7 @@ class InstallTool
             }
         }
 
-        $data = file($this->rootDir.'/templates/'.$template);
+        $data = file(Path::join($this->projectDir, 'templates', $template));
 
         foreach (preg_grep('/^INSERT /', $data) as $query) {
             $this->connection->query($query);

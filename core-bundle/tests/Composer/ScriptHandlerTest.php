@@ -168,17 +168,17 @@ class ScriptHandlerTest extends TestCase
         );
 
         $this->assertSame(
-            ' -v',
+            '-v',
             $method->invokeArgs($this->handler, [$this->getComposerEvent([], 'isVerbose')])
         );
 
         $this->assertSame(
-            ' -vv',
+            '-vv',
             $method->invokeArgs($this->handler, [$this->getComposerEvent([], 'isVeryVerbose')])
         );
 
         $this->assertSame(
-            ' -vvv',
+            '-vvv',
             $method->invokeArgs($this->handler, [$this->getComposerEvent([], 'isDebug')])
         );
     }
