@@ -37,6 +37,10 @@ class BackendAccessVoter extends Voter
     {
         $user = $token->getUser();
 
+        if (!$user instanceof BackendUser) {
+            return false;
+        }
+
         $permission = explode('.', $attribute, 3);
 
         if ('contao_user' !== $permission[0] || !isset($permission[1])) {
@@ -47,10 +51,6 @@ class BackendAccessVoter extends Voter
 
         if (!$subject && isset($permission[2])) {
             $subject = $permission[2];
-        }
-
-        if (!$user instanceof BackendUser) {
-            return false;
         }
 
         if ('can_edit_fields' === $field) {
