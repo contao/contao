@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\InternalServerErrorException;
+use Contao\CoreBundle\Util\SimpleTokenParser;
 use Contao\Database\Result;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Mime\Exception\RfcComplianceException;
@@ -364,15 +365,18 @@ class Newsletter extends Backend
 	 */
 	protected function sendNewsletter(Email $objEmail, Result $objNewsletter, $arrRecipient, $text, $html, $css=null)
 	{
+		/** @var SimpleTokenParser $simpleTokenParser */
+		$simpleTokenParser = System::getContainer()->get(SimpleTokenParser::class);
+
 		// Prepare the text content
-		$objEmail->text = StringUtil::parseSimpleTokens($text, $arrRecipient);
+		$objEmail->text = $simpleTokenParser->parseTokens($text, $arrRecipient);
 
 		if (!$objNewsletter->sendText)
 		{
 			$objTemplate = new BackendTemplate($objNewsletter->template ?: 'mail_default');
 			$objTemplate->setData($objNewsletter->row());
 			$objTemplate->title = $objNewsletter->subject;
-			$objTemplate->body = StringUtil::parseSimpleTokens($html, $arrRecipient);
+			$objTemplate->body = $simpleTokenParser->parseTokens($html, $arrRecipient);
 			$objTemplate->charset = Config::get('characterSet');
 			$objTemplate->recipient = $arrRecipient['email'];
 
