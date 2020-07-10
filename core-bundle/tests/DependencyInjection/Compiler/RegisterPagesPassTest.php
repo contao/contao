@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\Controller\FrontendModule\TwoFactorController;
 use Contao\CoreBundle\Controller\Page\RootPageController;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterPagesPass;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
@@ -100,6 +101,33 @@ class RegisterPagesPassTest extends TestCase
     }
 
     public function testStripsControllerSuffixOnGetPageTypeFromClass(): void
+    {
+        $registry = $this->createMock(Definition::class);
+        $registry
+            ->expects($this->once())
+            ->method('addMethodCall')
+            ->with(
+                'add',
+                $this->callback(
+                    static function ($arguments) {
+                        return 'two_factor' === $arguments[0];
+                    }
+                )
+            )
+        ;
+
+        $definition = new Definition(TwoFactorController::class);
+        $definition->addTag('contao.page');
+
+        $container = new ContainerBuilder();
+        $container->setDefinition(PageRegistry::class, $registry);
+        $container->setDefinition('test.controller', $definition);
+
+        $pass = new RegisterPagesPass();
+        $pass->process($container);
+    }
+
+    public function testStripsPageControllerSuffixOnGetPageTypeFromClass(): void
     {
         $registry = $this->createMock(Definition::class);
         $registry

@@ -26,7 +26,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Route;
 
-class RootController extends AbstractController implements PageRouteEnhancerInterface, CompositionAwareInterface
+class RootPageController extends AbstractController implements PageRouteEnhancerInterface, CompositionAwareInterface
 {
     /**
      * @var ContaoFramework

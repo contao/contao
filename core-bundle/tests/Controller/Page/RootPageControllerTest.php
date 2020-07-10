@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Controller\Page;
 
-use Contao\CoreBundle\Controller\Page\RootController;
+use Contao\CoreBundle\Controller\Page\RootPageController;
 use Contao\CoreBundle\Exception\NoActivePageFoundException;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Routing\Page\CompositionAwareInterface;
@@ -28,7 +28,7 @@ use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class RootControllerTest extends TestCase
+class RootPageControllerTest extends TestCase
 {
     /**
      * @var PageModel|Adapter|MockObject
@@ -46,7 +46,7 @@ class RootControllerTest extends TestCase
     private $router;
 
     /**
-     * @var RootController
+     * @var RootPageController
      */
     private $controller;
 
@@ -65,7 +65,7 @@ class RootControllerTest extends TestCase
             ->willReturn($this->router)
         ;
 
-        $this->controller = new RootController($framework, $this->connection);
+        $this->controller = new RootPageController($framework, $this->connection);
         $this->controller->setContainer($container);
     }
 

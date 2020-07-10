@@ -139,6 +139,10 @@ class RegisterPagesPass implements CompilerPassInterface
             $className = substr($className, 0, -10);
         }
 
+        if ('Page' === substr($className, -4)) {
+            $className = substr($className, 0, -4);
+        }
+
         return Container::underscore($className);
     }
 }
