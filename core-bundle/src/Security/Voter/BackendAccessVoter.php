@@ -77,7 +77,7 @@ class BackendAccessVoter extends Voter
     }
 
     /**
-     * Checks if the user has access to a given page (tl_page.includeChmod et al).
+     * Checks if the user has access to a given page (tl_page.includeChmod et al.).
      */
     private function isAllowed($subject, int $flag, BackendUser $user): bool
     {

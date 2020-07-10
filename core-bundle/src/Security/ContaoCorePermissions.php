@@ -102,13 +102,13 @@ final class ContaoCorePermissions
      * Access is granted if the current user can access the content element type.
      * Subject must be a content element type (e.g. "text").
      */
-    public const USER_CAN_ACCESS_ELEMENT = 'contao_user.elements';
+    public const USER_CAN_ACCESS_ELEMENT_TYPE = 'contao_user.elements';
 
     /**
-     * Access is granted if the current user can access the field type.
+     * Access is granted if the current user can access the form field type.
      * Subject must be a content element type (e.g. "hidden").
      */
-    public const USER_CAN_ACCESS_FIELD = 'contao_user.fields';
+    public const USER_CAN_ACCESS_FIELD_TYPE = 'contao_user.fields';
 
     /**
      * Access is granted if the current user can access the theme.
