@@ -58,6 +58,7 @@ use Contao\CoreBundle\EventListener\ExceptionConverterListener;
 use Contao\CoreBundle\EventListener\InitializeControllerListener;
 use Contao\CoreBundle\EventListener\InsecureInstallationListener;
 use Contao\CoreBundle\EventListener\InsertTags\AssetListener;
+use Contao\CoreBundle\EventListener\InsertTags\DateListener;
 use Contao\CoreBundle\EventListener\InsertTags\TranslationListener;
 use Contao\CoreBundle\EventListener\LocaleSubscriber;
 use Contao\CoreBundle\EventListener\MakeResponsePrivateListener;
@@ -653,6 +654,25 @@ class ContaoCoreExtensionTest extends TestCase
                 ],
             ],
             $definition->getTags()
+        );
+    }
+
+    public function testContainerHasDateFormatInsertTagListener(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $this->assertTrue($container->has(DateListener::class));
+
+        $definition = $container->getDefinition(DateListener::class);
+
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('contao.framework'),
+                new Reference('request_stack'),
+            ],
+            $definition->getArguments()
         );
     }
 
