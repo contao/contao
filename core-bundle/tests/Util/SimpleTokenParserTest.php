@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Util;
 
+use Contao\CoreBundle\Tests\Fixtures\IteratorAggregateStub;
 use Contao\CoreBundle\Util\SimpleTokenExpressionLanguage;
 use Contao\CoreBundle\Util\SimpleTokenParser;
-use Contao\ManagerBundle\Tests\Fixtures\IteratorAggregateStub;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\ExpressionLanguage\ExpressionFunction;
 use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
