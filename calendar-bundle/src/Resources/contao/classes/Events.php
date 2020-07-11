@@ -10,7 +10,9 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Routing\Page\PageRoute;
 use FOS\HttpCache\ResponseTagger;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Provide methods to get all events of a certain period from the database.
@@ -44,12 +46,6 @@ abstract class Events extends Module
 	 * @var array
 	 */
 	protected $arrEvents = array();
-
-	/**
-	 * URL cache array
-	 * @var array
-	 */
-	private static $arrUrlCache = array();
 
 	/**
 	 * Sort out protected archives
@@ -423,73 +419,25 @@ abstract class Events extends Module
 	 * @param boolean             $blnAbsolute
 	 *
 	 * @return string
+	 *
+	 * @deprecated Deprecated since Contao 4.10. Use the Symfony router instead.
 	 */
 	public static function generateEventUrl($objEvent, $blnAbsolute=false)
 	{
-		$strCacheKey = 'id_' . $objEvent->id . ($blnAbsolute ? '_absolute' : '');
+		@trigger_error(__METHOD__.' is deprecated since Contao 4.10. Use the Symfony router instead.', E_USER_DEPRECATED);
 
-		// Load the URL from cache
-		if (isset(self::$arrUrlCache[$strCacheKey]))
+		$strUrl =  System::getContainer()->get('router')->generate(
+			PageRoute::ROUTE_NAME,
+			[PageRoute::CONTENT_PARAMETER => $objEvent],
+			$blnAbsolute ? RouterInterface::ABSOLUTE_URL : RouterInterface::ABSOLUTE_PATH
+		);
+
+		if (!$blnAbsolute && 0 === strncmp($strUrl, '/', 1))
 		{
-			return self::$arrUrlCache[$strCacheKey];
+			$strUrl = substr($strUrl, 1);
 		}
 
-		// Initialize the cache
-		self::$arrUrlCache[$strCacheKey] = null;
-
-		switch ($objEvent->source)
-		{
-			// Link to an external page
-			case 'external':
-				if (0 === strncmp($objEvent->url, 'mailto:', 7))
-				{
-					self::$arrUrlCache[$strCacheKey] = StringUtil::encodeEmail($objEvent->url);
-				}
-				else
-				{
-					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($objEvent->url);
-				}
-				break;
-
-			// Link to an internal page
-			case 'internal':
-				if (($objTarget = $objEvent->getRelated('jumpTo')) instanceof PageModel)
-				{
-					/** @var PageModel $objTarget */
-					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($blnAbsolute ? $objTarget->getAbsoluteUrl() : $objTarget->getFrontendUrl());
-				}
-				break;
-
-			// Link to an article
-			case 'article':
-				if (($objArticle = ArticleModel::findByPk($objEvent->articleId)) instanceof ArticleModel && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
-				{
-					$params = '/articles/' . ($objArticle->alias ?: $objArticle->id);
-
-					/** @var PageModel $objPid */
-					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($blnAbsolute ? $objPid->getAbsoluteUrl($params) : $objPid->getFrontendUrl($params));
-				}
-				break;
-		}
-
-		// Link to the default page
-		if (self::$arrUrlCache[$strCacheKey] === null)
-		{
-			$objPage = PageModel::findByPk($objEvent->getRelated('pid')->jumpTo);
-
-			if (!$objPage instanceof PageModel)
-			{
-				self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand(Environment::get('request'));
-			}
-			else
-			{
-				$params = (Config::get('useAutoItem') ? '/' : '/events/') . ($objEvent->alias ?: $objEvent->id);
-
-				self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($blnAbsolute ? $objPage->getAbsoluteUrl($params) : $objPage->getFrontendUrl($params));
-			}
-		}
-
-		return self::$arrUrlCache[$strCacheKey];
+		return $strUrl;
 	}
 
 	/**

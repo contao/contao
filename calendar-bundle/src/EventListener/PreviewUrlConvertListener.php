@@ -15,8 +15,9 @@ namespace Contao\CalendarBundle\EventListener;
 use Contao\CalendarEventsModel;
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\Events;
+use Contao\CoreBundle\Routing\Page\PageRoute;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @internal
@@ -25,9 +26,15 @@ class PreviewUrlConvertListener
 {
     private $framework;
 
-    public function __construct(ContaoFramework $framework)
+    /**
+     * @var UrlGeneratorInterface
+     */
+    private $router;
+
+    public function __construct(ContaoFramework $framework, UrlGeneratorInterface $router)
     {
         $this->framework = $framework;
+        $this->router = $router;
     }
 
     /**
@@ -45,10 +52,11 @@ class PreviewUrlConvertListener
             return;
         }
 
-        /** @var Events $eventsAdapter */
-        $eventsAdapter = $this->framework->getAdapter(Events::class);
-
-        $event->setUrl($request->getSchemeAndHttpHost().'/'.$eventsAdapter->generateEventUrl($eventModel));
+        $event->setUrl($this->router->generate(
+            PageRoute::ROUTE_NAME,
+            [PageRoute::CONTENT_PARAMETER => $eventModel],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        ));
     }
 
     private function getEventModel(Request $request): ?CalendarEventsModel
