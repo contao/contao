@@ -403,7 +403,7 @@ abstract class Template extends Controller
 	{
 		$arrParams[PageRoute::CONTENT_PARAMETER] = $objContent;
 
-		return $this->contentRoute(PageRoute::ROUTE_NAME, $arrParams);
+		return $this->previewRoute(PageRoute::ROUTE_NAME, $arrParams);
 	}
 
 	/**
