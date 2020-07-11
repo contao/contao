@@ -51,6 +51,12 @@ parameters:
           paths:
               - %currentWorkingDirectory%/core-bundle/tests/Security/User/ContaoUserProviderTest.php
 
+        # Ignore tests intentionally calling legacy code with other types than annotated
+        - message: '#Parameter .* of (static )?method .* expects .* given.#'
+          paths:
+              - %currentWorkingDirectory%/core-bundle/tests/Contao/ImageTest.php
+              - %currentWorkingDirectory%/core-bundle/tests/Routing/UrlGeneratorTest.php
+
         # Ignore that $container->get() always returns false (see https://github.com/phpstan/phpstan-symfony/issues/74)
         - message: '#Negated boolean expression is always (false|true)\.#'
           paths:
