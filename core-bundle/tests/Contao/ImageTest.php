@@ -1001,6 +1001,8 @@ class ImageTest extends TestCase
     public function testDoesNotFactorImagesInTheLegacyMethodIfTheArgumentIsInvalid(): void
     {
         $this->assertNull(Image::get('', 100, 100));
+        $this->assertNull(Image::get(0, 100, 100));
+        $this->assertNull(Image::get(null, 100, 100));
     }
 
     /**
