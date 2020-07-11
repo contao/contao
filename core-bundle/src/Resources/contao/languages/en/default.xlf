@@ -140,6 +140,9 @@
       <trans-unit id="ERR.aliasExists">
         <source>The alias "%s" already exists!</source>
       </trans-unit>
+      <trans-unit id="ERR.urlPrefixExists">
+        <source>The URL prefix "%s" already exists on this domain!</source>
+      </trans-unit>
       <trans-unit id="ERR.pageUrlExists">
         <source>A page with URL "%s" already exists!</source>
       </trans-unit>

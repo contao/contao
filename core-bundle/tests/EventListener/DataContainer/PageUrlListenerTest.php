@@ -1011,7 +1011,8 @@ class PageUrlListenerTest extends TestCase
             [['urlPrefix' => 'de', 'urlSuffix' => '.html']],
             [2],
             ['foo'],
-            [[]]
+            [[]],
+            true
         );
 
         $listener = new PageUrlListener(
@@ -1027,14 +1028,61 @@ class PageUrlListenerTest extends TestCase
             DataContainer::class,
             [
                 'id' => 1,
-                'activeRecord' => (object) ['type' => 'root', 'urlPrefix' => 'de', 'urlSuffix' => ''],
+                'activeRecord' => (object) ['type' => 'root', 'dns' => '', 'urlPrefix' => 'de', 'urlSuffix' => ''],
             ]
         );
 
         $listener->validateUrlPrefix('en', $dc);
     }
 
-    public function testThrowsExceptionOnDuplicateUrlPrefix(): void
+    public function testThrowsExceptionOnDuplicateUrlPrefixInDomain(): void
+    {
+        $translator = $this->mockTranslator('ERR.urlPrefixExists', 'en');
+
+        $statement = $this->createMock(Statement::class);
+        $statement
+            ->expects($this->once())
+            ->method('fetchColumn')
+            ->willReturn(1)
+        ;
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('executeQuery')
+            ->with(
+                'SELECT COUNT(*) FROM tl_page WHERE urlPrefix=:urlPrefix AND dns=:dns AND id!=:rootId',
+                ['urlPrefix' => 'en', 'dns' => 'www.example.com', 'rootId' => 1]
+            )
+            ->willReturn($statement)
+        ;
+
+        $listener = new PageUrlListener(
+            $this->mockContaoFramework(),
+            $this->createMock(Slug::class),
+            $translator,
+            $connection,
+            $this->createMock(IndexerInterface::class)
+        );
+
+        /** @var MockObject&DataContainer $dc */
+        $dc = $this->mockClassWithProperties(
+            DataContainer::class,
+            [
+                'id' => 1,
+                'activeRecord' => (object) [
+                    'type' => 'root',
+                    'dns' => 'www.example.com',
+                    'urlPrefix' => 'de',
+                    'urlSuffix' => '',
+                ],
+            ]
+        );
+
+        $listener->validateUrlPrefix('en', $dc);
+    }
+
+    public function testThrowsExceptionIfUrlPrefixLeadsToDuplicatePages(): void
     {
         $framework = $this->mockFrameworkWithPages(
             [
@@ -1093,7 +1141,8 @@ class PageUrlListenerTest extends TestCase
             [['urlPrefix' => 'de', 'urlSuffix' => '.html']],
             [2, 3, 4],
             ['foo', 'bar', 'bar/foo'],
-            [[], [], [6]]
+            [[], [], [6]],
+            true
         );
 
         $listener = new PageUrlListener(
@@ -1109,7 +1158,7 @@ class PageUrlListenerTest extends TestCase
             DataContainer::class,
             [
                 'id' => 1,
-                'activeRecord' => (object) ['type' => 'root', 'urlPrefix' => 'de', 'urlSuffix' => ''],
+                'activeRecord' => (object) ['type' => 'root', 'dns' => '', 'urlPrefix' => 'de', 'urlSuffix' => ''],
             ]
         );
 
@@ -1209,6 +1258,7 @@ class PageUrlListenerTest extends TestCase
                 'id' => 1,
                 'activeRecord' => (object) [
                     'type' => 'root',
+                    'dns' => '',
                     'urlPrefix' => 'en',
                 ],
             ]
@@ -1444,6 +1494,7 @@ class PageUrlListenerTest extends TestCase
                 'id' => 1,
                 'activeRecord' => (object) [
                     'type' => 'root',
+                    'dns' => '',
                     'urlPrefix' => '',
                 ],
             ]
@@ -1455,18 +1506,30 @@ class PageUrlListenerTest extends TestCase
     /**
      * @return Connection&MockObject
      */
-    private function mockConnection(array $prefixAndSuffix, array $ids, array $aliases, array $aliasIds): Connection
+    private function mockConnection(array $prefixAndSuffix, array $ids, array $aliases, array $aliasIds, bool $prefixCheck = false): Connection
     {
         $args = [];
         $statements = [];
 
+        if ($prefixCheck) {
+            $args[] = ['SELECT COUNT(*) FROM tl_page WHERE urlPrefix=:urlPrefix AND dns=:dns AND id!=:rootId'];
+            $statement = $this->createMock(Statement::class);
+            $statement
+                ->expects($this->once())
+                ->method('fetchColumn')
+                ->willReturn(0)
+            ;
+            $statements[] = $statement;
+        }
+
         $args[] = ["SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'"];
-        $statements[] = $this->createMock(Statement::class);
-        $statements[0]
+        $statement = $this->createMock(Statement::class);
+        $statement
             ->expects($this->once())
             ->method('fetchAll')
             ->willReturn($prefixAndSuffix)
         ;
+        $statements[] = $statement;
 
         foreach ($ids as $k => $id) {
             $args[] = [
@@ -1567,11 +1630,11 @@ class PageUrlListenerTest extends TestCase
     /**
      * @return TranslatorInterface&MockObject
      */
-    private function mockTranslator(string $messageKey = null, string $url = null): TranslatorInterface
+    private function mockTranslator(string $messageKey = null, string $argument = null): TranslatorInterface
     {
         $translator = $this->createMock(TranslatorInterface::class);
 
-        if (null === $messageKey || null === $url) {
+        if (null === $messageKey || null === $argument) {
             $translator
                 ->expects($this->never())
                 ->method('trans')
@@ -1583,12 +1646,12 @@ class PageUrlListenerTest extends TestCase
         $translator
             ->expects($this->once())
             ->method('trans')
-            ->with($messageKey, [$url], 'contao_default')
-            ->willReturn($url)
+            ->with($messageKey, [$argument], 'contao_default')
+            ->willReturn($argument)
         ;
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage($url);
+        $this->expectExceptionMessage($argument);
 
         return $translator;
     }
