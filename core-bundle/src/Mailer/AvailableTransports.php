@@ -50,7 +50,7 @@ class AvailableTransports implements ServiceAnnotationInterface
      * Returns the available transports as options suitable for widgets.
      *
      * @return array<string, string>
-     * 
+     *
      * @Callback(table="tl_page", target="fields.mailerTransport.options")
      * @Callback(table="tl_form", target="fields.mailerTransport.options")
      */
