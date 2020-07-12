@@ -160,6 +160,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static PageModel|null findOneByStop($val, array $opt=array())
  * @method static PageModel|null findOneByEnforceTwoFactor($val, array $opt=array())
  * @method static PageModel|null findOneByTwoFactorJumpTo($val, array $opt=array())
+ * @method static PageModel|null findOneByMailerTransport($val, array $opt=array())
  *
  * @method static Collection|PageModel[]|PageModel|null findByPid($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findBySorting($val, array $opt=array())
@@ -213,6 +214,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static Collection|PageModel[]|PageModel|null findByStop($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByEnforceTwoFactor($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByTwoFactorJumpTo($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByMailerTransport($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findMultipleByIds($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findBy($col, $val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findAll(array $opt=array())
@@ -270,6 +272,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static integer countByStop($val, array $opt=array())
  * @method static integer countByEnforceTwoFactor($val, array $opt=array())
  * @method static integer countByTwoFactorJumpTo($val, array $opt=array())
+ * @method static integer countByMailerTransport($val, array $opt=array())
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */

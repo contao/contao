@@ -55,6 +55,7 @@ use Contao\Model\Collection;
  * @method static FormModel|null findOneByFormID($val, array $opt=array())
  * @method static FormModel|null findOneByTableless($val, array $opt=array())
  * @method static FormModel|null findOneByAllowTags($val, array $opt=array())
+ * @method static FormModel|null findOneByMailerTransport($val, array $opt=array())
  *
  * @method static Collection|FormModel[]|FormModel|null findByTstamp($val, array $opt=array())
  * @method static Collection|FormModel[]|FormModel|null findByTitle($val, array $opt=array())
@@ -73,6 +74,7 @@ use Contao\Model\Collection;
  * @method static Collection|FormModel[]|FormModel|null findByFormID($val, array $opt=array())
  * @method static Collection|FormModel[]|FormModel|null findByTableless($val, array $opt=array())
  * @method static Collection|FormModel[]|FormModel|null findByAllowTags($val, array $opt=array())
+ * @method static Collection|FormModel[]|FormModel|null findByMailerTransport($val, array $opt=array())
  * @method static Collection|FormModel[]|FormModel|null findMultipleByIds($val, array $opt=array())
  * @method static Collection|FormModel[]|FormModel|null findBy($col, $val, array $opt=array())
  * @method static Collection|FormModel[]|FormModel|null findAll(array $opt=array())
@@ -95,6 +97,7 @@ use Contao\Model\Collection;
  * @method static integer countByFormID($val, array $opt=array())
  * @method static integer countByTableless($val, array $opt=array())
  * @method static integer countByAllowTags($val, array $opt=array())
+ * @method static integer countByMailerTransport($val, array $opt=array())
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
