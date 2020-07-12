@@ -74,14 +74,24 @@ final class ContaoMailer implements MailerInterface
 
         $attributes = $this->requestStack->getCurrentRequest()->attributes;
 
-        if ($attributes->has('pageModel') && ($page = $attributes->get('pageModel')) instanceof PageModel) {
-            /** @var PageModel $page */
-            $page->loadDetails();
-
-            if (!empty($page->mailerTransport) && null !== $this->transports->getTransport($page->mailerTransport)) {
-                $message->getHeaders()->addTextHeader('X-Transport', $page->mailerTransport);
-            }
+        if (!$attributes->has('pageModel')) {
+            return;
         }
+
+        $page = $attributes->get('pageModel');
+
+        if (!$page instanceof PageModel) {
+            return;
+        }
+
+        /** @var PageModel $page */
+        $page->loadDetails();
+
+        if (empty($page->mailerTransport) || null === $this->transports->getTransport($page->mailerTransport)) {
+            return;
+        }
+
+        $message->getHeaders()->addTextHeader('X-Transport', $page->mailerTransport);
     }
 
     /**
@@ -96,8 +106,16 @@ final class ContaoMailer implements MailerInterface
         $transportName = $message->getHeaders()->get('X-Transport')->getBodyAsString();
         $transport = $this->transports->getTransport($transportName);
 
-        if (null !== $transport && null !== ($from = $transport->getFrom())) {
-            $message->from($from);
+        if (null === $transport) {
+            return;
         }
+
+        $from = $transport->getFrom();
+
+        if (null === $from) {
+            return;
+        }
+
+        $message->from($from);
     }
 }
