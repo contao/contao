@@ -35,13 +35,19 @@ class AvailableTransportsTest extends TestCase
         $formCallback->table = 'tl_form';
         $formCallback->target = 'fields.mailerTransport.options';
 
-        $this->assertEquals(
-            [
-                $pageCallback,
-                $formCallback,
-            ],
-            $annotations
-        );
+        $this->assertCount(2, $annotations);
+
+        $this->assertSame([
+            'table' => 'tl_page',
+            'target' => 'fields.mailerTransport.options',
+            'priority' => null,
+        ], (array) $annotations[0]);
+
+        $this->assertSame([
+            'table' => 'tl_form',
+            'target' => 'fields.mailerTransport.options',
+            'priority' => null,
+        ], (array) $annotations[1]);
     }
 
     public function testAddsTransports(): void
