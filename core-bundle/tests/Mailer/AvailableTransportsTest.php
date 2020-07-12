@@ -14,10 +14,36 @@ namespace Contao\CoreBundle\Tests\Mailer;
 
 use Contao\CoreBundle\Mailer\AvailableTransports;
 use Contao\CoreBundle\Mailer\TransportConfig;
+use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\CoreBundle\Tests\TestCase;
+use Doctrine\Common\Annotations\AnnotationReader;
 
 class AvailableTransportsTest extends TestCase
 {
+    public function testAnnotatedCallbacks(): void
+    {
+        $service = new AvailableTransports();
+
+        $annotationReader = new AnnotationReader();
+        $annotations = $annotationReader->getMethodAnnotations(new \ReflectionMethod($service, 'getTransportOptions'));
+
+        $pageCallback = new Callback();
+        $pageCallback->table = 'tl_page';
+        $pageCallback->target = 'fields.mailerTransport.options';
+
+        $formCallback = new Callback();
+        $formCallback->table = 'tl_form';
+        $formCallback->target = 'fields.mailerTransport.options';
+
+        $this->assertEquals(
+            [
+                $pageCallback,
+                $formCallback,
+            ],
+            $annotations
+        );
+    }
+
     public function testAddsTransports(): void
     {
         $availableTransports = new AvailableTransports();

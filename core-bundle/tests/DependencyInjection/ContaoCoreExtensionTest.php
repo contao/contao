@@ -90,6 +90,7 @@ use Contao\CoreBundle\Image\ImageFactory;
 use Contao\CoreBundle\Image\ImageSizes;
 use Contao\CoreBundle\Image\LegacyResizer;
 use Contao\CoreBundle\Image\PictureFactory;
+use Contao\CoreBundle\Mailer\AvailableTransports;
 use Contao\CoreBundle\Menu\BackendMenuBuilder;
 use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\Version409\CeAccessMigration;
@@ -654,6 +655,24 @@ class ContaoCoreExtensionTest extends TestCase
                 ],
             ],
             $definition->getTags()
+        );
+    }
+
+    public function testContainerHasTheAvailableTransportsService(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $this->assertTrue($container->has(AvailableTransports::class));
+
+        $definition = $container->getDefinition(AvailableTransports::class);
+
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('translator', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+            ],
+            $definition->getArguments()
         );
     }
 
