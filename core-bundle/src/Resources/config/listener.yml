@@ -128,6 +128,11 @@ services:
         tags:
             - { name: contao.hook, hook: replaceInsertTags }
 
+    Contao\CoreBundle\EventListener\InsertTags\DateListener:
+        arguments:
+            - '@contao.framework'
+            - '@request_stack'
+
     contao.listener.insert_tags.translation:
         class: Contao\CoreBundle\EventListener\InsertTags\TranslationListener
         arguments:

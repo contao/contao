@@ -39,9 +39,12 @@ use Terminal42\Escargot\Exception\InvalidJobIdException;
 use Terminal42\Escargot\Queue\InMemoryQueue;
 use Terminal42\Escargot\Subscriber\FinishedCrawlingSubscriberInterface;
 use Terminal42\Escargot\Subscriber\SubscriberInterface;
+use Webmozart\PathUtil\Path;
 
 class CrawlCommand extends Command
 {
+    protected static $defaultName = 'contao:crawl';
+
     /**
      * @var Factory
      */
@@ -73,7 +76,6 @@ class CrawlCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('contao:crawl')
             ->addArgument('job', InputArgument::OPTIONAL, 'An optional existing job ID')
             ->addOption('subscribers', 's', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'A list of subscribers to enable', $this->escargotFactory->getSubscriberNames())
             ->addOption('concurrency', 'c', InputOption::VALUE_REQUIRED, 'The number of concurrent requests that are going to be executed', 10)
@@ -82,7 +84,7 @@ class CrawlCommand extends Command
             ->addOption('max-depth', null, InputOption::VALUE_REQUIRED, 'The maximum depth to crawl for (0 = no limit)', 0)
             ->addOption('no-progress', null, InputOption::VALUE_NONE, 'Disables the progress bar output')
             ->addOption('enable-debug-csv', null, InputOption::VALUE_NONE, 'Writes the crawl debug log into a separate CSV file')
-            ->addOption('debug-csv-path', null, InputOption::VALUE_REQUIRED, 'The path of the debug log CSV file', getcwd().'/crawl_debug_log.csv')
+            ->addOption('debug-csv-path', null, InputOption::VALUE_REQUIRED, 'The path of the debug log CSV file', Path::join(getcwd(), 'crawl_debug_log.csv'))
             ->setDescription('Crawls the Contao root pages with the desired subscribers')
             ->setHelp('You can add additional URIs via the <info>contao.crawl.additional_uris</info> parameter.')
         ;

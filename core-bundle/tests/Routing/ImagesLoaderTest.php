@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\Routing;
 use Contao\CoreBundle\Controller\ImagesController;
 use Contao\CoreBundle\Routing\ImagesLoader;
 use Contao\CoreBundle\Tests\TestCase;
-use Symfony\Component\Filesystem\Filesystem;
 
 class ImagesLoaderTest extends TestCase
 {
@@ -23,8 +22,7 @@ class ImagesLoaderTest extends TestCase
     {
         $loader = new ImagesLoader(
             $this->getFixturesDir(),
-            $this->getFixturesDir().'/path/to/images',
-            new Filesystem()
+            $this->getFixturesDir().'/path/to/images'
         );
 
         $this->assertTrue($loader->supports('.', 'contao_images'));
@@ -34,8 +32,7 @@ class ImagesLoaderTest extends TestCase
     {
         $loader = new ImagesLoader(
             $this->getFixturesDir(),
-            $this->getFixturesDir().'/path/to/images',
-            new Filesystem()
+            $this->getFixturesDir().'/path/to/images'
         );
 
         $route = $loader->load('.', 'contao_images')->get('contao_images');

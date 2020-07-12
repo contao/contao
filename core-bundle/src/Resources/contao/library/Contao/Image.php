@@ -624,7 +624,7 @@ class Image
 			return $src;
 		}
 
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		if (strncmp($src, 'icon', 4) === 0)
 		{
@@ -636,7 +636,7 @@ class Image
 			$filename = pathinfo($src, PATHINFO_FILENAME);
 
 			// Prefer SVG icons
-			if (file_exists($rootDir . '/assets/contao/images/' . $filename . '.svg'))
+			if (file_exists($projectDir . '/assets/contao/images/' . $filename . '.svg'))
 			{
 				return 'assets/contao/images/' . $filename . '.svg';
 			}
@@ -654,7 +654,7 @@ class Image
 		$filename = pathinfo($src, PATHINFO_FILENAME);
 
 		// Prefer SVG icons
-		if (file_exists($rootDir . '/system/themes/' . $theme . '/icons/' . $filename . '.svg'))
+		if (file_exists($projectDir . '/system/themes/' . $theme . '/icons/' . $filename . '.svg'))
 		{
 			return 'system/themes/' . $theme . '/icons/' . $filename . '.svg';
 		}
@@ -681,14 +681,14 @@ class Image
 		}
 
 		$container = System::getContainer();
-		$rootDir = $container->getParameter('kernel.project_dir');
+		$projectDir = $container->getParameter('kernel.project_dir');
 		$webDir = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
 
-		if (!is_file($rootDir . '/' . $src))
+		if (!is_file($projectDir . '/' . $src))
 		{
 			try
 			{
-				$deferredImage = $container->get('contao.image.image_factory')->create($rootDir . '/' . $src);
+				$deferredImage = $container->get('contao.image.image_factory')->create($projectDir . '/' . $src);
 			}
 			catch (\Exception $e)
 			{
@@ -696,7 +696,7 @@ class Image
 			}
 
 			// Handle public bundle resources
-			if (file_exists($rootDir . '/' . $webDir . '/' . $src))
+			if (file_exists($projectDir . '/' . $webDir . '/' . $src))
 			{
 				$src = $webDir . '/' . $src;
 			}

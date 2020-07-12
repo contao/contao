@@ -576,9 +576,6 @@ class BackendUser extends User
 						$arrModules[$strGroupName]['modules'][$strModuleName]['isActive'] = true;
 					}
 				}
-
-				// Sort the modules alphabetically by label (see #1205)
-				uasort($arrModules[$strGroupName]['modules'], static function ($a, $b) { return $a['label'] <=> $b['label']; });
 			}
 		}
 

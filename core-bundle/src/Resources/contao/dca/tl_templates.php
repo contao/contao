@@ -197,10 +197,10 @@ class tl_templates extends Backend
 			throw new RuntimeException('Insecure path ' . $strNode);
 		}
 
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Currently selected folder does not exist
-		if (!is_dir($rootDir . '/' . $strNode))
+		if (!is_dir($projectDir . '/' . $strNode))
 		{
 			$objSessionBag->set('tl_templates_node', '');
 
@@ -281,10 +281,10 @@ class tl_templates extends Backend
 				throw new RuntimeException('Invalid path ' . $strTarget);
 			}
 
-			$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+			$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 			// Validate the target path
-			if (strncmp($strTarget, 'templates', 9) !== 0 || !is_dir($rootDir . '/' . $strTarget))
+			if (strncmp($strTarget, 'templates', 9) !== 0 || !is_dir($projectDir . '/' . $strTarget))
 			{
 				$strError = sprintf($GLOBALS['TL_LANG']['tl_templates']['invalid'], $strTarget);
 			}
@@ -311,7 +311,7 @@ class tl_templates extends Backend
 					$strTarget .= '/' . basename($strOriginal);
 
 					// Check whether the target file exists
-					if (file_exists($rootDir . '/' . $strTarget))
+					if (file_exists($projectDir . '/' . $strTarget))
 					{
 						$strError = sprintf($GLOBALS['TL_LANG']['tl_templates']['exists'], $strTarget);
 					}

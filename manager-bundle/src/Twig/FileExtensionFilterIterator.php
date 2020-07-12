@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Twig;
 
+use Webmozart\PathUtil\Path;
+
 class FileExtensionFilterIterator implements \IteratorAggregate
 {
     /**
@@ -32,7 +34,7 @@ class FileExtensionFilterIterator implements \IteratorAggregate
         return new \CallbackFilterIterator(
             new \IteratorIterator($this->iterator),
             static function ($path): bool {
-                return 0 === strncmp($path, '@', 1) || '.twig' === substr($path, -5);
+                return 0 === strncmp($path, '@', 1) || 'twig' === Path::getExtension($path, true);
             }
         );
     }

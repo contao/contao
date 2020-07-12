@@ -24,9 +24,12 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
+use Webmozart\PathUtil\Path;
 
 class MigrateCommand extends Command
 {
+    protected static $defaultName = 'contao:migrate';
+
     /**
      * @var MigrationCollection
      */
@@ -71,7 +74,6 @@ class MigrateCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('contao:migrate')
             ->addOption('with-deletes', null, InputOption::VALUE_NONE, 'Execute all database migrations including DROP queries. Can be used together with --no-interaction.')
             ->addOption('schema-only', null, InputOption::VALUE_NONE, 'Execute database schema migration only.')
             ->setDescription('Executes migrations and the database schema diff.')
@@ -178,7 +180,7 @@ class MigrateCommand extends Command
 
         return array_map(
             function ($path) {
-                return rtrim((new Filesystem())->makePathRelative($path, $this->projectDir), '/');
+                return Path::makeRelative($path, $this->projectDir);
             },
             $files
         );
@@ -188,9 +190,11 @@ class MigrateCommand extends Command
     {
         $this->framework->initialize();
 
-        include $this->projectDir.'/'.$file;
+        $filePath = Path::join($this->projectDir, $file);
 
-        (new Filesystem())->remove($this->projectDir.'/'.$file);
+        include $filePath;
+
+        (new Filesystem())->remove($filePath);
     }
 
     private function executeSchemaDiff(bool $withDeletesOption): bool
@@ -242,7 +246,6 @@ class MigrateCommand extends Command
             $this->io->section('Execute database migrations');
 
             $count = 0;
-
             $commandHashes = $this->getCommandHashes($commands, 'yes, with deletes' === $answer);
 
             do {
@@ -285,8 +288,8 @@ class MigrateCommand extends Command
         if (!$withDrops) {
             foreach ($commands as $hash => $command) {
                 if (
-                    (0 === strncmp($command, 'DROP ', 5) && 0 !== strncmp($command, 'DROP INDEX', 10))
-                    || preg_match('/^ALTER TABLE [^ ]+ DROP /', $command, $matches)
+                    preg_match('/^ALTER TABLE [^ ]+ DROP /', $command, $matches)
+                    || (0 === strncmp($command, 'DROP ', 5) && 0 !== strncmp($command, 'DROP INDEX', 10))
                 ) {
                     unset($commands[$hash]);
                 }

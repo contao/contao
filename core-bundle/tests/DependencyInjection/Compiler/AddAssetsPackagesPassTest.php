@@ -23,6 +23,7 @@ use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\Filesystem\Filesystem;
+use Webmozart\PathUtil\Path;
 
 class AddAssetsPackagesPassTest extends TestCase
 {
@@ -126,7 +127,7 @@ class AddAssetsPackagesPassTest extends TestCase
 
     public function testUsesTheJsonManifestVersionStrategyForBundles(): void
     {
-        $bundlePath = static::getTempDir().'/ManifestJsonBundle';
+        $bundlePath = Path::normalize(static::getTempDir()).'/ManifestJsonBundle';
         $container = $this->getContainerWithAssets('ManifestJsonBundle', 'Foo\Bar\ManifestJsonBundle', $bundlePath);
 
         $pass = new AddAssetsPackagesPass();

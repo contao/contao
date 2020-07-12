@@ -217,8 +217,8 @@ class Picture
 	 */
 	public function getTemplateData()
 	{
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
-		$image = System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . $this->image->getOriginalPath());
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+		$image = System::getContainer()->get('contao.image.image_factory')->create($projectDir . '/' . $this->image->getOriginalPath());
 
 		if (\is_string($this->imageSize) && $this->imageSize[0] === '_')
 		{
@@ -268,8 +268,8 @@ class Picture
 
 		return array
 		(
-			'img' => $picture->getImg($rootDir, $staticUrl),
-			'sources' => $picture->getSources($rootDir, $staticUrl),
+			'img' => $picture->getImg($projectDir, $staticUrl),
+			'sources' => $picture->getSources($projectDir, $staticUrl),
 		);
 	}
 

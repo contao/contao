@@ -22,6 +22,7 @@ use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Webmozart\PathUtil\Path;
 
 /**
  * @internal
@@ -41,7 +42,7 @@ class InitializeApplicationListener implements ContainerAwareInterface
     {
         $webDir = $this->container->getParameter('contao.web_dir');
 
-        if (file_exists($webDir.'/bundles/contaocore/core.js')) {
+        if (file_exists(Path::join($webDir, 'bundles/contaocore/core.js'))) {
             return;
         }
 
@@ -63,13 +64,13 @@ class InitializeApplicationListener implements ContainerAwareInterface
     {
         $projectDir = $this->container->getParameter('kernel.project_dir');
 
-        if (is_dir($projectDir.'/system/config')) {
+        if (is_dir(Path::join($projectDir, 'system/config'))) {
             return;
         }
 
         $webDir = $this->container->getParameter('contao.web_dir');
         $command = $this->container->get('contao.command.install');
-        $input = new ArgvInput(['contao:install', substr($webDir, \strlen($projectDir) + 1)]);
+        $input = new ArgvInput(['contao:install', Path::makeRelative($webDir, $projectDir)]);
 
         if (null === ($output = $this->runCommand($command, $input))) {
             return;
@@ -82,13 +83,13 @@ class InitializeApplicationListener implements ContainerAwareInterface
     {
         $webDir = $this->container->getParameter('contao.web_dir');
 
-        if (is_link($webDir.'/system/themes')) {
+        if (is_link(Path::join($webDir, 'system/themes'))) {
             return;
         }
 
         $projectDir = $this->container->getParameter('kernel.project_dir');
         $command = $this->container->get('contao.command.symlinks');
-        $input = new ArgvInput(['contao:symlinks', substr($webDir, \strlen($projectDir) + 1)]);
+        $input = new ArgvInput(['contao:symlinks', Path::makeRelative($webDir, $projectDir)]);
 
         if (null === ($output = $this->runCommand($command, $input))) {
             return;

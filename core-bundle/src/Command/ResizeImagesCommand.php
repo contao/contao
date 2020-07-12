@@ -29,6 +29,7 @@ use Symfony\Component\Debug\Exception\FlattenException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
+use Webmozart\PathUtil\Path;
 
 /**
  * Resize deferred images that have not been processed yet.
@@ -37,6 +38,8 @@ use Symfony\Component\Process\Process;
  */
 class ResizeImagesCommand extends Command
 {
+    protected static $defaultName = 'contao:resize-images';
+
     /**
      * @var ImageFactoryInterface
      */
@@ -82,7 +85,6 @@ class ResizeImagesCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('contao:resize-images')
             ->addOption('time-limit', 'l', InputOption::VALUE_OPTIONAL, 'Time limit in seconds', '0')
             ->addOption('concurrent', 'c', InputOption::VALUE_OPTIONAL, 'Run multiple processes concurrently', '1')
             ->addOption('throttle', 't', InputOption::VALUE_OPTIONAL, 'Pause between resizes to limit CPU utilization, 0.1 relates to 10% CPU usage', '1')
@@ -153,7 +155,7 @@ class ResizeImagesCommand extends Command
         $io->write(str_pad($path, $this->terminalWidth + \strlen($path) - Utf8::strlen($path) - 13, '.').' ');
 
         try {
-            $image = $this->imageFactory->create($this->targetDir.'/'.$path);
+            $image = $this->imageFactory->create(Path::join($this->targetDir, $path));
             $resizer = $this->resizer;
 
             if ($image instanceof DeferredImageInterface) {
@@ -195,10 +197,7 @@ class ResizeImagesCommand extends Command
             throw new \RuntimeException('The php executable could not be found.');
         }
 
-        /** @var array<Process> $processes */
         $processes = [];
-
-        /** @var array<string> $buffers */
         $buffers = [];
 
         for ($i = 0; $i < $count; ++$i) {
