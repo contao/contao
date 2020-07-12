@@ -74,10 +74,10 @@
       <trans-unit id="tl_form.skipEmpty.1">
         <source>Do not include empty fields in the form data.</source>
       </trans-unit>
-      <trans-unit id="tl_form.mailer_transport.0">
+      <trans-unit id="tl_form.mailerTransport.0">
         <source>Mailer configuration</source>
       </trans-unit>
-      <trans-unit id="tl_form.mailer_transport.1">
+      <trans-unit id="tl_form.mailerTransport.1">
         <source>The mailer configuration used for this form.</source>
       </trans-unit>
       <trans-unit id="tl_form.email.0">

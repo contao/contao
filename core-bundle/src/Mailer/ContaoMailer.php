@@ -78,8 +78,8 @@ final class ContaoMailer implements MailerInterface
             /** @var PageModel $page */
             $page->loadDetails();
 
-            if (!empty($page->mailer_transport) && null !== $this->transports->getTransport($page->mailer_transport)) {
-                $message->getHeaders()->addTextHeader('X-Transport', $page->mailer_transport);
+            if (!empty($page->mailerTransport) && null !== $this->transports->getTransport($page->mailerTransport)) {
+                $message->getHeaders()->addTextHeader('X-Transport', $page->mailerTransport);
             }
         }
     }

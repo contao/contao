@@ -98,10 +98,10 @@
       <trans-unit id="tl_page.staticPlugins.1">
         <source>The assets URL applies to the &lt;em&gt;assets&lt;/em&gt; directory (page speed optimization).</source>
       </trans-unit>
-      <trans-unit id="tl_page.mailer_transport.0">
+      <trans-unit id="tl_page.mailerTransport.0">
         <source>Mailer configuration</source>
       </trans-unit>
-      <trans-unit id="tl_page.mailer_transport.1">
+      <trans-unit id="tl_page.mailerTransport.1">
         <source>The mailer configuration used for this website root.</source>
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.0">

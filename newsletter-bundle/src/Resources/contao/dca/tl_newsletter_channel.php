@@ -117,7 +117,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},title,jumpTo;{template_legend:hide},template;{sender_legend},sender,senderName,mailer_transport'
+		'default'                     => '{title_legend},title,jumpTo;{template_legend:hide},template;{sender_legend},sender,senderName,mailerTransport'
 	),
 
 	// Fields
@@ -178,7 +178,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(128) NOT NULL default ''"
 		),
-		'mailer_transport' => array
+		'mailerTransport' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'select',
