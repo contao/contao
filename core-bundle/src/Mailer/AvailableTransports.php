@@ -12,9 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Mailer;
 
+use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
-class AvailableTransports
+class AvailableTransports implements ServiceAnnotationInterface
 {
     /**
      * @var array<TransportConfig>
@@ -48,6 +50,9 @@ class AvailableTransports
      * Returns the available transports as options suitable for widgets.
      *
      * @return array<string, string>
+     * 
+     * @Callback(table="tl_page", target="fields.mailerTransport.options")
+     * @Callback(table="tl_form", target="fields.mailerTransport.options")
      */
     public function getTransportOptions(): array
     {
