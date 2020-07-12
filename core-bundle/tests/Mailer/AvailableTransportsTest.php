@@ -27,27 +27,24 @@ class AvailableTransportsTest extends TestCase
         $annotationReader = new AnnotationReader();
         $annotations = $annotationReader->getMethodAnnotations(new \ReflectionMethod($service, 'getTransportOptions'));
 
-        $pageCallback = new Callback();
-        $pageCallback->table = 'tl_page';
-        $pageCallback->target = 'fields.mailerTransport.options';
-
-        $formCallback = new Callback();
-        $formCallback->table = 'tl_form';
-        $formCallback->target = 'fields.mailerTransport.options';
-
         $this->assertCount(2, $annotations);
+
+        [$pageCallback, $formCallback] = $annotations;
+
+        $this->assertInstanceOf(Callback::class, $pageCallback);
+        $this->assertInstanceOf(Callback::class, $formCallback);
 
         $this->assertSame([
             'table' => 'tl_page',
             'target' => 'fields.mailerTransport.options',
             'priority' => null,
-        ], (array) $annotations[0]);
+        ], get_object_vars($pageCallback));
 
         $this->assertSame([
             'table' => 'tl_form',
             'target' => 'fields.mailerTransport.options',
             'priority' => null,
-        ], (array) $annotations[1]);
+        ], get_object_vars($formCallback));
     }
 
     public function testAddsTransports(): void
