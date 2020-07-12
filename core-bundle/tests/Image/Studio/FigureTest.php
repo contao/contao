@@ -288,50 +288,50 @@ class FigureTest extends TestCase
         ];
     }
 
-    public function testGetAttributes(): void
+    public function testGetOptions(): void
     {
         /** @var ImageResult&MockObject $image */
         $image = $this->createMock(ImageResult::class);
 
-        $attributes = ['class' => 'foo', 'custom' => new \stdClass()];
+        $options = ['attributes' => ['class' => 'foo'], 'custom' => new \stdClass()];
 
-        $figure = new Figure($image, null, null, null, $attributes);
+        $figure = new Figure($image, null, null, null, $options);
 
-        $this->assertSame($attributes, $figure->getAttributes());
+        $this->assertSame($options, $figure->getOptions());
     }
 
-    public function testGetAttributesSetViaCallback(): void
+    public function testGetOptionsSetViaCallback(): void
     {
         /** @var ImageResult&MockObject $image */
         $image = $this->createMock(ImageResult::class);
 
-        $attributes = ['class' => 'foo', 'custom' => new \stdClass()];
+        $options = ['attributes' => ['class' => 'foo'], 'custom' => new \stdClass()];
 
         $called = 0;
 
-        $attributesClosure = function (Figure $figure) use (&$called, $attributes): array {
+        $optionsClosure = function (Figure $figure) use (&$called, $options): array {
             $this->assertInstanceOf(Figure::class, $figure);
             ++$called;
 
-            return $attributes;
+            return $options;
         };
 
-        $figure = new Figure($image, null, null, null, $attributesClosure);
+        $figure = new Figure($image, null, null, null, $optionsClosure);
 
-        $this->assertSame($attributes, $figure->getAttributes());
+        $this->assertSame($options, $figure->getOptions());
 
-        $figure->getAttributes(); // second call should be cached
+        $figure->getOptions(); // second call should be cached
         $this->assertSame(1, $called);
     }
 
-    public function testGetAttributesReturnsEmptySetIfNotDefined(): void
+    public function testGetOptionsReturnsEmptySetIfNotDefined(): void
     {
         /** @var ImageResult&MockObject $image */
         $image = $this->createMock(ImageResult::class);
 
         $figure = new Figure($image);
 
-        $this->assertSame([], $figure->getAttributes());
+        $this->assertSame([], $figure->getOptions());
     }
 
     /**

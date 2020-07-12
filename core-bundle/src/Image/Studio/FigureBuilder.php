@@ -124,11 +124,11 @@ class FigureBuilder
     private $enableLightBox;
 
     /**
-     * User defined figure attributes.
+     * User defined template options.
      *
      * @var array<string, mixed>
      */
-    private $figureAttributes = [];
+    private $options = [];
 
     /**
      * @internal use the `\Contao\Image\Studio\Studio` factory to get an instance of this class
@@ -406,11 +406,11 @@ class FigureBuilder
     }
 
     /**
-     * Set all figure attributes as an associative array.
+     * Set all template options as an associative array.
      */
-    public function setFigureAttributes(array $attributes): self
+    public function setOptions(array $options): self
     {
-        $this->figureAttributes = $attributes;
+        $this->options = $options;
 
         return $this;
     }
@@ -450,7 +450,7 @@ class FigureBuilder
                     return $this->onDefineLightBoxResult($figure);
                 }, $settings
             ),
-            $this->figureAttributes
+            $this->options
         );
     }
 

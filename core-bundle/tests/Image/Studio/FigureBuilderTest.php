@@ -648,19 +648,6 @@ class FigureBuilderTest extends TestCase
         $this->assertSame('https://example.com', $figure->getLinkHref());
     }
 
-    public function testSetFigureAttributes(): void
-    {
-        $object = new \stdClass();
-
-        $figure = $this->getFigure(
-            static function (FigureBuilder $builder) use ($object): void {
-                $builder->setFigureAttributes(['class' => 'foo', 'custom' => $object]);
-            }
-        );
-
-        $this->assertSame(['class' => 'foo', 'custom' => $object], $figure->getAttributes());
-    }
-
     public function testSetsTargetAttributeIfFullsizeWithoutLightBox(): void
     {
         $figure = $this->getFigure(
@@ -833,6 +820,17 @@ class FigureBuilderTest extends TestCase
         );
 
         $this->assertTrue($figure->hasLightBox());
+    }
+
+    public function testSetTemplateOptions(): void
+    {
+        $figure = $this->getFigure(
+            static function (FigureBuilder $builder): void {
+                $builder->setOptions(['foo' => 'bar']);
+            }
+        );
+
+        $this->assertSame(['foo' => 'bar'], $figure->getOptions());
     }
 
     public function testBuildMultipleTimes(): void

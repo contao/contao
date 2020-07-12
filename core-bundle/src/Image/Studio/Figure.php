@@ -51,7 +51,7 @@ final class Figure
     /**
      * @var array<string, mixed>|(\Closure(self):array<string, mixed>)|null
      */
-    private $attributes;
+    private $options;
 
     /**
      * Create a figure container.
@@ -63,15 +63,15 @@ final class Figure
      * @param MetaData|(\Closure(self):MetaData|null)|null                                $metaData       Meta data container
      * @param array<string, string|null>|(\Closure(self):array<string, string|null>)|null $linkAttributes Link attributes
      * @param LightBoxResult|(\Closure(self):LightBoxResult|null)|null                    $lightBox       Light box
-     * @param array<string, mixed>|(\Closure(self):array<string, mixed>)|null             $attributes     Figure attributes
+     * @param array<string, mixed>|(\Closure(self):array<string, mixed>)|null             $options        Template options
      */
-    public function __construct(ImageResult $image, $metaData = null, $linkAttributes = null, $lightBox = null, $attributes = null)
+    public function __construct(ImageResult $image, $metaData = null, $linkAttributes = null, $lightBox = null, $options = null)
     {
         $this->image = $image;
         $this->metaData = $metaData;
         $this->linkAttributes = $linkAttributes;
         $this->lightBox = $lightBox;
-        $this->attributes = $attributes;
+        $this->options = $options;
     }
 
     /**
@@ -190,11 +190,11 @@ final class Figure
     /**
      * Return a key-value list of (figure) attributes.
      */
-    public function getAttributes(): array
+    public function getOptions(): array
     {
-        $this->resolveIfClosure($this->attributes);
+        $this->resolveIfClosure($this->options);
 
-        return $this->attributes ?? [];
+        return $this->options ?? [];
     }
 
     /**
