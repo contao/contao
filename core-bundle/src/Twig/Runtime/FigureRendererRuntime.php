@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Twig\Runtime;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Twig\Environment;
 use Twig\Extension\RuntimeExtensionInterface;
 
@@ -31,12 +32,19 @@ final class FigureRendererRuntime implements RuntimeExtensionInterface
     private $twig;
 
     /**
+     * @var PropertyAccessor
+     */
+    private $propertyAccessor;
+
+    /**
      * @internal
      */
     public function __construct(Studio $studio, Environment $twig)
     {
         $this->studio = $studio;
         $this->twig = $twig;
+
+        $this->propertyAccessor = PropertyAccess::createPropertyAccessor();
     }
 
     /**
@@ -56,10 +64,9 @@ final class FigureRendererRuntime implements RuntimeExtensionInterface
     private function buildFigure(array $options): Figure
     {
         $figureBuilder = $this->studio->createFigureBuilder();
-        $propertyAccessor = PropertyAccess::createPropertyAccessor();
 
         foreach ($options as $property => $value) {
-            $propertyAccessor->setValue($figureBuilder, $property, $value);
+            $this->propertyAccessor->setValue($figureBuilder, $property, $value);
         }
 
         return $figureBuilder->build();
