@@ -1728,9 +1728,9 @@ abstract class Controller extends System
 			->build()
 			->applyLegacyTemplateData(
 				$template,
-				$includeFullMetaData,
+				static::generateMargin($margin),
 				$rowData['floating'] ?: null,
-				static::generateMargin($margin)
+				$includeFullMetaData
 			);
 
 		// Fall back to manually specified link title or empty string if not set (BC)

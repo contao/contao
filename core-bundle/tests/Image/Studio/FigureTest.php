@@ -345,7 +345,7 @@ class FigureTest extends TestCase
         System::setContainer($this->getContainerWithContaoConfiguration());
 
         $figure = new Figure($this->getImageMock(), $metaData, $linkAttributes, $lightBox);
-        $data = $figure->getLegacyTemplateData($includeFullMetaData, $floatingProperty, $marginProperty);
+        $data = $figure->getLegacyTemplateData($marginProperty, $floatingProperty, $includeFullMetaData);
 
         $assert($data);
     }

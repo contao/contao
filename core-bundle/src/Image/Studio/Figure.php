@@ -204,11 +204,11 @@ final class Figure
      *       add this object to your template's context and directly access the
      *       specific data you need.
      *
-     * @param bool   $includeFullMetaData Make all meta data available in the first dimension of the returned data set (key-value pairs)
-     * @param string $floatingProperty    Set/determine values for the 'float_class' and 'addBefore' keys
      * @param string $marginProperty      Set a value for the 'margin' key
+     * @param string $floatingProperty    Set/determine values for the 'float_class' and 'addBefore' keys
+     * @param bool   $includeFullMetaData Make all meta data available in the first dimension of the returned data set (key-value pairs)
      */
-    public function getLegacyTemplateData(bool $includeFullMetaData = true, string $floatingProperty = null, string $marginProperty = null): array
+    public function getLegacyTemplateData(string $marginProperty = null, string $floatingProperty = null, bool $includeFullMetaData = true): array
     {
         // Create a key-value list of the meta data and apply some renaming and
         // formatting transformations to fit the legacy templates.
@@ -323,13 +323,14 @@ final class Figure
      *       add this object to your template's context and directly access the
      *       specific data you need.
      *
-     * @param bool   $includeFullMetaData Make all meta data entries directly available in the template
-     * @param string $floatingProperty    Set/determine values for the template's 'float_class' and 'addBefore' properties
+     * @param $template
      * @param string $marginProperty      Set a value for the template's 'margin' property
+     * @param string $floatingProperty    Set/determine values for the template's 'float_class' and 'addBefore' properties
+     * @param bool   $includeFullMetaData Make all meta data entries directly available in the template
      */
-    public function applyLegacyTemplateData($template, bool $includeFullMetaData = true, string $floatingProperty = null, string $marginProperty = null, string $linkTitleFallback = null): void
+    public function applyLegacyTemplateData($template, string $marginProperty = null, string $floatingProperty = null, bool $includeFullMetaData = true): void
     {
-        $new = $this->getLegacyTemplateData($includeFullMetaData, $floatingProperty, $marginProperty);
+        $new = $this->getLegacyTemplateData($marginProperty, $floatingProperty, $includeFullMetaData);
         $existing = $template instanceof Template ? $template->getData() : get_object_vars($template);
 
         // Do not override the "href" key (see #6468)
