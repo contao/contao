@@ -96,4 +96,36 @@ class PictureConfigurationRuntimeTest extends TestCase
         $this->assertSame('proportional', $item2->getResizeConfig()->getMode());
         $this->assertSame('(max-width: 640px)', $item2->getMedia());
     }
+
+    public function testFailsWithInvalidConfiguration(): void
+    {
+        $runtime = new PictureConfigurationRuntime();
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Could not map picture configuration key(s) "foo", "bar".');
+
+        $runtime->fromArray([
+            'foo' => 'value',
+            'bar' => 'value',
+            'sizes' => '100vw',
+        ]);
+    }
+
+    public function testFailsWithInvalidItemConfiguration(): void
+    {
+        $runtime = new PictureConfigurationRuntime();
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Could not map picture configuration key(s) "items.foo", "items.bar".');
+
+        $runtime->fromArray([
+            'items' => [
+                [
+                    'width' => '100',
+                    'foo' => 'value',
+                    'bar' => 'value',
+                ],
+            ],
+        ]);
+    }
 }
