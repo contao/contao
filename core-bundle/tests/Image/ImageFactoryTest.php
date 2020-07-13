@@ -38,6 +38,7 @@ use Imagine\Image\ImageInterface as ImagineImageInterface;
 use Imagine\Image\ImagineInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Filesystem\Filesystem;
+use Webmozart\PathUtil\Path;
 
 class ImageFactoryTest extends TestCase
 {
@@ -658,14 +659,14 @@ class ImageFactoryTest extends TestCase
         $image = $imageFactory->create($path, [100, 100, ResizeConfiguration::MODE_CROP]);
 
         $this->assertSame(
-            $this->getFixturesDir().'/assets/images/dummy.jpg&executeResize_100_100_crop__Contao-Image.jpg',
+            Path::normalize($this->getFixturesDir()).'/assets/images/dummy.jpg&executeResize_100_100_crop__Contao-Image.jpg',
             $image->getPath()
         );
 
         $image = $imageFactory->create($path, [200, 200, ResizeConfiguration::MODE_CROP]);
 
         $this->assertSame(
-            $this->getFixturesDir().'/assets/images/dummy.jpg&executeResize_200_200_crop__Contao-Image.jpg',
+            Path::normalize($this->getFixturesDir()).'/assets/images/dummy.jpg&executeResize_200_200_crop__Contao-Image.jpg',
             $image->getPath()
         );
 
@@ -676,7 +677,7 @@ class ImageFactoryTest extends TestCase
         );
 
         $this->assertSame(
-            $this->getFixturesDir().'/assets/images/dummy.jpg&executeResize_200_200_crop_target.jpg_Contao-Image.jpg',
+            Path::normalize($this->getFixturesDir()).'/assets/images/dummy.jpg&executeResize_200_200_crop_target.jpg_Contao-Image.jpg',
             $image->getPath()
         );
 
@@ -697,13 +698,13 @@ class ImageFactoryTest extends TestCase
             .'.jpg';
 
         $fs = new Filesystem();
-        $rootDir = System::getContainer()->getParameter('kernel.project_dir');
+        $projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
-        if (!$fs->exists(\dirname($rootDir.'/'.$path))) {
-            $fs->mkdir(\dirname($rootDir.'/'.$path), 0777);
+        if (!$fs->exists(\dirname($projectDir.'/'.$path))) {
+            $fs->mkdir(\dirname($projectDir.'/'.$path), 0777);
         }
 
-        $fs->dumpFile($rootDir.'/'.$path, '');
+        $fs->dumpFile($projectDir.'/'.$path, '');
 
         return $path;
     }
@@ -743,8 +744,8 @@ class ImageFactoryTest extends TestCase
         $image = $imageFactory->create($path, [100, 100, ResizeConfiguration::MODE_CROP]);
 
         $this->assertSame(
-            $this->getFixturesDir().'/assets/images/dummy.jpg&getImage_100_100_crop_Contao-File__Contao-Image.jpg',
-            $image->getPath()
+            Path::normalize($this->getFixturesDir()).'/assets/images/dummy.jpg&getImage_100_100_crop_Contao-File__Contao-Image.jpg',
+            Path::normalize($image->getPath())
         );
 
         $image = $imageFactory->create($path, [50, 50, ResizeConfiguration::MODE_CROP]);
@@ -762,8 +763,8 @@ class ImageFactoryTest extends TestCase
         );
 
         $this->assertSame(
-            $this->getFixturesDir().'/images/dummy.jpg',
-            $image->getPath(),
+            Path::normalize($this->getFixturesDir()).'/images/dummy.jpg',
+            Path::normalize($image->getPath()),
             'Hook should not get called if no resize is necessary'
         );
 
@@ -785,13 +786,13 @@ class ImageFactoryTest extends TestCase
             .'.jpg';
 
         $fs = new Filesystem();
-        $rootDir = System::getContainer()->getParameter('kernel.project_dir');
+        $projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
-        if (!$fs->exists(\dirname($rootDir.'/'.$path))) {
-            $fs->mkdir(\dirname($rootDir.'/'.$path), 0777);
+        if (!$fs->exists(\dirname($projectDir.'/'.$path))) {
+            $fs->mkdir(\dirname($projectDir.'/'.$path), 0777);
         }
 
-        $fs->dumpFile($rootDir.'/'.$path, '');
+        $fs->dumpFile($projectDir.'/'.$path, '');
 
         return $path;
     }

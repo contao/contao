@@ -14,6 +14,7 @@ namespace Contao\ManagerBundle\Cache;
 
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\CacheClearer\CacheClearerInterface;
+use Webmozart\PathUtil\Path;
 
 class BundleCacheClearer implements CacheClearerInterface
 {
@@ -32,6 +33,6 @@ class BundleCacheClearer implements CacheClearerInterface
 
     public function clear($cacheDir): void
     {
-        $this->filesystem->remove($cacheDir.'/bundles.map');
+        $this->filesystem->remove(Path::join($cacheDir, 'bundles.map'));
     }
 }

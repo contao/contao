@@ -528,17 +528,19 @@ class tl_user_group extends Backend
 			throw new AccessDeniedException('Not enough permissions to activate/deactivate user group ID ' . $intId . '.');
 		}
 
+		$objRow = $this->Database->prepare("SELECT * FROM tl_user_group WHERE id=?")
+								 ->limit(1)
+								 ->execute($intId);
+
+		if ($objRow->numRows < 1)
+		{
+			throw new AccessDeniedException('Invalid user group ID ' . $intId . '.');
+		}
+
 		// Set the current record
 		if ($dc)
 		{
-			$objRow = $this->Database->prepare("SELECT * FROM tl_user_group WHERE id=?")
-									 ->limit(1)
-									 ->execute($intId);
-
-			if ($objRow->numRows)
-			{
-				$dc->activeRecord = $objRow;
-			}
+			$dc->activeRecord = $objRow;
 		}
 
 		$objVersions = new Versions('tl_user_group', $intId);

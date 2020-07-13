@@ -15,6 +15,7 @@ namespace Contao\ManagerBundle\EventListener;
 use Contao\CoreBundle\Command\InstallCommand;
 use Symfony\Component\Console\Event\ConsoleTerminateEvent;
 use Symfony\Component\Filesystem\Filesystem;
+use Webmozart\PathUtil\Path;
 
 /**
  * @internal
@@ -43,7 +44,7 @@ class InstallCommandListener
         (new Filesystem())
             ->copy(
                 __DIR__.'/../Resources/skeleton/system/initialize.php',
-                $this->projectDir.'/system/initialize.php',
+                Path::join($this->projectDir, 'system/initialize.php'),
                 true
             )
         ;

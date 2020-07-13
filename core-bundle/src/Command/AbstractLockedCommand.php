@@ -17,6 +17,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Lock\Factory;
 use Symfony\Component\Lock\Store\FlockStore;
+use Webmozart\PathUtil\Path;
 
 /**
  * @deprecated Deprecated since Contao 4.7, to be removed in Contao 5.0; use
@@ -59,7 +60,7 @@ abstract class AbstractLockedCommand extends ContainerAwareCommand
     private function getTempDir(): string
     {
         $container = $this->getContainer();
-        $tmpDir = sys_get_temp_dir().'/'.md5($container->getParameter('kernel.project_dir'));
+        $tmpDir = Path::join(sys_get_temp_dir(), md5($container->getParameter('kernel.project_dir')));
 
         if (!is_dir($tmpDir)) {
             $container->get('filesystem')->mkdir($tmpDir);

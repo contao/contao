@@ -19,6 +19,7 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
+use Webmozart\PathUtil\Path;
 
 class Configuration implements ConfigurationInterface
 {
@@ -84,8 +85,8 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue('')
                     ->validate()
                         ->always(
-                            function (string $value): string {
-                                return $this->canonicalize($value);
+                            static function (string $value): string {
+                                return Path::canonicalize($value);
                             }
                         )
                     ->end()
@@ -112,11 +113,11 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('web_dir')
                     ->info('Absolute path to the web directory. Defaults to %kernel.project_dir%/web.')
                     ->cannotBeEmpty()
-                    ->defaultValue($this->canonicalize($this->projectDir.'/web'))
+                    ->defaultValue(Path::join($this->projectDir, 'web'))
                     ->validate()
                         ->always(
-                            function (string $value): string {
-                                return $this->canonicalize($value);
+                            static function (string $value): string {
+                                return Path::canonicalize($value);
                             }
                         )
                     ->end()
@@ -307,11 +308,11 @@ class Configuration implements ConfigurationInterface
                     ->info('The target directory for the cached images processed by Contao.')
                     ->example('%kernel.project_dir%/assets/images')
                     ->cannotBeEmpty()
-                    ->defaultValue($this->canonicalize($this->projectDir.'/assets/images'))
+                    ->defaultValue(Path::join($this->projectDir, 'assets/images'))
                     ->validate()
                         ->always(
-                            function (string $value): string {
-                                return $this->canonicalize($value);
+                            static function (string $value): string {
+                                return Path::canonicalize($value);
                             }
                         )
                     ->end()
@@ -418,58 +419,19 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * Canonicalizes a path preserving the directory separators.
-     */
-    private function canonicalize(string $value): string
-    {
-        $resolved = [];
-        $chunks = preg_split('#([\\\\/]+)#', $value, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-
-        for ($i = 0, $c = \count($chunks); $i < $c; ++$i) {
-            if ('.' === $chunks[$i]) {
-                ++$i;
-                continue;
-            }
-
-            // Reduce multiple slashes to one
-            if (0 === strncmp($chunks[$i], '/', 1)) {
-                $resolved[] = '/';
-                continue;
-            }
-
-            // Reduce multiple backslashes to one
-            if (0 === strncmp($chunks[$i], '\\', 1)) {
-                $resolved[] = '\\';
-                continue;
-            }
-
-            if ('..' === $chunks[$i]) {
-                ++$i;
-                array_pop($resolved);
-                array_pop($resolved);
-                continue;
-            }
-
-            $resolved[] = $chunks[$i];
-        }
-
-        return rtrim(implode('', $resolved), '\/');
-    }
-
-    /**
      * @return array<string>
      */
     private function getLocales(): array
     {
         $dirs = [__DIR__.'/../Resources/contao/languages'];
 
-        if (is_dir($this->projectDir.'/contao/languages')) {
-            $dirs[] = $this->projectDir.'/contao/languages';
+        if (is_dir($path = Path::join($this->projectDir, 'contao/languages'))) {
+            $dirs[] = $path;
         }
 
         // Backwards compatibility
-        if (is_dir($this->projectDir.'/app/Resources/contao/languages')) {
-            $dirs[] = $this->projectDir.'/app/Resources/contao/languages';
+        if (is_dir($path = Path::join($this->projectDir, 'app/Resources/contao/languages'))) {
+            $dirs[] = $path;
         }
 
         // The default locale must be the first supported language (see contao/core#6533)

@@ -13,6 +13,7 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Search\Document;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\Input;
@@ -23,6 +24,7 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Versions;
+use Nyholm\Psr7\Uri;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -185,7 +187,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 	// Subpalettes
 	'subpalettes' => array
 	(
-		'autoforward'                 => 'jumpTo,redirect',
+		'autoforward'                 => 'jumpTo',
 		'protected'                   => 'groups',
 		'createSitemap'               => 'sitemapName',
 		'includeLayout'               => 'layout',
@@ -1251,16 +1253,14 @@ class tl_page extends Backend
 			return;
 		}
 
-		$objResult = $this->Database->prepare("SELECT id FROM tl_search WHERE pid=?")
+		$objResult = $this->Database->prepare("SELECT url FROM tl_search WHERE pid=?")
 									->execute($dc->id);
+
+		$indexer = System::getContainer()->get('contao.search.indexer');
 
 		while ($objResult->next())
 		{
-			$this->Database->prepare("DELETE FROM tl_search WHERE id=?")
-						   ->execute($objResult->id);
-
-			$this->Database->prepare("DELETE FROM tl_search_index WHERE pid=?")
-						   ->execute($objResult->id);
+			$indexer->delete(new Document(new Uri($objResult->url), 200));
 		}
 	}
 
@@ -1814,17 +1814,19 @@ class tl_page extends Backend
 			throw new AccessDeniedException('Not enough permissions to publish/unpublish page ID ' . $intId . '.');
 		}
 
+		$objRow = $this->Database->prepare("SELECT * FROM tl_page WHERE id=?")
+								 ->limit(1)
+								 ->execute($intId);
+
+		if ($objRow->numRows < 1)
+		{
+			throw new AccessDeniedException('Invalid page ID ' . $intId . '.');
+		}
+
 		// Set the current record
 		if ($dc)
 		{
-			$objRow = $this->Database->prepare("SELECT * FROM tl_page WHERE id=?")
-									 ->limit(1)
-									 ->execute($intId);
-
-			if ($objRow->numRows)
-			{
-				$dc->activeRecord = $objRow;
-			}
+			$dc->activeRecord = $objRow;
 		}
 
 		$objVersions = new Versions('tl_page', $intId);

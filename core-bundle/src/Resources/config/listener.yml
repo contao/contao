@@ -1,4 +1,7 @@
 services:
+    _defaults:
+        autoconfigure: true
+
     _instanceof:
         Contao\CoreBundle\Framework\FrameworkAwareInterface:
             calls:
@@ -83,6 +86,13 @@ services:
         tags:
             - kernel.event_subscriber
 
+    Contao\CoreBundle\EventListener\DataContainer\DisableAppConfiguredSettingsListener:
+        arguments:
+            - '@translator'
+            - '@contao.framework'
+            - '%contao.localconfig%'
+        public: true
+
     contao.listener.data_container_callback:
         class: Contao\CoreBundle\EventListener\DataContainerCallbackListener
         tags:
@@ -117,6 +127,11 @@ services:
             - '@assets.packages'
         tags:
             - { name: contao.hook, hook: replaceInsertTags }
+
+    Contao\CoreBundle\EventListener\InsertTags\DateListener:
+        arguments:
+            - '@contao.framework'
+            - '@request_stack'
 
     contao.listener.insert_tags.translation:
         class: Contao\CoreBundle\EventListener\InsertTags\TranslationListener

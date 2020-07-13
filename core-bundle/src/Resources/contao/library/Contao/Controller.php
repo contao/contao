@@ -19,6 +19,7 @@ use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\File\MetaData;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\CoreBundle\Util\SimpleTokenParser;
 use Contao\Database\Result;
 use Contao\Image\PictureConfiguration;
 use Contao\Model\Collection;
@@ -147,8 +148,8 @@ abstract class Controller extends System
 			$strGlobPrefix = substr($strGlobPrefix, 0, -1) . '[_-]';
 		}
 
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
-		$arrCustomized = self::braceGlob($rootDir . '/templates/' . $strGlobPrefix . '*.html5');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+		$arrCustomized = self::braceGlob($projectDir . '/templates/' . $strGlobPrefix . '*.html5');
 
 		// Add the customized templates
 		if (!empty($arrCustomized) && \is_array($arrCustomized))
@@ -189,7 +190,7 @@ abstract class Controller extends System
 
 		$arrDefaultPlaces = array();
 
-		if ($strDefaultTemplate && file_exists($rootDir . '/templates/' . $strDefaultTemplate . '.html5'))
+		if ($strDefaultTemplate && file_exists($projectDir . '/templates/' . $strDefaultTemplate . '.html5'))
 		{
 			$arrDefaultPlaces[] = $GLOBALS['TL_LANG']['MSC']['global'];
 		}
@@ -217,12 +218,12 @@ abstract class Controller extends System
 						continue;
 					}
 
-					if ($strDefaultTemplate && file_exists($rootDir . '/' . $objTheme->templates . '/' . $strDefaultTemplate . '.html5'))
+					if ($strDefaultTemplate && file_exists($projectDir . '/' . $objTheme->templates . '/' . $strDefaultTemplate . '.html5'))
 					{
 						$arrDefaultPlaces[] = $objTheme->name;
 					}
 
-					$arrThemeTemplates = self::braceGlob($rootDir . '/' . $objTheme->templates . '/' . $strGlobPrefix . '*.html5');
+					$arrThemeTemplates = self::braceGlob($projectDir . '/' . $objTheme->templates . '/' . $strGlobPrefix . '*.html5');
 
 					if (!empty($arrThemeTemplates) && \is_array($arrThemeTemplates))
 					{
@@ -1326,10 +1327,10 @@ abstract class Controller extends System
 			throw new PageNotFoundException('Invalid path');
 		}
 
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Check whether the file exists
-		if (!file_exists($rootDir . '/' . $strFile))
+		if (!file_exists($projectDir . '/' . $strFile))
 		{
 			throw new PageNotFoundException('File not found');
 		}
@@ -1820,14 +1821,14 @@ abstract class Controller extends System
 
 		try
 		{
-			$rootDir = $container->getParameter('kernel.project_dir');
+			$projectDir = $container->getParameter('kernel.project_dir');
 			$staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
-			$picture = $container->get('contao.image.picture_factory')->create($rootDir . '/' . $arrItem['singleSRC'], $size);
+			$picture = $container->get('contao.image.picture_factory')->create($projectDir . '/' . $arrItem['singleSRC'], $size);
 
 			$picture = array
 			(
-				'img' => $picture->getImg($rootDir, $staticUrl),
-				'sources' => $picture->getSources($rootDir, $staticUrl)
+				'img' => $picture->getImg($projectDir, $staticUrl),
+				'sources' => $picture->getSources($projectDir, $staticUrl)
 			);
 
 			$src = $picture['img']['src'];
@@ -1963,14 +1964,14 @@ abstract class Controller extends System
 					{
 						try
 						{
-							$rootDir = $container->getParameter('kernel.project_dir');
+							$projectDir = $container->getParameter('kernel.project_dir');
 							$staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
-							$picture = $container->get('contao.image.picture_factory')->create($rootDir . '/' . $arrItem['imageUrl'], $lightboxSize);
+							$picture = $container->get('contao.image.picture_factory')->create($projectDir . '/' . $arrItem['imageUrl'], $lightboxSize);
 
 							$objTemplate->lightboxPicture = array
 							(
-								'img' => $picture->getImg($rootDir, $staticUrl),
-								'sources' => $picture->getSources($rootDir, $staticUrl)
+								'img' => $picture->getImg($projectDir, $staticUrl),
+								'sources' => $picture->getSources($projectDir, $staticUrl)
 							);
 
 							$objTemplate->$strHrefKey = $objTemplate->lightboxPicture['img']['src'];
@@ -2001,14 +2002,14 @@ abstract class Controller extends System
 		{
 			try
 			{
-				$rootDir = $container->getParameter('kernel.project_dir');
+				$projectDir = $container->getParameter('kernel.project_dir');
 				$staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
-				$picture = $container->get('contao.image.picture_factory')->create($rootDir . '/' . $arrItem['singleSRC'], $lightboxSize);
+				$picture = $container->get('contao.image.picture_factory')->create($projectDir . '/' . $arrItem['singleSRC'], $lightboxSize);
 
 				$objTemplate->lightboxPicture = array
 				(
-					'img' => $picture->getImg($rootDir, $staticUrl),
-					'sources' => $picture->getSources($rootDir, $staticUrl)
+					'img' => $picture->getImg($projectDir, $staticUrl),
+					'sources' => $picture->getSources($projectDir, $staticUrl)
 				);
 
 				$objTemplate->$strHrefKey = $objTemplate->lightboxPicture['img']['src'];
@@ -2088,9 +2089,9 @@ abstract class Controller extends System
 		{
 			if ($objFiles->type == 'file')
 			{
-				$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+				$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
-				if (!\in_array($objFiles->extension, $allowedDownload) || !is_file($rootDir . '/' . $objFiles->path))
+				if (!\in_array($objFiles->extension, $allowedDownload) || !is_file($projectDir . '/' . $objFiles->path))
 				{
 					continue;
 				}
@@ -2478,14 +2479,14 @@ abstract class Controller extends System
 	 *
 	 * @return string The text with the replaced tokens
 	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use StringUtil::parseSimpleTokens() instead.
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0;
+	 *             Use the SimpleTokenParser::class service instead.
 	 */
 	protected function parseSimpleTokens($strBuffer, $arrData)
 	{
-		@trigger_error('Using Controller::parseSimpleTokens() has been deprecated and will no longer work in Contao 5.0. Use StringUtil::parseSimpleTokens() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Controller::parseSimpleTokens() has been deprecated and will no longer work in Contao 5.0. Use the SimpleTokenParser::class service instead.', E_USER_DEPRECATED);
 
-		return StringUtil::parseSimpleTokens($strBuffer, $arrData);
+		return System::getContainer()->get(SimpleTokenParser::class)->parseTokens($strBuffer, $arrData);
 	}
 
 	/**

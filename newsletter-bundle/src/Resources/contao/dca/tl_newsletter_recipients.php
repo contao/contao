@@ -147,7 +147,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 			'save_callback' => array
 			(
 				array('tl_newsletter_recipients', 'checkUniqueRecipient'),
-				array('tl_newsletter_recipients', 'checkBlacklistedRecipient')
+				array('tl_newsletter_recipients', 'checkDenyList')
 			),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
@@ -326,7 +326,7 @@ class tl_newsletter_recipients extends Backend
 	}
 
 	/**
-	 * Check if a recipient is blacklisted for a channel
+	 * Check if a recipient was added to the deny list for a channel
 	 *
 	 * @param mixed         $varValue
 	 * @param DataContainer $dc
@@ -335,14 +335,14 @@ class tl_newsletter_recipients extends Backend
 	 *
 	 * @throws Exception
 	 */
-	public function checkBlacklistedRecipient($varValue, DataContainer $dc)
+	public function checkDenyList($varValue, DataContainer $dc)
 	{
-		$objBlacklist = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_blacklist WHERE hash=? AND pid=(SELECT pid FROM tl_newsletter_recipients WHERE id=?) AND id!=?")
+		$objDenyList = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_deny_list WHERE hash=? AND pid=(SELECT pid FROM tl_newsletter_recipients WHERE id=?) AND id!=?")
 									   ->execute(md5($varValue), $dc->id, $dc->id);
 
-		if ($objBlacklist->count > 0)
+		if ($objDenyList->count > 0)
 		{
-			throw new Exception($GLOBALS['TL_LANG']['ERR']['blacklisted']);
+			throw new Exception($GLOBALS['TL_LANG']['ERR']['onDenyList']);
 		}
 
 		return $varValue;
@@ -450,17 +450,19 @@ class tl_newsletter_recipients extends Backend
 			throw new AccessDeniedException('Not enough permissions to publish/unpublish newsletter recipient ID ' . $intId . '.');
 		}
 
+		$objRow = $this->Database->prepare("SELECT * FROM tl_newsletter_recipients WHERE id=?")
+								 ->limit(1)
+								 ->execute($intId);
+
+		if ($objRow->numRows < 1)
+		{
+			throw new AccessDeniedException('Invalid newsletter recipient ID ' . $intId . '.');
+		}
+
 		// Set the current record
 		if ($dc)
 		{
-			$objRow = $this->Database->prepare("SELECT * FROM tl_newsletter_recipients WHERE id=?")
-									 ->limit(1)
-									 ->execute($intId);
-
-			if ($objRow->numRows)
-			{
-				$dc->activeRecord = $objRow;
-			}
+			$dc->activeRecord = $objRow;
 		}
 
 		$objVersions = new Versions('tl_newsletter_recipients', $intId);

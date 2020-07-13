@@ -90,7 +90,7 @@ class OrderFieldMigration extends AbstractMigration
             }
         }
 
-        return new MigrationResult(true, '');
+        return $this->createResult(true);
     }
 
     private function migrateOrderField(string $table, string $orderField, string $field): void

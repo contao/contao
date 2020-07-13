@@ -11,8 +11,10 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\InternalServerErrorException;
+use Contao\CoreBundle\Util\SimpleTokenParser;
 use Contao\Database\Result;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Mime\Exception\RfcComplianceException;
 
 /**
  * Provide methods to handle newsletters.
@@ -79,11 +81,11 @@ class Newsletter extends Backend
 
 				if ($objFiles !== null)
 				{
-					$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+					$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 					while ($objFiles->next())
 					{
-						if (is_file($rootDir . '/' . $objFiles->path))
+						if (is_file($projectDir . '/' . $objFiles->path))
 						{
 							$arrAttachments[] = $objFiles->path;
 						}
@@ -340,11 +342,11 @@ class Newsletter extends Backend
 		// Attachments
 		if (!empty($arrAttachments) && \is_array($arrAttachments))
 		{
-			$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+			$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 			foreach ($arrAttachments as $strAttachment)
 			{
-				$objEmail->attachFile($rootDir . '/' . $strAttachment);
+				$objEmail->attachFile($projectDir . '/' . $strAttachment);
 			}
 		}
 
@@ -363,15 +365,18 @@ class Newsletter extends Backend
 	 */
 	protected function sendNewsletter(Email $objEmail, Result $objNewsletter, $arrRecipient, $text, $html, $css=null)
 	{
+		/** @var SimpleTokenParser $simpleTokenParser */
+		$simpleTokenParser = System::getContainer()->get(SimpleTokenParser::class);
+
 		// Prepare the text content
-		$objEmail->text = StringUtil::parseSimpleTokens($text, $arrRecipient);
+		$objEmail->text = $simpleTokenParser->parseTokens($text, $arrRecipient);
 
 		if (!$objNewsletter->sendText)
 		{
 			$objTemplate = new BackendTemplate($objNewsletter->template ?: 'mail_default');
 			$objTemplate->setData($objNewsletter->row());
 			$objTemplate->title = $objNewsletter->subject;
-			$objTemplate->body = StringUtil::parseSimpleTokens($html, $arrRecipient);
+			$objTemplate->body = $simpleTokenParser->parseTokens($html, $arrRecipient);
 			$objTemplate->charset = Config::get('characterSet');
 			$objTemplate->recipient = $arrRecipient['email'];
 
@@ -388,7 +393,7 @@ class Newsletter extends Backend
 		{
 			$objEmail->sendTo($arrRecipient['email']);
 		}
-		catch (\Swift_RfcComplianceException $e)
+		catch (RfcComplianceException $e)
 		{
 			$_SESSION['REJECTED_RECIPIENTS'][] = $arrRecipient['email'];
 		}
@@ -504,11 +509,11 @@ class Newsletter extends Backend
 						continue;
 					}
 
-					// Check whether the e-mail address has been blacklisted
-					$objBlacklist = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_blacklist WHERE pid=? AND hash=?")
+					// Check whether the e-mail address has been added to the deny list
+					$objDenyList = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_deny_list WHERE pid=? AND hash=?")
 												   ->execute(Input::get('id'), md5($strRecipient));
 
-					if ($objBlacklist->count > 0)
+					if ($objDenyList->count > 0)
 					{
 						$this->log('Recipient "' . $strRecipient . '" has unsubscribed from channel ID "' . Input::get('id') . '" and was not imported', __METHOD__, TL_ERROR);
 						continue;
