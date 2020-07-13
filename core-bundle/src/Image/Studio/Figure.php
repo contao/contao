@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Image\Studio;
 
+use Contao\Controller;
 use Contao\CoreBundle\File\MetaData;
 use Contao\File;
 use Contao\StringUtil;
@@ -204,11 +205,11 @@ final class Figure
      *       add this object to your template's context and directly access the
      *       specific data you need.
      *
-     * @param string $marginProperty      Set a value for the 'margin' key
-     * @param string $floatingProperty    Set/determine values for the 'float_class' and 'addBefore' keys
-     * @param bool   $includeFullMetaData Make all meta data available in the first dimension of the returned data set (key-value pairs)
+     * @param string|array|null $margin              Set margins that will compose the inline CSS for the 'margin' key
+     * @param string|null       $floating            Set/determine values for the 'float_class' and 'addBefore' keys
+     * @param bool              $includeFullMetaData Make all meta data available in the first dimension of the returned data set (key-value pairs)
      */
-    public function getLegacyTemplateData(string $marginProperty = null, string $floatingProperty = null, bool $includeFullMetaData = true): array
+    public function getLegacyTemplateData($margin = null, string $floating = null, bool $includeFullMetaData = true): array
     {
         // Create a key-value list of the meta data and apply some renaming and
         // formatting transformations to fit the legacy templates.
@@ -240,6 +241,20 @@ final class Figure
             return $mapping;
         };
 
+        // Create a CSS margin property from an array or serialized string.
+        $getMargin = static function ($margin): string {
+            if (!$margin) {
+                return '';
+            }
+
+            $values = array_merge(
+                ['top' => '', 'right' => '', 'bottom' => '', 'left' => '', 'unit' => ''],
+                StringUtil::deserialize($margin, true)
+            );
+
+            return Controller::generateMargin($values);
+        };
+
         $image = $this->getImage();
         $originalSize = $image->getOriginalDimensions()->getSize();
         $fileInfoImageSize = (new File(rawurldecode($image->getImageSrc())))->imageSize;
@@ -262,8 +277,8 @@ final class Figure
                 'singleSRC' => $image->getFilePath(),
                 'src' => $image->getImageSrc(),
                 'fullsize' => ('_blank' === ($linkAttributes['target'] ?? null)) || $this->hasLightBox(),
-                'margin' => $marginProperty ?? '',
-                'addBefore' => 'below' !== $floatingProperty,
+                'margin' => $getMargin($margin),
+                'addBefore' => 'below' !== $floating,
                 'addImage' => true,
             ],
             $includeFullMetaData ? $createLegacyMetaDataMapping($metaData) : []
@@ -307,8 +322,8 @@ final class Figure
         }
 
         // Other
-        if (null !== $floatingProperty) {
-            $templateData['floatClass'] = " float_{$floatingProperty}";
+        if (null !== $floating) {
+            $templateData['floatClass'] = " float_{$floating}";
         }
 
         return $templateData;
@@ -324,13 +339,13 @@ final class Figure
      *       specific data you need.
      *
      * @param $template
-     * @param string $marginProperty      Set a value for the template's 'margin' property
-     * @param string $floatingProperty    Set/determine values for the template's 'float_class' and 'addBefore' properties
-     * @param bool   $includeFullMetaData Make all meta data entries directly available in the template
+     * @param string|array|null $margin              Set margins that will compose the inline CSS for the template's 'margin' property
+     * @param string|null       $floating            Set/determine values for the template's 'float_class' and 'addBefore' properties
+     * @param bool              $includeFullMetaData Make all meta data entries directly available in the template
      */
-    public function applyLegacyTemplateData($template, string $marginProperty = null, string $floatingProperty = null, bool $includeFullMetaData = true): void
+    public function applyLegacyTemplateData($template, $margin = null, string $floating = null, bool $includeFullMetaData = true): void
     {
-        $new = $this->getLegacyTemplateData($marginProperty, $floatingProperty, $includeFullMetaData);
+        $new = $this->getLegacyTemplateData($margin, $floating, $includeFullMetaData);
         $existing = $template instanceof Template ? $template->getData() : get_object_vars($template);
 
         // Do not override the "href" key (see #6468)

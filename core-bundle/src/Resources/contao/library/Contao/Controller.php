@@ -1717,21 +1717,15 @@ abstract class Controller extends System
 
 		$lightBoxSize = StringUtil::deserialize($rowData['lightboxSize'] ?? null) ?: null;
 
-		$figureBuilder
+		$figure = $figureBuilder
 			->setSize($size)
 			->setLightBoxGroupIdentifier($lightBoxGroupIdentifier)
 			->setLightBoxSize($lightBoxSize)
-			->enableLightBox('1' === ($rowData['fullsize'] ?? null));
+			->enableLightBox('1' === ($rowData['fullsize'] ?? null))
+			->build();
 
 		// Build result and apply it to the template
-		$figureBuilder
-			->build()
-			->applyLegacyTemplateData(
-				$template,
-				static::generateMargin($margin),
-				$rowData['floating'] ?: null,
-				$includeFullMetaData
-			);
+		$figure->applyLegacyTemplateData($template, $margin, $rowData['floating'] ?: null, $includeFullMetaData);
 
 		// Fall back to manually specified link title or empty string if not set (BC)
 		$template->linkTitle = $template->linkTitle ?? StringUtil::specialchars($rowData['title'] ?? '');
