@@ -42,38 +42,38 @@ final class PictureConfigurationRuntime implements RuntimeExtensionInterface
         return $config;
     }
 
-    private function createConfigItem(array $imageSize): PictureConfigurationItem
+    private function createConfigItem(array $config): PictureConfigurationItem
     {
         $configItem = new PictureConfigurationItem();
 
-        if (isset($imageSize['sizes'])) {
-            $configItem->setSizes((string) $imageSize['sizes']);
+        if (isset($config['sizes'])) {
+            $configItem->setSizes((string) $config['sizes']);
         }
 
-        if (isset($imageSize['densities'])) {
-            $configItem->setDensities((string) $imageSize['densities']);
+        if (isset($config['densities'])) {
+            $configItem->setDensities((string) $config['densities']);
         }
 
-        if (isset($imageSize['media'])) {
-            $configItem->setMedia((string) $imageSize['media']);
+        if (isset($config['media'])) {
+            $configItem->setMedia((string) $config['media']);
         }
 
         $resizeConfig = new ResizeConfiguration();
 
-        if (isset($imageSize['width'])) {
-            $resizeConfig->setWidth((int) $imageSize['width']);
+        if (isset($config['width'])) {
+            $resizeConfig->setWidth((int) $config['width']);
         }
 
-        if (isset($imageSize['height'])) {
-            $resizeConfig->setHeight((int) $imageSize['height']);
+        if (isset($config['height'])) {
+            $resizeConfig->setHeight((int) $config['height']);
         }
 
-        if (isset($imageSize['zoom'])) {
-            $resizeConfig->setZoomLevel((int) $imageSize['zoom']);
+        if (isset($config['zoom'])) {
+            $resizeConfig->setZoomLevel((int) $config['zoom']);
         }
 
-        if (isset($imageSize['resizeMode'])) {
-            $resizeConfig->setMode((string) $imageSize['resizeMode']);
+        if (isset($config['resizeMode'])) {
+            $resizeConfig->setMode((string) $config['resizeMode']);
         }
 
         $configItem->setResizeConfig($resizeConfig);

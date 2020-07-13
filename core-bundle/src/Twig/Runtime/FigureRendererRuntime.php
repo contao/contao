@@ -40,14 +40,15 @@ final class FigureRendererRuntime implements RuntimeExtensionInterface
     }
 
     /**
-     * Render a figure. The provided options are used to configure a
-     * FigureBuilder. By default.
+     * Render a figure. The provided configuration array is used to configure
+     * a FigureBuilder. If not explicitly set the default figure template will
+     * be used to render the results.
      */
-    public function render($from, array $options = [], $template = '@ContaoCore/Image/Studio/figure.html.twig'): string
+    public function render($from, array $configuration = [], $template = '@ContaoCore/Image/Studio/figure.html.twig'): string
     {
-        $options['from'] = $from;
+        $configuration['from'] = $from;
 
-        $figure = $this->buildFigure($options);
+        $figure = $this->buildFigure($configuration);
 
         return $this->twig->render($template, ['figure' => $figure]);
     }
