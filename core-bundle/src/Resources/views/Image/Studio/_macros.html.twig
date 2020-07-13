@@ -44,10 +44,15 @@
 
     If a link is defined the picture will be wrapped in an `<a>` tag.
 #}
-{% macro figure(figure, options = {}) %}
-    {% set figure_attributes = figure.options.attr|default({})|merge(options.attr|default({})) %}
-    {% set link_attributes = figure.options.link_attr|default({})|merge(options.link_attr|default({})) ~%}
-    <figure{{ _self.html_attributes(figure_attributes) }}>
+{%- macro figure(figure, options = {}) -%}
+    {%- set figure_attributes = figure.options.attr|default({})|merge(options.attr|default({})) %}
+    {%- set link_attributes = figure.options.link_attr|default({})|merge(options.link_attr|default({})) ~%}
+
+    {%- set base_attributes = {
+        'itemscope': '',
+        'itemtype': 'http://schema.org/ImageObject'
+    } %}
+    <figure{{ _self.html_attributes(base_attributes|merge(figure_attributes)) }}>
         {% if figure.linkHref -%}
             {%- set base_attributes = {
                 'href': figure.linkHref,
@@ -62,7 +67,7 @@
 
         {{ _self.caption(figure, options) }}
     </figure>
-{% endmacro %}
+{%- endmacro -%}
 
 {#
     Build a `<picture>` from `Studio\Figure` data.
@@ -127,7 +132,11 @@
     {% apply spaceless %}
         {% if figure.hasMetaData and figure.metaData.caption %}
             {% set caption_attributes = figure.options.caption_attr|default({})|merge(options.caption_attr|default({})) %}
-            <figcaption{{ _self.html_attributes(caption_attributes) }}>
+
+            {% set base_attributes = {
+                'itemprop': 'caption'
+            } %}
+            <figcaption{{ _self.html_attributes(base_attributes|merge(caption_attributes)) }}>
                 {{- figure.metaData.caption -}}
             </figcaption>
         {% endif %}
@@ -146,6 +155,6 @@
 #}
 {%- macro html_attributes(attributes) -%}
     {%- for attr, value in attributes|filter(v => v is not null) -%}
-        {{ ' ' ~ attr }}="{{ value }}"
+        {{ ' ' ~ attr }}{% if value %}="{{ value }}"{% endif %}
     {%- endfor -%}
 {%- endmacro -%}
