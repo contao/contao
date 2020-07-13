@@ -338,12 +338,12 @@ final class Figure
      *       add this object to your template's context and directly access the
      *       specific data you need.
      *
-     * @param $template
+     * @param Template|object   $template            The template to apply the data to
      * @param string|array|null $margin              Set margins that will compose the inline CSS for the template's 'margin' property
      * @param string|null       $floating            Set/determine values for the template's 'float_class' and 'addBefore' properties
      * @param bool              $includeFullMetaData Make all meta data entries directly available in the template
      */
-    public function applyLegacyTemplateData($template, $margin = null, string $floating = null, bool $includeFullMetaData = true): void
+    public function applyLegacyTemplateData(object $template, $margin = null, string $floating = null, bool $includeFullMetaData = true): void
     {
         $new = $this->getLegacyTemplateData($margin, $floating, $includeFullMetaData);
         $existing = $template instanceof Template ? $template->getData() : get_object_vars($template);
