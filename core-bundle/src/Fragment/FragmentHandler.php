@@ -99,7 +99,7 @@ class FragmentHandler extends BaseFragmentHandler
     private function preHandleFragment(FragmentReference $uri, FragmentConfig $config): void
     {
         if (!isset($uri->attributes['pageModel']) && $this->hasGlobalPageObject()) {
-            $uri->attributes['pageModel'] = $GLOBALS['objPage']->id;
+            $uri->attributes['pageModel'] = 'esi' === $config->getRenderer() ? $GLOBALS['objPage']->id : $GLOBALS['objPage'];
         }
 
         if ($this->preHandlers->has($uri->controller)) {

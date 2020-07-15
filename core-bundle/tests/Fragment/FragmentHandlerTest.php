@@ -107,7 +107,7 @@ class FragmentHandlerTest extends TestCase
         $uri = new FragmentReference('foo.bar');
 
         $fragmentRegistry = new FragmentRegistry();
-        $fragmentRegistry->add('foo.bar', new FragmentConfig('foo.bar', 'inline', ['foo' => 'bar']));
+        $fragmentRegistry->add('foo.bar', new FragmentConfig('foo.bar', 'esi', ['foo' => 'bar']));
 
         $callback = $this->callback(
             static function () use ($uri) {
@@ -115,10 +115,30 @@ class FragmentHandlerTest extends TestCase
             }
         );
 
+        $renderers = $this->mockServiceLocatorWithRenderer('esi', [$callback]);
+
+        $GLOBALS['objPage'] = $this->mockClassWithProperties(PageModel::class, ['id' => 42]);
+
+        $fragmentHandler = $this->getFragmentHandler($fragmentRegistry, $renderers);
+        $fragmentHandler->render($uri);
+    }
+
+    public function testAddsTheGlobalPageObjectIfNotEsi(): void
+    {
+        $uri = new FragmentReference('foo.bar');
+
+        $fragmentRegistry = new FragmentRegistry();
+        $fragmentRegistry->add('foo.bar', new FragmentConfig('foo.bar', 'inline', ['foo' => 'bar']));
+
+        $callback = $this->callback(
+            static function () use ($uri) {
+                return isset($uri->attributes['pageModel']) && $uri->attributes['pageModel'] instanceof PageModel && 42 === $uri->attributes['pageModel']->id;
+            }
+        );
+
         $renderers = $this->mockServiceLocatorWithRenderer('inline', [$callback]);
 
-        $GLOBALS['objPage'] = new PageModel();
-        $GLOBALS['objPage']->id = 42;
+        $GLOBALS['objPage'] = $this->mockClassWithProperties(PageModel::class, ['id' => 42]);
 
         $fragmentHandler = $this->getFragmentHandler($fragmentRegistry, $renderers);
         $fragmentHandler->render($uri);
@@ -139,8 +159,7 @@ class FragmentHandlerTest extends TestCase
 
         $renderers = $this->mockServiceLocatorWithRenderer('inline', [$callback]);
 
-        $GLOBALS['objPage'] = new PageModel();
-        $GLOBALS['objPage']->id = 42;
+        $GLOBALS['objPage'] = $this->mockClassWithProperties(PageModel::class, ['id' => 42]);
 
         $fragmentHandler = $this->getFragmentHandler($fragmentRegistry, $renderers);
         $fragmentHandler->render($uri);
