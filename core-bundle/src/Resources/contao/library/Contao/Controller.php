@@ -1572,7 +1572,7 @@ abstract class Controller extends System
 
 			if (null !== $filesModel)
 			{
-				// Set empty meta data (this is actually a minor BC break)
+				// Set empty meta data
 				$templateData = array_replace_recursive(
 					$templateData,
 					array(
