@@ -19,11 +19,11 @@ use Contao\StringUtil;
 use Contao\Template;
 
 /**
- * A Figure object holds image and meta data ready to be applied to a (modern)
- * template's context. If you're using the "old way" you can still use the
- * provided legacy helper methods to manually apply the data to your template.
+ * A Figure object holds image and meta data ready to be applied to a
+ * template's context. If you're using the legacy PHP templates, you can still
+ * use the provided legacy helper methods to manually apply the data to your template.
  *
- * Wherever possible, the actual data is only requested/built on access (lazy).
+ * Wherever possible, the actual data is only requested/built on demand.
  */
 final class Figure
 {
@@ -58,7 +58,8 @@ final class Figure
      * Create a figure container.
      *
      * All arguments but the main image result can also be set via a Closure
-     * that returns the value instead (lazily evaluated when needed).
+     * that returns the value instead. Closures will only be evaluated on
+     * demand.
      *
      * @param ImageResult                                                                 $image          Main image
      * @param MetaData|(\Closure(self):MetaData|null)|null                                $metaData       Meta data container
@@ -127,7 +128,8 @@ final class Figure
     }
 
     /**
-     * Return a key-value list of all link attributes (excluding "href" by default).
+     * Return a key-value list of all link attributes. This excludes "href" by
+     * default.
      */
     public function getLinkAttributes(bool $includeHref = false): array
     {
@@ -190,7 +192,7 @@ final class Figure
     }
 
     /**
-     * Return a key-value list of (figure) attributes.
+     * Return a key-value list of template options.
      */
     public function getOptions(): array
     {
@@ -331,8 +333,8 @@ final class Figure
     }
 
     /**
-     * Apply the legacy template data to an existing Contao template. This will
-     * prevent overriding the "href" property if already set and use
+     * Apply the legacy template data to an existing template. This will
+     * prevent overriding the "href" property if already present and use
      * "imageHref" instead.
      *
      * Note: Do not use this method when using modern/Twig templates! Instead,

@@ -74,7 +74,7 @@ class LightBoxResult
     }
 
     /**
-     * Return if this light box result contains a (resized) image.
+     * Return if this light box result contains an image.
      */
     public function hasImage(): bool
     {
@@ -82,12 +82,12 @@ class LightBoxResult
     }
 
     /**
-     * Return the underlying (resized) image.
+     * Return the image.
      */
     public function getImage(): ImageResult
     {
         if (!$this->hasImage()) {
-            throw new \RuntimeException('This light box result does not contain a (resized) image.');
+            throw new \RuntimeException('This light box result does not contain an image.');
         }
 
         return $this->image;

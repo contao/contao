@@ -24,10 +24,11 @@ use Symfony\Component\Filesystem\Filesystem;
 use Webmozart\PathUtil\Path;
 
 /**
- * Use the FigureBuilder class to easily create Figure result objects by
- * applying configuration via a fluent interface. You can call the build()
- * method multiple times (and change some settings in between) to create
- * multiple instances.
+ * Use the FigureBuilder to create Figure result objects. The class features a
+ * fluent interface to configure the desired output. When you're ready call
+ * build() to get a Figure. If you need another instance with similar settings,
+ * you can alter values and call build() again - this won't affect your first
+ * instance.
  */
 class FigureBuilder
 {
@@ -53,7 +54,7 @@ class FigureBuilder
     private $filePath;
 
     /**
-     * The resource's file model (if applicable).
+     * The resource's file model if applicable.
      *
      * @var FilesModel|null
      */
@@ -69,14 +70,14 @@ class FigureBuilder
     private $sizeConfiguration;
 
     /**
-     * User defined custom locale (overwriting the default).
+     * User defined custom locale. This will overwrite the default if set.
      *
      * @var string|null
      */
     private $locale;
 
     /**
-     * User defined meta data (overwriting the default).
+     * User defined meta data. This will overwrite the default if set.
      *
      * @var MetaData|null
      */
@@ -90,28 +91,28 @@ class FigureBuilder
     private $disableMetaData;
 
     /**
-     * User defined link attributes (adding to or overwriting the default attributes).
+     * User defined link attributes. These will add to or overwrite the default values.
      *
      * @var array<string, string|null>
      */
     private $additionalLinkAttributes = [];
 
     /**
-     * User defined light box resource or url (overwriting the default).
+     * User defined light box resource or url. This will overwrite the default if set.
      *
      * @var string|ImageInterface|null
      */
     private $lightBoxResourceOrUrl;
 
     /**
-     * User defined light box size configuration (overwriting the default).
+     * User defined light box size configuration. This will overwrite the default if set.
      *
      * @var mixed|null
      */
     private $lightBoxSizeConfiguration;
 
     /**
-     * User defined light box group identifier (overwriting the default).
+     * User defined light box group identifier. This will overwrite the default if set.
      *
      * @var string|null
      */
@@ -267,7 +268,7 @@ class FigureBuilder
 
     /**
      * Set custom meta data. By default or if the argument is set to null, meta
-     * data from the FilesModel (if available) will be used instead.
+     * data is trying to be pulled from the FilesModel.
      */
     public function setMetaData(?MetaData $metaData): self
     {
@@ -301,8 +302,8 @@ class FigureBuilder
 
     /**
      * Add a custom link attribute. Set the value to null to remove it. If you
-     * want to explicitly remove the value (including auto generated defaults)
-     * set the $forceRemove flag to true.
+     * want to explicitly remove an auto generated value from the results, set
+     * the $forceRemove flag to true.
      */
     public function setLinkAttribute(string $attribute, ?string $value, $forceRemove = false): self
     {
@@ -317,9 +318,9 @@ class FigureBuilder
 
     /**
      * Set all custom link attributes as an associative array. This will
-     * overwrite previously set attributes. If you want to explicitly remove a
-     * value (including auto generated defaults) set the respective attribute
-     * to null.
+     * overwrite previously set attributes. If you want to explicitly remove an
+     * auto generated value from the results, set the respective attribute to
+     * null.
      */
     public function setLinkAttributes(array $attributes): self
     {
@@ -363,8 +364,7 @@ class FigureBuilder
     }
 
     /**
-     * Set a size configuration that will be applied to the light box image (if
-     * available).
+     * Set a size configuration that will be applied to the light box image.
      *
      * For this setting to take effect make sure you enabled the creation of a
      * light box by calling enableLightBox().
@@ -457,7 +457,7 @@ class FigureBuilder
     }
 
     /**
-     * Define meta data [on demand].
+     * Define meta data on demand.
      */
     private function onDefineMetaData(): ?MetaData
     {
@@ -489,7 +489,7 @@ class FigureBuilder
     }
 
     /**
-     * Define link attributes [on demand].
+     * Define link attributes on demand.
      */
     private function onDefineLinkAttributes(Figure $result): array
     {
@@ -504,7 +504,7 @@ class FigureBuilder
     }
 
     /**
-     * Define the light box result if it is enabled [on demand].
+     * Define the light box result if it is enabled on demand.
      */
     private function onDefineLightBoxResult(Figure $result): ?LightBoxResult
     {

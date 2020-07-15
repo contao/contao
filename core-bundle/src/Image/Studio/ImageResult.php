@@ -100,7 +100,7 @@ class ImageResult
     }
 
     /**
-     * Return the image "src" attribute.
+     * Return the image's "src" attribute.
      */
     public function getImageSrc(): string
     {
@@ -108,7 +108,7 @@ class ImageResult
     }
 
     /**
-     * Return the original image dimensions.
+     * Return the image dimensions of the base resource.
      */
     public function getOriginalDimensions(): ImageDimensions
     {
