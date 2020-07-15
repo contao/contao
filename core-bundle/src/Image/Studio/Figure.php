@@ -202,9 +202,9 @@ final class Figure
     /**
      * Compile an opinionated data set ready to be applied to a Contao template.
      *
-     * Note: Do not use this method when using modern/Twig templates! Instead,
-     *       add this object to your template's context and directly access the
-     *       specific data you need.
+     * Note: Do not use this method when building new templates from scratch or
+     *       when using Twig templates! Instead, add this object to your
+     *       template's context and directly access the specific data you need.
      *
      * @param string|array|null $margin              Set margins that will compose the inline CSS for the "margin" key
      * @param string|null       $floating            Set/determine values for the "float_class" and 'addBefore' keys
@@ -335,9 +335,9 @@ final class Figure
      * prevent overriding the "href" property if already present and use
      * "imageHref" instead.
      *
-     * Note: Do not use this method when using modern/Twig templates! Instead,
-     *       add this object to your template's context and directly access the
-     *       specific data you need.
+     * Note: Do not use this method when building new templates from scratch or
+     *       when using Twig templates! Instead, add this object to your
+     *       template's context and directly access the specific data you need.
      *
      * @param Template|object   $template            The template to apply the data to
      * @param string|array|null $margin              Set margins that will compose the inline CSS for the template's "margin" property
