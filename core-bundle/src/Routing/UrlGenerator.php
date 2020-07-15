@@ -190,6 +190,8 @@ class UrlGenerator implements UrlGeneratorInterface
 
     /**
      * Extracts host and port from the domain.
+     *
+     * @return array<string|int|null>
      */
     private function getHostAndPort(string $domain): array
     {
