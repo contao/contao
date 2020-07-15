@@ -79,35 +79,6 @@ class FigureBuilderIntegrationTest extends TestCase
         $this->assertSameTemplateData($expectedTemplateData, $template);
     }
 
-    // fixme: Uncomment the following method to test + compare against old implementation / also see #1862.
-
-//    /**
-//     * @dataProvider provideControllerAddImageToTemplateTestCases
-//     *
-//     * @group legacy
-//     */
-//    public function testControllerAddImageToTemplateOld(\Closure $testCase, array $expectedTemplateData): void
-//    {
-//        // Define constants and globals
-//        if (!\defined('TL_MODE')) {
-//            \define('TL_MODE', 'FE');
-//        }
-//
-//        if (!\defined('TL_ERROR')) {
-//            \define('TL_ERROR', 'ERROR');
-//        }
-//
-//        [$template, $dataRow, $maxWidth, $lightBoxGroupIdentifier, $filesModel] = $this->setUpTestCase($testCase);
-//
-//        // suppress E_NOTICE warnings
-//        $errorLevel = error_reporting();
-//        error_reporting($errorLevel & ~E_NOTICE);
-//        Controller::addImageToTemplate__old($template, $dataRow, $maxWidth, $lightBoxGroupIdentifier, $filesModel);
-//        error_reporting($errorLevel);
-//
-//        $this->assertSameTemplateData($expectedTemplateData, $template);
-//    }
-
     /**
      * Returns test cases in the following form:
      *  [
