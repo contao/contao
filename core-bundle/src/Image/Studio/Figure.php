@@ -245,7 +245,7 @@ final class Figure
         };
 
         // Create a CSS margin property from an array or serialized string.
-        $getMargin = static function ($margin): string {
+        $createMargin = static function ($margin): string {
             if (!$margin) {
                 return '';
             }
@@ -280,7 +280,7 @@ final class Figure
                 'singleSRC' => $image->getFilePath(),
                 'src' => $image->getImageSrc(),
                 'fullsize' => ('_blank' === ($linkAttributes['target'] ?? null)) || $this->hasLightBox(),
-                'margin' => $getMargin($margin),
+                'margin' => $createMargin($margin),
                 'addBefore' => 'below' !== $floating,
                 'addImage' => true,
             ],
