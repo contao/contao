@@ -53,9 +53,11 @@ class FigureBuilderTest extends TestCase
         $model = $this->mockClassWithProperties(FilesModel::class);
         $model->type = 'folder';
 
+        $figureBuilder = $this->getFigureBuilder();
+
         $this->expectException(InvalidResourceException::class);
 
-        $this->getFigureBuilder()->fromFilesModel($model);
+        $figureBuilder->fromFilesModel($model);
     }
 
     public function testFromFilesModelFailsWithNonExistingResource(): void
@@ -65,9 +67,11 @@ class FigureBuilderTest extends TestCase
         $model->type = 'file';
         $model->path = 'this/does/not/exist.jpg';
 
+        $figureBuilder = $this->getFigureBuilder();
+
         $this->expectException(InvalidResourceException::class);
 
-        $this->getFigureBuilder()->fromFilesModel($model);
+        $figureBuilder->fromFilesModel($model);
     }
 
     public function testFromUuid(): void
@@ -98,9 +102,11 @@ class FigureBuilderTest extends TestCase
         $filesModelAdapter = $this->mockAdapter(['findByUuid']);
         $framework = $this->mockContaoFramework([FilesModel::class => $filesModelAdapter]);
 
+        $figureBuilder = $this->getFigureBuilder(null, $framework);
+
         $this->expectException(InvalidResourceException::class);
 
-        $this->getFigureBuilder(null, $framework)->fromUuid('invalid-uuid');
+        $figureBuilder->fromUuid('invalid-uuid');
     }
 
     public function testFromId(): void
@@ -131,9 +137,11 @@ class FigureBuilderTest extends TestCase
         $filesModelAdapter = $this->mockAdapter(['findByPk']);
         $framework = $this->mockContaoFramework([FilesModel::class => $filesModelAdapter]);
 
+        $figureBuilder = $this->getFigureBuilder(null, $framework);
+
         $this->expectException(InvalidResourceException::class);
 
-        $this->getFigureBuilder(null, $framework)->fromId(99);
+        $figureBuilder->fromId(99);
     }
 
     public function testFromAbsolutePath(): void
@@ -186,9 +194,11 @@ class FigureBuilderTest extends TestCase
 
         $filePath = Path::join($projectDir, 'this/does/not/exist.png');
 
+        $figureBuilder = $this->getFigureBuilder();
+
         $this->expectException(InvalidResourceException::class);
 
-        $this->getFigureBuilder()->fromPath($filePath, false);
+        $figureBuilder->fromPath($filePath, false);
     }
 
     public function testFromImage(): void
@@ -221,9 +231,11 @@ class FigureBuilderTest extends TestCase
             ->willReturn($filePath)
         ;
 
+        $figureBuilder = $this->getFigureBuilder();
+
         $this->expectException(InvalidResourceException::class);
 
-        $this->getFigureBuilder()->fromImage($image);
+        $figureBuilder->fromImage($image);
     }
 
     /**
@@ -315,9 +327,11 @@ class FigureBuilderTest extends TestCase
 
     public function testFailsWhenTryingToBuildWithoutSettingResource(): void
     {
+        $figureBuilder = $this->getFigureBuilder();
+
         $this->expectException(\LogicException::class);
 
-        $this->getFigureBuilder()->build();
+        $figureBuilder->build();
     }
 
     public function testSetSize(): void
@@ -583,9 +597,11 @@ class FigureBuilderTest extends TestCase
      */
     public function testSetLinkAttributesFailsWithInvalidArray(array $attributes): void
     {
+        $figureBuilder = $this->getFigureBuilder();
+
         $this->expectException(\InvalidArgumentException::class);
 
-        $this->getFigureBuilder()->setLinkAttributes($attributes);
+        $figureBuilder->setLinkAttributes($attributes);
     }
 
     public function provideInvalidLinkAttributes(): \Generator
