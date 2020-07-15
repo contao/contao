@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Image;
+namespace Contao\CoreBundle\Tests\Image\Studio;
 
 use Contao\Config;
 use Contao\Controller;
@@ -38,7 +38,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Webmozart\PathUtil\Path;
 
-class IntegrationTest extends TestCase
+class FigureBuilderIntegrationTest extends TestCase
 {
     /**
      * @var string
@@ -55,12 +55,12 @@ class IntegrationTest extends TestCase
         $filesystem = new Filesystem();
 
         $filesystem->symlink(
-            Path::canonicalize(__DIR__.'/../Fixtures/files'),
+            Path::canonicalize(__DIR__.'/../../Fixtures/files'),
             Path::join(self::$testRoot, 'files')
         );
 
         $filesystem->symlink(
-            Path::canonicalize(__DIR__.'/../../src/Resources/contao'),
+            Path::canonicalize(__DIR__.'/../../../src/Resources/contao'),
             Path::join(self::$testRoot, 'contao')
         );
     }
