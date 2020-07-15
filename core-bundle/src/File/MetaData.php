@@ -20,8 +20,6 @@ namespace Contao\CoreBundle\File;
  * The data must be stored in a normalized form. It is your responsibility to
  * ensure this is the case when creating an instance of this class. You can use
  * the public class constants as keys for a better DX.
- *
- * @psalm-immutable
  */
 class MetaData
 {

@@ -25,8 +25,6 @@ use Symfony\Contracts\Service\ServiceSubscriberInterface;
 class Studio implements ServiceSubscriberInterface
 {
     /**
-     * @readonly
-     *
      * @var ContainerInterface
      */
     private $locator;

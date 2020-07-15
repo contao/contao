@@ -22,29 +22,21 @@ use Psr\Container\ContainerInterface;
 class LightBoxResult
 {
     /**
-     * @readonly
-     *
      * @var ContainerInterface
      */
     protected $locator;
 
     /**
-     * @readonly
-     *
      * @var ImageResult|null
      */
     private $image;
 
     /**
-     * @readonly
-     *
      * @var string|null
      */
     private $url;
 
     /**
-     * @readonly
-     *
      * @var string|null
      */
     private $groupIdentifier;

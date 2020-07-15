@@ -24,22 +24,16 @@ use Webmozart\PathUtil\Path;
 class ImageResult
 {
     /**
-     * @readonly
-     *
      * @var ContainerInterface
      */
     protected $locator;
 
     /**
-     * @readonly
-     *
      * @var string|ImageInterface
      */
     protected $filePathOrImageInterface;
 
     /**
-     * @readonly
-     *
      * @var int|string|array|PictureConfiguration|null
      */
     protected $sizeConfiguration;

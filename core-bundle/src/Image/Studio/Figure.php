@@ -28,8 +28,6 @@ use Contao\Template;
 final class Figure
 {
     /**
-     * @readonly
-     *
      * @var ImageResult
      */
     private $image;

@@ -33,15 +33,11 @@ use Webmozart\PathUtil\Path;
 class FigureBuilder
 {
     /**
-     * @readonly
-     *
      * @var ContainerInterface
      */
     private $locator;
 
     /**
-     * @readonly
-     *
      * @var Filesystem
      */
     private $filesystem;
