@@ -1105,7 +1105,7 @@ class FigureBuilderIntegrationTest extends TestCase
             ),
         ];
 
-        yield 'image content element 1' => [
+        yield 'image/text content element 1' => [
             function () {
                 return [
                     $this->getFilesAdapter([
@@ -1152,7 +1152,7 @@ class FigureBuilderIntegrationTest extends TestCase
             ),
         ];
 
-        yield 'image content element 2 (overwriting meta data)' => [
+        yield 'image/text content element 2 (overwriting meta data)' => [
             function () {
                 return [
                     $this->getFilesAdapter([
@@ -1200,7 +1200,7 @@ class FigureBuilderIntegrationTest extends TestCase
             ),
         ];
 
-        yield 'image content element 3 (fullsize/lightbox without size)' => [
+        yield 'image/text content element 3 (fullsize/lightbox without size)' => [
             function () {
                 return [
                     $this->getFilesAdapter([
@@ -1262,7 +1262,7 @@ class FigureBuilderIntegrationTest extends TestCase
             ),
         ];
 
-        yield 'image content element 4 (lightbox + size from layout)' => [
+        yield 'image/text content element 4 (lightbox + size from layout)' => [
             function () {
                 return [
                     [
@@ -1327,7 +1327,7 @@ class FigureBuilderIntegrationTest extends TestCase
             ),
         ];
 
-        yield 'image content element 5 (complex with link)' => [
+        yield 'image/text content element 5 (complex with link)' => [
             function () {
                 return [
                     $this->getFilesAdapter([
@@ -1377,7 +1377,7 @@ class FigureBuilderIntegrationTest extends TestCase
             ),
         ];
 
-        yield 'image content element 6 (complex with lightbox)' => [
+        yield 'image/text content element 6 (complex with lightbox)' => [
             function () {
                 return [
                     [
@@ -1442,8 +1442,6 @@ class FigureBuilderIntegrationTest extends TestCase
                 ]
             ),
         ];
-
-        // todo: add a gallery/text element test case
     }
 
     public function replaceFileTestInsertTag(string $tag)
