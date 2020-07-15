@@ -128,6 +128,8 @@ class FigureBuilder
     /**
      * User defined template options.
      *
+     * @phpcsSuppress SlevomatCodingStandard.Classes.UnusedPrivateElements
+     *
      * @var array<string, mixed>
      */
     private $options = [];
@@ -452,7 +454,7 @@ class FigureBuilder
                 },
                 $settings
             ),
-            $this->options
+            $settings->options
         );
     }
 
