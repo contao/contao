@@ -16,7 +16,6 @@ use Contao\BackendCustom;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoTemplateExtension;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -75,9 +74,6 @@ class ContaoTemplateExtensionTest extends TestCase
         $this->assertEmpty($this->getExtension(null, 'frontend')->renderContaoBackendTemplate());
     }
 
-    /**
-     * @param ContaoFramework&MockObject $framework
-     */
     private function getExtension(ContaoFramework $framework = null, string $scope = 'backend'): ContaoTemplateExtension
     {
         $request = new Request();

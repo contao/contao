@@ -340,8 +340,6 @@ class TokenCheckerTest extends TestCase
     }
 
     /**
-     * @param Request&MockObject $request
-     *
      * @return RequestStack&MockObject
      */
     private function mockRequestStack(Request $request = null): RequestStack

@@ -235,9 +235,6 @@ class UserPasswordCommandTest extends TestCase
         (new CommandTester($command))->execute($input, ['interactive' => false]);
     }
 
-    /**
-     * @param Connection&MockObject $connection
-     */
     private function getCommand(Connection $connection = null, string $password = null): UserPasswordCommand
     {
         if (null === $connection) {

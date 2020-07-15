@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\Contao\Database;
 
 use Contao\CoreBundle\Tests\Fixtures\Database\DoctrineArrayStatement;
 use Contao\Database\Result;
-use PHPUnit\Framework\Error\Notice;
 use PHPUnit\Framework\TestCase;
 
 class ResultTest extends TestCase
@@ -52,7 +51,8 @@ class ResultTest extends TestCase
             }
         }
 
-        $this->expectException(Notice::class);
+        $this->expectNotice();
+
         $resultStatement->fetchField();
     }
 
@@ -95,7 +95,8 @@ class ResultTest extends TestCase
             $this->assertSame('value1', $result->fetchField(0));
         }
 
-        $this->expectException(Notice::class);
+        $this->expectNotice();
+
         $result->fetchField(1);
     }
 
@@ -143,7 +144,8 @@ class ResultTest extends TestCase
             $this->assertSame('value2', $result->fetchField(0));
         }
 
-        $this->expectException(Notice::class);
+        $this->expectNotice();
+
         $result->fetchField(1);
     }
 

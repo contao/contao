@@ -838,12 +838,6 @@ class ImageFactoryTest extends TestCase
     {
     }
 
-    /**
-     * @param ResizerInterface&MockObject $resizer
-     * @param ImagineInterface&MockObject $imagine
-     * @param ImagineInterface&MockObject $imagineSvg
-     * @param ContaoFramework&MockObject  $framework
-     */
     private function getImageFactory(ResizerInterface $resizer = null, ImagineInterface $imagine = null, ImagineInterface $imagineSvg = null, Filesystem $filesystem = null, ContaoFramework $framework = null, bool $bypassCache = null, array $imagineOptions = null, array $validExtensions = null, string $uploadDir = null): ImageFactory
     {
         if (null === $resizer) {
