@@ -24,9 +24,10 @@ use Symfony\Component\Filesystem\Filesystem;
 use Webmozart\PathUtil\Path;
 
 /**
- * Use the `FigureBuilder` to easily create Figure result objects by applying
- * configuration via a fluent interface. You can call `build()` multiple times
- * (and change some settings in between) to create multiple instances.
+ * Use the FigureBuilder class to easily create Figure result objects by
+ * applying configuration via a fluent interface. You can call the build()
+ * method multiple times (and change some settings in between) to create
+ * multiple instances.
  */
 class FigureBuilder
 {
@@ -131,7 +132,7 @@ class FigureBuilder
     private $options = [];
 
     /**
-     * @internal use the `\Contao\Image\Studio\Studio` factory to get an instance of this class
+     * @internal use the Contao\Image\Studio\Studio factory to get an instance of this class
      */
     public function __construct(ContainerInterface $locator)
     {
@@ -160,28 +161,28 @@ class FigureBuilder
     }
 
     /**
-     * Set the image resource from a tl_files uuid.
+     * Set the image resource from a tl_files UUID.
      */
     public function fromUuid(string $uuid): self
     {
         $filesModel = $this->filesModelAdapter()->findByUuid($uuid);
 
         if (null === $filesModel) {
-            throw new InvalidResourceException("DBAFS item with uuid '$uuid' could not be found.");
+            throw new InvalidResourceException("DBAFS item with UUID '$uuid' could not be found.");
         }
 
         return $this->fromFilesModel($filesModel);
     }
 
     /**
-     * Set the image resource from a tl_files id.
+     * Set the image resource from a tl_files ID.
      */
     public function fromId(int $id): self
     {
         $filesModel = $this->filesModelAdapter()->findByPk($id);
 
         if (null === $filesModel) {
-            throw new InvalidResourceException("DBAFS item with id '$id' could not be found.");
+            throw new InvalidResourceException("DBAFS item with ID '$id' could not be found.");
         }
 
         return $this->fromFilesModel($filesModel);
@@ -197,9 +198,7 @@ class FigureBuilder
         $projectDir = $this->projectDir();
 
         // Make sure path is absolute and in a canonical form
-        $path = Path::isAbsolute($path) ?
-            Path::canonicalize($path) :
-            Path::makeAbsolute($path, $projectDir);
+        $path = Path::isAbsolute($path) ? Path::canonicalize($path) : Path::makeAbsolute($path, $projectDir);
 
         // Only check for a FilesModel if requested if resource is inside upload path
         if ($autoDetectDbafsPaths && Path::isBasePath(Path::join($projectDir, $this->uploadPath()), $path)) {
@@ -303,7 +302,7 @@ class FigureBuilder
     /**
      * Add a custom link attribute. Set the value to null to remove it. If you
      * want to explicitly remove the value (including auto generated defaults)
-     * set the `$forceRemove` flag to true.
+     * set the $forceRemove flag to true.
      */
     public function setLinkAttribute(string $attribute, ?string $value, $forceRemove = false): self
     {
@@ -352,7 +351,7 @@ class FigureBuilder
      * automatically determined from the meta data or base resource.
      *
      * For this setting to take effect make sure you enabled the creation of a
-     * light box by calling `enableLightBox()`.
+     * light box by calling enableLightBox().
      *
      * @param string|ImageInterface|null $resourceOrUrl
      */
@@ -368,7 +367,7 @@ class FigureBuilder
      * available).
      *
      * For this setting to take effect make sure you enabled the creation of a
-     * light box by calling `enableLightBox()`.
+     * light box by calling enableLightBox().
      *
      * @param int|string|array|PictureConfiguration $size A picture size configuration or reference
      */
@@ -384,7 +383,7 @@ class FigureBuilder
      * null an id will be generated.
      *
      * For this setting to take effect make sure you enabled the creation of a
-     * light box by calling `enableLightBox()`.
+     * light box by calling enableLightBox().
      */
     public function setLightBoxGroupIdentifier(?string $identifier): self
     {
@@ -432,23 +431,26 @@ class FigureBuilder
             ->createImage($settings->filePath, $settings->sizeConfiguration)
         ;
 
-        // We're defining some values via a Closure to make their evaluation lazy
+        // We are defining some values via a Closure to make their evaluation lazy
         return new Figure(
             $imageResult,
             \Closure::bind(
                 function (Figure $figure): ?MetaData {
                     return $this->onDefineMetaData();
-                }, $settings
+                },
+                $settings
             ),
             \Closure::bind(
                 function (Figure $figure): array {
                     return $this->onDefineLinkAttributes($figure);
-                }, $settings
+                },
+                $settings
             ),
             \Closure::bind(
                 function (Figure $figure): ?LightBoxResult {
                     return $this->onDefineLightBoxResult($figure);
-                }, $settings
+                },
+                $settings
             ),
             $this->options
         );
@@ -473,7 +475,6 @@ class FigureBuilder
 
         // Get fallback locale list or use without fallbacks if explicitly set
         $locales = null !== $this->locale ? [$this->locale] : $this->getFallbackLocaleList();
-
         $metaData = $this->filesModel->getMetaData(...$locales);
 
         if (null !== $metaData) {
@@ -484,9 +485,7 @@ class FigureBuilder
         // container from the default meta fields with empty values instead.
         $metaFields = $this->filesModelAdapter()->getMetaFields();
 
-        return new MetaData(
-            array_combine($metaFields, array_fill(0, \count($metaFields), ''))
-        );
+        return new MetaData(array_combine($metaFields, array_fill(0, \count($metaFields), '')));
     }
 
     /**

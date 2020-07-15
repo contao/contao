@@ -13,15 +13,15 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\File;
 
 /**
- * @psalm-immutable
- *
  * This class is as a container for file meta data as typically defined in
- * tl_files / tl_content. Its underlying data structure is a key-value store
- * with added getters/setters for convenience.
+ * tl_files/tl_content. Its underlying data structure is a key-value store with
+ * added getters/setters for convenience.
  *
- * The data must be stored in a normalized form. It's your responsibility to
- * ensure this is the case when creating an instance of this class. You can
- * use the public class constants as keys for a better DX.
+ * The data must be stored in a normalized form. It is your responsibility to
+ * ensure this is the case when creating an instance of this class. You can use
+ * the public class constants as keys for a better DX.
+ *
+ * @psalm-immutable
  */
 class MetaData
 {

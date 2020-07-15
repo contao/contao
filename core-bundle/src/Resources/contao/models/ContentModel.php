@@ -439,7 +439,7 @@ class ContentModel extends Model
 	 */
 	public function getOverwriteMetaData(): ?MetaData
 	{
-		// Ignore if `overwriteMeta` isn't set
+		// Ignore if "overwriteMeta" isn't set
 		if (!$this->overwriteMeta)
 		{
 			return null;
@@ -466,7 +466,7 @@ class ContentModel extends Model
 			$data[MetaData::VALUE_URL] = Controller::replaceInsertTags($data[MetaData::VALUE_URL]);
 		}
 
-		// Strip superfluous fields by intersecting with `tl_files.meta.eval.metaFields`
+		// Strip superfluous fields by intersecting with tl_files.meta.eval.metaFields
 		return new MetaData(array_intersect_key($data, array_flip(FilesModel::getMetaFields())));
 	}
 }

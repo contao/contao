@@ -19,11 +19,11 @@ use Contao\StringUtil;
 use Contao\Template;
 
 /**
- * A `Figure` holds image and meta data ready to be applied to a (modern)
- * template's context. (If you're using the "old way" you can still use the
- * provided legacy helper methods to manually apply the data to your template).
+ * A Figure object holds image and meta data ready to be applied to a (modern)
+ * template's context. If you're using the "old way" you can still use the
+ * provided legacy helper methods to manually apply the data to your template.
  *
- * Wherever possible the actual data is only requested/built on access (lazy).
+ * Wherever possible, the actual data is only requested/built on access (lazy).
  */
 final class Figure
 {
@@ -102,7 +102,7 @@ final class Figure
             throw new \LogicException('This result container does not include a light box.');
         }
 
-        // Safely return as Closure will be evaluated by this point
+        // Safely return as Closure will be evaluated at this point
         return $this->lightBox;
     }
 
@@ -122,12 +122,12 @@ final class Figure
             throw new \LogicException('This result container does not include meta data.');
         }
 
-        // Safely return as Closure will be evaluated by this point
+        // Safely return as Closure will be evaluated at this point
         return $this->metaData;
     }
 
     /**
-     * Return a key-value list of all link attributes (excluding `href` by default).
+     * Return a key-value list of all link attributes (excluding "href" by default).
      */
     public function getLinkAttributes(bool $includeHref = false): array
     {
@@ -140,24 +140,25 @@ final class Figure
         // Generate href attribute
         if (!\array_key_exists('href', $this->linkAttributes)) {
             $this->linkAttributes['href'] = (
-            function () {
-                if ($this->hasLightBox()) {
-                    return $this->getLightBox()->getLinkHref();
-                }
+                function () {
+                    if ($this->hasLightBox()) {
+                        return $this->getLightBox()->getLinkHref();
+                    }
 
-                if ($this->hasMetaData()) {
-                    return $this->getMetaData()->getUrl();
-                }
+                    if ($this->hasMetaData()) {
+                        return $this->getMetaData()->getUrl();
+                    }
 
-                return '';
-            }
+                    return '';
+                }
             )();
         }
 
-        // Add rel attribute ("noreferrer noopener") to external links
+        // Add rel attribute "noreferrer noopener" to external links
         if (
-            !empty($this->linkAttributes['href']) &&
-            !\array_key_exists('rel', $this->linkAttributes) && preg_match('#^https?://#', $this->linkAttributes['href'])
+            !empty($this->linkAttributes['href'])
+            && !\array_key_exists('rel', $this->linkAttributes)
+            && preg_match('#^https?://#', $this->linkAttributes['href'])
         ) {
             $this->linkAttributes['rel'] = 'noreferrer noopener';
         }
@@ -181,7 +182,7 @@ final class Figure
     }
 
     /**
-     * Return the `href` link attribute.
+     * Return the "href" link attribute.
      */
     public function getLinkHref(): string
     {
@@ -205,8 +206,8 @@ final class Figure
      *       add this object to your template's context and directly access the
      *       specific data you need.
      *
-     * @param string|array|null $margin              Set margins that will compose the inline CSS for the 'margin' key
-     * @param string|null       $floating            Set/determine values for the 'float_class' and 'addBefore' keys
+     * @param string|array|null $margin              Set margins that will compose the inline CSS for the "margin" key
+     * @param string|null       $floating            Set/determine values for the "float_class" and 'addBefore' keys
      * @param bool              $includeFullMetaData Make all meta data available in the first dimension of the returned data set (key-value pairs)
      */
     public function getLegacyTemplateData($margin = null, string $floating = null, bool $includeFullMetaData = true): array
@@ -323,7 +324,7 @@ final class Figure
 
         // Other
         if (null !== $floating) {
-            $templateData['floatClass'] = " float_{$floating}";
+            $templateData['floatClass'] = " float_$floating";
         }
 
         return $templateData;
@@ -331,16 +332,16 @@ final class Figure
 
     /**
      * Apply the legacy template data to an existing Contao template. This will
-     * prevent overriding the href property if already set and use 'imageHref'
-     * instead.
+     * prevent overriding the "href" property if already set and use
+     * "imageHref" instead.
      *
      * Note: Do not use this method when using modern/Twig templates! Instead,
      *       add this object to your template's context and directly access the
      *       specific data you need.
      *
      * @param Template|object   $template            The template to apply the data to
-     * @param string|array|null $margin              Set margins that will compose the inline CSS for the template's 'margin' property
-     * @param string|null       $floating            Set/determine values for the template's 'float_class' and 'addBefore' properties
+     * @param string|array|null $margin              Set margins that will compose the inline CSS for the template's "margin" property
+     * @param string|null       $floating            Set/determine values for the template's "float_class" and "addBefore" properties
      * @param bool              $includeFullMetaData Make all meta data entries directly available in the template
      */
     public function applyLegacyTemplateData(object $template, $margin = null, string $floating = null, bool $includeFullMetaData = true): void

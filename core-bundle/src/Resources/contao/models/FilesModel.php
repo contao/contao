@@ -397,7 +397,7 @@ class FilesModel extends Model
 	}
 
 	/**
-	 * Get the meta fields defined in `tl_files.meta.eval.metaFields`.
+	 * Get the meta fields defined in tl_files.meta.eval.metaFields.
 	 */
 	public static function getMetaFields(): array
 	{
@@ -407,9 +407,8 @@ class FilesModel extends Model
 	}
 
 	/**
-	 * Get the meta data for this file. Specify one or more locales - meta
-	 * data of the first matching one will be returned or null if none was
-	 * found.
+	 * Get the meta data for this file. Specify one or more locales - meta data
+	 * of the first matching one will be returned or null if none was found.
 	 */
 	public function getMetaData(string ...$locales): ?MetaData
 	{
@@ -430,10 +429,7 @@ class FilesModel extends Model
 
 			// Fill missing meta fields with empty values
 			$metaFields = self::getMetaFields();
-			$data = array_merge(
-				array_combine($metaFields, array_fill(0, \count($metaFields), '')),
-				$data
-			);
+			$data = array_merge(array_combine($metaFields, array_fill(0, \count($metaFields), '')), $data);
 
 			return new MetaData($data);
 		}

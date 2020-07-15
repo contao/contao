@@ -55,7 +55,6 @@ class ImageResultTest extends TestCase
 
         /** @var PictureInterface&MockObject $picture */
         $picture = $this->createMock(PictureInterface::class);
-
         $picture
             ->expects($this->once())
             ->method('getSources')
@@ -91,7 +90,6 @@ class ImageResultTest extends TestCase
 
         /** @var PictureInterface&MockObject $picture */
         $picture = $this->createMock(PictureInterface::class);
-
         $picture
             ->expects($this->once())
             ->method('getImg')
@@ -110,7 +108,6 @@ class ImageResultTest extends TestCase
     public function testGetOriginalDimensionsFromPathResource(): void
     {
         $filePath = 'foo/bar/foobar.png';
-
         $dimensions = $this->createMock(ImageDimensions::class);
 
         /** @var ImageInterface&MockObject $image */
@@ -160,7 +157,6 @@ class ImageResultTest extends TestCase
         ;
 
         $locator = $this->getLocatorMock();
-
         $imageResult = new ImageResult($locator, $image);
 
         $this->assertSame($dimensions, $imageResult->getOriginalDimensions());
@@ -172,7 +168,6 @@ class ImageResultTest extends TestCase
         $filePath = 'project/dir/file/path';
 
         $locator = $this->getLocatorMock(null, $projectDir);
-
         $imageResult = new ImageResult($locator, $filePath);
 
         $this->assertSame('file/path', $imageResult->getFilePath());
@@ -193,7 +188,6 @@ class ImageResultTest extends TestCase
         ;
 
         $locator = $this->getLocatorMock(null, $projectDir);
-
         $imageResult = new ImageResult($locator, $image);
 
         $this->assertSame('file/path', $imageResult->getFilePath());

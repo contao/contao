@@ -30,7 +30,6 @@ class FigureTest extends TestCase
     {
         /** @var ImageResult&MockObject $image */
         $image = $this->createMock(ImageResult::class);
-
         $figure = new Figure($image);
 
         $this->assertSame($image, $figure->getImage());
@@ -40,7 +39,6 @@ class FigureTest extends TestCase
     {
         /** @var ImageResult&MockObject $image */
         $image = $this->createMock(ImageResult::class);
-
         $figure = new Figure($image);
 
         $this->assertFalse($figure->hasLightBox());
@@ -54,7 +52,6 @@ class FigureTest extends TestCase
 
         /** @var LightBoxResult&MockObject $lightBox */
         $lightBox = $this->createMock(LightBoxResult::class);
-
         $figure = new Figure($image, null, null, $lightBox);
 
         $this->assertTrue($figure->hasLightBox());
@@ -68,7 +65,6 @@ class FigureTest extends TestCase
 
         /** @var LightBoxResult&MockObject $lightBox */
         $lightBox = $this->createMock(LightBoxResult::class);
-
         $called = 0;
 
         $lightBoxClosure = function (Figure $figure) use (&$called, $lightBox): LightBoxResult {
@@ -91,7 +87,6 @@ class FigureTest extends TestCase
     {
         /** @var ImageResult&MockObject $image */
         $image = $this->createMock(ImageResult::class);
-
         $figure = new Figure($image);
 
         $this->expectException(\LogicException::class);
@@ -103,9 +98,7 @@ class FigureTest extends TestCase
     {
         /** @var ImageResult&MockObject $image */
         $image = $this->createMock(ImageResult::class);
-
         $metaData = new MetaData(['foo' => 'bar']);
-
         $figure = new Figure($image, $metaData);
 
         $this->assertTrue($figure->hasMetaData());
@@ -116,9 +109,7 @@ class FigureTest extends TestCase
     {
         /** @var ImageResult&MockObject $image */
         $image = $this->createMock(ImageResult::class);
-
         $metaData = new MetaData(['foo' => 'bar']);
-
         $called = 0;
 
         $metaDataClosure = function (Figure $figure) use (&$called, $metaData): MetaData {
@@ -141,7 +132,6 @@ class FigureTest extends TestCase
     {
         /** @var ImageResult&MockObject $image */
         $image = $this->createMock(ImageResult::class);
-
         $figure = new Figure($image);
 
         $this->expectException(\LogicException::class);
@@ -170,7 +160,6 @@ class FigureTest extends TestCase
     {
         /** @var LightBoxResult&MockObject $lightBox */
         $lightBox = $this->createMock(LightBoxResult::class);
-
         $lightBox
             ->method('getLinkHref')
             ->willReturn('path/from/lightbox')
@@ -292,9 +281,7 @@ class FigureTest extends TestCase
     {
         /** @var ImageResult&MockObject $image */
         $image = $this->createMock(ImageResult::class);
-
         $options = ['attributes' => ['class' => 'foo'], 'custom' => new \stdClass()];
-
         $figure = new Figure($image, null, null, null, $options);
 
         $this->assertSame($options, $figure->getOptions());
@@ -304,9 +291,7 @@ class FigureTest extends TestCase
     {
         /** @var ImageResult&MockObject $image */
         $image = $this->createMock(ImageResult::class);
-
         $options = ['attributes' => ['class' => 'foo'], 'custom' => new \stdClass()];
-
         $called = 0;
 
         $optionsClosure = function (Figure $figure) use (&$called, $options): array {
@@ -321,6 +306,7 @@ class FigureTest extends TestCase
         $this->assertSame($options, $figure->getOptions());
 
         $figure->getOptions(); // second call should be cached
+
         $this->assertSame(1, $called);
     }
 
@@ -328,7 +314,6 @@ class FigureTest extends TestCase
     {
         /** @var ImageResult&MockObject $image */
         $image = $this->createMock(ImageResult::class);
-
         $figure = new Figure($image);
 
         $this->assertSame([], $figure->getOptions());
@@ -456,7 +441,6 @@ class FigureTest extends TestCase
 
         /** @var ImageResult&MockObject $lightBoxImage */
         $lightBoxImage = $this->createMock(ImageResult::class);
-
         $lightBoxImage
             ->method('getImg')
             ->willReturn(['light box img'])
@@ -469,7 +453,6 @@ class FigureTest extends TestCase
 
         /** @var LightBoxResult&MockObject $lightBox */
         $lightBox = $this->createMock(LightBoxResult::class);
-
         $lightBox
             ->method('hasImage')
             ->willReturn(true)
@@ -537,14 +520,16 @@ class FigureTest extends TestCase
     {
         System::setContainer($this->getContainerWithContaoConfiguration());
 
-        $figure = new Figure($this->getImageMock());
-
         $template = new FrontendTemplate('ce_image');
+
+        $figure = new Figure($this->getImageMock());
         $figure->applyLegacyTemplateData($template);
+
         $this->assertSame(['img foo'], $template->getData()['picture']['img']);
 
         $template = new \stdClass();
         $figure->applyLegacyTemplateData($template);
+
         $this->assertSame(['img foo'], $template->picture['img']);
     }
 
@@ -552,15 +537,16 @@ class FigureTest extends TestCase
     {
         System::setContainer($this->getContainerWithContaoConfiguration());
 
-        $figure = new Figure($this->getImageMock(), null, ['href' => 'foo://bar']);
-
         $template = new \stdClass();
+
+        $figure = new Figure($this->getImageMock(), null, ['href' => 'foo://bar']);
         $figure->applyLegacyTemplateData($template);
 
         $this->assertSame('foo://bar', $template->href);
 
         $template = new \stdClass();
         $template->href = 'do-not-overwrite';
+
         $figure->applyLegacyTemplateData($template);
 
         $this->assertSame('do-not-overwrite', $template->href);
@@ -581,7 +567,6 @@ class FigureTest extends TestCase
 
         /** @var BoxInterface&MockObject $originalSize */
         $originalSize = $this->createMock(BoxInterface::class);
-
         $originalSize
             ->method('getWidth')
             ->willReturn($originalWidth)
@@ -594,7 +579,6 @@ class FigureTest extends TestCase
 
         /** @var ImageDimensions&MockObject $originalDimensions */
         $originalDimensions = $this->createMock(ImageDimensions::class);
-
         $originalDimensions
             ->method('getSize')
             ->willReturn($originalSize)
@@ -602,7 +586,6 @@ class FigureTest extends TestCase
 
         /** @var ImageResult&MockObject $image */
         $image = $this->createMock(ImageResult::class);
-
         $image
             ->method('getOriginalDimensions')
             ->willReturn($originalDimensions)

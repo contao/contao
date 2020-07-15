@@ -49,13 +49,16 @@ class MetaDataTest extends TestCase
         $this->assertSame('url', $metaData->getUrl());
         $this->assertSame('bar', $metaData->get('foo'));
 
-        $this->assertSame([
-            MetaData::VALUE_ALT => 'alt',
-            MetaData::VALUE_CAPTION => 'caption',
-            MetaData::VALUE_TITLE => 'title',
-            MetaData::VALUE_URL => 'url',
-            'foo' => 'bar',
-        ], $metaData->all());
+        $this->assertSame(
+            [
+                MetaData::VALUE_ALT => 'alt',
+                MetaData::VALUE_CAPTION => 'caption',
+                MetaData::VALUE_TITLE => 'title',
+                MetaData::VALUE_URL => 'url',
+                'foo' => 'bar',
+            ],
+            $metaData->all()
+        );
     }
 
     public function testGetEmpty(): void
@@ -92,9 +95,7 @@ class MetaDataTest extends TestCase
     public function testCreatesMetaDataContainerFromContentModel(): void
     {
         /** @var ContentModel $model */
-        $model = (new \ReflectionClass(ContentModel::class))
-            ->newInstanceWithoutConstructor()
-        ;
+        $model = (new \ReflectionClass(ContentModel::class))->newInstanceWithoutConstructor();
 
         $model->setRow([
             'id' => 100,
@@ -106,20 +107,21 @@ class MetaDataTest extends TestCase
             'caption' => 'foo caption',
         ]);
 
-        $this->assertSame([
-            MetaData::VALUE_ALT => 'foo alt',
-            MetaData::VALUE_CAPTION => 'foo caption',
-            MetaData::VALUE_TITLE => 'foo title',
-            MetaData::VALUE_URL => 'foo://bar',
-        ], $model->getOverwriteMetaData()->all());
+        $this->assertSame(
+            [
+                MetaData::VALUE_ALT => 'foo alt',
+                MetaData::VALUE_CAPTION => 'foo caption',
+                MetaData::VALUE_TITLE => 'foo title',
+                MetaData::VALUE_URL => 'foo://bar',
+            ],
+            $model->getOverwriteMetaData()->all()
+        );
     }
 
     public function testDoesNotCreateMetaDataContainerFromContentModelIfOverwriteIsDisabled(): void
     {
         /** @var ContentModel $model */
-        $model = (new \ReflectionClass(ContentModel::class))
-            ->newInstanceWithoutConstructor()
-        ;
+        $model = (new \ReflectionClass(ContentModel::class))->newInstanceWithoutConstructor();
 
         $model->setRow([
             'id' => 100,
@@ -134,9 +136,7 @@ class MetaDataTest extends TestCase
     public function testCreatesMetaDataContainerFromFilesModel(): void
     {
         /** @var FilesModel $model */
-        $model = (new \ReflectionClass(FilesModel::class))
-            ->newInstanceWithoutConstructor()
-        ;
+        $model = (new \ReflectionClass(FilesModel::class))->newInstanceWithoutConstructor();
 
         $model->setRow([
             'id' => 100,

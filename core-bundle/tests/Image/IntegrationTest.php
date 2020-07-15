@@ -40,6 +40,9 @@ use Webmozart\PathUtil\Path;
 
 class IntegrationTest extends TestCase
 {
+    /**
+     * @var string
+     */
     private static $testRoot;
 
     public static function setUpBeforeClass(): void
@@ -63,9 +66,9 @@ class IntegrationTest extends TestCase
     }
 
     /**
-     * @dataProvider provideControllerAddImageToTemplateTestCases
-     *
      * @group legacy
+     *
+     * @dataProvider provideControllerAddImageToTemplateTestCases
      */
     public function testControllerAddImageToTemplate(\Closure $testCase, array $expectedTemplateData): void
     {
@@ -1519,13 +1522,11 @@ class IntegrationTest extends TestCase
                 'importantPartWidth' => 0.0,
             ], $filesModelProperties);
 
-            // We're using a child class of FilesModel to benefit from
-            // realistic MetaData creation while being able to disable
-            // object registration.
+            // We are using a child class of FilesModel to benefit from
+            // realistic MetaData creation while being able to disable object
+            // registration
             $filesModel = new class($data) extends FilesModel {
-                /**
-                 * @noinspection PhpMissingParentConstructorInspection
-                 */
+                /* @noinspection PhpMissingParentConstructorInspection */
                 public function __construct($data)
                 {
                     $this->setRow($data);
@@ -1536,7 +1537,6 @@ class IntegrationTest extends TestCase
         }
 
         $filesAdapter = $this->mockAdapter(['getMetaFields', 'findByPath']);
-
         $filesAdapter
             ->method('getMetaFields')
             ->willReturn(['title', 'alt', 'link', 'caption'])
@@ -1567,13 +1567,11 @@ class IntegrationTest extends TestCase
             'lightboxSize' => 'a:3:{i:0;s:2:"40";i:1;s:2:"30";i:2;s:13:"center_center";}',
         ];
 
-        // We're using a child class of LayoutModel so that we can push it
+        // We are using a child class of LayoutModel so that we can push it
         // into the registry cache and therefore make it available for the
         // legacy code.
         $layoutModel = new class($data) extends LayoutModel {
-            /**
-             * @noinspection PhpMissingParentConstructorInspection
-             */
+            /* @noinspection PhpMissingParentConstructorInspection */
             public function __construct($data)
             {
                 $this->setRow($data);
@@ -1590,7 +1588,6 @@ class IntegrationTest extends TestCase
         $registry->register($layoutModel);
 
         $layoutAdapter = $this->mockAdapter(['findByPk']);
-
         $layoutAdapter
             ->method('findByPk')
             ->with(1)
@@ -1655,8 +1652,9 @@ class IntegrationTest extends TestCase
 
     private function assertSameTemplateData(array $expected, object $template): void
     {
-        $templateData = $template instanceof Template ?
-            $template->getData() : get_object_vars($template);
+        $templateData = $template instanceof Template
+            ? $template->getData()
+            : get_object_vars($template);
 
         $sortByKeyRecursive = static function (array &$array) use (&$sortByKeyRecursive) {
             foreach ($array as &$value) {

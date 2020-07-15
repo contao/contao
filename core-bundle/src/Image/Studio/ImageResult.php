@@ -62,7 +62,7 @@ class ImageResult
      * @param string|ImageInterface                      $filePathOrImage
      * @param array|PictureConfiguration|int|string|null $sizeConfiguration
      *
-     * @internal use the `\Contao\Image\Studio\Studio` factory to get an instance of this class
+     * @internal use the Contao\Image\Studio\Studio factory to get an instance of this class
      */
     public function __construct(ContainerInterface $locator, $filePathOrImage, $sizeConfiguration = null)
     {
@@ -84,29 +84,23 @@ class ImageResult
     }
 
     /**
-     * Return the 'sources' part of the current picture.
+     * Return the "sources" part of the current picture.
      */
     public function getSources(): array
     {
-        return $this->getPicture()->getSources(
-            $this->projectDir(),
-            $this->staticUrl()
-        );
+        return $this->getPicture()->getSources($this->projectDir(), $this->staticUrl());
     }
 
     /**
-     * Return the 'img' part of the current picture.
+     * Return the "img" part of the current picture.
      */
     public function getImg(): array
     {
-        return $this->getPicture()->getImg(
-            $this->projectDir(),
-            $this->staticUrl()
-        );
+        return $this->getPicture()->getImg($this->projectDir(), $this->staticUrl());
     }
 
     /**
-     * Return the image's src attribute.
+     * Return the image "src" attribute.
      */
     public function getImageSrc(): string
     {
@@ -126,7 +120,8 @@ class ImageResult
             return $this->originalDimensions = $this->filePathOrImageInterface->getDimensions();
         }
 
-        return $this->originalDimensions = $this->imageFactory()
+        return $this->originalDimensions = $this
+            ->imageFactory()
             ->create($this->filePathOrImageInterface)
             ->getDimensions()
         ;
@@ -138,8 +133,9 @@ class ImageResult
      */
     public function getFilePath($absolute = false): string
     {
-        $path = $this->filePathOrImageInterface instanceof ImageInterface ?
-            $this->filePathOrImageInterface->getPath() : $this->filePathOrImageInterface;
+        $path = $this->filePathOrImageInterface instanceof ImageInterface
+            ? $this->filePathOrImageInterface->getPath()
+            : $this->filePathOrImageInterface;
 
         return $absolute ? $path : Path::makeRelative($path, $this->projectDir());
     }

@@ -19,6 +19,7 @@ use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\File\MetaData;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\CoreBundle\Monolog\ContaoContext as ContaoMonologContext;
 use Contao\CoreBundle\Util\SimpleTokenParser;
 use Contao\Database\Result;
 use Contao\Image\PictureConfiguration;
@@ -1530,22 +1531,19 @@ abstract class Controller extends System
 			if ($interpretAsContentModel)
 			{
 				/** @var ContentModel $contentModel */
-				$contentModel = (new \ReflectionClass(ContentModel::class))
-					->newInstanceWithoutConstructor();
+				$contentModel = (new \ReflectionClass(ContentModel::class))->newInstanceWithoutConstructor();
 
-				// This will be null if `overwriteMeta` isn't set
+				// This will be null if "overwriteMeta" is not set
 				return $contentModel->setRow($rowData)->getOverwriteMetaData();
 			}
 
 			// Manually create meta data that always contains certain properties (BC)
-			return new MetaData(
-				array(
-					MetaData::VALUE_ALT => $rowData['alt'] ?? '',
-					MetaData::VALUE_TITLE => $rowData['imageTitle'] ?? '',
-					MetaData::VALUE_URL => self::replaceInsertTags($rowData['imageUrl'] ?? ''),
-					'linkTitle' => $rowData['linkTitle'] ?: '',
-				)
-			);
+			return new MetaData(array(
+				MetaData::VALUE_ALT => $rowData['alt'] ?? '',
+				MetaData::VALUE_TITLE => $rowData['imageTitle'] ?? '',
+				MetaData::VALUE_URL => self::replaceInsertTags($rowData['imageUrl'] ?? ''),
+				'linkTitle' => $rowData['linkTitle'] ?: '',
+			));
 		};
 
 		// Helper: Create fallback template data with (mostly) empty fields (used if resource acquisition fails)
@@ -1575,12 +1573,15 @@ abstract class Controller extends System
 			if (null !== $filesModel)
 			{
 				// Set empty meta data (this is actually a minor BC break)
-				$templateData = array_replace_recursive($templateData, array(
-					'alt' => '',
-					'caption' => '',
-					'imageTitle' => '',
-					'imageUrl' => '',
-				));
+				$templateData = array_replace_recursive(
+					$templateData,
+					array(
+						'alt' => '',
+						'caption' => '',
+						'imageTitle' => '',
+						'imageUrl' => '',
+					)
+				);
 			}
 
 			return $templateData;
@@ -1700,7 +1701,7 @@ abstract class Controller extends System
 				->log(
 					LogLevel::ERROR,
 					sprintf('Image "%s" could not be processed: %s', $rowData['singleSRC'], $e->getMessage()),
-					array('contao' => new \Contao\CoreBundle\Monolog\ContaoContext(__METHOD__, 'ERROR'))
+					array('contao' => new ContaoMonologContext(__METHOD__, 'ERROR'))
 				);
 
 			// Fall back to apply a sparse data set instead of failing (BC)

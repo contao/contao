@@ -53,12 +53,12 @@ class LightBoxResult
      * @param string|ImageInterface|null                 $filePathOrImage
      * @param array|PictureConfiguration|int|string|null $sizeConfiguration
      *
-     * @internal use the `\Contao\Image\Studio\Studio` factory to get an instance of this class
+     * @internal use the Contao\Image\Studio\Studio factory to get an instance of this class
      */
     public function __construct(ContainerInterface $locator, $filePathOrImage, ?string $url, $sizeConfiguration = null, string $groupIdentifier = null)
     {
         if (1 !== \count(array_filter([$filePathOrImage, $url]))) {
-            throw new \InvalidArgumentException('A lightbox must be either constructed with a resource or an url.');
+            throw new \InvalidArgumentException('A lightbox must be either constructed with a resource or an URL.');
         }
 
         $this->locator = $locator;
@@ -117,14 +117,12 @@ class LightBoxResult
     private function getDefaultLightBoxSizeConfiguration(): ?array
     {
         $framework = $this->locator->get('contao.framework');
-
         $page = $GLOBALS['objPage'] ?? null;
 
         if (!$page instanceof PageModel || null === $page->layout) {
             return null;
         }
 
-        // Try to get layout
         /** @var LayoutModel $layoutModelAdapter */
         $layoutModelAdapter = $framework->getAdapter(LayoutModel::class);
 

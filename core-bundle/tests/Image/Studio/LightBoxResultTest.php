@@ -58,7 +58,7 @@ class LightBoxResultTest extends TestCase
             ->method('findByPk')
             ->with($layoutId)
             ->willReturn($layoutModel)
-            ;
+        ;
 
         $framework = $this->mockContaoFramework([LayoutModel::class => $layoutModelAdapter]);
 
@@ -151,7 +151,6 @@ class LightBoxResultTest extends TestCase
     public function testFallBackLightBoxSizeConfigurationFailsIfNoPage(): void
     {
         $resource = 'foo/bar.png';
-
         $framework = $this->mockContaoFramework();
 
         /** @var MockObject&ImageResult $image */
@@ -216,7 +215,6 @@ class LightBoxResultTest extends TestCase
     {
         /** @var MockObject&ContainerInterface $locator */
         $locator = $this->createMock(ContainerInterface::class);
-
         $lightBoxResult = new LightBoxResult($locator, null, 'foo://bar');
 
         $this->assertFalse($lightBoxResult->hasImage());
@@ -257,7 +255,6 @@ class LightBoxResultTest extends TestCase
     {
         /** @var MockObject&ContainerInterface $locator */
         $locator = $this->createMock(ContainerInterface::class);
-
         $lightBoxResult = new LightBoxResult($locator, null, 'foo://bar');
 
         $this->expectException(\RuntimeException::class);
@@ -305,7 +302,6 @@ class LightBoxResultTest extends TestCase
     {
         /** @var MockObject&ContainerInterface $locator */
         $locator = $this->createMock(ContainerInterface::class);
-
         $lightBoxResult = new LightBoxResult($locator, null, 'foo://bar');
 
         $this->assertSame('foo://bar', $lightBoxResult->getLinkHref());
@@ -315,7 +311,6 @@ class LightBoxResultTest extends TestCase
     {
         /** @var MockObject&ContainerInterface $locator */
         $locator = $this->createMock(ContainerInterface::class);
-
         $lightBoxResult = new LightBoxResult($locator, null, 'foo://bar', null, '12345');
 
         $this->assertSame('12345', $lightBoxResult->getGroupIdentifier());
@@ -325,7 +320,6 @@ class LightBoxResultTest extends TestCase
     {
         /** @var MockObject&ContainerInterface $locator */
         $locator = $this->createMock(ContainerInterface::class);
-
         $lightBoxResult = new LightBoxResult($locator, null, 'foo://bar');
 
         $this->assertSame('', $lightBoxResult->getGroupIdentifier());

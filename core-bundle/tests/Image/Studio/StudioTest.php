@@ -57,7 +57,6 @@ class StudioTest extends TestCase
             Studio::class,
             PictureFactoryInterface::class,
             ImageFactoryInterface::class,
-
             ContaoFramework::class,
             ParameterBagInterface::class,
             ContaoContext::class,
