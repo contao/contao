@@ -1474,7 +1474,7 @@ class FigureBuilderIntegrationTest extends TestCase
     }
 
     /**
-     * Return a files adapter capable of finding multiple files models.
+     * Returns a files adapter capable of finding multiple files models.
      */
     private function getFilesAdapter(array $filesModelPropertyCollection, &$firstFilesModel = null)
     {
@@ -1491,9 +1491,8 @@ class FigureBuilderIntegrationTest extends TestCase
                 'importantPartWidth' => 0.0,
             ], $filesModelProperties);
 
-            // We are using a child class of FilesModel to benefit from
-            // realistic MetaData creation while being able to disable object
-            // registration
+            // We are using a child class of FilesModel to benefit from realistic MetaData
+            // creation while being able to disable object registration
             $filesModel = new class($data) extends FilesModel {
                 /* @noinspection PhpMissingParentConstructorInspection */
                 public function __construct($data)
@@ -1527,7 +1526,7 @@ class FigureBuilderIntegrationTest extends TestCase
     }
 
     /**
-     * Get a layout adapter that can find the default layout model.
+     * Returns a layout adapter that can find the default layout model.
      */
     private function getLayoutAdapter(): Adapter
     {
@@ -1536,9 +1535,8 @@ class FigureBuilderIntegrationTest extends TestCase
             'lightboxSize' => 'a:3:{i:0;s:2:"40";i:1;s:2:"30";i:2;s:13:"center_center";}',
         ];
 
-        // We are using a child class of LayoutModel so that we can push it
-        // into the registry cache and therefore make it available for the
-        // legacy code.
+        // We are using a child class of LayoutModel so that we can push it into the
+        // registry cache and therefore make it available for the legacy code
         $layoutModel = new class($data) extends LayoutModel {
             /* @noinspection PhpMissingParentConstructorInspection */
             public function __construct($data)
@@ -1567,7 +1565,7 @@ class FigureBuilderIntegrationTest extends TestCase
     }
 
     /**
-     * Configure container with parameters + services needed for the tests.
+     * Configures the container with parameters and services needed for the tests.
      */
     private function configureContainer(ContainerBuilder $container, ?Adapter $filesAdapter): void
     {

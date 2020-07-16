@@ -56,7 +56,7 @@ class ImageResult
      * @param string|ImageInterface                      $filePathOrImage
      * @param array|PictureConfiguration|int|string|null $sizeConfiguration
      *
-     * @internal use the Contao\Image\Studio\Studio factory to get an instance of this class
+     * @internal Use the Contao\Image\Studio\Studio factory to get an instance of this class
      */
     public function __construct(ContainerInterface $locator, $filePathOrImage, $sizeConfiguration = null)
     {
@@ -66,7 +66,7 @@ class ImageResult
     }
 
     /**
-     * Create a picture with the defined size configuration.
+     * Creates a picture with the defined size configuration.
      */
     public function getPicture(): PictureInterface
     {
@@ -78,7 +78,7 @@ class ImageResult
     }
 
     /**
-     * Return the "sources" part of the current picture.
+     * Returns the "sources" part of the current picture.
      */
     public function getSources(): array
     {
@@ -86,7 +86,7 @@ class ImageResult
     }
 
     /**
-     * Return the "img" part of the current picture.
+     * Returns the "img" part of the current picture.
      */
     public function getImg(): array
     {
@@ -94,7 +94,7 @@ class ImageResult
     }
 
     /**
-     * Return the image's "src" attribute.
+     * Returns the "src" attribute of the image.
      */
     public function getImageSrc(): string
     {
@@ -102,7 +102,7 @@ class ImageResult
     }
 
     /**
-     * Return the image dimensions of the base resource.
+     * Returns the image dimensions of the base resource.
      */
     public function getOriginalDimensions(): ImageDimensions
     {
@@ -122,8 +122,10 @@ class ImageResult
     }
 
     /**
-     * Return the file path of the base resource. Set $absolute to true to
-     * return an absolute path instead of a path relative to the project dir.
+     * Returns the file path of the base resource.
+     *
+     * Set $absolute to true to return an absolute path instead of a path
+     * relative to the project dir.
      */
     public function getFilePath($absolute = false): string
     {
@@ -146,17 +148,11 @@ class ImageResult
 
     protected function projectDir(): string
     {
-        return $this->locator
-            ->get('parameter_bag')
-            ->get('kernel.project_dir')
-        ;
+        return $this->locator->get('parameter_bag')->get('kernel.project_dir');
     }
 
     protected function staticUrl(): string
     {
-        return $this->locator
-            ->get('contao.assets.files_context')
-            ->getStaticUrl()
-        ;
+        return $this->locator->get('contao.assets.files_context')->getStaticUrl();
     }
 }

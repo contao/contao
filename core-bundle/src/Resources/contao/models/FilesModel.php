@@ -397,7 +397,7 @@ class FilesModel extends Model
 	}
 
 	/**
-	 * Get the meta fields defined in tl_files.meta.eval.metaFields.
+	 * Return the meta fields defined in tl_files.meta.eval.metaFields
 	 */
 	public static function getMetaFields(): array
 	{
@@ -407,8 +407,9 @@ class FilesModel extends Model
 	}
 
 	/**
-	 * Get the meta data for this file. Specify one or more locales - meta data
-	 * of the first matching one will be returned or null if none was found.
+	 * Return the meta data for this file
+	 *
+	 * Returns the meta data of the first matching locale or null if none was found.
 	 */
 	public function getMetaData(string ...$locales): ?MetaData
 	{
@@ -421,7 +422,7 @@ class FilesModel extends Model
 				continue;
 			}
 
-			// Make sure we resolve insert tags pointing to files.
+			// Make sure we resolve insert tags pointing to files
 			if (isset($data[MetaData::VALUE_URL]))
 			{
 				$data[MetaData::VALUE_URL] = Controller::replaceInsertTags($data[MetaData::VALUE_URL]);

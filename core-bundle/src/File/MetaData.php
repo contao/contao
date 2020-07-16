@@ -41,9 +41,7 @@ class MetaData
     }
 
     /**
-     * Get a value. Returns null if the value was not found.
-     *
-     * @return mixed|null
+     * Returns a value or null if the value was not found.
      */
     public function get(string $key)
     {
@@ -79,7 +77,7 @@ class MetaData
     }
 
     /**
-     * Return the whole data set as an associative array.
+     * Returns the whole data set as an associative array.
      */
     public function all(): array
     {

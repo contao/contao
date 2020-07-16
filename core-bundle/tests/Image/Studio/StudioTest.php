@@ -29,7 +29,6 @@ class StudioTest extends TestCase
     {
         /** @var ContainerInterface&MockObject $locator */
         $locator = $this->createMock(ContainerInterface::class);
-
         $studio = new Studio($locator);
 
         $this->assertInstanceOf(ServiceSubscriberInterface::class, $studio);

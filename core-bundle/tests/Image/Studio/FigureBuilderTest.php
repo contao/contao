@@ -101,7 +101,6 @@ class FigureBuilderTest extends TestCase
     {
         $filesModelAdapter = $this->mockAdapter(['findByUuid']);
         $framework = $this->mockContaoFramework([FilesModel::class => $filesModelAdapter]);
-
         $figureBuilder = $this->getFigureBuilder(null, $framework);
 
         $this->expectException(InvalidResourceException::class);
@@ -112,7 +111,6 @@ class FigureBuilderTest extends TestCase
     public function testFromId(): void
     {
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
-        $id = 5;
 
         /** @var FileSModel&MockObject $model */
         $model = $this->mockClassWithProperties(FilesModel::class);
@@ -122,21 +120,20 @@ class FigureBuilderTest extends TestCase
         $filesModelAdapter = $this->mockAdapter(['findByPk']);
         $filesModelAdapter
             ->method('findByPk')
-            ->with($id)
+            ->with(5)
             ->willReturn($model)
         ;
 
         $framework = $this->mockContaoFramework([FilesModel::class => $filesModelAdapter]);
         $studio = $this->getStudioMockForImage($absoluteFilePath);
 
-        $this->getFigureBuilder($studio, $framework)->fromId($id)->build();
+        $this->getFigureBuilder($studio, $framework)->fromId(5)->build();
     }
 
     public function testFromIdFailsWithNonExistingResource(): void
     {
         $filesModelAdapter = $this->mockAdapter(['findByPk']);
         $framework = $this->mockContaoFramework([FilesModel::class => $filesModelAdapter]);
-
         $figureBuilder = $this->getFigureBuilder(null, $framework);
 
         $this->expectException(InvalidResourceException::class);
@@ -193,7 +190,6 @@ class FigureBuilderTest extends TestCase
         [, , $projectDir,] = $this->getTestFilePaths();
 
         $filePath = Path::join($projectDir, 'this/does/not/exist.png');
-
         $figureBuilder = $this->getFigureBuilder();
 
         $this->expectException(InvalidResourceException::class);

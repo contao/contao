@@ -33,10 +33,8 @@ class ImageResultTest extends TestCase
 
         /** @var PictureInterface&MockObject $picture */
         $picture = $this->createMock(PictureInterface::class);
-
         $pictureFactory = $this->getPictureFactoryMock($filePathOrImage, $sizeConfiguration, $picture);
         $locator = $this->getLocatorMock($pictureFactory);
-
         $imageResult = new ImageResult($locator, $filePathOrImage, $sizeConfiguration);
 
         $this->assertSame($picture, $imageResult->getPicture());
@@ -71,7 +69,6 @@ class ImageResultTest extends TestCase
 
         $pictureFactory = $this->getPictureFactoryMock($filePathOrImage, $sizeConfiguration, $picture);
         $locator = $this->getLocatorMock($pictureFactory, $projectDir, $staticUrl);
-
         $imageResult = new ImageResult($locator, $filePathOrImage, $sizeConfiguration);
 
         $this->assertSame($sources, $imageResult->getSources());
@@ -99,7 +96,6 @@ class ImageResultTest extends TestCase
 
         $pictureFactory = $this->getPictureFactoryMock($filePath, $sizeConfiguration, $picture);
         $locator = $this->getLocatorMock($pictureFactory, $projectDir, $staticUrl);
-
         $imageResult = new ImageResult($locator, $filePath, $sizeConfiguration);
 
         $this->assertSame('foo', $imageResult->getImageSrc());

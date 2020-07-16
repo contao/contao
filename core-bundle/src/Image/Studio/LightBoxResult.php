@@ -45,7 +45,7 @@ class LightBoxResult
      * @param string|ImageInterface|null                 $filePathOrImage
      * @param array|PictureConfiguration|int|string|null $sizeConfiguration
      *
-     * @internal use the Contao\Image\Studio\Studio factory to get an instance of this class
+     * @internal Use the Contao\Image\Studio\Studio factory to get an instance of this class
      */
     public function __construct(ContainerInterface $locator, $filePathOrImage, ?string $url, $sizeConfiguration = null, string $groupIdentifier = null)
     {
@@ -66,7 +66,7 @@ class LightBoxResult
     }
 
     /**
-     * Return if this light box result contains an image.
+     * Returns true if this light box result contains an image.
      */
     public function hasImage(): bool
     {
@@ -74,7 +74,7 @@ class LightBoxResult
     }
 
     /**
-     * Return the image.
+     * Returns the image.
      */
     public function getImage(): ImageResult
     {
@@ -86,7 +86,7 @@ class LightBoxResult
     }
 
     /**
-     * Return the link url pointing to the resource.
+     * Returns the link URL pointing to the resource.
      */
     public function getLinkHref(): string
     {
@@ -94,7 +94,7 @@ class LightBoxResult
     }
 
     /**
-     * Return the light box group identifier.
+     * Returns the light box group identifier.
      */
     public function getGroupIdentifier(): string
     {
@@ -102,9 +102,10 @@ class LightBoxResult
     }
 
     /**
-     * Try to get a light box size configuration from the current page's
-     * associated layout. Will return null if not defined or not in a request
-     * context.
+     * Returns the light box size configuration from the associated page layout.
+     *
+     * Will return null if there is no light box size configuration or if not
+     * in a request context.
      */
     private function getDefaultLightBoxSizeConfiguration(): ?array
     {

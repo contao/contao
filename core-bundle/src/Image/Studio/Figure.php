@@ -20,8 +20,8 @@ use Contao\Template;
 
 /**
  * A Figure object holds image and meta data ready to be applied to a
- * template's context. If you're using the legacy PHP templates, you can still
- * use the provided legacy helper methods to manually apply the data to your template.
+ * template's context. If you are using the legacy PHP templates, you can still
+ * use the provided legacy helper methods to manually apply the data to them.
  *
  * Wherever possible, the actual data is only requested/built on demand.
  */
@@ -53,11 +53,10 @@ final class Figure
     private $options;
 
     /**
-     * Create a figure container.
+     * Creates a figure container.
      *
      * All arguments but the main image result can also be set via a Closure
-     * that returns the value instead. Closures will only be evaluated on
-     * demand.
+     * that only returns the value on demand.
      *
      * @param ImageResult                                                                 $image          Main image
      * @param MetaData|(\Closure(self):MetaData|null)|null                                $metaData       Meta data container
@@ -75,7 +74,7 @@ final class Figure
     }
 
     /**
-     * Return the image result of the main resource.
+     * Returns the image result of the main resource.
      */
     public function getImage(): ImageResult
     {
@@ -83,7 +82,7 @@ final class Figure
     }
 
     /**
-     * Return if a light box result can be obtained.
+     * Returns true if a light box result can be obtained.
      */
     public function hasLightBox(): bool
     {
@@ -93,7 +92,7 @@ final class Figure
     }
 
     /**
-     * Return the light box result (if available).
+     * Returns the light box result (if available).
      */
     public function getLightBox(): LightBoxResult
     {
@@ -113,7 +112,7 @@ final class Figure
     }
 
     /**
-     * Return the main resource's meta data.
+     * Returns the main resource's meta data.
      */
     public function getMetaData(): MetaData
     {
@@ -126,7 +125,7 @@ final class Figure
     }
 
     /**
-     * Return a key-value list of all link attributes. This excludes "href" by
+     * Returns a key-value list of all link attributes. This excludes "href" by
      * default.
      */
     public function getLinkAttributes(bool $includeHref = false): array
@@ -137,7 +136,7 @@ final class Figure
             $this->linkAttributes = [];
         }
 
-        // Generate href attribute
+        // Generate the href attribute
         if (!\array_key_exists('href', $this->linkAttributes)) {
             $this->linkAttributes['href'] = (
                 function () {
@@ -169,7 +168,7 @@ final class Figure
             $this->linkAttributes['data-lightbox'] = $lightBox->getGroupIdentifier();
         }
 
-        // Allow removing attributes by setting them to `null`
+        // Allow removing attributes by setting them to null
         $linkAttributes = array_filter(
             $this->linkAttributes,
             static function ($attribute): bool {
@@ -177,12 +176,12 @@ final class Figure
             }
         );
 
-        // Optionally strip href attribute
+        // Optionally strip the href attribute
         return $includeHref ? $linkAttributes : array_diff_key($linkAttributes, ['href' => null]);
     }
 
     /**
-     * Return the "href" link attribute.
+     * Returns the "href" link attribute.
      */
     public function getLinkHref(): string
     {
@@ -190,7 +189,7 @@ final class Figure
     }
 
     /**
-     * Return a key-value list of template options.
+     * Returns a key-value list of template options.
      */
     public function getOptions(): array
     {
@@ -200,14 +199,14 @@ final class Figure
     }
 
     /**
-     * Compile an opinionated data set ready to be applied to a Contao template.
+     * Compiles an opinionated data set to be applied to a Contao template.
      *
      * Note: Do not use this method when building new templates from scratch or
      *       when using Twig templates! Instead, add this object to your
      *       template's context and directly access the specific data you need.
      *
      * @param string|array|null $margin              Set margins that will compose the inline CSS for the "margin" key
-     * @param string|null       $floating            Set/determine values for the "float_class" and 'addBefore' keys
+     * @param string|null       $floating            Set/determine values for the "float_class" and "addBefore" keys
      * @param bool              $includeFullMetaData Make all meta data available in the first dimension of the returned data set (key-value pairs)
      */
     public function getLegacyTemplateData($margin = null, string $floating = null, bool $includeFullMetaData = true): array
@@ -242,7 +241,7 @@ final class Figure
             return $mapping;
         };
 
-        // Create a CSS margin property from an array or serialized string.
+        // Create a CSS margin property from an array or serialized string
         $createMargin = static function ($margin): string {
             if (!$margin) {
                 return '';
@@ -285,12 +284,12 @@ final class Figure
             $includeFullMetaData ? $createLegacyMetaDataMapping($metaData) : []
         );
 
-        // Link attributes (+ title)
+        // Link attributes and title
         if ('' !== ($href = $this->getLinkHref())) {
             $templateData['href'] = $href;
             $templateData['attributes'] = ''; // always define attributes key if href is set
 
-            // Move 'imageTitle' -> 'linkTitle'
+            // Map "imageTitle" to "linkTitle"
             $templateData['linkTitle'] = ($templateData['imageTitle'] ?? null) ?? StringUtil::specialchars($metaData->getTitle());
             unset($templateData['imageTitle']);
         } elseif ($metaData->has(MetaData::VALUE_TITLE)) {
@@ -331,7 +330,7 @@ final class Figure
     }
 
     /**
-     * Apply the legacy template data to an existing template. This will
+     * Applies the legacy template data to an existing template. This will
      * prevent overriding the "href" property if already present and use
      * "imageHref" instead.
      *
@@ -368,7 +367,7 @@ final class Figure
     }
 
     /**
-     * Evaluate Closure to retrieve the value.
+     * Evaluates closures to retrieve the value.
      */
     private function resolveIfClosure(&$property): void
     {

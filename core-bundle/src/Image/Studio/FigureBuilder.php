@@ -24,11 +24,11 @@ use Symfony\Component\Filesystem\Filesystem;
 use Webmozart\PathUtil\Path;
 
 /**
- * Use the FigureBuilder to create Figure result objects. The class features a
- * fluent interface to configure the desired output. When you're ready call
- * build() to get a Figure. If you need another instance with similar settings,
- * you can alter values and call build() again - this won't affect your first
- * instance.
+ * Use the FigureBuilder class to create Figure result objects. The class
+ * has a fluent interface to configure the desired output. When you are ready,
+ * call build() to get a Figure. If you need another instance with similar
+ * settings, you can alter values and call build() again - it will not affect
+ * your first instance.
  */
 class FigureBuilder
 {
@@ -131,17 +131,16 @@ class FigureBuilder
     private $options = [];
 
     /**
-     * @internal use the Contao\Image\Studio\Studio factory to get an instance of this class
+     * @internal Use the Contao\Image\Studio\Studio factory to get an instance of this class
      */
     public function __construct(ContainerInterface $locator)
     {
         $this->locator = $locator;
-
         $this->filesystem = new Filesystem();
     }
 
     /**
-     * Set the image resource from a FilesModel.
+     * Sets the image resource from a FilesModel.
      */
     public function fromFilesModel(FilesModel $filesModel): self
     {
@@ -160,7 +159,7 @@ class FigureBuilder
     }
 
     /**
-     * Set the image resource from a tl_files UUID.
+     * Sets the image resource from a tl_files UUID.
      */
     public function fromUuid(string $uuid): self
     {
@@ -174,7 +173,7 @@ class FigureBuilder
     }
 
     /**
-     * Set the image resource from a tl_files ID.
+     * Sets the image resource from a tl_files ID.
      */
     public function fromId(int $id): self
     {
@@ -188,7 +187,7 @@ class FigureBuilder
     }
 
     /**
-     * Set the image resource from an absolute or relative path.
+     * Sets the image resource from an absolute or relative path.
      *
      * @param bool $autoDetectDbafsPaths Set to false to skip searching for a FilesModel
      */
@@ -199,7 +198,7 @@ class FigureBuilder
         // Make sure path is absolute and in a canonical form
         $path = Path::isAbsolute($path) ? Path::canonicalize($path) : Path::makeAbsolute($path, $projectDir);
 
-        // Only check for a FilesModel if requested if resource is inside upload path
+        // Only check for a FilesModel if the resource is inside the upload path
         if ($autoDetectDbafsPaths && Path::isBasePath(Path::join($projectDir, $this->uploadPath()), $path)) {
             $filesModel = $this->filesModelAdapter()->findByPath($path);
 
@@ -219,7 +218,7 @@ class FigureBuilder
     }
 
     /**
-     * Set the image resource from an ImageInterface.
+     * Sets the image resource from an ImageInterface.
      */
     public function fromImage(ImageInterface $image): self
     {
@@ -227,9 +226,9 @@ class FigureBuilder
     }
 
     /**
-     * Set the image resource by guessing the identifier type.
+     * Sets the image resource by guessing the identifier type.
      *
-     * @param int|string|FilesModel|ImageInterface $identifier Can be a FilesModel, an ImageInterface, a tl_files uuid/id/path or a file system path
+     * @param int|string|FilesModel|ImageInterface $identifier Can be a FilesModel, an ImageInterface, a tl_files UUID/ID/path or a file system path
      */
     public function from($identifier): self
     {
@@ -253,7 +252,7 @@ class FigureBuilder
     }
 
     /**
-     * Set a size configuration that will be applied to the resource.
+     * Sets a size configuration that will be applied to the resource.
      *
      * @param int|string|array|PictureConfiguration $size A picture size configuration or reference
      */
@@ -265,8 +264,10 @@ class FigureBuilder
     }
 
     /**
-     * Set custom meta data. By default or if the argument is set to null, meta
-     * data is trying to be pulled from the FilesModel.
+     * Sets custom meta data.
+     *
+     * By default or if the argument is set to null, meta data is trying to be
+     * pulled from the FilesModel.
      */
     public function setMetaData(?MetaData $metaData): self
     {
@@ -276,9 +277,7 @@ class FigureBuilder
     }
 
     /**
-     * Disable/allow creation of meta data in the output even if it is present.
-     * This setting is not active by default (= meta data will be created if
-     * possible).
+     * Disables creating/using meta data in the output even if it is present.
      */
     public function disableMetaData(bool $disable = true): self
     {
@@ -288,8 +287,10 @@ class FigureBuilder
     }
 
     /**
-     * Set a custom locale. By default or if the argument is set to null, the
-     * locale is determined from the request context and/or system settings.
+     * Sets a custom locale.
+     *
+     * By default or if the argument is set to null, the locale is determined
+     * from the request context and/or system settings.
      */
     public function setLocale(?string $locale): self
     {
@@ -299,9 +300,10 @@ class FigureBuilder
     }
 
     /**
-     * Add a custom link attribute. Set the value to null to remove it. If you
-     * want to explicitly remove an auto generated value from the results, set
-     * the $forceRemove flag to true.
+     * Adds a custom link attribute.
+     *
+     * Set the value to null to remove it. If you want to explicitly remove an
+     * auto-generated value from the results, set the $forceRemove flag to true.
      */
     public function setLinkAttribute(string $attribute, ?string $value, $forceRemove = false): self
     {
@@ -315,10 +317,11 @@ class FigureBuilder
     }
 
     /**
-     * Set all custom link attributes as an associative array. This will
-     * overwrite previously set attributes. If you want to explicitly remove an
-     * auto generated value from the results, set the respective attribute to
-     * null.
+     * Sets all custom link attributes as an associative array.
+     *
+     * This will overwrite previously set attributes. If you want to explicitly
+     * remove an auto-generated value from the results, set the respective
+     * attribute to null.
      */
     public function setLinkAttributes(array $attributes): self
     {
@@ -334,8 +337,9 @@ class FigureBuilder
     }
 
     /**
-     * Set the link href attribute. Set the value to null to use the auto
-     * generated default.
+     * Sets the link href attribute.
+     *
+     * Set the value to null to use the auto-generated default.
      */
     public function setLinkHref(?string $url): self
     {
@@ -345,11 +349,11 @@ class FigureBuilder
     }
 
     /**
-     * Set a custom light box resource (file path or ImageInterface) or url.
-     * By default or if the argument is set to null the image/target will be
-     * automatically determined from the meta data or base resource.
+     * Sets a custom light box resource (file path or ImageInterface) or URL.
      *
-     * For this setting to take effect make sure you enabled the creation of a
+     * By default or if the argument is set to null, the image/target will be
+     * automatically determined from the meta data or base resource. For this
+     * setting to take effect, make sure you have enabled the creation of a
      * light box by calling enableLightBox().
      *
      * @param string|ImageInterface|null $resourceOrUrl
@@ -362,10 +366,10 @@ class FigureBuilder
     }
 
     /**
-     * Set a size configuration that will be applied to the light box image.
+     * Sets a size configuration that will be applied to the light box image.
      *
-     * For this setting to take effect make sure you enabled the creation of a
-     * light box by calling enableLightBox().
+     * For this setting to take effect, make sure you have enabled the creation
+     * of a light box by calling enableLightBox().
      *
      * @param int|string|array|PictureConfiguration $size A picture size configuration or reference
      */
@@ -377,11 +381,11 @@ class FigureBuilder
     }
 
     /**
-     * Set a custom light box group id. By default or if the argument is set to
-     * null an id will be generated.
+     * Sets a custom light box group ID.
      *
-     * For this setting to take effect make sure you enabled the creation of a
-     * light box by calling enableLightBox().
+     * By default or if the argument is set to null, an ID will be generated.
+     * For this setting to take effect, make sure you have enabled the creation
+     * of a light box by calling enableLightBox().
      */
     public function setLightBoxGroupIdentifier(?string $identifier): self
     {
@@ -391,9 +395,10 @@ class FigureBuilder
     }
 
     /**
-     * Enable/disable creation of a light box image (if possible) and/or
-     * outputting the respective link attributes. This setting is disabled by
-     * default.
+     * Enables the creation of a light box image (if possible) and/or
+     * outputting the respective link attributes.
+     *
+     * This setting is disabled by default.
      */
     public function enableLightBox(bool $enable = true): self
     {
@@ -403,7 +408,7 @@ class FigureBuilder
     }
 
     /**
-     * Set all template options as an associative array.
+     * Sets all template options as an associative array.
      */
     public function setOptions(array $options): self
     {
@@ -413,7 +418,7 @@ class FigureBuilder
     }
 
     /**
-     * Create a result object with the current settings.
+     * Creates a result object with the current settings.
      */
     public function build(): Figure
     {
@@ -421,7 +426,7 @@ class FigureBuilder
             throw new \LogicException('You need to set a resource before building the result.');
         }
 
-        // Freeze settings to allow reusing this builder object.
+        // Freeze settings to allow reusing this builder object
         $settings = clone $this;
 
         $imageResult = $this->locator
@@ -429,7 +434,7 @@ class FigureBuilder
             ->createImage($settings->filePath, $settings->sizeConfiguration)
         ;
 
-        // We are defining some values via a Closure to make their evaluation lazy
+        // Define the values via closure to make their evaluation lazy
         return new Figure(
             $imageResult,
             \Closure::bind(
@@ -455,7 +460,7 @@ class FigureBuilder
     }
 
     /**
-     * Define meta data on demand.
+     * Defines meta data on demand.
      */
     private function onDefineMetaData(): ?MetaData
     {
@@ -480,14 +485,14 @@ class FigureBuilder
         }
 
         // If no meta data can be obtained from the model, we create a
-        // container from the default meta fields with empty values instead.
+        // container from the default meta fields with empty values instead
         $metaFields = $this->filesModelAdapter()->getMetaFields();
 
         return new MetaData(array_combine($metaFields, array_fill(0, \count($metaFields), '')));
     }
 
     /**
-     * Define link attributes on demand.
+     * Defines link attributes on demand.
      */
     private function onDefineLinkAttributes(Figure $result): array
     {
@@ -502,7 +507,7 @@ class FigureBuilder
     }
 
     /**
-     * Define the light box result if it is enabled on demand.
+     * Defines the light box result (if enabled) on demand.
      */
     private function onDefineLightBoxResult(Figure $result): ?LightBoxResult
     {
@@ -555,7 +560,7 @@ class FigureBuilder
             return [$filePath, null];
         };
 
-        // Use explicitly set data (1), fall back to using meta data (2) or use the base resource (3) if empty.
+        // Use explicitly set data (1), fall back to using meta data (2) or use the base resource (3) if empty
         $lightBoxResourceOrUrl = $this->lightBoxResourceOrUrl ?? $getMetaDataUrl() ?? $this->filePath;
 
         [$filePathOrImage, $url] = $getResourceOrUrl($lightBoxResourceOrUrl);
@@ -603,7 +608,7 @@ class FigureBuilder
     }
 
     /**
-     * Return a list of locales (if available) in the following order:
+     * Returns a list of locales (if available) in the following order:
      *  1. language of current page,
      *  2. root page fallback language.
      */

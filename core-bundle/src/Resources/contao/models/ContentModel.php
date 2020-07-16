@@ -439,7 +439,7 @@ class ContentModel extends Model
 	 */
 	public function getOverwriteMetaData(): ?MetaData
 	{
-		// Ignore if "overwriteMeta" isn't set
+		// Ignore if "overwriteMeta" is not set
 		if (!$this->overwriteMeta)
 		{
 			return null;

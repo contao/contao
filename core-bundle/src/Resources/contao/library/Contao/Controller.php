@@ -1522,8 +1522,14 @@ abstract class Controller extends System
 
 	/**
 	 * Add an image to a template
+	 *
+	 * @param object          $template                The template object to add the image to
+	 * @param array           $rowData                 The element or module as array
+	 * @param integer|null    $maxWidth                An optional maximum width of the image
+	 * @param string|null     $lightBoxGroupIdentifier An optional lightbox group identifier
+	 * @param FilesModel|null $filesModel              An optional files model
 	 */
-	public static function addImageToTemplate(object $template, array $rowData, ?int $maxWidth = null, ?string $lightBoxGroupIdentifier = null, FilesModel $filesModel = null): void
+	public static function addImageToTemplate($template, array $rowData, $maxWidth = null, $lightBoxGroupIdentifier = null, FilesModel $filesModel = null): void
 	{
 		// Helper: Create MetaData from the specified row data
 		$createMetaDataOverwriteFromRowData = static function (bool $interpretAsContentModel) use ($rowData)
@@ -1728,7 +1734,7 @@ abstract class Controller extends System
 		// Build result and apply it to the template
 		$figure->applyLegacyTemplateData($template, $margin, $rowData['floating'] ?: null, $includeFullMetaData);
 
-		// Fall back to manually specified link title or empty string if not set (BC)
+		// Fall back to manually specified link title or empty string if not set (backwards compatibility)
 		$template->linkTitle = $template->linkTitle ?? StringUtil::specialchars($rowData['title'] ?? '');
 	}
 
