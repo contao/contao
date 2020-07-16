@@ -13,6 +13,8 @@ namespace Contao;
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\Image\ImageInterface;
+use Contao\Image\PictureConfiguration;
 use MatthiasMullie\Minify\CSS;
 use MatthiasMullie\Minify\JS;
 use Symfony\Component\HttpFoundation\Response;
@@ -400,15 +402,17 @@ abstract class Template extends Controller
 	 * template, pass '@ContaoCore/Image/Studio/figure.html.twig' into the
 	 * $template argument.
 	 *
-	 * @param string|int|FilesModel $from
-	 * @param array                 $configuration
-	 * @param string                $template
+	 * @param int|string|FilesModel|ImageInterface  $from          Can be a FilesModel, an ImageInterface, a tl_files UUID/ID/path or a file system path
+	 * @param int|string|array|PictureConfiguration $size          A picture size configuration or reference
+	 * @param array<string, mixed>                  $configuration Configuration for the FigureBuilder
+	 * @param string                                $template      A Contao or Twig template
 	 *
 	 * @return string
 	 */
-	public function figure($from, $configuration = array(), $template = 'image')
+	public function figure($from, $size, $configuration = array(), $template = 'image')
 	{
 		$configuration['from'] = $from;
+		$configuration['size'] = $size;
 
 		/** @var FigureBuilder $figureBuilder */
 		$figureBuilder = System::getContainer()
