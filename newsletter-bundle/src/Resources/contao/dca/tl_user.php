@@ -16,7 +16,7 @@ Contao\CoreBundle\DataContainer\PaletteManipulator::create()
 	->applyToPalette('custom', 'tl_user')
 ;
 
-// Add fields to tl_user_group
+// Add fields to tl_user
 $GLOBALS['TL_DCA']['tl_user']['fields']['newsletters'] = array
 (
 	'label'                   => &$GLOBALS['TL_LANG']['tl_user']['newsletters'],
