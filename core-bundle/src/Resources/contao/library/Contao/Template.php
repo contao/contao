@@ -15,6 +15,7 @@ use MatthiasMullie\Minify\CSS;
 use MatthiasMullie\Minify\JS;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\VarDumper\VarDumper;
+use Webmozart\PathUtil\Path;
 
 /**
  * Parses and outputs template files
@@ -403,6 +404,30 @@ abstract class Template extends Controller
 
 		// Contao paths are relative to the <base> tag, so remove leading slashes
 		return ltrim($url, '/');
+	}
+
+	/**
+	 * Renders a figure. The provided configuration array is used to configure
+	 * a FigureBuilder. If not explicitly set the default figure template will
+	 * be used to render the results.
+	 *
+	 * @param string|int|FilesModel $from
+	 * @param array                 $configuration
+	 * @param string                $template
+	 *
+	 * @return string
+	 */
+	public function figure($from, $configuration = array(), $template = '@ContaoCore/Image/Studio/figure.html.twig')
+	{
+		if ('twig' !== Path::getExtension($template, true))
+		{
+			throw new \InvalidArgumentException('Only twig templates are supported to render a figure inline.');
+		}
+
+		return System::getContainer()
+			->get('contao.twig.runtime.figure_renderer')
+			->render($from, $configuration, $template)
+		;
 	}
 
 	/**
