@@ -335,6 +335,16 @@ services:
             - '@?contao.image.resize_calculator'
         public: true
 
+    Contao\CoreBundle\Image\Studio\Studio:
+        arguments:
+            - '@Psr\Container\ContainerInterface'
+            - '%kernel.project_dir%'
+            - '%contao.upload_path%'
+            - '%contao.image.valid_extensions%'
+        public: true
+        tags:
+            - { name: container.service_subscriber, id: contao.assets.files_context }
+
     contao.menu.backend_menu_builder:
         class: Contao\CoreBundle\Menu\BackendMenuBuilder
         arguments:

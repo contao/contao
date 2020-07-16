@@ -345,7 +345,7 @@ class PictureFactoryTest extends TestCase
 
         $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
         $pictureGenerator
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('generate')
             ->with(
                 $this->callback(
@@ -377,7 +377,7 @@ class PictureFactoryTest extends TestCase
 
         $imageFactory = $this->createMock(ImageFactoryInterface::class);
         $imageFactory
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('create')
             ->with($this->callback(
                 function (string $imagePath) use ($path): bool {
@@ -390,7 +390,7 @@ class PictureFactoryTest extends TestCase
         ;
 
         $imageFactory
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('getImportantPartFromLegacyMode')
             ->with(
                 $this->callback(
@@ -410,8 +410,10 @@ class PictureFactoryTest extends TestCase
 
         $pictureFactory = $this->getPictureFactory($pictureGenerator, $imageFactory);
         $picture = $pictureFactory->create($path, [100, 200, 'left_top']);
+        $pictureFromSerializedConfig = $pictureFactory->create($path, serialize([100, 200, 'left_top']));
 
         $this->assertSame($imageMock, $picture->getImg()['src']);
+        $this->assertSame($imageMock, $pictureFromSerializedConfig->getImg()['src']);
     }
 
     public function testCreatesAPictureObjectWithoutAModel(): void

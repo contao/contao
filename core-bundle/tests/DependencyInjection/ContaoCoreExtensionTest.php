@@ -90,6 +90,7 @@ use Contao\CoreBundle\Image\ImageFactory;
 use Contao\CoreBundle\Image\ImageSizes;
 use Contao\CoreBundle\Image\LegacyResizer;
 use Contao\CoreBundle\Image\PictureFactory;
+use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Menu\BackendMenuBuilder;
 use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\Version409\CeAccessMigration;
@@ -147,6 +148,7 @@ use Contao\Image\ResizeCalculator;
 use Contao\ImagineSvg\Imagine as ImagineSvg;
 use Knp\Menu\Matcher\Matcher;
 use Knp\Menu\Renderer\ListRenderer;
+use Psr\Container\ContainerInterface as PsrContainerInterface;
 use Symfony\Cmf\Component\Routing\DynamicRouter;
 use Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher;
 use Symfony\Cmf\Component\Routing\ProviderBasedGenerator;
@@ -2059,6 +2061,36 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('contao.image.resize_calculator', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
             ],
             $definition->getArguments()
+        );
+    }
+
+    public function testRegistersTheImageStudio(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $this->assertTrue($container->has(Studio::class));
+
+        $definition = $container->getDefinition(Studio::class);
+
+        $this->assertTrue($definition->isPublic());
+
+        $this->assertEquals(
+            [
+                new Reference(PsrContainerInterface::class),
+                new Reference('%kernel.project_dir%'),
+                new Reference('%contao.upload_path%'),
+                new Reference('%contao.image.valid_extensions%'),
+            ],
+            $definition->getArguments()
+        );
+
+        $this->assertSame(
+            [
+                'container.service_subscriber' => [
+                    ['id' => 'contao.assets.files_context'],
+                ],
+            ],
+            $definition->getTags()
         );
     }
 
