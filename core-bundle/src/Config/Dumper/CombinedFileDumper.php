@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Config\Dumper;
 
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Webmozart\PathUtil\Path;
 
 /**
  * Combines multiple files into one PHP file.
@@ -68,6 +69,6 @@ class CombinedFileDumper implements DumperInterface
             $buffer .= $this->loader->load($file, $type);
         }
 
-        $this->filesystem->dumpFile($this->cacheDir.'/'.$cacheFile, $buffer);
+        $this->filesystem->dumpFile(Path::join($this->cacheDir, $cacheFile), $buffer);
     }
 }

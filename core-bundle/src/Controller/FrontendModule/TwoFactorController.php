@@ -107,7 +107,7 @@ class TwoFactorController extends AbstractFrontendModuleController
             }
         }
 
-        if (!$this->page->enforceTwoFactor && 'tl_two_factor_disable' === $request->request->get('FORM_SUBMIT')) {
+        if ('tl_two_factor_disable' === $request->request->get('FORM_SUBMIT')) {
             $response = $this->disableTwoFactor($user);
 
             if (null !== $response) {

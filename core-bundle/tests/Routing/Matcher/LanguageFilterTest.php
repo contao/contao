@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\Routing\Matcher;
 use Contao\CoreBundle\Routing\Matcher\LanguageFilter;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
@@ -23,8 +22,6 @@ use Symfony\Component\Routing\RouteCollection;
 class LanguageFilterTest extends TestCase
 {
     /**
-     * @param PageModel&MockObject $page
-     *
      * @dataProvider getRoutesAndLanguages
      */
     public function testRemovesARouteIfTheAcceptedLanguagesDoNotMatch(string $name, ?PageModel $page, string $acceptLanguage, bool $expectPageModel, bool $expectRemoval, bool $prependLocale = false): void

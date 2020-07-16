@@ -110,6 +110,9 @@ class DcaLoader extends Controller
 			}
 		}
 
+		// Set the ptable dynamically
+		$this->setDynamicPTable();
+
 		// HOOK: allow to load custom settings
 		if (isset($GLOBALS['TL_HOOKS']['loadDataContainer']) && \is_array($GLOBALS['TL_HOOKS']['loadDataContainer']))
 		{
@@ -120,13 +123,13 @@ class DcaLoader extends Controller
 			}
 		}
 
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Local configuration file
-		if (file_exists($rootDir . '/system/config/dcaconfig.php'))
+		if (file_exists($projectDir . '/system/config/dcaconfig.php'))
 		{
 			@trigger_error('Using the "dcaconfig.php" file has been deprecated and will no longer work in Contao 5.0. Create custom DCA files in the "contao/dca" folder instead.', E_USER_DEPRECATED);
-			include $rootDir . '/system/config/dcaconfig.php';
+			include $projectDir . '/system/config/dcaconfig.php';
 		}
 	}
 
@@ -196,6 +199,43 @@ class DcaLoader extends Controller
 			}
 
 			unset($v);
+		}
+	}
+
+	/**
+	 * Sets the parent table for the current table, if enabled and not set.
+	 */
+	private function setDynamicPTable(): void
+	{
+		if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? false) || !isset($GLOBALS['BE_MOD']))
+		{
+			return;
+		}
+
+		if (!$do = Input::get('do'))
+		{
+			return;
+		}
+
+		foreach (array_merge(...array_values($GLOBALS['BE_MOD'])) as $key => $module)
+		{
+			if ($do !== $key || !isset($module['tables']) || !\is_array($module['tables']))
+			{
+				continue;
+			}
+
+			foreach ($module['tables'] as $table)
+			{
+				Controller::loadDataContainer($table);
+				$ctable = $GLOBALS['TL_DCA'][$table]['config']['ctable'] ?? array();
+
+				if (\in_array($this->strTable, $ctable, true))
+				{
+					$GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] = $table;
+
+					return;
+				}
+			}
 		}
 	}
 }

@@ -31,13 +31,13 @@ class StripQueryParametersSubscriberTest extends TestCase
     /**
      * @dataProvider queryParametersProvider
      */
-    public function testQueryParametersAreStrippedCorrectly(array $parameters, array $expectedParameters, array $whitelist = [], array $disabledFromBlacklist = []): void
+    public function testQueryParametersAreStrippedCorrectly(array $parameters, array $expectedParameters, array $allowList = [], array $removeFromDenyList = []): void
     {
         $request = Request::create('/', 'GET', $parameters);
         $event = new CacheEvent($this->createMock(CacheInvalidation::class), $request);
 
-        $subscriber = new StripQueryParametersSubscriber($whitelist);
-        $subscriber->disableFromBlacklist($disabledFromBlacklist);
+        $subscriber = new StripQueryParametersSubscriber($allowList);
+        $subscriber->removeFromDenyList($removeFromDenyList);
         $subscriber->preHandle($event);
 
         $this->assertSame($expectedParameters, $request->query->all());
@@ -71,6 +71,13 @@ class StripQueryParametersSubscriberTest extends TestCase
             ['page' => 42, 'utm_source' => 'twitter'],
             [],
             ['utm_[a-z]+'],
+        ];
+
+        yield [
+            ['page' => 42, 'utm_foo' => 'foo', 'utm_bar' => 'bar'],
+            ['page' => 42, 'utm_foo' => 'foo'],
+            [],
+            ['utm_fo+'],
         ];
     }
 }

@@ -11,7 +11,8 @@
 namespace Contao;
 
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
-use MatthiasMullie\Minify;
+use MatthiasMullie\Minify\CSS;
+use MatthiasMullie\Minify\JS;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\VarDumper\VarDumper;
 
@@ -307,9 +308,6 @@ abstract class Template extends Controller
 		header('Content-Type: ' . $this->strContentType . '; charset=' . Config::get('characterSet'));
 
 		echo $this->strBuffer;
-
-		// Flush the output buffers (see #6962)
-		$this->flushAllData();
 	}
 
 	/**
@@ -517,13 +515,13 @@ abstract class Template extends Controller
 				// Minify inline scripts
 				if ($strType == 'js')
 				{
-					$objMinify = new Minify\JS();
+					$objMinify = new JS();
 					$objMinify->add($strChunk);
 					$strChunk = $objMinify->minify();
 				}
 				elseif ($strType == 'css')
 				{
-					$objMinify = new Minify\CSS();
+					$objMinify = new CSS();
 					$objMinify->add($strChunk);
 					$strChunk = $objMinify->minify();
 				}
@@ -556,20 +554,20 @@ abstract class Template extends Controller
 		if ($mtime === null && !preg_match('@^https?://@', $href))
 		{
 			$container = System::getContainer();
-			$rootDir = $container->getParameter('kernel.project_dir');
+			$projectDir = $container->getParameter('kernel.project_dir');
 
-			if (file_exists($rootDir . '/' . $href))
+			if (file_exists($projectDir . '/' . $href))
 			{
-				$mtime = filemtime($rootDir . '/' . $href);
+				$mtime = filemtime($projectDir . '/' . $href);
 			}
 			else
 			{
 				$webDir = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
 
 				// Handle public bundle resources in web/
-				if (file_exists($rootDir . '/' . $webDir . '/' . $href))
+				if (file_exists($projectDir . '/' . $webDir . '/' . $href))
 				{
-					$mtime = filemtime($rootDir . '/' . $webDir . '/' . $href);
+					$mtime = filemtime($projectDir . '/' . $webDir . '/' . $href);
 				}
 			}
 		}
@@ -612,20 +610,20 @@ abstract class Template extends Controller
 		if ($mtime === null && !preg_match('@^https?://@', $src))
 		{
 			$container = System::getContainer();
-			$rootDir = $container->getParameter('kernel.project_dir');
+			$projectDir = $container->getParameter('kernel.project_dir');
 
-			if (file_exists($rootDir . '/' . $src))
+			if (file_exists($projectDir . '/' . $src))
 			{
-				$mtime = filemtime($rootDir . '/' . $src);
+				$mtime = filemtime($projectDir . '/' . $src);
 			}
 			else
 			{
 				$webDir = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
 
 				// Handle public bundle resources in web/
-				if (file_exists($rootDir . '/' . $webDir . '/' . $src))
+				if (file_exists($projectDir . '/' . $webDir . '/' . $src))
 				{
-					$mtime = filemtime($rootDir . '/' . $webDir . '/' . $src);
+					$mtime = filemtime($projectDir . '/' . $webDir . '/' . $src);
 				}
 			}
 		}

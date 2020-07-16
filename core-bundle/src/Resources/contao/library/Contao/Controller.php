@@ -15,6 +15,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\CoreBundle\Util\SimpleTokenParser;
 use Contao\Database\Result;
 use Contao\Image\PictureConfiguration;
 use Contao\Model\Collection;
@@ -81,10 +82,11 @@ abstract class Controller extends System
 	 *
 	 * @param string $strPrefix           The template name prefix (e.g. "ce_")
 	 * @param array  $arrAdditionalMapper An additional mapper array
+	 * @param string $strDefaultTemplate  An optional default template
 	 *
 	 * @return array An array of template names
 	 */
-	public static function getTemplateGroup($strPrefix, array $arrAdditionalMapper=array())
+	public static function getTemplateGroup($strPrefix, array $arrAdditionalMapper=array(), $strDefaultTemplate='')
 	{
 		$arrTemplates = array();
 		$arrBundleTemplates = array();
@@ -140,11 +142,11 @@ abstract class Controller extends System
 			$strGlobPrefix = substr($strGlobPrefix, 0, -1) . '[_-]';
 		}
 
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
-		$arrCustomized = self::braceGlob($rootDir . '/templates/' . $strGlobPrefix . '*.html5');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+		$arrCustomized = self::braceGlob($projectDir . '/templates/' . $strGlobPrefix . '*.html5');
 
 		// Add the customized templates
-		if (\is_array($arrCustomized))
+		if (!empty($arrCustomized) && \is_array($arrCustomized))
 		{
 			$blnIsGroupPrefix = preg_match('/^[a-z]+_$/', $strPrefix);
 
@@ -180,6 +182,13 @@ abstract class Controller extends System
 			}
 		}
 
+		$arrDefaultPlaces = array();
+
+		if ($strDefaultTemplate && file_exists($projectDir . '/templates/' . $strDefaultTemplate . '.html5'))
+		{
+			$arrDefaultPlaces[] = $GLOBALS['TL_LANG']['MSC']['global'];
+		}
+
 		// Do not look for back end templates in theme folders (see #5379)
 		if ($strPrefix != 'be_' && $strPrefix != 'mail_')
 		{
@@ -198,17 +207,24 @@ abstract class Controller extends System
 			{
 				while ($objTheme->next())
 				{
-					if ($objTheme->templates != '')
+					if (!$objTheme->templates)
 					{
-						$arrThemeTemplates = self::braceGlob($rootDir . '/' . $objTheme->templates . '/' . $strGlobPrefix . '*.html5');
+						continue;
+					}
 
-						if (\is_array($arrThemeTemplates))
+					if ($strDefaultTemplate && file_exists($projectDir . '/' . $objTheme->templates . '/' . $strDefaultTemplate . '.html5'))
+					{
+						$arrDefaultPlaces[] = $objTheme->name;
+					}
+
+					$arrThemeTemplates = self::braceGlob($projectDir . '/' . $objTheme->templates . '/' . $strGlobPrefix . '*.html5');
+
+					if (!empty($arrThemeTemplates) && \is_array($arrThemeTemplates))
+					{
+						foreach ($arrThemeTemplates as $strFile)
 						{
-							foreach ($arrThemeTemplates as $strFile)
-							{
-								$strTemplate = basename($strFile, strrchr($strFile, '.'));
-								$arrTemplates[$strTemplate][] = $objTheme->name;
-							}
+							$strTemplate = basename($strFile, strrchr($strFile, '.'));
+							$arrTemplates[$strTemplate][] = $objTheme->name;
 						}
 					}
 				}
@@ -235,6 +251,16 @@ abstract class Controller extends System
 
 		// Sort the template names
 		ksort($arrTemplates);
+
+		if ($strDefaultTemplate)
+		{
+			if (!empty($arrDefaultPlaces))
+			{
+				$strDefaultTemplate .= ' (' . implode(', ', $arrDefaultPlaces) . ')';
+			}
+
+			$arrTemplates = array('' => $strDefaultTemplate) + $arrTemplates;
+		}
 
 		return $arrTemplates;
 	}
@@ -316,39 +342,44 @@ abstract class Controller extends System
 				return '';
 			}
 
-			$return = '';
-			$intCount = 0;
+			$arrArticles = array();
 			$blnMultiMode = ($objArticles->count() > 1);
-			$intLast = $objArticles->count() - 1;
+			$arrRows = $objArticles->getModels();
+			$objLastRow = null;
 
-			while ($objArticles->next())
+			/** @var ArticleModel $objRow */
+			while ($objRow = array_shift($arrRows))
 			{
-				/** @var ArticleModel $objRow */
-				$objRow = $objArticles->current();
-
 				// Add the "first" and "last" classes (see #2583)
-				if ($intCount == 0 || $intCount == $intLast)
+				$arrCss = array();
+
+				if (empty($arrArticles))
 				{
-					$arrCss = array();
-
-					if ($intCount == 0)
-					{
-						$arrCss[] = 'first';
-					}
-
-					if ($intCount == $intLast)
-					{
-						$arrCss[] = 'last';
-					}
-
-					$objRow->classes = $arrCss;
+					$arrCss[] = 'first';
 				}
 
-				$return .= static::getArticle($objRow, $blnMultiMode, false, $strColumn);
-				++$intCount;
+				if (empty($arrRows))
+				{
+					$arrCss[] = 'last';
+				}
+
+				$objRow->classes = $arrCss;
+				$strArticle = static::getArticle($objRow, $blnMultiMode, false, $strColumn);
+
+				if ($strArticle != '')
+				{
+					$arrArticles[] = $strArticle;
+					$objLastRow = $objRow;
+				}
+				elseif (empty($arrRows) && $objLastRow != null && $objLastRow !== $objRow)
+				{
+					// Re-generate the last successful article with "last" class
+					array_pop($arrArticles);
+					$arrRows[] = $objLastRow;
+				}
 			}
 
-			return $return;
+			return implode('', $arrArticles);
 		}
 
 		// Other modules
@@ -656,7 +687,8 @@ abstract class Controller extends System
 	public static function getPageStatusIcon($objPage)
 	{
 		$sub = 0;
-		$image = $objPage->type . '.svg';
+		$type = \in_array($objPage->type, array('regular', 'root', 'forward', 'redirect', 'error_401', 'error_403', 'error_404'), true) ? $objPage->type : 'regular';
+		$image = $type . '.svg';
 
 		// Page not published or not active
 		if (!$objPage->published || ($objPage->start != '' && $objPage->start > time()) || ($objPage->stop != '' && $objPage->stop < time()))
@@ -665,13 +697,13 @@ abstract class Controller extends System
 		}
 
 		// Page hidden from menu
-		if ($objPage->hide && !\in_array($objPage->type, array('root', 'error_401', 'error_403', 'error_404')))
+		if ($objPage->hide && !\in_array($type, array('root', 'error_401', 'error_403', 'error_404')))
 		{
 			$sub += 2;
 		}
 
 		// Page protected
-		if ($objPage->protected && !\in_array($objPage->type, array('root', 'error_401', 'error_403', 'error_404')))
+		if ($objPage->protected && !\in_array($type, array('root', 'error_401', 'error_403', 'error_404')))
 		{
 			$sub += 4;
 		}
@@ -679,7 +711,7 @@ abstract class Controller extends System
 		// Get the image name
 		if ($sub > 0)
 		{
-			$image = $objPage->type . '_' . $sub . '.svg';
+			$image = $type . '_' . $sub . '.svg';
 		}
 
 		// HOOK: add custom logic
@@ -1289,10 +1321,10 @@ abstract class Controller extends System
 			throw new PageNotFoundException('Invalid path');
 		}
 
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Check whether the file exists
-		if (!file_exists($rootDir . '/' . $strFile))
+		if (!file_exists($projectDir . '/' . $strFile))
 		{
 			throw new PageNotFoundException('File not found');
 		}
@@ -1384,7 +1416,7 @@ abstract class Controller extends System
 	protected function getParentEntries($strTable, $intId)
 	{
 		// No parent table
-		if (!isset($GLOBALS['TL_DCA'][$strTable]['config']['ptable']))
+		if (empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']))
 		{
 			return '';
 		}
@@ -1565,14 +1597,14 @@ abstract class Controller extends System
 
 		try
 		{
-			$rootDir = $container->getParameter('kernel.project_dir');
+			$projectDir = $container->getParameter('kernel.project_dir');
 			$staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
-			$picture = $container->get('contao.image.picture_factory')->create($rootDir . '/' . $arrItem['singleSRC'], $size);
+			$picture = $container->get('contao.image.picture_factory')->create($projectDir . '/' . $arrItem['singleSRC'], $size);
 
 			$picture = array
 			(
-				'img' => $picture->getImg($rootDir, $staticUrl),
-				'sources' => $picture->getSources($rootDir, $staticUrl)
+				'img' => $picture->getImg($projectDir, $staticUrl),
+				'sources' => $picture->getSources($projectDir, $staticUrl)
 			);
 
 			$src = $picture['img']['src'];
@@ -1670,7 +1702,7 @@ abstract class Controller extends System
 		$objTemplate->picture = $picture;
 
 		// Provide an ID for single lightbox images in HTML5 (see #3742)
-		if ($strLightboxId === null && $arrItem['fullsize'])
+		if ($strLightboxId === null && $arrItem['fullsize'] && $objTemplate instanceof Template && !empty($arrItem['id']))
 		{
 			$strLightboxId = substr(md5($objTemplate->getName() . '_' . $arrItem['id']), 0, 6);
 		}
@@ -1698,22 +1730,24 @@ abstract class Controller extends System
 
 			if ($arrItem['fullsize'])
 			{
+				$blnIsExternal = strncmp($arrItem['imageUrl'], 'http://', 7) === 0 || strncmp($arrItem['imageUrl'], 'https://', 8) === 0;
+
 				// Open images in the lightbox
 				if (preg_match('/\.(' . strtr(preg_quote(Config::get('validImageTypes'), '/'), ',', '|') . ')$/i', $arrItem['imageUrl']))
 				{
 					// Do not add the TL_FILES_URL to external URLs (see #4923)
-					if (strncmp($arrItem['imageUrl'], 'http://', 7) !== 0 && strncmp($arrItem['imageUrl'], 'https://', 8) !== 0)
+					if (!$blnIsExternal)
 					{
 						try
 						{
-							$rootDir = $container->getParameter('kernel.project_dir');
+							$projectDir = $container->getParameter('kernel.project_dir');
 							$staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
-							$picture = $container->get('contao.image.picture_factory')->create($rootDir . '/' . $arrItem['imageUrl'], $lightboxSize);
+							$picture = $container->get('contao.image.picture_factory')->create($projectDir . '/' . $arrItem['imageUrl'], $lightboxSize);
 
 							$objTemplate->lightboxPicture = array
 							(
-								'img' => $picture->getImg($rootDir, $staticUrl),
-								'sources' => $picture->getSources($rootDir, $staticUrl)
+								'img' => $picture->getImg($projectDir, $staticUrl),
+								'sources' => $picture->getSources($projectDir, $staticUrl)
 							);
 
 							$objTemplate->$strHrefKey = $objTemplate->lightboxPicture['img']['src'];
@@ -1730,6 +1764,11 @@ abstract class Controller extends System
 				else
 				{
 					$objTemplate->attributes = ' target="_blank"';
+
+					if ($blnIsExternal)
+					{
+						$objTemplate->attributes .= ' rel="noreferrer noopener"';
+					}
 				}
 			}
 		}
@@ -1739,14 +1778,14 @@ abstract class Controller extends System
 		{
 			try
 			{
-				$rootDir = $container->getParameter('kernel.project_dir');
+				$projectDir = $container->getParameter('kernel.project_dir');
 				$staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
-				$picture = $container->get('contao.image.picture_factory')->create($rootDir . '/' . $arrItem['singleSRC'], $lightboxSize);
+				$picture = $container->get('contao.image.picture_factory')->create($projectDir . '/' . $arrItem['singleSRC'], $lightboxSize);
 
 				$objTemplate->lightboxPicture = array
 				(
-					'img' => $picture->getImg($rootDir, $staticUrl),
-					'sources' => $picture->getSources($rootDir, $staticUrl)
+					'img' => $picture->getImg($projectDir, $staticUrl),
+					'sources' => $picture->getSources($projectDir, $staticUrl)
 				);
 
 				$objTemplate->$strHrefKey = $objTemplate->lightboxPicture['img']['src'];
@@ -1826,9 +1865,9 @@ abstract class Controller extends System
 		{
 			if ($objFiles->type == 'file')
 			{
-				$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+				$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
-				if (!\in_array($objFiles->extension, $allowedDownload) || !is_file($rootDir . '/' . $objFiles->path))
+				if (!\in_array($objFiles->extension, $allowedDownload) || !is_file($projectDir . '/' . $objFiles->path))
 				{
 					continue;
 				}
@@ -2216,14 +2255,14 @@ abstract class Controller extends System
 	 *
 	 * @return string The text with the replaced tokens
 	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use StringUtil::parseSimpleTokens() instead.
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0;
+	 *             Use the SimpleTokenParser::class service instead.
 	 */
 	protected function parseSimpleTokens($strBuffer, $arrData)
 	{
-		@trigger_error('Using Controller::parseSimpleTokens() has been deprecated and will no longer work in Contao 5.0. Use StringUtil::parseSimpleTokens() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Controller::parseSimpleTokens() has been deprecated and will no longer work in Contao 5.0. Use the SimpleTokenParser::class service instead.', E_USER_DEPRECATED);
 
-		return StringUtil::parseSimpleTokens($strBuffer, $arrData);
+		return System::getContainer()->get(SimpleTokenParser::class)->parseTokens($strBuffer, $arrData);
 	}
 
 	/**
@@ -2428,7 +2467,7 @@ abstract class Controller extends System
 	 *
 	 * @param string $pattern
 	 *
-	 * @return array
+	 * @return array|false
 	 */
 	protected static function braceGlob($pattern)
 	{

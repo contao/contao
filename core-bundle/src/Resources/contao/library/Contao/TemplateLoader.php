@@ -97,18 +97,18 @@ class TemplateLoader
 	public static function getPath($template, $format, $custom='templates')
 	{
 		$file = $template . '.' . $format;
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Check the theme folder first
-		if (file_exists($rootDir . '/' . $custom . '/' . $file))
+		if (file_exists($projectDir . '/' . $custom . '/' . $file))
 		{
-			return $rootDir . '/' . $custom . '/' . $file;
+			return $projectDir . '/' . $custom . '/' . $file;
 		}
 
 		// Then check the global templates directory (see #5547)
-		if ($custom != 'templates' && file_exists($rootDir . '/templates/' . $file))
+		if ($custom != 'templates' && file_exists($projectDir . '/templates/' . $file))
 		{
-			return $rootDir . '/templates/' . $file;
+			return $projectDir . '/templates/' . $file;
 		}
 
 		return static::getDefaultPath($template, $format);
@@ -128,11 +128,11 @@ class TemplateLoader
 	{
 		$file = $template . '.' . $format;
 		$container = System::getContainer();
-		$rootDir = $container->getParameter('kernel.project_dir');
+		$projectDir = $container->getParameter('kernel.project_dir');
 
 		if (isset(self::$files[$template]))
 		{
-			return $rootDir . '/' . self::$files[$template] . '/' . $file;
+			return $projectDir . '/' . self::$files[$template] . '/' . $file;
 		}
 
 		$strPath = null;

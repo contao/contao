@@ -26,6 +26,7 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Webmozart\PathUtil\Path;
 
 class ContaoCoreExtension extends Extension
 {
@@ -79,10 +80,7 @@ class ContaoCoreExtension extends Extension
         $container->setParameter('contao.image.imagine_options', $config['image']['imagine_options']);
         $container->setParameter('contao.image.reject_large_uploads', $config['image']['reject_large_uploads']);
         $container->setParameter('contao.security.two_factor.enforce_backend', $config['security']['two_factor']['enforce_backend']);
-
-        if (isset($config['localconfig'])) {
-            $container->setParameter('contao.localconfig', $config['localconfig']);
-        }
+        $container->setParameter('contao.localconfig', $config['localconfig'] ?? []);
 
         $this->handleSearchConfig($config, $container);
         $this->handleCrawlConfig($config, $container);
@@ -119,7 +117,7 @@ class ContaoCoreExtension extends Extension
         } else {
             // Configure whether to index protected pages on the default indexer
             $defaultIndexer = $container->getDefinition('contao.search.indexer.default');
-            $defaultIndexer->setArgument(3, $config['search']['index_protected']);
+            $defaultIndexer->setArgument(2, $config['search']['index_protected']);
         }
 
         $features = SearchIndexListener::FEATURE_INDEX | SearchIndexListener::FEATURE_DELETE;
@@ -252,7 +250,7 @@ class ContaoCoreExtension extends Extension
 
         $container->setParameter(
             'contao.image.target_dir',
-            $container->getParameter('kernel.project_dir').'/'.$config['image']['target_path']
+            Path::join($container->getParameter('kernel.project_dir'), $config['image']['target_path'])
         );
 
         @trigger_error('Using the "contao.image.target_path" parameter has been deprecated and will no longer work in Contao 5.0. Use the "contao.image.target_dir" parameter instead.', E_USER_DEPRECATED);

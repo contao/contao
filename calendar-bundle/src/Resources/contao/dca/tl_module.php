@@ -8,15 +8,21 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\Backend;
+use Contao\BackendUser;
+use Contao\Controller;
+use Contao\DataContainer;
+use Contao\System;
+
 // Add a palette selector
 $GLOBALS['TL_DCA']['tl_module']['palettes']['__selector__'][] = 'cal_format';
 
 // Add palettes to tl_module
-$GLOBALS['TL_DCA']['tl_module']['palettes']['calendar']         = '{title_legend},name,headline,type;{config_legend},cal_calendar,cal_startDay,cal_noSpan;{redirect_legend},jumpTo;{template_legend:hide},cal_ctemplate,customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
-$GLOBALS['TL_DCA']['tl_module']['palettes']['eventlist']        = '{title_legend},name,headline,type;{config_legend},cal_calendar,cal_format,cal_noSpan,cal_order,cal_readerModule,cal_limit,perPage,cal_ignoreDynamic,cal_hideRunning;{template_legend:hide},cal_template,customTpl;{image_legend:hide},imgSize;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['calendar']         = '{title_legend},name,headline,type;{config_legend},cal_calendar,cal_noSpan,cal_startDay,cal_featured;{redirect_legend},jumpTo;{template_legend:hide},cal_ctemplate,customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['eventlist']        = '{title_legend},name,headline,type;{config_legend},cal_calendar,cal_noSpan,cal_format,cal_featured,cal_order,cal_readerModule,cal_limit,perPage,cal_ignoreDynamic,cal_hideRunning;{template_legend:hide},cal_template,customTpl;{image_legend:hide},imgSize;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
 $GLOBALS['TL_DCA']['tl_module']['palettes']['eventreader']      = '{title_legend},name,headline,type;{config_legend},cal_calendar,cal_hideRunning;{template_legend:hide},cal_template,customTpl;{image_legend},imgSize;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
-$GLOBALS['TL_DCA']['tl_module']['palettes']['eventmenu']        = '{title_legend},name,headline,type;{config_legend},cal_calendar,cal_format,cal_noSpan,cal_order,cal_showQuantity;{redirect_legend},jumpTo;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
-$GLOBALS['TL_DCA']['tl_module']['palettes']['eventmenucal_day'] = '{title_legend},name,headline,type;{config_legend},cal_calendar,cal_format,cal_noSpan,cal_startDay,cal_showQuantity;{redirect_legend},jumpTo;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['eventmenu']        = '{title_legend},name,headline,type;{config_legend},cal_calendar,cal_noSpan,cal_format,cal_featured,cal_order,cal_showQuantity;{redirect_legend},jumpTo;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['eventmenucal_day'] = '{title_legend},name,headline,type;{config_legend},cal_calendar,cal_noSpan,cal_format,cal_featured,cal_startDay,cal_showQuantity;{redirect_legend},jumpTo;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
 
 // Add fields to tl_module
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_calendar'] = array
@@ -32,7 +38,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_noSpan'] = array
 (
 	'exclude'                 => true,
 	'inputType'               => 'checkbox',
-	'eval'                    => array('tl_class'=>'w50 m12'),
+	'eval'                    => array('tl_class'=>'w50'),
 	'sql'                     => "char(1) NOT NULL default ''"
 );
 
@@ -50,7 +56,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_startDay'] = array
 	'inputType'               => 'select',
 	'options'                 => array(0, 1, 2, 3, 4, 5, 6),
 	'reference'               => &$GLOBALS['TL_LANG']['DAYS'],
-	'eval'                    => array('tl_class'=>'w50'),
+	'eval'                    => array('tl_class'=>'w50 clr'),
 	'sql'                     => "smallint(5) unsigned NOT NULL default 1"
 );
 
@@ -60,7 +66,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_format'] = array
 	'inputType'               => 'select',
 	'options_callback'        => array('tl_module_calendar', 'getFormats'),
 	'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
-	'eval'                    => array('tl_class'=>'w50', 'submitOnChange'=>true),
+	'eval'                    => array('tl_class'=>'w50 clr', 'submitOnChange'=>true),
 	'sql'                     => "varchar(32) NOT NULL default 'cal_month'"
 );
 
@@ -68,7 +74,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_ignoreDynamic'] = array
 (
 	'exclude'                 => true,
 	'inputType'               => 'checkbox',
-	'eval'                    => array('tl_class'=>'w50'),
+	'eval'                    => array('tl_class'=>'clr w50'),
 	'sql'                     => "char(1) NOT NULL default ''"
 );
 
@@ -106,7 +112,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_template'] = array
 	'inputType'               => 'select',
 	'options_callback' => static function ()
 	{
-		return Contao\Controller::getTemplateGroup('event_');
+		return Controller::getTemplateGroup('event_');
 	},
 	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
 	'sql'                     => "varchar(64) NOT NULL default ''"
@@ -118,7 +124,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_ctemplate'] = array
 	'inputType'               => 'select',
 	'options_callback' => static function ()
 	{
-		return Contao\Controller::getTemplateGroup('cal_');
+		return Controller::getTemplateGroup('cal_');
 	},
 	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
 	'sql'                     => "varchar(64) NOT NULL default ''"
@@ -132,7 +138,17 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_showQuantity'] = array
 	'sql'                     => "char(1) NOT NULL default ''"
 );
 
-$bundles = Contao\System::getContainer()->getParameter('kernel.bundles');
+$GLOBALS['TL_DCA']['tl_module']['fields']['cal_featured'] = array
+(
+	'exclude'                 => true,
+	'inputType'               => 'select',
+	'options'                 => array('all_items', 'featured', 'unfeatured'),
+	'reference'               => &$GLOBALS['TL_LANG']['tl_module']['events'],
+	'eval'                    => array('tl_class'=>'w50'),
+	'sql'                     => "varchar(16) NOT NULL default 'all_items'"
+);
+
+$bundles = System::getContainer()->getParameter('kernel.bundles');
 
 // Add the comments template drop-down menu
 if (isset($bundles['ContaoCommentsBundle']))
@@ -145,7 +161,7 @@ if (isset($bundles['ContaoCommentsBundle']))
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_module_calendar extends Contao\Backend
+class tl_module_calendar extends Backend
 {
 	/**
 	 * Import the back end user object
@@ -153,7 +169,7 @@ class tl_module_calendar extends Contao\Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('Contao\BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 	}
 
 	/**
@@ -203,11 +219,11 @@ class tl_module_calendar extends Contao\Backend
 	/**
 	 * Return the calendar formats depending on the module type
 	 *
-	 * @param Contao\DataContainer $dc
+	 * @param DataContainer $dc
 	 *
 	 * @return array
 	 */
-	public function getFormats(Contao\DataContainer $dc)
+	public function getFormats(DataContainer $dc)
 	{
 		if ($dc->activeRecord->type == 'eventmenu')
 		{

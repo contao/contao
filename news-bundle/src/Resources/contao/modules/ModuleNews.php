@@ -254,12 +254,21 @@ abstract class ModuleNews extends Module
 
 		$count = 0;
 		$arrArticles = array();
+		$uuids = array();
 
-		while ($objArticles->next())
+		foreach ($objArticles as $objArticle)
 		{
-			/** @var NewsModel $objArticle */
-			$objArticle = $objArticles->current();
+			if ($objArticle->addImage && $objArticle->singleSRC != '')
+			{
+				$uuids[] = $objArticle->singleSRC;
+			}
+		}
 
+		// Preload all images in one query so they are loaded into the model registry
+		FilesModel::findMultipleByUuids($uuids);
+
+		foreach ($objArticles as $objArticle)
+		{
 			$arrArticles[] = $this->parseArticle($objArticle, $blnAddArchive, ((++$count == 1) ? ' first' : '') . (($count == $limit) ? ' last' : '') . ((($count % 2) == 0) ? ' odd' : ' even'), $count);
 		}
 
@@ -385,7 +394,7 @@ abstract class ModuleNews extends Module
 			'<a href="%s" title="%s"%s itemprop="url"><span itemprop="headline">%s</span></a>',
 			$strArticleUrl,
 			StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['open'], $strArticleUrl)),
-			($objArticle->target ? ' target="_blank"' : ''),
+			($objArticle->target ? ' target="_blank" rel="noreferrer noopener"' : ''),
 			$strLink
 		);
 	}

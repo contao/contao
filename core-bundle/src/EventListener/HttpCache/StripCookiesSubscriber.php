@@ -22,7 +22,10 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class StripCookiesSubscriber implements EventSubscriberInterface
 {
-    private const BLACKLIST = [
+    private const DENY_LIST = [
+        // Contao Manager
+        'contao_manager_auth',
+
         // Modals are always for JS only
         '(.*)?modal(.*)?',
 
@@ -53,31 +56,51 @@ class StripCookiesSubscriber implements EventSubscriberInterface
 
         // Blackfire
         '__blackfire',
+
+        // Tideways
+        'TIDEWAYS_SESSION',
+
+        // Litespeed HTTP2 Smart Push
+        'ls_smartpush',
+
+        // Osano Cookie Consent
+        'cookieconsent_status',
     ];
 
     /**
      * @var array
      */
-    private $whitelist = [];
+    private $allowList;
 
     /**
      * @var array
      */
-    private $disabledFromBlacklist = [];
+    private $removeFromDenyList = [];
 
-    public function __construct(array $whitelist = [])
+    public function __construct(array $allowList = [])
     {
-        $this->whitelist = $whitelist;
+        $this->allowList = $allowList;
     }
 
+    /**
+     * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.0; use the
+     *             getAllowList() method instead
+     */
     public function getWhitelist(): array
     {
-        return $this->whitelist;
+        @trigger_error('Using the "getWhitelist()" method has been deprecated and will no longer work in Contao 5.0. Use the "getAllowList()" method instead.', E_USER_DEPRECATED);
+
+        return $this->getAllowList();
     }
 
-    public function disableFromBlacklist(array $disableFromBlacklist): self
+    public function getAllowList(): array
     {
-        $this->disabledFromBlacklist = $disableFromBlacklist;
+        return $this->allowList;
+    }
+
+    public function removeFromDenyList(array $removeFromDenyList): self
+    {
+        $this->removeFromDenyList = $removeFromDenyList;
 
         return $this;
     }
@@ -90,11 +113,11 @@ class StripCookiesSubscriber implements EventSubscriberInterface
             return;
         }
 
-        // Use a custom whitelist if present, otherwise use the default blacklist
-        if (0 !== \count($this->whitelist)) {
-            $this->filterCookies($request, $this->whitelist, true);
+        // Use a custom allow list if present, otherwise use the default deny list
+        if (0 !== \count($this->allowList)) {
+            $this->filterCookies($request, $this->allowList);
         } else {
-            $this->filterCookies($request, array_diff(self::BLACKLIST, $this->disabledFromBlacklist));
+            $this->filterCookies($request, $this->removeFromDenyList, self::DENY_LIST);
         }
     }
 
@@ -105,12 +128,19 @@ class StripCookiesSubscriber implements EventSubscriberInterface
         ];
     }
 
-    private function filterCookies(Request $request, array $list, bool $isWhitelist = false): void
+    private function filterCookies(Request $request, array $allowList = [], array $denyList = []): void
     {
+        // Remove cookies that match the deny list or all if no deny list was set
         $removeCookies = preg_grep(
-            '/^(?:'.implode(')$|^(?:', $list).')$/i',
-            array_keys($request->cookies->all()),
-            $isWhitelist ? PREG_GREP_INVERT : 0
+            '/^(?:'.implode(')$|^(?:', $denyList ?: ['.*']).')$/i',
+            array_keys($request->cookies->all())
+        );
+
+        // Do not remove cookies that match the allow list
+        $removeCookies = preg_grep(
+            '/^(?:'.implode(')$|^(?:', $allowList).')$/i',
+            $removeCookies,
+            PREG_GREP_INVERT
         );
 
         foreach ($removeCookies as $name) {

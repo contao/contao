@@ -101,10 +101,11 @@ abstract class Events extends Module
 	 * @param array   $arrCalendars
 	 * @param integer $intStart
 	 * @param integer $intEnd
+	 * @param boolean $blnFeatured
 	 *
 	 * @return array
 	 */
-	protected function getAllEvents($arrCalendars, $intStart, $intEnd)
+	protected function getAllEvents($arrCalendars, $intStart, $intEnd, $blnFeatured = null)
 	{
 		if (!\is_array($arrCalendars))
 		{
@@ -116,7 +117,7 @@ abstract class Events extends Module
 		foreach ($arrCalendars as $id)
 		{
 			// Get the events of the current period
-			$objEvents = CalendarEventsModel::findCurrentByPid($id, $intStart, $intEnd);
+			$objEvents = CalendarEventsModel::findCurrentByPid($id, $intStart, $intEnd, array('showFeatured' => $blnFeatured));
 
 			if ($objEvents === null)
 			{
@@ -319,7 +320,7 @@ abstract class Events extends Module
 		// Override the link target
 		if ($objEvents->source == 'external' && $objEvents->target)
 		{
-			$arrEvent['target'] = ' target="_blank"';
+			$arrEvent['target'] = ' target="_blank" rel="noreferrer noopener"';
 		}
 
 		// Clean the RTE output
@@ -333,7 +334,6 @@ abstract class Events extends Module
 		// Display the "read more" button for external/article links
 		if ($objEvents->source != 'default')
 		{
-			$arrEvent['details'] = true;
 			$arrEvent['hasDetails'] = true;
 		}
 
@@ -387,6 +387,11 @@ abstract class Events extends Module
 		else
 		{
 			$arrEvent['class'] .= ' current';
+		}
+
+		if ($arrEvent['featured'] == 1)
+		{
+			$arrEvent['class'] .= ' featured';
 		}
 
 		$this->arrEvents[$intKey][$intStart][] = $arrEvent;

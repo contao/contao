@@ -349,10 +349,7 @@ class FrontendIndex extends Frontend
 			$GLOBALS['TL_MOOTOOLS'] = $arrMootools;
 			$GLOBALS['TL_JQUERY'] = $arrJquery;
 
-			/** @var PageError404 $objHandler */
-			$objHandler = new $GLOBALS['TL_PTY']['error_404']();
-
-			return $objHandler->getResponse();
+			throw $e;
 		}
 	}
 

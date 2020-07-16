@@ -22,7 +22,6 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class BackendPreviewControllerTest extends TestCase
@@ -33,7 +32,6 @@ class BackendPreviewControllerTest extends TestCase
             'preview.php',
             $this->createMock(FrontendPreviewAuthenticator::class),
             new EventDispatcher(),
-            $this->mockRouter(),
             $this->mockAuthorizationChecker()
         );
 
@@ -50,7 +48,6 @@ class BackendPreviewControllerTest extends TestCase
             'preview.php',
             $this->createMock(FrontendPreviewAuthenticator::class),
             new EventDispatcher(),
-            $this->mockRouter(),
             $this->mockAuthorizationChecker(false)
         );
 
@@ -75,7 +72,6 @@ class BackendPreviewControllerTest extends TestCase
             'preview.php',
             $previewAuthenticator,
             new EventDispatcher(),
-            $this->mockRouter(),
             $this->mockAuthorizationChecker()
         );
 
@@ -97,7 +93,6 @@ class BackendPreviewControllerTest extends TestCase
             'preview.php',
             $this->createMock(FrontendPreviewAuthenticator::class),
             $dispatcher,
-            $this->mockRouter(),
             $this->mockAuthorizationChecker()
         );
 
@@ -113,7 +108,6 @@ class BackendPreviewControllerTest extends TestCase
             'preview.php',
             $this->createMock(FrontendPreviewAuthenticator::class),
             new EventDispatcher(),
-            $this->mockRouter(),
             $this->mockAuthorizationChecker()
         );
 
@@ -121,7 +115,7 @@ class BackendPreviewControllerTest extends TestCase
         $response = $controller($this->mockRequest());
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
-        $this->assertSame('/index.html', $response->getTargetUrl());
+        $this->assertSame('/', $response->getTargetUrl());
     }
 
     /**
@@ -138,21 +132,6 @@ class BackendPreviewControllerTest extends TestCase
         ;
 
         return $request;
-    }
-
-    /**
-     * @return RouterInterface&MockObject
-     */
-    private function mockRouter(): RouterInterface
-    {
-        $router = $this->createMock(RouterInterface::class);
-        $router
-            ->method('generate')
-            ->with('contao_root')
-            ->willReturn('/index.html')
-        ;
-
-        return $router;
     }
 
     /**

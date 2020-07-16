@@ -380,7 +380,7 @@ class PaletteManipulator
      *
      * @return string|false
      */
-    private function findLegendForField(array &$config, string $field)
+    private function findLegendForField(array $config, string $field)
     {
         foreach ($config as $legend => $group) {
             if (\in_array($field, $group['fields'], true)) {

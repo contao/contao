@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class StripQueryParametersSubscriber implements EventSubscriberInterface
 {
-    private const BLACKLIST = [
+    private const DENY_LIST = [
         // Google click identifier
         'gclid',
         'dclid', // Used to be DoubleClick
@@ -51,26 +51,26 @@ class StripQueryParametersSubscriber implements EventSubscriberInterface
     /**
      * @var array
      */
-    private $whitelist = [];
+    private $allowList;
 
     /**
      * @var array
      */
-    private $disabledFromBlacklist = [];
+    private $removeFromDenyList = [];
 
-    public function __construct(array $whitelist = [])
+    public function __construct(array $allowList = [])
     {
-        $this->whitelist = $whitelist;
+        $this->allowList = $allowList;
     }
 
-    public function getWhitelist(): array
+    public function getAllowList(): array
     {
-        return $this->whitelist;
+        return $this->allowList;
     }
 
-    public function disableFromBlacklist(array $disableFromBlacklist): self
+    public function removeFromDenyList(array $removeFromDenyList): self
     {
-        $this->disabledFromBlacklist = $disableFromBlacklist;
+        $this->removeFromDenyList = $removeFromDenyList;
 
         return $this;
     }
@@ -83,11 +83,11 @@ class StripQueryParametersSubscriber implements EventSubscriberInterface
             return;
         }
 
-        // Use a custom whitelist if present, otherwise use the default blacklist
-        if (0 !== \count($this->whitelist)) {
-            $this->filterQueryParams($request, $this->whitelist, true);
+        // Use a custom allow list if present, otherwise use the default deny list
+        if (0 !== \count($this->allowList)) {
+            $this->filterQueryParams($request, $this->allowList);
         } else {
-            $this->filterQueryParams($request, array_diff(self::BLACKLIST, $this->disabledFromBlacklist));
+            $this->filterQueryParams($request, $this->removeFromDenyList, self::DENY_LIST);
         }
     }
 
@@ -98,12 +98,19 @@ class StripQueryParametersSubscriber implements EventSubscriberInterface
         ];
     }
 
-    private function filterQueryParams(Request $request, array $list, bool $isWhitelist = false): void
+    private function filterQueryParams(Request $request, array $allowList = [], array $denyList = []): void
     {
+        // Remove params that match the deny list or all if no deny list was set
         $removeParams = preg_grep(
-            '/^(?:'.implode(')$|^(?:', $list).')$/i',
-            array_keys($request->query->all()),
-            $isWhitelist ? PREG_GREP_INVERT : 0
+            '/^(?:'.implode(')$|^(?:', $denyList ?: ['.*']).')$/i',
+            array_keys($request->query->all())
+        );
+
+        // Do not remove params that match the allow list
+        $removeParams = preg_grep(
+            '/^(?:'.implode(')$|^(?:', $allowList).')$/i',
+            $removeParams,
+            PREG_GREP_INVERT
         );
 
         foreach ($removeParams as $name) {

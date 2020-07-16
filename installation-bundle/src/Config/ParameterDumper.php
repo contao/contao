@@ -14,6 +14,7 @@ namespace Contao\InstallationBundle\Config;
 
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Yaml;
+use Webmozart\PathUtil\Path;
 
 class ParameterDumper
 {
@@ -32,16 +33,20 @@ class ParameterDumper
      */
     private $parameters = ['parameters' => []];
 
-    public function __construct(string $rootDir, Filesystem $filesystem = null)
+    public function __construct(string $projectDir, Filesystem $filesystem = null)
     {
-        $this->configFile = $rootDir.'/config/parameters.yml';
+        $this->configFile = Path::join($projectDir, 'config/parameters.yml');
         $this->filesystem = $filesystem ?: new Filesystem();
 
-        // Fallback to the legacy config file (see #566)
-        if (file_exists($rootDir.'/app/config/parameters.yml') && !file_exists($rootDir.'/config/parameters.yml')) {
-            $this->configFile = $rootDir.'/app/config/parameters.yml';
-        } elseif (!file_exists($this->configFile)) {
-            return;
+        if (!$this->filesystem->exists($this->configFile)) {
+            // Fallback to the legacy config file (see #566)
+            $fallbackConfigFile = Path::join($projectDir, 'app/config/parameters.yml');
+
+            if (!$this->filesystem->exists($fallbackConfigFile)) {
+                return;
+            }
+
+            $this->configFile = $fallbackConfigFile;
         }
 
         $parameters = Yaml::parse(file_get_contents($this->configFile));

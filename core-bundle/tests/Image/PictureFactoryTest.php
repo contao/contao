@@ -628,11 +628,6 @@ class PictureFactoryTest extends TestCase
         yield [false, 20, 100, 22, 100];
     }
 
-    /**
-     * @param PictureGeneratorInterface&MockObject $pictureGenerator
-     * @param ImageFactoryInterface&MockObject     $imageFactory
-     * @param ContaoFramework&MockObject           $framework
-     */
     private function getPictureFactory(PictureGeneratorInterface $pictureGenerator = null, ImageFactoryInterface $imageFactory = null, ContaoFramework $framework = null, bool $bypassCache = null, array $imagineOptions = null): PictureFactory
     {
         if (null === $pictureGenerator) {

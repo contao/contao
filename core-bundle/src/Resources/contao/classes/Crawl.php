@@ -38,6 +38,11 @@ class Crawl extends Backend implements \executable
 	private $valid = true;
 
 	/**
+	 * @var string
+	 */
+	private $logDir;
+
+	/**
 	 * Return true if the module is active
 	 *
 	 * @return boolean
@@ -59,6 +64,17 @@ class Crawl extends Backend implements \executable
 			return '';
 		}
 
+		// Hide the crawler in maintenance mode (see #1379)
+		try
+		{
+			$driver = System::getContainer()->get('lexik_maintenance.driver.factory')->getDriver();
+			$blnMaintenance = $driver->isExists();
+		}
+		catch (\Exception $e)
+		{
+			$blnMaintenance = false;
+		}
+
 		/** @var Factory $factory */
 		$factory = System::getContainer()->get('contao.crawl.escargot_factory');
 		$subscriberNames = $factory->getSubscriberNames();
@@ -71,6 +87,7 @@ class Crawl extends Backend implements \executable
 		}
 
 		$template = new BackendTemplate('be_crawl');
+		$template->isMaintenance = $blnMaintenance;
 		$template->isActive = $this->isActive();
 		$template->subscribersWidget = $subscribersWidget;
 		$template->memberWidget = $memberWidget;
@@ -87,16 +104,9 @@ class Crawl extends Backend implements \executable
 
 		$jobId = Input::get('jobId');
 		$queue = $factory->createLazyQueue();
-		$crawLogsDir = sys_get_temp_dir() . '/contao-crawl';
 
-		// Make sure the subdirectory exists so logs can be written
-		if (!is_dir($crawLogsDir))
-		{
-			(new Filesystem())->mkdir($crawLogsDir);
-		}
-
-		$debugLogPath = $crawLogsDir . '/' . $jobId . '_log.csv';
-		$resultCache = $crawLogsDir . '/' . $jobId . '.result-cache';
+		$debugLogPath = $this->getLogDir() . '/' . $jobId . '_log.csv';
+		$resultCache = $this->getLogDir() . '/' . $jobId . '.result-cache';
 
 		if ($downloadLog = Input::get('downloadLog'))
 		{
@@ -272,9 +282,26 @@ class Crawl extends Backend implements \executable
 		return $logger;
 	}
 
+	private function getLogDir(): string
+	{
+		if (null !== $this->logDir)
+		{
+			return $this->logDir;
+		}
+
+		$this->logDir = sprintf('%s/%s/contao-crawl', sys_get_temp_dir(), md5(System::getContainer()->getParameter('kernel.project_dir')));
+
+		if (!is_dir($this->logDir))
+		{
+			(new Filesystem())->mkdir($this->logDir);
+		}
+
+		return $this->logDir;
+	}
+
 	private function getSubscriberLogFilePath(string $subscriberName, string $jobId): string
 	{
-		return sys_get_temp_dir() . '/contao-crawl/' . $jobId . '_' . $subscriberName . '_log.csv';
+		return $this->getLogDir() . '/' . $jobId . '_' . $subscriberName . '_log.csv';
 	}
 
 	private function generateSubscribersWidget(array $subscriberNames): Widget

@@ -10,8 +10,9 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Util\SimpleTokenParser;
 use Patchwork\Utf8;
-use Psr\Log\LogLevel;
+use Webmozart\PathUtil\Path;
 
 /**
  * Provides string manipulation methods
@@ -331,9 +332,9 @@ class StringUtil
 			$strEncoded = '';
 			$arrCharacters = Utf8::str_split($strEmail);
 
-			foreach ($arrCharacters as $strCharacter)
+			foreach ($arrCharacters as $index => $strCharacter)
 			{
-				$strEncoded .= sprintf((random_int(0, 1) ? '&#x%X;' : '&#%s;'), Utf8::ord($strCharacter));
+				$strEncoded .= sprintf(($index % 2) ? '&#x%X;' : '&#%s;', Utf8::ord($strCharacter));
 			}
 
 			$strString = str_replace($strEmail, $strEncoded, $strString);
@@ -551,182 +552,17 @@ class StringUtil
 	 *
 	 * @return string The converted string
 	 *
-	 * @throws \Exception                If $strString cannot be parsed
+	 * @throws \RuntimeException         If $strString cannot be parsed
 	 * @throws \InvalidArgumentException If there are incorrectly formatted if-tags
+	 *
+	 * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.
+	 *             Use the SimpleTokenParser::class service instead.
 	 */
 	public static function parseSimpleTokens($strString, $arrData)
 	{
-		$strReturn = '';
+		@trigger_error('Using StringUtil::parseSimpleTokens() has been deprecated and will no longer work in Contao 5.0. Use the SimpleTokenParser::class service instead.', E_USER_DEPRECATED);
 
-		$replaceTokens = static function ($strSubject) use ($arrData)
-		{
-			// Replace tokens
-			return preg_replace_callback
-			(
-				'/##([^=!<>\s]+?)##/',
-				static function (array $matches) use ($arrData)
-				{
-					if (!\array_key_exists($matches[1], $arrData))
-					{
-						System::getContainer()
-							->get('monolog.logger.contao')
-							->log(LogLevel::INFO, sprintf('Tried to parse unknown simple token "%s".', $matches[1]))
-						;
-
-						return '##' . $matches[1] . '##';
-					}
-
-					return $arrData[$matches[1]];
-				},
-				$strSubject
-			);
-		};
-
-		$evaluateExpression = static function ($strExpression) use ($arrData)
-		{
-			if (!preg_match('/^([^=!<>\s]+) *([=!<>]+)(.+)$/s', $strExpression, $arrMatches))
-			{
-				return false;
-			}
-
-			$strToken = $arrMatches[1];
-			$strOperator = $arrMatches[2];
-			$strValue = trim($arrMatches[3], ' ');
-
-			if (!\array_key_exists($strToken, $arrData))
-			{
-				System::getContainer()
-					->get('monolog.logger.contao')
-					->log(LogLevel::INFO, sprintf('Tried to evaluate unknown simple token "%s".', $strToken))
-				;
-
-				return false;
-			}
-
-			$varTokenValue = $arrData[$strToken];
-
-			if (is_numeric($strValue))
-			{
-				if (strpos($strValue, '.') === false)
-				{
-					$varValue = (int) $strValue;
-				}
-				else
-				{
-					$varValue = (float) $strValue;
-				}
-			}
-			elseif (strtolower($strValue) === 'true')
-			{
-				$varValue = true;
-			}
-			elseif (strtolower($strValue) === 'false')
-			{
-				$varValue = false;
-			}
-			elseif (strtolower($strValue) === 'null')
-			{
-				$varValue = null;
-			}
-			elseif (0 === strncmp($strValue, '"', 1) && substr($strValue, -1) === '"')
-			{
-				$varValue = str_replace('\"', '"', substr($strValue, 1, -1));
-			}
-			elseif (0 === strncmp($strValue, "'", 1) && substr($strValue, -1) === "'")
-			{
-				$varValue = str_replace("\\'", "'", substr($strValue, 1, -1));
-			}
-			else
-			{
-				throw new \InvalidArgumentException(sprintf('Unknown data type of comparison value "%s".', $strValue));
-			}
-
-			switch ($strOperator)
-			{
-				case '==':
-					return $varTokenValue == $varValue;
-
-				case '!=':
-					return $varTokenValue != $varValue;
-
-				case '===':
-					return $varTokenValue === $varValue;
-
-				case '!==':
-					return $varTokenValue !== $varValue;
-
-				case '<':
-					return $varTokenValue < $varValue;
-
-				case '>':
-					return $varTokenValue > $varValue;
-
-				case '<=':
-					return $varTokenValue <= $varValue;
-
-				case '>=':
-					return $varTokenValue >= $varValue;
-
-				default:
-					throw new \InvalidArgumentException(sprintf('Unknown simple token comparison operator "%s".', $strOperator));
-			}
-		};
-
-		// The last item is true if it is inside a matching if-tag
-		$arrStack = array(true);
-
-		// The last item is true if any if/elseif at that level was true
-		$arrIfStack = array(true);
-
-		// Tokenize the string into tag and text blocks
-		$arrTags = preg_split('/({[^{}]+})\n?/', $strString, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
-
-		// Parse the tokens
-		foreach ($arrTags as $strTag)
-		{
-			// True if it is inside a matching if-tag
-			$blnCurrent = $arrStack[\count($arrStack) - 1];
-			$blnCurrentIf = $arrIfStack[\count($arrIfStack) - 1];
-
-			if (strncmp($strTag, '{if ', 4) === 0)
-			{
-				$blnExpression = $evaluateExpression(substr($strTag, 4, -1));
-				$arrStack[] = $blnCurrent && $blnExpression;
-				$arrIfStack[] = $blnExpression;
-			}
-			elseif (strncmp($strTag, '{elseif ', 8) === 0)
-			{
-				$blnExpression = $evaluateExpression(substr($strTag, 8, -1));
-				array_pop($arrStack);
-				array_pop($arrIfStack);
-				$arrStack[] = !$blnCurrentIf && $arrStack[\count($arrStack) - 1] && $blnExpression;
-				$arrIfStack[] = $blnCurrentIf || $blnExpression;
-			}
-			elseif (strncmp($strTag, '{else}', 6) === 0)
-			{
-				array_pop($arrStack);
-				array_pop($arrIfStack);
-				$arrStack[] = !$blnCurrentIf && $arrStack[\count($arrStack) - 1];
-				$arrIfStack[] = true;
-			}
-			elseif (strncmp($strTag, '{endif}', 7) === 0)
-			{
-				array_pop($arrStack);
-				array_pop($arrIfStack);
-			}
-			elseif ($blnCurrent)
-			{
-				$strReturn .= $replaceTokens($strTag);
-			}
-		}
-
-		// Throw an exception if there is an error
-		if (\count($arrStack) !== 1)
-		{
-			throw new \Exception('Error parsing simple tokens');
-		}
-
-		return $strReturn;
+		return System::getContainer()->get(SimpleTokenParser::class)->parseTokens($strString, $arrData);
 	}
 
 	/**
@@ -1110,12 +946,14 @@ class StringUtil
 	 */
 	public static function stripRootDir($path)
 	{
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
-		$length = \strlen($rootDir);
+		// Compare normalized version of the paths
+		$projectDir = Path::normalize(System::getContainer()->getParameter('kernel.project_dir'));
+		$normalizedPath = Path::normalize($path);
+		$length = \strlen($projectDir);
 
-		if (strncmp($path, $rootDir, $length) !== 0 || \strlen($path) <= $length || ($path[$length] !== '/' && $path[$length] !== '\\'))
+		if (strncmp($normalizedPath, $projectDir, $length) !== 0 || \strlen($normalizedPath) <= $length || $normalizedPath[$length] !== '/')
 		{
-			throw new \InvalidArgumentException(sprintf('Path "%s" is not inside the Contao root dir "%s"', $path, $rootDir));
+			throw new \InvalidArgumentException(sprintf('Path "%s" is not inside the Contao root dir "%s"', $path, $projectDir));
 		}
 
 		return (string) substr($path, $length + 1);

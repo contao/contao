@@ -30,6 +30,7 @@ use Contao\Model\Registry;
 use Contao\PageModel;
 use Contao\RequestToken;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -381,6 +382,7 @@ class ContaoFrameworkTest extends TestCase
             $requestStack,
             $this->mockScopeMatcher(),
             $this->createMock(TokenChecker::class),
+            new Filesystem(),
             $this->getTempDir(),
             error_reporting()
         );
@@ -417,6 +419,7 @@ class ContaoFrameworkTest extends TestCase
             $requestStack,
             $this->mockScopeMatcher(),
             $this->createMock(TokenChecker::class),
+            new Filesystem(),
             $this->getTempDir(),
             error_reporting()
         );
@@ -681,18 +684,15 @@ class ContaoFrameworkTest extends TestCase
 
         $this->assertSame('bar', Environment::get('scriptFilename'));
         $this->assertNotEmpty(Input::getUnusedGet());
-        $this->assertSame(1, $registry->count());
+        $this->assertCount(1, $registry);
 
         $framework->reset();
 
         $this->assertNotSame('bar', Environment::get('scriptFilename'));
         $this->assertEmpty(Input::getUnusedGet());
-        $this->assertSame(0, $registry->count());
+        $this->assertCount(0, $registry);
     }
 
-    /**
-     * @param TokenChecker&MockObject $tokenChecker
-     */
     private function mockFramework(Request $request = null, ScopeMatcher $scopeMatcher = null, TokenChecker $tokenChecker = null): ContaoFramework
     {
         $requestStack = new RequestStack();
@@ -705,6 +705,7 @@ class ContaoFrameworkTest extends TestCase
             $requestStack,
             $scopeMatcher ?? $this->mockScopeMatcher(),
             $tokenChecker ?? $this->createMock(TokenChecker::class),
+            new Filesystem(),
             $this->getTempDir(),
             error_reporting()
         );

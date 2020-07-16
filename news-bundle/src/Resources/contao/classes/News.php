@@ -61,6 +61,7 @@ class News extends Frontend
 	{
 		$this->import(Automator::class, 'Automator');
 		$this->Automator->purgeXmlFiles();
+		$this->Automator->generateSitemap();
 
 		$objFeed = NewsFeedModel::findAll();
 
@@ -336,6 +337,11 @@ class News extends Frontend
 				{
 					while ($objArticle->next())
 					{
+						if ($blnIsSitemap && $objArticle->robots === 'noindex,nofollow')
+						{
+							continue;
+						}
+
 						$arrPages[] = $this->getLink($objArticle, $strUrl);
 					}
 				}

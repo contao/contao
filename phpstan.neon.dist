@@ -1,7 +1,16 @@
-parameters:
-    autoload_files:
-        - %currentWorkingDirectory%/vendor/autoload.php
+includes:
+    - vendor/contao/phpstan/extension.neon
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor/phpstan/phpstan-phpunit/rules.neon
+    - vendor/phpstan/phpstan-symfony/extension.neon
+    - vendor/phpstan/phpstan-symfony/rules.neon
 
+rules:
+    - SlamPhpStan\SymfonyFilesystemRule
+    - SlamPhpStan\SymfonyProcessRule
+    - TheCodingMachine\PHPStan\Rules\Exceptions\ThrowMustBundlePreviousExceptionRule
+
+parameters:
     contao:
         services_yml_path: %currentWorkingDirectory%/core-bundle/src/Resources/config/services.yml
 
@@ -15,14 +24,8 @@ parameters:
         - %currentWorkingDirectory%/core-bundle/tests/Functional/var/*
 
     ignoreErrors:
-        # Ignore the Adapter::missingMethod() warning
-        - '#Call to an undefined method Contao\\CoreBundle\\Framework\\Adapter::missingMethod\(\)\.#'
-
         # Ignore backwards compatibility layers when preferring lowest dependencies
         - '#Method Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface::dispatch\(\) invoked with 2 parameters, 1 required\.#'
-
-        # Ingore forward compatibility layers
-        - '#Method Symfony\\Component\\HttpFoundation\\ResponseHeaderBag::all\(\) invoked with 1 parameter, 0 required\.#'
 
         # Ignore configuration tree errors
         - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition::children\(\)\.#'
@@ -41,7 +44,9 @@ parameters:
               - %currentWorkingDirectory%/core-bundle/tests/Doctrine/Schema/DcaSchemaProviderTest.php
 
         - message: '#Result of && is always false\.#'
-          path: %currentWorkingDirectory%/core-bundle/src/DataCollector/ContaoDataCollector.php
+          paths:
+              - %currentWorkingDirectory%/core-bundle/src/DataCollector/ContaoDataCollector.php
+              - %currentWorkingDirectory%/core-bundle/src/Image/ImageFactory.php
 
         - message: '#Strict comparison using === between true and false will always evaluate to false\.#'
           path: %currentWorkingDirectory%/core-bundle/src/DataCollector/ContaoDataCollector.php
@@ -59,5 +64,5 @@ parameters:
               - %currentWorkingDirectory%/core-bundle/src/Command/MigrateCommand.php
 
     reportUnmatchedIgnoredErrors: false
+    checkGenericClassInNonGenericObjectType: false
     inferPrivatePropertyTypeFromConstructor: true
-    treatPhpDocTypesAsCertain: false

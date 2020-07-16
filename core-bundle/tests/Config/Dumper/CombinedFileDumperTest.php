@@ -17,6 +17,7 @@ use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Filesystem\Filesystem;
+use Webmozart\PathUtil\Path;
 
 class CombinedFileDumperTest extends TestCase
 {
@@ -57,7 +58,7 @@ class CombinedFileDumperTest extends TestCase
         $filesystem
             ->expects($this->once())
             ->method('dumpFile')
-            ->with($this->getTempDir().'/test.php', $expects)
+            ->with(Path::normalize($this->getTempDir()).'/test.php', $expects)
         ;
 
         return $filesystem;

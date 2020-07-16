@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Util\SimpleTokenParser;
 use Patchwork\Utf8;
 
 /**
@@ -125,7 +126,7 @@ class ModuleNewsletterReader extends Module
 
 		// Parse simple tokens and insert tags
 		$strContent = $this->replaceInsertTags($strContent);
-		$strContent = StringUtil::parseSimpleTokens($strContent, array());
+		$strContent = System::getContainer()->get(SimpleTokenParser::class)->parse($strContent, array());
 
 		// Encode e-mail addresses
 		$strContent = StringUtil::encodeEmail($strContent);

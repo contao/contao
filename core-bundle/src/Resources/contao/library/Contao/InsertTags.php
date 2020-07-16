@@ -336,7 +336,7 @@ class InsertTags extends Controller
 						{
 							$arrCache[$strTag] = implode(', ', $value);
 						}
-						elseif (\is_array($opts) && array_is_assoc($opts))
+						elseif (\is_array($opts) && ArrayUtil::isAssoc($opts))
 						{
 							$arrCache[$strTag] = $opts[$value] ?? $value;
 						}
@@ -450,7 +450,7 @@ class InsertTags extends Controller
 						}
 
 						$strName = $objNextPage->title;
-						$strTarget = $objNextPage->target ? ' target="_blank"' : '';
+						$strTarget = $objNextPage->target ? ' target="_blank" rel="noreferrer noopener"' : '';
 						$strClass = $objNextPage->cssClass ? sprintf(' class="%s"', $objNextPage->cssClass) : '';
 						$strTitle = $objNextPage->pageTitle ?: $objNextPage->title;
 					}

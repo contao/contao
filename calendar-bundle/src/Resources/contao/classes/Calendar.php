@@ -373,6 +373,11 @@ class Calendar extends Frontend
 				{
 					while ($objEvents->next())
 					{
+						if ($blnIsSitemap && $objEvents->robots === 'noindex,nofollow')
+						{
+							continue;
+						}
+
 						$arrPages[] = sprintf(preg_replace('/%(?!s)/', '%%', $strUrl), ($objEvents->alias ?: $objEvents->id));
 					}
 				}

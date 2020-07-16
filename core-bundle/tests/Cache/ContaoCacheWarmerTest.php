@@ -18,7 +18,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\System;
 use Doctrine\DBAL\Connection;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -126,10 +125,6 @@ class ContaoCacheWarmerTest extends TestCase
         $this->assertFileNotExists($this->getFixturesDir().'/var/cache/contao');
     }
 
-    /**
-     * @param Connection&MockObject      $connection
-     * @param ContaoFramework&MockObject $framework
-     */
     private function getCacheWarmer(Connection $connection = null, ContaoFramework $framework = null, string $bundle = 'test-bundle'): ContaoCacheWarmer
     {
         if (null === $connection) {
