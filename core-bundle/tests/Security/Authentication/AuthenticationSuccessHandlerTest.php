@@ -449,10 +449,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $this->getHandler()->onAuthenticationSuccess($request, $token);
     }
 
-    /**
-     * @param ContaoFramework&MockObject $framework
-     * @param LoggerInterface&MockObject $logger
-     */
     private function getHandler(ContaoFramework $framework = null, LoggerInterface $logger = null): AuthenticationSuccessHandler
     {
         if (null === $framework) {

@@ -320,9 +320,6 @@ class OptInTokenTest extends ContaoTestCase
         $this->assertTrue($token->hasBeenSent());
     }
 
-    /**
-     * @param ContaoFramework&MockObject $framework
-     */
     private function getToken(OptInModel $model, ContaoFramework $framework = null): OptInTokenInterface
     {
         if (null === $framework) {
