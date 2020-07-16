@@ -102,7 +102,7 @@
         <source>Mailer configuration</source>
       </trans-unit>
       <trans-unit id="tl_page.mailerTransport.1">
-        <source>The mailer configuration used for this website root.</source>
+        <source>Here you can select which mailer configuration to use for the website.</source>
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.0">
         <source>E-mail address of the website administrator</source>

@@ -39,6 +39,7 @@ class AddAvailableTransportsPassTest extends TestCase
     {
         $container = $this->getContainerBuilder();
         $container->prependExtensionConfig('contao', []);
+
         $container->prependExtensionConfig('framework', [
             'mailer' => [
                 'dsn' => 'smtp://localhost',
@@ -57,6 +58,7 @@ class AddAvailableTransportsPassTest extends TestCase
     {
         $container = $this->getContainerBuilder();
         $container->prependExtensionConfig('contao', []);
+
         $container->prependExtensionConfig('framework', [
             'mailer' => [
                 'transports' => [
@@ -78,6 +80,7 @@ class AddAvailableTransportsPassTest extends TestCase
     public function testAddsConfiguredTransports(): void
     {
         $container = $this->getContainerBuilder();
+
         $container->prependExtensionConfig('contao', [
             'mailer' => [
                 'transports' => [
@@ -86,6 +89,7 @@ class AddAvailableTransportsPassTest extends TestCase
                 ],
             ],
         ]);
+
         $container->prependExtensionConfig('framework', [
             'mailer' => [
                 'transports' => [
@@ -116,6 +120,7 @@ class AddAvailableTransportsPassTest extends TestCase
     public function testAddsFromAddresses(): void
     {
         $container = $this->getContainerBuilder();
+
         $container->prependExtensionConfig('contao', [
             'mailer' => [
                 'transports' => [
@@ -129,6 +134,7 @@ class AddAvailableTransportsPassTest extends TestCase
                 ],
             ],
         ]);
+
         $container->prependExtensionConfig('framework', [
             'mailer' => [
                 'transports' => [
@@ -190,10 +196,7 @@ class AddAvailableTransportsPassTest extends TestCase
 
             $this->assertSame(TransportConfig::class, $definition->getClass());
             $this->assertIsString($definition->getArgument(0));
-            $this->assertThat($definition->getArgument(1), $this->logicalOr(
-                $this->isType('string'),
-                $this->isNull()
-            ));
+            $this->assertThat($definition->getArgument(1), $this->logicalOr($this->isType('string'), $this->isNull()));
 
             $transports[] = $methodCall[1];
         }

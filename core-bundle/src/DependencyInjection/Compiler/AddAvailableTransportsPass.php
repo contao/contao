@@ -27,11 +27,7 @@ class AddAvailableTransportsPass implements CompilerPassInterface
         }
 
         $contaoConfig = array_merge(...$container->getExtensionConfig('contao'));
-        $contaoMailerConfig = [];
-
-        if (isset($contaoConfig['mailer'], $contaoConfig['mailer']['transports'])) {
-            $contaoMailerConfig = $contaoConfig['mailer']['transports'];
-        }
+        $contaoMailerConfig = $contaoConfig['mailer']['transports'] ?? [];
 
         if (empty($contaoMailerConfig)) {
             return;
@@ -41,7 +37,7 @@ class AddAvailableTransportsPass implements CompilerPassInterface
         $definition = $container->findDefinition(AvailableTransports::class);
 
         foreach ($frameworkConfig as $v) {
-            if (!isset($v['mailer']) || !isset($v['mailer']['transports'])) {
+            if (!isset($v['mailer']['transports'])) {
                 continue;
             }
 
@@ -54,9 +50,7 @@ class AddAvailableTransportsPass implements CompilerPassInterface
 
                 $definition->addMethodCall(
                     'addTransport',
-                    [
-                        new Definition(TransportConfig::class, [$transportName, $from]),
-                    ]
+                    [new Definition(TransportConfig::class, [$transportName, $from])]
                 );
             }
         }

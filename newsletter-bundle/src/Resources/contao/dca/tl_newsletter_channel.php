@@ -117,7 +117,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},title,jumpTo;{template_legend:hide},template;{sender_legend},sender,senderName,mailerTransport'
+		'default'                     => '{title_legend},title,jumpTo;{template_legend:hide},template;{sender_legend},mailerTransport,sender,senderName'
 	),
 
 	// Fields
@@ -159,13 +159,21 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 			},
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
+		'mailerTransport' => array
+		(
+			'exclude'                 => true,
+			'inputType'               => 'select',
+			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption'=>true),
+			'options_callback'        => array(AvailableTransports::class, 'getTransportOptions'),
+			'sql'                     => "varchar(255) NOT NULL default ''"
+		),
 		'sender' => array
 		(
 			'exclude'                 => true,
 			'search'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'email', 'maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'email', 'maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50 clr'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'senderName' => array
@@ -177,14 +185,6 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 			'inputType'               => 'text',
 			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(128) NOT NULL default ''"
-		),
-		'mailerTransport' => array
-		(
-			'exclude'                 => true,
-			'inputType'               => 'select',
-			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption'=>true),
-			'options_callback'        => array(AvailableTransports::class, 'getTransportOptions'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
 		)
 	)
 );

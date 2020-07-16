@@ -34,30 +34,38 @@ class AvailableTransportsTest extends TestCase
         $this->assertInstanceOf(Callback::class, $pageCallback);
         $this->assertInstanceOf(Callback::class, $formCallback);
 
-        $this->assertSame([
-            'table' => 'tl_page',
-            'target' => 'fields.mailerTransport.options',
-            'priority' => null,
-        ], get_object_vars($pageCallback));
+        $this->assertSame(
+            [
+                'table' => 'tl_page',
+                'target' => 'fields.mailerTransport.options',
+                'priority' => null,
+            ],
+            get_object_vars($pageCallback)
+        );
 
-        $this->assertSame([
-            'table' => 'tl_form',
-            'target' => 'fields.mailerTransport.options',
-            'priority' => null,
-        ], get_object_vars($formCallback));
+        $this->assertSame(
+            [
+                'table' => 'tl_form',
+                'target' => 'fields.mailerTransport.options',
+                'priority' => null,
+            ],
+            get_object_vars($formCallback)
+        );
     }
 
     public function testAddsTransports(): void
     {
         $availableTransports = new AvailableTransports();
-
         $availableTransports->addTransport(new TransportConfig('foobar'));
         $availableTransports->addTransport(new TransportConfig('lorem', 'Lorem Ipsum <lorem.ipsum@example.org>'));
 
-        $this->assertSame([
-            'foobar' => 'foobar',
-            'lorem' => 'lorem (Lorem Ipsum &lt;lorem.ipsum@example.org&gt;)',
-        ], $availableTransports->getTransportOptions());
+        $this->assertSame(
+            [
+                'foobar' => 'foobar',
+                'lorem' => 'lorem (Lorem Ipsum &lt;lorem.ipsum@example.org&gt;)',
+            ],
+            $availableTransports->getTransportOptions()
+        );
 
         $this->assertCount(2, $availableTransports->getTransports());
         $this->assertNotNull($availableTransports->getTransport('foobar'));
