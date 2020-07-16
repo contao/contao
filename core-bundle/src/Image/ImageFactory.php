@@ -111,9 +111,12 @@ class ImageFactory implements ImageFactoryInterface
         $this->predefinedSizes = $predefinedSizes;
     }
 
+    /**
+     * @param mixed $size
+     * @param mixed $options
+     */
     public function create($path, $size = null, $options = null): ImageInterface
     {
-        /** @var mixed $options */
         if (null !== $options && !\is_string($options) && !$options instanceof ResizeOptions) {
             throw new \InvalidArgumentException('Options must be of type null, string or '.ResizeOptions::class);
         }
