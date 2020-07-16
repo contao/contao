@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Runtime;
 
+use Contao\CoreBundle\File\MetaData;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -55,6 +56,13 @@ final class FigureRendererRuntime implements RuntimeExtensionInterface
     public function render($from, array $configuration = [], $template = '@ContaoCore/Image/Studio/figure.html.twig'): string
     {
         $configuration['from'] = $from;
+
+        // Allow overwriting meta data on the fly
+        foreach (['metaData', 'setMetaData'] as $key) {
+            if (\is_array($configuration[$key] ?? null)) {
+                $configuration[$key] = new MetaData($configuration[$key]);
+            }
+        }
 
         $figure = $this->buildFigure($configuration);
 

@@ -30,7 +30,7 @@ class FigureRendererRuntimeTest extends TestCase
 
         $configuration = [
             'size' => '_size',
-            'metadata' => $metaData,
+            'metaData' => $metaData,
             'disableMetaData' => true,
             'locale' => 'de',
             'linkAttributes' => ['foo' => 'bar'],
@@ -60,6 +60,18 @@ class FigureRendererRuntimeTest extends TestCase
         $runtime = $this->getRuntime($expectedFigureBuilderCalls);
 
         $this->assertSame('<result>', $runtime->render('resource', $configuration));
+    }
+
+    /**
+     * @testWith ["metaData", "setMetaData"]
+     */
+    public function testAllowsDefiningMetaDataAsArray(string $key): void
+    {
+        $metaData = [MetaData::VALUE_ALT => 'foo'];
+
+        $runtime = $this->getRuntime(['setMetaData' => new MetaData($metaData)]);
+
+        $this->assertSame('<result>', $runtime->render('resource', [$key => [MetaData::VALUE_ALT => 'foo']]));
     }
 
     public function testUsesCustomTemplate(): void
