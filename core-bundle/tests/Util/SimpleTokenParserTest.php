@@ -524,11 +524,9 @@ class SimpleTokenParserTest extends TestCase
     public function testParseSimpleTokenWithCustomExtensionProvider(): void
     {
         $stringExtensionProvider = new class() implements ExpressionFunctionProviderInterface {
-            public function getFunctions()
+            public function getFunctions(): array
             {
-                return [
-                    ExpressionFunction::fromPhp('strtoupper'),
-                ];
+                return [ExpressionFunction::fromPhp('strtoupper')];
             }
         };
 

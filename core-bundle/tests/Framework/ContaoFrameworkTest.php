@@ -695,9 +695,6 @@ class ContaoFrameworkTest extends TestCase
         $this->assertCount(0, $registry);
     }
 
-    /**
-     * @param TokenChecker&MockObject $tokenChecker
-     */
     private function mockFramework(Request $request = null, ScopeMatcher $scopeMatcher = null, TokenChecker $tokenChecker = null): ContaoFramework
     {
         $requestStack = new RequestStack();

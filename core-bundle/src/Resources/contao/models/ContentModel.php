@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\File\MetaData;
 use Contao\Model\Collection;
 
 /**
@@ -431,6 +432,42 @@ class ContentModel extends Model
 		}
 
 		return static::countBy($arrColumns, array($intPid, $strParentTable), $arrOptions);
+	}
+
+	/**
+	 * Get the default meta data or null if not applicable.
+	 */
+	public function getOverwriteMetaData(): ?MetaData
+	{
+		// Ignore if "overwriteMeta" is not set
+		if (!$this->overwriteMeta)
+		{
+			return null;
+		}
+
+		$data = $this->row();
+
+		// Normalize keys
+		if (isset($data['imageTitle']))
+		{
+			$data[MetaData::VALUE_TITLE] = $data['imageTitle'];
+		}
+
+		if (isset($data['imageUrl']))
+		{
+			$data[MetaData::VALUE_URL] = $data['imageUrl'];
+		}
+
+		unset($data['imageTitle'], $data['imageUrl']);
+
+		// Make sure we resolve insert tags pointing to files.
+		if (isset($data[MetaData::VALUE_URL]))
+		{
+			$data[MetaData::VALUE_URL] = Controller::replaceInsertTags($data[MetaData::VALUE_URL]);
+		}
+
+		// Strip superfluous fields by intersecting with tl_files.meta.eval.metaFields
+		return new MetaData(array_intersect_key($data, array_flip(FilesModel::getMetaFields())));
 	}
 }
 

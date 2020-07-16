@@ -740,9 +740,6 @@ class RouteProviderTest extends TestCase
         return $page;
     }
 
-    /**
-     * @param ContaoFramework&MockObject $framework
-     */
     private function getRouteProvider(ContaoFramework $framework = null, RouteFactory $routeFactory = null, bool $prependLocale = false): RouteProvider
     {
         if (null === $framework) {

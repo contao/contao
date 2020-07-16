@@ -62,11 +62,6 @@ class ImagesController
     {
         try {
             $image = $this->imageFactory->create(Path::join($this->targetDir, $path));
-            $resizer = $this->resizer;
-
-            if ($image instanceof DeferredImageInterface && $resizer instanceof DeferredResizerInterface) {
-                $resizer->resizeDeferredImage($image);
-            }
         } catch (\Exception $exception) {
             throw new NotFoundHttpException($exception->getMessage(), $exception);
         }
