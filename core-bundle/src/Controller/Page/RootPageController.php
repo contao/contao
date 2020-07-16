@@ -69,7 +69,6 @@ class RootPageController extends AbstractController implements PageRouteEnhancer
 
         /** @var PageModel $pageAdapter */
         $pageAdapter = $this->get('contao.framework')->getAdapter(PageModel::class);
-
         $nextPage = $pageAdapter->findFirstPublishedByPid($rootPageId);
 
         if (null !== $nextPage) {
@@ -79,7 +78,7 @@ class RootPageController extends AbstractController implements PageRouteEnhancer
         if (null !== ($logger = $this->get('logger'))) {
             $logger->error(
                 'No active page found under root page "'.$rootPageId.'"',
-                    ['contao' => new ContaoContext(__METHOD__, ContaoContext::ERROR)]
+                ['contao' => new ContaoContext(__METHOD__, ContaoContext::ERROR)]
             );
         }
 

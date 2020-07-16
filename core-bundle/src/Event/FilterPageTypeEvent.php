@@ -20,6 +20,7 @@ class FilterPageTypeEvent
      * @var array
      */
     private $options;
+
     /**
      * @var DataContainer
      */

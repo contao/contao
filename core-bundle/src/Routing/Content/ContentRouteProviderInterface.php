@@ -18,10 +18,10 @@ use Symfony\Component\Routing\Route;
 /**
  * A content route provider converts content to a URL (represented by a route object).
  *
- * - Resolve to a Contao\CoreBundle\Routing\Page\PageRoute if the
+ * - Resolve to a Contao\CoreBundle\Routing\Page\PageRoute object if the
  *   content is embedded on a page (e.g. through a "reader" module).
  *
- * - Resolve to a Symfony\Component\Routing\Route if the content's URL
+ * - Resolve to a Symfony\Component\Routing\Route object if the content's URL
  *   is not within the CMS (e.g. an absolute URL).
  *
  * If a provider is responsible for a content object but cannot convert it to a route,
@@ -30,14 +30,16 @@ use Symfony\Component\Routing\Route;
 interface ContentRouteProviderInterface
 {
     /**
+     * Returns the route for the given content.
+     *
      * @param mixed $content The route "content" which may be an object or anything
      *
-     * @throws RouteNotFoundException if the content cannot be resolved
+     * @throws RouteNotFoundException If the content cannot be resolved
      */
     public function getRouteForContent($content): Route;
 
     /**
-     * Whether this provider supports the supplied $content.
+     * Returns true if this provider supports the given content.
      *
      * This check does not need to look if the specific instance can be
      * resolved to a route, only whether the resolver can generate routes from

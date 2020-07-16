@@ -411,7 +411,6 @@ abstract class Frontend extends Controller
 	 */
 	public static function addToUrl($strRequest, $blnIgnoreParams=false, $arrUnset=array())
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$arrGet = $blnIgnoreParams ? array() : $_GET;

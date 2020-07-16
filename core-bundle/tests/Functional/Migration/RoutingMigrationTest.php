@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Functional\Migration;
 
-use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\CoreBundle\Migration\Version410\RoutingMigration;
 use Contao\TestCase\FunctionalTestCase;
 use Doctrine\DBAL\Connection;
@@ -43,7 +42,7 @@ class RoutingMigrationTest extends FunctionalTestCase
         $this->assertSame($expected, $migration->shouldRun());
     }
 
-    public function shouldRunProvider()
+    public function shouldRunProvider(): \Generator
     {
         yield 'should not run if both fields exist' => [
             [],
@@ -72,20 +71,20 @@ class RoutingMigrationTest extends FunctionalTestCase
 
         /** @var Connection $connection */
         $connection = static::$container->get('database_connection');
-
         $connection->exec('ALTER TABLE tl_page DROP urlPrefix, DROP urlSuffix');
+
         $columns = $connection->getSchemaManager()->listTableColumns('tl_page');
+
         $this->assertFalse(isset($columns['urlPrefix']));
         $this->assertFalse(isset($columns['urlsuffix']));
 
         $migration = new RoutingMigration($connection);
-
         $result = $migration->run();
 
-        $this->assertInstanceOf(MigrationResult::class, $result);
         $this->assertTrue($result->isSuccessful());
 
         $columns = $connection->getSchemaManager()->listTableColumns('tl_page');
+
         $this->assertTrue(isset($columns['urlprefix']));
         $this->assertTrue(isset($columns['urlsuffix']));
     }
@@ -100,7 +99,6 @@ class RoutingMigrationTest extends FunctionalTestCase
 
         /** @var Connection $connection */
         $connection = static::$container->get('database_connection');
-
         $connection->exec('ALTER TABLE tl_page DROP urlPrefix, DROP urlSuffix');
 
         $migration = new RoutingMigration($connection, $urlSuffix, $prependLocale);

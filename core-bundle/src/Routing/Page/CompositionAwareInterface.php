@@ -17,14 +17,16 @@ use Contao\PageModel;
 interface CompositionAwareInterface
 {
     /**
-     * If the page supports content composition, its layout is defined by a Contao
-     * page layout, and it supports articles and content elements.
+     * If the page supports content composition, its layout is defined by a
+     * Contao page layout and it supports articles and content elements.
      *
-     * Most Contao page types do support composition. Pages that do not support composition
-     * can be structural (e.g. a redirect page) or functional (e.g. an XML sitemap).
+     * Most Contao page types do support composition. Pages that do not support
+     * composition can be structural (e.g. a redirect page) or functional (e.g.
+     * an XML sitemap).
      *
-     * The $pageModel might tell if a particular page supports composition,
-     * for example a 404 page that redirects cannot have articles, but a regular 404 does.
+     * The $pageModel might tell if a particular page supports composition, for
+     * example a 404 page that redirects cannot have articles, but a regular
+     * 404 page can.
      */
     public function supportsContentComposition(PageModel $pageModel): bool;
 }

@@ -112,7 +112,7 @@ class ContentCompositionListener implements ServiceAnnotationInterface
     }
 
     /**
-     * Automatically create an article in the main column of a new page.
+     * Automatically creates an article in the main column of a new page.
      *
      * @Callback(table="tl_page", target="config.onsubmit", priority=-16)
      */
@@ -122,7 +122,7 @@ class ContentCompositionListener implements ServiceAnnotationInterface
         $user = $this->security->getUser();
 
         // Return if there is no active record (override all)
-        if (!$dc->activeRecord || null === $request || !$request->hasSession() || !$user instanceof BackendUser) {
+        if (!$dc->activeRecord || null === $request || !$user instanceof BackendUser || !$request->hasSession()) {
             return;
         }
 
@@ -152,10 +152,13 @@ class ContentCompositionListener implements ServiceAnnotationInterface
         }
 
         // Check whether there are articles (e.g. on copied pages)
-        $total = $this->connection->executeQuery(
-            'SELECT COUNT(*) FROM tl_article WHERE pid=:pid',
-            ['pid' => $dc->id]
-        )->fetchColumn();
+        $total = $this->connection
+            ->executeQuery(
+                'SELECT COUNT(*) FROM tl_article WHERE pid=:pid',
+                ['pid' => $dc->id]
+            )
+            ->fetchColumn()
+        ;
 
         if ($total > 0) {
             return;
@@ -207,10 +210,7 @@ class ContentCompositionListener implements ServiceAnnotationInterface
             '<a href="%s" title="%s" onclick="Backend.getScrollOffset()">%s</a> ',
             $this->backend->addToUrl('act='.$clipboard['mode'].'&amp;mode=2&amp;pid='.$row['id'].(!\is_array($clipboard['id'] ?? null) ? '&amp;id='.$clipboard['id'] : '')),
             StringUtil::specialchars($this->translator->trans($dc->table.'.pasteinto.1', [$row['id']], 'contao_'.$dc->table)),
-            $this->image->getHtml(
-                'pasteinto.svg',
-                $this->translator->trans($dc->table.'.pasteinto.1', [$row['id']], 'contao_'.$dc->table)
-            )
+            $this->image->getHtml('pasteinto.svg', $this->translator->trans($dc->table.'.pasteinto.1', [$row['id']], 'contao_'.$dc->table))
         );
     }
 
@@ -218,7 +218,6 @@ class ContentCompositionListener implements ServiceAnnotationInterface
     {
         /** @var PageModel $pageAdapter */
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
-
         $pageModel = $pageAdapter->findByPk($row['pid']);
 
         // Do not show paste button for pages without content composition or articles in layout
@@ -243,10 +242,7 @@ class ContentCompositionListener implements ServiceAnnotationInterface
             '<a href="%s" title="%s" onclick="Backend.getScrollOffset()">%s</a> ',
             $this->backend->addToUrl('act='.$clipboard['mode'].'&amp;mode=1&amp;pid='.$row['id'].(!\is_array($clipboard['id']) ? '&amp;id='.$clipboard['id'] : '')),
             StringUtil::specialchars($this->translator->trans($dc->table.'.pasteafter.1', [$row['id']], 'contao_'.$dc->table)),
-            $this->image->getHtml(
-                'pasteafter.svg',
-                $this->translator->trans($dc->table.'.pasteafter.1', [$row['id']], 'contao_'.$dc->table)
-            )
+            $this->image->getHtml('pasteafter.svg', $this->translator->trans($dc->table.'.pasteafter.1', [$row['id']], 'contao_'.$dc->table))
         );
     }
 

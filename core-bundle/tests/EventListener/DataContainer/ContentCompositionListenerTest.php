@@ -38,6 +38,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ContentCompositionListenerTest extends TestCase
 {
+    /**
+     * @var array
+     */
     private $pageRecord = [
         'id' => 17,
         'alias' => 'foo/bar',
@@ -46,6 +49,9 @@ class ContentCompositionListenerTest extends TestCase
         'published' => '1',
     ];
 
+    /**
+     * @var array
+     */
     private $articleRecord = [
         'id' => 2,
         'pid' => 17,
@@ -116,9 +122,7 @@ class ContentCompositionListenerTest extends TestCase
         ]);
 
         $this->pageRegistry = $this->createMock(PageRegistry::class);
-
         $this->connection = $this->createMock(Connection::class);
-
         $this->requestStack = $this->createMock(RequestStack::class);
 
         $this->listener = new ContentCompositionListener(
@@ -153,6 +157,7 @@ class ContentCompositionListenerTest extends TestCase
         ;
 
         $page = $this->expectPageWithRow($this->pageRecord);
+
         $this->expectSupportsContentComposition(false, $page);
 
         $this->imageAdapter
@@ -183,6 +188,7 @@ class ContentCompositionListenerTest extends TestCase
         ;
 
         $page = $this->expectPageWithRow($this->pageRecord, null);
+
         $this->expectSupportsContentComposition(true, $page);
 
         $this->imageAdapter
@@ -213,6 +219,7 @@ class ContentCompositionListenerTest extends TestCase
         ;
 
         $page = $this->expectPageWithRow($this->pageRecord, 17);
+
         $this->expectSupportsContentComposition(true, $page);
 
         $this->imageAdapter
@@ -243,6 +250,7 @@ class ContentCompositionListenerTest extends TestCase
         ;
 
         $page = $this->expectPageWithRow($this->pageRecord, 0);
+
         $this->expectSupportsContentComposition(true, $page);
 
         $this->imageAdapter
@@ -353,7 +361,6 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->expectRequest(true);
         $this->expectUser();
-
         $this->expectPageWithRow($this->pageRecord);
 
         $this->pageRegistry
@@ -373,6 +380,7 @@ class ContentCompositionListenerTest extends TestCase
         $this->expectUser();
 
         $page = $this->expectPageWithRow($this->pageRecord);
+
         $this->expectSupportsContentComposition(false, $page);
 
         /** @var DataContainer&MockObject $dc */
@@ -387,6 +395,7 @@ class ContentCompositionListenerTest extends TestCase
         $this->expectUser();
 
         $page = $this->expectPageWithRow($this->pageRecord, 17);
+
         $this->expectSupportsContentComposition(true, $page);
 
         /** @var DataContainer&MockObject $dc */
@@ -401,6 +410,7 @@ class ContentCompositionListenerTest extends TestCase
         $this->expectUser();
 
         $page = $this->expectPageWithRow($this->pageRecord, 0);
+
         $this->expectSupportsContentComposition(true, $page);
 
         /** @var DataContainer&MockObject $dc */
@@ -415,6 +425,7 @@ class ContentCompositionListenerTest extends TestCase
         $this->expectUser();
 
         $page = $this->expectPageWithRow($this->pageRecord, 0);
+
         $this->expectSupportsContentComposition(true, $page);
 
         /** @var DataContainer&MockObject $dc */
@@ -429,6 +440,7 @@ class ContentCompositionListenerTest extends TestCase
         $this->expectUser();
 
         $page = $this->expectPageWithRow($this->pageRecord, 0);
+
         $this->expectSupportsContentComposition(true, $page);
         $this->expectArticleCount(1);
 
@@ -447,7 +459,9 @@ class ContentCompositionListenerTest extends TestCase
     {
         $this->expectRequest(true, ['tl_foo' => [17]]);
         $this->expectUser();
+
         $page = $this->expectPageWithRow($this->pageRecord, 0);
+
         $this->expectSupportsContentComposition(true, $page);
         $this->expectArticleCount(0);
 
@@ -481,7 +495,9 @@ class ContentCompositionListenerTest extends TestCase
     {
         $this->expectRequest(true, ['tl_foo' => [17]]);
         $this->expectUser();
+
         $page = $this->expectPageWithRow($this->pageRecord);
+
         $this->expectSupportsContentComposition(true, $page);
         $this->expectArticleCount(0);
 
@@ -556,6 +572,7 @@ class ContentCompositionListenerTest extends TestCase
     public function testCannotPasteIntoArticleIfProviderDoesNotSupportContentComposition(): void
     {
         $page = $this->expectPageWithRow($this->pageRecord);
+
         $this->expectSupportsContentComposition(false, $page);
 
         /** @var DataContainer&MockObject $dc */
@@ -580,6 +597,7 @@ class ContentCompositionListenerTest extends TestCase
     public function testCannotPasteIntoArticleIfPageLayoutDoesNotHaveArticles(): void
     {
         $page = $this->expectPageWithRow($this->pageRecord, 1);
+
         $this->expectSupportsContentComposition(true, $page);
 
         /** @var DataContainer&MockObject $dc */
@@ -604,6 +622,7 @@ class ContentCompositionListenerTest extends TestCase
     public function testDisablesPasteIntoArticleOnCircularReference(): void
     {
         $page = $this->expectPageWithRow($this->pageRecord, 0);
+
         $this->expectSupportsContentComposition(true, $page);
 
         $this->imageAdapter
@@ -630,6 +649,7 @@ class ContentCompositionListenerTest extends TestCase
     public function testDisablesPasteIntoArticleIfUserDoesNotHavePermission(): void
     {
         $page = $this->expectPageWithRow($this->pageRecord, 0);
+
         $this->expectSupportsContentComposition(true, $page);
 
         $this->security
@@ -658,6 +678,7 @@ class ContentCompositionListenerTest extends TestCase
     public function testCanPasteIntoArticle(): void
     {
         $page = $this->expectPageWithRow($this->pageRecord, 0);
+
         $this->expectSupportsContentComposition(true, $page);
 
         $this->security
@@ -724,6 +745,7 @@ class ContentCompositionListenerTest extends TestCase
     public function testCannotPasteAfterArticleIfProviderDoesNotSupportContentComposition(): void
     {
         $page = $this->expectPageFindByPk(17, $this->pageRecord);
+
         $this->expectSupportsContentComposition(false, $page);
 
         /** @var DataContainer&MockObject $dc */
@@ -748,6 +770,7 @@ class ContentCompositionListenerTest extends TestCase
     public function testCannotPasteAfterArticleIfPageLayoutDoesNotHaveArticles(): void
     {
         $page = $this->expectPageFindByPk(17, $this->pageRecord, 17);
+
         $this->expectSupportsContentComposition(true, $page);
 
         /** @var DataContainer&MockObject $dc */
@@ -772,6 +795,7 @@ class ContentCompositionListenerTest extends TestCase
     public function testDisablesPasteAfterArticleOnCutCurrentRecord(): void
     {
         $page = $this->expectPageFindByPk(17, $this->pageRecord, 0);
+
         $this->expectSupportsContentComposition(true, $page);
 
         /** @var DataContainer&MockObject $dc */
@@ -798,6 +822,7 @@ class ContentCompositionListenerTest extends TestCase
     public function testDisablesPasteAfterArticleOnCutAllCurrentRecord(): void
     {
         $page = $this->expectPageFindByPk(17, $this->pageRecord, 0);
+
         $this->expectSupportsContentComposition(true, $page);
 
         /** @var DataContainer&MockObject $dc */
@@ -824,6 +849,7 @@ class ContentCompositionListenerTest extends TestCase
     public function testDisablesPasteAfterArticleOnCircularReference(): void
     {
         $page = $this->expectPageFindByPk(17, $this->pageRecord, 0);
+
         $this->expectSupportsContentComposition(true, $page);
 
         /** @var DataContainer&MockObject $dc */
@@ -850,6 +876,7 @@ class ContentCompositionListenerTest extends TestCase
     public function testDisablesPasteAfterArticleIfUserDoesNotHavePermission(): void
     {
         $page = $this->expectPageFindByPk(17, $this->pageRecord, 0);
+
         $this->expectSupportsContentComposition(true, $page);
 
         /** @var DataContainer&MockObject $dc */
@@ -878,6 +905,7 @@ class ContentCompositionListenerTest extends TestCase
     public function testCanPasteAfterArticle(): void
     {
         $pageModel = $this->expectPageFindByPk(17, $this->pageRecord, 0);
+
         $this->expectSupportsContentComposition(true, $pageModel);
 
         /** @var DataContainer&MockObject $dc */
@@ -931,7 +959,6 @@ class ContentCompositionListenerTest extends TestCase
     private function expectRequest(bool $hasSession, array $newRecords = null): Request
     {
         $request = $this->createMock(Request::class);
-
         $request
             ->expects($this->once())
             ->method('hasSession')
@@ -980,7 +1007,6 @@ class ContentCompositionListenerTest extends TestCase
     private function expectPageWithRow(array $row, $moduleId = false): PageModel
     {
         $page = $this->mockClassWithProperties(PageModel::class, $row);
-
         $page
             ->expects($this->once())
             ->method('preventSaving')
@@ -1030,7 +1056,6 @@ class ContentCompositionListenerTest extends TestCase
     private function expectPageFindByPk(int $id, array $row, $moduleId = false): PageModel
     {
         $page = $this->mockClassWithProperties(PageModel::class, $row);
-
         $page
             ->method('row')
             ->willReturn($row)

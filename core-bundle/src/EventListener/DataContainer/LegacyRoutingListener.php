@@ -84,7 +84,7 @@ class LegacyRoutingListener implements ServiceAnnotationInterface
     /**
      * @Callback(table="tl_page", target="fields.urlSuffix.load")
      */
-    public function overrideUrlSuffix()
+    public function overrideUrlSuffix(): string
     {
         return $this->urlSuffix;
     }

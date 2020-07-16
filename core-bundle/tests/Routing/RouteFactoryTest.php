@@ -39,6 +39,7 @@ class RouteFactoryTest extends TestCase
      * @var ContentRouteProviderInterface&MockObject
      */
     private $provider2;
+
     /**
      * @var RouteFactory
      */
@@ -49,7 +50,6 @@ class RouteFactoryTest extends TestCase
         $this->pageRegistry = $this->createMock(PageRegistry::class);
         $this->provider1 = $this->createMock(ContentRouteProviderInterface::class);
         $this->provider2 = $this->createMock(ContentRouteProviderInterface::class);
-
         $this->factory = new RouteFactory($this->pageRegistry, [$this->provider1, $this->provider2]);
     }
 

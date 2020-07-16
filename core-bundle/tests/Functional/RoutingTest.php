@@ -72,11 +72,10 @@ class RoutingTest extends FunctionalTestCase
     }
 
     /**
+     * @group legacy
      * @dataProvider getAliases
      *
-     * @group legacy
-     *
-     * @expectedDeprecation The Contao\CoreBundle\Routing\FrontendLoader is deprecated. Use Symfony routing instead.
+     * @expectedDeprecation Using the Contao\CoreBundle\Routing\FrontendLoader class has been deprecated %s.
      */
     public function testResolvesAliasesInLegacyMode(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
     {
@@ -387,11 +386,10 @@ class RoutingTest extends FunctionalTestCase
     }
 
     /**
+     * @group legacy
      * @dataProvider getAliasesWithLocale
      *
-     * @group legacy
-     *
-     * @expectedDeprecation The Contao\CoreBundle\Routing\FrontendLoader is deprecated. Use Symfony routing instead.
+     * @expectedDeprecation Using the Contao\CoreBundle\Routing\FrontendLoader class has been deprecated %s.
      */
     public function testResolvesAliasesWithLocaleInLegacyMode(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
     {
@@ -699,11 +697,10 @@ class RoutingTest extends FunctionalTestCase
     }
 
     /**
+     * @group legacy
      * @dataProvider getAliasesWithoutUrlSuffix
      *
-     * @group legacy
-     *
-     * @expectedDeprecation The Contao\CoreBundle\Routing\FrontendLoader is deprecated. Use Symfony routing instead.
+     * @expectedDeprecation Using the Contao\CoreBundle\Routing\FrontendLoader class has been deprecated %s.
      */
     public function testResolvesAliasesWithoutUrlSuffixInLegacyMode(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
     {
@@ -1053,11 +1050,10 @@ class RoutingTest extends FunctionalTestCase
     }
 
     /**
+     * @group legacy
      * @dataProvider getRootAliasesWithLocale
      *
-     * @group legacy
-     *
-     * @expectedDeprecation The Contao\CoreBundle\Routing\FrontendLoader is deprecated. Use Symfony routing instead.
+     * @expectedDeprecation Using the Contao\CoreBundle\Routing\FrontendLoader class has been deprecated %s.
      */
     public function testResolvesTheRootPageWithLocaleInLegacyMode(array $fixtures, string $request, int $statusCode, string $pageTitle, string $acceptLanguages, string $host): void
     {

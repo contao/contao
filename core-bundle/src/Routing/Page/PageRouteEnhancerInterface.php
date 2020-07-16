@@ -16,30 +16,33 @@ use Symfony\Component\Routing\Route;
 
 /**
  * A page route enhancer can adjust the default route for a page.
- * The route enhancer knows what a route for a page looks like, e.g. if
- * a particular route has a different URL suffix than configured in the root page.
+ *
+ * The route enhancer knows what the route for a page looks like, e.g. if a
+ * certain route has a different URL suffix than configured in the root page.
  */
 interface PageRouteEnhancerInterface
 {
     /**
-     * While matching URLs, Contao generates alias candidates and looks for matching page models.
-     * Based on these page's "type" property, the route factory creates a default route and asks to enhance
-     * the route, as only the route provider knows about dynamic requirements or defaults.
+     * While matching URLs, Contao generates alias candidates and looks for
+     * matching page models. Based on the page's "type" property, the route
+     * factory creates a default route and asks to enhance the route, as only
+     * the route provider knows about dynamic requirements or defaults.
      *
-     * To generate URLs for a page, the respective route enhancer needs to return a route based on
-     * the page configuration. If content is available, it can be used to enhance route defaults,
-     * so the route can be generated even if no parameters have been passed to the router generate() method.
+     * To generate URLs for a page, the respective route enhancer needs to
+     * return a route based on the page configuration. If content is available,
+     * it can be used to enhance route defaults, so the route can be generated
+     * even if no parameters have been passed to the router generate() method.
      */
     public function enhancePageRoute(PageRoute $route): Route;
 
     /**
      * URL suffixes are used to generate alias candidates, which means
-     * stripping the URL suffix from a request path to find pages with
-     * the remaining path as an alias.
+     * stripping the URL suffix from a request path to find pages with the
+     * remaining path as an alias.
      *
-     * Only return a non-empty array if this page does not use the global
-     * URL suffix as configured in the root page, e.g if this is a "feed" page type,
-     * it could return ".rss" and ".atom" as the URL suffixes.
+     * Only return a non-empty array if this page does not use the global URL
+     * suffix as configured in the root page, e.g if this is a "feed" page
+     * type, it could return ".rss" and ".atom" as URL suffixes.
      */
     public function getUrlSuffixes(): array;
 }

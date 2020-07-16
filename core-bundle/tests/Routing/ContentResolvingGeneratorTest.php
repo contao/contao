@@ -36,7 +36,6 @@ class ContentResolvingGeneratorTest extends TestCase
     protected function setUp(): void
     {
         $this->routeFactory = $this->createMock(RouteFactory::class);
-
         $this->generator = new ContentResolvingGenerator($this->routeFactory);
     }
 
@@ -58,8 +57,6 @@ class ContentResolvingGeneratorTest extends TestCase
 
     public function testGeneratesTheContentRoute(): void
     {
-        $content = (object) ['foo' => 'bar'];
-
         /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class, [
             'id' => 17,
@@ -71,6 +68,7 @@ class ContentResolvingGeneratorTest extends TestCase
             'urlSuffix' => '.html',
         ]);
 
+        $content = (object) ['foo' => 'bar'];
         $route = new PageRoute($page);
 
         $this->routeFactory

@@ -149,14 +149,17 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
         }
 
         // First check if another root page uses the same url prefix and domain
-        $count = $this->connection->executeQuery(
-            'SELECT COUNT(*) FROM tl_page WHERE urlPrefix=:urlPrefix AND dns=:dns AND id!=:rootId',
-            [
-                'urlPrefix' => $value,
-                'dns' => $dc->activeRecord->dns,
-                'rootId' => $dc->id,
-            ]
-        )->fetchColumn();
+        $count = $this->connection
+            ->executeQuery(
+                'SELECT COUNT(*) FROM tl_page WHERE urlPrefix=:urlPrefix AND dns=:dns AND id!=:rootId',
+                [
+                    'urlPrefix' => $value,
+                    'dns' => $dc->activeRecord->dns,
+                    'rootId' => $dc->id,
+                ]
+            )
+            ->fetchColumn()
+        ;
 
         if ($count > 0) {
             throw new \RuntimeException($this->translator->trans('ERR.urlPrefixExists', [$value], 'contao_default'));
@@ -164,7 +167,6 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
 
         /** @var PageModel|Adapter $pageAdapter */
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
-
         $rootPage = $pageAdapter->findByPk($dc->id);
 
         if (null === $rootPage) {
@@ -191,7 +193,6 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
 
         /** @var PageModel|Adapter $pageAdapter */
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
-
         $rootPage = $pageAdapter->findByPk($dc->id);
 
         if (null === $rootPage) {
@@ -215,10 +216,13 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
 
     private function purgeSearchIndex(int $pageId): void
     {
-        $urls = $this->connection->executeQuery(
-            'SELECT url FROM tl_search WHERE pid=:pageId',
-            ['pageId' => $pageId]
-        )->fetchAll(FetchMode::COLUMN);
+        $urls = $this->connection
+            ->executeQuery(
+                'SELECT url FROM tl_search WHERE pid=:pageId',
+                ['pageId' => $pageId]
+            )
+            ->fetchAll(FetchMode::COLUMN)
+        ;
 
         foreach ($urls as $url) {
             $this->searchIndexer->delete(new Document(new Uri($url), 200));
@@ -232,7 +236,6 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
     {
         /** @var PageModel|Adapter $pageAdapter */
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
-
         $pages = $pageAdapter->findByPid($pid);
 
         if (null === $pages) {
@@ -242,7 +245,6 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
         /** @var PageModel $page */
         foreach ($pages as $page) {
             $this->aliasExists($page->alias, (int) $page->id, $rootPage, true);
-
             $this->recursiveValidatePages((int) $page->id, $rootPage);
         }
     }
@@ -275,7 +277,8 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
                     'alias' => '%'.$this->stripPrefixesAndSuffixes($currentAlias, $currentPrefix, $currentSuffix).'%',
                     'id' => $currentId,
                 ]
-            )->fetchAll(FetchMode::COLUMN)
+            )
+            ->fetchAll(FetchMode::COLUMN)
         ;
 
         if (0 === \count($aliasIds)) {
@@ -284,7 +287,6 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
 
         /** @var PageModel|Adapter $pageAdapter */
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
-
         $currentUrl = $this->buildUrl($currentAlias, $currentPrefix, $currentSuffix);
 
         foreach ($aliasIds as $aliasId) {

@@ -50,7 +50,7 @@ class PageCandidates extends AbstractCandidates
     }
 
     /**
-     * Lazy-initialize because we don't want to query the database when creating the service.
+     * Lazy-initialize because we do not want to query the database when creating the service.
      */
     private function initialize(): void
     {

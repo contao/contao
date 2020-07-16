@@ -49,8 +49,8 @@ class ArticleRouteProviderTest extends TestCase
     {
         $page = $this->mockPage();
         $route = new Route('/');
-        $article = $this->mockArticle(['alias' => 'foobar']);
 
+        $article = $this->mockArticle(['alias' => 'foobar']);
         $article
             ->expects($this->once())
             ->method('getRelated')
@@ -72,8 +72,8 @@ class ArticleRouteProviderTest extends TestCase
     {
         $page = $this->mockPage();
         $route = new Route('/');
-        $article = $this->mockArticle(['id' => 17, 'alias' => '']);
 
+        $article = $this->mockArticle(['id' => 17, 'alias' => '']);
         $article
             ->expects($this->once())
             ->method('getRelated')
@@ -94,7 +94,6 @@ class ArticleRouteProviderTest extends TestCase
     public function testThrowsExceptionIfPageIsNotFound(): void
     {
         $article = $this->mockArticle();
-
         $article
             ->expects($this->once())
             ->method('getRelated')

@@ -81,18 +81,16 @@ class RootPageControllerTest extends TestCase
 
     public function testThrowsExceptionIfPageTypeIsNotSupported(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
-
         /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class, ['type' => 'foobar']);
+
+        $this->expectException(\InvalidArgumentException::class);
 
         $this->controller->__invoke($page);
     }
 
     public function testThrowsExceptionIfFirstPageOfRootIsNotFound(): void
     {
-        $this->expectException(NoActivePageFoundException::class);
-
         /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class, ['id' => 17, 'type' => 'root']);
 
@@ -102,6 +100,8 @@ class RootPageControllerTest extends TestCase
             ->with(17)
             ->willReturn(null)
         ;
+
+        $this->expectException(NoActivePageFoundException::class);
 
         $this->controller->__invoke($page);
     }

@@ -186,11 +186,15 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
 
             foreach ($GLOBALS['TL_HOOKS'][$name] as $callback) {
                 $class = $systemAdapter->importStatic($callback[0]);
-                $r = new \ReflectionClass($class);
-                $file = $r->getFileName();
+                $file = (new \ReflectionClass($class))->getFileName();
                 $vendorDir = $this->parameterBag->get('kernel.project_dir').'/vendor/';
 
-                $hook = ['name' => $name, 'class' => \get_class($class), 'method' => $callback[1], 'package' => ''];
+                $hook = [
+                    'name' => $name,
+                    'class' => \get_class($class),
+                    'method' => $callback[1],
+                    'package' => '',
+                ];
 
                 if (Path::isBasePath($vendorDir, $file)) {
                     [$vendor, $package] = explode('/', Path::makeRelative($file, $vendorDir), 3);

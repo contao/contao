@@ -51,9 +51,19 @@ class ContentResolvingGenerator extends SymfonyUrlGenerator
         $route = $this->routeFactory->createRouteForContent($parameters[PageRoute::CONTENT_PARAMETER]);
         unset($parameters[PageRoute::CONTENT_PARAMETER]);
 
-        // the Route has a cache of its own and is not recompiled as long as it does not get modified
+        // The route has a cache of its own and is not recompiled as long as it does not get modified
         $compiledRoute = $route->compile();
 
-        return $this->doGenerate($compiledRoute->getVariables(), $route->getDefaults(), $route->getRequirements(), $compiledRoute->getTokens(), $parameters, $name, $referenceType, $compiledRoute->getHostTokens(), $route->getSchemes());
+        return $this->doGenerate(
+            $compiledRoute->getVariables(),
+            $route->getDefaults(),
+            $route->getRequirements(),
+            $compiledRoute->getTokens(),
+            $parameters,
+            $name,
+            $referenceType,
+            $compiledRoute->getHostTokens(),
+            $route->getSchemes()
+        );
     }
 }

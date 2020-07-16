@@ -2591,7 +2591,9 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($definition->isPrivate());
 
         $this->assertEquals(
-            [new Reference('contao.framework')],
+            [
+                new Reference('contao.framework'),
+            ],
             $definition->getArguments()
         );
     }
@@ -2613,6 +2615,7 @@ class ContaoCoreExtensionTest extends TestCase
     public function testRegistersTheRoutingLegacyMatcher(): void
     {
         $container = $this->getContainerBuilder();
+
         $this->assertFalse($container->has('contao.routing.legacy_matcher'));
 
         $container = $this->getContainerBuilder([

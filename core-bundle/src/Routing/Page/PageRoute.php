@@ -120,7 +120,7 @@ class PageRoute extends Route
     }
 
     /**
-     * Set the object this url points to.
+     * Sets the object this URL points to.
      */
     public function setContent($object): self
     {

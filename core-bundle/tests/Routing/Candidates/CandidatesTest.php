@@ -77,9 +77,8 @@ class CandidatesTest extends TestCase
     }
 
     /**
-     * @dataProvider getCandidatesProvider
-     *
      * @group legacy
+     * @dataProvider getCandidatesProvider
      */
     public function testGetCandidatesInLegacyMode(string $pathInfo, array $urlSuffixes, array $languages, array $expected): void
     {

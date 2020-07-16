@@ -54,8 +54,8 @@ class AbstractCandidates implements CandidatesInterface
     }
 
     /**
-     * Generates possible page aliases from the request path by
-     * removing prefixes, suffixes and parameters.
+     * Generates possible page aliases from the request path by removing
+     * prefixes, suffixes and parameters.
      *
      * Example 1:
      *   Path: /en/alias/foo/bar.html
@@ -84,11 +84,12 @@ class AbstractCandidates implements CandidatesInterface
     {
         $url = $request->getPathInfo();
         $url = rawurldecode(ltrim($url, '/'));
-        $candidates = [];
 
         if (empty($url)) {
             throw new \RuntimeException(__METHOD__.' cannot handle empty path');
         }
+
+        $candidates = [];
 
         foreach ($this->urlPrefixes as $prefix) {
             // Language prefix only (e.g. URL = /en/)
@@ -152,6 +153,7 @@ class AbstractCandidates implements CandidatesInterface
             if ($count > self::LIMIT) {
                 return;
             }
+
             $candidates[] = $part;
             $part = substr($url, 0, $pos);
         }

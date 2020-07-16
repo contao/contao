@@ -63,6 +63,7 @@ class LegacyRoutingListenerTest extends TestCase
         $listener->disableRoutingFields();
 
         $this->assertIsCallable($GLOBALS['TL_DCA']['tl_page']['fields']['legacy_routing']['input_field_callback']);
+
         $this->assertSame(
             '<p class="tl_gerror">warning</p>',
             \call_user_func($GLOBALS['TL_DCA']['tl_page']['fields']['legacy_routing']['input_field_callback'])

@@ -40,11 +40,12 @@ class RouteFactory
     /**
      * Creates a route for page in Contao.
      *
-     * If $pathParameters are not configured (is null), the route will accept any parameters after
-     * the page alias (e.g. "en/page-alias/foo/bar.html").
+     * If $pathParameters are not configured (is null), the route will accept
+     * any parameters after the page alias (e.g. "en/page-alias/foo/bar.html").
      *
-     * In any other case, $pathParameters will be appended to the path, to support custom parameters.
-     * The value of $pathParameter can be configured in the back end through tl_page.parameters.
+     * In any other case, $pathParameters will be appended to the path, to
+     * support custom parameters. The value of $pathParameter can be configured
+     * in the back end through tl_page.parameters.
      *
      * A route enhancer might change or replace the route for a specific page.
      */

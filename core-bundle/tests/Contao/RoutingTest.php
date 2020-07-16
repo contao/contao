@@ -43,6 +43,7 @@ class RoutingTest extends ContaoTestCase
 
         $container = new ContainerBuilder();
         $container->setParameter('contao.legacy_routing', true);
+
         System::setContainer($container);
 
         $_GET = [];

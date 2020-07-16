@@ -130,13 +130,9 @@ class ContaoDataCollectorTest extends TestCase
     public function legacyRoutingProvider(): \Generator
     {
         yield [false, false, '.html'];
-
         yield [true, false, '.html'];
-
         yield [true, false, '.html'];
-
         yield [true, true, '.html'];
-
         yield [true, true, '.php'];
     }
 
@@ -161,9 +157,7 @@ class ContaoDataCollectorTest extends TestCase
             ->willReturnOnConsecutiveCalls(new TestClass(), new BundleTestClass(), new TestClass(), new BundleTestClass())
         ;
 
-        $framework = $this->mockContaoFramework([
-            System::class => $systemAdapter,
-        ]);
+        $framework = $this->mockContaoFramework([System::class => $systemAdapter]);
 
         $parameterBag = $this->createParameterBag(true);
         $parameterBag->set('kernel.project_dir', \dirname(__DIR__).'/Fixtures/DataCollector');

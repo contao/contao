@@ -456,13 +456,10 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
 
     private function throwOnLegacyRoutingHooks(): void
     {
-        if (
-            empty($GLOBALS['TL_HOOKS']['getPageIdFromUrl'])
-            && empty($GLOBALS['TL_HOOKS']['getRootPageFromUrl'])
-        ) {
+        if (empty($GLOBALS['TL_HOOKS']['getPageIdFromUrl']) && empty($GLOBALS['TL_HOOKS']['getRootPageFromUrl'])) {
             return;
         }
 
-        throw new LegacyRoutingException('Legacy routing is required to support the getPageIdFromUrl and getRootPageFromUrl hooks. Check the Symfony inspector for more information.');
+        throw new LegacyRoutingException('Legacy routing is required to support the "getPageIdFromUrl" and "getRootPageFromUrl" hooks. Check the Symfony inspector for more information.');
     }
 }

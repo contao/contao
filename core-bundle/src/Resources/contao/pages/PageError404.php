@@ -84,7 +84,7 @@ class PageError404 extends Frontend
 		// Find the matching root page
 		$objRootPage = $this->getRootPageFromUrl();
 
-		// Forward if the language should be but is not set (see #4028).
+		// Forward if the language should be but is not set (see #4028)
 		if ($objRootPage->urlPrefix)
 		{
 			// Get the request string without the script name

@@ -96,9 +96,6 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new SearchIndexerPass()); // Must be before the CrawlerPass
         $container->addCompilerPass(new CrawlerPass());
         $container->addCompilerPass(new AddCronJobsPass());
-
-        $container->addCompilerPass(
-            new RegisterRouteEnhancersPass('contao.routing.page_router', 'contao.page_router_enhancer')
-        );
+        $container->addCompilerPass(new RegisterRouteEnhancersPass('contao.routing.page_router', 'contao.page_router_enhancer'));
     }
 }

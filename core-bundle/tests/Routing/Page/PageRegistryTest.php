@@ -139,7 +139,6 @@ class PageRegistryTest extends TestCase
     {
         /** @var PageModel&MockObject $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class, ['type' => 'foo']);
-
         $registry = new PageRegistry();
 
         $this->assertTrue($registry->supportsContentComposition($pageModel));
@@ -215,7 +214,6 @@ class PageRegistryTest extends TestCase
     {
         /** @var PageModel&MockObject $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class, ['type' => 'foo']);
-
         $config = new RouteConfig();
 
         $enhancer = $this->createMock(PageRouteEnhancerInterface::class);

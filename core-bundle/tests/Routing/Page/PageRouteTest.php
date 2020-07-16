@@ -22,7 +22,6 @@ class PageRouteTest extends TestCase
     public function testReturnsThePageModel(): void
     {
         $pageModel = $this->mockPageModel();
-
         $route = new PageRoute($pageModel);
 
         $this->assertSame($pageModel, $route->getPageModel());
@@ -71,14 +70,17 @@ class PageRouteTest extends TestCase
         $content = (object) ['foo' => 'bar'];
 
         $route = new PageRoute($this->mockPageModel());
+
         $this->assertNull($route->getContent());
 
         $route = new PageRoute($this->mockPageModel());
         $route->setContent($content);
+
         $this->assertSame($content, $route->getContent());
 
         $route = new PageRoute($this->mockPageModel());
         $route->setContent('foo');
+
         $this->assertSame('foo', $route->getContent());
     }
 
@@ -96,15 +98,18 @@ class PageRouteTest extends TestCase
     public function testSetsPageDomainAsRouteHost(): void
     {
         $route = new PageRoute($this->mockPageModel());
+
         $this->assertSame('www.example.com', $route->getHost());
     }
 
     public function testSetsProtocolIfRootPageUsesSSL(): void
     {
         $route = new PageRoute($this->mockPageModel(['rootUseSSL' => false]));
+
         $this->assertEmpty($route->getSchemes());
 
         $route = new PageRoute($this->mockPageModel(['rootUseSSL' => true]));
+
         $this->assertSame(['https'], $route->getSchemes());
     }
 

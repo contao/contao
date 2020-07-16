@@ -58,6 +58,7 @@ class RouteProviderTest extends TestCase
         ;
 
         $framework = $this->mockFramework($pageAdapter);
+
         $this->assertSame($route, $this->getRouteProvider($framework, $routeFactory)->getRouteByName('tl_page.17'));
     }
 
@@ -152,6 +153,7 @@ class RouteProviderTest extends TestCase
         ;
 
         $framework = $this->mockFramework($pageAdapter);
+
         $this->assertSame($route, $this->getRouteProvider($framework, $routeFactory)->getRouteByName('tl_page.17'));
     }
 
@@ -183,6 +185,7 @@ class RouteProviderTest extends TestCase
         ;
 
         $framework = $this->mockFramework($pageAdapter);
+
         $this->assertSame($route, $this->getRouteProvider($framework, $routeFactory)->getRouteByName('tl_page.17'));
     }
 
@@ -549,6 +552,7 @@ class RouteProviderTest extends TestCase
     {
         $pageModel = $this->createPage($language, $alias, true, $domain, $scheme, $urlSuffix);
         $pageModel->urlPrefix = $prependLocale ? $language : '';
+
         $pageModel
             ->expects($this->atLeastOnce())
             ->method('loadDetails')
@@ -581,7 +585,6 @@ class RouteProviderTest extends TestCase
         $collection = $provider->getRouteCollectionForRequest($request);
 
         $this->assertCount(1, $collection);
-
         $this->assertArrayHasKey('tl_page.'.$pageModel->id, $collection->all());
         $this->assertSame($route, $collection->get('tl_page.'.$pageModel->id));
     }
@@ -630,7 +633,6 @@ class RouteProviderTest extends TestCase
 
         $framework = $this->mockFramework($pageAdapter);
         $request = $this->mockRequestWithPath('/foo.html');
-
         $routes = $this->getRouteProvider($framework)->getRouteCollectionForRequest($request)->all();
 
         $this->assertIsArray($routes);
@@ -656,7 +658,6 @@ class RouteProviderTest extends TestCase
 
         $framework = $this->mockFramework($pageAdapter);
         $request = $this->mockRequestWithPath('/foo.html');
-
         $routes = $this->getRouteProvider($framework)->getRouteCollectionForRequest($request)->all();
 
         $this->assertIsArray($routes);

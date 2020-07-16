@@ -931,7 +931,9 @@ class PageUrlListenerTest extends TestCase
             ->expects($this->exactly(5))
             ->method('executeQuery')
             ->withConsecutive(
-                ["SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'"],
+                [
+                    "SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'",
+                ],
                 [
                     'SELECT id FROM tl_page WHERE alias LIKE :alias AND id!=:id',
                     [
@@ -946,7 +948,9 @@ class PageUrlListenerTest extends TestCase
                         'id' => 2,
                     ],
                 ],
-                ["SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'"],
+                [
+                    "SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'",
+                ],
                 [
                     'SELECT id FROM tl_page WHERE alias LIKE :alias AND id!=:id',
                     [
@@ -1513,22 +1517,26 @@ class PageUrlListenerTest extends TestCase
 
         if ($prefixCheck) {
             $args[] = ['SELECT COUNT(*) FROM tl_page WHERE urlPrefix=:urlPrefix AND dns=:dns AND id!=:rootId'];
+
             $statement = $this->createMock(Statement::class);
             $statement
                 ->expects($this->once())
                 ->method('fetchColumn')
                 ->willReturn(0)
             ;
+
             $statements[] = $statement;
         }
 
         $args[] = ["SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'"];
+
         $statement = $this->createMock(Statement::class);
         $statement
             ->expects($this->once())
             ->method('fetchAll')
             ->willReturn($prefixAndSuffix)
         ;
+
         $statements[] = $statement;
 
         foreach ($ids as $k => $id) {
@@ -1552,7 +1560,6 @@ class PageUrlListenerTest extends TestCase
         }
 
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->expects($this->exactly(\count($statements)))
             ->method('executeQuery')
@@ -1581,7 +1588,6 @@ class PageUrlListenerTest extends TestCase
         }
 
         $pageAdapter = $this->mockAdapter(['findByPk', 'findWithDetails', 'findByPid']);
-
         $pageAdapter
             ->method('findByPk')
             ->willReturnCallback(
