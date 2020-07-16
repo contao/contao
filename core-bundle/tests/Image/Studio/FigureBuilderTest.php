@@ -928,7 +928,6 @@ class FigureBuilderTest extends TestCase
 
         /** @var ContainerInterface&MockObject $locator */
         $locator = $this->createMock(ContainerInterface::class);
-
         $locator
             ->method('get')
             ->willReturnMap([
