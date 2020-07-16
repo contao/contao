@@ -122,7 +122,7 @@ class ContentCompositionListener implements ServiceAnnotationInterface
         $user = $this->security->getUser();
 
         // Return if there is no active record (override all)
-        if (!$dc->activeRecord || null === $request || !$user instanceof BackendUser || !$request->hasSession()) {
+        if (!$dc->activeRecord || null === $request || !$request->hasSession() || !$user instanceof BackendUser) {
             return;
         }
 
