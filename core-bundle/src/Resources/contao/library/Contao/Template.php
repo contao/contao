@@ -11,9 +11,12 @@
 namespace Contao;
 
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
+use Contao\CoreBundle\Image\Studio\FigureBuilder;
+use Contao\CoreBundle\Image\Studio\Studio;
 use MatthiasMullie\Minify\CSS;
 use MatthiasMullie\Minify\JS;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\VarDumper\VarDumper;
 use Webmozart\PathUtil\Path;
 
@@ -391,6 +394,50 @@ abstract class Template extends Controller
 	}
 
 	/**
+	 * Renders a figure. The provided configuration array is used to configure
+	 * a FigureBuilder. If not explicitly set the default image.html5 template
+	 * will be used to render the results. To use the core's default Twig
+	 * template, pass '@ContaoCore/Image/Studio/figure.html.twig' into the
+	 * $template argument.
+	 *
+	 * @param string|int|FilesModel $from
+	 * @param array                 $configuration
+	 * @param string                $template
+	 *
+	 * @return string
+	 */
+	public function figure($from, $configuration = array(), $template = 'image')
+	{
+		$configuration['from'] = $from;
+
+		/** @var FigureBuilder $figureBuilder */
+		$figureBuilder = System::getContainer()
+			->get(Studio::class)
+			->createFigureBuilder();
+
+		$propertyAccessor = PropertyAccess::createPropertyAccessor();
+
+		foreach ($configuration as $property => $value)
+		{
+			$propertyAccessor->setValue($figureBuilder, $property, $value);
+		}
+
+		$figure = $figureBuilder->build();
+
+		if ('twig' === Path::getExtension($template, true))
+		{
+			return System::getContainer()
+				->get('twig')
+				->render($template, array('figure' => $figure));
+		}
+
+		$imageTemplate = new FrontendTemplate($template);
+		$figure->applyLegacyTemplateData($imageTemplate);
+
+		return $imageTemplate->parse();
+	}
+
+	/**
 	 * Returns an asset path
 	 *
 	 * @param string      $path
@@ -404,30 +451,6 @@ abstract class Template extends Controller
 
 		// Contao paths are relative to the <base> tag, so remove leading slashes
 		return ltrim($url, '/');
-	}
-
-	/**
-	 * Renders a figure. The provided configuration array is used to configure
-	 * a FigureBuilder. If not explicitly set the default figure template will
-	 * be used to render the results.
-	 *
-	 * @param string|int|FilesModel $from
-	 * @param array                 $configuration
-	 * @param string                $template
-	 *
-	 * @return string
-	 */
-	public function figure($from, $configuration = array(), $template = '@ContaoCore/Image/Studio/figure.html.twig')
-	{
-		if ('twig' !== Path::getExtension($template, true))
-		{
-			throw new \InvalidArgumentException('Only twig templates are supported to render a figure inline.');
-		}
-
-		return System::getContainer()
-			->get('contao.twig.runtime.figure_renderer')
-			->render($from, $configuration, $template)
-		;
 	}
 
 	/**
