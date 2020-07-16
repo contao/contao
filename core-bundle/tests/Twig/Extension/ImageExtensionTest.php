@@ -33,7 +33,7 @@ class ImageExtensionTest extends TestCase
         $this->assertSame([FigureRendererRuntime::class, 'render'], $contaoFigureFn->getCallable());
         $this->assertSame(['html'], $contaoFigureFn->getSafe($node));
 
-        $this->assertSame('picture_configuration', $pictureConfigurationFn->getName());
+        $this->assertSame('picture_config', $pictureConfigurationFn->getName());
         $this->assertSame([PictureConfigurationRuntime::class, 'fromArray'], $pictureConfigurationFn->getCallable());
         $this->assertSame([], $pictureConfigurationFn->getSafe($node));
     }

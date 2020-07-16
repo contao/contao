@@ -28,7 +28,7 @@ class ImageExtension extends AbstractExtension
                 ['is_safe' => ['html']]
             ),
             new TwigFunction(
-                'picture_configuration',
+                'picture_config',
                 [PictureConfigurationRuntime::class, 'fromArray']
             ),
         ];
