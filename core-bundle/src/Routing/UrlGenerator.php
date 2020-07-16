@@ -177,7 +177,7 @@ class UrlGenerator implements UrlGeneratorInterface
         $context->setHost($host);
         $referenceType = UrlGeneratorInterface::ABSOLUTE_URL;
 
-        if (null === $port) {
+        if (!$port) {
             return;
         }
 
