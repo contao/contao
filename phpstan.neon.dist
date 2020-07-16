@@ -53,5 +53,6 @@ parameters:
               - %currentWorkingDirectory%/core-bundle/src/DependencyInjection/Compiler/*Pass.php
               - %currentWorkingDirectory%/core-bundle/src/Controller/AbstractController.php
 
+    treatPhpDocTypesAsCertain: false
     checkGenericClassInNonGenericObjectType: false
     inferPrivatePropertyTypeFromConstructor: true

@@ -112,8 +112,7 @@ class ImageFactory implements ImageFactoryInterface
     }
 
     /**
-     * @param mixed $size
-     * @param mixed $options
+     * @param int|array|string|ResizeConfiguration|null $size
      */
     public function create($path, $size = null, $options = null): ImageInterface
     {
