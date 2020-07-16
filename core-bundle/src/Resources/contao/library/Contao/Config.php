@@ -426,12 +426,12 @@ class Config
 		include __DIR__ . '/../../config/agents.php';
 		include __DIR__ . '/../../config/mimetypes.php';
 
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Include the local configuration file
-		if (($blnHasLcf = file_exists($rootDir . '/system/config/localconfig.php')) === true)
+		if (($blnHasLcf = file_exists($projectDir . '/system/config/localconfig.php')) === true)
 		{
-			include $rootDir . '/system/config/localconfig.php';
+			include $projectDir . '/system/config/localconfig.php';
 		}
 
 		static::loadParameters();

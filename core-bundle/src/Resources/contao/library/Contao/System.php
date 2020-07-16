@@ -85,6 +85,12 @@ abstract class System
 	protected static $arrStaticObjects = array();
 
 	/**
+	 * Singletons
+	 * @var array
+	 */
+	protected static $arrSingletons = array();
+
+	/**
 	 * Available languages
 	 * @var array
 	 */
@@ -160,9 +166,18 @@ abstract class System
 		{
 			$container = static::getContainer();
 
+			if (null === $container)
+			{
+				throw new \RuntimeException('The Symfony container is not available, did you initialize the Contao framework?');
+			}
+
 			if (\is_object($strClass))
 			{
 				$this->arrObjects[$strKey] = $strClass;
+			}
+			elseif (isset(static::$arrSingletons[$strKey]))
+			{
+				$this->arrObjects[$strKey] = static::$arrSingletons[$strKey];
 			}
 			elseif ($container->has($strClass) && (strpos($strClass, '\\') !== false || !class_exists($strClass)))
 			{
@@ -174,7 +189,7 @@ abstract class System
 			}
 			elseif (\in_array('getInstance', get_class_methods($strClass)))
 			{
-				$this->arrObjects[$strKey] = \call_user_func(array($strClass, 'getInstance'));
+				static::$arrStaticObjects[$strKey] = static::$arrSingletons[$strKey] = $this->arrObjects[$strKey] = \call_user_func(array($strClass, 'getInstance'));
 			}
 			else
 			{
@@ -207,6 +222,11 @@ abstract class System
 		{
 			$container = static::getContainer();
 
+			if (null === $container)
+			{
+				throw new \RuntimeException('The Symfony container is not available, did you initialize the Contao framework?');
+			}
+
 			if (\is_object($strClass))
 			{
 				static::$arrStaticObjects[$strKey] = $strClass;
@@ -221,7 +241,7 @@ abstract class System
 			}
 			elseif (\in_array('getInstance', get_class_methods($strClass)))
 			{
-				static::$arrStaticObjects[$strKey] = \call_user_func(array($strClass, 'getInstance'));
+				static::$arrStaticObjects[$strKey] = static::$arrSingletons[$strKey] = \call_user_func(array($strClass, 'getInstance'));
 			}
 			else
 			{
@@ -448,13 +468,13 @@ abstract class System
 			$GLOBALS['TL_LANG']['MSC']['deleteConfirm'] = str_replace("'", "\\'", $GLOBALS['TL_LANG']['MSC']['deleteConfirm']);
 		}
 
-		$rootDir = self::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = self::getContainer()->getParameter('kernel.project_dir');
 
 		// Local configuration file
-		if (file_exists($rootDir . '/system/config/langconfig.php'))
+		if (file_exists($projectDir . '/system/config/langconfig.php'))
 		{
 			@trigger_error('Using the "langconfig.php" file has been deprecated and will no longer work in Contao 5.0. Create custom language files in the "contao/languages" folder instead.', E_USER_DEPRECATED);
-			include $rootDir . '/system/config/langconfig.php';
+			include $projectDir . '/system/config/langconfig.php';
 		}
 	}
 
@@ -469,9 +489,9 @@ abstract class System
 	{
 		if (!isset(static::$arrLanguages[$strLanguage]))
 		{
-			$rootDir = self::getContainer()->getParameter('kernel.project_dir');
+			$projectDir = self::getContainer()->getParameter('kernel.project_dir');
 
-			if (is_dir($rootDir . '/vendor/contao/core-bundle/src/Resources/contao/languages/' . $strLanguage))
+			if (is_dir($projectDir . '/vendor/contao/core-bundle/src/Resources/contao/languages/' . $strLanguage))
 			{
 				static::$arrLanguages[$strLanguage] = true;
 			}
@@ -765,12 +785,12 @@ abstract class System
 	{
 		@trigger_error('Using System::readPhpFileWithoutTags() has been deprecated and will no longer work in Contao 5.0. Use the Contao\CoreBundle\Config\Loader\PhpFileLoader instead.', E_USER_DEPRECATED);
 
-		$rootDir = self::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = self::getContainer()->getParameter('kernel.project_dir');
 
 		// Convert to absolute path
-		if (strpos($strName, $rootDir . '/') === false)
+		if (strpos($strName, $projectDir . '/') === false)
 		{
-			$strName = $rootDir . '/' . $strName;
+			$strName = $projectDir . '/' . $strName;
 		}
 
 		$loader = new PhpFileLoader();
@@ -794,12 +814,12 @@ abstract class System
 	{
 		@trigger_error('Using System::convertXlfToPhp() has been deprecated and will no longer work in Contao 5.0. Use the Contao\CoreBundle\Config\Loader\XliffFileLoader instead.', E_USER_DEPRECATED);
 
-		$rootDir = self::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = self::getContainer()->getParameter('kernel.project_dir');
 
 		// Convert to absolute path
-		if (strpos($strName, $rootDir . '/') === false)
+		if (strpos($strName, $projectDir . '/') === false)
 		{
-			$strName = $rootDir . '/' . $strName;
+			$strName = $projectDir . '/' . $strName;
 		}
 
 		$loader = new XliffFileLoader(static::getContainer()->getParameter('kernel.project_dir'), $blnLoad);

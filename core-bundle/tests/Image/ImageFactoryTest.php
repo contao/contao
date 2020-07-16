@@ -469,14 +469,14 @@ class ImageFactoryTest extends TestCase
         ;
 
         $filesystem
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('exists')
             ->willReturn(true)
         ;
 
         $resizer = $this->createMock(ResizerInterface::class);
         $resizer
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('resize')
             ->with(
                 $this->callback(
@@ -519,8 +519,10 @@ class ImageFactoryTest extends TestCase
         $framework = $this->mockContaoFramework([FilesModel::class => $filesAdapter]);
         $imageFactory = $this->getImageFactory($resizer, $imagine, $imagine, $filesystem, $framework);
         $image = $imageFactory->create($path, [50, 50, $mode]);
+        $imageFromSerializedConfig = $imageFactory->create($path, serialize([50, 50, $mode]));
 
         $this->assertSame($imageMock, $image);
+        $this->assertSame($imageMock, $imageFromSerializedConfig);
     }
 
     /**
@@ -696,13 +698,13 @@ class ImageFactoryTest extends TestCase
             .'.jpg';
 
         $fs = new Filesystem();
-        $rootDir = System::getContainer()->getParameter('kernel.project_dir');
+        $projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
-        if (!$fs->exists(\dirname($rootDir.'/'.$path))) {
-            $fs->mkdir(\dirname($rootDir.'/'.$path), 0777);
+        if (!$fs->exists(\dirname($projectDir.'/'.$path))) {
+            $fs->mkdir(\dirname($projectDir.'/'.$path), 0777);
         }
 
-        $fs->dumpFile($rootDir.'/'.$path, '');
+        $fs->dumpFile($projectDir.'/'.$path, '');
 
         return $path;
     }
@@ -784,13 +786,13 @@ class ImageFactoryTest extends TestCase
             .'.jpg';
 
         $fs = new Filesystem();
-        $rootDir = System::getContainer()->getParameter('kernel.project_dir');
+        $projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
-        if (!$fs->exists(\dirname($rootDir.'/'.$path))) {
-            $fs->mkdir(\dirname($rootDir.'/'.$path), 0777);
+        if (!$fs->exists(\dirname($projectDir.'/'.$path))) {
+            $fs->mkdir(\dirname($projectDir.'/'.$path), 0777);
         }
 
-        $fs->dumpFile($rootDir.'/'.$path, '');
+        $fs->dumpFile($projectDir.'/'.$path, '');
 
         return $path;
     }

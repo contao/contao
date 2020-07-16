@@ -522,11 +522,6 @@ class AuthenticationProviderTest extends TestCase
         return false;
     }
 
-    /**
-     * @param ContaoFramework&MockObject                $framework
-     * @param AuthenticationHandlerInterface&MockObject $twoFactorHandler
-     * @param TrustedDeviceManagerInterface&MockObject  $trustedDeviceManager
-     */
     private function createUsernamePasswordProvider(ContaoFramework $framework = null, AuthenticationHandlerInterface $twoFactorHandler = null, TrustedDeviceManagerInterface $trustedDeviceManager = null): AuthenticationProvider
     {
         $userProvider = $this->createMock(UserProviderInterface::class);

@@ -494,6 +494,7 @@ h2.sub_headline {
 .tl_box h3,.tl_tbox h3,.tl_xpl h3 {
 	margin:0;
 	padding-top:13px;
+	height:16px;
 	font-size:.875rem;
 }
 .tl_box h4,.tl_tbox h4 {

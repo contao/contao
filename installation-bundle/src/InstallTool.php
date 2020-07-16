@@ -35,7 +35,7 @@ class InstallTool
     /**
      * @var string
      */
-    private $rootDir;
+    private $projectDir;
 
     /**
      * @var LoggerInterface
@@ -50,17 +50,17 @@ class InstallTool
     /**
      * @internal Do not inherit from this class; decorate the "contao.install_tool" service instead
      */
-    public function __construct(Connection $connection, string $rootDir, LoggerInterface $logger, MigrationCollection $migrations)
+    public function __construct(Connection $connection, string $projectDir, LoggerInterface $logger, MigrationCollection $migrations)
     {
         $this->connection = $connection;
-        $this->rootDir = $rootDir;
+        $this->projectDir = $projectDir;
         $this->logger = $logger;
         $this->migrations = $migrations;
     }
 
     public function isLocked(): bool
     {
-        $file = Path::join($this->rootDir, 'var/install_lock');
+        $file = Path::join($this->projectDir, 'var/install_lock');
 
         if (!file_exists($file)) {
             return false;
@@ -84,7 +84,7 @@ class InstallTool
     public function increaseLoginCount(): void
     {
         $count = 0;
-        $file = Path::join($this->rootDir, 'var/install_lock');
+        $file = Path::join($this->projectDir, 'var/install_lock');
 
         if (file_exists($file)) {
             $count = file_get_contents($file);
@@ -327,7 +327,7 @@ class InstallTool
         $finder = Finder::create()
             ->files()
             ->name('*.sql')
-            ->in(Path::join($this->rootDir, 'templates'))
+            ->in(Path::join($this->projectDir, 'templates'))
         ;
 
         $templates = [];
@@ -351,7 +351,7 @@ class InstallTool
             }
         }
 
-        $data = file(Path::join($this->rootDir, 'templates', $template));
+        $data = file(Path::join($this->projectDir, 'templates', $template));
 
         foreach (preg_grep('/^INSERT /', $data) as $query) {
             $this->connection->query($query);

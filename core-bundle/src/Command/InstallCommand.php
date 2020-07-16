@@ -27,6 +27,8 @@ use Webmozart\PathUtil\Path;
  */
 class InstallCommand extends Command
 {
+    protected static $defaultName = 'contao:install';
+
     /**
      * @var Filesystem
      */
@@ -40,7 +42,7 @@ class InstallCommand extends Command
     /**
      * @var string
      */
-    private $rootDir;
+    private $projectDir;
 
     /**
      * @var string
@@ -57,9 +59,9 @@ class InstallCommand extends Command
      */
     private $webDir;
 
-    public function __construct(string $rootDir, string $uploadPath, string $imageDir)
+    public function __construct(string $projectDir, string $uploadPath, string $imageDir)
     {
-        $this->rootDir = $rootDir;
+        $this->projectDir = $projectDir;
         $this->uploadPath = $uploadPath;
         $this->imageDir = $imageDir;
 
@@ -69,7 +71,6 @@ class InstallCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('contao:install')
             ->addArgument('target', InputArgument::OPTIONAL, 'The target directory', 'web')
             ->setDescription('Installs the required Contao directories')
         ;
@@ -108,11 +109,11 @@ class InstallCommand extends Command
         ];
 
         foreach ($emptyDirs as $path) {
-            $this->addEmptyDir(Path::join($this->rootDir, sprintf($path, $this->webDir)));
+            $this->addEmptyDir(Path::join($this->projectDir, sprintf($path, $this->webDir)));
         }
 
         $this->addEmptyDir($this->imageDir);
-        $this->addEmptyDir(Path::join($this->rootDir, $this->uploadPath));
+        $this->addEmptyDir(Path::join($this->projectDir, $this->uploadPath));
     }
 
     private function addEmptyDir(string $path): void
@@ -123,6 +124,6 @@ class InstallCommand extends Command
 
         $this->fs->mkdir($path);
 
-        $this->rows[] = Path::makeRelative($path, $this->rootDir);
+        $this->rows[] = Path::makeRelative($path, $this->projectDir);
     }
 }

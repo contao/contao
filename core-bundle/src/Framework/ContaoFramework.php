@@ -69,7 +69,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     /**
      * @var string
      */
-    private $rootDir;
+    private $projectDir;
 
     /**
      * @var int
@@ -96,13 +96,13 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      */
     private $hookListeners = [];
 
-    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker, Filesystem $filesystem, string $rootDir, int $errorLevel)
+    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker, Filesystem $filesystem, string $projectDir, int $errorLevel)
     {
         $this->requestStack = $requestStack;
         $this->scopeMatcher = $scopeMatcher;
         $this->tokenChecker = $tokenChecker;
         $this->filesystem = $filesystem;
-        $this->rootDir = $rootDir;
+        $this->projectDir = $projectDir;
         $this->errorLevel = $errorLevel;
     }
 
@@ -185,7 +185,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         }
 
         \define('TL_START', microtime(true));
-        \define('TL_ROOT', $this->rootDir);
+        \define('TL_ROOT', $this->projectDir);
         \define('TL_REFERER_ID', $this->getRefererId());
 
         if (!\defined('TL_SCRIPT')) {
@@ -387,14 +387,14 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         if (
             !empty($GLOBALS['TL_HOOKS']['initializeSystem'])
             && \is_array($GLOBALS['TL_HOOKS']['initializeSystem'])
-            && is_dir(Path::join($this->rootDir, 'system/tmp'))
+            && is_dir(Path::join($this->projectDir, 'system/tmp'))
         ) {
             foreach ($GLOBALS['TL_HOOKS']['initializeSystem'] as $callback) {
                 System::importStatic($callback[0])->{$callback[1]}();
             }
         }
 
-        if ($this->filesystem->exists($filePath = Path::join($this->rootDir, 'system/config/initconfig.php'))) {
+        if ($this->filesystem->exists($filePath = Path::join($this->projectDir, 'system/config/initconfig.php'))) {
             @trigger_error('Using the "initconfig.php" file has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
             include $filePath;
         }

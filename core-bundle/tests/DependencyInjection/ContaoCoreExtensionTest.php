@@ -58,6 +58,7 @@ use Contao\CoreBundle\EventListener\ExceptionConverterListener;
 use Contao\CoreBundle\EventListener\InitializeControllerListener;
 use Contao\CoreBundle\EventListener\InsecureInstallationListener;
 use Contao\CoreBundle\EventListener\InsertTags\AssetListener;
+use Contao\CoreBundle\EventListener\InsertTags\DateListener;
 use Contao\CoreBundle\EventListener\InsertTags\TranslationListener;
 use Contao\CoreBundle\EventListener\LocaleSubscriber;
 use Contao\CoreBundle\EventListener\MakeResponsePrivateListener;
@@ -89,6 +90,7 @@ use Contao\CoreBundle\Image\ImageFactory;
 use Contao\CoreBundle\Image\ImageSizes;
 use Contao\CoreBundle\Image\LegacyResizer;
 use Contao\CoreBundle\Image\PictureFactory;
+use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Menu\BackendMenuBuilder;
 use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\Version409\CeAccessMigration;
@@ -146,6 +148,7 @@ use Contao\Image\ResizeCalculator;
 use Contao\ImagineSvg\Imagine as ImagineSvg;
 use Knp\Menu\Matcher\Matcher;
 use Knp\Menu\Renderer\ListRenderer;
+use Psr\Container\ContainerInterface as PsrContainerInterface;
 use Symfony\Cmf\Component\Routing\DynamicRouter;
 use Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher;
 use Symfony\Cmf\Component\Routing\ProviderBasedGenerator;
@@ -653,6 +656,25 @@ class ContaoCoreExtensionTest extends TestCase
                 ],
             ],
             $definition->getTags()
+        );
+    }
+
+    public function testContainerHasDateFormatInsertTagListener(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $this->assertTrue($container->has(DateListener::class));
+
+        $definition = $container->getDefinition(DateListener::class);
+
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('contao.framework'),
+                new Reference('request_stack'),
+            ],
+            $definition->getArguments()
         );
     }
 
@@ -2039,6 +2061,36 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('contao.image.resize_calculator', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
             ],
             $definition->getArguments()
+        );
+    }
+
+    public function testRegistersTheImageStudio(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $this->assertTrue($container->has(Studio::class));
+
+        $definition = $container->getDefinition(Studio::class);
+
+        $this->assertTrue($definition->isPublic());
+
+        $this->assertEquals(
+            [
+                new Reference(PsrContainerInterface::class),
+                new Reference('%kernel.project_dir%'),
+                new Reference('%contao.upload_path%'),
+                new Reference('%contao.image.valid_extensions%'),
+            ],
+            $definition->getArguments()
+        );
+
+        $this->assertSame(
+            [
+                'container.service_subscriber' => [
+                    ['id' => 'contao.assets.files_context'],
+                ],
+            ],
+            $definition->getTags()
         );
     }
 

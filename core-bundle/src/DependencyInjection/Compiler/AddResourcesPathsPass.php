@@ -33,7 +33,7 @@ class AddResourcesPathsPass implements CompilerPassInterface
     private function getResourcesPaths(ContainerBuilder $container): array
     {
         $paths = [];
-        $rootDir = $container->getParameter('kernel.project_dir');
+        $projectDir = $container->getParameter('kernel.project_dir');
 
         $bundles = $container->getParameter('kernel.bundles');
         $meta = $container->getParameter('kernel.bundles_metadata');
@@ -48,16 +48,16 @@ class AddResourcesPathsPass implements CompilerPassInterface
             }
         }
 
-        if (is_dir($path = Path::join($rootDir, 'contao'))) {
+        if (is_dir($path = Path::join($projectDir, 'contao'))) {
             $paths[] = $path;
         }
 
-        if (is_dir($path = Path::join($rootDir, 'app/Resources/contao'))) {
+        if (is_dir($path = Path::join($projectDir, 'app/Resources/contao'))) {
             @trigger_error('Using "app/Resources/contao" has been deprecated and will no longer work in Contao 5.0. Use the "contao" folder instead.', E_USER_DEPRECATED);
             $paths[] = $path;
         }
 
-        if (is_dir($path = Path::join($rootDir, 'src/Resources/contao'))) {
+        if (is_dir($path = Path::join($projectDir, 'src/Resources/contao'))) {
             @trigger_error('Using "src/Resources/contao" has been deprecated and will no longer work in Contao 5.0. Use the "contao" folder instead.', E_USER_DEPRECATED);
             $paths[] = $path;
         }
