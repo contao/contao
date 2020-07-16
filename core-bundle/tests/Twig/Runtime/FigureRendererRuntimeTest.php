@@ -29,7 +29,6 @@ class FigureRendererRuntimeTest extends TestCase
         $metaData = new MetaData([]);
 
         $configuration = [
-            'size' => '_size',
             'metaData' => $metaData,
             'disableMetaData' => true,
             'locale' => 'de',
@@ -59,7 +58,7 @@ class FigureRendererRuntimeTest extends TestCase
 
         $runtime = $this->getRuntime($expectedFigureBuilderCalls);
 
-        $this->assertSame('<result>', $runtime->render('resource', $configuration));
+        $this->assertSame('<result>', $runtime->render('resource', '_size', $configuration));
     }
 
     /**
@@ -71,14 +70,14 @@ class FigureRendererRuntimeTest extends TestCase
 
         $runtime = $this->getRuntime(['setMetaData' => new MetaData($metaData)]);
 
-        $this->assertSame('<result>', $runtime->render('resource', [$key => [MetaData::VALUE_ALT => 'foo']]));
+        $this->assertSame('<result>', $runtime->render('resource', null, [$key => [MetaData::VALUE_ALT => 'foo']]));
     }
 
     public function testUsesCustomTemplate(): void
     {
         $runtime = $this->getRuntime([], '@App/custom_figure.html.twig');
 
-        $this->assertSame('<result>', $runtime->render(1, [], '@App/custom_figure.html.twig'));
+        $this->assertSame('<result>', $runtime->render(1, null, [], '@App/custom_figure.html.twig'));
     }
 
     public function testFailsWithInvalidConfiguration(): void
@@ -89,7 +88,7 @@ class FigureRendererRuntimeTest extends TestCase
             'invalid' => 'foobar',
         ];
 
-        $this->getRuntime()->render(1, $configuration);
+        $this->getRuntime()->render(1, null, $configuration);
     }
 
     private function getRuntime(array $figureBuilderCalls = [], string $expectedTemplate = '@ContaoCore/Image/Studio/figure.html.twig'): FigureRendererRuntime
