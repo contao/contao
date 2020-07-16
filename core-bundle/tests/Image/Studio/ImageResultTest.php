@@ -22,7 +22,6 @@ use Contao\Image\ImageInterface;
 use Contao\Image\PictureInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class ImageResultTest extends TestCase
 {
@@ -35,7 +34,7 @@ class ImageResultTest extends TestCase
         $picture = $this->createMock(PictureInterface::class);
         $pictureFactory = $this->getPictureFactoryMock($filePathOrImage, $sizeConfiguration, $picture);
         $locator = $this->getLocatorMock($pictureFactory);
-        $imageResult = new ImageResult($locator, $filePathOrImage, $sizeConfiguration);
+        $imageResult = new ImageResult($locator, 'any/project/dir', $filePathOrImage, $sizeConfiguration);
 
         $this->assertSame($picture, $imageResult->getPicture());
     }
@@ -68,8 +67,8 @@ class ImageResultTest extends TestCase
         ;
 
         $pictureFactory = $this->getPictureFactoryMock($filePathOrImage, $sizeConfiguration, $picture);
-        $locator = $this->getLocatorMock($pictureFactory, $projectDir, $staticUrl);
-        $imageResult = new ImageResult($locator, $filePathOrImage, $sizeConfiguration);
+        $locator = $this->getLocatorMock($pictureFactory, $staticUrl);
+        $imageResult = new ImageResult($locator, $projectDir, $filePathOrImage, $sizeConfiguration);
 
         $this->assertSame($sources, $imageResult->getSources());
         $this->assertSame($img, $imageResult->getImg());
@@ -95,8 +94,8 @@ class ImageResultTest extends TestCase
         ;
 
         $pictureFactory = $this->getPictureFactoryMock($filePath, $sizeConfiguration, $picture);
-        $locator = $this->getLocatorMock($pictureFactory, $projectDir, $staticUrl);
-        $imageResult = new ImageResult($locator, $filePath, $sizeConfiguration);
+        $locator = $this->getLocatorMock($pictureFactory, $staticUrl);
+        $imageResult = new ImageResult($locator, $projectDir, $filePath, $sizeConfiguration);
 
         $this->assertSame('foo', $imageResult->getImageSrc());
     }
@@ -132,7 +131,7 @@ class ImageResultTest extends TestCase
             ->willReturn($imageFactory)
         ;
 
-        $imageResult = new ImageResult($locator, $filePath);
+        $imageResult = new ImageResult($locator, 'any/project/dir', $filePath);
 
         $this->assertSame($dimensions, $imageResult->getOriginalDimensions());
 
@@ -153,7 +152,7 @@ class ImageResultTest extends TestCase
         ;
 
         $locator = $this->getLocatorMock();
-        $imageResult = new ImageResult($locator, $image);
+        $imageResult = new ImageResult($locator, 'any/project/dir', $image);
 
         $this->assertSame($dimensions, $imageResult->getOriginalDimensions());
     }
@@ -163,8 +162,8 @@ class ImageResultTest extends TestCase
         $projectDir = 'project/dir';
         $filePath = 'project/dir/file/path';
 
-        $locator = $this->getLocatorMock(null, $projectDir);
-        $imageResult = new ImageResult($locator, $filePath);
+        $locator = $this->getLocatorMock(null);
+        $imageResult = new ImageResult($locator, $projectDir, $filePath);
 
         $this->assertSame('file/path', $imageResult->getFilePath());
         $this->assertSame('project/dir/file/path', $imageResult->getFilePath(true));
@@ -183,8 +182,8 @@ class ImageResultTest extends TestCase
             ->willReturn($filePath)
         ;
 
-        $locator = $this->getLocatorMock(null, $projectDir);
-        $imageResult = new ImageResult($locator, $image);
+        $locator = $this->getLocatorMock();
+        $imageResult = new ImageResult($locator, $projectDir, $image);
 
         $this->assertSame('file/path', $imageResult->getFilePath());
         $this->assertSame('project/dir/file/path', $imageResult->getFilePath(true));
@@ -209,22 +208,11 @@ class ImageResultTest extends TestCase
     /**
      * @return ContainerInterface&MockObject
      */
-    private function getLocatorMock(?PictureFactoryInterface $pictureFactory = null, string $projectDir = null, string $staticUrl = null)
+    private function getLocatorMock(?PictureFactoryInterface $pictureFactory = null, string $staticUrl = null)
     {
         $locator = $this->createMock(ContainerInterface::class);
 
-        $parameterBag = null;
         $context = null;
-
-        if (null !== $projectDir) {
-            $parameterBag = $this->createMock(ParameterBagInterface::class);
-            $parameterBag
-                ->expects($this->atLeastOnce())
-                ->method('get')
-                ->with('kernel.project_dir')
-                ->willReturn($projectDir)
-            ;
-        }
 
         if (null !== $staticUrl) {
             $context = $this->createMock(ContaoContext::class);
@@ -239,7 +227,6 @@ class ImageResultTest extends TestCase
             ->method('get')
             ->willReturnMap([
                 ['contao.image.picture_factory', $pictureFactory],
-                ['parameter_bag', $parameterBag],
                 ['contao.assets.files_context', $context],
             ])
         ;

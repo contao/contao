@@ -33,7 +33,6 @@ use Contao\Template;
 use Imagine\Gd\Imagine as ImagineGd;
 use Psr\Log\NullLogger;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Webmozart\PathUtil\Path;
@@ -1601,17 +1600,18 @@ class FigureBuilderIntegrationTest extends TestCase
             $container->getParameter('contao.image.imagine_options')
         );
 
-        $parameterBag = new ParameterBag([
-            'kernel.project_dir' => $container->getParameter('kernel.project_dir'),
-            'contao.image.valid_extensions' => $container->getParameter('contao.image.valid_extensions'),
-        ]);
+        $studio = new Studio(
+            $container,
+            $container->getParameter('kernel.project_dir'),
+            $container->getParameter('contao.upload_path'),
+            $container->getParameter('contao.image.valid_extensions')
+        );
 
-        $container->set(Studio::class, new Studio($container));
+        $container->set(Studio::class, $studio);
         $container->set('contao.framework', $framework);
         $container->set('contao.image.resizer', $resizer);
         $container->set('contao.image.image_factory', $imageFactory);
         $container->set('contao.image.picture_factory', $pictureFactory);
-        $container->set('parameter_bag', $parameterBag);
         $container->set('request_stack', new RequestStack());
         $container->set('filesystem', new Filesystem());
         $container->set('monolog.logger.contao', new NullLogger());

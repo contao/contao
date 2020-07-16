@@ -19,7 +19,6 @@ use Contao\CoreBundle\Image\PictureFactoryInterface;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
 use Psr\Container\ContainerInterface;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
 class Studio implements ServiceSubscriberInterface
@@ -29,14 +28,32 @@ class Studio implements ServiceSubscriberInterface
      */
     private $locator;
 
-    public function __construct(ContainerInterface $locator)
+    /**
+     * @var string
+     */
+    private $projectDir;
+
+    /**
+     * @var string
+     */
+    private $uploadPath;
+
+    /**
+     * @var array<string>
+     */
+    private $validExtensions;
+
+    public function __construct(ContainerInterface $locator, string $projectDir, string $uploadPath, array $validExtensions)
     {
         $this->locator = $locator;
+        $this->projectDir = $projectDir;
+        $this->uploadPath = $uploadPath;
+        $this->validExtensions = $validExtensions;
     }
 
     public function createFigureBuilder(): FigureBuilder
     {
-        return new FigureBuilder($this->locator);
+        return new FigureBuilder($this->locator, $this->projectDir, $this->uploadPath, $this->validExtensions);
     }
 
     /**
@@ -44,7 +61,7 @@ class Studio implements ServiceSubscriberInterface
      */
     public function createImage($filePathOrImage, $sizeConfiguration): ImageResult
     {
-        return new ImageResult($this->locator, $filePathOrImage, $sizeConfiguration);
+        return new ImageResult($this->locator, $this->projectDir, $filePathOrImage, $sizeConfiguration);
     }
 
     /**
@@ -62,7 +79,6 @@ class Studio implements ServiceSubscriberInterface
             self::class,
             'contao.image.picture_factory' => PictureFactoryInterface::class,
             'contao.image.image_factory' => ImageFactoryInterface::class,
-            'parameter_bag' => ParameterBagInterface::class,
             'contao.assets.files_context' => ContaoContext::class,
             'contao.framework' => ContaoFramework::class,
         ];

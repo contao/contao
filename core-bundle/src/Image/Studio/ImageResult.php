@@ -53,14 +53,20 @@ class ImageResult
     protected $originalDimensions;
 
     /**
+     * @var string
+     */
+    private $projectDir;
+
+    /**
      * @param string|ImageInterface                      $filePathOrImage
      * @param array|PictureConfiguration|int|string|null $sizeConfiguration
      *
      * @internal Use the Contao\Image\Studio\Studio factory to get an instance of this class
      */
-    public function __construct(ContainerInterface $locator, $filePathOrImage, $sizeConfiguration = null)
+    public function __construct(ContainerInterface $locator, string $projectDir, $filePathOrImage, $sizeConfiguration = null)
     {
         $this->locator = $locator;
+        $this->projectDir = $projectDir;
         $this->filePathOrImageInterface = $filePathOrImage;
         $this->sizeConfiguration = $sizeConfiguration;
     }
@@ -82,7 +88,7 @@ class ImageResult
      */
     public function getSources(): array
     {
-        return $this->getPicture()->getSources($this->projectDir(), $this->staticUrl());
+        return $this->getPicture()->getSources($this->projectDir, $this->staticUrl());
     }
 
     /**
@@ -90,7 +96,7 @@ class ImageResult
      */
     public function getImg(): array
     {
-        return $this->getPicture()->getImg($this->projectDir(), $this->staticUrl());
+        return $this->getPicture()->getImg($this->projectDir, $this->staticUrl());
     }
 
     /**
@@ -133,7 +139,7 @@ class ImageResult
             ? $this->filePathOrImageInterface->getPath()
             : $this->filePathOrImageInterface;
 
-        return $absolute ? $path : Path::makeRelative($path, $this->projectDir());
+        return $absolute ? $path : Path::makeRelative($path, $this->projectDir);
     }
 
     protected function imageFactory(): ImageFactoryInterface
@@ -144,11 +150,6 @@ class ImageResult
     protected function pictureFactory(): PictureFactoryInterface
     {
         return $this->locator->get('contao.image.picture_factory');
-    }
-
-    protected function projectDir(): string
-    {
-        return $this->locator->get('parameter_bag')->get('kernel.project_dir');
     }
 
     protected function staticUrl(): string

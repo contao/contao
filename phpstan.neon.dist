@@ -63,15 +63,6 @@ parameters:
               - %currentWorkingDirectory%/core-bundle/src/Controller/AbstractController.php
               - %currentWorkingDirectory%/core-bundle/src/Command/MigrateCommand.php
 
-        # Ignore that services via a locator are falsely identified as private/not registered
-        - message: '#Service ".*" is not registered in the container\.#'
-          paths:
-              - %currentWorkingDirectory%/core-bundle/src/Image/Studio/*.php
-
-        - message: '#Service "parameter_bag" is private\.#'
-          paths:
-              - %currentWorkingDirectory%/core-bundle/src/Image/Studio/*.php
-
     reportUnmatchedIgnoredErrors: false
     checkGenericClassInNonGenericObjectType: false
     inferPrivatePropertyTypeFromConstructor: true

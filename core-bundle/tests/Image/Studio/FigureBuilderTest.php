@@ -28,7 +28,6 @@ use Contao\System;
 use Contao\Validator;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Webmozart\PathUtil\Path;
 
 class FigureBuilderTest extends TestCase
@@ -930,26 +929,15 @@ class FigureBuilderTest extends TestCase
         /** @var ContainerInterface&MockObject $locator */
         $locator = $this->createMock(ContainerInterface::class);
 
-        $parameterBag = $this->createMock(ParameterBagInterface::class);
-        $parameterBag
-            ->method('get')
-            ->willReturnMap([
-                ['kernel.project_dir', $projectDir],
-                ['contao.upload_path', $uploadPath],
-                ['contao.image.valid_extensions', $validExtensions],
-            ])
-        ;
-
         $locator
             ->method('get')
             ->willReturnMap([
-                ['parameter_bag', $parameterBag],
                 [Studio::class, $studio],
                 ['contao.framework', $framework],
             ])
         ;
 
-        return new FigureBuilder($locator);
+        return new FigureBuilder($locator, $projectDir, $uploadPath, $validExtensions);
     }
 
     private function getTestFilePaths(): array

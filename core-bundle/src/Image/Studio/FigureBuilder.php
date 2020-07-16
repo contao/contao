@@ -38,6 +38,21 @@ class FigureBuilder
     private $locator;
 
     /**
+     * @var string
+     */
+    private $projectDir;
+
+    /**
+     * @var string
+     */
+    private $uploadPath;
+
+    /**
+     * @var array<string>
+     */
+    private $validExtensions;
+
+    /**
      * @var Filesystem
      */
     private $filesystem;
@@ -133,9 +148,13 @@ class FigureBuilder
     /**
      * @internal Use the Contao\Image\Studio\Studio factory to get an instance of this class
      */
-    public function __construct(ContainerInterface $locator)
+    public function __construct(ContainerInterface $locator, string $projectDir, string $uploadPath, array $validExtensions)
     {
         $this->locator = $locator;
+        $this->projectDir = $projectDir;
+        $this->uploadPath = $uploadPath;
+        $this->validExtensions = $validExtensions;
+
         $this->filesystem = new Filesystem();
     }
 
@@ -148,7 +167,7 @@ class FigureBuilder
             throw new InvalidResourceException("DBAFS item '{$filesModel->path}' is not a file.");
         }
 
-        $this->filePath = Path::makeAbsolute($filesModel->path, $this->projectDir());
+        $this->filePath = Path::makeAbsolute($filesModel->path, $this->projectDir);
         $this->filesModel = $filesModel;
 
         if (!$this->filesystem->exists($this->filePath)) {
@@ -193,13 +212,11 @@ class FigureBuilder
      */
     public function fromPath(string $path, bool $autoDetectDbafsPaths = true): self
     {
-        $projectDir = $this->projectDir();
-
         // Make sure path is absolute and in a canonical form
-        $path = Path::isAbsolute($path) ? Path::canonicalize($path) : Path::makeAbsolute($path, $projectDir);
+        $path = Path::isAbsolute($path) ? Path::canonicalize($path) : Path::makeAbsolute($path, $this->projectDir);
 
         // Only check for a FilesModel if the resource is inside the upload path
-        if ($autoDetectDbafsPaths && Path::isBasePath(Path::join($projectDir, $this->uploadPath()), $path)) {
+        if ($autoDetectDbafsPaths && Path::isBasePath(Path::join($this->projectDir, $this->uploadPath), $path)) {
             $filesModel = $this->filesModelAdapter()->findByPath($path);
 
             if (null !== $filesModel) {
@@ -528,12 +545,7 @@ class FigureBuilder
                 return [$target, null];
             }
 
-            $validExtensions = $this->locator
-                ->get('parameter_bag')
-                ->get('contao.image.valid_extensions')
-            ;
-
-            $validExtension = \in_array(Path::getExtension($target), $validExtensions, true);
+            $validExtension = \in_array(Path::getExtension($target), $this->validExtensions, true);
             $externalUrl = 1 === preg_match('#^https?://#', $target);
 
             if (!$validExtension) {
@@ -544,14 +556,9 @@ class FigureBuilder
                 return [null, $target];
             }
 
-            $projectDir = $this->locator
-                ->get('parameter_bag')
-                ->get('kernel.project_dir')
-            ;
-
             $filePath = Path::isAbsolute($target) ?
                 Path::canonicalize($target) :
-                Path::makeAbsolute($target, $projectDir);
+                Path::makeAbsolute($target, $this->projectDir);
 
             if (!is_file($filePath)) {
                 $filePath = null;
@@ -589,22 +596,6 @@ class FigureBuilder
         $framework->initialize();
 
         return $framework->getAdapter(Validator::class);
-    }
-
-    private function projectDir(): string
-    {
-        return $this->locator
-            ->get('parameter_bag')
-            ->get('kernel.project_dir')
-        ;
-    }
-
-    private function uploadPath(): string
-    {
-        return $this->locator
-            ->get('parameter_bag')
-            ->get('contao.upload_path')
-        ;
     }
 
     /**

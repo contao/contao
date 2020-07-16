@@ -20,7 +20,6 @@ use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
 class StudioTest extends TestCase
@@ -29,7 +28,7 @@ class StudioTest extends TestCase
     {
         /** @var ContainerInterface&MockObject $locator */
         $locator = $this->createMock(ContainerInterface::class);
-        $studio = new Studio($locator);
+        $studio = new Studio($locator, '/project/dir', 'files', ['jpg']);
 
         $this->assertInstanceOf(ServiceSubscriberInterface::class, $studio);
     }
@@ -41,7 +40,6 @@ class StudioTest extends TestCase
             PictureFactoryInterface::class,
             ImageFactoryInterface::class,
             ContaoFramework::class,
-            ParameterBagInterface::class,
             ContaoContext::class,
         ];
 
