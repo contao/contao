@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\CoreBundle\Event\FilterPageTypeEvent;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\DataContainer;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -60,7 +61,10 @@ class PageTypeOptionsListener implements ServiceAnnotationInterface
 
         // Allow the currently selected option and anything the user has access to
         foreach ($options as $k => $pageType) {
-            if ($pageType !== $dc->value && !$this->security->isGranted('contao_user.alpty', $pageType)) {
+            if (
+                $pageType !== $dc->value
+                && !$this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $pageType)
+            ) {
                 unset($options[$k]);
             }
         }

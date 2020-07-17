@@ -91,7 +91,7 @@ class ContentCompositionListener implements ServiceAnnotationInterface
      */
     public function renderPageArticlesOperation(array $row, string $href, string $label, string $title, string $icon): string
     {
-        if (!$this->security->isGranted('contao_user.modules', 'article')) {
+        if (!$this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'article')) {
             return '';
         }
 
