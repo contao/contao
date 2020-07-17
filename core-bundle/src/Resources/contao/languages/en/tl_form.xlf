@@ -27,10 +27,10 @@
         <source>Send the submitted data to an e-mail address.</source>
       </trans-unit>
       <trans-unit id="tl_form.mailerTransport.0">
-        <source>Mailer configuration</source>
+        <source>Mailer transport</source>
       </trans-unit>
       <trans-unit id="tl_form.mailerTransport.1">
-        <source>Here you can select which mailer configuration to use for the form.</source>
+        <source>Here you can override which mailer transport is used for any e-mails sent by this form.</source>
       </trans-unit>
       <trans-unit id="tl_form.recipient.0">
         <source>Recipient address</source>

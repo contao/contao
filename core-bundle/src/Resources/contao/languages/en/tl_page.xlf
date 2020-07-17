@@ -99,10 +99,10 @@
         <source>The assets URL applies to the &lt;em&gt;assets&lt;/em&gt; directory (page speed optimization).</source>
       </trans-unit>
       <trans-unit id="tl_page.mailerTransport.0">
-        <source>Mailer configuration</source>
+        <source>Mailer transport</source>
       </trans-unit>
       <trans-unit id="tl_page.mailerTransport.1">
-        <source>Here you can select which mailer configuration to use for the website.</source>
+        <source>Here you can override which mailer transport is used for any e-mails sent on this website.</source>
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.0">
         <source>E-mail address of the website administrator</source>

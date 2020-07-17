@@ -57,10 +57,10 @@
         <source>Do not embed images in HTML newsletters.</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.mailerTransport.0">
-        <source>Mailer configuration</source>
+        <source>Mailer transport</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.mailerTransport.1">
-        <source>Here you can override the default mailer configuration of the channel.</source>
+        <source>Here you can override which mailer transport is used to send e-mails for this newsletter.</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.sender.0">
         <source>Custom sender e-mail address</source>
