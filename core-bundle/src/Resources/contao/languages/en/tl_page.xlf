@@ -14,10 +14,10 @@
       <trans-unit id="tl_page.alias.1">
         <source>The page alias is a unique reference to the page which can be called instead of its numeric ID.</source>
       </trans-unit>
-      <trans-unit id="tl_page.alias.0">
+      <trans-unit id="tl_page.parameters.0">
         <source>URL parameters</source>
       </trans-unit>
-      <trans-unit id="tl_page.alias.1">
+      <trans-unit id="tl_page.parameters.1">
         <source>URL parameters are placeholders for the current reader page item, e.g. a news alias. Refer to the current page type for available parameters.</source>
       </trans-unit>
       <trans-unit id="tl_page.type.0">
