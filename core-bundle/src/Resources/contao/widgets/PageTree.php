@@ -179,6 +179,7 @@ class PageTree extends Widget
 				foreach ($objPages as $objPage)
 				{
 					$objPage->loadDetails();
+
 					$arrSet[] = $objPage->id;
 					$arrValues[$objPage->id] = Image::getHtml($this->getPageStatusIcon($objPage)) . ' ' . $objPage->title . ' (' . ($objPage->urlPrefix ? ($objPage->urlPrefix . '/') : '') . $objPage->alias . $objPage->urlSuffix . ')';
 				}

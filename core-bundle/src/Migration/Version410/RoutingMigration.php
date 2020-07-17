@@ -68,7 +68,6 @@ class RoutingMigration extends AbstractMigration
         $urlSuffix->setColumnDefinition("varchar(16) NOT NULL default '.html'");
 
         $diff = new TableDiff('tl_page', [$urlPrefix, $urlSuffix]);
-
         $sql = $this->connection->getDatabasePlatform()->getAlterTableSQL($diff);
 
         foreach ($sql as $statement) {
@@ -76,11 +75,10 @@ class RoutingMigration extends AbstractMigration
         }
 
         $prefix = $this->prependLocale ? 'language' : "''";
+
         $this->connection
             ->prepare("UPDATE tl_page SET urlPrefix=$prefix, urlSuffix=:suffix WHERE type='root'")
-            ->execute([
-                'suffix' => $this->urlSuffix,
-            ])
+            ->execute(['suffix' => $this->urlSuffix])
         ;
 
         return new MigrationResult(true, '');

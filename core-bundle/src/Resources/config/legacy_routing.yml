@@ -45,7 +45,7 @@ services:
             - ''
             - '@event_dispatcher'
         tags:
-            - { name: router }
+            - router
 
     contao.routing.legacy_route_provider:
         class: Contao\CoreBundle\Routing\LegacyRouteProvider

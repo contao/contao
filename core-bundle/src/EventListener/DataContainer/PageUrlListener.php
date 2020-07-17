@@ -213,7 +213,7 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
         $this->suffixes = null;
     }
 
-    private function purgeSearchIndex(int $pageId): void
+    public function purgeSearchIndex(int $pageId): void
     {
         $urls = $this->connection
             ->executeQuery(

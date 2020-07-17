@@ -170,15 +170,15 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 	(
 		'__selector__'                => array('type', 'fallback', 'autoforward', 'protected', 'createSitemap', 'includeLayout', 'includeCache', 'includeChmod', 'enforceTwoFactor'),
 		'default'                     => '{title_legend},title,alias,type',
-		'regular'                     => '{title_legend},title,type,alias;{meta_legend},pageTitle,robots,description,serpPreview;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,noSearch,guests,requireItem;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
-		'forward'                     => '{title_legend},title,type,alias;{meta_legend},pageTitle;{redirect_legend},jumpTo,redirect;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,guests;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
-		'redirect'                    => '{title_legend},title,type,alias;{meta_legend},pageTitle;{redirect_legend},redirect,url,target;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,guests;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
-		'root'                        => '{title_legend},title,type,alias;{meta_legend},pageTitle;{url_legend},dns,useSSL,urlPrefix,urlSuffix,validAliasCharacters,useFolderUrl;{global_legend:hide},language,fallback,dateFormat,timeFormat,datimFormat,adminEmail,staticFiles,staticPlugins;{sitemap_legend:hide},createSitemap;{protected_legend:hide},protected;{layout_legend},includeLayout;{twoFactor_legend:hide},enforceTwoFactor;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{publish_legend},published,start,stop',
-		'rootfallback'                => '{title_legend},title,type,alias;{meta_legend},pageTitle;{url_legend},dns,useSSL,urlPrefix,urlSuffix,validAliasCharacters,useFolderUrl;{website_legend:hide},favicon,robotsTxt;{global_legend:hide},language,fallback,dateFormat,timeFormat,datimFormat,adminEmail,staticFiles,staticPlugins;{sitemap_legend:hide},createSitemap;{protected_legend:hide},protected;{layout_legend},includeLayout;{twoFactor_legend:hide},enforceTwoFactor;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{publish_legend},published,start,stop',
-		'logout'                      => '{title_legend},title,type,alias;{forward_legend},jumpTo,redirectBack;{protected_legend:hide},protected;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
-		'error_401'                   => '{title_legend},title,type,alias;{meta_legend},pageTitle,robots,description;{forward_legend},autoforward;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass;{publish_legend},published,start,stop',
-		'error_403'                   => '{title_legend},title,type,alias;{meta_legend},pageTitle,robots,description;{forward_legend},autoforward;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass;{publish_legend},published,start,stop',
-		'error_404'                   => '{title_legend},title,type,alias;{meta_legend},pageTitle,robots,description;{forward_legend},autoforward;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass;{publish_legend},published,start,stop'
+		'regular'                     => '{title_legend},title,alias,type;{meta_legend},pageTitle,robots,description,serpPreview;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,noSearch,guests,requireItem;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
+		'forward'                     => '{title_legend},title,alias,type;{meta_legend},pageTitle;{redirect_legend},jumpTo,redirect;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,guests;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
+		'redirect'                    => '{title_legend},title,alias,type;{meta_legend},pageTitle;{redirect_legend},redirect,url,target;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,guests;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
+		'root'                        => '{title_legend},title,alias,type;{meta_legend},pageTitle;{url_legend},dns,useSSL,urlPrefix,urlSuffix,validAliasCharacters,useFolderUrl;{global_legend:hide},language,fallback,dateFormat,timeFormat,datimFormat,adminEmail,staticFiles,staticPlugins;{sitemap_legend:hide},createSitemap;{protected_legend:hide},protected;{layout_legend},includeLayout;{twoFactor_legend:hide},enforceTwoFactor;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{publish_legend},published,start,stop',
+		'rootfallback'                => '{title_legend},title,alias,type;{meta_legend},pageTitle;{url_legend},dns,useSSL,urlPrefix,urlSuffix,validAliasCharacters,useFolderUrl;{website_legend:hide},favicon,robotsTxt;{global_legend:hide},language,fallback,dateFormat,timeFormat,datimFormat,adminEmail,staticFiles,staticPlugins;{sitemap_legend:hide},createSitemap;{protected_legend:hide},protected;{layout_legend},includeLayout;{twoFactor_legend:hide},enforceTwoFactor;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{publish_legend},published,start,stop',
+		'logout'                      => '{title_legend},title,alias,type;{forward_legend},jumpTo,redirectBack;{protected_legend:hide},protected;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
+		'error_401'                   => '{title_legend},title,alias,type;{meta_legend},pageTitle,robots,description;{forward_legend},autoforward;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass;{publish_legend},published,start,stop',
+		'error_403'                   => '{title_legend},title,alias,type;{meta_legend},pageTitle,robots,description;{forward_legend},autoforward;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass;{publish_legend},published,start,stop',
+		'error_404'                   => '{title_legend},title,alias,type;{meta_legend},pageTitle,robots,description;{forward_legend},autoforward;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass;{publish_legend},published,start,stop'
 	),
 
 	// Subpalettes
@@ -1010,7 +1010,7 @@ class tl_page extends Backend
 	 */
 	public function checkRootType($varValue, DataContainer $dc)
 	{
-		@trigger_error('tl_page::checkRootType() is deprecated since Contao 4.10', E_USER_DEPRECATED);
+		@trigger_error('Using "tl_page::checkRootType()" has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
 		if ($varValue != 'root' && $dc->activeRecord->pid == 0)
 		{
@@ -1129,22 +1129,24 @@ class tl_page extends Backend
 	 */
 	public function generateAlias($varValue, DataContainer $dc)
 	{
-		@trigger_error('tl_page::generateAlias() is deprecated, use PageUrlListener::generateAlias() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using "tl_page::generateAlias()" has been deprecated and will no longer work in Contao 5.0. Use "PageUrlListener::generateAlias()" instead.', E_USER_DEPRECATED);
 
 		return System::getContainer()
 			->get(PageUrlListener::class)
-			->generateAlias($varValue, $dc);
+			->generateAlias($varValue, $dc)
+		;
 	}
 
 	/**
 	 * Automatically create an article in the main column of a new page
 	 *
 	 * @param DataContainer $dc
+	 *
 	 * @deprecated
 	 */
 	public function generateArticle(DataContainer $dc)
 	{
-		@trigger_error('tl_page::generateArticle() is deprecated, use ContentCompositionListener::generateArticleForPage() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using "tl_page::generateArticle()" has been deprecated and will no longer work in Contao 5.0. Use "ContentCompositionListener::generateArticleForPage()" instead.', E_USER_DEPRECATED);
 
 		System::getContainer()
 			->get(ContentCompositionListener::class)
@@ -1156,15 +1158,17 @@ class tl_page extends Backend
 	 * Purge the search index if a page is being deleted
 	 *
 	 * @param DataContainer $dc
+	 *
 	 * @deprecated
 	 */
 	public function purgeSearchIndex(DataContainer $dc)
 	{
-		@trigger_error('tl_page::purgeSearchIndex() is deprecated, use PageUrlListener::purgeSearchIndex() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using "tl_page::purgeSearchIndex()" has been deprecated and will no longer work in Contao 5.0. Use "PageUrlListener::purgeSearchIndex()" instead.', E_USER_DEPRECATED);
 
 		System::getContainer()
 			->get(PageUrlListener::class)
-			->purgeSearchIndex($dc);
+			->purgeSearchIndex($dc)
+		;
 	}
 
 	/**
@@ -1282,11 +1286,12 @@ class tl_page extends Backend
 	 * @param DataContainer $dc
 	 *
 	 * @return array
+	 *
 	 * @deprecated
 	 */
 	public function getPageTypes(DataContainer $dc)
 	{
-		@trigger_error('tl_page::getPageTypes() is deprecated, use the \Contao\CoreBundle\EventListener\DataContainer\PageTypeOptionsListener instead.', E_USER_DEPRECATED);
+		@trigger_error('Using "tl_page::getPageTypes()" has been deprecated and will no longer work in Contao 5.0. Use the "Contao\CoreBundle\EventListener\DataContainer\PageTypeOptionsListener" instead.', E_USER_DEPRECATED);
 
 		return System::getContainer()->get(PageTypeOptionsListener::class)($dc);
 	}
@@ -1529,11 +1534,12 @@ class tl_page extends Backend
 	 * @param string $icon
 	 *
 	 * @return string
+	 *
 	 * @deprecated
 	 */
 	public function editArticles($row, $href, $label, $title, $icon)
 	{
-		@trigger_error('tl_page::editArticles() is deprecated, use \Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener::renderPageArticlesOperation instead.', E_USER_DEPRECATED);
+		@trigger_error('Using "tl_page::editArticles()" has been deprecated and will no longer work in Contao 5.0. Use "ContentCompositionListener::renderPageArticlesOperation()" instead.', E_USER_DEPRECATED);
 
 		return System::getContainer()
 			->get(ContentCompositionListener::class)
