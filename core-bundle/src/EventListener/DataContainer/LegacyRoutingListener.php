@@ -12,9 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
-use Contao\CoreBundle\DataContainer\PaletteManipulator;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\DataContainer;
+use Contao\Image;
+use Contao\StringUtil;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
@@ -23,6 +25,11 @@ use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
  */
 class LegacyRoutingListener implements ServiceAnnotationInterface
 {
+    /**
+     * @var ContaoFramework
+     */
+    private $framework;
+
     /**
      * @var TranslatorInterface
      */
@@ -38,8 +45,9 @@ class LegacyRoutingListener implements ServiceAnnotationInterface
      */
     private $urlSuffix;
 
-    public function __construct(TranslatorInterface $translator, bool $prependLocale = false, string $urlSuffix = '.html')
+    public function __construct(ContaoFramework $framework, TranslatorInterface $translator, bool $prependLocale = false, string $urlSuffix = '.html')
     {
+        $this->framework = $framework;
         $this->translator = $translator;
         $this->prependLocale = $prependLocale;
         $this->urlSuffix = $urlSuffix;
@@ -50,25 +58,26 @@ class LegacyRoutingListener implements ServiceAnnotationInterface
      */
     public function disableRoutingFields(): void
     {
-        $translator = $this->translator;
+        foreach (['urlPrefix', 'urlSuffix'] as $field) {
+            $GLOBALS['TL_DCA']['tl_page']['fields'][$field]['eval']['disabled'] = true;
+            $GLOBALS['TL_DCA']['tl_page']['fields'][$field]['eval']['helpwizard'] = false;
+            $GLOBALS['TL_DCA']['tl_page']['fields'][$field]['xlabel'][] = [self::class, 'renderHelpIcon'];
+        }
+    }
 
-        $GLOBALS['TL_DCA']['tl_page']['fields']['urlPrefix']['eval']['disabled'] = true;
-        $GLOBALS['TL_DCA']['tl_page']['fields']['urlSuffix']['eval']['disabled'] = true;
+    public function renderHelpIcon(): string
+    {
+        /** @var Image $adapter */
+        $adapter = $this->framework->getAdapter(Image::class);
 
-        $GLOBALS['TL_DCA']['tl_page']['fields']['legacy_routing'] = [
-            'input_field_callback' => static function () use ($translator) {
-                return sprintf(
-                    '<p class="tl_gerror">%s</p>',
-                    $translator->trans('tl_page.legacyRouting', [], 'contao_tl_page')
-                );
-            },
-        ];
-
-        PaletteManipulator::create()
-            ->addField('legacy_routing', 'url_legend', PaletteManipulator::POSITION_PREPEND)
-            ->applyToPalette('root', 'tl_page')
-            ->applyToPalette('rootfallback', 'tl_page')
-        ;
+        return $adapter->getHtml(
+            'show.svg',
+            '',
+            sprintf(
+                'title="%s"',
+                StringUtil::specialchars($this->translator->trans('tl_page.legacyRouting', [], 'contao_tl_page'))
+            )
+        );
     }
 
     /**
