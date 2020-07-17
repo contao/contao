@@ -114,7 +114,7 @@ class PageRouteTest extends TestCase
     }
 
     /**
-     * @return PageModel&MockObject $page
+     * @return PageModel&MockObject
      */
     private function mockPageModel(array $properties = []): PageModel
     {

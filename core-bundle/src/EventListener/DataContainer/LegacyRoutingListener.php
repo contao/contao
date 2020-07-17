@@ -20,8 +20,6 @@ use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
 /**
  * @internal
- *
- * @deprecated This listener is used to handle legacy routing mode. It will be obsolete with Contao 5.
  */
 class LegacyRoutingListener implements ServiceAnnotationInterface
 {

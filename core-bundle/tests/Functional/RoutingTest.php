@@ -75,7 +75,7 @@ class RoutingTest extends FunctionalTestCase
      * @group legacy
      * @dataProvider getAliases
      *
-     * @expectedDeprecation Using the Contao\CoreBundle\Routing\FrontendLoader class has been deprecated %s.
+     * @expectedDeprecation Using the "Contao\CoreBundle\Routing\FrontendLoader" class has been deprecated %s.
      */
     public function testResolvesAliasesInLegacyMode(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
     {
@@ -389,7 +389,7 @@ class RoutingTest extends FunctionalTestCase
      * @group legacy
      * @dataProvider getAliasesWithLocale
      *
-     * @expectedDeprecation Using the Contao\CoreBundle\Routing\FrontendLoader class has been deprecated %s.
+     * @expectedDeprecation Using the "Contao\CoreBundle\Routing\FrontendLoader" class has been deprecated %s.
      */
     public function testResolvesAliasesWithLocaleInLegacyMode(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
     {
@@ -700,7 +700,7 @@ class RoutingTest extends FunctionalTestCase
      * @group legacy
      * @dataProvider getAliasesWithoutUrlSuffix
      *
-     * @expectedDeprecation Using the Contao\CoreBundle\Routing\FrontendLoader class has been deprecated %s.
+     * @expectedDeprecation Using the "Contao\CoreBundle\Routing\FrontendLoader" class has been deprecated %s.
      */
     public function testResolvesAliasesWithoutUrlSuffixInLegacyMode(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
     {
@@ -1053,7 +1053,7 @@ class RoutingTest extends FunctionalTestCase
      * @group legacy
      * @dataProvider getRootAliasesWithLocale
      *
-     * @expectedDeprecation Using the Contao\CoreBundle\Routing\FrontendLoader class has been deprecated %s.
+     * @expectedDeprecation Using the "Contao\CoreBundle\Routing\FrontendLoader" class has been deprecated %s.
      */
     public function testResolvesTheRootPageWithLocaleInLegacyMode(array $fixtures, string $request, int $statusCode, string $pageTitle, string $acceptLanguages, string $host): void
     {

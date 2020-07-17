@@ -66,17 +66,17 @@ class ContentCompositionListenerTest extends TestCase
     private $security;
 
     /**
-     * @var Image|Adapter|MockObject
+     * @var Adapter
      */
     private $imageAdapter;
 
     /**
-     * @var Backend|Adapter|MockObject
+     * @var Adapter
      */
     private $backendAdapter;
 
     /**
-     * @var PageModel|Adapter|MockObject
+     * @var Adapter
      */
     private $pageModelAdapter;
 
@@ -110,7 +110,6 @@ class ContentCompositionListenerTest extends TestCase
         $GLOBALS['TL_DCA']['tl_article']['config']['ptable'] = 'tl_page';
 
         $this->security = $this->createMock(Security::class);
-
         $this->imageAdapter = $this->mockAdapter(['getHtml']);
         $this->backendAdapter = $this->mockAdapter(['addToUrl']);
         $this->pageModelAdapter = $this->mockAdapter(['findByPk']);

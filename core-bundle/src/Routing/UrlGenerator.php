@@ -19,8 +19,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
 
 /**
- * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.0.
- *             Use the Symfony router instead.
+ * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.0; use
+ *             the Symfony router instead.
  */
 class UrlGenerator implements UrlGeneratorInterface
 {
@@ -44,7 +44,7 @@ class UrlGenerator implements UrlGeneratorInterface
      */
     public function __construct(UrlGeneratorInterface $router, ContaoFramework $framework, bool $prependLocale)
     {
-        @trigger_error('Using the Contao\CoreBundle\Routing\UrlGenerator class has been deprecated and will no longer work in Contao 5.0. Use the Symfony router instead.', E_USER_DEPRECATED);
+        @trigger_error('Using the "Contao\CoreBundle\Routing\UrlGenerator" class has been deprecated and will no longer work in Contao 5.0. Use the Symfony router instead.', E_USER_DEPRECATED);
 
         $this->router = $router;
         $this->framework = $framework;

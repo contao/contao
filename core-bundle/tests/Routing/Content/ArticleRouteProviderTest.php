@@ -107,7 +107,7 @@ class ArticleRouteProviderTest extends TestCase
     }
 
     /**
-     * @return ArticleModel&MockObject $article
+     * @return ArticleModel&MockObject
      */
     private function mockArticle(array $parameters = []): ArticleModel
     {
@@ -125,7 +125,7 @@ class ArticleRouteProviderTest extends TestCase
     }
 
     /**
-     * @return PageModel&MockObject $page
+     * @return PageModel&MockObject
      */
     private function mockPage(array $properties = []): PageModel
     {

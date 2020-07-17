@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\CoreBundle\Exception\DuplicateAliasException;
-use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Search\Document;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
@@ -80,7 +79,7 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
      */
     public function generateAlias(string $value, DataContainer $dc): string
     {
-        /** @var PageModel|Adapter $pageAdapter */
+        /** @var PageModel $pageAdapter */
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
 
         /** @var PageModel $pageModel */
@@ -165,7 +164,7 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
             throw new \RuntimeException($this->translator->trans('ERR.urlPrefixExists', [$value], 'contao_default'));
         }
 
-        /** @var PageModel|Adapter $pageAdapter */
+        /** @var PageModel $pageAdapter */
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
         $rootPage = $pageAdapter->findByPk($dc->id);
 
@@ -191,7 +190,7 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
             return $value;
         }
 
-        /** @var PageModel|Adapter $pageAdapter */
+        /** @var PageModel $pageAdapter */
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
         $rootPage = $pageAdapter->findByPk($dc->id);
 
@@ -234,7 +233,7 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
      */
     private function recursiveValidatePages(int $pid, PageModel $rootPage): void
     {
-        /** @var PageModel|Adapter $pageAdapter */
+        /** @var PageModel $pageAdapter */
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
         $pages = $pageAdapter->findByPid($pid);
 
@@ -285,7 +284,7 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
             return false;
         }
 
-        /** @var PageModel|Adapter $pageAdapter */
+        /** @var PageModel $pageAdapter */
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
         $currentUrl = $this->buildUrl($currentAlias, $currentPrefix, $currentSuffix);
 

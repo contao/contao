@@ -31,7 +31,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class RootPageControllerTest extends TestCase
 {
     /**
-     * @var PageModel|Adapter|MockObject
+     * @var Adapter
      */
     private $pageModelAdapter;
 

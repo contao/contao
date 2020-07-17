@@ -95,11 +95,7 @@ class LegacyRoutingListenerTest extends TestCase
 
     public function testOverridesTheUrlSuffix(): void
     {
-        $listener = new LegacyRoutingListener(
-            $this->createMock(TranslatorInterface::class),
-            false,
-            '.bar'
-        );
+        $listener = new LegacyRoutingListener($this->createMock(TranslatorInterface::class), false, '.bar');
 
         $this->assertSame('.bar', $listener->overrideUrlSuffix());
     }
