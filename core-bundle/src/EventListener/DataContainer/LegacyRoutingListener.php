@@ -58,26 +58,25 @@ class LegacyRoutingListener implements ServiceAnnotationInterface
      */
     public function disableRoutingFields(): void
     {
-        foreach (['urlPrefix', 'urlSuffix'] as $field) {
-            $GLOBALS['TL_DCA']['tl_page']['fields'][$field]['eval']['disabled'] = true;
-            $GLOBALS['TL_DCA']['tl_page']['fields'][$field]['eval']['helpwizard'] = false;
-            $GLOBALS['TL_DCA']['tl_page']['fields'][$field]['xlabel'][] = [self::class, 'renderHelpIcon'];
-        }
-    }
-
-    public function renderHelpIcon(): string
-    {
         /** @var Image $adapter */
         $adapter = $this->framework->getAdapter(Image::class);
 
-        return $adapter->getHtml(
-            'show.svg',
-            '',
-            sprintf(
-                'title="%s"',
-                StringUtil::specialchars($this->translator->trans('tl_page.legacyRouting', [], 'contao_tl_page'))
-            )
-        );
+        $renderHelpIcon = function () use ($adapter) {
+            return $adapter->getHtml(
+                'show.svg',
+                '',
+                sprintf(
+                    'title="%s"',
+                    StringUtil::specialchars($this->translator->trans('tl_page.legacyRouting', [], 'contao_tl_page'))
+                )
+            );
+        };
+
+        foreach (['urlPrefix', 'urlSuffix'] as $field) {
+            $GLOBALS['TL_DCA']['tl_page']['fields'][$field]['eval']['disabled'] = true;
+            $GLOBALS['TL_DCA']['tl_page']['fields'][$field]['eval']['helpwizard'] = false;
+            $GLOBALS['TL_DCA']['tl_page']['fields'][$field]['xlabel'][] = $renderHelpIcon;
+        }
     }
 
     /**

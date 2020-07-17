@@ -34,32 +34,33 @@ class LegacyRoutingListenerTest extends TestCase
         $GLOBALS['TL_DCA']['tl_page']['fields']['urlPrefix']['eval'] = [];
         $GLOBALS['TL_DCA']['tl_page']['fields']['urlSuffix']['eval'] = [];
 
+        $adapter = $this->mockAdapter(['getHtml']);
+        $framework = $this->mockContaoFramework([Image::class => $adapter]);
+
         $listener = new LegacyRoutingListener(
-            $this->mockContaoFramework(),
+            $framework,
             $this->createMock(TranslatorInterface::class)
         );
 
         $listener->disableRoutingFields();
 
         $expect = [
-            'eval' => [
-                'disabled' => true,
-                'helpwizard' => false,
-            ],
-            'xlabel' => [
-                [LegacyRoutingListener::class, 'renderHelpIcon'],
-            ],
+            'disabled' => true,
+            'helpwizard' => false,
         ];
 
-        $this->assertSame($expect, $GLOBALS['TL_DCA']['tl_page']['fields']['urlPrefix']);
-        $this->assertSame($expect, $GLOBALS['TL_DCA']['tl_page']['fields']['urlSuffix']);
+        $this->assertSame($expect, $GLOBALS['TL_DCA']['tl_page']['fields']['urlPrefix']['eval']);
+        $this->assertSame($expect, $GLOBALS['TL_DCA']['tl_page']['fields']['urlSuffix']['eval']);
     }
 
     public function testAddsTheRoutingWarning(): void
     {
+        $GLOBALS['TL_DCA']['tl_page']['fields']['urlPrefix']['eval'] = [];
+        $GLOBALS['TL_DCA']['tl_page']['fields']['urlSuffix']['eval'] = [];
+
         $adapter = $this->mockAdapter(['getHtml']);
         $adapter
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('getHtml')
             ->with('show.svg', '', 'title="disabled"')
             ->willReturn('<img src="show.svg" alt="" title="disabled">')
@@ -69,14 +70,20 @@ class LegacyRoutingListenerTest extends TestCase
 
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('trans')
             ->with('tl_page.legacyRouting', [], 'contao_tl_page')
             ->willReturn('disabled')
         ;
 
         $listener = new LegacyRoutingListener($framework, $translator);
-        $listener->renderHelpIcon();
+        $listener->disableRoutingFields();
+
+        $this->assertInstanceOf(\Closure::class, $GLOBALS['TL_DCA']['tl_page']['fields']['urlPrefix']['xlabel'][0]);
+        $this->assertInstanceOf(\Closure::class, $GLOBALS['TL_DCA']['tl_page']['fields']['urlSuffix']['xlabel'][0]);
+
+        $this->assertSame('<img src="show.svg" alt="" title="disabled">', $GLOBALS['TL_DCA']['tl_page']['fields']['urlPrefix']['xlabel'][0]());
+        $this->assertSame('<img src="show.svg" alt="" title="disabled">', $GLOBALS['TL_DCA']['tl_page']['fields']['urlSuffix']['xlabel'][0]());
     }
 
     public function testOverridesTheUrlPrefixWithPrependLocale(): void
