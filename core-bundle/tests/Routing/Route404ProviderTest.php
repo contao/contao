@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Routing;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
+use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Routing\Route404Provider;
 use Contao\CoreBundle\Routing\RouteFactory;
 use Contao\CoreBundle\Tests\TestCase;
@@ -20,6 +21,7 @@ use Contao\Model\Collection;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bundle\FrameworkBundle\Controller\RedirectController;
 use Symfony\Cmf\Component\Routing\Candidates\Candidates;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -66,39 +68,84 @@ class Route404ProviderTest extends TestCase
 
     public function testGetRoutesByNamesWithoutValueReturnsAllRoutes(): void
     {
-        /** @var PageModel&MockObject $page */
-        $page = $this->mockClassWithProperties(PageModel::class);
-        $page->id = 17;
-        $page->rootId = 1;
+        /** @var PageModel&MockObject $notFoundPage */
+        $notFoundPage = $this->mockClassWithProperties(
+            PageModel::class,
+            [
+                'id' => 2,
+                'type' => 'error_404',
+                'urlPrefix' => '',
+                'urlSuffix' => '.html',
+                'rootId' => 1,
+            ]
+        );
 
-        $pageAdapter = $this->mockAdapter(['findByType']);
+        /** @var PageModel&MockObject $otherPage */
+        $otherPage = $this->mockClassWithProperties(
+            PageModel::class,
+            [
+                'id' => 3,
+                'type' => 'regular',
+                'alias' => 'foo',
+                'urlPrefix' => 'en',
+                'urlSuffix' => '.html',
+                'rootId' => 1,
+            ]
+        );
+
+        $otherPageRoute = new PageRoute($otherPage);
+
+        $pageAdapter = $this->mockAdapter(['findByType', 'findAll']);
         $pageAdapter
             ->expects($this->once())
             ->method('findByType')
             ->with('error_404')
-            ->willReturn(new Collection([$page], 'tl_page'))
+            ->willReturn(new Collection([$notFoundPage], 'tl_page'))
+        ;
+
+        $pageAdapter
+            ->expects($this->once())
+            ->method('findAll')
+            ->willReturn(new Collection([$otherPage], 'tl_page'))
         ;
 
         $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
 
         $candidates = $this->createMock(Candidates::class);
-//        $candidates
-//            ->expects($this->once())
-//            ->method('getCandidates')
-//            ->willReturn([])
-//        ;
+        $candidates
+            ->expects($this->never())
+            ->method('getCandidates')
+        ;
+
+        $routeFactory = $this->createMock(RouteFactory::class);
+        $routeFactory
+            ->expects($this->once())
+            ->method('createRouteForPage')
+            ->with($otherPage)
+            ->willReturn($otherPageRoute)
+        ;
 
         $provider = new Route404Provider(
             $framework,
             $this->createMock(Connection::class),
             $candidates,
-            $this->createMock(RouteFactory::class)
+            $routeFactory
         );
 
-        $result = $provider->getRoutesByNames(null);
+        $routes = $provider->getRoutesByNames(null);
 
-        $this->assertIsArray($result);
-        $this->assertCount(1, $result);
+        $this->assertIsArray($routes);
+        $this->assertCount(2, $routes);
+
+        $this->assertArrayHasKey('tl_page.2.error_404', $routes);
+        $this->assertArrayHasKey('tl_page.3.locale', $routes);
+
+        /** @var Route $route */
+        $route = $routes['tl_page.3.locale'];
+        $this->assertInstanceOf(Route::class, $route);
+        $this->assertSame(RedirectController::class, $route->getDefault('_controller'));
+        $this->assertSame('/en/foo.html', $route->getDefault('path'));
+        $this->assertTrue($route->getDefault('permanent'));
     }
 
     public function testDoesNotCheckCandidatesForEmptyPath(): void
@@ -257,31 +304,6 @@ class Route404ProviderTest extends TestCase
         $this->assertSame(['https'], $route->getSchemes());
         $this->assertSame('/de/{_url_fragment}', $route->getPath());
     }
-
-//    public function testLocale()
-//    {
-//        $this->assertArrayHasKey('tl_page.'.$pageModel->id.'.locale', $collection->all());
-//        $route = $collection->get('tl_page.'.$pageModel->id.'.locale');
-//
-//        $this->assertInstanceOf(Route::class, $route);
-//        $this->assertSame('(/.+)?', $route->getRequirement('parameters'));
-//        $this->assertSame('/foo/bar', $route->getDefault('parameters'));
-//        $this->assertTrue($route->getOption('utf8'));
-//        $this->assertSame($domain, $route->getHost());
-//
-//        if ('https' === $scheme) {
-//            $this->assertSame(['https'], $route->getSchemes());
-//        } else {
-//            $this->assertSame([], $route->getSchemes());
-//        }
-//
-//        $this->assertSame('/'.$alias.'{parameters}'.$urlSuffix, $route->getPath());
-//        $this->assertSame(RedirectController::class.'::urlRedirectAction', $route->getDefault('_controller'));
-//        $this->assertTrue($route->getDefault('permanent'));
-//
-//        // It's correct to test for the language twice here: the prefix is added *to the current request URL*
-//        $this->assertSame('/'.$language.'/'.$language.'/foo/bar'.$urlSuffix, $route->getDefault('path'));
-//    }
 
     /**
      * @dataProvider sortRoutesProvider

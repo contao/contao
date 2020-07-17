@@ -72,7 +72,14 @@ class Route404Provider implements RouteProviderInterface
     {
         // Support console and web inspector profiling
         if (null === $names) {
-            return $this->getNotFoundRoutes();
+            $routes = array_merge(
+                $this->getNotFoundRoutes(),
+                $this->getLocaleFallbackRoutes()
+            );
+
+            $this->sortRoutes($routes);
+
+            return $routes;
         }
 
         return [];
@@ -147,14 +154,22 @@ class Route404Provider implements RouteProviderInterface
         );
     }
 
-    private function getLocaleFallbackRoutes(Request $request): array
+    private function getLocaleFallbackRoutes(Request $request = null): array
     {
-        if ('/' === $request->getPathInfo()) {
+        if (null !== $request && '/' === $request->getPathInfo()) {
             return [];
         }
 
         $routes = [];
-        $pages = $this->findCandidatePages($request);
+
+        if (null === $request) {
+            /** @var PageModel $pageAdapter */
+            $pageAdapter = $this->framework->getAdapter(PageModel::class);
+
+            $pages = $pageAdapter->findAll();
+        } else {
+            $pages = $this->findCandidatePages($request);
+        }
 
         foreach ($pages as $page) {
             $route = $this->routeFactory->createRouteForPage($page);
@@ -192,7 +207,7 @@ class Route404Provider implements RouteProviderInterface
         }
 
         $redirect->addDefaults([
-            '_controller' => RedirectController::class.'::urlRedirectAction',
+            '_controller' => RedirectController::class,
             'path' => $path,
             'permanent' => true,
         ]);
