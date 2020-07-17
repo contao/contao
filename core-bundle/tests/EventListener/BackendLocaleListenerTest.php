@@ -95,7 +95,7 @@ class BackendLocaleListenerTest extends TestCase
         $security
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($security)
+            ->willReturn(null)
         ;
 
         $request = $this->createMock(Request::class);
