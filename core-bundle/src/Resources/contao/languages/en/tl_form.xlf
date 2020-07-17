@@ -30,7 +30,7 @@
         <source>Mailer transport</source>
       </trans-unit>
       <trans-unit id="tl_form.mailerTransport.1">
-        <source>Here you can override which mailer transport is used for any e-mails sent by this form.</source>
+        <source>Here you can override the mailer transport used to send the form via e-mail.</source>
       </trans-unit>
       <trans-unit id="tl_form.recipient.0">
         <source>Recipient address</source>

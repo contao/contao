@@ -102,7 +102,7 @@
         <source>Mailer transport</source>
       </trans-unit>
       <trans-unit id="tl_page.mailerTransport.1">
-        <source>Here you can override which mailer transport is used for any e-mails sent on this website.</source>
+        <source>Here you can override the mailer transport used to send e-mails on this website.</source>
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.0">
         <source>E-mail address of the website administrator</source>
