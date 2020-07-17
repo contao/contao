@@ -91,6 +91,8 @@ use Contao\CoreBundle\Image\ImageSizes;
 use Contao\CoreBundle\Image\LegacyResizer;
 use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\CoreBundle\Mailer\AvailableTransports;
+use Contao\CoreBundle\Mailer\ContaoMailer;
 use Contao\CoreBundle\Menu\BackendMenuBuilder;
 use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\Version409\CeAccessMigration;
@@ -2059,6 +2061,45 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 new Reference('contao.image.resizer'),
                 new Reference('contao.image.resize_calculator', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+            ],
+            $definition->getArguments()
+        );
+    }
+
+    public function testRegistersTheAvailableTransports(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $this->assertTrue($container->has(AvailableTransports::class));
+
+        $definition = $container->getDefinition(AvailableTransports::class);
+
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('translator', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+            ],
+            $definition->getArguments()
+        );
+    }
+
+    public function testRegistersTheContaoMailer(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $this->assertTrue($container->has(ContaoMailer::class));
+
+        $definition = $container->getDefinition(ContaoMailer::class);
+
+        $this->assertTrue($definition->isPrivate());
+        $this->assertSame('mailer', $definition->getDecoratedService()[0]);
+
+        $this->assertEquals(
+            [
+                new Reference('Contao\CoreBundle\Mailer\ContaoMailer.inner'),
+                new Reference(AvailableTransports::class),
+                new Reference('request_stack'),
             ],
             $definition->getArguments()
         );

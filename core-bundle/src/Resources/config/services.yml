@@ -345,6 +345,17 @@ services:
         tags:
             - { name: container.service_subscriber, id: contao.assets.files_context }
 
+    Contao\CoreBundle\Mailer\AvailableTransports:
+        arguments:
+            - '@?translator'
+
+    Contao\CoreBundle\Mailer\ContaoMailer:
+        decorates: mailer
+        arguments:
+            - '@Contao\CoreBundle\Mailer\ContaoMailer.inner'
+            - '@Contao\CoreBundle\Mailer\AvailableTransports'
+            - '@request_stack'
+
     contao.menu.backend_menu_builder:
         class: Contao\CoreBundle\Menu\BackendMenuBuilder
         arguments:

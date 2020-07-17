@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddAssetsPackagesPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\AddAvailableTransportsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddCronJobsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
@@ -67,6 +68,7 @@ class ContaoCoreBundleTest extends TestCase
             SearchIndexerPass::class,
             CrawlerPass::class,
             AddCronJobsPass::class,
+            AddAvailableTransportsPass::class,
         ];
 
         $security = $this->createMock(SecurityExtension::class);

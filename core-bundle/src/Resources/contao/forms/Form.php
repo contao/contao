@@ -445,6 +445,12 @@ class Form extends Hybrid
 			$uploaded = trim($uploaded) != '' ? "\n\n---\n" . $uploaded : '';
 			$email->text = StringUtil::decodeEntities(trim($message)) . $uploaded . "\n\n";
 
+			// Set the transport
+			if (!empty($this->mailerTransport))
+			{
+				$email->addHeader('X-Transport', $this->mailerTransport);
+			}
+
 			// Send the e-mail
 			$email->sendTo($recipients);
 		}
