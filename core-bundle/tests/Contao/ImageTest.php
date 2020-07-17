@@ -835,12 +835,16 @@ class ImageTest extends TestCase
         $this->assertSame($imageObj->getTargetHeight(), 0);
         $imageObj->setTargetHeight(20);
         $this->assertSame($imageObj->getTargetHeight(), 20);
+
+        /* @phpstan-ignore-next-line  */
         $imageObj->setTargetHeight(50.125);
         $this->assertSame($imageObj->getTargetHeight(), 50);
 
         $this->assertSame($imageObj->getTargetWidth(), 0);
         $imageObj->setTargetWidth(20);
         $this->assertSame($imageObj->getTargetWidth(), 20);
+
+        /* @phpstan-ignore-next-line  */
         $imageObj->setTargetWidth(50.125);
         $this->assertSame($imageObj->getTargetWidth(), 50);
 
@@ -1001,7 +1005,11 @@ class ImageTest extends TestCase
     public function testDoesNotFactorImagesInTheLegacyMethodIfTheArgumentIsInvalid(): void
     {
         $this->assertNull(Image::get('', 100, 100));
+
+        /* @phpstan-ignore-next-line  */
         $this->assertNull(Image::get(0, 100, 100));
+
+        /* @phpstan-ignore-next-line  */
         $this->assertNull(Image::get(null, 100, 100));
     }
 

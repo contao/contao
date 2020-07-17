@@ -40,6 +40,7 @@ abstract class AbstractController extends SymfonyAbstractController implements S
             return;
         }
 
+        /* @phpstan-ignore-next-line  */
         $this->get('fos_http_cache.http.symfony_response_tagger')->addTags($tags);
     }
 }

@@ -111,6 +111,9 @@ class ImageFactory implements ImageFactoryInterface
         $this->predefinedSizes = $predefinedSizes;
     }
 
+    /**
+     * @param int|array|string|ResizeConfiguration|null $size
+     */
     public function create($path, $size = null, $options = null): ImageInterface
     {
         if (null !== $options && !\is_string($options) && !$options instanceof ResizeOptions) {

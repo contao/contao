@@ -275,7 +275,7 @@
             "vendor/bin/monorepo-tools composer-json --validate --ansi"
         ],
         "phpstan": [
-            "vendor/bin/phpstan analyze core-bundle/src core-bundle/tests --level=4 --memory-limit=1G --ansi"
+            "vendor/bin/phpstan analyze core-bundle/src core-bundle/tests --level=5 --memory-limit=1G --ansi"
         ],
         "psalm": [
             "vendor/bin/psalm --no-suggestions --threads=4"

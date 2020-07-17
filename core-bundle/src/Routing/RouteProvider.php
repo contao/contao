@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Routing;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\Model;
 use Contao\Model\Collection;
 use Contao\PageModel;
 use Contao\System;
@@ -458,7 +457,7 @@ class RouteProvider implements RouteProviderInterface
     }
 
     /**
-     * @return array<Model>
+     * @return array<PageModel>
      */
     private function findPages(array $candidates): array
     {
@@ -491,11 +490,12 @@ class RouteProvider implements RouteProviderInterface
             return [];
         }
 
+        /** @var array<PageModel> */
         return $pages->getModels();
     }
 
     /**
-     * @return array<Model>
+     * @return array<PageModel>
      */
     private function findRootPages(string $httpHost): array
     {
@@ -523,12 +523,14 @@ class RouteProvider implements RouteProviderInterface
         $pages = $pageModel->findBy(["(tl_page.type='root' AND (tl_page.dns=? OR tl_page.dns=''))"], $httpHost);
 
         if ($pages instanceof Collection) {
+            /** @var array<PageModel> $rootPages */
             $rootPages = $pages->getModels();
         }
 
         $pages = $pageModel->findBy(["tl_page.alias='index' OR tl_page.alias='/'"], null);
 
         if ($pages instanceof Collection) {
+            /** @var array<PageModel> $indexPages */
             $indexPages = $pages->getModels();
         }
 

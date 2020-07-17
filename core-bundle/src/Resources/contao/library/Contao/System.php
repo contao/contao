@@ -367,9 +367,9 @@ abstract class System
 	/**
 	 * Load a set of language files
 	 *
-	 * @param string  $strName     The table name
-	 * @param boolean $strLanguage An optional language code
-	 * @param boolean $blnNoCache  If true, the cache will be bypassed
+	 * @param string      $strName     The table name
+	 * @param string|null $strLanguage An optional language code
+	 * @param boolean     $blnNoCache  If true, the cache will be bypassed
 	 */
 	public static function loadLanguageFile($strName, $strLanguage=null, $blnNoCache=false)
 	{

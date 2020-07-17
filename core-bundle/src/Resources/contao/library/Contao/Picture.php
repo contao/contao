@@ -64,7 +64,7 @@ class Picture
 	/**
 	 * The image size items collection
 	 *
-	 * @var ImageSizeItemModel[]|Collection
+	 * @var array<ImageSizeItemModel|object>|Collection
 	 */
 	protected $imageSizeItems = array();
 
@@ -194,7 +194,7 @@ class Picture
 	/**
 	 * Set the image size items collection
 	 *
-	 * @param ImageSizeItemModel[]|Collection $imageSizeItems The image size items collection
+	 * @param array<ImageSizeItemModel|object>|Collection $imageSizeItems The image size items collection
 	 *
 	 * @return $this The picture object
 	 */

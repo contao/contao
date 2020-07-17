@@ -164,6 +164,10 @@ class UrlGenerator implements UrlGeneratorInterface
      */
     private function addHostToContext(RequestContext $context, array $parameters, int &$referenceType): void
     {
+        /**
+         * @var string   $host
+         * @var int|null $port
+         */
         [$host, $port] = $this->getHostAndPort($parameters['_domain']);
 
         if ($context->getHost() === $host) {
@@ -187,12 +191,14 @@ class UrlGenerator implements UrlGeneratorInterface
     /**
      * Extracts host and port from the domain.
      *
-     * @return array<(string|null)>
+     * @return array<string|int|null>
      */
     private function getHostAndPort(string $domain): array
     {
         if (false !== strpos($domain, ':')) {
-            return explode(':', $domain, 2);
+            [$host, $port] = explode(':', $domain, 2);
+
+            return [$host, (int) $port];
         }
 
         return [$domain, null];

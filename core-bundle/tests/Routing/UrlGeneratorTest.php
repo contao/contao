@@ -242,6 +242,7 @@ class UrlGeneratorTest extends TestCase
 
     public function testHandlesNonArrayParameters(): void
     {
+        /* @phpstan-ignore-next-line  */
         $this
             ->getUrlGenerator($this->mockRouterWithContext(['alias' => 'foo']))
             ->generate('foo', 'bar')

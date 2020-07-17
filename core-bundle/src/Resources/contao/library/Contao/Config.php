@@ -363,7 +363,7 @@ class Config
 	 *
 	 * @param string $strKey The short key
 	 *
-	 * @return mixed|null The configuration value
+	 * @return mixed The configuration value
 	 */
 	public static function get($strKey)
 	{
@@ -374,7 +374,7 @@ class Config
 	 * Temporarily set a configuration value
 	 *
 	 * @param string $strKey   The short key
-	 * @param string $varValue The configuration value
+	 * @param mixed  $varValue The configuration value
 	 */
 	public static function set($strKey, $varValue)
 	{

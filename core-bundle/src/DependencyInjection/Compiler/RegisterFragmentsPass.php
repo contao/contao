@@ -68,7 +68,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
         $command = $container->findDefinition('contao.command.debug_fragments');
 
         foreach ($this->findAndSortTaggedServices($tag, $container) as $reference) {
-            $definition = $container->findDefinition($reference);
+            $definition = $container->findDefinition((string) $reference);
             $definition->setPublic(true);
 
             $tags = $definition->getTag($tag);
