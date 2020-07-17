@@ -18,12 +18,21 @@ use Symfony\Component\Routing\Route;
 
 class ContentRouteNotFoundException extends RouteNotFoundException
 {
+    private $content;
+
     public function __construct($content, $code = 0, \Throwable $previous = null)
     {
-        parent::__construct('No route found for '.static::getRouteDebugMessage($content), $code, $previous);
+        parent::__construct('No route found for '.$this->getRouteDebugMessage($content), $code, $previous);
+
+        $this->content = $content;
     }
 
-    public static function getRouteDebugMessage($content): string
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    private function getRouteDebugMessage($content): string
     {
         if (is_scalar($content)) {
             return $content;
@@ -45,6 +54,6 @@ class ContentRouteNotFoundException extends RouteNotFoundException
             return \get_class($content);
         }
 
-        return 'null route';
+        return 'unknown route';
     }
 }

@@ -39,7 +39,7 @@ class FilterPageTypeEvent
 
     public function getOptions(): array
     {
-        return $this->options;
+        return array_values($this->options);
     }
 
     public function setOptions(array $options): self
