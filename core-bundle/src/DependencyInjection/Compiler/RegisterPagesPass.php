@@ -17,7 +17,6 @@ use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRouteEnhancerInterface;
 use Contao\CoreBundle\Routing\Page\RouteConfig;
 use Contao\FrontendIndex;
-use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\PriorityTaggedServiceTrait;
 use Symfony\Component\DependencyInjection\Container;
@@ -46,9 +45,6 @@ class RegisterPagesPass implements CompilerPassInterface
         $this->registerPages($container);
     }
 
-    /**
-     * @throws InvalidConfigurationException
-     */
     protected function registerPages(ContainerBuilder $container): void
     {
         $registry = $container->findDefinition(PageRegistry::class);

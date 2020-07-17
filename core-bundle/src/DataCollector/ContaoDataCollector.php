@@ -103,7 +103,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         return $data;
     }
 
-    public function getLegacyRouting()
+    public function getLegacyRouting(): array
     {
         return $this->getData('legacy_routing');
     }

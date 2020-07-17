@@ -340,25 +340,16 @@ abstract class Template extends Controller
 	 */
 	public function route($strName, $arrParams=array())
 	{
+		if (!is_string($strName))
+		{
+			$arrParams[PageRoute::CONTENT_PARAMETER] = $strName;
+			$strName = PageRoute::ROUTE_NAME;
+		}
+
 		$strUrl = System::getContainer()->get('router')->generate($strName, $arrParams);
 		$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
 
 		return StringUtil::ampersand($strUrl);
-	}
-
-	/**
-	 * Return a content route relative to the base URL
-	 *
-	 * @param mixed $objContent The content
-	 * @param array $arrParams  The route parameters
-	 *
-	 * @return string The route
-	 */
-	public function contentRoute($objContent, $arrParams=array())
-	{
-		$arrParams[PageRoute::CONTENT_PARAMETER] = $objContent;
-
-		return $this->route(PageRoute::ROUTE_NAME, $arrParams);
 	}
 
 	/**
@@ -371,6 +362,12 @@ abstract class Template extends Controller
 	 */
 	public function previewRoute($strName, $arrParams=array())
 	{
+		if (!is_string($strName))
+		{
+			$arrParams[PageRoute::CONTENT_PARAMETER] = $strName;
+			$strName = PageRoute::ROUTE_NAME;
+		}
+
 		$container = System::getContainer();
 
 		if (!$previewScript = $container->getParameter('contao.preview_script'))
@@ -389,21 +386,6 @@ abstract class Template extends Controller
 		$context->setBaseUrl('');
 
 		return StringUtil::ampersand($strUrl);
-	}
-
-	/**
-	 * Return the preview content route
-	 *
-	 * @param mixed $objContent The content
-	 * @param array $arrParams  The route parameters
-	 *
-	 * @return string The route
-	 */
-	public function previewContentRoute($objContent, $arrParams = array())
-	{
-		$arrParams[PageRoute::CONTENT_PARAMETER] = $objContent;
-
-		return $this->previewRoute(PageRoute::ROUTE_NAME, $arrParams);
 	}
 
 	/**

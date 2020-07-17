@@ -10,10 +10,10 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\ContentRouting\PageRoute;
 use Contao\CoreBundle\Exception\LegacyRoutingException;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Search\Document;
 use Psr\Log\LogLevel;
 use Symfony\Component\HttpFoundation\Request;
@@ -71,7 +71,7 @@ abstract class Frontend extends Controller
 
 		if (!System::getContainer()->getParameter('contao.legacy_routing'))
 		{
-			throw new LegacyRoutingException('Frontend::getPageIdFromUrl() requires legacy routing. Configure "prepend_locale" or "url_suffix" in the Contao bundle.');
+			throw new LegacyRoutingException('Frontend::getPageIdFromUrl() requires legacy routing. Configure "prepend_locale" or "url_suffix" in your app configuration (e.g. config.yml).');
 		}
 
 		$strRequest = Environment::get('relativeRequest');
