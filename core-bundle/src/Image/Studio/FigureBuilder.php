@@ -76,7 +76,7 @@ class FigureBuilder
      *
      * @phpcsSuppress SlevomatCodingStandard.Classes.UnusedPrivateElements
      *
-     * @var mixed|null
+     * @var int|string|array|PictureConfiguration|null
      */
     private $sizeConfiguration;
 
