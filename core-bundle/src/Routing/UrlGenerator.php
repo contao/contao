@@ -18,10 +18,6 @@ use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
 
-/**
- * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.0; use
- *             the Symfony router instead.
- */
 class UrlGenerator implements UrlGeneratorInterface
 {
     /**

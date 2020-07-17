@@ -14,11 +14,6 @@ namespace Contao\CoreBundle\Routing\Candidates;
 
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * @internal
- *
- * @deprecated
- */
 class LegacyCandidates extends AbstractCandidates
 {
     /**
@@ -26,6 +21,9 @@ class LegacyCandidates extends AbstractCandidates
      */
     private $prependLocale;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.routing.candidates" service instead
+     */
     public function __construct(bool $prependLocale, string $urlSuffix)
     {
         parent::__construct([], [$urlSuffix]);

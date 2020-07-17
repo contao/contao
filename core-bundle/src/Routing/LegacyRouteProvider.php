@@ -18,11 +18,6 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-/**
- * @internal
- *
- * @deprecated
- */
 class LegacyRouteProvider implements RouteProviderInterface
 {
     /**
@@ -30,6 +25,9 @@ class LegacyRouteProvider implements RouteProviderInterface
      */
     private $frontendLoader;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.routing.legacy_route_provider" service instead
+     */
     public function __construct(FrontendLoader $frontendLoader)
     {
         $this->frontendLoader = $frontendLoader;

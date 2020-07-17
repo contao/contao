@@ -17,10 +17,6 @@ use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-/**
- * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.0; use
- *             Symfony routing instead.
- */
 class FrontendLoader extends Loader
 {
     /**
