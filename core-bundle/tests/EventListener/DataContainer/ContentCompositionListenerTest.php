@@ -314,10 +314,28 @@ class ContentCompositionListenerTest extends TestCase
         $this->listener->generateArticleForPage($dc);
     }
 
-    public function testDoesNotGenerateArticleIfRequestDoesNotHaveASession(): void
+    public function testDoesNotGenerateArticleWithoutBackendUser(): void
     {
-        $this->expectRequest(false);
-        $this->expectUser();
+        $request = $this->createMock(Request::class);
+        $request
+            ->expects($this->never())
+            ->method('hasSession')
+        ;
+
+        $this->requestStack
+            ->expects($this->once())
+            ->method('getCurrentRequest')
+            ->willReturn($request)
+        ;
+
+        /** @var FrontendUser&MockObject $user */
+        $user = $this->mockClassWithProperties(FrontendUser::class, ['id' => 1]);
+
+        $this->security
+            ->expects($this->atLeastOnce())
+            ->method('getUser')
+            ->willReturn($user)
+        ;
 
         $this->framework
             ->expects($this->never())
@@ -330,18 +348,10 @@ class ContentCompositionListenerTest extends TestCase
         $this->listener->generateArticleForPage($dc);
     }
 
-    public function testDoesNotGenerateArticleWithoutBackendUser(): void
+    public function testDoesNotGenerateArticleIfRequestDoesNotHaveASession(): void
     {
-        $this->expectRequest(true);
-
-        /** @var FrontendUser&MockObject $user */
-        $user = $this->mockClassWithProperties(FrontendUser::class, ['id' => 1]);
-
-        $this->security
-            ->expects($this->atLeastOnce())
-            ->method('getUser')
-            ->willReturn($user)
-        ;
+        $this->expectRequest(false);
+        $this->expectUser();
 
         $this->framework
             ->expects($this->never())
