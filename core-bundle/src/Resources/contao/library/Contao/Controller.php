@@ -13,13 +13,20 @@ namespace Contao;
 use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
+use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\CoreBundle\File\MetaData;
+use Contao\CoreBundle\Image\Studio\FigureBuilder;
+use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\CoreBundle\Monolog\ContaoContext as ContaoMonologContext;
 use Contao\CoreBundle\Util\SimpleTokenParser;
 use Contao\Database\Result;
 use Contao\Image\PictureConfiguration;
 use Contao\Model\Collection;
+use Imagine\Image\BoxInterface;
 use League\Uri\Components\Query;
+use Psr\Log\LogLevel;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\Glob;
 
@@ -1516,303 +1523,219 @@ abstract class Controller extends System
 	/**
 	 * Add an image to a template
 	 *
-	 * @param object     $objTemplate   The template object to add the image to
-	 * @param array      $arrItem       The element or module as array
-	 * @param integer    $intMaxWidth   An optional maximum width of the image
-	 * @param string     $strLightboxId An optional lightbox ID
-	 * @param FilesModel $objModel      An optional files model
+	 * @param object          $template                The template object to add the image to
+	 * @param array           $rowData                 The element or module as array
+	 * @param integer|null    $maxWidth                An optional maximum width of the image
+	 * @param string|null     $lightBoxGroupIdentifier An optional lightbox group identifier
+	 * @param FilesModel|null $filesModel              An optional files model
 	 */
-	public static function addImageToTemplate($objTemplate, $arrItem, $intMaxWidth=null, $strLightboxId=null, FilesModel $objModel=null)
+	public static function addImageToTemplate($template, array $rowData, $maxWidth = null, $lightBoxGroupIdentifier = null, FilesModel $filesModel = null): void
 	{
-		try
+		// Helper: Create MetaData from the specified row data
+		$createMetaDataOverwriteFromRowData = static function (bool $interpretAsContentModel) use ($rowData)
 		{
-			$objFile = new File($arrItem['singleSRC']);
-		}
-		catch (\Exception $e)
-		{
-			$objFile = null;
-		}
-
-		$imgSize = $objFile ? $objFile->imageSize : false;
-		$size = StringUtil::deserialize($arrItem['size']);
-
-		if (is_numeric($size))
-		{
-			$size = array(0, 0, (int) $size);
-		}
-		elseif (!$size instanceof PictureConfiguration)
-		{
-			if (!\is_array($size))
+			if ($interpretAsContentModel)
 			{
-				$size = array();
+				/** @var ContentModel $contentModel */
+				$contentModel = (new \ReflectionClass(ContentModel::class))->newInstanceWithoutConstructor();
+
+				// This will be null if "overwriteMeta" is not set
+				return $contentModel->setRow($rowData)->getOverwriteMetaData();
 			}
 
-			$size += array(0, 0, 'crop');
-		}
+			// Manually create meta data that always contains certain properties (BC)
+			return new MetaData(array(
+				MetaData::VALUE_ALT => $rowData['alt'] ?? '',
+				MetaData::VALUE_TITLE => $rowData['imageTitle'] ?? '',
+				MetaData::VALUE_URL => self::replaceInsertTags($rowData['imageUrl'] ?? ''),
+				'linkTitle' => $rowData['linkTitle'] ?: '',
+			));
+		};
 
-		if ($intMaxWidth === null)
+		// Helper: Create fallback template data with (mostly) empty fields (used if resource acquisition fails)
+		$createFallBackTemplateData = static function () use ($filesModel, $rowData)
 		{
-			$intMaxWidth = Config::get('maxImageWidth');
-		}
+			$templateData = array(
+				'width' => null,
+				'height' => null,
+				'picture' => array(
+					'img' => array(
+						'src' => '',
+						'srcset' => '',
+					),
+					'sources' => array(),
+					'alt' => '',
+					'title' => '',
+				),
+				'singleSRC' => $rowData['singleSRC'],
+				'src' => '',
+				'linkTitle' => '',
+				'margin' => '',
+				'addImage' => true,
+				'addBefore' => true,
+				'fullsize' => false,
+			);
 
-		$arrMargin = (TL_MODE == 'BE') ? array() : StringUtil::deserialize($arrItem['imagemargin']);
+			if (null !== $filesModel)
+			{
+				// Set empty meta data
+				$templateData = array_replace_recursive(
+					$templateData,
+					array(
+						'alt' => '',
+						'caption' => '',
+						'imageTitle' => '',
+						'imageUrl' => '',
+					)
+				);
+			}
 
-		// Store the original dimensions
-		$objTemplate->width = $imgSize[0];
-		$objTemplate->height = $imgSize[1];
+			return $templateData;
+		};
 
-		// Adjust the image size
-		if ($intMaxWidth > 0)
+		// Helper: Get size and margins and handle legacy $maxWidth option
+		$getSizeAndMargin = static function () use ($rowData, $maxWidth)
 		{
+			$size = $rowData['size'] ?? null;
+			$margin = StringUtil::deserialize($rowData['imagemargin'] ?? null);
+			$maxWidth = (int) ($maxWidth ?? Config::get('maxImageWidth'));
+
+			if (0 === $maxWidth)
+			{
+				return array($size, $margin);
+			}
+
 			@trigger_error('Using a maximum front end width has been deprecated and will no longer work in Contao 5.0. Remove the "maxImageWidth" configuration and use responsive images instead.', E_USER_DEPRECATED);
 
-			// Subtract the margins before deciding whether to resize (see #6018)
-			if (\is_array($arrMargin) && $arrMargin['unit'] == 'px')
+			// Adjust margins if needed
+			if ('px' === ($margin['unit'] ?? null))
 			{
-				$intMargin = (int) $arrMargin['left'] + (int) $arrMargin['right'];
+				$horizontalMargin = (int) ($margin['left'] ?? 0) + (int) ($margin['right'] ?? 0);
 
-				// Reset the margin if it exceeds the maximum width (see #7245)
-				if ($intMaxWidth - $intMargin < 1)
+				if ($maxWidth - $horizontalMargin < 1)
 				{
-					$arrMargin['left'] = '';
-					$arrMargin['right'] = '';
+					$margin['left'] = '';
+					$margin['right'] = '';
 				}
 				else
 				{
-					$intMaxWidth -= $intMargin;
+					$maxWidth -= $horizontalMargin;
 				}
 			}
 
-			if (\is_array($size) && ($size[0] > $intMaxWidth || (!$size[0] && !$size[1] && (!$imgSize[0] || $imgSize[0] > $intMaxWidth))))
+			// Normalize size
+			if ($size instanceof PictureConfiguration)
 			{
-				// See #2268 (thanks to Thyon)
-				$ratio = ($size[0] && $size[1]) ? $size[1] / $size[0] : (($imgSize[0] && $imgSize[1]) ? $imgSize[1] / $imgSize[0] : 0);
-
-				$size[0] = $intMaxWidth;
-				$size[1] = floor($intMaxWidth * $ratio);
+				return array($size, $margin);
 			}
-		}
 
-		$container = System::getContainer();
-
-		try
-		{
-			$projectDir = $container->getParameter('kernel.project_dir');
-			$staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
-			$picture = $container->get('contao.image.picture_factory')->create($projectDir . '/' . $arrItem['singleSRC'], $size);
-
-			$picture = array
-			(
-				'img' => $picture->getImg($projectDir, $staticUrl),
-				'sources' => $picture->getSources($projectDir, $staticUrl)
-			);
-
-			$src = $picture['img']['src'];
-
-			if ($src !== $arrItem['singleSRC'])
+			if (is_numeric($size))
 			{
-				$objFile = new File(rawurldecode($src));
-			}
-		}
-		catch (\Exception $e)
-		{
-			System::log('Image "' . $arrItem['singleSRC'] . '" could not be processed: ' . $e->getMessage(), __METHOD__, TL_ERROR);
-
-			$src = '';
-			$picture = array('img'=>array('src'=>'', 'srcset'=>''), 'sources'=>array());
-		}
-
-		// Image dimensions
-		if ($objFile && ($imgSize = $objFile->imageSize) !== false)
-		{
-			$objTemplate->arrSize = $imgSize;
-			$objTemplate->imgSize = ' width="' . $imgSize[0] . '" height="' . $imgSize[1] . '"';
-		}
-
-		$arrMeta = array();
-
-		// Load the meta data
-		if ($objModel instanceof FilesModel)
-		{
-			if (TL_MODE == 'FE')
-			{
-				global $objPage;
-
-				$arrMeta = Frontend::getMetaData($objModel->meta, $objPage->language);
-
-				if (empty($arrMeta) && $objPage->rootFallbackLanguage !== null)
-				{
-					$arrMeta = Frontend::getMetaData($objModel->meta, $objPage->rootFallbackLanguage);
-				}
+				$size = array(0, 0, (int) $size);
 			}
 			else
 			{
-				$arrMeta = Frontend::getMetaData($objModel->meta, $GLOBALS['TL_LANGUAGE']);
+				$size = (\is_array($size) ? $size : array()) + array(0, 0, 'crop');
+				$size[0] = (int) $size[0];
+				$size[1] = (int) $size[1];
 			}
 
-			self::loadDataContainer('tl_files');
-
-			// Add any missing fields
-			foreach (array_keys($GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']) as $k)
+			// Adjust image size configuration if it exceeds the max width
+			if ($size[0] > 0 && $size[1] > 0)
 			{
-				if (!isset($arrMeta[$k]))
-				{
-					$arrMeta[$k] = '';
-				}
+				list($width, $height) = $size;
+			}
+			else
+			{
+				$container = System::getContainer();
+
+				/** @var BoxInterface $originalSize */
+				$originalSize = $container
+					->get('contao.image.image_factory')
+					->create($container->getParameter('kernel.project_dir') . '/' . $rowData['singleSRC'])
+					->getDimensions()
+					->getSize();
+
+				$width = $originalSize->getWidth();
+				$height = $originalSize->getHeight();
 			}
 
-			$arrMeta['imageTitle'] = $arrMeta['title'];
-			$arrMeta['imageUrl'] = $arrMeta['link'];
-			unset($arrMeta['title'], $arrMeta['link']);
-
-			// Add the meta data to the item
-			if (!$arrItem['overwriteMeta'])
+			if ($width <= $maxWidth)
 			{
-				foreach ($arrMeta as $k=>$v)
-				{
-					switch ($k)
-					{
-						case 'alt':
-						case 'imageTitle':
-							$arrItem[$k] = StringUtil::specialchars($v);
-							break;
+				return array($size, $margin);
+			}
 
-						default:
-							$arrItem[$k] = $v;
-							break;
-					}
-				}
+			$size[0] = $maxWidth;
+			$size[1] = floor($maxWidth * ($height / $width));
+
+			return array($size, $margin);
+		};
+
+		/** @var FigureBuilder $figureBuilder */
+		$figureBuilder = System::getContainer()->get(Studio::class)->createFigureBuilder();
+
+		// Set image resource
+		try
+		{
+			if (null !== $filesModel)
+			{
+				// Make sure model points to the same resource (BC)
+				$filesModel = clone $filesModel;
+				$filesModel->path = $rowData['singleSRC'];
+
+				// Use source + meta data from files model (if not overwritten)
+				$figureBuilder
+					->fromFilesModel($filesModel)
+					->setMetaData($createMetaDataOverwriteFromRowData(true));
+
+				$includeFullMetaData = true;
+			}
+			else
+			{
+				// Always ignore file meta data when building from path (BC)
+				$figureBuilder
+					->fromPath($rowData['singleSRC'], false)
+					->setMetaData($createMetaDataOverwriteFromRowData(false));
+
+				$includeFullMetaData = false;
 			}
 		}
-
-		$picture['alt'] = StringUtil::specialchars($arrItem['alt']);
-
-		// Move the title to the link tag so it is shown in the lightbox
-		if ($arrItem['imageTitle'] && !$arrItem['linkTitle'] && ($arrItem['fullsize'] || $arrItem['imageUrl']))
+		catch (InvalidResourceException $e)
 		{
-			$arrItem['linkTitle'] = $arrItem['imageTitle'];
-			unset($arrItem['imageTitle']);
-		}
-
-		if (isset($arrItem['imageTitle']))
-		{
-			$picture['title'] = StringUtil::specialchars($arrItem['imageTitle']);
-		}
-
-		$objTemplate->picture = $picture;
-
-		// Provide an ID for single lightbox images in HTML5 (see #3742)
-		if ($strLightboxId === null && $arrItem['fullsize'] && $objTemplate instanceof Template && !empty($arrItem['id']))
-		{
-			$strLightboxId = substr(md5($objTemplate->getName() . '_' . $arrItem['id']), 0, 6);
-		}
-
-		// Float image
-		if ($arrItem['floating'])
-		{
-			$objTemplate->floatClass = ' float_' . $arrItem['floating'];
-		}
-
-		// Do not override the "href" key (see #6468)
-		$strHrefKey = ($objTemplate->href != '') ? 'imageHref' : 'href';
-		$lightboxSize = StringUtil::deserialize($arrItem['lightboxSize'] ?? null, true);
-
-		if (!$lightboxSize && $arrItem['fullsize'] && isset($GLOBALS['objPage']->layoutId))
-		{
-			$lightboxSize = StringUtil::deserialize(LayoutModel::findByPk($GLOBALS['objPage']->layoutId)->lightboxSize ?? null, true);
-		}
-
-		// Image link
-		if (TL_MODE == 'FE' && $arrItem['imageUrl'])
-		{
-			$objTemplate->$strHrefKey = $arrItem['imageUrl'];
-			$objTemplate->attributes = '';
-
-			if ($arrItem['fullsize'])
-			{
-				$blnIsExternal = strncmp($arrItem['imageUrl'], 'http://', 7) === 0 || strncmp($arrItem['imageUrl'], 'https://', 8) === 0;
-
-				// Open images in the lightbox
-				if (preg_match('/\.(' . strtr(preg_quote(Config::get('validImageTypes'), '/'), ',', '|') . ')$/i', $arrItem['imageUrl']))
-				{
-					// Do not add the TL_FILES_URL to external URLs (see #4923)
-					if (!$blnIsExternal)
-					{
-						try
-						{
-							$projectDir = $container->getParameter('kernel.project_dir');
-							$staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
-							$picture = $container->get('contao.image.picture_factory')->create($projectDir . '/' . $arrItem['imageUrl'], $lightboxSize);
-
-							$objTemplate->lightboxPicture = array
-							(
-								'img' => $picture->getImg($projectDir, $staticUrl),
-								'sources' => $picture->getSources($projectDir, $staticUrl)
-							);
-
-							$objTemplate->$strHrefKey = $objTemplate->lightboxPicture['img']['src'];
-						}
-						catch (\Exception $e)
-						{
-							$objTemplate->$strHrefKey = static::addFilesUrlTo(System::urlEncode($arrItem['imageUrl']));
-							$objTemplate->lightboxPicture = array('img'=>array('src'=>$objTemplate->$strHrefKey, 'srcset'=>$objTemplate->$strHrefKey), 'sources'=>array());
-						}
-					}
-
-					$objTemplate->attributes = ' data-lightbox="' . $strLightboxId . '"';
-				}
-				else
-				{
-					$objTemplate->attributes = ' target="_blank"';
-
-					if ($blnIsExternal)
-					{
-						$objTemplate->attributes .= ' rel="noreferrer noopener"';
-					}
-				}
-			}
-		}
-
-		// Fullsize view
-		elseif (TL_MODE == 'FE' && $arrItem['fullsize'])
-		{
-			try
-			{
-				$projectDir = $container->getParameter('kernel.project_dir');
-				$staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
-				$picture = $container->get('contao.image.picture_factory')->create($projectDir . '/' . $arrItem['singleSRC'], $lightboxSize);
-
-				$objTemplate->lightboxPicture = array
-				(
-					'img' => $picture->getImg($projectDir, $staticUrl),
-					'sources' => $picture->getSources($projectDir, $staticUrl)
+			System::getContainer()
+				->get('monolog.logger.contao')
+				->log(
+					LogLevel::ERROR,
+					sprintf('Image "%s" could not be processed: %s', $rowData['singleSRC'], $e->getMessage()),
+					array('contao' => new ContaoMonologContext(__METHOD__, 'ERROR'))
 				);
 
-				$objTemplate->$strHrefKey = $objTemplate->lightboxPicture['img']['src'];
-			}
-			catch (\Exception $e)
+			// Fall back to apply a sparse data set instead of failing (BC)
+			foreach ($createFallBackTemplateData() as $key => $value)
 			{
-				$objTemplate->$strHrefKey = static::addFilesUrlTo(System::urlEncode($arrItem['singleSRC']));
-				$objTemplate->lightboxPicture = array('img'=>array('src'=>$objTemplate->$strHrefKey, 'srcset'=>$objTemplate->$strHrefKey), 'sources'=>array());
+				$template->$key = $value;
 			}
 
-			$objTemplate->attributes = ' data-lightbox="' . $strLightboxId . '"';
+			return;
 		}
 
-		// Add the meta data to the template
-		foreach (array_keys($arrMeta) as $k)
-		{
-			$objTemplate->$k = $arrItem[$k];
-		}
+		// Set size and light box configuration
+		list($size, $margin) = $getSizeAndMargin();
 
-		// Do not urlEncode() here because getImage() already does (see #3817)
-		$objTemplate->src = static::addFilesUrlTo($src);
-		$objTemplate->singleSRC = $arrItem['singleSRC'];
-		$objTemplate->linkTitle = StringUtil::specialchars($arrItem['linkTitle'] ?: $arrItem['title']);
-		$objTemplate->fullsize = $arrItem['fullsize'] ? true : false;
-		$objTemplate->addBefore = ($arrItem['floating'] != 'below');
-		$objTemplate->margin = static::generateMargin($arrMargin);
-		$objTemplate->addImage = true;
+		$lightBoxSize = StringUtil::deserialize($rowData['lightboxSize'] ?? null) ?: null;
+
+		$figure = $figureBuilder
+			->setSize($size)
+			->setLightBoxGroupIdentifier($lightBoxGroupIdentifier)
+			->setLightBoxSize($lightBoxSize)
+			->enableLightBox('1' === ($rowData['fullsize'] ?? null))
+			->build();
+
+		// Build result and apply it to the template
+		$figure->applyLegacyTemplateData($template, $margin, $rowData['floating'] ?: null, $includeFullMetaData);
+
+		// Fall back to manually specified link title or empty string if not set (backwards compatibility)
+		$template->linkTitle = $template->linkTitle ?? StringUtil::specialchars($rowData['title'] ?? '');
 	}
 
 	/**

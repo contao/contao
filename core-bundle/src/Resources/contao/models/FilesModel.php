@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\File\MetaData;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
 
@@ -393,6 +394,48 @@ class FilesModel extends Model
 	 */
 	protected function postSave($intType)
 	{
+	}
+
+	/**
+	 * Return the meta fields defined in tl_files.meta.eval.metaFields
+	 */
+	public static function getMetaFields(): array
+	{
+		Controller::loadDataContainer('tl_files');
+
+		return array_keys($GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields'] ?? array());
+	}
+
+	/**
+	 * Return the meta data for this file
+	 *
+	 * Returns the meta data of the first matching locale or null if none was found.
+	 */
+	public function getMetaData(string ...$locales): ?MetaData
+	{
+		$dataCollection = StringUtil::deserialize($this->meta, true);
+
+		foreach ($locales as $locale)
+		{
+			if (!\is_array($data = $dataCollection[$locale] ?? null))
+			{
+				continue;
+			}
+
+			// Make sure we resolve insert tags pointing to files
+			if (isset($data[MetaData::VALUE_URL]))
+			{
+				$data[MetaData::VALUE_URL] = Controller::replaceInsertTags($data[MetaData::VALUE_URL]);
+			}
+
+			// Fill missing meta fields with empty values
+			$metaFields = self::getMetaFields();
+			$data = array_merge(array_combine($metaFields, array_fill(0, \count($metaFields), '')), $data);
+
+			return new MetaData($data);
+		}
+
+		return null;
 	}
 }
 

@@ -23,6 +23,7 @@ use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeOptions;
 use Contao\Image\ResizerInterface;
 use Contao\ImageSizeModel;
+use Contao\StringUtil;
 use Imagine\Image\ImagineInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -148,6 +149,9 @@ class ImageFactory implements ImageFactoryInterface
         }
 
         $targetPath = $options instanceof ResizeOptions ? $options->getTargetPath() : $options;
+
+        // Support arrays in a serialized form
+        $size = StringUtil::deserialize($size);
 
         if ($size instanceof ResizeConfiguration) {
             /** @var ResizeConfiguration $resizeConfig */

@@ -106,6 +106,9 @@ class PictureFactory implements PictureFactoryInterface
             $image = $this->imageFactory->create($path);
         }
 
+        // Support arrays in a serialized form
+        $size = StringUtil::deserialize($size);
+
         if (
             \is_array($size)
             && isset($size[2])

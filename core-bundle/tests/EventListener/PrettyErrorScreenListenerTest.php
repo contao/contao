@@ -23,7 +23,6 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Fixtures\Exception\PageErrorResponseException;
 use Contao\CoreBundle\Tests\TestCase;
 use Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -308,9 +307,6 @@ class PrettyErrorScreenListenerTest extends TestCase
         $this->assertSame(500, $event->getResponse()->getStatusCode());
     }
 
-    /**
-     * @param Environment&MockObject $twig
-     */
     private function getListener(bool $isBackendUser = false, bool $expectLogging = false, Environment $twig = null): PrettyErrorScreenListener
     {
         if (null === $twig) {
