@@ -18,6 +18,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\UserGroupModel;
 use Contao\Validator;
 use Doctrine\DBAL\Connection;
+use Patchwork\Utf8;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
@@ -128,7 +129,7 @@ class UserCreateCommand extends Command
                 throw new \RuntimeException('The password cannot be empty');
             }
 
-            if (grapheme_strlen($value) < $minLength) {
+            if (Utf8::strlen($value) < $minLength) {
                 throw new \RuntimeException(sprintf('Please use at least %d characters.', $minLength));
             }
 
