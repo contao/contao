@@ -12,16 +12,16 @@
     By setting options, the default output can be altered. There are two places
     where this can be done:
 
-      1) By constructing a Studio\Figure object with `$options`
-      2) By passing the `$options` argument to the macros
+      1) By constructing a Studio\Figure object with $options
+      2) By passing the $options argument to the macros
 
      If the same keys are defined in both 1) and 2), the template options
      will have precedence.
 
      Currently, options allow you to extend/overwrite HTML attributes for all
-     tags that are output. Attributes defined under the `attr` key will be
-     placed inside the <figure> tag while those defined under the `%tag%_attr`
-     key will end up inside the `<%tag%>` tag.
+     tags that are output. Attributes defined under the 'attr' key will be
+     placed inside the <figure> tag while those defined under the '%tag%_attr'
+     key will end up inside the <%tag%> tag.
 
      Example:
 
@@ -40,10 +40,10 @@
 
 
 {#
-    Build a `<figure>` including a picture and - if available - a caption from
-    `Studio\Figure` data.
+    Build a <figure> including a picture and - if available - a caption from
+    Studio\Figure data.
 
-    If a link is defined the picture will be wrapped in an `<a>` tag.
+    If a link is defined the picture will be wrapped in an <a> tag.
 #}
 {%- macro figure(figure, options = {}) -%}
     {%- set figure_attributes = figure.options.attr|default({})|merge(options.attr|default({})) %}
@@ -71,9 +71,9 @@
 {%- endmacro -%}
 
 {#
-    Build a `<picture>` from `Studio\Figure` data.
+    Build a <picture> from Studio\Figure data.
 
-    This falls back to only creating a single `<img>` if no sources are present.
+    This falls back to only creating a single <img> if no sources are present.
 #}
 {% macro picture(figure, options = {}) %}
     {%- set picture_attributes = figure.options.picture_attr|default({})|merge(options.picture_attr|default({})) %}
@@ -99,7 +99,7 @@
 {% endmacro %}
 
 {#
-    Build an `<img>` from `Studio\Figure` data.
+    Build an <img> from Studio\Figure data.
 #}
 {%- macro img(figure, options = {}) -%}
     {% apply spaceless %}
@@ -125,7 +125,7 @@
 {%- endmacro -%}
 
 {#
-    Build a `<figcaption>` from `Studio\Figure` data.
+    Build a <figcaption> from Studio\Figure data.
 
     If no meta data is present, nothing will be output.
 #}
