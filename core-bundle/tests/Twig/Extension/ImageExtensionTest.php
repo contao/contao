@@ -25,6 +25,7 @@ class ImageExtensionTest extends TestCase
         $functions = (new ImageExtension())->getFunctions();
 
         $this->assertCount(2, $functions);
+
         [$contaoFigureFn, $pictureConfigurationFn] = $functions;
 
         $node = $this->createMock(Node::class);

@@ -20,7 +20,6 @@ class PictureConfigurationRuntimeTest extends TestCase
     public function testGeneratesEmptyPictureConfiguration(): void
     {
         $runtime = new PictureConfigurationRuntime();
-
         $configuration = $runtime->fromArray([]);
 
         $this->assertSame('', $configuration->getSize()->getDensities());
@@ -78,6 +77,7 @@ class PictureConfigurationRuntimeTest extends TestCase
         ]);
 
         $this->assertCount(2, $configuration->getSizeItems());
+
         [$item1, $item2] = $configuration->getSizeItems();
 
         $this->assertSame('', $item1->getDensities());

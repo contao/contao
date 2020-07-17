@@ -1,20 +1,21 @@
 {#
     Studio Macros
     -------------
-    This collection of twig macros is intended to help you render figure/image
+    This collection of Twig macros is intended to help you render figure/image
     markup directly from a Studio\Figure. You can use these macros as building
-    blocks for your own figure template or render the whole thing and pass some
-    options.
+    blocks for your own figure template or to render the whole thing and pass
+    some options.
 
 
     Options
     -------
-    By setting options, the default output can be altered: There are two places
+    By setting options, the default output can be altered. There are two places
     where this can be done:
-      1) by constructing Studio\Figure with `$options`
-      2) by passing the `options` argument to the macros
 
-     If the same keys are defined in both 1) and 2) the template options
+      1) By constructing a Studio\Figure object with `$options`
+      2) By passing the `$options` argument to the macros
+
+     If the same keys are defined in both 1) and 2), the template options
      will have precedence.
 
      Currently, options allow you to extend/overwrite HTML attributes for all
@@ -23,9 +24,10 @@
      key will end up inside the `<%tag%>` tag.
 
      Example:
+
         {{ _self.figure(figure, {
-         attr: { data-foo: 'a' },
-         figcaption_attr: { class: 'bar' }
+            attr: { data-foo: 'a' },
+            figcaption_attr: { class: 'bar' }
         } }}
 
         :  <figure data-foo="a">
@@ -34,7 +36,6 @@
         :      ...
         :    </figcaption>
         :  </figure>
-
 #}
 
 
@@ -71,6 +72,7 @@
 
 {#
     Build a `<picture>` from `Studio\Figure` data.
+
     This falls back to only creating a single `<img>` if no sources are present.
 #}
 {% macro picture(figure, options = {}) %}
@@ -95,7 +97,6 @@
         {{ _self.img(figure, options) }}
     {%- endif %}
 {% endmacro %}
-
 
 {#
     Build an `<img>` from `Studio\Figure` data.
@@ -123,19 +124,16 @@
     {% endapply %}
 {%- endmacro -%}
 
-
 {#
     Build a `<figcaption>` from `Studio\Figure` data.
+
     If no meta data is present, nothing will be output.
 #}
 {%- macro caption(figure, options = {}) -%}
     {% apply spaceless %}
         {% if figure.hasMetaData and figure.metaData.caption %}
             {% set caption_attributes = figure.options.caption_attr|default({})|merge(options.caption_attr|default({})) %}
-
-            {% set base_attributes = {
-                'itemprop': 'caption'
-            } %}
+            {% set base_attributes = { 'itemprop': 'caption' } %}
             <figcaption{{ _self.html_attributes(base_attributes|merge(caption_attributes)) }}>
                 {{- figure.metaData.caption -}}
             </figcaption>
@@ -143,14 +141,14 @@
     {% endapply %}
 {%- endmacro -%}
 
-
 {#
     Helper: Expand an associative mapping into HTML attributes.
 
-     - Values that are null won't be included.
-     - The output will contain a leading space.
+     - Values that are null won't be included
+     - The output will contain a leading space
 
     Example:
+
         { 'foo': 'a', 'bar': 'b, 'foobar': null } --> ' foo="a" bar="b"'
 #}
 {%- macro html_attributes(attributes) -%}

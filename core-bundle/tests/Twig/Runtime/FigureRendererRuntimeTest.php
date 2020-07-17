@@ -67,7 +67,6 @@ class FigureRendererRuntimeTest extends TestCase
     public function testAllowsDefiningMetaDataAsArray(string $key): void
     {
         $metaData = [MetaData::VALUE_ALT => 'foo'];
-
         $runtime = $this->getRuntime(['setMetaData' => new MetaData($metaData)]);
 
         $this->assertSame('<result>', $runtime->render('resource', null, [$key => [MetaData::VALUE_ALT => 'foo']]));
@@ -96,7 +95,6 @@ class FigureRendererRuntimeTest extends TestCase
         $figure = new Figure($this->createMock(ImageResult::class));
 
         $figureBuilder = $this->createMock(FigureBuilder::class);
-
         $figureBuilder
             ->method('build')
             ->willReturn($figure)
@@ -112,14 +110,12 @@ class FigureRendererRuntimeTest extends TestCase
         }
 
         $studio = $this->createMock(Studio::class);
-
         $studio
             ->method('createFigureBuilder')
             ->willReturn($figureBuilder)
         ;
 
         $twig = $this->createMock(Environment::class);
-
         $twig
             ->method('render')
             ->with($expectedTemplate, ['figure' => $figure])

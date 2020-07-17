@@ -32,8 +32,10 @@ final class PictureConfigurationRuntime implements RuntimeExtensionInterface
     }
 
     /**
-     * Create a picture configuration from an array. This is intended to be
-     * used from within templates where programmatic building isn't available.
+     * Creates a picture configuration from an array.
+     *
+     * This is intended to be used from within templates where programmatic
+     * building is not available.
      */
     public function fromArray(array $config): PictureConfiguration
     {
@@ -55,6 +57,7 @@ final class PictureConfigurationRuntime implements RuntimeExtensionInterface
             },
             $config['items'] ?? []
         );
+
         unset($config['items']);
 
         // Apply remaining data to root config
@@ -80,6 +83,7 @@ final class PictureConfigurationRuntime implements RuntimeExtensionInterface
         if (isset($config['resizeMode'])) {
             $config['mode'] = $config['resizeMode'];
         }
+
         unset($config['zoom'], $config['resizeMode']);
 
         $this->applyConfiguration($pictureConfigurationItem, $config);
