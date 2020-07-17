@@ -81,13 +81,11 @@ class FigureRendererRuntimeTest extends TestCase
 
     public function testFailsWithInvalidConfiguration(): void
     {
+        $runtime = $this->getRuntime();
+
         $this->expectException(NoSuchPropertyException::class);
 
-        $configuration = [
-            'invalid' => 'foobar',
-        ];
-
-        $this->getRuntime()->render(1, null, $configuration);
+        $runtime->render(1, null, ['invalid' => 'foobar']);
     }
 
     private function getRuntime(array $figureBuilderCalls = [], string $expectedTemplate = '@ContaoCore/Image/Studio/figure.html.twig'): FigureRendererRuntime
