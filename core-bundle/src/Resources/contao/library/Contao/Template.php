@@ -340,7 +340,7 @@ abstract class Template extends Controller
 	 */
 	public function route($strName, $arrParams=array())
 	{
-		if (!is_string($strName))
+		if (!\is_string($strName))
 		{
 			$arrParams[PageRoute::CONTENT_PARAMETER] = $strName;
 			$strName = PageRoute::ROUTE_NAME;
@@ -362,7 +362,7 @@ abstract class Template extends Controller
 	 */
 	public function previewRoute($strName, $arrParams=array())
 	{
-		if (!is_string($strName))
+		if (!\is_string($strName))
 		{
 			$arrParams[PageRoute::CONTENT_PARAMETER] = $strName;
 			$strName = PageRoute::ROUTE_NAME;

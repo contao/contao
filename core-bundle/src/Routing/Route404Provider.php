@@ -165,7 +165,6 @@ class Route404Provider implements RouteProviderInterface
         if (null === $request) {
             /** @var PageModel $pageAdapter */
             $pageAdapter = $this->framework->getAdapter(PageModel::class);
-
             $pages = $pageAdapter->findAll();
         } else {
             $pages = $this->findCandidatePages($request);

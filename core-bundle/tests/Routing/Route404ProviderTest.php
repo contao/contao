@@ -227,7 +227,6 @@ class Route404ProviderTest extends TestCase
 
         $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
         $request = $this->mockRequestWithPath('/');
-
         $candidates = $this->createMock(Candidates::class);
 
         $provider = new Route404Provider(
@@ -339,7 +338,6 @@ class Route404ProviderTest extends TestCase
 
         $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
         $request = $this->mockRequestWithPath('/', $languages);
-
         $candidates = $this->createMock(Candidates::class);
 
         $provider = new Route404Provider(
@@ -415,7 +413,6 @@ class Route404ProviderTest extends TestCase
 
         $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
         $request = $this->mockRequestWithPath('/');
-
         $candidates = $this->createMock(Candidates::class);
 
         $provider = new Route404Provider(
