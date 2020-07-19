@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\Controller\Page;
 
 use Contao\CoreBundle\Controller\Page\RootPageController;
 use Contao\CoreBundle\Exception\NoActivePageFoundException;
-use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Routing\Page\CompositionAwareInterface;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Routing\Page\PageRouteEnhancerInterface;
@@ -31,7 +30,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class RootPageControllerTest extends TestCase
 {
     /**
-     * @var Adapter
+     * @var PageModel&MockObject
      */
     private $pageModelAdapter;
 
@@ -52,7 +51,10 @@ class RootPageControllerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->pageModelAdapter = $this->mockAdapter(['findFirstPublishedByPid']);
+        /** @var PageModel&MockObject $pageModelAdapter */
+        $pageModelAdapter = $this->mockAdapter(['findFirstPublishedByPid']);
+        $this->pageModelAdapter = $pageModelAdapter;
+
         $this->connection = $this->createMock(Connection::class);
         $this->router = $this->createMock(UrlGeneratorInterface::class);
 

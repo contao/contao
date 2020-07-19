@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener;
-use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
@@ -66,17 +65,17 @@ class ContentCompositionListenerTest extends TestCase
     private $security;
 
     /**
-     * @var Adapter
+     * @var Image&MockObject
      */
     private $imageAdapter;
 
     /**
-     * @var Adapter
+     * @var Backend&MockObject
      */
     private $backendAdapter;
 
     /**
-     * @var Adapter
+     * @var PageModel&MockObject
      */
     private $pageModelAdapter;
 
@@ -110,9 +109,18 @@ class ContentCompositionListenerTest extends TestCase
         $GLOBALS['TL_DCA']['tl_article']['config']['ptable'] = 'tl_page';
 
         $this->security = $this->createMock(Security::class);
-        $this->imageAdapter = $this->mockAdapter(['getHtml']);
-        $this->backendAdapter = $this->mockAdapter(['addToUrl']);
-        $this->pageModelAdapter = $this->mockAdapter(['findByPk']);
+
+        /** @var Image&MockObject $imageAdapter */
+        $imageAdapter = $this->mockAdapter(['getHtml']);
+        $this->imageAdapter = $imageAdapter;
+
+        /** @var Backend&MockObject $backendAdapter */
+        $backendAdapter = $this->mockAdapter(['addToUrl']);
+        $this->backendAdapter = $backendAdapter;
+
+        /** @var PageModel&MockObject $pageModelAdapter */
+        $pageModelAdapter = $this->mockAdapter(['findByPk']);
+        $this->pageModelAdapter = $pageModelAdapter;
 
         $this->framework = $this->mockContaoFramework([
             Image::class => $this->imageAdapter,
