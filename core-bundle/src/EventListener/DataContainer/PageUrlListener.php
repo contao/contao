@@ -362,7 +362,7 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
                 $this->suffixes = array_column($rows, 'urlSuffix');
             } else {
                 foreach (array_column($rows, 'urlSuffix') as $suffix) {
-                    if (0 === substr_compare($suffix, $urlSuffix, -$suffixLength, null, true)) {
+                    if (0 === substr_compare($suffix, $urlSuffix, -$suffixLength, $suffixLength, true)) {
                         $this->suffixes[] = substr($suffix, 0, -$suffixLength);
                     }
                 }
