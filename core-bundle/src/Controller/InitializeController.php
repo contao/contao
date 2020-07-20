@@ -60,6 +60,10 @@ class InitializeController extends AbstractController
             $realRequest->setSession($masterRequest->getSession());
         }
 
+        if (!\defined('TL_SCRIPT')) {
+            \define('TL_SCRIPT', '');
+        }
+
         // Necessary to generate the correct base path
         foreach (['REQUEST_URI', 'SCRIPT_NAME', 'SCRIPT_FILENAME', 'PHP_SELF'] as $name) {
             $realRequest->server->set(

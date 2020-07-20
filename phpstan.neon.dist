@@ -1,5 +1,4 @@
 includes:
-    - vendor/contao/phpstan/extension.neon
     - vendor/phpstan/phpstan-phpunit/extension.neon
     - vendor/phpstan/phpstan-phpunit/rules.neon
     - vendor/phpstan/phpstan-symfony/extension.neon
@@ -11,14 +10,15 @@ rules:
     - TheCodingMachine\PHPStan\Rules\Exceptions\ThrowMustBundlePreviousExceptionRule
 
 parameters:
-    contao:
-        services_yml_path: %currentWorkingDirectory%/core-bundle/src/Resources/config/services.yml
-
     symfony:
         container_xml_path: %currentWorkingDirectory%/core-bundle/var/cache/phpstan/appContao_CoreBundle_Tests_Functional_app_AppKernelPhpstanDebugContainer.xml
 
     dynamicConstantNames:
         - BE_USER_LOGGED_IN
+
+    universalObjectCratesClasses:
+        - Contao\Model
+        - Contao\Template
 
     excludes_analyse:
         - %currentWorkingDirectory%/core-bundle/src/Resources/*
@@ -34,17 +34,8 @@ parameters:
         - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition::children\(\)\.#'
         - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition::addDefaultsIfNotSet\(\)\.#'
 
-        # Ignore $_SESSION type errors in the lazy session access test
-        - '#Instanceof between array<string, mixed> and Contao\\CoreBundle\\Session\\LazySessionAccess will always evaluate to false\.#'
-
         # Ignore the wrong return type hint of the UrlGeneratorInterface::generate() method
         - '#Method Contao\\CoreBundle\\Picker\\AbstractPickerProvider::generateUrl\(\) never returns null so it can be removed from the return typehint\.#'
-
-        # Ignore constant errors due to bootstrap.php in contao/contao-phpstan (see https://github.com/contao/contao/pull/1451)
-        - message: '#Call to method PHPUnit\\Framework\\Assert::assert(Same|Null|True|InstanceOf)\(\) with .* will always evaluate to false\.#'
-          paths:
-              - %currentWorkingDirectory%/core-bundle/tests/Framework/ContaoFrameworkTest.php
-              - %currentWorkingDirectory%/core-bundle/tests/Doctrine/Schema/DcaSchemaProviderTest.php
 
         # Ignore that $container->get() always returns false (see https://github.com/phpstan/phpstan-symfony/issues/74)
         - message: '#Negated boolean expression is always (false|true)\.#'

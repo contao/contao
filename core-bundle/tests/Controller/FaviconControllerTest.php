@@ -17,6 +17,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\FilesModel;
 use Contao\PageModel;
 use FOS\HttpCache\ResponseTagger;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -68,10 +69,12 @@ class FaviconControllerTest extends TestCase
 
     private function getController(string $iconPath): FaviconController
     {
+        /** @var PageModel&MockObject $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->id = 42;
         $pageModel->favicon = 'favicon-uuid';
 
+        /** @var FilesModel&MockObject $faviconModel */
         $faviconModel = $this->mockClassWithProperties(FilesModel::class);
         $faviconModel->path = $iconPath;
         $faviconModel->extension = substr($iconPath, -3);

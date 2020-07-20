@@ -17,6 +17,7 @@ use Contao\CoreBundle\Mailer\ContaoMailer;
 use Contao\CoreBundle\Mailer\TransportConfig;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Mailer\Mailer;
@@ -29,6 +30,7 @@ class ContaoMailerTest extends TestCase
 {
     public function testSetsTransportForRequest(): void
     {
+        /** @var PageModel&MockObject $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->mailerTransport = 'foobar';
 
