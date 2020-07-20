@@ -25,6 +25,7 @@ use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
  * @Attributes({
  *     @Attribute("value", type = "string"),
  *     @Attribute("parameters", type = "string"),
+ *     @Attribute("urlSuffix", type = "string"),
  *     @Attribute("requirements", type = "array"),
  *     @Attribute("options", type = "array"),
  *     @Attribute("defaults", type = "array"),

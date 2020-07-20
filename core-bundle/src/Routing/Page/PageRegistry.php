@@ -13,10 +13,16 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing\Page;
 
 use Contao\PageModel;
+use Doctrine\DBAL\Connection;
 use Symfony\Component\Routing\Route;
 
 class PageRegistry
 {
+    /**
+     * @var Connection
+     */
+    private $connection;
+
     /**
      * @var array
      */
@@ -31,6 +37,21 @@ class PageRegistry
      * @var array<ContentCompositionInterface|bool>
      */
     private $contentComposition = [];
+
+    /**
+     * @var array<string>
+     */
+    private $urlPrefixes;
+
+    /**
+     * @var array<string>
+     */
+    private $urlSuffixes;
+
+    public function __construct(Connection $connection)
+    {
+        $this->connection = $connection;
+    }
 
     public function getRouteConfig(string $type): RouteConfig
     {
@@ -51,21 +72,6 @@ class PageRegistry
         return $enhancer->enhancePageRoute($route);
     }
 
-    public function getUrlSuffixes(): array
-    {
-        $urlSuffixes = [];
-
-        foreach ($this->routeEnhancers as $enhancer) {
-            $urlSuffixes[] = $enhancer->getUrlSuffixes();
-        }
-
-        if (0 === \count($urlSuffixes)) {
-            return [];
-        }
-
-        return array_unique(array_merge(...$urlSuffixes));
-    }
-
     public function supportsContentComposition(PageModel $pageModel): bool
     {
         if (!isset($this->contentComposition[$pageModel->type])) {
@@ -79,6 +85,26 @@ class PageRegistry
         }
 
         return (bool) $service;
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getUrlPrefixes(): array
+    {
+        $this->initializePrefixAndSuffix();
+
+        return $this->urlPrefixes;
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getUrlSuffixes(): array
+    {
+        $this->initializePrefixAndSuffix();
+
+        return $this->urlSuffixes;
     }
 
     /**
@@ -114,5 +140,40 @@ class PageRegistry
     public function keys(): array
     {
         return array_keys($this->routeConfigs);
+    }
+
+    private function initializePrefixAndSuffix(): void
+    {
+        if (null !== $this->urlPrefixes || null !== $this->urlSuffixes) {
+            return;
+        }
+
+        $results = $this->connection
+            ->query("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'")
+            ->fetchAll()
+        ;
+
+        $urlSuffixes = [
+            array_column($results, 'urlSuffix'),
+            array_filter(array_map(
+                function (RouteConfig $config) {
+                    return $config->getUrlSuffix();
+                },
+                $this->routeConfigs
+            ))
+        ];
+
+        foreach ($this->routeConfigs as $config) {
+            if (null !== ($suffix = $config->getUrlSuffix())) {
+                $urlSuffixes[] = [$suffix];
+            }
+        }
+
+        foreach ($this->routeEnhancers as $enhancer) {
+            $urlSuffixes[] = $enhancer->getUrlSuffixes();
+        }
+
+        $this->urlSuffixes = array_unique(array_merge(...$urlSuffixes));
+        $this->urlPrefixes = array_unique(array_column($results, 'urlPrefix'));
     }
 }

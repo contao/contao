@@ -52,6 +52,6 @@ class LocaleCandidates extends AbstractCandidates
 
         $this->initialized = true;
 
-        $this->setUrlSuffixes($this->pageRegistry->getUrlSuffixes());
+        $this->urlSuffixes = $this->pageRegistry->getUrlSuffixes();
     }
 }

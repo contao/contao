@@ -75,12 +75,7 @@ class PageCandidates extends AbstractCandidates
 
         $this->initialized = true;
 
-        $urlPrefixes = $this->connection
-            ->query("SELECT DISTINCT urlPrefix FROM tl_page WHERE type='root'")
-            ->fetchAll(FetchMode::COLUMN)
-        ;
-
-        $this->setUrlPrefixes($urlPrefixes);
-        $this->setUrlSuffixes($this->pageRegistry->getUrlSuffixes());
+        $this->urlPrefixes = $this->pageRegistry->getUrlPrefixes();
+        $this->urlSuffixes = $this->pageRegistry->getUrlSuffixes();
     }
 }

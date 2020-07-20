@@ -31,12 +31,12 @@ class AbstractCandidates implements CandidatesInterface
     /**
      * @var array
      */
-    private $urlPrefixes;
+    protected $urlPrefixes;
 
     /**
      * @var array
      */
-    private $urlSuffixes;
+    protected $urlSuffixes;
 
     public function __construct(array $urlPrefixes, array $urlSuffixes)
     {
@@ -124,16 +124,6 @@ class AbstractCandidates implements CandidatesInterface
         }
 
         return array_values(array_unique($candidates));
-    }
-
-    protected function setUrlPrefixes(array $urlPrefixes): void
-    {
-        $this->urlPrefixes = $urlPrefixes;
-    }
-
-    protected function setUrlSuffixes(array $urlSuffixes): void
-    {
-        $this->urlSuffixes = $urlSuffixes;
     }
 
     private function addCandidatesFor(string $url, array &$candidates): void

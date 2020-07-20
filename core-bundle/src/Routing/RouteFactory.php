@@ -67,6 +67,10 @@ class RouteFactory
         $route = new PageRoute($pageModel, $pathParameters, $defaults, $requirements, $config->getOptions(), $config->getMethods());
         $route->setContent($content);
 
+        if (null !== $config->getUrlSuffix()) {
+            $route->setUrlSuffix($config->getUrlSuffix());
+        }
+
         return $this->pageRegistry->enhancePageRoute($route);
     }
 

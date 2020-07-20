@@ -42,7 +42,7 @@ class LegacyCandidates extends AbstractCandidates
             return [];
         }
 
-        $this->setUrlPrefixes([$prefix]);
+        $this->urlPrefixes = [$prefix];
 
         return parent::getCandidates($request);
     }

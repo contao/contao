@@ -88,6 +88,7 @@ class RegisterPagesPass implements CompilerPassInterface
             RouteConfig::class,
             [
                 $attributes['parameters'] ?? null,
+                $attributes['urlSuffix'] ?? null,
                 $attributes['requirements'] ?? [],
                 $attributes['options'] ?? [],
                 $defaults,
