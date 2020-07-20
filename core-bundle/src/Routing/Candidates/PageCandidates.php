@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Routing\Candidates;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\FetchMode;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Symfony\Component\HttpFoundation\Request;
 
 class PageCandidates extends AbstractCandidates
@@ -48,20 +49,59 @@ class PageCandidates extends AbstractCandidates
 
         $candidates = parent::getCandidates($request);
 
-        if (\in_array('index', $candidates, true)) {
-            $result = $this->connection->executeQuery(
-                "SELECT IF(alias='', id, alias) FROM tl_page WHERE type='root' AND (dns=:httpHost OR dns='')",
-                ['httpHost' => $request->getHttpHost()]
-            );
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('id')->from('tl_page');
 
-            $candidates = array_merge(
-                $candidates,
-                ['/'],
-                $result->fetchAll(FetchMode::COLUMN)
-            );
+        if ($this->addRootQuery($candidates, $qb, $request->getHttpHost()) || $this->addRegexQuery($qb, $request->getPathInfo())) {
+            return array_unique(array_merge($candidates, $qb->execute()->fetchAll(FetchMode::COLUMN)));
         }
 
-        return array_unique($candidates);
+        return $candidates;
+    }
+
+    private function addRootQuery(array &$candidates, QueryBuilder $queryBuilder, string $httpHost): bool
+    {
+        if (!\in_array('index', $candidates, true)) {
+            return false;
+        }
+
+        $candidates[] = '/';
+
+        $queryBuilder->orWhere("type='root' AND (dns=:httpHost OR dns='')");
+        $queryBuilder->setParameter('httpHost', $httpHost);
+
+        return true;
+    }
+
+    private function addRegexQuery(QueryBuilder $queryBuilder, string $pathInfo): bool
+    {
+        $pathMap = $this->pageRegistry->getPathRegex();
+
+        if (empty($pathMap)) {
+            return false;
+        }
+
+        $paths = [];
+        foreach ($pathMap as $type => $pathRegex) {
+            $paths[] = '(?P<'.$type.'>'.substr($pathRegex, 2, strrpos($pathRegex, '$')-2).')';
+        }
+
+        preg_match_all(
+            '#^(/'.implode('|/', array_map('preg_quote', $this->urlPrefixes)).')'.implode('|', $paths).'#sD',
+            $pathInfo,
+            $matches
+        );
+
+        $types = array_keys(array_intersect_key($pathMap, array_filter($matches)));
+
+        if (empty($types)) {
+            return false;
+        }
+
+        $queryBuilder->orWhere('type IN (:types)');
+        $queryBuilder->setParameter('types', $types, Connection::PARAM_STR_ARRAY);
+
+        return true;
     }
 
     /**

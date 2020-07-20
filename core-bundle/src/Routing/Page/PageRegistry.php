@@ -24,7 +24,7 @@ class PageRegistry
     private $connection;
 
     /**
-     * @var array
+     * @var array<RouteConfig>
      */
     private $routeConfigs = [];
 
@@ -56,6 +56,21 @@ class PageRegistry
     public function getRouteConfig(string $type): RouteConfig
     {
         return $this->routeConfigs[$type] ?? new RouteConfig();
+    }
+
+    public function getPathRegex(): array
+    {
+        $prefixes = [];
+
+        foreach ($this->routeConfigs as $type => $config) {
+            $regex = $config->getPathRegex();
+
+            if (null !== $regex) {
+                $prefixes[$type] = $regex;
+            }
+        }
+
+        return $prefixes;
     }
 
     public function enhancePageRoute(PageRoute $route): Route

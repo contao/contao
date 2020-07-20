@@ -43,7 +43,7 @@ class PageRoute extends Route
      */
     private $content;
 
-    public function __construct(PageModel $pageModel, string $pathParameters = '', array $defaults = [], array $requirements = [], array $options = [], $methods = [])
+    public function __construct(PageModel $pageModel, string $path = '', array $defaults = [], array $requirements = [], array $options = [], $methods = [])
     {
         $pageModel->loadDetails();
 
@@ -64,8 +64,14 @@ class PageRoute extends Route
             $options['utf8'] = true;
         }
 
+        if ('' === $path) {
+            $path = '/'.($pageModel->alias ?: $pageModel->id);
+        } elseif (0 !== strncmp($path, '/', 1)) {
+            $path = '/'.($pageModel->alias ?: $pageModel->id).'/'.$path;
+        }
+
         parent::__construct(
-            '/'.($pageModel->alias ?: $pageModel->id).$pathParameters,
+            $path,
             $defaults,
             $requirements,
             $options,

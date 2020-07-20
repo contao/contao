@@ -24,7 +24,7 @@ use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
  * @Target({"CLASS", "METHOD"})
  * @Attributes({
  *     @Attribute("value", type = "string"),
- *     @Attribute("parameters", type = "string"),
+ *     @Attribute("path", type = "string"),
  *     @Attribute("urlSuffix", type = "string"),
  *     @Attribute("requirements", type = "array"),
  *     @Attribute("options", type = "array"),

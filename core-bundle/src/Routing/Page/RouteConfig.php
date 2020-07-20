@@ -17,7 +17,12 @@ final class RouteConfig
     /**
      * @var string|null
      */
-    private $pathParameters;
+    private $path;
+
+    /**
+     * @var string|null
+     */
+    private $pathRegex;
 
     /**
      * @var string|null
@@ -44,9 +49,10 @@ final class RouteConfig
      */
     private $methods;
 
-    public function __construct(string $pathParameters = null, string $urlSuffix = null, array $requirements = [], array $options = [], array $defaults = [], array $methods = [])
+    public function __construct(string $path = null, string $pathRegex = null, string $urlSuffix = null, array $requirements = [], array $options = [], array $defaults = [], array $methods = [])
     {
-        $this->pathParameters = $pathParameters;
+        $this->path = $path;
+        $this->pathRegex = $pathRegex;
         $this->urlSuffix = $urlSuffix;
         $this->requirements = $requirements;
         $this->options = $options;
@@ -54,9 +60,14 @@ final class RouteConfig
         $this->methods = $methods;
     }
 
-    public function getPathParameters(): ?string
+    public function getPath(): ?string
     {
-        return $this->pathParameters;
+        return $this->path;
+    }
+
+    public function getPathRegex(): ?string
+    {
+        return $this->pathRegex;
     }
 
     public function getUrlSuffix(): ?string

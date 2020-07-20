@@ -23,6 +23,7 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\Routing\Route;
 
 /**
  * Registers Contao pages in the registry.
@@ -82,10 +83,19 @@ class RegisterPagesPass implements CompilerPassInterface
         $defaults = $attributes['defaults'] ?? [];
         $defaults['_controller'] = $this->getControllerName($reference, $definition, $attributes);
 
+        $path = $attributes['path'] ?? null;
+        $pathRegex = null;
+
+        if (null !== $path && 0 === strncmp($path, '/', 1)) {
+            $compiledRoute = (new Route($path))->compile();
+            $pathRegex = $compiledRoute->getRegex();
+        }
+
         return new Definition(
             RouteConfig::class,
             [
-                $attributes['parameters'] ?? null,
+                $path,
+                $pathRegex,
                 $attributes['urlSuffix'] ?? null,
                 $attributes['requirements'] ?? [],
                 $attributes['options'] ?? [],
