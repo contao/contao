@@ -1,0 +1,158 @@
+{#
+    Studio Macros
+    -------------
+    This collection of Twig macros is intended to help you render figure/image
+    markup directly from a Studio\Figure. You can use these macros as building
+    blocks for your own figure template or to render the whole thing and pass
+    some options.
+
+
+    Options
+    -------
+    By setting options, the default output can be altered. There are two places
+    where this can be done:
+
+      1) By constructing a Studio\Figure object with $options
+      2) By passing the $options argument to the macros
+
+     If the same keys are defined in both 1) and 2), the template options
+     will have precedence.
+
+     Currently, options allow you to extend/overwrite HTML attributes for all
+     tags that are output. Attributes defined under the 'attr' key will be
+     placed inside the <figure> tag while those defined under the '%tag%_attr'
+     key will end up inside the <%tag%> tag.
+
+     Example:
+
+        {{ _self.figure(figure, {
+            attr: { data-foo: 'a' },
+            figcaption_attr: { class: 'bar' }
+        } }}
+
+        :  <figure data-foo="a">
+        :    ...
+        :    <figcaption class="bar">
+        :      ...
+        :    </figcaption>
+        :  </figure>
+#}
+
+
+{#
+    Build a <figure> including a picture and - if available - a caption from
+    Studio\Figure data.
+
+    If a link is defined the picture will be wrapped in an <a> tag.
+#}
+{%- macro figure(figure, options = {}) -%}
+    {%- set figure_attributes = figure.options.attr|default({})|merge(options.attr|default({})) %}
+    {%- set link_attributes = figure.options.link_attr|default({})|merge(options.link_attr|default({})) ~%}
+
+    {%- set base_attributes = {
+        'itemscope': '',
+        'itemtype': 'http://schema.org/ImageObject'
+    } %}
+    <figure{{ _self.html_attributes(base_attributes|merge(figure_attributes)) }}>
+        {% if figure.linkHref -%}
+            {%- set base_attributes = {
+                'href': figure.linkHref,
+                'title': figure.hasLightBox and figure.hasMetaData ? figure.metaData.title : null,
+            }|merge(figure.linkAttributes) -%}
+            <a{{ _self.html_attributes(base_attributes|merge(link_attributes)) }}>
+               {{~ _self.picture(figure, options) }}
+            </a>
+        {%- else %}
+            {{- _self.picture(figure, options) -}}
+        {% endif %}
+
+        {{ _self.caption(figure, options) }}
+    </figure>
+{%- endmacro -%}
+
+{#
+    Build a <picture> from Studio\Figure data.
+
+    This falls back to only creating a single <img> if no sources are present.
+#}
+{% macro picture(figure, options = {}) %}
+    {%- set picture_attributes = figure.options.picture_attr|default({})|merge(options.picture_attr|default({})) %}
+    {%- set source_attributes = figure.options.source_attr|default({})|merge(options.source_attr|default({})) %}
+
+    {%- if figure.image.sources %}
+        <picture{{ _self.html_attributes(picture_attributes) }}>
+            {% for source in figure.image.sources %}
+                {%- set base_attributes = {
+                    'srcset': source.srcset,
+                    'sizes': source.sizes|default(null),
+                    'media': source.media|default(null),
+                    'type': source.type|default(null),
+                } -%}
+                <source{{ _self.html_attributes(base_attributes|merge(source_attributes)) }}>
+            {%- endfor %}
+
+            {{ _self.img(figure, options) }}
+        </picture>
+    {%- else %}
+        {{ _self.img(figure, options) }}
+    {%- endif %}
+{% endmacro %}
+
+{#
+    Build an <img> from Studio\Figure data.
+#}
+{%- macro img(figure, options = {}) -%}
+    {% apply spaceless %}
+        {% set img_attributes = figure.options.img_attr|default({})|merge(options.img_attr|default({})) %}
+
+        {% set img = figure.image.img %}
+        {% set defineProportions = img.hasSingleAspectRatio|default(false) and img.width|default(false) and img.height|default(false) %}
+
+        {% set base_attributes = {
+            'src': img.src,
+            'alt': figure.hasMetaData ? figure.metaData.alt : '',
+            'title': figure.hasMetaData ? figure.metaData.title : null,
+            'srcset': img.srcset is defined and img.srcset != img.src ? img.srcset : null,
+            'sizes': img.sizes|default(null),
+            'width': defineProportions ? img.width : null,
+            'height': defineProportions ? img.height : null,
+            'loading': img.loading|default(null),
+            'class': img.class|default(null),
+            'itemprop': 'image',
+        } %}
+        <img{{ _self.html_attributes(base_attributes|merge(img_attributes)) }}>
+    {% endapply %}
+{%- endmacro -%}
+
+{#
+    Build a <figcaption> from Studio\Figure data.
+
+    If no meta data is present, nothing will be output.
+#}
+{%- macro caption(figure, options = {}) -%}
+    {% apply spaceless %}
+        {% if figure.hasMetaData and figure.metaData.caption %}
+            {% set caption_attributes = figure.options.caption_attr|default({})|merge(options.caption_attr|default({})) %}
+            {% set base_attributes = { 'itemprop': 'caption' } %}
+            <figcaption{{ _self.html_attributes(base_attributes|merge(caption_attributes)) }}>
+                {{- figure.metaData.caption -}}
+            </figcaption>
+        {% endif %}
+    {% endapply %}
+{%- endmacro -%}
+
+{#
+    Helper: Expand an associative mapping into HTML attributes.
+
+     - Values that are null won't be included
+     - The output will contain a leading space
+
+    Example:
+
+        { 'foo': 'a', 'bar': 'b, 'foobar': null } --> ' foo="a" bar="b"'
+#}
+{%- macro html_attributes(attributes) -%}
+    {%- for attr, value in attributes|filter(v => v is not null) -%}
+        {{ ' ' ~ attr }}{% if value %}="{{ value }}"{% endif %}
+    {%- endfor -%}
+{%- endmacro -%}

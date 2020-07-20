@@ -828,6 +828,15 @@ services:
         tags:
             - { name: kernel.reset, method: reset }
 
+    Contao\CoreBundle\Twig\Extension\ImageExtension: ~
+
+    Contao\CoreBundle\Twig\Runtime\FigureRendererRuntime:
+        arguments:
+            - '@Contao\CoreBundle\Image\Studio\Studio'
+            - '@twig'
+
+    Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime: ~
+
     contao.twig.template_extension:
         class: Contao\CoreBundle\Twig\Extension\ContaoTemplateExtension
         arguments:
