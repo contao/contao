@@ -634,7 +634,7 @@ class ImageFactoryTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.
      */
     public function testExecutesTheExecuteResizeHook(): void
     {
@@ -712,7 +712,7 @@ class ImageFactoryTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.
      */
     public function testExecutesTheGetImageHook(): void
     {
@@ -800,7 +800,7 @@ class ImageFactoryTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.
      */
     public function testIgnoresAnEmptyHookReturnValue(): void
     {

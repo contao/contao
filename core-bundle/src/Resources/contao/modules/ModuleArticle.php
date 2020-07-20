@@ -211,7 +211,7 @@ class ModuleArticle extends Module
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		if ($this->printable == 1)
 		{
-			@trigger_error('Setting tl_article.printable to "1" has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+			trigger_deprecation('contao/core-bundle', '4.0', 'Setting tl_article.printable to "1" has been deprecated and will no longer work in Contao 5.0.');
 
 			$this->Template->printable = !empty($GLOBALS['TL_HOOKS']['printArticleAsPdf']);
 			$this->Template->pdfButton = $this->Template->printable;

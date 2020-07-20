@@ -263,7 +263,7 @@ class FileUpload extends Backend
 	 */
 	protected function getMaximumUploadSize()
 	{
-		@trigger_error('Using FileUpload::getMaximumUploadSize() has been deprecated and will no longer work in Contao 5.0. Use FileUpload::getMaxUploadSize() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.6', 'Using "Contao\FileUpload::getMaximumUploadSize()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\FileUpload::getMaxUploadSize()" instead.');
 
 		return static::getMaxUploadSize();
 	}

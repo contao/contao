@@ -70,7 +70,7 @@ class ImageTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.
      */
     public function testFailsIfTheFileDoesNotExist(): void
     {
@@ -88,7 +88,7 @@ class ImageTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.
      */
     public function testFailsIfTheFileExtensionIsInvalid(): void
     {
@@ -108,7 +108,7 @@ class ImageTest extends TestCase
      * @group legacy
      * @dataProvider getComputeResizeDataWithoutImportantPart
      *
-     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.
      */
     public function testResizesImagesWithoutImportantPart(array $arguments, array $expectedResult): void
     {
@@ -568,7 +568,7 @@ class ImageTest extends TestCase
      * @group legacy
      * @dataProvider getComputeResizeDataWithImportantPart
      *
-     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.
      */
     public function testResizesImagesWithImportantPart(array $arguments, array $expectedResult): void
     {
@@ -746,7 +746,7 @@ class ImageTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.
      */
     public function testSupportsReadingAndWritingValues(): void
     {
@@ -868,7 +868,7 @@ class ImageTest extends TestCase
      * @group legacy
      * @dataProvider getCacheName
      *
-     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.
      */
     public function testReturnsTheCacheName(array $arguments, string $expectedCacheName): void
     {
@@ -948,7 +948,7 @@ class ImageTest extends TestCase
      * @group legacy
      * @dataProvider getZoomLevel
      *
-     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.
      */
     public function testFailsIfTheZoomValueIsOutOfBounds(int $value): void
     {
@@ -976,7 +976,7 @@ class ImageTest extends TestCase
      * @group legacy
      * @dataProvider getGetLegacy
      *
-     * @expectedDeprecation Using Image::get() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.3: Using "Contao\Image::get()" has been deprecated %s.
      */
     public function testFactorsImagesInTheLegacyMethod(array $arguments): void
     {
@@ -1000,7 +1000,7 @@ class ImageTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using Image::get() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.3: Using "Contao\Image::get()" has been deprecated %s.
      */
     public function testDoesNotFactorImagesInTheLegacyMethodIfTheArgumentIsInvalid(): void
     {
@@ -1017,7 +1017,7 @@ class ImageTest extends TestCase
      * @group legacy
      * @dataProvider getResizeLegacy
      *
-     * @expectedDeprecation Using Image::resize() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.3: Using "Contao\Image::resize()" has been deprecated %s.
      */
     public function testResizesImagesInTheLegacyMethod(array $arguments): void
     {
@@ -1041,7 +1041,7 @@ class ImageTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.
      */
     public function testDoesNotResizeMatchingImages(): void
     {
@@ -1060,7 +1060,7 @@ class ImageTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.
      */
     public function testCropsImages(): void
     {
@@ -1079,7 +1079,7 @@ class ImageTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.
      */
     public function testCropsImagesWithTargetPath(): void
     {
@@ -1099,7 +1099,7 @@ class ImageTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.
      */
     public function testCropsImagesWithExistingTargetPath(): void
     {
@@ -1122,7 +1122,7 @@ class ImageTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.
      */
     public function testResizesSvgImages(): void
     {
@@ -1166,7 +1166,7 @@ class ImageTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.
      */
     public function testResizesSvgImagesWithPercentageDimensions(): void
     {
@@ -1210,7 +1210,7 @@ class ImageTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.
      */
     public function testResizesSvgImagesWithoutDimensions(): void
     {
@@ -1252,7 +1252,7 @@ class ImageTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.
      */
     public function testResizesSvgImagesWithoutViewBox(): void
     {
@@ -1295,7 +1295,7 @@ class ImageTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.
      */
     public function testResizesSvgImagesWithoutViewBoxAndDimensions(): void
     {
@@ -1323,7 +1323,7 @@ class ImageTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.
      */
     public function testResizesSvgzImages(): void
     {
@@ -1368,7 +1368,7 @@ class ImageTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.
      */
     public function testExecutesTheResizeHook(): void
     {
@@ -1435,7 +1435,7 @@ class ImageTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.
      */
     public function testExecutesTheGetImageHook(): void
     {
@@ -1514,7 +1514,7 @@ class ImageTest extends TestCase
      * @group legacy
      * @dataProvider getGetPixelValueData
      *
-     * @expectedDeprecation Using Image::getPixelValue() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.3: Using "Contao\Image::getPixelValue()" has been deprecated %s.
      */
     public function testReadsThePixelValue(string $value, int $expected): void
     {

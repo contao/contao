@@ -1539,7 +1539,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 				// Call the onversion_callback
 				if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onversion_callback']))
 				{
-					@trigger_error('Using the "onversion_callback" has been deprecated and will no longer work in Contao 5.0. Use the "oncreate_version_callback" instead.', E_USER_DEPRECATED);
+					trigger_deprecation('contao/core-bundle', '4.0', 'Using the "onversion_callback" has been deprecated and will no longer work in Contao 5.0. Use the "oncreate_version_callback" instead.');
 
 					foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onversion_callback'] as $callback)
 					{
@@ -1768,7 +1768,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 						// Call the onversion_callback
 						if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onversion_callback']))
 						{
-							@trigger_error('Using the "onversion_callback" has been deprecated and will no longer work in Contao 5.0. Use the "oncreate_version_callback" instead.', E_USER_DEPRECATED);
+							trigger_deprecation('contao/core-bundle', '4.0', 'Using the "onversion_callback" has been deprecated and will no longer work in Contao 5.0. Use the "oncreate_version_callback" instead.');
 
 							foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onversion_callback'] as $callback)
 							{
@@ -2137,7 +2137,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 	 */
 	public function protect()
 	{
-		@trigger_error('Using DC_Folder::protect() has been deprecated and will no longer work in Contao 5.0. Use Contao\Folder::protect() and Contao\Folder::unprotect() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.7', 'Using "Contao\DC_Folder::protect()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Folder::protect()" and "Contao\Folder::unprotect()" instead.');
 
 		if (!is_dir($this->strRootDir . '/' . $this->intId))
 		{

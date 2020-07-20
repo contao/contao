@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
-@trigger_error('Using the "Contao\Session" class has been deprecated and will no longer work in Contao 5.0. Use the session service instead.', E_USER_DEPRECATED);
+trigger_deprecation('contao/core-bundle', '4.0', 'Using the "Contao\Session" class has been deprecated and will no longer work in Contao 5.0. Use the session service instead.');
 
 /**
  * Handles reading and updating the session data

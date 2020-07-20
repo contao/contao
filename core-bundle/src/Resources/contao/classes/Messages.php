@@ -26,7 +26,7 @@ class Messages extends Backend
 	 */
 	public function versionCheck()
 	{
-		@trigger_error('Using Messages::versionCheck() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.7', 'Using "Contao\Messages::versionCheck()" has been deprecated and will no longer work in Contao 5.0.');
 
 		return '';
 	}

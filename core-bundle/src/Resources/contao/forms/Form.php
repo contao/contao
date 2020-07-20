@@ -570,7 +570,7 @@ class Form extends Hybrid
 	 */
 	protected function getMaxFileSize()
 	{
-		@trigger_error('Using Form::getMaxFileSize() has been deprecated and will no longer work in Contao 5.0. Use $this->objModel->getMaxUploadFileSize() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Form::getMaxFileSize()" has been deprecated and will no longer work in Contao 5.0. Use "$this->objModel->getMaxUploadFileSize()" instead.');
 
 		return $this->objModel->getMaxUploadFileSize();
 	}

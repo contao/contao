@@ -14,7 +14,7 @@ use League\Uri\Components\Query;
 use League\Uri\Http;
 use Patchwork\Utf8;
 
-@trigger_error('Using the logout module has been deprecated and will no longer work in Contao 5.0. Use the logout page instead.', E_USER_DEPRECATED);
+trigger_deprecation('contao/core-bundle', '4.2', 'Using the logout module has been deprecated and will no longer work in Contao 5.0. Use the logout page instead.');
 
 /**
  * Front end module "logout".

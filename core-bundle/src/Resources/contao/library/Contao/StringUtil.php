@@ -82,7 +82,7 @@ class StringUtil
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		if ($strEllipsis === true)
 		{
-			@trigger_error('Passing "true" as third argument to StringUtil::substr() has been deprecated and will no longer work in Contao 5.0. Pass the ellipsis string instead.', E_USER_DEPRECATED);
+			trigger_deprecation('contao/core-bundle', '4.0', 'Passing "true" as third argument to "Contao\StringUtil::substr()" has been deprecated and will no longer work in Contao 5.0. Pass the ellipsis string instead.');
 
 			$strEllipsis = ' …';
 		}
@@ -560,7 +560,7 @@ class StringUtil
 	 */
 	public static function parseSimpleTokens($strString, $arrData)
 	{
-		@trigger_error('Using StringUtil::parseSimpleTokens() has been deprecated and will no longer work in Contao 5.0. Use the SimpleTokenParser::class service instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.10', 'Using "Contao\StringUtil::parseSimpleTokens()" has been deprecated and will no longer work in Contao 5.0. Use the "SimpleTokenParser::class" service instead.');
 
 		return System::getContainer()->get(SimpleTokenParser::class)->parseTokens($strString, $arrData);
 	}

@@ -360,7 +360,7 @@ class PageModel extends Model
 	 */
 	public static function findFirstPublishedRootByHostAndLanguage($strHost, $varLanguage, array $arrOptions=array())
 	{
-		@trigger_error('Using PageModel::findFirstPublishedRootByHostAndLanguage() has been deprecated and will no longer work Contao 5.0.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.7', 'Using "Contao\PageModel::findFirstPublishedRootByHostAndLanguage()" has been deprecated and will no longer work Contao 5.0.');
 
 		$t = static::$strTable;
 		$objDatabase = Database::getInstance();
@@ -1106,7 +1106,7 @@ class PageModel extends Model
 
 		if ($strForceLang !== null)
 		{
-			@trigger_error('Using PageModel::getFrontendUrl() with $strForceLang has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+			trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\PageModel::getFrontendUrl()" with $strForceLang has been deprecated and will no longer work in Contao 5.0.');
 
 			$page = $page->cloneOriginal();
 			$page->preventSaving(false);
@@ -1210,7 +1210,7 @@ class PageModel extends Model
 		// Decode sprintf placeholders
 		if (strpos($strParams, '%') !== false)
 		{
-			@trigger_error('Using sprintf placeholders in URLs has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+			trigger_deprecation('contao/core-bundle', '4.2', 'Using sprintf placeholders in URLs has been deprecated and will no longer work in Contao 5.0.');
 
 			$arrMatches = array();
 			preg_match_all('/%([sducoxXbgGeEfF])/', $strParams, $arrMatches);
@@ -1224,7 +1224,7 @@ class PageModel extends Model
 		// HOOK: add custom logic
 		if (isset($GLOBALS['TL_HOOKS']['generateFrontendUrl']) && \is_array($GLOBALS['TL_HOOKS']['generateFrontendUrl']))
 		{
-			@trigger_error('Using the "generateFrontendUrl" hook has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+			trigger_deprecation('contao/core-bundle', '4.0', 'Using the "generateFrontendUrl" hook has been deprecated and will no longer work in Contao 5.0.');
 
 			foreach ($GLOBALS['TL_HOOKS']['generateFrontendUrl'] as $callback)
 			{
