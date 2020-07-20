@@ -79,6 +79,7 @@ class ModuleArticle extends Module
 	 */
 	protected function compile()
 	{
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$id = 'article-' . $this->id;

@@ -202,6 +202,7 @@ abstract class Events extends Module
 	 */
 	protected function addEvent($objEvents, $intStart, $intEnd, $intBegin, $intLimit, $intCalendar)
 	{
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		// Backwards compatibility (4th argument was $strUrl)

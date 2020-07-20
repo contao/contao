@@ -71,6 +71,7 @@ class ModuleFaqPage extends Module
 			return;
 		}
 
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$arrFaqs = array_fill_keys($this->faq_categories, array());

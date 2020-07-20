@@ -84,6 +84,7 @@ class ModuleEventlist extends Events
 	 */
 	protected function compile()
 	{
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$blnClearInput = false;

@@ -29,6 +29,7 @@ class PageError401 extends Frontend
 	 */
 	public function generate($objRootPage=null)
 	{
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$obj401 = $this->prepare($objRootPage);
@@ -57,6 +58,7 @@ class PageError401 extends Frontend
 	 */
 	public function getResponse($objRootPage=null)
 	{
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$obj401 = $this->prepare($objRootPage);

@@ -119,6 +119,7 @@ class ModuleSearch extends Module
 			// Website root
 			else
 			{
+				/** @var PageModel $objPage */
 				global $objPage;
 
 				$varRootId = $objPage->rootId;

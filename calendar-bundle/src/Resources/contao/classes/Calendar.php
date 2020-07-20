@@ -407,6 +407,7 @@ class Calendar extends Frontend
 		$span = self::calculateSpan($intStart, $intEnd);
 		$format = $objEvent->addTime ? 'datimFormat' : 'dateFormat';
 
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		if ($objPage instanceof PageModel)

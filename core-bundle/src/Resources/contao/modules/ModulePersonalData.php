@@ -67,6 +67,7 @@ class ModulePersonalData extends Module
 	 */
 	protected function compile()
 	{
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$this->import(FrontendUser::class, 'User');

@@ -90,6 +90,7 @@ class ContentMedia extends ContentElement
 	 */
 	protected function compile()
 	{
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$this->Template->poster = false;

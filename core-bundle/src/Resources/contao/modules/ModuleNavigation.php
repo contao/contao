@@ -54,6 +54,7 @@ class ModuleNavigation extends Module
 	 */
 	protected function compile()
 	{
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		// Set the trail and level

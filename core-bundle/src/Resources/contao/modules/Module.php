@@ -282,6 +282,7 @@ abstract class Module extends Frontend
 		$objTemplate->level = 'level_' . $level++;
 		$objTemplate->module = $this; // see #155
 
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		// Browse subpages

@@ -26,6 +26,7 @@ class PageError404 extends Frontend
 	 */
 	public function generate()
 	{
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$obj404 = $this->prepare();
@@ -52,6 +53,7 @@ class PageError404 extends Frontend
 	 */
 	public function getResponse()
 	{
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$obj404 = $this->prepare();

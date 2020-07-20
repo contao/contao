@@ -62,6 +62,7 @@ class ModuleNewsletterList extends Module
 	 */
 	protected function compile()
 	{
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$arrJumpTo = array();

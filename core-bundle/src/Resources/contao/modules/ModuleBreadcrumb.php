@@ -52,6 +52,7 @@ class ModuleBreadcrumb extends Module
 	 */
 	protected function compile()
 	{
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$type = null;

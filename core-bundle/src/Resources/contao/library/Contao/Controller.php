@@ -67,6 +67,7 @@ abstract class Controller extends System
 		// Check for a theme folder
 		if (\defined('TL_MODE') && TL_MODE == 'FE')
 		{
+			/** @var PageModel $objPage */
 			global $objPage;
 
 			if ($objPage->templateGroup != '')
@@ -286,6 +287,7 @@ abstract class Controller extends System
 			return '';
 		}
 
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		// Articles
@@ -454,6 +456,7 @@ abstract class Controller extends System
 	 */
 	public static function getArticle($varId, $blnMultiMode=false, $blnIsInsertTag=false, $strColumn='main')
 	{
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		if (\is_object($varId))
@@ -1213,6 +1216,7 @@ abstract class Controller extends System
 		}
 		elseif (TL_MODE == 'FE')
 		{
+			/** @var PageModel $objPage */
 			global $objPage;
 
 			$arrParams['_locale'] = $objPage->rootLanguage;
@@ -1772,6 +1776,7 @@ abstract class Controller extends System
 			$objFiles->reset();
 		}
 
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$arrEnclosures = array();
