@@ -79,7 +79,7 @@ class ContaoCache extends HttpCache implements CacheInvalidation
     private function readEnvCsv(string $key, string $oldName = ''): array
     {
         if ('' !== $oldName && isset($_SERVER[$oldName])) {
-            @trigger_error(sprintf('Using the "%s" environment variable has been deprecated. Use "%s" instead.', $oldName, $key), E_USER_DEPRECATED);
+            trigger_deprecation('contao/manager-bundle', '4.10', sprintf('Using the "%s" environment variable has been deprecated. Use "%s" instead.', $oldName, $key));
 
             $key = $oldName;
         }

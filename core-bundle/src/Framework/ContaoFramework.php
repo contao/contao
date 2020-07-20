@@ -406,7 +406,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         }
 
         if ($this->filesystem->exists($filePath = Path::join($this->projectDir, 'system/config/initconfig.php'))) {
-            @trigger_error('Using the "initconfig.php" file has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+            trigger_deprecation('contao/core-bundle', '4.0', 'Using the "initconfig.php" file has been deprecated and will no longer work in Contao 5.0.');
             include $filePath;
         }
     }

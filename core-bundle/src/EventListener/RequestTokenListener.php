@@ -91,19 +91,19 @@ class RequestTokenListener
         $config = $this->framework->getAdapter(Config::class);
 
         if (\defined('BYPASS_TOKEN_CHECK')) {
-            @trigger_error('Defining the BYPASS_TOKEN_CHECK constant has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+            trigger_deprecation('contao/core-bundle', '4.0', 'Defining the BYPASS_TOKEN_CHECK constant has been deprecated and will no longer work in Contao 5.0.');
 
             return;
         }
 
         if ($config->get('disableRefererCheck')) {
-            @trigger_error('Using the "disableRefererCheck" setting has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+            trigger_deprecation('contao/core-bundle', '4.0', 'Using the "disableRefererCheck" setting has been deprecated and will no longer work in Contao 5.0.');
 
             return;
         }
 
         if ($config->get('requestTokenWhitelist')) {
-            @trigger_error('Using the "requestTokenWhitelist" setting has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+            trigger_deprecation('contao/core-bundle', '4.0', 'Using the "requestTokenWhitelist" setting has been deprecated and will no longer work in Contao 5.0.');
 
             $hostname = gethostbyaddr($request->getClientIp());
 

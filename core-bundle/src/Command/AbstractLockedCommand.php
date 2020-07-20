@@ -27,7 +27,7 @@ abstract class AbstractLockedCommand extends ContainerAwareCommand
 {
     final protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        @trigger_error('Using the "AbstractLockedCommand" has been deprecated and will no longer work in Contao 5.0. Use the Symfony Lock component instead.', E_USER_DEPRECATED);
+        trigger_deprecation('contao/core-bundle', '4.7', 'Using the "AbstractLockedCommand" has been deprecated and will no longer work in Contao 5.0. Use the Symfony Lock component instead.');
 
         $store = new FlockStore($this->getTempDir());
         $factory = new Factory($store);

@@ -162,7 +162,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
             return;
         }
 
-        @trigger_error('Using the "postLogin" hook has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+        trigger_deprecation('contao/core-bundle', '4.5', 'Using the "postLogin" hook has been deprecated and will no longer work in Contao 5.0.');
 
         /** @var System $system */
         $system = $this->framework->getAdapter(System::class);

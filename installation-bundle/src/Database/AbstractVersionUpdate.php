@@ -16,7 +16,7 @@ use Doctrine\DBAL\Connection;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
-@trigger_error('Using the "Contao\InstallationBundle\Database\AbstractVersionUpdate" class has been deprecated and will no longer work in Contao 5.0. Use the "Contao\CoreBundle\Migration\AbstractMigration" class instead.', E_USER_DEPRECATED);
+trigger_deprecation('contao/installation-bundle', '4.9', 'Using the "Contao\InstallationBundle\Database\AbstractVersionUpdate" class has been deprecated and will no longer work in Contao 5.0. Use the "Contao\CoreBundle\Migration\AbstractMigration" class instead.');
 
 /**
  * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0; use the
