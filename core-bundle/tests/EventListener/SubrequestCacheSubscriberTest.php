@@ -42,14 +42,14 @@ class SubrequestCacheSubscriberTest extends TestCase
         $this->onKernelRequest($subscriber, KernelInterface::MASTER_REQUEST);
 
         $subResponse = new Response();
-        $subResponse->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, true);
+        $subResponse->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, '1');
         $subResponse->setPublic();
         $subResponse->setMaxAge(30);
 
         $this->onKernelResponse($subscriber, $subResponse, KernelInterface::SUB_REQUEST);
 
         $mainResponse = new Response();
-        $mainResponse->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, true);
+        $mainResponse->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, '1');
         $mainResponse->setPublic();
         $mainResponse->setMaxAge(60);
 
@@ -66,13 +66,13 @@ class SubrequestCacheSubscriberTest extends TestCase
         $this->onKernelRequest($subscriber, KernelInterface::MASTER_REQUEST);
 
         $subResponse = new Response();
-        $subResponse->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, true);
+        $subResponse->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, '1');
         $subResponse->setPrivate();
 
         $this->onKernelResponse($subscriber, $subResponse, KernelInterface::SUB_REQUEST);
 
         $mainResponse = new Response();
-        $mainResponse->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, true);
+        $mainResponse->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, '1');
         $subResponse->setPublic();
         $mainResponse->setMaxAge(60);
 
@@ -93,7 +93,7 @@ class SubrequestCacheSubscriberTest extends TestCase
         $this->onKernelResponse($subscriber, $subResponse, KernelInterface::SUB_REQUEST);
 
         $mainResponse = new Response();
-        $mainResponse->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, true);
+        $mainResponse->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, '1');
         $mainResponse->setPublic();
         $mainResponse->setMaxAge(60);
 
@@ -109,13 +109,13 @@ class SubrequestCacheSubscriberTest extends TestCase
         $this->onKernelRequest($subscriber, KernelInterface::MASTER_REQUEST);
 
         $subResponse = new Response();
-        $subResponse->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, true);
+        $subResponse->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, '1');
         $subResponse->headers->remove('Cache-Control');
 
         $this->onKernelResponse($subscriber, $subResponse, KernelInterface::SUB_REQUEST);
 
         $mainResponse = new Response();
-        $mainResponse->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, true);
+        $mainResponse->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, '1');
         $mainResponse->setPublic();
         $mainResponse->setMaxAge(60);
 

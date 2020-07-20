@@ -32,7 +32,7 @@ class Newsletter extends Backend
 	 */
 	public function send(DataContainer $dc)
 	{
-		$objNewsletter = $this->Database->prepare("SELECT n.*, c.template AS channelTemplate, c.sender AS channelSender, c.senderName as channelSenderName FROM tl_newsletter n LEFT JOIN tl_newsletter_channel c ON n.pid=c.id WHERE n.id=?")
+		$objNewsletter = $this->Database->prepare("SELECT n.*, c.template AS channelTemplate, c.sender AS channelSender, c.senderName as channelSenderName, c.mailerTransport AS channelMailerTransport FROM tl_newsletter n LEFT JOIN tl_newsletter_channel c ON n.pid=c.id WHERE n.id=?")
 										->limit(1)
 										->execute($dc->id);
 
@@ -348,6 +348,12 @@ class Newsletter extends Backend
 			{
 				$objEmail->attachFile($projectDir . '/' . $strAttachment);
 			}
+		}
+
+		// Add transport
+		if (!empty($objNewsletter->mailerTransport) || !empty($objNewsletter->channelMailerTransport))
+		{
+			$objEmail->addHeader('X-Transport', $objNewsletter->mailerTransport ?: $objNewsletter->channelMailerTransport);
 		}
 
 		return $objEmail;

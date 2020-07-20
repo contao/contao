@@ -12,6 +12,7 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Mailer\AvailableTransports;
 use Contao\Image;
 use Contao\Input;
 use Contao\StringUtil;
@@ -116,7 +117,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},title,jumpTo;{template_legend:hide},template;{sender_legend},sender,senderName'
+		'default'                     => '{title_legend},title,jumpTo;{template_legend:hide},template;{sender_legend},mailerTransport,sender,senderName'
 	),
 
 	// Fields
@@ -158,13 +159,21 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 			},
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
+		'mailerTransport' => array
+		(
+			'exclude'                 => true,
+			'inputType'               => 'select',
+			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption'=>true),
+			'options_callback'        => array(AvailableTransports::class, 'getTransportOptions'),
+			'sql'                     => "varchar(255) NOT NULL default ''"
+		),
 		'sender' => array
 		(
 			'exclude'                 => true,
 			'search'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'email', 'maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'email', 'maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50 clr'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'senderName' => array

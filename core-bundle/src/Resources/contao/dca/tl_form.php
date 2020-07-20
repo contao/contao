@@ -120,7 +120,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 	// Subpalettes
 	'subpalettes' => array
 	(
-		'sendViaEmail'                => 'recipient,subject,format,skipEmpty',
+		'sendViaEmail'                => 'mailerTransport,recipient,subject,format,skipEmpty',
 		'storeValues'                 => 'targetTable'
 	),
 
@@ -171,12 +171,19 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 			'eval'                    => array('submitOnChange'=>true),
 			'sql'                     => "char(1) NOT NULL default ''"
 		),
+		'mailerTransport' => array
+		(
+			'exclude'                 => true,
+			'inputType'               => 'select',
+			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption'=>true),
+			'sql'                     => "varchar(255) NOT NULL default ''"
+		),
 		'recipient' => array
 		(
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>1022, 'rgxp'=>'emails', 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'maxlength'=>1022, 'rgxp'=>'emails', 'tl_class'=>'w50 clr'),
 			'sql'                     => "varchar(1022) NOT NULL default ''"
 		),
 		'subject' => array

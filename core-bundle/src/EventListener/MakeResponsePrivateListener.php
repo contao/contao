@@ -53,7 +53,7 @@ class MakeResponsePrivateListener
         $response = $event->getResponse();
 
         // Disable the default Symfony auto cache control
-        $response->headers->set(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER, true);
+        $response->headers->set(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER, '1');
 
         // If the response is not cacheable for a reverse proxy, we don't have to do anything anyway
         if (!$response->isCacheable()) {

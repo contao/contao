@@ -126,6 +126,7 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addSecurityNode())
                 ->append($this->addSearchNode())
                 ->append($this->addCrawlNode())
+                ->append($this->addMailerNode())
             ->end()
         ;
 
@@ -413,6 +414,28 @@ class Configuration implements ConfigurationInterface
                     ->info('Allows to configure the default HttpClient options (useful for proxy settings, SSL certificate validation and more).')
                     ->prototype('scalar')->end()
                     ->defaultValue([])
+                ->end()
+            ->end()
+        ;
+    }
+
+    private function addMailerNode(): NodeDefinition
+    {
+        return (new TreeBuilder('mailer'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('transports')
+                    ->info('Specifies the mailer transports available for selection within Contao.')
+                    ->useAttributeAsKey('name')
+                    ->arrayPrototype()
+                        ->children()
+                            ->scalarNode('from')
+                                ->info('Overrides the "From" address for any e-mails sent with this mailer transport.')
+                                ->defaultNull()
+                            ->end()
+                        ->end()
+                    ->end()
                 ->end()
             ->end()
         ;
