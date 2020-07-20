@@ -54,6 +54,22 @@ class ContentResolvingGenerator extends SymfonyUrlGenerator
         // The route has a cache of its own and is not recompiled as long as it does not get modified
         $compiledRoute = $route->compile();
 
+        if (
+            $route instanceof PageRoute
+            && 0 === \count(array_intersect_key(array_filter($parameters), array_flip($compiledRoute->getVariables())))
+        ) {
+            $indexPath = ($route->getUrlPrefix() ? '/'.$route->getUrlPrefix() : '').'/index';
+
+            if (
+                $compiledRoute->getStaticPrefix() === $indexPath
+                || $compiledRoute->getStaticPrefix() === $indexPath.$route->getUrlSuffix()
+            ) {
+                $route->setPath('/');
+                $route->setUrlSuffix('');
+                $compiledRoute = $route->compile();
+            }
+        }
+
         return $this->doGenerate(
             $compiledRoute->getVariables(),
             $route->getDefaults(),
