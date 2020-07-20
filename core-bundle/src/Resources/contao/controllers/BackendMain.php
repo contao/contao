@@ -141,7 +141,7 @@ class BackendMain extends Backend
 			$this->Template->error = $GLOBALS['TL_LANG']['ERR']['general'];
 			$this->Template->title = $GLOBALS['TL_LANG']['ERR']['general'];
 
-			trigger_deprecation('contao/core-bundle', '4.0', 'Using act=error has been deprecated and will no longer work in Contao 5.0. Throw an exception instead.');
+			trigger_deprecation('contao/core-bundle', '4.0', 'Using "act=error" has been deprecated and will no longer work in Contao 5.0. Throw an exception instead.');
 		}
 		// Welcome screen
 		elseif (!Input::get('do') && !Input::get('act'))
