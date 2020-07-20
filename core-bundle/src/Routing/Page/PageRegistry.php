@@ -28,9 +28,9 @@ class PageRegistry
     private $routeEnhancers = [];
 
     /**
-     * @var array<CompositionAwareInterface>
+     * @var array<ContentCompositionInterface|bool>
      */
-    private $compositionAware = [];
+    private $contentComposition = [];
 
     public function getRouteConfig(string $type): RouteConfig
     {
@@ -68,17 +68,23 @@ class PageRegistry
 
     public function supportsContentComposition(PageModel $pageModel): bool
     {
-        if (!isset($this->compositionAware[$pageModel->type])) {
+        if (!isset($this->contentComposition[$pageModel->type])) {
             return true;
         }
 
-        /** @var CompositionAwareInterface $service */
-        $service = $this->compositionAware[$pageModel->type];
+        $service = $this->contentComposition[$pageModel->type];
 
-        return $service->supportsContentComposition($pageModel);
+        if ($service instanceof ContentCompositionInterface) {
+            return $service->supportsContentComposition($pageModel);
+        }
+
+        return (bool) $service;
     }
 
-    public function add(string $type, RouteConfig $config, PageRouteEnhancerInterface $routeEnhancer = null, CompositionAwareInterface $compositionAware = null): self
+    /**
+     * @param ContentCompositionInterface|bool $contentComposition
+     */
+    public function add(string $type, RouteConfig $config, PageRouteEnhancerInterface $routeEnhancer = null, $contentComposition = true): self
     {
         // Override existing pages with the same identifier
         $this->routeConfigs[$type] = $config;
@@ -87,8 +93,8 @@ class PageRegistry
             $this->routeEnhancers[$type] = $routeEnhancer;
         }
 
-        if (null !== $compositionAware) {
-            $this->compositionAware[$type] = $compositionAware;
+        if (null !== $contentComposition) {
+            $this->contentComposition[$type] = $contentComposition;
         }
 
         return $this;
@@ -99,7 +105,7 @@ class PageRegistry
         unset(
             $this->routeConfigs[$type],
             $this->routeEnhancers[$type],
-            $this->compositionAware[$type]
+            $this->contentComposition[$type]
         );
 
         return $this;

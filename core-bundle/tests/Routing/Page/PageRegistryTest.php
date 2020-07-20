@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Routing\Page;
 
-use Contao\CoreBundle\Routing\Page\CompositionAwareInterface;
+use Contao\CoreBundle\Routing\Page\ContentCompositionInterface;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Routing\Page\PageRouteEnhancerInterface;
@@ -153,7 +153,7 @@ class PageRegistryTest extends TestCase
         /** @var PageModel&MockObject $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class, ['type' => 'foo']);
 
-        $composite = $this->createMock(CompositionAwareInterface::class);
+        $composite = $this->createMock(ContentCompositionInterface::class);
         $composite
             ->expects($this->once())
             ->method('supportsContentComposition')
@@ -188,13 +188,13 @@ class PageRegistryTest extends TestCase
             ->willReturn([])
         ;
 
-        $composite1 = $this->createMock(CompositionAwareInterface::class);
+        $composite1 = $this->createMock(ContentCompositionInterface::class);
         $composite1
             ->expects($this->never())
             ->method($this->anything())
         ;
 
-        $composite2 = $this->createMock(CompositionAwareInterface::class);
+        $composite2 = $this->createMock(ContentCompositionInterface::class);
         $composite2
             ->expects($this->once())
             ->method('supportsContentComposition')
@@ -222,7 +222,7 @@ class PageRegistryTest extends TestCase
             ->method($this->anything())
         ;
 
-        $composite = $this->createMock(CompositionAwareInterface::class);
+        $composite = $this->createMock(ContentCompositionInterface::class);
         $composite
             ->expects($this->never())
             ->method($this->anything())

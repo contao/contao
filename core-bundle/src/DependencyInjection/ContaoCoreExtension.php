@@ -17,7 +17,7 @@ use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Migration\MigrationInterface;
 use Contao\CoreBundle\Picker\PickerProviderInterface;
 use Contao\CoreBundle\Routing\Content\ContentRouteProviderInterface;
-use Contao\CoreBundle\Routing\Page\CompositionAwareInterface;
+use Contao\CoreBundle\Routing\Page\ContentCompositionInterface;
 use Contao\CoreBundle\Routing\Page\PageRouteEnhancerInterface;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Imagine\Exception\RuntimeException;
@@ -114,7 +114,7 @@ class ContaoCoreExtension extends Extension
         ;
 
         $container
-            ->registerForAutoconfiguration(CompositionAwareInterface::class)
+            ->registerForAutoconfiguration(ContentCompositionInterface::class)
             ->addTag('contao.page')
         ;
     }

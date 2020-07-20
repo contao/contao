@@ -29,6 +29,7 @@ use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
  *     @Attribute("options", type = "array"),
  *     @Attribute("defaults", type = "array"),
  *     @Attribute("methods", type = "array"),
+ *     @Attribute("contentComposition", type = "boolean"),
  * })
  */
 final class Page implements ServiceAnnotationInterface

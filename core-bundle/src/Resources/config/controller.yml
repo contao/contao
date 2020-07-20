@@ -7,5 +7,5 @@ services:
         arguments:
             - '@database_connection'
         tags:
-            - { name: contao.page }
+            - { name: contao.page, contentComposition: false }
             - { name: monolog.logger, channel: contao }
