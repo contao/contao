@@ -25,8 +25,8 @@ class AddResourcesPathsPassTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using "app/Resources/contao" has been deprecated %s.
-     * @expectedDeprecation Using "src/Resources/contao" has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.9: Using "app/Resources/contao" has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.9: Using "src/Resources/contao" has been deprecated %s.
      */
     public function testAddsTheResourcesPaths(): void
     {

@@ -438,7 +438,7 @@ class AuthenticationProviderTest extends TestCase
      * @group legacy
      * @dataProvider getCheckCredentialsHookData
      *
-     * @expectedDeprecation Using the "checkCredentials" hook has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.5: Using the "checkCredentials" hook has been deprecated %s.
      */
     public function testTriggersTheCheckCredentialsHook(string $callback): void
     {

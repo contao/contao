@@ -313,7 +313,7 @@ class PluginTest extends ContaoTestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Defining the "prepend_locale" parameter in the parameters.yml file %s.
+     * @expectedDeprecation Since contao/manager-bundle 4.6: Defining the "prepend_locale" parameter in the parameters.yml file %s.
      */
     public function testHandlesThePrependLocaleParameter(): void
     {

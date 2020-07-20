@@ -78,7 +78,7 @@ class LogoutHandlerTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using the "postLogout" hook has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.5: Using the "postLogout" hook has been deprecated %s.
      */
     public function testTriggersThePostLogoutHook(): void
     {

@@ -134,7 +134,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using the "postLogin" hook has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.5: Using the "postLogin" hook has been deprecated %s.
      */
     public function testTriggersThePostLoginHook(): void
     {
