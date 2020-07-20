@@ -16,6 +16,7 @@ use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Controller\FrontendModule\TwoFactorController;
 use Contao\CoreBundle\Controller\Page\RootPageController;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterPagesPass;
+use Contao\CoreBundle\Fixtures\Controller\Page\TestPageController;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendIndex;
@@ -167,7 +168,7 @@ class RegisterPagesPassTest extends TestCase
                         $definition = $arguments[1];
                         $this->assertInstanceOf(Definition::class, $definition);
 
-                        return 'MyController::action' === $definition->getArgument(3)['_controller'];
+                        return 'MyController::action' === $definition->getArgument(5)['_controller'];
                     }
                 )
             )
@@ -198,7 +199,7 @@ class RegisterPagesPassTest extends TestCase
                         $definition = $arguments[1];
                         $this->assertInstanceOf(Definition::class, $definition);
 
-                        return 'test.controller:action' === $definition->getArgument(3)['_controller'];
+                        return 'test.controller:action' === $definition->getArgument(5)['_controller'];
                     }
                 )
             )
@@ -232,7 +233,7 @@ class RegisterPagesPassTest extends TestCase
                         $definition = $arguments[1];
                         $this->assertInstanceOf(Definition::class, $definition);
 
-                        return 'test.controller' === $definition->getArgument(3)['_controller'];
+                        return 'test.controller' === $definition->getArgument(5)['_controller'];
                     }
                 )
             )
@@ -266,7 +267,7 @@ class RegisterPagesPassTest extends TestCase
                         $definition = $arguments[1];
                         $this->assertInstanceOf(Definition::class, $definition);
 
-                        return FrontendIndex::class.'::renderPage' === $definition->getArgument(3)['_controller'];
+                        return FrontendIndex::class.'::renderPage' === $definition->getArgument(5)['_controller'];
                     }
                 )
             )
@@ -286,7 +287,7 @@ class RegisterPagesPassTest extends TestCase
         $this->assertFalse($definition->isPublic());
     }
 
-    public function testRegistersPageRouteEnhancer(): void
+    public function testRegistersDynamicPageInterface(): void
     {
         $registry = $this->createMock(Definition::class);
         $registry
@@ -306,7 +307,7 @@ class RegisterPagesPassTest extends TestCase
             )
         ;
 
-        $definition = new Definition(RootPageController::class);
+        $definition = new Definition(TestPageController::class);
         $definition->addTag('contao.page');
 
         $container = new ContainerBuilder();
@@ -317,7 +318,7 @@ class RegisterPagesPassTest extends TestCase
         $pass->process($container);
     }
 
-    public function testRegistersCompositionAware(): void
+    public function testRegistersContentCompositionInterface(): void
     {
         $registry = $this->createMock(Definition::class);
         $registry
@@ -337,7 +338,7 @@ class RegisterPagesPassTest extends TestCase
             )
         ;
 
-        $definition = new Definition(RootPageController::class);
+        $definition = new Definition(TestPageController::class);
         $definition->addTag('contao.page');
 
         $container = new ContainerBuilder();

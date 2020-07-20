@@ -39,12 +39,12 @@ class PageRegistry
     private $contentComposition = [];
 
     /**
-     * @var array<string>
+     * @var array<string>|null
      */
     private $urlPrefixes;
 
     /**
-     * @var array<string>
+     * @var array<string>|null
      */
     private $urlSuffixes;
 
@@ -138,6 +138,8 @@ class PageRegistry
             $this->contentComposition[$type] = $contentComposition;
         }
 
+        $this->urlPrefixes = $this->urlSuffixes = null;
+
         return $this;
     }
 
@@ -148,6 +150,8 @@ class PageRegistry
             $this->routeEnhancers[$type],
             $this->contentComposition[$type]
         );
+
+        $this->urlPrefixes = $this->urlSuffixes = null;
 
         return $this;
     }
@@ -188,7 +192,7 @@ class PageRegistry
             $urlSuffixes[] = $enhancer->getUrlSuffixes();
         }
 
-        $this->urlSuffixes = array_unique(array_merge(...$urlSuffixes));
-        $this->urlPrefixes = array_unique(array_column($results, 'urlPrefix'));
+        $this->urlSuffixes = array_values(array_unique(array_merge(...$urlSuffixes)));
+        $this->urlPrefixes = array_values(array_unique(array_column($results, 'urlPrefix')));
     }
 }

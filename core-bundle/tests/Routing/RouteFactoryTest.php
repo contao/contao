@@ -59,7 +59,6 @@ class RouteFactoryTest extends TestCase
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
             'type' => 'foo',
             'alias' => 'bar',
-            'parameters' => '/this/is/{ignored}',
             'urlPrefix' => 'foo',
             'urlSuffix' => '.baz',
             'requireItem' => '',
@@ -91,7 +90,6 @@ class RouteFactoryTest extends TestCase
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
             'type' => 'foo',
             'alias' => 'bar',
-            'parameters' => '/this/is/{ignored}',
             'urlPrefix' => 'foo',
             'urlSuffix' => '.baz',
             'requireItem' => '1',
@@ -117,21 +115,24 @@ class RouteFactoryTest extends TestCase
         $this->assertSame('/.+', $route->getRequirement('parameters'));
     }
 
-    public function testCreatesPageRouteWithoutPathParameters(): void
+    /**
+     * @dataProvider pageRouteWithPathProvider
+     */
+    public function testCreatesPageRouteWithPath(RouteConfig $config, string $urlPrefix, string $alias, string $urlSuffix, string $expectedPath): void
     {
         /** @var PageModel&MockObject $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
             'type' => 'foo',
-            'alias' => 'bar',
-            'urlPrefix' => 'foo',
-            'urlSuffix' => '.baz',
+            'alias' => $alias,
+            'urlPrefix' => $urlPrefix,
+            'urlSuffix' => $urlSuffix,
         ]);
 
         $this->pageRegistry
             ->expects($this->once())
             ->method('getRouteConfig')
             ->with('foo')
-            ->willReturn(new RouteConfig(''))
+            ->willReturn($config)
         ;
 
         $this->pageRegistry
@@ -142,65 +143,74 @@ class RouteFactoryTest extends TestCase
 
         $route = $this->factory->createRouteForPage($pageModel);
 
-        $this->assertSame('/foo/bar.baz', $route->getPath());
+        $this->assertSame($expectedPath, $route->getPath());
     }
 
-    public function testCreatesPageRouteWithParameters(): void
+    public function pageRouteWithPathProvider(): \Generator
     {
-        /** @var PageModel&MockObject $pageModel */
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
-            'type' => 'foo',
-            'alias' => 'bar',
-            'parameters' => '',
-            'urlPrefix' => 'foo',
-            'urlSuffix' => '.baz',
-        ]);
+        yield 'Does not add parameters for empty path' => [
+            new RouteConfig(''),
+            'foo',
+            'bar',
+            '.baz',
+            '/foo/bar.baz',
+        ];
 
-        $this->pageRegistry
-            ->expects($this->once())
-            ->method('getRouteConfig')
-            ->with('foo')
-            ->willReturn(new RouteConfig('/{alias}'))
-        ;
+        yield 'Prepends the page alias for a relative path' => [
+            new RouteConfig('{alias}'),
+            'foo',
+            'bar',
+            '.baz',
+            '/foo/bar/{alias}.baz',
+        ];
 
-        $this->pageRegistry
-            ->expects($this->once())
-            ->method('enhancePageRoute')
-            ->willReturnArgument(0)
-        ;
+        yield 'URL Suffix from route config overrides the page settings' => [
+            new RouteConfig('{alias}', null, '.html'),
+            'foo',
+            'bar',
+            '.baz',
+            '/foo/bar/{alias}.html',
+        ];
 
-        $route = $this->factory->createRouteForPage($pageModel);
+        yield 'Adds URL suffix for absolute path' => [
+            new RouteConfig('/foo'),
+            '',
+            'bar',
+            '.baz',
+            '/foo.baz',
+        ];
 
-        $this->assertSame('/foo/bar/{alias}.baz', $route->getPath());
-    }
+        yield 'Adds URL prefix and suffix for absolute path' => [
+            new RouteConfig('/not-bar'),
+            'foo',
+            'bar',
+            '.baz',
+            '/foo/not-bar.baz',
+        ];
 
-    public function testCreatesPageRouteWithParametersFromPageModel(): void
-    {
-        /** @var PageModel&MockObject $pageModel */
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
-            'type' => 'foo',
-            'alias' => 'bar',
-            'parameters' => '/{category}/{alias}',
-            'urlPrefix' => 'foo',
-            'urlSuffix' => '.baz',
-        ]);
+        yield 'Override URL Suffix for absolute path' => [
+            new RouteConfig('/foo', null, '.html'),
+            '',
+            'bar',
+            '.baz',
+            '/foo.html',
+        ];
 
-        $this->pageRegistry
-            ->expects($this->once())
-            ->method('getRouteConfig')
-            ->with('foo')
-            ->willReturn(new RouteConfig('/{alias}'))
-        ;
+        yield 'Allow config with full path' => [
+            new RouteConfig('/feed/{alias}.atom', null, ''),
+            '',
+            'bar',
+            '.baz',
+            '/feed/{alias}.atom',
+        ];
 
-        $this->pageRegistry
-            ->expects($this->once())
-            ->method('enhancePageRoute')
-            ->willReturnArgument(0)
-        ;
-
-        $route = $this->factory->createRouteForPage($pageModel);
-
-        $this->assertSame('/foo/bar/{category}/{alias}.baz', $route->getPath());
+        yield 'Adds URL prefix to config with full path' => [
+            new RouteConfig('/feed/{alias}.atom', null, ''),
+            'foo',
+            'bar',
+            '.baz',
+            '/foo/feed/{alias}.atom',
+        ];
     }
 
     public function testCreatesPageRouteWithContent(): void

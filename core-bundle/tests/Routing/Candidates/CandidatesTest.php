@@ -19,9 +19,9 @@ use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\FetchMode;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Statement;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpFoundation\Request;
 
 class CandidatesTest extends TestCase
@@ -31,21 +31,10 @@ class CandidatesTest extends TestCase
      */
     public function testGetCandidates(string $pathInfo, array $urlSuffixes, array $languages, array $expected): void
     {
-        $request = $this->createMock(Request::class);
-        $request
-            ->expects($this->once())
-            ->method('getPathinfo')
-            ->willReturn($pathInfo)
-        ;
+        $request = $this->mockRequest($pathInfo);
+        $connection = $this->mockConnection();
 
-        $connection = $this->mockConnectionWithLanguages($languages);
-
-        $pageRegistry = $this->createMock(PageRegistry::class);
-        $pageRegistry
-            ->expects($this->once())
-            ->method('getUrlSuffixes')
-            ->willReturn($urlSuffixes)
-        ;
+        $pageRegistry = $this->mockPageRegistry($languages, $urlSuffixes);
 
         $candidates = new PageCandidates($connection, $pageRegistry);
 
@@ -57,19 +46,9 @@ class CandidatesTest extends TestCase
      */
     public function testGetLocaleCandidates(string $pathInfo, array $urlSuffixes, array $languages, array $expected): void
     {
-        $request = $this->createMock(Request::class);
-        $request
-            ->expects($this->once())
-            ->method('getPathinfo')
-            ->willReturn($pathInfo)
-        ;
+        $request = $this->mockRequest($pathInfo);
 
-        $pageRegistry = $this->createMock(PageRegistry::class);
-        $pageRegistry
-            ->expects($this->once())
-            ->method('getUrlSuffixes')
-            ->willReturn($urlSuffixes)
-        ;
+        $pageRegistry = $this->mockPageRegistry(null, $urlSuffixes);
 
         $candidates = new LocaleCandidates($pageRegistry);
 
@@ -82,24 +61,7 @@ class CandidatesTest extends TestCase
      */
     public function testGetCandidatesInLegacyMode(string $pathInfo, array $urlSuffixes, array $languages, array $expected): void
     {
-        $request = $this->createMock(Request::class);
-        $request
-            ->expects($this->atLeastOnce())
-            ->method('getPathinfo')
-            ->willReturn($pathInfo)
-        ;
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $providers = $this->createMock(ServiceLocator::class);
-        $providers
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
+        $request = $this->mockRequest($pathInfo);
 
         $candidates = (new LegacyCandidates('' !== $languages[0], $urlSuffixes[0]))->getCandidates($request);
 
@@ -280,7 +242,7 @@ class CandidatesTest extends TestCase
             ['.html'],
             ['en'],
             [
-                'default' => ['index', '/', 'foobar'],
+                'default' => ['index', '/', 15],
                 'legacy' => [],
                 'locale' => [],
             ],
@@ -403,36 +365,126 @@ class CandidatesTest extends TestCase
         ];
     }
 
+    public function testIncluesPageWithAbsolutePath(): void
+    {
+        $request = $this->mockRequest('/foo/bar/baz.html');
+
+        $queryBuilder = $this->createMock(QueryBuilder::class);
+
+        $queryBuilder
+            ->expects($this->once())
+            ->method('orWhere')
+            ->with('type IN (:types)')
+            ->willReturnSelf()
+        ;
+
+        $queryBuilder
+            ->expects($this->once())
+            ->method('setParameter')
+            ->with('types', ['foo', 'bar'], Connection::PARAM_STR_ARRAY)
+            ->willReturnSelf()
+        ;
+
+        $pageRegistry = $this->mockPageRegistry(['foo', 'bar'], ['.html']);
+        $pageRegistry
+            ->expects($this->once())
+            ->method('getPathRegex')
+            ->willReturn([
+                'foo' => '#^/bar/[.]+\.html$#sD',
+                'bar' => '#^/bar$#sD',
+            ])
+        ;
+
+        $candidates = new PageCandidates($this->mockConnection($queryBuilder), $pageRegistry);
+
+        $this->assertSame(['bar/baz', 'bar', 15], $candidates->getCandidates($request));
+    }
+
     /**
+     * @return Request&MockObject
+     */
+    private function mockRequest(string $pathInfo): Request
+    {
+        $request = $this->createMock(Request::class);
+
+        $request
+            ->method('getHttpHost')
+            ->willReturn('www.example.com')
+        ;
+
+        $request
+            ->expects($this->atLeastOnce())
+            ->method('getPathinfo')
+            ->willReturn($pathInfo)
+        ;
+
+        return $request;
+    }
+
+    /**
+     * @return PageRegistry&MockObject
+     */
+    private function mockPageRegistry(?array $urlPrefixes, ?array $urlSuffixes): PageRegistry
+    {
+        $pageRegistry = $this->createMock(PageRegistry::class);
+
+        $pageRegistry
+            ->expects(null === $urlPrefixes ? $this->never() : $this->once())
+            ->method('getUrlPrefixes')
+            ->willReturn($urlPrefixes ?: [])
+        ;
+
+        $pageRegistry
+            ->expects(null === $urlSuffixes ? $this->never() : $this->once())
+            ->method('getUrlSuffixes')
+            ->willReturn($urlSuffixes ?: [])
+        ;
+
+        return $pageRegistry;
+    }
+
+    /**
+     * @param QueryBuilder&MockObject $queryBuilder
+     *
      * @return Connection&MockObject
      */
-    private function mockConnectionWithLanguages(array $languages): Connection
+    private function mockConnection(QueryBuilder $queryBuilder = null): Connection
     {
-        $prefixStatement = $this->createMock(Statement::class);
-        $prefixStatement
-            ->expects($this->once())
+        $statement = $this->createMock(Statement::class);
+        $statement
             ->method('fetchAll')
             ->with(FetchMode::COLUMN)
-            ->willReturn($languages)
+            ->willReturn([15])
+        ;
+
+        if (null === $queryBuilder) {
+            $queryBuilder = $this->createMock(QueryBuilder::class);
+        }
+
+        $queryBuilder
+            ->expects($this->once())
+            ->method('select')
+            ->with('id')
+            ->willReturnSelf()
+        ;
+
+        $queryBuilder
+            ->expects($this->once())
+            ->method('from')
+            ->with('tl_page')
+            ->willReturnSelf()
+        ;
+
+        $queryBuilder
+            ->method('execute')
+            ->willReturn($statement)
         ;
 
         $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects($this->once())
-            ->method('query')
-            ->with("SELECT DISTINCT urlPrefix FROM tl_page WHERE type='root'")
-            ->willReturn($prefixStatement)
-        ;
-
-        $rootStatement = $this->createMock(Statement::class);
-        $rootStatement
-            ->method('fetchAll')
-            ->willReturn(['foobar'])
-        ;
 
         $connection
-            ->method('executeQuery')
-            ->willReturn($rootStatement)
+            ->method('createQueryBuilder')
+            ->willReturn($queryBuilder)
         ;
 
         return $connection;

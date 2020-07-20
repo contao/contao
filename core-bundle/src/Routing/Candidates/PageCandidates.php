@@ -52,7 +52,10 @@ class PageCandidates extends AbstractCandidates
         $qb = $this->connection->createQueryBuilder();
         $qb->select('id')->from('tl_page');
 
-        if ($this->addRootQuery($candidates, $qb, $request->getHttpHost()) || $this->addRegexQuery($qb, $request->getPathInfo())) {
+        $hasRoot = $this->addRootQuery($candidates, $qb, $request->getHttpHost());
+        $hasRegex = $this->addRegexQuery($qb, $request->getPathInfo());
+
+        if ($hasRoot || $hasRegex) {
             return array_unique(array_merge($candidates, $qb->execute()->fetchAll(FetchMode::COLUMN)));
         }
 
@@ -99,8 +102,10 @@ class PageCandidates extends AbstractCandidates
             return false;
         }
 
-        $queryBuilder->orWhere('type IN (:types)');
-        $queryBuilder->setParameter('types', $types, Connection::PARAM_STR_ARRAY);
+        $queryBuilder
+            ->orWhere('type IN (:types)')
+            ->setParameter('types', $types, Connection::PARAM_STR_ARRAY)
+        ;
 
         return true;
     }
