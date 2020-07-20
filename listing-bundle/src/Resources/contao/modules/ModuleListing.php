@@ -421,7 +421,6 @@ class ModuleListing extends Module
 			return '';
 		}
 
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		// Array

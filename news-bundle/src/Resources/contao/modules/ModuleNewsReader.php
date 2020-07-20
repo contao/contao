@@ -80,7 +80,6 @@ class ModuleNewsReader extends ModuleNews
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$this->Template->articles = '';

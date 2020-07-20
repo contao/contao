@@ -79,7 +79,6 @@ class InsertTags extends Controller
 	 */
 	protected function doReplace($strBuffer, $blnCache)
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		// Preserve insert tags

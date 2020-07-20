@@ -291,7 +291,6 @@ abstract class ModuleNews extends Module
 			return array();
 		}
 
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$return = array();

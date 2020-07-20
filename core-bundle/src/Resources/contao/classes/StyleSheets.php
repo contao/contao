@@ -1072,7 +1072,6 @@ class StyleSheets extends Backend
 			return '';
 		}
 
-		/** @var FileUpload $objUploader */
 		$objUploader = new FileUpload();
 
 		// Import CSS

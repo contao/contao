@@ -62,7 +62,6 @@ class ModuleCustomnav extends Module
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$items = array();

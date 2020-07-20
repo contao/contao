@@ -66,7 +66,6 @@ class ModuleQuicklink extends Module
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		// Get all active pages

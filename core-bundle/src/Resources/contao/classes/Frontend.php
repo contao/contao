@@ -434,7 +434,6 @@ abstract class Frontend extends Controller
 			}
 		}
 
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$pageId = $objPage->alias ?: $objPage->id;
@@ -473,7 +472,6 @@ abstract class Frontend extends Controller
 			@trigger_error('Using Frontend::jumpToOrReload() with $strForceLang has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 		}
 
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		// Always redirect if there are additional arguments (see #5734)

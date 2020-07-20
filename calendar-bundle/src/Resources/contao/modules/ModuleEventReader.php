@@ -82,7 +82,6 @@ class ModuleEventReader extends Events
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$this->Template->event = '';

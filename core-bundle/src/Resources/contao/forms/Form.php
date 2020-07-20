@@ -254,7 +254,6 @@ class Form extends Hybrid
 		// Add a warning to the page title
 		if ($doNotSubmit && !Environment::get('isAjaxRequest'))
 		{
-			/** @var PageModel $objPage */
 			global $objPage;
 
 			$title = $objPage->pageTitle ?: $objPage->title;

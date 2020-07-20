@@ -32,7 +32,6 @@ class Comments extends Frontend
 	 */
 	public function addCommentsToTemplate(FrontendTemplate $objTemplate, \stdClass $objConfig, $strSource, $intParent, $varNotifies)
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$limit = 0;
@@ -291,7 +290,6 @@ class Comments extends Frontend
 
 			if ($flashBag->has('comment_added'))
 			{
-				/** @var PageModel $objPage */
 				global $objPage;
 
 				$objPage->noSearch = 1;

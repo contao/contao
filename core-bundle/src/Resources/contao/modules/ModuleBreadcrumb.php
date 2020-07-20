@@ -52,7 +52,6 @@ class ModuleBreadcrumb extends Module
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$type = null;
@@ -92,7 +91,6 @@ class ModuleBreadcrumb extends Module
 			array_pop($pages);
 		}
 
-		/** @var PageModel[] $pages */
 		for ($i=(\count($pages)-1); $i>0; $i--)
 		{
 			if (($pages[$i]->hide && !$this->showHidden) || (!$pages[$i]->published && !BE_USER_LOGGED_IN))
