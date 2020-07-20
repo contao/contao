@@ -25,7 +25,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property integer $tstamp
  * @property string  $title
  * @property string  $alias
- * @property string  $parameters
  * @property string  $type
  * @property string  $pageTitle
  * @property string  $language
@@ -118,7 +117,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static PageModel|null findOneByTstamp($val, array $opt=array())
  * @method static PageModel|null findOneByTitle($val, array $opt=array())
  * @method static PageModel|null findOneByAlias($val, array $opt=array())
- * @method static PageModel|null findOneByParameters($val, array $opt=array())
  * @method static PageModel|null findOneByType($val, array $opt=array())
  * @method static PageModel|null findOneByPageTitle($val, array $opt=array())
  * @method static PageModel|null findOneByLanguage($val, array $opt=array())
@@ -176,7 +174,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static Collection|PageModel[]|PageModel|null findByTstamp($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByTitle($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByAlias($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByParameters($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByType($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByPageTitle($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByLanguage($val, array $opt=array())
@@ -238,7 +235,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static integer countByTstamp($val, array $opt=array())
  * @method static integer countByTitle($val, array $opt=array())
  * @method static integer countByAlias($val, array $opt=array())
- * @method static integer countByParameters($val, array $opt=array())
  * @method static integer countByType($val, array $opt=array())
  * @method static integer countByPageTitle($val, array $opt=array())
  * @method static integer countByLanguage($val, array $opt=array())

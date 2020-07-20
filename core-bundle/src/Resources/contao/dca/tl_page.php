@@ -230,14 +230,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'eval'                    => array('rgxp'=>'folderalias', 'doNotCopy'=>true, 'maxlength'=>255, 'tl_class'=>'w50 clr'),
 			'sql'                     => "varchar(255) BINARY NOT NULL default ''"
 		),
-		'parameters' => array
-		(
-			'exclude'                 => true,
-			'search'                  => true,
-			'inputType'               => 'text',
-			'eval'                    => array('nospace'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
-		),
 		'type' => array
 		(
 			'exclude'                 => true,
