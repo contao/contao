@@ -4,8 +4,6 @@ services:
         public: true
 
     Contao\CoreBundle\Controller\Page\RootPageController:
-        arguments:
-            - '@database_connection'
         tags:
             - { name: contao.page, contentComposition: false }
             - { name: monolog.logger, channel: contao }

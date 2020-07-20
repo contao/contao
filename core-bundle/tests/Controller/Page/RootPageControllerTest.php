@@ -14,14 +14,9 @@ namespace Contao\CoreBundle\Tests\Controller\Page;
 
 use Contao\CoreBundle\Controller\Page\RootPageController;
 use Contao\CoreBundle\Exception\NoActivePageFoundException;
-use Contao\CoreBundle\Routing\Page\CompositionAwareInterface;
 use Contao\CoreBundle\Routing\Page\PageRoute;
-use Contao\CoreBundle\Routing\Page\PageRouteEnhancerInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\FetchMode;
-use Doctrine\DBAL\Statement;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -33,11 +28,6 @@ class RootPageControllerTest extends TestCase
      * @var PageModel&MockObject
      */
     private $pageModelAdapter;
-
-    /**
-     * @var Connection&MockObject
-     */
-    private $connection;
 
     /**
      * @var UrlGeneratorInterface&MockObject
@@ -55,7 +45,6 @@ class RootPageControllerTest extends TestCase
         $pageModelAdapter = $this->mockAdapter(['findFirstPublishedByPid']);
         $this->pageModelAdapter = $pageModelAdapter;
 
-        $this->connection = $this->createMock(Connection::class);
         $this->router = $this->createMock(UrlGeneratorInterface::class);
 
         $framework = $this->mockContaoFramework([PageModel::class => $this->pageModelAdapter]);
@@ -71,14 +60,8 @@ class RootPageControllerTest extends TestCase
             )
         ;
 
-        $this->controller = new RootPageController($this->connection);
+        $this->controller = new RootPageController();
         $this->controller->setContainer($container);
-    }
-
-    public function testImplementsTheInterfaces(): void
-    {
-        $this->assertInstanceOf(PageRouteEnhancerInterface::class, $this->controller);
-        $this->assertInstanceOf(CompositionAwareInterface::class, $this->controller);
     }
 
     public function testThrowsExceptionIfPageTypeIsNotSupported(): void
@@ -135,33 +118,5 @@ class RootPageControllerTest extends TestCase
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame('https://www.example.org/en/foobar.html', $response->getTargetUrl());
-    }
-
-    public function testReturnsUrlSuffixesFromDatabase(): void
-    {
-        $statement = $this->createMock(Statement::class);
-        $statement
-            ->expects($this->once())
-            ->method('fetchAll')
-            ->with(FetchMode::COLUMN)
-            ->willReturn(['foo', 'bar'])
-        ;
-
-        $this->connection
-            ->expects($this->once())
-            ->method('query')
-            ->with("SELECT DISTINCT urlSuffix FROM tl_page WHERE type='root'")
-            ->willReturn($statement)
-        ;
-
-        $this->assertSame(['foo', 'bar'], $this->controller->getUrlSuffixes());
-    }
-
-    public function testDoesNotSupportContentComposition(): void
-    {
-        /** @var PageModel&MockObject $page */
-        $page = $this->mockClassWithProperties(PageModel::class);
-
-        $this->assertFalse($this->controller->supportsContentComposition($page));
     }
 }

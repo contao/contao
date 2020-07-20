@@ -15,27 +15,11 @@ namespace Contao\CoreBundle\Controller\Page;
 use Contao\CoreBundle\Controller\AbstractController;
 use Contao\CoreBundle\Exception\NoActivePageFoundException;
 use Contao\CoreBundle\Monolog\ContaoContext;
-use Contao\CoreBundle\Routing\Page\CompositionAwareInterface;
-use Contao\CoreBundle\Routing\Page\PageRoute;
-use Contao\CoreBundle\Routing\Page\PageRouteEnhancerInterface;
 use Contao\PageModel;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\FetchMode;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Route;
 
-class RootPageController extends AbstractController implements PageRouteEnhancerInterface, CompositionAwareInterface
+class RootPageController extends AbstractController
 {
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    public function __construct(Connection $connection)
-    {
-        $this->connection = $connection;
-    }
-
     public function __invoke(PageModel $pageModel): Response
     {
         if ('root' !== $pageModel->type) {
@@ -43,24 +27,6 @@ class RootPageController extends AbstractController implements PageRouteEnhancer
         }
 
         return $this->redirectToContent($this->getNextPage((int) $pageModel->id));
-    }
-
-    public function enhancePageRoute(PageRoute $route): Route
-    {
-        return $route;
-    }
-
-    public function getUrlSuffixes(): array
-    {
-        return $this->connection
-            ->query("SELECT DISTINCT urlSuffix FROM tl_page WHERE type='root'")
-            ->fetchAll(FetchMode::COLUMN)
-        ;
-    }
-
-    public function supportsContentComposition(PageModel $pageModel): bool
-    {
-        return false;
     }
 
     private function getNextPage(int $rootPageId): PageModel

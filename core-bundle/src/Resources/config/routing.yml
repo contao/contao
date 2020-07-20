@@ -10,7 +10,9 @@ services:
         arguments:
             - '@Contao\CoreBundle\Routing\RouteFactory'
 
-    Contao\CoreBundle\Routing\Page\PageRegistry: ~
+    Contao\CoreBundle\Routing\Page\PageRegistry:
+        arguments:
+            - '@database_connection'
 
     Contao\CoreBundle\Routing\RouteFactory:
         arguments:
