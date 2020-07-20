@@ -13,9 +13,9 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Routing\Page;
 
 use Contao\CoreBundle\Routing\Page\ContentCompositionInterface;
+use Contao\CoreBundle\Routing\Page\DynamicRouteInterface;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
-use Contao\CoreBundle\Routing\Page\DynamicRouteInterface;
 use Contao\CoreBundle\Routing\Page\RouteConfig;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;

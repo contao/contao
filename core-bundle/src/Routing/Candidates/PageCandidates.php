@@ -82,8 +82,9 @@ class PageCandidates extends AbstractCandidates
         }
 
         $paths = [];
+
         foreach ($pathMap as $type => $pathRegex) {
-            $paths[] = '(?P<'.$type.'>'.substr($pathRegex, 2, strrpos($pathRegex, '$')-2).')';
+            $paths[] = '(?P<'.$type.'>'.substr($pathRegex, 2, strrpos($pathRegex, '$') - 2).')';
         }
 
         preg_match_all(

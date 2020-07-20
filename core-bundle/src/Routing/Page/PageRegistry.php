@@ -171,11 +171,11 @@ class PageRegistry
         $urlSuffixes = [
             array_column($results, 'urlSuffix'),
             array_filter(array_map(
-                function (RouteConfig $config) {
+                static function (RouteConfig $config) {
                     return $config->getUrlSuffix();
                 },
                 $this->routeConfigs
-            ))
+            )),
         ];
 
         foreach ($this->routeConfigs as $config) {
