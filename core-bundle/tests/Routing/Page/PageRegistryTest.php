@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Tests\Routing\Page;
 use Contao\CoreBundle\Routing\Page\ContentCompositionInterface;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
-use Contao\CoreBundle\Routing\Page\PageRouteEnhancerInterface;
+use Contao\CoreBundle\Routing\Page\DynamicRouteInterface;
 use Contao\CoreBundle\Routing\Page\RouteConfig;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
@@ -83,7 +83,7 @@ class PageRegistryTest extends TestCase
             ->willReturn($pageModel)
         ;
 
-        $enhancer1 = $this->createMock(PageRouteEnhancerInterface::class);
+        $enhancer1 = $this->createMock(DynamicRouteInterface::class);
         $enhancer1
             ->expects($this->once())
             ->method('enhancePageRoute')
@@ -91,7 +91,7 @@ class PageRegistryTest extends TestCase
             ->willReturn($route)
         ;
 
-        $enhancer2 = $this->createMock(PageRouteEnhancerInterface::class);
+        $enhancer2 = $this->createMock(DynamicRouteInterface::class);
         $enhancer2
             ->expects($this->never())
             ->method($this->anything())
@@ -106,21 +106,21 @@ class PageRegistryTest extends TestCase
 
     public function testGetsSuffixesFromRouteEnhancers(): void
     {
-        $enhancer1 = $this->createMock(PageRouteEnhancerInterface::class);
+        $enhancer1 = $this->createMock(DynamicRouteInterface::class);
         $enhancer1
             ->expects($this->once())
             ->method('getUrlSuffixes')
             ->willReturn(['foo', 'bar'])
         ;
 
-        $enhancer2 = $this->createMock(PageRouteEnhancerInterface::class);
+        $enhancer2 = $this->createMock(DynamicRouteInterface::class);
         $enhancer2
             ->expects($this->once())
             ->method('getUrlSuffixes')
             ->willReturn(['baz'])
         ;
 
-        $enhancer3 = $this->createMock(PageRouteEnhancerInterface::class);
+        $enhancer3 = $this->createMock(DynamicRouteInterface::class);
         $enhancer3
             ->expects($this->once())
             ->method('getUrlSuffixes')
@@ -175,13 +175,13 @@ class PageRegistryTest extends TestCase
         $config1 = new RouteConfig();
         $config2 = new RouteConfig();
 
-        $enhancer1 = $this->createMock(PageRouteEnhancerInterface::class);
+        $enhancer1 = $this->createMock(DynamicRouteInterface::class);
         $enhancer1
             ->expects($this->never())
             ->method($this->anything())
         ;
 
-        $enhancer2 = $this->createMock(PageRouteEnhancerInterface::class);
+        $enhancer2 = $this->createMock(DynamicRouteInterface::class);
         $enhancer2
             ->expects($this->once())
             ->method('getUrlSuffixes')
@@ -216,7 +216,7 @@ class PageRegistryTest extends TestCase
         $pageModel = $this->mockClassWithProperties(PageModel::class, ['type' => 'foo']);
         $config = new RouteConfig();
 
-        $enhancer = $this->createMock(PageRouteEnhancerInterface::class);
+        $enhancer = $this->createMock(DynamicRouteInterface::class);
         $enhancer
             ->expects($this->never())
             ->method($this->anything())

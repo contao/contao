@@ -29,7 +29,7 @@ class PageRegistry
     private $routeConfigs = [];
 
     /**
-     * @var array<PageRouteEnhancerInterface>
+     * @var array<DynamicRouteInterface>
      */
     private $routeEnhancers = [];
 
@@ -66,7 +66,7 @@ class PageRegistry
             return $route;
         }
 
-        /** @var PageRouteEnhancerInterface $enhancer */
+        /** @var DynamicRouteInterface $enhancer */
         $enhancer = $this->routeEnhancers[$type];
 
         return $enhancer->enhancePageRoute($route);
@@ -110,7 +110,7 @@ class PageRegistry
     /**
      * @param ContentCompositionInterface|bool $contentComposition
      */
-    public function add(string $type, RouteConfig $config, PageRouteEnhancerInterface $routeEnhancer = null, $contentComposition = true): self
+    public function add(string $type, RouteConfig $config, DynamicRouteInterface $routeEnhancer = null, $contentComposition = true): self
     {
         // Override existing pages with the same identifier
         $this->routeConfigs[$type] = $config;

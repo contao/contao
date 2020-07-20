@@ -15,12 +15,9 @@ namespace Contao\CoreBundle\Routing\Page;
 use Symfony\Component\Routing\Route;
 
 /**
- * A page route enhancer can adjust the default route for a page.
- *
- * The route enhancer knows what the route for a page looks like, e.g. if a
- * certain route has a different URL suffix than configured in the root page.
+ * A page can dynamically adjust the route for a page at runtime.
  */
-interface PageRouteEnhancerInterface
+interface DynamicRouteInterface
 {
     /**
      * While matching URLs, Contao generates alias candidates and looks for
@@ -41,7 +38,7 @@ interface PageRouteEnhancerInterface
      * remaining path as an alias.
      *
      * Only return a non-empty array if this page does not use the global URL
-     * suffix as configured in the root page, e.g if this is a "feed" page
+     * suffix as configured in the root page, e.g. if this is a "feed" page
      * type, it could return ".rss" and ".atom" as URL suffixes.
      */
     public function getUrlSuffixes(): array;

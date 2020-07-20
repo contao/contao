@@ -18,7 +18,7 @@ use Contao\CoreBundle\Migration\MigrationInterface;
 use Contao\CoreBundle\Picker\PickerProviderInterface;
 use Contao\CoreBundle\Routing\Content\ContentRouteProviderInterface;
 use Contao\CoreBundle\Routing\Page\ContentCompositionInterface;
-use Contao\CoreBundle\Routing\Page\PageRouteEnhancerInterface;
+use Contao\CoreBundle\Routing\Page\DynamicRouteInterface;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Imagine\Exception\RuntimeException;
 use Imagine\Gd\Imagine;
@@ -109,7 +109,7 @@ class ContaoCoreExtension extends Extension
         ;
 
         $container
-            ->registerForAutoconfiguration(PageRouteEnhancerInterface::class)
+            ->registerForAutoconfiguration(DynamicRouteInterface::class)
             ->addTag('contao.page')
         ;
 
