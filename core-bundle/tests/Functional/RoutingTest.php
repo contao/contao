@@ -662,6 +662,16 @@ class RoutingTest extends FunctionalTestCase
             'root-with-home.local',
             true,
         ];
+
+        yield 'Redirects to the first regular page if the alias is not "index" and the request is only the prefix' => [
+            ['theme', 'root-with-home-and-prefix'],
+            '/en/',
+            302,
+            'Redirecting to http://root-with-home.local/en/home.html',
+            ['language' => 'en'],
+            'root-with-home.local',
+            false,
+        ];
     }
 
     /**

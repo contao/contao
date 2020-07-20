@@ -46,7 +46,22 @@ class PageCandidates extends AbstractCandidates
     {
         $this->initialize();
 
-        return parent::getCandidates($request);
+        $candidates = parent::getCandidates($request);
+
+        if (\in_array('index', $candidates, true)) {
+            $result = $this->connection->executeQuery(
+                "SELECT IF(alias='', id, alias) FROM tl_page WHERE type='root' AND (dns=:httpHost OR dns='')",
+                ['httpHost' => $request->getHttpHost()]
+            );
+
+            $candidates = array_merge(
+                $candidates,
+                ['/'],
+                $result->fetchAll(FetchMode::COLUMN)
+            );
+        }
+
+        return array_unique($candidates);
     }
 
     /**

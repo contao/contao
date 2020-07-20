@@ -280,7 +280,7 @@ class CandidatesTest extends TestCase
             ['.html'],
             ['en'],
             [
-                'default' => ['index'],
+                'default' => ['index', '/', 'foobar'],
                 'legacy' => [],
                 'locale' => [],
             ],
@@ -408,8 +408,8 @@ class CandidatesTest extends TestCase
      */
     private function mockConnectionWithLanguages(array $languages): Connection
     {
-        $statement = $this->createMock(Statement::class);
-        $statement
+        $prefixStatement = $this->createMock(Statement::class);
+        $prefixStatement
             ->expects($this->once())
             ->method('fetchAll')
             ->with(FetchMode::COLUMN)
@@ -417,11 +417,23 @@ class CandidatesTest extends TestCase
         ;
 
         $connection = $this->createMock(Connection::class);
+
         $connection
             ->expects($this->once())
             ->method('query')
             ->with("SELECT DISTINCT urlPrefix FROM tl_page WHERE type='root'")
-            ->willReturn($statement)
+            ->willReturn($prefixStatement)
+        ;
+
+        $rootStatement = $this->createMock(Statement::class);
+        $rootStatement
+            ->method('fetchAll')
+            ->willReturn(['foobar'])
+        ;
+
+        $connection
+            ->method('executeQuery')
+            ->willReturn($rootStatement)
         ;
 
         return $connection;

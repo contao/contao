@@ -384,7 +384,8 @@ class RouteProvider implements RouteProviderInterface
     private function findRootPages(string $httpHost): array
     {
         if (
-            !empty($GLOBALS['TL_HOOKS']['getRootPageFromUrl'])
+            $this->legacyRouting
+            && !empty($GLOBALS['TL_HOOKS']['getRootPageFromUrl'])
             && \is_array($GLOBALS['TL_HOOKS']['getRootPageFromUrl'])
         ) {
             /** @var System $system */
