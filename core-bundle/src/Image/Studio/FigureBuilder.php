@@ -400,9 +400,9 @@ class FigureBuilder
     /**
      * Sets a custom light box group ID.
      *
-     * By default or if the argument is set to null, an ID will be generated.
-     * For this setting to take effect, make sure you have enabled the creation
-     * of a light box by calling enableLightBox().
+     * By default or if the argument is set to null, the ID will be empty. For
+     * this setting to take effect, make sure you have enabled the creation of
+     * a light box by calling enableLightBox().
      */
     public function setLightBoxGroupIdentifier(?string $identifier): self
     {
