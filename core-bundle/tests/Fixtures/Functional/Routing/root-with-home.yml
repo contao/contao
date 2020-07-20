@@ -6,7 +6,7 @@ tl_page:
       title: Root with home page
       alias: root-with-home-page
       urlPrefix: ''
-      urlSuffix: '.html'
+      urlSuffix: .html
       type: root
       language: en
       dns: root-with-home.local

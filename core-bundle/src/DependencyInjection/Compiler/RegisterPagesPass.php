@@ -51,8 +51,8 @@ class RegisterPagesPass implements CompilerPassInterface
 
         foreach ($this->findAndSortTaggedServices(self::TAG_NAME, $container) as $reference) {
             $definition = $container->findDefinition((string) $reference);
-
             $tags = $definition->getTag(self::TAG_NAME);
+
             $definition->clearTag(self::TAG_NAME);
 
             foreach ($tags as $attributes) {

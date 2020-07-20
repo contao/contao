@@ -417,7 +417,6 @@ class CandidatesTest extends TestCase
         ;
 
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->expects($this->once())
             ->method('query')

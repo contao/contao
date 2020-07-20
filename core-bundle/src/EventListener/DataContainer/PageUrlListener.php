@@ -228,9 +228,6 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
         }
     }
 
-    /**
-     * @throws DuplicateAliasException
-     */
     private function recursiveValidatePages(int $pid, PageModel $rootPage): void
     {
         /** @var PageModel $pageAdapter */
