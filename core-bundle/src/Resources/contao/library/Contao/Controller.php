@@ -863,6 +863,7 @@ abstract class Controller extends System
 			}
 		}
 
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$objLayout = LayoutModel::findByPk($objPage->layoutId);

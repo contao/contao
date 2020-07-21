@@ -18,16 +18,12 @@ use Doctrine\DBAL\Connection;
 
 class RoutingMigrationTest extends FunctionalTestCase
 {
-    protected function setUp(): void
-    {
-        static::bootKernel();
-    }
-
     /**
      * @dataProvider shouldRunProvider
      */
     public function testShouldRun(array $dropFields, bool $expected): void
     {
+        static::bootKernel();
         static::resetDatabaseSchema();
 
         /** @var Connection $connection */
@@ -67,6 +63,7 @@ class RoutingMigrationTest extends FunctionalTestCase
 
     public function testMigratesSchema(): void
     {
+        static::bootKernel();
         static::resetDatabaseSchema();
 
         /** @var Connection $connection */
@@ -94,6 +91,7 @@ class RoutingMigrationTest extends FunctionalTestCase
      */
     public function testMigratesData(bool $prependLocale, string $urlSuffix): void
     {
+        static::bootKernel();
         static::resetDatabaseSchema();
         static::loadFixtures([__DIR__.'/../../Fixtures/Functional/Migration/routing.yml'], false);
 

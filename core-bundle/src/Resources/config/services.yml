@@ -211,7 +211,10 @@ services:
     contao.data_collector:
         class: Contao\CoreBundle\DataCollector\ContaoDataCollector
         arguments:
-            - '@parameter_bag'
+            - '%contao.legacy_routing%'
+            - '%kernel.project_dir%'
+            - '%contao.prepend_locale%'
+            - '%contao.url_suffix%'
         tags:
             - { name: data_collector, template: '@ContaoCore/Collector/contao.html.twig', id: contao }
 

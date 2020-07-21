@@ -23,8 +23,6 @@ use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\System;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -39,7 +37,7 @@ class ContaoDataCollectorTest extends TestCase
             'additional_data' => 'data',
         ];
 
-        $collector = new ContaoDataCollector($this->createParameterBag());
+        $collector = $this->getDataCollector();
         $collector->collect(new Request(), new Response());
 
         $this->assertSame(['ContentText' => ContentText::class], $collector->getClassesAliased());
@@ -86,7 +84,7 @@ class ContaoDataCollectorTest extends TestCase
 
         $GLOBALS['objPage'] = $page;
 
-        $collector = new ContaoDataCollector($this->createParameterBag());
+        $collector = $this->getDataCollector();
         $collector->setFramework($framework);
         $collector->collect(new Request(), new Response());
 
@@ -113,7 +111,7 @@ class ContaoDataCollectorTest extends TestCase
 
     public function testStoresTheLegacyRoutingData(bool $legacyRouting = false, bool $prependLocale = false, string $urlSuffix = '.html'): void
     {
-        $collector = new ContaoDataCollector($this->createParameterBag($legacyRouting, $prependLocale, $urlSuffix));
+        $collector = $this->getDataCollector($legacyRouting, $prependLocale, $urlSuffix);
         $collector->collect(new Request(), new Response());
 
         $this->assertSame(
@@ -159,10 +157,7 @@ class ContaoDataCollectorTest extends TestCase
 
         $framework = $this->mockContaoFramework([System::class => $systemAdapter]);
 
-        $parameterBag = $this->createParameterBag(true);
-        $parameterBag->set('kernel.project_dir', \dirname(__DIR__).'/Fixtures/DataCollector');
-
-        $collector = new ContaoDataCollector($parameterBag);
+        $collector = $this->getDataCollector(true);
         $collector->setFramework($framework);
         $collector->collect(new Request(), new Response());
 
@@ -179,7 +174,7 @@ class ContaoDataCollectorTest extends TestCase
 
     public function testReturnsAnEmptyArrayIfTheKeyIsUnknown(): void
     {
-        $collector = new ContaoDataCollector($this->createParameterBag());
+        $collector = $this->getDataCollector();
 
         $method = new \ReflectionMethod($collector, 'getData');
         $method->setAccessible(true);
@@ -187,12 +182,8 @@ class ContaoDataCollectorTest extends TestCase
         $this->assertSame([], $method->invokeArgs($collector, ['foo']));
     }
 
-    private function createParameterBag(bool $legacyRouting = false, bool $prependLocale = false, string $urlSuffix = '.html'): ParameterBagInterface
+    private function getDataCollector(bool $legacyRouting = false, bool $prependLocale = false, string $urlSuffix = '.html'): ContaoDataCollector
     {
-        return new ParameterBag([
-            'contao.legacy_routing' => $legacyRouting,
-            'contao.prepend_locale' => $prependLocale,
-            'contao.url_suffix' => $urlSuffix,
-        ]);
+        return new ContaoDataCollector($legacyRouting, \dirname(__DIR__).'/Fixtures/DataCollector', $prependLocale, $urlSuffix);
     }
 }
