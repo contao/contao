@@ -134,9 +134,6 @@
         "contao/tcpdf-bundle": "To export articles as PDF files"
     },
     "extra": {
-        "branch-alias": {
-            "dev-master": "4.10.x-dev"
-        },
         "contao-manager-plugin": "Contao\\CoreBundle\\ContaoManager\\Plugin",
         "symfony": {
             "require": "^4.4"

@@ -30,9 +30,6 @@
         "symfony/http-client": "4.4.*"
     },
     "extra": {
-        "branch-alias": {
-            "dev-master": "4.10.x-dev"
-        },
         "contao-manager-plugin": "Contao\\NewsletterBundle\\ContaoManager\\Plugin",
         "symfony": {
             "require": "^4.4"

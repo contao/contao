@@ -4,9 +4,9 @@ on:
     pull_request: ~
     push:
         branches:
-            - master
+            - 4.10
         tags:
-            - '*'
+            - 4.10.*
     schedule:
         - cron: 0 13 * * MON,TUE
 

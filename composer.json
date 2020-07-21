@@ -164,9 +164,6 @@
         "weirdan/doctrine-psalm-plugin": "^0.11"
     },
     "extra": {
-        "branch-alias": {
-            "dev-master": "4.10.x-dev"
-        },
         "contao-manager-plugin": {
             "contao/calendar-bundle": "Contao\\CalendarBundle\\ContaoManager\\Plugin",
             "contao/comments-bundle": "Contao\\CommentsBundle\\ContaoManager\\Plugin",
