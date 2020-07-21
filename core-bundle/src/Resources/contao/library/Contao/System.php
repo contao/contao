@@ -163,7 +163,7 @@ abstract class System
 			}
 			elseif (!class_exists($strClass))
 			{
-				throw new \RuntimeException('System::import() failed because class "'.$strClass.'" is not a valid class name or does not exist.');
+				throw new \RuntimeException('System::import() failed because class "' . $strClass . '" is not a valid class name or does not exist.');
 			}
 			elseif (\in_array('getInstance', get_class_methods($strClass)))
 			{
@@ -208,7 +208,7 @@ abstract class System
 			}
 			elseif (!class_exists($strClass))
 			{
-				throw new \RuntimeException('System::importStatic() failed because class "'.$strClass.'" is not a valid class name or does not exist.');
+				throw new \RuntimeException('System::importStatic() failed because class "' . $strClass . '" is not a valid class name or does not exist.');
 			}
 			elseif (\in_array('getInstance', get_class_methods($strClass)))
 			{
