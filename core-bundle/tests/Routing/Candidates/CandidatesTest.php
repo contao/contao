@@ -428,6 +428,40 @@ class CandidatesTest extends TestCase
         $this->assertSame(['bar/baz', 'bar', 'bar/baz.html', 15], $candidates->getCandidates($request));
     }
 
+    public function testIncluesPageWithAbsolutePathWithoutPrefix(): void
+    {
+        $request = $this->mockRequest('/bar/baz.html');
+
+        $queryBuilder = $this->createMock(QueryBuilder::class);
+        $queryBuilder
+            ->expects($this->once())
+            ->method('orWhere')
+            ->with('type IN (:types)')
+            ->willReturnSelf()
+        ;
+
+        $queryBuilder
+            ->expects($this->once())
+            ->method('setParameter')
+            ->with('types', ['foo', 'bar'], Connection::PARAM_STR_ARRAY)
+            ->willReturnSelf()
+        ;
+
+        $pageRegistry = $this->mockPageRegistry(['foo', ''], ['.html']);
+        $pageRegistry
+            ->expects($this->once())
+            ->method('getPathRegex')
+            ->willReturn([
+                'foo' => '#^/bar/[a-z]+$#sD',
+                'bar' => '#^/bar$#sD',
+            ])
+        ;
+
+        $candidates = new PageCandidates($this->mockConnection($queryBuilder), $pageRegistry);
+
+        $this->assertSame(['bar/baz', 'bar', 15], $candidates->getCandidates($request));
+    }
+
     /**
      * @return Request&MockObject
      */
