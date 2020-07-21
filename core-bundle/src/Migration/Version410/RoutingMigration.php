@@ -81,6 +81,6 @@ class RoutingMigration extends AbstractMigration
             ->execute(['suffix' => $this->urlSuffix])
         ;
 
-        return new MigrationResult(true, '');
+        return $this->createResult(true);
     }
 }
