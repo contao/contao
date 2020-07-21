@@ -31,6 +31,7 @@ use Contao\PageModel;
 use Contao\System;
 use Contao\Template;
 use Imagine\Gd\Imagine as ImagineGd;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
@@ -1456,7 +1457,7 @@ class FigureBuilderIntegrationTest extends TestCase
 
         $GLOBALS['TL_HOOKS']['replaceInsertTags'][] = [self::class, 'replaceFileTestInsertTag'];
 
-        // Register dummy page
+        /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->language = 'en';
 

@@ -491,6 +491,7 @@ class ContaoFrameworkTest extends TestCase
         $framework->setContainer($this->getContainerWithContaoConfiguration());
         $framework->initialize();
 
+        /* @phpstan-ignore-next-line */
         $this->assertInstanceOf(LazySessionAccess::class, $_SESSION);
         $this->assertInstanceOf(ArrayAttributeBag::class, $_SESSION['BE_DATA']);
         $this->assertInstanceOf(ArrayAttributeBag::class, $_SESSION['FE_DATA']);
