@@ -369,7 +369,7 @@ abstract class DataContainer extends Backend
 			// Deprecated since Contao 4.2, to be removed in Contao 5.0
 			if (!isset($_POST[$this->strInputName]) && \in_array($this->strInputName, $paletteFields))
 			{
-				@trigger_error('Using FORM_FIELDS has been deprecated and will no longer work in Contao 5.0. Make sure to always submit at least an empty string in your widget.', E_USER_DEPRECATED);
+				trigger_deprecation('contao/core-bundle', '4.2', 'Using $_POST[\'FORM_FIELDS\'] has been deprecated and will no longer work in Contao 5.0. Make sure to always submit at least an empty string in your widget.');
 			}
 
 			// Validate and save the field

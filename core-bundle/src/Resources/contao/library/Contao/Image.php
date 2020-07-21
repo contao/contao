@@ -120,7 +120,7 @@ class Image
 	 */
 	public function __construct(File $file)
 	{
-		@trigger_error('Using new Contao\Image() has been deprecated and will no longer work in Contao 5.0. Use the contao.image.image_factory service instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.3', 'Using the "Contao\Image" class has been deprecated and will no longer work in Contao 5.0. Use the "contao.image.image_factory" service instead.');
 
 		// Check whether the file exists
 		if (!$file->exists())
@@ -734,7 +734,7 @@ class Image
 	 */
 	public static function resize($image, $width, $height, $mode='')
 	{
-		@trigger_error('Using Image::resize() has been deprecated and will no longer work in Contao 5.0. Use the contao.image.image_factory service instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.3', 'Using "Contao\Image::resize()" has been deprecated and will no longer work in Contao 5.0. Use the "contao.image.image_factory" service instead.');
 
 		return static::get($image, $width, $height, $mode, $image, true) ? true : false;
 	}
@@ -752,7 +752,7 @@ class Image
 	 */
 	public static function create($image, $size=null)
 	{
-		@trigger_error('Using Image::create() has been deprecated and will no longer work in Contao 5.0. Use the contao.image.image_factory service instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.3', 'Using "Contao\Image::create()" has been deprecated and will no longer work in Contao 5.0. Use the "contao.image.image_factory" service instead.');
 
 		if (\is_string($image))
 		{
@@ -869,7 +869,7 @@ class Image
 	 */
 	public static function get($image, $width, $height, $mode='', $target=null, $force=false)
 	{
-		@trigger_error('Using Image::get() has been deprecated and will no longer work in Contao 5.0. Use the contao.image.image_factory service instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.3', 'Using "Contao\Image::get()" has been deprecated and will no longer work in Contao 5.0. Use the "contao.image.image_factory" service instead.');
 
 		if ($image == '')
 		{
@@ -907,7 +907,7 @@ class Image
 	 */
 	public static function getPixelValue($size)
 	{
-		@trigger_error('Using Image::getPixelValue() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.3', 'Using "Contao\Image::getPixelValue()" has been deprecated and will no longer work in Contao 5.0. Use the "contao.image.image_factory" service instead.');
 
 		$value = preg_replace('/[^0-9.-]+/', '', $size);
 		$unit = preg_replace('/[^acehimnprtvwx%]/', '', $size);

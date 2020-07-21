@@ -256,7 +256,7 @@ abstract class Template extends Controller
 	 */
 	public function showTemplateVars()
 	{
-		@trigger_error('Using Template::showTemplateVars() has been deprecated and will no longer work in Contao 5.0. Use Template::dumpTemplateVars() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Template::showTemplateVars()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Template::dumpTemplateVars()" instead.');
 
 		$this->dumpTemplateVars();
 	}
@@ -302,7 +302,7 @@ abstract class Template extends Controller
 	 */
 	public function output()
 	{
-		@trigger_error('Using Template::output() has been deprecated and will no longer work in Contao 5.0. Use Template::getResponse() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Template::output()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Template::getResponse()" instead.');
 
 		$this->compile();
 
@@ -450,7 +450,7 @@ abstract class Template extends Controller
 	 */
 	protected function getDebugBar()
 	{
-		@trigger_error('Using Template::getDebugBar() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Template::getDebugBar()" has been deprecated and will no longer work in Contao 5.0.');
 	}
 
 	/**
@@ -682,7 +682,7 @@ abstract class Template extends Controller
 	 */
 	public function flushAllData()
 	{
-		@trigger_error('Using Template::flushAllData() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Template::flushAllData()" has been deprecated and will no longer work in Contao 5.0.');
 
 		if (\function_exists('fastcgi_finish_request'))
 		{

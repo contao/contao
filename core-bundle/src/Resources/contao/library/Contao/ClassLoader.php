@@ -50,7 +50,7 @@ class ClassLoader
 	 */
 	public static function addNamespace($name)
 	{
-		@trigger_error('Using ClassLoader::addNamespace() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.2', 'Using "Contao\ClassLoader::addNamespace()" has been deprecated and will no longer work in Contao 5.0.');
 
 		if (\in_array($name, self::$namespaces))
 		{
@@ -69,7 +69,7 @@ class ClassLoader
 	 */
 	public static function addNamespaces($names)
 	{
-		@trigger_error('Using ClassLoader::addNamespaces() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.2', 'Using "Contao\ClassLoader::addNamespaces()" has been deprecated and will no longer work in Contao 5.0.');
 
 		foreach ($names as $name)
 		{
@@ -86,7 +86,7 @@ class ClassLoader
 	 */
 	public static function getNamespaces()
 	{
-		@trigger_error('Using ClassLoader::getNamespaces() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.2', 'Using "Contao\ClassLoader::getNamespaces()" has been deprecated and will no longer work in Contao 5.0.');
 
 		return self::$namespaces;
 	}
@@ -101,7 +101,7 @@ class ClassLoader
 	 */
 	public static function addClass($class, $file)
 	{
-		@trigger_error('Using ClassLoader::addClass() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.2', 'Using "Contao\ClassLoader::addClass()" has been deprecated and will no longer work in Contao 5.0.');
 
 		self::$classes[$class] = $file;
 	}
@@ -115,7 +115,7 @@ class ClassLoader
 	 */
 	public static function addClasses($classes)
 	{
-		@trigger_error('Using ClassLoader::addClasses() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.2', 'Using "Contao\ClassLoader::addClasses()" has been deprecated and will no longer work in Contao 5.0.');
 
 		foreach ($classes as $class=>$file)
 		{
@@ -132,7 +132,7 @@ class ClassLoader
 	 */
 	public static function getClasses()
 	{
-		@trigger_error('Using ClassLoader::getClasses() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.2', 'Using "Contao\ClassLoader::getClasses()" has been deprecated and will no longer work in Contao 5.0.');
 
 		return self::$classes;
 	}

@@ -294,7 +294,7 @@ class SimpleTokenParserTest extends TestCase
      * @group legacy
      * @dataProvider parseSimpleTokensLegacyProvider
      *
-     * @expectedDeprecation Using tokens that are not valid PHP variables has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.10: Using tokens that are not valid PHP variables has been deprecated %s.
      */
     public function testParsesSimpleTokensLegacy(string $string, array $tokens, string $expected): void
     {

@@ -29,7 +29,7 @@ class GdImageTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using the "Contao\GdImage" class has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.3: Using the "Contao\GdImage" class has been deprecated %s.
      */
     public function testCreatesImagesFromResources(): void
     {

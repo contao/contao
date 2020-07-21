@@ -67,7 +67,7 @@ abstract class Frontend extends Controller
 	 */
 	public static function getPageIdFromUrl()
 	{
-		@trigger_error('Using Frontend::getPageIdFromUrl() has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.7', 'Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.');
 
 		if (!System::getContainer()->getParameter('contao.legacy_routing'))
 		{
@@ -289,7 +289,7 @@ abstract class Frontend extends Controller
 	 */
 	public static function getRootIdFromUrl()
 	{
-		@trigger_error('Using Frontend::getRootIdFromUrl() has been deprecated and will no longer work in Contao 5.0. Use Frontend::getRootPageFromUrl()->id instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Frontend::getRootIdFromUrl()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Frontend::getRootPageFromUrl()->id" instead.');
 
 		return static::getRootPageFromUrl()->id;
 	}
@@ -480,7 +480,7 @@ abstract class Frontend extends Controller
 	{
 		if ($strForceLang !== null)
 		{
-			@trigger_error('Using Frontend::jumpToOrReload() with $strForceLang has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+			trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Frontend::jumpToOrReload()" with $strForceLang has been deprecated and will no longer work in Contao 5.0.');
 		}
 
 		/** @var PageModel $objPage */
@@ -514,7 +514,7 @@ abstract class Frontend extends Controller
 	 */
 	protected function getLoginStatus($strCookie)
 	{
-		@trigger_error('Using Frontend::getLoginStatus() has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.5', 'Using "Contao\Frontend::getLoginStatus()" has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.');
 
 		$objTokenChecker = System::getContainer()->get('contao.security.token_checker');
 
@@ -612,7 +612,7 @@ abstract class Frontend extends Controller
 	 */
 	public static function indexPageIfApplicable(Response $response)
 	{
-		@trigger_error('Using Frontend::indexPageIfApplicable() has been deprecated and will no longer work in Contao 5.0. Use the "contao.search.indexer" service instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.9', 'Using "Contao\Frontend::indexPageIfApplicable()" has been deprecated and will no longer work in Contao 5.0. Use the "contao.search.indexer" service instead.');
 
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
@@ -636,7 +636,7 @@ abstract class Frontend extends Controller
 	 */
 	public static function getResponseFromCache()
 	{
-		@trigger_error('Using Frontend::getResponseFromCache() has been deprecated and will no longer work in Contao 5.0. Use proper response caching headers instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.3', 'Using "Contao\Frontend::getResponseFromCache()" has been deprecated and will no longer work in Contao 5.0. Use proper response caching headers instead.');
 
 		return null;
 	}

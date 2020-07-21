@@ -348,7 +348,7 @@ abstract class ModuleNews extends Module
 	 */
 	protected function generateNewsUrl($objItem, $blnAddArchive=false)
 	{
-		@trigger_error('Using ModuleNews::generateNewsUrl() has been deprecated and will no longer work in Contao 5.0. Use News::generateNewsUrl() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/news-bundle', '4.1', 'Using "Contao\ModuleNews::generateNewsUrl()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\News::generateNewsUrl()" instead.');
 
 		return News::generateNewsUrl($objItem, $blnAddArchive);
 	}

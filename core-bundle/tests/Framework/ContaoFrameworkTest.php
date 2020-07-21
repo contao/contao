@@ -468,7 +468,7 @@ class ContaoFrameworkTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      *
-     * @expectedDeprecation Using $_SESSION has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.5: Using "$_SESSION" has been deprecated %s.
      */
     public function testRegistersTheLazySessionAccessObject(): void
     {

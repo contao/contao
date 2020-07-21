@@ -71,7 +71,7 @@ class Database
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		if (!empty($arrConfig))
 		{
-			@trigger_error('Passing a custom configuration to Database::__construct() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+			trigger_deprecation('contao/core-bundle', '4.0', 'Passing a custom configuration to "Contao\Database::__construct()" has been deprecated and will no longer work in Contao 5.0.');
 
 			$arrParams = array
 			(
@@ -746,7 +746,7 @@ class Database
 	 */
 	public function executeUncached($strQuery)
 	{
-		@trigger_error('Using Database::executeUncached() has been deprecated and will no longer work in Contao 5.0. Use Database::execute() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Database::executeUncached()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Database::execute()" instead.');
 
 		return $this->execute($strQuery);
 	}
@@ -763,7 +763,7 @@ class Database
 	 */
 	public function executeCached($strQuery)
 	{
-		@trigger_error('Using Database::executeCached() has been deprecated and will no longer work in Contao 5.0. Use Database::execute() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Database::executeCached()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Database::execute()" instead.');
 
 		return $this->execute($strQuery);
 	}

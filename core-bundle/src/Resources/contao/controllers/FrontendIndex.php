@@ -42,7 +42,7 @@ class FrontendIndex extends Frontend
 	 */
 	public function run()
 	{
-		@trigger_error('Using FrontendIndex::run() has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.10', 'Using "Contao\FrontendIndex::run()" has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.');
 
 		$pageId = $this->getPageIdFromUrl();
 		$objRootPage = null;
@@ -95,7 +95,7 @@ class FrontendIndex extends Frontend
 		// Check the URL and language of each page if there are multiple results
 		if ($objPage instanceof Collection && $objPage->count() > 1)
 		{
-			@trigger_error('Using FrontendIndex::renderPage() with a model collection has been deprecated and will no longer work Contao 5.0. Use the Symfony routing instead.', E_USER_DEPRECATED);
+			trigger_deprecation('contao/core-bundle', '4.7', 'Using "Contao\FrontendIndex::renderPage()" with a model collection has been deprecated and will no longer work Contao 5.0. Use the Symfony routing instead.');
 
 			$objNewPage = null;
 			$arrPages = array();
@@ -365,7 +365,7 @@ class FrontendIndex extends Frontend
 	 */
 	protected function outputFromCache()
 	{
-		@trigger_error('Using FrontendIndex::outputFromCache() has been deprecated and will no longer work in Contao 5.0. Use the kernel.request event instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\FrontendIndex::outputFromCache()" has been deprecated and will no longer work in Contao 5.0. Use the "kernel.request" event instead.');
 	}
 }
 

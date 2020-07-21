@@ -430,7 +430,7 @@ class DcaExtractor extends Controller
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		if ($blnFromFile)
 		{
-			@trigger_error('Using database.sql files has been deprecated and will no longer work in Contao 5.0. Use a DCA file instead.', E_USER_DEPRECATED);
+			trigger_deprecation('contao/core-bundle', '4.0', 'Using "database.sql" files has been deprecated and will no longer work in Contao 5.0. Use a DCA file instead.');
 
 			if (!isset(static::$arrSql[$this->strTable]))
 			{

@@ -115,7 +115,7 @@ class SimpleTokenParser implements LoggerAwareInterface
     {
         foreach (array_keys($data) as $token) {
             if (!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $token)) {
-                @trigger_error('Using tokens that are not valid PHP variables has been deprecated and will no longer work in Contao 5.0. Falling back to legacy token parsing.', E_USER_DEPRECATED);
+                trigger_deprecation('contao/core-bundle', '4.10', 'Using tokens that are not valid PHP variables has been deprecated and will no longer work in Contao 5.0. Falling back to legacy token parsing.');
 
                 return false;
             }

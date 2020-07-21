@@ -17,7 +17,7 @@ use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeOptions;
 use Contao\Model\Collection;
 
-@trigger_error('Using the "Contao\Picture" class has been deprecated and will no longer work in Contao 5.0. Use the "contao.image.picture_factory" service instead.', E_USER_DEPRECATED);
+trigger_deprecation('contao/core-bundle', '4.3', 'Using the "Contao\Picture" class has been deprecated and will no longer work in Contao 5.0. Use the "contao.image.picture_factory" service instead.');
 
 /**
  * Resizes images and creates picture data

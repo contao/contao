@@ -334,7 +334,7 @@ class ImageFactory implements ImageFactoryInterface
             (float) $file->importantPartX + (float) $file->importantPartWidth >= 2
             || (float) $file->importantPartY + (float) $file->importantPartHeight >= 2
         ) {
-            @trigger_error(sprintf('Defining the important part in absolute pixels has been deprecated and will no longer work in Contao 5.0. Run the database migration to migrate to the new format.'), E_USER_DEPRECATED);
+            trigger_deprecation('contao/core-bundle', '4.8', 'Defining the important part in absolute pixels has been deprecated and will no longer work in Contao 5.0. Run the database migration to migrate to the new format.');
 
             if ($this->logger) {
                 $this->logger->warning(

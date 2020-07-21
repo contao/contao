@@ -457,7 +457,7 @@ class Automator extends System
 	 */
 	public function rotateLogs()
 	{
-		@trigger_error('Using Automator::rotateLogs() has been deprecated and will no longer work in Contao 5.0. Use the logger service instead, which rotates its log files automatically.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Automator::rotateLogs()" has been deprecated and will no longer work in Contao 5.0. Use the logger service instead, which rotates its log files automatically.');
 
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 		$arrFiles = preg_grep('/\.log$/', Folder::scan($projectDir . '/system/logs'));

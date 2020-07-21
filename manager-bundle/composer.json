@@ -34,6 +34,7 @@
         "symfony/debug": "4.4.*",
         "symfony/debug-bundle": "4.4.*",
         "symfony/dependency-injection": "4.4.*",
+        "symfony/deprecation-contracts": "^2.1",
         "symfony/dotenv": "4.4.*",
         "symfony/doctrine-bridge": "4.4.*",
         "symfony/expression-language": "4.4.*",

@@ -122,7 +122,7 @@ class MigrateCommand extends Command
             $runOnceFiles = $this->getRunOnceFiles();
 
             if ($runOnceFiles) {
-                @trigger_error('Using runonce.php files has been deprecated and will no longer work in Contao 5.0. Use the migration framework instead.', E_USER_DEPRECATED);
+                trigger_deprecation('contao/core-bundle', '4.9', 'Using "runonce.php" files has been deprecated and will no longer work in Contao 5.0. Use the migration framework instead.');
             }
 
             foreach ($runOnceFiles as $file) {

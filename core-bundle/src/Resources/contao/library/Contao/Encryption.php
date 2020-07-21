@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-@trigger_error('Using the "Contao\Encryption" class has been deprecated and will no longer work in Contao 5.0. Use the PHP password_* functions and a third-party library such as OpenSSL or phpseclib instead.', E_USER_DEPRECATED);
+trigger_deprecation('contao/core-bundle', '3.5', 'Using the "Contao\Encryption" class has been deprecated and will no longer work in Contao 5.0. Use the PHP password_* functions and a third-party library such as OpenSSL or phpseclib instead.');
 
 /**
  * Encrypts and decrypts data

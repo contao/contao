@@ -202,7 +202,7 @@ class BackendUser extends User
 	 */
 	public function authenticate()
 	{
-		@trigger_error('Using BackendUser::authenticate() has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.5', 'Using "Contao\BackendUser::authenticate()" has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.');
 
 		// Do not redirect if authentication is successful
 		if (System::getContainer()->get('contao.security.token_checker')->hasBackendUser())
@@ -237,7 +237,7 @@ class BackendUser extends User
 	 */
 	public function login()
 	{
-		@trigger_error('Using BackendUser::login() has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.5', 'Using "Contao\BackendUser::login()" has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.');
 
 		return System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
 	}

@@ -22,7 +22,7 @@ class FrameworkAwareTraitTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using FrameworkAwareTrait::getFramework() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.3: Using "Contao\CoreBundle\Framework\FrameworkAwareTrait::getFramework()" has been deprecated %s.
      */
     public function testDeprecatesTheGetFrameworkMethod(): void
     {
@@ -35,7 +35,7 @@ class FrameworkAwareTraitTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using FrameworkAwareTrait::getFramework() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.3: Using "Contao\CoreBundle\Framework\FrameworkAwareTrait::getFramework()" has been deprecated %s.
      */
     public function testFailsIfTheFrameworkHasNotBeenSet(): void
     {

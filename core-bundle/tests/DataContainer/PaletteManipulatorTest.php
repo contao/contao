@@ -332,7 +332,7 @@ class PaletteManipulatorTest extends TestCase
 
     /**
      * @group legacy
-     * @expectedDeprecation Using the "Contao\CoreBundle\Exception\PaletteNotFoundException" class has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.7: Using the "Contao\CoreBundle\Exception\PaletteNotFoundException" class has been deprecated %s.
      */
     public function testFailsIfTheDcaPaletteDoesNotExist(): void
     {
@@ -365,7 +365,7 @@ class PaletteManipulatorTest extends TestCase
 
     /**
      * @group legacy
-     * @expectedDeprecation Using the "Contao\CoreBundle\Exception\PalettePositionException" class has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.7: Using the "Contao\CoreBundle\Exception\PalettePositionException" class has been deprecated %s.
      */
     public function testFailsIfThePositionIsInvalid(): void
     {

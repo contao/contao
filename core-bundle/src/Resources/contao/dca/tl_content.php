@@ -1321,7 +1321,7 @@ class tl_content extends Backend
 	 */
 	public function editArticleAlias(DataContainer $dc)
 	{
-		@trigger_error('Using tl_content::editArticleAlias() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.9', 'Using "tl_content::editArticleAlias()" has been deprecated and will no longer work in Contao 5.0.');
 
 		if ($dc->value < 1)
 		{
@@ -1344,7 +1344,7 @@ class tl_content extends Backend
 	 */
 	public function getArticleAlias(DataContainer $dc)
 	{
-		@trigger_error('Using tl_content::getArticleAlias() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.9', 'Using "tl_content::getArticleAlias()" has been deprecated and will no longer work in Contao 5.0.');
 
 		$arrPids = array();
 		$arrAlias = array();
@@ -1418,7 +1418,7 @@ class tl_content extends Backend
 	 */
 	public function editAlias(DataContainer $dc)
 	{
-		@trigger_error('Using tl_content::editAlias() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.9', 'Using "tl_content::editAlias()" has been deprecated and will no longer work in Contao 5.0.');
 
 		if ($dc->value < 1)
 		{
@@ -1439,7 +1439,7 @@ class tl_content extends Backend
 	 */
 	public function getAlias()
 	{
-		@trigger_error('Using tl_content::getAlias() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.9', 'Using "tl_content::getAlias()" has been deprecated and will no longer work in Contao 5.0.');
 
 		$arrPids = array();
 		$arrAlias = array();
@@ -1613,7 +1613,7 @@ class tl_content extends Backend
 	 */
 	public function editArticle(DataContainer $dc)
 	{
-		@trigger_error('Using tl_content::editArticle() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.9', 'Using "tl_content::editArticle()" has been deprecated and will no longer work in Contao 5.0.');
 
 		if ($dc->value < 1)
 		{
@@ -1636,7 +1636,7 @@ class tl_content extends Backend
 	 */
 	public function getArticles(DataContainer $dc)
 	{
-		@trigger_error('Using tl_content::getArticles() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.9', 'Using "tl_content::getArticles()" has been deprecated and will no longer work in Contao 5.0.');
 
 		$arrPids = array();
 		$arrArticle = array();
@@ -1798,7 +1798,7 @@ class tl_content extends Backend
 	 */
 	public function pagePicker(DataContainer $dc)
 	{
-		@trigger_error('Using tl_content::pagePicker() has been deprecated and will no longer work in Contao 5.0. Set the "dcaPicker" eval attribute instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.4', 'Using "tl_content::pagePicker()" has been deprecated and will no longer work in Contao 5.0. Set the "dcaPicker" eval attribute instead.');
 
 		return Backend::getDcaPickerWizard(true, $dc->table, $dc->field, $dc->inputName);
 	}

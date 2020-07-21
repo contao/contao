@@ -863,7 +863,7 @@ class InsertTags extends Controller
 					// Check the maximum image width
 					if ($maxImageWidth > 0 && $width > $maxImageWidth)
 					{
-						@trigger_error('Using a maximum front end width has been deprecated and will no longer work in Contao 5.0. Remove the "maxImageWidth" configuration and use responsive images instead.', E_USER_DEPRECATED);
+						trigger_deprecation('contao/core-bundle', '4.0', 'Using a maximum front end width has been deprecated and will no longer work in Contao 5.0. Remove the "maxImageWidth" configuration and use responsive images instead.');
 
 						$width = $maxImageWidth;
 						$height = null;
@@ -1040,7 +1040,7 @@ class InsertTags extends Controller
 							break;
 
 						case 'nl2br_pre':
-							@trigger_error('Using nl2br_pre() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+							trigger_deprecation('contao/core-bundle', '4.0', 'Using nl2br_pre() has been deprecated and will no longer work in Contao 5.0.');
 							// no break
 
 						case 'nl2br':

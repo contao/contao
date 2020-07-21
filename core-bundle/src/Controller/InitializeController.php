@@ -45,7 +45,7 @@ class InitializeController extends AbstractController
      */
     public function indexAction(): InitializeControllerResponse
     {
-        @trigger_error('Custom entry points are deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+        trigger_deprecation('contao/core-bundle', '4.0', 'Using custom entry points has been deprecated and will no longer work in Contao 5.0.');
 
         $masterRequest = $this->get('request_stack')->getMasterRequest();
 

@@ -87,7 +87,7 @@ class LegacyCron implements ServiceAnnotationInterface
         $system->loadLanguageFile('default');
 
         foreach ($GLOBALS['TL_CRON'][$interval] as $cron) {
-            @trigger_error('Using $GLOBALS[\'TL_CRON\'] has been deprecated and will be removed in Contao 5.0. Use the "contao.cronjob" service tag instead.', E_USER_DEPRECATED);
+            trigger_deprecation('contao/core-bundle', '4.9', 'Using $GLOBALS[\'TL_CRON\'] has been deprecated and will be removed in Contao 5.0. Use the "contao.cronjob" service tag instead.');
 
             $system->importStatic($cron[0])->{$cron[1]}();
         }

@@ -60,7 +60,7 @@ class MigrateCommandTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using runonce.php files has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.9: Using "runonce.php" files has been deprecated %s.
      */
     public function testExecutesRunOnceFiles(): void
     {

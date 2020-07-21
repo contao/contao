@@ -40,7 +40,7 @@ class Picker extends Widget
 		// Prepare the order field
 		if ($this->orderField != '')
 		{
-			@trigger_error('Using "orderField" for the picker has been deprecated and will no longer work in Contao 5.0. Use "isSortable" instead.', E_USER_DEPRECATED);
+			trigger_deprecation('contao/core-bundle', '4.10', 'Using "orderField" for the picker has been deprecated and will no longer work in Contao 5.0. Use "isSortable" instead.');
 
 			$this->strOrderId = $this->orderField . str_replace($this->strField, '', $this->strId);
 			$this->strOrderName = $this->orderField . str_replace($this->strField, '', $this->strName);

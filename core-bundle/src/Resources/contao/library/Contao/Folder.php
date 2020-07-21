@@ -207,7 +207,7 @@ class Folder extends System
 	 */
 	public function clear()
 	{
-		@trigger_error('Using Folder->clear() has been deprecated and will no longer work in Contao 5.0. Use Folder->purge() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Folder->clear()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Folder->purge()" instead.');
 
 		$this->purge();
 	}
@@ -451,7 +451,7 @@ class Folder extends System
 	 */
 	protected function getHash()
 	{
-		@trigger_error('Using Folder::getHash() has been deprecated and will no longer work in Contao 5.0. Use Dbafs::getFolderHash() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.4', 'Using "Contao\Folder::getHash()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Dbafs::getFolderHash()" instead.');
 
 		$arrFiles = array();
 

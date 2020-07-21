@@ -23,7 +23,7 @@ class LazySessionAccessTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using $_SESSION has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.5: Using "$_SESSION" has been deprecated %s.
      */
     public function testStartsSessionOnOffsetExists(): void
     {
@@ -49,7 +49,7 @@ class LazySessionAccessTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using $_SESSION has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.5: Using "$_SESSION" has been deprecated %s.
      */
     public function testStartsSessionOnOffsetGet(): void
     {
@@ -75,7 +75,7 @@ class LazySessionAccessTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using $_SESSION has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.5: Using "$_SESSION" has been deprecated %s.
      */
     public function testStartsSessionOnOffsetSet(): void
     {
@@ -104,7 +104,7 @@ class LazySessionAccessTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using $_SESSION has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.5: Using "$_SESSION" has been deprecated %s.
      */
     public function testStartsSessionOnOffsetUnset(): void
     {
@@ -132,7 +132,7 @@ class LazySessionAccessTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using $_SESSION has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.5: Using "$_SESSION" has been deprecated %s.
      */
     public function testStartsSessionOnCount(): void
     {
