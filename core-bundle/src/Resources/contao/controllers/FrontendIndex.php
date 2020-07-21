@@ -42,7 +42,7 @@ class FrontendIndex extends Frontend
 	 */
 	public function run()
 	{
-		@trigger_error('Using FrontendIndex::run() has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.10', 'Using "Contao\FrontendIndex::run()" has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.');
 
 		$pageId = $this->getPageIdFromUrl();
 		$objRootPage = null;

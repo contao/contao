@@ -28,7 +28,7 @@ use Symfony\Component\Routing\RouteCollection;
 class UrlGeneratorTest extends TestCase
 {
     /**
-     * @expectedDeprecation Using the "Contao\CoreBundle\Routing\UrlGenerator" class has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.10: Using the "Contao\CoreBundle\Routing\UrlGenerator" class has been deprecated %s.
      */
     public function testCanWriteTheContext(): void
     {

@@ -47,7 +47,7 @@ class LegacyRouteProvider implements RouteProviderInterface
     {
         $route = $this->loadRoute($name);
 
-        @trigger_error(sprintf('The %s route is deprecated and only available in legacy routing mode.', $name), E_USER_DEPRECATED);
+        trigger_deprecation('contao/core-bundle', '4.10', sprintf('The "%s" route has been deprecated and is only available in legacy routing mode.', $name));
 
         return $route;
     }
