@@ -71,9 +71,9 @@ class FigureBuilderIntegrationTest extends TestCase
      */
     public function testControllerAddImageToTemplate(\Closure $testCase, array $expectedTemplateData): void
     {
-        [$template, $dataRow, $maxWidth, $lightBoxGroupIdentifier, $filesModel] = $this->setUpTestCase($testCase);
+        [$template, $dataRow, $maxWidth, $lightboxGroupIdentifier, $filesModel] = $this->setUpTestCase($testCase);
 
-        Controller::addImageToTemplate($template, $dataRow, $maxWidth, $lightBoxGroupIdentifier, $filesModel);
+        Controller::addImageToTemplate($template, $dataRow, $maxWidth, $lightboxGroupIdentifier, $filesModel);
 
         $this->assertSameTemplateData($expectedTemplateData, $template);
     }
@@ -91,7 +91,7 @@ class FigureBuilderIntegrationTest extends TestCase
      *  <TestCase Closure> itself must return the following preconditions and arguments:
      *   [
      *     <FilesAdapter>|<Setup Closure>|[<FilesAdapter>, <Setup Closure>]|null,
-     *     [ $template, $dataRow, $maxWidth, $lightBoxGroupIdentifier, $filesModel ]
+     *     [ $template, $dataRow, $maxWidth, $lightboxGroupIdentifier, $filesModel ]
      *   ]
      */
     public function provideControllerAddImageToTemplateTestCases(): \Generator

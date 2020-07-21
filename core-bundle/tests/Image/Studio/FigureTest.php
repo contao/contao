@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Tests\Image\Studio;
 use Contao\CoreBundle\File\MetaData;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\ImageResult;
-use Contao\CoreBundle\Image\Studio\LightBoxResult;
+use Contao\CoreBundle\Image\Studio\LightboxResult;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\Image\ImageDimensions;
@@ -35,55 +35,55 @@ class FigureTest extends TestCase
         $this->assertSame($image, $figure->getImage());
     }
 
-    public function testHasNoLightBoxOrMetaDataByDefault(): void
+    public function testHasNoLightboxOrMetaDataByDefault(): void
     {
         /** @var ImageResult&MockObject $image */
         $image = $this->createMock(ImageResult::class);
         $figure = new Figure($image);
 
-        $this->assertFalse($figure->hasLightBox());
+        $this->assertFalse($figure->hasLightbox());
         $this->assertFalse($figure->hasMetaData());
     }
 
-    public function testGetLightBox(): void
+    public function testGetLightbox(): void
     {
         /** @var ImageResult&MockObject $image */
         $image = $this->createMock(ImageResult::class);
 
-        /** @var LightBoxResult&MockObject $lightBox */
-        $lightBox = $this->createMock(LightBoxResult::class);
-        $figure = new Figure($image, null, null, $lightBox);
+        /** @var LightboxResult&MockObject $lightbox */
+        $lightbox = $this->createMock(LightboxResult::class);
+        $figure = new Figure($image, null, null, $lightbox);
 
-        $this->assertTrue($figure->hasLightBox());
-        $this->assertSame($lightBox, $figure->getLightBox());
+        $this->assertTrue($figure->hasLightbox());
+        $this->assertSame($lightbox, $figure->getLightbox());
     }
 
-    public function testGetLightBoxSetViaCallback(): void
+    public function testGetLightboxSetViaCallback(): void
     {
         /** @var ImageResult&MockObject $image */
         $image = $this->createMock(ImageResult::class);
 
-        /** @var LightBoxResult&MockObject $lightBox */
-        $lightBox = $this->createMock(LightBoxResult::class);
+        /** @var LightboxResult&MockObject $lightbox */
+        $lightbox = $this->createMock(LightboxResult::class);
         $called = 0;
 
-        $lightBoxClosure = function (Figure $figure) use (&$called, $lightBox): LightBoxResult {
+        $lightboxClosure = function (Figure $figure) use (&$called, $lightbox): LightboxResult {
             $this->assertInstanceOf(Figure::class, $figure);
             ++$called;
 
-            return $lightBox;
+            return $lightbox;
         };
 
-        $figure = new Figure($image, null, null, $lightBoxClosure);
+        $figure = new Figure($image, null, null, $lightboxClosure);
 
-        $this->assertTrue($figure->hasLightBox());
-        $this->assertSame($lightBox, $figure->getLightBox());
+        $this->assertTrue($figure->hasLightbox());
+        $this->assertSame($lightbox, $figure->getLightbox());
 
-        $figure->getLightBox(); // second call should be cached
+        $figure->getLightbox(); // second call should be cached
         $this->assertSame(1, $called);
     }
 
-    public function testGetLightBoxFailsIfNotSet(): void
+    public function testGetLightboxFailsIfNotSet(): void
     {
         /** @var ImageResult&MockObject $image */
         $image = $this->createMock(ImageResult::class);
@@ -91,7 +91,7 @@ class FigureTest extends TestCase
 
         $this->expectException(\LogicException::class);
 
-        $figure->getLightBox();
+        $figure->getLightbox();
     }
 
     public function testGetMetaData(): void
@@ -147,9 +147,9 @@ class FigureTest extends TestCase
         /** @var ImageResult&MockObject $image */
         $image = $this->createMock(ImageResult::class);
 
-        [$attributes, $metaData, $lightBox] = $argumentsAndPreconditions;
+        [$attributes, $metaData, $lightbox] = $argumentsAndPreconditions;
 
-        $figure = new Figure($image, $metaData, $attributes, $lightBox);
+        $figure = new Figure($image, $metaData, $attributes, $lightbox);
 
         $this->assertSame($expectedAttributes, $figure->getLinkAttributes());
         $this->assertSame($expectedHref ?? '', $figure->getLinkHref());
@@ -158,14 +158,14 @@ class FigureTest extends TestCase
 
     public function provideLinkAttributesAndPreconditions(): \Generator
     {
-        /** @var LightBoxResult&MockObject $lightBox */
-        $lightBox = $this->createMock(LightBoxResult::class);
-        $lightBox
+        /** @var LightboxResult&MockObject $lightbox */
+        $lightbox = $this->createMock(LightboxResult::class);
+        $lightbox
             ->method('getLinkHref')
             ->willReturn('path/from/lightbox')
         ;
 
-        $lightBox
+        $lightbox
             ->method('getGroupIdentifier')
             ->willReturn('12345')
         ;
@@ -235,9 +235,9 @@ class FigureTest extends TestCase
             'this-will-win',
         ];
 
-        yield 'custom attributes and light box' => [
+        yield 'custom attributes and lightbox' => [
             [
-                ['foo' => 'a'], null, $lightBox,
+                ['foo' => 'a'], null, $lightbox,
             ],
             [
                 'foo' => 'a',
@@ -246,9 +246,9 @@ class FigureTest extends TestCase
             'path/from/lightbox',
         ];
 
-        yield 'custom attributes, meta data containing link and light box' => [
+        yield 'custom attributes, meta data containing link and lightbox' => [
             [
-                ['foo' => 'a'], new MetaData([MetaData::VALUE_URL => 'will-be-ignored']), $lightBox,
+                ['foo' => 'a'], new MetaData([MetaData::VALUE_URL => 'will-be-ignored']), $lightbox,
             ],
             [
                 'foo' => 'a',
@@ -267,7 +267,7 @@ class FigureTest extends TestCase
 
         yield 'custom attributes, force-set data-lightbox attribute and light-box' => [
             [
-                ['foo' => 'a', 'data-lightbox' => 'abcde'], new MetaData([MetaData::VALUE_URL => 'https://example.com']), $lightBox,
+                ['foo' => 'a', 'data-lightbox' => 'abcde'], new MetaData([MetaData::VALUE_URL => 'https://example.com']), $lightbox,
             ],
             [
                 'foo' => 'a',
@@ -324,12 +324,12 @@ class FigureTest extends TestCase
      */
     public function testGetLegacyTemplateData(array $preconditions, array $buildAttributes, \Closure $assert): void
     {
-        [$metaData, $linkAttributes, $lightBox] = $preconditions;
+        [$metaData, $linkAttributes, $lightbox] = $preconditions;
         [$includeFullMetaData, $floatingProperty, $marginProperty] = $buildAttributes;
 
         System::setContainer($this->getContainerWithContaoConfiguration());
 
-        $figure = new Figure($this->getImageMock(), $metaData, $linkAttributes, $lightBox);
+        $figure = new Figure($this->getImageMock(), $metaData, $linkAttributes, $lightbox);
         $data = $figure->getLegacyTemplateData($marginProperty, $floatingProperty, $includeFullMetaData);
 
         $assert($data);
@@ -439,46 +439,46 @@ class FigureTest extends TestCase
             },
         ];
 
-        /** @var ImageResult&MockObject $lightBoxImage */
-        $lightBoxImage = $this->createMock(ImageResult::class);
-        $lightBoxImage
+        /** @var ImageResult&MockObject $lightboxImage */
+        $lightboxImage = $this->createMock(ImageResult::class);
+        $lightboxImage
             ->method('getImg')
-            ->willReturn(['light box img'])
+            ->willReturn(['lightbox img'])
         ;
 
-        $lightBoxImage
+        $lightboxImage
             ->method('getSources')
-            ->willReturn(['light box sources'])
+            ->willReturn(['lightbox sources'])
         ;
 
-        /** @var LightBoxResult&MockObject $lightBox */
-        $lightBox = $this->createMock(LightBoxResult::class);
-        $lightBox
+        /** @var LightboxResult&MockObject $lightbox */
+        $lightbox = $this->createMock(LightboxResult::class);
+        $lightbox
             ->method('hasImage')
             ->willReturn(true)
         ;
 
-        $lightBox
+        $lightbox
             ->method('getImage')
-            ->willReturn($lightBoxImage)
+            ->willReturn($lightboxImage)
         ;
 
-        $lightBox
+        $lightbox
             ->method('getGroupIdentifier')
             ->willReturn('12345')
         ;
 
-        $lightBox
+        $lightbox
             ->method('getLinkHref')
             ->willReturn('foo://bar')
         ;
 
-        yield 'with light box' => [
-            [null, null, $lightBox],
+        yield 'with lightbox' => [
+            [null, null, $lightbox],
             [false, null, null],
             function (array $data): void {
-                $this->assertSame(['light box img'], $data['lightboxPicture']['img']);
-                $this->assertSame(['light box sources'], $data['lightboxPicture']['sources']);
+                $this->assertSame(['lightbox img'], $data['lightboxPicture']['img']);
+                $this->assertSame(['lightbox sources'], $data['lightboxPicture']['sources']);
 
                 $this->assertSame('foo://bar', $data['href']);
                 $this->assertSame(' data-lightbox="12345"', $data['attributes']);

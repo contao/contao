@@ -19,7 +19,7 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Psr\Container\ContainerInterface;
 
-class LightBoxResult
+class LightboxResult
 {
     /**
      * @var ContainerInterface
@@ -60,13 +60,13 @@ class LightBoxResult
         if (null !== $filePathOrImage) {
             $this->image = $locator
                 ->get(Studio::class)
-                ->createImage($filePathOrImage, $sizeConfiguration ?? $this->getDefaultLightBoxSizeConfiguration())
+                ->createImage($filePathOrImage, $sizeConfiguration ?? $this->getDefaultLightboxSizeConfiguration())
             ;
         }
     }
 
     /**
-     * Returns true if this light box result contains an image.
+     * Returns true if this lightbox result contains an image.
      */
     public function hasImage(): bool
     {
@@ -79,7 +79,7 @@ class LightBoxResult
     public function getImage(): ImageResult
     {
         if (!$this->hasImage()) {
-            throw new \RuntimeException('This light box result does not contain an image.');
+            throw new \RuntimeException('This lightbox result does not contain an image.');
         }
 
         return $this->image;
@@ -94,7 +94,7 @@ class LightBoxResult
     }
 
     /**
-     * Returns the light box group identifier.
+     * Returns the lightbox group identifier.
      */
     public function getGroupIdentifier(): string
     {
@@ -102,12 +102,12 @@ class LightBoxResult
     }
 
     /**
-     * Returns the light box size configuration from the associated page layout.
+     * Returns the lightbox size configuration from the associated page layout.
      *
-     * Will return null if there is no light box size configuration or if not
+     * Will return null if there is no lightbox size configuration or if not
      * in a request context.
      */
-    private function getDefaultLightBoxSizeConfiguration(): ?array
+    private function getDefaultLightboxSizeConfiguration(): ?array
     {
         $framework = $this->locator->get('contao.framework');
         $page = $GLOBALS['objPage'] ?? null;

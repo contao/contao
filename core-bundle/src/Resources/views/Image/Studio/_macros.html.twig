@@ -57,7 +57,7 @@
         {% if figure.linkHref -%}
             {%- set base_attributes = {
                 'href': figure.linkHref,
-                'title': figure.hasLightBox and figure.hasMetaData ? figure.metaData.title : null,
+                'title': figure.hasLightbox and figure.hasMetaData ? figure.metaData.title : null,
             }|merge(figure.linkAttributes) -%}
             <a{{ _self.html_attributes(base_attributes|merge(link_attributes)) }}>
                {{~ _self.picture(figure, options) }}

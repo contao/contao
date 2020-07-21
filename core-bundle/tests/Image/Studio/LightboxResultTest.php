@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Image\Studio;
 
 use Contao\CoreBundle\Image\Studio\ImageResult;
-use Contao\CoreBundle\Image\Studio\LightBoxResult;
+use Contao\CoreBundle\Image\Studio\LightboxResult;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\LayoutModel;
@@ -21,7 +21,7 @@ use Contao\PageModel;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
 
-class LightBoxResultTest extends TestCase
+class LightboxResultTest extends TestCase
 {
     /**
      * @dataProvider provideInvalidConfigurations
@@ -33,7 +33,7 @@ class LightBoxResultTest extends TestCase
 
         $this->expectException(\InvalidArgumentException::class);
 
-        new LightBoxResult($locator, $resource, $url);
+        new LightboxResult($locator, $resource, $url);
     }
 
     public function provideInvalidConfigurations(): \Generator
@@ -43,7 +43,7 @@ class LightBoxResultTest extends TestCase
         yield 'both set' => ['foo', 'bar'];
     }
 
-    public function testUsesFallBackLightBoxSizeConfiguration(): void
+    public function testUsesFallBackLightboxSizeConfiguration(): void
     {
         $resource = 'foo/bar.png';
         $size = [100, 200, 'crop'];
@@ -91,12 +91,12 @@ class LightBoxResultTest extends TestCase
             ])
         ;
 
-        new LightBoxResult($locator, $resource, null);
+        new LightboxResult($locator, $resource, null);
 
         unset($GLOBALS['objPage']);
     }
 
-    public function testFallBackLightBoxSizeConfigurationFailsIfNoLightBoxSizeSet(): void
+    public function testFallBackLightboxSizeConfigurationFailsIfNoLightboxSizeSet(): void
     {
         $resource = 'foo/bar.png';
         $layoutId = '1';
@@ -143,12 +143,12 @@ class LightBoxResultTest extends TestCase
             ])
         ;
 
-        new LightBoxResult($locator, $resource, null);
+        new LightboxResult($locator, $resource, null);
 
         unset($GLOBALS['objPage']);
     }
 
-    public function testFallBackLightBoxSizeConfigurationFailsIfNoPage(): void
+    public function testFallBackLightboxSizeConfigurationFailsIfNoPage(): void
     {
         $resource = 'foo/bar.png';
         $framework = $this->mockContaoFramework();
@@ -177,7 +177,7 @@ class LightBoxResultTest extends TestCase
         ;
 
         // Note: $GLOBALS['objPage'] is not set at this point
-        new LightBoxResult($locator, $resource, null);
+        new LightboxResult($locator, $resource, null);
     }
 
     public function testHasImage(): void
@@ -206,18 +206,18 @@ class LightBoxResultTest extends TestCase
             ->willReturn($studio)
         ;
 
-        $lightBoxResult = new LightBoxResult($locator, $resource, null, $size);
+        $lightboxResult = new LightboxResult($locator, $resource, null, $size);
 
-        $this->assertTrue($lightBoxResult->hasImage());
+        $this->assertTrue($lightboxResult->hasImage());
     }
 
     public function testHasNoImage(): void
     {
         /** @var MockObject&ContainerInterface $locator */
         $locator = $this->createMock(ContainerInterface::class);
-        $lightBoxResult = new LightBoxResult($locator, null, 'foo://bar');
+        $lightboxResult = new LightboxResult($locator, null, 'foo://bar');
 
-        $this->assertFalse($lightBoxResult->hasImage());
+        $this->assertFalse($lightboxResult->hasImage());
     }
 
     public function testGetImage(): void
@@ -246,20 +246,20 @@ class LightBoxResultTest extends TestCase
             ->willReturn($studio)
         ;
 
-        $lightBoxResult = new LightBoxResult($locator, $resource, null, $size);
+        $lightboxResult = new LightboxResult($locator, $resource, null, $size);
 
-        $this->assertSame($image, $lightBoxResult->getImage());
+        $this->assertSame($image, $lightboxResult->getImage());
     }
 
     public function testGetImageThrowsIfNoImageWasSet(): void
     {
         /** @var MockObject&ContainerInterface $locator */
         $locator = $this->createMock(ContainerInterface::class);
-        $lightBoxResult = new LightBoxResult($locator, null, 'foo://bar');
+        $lightboxResult = new LightboxResult($locator, null, 'foo://bar');
 
         $this->expectException(\RuntimeException::class);
 
-        $lightBoxResult->getImage();
+        $lightboxResult->getImage();
     }
 
     public function testGetLinkHrefForImageResource(): void
@@ -293,35 +293,35 @@ class LightBoxResultTest extends TestCase
             ->willReturn($studio)
         ;
 
-        $lightBoxResult = new LightBoxResult($locator, $resource, null, $size);
+        $lightboxResult = new LightboxResult($locator, $resource, null, $size);
 
-        $this->assertSame('foobar.png', $lightBoxResult->getLinkHref());
+        $this->assertSame('foobar.png', $lightboxResult->getLinkHref());
     }
 
     public function testGetLinkHrefForUrl(): void
     {
         /** @var MockObject&ContainerInterface $locator */
         $locator = $this->createMock(ContainerInterface::class);
-        $lightBoxResult = new LightBoxResult($locator, null, 'foo://bar');
+        $lightboxResult = new LightboxResult($locator, null, 'foo://bar');
 
-        $this->assertSame('foo://bar', $lightBoxResult->getLinkHref());
+        $this->assertSame('foo://bar', $lightboxResult->getLinkHref());
     }
 
     public function testGetGroupIdentifierIfExplicitlySet(): void
     {
         /** @var MockObject&ContainerInterface $locator */
         $locator = $this->createMock(ContainerInterface::class);
-        $lightBoxResult = new LightBoxResult($locator, null, 'foo://bar', null, '12345');
+        $lightboxResult = new LightboxResult($locator, null, 'foo://bar', null, '12345');
 
-        $this->assertSame('12345', $lightBoxResult->getGroupIdentifier());
+        $this->assertSame('12345', $lightboxResult->getGroupIdentifier());
     }
 
     public function testGroupIdentifierIsEmptyIfNotExplicitlySet(): void
     {
         /** @var MockObject&ContainerInterface $locator */
         $locator = $this->createMock(ContainerInterface::class);
-        $lightBoxResult = new LightBoxResult($locator, null, 'foo://bar');
+        $lightboxResult = new LightboxResult($locator, null, 'foo://bar');
 
-        $this->assertSame('', $lightBoxResult->getGroupIdentifier());
+        $this->assertSame('', $lightboxResult->getGroupIdentifier());
     }
 }

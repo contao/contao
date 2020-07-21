@@ -1517,10 +1517,10 @@ abstract class Controller extends System
 	 * @param object          $template                The template object to add the image to
 	 * @param array           $rowData                 The element or module as array
 	 * @param integer|null    $maxWidth                An optional maximum width of the image
-	 * @param string|null     $lightBoxGroupIdentifier An optional lightbox group identifier
+	 * @param string|null     $lightboxGroupIdentifier An optional lightbox group identifier
 	 * @param FilesModel|null $filesModel              An optional files model
 	 */
-	public static function addImageToTemplate($template, array $rowData, $maxWidth = null, $lightBoxGroupIdentifier = null, FilesModel $filesModel = null): void
+	public static function addImageToTemplate($template, array $rowData, $maxWidth = null, $lightboxGroupIdentifier = null, FilesModel $filesModel = null): void
 	{
 		// Helper: Create MetaData from the specified row data
 		$createMetaDataOverwriteFromRowData = static function (bool $interpretAsContentModel) use ($rowData)
@@ -1710,16 +1710,16 @@ abstract class Controller extends System
 			return;
 		}
 
-		// Set size and light box configuration
+		// Set size and lightbox configuration
 		list($size, $margin) = $getSizeAndMargin();
 
-		$lightBoxSize = StringUtil::deserialize($rowData['lightboxSize'] ?? null) ?: null;
+		$lightboxSize = StringUtil::deserialize($rowData['lightboxSize'] ?? null) ?: null;
 
 		$figure = $figureBuilder
 			->setSize($size)
-			->setLightBoxGroupIdentifier($lightBoxGroupIdentifier)
-			->setLightBoxSize($lightBoxSize)
-			->enableLightBox('1' === ($rowData['fullsize'] ?? null))
+			->setLightboxGroupIdentifier($lightboxGroupIdentifier)
+			->setLightboxSize($lightboxSize)
+			->enableLightbox('1' === ($rowData['fullsize'] ?? null))
 			->build();
 
 		// Build result and apply it to the template

@@ -109,32 +109,32 @@ class FigureBuilder
     private $additionalLinkAttributes = [];
 
     /**
-     * User defined light box resource or url. This will overwrite the default if set.
+     * User defined lightbox resource or url. This will overwrite the default if set.
      *
      * @var string|ImageInterface|null
      */
-    private $lightBoxResourceOrUrl;
+    private $lightboxResourceOrUrl;
 
     /**
-     * User defined light box size configuration. This will overwrite the default if set.
+     * User defined lightbox size configuration. This will overwrite the default if set.
      *
      * @var mixed|null
      */
-    private $lightBoxSizeConfiguration;
+    private $lightboxSizeConfiguration;
 
     /**
-     * User defined light box group identifier. This will overwrite the default if set.
+     * User defined lightbox group identifier. This will overwrite the default if set.
      *
      * @var string|null
      */
-    private $lightBoxGroupIdentifier;
+    private $lightboxGroupIdentifier;
 
     /**
-     * Determines if a light box (or "fullsize") image should be created.
+     * Determines if a lightbox (or "fullsize") image should be created.
      *
      * @var bool
      */
-    private $enableLightBox;
+    private $enableLightbox;
 
     /**
      * User defined template options.
@@ -366,60 +366,60 @@ class FigureBuilder
     }
 
     /**
-     * Sets a custom light box resource (file path or ImageInterface) or URL.
+     * Sets a custom lightbox resource (file path or ImageInterface) or URL.
      *
      * By default or if the argument is set to null, the image/target will be
      * automatically determined from the meta data or base resource. For this
      * setting to take effect, make sure you have enabled the creation of a
-     * light box by calling enableLightBox().
+     * lightbox by calling enableLightbox().
      *
      * @param string|ImageInterface|null $resourceOrUrl
      */
-    public function setLightBoxResourceOrUrl($resourceOrUrl): self
+    public function setLightboxResourceOrUrl($resourceOrUrl): self
     {
-        $this->lightBoxResourceOrUrl = $resourceOrUrl;
+        $this->lightboxResourceOrUrl = $resourceOrUrl;
 
         return $this;
     }
 
     /**
-     * Sets a size configuration that will be applied to the light box image.
+     * Sets a size configuration that will be applied to the lightbox image.
      *
      * For this setting to take effect, make sure you have enabled the creation
-     * of a light box by calling enableLightBox().
+     * of a lightbox by calling enableLightbox().
      *
      * @param int|string|array|PictureConfiguration $size A picture size configuration or reference
      */
-    public function setLightBoxSize($size): self
+    public function setLightboxSize($size): self
     {
-        $this->lightBoxSizeConfiguration = $size;
+        $this->lightboxSizeConfiguration = $size;
 
         return $this;
     }
 
     /**
-     * Sets a custom light box group ID.
+     * Sets a custom lightbox group ID.
      *
      * By default or if the argument is set to null, the ID will be empty. For
      * this setting to take effect, make sure you have enabled the creation of
-     * a light box by calling enableLightBox().
+     * a lightbox by calling enableLightbox().
      */
-    public function setLightBoxGroupIdentifier(?string $identifier): self
+    public function setLightboxGroupIdentifier(?string $identifier): self
     {
-        $this->lightBoxGroupIdentifier = $identifier;
+        $this->lightboxGroupIdentifier = $identifier;
 
         return $this;
     }
 
     /**
-     * Enables the creation of a light box image (if possible) and/or
+     * Enables the creation of a lightbox image (if possible) and/or
      * outputting the respective link attributes.
      *
      * This setting is disabled by default.
      */
-    public function enableLightBox(bool $enable = true): self
+    public function enableLightbox(bool $enable = true): self
     {
-        $this->enableLightBox = $enable;
+        $this->enableLightbox = $enable;
 
         return $this;
     }
@@ -467,8 +467,8 @@ class FigureBuilder
                 $settings
             ),
             \Closure::bind(
-                function (Figure $figure): ?LightBoxResult {
-                    return $this->onDefineLightBoxResult($figure);
+                function (Figure $figure): ?LightboxResult {
+                    return $this->onDefineLightboxResult($figure);
                 },
                 $settings
             ),
@@ -515,8 +515,8 @@ class FigureBuilder
     {
         $linkAttributes = [];
 
-        // Open in a new window if light box was requested but is invalid (fullsize)
-        if ($this->enableLightBox && !$result->hasLightBox()) {
+        // Open in a new window if lightbox was requested but is invalid (fullsize)
+        if ($this->enableLightbox && !$result->hasLightbox()) {
             $linkAttributes['target'] = '_blank';
         }
 
@@ -524,11 +524,11 @@ class FigureBuilder
     }
 
     /**
-     * Defines the light box result (if enabled) on demand.
+     * Defines the lightbox result (if enabled) on demand.
      */
-    private function onDefineLightBoxResult(Figure $result): ?LightBoxResult
+    private function onDefineLightboxResult(Figure $result): ?LightboxResult
     {
-        if (!$this->enableLightBox) {
+        if (!$this->enableLightbox) {
             return null;
         }
 
@@ -568,9 +568,9 @@ class FigureBuilder
         };
 
         // Use explicitly set data (1), fall back to using meta data (2) or use the base resource (3) if empty
-        $lightBoxResourceOrUrl = $this->lightBoxResourceOrUrl ?? $getMetaDataUrl() ?? $this->filePath;
+        $lightboxResourceOrUrl = $this->lightboxResourceOrUrl ?? $getMetaDataUrl() ?? $this->filePath;
 
-        [$filePathOrImage, $url] = $getResourceOrUrl($lightBoxResourceOrUrl);
+        [$filePathOrImage, $url] = $getResourceOrUrl($lightboxResourceOrUrl);
 
         if (null === $filePathOrImage && null === $url) {
             return null;
@@ -578,7 +578,7 @@ class FigureBuilder
 
         return $this->locator
             ->get(Studio::class)
-            ->createLightBoxImage($filePathOrImage, $url, $this->lightBoxSizeConfiguration, $this->lightBoxGroupIdentifier)
+            ->createLightboxImage($filePathOrImage, $url, $this->lightboxSizeConfiguration, $this->lightboxGroupIdentifier)
         ;
     }
 

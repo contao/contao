@@ -34,10 +34,10 @@ class FigureRendererRuntimeTest extends TestCase
             'locale' => 'de',
             'linkAttributes' => ['foo' => 'bar'],
             'linkHref' => 'foo',
-            'lightBoxResourceOrUrl' => 'foobar',
-            'lightBoxSize' => '_lightbox_size',
-            'lightBoxGroupIdentifier' => '123',
-            'enableLightBox' => true,
+            'lightboxResourceOrUrl' => 'foobar',
+            'lightboxSize' => '_lightbox_size',
+            'lightboxGroupIdentifier' => '123',
+            'enableLightbox' => true,
             'options' => ['foo' => 'bar'],
         ];
 
@@ -49,10 +49,10 @@ class FigureRendererRuntimeTest extends TestCase
             'setLocale' => 'de',
             'setLinkAttributes' => ['foo' => 'bar'],
             'setLinkHref' => 'foo',
-            'setLightBoxResourceOrUrl' => 'foobar',
-            'setLightBoxSize' => '_lightbox_size',
-            'setLightBoxGroupIdentifier' => '123',
-            'enableLightBox' => true,
+            'setLightboxResourceOrUrl' => 'foobar',
+            'setLightboxSize' => '_lightbox_size',
+            'setLightboxGroupIdentifier' => '123',
+            'enableLightbox' => true,
             'setOptions' => ['foo' => 'bar'],
         ];
 
