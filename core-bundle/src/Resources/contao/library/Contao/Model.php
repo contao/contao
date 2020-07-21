@@ -1189,6 +1189,8 @@ abstract class Model
 			return static::$arrClassNames[$strTable];
 		}
 
+		trigger_deprecation('contao/core-bundle', '4.10', sprintf('Not registering table "%s" in $GLOBALS[\'TL_MODELS\'] has been deprecated and will no longer work in Contao 5.0.', $strTable));
+
 		$arrChunks = explode('_', $strTable);
 
 		if ($arrChunks[0] == 'tl')
