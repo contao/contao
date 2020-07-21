@@ -90,9 +90,12 @@ class PageCandidates extends AbstractCandidates
             $paths[] = '(?P<'.$type.'>'.substr($pathRegex, 2, strrpos($pathRegex, '$') - 2).')';
         }
 
-        $prefixes = array_map(static function ($prefix) {
-            return $prefix ? preg_quote('/'.$prefix, '#') : '';
-        }, $this->urlPrefixes);
+        $prefixes = array_map(
+            static function ($prefix) {
+                return $prefix ? preg_quote('/'.$prefix, '#') : '';
+            },
+            $this->urlPrefixes
+        );
 
         preg_match_all(
             '#^('.implode('|', $prefixes).')('.implode('|', $paths).')('.implode('|', array_map('preg_quote', $this->urlSuffixes)).')'.'$#sD',
