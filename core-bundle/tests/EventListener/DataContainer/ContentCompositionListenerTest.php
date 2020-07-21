@@ -605,10 +605,7 @@ class ContentCompositionListenerTest extends TestCase
             ->method('isGranted')
         ;
 
-        $this->assertSame(
-            '',
-            $this->listener->renderArticlePasteButton($dc, $this->pageRecord, 'tl_page', false)
-        );
+        $this->assertSame('', $this->listener->renderArticlePasteButton($dc, $this->pageRecord, 'tl_page', false));
     }
 
     public function testCannotPasteIntoArticleIfPageLayoutDoesNotHaveArticles(): void

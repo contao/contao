@@ -33,9 +33,7 @@ class CandidatesTest extends TestCase
     {
         $request = $this->mockRequest($pathInfo);
         $connection = $this->mockConnection();
-
         $pageRegistry = $this->mockPageRegistry($languages, $urlSuffixes);
-
         $candidates = new PageCandidates($connection, $pageRegistry);
 
         $this->assertSame($expected['default'], $candidates->getCandidates($request));
@@ -47,9 +45,7 @@ class CandidatesTest extends TestCase
     public function testGetLocaleCandidates(string $pathInfo, array $urlSuffixes, array $languages, array $expected): void
     {
         $request = $this->mockRequest($pathInfo);
-
         $pageRegistry = $this->mockPageRegistry(null, $urlSuffixes);
-
         $candidates = new LocaleCandidates($pageRegistry);
 
         $this->assertSame($expected['locale'] ?? $expected['default'], $candidates->getCandidates($request));
@@ -62,7 +58,6 @@ class CandidatesTest extends TestCase
     public function testGetCandidatesInLegacyMode(string $pathInfo, array $urlSuffixes, array $languages, array $expected): void
     {
         $request = $this->mockRequest($pathInfo);
-
         $candidates = (new LegacyCandidates('' !== $languages[0], $urlSuffixes[0]))->getCandidates($request);
 
         $this->assertSame($expected['legacy'] ?? $expected['default'], $candidates);
@@ -370,7 +365,6 @@ class CandidatesTest extends TestCase
         $request = $this->mockRequest('/foo/bar/baz.html');
 
         $queryBuilder = $this->createMock(QueryBuilder::class);
-
         $queryBuilder
             ->expects($this->once())
             ->method('orWhere')
@@ -406,7 +400,6 @@ class CandidatesTest extends TestCase
     private function mockRequest(string $pathInfo): Request
     {
         $request = $this->createMock(Request::class);
-
         $request
             ->method('getHttpHost')
             ->willReturn('www.example.com')
@@ -427,7 +420,6 @@ class CandidatesTest extends TestCase
     private function mockPageRegistry(?array $urlPrefixes, ?array $urlSuffixes): PageRegistry
     {
         $pageRegistry = $this->createMock(PageRegistry::class);
-
         $pageRegistry
             ->expects(null === $urlPrefixes ? $this->never() : $this->once())
             ->method('getUrlPrefixes')
@@ -481,7 +473,6 @@ class CandidatesTest extends TestCase
         ;
 
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->method('createQueryBuilder')
             ->willReturn($queryBuilder)

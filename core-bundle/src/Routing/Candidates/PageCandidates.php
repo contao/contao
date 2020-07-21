@@ -120,7 +120,6 @@ class PageCandidates extends AbstractCandidates
         }
 
         $this->initialized = true;
-
         $this->urlPrefixes = $this->pageRegistry->getUrlPrefixes();
         $this->urlSuffixes = $this->pageRegistry->getUrlSuffixes();
     }

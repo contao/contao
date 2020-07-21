@@ -6,11 +6,9 @@ class BundleTestClass
 {
     public function onGetPageIdFromUrl()
     {
-
     }
 
     public function onGetRootPageFromUrl()
     {
-
     }
 }

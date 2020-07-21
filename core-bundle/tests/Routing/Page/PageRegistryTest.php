@@ -119,7 +119,6 @@ class PageRegistryTest extends TestCase
     public function testGetUrlPrefixes(): void
     {
         $connection = $this->mockConnectionWithPrefixAndSuffix('en');
-
         $registry = new PageRegistry($connection);
 
         $this->assertSame(['en'], $registry->getUrlPrefixes());

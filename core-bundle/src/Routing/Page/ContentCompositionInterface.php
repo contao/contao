@@ -15,9 +15,9 @@ namespace Contao\CoreBundle\Routing\Page;
 use Contao\PageModel;
 
 /**
- * The ContentCompositionInterface allows a page to dynamically determine if the given
- * PageModel supports content composition. If the value is always the same, use the
- * service tag or annotation (contentComposition=false) instead.
+ * The ContentCompositionInterface allows a page to dynamically determine if
+ * the given PageModel supports content composition. If the value is always the
+ * same, use the service tag or "contentComposition=false" annotation instead.
  */
 interface ContentCompositionInterface
 {
