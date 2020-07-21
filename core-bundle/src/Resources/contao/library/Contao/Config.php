@@ -489,6 +489,15 @@ class Config
 			}
 		}
 
+		$objRequest = $container->get('request_stack')->getCurrentRequest();
+
+		/** @var PageModel $objPage */
+		if (null !== $objRequest && ($objPage = $objRequest->attributes->get('pageModel')) instanceof PageModel)
+		{
+			$GLOBALS['TL_CONFIG']['addLanguageToUrl'] = $objPage->urlPrefix !== '';
+			$GLOBALS['TL_CONFIG']['urlSuffix'] = $objPage->urlSuffix;
+		}
+
 		if ($container->hasParameter('contao.image.valid_extensions'))
 		{
 			$GLOBALS['TL_CONFIG']['validImageTypes'] = implode(',', $container->getParameter('contao.image.valid_extensions'));

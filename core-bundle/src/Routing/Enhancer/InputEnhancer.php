@@ -28,22 +28,18 @@ class InputEnhancer implements RouteEnhancerInterface
     private $framework;
 
     /**
-     * @var bool
-     */
-    private $prependLocale;
-
-    /**
      * @internal Do not inherit from this class; decorate the "contao.routing.input_enhancer" service instead
      */
-    public function __construct(ContaoFramework $framework, bool $prependLocale)
+    public function __construct(ContaoFramework $framework)
     {
         $this->framework = $framework;
-        $this->prependLocale = $prependLocale;
     }
 
     public function enhance(array $defaults, Request $request): array
     {
-        if (!isset($defaults['pageModel']) || !$defaults['pageModel'] instanceof PageModel) {
+        $page = $defaults['pageModel'] ?? null;
+
+        if (!$page instanceof PageModel) {
             return $defaults;
         }
 
@@ -52,8 +48,8 @@ class InputEnhancer implements RouteEnhancerInterface
         /** @var Input $input */
         $input = $this->framework->getAdapter(Input::class);
 
-        if ($this->prependLocale && !empty($defaults['_locale'])) {
-            $input->setGet('language', $defaults['_locale']);
+        if (!empty($page->urlPrefix)) {
+            $input->setGet('language', $page->rootLanguage);
         }
 
         if (empty($defaults['parameters'])) {

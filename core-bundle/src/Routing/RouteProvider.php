@@ -12,13 +12,14 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing;
 
-use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\Model\Collection;
 use Contao\PageModel;
 use Contao\System;
 use Doctrine\DBAL\Connection;
+use Symfony\Cmf\Component\Routing\Candidates\CandidatesInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -27,20 +28,17 @@ use Symfony\Component\Routing\RouteCollection;
 
 class RouteProvider implements RouteProviderInterface
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
+    use CandidatePagesTrait;
 
     /**
-     * @var Connection
+     * @var RouteFactory
      */
-    private $database;
+    private $routeFactory;
 
     /**
-     * @var string
+     * @var bool
      */
-    private $urlSuffix;
+    private $legacyRouting;
 
     /**
      * @var bool
@@ -50,11 +48,13 @@ class RouteProvider implements RouteProviderInterface
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.route_provider" service instead
      */
-    public function __construct(ContaoFramework $framework, Connection $database, string $urlSuffix, bool $prependLocale)
+    public function __construct(ContaoFramework $framework, Connection $connection, CandidatesInterface $candidates, RouteFactory $routeFactory, bool $legacyRouting, bool $prependLocale)
     {
         $this->framework = $framework;
-        $this->database = $database;
-        $this->urlSuffix = $urlSuffix;
+        $this->connection = $connection;
+        $this->candidates = $candidates;
+        $this->routeFactory = $routeFactory;
+        $this->legacyRouting = $legacyRouting;
         $this->prependLocale = $prependLocale;
     }
 
@@ -71,20 +71,17 @@ class RouteProvider implements RouteProviderInterface
 
         $routes = [];
 
-        if ('/' === $pathInfo || ($this->prependLocale && preg_match('@^/([a-z]{2}(-[A-Z]{2})?)/$@', $pathInfo))) {
+        if ('/' === $pathInfo || ($this->legacyRouting && $this->prependLocale && preg_match('@^/([a-z]{2}(-[A-Z]{2})?)/$@', $pathInfo))) {
             $this->addRoutesForRootPages($this->findRootPages($request->getHttpHost()), $routes);
 
             return $this->createCollectionForRoutes($routes, $request->getLanguages());
         }
 
-        $pathInfo = $this->removeSuffixAndLanguage($pathInfo);
+        $pages = $this->findCandidatePages($request);
 
-        if (null === $pathInfo) {
+        if (empty($pages)) {
             return new RouteCollection();
         }
-
-        $candidates = $this->getAliasCandidates($pathInfo);
-        $pages = $this->findPages($candidates);
 
         $this->addRoutesForPages($pages, $routes);
 
@@ -147,58 +144,6 @@ class RouteProvider implements RouteProviderInterface
         return $routes;
     }
 
-    private function removeSuffixAndLanguage(string $pathInfo): ?string
-    {
-        $suffixLength = \strlen($this->urlSuffix);
-
-        if (0 !== $suffixLength) {
-            if (substr($pathInfo, -$suffixLength) !== $this->urlSuffix) {
-                return null;
-            }
-
-            $pathInfo = substr($pathInfo, 0, -$suffixLength);
-        }
-
-        if (0 === strncmp($pathInfo, '/', 1)) {
-            $pathInfo = substr($pathInfo, 1);
-        }
-
-        if ($this->prependLocale) {
-            $matches = [];
-
-            if (!preg_match('@^([a-z]{2}(-[A-Z]{2})?)/(.+)$@', $pathInfo, $matches)) {
-                return null;
-            }
-
-            $pathInfo = $matches[3];
-        }
-
-        return $pathInfo;
-    }
-
-    /**
-     * Compiles all possible aliases by applying dirname() to the request (e.g. news/archive/item, news/archive, news).
-     *
-     * @return array<string>
-     */
-    private function getAliasCandidates(string $pathInfo): array
-    {
-        $pos = strpos($pathInfo, '/');
-
-        if (false === $pos) {
-            return [$pathInfo];
-        }
-
-        $candidates = [$pathInfo];
-
-        while ('/' !== $pathInfo && false !== strpos($pathInfo, '/')) {
-            $pathInfo = \dirname($pathInfo);
-            $candidates[] = $pathInfo;
-        }
-
-        return $candidates;
-    }
-
     /**
      * @param iterable<PageModel> $pages
      */
@@ -244,25 +189,8 @@ class RouteProvider implements RouteProviderInterface
             return;
         }
 
-        $defaults = $this->getRouteDefaults($page);
-        $defaults['parameters'] = '';
-
-        $requirements = ['parameters' => '(/.+)?'];
-        $path = sprintf('/%s{parameters}%s', $page->alias ?: $page->id, $this->urlSuffix);
-
-        if ($this->prependLocale) {
-            $path = '/{_locale}'.$path;
-            $requirements['_locale'] = $page->rootLanguage;
-        }
-
-        $routes['tl_page.'.$page->id] = new Route(
-            $path,
-            $defaults,
-            $requirements,
-            ['utf8' => true],
-            $page->domain,
-            $page->rootUseSSL ? 'https' : null
-        );
+        $route = $this->routeFactory->createRouteForPage($page);
+        $routes['tl_page.'.$page->id] = $route;
 
         $this->addRoutesForRootPage($page, $routes);
     }
@@ -274,53 +202,43 @@ class RouteProvider implements RouteProviderInterface
         }
 
         $page->loadDetails();
+        $route = $this->routeFactory->createRouteForPage($page);
+        $urlPrefix = '';
 
-        $path = '/';
-        $requirements = [];
-        $defaults = $this->getRouteDefaults($page);
-
-        if ($this->prependLocale) {
-            $path = '/{_locale}'.$path;
-            $requirements['_locale'] = $page->rootLanguage;
+        if ($route instanceof PageRoute) {
+            $urlPrefix = $route->getUrlPrefix();
         }
 
         $routes['tl_page.'.$page->id.'.root'] = new Route(
-            $path,
-            $defaults,
-            $requirements,
+            $urlPrefix ? '/'.$urlPrefix.'/' : '/',
+            $route->getDefaults(),
             [],
-            $page->domain,
-            $page->rootUseSSL ? 'https' : null,
-            []
+            $route->getOptions(),
+            $route->getHost(),
+            $route->getSchemes(),
+            $route->getMethods()
         );
 
-        $defaults['_controller'] = 'Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction';
-        $defaults['path'] = '/'.$page->language.'/';
-        $defaults['permanent'] = true;
+        if (!$urlPrefix) {
+            return;
+        }
 
         $routes['tl_page.'.$page->id.'.fallback'] = new Route(
             '/',
-            $defaults,
+            array_merge(
+                $route->getDefaults(),
+                [
+                    '_controller' => 'Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction',
+                    'path' => '/'.$urlPrefix.'/',
+                    'permanent' => true,
+                ]
+            ),
             [],
-            [],
-            $page->domain,
-            $page->rootUseSSL ? 'https' : null,
-            []
+            $route->getOptions(),
+            $route->getHost(),
+            $route->getSchemes(),
+            $route->getMethods()
         );
-    }
-
-    /**
-     * @return array<string,PageModel|bool|string>
-     */
-    private function getRouteDefaults(PageModel $page): array
-    {
-        return [
-            '_token_check' => true,
-            '_controller' => 'Contao\FrontendIndex::renderPage',
-            '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
-            '_locale' => $page->rootLanguage,
-            'pageModel' => $page,
-        ];
     }
 
     /**
@@ -380,8 +298,11 @@ class RouteProvider implements RouteProviderInterface
         uasort(
             $routes,
             static function (Route $a, Route $b) use ($languages, $routes) {
-                $fallbackA = '.fallback' === substr(array_search($a, $routes, true), -9);
-                $fallbackB = '.fallback' === substr(array_search($b, $routes, true), -9);
+                $nameA = array_search($a, $routes, true);
+                $nameB = array_search($b, $routes, true);
+
+                $fallbackA = 0 === substr_compare($nameA, '.fallback', -9);
+                $fallbackB = 0 === substr_compare($nameB, '.fallback', -9);
 
                 if ($fallbackA && !$fallbackB) {
                     return 1;
@@ -459,48 +380,11 @@ class RouteProvider implements RouteProviderInterface
     /**
      * @return array<PageModel>
      */
-    private function findPages(array $candidates): array
-    {
-        $ids = [];
-        $aliases = [];
-
-        foreach ($candidates as $candidate) {
-            if (is_numeric($candidate)) {
-                $ids[] = (int) $candidate;
-            } else {
-                $aliases[] = $this->database->quote($candidate);
-            }
-        }
-
-        $conditions = [];
-
-        if (!empty($ids)) {
-            $conditions[] = 'tl_page.id IN ('.implode(',', $ids).')';
-        }
-
-        if (!empty($aliases)) {
-            $conditions[] = 'tl_page.alias IN ('.implode(',', $aliases).')';
-        }
-
-        /** @var PageModel $pageModel */
-        $pageModel = $this->framework->getAdapter(PageModel::class);
-        $pages = $pageModel->findBy([implode(' OR ', $conditions)], []);
-
-        if (!$pages instanceof Collection) {
-            return [];
-        }
-
-        /** @var array<PageModel> */
-        return $pages->getModels();
-    }
-
-    /**
-     * @return array<PageModel>
-     */
     private function findRootPages(string $httpHost): array
     {
         if (
-            !empty($GLOBALS['TL_HOOKS']['getRootPageFromUrl'])
+            $this->legacyRouting
+            && !empty($GLOBALS['TL_HOOKS']['getRootPageFromUrl'])
             && \is_array($GLOBALS['TL_HOOKS']['getRootPageFromUrl'])
         ) {
             /** @var System $system */

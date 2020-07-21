@@ -10,8 +10,10 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\LegacyRoutingException;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Search\Document;
 use Psr\Log\LogLevel;
 use Symfony\Component\HttpFoundation\Request;
@@ -66,6 +68,11 @@ abstract class Frontend extends Controller
 	public static function getPageIdFromUrl()
 	{
 		@trigger_error('Using Frontend::getPageIdFromUrl() has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.', E_USER_DEPRECATED);
+
+		if (!System::getContainer()->getParameter('contao.legacy_routing'))
+		{
+			throw new LegacyRoutingException('Frontend::getPageIdFromUrl() requires legacy routing. Configure "prepend_locale" or "url_suffix" in your app configuration (e.g. config.yml).');
+		}
 
 		$strRequest = Environment::get('relativeRequest');
 
@@ -294,6 +301,25 @@ abstract class Frontend extends Controller
 	 */
 	public static function getRootPageFromUrl()
 	{
+		if (!System::getContainer()->getParameter('contao.legacy_routing'))
+		{
+			$objRequest = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+			if ($objRequest instanceof Request)
+			{
+				$objPage = $objRequest->attributes->get('pageModel');
+
+				if ($objPage instanceof PageModel)
+				{
+					$objPage->loadDetails();
+
+					return PageModel::findByPk($objPage->rootId);
+				}
+			}
+
+			throw new NoRootPageFoundException('No root page found');
+		}
+
 		$host = Environment::get('host');
 		$logger = System::getContainer()->get('monolog.logger.contao');
 		$accept_language = Environment::get('httpAcceptLanguage');
@@ -385,6 +411,8 @@ abstract class Frontend extends Controller
 	 */
 	public static function addToUrl($strRequest, $blnIgnoreParams=false, $arrUnset=array())
 	{
+		global $objPage;
+
 		$arrGet = $blnIgnoreParams ? array() : $_GET;
 
 		// Clean the $_GET values (thanks to thyon)
@@ -411,7 +439,7 @@ abstract class Frontend extends Controller
 		}
 
 		// Unset the language parameter
-		if (Config::get('addLanguageToUrl'))
+		if ($objPage->urlPrefix)
 		{
 			unset($arrGet['language']);
 		}
@@ -424,7 +452,7 @@ abstract class Frontend extends Controller
 		foreach ($arrGet as $k=>$v)
 		{
 			// Omit the key if it is an auto_item key (see #5037)
-			if (Config::get('useAutoItem') && ($k == 'auto_item' || \in_array($k, $GLOBALS['TL_AUTO_ITEM'])))
+			if ($objPage->useAutoItem && ($k == 'auto_item' || \in_array($k, $GLOBALS['TL_AUTO_ITEM'])))
 			{
 				$strParams = $strConnector . urlencode($v) . $strParams;
 			}
@@ -434,26 +462,7 @@ abstract class Frontend extends Controller
 			}
 		}
 
-		/** @var PageModel $objPage */
-		global $objPage;
-
-		$pageId = $objPage->alias ?: $objPage->id;
-
-		// Get the page ID from URL if not set
-		if (empty($pageId))
-		{
-			$pageId = static::getPageIdFromUrl();
-		}
-
-		$arrParams = array();
-		$arrParams['alias'] = $pageId . $strParams;
-
-		if (Config::get('addLanguageToUrl'))
-		{
-			$arrParams['_locale'] = $objPage->rootLanguage;
-		}
-
-		$strUrl = System::getContainer()->get('router')->generate('contao_frontend', $arrParams);
+		$strUrl = System::getContainer()->get('router')->generate(PageRoute::ROUTE_NAME, array(PageRoute::CONTENT_PARAMETER => $objPage, 'parameters' => $strParams));
 		$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
 
 		return $strUrl;

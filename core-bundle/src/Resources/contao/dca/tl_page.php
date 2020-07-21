@@ -12,8 +12,10 @@ use Contao\Automator;
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
+use Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener;
+use Contao\CoreBundle\EventListener\DataContainer\PageTypeOptionsListener;
+use Contao\CoreBundle\EventListener\DataContainer\PageUrlListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Search\Document;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\Input;
@@ -24,8 +26,6 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Versions;
-use Nyholm\Psr7\Uri;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 $GLOBALS['TL_DCA']['tl_page'] = array
@@ -52,13 +52,11 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		),
 		'ondelete_callback' => array
 		(
-			array('tl_page', 'purgeSearchIndex'),
 			array('tl_page', 'scheduleUpdate')
 		),
 		'onsubmit_callback' => array
 		(
 			array('tl_page', 'scheduleUpdate'),
-			array('tl_page', 'generateArticle')
 		),
 		'sql' => array
 		(
@@ -153,8 +151,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'articles' => array
 			(
 				'href'                => 'do=article',
-				'icon'                => 'article.svg',
-				'button_callback'     => array('tl_page', 'editArticles')
+				'icon'                => 'article.svg'
 			)
 		)
 	),
@@ -176,8 +173,8 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'regular'                     => '{title_legend},title,alias,type;{meta_legend},pageTitle,robots,description,serpPreview;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,noSearch,guests,requireItem;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
 		'forward'                     => '{title_legend},title,alias,type;{meta_legend},pageTitle;{redirect_legend},jumpTo,redirect;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,guests;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
 		'redirect'                    => '{title_legend},title,alias,type;{meta_legend},pageTitle;{redirect_legend},redirect,url,target;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,guests;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
-		'root'                        => '{title_legend},title,alias,type;{meta_legend},pageTitle;{dns_legend},dns,useSSL,language,fallback;{global_legend:hide},mailerTransport,dateFormat,timeFormat,datimFormat,adminEmail,staticFiles,staticPlugins;{alias_legend:hide},validAliasCharacters,useFolderUrl;{sitemap_legend:hide},createSitemap;{protected_legend:hide},protected;{layout_legend},includeLayout;{twoFactor_legend:hide},enforceTwoFactor;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{publish_legend},published,start,stop',
-		'rootfallback'                => '{title_legend},title,alias,type;{meta_legend},pageTitle;{dns_legend},dns,useSSL,language,fallback;{website_legend},favicon,robotsTxt;{global_legend:hide},mailerTransport,dateFormat,timeFormat,datimFormat,adminEmail,staticFiles,staticPlugins;{alias_legend:hide},validAliasCharacters,useFolderUrl;{sitemap_legend:hide},createSitemap;{protected_legend:hide},protected;{layout_legend},includeLayout;{twoFactor_legend:hide},enforceTwoFactor;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{publish_legend},published,start,stop',
+		'root'                        => '{title_legend},title,alias,type;{meta_legend},pageTitle;{url_legend},dns,useSSL,urlPrefix,urlSuffix,validAliasCharacters,useFolderUrl;{global_legend:hide},language,fallback,dateFormat,timeFormat,datimFormat,adminEmail,mailerTransport,staticFiles,staticPlugins;{sitemap_legend:hide},createSitemap;{protected_legend:hide},protected;{layout_legend},includeLayout;{twoFactor_legend:hide},enforceTwoFactor;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{publish_legend},published,start,stop',
+		'rootfallback'                => '{title_legend},title,alias,type;{meta_legend},pageTitle;{url_legend},dns,useSSL,urlPrefix,urlSuffix,validAliasCharacters,useFolderUrl;{website_legend:hide},favicon,robotsTxt;{global_legend:hide},language,fallback,dateFormat,timeFormat,datimFormat,adminEmail,mailerTransport,staticFiles,staticPlugins;{sitemap_legend:hide},createSitemap;{protected_legend:hide},protected;{layout_legend},includeLayout;{twoFactor_legend:hide},enforceTwoFactor;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{publish_legend},published,start,stop',
 		'logout'                      => '{title_legend},title,alias,type;{forward_legend},jumpTo,redirectBack;{protected_legend:hide},protected;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
 		'error_401'                   => '{title_legend},title,alias,type;{meta_legend},pageTitle,robots,description;{forward_legend},autoforward;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass;{publish_legend},published,start,stop',
 		'error_403'                   => '{title_legend},title,alias,type;{meta_legend},pageTitle,robots,description;{forward_legend},autoforward;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass;{publish_legend},published,start,stop',
@@ -231,10 +228,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'folderalias', 'doNotCopy'=>true, 'maxlength'=>255, 'tl_class'=>'w50 clr'),
-			'save_callback' => array
-			(
-				array('tl_page', 'generateAlias')
-			),
 			'sql'                     => "varchar(255) BINARY NOT NULL default ''"
 		),
 		'type' => array
@@ -242,13 +235,8 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'select',
-			'options_callback'        => array('tl_page', 'getPageTypes'),
 			'eval'                    => array('helpwizard'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['PTY'],
-			'save_callback' => array
-			(
-				array('tl_page', 'checkRootType')
-			),
 			'sql'                     => "varchar(64) NOT NULL default 'regular'"
 		),
 		'pageTitle' => array
@@ -410,7 +398,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'rgxp'=>'friendly', 'decodeEntities'=>true, 'placeholder'=>Config::get('adminEmail'), 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>255, 'rgxp'=>'friendly', 'decodeEntities'=>true, 'placeholder'=>Config::get('adminEmail'), 'tl_class'=>'clr w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'dateFormat' => array
@@ -454,6 +442,20 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
 			'sql'                     => "char(1) NOT NULL default ''"
+		),
+		'urlPrefix' => array
+		(
+			'exclude'                 => true,
+			'inputType'               => 'text',
+			'eval'                    => array('rgxp'=>'folderalias', 'doNotCopy'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(128) BINARY NOT NULL default ''"
+		),
+		'urlSuffix' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_page']['urlSuffix'],
+			'inputType'               => 'text',
+			'eval'                    => array('nospace'=>'true', 'maxlength'=>16, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(16) NOT NULL default '.html'"
 		),
 		'createSitemap' => array
 		(
@@ -1002,9 +1004,13 @@ class tl_page extends Backend
 	 * @return mixed
 	 *
 	 * @throws Exception
+	 *
+	 * @deprecated
 	 */
 	public function checkRootType($varValue, DataContainer $dc)
 	{
+		@trigger_error('Using "tl_page::checkRootType()" has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 		if ($varValue != 'root' && $dc->activeRecord->pid == 0)
 		{
 			throw new Exception($GLOBALS['TL_LANG']['ERR']['topLevelRoot']);
@@ -1122,153 +1128,46 @@ class tl_page extends Backend
 	 */
 	public function generateAlias($varValue, DataContainer $dc)
 	{
-		$objPage = PageModel::findWithDetails($dc->id);
+		@trigger_error('Using "tl_page::generateAlias()" has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
-		$aliasExists = function (string $alias) use ($dc, $objPage): bool
-		{
-			$objAliasIds = $this->Database->prepare("SELECT id FROM tl_page WHERE alias=? AND id!=?")
-										  ->execute($alias, $dc->id);
-
-			if (!$objAliasIds->numRows)
-			{
-				return false;
-			}
-
-			$strCurrentDomain = $objPage->domain;
-			$strCurrentLanguage = $objPage->rootLanguage;
-
-			if ($objPage->type == 'root')
-			{
-				$strCurrentDomain = Input::post('dns');
-				$strCurrentLanguage = Input::post('language');
-			}
-
-			while ($objAliasIds->next())
-			{
-				$objAliasPage = PageModel::findWithDetails($objAliasIds->id);
-
-				if ($objAliasPage->domain != $strCurrentDomain)
-				{
-					continue;
-				}
-
-				if ($objAliasPage->rootLanguage != $strCurrentLanguage && Config::get('addLanguageToUrl'))
-				{
-					continue;
-				}
-
-				// Duplicate alias found
-				return true;
-			}
-
-			return false;
-		};
-
-		// Generate an alias if there is none
-		if ($varValue == '')
-		{
-			$varValue = System::getContainer()->get('contao.slug')->generate
-			(
-				$dc->activeRecord->title,
-				$dc->activeRecord->id,
-				static function ($alias) use ($objPage, $aliasExists)
-				{
-					return $aliasExists(($objPage->useFolderUrl ? $objPage->folderUrl : '') . $alias);
-				}
-			);
-
-			// Generate folder URL aliases (see #4933)
-			if ($objPage->useFolderUrl && $objPage->folderUrl != '')
-			{
-				$varValue = $objPage->folderUrl . $varValue;
-			}
-		}
-		elseif ($aliasExists($varValue))
-		{
-			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
-		}
-
-		if ($varValue != $dc->activeRecord->alias)
-		{
-			$this->purgeSearchIndex($dc);
-		}
-
-		return $varValue;
+		return System::getContainer()
+			->get(PageUrlListener::class)
+			->generateAlias($varValue, $dc)
+		;
 	}
 
 	/**
 	 * Automatically create an article in the main column of a new page
 	 *
 	 * @param DataContainer $dc
+	 *
+	 * @deprecated
 	 */
 	public function generateArticle(DataContainer $dc)
 	{
-		// Return if there is no active record (override all)
-		if (!$dc->activeRecord)
-		{
-			return;
-		}
+		@trigger_error('Using "tl_page::generateArticle()" has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
-		// No title or not a regular page
-		if ($dc->activeRecord->title == '' || !in_array($dc->activeRecord->type, array('regular', 'error_401', 'error_403', 'error_404')))
-		{
-			return;
-		}
-
-		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
-
-		$new_records = $objSessionBag->get('new_records');
-
-		// Not a new page
-		if (!$new_records || !is_array($new_records[$dc->table]) || !in_array($dc->id, $new_records[$dc->table]))
-		{
-			return;
-		}
-
-		// Check whether there are articles (e.g. on copied pages)
-		$objTotal = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_article WHERE pid=?")
-								   ->execute($dc->id);
-
-		if ($objTotal->count > 0)
-		{
-			return;
-		}
-
-		// Create article
-		$arrSet['pid'] = $dc->id;
-		$arrSet['sorting'] = 128;
-		$arrSet['tstamp'] = time();
-		$arrSet['author'] = $this->User->id;
-		$arrSet['inColumn'] = 'main';
-		$arrSet['title'] = $dc->activeRecord->title;
-		$arrSet['alias'] = str_replace('/', '-', $dc->activeRecord->alias); // see #5168
-		$arrSet['published'] = $dc->activeRecord->published;
-
-		$this->Database->prepare("INSERT INTO tl_article %s")->set($arrSet)->execute();
+		System::getContainer()
+			->get(ContentCompositionListener::class)
+			->generateArticleForPage($dc)
+		;
 	}
 
 	/**
 	 * Purge the search index if a page is being deleted
 	 *
 	 * @param DataContainer $dc
+	 *
+	 * @deprecated
 	 */
 	public function purgeSearchIndex(DataContainer $dc)
 	{
-		if (!$dc->id)
-		{
-			return;
-		}
+		@trigger_error('Using "tl_page::purgeSearchIndex()" has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
-		$objResult = $this->Database->prepare("SELECT url FROM tl_search WHERE pid=?")
-									->execute($dc->id);
-
-		$indexer = System::getContainer()->get('contao.search.indexer');
-
-		while ($objResult->next())
-		{
-			$indexer->delete(new Document(new Uri($objResult->url), 200));
-		}
+		System::getContainer()
+			->get(PageUrlListener::class)
+			->purgeSearchIndex($dc)
+		;
 	}
 
 	/**
@@ -1386,27 +1285,14 @@ class tl_page extends Backend
 	 * @param DataContainer $dc
 	 *
 	 * @return array
+	 *
+	 * @deprecated
 	 */
 	public function getPageTypes(DataContainer $dc)
 	{
-		$arrOptions = array();
+		@trigger_error('Using "tl_page::getPageTypes()" has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
-		foreach (array_keys($GLOBALS['TL_PTY']) as $pty)
-		{
-			// Root pages are allowed on the first level only (see #6360)
-			if ($pty == 'root' && $dc->activeRecord && $dc->activeRecord->pid > 0)
-			{
-				continue;
-			}
-
-			// Allow the currently selected option and anything the user has access to
-			if ($pty == $dc->value || $this->User->hasAccess($pty, 'alpty'))
-			{
-				$arrOptions[] = $pty;
-			}
-		}
-
-		return $arrOptions;
+		return System::getContainer()->get(PageTypeOptionsListener::class)($dc);
 	}
 
 	/**
@@ -1647,15 +1533,17 @@ class tl_page extends Backend
 	 * @param string $icon
 	 *
 	 * @return string
+	 *
+	 * @deprecated
 	 */
 	public function editArticles($row, $href, $label, $title, $icon)
 	{
-		if (!$this->User->hasAccess('article', 'modules'))
-		{
-			return '';
-		}
+		@trigger_error('Using "tl_page::editArticles()" has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
-		return ($row['type'] == 'regular' || $row['type'] == 'error_401' || $row['type'] == 'error_403' || $row['type'] == 'error_404') ? '<a href="' . $this->addToUrl($href . '&amp;pn=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '">' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return System::getContainer()
+			->get(ContentCompositionListener::class)
+			->renderPageArticlesOperation($row, $href, $label, $title, $icon)
+		;
 	}
 
 	/**

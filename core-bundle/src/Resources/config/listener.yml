@@ -11,6 +11,36 @@ services:
             calls:
                 - [setContainer, ['@service_container']]
 
+    Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener:
+        arguments:
+            - '@contao.framework'
+            - '@security.helper'
+            - '@Contao\CoreBundle\Routing\Page\PageRegistry'
+            - '@translator'
+            - '@database_connection'
+            - '@request_stack'
+        public: true
+
+    Contao\CoreBundle\EventListener\DataContainer\PageTypeOptionsListener:
+        arguments:
+            - '@Contao\CoreBundle\Routing\Page\PageRegistry'
+            - '@security.helper'
+            - '@?event_dispatcher'
+        public: true
+
+    Contao\CoreBundle\EventListener\DataContainer\PageUrlListener:
+        arguments:
+            - '@contao.framework'
+            - '@contao.slug'
+            - '@translator'
+            - '@database_connection'
+            - '@contao.search.indexer'
+        public: true
+
+    Contao\CoreBundle\EventListener\FilterPageTypeListener:
+        tags:
+            - { name: kernel.event_listener }
+
     contao.listener.backend_locale:
         class: Contao\CoreBundle\EventListener\BackendLocaleListener
         arguments:

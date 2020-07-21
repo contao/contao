@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
+use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -28,6 +29,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string  $pageTitle
  * @property string  $language
  * @property boolean $useFolderUrl
+ * @property boolean $useAutoItem
  * @property string  $robots
  * @property string  $description
  * @property string  $redirect
@@ -46,6 +48,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string  $timeFormat
  * @property string  $datimFormat
  * @property string  $validAliasCharacters
+ * @property string  $urlPrefix
+ * @property string  $urlSuffix
  * @property string  $createSitemap
  * @property string  $sitemapName
  * @property string  $useSSL
@@ -134,6 +138,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static PageModel|null findOneByDateFormat($val, array $opt=array())
  * @method static PageModel|null findOneByTimeFormat($val, array $opt=array())
  * @method static PageModel|null findOneByDatimFormat($val, array $opt=array())
+ * @method static PageModel|null findOneByValidAliasCharacters($val, array $opt=array())
+ * @method static PageModel|null findOneByUrlPrefix($val, array $opt=array())
+ * @method static PageModel|null findOneByUrlSuffix($val, array $opt=array())
  * @method static PageModel|null findOneByCreateSitemap($val, array $opt=array())
  * @method static PageModel|null findOneBySitemapName($val, array $opt=array())
  * @method static PageModel|null findOneByUseSSL($val, array $opt=array())
@@ -188,6 +195,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static Collection|PageModel[]|PageModel|null findByDateFormat($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByTimeFormat($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByDatimFormat($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByValidAliasCharacters($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByUrlPrefix($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByUrlSuffix($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByCreateSitemap($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findBySitemapName($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByUseSSL($val, array $opt=array())
@@ -246,6 +256,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static integer countByDateFormat($val, array $opt=array())
  * @method static integer countByTimeFormat($val, array $opt=array())
  * @method static integer countByDatimFormat($val, array $opt=array())
+ * @method static integer countByValidAliasCharacters($val, array $opt=array())
+ * @method static integer countByUrlPrefix($val, array $opt=array())
+ * @method static integer countByUrlSuffix($val, array $opt=array())
  * @method static integer countByCreateSitemap($val, array $opt=array())
  * @method static integer countBySitemapName($val, array $opt=array())
  * @method static integer countByUseSSL($val, array $opt=array())
@@ -991,17 +1004,26 @@ class PageModel extends Model
 			$this->timeFormat = $objParentPage->timeFormat;
 			$this->datimFormat = $objParentPage->datimFormat;
 			$this->validAliasCharacters = $objParentPage->validAliasCharacters;
+			$this->urlPrefix = $objParentPage->urlPrefix;
+			$this->urlSuffix = $objParentPage->urlSuffix;
 			$this->adminEmail = $objParentPage->adminEmail;
 			$this->enforceTwoFactor = $objParentPage->enforceTwoFactor;
 			$this->twoFactorJumpTo = $objParentPage->twoFactorJumpTo;
 			$this->useFolderUrl = $objParentPage->useFolderUrl;
 			$this->mailerTransport = $objParentPage->mailerTransport;
+			$this->useAutoItem = Config::get('useAutoItem');
 
 			// Store whether the root page has been published
 			$this->rootIsPublic = ($objParentPage->published && ($objParentPage->start == '' || $objParentPage->start <= $time) && ($objParentPage->stop == '' || $objParentPage->stop > ($time + 60)));
 			$this->rootIsFallback = true;
 			$this->rootUseSSL = $objParentPage->useSSL;
 			$this->rootFallbackLanguage = $objParentPage->language;
+
+			if (System::getContainer()->getParameter('contao.legacy_routing'))
+			{
+				$this->urlPrefix = System::getContainer()->getParameter('contao.prepend_locale') ? $objParentPage->language : '';
+				$this->urlSuffix = System::getContainer()->getParameter('contao.url_suffix');
+			}
 
 			// Store the fallback language (see #6874)
 			if (!$objParentPage->fallback)
@@ -1079,25 +1101,26 @@ class PageModel extends Model
 	 */
 	public function getFrontendUrl($strParams=null, $strForceLang=null)
 	{
+		$page = $this;
+		$page->loadDetails();
+
 		if ($strForceLang !== null)
 		{
 			@trigger_error('Using PageModel::getFrontendUrl() with $strForceLang has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
+			$page = $page->cloneOriginal();
+			$page->preventSaving(false);
+			$page->language = $strForceLang;
+			$page->rootLanguage = $strForceLang;
+
+			if (System::getContainer()->getParameter('contao.legacy_routing'))
+			{
+				$page->urlPrefix = System::getContainer()->getParameter('contao.prepend_locale') ? $strForceLang : '';
+			}
 		}
 
-		$this->loadDetails();
-
-		$objUrlGenerator = System::getContainer()->get('contao.routing.url_generator');
-
-		$strUrl = $objUrlGenerator->generate
-		(
-			($this->alias ?: $this->id) . $strParams,
-			array
-			(
-				'_locale' => ($strForceLang ?: $this->rootLanguage),
-				'_domain' => $this->domain,
-				'_ssl' => (bool) $this->rootUseSSL,
-			)
-		);
+		$objRouter = System::getContainer()->get('router');
+		$strUrl = $objRouter->generate(PageRoute::ROUTE_NAME, array(PageRoute::CONTENT_PARAMETER => $this, 'parameters' => $strParams));
 
 		// Make the URL relative to the base path
 		if (0 === strncmp($strUrl, '/', 1))
@@ -1119,19 +1142,8 @@ class PageModel extends Model
 	{
 		$this->loadDetails();
 
-		$objUrlGenerator = System::getContainer()->get('contao.routing.url_generator');
-
-		$strUrl = $objUrlGenerator->generate
-		(
-			($this->alias ?: $this->id) . $strParams,
-			array
-			(
-				'_locale' => $this->rootLanguage,
-				'_domain' => $this->domain,
-				'_ssl' => (bool) $this->rootUseSSL,
-			),
-			UrlGeneratorInterface::ABSOLUTE_URL
-		);
+		$objRouter = System::getContainer()->get('router');
+		$strUrl = $objRouter->generate(PageRoute::ROUTE_NAME, array(PageRoute::CONTENT_PARAMETER => $this, 'parameters' => $strParams), UrlGeneratorInterface::ABSOLUTE_URL);
 
 		return $this->applyLegacyLogic($strUrl, $strParams);
 	}
@@ -1152,25 +1164,16 @@ class PageModel extends Model
 			return $this->getAbsoluteUrl($strParams);
 		}
 
+		$this->loadDetails();
+
 		$context = $container->get('router')->getContext();
 		$baseUrl = $context->getBaseUrl();
 
 		// Add the preview script
 		$context->setBaseUrl($previewScript);
 
-		$objUrlGenerator = $container->get('contao.routing.url_generator');
-
-		$strUrl = $objUrlGenerator->generate
-		(
-			($this->alias ?: $this->id) . $strParams,
-			array
-			(
-				'_locale' => $this->rootLanguage,
-				'_domain' => $this->domain,
-				'_ssl' => (bool) $this->rootUseSSL,
-			),
-			UrlGeneratorInterface::ABSOLUTE_URL
-		);
+		$objRouter = System::getContainer()->get('router');
+		$strUrl = $objRouter->generate(PageRoute::ROUTE_NAME, array(PageRoute::CONTENT_PARAMETER => $this, 'parameters' => $strParams), UrlGeneratorInterface::ABSOLUTE_URL);
 
 		$context->setBaseUrl($baseUrl);
 

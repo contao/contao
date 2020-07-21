@@ -26,6 +26,7 @@ use Contao\CoreBundle\DependencyInjection\Compiler\MapFragmentsToGlobalsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\PickerProviderPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterHookListenersPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\RegisterPagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RemembermeServicesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\SearchIndexerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\TaggedMigrationsPass;
@@ -39,6 +40,7 @@ use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Event\RobotsTxtEvent;
 use Contao\CoreBundle\Event\SlugValidCharactersEvent;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
+use Symfony\Cmf\Component\Routing\DependencyInjection\Compiler\RegisterRouteEnhancersPass;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\EventDispatcher\DependencyInjection\AddEventAliasesPass;
@@ -46,7 +48,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\FragmentRendererPass;
 
 class ContaoCoreBundleTest extends TestCase
 {
-    public function testAddsTheCompilerPaths(): void
+    public function testAddsTheCompilerPasses(): void
     {
         $passes = [
             AddEventAliasesPass::class,
@@ -57,6 +59,7 @@ class ContaoCoreBundleTest extends TestCase
             AddResourcesPathsPass::class,
             TaggedMigrationsPass::class,
             PickerProviderPass::class,
+            RegisterPagesPass::class,
             RegisterFragmentsPass::class,
             RegisterFragmentsPass::class,
             FragmentRendererPass::class,
@@ -69,6 +72,7 @@ class ContaoCoreBundleTest extends TestCase
             CrawlerPass::class,
             AddCronJobsPass::class,
             AddAvailableTransportsPass::class,
+            RegisterRouteEnhancersPass::class,
         ];
 
         $security = $this->createMock(SecurityExtension::class);

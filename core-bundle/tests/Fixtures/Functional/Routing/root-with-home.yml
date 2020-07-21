@@ -5,6 +5,8 @@ tl_page:
       tstamp: 1539679767
       title: Root with home page
       alias: root-with-home-page
+      urlPrefix: ''
+      urlSuffix: .html
       type: root
       language: en
       dns: root-with-home.local

@@ -140,6 +140,18 @@
       <trans-unit id="ERR.aliasExists">
         <source>The alias "%s" already exists!</source>
       </trans-unit>
+      <trans-unit id="ERR.urlPrefixExists">
+        <source>The URL prefix "%s" is already used by another root page with the same domain name!</source>
+      </trans-unit>
+      <trans-unit id="ERR.pageUrlExists">
+        <source>A page with the URL "%s" already exists!</source>
+      </trans-unit>
+      <trans-unit id="ERR.pageUrlSuffix">
+        <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>
+      </trans-unit>
+      <trans-unit id="ERR.pageUrlPrefix">
+        <source>This language prefix will lead to duplicate URLs (e.g. %s)!</source>
+      </trans-unit>
       <trans-unit id="ERR.importFolder">
         <source>The folder "%s" cannot be imported!</source>
       </trans-unit>

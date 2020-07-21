@@ -17,6 +17,7 @@ use Contao\CoreBundle\Routing\Enhancer\InputEnhancer;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Input;
 use Contao\PageModel;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
@@ -37,57 +38,40 @@ class InputEnhancerTest extends TestCase
             ->method('initialize')
         ;
 
-        $enhancer = new InputEnhancer($framework, false);
+        $enhancer = new InputEnhancer($framework);
         $enhancer->enhance([], Request::create('/'));
     }
 
     /**
      * @dataProvider getLocales
      */
-    public function testAddsTheLocaleIfEnabled(bool $prependLocale, string $locale): void
+    public function testSetsTheLanguageWithUrlPrefix(string $urlPrefix, string $language): void
     {
         $input = $this->mockAdapter(['setGet']);
         $input
-            ->expects($prependLocale ? $this->once() : $this->never())
+            ->expects('' !== $urlPrefix ? $this->once() : $this->never())
             ->method('setGet')
-            ->with('language', $locale)
+            ->with('language', $language)
         ;
 
         $framework = $this->mockContaoFramework([Input::class => $input]);
 
         $defaults = [
-            'pageModel' => $this->createMock(PageModel::class),
-            '_locale' => $locale,
+            'pageModel' => $this->mockPageModel($language, $urlPrefix),
         ];
 
-        $enhancer = new InputEnhancer($framework, $prependLocale);
+        $enhancer = new InputEnhancer($framework);
         $enhancer->enhance($defaults, Request::create('/'));
     }
 
     public function getLocales(): \Generator
     {
-        yield [false, 'en'];
-        yield [false, 'de'];
-        yield [true, 'de'];
-        yield [true, 'en'];
-    }
-
-    public function testDoesNotAddTheLocaleIfItIsNotPresent(): void
-    {
-        $input = $this->mockAdapter(['setGet']);
-        $input
-            ->expects($this->never())
-            ->method('setGet')
-        ;
-
-        $framework = $this->mockContaoFramework([Input::class => $input]);
-
-        $defaults = [
-            'pageModel' => $this->createMock(PageModel::class),
-        ];
-
-        $enhancer = new InputEnhancer($framework, true);
-        $enhancer->enhance($defaults, Request::create('/'));
+        yield ['', 'en'];
+        yield ['', 'de'];
+        yield ['de', 'de'];
+        yield ['en', 'en'];
+        yield ['foo', 'de'];
+        yield ['bar', 'en'];
     }
 
     /**
@@ -118,11 +102,11 @@ class InputEnhancerTest extends TestCase
         $framework = $this->mockContaoFramework($adapters);
 
         $defaults = [
-            'pageModel' => $this->createMock(PageModel::class),
+            'pageModel' => $this->mockPageModel('en', ''),
             'parameters' => $parameters,
         ];
 
-        $enhancer = new InputEnhancer($framework, false);
+        $enhancer = new InputEnhancer($framework);
         $enhancer->enhance($defaults, Request::create('/'));
     }
 
@@ -150,7 +134,7 @@ class InputEnhancerTest extends TestCase
             'parameters' => '/foo/bar/foo/bar',
         ];
 
-        $enhancer = new InputEnhancer($framework, false);
+        $enhancer = new InputEnhancer($framework);
 
         $this->expectException(ResourceNotFoundException::class);
         $this->expectExceptionMessage('Duplicate parameter "foo" in path');
@@ -169,11 +153,11 @@ class InputEnhancerTest extends TestCase
         $framework = $this->mockContaoFramework([Input::class => $input]);
 
         $defaults = [
-            'pageModel' => $this->createMock(PageModel::class),
+            'pageModel' => $this->mockPageModel('en', ''),
             'parameters' => '/foo/bar',
         ];
 
-        $enhancer = new InputEnhancer($framework, false);
+        $enhancer = new InputEnhancer($framework);
 
         $this->expectException(ResourceNotFoundException::class);
         $this->expectExceptionMessage('Duplicate parameter "foo" in path');
@@ -193,13 +177,13 @@ class InputEnhancerTest extends TestCase
         $framework = $this->mockContaoFramework([Input::class => $input]);
 
         $defaults = [
-            'pageModel' => $this->createMock(PageModel::class),
+            'pageModel' => $this->mockPageModel('en', ''),
             'parameters' => '/foo/bar/bar',
         ];
 
         $GLOBALS['TL_AUTO_ITEM'] = ['bar'];
 
-        $enhancer = new InputEnhancer($framework, false);
+        $enhancer = new InputEnhancer($framework);
 
         $this->expectException(ResourceNotFoundException::class);
         $this->expectExceptionMessage('"bar" is an auto_item keyword (duplicate content)');
@@ -223,11 +207,11 @@ class InputEnhancerTest extends TestCase
         $framework = $this->mockContaoFramework($adapters);
 
         $defaults = [
-            'pageModel' => $this->createMock(PageModel::class),
+            'pageModel' => $this->mockPageModel('en', ''),
             'parameters' => '/foo/bar/baz',
         ];
 
-        $enhancer = new InputEnhancer($framework, false);
+        $enhancer = new InputEnhancer($framework);
 
         $this->expectException(ResourceNotFoundException::class);
         $this->expectExceptionMessage('Invalid number of arguments');
@@ -252,15 +236,29 @@ class InputEnhancerTest extends TestCase
         $framework = $this->mockContaoFramework($adapters);
 
         $defaults = [
-            'pageModel' => $this->createMock(PageModel::class),
+            'pageModel' => $this->mockPageModel('en', ''),
             'parameters' => '/foo/bar//baz',
         ];
 
-        $enhancer = new InputEnhancer($framework, false);
+        $enhancer = new InputEnhancer($framework);
 
         $this->expectException(ResourceNotFoundException::class);
         $this->expectExceptionMessage('Empty fragment key in path');
 
         $enhancer->enhance($defaults, Request::create('/'));
+    }
+
+    /**
+     * @return PageModel&MockObject
+     */
+    private function mockPageModel(string $language, string $urlPrefix): PageModel
+    {
+        return $this->mockClassWithProperties(
+            PageModel::class,
+            [
+                'rootLanguage' => $language,
+                'urlPrefix' => $urlPrefix,
+            ]
+        );
     }
 }

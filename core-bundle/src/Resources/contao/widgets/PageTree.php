@@ -176,10 +176,12 @@ class PageTree extends Widget
 
 			if ($objPages !== null)
 			{
-				while ($objPages->next())
+				foreach ($objPages as $objPage)
 				{
-					$arrSet[] = $objPages->id;
-					$arrValues[$objPages->id] = Image::getHtml($this->getPageStatusIcon($objPages)) . ' ' . $objPages->title . ' (' . $objPages->alias . Config::get('urlSuffix') . ')';
+					$objPage->loadDetails();
+
+					$arrSet[] = $objPage->id;
+					$arrValues[$objPage->id] = Image::getHtml($this->getPageStatusIcon($objPage)) . ' ' . $objPage->title . ' (' . ($objPage->urlPrefix ? ($objPage->urlPrefix . '/') : '') . $objPage->alias . $objPage->urlSuffix . ')';
 				}
 			}
 

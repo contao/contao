@@ -210,6 +210,8 @@ services:
 
     contao.data_collector:
         class: Contao\CoreBundle\DataCollector\ContaoDataCollector
+        arguments:
+            - '@parameter_bag'
         tags:
             - { name: data_collector, template: '@ContaoCore/Collector/contao.html.twig', id: contao }
 
@@ -257,6 +259,7 @@ services:
             - '@filesystem'
             - '%kernel.project_dir%'
             - '%contao.error_level%'
+            - '%contao.legacy_routing%'
         public: true
         tags:
             - { name: kernel.reset, method: reset }
@@ -478,19 +481,22 @@ services:
         calls:
             - [matchAttribute, [_scope, backend]]
 
+    contao.routing.candidates:
+        class: Contao\CoreBundle\Routing\Candidates\PageCandidates
+        arguments:
+            - '@database_connection'
+            - '@Contao\CoreBundle\Routing\Page\PageRegistry'
+
+    contao.routing.locale_candidates:
+        class: Contao\CoreBundle\Routing\Candidates\LocaleCandidates
+        arguments:
+            - '@Contao\CoreBundle\Routing\Page\PageRegistry'
+
     contao.routing.domain_filter:
         class: Contao\CoreBundle\Routing\Matcher\DomainFilter
 
     contao.routing.final_matcher:
         class: Contao\CoreBundle\Routing\Matcher\UrlMatcher
-
-    contao.routing.frontend_loader:
-        class: Contao\CoreBundle\Routing\FrontendLoader
-        arguments:
-            - '%contao.prepend_locale%'
-            - '%contao.url_suffix%'
-        tags:
-            - routing.loader
 
     contao.routing.frontend_matcher:
         class: Symfony\Component\HttpFoundation\RequestMatcher
@@ -509,28 +515,11 @@ services:
         class: Contao\CoreBundle\Routing\Enhancer\InputEnhancer
         arguments:
             - '@contao.framework'
-            - '%contao.prepend_locale%'
+        tags:
+            - contao.page_router_enhancer
 
     contao.routing.language_filter:
         class: Contao\CoreBundle\Routing\Matcher\LanguageFilter
-        arguments:
-            - '%contao.prepend_locale%'
-
-    contao.routing.legacy_matcher:
-        class: Contao\CoreBundle\Routing\Matcher\LegacyMatcher
-        decorates: contao.routing.nested_matcher
-        arguments:
-            - '@contao.framework'
-            - '@contao.routing.legacy_matcher.inner'
-            - '%contao.url_suffix%'
-            - '%contao.prepend_locale%'
-
-    contao.routing.legacy_route_provider:
-        class: Contao\CoreBundle\Routing\LegacyRouteProvider
-        decorates: contao.routing.route_provider
-        arguments:
-            - '@contao.routing.frontend_loader'
-            - '@contao.routing.legacy_route_provider.inner'
 
     contao.routing.nested_matcher:
         class: Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher
@@ -561,8 +550,6 @@ services:
             - ''
             - '@event_dispatcher'
             - '@contao.routing.route_provider'
-        calls:
-            - [addRouteEnhancer, ['@contao.routing.input_enhancer']]
         tags:
             - { name: router, priority: 20 }
 
@@ -584,9 +571,9 @@ services:
             - '@contao.security.token_checker'
 
     contao.routing.route_generator:
-        class: Symfony\Cmf\Component\Routing\ProviderBasedGenerator
+        class: Contao\CoreBundle\Routing\ContentResolvingGenerator
         arguments:
-            - '@contao.routing.route_provider'
+            - '@Contao\CoreBundle\Routing\RouteFactory'
             - '@?logger'
 
     contao.routing.route_provider:
@@ -594,28 +581,24 @@ services:
         arguments:
             - '@contao.framework'
             - '@database_connection'
-            - '%contao.url_suffix%'
+            - '@contao.routing.candidates'
+            - '@Contao\CoreBundle\Routing\RouteFactory'
+            - '%contao.legacy_routing%'
             - '%contao.prepend_locale%'
 
     contao.routing.route_404_provider:
         class: Contao\CoreBundle\Routing\Route404Provider
         arguments:
             - '@contao.framework'
-            - '%contao.prepend_locale%'
+            - '@database_connection'
+            - '@contao.routing.locale_candidates'
+            - '@Contao\CoreBundle\Routing\RouteFactory'
 
     contao.routing.scope_matcher:
         class: Contao\CoreBundle\Routing\ScopeMatcher
         arguments:
             - '@contao.routing.backend_matcher'
             - '@contao.routing.frontend_matcher'
-        public: true
-
-    contao.routing.url_generator:
-        class: Contao\CoreBundle\Routing\UrlGenerator
-        arguments:
-            - '@router'
-            - '@contao.framework'
-            - '%contao.prepend_locale%'
         public: true
 
     contao.search.indexer.default:

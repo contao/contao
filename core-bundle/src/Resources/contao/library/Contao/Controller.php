@@ -20,6 +20,7 @@ use Contao\CoreBundle\File\MetaData;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Monolog\ContaoContext as ContaoMonologContext;
+use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Util\SimpleTokenParser;
 use Contao\Database\Result;
 use Contao\Image\PictureConfiguration;
@@ -1178,59 +1179,50 @@ abstract class Controller extends System
 	 * @return string An URL that can be used in the front end
 	 *
 	 * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.0.
-	 *             Use the contao.routing.url_generator service or PageModel::getFrontendUrl() instead.
+	 *             Use the Symfony router instead.
 	 */
 	public static function generateFrontendUrl(array $arrRow, $strParams=null, $strForceLang=null, $blnFixDomain=false)
 	{
-		@trigger_error('Using Controller::generateFrontendUrl() has been deprecated and will no longer work in Contao 5.0. Use the contao.routing.url_generator service or PageModel::getFrontendUrl() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Controller::generateFrontendUrl() has been deprecated and will no longer work in Contao 5.0. Use the Symfony router instead.', E_USER_DEPRECATED);
+
+		$page = new PageModel();
+		$page->preventSaving(false);
+		$page->setRow($arrRow);
 
 		if (!isset($arrRow['rootId']))
 		{
-			$row = PageModel::findWithDetails($arrRow['id']);
-
-			$arrRow['rootId'] = $row->rootId;
+			$page->loadDetails();
 
 			foreach (array('domain', 'rootLanguage', 'rootUseSSL') as $key)
 			{
-				if (!isset($arrRow[$key]))
+				if (isset($arrRow[$key]))
 				{
-					$arrRow[$key] = $row->$key;
+					$page->$key = $arrRow[$key];
 				}
 			}
 		}
 
-		$arrParams = array();
-
 		// Set the language
-		if ($strForceLang != '')
+		if ($strForceLang !== null)
 		{
-			$arrParams['_locale'] = $strForceLang;
-		}
-		elseif (isset($arrRow['rootLanguage']))
-		{
-			$arrParams['_locale'] = $arrRow['rootLanguage'];
-		}
-		elseif (isset($arrRow['language']) && $arrRow['type'] == 'root')
-		{
-			$arrParams['_locale'] = $arrRow['language'];
-		}
-		elseif (TL_MODE == 'FE')
-		{
-			/** @var PageModel $objPage */
-			global $objPage;
+			$page->language = $strForceLang;
+			$page->rootLanguage = $strForceLang;
 
-			$arrParams['_locale'] = $objPage->rootLanguage;
+			if (System::getContainer()->getParameter('contao.legacy_routing'))
+			{
+				$page->urlPrefix = System::getContainer()->getParameter('contao.prepend_locale') ? $strForceLang : '';
+			}
 		}
 
 		// Add the domain if it differs from the current one (see #3765 and #6927)
 		if ($blnFixDomain)
 		{
-			$arrParams['_domain'] = $arrRow['domain'];
-			$arrParams['_ssl'] = (bool) $arrRow['rootUseSSL'];
+			$page->domain = $arrRow['domain'];
+			$page->rootUseSSL = (bool) $arrRow['rootUseSSL'];
 		}
 
-		$objUrlGenerator = System::getContainer()->get('contao.routing.url_generator');
-		$strUrl = $objUrlGenerator->generate(($arrRow['alias'] ?: $arrRow['id']) . $strParams, $arrParams);
+		$objRouter = System::getContainer()->get('router');
+		$strUrl = $objRouter->generate(PageRoute::ROUTE_NAME, array(PageRoute::CONTENT_PARAMETER => $page, 'parameters' => $strParams));
 
 		// Remove path from absolute URLs
 		if (0 === strncmp($strUrl, '/', 1))

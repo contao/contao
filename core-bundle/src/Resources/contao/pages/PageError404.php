@@ -85,7 +85,7 @@ class PageError404 extends Frontend
 		$objRootPage = $this->getRootPageFromUrl();
 
 		// Forward if the language should be but is not set (see #4028)
-		if (Config::get('addLanguageToUrl'))
+		if ($objRootPage->urlPrefix)
 		{
 			// Get the request string without the script name
 			$strRequest = Environment::get('relativeRequest');

@@ -164,6 +164,7 @@ class ContaoContextTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.resource_finder', $finder);
+        $container->set('request_stack', new RequestStack());
         $container->setParameter('kernel.project_dir', $this->getFixturesDir());
 
         System::setContainer($container);

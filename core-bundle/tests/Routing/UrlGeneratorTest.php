@@ -22,8 +22,14 @@ use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
+/**
+ * @group legacy
+ */
 class UrlGeneratorTest extends TestCase
 {
+    /**
+     * @expectedDeprecation Using the "Contao\CoreBundle\Routing\UrlGenerator" class has been deprecated %s.
+     */
     public function testCanWriteTheContext(): void
     {
         $router = new ParentUrlGenerator(new RouteCollection(), new RequestContext());

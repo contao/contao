@@ -42,6 +42,8 @@ class FrontendIndex extends Frontend
 	 */
 	public function run()
 	{
+		@trigger_error('Using FrontendIndex::run() has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.', E_USER_DEPRECATED);
+
 		$pageId = $this->getPageIdFromUrl();
 		$objRootPage = null;
 
@@ -126,7 +128,7 @@ class FrontendIndex extends Frontend
 			}
 
 			// Use the first result (see #4872)
-			if (!Config::get('addLanguageToUrl'))
+			if (!System::getContainer()->getParameter('contao.legacy_routing') || !Config::get('addLanguageToUrl'))
 			{
 				$objNewPage = current($arrLangs);
 			}
@@ -173,8 +175,8 @@ class FrontendIndex extends Frontend
 		// If the page has an alias, it can no longer be called via ID (see #7661)
 		if ($objPage->alias != '')
 		{
-			$language = Config::get('addLanguageToUrl') ? '[a-z]{2}(-[A-Z]{2})?/' : '';
-			$suffix = preg_quote(Config::get('urlSuffix'), '#');
+			$language = $objPage->urlPrefix ? preg_quote($objPage->urlPrefix . '/', '#') : '';
+			$suffix = preg_quote($objPage->urlSuffix, '#');
 
 			if (preg_match('#^' . $language . $objPage->id . '(' . $suffix . '($|\?)|/)#', Environment::get('relativeRequest')))
 			{
@@ -314,7 +316,8 @@ class FrontendIndex extends Frontend
 					return $objHandler->getResponse();
 
 				default:
-					$objHandler = new $GLOBALS['TL_PTY'][$objPage->type]();
+					$pageType = $GLOBALS['TL_PTY'][$objPage->type] ?? PageRegular::class;
+					$objHandler = new $pageType();
 
 					// Backwards compatibility
 					if (!method_exists($objHandler, 'getResponse'))

@@ -106,6 +106,7 @@ use Contao\CoreBundle\Picker\PickerBuilder;
 use Contao\CoreBundle\Picker\TablePickerProvider;
 use Contao\CoreBundle\Repository\CronJobRepository;
 use Contao\CoreBundle\Repository\RememberMeRepository;
+use Contao\CoreBundle\Routing\ContentResolvingGenerator;
 use Contao\CoreBundle\Routing\Enhancer\InputEnhancer;
 use Contao\CoreBundle\Routing\FrontendLoader;
 use Contao\CoreBundle\Routing\ImagesLoader;
@@ -116,6 +117,7 @@ use Contao\CoreBundle\Routing\Matcher\LegacyMatcher;
 use Contao\CoreBundle\Routing\Matcher\PublishedFilter;
 use Contao\CoreBundle\Routing\Matcher\UrlMatcher;
 use Contao\CoreBundle\Routing\Route404Provider;
+use Contao\CoreBundle\Routing\RouteFactory;
 use Contao\CoreBundle\Routing\RouteProvider;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Routing\UrlGenerator;
@@ -153,7 +155,6 @@ use Knp\Menu\Renderer\ListRenderer;
 use Psr\Container\ContainerInterface as PsrContainerInterface;
 use Symfony\Cmf\Component\Routing\DynamicRouter;
 use Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher;
-use Symfony\Cmf\Component\Routing\ProviderBasedGenerator;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -1870,6 +1871,7 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('filesystem'),
                 new Reference('%kernel.project_dir%'),
                 new Reference('%contao.error_level%'),
+                new Reference('%contao.legacy_routing%'),
             ],
             $definition->getArguments()
         );
@@ -2550,9 +2552,29 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($definition->isPrivate());
     }
 
-    public function testRegistersTheRoutingFrontendLoader(): void
+    public function testRegistersTheRoutingFrontendLoaderInLegacyMode(): void
     {
         $container = $this->getContainerBuilder();
+
+        $this->assertFalse($container->has('contao.routing.frontend_loader'));
+
+        $container = $this->getContainerBuilder([
+            'contao' => [
+                'encryption_key' => 'foobar',
+                'localconfig' => ['foo' => 'bar'],
+                'prepend_locale' => true,
+            ],
+        ]);
+
+        $this->assertTrue($container->has('contao.routing.frontend_loader'));
+
+        $container = $this->getContainerBuilder([
+            'contao' => [
+                'encryption_key' => 'foobar',
+                'localconfig' => ['foo' => 'bar'],
+                'url_suffix' => '.php',
+            ],
+        ]);
 
         $this->assertTrue($container->has('contao.routing.frontend_loader'));
 
@@ -2644,7 +2666,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEquals(
             [
                 new Reference('contao.framework'),
-                new Reference('%contao.prepend_locale%'),
             ],
             $definition->getArguments()
         );
@@ -2661,17 +2682,32 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(LanguageFilter::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
 
-        $this->assertEquals(
-            [
-                new Reference('%contao.prepend_locale%'),
-            ],
-            $definition->getArguments()
-        );
+        $this->assertSame([], $definition->getArguments());
     }
 
     public function testRegistersTheRoutingLegacyMatcher(): void
     {
         $container = $this->getContainerBuilder();
+
+        $this->assertFalse($container->has('contao.routing.legacy_matcher'));
+
+        $container = $this->getContainerBuilder([
+            'contao' => [
+                'encryption_key' => 'foobar',
+                'localconfig' => ['foo' => 'bar'],
+                'prepend_locale' => true,
+            ],
+        ]);
+
+        $this->assertTrue($container->has('contao.routing.legacy_matcher'));
+
+        $container = $this->getContainerBuilder([
+            'contao' => [
+                'encryption_key' => 'foobar',
+                'localconfig' => ['foo' => 'bar'],
+                'url_suffix' => '.php',
+            ],
+        ]);
 
         $this->assertTrue($container->has('contao.routing.legacy_matcher'));
 
@@ -2696,6 +2732,26 @@ class ContaoCoreExtensionTest extends TestCase
     {
         $container = $this->getContainerBuilder();
 
+        $this->assertFalse($container->has('contao.routing.legacy_route_provider'));
+
+        $container = $this->getContainerBuilder([
+            'contao' => [
+                'encryption_key' => 'foobar',
+                'localconfig' => ['foo' => 'bar'],
+                'url_suffix' => '.php',
+            ],
+        ]);
+
+        $this->assertTrue($container->has('contao.routing.legacy_route_provider'));
+
+        $container = $this->getContainerBuilder([
+            'contao' => [
+                'encryption_key' => 'foobar',
+                'localconfig' => ['foo' => 'bar'],
+                'url_suffix' => '.php',
+            ],
+        ]);
+
         $this->assertTrue($container->has('contao.routing.legacy_route_provider'));
 
         $definition = $container->getDefinition('contao.routing.legacy_route_provider');
@@ -2706,7 +2762,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEquals(
             [
                 new Reference('contao.routing.frontend_loader'),
-                new Reference('contao.routing.legacy_route_provider.inner'),
             ],
             $definition->getArguments()
         );
@@ -2793,15 +2848,7 @@ class ContaoCoreExtensionTest extends TestCase
             $definition->getArguments()
         );
 
-        $this->assertEquals(
-            [
-                [
-                    'addRouteEnhancer',
-                    [new Reference('contao.routing.input_enhancer')],
-                ],
-            ],
-            $definition->getMethodCalls()
-        );
+        $this->assertSame([], $definition->getMethodCalls());
 
         $this->assertSame(
             [
@@ -2866,12 +2913,12 @@ class ContaoCoreExtensionTest extends TestCase
 
         $definition = $container->getDefinition('contao.routing.route_generator');
 
-        $this->assertSame(ProviderBasedGenerator::class, $definition->getClass());
+        $this->assertSame(ContentResolvingGenerator::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
 
         $this->assertEquals(
             [
-                new Reference('contao.routing.route_provider'),
+                new Reference(RouteFactory::class),
                 new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
             ],
             $definition->getArguments()
@@ -2893,7 +2940,9 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 new Reference('contao.framework'),
                 new Reference('database_connection'),
-                new Reference('%contao.url_suffix%'),
+                new Reference('contao.routing.candidates'),
+                new Reference(RouteFactory::class),
+                new Reference('%contao.legacy_routing%'),
                 new Reference('%contao.prepend_locale%'),
             ],
             $definition->getArguments()
@@ -2914,7 +2963,9 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEquals(
             [
                 new Reference('contao.framework'),
-                new Reference('%contao.prepend_locale%'),
+                new Reference('database_connection'),
+                new Reference('contao.routing.locale_candidates'),
+                new Reference(RouteFactory::class),
             ],
             $definition->getArguments()
         );
@@ -2940,9 +2991,29 @@ class ContaoCoreExtensionTest extends TestCase
         );
     }
 
-    public function testRegistersTheRoutingUrlGenerator(): void
+    public function testRegistersTheRoutingUrlGeneratorInLegacyMode(): void
     {
         $container = $this->getContainerBuilder();
+
+        $this->assertFalse($container->has('contao.routing.url_generator'));
+
+        $container = $this->getContainerBuilder([
+            'contao' => [
+                'encryption_key' => 'foobar',
+                'localconfig' => ['foo' => 'bar'],
+                'prepend_locale' => true,
+            ],
+        ]);
+
+        $this->assertTrue($container->has('contao.routing.url_generator'));
+
+        $container = $this->getContainerBuilder([
+            'contao' => [
+                'encryption_key' => 'foobar',
+                'localconfig' => ['foo' => 'bar'],
+                'url_suffix' => '.php',
+            ],
+        ]);
 
         $this->assertTrue($container->has('contao.routing.url_generator'));
 

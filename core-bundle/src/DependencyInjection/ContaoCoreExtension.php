@@ -16,6 +16,9 @@ use Contao\CoreBundle\Crawl\Escargot\Subscriber\EscargotSubscriberInterface;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Migration\MigrationInterface;
 use Contao\CoreBundle\Picker\PickerProviderInterface;
+use Contao\CoreBundle\Routing\Content\ContentRouteProviderInterface;
+use Contao\CoreBundle\Routing\Page\ContentCompositionInterface;
+use Contao\CoreBundle\Routing\Page\DynamicRouteInterface;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Imagine\Exception\RuntimeException;
 use Imagine\Gd\Imagine;
@@ -58,14 +61,14 @@ class ContaoCoreExtension extends Extension
         );
 
         $loader->load('commands.yml');
+        $loader->load('controller.yml');
         $loader->load('listener.yml');
         $loader->load('services.yml');
+        $loader->load('routing.yml');
         $loader->load('migrations.yml');
 
         $container->setParameter('contao.web_dir', $config['web_dir']);
-        $container->setParameter('contao.prepend_locale', $config['prepend_locale']);
         $container->setParameter('contao.encryption_key', $config['encryption_key']);
-        $container->setParameter('contao.url_suffix', $config['url_suffix']);
         $container->setParameter('contao.upload_path', $config['upload_path']);
         $container->setParameter('contao.editable_files', $config['editable_files']);
         $container->setParameter('contao.preview_script', $config['preview_script']);
@@ -88,6 +91,7 @@ class ContaoCoreExtension extends Extension
         $this->setImagineService($config, $container);
         $this->overwriteImageTargetDir($config, $container);
         $this->handleTokenCheckerConfig($config, $container);
+        $this->handleLegacyRouting($config, $container, $loader);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -97,6 +101,21 @@ class ContaoCoreExtension extends Extension
         $container
             ->registerForAutoconfiguration(MigrationInterface::class)
             ->addTag('contao.migration')
+        ;
+
+        $container
+            ->registerForAutoconfiguration(ContentRouteProviderInterface::class)
+            ->addTag('contao.content_route_provider')
+        ;
+
+        $container
+            ->registerForAutoconfiguration(DynamicRouteInterface::class)
+            ->addTag('contao.page')
+        ;
+
+        $container
+            ->registerForAutoconfiguration(ContentCompositionInterface::class)
+            ->addTag('contao.page')
         ;
     }
 
@@ -267,6 +286,31 @@ class ContaoCoreExtension extends Extension
 
         if ($container->hasParameter('security.role_hierarchy.roles') && \count($container->getParameter('security.role_hierarchy.roles')) > 0) {
             $tokenChecker->replaceArgument(5, new Reference('security.access.role_hierarchy_voter'));
+        }
+    }
+
+    private function handleLegacyRouting(array $config, ContainerBuilder $container, YamlFileLoader $loader): void
+    {
+        $count = 0;
+
+        if (!isset($config['prepend_locale'])) {
+            ++$count;
+            $config['prepend_locale'] = false;
+        }
+
+        if (!isset($config['url_suffix'])) {
+            ++$count;
+            $config['url_suffix'] = '.html';
+        }
+
+        $legacyRouting = 2 !== $count;
+
+        $container->setParameter('contao.prepend_locale', $config['prepend_locale']);
+        $container->setParameter('contao.url_suffix', $config['url_suffix']);
+        $container->setParameter('contao.legacy_routing', $legacyRouting);
+
+        if ($legacyRouting) {
+            $loader->load('legacy_routing.yml');
         }
     }
 }

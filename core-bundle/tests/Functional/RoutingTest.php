@@ -36,6 +36,7 @@ class RoutingTest extends FunctionalTestCase
     protected function setUp(): void
     {
         parent::setUp();
+        static::bootKernel();
 
         $_GET = [];
 
@@ -58,6 +59,35 @@ class RoutingTest extends FunctionalTestCase
         System::setContainer($client->getContainer());
 
         $this->loadFixtureFiles($fixtures);
+
+        $crawler = $client->request('GET', $request);
+        $title = trim($crawler->filterXPath('//head/title')->text());
+
+        /** @var Response $response */
+        $response = $client->getResponse();
+
+        $this->assertSame($statusCode, $response->getStatusCode());
+        $this->assertSame($query, $_GET);
+        $this->assertStringContainsString($pageTitle, $title);
+    }
+
+    /**
+     * @group legacy
+     * @dataProvider getAliases
+     *
+     * @expectedDeprecation Using the "Contao\CoreBundle\Routing\FrontendLoader" class has been deprecated %s.
+     */
+    public function testResolvesAliasesInLegacyMode(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
+    {
+        $this->loadFixtureFiles($fixtures);
+
+        Config::set('useAutoItem', $autoItem);
+
+        $_SERVER['REQUEST_URI'] = $request;
+        $_SERVER['HTTP_HOST'] = $host;
+
+        $client = $this->createClient(['environment' => 'legacy'], $_SERVER);
+        System::setContainer($client->getContainer());
 
         $crawler = $client->request('GET', $request);
         $title = trim($crawler->filterXPath('//head/title')->text());
@@ -301,6 +331,26 @@ class RoutingTest extends FunctionalTestCase
             'root-with-folder-urls.local',
             true,
         ];
+
+        yield 'Renders the page if the URL contains a page ID and the page has no alias' => [
+            ['theme', 'page-without-alias'],
+            '/15.html',
+            200,
+            'Home - Page without alias',
+            [],
+            'localhost',
+            true,
+        ];
+
+        yield 'Renders the 404 page if the URL contains a page ID but the page has an alias' => [
+            ['theme', 'root-with-home'],
+            '/2.html',
+            404,
+            '(404 Not Found)',
+            [],
+            'root-with-home.local',
+            true,
+        ];
     }
 
     /**
@@ -308,6 +358,43 @@ class RoutingTest extends FunctionalTestCase
      */
     public function testResolvesAliasesWithLocale(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
     {
+        $this->loadFixtureFiles($fixtures);
+
+        self::$container
+            ->get('doctrine')
+            ->getConnection()
+            ->exec('UPDATE tl_page SET urlPrefix=language')
+        ;
+
+        Config::set('useAutoItem', $autoItem);
+
+        $_SERVER['REQUEST_URI'] = $request;
+        $_SERVER['HTTP_HOST'] = $host;
+
+        $client = $this->createClient([], $_SERVER);
+        System::setContainer($client->getContainer());
+
+        $crawler = $client->request('GET', $request);
+        $title = trim($crawler->filterXPath('//head/title')->text());
+
+        /** @var Response $response */
+        $response = $client->getResponse();
+
+        $this->assertSame($statusCode, $response->getStatusCode());
+        $this->assertSame($query, $_GET);
+        $this->assertStringContainsString($pageTitle, $title);
+    }
+
+    /**
+     * @group legacy
+     * @dataProvider getAliasesWithLocale
+     *
+     * @expectedDeprecation Using the "Contao\CoreBundle\Routing\FrontendLoader" class has been deprecated %s.
+     */
+    public function testResolvesAliasesWithLocaleInLegacyMode(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
+    {
+        $this->loadFixtureFiles($fixtures);
+
         Config::set('useAutoItem', $autoItem);
         Config::set('addLanguageToUrl', true);
 
@@ -324,6 +411,10 @@ class RoutingTest extends FunctionalTestCase
 
         /** @var Response $response */
         $response = $client->getResponse();
+
+        if (!isset($query['language'])) {
+            unset($_GET['language']);
+        }
 
         $this->assertSame($statusCode, $response->getStatusCode());
         $this->assertSame($query, $_GET);
@@ -377,7 +468,7 @@ class RoutingTest extends FunctionalTestCase
             '/en/home.xml',
             404,
             '(404 Not Found)',
-            ['language' => 'en'],
+            [],
             'root-with-home.local',
             false,
         ];
@@ -387,7 +478,7 @@ class RoutingTest extends FunctionalTestCase
             '/en/home/auto_item/foo.html',
             404,
             '(404 Not Found)',
-            ['language' => 'en'],
+            [],
             'root-with-home.local',
             false,
         ];
@@ -437,7 +528,7 @@ class RoutingTest extends FunctionalTestCase
             '/en/.html',
             404,
             '(404 Not Found)',
-            ['language' => 'en'],
+            [],
             'root-with-home.local',
             false,
         ];
@@ -487,7 +578,7 @@ class RoutingTest extends FunctionalTestCase
             '/en/home/auto_item/foo.html',
             404,
             '(404 Not Found)',
-            ['language' => 'en'],
+            [],
             'root-with-home.local',
             true,
         ];
@@ -537,7 +628,7 @@ class RoutingTest extends FunctionalTestCase
             '/en/folder/url/home/auto_item/foo.html',
             404,
             '(404 Not Found)',
-            ['language' => 'en'],
+            [],
             'root-with-folder-urls.local',
             true,
         ];
@@ -551,6 +642,36 @@ class RoutingTest extends FunctionalTestCase
             'root-with-folder-urls.local',
             true,
         ];
+
+        yield 'Renders the page if the URL contains a page ID and the page has no alias' => [
+            ['theme', 'page-without-alias'],
+            '/en/15.html',
+            200,
+            'Home - Page without alias',
+            ['language' => 'en'],
+            'localhost',
+            true,
+        ];
+
+        yield 'Renders the 404 page if the URL contains a page ID but the page has an alias' => [
+            ['theme', 'root-with-home'],
+            '/en/2.html',
+            404,
+            '(404 Not Found)',
+            [],
+            'root-with-home.local',
+            true,
+        ];
+
+        yield 'Redirects to the first regular page if the alias is not "index" and the request is only the prefix' => [
+            ['theme', 'root-with-home-and-prefix'],
+            '/en/',
+            302,
+            'Redirecting to http://root-with-home.local/en/home.html',
+            ['language' => 'en'],
+            'root-with-home.local',
+            false,
+        ];
     }
 
     /**
@@ -558,6 +679,43 @@ class RoutingTest extends FunctionalTestCase
      */
     public function testResolvesAliasesWithoutUrlSuffix(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
     {
+        $this->loadFixtureFiles($fixtures);
+
+        self::$container
+            ->get('doctrine')
+            ->getConnection()
+            ->exec("UPDATE tl_page SET urlSuffix=''")
+        ;
+
+        Config::set('useAutoItem', $autoItem);
+
+        $_SERVER['REQUEST_URI'] = $request;
+        $_SERVER['HTTP_HOST'] = $host;
+
+        $client = $this->createClient([], $_SERVER);
+        System::setContainer($client->getContainer());
+
+        $crawler = $client->request('GET', $request);
+        $title = trim($crawler->filterXPath('//head/title')->text());
+
+        /** @var Response $response */
+        $response = $client->getResponse();
+
+        $this->assertSame($statusCode, $response->getStatusCode());
+        $this->assertSame($query, $_GET);
+        $this->assertStringContainsString($pageTitle, $title);
+    }
+
+    /**
+     * @group legacy
+     * @dataProvider getAliasesWithoutUrlSuffix
+     *
+     * @expectedDeprecation Using the "Contao\CoreBundle\Routing\FrontendLoader" class has been deprecated %s.
+     */
+    public function testResolvesAliasesWithoutUrlSuffixInLegacyMode(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
+    {
+        $this->loadFixtureFiles($fixtures);
+
         Config::set('useAutoItem', $autoItem);
 
         $_SERVER['REQUEST_URI'] = $request;
@@ -876,6 +1034,41 @@ class RoutingTest extends FunctionalTestCase
      */
     public function testResolvesTheRootPageWithLocale(array $fixtures, string $request, int $statusCode, string $pageTitle, string $acceptLanguages, string $host): void
     {
+        $this->loadFixtureFiles($fixtures);
+
+        self::$container
+            ->get('doctrine')
+            ->getConnection()
+            ->exec('UPDATE tl_page SET urlPrefix=language')
+        ;
+
+        $_SERVER['REQUEST_URI'] = $request;
+        $_SERVER['HTTP_HOST'] = $host;
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptLanguages;
+
+        $client = $this->createClient([], $_SERVER);
+        System::setContainer($client->getContainer());
+
+        $crawler = $client->request('GET', $request);
+        $title = trim($crawler->filterXPath('//head/title')->text());
+
+        /** @var Response $response */
+        $response = $client->getResponse();
+
+        $this->assertSame($statusCode, $response->getStatusCode());
+        $this->assertStringContainsString($pageTitle, $title);
+    }
+
+    /**
+     * @group legacy
+     * @dataProvider getRootAliasesWithLocale
+     *
+     * @expectedDeprecation Using the "Contao\CoreBundle\Routing\FrontendLoader" class has been deprecated %s.
+     */
+    public function testResolvesTheRootPageWithLocaleInLegacyMode(array $fixtures, string $request, int $statusCode, string $pageTitle, string $acceptLanguages, string $host): void
+    {
+        $this->loadFixtureFiles($fixtures);
+
         Config::set('addLanguageToUrl', true);
 
         $_SERVER['REQUEST_URI'] = $request;

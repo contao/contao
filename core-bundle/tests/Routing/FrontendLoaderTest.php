@@ -20,8 +20,14 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Symfony\Component\Routing\RouteCollection;
 
+/**
+ * @group legacy
+ */
 class FrontendLoaderTest extends TestCase
 {
+    /**
+     * @expectedDeprecation Using the "Contao\CoreBundle\Routing\FrontendLoader" class has been deprecated %s.
+     */
     public function testSupportsTheContaoFrontEndRoute(): void
     {
         $loader = new FrontendLoader(false);
