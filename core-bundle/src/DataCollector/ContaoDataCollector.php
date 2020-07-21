@@ -19,7 +19,6 @@ use Contao\LayoutModel;
 use Contao\Model\Registry;
 use Contao\PageModel;
 use Contao\System;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
@@ -33,13 +32,31 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     use FrameworkAwareTrait;
 
     /**
-     * @var ParameterBagInterface
+     * @var bool
      */
-    private $parameterBag;
+    private $legacyRouting;
 
-    public function __construct(ParameterBagInterface $parameterBag)
+    /**
+     * @var string
+     */
+    private $projectDir;
+
+    /**
+     * @var bool
+     */
+    private $prependLocale;
+
+    /**
+     * @var string
+     */
+    private $urlSuffix;
+
+    public function __construct(bool $legacyRouting, string $projectDir, bool $prependLocale, string $urlSuffix)
     {
-        $this->parameterBag = $parameterBag;
+        $this->legacyRouting = $legacyRouting;
+        $this->projectDir = $projectDir;
+        $this->prependLocale = $prependLocale;
+        $this->urlSuffix = $urlSuffix;
     }
 
     public function collect(Request $request, Response $response, \Exception $exception = null): void
@@ -168,7 +185,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
             'preview' => \defined('BE_USER_LOGGED_IN') && true === BE_USER_LOGGED_IN,
             'layout' => $this->getLayoutName(),
             'template' => $this->getTemplateName(),
-            'legacy_routing' => $this->parameterBag->get('contao.legacy_routing'),
+            'legacy_routing' => $this->legacyRouting,
         ];
     }
 
@@ -187,7 +204,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
             foreach ($GLOBALS['TL_HOOKS'][$name] as $callback) {
                 $class = $systemAdapter->importStatic($callback[0]);
                 $file = (new \ReflectionClass($class))->getFileName();
-                $vendorDir = $this->parameterBag->get('kernel.project_dir').'/vendor/';
+                $vendorDir = $this->projectDir.'/vendor/';
 
                 $hook = [
                     'name' => $name,
@@ -206,9 +223,9 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         }
 
         $this->data['legacy_routing'] = [
-            'enabled' => $this->parameterBag->get('contao.legacy_routing'),
-            'prepend_locale' => $this->parameterBag->get('contao.prepend_locale'),
-            'url_suffix' => $this->parameterBag->get('contao.url_suffix'),
+            'enabled' => $this->legacyRouting,
+            'prepend_locale' => $this->prependLocale,
+            'url_suffix' => $this->urlSuffix,
             'hooks' => $hooks,
         ];
     }

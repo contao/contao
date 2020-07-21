@@ -89,6 +89,7 @@ class ContentDownload extends ContentElement
 
 		if (TL_MODE == 'FE')
 		{
+			/** @var PageModel $objPage */
 			global $objPage;
 
 			$arrMeta = Frontend::getMetaData($this->objFile->meta, $objPage->language);

@@ -71,7 +71,7 @@ class RootPageControllerTest extends TestCase
 
         $this->expectException(\InvalidArgumentException::class);
 
-        $this->controller->__invoke($page);
+        ($this->controller)($page);
     }
 
     public function testThrowsExceptionIfFirstPageOfRootIsNotFound(): void
@@ -88,7 +88,7 @@ class RootPageControllerTest extends TestCase
 
         $this->expectException(NoActivePageFoundException::class);
 
-        $this->controller->__invoke($page);
+        ($this->controller)($page);
     }
 
     public function testCreatesRedirectResponseToFirstPage(): void
@@ -114,7 +114,7 @@ class RootPageControllerTest extends TestCase
         ;
 
         /** @var RedirectResponse $response */
-        $response = $this->controller->__invoke($page);
+        $response = ($this->controller)($page);
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame('https://www.example.org/en/foobar.html', $response->getTargetUrl());

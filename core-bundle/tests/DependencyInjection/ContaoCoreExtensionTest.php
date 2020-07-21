@@ -1722,6 +1722,16 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(ContaoDataCollector::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
 
+        $this->assertEquals(
+            [
+                new Reference('%contao.legacy_routing%'),
+                new Reference('%kernel.project_dir%'),
+                new Reference('%contao.prepend_locale%'),
+                new Reference('%contao.url_suffix%'),
+            ],
+            $definition->getArguments()
+        );
+
         $this->assertSame(
             [
                 'data_collector' => [
@@ -2552,6 +2562,12 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($definition->isPrivate());
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation The language prefix is configured per root page since Contao 4.10. Enabling this option will activate legacy routing.
+     * @expectedDeprecation The URL suffix is configured per root page since Contao 4.10. Enabling this option will activate legacy routing.
+     */
     public function testRegistersTheRoutingFrontendLoaderInLegacyMode(): void
     {
         $container = $this->getContainerBuilder();
@@ -2685,6 +2701,12 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame([], $definition->getArguments());
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation The language prefix is configured per root page since Contao 4.10. Enabling this option will activate legacy routing.
+     * @expectedDeprecation The URL suffix is configured per root page since Contao 4.10. Enabling this option will activate legacy routing.
+     */
     public function testRegistersTheRoutingLegacyMatcher(): void
     {
         $container = $this->getContainerBuilder();
@@ -2728,6 +2750,11 @@ class ContaoCoreExtensionTest extends TestCase
         );
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation The URL suffix is configured per root page since Contao 4.10. Enabling this option will activate legacy routing.
+     */
     public function testRegistersTheRoutingLegacyRouteProvider(): void
     {
         $container = $this->getContainerBuilder();
@@ -2991,6 +3018,11 @@ class ContaoCoreExtensionTest extends TestCase
         );
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation The URL suffix is configured per root page since Contao 4.10. Enabling this option will activate legacy routing.
+     */
     public function testRegistersTheRoutingUrlGeneratorInLegacyMode(): void
     {
         $container = $this->getContainerBuilder();
