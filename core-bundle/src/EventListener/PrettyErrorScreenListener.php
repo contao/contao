@@ -14,10 +14,12 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\Config;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
+use Contao\CoreBundle\Exception\LegacyRoutingException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageError404;
 use Contao\StringUtil;
+use Contao\System;
 use Symfony\Component\HttpFoundation\AcceptHeader;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -56,12 +58,18 @@ class PrettyErrorScreenListener
      */
     private $security;
 
-    public function __construct(bool $prettyErrorScreens, Environment $twig, ContaoFramework $framework, Security $security)
+    /**
+     * @var string
+     */
+    private $projectDir;
+
+    public function __construct(bool $prettyErrorScreens, Environment $twig, ContaoFramework $framework, Security $security, string $projectDir)
     {
         $this->prettyErrorScreens = $prettyErrorScreens;
         $this->twig = $twig;
         $this->framework = $framework;
         $this->security = $security;
+        $this->projectDir = $projectDir;
     }
 
     /**
@@ -115,6 +123,10 @@ class PrettyErrorScreenListener
 
             case $exception instanceof ServiceUnavailableHttpException:
                 $this->renderTemplate('service_unavailable', 503, $event);
+                break;
+
+            case $exception instanceof LegacyRoutingException:
+                $this->renderTemplate('legacy_routing', 501, $event);
                 break;
 
             default:
@@ -212,7 +224,7 @@ class PrettyErrorScreenListener
         $config = $this->framework->getAdapter(Config::class);
         $encoded = StringUtil::encodeEmail($config->get('adminEmail'));
 
-        return [
+        $parameters = [
             'statusCode' => $statusCode,
             'statusName' => Response::$statusTexts[$statusCode],
             'template' => $view,
@@ -221,6 +233,15 @@ class PrettyErrorScreenListener
             'adminEmail' => '&#109;&#97;&#105;&#108;&#116;&#111;&#58;'.$encoded,
             'exception' => $event->getThrowable()->getMessage(),
         ];
+
+        if ($event->getThrowable() instanceof LegacyRoutingException) {
+            /** @var System $systemAdapter */
+            $systemAdapter = $this->framework->getAdapter(System::class);
+
+            $parameters['hooks'] = LegacyRoutingException::getHooks($systemAdapter, $this->projectDir);
+        }
+
+        return $parameters;
     }
 
     private function getStatusCodeForException(\Throwable $exception): int

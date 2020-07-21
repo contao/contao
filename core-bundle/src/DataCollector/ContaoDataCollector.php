@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DataCollector;
 
+use Contao\CoreBundle\Exception\LegacyRoutingException;
 use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
 use Contao\CoreBundle\Util\PackageUtil;
@@ -22,7 +23,6 @@ use Contao\System;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
-use Webmozart\PathUtil\Path;
 
 /**
  * @internal
@@ -191,42 +191,14 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
 
     private function addLegacyRoutingData(): void
     {
-        $hooks = [];
-
-        foreach (['getPageIdFromUrl', 'getRootPageFromUrl'] as $name) {
-            if (empty($GLOBALS['TL_HOOKS'][$name]) || !\is_array($GLOBALS['TL_HOOKS'][$name])) {
-                continue;
-            }
-
-            /** @var System $systemAdapter */
-            $systemAdapter = $this->framework->getAdapter(System::class);
-
-            foreach ($GLOBALS['TL_HOOKS'][$name] as $callback) {
-                $class = $systemAdapter->importStatic($callback[0]);
-                $file = (new \ReflectionClass($class))->getFileName();
-                $vendorDir = $this->projectDir.'/vendor/';
-
-                $hook = [
-                    'name' => $name,
-                    'class' => \get_class($class),
-                    'method' => $callback[1],
-                    'package' => '',
-                ];
-
-                if (Path::isBasePath($vendorDir, $file)) {
-                    [$vendor, $package] = explode('/', Path::makeRelative($file, $vendorDir), 3);
-                    $hook['package'] = $vendor.'/'.$package;
-                }
-
-                $hooks[] = $hook;
-            }
-        }
+        /** @var System $systemAdapter */
+        $systemAdapter = $this->framework->getAdapter(System::class);
 
         $this->data['legacy_routing'] = [
             'enabled' => $this->legacyRouting,
             'prepend_locale' => $this->prependLocale,
             'url_suffix' => $this->urlSuffix,
-            'hooks' => $hooks,
+            'hooks' => LegacyRoutingException::getHooks($systemAdapter, $this->projectDir),
         ];
     }
 

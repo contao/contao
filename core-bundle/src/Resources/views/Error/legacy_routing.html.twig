@@ -1,0 +1,40 @@
+{% trans_default_domain 'contao_exception' %}
+{% extends "@ContaoCore/Error/layout.html.twig" %}
+{% block title %}
+    {{ 'XPT.legacyRoutingTitle'|trans }}
+{% endblock %}
+{% block matter %}
+    <p>{{ 'XPT.legacyRoutingMatter'|trans }}</p>
+{% endblock %}
+{% block howToFix %}
+    <p>{{ 'XPT.legacyRoutingFix1'|trans|raw }}</p>
+    <p>{{ 'XPT.legacyRoutingFix2'|trans|raw }}</p>
+    <pre>
+contao:
+    prepend_locale: false
+    url_suffix: '.html'
+    </pre>
+{% endblock %}
+{% block explain %}
+    <p>{{ 'XPT.legacyRoutingHooks'|trans|raw }}</p>
+    <table>
+        <thead>
+        <tr>
+            <th style="text-align:left; padding-right:10px">Hook</th>
+            <th style="text-align:left; padding-right:10px">Class</th>
+            <th style="text-align:left; padding-right:10px">Method</th>
+            <th style="text-align:left; padding-right:10px">Extension</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for hook in hooks %}
+            <tr>
+                <td style="padding-right:10px"><code>{{ hook.name }}</code></td>
+                <td style="padding-right:10px"><code>{{ hook.class }}</code></td>
+                <td style="padding-right:10px"><code>{{ hook.method }}</code></td>
+                <td style="padding-right:10px"><code>{{ hook.extension }}</code></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -202,6 +202,7 @@ services:
             - '@twig'
             - '@contao.framework'
             - '@security.helper'
+            - '%kernel.project_dir%'
         tags:
             # The priority must be higher than the one of the Twig exception listener (defaults to -128)
             - { name: kernel.event_listener, priority: -96 }

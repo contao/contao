@@ -47,6 +47,21 @@
       <trans-unit id="XPT.maintenance">
         <source>The website is currently not available. Please come back later.</source>
       </trans-unit>
+      <trans-unit id="XPT.legacyRoutingTitle">
+        <source>Legacy routing required</source>
+      </trans-unit>
+      <trans-unit id="XPT.legacyRoutingMatter">
+        <source>At least one extension requires legacy routing to work correctly, because it has not been updated to support the new routing system introduced in Contao 4.10.</source>
+      </trans-unit>
+      <trans-unit id="XPT.legacyRoutingFix1">
+        <source>Legacy routing can be activated by setting &lt;code&gt;prepend_locale&lt;/code&gt; and/or &lt;code&gt;url_suffix&lt;/code&gt; in the Contao configuration. &lt;strong&gt;Be aware that you can no longer set the URL prefix and suffix in the root page and existing configuration will be ignored!&lt;/strong&gt;</source>
+      </trans-unit>
+      <trans-unit id="XPT.legacyRoutingFix2">
+        <source>To enable legacy routing, add the following to your &lt;code&gt;config.yml&lt;/code&gt; and adapt it to your needs. Please refer to the &lt;a href="https://docs.contao.org" target="_blank"&gt;Contao Documentation&lt;/a&gt; if you are unsure how to adjust the container configuration.</source>
+      </trans-unit>
+      <trans-unit id="XPT.legacyRoutingHooks">
+        <source>The following hooks are incompatible with legacy routing.</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>
