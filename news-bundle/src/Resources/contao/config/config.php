@@ -14,6 +14,9 @@ use Contao\ModuleNewsList;
 use Contao\ModuleNewsMenu;
 use Contao\ModuleNewsReader;
 use Contao\News;
+use Contao\NewsArchiveModel;
+use Contao\NewsFeedModel;
+use Contao\NewsModel;
 use Contao\TableWizard;
 
 // Back end modules
@@ -52,3 +55,8 @@ $GLOBALS['TL_PERMISSIONS'][] = 'news';
 $GLOBALS['TL_PERMISSIONS'][] = 'newp';
 $GLOBALS['TL_PERMISSIONS'][] = 'newsfeeds';
 $GLOBALS['TL_PERMISSIONS'][] = 'newsfeedp';
+
+// Models
+$GLOBALS['TL_MODELS']['tl_news_archive'] = NewsArchiveModel::class;
+$GLOBALS['TL_MODELS']['tl_news_feed'] = NewsFeedModel::class;
+$GLOBALS['TL_MODELS']['tl_news'] = NewsModel::class;

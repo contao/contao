@@ -8,6 +8,8 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\FaqCategoryModel;
+use Contao\FaqModel;
 use Contao\ModuleFaq;
 use Contao\ModuleFaqList;
 use Contao\ModuleFaqPage;
@@ -39,3 +41,7 @@ $GLOBALS['TL_HOOKS']['getSearchablePages'][] = array(ModuleFaq::class, 'getSearc
 // Add permissions
 $GLOBALS['TL_PERMISSIONS'][] = 'faqs';
 $GLOBALS['TL_PERMISSIONS'][] = 'faqp';
+
+// Models
+$GLOBALS['TL_MODELS']['tl_faq_category'] = FaqCategoryModel::class;
+$GLOBALS['TL_MODELS']['tl_faq'] = FaqModel::class;

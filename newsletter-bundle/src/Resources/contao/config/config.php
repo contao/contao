@@ -13,6 +13,10 @@ use Contao\ModuleNewsletterReader;
 use Contao\ModuleSubscribe;
 use Contao\ModuleUnsubscribe;
 use Contao\Newsletter;
+use Contao\NewsletterChannelModel;
+use Contao\NewsletterDenyListModel;
+use Contao\NewsletterModel;
+use Contao\NewsletterRecipientsModel;
 
 // Back end modules
 $GLOBALS['BE_MOD']['content']['newsletter'] = array
@@ -44,3 +48,9 @@ $GLOBALS['TL_PERMISSIONS'][] = 'newsletterp';
 
 // Cron jobs
 $GLOBALS['TL_CRON']['daily']['purgeNewsletterSubscriptions'] = array(Newsletter::class, 'purgeSubscriptions');
+
+// Models
+$GLOBALS['TL_MODELS']['tl_newsletter_channel'] = NewsletterChannelModel::class;
+$GLOBALS['TL_MODELS']['tl_newsletter_deny_list'] = NewsletterDenyListModel::class;
+$GLOBALS['TL_MODELS']['tl_newsletter'] = NewsletterModel::class;
+$GLOBALS['TL_MODELS']['tl_newsletter_recipients'] = NewsletterRecipientsModel::class;
