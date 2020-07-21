@@ -39,7 +39,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "4.10.x-dev"
+            "dev-master": "4.11.x-dev"
         },
         "contao-manager-plugin": "Contao\\NewsBundle\\ContaoManager\\Plugin",
         "symfony": {
