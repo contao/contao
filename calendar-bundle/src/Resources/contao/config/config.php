@@ -57,8 +57,6 @@ $GLOBALS['TL_PERMISSIONS'][] = 'calendarfeeds';
 $GLOBALS['TL_PERMISSIONS'][] = 'calendarfeedp';
 
 // Models
-$GLOBALS['TL_MODELS'] = array(
-	'tl_calendar_events' => CalendarEventsModel::class,
-	'tl_calendar_feed' => CalendarFeedModel::class,
-	'tl_calendar' => CalendarModel::class
-);
+$GLOBALS['TL_MODELS']['tl_calendar_events'] = CalendarEventsModel::class;
+$GLOBALS['TL_MODELS']['tl_calendar_feed'] = CalendarFeedModel::class;
+$GLOBALS['TL_MODELS']['tl_calendar'] = CalendarModel::class;

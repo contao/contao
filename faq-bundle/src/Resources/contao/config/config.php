@@ -43,7 +43,5 @@ $GLOBALS['TL_PERMISSIONS'][] = 'faqs';
 $GLOBALS['TL_PERMISSIONS'][] = 'faqp';
 
 // Models
-$GLOBALS['TL_MODELS'] = array(
-	'tl_faq_category' => FaqCategoryModel::class,
-	'tl_faq' => FaqModel::class
-);
+$GLOBALS['TL_MODELS']['tl_faq_category'] = FaqCategoryModel::class;
+$GLOBALS['TL_MODELS']['tl_faq'] = FaqModel::class;

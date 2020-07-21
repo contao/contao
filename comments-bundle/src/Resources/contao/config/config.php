@@ -31,7 +31,5 @@ $GLOBALS['BE_MOD']['content']['comments'] = array
 $GLOBALS['TL_CRON']['daily']['purgeCommentSubscriptions'] = array(Comments::class, 'purgeSubscriptions');
 
 // Models
-$GLOBALS['TL_MODELS'] = array(
-	'tl_comments' => CommentsModel::class,
-	'tl_comments_notify' => CommentsNotifyModel::class
-);
+$GLOBALS['TL_MODELS']['tl_comments'] = CommentsModel::class;
+$GLOBALS['TL_MODELS']['tl_comments_notify'] = CommentsNotifyModel::class;

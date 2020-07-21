@@ -50,9 +50,7 @@ $GLOBALS['TL_PERMISSIONS'][] = 'newsletterp';
 $GLOBALS['TL_CRON']['daily']['purgeNewsletterSubscriptions'] = array(Newsletter::class, 'purgeSubscriptions');
 
 // Models
-$GLOBALS['TL_MODELS'] = array(
-	'tl_newsletter_channel' => NewsletterChannelModel::class,
-	'tl_newsletter_deny_list' => NewsletterDenyListModel::class,
-	'tl_newsletter' => NewsletterModel::class,
-	'tl_newsletter_recipients' => NewsletterRecipientsModel::class
-);
+$GLOBALS['TL_MODELS']['tl_newsletter_channel'] = NewsletterChannelModel::class;
+$GLOBALS['TL_MODELS']['tl_newsletter_deny_list'] = NewsletterDenyListModel::class;
+$GLOBALS['TL_MODELS']['tl_newsletter'] = NewsletterModel::class;
+$GLOBALS['TL_MODELS']['tl_newsletter_recipients'] = NewsletterRecipientsModel::class;

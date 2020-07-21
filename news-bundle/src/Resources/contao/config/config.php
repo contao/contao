@@ -57,8 +57,6 @@ $GLOBALS['TL_PERMISSIONS'][] = 'newsfeeds';
 $GLOBALS['TL_PERMISSIONS'][] = 'newsfeedp';
 
 // Models
-$GLOBALS['TL_MODELS'] = array(
-	'tl_news_archive' => NewsArchiveModel::class,
-	'tl_news_feed' => NewsFeedModel::class,
-	'tl_news' => NewsModel::class
-);
+$GLOBALS['TL_MODELS']['tl_news_archive'] = NewsArchiveModel::class;
+$GLOBALS['TL_MODELS']['tl_news_feed'] = NewsFeedModel::class;
+$GLOBALS['TL_MODELS']['tl_news'] = NewsModel::class;
