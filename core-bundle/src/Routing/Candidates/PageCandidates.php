@@ -91,7 +91,7 @@ class PageCandidates extends AbstractCandidates
         }
 
         preg_match_all(
-            '#^(/'.implode('|/', array_map('preg_quote', $this->urlPrefixes)).')'.implode('|', $paths).'#sD',
+            '#^(/'.implode('|/', array_map('preg_quote', $this->urlPrefixes)).')'.implode('|', $paths).'('.implode('|', array_map('preg_quote', $this->urlSuffixes)).')?'.'$#sD',
             $pathInfo,
             $matches
         );

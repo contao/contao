@@ -1128,7 +1128,7 @@ class tl_page extends Backend
 	 */
 	public function generateAlias($varValue, DataContainer $dc)
 	{
-		@trigger_error('Using "tl_page::generateAlias()" has been deprecated and will no longer work in Contao 5.0. Use "PageUrlListener::generateAlias()" instead.', E_USER_DEPRECATED);
+		@trigger_error('Using "tl_page::generateAlias()" has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
 		return System::getContainer()
 			->get(PageUrlListener::class)
@@ -1145,7 +1145,7 @@ class tl_page extends Backend
 	 */
 	public function generateArticle(DataContainer $dc)
 	{
-		@trigger_error('Using "tl_page::generateArticle()" has been deprecated and will no longer work in Contao 5.0. Use "ContentCompositionListener::generateArticleForPage()" instead.', E_USER_DEPRECATED);
+		@trigger_error('Using "tl_page::generateArticle()" has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
 		System::getContainer()
 			->get(ContentCompositionListener::class)
@@ -1162,7 +1162,7 @@ class tl_page extends Backend
 	 */
 	public function purgeSearchIndex(DataContainer $dc)
 	{
-		@trigger_error('Using "tl_page::purgeSearchIndex()" has been deprecated and will no longer work in Contao 5.0. Use "PageUrlListener::purgeSearchIndex()" instead.', E_USER_DEPRECATED);
+		@trigger_error('Using "tl_page::purgeSearchIndex()" has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
 		System::getContainer()
 			->get(PageUrlListener::class)
@@ -1290,7 +1290,7 @@ class tl_page extends Backend
 	 */
 	public function getPageTypes(DataContainer $dc)
 	{
-		@trigger_error('Using "tl_page::getPageTypes()" has been deprecated and will no longer work in Contao 5.0. Use the "Contao\CoreBundle\EventListener\DataContainer\PageTypeOptionsListener" instead.', E_USER_DEPRECATED);
+		@trigger_error('Using "tl_page::getPageTypes()" has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
 		return System::getContainer()->get(PageTypeOptionsListener::class)($dc);
 	}
@@ -1538,7 +1538,7 @@ class tl_page extends Backend
 	 */
 	public function editArticles($row, $href, $label, $title, $icon)
 	{
-		@trigger_error('Using "tl_page::editArticles()" has been deprecated and will no longer work in Contao 5.0. Use "ContentCompositionListener::renderPageArticlesOperation()" instead.', E_USER_DEPRECATED);
+		@trigger_error('Using "tl_page::editArticles()" has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
 		return System::getContainer()
 			->get(ContentCompositionListener::class)

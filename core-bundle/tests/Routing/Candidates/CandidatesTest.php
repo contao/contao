@@ -384,7 +384,7 @@ class CandidatesTest extends TestCase
             ->expects($this->once())
             ->method('getPathRegex')
             ->willReturn([
-                'foo' => '#^/bar/[.]+\.html$#sD',
+                'foo' => '#^/bar/[a-z]+\.html$#sD',
                 'bar' => '#^/bar$#sD',
             ])
         ;
