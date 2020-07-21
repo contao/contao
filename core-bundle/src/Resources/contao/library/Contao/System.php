@@ -161,6 +161,10 @@ abstract class System
 			{
 				$this->arrObjects[$strKey] = $container->get($strClass);
 			}
+			elseif (!class_exists($strClass))
+			{
+				throw new \RuntimeException('System::import() failed because class "' . $strClass . '" is not a valid class name or does not exist.');
+			}
 			elseif (\in_array('getInstance', get_class_methods($strClass)))
 			{
 				$this->arrObjects[$strKey] = \call_user_func(array($strClass, 'getInstance'));
@@ -201,6 +205,10 @@ abstract class System
 			elseif ($container->has($strClass) && (strpos($strClass, '\\') !== false || !class_exists($strClass)))
 			{
 				static::$arrStaticObjects[$strKey] = $container->get($strClass);
+			}
+			elseif (!class_exists($strClass))
+			{
+				throw new \RuntimeException('System::importStatic() failed because class "' . $strClass . '" is not a valid class name or does not exist.');
 			}
 			elseif (\in_array('getInstance', get_class_methods($strClass)))
 			{
