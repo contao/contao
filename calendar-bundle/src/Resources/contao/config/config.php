@@ -9,6 +9,9 @@
  */
 
 use Contao\Calendar;
+use Contao\CalendarEventsModel;
+use Contao\CalendarFeedModel;
+use Contao\CalendarModel;
 use Contao\ListWizard;
 use Contao\ModuleCalendar;
 use Contao\ModuleEventlist;
@@ -52,3 +55,10 @@ $GLOBALS['TL_PERMISSIONS'][] = 'calendars';
 $GLOBALS['TL_PERMISSIONS'][] = 'calendarp';
 $GLOBALS['TL_PERMISSIONS'][] = 'calendarfeeds';
 $GLOBALS['TL_PERMISSIONS'][] = 'calendarfeedp';
+
+// Models
+$GLOBALS['TL_MODELS'] = array(
+	'tl_calendar_events' => CalendarEventsModel::class,
+	'tl_calendar_feed' => CalendarFeedModel::class,
+	'tl_calendar' => CalendarModel::class
+);

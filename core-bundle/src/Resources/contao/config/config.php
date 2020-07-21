@@ -8,6 +8,7 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\ArticleModel;
 use Contao\Automator;
 use Contao\CheckBox;
 use Contao\CheckBoxWizard;
@@ -28,6 +29,7 @@ use Contao\ContentImage;
 use Contao\ContentList;
 use Contao\ContentMarkdown;
 use Contao\ContentMedia;
+use Contao\ContentModel;
 use Contao\ContentModule;
 use Contao\ContentSliderStart;
 use Contao\ContentSliderStop;
@@ -40,16 +42,19 @@ use Contao\ContentYouTube;
 use Contao\CoreBundle\Controller\BackendCsvImportController;
 use Contao\Crawl;
 use Contao\FileSelector;
+use Contao\FilesModel;
 use Contao\FileTree;
 use Contao\Form;
 use Contao\FormCaptcha;
 use Contao\FormCheckBox;
 use Contao\FormExplanation;
+use Contao\FormFieldModel;
 use Contao\FormFieldsetStart;
 use Contao\FormFieldsetStop;
 use Contao\FormFileUpload;
 use Contao\FormHidden;
 use Contao\FormHtml;
+use Contao\FormModel;
 use Contao\FormPassword;
 use Contao\FormRadioButton;
 use Contao\FormRange;
@@ -58,10 +63,15 @@ use Contao\FormSubmit;
 use Contao\FormTextArea;
 use Contao\FormTextField;
 use Contao\ImageSize;
+use Contao\ImageSizeItemModel;
+use Contao\ImageSizeModel;
 use Contao\InputUnit;
 use Contao\KeyValueWizard;
+use Contao\LayoutModel;
 use Contao\ListWizard;
 use Contao\Maintenance;
+use Contao\MemberGroupModel;
+use Contao\MemberModel;
 use Contao\Messages;
 use Contao\MetaWizard;
 use Contao\ModuleArticleList;
@@ -75,6 +85,7 @@ use Contao\ModuleHtml;
 use Contao\ModuleLogin;
 use Contao\ModuleLogout;
 use Contao\ModuleMaintenance;
+use Contao\ModuleModel;
 use Contao\ModuleNavigation;
 use Contao\ModulePassword;
 use Contao\ModulePersonalData;
@@ -87,12 +98,14 @@ use Contao\ModuleSearch;
 use Contao\ModuleSitemap;
 use Contao\ModuleTwoFactor;
 use Contao\ModuleWizard;
+use Contao\OptInModel;
 use Contao\OptionWizard;
 use Contao\PageError401;
 use Contao\PageError403;
 use Contao\PageError404;
 use Contao\PageForward;
 use Contao\PageLogout;
+use Contao\PageModel;
 use Contao\PageRedirect;
 use Contao\PageRegular;
 use Contao\PageRoot;
@@ -107,6 +120,8 @@ use Contao\SectionWizard;
 use Contao\SelectMenu;
 use Contao\SerpPreview;
 use Contao\StringUtil;
+use Contao\StyleModel;
+use Contao\StyleSheetModel;
 use Contao\StyleSheets;
 use Contao\System;
 use Contao\TableWizard;
@@ -114,9 +129,12 @@ use Contao\TextArea;
 use Contao\TextField;
 use Contao\TextStore;
 use Contao\Theme;
+use Contao\ThemeModel;
 use Contao\TimePeriod;
 use Contao\TrblField;
 use Contao\Upload;
+use Contao\UserGroupModel;
+use Contao\UserModel;
 
 // Back end modules
 $GLOBALS['BE_MOD'] = array
@@ -537,6 +555,27 @@ $GLOBALS['TL_WRAPPERS'] = array
 	'separator' => array()
 );
 
+// Models
+$GLOBALS['TL_MODELS'] = array(
+	'tl_article' => ArticleModel::class,
+	'tl_content' => ContentModel::class,
+	'tl_files' => FilesModel::class,
+	'tl_form_field' => FormFieldModel::class,
+	'tl_form' => FormModel::class,
+	'tl_image_size_item' => ImageSizeItemModel::class,
+	'tl_image_size' => ImageSizeModel::class,
+	'tl_layout' => LayoutModel::class,
+	'tl_member_group' => MemberGroupModel::class,
+	'tl_member' => MemberModel::class,
+	'tl_module' => ModuleModel::class,
+	'tl_opt_in' => OptInModel::class,
+	'tl_page' => PageModel::class,
+	'tl_style' => StyleModel::class,
+	'tl_style_sheet' => StyleSheetModel::class,
+	'tl_theme' => ThemeModel::class,
+	'tl_user_group' => UserGroupModel::class,
+	'tl_user' => UserModel::class
+);
+
 // Other global arrays
-$GLOBALS['TL_MODELS'] = array();
 $GLOBALS['TL_PERMISSIONS'] = array();
