@@ -43,9 +43,9 @@ final class Figure
     private $linkAttributes;
 
     /**
-     * @var LightBoxResult|(\Closure(self):LightBoxResult|null)|null
+     * @var LightboxResult|(\Closure(self):LightboxResult|null)|null
      */
-    private $lightBox;
+    private $lightbox;
 
     /**
      * @var array<string, mixed>|(\Closure(self):array<string, mixed>)|null
@@ -61,15 +61,15 @@ final class Figure
      * @param ImageResult                                                                 $image          Main image
      * @param MetaData|(\Closure(self):MetaData|null)|null                                $metaData       Meta data container
      * @param array<string, string|null>|(\Closure(self):array<string, string|null>)|null $linkAttributes Link attributes
-     * @param LightBoxResult|(\Closure(self):LightBoxResult|null)|null                    $lightBox       Light box
+     * @param LightboxResult|(\Closure(self):LightboxResult|null)|null                    $lightbox       Lightbox
      * @param array<string, mixed>|(\Closure(self):array<string, mixed>)|null             $options        Template options
      */
-    public function __construct(ImageResult $image, $metaData = null, $linkAttributes = null, $lightBox = null, $options = null)
+    public function __construct(ImageResult $image, $metaData = null, $linkAttributes = null, $lightbox = null, $options = null)
     {
         $this->image = $image;
         $this->metaData = $metaData;
         $this->linkAttributes = $linkAttributes;
-        $this->lightBox = $lightBox;
+        $this->lightbox = $lightbox;
         $this->options = $options;
     }
 
@@ -82,26 +82,26 @@ final class Figure
     }
 
     /**
-     * Returns true if a light box result can be obtained.
+     * Returns true if a lightbox result can be obtained.
      */
-    public function hasLightBox(): bool
+    public function hasLightbox(): bool
     {
-        $this->resolveIfClosure($this->lightBox);
+        $this->resolveIfClosure($this->lightbox);
 
-        return $this->lightBox instanceof LightBoxResult;
+        return $this->lightbox instanceof LightboxResult;
     }
 
     /**
-     * Returns the light box result (if available).
+     * Returns the lightbox result (if available).
      */
-    public function getLightBox(): LightBoxResult
+    public function getLightbox(): LightboxResult
     {
-        if (!$this->hasLightBox()) {
-            throw new \LogicException('This result container does not include a light box.');
+        if (!$this->hasLightbox()) {
+            throw new \LogicException('This result container does not include a lightbox.');
         }
 
         // Safely return as Closure will be evaluated at this point
-        return $this->lightBox;
+        return $this->lightbox;
     }
 
     public function hasMetaData(): bool
@@ -140,8 +140,8 @@ final class Figure
         if (!\array_key_exists('href', $this->linkAttributes)) {
             $this->linkAttributes['href'] = (
                 function () {
-                    if ($this->hasLightBox()) {
-                        return $this->getLightBox()->getLinkHref();
+                    if ($this->hasLightbox()) {
+                        return $this->getLightbox()->getLinkHref();
                     }
 
                     if ($this->hasMetaData()) {
@@ -162,10 +162,10 @@ final class Figure
             $this->linkAttributes['rel'] = 'noreferrer noopener';
         }
 
-        // Add light box attributes
-        if (!\array_key_exists('data-lightbox', $this->linkAttributes) && $this->hasLightBox()) {
-            $lightBox = $this->getLightBox();
-            $this->linkAttributes['data-lightbox'] = $lightBox->getGroupIdentifier();
+        // Add lightbox attributes
+        if (!\array_key_exists('data-lightbox', $this->linkAttributes) && $this->hasLightbox()) {
+            $lightbox = $this->getLightbox();
+            $this->linkAttributes['data-lightbox'] = $lightbox->getGroupIdentifier();
         }
 
         // Allow removing attributes by setting them to null
@@ -276,7 +276,7 @@ final class Figure
                 'imgSize' => sprintf(' width="%d" height="%d"', $fileInfoImageSize[0], $fileInfoImageSize[1]),
                 'singleSRC' => $image->getFilePath(),
                 'src' => $image->getImageSrc(),
-                'fullsize' => ('_blank' === ($linkAttributes['target'] ?? null)) || $this->hasLightBox(),
+                'fullsize' => ('_blank' === ($linkAttributes['target'] ?? null)) || $this->hasLightbox(),
                 'margin' => $createMargin($margin),
                 'addBefore' => 'below' !== $floating,
                 'addImage' => true,
@@ -307,16 +307,16 @@ final class Figure
             $templateData['attributes'] = ' '.implode(' ', $htmlAttributes);
         }
 
-        // Light box
-        if ($this->hasLightBox()) {
-            $lightBox = $this->getLightBox();
+        // Lightbox
+        if ($this->hasLightbox()) {
+            $lightbox = $this->getLightbox();
 
-            if ($lightBox->hasImage()) {
-                $lightBoxImage = $lightBox->getImage();
+            if ($lightbox->hasImage()) {
+                $lightboxImage = $lightbox->getImage();
 
                 $templateData['lightboxPicture'] = [
-                    'img' => $lightBoxImage->getImg(),
-                    'sources' => $lightBoxImage->getSources(),
+                    'img' => $lightboxImage->getImg(),
+                    'sources' => $lightboxImage->getSources(),
                 ];
             }
         }

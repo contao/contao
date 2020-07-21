@@ -68,9 +68,9 @@ class Studio implements ServiceSubscriberInterface
      * @param string|ImageInterface|null                 $filePathOrImage
      * @param array|PictureConfiguration|int|string|null $sizeConfiguration
      */
-    public function createLightBoxImage($filePathOrImage, string $url = null, $sizeConfiguration = null, string $groupIdentifier = null): LightBoxResult
+    public function createLightboxImage($filePathOrImage, string $url = null, $sizeConfiguration = null, string $groupIdentifier = null): LightboxResult
     {
-        return new LightBoxResult($this->locator, $filePathOrImage, $url, $sizeConfiguration, $groupIdentifier);
+        return new LightboxResult($this->locator, $filePathOrImage, $url, $sizeConfiguration, $groupIdentifier);
     }
 
     public static function getSubscribedServices(): array

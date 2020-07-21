@@ -18,7 +18,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\ImageResult;
-use Contao\CoreBundle\Image\Studio\LightBoxResult;
+use Contao\CoreBundle\Image\Studio\LightboxResult;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FilesModel;
@@ -617,13 +617,13 @@ class FigureBuilderTest extends TestCase
         $this->assertSame('https://example.com', $figure->getLinkHref());
     }
 
-    public function testSetsTargetAttributeIfFullsizeWithoutLightBox(): void
+    public function testSetsTargetAttributeIfFullsizeWithoutLightbox(): void
     {
         $figure = $this->getFigure(
             static function (FigureBuilder $builder): void {
                 $builder
-                    ->setLightBoxResourceOrUrl('https://exampe.com/this-is-no-image')
-                    ->enableLightBox()
+                    ->setLightboxResourceOrUrl('https://exampe.com/this-is-no-image')
+                    ->enableLightbox()
                 ;
             }
         );
@@ -631,20 +631,20 @@ class FigureBuilderTest extends TestCase
         $this->assertSame('_blank', $figure->getLinkAttributes()['target']);
     }
 
-    public function testLightBoxIsDisabledByDefault(): void
+    public function testLightboxIsDisabledByDefault(): void
     {
         $figure = $this->getFigure();
 
-        $this->assertFalse($figure->hasLightBox());
+        $this->assertFalse($figure->hasLightbox());
     }
 
     /**
-     * @dataProvider provideLightBoxResourcesOrUrls
+     * @dataProvider provideLightboxResourcesOrUrls
      */
-    public function testSetLightBoxResourceOrUrl($resource, array $expectedArguments, bool $hasLightBox = true): void
+    public function testSetLightboxResourceOrUrl($resource, array $expectedArguments, bool $hasLightbox = true): void
     {
-        if ($hasLightBox) {
-            $studio = $this->getStudioMockForLightBox(...$expectedArguments);
+        if ($hasLightbox) {
+            $studio = $this->getStudioMockForLightbox(...$expectedArguments);
         } else {
             /** @var Studio&MockObject $studio */
             $studio = $this->createMock(Studio::class);
@@ -653,17 +653,17 @@ class FigureBuilderTest extends TestCase
         $figure = $this->getFigure(
             static function (FigureBuilder $builder) use ($resource): void {
                 $builder
-                    ->setLightBoxResourceOrUrl($resource)
-                    ->enableLightBox()
+                    ->setLightboxResourceOrUrl($resource)
+                    ->enableLightbox()
                 ;
             },
             $studio
         );
 
-        $this->assertSame($hasLightBox, $figure->hasLightBox());
+        $this->assertSame($hasLightbox, $figure->hasLightbox());
     }
 
-    public function provideLightBoxResourcesOrUrls(): \Generator
+    public function provideLightboxResourcesOrUrls(): \Generator
     {
         [$absoluteFilePath, $relativeFilePath, ,] = $this->getTestFilePaths();
 
@@ -707,26 +707,26 @@ class FigureBuilderTest extends TestCase
     }
 
     /**
-     * @dataProvider provideLightBoxFallbackResources
+     * @dataProvider provideLightboxFallbackResources
      */
-    public function testLightBoxResourceFallback(?MetaData $metaData, ?string $expectedFilePath, ?string $expectedUrl): void
+    public function testLightboxResourceFallback(?MetaData $metaData, ?string $expectedFilePath, ?string $expectedUrl): void
     {
-        $studio = $this->getStudioMockForLightBox($expectedFilePath, $expectedUrl);
+        $studio = $this->getStudioMockForLightbox($expectedFilePath, $expectedUrl);
 
         $figure = $this->getFigure(
             static function (FigureBuilder $builder) use ($metaData): void {
                 $builder
                     ->setMetaData($metaData)
-                    ->enableLightBox()
+                    ->enableLightbox()
                 ;
             },
             $studio
         );
 
-        $this->assertTrue($figure->hasLightBox());
+        $this->assertTrue($figure->hasLightbox());
     }
 
-    public function provideLightBoxFallbackResources(): \Generator
+    public function provideLightboxFallbackResources(): \Generator
     {
         [$absoluteFilePath, , ,] = $this->getTestFilePaths();
 
@@ -745,46 +745,46 @@ class FigureBuilderTest extends TestCase
         ];
     }
 
-    public function testSetLightBoxSize(): void
+    public function testSetLightboxSize(): void
     {
         /** @var ImageInterface&MockObject $image */
         $image = $this->createMock(ImageInterface::class);
         $size = '_custom_size_configuration';
-        $studio = $this->getStudioMockForLightBox($image, null, $size);
+        $studio = $this->getStudioMockForLightbox($image, null, $size);
 
         $figure = $this->getFigure(
             static function (FigureBuilder $builder) use ($image, $size): void {
                 $builder
-                    ->setLightBoxResourceOrUrl($image)
-                    ->setLightBoxSize($size)
-                    ->enableLightBox()
+                    ->setLightboxResourceOrUrl($image)
+                    ->setLightboxSize($size)
+                    ->enableLightbox()
                 ;
             },
             $studio
         );
 
-        $this->assertTrue($figure->hasLightBox());
+        $this->assertTrue($figure->hasLightbox());
     }
 
-    public function testSetLightBoxGroupIdentifier(): void
+    public function testSetLightboxGroupIdentifier(): void
     {
         /** @var ImageInterface&MockObject $image */
         $image = $this->createMock(ImageInterface::class);
         $groupIdentifier = '12345';
-        $studio = $this->getStudioMockForLightBox($image, null, null, $groupIdentifier);
+        $studio = $this->getStudioMockForLightbox($image, null, null, $groupIdentifier);
 
         $figure = $this->getFigure(
             static function (FigureBuilder $builder) use ($image, $groupIdentifier): void {
                 $builder
-                    ->setLightBoxResourceOrUrl($image)
-                    ->setLightBoxGroupIdentifier($groupIdentifier)
-                    ->enableLightBox()
+                    ->setLightboxResourceOrUrl($image)
+                    ->setLightboxGroupIdentifier($groupIdentifier)
+                    ->enableLightbox()
                 ;
             },
             $studio
         );
 
-        $this->assertTrue($figure->hasLightBox());
+        $this->assertTrue($figure->hasLightbox());
     }
 
     public function testSetTemplateOptions(): void
@@ -811,11 +811,11 @@ class FigureBuilderTest extends TestCase
         /** @var ImageResult&MockObject $imageResult2 */
         $imageResult2 = $this->createMock(ImageResult::class);
 
-        /** @var ImageInterface&MockObject $lightBoxResource */
-        $lightBoxResource = $this->createMock(ImageInterface::class);
+        /** @var ImageInterface&MockObject $lightboxResource */
+        $lightboxResource = $this->createMock(ImageInterface::class);
 
-        /** @var LightBoxResult&MockObject $lightBoxImageResult */
-        $lightBoxImageResult = $this->createMock(LightBoxResult::class);
+        /** @var LightboxResult&MockObject $lightboxImageResult */
+        $lightboxImageResult = $this->createMock(LightboxResult::class);
 
         /** @var Studio&MockObject $studio */
         $studio = $this->createMock(Studio::class);
@@ -830,9 +830,9 @@ class FigureBuilderTest extends TestCase
 
         $studio
             ->expects($this->once())
-            ->method('createLightBoxImage')
-            ->with($lightBoxResource)
-            ->willReturn($lightBoxImageResult)
+            ->method('createLightboxImage')
+            ->with($lightboxResource)
+            ->willReturn($lightboxImageResult)
         ;
 
         $builder = $this->getFigureBuilder($studio);
@@ -847,8 +847,8 @@ class FigureBuilderTest extends TestCase
         $builder
             ->fromPath($filePath2, false)
             ->setLinkAttribute('custom', 'bar')
-            ->setLightBoxResourceOrUrl($lightBoxResource)
-            ->enableLightBox()
+            ->setLightboxResourceOrUrl($lightboxResource)
+            ->enableLightbox()
         ;
 
         $figure2 = $builder->build();
@@ -856,12 +856,12 @@ class FigureBuilderTest extends TestCase
         $this->assertSame($imageResult1, $figure1->getImage());
         $this->assertSame('foo', $figure1->getLinkAttributes()['custom']); // not affected by reconfiguring
         $this->assertSame($metaData, $figure1->getMetaData());
-        $this->assertFalse($figure1->hasLightBox());
+        $this->assertFalse($figure1->hasLightbox());
 
         $this->assertSame($imageResult2, $figure2->getImage()); // other image
         $this->assertSame('bar', $figure2->getLinkAttributes()['custom']); // other link attribute
         $this->assertSame($metaData, $figure2->getMetaData()); // same meta data
-        $this->assertSame($lightBoxImageResult, $figure2->getLightBox());
+        $this->assertSame($lightboxImageResult, $figure2->getLightbox());
     }
 
     private function getFigure(\Closure $configureBuilderCallback = null, Studio $studio = null): Figure
@@ -904,18 +904,18 @@ class FigureBuilderTest extends TestCase
     /**
      * @return MockObject&Studio
      */
-    private function getStudioMockForLightBox($expectedResource, ?string $expectedUrl, $expectedSizeConfiguration = null, string $expectedGroupIdentifier = null)
+    private function getStudioMockForLightbox($expectedResource, ?string $expectedUrl, $expectedSizeConfiguration = null, string $expectedGroupIdentifier = null)
     {
-        /** @var LightBoxResult&MockObject $lightBox */
-        $lightBox = $this->createMock(LightBoxResult::class);
+        /** @var LightboxResult&MockObject $lightbox */
+        $lightbox = $this->createMock(LightboxResult::class);
 
         /** @var Studio&MockObject $studio */
         $studio = $this->createMock(Studio::class);
         $studio
             ->expects($this->once())
-            ->method('createLightBoxImage')
+            ->method('createLightboxImage')
             ->with($expectedResource, $expectedUrl, $expectedSizeConfiguration, $expectedGroupIdentifier)
-            ->willReturn($lightBox)
+            ->willReturn($lightbox)
         ;
 
         return $studio;
