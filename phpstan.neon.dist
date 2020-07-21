@@ -1,8 +1,6 @@
 includes:
     - vendor/phpstan/phpstan-phpunit/extension.neon
     - vendor/phpstan/phpstan-phpunit/rules.neon
-    - vendor/phpstan/phpstan-symfony/extension.neon
-    - vendor/phpstan/phpstan-symfony/rules.neon
 
 rules:
     - SlamPhpStan\SymfonyFilesystemRule
@@ -10,9 +8,6 @@ rules:
     - TheCodingMachine\PHPStan\Rules\Exceptions\ThrowMustBundlePreviousExceptionRule
 
 parameters:
-    symfony:
-        container_xml_path: %currentWorkingDirectory%/core-bundle/var/cache/phpstan/appContao_CoreBundle_Tests_Functional_app_AppKernelPhpstanDebugContainer.xml
-
     dynamicConstantNames:
         - BE_USER_LOGGED_IN
 
@@ -36,13 +31,6 @@ parameters:
 
         # Ignore the wrong return type hint of the UrlGeneratorInterface::generate() method
         - '#Method Contao\\CoreBundle\\Picker\\AbstractPickerProvider::generateUrl\(\) never returns null so it can be removed from the return typehint\.#'
-
-        # Ignore that $container->get() always returns false (see https://github.com/phpstan/phpstan-symfony/issues/74)
-        - message: '#Negated boolean expression is always (false|true)\.#'
-          paths:
-              - %currentWorkingDirectory%/core-bundle/src/Monolog/ContaoTableHandler.php
-              - %currentWorkingDirectory%/core-bundle/src/DependencyInjection/Compiler/*Pass.php
-              - %currentWorkingDirectory%/core-bundle/src/Controller/AbstractController.php
 
     treatPhpDocTypesAsCertain: false
     checkGenericClassInNonGenericObjectType: false

@@ -11,12 +11,8 @@ composer:
         contao/easy-coding-standard: ^2.0
         contao/monorepo-tools: dev-master
         phpstan/phpstan-phpunit: ^0.12
-        phpstan/phpstan-symfony: ^0.12
-        psalm/plugin-phpunit: ^0.9
-        psalm/plugin-symfony: ^1.0
+        psalm/plugin-phpunit: ^0.10
         slam/phpstan-extensions: ^5.0
-        vimeo/psalm: ^3.9
-        weirdan/doctrine-psalm-plugin: ^0.10
 
 repositories:
     core-bundle:
