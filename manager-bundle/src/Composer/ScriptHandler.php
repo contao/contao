@@ -75,7 +75,8 @@ class ScriptHandler
             $command[] = $verbose;
         }
 
-        $process = new Process($command);
+        // Composer uses an old version of symfony/console which expects a string (see #1956)
+        $process = new Process(implode(' ', $command));
 
         // Increase the timeout according to terminal42/background-process (see #54)
         $process->setTimeout(500);

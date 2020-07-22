@@ -70,7 +70,8 @@ class ScriptHandler
             $command[] = $verbose;
         }
 
-        $process = new Process($command);
+        // Composer uses an old version of symfony/console which expects a string (see #1956)
+        $process = new Process(implode(' ', $command));
 
         $process->run(
             static function (string $type, string $buffer) use ($event): void {
