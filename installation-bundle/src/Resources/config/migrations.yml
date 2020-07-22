@@ -5,39 +5,57 @@ services:
     Contao\InstallationBundle\Database\Version330Update:
         arguments:
             - '@database_connection'
+        tags:
+            - { name: contao.migration, priority: 50 }
 
     Contao\InstallationBundle\Database\Version350Update:
         arguments:
             - '@database_connection'
+        tags:
+            - { name: contao.migration, priority: 50 }
 
     Contao\InstallationBundle\Database\Version400Update:
         arguments:
             - '@database_connection'
+        tags:
+            - { name: contao.migration, priority: 50 }
 
     Contao\InstallationBundle\Database\Version410Update:
         arguments:
             - '@database_connection'
+        tags:
+            - { name: contao.migration, priority: 50 }
 
     Contao\InstallationBundle\Database\Version430Update:
         arguments:
             - '@database_connection'
+        tags:
+            - { name: contao.migration, priority: 50 }
 
     Contao\InstallationBundle\Database\Version440Update:
         arguments:
             - '@database_connection'
+        tags:
+            - { name: contao.migration, priority: 50 }
 
     Contao\InstallationBundle\Database\Version447Update:
         arguments:
             - '@database_connection'
             - '@translator'
+        tags:
+            - { name: contao.migration, priority: 50 }
 
     Contao\InstallationBundle\Database\Version450Update:
         arguments:
             - '@database_connection'
+        tags:
+            - { name: contao.migration, priority: 50 }
 
     Contao\InstallationBundle\Database\Version460Update:
         arguments:
             - '@database_connection'
+        tags:
+            - { name: contao.migration, priority: 50 }
 
     Contao\InstallationBundle\Database\Version470Update:
         arguments:
@@ -45,8 +63,12 @@ services:
             - '@filesystem'
             - '%contao.upload_path%'
             - '%kernel.project_dir%'
+        tags:
+            - { name: contao.migration, priority: 50 }
 
     Contao\InstallationBundle\Database\Version480Update:
         arguments:
             - '@database_connection'
             - '%kernel.project_dir%'
+        tags:
+            - { name: contao.migration, priority: 50 }
