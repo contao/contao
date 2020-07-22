@@ -111,6 +111,7 @@ class ArticleRouteProviderTest extends TestCase
      */
     private function mockArticle(array $parameters = []): ArticleModel
     {
+        /** @var ArticleModel&MockObject */
         return $this->mockClassWithProperties(
             ArticleModel::class,
             array_merge(
@@ -129,6 +130,7 @@ class ArticleRouteProviderTest extends TestCase
      */
     private function mockPage(array $properties = []): PageModel
     {
+        /** @var PageModel&MockObject */
         return $this->mockClassWithProperties(
             PageModel::class,
             array_merge(

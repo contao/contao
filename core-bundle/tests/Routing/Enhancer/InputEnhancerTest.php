@@ -253,6 +253,7 @@ class InputEnhancerTest extends TestCase
      */
     private function mockPageModel(string $language, string $urlPrefix): PageModel
     {
+        /** @var PageModel&MockObject */
         return $this->mockClassWithProperties(
             PageModel::class,
             [
