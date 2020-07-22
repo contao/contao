@@ -261,9 +261,9 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
             $input = $this->framework->getAdapter(Input::class);
 
             // TODO: this won't work in edit-all, in legacy mode or if user does not have access to these fields
-            $currentDomain = $input->post('dns');
-            $currentPrefix = $input->post('urlPrefix');
-            $currentSuffix = $input->post('urlSuffix');
+            $currentDomain = $input->post('dns') ?: '';
+            $currentPrefix = $input->post('urlPrefix') ?: '';
+            $currentSuffix = $input->post('urlSuffix') ?: '';
         }
 
         $aliasIds = $this->connection
