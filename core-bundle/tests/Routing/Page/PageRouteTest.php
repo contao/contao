@@ -118,6 +118,7 @@ class PageRouteTest extends TestCase
      */
     private function mockPageModel(array $properties = []): PageModel
     {
+        /** @var PageModel&MockObject */
         return $this->mockClassWithProperties(
             PageModel::class,
             array_merge(
