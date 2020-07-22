@@ -956,6 +956,7 @@ class ContentCompositionListenerTest extends TestCase
      */
     private function expectUser(): BackendUser
     {
+        /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 1]);
 
         $this->security
@@ -1020,6 +1021,7 @@ class ContentCompositionListenerTest extends TestCase
      */
     private function expectPageWithRow(array $row, $moduleId = false): PageModel
     {
+        /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class, $row);
         $page
             ->expects($this->once())
@@ -1069,6 +1071,7 @@ class ContentCompositionListenerTest extends TestCase
      */
     private function expectPageFindByPk(int $id, array $row, $moduleId = false): PageModel
     {
+        /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class, $row);
         $page
             ->method('row')
