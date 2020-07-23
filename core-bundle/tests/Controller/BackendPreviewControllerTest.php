@@ -105,7 +105,7 @@ class BackendPreviewControllerTest extends TestCase
     public function testRedirectsToRootPage(): void
     {
         $controller = new BackendPreviewController(
-            'preview.php',
+            '',
             $this->createMock(FrontendPreviewAuthenticator::class),
             new EventDispatcher(),
             $this->mockAuthorizationChecker()
@@ -116,6 +116,22 @@ class BackendPreviewControllerTest extends TestCase
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame('/', $response->getTargetUrl());
+    }
+
+    public function testRedirectsToRootPageWitPreviewScript(): void
+    {
+        $controller = new BackendPreviewController(
+            'preview.php',
+            $this->createMock(FrontendPreviewAuthenticator::class),
+            new EventDispatcher(),
+            $this->mockAuthorizationChecker()
+        );
+
+        /** @var RedirectResponse $response */
+        $response = $controller($this->mockRequest());
+
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+        $this->assertSame('preview.php', $response->getTargetUrl());
     }
 
     /**
