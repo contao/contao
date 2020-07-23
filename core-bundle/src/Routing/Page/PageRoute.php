@@ -43,7 +43,10 @@ class PageRoute extends Route
      */
     private $content;
 
-    public function __construct(PageModel $pageModel, string $path = '', array $defaults = [], array $requirements = [], array $options = [], array $methods = [])
+    /**
+     * @param string|array<string> $methods
+     */
+    public function __construct(PageModel $pageModel, string $path = '', array $defaults = [], array $requirements = [], array $options = [], $methods = [])
     {
         $pageModel->loadDetails();
 
