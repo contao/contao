@@ -53,7 +53,7 @@ class RouteFactory
         $requirements = $config->getRequirements();
 
         if (null === $path) {
-            $path = '/'.($pageModel->alias ?: $pageModel->id).'{parameters}';
+            $path = '/'.($pageModel->alias ?: $pageModel->id).'{!parameters}';
             $defaults['parameters'] = $defaultParameters;
             $requirements['parameters'] = $pageModel->requireItem ? '/.+' : '(/.+)?';
         }
