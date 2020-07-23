@@ -46,8 +46,7 @@
         <target>Атрибути величина</target>
       </trans-unit>
       <trans-unit id="tl_image_size.sizes.1">
-        <source>Here you can define the displayed image width(s), e.g. &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;.</source>
-        <target>Овде можете дефинисати ширину(е) приказане слике, нпр. &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;.</target>
+        <source>Here you can define the intended layout width of the image, the actual size should be defined via CSS. Example: &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;.</source>
       </trans-unit>
       <trans-unit id="tl_image_size.densities.0">
         <source>Pixel densities/scale factors</source>
@@ -142,6 +141,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.new.0">
         <source>New</source>
+        <target>Ново</target>
       </trans-unit>
       <trans-unit id="tl_image_size.new.1">
         <source>Create a new image size</source>

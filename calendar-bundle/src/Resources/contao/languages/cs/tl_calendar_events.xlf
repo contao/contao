@@ -73,6 +73,13 @@
         <source>Here you can add a custom meta title to overwrite the default page title.</source>
         <target>Zde můžete přidat vlastní název události a tím přepsat výše uvedený. </target>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.robots.0">
+        <source>Robots tag</source>
+        <target>Tag pro hledací roboty</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.robots.1">
+        <source>Here you can overwrite how search engines handle the event.</source>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.description.0">
         <source>Meta description</source>
         <target>Popis pro meta údaj</target>
@@ -237,6 +244,12 @@
         <source>Do not allow comments for this particular event.</source>
         <target>Zakázat přidávání komentářů.</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.featured.0">
+        <source>Feature event</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.featured.1">
+        <source>Show the event in a featured event list.</source>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.published.0">
         <source>Publish event</source>
         <target>Publikovat</target>
@@ -251,6 +264,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.start.1">
         <source>If you want to prevent the event from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Pokud chcete zabránit zobrazení události před jistým datem/časem, můžete to zadat tady. Jinak ponechte dané pole prázdné.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.0">
         <source>Show until</source>
@@ -258,6 +272,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.1">
         <source>If you want to prevent the event from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Pokud chcete zabránit zobrazení události po jistém datu/času, můžete to zadat tady. Jinak ponechte dané pole prázdné.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.tstamp.0">
         <source>Revision date</source>
@@ -274,10 +289,6 @@
       <trans-unit id="tl_calendar_events.date_legend">
         <source>Date and time</source>
         <target>Datum a čas</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.meta_legend">
-        <source>Meta data</source>
-        <target>Meta informace</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.details_legend">
         <source>Event details</source>
@@ -302,6 +313,10 @@
       <trans-unit id="tl_calendar_events.source_legend">
         <source>Redirect target</source>
         <target>Cíl přesměrování</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.meta_legend">
+        <source>Meta data</source>
+        <target>Meta informace</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.expert_legend">
         <source>Expert settings</source>
@@ -329,6 +344,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.new.0">
         <source>New</source>
+        <target>Nové</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.new.1">
         <source>Create a new event</source>
@@ -358,12 +374,20 @@
         <source>Publish/unpublish event ID %s</source>
         <target>Publikovat / nepublikovat událost ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.feature">
+        <source>Feature/unfeature event ID %s</source>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.editheader">
         <source>Edit the settings of event ID %s</source>
+        <target>Upravit nastavení události ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>
         <target>Vložit do tohto kalenáře</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.editmeta">
+        <source>Edit the event settings</source>
+        <target>Upravit nastavení události</target>
       </trans-unit>
     </body>
   </file>

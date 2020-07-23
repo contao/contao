@@ -46,8 +46,8 @@
         <target>ニュースのテンプレート</target>
       </trans-unit>
       <trans-unit id="tl_module.news_template.1">
-        <source>Here you can select the news template.</source>
-        <target>ニュースのテンプレートを選択します。</target>
+        <source>Here you can select a news template.</source>
+        <target>ニュースのテンプレートを選択できます。</target>
       </trans-unit>
       <trans-unit id="tl_module.news_format.0">
         <source>Archive format</source>

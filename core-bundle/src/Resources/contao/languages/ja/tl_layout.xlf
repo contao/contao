@@ -517,9 +517,9 @@
         <source>Google Analytics</source>
         <target>Googleアナリティックス</target>
       </trans-unit>
-      <trans-unit id="tl_layout.analytics_piwik">
-        <source>Piwik</source>
-        <target>Piwik</target>
+      <trans-unit id="tl_layout.analytics_matomo">
+        <source>Matomo</source>
+        <target>Matomo</target>
       </trans-unit>
       <trans-unit id="tl_layout.new.0">
         <source>New</source>

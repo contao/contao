@@ -188,9 +188,11 @@
       </trans-unit>
       <trans-unit id="tl_form_field.step.0">
         <source>Step</source>
+        <target>Шаг</target>
       </trans-unit>
       <trans-unit id="tl_form_field.step.1">
         <source>Here you can set the discrete step size of the field.</source>
+        <target>Здесь можно установить дискретный размер шага поля.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.size.0">
         <source>Rows and columns</source>
@@ -297,12 +299,12 @@
         <target>Вы можете ввести размер поля загрузки (атрибут &lt;em&gt;size&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_form_field.customTpl.0">
-        <source>Custom form field template</source>
-        <target>Пользовательский шаблон поля формы</target>
+        <source>Form field template</source>
+        <target>Шаблон поля формы</target>
       </trans-unit>
       <trans-unit id="tl_form_field.customTpl.1">
-        <source>Here you can overwrite the default form field template.</source>
-        <target>Вы можете переписать шаблон поля формы по умолчанию.</target>
+        <source>Here you can select the form field template.</source>
+        <target>Вы можете выбрать шаблон поля формы.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.slabel.0">
         <source>Submit button label</source>

@@ -78,8 +78,8 @@
         <target>Přesměrování na poslední navštívenou stránku</target>
       </trans-unit>
       <trans-unit id="tl_page.redirectBack.1">
-        <source>Redirect the user back to the last page visited instead of the redirect page.</source>
-        <target>Přesměrovat uživatele na poslední navštívenou stránku místo na stránku určenou k přesměrování.</target>
+        <source>Redirect the member back to the last page visited instead of the redirect page.</source>
+        <target>Přesměrovat uživatele na poslední navštívenou stránku namísto na stránku určenou k přesměrování.</target>
       </trans-unit>
       <trans-unit id="tl_page.fallback.0">
         <source>Language fallback</source>
@@ -91,12 +91,15 @@
       </trans-unit>
       <trans-unit id="tl_page.favicon.0">
         <source>Favicon</source>
+        <target>Favicon</target>
       </trans-unit>
       <trans-unit id="tl_page.favicon.1">
         <source>Here you can select a favicon for the website.</source>
+        <target>Zde můžet vybrat faviconu webové stránky.</target>
       </trans-unit>
       <trans-unit id="tl_page.robotsTxt.0">
         <source>Custom robots.txt content</source>
+        <target>Vlastní obsah robots.txt</target>
       </trans-unit>
       <trans-unit id="tl_page.robotsTxt.1">
         <source>Here you can enter custom robots.txt content. It may be extended automatically by extensions.</source>
@@ -124,6 +127,12 @@
       <trans-unit id="tl_page.staticPlugins.1">
         <source>The assets URL applies to the &lt;em&gt;assets&lt;/em&gt; directory (page speed optimization).</source>
         <target>URL-adresa rozšíření se dotkne všech souborů v adresáři &lt;em&gt;rozšíření&lt;/em&gt; (zvýší rychlost načítání stránky).</target>
+      </trans-unit>
+      <trans-unit id="tl_page.mailerTransport.0">
+        <source>Mailer transport</source>
+      </trans-unit>
+      <trans-unit id="tl_page.mailerTransport.1">
+        <source>Here you can override the mailer transport used to send e-mails on this website.</source>
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.0">
         <source>E-mail address of the website administrator</source>
@@ -164,6 +173,25 @@
       <trans-unit id="tl_page.validAliasCharacters.1">
         <source>Here you can select a custom character set for auto-generated aliases.</source>
         <target>Zde můžete vybrat vlastní znaky, abyste ovlivnily automatické generování aliasů.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.useFolderUrl.0">
+        <source>Enable folder URLs</source>
+        <target>Povolit tyto složkové adresy</target>
+      </trans-unit>
+      <trans-unit id="tl_page.useFolderUrl.1">
+        <source>Generate folder-style page aliases like &lt;em&gt;docs/install/download.html&lt;/em&gt; instead of &lt;em&gt;docs-install-download.html&lt;/em&gt;.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.urlPrefix.0">
+        <source>URL prefix</source>
+      </trans-unit>
+      <trans-unit id="tl_page.urlPrefix.1">
+        <source>Enter a URL prefix (e.g. the language) that will be prepended to aliases for this root page.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.urlSuffix.0">
+        <source>URL suffix</source>
+      </trans-unit>
+      <trans-unit id="tl_page.urlSuffix.1">
+        <source>The URL suffix will be added to the URI string to simulate static documents.</source>
       </trans-unit>
       <trans-unit id="tl_page.createSitemap.0">
         <source>Create an XML sitemap</source>
@@ -313,9 +341,11 @@
       </trans-unit>
       <trans-unit id="tl_page.sitemap.0">
         <source>Show in HTML sitemap</source>
+        <target>Zobrazit v HTML mapy stránek</target>
       </trans-unit>
       <trans-unit id="tl_page.sitemap.1">
         <source>Here you can define whether the page is shown in the HTML sitemap.</source>
+        <target>Zde můžete určit, zda se stránka objeví v mapě stránky HTML.</target>
       </trans-unit>
       <trans-unit id="tl_page.hide.0">
         <source>Hide from navigation</source>
@@ -330,8 +360,8 @@
         <target>Ukázat pouze hostům</target>
       </trans-unit>
       <trans-unit id="tl_page.guests.1">
-        <source>Hide the page if there is an authenticated user.</source>
-        <target>Skrýt stránku z navigačního menu pokud je uživatel přihlášen</target>
+        <source>Hide the page if a member is logged in.</source>
+        <target>Skrýt stránku, pokud je člen přihlášený.</target>
       </trans-unit>
       <trans-unit id="tl_page.tabindex.0">
         <source>Tab index</source>
@@ -381,7 +411,7 @@
         <source>Two-factor redirect page</source>
       </trans-unit>
       <trans-unit id="tl_page.twoFactorJumpTo.1">
-        <source>Please choose the page to which visitors will be redirected when setting up two-factor authentication.</source>
+        <source>Please choose the page to which members will be redirected to set up two-factor authentication.</source>
       </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
@@ -399,9 +429,8 @@
         <source>Redirect settings</source>
         <target>Přesměrování</target>
       </trans-unit>
-      <trans-unit id="tl_page.dns_legend">
-        <source>DNS settings</source>
-        <target>Nastavení DNS</target>
+      <trans-unit id="tl_page.url_legend">
+        <source>URL settings</source>
       </trans-unit>
       <trans-unit id="tl_page.website_legend">
         <source>Website settings</source>
@@ -409,10 +438,6 @@
       <trans-unit id="tl_page.global_legend">
         <source>Global settings</source>
         <target>Obecná nastavení</target>
-      </trans-unit>
-      <trans-unit id="tl_page.alias_legend">
-        <source>Alias settings</source>
-        <target>Nastavení aliasů</target>
       </trans-unit>
       <trans-unit id="tl_page.sitemap_legend">
         <source>XML sitemap</source>
@@ -476,6 +501,7 @@
       </trans-unit>
       <trans-unit id="tl_page.new.0">
         <source>New</source>
+        <target>Nové</target>
       </trans-unit>
       <trans-unit id="tl_page.new.1">
         <source>Create a new page</source>
@@ -524,6 +550,9 @@
       <trans-unit id="tl_page.articles">
         <source>Edit the articles of page ID %s</source>
         <target>Upravit článek stránky ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.legacyRouting">
+        <source>This setting has been disabled because Contao is running in legacy routing mode.</source>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

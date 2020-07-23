@@ -387,19 +387,19 @@
       </trans-unit>
       <trans-unit id="tl_content.galleryTpl.0">
         <source>Gallery template</source>
-        <target>Galerietemplate</target>
+        <target>Galerie-Template</target>
       </trans-unit>
       <trans-unit id="tl_content.galleryTpl.1">
-        <source>Here you can select the gallery template.</source>
-        <target>Hier können Sie das Galerietemplate auswählen.</target>
+        <source>Here you can select a gallery template.</source>
+        <target>Hier können Sie ein Galerie-Template auswählen.</target>
       </trans-unit>
       <trans-unit id="tl_content.customTpl.0">
-        <source>Custom element template</source>
-        <target>Individuelles Template</target>
+        <source>Content element template</source>
+        <target>Inhaltselement-Template</target>
       </trans-unit>
       <trans-unit id="tl_content.customTpl.1">
-        <source>Here you can overwrite the default element template.</source>
-        <target>Hier können Sie das Standard-Template überschreiben.</target>
+        <source>Here you can select the content element template.</source>
+        <target>Hier können Sie das Inhaltselement-Template auswählen.</target>
       </trans-unit>
       <trans-unit id="tl_content.playerSRC.0">
         <source>Video/audio files</source>
@@ -475,11 +475,11 @@
       </trans-unit>
       <trans-unit id="tl_content.playerCaption.0">
         <source>Caption</source>
-        <target>Bildunterschrift</target>
+        <target>Untertitel</target>
       </trans-unit>
       <trans-unit id="tl_content.playerCaption.1">
         <source>Here you can enter a caption.</source>
-        <target>Hier können Sie eine Bildunterschrift eingeben.</target>
+        <target>Hier können Sie einen Untertitel eingeben.</target>
       </trans-unit>
       <trans-unit id="tl_content.playerAspect.0">
         <source>Aspect ratio</source>

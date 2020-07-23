@@ -78,16 +78,14 @@
         <target>Etkinlik kalıbı</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_template.1">
-        <source>Here you can select the event template.</source>
-        <target>Bu bölümden etkinlik kalıbı seçilebilir.</target>
+        <source>Here you can select an event template.</source>
       </trans-unit>
       <trans-unit id="tl_module.cal_ctemplate.0">
         <source>Calendar template</source>
         <target>Takvim kalıbı</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_ctemplate.1">
-        <source>Here you can select the calendar template.</source>
-        <target>Bu bölümden takvim kalıbı seçilebilir.</target>
+        <source>Here you can select a calendar template.</source>
       </trans-unit>
       <trans-unit id="tl_module.cal_showQuantity.0">
         <source>Show number of events</source>
@@ -96,6 +94,12 @@
       <trans-unit id="tl_module.cal_showQuantity.1">
         <source>Show the number of events of each month in the menu.</source>
         <target>Bu seçenek etkinleştirildiğinde, her ay yapılacak etkinlik sayısı menüde görüntülenir.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.cal_featured.0">
+        <source>Featured events</source>
+      </trans-unit>
+      <trans-unit id="tl_module.cal_featured.1">
+        <source>Here you can choose how featured events are handled.</source>
       </trans-unit>
       <trans-unit id="tl_module.cal_list">
         <source>Event list</source>
@@ -220,6 +224,15 @@
       <trans-unit id="tl_module.past_all">
         <source>All past events</source>
         <target>Geçmiş tüm etkinlikler</target>
+      </trans-unit>
+      <trans-unit id="tl_module.events.all_items">
+        <source>Show all events</source>
+      </trans-unit>
+      <trans-unit id="tl_module.events.featured">
+        <source>Show featured events only</source>
+      </trans-unit>
+      <trans-unit id="tl_module.events.unfeatured">
+        <source>Skip featured events</source>
       </trans-unit>
     </body>
   </file>

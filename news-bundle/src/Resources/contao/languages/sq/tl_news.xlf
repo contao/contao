@@ -49,6 +49,13 @@
         <source>Here you can add a custom meta title to overwrite the default page title.</source>
         <target>Here you can add a custom meta title to overwrite the default page title. Këtu mund të shtoni një titull në nivel meta për të zëvendësuar titullin e faqes parazgjedhore.</target>
       </trans-unit>
+      <trans-unit id="tl_news.robots.0">
+        <source>Robots tag</source>
+        <target>Robots tag</target>
+      </trans-unit>
+      <trans-unit id="tl_news.robots.1">
+        <source>Here you can overwrite how search engines handle the news item.</source>
+      </trans-unit>
       <trans-unit id="tl_news.description.0">
         <source>Meta description</source>
         <target>Përshkrim të nivelit meta</target>
@@ -223,10 +230,6 @@
         <source>Date and time</source>
         <target>Data dhe koha</target>
       </trans-unit>
-      <trans-unit id="tl_news.meta_legend">
-        <source>Meta data</source>
-        <target>Të dhënat në nivel meta</target>
-      </trans-unit>
       <trans-unit id="tl_news.teaser_legend">
         <source>Subheadline and teaser</source>
         <target>Nëtitull dhe ngacmues</target>
@@ -246,6 +249,10 @@
       <trans-unit id="tl_news.source_legend">
         <source>Redirect target</source>
         <target>Burimi faqes</target>
+      </trans-unit>
+      <trans-unit id="tl_news.meta_legend">
+        <source>Meta data</source>
+        <target>Të dhënat në nivel meta</target>
       </trans-unit>
       <trans-unit id="tl_news.expert_legend">
         <source>Expert settings</source>
@@ -298,6 +305,10 @@
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
         <target>Fut në këtë arkiva </target>
+      </trans-unit>
+      <trans-unit id="tl_news.editmeta">
+        <source>Edit the news item settings</source>
+        <target>Përpuno kryen e këtij lajmi</target>
       </trans-unit>
     </body>
   </file>

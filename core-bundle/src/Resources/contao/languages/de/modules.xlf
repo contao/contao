@@ -294,24 +294,24 @@
         <target>Automatischer Logout</target>
       </trans-unit>
       <trans-unit id="FMD.logout.1">
-        <source>Automatically logs out a user</source>
-        <target>Meldet einen Benutzer automatisch ab (Logout)</target>
+        <source>Automatically logs out a member</source>
+        <target>Meldet ein Mitglied automatisch ab (Logout)</target>
       </trans-unit>
       <trans-unit id="FMD.personalData.0">
         <source>Personal data</source>
         <target>Personendaten</target>
       </trans-unit>
       <trans-unit id="FMD.personalData.1">
-        <source>Generates a form to edit a user's personal data</source>
-        <target>Erzeugt ein Formular zur Bearbeitung der Benutzerdaten</target>
+        <source>Generates a form to edit a member's personal data</source>
+        <target>Erzeugt ein Formular zur Bearbeitung der Mitgliedsdaten</target>
       </trans-unit>
       <trans-unit id="FMD.registration.0">
         <source>Registration</source>
         <target>Registrierung</target>
       </trans-unit>
       <trans-unit id="FMD.registration.1">
-        <source>Generates a user registration form</source>
-        <target>Erzeugt ein Formular zur Benutzerregistrierung</target>
+        <source>Generates a member registration form</source>
+        <target>Erzeugt ein Formular zur Mitgliederregistrierung</target>
       </trans-unit>
       <trans-unit id="FMD.changePassword.0">
         <source>Change password</source>
