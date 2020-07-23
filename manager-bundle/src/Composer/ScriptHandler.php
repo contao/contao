@@ -75,6 +75,11 @@ class ScriptHandler
             $command[] = $verbose;
         }
 
+        // Backwards compatibility with symfony/process <3.3 (see #1964)
+        if (method_exists(Process::class, 'setCommandline')) {
+            $command = implode(' ', $command);
+        }
+
         $process = new Process($command);
 
         // Increase the timeout according to terminal42/background-process (see #54)
