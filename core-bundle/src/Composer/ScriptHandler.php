@@ -70,8 +70,12 @@ class ScriptHandler
             $command[] = $verbose;
         }
 
-        // Composer uses an old version of symfony/console which expects a string (see #1956)
-        $process = new Process(implode(' ', $command));
+        // Backwards compatibility with symfony/process <3.3 (see #1964)
+        if (method_exists(Process::class, 'setCommandline')) {
+            $command = implode(' ', $command);
+        }
+
+        $process = new Process($command);
 
         $process->run(
             static function (string $type, string $buffer) use ($event): void {
