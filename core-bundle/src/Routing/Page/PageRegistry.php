@@ -62,6 +62,7 @@ class PageRegistry
     {
         $prefixes = [];
 
+        /** @var RouteConfig $config */
         foreach ($this->routeConfigs as $type => $config) {
             $regex = $config->getPathRegex();
 

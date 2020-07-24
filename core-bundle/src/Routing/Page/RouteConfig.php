@@ -45,11 +45,14 @@ final class RouteConfig
     private $defaults;
 
     /**
-     * @var array
+     * @var array<string>
      */
     private $methods;
 
-    public function __construct(string $path = null, string $pathRegex = null, string $urlSuffix = null, array $requirements = [], array $options = [], array $defaults = [], array $methods = [])
+    /**
+     * @param string|array<string> $methods
+     */
+    public function __construct(string $path = null, string $pathRegex = null, string $urlSuffix = null, array $requirements = [], array $options = [], array $defaults = [], $methods = [])
     {
         $this->path = $path;
         $this->pathRegex = $pathRegex;
@@ -57,7 +60,7 @@ final class RouteConfig
         $this->requirements = $requirements;
         $this->options = $options;
         $this->defaults = $defaults;
-        $this->methods = $methods;
+        $this->methods = \is_array($methods) ? $methods : [$methods];
     }
 
     public function getPath(): ?string
