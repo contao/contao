@@ -97,6 +97,7 @@ final class Page implements ServiceAnnotationInterface
             if (!method_exists($this, $method)) {
                 throw new \BadMethodCallException(sprintf('Unknown property "%s" on annotation "%s".', $key, static::class));
             }
+
             $this->$method($value);
         }
     }
