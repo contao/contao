@@ -25,13 +25,44 @@ use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
  */
 final class Page implements ServiceAnnotationInterface
 {
+    /**
+     * @var string
+     */
     private $type;
+
+    /**
+     * @var bool
+     */
     private $contentComposition = true;
+
+    /**
+     * @var string|null
+     */
     private $path;
+
+    /**
+     * @var string|null
+     */
     private $urlSuffix;
+
+    /**
+     * @var array
+     */
     private $requirements = [];
+
+    /**
+     * @var array
+     */
     private $options = [];
+
+    /**
+     * @var array
+     */
     private $defaults = [];
+
+    /**
+     * @var array
+     */
     private $methods = [];
 
     public function __construct(array $data)

@@ -45,10 +45,13 @@ final class RouteConfig
     private $defaults;
 
     /**
-     * @var array<string>|string
+     * @var array<string>
      */
     private $methods;
 
+    /**
+     * @param string|array<string> $methods
+     */
     public function __construct(string $path = null, string $pathRegex = null, string $urlSuffix = null, array $requirements = [], array $options = [], array $defaults = [], $methods = [])
     {
         $this->path = $path;
