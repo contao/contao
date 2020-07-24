@@ -26,9 +26,8 @@ use Doctrine\DBAL\FetchMode;
 use Nyholm\Psr7\Uri;
 use Symfony\Contracts\Service\ResetInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
-class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
+class PageUrlListener implements ResetInterface
 {
     /**
      * @var ContaoFramework

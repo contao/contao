@@ -17,12 +17,11 @@ use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\Image;
 use Contao\StringUtil;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
 /**
  * @Callback(table="tl_settings", target="config.onload")
  */
-class DisableAppConfiguredSettingsListener implements ServiceAnnotationInterface
+class DisableAppConfiguredSettingsListener
 {
     /**
      * @var TranslatorInterface

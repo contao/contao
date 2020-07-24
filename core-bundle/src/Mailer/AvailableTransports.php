@@ -14,9 +14,8 @@ namespace Contao\CoreBundle\Mailer;
 
 use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
-class AvailableTransports implements ServiceAnnotationInterface
+class AvailableTransports
 {
     /**
      * @var array<TransportConfig>
