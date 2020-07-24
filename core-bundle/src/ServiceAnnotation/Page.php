@@ -93,6 +93,7 @@ final class Page implements ServiceAnnotationInterface
 
         foreach ($data as $key => $value) {
             $method = 'set'.str_replace('_', '', $key);
+
             if (!method_exists($this, $method)) {
                 throw new \BadMethodCallException(sprintf('Unknown property "%s" on annotation "%s".', $key, static::class));
             }
@@ -142,7 +143,7 @@ final class Page implements ServiceAnnotationInterface
         $this->contentComposition = $contentComposition;
     }
 
-    public function setPath(?string $path)
+    public function setPath(?string $path): void
     {
         $this->path = $path;
     }
@@ -162,7 +163,7 @@ final class Page implements ServiceAnnotationInterface
         $this->urlSuffix = $urlSuffix;
     }
 
-    public function setRequirements(array $requirements)
+    public function setRequirements(array $requirements): void
     {
         $this->requirements = $requirements;
     }
@@ -172,7 +173,7 @@ final class Page implements ServiceAnnotationInterface
         return $this->requirements;
     }
 
-    public function setOptions(array $options)
+    public function setOptions(array $options): void
     {
         $this->options = $options;
     }
@@ -182,7 +183,7 @@ final class Page implements ServiceAnnotationInterface
         return $this->options;
     }
 
-    public function setDefaults(array $defaults)
+    public function setDefaults(array $defaults): void
     {
         $this->defaults = $defaults;
     }
@@ -195,7 +196,7 @@ final class Page implements ServiceAnnotationInterface
     /**
      * @param string|array<string> $methods
      */
-    public function setMethods($methods)
+    public function setMethods($methods): void
     {
         $this->methods = \is_array($methods) ? $methods : [$methods];
     }
