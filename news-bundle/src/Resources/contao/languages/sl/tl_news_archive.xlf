@@ -70,12 +70,11 @@
         <target>Zahtevaj prijavo za komentiranje</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.requireLogin.1">
-        <source>Allow only authenticated users to create comments.</source>
-        <target>Komentiranje dovoli samo prijavljenim uporabnikom.</target>
+        <source>Allow only authenticated members to create comments.</source>
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>Onemogoči varnostno vprašanje</target>
+        <source>Disable spam protection</source>
+        <target>Onemogoči zaščito pred neželeno pošto</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>
@@ -134,12 +133,11 @@
         <target>Avtor in administrator sistema</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.0">
-        <source>RSS feeds</source>
-        <target>RSS izvlečki</target>
+        <source>News feeds</source>
+        <target>Izvleček novic</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.1">
-        <source>Manage RSS feeds</source>
-        <target>Upravljaj RSS izvlečke</target>
+        <source>Manage news feeds</source>
       </trans-unit>
       <trans-unit id="tl_news_archive.new.0">
         <source>New</source>
@@ -147,15 +145,19 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.new.1">
         <source>Create a new news archive</source>
+        <target>Ustvari nov arhiv novic</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.show">
         <source>Show the details of news archive ID %s</source>
+        <target>Prikaži podrobnosti arhiva novic z ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.edit">
         <source>Edit news archive ID %s</source>
+        <target>Uredi arhiv novic z ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.editheader">
         <source>Edit the settings of news archive ID %s</source>
+        <target>Uredi nastavitve arhiva novic z ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.editmeta">
         <source>Edit the news archive settings</source>
@@ -163,9 +165,11 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.copy">
         <source>Duplicate news archive ID %s</source>
+        <target>Podvoji arhiv novic z ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.delete">
         <source>Delete news archive ID %s</source>
+        <target>Izbriši arhiv novic z ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.comments">
         <source>Show comments of news archive ID %s</source>

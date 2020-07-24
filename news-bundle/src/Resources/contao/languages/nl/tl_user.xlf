@@ -18,16 +18,16 @@
         <target>Selecteer nieuws permissies voor de gebruiker.</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeeds.0">
-        <source>Allowed RSS feeds</source>
-        <target>Toegestane RSS feeds</target>
+        <source>Allowed news feeds</source>
+        <target>Toegestane nieuws feeds</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeeds.1">
         <source>Here you can grant access to one or more news feeds.</source>
         <target>Hier kunt u toegang verlenen aan een of meer nieuws feeds.</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeedp.0">
-        <source>RSS feed permissions</source>
-        <target>RSS feed permissies</target>
+        <source>News feed permissions</source>
+        <target>Machtigingen voor nieuws feeds</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeedp.1">
         <source>Here you can define the news feed permissions.</source>

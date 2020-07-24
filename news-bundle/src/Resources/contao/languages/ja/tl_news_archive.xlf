@@ -70,12 +70,12 @@
         <target>コメントにログインを必要</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.requireLogin.1">
-        <source>Allow only authenticated users to create comments.</source>
-        <target>ログインしたユーザーにだけコメントの作成を許可します。</target>
+        <source>Allow only authenticated members to create comments.</source>
+        <target>ログインしたメンバーにだけコメントの作成を許可します。</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>セキュリティ質問を不使用</target>
+        <source>Disable spam protection</source>
+        <target>spam防護を不使用</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>
@@ -134,12 +134,12 @@
         <target>作成者とシステム管理者</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.0">
-        <source>RSS feeds</source>
-        <target>RSSフィード</target>
+        <source>News feeds</source>
+        <target>ニュースのフィード</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.1">
-        <source>Manage RSS feeds</source>
-        <target>RSSフィードを管理</target>
+        <source>Manage news feeds</source>
+        <target>ニュースのフィードを管理</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.new.0">
         <source>New</source>

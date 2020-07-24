@@ -59,6 +59,7 @@
       </trans-unit>
       <trans-unit id="tl_member_group.account_legend">
         <source>Group settings</source>
+        <target>Настройки группы</target>
       </trans-unit>
       <trans-unit id="tl_member_group.new.0">
         <source>New</source>

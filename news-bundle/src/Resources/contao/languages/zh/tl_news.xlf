@@ -43,15 +43,26 @@
       </trans-unit>
       <trans-unit id="tl_news.pageTitle.0">
         <source>Meta title</source>
+        <target>Meta标题</target>
       </trans-unit>
       <trans-unit id="tl_news.pageTitle.1">
         <source>Here you can add a custom meta title to overwrite the default page title.</source>
+        <target>在这里添加一个自定义meta标题覆盖默认页面标题。</target>
+      </trans-unit>
+      <trans-unit id="tl_news.robots.0">
+        <source>Robots tag</source>
+        <target>Robots标签</target>
+      </trans-unit>
+      <trans-unit id="tl_news.robots.1">
+        <source>Here you can overwrite how search engines handle the news item.</source>
       </trans-unit>
       <trans-unit id="tl_news.description.0">
         <source>Meta description</source>
+        <target>Meta描述</target>
       </trans-unit>
       <trans-unit id="tl_news.description.1">
         <source>Here you can add a custom meta description to overwrite the default page description.</source>
+        <target>在这里添加一个自定义meta描述覆盖默认页面描述。</target>
       </trans-unit>
       <trans-unit id="tl_news.subheadline.0">
         <source>Subheadline</source>
@@ -195,6 +206,7 @@
       </trans-unit>
       <trans-unit id="tl_news.start.1">
         <source>If you want to prevent the news item from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>如果需要在一个特定日期/时间前不显示新闻记录，请在这里录入。否则该字段留空。</target>
       </trans-unit>
       <trans-unit id="tl_news.stop.0">
         <source>Show until</source>
@@ -202,6 +214,7 @@
       </trans-unit>
       <trans-unit id="tl_news.stop.1">
         <source>If you want to prevent the news item from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>如果需要在一个特定日期/时间后不显示新闻记录，请在这里录入。否则该字段留空。</target>
       </trans-unit>
       <trans-unit id="tl_news.tstamp.0">
         <source>Revision date</source>
@@ -218,10 +231,6 @@
       <trans-unit id="tl_news.date_legend">
         <source>Date and time</source>
         <target>日期与时间</target>
-      </trans-unit>
-      <trans-unit id="tl_news.meta_legend">
-        <source>Meta data</source>
-        <target>Meta数据</target>
       </trans-unit>
       <trans-unit id="tl_news.teaser_legend">
         <source>Subheadline and teaser</source>
@@ -242,6 +251,10 @@
       <trans-unit id="tl_news.source_legend">
         <source>Redirect target</source>
         <target>目标页面</target>
+      </trans-unit>
+      <trans-unit id="tl_news.meta_legend">
+        <source>Meta data</source>
+        <target>Meta数据</target>
       </trans-unit>
       <trans-unit id="tl_news.expert_legend">
         <source>Expert settings</source>
@@ -289,10 +302,15 @@
       </trans-unit>
       <trans-unit id="tl_news.editheader">
         <source>Edit the settings of news item ID %s</source>
+        <target>编辑新闻记录ID为 %s 的设置</target>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
         <target>粘贴到这个新闻存档</target>
+      </trans-unit>
+      <trans-unit id="tl_news.editmeta">
+        <source>Edit the news item settings</source>
+        <target>编辑新闻记录设置</target>
       </trans-unit>
     </body>
   </file>

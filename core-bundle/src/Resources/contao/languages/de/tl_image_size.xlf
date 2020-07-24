@@ -46,8 +46,8 @@
         <target>Sizes-Attribut</target>
       </trans-unit>
       <trans-unit id="tl_image_size.sizes.1">
-        <source>Here you can define the displayed image width(s), e.g. &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;.</source>
-        <target>Hier können Sie die anzuzeigende(n) Bildbreite(n) angeben, z.B. &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;.</target>
+        <source>Here you can define the intended layout width of the image, the actual size should be defined via CSS. Example: &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;.</source>
+        <target>Hier können Sie die gewünschte Layout-Breite des Bildes angeben. Die tatsächliche Größe sollte per CSS definiert werden. Beispiel: &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.densities.0">
         <source>Pixel densities/scale factors</source>

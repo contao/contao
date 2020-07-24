@@ -46,8 +46,7 @@
         <target>Diseño noticias</target>
       </trans-unit>
       <trans-unit id="tl_module.news_template.1">
-        <source>Here you can select the news template.</source>
-        <target>Por favor seleccione un diseño de noticias. Puede añadir diseños personalizados para noticias en la carpeta &lt;em&gt;templates&lt;/em&gt;. Los archivos de plantillas de noticias empieza por &lt;em&gt;news_&lt;/em&gt; y requieren la extensión de archivo &lt;em&gt;.tpl&lt;/em&gt;.</target>
+        <source>Here you can select a news template.</source>
       </trans-unit>
       <trans-unit id="tl_module.news_format.0">
         <source>Archive format</source>

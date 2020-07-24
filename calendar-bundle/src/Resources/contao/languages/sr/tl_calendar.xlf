@@ -70,12 +70,10 @@
         <target>Захтевај пријављивање ради коментарисања</target>
       </trans-unit>
       <trans-unit id="tl_calendar.requireLogin.1">
-        <source>Allow only authenticated users to create comments.</source>
-        <target>Дозволи само аутентификованим корисницима да пишу коментаре.</target>
+        <source>Allow only authenticated members to create comments.</source>
       </trans-unit>
       <trans-unit id="tl_calendar.disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>Искључи сигурносно питање.</target>
+        <source>Disable spam protection</source>
       </trans-unit>
       <trans-unit id="tl_calendar.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>
@@ -142,15 +140,16 @@
         <target>Комплетни чланци</target>
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.0">
-        <source>RSS feeds</source>
-        <target>RSS сажеци</target>
+        <source>Calendar feeds</source>
+        <target>Сажеци календара</target>
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.1">
-        <source>Manage RSS feeds</source>
-        <target>Управљај RSS сажецима</target>
+        <source>Manage calendar feeds</source>
+        <target>Управљај сажецима календара</target>
       </trans-unit>
       <trans-unit id="tl_calendar.new.0">
         <source>New</source>
+        <target>Ново</target>
       </trans-unit>
       <trans-unit id="tl_calendar.new.1">
         <source>Create a new calendar</source>

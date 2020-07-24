@@ -70,6 +70,11 @@ class ScriptHandler
             $command[] = $verbose;
         }
 
+        // Backwards compatibility with symfony/process <3.3 (see #1964)
+        if (method_exists(Process::class, 'setCommandline')) {
+            $command = implode(' ', $command);
+        }
+
         $process = new Process($command);
 
         $process->run(

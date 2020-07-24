@@ -82,12 +82,10 @@
         <target>Verberg artikel als een lid is ingelogd.</target>
       </trans-unit>
       <trans-unit id="tl_article.customTpl.0">
-        <source>Custom article template</source>
-        <target>Aangepaste artikeltemplate</target>
+        <source>Article template</source>
       </trans-unit>
       <trans-unit id="tl_article.customTpl.1">
-        <source>Here you can overwrite the default article template.</source>
-        <target>Hier kunt u de standaard artikeltemplate overschrijven.</target>
+        <source>Here you can select the article template.</source>
       </trans-unit>
       <trans-unit id="tl_article.protected.0">
         <source>Protect article</source>

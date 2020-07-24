@@ -50,12 +50,11 @@
         <target>Prosimo izberite datoteke iz drevesne strukture, ki jih želite pripeti v e-novico.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.0">
-        <source>Custom e-mail template</source>
-        <target>E-mail predloga</target>
+        <source>E-mail template</source>
+        <target>Email predloga</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.1">
-        <source>Here you can override the default e-mail template of the channel.</source>
-        <target>Tukaj lahko spremenite privzeto e-mail predlogo te vrste e-novic.</target>
+        <source>Here you can override the e-mail template of the channel.</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendText.0">
         <source>Send as plain text</source>
@@ -72,6 +71,12 @@
       <trans-unit id="tl_newsletter.externalImages.1">
         <source>Do not embed images in HTML newsletters.</source>
         <target>Ne vključuj slik HTML e-novice.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.mailerTransport.0">
+        <source>Mailer transport</source>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.mailerTransport.1">
+        <source>Here you can override the default mailer transport of the channel.</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.sender.0">
         <source>Custom sender e-mail address</source>

@@ -54,8 +54,8 @@
         <target>ニュースレターのテンプレート</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_template.1">
-        <source>Here you can select the newsletter template.</source>
-        <target>ニュースレターのテンプレートを選択します。</target>
+        <source>Here you can select a newsletter template.</source>
+        <target>ニュースレターのテンプレートを選択できます。</target>
       </trans-unit>
       <trans-unit id="tl_module.text_legend">
         <source>Custom text</source>

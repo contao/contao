@@ -33,6 +33,14 @@
         <source>Send the submitted data to an e-mail address.</source>
         <target>Se selezionato, i dati del form verranno spediti via e-mail.</target>
       </trans-unit>
+      <trans-unit id="tl_form.mailerTransport.0">
+        <source>Mailer transport</source>
+        <target>Mailer transport</target>
+      </trans-unit>
+      <trans-unit id="tl_form.mailerTransport.1">
+        <source>Here you can override the mailer transport used to send the form via e-mail.</source>
+        <target>Qui è possibile sovrascrivere il mailer transport utilizzato per inviare e-mail.</target>
+      </trans-unit>
       <trans-unit id="tl_form.recipient.0">
         <source>Recipient address</source>
         <target>Destinatario</target>
@@ -81,12 +89,21 @@
         <source>The form data will be attached to the e-mail as a CSV file.</source>
         <target>I dati del form verranno inviati come file CSV. (una virgola separa i valori)</target>
       </trans-unit>
+      <trans-unit id="tl_form.csv_excel.0">
+        <source>CSV file (Microsoft Excel)</source>
+        <target>CSV file (Microsoft Excel)</target>
+      </trans-unit>
+      <trans-unit id="tl_form.csv_excel.1">
+        <source>The form data will be attached to the e-mail as a CSV file readable by Microsoft Excel.</source>
+        <target>I dati del modulo verranno allegati all'e-mail come file CSV leggibile da Microsoft Excel.</target>
+      </trans-unit>
       <trans-unit id="tl_form.skipEmpty.0">
         <source>Skip empty fields</source>
         <target>Salta campi vuoti</target>
       </trans-unit>
       <trans-unit id="tl_form.skipEmpty.1">
         <source>Do not include empty fields in the form data.</source>
+        <target>Non includere campi vuoti nei dati del modulo.</target>
       </trans-unit>
       <trans-unit id="tl_form.email.0">
         <source>E-mail</source>
@@ -113,10 +130,12 @@
         <target>Archivia i valori inviati dal form in un database.</target>
       </trans-unit>
       <trans-unit id="tl_form.customTpl.0">
-        <source>Custom form template</source>
+        <source>Form template</source>
+        <target>Modello form</target>
       </trans-unit>
       <trans-unit id="tl_form.customTpl.1">
-        <source>Here you can overwrite the default form template.</source>
+        <source>Here you can select the form template.</source>
+        <target>Seleziona un modello di form. Il modello predefinito è chiamato &lt;em&gt;member_default&lt;/em&gt;. Se vuoi aggiungere un modello, caricalo nella cartella &lt;em&gt;templates&lt;/em&gt;. (l'estensione del file deve essere &quot;.tpl&quot;)</target>
       </trans-unit>
       <trans-unit id="tl_form.targetTable.0">
         <source>Target table</source>

@@ -49,6 +49,13 @@
         <source>Here you can add a custom meta title to overwrite the default page title.</source>
         <target>Aqui pode adicionar um titulo meta para substituir o titulo de página padrão.</target>
       </trans-unit>
+      <trans-unit id="tl_news.robots.0">
+        <source>Robots tag</source>
+        <target>Tag dos robôs</target>
+      </trans-unit>
+      <trans-unit id="tl_news.robots.1">
+        <source>Here you can overwrite how search engines handle the news item.</source>
+      </trans-unit>
       <trans-unit id="tl_news.description.0">
         <source>Meta description</source>
         <target>Informação meta</target>
@@ -199,13 +206,15 @@
       </trans-unit>
       <trans-unit id="tl_news.start.1">
         <source>If you want to prevent the news item from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Caso pretenda que um artigo não seja mostrado antes de uma determinada data/hora, pode defini-la aqui. Caso contrário, deixe o campo em branco.</target>
       </trans-unit>
       <trans-unit id="tl_news.stop.0">
         <source>Show until</source>
-        <target>Até</target>
+        <target>Mostrar Até</target>
       </trans-unit>
       <trans-unit id="tl_news.stop.1">
         <source>If you want to prevent the news item from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Caso pretenda que um artigo não seja mostrado depois de uma determinada data/hora, pode defini-la aqui. Caso contrário, deixe o campo em branco.</target>
       </trans-unit>
       <trans-unit id="tl_news.tstamp.0">
         <source>Revision date</source>
@@ -222,10 +231,6 @@
       <trans-unit id="tl_news.date_legend">
         <source>Date and time</source>
         <target>Data e hora</target>
-      </trans-unit>
-      <trans-unit id="tl_news.meta_legend">
-        <source>Meta data</source>
-        <target>Dados meta</target>
       </trans-unit>
       <trans-unit id="tl_news.teaser_legend">
         <source>Subheadline and teaser</source>
@@ -246,6 +251,10 @@
       <trans-unit id="tl_news.source_legend">
         <source>Redirect target</source>
         <target>Redireccionar para</target>
+      </trans-unit>
+      <trans-unit id="tl_news.meta_legend">
+        <source>Meta data</source>
+        <target>Dados meta</target>
       </trans-unit>
       <trans-unit id="tl_news.expert_legend">
         <source>Expert settings</source>
@@ -293,10 +302,15 @@
       </trans-unit>
       <trans-unit id="tl_news.editheader">
         <source>Edit the settings of news item ID %s</source>
+        <target>Editar as configurações do item de Notícias com ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
         <target>Colar para dentro deste artigo de noticias</target>
+      </trans-unit>
+      <trans-unit id="tl_news.editmeta">
+        <source>Edit the news item settings</source>
+        <target>Editar configurações do artigo de noticias</target>
       </trans-unit>
     </body>
   </file>

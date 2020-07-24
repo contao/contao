@@ -72,22 +72,6 @@
         <source>Do not collapse elements in the back end preview.</source>
         <target>عنصر‌ها را در پیش‌نمایش بخش مدیریت جمع نمی‌کند.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.doNotRedirectEmpty.0">
-        <source>Do not redirect empty URLs</source>
-        <target>عدم تغییر مسیر نشانی‌های وب خالی</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.doNotRedirectEmpty.1">
-        <source>For an empty URL display the website instead of redirecting to the language root page (not recommended).</source>
-        <target>برای نشانی وب خالی، وب‌سایت را به جای تغییر مسیر به برگه ریشه زبانی، نمایش می‌دهد (توصیه نمی‌شود).</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.folderUrl.0">
-        <source>Enable folder URLs</source>
-        <target>فعال کردن نشانی‌های وب پوشه‌ای</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.folderUrl.1">
-        <source>Here you can enable folder-style page aliases like &lt;em&gt;docs/install/download.html&lt;/em&gt; instead of &lt;em&gt;docs-install-download.html&lt;/em&gt;.</source>
-        <target>در اینجا می‌توانید نام مستعار برگه شبیه-پوشه مانند &lt;em&gt;docs/install/download.html&lt;/em&gt; را به جای &lt;em&gt;docs-install-download.html&lt;/em&gt; فعال نمایید.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.allowedTags.0">
         <source>Allowed HTML tags</source>
         <target>برچسب‌های HTML مجاز</target>
@@ -196,10 +180,6 @@
         <source>Back end configuration</source>
         <target>پیکربندی بخش مدیریت</target>
       </trans-unit>
-      <trans-unit id="tl_settings.frontend_legend">
-        <source>Front end configuration</source>
-        <target>پیکربندی بخش کاربری</target>
-      </trans-unit>
       <trans-unit id="tl_settings.security_legend">
         <source>Security settings</source>
         <target>تنظیمات امنیتی</target>
@@ -219,6 +199,9 @@
       <trans-unit id="tl_settings.chmod_legend">
         <source>Default access rights</source>
         <target>سطوح دسترسی پیش‌فرض</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.configuredInApp">
+        <source>This setting has been defined in the app configuration and cannot be changed here anymore.</source>
       </trans-unit>
     </body>
   </file>

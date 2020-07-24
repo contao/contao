@@ -78,8 +78,7 @@
         <target>Redirigir a la última página visitada</target>
       </trans-unit>
       <trans-unit id="tl_page.redirectBack.1">
-        <source>Redirect the user back to the last page visited instead of the redirect page.</source>
-        <target>Redirigir al usuario a la última página visitada en vez de la página de redirección.</target>
+        <source>Redirect the member back to the last page visited instead of the redirect page.</source>
       </trans-unit>
       <trans-unit id="tl_page.fallback.0">
         <source>Language fallback</source>
@@ -129,6 +128,12 @@
         <source>The assets URL applies to the &lt;em&gt;assets&lt;/em&gt; directory (page speed optimization).</source>
         <target>La URL de plugins aplica a todos los recursos en el directorio &lt;em&gt;plugins&lt;/em&gt; (optimización de descarga de páginas).</target>
       </trans-unit>
+      <trans-unit id="tl_page.mailerTransport.0">
+        <source>Mailer transport</source>
+      </trans-unit>
+      <trans-unit id="tl_page.mailerTransport.1">
+        <source>Here you can override the mailer transport used to send e-mails on this website.</source>
+      </trans-unit>
       <trans-unit id="tl_page.adminEmail.0">
         <source>E-mail address of the website administrator</source>
         <target>Dirección e-mail del administrador de la web</target>
@@ -168,6 +173,26 @@
       <trans-unit id="tl_page.validAliasCharacters.1">
         <source>Here you can select a custom character set for auto-generated aliases.</source>
         <target>Aquí puede seleccionar un juego de caracteres personalizado para alias autogenerados.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.useFolderUrl.0">
+        <source>Enable folder URLs</source>
+        <target>Activar URLs decarpeta</target>
+      </trans-unit>
+      <trans-unit id="tl_page.useFolderUrl.1">
+        <source>Generate folder-style page aliases like &lt;em&gt;docs/install/download.html&lt;/em&gt; instead of &lt;em&gt;docs-install-download.html&lt;/em&gt;.</source>
+        <target>Genere alias de página con estilo de carpeta como &lt;em&gt;docs/install/download.html&lt;/em&gt; en lugar de &lt;em&gt;docs-install-download.html&lt;/em&gt;.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.urlPrefix.0">
+        <source>URL prefix</source>
+      </trans-unit>
+      <trans-unit id="tl_page.urlPrefix.1">
+        <source>Enter a URL prefix (e.g. the language) that will be prepended to aliases for this root page.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.urlSuffix.0">
+        <source>URL suffix</source>
+      </trans-unit>
+      <trans-unit id="tl_page.urlSuffix.1">
+        <source>The URL suffix will be added to the URI string to simulate static documents.</source>
       </trans-unit>
       <trans-unit id="tl_page.createSitemap.0">
         <source>Create an XML sitemap</source>
@@ -340,8 +365,7 @@
         <target>Mostrar sólo a los invitados</target>
       </trans-unit>
       <trans-unit id="tl_page.guests.1">
-        <source>Hide the page if there is an authenticated user.</source>
-        <target>Ocultar la página desde el menú de navegación si un miembro está conectado.</target>
+        <source>Hide the page if a member is logged in.</source>
       </trans-unit>
       <trans-unit id="tl_page.tabindex.0">
         <source>Tab index</source>
@@ -394,8 +418,7 @@
         <target>Página de redireccionamiento de dos factores</target>
       </trans-unit>
       <trans-unit id="tl_page.twoFactorJumpTo.1">
-        <source>Please choose the page to which visitors will be redirected when setting up two-factor authentication.</source>
-        <target>Elija la página a la que se redirigirá a los visitantes al configurar la autenticación de dos factores.</target>
+        <source>Please choose the page to which members will be redirected to set up two-factor authentication.</source>
       </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
@@ -413,9 +436,8 @@
         <source>Redirect settings</source>
         <target>Ajustes de redirección</target>
       </trans-unit>
-      <trans-unit id="tl_page.dns_legend">
-        <source>DNS settings</source>
-        <target>Ajustes DNS</target>
+      <trans-unit id="tl_page.url_legend">
+        <source>URL settings</source>
       </trans-unit>
       <trans-unit id="tl_page.website_legend">
         <source>Website settings</source>
@@ -424,10 +446,6 @@
       <trans-unit id="tl_page.global_legend">
         <source>Global settings</source>
         <target>Configuración global</target>
-      </trans-unit>
-      <trans-unit id="tl_page.alias_legend">
-        <source>Alias settings</source>
-        <target>Configuración de alias</target>
       </trans-unit>
       <trans-unit id="tl_page.sitemap_legend">
         <source>XML sitemap</source>
@@ -540,6 +558,9 @@
       <trans-unit id="tl_page.articles">
         <source>Edit the articles of page ID %s</source>
         <target>Editar artículos de la página con ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.legacyRouting">
+        <source>This setting has been disabled because Contao is running in legacy routing mode.</source>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

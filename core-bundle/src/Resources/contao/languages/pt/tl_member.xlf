@@ -193,6 +193,7 @@
       </trans-unit>
       <trans-unit id="tl_member.useTwoFactor">
         <source>Use two-factor authentication</source>
+        <target>Usar autenticação em dois passos</target>
       </trans-unit>
       <trans-unit id="tl_member.personal_legend">
         <source>Personal data</source>

@@ -29,8 +29,7 @@
         <source>Open the current log file in the &lt;code&gt;var/logs&lt;/code&gt; directory and find the associated error message (usually the last one).</source>
       </trans-unit>
       <trans-unit id="XPT.errorExplain">
-        <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, search the &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;Contao support page&lt;/a&gt;.</source>
-        <target>Извршавање скрипте је заустављено, јер нешто не ради како треба. Права порука грешке је скривена из разлога безбедности и може бити пронађена у фајлу са записима порука (погледати испод). Ако не разумете поруке о грешкама или не знате како да решите проблем, претражите &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;Contao support page&lt;/a&gt;. </target>
+        <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, search the &lt;a href=&quot;https://contao.org/en/frequently-asked.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/en/support.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="XPT.requestToken">
         <source>Invalid request token</source>
@@ -49,8 +48,7 @@
         <target>Ова грешка се дешава када постоји POST захтев без валидног аутентификационг токена. Од Contao 2.10, провера реферала замењена је системом захтеваног токена. Ако проблем потраје, можда користите некомпатибилну &quot;third-party&quot; екстензију или нисте исправно ажурирали своју верзију Contao система.</target>
       </trans-unit>
       <trans-unit id="XPT.tokenExplainTwo">
-        <source>For more information, search the &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;Contao support page&lt;/a&gt;.</source>
-        <target>За више информација, претражите &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;Contao FAQs&lt;/a&gt; или посетите &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;Contao support page&lt;/a&gt;.</target>
+        <source>For more information, search the &lt;a href=&quot;https://contao.org/en/frequently-asked.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/en/support.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="XPT.unavailable">
         <source>Service unavailable</source>
