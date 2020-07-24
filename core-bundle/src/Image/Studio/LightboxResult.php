@@ -24,7 +24,7 @@ class LightboxResult
     /**
      * @var ContainerInterface
      */
-    protected $locator;
+    private $locator;
 
     /**
      * @var ImageResult|null
