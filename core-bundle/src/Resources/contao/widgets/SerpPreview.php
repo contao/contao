@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\Routing\Exception\InvalidParameterException;
+
 /**
  * @property array    $titleFields
  * @property array    $descriptionFields
@@ -42,8 +44,18 @@ class SerpPreview extends Widget
 		$description = StringUtil::substr($this->getDescription($model), 160);
 		$alias = $this->getAlias($model);
 
-		// Get the URL with a %s placeholder for the alias or ID
-		$url = $this->getUrl($model);
+		try
+		{
+			// Get the URL with a %s placeholder for the alias or ID
+			$url = $this->getUrl($model);
+		}
+		catch (InvalidParameterException $exception)
+		{
+			if ($model->requireItem)
+			{
+				return '<div class="serp-preview"><p class="tl_info">' . $GLOBALS['TL_LANG']['MSC']['noResult'] . '</p></div>';
+			}
+		}
 
 		list($baseUrl) = explode('%s', $url);
 		$trail = implode(' › ', $this->convertUrlToItems($baseUrl));
