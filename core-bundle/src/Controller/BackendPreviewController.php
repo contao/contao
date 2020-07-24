@@ -90,6 +90,6 @@ class BackendPreviewController
             return new RedirectResponse($targetUrl);
         }
 
-        return new RedirectResponse($this->previewScript ?: '/');
+        return new RedirectResponse($request->getBaseUrl().'/');
     }
 }
