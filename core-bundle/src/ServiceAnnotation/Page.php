@@ -67,12 +67,12 @@ final class Page implements ServiceAnnotationInterface
 
     public function __construct(array $data)
     {
-        if (isset($attributes['value'])) {
-            $attributes['type'] = $attributes['value'];
-            unset($attributes['value']);
+        if (isset($data['value'])) {
+            $data['type'] = $data['value'];
+            unset($data['value']);
         }
 
-        if (!isset($attributes['type'])) {
+        if (!isset($data['type'])) {
             throw new \LogicException('@Page annotation requires a type property.');
         }
 
@@ -120,9 +120,6 @@ final class Page implements ServiceAnnotationInterface
         ];
     }
 
-    /**
-     * @return mixed
-     */
     public function getType(): string
     {
         return $this->type;
