@@ -2,6 +2,21 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.10.0-RC2] (2020-07-24)
+
+**Fixed issues:**
+
+- [#1972] Fix the front end preview ([leofeyer])
+- [#1975] Always include the default value in the generated URL ([bytehead])
+- [#1973] Rewrite the page annotation to follow the Route annotation ([aschempp])
+- [#1976] Improve the search result highlighting performance ([ausi])
+- [#1964] Fix the Composer script handlers ([leofeyer])
+- [#1970] Prevent type errors in the button callback functions ([leofeyer])
+- [#1971] Add a missing type-hint in the PageRoute constructor ([leofeyer])
+- [#1969] Fix the order field migration ([ausi])
+- [#1961] Convert non existing $_POST fields to an empty string ([leofeyer])
+- [#1960] Fix two MySQL 8 issues ([leofeyer])
+
 ## [4.10.0-RC1] (2020-07-21)
 
 **New features:**
@@ -73,6 +88,7 @@ This project adheres to [Semantic Versioning].
 - [#1458] Always set host and language when generating the navigation menu ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.10.0-RC2]: https://github.com/contao/contao/releases/tag/4.10.0-RC2
 [4.10.0-RC1]: https://github.com/contao/contao/releases/tag/4.10.0-RC1
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
@@ -84,6 +100,16 @@ This project adheres to [Semantic Versioning].
 [m-vo]: https://github.com/m-vo
 [richardhj]: https://github.com/richardhj
 [Toflar]: https://github.com/Toflar
+[#1972]: https://github.com/contao/contao/pull/1972
+[#1975]: https://github.com/contao/contao/pull/1975
+[#1973]: https://github.com/contao/contao/pull/1973
+[#1976]: https://github.com/contao/contao/pull/1976
+[#1964]: https://github.com/contao/contao/pull/1964
+[#1970]: https://github.com/contao/contao/pull/1970
+[#1971]: https://github.com/contao/contao/pull/1971
+[#1969]: https://github.com/contao/contao/pull/1969
+[#1961]: https://github.com/contao/contao/pull/1961
+[#1960]: https://github.com/contao/contao/pull/1960
 [#1516]: https://github.com/contao/contao/pull/1516
 [#1528]: https://github.com/contao/contao/pull/1528
 [#1830]: https://github.com/contao/contao/pull/1830
