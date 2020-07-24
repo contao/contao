@@ -46,8 +46,7 @@
         <target>Struktura e lajmeve</target>
       </trans-unit>
       <trans-unit id="tl_module.news_template.1">
-        <source>Here you can select the news template.</source>
-        <target>Zgjedhoni strukturën e lajmeve. Mund ta caktoni një strukturë të përshtatur në dosjen &lt;em&gt;templates&lt;/em&gt;. Skedarët e shabllonëve të lajmeve fillojnë me &lt;em&gt;news_&lt;/em&gt; dhe kërkojnë prapashtesën &lt;em&gt;.tpl&lt;/em&gt;.</target>
+        <source>Here you can select a news template.</source>
       </trans-unit>
       <trans-unit id="tl_module.news_format.0">
         <source>Archive format</source>

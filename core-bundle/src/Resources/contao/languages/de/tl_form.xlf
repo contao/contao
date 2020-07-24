@@ -33,6 +33,14 @@
         <source>Send the submitted data to an e-mail address.</source>
         <target>Die Formulardaten an eine E-Mail-Adresse versenden.</target>
       </trans-unit>
+      <trans-unit id="tl_form.mailerTransport.0">
+        <source>Mailer transport</source>
+        <target>Mailer-Transport</target>
+      </trans-unit>
+      <trans-unit id="tl_form.mailerTransport.1">
+        <source>Here you can override the mailer transport used to send the form via e-mail.</source>
+        <target>Hier können Sie den Mailer-Transport überschreiben, der für den Versand des Formulars per E-Mail verwendet wird.</target>
+      </trans-unit>
       <trans-unit id="tl_form.recipient.0">
         <source>Recipient address</source>
         <target>Empfänger-Adresse</target>
@@ -81,6 +89,14 @@
         <source>The form data will be attached to the e-mail as a CSV file.</source>
         <target>Die Formulardaten werden der E-Mail als CSV-Datei angefügt.</target>
       </trans-unit>
+      <trans-unit id="tl_form.csv_excel.0">
+        <source>CSV file (Microsoft Excel)</source>
+        <target>CSV-Datei (Microsoft Excel)</target>
+      </trans-unit>
+      <trans-unit id="tl_form.csv_excel.1">
+        <source>The form data will be attached to the e-mail as a CSV file readable by Microsoft Excel.</source>
+        <target>Die Formulardaten werden der E-Mail als CSV-Datei angefügt, die von Microsoft Excel gelesen werden kann.</target>
+      </trans-unit>
       <trans-unit id="tl_form.skipEmpty.0">
         <source>Skip empty fields</source>
         <target>Leere Felder auslassen</target>
@@ -114,12 +130,12 @@
         <target>Übermittelte Formulardaten in der Datenbank speichern.</target>
       </trans-unit>
       <trans-unit id="tl_form.customTpl.0">
-        <source>Custom form template</source>
-        <target>Individuelles Template</target>
+        <source>Form template</source>
+        <target>Formular-Template</target>
       </trans-unit>
       <trans-unit id="tl_form.customTpl.1">
-        <source>Here you can overwrite the default form template.</source>
-        <target>Hier können Sie das Standard-Template überschreiben.</target>
+        <source>Here you can select the form template.</source>
+        <target>Hier können Sie das Formular-Template auswählen.</target>
       </trans-unit>
       <trans-unit id="tl_form.targetTable.0">
         <source>Target table</source>

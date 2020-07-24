@@ -11,7 +11,7 @@
       </trans-unit>
       <trans-unit id="tl_content.headline.0">
         <source>Headline</source>
-        <target>Manchete</target>
+        <target>Primeira Página</target>
       </trans-unit>
       <trans-unit id="tl_content.headline.1">
         <source>Here you can add a headline to the content element.</source>
@@ -390,16 +390,13 @@
         <target>Aparência da Galeria</target>
       </trans-unit>
       <trans-unit id="tl_content.galleryTpl.1">
-        <source>Here you can select the gallery template.</source>
-        <target>Aqui você pode selecionar o design a ser usado na galeria.</target>
+        <source>Here you can select a gallery template.</source>
       </trans-unit>
       <trans-unit id="tl_content.customTpl.0">
-        <source>Custom element template</source>
-        <target>Template de elemento personalizado</target>
+        <source>Content element template</source>
       </trans-unit>
       <trans-unit id="tl_content.customTpl.1">
-        <source>Here you can overwrite the default element template.</source>
-        <target>Aqui pode substituir o template padrão para elementos.</target>
+        <source>Here you can select the content element template.</source>
       </trans-unit>
       <trans-unit id="tl_content.playerSRC.0">
         <source>Video/audio files</source>
@@ -623,6 +620,7 @@
       </trans-unit>
       <trans-unit id="tl_content.start.1">
         <source>If you want to prevent the element from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Caso pretenda prevenir que o elemento apareça no website antes de uma determinada data/hora, pode inseri-la aqui. Caso contrário, deixe o campo em branco.</target>
       </trans-unit>
       <trans-unit id="tl_content.stop.0">
         <source>Show until</source>
@@ -630,6 +628,7 @@
       </trans-unit>
       <trans-unit id="tl_content.stop.1">
         <source>If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Caso pretenda prevenir que o elemento apareça no website depois de uma determinada data/hora, pode inseri-la aqui. Caso contrário, deixe o campo em branco.</target>
       </trans-unit>
       <trans-unit id="tl_content.type_legend">
         <source>Element type</source>

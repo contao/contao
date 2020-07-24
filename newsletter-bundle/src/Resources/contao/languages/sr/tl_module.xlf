@@ -54,8 +54,7 @@
         <target>Шаблон билтена</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_template.1">
-        <source>Here you can select the newsletter template.</source>
-        <target>Овде можете изабрати шаблон за билтен.</target>
+        <source>Here you can select a newsletter template.</source>
       </trans-unit>
       <trans-unit id="tl_module.text_legend">
         <source>Custom text</source>

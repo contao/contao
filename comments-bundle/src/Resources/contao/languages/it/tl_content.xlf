@@ -38,15 +38,15 @@
         <target>Richiedere il login per poter aggiungere dei commenti</target>
       </trans-unit>
       <trans-unit id="tl_content.com_requireLogin.1">
-        <source>Allow only authenticated users to create comments.</source>
+        <source>Allow only authenticated members to create comments.</source>
         <target>Consentire solo agli utenti autenticati di creare commenti.</target>
       </trans-unit>
       <trans-unit id="tl_content.com_disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>Disattivare la domanda di sicurezza</target>
+        <source>Disable spam protection</source>
+        <target>Disabilita la protezione spam</target>
       </trans-unit>
       <trans-unit id="tl_content.com_disableCaptcha.1">
-        <source>Here you can disable the security question (not recommended).</source>
+        <source>Here you can disable the spam protection (not recommended).</source>
         <target>Qui puoi disabilitare la domanda di sicurezza (non raccomandato).</target>
       </trans-unit>
       <trans-unit id="tl_content.com_template.0">
@@ -54,7 +54,7 @@
         <target>Template commenti</target>
       </trans-unit>
       <trans-unit id="tl_content.com_template.1">
-        <source>Here you can select the comments template.</source>
+        <source>Here you can select a comments template.</source>
         <target>Qui puoi selezionare una template per i commenti.</target>
       </trans-unit>
       <trans-unit id="tl_content.comment_legend">

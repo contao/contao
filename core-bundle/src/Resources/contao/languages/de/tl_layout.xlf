@@ -267,11 +267,11 @@
       </trans-unit>
       <trans-unit id="tl_layout.template.0">
         <source>Page template</source>
-        <target>Seitentemplate</target>
+        <target>Seiten-Template</target>
       </trans-unit>
       <trans-unit id="tl_layout.template.1">
         <source>Here you can select the page template.</source>
-        <target>Hier können Sie das Seitentemplate auswählen.</target>
+        <target>Hier können Sie das Seiten-Template auswählen.</target>
       </trans-unit>
       <trans-unit id="tl_layout.minifyMarkup.0">
         <source>Minify the markup</source>
@@ -517,9 +517,9 @@
         <source>Google Analytics</source>
         <target>Google Analytics</target>
       </trans-unit>
-      <trans-unit id="tl_layout.analytics_piwik">
-        <source>Piwik</source>
-        <target>Piwik</target>
+      <trans-unit id="tl_layout.analytics_matomo">
+        <source>Matomo</source>
+        <target>Matomo</target>
       </trans-unit>
       <trans-unit id="tl_layout.new.0">
         <source>New</source>

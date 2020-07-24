@@ -70,12 +70,12 @@
         <target>Vyžadovat přihlášení pro přidávání komentářů</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.requireLogin.1">
-        <source>Allow only authenticated users to create comments.</source>
-        <target>Povolit přidávat komentáře jen přihlášeným uživatelům.</target>
+        <source>Allow only authenticated members to create comments.</source>
+        <target>Povolit komentování jen ověřeným členům.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>Vypnout bezpečnostní otázku.</target>
+        <source>Disable spam protection</source>
+        <target>Vypnout ochranu proti spamu</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>
@@ -134,15 +134,15 @@
         <target>Autor a administrátor systému</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.0">
-        <source>RSS feeds</source>
-        <target>Kanály RSS</target>
+        <source>News feeds</source>
+        <target>Kanály Novinek</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.1">
-        <source>Manage RSS feeds</source>
-        <target>Spravovat kanály RSS</target>
+        <source>Manage news feeds</source>
       </trans-unit>
       <trans-unit id="tl_news_archive.new.0">
         <source>New</source>
+        <target>Nové</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.new.1">
         <source>Create a new news archive</source>

@@ -22,8 +22,15 @@
         <target>Template E-mail</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.template.1">
-        <source>Here you can choose the e-mail template.</source>
-        <target>Qui puoi scegliere una template e-mail.</target>
+        <source>Here you can select an e-mail template.</source>
+        <target>Seleziona una template per l'email.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.mailerTransport.0">
+        <source>Mailer transport</source>
+        <target>Mailer transport</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.mailerTransport.1">
+        <source>Here you can override the mailer transport used to send newsletters in this channel.</source>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.sender.0">
         <source>Sender e-mail address</source>

@@ -73,22 +73,6 @@
         <source>Do not collapse elements in the back end preview.</source>
         <target>Elemente in der Backend-Vorschau nicht verkürzen.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.doNotRedirectEmpty.0">
-        <source>Do not redirect empty URLs</source>
-        <target>Leere URLs nicht umleiten</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.doNotRedirectEmpty.1">
-        <source>For an empty URL display the website instead of redirecting to the language root page (not recommended).</source>
-        <target>Bei einer leeren URL die Webseite anzeigen anstatt auf den Startpunkt der Sprache weiterzuleiten (nicht empfohlen).</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.folderUrl.0">
-        <source>Enable folder URLs</source>
-        <target>Ordner-URLs verwenden</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.folderUrl.1">
-        <source>Here you can enable folder-style page aliases like &lt;em&gt;docs/install/download.html&lt;/em&gt; instead of &lt;em&gt;docs-install-download.html&lt;/em&gt;.</source>
-        <target>Hier können Sie Ordnerstrukturen in Seitenaliasen aktivieren (z.B. &lt;em&gt;docs/install/download.html&lt;/em&gt; anstatt &lt;em&gt;docs-install-download.html&lt;/em&gt;).</target>
-      </trans-unit>
       <trans-unit id="tl_settings.allowedTags.0">
         <source>Allowed HTML tags</source>
         <target>Erlaubte HTML-Tags</target>
@@ -197,10 +181,6 @@
         <source>Back end configuration</source>
         <target>Backend-Einstellungen</target>
       </trans-unit>
-      <trans-unit id="tl_settings.frontend_legend">
-        <source>Front end configuration</source>
-        <target>Frontend-Einstellungen</target>
-      </trans-unit>
       <trans-unit id="tl_settings.security_legend">
         <source>Security settings</source>
         <target>Sicherheitseinstellungen</target>
@@ -220,6 +200,10 @@
       <trans-unit id="tl_settings.chmod_legend">
         <source>Default access rights</source>
         <target>Standard-Zugriffsrechte</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.configuredInApp">
+        <source>This setting has been defined in the app configuration and cannot be changed here anymore.</source>
+        <target>Diese Einstellung wurde in der App-Konfiguration definiert und kann daher nicht mehr geändert werden.</target>
       </trans-unit>
     </body>
   </file>

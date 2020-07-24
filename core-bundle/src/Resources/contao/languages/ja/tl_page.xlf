@@ -78,8 +78,8 @@
         <target>最後に参照していたページに移動</target>
       </trans-unit>
       <trans-unit id="tl_page.redirectBack.1">
-        <source>Redirect the user back to the last page visited instead of the redirect page.</source>
-        <target>リダイレクト先のページの代わりに、ユーザーが最後に参照していたページに移動します。</target>
+        <source>Redirect the member back to the last page visited instead of the redirect page.</source>
+        <target>リダイレクト先のページの代わりに、メンバーが最後に参照していたページに移動します。</target>
       </trans-unit>
       <trans-unit id="tl_page.fallback.0">
         <source>Language fallback</source>
@@ -129,6 +129,12 @@
         <source>The assets URL applies to the &lt;em&gt;assets&lt;/em&gt; directory (page speed optimization).</source>
         <target>asstesのURLは&lt;em&gt;assets&lt;/em&gt;のディレクトリに適用します。(Page Speed最適化)</target>
       </trans-unit>
+      <trans-unit id="tl_page.mailerTransport.0">
+        <source>Mailer transport</source>
+      </trans-unit>
+      <trans-unit id="tl_page.mailerTransport.1">
+        <source>Here you can override the mailer transport used to send e-mails on this website.</source>
+      </trans-unit>
       <trans-unit id="tl_page.adminEmail.0">
         <source>E-mail address of the website administrator</source>
         <target>ウェブサイトの管理者の電子メールアドレス</target>
@@ -168,6 +174,26 @@
       <trans-unit id="tl_page.validAliasCharacters.1">
         <source>Here you can select a custom character set for auto-generated aliases.</source>
         <target>自動生成するページのエイリアスに使用する独自の文字集合を選択できます。</target>
+      </trans-unit>
+      <trans-unit id="tl_page.useFolderUrl.0">
+        <source>Enable folder URLs</source>
+        <target>フォルダーのURLを有効</target>
+      </trans-unit>
+      <trans-unit id="tl_page.useFolderUrl.1">
+        <source>Generate folder-style page aliases like &lt;em&gt;docs/install/download.html&lt;/em&gt; instead of &lt;em&gt;docs-install-download.html&lt;/em&gt;.</source>
+        <target>&lt;em&gt;docs-install-download.html&lt;/em&gt;の代わりに&lt;em&gt;docs/install/download.html&lt;/em&gt;の様なフォルダー形式のページのエイリアスを生成します。</target>
+      </trans-unit>
+      <trans-unit id="tl_page.urlPrefix.0">
+        <source>URL prefix</source>
+      </trans-unit>
+      <trans-unit id="tl_page.urlPrefix.1">
+        <source>Enter a URL prefix (e.g. the language) that will be prepended to aliases for this root page.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.urlSuffix.0">
+        <source>URL suffix</source>
+      </trans-unit>
+      <trans-unit id="tl_page.urlSuffix.1">
+        <source>The URL suffix will be added to the URI string to simulate static documents.</source>
       </trans-unit>
       <trans-unit id="tl_page.createSitemap.0">
         <source>Create an XML sitemap</source>
@@ -342,8 +368,8 @@
         <target>ゲストだけに表示</target>
       </trans-unit>
       <trans-unit id="tl_page.guests.1">
-        <source>Hide the page if there is an authenticated user.</source>
-        <target>ログインしているユーザーにページを表示しません。</target>
+        <source>Hide the page if a member is logged in.</source>
+        <target>ログインしているメンバーにページを表示しません。</target>
       </trans-unit>
       <trans-unit id="tl_page.tabindex.0">
         <source>Tab index</source>
@@ -398,8 +424,8 @@
         <target>2ファクター認証のリダイレクトページ</target>
       </trans-unit>
       <trans-unit id="tl_page.twoFactorJumpTo.1">
-        <source>Please choose the page to which visitors will be redirected when setting up two-factor authentication.</source>
-        <target>2ファクター認証を設定した時に移動するページを選択してください。</target>
+        <source>Please choose the page to which members will be redirected to set up two-factor authentication.</source>
+        <target>メンバーが2ファクター認証を設定するために移動するページを選択してください。</target>
       </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
@@ -417,9 +443,8 @@
         <source>Redirect settings</source>
         <target>リダイレクトの設定</target>
       </trans-unit>
-      <trans-unit id="tl_page.dns_legend">
-        <source>DNS settings</source>
-        <target>DNSの設定</target>
+      <trans-unit id="tl_page.url_legend">
+        <source>URL settings</source>
       </trans-unit>
       <trans-unit id="tl_page.website_legend">
         <source>Website settings</source>
@@ -428,10 +453,6 @@
       <trans-unit id="tl_page.global_legend">
         <source>Global settings</source>
         <target>全般的な設定</target>
-      </trans-unit>
-      <trans-unit id="tl_page.alias_legend">
-        <source>Alias settings</source>
-        <target>エイリアスの設定</target>
       </trans-unit>
       <trans-unit id="tl_page.sitemap_legend">
         <source>XML sitemap</source>
@@ -544,6 +565,9 @@
       <trans-unit id="tl_page.articles">
         <source>Edit the articles of page ID %s</source>
         <target>ID %sのページのアーティクルを編集</target>
+      </trans-unit>
+      <trans-unit id="tl_page.legacyRouting">
+        <source>This setting has been disabled because Contao is running in legacy routing mode.</source>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

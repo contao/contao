@@ -49,6 +49,13 @@
         <source>Here you can add a custom meta title to overwrite the default page title.</source>
         <target>Zde můžete přidat vlastní název události a tím přepsat výše uvedený. </target>
       </trans-unit>
+      <trans-unit id="tl_news.robots.0">
+        <source>Robots tag</source>
+        <target>Tag pro hledací roboty</target>
+      </trans-unit>
+      <trans-unit id="tl_news.robots.1">
+        <source>Here you can overwrite how search engines handle the news item.</source>
+      </trans-unit>
       <trans-unit id="tl_news.description.0">
         <source>Meta description</source>
         <target>Popis pro meta údaj</target>
@@ -223,10 +230,6 @@
         <source>Date and time</source>
         <target>Datum a čas</target>
       </trans-unit>
-      <trans-unit id="tl_news.meta_legend">
-        <source>Meta data</source>
-        <target>Meta informace</target>
-      </trans-unit>
       <trans-unit id="tl_news.teaser_legend">
         <source>Subheadline and teaser</source>
         <target>Podnadpis a ukázka</target>
@@ -247,6 +250,10 @@
         <source>Redirect target</source>
         <target>Cíl přesměrování</target>
       </trans-unit>
+      <trans-unit id="tl_news.meta_legend">
+        <source>Meta data</source>
+        <target>Meta informace</target>
+      </trans-unit>
       <trans-unit id="tl_news.expert_legend">
         <source>Expert settings</source>
         <target>Rozšířená nastavení</target>
@@ -257,6 +264,7 @@
       </trans-unit>
       <trans-unit id="tl_news.new.0">
         <source>New</source>
+        <target>Nové</target>
       </trans-unit>
       <trans-unit id="tl_news.new.1">
         <source>Create a new news item</source>
@@ -296,6 +304,10 @@
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
         <target>Vložit do tohto archivu</target>
+      </trans-unit>
+      <trans-unit id="tl_news.editmeta">
+        <source>Edit the news item settings</source>
+        <target>Upravit nastavení příspěvku novinek</target>
       </trans-unit>
     </body>
   </file>

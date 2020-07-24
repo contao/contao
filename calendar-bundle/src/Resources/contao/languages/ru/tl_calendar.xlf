@@ -70,12 +70,12 @@
         <target>Требовать авторизацию для комментирования</target>
       </trans-unit>
       <trans-unit id="tl_calendar.requireLogin.1">
-        <source>Allow only authenticated users to create comments.</source>
-        <target>Разрешить только авторизованным пользователям создавать комментарии.</target>
+        <source>Allow only authenticated members to create comments.</source>
+        <target>Разрешить только авторизованным участникам создавать комментарии.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>Отключить контрольный вопрос</target>
+        <source>Disable spam protection</source>
+        <target>Отключить защиту от спама</target>
       </trans-unit>
       <trans-unit id="tl_calendar.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>
@@ -142,12 +142,12 @@
         <target>Полные статьи</target>
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.0">
-        <source>RSS feeds</source>
-        <target>RSS-каналы</target>
+        <source>Calendar feeds</source>
+        <target>RSS-каналы календаря</target>
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.1">
-        <source>Manage RSS feeds</source>
-        <target>Управление RSS-каналами</target>
+        <source>Manage calendar feeds</source>
+        <target>Управление каналами календаря</target>
       </trans-unit>
       <trans-unit id="tl_calendar.new.0">
         <source>New</source>

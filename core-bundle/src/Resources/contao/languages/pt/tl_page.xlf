@@ -78,8 +78,7 @@
         <target>Redirecionar para a última página visitada</target>
       </trans-unit>
       <trans-unit id="tl_page.redirectBack.1">
-        <source>Redirect the user back to the last page visited instead of the redirect page.</source>
-        <target>Após o login/logout, o usuário é redirecionado para a página em que ele estava antes.</target>
+        <source>Redirect the member back to the last page visited instead of the redirect page.</source>
       </trans-unit>
       <trans-unit id="tl_page.fallback.0">
         <source>Language fallback</source>
@@ -125,6 +124,12 @@
         <source>The assets URL applies to the &lt;em&gt;assets&lt;/em&gt; directory (page speed optimization).</source>
         <target>URL das plugins referir-se a todos recursos na pasta &lt;em&gt;plugins&lt;/em&gt; (page speed optimization).</target>
       </trans-unit>
+      <trans-unit id="tl_page.mailerTransport.0">
+        <source>Mailer transport</source>
+      </trans-unit>
+      <trans-unit id="tl_page.mailerTransport.1">
+        <source>Here you can override the mailer transport used to send e-mails on this website.</source>
+      </trans-unit>
       <trans-unit id="tl_page.adminEmail.0">
         <source>E-mail address of the website administrator</source>
         <target>E-mail do administrador do website</target>
@@ -164,6 +169,25 @@
       <trans-unit id="tl_page.validAliasCharacters.1">
         <source>Here you can select a custom character set for auto-generated aliases.</source>
         <target>Aqui pode escolher um conjunto de caracteres válido para aliases auto-gerados.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.useFolderUrl.0">
+        <source>Enable folder URLs</source>
+        <target>Habilitar URLs de pastas</target>
+      </trans-unit>
+      <trans-unit id="tl_page.useFolderUrl.1">
+        <source>Generate folder-style page aliases like &lt;em&gt;docs/install/download.html&lt;/em&gt; instead of &lt;em&gt;docs-install-download.html&lt;/em&gt;.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.urlPrefix.0">
+        <source>URL prefix</source>
+      </trans-unit>
+      <trans-unit id="tl_page.urlPrefix.1">
+        <source>Enter a URL prefix (e.g. the language) that will be prepended to aliases for this root page.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.urlSuffix.0">
+        <source>URL suffix</source>
+      </trans-unit>
+      <trans-unit id="tl_page.urlSuffix.1">
+        <source>The URL suffix will be added to the URI string to simulate static documents.</source>
       </trans-unit>
       <trans-unit id="tl_page.createSitemap.0">
         <source>Create an XML sitemap</source>
@@ -317,9 +341,11 @@
       </trans-unit>
       <trans-unit id="tl_page.sitemap.0">
         <source>Show in HTML sitemap</source>
+        <target>Mostrar em HTML sitemap.</target>
       </trans-unit>
       <trans-unit id="tl_page.sitemap.1">
         <source>Here you can define whether the page is shown in the HTML sitemap.</source>
+        <target>Aqui pode definir se pretende que a página seja mostrada em HTML sitemap.</target>
       </trans-unit>
       <trans-unit id="tl_page.hide.0">
         <source>Hide from navigation</source>
@@ -334,8 +360,7 @@
         <target>Mostrar apenas para visitantes</target>
       </trans-unit>
       <trans-unit id="tl_page.guests.1">
-        <source>Hide the page if there is an authenticated user.</source>
-        <target>Ocultar esta página no menu de navegação dos usuários conectados.</target>
+        <source>Hide the page if a member is logged in.</source>
       </trans-unit>
       <trans-unit id="tl_page.tabindex.0">
         <source>Tab index</source>
@@ -367,6 +392,7 @@
       </trans-unit>
       <trans-unit id="tl_page.start.1">
         <source>If you want to prevent the page from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Caso pretenda prevenir que a página surja no website antes de uma determinada data/hora, pode defini-lo aqui. Caso contrário, deixe este campo em branco.</target>
       </trans-unit>
       <trans-unit id="tl_page.stop.0">
         <source>Show until</source>
@@ -374,6 +400,7 @@
       </trans-unit>
       <trans-unit id="tl_page.stop.1">
         <source>If you want to prevent the page from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Caso pretenda prevenir que a página surja no website depois de uma determinada data/hora, pode defini-lo aqui. Caso contrário, deixe este campo em branco.</target>
       </trans-unit>
       <trans-unit id="tl_page.enforceTwoFactor.0">
         <source>Enforce two-factor authentication</source>
@@ -388,8 +415,7 @@
         <target>Página de redireccionamento para autenticação 2 passos</target>
       </trans-unit>
       <trans-unit id="tl_page.twoFactorJumpTo.1">
-        <source>Please choose the page to which visitors will be redirected when setting up two-factor authentication.</source>
-        <target>Escolha página de redireccionamento para visitantes configurarem autenticação em 2 passos.</target>
+        <source>Please choose the page to which members will be redirected to set up two-factor authentication.</source>
       </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
@@ -407,9 +433,8 @@
         <source>Redirect settings</source>
         <target>Configurações de redirecionamento</target>
       </trans-unit>
-      <trans-unit id="tl_page.dns_legend">
-        <source>DNS settings</source>
-        <target>Configurações de DNS</target>
+      <trans-unit id="tl_page.url_legend">
+        <source>URL settings</source>
       </trans-unit>
       <trans-unit id="tl_page.website_legend">
         <source>Website settings</source>
@@ -417,10 +442,6 @@
       <trans-unit id="tl_page.global_legend">
         <source>Global settings</source>
         <target>Configurações globais</target>
-      </trans-unit>
-      <trans-unit id="tl_page.alias_legend">
-        <source>Alias settings</source>
-        <target>Definições de alias</target>
       </trans-unit>
       <trans-unit id="tl_page.sitemap_legend">
         <source>XML sitemap</source>
@@ -533,6 +554,9 @@
       <trans-unit id="tl_page.articles">
         <source>Edit the articles of page ID %s</source>
         <target>Editar artigos de página com ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.legacyRouting">
+        <source>This setting has been disabled because Contao is running in legacy routing mode.</source>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

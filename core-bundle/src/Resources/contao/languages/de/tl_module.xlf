@@ -54,8 +54,8 @@
         <target>Geschützte Seiten anzeigen</target>
       </trans-unit>
       <trans-unit id="tl_module.showProtected.1">
-        <source>Show items that are usually only visible to authenticated users.</source>
-        <target>Menüpunkte anzeigen, die sonst nur für angemeldete Benutzer sichtbar sind.</target>
+        <source>Show items that are usually only visible to authenticated members.</source>
+        <target>Menüpunkte anzeigen, die sonst nur für angemeldete Mitglieder sichtbar sind.</target>
       </trans-unit>
       <trans-unit id="tl_module.defineRoot.0">
         <source>Set a reference page</source>
@@ -75,19 +75,19 @@
       </trans-unit>
       <trans-unit id="tl_module.navigationTpl.0">
         <source>Navigation template</source>
-        <target>Navigationstemplate</target>
+        <target>Navigations-Template</target>
       </trans-unit>
       <trans-unit id="tl_module.navigationTpl.1">
         <source>Here you can select the navigation template.</source>
-        <target>Hier können Sie das Navigationstemplate auswählen.</target>
+        <target>Hier können Sie das Navigations-Template auswählen.</target>
       </trans-unit>
       <trans-unit id="tl_module.customTpl.0">
-        <source>Custom module template</source>
-        <target>Individuelles Template</target>
+        <source>Module template</source>
+        <target>Modul-Template</target>
       </trans-unit>
       <trans-unit id="tl_module.customTpl.1">
-        <source>Here you can overwrite the default module template.</source>
-        <target>Hier können Sie das Standard-Template überschreiben.</target>
+        <source>Here you can select the module template.</source>
+        <target>Hier können Sie das Modul-Template auswählen.</target>
       </trans-unit>
       <trans-unit id="tl_module.pages.0">
         <source>Pages</source>
@@ -134,8 +134,8 @@
         <target>Zur zuletzt besuchten Seite</target>
       </trans-unit>
       <trans-unit id="tl_module.redirectBack.1">
-        <source>Redirect the user back to the last page visited instead of the redirect page.</source>
-        <target>Den Benutzer zurück zu der zuletzt besuchten Seiten anstatt der Weiterleitungsseite leiten.</target>
+        <source>Redirect the member back to the last page visited instead of the redirect page.</source>
+        <target>Das Mitglied zurück zu der zuletzt besuchten Seiten anstatt der Weiterleitungsseite leiten.</target>
       </trans-unit>
       <trans-unit id="tl_module.1cl.0">
         <source>One column</source>
@@ -163,11 +163,11 @@
       </trans-unit>
       <trans-unit id="tl_module.memberTpl.0">
         <source>Form template</source>
-        <target>Formulartemplate</target>
+        <target>Formular-Template</target>
       </trans-unit>
       <trans-unit id="tl_module.memberTpl.1">
         <source>Here you can select the form template.</source>
-        <target>Hier können Sie das Formulartemplate auswählen.</target>
+        <target>Hier können Sie das Formular-Template auswählen.</target>
       </trans-unit>
       <trans-unit id="tl_module.form.0">
         <source>Form</source>
@@ -259,11 +259,11 @@
       </trans-unit>
       <trans-unit id="tl_module.searchTpl.0">
         <source>Search results template</source>
-        <target>Ergebnistemplate</target>
+        <target>Ergebnis-Template</target>
       </trans-unit>
       <trans-unit id="tl_module.searchTpl.1">
         <source>Here you can select the search results template.</source>
-        <target>Hier können Sie das Ergebnistemplate auswählen.</target>
+        <target>Hier können Sie das Ergebnis-Template auswählen.</target>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.0">
         <source>Layout section</source>
@@ -410,28 +410,28 @@
         <target>Hier können Sie eine ID und beliebig viele Klassen eingeben.</target>
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>Sicherheitsfrage deaktivieren</target>
+        <source>Disable spam protection</source>
+        <target>Spam-Schutz deaktivieren</target>
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.1">
-        <source>Here you can disable the security question (not recommended).</source>
-        <target>Hier können Sie die Sicherheitsfrage abschalten (nicht empfohlen).</target>
+        <source>Here you can disable the spam protection (not recommended).</source>
+        <target>Hier können Sie den Spam-Schutz deaktivieren (nicht empfohlen).</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_groups.0">
         <source>Member groups</source>
         <target>Mitgliedergruppen</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_groups.1">
-        <source>Here you can assign the user to one or more groups.</source>
-        <target>Hier können Sie den Benutzer einer oder mehreren Gruppen zuweisen.</target>
+        <source>Here you can assign the member to one or more groups.</source>
+        <target>Hier können Sie das Mitglied einer oder mehreren Gruppen zuweisen.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_allowLogin.0">
         <source>Allow login</source>
         <target>Login erlauben</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_allowLogin.1">
-        <source>Allow the new user to log into the front end.</source>
-        <target>Dem neuen Benutzer die Anmeldung im Frontend erlauben.</target>
+        <source>Allow the new member to log into the front end.</source>
+        <target>Dem neuen Mitglied die Anmeldung im Frontend erlauben.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_skipName.0">
         <source>Skip username</source>
@@ -478,8 +478,8 @@
         <target>Bestätigungsseite</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_jumpTo.1">
-        <source>Please choose the page to which users will be redirected after the request has been completed.</source>
-        <target>Bitte wählen Sie die Seite aus, zu der Benutzer nach Abarbeitung der Anfrage weitergeleitet werden.</target>
+        <source>Please choose the page to which members will be redirected after the request has been completed.</source>
+        <target>Bitte wählen Sie die Seite aus, zu der Mitglieder nach Verarbeitung der Anfrage weitergeleitet werden.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_text.0">
         <source>Activation message</source>
@@ -494,8 +494,8 @@
         <target>Bestätigungsmail</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_password.1">
-        <source>You can use the wildcards &lt;em&gt;##domain##&lt;/em&gt; (domain name), &lt;em&gt;##link##&lt;/em&gt; (activation link) and any user property (e.g. &lt;em&gt;##lastname##&lt;/em&gt;).</source>
-        <target>Sie können die Platzhalter &lt;em&gt;##domain##&lt;/em&gt; (Domainname), &lt;em&gt;##link##&lt;/em&gt; (Aktivierungslink) sowie alle Benutzereigenschaften (z.B. &lt;em&gt;##lastname##&lt;/em&gt;) verwenden.</target>
+        <source>You can use the wildcards &lt;em&gt;##domain##&lt;/em&gt; (domain name), &lt;em&gt;##link##&lt;/em&gt; (activation link) and any member property (e.g. &lt;em&gt;##lastname##&lt;/em&gt;).</source>
+        <target>Sie können die Platzhalter &lt;em&gt;##domain##&lt;/em&gt; (Domainname), &lt;em&gt;##link##&lt;/em&gt; (Aktivierungslink) sowie alle Mitgliedsdaten (z.B. &lt;em&gt;##lastname##&lt;/em&gt;) verwenden.</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>
