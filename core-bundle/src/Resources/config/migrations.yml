@@ -13,6 +13,11 @@ services:
         arguments:
             - '@database_connection'
 
+    Contao\CoreBundle\Migration\Version410\FolderUrlMigration:
+        arguments:
+            - '@database_connection'
+            - '@contao.framework'
+
     Contao\CoreBundle\Migration\Version410\OrderFieldMigration:
         arguments:
             - '@database_connection'
