@@ -79,7 +79,7 @@ class RouteFactoryTest extends TestCase
 
         $route = $this->factory->createRouteForPage($pageModel, '/items/news');
 
-        $this->assertSame('/foo/bar{parameters}.baz', $route->getPath());
+        $this->assertSame('/foo/bar{!parameters}.baz', $route->getPath());
         $this->assertSame('/items/news', $route->getDefault('parameters'));
         $this->assertSame('(/.+)?', $route->getRequirement('parameters'));
     }
@@ -110,7 +110,7 @@ class RouteFactoryTest extends TestCase
 
         $route = $this->factory->createRouteForPage($pageModel, '/items/news');
 
-        $this->assertSame('/foo/bar{parameters}.baz', $route->getPath());
+        $this->assertSame('/foo/bar{!parameters}.baz', $route->getPath());
         $this->assertSame('/items/news', $route->getDefault('parameters'));
         $this->assertSame('/.+', $route->getRequirement('parameters'));
     }
