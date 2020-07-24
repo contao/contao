@@ -14,8 +14,8 @@ namespace Contao\CoreBundle\Repository;
 
 use Contao\CoreBundle\Entity\CronJob;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\DBAL\Connection;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @internal
