@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Migration\Version409;
+namespace Contao\CoreBundle\Tests\Migration\Version410;
 
 use Contao\Config;
 use Contao\CoreBundle\Migration\Version410\FolderUrlMigration;

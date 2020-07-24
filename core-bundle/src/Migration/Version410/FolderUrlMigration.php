@@ -55,7 +55,7 @@ class FolderUrlMigration extends AbstractMigration
         if (!$this->getConfig()->has('folderUrl')) {
             return false;
         }
-   
+
         return $this->getConfig()->get('folderUrl') && !$this->hasUpdatedRootPages();
     }
 
@@ -84,13 +84,15 @@ class FolderUrlMigration extends AbstractMigration
 
     private function hasRootPages(): bool
     {
-        $query = "SELECT COUNT(id) FROM tl_page WHERE ".$this->connection->quoteIdentifier('type')." = 'root'";
+        $query = 'SELECT COUNT(id) FROM tl_page WHERE '.$this->connection->quoteIdentifier('type')." = 'root'";
+
         return (int) $this->connection->executeQuery($query)->fetchColumn() > 0;
     }
 
     private function hasUpdatedRootPages(): bool
     {
-        $query = "SELECT COUNT(id) FROM tl_page WHERE ".$this->connection->quoteIdentifier('type')." = 'root' AND useFolderUrl = '1'";
+        $query = 'SELECT COUNT(id) FROM tl_page WHERE '.$this->connection->quoteIdentifier('type')." = 'root' AND useFolderUrl = '1'";
+
         return (int) $this->connection->executeQuery($query)->fetchColumn() > 0;
     }
 }
