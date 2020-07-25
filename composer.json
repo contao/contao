@@ -50,7 +50,7 @@
         "contao/maintenance-bundle-deprecated": "^2.1.5",
         "contao/manager-plugin": "^2.6.2",
         "doctrine/dbal": "^2.10",
-        "doctrine/doctrine-bundle": "^1.8 || ^2.0",
+        "doctrine/doctrine-bundle": "^2.0",
         "doctrine/orm": "^2.6.3",
         "dragonmantank/cron-expression": "^2.3",
         "friendsofsymfony/http-cache": "^2.6",

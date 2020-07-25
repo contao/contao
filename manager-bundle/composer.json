@@ -22,7 +22,7 @@
         "contao/maintenance-bundle-deprecated": "^2.1.5",
         "contao/manager-plugin": "^2.4",
         "doctrine/dbal": "^2.10",
-        "doctrine/doctrine-bundle": "^1.8 || ^2.0",
+        "doctrine/doctrine-bundle": "^2.0",
         "friendsofsymfony/http-cache": "^2.6",
         "friendsofsymfony/http-cache-bundle": "^2.6",
         "nelmio/cors-bundle": "^1.5.3 || ^2.0.1",
