@@ -1,4 +1,8 @@
 <style>
+    .cto-toolbar, .cto-toolbar * {
+        all: unset;
+    }
+
     .cto-toolbar {
         font-family: -apple-system,system-ui,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
         font-weight: 400;
@@ -26,6 +30,10 @@
         align-items: center;
         justify-content: center;
         z-index: 99999;
+    }
+
+    .cto-toolbar__open svg {
+        fill: #fff;
     }
 
     .cto-toolbar--visible .cto-toolbar__open {

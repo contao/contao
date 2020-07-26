@@ -17,13 +17,17 @@ use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
 use Contao\File;
 use Contao\Image as LegacyImage;
+use Contao\Image\DeferredImageInterface;
 use Contao\Image\DeferredResizer as ImageResizer;
 use Contao\Image\ImageInterface;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeCoordinates;
 use Contao\Image\ResizeOptions;
 use Contao\System;
+use Imagine\Exception\Exception as ImagineException;
 use Imagine\Gd\Imagine as GdImagine;
+use Imagine\Image\Box;
+use Imagine\Image\ImagineInterface;
 use Webmozart\PathUtil\Path;
 
 /**
@@ -84,7 +88,20 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
             }
         }
 
-        return parent::resize($image, $config, $options);
+        try {
+            return parent::resize($image, $config, $options);
+        } catch (ImagineException $exception) {
+            throw $this->enhanceImagineException($exception, $image);
+        }
+    }
+
+    public function resizeDeferredImage(DeferredImageInterface $image, bool $blocking = true): ?ImageInterface
+    {
+        try {
+            return parent::resizeDeferredImage($image, $blocking);
+        } catch (ImagineException $exception) {
+            throw $this->enhanceImagineException($exception, $image);
+        }
     }
 
     protected function executeResize(ImageInterface $image, ResizeCoordinates $coordinates, string $path, ResizeOptions $options): ImageInterface
@@ -140,5 +157,31 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
     private function hasGetImageHook(): bool
     {
         return !empty($GLOBALS['TL_HOOKS']['getImage']) && \is_array($GLOBALS['TL_HOOKS']['getImage']);
+    }
+
+    private function enhanceImagineException(\Throwable $exception, ImageInterface $image): \Throwable
+    {
+        $format = Path::getExtension($image->getPath());
+
+        if (!$this->formatIsSupported($format, $image->getImagine())) {
+            return new \RuntimeException(sprintf('Image format "%s" is not supported in %s on this environment. Consider removing this format from contao.image.valid_extensions or switch the contao.image.imagine_service to an implementation that supports it.', $format, \get_class($image->getImagine())), $exception->getCode(), $exception);
+        }
+
+        return $exception;
+    }
+
+    private function formatIsSupported(string $format, ImagineInterface $imagine): bool
+    {
+        if ('' === $format) {
+            return false;
+        }
+
+        try {
+            $imagine->create(new Box(1, 1))->get($format);
+        } catch (\Throwable $e) {
+            return false;
+        }
+
+        return true;
     }
 }

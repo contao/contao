@@ -96,6 +96,7 @@ use Contao\CoreBundle\Mailer\ContaoMailer;
 use Contao\CoreBundle\Menu\BackendMenuBuilder;
 use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\Version409\CeAccessMigration;
+use Contao\CoreBundle\Migration\Version410\RoutingMigration;
 use Contao\CoreBundle\Monolog\ContaoTableHandler;
 use Contao\CoreBundle\Monolog\ContaoTableProcessor;
 use Contao\CoreBundle\OptIn\OptIn;
@@ -3734,6 +3735,27 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 new Reference('database_connection'),
                 new Reference('contao.framework'),
+            ],
+            $definition->getArguments()
+        );
+    }
+
+    public function testRegistersTheVersion410RoutingMigration(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $this->assertTrue($container->has(RoutingMigration::class));
+
+        $definition = $container->getDefinition(RoutingMigration::class);
+
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('database_connection'),
+                new Reference('contao.framework'),
+                '%contao.url_suffix%',
+                '%contao.prepend_locale%',
             ],
             $definition->getArguments()
         );
