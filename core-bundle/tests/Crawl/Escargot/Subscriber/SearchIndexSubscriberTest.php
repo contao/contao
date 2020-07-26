@@ -470,6 +470,12 @@ class SearchIndexSubscriberTest extends TestCase
             ->willReturn($statusCode)
         ;
 
+        $response
+            ->method('getInfo')
+            ->with('response_headers')
+            ->willReturn([])
+        ;
+
         return $response;
     }
 
