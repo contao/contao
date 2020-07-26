@@ -13,6 +13,14 @@ html {
 }
 
 /* General */
+:root {
+	--brand-color:#f47c00;
+	--header-invert:0;
+	--header-background-color-hover:rgba(255, 255, 255, 0.1);
+	--environment-background-color:#0F1C26;
+	--environment-text-color:#fff;
+	--main-background-color:#eaeaec;
+}
 header,footer,nav,section,aside,main,article,figure,figcaption {
 	display:block;
 }
@@ -705,4 +713,17 @@ a.tl_submit {
 		margin-top:1px;
 		margin-bottom:1px;
 	}
+}
+
+/* Brand header */
+.header-brand .environment {
+	border-radius:8px;
+	padding:2px 5px;
+	margin-top:5px;
+	background:#0F1C26;
+	background:var(--environment-background-color);
+	color:#fff;
+	color:var(--environment-text-color);
+	font-size:.75rem;
+	font-weight:600;
 }

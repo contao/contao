@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
  * @property array  $javascripts
  * @property array  $stylesheets
  * @property string $mootools
+ * @property array  $themeConfig
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -149,6 +150,9 @@ class BackendTemplate extends Template
 			$this->mootools .= $strMootools;
 		}
 
+		// Add theme config to the template @see #403
+		$this->addThemeConfig();
+
 		$strBuffer = $this->parse();
 		$strBuffer = static::replaceOldBePaths($strBuffer);
 
@@ -221,6 +225,32 @@ class BackendTemplate extends Template
 				. 'cancel:"' . $GLOBALS['TL_LANG']['DP']['cancel'] . '",'
 				. 'week:"' . $GLOBALS['TL_LANG']['DP']['week'] . '"'
 			. '});';
+	}
+
+	private function addThemeConfig(): void
+	{
+		$container = System::getContainer();
+
+		if (!$container->hasParameter('contao.theme'))
+		{
+			$this->themeConfig = null;
+
+			return;
+		}
+
+		$themeConfig = $container->getParameter('contao.theme');
+
+		if (true === $themeConfig['brand']['whitelabel'])
+		{
+			$themeConfig['css_classes'][] = 'brand--whitelabel';
+		}
+
+		if (!empty($themeConfig['environment']['title']))
+		{
+			$themeConfig['css_classes'][] = 'environment--' . StringUtil::standardize($themeConfig['environment']['title']);
+		}
+
+		$this->themeConfig = $themeConfig;
 	}
 }
 
