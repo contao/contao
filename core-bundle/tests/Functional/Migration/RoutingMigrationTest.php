@@ -145,97 +145,97 @@ class RoutingMigrationTest extends FunctionalTestCase
         yield [
             false,
             '.html',
-            true
+            true,
         ];
 
         yield [
             true,
             '.html',
-            true
+            true,
         ];
 
         yield [
             false,
             '.json',
-            true
+            true,
         ];
 
         yield [
             true,
             '.json',
-            true
+            true,
         ];
 
         yield [
             false,
             '/',
-            true
+            true,
         ];
 
         yield [
             true,
             '/',
-            true
+            true,
         ];
 
         yield [
             false,
             '',
-            true
+            true,
         ];
 
         yield [
             true,
             '',
-            true
+            true,
         ];
 
         yield [
             false,
             '.html',
-            true
+            true,
         ];
 
         yield [
             true,
             '.html',
-            false
+            false,
         ];
 
         yield [
             false,
             '.json',
-            false
+            false,
         ];
 
         yield [
             true,
             '.json',
-            false
+            false,
         ];
 
         yield [
             false,
             '/',
-            false
+            false,
         ];
 
         yield [
             true,
             '/',
-            false
+            false,
         ];
 
         yield [
             false,
             '',
-            false
+            false,
         ];
 
         yield [
             true,
             '',
-            false
+            false,
         ];
     }
 }
