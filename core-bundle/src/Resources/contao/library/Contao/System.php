@@ -187,6 +187,10 @@ abstract class System
 			{
 				throw new ServiceNotFoundException($strClass, null, null, array(), sprintf('The "%s" service or alias has been removed or inlined when the container was compiled. You should either make it public, or stop using the container directly and use dependency injection instead.', $strClass));
 			}
+			elseif (!class_exists($strClass))
+			{
+				throw new \RuntimeException('System::import() failed because class "' . $strClass . '" is not a valid class name or does not exist.');
+			}
 			elseif (\in_array('getInstance', get_class_methods($strClass)))
 			{
 				static::$arrStaticObjects[$strKey] = static::$arrSingletons[$strKey] = $this->arrObjects[$strKey] = \call_user_func(array($strClass, 'getInstance'));
@@ -238,6 +242,10 @@ abstract class System
 			elseif ($container instanceof Container && isset($container->getRemovedIds()[$strClass]))
 			{
 				throw new ServiceNotFoundException($strClass, null, null, array(), sprintf('The "%s" service or alias has been removed or inlined when the container was compiled. You should either make it public, or stop using the container directly and use dependency injection instead.', $strClass));
+			}
+			elseif (!class_exists($strClass))
+			{
+				throw new \RuntimeException('System::importStatic() failed because class "' . $strClass . '" is not a valid class name or does not exist.');
 			}
 			elseif (\in_array('getInstance', get_class_methods($strClass)))
 			{
