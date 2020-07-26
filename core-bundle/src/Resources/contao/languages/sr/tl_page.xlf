@@ -78,8 +78,7 @@
         <target>Преусмери на претходно посећену страницу</target>
       </trans-unit>
       <trans-unit id="tl_page.redirectBack.1">
-        <source>Redirect the user back to the last page visited instead of the redirect page.</source>
-        <target>Преусмери корисника на последњу страницу коју је посетио, уместо да иде на страницу преусмеравања.</target>
+        <source>Redirect the member back to the last page visited instead of the redirect page.</source>
       </trans-unit>
       <trans-unit id="tl_page.fallback.0">
         <source>Language fallback</source>
@@ -125,6 +124,12 @@
         <source>The assets URL applies to the &lt;em&gt;assets&lt;/em&gt; directory (page speed optimization).</source>
         <target>URL ресурса се односи на &lt;em&gt;assets&lt;/em&gt; фолдер (оптимизација брзине учитавања страница).</target>
       </trans-unit>
+      <trans-unit id="tl_page.mailerTransport.0">
+        <source>Mailer transport</source>
+      </trans-unit>
+      <trans-unit id="tl_page.mailerTransport.1">
+        <source>Here you can override the mailer transport used to send e-mails on this website.</source>
+      </trans-unit>
       <trans-unit id="tl_page.adminEmail.0">
         <source>E-mail address of the website administrator</source>
         <target>Имејл адреса администратора сајта</target>
@@ -164,6 +169,25 @@
       <trans-unit id="tl_page.validAliasCharacters.1">
         <source>Here you can select a custom character set for auto-generated aliases.</source>
         <target>Овде можете подесити произвољан сет знакова за генерисање аутоматских алиаса.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.useFolderUrl.0">
+        <source>Enable folder URLs</source>
+        <target>Омогући URL у стилу фолдера</target>
+      </trans-unit>
+      <trans-unit id="tl_page.useFolderUrl.1">
+        <source>Generate folder-style page aliases like &lt;em&gt;docs/install/download.html&lt;/em&gt; instead of &lt;em&gt;docs-install-download.html&lt;/em&gt;.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.urlPrefix.0">
+        <source>URL prefix</source>
+      </trans-unit>
+      <trans-unit id="tl_page.urlPrefix.1">
+        <source>Enter a URL prefix (e.g. the language) that will be prepended to aliases for this root page.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.urlSuffix.0">
+        <source>URL suffix</source>
+      </trans-unit>
+      <trans-unit id="tl_page.urlSuffix.1">
+        <source>The URL suffix will be added to the URI string to simulate static documents.</source>
       </trans-unit>
       <trans-unit id="tl_page.createSitemap.0">
         <source>Create an XML sitemap</source>
@@ -330,8 +354,7 @@
         <target>Прикажи само гостима</target>
       </trans-unit>
       <trans-unit id="tl_page.guests.1">
-        <source>Hide the page if there is an authenticated user.</source>
-        <target>Сакриј страницу ако је корисник пријављен.</target>
+        <source>Hide the page if a member is logged in.</source>
       </trans-unit>
       <trans-unit id="tl_page.tabindex.0">
         <source>Tab index</source>
@@ -381,7 +404,7 @@
         <source>Two-factor redirect page</source>
       </trans-unit>
       <trans-unit id="tl_page.twoFactorJumpTo.1">
-        <source>Please choose the page to which visitors will be redirected when setting up two-factor authentication.</source>
+        <source>Please choose the page to which members will be redirected to set up two-factor authentication.</source>
       </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
@@ -399,9 +422,8 @@
         <source>Redirect settings</source>
         <target>Подешавање преусмерења</target>
       </trans-unit>
-      <trans-unit id="tl_page.dns_legend">
-        <source>DNS settings</source>
-        <target>Подешавања DNS-а</target>
+      <trans-unit id="tl_page.url_legend">
+        <source>URL settings</source>
       </trans-unit>
       <trans-unit id="tl_page.website_legend">
         <source>Website settings</source>
@@ -409,10 +431,6 @@
       <trans-unit id="tl_page.global_legend">
         <source>Global settings</source>
         <target>Глобална подешавања</target>
-      </trans-unit>
-      <trans-unit id="tl_page.alias_legend">
-        <source>Alias settings</source>
-        <target>Подешавања алиаса</target>
       </trans-unit>
       <trans-unit id="tl_page.sitemap_legend">
         <source>XML sitemap</source>
@@ -476,6 +494,7 @@
       </trans-unit>
       <trans-unit id="tl_page.new.0">
         <source>New</source>
+        <target>Ново</target>
       </trans-unit>
       <trans-unit id="tl_page.new.1">
         <source>Create a new page</source>
@@ -524,6 +543,9 @@
       <trans-unit id="tl_page.articles">
         <source>Edit the articles of page ID %s</source>
         <target>Уреди чланак на страници ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.legacyRouting">
+        <source>This setting has been disabled because Contao is running in legacy routing mode.</source>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

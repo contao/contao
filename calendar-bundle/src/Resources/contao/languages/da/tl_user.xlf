@@ -18,16 +18,14 @@
         <target>Her kan du definere tilladelser for kalenderen.</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeeds.0">
-        <source>Allowed RSS feeds</source>
-        <target>Tilladte RSS feeds</target>
+        <source>Allowed calendar feeds</source>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeeds.1">
         <source>Here you can grant access to one or more calendar feeds.</source>
         <target>Har kan du give adgang til et eller flere kalender feeds.</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeedp.0">
-        <source>RSS feed permissions</source>
-        <target>RSS feed tilladelser</target>
+        <source>Calendar feed permissions</source>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeedp.1">
         <source>Here you can define the calendar feed permissions.</source>

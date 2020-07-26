@@ -344,6 +344,12 @@ class SimpleTokenParserTest extends TestCase
             ['val&#ue' => 9],
             'This is my ',
         ];
+
+        yield 'Test indexed token replacement' => [
+            'This is my ##0##,##1##',
+            ['test@foobar.com', 'foo@test.com'],
+            'This is my test@foobar.com,foo@test.com',
+        ];
     }
 
     /**

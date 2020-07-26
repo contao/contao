@@ -38,24 +38,24 @@
         <target>Vyžadovat přihlášení pro přidávání komentářů</target>
       </trans-unit>
       <trans-unit id="tl_content.com_requireLogin.1">
-        <source>Allow only authenticated users to create comments.</source>
-        <target>Povolit přidávat komentáře jen přihlášeným uživatelům.</target>
+        <source>Allow only authenticated members to create comments.</source>
+        <target>Povolit komentování jen ověřeným členům.</target>
       </trans-unit>
       <trans-unit id="tl_content.com_disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>Vypnout bezpečnostní otázku.</target>
+        <source>Disable spam protection</source>
+        <target>Vypnout ochranu proti spamu</target>
       </trans-unit>
       <trans-unit id="tl_content.com_disableCaptcha.1">
-        <source>Here you can disable the security question (not recommended).</source>
-        <target>Zde můžete vypnout bezpečnostní otázku (nedoporučeno).</target>
+        <source>Here you can disable the spam protection (not recommended).</source>
+        <target>Zde můžete vypnout obranu proti spamu (nedoporučené).</target>
       </trans-unit>
       <trans-unit id="tl_content.com_template.0">
         <source>Comments template</source>
         <target>Předloha komentářů</target>
       </trans-unit>
       <trans-unit id="tl_content.com_template.1">
-        <source>Here you can select the comments template.</source>
-        <target>Zde můžete vybrat předlohu komentářů.</target>
+        <source>Here you can select a comments template.</source>
+        <target>Zde můžete vybrat předlohu pro komentáře</target>
       </trans-unit>
       <trans-unit id="tl_content.comment_legend">
         <source>Comment settings</source>

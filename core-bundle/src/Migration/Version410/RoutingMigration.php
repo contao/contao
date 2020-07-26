@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Migration\Version410;
 
+use Contao\Config;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Doctrine\DBAL\Connection;
@@ -30,6 +32,11 @@ class RoutingMigration extends AbstractMigration
     private $connection;
 
     /**
+     * @var ContaoFramework
+     */
+    private $framework;
+
+    /**
      * @var string
      */
     private $urlSuffix;
@@ -39,9 +46,10 @@ class RoutingMigration extends AbstractMigration
      */
     private $prependLocale;
 
-    public function __construct(Connection $connection, string $urlSuffix = '.html', bool $prependLocale = false)
+    public function __construct(Connection $connection, ContaoFramework $framework, string $urlSuffix = '.html', bool $prependLocale = false)
     {
         $this->connection = $connection;
+        $this->framework = $framework;
         $this->urlSuffix = $urlSuffix;
         $this->prependLocale = $prependLocale;
     }
@@ -56,7 +64,7 @@ class RoutingMigration extends AbstractMigration
 
         $columns = $schemaManager->listTableColumns('tl_page');
 
-        return !isset($columns['urlprefix']) && !isset($columns['urlsuffix']);
+        return !isset($columns['urlprefix']) && !isset($columns['urlsuffix']) && !isset($columns['usefolderurl']);
     }
 
     public function run(): MigrationResult
@@ -67,7 +75,10 @@ class RoutingMigration extends AbstractMigration
         $urlSuffix = new Column('urlSuffix', new StringType());
         $urlSuffix->setColumnDefinition("varchar(16) NOT NULL default '.html'");
 
-        $diff = new TableDiff('tl_page', [$urlPrefix, $urlSuffix]);
+        $useFolderUrl = new Column('useFolderUrl', new StringType());
+        $useFolderUrl->setColumnDefinition("char(1) NOT NULL default ''");
+
+        $diff = new TableDiff('tl_page', [$urlPrefix, $urlSuffix, $useFolderUrl]);
         $sql = $this->connection->getDatabasePlatform()->getAlterTableSQL($diff);
 
         foreach ($sql as $statement) {
@@ -80,6 +91,15 @@ class RoutingMigration extends AbstractMigration
             ->prepare("UPDATE tl_page SET urlPrefix=$prefix, urlSuffix=:suffix WHERE type='root'")
             ->execute(['suffix' => $this->urlSuffix])
         ;
+
+        $this->framework->initialize();
+
+        /** @var Config $config */
+        $config = $this->framework->getAdapter(Config::class);
+
+        if ($config->get('folderUrl')) {
+            $this->connection->update('tl_page', ['useFolderUrl' => '1'], ['type' => 'root']);
+        }
 
         return $this->createResult(true);
     }

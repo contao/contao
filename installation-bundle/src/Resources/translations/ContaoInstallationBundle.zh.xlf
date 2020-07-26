@@ -327,9 +327,11 @@
       </trans-unit>
       <trans-unit id="82" resname="engine_mismatch">
         <source>Invalid combination of database engine and collation!</source>
+        <target>数据库引擎和排序规则的无效组合！</target>
       </trans-unit>
       <trans-unit id="83" resname="engine_mismatch_explain">
         <source>The configured database engine &lt;code&gt;%s&lt;/code&gt; does not support utf8mb4. Please use InnoDB instead (recommended) or configure a different character set and collation in the &lt;code&gt;config/config.yml&lt;/code&gt; file.</source>
+        <target>已配置的数据库引擎 &lt;code&gt;%s&lt;/code&gt; 不支持utf8mb4。请在文件中 &lt;code&gt;config/config.yml&lt;/code&gt; 使用 InnoDB 替代 (推荐) 或配置一个不同字符集和排序规则。</target>
       </trans-unit>
       <trans-unit id="84" resname="innodb_large_prefix">
         <source>The innodb_large_prefix option is not enabled!</source>
@@ -337,6 +339,7 @@
       </trans-unit>
       <trans-unit id="85" resname="innodb_large_prefix_explain">
         <source>The &lt;code&gt;innodb_large_prefix&lt;/code&gt; option is not enabled on your server. Please enable it (recommended) or configure a different character set and collation in the &lt;code&gt;config/config.yml&lt;/code&gt; file.</source>
+        <target>服务器中没有启用 &lt;code&gt;innodb_large_prefix&lt;/code&gt; 选项。请在 &lt;code&gt;config/config.yml&lt;/code&gt; 文件中启用 (推荐) 或配置一个不同的字符集和排序规则。</target>
       </trans-unit>
       <trans-unit id="86" resname="innodb_additional">
         <source>InnoDB is not configured properly!</source>

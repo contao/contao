@@ -177,7 +177,7 @@ class BackendPreviewSwitchController
                 $user->amg
             );
 
-            $andWhereGroups = "AND (groups LIKE '".implode("' OR GROUPS LIKE '", $groups)."')";
+            $andWhereGroups = "AND (`groups` LIKE '".implode("' OR `groups` LIKE '", $groups)."')";
         }
 
         $time = Date::floorToMinute();

@@ -18,16 +18,14 @@
         <target>Permite definir los permisos para el calendario.</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeeds.0">
-        <source>Allowed RSS feeds</source>
-        <target>Fuentes RSS admitidas</target>
+        <source>Allowed calendar feeds</source>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeeds.1">
         <source>Here you can grant access to one or more calendar feeds.</source>
         <target>Dar acceso a un flujo de calendario o más.</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeedp.0">
-        <source>RSS feed permissions</source>
-        <target>Permisos de fuentes RSS</target>
+        <source>Calendar feed permissions</source>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeedp.1">
         <source>Here you can define the calendar feed permissions.</source>

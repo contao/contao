@@ -510,9 +510,8 @@
         <source>Google Analytics</source>
         <target>گوگل آنالیتیکز</target>
       </trans-unit>
-      <trans-unit id="tl_layout.analytics_piwik">
-        <source>Piwik</source>
-        <target>پی‌ویک</target>
+      <trans-unit id="tl_layout.analytics_matomo">
+        <source>Matomo</source>
       </trans-unit>
       <trans-unit id="tl_layout.new.0">
         <source>New</source>

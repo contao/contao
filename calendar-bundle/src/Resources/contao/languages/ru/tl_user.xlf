@@ -18,16 +18,16 @@
         <target>Определение разрешений календаря.</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeeds.0">
-        <source>Allowed RSS feeds</source>
-        <target>Разрешенные RSS-каналы</target>
+        <source>Allowed calendar feeds</source>
+        <target>Разрешенные каналы календаря</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeeds.1">
         <source>Here you can grant access to one or more calendar feeds.</source>
         <target>Предоставление доступа к одному или нескольким каналам календаря.</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeedp.0">
-        <source>RSS feed permissions</source>
-        <target>Разрешения RSS-каналов</target>
+        <source>Calendar feed permissions</source>
+        <target>Разрешения каналов календаря</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeedp.1">
         <source>Here you can define the calendar feed permissions.</source>

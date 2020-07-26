@@ -73,22 +73,6 @@
         <source>Do not collapse elements in the back end preview.</source>
         <target>Non chiudere gli elementi e le altre risorse una volta visti in anteprima nel backend.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.doNotRedirectEmpty.0">
-        <source>Do not redirect empty URLs</source>
-        <target>Non reindirizzare gli URL vuoti</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.doNotRedirectEmpty.1">
-        <source>For an empty URL display the website instead of redirecting to the language root page (not recommended).</source>
-        <target>In caso un URL sia vuoto mostra il sito invece di effettuare il reindirizzamento alla pagina root della lingua (non raccomandato)</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.folderUrl.0">
-        <source>Enable folder URLs</source>
-        <target>Abilita URL a struttura directory</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.folderUrl.1">
-        <source>Here you can enable folder-style page aliases like &lt;em&gt;docs/install/download.html&lt;/em&gt; instead of &lt;em&gt;docs-install-download.html&lt;/em&gt;.</source>
-        <target>Selezionando questa opzione Contao crea alias di pagina a struttura directory come &lt;em&gt;docs/install/download.html&lt;/em&gt; invece di &lt;em&gt;docs-install-download.html&lt;/em&gt;.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.allowedTags.0">
         <source>Allowed HTML tags</source>
         <target>Tag html consentiti</target>
@@ -187,7 +171,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.date_legend">
         <source>Date and time</source>
-        <target>Data e tempo</target>
+        <target>Data e ora</target>
       </trans-unit>
       <trans-unit id="tl_settings.global_legend">
         <source>Global configuration</source>
@@ -196,10 +180,6 @@
       <trans-unit id="tl_settings.backend_legend">
         <source>Back end configuration</source>
         <target>Configurazione backend</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.frontend_legend">
-        <source>Front end configuration</source>
-        <target>Configurazione frontend</target>
       </trans-unit>
       <trans-unit id="tl_settings.security_legend">
         <source>Security settings</source>
@@ -220,6 +200,10 @@
       <trans-unit id="tl_settings.chmod_legend">
         <source>Default access rights</source>
         <target>Diritti di accesso predefiniti</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.configuredInApp">
+        <source>This setting has been defined in the app configuration and cannot be changed here anymore.</source>
+        <target>Questa impostazione è stata definita nella configurazione dell'app e non può più essere modificata qui.</target>
       </trans-unit>
     </body>
   </file>

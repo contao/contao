@@ -2,12 +2,12 @@
 host = https://www.transifex.com
 type = XLIFF
 
-[listing-bundle.v4_9-modules]
+[listing-bundle.v4_10-modules]
 source_file = src/Resources/contao/languages/en/modules.xlf
 source_lang = en
 file_filter = src/Resources/contao/languages/<lang>/modules.xlf
 
-[listing-bundle.v4_9-tl_module]
+[listing-bundle.v4_10-tl_module]
 source_file = src/Resources/contao/languages/en/tl_module.xlf
 source_lang = en
 file_filter = src/Resources/contao/languages/<lang>/tl_module.xlf

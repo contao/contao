@@ -15,6 +15,7 @@
       </trans-unit>
       <trans-unit id="MOD.form.0">
         <source>Forms</source>
+        <target>Formuláře</target>
       </trans-unit>
       <trans-unit id="MOD.form.1">
         <source>Create custom forms and store or send the submitted data</source>
@@ -30,6 +31,7 @@
       </trans-unit>
       <trans-unit id="MOD.themes.1">
         <source>Manage themes, front end modules, page layouts or image sizes</source>
+        <target>Spravovat vzhledy, frontendové moduly, vzhledy stránek nebo rozměry obrázků</target>
       </trans-unit>
       <trans-unit id="MOD.page.0">
         <source>Site structure</source>
@@ -45,6 +47,7 @@
       </trans-unit>
       <trans-unit id="MOD.tpl_editor.1">
         <source>Add or edit custom templates</source>
+        <target>Přidat nebo upravit vlastní předlohy</target>
       </trans-unit>
       <trans-unit id="MOD.accounts">
         <source>Account manager</source>
@@ -56,6 +59,7 @@
       </trans-unit>
       <trans-unit id="MOD.member.1">
         <source>Manage member accounts (front end)</source>
+        <target>Spravovat účty členů (fontend)</target>
       </trans-unit>
       <trans-unit id="MOD.mgroup.0">
         <source>Member groups</source>
@@ -63,6 +67,7 @@
       </trans-unit>
       <trans-unit id="MOD.mgroup.1">
         <source>Manage member groups (front end)</source>
+        <target>Spravovat skupiny členů (frontend)</target>
       </trans-unit>
       <trans-unit id="MOD.user.0">
         <source>Users</source>
@@ -70,6 +75,7 @@
       </trans-unit>
       <trans-unit id="MOD.user.1">
         <source>Manage user accounts (back end)</source>
+        <target>Spravovat účty uživatelů (backend)</target>
       </trans-unit>
       <trans-unit id="MOD.group.0">
         <source>User groups</source>
@@ -77,6 +83,7 @@
       </trans-unit>
       <trans-unit id="MOD.group.1">
         <source>Manage user groups (back end)</source>
+        <target>Spravovat skupiny uživatelů (backend)</target>
       </trans-unit>
       <trans-unit id="MOD.opt_in.0">
         <source>Double opt-in</source>
@@ -84,6 +91,7 @@
       </trans-unit>
       <trans-unit id="MOD.opt_in.1">
         <source>Manage double opt-in tokens</source>
+        <target>Spravovat dvoufázové tokeny</target>
       </trans-unit>
       <trans-unit id="MOD.system">
         <source>System</source>
@@ -95,6 +103,7 @@
       </trans-unit>
       <trans-unit id="MOD.files.1">
         <source>Manage files and folders</source>
+        <target>Spravovat soubory a složky</target>
       </trans-unit>
       <trans-unit id="MOD.log.0">
         <source>System log</source>
@@ -102,6 +111,7 @@
       </trans-unit>
       <trans-unit id="MOD.log.1">
         <source>Browse the system log</source>
+        <target>Projít systémová hlášení</target>
       </trans-unit>
       <trans-unit id="MOD.settings.0">
         <source>Settings</source>
@@ -109,6 +119,7 @@
       </trans-unit>
       <trans-unit id="MOD.settings.1">
         <source>Adjust the Contao configuration</source>
+        <target>Přizpůsobit nastavení Contaa</target>
       </trans-unit>
       <trans-unit id="MOD.maintenance.0">
         <source>Maintenance</source>
@@ -116,6 +127,7 @@
       </trans-unit>
       <trans-unit id="MOD.maintenance.1">
         <source>Crawl the website or purge generated data</source>
+        <target>Procházet web nebo vyčistit generovaná data</target>
       </trans-unit>
       <trans-unit id="MOD.security.0">
         <source>Security</source>
@@ -260,6 +272,7 @@
       </trans-unit>
       <trans-unit id="FMD.sitemap.0">
         <source>HTML sitemap</source>
+        <target>Mapa stránek HTML</target>
       </trans-unit>
       <trans-unit id="FMD.sitemap.1">
         <source>Generates a list of all pages in the site structure</source>
@@ -282,24 +295,24 @@
         <target>Automatické odhlášení</target>
       </trans-unit>
       <trans-unit id="FMD.logout.1">
-        <source>Automatically logs out a user</source>
-        <target>automaticky odhlásí uživatele.</target>
+        <source>Automatically logs out a member</source>
+        <target>Automaticky odhlásí uživatele</target>
       </trans-unit>
       <trans-unit id="FMD.personalData.0">
         <source>Personal data</source>
         <target>Osobní data</target>
       </trans-unit>
       <trans-unit id="FMD.personalData.1">
-        <source>Generates a form to edit a user's personal data</source>
-        <target>generuje formulář pro editaci osobních dat užibatelů.</target>
+        <source>Generates a form to edit a member's personal data</source>
+        <target>Vytvoří formulář pro editaci osobních dat užibatele.</target>
       </trans-unit>
       <trans-unit id="FMD.registration.0">
         <source>Registration</source>
         <target>Registrace člena</target>
       </trans-unit>
       <trans-unit id="FMD.registration.1">
-        <source>Generates a user registration form</source>
-        <target>Tento modul vytváří formulář, který umožňuje front end uživatelům registraci na vašem webu.</target>
+        <source>Generates a member registration form</source>
+        <target>Vytvoří registrační formulář pro člena</target>
       </trans-unit>
       <trans-unit id="FMD.changePassword.0">
         <source>Change password</source>
@@ -387,6 +400,7 @@
       </trans-unit>
       <trans-unit id="FMD.two_factor.1">
         <source>Generates a form to set up or change two-factor authentication</source>
+        <target>Vytvoří formulář pro nastavení nebo změnu dvoufázové autorizace</target>
       </trans-unit>
     </body>
   </file>

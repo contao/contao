@@ -38,8 +38,7 @@
         <target>Очисти индекс претраге</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.index.1">
-        <source>Truncates the tables &lt;code&gt;tl_search&lt;/code&gt; and &lt;code&gt;tl_search_index&lt;/code&gt;. Afterwards, you have to rebuild the search index (see above).</source>
-        <target>Пражњење табела  &lt;code&gt;tl_search&lt;/code&gt; и &lt;code&gt;tl_search_index&lt;/code&gt;. Након тога, мораћете поново да креирате индекс претраге (погледајте горе).</target>
+        <source>Truncates the tables &lt;code&gt;tl_search&lt;/code&gt;, &lt;code&gt;tl_search_index&lt;/code&gt; and &lt;code&gt;tl_search_term&lt;/code&gt;. Afterwards, you have to rebuild the search index (see above).</source>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.undo.0">
         <source>Purge the undo table</source>
@@ -64,6 +63,12 @@
       <trans-unit id="tl_maintenance_jobs.log.1">
         <source>Truncates the &lt;code&gt;tl_log&lt;/code&gt; table which stores all the system log entries. This job permanently deletes these records.</source>
         <target>Пражњење табеле &lt;code&gt;tl_log&lt;/code&gt; у којој су смештени записи лога. Након тога, ови записи ће бити трајно обрисани.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.crawl_queue.0">
+        <source>Purge the crawl queue</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.crawl_queue.1">
+        <source>Truncates the &lt;code&gt;tl_crawl_queue&lt;/code&gt; table which stores all the queue information from crawl processes.</source>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.images.0">
         <source>Purge the image cache</source>
@@ -148,6 +153,9 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlSubscriberNames.broken-link-checker">
         <source>Check for broken links</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlMaintenance">
+        <source>Crawling is not possible while the maintenance mode is enabled.</source>
       </trans-unit>
     </body>
   </file>

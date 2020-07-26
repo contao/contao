@@ -54,8 +54,7 @@
         <target>Haber abonelik şablonu</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_template.1">
-        <source>Here you can select the newsletter template.</source>
-        <target>Buradan haber abonelik şablonu seçebilirsiniz.</target>
+        <source>Here you can select a newsletter template.</source>
       </trans-unit>
       <trans-unit id="tl_module.text_legend">
         <source>Custom text</source>

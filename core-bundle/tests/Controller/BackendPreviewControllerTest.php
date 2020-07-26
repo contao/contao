@@ -111,11 +111,18 @@ class BackendPreviewControllerTest extends TestCase
             $this->mockAuthorizationChecker()
         );
 
+        $request = $this->mockRequest();
+        $request
+            ->expects($this->once())
+            ->method('getBaseUrl')
+            ->willReturn('/preview.php')
+        ;
+
         /** @var RedirectResponse $response */
-        $response = $controller($this->mockRequest());
+        $response = $controller($request);
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
-        $this->assertSame('/', $response->getTargetUrl());
+        $this->assertSame('/preview.php/', $response->getTargetUrl());
     }
 
     /**

@@ -93,7 +93,7 @@ class ContentCompositionListener implements ServiceAnnotationInterface
     /**
      * @Callback(table="tl_page", target="list.operations.articles.button")
      */
-    public function renderPageArticlesOperation(array $row, string $href, string $label, string $title, string $icon): string
+    public function renderPageArticlesOperation(array $row, ?string $href, string $label, string $title, ?string $icon): string
     {
         if (!$this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'article')) {
             return '';

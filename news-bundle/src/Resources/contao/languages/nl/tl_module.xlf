@@ -46,7 +46,7 @@
         <target>Nieuwstemplate</target>
       </trans-unit>
       <trans-unit id="tl_module.news_template.1">
-        <source>Here you can select the news template.</source>
+        <source>Here you can select a news template.</source>
         <target>Selecteer een nieuwstemplate.</target>
       </trans-unit>
       <trans-unit id="tl_module.news_format.0">
