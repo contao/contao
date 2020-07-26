@@ -82,12 +82,12 @@
         <target>ナビゲーションのテンプレートを選択します。</target>
       </trans-unit>
       <trans-unit id="tl_module.customTpl.0">
-        <source>Custom module template</source>
-        <target>独自のモジュールのテンプレート</target>
+        <source>Module template</source>
+        <target>モジュールのテンプレート</target>
       </trans-unit>
       <trans-unit id="tl_module.customTpl.1">
-        <source>Here you can overwrite the default module template.</source>
-        <target>初期設定のモジュールのテンプレートを上書きできます。</target>
+        <source>Here you can select the module template.</source>
+        <target>モジュールのテンプレートを選択できます。</target>
       </trans-unit>
       <trans-unit id="tl_module.pages.0">
         <source>Pages</source>
@@ -410,12 +410,12 @@
         <target>IDと1つ以上のclassを設定できます。</target>
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>セキュリティ質問を不使用</target>
+        <source>Disable spam protection</source>
+        <target>spam防御を不使用</target>
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.1">
-        <source>Here you can disable the security question (not recommended).</source>
-        <target>セキュリティ質問を使用しません。(推奨しません。)</target>
+        <source>Here you can disable the spam protection (not recommended).</source>
+        <target>spam防御を使用しません。(推奨しません。)</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_groups.0">
         <source>Member groups</source>

@@ -50,12 +50,11 @@
         <target>Vyberte prosím soubory, které chcete připojit k Vašemu zpravodaji a které mají být načteny z adresáře souborů.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.0">
-        <source>Custom e-mail template</source>
-        <target>Vlastní předloha e-mailu</target>
+        <source>E-mail template</source>
+        <target>Předloha e-mailu</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.1">
-        <source>Here you can override the default e-mail template of the channel.</source>
-        <target>Zde můžete přepsat výchozí předlohu e-mailu.</target>
+        <source>Here you can override the e-mail template of the channel.</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendText.0">
         <source>Send as plain text</source>

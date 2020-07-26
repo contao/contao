@@ -96,8 +96,8 @@
       <?php endif; ?>
       <?php if ($this->isImage): ?>
         <div id="preview">
-          <div class="checkerbox" style="width:<?= $this->width ?>px;height:<?= $this->height ?>px">
-            <img src="<?= $this->dataUri ?>" width="<?= $this->width ?>" height="<?= $this->height ?>" alt="" style="image-orientation:from-image">
+          <div class="checkerbox"<?php if ($this->width && $this->height): ?> style="width:<?= $this->width ?>px;height:<?= $this->height ?>px"<?php endif; ?>>
+            <img src="<?= $this->dataUri ?>" alt="" style="image-orientation:from-image"<?php if ($this->width && $this->height): ?> width="<?= $this->width ?>" height="<?= $this->height ?>"<?php endif; ?>>
           </div>
         </div>
       <?php endif; ?>

@@ -82,12 +82,12 @@
         <target>Выберите шаблон навигации.</target>
       </trans-unit>
       <trans-unit id="tl_module.customTpl.0">
-        <source>Custom module template</source>
-        <target>Пользовательский шаблон модуля</target>
+        <source>Module template</source>
+        <target>Шаблон модуля</target>
       </trans-unit>
       <trans-unit id="tl_module.customTpl.1">
-        <source>Here you can overwrite the default module template.</source>
-        <target>Вы можете переписать шаблон модуля по умолчанию.</target>
+        <source>Here you can select the module template.</source>
+        <target>Вы можете выбрать шаблон модуля.</target>
       </trans-unit>
       <trans-unit id="tl_module.pages.0">
         <source>Pages</source>
@@ -410,12 +410,12 @@
         <target>Вы можете ввести ID одного или нескольких классов.</target>
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>Отключить контрольный вопрос</target>
+        <source>Disable spam protection</source>
+        <target>Отключить защиту от спама</target>
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.1">
-        <source>Here you can disable the security question (not recommended).</source>
-        <target>Вы можете отключить контрольный вопрос (не рекомендуется).</target>
+        <source>Here you can disable the spam protection (not recommended).</source>
+        <target>Вы можете отключить защиту от спама (не рекомендуется).</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_groups.0">
         <source>Member groups</source>

@@ -82,12 +82,10 @@
         <target>Por favor selecciona una plantilla de navegación (plantillas de navegación empiezan por &lt;em&gt;nav_&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_module.customTpl.0">
-        <source>Custom module template</source>
-        <target>Personalizar plantilla de módulo</target>
+        <source>Module template</source>
       </trans-unit>
       <trans-unit id="tl_module.customTpl.1">
-        <source>Here you can overwrite the default module template.</source>
-        <target>Aquí puede sobreescribir la plantilla por defecto de módulo.</target>
+        <source>Here you can select the module template.</source>
       </trans-unit>
       <trans-unit id="tl_module.pages.0">
         <source>Pages</source>
@@ -408,12 +406,10 @@
         <target>Aquí puedes introducir una ID para la hoja de estilo (atributo id) y una o más clases de hoja de estilos (atributos clase) para poder dar formato al elemento del modulo utilizando CSS.</target>
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>Deshabilitar pregunta de seguridad</target>
+        <source>Disable spam protection</source>
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.1">
-        <source>Here you can disable the security question (not recommended).</source>
-        <target>Aqui puedes deshabilitar la pregunta de seguridad (no es recomendado).</target>
+        <source>Here you can disable the spam protection (not recommended).</source>
       </trans-unit>
       <trans-unit id="tl_module.reg_groups.0">
         <source>Member groups</source>

@@ -298,12 +298,10 @@
         <target>Tutaj możesz wprowadzić rozmiar pola upload (atrybut &lt;em&gt;size&lt;em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_form_field.customTpl.0">
-        <source>Custom form field template</source>
-        <target>Własny szablon pola formularza</target>
+        <source>Form field template</source>
       </trans-unit>
       <trans-unit id="tl_form_field.customTpl.1">
-        <source>Here you can overwrite the default form field template.</source>
-        <target>Tutaj możesz wybrać własny szablon pola formularza</target>
+        <source>Here you can select the form field template.</source>
       </trans-unit>
       <trans-unit id="tl_form_field.slabel.0">
         <source>Submit button label</source>

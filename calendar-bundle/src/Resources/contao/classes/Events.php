@@ -319,7 +319,7 @@ abstract class Events extends Module
 		// Override the link target
 		if ($objEvents->source == 'external' && $objEvents->target)
 		{
-			$arrEvent['target'] = ' target="_blank"';
+			$arrEvent['target'] = ' target="_blank" rel="noreferrer noopener"';
 		}
 
 		// Clean the RTE output
@@ -333,7 +333,6 @@ abstract class Events extends Module
 		// Display the "read more" button for external/article links
 		if ($objEvents->source != 'default')
 		{
-			$arrEvent['details'] = true;
 			$arrEvent['hasDetails'] = true;
 		}
 

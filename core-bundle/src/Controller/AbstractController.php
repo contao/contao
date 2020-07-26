@@ -15,9 +15,8 @@ namespace Contao\CoreBundle\Controller;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use FOS\HttpCacheBundle\Http\SymfonyResponseTagger;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as SymfonyAbstractController;
-use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
-abstract class AbstractController extends SymfonyAbstractController implements ServiceAnnotationInterface
+abstract class AbstractController extends SymfonyAbstractController
 {
     public static function getSubscribedServices()
     {

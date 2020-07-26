@@ -79,8 +79,9 @@ class FrontendController extends AbstractController
      *
      * This route can be used to include e.g. a hidden <img> tag to force
      * a request to the application. That way, cookies can be set even if
-     * the output is cached (used in the core for the RememberMe cookie if
-     * the "alwaysLoadFromCache" option is enabled).
+     * the output is cached (used in the core if the "alwaysLoadFromCache"
+     * option is enabled to evaluate the RememberMe cookie and then set
+     * the session cookie).
      *
      * @Route("/_contao/check_cookies", name="contao_frontend_check_cookies")
      */

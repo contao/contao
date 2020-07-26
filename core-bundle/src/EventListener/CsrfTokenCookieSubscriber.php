@@ -173,7 +173,7 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
         return $tokens;
     }
 
-    private function isCsrfCookie($key, string $value): bool
+    private function isCsrfCookie($key, $value): bool
     {
         if (!\is_string($key)) {
             return false;

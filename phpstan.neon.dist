@@ -1,7 +1,16 @@
-parameters:
-    autoload_files:
-        - %currentWorkingDirectory%/vendor/autoload.php
+includes:
+    - vendor/contao/phpstan/extension.neon
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor/phpstan/phpstan-phpunit/rules.neon
+    - vendor/phpstan/phpstan-symfony/extension.neon
+    - vendor/phpstan/phpstan-symfony/rules.neon
 
+rules:
+    - SlamPhpStan\SymfonyFilesystemRule
+    - SlamPhpStan\SymfonyProcessRule
+    - TheCodingMachine\PHPStan\Rules\Exceptions\ThrowMustBundlePreviousExceptionRule
+
+parameters:
     contao:
         services_yml_path: %currentWorkingDirectory%/core-bundle/src/Resources/config/services.yml
 
@@ -18,9 +27,6 @@ parameters:
         # Ignore the missing TL_SCRIPT constant in the InitializeController class
         - '#Constant TL_SCRIPT not found\.#'
 
-        # Ignore the Adapter::missingMethod() warning
-        - '#Call to an undefined method Contao\\CoreBundle\\Framework\\Adapter::missingMethod\(\)\.#'
-
         # Ignore backwards compatibility layers when preferring lowest dependencies
         - '#Method Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface::dispatch\(\) invoked with 2 parameters, 1 required\.#'
 
@@ -31,5 +37,12 @@ parameters:
         - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition::children\(\)\.#'
         - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition::addDefaultsIfNotSet\(\)\.#'
 
+        # Ignore unused variables in the ArrayAttributeBagTest class
+        - '#Function testDoesNotReferenceValues\(\) has an unused variable#'
+
+        # Ignore test case classes not starting with "Abstract" (backwards compatibility)
+        - '#Abstract class Contao\\CoreBundle\\Tests\\.*TestCase should start with "Abstract" prefix\.#'
+
     reportUnmatchedIgnoredErrors: false
+    checkGenericClassInNonGenericObjectType: false
     inferPrivatePropertyTypeFromConstructor: true

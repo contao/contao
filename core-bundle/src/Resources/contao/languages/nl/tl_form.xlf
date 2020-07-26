@@ -114,12 +114,12 @@
         <target>Sla de ingediende waarden op in de database.</target>
       </trans-unit>
       <trans-unit id="tl_form.customTpl.0">
-        <source>Custom form template</source>
-        <target>Aangepast formulier template</target>
+        <source>Form template</source>
+        <target>Formulier template</target>
       </trans-unit>
       <trans-unit id="tl_form.customTpl.1">
-        <source>Here you can overwrite the default form template.</source>
-        <target>Hier kunt u de standaard formulier template overschrijven.</target>
+        <source>Here you can select the form template.</source>
+        <target>Kies een formulier template.</target>
       </trans-unit>
       <trans-unit id="tl_form.targetTable.0">
         <source>Target table</source>

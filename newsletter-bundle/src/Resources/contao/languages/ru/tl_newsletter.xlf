@@ -50,12 +50,12 @@
         <target>Выберите файлы, которые вы хотите вложить.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.0">
-        <source>Custom e-mail template</source>
-        <target>Пользовательский шаблон e-mail</target>
+        <source>E-mail template</source>
+        <target>Шаблон е-mail письма</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.1">
-        <source>Here you can override the default e-mail template of the channel.</source>
-        <target>Вы можете переопределить e-mail шаблон по умолчанию для канала.</target>
+        <source>Here you can override the e-mail template of the channel.</source>
+        <target>Вы можете переопределить шаблон электронной почты канала.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendText.0">
         <source>Send as plain text</source>

@@ -82,7 +82,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         static::$autoloadModules = $modulePath;
     }
 
-    public function getPackageDependencies()
+    public function getPackageDependencies(): array
     {
         return ['contao/core-bundle'];
     }
@@ -91,7 +91,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     {
         $configs = [
             BundleConfig::create(FrameworkBundle::class),
-            BundleConfig::create(SecurityBundle::class),
+            BundleConfig::create(SecurityBundle::class)->setLoadAfter([FrameworkBundle::class]),
             BundleConfig::create(TwigBundle::class),
             BundleConfig::create(MonologBundle::class),
             BundleConfig::create(SwiftmailerBundle::class),
@@ -244,11 +244,13 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 return $this->addDefaultServerVersion($extensionConfigs, $container);
 
             case 'swiftmailer':
+                $extensionConfigs = $this->checkMailerTransport($extensionConfigs, $container);
+
                 if (!isset($_SERVER['MAILER_URL'])) {
                     $container->setParameter('env(MAILER_URL)', $this->getMailerUrl($container));
                 }
 
-                return $this->checkMailerTransport($extensionConfigs, $container);
+                return $extensionConfigs;
         }
 
         return $extensionConfigs;
@@ -310,6 +312,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         try {
             $connection = \call_user_func($this->dbalConnectionFactory, $params);
             $connection->connect();
+            $connection->query('SHOW TABLES');
             $connection->close();
         } catch (DriverException $e) {
             $extensionConfigs[] = [

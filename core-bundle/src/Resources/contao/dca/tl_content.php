@@ -307,6 +307,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'inputType'               => 'select',
 			'options'                 => array('ordered', 'unordered'),
 			'eval'                    => array('tl_class'=>'w50'),
+			'reference'               => &$GLOBALS['TL_LANG']['tl_content'],
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'listitems' => array
@@ -567,9 +568,9 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'inputType'               => 'select',
 			'options_callback' => static function (Contao\DataContainer $dc)
 			{
-				return Contao\Controller::getTemplateGroup('ce_' . $dc->activeRecord->type . '_');
+				return Contao\Controller::getTemplateGroup('ce_' . $dc->activeRecord->type . '_', array(), 'ce_' . $dc->activeRecord->type);
 			},
-			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'playerSRC' => array
@@ -654,7 +655,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'options'                 => array('16:9', '16:10', '21:9', '4:3', '3:2'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_content']['player_aspect'],
 			'eval'                    => array('includeBlankOption' => true, 'nospace'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(8) NOT NULL default 'none'"
+			'sql'                     => "varchar(8) NOT NULL default ''"
 		),
 		'splashImage' => array
 		(
@@ -1136,7 +1137,7 @@ class tl_content extends Contao\Backend
 					$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE id IN(" . implode(',', array_map('\intval', $session['CURRENT']['IDS'])) . ") AND type IN(" . implode(',', array_fill(0, count($this->User->elements), '?')) . ")")
 											 ->execute(...$this->User->elements);
 
-					$session['CURRENT']['IDS'] = $objCes->fetchEach('id');
+					$session['CURRENT']['IDS'] = array_intersect($session['CURRENT']['IDS'], $objCes->fetchEach('id'));
 				}
 
 				$objSession->replace($session);
@@ -1159,7 +1160,7 @@ class tl_content extends Contao\Backend
 					$objCes = $this->Database->prepare("SELECT id, type FROM tl_content WHERE id IN(" . implode(',', array_map('\intval', $session['CLIPBOARD']['tl_content']['id'])) . ") AND type IN(" . implode(',', array_fill(0, count($this->User->elements), '?')) . ")")
 											 ->execute(...$this->User->elements);
 
-					$session['CLIPBOARD']['tl_content']['id'] = $objCes->fetchEach('id');
+					$session['CLIPBOARD']['tl_content']['id'] = array_intersect($session['CLIPBOARD']['tl_content']['id'], $objCes->fetchEach('id'));
 				}
 
 				$objSession->replace($session);
@@ -1949,12 +1950,6 @@ class tl_content extends Contao\Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		// Disable the button if the element type is not allowed
-		if (!$this->User->hasAccess($row['type'], 'elements'))
-		{
-			return Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
-		}
-
 		if (Contao\Input::get('cid'))
 		{
 			$this->toggleVisibility(Contao\Input::get('cid'), (Contao\Input::get('state') == 1), (@func_get_arg(12) ?: null));
@@ -1965,6 +1960,12 @@ class tl_content extends Contao\Backend
 		if (!$this->User->hasAccess('tl_content::invisible', 'alexf'))
 		{
 			return '';
+		}
+
+		// Disable the button if the element type is not allowed
+		if (!$this->User->hasAccess($row['type'], 'elements'))
+		{
+			return Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 		}
 
 		$href .= '&amp;id=' . Contao\Input::get('id') . '&amp;cid=' . $row['id'] . '&amp;state=' . $row['invisible'];
@@ -2020,22 +2021,24 @@ class tl_content extends Contao\Backend
 			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to show/hide content element ID ' . $intId . '.');
 		}
 
+		$objRow = $this->Database->prepare("SELECT * FROM tl_content WHERE id=?")
+								 ->limit(1)
+								 ->execute($intId);
+
+		if ($objRow->numRows < 1)
+		{
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid content element ID ' . $intId . '.');
+		}
+
+		if (!$this->User->hasAccess($objRow->type, 'elements'))
+		{
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to modify content elements of type "' . $objRow->type . '".');
+		}
+
 		// Set the current record
 		if ($dc)
 		{
-			$objRow = $this->Database->prepare("SELECT * FROM tl_content WHERE id=?")
-									 ->limit(1)
-									 ->execute($intId);
-
-			if ($objRow->numRows)
-			{
-				$dc->activeRecord = $objRow;
-
-				if (!$this->User->hasAccess($objRow->type, 'fields'))
-				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to modify content elements of type "' . $objRow->type . '".');
-				}
-			}
+			$dc->activeRecord = $objRow;
 		}
 
 		$objVersions = new Contao\Versions('tl_content', $intId);

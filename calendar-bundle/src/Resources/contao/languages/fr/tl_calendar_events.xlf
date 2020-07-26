@@ -270,10 +270,6 @@
         <source>Date and time</source>
         <target>Date et heure</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.meta_legend">
-        <source>Meta data</source>
-        <target>Meta-données</target>
-      </trans-unit>
       <trans-unit id="tl_calendar_events.details_legend">
         <source>Event details</source>
         <target>Détails de l'événement</target>
@@ -359,6 +355,10 @@
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>
         <target>Coller dans ce calendrier</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.editmeta">
+        <source>Edit the event settings</source>
+        <target>Éditer les paramètres de l'événement</target>
       </trans-unit>
     </body>
   </file>

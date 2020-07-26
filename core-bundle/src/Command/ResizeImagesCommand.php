@@ -37,6 +37,8 @@ use Symfony\Component\Process\Process;
  */
 class ResizeImagesCommand extends Command
 {
+    protected static $defaultName = 'contao:resize-images';
+
     /**
      * @var ImageFactoryInterface
      */
@@ -82,7 +84,6 @@ class ResizeImagesCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('contao:resize-images')
             ->addOption('time-limit', 'l', InputOption::VALUE_OPTIONAL, 'Time limit in seconds', '0')
             ->addOption('concurrent', 'c', InputOption::VALUE_OPTIONAL, 'Run multiple processes concurrently', '1')
             ->addOption('throttle', 't', InputOption::VALUE_OPTIONAL, 'Pause between resizes to limit CPU utilization, 0.1 relates to 10% CPU usage', '1')

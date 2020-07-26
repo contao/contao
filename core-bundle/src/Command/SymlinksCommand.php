@@ -34,6 +34,8 @@ use Symfony\Component\Finder\SplFileInfo;
  */
 class SymlinksCommand extends Command
 {
+    protected static $defaultName = 'contao:symlinks';
+
     /**
      * @var SymfonyStyle
      */
@@ -47,7 +49,7 @@ class SymlinksCommand extends Command
     /**
      * @var string
      */
-    private $rootDir;
+    private $projectDir;
 
     /**
      * @var string
@@ -79,9 +81,9 @@ class SymlinksCommand extends Command
      */
     private $statusCode = 0;
 
-    public function __construct(string $rootDir, string $uploadPath, string $logsDir, ResourceFinderInterface $resourceFinder, EventDispatcherInterface $eventDispatcher)
+    public function __construct(string $projectDir, string $uploadPath, string $logsDir, ResourceFinderInterface $resourceFinder, EventDispatcherInterface $eventDispatcher)
     {
-        $this->rootDir = $rootDir;
+        $this->projectDir = $projectDir;
         $this->uploadPath = $uploadPath;
         $this->logsDir = $logsDir;
         $this->resourceFinder = $resourceFinder;
@@ -93,7 +95,6 @@ class SymlinksCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('contao:symlinks')
             ->addArgument('target', InputArgument::OPTIONAL, 'The target directory', 'web')
             ->setDescription('Symlinks the public resources into the web directory.')
         ;
@@ -122,9 +123,9 @@ class SymlinksCommand extends Command
         $fs = new Filesystem();
 
         // Remove the base folders in the document root
-        $fs->remove($this->rootDir.'/'.$this->webDir.'/'.$this->uploadPath);
-        $fs->remove($this->rootDir.'/'.$this->webDir.'/system/modules');
-        $fs->remove($this->rootDir.'/'.$this->webDir.'/vendor');
+        $fs->remove($this->projectDir.'/'.$this->webDir.'/'.$this->uploadPath);
+        $fs->remove($this->projectDir.'/'.$this->webDir.'/system/modules');
+        $fs->remove($this->projectDir.'/'.$this->webDir.'/vendor');
 
         $this->symlinkFiles($this->uploadPath);
         $this->symlinkModules();
@@ -143,7 +144,7 @@ class SymlinksCommand extends Command
     private function symlinkFiles(string $uploadPath): void
     {
         $this->createSymlinksFromFinder(
-            $this->findIn($this->rootDir.'/'.$uploadPath)->files()->depth('> 0')->name('.public'),
+            $this->findIn($this->projectDir.'/'.$uploadPath)->files()->depth('> 0')->name('.public'),
             $uploadPath
         );
     }
@@ -155,7 +156,7 @@ class SymlinksCommand extends Command
         };
 
         $this->createSymlinksFromFinder(
-            $this->findIn($this->rootDir.'/system/modules')->files()->filter($filter)->name('.htaccess'),
+            $this->findIn($this->projectDir.'/system/modules')->files()->filter($filter)->name('.htaccess'),
             'system/modules'
         );
     }
@@ -207,7 +208,7 @@ class SymlinksCommand extends Command
         $link = strtr($link, '\\', '/');
 
         try {
-            SymlinkUtil::symlink($target, $link, $this->rootDir);
+            SymlinkUtil::symlink($target, $link, $this->projectDir);
 
             $this->rows[] = [
                 sprintf(
@@ -294,6 +295,6 @@ class SymlinksCommand extends Command
 
     private function getRelativePath(string $path): string
     {
-        return str_replace(strtr($this->rootDir, '\\', '/').'/', '', strtr($path, '\\', '/'));
+        return str_replace(strtr($this->projectDir, '\\', '/').'/', '', strtr($path, '\\', '/'));
     }
 }

@@ -50,12 +50,11 @@
         <target>Wybierz pliki, które chcesz dołączyć do newslettera.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.0">
-        <source>Custom e-mail template</source>
-        <target>Własny szablon e-mail</target>
+        <source>E-mail template</source>
+        <target>Szablon e-mail</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.1">
-        <source>Here you can override the default e-mail template of the channel.</source>
-        <target>Tutaj możesz nadpisać domyślny szablon e-mail tego kanału.</target>
+        <source>Here you can override the e-mail template of the channel.</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendText.0">
         <source>Send as plain text</source>

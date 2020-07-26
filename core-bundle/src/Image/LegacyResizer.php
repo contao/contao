@@ -17,13 +17,18 @@ use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
 use Contao\File;
 use Contao\Image as LegacyImage;
+use Contao\Image\DeferredImageInterface;
 use Contao\Image\DeferredResizer as ImageResizer;
 use Contao\Image\ImageInterface;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeCoordinates;
 use Contao\Image\ResizeOptions;
 use Contao\System;
+use Imagine\Exception\Exception as ImagineException;
 use Imagine\Gd\Imagine as GdImagine;
+use Imagine\Image\Box;
+use Imagine\Image\ImagineInterface;
+use Webmozart\PathUtil\Path;
 
 /**
  * Resizes image objects and executes the legacy hooks.
@@ -41,7 +46,7 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
     {
         $this->framework->initialize(true);
 
-        $rootDir = System::getContainer()->getParameter('kernel.project_dir');
+        $projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
         if ($this->hasExecuteResizeHook() || $this->hasGetImageHook()) {
             @trigger_error('Using the "executeResize" and "getImage" hooks has been deprecated and will no longer work in Contao 5.0. Replace the "contao.image.resizer" service instead.', E_USER_DEPRECATED);
@@ -49,8 +54,8 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
             $this->legacyImage = null;
             $legacyPath = $image->getPath();
 
-            if (0 === strpos($legacyPath, $rootDir.'/') || 0 === strpos($legacyPath, $rootDir.'\\')) {
-                $legacyPath = substr($legacyPath, \strlen($rootDir) + 1);
+            if (0 === strpos($legacyPath, $projectDir.'/') || 0 === strpos($legacyPath, $projectDir.'\\')) {
+                $legacyPath = substr($legacyPath, \strlen($projectDir) + 1);
                 $this->legacyImage = new LegacyImage(new File($legacyPath));
                 $this->legacyImage->setTargetWidth($config->getWidth());
                 $this->legacyImage->setTargetHeight($config->getHeight());
@@ -59,9 +64,9 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
 
                 if (
                     ($targetPath = $options->getTargetPath())
-                    && (0 === strpos($targetPath, $rootDir.'/') || 0 === strpos($targetPath, $rootDir.'\\'))
+                    && (0 === strpos($targetPath, $projectDir.'/') || 0 === strpos($targetPath, $projectDir.'\\'))
                 ) {
-                    $this->legacyImage->setTargetPath(substr($targetPath, \strlen($rootDir) + 1));
+                    $this->legacyImage->setTargetPath(substr($targetPath, \strlen($projectDir) + 1));
                 }
 
                 $importantPart = $image->getImportantPart();
@@ -81,18 +86,31 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
                 $return = System::importStatic($callback[0])->{$callback[1]}($this->legacyImage);
 
                 if (\is_string($return)) {
-                    return $this->createImage($image, $rootDir.'/'.$return);
+                    return $this->createImage($image, $projectDir.'/'.$return);
                 }
             }
         }
 
-        return parent::resize($image, $config, $options);
+        try {
+            return parent::resize($image, $config, $options);
+        } catch (ImagineException $exception) {
+            throw $this->enhanceImagineException($exception, $image);
+        }
+    }
+
+    public function resizeDeferredImage(DeferredImageInterface $image, bool $blocking = true): ?ImageInterface
+    {
+        try {
+            return parent::resizeDeferredImage($image, $blocking);
+        } catch (ImagineException $exception) {
+            throw $this->enhanceImagineException($exception, $image);
+        }
     }
 
     protected function executeResize(ImageInterface $image, ResizeCoordinates $coordinates, string $path, ResizeOptions $options): ImageInterface
     {
         if ($this->legacyImage && $this->hasGetImageHook()) {
-            $rootDir = System::getContainer()->getParameter('kernel.project_dir');
+            $projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
             foreach ($GLOBALS['TL_HOOKS']['getImage'] as $callback) {
                 $return = System::importStatic($callback[0])->{$callback[1]}(
@@ -107,7 +125,7 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
                 );
 
                 if (\is_string($return)) {
-                    return $this->createImage($image, $rootDir.'/'.$return);
+                    return $this->createImage($image, $projectDir.'/'.$return);
                 }
             }
         }
@@ -142,5 +160,31 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
     private function hasGetImageHook(): bool
     {
         return !empty($GLOBALS['TL_HOOKS']['getImage']) && \is_array($GLOBALS['TL_HOOKS']['getImage']);
+    }
+
+    private function enhanceImagineException(\Throwable $exception, ImageInterface $image): \Throwable
+    {
+        $format = Path::getExtension($image->getPath());
+
+        if (!$this->formatIsSupported($format, $image->getImagine())) {
+            return new \RuntimeException(sprintf('Image format "%s" is not supported in %s on this environment. Consider removing this format from contao.image.valid_extensions or switch the contao.image.imagine_service to an implementation that supports it.', $format, \get_class($image->getImagine())), $exception->getCode(), $exception);
+        }
+
+        return $exception;
+    }
+
+    private function formatIsSupported(string $format, ImagineInterface $imagine): bool
+    {
+        if ('' === $format) {
+            return false;
+        }
+
+        try {
+            $imagine->create(new Box(1, 1))->get($format);
+        } catch (\Throwable $e) {
+            return false;
+        }
+
+        return true;
     }
 }

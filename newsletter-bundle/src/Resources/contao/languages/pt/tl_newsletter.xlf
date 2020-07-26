@@ -50,12 +50,11 @@
         <target>Por favor, selecione os arquivos que deseja anexar à newsletter.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.0">
-        <source>Custom e-mail template</source>
-        <target>Modelo de e-mail personalizado</target>
+        <source>E-mail template</source>
+        <target>Exemplo de e-mail</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.1">
-        <source>Here you can override the default e-mail template of the channel.</source>
-        <target>Aqui pode alterar o modelo de e-mail padrão do canal.</target>
+        <source>Here you can override the e-mail template of the channel.</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendText.0">
         <source>Send as plain text</source>
@@ -99,11 +98,11 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.timeout.0">
         <source>Timeout in seconds</source>
-        <target>Tempo Esgotado em segundos</target>
+        <target>Timeout em segundos</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.timeout.1">
         <source>Here you can modify the waiting time between each cycle to control the number of e-mails per minute.</source>
-        <target>Alguns servidores limitam o número de emails que uma pessoa pode enviar por minuto. Aqui você pode modificar o Tempo Esgotado entre cada ciclo em segundos para ter mais controle sobre a margem de tempo.</target>
+        <target>Alguns servidores limitam o número de e-mails que uma pessoa pode enviar por minuto. Aqui você pode definir o tempo entre cada ciclo em segundos para evitar atingir esse mesmo número.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.start.0">
         <source>Offset</source>
@@ -115,11 +114,11 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.sendPreviewTo.0">
         <source>Send preview to</source>
-        <target>Enviar prévia para</target>
+        <target>Enviar pré-visualização para</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendPreviewTo.1">
         <source>Send the preview of the newsletter to this e-mail address.</source>
-        <target>Enviar uma amostra da newsletter para este endereço de email.</target>
+        <target>Enviar uma pré-visualização da newsletter para este endereço de email.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.title_legend">
         <source>Title and subject</source>
@@ -131,7 +130,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.text_legend">
         <source>Text content</source>
-        <target>Texto do conteúdo</target>
+        <target>Conteúdo em texto</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.attachment_legend">
         <source>Attachments</source>
@@ -171,7 +170,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.rejected">
         <source>%s invalid e-mail address(es) has/have been disabled (see system log).</source>
-        <target>%s endereço(s) de e-mail inválido tem/têm sido desabilitada (veja log do sistema).</target>
+        <target>%s endereço(s) de e-mail inválido foi/foram desactivados (veja log do sistema).</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.error">
         <source>There are no active subscribers to the channel.</source>
@@ -187,11 +186,11 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.preview">
         <source>Send preview</source>
-        <target>Enviar prévia</target>
+        <target>Enviar pré-visualização</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendConfirm">
         <source>Do you really want to send the newsletter?</source>
-        <target>Você realmente deseja enviar a newsletter?</target>
+        <target>Tem a certeza que pretende enviar a newsletter?</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.send.0">
         <source>Send newsletter</source>
@@ -219,7 +218,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.copy">
         <source>Duplicate newsletter ID %s</source>
-        <target>Copiar newsletter com ID %s</target>
+        <target>Duplicar newsletter com ID %s</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.cut">
         <source>Move newsletter ID %s</source>

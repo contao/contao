@@ -28,6 +28,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\HttpClient\ChunkInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 use Terminal42\Escargot\CrawlUri;
@@ -41,19 +42,27 @@ use Terminal42\Escargot\Subscriber\SubscriberInterface;
 
 class CrawlCommand extends Command
 {
+    protected static $defaultName = 'contao:crawl';
+
     /**
      * @var Factory
      */
     private $escargotFactory;
 
     /**
+     * @var Filesystem
+     */
+    private $filesystem;
+
+    /**
      * @var Escargot
      */
     private $escargot;
 
-    public function __construct(Factory $escargotFactory)
+    public function __construct(Factory $escargotFactory, Filesystem $filesystem)
     {
         $this->escargotFactory = $escargotFactory;
+        $this->filesystem = $filesystem;
 
         parent::__construct();
     }
@@ -66,7 +75,6 @@ class CrawlCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('contao:crawl')
             ->addArgument('job', InputArgument::OPTIONAL, 'An optional existing job ID')
             ->addOption('subscribers', 's', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'A list of subscribers to enable', $this->escargotFactory->getSubscriberNames())
             ->addOption('concurrency', 'c', InputOption::VALUE_REQUIRED, 'The number of concurrent requests that are going to be executed', 10)
@@ -159,8 +167,8 @@ class CrawlCommand extends Command
 
         if ($input->getOption('enable-debug-csv')) {
             // Delete file if it already exists
-            if (file_exists($input->getOption('debug-csv-path'))) {
-                unlink($input->getOption('debug-csv-path'));
+            if ($this->filesystem->exists($input->getOption('debug-csv-path'))) {
+                $this->filesystem->remove($input->getOption('debug-csv-path'));
             }
 
             $csvDebugHandler = new CrawlCsvLogHandler($input->getOption('debug-csv-path'), Logger::DEBUG);

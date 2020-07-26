@@ -47,7 +47,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * @var string
      */
-    private $rootDir;
+    private $projectDir;
 
     /**
      * @var Connection
@@ -67,12 +67,12 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * @internal Do not inherit from this class; decorate the "contao.cache.warm_internal" service instead
      */
-    public function __construct(Filesystem $filesystem, ResourceFinderInterface $finder, FileLocator $locator, string $rootDir, Connection $connection, ContaoFramework $framework, array $locales)
+    public function __construct(Filesystem $filesystem, ResourceFinderInterface $finder, FileLocator $locator, string $projectDir, Connection $connection, ContaoFramework $framework, array $locales)
     {
         $this->filesystem = $filesystem;
         $this->finder = $finder;
         $this->locator = $locator;
-        $this->rootDir = $rootDir;
+        $this->projectDir = $projectDir;
         $this->connection = $connection;
         $this->framework = $framework;
         $this->locales = $locales;
@@ -136,7 +136,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     {
         $dumper = new CombinedFileDumper(
             $this->filesystem,
-            new DelegatingLoader(new LoaderResolver([new PhpFileLoader(), new XliffFileLoader($this->rootDir)])),
+            new DelegatingLoader(new LoaderResolver([new PhpFileLoader(), new XliffFileLoader($this->projectDir)])),
             $cacheDir.'/contao'
         );
 
@@ -216,7 +216,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
 
         foreach ($files as $file) {
             $mapper[$file->getBasename('.html5')] = rtrim(
-                $this->filesystem->makePathRelative($file->getPath(), $this->rootDir),
+                $this->filesystem->makePathRelative($file->getPath(), $this->projectDir),
                 '/'
             );
         }

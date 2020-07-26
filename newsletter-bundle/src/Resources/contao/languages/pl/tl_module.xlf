@@ -54,8 +54,7 @@
         <target>Szablon modułu</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_template.1">
-        <source>Here you can select the newsletter template.</source>
-        <target>Wybierz szablon modułu. Możesz dodać własne szablony do katalogu &lt;em&gt;templates&lt;/em&gt;. Pliki szablonów newslettera muszą zaczynać się od &lt;em&gt;nl_&lt;/em&gt; i muszą mieć rozszerzenie &lt;em&gt;.tpl&lt;/em&gt;.</target>
+        <source>Here you can select a newsletter template.</source>
       </trans-unit>
       <trans-unit id="tl_module.text_legend">
         <source>Custom text</source>

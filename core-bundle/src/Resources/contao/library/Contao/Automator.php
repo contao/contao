@@ -459,8 +459,8 @@ class Automator extends System
 	{
 		@trigger_error('Using Automator::rotateLogs() has been deprecated and will no longer work in Contao 5.0. Use the logger service instead, which rotates its log files automatically.', E_USER_DEPRECATED);
 
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
-		$arrFiles = preg_grep('/\.log$/', scan($rootDir . '/system/logs'));
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+		$arrFiles = preg_grep('/\.log$/', scan($projectDir . '/system/logs'));
 
 		foreach ($arrFiles as $strFile)
 		{
@@ -477,7 +477,7 @@ class Automator extends System
 			{
 				$strGzName = 'system/logs/' . $strFile . '.' . $i;
 
-				if (file_exists($rootDir . '/' . $strGzName))
+				if (file_exists($projectDir . '/' . $strGzName))
 				{
 					$objFile = new File($strGzName);
 					$objFile->renameTo('system/logs/' . $strFile . '.' . ($i+1));

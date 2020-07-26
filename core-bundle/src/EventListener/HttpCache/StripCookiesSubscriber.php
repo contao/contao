@@ -23,6 +23,9 @@ use Symfony\Component\HttpFoundation\Request;
 class StripCookiesSubscriber implements EventSubscriberInterface
 {
     private const BLACKLIST = [
+        // Contao Manager
+        'contao_manager_auth',
+
         // Modals are always for JS only
         '(.*)?modal(.*)?',
 
@@ -30,15 +33,17 @@ class StripCookiesSubscriber implements EventSubscriberInterface
         '_ga',
         '_gid',
         '_gat',
+        '_dc_gtm_.+',
         'AMP_TOKEN',
         '_gac_.+',
+        '__utm.+',
 
         // Matomo (https://matomo.org/faq/general/faq_146/)
-        '_pk_id',
-        '_pk_ref',
-        '_pk_ses',
-        '_pk_cvar',
-        '_pk_hsr',
+        '_pk_id.*',
+        '_pk_ref.*',
+        '_pk_ses.*',
+        '_pk_cvar.*',
+        '_pk_hsr.*',
 
         // Cloudflare
         '__cfduid',
@@ -51,6 +56,15 @@ class StripCookiesSubscriber implements EventSubscriberInterface
 
         // Blackfire
         '__blackfire',
+
+        // Tideways
+        'TIDEWAYS_SESSION',
+
+        // Litespeed HTTP2 Smart Push
+        'ls_smartpush',
+
+        // Osano Cookie Consent
+        'cookieconsent_status',
     ];
 
     /**

@@ -82,12 +82,10 @@
         <target>اینجا می‌توانید قالب ناوبری را انتخاب کنید.</target>
       </trans-unit>
       <trans-unit id="tl_module.customTpl.0">
-        <source>Custom module template</source>
-        <target>قالب ماژول سفارشی</target>
+        <source>Module template</source>
       </trans-unit>
       <trans-unit id="tl_module.customTpl.1">
-        <source>Here you can overwrite the default module template.</source>
-        <target>اینجا می‌توانید قالب ماژول پیش‌فرش را رونویسی کنید.</target>
+        <source>Here you can select the module template.</source>
       </trans-unit>
       <trans-unit id="tl_module.pages.0">
         <source>Pages</source>
@@ -405,12 +403,10 @@
         <target>اینجا می‌توانید یک شناسه و یک یا چند کلاس انتخاب نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>غیرفعال کردن سوال امنیتی</target>
+        <source>Disable spam protection</source>
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.1">
-        <source>Here you can disable the security question (not recommended).</source>
-        <target>اینجا می‌توانید سوال امنیتی را غیرفعال نمایید (توصیه نمی‌شود).</target>
+        <source>Here you can disable the spam protection (not recommended).</source>
       </trans-unit>
       <trans-unit id="tl_module.reg_groups.0">
         <source>Member groups</source>

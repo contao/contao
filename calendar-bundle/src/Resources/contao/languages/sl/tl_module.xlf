@@ -78,16 +78,14 @@
         <target>Predloga dogodkov</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_template.1">
-        <source>Here you can select the event template.</source>
-        <target>Izberite predlogo dogodkov. Dodate lahko predlogo po meri v mapo &lt;em&gt;templates&lt;/em&gt;. Predloge dogodkov se začno z &lt;em&gt;event_&lt;/em&gt; in vsebujejo končnico &lt;em&gt;.tpl&lt;/em&gt;.</target>
+        <source>Here you can select an event template.</source>
       </trans-unit>
       <trans-unit id="tl_module.cal_ctemplate.0">
         <source>Calendar template</source>
         <target>Predloga koledarja</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_ctemplate.1">
-        <source>Here you can select the calendar template.</source>
-        <target>Tukaj lahko izberete predlogo koledarja.</target>
+        <source>Here you can select a calendar template.</source>
       </trans-unit>
       <trans-unit id="tl_module.cal_showQuantity.0">
         <source>Show number of events</source>

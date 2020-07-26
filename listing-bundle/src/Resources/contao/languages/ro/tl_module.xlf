@@ -62,16 +62,14 @@
         <target>Şablon pentru listă</target>
       </trans-unit>
       <trans-unit id="tl_module.list_layout.1">
-        <source>Here you can select the list template.</source>
-        <target>Alegeţi un şablon de listă. Puteţi adăuga şabloane personalizate de liste în &lt;em&gt;templates&lt;/em&gt;. Fişierele cu şabloane de liste încep cu &lt;em&gt;list_&lt;/em&gt; şi au extensia &lt;em&gt;.tpl&lt;/em&gt;.</target>
+        <source>Here you can select a list template.</source>
       </trans-unit>
       <trans-unit id="tl_module.list_info_layout.0">
         <source>Details page template</source>
         <target>Şablon pentru pagina de detalii</target>
       </trans-unit>
       <trans-unit id="tl_module.list_info_layout.1">
-        <source>Here you can select the details page template.</source>
-        <target>Alegeţi un şablon pentru pagina de detalii. Puteţi adăuga şabloane pentru pagini de detalii în &lt;em&gt;templates&lt;/em&gt;. Fişierele cu şabloanele pentru detalii încep cu &lt;em&gt;info_&lt;/em&gt; şi au extensia &lt;em&gt;.tpl&lt;/em&gt;.</target>
+        <source>Here you can select a details page template.</source>
       </trans-unit>
     </body>
   </file>

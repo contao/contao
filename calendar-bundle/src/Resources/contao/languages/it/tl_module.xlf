@@ -78,16 +78,14 @@
         <target>Template eventi</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_template.1">
-        <source>Here you can select the event template.</source>
-        <target>Seleziona una template per gli eventi.</target>
+        <source>Here you can select an event template.</source>
       </trans-unit>
       <trans-unit id="tl_module.cal_ctemplate.0">
         <source>Calendar template</source>
         <target>Template calendario</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_ctemplate.1">
-        <source>Here you can select the calendar template.</source>
-        <target>Qui puoi selezionare la template per il calendario.</target>
+        <source>Here you can select a calendar template.</source>
       </trans-unit>
       <trans-unit id="tl_module.cal_showQuantity.0">
         <source>Show number of events</source>

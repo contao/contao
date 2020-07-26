@@ -363,7 +363,7 @@ CREATE TABLE `tl_content` (
   `playerStop` int(10) unsigned NOT NULL DEFAULT 0,
   `playerColor` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `playerPreload` varchar(8) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `playerAspect` varchar(8) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'none',
+  `playerAspect` varchar(8) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `playerCaption` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `overwriteLink` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `inline` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
@@ -379,7 +379,7 @@ CREATE TABLE `tl_content` (
 
 LOCK TABLES `tl_content` WRITE;
 /*!40000 ALTER TABLE `tl_content` DISABLE KEYS */;
-INSERT INTO `tl_content` VALUES (9,4,'tl_article',128,1539686688,'module','a:2:{s:5:\"value\";s:0:\"\";s:4:\"unit\";s:2:\"h2\";}',NULL,'',NULL,'','','','','','','','above',NULL,'',NULL,NULL,'','','','','',0,'ascending','','','','',NULL,'','','','','','','',NULL,NULL,'',4,0,0,'','','','',NULL,'',NULL,'',0,300,0,'',0,0,0,0,1,'',NULL,'','a:2:{i:0;s:0:\"\";i:1;s:0:\"\";}','','','','ascending',0,'','','','','com_default','',NULL,'',NULL,NULL,0,0,'','','none','','','',''),(10,13,'tl_article',128,1539686730,'module','a:2:{s:5:\"value\";s:0:\"\";s:4:\"unit\";s:2:\"h2\";}',NULL,'',NULL,'','','','','','','','above',NULL,'',NULL,NULL,'','','','','',0,'ascending','','','','',NULL,'','','','','','','',NULL,NULL,'',4,0,0,'','','','',NULL,'',NULL,'',0,300,0,'',0,0,0,0,1,'',NULL,'','a:2:{i:0;s:0:\"\";i:1;s:0:\"\";}','','','','ascending',0,'','','','','com_default','',NULL,'',NULL,NULL,0,0,'','','none','','','','');
+INSERT INTO `tl_content` VALUES (9,4,'tl_article',128,1539686688,'module','a:2:{s:5:\"value\";s:0:\"\";s:4:\"unit\";s:2:\"h2\";}',NULL,'',NULL,'','','','','','','','above',NULL,'',NULL,NULL,'','','','','',0,'ascending','','','','',NULL,'','','','','','','',NULL,NULL,'',4,0,0,'','','','',NULL,'',NULL,'',0,300,0,'',0,0,0,0,1,'',NULL,'','a:2:{i:0;s:0:\"\";i:1;s:0:\"\";}','','','','ascending',0,'','','','','com_default','',NULL,'',NULL,NULL,0,0,'','','','','','',''),(10,13,'tl_article',128,1539686730,'module','a:2:{s:5:\"value\";s:0:\"\";s:4:\"unit\";s:2:\"h2\";}',NULL,'',NULL,'','','','','','','','above',NULL,'',NULL,NULL,'','','','','',0,'ascending','','','','',NULL,'','','','','','','',NULL,NULL,'',4,0,0,'','','','',NULL,'',NULL,'',0,300,0,'',0,0,0,0,1,'',NULL,'','a:2:{i:0;s:0:\"\";i:1;s:0:\"\";}','','','','ascending',0,'','','','','com_default','',NULL,'',NULL,NULL,0,0,'','','','','','','');
 /*!40000 ALTER TABLE `tl_content` ENABLE KEYS */;
 UNLOCK TABLES;
 

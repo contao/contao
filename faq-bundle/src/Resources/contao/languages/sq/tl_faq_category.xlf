@@ -82,8 +82,7 @@
         <target>Lejo vetëm përdoruesit e autorizuar për të komentuar.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>ç'aktivizo pyetjen e sigurisë</target>
+        <source>Disable spam protection</source>
       </trans-unit>
       <trans-unit id="tl_faq_category.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>

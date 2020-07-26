@@ -42,20 +42,20 @@
         <target>ログインしたユーザーにだけコメントの作成を許可します。</target>
       </trans-unit>
       <trans-unit id="tl_content.com_disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>セキュリティ質問を不使用</target>
+        <source>Disable spam protection</source>
+        <target>spam防御を不使用</target>
       </trans-unit>
       <trans-unit id="tl_content.com_disableCaptcha.1">
-        <source>Here you can disable the security question (not recommended).</source>
-        <target>セキュリティ質問を使用しません。(推奨しません。)</target>
+        <source>Here you can disable the spam protection (not recommended).</source>
+        <target>spam防御を使用しません。(推奨しません。)</target>
       </trans-unit>
       <trans-unit id="tl_content.com_template.0">
         <source>Comments template</source>
         <target>コメントのテンプレート</target>
       </trans-unit>
       <trans-unit id="tl_content.com_template.1">
-        <source>Here you can select the comments template.</source>
-        <target>コメントのテンプレートを選択します。</target>
+        <source>Here you can select a comments template.</source>
+        <target>コメントのテンプレートを選択できます。</target>
       </trans-unit>
       <trans-unit id="tl_content.comment_legend">
         <source>Comment settings</source>

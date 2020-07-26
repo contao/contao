@@ -78,16 +78,14 @@
         <target>Szablon wydarzeń</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_template.1">
-        <source>Here you can select the event template.</source>
-        <target>Wybierz szablon wydarzeń. Możesz dodać własne szablony wydarzeń do katalogu &lt;em&gt;templates&lt;/em&gt;. Pliki szablonów wydarzeń muszą zaczynać się od &lt;em&gt;event_&lt;/em&gt; i muszą mieć rozszerzenie &lt;em&gt;.tpl&lt;/em&gt;.</target>
+        <source>Here you can select an event template.</source>
       </trans-unit>
       <trans-unit id="tl_module.cal_ctemplate.0">
         <source>Calendar template</source>
         <target>Szablon kalendarza</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_ctemplate.1">
-        <source>Here you can select the calendar template.</source>
-        <target>Tu możesz wybrać szablon kalendarza.</target>
+        <source>Here you can select a calendar template.</source>
       </trans-unit>
       <trans-unit id="tl_module.cal_showQuantity.0">
         <source>Show number of events</source>

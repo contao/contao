@@ -50,12 +50,11 @@
         <target>Selecteer de bestanden die u wilt toevoegen aan de nieuwsbrief.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.0">
-        <source>Custom e-mail template</source>
-        <target>Individuele e-mail template</target>
+        <source>E-mail template</source>
+        <target>E-mail template</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.1">
-        <source>Here you can override the default e-mail template of the channel.</source>
-        <target>De standaard e-mail template van het kanaal kunt u hier overschrijven.</target>
+        <source>Here you can override the e-mail template of the channel.</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendText.0">
         <source>Send as plain text</source>

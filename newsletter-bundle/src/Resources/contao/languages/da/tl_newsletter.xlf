@@ -50,12 +50,11 @@
         <target>Vælg filer du vil vedhæfte nyhedsbrevet.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.0">
-        <source>Custom e-mail template</source>
-        <target>Brugerdefineret e-mail skabelon</target>
+        <source>E-mail template</source>
+        <target>E-mail skabelon</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.1">
-        <source>Here you can override the default e-mail template of the channel.</source>
-        <target>Her kan vælge en anden skabelon end standardskabelonen for denne kanal.</target>
+        <source>Here you can override the e-mail template of the channel.</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendText.0">
         <source>Send as plain text</source>

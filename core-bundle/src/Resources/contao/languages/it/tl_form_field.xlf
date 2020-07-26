@@ -114,7 +114,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.datim.0">
         <source>Date and time</source>
-        <target>Data e tempo</target>
+        <target>Data e ora</target>
       </trans-unit>
       <trans-unit id="tl_form_field.datim.1">
         <source>Checks whether the input matches the global date and time format.</source>
@@ -291,12 +291,10 @@
         <target>Qui puoi inserire la dimensione del campo carica file (attributo &lt;em&gt;size&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_form_field.customTpl.0">
-        <source>Custom form field template</source>
-        <target>Template campi form personalizzato</target>
+        <source>Form field template</source>
       </trans-unit>
       <trans-unit id="tl_form_field.customTpl.1">
-        <source>Here you can overwrite the default form field template.</source>
-        <target>Qui è possibile definire un template personalizzato per sovrascrivere il template predefinito</target>
+        <source>Here you can select the form field template.</source>
       </trans-unit>
       <trans-unit id="tl_form_field.slabel.0">
         <source>Submit button label</source>

@@ -1,6 +1,6 @@
 {% trans_default_domain 'contao_default' %}
 <div class="cto-toolbar__open">
-    <a href="#" title="{{ 'MSC.showPreviewToolbar'|trans }}">{{ include('@ContaoCore/Collector/contao.svg') }}</a>
+    <a href="#" title="{{ 'MSC.openToolbar'|trans }}">{{ include('@ContaoCore/Collector/contao.svg') }}</a>
 </div>
 <div class="cto-toolbar__inside">
     <form action="{{ action }}" method="post">
@@ -11,9 +11,7 @@
                 <div>
                     <label for="ctrl_user">{{ 'MSC.feUser'|trans }}:</label>
                     <input type="text" name="user" id="ctrl_user" list="userlist" class="tl_text user" placeholder="{{ 'MSC.username'|trans }}" value="{{ user }}" autocomplete="off">
-                    <datalist id="userlist">
-                        <option value="-"></option>
-                    </datalist>
+                    <datalist id="userlist"></datalist>
                 </div>
             {% endif %}
             <div>
@@ -26,5 +24,6 @@
             </div>
         </div>
     </form>
-    <div class="cto-toolbar__close"><a href="#" title="{{ 'MSC.close'|trans }}">&times;</a></div>
+    <div class="cto-toolbar__close"><a href="#" title="{{ 'MSC.closeToolbar'|trans }}">&times;</a></div>
 </div>
+<div class="cto-toolbar__clear"></div>

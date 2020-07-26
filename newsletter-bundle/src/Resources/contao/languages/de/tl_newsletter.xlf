@@ -50,12 +50,12 @@
         <target>Bitte wählen Sie die anzuhängenden Dateien aus der Dateiübersicht.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.0">
-        <source>Custom e-mail template</source>
-        <target>Individuelles E-Mail-Template</target>
+        <source>E-mail template</source>
+        <target>E-Mail-Template</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.1">
-        <source>Here you can override the default e-mail template of the channel.</source>
-        <target>Hier können Sie das Standard-E-Mail-Template des Verteilers überschreiben.</target>
+        <source>Here you can override the e-mail template of the channel.</source>
+        <target>Hier können Sie das E-Mail-Template des Verteilers überschreiben.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendText.0">
         <source>Send as plain text</source>

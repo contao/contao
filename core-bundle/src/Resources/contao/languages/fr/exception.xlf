@@ -29,8 +29,7 @@
         <source>Open the current log file in the &lt;code&gt;var/logs&lt;/code&gt; directory and find the associated error message (usually the last one).</source>
       </trans-unit>
       <trans-unit id="XPT.errorExplain">
-        <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, search the &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;Contao support page&lt;/a&gt;.</source>
-        <target>L'exécution du script est interrompue, parce que quelque chose ne fonctionne pas correctement. Le message d'erreur actuel est caché par le présent avis pour des raisons de sécurité et peut être trouvé dans le fichier log courant (voir ci-dessus). Si vous ne comprenez pas le message d'erreur ou si vous ne savez pas comment résoudre le problème, veuillez consulter la &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;FAQ de Contao&lt;/a&gt; ou visitez la &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;page de support de Contao&lt;/a&gt;.</target>
+        <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, search the &lt;a href=&quot;https://contao.org/en/frequently-asked.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/en/support.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="XPT.requestToken">
         <source>Invalid request token</source>
@@ -49,8 +48,7 @@
         <target>Cette erreur se produit s'il y a une requête POST sans un jeton d'authentification valide. Dans Contao 2.10, le contrôle du référant a été remplacé par un système de demande de jetons. Si le problème persiste, vous utilisez peut-être une extension incompatible ou votre installation de Contao n'a pas été correctement mise à jour.</target>
       </trans-unit>
       <trans-unit id="XPT.tokenExplainTwo">
-        <source>For more information, search the &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;Contao support page&lt;/a&gt;.</source>
-        <target>Pour plus d'information, veuillez consulter la &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;FAQ de Contao&lt;/a&gt; ou visiter la &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;page de support de Contao&lt;/a&gt;.</target>
+        <source>For more information, search the &lt;a href=&quot;https://contao.org/en/frequently-asked.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/en/support.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="XPT.unavailable">
         <source>Service unavailable</source>

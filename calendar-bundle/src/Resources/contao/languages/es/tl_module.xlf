@@ -78,16 +78,14 @@
         <target>Plantilla de eventos</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_template.1">
-        <source>Here you can select the event template.</source>
-        <target>Seleccionar la plantilla de eventos. Se puede añadir diseños personalizados para eventos en la carpeta &lt;em&gt;templates&lt;/em&gt;. Los archivos de plantillas de eventos empieza por &lt;em&gt;event_&lt;/em&gt; y requieren la extensión de archivo &lt;em&gt;.tpl&lt;/em&gt;.</target>
+        <source>Here you can select an event template.</source>
       </trans-unit>
       <trans-unit id="tl_module.cal_ctemplate.0">
         <source>Calendar template</source>
         <target>Plantilla del Calendario</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_ctemplate.1">
-        <source>Here you can select the calendar template.</source>
-        <target>Seleccionar la plantilla para el calendario.</target>
+        <source>Here you can select a calendar template.</source>
       </trans-unit>
       <trans-unit id="tl_module.cal_showQuantity.0">
         <source>Show number of events</source>

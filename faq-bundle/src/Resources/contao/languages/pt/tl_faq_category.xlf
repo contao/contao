@@ -82,8 +82,7 @@
         <target>Permitir que somente usuários autenticados podem criar comentários.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>Disabilitar pergunta de segurança</target>
+        <source>Disable spam protection</source>
       </trans-unit>
       <trans-unit id="tl_faq_category.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>

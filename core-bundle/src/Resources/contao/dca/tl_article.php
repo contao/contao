@@ -250,9 +250,9 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			'inputType'               => 'select',
 			'options_callback' => static function ()
 			{
-				return Contao\Controller::getTemplateGroup('mod_article_');
+				return Contao\Controller::getTemplateGroup('mod_article_', array(), 'mod_article');
 			},
-			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'protected' => array
@@ -940,17 +940,19 @@ class tl_article extends Contao\Backend
 			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to publish/unpublish article ID "' . $intId . '".');
 		}
 
+		$objRow = $this->Database->prepare("SELECT * FROM tl_article WHERE id=?")
+								 ->limit(1)
+								 ->execute($intId);
+
+		if ($objRow->numRows < 1)
+		{
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid article ID "' . $intId . '".');
+		}
+
 		// Set the current record
 		if ($dc)
 		{
-			$objRow = $this->Database->prepare("SELECT * FROM tl_article WHERE id=?")
-									 ->limit(1)
-									 ->execute($intId);
-
-			if ($objRow->numRows)
-			{
-				$dc->activeRecord = $objRow;
-			}
+			$dc->activeRecord = $objRow;
 		}
 
 		$objVersions = new Contao\Versions('tl_article', $intId);

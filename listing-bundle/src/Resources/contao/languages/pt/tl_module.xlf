@@ -62,16 +62,14 @@
         <target>Layout da lista</target>
       </trans-unit>
       <trans-unit id="tl_module.list_layout.1">
-        <source>Here you can select the list template.</source>
-        <target>Por favor escolha um layout de lista. Você pode adicionar layouts de lista personalizados a pasta &lt;em&gt;templates&lt;/em&gt;. Layouts de lista iniciam com &lt;em&gt;list_&lt;/em&gt; e requerem a extensão &lt;em&gt;.tpl&lt;/em&gt;</target>
+        <source>Here you can select a list template.</source>
       </trans-unit>
       <trans-unit id="tl_module.list_info_layout.0">
         <source>Details page template</source>
         <target>Layout de detalhes de página</target>
       </trans-unit>
       <trans-unit id="tl_module.list_info_layout.1">
-        <source>Here you can select the details page template.</source>
-        <target>Favor escolher um layout de detalhes de página. Você pode adicionar layouts de lista personalizados à pasta &lt;em&gt;templates&lt;/em&gt;. Layouts de Detalhes de página iniciam com &lt;em&gt;info_&lt;/em&gt; e requerem a extensão &lt;em&gt;.tpl&lt;/em&gt;</target>
+        <source>Here you can select a details page template.</source>
       </trans-unit>
     </body>
   </file>

@@ -42,20 +42,17 @@
         <target>Zezwól tylko zalogowanym użytkownikom na tworzenie komentarzy</target>
       </trans-unit>
       <trans-unit id="tl_content.com_disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>Wyłącz pytanie kontrolne</target>
+        <source>Disable spam protection</source>
       </trans-unit>
       <trans-unit id="tl_content.com_disableCaptcha.1">
-        <source>Here you can disable the security question (not recommended).</source>
-        <target>Tu możesz wyłączyć pytanie kontrolne (nie zalecane).</target>
+        <source>Here you can disable the spam protection (not recommended).</source>
       </trans-unit>
       <trans-unit id="tl_content.com_template.0">
         <source>Comments template</source>
         <target>Szablon komentarzy</target>
       </trans-unit>
       <trans-unit id="tl_content.com_template.1">
-        <source>Here you can select the comments template.</source>
-        <target>Wybierz szablon komentarzy. Własne szablony komentarzy można zapisać do katalogu &lt;em&gt;templates&lt;/em&gt;. Pliki szablonów komentarzy muszą zaczynać się &lt;em&gt;com_&lt;/em&gt; a kończyć &lt;em&gt;.tpl&lt;/em&gt;.</target>
+        <source>Here you can select a comments template.</source>
       </trans-unit>
       <trans-unit id="tl_content.comment_legend">
         <source>Comment settings</source>

@@ -22,8 +22,7 @@
         <target>电子邮件模板</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.template.1">
-        <source>Here you can choose the e-mail template.</source>
-        <target>您可以在这里选择电子邮件模板。</target>
+        <source>Here you can select an e-mail template.</source>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.sender.0">
         <source>Sender e-mail address</source>

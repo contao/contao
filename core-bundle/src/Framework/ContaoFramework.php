@@ -18,12 +18,16 @@ use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Session\LazySessionAccess;
+use Contao\Environment;
 use Contao\Input;
+use Contao\InsertTags;
+use Contao\Model\Registry;
 use Contao\RequestToken;
 use Contao\System;
 use Contao\TemplateLoader;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -57,9 +61,14 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     private $tokenChecker;
 
     /**
+     * @var Filesystem
+     */
+    private $filesystem;
+
+    /**
      * @var string
      */
-    private $rootDir;
+    private $projectDir;
 
     /**
      * @var int
@@ -86,12 +95,13 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      */
     private $hookListeners = [];
 
-    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker, string $rootDir, int $errorLevel)
+    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker, Filesystem $filesystem, string $projectDir, int $errorLevel)
     {
         $this->requestStack = $requestStack;
         $this->scopeMatcher = $scopeMatcher;
         $this->tokenChecker = $tokenChecker;
-        $this->rootDir = $rootDir;
+        $this->filesystem = $filesystem;
+        $this->projectDir = $projectDir;
         $this->errorLevel = $errorLevel;
     }
 
@@ -99,6 +109,16 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     {
         $this->adapterCache = [];
         $this->isFrontend = false;
+
+        if (!$this->isInitialized()) {
+            return;
+        }
+
+        Environment::reset();
+        Input::resetCache();
+        Input::resetUnusedGet();
+        InsertTags::reset();
+        Registry::getInstance()->reset();
     }
 
     public function isInitialized(): bool
@@ -164,7 +184,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         }
 
         \define('TL_START', microtime(true));
-        \define('TL_ROOT', $this->rootDir);
+        \define('TL_ROOT', $this->projectDir);
         \define('TL_REFERER_ID', $this->getRefererId());
 
         if (!\defined('TL_SCRIPT')) {
@@ -363,15 +383,19 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
 
     private function triggerInitializeSystemHook(): void
     {
-        if (isset($GLOBALS['TL_HOOKS']['initializeSystem']) && \is_array($GLOBALS['TL_HOOKS']['initializeSystem'])) {
+        if (
+            !empty($GLOBALS['TL_HOOKS']['initializeSystem'])
+            && \is_array($GLOBALS['TL_HOOKS']['initializeSystem'])
+            && is_dir($this->projectDir.'/system/tmp')
+        ) {
             foreach ($GLOBALS['TL_HOOKS']['initializeSystem'] as $callback) {
                 System::importStatic($callback[0])->{$callback[1]}();
             }
         }
 
-        if (file_exists($this->rootDir.'/system/config/initconfig.php')) {
+        if ($this->filesystem->exists($this->projectDir.'/system/config/initconfig.php')) {
             @trigger_error('Using the "initconfig.php" file has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
-            include $this->rootDir.'/system/config/initconfig.php';
+            include $this->projectDir.'/system/config/initconfig.php';
         }
     }
 

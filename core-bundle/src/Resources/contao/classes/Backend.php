@@ -49,9 +49,9 @@ abstract class Backend extends Controller
 	public static function getTheme()
 	{
 		$theme = Config::get('backendTheme');
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
-		if ($theme != '' && $theme != 'flexible' && is_dir($rootDir . '/system/themes/' . $theme))
+		if ($theme != '' && $theme != 'flexible' && is_dir($projectDir . '/system/themes/' . $theme))
 		{
 			return $theme;
 		}
@@ -67,12 +67,12 @@ abstract class Backend extends Controller
 	public static function getThemes()
 	{
 		$arrReturn = array();
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
-		$arrThemes = scan($rootDir . '/system/themes');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+		$arrThemes = scan($projectDir . '/system/themes');
 
 		foreach ($arrThemes as $strTheme)
 		{
-			if (strncmp($strTheme, '.', 1) === 0 || !is_dir($rootDir . '/system/themes/' . $strTheme))
+			if (strncmp($strTheme, '.', 1) === 0 || !is_dir($projectDir . '/system/themes/' . $strTheme))
 			{
 				continue;
 			}
@@ -98,10 +98,10 @@ abstract class Backend extends Controller
 		}
 
 		$lang = str_replace('-', '_', $lang);
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// The translation exists
-		if (file_exists($rootDir . '/assets/tinymce4/js/langs/' . $lang . '.js'))
+		if (file_exists($projectDir . '/assets/tinymce4/js/langs/' . $lang . '.js'))
 		{
 			return $lang;
 		}
@@ -109,7 +109,7 @@ abstract class Backend extends Controller
 		if (($short = substr($GLOBALS['TL_LANGUAGE'], 0, 2)) != $lang)
 		{
 			// Try the short tag, e.g. "de" instead of "de_CH"
-			if (file_exists($rootDir . '/assets/tinymce4/js/langs/' . $short . '.js'))
+			if (file_exists($projectDir . '/assets/tinymce4/js/langs/' . $short . '.js'))
 			{
 				return $short;
 			}
@@ -117,7 +117,7 @@ abstract class Backend extends Controller
 		elseif (($long = $short . '_' . strtoupper($short)) != $lang)
 		{
 			// Try the long tag, e.g. "fr_FR" instead of "fr" (see #6952)
-			if (file_exists($rootDir . '/assets/tinymce4/js/langs/' . $long . '.js'))
+			if (file_exists($projectDir . '/assets/tinymce4/js/langs/' . $long . '.js'))
 			{
 				return $long;
 			}
@@ -194,19 +194,19 @@ abstract class Backend extends Controller
 	public static function getTinyTemplates()
 	{
 		$strDir = Config::get('uploadPath') . '/tiny_templates';
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
-		if (!is_dir($rootDir . '/' . $strDir))
+		if (!is_dir($projectDir . '/' . $strDir))
 		{
 			return '';
 		}
 
 		$arrFiles = array();
-		$arrTemplates = scan($rootDir . '/' . $strDir);
+		$arrTemplates = scan($projectDir . '/' . $strDir);
 
 		foreach ($arrTemplates as $strFile)
 		{
-			if (strncmp('.', $strFile, 1) !== 0 && is_file($rootDir . '/' . $strDir . '/' . $strFile))
+			if (strncmp('.', $strFile, 1) !== 0 && is_file($projectDir . '/' . $strDir . '/' . $strFile))
 			{
 				$arrFiles[] = '{ title: "' . $strFile . '", url: "' . $strDir . '/' . $strFile . '" }';
 			}
@@ -1007,10 +1007,10 @@ abstract class Backend extends Controller
 			throw new \RuntimeException('Insecure path ' . $strNode);
 		}
 
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Currently selected folder does not exist
-		if (!is_dir($rootDir . '/' . $strNode))
+		if (!is_dir($projectDir . '/' . $strNode))
 		{
 			$objSession->set($strKey, '');
 
@@ -1344,8 +1344,8 @@ abstract class Backend extends Controller
 			$strFilter = 'gif,jpg,jpeg,png';
 		}
 
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
-		$arrPages = scan($rootDir . '/' . $strFolder);
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+		$arrPages = scan($projectDir . '/' . $strFolder);
 
 		// Empty folder
 		if (empty($arrPages))
@@ -1372,7 +1372,7 @@ abstract class Backend extends Controller
 			}
 
 			// Folders
-			if (is_dir($rootDir . '/' . $strFolder . '/' . $strFile))
+			if (is_dir($projectDir . '/' . $strFolder . '/' . $strFile))
 			{
 				$strFolders .=  $this->doCreateFileList($strFolder . '/' . $strFile, $level, $strFilter);
 			}

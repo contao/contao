@@ -62,16 +62,14 @@
         <target>Rozloženie zoznamu</target>
       </trans-unit>
       <trans-unit id="tl_module.list_layout.1">
-        <source>Here you can select the list template.</source>
-        <target>Prosím vyberte rozloženie zoznamu. Môžete pridať vlastné rozloženia zoznamu do priečinka &lt;em&gt;templates&lt;/em&gt;. Šablóny rozloženia začínajú prefixom &lt;em&gt;list_&lt;/em&gt; a vyžadujú súborovú príponu &lt;em&gt;.tpl&lt;/em&gt;.</target>
+        <source>Here you can select a list template.</source>
       </trans-unit>
       <trans-unit id="tl_module.list_info_layout.0">
         <source>Details page template</source>
         <target>Rozloženie stránky detailneho zobrazenia</target>
       </trans-unit>
       <trans-unit id="tl_module.list_info_layout.1">
-        <source>Here you can select the details page template.</source>
-        <target>Prosím, vyberte roloženie stránky podrobností. Môžete pridať vlastné rozloženia stránky podrobností do priečinka &lt;em&gt;templates&lt;/em&gt;. Šablóny rozloženia začínajú prefixom &lt;em&gt;info_&lt;/em&gt; a vyžadujú súborovú príponu &lt;em&gt;.tpl&lt;/em&gt;.</target>
+        <source>Here you can select a details page template.</source>
       </trans-unit>
     </body>
   </file>

@@ -50,12 +50,11 @@
         <target>Por favor seleccione los archivos que quiere adjuntar al boletín.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.0">
-        <source>Custom e-mail template</source>
-        <target>Plantilla E-mail personalizada</target>
+        <source>E-mail template</source>
+        <target>Plantilla e-mail</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.1">
-        <source>Here you can override the default e-mail template of the channel.</source>
-        <target>Aquí puede sobreescribir la plantilla predeterminada del canal.</target>
+        <source>Here you can override the e-mail template of the channel.</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendText.0">
         <source>Send as plain text</source>

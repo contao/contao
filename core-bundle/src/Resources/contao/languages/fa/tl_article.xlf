@@ -82,12 +82,10 @@
         <target>پنهان کردن مقاله اگر یک عضو وارد شده باشد.</target>
       </trans-unit>
       <trans-unit id="tl_article.customTpl.0">
-        <source>Custom article template</source>
-        <target>قالب مقاله سفارشی</target>
+        <source>Article template</source>
       </trans-unit>
       <trans-unit id="tl_article.customTpl.1">
-        <source>Here you can overwrite the default article template.</source>
-        <target>شما اینجا می‌توانید قالب مقاله پیش‌فرض را رونویسی کنید.</target>
+        <source>Here you can select the article template.</source>
       </trans-unit>
       <trans-unit id="tl_article.protected.0">
         <source>Protect article</source>

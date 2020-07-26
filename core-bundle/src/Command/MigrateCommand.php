@@ -27,6 +27,8 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class MigrateCommand extends Command
 {
+    protected static $defaultName = 'contao:migrate';
+
     /**
      * @var MigrationCollection
      */
@@ -71,7 +73,6 @@ class MigrateCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('contao:migrate')
             ->addOption('with-deletes', null, InputOption::VALUE_NONE, 'Execute all database migrations including DROP queries. Can be used together with --no-interaction.')
             ->addOption('schema-only', null, InputOption::VALUE_NONE, 'Execute database schema migration only.')
             ->setDescription('Executes migrations and the database schema diff.')
@@ -206,13 +207,13 @@ class MigrateCommand extends Command
         while (true) {
             $this->installer->compileCommands();
 
-            if (!$commands = $this->installer->getCommands()) {
+            if (!$commands = $this->installer->getCommands(false)) {
                 return true;
             }
 
             $hasNewCommands = \count(
                 array_filter(
-                    array_keys(array_merge(...array_values($commands))),
+                    array_keys($commands),
                     static function ($hash) use ($commandsByHash) {
                         return !isset($commandsByHash[$hash]);
                     }
@@ -225,7 +226,7 @@ class MigrateCommand extends Command
 
             $this->io->section('Pending database migrations');
 
-            $commandsByHash = array_merge(...array_values($commands));
+            $commandsByHash = $commands;
 
             $this->io->listing($commandsByHash);
 
@@ -285,17 +286,16 @@ class MigrateCommand extends Command
     private function getCommandHashes(array $commands, bool $withDrops): array
     {
         if (!$withDrops) {
-            unset($commands['ALTER_DROP']);
-
-            foreach ($commands as $category => $commandsByHash) {
-                foreach ($commandsByHash as $hash => $command) {
-                    if ('DROP' === $category && false === strpos($command, 'DROP INDEX')) {
-                        unset($commands[$category][$hash]);
-                    }
+            foreach ($commands as $hash => $command) {
+                if (
+                    (0 === strncmp($command, 'DROP ', 5) && 0 !== strncmp($command, 'DROP INDEX', 10))
+                    || preg_match('/^ALTER TABLE [^ ]+ DROP /', $command, $matches)
+                ) {
+                    unset($commands[$hash]);
                 }
             }
         }
 
-        return \count($commands) ? array_keys(array_merge(...array_values($commands))) : [];
+        return array_keys($commands);
     }
 }

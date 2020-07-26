@@ -298,12 +298,12 @@
         <target>アップロードの項目の大きさ(&lt;em&gt;size&lt;/em&gt;属性)を入力できます。</target>
       </trans-unit>
       <trans-unit id="tl_form_field.customTpl.0">
-        <source>Custom form field template</source>
-        <target>独自のフォームの項目のテンプレート</target>
+        <source>Form field template</source>
+        <target>フォームの項目のテンプレート</target>
       </trans-unit>
       <trans-unit id="tl_form_field.customTpl.1">
-        <source>Here you can overwrite the default form field template.</source>
-        <target>初期設定のフォームの項目のテンプレートを上書きできます。</target>
+        <source>Here you can select the form field template.</source>
+        <target>フォームの項目のテンプレートを選択できます。</target>
       </trans-unit>
       <trans-unit id="tl_form_field.slabel.0">
         <source>Submit button label</source>

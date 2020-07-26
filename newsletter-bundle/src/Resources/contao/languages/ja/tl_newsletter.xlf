@@ -50,12 +50,12 @@
         <target>ファイルディレクトリから添付するファイルを選択してください。</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.0">
-        <source>Custom e-mail template</source>
-        <target>独自の電子メールのテンプレート</target>
+        <source>E-mail template</source>
+        <target>電子メールのテンプレート</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.1">
-        <source>Here you can override the default e-mail template of the channel.</source>
-        <target>チャネルの電子メールのテンプレートの初期設定を上書きできます。</target>
+        <source>Here you can override the e-mail template of the channel.</source>
+        <target>チャネルの電子メールのテンプレートを上書きできます。</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendText.0">
         <source>Send as plain text</source>

@@ -373,7 +373,25 @@ class tl_faq extends Contao\Backend
 				break;
 
 			case 'create':
-				if (!strlen(Contao\Input::get('pid')) || !in_array(Contao\Input::get('pid'), $root))
+				if (Contao\Input::get('mode') == 1)
+				{
+					$objFaq = $this->Database->prepare("SELECT pid FROM tl_faq WHERE id=?")
+											 ->limit(1)
+											 ->execute(Contao\Input::get('pid'));
+
+					if ($objFaq->numRows < 1)
+					{
+						throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid FAQ ID ' . Contao\Input::get('pid') . '.');
+					}
+
+					$pid = $objFaq->pid;
+				}
+				else
+				{
+					$pid = Contao\Input::get('pid');
+				}
+
+				if (!in_array($pid, $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to create FAQs in FAQ category ID ' . Contao\Input::get('pid') . '.');
 				}
@@ -588,17 +606,19 @@ class tl_faq extends Contao\Backend
 			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to publish/unpublish FAQ ID ' . $intId . '.');
 		}
 
+		$objRow = $this->Database->prepare("SELECT * FROM tl_faq WHERE id=?")
+								 ->limit(1)
+								 ->execute($intId);
+
+		if ($objRow->numRows < 1)
+		{
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid FAQ ID ' . $intId . '.');
+		}
+
 		// Set the current record
 		if ($dc)
 		{
-			$objRow = $this->Database->prepare("SELECT * FROM tl_faq WHERE id=?")
-									 ->limit(1)
-									 ->execute($intId);
-
-			if ($objRow->numRows)
-			{
-				$dc->activeRecord = $objRow;
-			}
+			$dc->activeRecord = $objRow;
 		}
 
 		$objVersions = new Contao\Versions('tl_faq', $intId);

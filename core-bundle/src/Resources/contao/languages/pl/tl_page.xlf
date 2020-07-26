@@ -342,8 +342,7 @@
         <target>Pokaż tylko dla osób niezalogowanych</target>
       </trans-unit>
       <trans-unit id="tl_page.guests.1">
-        <source>Hide the page if there is an authenticated user.</source>
-        <target>Nie pokazuj strony w menu dla osób zalogowanych.</target>
+        <source>Hide the page if a member is logged in.</source>
       </trans-unit>
       <trans-unit id="tl_page.tabindex.0">
         <source>Tab index</source>
@@ -398,8 +397,7 @@
         <target>Dwuskładnikowa strona przekierowania</target>
       </trans-unit>
       <trans-unit id="tl_page.twoFactorJumpTo.1">
-        <source>Please choose the page to which visitors will be redirected when setting up two-factor authentication.</source>
-        <target>Wybierz stronę, na którą zostaną przekierowani użytkownicy podczas konfigurowania uwierzytelniania dwuskładnikowego.</target>
+        <source>Please choose the page to which members will be redirected to set up two-factor authentication.</source>
       </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>

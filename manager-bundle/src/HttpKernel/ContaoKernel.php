@@ -316,20 +316,20 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
     private function getConfigFile(string $file): ?string
     {
-        $rootDir = $this->getProjectDir();
+        $projectDir = $this->getProjectDir();
 
         foreach (['.yaml', '.yml'] as $ext) {
-            if (file_exists($rootDir.'/config/'.$file.$ext)) {
-                return $rootDir.'/config/'.$file.$ext;
+            if (file_exists($projectDir.'/config/'.$file.$ext)) {
+                return $projectDir.'/config/'.$file.$ext;
             }
         }
 
         // Fallback to the legacy config file (see #566)
         foreach (['.yaml', '.yml'] as $ext) {
-            if (file_exists($rootDir.'/app/config/'.$file.$ext)) {
+            if (file_exists($projectDir.'/app/config/'.$file.$ext)) {
                 @trigger_error(sprintf('Storing the "%s" file in the "app/config" folder has been deprecated and will no longer work in Contao 5.0. Move it to the "config" folder instead.', $file.$ext), E_USER_DEPRECATED);
 
-                return $rootDir.'/app/config/'.$file.$ext;
+                return $projectDir.'/app/config/'.$file.$ext;
             }
         }
 

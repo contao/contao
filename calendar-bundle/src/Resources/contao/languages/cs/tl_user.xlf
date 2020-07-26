@@ -18,16 +18,14 @@
         <target>Zde můžete určit práva kalendáře.</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeeds.0">
-        <source>Allowed RSS feeds</source>
-        <target>Povolené kanály RSS</target>
+        <source>Allowed calendar feeds</source>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeeds.1">
         <source>Here you can grant access to one or more calendar feeds.</source>
         <target>Zde můžete zajistit přístup k jednomu či více kanálům kalendářů.</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeedp.0">
-        <source>RSS feed permissions</source>
-        <target>Přístupová práva ke kanálu RSS</target>
+        <source>Calendar feed permissions</source>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeedp.1">
         <source>Here you can define the calendar feed permissions.</source>

@@ -62,16 +62,14 @@
         <target>Listelayout</target>
       </trans-unit>
       <trans-unit id="tl_module.list_layout.1">
-        <source>Here you can select the list template.</source>
-        <target>Vælg et layout til lister. Du kan tilføje tilpassede layouts til folderen &lt;em&gt;templates&lt;/em&gt;. Filnavne for listeskabelonfiler begynder med &lt;em&gt;list_&lt;/em&gt; og skal have filendelse &lt;em&gt;.tpl&lt;/em&gt;.</target>
+        <source>Here you can select a list template.</source>
       </trans-unit>
       <trans-unit id="tl_module.list_info_layout.0">
         <source>Details page template</source>
         <target>Layout for yderligere detaljer</target>
       </trans-unit>
       <trans-unit id="tl_module.list_info_layout.1">
-        <source>Here you can select the details page template.</source>
-        <target>Vælg et layout for yderligere detaljer. Du kan tilføje tilpassede layouts til folderen &lt;em&gt;templates&lt;/em&gt;. Filnavne for skabelonfiler begynder med &lt;em&gt;info_&lt;/em&gt; og skal have filendelse &lt;em&gt;.tpl&lt;/em&gt;.</target>
+        <source>Here you can select a details page template.</source>
       </trans-unit>
     </body>
   </file>

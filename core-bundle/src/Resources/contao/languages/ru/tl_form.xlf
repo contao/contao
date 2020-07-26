@@ -114,12 +114,12 @@
         <target>Хранить принятые данные в базе данных.</target>
       </trans-unit>
       <trans-unit id="tl_form.customTpl.0">
-        <source>Custom form template</source>
-        <target>Пользовательский шаблон формы</target>
+        <source>Form template</source>
+        <target>Шаблон формы</target>
       </trans-unit>
       <trans-unit id="tl_form.customTpl.1">
-        <source>Here you can overwrite the default form template.</source>
-        <target>Вы можете переписать шаблон формы по умолчанию.</target>
+        <source>Here you can select the form template.</source>
+        <target>Вы можете выбрать шаблон формы.</target>
       </trans-unit>
       <trans-unit id="tl_form.targetTable.0">
         <source>Target table</source>

@@ -55,6 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.member.1">
         <source>Here you can associate the comment with a member.</source>
+        <target>在这里将评论与一位成员关联。</target>
       </trans-unit>
       <trans-unit id="tl_comments.comment.0">
         <source>Comment</source>
