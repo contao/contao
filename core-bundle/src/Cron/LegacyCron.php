@@ -15,8 +15,9 @@ namespace Contao\CoreBundle\Cron;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\ServiceAnnotation\CronJob;
 use Contao\System;
+use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
-class LegacyCron
+class LegacyCron implements ServiceAnnotationInterface
 {
     /**
      * @var ContaoFramework

@@ -18,8 +18,9 @@ use FOS\HttpCacheBundle\Http\SymfonyResponseTagger;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as SymfonyAbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
-abstract class AbstractController extends SymfonyAbstractController
+abstract class AbstractController extends SymfonyAbstractController implements ServiceAnnotationInterface
 {
     public static function getSubscribedServices()
     {
