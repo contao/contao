@@ -23,7 +23,7 @@ use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
  */
 class MakeResponsePrivateListener
 {
-    public const DEBUG_HEADER = 'Contao-Response-Private-Reason';
+    public const DEBUG_HEADER = 'Contao-Private-Response-Reason';
 
     /**
      * @var ScopeMatcher
