@@ -3183,21 +3183,26 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($container->has('contao.security.backend_access_voter'));
 
         $definition = $container->getDefinition('contao.security.backend_access_voter');
+    }
 
     public function testRegistersTheSecurityPageModelFrontendAccessVoter(): void
     {
-        $this->assertTrue($this->container->has(PageModelFrontendAccessVoter::class));
+        $container = $this->getContainerBuilder();
 
-        $definition = $this->container->getDefinition(PageModelFrontendAccessVoter::class);
+        $this->assertTrue($container->has(PageModelFrontendAccessVoter::class));
+
+        $definition = $container->getDefinition(PageModelFrontendAccessVoter::class);
 
         $this->assertTrue($definition->isPrivate());
     }
 
     public function testRegistersTheSecurityVisibleElementAccessVoter(): void
     {
-        $this->assertTrue($this->container->has(CoreBundleVisibleElementVoter::class));
+        $container = $this->getContainerBuilder();
 
-        $definition = $this->container->getDefinition(CoreBundleVisibleElementVoter::class);
+        $this->assertTrue($container->has(CoreBundleVisibleElementVoter::class));
+
+        $definition = $container->getDefinition(CoreBundleVisibleElementVoter::class);
 
         $this->assertTrue($definition->isPrivate());
     }
