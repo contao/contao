@@ -424,7 +424,7 @@ abstract class Events extends Module
 	 */
 	public static function generateEventUrl($objEvent, $blnAbsolute=false)
 	{
-		@trigger_error(__METHOD__.' is deprecated since Contao 4.10. Use the Symfony router instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/calendar-bundle', '4.10', 'Events::generateEventUrl() is deprecated, use the Symfony router instead.');
 
 		$strUrl =  System::getContainer()->get('router')->generate(
 			PageRoute::ROUTE_NAME,
