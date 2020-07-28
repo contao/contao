@@ -271,7 +271,7 @@ fieldset.checkbox_container,fieldset.radio_container {
 	cursor:not-allowed;
 }
 .tl_textarea {
-	height:336px;
+	height:240px;
 	padding:4px 6px;
 	line-height:1.45;
 }

@@ -10,6 +10,7 @@ if ($GLOBALS['TL_CONFIG']['useRTE']):
 <script>
 window.tinymce && tinymce.init({
   selector: '#<?= $this->selector ?>',
+  min_height: 336,
   language: '<?= Backend::getTinyMceLanguage() ?>',
   element_format: 'html',
   document_base_url: '<?= Environment::get('base') ?>',
