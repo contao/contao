@@ -151,11 +151,10 @@ EOT;
 		}
 		else
 		{
-			$url = System::getContainer()->get('router')->generate(
-				PageRoute::ROUTE_NAME,
-				[PageRoute::CONTENT_PARAMETER => $tempModel],
-				UrlGeneratorInterface::ABSOLUTE_URL
-			);
+			$url = System::getContainer()
+				->get('router')
+				->generate(PageRoute::ROUTE_NAME, array(PageRoute::CONTENT_PARAMETER => $tempModel), UrlGeneratorInterface::ABSOLUTE_URL)
+			;
 		}
 
 		return str_replace($placeholder, '%s', $url);

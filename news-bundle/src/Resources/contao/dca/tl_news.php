@@ -19,7 +19,6 @@ use Contao\Image;
 use Contao\Input;
 use Contao\News;
 use Contao\NewsArchiveModel;
-use Contao\NewsModel;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Versions;
