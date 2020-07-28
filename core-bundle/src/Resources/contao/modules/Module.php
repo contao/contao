@@ -315,47 +315,58 @@ abstract class Module extends Frontend
 
 				$href = null;
 
-				try
+				// Get href
+				switch ($objSubpage->type)
 				{
-					// Get href
-					switch ($objSubpage->type)
-					{
-						case 'redirect':
-							$href = $objSubpage->url;
+					case 'redirect':
+						$href = $objSubpage->url;
 
-							if (strncasecmp($href, 'mailto:', 7) === 0)
-							{
-								$href = StringUtil::encodeEmail($href);
-							}
-							break;
+						if (strncasecmp($href, 'mailto:', 7) === 0)
+						{
+							$href = StringUtil::encodeEmail($href);
+						}
+						break;
 
-						case 'forward':
-							if ($objSubpage->jumpTo)
-							{
-								$objNext = PageModel::findPublishedById($objSubpage->jumpTo);
-							}
-							else
-							{
-								$objNext = PageModel::findFirstPublishedRegularByPid($objSubpage->id);
-							}
+					case 'forward':
+						if ($objSubpage->jumpTo)
+						{
+							$objNext = PageModel::findPublishedById($objSubpage->jumpTo);
+						}
+						else
+						{
+							$objNext = PageModel::findFirstPublishedRegularByPid($objSubpage->id);
+						}
 
-							// Hide the link if the target page is invisible
-							if (!$objNext instanceof PageModel || (!$objNext->loadDetails()->isPublic && !BE_USER_LOGGED_IN))
-							{
-								continue 2;
-							}
+						// Hide the link if the target page is invisible
+						if (!$objNext instanceof PageModel || (!$objNext->loadDetails()->isPublic && !BE_USER_LOGGED_IN))
+						{
+							continue 2;
+						}
 
+						try
+						{
 							$href = $objNext->getFrontendUrl();
-							break;
+						}
+						catch (ExceptionInterface $exception)
+						{
+							System::log('Unable to generate URL for page ID '.$objNext->id.': '.$exception->getMessage(), __METHOD__, TL_ERROR);
 
-						default:
+							continue 2;
+						}
+						break;
+
+					default:
+						try
+						{
 							$href = $objSubpage->getFrontendUrl();
-							break;
-					}
-				}
-				catch (ExceptionInterface $exception)
-				{
-					continue;
+						}
+						catch (ExceptionInterface $exception)
+						{
+							System::log('Unable to generate URL for page ID '.$objSubpage->id.': '.$exception->getMessage(), __METHOD__, TL_ERROR);
+
+							continue 2;
+						}
+						break;
 				}
 
 				$items[] = $this->compileNavigationRow($objPage, $objSubpage, $subitems, $href);
