@@ -1196,14 +1196,14 @@ class PageUrlListenerTest extends TestCase
             [
                 'id' => 3,
                 'pid' => 1,
-                'alias' => 'bar',
+                'alias' => '',
                 'urlPrefix' => '',
                 'urlSuffix' => '.html',
             ],
             [
                 'id' => 4,
                 'pid' => 3,
-                'alias' => '',
+                'alias' => 'foo/bar',
                 'urlPrefix' => '',
                 'urlSuffix' => '.html',
             ],
@@ -1225,8 +1225,8 @@ class PageUrlListenerTest extends TestCase
 
         $connection = $this->mockConnection(
             [['urlPrefix' => 'de', 'urlSuffix' => '.html']],
-            [2, 3],
-            ['foo', 'bar'],
+            [2, 3, 4],
+            [0 => 'foo', 2 => 'foo/bar'],
             [[], [], [6]],
             true
         );
@@ -1622,6 +1622,10 @@ class PageUrlListenerTest extends TestCase
         $statements[] = $statement;
 
         foreach ($ids as $k => $id) {
+            if (!isset($aliases[$k])) {
+                continue;
+            }
+
             $args[] = [
                 'SELECT id FROM tl_page WHERE alias LIKE :alias AND id!=:id',
                 [

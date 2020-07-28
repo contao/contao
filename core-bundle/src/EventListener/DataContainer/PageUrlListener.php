@@ -240,11 +240,10 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
 
         /** @var PageModel $page */
         foreach ($pages as $page) {
-            if (!$page->alias) {
-                continue;
+            if ($page->alias) {
+                $this->aliasExists($page->alias, (int) $page->id, $rootPage, true);
             }
 
-            $this->aliasExists($page->alias, (int) $page->id, $rootPage, true);
             $this->recursiveValidatePages((int) $page->id, $rootPage);
         }
     }
