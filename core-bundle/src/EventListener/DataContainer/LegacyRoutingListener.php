@@ -18,12 +18,11 @@ use Contao\DataContainer;
 use Contao\Image;
 use Contao\StringUtil;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
 /**
  * @internal
  */
-class LegacyRoutingListener implements ServiceAnnotationInterface
+class LegacyRoutingListener
 {
     /**
      * @var ContaoFramework

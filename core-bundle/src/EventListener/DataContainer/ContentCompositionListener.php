@@ -28,9 +28,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
-class ContentCompositionListener implements ServiceAnnotationInterface
+class ContentCompositionListener
 {
     /**
      * @var ContaoFramework

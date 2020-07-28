@@ -18,15 +18,12 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
 class DisableAppConfiguredSettingsListenerTest extends TestCase
 {
     public function testAnnotatedCallbacks(): void
     {
         $listener = $this->createListener();
-
-        $this->assertInstanceOf(ServiceAnnotationInterface::class, $listener);
 
         $annotationReader = new AnnotationReader();
         $annotation = $annotationReader->getClassAnnotation(new \ReflectionClass($listener), Callback::class);
