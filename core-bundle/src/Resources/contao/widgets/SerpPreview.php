@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Symfony\Component\Routing\Exception\InvalidParameterException;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
  * @property array    $titleFields
@@ -49,7 +49,7 @@ class SerpPreview extends Widget
 			// Get the URL with a %s placeholder for the alias or ID
 			$url = $this->getUrl($model);
 		}
-		catch (InvalidParameterException $exception)
+		catch (ExceptionInterface $routingException)
 		{
 			if ($model->requireItem)
 			{
