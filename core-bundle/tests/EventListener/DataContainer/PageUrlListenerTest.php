@@ -1139,6 +1139,7 @@ class PageUrlListenerTest extends TestCase
             ]
         );
 
+        // Expects exception
         $translator = $this->mockTranslator('ERR.pageUrlPrefix', '/de/bar/foo.html');
 
         $connection = $this->mockConnection(
@@ -1153,6 +1154,87 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $this->createMock(Slug::class),
             $translator,
+            $connection,
+            $this->createMock(IndexerInterface::class)
+        );
+
+        /** @var MockObject&DataContainer $dc */
+        $dc = $this->mockClassWithProperties(
+            DataContainer::class,
+            [
+                'id' => 1,
+                'activeRecord' => (object) ['type' => 'root', 'dns' => '', 'urlPrefix' => 'de', 'urlSuffix' => ''],
+            ]
+        );
+
+        $listener->validateUrlPrefix('en', $dc);
+    }
+
+    public function testIgnoresPagesWithoutAliasWhenValidatingUrlPrefix(): void
+    {
+        $framework = $this->mockFrameworkWithPages(
+            [
+                'dns' => '',
+                'urlPrefix' => 'de',
+                'urlSuffix' => '.html',
+            ],
+            [
+                'id' => 1,
+                'pid' => 0,
+                'type' => 'root',
+                'alias' => 'root',
+                'urlPrefix' => '',
+                'urlSuffix' => '.html',
+            ],
+            [
+                'id' => 2,
+                'pid' => 1,
+                'alias' => 'foo',
+                'urlPrefix' => '',
+                'urlSuffix' => '.html',
+            ],
+            [
+                'id' => 3,
+                'pid' => 1,
+                'alias' => '',
+                'urlPrefix' => '',
+                'urlSuffix' => '.html',
+            ],
+            [
+                'id' => 4,
+                'pid' => 3,
+                'alias' => 'foo/bar',
+                'urlPrefix' => '',
+                'urlSuffix' => '.html',
+            ],
+            [
+                'id' => 5,
+                'pid' => 0,
+                'type' => 'root',
+                'urlPrefix' => 'de',
+                'urlSuffix' => '.html',
+            ],
+            [
+                'id' => 6,
+                'pid' => 5,
+                'alias' => '',
+                'urlPrefix' => 'de',
+                'urlSuffix' => '.html',
+            ]
+        );
+
+        $connection = $this->mockConnection(
+            [['urlPrefix' => 'de', 'urlSuffix' => '.html']],
+            [2, 3, 4],
+            [0 => 'foo', 2 => 'foo/bar'],
+            [[], [], [6]],
+            true
+        );
+
+        $listener = new PageUrlListener(
+            $framework,
+            $this->createMock(Slug::class),
+            $this->createMock(TranslatorInterface::class),
             $connection,
             $this->createMock(IndexerInterface::class)
         );
@@ -1540,6 +1622,10 @@ class PageUrlListenerTest extends TestCase
         $statements[] = $statement;
 
         foreach ($ids as $k => $id) {
+            if (!isset($aliases[$k])) {
+                continue;
+            }
+
             $args[] = [
                 'SELECT id FROM tl_page WHERE alias LIKE :alias AND id!=:id',
                 [

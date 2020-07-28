@@ -239,7 +239,10 @@ class PageUrlListener implements ResetInterface
 
         /** @var PageModel $page */
         foreach ($pages as $page) {
-            $this->aliasExists($page->alias, (int) $page->id, $rootPage, true);
+            if ($page->alias) {
+                $this->aliasExists($page->alias, (int) $page->id, $rootPage, true);
+            }
+
             $this->recursiveValidatePages((int) $page->id, $rootPage);
         }
     }
