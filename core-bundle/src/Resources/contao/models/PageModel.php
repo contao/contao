@@ -28,6 +28,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string  $type
  * @property string  $pageTitle
  * @property string  $language
+ * @property boolean $doNotRedirectLanguage
  * @property boolean $useFolderUrl
  * @property boolean $useAutoItem
  * @property string  $robots

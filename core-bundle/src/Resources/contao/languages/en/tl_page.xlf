@@ -32,6 +32,12 @@
       <trans-unit id="tl_page.language.1">
         <source>Please enter the page language according to the ISO-639-1 standard (e.g. "en" for English or "en-US" for American English).</source>
       </trans-unit>
+      <trans-unit id="tl_page.doNotRedirectLanguage.0">
+        <source>Do not redirect language</source>
+      </trans-unit>
+      <trans-unit id="tl_page.doNotRedirectLanguage.1">
+        <source>Do not redirect a user to this root even if it's the preferred browser language.</source>
+      </trans-unit>
       <trans-unit id="tl_page.robots.0">
         <source>Robots tag</source>
       </trans-unit>

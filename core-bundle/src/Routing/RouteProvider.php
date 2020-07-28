@@ -219,7 +219,7 @@ class RouteProvider implements RouteProviderInterface
             $route->getMethods()
         );
 
-        if (!$urlPrefix) {
+        if (!$urlPrefix || $page->doNotRedirectLanguage) {
             return;
         }
 
