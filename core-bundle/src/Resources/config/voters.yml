@@ -1,0 +1,14 @@
+services:
+    _defaults:
+        autoconfigure: true
+
+    _instanceof:
+        Contao\CoreBundle\Security\Voter\AbstractFrontendAccessVoter:
+            calls:
+                - [setContainer, ['@Psr\Container\ContainerInterface']]
+
+    Contao\CoreBundle\Security\Voter\:
+        resource: ../../Security/Voter/*
+
+    # Backwards compatibility
+    contao.security.backend_access_voter: '@Contao\CoreBundle\Security\Voter\BackendAccessVoter'

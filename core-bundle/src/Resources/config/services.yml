@@ -661,9 +661,6 @@ services:
             - '@security.firewall.map'
             - '@?logger'
 
-    contao.security.backend_access_voter:
-        class: Contao\CoreBundle\Security\Voter\BackendAccessVoter
-
     contao.security.backend_user_provider:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
         arguments:
