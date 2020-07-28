@@ -771,6 +771,11 @@ class File extends \System
 		$response->headers->addCacheControlDirective('must-revalidate');
 		$response->headers->set('Connection', 'close');
 
+		// Set Content-Type if mime type info for this file extension is known, otherwise let Symfony guess it.
+		if (isset($GLOBALS['TL_MIME'][$this->extension])) {
+			$response->headers->set('Content-Type', $this->getMimeType());
+		}
+
 		throw new ResponseException($response);
 	}
 

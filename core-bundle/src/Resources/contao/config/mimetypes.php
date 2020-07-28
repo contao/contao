@@ -122,6 +122,7 @@ $GLOBALS['TL_MIME'] = array
 	'rtf'   => array('text/rtf', 'iconRTF.svg'),
 	'xml'   => array('text/xml', 'iconXML.svg'),
 	'xsl'   => array('text/xml', 'iconXSL.svg'),
+	'csv'   => array('text/csv', 'iconCSV.svg'),
 
 	// Videos
 	'mp4'   => array('video/mp4', 'iconMP4.svg'),
