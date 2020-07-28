@@ -26,31 +26,31 @@ class ImageResult
     /**
      * @var ContainerInterface
      */
-    protected $locator;
+    private $locator;
 
     /**
      * @var string|ImageInterface
      */
-    protected $filePathOrImageInterface;
+    private $filePathOrImageInterface;
 
     /**
      * @var int|string|array|PictureConfiguration|null
      */
-    protected $sizeConfiguration;
+    private $sizeConfiguration;
 
     /**
      * Cached picture.
      *
      * @var PictureInterface|null
      */
-    protected $picture;
+    private $picture;
 
     /**
      * Cached image dimensions.
      *
      * @var ImageDimensions|null
      */
-    protected $originalDimensions;
+    private $originalDimensions;
 
     /**
      * @var string
@@ -142,17 +142,17 @@ class ImageResult
         return $absolute ? $path : Path::makeRelative($path, $this->projectDir);
     }
 
-    protected function imageFactory(): ImageFactoryInterface
+    private function imageFactory(): ImageFactoryInterface
     {
         return $this->locator->get('contao.image.image_factory');
     }
 
-    protected function pictureFactory(): PictureFactoryInterface
+    private function pictureFactory(): PictureFactoryInterface
     {
         return $this->locator->get('contao.image.picture_factory');
     }
 
-    protected function staticUrl(): string
+    private function staticUrl(): string
     {
         return $this->locator->get('contao.assets.files_context')->getStaticUrl();
     }
