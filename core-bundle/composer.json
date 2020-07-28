@@ -43,7 +43,7 @@
         "contao-components/swipe": "^2.0.3",
         "contao-components/tablesort": "^4.0",
         "contao-components/tablesorter": "^2.1",
-        "contao-components/tinymce4": "^4.7",
+        "contao-components/tinymce4": "^4.7 || ^5.0",
         "contao/image": "^1.0",
         "contao/imagine-svg": "^0.2.3 || ^1.0",
         "doctrine/dbal": "^2.10",

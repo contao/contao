@@ -2109,6 +2109,14 @@ fieldset.collapsed > legend {
 	color:#ccc;
 }
 
+/* TinyMCE */
+.tox-tinymce {
+	margin: 3px 0;
+}
+.tox .tox-menubar,.tox .tox-toolbar__primary,.tox .tox-statusbar {
+	background-color: #f7f7f9;
+}
+
 /* Tablet */
 @media (max-width:991px) {
 	body {
