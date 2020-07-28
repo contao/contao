@@ -2114,7 +2114,7 @@ fieldset.collapsed > legend {
 	margin: 3px 0;
 }
 .tox .tox-menubar,.tox .tox-toolbar__primary,.tox .tox-statusbar {
-	background-color: #f7f7f9;
+	background-color: #f7f7f9 !important;
 }
 
 /* Tablet */
