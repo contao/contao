@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\Model\Collection;
 use FOS\HttpCache\ResponseTagger;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
  * Parent class for front end modules.
@@ -314,40 +315,47 @@ abstract class Module extends Frontend
 
 				$href = null;
 
-				// Get href
-				switch ($objSubpage->type)
+				try
 				{
-					case 'redirect':
-						$href = $objSubpage->url;
+					// Get href
+					switch ($objSubpage->type)
+					{
+						case 'redirect':
+							$href = $objSubpage->url;
 
-						if (strncasecmp($href, 'mailto:', 7) === 0)
-						{
-							$href = StringUtil::encodeEmail($href);
-						}
-						break;
+							if (strncasecmp($href, 'mailto:', 7) === 0)
+							{
+								$href = StringUtil::encodeEmail($href);
+							}
+							break;
 
-					case 'forward':
-						if ($objSubpage->jumpTo)
-						{
-							$objNext = PageModel::findPublishedById($objSubpage->jumpTo);
-						}
-						else
-						{
-							$objNext = PageModel::findFirstPublishedRegularByPid($objSubpage->id);
-						}
+						case 'forward':
+							if ($objSubpage->jumpTo)
+							{
+								$objNext = PageModel::findPublishedById($objSubpage->jumpTo);
+							}
+							else
+							{
+								$objNext = PageModel::findFirstPublishedRegularByPid($objSubpage->id);
+							}
 
-						// Hide the link if the target page is invisible
-						if (!$objNext instanceof PageModel || (!$objNext->loadDetails()->isPublic && !BE_USER_LOGGED_IN))
-						{
-							continue 2;
-						}
+							// Hide the link if the target page is invisible
+							if (!$objNext instanceof PageModel || (!$objNext->loadDetails()->isPublic && !BE_USER_LOGGED_IN))
+							{
+								continue 2;
+							}
 
-						$href = $objNext->getFrontendUrl();
-						break;
+							$href = $objNext->getFrontendUrl();
+							break;
 
-					default:
-						$href = $objSubpage->getFrontendUrl();
-						break;
+						default:
+							$href = $objSubpage->getFrontendUrl();
+							break;
+					}
+				}
+				catch (ExceptionInterface $exception)
+				{
+					continue;
 				}
 
 				$items[] = $this->compileNavigationRow($objPage, $objSubpage, $subitems, $href);
