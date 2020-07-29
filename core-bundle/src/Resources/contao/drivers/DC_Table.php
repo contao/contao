@@ -2567,6 +2567,9 @@ class DC_Table extends DataContainer implements \listable, \editable
 							}
 						}
 					}
+
+					// Invalidate cache tags
+					$this->invalidateCacheTags($this);
 				}
 			}
 
