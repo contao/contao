@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Exception;
 
-class ForwardPageNotFoundException extends \RuntimeException
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+
+class ForwardPageNotFoundException extends ResourceNotFoundException
 {
 }

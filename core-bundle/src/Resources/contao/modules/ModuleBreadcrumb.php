@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Patchwork\Utf8;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
  * Front end module "breadcrumb".
@@ -82,7 +83,7 @@ class ModuleBreadcrumb extends Module
 			(
 				'isRoot'   => true,
 				'isActive' => false,
-				'href'     => (($objFirstPage !== null) ? $objFirstPage->getFrontendUrl() : Environment::get('base')),
+				'href'     => (($objFirstPage !== null) ? $this->getPageFrontendUrl($objFirstPage) : Environment::get('base')),
 				'title'    => StringUtil::specialchars($objPages->pageTitle ?: $objPages->title, true),
 				'link'     => $objPages->title,
 				'data'     => (($objFirstPage !== null) ? $objFirstPage->row() : array()),
@@ -99,45 +100,11 @@ class ModuleBreadcrumb extends Module
 				continue;
 			}
 
-			// Get href
-			switch ($pages[$i]->type)
-			{
-				case 'redirect':
-					$href = $pages[$i]->url;
-
-					if (strncasecmp($href, 'mailto:', 7) === 0)
-					{
-						$href = StringUtil::encodeEmail($href);
-					}
-					break;
-
-				case 'forward':
-					if ($pages[$i]->jumpTo)
-					{
-						$objNext = PageModel::findPublishedById($pages[$i]->jumpTo);
-					}
-					else
-					{
-						$objNext = PageModel::findFirstPublishedRegularByPid($pages[$i]->id);
-					}
-
-					if ($objNext instanceof PageModel)
-					{
-						$href = $objNext->getFrontendUrl();
-						break;
-					}
-					// no break
-
-				default:
-					$href = $pages[$i]->getFrontendUrl();
-					break;
-			}
-
 			$items[] = array
 			(
 				'isRoot'   => false,
 				'isActive' => false,
-				'href'     => $href,
+				'href'     => $this->getPageFrontendUrl($pages[$i]),
 				'title'    => StringUtil::specialchars($pages[$i]->pageTitle ?: $pages[$i]->title, true),
 				'link'     => $pages[$i]->title,
 				'data'     => $pages[$i]->row(),
@@ -152,7 +119,7 @@ class ModuleBreadcrumb extends Module
 			(
 				'isRoot'   => false,
 				'isActive' => false,
-				'href'     => $pages[0]->getFrontendUrl(),
+				'href'     => $this->getPageFrontendUrl($pages[0]),
 				'title'    => StringUtil::specialchars($pages[0]->pageTitle ?: $pages[0]->title, true),
 				'link'     => $pages[0]->title,
 				'data'     => $pages[0]->row(),
@@ -180,7 +147,7 @@ class ModuleBreadcrumb extends Module
 				(
 					'isRoot'   => false,
 					'isActive' => true,
-					'href'     => $pages[0]->getFrontendUrl('/articles/' . $strAlias),
+					'href'     => $this->getPageFrontendUrl($pages[0], '/articles/' . $strAlias),
 					'title'    => StringUtil::specialchars($objArticle->title, true),
 					'link'     => $objArticle->title,
 					'data'     => $objArticle->row(),
@@ -196,7 +163,7 @@ class ModuleBreadcrumb extends Module
 			(
 				'isRoot'   => false,
 				'isActive' => true,
-				'href'     => $pages[0]->getFrontendUrl(),
+				'href'     => $this->getPageFrontendUrl($pages[0]),
 				'title'    => StringUtil::specialchars($pages[0]->pageTitle ?: $pages[0]->title),
 				'link'     => $pages[0]->title,
 				'data'     => $pages[0]->row(),
@@ -218,6 +185,20 @@ class ModuleBreadcrumb extends Module
 		}
 
 		$this->Template->items = $items;
+	}
+
+	private function getPageFrontendUrl(PageModel $pageModel, $strParams=null)
+	{
+		try
+		{
+			return $pageModel->getFrontendUrl($strParams);
+		}
+		catch (ExceptionInterface $exception)
+		{
+			System::log('Unable to generate URL for page ID '.$pageModel->id.': '.$exception->getMessage(), __METHOD__, TL_ERROR);
+
+			return '';
+		}
 	}
 }
 

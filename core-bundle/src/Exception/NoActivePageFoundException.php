@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Exception;
 
-class NoActivePageFoundException extends \RuntimeException
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+
+class NoActivePageFoundException extends ResourceNotFoundException
 {
 }

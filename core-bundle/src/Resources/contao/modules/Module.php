@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\Model\Collection;
 use FOS\HttpCache\ResponseTagger;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
  * Parent class for front end modules.
@@ -312,42 +313,15 @@ abstract class Module extends Frontend
 					$subitems = $this->renderNavigation($objSubpage->id, $level, $host, $language);
 				}
 
-				$href = null;
-
-				// Get href
-				switch ($objSubpage->type)
+				try
 				{
-					case 'redirect':
-						$href = $objSubpage->url;
+					$href = $objSubpage->getFrontendUrl();
+				}
+				catch (ExceptionInterface $exception)
+				{
+					System::log('Unable to generate URL for page ID '.$objSubpage->id.': '.$exception->getMessage(), __METHOD__, TL_ERROR);
 
-						if (strncasecmp($href, 'mailto:', 7) === 0)
-						{
-							$href = StringUtil::encodeEmail($href);
-						}
-						break;
-
-					case 'forward':
-						if ($objSubpage->jumpTo)
-						{
-							$objNext = PageModel::findPublishedById($objSubpage->jumpTo);
-						}
-						else
-						{
-							$objNext = PageModel::findFirstPublishedRegularByPid($objSubpage->id);
-						}
-
-						// Hide the link if the target page is invisible
-						if (!$objNext instanceof PageModel || (!$objNext->loadDetails()->isPublic && !BE_USER_LOGGED_IN))
-						{
-							continue 2;
-						}
-
-						$href = $objNext->getFrontendUrl();
-						break;
-
-					default:
-						$href = $objSubpage->getFrontendUrl();
-						break;
+					continue;
 				}
 
 				$items[] = $this->compileNavigationRow($objPage, $objSubpage, $subitems, $href);

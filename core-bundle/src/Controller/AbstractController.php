@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Controller;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use FOS\HttpCacheBundle\Http\SymfonyResponseTagger;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as SymfonyAbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -26,6 +27,7 @@ abstract class AbstractController extends SymfonyAbstractController
         $services = parent::getSubscribedServices();
 
         $services['contao.framework'] = ContaoFramework::class;
+        $services['logger'] = '?'.LoggerInterface::class;
         $services['fos_http_cache.http.symfony_response_tagger'] = '?'.SymfonyResponseTagger::class;
 
         return $services;

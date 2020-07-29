@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Routing;
 
 use Contao\CoreBundle\Routing\ContentResolvingGenerator;
 use Contao\CoreBundle\Routing\Page\PageRoute;
+use Contao\CoreBundle\Routing\RedirectRoute;
 use Contao\CoreBundle\Routing\RouteFactory;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
@@ -53,6 +54,27 @@ class ContentResolvingGeneratorTest extends TestCase
         $this->expectExceptionMessage('Missing parameter "_content" for content route (contao_routing_object).');
 
         $this->generator->generate(PageRoute::ROUTE_NAME);
+    }
+
+    public function testReturnsTheTargetUrlOptionIfPresent(): void
+    {
+        $content = (object) ['foo' => 'bar'];
+        $route = new RedirectRoute('https://www.example.org/foobar.html');
+
+        $this->routeFactory
+            ->expects($this->once())
+            ->method('createRouteForContent')
+            ->with($content)
+            ->willReturn($route)
+        ;
+
+        $url = $this->generator->generate(
+            PageRoute::ROUTE_NAME,
+            [PageRoute::CONTENT_PARAMETER => $content],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        $this->assertSame('https://www.example.org/foobar.html', $url);
     }
 
     public function testGeneratesTheContentRoute(): void

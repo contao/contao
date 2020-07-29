@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Routing\Page;
 
 use Contao\CoreBundle\Routing\Page\PageRoute;
+use Contao\CoreBundle\Routing\RedirectRoute;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -41,6 +42,30 @@ class PageRouteTest extends TestCase
         $route->setPath('/path/{pattern}');
 
         $this->assertSame('/prefix/path/{pattern}.suffix', $route->getPath());
+    }
+
+    public function testIgnoresPageAliasForAbsolutePath(): void
+    {
+        $route = new PageRoute($this->mockPageModel(), '/bar/{baz}');
+
+        $this->assertSame('/foo/bar/{baz}.baz', $route->getPath());
+
+        $route->setUrlPrefix('');
+        $route->setUrlSuffix('.html');
+
+        $this->assertSame('/bar/{baz}.html', $route->getPath());
+    }
+
+    public function testAppendsRelativePathToPageAlias(): void
+    {
+        $route = new PageRoute($this->mockPageModel(), '{foo}/{bar}');
+
+        $this->assertSame('/foo/bar/{foo}/{bar}.baz', $route->getPath());
+
+        $route->setUrlPrefix('');
+        $route->setUrlSuffix('.html');
+
+        $this->assertSame('/bar/{foo}/{bar}.html', $route->getPath());
     }
 
     public function testReturnsTheUrlPrefix(): void
@@ -111,6 +136,18 @@ class PageRouteTest extends TestCase
         $route = new PageRoute($this->mockPageModel(['rootUseSSL' => true]));
 
         $this->assertSame(['https'], $route->getSchemes());
+    }
+
+    public function testSetsTargetUrlInOptions(): void
+    {
+        $route = new PageRoute($this->mockPageModel());
+
+        $this->assertFalse($route->hasOption(RedirectRoute::TARGET_URL));
+
+        $route->setTargetUrl('https://example.com');
+
+        $this->assertTrue($route->hasOption(RedirectRoute::TARGET_URL));
+        $this->assertSame('https://example.com', $route->getOption(RedirectRoute::TARGET_URL));
     }
 
     /**

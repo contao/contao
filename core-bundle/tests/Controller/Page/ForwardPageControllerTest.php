@@ -12,18 +12,17 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Controller\Page;
 
-use Contao\CoreBundle\Controller\Page\RootPageController;
-use Contao\CoreBundle\Exception\NoActivePageFoundException;
+use Contao\CoreBundle\Controller\Page\ForwardPageController;
+use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Routing\RedirectRoute;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class RootPageControllerTest extends TestCase
+class ForwardPageControllerTest extends TestCase
 {
     /**
      * @var PageModel&MockObject
@@ -36,14 +35,14 @@ class RootPageControllerTest extends TestCase
     private $router;
 
     /**
-     * @var RootPageController
+     * @var ForwardPageController
      */
     private $controller;
 
     protected function setUp(): void
     {
         /** @var PageModel&MockObject $pageModelAdapter */
-        $pageModelAdapter = $this->mockAdapter(['findFirstPublishedByPid']);
+        $pageModelAdapter = $this->mockAdapter(['findPublishedById', 'findFirstPublishedRegularByPid']);
         $this->pageModelAdapter = $pageModelAdapter;
 
         $this->router = $this->createMock(UrlGeneratorInterface::class);
@@ -61,68 +60,22 @@ class RootPageControllerTest extends TestCase
             )
         ;
 
-        $this->controller = new RootPageController();
+        $this->controller = new ForwardPageController();
         $this->controller->setContainer($container);
     }
 
-    public function testThrowsExceptionIfFirstPageOfRootIsNotFound(): void
+    public function testSetsThePageRouteTargetUrlToJumpTo(): void
     {
         /** @var PageModel&MockObject $page */
-        $page = $this->mockClassWithProperties(PageModel::class, ['id' => 17, 'type' => 'root']);
-
-        $this->pageModelAdapter
-            ->expects($this->once())
-            ->method('findFirstPublishedByPid')
-            ->with(17)
-            ->willReturn(null)
-        ;
-
-        $this->expectException(NoActivePageFoundException::class);
-
-        ($this->controller)($page);
-    }
-
-    public function testCreatesRedirectResponseToFirstPage(): void
-    {
-        /** @var PageModel&MockObject $page */
-        $page = $this->mockClassWithProperties(PageModel::class, ['id' => 17, 'type' => 'root', 'alias' => 'root', 'urlPrefix' => 'en', 'urlSuffix' => '.html']);
-
-        /** @var PageModel&MockObject $nextPage */
-        $nextPage = $this->mockClassWithProperties(PageModel::class, ['id' => 18, 'pid' => 17, 'type' => 'root']);
-
-        $this->pageModelAdapter
-            ->expects($this->once())
-            ->method('findFirstPublishedByPid')
-            ->with(17)
-            ->willReturn($nextPage)
-        ;
-
-        $this->router
-            ->expects($this->once())
-            ->method('generate')
-            ->with(PageRoute::ROUTE_NAME, [PageRoute::CONTENT_PARAMETER => $nextPage])
-            ->willReturn('https://www.example.org/en/foobar.html')
-        ;
-
-        /** @var RedirectResponse $response */
-        $response = ($this->controller)($page);
-
-        $this->assertInstanceOf(RedirectResponse::class, $response);
-        $this->assertSame('https://www.example.org/en/foobar.html', $response->getTargetUrl());
-    }
-
-    public function testSetsTheTargetUrlOnPageRoute(): void
-    {
-        /** @var PageModel&MockObject $page */
-        $page = $this->mockClassWithProperties(PageModel::class, ['id' => 17, 'type' => 'root', 'alias' => 'root', 'urlPrefix' => 'en', 'urlSuffix' => '.html']);
+        $page = $this->mockClassWithProperties(PageModel::class, ['jumpTo' => 17]);
         $route = new PageRoute($page);
 
         /** @var PageModel&MockObject $nextPage */
-        $nextPage = $this->mockClassWithProperties(PageModel::class, ['id' => 18, 'pid' => 17, 'type' => 'root']);
+        $nextPage = $this->mockClassWithProperties(PageModel::class, ['id' => 17]);
 
         $this->pageModelAdapter
             ->expects($this->once())
-            ->method('findFirstPublishedByPid')
+            ->method('findPublishedById')
             ->with(17)
             ->willReturn($nextPage)
         ;
@@ -139,6 +92,54 @@ class RootPageControllerTest extends TestCase
         $this->assertSame($route, $targetRoute);
         $this->assertTrue($targetRoute->hasOption(RedirectRoute::TARGET_URL));
         $this->assertSame('https://www.example.org/en/foobar.html', $targetRoute->getOption(RedirectRoute::TARGET_URL));
+    }
+
+    public function testSetsThePageRouteTargetUrlToFirstSubpageIfJumpToIsEmpty(): void
+    {
+        /** @var PageModel&MockObject $page */
+        $page = $this->mockClassWithProperties(PageModel::class, ['id' => 1, 'jumpTo' => null]);
+        $route = new PageRoute($page);
+
+        /** @var PageModel&MockObject $nextPage */
+        $nextPage = $this->mockClassWithProperties(PageModel::class, ['id' => 2]);
+
+        $this->pageModelAdapter
+            ->expects($this->once())
+            ->method('findFirstPublishedRegularByPid')
+            ->with(1)
+            ->willReturn($nextPage)
+        ;
+
+        $this->router
+            ->expects($this->once())
+            ->method('generate')
+            ->with(PageRoute::ROUTE_NAME, [PageRoute::CONTENT_PARAMETER => $nextPage])
+            ->willReturn('https://www.example.org/en/foobar.html')
+        ;
+
+        $targetRoute = $this->controller->enhancePageRoute($route);
+
+        $this->assertSame($route, $targetRoute);
+        $this->assertTrue($targetRoute->hasOption(RedirectRoute::TARGET_URL));
+        $this->assertSame('https://www.example.org/en/foobar.html', $targetRoute->getOption(RedirectRoute::TARGET_URL));
+    }
+
+    public function testThrowsExceptionIfForwardPageIsNotFound(): void
+    {
+        /** @var PageModel&MockObject $page */
+        $page = $this->mockClassWithProperties(PageModel::class, ['jumpTo' => 17]);
+        $route = new PageRoute($page);
+
+        $this->pageModelAdapter
+            ->expects($this->once())
+            ->method('findPublishedById')
+            ->with(17)
+            ->willReturn(null)
+        ;
+
+        $this->expectException(ForwardPageNotFoundException::class);
+
+        $this->controller->enhancePageRoute($route);
     }
 
     public function testDoesNotAddUrlSuffixes(): void
