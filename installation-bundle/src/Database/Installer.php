@@ -295,17 +295,10 @@ class Installer
                     $indexCommand = $platform->getDropIndexSQL($indexName, $tableName);
                     $strKey = md5($indexCommand);
 
-                    if (isset($sql['ALTER_CHANGE'][$strKey])) {
-                        unset(
-                            $sql['ALTER_CHANGE'][$strKey],
-                            $order[array_search($strKey, $order, true)]
-                        );
-
-                        $order = array_values($order);
+                    if (!isset($sql['ALTER_CHANGE'][$strKey])) {
+                        $sql['ALTER_TABLE'][$strKey] = $indexCommand;
+                        $order[] = $strKey;
                     }
-
-                    $sql['ALTER_TABLE'][$strKey] = $indexCommand;
-                    $order[] = $strKey;
                 }
             }
 

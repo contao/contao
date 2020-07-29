@@ -245,7 +245,6 @@ fieldset.checkbox_container,fieldset.radio_container {
 }
 .tl_textarea {
 	width:100%;
-	height:240px;
 }
 .tl_text_unit {
 	width:79%;
@@ -272,6 +271,7 @@ fieldset.checkbox_container,fieldset.radio_container {
 	cursor:not-allowed;
 }
 .tl_textarea {
+	height:240px;
 	padding:4px 6px;
 	line-height:1.45;
 }
