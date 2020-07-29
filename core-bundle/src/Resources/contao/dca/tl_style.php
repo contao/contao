@@ -800,5 +800,11 @@ class tl_style extends Contao\Backend
 
 		// The onsubmit_callback has triggered scheduleUpdate(), so run updateStyleSheet() now (see #1052)
 		$this->updateStyleSheet();
+
+		// Invalidate cache tags
+		if ($dc)
+		{
+			$dc->invalidateCacheTags();
+		}
 	}
 }

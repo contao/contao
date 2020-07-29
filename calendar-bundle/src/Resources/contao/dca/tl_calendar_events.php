@@ -1145,5 +1145,11 @@ class tl_calendar_events extends Contao\Backend
 
 		// The onsubmit_callback has triggered scheduleUpdate(), so run generateFeed() now
 		$this->generateFeed();
+
+		// Invalidate cache tags
+		if ($dc)
+		{
+			$dc->invalidateCacheTags();
+		}
 	}
 }

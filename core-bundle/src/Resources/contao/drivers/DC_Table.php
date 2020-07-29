@@ -1758,7 +1758,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 						   ->limit(1)
 						   ->execute($this->intId);
 		}
-		
+
 		// Invalidate cache tags
 		$this->invalidateCacheTags();
 

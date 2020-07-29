@@ -1250,7 +1250,7 @@ abstract class DataContainer extends Backend
 	 *
 	 * Call this whenever an entry is modified (added, updated, deleted).
 	 */
-	protected function invalidateCacheTags()
+	public function invalidateCacheTags()
 	{
 		if (!System::getContainer()->has('fos_http_cache.cache_manager'))
 		{
