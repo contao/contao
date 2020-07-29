@@ -254,13 +254,13 @@ class ResizeImagesCommand extends Command
     private function executeConcurrent(float $timeLimit, float $concurrent): int
     {
         $startTime = microtime(true);
+        $processStartTime = 0;
 
         $phpFinder = new PhpExecutableFinder();
         $phpPath = $phpFinder->find();
 
         $processes = array_fill(0, (int) $concurrent ?: 1, null);
         $paths = array_fill(0, \count($processes), '');
-        $startTimes = array_fill(0, \count($processes), 0);
         $counts = array_fill(0, \count($processes), 0);
 
         foreach ($this->storage->listPaths() as $path) {
@@ -282,7 +282,7 @@ class ResizeImagesCommand extends Command
                             usleep((int) (
                                 (1 - $concurrent)
                                 / $concurrent
-                                * (microtime(true) - $startTimes[$index])
+                                * (microtime(true) - $processStartTime)
                                 * 1000000
                             ));
                         }
@@ -297,8 +297,11 @@ class ResizeImagesCommand extends Command
                     $process->setTimeout(null);
                     $process->start();
 
+                    if ($concurrent < 1) {
+                        $processStartTime = microtime(true);
+                    }
+
                     $processes[$index] = $process;
-                    $startTimes[$index] = microtime(true);
                     $paths[$index] = $path;
                     ++$counts[$index];
 
