@@ -111,8 +111,6 @@ class ResizeImagesCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->io = new SymfonyStyle($input, $output->section());
-
         if (!$this->resizer instanceof DeferredResizerInterface) {
             throw new \RuntimeException('Deferred resizer not available');
         }
@@ -120,6 +118,8 @@ class ResizeImagesCommand extends Command
         if (!$output instanceof ConsoleOutputInterface) {
             throw new \InvalidArgumentException(sprintf('Output must be an instance of "%s"', ConsoleOutputInterface::class));
         }
+
+        $this->io = new SymfonyStyle($input, $output->section());
 
         if (null !== $image = $input->getOption('image')) {
             return $this->resizeImage($image);
