@@ -83,7 +83,7 @@ class ModuleBreadcrumb extends Module
 			(
 				'isRoot'   => true,
 				'isActive' => false,
-				'href'     => (($objFirstPage !== null) ? $this->getPageFrontendUrl($objFirstPage) : Environment::get('base')),
+				'href'     => (($objFirstPage !== null) ? $this->getUrl($objFirstPage) : Environment::get('base')),
 				'title'    => StringUtil::specialchars($objPages->pageTitle ?: $objPages->title, true),
 				'link'     => $objPages->title,
 				'data'     => (($objFirstPage !== null) ? $objFirstPage->row() : array()),
@@ -124,13 +124,13 @@ class ModuleBreadcrumb extends Module
 
 					if ($objNext instanceof PageModel)
 					{
-						$href = $this->getPageFrontendUrl($objNext);
+						$href = $this->getUrl($objNext);
 						break;
 					}
 					// no break
 
 				default:
-					$href = $this->getPageFrontendUrl($pages[$i]);
+					$href = $this->getUrl($pages[$i]);
 					break;
 			}
 
@@ -153,7 +153,7 @@ class ModuleBreadcrumb extends Module
 			(
 				'isRoot'   => false,
 				'isActive' => false,
-				'href'     => $this->getPageFrontendUrl($pages[0]),
+				'href'     => $this->getUrl($pages[0]),
 				'title'    => StringUtil::specialchars($pages[0]->pageTitle ?: $pages[0]->title, true),
 				'link'     => $pages[0]->title,
 				'data'     => $pages[0]->row(),
@@ -181,7 +181,7 @@ class ModuleBreadcrumb extends Module
 				(
 					'isRoot'   => false,
 					'isActive' => true,
-					'href'     => $this->getPageFrontendUrl($pages[0], '/articles/' . $strAlias),
+					'href'     => $this->getUrl($pages[0], '/articles/' . $strAlias),
 					'title'    => StringUtil::specialchars($objArticle->title, true),
 					'link'     => $objArticle->title,
 					'data'     => $objArticle->row(),
@@ -197,7 +197,7 @@ class ModuleBreadcrumb extends Module
 			(
 				'isRoot'   => false,
 				'isActive' => true,
-				'href'     => $this->getPageFrontendUrl($pages[0]),
+				'href'     => $this->getUrl($pages[0]),
 				'title'    => StringUtil::specialchars($pages[0]->pageTitle ?: $pages[0]->title),
 				'link'     => $pages[0]->title,
 				'data'     => $pages[0]->row(),
@@ -221,7 +221,15 @@ class ModuleBreadcrumb extends Module
 		$this->Template->items = $items;
 	}
 
-	private function getPageFrontendUrl(PageModel $pageModel, $strParams=null)
+	/**
+	 * Generate the front end URL
+	 *
+	 * @param PageModel $pageModel
+	 * @param null      $strParams
+	 *
+	 * @return string
+	 */
+	private function getUrl(PageModel $pageModel, $strParams=null)
 	{
 		try
 		{
@@ -229,7 +237,7 @@ class ModuleBreadcrumb extends Module
 		}
 		catch (ExceptionInterface $exception)
 		{
-			System::log('Unable to generate URL for page ID '.$pageModel->id.': '.$exception->getMessage(), __METHOD__, TL_ERROR);
+			System::log('Unable to generate the URL for page ID ' . $pageModel->id . ': ' . $exception->getMessage(), __METHOD__, TL_ERROR);
 
 			return '';
 		}
