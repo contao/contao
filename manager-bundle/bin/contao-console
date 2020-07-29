@@ -11,6 +11,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
+use Composer\XdebugHandler\XdebugHandler;
 use Contao\ManagerBundle\Console\ContaoApplication;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -30,6 +31,11 @@ if (file_exists(__DIR__.'/../autoload.php')) {
 
 /** @var Composer\Autoload\ClassLoader $loader */
 $loader = require $projectDir.'/vendor/autoload.php';
+
+// Automatically disable xdebug if enabled. You can enable it running "CONTAO_ALLOW_XDEBUG=1 vendor/bin/contao-console"
+$xdebug = new XdebugHandler('CONTAO');
+$xdebug->check();
+unset($xdebug);
 
 $input = new ArgvInput();
 $kernel = ContaoKernel::fromInput($projectDir, $input);

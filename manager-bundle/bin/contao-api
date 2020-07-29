@@ -11,6 +11,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
+use Composer\XdebugHandler\XdebugHandler;
 use Contao\ManagerBundle\Api\Application;
 
 error_reporting(-1);
@@ -27,6 +28,11 @@ if (file_exists(__DIR__.'/../../../../autoload.php')) {
 
 /** @var Composer\Autoload\ClassLoader $loader */
 $loader = require $projectDir.'/vendor/autoload.php';
+
+// Automatically disable xdebug if enabled. You can enable it running "CONTAO_API_ALLOW_XDEBUG=1 vendor/bin/contao-api"
+$xdebug = new XdebugHandler('CONTAO_API');
+$xdebug->check();
+unset($xdebug);
 
 $application = new Application($projectDir);
 $application->run();
