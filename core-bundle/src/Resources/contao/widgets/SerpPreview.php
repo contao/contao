@@ -51,7 +51,7 @@ class SerpPreview extends Widget
 		}
 		catch (ExceptionInterface $routingException)
 		{
-			return '<div class="serp-preview"><p class="tl_info">' . $GLOBALS['TL_LANG']['MSC']['noResult'] . '</p></div>';
+			return '<div class="serp-preview"><p class="tl_info">' . $GLOBALS['TL_LANG']['MSC']['noSerpPreview'] . '</p></div>';
 		}
 
 		list($baseUrl) = explode('%s', $url);
