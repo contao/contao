@@ -2823,6 +2823,9 @@ class DC_Table extends DataContainer implements \listable, \editable
 								}
 							}
 						}
+						
+						// Invalidate cache tags
+						$this->invalidateCacheTags($this);
 
 						// Set the current timestamp before adding a new version
 						if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'])
