@@ -199,6 +199,8 @@ class Versions extends \Controller
 				{
 					$data['content'] = $objFile->getContent();
 				}
+
+				$data['name'] = $objModel->name;
 			}
 		}
 
