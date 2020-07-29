@@ -1850,6 +1850,10 @@ class DC_Table extends DataContainer implements \listable, \editable
 			if (Input::post('FORM_SUBMIT') == 'tl_version' && Input::post('version') != '')
 			{
 				$objVersions->restore(Input::post('version'));
+
+				// Invalidate cache tags
+				$this->invalidateCacheTags();
+
 				$this->reload();
 			}
 		}
