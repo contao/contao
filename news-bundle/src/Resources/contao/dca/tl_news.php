@@ -19,7 +19,6 @@ use Contao\Image;
 use Contao\Input;
 use Contao\News;
 use Contao\NewsArchiveModel;
-use Contao\NewsModel;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Versions;
@@ -265,7 +264,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
 			'exclude'                 => true,
 			'inputType'               => 'serpPreview',
-			'eval'                    => array('url_callback'=>array('tl_news', 'getSerpUrl'), 'titleFields'=>array('pageTitle', 'headline'), 'descriptionFields'=>array('description', 'teaser')),
+			'eval'                    => array('titleFields'=>array('pageTitle', 'headline'), 'descriptionFields'=>array('description', 'teaser')),
 			'sql'                     => null
 		),
 		'subheadline' => array
@@ -694,18 +693,6 @@ class tl_news extends Backend
 	public function loadTime($value)
 	{
 		return strtotime('1970-01-01 ' . date('H:i:s', $value));
-	}
-
-	/**
-	 * Return the SERP URL
-	 *
-	 * @param NewsModel $model
-	 *
-	 * @return string
-	 */
-	public function getSerpUrl(NewsModel $model)
-	{
-		return News::generateNewsUrl($model, false, true);
 	}
 
 	/**

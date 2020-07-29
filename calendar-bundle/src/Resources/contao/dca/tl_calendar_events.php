@@ -12,13 +12,11 @@ use Contao\Automator;
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Calendar;
-use Contao\CalendarEventsModel;
 use Contao\CalendarModel;
 use Contao\Config;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\DataContainer;
 use Contao\Date;
-use Contao\Events;
 use Contao\Image;
 use Contao\Input;
 use Contao\StringUtil;
@@ -292,7 +290,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
 			'exclude'                 => true,
 			'inputType'               => 'serpPreview',
-			'eval'                    => array('url_callback'=>array('tl_calendar_events', 'getSerpUrl'), 'titleFields'=>array('pageTitle', 'title'), 'descriptionFields'=>array('description', 'teaser')),
+			'eval'                    => array('titleFields'=>array('pageTitle', 'title'), 'descriptionFields'=>array('description', 'teaser')),
 			'sql'                     => null
 		),
 		'location' => array
@@ -771,18 +769,6 @@ class tl_calendar_events extends Backend
 		}
 
 		return $varValue;
-	}
-
-	/**
-	 * Return the SERP URL
-	 *
-	 * @param CalendarEventsModel $model
-	 *
-	 * @return string
-	 */
-	public function getSerpUrl(CalendarEventsModel $model)
-	{
-		return Events::generateEventUrl($model, true);
 	}
 
 	/**

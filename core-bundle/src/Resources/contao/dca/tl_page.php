@@ -277,7 +277,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
 			'exclude'                 => true,
 			'inputType'               => 'serpPreview',
-			'eval'                    => array('url_callback'=>array('tl_page', 'getSerpUrl'), 'titleFields'=>array('pageTitle', 'title')),
+			'eval'                    => array('titleFields'=>array('pageTitle', 'title')),
 			'sql'                     => null
 		),
 		'redirect' => array
@@ -1017,18 +1017,6 @@ class tl_page extends Backend
 		}
 
 		return $varValue;
-	}
-
-	/**
-	 * Return the SERP URL
-	 *
-	 * @param PageModel $model
-	 *
-	 * @return string
-	 */
-	public function getSerpUrl(PageModel $model)
-	{
-		return $model->getAbsoluteUrl();
 	}
 
 	/**
