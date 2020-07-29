@@ -2013,7 +2013,7 @@
         <source>Close the Contao toolbar</source>
       </trans-unit>
       <trans-unit id="MSC.noSerpPreview">
-        <source>As this page is configured to require an item (trigger a 404 when the item alias is missing in the URL, see expert settings), a search result preview can't be generated.</source>
+        <source>The preview URL cannot be generated, because the route has mandatory parameters.</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
