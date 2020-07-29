@@ -181,7 +181,7 @@ class BackendCsvImportController
             } catch (\RuntimeException $e) {
                 Message::addError($e->getMessage());
 
-                return new RedirectResponse($request->getUri(), 303);
+                return new RedirectResponse($request->getUri(), 307);
             }
 
             $this->connection->update(
@@ -190,7 +190,7 @@ class BackendCsvImportController
                 ['id' => $id]
             );
 
-            $response = new RedirectResponse($this->getBackUrl($request));
+            $response = new RedirectResponse($this->getBackUrl($request), 307);
             $response->headers->setCookie(new Cookie('BE_PAGE_OFFSET', 0, 0, $request->getBasePath(), null, false, false));
 
             return $response;

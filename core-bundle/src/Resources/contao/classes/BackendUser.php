@@ -180,7 +180,7 @@ class BackendUser extends \User
 			$parameters['referer'] = base64_encode($request->getRequestUri());
 		}
 
-		throw new RedirectResponseException(\System::getContainer()->get('router')->generate('contao_backend_login', $parameters, UrlGeneratorInterface::ABSOLUTE_URL));
+		throw new RedirectResponseException(\System::getContainer()->get('router')->generate('contao_backend_login', $parameters, UrlGeneratorInterface::ABSOLUTE_URL), 307);
 	}
 
 	/**

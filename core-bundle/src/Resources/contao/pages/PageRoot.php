@@ -51,7 +51,7 @@ class PageRoot extends \Frontend
 	 */
 	public function getResponse($rootPageId)
 	{
-		return new RedirectResponse($this->getRedirectUrl($rootPageId), 303);
+		return new RedirectResponse($this->getRedirectUrl($rootPageId), 307);
 	}
 
 	/**

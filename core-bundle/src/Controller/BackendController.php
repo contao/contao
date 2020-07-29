@@ -246,6 +246,6 @@ class BackendController extends Controller
             throw new BadRequestHttpException('Unsupported picker context');
         }
 
-        return new RedirectResponse($picker->getCurrentUrl());
+        return new RedirectResponse($picker->getCurrentUrl(), 307);
     }
 }
