@@ -105,6 +105,7 @@ class ResizeImagesCommand extends Command
             ->addOption('concurrent', 'c', InputOption::VALUE_OPTIONAL, 'Run multiple processes concurrently with a value larger than 1 or pause between resizes to limit CPU utilization with values lower than 1.0', '1')
             ->addOption('throttle', 't', InputOption::VALUE_OPTIONAL, '(Deprecated) Use the concurrent option instead', '1')
             ->addOption('image', null, InputArgument::OPTIONAL, 'Image name to resize a single image')
+            ->addOption('no-sub-process', null, InputOption::VALUE_NONE, 'Do not start a sub process per resize')
             ->setDescription('Resizes deferred images that have not been processed yet.')
         ;
     }
@@ -155,7 +156,7 @@ class ResizeImagesCommand extends Command
         $this->table->setColumnWidth(2, $this->terminalWidth - 25);
         $this->table->setColumnMaxWidth(2, $this->terminalWidth - 25);
 
-        return $this->resizeImages($timeLimit, $concurrent);
+        return $this->resizeImages($timeLimit, $concurrent, $input->getOption('no-sub-process'));
     }
 
     private function resizeImage(string $path, bool $quiet = false): int
@@ -188,9 +189,9 @@ class ResizeImagesCommand extends Command
         return 0;
     }
 
-    private function resizeImages(float $timeLimit, float $concurrent)
+    private function resizeImages(float $timeLimit, float $concurrent, bool $noSubProcess)
     {
-        if ($this->supportsSubProcesses()) {
+        if (!$noSubProcess && $this->supportsSubProcesses()) {
             $this->executeConcurrent($timeLimit, $concurrent);
         } else {
             $this->executeInCurrentProcess($timeLimit, $concurrent);
