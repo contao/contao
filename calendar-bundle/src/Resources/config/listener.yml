@@ -27,5 +27,6 @@ services:
         class: Contao\CalendarBundle\EventListener\PreviewUrlConvertListener
         arguments:
             - '@contao.framework'
+            - '@router'
         tags:
             - kernel.event_listener
