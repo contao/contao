@@ -1568,7 +1568,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			}
 
 			// Invalidate cache tags (no need to invalidate the parent)
-			$this->invalidateCacheTags($this);
+			$this->invalidateCacheTags();
 
 			// Delete the records
 			foreach ($delete as $table=>$fields)
@@ -1759,6 +1759,9 @@ class DC_Table extends DataContainer implements \listable, \editable
 						   ->execute($this->intId);
 		}
 
+		// Invalidate cache tags
+		$this->invalidateCacheTags();
+
 		$this->redirect($this->getReferer());
 	}
 
@@ -1785,7 +1788,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 							   ->execute($row[1]['sorting'], $row[0]['id']);
 
 				// Invalidate cache tags
-				$this->invalidateCacheTags($this);
+				$this->invalidateCacheTags();
 			}
 		}
 
@@ -1847,6 +1850,10 @@ class DC_Table extends DataContainer implements \listable, \editable
 			if (Input::post('FORM_SUBMIT') == 'tl_version' && Input::post('version') != '')
 			{
 				$objVersions->restore(Input::post('version'));
+
+				// Invalidate cache tags
+				$this->invalidateCacheTags();
+
 				$this->reload();
 			}
 		}
@@ -2194,7 +2201,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			}
 
 			// Invalidate cache tags
-			$this->invalidateCacheTags($this);
+			$this->invalidateCacheTags();
 
 			// Redirect
 			if (isset($_POST['saveNclose']))
@@ -2567,6 +2574,9 @@ class DC_Table extends DataContainer implements \listable, \editable
 							}
 						}
 					}
+
+					// Invalidate cache tags
+					$this->invalidateCacheTags();
 				}
 			}
 
@@ -2823,6 +2833,9 @@ class DC_Table extends DataContainer implements \listable, \editable
 								}
 							}
 						}
+
+						// Invalidate cache tags
+						$this->invalidateCacheTags();
 
 						// Set the current timestamp before adding a new version
 						if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'])
@@ -3367,7 +3380,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 					$this->activeRecord = $objRow;
 
 					// Invalidate cache tags (no need to invalidate the parent)
-					$this->invalidateCacheTags($this);
+					$this->invalidateCacheTags();
 				}
 
 				$this->id = $origId;
