@@ -149,7 +149,7 @@ class PageUrlListener implements ResetInterface
         // First check if another root page uses the same url prefix and domain
         $count = $this->connection
             ->executeQuery(
-                'SELECT COUNT(*) FROM tl_page WHERE urlPrefix=:urlPrefix AND dns=:dns AND id!=:rootId',
+                "SELECT COUNT(*) FROM tl_page WHERE urlPrefix=:urlPrefix AND dns=:dns AND id!=:rootId AND type='root'",
                 [
                     'urlPrefix' => $value,
                     'dns' => $dc->activeRecord->dns,
