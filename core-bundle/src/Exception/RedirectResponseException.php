@@ -27,7 +27,7 @@ class RedirectResponseException extends ResponseException
      * @param int             $status
      * @param \Exception|null $previous
      */
-    public function __construct($location, $status = 303, \Exception $previous = null)
+    public function __construct($location, $status = 307, \Exception $previous = null)
     {
         parent::__construct(new RedirectResponse($location, $status), $previous);
     }

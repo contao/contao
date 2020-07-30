@@ -135,7 +135,7 @@ EOF;
         $response = $controller->importListWizard($dc);
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
-        $this->assertSame(302, $response->getStatusCode());
+        $this->assertSame(307, $response->getStatusCode());
     }
 
     /**
@@ -224,7 +224,7 @@ EOF;
         $response = $controller->importTableWizard($dc);
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
-        $this->assertSame(302, $response->getStatusCode());
+        $this->assertSame(307, $response->getStatusCode());
     }
 
     /**
@@ -317,7 +317,7 @@ EOF;
         $response = $controller->importOptionWizard($dc);
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
-        $this->assertSame(302, $response->getStatusCode());
+        $this->assertSame(307, $response->getStatusCode());
     }
 
     /**
@@ -350,7 +350,7 @@ EOF;
         $response = $this->getController($request)->importListWizard($dc);
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
-        $this->assertSame(303, $response->getStatusCode());
+        $this->assertSame(307, $response->getStatusCode());
     }
 
     /**

@@ -1002,9 +1002,9 @@ abstract class Controller extends \System
 	 * Redirect to another page
 	 *
 	 * @param string  $strLocation The target URL
-	 * @param integer $intStatus   The HTTP status code (defaults to 303)
+	 * @param integer $intStatus   The HTTP status code (defaults to 307)
 	 */
-	public static function redirect($strLocation, $intStatus=303)
+	public static function redirect($strLocation, $intStatus=307)
 	{
 		if (headers_sent())
 		{

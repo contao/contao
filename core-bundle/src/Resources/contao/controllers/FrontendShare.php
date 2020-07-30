@@ -31,23 +31,26 @@ class FrontendShare extends \Frontend
 			case 'facebook':
 				return new RedirectResponse(
 					'https://www.facebook.com/sharer/sharer.php'
-						. '?u=' . rawurlencode(\Input::get('u', true))
+						. '?u=' . rawurlencode(\Input::get('u', true)),
+					307
 				);
 
 			case 'twitter':
 				return new RedirectResponse(
 					'https://twitter.com/intent/tweet'
 						. '?url=' . rawurlencode(\Input::get('u', true))
-						. '&text=' . rawurlencode(\Input::get('t', true))
+						. '&text=' . rawurlencode(\Input::get('t', true)),
+					307
 				);
 
 			case 'gplus':
 				return new RedirectResponse(
 					'https://plus.google.com/share'
-						. '?url=' . rawurlencode(\Input::get('u', true))
+						. '?url=' . rawurlencode(\Input::get('u', true)),
+					307
 				);
 		}
 
-		return new RedirectResponse('../');
+		return new RedirectResponse('../', 307);
 	}
 }

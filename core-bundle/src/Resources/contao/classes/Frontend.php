@@ -355,7 +355,7 @@ abstract class Frontend extends \Controller
 				// Redirect if the page alias is not "index" or "/" (see #8498, #8560 and #1210)
 				elseif (($objPage = \PageModel::findFirstPublishedByPid($objRootPage->id)) !== null && !\in_array($objPage->alias, array('index', '/')))
 				{
-					static::redirect($objPage->getFrontendUrl(), 302);
+					static::redirect($objPage->getFrontendUrl());
 				}
 			}
 		}
