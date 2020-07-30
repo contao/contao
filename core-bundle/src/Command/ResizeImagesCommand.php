@@ -195,6 +195,11 @@ class ResizeImagesCommand extends Command
         if (!$noSubProcess && $this->supportsSubProcesses()) {
             $this->executeConcurrent($timeLimit, $concurrent);
         } else {
+            $this->io->warning(
+                "Running this command without sub processes.\n"
+                .'This can lead to memory leaks and eventually let the execution fail.'
+            );
+
             $this->executeInCurrentProcess($timeLimit, $concurrent);
         }
 
