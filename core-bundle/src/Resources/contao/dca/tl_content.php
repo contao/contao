@@ -2095,7 +2095,6 @@ class tl_content extends Contao\Backend
 
 		$objVersions->create();
 
-		// Invalidate cache tags
 		if ($dc)
 		{
 			$dc->invalidateCacheTags();

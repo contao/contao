@@ -1759,7 +1759,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 						   ->execute($this->intId);
 		}
 
-		// Invalidate cache tags
 		$this->invalidateCacheTags();
 
 		$this->redirect($this->getReferer());
@@ -1787,7 +1786,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 				$this->Database->prepare("UPDATE " . $this->strTable . " SET sorting=? WHERE id=?")
 							   ->execute($row[1]['sorting'], $row[0]['id']);
 
-				// Invalidate cache tags
 				$this->invalidateCacheTags();
 			}
 		}
@@ -1851,7 +1849,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 			{
 				$objVersions->restore(Input::post('version'));
 
-				// Invalidate cache tags
 				$this->invalidateCacheTags();
 
 				$this->reload();
@@ -2200,7 +2197,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 				throw new ResponseException($objTemplate->getResponse());
 			}
 
-			// Invalidate cache tags
 			$this->invalidateCacheTags();
 
 			// Redirect
@@ -2575,7 +2571,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 						}
 					}
 
-					// Invalidate cache tags
 					$this->invalidateCacheTags();
 				}
 			}
@@ -2834,7 +2829,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 							}
 						}
 
-						// Invalidate cache tags
 						$this->invalidateCacheTags();
 
 						// Set the current timestamp before adding a new version
