@@ -132,7 +132,6 @@ class ResizeImagesCommand extends Command
 
         if (false !== $input->getOption('throttle')) {
             trigger_deprecation('contao/core-bundle', '4.10', 'Using the throttle option is deprecated and will no longer work in Contao 5.0. Use the concurrent option instead.', E_USER_DEPRECATED);
-
             $this->io->warning('Using the throttle option is deprecated, use the concurrent option instead.');
 
             $throttle = (float) $input->getOption('throttle');
@@ -293,12 +292,7 @@ class ResizeImagesCommand extends Command
                         }
                     }
 
-                    $process = new Process(array_merge(
-                        [$phpPath],
-                        $_SERVER['argv'],
-                        ['--image='.$path]
-                    ));
-
+                    $process = new Process(array_merge([$phpPath], $_SERVER['argv'], ['--image='.$path]));
                     $process->setTimeout(null);
                     $process->start();
 
@@ -323,6 +317,7 @@ class ResizeImagesCommand extends Command
             if (null === $process) {
                 continue;
             }
+
             $this->finishSubProcess($process, $paths[$index]);
             unset($processes[$index]);
             $this->updateOutput($processes, $counts, $paths);
