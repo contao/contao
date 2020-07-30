@@ -1055,7 +1055,7 @@ class PageUrlListenerTest extends TestCase
             ->expects($this->once())
             ->method('executeQuery')
             ->with(
-                'SELECT COUNT(*) FROM tl_page WHERE urlPrefix=:urlPrefix AND dns=:dns AND id!=:rootId',
+                "SELECT COUNT(*) FROM tl_page WHERE urlPrefix=:urlPrefix AND dns=:dns AND id!=:rootId AND type='root'",
                 ['urlPrefix' => 'en', 'dns' => 'www.example.com', 'rootId' => 1]
             )
             ->willReturn($statement)
@@ -1598,7 +1598,7 @@ class PageUrlListenerTest extends TestCase
         $statements = [];
 
         if ($prefixCheck) {
-            $args[] = ['SELECT COUNT(*) FROM tl_page WHERE urlPrefix=:urlPrefix AND dns=:dns AND id!=:rootId'];
+            $args[] = ["SELECT COUNT(*) FROM tl_page WHERE urlPrefix=:urlPrefix AND dns=:dns AND id!=:rootId AND type='root'"];
 
             $statement = $this->createMock(Statement::class);
             $statement
