@@ -19,9 +19,6 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping\ClassMetadata;
-use Doctrine\ORM\Tools\SchemaTool;
 
 class DcaSchemaProvider
 {
@@ -36,30 +33,25 @@ class DcaSchemaProvider
     private $doctrine;
 
     /**
+     * @var SchemaProvider
+     */
+    private $schemaProvider;
+
+    /**
      * @internal Do not inherit from this class; decorate the "contao.doctrine.schema_provider" service instead
      */
-    public function __construct(ContaoFramework $framework, Registry $doctrine)
+    public function __construct(ContaoFramework $framework, Registry $doctrine, SchemaProvider $schemaProvider)
     {
         $this->framework = $framework;
         $this->doctrine = $doctrine;
+        $this->schemaProvider = $schemaProvider;
     }
 
     public function createSchema(): Schema
     {
-        /** @var EntityManagerInterface $manager */
-        $manager = $this->doctrine->getManager();
+        trigger_deprecation('contao/core-bundle', '4.11', 'Using the DcaSchemaProvider to create the schema is deprecated. Use the SchemaProvider instead.');
 
-        if(null === $manager) {
-            return new Schema();
-        }
-
-        $schemaTool = new SchemaTool($manager);
-
-        $metadata = $manager->getMetadataFactory()->getAllMetadata();
-
-        // This will trigger the contao.listener.doctrine_schema listener that
-        // will call appendToSchema() to add the DCA definitions.
-        return $schemaTool->getSchemaFromMetadata($metadata);
+        return $this->schemaProvider->createSchema();
     }
 
     /**

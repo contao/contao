@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle\Database;
 
-use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
+use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Schema;
@@ -36,14 +36,14 @@ class Installer
     private $commandOrder;
 
     /**
-     * @var DcaSchemaProvider
+     * @var SchemaProvider
      */
     private $schemaProvider;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.installer" service instead
      */
-    public function __construct(Connection $connection, DcaSchemaProvider $schemaProvider)
+    public function __construct(Connection $connection, SchemaProvider $schemaProvider)
     {
         $this->connection = $connection;
         $this->schemaProvider = $schemaProvider;

@@ -21,5 +21,5 @@ services:
         class: Contao\InstallationBundle\Database\Installer
         arguments:
             - '@database_connection'
-            - '@contao.doctrine.schema_provider'
+            - '@Contao\CoreBundle\Doctrine\Schema\SchemaProvider'
         public: true
