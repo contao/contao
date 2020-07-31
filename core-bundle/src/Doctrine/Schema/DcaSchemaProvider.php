@@ -18,7 +18,6 @@ use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\Schema;
-use Doctrine\DBAL\Schema\SchemaConfig;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
@@ -47,11 +46,20 @@ class DcaSchemaProvider
 
     public function createSchema(): Schema
     {
-        if (0 !== \count($this->doctrine->getManagerNames())) {
-            return $this->createSchemaFromOrm();
+        /** @var EntityManagerInterface $manager */
+        $manager = $this->doctrine->getManager();
+
+        if(null === $manager) {
+            return new Schema();
         }
 
-        return $this->createSchemaFromDca();
+        $schemaTool = new SchemaTool($manager);
+
+        $metadata = $manager->getMetadataFactory()->getAllMetadata();
+
+        // This will trigger the contao.listener.doctrine_schema listener that
+        // will call appendToSchema() to add the DCA definitions.
+        return $schemaTool->getSchemaFromMetadata($metadata);
     }
 
     /**
@@ -106,51 +114,6 @@ class DcaSchemaProvider
                 }
             }
         }
-    }
-
-    private function createSchemaFromOrm(): Schema
-    {
-        /** @var EntityManagerInterface $manager */
-        $manager = $this->doctrine->getManager();
-
-        /** @var array<ClassMetadata> $metadata */
-        $metadata = $manager->getMetadataFactory()->getAllMetadata();
-
-        /** @var Connection $connection */
-        $connection = $this->doctrine->getConnection();
-
-        // Apply the schema filter
-        if ($filter = $connection->getConfiguration()->getSchemaAssetsFilter()) {
-            foreach ($metadata as $key => $data) {
-                if (!$filter($data->getTableName())) {
-                    unset($metadata[$key]);
-                }
-            }
-        }
-
-        if (empty($metadata)) {
-            return $this->createSchemaFromDca();
-        }
-
-        $tool = new SchemaTool($manager);
-
-        return $tool->getSchemaFromMetadata($metadata);
-    }
-
-    private function createSchemaFromDca(): Schema
-    {
-        $config = new SchemaConfig();
-        $params = $this->doctrine->getConnection()->getParams();
-
-        if (isset($params['defaultTableOptions'])) {
-            $config->setDefaultTableOptions($params['defaultTableOptions']);
-        }
-
-        $schema = new Schema([], [], $config);
-
-        $this->appendToSchema($schema);
-
-        return $schema;
     }
 
     private function parseColumnSql(Table $table, string $columnName, string $sql): void
