@@ -67,7 +67,7 @@ class DefaultIndexerTest extends ContaoTestCase
      */
     public function testIndexesADocumentDeprecated(): void
     {
-        $this->testIndexesADocument(...func_get_args());
+        $this->testIndexesADocument(...\func_get_args());
     }
 
     public function indexProvider(): \Generator
