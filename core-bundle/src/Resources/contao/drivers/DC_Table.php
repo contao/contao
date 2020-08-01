@@ -1921,7 +1921,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 					$class .= (($cls && $legend) ? ' ' . $cls : '');
 				}
 
-				$return .= "\n\n" . '<fieldset' . ($key ? ' id="pal_' . $key . '"' : '') . ' class="' . $class . ($legend ? '' : ' nolegend') . '">' . $legend;
+				$return .= "\n\n" . '<fieldset' . ($key ? ' id="pal_' . $key . '"' : '') . ' class="' . $class . ($legend ? '' : ' nolegend') . '">' . $legend . "\n" . '<div class="widget-group">';
 				$thisId = '';
 
 				// Build rows of the current box
@@ -1938,7 +1938,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 							if (\count($arrAjax) > 1)
 							{
-								$current = "\n" . '<div id="' . $thisId . '" class="subpal cf">' . $arrAjax[$thisId] . '</div>';
+								$current = "\n" . '<div id="' . $thisId . '" class="subpal widget-group">' . $arrAjax[$thisId] . '</div>';
 								unset($arrAjax[$thisId]);
 								end($arrAjax);
 								$thisId = key($arrAjax);
@@ -1956,7 +1956,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 						$thisId = 'sub_' . substr($vv, 1, -1);
 						$arrAjax[$thisId] = '';
 						$blnAjax = ($ajaxId == $thisId && Environment::get('isAjaxRequest')) ? true : $blnAjax;
-						$return .= "\n" . '<div id="' . $thisId . '" class="subpal cf">';
+						$return .= "\n" . '<div id="' . $thisId . '" class="subpal widget-group">';
 
 						continue;
 					}
@@ -1996,7 +1996,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				}
 
 				$class = 'tl_box';
-				$return .= "\n" . '</fieldset>';
+				$return .= "\n</div>\n</fieldset>";
 			}
 		}
 
@@ -2445,7 +2445,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 					{
 						$thisId = 'sub_' . substr($v, 1, -1) . '_' . $id;
 						$blnAjax = ($ajaxId == $thisId && Environment::get('isAjaxRequest'));
-						$return .= "\n  " . '<div id="' . $thisId . '" class="subpal cf">';
+						$return .= "\n  " . '<div id="' . $thisId . '" class="subpal widget-group">';
 
 						continue;
 					}

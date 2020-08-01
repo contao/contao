@@ -179,7 +179,7 @@ class DC_File extends DataContainer implements \editable
 					$class .= (($cls && $legend) ? ' ' . $cls : '');
 				}
 
-				$return .= "\n\n" . '<fieldset' . ($key ? ' id="pal_' . $key . '"' : '') . ' class="' . $class . ($legend ? '' : ' nolegend') . '">' . $legend;
+				$return .= "\n\n" . '<fieldset' . ($key ? ' id="pal_' . $key . '"' : '') . ' class="' . $class . ($legend ? '' : ' nolegend') . '">' . $legend . "\n" . '<div class="widget-group">';
 
 				// Build rows of the current box
 				foreach ($v as $vv)
@@ -201,7 +201,7 @@ class DC_File extends DataContainer implements \editable
 					{
 						$thisId = 'sub_' . substr($vv, 1, -1);
 						$blnAjax = ($ajaxId == $thisId && Environment::get('isAjaxRequest'));
-						$return .= "\n  " . '<div id="' . $thisId . '" class="subpal cf">';
+						$return .= "\n  " . '<div id="' . $thisId . '" class="subpal widget-group">';
 
 						continue;
 					}
@@ -253,7 +253,7 @@ class DC_File extends DataContainer implements \editable
 				}
 
 				$class = 'tl_box';
-				$return .= "\n" . '</fieldset>';
+				$return .= "\n</div>\n</fieldset>";
 			}
 		}
 

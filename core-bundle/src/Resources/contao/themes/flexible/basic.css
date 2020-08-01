@@ -162,10 +162,33 @@ p {
 }
 
 /* Widgets */
-.widget {
-	margin-left:15px;
-	margin-right:15px;
-	position:relative;
+fieldset > .widget-group {
+	padding: 0 15px;
+}
+.widget-group {
+	display: -ms-grid;
+	display: grid;
+	grid-column-gap: 30px;
+	-ms-grid-columns: 1fr 30px 1fr 30px 1fr 30px 1fr 30px 1fr 30px 1fr 30px 1fr 30px 1fr 30px 1fr 30px 1fr 30px 1fr 30px 1fr;
+	grid-template-columns: repeat(12, 1fr);
+}
+.widget-group > * {
+	-ms-grid-column: 1;
+	-ms-grid-column-span: 12;
+	grid-column: 1 / 13;
+}
+.widget-group > .w50 {
+	grid-column: auto / span 6;
+}
+.widget-group > .w33 {
+	grid-column: auto / span 4;
+}
+.widget-group > .w25 {
+	grid-column: auto / span 3;
+}
+.widget-group > .clr {
+	-ms-grid-column: 1;
+	grid-column-start: 1;
 }
 .widget {
 	font-size:0;
@@ -485,25 +508,6 @@ a.tl_submit {
 }
 
 /* Floats */
-.clr {
-	clear:both;
-	width:calc(100% - 30px);
-}
-.clr:not(.widget) {
-	width:100%;
-}
-.clr:before {
-	content:"";
-	display:table;
-}
-.w50 {
-	width:calc(50% - 30px);
-	float:left;
-	min-height:80px;
-}
-.long {
-	width:calc(100% - 30px); /* see #6320 */
-}
 .wizard > a {
 	position:relative;
 	top:-2px;
@@ -522,7 +526,6 @@ a.tl_submit {
 	width:100%;
 }
 .m12 {
-	margin:0 15px;
 	padding:17px 0;
 }
 .cbx {
@@ -683,11 +686,21 @@ a.tl_submit {
 	}
 }
 
-/* Handheld */
+/* Smaller viewports */
+@media (max-width:1023px) {
+	.widget-group > .w33 {
+		grid-column: auto / span 6;
+	}
+}
+
 @media (max-width:767px) {
-	.w50 {
-		float:none;
-		width:calc(100% - 30px);
+	.widget-group > .w50, .widget-group .w33 {
+		-ms-grid-column: 1;
+		-ms-grid-column-span: 12;
+		grid-column: 1 / 13;
+	}
+	.widget-group > .w25 {
+		grid-column: auto / span 6;
 	}
 	.m12 {
 		margin-top:0;
@@ -703,5 +716,36 @@ a.tl_submit {
 	.tl_checkbox_single_container label {
 		position:relative;
 		top:1px;
+	}
+}
+
+/* BC */
+*:not(.widget-group) > .clr {
+	clear:both;
+	width:calc(100% - 30px);
+}
+*:not(.widget-group) > .clr:not(.widget) {
+	width:100%;
+}
+*:not(.widget-group) > .clr:before {
+	content:"";
+	display:table;
+}
+*:not(.widget-group) > .w50 {
+	width:calc(50% - 30px);
+	float:left;
+	min-height:80px;
+}
+*:not(.widget-group) > .long {
+	width:calc(100% - 30px); /* see #6320 */
+}
+*:not(.widget-group) > .m12 {
+	margin: 0 15px;
+}
+
+@media (max-width:767px) {
+	*:not(.widget-group) > .w50 {
+		float:none;
+		width:calc(100% - 30px);
 	}
 }
