@@ -26,6 +26,7 @@ use Contao\System;
 use Contao\TemplateLoader;
 use Contao\Validator;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+use Webmozart\PathUtil\Path;
 
 System::loadLanguageFile('tl_files');
 
@@ -158,7 +159,6 @@ class tl_templates extends Backend
 	public function adjustSettings()
 	{
 		Config::set('uploadPath', 'templates');
-		Config::set('editableFiles', 'html5');
 	}
 
 	/**
@@ -581,7 +581,15 @@ class tl_templates extends Backend
 	 */
 	public function editSource($row, $href, $label, $title, $icon, $attributes)
 	{
-		return substr($row['id'], -6) == '.html5' && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . rawurldecode($row['id'])) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		$container = System::getContainer();
+
+		$editableExtension = in_array(
+			Path::getExtension($row['id'], true),
+			explode(',', $container->getParameter('contao.editable_files')),
+			true
+		);
+
+		return $editableExtension && is_file($container->getParameter('kernel.project_dir') . '/' . rawurldecode($row['id'])) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
