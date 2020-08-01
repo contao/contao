@@ -524,7 +524,7 @@ class DataContainerCallbackPassTest extends TestCase
         $pass = new DataContainerCallbackPass();
 
         $this->expectException(InvalidDefinitionException::class);
-        $this->expectDeprecationMessage('The class "Contao\CoreBundle\Fixtures\EventListener\TestListener" does not have a method "onFooCallback".');
+        $this->expectExceptionMessage('The class "Contao\CoreBundle\Fixtures\EventListener\TestListener" does not have a method "onFooCallback".');
 
         $pass->process($container);
     }
@@ -548,7 +548,7 @@ class DataContainerCallbackPassTest extends TestCase
         $pass = new DataContainerCallbackPass();
 
         $this->expectException(InvalidDefinitionException::class);
-        $this->expectDeprecationMessage('The "Contao\CoreBundle\Fixtures\EventListener\TestListener::onPrivateCallback" method exists but is not public.');
+        $this->expectExceptionMessage('The "Contao\CoreBundle\Fixtures\EventListener\TestListener::onPrivateCallback" method exists but is not public.');
 
         $pass->process($container);
     }
@@ -564,7 +564,7 @@ class DataContainerCallbackPassTest extends TestCase
         $pass = new DataContainerCallbackPass();
 
         $this->expectException(InvalidDefinitionException::class);
-        $this->expectDeprecationMessage('The "Contao\CoreBundle\Fixtures\EventListener\TestListener::onPrivateCallback" method exists but is not public.');
+        $this->expectExceptionMessage('The "Contao\CoreBundle\Fixtures\EventListener\TestListener::onPrivateCallback" method exists but is not public.');
 
         $pass->process($container);
     }
@@ -580,7 +580,7 @@ class DataContainerCallbackPassTest extends TestCase
         $pass = new DataContainerCallbackPass();
 
         $this->expectException(InvalidDefinitionException::class);
-        $this->expectDeprecationMessage('Either specify a method name or implement the "onFooCallback" or __invoke method.');
+        $this->expectExceptionMessage('Either specify a method name or implement the "onFooCallback" or __invoke method.');
 
         $pass->process($container);
     }
