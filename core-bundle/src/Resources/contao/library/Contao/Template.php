@@ -340,12 +340,6 @@ abstract class Template extends Controller
 	 */
 	public function route($strName, $arrParams=array())
 	{
-		if (!\is_string($strName))
-		{
-			$arrParams[PageRoute::CONTENT_PARAMETER] = $strName;
-			$strName = PageRoute::ROUTE_NAME;
-		}
-
 		$strUrl = System::getContainer()->get('router')->generate($strName, $arrParams);
 		$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
 
@@ -362,12 +356,6 @@ abstract class Template extends Controller
 	 */
 	public function previewRoute($strName, $arrParams=array())
 	{
-		if (!\is_string($strName))
-		{
-			$arrParams[PageRoute::CONTENT_PARAMETER] = $strName;
-			$strName = PageRoute::ROUTE_NAME;
-		}
-
 		$container = System::getContainer();
 
 		if (!$previewScript = $container->getParameter('contao.preview_script'))

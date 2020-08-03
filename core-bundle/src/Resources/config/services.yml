@@ -545,6 +545,10 @@ services:
             - [addRouteFilter, ['@contao.routing.domain_filter']]
             - [addRouteFilter, ['@contao.routing.published_filter']]
 
+    Contao\CoreBundle\Routing\Page\PageRegistry:
+        arguments:
+            - '@database_connection'
+
     contao.routing.page_router:
         class: Symfony\Cmf\Component\Routing\DynamicRouter
         arguments:
