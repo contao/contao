@@ -25,9 +25,8 @@ class TestPageController implements DynamicRouteInterface, ContentCompositionInt
         return false;
     }
 
-    public function enhancePageRoute(PageRoute $route): Route
+    public function configurePageRoute(PageRoute $route): void
     {
-        return $route;
     }
 
     public function getUrlSuffixes(): array

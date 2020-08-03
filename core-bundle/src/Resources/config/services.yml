@@ -579,9 +579,10 @@ services:
             - '@contao.security.token_checker'
 
     contao.routing.route_generator:
-        class: Contao\CoreBundle\Routing\ContentResolvingGenerator
+        class: Contao\CoreBundle\Routing\PageAwareGenerator
         arguments:
-            - '@Contao\CoreBundle\Routing\RouteFactory'
+            - '@contao.routing.route_provider'
+            - '@Contao\CoreBundle\Routing\Page\PageRegistry'
             - '@?logger'
 
     contao.routing.route_provider:
@@ -590,7 +591,7 @@ services:
             - '@contao.framework'
             - '@database_connection'
             - '@contao.routing.candidates'
-            - '@Contao\CoreBundle\Routing\RouteFactory'
+            - '@Contao\CoreBundle\Routing\Page\PageRegistry'
             - '%contao.legacy_routing%'
             - '%contao.prepend_locale%'
 
@@ -600,7 +601,7 @@ services:
             - '@contao.framework'
             - '@database_connection'
             - '@contao.routing.locale_candidates'
-            - '@Contao\CoreBundle\Routing\RouteFactory'
+            - '@Contao\CoreBundle\Routing\Page\PageRegistry'
 
     contao.routing.scope_matcher:
         class: Contao\CoreBundle\Routing\ScopeMatcher

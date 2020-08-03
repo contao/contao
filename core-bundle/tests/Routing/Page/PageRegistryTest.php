@@ -98,7 +98,7 @@ class PageRegistryTest extends TestCase
         $enhancer1 = $this->createMock(DynamicRouteInterface::class);
         $enhancer1
             ->expects($this->once())
-            ->method('enhancePageRoute')
+            ->method('configurePageRoute')
             ->with($route)
             ->willReturn($route)
         ;
