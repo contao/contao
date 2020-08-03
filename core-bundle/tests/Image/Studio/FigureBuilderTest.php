@@ -36,7 +36,7 @@ class FigureBuilderTest extends TestCase
     {
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
 
-        /** @var FileSModel&MockObject $model */
+        /** @var FilesModel&MockObject $model */
         $model = $this->mockClassWithProperties(FilesModel::class);
         $model->type = 'file';
         $model->path = $relativeFilePath;
@@ -48,7 +48,7 @@ class FigureBuilderTest extends TestCase
 
     public function testFromFilesModelFailsWithInvalidDBAFSType(): void
     {
-        /** @var FileSModel&MockObject $model */
+        /** @var FilesModel&MockObject $model */
         $model = $this->mockClassWithProperties(FilesModel::class);
         $model->type = 'folder';
 
@@ -61,7 +61,7 @@ class FigureBuilderTest extends TestCase
 
     public function testFromFilesModelFailsWithNonExistingResource(): void
     {
-        /** @var FileSModel&MockObject $model */
+        /** @var FilesModel&MockObject $model */
         $model = $this->mockClassWithProperties(FilesModel::class);
         $model->type = 'file';
         $model->path = 'this/does/not/exist.jpg';
@@ -78,7 +78,7 @@ class FigureBuilderTest extends TestCase
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
         $uuid = 'foo-uuid';
 
-        /** @var FileSModel&MockObject $model */
+        /** @var FilesModel&MockObject $model */
         $model = $this->mockClassWithProperties(FilesModel::class);
         $model->type = 'file';
         $model->path = $relativeFilePath;
@@ -111,7 +111,7 @@ class FigureBuilderTest extends TestCase
     {
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
 
-        /** @var FileSModel&MockObject $model */
+        /** @var FilesModel&MockObject $model */
         $model = $this->mockClassWithProperties(FilesModel::class);
         $model->type = 'file';
         $model->path = $relativeFilePath;
@@ -144,7 +144,7 @@ class FigureBuilderTest extends TestCase
     {
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
 
-        /** @var FileSModel&MockObject $model */
+        /** @var FilesModel&MockObject $model */
         $model = $this->mockClassWithProperties(FilesModel::class);
         $model->type = 'file';
         $model->path = $relativeFilePath;
@@ -166,7 +166,7 @@ class FigureBuilderTest extends TestCase
     {
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
 
-        /** @var FileSModel&MockObject $model */
+        /** @var FilesModel&MockObject $model */
         $model = $this->mockClassWithProperties(FilesModel::class);
         $model->type = 'file';
         $model->path = $relativeFilePath;
@@ -240,7 +240,7 @@ class FigureBuilderTest extends TestCase
     {
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
 
-        /** @var FileSModel&MockObject $filesModel */
+        /** @var FilesModel&MockObject $filesModel */
         $filesModel = $this->mockClassWithProperties(FilesModel::class);
         $filesModel->type = 'file';
         $filesModel->path = $relativeFilePath;
@@ -294,7 +294,7 @@ class FigureBuilderTest extends TestCase
     {
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
 
-        /** @var FileSModel&MockObject $filesModel */
+        /** @var FilesModel&MockObject $filesModel */
         $filesModel = $this->mockClassWithProperties(FilesModel::class);
         $filesModel->type = 'file';
         $filesModel->path = $relativeFilePath;
