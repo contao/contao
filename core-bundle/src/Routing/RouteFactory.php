@@ -74,6 +74,7 @@ class RouteFactory
             return $content;
         }
 
+        /** @var ContentRouteProviderInterface $provider */
         foreach ($this->routeProviders as $provider) {
             if ($provider->supportsContent($content)) {
                 return $provider->getRouteForContent($content);

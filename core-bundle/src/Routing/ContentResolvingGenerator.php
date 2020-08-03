@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Routing;
 
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Routing\CompiledRoute;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGenerator as SymfonyUrlGenerator;
 use Symfony\Component\Routing\RequestContext;
@@ -51,19 +52,22 @@ class ContentResolvingGenerator extends SymfonyUrlGenerator
         $route = $this->routeFactory->createRouteForContent($parameters[PageRoute::CONTENT_PARAMETER]);
         unset($parameters[PageRoute::CONTENT_PARAMETER]);
 
+        if ($route->hasOption(RedirectRoute::TARGET_URL)) {
+            return $route->getOption(RedirectRoute::TARGET_URL);
+        }
+
         // The route has a cache of its own and is not recompiled as long as it does not get modified
+        /** @var CompiledRoute $compiledRoute */
         $compiledRoute = $route->compile();
 
         if (
             $route instanceof PageRoute
             && 0 === \count(array_intersect_key(array_filter($parameters), array_flip($compiledRoute->getVariables())))
         ) {
+            $staticPrefix = $compiledRoute->getStaticPrefix();
             $indexPath = ($route->getUrlPrefix() ? '/'.$route->getUrlPrefix() : '').'/index';
 
-            if (
-                $compiledRoute->getStaticPrefix() === $indexPath
-                || $compiledRoute->getStaticPrefix() === $indexPath.$route->getUrlSuffix()
-            ) {
+            if ($staticPrefix === $indexPath || $staticPrefix === $indexPath.$route->getUrlSuffix()) {
                 $route->setPath('/');
                 $route->setUrlSuffix('');
                 $compiledRoute = $route->compile();

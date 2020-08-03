@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing\Page;
 
 use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\Routing\RedirectRoute;
 use Contao\PageModel;
 use Symfony\Component\Routing\Route;
 
@@ -141,5 +142,12 @@ class PageRoute extends Route
     public function getContent()
     {
         return $this->content;
+    }
+
+    public function setTargetUrl(string $targetUrl): self
+    {
+        $this->setOption(RedirectRoute::TARGET_URL, $targetUrl);
+
+        return $this;
     }
 }

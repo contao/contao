@@ -3,6 +3,21 @@ services:
         autoconfigure: true
         public: true
 
+    _instanceof:
+        Symfony\Bundle\FrameworkBundle\Controller\AbstractController:
+            calls:
+                - [setContainer, ['@Psr\Container\ContainerInterface']]
+
+    Contao\CoreBundle\Controller\Page\ForwardPageController:
+        tags:
+            - { name: contao.page, contentComposition: false }
+            - { name: monolog.logger, channel: contao }
+
+    Contao\CoreBundle\Controller\Page\RedirectPageController:
+        tags:
+            - { name: contao.page, contentComposition: false }
+            - { name: monolog.logger, channel: contao }
+
     Contao\CoreBundle\Controller\Page\RootPageController:
         tags:
             - { name: contao.page, contentComposition: false }
