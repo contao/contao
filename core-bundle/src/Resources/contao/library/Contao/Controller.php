@@ -16,7 +16,7 @@ use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
-use Contao\CoreBundle\File\MetaData;
+use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Monolog\ContaoContext as ContaoMonologContext;
@@ -1523,8 +1523,8 @@ abstract class Controller extends System
 	 */
 	public static function addImageToTemplate($template, array $rowData, $maxWidth = null, $lightboxGroupIdentifier = null, FilesModel $filesModel = null): void
 	{
-		// Helper: Create MetaData from the specified row data
-		$createMetaDataOverwriteFromRowData = static function (bool $interpretAsContentModel) use ($rowData)
+		// Helper: Create metadata from the specified row data
+		$createMetadataOverwriteFromRowData = static function (bool $interpretAsContentModel) use ($rowData)
 		{
 			if ($interpretAsContentModel)
 			{
@@ -1532,14 +1532,14 @@ abstract class Controller extends System
 				$contentModel = (new \ReflectionClass(ContentModel::class))->newInstanceWithoutConstructor();
 
 				// This will be null if "overwriteMeta" is not set
-				return $contentModel->setRow($rowData)->getOverwriteMetaData();
+				return $contentModel->setRow($rowData)->getOverwriteMetadata();
 			}
 
-			// Manually create meta data that always contains certain properties (BC)
-			return new MetaData(array(
-				MetaData::VALUE_ALT => $rowData['alt'] ?? '',
-				MetaData::VALUE_TITLE => $rowData['imageTitle'] ?? '',
-				MetaData::VALUE_URL => self::replaceInsertTags($rowData['imageUrl'] ?? ''),
+			// Manually create metadata that always contains certain properties (BC)
+			return new Metadata(array(
+				Metadata::VALUE_ALT => $rowData['alt'] ?? '',
+				Metadata::VALUE_TITLE => $rowData['imageTitle'] ?? '',
+				Metadata::VALUE_URL => self::replaceInsertTags($rowData['imageUrl'] ?? ''),
 				'linkTitle' => $rowData['linkTitle'] ?: '',
 			));
 		};
@@ -1570,7 +1570,7 @@ abstract class Controller extends System
 
 			if (null !== $filesModel)
 			{
-				// Set empty meta data
+				// Set empty metadata
 				$templateData = array_replace_recursive(
 					$templateData,
 					array(
@@ -1675,21 +1675,21 @@ abstract class Controller extends System
 				$filesModel = clone $filesModel;
 				$filesModel->path = $rowData['singleSRC'];
 
-				// Use source + meta data from files model (if not overwritten)
+				// Use source + metadata from files model (if not overwritten)
 				$figureBuilder
 					->fromFilesModel($filesModel)
-					->setMetaData($createMetaDataOverwriteFromRowData(true));
+					->setMetadata($createMetadataOverwriteFromRowData(true));
 
-				$includeFullMetaData = true;
+				$includeFullMetadata = true;
 			}
 			else
 			{
-				// Always ignore file meta data when building from path (BC)
+				// Always ignore file metadata when building from path (BC)
 				$figureBuilder
 					->fromPath($rowData['singleSRC'], false)
-					->setMetaData($createMetaDataOverwriteFromRowData(false));
+					->setMetadata($createMetadataOverwriteFromRowData(false));
 
-				$includeFullMetaData = false;
+				$includeFullMetadata = false;
 			}
 		}
 		catch (InvalidResourceException $e)
@@ -1724,7 +1724,7 @@ abstract class Controller extends System
 			->build();
 
 		// Build result and apply it to the template
-		$figure->applyLegacyTemplateData($template, $margin, $rowData['floating'] ?: null, $includeFullMetaData);
+		$figure->applyLegacyTemplateData($template, $margin, $rowData['floating'] ?: null, $includeFullMetadata);
 
 		// Fall back to manually specified link title or empty string if not set (backwards compatibility)
 		$template->linkTitle = $template->linkTitle ?? StringUtil::specialchars($rowData['title'] ?? '');

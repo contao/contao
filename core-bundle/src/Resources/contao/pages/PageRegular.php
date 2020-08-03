@@ -748,7 +748,7 @@ class PageRegular extends Frontend
 			}
 		}
 
-		// Add search index meta data
+		// Add search index metadata
 		if ($objPage !== null)
 		{
 			$noSearch = (bool) $objPage->noSearch;

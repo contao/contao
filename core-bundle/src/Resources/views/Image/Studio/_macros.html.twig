@@ -57,7 +57,7 @@
         {% if figure.linkHref -%}
             {%- set base_attributes = {
                 'href': figure.linkHref,
-                'title': figure.hasLightbox and figure.hasMetaData ? figure.metaData.title : null,
+                'title': figure.hasLightbox and figure.hasMetadata ? figure.metadata.title : null,
             }|merge(figure.linkAttributes) -%}
             <a{{ _self.html_attributes(base_attributes|merge(link_attributes)) }}>
                {{~ _self.picture(figure, options) }}
@@ -110,8 +110,8 @@
 
         {% set base_attributes = {
             'src': img.src,
-            'alt': figure.hasMetaData ? figure.metaData.alt : '',
-            'title': figure.hasMetaData ? figure.metaData.title : null,
+            'alt': figure.hasMetadata ? figure.metadata.alt : '',
+            'title': figure.hasMetadata ? figure.metadata.title : null,
             'srcset': img.srcset is defined and img.srcset != img.src ? img.srcset : null,
             'sizes': img.sizes|default(null),
             'width': defineProportions ? img.width : null,
@@ -127,15 +127,15 @@
 {#
     Build a <figcaption> from Studio\Figure data.
 
-    If no meta data is present, nothing will be output.
+    If no metadata is present, nothing will be output.
 #}
 {%- macro caption(figure, options = {}) -%}
     {% apply spaceless %}
-        {% if figure.hasMetaData and figure.metaData.caption %}
+        {% if figure.hasMetadata and figure.metadata.caption %}
             {% set caption_attributes = figure.options.caption_attr|default({})|merge(options.caption_attr|default({})) %}
             {% set base_attributes = { 'itemprop': 'caption' } %}
             <figcaption{{ _self.html_attributes(base_attributes|merge(caption_attributes)) }}>
-                {{- figure.metaData.caption -}}
+                {{- figure.metadata.caption -}}
             </figcaption>
         {% endif %}
     {% endapply %}

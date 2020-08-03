@@ -869,7 +869,7 @@ class InsertTags extends Controller
 						$height = null;
 					}
 
-					// Use the alternative text from the image meta data if none is given
+					// Use the alternative text from the image metadata if none is given
 					if (!$alt && ($objFile = FilesModel::findByPath($strFile)))
 					{
 						$arrMeta = Frontend::getMetaData($objFile->meta, $objPage->language);

@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Image\Studio;
 
 use Contao\CoreBundle\Exception\InvalidResourceException;
-use Contao\CoreBundle\File\MetaData;
+use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
@@ -343,37 +343,37 @@ class FigureBuilderTest extends TestCase
         ;
     }
 
-    public function testSetMetaData(): void
+    public function testSetMetadata(): void
     {
-        $metaData = new MetaData(['foo' => 'bar']);
+        $metadata = new Metadata(['foo' => 'bar']);
 
         $figure = $this->getFigure(
-            static function (FigureBuilder $builder) use ($metaData): void {
-                $builder->setMetaData($metaData);
+            static function (FigureBuilder $builder) use ($metadata): void {
+                $builder->setMetadata($metadata);
             }
         );
 
-        $this->assertSame($metaData, $figure->getMetaData());
+        $this->assertSame($metadata, $figure->getMetadata());
     }
 
-    public function testDisableMetaData(): void
+    public function testDisableMetadata(): void
     {
         $figure = $this->getFigure(
             static function (FigureBuilder $builder): void {
                 $builder
-                    ->setMetaData(new MetaData(['foo' => 'bar']))
-                    ->disableMetaData()
+                    ->setMetadata(new Metadata(['foo' => 'bar']))
+                    ->disableMetadata()
                 ;
             }
         );
 
-        $this->assertFalse($figure->hasMetaData());
+        $this->assertFalse($figure->hasMetadata());
     }
 
     /**
-     * @dataProvider provideMetaDataAutoFetchCases
+     * @dataProvider provideMetadataAutoFetchCases
      */
-    public function testAutoFetchMetaDataFromFilesModel(string $serializedMetaData, $locale, array $expectedMetaData): void
+    public function testAutoFetchMetadataFromFilesModel(string $serializedMetadata, $locale, array $expectedMetadata): void
     {
         System::setContainer($this->getContainerWithContaoConfiguration());
 
@@ -396,7 +396,7 @@ class FigureBuilderTest extends TestCase
         $filesModel->setRow([
             'type' => 'file',
             'path' => $relativeFilePath,
-            'meta' => $serializedMetaData,
+            'meta' => $serializedMetadata,
         ]);
 
         $filesModelAdapter = $this->mockAdapter(['getMetaFields']);
@@ -414,105 +414,105 @@ class FigureBuilderTest extends TestCase
             ->build()
         ;
 
-        $this->assertSame($expectedMetaData, $figure->getMetaData()->all());
+        $this->assertSame($expectedMetadata, $figure->getMetadata()->all());
 
         unset($GLOBALS['TL_DCA'], $GLOBALS['objPage']);
     }
 
-    public function provideMetaDataAutoFetchCases(): \Generator
+    public function provideMetadataAutoFetchCases(): \Generator
     {
-        yield 'complete meta data available in defined locale' => [
+        yield 'complete metadata available in defined locale' => [
             serialize([
                 'en' => ['title' => 't', 'alt' => 'a', 'link' => 'l', 'caption' => 'c'],
             ]),
             'en',
             [
-                MetaData::VALUE_TITLE => 't',
-                MetaData::VALUE_ALT => 'a',
-                MetaData::VALUE_URL => 'l',
-                MetaData::VALUE_CAPTION => 'c',
+                Metadata::VALUE_TITLE => 't',
+                Metadata::VALUE_ALT => 'a',
+                Metadata::VALUE_URL => 'l',
+                Metadata::VALUE_CAPTION => 'c',
             ],
         ];
 
-        yield '(partial) meta data available in defined locale' => [
+        yield '(partial) metadata available in defined locale' => [
             serialize([
                 'en' => [],
                 'fr' => ['title' => 'foo', 'caption' => 'bar'],
             ]),
             'fr',
             [
-                MetaData::VALUE_TITLE => 'foo',
-                MetaData::VALUE_ALT => '',
-                MetaData::VALUE_URL => '',
-                MetaData::VALUE_CAPTION => 'bar',
+                Metadata::VALUE_TITLE => 'foo',
+                Metadata::VALUE_ALT => '',
+                Metadata::VALUE_URL => '',
+                Metadata::VALUE_CAPTION => 'bar',
             ],
         ];
 
-        yield 'no meta data available in defined locale' => [
+        yield 'no metadata available in defined locale' => [
             serialize([
                 'en' => ['title' => 'foo'],
             ]),
             'de',
             [
-                MetaData::VALUE_TITLE => '',
-                MetaData::VALUE_ALT => '',
-                MetaData::VALUE_URL => '',
-                MetaData::VALUE_CAPTION => '',
+                Metadata::VALUE_TITLE => '',
+                Metadata::VALUE_ALT => '',
+                Metadata::VALUE_URL => '',
+                Metadata::VALUE_CAPTION => '',
             ],
         ];
 
-        yield '(partial) meta data available in page locale' => [
+        yield '(partial) metadata available in page locale' => [
             serialize([
                 'es' => ['title' => 'foo'],
             ]),
             null,
             [
-                MetaData::VALUE_TITLE => 'foo',
-                MetaData::VALUE_ALT => '',
-                MetaData::VALUE_URL => '',
-                MetaData::VALUE_CAPTION => '',
+                Metadata::VALUE_TITLE => 'foo',
+                Metadata::VALUE_ALT => '',
+                Metadata::VALUE_URL => '',
+                Metadata::VALUE_CAPTION => '',
             ],
         ];
 
-        yield '(partial) meta data available in page fallback locale' => [
+        yield '(partial) metadata available in page fallback locale' => [
             serialize([
                 'de' => ['title' => 'foo'],
             ]),
             null,
             [
-                MetaData::VALUE_TITLE => 'foo',
-                MetaData::VALUE_ALT => '',
-                MetaData::VALUE_URL => '',
-                MetaData::VALUE_CAPTION => '',
+                Metadata::VALUE_TITLE => 'foo',
+                Metadata::VALUE_ALT => '',
+                Metadata::VALUE_URL => '',
+                Metadata::VALUE_CAPTION => '',
             ],
         ];
 
-        yield 'no meta data available in any fallback locale' => [
+        yield 'no metadata available in any fallback locale' => [
             serialize([
                 'en' => ['title' => 'foo'],
             ]),
             null,
             [
-                MetaData::VALUE_TITLE => '',
-                MetaData::VALUE_ALT => '',
-                MetaData::VALUE_URL => '',
-                MetaData::VALUE_CAPTION => '',
+                Metadata::VALUE_TITLE => '',
+                Metadata::VALUE_ALT => '',
+                Metadata::VALUE_URL => '',
+                Metadata::VALUE_CAPTION => '',
             ],
         ];
 
-        yield 'empty meta data' => [
+        yield 'empty metadata' => [
             '',
             null,
             [
-                MetaData::VALUE_TITLE => '',
-                MetaData::VALUE_ALT => '',
-                MetaData::VALUE_URL => '',
-                MetaData::VALUE_CAPTION => '',
+                Metadata::VALUE_TITLE => '',
+                Metadata::VALUE_ALT => '',
+                Metadata::VALUE_URL => '',
+                Metadata::VALUE_CAPTION => '',
             ],
         ];
     }
 
-    public function testAutoFetchMetaDataFromFilesModelFailsIfNoPage(): void
+    public function testAutoFetchMetadataFromFilesModelFailsIfNoPage(): void
     {
         System::setContainer($this->getContainerWithContaoConfiguration());
 
@@ -541,15 +541,15 @@ class FigureBuilderTest extends TestCase
         $studio = $this->getStudioMockForImage($absoluteFilePath);
         $figure = $this->getFigureBuilder($studio, $framework)->fromFilesModel($filesModel)->build();
 
-        $emptyMetaData = [
-            MetaData::VALUE_TITLE => '',
-            MetaData::VALUE_ALT => '',
-            MetaData::VALUE_URL => '',
-            MetaData::VALUE_CAPTION => '',
+        $emptyMetadata = [
+            Metadata::VALUE_TITLE => '',
+            Metadata::VALUE_ALT => '',
+            Metadata::VALUE_URL => '',
+            Metadata::VALUE_CAPTION => '',
         ];
 
         // Note: $GLOBALS['objPage'] is not set at this point
-        $this->assertSame($emptyMetaData, $figure->getMetaData()->all());
+        $this->assertSame($emptyMetadata, $figure->getMetadata()->all());
     }
 
     public function testSetLinkAttribute(): void
@@ -709,14 +709,14 @@ class FigureBuilderTest extends TestCase
     /**
      * @dataProvider provideLightboxFallbackResources
      */
-    public function testLightboxResourceFallback(?MetaData $metaData, ?string $expectedFilePath, ?string $expectedUrl): void
+    public function testLightboxResourceFallback(?Metadata $metadata, ?string $expectedFilePath, ?string $expectedUrl): void
     {
         $studio = $this->getStudioMockForLightbox($expectedFilePath, $expectedUrl);
 
         $figure = $this->getFigure(
-            static function (FigureBuilder $builder) use ($metaData): void {
+            static function (FigureBuilder $builder) use ($metadata): void {
                 $builder
-                    ->setMetaData($metaData)
+                    ->setMetadata($metadata)
                     ->enableLightbox()
                 ;
             },
@@ -732,15 +732,15 @@ class FigureBuilderTest extends TestCase
 
         $url = 'https://example.com/valid_image.png';
 
-        yield 'meta data with url' => [
-            new MetaData([MetaData::VALUE_URL => $url]), null, $url,
+        yield 'metadata with url' => [
+            new Metadata([Metadata::VALUE_URL => $url]), null, $url,
         ];
 
-        yield 'meta data without url -> use base resource' => [
-            new MetaData([]), $absoluteFilePath, null,
+        yield 'metadata without url -> use base resource' => [
+            new Metadata([]), $absoluteFilePath, null,
         ];
 
-        yield 'no meta data -> use base resource' => [
+        yield 'no metadata -> use base resource' => [
             null, $absoluteFilePath, null,
         ];
     }
@@ -803,7 +803,7 @@ class FigureBuilderTest extends TestCase
         [$filePath1] = $this->getTestFilePaths();
 
         $filePath2 = str_replace('foo.jpg', 'bar.jpg', $filePath1);
-        $metaData = new MetaData([MetaData::VALUE_ALT => 'foo']);
+        $metadata = new Metadata([Metadata::VALUE_ALT => 'foo']);
 
         /** @var ImageResult&MockObject $imageResult1 */
         $imageResult1 = $this->createMock(ImageResult::class);
@@ -839,7 +839,7 @@ class FigureBuilderTest extends TestCase
         $builder
             ->fromPath($filePath1, false)
             ->setLinkAttribute('custom', 'foo')
-            ->setMetaData($metaData)
+            ->setMetadata($metadata)
         ;
 
         $figure1 = $builder->build();
@@ -855,12 +855,12 @@ class FigureBuilderTest extends TestCase
 
         $this->assertSame($imageResult1, $figure1->getImage());
         $this->assertSame('foo', $figure1->getLinkAttributes()['custom']); // not affected by reconfiguring
-        $this->assertSame($metaData, $figure1->getMetaData());
+        $this->assertSame($metadata, $figure1->getMetadata());
         $this->assertFalse($figure1->hasLightbox());
 
         $this->assertSame($imageResult2, $figure2->getImage()); // other image
         $this->assertSame('bar', $figure2->getLinkAttributes()['custom']); // other link attribute
-        $this->assertSame($metaData, $figure2->getMetaData()); // same meta data
+        $this->assertSame($metadata, $figure2->getMetadata()); // same metadata
         $this->assertSame($lightboxImageResult, $figure2->getLightbox());
     }
 
