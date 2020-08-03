@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\File\MetaData;
+use Contao\CoreBundle\File\Metadata;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
 
@@ -407,11 +407,11 @@ class FilesModel extends Model
 	}
 
 	/**
-	 * Return the meta data for this file
+	 * Return the metadata for this file
 	 *
-	 * Returns the meta data of the first matching locale or null if none was found.
+	 * Returns the metadata of the first matching locale or null if none was found.
 	 */
-	public function getMetaData(string ...$locales): ?MetaData
+	public function getMetadata(string ...$locales): ?Metadata
 	{
 		$dataCollection = StringUtil::deserialize($this->meta, true);
 
@@ -423,16 +423,16 @@ class FilesModel extends Model
 			}
 
 			// Make sure we resolve insert tags pointing to files
-			if (isset($data[MetaData::VALUE_URL]))
+			if (isset($data[Metadata::VALUE_URL]))
 			{
-				$data[MetaData::VALUE_URL] = Controller::replaceInsertTags($data[MetaData::VALUE_URL]);
+				$data[Metadata::VALUE_URL] = Controller::replaceInsertTags($data[Metadata::VALUE_URL]);
 			}
 
 			// Fill missing meta fields with empty values
 			$metaFields = self::getMetaFields();
 			$data = array_merge(array_combine($metaFields, array_fill(0, \count($metaFields), '')), $data);
 
-			return new MetaData($data);
+			return new Metadata($data);
 		}
 
 		return null;

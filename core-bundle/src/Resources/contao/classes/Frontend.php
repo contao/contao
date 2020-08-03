@@ -538,7 +538,7 @@ abstract class Frontend extends Controller
 	}
 
 	/**
-	 * Get the meta data from a serialized string
+	 * Get the metadata from a serialized string
 	 *
 	 * @param string $strData
 	 * @param string $strLanguage

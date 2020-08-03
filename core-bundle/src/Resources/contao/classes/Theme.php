@@ -706,7 +706,7 @@ class Theme extends Backend
 	 */
 	public function exportTheme(DataContainer $dc)
 	{
-		// Get the theme meta data
+		// Get the theme metadata
 		$objTheme = $this->Database->prepare("SELECT * FROM tl_theme WHERE id=?")
 								   ->limit(1)
 								   ->execute($dc->id);
