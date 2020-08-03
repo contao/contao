@@ -14,15 +14,11 @@ namespace Contao\CoreBundle\Routing\Page;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\PageModel;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Route;
 
-class PageRoute extends Route
+class PageRoute extends Route implements RouteObjectInterface
 {
-    public const ROUTE_NAME = 'contao_routing_object';
-    public const ROUTE_NAME_PARAMETER = '_route';
-    public const ROUTE_OBJECT_PARAMETER = '_route_object';
-    public const CONTENT_PARAMETER = '_content';
-
     /**
      * @var PageModel
      */
@@ -141,5 +137,10 @@ class PageRoute extends Route
     public function getContent()
     {
         return $this->content;
+    }
+
+    public function getRouteKey(): string
+    {
+        return 'tl_page.'.$this->pageModel->id;
     }
 }
