@@ -1180,11 +1180,11 @@ abstract class Controller extends System
 	 * @return string An URL that can be used in the front end
 	 *
 	 * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.0.
-	 *             Use the Symfony router instead.
+	 *             Use PageModel::getFrontendUrl() instead.
 	 */
 	public static function generateFrontendUrl(array $arrRow, $strParams=null, $strForceLang=null, $blnFixDomain=false)
 	{
-		trigger_deprecation('contao/core-bundle', '4.2', 'Using "Contao\Controller::generateFrontendUrl()" has been deprecated and will no longer work in Contao 5.0. Use the Symfony router instead.');
+		trigger_deprecation('contao/core-bundle', '4.2', 'Using "Contao\Controller::generateFrontendUrl()" has been deprecated and will no longer work in Contao 5.0. Use PageModel::getFrontendUrl() instead.');
 
 		$page = new PageModel();
 		$page->preventSaving(false);

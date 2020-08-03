@@ -21,10 +21,8 @@ use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\Routing\CompiledRoute;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGenerator as SymfonyUrlGenerator;
 use Symfony\Component\Routing\RequestContext;
-use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 class PageUrlGenerator extends SymfonyUrlGenerator
@@ -54,10 +52,15 @@ class PageUrlGenerator extends SymfonyUrlGenerator
      */
     public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH): string
     {
-        if (RouteObjectInterface::OBJECT_BASED_ROUTE_NAME === $name) {
-            $route = $this->getRouteFromParameters($parameters);
-        } elseif (null === $route = $this->provider->getRouteByName($name)) {
-            throw new RouteNotFoundException(sprintf('Route "%s" does not exist.', $name));
+        if (
+            RouteObjectInterface::OBJECT_BASED_ROUTE_NAME === $name
+            && \array_key_exists(RouteObjectInterface::CONTENT_OBJECT, $parameters)
+            && $parameters[RouteObjectInterface::CONTENT_OBJECT] instanceof PageModel
+        ) {
+            $route = $this->pageRegistry->getRoute($parameters[RouteObjectInterface::CONTENT_OBJECT]);
+            unset($parameters[RouteObjectInterface::CONTENT_OBJECT]);
+        } else {
+            $route = $this->provider->getRouteByName($name);
         }
 
         /** @var CompiledRoute $compiledRoute */
@@ -92,30 +95,5 @@ class PageUrlGenerator extends SymfonyUrlGenerator
         } catch (ExceptionInterface $exception) {
             throw new RouteParametersException($route, $parameters, $referenceType, $exception);
         }
-    }
-
-    private function getRouteFromParameters(array &$parameters): Route
-    {
-        if (
-            \array_key_exists(RouteObjectInterface::ROUTE_OBJECT, $parameters)
-            && $parameters[RouteObjectInterface::ROUTE_OBJECT] instanceof Route
-        ) {
-            $route = $parameters[RouteObjectInterface::ROUTE_OBJECT];
-            unset($parameters[RouteObjectInterface::ROUTE_OBJECT]);
-
-            return $route;
-        }
-
-        if (
-            \array_key_exists(RouteObjectInterface::CONTENT_OBJECT, $parameters)
-            && $parameters[RouteObjectInterface::CONTENT_OBJECT] instanceof PageModel
-        ) {
-            $route = $this->pageRegistry->getRoute($parameters[RouteObjectInterface::CONTENT_OBJECT]);
-            unset($parameters[RouteObjectInterface::CONTENT_OBJECT]);
-
-            return $route;
-        }
-
-        throw new RouteNotFoundException('Route "'.RouteObjectInterface::OBJECT_BASED_ROUTE_NAME.'" requires PageModel or route object parameter.');
     }
 }
