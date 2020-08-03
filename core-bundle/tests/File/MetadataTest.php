@@ -12,11 +12,16 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\File;
 
+use Contao\CalendarEventsModel;
 use Contao\ContentModel;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\FaqModel;
 use Contao\FilesModel;
+use Contao\NewsModel;
 use Contao\System;
+use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class MetadataTest extends TestCase
 {
@@ -24,7 +29,9 @@ class MetadataTest extends TestCase
     {
         parent::setUp();
 
-        System::setContainer($this->getContainerWithContaoConfiguration());
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->setDefinition('request_stack', new Definition(RequestStack::class));
+        System::setContainer($container);
 
         $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields'] = [
             'title' => '', 'alt' => '', 'link' => '', 'caption' => '',
@@ -92,10 +99,13 @@ class MetadataTest extends TestCase
         $this->assertFalse($metadata->has('bar'));
     }
 
-    public function testCreatesMetadataContainerFromContentModel(): void
+    /**
+     * @dataProvider provideModelsThatContainMetadata
+     */
+    public function testCreatesMetadataContainerFromModel(string $modelClass): void
     {
-        /** @var ContentModel $model */
-        $model = (new \ReflectionClass(ContentModel::class))->newInstanceWithoutConstructor();
+        /** @var ContentModel|CalendarEventsModel|NewsModel|FaqModel $model */
+        $model = (new \ReflectionClass($modelClass))->newInstanceWithoutConstructor();
 
         $model->setRow([
             'id' => 100,
@@ -116,6 +126,14 @@ class MetadataTest extends TestCase
             ],
             $model->getOverwriteMetadata()->all()
         );
+    }
+
+    public function provideModelsThatContainMetadata(): \Generator
+    {
+        yield [ContentModel::class];
+        yield [CalendarEventsModel::class];
+        yield [NewsModel::class];
+        yield [FaqModel::class];
     }
 
     public function testDoesNotCreateMetadataContainerFromContentModelIfOverwriteIsDisabled(): void
