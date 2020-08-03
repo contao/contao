@@ -61,7 +61,6 @@ class ContaoCoreExtension extends Extension
         );
 
         $loader->load('commands.yml');
-        $loader->load('controller.yml');
         $loader->load('listener.yml');
         $loader->load('services.yml');
         $loader->load('routing.yml');
