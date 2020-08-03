@@ -60,16 +60,6 @@ class DefaultIndexerTest extends ContaoTestCase
         $indexer->index($document);
     }
 
-    /**
-     * @dataProvider indexProviderDeprecated
-     * @group legacy
-     * @expectedDeprecation JSON-LD type "RegularPage" is deprecated and will no longer work in Contao 5.0. Use "Page" instead.
-     */
-    public function testIndexesADocumentDeprecated(): void
-    {
-        $this->testIndexesADocument(...\func_get_args());
-    }
-
     public function indexProvider(): \Generator
     {
         yield 'Test does not index on empty content' => [
@@ -135,6 +125,17 @@ class DefaultIndexerTest extends ContaoTestCase
             null,
             true,
         ];
+    }
+
+    /**
+     * @group legacy
+     * @dataProvider indexProviderDeprecated
+     *
+     * @expectedDeprecation Using the JSON-LD type "RegularPage" has been deprecated and will no longer work in Contao 5.0. Use "Page" instead.
+     */
+    public function testIndexesADocumentWithDeprecatedJsonLd(Document $document, ?array $expectedIndexParams, string $expectedMessage = null, bool $indexProtected = false): void
+    {
+        $this->testIndexesADocument($document, $expectedIndexParams, $expectedMessage, $indexProtected);
     }
 
     public function indexProviderDeprecated(): \Generator
