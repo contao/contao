@@ -2139,12 +2139,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 				$container->getParameter('kernel.project_dir')
 			);
 
-			// Always purge the prod cache
-			if ('prod' !== ($env = $container->get('kernel')->getEnvironment()))
-			{
-				$twigCacheDir = str_replace("/$env/", '/prod/', $twigCacheDir);
-			}
-
 			// Purge whole cache as we unfortunately cannot invalidate a single file
 			(new Folder($twigCacheDir))->purge();
 		}
