@@ -255,7 +255,7 @@ function trimsplit($strPattern, $strString)
  */
 function ampersand($strString, $blnEncode=true)
 {
-	trigger_deprecation('contao/core-bundle', '4.0', 'Using "ampersand()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\StringUtil::ampersand()" instead.');
+	trigger_deprecation('contao/core-bundle', '4.10', 'Using "ampersand()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\StringUtil::ampersand()" instead.');
 
 	return StringUtil::ampersand($strString, $blnEncode);
 }
