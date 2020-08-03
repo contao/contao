@@ -26,10 +26,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class PageUrlGeneratorTest extends TestCase
 {
     /**
-     * @var RouteProviderInterface&MockObject
-     */
-    private $provider;
-    /**
      * @var PageRegistry&MockObject
      */
     private $pageRegistry;
@@ -41,9 +37,10 @@ class PageUrlGeneratorTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->provider = $this->createMock(RouteProviderInterface::class);
+        $provider = $this->createMock(RouteProviderInterface::class);
+
         $this->pageRegistry = $this->createMock(PageRegistry::class);
-        $this->generator = new PageUrlGenerator($this->provider, $this->pageRegistry);
+        $this->generator = new PageUrlGenerator($provider, $this->pageRegistry);
     }
 
     public function testGeneratesThePageRoute(): void

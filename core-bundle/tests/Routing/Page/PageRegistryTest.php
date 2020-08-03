@@ -37,7 +37,6 @@ class PageRegistryTest extends TestCase
         ]);
 
         $registry = new PageRegistry($this->createMock(Connection::class));
-
         $route = $registry->getRoute($pageModel);
 
         $this->assertSame('/foo/bar{!parameters}.baz', $route->getPath());
@@ -57,7 +56,6 @@ class PageRegistryTest extends TestCase
         ]);
 
         $registry = new PageRegistry($this->createMock(Connection::class));
-
         $route = $registry->getRoute($pageModel);
 
         $this->assertSame('/foo/bar{!parameters}.baz', $route->getPath());
@@ -358,6 +356,7 @@ class PageRegistryTest extends TestCase
         $route = $registry->getRoute($pageModel);
 
         $this->assertSame('/bar/baz{!parameters}.html', $route->getPath());
+
         $registry->getUrlSuffixes();
         $registry->supportsContentComposition($pageModel);
     }
@@ -368,7 +367,7 @@ class PageRegistryTest extends TestCase
         $statement
             ->expects($this->once())
             ->method('fetchAll')
-            ->willReturn([['urlPrefix' => $urlPrefix, 'urlSuffix' => $urlSuffix]])
+            ->willReturn([compact('urlPrefix', 'urlSuffix')])
         ;
 
         $connection = $this->createMock(Connection::class);

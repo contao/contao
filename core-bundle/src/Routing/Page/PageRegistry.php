@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Routing\Page;
 
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
-use Symfony\Component\Routing\Route;
 
 class PageRegistry
 {
@@ -54,7 +53,7 @@ class PageRegistry
     }
 
     /**
-     * Returns a route for page in Contao.
+     * Returns the route for a page.
      *
      * If no path is configured (is null), the route will accept
      * any parameters after the page alias (e.g. "en/page-alias/foo/bar.html").
@@ -64,11 +63,10 @@ class PageRegistry
     public function getRoute(PageModel $pageModel): PageRoute
     {
         $type = $pageModel->type;
-
         $config = $this->routeConfigs[$type] ?? new RouteConfig();
-        $path = $config->getPath();
         $defaults = $config->getDefaults();
         $requirements = $config->getRequirements();
+        $path = $config->getPath();
 
         if (null === $path) {
             $path = '/'.($pageModel->alias ?: $pageModel->id).'{!parameters}';

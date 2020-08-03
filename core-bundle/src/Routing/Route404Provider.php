@@ -172,8 +172,7 @@ class Route404Provider implements RouteProviderInterface
         }
 
         foreach ($pages as $page) {
-            $route = $this->pageRegistry->getRoute($page);
-            $this->addLocaleRedirectRoute($route, $request, $routes);
+            $this->addLocaleRedirectRoute($this->pageRegistry->getRoute($page), $request, $routes);
         }
 
         return $routes;
