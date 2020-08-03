@@ -334,7 +334,7 @@ class RegisterHookListenersPassTest extends TestCase
         $pass = new RegisterHookListenersPass();
 
         $this->expectException(InvalidDefinitionException::class);
-        $this->expectDeprecationMessage('The class "Contao\CoreBundle\Fixtures\EventListener\TestListener" does not have a method "onFoo".');
+        $this->expectExceptionMessage('The class "Contao\CoreBundle\Fixtures\EventListener\TestListener" does not have a method "onFoo".');
 
         $pass->process($container);
     }
@@ -350,7 +350,7 @@ class RegisterHookListenersPassTest extends TestCase
         $pass = new RegisterHookListenersPass();
 
         $this->expectException(InvalidDefinitionException::class);
-        $this->expectDeprecationMessage('The "Contao\CoreBundle\Fixtures\EventListener\TestListener::onPrivateCallback" method exists but is not public.');
+        $this->expectExceptionMessage('The "Contao\CoreBundle\Fixtures\EventListener\TestListener::onPrivateCallback" method exists but is not public.');
 
         $pass->process($container);
     }
@@ -366,7 +366,7 @@ class RegisterHookListenersPassTest extends TestCase
         $pass = new RegisterHookListenersPass();
 
         $this->expectException(InvalidDefinitionException::class);
-        $this->expectDeprecationMessage('The "Contao\CoreBundle\Fixtures\EventListener\TestListener::onPrivateCallback" method exists but is not public.');
+        $this->expectExceptionMessage('The "Contao\CoreBundle\Fixtures\EventListener\TestListener::onPrivateCallback" method exists but is not public.');
 
         $pass->process($container);
     }
@@ -382,7 +382,7 @@ class RegisterHookListenersPassTest extends TestCase
         $pass = new RegisterHookListenersPass();
 
         $this->expectException(InvalidDefinitionException::class);
-        $this->expectDeprecationMessage('Either specify a method name or implement the "onFooBar" or __invoke method.');
+        $this->expectExceptionMessage('Either specify a method name or implement the "onFooBar" or __invoke method.');
 
         $pass->process($container);
     }
