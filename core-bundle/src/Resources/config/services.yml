@@ -579,7 +579,7 @@ services:
             - '@contao.security.token_checker'
 
     contao.routing.route_generator:
-        class: Contao\CoreBundle\Routing\PageAwareGenerator
+        class: Contao\CoreBundle\Routing\PageUrlGenerator
         arguments:
             - '@contao.routing.route_provider'
             - '@Contao\CoreBundle\Routing\Page\PageRegistry'
