@@ -826,7 +826,7 @@ class PageRegular extends Frontend
 			$meta = array
 			(
 				'@context' => array('contao' => 'https://schema.contao.org/'),
-				'@type' => 'contao:RegularPage',
+				'@type' => 'contao:Page',
 				'contao:pageId' => (int) $objPage->id,
 				'contao:noSearch' => $noSearch,
 				'contao:protected' => (bool) $objPage->protected,
