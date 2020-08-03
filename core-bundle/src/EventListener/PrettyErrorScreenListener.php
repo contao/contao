@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\Config;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\Exception\RouteParametersException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageError404;
 use Contao\StringUtil;
@@ -97,6 +98,10 @@ class PrettyErrorScreenListener
         }
 
         switch (true) {
+            case $exception instanceof RouteParametersException:
+                $this->renderTemplate('missing_route_parameters', 501, $event);
+                break;
+
             case $isBackendUser:
                 $this->renderBackendException($event);
                 break;
@@ -220,6 +225,7 @@ class PrettyErrorScreenListener
             'language' => $event->getRequest()->getLocale(),
             'adminEmail' => '&#109;&#97;&#105;&#108;&#116;&#111;&#58;'.$encoded,
             'exception' => $event->getThrowable()->getMessage(),
+            'throwable' => $event->getThrowable(),
         ];
     }
 

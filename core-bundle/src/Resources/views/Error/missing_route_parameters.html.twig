@@ -1,0 +1,37 @@
+{% trans_default_domain 'contao_exception' %}
+{% extends "@ContaoCore/Error/layout.html.twig" %}
+
+{% block title %}Unable to generate front end URL{% endblock %}
+{% block matter %}
+    <p>
+        Contao cannot generate the URL for a front end page, because it requires parameters that are unknown.
+        The page cannot be visited without additional information, like a news alias in the URL.
+    </p>
+{% endblock %}
+{% block explain %}
+    <p>
+        Symfony routes can have variable parameters, which are validated using regular expressions.
+        The following configuration cannot be resolved.
+    </p>
+    <p>
+        Route path: <code>{{ throwable.route.path }}</code>
+    </p>
+    <table>
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Requirement (Regex)</th>
+            <th>Default Value</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for variable, requirement in throwable.route.requirements %}
+            <tr>
+                <td>{{ variable }}</td>
+                <td><code>{{ requirement }}</code></td>
+                <td>{% if throwable.route.defaults[variable] is empty %}<i>empty</i>{% else %}{{ throwable.route.defaults[variable] }}{% endif %}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
