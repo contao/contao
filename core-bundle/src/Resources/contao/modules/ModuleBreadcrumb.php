@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Patchwork\Utf8;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
  * Front end module "breadcrumb".
@@ -82,7 +83,7 @@ class ModuleBreadcrumb extends Module
 			(
 				'isRoot'   => true,
 				'isActive' => false,
-				'href'     => (($objFirstPage !== null) ? $objFirstPage->getFrontendUrl() : Environment::get('base')),
+				'href'     => (($objFirstPage !== null) ? $this->getPageFrontendUrl($objFirstPage) : Environment::get('base')),
 				'title'    => StringUtil::specialchars($objPages->pageTitle ?: $objPages->title, true),
 				'link'     => $objPages->title,
 				'data'     => (($objFirstPage !== null) ? $objFirstPage->row() : array()),
@@ -123,13 +124,13 @@ class ModuleBreadcrumb extends Module
 
 					if ($objNext instanceof PageModel)
 					{
-						$href = $objNext->getFrontendUrl();
+						$href = $this->getPageFrontendUrl($objNext);
 						break;
 					}
 					// no break
 
 				default:
-					$href = $pages[$i]->getFrontendUrl();
+					$href = $this->getPageFrontendUrl($pages[$i]);
 					break;
 			}
 
@@ -152,7 +153,7 @@ class ModuleBreadcrumb extends Module
 			(
 				'isRoot'   => false,
 				'isActive' => false,
-				'href'     => $pages[0]->getFrontendUrl(),
+				'href'     => $this->getPageFrontendUrl($pages[0]),
 				'title'    => StringUtil::specialchars($pages[0]->pageTitle ?: $pages[0]->title, true),
 				'link'     => $pages[0]->title,
 				'data'     => $pages[0]->row(),
@@ -180,7 +181,7 @@ class ModuleBreadcrumb extends Module
 				(
 					'isRoot'   => false,
 					'isActive' => true,
-					'href'     => $pages[0]->getFrontendUrl('/articles/' . $strAlias),
+					'href'     => $this->getPageFrontendUrl($pages[0], '/articles/' . $strAlias),
 					'title'    => StringUtil::specialchars($objArticle->title, true),
 					'link'     => $objArticle->title,
 					'data'     => $objArticle->row(),
@@ -196,7 +197,7 @@ class ModuleBreadcrumb extends Module
 			(
 				'isRoot'   => false,
 				'isActive' => true,
-				'href'     => $pages[0]->getFrontendUrl(),
+				'href'     => $this->getPageFrontendUrl($pages[0]),
 				'title'    => StringUtil::specialchars($pages[0]->pageTitle ?: $pages[0]->title),
 				'link'     => $pages[0]->title,
 				'data'     => $pages[0]->row(),
@@ -218,6 +219,20 @@ class ModuleBreadcrumb extends Module
 		}
 
 		$this->Template->items = $items;
+	}
+
+	private function getPageFrontendUrl(PageModel $pageModel, $strParams=null)
+	{
+		try
+		{
+			return $pageModel->getFrontendUrl($strParams);
+		}
+		catch (ExceptionInterface $exception)
+		{
+			System::log('Unable to generate URL for page ID ' . $pageModel->id . ': ' . $exception->getMessage(), __METHOD__, TL_ERROR);
+
+			return '';
+		}
 	}
 }
 

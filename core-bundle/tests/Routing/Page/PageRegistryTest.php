@@ -25,25 +25,159 @@ use PHPUnit\Framework\MockObject\MockObject;
 
 class PageRegistryTest extends TestCase
 {
-    public function testReturnsRouteConfig(): void
+    public function testReturnsParameteredPageRouteIfPathIsNullWithoutRequireItem(): void
     {
-        $config = new RouteConfig();
+        /** @var PageModel&MockObject $pageModel */
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'type' => 'foo',
+            'alias' => 'bar',
+            'urlPrefix' => 'foo',
+            'urlSuffix' => '.baz',
+            'requireItem' => '',
+        ]);
 
         $registry = new PageRegistry($this->createMock(Connection::class));
-        $registry->add('foo', $config);
+        $route = $registry->getRoute($pageModel);
 
-        $this->assertSame($config, $registry->getRouteConfig('foo'));
+        $this->assertSame('/foo/bar{!parameters}.baz', $route->getPath());
+        $this->assertSame('', $route->getDefault('parameters'));
+        $this->assertSame('(/.+)?', $route->getRequirement('parameters'));
     }
 
-    public function testReturnsEmptyRouteConfigForUnknownType(): void
+    public function testReturnsParameteredPageRouteIfPathIsNullWithRequireItem(): void
     {
-        $config = new RouteConfig();
+        /** @var PageModel&MockObject $pageModel */
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'type' => 'foo',
+            'alias' => 'bar',
+            'urlPrefix' => 'foo',
+            'urlSuffix' => '.baz',
+            'requireItem' => '1',
+        ]);
+
+        $registry = new PageRegistry($this->createMock(Connection::class));
+        $route = $registry->getRoute($pageModel);
+
+        $this->assertSame('/foo/bar{!parameters}.baz', $route->getPath());
+        $this->assertSame('', $route->getDefault('parameters'));
+        $this->assertSame('/.+', $route->getRequirement('parameters'));
+    }
+
+    /**
+     * @dataProvider pageRouteWithPathProvider
+     */
+    public function testReturnsPageRouteWithPath(RouteConfig $config, string $urlPrefix, string $alias, string $urlSuffix, string $expectedPath): void
+    {
+        /** @var PageModel&MockObject $pageModel */
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'type' => 'foo',
+            'alias' => $alias,
+            'urlPrefix' => $urlPrefix,
+            'urlSuffix' => $urlSuffix,
+        ]);
 
         $registry = new PageRegistry($this->createMock(Connection::class));
         $registry->add('foo', $config);
 
-        $result = $registry->getRouteConfig('bar');
-        $this->assertNotSame($config, $result);
+        $route = $registry->getRoute($pageModel);
+
+        $this->assertSame($expectedPath, $route->getPath());
+    }
+
+    public function pageRouteWithPathProvider(): \Generator
+    {
+        yield 'Does not add parameters for empty path' => [
+            new RouteConfig(''),
+            'foo',
+            'bar',
+            '.baz',
+            '/foo/bar.baz',
+        ];
+
+        yield 'Prepends the page alias for a relative path' => [
+            new RouteConfig('{alias}'),
+            'foo',
+            'bar',
+            '.baz',
+            '/foo/bar/{alias}.baz',
+        ];
+
+        yield 'URL Suffix from route config overrides the page settings' => [
+            new RouteConfig('{alias}', null, '.html'),
+            'foo',
+            'bar',
+            '.baz',
+            '/foo/bar/{alias}.html',
+        ];
+
+        yield 'Adds URL suffix for absolute path' => [
+            new RouteConfig('/foo'),
+            '',
+            'bar',
+            '.baz',
+            '/foo.baz',
+        ];
+
+        yield 'Adds URL prefix and suffix for absolute path' => [
+            new RouteConfig('/not-bar'),
+            'foo',
+            'bar',
+            '.baz',
+            '/foo/not-bar.baz',
+        ];
+
+        yield 'Override URL Suffix for absolute path' => [
+            new RouteConfig('/foo', null, '.html'),
+            '',
+            'bar',
+            '.baz',
+            '/foo.html',
+        ];
+
+        yield 'Allow config with full path' => [
+            new RouteConfig('/feed/{alias}.atom', null, ''),
+            '',
+            'bar',
+            '.baz',
+            '/feed/{alias}.atom',
+        ];
+
+        yield 'Adds URL prefix to config with full path' => [
+            new RouteConfig('/feed/{alias}.atom', null, ''),
+            'foo',
+            'bar',
+            '.baz',
+            '/foo/feed/{alias}.atom',
+        ];
+    }
+
+    public function testConfiguresTheRoute(): void
+    {
+        /** @var PageModel&MockObject $pageModel */
+        $pageModel = $this->mockClassWithProperties(PageModel::class, ['type' => 'foo']);
+
+        $enhancer1 = $this->createMock(DynamicRouteInterface::class);
+        $enhancer1
+            ->expects($this->once())
+            ->method('configurePageRoute')
+            ->with($this->callback(
+                static function ($route) use ($pageModel) {
+                    return $route instanceof PageRoute && $route->getPageModel() === $pageModel;
+                }
+            ))
+        ;
+
+        $enhancer2 = $this->createMock(DynamicRouteInterface::class);
+        $enhancer2
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
+        $registry = new PageRegistry($this->createMock(Connection::class));
+        $registry->add('foo', new RouteConfig(), $enhancer1);
+        $registry->add('bar', new RouteConfig(), $enhancer2);
+
+        $registry->getRoute($pageModel);
     }
 
     public function testReturnsConfigKeys(): void
@@ -63,57 +197,6 @@ class PageRegistryTest extends TestCase
         $registry->add('baz', new RouteConfig());
 
         $this->assertSame(['foo' => '/foo', 'bar' => '/bar/[a-z]+'], $registry->getPathRegex());
-    }
-
-    public function testReturnsRouteIfEnhancerIsNotFound(): void
-    {
-        /** @var PageModel&MockObject $pageModel */
-        $pageModel = $this->mockClassWithProperties(PageModel::class, ['type' => 'foo']);
-
-        $route = $this->createMock(PageRoute::class);
-        $route
-            ->expects($this->once())
-            ->method('getPageModel')
-            ->willReturn($pageModel)
-        ;
-
-        $registry = new PageRegistry($this->createMock(Connection::class));
-        $registry->add('foo', new RouteConfig());
-
-        $this->assertSame($route, $registry->enhancePageRoute($route));
-    }
-
-    public function testUsesRouteEnhancerForPageType(): void
-    {
-        /** @var PageModel&MockObject $pageModel */
-        $pageModel = $this->mockClassWithProperties(PageModel::class, ['type' => 'foo']);
-
-        $route = $this->createMock(PageRoute::class);
-        $route
-            ->expects($this->once())
-            ->method('getPageModel')
-            ->willReturn($pageModel)
-        ;
-
-        $enhancer1 = $this->createMock(DynamicRouteInterface::class);
-        $enhancer1
-            ->expects($this->once())
-            ->method('enhancePageRoute')
-            ->with($route)
-            ->willReturn($route)
-        ;
-
-        $enhancer2 = $this->createMock(DynamicRouteInterface::class);
-        $enhancer2
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $registry = new PageRegistry($this->createMock(Connection::class));
-        $registry->add('foo', new RouteConfig(), $enhancer1);
-        $registry->add('bar', new RouteConfig(), $enhancer2);
-
-        $this->assertSame($route, $registry->enhancePageRoute($route));
     }
 
     public function testGetUrlPrefixes(): void
@@ -236,7 +319,7 @@ class PageRegistryTest extends TestCase
         $registry->add('foo', $config1, $enhancer1, $composite1);
         $registry->add('foo', $config2, $enhancer2, $composite2);
 
-        $this->assertSame($config2, $registry->getRouteConfig('foo'));
+        $registry->getRoute($pageModel);
         $registry->getUrlSuffixes();
         $registry->supportsContentComposition($pageModel);
     }
@@ -244,8 +327,15 @@ class PageRegistryTest extends TestCase
     public function testRemovesType(): void
     {
         /** @var PageModel&MockObject $pageModel */
-        $pageModel = $this->mockClassWithProperties(PageModel::class, ['type' => 'foo']);
-        $config = new RouteConfig();
+        $pageModel = $this->mockClassWithProperties(
+            PageModel::class,
+            [
+                'type' => 'foo',
+                'alias' => 'baz',
+                'urlPrefix' => 'bar',
+                'urlSuffix' => '.html',
+            ]
+        );
 
         $enhancer = $this->createMock(DynamicRouteInterface::class);
         $enhancer
@@ -260,10 +350,13 @@ class PageRegistryTest extends TestCase
         ;
 
         $registry = new PageRegistry($this->mockConnectionWithPrefixAndSuffix());
-        $registry->add('foo', $config, $enhancer, $composite);
+        $registry->add('foo', new RouteConfig('/foo'), $enhancer, $composite);
         $registry->remove('foo');
 
-        $this->assertNotSame($config, $registry->getRouteConfig('foo'));
+        $route = $registry->getRoute($pageModel);
+
+        $this->assertSame('/bar/baz{!parameters}.html', $route->getPath());
+
         $registry->getUrlSuffixes();
         $registry->supportsContentComposition($pageModel);
     }
@@ -274,7 +367,7 @@ class PageRegistryTest extends TestCase
         $statement
             ->expects($this->once())
             ->method('fetchAll')
-            ->willReturn([['urlPrefix' => $urlPrefix, 'urlSuffix' => $urlSuffix]])
+            ->willReturn([compact('urlPrefix', 'urlSuffix')])
         ;
 
         $connection = $this->createMock(Connection::class);

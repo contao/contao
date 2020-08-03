@@ -77,11 +77,6 @@ class PageRouteTest extends TestCase
         $route->setContent($content);
 
         $this->assertSame($content, $route->getContent());
-
-        $route = new PageRoute($this->mockPageModel());
-        $route->setContent('foo');
-
-        $this->assertSame('foo', $route->getContent());
     }
 
     public function testAddsPageLanguageAsLocaleToRouteDefaults(): void
