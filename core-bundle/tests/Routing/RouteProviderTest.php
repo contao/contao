@@ -20,7 +20,6 @@ use Contao\CoreBundle\Routing\RouteProvider;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Model\Collection;
 use Contao\PageModel;
-use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -178,13 +177,6 @@ class RouteProviderTest extends TestCase
         $this->assertEmpty($this->getRouteProvider()->getRouteCollectionForRequest($request));
     }
 
-    public function testReturnsAnEmptyCollectionIfThePathContainsPercentageCharacter(): void
-    {
-        $request = $this->mockRequestWithPath('/drachenlochmuseum-v%25c3%25a4ttis.html');
-
-        $this->assertEmpty($this->mockRouteProvider()->getRouteCollectionForRequest($request));
-    }
-
     public function testReturnsAnEmptyCollectionIfTheUrlSuffixDoesNotMatch(): void
     {
         $request = $this->mockRequestWithPath('/foo.php');
@@ -212,14 +204,14 @@ class RouteProviderTest extends TestCase
         }
 
         if (!empty($aliases)) {
-            $conditions[] = 'tl_page.alias IN ('.implode(',', $aliases).')';
+            $conditions[] = 'tl_page.alias IN ('.implode(',', array_fill(0, \count($aliases), '?')).')';
         }
 
         $pageAdapter = $this->mockAdapter(['findBy']);
         $pageAdapter
             ->expects($this->once())
             ->method('findBy')
-            ->with([implode(' OR ', $conditions)], [])
+            ->with([implode(' OR ', $conditions)], $aliases)
             ->willReturn(null)
         ;
 
@@ -696,12 +688,6 @@ class RouteProviderTest extends TestCase
             $framework = $this->mockContaoFramework();
         }
 
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->method('quote')
-            ->willReturnArgument(0)
-        ;
-
-        return new RouteProvider($framework, $connection, $urlSuffix, $prependLocale);
+        return new RouteProvider($framework, $urlSuffix, $prependLocale);
     }
 }

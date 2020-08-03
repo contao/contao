@@ -20,7 +20,6 @@ use Contao\Model;
 use Contao\Model\Collection;
 use Contao\PageModel;
 use Contao\System;
-use Doctrine\DBAL\Connection;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -35,11 +34,6 @@ class RouteProvider implements RouteProviderInterface
     private $framework;
 
     /**
-     * @var Connection
-     */
-    private $database;
-
-    /**
      * @var string
      */
     private $urlSuffix;
@@ -52,10 +46,9 @@ class RouteProvider implements RouteProviderInterface
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.route_provider" service instead
      */
-    public function __construct(ContaoFramework $framework, Connection $database, string $urlSuffix, bool $prependLocale)
+    public function __construct(ContaoFramework $framework, string $urlSuffix, bool $prependLocale)
     {
         $this->framework = $framework;
-        $this->database = $database;
         $this->urlSuffix = $urlSuffix;
         $this->prependLocale = $prependLocale;
     }
@@ -66,8 +59,8 @@ class RouteProvider implements RouteProviderInterface
 
         $pathInfo = rawurldecode($request->getPathInfo());
 
-        // The request string must not contain "auto_item" (see #4012) or a percentage character (which means it was double encoded (see #619))
-        if (false !== strpos($pathInfo, '/auto_item/') || false !== strpos($pathInfo, '%')) {
+        // The request string must not contain "auto_item" (see #4012)
+        if (false !== strpos($pathInfo, '/auto_item/')) {
             return new RouteCollection();
         }
 
@@ -482,7 +475,7 @@ class RouteProvider implements RouteProviderInterface
             if (is_numeric($candidate)) {
                 $ids[] = (int) $candidate;
             } else {
-                $aliases[] = $this->database->quote($candidate);
+                $aliases[] = $candidate;
             }
         }
 
@@ -493,12 +486,12 @@ class RouteProvider implements RouteProviderInterface
         }
 
         if (!empty($aliases)) {
-            $conditions[] = 'tl_page.alias IN ('.implode(',', $aliases).')';
+            $conditions[] = 'tl_page.alias IN ('.implode(',', array_fill(0, \count($aliases), '?')).')';
         }
 
         /** @var PageModel $pageModel */
         $pageModel = $this->framework->getAdapter(PageModel::class);
-        $pages = $pageModel->findBy([implode(' OR ', $conditions)], []);
+        $pages = $pageModel->findBy([implode(' OR ', $conditions)], $aliases);
 
         if (!$pages instanceof Collection) {
             return [];
