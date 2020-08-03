@@ -159,6 +159,7 @@ class tl_templates extends Backend
 	public function adjustSettings()
 	{
 		Config::set('uploadPath', 'templates');
+		Config::set('editableFiles', 'html5,twig');
 	}
 
 	/**
@@ -581,15 +582,7 @@ class tl_templates extends Backend
 	 */
 	public function editSource($row, $href, $label, $title, $icon, $attributes)
 	{
-		$container = System::getContainer();
-
-		$editableExtension = in_array(
-			Path::getExtension($row['id'], true),
-			explode(',', $container->getParameter('contao.editable_files')),
-			true
-		);
-
-		return $editableExtension && is_file($container->getParameter('kernel.project_dir') . '/' . rawurldecode($row['id'])) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return in_array(Path::getExtension($row['id'], true), array('html5', 'twig')) && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . rawurldecode($row['id'])) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
