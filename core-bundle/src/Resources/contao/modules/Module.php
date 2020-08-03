@@ -349,7 +349,7 @@ abstract class Module extends Frontend
 						}
 						catch (ExceptionInterface $exception)
 						{
-							System::log('Unable to generate URL for page ID '.$objSubpage->id.': '.$exception->getMessage(), __METHOD__, TL_ERROR);
+							System::log('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage(), __METHOD__, TL_ERROR);
 
 							continue 2;
 						}
@@ -362,7 +362,7 @@ abstract class Module extends Frontend
 						}
 						catch (ExceptionInterface $exception)
 						{
-							System::log('Unable to generate URL for page ID '.$objSubpage->id.': '.$exception->getMessage(), __METHOD__, TL_ERROR);
+							System::log('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage(), __METHOD__, TL_ERROR);
 
 							continue 2;
 						}

@@ -90,19 +90,14 @@ class PageUrlGenerator extends SymfonyUrlGenerator
                 $route->getSchemes()
             );
         } catch (ExceptionInterface $exception) {
-            throw new RouteParametersException(
-                $route,
-                $parameters,
-                $referenceType,
-                $exception
-            );
+            throw new RouteParametersException($route, $parameters, $referenceType, $exception);
         }
     }
 
     private function getRouteFromParameters(array &$parameters): Route
     {
         if (
-            array_key_exists(RouteObjectInterface::ROUTE_OBJECT, $parameters)
+            \array_key_exists(RouteObjectInterface::ROUTE_OBJECT, $parameters)
             && $parameters[RouteObjectInterface::ROUTE_OBJECT] instanceof Route
         ) {
             $route = $parameters[RouteObjectInterface::ROUTE_OBJECT];
@@ -112,7 +107,7 @@ class PageUrlGenerator extends SymfonyUrlGenerator
         }
 
         if (
-            array_key_exists(RouteObjectInterface::CONTENT_OBJECT, $parameters)
+            \array_key_exists(RouteObjectInterface::CONTENT_OBJECT, $parameters)
             && $parameters[RouteObjectInterface::CONTENT_OBJECT] instanceof PageModel
         ) {
             $route = $this->pageRegistry->getRoute($parameters[RouteObjectInterface::CONTENT_OBJECT]);
