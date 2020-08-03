@@ -105,7 +105,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->scalarNode('editable_files')
-                    ->defaultValue('css,csv,html,html5,ini,js,json,less,md,scss,svg,svgz,twig,txt,xliff,xml,yml,yaml')
+                    ->defaultValue('css,csv,html,ini,js,json,less,md,scss,svg,svgz,txt,xliff,xml,yml,yaml')
                 ->end()
                 ->scalarNode('url_suffix')
                     ->setDeprecated('The URL suffix is configured per root page since Contao 4.10. Enabling this option will activate legacy routing.')
