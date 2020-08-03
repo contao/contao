@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Controller\FrontendModule\TwoFactorController;
-use Contao\CoreBundle\Controller\Page\RootPageController;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterPagesPass;
 use Contao\CoreBundle\Fixtures\Controller\Page\TestPageController;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
@@ -137,13 +136,13 @@ class RegisterPagesPassTest extends TestCase
                 'add',
                 $this->callback(
                     static function ($arguments) {
-                        return 'root' === $arguments[0];
+                        return 'test' === $arguments[0];
                     }
                 )
             )
         ;
 
-        $definition = new Definition(RootPageController::class);
+        $definition = new Definition(TestPageController::class);
         $definition->addTag('contao.page');
 
         $container = new ContainerBuilder();
@@ -174,7 +173,7 @@ class RegisterPagesPassTest extends TestCase
             )
         ;
 
-        $definition = new Definition(RootPageController::class);
+        $definition = new Definition(TestPageController::class);
         $definition->addTag('contao.page', ['defaults' => ['_controller' => 'MyController::action']]);
 
         $container = new ContainerBuilder();
@@ -205,7 +204,7 @@ class RegisterPagesPassTest extends TestCase
             )
         ;
 
-        $definition = new Definition(RootPageController::class);
+        $definition = new Definition(TestPageController::class);
         $definition->addTag('contao.page', ['method' => 'action']);
         $definition->setPublic(false);
 
@@ -239,7 +238,7 @@ class RegisterPagesPassTest extends TestCase
             )
         ;
 
-        $definition = new Definition(RootPageController::class);
+        $definition = new Definition(TestPageController::class);
         $definition->addTag('contao.page');
         $definition->setPublic(false);
 
