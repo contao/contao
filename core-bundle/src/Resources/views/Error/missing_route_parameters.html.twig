@@ -9,9 +9,7 @@
 {% endblock %}
 {% block explain %}
     <p>{{ 'XPT.missingRouteParameters.explain'|trans }}</p>
-    <p>
-        {{ 'XPT.missingRouteParameters.path'|trans }}: <code>{{ throwable.route.path }}</code>
-    </p>
+    <p>{{ 'XPT.missingRouteParameters.path'|trans }}: <code>{{ throwable.route.path }}</code></p>
     <table>
         <thead>
         <tr>
