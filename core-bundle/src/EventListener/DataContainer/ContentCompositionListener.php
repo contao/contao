@@ -18,6 +18,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
+use Contao\Database\Result;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\LayoutModel;
@@ -131,7 +132,7 @@ class ContentCompositionListener
 
         $pageModel = $this->framework->createInstance(PageModel::class);
         $pageModel->preventSaving(false);
-        $pageModel->setRow((array) $dc->activeRecord);
+        $pageModel->setRow($dc->activeRecord instanceof Result ? $dc->activeRecord->row() : (array) $dc->activeRecord);
 
         if (
             empty($pageModel->title)
