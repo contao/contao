@@ -719,7 +719,7 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 'kernel.event_listener' => [
                     [
-                        'priority' => -99
+                        'priority' => -99,
                     ],
                 ],
             ],
