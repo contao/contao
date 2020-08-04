@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Image\Studio\LegacyFigureBuilderTrait;
 use Patchwork\Utf8;
 
 /**
@@ -31,6 +32,8 @@ use Patchwork\Utf8;
  */
 class ModuleEventlist extends Events
 {
+	use LegacyFigureBuilderTrait;
+
 	/**
 	 * Current date object
 	 * @var Date
@@ -358,32 +361,28 @@ class ModuleEventlist extends Events
 			$objTemplate->addBefore = false;
 
 			// Add an image
-			if ($event['addImage'] && $event['singleSRC'])
+			if ($event['addImage'] && null !== ($figureBuilder = $this->getFigureBuilderIfResourceExists($event['singleSRC'])))
 			{
-				$objModel = FilesModel::findByUuid($event['singleSRC']);
+				/** @var CalendarEventsModel $eventModel */
+				$eventModel = CalendarEventsModel::findByPk($event['id']);
 
-				if ($objModel !== null && is_file($projectDir . '/' . $objModel->path))
+				$figure = $figureBuilder
+					->setSize($eventModel->size ?: $this->imgSize ?: null)
+					->setMetaData($eventModel->getOverwriteMetaData())
+					->enableLightbox($eventModel->fullsize)
+					->build();
+
+				// Rebuild with link to event if none is set
+				if (!$figure->getLinkHref())
 				{
-					if ($imgSize)
-					{
-						$event['size'] = $imgSize;
-					}
-
-					$event['singleSRC'] = $objModel->path;
-					$this->addImageToTemplate($objTemplate, $event, null, null, $objModel);
-
-					// Link to the event if no image link has been defined
-					if (!$objTemplate->fullsize && !$objTemplate->imageUrl)
-					{
-						// Unset the image title attribute
-						$picture = $objTemplate->picture;
-						unset($picture['title']);
-						$objTemplate->picture = $picture;
-
-						// Link to the event
-						$objTemplate->linkTitle = $objTemplate->readMore;
-					}
+					$figure = $figureBuilder
+						->setLinkHref($event['href'])
+						->setLinkAttribute('title', $objTemplate->readMore)
+						->setOptions(array('linkTitle' => $objTemplate->readMore)) // BC
+						->build();
 				}
+
+				$figure->applyLegacyTemplateData($objTemplate, $eventModel->imagemargin, $eventModel->floating);
 			}
 
 			$objTemplate->enclosure = array();

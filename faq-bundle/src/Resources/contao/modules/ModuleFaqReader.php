@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Image\Studio\LegacyFigureBuilderTrait;
 use Patchwork\Utf8;
 
 /**
@@ -24,6 +25,8 @@ use Patchwork\Utf8;
  */
 class ModuleFaqReader extends Module
 {
+	use LegacyFigureBuilderTrait;
+
 	/**
 	 * Template
 	 * @var string
@@ -124,18 +127,16 @@ class ModuleFaqReader extends Module
 		$this->Template->before = false;
 
 		// Add image
-		if ($objFaq->addImage && $objFaq->singleSRC)
+		if ($objFaq->addImage && null !== ($figureBuilder = $this->getFigureBuilderIfResourceExists($objFaq->singleSRC)))
 		{
-			$objModel = FilesModel::findByUuid($objFaq->singleSRC);
+			$figureBuilder
+				->setSize($objFaq->size)
+				->setMetaData($objFaq->getOverwriteMetaData())
+				->enableLightbox($objFaq->fullsize)
+				->build()
+				->applyLegacyTemplateData($this->Template, $objFaq->imagemargin, $objFaq->floating);
 
-			if ($objModel !== null && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . $objModel->path))
-			{
-				// Do not override the field now that we have a model registry (see #6303)
-				$arrFaq = $objFaq->row();
-				$arrFaq['singleSRC'] = $objModel->path;
-
-				$this->addImageToTemplate($this->Template, $arrFaq, null, null, $objModel);
-			}
+			$this->Template->useImage = true;
 		}
 
 		$this->Template->enclosure = array();

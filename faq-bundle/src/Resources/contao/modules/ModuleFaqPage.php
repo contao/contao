@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Image\Studio\LegacyFigureBuilderTrait;
 use Patchwork\Utf8;
 
 /**
@@ -21,6 +22,8 @@ use Patchwork\Utf8;
  */
 class ModuleFaqPage extends Module
 {
+	use LegacyFigureBuilderTrait;
+
 	/**
 	 * Template
 	 * @var string
@@ -85,7 +88,6 @@ class ModuleFaqPage extends Module
 
 		$tags = array();
 		$arrFaqs = array_fill_keys($this->faq_categories, array());
-		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Add FAQs
 		while ($objFaq->next())
@@ -101,19 +103,17 @@ class ModuleFaqPage extends Module
 			$objTemp->addBefore = false;
 
 			// Add an image
-			if ($objFaq->addImage && $objFaq->singleSRC)
+			if ($objFaq->addImage && null !== ($figureBuilder = $this->getFigureBuilderIfResourceExists($objFaq->singleSRC)))
 			{
-				$objModel = FilesModel::findByUuid($objFaq->singleSRC);
+				$figureBuilder
+					->setSize($objFaq->size)
+					->setMetaData($objFaq->getOverwriteMetaData())
+					->setLightboxGroupIdentifier('lightbox[' . substr(md5('mod_faqpage_' . $objFaq->id), 0, 6) . ']')
+					->enableLightbox($objFaq->fullsize)
+					->build()
+					->applyLegacyTemplateData($objTemp, $objFaq->imagemargin, $objFaq->floating);
 
-				if ($objModel !== null && is_file($projectDir . '/' . $objModel->path))
-				{
-					// Do not override the field now that we have a model registry (see #6303)
-					$arrFaq = $objFaq->row();
-					$arrFaq['singleSRC'] = $objModel->path;
-					$strLightboxId = 'lightbox[' . substr(md5('mod_faqpage_' . $objFaq->id), 0, 6) . ']'; // see #5810
-
-					$this->addImageToTemplate($objTemp, $arrFaq, null, $strLightboxId, $objModel);
-				}
+				$this->Template->useImage = true;
 			}
 
 			$objTemp->enclosure = array();
