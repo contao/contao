@@ -95,18 +95,11 @@ class Route404ProviderTest extends TestCase
 
         $otherPageRoute = new PageRoute($otherPage);
 
-        $pageAdapter = $this->mockAdapter(['findByType', 'findAll']);
-        $pageAdapter
-            ->expects($this->once())
-            ->method('findByType')
-            ->with('error_404')
-            ->willReturn(new Collection([$notFoundPage], 'tl_page'))
-        ;
-
+        $pageAdapter = $this->mockAdapter(['findAll']);
         $pageAdapter
             ->expects($this->once())
             ->method('findAll')
-            ->willReturn(new Collection([$otherPage], 'tl_page'))
+            ->willReturn(new Collection([$otherPage, $notFoundPage], 'tl_page'))
         ;
 
         $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
@@ -119,9 +112,9 @@ class Route404ProviderTest extends TestCase
 
         $pageRegistry = $this->createMock(PageRegistry::class);
         $pageRegistry
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('getRoute')
-            ->with($otherPage)
+            ->withConsecutive([$otherPage], [$notFoundPage])
             ->willReturn($otherPageRoute)
         ;
 
@@ -211,11 +204,16 @@ class Route404ProviderTest extends TestCase
     public function testCreatesOneRouteWithoutLocale(): void
     {
         /** @var PageModel&MockObject $page */
-        $page = $this->mockClassWithProperties(PageModel::class);
-        $page->id = 17;
-        $page->rootId = 1;
-        $page->domain = 'example.com';
-        $page->rootUseSSL = true;
+        $page = $this->mockClassWithProperties(
+            PageModel::class,
+            [
+                'id' => 17,
+                'rootId' => 1,
+                'type' => 'error_404',
+                'domain' => 'example.com',
+                'rootUseSSL' => true,
+            ]
+        );
 
         $pageAdapter = $this->mockAdapter(['findByType']);
         $pageAdapter
@@ -254,13 +252,18 @@ class Route404ProviderTest extends TestCase
     public function testCreatesTwoRoutesWithLocale(): void
     {
         /** @var PageModel&MockObject $page */
-        $page = $this->mockClassWithProperties(PageModel::class);
-        $page->id = 17;
-        $page->rootId = 1;
-        $page->domain = 'example.com';
-        $page->rootUseSSL = true;
-        $page->rootLanguage = 'de';
-        $page->urlPrefix = 'de';
+        $page = $this->mockClassWithProperties(
+            PageModel::class,
+            [
+                'id' => 17,
+                'rootId' => 1,
+                'type' => 'error_404',
+                'domain' => 'example.com',
+                'rootUseSSL' => true,
+                'rootLanguage' => 'de',
+                'urlPrefix' => 'de',
+            ]
+        );
 
         $pageAdapter = $this->mockAdapter(['findByType']);
         $pageAdapter
@@ -361,42 +364,47 @@ class Route404ProviderTest extends TestCase
         yield 'adds page' => [
             ['tl_page.42.error_404'],
             ['en'],
-            ['id' => 42, 'urlPrefix' => ''],
+            ['id' => 42, 'type' => 'error_404', 'urlPrefix' => ''],
         ];
 
         yield 'sorts page with locale first' => [
             ['tl_page.42.error_404.locale', 'tl_page.42.error_404'],
             ['en'],
-            ['id' => 42, 'urlPrefix' => 'en'],
+            ['id' => 42, 'type' => 'error_404', 'urlPrefix' => 'en'],
         ];
 
         yield 'sorts page with domain first' => [
             ['tl_page.42.error_404', 'tl_page.17.error_404'],
             ['en'],
-            ['id' => 17, 'urlPrefix' => ''],
-            ['id' => 42, 'domain' => 'example.com', 'urlPrefix' => ''],
+            ['id' => 17, 'type' => 'error_404', 'urlPrefix' => ''],
+            ['id' => 42, 'type' => 'error_404', 'domain' => 'example.com', 'urlPrefix' => ''],
         ];
 
         yield 'sorts pages with locales first' => [
             ['tl_page.42.error_404.locale', 'tl_page.17.error_404.locale', 'tl_page.42.error_404', 'tl_page.17.error_404'],
             ['en'],
-            ['id' => 17, 'urlPrefix' => 'en'],
-            ['id' => 42, 'domain' => 'example.com', 'urlPrefix' => 'en'],
+            ['id' => 17, 'type' => 'error_404', 'urlPrefix' => 'en'],
+            ['id' => 42, 'type' => 'error_404', 'domain' => 'example.com', 'urlPrefix' => 'en'],
         ];
 
         yield 'sorts pages by preferred locale' => [
             ['tl_page.42.error_404', 'tl_page.17.error_404'],
             ['de'],
-            ['id' => 17, 'rootLanguage' => 'en', 'urlPrefix' => ''],
-            ['id' => 42, 'rootLanguage' => 'de', 'urlPrefix' => ''],
+            ['id' => 17, 'type' => 'error_404', 'rootLanguage' => 'en', 'urlPrefix' => ''],
+            ['id' => 42, 'type' => 'error_404', 'rootLanguage' => 'de', 'urlPrefix' => ''],
         ];
     }
 
     public function testIgnoresRoutesWithoutRootId(): void
     {
         /** @var PageModel&MockObject $page */
-        $page = $this->mockClassWithProperties(PageModel::class);
-        $page->id = 17;
+        $page = $this->mockClassWithProperties(
+            PageModel::class,
+            [
+                'id' => 17,
+                'type' => 'error_404',
+            ]
+        );
 
         $page
             ->expects($this->once())
@@ -431,9 +439,14 @@ class Route404ProviderTest extends TestCase
     public function testIgnoresPagesWithNoRootPageFoundException(): void
     {
         /** @var PageModel&MockObject $page */
-        $page = $this->mockClassWithProperties(PageModel::class);
-        $page->id = 17;
-        $page->rootId = 1;
+        $page = $this->mockClassWithProperties(
+            PageModel::class,
+            [
+                'id' => 17,
+                'rootId' => 1,
+                'type' => 'error_404',
+            ]
+        );
 
         $page
             ->expects($this->once())
