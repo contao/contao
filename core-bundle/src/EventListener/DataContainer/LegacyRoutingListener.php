@@ -81,7 +81,7 @@ class LegacyRoutingListener
     /**
      * @Callback(table="tl_page", target="fields.urlPrefix.load")
      */
-    public function overrideUrlPrefix($value, DataContainer $dc)
+    public function overrideUrlPrefix($value, DataContainer $dc): ?string
     {
         return $this->prependLocale ? $dc->activeRecord->language : '';
     }

@@ -225,7 +225,6 @@ class Email
 
 			default:
 				throw new \Exception(sprintf('Invalid argument "%s"', $strKey));
-				break;
 		}
 	}
 
@@ -513,16 +512,13 @@ class Email
 			{
 				$this->objMessage->text($this->strText, $this->strCharset);
 			}
+			elseif ($this->strHtml != '')
+			{
+				$this->objMessage->addPart($this->strText, 'text/plain');
+			}
 			else
 			{
-				if ($this->strHtml != '')
-				{
-					$this->objMessage->addPart($this->strText, 'text/plain');
-				}
-				else
-				{
-					$this->objMessage->setBody($this->strText, 'text/plain');
-				}
+				$this->objMessage->setBody($this->strText, 'text/plain');
 			}
 		}
 
@@ -537,16 +533,13 @@ class Email
 		{
 			$this->objMessage->from(new Address($this->strSender, $this->strSenderName ?? ''));
 		}
+		elseif ($this->strSenderName != '')
+		{
+			$this->objMessage->setFrom(array($this->strSender=>$this->strSenderName));
+		}
 		else
 		{
-			if ($this->strSenderName != '')
-			{
-				$this->objMessage->setFrom(array($this->strSender=>$this->strSenderName));
-			}
-			else
-			{
-				$this->objMessage->setFrom($this->strSender);
-			}
+			$this->objMessage->setFrom($this->strSender);
 		}
 
 		// Set the return path (see #5004)
@@ -637,16 +630,13 @@ class Email
 				{
 					$arrReturn[] = new Address($strEmail, $strName);
 				}
+				elseif ($strName != '')
+				{
+					$arrReturn[$strEmail] = $strName;
+				}
 				else
 				{
-					if ($strName != '')
-					{
-						$arrReturn[$strEmail] = $strName;
-					}
-					else
-					{
-						$arrReturn[] = $strEmail;
-					}
+					$arrReturn[] = $strEmail;
 				}
 			}
 		}

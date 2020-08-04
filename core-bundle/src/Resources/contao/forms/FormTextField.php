@@ -160,11 +160,8 @@ class FormTextField extends Widget
 				{
 					return Idna::decodeEmail($this->varValue);
 				}
-				else
-				{
-					return $this->varValue;
-				}
-				break;
+
+				return $this->varValue;
 
 			case 'type':
 				if ($this->hideInput)

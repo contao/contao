@@ -213,7 +213,7 @@ abstract class DataContainer extends Backend
 	/**
 	 * Render a row of a box and return it as HTML string
 	 *
-	 * @param string $strPalette
+	 * @param string|array|null $strPalette
 	 *
 	 * @return string
 	 *
