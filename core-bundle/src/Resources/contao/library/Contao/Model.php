@@ -1240,7 +1240,10 @@ abstract class Model
 	 */
 	protected static function createModelFromDbResult(Database\Result $objResult)
 	{
-		return new static($objResult);
+		/** @var static $strClass */
+		$strClass = static::getClassFromTable(static::$strTable);
+
+		return new $strClass($objResult);
 	}
 
 	/**
