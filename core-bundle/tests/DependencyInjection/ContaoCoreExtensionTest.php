@@ -487,7 +487,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(
             [
                 'kernel.request' => ['onKernelRequest', 36],
-                'kernel.response' => 'onKernelResponse',
+                'kernel.response' => ['onKernelResponse', -98],
             ],
             CsrfTokenCookieSubscriber::getSubscribedEvents()
         );
@@ -718,7 +718,9 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(
             [
                 'kernel.event_listener' => [
-                    [],
+                    [
+                        'priority' => -99
+                    ],
                 ],
             ],
             $tags
