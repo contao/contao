@@ -734,6 +734,11 @@ class ContaoCoreExtensionTest extends TestCase
 
         // Ensure that the listener is registered after the MergeHeaderListener
         $this->assertTrue($priority < $mergeHeadersListenerPriority);
+
+        $csrfCookieListenerPriority = CsrfTokenCookieSubscriber::getSubscribedEvents()['kernel.response'][1] ?? 0;
+
+        // Ensure that the listener is registered after the CsrfTokenCookieSubscriber
+        $this->assertTrue($priority < $csrfCookieListenerPriority);
     }
 
     public function testRegistersTheMergeHttpHeadersListener(): void
