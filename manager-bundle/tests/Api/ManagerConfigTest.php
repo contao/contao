@@ -86,7 +86,7 @@ class ManagerConfigTest extends ContaoTestCase
         $this->assertSame(['bar' => 'foo'], $this->config->all());
     }
 
-    public function testIgnoresEmptyConfigFile()
+    public function testIgnoresEmptyConfigFile(): void
     {
         $this->filesystem->dumpFile($this->tempfile, '');
 
