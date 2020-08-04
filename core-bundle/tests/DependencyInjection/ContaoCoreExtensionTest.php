@@ -2565,33 +2565,20 @@ class ContaoCoreExtensionTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation The language prefix is configured per root page since Contao 4.10. Enabling this option will activate legacy routing.
-     * @expectedDeprecation The URL suffix is configured per root page since Contao 4.10. Enabling this option will activate legacy routing.
      */
-    public function testRegistersTheRoutingFrontendLoaderInLegacyMode(): void
+    public function testOnlyRegistersTheRoutingFrontendLoaderInLegacyMode(): void
     {
-        $container = $this->getContainerBuilder();
+        $container = $this->getContainerBuilder([
+            'contao' => [
+                'encryption_key' => 'foobar',
+                'localconfig' => ['foo' => 'bar'],
+                'legacy_routing' => false,
+            ],
+        ]);
 
         $this->assertFalse($container->has('contao.routing.frontend_loader'));
 
-        $container = $this->getContainerBuilder([
-            'contao' => [
-                'encryption_key' => 'foobar',
-                'localconfig' => ['foo' => 'bar'],
-                'prepend_locale' => true,
-            ],
-        ]);
-
-        $this->assertTrue($container->has('contao.routing.frontend_loader'));
-
-        $container = $this->getContainerBuilder([
-            'contao' => [
-                'encryption_key' => 'foobar',
-                'localconfig' => ['foo' => 'bar'],
-                'url_suffix' => '.php',
-            ],
-        ]);
+        $container = $this->getContainerBuilder();
 
         $this->assertTrue($container->has('contao.routing.frontend_loader'));
 
@@ -2704,33 +2691,20 @@ class ContaoCoreExtensionTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation The language prefix is configured per root page since Contao 4.10. Enabling this option will activate legacy routing.
-     * @expectedDeprecation The URL suffix is configured per root page since Contao 4.10. Enabling this option will activate legacy routing.
      */
-    public function testRegistersTheRoutingLegacyMatcher(): void
+    public function testOnlyRegistersTheRoutingLegacyMatcherInLegacyMode(): void
     {
-        $container = $this->getContainerBuilder();
+        $container = $this->getContainerBuilder([
+            'contao' => [
+                'encryption_key' => 'foobar',
+                'localconfig' => ['foo' => 'bar'],
+                'legacy_routing' => false,
+            ],
+        ]);
 
         $this->assertFalse($container->has('contao.routing.legacy_matcher'));
 
-        $container = $this->getContainerBuilder([
-            'contao' => [
-                'encryption_key' => 'foobar',
-                'localconfig' => ['foo' => 'bar'],
-                'prepend_locale' => true,
-            ],
-        ]);
-
-        $this->assertTrue($container->has('contao.routing.legacy_matcher'));
-
-        $container = $this->getContainerBuilder([
-            'contao' => [
-                'encryption_key' => 'foobar',
-                'localconfig' => ['foo' => 'bar'],
-                'url_suffix' => '.php',
-            ],
-        ]);
+        $container = $this->getContainerBuilder();
 
         $this->assertTrue($container->has('contao.routing.legacy_matcher'));
 
@@ -2753,22 +2727,20 @@ class ContaoCoreExtensionTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation The URL suffix is configured per root page since Contao 4.10. Enabling this option will activate legacy routing.
      */
-    public function testRegistersTheRoutingLegacyRouteProvider(): void
+    public function testOnlyRegistersTheRoutingLegacyRouteProviderInLegacyMode(): void
     {
-        $container = $this->getContainerBuilder();
-
-        $this->assertFalse($container->has('contao.routing.legacy_route_provider'));
-
         $container = $this->getContainerBuilder([
             'contao' => [
                 'encryption_key' => 'foobar',
                 'localconfig' => ['foo' => 'bar'],
-                'url_suffix' => '.php',
+                'legacy_routing' => false,
             ],
         ]);
+
+        $this->assertFalse($container->has('contao.routing.legacy_route_provider'));
+
+        $container = $this->getContainerBuilder();
 
         $this->assertTrue($container->has('contao.routing.legacy_route_provider'));
 
@@ -3022,22 +2994,20 @@ class ContaoCoreExtensionTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation The URL suffix is configured per root page since Contao 4.10. Enabling this option will activate legacy routing.
      */
-    public function testRegistersTheRoutingUrlGeneratorInLegacyMode(): void
+    public function testOnlyRegistersTheRoutingUrlGeneratorInLegacyMode(): void
     {
-        $container = $this->getContainerBuilder();
-
-        $this->assertFalse($container->has('contao.routing.url_generator'));
-
         $container = $this->getContainerBuilder([
             'contao' => [
                 'encryption_key' => 'foobar',
                 'localconfig' => ['foo' => 'bar'],
-                'prepend_locale' => true,
+                'legacy_routing' => false,
             ],
         ]);
+
+        $this->assertFalse($container->has('contao.routing.url_generator'));
+
+        $container = $this->getContainerBuilder();
 
         $this->assertTrue($container->has('contao.routing.url_generator'));
 
