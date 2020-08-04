@@ -65,7 +65,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->booleanNode('legacy_routing')
                     ->defaultTrue()
-                    ->info('Disabling legacy routing allows to configure the URL prefix and suffix per root page. However it might not be compatible with older extensions.')
+                    ->info('Disabling legacy routing allows to configure the URL prefix and suffix per root page. However, it might not be compatible with third-party extensions.')
                 ->end()
                 ->variableNode('localconfig')
                     ->info('Allows to set TL_CONFIG variables, overriding settings stored in localconfig.php. Changes in the Contao back end will not have any effect.')

@@ -287,11 +287,11 @@ class ContaoCoreExtension extends Extension
         if (false === $mergedConfig['legacy_routing']) {
             foreach ($configs as $config) {
                 if (isset($config['prepend_locale'])) {
-                    throw new InvalidConfigurationException('Configuring contao.prepend_locale to "'.var_export($config['prepend_locale'], true).'" requires legacy routing.');
+                    throw new InvalidConfigurationException('Setting contao.prepend_locale to "'.var_export($config['prepend_locale'], true).'" requires legacy routing.');
                 }
 
                 if (isset($config['url_suffix'])) {
-                    throw new InvalidConfigurationException('Configuring contao.prepend_locale to "'.$config['url_suffix'].'" requires legacy routing.');
+                    throw new InvalidConfigurationException('Setting contao.url_suffix to "'.$config['url_suffix'].'" requires legacy routing.');
                 }
             }
         }

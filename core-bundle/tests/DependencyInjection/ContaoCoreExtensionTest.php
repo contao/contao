@@ -2692,7 +2692,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * @group legacy
      */
-    public function testOnlyRegistersTheRoutingLegacyMatcher(): void
+    public function testOnlyRegistersTheRoutingLegacyMatcherInLegacyMode(): void
     {
         $container = $this->getContainerBuilder([
             'contao' => [
@@ -2728,7 +2728,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * @group legacy
      */
-    public function testRegistersTheRoutingLegacyRouteProvider(): void
+    public function testOnlyRegistersTheRoutingLegacyRouteProviderInLegacyMode(): void
     {
         $container = $this->getContainerBuilder([
             'contao' => [
