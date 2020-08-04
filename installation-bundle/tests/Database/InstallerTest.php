@@ -206,6 +206,29 @@ class InstallerTest extends TestCase
         );
     }
 
+    public function testDoesNotChangeTheRowFormatIfTableOptionsAreNotAvailable(): void
+    {
+        $fromSchema = new Schema();
+        $fromSchema
+            ->createTable('tl_foo_view')
+            ->addColumn('foo', 'string')
+        ;
+
+        $toSchema = new Schema();
+        $toSchema
+            ->createTable('tl_foo_view')
+            ->addOption('engine', 'InnoDB')
+            ->addOption('row_format', 'DYNAMIC')
+            ->addOption('charset', 'utf8mb4')
+            ->addOption('collate', 'utf8mb4_unicode_ci')
+            ->addColumn('foo', 'string')
+        ;
+
+        $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_foo_view']);
+
+        $this->assertEmpty($installer->getCommands());
+    }
+
     public function testReturnsTheDropColumnCommands(): void
     {
         $fromSchema = new Schema();
@@ -417,8 +440,23 @@ class InstallerTest extends TestCase
                             ;
 
                             return $statement;
+                    }
 
-                        case "SHOW TABLE STATUS LIKE 'tl_foo'":
+                    return null;
+                }
+            )
+        ;
+
+        $connection
+            ->method('executeQuery')
+            ->willReturnCallback(
+                function (string $query, array $parameters): ?MockObject {
+                    if ('SHOW TABLE STATUS WHERE Name = ? AND Engine IS NOT NULL AND Create_options IS NOT NULL AND Collation IS NOT NULL' !== $query) {
+                        return null;
+                    }
+
+                    switch ($parameters[0]) {
+                        case 'tl_foo':
                             $statement = $this->createMock(Statement::class);
                             $statement
                                 ->method('fetch')
@@ -430,15 +468,24 @@ class InstallerTest extends TestCase
 
                             return $statement;
 
-                        case "SHOW TABLE STATUS LIKE 'tl_bar'":
+                        case 'tl_bar':
                             $statement = $this->createMock(Statement::class);
                             $statement
                                 ->method('fetch')
                                 ->willReturn((object) [
                                     'Engine' => 'InnoDB',
-                                    'Create_options' => 'row_format=COMPATCT',
+                                    'Create_options' => 'row_format=COMPACT',
                                     'Collation' => 'utf8mb4_unicode_ci',
                                 ])
+                            ;
+
+                            return $statement;
+
+                        case 'tl_foo_view':
+                            $statement = $this->createMock(Statement::class);
+                            $statement
+                                ->method('fetch')
+                                ->willReturn(false)
                             ;
 
                             return $statement;

@@ -238,11 +238,13 @@ class Installer
             $this->setLegacyOptions($table);
 
             $tableOptions = $this->connection
-                ->query("SHOW TABLE STATUS LIKE '".$tableName."'")
+                ->executeQuery(
+                    'SHOW TABLE STATUS WHERE Name = ? AND Engine IS NOT NULL AND Create_options IS NOT NULL AND Collation IS NOT NULL',
+                    [$tableName]
+                )
                 ->fetch(\PDO::FETCH_OBJ)
             ;
 
-            // The table does not yet exist
             if (false === $tableOptions) {
                 continue;
             }
