@@ -2598,7 +2598,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEquals(
             [
                 new Reference('contao.framework'),
-                new Reference('database_connection'),
                 new Reference('%contao.url_suffix%'),
                 new Reference('%contao.prepend_locale%'),
             ],
