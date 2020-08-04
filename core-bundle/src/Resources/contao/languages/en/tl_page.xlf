@@ -68,6 +68,12 @@
       <trans-unit id="tl_page.fallback.1">
         <source>Show this page if there is none that matches the visitor's language.</source>
       </trans-unit>
+      <trans-unit id="tl_page.disableLanguageRedirect.0">
+        <source>Disable language redirect</source>
+      </trans-unit>
+      <trans-unit id="tl_page.disableLanguageRedirect.1">
+        <source>Do not redirect visitors to this website root based on their preferred browser language.</source>
+      </trans-unit>
       <trans-unit id="tl_page.favicon.0">
         <source>Favicon</source>
       </trans-unit>
@@ -341,8 +347,8 @@
       <trans-unit id="tl_page.url_legend">
         <source>URL settings</source>
       </trans-unit>
-      <trans-unit id="tl_page.alias_legend">
-        <source>Alias settings</source>
+      <trans-unit id="tl_page.language_legend">
+        <source>Language settings</source>
       </trans-unit>
       <trans-unit id="tl_page.website_legend">
         <source>Website settings</source>

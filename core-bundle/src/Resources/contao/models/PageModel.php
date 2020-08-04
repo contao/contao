@@ -28,6 +28,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string  $type
  * @property string  $pageTitle
  * @property string  $language
+ * @property boolean $disableLanguageRedirect
  * @property boolean $useFolderUrl
  * @property boolean $useAutoItem
  * @property string  $robots
@@ -120,6 +121,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static PageModel|null findOneByType($val, array $opt=array())
  * @method static PageModel|null findOneByPageTitle($val, array $opt=array())
  * @method static PageModel|null findOneByLanguage($val, array $opt=array())
+ * @method static PageModel|null findOneByDisableLanguageRedirect($val, array $opt=array())
  * @method static PageModel|null findOneByUseFolderUrl($val, array $opt=array())
  * @method static PageModel|null findOneByRobots($val, array $opt=array())
  * @method static PageModel|null findOneByDescription($val, array $opt=array())
@@ -177,6 +179,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static Collection|PageModel[]|PageModel|null findByType($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByPageTitle($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByLanguage($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByDisableLanguageRedirect($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByUseFolderUrl($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByRobots($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByDescription($val, array $opt=array())
@@ -238,6 +241,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static integer countByType($val, array $opt=array())
  * @method static integer countByPageTitle($val, array $opt=array())
  * @method static integer countByLanguage($val, array $opt=array())
+ * @method static integer countByDisableLanguageRedirect($val, array $opt=array())
  * @method static integer countByUseFolderUrl($val, array $opt=array())
  * @method static integer countByRobots($val, array $opt=array())
  * @method static integer countByDescription($val, array $opt=array())
