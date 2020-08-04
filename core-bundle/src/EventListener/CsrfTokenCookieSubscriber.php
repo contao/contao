@@ -81,7 +81,7 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
         return [
             // The priority must be higher than the one of the Symfony route listener (defaults to 32)
             KernelEvents::REQUEST => ['onKernelRequest', 36],
-            KernelEvents::RESPONSE => 'onKernelResponse',
+            KernelEvents::RESPONSE => ['onKernelResponse', -98],
         ];
     }
 
