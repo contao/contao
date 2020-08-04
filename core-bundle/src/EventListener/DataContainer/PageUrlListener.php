@@ -262,10 +262,17 @@ class PageUrlListener implements ResetInterface
             /** @var Input $input */
             $input = $this->framework->getAdapter(Input::class);
 
-            // TODO: this won't work in edit-all, in legacy mode or if user does not have access to these fields
-            $currentDomain = $input->post('dns') ?: '';
-            $currentPrefix = $input->post('urlPrefix') ?: '';
-            $currentSuffix = $input->post('urlSuffix') ?: '';
+            if (null !== ($dns = $input->post('dns'))) {
+                $currentDomain = $dns;
+            }
+
+            if (null !== ($urlPrefix = $input->post('urlPrefix'))) {
+                $currentPrefix = $urlPrefix;
+            }
+
+            if (null !== ($urlSuffix = $input->post('urlSuffix'))) {
+                $currentSuffix = $urlSuffix;
+            }
         }
 
         $aliasIds = $this->connection
