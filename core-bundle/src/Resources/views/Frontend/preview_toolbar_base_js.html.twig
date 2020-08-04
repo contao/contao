@@ -207,9 +207,9 @@
 
             request.onload = function () {
                 toolbar.classList.remove('ajax-loading');
-
                 callback.apply(this);
             };
+
             request.send(body)
         }
 
@@ -235,9 +235,11 @@
         // Js for the authenticator
         window.addEventListener("cto-toolbar-loaded", function () {
             const form = toolbar.querySelector('input[name="FORM_SUBMIT"][value="tl_switch"]').form;
+
             if (!form) {
                 return;
             }
+
             form.addEventListener('submit', function (e) {
                 e.preventDefault();
                 const formData = new FormData(form);
@@ -253,28 +255,31 @@
 
             if (document.createElement('datalist') && window.HTMLDataListElement) {
                 const userField = form.querySelector('input[name="user"]');
-                const userList = form.querySelector('datalist[id="userlist"]');
 
-                userField.addEventListener('keyup', function () {
-                    if (userField.value.length < 2) {
-                        return;
-                    }
+                if (userField) {
+                    userField.addEventListener('keyup', function () {
+                        if (userField.value.length < 2) {
+                            return;
+                        }
 
-                    const body = {
-                        FORM_SUBMIT: 'datalist_members',
-                        REQUEST_TOKEN: form.querySelector('input[name="REQUEST_TOKEN"]').value,
-                        value: userField.value
-                    };
+                        const body = {
+                            FORM_SUBMIT: 'datalist_members',
+                            REQUEST_TOKEN: form.querySelector('input[name="REQUEST_TOKEN"]').value,
+                            value: userField.value
+                        };
 
-                    request('POST', form.action, new URLSearchParams(body), function () {
-                        userList.innerHTML = '';
-                        JSON.parse(this.response).forEach(item => {
-                            const option = document.createElement('option');
-                            option.value = item;
-                            userList.appendChild(option);
-                        });
-                    }, false);
-                });
+                        const userList = form.querySelector('datalist[id="userlist"]');
+
+                        request('POST', form.action, new URLSearchParams(body), function () {
+                            userList.innerHTML = '';
+                            JSON.parse(this.response).forEach(item => {
+                                const option = document.createElement('option');
+                                option.value = item;
+                                userList.appendChild(option);
+                            });
+                        }, false);
+                    });
+                }
             }
 
             // Collapse toolbar
