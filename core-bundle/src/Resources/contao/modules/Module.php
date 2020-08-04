@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\Model\Collection;
 use FOS\HttpCache\ResponseTagger;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
  * Parent class for front end modules.
@@ -342,11 +343,29 @@ abstract class Module extends Frontend
 							continue 2;
 						}
 
-						$href = $objNext->getFrontendUrl();
+						try
+						{
+							$href = $objNext->getFrontendUrl();
+						}
+						catch (ExceptionInterface $exception)
+						{
+							System::log('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage(), __METHOD__, TL_ERROR);
+
+							continue 2;
+						}
 						break;
 
 					default:
-						$href = $objSubpage->getFrontendUrl();
+						try
+						{
+							$href = $objSubpage->getFrontendUrl();
+						}
+						catch (ExceptionInterface $exception)
+						{
+							System::log('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage(), __METHOD__, TL_ERROR);
+
+							continue 2;
+						}
 						break;
 				}
 

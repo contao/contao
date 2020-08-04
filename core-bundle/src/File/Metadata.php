@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\File;
 
 /**
- * This class is as a container for file meta data as typically defined in
+ * This class is as a container for file metadata as typically defined in
  * tl_files/tl_content. Its underlying data structure is a key-value store with
  * added getters/setters for convenience.
  *
@@ -21,7 +21,7 @@ namespace Contao\CoreBundle\File;
  * ensure this is the case when creating an instance of this class. You can use
  * the public class constants as keys for a better DX.
  */
-class MetaData
+class Metadata
 {
     public const VALUE_ALT = 'alt';
     public const VALUE_CAPTION = 'caption';
@@ -29,7 +29,7 @@ class MetaData
     public const VALUE_URL = 'link';
 
     /**
-     * Key-value pairs of meta data.
+     * Key-value pairs of metadata.
      *
      * @var array<string, mixed>
      */

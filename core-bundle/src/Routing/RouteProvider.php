@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Routing;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\Model\Collection;
 use Contao\PageModel;
@@ -31,9 +32,9 @@ class RouteProvider implements RouteProviderInterface
     use CandidatePagesTrait;
 
     /**
-     * @var RouteFactory
+     * @var PageRegistry
      */
-    private $routeFactory;
+    private $pageRegistry;
 
     /**
      * @var bool
@@ -48,12 +49,12 @@ class RouteProvider implements RouteProviderInterface
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.route_provider" service instead
      */
-    public function __construct(ContaoFramework $framework, Connection $connection, CandidatesInterface $candidates, RouteFactory $routeFactory, bool $legacyRouting, bool $prependLocale)
+    public function __construct(ContaoFramework $framework, Connection $connection, CandidatesInterface $candidates, PageRegistry $pageRegistry, bool $legacyRouting, bool $prependLocale)
     {
         $this->framework = $framework;
         $this->connection = $connection;
         $this->candidates = $candidates;
-        $this->routeFactory = $routeFactory;
+        $this->pageRegistry = $pageRegistry;
         $this->legacyRouting = $legacyRouting;
         $this->prependLocale = $prependLocale;
     }
@@ -189,7 +190,7 @@ class RouteProvider implements RouteProviderInterface
             return;
         }
 
-        $route = $this->routeFactory->createRouteForPage($page);
+        $route = $this->pageRegistry->getRoute($page);
         $routes['tl_page.'.$page->id] = $route;
 
         $this->addRoutesForRootPage($page, $routes);
@@ -202,7 +203,7 @@ class RouteProvider implements RouteProviderInterface
         }
 
         $page->loadDetails();
-        $route = $this->routeFactory->createRouteForPage($page);
+        $route = $this->pageRegistry->getRoute($page);
         $urlPrefix = '';
 
         if ($route instanceof PageRoute) {

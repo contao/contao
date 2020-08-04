@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Image\Studio;
 
 use Contao\CoreBundle\Exception\InvalidResourceException;
-use Contao\CoreBundle\File\MetaData;
+use Contao\CoreBundle\File\Metadata;
 use Contao\FilesModel;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
@@ -88,18 +88,18 @@ class FigureBuilder
     private $locale;
 
     /**
-     * User defined meta data. This will overwrite the default if set.
+     * User defined metadata. This will overwrite the default if set.
      *
-     * @var MetaData|null
+     * @var Metadata|null
      */
-    private $metaData;
+    private $metadata;
 
     /**
-     * Determines if a meta data should never be present in the output.
+     * Determines if a metadata should never be present in the output.
      *
      * @var bool
      */
-    private $disableMetaData;
+    private $disableMetadata;
 
     /**
      * User defined link attributes. These will add to or overwrite the default values.
@@ -281,24 +281,24 @@ class FigureBuilder
     }
 
     /**
-     * Sets custom meta data.
+     * Sets custom metadata.
      *
-     * By default or if the argument is set to null, meta data is trying to be
+     * By default or if the argument is set to null, metadata is trying to be
      * pulled from the FilesModel.
      */
-    public function setMetaData(?MetaData $metaData): self
+    public function setMetadata(?Metadata $metadata): self
     {
-        $this->metaData = $metaData;
+        $this->metadata = $metadata;
 
         return $this;
     }
 
     /**
-     * Disables creating/using meta data in the output even if it is present.
+     * Disables creating/using metadata in the output even if it is present.
      */
-    public function disableMetaData(bool $disable = true): self
+    public function disableMetadata(bool $disable = true): self
     {
-        $this->disableMetaData = $disable;
+        $this->disableMetadata = $disable;
 
         return $this;
     }
@@ -369,7 +369,7 @@ class FigureBuilder
      * Sets a custom lightbox resource (file path or ImageInterface) or URL.
      *
      * By default or if the argument is set to null, the image/target will be
-     * automatically determined from the meta data or base resource. For this
+     * automatically determined from the metadata or base resource. For this
      * setting to take effect, make sure you have enabled the creation of a
      * lightbox by calling enableLightbox().
      *
@@ -455,8 +455,8 @@ class FigureBuilder
         return new Figure(
             $imageResult,
             \Closure::bind(
-                function (Figure $figure): ?MetaData {
-                    return $this->onDefineMetaData();
+                function (Figure $figure): ?Metadata {
+                    return $this->onDefineMetadata();
                 },
                 $settings
             ),
@@ -477,16 +477,16 @@ class FigureBuilder
     }
 
     /**
-     * Defines meta data on demand.
+     * Defines metadata on demand.
      */
-    private function onDefineMetaData(): ?MetaData
+    private function onDefineMetadata(): ?Metadata
     {
-        if ($this->disableMetaData) {
+        if ($this->disableMetadata) {
             return null;
         }
 
-        if (null !== $this->metaData) {
-            return $this->metaData;
+        if (null !== $this->metadata) {
+            return $this->metadata;
         }
 
         if (null === $this->filesModel) {
@@ -495,17 +495,17 @@ class FigureBuilder
 
         // Get fallback locale list or use without fallbacks if explicitly set
         $locales = null !== $this->locale ? [$this->locale] : $this->getFallbackLocaleList();
-        $metaData = $this->filesModel->getMetaData(...$locales);
+        $metadata = $this->filesModel->getMetadata(...$locales);
 
-        if (null !== $metaData) {
-            return $metaData;
+        if (null !== $metadata) {
+            return $metadata;
         }
 
-        // If no meta data can be obtained from the model, we create a
+        // If no metadata can be obtained from the model, we create a
         // container from the default meta fields with empty values instead
         $metaFields = $this->filesModelAdapter()->getMetaFields();
 
-        return new MetaData(array_combine($metaFields, array_fill(0, \count($metaFields), '')));
+        return new Metadata(array_combine($metaFields, array_fill(0, \count($metaFields), '')));
     }
 
     /**
@@ -532,12 +532,12 @@ class FigureBuilder
             return null;
         }
 
-        $getMetaDataUrl = static function () use ($result): ?string {
-            if (!$result->hasMetaData()) {
+        $getMetadataUrl = static function () use ($result): ?string {
+            if (!$result->hasMetadata()) {
                 return null;
             }
 
-            return $result->getMetaData()->getUrl() ?: null;
+            return $result->getMetadata()->getUrl() ?: null;
         };
 
         $getResourceOrUrl = function ($target): array {
@@ -567,8 +567,8 @@ class FigureBuilder
             return [$filePath, null];
         };
 
-        // Use explicitly set data (1), fall back to using meta data (2) or use the base resource (3) if empty
-        $lightboxResourceOrUrl = $this->lightboxResourceOrUrl ?? $getMetaDataUrl() ?? $this->filePath;
+        // Use explicitly set data (1), fall back to using metadata (2) or use the base resource (3) if empty
+        $lightboxResourceOrUrl = $this->lightboxResourceOrUrl ?? $getMetadataUrl() ?? $this->filePath;
 
         [$filePathOrImage, $url] = $getResourceOrUrl($lightboxResourceOrUrl);
 

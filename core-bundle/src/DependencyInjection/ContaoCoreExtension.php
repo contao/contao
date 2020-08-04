@@ -16,7 +16,6 @@ use Contao\CoreBundle\Crawl\Escargot\Subscriber\EscargotSubscriberInterface;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Migration\MigrationInterface;
 use Contao\CoreBundle\Picker\PickerProviderInterface;
-use Contao\CoreBundle\Routing\Content\ContentRouteProviderInterface;
 use Contao\CoreBundle\Routing\Page\ContentCompositionInterface;
 use Contao\CoreBundle\Routing\Page\DynamicRouteInterface;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
@@ -61,10 +60,8 @@ class ContaoCoreExtension extends Extension
         );
 
         $loader->load('commands.yml');
-        $loader->load('controller.yml');
         $loader->load('listener.yml');
         $loader->load('services.yml');
-        $loader->load('routing.yml');
         $loader->load('migrations.yml');
 
         $container->setParameter('contao.web_dir', $config['web_dir']);
@@ -101,11 +98,6 @@ class ContaoCoreExtension extends Extension
         $container
             ->registerForAutoconfiguration(MigrationInterface::class)
             ->addTag('contao.migration')
-        ;
-
-        $container
-            ->registerForAutoconfiguration(ContentRouteProviderInterface::class)
-            ->addTag('contao.content_route_provider')
         ;
 
         $container

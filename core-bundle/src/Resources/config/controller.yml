@@ -1,9 +1,0 @@
-services:
-    _defaults:
-        autoconfigure: true
-        public: true
-
-    Contao\CoreBundle\Controller\Page\RootPageController:
-        tags:
-            - { name: contao.page, contentComposition: false }
-            - { name: monolog.logger, channel: contao }

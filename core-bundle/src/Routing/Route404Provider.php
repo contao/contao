@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Routing;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
@@ -31,16 +32,16 @@ class Route404Provider implements RouteProviderInterface
     use CandidatePagesTrait;
 
     /**
-     * @var RouteFactory
+     * @var PageRegistry
      */
-    private $routeFactory;
+    private $pageRegistry;
 
-    public function __construct(ContaoFramework $framework, Connection $connection, CandidatesInterface $candidates, RouteFactory $routeFactory)
+    public function __construct(ContaoFramework $framework, Connection $connection, CandidatesInterface $candidates, PageRegistry $pageRegistry)
     {
         $this->framework = $framework;
         $this->connection = $connection;
         $this->candidates = $candidates;
-        $this->routeFactory = $routeFactory;
+        $this->pageRegistry = $pageRegistry;
     }
 
     public function getRouteCollectionForRequest(Request $request): RouteCollection
@@ -171,11 +172,7 @@ class Route404Provider implements RouteProviderInterface
         }
 
         foreach ($pages as $page) {
-            $route = $this->routeFactory->createRouteForPage($page);
-
-            if ($route instanceof PageRoute) {
-                $this->addLocaleRedirectRoute($route, $request, $routes);
-            }
+            $this->addLocaleRedirectRoute($this->pageRegistry->getRoute($page), $request, $routes);
         }
 
         return $routes;

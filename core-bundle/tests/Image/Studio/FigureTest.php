@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Image\Studio;
 
-use Contao\CoreBundle\File\MetaData;
+use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\ImageResult;
 use Contao\CoreBundle\Image\Studio\LightboxResult;
@@ -35,14 +35,14 @@ class FigureTest extends TestCase
         $this->assertSame($image, $figure->getImage());
     }
 
-    public function testHasNoLightboxOrMetaDataByDefault(): void
+    public function testHasNoLightboxOrMetadataByDefault(): void
     {
         /** @var ImageResult&MockObject $image */
         $image = $this->createMock(ImageResult::class);
         $figure = new Figure($image);
 
         $this->assertFalse($figure->hasLightbox());
-        $this->assertFalse($figure->hasMetaData());
+        $this->assertFalse($figure->hasMetadata());
     }
 
     public function testGetLightbox(): void
@@ -94,41 +94,41 @@ class FigureTest extends TestCase
         $figure->getLightbox();
     }
 
-    public function testGetMetaData(): void
+    public function testGetMetadata(): void
     {
         /** @var ImageResult&MockObject $image */
         $image = $this->createMock(ImageResult::class);
-        $metaData = new MetaData(['foo' => 'bar']);
-        $figure = new Figure($image, $metaData);
+        $metadata = new Metadata(['foo' => 'bar']);
+        $figure = new Figure($image, $metadata);
 
-        $this->assertTrue($figure->hasMetaData());
-        $this->assertSame($metaData, $figure->getMetaData());
+        $this->assertTrue($figure->hasMetadata());
+        $this->assertSame($metadata, $figure->getMetadata());
     }
 
-    public function testGetMetaDataSetViaCallback(): void
+    public function testGetMetadataSetViaCallback(): void
     {
         /** @var ImageResult&MockObject $image */
         $image = $this->createMock(ImageResult::class);
-        $metaData = new MetaData(['foo' => 'bar']);
+        $metadata = new Metadata(['foo' => 'bar']);
         $called = 0;
 
-        $metaDataClosure = function (Figure $figure) use (&$called, $metaData): MetaData {
+        $metadataClosure = function (Figure $figure) use (&$called, $metadata): Metadata {
             $this->assertInstanceOf(Figure::class, $figure);
             ++$called;
 
-            return $metaData;
+            return $metadata;
         };
 
-        $figure = new Figure($image, $metaDataClosure);
+        $figure = new Figure($image, $metadataClosure);
 
-        $this->assertTrue($figure->hasMetaData());
-        $this->assertSame($metaData, $figure->getMetaData());
+        $this->assertTrue($figure->hasMetadata());
+        $this->assertSame($metadata, $figure->getMetadata());
 
-        $figure->getMetaData(); // second call should be cached
+        $figure->getMetadata(); // second call should be cached
         $this->assertSame(1, $called);
     }
 
-    public function testGetMetaDataFailsIfNotSet(): void
+    public function testGetMetadataFailsIfNotSet(): void
     {
         /** @var ImageResult&MockObject $image */
         $image = $this->createMock(ImageResult::class);
@@ -136,7 +136,7 @@ class FigureTest extends TestCase
 
         $this->expectException(\LogicException::class);
 
-        $figure->getMetaData();
+        $figure->getMetadata();
     }
 
     /**
@@ -147,9 +147,9 @@ class FigureTest extends TestCase
         /** @var ImageResult&MockObject $image */
         $image = $this->createMock(ImageResult::class);
 
-        [$attributes, $metaData, $lightbox] = $argumentsAndPreconditions;
+        [$attributes, $metadata, $lightbox] = $argumentsAndPreconditions;
 
-        $figure = new Figure($image, $metaData, $attributes, $lightbox);
+        $figure = new Figure($image, $metadata, $attributes, $lightbox);
 
         $this->assertSame($expectedAttributes, $figure->getLinkAttributes());
         $this->assertSame($expectedHref ?? '', $figure->getLinkHref());
@@ -206,9 +206,9 @@ class FigureTest extends TestCase
             'https://example.com',
         ];
 
-        yield 'custom attributes and meta data containing link' => [
+        yield 'custom attributes and metadata containing link' => [
             [
-                ['foo' => 'a'], new MetaData([MetaData::VALUE_URL => 'foobar']), null,
+                ['foo' => 'a'], new Metadata([Metadata::VALUE_URL => 'foobar']), null,
             ],
             [
                 'foo' => 'a',
@@ -216,9 +216,9 @@ class FigureTest extends TestCase
             'foobar',
         ];
 
-        yield 'custom attributes and meta data containing external link' => [
+        yield 'custom attributes and metadata containing external link' => [
             [
-                ['foo' => 'a'], new MetaData([MetaData::VALUE_URL => 'https://example.com']), null,
+                ['foo' => 'a'], new Metadata([Metadata::VALUE_URL => 'https://example.com']), null,
             ],
             [
                 'foo' => 'a',
@@ -227,9 +227,9 @@ class FigureTest extends TestCase
             'https://example.com',
         ];
 
-        yield 'custom href attribute and meta data containing link' => [
+        yield 'custom href attribute and metadata containing link' => [
             [
-                ['href' => 'this-will-win'], new MetaData([MetaData::VALUE_URL => 'will-be-overwritten']), null,
+                ['href' => 'this-will-win'], new Metadata([Metadata::VALUE_URL => 'will-be-overwritten']), null,
             ],
             [],
             'this-will-win',
@@ -246,9 +246,9 @@ class FigureTest extends TestCase
             'path/from/lightbox',
         ];
 
-        yield 'custom attributes, meta data containing link and lightbox' => [
+        yield 'custom attributes, metadata containing link and lightbox' => [
             [
-                ['foo' => 'a'], new MetaData([MetaData::VALUE_URL => 'will-be-ignored']), $lightbox,
+                ['foo' => 'a'], new Metadata([Metadata::VALUE_URL => 'will-be-ignored']), $lightbox,
             ],
             [
                 'foo' => 'a',
@@ -257,9 +257,9 @@ class FigureTest extends TestCase
             'path/from/lightbox',
         ];
 
-        yield 'force-removed href attribute and meta data containing external link' => [
+        yield 'force-removed href attribute and metadata containing external link' => [
             [
-                ['href' => null], new MetaData([MetaData::VALUE_URL => 'https://example.com']), null,
+                ['href' => null], new Metadata([Metadata::VALUE_URL => 'https://example.com']), null,
             ],
             [],
             null,
@@ -267,7 +267,7 @@ class FigureTest extends TestCase
 
         yield 'custom attributes, force-set data-lightbox attribute and light-box' => [
             [
-                ['foo' => 'a', 'data-lightbox' => 'abcde'], new MetaData([MetaData::VALUE_URL => 'https://example.com']), $lightbox,
+                ['foo' => 'a', 'data-lightbox' => 'abcde'], new Metadata([Metadata::VALUE_URL => 'https://example.com']), $lightbox,
             ],
             [
                 'foo' => 'a',
@@ -324,13 +324,13 @@ class FigureTest extends TestCase
      */
     public function testGetLegacyTemplateData(array $preconditions, array $buildAttributes, \Closure $assert): void
     {
-        [$metaData, $linkAttributes, $lightbox] = $preconditions;
-        [$includeFullMetaData, $floatingProperty, $marginProperty] = $buildAttributes;
+        [$metadata, $linkAttributes, $lightbox] = $preconditions;
+        [$includeFullMetadata, $floatingProperty, $marginProperty] = $buildAttributes;
 
         System::setContainer($this->getContainerWithContaoConfiguration());
 
-        $figure = new Figure($this->getImageMock(), $metaData, $linkAttributes, $lightbox);
-        $data = $figure->getLegacyTemplateData($marginProperty, $floatingProperty, $includeFullMetaData);
+        $figure = new Figure($this->getImageMock(), $metadata, $linkAttributes, $lightbox);
+        $data = $figure->getLegacyTemplateData($marginProperty, $floatingProperty, $includeFullMetadata);
 
         $assert($data);
     }
@@ -355,19 +355,19 @@ class FigureTest extends TestCase
             },
         ];
 
-        $simpleMetaData = new MetaData([
-            MetaData::VALUE_ALT => 'a',
-            MetaData::VALUE_TITLE => 't',
+        $simpleMetadata = new Metadata([
+            Metadata::VALUE_ALT => 'a',
+            Metadata::VALUE_TITLE => 't',
             'foo' => 'bar',
         ]);
 
-        $metaDataWithLink = new MetaData([
-            MetaData::VALUE_TITLE => 't',
-            MetaData::VALUE_URL => 'foo://meta',
+        $metadataWithLink = new Metadata([
+            Metadata::VALUE_TITLE => 't',
+            Metadata::VALUE_URL => 'foo://meta',
         ]);
 
-        yield 'with meta data' => [
-            [$simpleMetaData, null, null],
+        yield 'with metadata' => [
+            [$simpleMetadata, null, null],
             [false, null, null],
             function (array $data): void {
                 $this->assertSame('a', $data['picture']['alt']);
@@ -376,8 +376,8 @@ class FigureTest extends TestCase
             },
         ];
 
-        yield 'with full meta data' => [
-            [$simpleMetaData, null, null],
+        yield 'with full metadata' => [
+            [$simpleMetadata, null, null],
             [true, null, null],
             function (array $data): void {
                 $this->assertSame('a', $data['alt']);
@@ -386,8 +386,8 @@ class FigureTest extends TestCase
             },
         ];
 
-        yield 'with meta data containing link' => [
-            [$metaDataWithLink, null, null],
+        yield 'with metadata containing link' => [
+            [$metadataWithLink, null, null],
             [true, null, null],
             function (array $data): void {
                 $this->assertSame('t', $data['linkTitle']);
@@ -421,8 +421,8 @@ class FigureTest extends TestCase
             },
         ];
 
-        yield 'with full meta data and href link attribute' => [
-            [$metaDataWithLink, $basicLinkAttributes, null],
+        yield 'with full metadata and href link attribute' => [
+            [$metadataWithLink, $basicLinkAttributes, null],
             [true, null, null],
             function (array $data): void {
                 $this->assertSame('foo://meta', $data['imageUrl']);

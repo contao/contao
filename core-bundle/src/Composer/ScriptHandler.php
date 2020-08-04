@@ -72,7 +72,7 @@ class ScriptHandler
 
         // Backwards compatibility with symfony/process <3.3 (see #1964)
         if (method_exists(Process::class, 'setCommandline')) {
-            $command = implode(' ', $command);
+            $command = implode(' ', array_map('escapeshellarg', $command));
         }
 
         $process = new Process($command);

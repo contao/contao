@@ -188,7 +188,7 @@ class FigureBuilderIntegrationTest extends TestCase
             ),
         ];
 
-        yield 'meta data from tl_files' => [
+        yield 'metadata from tl_files' => [
             function () use ($baseRowData) {
                 return [
                     $this->getFilesAdapter([
@@ -221,7 +221,7 @@ class FigureBuilderIntegrationTest extends TestCase
             ),
         ];
 
-        yield 'overwriting/setting meta data (implicit)' => [
+        yield 'overwriting/setting metadata (implicit)' => [
             static function () use ($baseRowData) {
                 return [
                     null,
@@ -249,7 +249,7 @@ class FigureBuilderIntegrationTest extends TestCase
             ),
         ];
 
-        yield 'overwriting/setting meta data (explicit)' => [
+        yield 'overwriting/setting metadata (explicit)' => [
             function () use ($baseRowData) {
                 return [
                     $this->getFilesAdapter([
@@ -288,7 +288,7 @@ class FigureBuilderIntegrationTest extends TestCase
             ),
         ];
 
-        yield 'overwriting meta data with link' => [
+        yield 'overwriting metadata with link' => [
             function () use ($baseRowData) {
                 return [
                     $this->getFilesAdapter([
@@ -328,7 +328,7 @@ class FigureBuilderIntegrationTest extends TestCase
             ),
         ];
 
-        yield 'meta data from tl_files not present in current language' => [
+        yield 'metadata from tl_files not present in current language' => [
             function () use ($baseRowData) {
                 return [
                     $this->getFilesAdapter([
@@ -361,7 +361,7 @@ class FigureBuilderIntegrationTest extends TestCase
             ),
         ];
 
-        yield 'meta data from tl_files containing a link' => [
+        yield 'metadata from tl_files containing a link' => [
             function () use ($baseRowData) {
                 return [
                     $this->getFilesAdapter([
@@ -1123,7 +1123,7 @@ class FigureBuilderIntegrationTest extends TestCase
             ),
         ];
 
-        yield 'image/text content element 2 (overwriting meta data)' => [
+        yield 'image/text content element 2 (overwriting metadata)' => [
             function () {
                 return [
                     $this->getFilesAdapter([
@@ -1491,7 +1491,7 @@ class FigureBuilderIntegrationTest extends TestCase
                 'importantPartWidth' => 0.0,
             ], $filesModelProperties);
 
-            // We are using a child class of FilesModel to benefit from realistic MetaData
+            // We are using a child class of FilesModel to benefit from realistic metadata
             // creation while being able to disable object registration
             $filesModel = new class($data) extends FilesModel {
                 /* @noinspection PhpMissingParentConstructorInspection */

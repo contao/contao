@@ -13,13 +13,13 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Image\Studio;
 
 use Contao\Controller;
-use Contao\CoreBundle\File\MetaData;
+use Contao\CoreBundle\File\Metadata;
 use Contao\File;
 use Contao\StringUtil;
 use Contao\Template;
 
 /**
- * A Figure object holds image and meta data ready to be applied to a
+ * A Figure object holds image and metadata ready to be applied to a
  * template's context. If you are using the legacy PHP templates, you can still
  * use the provided legacy helper methods to manually apply the data to them.
  *
@@ -33,9 +33,9 @@ final class Figure
     private $image;
 
     /**
-     * @var MetaData|(\Closure(self):MetaData|null)|null
+     * @var Metadata|(\Closure(self):Metadata|null)|null
      */
-    private $metaData;
+    private $metadata;
 
     /**
      * @var array<string, string|null>|(\Closure(self):array<string, string|null>)|null
@@ -59,15 +59,15 @@ final class Figure
      * that only returns the value on demand.
      *
      * @param ImageResult                                                                 $image          Main image
-     * @param MetaData|(\Closure(self):MetaData|null)|null                                $metaData       Meta data container
+     * @param Metadata|(\Closure(self):Metadata|null)|null                                $metadata       Metadata container
      * @param array<string, string|null>|(\Closure(self):array<string, string|null>)|null $linkAttributes Link attributes
      * @param LightboxResult|(\Closure(self):LightboxResult|null)|null                    $lightbox       Lightbox
      * @param array<string, mixed>|(\Closure(self):array<string, mixed>)|null             $options        Template options
      */
-    public function __construct(ImageResult $image, $metaData = null, $linkAttributes = null, $lightbox = null, $options = null)
+    public function __construct(ImageResult $image, $metadata = null, $linkAttributes = null, $lightbox = null, $options = null)
     {
         $this->image = $image;
-        $this->metaData = $metaData;
+        $this->metadata = $metadata;
         $this->linkAttributes = $linkAttributes;
         $this->lightbox = $lightbox;
         $this->options = $options;
@@ -104,24 +104,24 @@ final class Figure
         return $this->lightbox;
     }
 
-    public function hasMetaData(): bool
+    public function hasMetadata(): bool
     {
-        $this->resolveIfClosure($this->metaData);
+        $this->resolveIfClosure($this->metadata);
 
-        return $this->metaData instanceof MetaData;
+        return $this->metadata instanceof Metadata;
     }
 
     /**
-     * Returns the main resource's meta data.
+     * Returns the main resource's metadata.
      */
-    public function getMetaData(): MetaData
+    public function getMetadata(): Metadata
     {
-        if (!$this->hasMetaData()) {
-            throw new \LogicException('This result container does not include meta data.');
+        if (!$this->hasMetadata()) {
+            throw new \LogicException('This result container does not include metadata.');
         }
 
         // Safely return as Closure will be evaluated at this point
-        return $this->metaData;
+        return $this->metadata;
     }
 
     /**
@@ -144,8 +144,8 @@ final class Figure
                         return $this->getLightbox()->getLinkHref();
                     }
 
-                    if ($this->hasMetaData()) {
-                        return $this->getMetaData()->getUrl();
+                    if ($this->hasMetadata()) {
+                        return $this->getMetadata()->getUrl();
                     }
 
                     return '';
@@ -207,36 +207,36 @@ final class Figure
      *
      * @param string|array|null $margin              Set margins that will compose the inline CSS for the "margin" key
      * @param string|null       $floating            Set/determine values for the "float_class" and "addBefore" keys
-     * @param bool              $includeFullMetaData Make all meta data available in the first dimension of the returned data set (key-value pairs)
+     * @param bool              $includeFullMetadata Make all metadata available in the first dimension of the returned data set (key-value pairs)
      */
-    public function getLegacyTemplateData($margin = null, string $floating = null, bool $includeFullMetaData = true): array
+    public function getLegacyTemplateData($margin = null, string $floating = null, bool $includeFullMetadata = true): array
     {
-        // Create a key-value list of the meta data and apply some renaming and
+        // Create a key-value list of the metadata and apply some renaming and
         // formatting transformations to fit the legacy templates.
-        $createLegacyMetaDataMapping = static function (MetaData $metaData): array {
-            if ($metaData->empty()) {
+        $createLegacyMetadataMapping = static function (Metadata $metadata): array {
+            if ($metadata->empty()) {
                 return [];
             }
 
-            $mapping = $metaData->all();
+            $mapping = $metadata->all();
 
             // Handle special chars
-            foreach ([MetaData::VALUE_ALT, MetaData::VALUE_TITLE, MetaData::VALUE_CAPTION] as $key) {
+            foreach ([Metadata::VALUE_ALT, Metadata::VALUE_TITLE, Metadata::VALUE_CAPTION] as $key) {
                 if (isset($mapping[$key])) {
                     $mapping[$key] = StringUtil::specialchars($mapping[$key]);
                 }
             }
 
             // Rename certain keys (as used in the Contao templates)
-            if (isset($mapping[MetaData::VALUE_TITLE])) {
-                $mapping['imageTitle'] = $mapping[MetaData::VALUE_TITLE];
+            if (isset($mapping[Metadata::VALUE_TITLE])) {
+                $mapping['imageTitle'] = $mapping[Metadata::VALUE_TITLE];
             }
 
-            if (isset($mapping[MetaData::VALUE_URL])) {
-                $mapping['imageUrl'] = $mapping[MetaData::VALUE_URL];
+            if (isset($mapping[Metadata::VALUE_URL])) {
+                $mapping['imageUrl'] = $mapping[Metadata::VALUE_URL];
             }
 
-            unset($mapping[MetaData::VALUE_TITLE], $mapping[MetaData::VALUE_URL]);
+            unset($mapping[Metadata::VALUE_TITLE], $mapping[Metadata::VALUE_URL]);
 
             return $mapping;
         };
@@ -260,15 +260,15 @@ final class Figure
         $fileInfoImageSize = (new File(rawurldecode($image->getImageSrc())))->imageSize;
 
         $linkAttributes = $this->getLinkAttributes();
-        $metaData = $this->hasMetaData() ? $this->getMetaData() : new MetaData([]);
+        $metadata = $this->hasMetadata() ? $this->getMetadata() : new Metadata([]);
 
-        // Primary image and meta data
+        // Primary image and metadata
         $templateData = array_merge(
             [
                 'picture' => [
                     'img' => $image->getImg(),
                     'sources' => $image->getSources(),
-                    'alt' => StringUtil::specialchars($metaData->getAlt()),
+                    'alt' => StringUtil::specialchars($metadata->getAlt()),
                 ],
                 'width' => $originalSize->getWidth(),
                 'height' => $originalSize->getHeight(),
@@ -281,7 +281,7 @@ final class Figure
                 'addBefore' => 'below' !== $floating,
                 'addImage' => true,
             ],
-            $includeFullMetaData ? $createLegacyMetaDataMapping($metaData) : []
+            $includeFullMetadata ? $createLegacyMetadataMapping($metadata) : []
         );
 
         // Link attributes and title
@@ -290,10 +290,10 @@ final class Figure
             $templateData['attributes'] = ''; // always define attributes key if href is set
 
             // Map "imageTitle" to "linkTitle"
-            $templateData['linkTitle'] = ($templateData['imageTitle'] ?? null) ?? StringUtil::specialchars($metaData->getTitle());
+            $templateData['linkTitle'] = ($templateData['imageTitle'] ?? null) ?? StringUtil::specialchars($metadata->getTitle());
             unset($templateData['imageTitle']);
-        } elseif ($metaData->has(MetaData::VALUE_TITLE)) {
-            $templateData['picture']['title'] = StringUtil::specialchars($metaData->getTitle());
+        } elseif ($metadata->has(Metadata::VALUE_TITLE)) {
+            $templateData['picture']['title'] = StringUtil::specialchars($metadata->getTitle());
         }
 
         if (!empty($linkAttributes)) {
@@ -341,11 +341,11 @@ final class Figure
      * @param Template|object   $template            The template to apply the data to
      * @param string|array|null $margin              Set margins that will compose the inline CSS for the template's "margin" property
      * @param string|null       $floating            Set/determine values for the template's "float_class" and "addBefore" properties
-     * @param bool              $includeFullMetaData Make all meta data entries directly available in the template
+     * @param bool              $includeFullMetadata Make all metadata entries directly available in the template
      */
-    public function applyLegacyTemplateData(object $template, $margin = null, string $floating = null, bool $includeFullMetaData = true): void
+    public function applyLegacyTemplateData(object $template, $margin = null, string $floating = null, bool $includeFullMetadata = true): void
     {
-        $new = $this->getLegacyTemplateData($margin, $floating, $includeFullMetaData);
+        $new = $this->getLegacyTemplateData($margin, $floating, $includeFullMetadata);
         $existing = $template instanceof Template ? $template->getData() : get_object_vars($template);
 
         // Do not override the "href" key (see #6468)
