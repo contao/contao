@@ -106,7 +106,7 @@ class MemberGroupModel extends Model
 	/**
 	 * Find the first active group with a published jumpTo page
 	 *
-	 * @param string $arrIds An array of member group IDs
+	 * @param array $arrIds An array of member group IDs
 	 *
 	 * @return MemberGroupModel|null The model or null if there is no matching member group
 	 *
