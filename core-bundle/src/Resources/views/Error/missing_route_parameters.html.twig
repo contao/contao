@@ -1,27 +1,23 @@
 {% trans_default_domain 'contao_exception' %}
 {% extends "@ContaoCore/Error/layout.html.twig" %}
 
-{% block title %}Unable to generate front end URL{% endblock %}
+{% block title %}
+    {{ 'XPT.missingRouteParameters.title'|trans }}
+{% endblock %}
 {% block matter %}
-    <p>
-        Contao cannot generate the URL for a front end page, because it requires parameters that are unknown.
-        The page cannot be visited without additional information, like a news alias in the URL.
-    </p>
+    <p>{{ 'XPT.missingRouteParameters.matter'|trans }}</p>
 {% endblock %}
 {% block explain %}
+    <p>{{ 'XPT.missingRouteParameters.explain'|trans }}</p>
     <p>
-        Symfony routes can have variable parameters, which are validated using regular expressions.
-        The following configuration cannot be resolved.
-    </p>
-    <p>
-        Route path: <code>{{ throwable.route.path }}</code>
+        {{ 'XPT.missingRouteParameters.path'|trans }}: <code>{{ throwable.route.path }}</code>
     </p>
     <table>
         <thead>
         <tr>
-            <th>Name</th>
-            <th>Requirement (Regex)</th>
-            <th>Default Value</th>
+            <th>{{ 'XPT.missingRouteParameters.parameterName'|trans }}</th>
+            <th>{{ 'XPT.missingRouteParameters.parameterRequirement'|trans }}</th>
+            <th>{{ 'XPT.missingRouteParameters.parameterDefault'|trans }}</th>
         </tr>
         </thead>
         <tbody>
@@ -29,7 +25,7 @@
             <tr>
                 <td>{{ variable }}</td>
                 <td><code>{{ requirement }}</code></td>
-                <td>{% if throwable.route.defaults[variable] is empty %}<i>empty</i>{% else %}{{ throwable.route.defaults[variable] }}{% endif %}</td>
+                <td>{% if throwable.route.defaults[variable] is empty %}<i>{{ 'XPT.missingRouteParameters.parameterEmpty'|trans }}</i>{% else %}{{ throwable.route.defaults[variable] }}{% endif %}</td>
             </tr>
         {% endfor %}
         </tbody>

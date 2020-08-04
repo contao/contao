@@ -129,6 +129,7 @@ class PrettyErrorScreenListener
 
         if ($exception instanceof RouteParametersException) {
             $this->renderTemplate('missing_route_parameters', 501, $event);
+
             return;
         }
 
