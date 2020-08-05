@@ -764,6 +764,11 @@ class tl_comments extends Backend
 		}
 
 		$objVersions->create();
+
+		if ($dc)
+		{
+			$dc->invalidateCacheTags();
+		}
 	}
 
 	/**

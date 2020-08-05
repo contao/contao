@@ -788,6 +788,7 @@ class File extends System
 
 		$response->headers->addCacheControlDirective('must-revalidate');
 		$response->headers->set('Connection', 'close');
+		$response->headers->set('Content-Type', $this->getMimeType());
 
 		throw new ResponseException($response);
 	}

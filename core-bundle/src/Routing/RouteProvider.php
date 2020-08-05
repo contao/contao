@@ -19,7 +19,6 @@ use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\Model\Collection;
 use Contao\PageModel;
 use Contao\System;
-use Doctrine\DBAL\Connection;
 use Symfony\Cmf\Component\Routing\Candidates\CandidatesInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -46,9 +45,9 @@ class RouteProvider extends AbstractPageRouteProvider
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.route_provider" service instead
      */
-    public function __construct(ContaoFramework $framework, Connection $connection, CandidatesInterface $candidates, PageRegistry $pageRegistry, bool $legacyRouting, bool $prependLocale)
+    public function __construct(ContaoFramework $framework, CandidatesInterface $candidates, PageRegistry $pageRegistry, bool $legacyRouting, bool $prependLocale)
     {
-        parent::__construct($framework, $connection, $candidates);
+        parent::__construct($framework, $candidates);
 
         $this->pageRegistry = $pageRegistry;
         $this->legacyRouting = $legacyRouting;

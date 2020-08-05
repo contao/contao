@@ -48,7 +48,7 @@ class PreviewUrlConvertListener
         /** @var Events $eventsAdapter */
         $eventsAdapter = $this->framework->getAdapter(Events::class);
 
-        $event->setUrl($request->getSchemeAndHttpHost().'/'.$eventsAdapter->generateEventUrl($eventModel));
+        $event->setUrl($eventsAdapter->generateEventUrl($eventModel, true));
     }
 
     private function getEventModel(Request $request): ?CalendarEventsModel

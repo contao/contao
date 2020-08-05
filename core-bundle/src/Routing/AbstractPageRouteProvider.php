@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Routing;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Model\Collection;
 use Contao\PageModel;
-use Doctrine\DBAL\Connection;
 use Symfony\Cmf\Component\Routing\Candidates\CandidatesInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,19 +28,13 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
     protected $framework;
 
     /**
-     * @var Connection
-     */
-    protected $connection;
-
-    /**
      * @var CandidatesInterface
      */
     protected $candidates;
 
-    public function __construct(ContaoFramework $framework, Connection $connection, CandidatesInterface $candidates)
+    public function __construct(ContaoFramework $framework, CandidatesInterface $candidates)
     {
         $this->framework = $framework;
-        $this->connection = $connection;
         $this->candidates = $candidates;
     }
 
@@ -63,7 +56,7 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
             if (is_numeric($candidate)) {
                 $ids[] = (int) $candidate;
             } else {
-                $aliases[] = $this->connection->quote($candidate);
+                $aliases[] = $candidate;
             }
         }
 
@@ -74,12 +67,12 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
         }
 
         if (!empty($aliases)) {
-            $conditions[] = 'tl_page.alias IN ('.implode(',', $aliases).')';
+            $conditions[] = 'tl_page.alias IN ('.implode(',', array_fill(0, \count($aliases), '?')).')';
         }
 
         /** @var PageModel $pageModel */
         $pageModel = $this->framework->getAdapter(PageModel::class);
-        $pages = $pageModel->findBy([implode(' OR ', $conditions)], []);
+        $pages = $pageModel->findBy([implode(' OR ', $conditions)], $aliases);
 
         if (!$pages instanceof Collection) {
             return [];

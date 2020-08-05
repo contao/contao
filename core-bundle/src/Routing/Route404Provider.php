@@ -18,7 +18,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\PageModel;
-use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\Controller\RedirectController;
 use Symfony\Cmf\Component\Routing\Candidates\CandidatesInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,9 +32,12 @@ class Route404Provider extends AbstractPageRouteProvider
      */
     private $pageRegistry;
 
-    public function __construct(ContaoFramework $framework, Connection $connection, CandidatesInterface $candidates, PageRegistry $pageRegistry)
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.routing.route_404_provider" service instead
+     */
+    public function __construct(ContaoFramework $framework, CandidatesInterface $candidates, PageRegistry $pageRegistry)
     {
-        parent::__construct($framework, $connection, $candidates);
+        parent::__construct($framework, $candidates);
 
         $this->pageRegistry = $pageRegistry;
     }

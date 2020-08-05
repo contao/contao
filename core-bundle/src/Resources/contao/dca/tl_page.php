@@ -1784,5 +1784,10 @@ class tl_page extends Backend
 
 		// The onsubmit_callback has triggered scheduleUpdate(), so run generateSitemap() now
 		$this->generateSitemap();
+
+		if ($dc)
+		{
+			$dc->invalidateCacheTags();
+		}
 	}
 }

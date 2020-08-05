@@ -1267,5 +1267,10 @@ class tl_calendar_events extends Backend
 
 		// The onsubmit_callback has triggered scheduleUpdate(), so run generateFeed() now
 		$this->generateFeed();
+
+		if ($dc)
+		{
+			$dc->invalidateCacheTags();
+		}
 	}
 }

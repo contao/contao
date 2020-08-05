@@ -63,10 +63,14 @@ class ManagerConfig
      */
     public function read(): array
     {
-        if (!is_file($this->configFile)) {
-            $this->config = [];
-        } else {
-            $this->config = Yaml::parse(file_get_contents($this->configFile));
+        $this->config = [];
+
+        if (is_file($this->configFile)) {
+            $config = Yaml::parse(file_get_contents($this->configFile));
+
+            if (\is_array($config)) {
+                $this->config = $config;
+            }
         }
 
         return $this->config;

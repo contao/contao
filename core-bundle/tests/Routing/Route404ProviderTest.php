@@ -19,7 +19,6 @@ use Contao\CoreBundle\Routing\Route404Provider;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Model\Collection;
 use Contao\PageModel;
-use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\FrameworkBundle\Controller\RedirectController;
 use Symfony\Cmf\Component\Routing\Candidates\Candidates;
@@ -33,7 +32,6 @@ class Route404ProviderTest extends TestCase
     {
         $provider = new Route404Provider(
             $this->mockContaoFramework(),
-            $this->createMock(Connection::class),
             $this->createMock(Candidates::class),
             $this->createMock(PageRegistry::class)
         );
@@ -55,7 +53,6 @@ class Route404ProviderTest extends TestCase
 
         $provider = new Route404Provider(
             $framework,
-            $this->createMock(Connection::class),
             $this->createMock(Candidates::class),
             $this->createMock(PageRegistry::class)
         );
@@ -120,7 +117,6 @@ class Route404ProviderTest extends TestCase
 
         $provider = new Route404Provider(
             $framework,
-            $this->createMock(Connection::class),
             $candidates,
             $pageRegistry
         );
@@ -162,7 +158,6 @@ class Route404ProviderTest extends TestCase
 
         $provider = new Route404Provider(
             $framework,
-            $this->createMock(Connection::class),
             $candidates,
             $this->createMock(PageRegistry::class)
         );
@@ -193,7 +188,6 @@ class Route404ProviderTest extends TestCase
 
         $provider = new Route404Provider(
             $framework,
-            $this->createMock(Connection::class),
             $candidates,
             $this->createMock(PageRegistry::class)
         );
@@ -229,7 +223,6 @@ class Route404ProviderTest extends TestCase
 
         $provider = new Route404Provider(
             $framework,
-            $this->createMock(Connection::class),
             $candidates,
             $this->createMock(PageRegistry::class)
         );
@@ -279,7 +272,6 @@ class Route404ProviderTest extends TestCase
 
         $provider = new Route404Provider(
             $framework,
-            $this->createMock(Connection::class),
             $candidates,
             $this->createMock(PageRegistry::class)
         );
@@ -345,7 +337,6 @@ class Route404ProviderTest extends TestCase
 
         $provider = new Route404Provider(
             $framework,
-            $this->createMock(Connection::class),
             $candidates,
             $this->createMock(PageRegistry::class)
         );
@@ -425,7 +416,6 @@ class Route404ProviderTest extends TestCase
 
         $provider = new Route404Provider(
             $framework,
-            $this->createMock(Connection::class),
             $candidates,
             $this->createMock(PageRegistry::class)
         );
@@ -468,7 +458,6 @@ class Route404ProviderTest extends TestCase
 
         $provider = new Route404Provider(
             $framework,
-            $this->createMock(Connection::class),
             $candidates,
             $this->createMock(PageRegistry::class)
         );

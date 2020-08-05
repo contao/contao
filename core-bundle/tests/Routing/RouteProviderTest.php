@@ -22,7 +22,6 @@ use Contao\CoreBundle\Routing\RouteProvider;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Model\Collection;
 use Contao\PageModel;
-use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Cmf\Component\Routing\Candidates\CandidatesInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -745,12 +744,6 @@ class RouteProviderTest extends TestCase
             $framework = $this->mockContaoFramework();
         }
 
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->method('quote')
-            ->willReturnArgument(0)
-        ;
-
         $candidates = $this->createMock(CandidatesInterface::class);
         $candidates
             ->method('getCandidates')
@@ -761,6 +754,6 @@ class RouteProviderTest extends TestCase
             $pageRegistry = $this->createMock(PageRegistry::class);
         }
 
-        return new RouteProvider($framework, $connection, $candidates, $pageRegistry, false, $prependLocale);
+        return new RouteProvider($framework, $candidates, $pageRegistry, false, $prependLocale);
     }
 }

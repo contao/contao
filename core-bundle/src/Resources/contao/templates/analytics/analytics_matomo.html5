@@ -8,7 +8,7 @@ $MatomoPath = '//www.example.com/matomo/';
 if ($MatomoSite > 0 && '//www.example.com/matomo/' != $MatomoPath && !BE_USER_LOGGED_IN && !$this->hasAuthenticatedBackendUser()): ?>
 
 <script>
-  var _paq = window._paq || [];
+  var _paq = window._paq = window._paq || [];
   _paq.push(['trackPageView']);
   _paq.push(['enableLinkTracking']);
   (function() {

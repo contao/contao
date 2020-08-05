@@ -388,7 +388,7 @@ abstract class Frontend extends Controller
 			// Redirect if the page alias is not "index" or "/" (see #8498, #8560 and #1210)
 			elseif ($objRootPage->type !== 'root' && !\in_array($objRootPage->alias, array('index', '/')))
 			{
-				static::redirect($objRootPage->getAbsoluteUrl(), 302);
+				static::redirect($objRootPage->getAbsoluteUrl());
 			}
 		}
 

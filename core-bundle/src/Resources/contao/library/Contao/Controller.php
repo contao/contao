@@ -192,9 +192,14 @@ abstract class Controller extends System
 
 		$arrDefaultPlaces = array();
 
-		if ($strDefaultTemplate && file_exists($projectDir . '/templates/' . $strDefaultTemplate . '.html5'))
+		if ($strDefaultTemplate)
 		{
-			$arrDefaultPlaces[] = $GLOBALS['TL_LANG']['MSC']['global'];
+			$arrDefaultPlaces[] = $GLOBALS['TL_LANG']['MSC']['default'];
+
+			if (file_exists($projectDir . '/templates/' . $strDefaultTemplate . '.html5'))
+			{
+				$arrDefaultPlaces[] = $GLOBALS['TL_LANG']['MSC']['global'];
+			}
 		}
 
 		// Do not look for back end templates in theme folders (see #5379)
@@ -1115,9 +1120,9 @@ abstract class Controller extends System
 	 * Redirect to another page
 	 *
 	 * @param string  $strLocation The target URL
-	 * @param integer $intStatus   The HTTP status code (defaults to 303)
+	 * @param integer $intStatus   The HTTP status code (defaults to 307)
 	 */
-	public static function redirect($strLocation, $intStatus=303)
+	public static function redirect($strLocation, $intStatus=307)
 	{
 		$strLocation = str_replace('&amp;', '&', $strLocation);
 		$strLocation = static::replaceOldBePaths($strLocation);

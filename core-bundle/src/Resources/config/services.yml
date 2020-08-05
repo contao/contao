@@ -589,7 +589,6 @@ services:
         class: Contao\CoreBundle\Routing\RouteProvider
         arguments:
             - '@contao.framework'
-            - '@database_connection'
             - '@contao.routing.candidates'
             - '@Contao\CoreBundle\Routing\Page\PageRegistry'
             - '%contao.legacy_routing%'
@@ -599,7 +598,6 @@ services:
         class: Contao\CoreBundle\Routing\Route404Provider
         arguments:
             - '@contao.framework'
-            - '@database_connection'
             - '@contao.routing.locale_candidates'
             - '@Contao\CoreBundle\Routing\Page\PageRegistry'
 
