@@ -257,7 +257,7 @@
                 const userField = form.querySelector('input[name="user"]');
 
                 if (userField) {
-                    userField.addEventListener('keyup', function () {
+                    userField.addEventListener('input', function () {
                         if (userField.value.length < 2) {
                             return;
                         }
