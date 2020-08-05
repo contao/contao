@@ -13,6 +13,7 @@ namespace Contao;
 use League\Uri\Components\Query;
 use League\Uri\Http;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Provide methods to handle a logout page.
@@ -52,7 +53,7 @@ class PageLogout extends Frontend
 		$query = new Query($uri->getQuery());
 		$query = $query->merge('redirect=' . $strRedirect);
 
-		return new RedirectResponse((string) $uri->withQuery((string) $query), 307);
+		return new RedirectResponse((string) $uri->withQuery((string) $query), Response::HTTP_TEMPORARY_REDIRECT);
 	}
 }
 

@@ -15,32 +15,31 @@ namespace Contao\CoreBundle\Routing;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\PageModel;
-use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\Controller\RedirectController;
 use Symfony\Cmf\Component\Routing\Candidates\CandidatesInterface;
-use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-class Route404Provider implements RouteProviderInterface
+class Route404Provider extends AbstractPageRouteProvider
 {
-    use CandidatePagesTrait;
+    /**
+     * @var PageRegistry
+     */
+    private $pageRegistry;
 
     /**
-     * @var RouteFactory
+     * @internal Do not inherit from this class; decorate the "contao.routing.route_404_provider" service instead
      */
-    private $routeFactory;
-
-    public function __construct(ContaoFramework $framework, Connection $connection, CandidatesInterface $candidates, RouteFactory $routeFactory)
+    public function __construct(ContaoFramework $framework, CandidatesInterface $candidates, PageRegistry $pageRegistry)
     {
-        $this->framework = $framework;
-        $this->connection = $connection;
-        $this->candidates = $candidates;
-        $this->routeFactory = $routeFactory;
+        parent::__construct($framework, $candidates);
+
+        $this->pageRegistry = $pageRegistry;
     }
 
     public function getRouteCollectionForRequest(Request $request): RouteCollection
@@ -65,24 +64,63 @@ class Route404Provider implements RouteProviderInterface
 
     public function getRouteByName($name): Route
     {
-        throw new RouteNotFoundException('This router cannot load routes by name');
+        $this->framework->initialize(true);
+
+        $ids = $this->getPageIdsFromNames([$name]);
+
+        if (empty($ids)) {
+            throw new RouteNotFoundException('Route name does not match a page ID');
+        }
+
+        /** @var PageModel $pageModel */
+        $pageModel = $this->framework->getAdapter(PageModel::class);
+        $page = $pageModel->findByPk($ids[0]);
+
+        if (null === $page) {
+            throw new RouteNotFoundException(sprintf('Page ID "%s" not found', $ids[0]));
+        }
+
+        $routes = [];
+
+        $this->addNotFoundRoutesForPage($page, $routes);
+        $this->addLocaleRedirectRoute($this->pageRegistry->getRoute($page), null, $routes);
+
+        if (!\array_key_exists($name, $routes)) {
+            throw new RouteNotFoundException('Route "'.$name.'" not found');
+        }
+
+        return $routes[$name];
     }
 
     public function getRoutesByNames($names): array
     {
-        // Support console and web inspector profiling
+        $this->framework->initialize(true);
+
+        /** @var PageModel $pageAdapter */
+        $pageAdapter = $this->framework->getAdapter(PageModel::class);
+
         if (null === $names) {
-            $routes = array_merge(
-                $this->getNotFoundRoutes(),
-                $this->getLocaleFallbackRoutes()
-            );
+            $pages = $pageAdapter->findAll();
+        } else {
+            $ids = $this->getPageIdsFromNames($names);
 
-            $this->sortRoutes($routes);
+            if (empty($ids)) {
+                return [];
+            }
 
-            return $routes;
+            $pages = $pageAdapter->findBy('tl_page.id IN ('.implode(',', $ids).')', []);
         }
 
-        return [];
+        $routes = [];
+
+        foreach ($pages as $page) {
+            $this->addNotFoundRoutesForPage($page, $routes);
+            $this->addLocaleRedirectRoute($this->pageRegistry->getRoute($page), null, $routes);
+        }
+
+        $this->sortRoutes($routes);
+
+        return $routes;
     }
 
     private function getNotFoundRoutes(): array
@@ -108,6 +146,10 @@ class Route404Provider implements RouteProviderInterface
 
     private function addNotFoundRoutesForPage(PageModel $page, array &$routes): void
     {
+        if ('error_404' !== $page->type) {
+            return;
+        }
+
         try {
             $page->loadDetails();
 
@@ -154,28 +196,16 @@ class Route404Provider implements RouteProviderInterface
         );
     }
 
-    private function getLocaleFallbackRoutes(Request $request = null): array
+    private function getLocaleFallbackRoutes(Request $request): array
     {
-        if (null !== $request && '/' === $request->getPathInfo()) {
+        if ('/' === $request->getPathInfo()) {
             return [];
         }
 
         $routes = [];
 
-        if (null === $request) {
-            /** @var PageModel $pageAdapter */
-            $pageAdapter = $this->framework->getAdapter(PageModel::class);
-            $pages = $pageAdapter->findAll();
-        } else {
-            $pages = $this->findCandidatePages($request);
-        }
-
-        foreach ($pages as $page) {
-            $route = $this->routeFactory->createRouteForPage($page);
-
-            if ($route instanceof PageRoute) {
-                $this->addLocaleRedirectRoute($route, $request, $routes);
-            }
+        foreach ($this->findCandidatePages($request) as $page) {
+            $this->addLocaleRedirectRoute($this->pageRegistry->getRoute($page), $request, $routes);
         }
 
         return $routes;
@@ -223,29 +253,9 @@ class Route404Provider implements RouteProviderInterface
      */
     private function sortRoutes(array &$routes, array $languages = null): void
     {
-        // Convert languages array so key is language and value is priority
-        if (null !== $languages) {
-            foreach ($languages as &$language) {
-                $language = str_replace('_', '-', $language);
-
-                if (5 === \strlen($language)) {
-                    $lng = substr($language, 0, 2);
-
-                    // Append the language if only language plus dialect is given (see #430)
-                    if (!\in_array($lng, $languages, true)) {
-                        $languages[] = $lng;
-                    }
-                }
-            }
-
-            unset($language);
-
-            $languages = array_flip(array_values($languages));
-        }
-
         uasort(
             $routes,
-            static function (Route $a, Route $b) use ($languages, $routes) {
+            function (Route $a, Route $b) use ($languages, $routes) {
                 $errorA = false !== strpos('.error_404', array_search($a, $routes, true));
                 $errorB = false !== strpos('.error_404', array_search($a, $routes, true), -7);
                 $localeA = '.locale' === substr(array_search($a, $routes, true), -7);
@@ -267,52 +277,12 @@ class Route404Provider implements RouteProviderInterface
                     return 1;
                 }
 
-                if ('' !== $a->getHost() && '' === $b->getHost()) {
-                    return -1;
+                // Convert languages array so key is language and value is priority
+                if (null !== $languages) {
+                    $languages = $this->convertLanguagesForSorting($languages);
                 }
 
-                if ('' === $a->getHost() && '' !== $b->getHost()) {
-                    return 1;
-                }
-
-                /** @var PageModel|null $pageA */
-                $pageA = $a->getDefault('pageModel');
-
-                /** @var PageModel|null $pageB */
-                $pageB = $b->getDefault('pageModel');
-
-                if (!$pageA instanceof PageModel || !$pageB instanceof PageModel) {
-                    return 0;
-                }
-
-                if (null !== $languages && $pageA->rootLanguage !== $pageB->rootLanguage) {
-                    $langA = $languages[$pageA->rootLanguage] ?? null;
-                    $langB = $languages[$pageB->rootLanguage] ?? null;
-
-                    if (null === $langA && null === $langB) {
-                        if ($pageA->rootIsFallback) {
-                            return -1;
-                        }
-
-                        if ($pageB->rootIsFallback) {
-                            return 1;
-                        }
-
-                        return $pageA->rootSorting <=> $pageB->rootSorting;
-                    }
-
-                    if (null === $langA && null !== $langB) {
-                        return 1;
-                    }
-
-                    if (null !== $langA && null === $langB) {
-                        return -1;
-                    }
-
-                    return $langA < $langB ? -1 : 1;
-                }
-
-                return strnatcasecmp((string) $pageB->alias, (string) $pageA->alias);
+                return $this->compareRoutes($a, $b, $languages);
             }
         );
     }

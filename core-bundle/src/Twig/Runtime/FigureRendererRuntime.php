@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Runtime;
 
-use Contao\CoreBundle\File\MetaData;
+use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\FilesModel;
@@ -67,10 +67,10 @@ final class FigureRendererRuntime implements RuntimeExtensionInterface
         $configuration['from'] = $from;
         $configuration['size'] = $size;
 
-        // Allow overwriting meta data on the fly
-        foreach (['metaData', 'setMetaData'] as $key) {
+        // Allow overwriting metadata on the fly
+        foreach (['metadata', 'setMetadata'] as $key) {
             if (\is_array($configuration[$key] ?? null)) {
-                $configuration[$key] = new MetaData($configuration[$key]);
+                $configuration[$key] = new Metadata($configuration[$key]);
             }
         }
 

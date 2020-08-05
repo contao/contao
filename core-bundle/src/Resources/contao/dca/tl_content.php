@@ -1865,6 +1865,8 @@ class tl_content extends Backend
 				case 'hyperlink':
 				case 'image':
 				case 'accordionSingle':
+				case 'youtube':
+				case 'vimeo':
 					$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = Config::get('validImageTypes');
 					break;
 
@@ -2110,5 +2112,10 @@ class tl_content extends Backend
 		}
 
 		$objVersions->create();
+
+		if ($dc)
+		{
+			$dc->invalidateCacheTags();
+		}
 	}
 }

@@ -467,7 +467,7 @@ class tl_files extends Backend
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 		$blnIsFolder = is_dir($projectDir . '/' . $dc->id);
 
-		// Remove the meta data when editing folders
+		// Remove the metadata when editing folders
 		if ($blnIsFolder)
 		{
 			PaletteManipulator::create()

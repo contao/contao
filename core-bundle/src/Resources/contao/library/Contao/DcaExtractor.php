@@ -14,7 +14,7 @@ namespace Contao;
  * Extracts DCA information and cache it
  *
  * The class parses the DCA files and stores various extracts like relations
- * in the cache directory. This meta data can then be loaded and used in the
+ * in the cache directory. This metadata can then be loaded and used in the
  * application (e.g. the Model classes).
  *
  * Usage:
@@ -43,7 +43,7 @@ class DcaExtractor extends Controller
 	protected $strTable;
 
 	/**
-	 * Meta data
+	 * Metadata
 	 * @var array
 	 */
 	protected $arrMeta = array();
@@ -146,9 +146,9 @@ class DcaExtractor extends Controller
 	}
 
 	/**
-	 * Return the meta data as array
+	 * Return the metadata as array
 	 *
-	 * @return array The meta data
+	 * @return array The metadata
 	 */
 	public function getMeta()
 	{
@@ -156,9 +156,9 @@ class DcaExtractor extends Controller
 	}
 
 	/**
-	 * Return true if there is meta data
+	 * Return true if there is metadata
 	 *
-	 * @return boolean True if there is meta data
+	 * @return boolean True if there is metadata
 	 */
 	public function hasMeta()
 	{
@@ -544,29 +544,26 @@ class DcaExtractor extends Controller
 			'collate' => $sql['collate']
 		);
 
+		$this->arrFields = array();
+		$this->arrOrderFields = array();
+
 		// Fields
-		if (!empty($fields))
+		foreach ($fields as $field=>$config)
 		{
-			$this->arrFields = array();
-			$this->arrOrderFields = array();
-
-			foreach ($fields as $field=>$config)
+			if (isset($config['sql']))
 			{
-				if (isset($config['sql']))
-				{
-					$this->arrFields[$field] = $config['sql'];
-				}
+				$this->arrFields[$field] = $config['sql'];
+			}
 
-				// Only add order fields of binary fields (see #7785)
-				if (isset($config['inputType'], $config['eval']['orderField']) && $config['inputType'] == 'fileTree')
-				{
-					$this->arrOrderFields[] = $config['eval']['orderField'];
-				}
+			// Only add order fields of binary fields (see #7785)
+			if (isset($config['inputType'], $config['eval']['orderField']) && $config['inputType'] == 'fileTree')
+			{
+				$this->arrOrderFields[] = $config['eval']['orderField'];
+			}
 
-				if (isset($config['eval']['unique']) && $config['eval']['unique'])
-				{
-					$this->arrUniqueFields[] = $field;
-				}
+			if (isset($config['eval']['unique']) && $config['eval']['unique'])
+			{
+				$this->arrUniqueFields[] = $field;
 			}
 		}
 

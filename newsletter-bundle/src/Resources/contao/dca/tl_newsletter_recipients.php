@@ -515,5 +515,10 @@ class tl_newsletter_recipients extends Backend
 		}
 
 		$objVersions->create();
+
+		if ($dc)
+		{
+			$dc->invalidateCacheTags();
+		}
 	}
 }

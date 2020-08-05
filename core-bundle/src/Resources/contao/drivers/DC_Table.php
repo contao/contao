@@ -1568,7 +1568,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			}
 
 			// Invalidate cache tags (no need to invalidate the parent)
-			$this->invalidateCacheTags($this);
+			$this->invalidateCacheTags();
 
 			// Delete the records
 			foreach ($delete as $table=>$fields)
@@ -1759,6 +1759,8 @@ class DC_Table extends DataContainer implements \listable, \editable
 						   ->execute($this->intId);
 		}
 
+		$this->invalidateCacheTags();
+
 		$this->redirect($this->getReferer());
 	}
 
@@ -1784,8 +1786,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				$this->Database->prepare("UPDATE " . $this->strTable . " SET sorting=? WHERE id=?")
 							   ->execute($row[1]['sorting'], $row[0]['id']);
 
-				// Invalidate cache tags
-				$this->invalidateCacheTags($this);
+				$this->invalidateCacheTags();
 			}
 		}
 
@@ -1847,6 +1848,9 @@ class DC_Table extends DataContainer implements \listable, \editable
 			if (Input::post('FORM_SUBMIT') == 'tl_version' && Input::post('version') != '')
 			{
 				$objVersions->restore(Input::post('version'));
+
+				$this->invalidateCacheTags();
+
 				$this->reload();
 			}
 		}
@@ -2193,8 +2197,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				throw new ResponseException($objTemplate->getResponse());
 			}
 
-			// Invalidate cache tags
-			$this->invalidateCacheTags($this);
+			$this->invalidateCacheTags();
 
 			// Redirect
 			if (isset($_POST['saveNclose']))
@@ -2567,6 +2570,8 @@ class DC_Table extends DataContainer implements \listable, \editable
 							}
 						}
 					}
+
+					$this->invalidateCacheTags();
 				}
 			}
 
@@ -2823,6 +2828,8 @@ class DC_Table extends DataContainer implements \listable, \editable
 								}
 							}
 						}
+
+						$this->invalidateCacheTags();
 
 						// Set the current timestamp before adding a new version
 						if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'])
@@ -3367,7 +3374,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 					$this->activeRecord = $objRow;
 
 					// Invalidate cache tags (no need to invalidate the parent)
-					$this->invalidateCacheTags($this);
+					$this->invalidateCacheTags();
 				}
 
 				$this->id = $origId;
@@ -5684,7 +5691,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			// Limit the options if there are root records
 			if (isset($GLOBALS['TL_DCA'][$table]['list']['sorting']['root']) && $GLOBALS['TL_DCA'][$table]['list']['sorting']['root'] !== false)
 			{
-				$arrProcedure[] = "id IN(" . implode(',', array_map('\intval', $GLOBALS['TL_DCA'][$table]['list']['sorting']['root'])) . ")";
+				$arrProcedure[] = "id IN(" . implode(',', $this->Database->getChildRecords($GLOBALS['TL_DCA'][$table]['list']['sorting']['root'], $this->strTable)) . ")";
 			}
 
 			$objFields = $this->Database->prepare("SELECT DISTINCT " . $what . " FROM " . $this->strTable . ((\is_array($arrProcedure) && isset($arrProcedure[0])) ? ' WHERE ' . implode(' AND ', $arrProcedure) : ''))

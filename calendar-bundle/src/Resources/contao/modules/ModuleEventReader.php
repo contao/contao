@@ -107,7 +107,6 @@ class ModuleEventReader extends Events
 				}
 
 				throw new InternalServerErrorException('Invalid "jumpTo" value or target page not public');
-				break;
 
 			case 'article':
 				if (($article = ArticleModel::findByPk($objEvent->articleId)) && ($page = PageModel::findPublishedById($article->pid)))
@@ -116,7 +115,6 @@ class ModuleEventReader extends Events
 				}
 
 				throw new InternalServerErrorException('Invalid "articleId" value or target page not public');
-				break;
 
 			case 'external':
 				if ($objEvent->url)
@@ -125,7 +123,6 @@ class ModuleEventReader extends Events
 				}
 
 				throw new InternalServerErrorException('Empty target URL');
-				break;
 		}
 
 		// Overwrite the page title (see #2853, #4955 and #87)

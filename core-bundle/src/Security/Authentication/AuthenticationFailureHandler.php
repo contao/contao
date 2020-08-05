@@ -48,7 +48,7 @@ class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterf
 
         $request->getSession()->set(Security::AUTHENTICATION_ERROR, $exception);
 
-        return new RedirectResponse($request->getUri());
+        return new RedirectResponse($request->getUri(), Response::HTTP_TEMPORARY_REDIRECT);
     }
 
     private function logException(Request $request, AuthenticationException $exception): void

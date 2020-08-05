@@ -13,6 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Routing\ScopeMatcher;
+use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
 
@@ -21,6 +23,8 @@ use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
  */
 class MakeResponsePrivateListener
 {
+    public const DEBUG_HEADER = 'Contao-Private-Response-Reason';
+
     /**
      * @var ScopeMatcher
      */
@@ -62,28 +66,47 @@ class MakeResponsePrivateListener
 
         // 1) An Authorization header is present
         if ($request->headers->has('Authorization')) {
-            $response->setPrivate();
+            $this->makePrivate($response, 'authorization');
 
             return;
         }
 
         // 2) The session was started
         if ($request->hasSession() && $request->getSession()->isStarted()) {
-            $response->setPrivate();
+            $this->makePrivate($response, 'session-cookie');
 
             return;
         }
 
         // 3) The response sets a cookie (same reason as 2 but for other cookies than the session cookie)
-        if (0 !== \count($response->headers->getCookies())) {
-            $response->setPrivate();
+        $cookies = $response->headers->getCookies();
+
+        if (0 !== \count($cookies)) {
+            $this->makePrivate(
+                $response,
+                sprintf('response-cookies (%s)', implode(', ', array_map(
+                    static function (Cookie $cookie) {
+                        return $cookie->getName();
+                    },
+                    $cookies
+                )))
+            );
 
             return;
         }
 
         // 4) The response has a "Vary: Cookie" header and the request provides at least one cookie
         if ($request->cookies->count() && \in_array('cookie', array_map('strtolower', $response->getVary()), true)) {
-            $response->setPrivate();
+            $this->makePrivate(
+                $response,
+                sprintf('request-cookies (%s)', implode(', ', array_keys($request->cookies->all())))
+            );
         }
+    }
+
+    private function makePrivate(Response $response, string $reason): void
+    {
+        $response->setPrivate();
+        $response->headers->set(self::DEBUG_HEADER, $reason);
     }
 }

@@ -1783,6 +1783,7 @@ ul.sortable button[disabled]:hover {
 }
 .ace_editor {
 	padding:3px;
+	z-index:0;
 }
 .ace_editor,.ace_editor * {
 	font-family:SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace  !important;
@@ -2107,6 +2108,14 @@ fieldset.collapsed > legend {
 .dz-message span {
 	font-size:1.3125rem;
 	color:#ccc;
+}
+
+/* TinyMCE */
+.tox-tinymce {
+	margin: 3px 0;
+}
+.tox .tox-menubar,.tox .tox-toolbar__primary,.tox .tox-statusbar {
+	background-color: #f7f7f9 !important;
 }
 
 /* Tablet */

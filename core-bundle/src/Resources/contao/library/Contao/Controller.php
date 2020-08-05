@@ -16,11 +16,10 @@ use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
-use Contao\CoreBundle\File\MetaData;
+use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Monolog\ContaoContext as ContaoMonologContext;
-use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Util\SimpleTokenParser;
 use Contao\Database\Result;
 use Contao\Image\PictureConfiguration;
@@ -28,6 +27,7 @@ use Contao\Model\Collection;
 use Imagine\Image\BoxInterface;
 use League\Uri\Components\Query;
 use Psr\Log\LogLevel;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\Glob;
 
@@ -192,9 +192,14 @@ abstract class Controller extends System
 
 		$arrDefaultPlaces = array();
 
-		if ($strDefaultTemplate && file_exists($projectDir . '/templates/' . $strDefaultTemplate . '.html5'))
+		if ($strDefaultTemplate)
 		{
-			$arrDefaultPlaces[] = $GLOBALS['TL_LANG']['MSC']['global'];
+			$arrDefaultPlaces[] = $GLOBALS['TL_LANG']['MSC']['default'];
+
+			if (file_exists($projectDir . '/templates/' . $strDefaultTemplate . '.html5'))
+			{
+				$arrDefaultPlaces[] = $GLOBALS['TL_LANG']['MSC']['global'];
+			}
 		}
 
 		// Do not look for back end templates in theme folders (see #5379)
@@ -1115,9 +1120,9 @@ abstract class Controller extends System
 	 * Redirect to another page
 	 *
 	 * @param string  $strLocation The target URL
-	 * @param integer $intStatus   The HTTP status code (defaults to 303)
+	 * @param integer $intStatus   The HTTP status code (defaults to 307)
 	 */
-	public static function redirect($strLocation, $intStatus=303)
+	public static function redirect($strLocation, $intStatus=307)
 	{
 		$strLocation = str_replace('&amp;', '&', $strLocation);
 		$strLocation = static::replaceOldBePaths($strLocation);
@@ -1180,11 +1185,11 @@ abstract class Controller extends System
 	 * @return string An URL that can be used in the front end
 	 *
 	 * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.0.
-	 *             Use the Symfony router instead.
+	 *             Use PageModel::getFrontendUrl() instead.
 	 */
 	public static function generateFrontendUrl(array $arrRow, $strParams=null, $strForceLang=null, $blnFixDomain=false)
 	{
-		trigger_deprecation('contao/core-bundle', '4.2', 'Using "Contao\Controller::generateFrontendUrl()" has been deprecated and will no longer work in Contao 5.0. Use the Symfony router instead.');
+		trigger_deprecation('contao/core-bundle', '4.2', 'Using "Contao\Controller::generateFrontendUrl()" has been deprecated and will no longer work in Contao 5.0. Use PageModel::getFrontendUrl() instead.');
 
 		$page = new PageModel();
 		$page->preventSaving(false);
@@ -1223,7 +1228,7 @@ abstract class Controller extends System
 		}
 
 		$objRouter = System::getContainer()->get('router');
-		$strUrl = $objRouter->generate(PageRoute::ROUTE_NAME, array(PageRoute::CONTENT_PARAMETER => $page, 'parameters' => $strParams));
+		$strUrl = $objRouter->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $page, 'parameters' => $strParams));
 
 		// Remove path from absolute URLs
 		if (0 === strncmp($strUrl, '/', 1))
@@ -1523,8 +1528,8 @@ abstract class Controller extends System
 	 */
 	public static function addImageToTemplate($template, array $rowData, $maxWidth = null, $lightboxGroupIdentifier = null, FilesModel $filesModel = null): void
 	{
-		// Helper: Create MetaData from the specified row data
-		$createMetaDataOverwriteFromRowData = static function (bool $interpretAsContentModel) use ($rowData)
+		// Helper: Create metadata from the specified row data
+		$createMetadataOverwriteFromRowData = static function (bool $interpretAsContentModel) use ($rowData)
 		{
 			if ($interpretAsContentModel)
 			{
@@ -1532,14 +1537,14 @@ abstract class Controller extends System
 				$contentModel = (new \ReflectionClass(ContentModel::class))->newInstanceWithoutConstructor();
 
 				// This will be null if "overwriteMeta" is not set
-				return $contentModel->setRow($rowData)->getOverwriteMetaData();
+				return $contentModel->setRow($rowData)->getOverwriteMetadata();
 			}
 
-			// Manually create meta data that always contains certain properties (BC)
-			return new MetaData(array(
-				MetaData::VALUE_ALT => $rowData['alt'] ?? '',
-				MetaData::VALUE_TITLE => $rowData['imageTitle'] ?? '',
-				MetaData::VALUE_URL => self::replaceInsertTags($rowData['imageUrl'] ?? ''),
+			// Manually create metadata that always contains certain properties (BC)
+			return new Metadata(array(
+				Metadata::VALUE_ALT => $rowData['alt'] ?? '',
+				Metadata::VALUE_TITLE => $rowData['imageTitle'] ?? '',
+				Metadata::VALUE_URL => self::replaceInsertTags($rowData['imageUrl'] ?? ''),
 				'linkTitle' => $rowData['linkTitle'] ?: '',
 			));
 		};
@@ -1570,7 +1575,7 @@ abstract class Controller extends System
 
 			if (null !== $filesModel)
 			{
-				// Set empty meta data
+				// Set empty metadata
 				$templateData = array_replace_recursive(
 					$templateData,
 					array(
@@ -1675,21 +1680,21 @@ abstract class Controller extends System
 				$filesModel = clone $filesModel;
 				$filesModel->path = $rowData['singleSRC'];
 
-				// Use source + meta data from files model (if not overwritten)
+				// Use source + metadata from files model (if not overwritten)
 				$figureBuilder
 					->fromFilesModel($filesModel)
-					->setMetaData($createMetaDataOverwriteFromRowData(true));
+					->setMetadata($createMetadataOverwriteFromRowData(true));
 
-				$includeFullMetaData = true;
+				$includeFullMetadata = true;
 			}
 			else
 			{
-				// Always ignore file meta data when building from path (BC)
+				// Always ignore file metadata when building from path (BC)
 				$figureBuilder
 					->fromPath($rowData['singleSRC'], false)
-					->setMetaData($createMetaDataOverwriteFromRowData(false));
+					->setMetadata($createMetadataOverwriteFromRowData(false));
 
-				$includeFullMetaData = false;
+				$includeFullMetadata = false;
 			}
 		}
 		catch (InvalidResourceException $e)
@@ -1724,7 +1729,7 @@ abstract class Controller extends System
 			->build();
 
 		// Build result and apply it to the template
-		$figure->applyLegacyTemplateData($template, $margin, $rowData['floating'] ?: null, $includeFullMetaData);
+		$figure->applyLegacyTemplateData($template, $margin, $rowData['floating'] ?: null, $includeFullMetadata);
 
 		// Fall back to manually specified link title or empty string if not set (backwards compatibility)
 		$template->linkTitle = $template->linkTitle ?? StringUtil::specialchars($rowData['title'] ?? '');

@@ -748,7 +748,7 @@ class PageRegular extends Frontend
 			}
 		}
 
-		// Add search index meta data
+		// Add search index metadata
 		if ($objPage !== null)
 		{
 			$noSearch = (bool) $objPage->noSearch;
@@ -762,7 +762,7 @@ class PageRegular extends Frontend
 			$meta = array
 			(
 				'@context' => array('contao' => 'https://schema.contao.org/'),
-				'@type' => 'contao:RegularPage',
+				'@type' => 'contao:Page',
 				'contao:pageId' => (int) $objPage->id,
 				'contao:noSearch' => $noSearch,
 				'contao:protected' => (bool) $objPage->protected,

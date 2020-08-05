@@ -240,7 +240,7 @@
         <source>Redirect target</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.meta_legend">
-        <source>Meta data</source>
+        <source>Metadata</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.expert_legend">
         <source>Expert settings</source>

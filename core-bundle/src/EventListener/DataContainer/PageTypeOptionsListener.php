@@ -19,12 +19,11 @@ use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\DataContainer;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Security;
-use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
 /**
  * @Callback(table="tl_page", target="fields.type.options")
  */
-class PageTypeOptionsListener implements ServiceAnnotationInterface
+class PageTypeOptionsListener
 {
     /**
      * @var PageRegistry

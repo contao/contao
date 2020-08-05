@@ -11,9 +11,9 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
-use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -28,6 +28,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string  $type
  * @property string  $pageTitle
  * @property string  $language
+ * @property boolean $disableLanguageRedirect
  * @property boolean $useFolderUrl
  * @property boolean $useAutoItem
  * @property string  $robots
@@ -120,6 +121,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static PageModel|null findOneByType($val, array $opt=array())
  * @method static PageModel|null findOneByPageTitle($val, array $opt=array())
  * @method static PageModel|null findOneByLanguage($val, array $opt=array())
+ * @method static PageModel|null findOneByDisableLanguageRedirect($val, array $opt=array())
  * @method static PageModel|null findOneByUseFolderUrl($val, array $opt=array())
  * @method static PageModel|null findOneByRobots($val, array $opt=array())
  * @method static PageModel|null findOneByDescription($val, array $opt=array())
@@ -177,6 +179,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static Collection|PageModel[]|PageModel|null findByType($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByPageTitle($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByLanguage($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByDisableLanguageRedirect($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByUseFolderUrl($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByRobots($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByDescription($val, array $opt=array())
@@ -238,6 +241,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static integer countByType($val, array $opt=array())
  * @method static integer countByPageTitle($val, array $opt=array())
  * @method static integer countByLanguage($val, array $opt=array())
+ * @method static integer countByDisableLanguageRedirect($val, array $opt=array())
  * @method static integer countByUseFolderUrl($val, array $opt=array())
  * @method static integer countByRobots($val, array $opt=array())
  * @method static integer countByDescription($val, array $opt=array())
@@ -1120,7 +1124,7 @@ class PageModel extends Model
 		}
 
 		$objRouter = System::getContainer()->get('router');
-		$strUrl = $objRouter->generate(PageRoute::ROUTE_NAME, array(PageRoute::CONTENT_PARAMETER => $this, 'parameters' => $strParams));
+		$strUrl = $objRouter->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams));
 
 		// Make the URL relative to the base path
 		if (0 === strncmp($strUrl, '/', 1))
@@ -1143,7 +1147,7 @@ class PageModel extends Model
 		$this->loadDetails();
 
 		$objRouter = System::getContainer()->get('router');
-		$strUrl = $objRouter->generate(PageRoute::ROUTE_NAME, array(PageRoute::CONTENT_PARAMETER => $this, 'parameters' => $strParams), UrlGeneratorInterface::ABSOLUTE_URL);
+		$strUrl = $objRouter->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams), UrlGeneratorInterface::ABSOLUTE_URL);
 
 		return $this->applyLegacyLogic($strUrl, $strParams);
 	}
@@ -1173,7 +1177,7 @@ class PageModel extends Model
 		$context->setBaseUrl($previewScript);
 
 		$objRouter = System::getContainer()->get('router');
-		$strUrl = $objRouter->generate(PageRoute::ROUTE_NAME, array(PageRoute::CONTENT_PARAMETER => $this, 'parameters' => $strParams), UrlGeneratorInterface::ABSOLUTE_URL);
+		$strUrl = $objRouter->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams), UrlGeneratorInterface::ABSOLUTE_URL);
 
 		$context->setBaseUrl($baseUrl);
 

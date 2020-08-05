@@ -13,9 +13,9 @@ namespace Contao;
 use Contao\CoreBundle\Exception\LegacyRoutingException;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Monolog\ContaoContext;
-use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Search\Document;
 use Psr\Log\LogLevel;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ExceptionInterface as RoutingExceptionInterface;
@@ -388,7 +388,7 @@ abstract class Frontend extends Controller
 			// Redirect if the page alias is not "index" or "/" (see #8498, #8560 and #1210)
 			elseif ($objRootPage->type !== 'root' && !\in_array($objRootPage->alias, array('index', '/')))
 			{
-				static::redirect($objRootPage->getAbsoluteUrl(), 302);
+				static::redirect($objRootPage->getAbsoluteUrl());
 			}
 		}
 
@@ -463,7 +463,7 @@ abstract class Frontend extends Controller
 			}
 		}
 
-		$strUrl = System::getContainer()->get('router')->generate(PageRoute::ROUTE_NAME, array(PageRoute::CONTENT_PARAMETER => $objPage, 'parameters' => $strParams));
+		$strUrl = System::getContainer()->get('router')->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $objPage, 'parameters' => $strParams));
 		$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
 
 		return $strUrl;
@@ -538,7 +538,7 @@ abstract class Frontend extends Controller
 	}
 
 	/**
-	 * Get the meta data from a serialized string
+	 * Get the metadata from a serialized string
 	 *
 	 * @param string $strData
 	 * @param string $strLanguage

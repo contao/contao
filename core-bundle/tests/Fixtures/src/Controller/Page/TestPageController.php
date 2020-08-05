@@ -16,18 +16,20 @@ use Contao\CoreBundle\Routing\Page\ContentCompositionInterface;
 use Contao\CoreBundle\Routing\Page\DynamicRouteInterface;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\PageModel;
-use Symfony\Component\Routing\Route;
 
 class TestPageController implements DynamicRouteInterface, ContentCompositionInterface
 {
+    public function __invoke(): void
+    {
+    }
+
     public function supportsContentComposition(PageModel $pageModel): bool
     {
         return false;
     }
 
-    public function enhancePageRoute(PageRoute $route): Route
+    public function configurePageRoute(PageRoute $route): void
     {
-        return $route;
     }
 
     public function getUrlSuffixes(): array

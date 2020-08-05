@@ -107,7 +107,6 @@ use Contao\CoreBundle\Picker\PickerBuilder;
 use Contao\CoreBundle\Picker\TablePickerProvider;
 use Contao\CoreBundle\Repository\CronJobRepository;
 use Contao\CoreBundle\Repository\RememberMeRepository;
-use Contao\CoreBundle\Routing\ContentResolvingGenerator;
 use Contao\CoreBundle\Routing\Enhancer\InputEnhancer;
 use Contao\CoreBundle\Routing\FrontendLoader;
 use Contao\CoreBundle\Routing\ImagesLoader;
@@ -117,8 +116,9 @@ use Contao\CoreBundle\Routing\Matcher\LanguageFilter;
 use Contao\CoreBundle\Routing\Matcher\LegacyMatcher;
 use Contao\CoreBundle\Routing\Matcher\PublishedFilter;
 use Contao\CoreBundle\Routing\Matcher\UrlMatcher;
+use Contao\CoreBundle\Routing\Page\PageRegistry;
+use Contao\CoreBundle\Routing\PageUrlGenerator;
 use Contao\CoreBundle\Routing\Route404Provider;
-use Contao\CoreBundle\Routing\RouteFactory;
 use Contao\CoreBundle\Routing\RouteProvider;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Routing\UrlGenerator;
@@ -486,7 +486,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(
             [
                 'kernel.request' => ['onKernelRequest', 36],
-                'kernel.response' => 'onKernelResponse',
+                'kernel.response' => ['onKernelResponse', -832],
             ],
             CsrfTokenCookieSubscriber::getSubscribedEvents()
         );
@@ -775,7 +775,9 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(
             [
                 'kernel.event_listener' => [
-                    [],
+                    [
+                        'priority' => -896,
+                    ],
                 ],
             ],
             $tags
@@ -789,6 +791,18 @@ class ContaoCoreExtensionTest extends TestCase
 
         // Ensure that the listener is registered after the MergeHeaderListener
         $this->assertTrue($priority < $mergeHeadersListenerPriority);
+
+        $clearSessionDataListenerDefinition = $container->getDefinition('contao.listener.clear_session_data');
+        $clearSessionDataListenerTags = $clearSessionDataListenerDefinition->getTags();
+        $clearSessionDataListenerPriority = $clearSessionDataListenerTags['kernel.event_listener'][0]['priority'] ?? 0;
+
+        // Ensure that the listener is registered after the ClearSessionDataListener
+        $this->assertTrue($priority < $clearSessionDataListenerPriority);
+
+        $csrfCookieListenerPriority = CsrfTokenCookieSubscriber::getSubscribedEvents()['kernel.response'][1] ?? 0;
+
+        // Ensure that the listener is registered after the CsrfTokenCookieSubscriber
+        $this->assertTrue($priority < (int) $csrfCookieListenerPriority);
     }
 
     public function testRegistersTheMergeHttpHeadersListener(): void
@@ -2565,33 +2579,20 @@ class ContaoCoreExtensionTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation The language prefix is configured per root page since Contao 4.10. Enabling this option will activate legacy routing.
-     * @expectedDeprecation The URL suffix is configured per root page since Contao 4.10. Enabling this option will activate legacy routing.
      */
-    public function testRegistersTheRoutingFrontendLoaderInLegacyMode(): void
+    public function testOnlyRegistersTheRoutingFrontendLoaderInLegacyMode(): void
     {
-        $container = $this->getContainerBuilder();
+        $container = $this->getContainerBuilder([
+            'contao' => [
+                'encryption_key' => 'foobar',
+                'localconfig' => ['foo' => 'bar'],
+                'legacy_routing' => false,
+            ],
+        ]);
 
         $this->assertFalse($container->has('contao.routing.frontend_loader'));
 
-        $container = $this->getContainerBuilder([
-            'contao' => [
-                'encryption_key' => 'foobar',
-                'localconfig' => ['foo' => 'bar'],
-                'prepend_locale' => true,
-            ],
-        ]);
-
-        $this->assertTrue($container->has('contao.routing.frontend_loader'));
-
-        $container = $this->getContainerBuilder([
-            'contao' => [
-                'encryption_key' => 'foobar',
-                'localconfig' => ['foo' => 'bar'],
-                'url_suffix' => '.php',
-            ],
-        ]);
+        $container = $this->getContainerBuilder();
 
         $this->assertTrue($container->has('contao.routing.frontend_loader'));
 
@@ -2704,33 +2705,20 @@ class ContaoCoreExtensionTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation The language prefix is configured per root page since Contao 4.10. Enabling this option will activate legacy routing.
-     * @expectedDeprecation The URL suffix is configured per root page since Contao 4.10. Enabling this option will activate legacy routing.
      */
-    public function testRegistersTheRoutingLegacyMatcher(): void
+    public function testOnlyRegistersTheRoutingLegacyMatcherInLegacyMode(): void
     {
-        $container = $this->getContainerBuilder();
+        $container = $this->getContainerBuilder([
+            'contao' => [
+                'encryption_key' => 'foobar',
+                'localconfig' => ['foo' => 'bar'],
+                'legacy_routing' => false,
+            ],
+        ]);
 
         $this->assertFalse($container->has('contao.routing.legacy_matcher'));
 
-        $container = $this->getContainerBuilder([
-            'contao' => [
-                'encryption_key' => 'foobar',
-                'localconfig' => ['foo' => 'bar'],
-                'prepend_locale' => true,
-            ],
-        ]);
-
-        $this->assertTrue($container->has('contao.routing.legacy_matcher'));
-
-        $container = $this->getContainerBuilder([
-            'contao' => [
-                'encryption_key' => 'foobar',
-                'localconfig' => ['foo' => 'bar'],
-                'url_suffix' => '.php',
-            ],
-        ]);
+        $container = $this->getContainerBuilder();
 
         $this->assertTrue($container->has('contao.routing.legacy_matcher'));
 
@@ -2753,22 +2741,20 @@ class ContaoCoreExtensionTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation The URL suffix is configured per root page since Contao 4.10. Enabling this option will activate legacy routing.
      */
-    public function testRegistersTheRoutingLegacyRouteProvider(): void
+    public function testOnlyRegistersTheRoutingLegacyRouteProviderInLegacyMode(): void
     {
-        $container = $this->getContainerBuilder();
-
-        $this->assertFalse($container->has('contao.routing.legacy_route_provider'));
-
         $container = $this->getContainerBuilder([
             'contao' => [
                 'encryption_key' => 'foobar',
                 'localconfig' => ['foo' => 'bar'],
-                'url_suffix' => '.php',
+                'legacy_routing' => false,
             ],
         ]);
+
+        $this->assertFalse($container->has('contao.routing.legacy_route_provider'));
+
+        $container = $this->getContainerBuilder();
 
         $this->assertTrue($container->has('contao.routing.legacy_route_provider'));
 
@@ -2941,12 +2927,13 @@ class ContaoCoreExtensionTest extends TestCase
 
         $definition = $container->getDefinition('contao.routing.route_generator');
 
-        $this->assertSame(ContentResolvingGenerator::class, $definition->getClass());
+        $this->assertSame(PageUrlGenerator::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
 
         $this->assertEquals(
             [
-                new Reference(RouteFactory::class),
+                new Reference('contao.routing.route_provider'),
+                new Reference(PageRegistry::class),
                 new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
             ],
             $definition->getArguments()
@@ -2967,9 +2954,8 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEquals(
             [
                 new Reference('contao.framework'),
-                new Reference('database_connection'),
                 new Reference('contao.routing.candidates'),
-                new Reference(RouteFactory::class),
+                new Reference(PageRegistry::class),
                 new Reference('%contao.legacy_routing%'),
                 new Reference('%contao.prepend_locale%'),
             ],
@@ -2991,9 +2977,8 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEquals(
             [
                 new Reference('contao.framework'),
-                new Reference('database_connection'),
                 new Reference('contao.routing.locale_candidates'),
-                new Reference(RouteFactory::class),
+                new Reference(PageRegistry::class),
             ],
             $definition->getArguments()
         );
@@ -3021,22 +3006,20 @@ class ContaoCoreExtensionTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation The URL suffix is configured per root page since Contao 4.10. Enabling this option will activate legacy routing.
      */
-    public function testRegistersTheRoutingUrlGeneratorInLegacyMode(): void
+    public function testOnlyRegistersTheRoutingUrlGeneratorInLegacyMode(): void
     {
-        $container = $this->getContainerBuilder();
-
-        $this->assertFalse($container->has('contao.routing.url_generator'));
-
         $container = $this->getContainerBuilder([
             'contao' => [
                 'encryption_key' => 'foobar',
                 'localconfig' => ['foo' => 'bar'],
-                'prepend_locale' => true,
+                'legacy_routing' => false,
             ],
         ]);
+
+        $this->assertFalse($container->has('contao.routing.url_generator'));
+
+        $container = $this->getContainerBuilder();
 
         $this->assertTrue($container->has('contao.routing.url_generator'));
 

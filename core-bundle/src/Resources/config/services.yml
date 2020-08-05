@@ -545,6 +545,10 @@ services:
             - [addRouteFilter, ['@contao.routing.domain_filter']]
             - [addRouteFilter, ['@contao.routing.published_filter']]
 
+    Contao\CoreBundle\Routing\Page\PageRegistry:
+        arguments:
+            - '@database_connection'
+
     contao.routing.page_router:
         class: Symfony\Cmf\Component\Routing\DynamicRouter
         arguments:
@@ -575,18 +579,18 @@ services:
             - '@contao.security.token_checker'
 
     contao.routing.route_generator:
-        class: Contao\CoreBundle\Routing\ContentResolvingGenerator
+        class: Contao\CoreBundle\Routing\PageUrlGenerator
         arguments:
-            - '@Contao\CoreBundle\Routing\RouteFactory'
+            - '@contao.routing.route_provider'
+            - '@Contao\CoreBundle\Routing\Page\PageRegistry'
             - '@?logger'
 
     contao.routing.route_provider:
         class: Contao\CoreBundle\Routing\RouteProvider
         arguments:
             - '@contao.framework'
-            - '@database_connection'
             - '@contao.routing.candidates'
-            - '@Contao\CoreBundle\Routing\RouteFactory'
+            - '@Contao\CoreBundle\Routing\Page\PageRegistry'
             - '%contao.legacy_routing%'
             - '%contao.prepend_locale%'
 
@@ -594,9 +598,8 @@ services:
         class: Contao\CoreBundle\Routing\Route404Provider
         arguments:
             - '@contao.framework'
-            - '@database_connection'
             - '@contao.routing.locale_candidates'
-            - '@Contao\CoreBundle\Routing\RouteFactory'
+            - '@Contao\CoreBundle\Routing\Page\PageRegistry'
 
     contao.routing.scope_matcher:
         class: Contao\CoreBundle\Routing\ScopeMatcher

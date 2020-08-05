@@ -68,6 +68,12 @@
       <trans-unit id="tl_page.fallback.1">
         <source>Show this page if there is none that matches the visitor's language.</source>
       </trans-unit>
+      <trans-unit id="tl_page.disableLanguageRedirect.0">
+        <source>Disable language redirect</source>
+      </trans-unit>
+      <trans-unit id="tl_page.disableLanguageRedirect.1">
+        <source>Do not redirect visitors to this website root based on their preferred browser language.</source>
+      </trans-unit>
       <trans-unit id="tl_page.favicon.0">
         <source>Favicon</source>
       </trans-unit>
@@ -108,7 +114,7 @@
         <source>E-mail address of the website administrator</source>
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.1">
-        <source>Auto-generated messages like subscription confirmation e-mails will be sent to this address.</source>
+        <source>This e-mail address will be used to send and receive system messages.</source>
       </trans-unit>
       <trans-unit id="tl_page.dateFormat.0">
         <source>Date format</source>
@@ -330,7 +336,7 @@
         <source>Name and type</source>
       </trans-unit>
       <trans-unit id="tl_page.meta_legend">
-        <source>Meta data</source>
+        <source>Metadata</source>
       </trans-unit>
       <trans-unit id="tl_page.system_legend">
         <source>System settings</source>
@@ -340,6 +346,9 @@
       </trans-unit>
       <trans-unit id="tl_page.url_legend">
         <source>URL settings</source>
+      </trans-unit>
+      <trans-unit id="tl_page.language_legend">
+        <source>Language settings</source>
       </trans-unit>
       <trans-unit id="tl_page.website_legend">
         <source>Website settings</source>
@@ -432,7 +441,7 @@
         <source>Edit the articles of page ID %s</source>
       </trans-unit>
       <trans-unit id="tl_page.legacyRouting">
-        <source>This setting has been disabled because Contao is running in legacy routing mode.</source>
+        <source>Disable legacy routing mode to configure the URL prefix and suffix in the root page.</source>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

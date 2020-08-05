@@ -14,26 +14,23 @@ namespace Contao\CoreBundle\Routing;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\Model\Collection;
 use Contao\PageModel;
 use Contao\System;
-use Doctrine\DBAL\Connection;
 use Symfony\Cmf\Component\Routing\Candidates\CandidatesInterface;
-use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-class RouteProvider implements RouteProviderInterface
+class RouteProvider extends AbstractPageRouteProvider
 {
-    use CandidatePagesTrait;
-
     /**
-     * @var RouteFactory
+     * @var PageRegistry
      */
-    private $routeFactory;
+    private $pageRegistry;
 
     /**
      * @var bool
@@ -48,12 +45,11 @@ class RouteProvider implements RouteProviderInterface
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.route_provider" service instead
      */
-    public function __construct(ContaoFramework $framework, Connection $connection, CandidatesInterface $candidates, RouteFactory $routeFactory, bool $legacyRouting, bool $prependLocale)
+    public function __construct(ContaoFramework $framework, CandidatesInterface $candidates, PageRegistry $pageRegistry, bool $legacyRouting, bool $prependLocale)
     {
-        $this->framework = $framework;
-        $this->connection = $connection;
-        $this->candidates = $candidates;
-        $this->routeFactory = $routeFactory;
+        parent::__construct($framework, $candidates);
+
+        $this->pageRegistry = $pageRegistry;
         $this->legacyRouting = $legacyRouting;
         $this->prependLocale = $prependLocale;
     }
@@ -109,6 +105,10 @@ class RouteProvider implements RouteProviderInterface
         $routes = [];
 
         $this->addRoutesForPage($page, $routes);
+
+        if (!\array_key_exists($name, $routes)) {
+            throw new RouteNotFoundException('Route "'.$name.'" not found');
+        }
 
         return $routes[$name];
     }
@@ -189,7 +189,7 @@ class RouteProvider implements RouteProviderInterface
             return;
         }
 
-        $route = $this->routeFactory->createRouteForPage($page);
+        $route = $this->pageRegistry->getRoute($page);
         $routes['tl_page.'.$page->id] = $route;
 
         $this->addRoutesForRootPage($page, $routes);
@@ -202,7 +202,7 @@ class RouteProvider implements RouteProviderInterface
         }
 
         $page->loadDetails();
-        $route = $this->routeFactory->createRouteForPage($page);
+        $route = $this->pageRegistry->getRoute($page);
         $urlPrefix = '';
 
         if ($route instanceof PageRoute) {
@@ -219,7 +219,7 @@ class RouteProvider implements RouteProviderInterface
             $route->getMethods()
         );
 
-        if (!$urlPrefix) {
+        if (!$urlPrefix || $page->disableLanguageRedirect) {
             return;
         }
 
@@ -242,30 +242,6 @@ class RouteProvider implements RouteProviderInterface
     }
 
     /**
-     * @return array<int>
-     */
-    private function getPageIdsFromNames(array $names): array
-    {
-        $ids = [];
-
-        foreach ($names as $name) {
-            if (0 !== strncmp($name, 'tl_page.', 8)) {
-                continue;
-            }
-
-            [, $id] = explode('.', $name);
-
-            if (!is_numeric($id)) {
-                continue;
-            }
-
-            $ids[] = (int) $id;
-        }
-
-        return array_unique($ids);
-    }
-
-    /**
      * Sorts routes so that the FinalMatcher will correctly resolve them.
      *
      * 1. The ones with hostname should come first, so the ones with empty host are only taken if no hostname matches
@@ -275,29 +251,9 @@ class RouteProvider implements RouteProviderInterface
      */
     private function sortRoutes(array &$routes, array $languages = null): void
     {
-        // Convert languages array so key is language and value is priority
-        if (null !== $languages) {
-            foreach ($languages as &$language) {
-                $language = str_replace('_', '-', $language);
-
-                if (5 === \strlen($language)) {
-                    $lng = substr($language, 0, 2);
-
-                    // Append the language if only language plus dialect is given (see #430)
-                    if (!\in_array($lng, $languages, true)) {
-                        $languages[] = $lng;
-                    }
-                }
-            }
-
-            unset($language);
-
-            $languages = array_flip(array_values($languages));
-        }
-
         uasort(
             $routes,
-            static function (Route $a, Route $b) use ($languages, $routes) {
+            function (Route $a, Route $b) use ($languages, $routes) {
                 $nameA = array_search($a, $routes, true);
                 $nameB = array_search($b, $routes, true);
 
@@ -312,67 +268,12 @@ class RouteProvider implements RouteProviderInterface
                     return -1;
                 }
 
-                if ('' !== $a->getHost() && '' === $b->getHost()) {
-                    return -1;
+                // Convert languages array so key is language and value is priority
+                if (null !== $languages) {
+                    $languages = $this->convertLanguagesForSorting($languages);
                 }
 
-                if ('' === $a->getHost() && '' !== $b->getHost()) {
-                    return 1;
-                }
-
-                /** @var PageModel|null $pageA */
-                $pageA = $a->getDefault('pageModel');
-
-                /** @var PageModel|null $pageB */
-                $pageB = $b->getDefault('pageModel');
-
-                // Check if the page models are valid (should always be the case, as routes are generated from pages)
-                if (!$pageA instanceof PageModel || !$pageB instanceof PageModel) {
-                    return 0;
-                }
-
-                if (null !== $languages && $pageA->rootLanguage !== $pageB->rootLanguage) {
-                    $langA = $languages[$pageA->rootLanguage] ?? null;
-                    $langB = $languages[$pageB->rootLanguage] ?? null;
-
-                    if (null === $langA && null === $langB) {
-                        if ($pageA->rootIsFallback && !$pageB->rootIsFallback) {
-                            return -1;
-                        }
-
-                        if ($pageB->rootIsFallback && !$pageA->rootIsFallback) {
-                            return 1;
-                        }
-
-                        return $pageA->rootSorting <=> $pageB->rootSorting;
-                    }
-
-                    if (null === $langA && null !== $langB) {
-                        return 1;
-                    }
-
-                    if (null !== $langA && null === $langB) {
-                        return -1;
-                    }
-
-                    if ($langA < $langB) {
-                        return -1;
-                    }
-
-                    if ($langA > $langB) {
-                        return 1;
-                    }
-                }
-
-                if ('root' !== $pageA->type && 'root' === $pageB->type) {
-                    return -1;
-                }
-
-                if ('root' === $pageA->type && 'root' !== $pageB->type) {
-                    return 1;
-                }
-
-                return strnatcasecmp((string) $pageB->alias, (string) $pageA->alias);
+                return $this->compareRoutes($a, $b, $languages);
             }
         );
     }

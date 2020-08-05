@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Runtime;
 
-use Contao\CoreBundle\File\MetaData;
+use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\ImageResult;
@@ -26,11 +26,11 @@ class FigureRendererRuntimeTest extends TestCase
 {
     public function testConfiguresBuilder(): void
     {
-        $metaData = new MetaData([]);
+        $metadata = new Metadata([]);
 
         $configuration = [
-            'metaData' => $metaData,
-            'disableMetaData' => true,
+            'metadata' => $metadata,
+            'disableMetadata' => true,
             'locale' => 'de',
             'linkAttributes' => ['foo' => 'bar'],
             'linkHref' => 'foo',
@@ -44,8 +44,8 @@ class FigureRendererRuntimeTest extends TestCase
         $expectedFigureBuilderCalls = [
             'from' => 'resource',
             'setSize' => '_size',
-            'setMetaData' => $metaData,
-            'disableMetaData' => true,
+            'setMetadata' => $metadata,
+            'disableMetadata' => true,
             'setLocale' => 'de',
             'setLinkAttributes' => ['foo' => 'bar'],
             'setLinkHref' => 'foo',
@@ -62,14 +62,14 @@ class FigureRendererRuntimeTest extends TestCase
     }
 
     /**
-     * @testWith ["metaData", "setMetaData"]
+     * @testWith ["metadata", "setMetadata"]
      */
-    public function testAllowsDefiningMetaDataAsArray(string $key): void
+    public function testAllowsDefiningMetadataAsArray(string $key): void
     {
-        $metaData = [MetaData::VALUE_ALT => 'foo'];
-        $runtime = $this->getRuntime(['setMetaData' => new MetaData($metaData)]);
+        $metadata = [Metadata::VALUE_ALT => 'foo'];
+        $runtime = $this->getRuntime(['setMetadata' => new Metadata($metadata)]);
 
-        $this->assertSame('<result>', $runtime->render('resource', null, [$key => [MetaData::VALUE_ALT => 'foo']]));
+        $this->assertSame('<result>', $runtime->render('resource', null, [$key => [Metadata::VALUE_ALT => 'foo']]));
     }
 
     public function testUsesCustomTemplate(): void

@@ -213,7 +213,7 @@ abstract class DataContainer extends Backend
 	/**
 	 * Render a row of a box and return it as HTML string
 	 *
-	 * @param string $strPalette
+	 * @param string|array|null $strPalette
 	 *
 	 * @return string
 	 *
@@ -1249,10 +1249,8 @@ abstract class DataContainer extends Backend
 	 * Invalidate the cache tags associated with a given DC
 	 *
 	 * Call this whenever an entry is modified (added, updated, deleted).
-	 *
-	 * @param DataContainer $dc
 	 */
-	protected function invalidateCacheTags(self $dc)
+	public function invalidateCacheTags()
 	{
 		if (!System::getContainer()->has('fos_http_cache.cache_manager'))
 		{
@@ -1260,27 +1258,27 @@ abstract class DataContainer extends Backend
 		}
 
 		$ns = 'contao.db.';
-		$tags = array($ns . $dc->table, $ns . $dc->table . '.' . $dc->id);
+		$tags = array($ns . $this->table, $ns . $this->table . '.' . $this->id);
 
-		if ($dc->ptable && $dc->activeRecord && $dc->activeRecord->pid > 0)
+		if ($this->ptable && $this->activeRecord && $this->activeRecord->pid > 0)
 		{
-			$tags[] = $ns . $dc->ptable;
-			$tags[] = $ns . $dc->ptable . '.' . $dc->activeRecord->pid;
+			$tags[] = $ns . $this->ptable;
+			$tags[] = $ns . $this->ptable . '.' . $this->activeRecord->pid;
 		}
 
 		// Trigger the oninvalidate_cache_tags_callback
-		if (\is_array($GLOBALS['TL_DCA'][$dc->table]['config']['oninvalidate_cache_tags_callback']))
+		if (\is_array($GLOBALS['TL_DCA'][$this->table]['config']['oninvalidate_cache_tags_callback']))
 		{
-			foreach ($GLOBALS['TL_DCA'][$dc->table]['config']['oninvalidate_cache_tags_callback'] as $callback)
+			foreach ($GLOBALS['TL_DCA'][$this->table]['config']['oninvalidate_cache_tags_callback'] as $callback)
 			{
 				if (\is_array($callback))
 				{
 					$this->import($callback[0]);
-					$tags = $this->{$callback[0]}->{$callback[1]}($dc, $tags);
+					$tags = $this->{$callback[0]}->{$callback[1]}($this, $tags);
 				}
 				elseif (\is_callable($callback))
 				{
-					$tags = $callback($dc, $tags);
+					$tags = $callback($this, $tags);
 				}
 			}
 		}

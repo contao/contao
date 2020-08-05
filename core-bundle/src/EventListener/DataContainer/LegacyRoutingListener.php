@@ -18,12 +18,11 @@ use Contao\DataContainer;
 use Contao\Image;
 use Contao\StringUtil;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
 /**
  * @internal
  */
-class LegacyRoutingListener implements ServiceAnnotationInterface
+class LegacyRoutingListener
 {
     /**
      * @var ContaoFramework
@@ -82,7 +81,7 @@ class LegacyRoutingListener implements ServiceAnnotationInterface
     /**
      * @Callback(table="tl_page", target="fields.urlPrefix.load")
      */
-    public function overrideUrlPrefix($value, DataContainer $dc)
+    public function overrideUrlPrefix($value, DataContainer $dc): ?string
     {
         return $this->prependLocale ? $dc->activeRecord->language : '';
     }

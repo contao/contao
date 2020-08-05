@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\File\ModelMetadataTrait;
 use Contao\Model\Collection;
 
 /**
@@ -168,6 +169,8 @@ use Contao\Model\Collection;
  */
 class NewsModel extends Model
 {
+	use ModelMetadataTrait;
+
 	/**
 	 * Table name
 	 * @var string
