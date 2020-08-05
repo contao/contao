@@ -158,7 +158,7 @@ class BackendMain extends Backend
 			{
 				$picker = System::getContainer()->get('contao.picker.builder')->createFromData(Input::get('picker', true));
 
-				if ($picker !== null && ($menu = $picker->getMenu()) && $menu->count() > 1)
+				if ($picker !== null && ($menu = $picker->getMenu()))
 				{
 					$this->Template->pickerMenu = System::getContainer()->get('contao.menu.renderer')->render($menu);
 				}
