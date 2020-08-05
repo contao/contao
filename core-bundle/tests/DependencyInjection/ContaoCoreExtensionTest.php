@@ -487,7 +487,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(
             [
                 'kernel.request' => ['onKernelRequest', 36],
-                'kernel.response' => ['onKernelResponse', -98],
+                'kernel.response' => ['onKernelResponse', -832],
             ],
             CsrfTokenCookieSubscriber::getSubscribedEvents()
         );
@@ -719,7 +719,7 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 'kernel.event_listener' => [
                     [
-                        'priority' => -99,
+                        'priority' => -896,
                     ],
                 ],
             ],
@@ -734,6 +734,13 @@ class ContaoCoreExtensionTest extends TestCase
 
         // Ensure that the listener is registered after the MergeHeaderListener
         $this->assertTrue($priority < $mergeHeadersListenerPriority);
+
+        $clearSessionDataListenerDefinition = $this->container->getDefinition('contao.listener.clear_session_data');
+        $clearSessionDataListenerTags = $clearSessionDataListenerDefinition->getTags();
+        $clearSessionDataListenerPriority = $clearSessionDataListenerTags['kernel.event_listener'][0]['priority'] ?? 0;
+
+        // Ensure that the listener is registered after the ClearSessionDataListener
+        $this->assertTrue($priority < $clearSessionDataListenerPriority);
 
         $csrfCookieListenerPriority = CsrfTokenCookieSubscriber::getSubscribedEvents()['kernel.response'][1] ?? 0;
 
