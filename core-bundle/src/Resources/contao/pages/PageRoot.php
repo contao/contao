@@ -52,7 +52,7 @@ class PageRoot extends \Frontend
 	 */
 	public function getResponse($rootPageId)
 	{
-		return new RedirectResponse($this->getRedirectUrl($rootPageId), Response::HTTP_TEMPORARY_REDIRECT);
+		return new RedirectResponse($this->getRedirectUrl($rootPageId), Response::HTTP_SEE_OTHER);
 	}
 
 	/**

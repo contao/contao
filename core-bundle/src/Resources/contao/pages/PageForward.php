@@ -133,6 +133,6 @@ class PageForward extends \Frontend
 	 */
 	protected function getRedirectStatusCode($objPage)
 	{
-		return ($objPage->redirect == 'temporary') ? 307 : 301;
+		return ($objPage->redirect == 'temporary') ? 303 : 301;
 	}
 }

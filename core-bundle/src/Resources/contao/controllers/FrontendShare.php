@@ -33,7 +33,7 @@ class FrontendShare extends \Frontend
 				return new RedirectResponse(
 					'https://www.facebook.com/sharer/sharer.php'
 						. '?u=' . rawurlencode(\Input::get('u', true)),
-					Response::HTTP_TEMPORARY_REDIRECT
+					Response::HTTP_SEE_OTHER
 				);
 
 			case 'twitter':
@@ -41,17 +41,17 @@ class FrontendShare extends \Frontend
 					'https://twitter.com/intent/tweet'
 						. '?url=' . rawurlencode(\Input::get('u', true))
 						. '&text=' . rawurlencode(\Input::get('t', true)),
-					Response::HTTP_TEMPORARY_REDIRECT
+					Response::HTTP_SEE_OTHER
 				);
 
 			case 'gplus':
 				return new RedirectResponse(
 					'https://plus.google.com/share'
 						. '?url=' . rawurlencode(\Input::get('u', true)),
-					Response::HTTP_TEMPORARY_REDIRECT
+					Response::HTTP_SEE_OTHER
 				);
 		}
 
-		return new RedirectResponse('../', Response::HTTP_TEMPORARY_REDIRECT);
+		return new RedirectResponse('../', Response::HTTP_SEE_OTHER);
 	}
 }

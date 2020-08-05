@@ -63,7 +63,7 @@ class ToggleViewListener
 
         $this->framework->initialize();
 
-        $response = new RedirectResponse(System::getReferer(), Response::HTTP_TEMPORARY_REDIRECT);
+        $response = new RedirectResponse(System::getReferer(), Response::HTTP_SEE_OTHER);
         $response->headers->setCookie($this->getCookie($request->query->get('toggle_view'), $request->getBasePath()));
 
         $event->setResponse($response);
