@@ -61,11 +61,11 @@ class BackendController extends AbstractController
 
                 // We cannot use $request->getUri() here as we want to work with the original URI (no query string reordering)
                 if ($uriSigner->check($request->getSchemeAndHttpHost().$request->getBaseUrl().$request->getPathInfo().(null !== ($qs = $request->server->get('QUERY_STRING')) ? '?'.$qs : ''))) {
-                    return new RedirectResponse($request->query->get('redirect'));
+                    return new RedirectResponse($request->query->get('redirect'), Response::HTTP_TEMPORARY_REDIRECT);
                 }
             }
 
-            return new RedirectResponse($this->generateUrl('contao_backend'));
+            return new RedirectResponse($this->generateUrl('contao_backend'), Response::HTTP_TEMPORARY_REDIRECT);
         }
 
         $controller = new BackendIndex();
@@ -195,7 +195,7 @@ class BackendController extends AbstractController
             throw new BadRequestHttpException('Unsupported picker context');
         }
 
-        return new RedirectResponse($picker->getCurrentUrl());
+        return new RedirectResponse($picker->getCurrentUrl(), Response::HTTP_TEMPORARY_REDIRECT);
     }
 
     public static function getSubscribedServices(): array

@@ -83,7 +83,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         $user = $token->getUser();
 
         if (!$user instanceof User) {
-            return new RedirectResponse($this->determineTargetUrl($request));
+            return new RedirectResponse($this->determineTargetUrl($request), Response::HTTP_TEMPORARY_REDIRECT);
         }
 
         $this->user = $user;
@@ -95,7 +95,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         if ($token instanceof TwoFactorTokenInterface) {
             $this->user->save();
 
-            $response = new RedirectResponse($request->getUri());
+            $response = new RedirectResponse($request->getUri(), Response::HTTP_TEMPORARY_REDIRECT);
 
             // Used by the TwoFactorListener to redirect a user back to the authentication page
             if ($request->hasSession() && $request->isMethodSafe() && !$request->isXmlHttpRequest()) {
@@ -118,7 +118,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
             }
         }
 
-        $response = new RedirectResponse($this->determineTargetUrl($request));
+        $response = new RedirectResponse($this->determineTargetUrl($request), Response::HTTP_TEMPORARY_REDIRECT);
 
         if (null !== $this->logger) {
             $this->logger->info(

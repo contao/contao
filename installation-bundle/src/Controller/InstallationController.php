@@ -583,7 +583,7 @@ class InstallationController implements ContainerAwareInterface
             throw new \RuntimeException('The request stack did not contain a request');
         }
 
-        return new RedirectResponse($request->getRequestUri());
+        return new RedirectResponse($request->getRequestUri(), Response::HTTP_TEMPORARY_REDIRECT);
     }
 
     /**

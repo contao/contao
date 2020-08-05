@@ -22,7 +22,7 @@ class RedirectResponseExceptionTest extends TestCase
         $exception = new RedirectResponseException('http://example.org');
         $response = $exception->getResponse();
 
-        $this->assertSame(303, $response->getStatusCode());
+        $this->assertSame(307, $response->getStatusCode());
         $this->assertSame('http://example.org', $response->headers->get('Location'));
     }
 }

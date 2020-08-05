@@ -148,7 +148,7 @@ class BackendCsvImportController
                 $message = $this->framework->getAdapter(Message::class);
                 $message->addError($e->getMessage());
 
-                return new RedirectResponse($request->getUri(), 303);
+                return new RedirectResponse($request->getUri(), Response::HTTP_TEMPORARY_REDIRECT);
             }
 
             $this->connection->update(
@@ -157,7 +157,7 @@ class BackendCsvImportController
                 ['id' => $id]
             );
 
-            return new RedirectResponse($this->getBackUrl($request));
+            return new RedirectResponse($this->getBackUrl($request), Response::HTTP_TEMPORARY_REDIRECT);
         }
 
         return new Response($template->parse());

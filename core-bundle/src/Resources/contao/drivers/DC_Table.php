@@ -5691,7 +5691,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			// Limit the options if there are root records
 			if (isset($GLOBALS['TL_DCA'][$table]['list']['sorting']['root']) && $GLOBALS['TL_DCA'][$table]['list']['sorting']['root'] !== false)
 			{
-				$arrProcedure[] = "id IN(" . implode(',', array_map('\intval', $GLOBALS['TL_DCA'][$table]['list']['sorting']['root'])) . ")";
+				$arrProcedure[] = "id IN(" . implode(',', $this->Database->getChildRecords($GLOBALS['TL_DCA'][$table]['list']['sorting']['root'], $this->strTable)) . ")";
 			}
 
 			$objFields = $this->Database->prepare("SELECT DISTINCT " . $what . " FROM " . $this->strTable . ((\is_array($arrProcedure) && isset($arrProcedure[0])) ? ' WHERE ' . implode(' AND ', $arrProcedure) : ''))
