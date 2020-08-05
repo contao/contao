@@ -78,6 +78,6 @@ class PreviewAuthenticationListener
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
-        $event->setResponse(new RedirectResponse($this->uriSigner->sign($url), Response::HTTP_TEMPORARY_REDIRECT));
+        $event->setResponse(new RedirectResponse($this->uriSigner->sign($url), Response::HTTP_SEE_OTHER));
     }
 }

@@ -92,6 +92,6 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
-        return new RedirectResponse($this->uriSigner->sign($url), Response::HTTP_TEMPORARY_REDIRECT);
+        return new RedirectResponse($this->uriSigner->sign($url), Response::HTTP_SEE_OTHER);
     }
 }
