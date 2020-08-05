@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\Response;
+
 /**
  * Provide methods to handle back end templates.
  *
@@ -42,6 +44,16 @@ class BackendTemplate extends Template
 		}
 
 		return $strBuffer;
+	}
+
+	/**
+	 * Return a response object
+	 *
+	 * @return Response The response object
+	 */
+	public function getResponse()
+	{
+		return parent::getResponse()->setMaxAge(0);
 	}
 
 	/**

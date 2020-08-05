@@ -371,14 +371,14 @@ class FrontendTemplate extends Template
 		{
 			$response->headers->set('Cache-Control', 'no-cache, no-store');
 
-			return $response->setPrivate(); // Make sure the response is private
+			return $response->setPrivate();
 		}
 
 		// Private cache
 		if ($objPage->clientCache > 0)
 		{
 			$response->setMaxAge($objPage->clientCache);
-			$response->setPrivate(); // Make sure the response is private
+			$response->setPrivate();
 		}
 
 		// Shared cache
