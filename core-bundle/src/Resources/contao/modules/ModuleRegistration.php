@@ -222,7 +222,7 @@ class ModuleRegistration extends Module
 				$encoder = System::getContainer()->get('security.encoder_factory')->getEncoder(FrontendUser::class);
 
 				// Check whether the password matches the username
-				if ($objWidget instanceof FormPassword && $encoder->isPasswordValid($varValue, Input::post('username'), null))
+				if ($objWidget instanceof FormPassword && ($username = Input::post('username')) && $encoder->isPasswordValid($varValue, $username, null))
 				{
 					$objWidget->addError($GLOBALS['TL_LANG']['ERR']['passwordName']);
 				}
