@@ -104,7 +104,7 @@ class TwoFactorFrontendListener
 
             // Redirect to two-factor page
             if ($page->id !== $twoFactorPage->id) {
-                $event->setResponse(new RedirectResponse($twoFactorPage->getAbsoluteUrl(), Response::HTTP_TEMPORARY_REDIRECT));
+                $event->setResponse(new RedirectResponse($twoFactorPage->getAbsoluteUrl(), Response::HTTP_SEE_OTHER));
             }
 
             return;
@@ -127,7 +127,7 @@ class TwoFactorFrontendListener
         if ($targetPath) {
             // Redirect to the target path
             if ($targetPath !== $request->getSchemeAndHttpHost().$request->getRequestUri()) {
-                $event->setResponse(new RedirectResponse($targetPath, Response::HTTP_TEMPORARY_REDIRECT));
+                $event->setResponse(new RedirectResponse($targetPath, Response::HTTP_SEE_OTHER));
             }
 
             return;

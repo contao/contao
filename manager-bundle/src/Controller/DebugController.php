@@ -76,7 +76,7 @@ class DebugController
 
         $response = new RedirectResponse(
             $request->getSchemeAndHttpHost().$request->getPathInfo().$referer,
-            Response::HTTP_TEMPORARY_REDIRECT
+            Response::HTTP_SEE_OTHER
         );
 
         $this->jwtManager->addResponseCookie($response, ['debug' => $debug]);

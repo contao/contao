@@ -77,7 +77,7 @@ class BackendPreviewController
         if ($this->previewScript && $request->getScriptName() !== $this->previewScript) {
             return new RedirectResponse(
                 $this->previewScript.$request->getRequestUri(),
-                Response::HTTP_TEMPORARY_REDIRECT
+                Response::HTTP_SEE_OTHER
             );
         }
 
@@ -98,12 +98,12 @@ class BackendPreviewController
         $this->dispatcher->dispatch($urlConvertEvent, ContaoCoreEvents::PREVIEW_URL_CONVERT);
 
         if ($targetUrl = $urlConvertEvent->getUrl()) {
-            return new RedirectResponse($targetUrl, Response::HTTP_TEMPORARY_REDIRECT);
+            return new RedirectResponse($targetUrl, Response::HTTP_SEE_OTHER);
         }
 
         return new RedirectResponse(
             $this->router->generate('contao_root', [], UrlGeneratorInterface::ABSOLUTE_URL),
-            Response::HTTP_TEMPORARY_REDIRECT
+            Response::HTTP_SEE_OTHER
         );
     }
 }
