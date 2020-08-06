@@ -79,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_page.redirectBack.1">
         <source>Redirect the member back to the last page visited instead of the redirect page.</source>
+        <target>Przekieruj użytkownika z powrotem do ostatnio odwiedzanej strony zamiast do określonej strony docelowej.</target>
       </trans-unit>
       <trans-unit id="tl_page.fallback.0">
         <source>Language fallback</source>
@@ -87,6 +88,12 @@
       <trans-unit id="tl_page.fallback.1">
         <source>Show this page if there is none that matches the visitor's language.</source>
         <target>Contao automatycznie przekieruje odwiedzającego do strony głównej w jego języku lub do językowej strony awaryjnej. Jeśli nie ma takiej strony, będzie wyświetlona wiadomość o błędzie &lt;em&gt;Nie znaleziono strony&lt;/em&gt;.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.disableLanguageRedirect.0">
+        <source>Disable language redirect</source>
+      </trans-unit>
+      <trans-unit id="tl_page.disableLanguageRedirect.1">
+        <source>Do not redirect visitors to this website root based on their preferred browser language.</source>
       </trans-unit>
       <trans-unit id="tl_page.favicon.0">
         <source>Favicon</source>
@@ -130,17 +137,18 @@
       </trans-unit>
       <trans-unit id="tl_page.mailerTransport.0">
         <source>Mailer transport</source>
+        <target>Mailer transport</target>
       </trans-unit>
       <trans-unit id="tl_page.mailerTransport.1">
         <source>Here you can override the mailer transport used to send e-mails on this website.</source>
+        <target>Tutaj możesz nadpisać mailer transport używany do wysyłania e-maili z tej strony.</target>
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.0">
         <source>E-mail address of the website administrator</source>
         <target>Adres e-mail administratora strony</target>
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.1">
-        <source>Auto-generated messages like subscription confirmation e-mails will be sent to this address.</source>
-        <target>Wprowadź adres e-mail administratora systemu.</target>
+        <source>This e-mail address will be used to send and receive system messages.</source>
       </trans-unit>
       <trans-unit id="tl_page.dateFormat.0">
         <source>Date format</source>
@@ -180,18 +188,23 @@
       </trans-unit>
       <trans-unit id="tl_page.useFolderUrl.1">
         <source>Generate folder-style page aliases like &lt;em&gt;docs/install/download.html&lt;/em&gt; instead of &lt;em&gt;docs-install-download.html&lt;/em&gt;.</source>
+        <target>Generuj aliasy strony w stylu folderów jak na przykład &lt;em&gt;docs/install/download.html&lt;/em&gt; zamiast &lt;em&gt;docs-install-download.html&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_page.urlPrefix.0">
         <source>URL prefix</source>
+        <target>Prefiks URL</target>
       </trans-unit>
       <trans-unit id="tl_page.urlPrefix.1">
         <source>Enter a URL prefix (e.g. the language) that will be prepended to aliases for this root page.</source>
+        <target>Wprowadź prefiks URL (np. język), który będzie dodawany do aliasów stron w tym serwisie.</target>
       </trans-unit>
       <trans-unit id="tl_page.urlSuffix.0">
         <source>URL suffix</source>
+        <target>Sufiks URL</target>
       </trans-unit>
       <trans-unit id="tl_page.urlSuffix.1">
         <source>The URL suffix will be added to the URI string to simulate static documents.</source>
+        <target>Wprowadź sufiks URL, który będzie dodawany URI w celu symulacji statycznych dokumentów.</target>
       </trans-unit>
       <trans-unit id="tl_page.createSitemap.0">
         <source>Create an XML sitemap</source>
@@ -367,6 +380,7 @@
       </trans-unit>
       <trans-unit id="tl_page.guests.1">
         <source>Hide the page if a member is logged in.</source>
+        <target>Ukryj stronę, jeśli użytkownik jest zalogowany.</target>
       </trans-unit>
       <trans-unit id="tl_page.tabindex.0">
         <source>Tab index</source>
@@ -422,14 +436,14 @@
       </trans-unit>
       <trans-unit id="tl_page.twoFactorJumpTo.1">
         <source>Please choose the page to which members will be redirected to set up two-factor authentication.</source>
+        <target>Wybierz stronę, na którą zostaną przekierowani użytkownicy do skonfigurowania uwierzytelniania dwuskładnikowego.</target>
       </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
         <target>Nazwa i typ</target>
       </trans-unit>
       <trans-unit id="tl_page.meta_legend">
-        <source>Meta data</source>
-        <target>Meta dane</target>
+        <source>Metadata</source>
       </trans-unit>
       <trans-unit id="tl_page.system_legend">
         <source>System settings</source>
@@ -441,6 +455,10 @@
       </trans-unit>
       <trans-unit id="tl_page.url_legend">
         <source>URL settings</source>
+        <target>Ustawienia URL</target>
+      </trans-unit>
+      <trans-unit id="tl_page.language_legend">
+        <source>Language settings</source>
       </trans-unit>
       <trans-unit id="tl_page.website_legend">
         <source>Website settings</source>
@@ -563,7 +581,7 @@
         <target>Edytuj artykuły strony ID %s</target>
       </trans-unit>
       <trans-unit id="tl_page.legacyRouting">
-        <source>This setting has been disabled because Contao is running in legacy routing mode.</source>
+        <source>Disable legacy routing mode to configure the URL prefix and suffix in the root page.</source>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

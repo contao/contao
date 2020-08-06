@@ -79,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_page.redirectBack.1">
         <source>Redirect the member back to the last page visited instead of the redirect page.</source>
+        <target>عضو را به جای اینجا به برگه‌ی بازگردانی به آخرین برگه‌ی بازدید شده برمی‌گرداند.</target>
       </trans-unit>
       <trans-unit id="tl_page.fallback.0">
         <source>Language fallback</source>
@@ -87,6 +88,12 @@
       <trans-unit id="tl_page.fallback.1">
         <source>Show this page if there is none that matches the visitor's language.</source>
         <target>این برگه زمانی که هیچ برگه منطبق بر زبان بازدیدکننده وجود نداشته باشد نمایش داده می‌شود.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.disableLanguageRedirect.0">
+        <source>Disable language redirect</source>
+      </trans-unit>
+      <trans-unit id="tl_page.disableLanguageRedirect.1">
+        <source>Do not redirect visitors to this website root based on their preferred browser language.</source>
       </trans-unit>
       <trans-unit id="tl_page.favicon.0">
         <source>Favicon</source>
@@ -129,6 +136,7 @@
       </trans-unit>
       <trans-unit id="tl_page.mailerTransport.0">
         <source>Mailer transport</source>
+        <target>Mailer transport</target>
       </trans-unit>
       <trans-unit id="tl_page.mailerTransport.1">
         <source>Here you can override the mailer transport used to send e-mails on this website.</source>
@@ -138,8 +146,7 @@
         <target>نشانی ایمیل مدیر وب‌سایت</target>
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.1">
-        <source>Auto-generated messages like subscription confirmation e-mails will be sent to this address.</source>
-        <target>پیغام‌های خودکار مانند ایمیل تایید عضویت به این نشانی فرستاده خواهند شد.</target>
+        <source>This e-mail address will be used to send and receive system messages.</source>
       </trans-unit>
       <trans-unit id="tl_page.dateFormat.0">
         <source>Date format</source>
@@ -181,12 +188,14 @@
       </trans-unit>
       <trans-unit id="tl_page.urlPrefix.0">
         <source>URL prefix</source>
+        <target>پیشوند URL</target>
       </trans-unit>
       <trans-unit id="tl_page.urlPrefix.1">
         <source>Enter a URL prefix (e.g. the language) that will be prepended to aliases for this root page.</source>
       </trans-unit>
       <trans-unit id="tl_page.urlSuffix.0">
         <source>URL suffix</source>
+        <target>پسوند URL</target>
       </trans-unit>
       <trans-unit id="tl_page.urlSuffix.1">
         <source>The URL suffix will be added to the URI string to simulate static documents.</source>
@@ -417,8 +426,7 @@
         <target>نام و نوع</target>
       </trans-unit>
       <trans-unit id="tl_page.meta_legend">
-        <source>Meta data</source>
-        <target>اطلاعات متا</target>
+        <source>Metadata</source>
       </trans-unit>
       <trans-unit id="tl_page.system_legend">
         <source>System settings</source>
@@ -430,6 +438,10 @@
       </trans-unit>
       <trans-unit id="tl_page.url_legend">
         <source>URL settings</source>
+        <target>تنظیمات URL</target>
+      </trans-unit>
+      <trans-unit id="tl_page.language_legend">
+        <source>Language settings</source>
       </trans-unit>
       <trans-unit id="tl_page.website_legend">
         <source>Website settings</source>
@@ -552,7 +564,7 @@
         <target>ویرایش مقاله‌های برگه شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_page.legacyRouting">
-        <source>This setting has been disabled because Contao is running in legacy routing mode.</source>
+        <source>Disable legacy routing mode to configure the URL prefix and suffix in the root page.</source>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

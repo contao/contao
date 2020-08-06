@@ -88,6 +88,12 @@
         <source>Show this page if there is none that matches the visitor's language.</source>
         <target>Prikaži to stran, če portal ne vsebuje jezika skladnega z obiskovalčevim.</target>
       </trans-unit>
+      <trans-unit id="tl_page.disableLanguageRedirect.0">
+        <source>Disable language redirect</source>
+      </trans-unit>
+      <trans-unit id="tl_page.disableLanguageRedirect.1">
+        <source>Do not redirect visitors to this website root based on their preferred browser language.</source>
+      </trans-unit>
       <trans-unit id="tl_page.favicon.0">
         <source>Favicon</source>
       </trans-unit>
@@ -135,8 +141,7 @@
         <target>Naslov elektronske pošte administratorja spletnega mesta</target>
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.1">
-        <source>Auto-generated messages like subscription confirmation e-mails will be sent to this address.</source>
-        <target>Samodejno ustvarjena sporočila, kot npr. potrditev naročila na obveščanje, bodo poslana na ta e-naslov.</target>
+        <source>This e-mail address will be used to send and receive system messages.</source>
       </trans-unit>
       <trans-unit id="tl_page.dateFormat.0">
         <source>Date format</source>
@@ -425,8 +430,7 @@
         <target>Naziv in tip</target>
       </trans-unit>
       <trans-unit id="tl_page.meta_legend">
-        <source>Meta data</source>
-        <target>Meta podatki</target>
+        <source>Metadata</source>
       </trans-unit>
       <trans-unit id="tl_page.system_legend">
         <source>System settings</source>
@@ -438,6 +442,9 @@
       </trans-unit>
       <trans-unit id="tl_page.url_legend">
         <source>URL settings</source>
+      </trans-unit>
+      <trans-unit id="tl_page.language_legend">
+        <source>Language settings</source>
       </trans-unit>
       <trans-unit id="tl_page.website_legend">
         <source>Website settings</source>
@@ -560,7 +567,7 @@
         <target>Uredi članke strani z ID %s</target>
       </trans-unit>
       <trans-unit id="tl_page.legacyRouting">
-        <source>This setting has been disabled because Contao is running in legacy routing mode.</source>
+        <source>Disable legacy routing mode to configure the URL prefix and suffix in the root page.</source>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

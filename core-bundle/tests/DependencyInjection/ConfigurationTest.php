@@ -194,6 +194,7 @@ class ConfigurationTest extends TestCase
 
     public function testAllowsOnlySnakeCaseKeys(): void
     {
+        /** @var ArrayNode $tree */
         $tree = $this->configuration->getConfigTreeBuilder()->buildTree();
 
         $this->assertInstanceOf(ArrayNode::class, $tree);
@@ -213,6 +214,7 @@ class ConfigurationTest extends TestCase
                 $this->checkKeys($value->getChildren());
             }
 
+            /** @var ArrayNode $prototype */
             if ($value instanceof PrototypedArrayNode && ($prototype = $value->getPrototype()) instanceof ArrayNode) {
                 $this->checkKeys($prototype->getChildren());
             }

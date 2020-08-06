@@ -55,6 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_news.robots.1">
         <source>Here you can overwrite how search engines handle the news item.</source>
+        <target>Вы можете перезаписать способ обработки новости поисковыми системами.</target>
       </trans-unit>
       <trans-unit id="tl_news.description.0">
         <source>Meta description</source>
@@ -253,7 +254,7 @@
         <target>Переадресация</target>
       </trans-unit>
       <trans-unit id="tl_news.meta_legend">
-        <source>Meta data</source>
+        <source>Metadata</source>
         <target>Метаданные</target>
       </trans-unit>
       <trans-unit id="tl_news.expert_legend">

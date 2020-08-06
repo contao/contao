@@ -99,9 +99,11 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_featured.0">
         <source>Featured events</source>
+        <target>Eventi in primo piano</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_featured.1">
         <source>Here you can choose how featured events are handled.</source>
+        <target>Qui puoi scegliere come gestire gli eventi in primo piano.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_list">
         <source>Event list</source>
@@ -229,12 +231,15 @@
       </trans-unit>
       <trans-unit id="tl_module.events.all_items">
         <source>Show all events</source>
+        <target>Mostra tutti gli eventi</target>
       </trans-unit>
       <trans-unit id="tl_module.events.featured">
         <source>Show featured events only</source>
+        <target>Mostra solo gli eventi in primo piano</target>
       </trans-unit>
       <trans-unit id="tl_module.events.unfeatured">
         <source>Skip featured events</source>
+        <target>Salta eventi in primo piano</target>
       </trans-unit>
     </body>
   </file>

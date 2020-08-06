@@ -99,9 +99,11 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_featured.0">
         <source>Featured events</source>
+        <target>特別なイベント</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_featured.1">
         <source>Here you can choose how featured events are handled.</source>
+        <target>特別なイベントをどのように扱うかを選択できます。</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_list">
         <source>Event list</source>
@@ -229,12 +231,15 @@
       </trans-unit>
       <trans-unit id="tl_module.events.all_items">
         <source>Show all events</source>
+        <target>すべてのイベントを表示</target>
       </trans-unit>
       <trans-unit id="tl_module.events.featured">
         <source>Show featured events only</source>
+        <target>特別なイベントだけを表示</target>
       </trans-unit>
       <trans-unit id="tl_module.events.unfeatured">
         <source>Skip featured events</source>
+        <target>特別なイベントを除外</target>
       </trans-unit>
     </body>
   </file>

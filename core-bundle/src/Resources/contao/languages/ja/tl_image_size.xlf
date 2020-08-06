@@ -82,8 +82,8 @@
         <target>サイズが一致した場合は元の画像を使用</target>
       </trans-unit>
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.1">
-        <source>Note that no optimizations such as meta data stripping or JPEG compression will be applied in this case.</source>
-        <target>この場合、メタデータの除去やJPEGの圧縮のような最適化は行わないことに注意してください。</target>
+        <source>Note that no optimizations such as metadata stripping or JPEG compression will be applied in this case.</source>
+        <target>この場合、メタデータの取り去りやJPEGの圧縮の様な最適化は行わないことに注意してください。</target>
       </trans-unit>
       <trans-unit id="tl_image_size.lazyLoading.0">
         <source>Enable lazy loading</source>

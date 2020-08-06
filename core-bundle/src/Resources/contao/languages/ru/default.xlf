@@ -187,15 +187,19 @@
       </trans-unit>
       <trans-unit id="ERR.urlPrefixExists">
         <source>The URL prefix &quot;%s&quot; is already used by another root page with the same domain name!</source>
+        <target>Префикс URL &quot;%s&quot; уже используется другой корневой страницей с тем же именем домена!</target>
       </trans-unit>
       <trans-unit id="ERR.pageUrlExists">
         <source>A page with the URL &quot;%s&quot; already exists!</source>
+        <target>Страница с URL-адресом &quot;%s&quot; уже существует!</target>
       </trans-unit>
       <trans-unit id="ERR.pageUrlSuffix">
         <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>
+        <target>Этот суффикс URL приведет к дублированию URL (наприм.: %s)!</target>
       </trans-unit>
       <trans-unit id="ERR.pageUrlPrefix">
         <source>This URL prefix will lead to duplicate URLs (e.g. %s)!</source>
+        <target>Этот префикс URL приведет к дублированию URL (наприм.: %s)!</target>
       </trans-unit>
       <trans-unit id="ERR.importFolder">
         <source>The folder &quot;%s&quot; cannot be imported!</source>
@@ -1886,7 +1890,7 @@
         <target>Относительный путь</target>
       </trans-unit>
       <trans-unit id="MSC.fileMeta">
-        <source>Meta data</source>
+        <source>Metadata</source>
         <target>Метаданные</target>
       </trans-unit>
       <trans-unit id="MSC.versioning">
@@ -2502,8 +2506,8 @@
         <target>Загрузка %s</target>
       </trans-unit>
       <trans-unit id="MSC.metaNoLanguages">
-        <source>You have to add a root page in the site structure to enter file meta data.</source>
-        <target>Чтобы ввести метаданные файла, вы должны добавить корневую страницу в структуру сайта.</target>
+        <source>You have to add a root page in the site structure to enter file metadata.</source>
+        <target>Необходимо добавить корневую страницу в структуру сайта, чтобы ввести метаданные файла.</target>
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
         <source>Breadcrumb menu</source>
@@ -2642,7 +2646,7 @@
         <target>Предпросмотр результатов поиска Google</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.1">
-        <source>Here you can preview the meta data in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
+        <source>Here you can preview the metadata in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
         <target>Вы можете просмотреть метаданные в результатах поиска Google. Другие поисковые системы могут показывать более длинные тексты или обрезать их в разных местах.</target>
       </trans-unit>
       <trans-unit id="MSC.clearTrustedDevices">
@@ -2676,6 +2680,10 @@
       <trans-unit id="MSC.closeToolbar">
         <source>Close the Contao toolbar</source>
         <target>Закрыть панель инструментов Contao</target>
+      </trans-unit>
+      <trans-unit id="MSC.noSerpPreview">
+        <source>The preview URL cannot be generated, because the route has mandatory parameters.</source>
+        <target>Невозможно создать URL-адрес предварительного просмотра, так как маршрут имеет обязательные параметры.</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

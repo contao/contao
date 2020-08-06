@@ -251,8 +251,7 @@
         <target>Página fuente</target>
       </trans-unit>
       <trans-unit id="tl_news.meta_legend">
-        <source>Meta data</source>
-        <target>Meta data</target>
+        <source>Metadata</source>
       </trans-unit>
       <trans-unit id="tl_news.expert_legend">
         <source>Expert settings</source>

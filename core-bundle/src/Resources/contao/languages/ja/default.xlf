@@ -187,15 +187,19 @@
       </trans-unit>
       <trans-unit id="ERR.urlPrefixExists">
         <source>The URL prefix &quot;%s&quot; is already used by another root page with the same domain name!</source>
+        <target>&quot;%s&quot;というURLプリフィックスは既に同じドメイン名の別のルートページで使用されています!</target>
       </trans-unit>
       <trans-unit id="ERR.pageUrlExists">
         <source>A page with the URL &quot;%s&quot; already exists!</source>
+        <target>&quot;%s&quot;というURLのページは既に存在します!</target>
       </trans-unit>
       <trans-unit id="ERR.pageUrlSuffix">
         <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>
+        <target>このURLサフィックスは重複したURL(例: %s)につながります。</target>
       </trans-unit>
       <trans-unit id="ERR.pageUrlPrefix">
         <source>This URL prefix will lead to duplicate URLs (e.g. %s)!</source>
+        <target>このURLプリフィックスは重複したURL(例: %s)につながります。</target>
       </trans-unit>
       <trans-unit id="ERR.importFolder">
         <source>The folder &quot;%s&quot; cannot be imported!</source>
@@ -1886,7 +1890,7 @@
         <target>相対パス</target>
       </trans-unit>
       <trans-unit id="MSC.fileMeta">
-        <source>Meta data</source>
+        <source>Metadata</source>
         <target>メタデータ</target>
       </trans-unit>
       <trans-unit id="MSC.versioning">
@@ -2502,8 +2506,8 @@
         <target>%sをダウンロード</target>
       </trans-unit>
       <trans-unit id="MSC.metaNoLanguages">
-        <source>You have to add a root page in the site structure to enter file meta data.</source>
-        <target>ファイルのメタ情報を入力するにはサイト構造でルートのページを追加しなければなりません。</target>
+        <source>You have to add a root page in the site structure to enter file metadata.</source>
+        <target>ファイルのメタデータを入力するにはサイト構造でルートのページを追加しなければなりません。</target>
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
         <source>Breadcrumb menu</source>
@@ -2642,8 +2646,8 @@
         <target>Google検索の結果のプレビュー</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.1">
-        <source>Here you can preview the meta data in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
-        <target>Google検索の結果のメタデータをプレビューできます。他の検索エンジンでは、さらに長いテキストを表示したり、異なる位置で切り取られたり、するかもしれません。</target>
+        <source>Here you can preview the metadata in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
+        <target>Google検索の結果のメタデータをプレビューできます。他の検索エンジンでは、さらに長いテキストを表示したり、異なる位置で切り詰めるかもしれません。</target>
       </trans-unit>
       <trans-unit id="MSC.clearTrustedDevices">
         <source>Clear trusted devices</source>
@@ -2677,9 +2681,13 @@
         <source>Close the Contao toolbar</source>
         <target>Contaoツールバーを閉じる</target>
       </trans-unit>
+      <trans-unit id="MSC.noSerpPreview">
+        <source>The preview URL cannot be generated, because the route has mandatory parameters.</source>
+        <target>ルートに必須のパラメーターがあるため、プレビューのURLを生成できません。</target>
+      </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
-        <target>byte</target>
+        <target>Byte</target>
       </trans-unit>
       <trans-unit id="UNITS.1">
         <source>KiB</source>

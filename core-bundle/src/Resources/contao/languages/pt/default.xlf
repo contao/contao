@@ -1879,8 +1879,7 @@
         <target>Caminho relativo</target>
       </trans-unit>
       <trans-unit id="MSC.fileMeta">
-        <source>Meta data</source>
-        <target>Dados meta</target>
+        <source>Metadata</source>
       </trans-unit>
       <trans-unit id="MSC.versioning">
         <source>Version management</source>
@@ -2496,8 +2495,7 @@
 Download %s</target>
       </trans-unit>
       <trans-unit id="MSC.metaNoLanguages">
-        <source>You have to add a root page in the site structure to enter file meta data.</source>
-        <target>Necessita adicionar uma página root à estrutura do website para introduzir meta data.</target>
+        <source>You have to add a root page in the site structure to enter file metadata.</source>
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
         <source>Breadcrumb menu</source>
@@ -2625,7 +2623,7 @@ Download %s</target>
         <source>Google search results preview</source>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.1">
-        <source>Here you can preview the meta data in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
+        <source>Here you can preview the metadata in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
       </trans-unit>
       <trans-unit id="MSC.clearTrustedDevices">
         <source>Clear trusted devices</source>
@@ -2651,6 +2649,9 @@ Download %s</target>
       </trans-unit>
       <trans-unit id="MSC.closeToolbar">
         <source>Close the Contao toolbar</source>
+      </trans-unit>
+      <trans-unit id="MSC.noSerpPreview">
+        <source>The preview URL cannot be generated, because the route has mandatory parameters.</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

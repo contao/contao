@@ -1885,8 +1885,7 @@
         <target>相对路径</target>
       </trans-unit>
       <trans-unit id="MSC.fileMeta">
-        <source>Meta data</source>
-        <target>Meta数据</target>
+        <source>Metadata</source>
       </trans-unit>
       <trans-unit id="MSC.versioning">
         <source>Version management</source>
@@ -2501,8 +2500,7 @@
         <target>下载%s</target>
       </trans-unit>
       <trans-unit id="MSC.metaNoLanguages">
-        <source>You have to add a root page in the site structure to enter file meta data.</source>
-        <target>请在站点结构中添加根页面才能录入文件的元数据</target>
+        <source>You have to add a root page in the site structure to enter file metadata.</source>
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
         <source>Breadcrumb menu</source>
@@ -2640,8 +2638,7 @@
         <target>谷歌搜索结果预览</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.1">
-        <source>Here you can preview the meta data in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
-        <target>在这里预览Google搜索结果中的mata数据。其他搜索引擎也许会显示较长文本或者裁剪在不同位置。</target>
+        <source>Here you can preview the metadata in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
       </trans-unit>
       <trans-unit id="MSC.clearTrustedDevices">
         <source>Clear trusted devices</source>
@@ -2672,6 +2669,9 @@
       </trans-unit>
       <trans-unit id="MSC.closeToolbar">
         <source>Close the Contao toolbar</source>
+      </trans-unit>
+      <trans-unit id="MSC.noSerpPreview">
+        <source>The preview URL cannot be generated, because the route has mandatory parameters.</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

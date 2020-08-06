@@ -276,7 +276,7 @@ class Picture
 	/**
 	 * Get the config for one picture source element
 	 *
-	 * @param Model|object $imageSize The image size or image size item model
+	 * @param ImageSizeModel|ImageSizeItemModel|object $imageSize The image size or image size item model
 	 *
 	 * @return PictureConfigurationItem
 	 */

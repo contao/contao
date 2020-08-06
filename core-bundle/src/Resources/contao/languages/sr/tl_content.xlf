@@ -42,12 +42,10 @@
         <target>Прикажи фајл у интернет прегледачу уместо отварања у дијалогу преузимања.</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.0">
-        <source>Overwrite meta data</source>
-        <target>Препиши мета податке</target>
+        <source>Overwrite metadata</source>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.1">
-        <source>Overwrite the meta data from the file manager.</source>
-        <target>Препиши метаподатке из менаџера фајлова.</target>
+        <source>Overwrite the metadata from the file manager.</source>
       </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
         <source>Source file</source>
@@ -378,12 +376,10 @@
         <target>Одаберите начин сортирања.</target>
       </trans-unit>
       <trans-unit id="tl_content.metaIgnore.0">
-        <source>Ignore files without meta data</source>
-        <target>Игнориши фајлове без мета података</target>
+        <source>Ignore files without metadata</source>
       </trans-unit>
       <trans-unit id="tl_content.metaIgnore.1">
-        <source>Do not show files without meta data matching the page language.</source>
-        <target>Не приказуј фајлове који не садрже мета податке на језику странице.</target>
+        <source>Do not show files without metadata matching the page language.</source>
       </trans-unit>
       <trans-unit id="tl_content.galleryTpl.0">
         <source>Gallery template</source>

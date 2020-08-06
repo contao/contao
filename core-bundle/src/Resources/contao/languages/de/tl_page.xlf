@@ -89,6 +89,14 @@
         <source>Show this page if there is none that matches the visitor's language.</source>
         <target>Diese Seite anzeigen, wenn es keine in der Sprache des Besuchers gibt.</target>
       </trans-unit>
+      <trans-unit id="tl_page.disableLanguageRedirect.0">
+        <source>Disable language redirect</source>
+        <target>Sprachweiterleitung deaktivieren</target>
+      </trans-unit>
+      <trans-unit id="tl_page.disableLanguageRedirect.1">
+        <source>Do not redirect visitors to this website root based on their preferred browser language.</source>
+        <target>Besucher nicht auf Basis ihrer bevorzugten Browser-Sprache zu diesem Startpunkt weiterleiten.</target>
+      </trans-unit>
       <trans-unit id="tl_page.favicon.0">
         <source>Favicon</source>
         <target>Favicon</target>
@@ -142,8 +150,8 @@
         <target>E-Mail-Adresse des Webseiten-Administrators</target>
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.1">
-        <source>Auto-generated messages like subscription confirmation e-mails will be sent to this address.</source>
-        <target>Automatisch erstellte Mitteilungen wie z.B. Kommentar-Benachrichtigungen werden an diese Adresse versendet.</target>
+        <source>This e-mail address will be used to send and receive system messages.</source>
+        <target>Diese E-Mail-Adresse wird benutzt, um Systemnachrichten zu senden und zu empfangen.</target>
       </trans-unit>
       <trans-unit id="tl_page.dateFormat.0">
         <source>Date format</source>
@@ -438,7 +446,7 @@
         <target>Name und Typ</target>
       </trans-unit>
       <trans-unit id="tl_page.meta_legend">
-        <source>Meta data</source>
+        <source>Metadata</source>
         <target>Metadaten</target>
       </trans-unit>
       <trans-unit id="tl_page.system_legend">
@@ -452,6 +460,10 @@
       <trans-unit id="tl_page.url_legend">
         <source>URL settings</source>
         <target>URL-Einstellungen</target>
+      </trans-unit>
+      <trans-unit id="tl_page.language_legend">
+        <source>Language settings</source>
+        <target>Spracheinstellungen</target>
       </trans-unit>
       <trans-unit id="tl_page.website_legend">
         <source>Website settings</source>
@@ -574,8 +586,8 @@
         <target>Artikel der Seite ID %s bearbeiten</target>
       </trans-unit>
       <trans-unit id="tl_page.legacyRouting">
-        <source>This setting has been disabled because Contao is running in legacy routing mode.</source>
-        <target>Diese Einstellung ist nicht verfügbar, weil Contao im Legacy-Routing-Modus läuft.</target>
+        <source>Disable legacy routing mode to configure the URL prefix and suffix in the root page.</source>
+        <target>Deaktivieren Sie den Legacy-Routing-Modus, um das URL-Präfix und -Suffix in der Root-Seite zu konfigurieren.</target>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

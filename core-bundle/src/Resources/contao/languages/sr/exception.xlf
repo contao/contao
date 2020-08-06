@@ -58,6 +58,32 @@
         <source>The website is currently not available. Please come back later.</source>
         <target>Сајт тренутно није доступан. Молимо вас да покушате касније.</target>
       </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.title">
+        <source>Unable to generate front end URL</source>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.matter">
+        <source>The URL could not be generated, because the route has mandatory parameters that are not given. Additional information (e.g. a news alias) must be provided.</source>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.explain">
+        <source>Symfony routes can have variable parameters, which are validated using regular expressions. The following configuration could not be resolved:</source>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.path">
+        <source>Route path</source>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.parameterName">
+        <source>Name</source>
+        <target>Име</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.parameterRequirement">
+        <source>Requirement (Regex)</source>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.parameterDefault">
+        <source>Default value</source>
+        <target>Подразумевана вредност</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.parameterEmpty">
+        <source>empty</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

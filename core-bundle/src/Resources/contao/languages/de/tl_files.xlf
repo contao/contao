@@ -74,11 +74,11 @@
         <target>Hier können Sie die Höhe des wichtigen Teils eingeben.</target>
       </trans-unit>
       <trans-unit id="tl_files.meta.0">
-        <source>Meta data</source>
+        <source>Metadata</source>
         <target>Metadaten</target>
       </trans-unit>
       <trans-unit id="tl_files.meta.1">
-        <source>Here you can enter the file meta data.</source>
+        <source>Here you can enter the file metadata.</source>
         <target>Hier können Sie die Metadaten der Datei eingeben.</target>
       </trans-unit>
       <trans-unit id="tl_files.fileupload.0">

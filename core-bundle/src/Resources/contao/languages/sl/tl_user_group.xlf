@@ -38,7 +38,7 @@
         <target>Onemogoči na</target>
       </trans-unit>
       <trans-unit id="tl_user_group.stop.1">
-        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the group from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
         <target>Če želite onemogočiti skupino z določenim dnem oz. uro, ga oz. jo vnesite tu. Drugače pustite vnosno polje prazno.</target>
       </trans-unit>
       <trans-unit id="tl_user_group.title_legend">

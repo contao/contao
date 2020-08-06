@@ -39,6 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.index.1">
         <source>Truncates the tables &lt;code&gt;tl_search&lt;/code&gt;, &lt;code&gt;tl_search_index&lt;/code&gt; and &lt;code&gt;tl_search_term&lt;/code&gt;. Afterwards, you have to rebuild the search index (see above).</source>
+        <target>Czyści tabele &lt;code&gt;tl_search&lt;/code&gt; i &lt;code&gt;tl_search_index&lt;/code&gt; i &lt;code&gt;tl_search_term&lt;/code&gt;. Po wszystkim powinieneś przebudować indeks wyszukiwarki (patrz wyżej).</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.undo.0">
         <source>Purge the undo table</source>
@@ -70,6 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.crawl_queue.1">
         <source>Truncates the &lt;code&gt;tl_crawl_queue&lt;/code&gt; table which stores all the queue information from crawl processes.</source>
+        <target>Czyści tabelę &lt;code&gt;tl_crawl_queue&lt;/code&gt;, która przechowuje wszystkie informacje o kolejce z procesów przeszukiwania.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.images.0">
         <source>Purge the image cache</source>
@@ -173,6 +175,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlMaintenance">
         <source>Crawling is not possible while the maintenance mode is enabled.</source>
+        <target>Indeksowanie nie jest możliwe kiedy tryb konserwacji jest włączony.</target>
       </trans-unit>
     </body>
   </file>

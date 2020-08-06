@@ -41,11 +41,10 @@
         <source>Show the file in the browser instead of opening the download dialog.</source>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.0">
-        <source>Overwrite meta data</source>
-        <target>رونویسی اطلاعات متا</target>
+        <source>Overwrite metadata</source>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.1">
-        <source>Overwrite the meta data from the file manager.</source>
+        <source>Overwrite the metadata from the file manager.</source>
       </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
         <source>Source file</source>
@@ -374,12 +373,10 @@
         <target>لطفا ترتیب مرتب‌سازی را انتخاب نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_content.metaIgnore.0">
-        <source>Ignore files without meta data</source>
-        <target>نادیده گرفتن پرونده‌های بدون اطلاعات متا</target>
+        <source>Ignore files without metadata</source>
       </trans-unit>
       <trans-unit id="tl_content.metaIgnore.1">
-        <source>Do not show files without meta data matching the page language.</source>
-        <target>پرونده‌های بدون اطلاعات متا مربوط به زبان برگه را نمایش نده.</target>
+        <source>Do not show files without metadata matching the page language.</source>
       </trans-unit>
       <trans-unit id="tl_content.galleryTpl.0">
         <source>Gallery template</source>

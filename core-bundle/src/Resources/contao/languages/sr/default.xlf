@@ -1885,8 +1885,7 @@
         <target>Релативна путања</target>
       </trans-unit>
       <trans-unit id="MSC.fileMeta">
-        <source>Meta data</source>
-        <target>Мета подаци</target>
+        <source>Metadata</source>
       </trans-unit>
       <trans-unit id="MSC.versioning">
         <source>Version management</source>
@@ -2501,8 +2500,7 @@
         <target>Преузимање  %s</target>
       </trans-unit>
       <trans-unit id="MSC.metaNoLanguages">
-        <source>You have to add a root page in the site structure to enter file meta data.</source>
-        <target>Да бисте чували мета податке о фајлу, у структуру сајта морате додати root страницу.</target>
+        <source>You have to add a root page in the site structure to enter file metadata.</source>
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
         <source>Breadcrumb menu</source>
@@ -2640,8 +2638,7 @@
         <target>Преглед резултата претраге из Google-a</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.1">
-        <source>Here you can preview the meta data in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
-        <target>Овде можете да прегледате мета податке у резултатима претраге Google-а. Остали алати за претраживање можда ће приказати дужи текст или извршити одсецање на другим позицијама.</target>
+        <source>Here you can preview the metadata in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
       </trans-unit>
       <trans-unit id="MSC.clearTrustedDevices">
         <source>Clear trusted devices</source>
@@ -2672,6 +2669,9 @@
       </trans-unit>
       <trans-unit id="MSC.closeToolbar">
         <source>Close the Contao toolbar</source>
+      </trans-unit>
+      <trans-unit id="MSC.noSerpPreview">
+        <source>The preview URL cannot be generated, because the route has mandatory parameters.</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

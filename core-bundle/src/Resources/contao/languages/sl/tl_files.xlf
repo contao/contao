@@ -74,12 +74,10 @@
         <target>Tukaj lahko nastavite višino pomembnega dela.</target>
       </trans-unit>
       <trans-unit id="tl_files.meta.0">
-        <source>Meta data</source>
-        <target>Meta podatki</target>
+        <source>Metadata</source>
       </trans-unit>
       <trans-unit id="tl_files.meta.1">
-        <source>Here you can enter the file meta data.</source>
-        <target>Tu lahko vnesete meta podatke.</target>
+        <source>Here you can enter the file metadata.</source>
       </trans-unit>
       <trans-unit id="tl_files.fileupload.0">
         <source>File upload</source>
