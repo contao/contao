@@ -78,6 +78,12 @@ abstract class DataContainer extends Backend
 	protected $root;
 
 	/**
+	 * Name of the parent table
+	 * @var string
+	 */
+	protected $ptable;
+
+	/**
 	 * WHERE clause of the database query
 	 * @var array
 	 */
