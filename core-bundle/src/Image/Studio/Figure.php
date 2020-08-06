@@ -326,7 +326,8 @@ final class Figure
             $templateData['floatClass'] = " float_$floating";
         }
 
-        return $templateData;
+        // Add arbitrary template options
+        return array_merge($templateData, $this->getOptions());
     }
 
     /**
