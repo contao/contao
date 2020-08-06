@@ -63,7 +63,7 @@ class BackendControllerTest extends TestCase
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
         $this->assertSame('/foobar', $response->getTargetUrl());
-        $this->assertSame(307, $response->getStatusCode());
+        $this->assertSame(302, $response->getStatusCode());
     }
 
     /**

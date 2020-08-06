@@ -853,12 +853,12 @@ abstract class System
 	 * Redirect to another page
 	 *
 	 * @param string  $strLocation The target URL
-	 * @param integer $intStatus   The HTTP status code (defaults to 307)
+	 * @param integer $intStatus   The HTTP status code (defaults to 303)
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             Use Controller::redirect() instead.
 	 */
-	public static function redirect($strLocation, $intStatus=307)
+	public static function redirect($strLocation, $intStatus=303)
 	{
 		@trigger_error('Using System::redirect() has been deprecated and will no longer work in Contao 5.0. Use Controller::redirect() instead.', E_USER_DEPRECATED);
 

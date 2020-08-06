@@ -15,7 +15,6 @@ use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 /**
@@ -63,7 +62,7 @@ class ToggleViewListener
 
         $this->framework->initialize();
 
-        $response = new RedirectResponse(System::getReferer(), Response::HTTP_TEMPORARY_REDIRECT);
+        $response = new RedirectResponse(System::getReferer());
         $response->headers->setCookie($this->getCookie($request->query->get('toggle_view'), $request->getBasePath()));
 
         $event->setResponse($response);

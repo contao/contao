@@ -609,10 +609,7 @@ class InstallationController implements ContainerAwareInterface
      */
     private function getRedirectResponse()
     {
-        return new RedirectResponse(
-            $this->container->get('request_stack')->getCurrentRequest()->getRequestUri(),
-            Response::HTTP_TEMPORARY_REDIRECT
-        );
+        return new RedirectResponse($this->container->get('request_stack')->getCurrentRequest()->getRequestUri());
     }
 
     /**
