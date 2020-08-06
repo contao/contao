@@ -19,7 +19,6 @@ use Contao\FrontendUser;
 use Contao\PageModel;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -104,7 +103,7 @@ class TwoFactorFrontendListener
 
             // Redirect to two-factor page
             if ($page->id !== $twoFactorPage->id) {
-                $event->setResponse(new RedirectResponse($twoFactorPage->getAbsoluteUrl(), Response::HTTP_TEMPORARY_REDIRECT));
+                $event->setResponse(new RedirectResponse($twoFactorPage->getAbsoluteUrl()));
             }
 
             return;
@@ -127,7 +126,7 @@ class TwoFactorFrontendListener
         if ($targetPath) {
             // Redirect to the target path
             if ($targetPath !== $request->getSchemeAndHttpHost().$request->getRequestUri()) {
-                $event->setResponse(new RedirectResponse($targetPath, Response::HTTP_TEMPORARY_REDIRECT));
+                $event->setResponse(new RedirectResponse($targetPath));
             }
 
             return;

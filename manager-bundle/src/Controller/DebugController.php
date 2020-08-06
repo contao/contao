@@ -15,7 +15,6 @@ namespace Contao\ManagerBundle\Controller;
 use Contao\ManagerBundle\HttpKernel\JwtManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Security;
 
@@ -74,10 +73,7 @@ class DebugController
             $referer = '?'.base64_decode($request->query->get('referer'), true);
         }
 
-        $response = new RedirectResponse(
-            $request->getSchemeAndHttpHost().$request->getPathInfo().$referer,
-            Response::HTTP_TEMPORARY_REDIRECT
-        );
+        $response = new RedirectResponse($request->getSchemeAndHttpHost().$request->getPathInfo().$referer);
 
         $this->jwtManager->addResponseCookie($response, ['debug' => $debug]);
 

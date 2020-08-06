@@ -22,7 +22,7 @@ class AjaxRedirectResponseExceptionTest extends TestCase
         $exception = new AjaxRedirectResponseException('http://example.org');
         $response = $exception->getResponse();
 
-        $this->assertSame(307, $response->getStatusCode());
+        $this->assertSame(303, $response->getStatusCode());
         $this->assertSame('http://example.org', $response->headers->get('X-Ajax-Location'));
     }
 }

@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -78,6 +77,6 @@ class PreviewAuthenticationListener
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
-        $event->setResponse(new RedirectResponse($this->uriSigner->sign($url), Response::HTTP_TEMPORARY_REDIRECT));
+        $event->setResponse(new RedirectResponse($this->uriSigner->sign($url)));
     }
 }

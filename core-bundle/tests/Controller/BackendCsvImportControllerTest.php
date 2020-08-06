@@ -95,7 +95,7 @@ EOF;
         $response = $controller->importListWizardAction($this->mockDataContainer());
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
-        $this->assertSame(307, $response->getStatusCode());
+        $this->assertSame(302, $response->getStatusCode());
     }
 
     public function testRendersTheTableWizardMarkup(): void
@@ -148,7 +148,7 @@ EOF;
         $response = $controller->importTableWizardAction($this->mockDataContainer());
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
-        $this->assertSame(307, $response->getStatusCode());
+        $this->assertSame(302, $response->getStatusCode());
     }
 
     public function testRendersTheOptionWizardMarkup(): void
@@ -205,7 +205,7 @@ EOF;
         $response = $controller->importOptionWizardAction($this->mockDataContainer());
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
-        $this->assertSame(307, $response->getStatusCode());
+        $this->assertSame(302, $response->getStatusCode());
     }
 
     public function testRedirectsIfThePostDataIsIncomplete(): void
@@ -236,7 +236,7 @@ EOF;
         $response = $controller->importListWizardAction($this->mockDataContainer());
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
-        $this->assertSame(307, $response->getStatusCode());
+        $this->assertSame(302, $response->getStatusCode());
     }
 
     public function testFailsIfThereIsNoRequestObject(): void
@@ -284,7 +284,7 @@ EOF;
         $response = $controller->importListWizardAction($this->mockDataContainer());
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
-        $this->assertSame(307, $response->getStatusCode());
+        $this->assertSame(302, $response->getStatusCode());
     }
 
     public function testFailsIfTheFileExtensionIsNotCsv(): void
@@ -315,7 +315,7 @@ EOF;
         $response = $controller->importListWizardAction($this->mockDataContainer());
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
-        $this->assertSame(307, $response->getStatusCode());
+        $this->assertSame(302, $response->getStatusCode());
     }
 
     private function mockFramework(array $files = [], bool $expectError = false): ContaoFramework
