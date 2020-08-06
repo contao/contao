@@ -75,10 +75,7 @@ class BackendPreviewController
         // Skip the redirect if there is no preview script, otherwise we will
         // end up in an endless loop (see #1511)
         if ($this->previewScript && $request->getScriptName() !== $this->previewScript) {
-            return new RedirectResponse(
-                $this->previewScript.$request->getRequestUri(),
-                Response::HTTP_TEMPORARY_REDIRECT
-            );
+            return new RedirectResponse($this->previewScript.$request->getRequestUri());
         }
 
         if (!$this->authorizationChecker->isGranted('ROLE_USER')) {
@@ -98,12 +95,9 @@ class BackendPreviewController
         $this->dispatcher->dispatch($urlConvertEvent, ContaoCoreEvents::PREVIEW_URL_CONVERT);
 
         if ($targetUrl = $urlConvertEvent->getUrl()) {
-            return new RedirectResponse($targetUrl, Response::HTTP_TEMPORARY_REDIRECT);
+            return new RedirectResponse($targetUrl);
         }
 
-        return new RedirectResponse(
-            $this->router->generate('contao_root', [], UrlGeneratorInterface::ABSOLUTE_URL),
-            Response::HTTP_TEMPORARY_REDIRECT
-        );
+        return new RedirectResponse($this->router->generate('contao_root', [], UrlGeneratorInterface::ABSOLUTE_URL));
     }
 }

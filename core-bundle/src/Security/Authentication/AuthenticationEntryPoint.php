@@ -19,7 +19,6 @@ use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\PageError401;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -92,6 +91,6 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
-        return new RedirectResponse($this->uriSigner->sign($url), Response::HTTP_TEMPORARY_REDIRECT);
+        return new RedirectResponse($this->uriSigner->sign($url));
     }
 }
