@@ -188,8 +188,8 @@ The following templates have been consolidated:
  * `mod_eventmenu_year`  -> `mod_eventmenu`
  * `mod_newsmenu_day`    -> `mod_newsmenu`
  * `mod_newsmenu_year`   -> `mod_newsmenu`
- * `nl_list`             -> `newsletterlist`
- * `nl_reader`           -> `newsletterreader`
+ * `nl_list`             -> `mod_newsletterlist`
+ * `nl_reader`           -> `mod_newsletterreader`
 
 Generally, we now require the template names to match the content element or
 module keys, so if your module has the key `taskList`, the corresponding
@@ -204,6 +204,8 @@ The keys of the following front end modules have been changed:
 
  * `articleList` -> `articlelist`
  * `rss_reader`  -> `rssReader`
+ * `nl_list`     -> `newsletterlist`
+ * `nl_reader`   -> `newsletterreader`
 
 ### Custom database drivers
 
