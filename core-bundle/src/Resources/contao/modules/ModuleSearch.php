@@ -303,7 +303,7 @@ class ModuleSearch extends Module
 					}
 
 					// Skip other terms if the total length is already reached
-					if (array_sum(array_map('mb_strlen', $arrContext)) >= $this->totalLength)
+					if (array_sum(array_map('mb_strlen', $arrContext)) >= $totalLength)
 					{
 						break;
 					}
