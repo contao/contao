@@ -54,7 +54,7 @@
         <source>Contao cannot generate the URL for a front end page, because it requires parameters that are unknown. The page cannot be visited without additional information, like a news alias in the URL.</source>
       </trans-unit>
       <trans-unit id="XPT.missingRouteParameters.explain">
-        <source>Symfony routes can have variable parameters, which are validated using regular expressions. The following configuration cannot be resolved.</source>
+        <source>Symfony routes can have variable parameters, which are validated using regular expressions. The following configuration could not be resolved:</source>
       </trans-unit>
       <trans-unit id="XPT.missingRouteParameters.path">
         <source>Route path</source>
