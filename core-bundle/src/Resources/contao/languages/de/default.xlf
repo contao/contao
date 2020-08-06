@@ -1890,7 +1890,7 @@
         <target>Relativer Pfad</target>
       </trans-unit>
       <trans-unit id="MSC.fileMeta">
-        <source>Meta data</source>
+        <source>Metadata</source>
         <target>Metadaten</target>
       </trans-unit>
       <trans-unit id="MSC.versioning">
@@ -2506,7 +2506,7 @@
         <target>Die Datei %s herunterladen</target>
       </trans-unit>
       <trans-unit id="MSC.metaNoLanguages">
-        <source>You have to add a root page in the site structure to enter file meta data.</source>
+        <source>You have to add a root page in the site structure to enter file metadata.</source>
         <target>Sie müssen einen Startpunkt in der Seitenstruktur anlegen, um Metadaten einzugeben.</target>
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
@@ -2646,7 +2646,7 @@
         <target>Google Suchergebnis-Vorschau</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.1">
-        <source>Here you can preview the meta data in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
+        <source>Here you can preview the metadata in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
         <target>Hier können Sie sehen wie Google die Metadaten in den Suchergebnissen anzeigt. Andere Suchmaschinen zeigen gegebenenfalls längere Texte an oder beschneiden diese an einer anderen Position.</target>
       </trans-unit>
       <trans-unit id="MSC.clearTrustedDevices">
@@ -2680,6 +2680,10 @@
       <trans-unit id="MSC.closeToolbar">
         <source>Close the Contao toolbar</source>
         <target>Contao-Toolbar schließen</target>
+      </trans-unit>
+      <trans-unit id="MSC.noSerpPreview">
+        <source>The preview URL cannot be generated, because the route has mandatory parameters.</source>
+        <target>Die Vorschau-URL kann nicht erstellt werden, weil die Route Parameter benötigt.</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

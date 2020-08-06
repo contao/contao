@@ -1885,8 +1885,7 @@
         <target>Relativní cesta</target>
       </trans-unit>
       <trans-unit id="MSC.fileMeta">
-        <source>Meta data</source>
-        <target>Meta informace</target>
+        <source>Metadata</source>
       </trans-unit>
       <trans-unit id="MSC.versioning">
         <source>Version management</source>
@@ -2501,8 +2500,7 @@
         <target>Stáhnout %s</target>
       </trans-unit>
       <trans-unit id="MSC.metaNoLanguages">
-        <source>You have to add a root page in the site structure to enter file meta data.</source>
-        <target>Musíte přidat kořenovou stránku do této struktury, abyste zadali soubor s meta daty.</target>
+        <source>You have to add a root page in the site structure to enter file metadata.</source>
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
         <source>Breadcrumb menu</source>
@@ -2642,8 +2640,7 @@
         <target>Náhled výsledků hledání Googlu</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.1">
-        <source>Here you can preview the meta data in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
-        <target>Zde můžete vidět náhled meta informací zobrazených jako výsledek hledání v Googlu. Jiné vyhledávače mohou zobrazovat delší texty nebo je umísťovat na jiném místě.</target>
+        <source>Here you can preview the metadata in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
       </trans-unit>
       <trans-unit id="MSC.clearTrustedDevices">
         <source>Clear trusted devices</source>
@@ -2676,6 +2673,9 @@
       <trans-unit id="MSC.closeToolbar">
         <source>Close the Contao toolbar</source>
         <target>Zavřít nástrojovou lištu Contaa</target>
+      </trans-unit>
+      <trans-unit id="MSC.noSerpPreview">
+        <source>The preview URL cannot be generated, because the route has mandatory parameters.</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

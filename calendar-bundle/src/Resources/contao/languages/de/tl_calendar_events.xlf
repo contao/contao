@@ -318,7 +318,7 @@
         <target>Weiterleitungsziel</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.meta_legend">
-        <source>Meta data</source>
+        <source>Metadata</source>
         <target>Metadaten</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.expert_legend">

@@ -99,9 +99,11 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_featured.0">
         <source>Featured events</source>
+        <target>Популярные события</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_featured.1">
         <source>Here you can choose how featured events are handled.</source>
+        <target>Вы можете выбрать способ обработки популярных событий.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_list">
         <source>Event list</source>
@@ -229,12 +231,15 @@
       </trans-unit>
       <trans-unit id="tl_module.events.all_items">
         <source>Show all events</source>
+        <target>Показать все события</target>
       </trans-unit>
       <trans-unit id="tl_module.events.featured">
         <source>Show featured events only</source>
+        <target>Показать только популярные события</target>
       </trans-unit>
       <trans-unit id="tl_module.events.unfeatured">
         <source>Skip featured events</source>
+        <target>Пропустить популярные события</target>
       </trans-unit>
     </body>
   </file>

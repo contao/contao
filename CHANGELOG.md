@@ -2,6 +2,41 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.10.0-RC3] (2020-08-06)
+
+**New features:**
+
+- [#2017] Allow to not redirect to a language ([aschempp])
+- [#2021] Upgrade to TinyMCE 5 ([leofeyer])
+
+**Fixed issues:**
+
+- [#2019] Add custom exception to further handle route parameter errors ([aschempp])
+- [#2071] Also add template options to legacy template data ([m-vo])
+- [#2098] Use HTTP status code 303 instead of 307 for redirects ([leofeyer])
+- [#2065] Enable legacy routing by default ([aschempp])
+- [#2064] Fix and improve route debugging ([aschempp])
+- [#2069] Correctly set the active record in the ContentCompositionListener ([leofeyer])
+- [#2068] Improve the PageUrlListener in "edit multiple" mode ([leofeyer])
+- [#2060] Support getOverwriteMetadata() in more models ([m-vo])
+- [#2062] Correctly deprecate the ampersand() function ([leofeyer])
+- [#2061] Fix a case-sensitivity mismatch in the figure builder ([leofeyer])
+- [#2059] Remove content routing ([aschempp])
+- [#2048] Re-arrange the root page form layout ([leofeyer])
+- [#2041] Fix a memory leak in the resize images command ([leofeyer])
+- [#2042] Add missing where condition for url prefix check ([ausi])
+- [#1984] Fix the SERP preview with mandatory route parameters ([bytehead])
+- [#2026] Use escapeshellarg() in the symfony/process BC layer ([leofeyer])
+- [#2024] Fix the .tox-menubar format definition ([leofeyer])
+- [#2018] Ignore pages without alias when checking for duplicates ([aschempp])
+- [#1985] Update terminal42/service-annotation-bundle and fix Page annotation ([aschempp])
+- [#2008] Prevent installing jQuery <3.5 ([leofeyer])
+- [#2009] Upgrade to highlight.js 10 ([leofeyer])
+- [#2000] Fix the search index subscriber test ([leofeyer])
+- [#1986] Private properties in ImageResult and LightboxResult ([m-vo])
+- [#1987] Also migrate the "useFolderUrl" setting ([fritzmg])
+- [#1990] Support indexed tokens in the SimpleTokenParser ([fritzmg])
+
 ## [4.10.0-RC2] (2020-07-24)
 
 **Fixed issues:**
@@ -57,8 +92,6 @@ This project adheres to [Semantic Versioning].
 - [#1468] Use "isSortable" in file and page trees without orderField ([ausi])
 - [#1483] Add Psalm with level 7 ([bytehead])
 - [#1480] Deprecate the remaining helper functions ([ausi])
-- [#1485] Run PHPStan on level 4 in CI ([bytehead])
-- [#1476] Enable PHPStan level 4 ([bytehead])
 - [#1447] Re-add the folderUrl setting to the root page ([aschempp])
 
 **Fixed issues:**
@@ -88,6 +121,7 @@ This project adheres to [Semantic Versioning].
 - [#1458] Always set host and language when generating the navigation menu ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.10.0-RC3]: https://github.com/contao/contao/releases/tag/4.10.0-RC3
 [4.10.0-RC2]: https://github.com/contao/contao/releases/tag/4.10.0-RC2
 [4.10.0-RC1]: https://github.com/contao/contao/releases/tag/4.10.0-RC1
 [aschempp]: https://github.com/aschempp
@@ -100,6 +134,33 @@ This project adheres to [Semantic Versioning].
 [m-vo]: https://github.com/m-vo
 [richardhj]: https://github.com/richardhj
 [Toflar]: https://github.com/Toflar
+[#2017]: https://github.com/contao/contao/pull/2017
+[#2021]: https://github.com/contao/contao/pull/2021
+[#2019]: https://github.com/contao/contao/pull/2019
+[#2071]: https://github.com/contao/contao/pull/2071
+[#2098]: https://github.com/contao/contao/pull/2098
+[#2065]: https://github.com/contao/contao/pull/2065
+[#2064]: https://github.com/contao/contao/pull/2064
+[#2069]: https://github.com/contao/contao/pull/2069
+[#2068]: https://github.com/contao/contao/pull/2068
+[#2060]: https://github.com/contao/contao/pull/2060
+[#2062]: https://github.com/contao/contao/pull/2062
+[#2061]: https://github.com/contao/contao/pull/2061
+[#2059]: https://github.com/contao/contao/pull/2059
+[#2048]: https://github.com/contao/contao/pull/2048
+[#2041]: https://github.com/contao/contao/pull/2041
+[#2042]: https://github.com/contao/contao/pull/2042
+[#1984]: https://github.com/contao/contao/pull/1984
+[#2026]: https://github.com/contao/contao/pull/2026
+[#2024]: https://github.com/contao/contao/pull/2024
+[#2018]: https://github.com/contao/contao/pull/2018
+[#1985]: https://github.com/contao/contao/pull/1985
+[#2008]: https://github.com/contao/contao/pull/2008
+[#2009]: https://github.com/contao/contao/pull/2009
+[#2000]: https://github.com/contao/contao/pull/2000
+[#1986]: https://github.com/contao/contao/pull/1986
+[#1987]: https://github.com/contao/contao/pull/1987
+[#1990]: https://github.com/contao/contao/pull/1990
 [#1972]: https://github.com/contao/contao/pull/1972
 [#1975]: https://github.com/contao/contao/pull/1975
 [#1973]: https://github.com/contao/contao/pull/1973
@@ -146,8 +207,6 @@ This project adheres to [Semantic Versioning].
 [#1468]: https://github.com/contao/contao/pull/1468
 [#1483]: https://github.com/contao/contao/pull/1483
 [#1480]: https://github.com/contao/contao/pull/1480
-[#1485]: https://github.com/contao/contao/pull/1485
-[#1476]: https://github.com/contao/contao/pull/1476
 [#1447]: https://github.com/contao/contao/pull/1447
 [#1951]: https://github.com/contao/contao/pull/1951
 [#1948]: https://github.com/contao/contao/pull/1948

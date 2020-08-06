@@ -74,11 +74,11 @@
         <target>重要な部分の高さを入力できます。</target>
       </trans-unit>
       <trans-unit id="tl_files.meta.0">
-        <source>Meta data</source>
+        <source>Metadata</source>
         <target>メタデータ</target>
       </trans-unit>
       <trans-unit id="tl_files.meta.1">
-        <source>Here you can enter the file meta data.</source>
+        <source>Here you can enter the file metadata.</source>
         <target>ファイルのメタデータを入力できます。</target>
       </trans-unit>
       <trans-unit id="tl_files.fileupload.0">

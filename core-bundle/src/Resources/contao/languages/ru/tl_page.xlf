@@ -89,6 +89,14 @@
         <source>Show this page if there is none that matches the visitor's language.</source>
         <target>Показать эту страницу, если нет страницы, которая соответствует языку посетителя.</target>
       </trans-unit>
+      <trans-unit id="tl_page.disableLanguageRedirect.0">
+        <source>Disable language redirect</source>
+        <target>Отключить перенаправление языка</target>
+      </trans-unit>
+      <trans-unit id="tl_page.disableLanguageRedirect.1">
+        <source>Do not redirect visitors to this website root based on their preferred browser language.</source>
+        <target>Не перенаправлять посетителей в корень сайта в зависимости от предпочитаемого языка браузера.</target>
+      </trans-unit>
       <trans-unit id="tl_page.favicon.0">
         <source>Favicon</source>
         <target>Favicon</target>
@@ -131,17 +139,19 @@
       </trans-unit>
       <trans-unit id="tl_page.mailerTransport.0">
         <source>Mailer transport</source>
+        <target>Почтовый транспорт</target>
       </trans-unit>
       <trans-unit id="tl_page.mailerTransport.1">
         <source>Here you can override the mailer transport used to send e-mails on this website.</source>
+        <target>Здесь можно переопределить транспорт почтовой рассылки, используемый для отправки сообщений электронной почты на этом веб-сайте.</target>
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.0">
         <source>E-mail address of the website administrator</source>
         <target>E-mail администратора веб-сайта</target>
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.1">
-        <source>Auto-generated messages like subscription confirmation e-mails will be sent to this address.</source>
-        <target>Автоматически-созданные сообщения (напр. e-mail активации или подтверждения) будут отправлены на этот адрес.</target>
+        <source>This e-mail address will be used to send and receive system messages.</source>
+        <target>Этот адрес электронной почты будет использоваться для отправки и получения системных сообщений.</target>
       </trans-unit>
       <trans-unit id="tl_page.dateFormat.0">
         <source>Date format</source>
@@ -185,15 +195,19 @@
       </trans-unit>
       <trans-unit id="tl_page.urlPrefix.0">
         <source>URL prefix</source>
+        <target>URL-префикс</target>
       </trans-unit>
       <trans-unit id="tl_page.urlPrefix.1">
         <source>Enter a URL prefix (e.g. the language) that will be prepended to aliases for this root page.</source>
+        <target>Введите префикс URL (например, язык), который будет предшествовать алиасам для этой корневой страницы.</target>
       </trans-unit>
       <trans-unit id="tl_page.urlSuffix.0">
         <source>URL suffix</source>
+        <target>URL-суффикс</target>
       </trans-unit>
       <trans-unit id="tl_page.urlSuffix.1">
         <source>The URL suffix will be added to the URI string to simulate static documents.</source>
+        <target>Суффикс URL будет добавлен в строку URI для моделирования статических документов.</target>
       </trans-unit>
       <trans-unit id="tl_page.createSitemap.0">
         <source>Create an XML sitemap</source>
@@ -432,7 +446,7 @@
         <target>Имя и тип</target>
       </trans-unit>
       <trans-unit id="tl_page.meta_legend">
-        <source>Meta data</source>
+        <source>Metadata</source>
         <target>Метаданные</target>
       </trans-unit>
       <trans-unit id="tl_page.system_legend">
@@ -445,6 +459,11 @@
       </trans-unit>
       <trans-unit id="tl_page.url_legend">
         <source>URL settings</source>
+        <target>Настройки URL</target>
+      </trans-unit>
+      <trans-unit id="tl_page.language_legend">
+        <source>Language settings</source>
+        <target>Настройки языка</target>
       </trans-unit>
       <trans-unit id="tl_page.website_legend">
         <source>Website settings</source>
@@ -567,7 +586,8 @@
         <target>Редактировать статьи на странице ID %s</target>
       </trans-unit>
       <trans-unit id="tl_page.legacyRouting">
-        <source>This setting has been disabled because Contao is running in legacy routing mode.</source>
+        <source>Disable legacy routing mode to configure the URL prefix and suffix in the root page.</source>
+        <target>Отключить устаревший режим маршрутизации, чтобы настроить префикс и суффикс URL на корневой странице.</target>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

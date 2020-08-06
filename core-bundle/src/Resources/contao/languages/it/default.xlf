@@ -1890,8 +1890,7 @@
         <target>Path relativo</target>
       </trans-unit>
       <trans-unit id="MSC.fileMeta">
-        <source>Meta data</source>
-        <target>Meta dati</target>
+        <source>Metadata</source>
       </trans-unit>
       <trans-unit id="MSC.versioning">
         <source>Version management</source>
@@ -2506,8 +2505,7 @@
         <target>Download %s</target>
       </trans-unit>
       <trans-unit id="MSC.metaNoLanguages">
-        <source>You have to add a root page in the site structure to enter file meta data.</source>
-        <target>È necessario aggiungere una pagina principale nella struttura del sito per inserire i meta dati del file.</target>
+        <source>You have to add a root page in the site structure to enter file metadata.</source>
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
         <source>Breadcrumb menu</source>
@@ -2646,8 +2644,7 @@
         <target>Anteprima dei risultati di ricerca di Google</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.1">
-        <source>Here you can preview the meta data in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
-        <target>Qui puoi visualizzare in anteprima i metadati nei risultati di ricerca di Google. Altri motori di ricerca potrebbero mostrare testi più lunghi o ritagliare in una posizione diversa.</target>
+        <source>Here you can preview the metadata in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
       </trans-unit>
       <trans-unit id="MSC.clearTrustedDevices">
         <source>Clear trusted devices</source>
@@ -2680,6 +2677,10 @@
       <trans-unit id="MSC.closeToolbar">
         <source>Close the Contao toolbar</source>
         <target>Chiudi la barra degli strumenti Contao</target>
+      </trans-unit>
+      <trans-unit id="MSC.noSerpPreview">
+        <source>The preview URL cannot be generated, because the route has mandatory parameters.</source>
+        <target>L'URL di anteprima non può essere generato, perché il percorso ha dei parametri obbligatori.</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
