@@ -67,7 +67,7 @@ ContaoKernel::setProjectDir(dirname(__DIR__));
 $kernel = new ContaoKernel('dev', true);
 
 if ($request->isSecure()) {
-    ini_set('session.cookie_secure', 'On'); // see #1760
+    @ini_set('session.cookie_secure', 'On'); // see #1760
 }
 
 $response = $kernel->handle($request);
