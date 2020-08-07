@@ -22,6 +22,7 @@ framework:
     default_locale: '%locale%'
     session:
         handler_id: ~
+        cookie_secure: auto
     fragments: { path: /_fragment }
 
 # Contao configuration
