@@ -43,11 +43,6 @@ class ContentModule extends \ContentElement
 			return '';
 		}
 
-		$objModule->typePrefix = 'ce_';
-
-		/** @var Module $objModule */
-		$objModule = new $strClass($objModule, $this->strColumn);
-
 		$cssID = \StringUtil::deserialize($objModule->cssID, true);
 
 		// Override the CSS ID (see #305)
@@ -63,6 +58,10 @@ class ContentModule extends \ContentElement
 		}
 
 		$objModule->cssID = $cssID;
+		$objModule->typePrefix = 'ce_';
+
+		/** @var Module $objModule */
+		$objModule = new $strClass($objModule, $this->strColumn);
 
 		return $objModule->generate();
 	}
