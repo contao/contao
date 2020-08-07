@@ -123,7 +123,7 @@ class UserListCommandTest extends TestCase
     {
         /** @var UserModel&MockObject $userModel */
         $userModel = $this->mockClassWithProperties(UserModel::class);
-        $userModel->id = '2';
+        $userModel->id = 2;
         $userModel->username = 'j.doe';
         $userModel->name = 'John Doe';
 
@@ -139,7 +139,7 @@ class UserListCommandTest extends TestCase
     {
         /** @var UserModel&MockObject $userModel */
         $userModel = $this->mockClassWithProperties(UserModel::class);
-        $userModel->id = '1';
+        $userModel->id = 1;
         $userModel->username = 'j.doe';
         $userModel->name = 'John Doe';
         $userModel->admin = '1';

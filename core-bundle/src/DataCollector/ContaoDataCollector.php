@@ -86,7 +86,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     }
 
     /**
-     * @return array<string>
+     * @return array<string|bool>
      */
     public function getClassesSet(): array
     {
@@ -98,7 +98,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     }
 
     /**
-     * @return array<string>
+     * @return array<string|bool>
      */
     public function getClassesAliased(): array
     {
@@ -110,7 +110,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     }
 
     /**
-     * @return array<string>
+     * @return array<string|bool>
      */
     public function getClassesComposerized(): array
     {
