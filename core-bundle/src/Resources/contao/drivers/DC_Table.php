@@ -5609,7 +5609,22 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			// Limit the options if there are root records
 			if (isset($GLOBALS['TL_DCA'][$table]['list']['sorting']['root']) && $GLOBALS['TL_DCA'][$table]['list']['sorting']['root'] !== false)
 			{
-				$arrProcedure[] = "id IN(" . implode(',', $this->Database->getChildRecords($GLOBALS['TL_DCA'][$table]['list']['sorting']['root'], $this->strTable)) . ")";
+				$rootIds = array_map('\intval', $GLOBALS['TL_DCA'][$table]['list']['sorting']['root']);
+
+				// Also add the child records of the table (see #1811)
+				if ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] == 5)
+				{
+					$rootIds = array_merge($rootIds, $this->Database->getChildRecords($rootIds, $table));
+				}
+
+				if ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 6)
+				{
+					$arrProcedure[] = "pid IN(" . implode(',', $rootIds) . ")";
+				}
+				else
+				{
+					$arrProcedure[] = "id IN(" . implode(',', $rootIds) . ")";
+				}
 			}
 
 			$objFields = $this->Database->prepare("SELECT DISTINCT " . $what . " FROM " . $this->strTable . ((\is_array($arrProcedure) && \strlen($arrProcedure[0])) ? ' WHERE ' . implode(' AND ', $arrProcedure) : ''))
