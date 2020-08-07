@@ -723,7 +723,15 @@ class tl_form_field extends Contao\Backend
 			return $this->getTemplateGroup('form_');
 		}
 
-		$arrTemplates = $this->getTemplateGroup('form_' . $dc->activeRecord->type . '_', array(), 'form_' . $dc->activeRecord->type);
+		$default = 'form_' . $dc->activeRecord->type;
+
+		// Backwards compatibility
+		if ($dc->activeRecord->type == 'text')
+		{
+			$default = 'form_textfield';
+		}
+
+		$arrTemplates = $this->getTemplateGroup('form_' . $dc->activeRecord->type . '_', array(), $default);
 
 		// Backwards compatibility
 		if ($dc->activeRecord->type == 'text')
