@@ -23,12 +23,19 @@ abstract class AbstractFragmentController extends AbstractController implements 
 {
     /**
      * @var array
+     * @deprecated use $optionsByType instead
      */
     protected $options = [];
+
+    /**
+     * @var array
+     */
+    protected $optionsByType = [];
 
     public function setFragmentOptions(array $options): void
     {
         $this->options = $options;
+        $this->optionsByType[$this->getType($options)] = $options;
     }
 
     /**
@@ -36,8 +43,10 @@ abstract class AbstractFragmentController extends AbstractController implements 
      */
     protected function createTemplate(Model $model, string $templateName): Template
     {
-        if (isset($this->options['template'])) {
-            $templateName = $this->options['template'];
+        $options = $this->getFragmentOptions($model->type);
+
+        if (isset($options['template'])) {
+            $templateName = $options['template'];
         }
 
         if ($model->customTpl) {
@@ -82,8 +91,12 @@ abstract class AbstractFragmentController extends AbstractController implements 
     /**
      * Returns the type from the class name.
      */
-    protected function getType(): string
+    protected function getType(array $options = null): string
     {
+        if (null !== $options && isset($options['type'])) {
+            return $options['type'];
+        }
+
         if (isset($this->options['type'])) {
             return $this->options['type'];
         }
@@ -95,5 +108,10 @@ abstract class AbstractFragmentController extends AbstractController implements 
         }
 
         return Container::underscore($className);
+    }
+
+    protected function getFragmentOptions(string $type): array
+    {
+        return $this->optionsByType[$type] ?? $this->options;
     }
 }

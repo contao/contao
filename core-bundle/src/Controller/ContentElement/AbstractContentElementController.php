@@ -22,7 +22,7 @@ abstract class AbstractContentElementController extends AbstractFragmentControll
 {
     public function __invoke(Request $request, ContentModel $model, string $section, array $classes = null): Response
     {
-        $type = $this->getType();
+        $type = $this->getType($this->getFragmentOptions($model->type));
         $template = $this->createTemplate($model, 'ce_'.$type);
 
         $this->addHeadlineToTemplate($template, $model->headline);
