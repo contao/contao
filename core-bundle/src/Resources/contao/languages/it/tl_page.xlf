@@ -91,15 +91,19 @@
       </trans-unit>
       <trans-unit id="tl_page.favicon.0">
         <source>Favicon</source>
+        <target>Favicon</target>
       </trans-unit>
       <trans-unit id="tl_page.favicon.1">
         <source>Here you can select a favicon for the website.</source>
+        <target>Qui puoi selezionare una favicon per il sito web.</target>
       </trans-unit>
       <trans-unit id="tl_page.robotsTxt.0">
         <source>Custom robots.txt content</source>
+        <target>Contenuti robots.txt personalizzati</target>
       </trans-unit>
       <trans-unit id="tl_page.robotsTxt.1">
         <source>Here you can enter custom robots.txt content. It may be extended automatically by extensions.</source>
+        <target>Qui puoi inserire contenuti personalizzati al file robots.txt. Il file può essere esteso automaticamente anche dalle estensioni.</target>
       </trans-unit>
       <trans-unit id="tl_page.dns.0">
         <source>Domain name</source>
@@ -239,21 +243,27 @@
       </trans-unit>
       <trans-unit id="tl_page.cache.0">
         <source>Shared cache timeout</source>
+        <target>Timeout cache condivisa</target>
       </trans-unit>
       <trans-unit id="tl_page.cache.1">
         <source>The period after which the page should no longer be considered fresh by a shared cache.</source>
+        <target>Il periodo dopo il quale la pagina non dovrebbe più essere considerata aggiornata da una cache condivisa.</target>
       </trans-unit>
       <trans-unit id="tl_page.alwaysLoadFromCache.0">
         <source>Always load from shared cache</source>
+        <target>Carica sempre dalla cache condivisa</target>
       </trans-unit>
       <trans-unit id="tl_page.alwaysLoadFromCache.1">
         <source>Always load this page from the shared cache, even if a member is logged in. Note that you can no longer personalize the page for logged in members in this case!</source>
+        <target>Carica sempre questa pagina dalla cache condivisa, anche se un membro ha effettuato l'accesso. In questo caso non puoi più personalizzare la pagina per i membri connessi!</target>
       </trans-unit>
       <trans-unit id="tl_page.clientCache.0">
         <source>Private cache timeout</source>
+        <target>Timeout cache privata</target>
       </trans-unit>
       <trans-unit id="tl_page.clientCache.1">
         <source>The period after which the page should no longer be considered fresh by a private cache.</source>
+        <target>Il periodo dopo il quale la pagina non dovrebbe più essere considerata aggiornata da una cache privata.</target>
       </trans-unit>
       <trans-unit id="tl_page.includeChmod.0">
         <source>Assign access rights</source>
@@ -333,6 +343,7 @@
       </trans-unit>
       <trans-unit id="tl_page.guests.1">
         <source>Hide the page if a member is logged in.</source>
+        <target>Nascondi la pagina se un membro ha effettuato l'accesso.</target>
       </trans-unit>
       <trans-unit id="tl_page.tabindex.0">
         <source>Tab index</source>
@@ -364,6 +375,7 @@
       </trans-unit>
       <trans-unit id="tl_page.start.1">
         <source>If you want to prevent the page from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Se desideri impedire che la pagina venga visualizzata sul sito Web prima di una determinata data / ora, puoi inserirla qui. Altrimenti lascia il campo vuoto.</target>
       </trans-unit>
       <trans-unit id="tl_page.stop.0">
         <source>Show until</source>
@@ -371,18 +383,23 @@
       </trans-unit>
       <trans-unit id="tl_page.stop.1">
         <source>If you want to prevent the page from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Se desideri impedire che la pagina venga visualizzata sul sito Web dopo una determinata data / ora, puoi inserirla qui. Altrimenti lascia il campo vuoto.</target>
       </trans-unit>
       <trans-unit id="tl_page.enforceTwoFactor.0">
         <source>Enforce two-factor authentication</source>
+        <target>Applica l'autenticazione a due fattori</target>
       </trans-unit>
       <trans-unit id="tl_page.enforceTwoFactor.1">
         <source>Enforce two-factor authentication for all members.</source>
+        <target>Applica l'autenticazione a due fattori per tutti i membri.</target>
       </trans-unit>
       <trans-unit id="tl_page.twoFactorJumpTo.0">
         <source>Two-factor redirect page</source>
+        <target>Pagina di reindirizzamento per autenticazione a due fattori</target>
       </trans-unit>
       <trans-unit id="tl_page.twoFactorJumpTo.1">
         <source>Please choose the page to which members will be redirected to set up two-factor authentication.</source>
+        <target>Scegli la pagina in cui i membri verranno reindirizzati per impostare l'autenticazione a due fattori.</target>
       </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
@@ -406,6 +423,7 @@
       </trans-unit>
       <trans-unit id="tl_page.website_legend">
         <source>Website settings</source>
+        <target>Impostazioni del sito Web</target>
       </trans-unit>
       <trans-unit id="tl_page.global_legend">
         <source>Global settings</source>

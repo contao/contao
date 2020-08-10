@@ -47,6 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.sizes.1">
         <source>Here you can define the intended layout width of the image, the actual size should be defined via CSS. Example: &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;.</source>
+        <target>Qui puoi definire la larghezza di layout dell'immagine, la dimensione effettiva dovrebbe essere definita tramite CSS. Esempio: &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.densities.0">
         <source>Pixel densities/scale factors</source>
@@ -62,27 +63,35 @@
       </trans-unit>
       <trans-unit id="tl_image_size.cssClass.1">
         <source>The CSS classes will be added to the image tag.</source>
+        <target>La classe CSS sarà applicata al tag immagine</target>
       </trans-unit>
       <trans-unit id="tl_image_size.formats.0">
         <source>Convert image formats</source>
+        <target>Converti formati immagine</target>
       </trans-unit>
       <trans-unit id="tl_image_size.formats.1">
         <source>Here you can select which image formats shall be converted.</source>
+        <target>Qui puoi selezionare quali formati di immagine devono essere convertiti.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.formatsWebpNotSupported">
         <source>WEBP is not supported on your server.</source>
+        <target>WEBP non è supportato sul tuo server.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.0">
         <source>Use original image if dimensions match</source>
+        <target>Usa l'immagine originale se le dimensioni corrispondono</target>
       </trans-unit>
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.1">
         <source>Note that no optimizations such as meta data stripping or JPEG compression will be applied in this case.</source>
+        <target>In questo caso non verranno applicate ottimizzazioni come l'eliminazione dei metadati o la compressione JPEG.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.lazyLoading.0">
         <source>Enable lazy loading</source>
+        <target>Abilita caricamento lazy loading</target>
       </trans-unit>
       <trans-unit id="tl_image_size.lazyLoading.1">
         <source>Defer loading the image until it is scrolled into the viewport.</source>
+        <target>Rimanda il caricamento dell'immagine fino a quando non viene fatta scorrere nella finestra.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.tstamp.0">
         <source>Revision date</source>
@@ -98,9 +107,11 @@
       </trans-unit>
       <trans-unit id="tl_image_size.source_legend">
         <source>Image source settings</source>
+        <target>Impostazioni della sorgente dell'immagine</target>
       </trans-unit>
       <trans-unit id="tl_image_size.loading_legend">
         <source>Loading options</source>
+        <target>Opzioni di caricamento</target>
       </trans-unit>
       <trans-unit id="tl_image_size.expert_legend">
         <source>Expert settings</source>
@@ -132,12 +143,15 @@
       </trans-unit>
       <trans-unit id="tl_image_size.png:webp,png">
         <source>PNG to WEBP</source>
+        <target>PNG to WEBP</target>
       </trans-unit>
       <trans-unit id="tl_image_size.jpg:webp,jpg;jpeg:webp,jpeg">
         <source>JPEG to WEBP</source>
+        <target>JPEG to WEBP</target>
       </trans-unit>
       <trans-unit id="tl_image_size.gif:webp,gif">
         <source>GIF to WEBP</source>
+        <target>GIF to WEBP</target>
       </trans-unit>
       <trans-unit id="tl_image_size.new.0">
         <source>New</source>

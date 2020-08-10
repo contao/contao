@@ -83,9 +83,11 @@
       </trans-unit>
       <trans-unit id="tl_module.customTpl.0">
         <source>Module template</source>
+        <target>Template del modulo</target>
       </trans-unit>
       <trans-unit id="tl_module.customTpl.1">
         <source>Here you can select the module template.</source>
+        <target>Qui è possibile selezionare il template del modulo.</target>
       </trans-unit>
       <trans-unit id="tl_module.pages.0">
         <source>Pages</source>
@@ -225,15 +227,19 @@
       </trans-unit>
       <trans-unit id="tl_module.contextLength.0">
         <source>Context length</source>
+        <target>Lunghezza del contesto</target>
       </trans-unit>
       <trans-unit id="tl_module.contextLength.1">
         <source>The first field defines the number of characters on the left and right side of each keyword and the second one the overall context length per result.</source>
+        <target>Il primo campo definisce il numero di caratteri sul lato sinistro e destro di ogni parola chiave e il secondo la lunghezza complessiva del contesto per risultato.</target>
       </trans-unit>
       <trans-unit id="tl_module.minKeywordLength.0">
         <source>Minimum keyword length</source>
+        <target>Lunghezza minima della parola chiave</target>
       </trans-unit>
       <trans-unit id="tl_module.minKeywordLength.1">
         <source>Keywords deceeding the minimum length will be ignored in the search results. Set to 0 to disable.</source>
+        <target>Le parole chiave che diminuiscono la lunghezza minima verranno ignorate nei risultati della ricerca. Impostare su 0 per disabilitare.</target>
       </trans-unit>
       <trans-unit id="tl_module.perPage.0">
         <source>Items per page</source>
@@ -261,9 +267,11 @@
       </trans-unit>
       <trans-unit id="tl_module.inColumn.0">
         <source>Layout section</source>
+        <target>Sezione layout</target>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.1">
         <source>Please choose the layout section whose articles you want to list.</source>
+        <target>Scegli la sezione del layout di cui desideri elencare gli articoli.</target>
       </trans-unit>
       <trans-unit id="tl_module.skipFirst.0">
         <source>Skip items</source>
@@ -407,6 +415,7 @@
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.1">
         <source>Here you can disable the spam protection (not recommended).</source>
+        <target>Qui puoi disabilitare la domanda di sicurezza (non raccomandato).</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_groups.0">
         <source>Member groups</source>
@@ -614,6 +623,7 @@ Se non hai richiesto questa e-mail, contatta l'amministratore del sito web.
       </trans-unit>
       <trans-unit id="tl_module.new.1">
         <source>Create a new module</source>
+        <target>Crea un nuovo modulo</target>
       </trans-unit>
       <trans-unit id="tl_module.show">
         <source>Show the details of module ID %s</source>

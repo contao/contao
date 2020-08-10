@@ -19,6 +19,7 @@
       </trans-unit>
       <trans-unit id="tl_user.newsfeeds.0">
         <source>Allowed news feeds</source>
+        <target>خوراک اخبار مجاز</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeeds.1">
         <source>Here you can grant access to one or more news feeds.</source>
@@ -26,6 +27,7 @@
       </trans-unit>
       <trans-unit id="tl_user.newsfeedp.0">
         <source>News feed permissions</source>
+        <target>مجوزهای خوراک اخبار</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeedp.1">
         <source>Here you can define the news feed permissions.</source>

@@ -75,6 +75,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.disableCaptcha.0">
         <source>Disable spam protection</source>
+        <target>Vypnout ochranu proti spamu</target>
       </trans-unit>
       <trans-unit id="tl_calendar.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>
@@ -146,9 +147,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.1">
         <source>Manage calendar feeds</source>
+        <target>Spravovat kanály kalendáře</target>
       </trans-unit>
       <trans-unit id="tl_calendar.new.0">
         <source>New</source>
+        <target>Nové</target>
       </trans-unit>
       <trans-unit id="tl_calendar.new.1">
         <source>Create a new calendar</source>

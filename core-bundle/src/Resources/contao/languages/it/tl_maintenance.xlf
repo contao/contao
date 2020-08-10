@@ -67,9 +67,11 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.crawl_queue.0">
         <source>Purge the crawl queue</source>
+        <target>Elimina la coda di scansione</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.crawl_queue.1">
         <source>Truncates the &lt;code&gt;tl_crawl_queue&lt;/code&gt; table which stores all the queue information from crawl processes.</source>
+        <target>Tronca il &lt;code&gt;tl_crawl_queue&lt;/code&gt; tabella che memorizza tutte le informazioni sulla coda dai processi di ricerca per indicizzazione.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.images.0">
         <source>Purge the image cache</source>
@@ -77,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.images.1">
         <source>Removes the automatically generated images and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>Rimuove le immagini generate automaticamente ed elimina la cache condivisa, in questo modo si eliminano anche riferimenti a risorse eliminate.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.0">
         <source>Purge the script cache</source>
@@ -84,9 +87,12 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.1">
         <source>Removes the automatically generated &lt;code&gt;.css&lt;/code&gt; and &lt;code&gt;.js&lt;/code&gt; files, recreates the internal style sheets and then purges the shared cache.</source>
+        <target>Rimuove il generato automaticamente
+Rimuove i file &lt;code&gt;.css&lt;/code&gt; e &lt;code&gt;.js&lt;/code&gt; generati automaticamente, ricrea i fogli di stile interni e quindi elimina la cache condivisa.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.pages.0">
         <source>Purge the shared cache</source>
+        <target>Ripulisci la cache del condivisa</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.pages.1">
         <source>Removes the cached versions of the front end pages.</source>
@@ -94,6 +100,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.search.0">
         <source>Purge the search results cache</source>
+        <target>Elimina la cache dei risultati della ricerca</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.search.1">
         <source>Removes the cached versions of the search results.</source>
@@ -113,6 +120,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.xml.1">
         <source>Recreates the XML files (sitemaps and feeds) and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>Ricrea i file XML (sitemap e feed) ed elimina la cache condivisa, in questo modo si eliminano anche riferimenti a risorse eliminate.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.0">
         <source>Recreate the symlinks</source>
@@ -124,39 +132,51 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.crawler">
         <source>Crawler</source>
+        <target>Spider </target>
       </trans-unit>
       <trans-unit id="tl_maintenance.startCrawling">
         <source>Start crawling</source>
+        <target>Avvia spieder</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlSubscribers.0">
         <source>Enabled features</source>
+        <target>Funzionalità abilitate</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlSubscribers.1">
         <source>The crawler crawls all URLs it finds. Here you can decide what to do with these results.</source>
+        <target>Il crawler esegue la scansione di tutti gli URL che trova. Qui puoi decidere cosa fare con questi risultati.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlMember.0">
         <source>Front end member</source>
+        <target>Front end membro</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlMember.1">
         <source>Automatically log in a front end member to index protected pages.</source>
+        <target>Accedi automaticamente come un membro front-end per indicizzare le pagine protette.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlWaitToBeFinished">
         <source>The crawler is currently working. Please wait for it to finish to see the results.</source>
+        <target>Il crawler sta attualmente funzionando. Attendi il termine per vedere i risultati.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlDownloadDebugLog">
         <source>Download the debug log</source>
+        <target>Scarica il log del debug </target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlDownloadSubscriberLog">
         <source>Download the log</source>
+        <target>Scarica il log</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlSubscriberNames.search-index">
         <source>Update the search index</source>
+        <target>Aggiorna l'indice di ricerca</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlSubscriberNames.broken-link-checker">
         <source>Check for broken links</source>
+        <target>Controlla collegamenti interrotti</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlMaintenance">
         <source>Crawling is not possible while the maintenance mode is enabled.</source>
+        <target>La scansione non è possibile mentre è abilitata la modalità manutenzione.</target>
       </trans-unit>
     </body>
   </file>
