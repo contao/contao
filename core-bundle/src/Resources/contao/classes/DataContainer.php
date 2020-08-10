@@ -1249,18 +1249,22 @@ abstract class DataContainer extends Backend
 	 * Invalidate the cache tags associated with a given DC
 	 *
 	 * Call this whenever an entry is modified (added, updated, deleted).
-	 *
-	 * @param array $tags
 	 */
-	public function invalidateCacheTags(array $tags=array())
+	public function invalidateCacheTags()
 	{
 		if (!System::getContainer()->has('fos_http_cache.cache_manager'))
 		{
 			return;
 		}
 
-		$tags[] = 'contao.db.' . $this->table;
-		$tags[] = 'contao.db.' . $this->table . '.' . $this->id;
+		$ns = 'contao.db.';
+		$tags = array($ns . $this->table, $ns . $this->table . '.' . $this->id);
+
+		if (!empty($this->ptable) && $this->activeRecord && $this->activeRecord->pid > 0)
+		{
+			$tags[] = $ns . $this->ptable;
+			$tags[] = $ns . $this->ptable . '.' . $this->activeRecord->pid;
+		}
 
 		// Trigger the oninvalidate_cache_tags_callback
 		if (\is_array($GLOBALS['TL_DCA'][$this->table]['config']['oninvalidate_cache_tags_callback']))
