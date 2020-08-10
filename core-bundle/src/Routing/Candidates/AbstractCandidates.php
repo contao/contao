@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Routing\Candidates;
 
 use Symfony\Cmf\Component\Routing\Candidates\CandidatesInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class AbstractCandidates implements CandidatesInterface
 {
@@ -86,7 +87,7 @@ class AbstractCandidates implements CandidatesInterface
         $url = rawurldecode(ltrim($url, '/'));
 
         if (empty($url)) {
-            throw new \RuntimeException(__METHOD__.' cannot handle empty path');
+            throw new ResourceNotFoundException('Empty path');
         }
 
         $candidates = [];
