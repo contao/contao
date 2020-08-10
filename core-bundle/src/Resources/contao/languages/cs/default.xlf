@@ -59,6 +59,7 @@
       </trans-unit>
       <trans-unit id="ERR.extnd">
         <source>For security reasons you can not use the following characters here: #&lt;&gt;()\=</source>
+        <target>Z bezpečnostních důvodů nemůžete použít následující znaky: #&lt;&gt;()\=</target>
       </trans-unit>
       <trans-unit id="ERR.email">
         <source>Please enter a valid e-mail address!</source>
@@ -222,6 +223,7 @@
       </trans-unit>
       <trans-unit id="ERR.forbiddenExtensions">
         <source>The following file extensions are not allowed: %s</source>
+        <target>Následující souborová rozšíření nejsou povolená: %s</target>
       </trans-unit>
       <trans-unit id="ERR.invalidPages">
         <source>Your selection contains invalid page IDs!</source>
@@ -285,15 +287,19 @@
       </trans-unit>
       <trans-unit id="ERR.emptyTitleOrId">
         <source>Please enter both title and ID!</source>
+        <target>Zadejte prosím jak název, tak i ID!</target>
       </trans-unit>
       <trans-unit id="ERR.duplicateSectionTitle">
         <source>Duplicate layout section title &quot;%s&quot;!</source>
+        <target>Duplikovat část název &quot;%s&quot;!</target>
       </trans-unit>
       <trans-unit id="ERR.duplicateSectionId">
         <source>Duplicate layout section ID &quot;%s&quot;!</source>
+        <target>Duplikovat část ID &quot;%s&quot;!</target>
       </trans-unit>
       <trans-unit id="ERR.moduleWithoutColumn">
         <source>Please assign all modules to a column!</source>
+        <target>Umístěte prosím všechny moduly do sloupce!</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -1333,6 +1339,7 @@
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
         <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <target>Více o zrychlení vašeho pracovního postupu pomocí &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;klávesových zkratek&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>

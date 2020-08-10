@@ -14,8 +14,7 @@
         <target>Administratorjev naslov elektronske pošte</target>
       </trans-unit>
       <trans-unit id="tl_settings.adminEmail.1">
-        <source>Auto-generated messages like subscription confirmation e-mails will be sent to this address.</source>
-        <target>Samodejno ustvarjena sporočila, kot npr. potrditev naročila na obveščanje, bodo poslana na ta e-naslov.</target>
+        <source>This e-mail address will be used to send and receive system messages.</source>
       </trans-unit>
       <trans-unit id="tl_settings.dateFormat.0">
         <source>Date format</source>
@@ -63,6 +62,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.disableCron.1">
         <source>Disable the periodic command scheduler and trigger the &lt;em&gt;_contao/cron&lt;/em&gt; route by a real cron job (which you have to set up manually).</source>
+        <target>Onemogoči ukaz periodičnih opravil in izvajaj &lt;em&gt; s pravim 'cron job' opravilom (potrebno nastaviti na strežniku).</target>
       </trans-unit>
       <trans-unit id="tl_settings.minifyMarkup.0">
         <source>Minify the markup</source>

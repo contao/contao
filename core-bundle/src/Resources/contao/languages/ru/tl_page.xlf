@@ -102,8 +102,8 @@
         <target>E-mail администратора веб-сайта</target>
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.1">
-        <source>Auto-generated messages like subscription confirmation e-mails will be sent to this address.</source>
-        <target>Автоматически-созданные сообщения (напр. e-mail активации или подтверждения) будут отправлены на этот адрес.</target>
+        <source>This e-mail address will be used to send and receive system messages.</source>
+        <target>Этот адрес электронной почты будет использоваться для отправки и получения системных сообщений.</target>
       </trans-unit>
       <trans-unit id="tl_page.dateFormat.0">
         <source>Date format</source>

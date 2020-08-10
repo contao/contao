@@ -14,8 +14,7 @@
         <target>系统管理员E-mail地址</target>
       </trans-unit>
       <trans-unit id="tl_settings.adminEmail.1">
-        <source>Auto-generated messages like subscription confirmation e-mails will be sent to this address.</source>
-        <target>自动生成的电子邮件。例如订阅和确认信，将发送到此地址</target>
+        <source>This e-mail address will be used to send and receive system messages.</source>
       </trans-unit>
       <trans-unit id="tl_settings.dateFormat.0">
         <source>Date format</source>

@@ -31,6 +31,7 @@
       </trans-unit>
       <trans-unit id="XPT.errorExplain">
         <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, search the &lt;a href=&quot;https://contao.org/en/frequently-asked.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/en/support.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
+        <target>Spouštění skriptu bylo pozastaveno, protože něco nefunguje správně. Daná chybová zpráva je skrytá u této poznámky z bezpečnostních důvodů a lze ji najít v souboru (viz výš). Pokud nerozumíte chybové zprávě nebo nevíte, jak lze daný problém opravit, prohledejte &lt;a href=&quot;https://contao.org/en/frequently-asked.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao FAQs&lt;/a&gt; nebo navštivte &lt;a href=&quot;https://contao.org/en/support.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;stránku podpory Contaa&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="XPT.requestToken">
         <source>Invalid request token</source>
@@ -50,6 +51,7 @@
       </trans-unit>
       <trans-unit id="XPT.tokenExplainTwo">
         <source>For more information, search the &lt;a href=&quot;https://contao.org/en/frequently-asked.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/en/support.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
+        <target>Více informací najdete na &lt;a href=&quot;https://contao.org/en/frequently-asked.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao FAQs&lt;/a&gt; nebo navštivte &lt;a href=&quot;https://contao.org/en/support.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;stránku podpory Contaa&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="XPT.incomplete">
         <source>Incomplete installation</source>
@@ -65,6 +67,7 @@
       </trans-unit>
       <trans-unit id="XPT.incompleteExplain">
         <source>For more information, please refer to the &lt;a href=&quot;https://contao.org/manual/installation.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao manual&lt;/a&gt;.</source>
+        <target>Více informací najdete v &lt;a href=&quot;https://contao.org/manual/installation.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;návodu Contaa&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="XPT.noForward">
         <source>Forward page not found</source>
@@ -104,6 +107,7 @@
       </trans-unit>
       <trans-unit id="XPT.noLayoutExplain">
         <source>For more information, please refer to the &lt;a href=&quot;https://contao.org/manual/managing-pages.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao manual&lt;/a&gt;.</source>
+        <target>Více informací najdete v &lt;a href=&quot;https://contao.org/manual/managing-pages.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;návodu Contaa&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="XPT.noActive">
         <source>No active pages found</source>

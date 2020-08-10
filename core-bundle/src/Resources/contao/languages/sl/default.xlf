@@ -58,8 +58,8 @@
         <target>Prosimo vpišite veljavno telefonsko številko!</target>
       </trans-unit>
       <trans-unit id="ERR.extnd">
-        <source>For security reasons you can not use the following characters here: =&lt;&gt;&amp;/()#</source>
-        <target>Zaradi varnostnih razlogov lahko uporabite samo določene znake (=&amp;/()#)!</target>
+        <source>For security reasons you can not use the following characters here: #&lt;&gt;()\=</source>
+        <target>Zaradi varnostnih razlogov tu ni mogoče uporabiti sledečih znakov: #()/&lt;=&gt;</target>
       </trans-unit>
       <trans-unit id="ERR.email">
         <source>Please enter a valid e-mail address!</source>
@@ -221,6 +221,10 @@
         <source>You can only select &quot;%s&quot; files!</source>
         <target>Izberete lahko največ &quot;%s&quot; datotek!</target>
       </trans-unit>
+      <trans-unit id="ERR.forbiddenExtensions">
+        <source>The following file extensions are not allowed: %s</source>
+        <target>Naslednje končnice datotek niso dovoljene: %s</target>
+      </trans-unit>
       <trans-unit id="ERR.invalidPages">
         <source>Your selection contains invalid page IDs!</source>
         <target>Vaš izbor vsebuje neveljavne IDje strani!</target>
@@ -282,12 +286,16 @@
       </trans-unit>
       <trans-unit id="ERR.emptyTitleOrId">
         <source>Please enter both title and ID!</source>
+        <target>Prosimo, vnesite naziv in ID!</target>
       </trans-unit>
       <trans-unit id="ERR.duplicateSectionTitle">
         <source>Duplicate layout section title &quot;%s&quot;!</source>
       </trans-unit>
       <trans-unit id="ERR.duplicateSectionId">
         <source>Duplicate layout section ID &quot;%s&quot;!</source>
+      </trans-unit>
+      <trans-unit id="ERR.moduleWithoutColumn">
+        <source>Please assign all modules to a column!</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -1325,8 +1333,8 @@
         <target>Bližnjice na tipkovnici, na voljo v administraciji</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/books/manual/current/en/02-administration-area/keyboard-shortcuts.html&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
-        <target>Več o načinu pohitritve dela preberite članek o&lt;a href=&quot;https://docs.contao.org/books/manual/current/en/02-administration-area/keyboard-shortcuts.html&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot;&gt;bližnjicah na tipkovnici&lt;/a&gt;.</target>
+        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <target>Več o načinu pohitritve dela preberite članek o &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;bližnjicah na tipkovnici&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -1422,6 +1430,7 @@ To sporočilo je bilo avtomatično generirarno iz Contao. Ne odgovarjajte na spo
       </trans-unit>
       <trans-unit id="MSC.learnMore">
         <source>Learn more on %s</source>
+        <target>Več podatkov o %s</target>
       </trans-unit>
       <trans-unit id="MSC.user">
         <source>User</source>
@@ -1821,9 +1830,11 @@ To sporočilo je bilo avtomatično generirarno iz Contao. Ne odgovarjajte na spo
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
         <source>Alerts</source>
+        <target>Opozorila</target>
       </trans-unit>
       <trans-unit id="MSC.noSystemMessages">
         <source>Currently there are no alerts.</source>
+        <target>Trenutno ni opozoril.</target>
       </trans-unit>
       <trans-unit id="MSC.clearClipboard">
         <source>Clear clipboard</source>
@@ -1915,6 +1926,7 @@ To sporočilo je bilo avtomatično generirarno iz Contao. Ne odgovarjajte na spo
       </trans-unit>
       <trans-unit id="MSC.jsDisabled">
         <source>It seems that you have disabled JavaScript in your browser. The Contao back end will not work properly without JavaScript.</source>
+        <target>Kot kaže imate v vašem brskalniku onemogočeno izvajanje JavaScript. Contao Administracija ne bo delovala pravilno brez JavaScript.</target>
       </trans-unit>
       <trans-unit id="MSC.copyOf">
         <source>%s (copy)</source>

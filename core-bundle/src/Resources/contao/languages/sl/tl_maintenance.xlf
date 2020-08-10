@@ -79,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.index.1">
         <source>Truncates the tables &lt;code&gt;tl_search&lt;/code&gt; and &lt;code&gt;tl_search_index&lt;/code&gt;. Afterwards, you have to rebuild the search index (see above).</source>
+        <target>Počisti tabeli &lt;code&gt;tl_search&lt;/code&gt;in &lt;code&gt;tl_search_index&lt;/code&gt;. Po tem morate ponovno ustvariti indeks iskalnika (glejte zgoraj).</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.undo.0">
         <source>Purge the undo table</source>
@@ -86,18 +87,23 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.undo.1">
         <source>Truncates the &lt;code&gt;tl_undo&lt;/code&gt; table which stores the deleted records. This job permanently deletes these records.</source>
+        <target>Sprazne tabelo &lt;code&gt;tl_undo&lt;/code&gt;, v kateri so shranjeni izbrisani elementi. Ti elementi bodo trajno izbrisani.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.versions.0">
         <source>Purge the version table</source>
+        <target>Sprazni tabelo s prejšnjimi različicami elementov</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.versions.1">
         <source>Truncates the &lt;code&gt;tl_version&lt;/code&gt; table which stores the previous versions of a record. This job permanently deletes these records.</source>
+        <target>Sprazne tabelo &lt;code&gt;tl_version&lt;/code&gt;, v kateri so shranjene prejšnje različice elementov. Te različice bodo trajno izbrisane.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.log.0">
         <source>Purge the system log</source>
+        <target>Sprazni sistemski dnevnik</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.log.1">
         <source>Truncates the &lt;code&gt;tl_log&lt;/code&gt; table which stores all the system log entries. This job permanently deletes these records.</source>
+        <target>Sprazni tabelo &lt;code&gt;tl_log&lt;/code&gt;, v kateri so shranjeni vsi vnosi v sistemski dnevnik. Vnosi bodo trajno izbrisani.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.images.0">
         <source>Purge the image cache</source>

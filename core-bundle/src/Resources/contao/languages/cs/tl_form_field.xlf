@@ -199,6 +199,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.extnd.1">
         <source>Allows everything except special characters which are usually encoded for security reasons: #&lt;&gt;()\=</source>
+        <target>Povolí cokoli kromě speciálních znaků, které jsou běžně zašifrované z bezpečnostních důvodů: #&lt;&gt;()\=</target>
       </trans-unit>
       <trans-unit id="tl_form_field.date.0">
         <source>Date</source>

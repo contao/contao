@@ -213,6 +213,7 @@
       </trans-unit>
       <trans-unit id="tl_user.amg.1">
         <source>Members of these groups can be used in the front end preview.</source>
+        <target>Člani teh skupin so na voljo pri predogledu strani</target>
       </trans-unit>
       <trans-unit id="tl_user.disable.0">
         <source>Deactivate</source>
