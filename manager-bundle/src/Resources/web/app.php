@@ -35,6 +35,11 @@ Request::enableHttpMethodParameterOverride();
 
 // Handle the request
 $request = Request::createFromGlobals();
+
+if ($request->isSecure()) {
+    @ini_set('session.cookie_secure', 'On'); // see #1760
+}
+
 $response = $kernel->handle($request);
 $response->send();
 $kernel->terminate($request, $response);
