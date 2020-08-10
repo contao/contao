@@ -1859,7 +1859,7 @@ class tl_page extends Contao\Backend
 		// The onsubmit_callback has triggered scheduleUpdate(), so run generateSitemap() now
 		$this->generateSitemap();
 
-		if ($dc instanceof Contao\DC_Table)
+		if ($dc)
 		{
 			$dc->invalidateCacheTags();
 		}

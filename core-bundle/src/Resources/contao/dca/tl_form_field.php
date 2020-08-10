@@ -908,7 +908,7 @@ class tl_form_field extends Contao\Backend
 
 		$objVersions->create();
 
-		if ($dc instanceof Contao\DC_Table)
+		if ($dc)
 		{
 			$dc->invalidateCacheTags();
 		}

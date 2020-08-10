@@ -585,7 +585,7 @@ class tl_user_group extends Contao\Backend
 
 		$objVersions->create();
 
-		if ($dc instanceof Contao\DC_Table)
+		if ($dc)
 		{
 			$dc->invalidateCacheTags();
 		}

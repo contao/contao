@@ -15,6 +15,7 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\DcaPickerProviderInterface;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\Image\ResizeConfiguration;
+use FOS\HttpCacheBundle\CacheManager;
 use Imagine\Gd\Imagine;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
@@ -1242,6 +1243,46 @@ abstract class DataContainer extends Backend
 </form>';
 
 		return $return;
+	}
+
+	/**
+	 * Invalidate the cache tags associated with a given DC
+	 *
+	 * Call this whenever an entry is modified (added, updated, deleted).
+	 */
+	public function invalidateCacheTags()
+	{
+		if (!System::getContainer()->has('fos_http_cache.cache_manager'))
+		{
+			return;
+		}
+
+		$ns = 'contao.db.';
+		$tags = array($ns . $this->table, $ns . $this->table . '.' . $this->id);
+
+		// Trigger the oninvalidate_cache_tags_callback
+		if (\is_array($GLOBALS['TL_DCA'][$this->table]['config']['oninvalidate_cache_tags_callback']))
+		{
+			foreach ($GLOBALS['TL_DCA'][$this->table]['config']['oninvalidate_cache_tags_callback'] as $callback)
+			{
+				if (\is_array($callback))
+				{
+					$this->import($callback[0]);
+					$tags = $this->{$callback[0]}->{$callback[1]}($this, $tags);
+				}
+				elseif (\is_callable($callback))
+				{
+					$tags = $callback($this, $tags);
+				}
+			}
+		}
+
+		// Make sure tags are unique and empty ones are removed
+		$tags = array_filter(array_unique($tags));
+
+		/** @var CacheManager $cacheManager */
+		$cacheManager = System::getContainer()->get('fos_http_cache.cache_manager');
+		$cacheManager->invalidateTags($tags);
 	}
 
 	/**
