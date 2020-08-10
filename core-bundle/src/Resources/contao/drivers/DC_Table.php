@@ -6198,11 +6198,11 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 	/**
 	 * Add the parent record to the list of cache tags to be invalidated
+	 *
+	 * @param array $tags
 	 */
-	public function invalidateCacheTags()
+	public function invalidateCacheTags(array $tags=array())
 	{
-		$tags = array();
-
 		if ($this->ptable && $this->activeRecord && $this->activeRecord->pid > 0)
 		{
 			$tags[] = 'contao.db.' . $this->ptable;
