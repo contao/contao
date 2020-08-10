@@ -45,11 +45,6 @@ class ContentModule extends ContentElement
 			return '';
 		}
 
-		$objModule->typePrefix = 'ce_';
-
-		/** @var Module $objModule */
-		$objModule = new $strClass($objModule, $this->strColumn);
-
 		$cssID = StringUtil::deserialize($objModule->cssID, true);
 
 		// Override the CSS ID (see #305)
@@ -65,6 +60,10 @@ class ContentModule extends ContentElement
 		}
 
 		$objModule->cssID = $cssID;
+		$objModule->typePrefix = 'ce_';
+
+		/** @var Module $objModule */
+		$objModule = new $strClass($objModule, $this->strColumn);
 
 		// Tag the response
 		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
