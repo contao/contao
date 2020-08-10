@@ -6195,6 +6195,22 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 		return $attributes;
 	}
+
+	/**
+	 * Add the parent record to the list of cache tags to be invalidated
+	 */
+	public function invalidateCacheTags()
+	{
+		$tags = array();
+
+		if ($this->ptable && $this->activeRecord && $this->activeRecord->pid > 0)
+		{
+			$tags[] = 'contao.db.' . $this->ptable;
+			$tags[] = 'contao.db.' . $this->ptable . '.' . $this->activeRecord->pid;
+		}
+
+		parent::invalidateCacheTags($tags);
+	}
 }
 
 class_alias(DC_Table::class, 'DC_Table');
