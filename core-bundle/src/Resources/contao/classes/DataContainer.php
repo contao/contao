@@ -78,12 +78,6 @@ abstract class DataContainer extends Backend
 	protected $root;
 
 	/**
-	 * Name of the parent table
-	 * @var string
-	 */
-	protected $ptable;
-
-	/**
 	 * WHERE clause of the database query
 	 * @var array
 	 */
@@ -1266,10 +1260,10 @@ abstract class DataContainer extends Backend
 		$ns = 'contao.db.';
 		$tags = array($ns . $this->table, $ns . $this->table . '.' . $this->id);
 
-		if ($this->ptable && $this->activeRecord && $this->activeRecord->pid > 0)
+		if ($GLOBALS['TL_DCA'][$this->table]['config']['ptable'] && $this->activeRecord && $this->activeRecord->pid > 0)
 		{
-			$tags[] = $ns . $this->ptable;
-			$tags[] = $ns . $this->ptable . '.' . $this->activeRecord->pid;
+			$tags[] = $ns . $GLOBALS['TL_DCA'][$this->table]['config']['ptable'];
+			$tags[] = $ns . $GLOBALS['TL_DCA'][$this->table]['config']['ptable'] . '.' . $this->activeRecord->pid;
 		}
 
 		// Trigger the oninvalidate_cache_tags_callback

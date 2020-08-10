@@ -32,6 +32,12 @@ use Symfony\Component\HttpFoundation\Session\Session;
 class DC_Table extends DataContainer implements \listable, \editable
 {
 	/**
+	 * Name of the parent table
+	 * @var string
+	 */
+	protected $ptable;
+
+	/**
 	 * Names of the child tables
 	 * @var array
 	 */
