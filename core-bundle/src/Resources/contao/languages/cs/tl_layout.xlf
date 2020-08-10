@@ -243,9 +243,11 @@
       </trans-unit>
       <trans-unit id="tl_layout.lightboxSize.0">
         <source>Lightbox image size</source>
+        <target>Velikost obrázku v lightboxu</target>
       </trans-unit>
       <trans-unit id="tl_layout.lightboxSize.1">
         <source>Here you can select an image size for the images shown in the lightbox.</source>
+        <target>Zde můžete vybrat velikost obrázku, které se zobrazuje v lightboxu.</target>
       </trans-unit>
       <trans-unit id="tl_layout.defaultImageDensities.0">
         <source>Default image pixel densities</source>
@@ -517,27 +519,35 @@
       </trans-unit>
       <trans-unit id="tl_layout.analytics_matomo">
         <source>Matomo</source>
+        <target>Matomo</target>
       </trans-unit>
       <trans-unit id="tl_layout.new.0">
         <source>New</source>
+        <target>Nové</target>
       </trans-unit>
       <trans-unit id="tl_layout.new.1">
         <source>Create a new page layout</source>
+        <target>Vytvořit nový vzhled stránky</target>
       </trans-unit>
       <trans-unit id="tl_layout.show">
         <source>Show the details of page layout ID %s</source>
+        <target>Zobrazit podrobnosti ke vzhledu stránky ID %s</target>
       </trans-unit>
       <trans-unit id="tl_layout.edit">
         <source>Edit page layout ID %s</source>
+        <target>Upravit vzhled stránky ID %s</target>
       </trans-unit>
       <trans-unit id="tl_layout.copy">
         <source>Duplicate page layout ID %s</source>
+        <target>Duplikovat vzhled stránky ID %s</target>
       </trans-unit>
       <trans-unit id="tl_layout.cut">
         <source>Move page layout ID %s</source>
+        <target>Přesunout vzhled stránky ID %s</target>
       </trans-unit>
       <trans-unit id="tl_layout.delete">
         <source>Delete page layout ID %s</source>
+        <target>Smazat vzhled stránky ID %s</target>
       </trans-unit>
     </body>
   </file>

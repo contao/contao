@@ -7,6 +7,7 @@
       </trans-unit>
       <trans-unit id="XPL.insertTags.0.1">
         <source>For more information about TinyMCE please visit &lt;a href=&quot;http://www.tinymce.com/&quot; title=&quot;TinyMCE by moxiecode&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;http://www.tinymce.com/&lt;/a&gt;.</source>
+        <target>برای اطلاعات بیشتر درباره TinyMCE از &lt;a href=&quot;http://www.tinymce.com/&quot; title=&quot;TinyMCE by moxiecode&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;http://www.tinymce.com/&lt;/a&gt; بازدید کنید.</target>
       </trans-unit>
       <trans-unit id="XPL.insertTags.1.0">
         <source>Insert tags</source>
@@ -14,6 +15,7 @@
       </trans-unit>
       <trans-unit id="XPL.insertTags.1.1">
         <source>For more information on insert tags please visit &lt;a href=&quot;https://docs.contao.org/books/manual/current/en/04-managing-content/insert-tags.html&quot; title=&quot;Contao online documentation&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://docs.contao.org/books/manual/current/en/04-managing-content/insert-tags.html&lt;/a&gt;.</source>
+        <target>برای اطلاعات بیشتر درباره تگ‌ها از &lt;a href=&quot;https://docs.contao.org/books/manual/current/en/04-managing-content/insert-tags.html&quot; title=&quot;Contao online documentation&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://docs.contao.org/books/manual/current/en/04-managing-content/insert-tags.html&lt;/a&gt; بازدید کنید.</target>
       </trans-unit>
       <trans-unit id="XPL.insertTags.2.0">
         <source>Code editor</source>
@@ -21,6 +23,7 @@
       </trans-unit>
       <trans-unit id="XPL.insertTags.2.1">
         <source>For more information about Ace please visit &lt;a href=&quot;http://ace.c9.io&quot; title=&quot;Ace - The High Performance Code Editor for the Web&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;http://ace.c9.io&lt;/a&gt;.</source>
+        <target>برای اطلاعات بیشتر درباره Ace از &lt;a href=&quot;http://ace.c9.io&quot; title=&quot;Ace - The High Performance Code Editor for the Web&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;http://ace.c9.io&lt;/a&gt; بازدید کنید.</target>
       </trans-unit>
       <trans-unit id="XPL.dateFormat.0.0">
         <source>colspan</source>

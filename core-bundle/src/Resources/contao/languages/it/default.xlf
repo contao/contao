@@ -59,6 +59,7 @@
       </trans-unit>
       <trans-unit id="ERR.extnd">
         <source>For security reasons you can not use the following characters here: #&lt;&gt;()\=</source>
+        <target>Per motivi di sicurezza non puoi utilizzare i seguenti caratteri: =&lt;&gt;&amp;/()#</target>
       </trans-unit>
       <trans-unit id="ERR.email">
         <source>Please enter a valid e-mail address!</source>
@@ -222,6 +223,7 @@
       </trans-unit>
       <trans-unit id="ERR.forbiddenExtensions">
         <source>The following file extensions are not allowed: %s</source>
+        <target>Non sono consentite le seguenti estensioni di file:%s</target>
       </trans-unit>
       <trans-unit id="ERR.invalidPages">
         <source>Your selection contains invalid page IDs!</source>
@@ -233,6 +235,7 @@
       </trans-unit>
       <trans-unit id="ERR.circularPicker">
         <source>Invalid selection (circular reference)!</source>
+        <target>Selezione non valida (riferimento circolare)!</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
         <source>None of the active website root pages without an explicit DNS setting have the language fallback option set.</source>
@@ -308,6 +311,7 @@
       </trans-unit>
       <trans-unit id="ERR.moduleWithoutColumn">
         <source>Please assign all modules to a column!</source>
+        <target>Si prega di assegnare tutti i moduli a una colonna!</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -647,9 +651,11 @@
       </trans-unit>
       <trans-unit id="FFL.range.0">
         <source>Range slider</source>
+        <target>Range slider</target>
       </trans-unit>
       <trans-unit id="FFL.range.1">
         <source>A range slider to select a value or range of values between a specified min and max.</source>
+        <target>Un dispositivo di scorrimento dell'intervallo per selezionare un valore o un intervallo di valori tra un minimo e un massimo specificati.</target>
       </trans-unit>
       <trans-unit id="FFL.hidden.0">
         <source>Hidden field</source>
@@ -721,6 +727,7 @@
       </trans-unit>
       <trans-unit id="PTY.error_401.1">
         <source>If a visitor requests a protected page without being authenticated, a 401 error page will be loaded instead.</source>
+        <target>Se un visitatore richiede una pagina protetta senza essere autenticato, verrà caricata una pagina di errore 401.</target>
       </trans-unit>
       <trans-unit id="PTY.error_403.0">
         <source>403 Access denied</source>
@@ -728,6 +735,7 @@
       </trans-unit>
       <trans-unit id="PTY.error_403.1">
         <source>If a member requests a protected page without permission, a 403 error page will be loaded instead.</source>
+        <target>Se un membro richiede una pagina protetta senza autorizzazione, verrà caricata una pagina di errore 403.</target>
       </trans-unit>
       <trans-unit id="PTY.error_404.0">
         <source>404 Page not found</source>
@@ -735,6 +743,7 @@
       </trans-unit>
       <trans-unit id="PTY.error_404.1">
         <source>If a visitor requests a non-existent page, a 404 error page will be loaded instead.</source>
+        <target>Se un visitatore richiede una pagina inesistente, verrà caricata una pagina di errore 404.</target>
       </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
@@ -1226,6 +1235,7 @@
       </trans-unit>
       <trans-unit id="MSC.mw_column">
         <source>Layout section</source>
+        <target>Sezione layout</target>
       </trans-unit>
       <trans-unit id="MSC.mw_enable">
         <source>Enable/disable the module</source>
@@ -1413,6 +1423,7 @@
       </trans-unit>
       <trans-unit id="MSC.all.1">
         <source>Edit multiple elements at once</source>
+        <target>Modifica più elementi contemporaneamente</target>
       </trans-unit>
       <trans-unit id="MSC.all_override.0">
         <source>Override multiple</source>
@@ -1420,6 +1431,7 @@
       </trans-unit>
       <trans-unit id="MSC.all_override.1">
         <source>Override multiple elements at once</source>
+        <target>Sostituisci più elementi contemporaneamente</target>
       </trans-unit>
       <trans-unit id="MSC.all_fields.0">
         <source>Available fields</source>
@@ -1611,6 +1623,7 @@
       </trans-unit>
       <trans-unit id="MSC.deleteConfirm">
         <source>Do you really want to delete element ID %s?</source>
+        <target>Sicuro di voler eliminare l'elemento ID %s?</target>
       </trans-unit>
       <trans-unit id="MSC.delAllConfirm">
         <source>Do you really want to delete the selected records?</source>
@@ -2274,6 +2287,7 @@
       </trans-unit>
       <trans-unit id="MSC.sKeywordHint">
         <source>Note that keywords shorter than %s characters and without a modifier have been ignored.</source>
+        <target>Tieni presente che le parole chiave più brevi di %s caratteri sono state ignorate.</target>
       </trans-unit>
       <trans-unit id="MSC.seconds">
         <source>seconds</source>
@@ -2553,27 +2567,35 @@
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesLabel">
         <source>Backup codes</source>
+        <target>Codici di backup</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesShow">
         <source>Show backup codes</source>
+        <target>Mostra i codici di backup</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesExplain">
         <source>Backup codes can be used to access your account if you have lost your authentication device and cannot generate two-factor codes anymore. Treat your backup codes with the same level of attention as your password! It is recommended to save them with a password manager such as Lastpass, 1Password or Keeper.</source>
+        <target>I codici di backup possono essere utilizzati per accedere al tuo account se hai perso il dispositivo di autenticazione e non riesci più a generare codici a due fattori. Tratta i tuoi codici di backup con lo stesso livello di attenzione della tua password! Si consiglia di salvarli con un gestore di password come Lastpass, 1Password o Keeper.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesInfo">
         <source>Put the codes in a safe spot. If you lose your authentication device and do not have backup codes, you cannot access your account anymore!</source>
+        <target>Metti i codici in un posto sicuro. Se perdi il tuo dispositivo di autenticazione e non hai codici di backup, non puoi più accedere al tuo account!</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesGenerate">
         <source>Generate backup codes</source>
+        <target>Genera codici di backup</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesRegenerate">
         <source>Regenerate backup codes</source>
+        <target>Rigenera i codici di backup</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesRegenerateInfo">
         <source>When you regenerate the backup codes, your old codes will not work anymore.</source>
+        <target>Quando si rigenerano i codici di backup, i vecchi codici non funzioneranno più.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorTrustDevice">
         <source>Trust this device</source>
+        <target>Fidati di questo dispositivo</target>
       </trans-unit>
       <trans-unit id="MSC.userTemplateEditor">
         <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
@@ -2585,9 +2607,11 @@
       </trans-unit>
       <trans-unit id="MSC.userThemeImport">
         <source>There is at least one regular user with permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, these users implicitly have full control over the system!</source>
+        <target>Esiste almeno un utente normale con il permesso di importare temi. Poiché i temi possono contenere modelli arbitrari e i modelli sono file PHP, questi utenti implicitamente hanno il pieno controllo del sistema!</target>
       </trans-unit>
       <trans-unit id="MSC.groupThemeImport">
         <source>There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!</source>
+        <target>Esiste almeno un gruppo di utenti che concede l'autorizzazione per importare temi. Poiché i temi possono contenere modelli arbitrari e i modelli sono file PHP, gli utenti di questi gruppi implicitamente hanno il pieno controllo del sistema!</target>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
@@ -2599,24 +2623,31 @@
       </trans-unit>
       <trans-unit id="MSC.internalCssEditor">
         <source>The internal CSS editor has been deprecated and will be removed in one of the next Contao versions! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
+        <target>L'editor CSS interno è stato deprecato e verrà rimosso in una delle prossime versioni di Contao! Considera di esportare i fogli di stile esistenti e di aggiungerli nuovamente al layout di pagina come fogli di stile esterni.</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
+        <target>Anteprima dei risultati di ricerca di Google</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.1">
         <source>Here you can preview the meta data in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
+        <target>Qui puoi visualizzare in anteprima i metadati nei risultati di ricerca di Google. Altri motori di ricerca potrebbero mostrare testi più lunghi o ritagliare in una posizione diversa.</target>
       </trans-unit>
       <trans-unit id="MSC.clearTrustedDevices">
         <source>Clear trusted devices</source>
+        <target>Cancella dispositivi attendibili</target>
       </trans-unit>
       <trans-unit id="MSC.trustedDevices">
         <source>Trusted devices</source>
+        <target>Dispositivi affidabili</target>
       </trans-unit>
       <trans-unit id="MSC.noTrustedDevices">
         <source>Currently there are no trusted devices.</source>
+        <target>Attualmente non ci sono dispositivi fidati.</target>
       </trans-unit>
       <trans-unit id="MSC.device">
         <source>Device</source>
+        <target>Dispositivo</target>
       </trans-unit>
       <trans-unit id="MSC.browser">
         <source>Browser</source>
@@ -2624,12 +2655,15 @@
       </trans-unit>
       <trans-unit id="MSC.operatingSystem">
         <source>Operating system</source>
+        <target>Sistema operativo</target>
       </trans-unit>
       <trans-unit id="MSC.openToolbar">
         <source>Open the Contao toolbar</source>
+        <target>Apri la barra degli strumenti Contao</target>
       </trans-unit>
       <trans-unit id="MSC.closeToolbar">
         <source>Close the Contao toolbar</source>
+        <target>Chiudi la barra degli strumenti Contao</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2757,6 +2791,7 @@
       </trans-unit>
       <trans-unit id="DCA.all.1">
         <source>Edit multiple elements at once</source>
+        <target>Modifica più elementi contemporaneamente</target>
       </trans-unit>
       <trans-unit id="DCA.toggleNodes.0">
         <source>Toggle all</source>
@@ -2772,33 +2807,43 @@
       </trans-unit>
       <trans-unit id="DCA.new.1">
         <source>Create a new element</source>
+        <target>Crea un nuovo elemento</target>
       </trans-unit>
       <trans-unit id="DCA.show">
         <source>Show the details of element ID %s</source>
+        <target>Mostra i dettagli dell'elemento ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.edit">
         <source>Edit element ID %s</source>
+        <target>Modifica l'elemento ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.cut">
         <source>Move element ID %s</source>
+        <target>Sposta elemento ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.copy">
         <source>Duplicate element ID %s</source>
+        <target>Duplica elemento ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.delete">
         <source>Delete element ID %s</source>
+        <target>Elimina elemento ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.drag">
         <source>Drag element ID %s</source>
+        <target>Trascina elemento ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.editheader.0">
         <source>Edit the element settings</source>
+        <target>Modifica le impostazioni dell'elemento</target>
       </trans-unit>
       <trans-unit id="DCA.editheader.1">
         <source>Edit the settings of element ID %s</source>
+        <target>Modifica le impostazioni dell'elemento ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.toggle">
         <source>Publish/unpublish element ID %s</source>
+        <target>Pubblica/nascondi elemento ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.pasteinto.0">
         <source>Paste at the top</source>
@@ -2806,6 +2851,7 @@
       </trans-unit>
       <trans-unit id="DCA.pasteinto.1">
         <source>Paste into element ID %s</source>
+        <target>Incolla dentro elemento ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.pasteafter.0">
         <source>Paste at the top</source>
@@ -2813,21 +2859,27 @@
       </trans-unit>
       <trans-unit id="DCA.pasteafter.1">
         <source>Paste after element ID %s</source>
+        <target>Incolla dopo elemento ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.pastenew.0">
         <source>Create a new element at the top</source>
+        <target>Crea una nuovo elemento in cima</target>
       </trans-unit>
       <trans-unit id="DCA.pastenew.1">
         <source>Create a new element after element ID %s</source>
+        <target>Crea un nuovo elemento dopo l'elemento ID %s</target>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.summary">
         <source>Indexed %d URI(s) successfully. %d failed.</source>
+        <target>inidizzati %d url con successo. %d falliti.</target>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.warning">
         <source>%d URI(s) were skipped (if you are missing one, checkout the debug log).</source>
+        <target>%d Gli URI sono stati ignorati (se ne manca uno, consulta il registro di debug).</target>
       </trans-unit>
       <trans-unit id="CRAWL.brokenLinkChecker.summary">
         <source>Checked %d link(s) successfully. %d were broken.</source>
+        <target>Verificata %d link con successo. %d erano interrotti.</target>
       </trans-unit>
     </body>
   </file>

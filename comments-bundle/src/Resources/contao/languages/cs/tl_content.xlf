@@ -43,9 +43,11 @@
       </trans-unit>
       <trans-unit id="tl_content.com_disableCaptcha.0">
         <source>Disable spam protection</source>
+        <target>Vypnout ochranu proti spamu</target>
       </trans-unit>
       <trans-unit id="tl_content.com_disableCaptcha.1">
         <source>Here you can disable the spam protection (not recommended).</source>
+        <target>Zde můžete vypnout obranu proti spamu (nedoporučené).</target>
       </trans-unit>
       <trans-unit id="tl_content.com_template.0">
         <source>Comments template</source>
@@ -53,6 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_content.com_template.1">
         <source>Here you can select a comments template.</source>
+        <target>Zde můžete vybrat předlohu pro komentáře</target>
       </trans-unit>
       <trans-unit id="tl_content.comment_legend">
         <source>Comment settings</source>

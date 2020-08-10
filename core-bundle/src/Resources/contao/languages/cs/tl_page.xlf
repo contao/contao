@@ -91,12 +91,15 @@
       </trans-unit>
       <trans-unit id="tl_page.favicon.0">
         <source>Favicon</source>
+        <target>Favicon</target>
       </trans-unit>
       <trans-unit id="tl_page.favicon.1">
         <source>Here you can select a favicon for the website.</source>
+        <target>Zde můžet vybrat faviconu webové stránky.</target>
       </trans-unit>
       <trans-unit id="tl_page.robotsTxt.0">
         <source>Custom robots.txt content</source>
+        <target>Vlastní obsah robots.txt</target>
       </trans-unit>
       <trans-unit id="tl_page.robotsTxt.1">
         <source>Here you can enter custom robots.txt content. It may be extended automatically by extensions.</source>
@@ -313,9 +316,11 @@
       </trans-unit>
       <trans-unit id="tl_page.sitemap.0">
         <source>Show in HTML sitemap</source>
+        <target>Zobrazit v HTML mapy stránek</target>
       </trans-unit>
       <trans-unit id="tl_page.sitemap.1">
         <source>Here you can define whether the page is shown in the HTML sitemap.</source>
+        <target>Zde můžete určit, zda se stránka objeví v mapě stránky HTML.</target>
       </trans-unit>
       <trans-unit id="tl_page.hide.0">
         <source>Hide from navigation</source>
@@ -331,6 +336,7 @@
       </trans-unit>
       <trans-unit id="tl_page.guests.1">
         <source>Hide the page if a member is logged in.</source>
+        <target>Skrýt stránku, pokud je člen přihlášený.</target>
       </trans-unit>
       <trans-unit id="tl_page.tabindex.0">
         <source>Tab index</source>
@@ -475,6 +481,7 @@
       </trans-unit>
       <trans-unit id="tl_page.new.0">
         <source>New</source>
+        <target>Nové</target>
       </trans-unit>
       <trans-unit id="tl_page.new.1">
         <source>Create a new page</source>

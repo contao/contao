@@ -390,6 +390,7 @@
       </trans-unit>
       <trans-unit id="tl_content.customTpl.0">
         <source>Content element template</source>
+        <target>قابل المنت محتوایی</target>
       </trans-unit>
       <trans-unit id="tl_content.customTpl.1">
         <source>Here you can select the content element template.</source>

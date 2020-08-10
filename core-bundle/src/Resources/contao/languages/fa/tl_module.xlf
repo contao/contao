@@ -83,9 +83,11 @@
       </trans-unit>
       <trans-unit id="tl_module.customTpl.0">
         <source>Module template</source>
+        <target>قالب ماژول</target>
       </trans-unit>
       <trans-unit id="tl_module.customTpl.1">
         <source>Here you can select the module template.</source>
+        <target>اینجا می‌توانید قالب ماژول را انتخاب کنید.</target>
       </trans-unit>
       <trans-unit id="tl_module.pages.0">
         <source>Pages</source>
@@ -232,6 +234,7 @@
       </trans-unit>
       <trans-unit id="tl_module.minKeywordLength.0">
         <source>Minimum keyword length</source>
+        <target>کمترین طول کلیدواژه</target>
       </trans-unit>
       <trans-unit id="tl_module.minKeywordLength.1">
         <source>Keywords deceeding the minimum length will be ignored in the search results. Set to 0 to disable.</source>
@@ -262,6 +265,7 @@
       </trans-unit>
       <trans-unit id="tl_module.inColumn.0">
         <source>Layout section</source>
+        <target>بخش چیدمان</target>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.1">
         <source>Please choose the layout section whose articles you want to list.</source>
@@ -404,9 +408,11 @@
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.0">
         <source>Disable spam protection</source>
+        <target>غیرفعال کردن حفاظت اسپم</target>
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.1">
         <source>Here you can disable the spam protection (not recommended).</source>
+        <target>اینجا می‌توانید حفاظت از اسپم را غیرفعال کنید (توصیه نمی‌شود).</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_groups.0">
         <source>Member groups</source>

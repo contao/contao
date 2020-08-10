@@ -43,9 +43,11 @@
       </trans-unit>
       <trans-unit id="tl_content.com_disableCaptcha.0">
         <source>Disable spam protection</source>
+        <target>غیرفعال کردن حفاظت اسپم</target>
       </trans-unit>
       <trans-unit id="tl_content.com_disableCaptcha.1">
         <source>Here you can disable the spam protection (not recommended).</source>
+        <target>اینجا می‌توانید حفاظت از اسپم را غیرفعال کنید (توصیه نمی‌شود).</target>
       </trans-unit>
       <trans-unit id="tl_content.com_template.0">
         <source>Comments template</source>
@@ -53,6 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_content.com_template.1">
         <source>Here you can select a comments template.</source>
+        <target>اینجا می‌توانید قالب دیدگاه‌ها را انتخاب کنید.</target>
       </trans-unit>
       <trans-unit id="tl_content.comment_legend">
         <source>Comment settings</source>

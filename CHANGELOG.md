@@ -2,6 +2,52 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.5] (2020-08-10)
+
+**Fixed issues:**
+
+- [#2103] $this->ptable not available in the DataContainer class ([leofeyer])
+- [#2122] Remove the Contao-Merge-Cache-Control header in the master request ([leofeyer])
+- [#2121] Correctly show the default text form field template ([leofeyer])
+- [#2118] Make cookies secure if the request is secure ([leofeyer])
+- [#2115] Do not add empty CSS classes to the template ([fritzmg])
+- [#2097] Use HTTP status code 303 instead of 307 for redirects ([leofeyer])
+- [#2028] Allow new major versions of two third-party packages ([leofeyer])
+- [#2074] Fix the order of the CSRF and the private response listener ([ausi])
+- [#2091] Check if the username has been submitted in the registration module ([leofeyer])
+- [#2087] Show the picker menu even if there is only one tab ([leofeyer])
+- [#2088] Increase the z-index of the top menu overlay ([leofeyer])
+- [#2086] Also indicate default templates in the custom template menu ([leofeyer])
+- [#2089] Use the input event instead of the keyup event in the preview toolbar ([m-vo])
+- [#2083] Update the Matomo tracking code ([leofeyer])
+- [#2085] Fix the tl_user_group.stop help text ([leofeyer])
+- [#2081] Correctly generate the news/events preview URL in multi-domain mode ([leofeyer])
+- [#2077] Correctly show the front end preview bar for non-admin users ([leofeyer])
+- [#2078] Always render the "go to front end" link without preview fragment ([leofeyer])
+- [#2050] Harden the table options lookup in the Installer class ([m-vo])
+- [#2066] Correctly handle empty manager config files ([aschempp])
+- [#619] Fix a potential error if the URL has a percentage in it ([qzminski], [aschempp])
+- [#2055] Change the JSON-LD type "RegularPage" to "Page" ([ausi])
+- [#2057] Set the singleSRC flag for the Youtube/Vimeo splash screen ([m-vo])
+- [#2056] Use expectExceptionMessage() for non-deprecations ([ausi])
+- [#1486] Fix a memory leak in the resize images command ([ausi])
+- [#2040] Remove redundant comments ([Toflar])
+- [#2039] Add the missing cache invalidations ([Toflar])
+- [#2032] Do not reorder existing DROP INDEX queries to the end ([ausi])
+- [#1982] Add debugging information to the MakeResponsePrivateListener ([Toflar])
+- [#2007] Require at least jQuery 3.5 ([leofeyer])
+- [#2005] Fix the textarea height ([leofeyer])
+- [#1991] Fix warning in SearchIndexSubscriberTest ([fritzmg])
+- [#1988] Update terminal42/service-annotation-bundle ([aschempp])
+- [#1978] Reset the preview toolbar styles ([aschempp])
+- [#1966] Do not run migration if tl_image_size table is missing ([aschempp])
+- [#1967] Allow ResourceFinder in autowiring ([aschempp])
+- [#1952] Add the missing ContentModel annotations ([fritzmg])
+- [#1950] Remove two left-over requirements ([leofeyer])
+- [#1943] Revert 'Remove symfony/monolog-bundle dependency from functional tests' ([leofeyer])
+- [#1942] Fix a wrong return value in the back end locale listener test ([leofeyer])
+- [#1932] Improve the error message for unsupported image formats ([ausi])
+
 ## [4.9.4] (2020-07-09)
 
 **Fixed issues:**
@@ -57,7 +103,7 @@ This project adheres to [Semantic Versioning].
 - [#1701] Improve the deprecation message of the AbstractLockedCommand ([Blog404DE])
 - [#1733] Fix the indentation in the event_list.html5 template ([leofeyer])
 - [#1732] Redirect if a news/event has an external target and is called via the default URL ([leofeyer])
-- [#1727] Move the meta data fields back up in the news/events module ([leofeyer])
+- [#1727] Move the metadata fields back up in the news/events module ([leofeyer])
 - [#1715] Re-add the redirect in the BackendUser::authenticate() method ([leofeyer])
 - [#1712] Remove the broken storeFrontendReferer() method ([leofeyer])
 - [#1711] Fix fixed position of toolbar elements ([fritzmg])
@@ -159,7 +205,7 @@ This project adheres to [Semantic Versioning].
 
 - [#1348] Correctly align the wizard icon ([leofeyer])
 - [#1336] Make the contao.search.indexer service public ([leofeyer])
-- [#1250] Use a custom schema for the search indexing meta data ([Toflar])
+- [#1250] Use a custom schema for the search indexing metadata ([Toflar])
 - [#1335] Correctly highlight phrases in the search results ([leofeyer])
 - [#1323] Adjust the SERP widget to the Google search results ([leofeyer])
 - [#1299] Fix several trusted device issues ([bytehead])
@@ -224,17 +270,17 @@ This project adheres to [Semantic Versioning].
 - [#1123] Do not strip forms in the ModuleArticle::generatePdf() method ([leofeyer])
 - [#1124] Rename "account settings" to "group settings" for groups ([leofeyer])
 - [#1115] Test the service arguments more accurately ([leofeyer])
-- [#1101] Refactor the back end main menu so it becomes a regular Knp menu ([leofeyer])
+- [#1101] Refactor the back end main menu, so it becomes a regular Knp menu ([leofeyer])
 - [#714] Add a universal table picker ([aschempp])
 - [#1085] Add support for the new bundle structure ([aschempp])
 - [#1078] Correctly reset the necessary services ([aschempp])
 - [#1094] Upgrade to PHPStan 0.12 ([leofeyer])
 - [#1080] Replace Guzzle with Symfony's HttpClient ([Toflar])
 - [#1086] Ignore the .github folder when installing from dist ([leofeyer])
-- [#718] Use cache strategy to merge fragment caching into main page ([aschempp])
+- [#718] Use the cache strategy to merge fragment caching into the main page ([aschempp])
 - [#1063] Add support for invokable listeners and method validation ([aschempp])
 - [#603] Add an abstract controller for common service tasks ([aschempp])
-- [#1055] Hide the meta data field when editing folders ([leofeyer])
+- [#1055] Hide the metadata field when editing folders ([leofeyer])
 - [#1045] Add @internal to what is not covered by our BC promise ([leofeyer])
 - [#1053] Do not add the X-Forwarded-Host in Environment::url() anymore ([leofeyer])
 - [#1058] Do not use Chosen in the meta wizard anymore ([leofeyer])
@@ -313,7 +359,7 @@ This project adheres to [Semantic Versioning].
 - [#1148] Rename "File location" to "Path" ([leofeyer])
 - [#1147] Add "contao.editable_files" to the configuration ([leofeyer])
 - [#1131] Fix a method name in the TwoFactorFrontendListenerTest class ([bytehead])
-- [#1128] Use the version callbacks to backup and restore file contents ([leofeyer])
+- [#1128] Use the version callbacks to back up and restore file contents ([leofeyer])
 - [#1126] Remove the registerCommands() methods ([leofeyer])
 - [#1092] Fix the SERP preview ([leofeyer])
 - [#1120] Only check $this->admin in the BackendUser class ([leofeyer])
@@ -328,11 +374,12 @@ This project adheres to [Semantic Versioning].
 - [#1046] Fix the height of the meta wizard button ([leofeyer])
 - [#1050] Use Throwable instead of Exception in the exception and error listeners ([leofeyer])
 - [#1033] Disable auto cache control of the Symfony SessionListener ([Toflar])
-- [#1013] BackendAccessVoter ensure string when checking for supported attribute ([AndreasA])
+- [#1013] Check the attribute type the BackendAccessVoter::supports() method ([AndreasA])
 - [#1010] Fix the Doctrine platform recognition ([leofeyer])
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.5]: https://github.com/contao/contao/releases/tag/4.9.5
 [4.9.4]: https://github.com/contao/contao/releases/tag/4.9.4
 [4.9.3]: https://github.com/contao/contao/releases/tag/4.9.3
 [4.9.2]: https://github.com/contao/contao/releases/tag/4.9.2
@@ -359,6 +406,47 @@ This project adheres to [Semantic Versioning].
 [Tastaturberuf]: https://github.com/Tastaturberuf
 [Toflar]: https://github.com/Toflar
 [xchs]: https://github.com/xchs
+[#2103]: https://github.com/contao/contao/pull/2103
+[#2122]: https://github.com/contao/contao/pull/2122
+[#2121]: https://github.com/contao/contao/pull/2121
+[#2118]: https://github.com/contao/contao/pull/2118
+[#2115]: https://github.com/contao/contao/pull/2115
+[#2097]: https://github.com/contao/contao/pull/2097
+[#2028]: https://github.com/contao/contao/pull/2028
+[#2074]: https://github.com/contao/contao/pull/2074
+[#2091]: https://github.com/contao/contao/pull/2091
+[#2087]: https://github.com/contao/contao/pull/2087
+[#2088]: https://github.com/contao/contao/pull/2088
+[#2086]: https://github.com/contao/contao/pull/2086
+[#2089]: https://github.com/contao/contao/pull/2089
+[#2083]: https://github.com/contao/contao/pull/2083
+[#2085]: https://github.com/contao/contao/pull/2085
+[#2081]: https://github.com/contao/contao/pull/2081
+[#2077]: https://github.com/contao/contao/pull/2077
+[#2078]: https://github.com/contao/contao/pull/2078
+[#2050]: https://github.com/contao/contao/pull/2050
+[#2066]: https://github.com/contao/contao/pull/2066
+[#619]: https://github.com/contao/contao/pull/619
+[#2055]: https://github.com/contao/contao/pull/2055
+[#2057]: https://github.com/contao/contao/pull/2057
+[#2056]: https://github.com/contao/contao/pull/2056
+[#1486]: https://github.com/contao/contao/pull/1486
+[#2040]: https://github.com/contao/contao/pull/2040
+[#2039]: https://github.com/contao/contao/pull/2039
+[#2032]: https://github.com/contao/contao/pull/2032
+[#1982]: https://github.com/contao/contao/pull/1982
+[#2007]: https://github.com/contao/contao/pull/2007
+[#2005]: https://github.com/contao/contao/pull/2005
+[#1991]: https://github.com/contao/contao/pull/1991
+[#1988]: https://github.com/contao/contao/pull/1988
+[#1978]: https://github.com/contao/contao/pull/1978
+[#1966]: https://github.com/contao/contao/pull/1966
+[#1967]: https://github.com/contao/contao/pull/1967
+[#1952]: https://github.com/contao/contao/pull/1952
+[#1950]: https://github.com/contao/contao/pull/1950
+[#1943]: https://github.com/contao/contao/pull/1943
+[#1942]: https://github.com/contao/contao/pull/1942
+[#1932]: https://github.com/contao/contao/pull/1932
 [#1920]: https://github.com/contao/contao/pull/1920
 [#1894]: https://github.com/contao/contao/pull/1894
 [#1919]: https://github.com/contao/contao/pull/1919

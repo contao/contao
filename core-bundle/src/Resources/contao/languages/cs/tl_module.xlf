@@ -83,9 +83,11 @@
       </trans-unit>
       <trans-unit id="tl_module.customTpl.0">
         <source>Module template</source>
+        <target>Předloha modulu</target>
       </trans-unit>
       <trans-unit id="tl_module.customTpl.1">
         <source>Here you can select the module template.</source>
+        <target>Zde můžete zvolit předlohu modulu.</target>
       </trans-unit>
       <trans-unit id="tl_module.pages.0">
         <source>Pages</source>
@@ -225,15 +227,19 @@
       </trans-unit>
       <trans-unit id="tl_module.contextLength.0">
         <source>Context length</source>
+        <target>Délka obsahu</target>
       </trans-unit>
       <trans-unit id="tl_module.contextLength.1">
         <source>The first field defines the number of characters on the left and right side of each keyword and the second one the overall context length per result.</source>
+        <target>První pole určuje počet znaků na levé a pravé straně každého klíčového slova, a druhé pole definuje celkovou délku výsledku.</target>
       </trans-unit>
       <trans-unit id="tl_module.minKeywordLength.0">
         <source>Minimum keyword length</source>
+        <target>Miminální délka klíčového slova</target>
       </trans-unit>
       <trans-unit id="tl_module.minKeywordLength.1">
         <source>Keywords deceeding the minimum length will be ignored in the search results. Set to 0 to disable.</source>
+        <target>Délka klíčového slova bude ignorována v těchto výsledcích hledání. Zadejte 0, abyste to vypnuli.</target>
       </trans-unit>
       <trans-unit id="tl_module.perPage.0">
         <source>Items per page</source>
@@ -261,9 +267,11 @@
       </trans-unit>
       <trans-unit id="tl_module.inColumn.0">
         <source>Layout section</source>
+        <target>Oddíl vzhledu</target>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.1">
         <source>Please choose the layout section whose articles you want to list.</source>
+        <target>Vyberte prosím oddíl vzhledu, jehož články chcete zobrazit v seznamu.</target>
       </trans-unit>
       <trans-unit id="tl_module.skipFirst.0">
         <source>Skip items</source>
@@ -403,9 +411,11 @@
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.0">
         <source>Disable spam protection</source>
+        <target>Vypnout ochranu proti spamu</target>
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.1">
         <source>Here you can disable the spam protection (not recommended).</source>
+        <target>Zde můžete vypnout obranu proti spamu (nedoporučené).</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_groups.0">
         <source>Member groups</source>
@@ -608,9 +618,11 @@ Pokud jste o nic takového nepožádali, kontaktujte prosím správce webu.
       </trans-unit>
       <trans-unit id="tl_module.new.0">
         <source>New</source>
+        <target>Nové</target>
       </trans-unit>
       <trans-unit id="tl_module.new.1">
         <source>Create a new module</source>
+        <target>Vytvořit nový modul</target>
       </trans-unit>
       <trans-unit id="tl_module.show">
         <source>Show the details of module ID %s</source>

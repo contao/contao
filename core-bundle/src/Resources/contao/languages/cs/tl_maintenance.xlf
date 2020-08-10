@@ -67,9 +67,11 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.crawl_queue.0">
         <source>Purge the crawl queue</source>
+        <target>Vyčistit crawl queue</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.crawl_queue.1">
         <source>Truncates the &lt;code&gt;tl_crawl_queue&lt;/code&gt; table which stores all the queue information from crawl processes.</source>
+        <target>Vyprázdnit tabulku &lt;code&gt;tl_crawl_queue&lt;/code&gt;, která zaznamenává queue informace z crawlového procesu. </target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.images.0">
         <source>Purge the image cache</source>
@@ -77,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.images.1">
         <source>Removes the automatically generated images and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>Odstraní automaticky vytvořené obrázky a pak vyčistí sdílené meziúložiště. Tím zmizí odkazy ke smazaným zdrojům.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.0">
         <source>Purge the script cache</source>
@@ -84,9 +87,11 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.1">
         <source>Removes the automatically generated &lt;code&gt;.css&lt;/code&gt; and &lt;code&gt;.js&lt;/code&gt; files, recreates the internal style sheets and then purges the shared cache.</source>
+        <target>Odstraní automaticky vytvořené soubory &lt;code&gt;.css&lt;/code&gt; a &lt;code&gt;.js&lt;/code&gt; a znovu vytvoří soubor již definovaných kaskádovitých stylů a pak vyprázdní sdílené meziúložiště.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.pages.0">
         <source>Purge the shared cache</source>
+        <target>Vyčistit sdílené meziúložiště</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.pages.1">
         <source>Removes the cached versions of the front end pages.</source>
@@ -94,6 +99,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.search.0">
         <source>Purge the search results cache</source>
+        <target>Vyčistit meziúložiště pro vyhledávání</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.search.1">
         <source>Removes the cached versions of the search results.</source>
@@ -113,6 +119,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.xml.1">
         <source>Recreates the XML files (sitemaps and feeds) and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>Přetvoří soubory XML (mapu stránky a kanály) a vyčistí sdílené meziúložiště. Tím zmizí odkazy ke smazaným zdrojům. </target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.0">
         <source>Recreate the symlinks</source>
@@ -124,39 +131,51 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.crawler">
         <source>Crawler</source>
+        <target>Crawler</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.startCrawling">
         <source>Start crawling</source>
+        <target>Spustit crawling</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlSubscribers.0">
         <source>Enabled features</source>
+        <target>Povolit funkce</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlSubscribers.1">
         <source>The crawler crawls all URLs it finds. Here you can decide what to do with these results.</source>
+        <target>Crawler projde všechny linky. Zde pak můžete rozhodnout, jak naložíte s danými výsledky.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlMember.0">
         <source>Front end member</source>
+        <target>Člen frontendu</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlMember.1">
         <source>Automatically log in a front end member to index protected pages.</source>
+        <target>Automaticky přihlásit frontendového člena, aby se daly indikovat chráněné stránky.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlWaitToBeFinished">
         <source>The crawler is currently working. Please wait for it to finish to see the results.</source>
+        <target>Crawler zrovna pracuje. Počkejte prosím, než se zobrazí výsledky.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlDownloadDebugLog">
         <source>Download the debug log</source>
+        <target>Stáhnout protokol vývojářského módu</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlDownloadSubscriberLog">
         <source>Download the log</source>
+        <target>Stáhnout protokol</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlSubscriberNames.search-index">
         <source>Update the search index</source>
+        <target>Zaktualizovat index vyhledávání</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlSubscriberNames.broken-link-checker">
         <source>Check for broken links</source>
+        <target>Zkontrolovat poškozené odkazy</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlMaintenance">
         <source>Crawling is not possible while the maintenance mode is enabled.</source>
+        <target>Crawling není možné provádět, dokud je zapnutý Bezpečnostní mód</target>
       </trans-unit>
     </body>
   </file>
