@@ -715,7 +715,7 @@ class tl_member extends Contao\Backend
 
 		$objVersions->create();
 
-		if ($dc)
+		if ($dc instanceof Contao\DC_Table)
 		{
 			$dc->invalidateCacheTags();
 		}

@@ -1100,7 +1100,7 @@ class tl_news extends Contao\Backend
 		// The onsubmit_callback has triggered scheduleUpdate(), so run generateFeed() now
 		$this->generateFeed();
 
-		if ($dc)
+		if ($dc instanceof Contao\DC_Table)
 		{
 			$dc->invalidateCacheTags();
 		}
