@@ -71,6 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.requireLogin.1">
         <source>Allow only authenticated members to create comments.</source>
+        <target>Povolit komentování jen ověřeným členům.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.disableCaptcha.0">
         <source>Disable the security question</source>
@@ -194,6 +195,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.1">
         <source>Manage calendar feeds</source>
+        <target>Spravovat kanály kalendáře</target>
       </trans-unit>
     </body>
   </file>

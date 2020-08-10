@@ -79,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_page.redirectBack.1">
         <source>Redirect the member back to the last page visited instead of the redirect page.</source>
+        <target>Reindirizzare il membro all'ultima pagina visitata anziché alla pagina di reindirizzamento.</target>
       </trans-unit>
       <trans-unit id="tl_page.fallback.0">
         <source>Language fallback</source>
@@ -101,8 +102,7 @@
         <target>Indirizzo e-mail dell'amministratore del sito</target>
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.1">
-        <source>Auto-generated messages like subscription confirmation e-mails will be sent to this address.</source>
-        <target>I messaggi generati automaticamente, come ad esempio conferma iscrizione via e-mail, saranno inviate a questo indirizzo.</target>
+        <source>This e-mail address will be used to send and receive system messages.</source>
       </trans-unit>
       <trans-unit id="tl_page.dateFormat.0">
         <source>Date format</source>
@@ -294,6 +294,7 @@
       </trans-unit>
       <trans-unit id="tl_page.guests.1">
         <source>Hide the page if a member is logged in.</source>
+        <target>Nascondi la pagina se un membro ha effettuato l'accesso.</target>
       </trans-unit>
       <trans-unit id="tl_page.tabindex.0">
         <source>Tab index</source>

@@ -14,8 +14,7 @@
         <target>نشانی ایمیل مدیر سامانه</target>
       </trans-unit>
       <trans-unit id="tl_settings.adminEmail.1">
-        <source>Auto-generated messages like subscription confirmation e-mails will be sent to this address.</source>
-        <target>پیغام‌های خودکار مانند ایمیل تایید عضویت به این نشانی فرستاده خواهند شد.</target>
+        <source>This e-mail address will be used to send and receive system messages.</source>
       </trans-unit>
       <trans-unit id="tl_settings.dateFormat.0">
         <source>Date format</source>
@@ -63,6 +62,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.disableCron.1">
         <source>Disable the periodic command scheduler and trigger the &lt;em&gt;_contao/cron&lt;/em&gt; route by a real cron job (which you have to set up manually).</source>
+        <target>برنامه دستور دوره‌ای را غیرفعال کنید و مسیر &lt;em&gt;_contao/cron&lt;/em&gt; با یک وظیفه‌ی کرون واقعی فعال کنید (که خودتان به صورت دستی تنظیم کنید).</target>
       </trans-unit>
       <trans-unit id="tl_settings.minifyMarkup.0">
         <source>Minify the markup</source>

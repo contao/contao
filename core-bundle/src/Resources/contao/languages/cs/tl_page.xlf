@@ -79,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_page.redirectBack.1">
         <source>Redirect the member back to the last page visited instead of the redirect page.</source>
+        <target>Přesměrovat uživatele na poslední navštívenou stránku namísto na stránku určenou k přesměrování.</target>
       </trans-unit>
       <trans-unit id="tl_page.fallback.0">
         <source>Language fallback</source>
@@ -101,8 +102,7 @@
         <target>E-mailová adresa administrátora webu</target>
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.1">
-        <source>Auto-generated messages like subscription confirmation e-mails will be sent to this address.</source>
-        <target>Zadejte emailovou adresu administrátora systému</target>
+        <source>This e-mail address will be used to send and receive system messages.</source>
       </trans-unit>
       <trans-unit id="tl_page.dateFormat.0">
         <source>Date format</source>
@@ -274,9 +274,11 @@
       </trans-unit>
       <trans-unit id="tl_page.sitemap.0">
         <source>Show in HTML sitemap</source>
+        <target>Zobrazit v Mapě stránek HTML</target>
       </trans-unit>
       <trans-unit id="tl_page.sitemap.1">
         <source>Here you can define whether the page is shown in the HTML sitemap.</source>
+        <target>Zde můžete určit, zda se stránka objeví v mapě stránky HTML.</target>
       </trans-unit>
       <trans-unit id="tl_page.hide.0">
         <source>Hide from navigation</source>
@@ -292,6 +294,7 @@
       </trans-unit>
       <trans-unit id="tl_page.guests.1">
         <source>Hide the page if a member is logged in.</source>
+        <target>Skrýt stránku, pokud je člen přihlášený.</target>
       </trans-unit>
       <trans-unit id="tl_page.tabindex.0">
         <source>Tab index</source>

@@ -215,6 +215,7 @@
       </trans-unit>
       <trans-unit id="ERR.pathOnly">
         <source>You can only select files or folders within &quot;%s&quot;!</source>
+        <target>شما فقط می‌توانید فایل‌ها یا فولدرهای داخل «%s» را انتخاب کنید!</target>
       </trans-unit>
       <trans-unit id="ERR.extensionsOnly">
         <source>You can only select &quot;%s&quot; files!</source>
@@ -222,9 +223,11 @@
       </trans-unit>
       <trans-unit id="ERR.forbiddenExtensions">
         <source>The following file extensions are not allowed: %s</source>
+        <target>پسوندها پرونده ذیل مجاز نیستند:‌%s</target>
       </trans-unit>
       <trans-unit id="ERR.invalidPages">
         <source>Your selection contains invalid page IDs!</source>
+        <target>انتخاب شما شامل شناسه‌های برگه نادرست می‌باشد!</target>
       </trans-unit>
       <trans-unit id="ERR.circularReference">
         <source>Invalid redirect target (circular reference)!</source>
@@ -284,9 +287,11 @@
       </trans-unit>
       <trans-unit id="ERR.duplicateSectionTitle">
         <source>Duplicate layout section title &quot;%s&quot;!</source>
+        <target>عنوان بخش چیدمان تکراری &quot;%s&quot;!</target>
       </trans-unit>
       <trans-unit id="ERR.duplicateSectionId">
         <source>Duplicate layout section ID &quot;%s&quot;!</source>
+        <target>شناسه بخش چیدمان تکراری &quot;%s&quot;!</target>
       </trans-unit>
       <trans-unit id="ERR.moduleWithoutColumn">
         <source>Please assign all modules to a column!</source>

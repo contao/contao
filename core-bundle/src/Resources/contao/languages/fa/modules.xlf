@@ -279,6 +279,7 @@
       </trans-unit>
       <trans-unit id="FMD.logout.1">
         <source>Automatically logs out a member</source>
+        <target>به صورت خودکار یک عضو را خارج کن.</target>
       </trans-unit>
       <trans-unit id="FMD.personalData.0">
         <source>Personal data</source>
@@ -286,6 +287,7 @@
       </trans-unit>
       <trans-unit id="FMD.personalData.1">
         <source>Generates a form to edit a member's personal data</source>
+        <target>یک فرم برای ویرایش اطلاعات شخصی عضو ایجاد می‌کند</target>
       </trans-unit>
       <trans-unit id="FMD.registration.0">
         <source>Registration</source>
@@ -293,6 +295,7 @@
       </trans-unit>
       <trans-unit id="FMD.registration.1">
         <source>Generates a member registration form</source>
+        <target>یک فرم ثبت‌نام عضو ایجاد می‌کند</target>
       </trans-unit>
       <trans-unit id="FMD.changePassword.0">
         <source>Change password</source>

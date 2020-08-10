@@ -1,5 +1,19 @@
 # Change log
 
+## 4.4.51 (2020-08-10)
+
+ * Correctly apply custom CSS in the ContentModule class (see #2082).
+ * Make cookies secure if the request is secure (see #2117).
+ * Show the module type if name is not available (see #2107).
+ * Use getClassFromTable() in the Model::createModelFromDbResult() method (see #2075).
+ * Pass the column to the getArticle() method in the ContentArticle class (see #2076).
+ * Show the filename in the versions overview (see #2034).
+ * Correctly generate the filter menu if the breadcrumb menu is active (see #2036).
+ * Add the CSV mime type and set Content-Type in File::sendToBrowser() (see #2020).
+ * Fix the textarea height (see #2004).
+ * Fix the search highlighting performance (see #2001).
+ * Add a useful exception when a hook class is invalid/missing (see #1949).
+
 ## 4.4.50 (2020-07-09)
 
  * Correctly symlink the TCPDF config file in the monorepo (see #1868).
@@ -36,7 +50,7 @@
  * Correctly check the permissions to create new FAQs (see #1566).
  * Fix duplicate version numbers (see #1564).
  * Only index successful responses (see #1559).
- * Allow to compare against any template if a prefix is unknown (see #1555).
+ * Allow comparing against any template if a prefix is unknown (see #1555).
  * Check if DBAL connection is available from .env configuration (see #1547).
  * Correctly handle URL suffix when redirecting page IDs (see #1503).
  * Revert the document.write() changes (see #1424).
@@ -75,12 +89,12 @@
  * Use a monospace font in the diff view (see #904).
  * If there are no unsynchronized folders, do not show an info message (see #897).
  * Distinguish between XML and HTML sitemap (see #879).
- * Re-index array of modules after unset keys to prevent inconsistency (see #834).
+ * Re-index array of modules after unset keys to prevent inconsistencies (see #834).
 
 ## 4.4.44 (2019-10-01)
 
  * Prevent regular users from enabling the template editor for themselves (see #749).
- * Use the robots meta data to determine whether to add a page to the XML sitemap (see #501).
+ * Use the robots metadata to determine whether to add a page to the XML sitemap (see #501).
  * Do not versionize the file name and path (see #694).
  * Update the comments notification URL if it has changed (see #373).
  * Hide the "generate aliases" button if the alias field has not been enabled (see #771).
@@ -240,7 +254,7 @@
  * Do not re-send the activation mail if auto-registration is disabled (see contao/core-bundle#1526).
  * Remove the app_dev.php/ fragment when generating sitemaps (see contao/core-bundle#1520).
  * Show the 404 page if a numeric aliases has no url suffix (see contao/core-bundle#1508).
- * Fix the schema.org markup so the breadcrumb is linked to the webpage (see contao/core-bundle#1527).
+ * Fix the schema.org markup, so the breadcrumb is linked to the webpage (see contao/core-bundle#1527).
  * Reduce memory consumption during sitemap generation (see contao/core-bundle#1549).
  * Correctly handle spaces when opening nodes in the file picker (see contao/core-bundle#1449).
  * Disable the maintenance mode for local requests (see contao/core-bundle#1492).
@@ -363,7 +377,7 @@
 
 ## 4.4.2 (2017-07-25)
 
- * Adjust the command scheduler listener so it does not rely on request parameters (see contao/core-bundle#955).
+ * Adjust the command scheduler listener, so it does not rely on request parameters (see contao/core-bundle#955).
  * Rewrite the DCA picker (see contao/core-bundle#950).
 
 ## 4.4.1 (2017-07-12)
@@ -414,14 +428,14 @@
 
  * Warn if another user has edited a record when saving it (see contao/core-bundle#809).
  * Optimize the element preview height (see contao/core-bundle#810).
- * Use the file meta data by default when adding an image (see contao/core-bundle#807).
+ * Use the file metadata by default when adding an image (see contao/core-bundle#807).
  * Use the kernel.project_dir parameter (see contao/core-bundle#758).
  * Disable the "publish" checkbox if a parent folder is public (see contao/core-bundle#712).
  * Improve the findByIdOrAlias() method (see contao/core-bundle#729).
  * Make sure that all modules can have a custom template (see contao/core-bundle#704).
  * Remove the popupWidth and popupHeight parameters in the file manager (see contao/core-bundle#727).
  * Remove the cron.txt file (see contao/core-bundle#753).
- * Allow to disable input encoding for a whole DCA (see contao/core-bundle#708).
+ * Allow disabling input encoding for a whole DCA (see contao/core-bundle#708).
  * Add the DCA picker (see contao/core-bundle#755).
  * Allow to manually pass a value to any widget (see contao/core-bundle#674).
  * Only prefix an all numeric alias when standardizing (see contao/core-bundle#707).

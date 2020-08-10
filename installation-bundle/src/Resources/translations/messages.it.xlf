@@ -283,7 +283,7 @@
       </trans-unit>
       <trans-unit id="57">
         <source>admin_email</source>
-        <target>Formato e-mail</target>
+        <target>E-mail</target>
         
       </trans-unit>
       <trans-unit id="58">
@@ -374,6 +374,11 @@
       <trans-unit id="75">
         <source>duplicate_subscriptions_end</source>
         <target>Le voci duplicate sono state eliminate automaticamente. Un backup degli iscritti originali è stato archiviato in &lt;code&gt;tl_newsletter_recipients_backup&lt;/code&gt;.</target>
+        
+      </trans-unit>
+      <trans-unit id="76">
+        <source>misconfigured_database_url_explain</source>
+        <target>Impossibile connettersi al database utilizzando l'URL di connessione presente nella variabile d'ambiente &lt;code&gt;DATABASE_URL&lt;/code&gt;.</target>
         
       </trans-unit>
     </body>

@@ -78,8 +78,7 @@
         <target>Preusmeri na zadnjo obiskano stran.</target>
       </trans-unit>
       <trans-unit id="tl_page.redirectBack.1">
-        <source>Redirect the user back to the last page visited instead of the redirect page.</source>
-        <target>Namesto na refernčno stran, preusmeri uporabnika na zadnjo obiskano stran.</target>
+        <source>Redirect the member back to the last page visited instead of the redirect page.</source>
       </trans-unit>
       <trans-unit id="tl_page.fallback.0">
         <source>Language fallback</source>
@@ -102,8 +101,7 @@
         <target>Naslov elektronske pošte administratorja spletnega mesta</target>
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.1">
-        <source>Auto-generated messages like subscription confirmation e-mails will be sent to this address.</source>
-        <target>Samodejno ustvarjena sporočila, kot npr. potrditev naročila na obveščanje, bodo poslana na ta e-naslov.</target>
+        <source>This e-mail address will be used to send and receive system messages.</source>
       </trans-unit>
       <trans-unit id="tl_page.dateFormat.0">
         <source>Date format</source>
@@ -203,9 +201,11 @@
       </trans-unit>
       <trans-unit id="tl_page.includeCache.0">
         <source>Set cache timeouts</source>
+        <target>Življenjska doba predpomnilnika</target>
       </trans-unit>
       <trans-unit id="tl_page.includeCache.1">
         <source>Set cache timeout values for the page and its subpages.</source>
+        <target>Določite življenjsko dobo strani in podstrani v predpomnilniku.</target>
       </trans-unit>
       <trans-unit id="tl_page.cache.0">
         <source>Server cache timeout</source>
@@ -268,12 +268,12 @@
         <target>CSS razredi (&lt;em&gt;class&lt;/em&gt;) bodo uporabljeni v navigacijskem meniju in oznaki &amp;lt;body&amp;gt;.</target>
       </trans-unit>
       <trans-unit id="tl_page.sitemap.0">
-        <source>Show in sitemap</source>
-        <target>Prikaži v strukturi strani</target>
+        <source>Show in HTML sitemap</source>
+        <target>Prikaži v HTML kazalu strani</target>
       </trans-unit>
       <trans-unit id="tl_page.sitemap.1">
-        <source>Here you can define whether the page is shown in the sitemap.</source>
-        <target>Tu lahko določite v kolikor naj bo stran prikazana v strukturi strani.</target>
+        <source>Here you can define whether the page is shown in the HTML sitemap.</source>
+        <target>Tu lahko določite, če se stran prikaže v HTML kazalu strani</target>
       </trans-unit>
       <trans-unit id="tl_page.hide.0">
         <source>Hide from navigation</source>
@@ -288,8 +288,8 @@
         <target>Prikaži le neprijavljenim</target>
       </trans-unit>
       <trans-unit id="tl_page.guests.1">
-        <source>Hide the page if there is an authenticated user.</source>
-        <target>Skrij to stran, če je uporabnik preverjen.</target>
+        <source>Hide the page if a member is logged in.</source>
+        <target>Skrij stran, če je uporabnik prijavljen</target>
       </trans-unit>
       <trans-unit id="tl_page.tabindex.0">
         <source>Tab index</source>

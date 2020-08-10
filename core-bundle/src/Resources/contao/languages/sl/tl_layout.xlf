@@ -139,9 +139,11 @@
       </trans-unit>
       <trans-unit id="tl_layout.stylesheet.0">
         <source>Internal style sheets</source>
+        <target>Lastne slogovne predloge</target>
       </trans-unit>
       <trans-unit id="tl_layout.stylesheet.1">
         <source>Here you can add internal style sheets to the layout.</source>
+        <target>Tu lahko vnesete lastne slogovne predloge</target>
       </trans-unit>
       <trans-unit id="tl_layout.framework.0">
         <source>CSS framework</source>
@@ -178,12 +180,14 @@
       </trans-unit>
       <trans-unit id="tl_layout.form.css.0">
         <source>Basic forms</source>
+        <target>Osnovni obrazci</target>
       </trans-unit>
       <trans-unit id="tl_layout.form.css.1">
         <source>Adds basic form elements and buttons formatting.</source>
       </trans-unit>
       <trans-unit id="tl_layout.icons.css.0">
         <source>Basic icons</source>
+        <target>Osnovne ikone</target>
       </trans-unit>
       <trans-unit id="tl_layout.icons.css.1">
         <source>Adds basic mime icons for downloads and enclosures.</source>
@@ -209,6 +213,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.loadingOrder.1">
         <source>Here you can select the loading order of the style sheets.</source>
+        <target>Tu lahko določite vrstni red nalaganja slogovnih predlog CSS.</target>
       </trans-unit>
       <trans-unit id="tl_layout.combineScripts.0">
         <source>Combine scripts</source>
@@ -219,9 +224,11 @@
       </trans-unit>
       <trans-unit id="tl_layout.external_first">
         <source>Load external style sheets first</source>
+        <target>Najprej naloži zunanje slogovne predloge</target>
       </trans-unit>
       <trans-unit id="tl_layout.internal_first">
         <source>Load internal style sheets first</source>
+        <target>Najprej naloži lastne slogovne predloge</target>
       </trans-unit>
       <trans-unit id="tl_layout.webfonts.0">
         <source>Google web fonts</source>
@@ -261,6 +268,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.cssClass.1">
         <source>Here you can add custom classes to the &amp;lt;body&amp;gt; tag.</source>
+        <target>Tu lahko vnesete prilagojene razrede CSS za HTML element &amp;lt;body&amp;gt;.</target>
       </trans-unit>
       <trans-unit id="tl_layout.viewport.0">
         <source>Viewport tag</source>
@@ -447,6 +455,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.j_fallback">
         <source>CDN with local fallback</source>
+        <target>CDN with local fallback</target>
       </trans-unit>
       <trans-unit id="tl_layout.mootools_legend">
         <source>MooTools</source>
@@ -462,6 +471,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.moo_fallback">
         <source>CDN with local fallback</source>
+        <target>CDN with local fallback</target>
       </trans-unit>
       <trans-unit id="tl_layout.html5">
         <source>HTML</source>

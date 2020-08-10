@@ -198,8 +198,8 @@
         <target>Razširjen nabor znakov</target>
       </trans-unit>
       <trans-unit id="tl_form_field.extnd.1">
-        <source>Allows everything except special characters which are usually encoded for security reasons (#/()&lt;=&gt;).</source>
-        <target>Dovoljen vseh znakov, z izjemo posebnih, ki so navadno kodirani zavoljo varnostnih razlogov (#/()&lt;=&gt;).</target>
+        <source>Allows everything except special characters which are usually encoded for security reasons: #&lt;&gt;()\=</source>
+        <target>Dovoli vse razen posebnih znakov, ki so pogosto spremenjeni iz varnostnih razlogov: #&lt;&gt;()\=</target>
       </trans-unit>
       <trans-unit id="tl_form_field.date.0">
         <source>Date</source>
