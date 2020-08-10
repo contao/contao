@@ -357,7 +357,7 @@ services:
             - '@?translator'
 
     Contao\CoreBundle\Mailer\ContaoMailer:
-        decorates: mailer
+        decorates: mailer.mailer
         arguments:
             - '@Contao\CoreBundle\Mailer\ContaoMailer.inner'
             - '@Contao\CoreBundle\Mailer\AvailableTransports'
