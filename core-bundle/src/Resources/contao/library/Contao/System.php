@@ -661,19 +661,29 @@ abstract class System
 	/**
 	 * Set a cookie
 	 *
-	 * @param string  $strName     The cookie name
-	 * @param mixed   $varValue    The cookie value
-	 * @param integer $intExpires  The expiration date
-	 * @param string  $strPath     An optional path
-	 * @param string  $strDomain   An optional domain name
-	 * @param boolean $blnSecure   If true, the secure flag will be set
-	 * @param boolean $blnHttpOnly If true, the http-only flag will be set
+	 * @param string       $strName     The cookie name
+	 * @param mixed        $varValue    The cookie value
+	 * @param integer      $intExpires  The expiration date
+	 * @param string|null  $strPath     An optional path
+	 * @param string|null  $strDomain   An optional domain name
+	 * @param boolean|null $blnSecure   If true, the secure flag will be set
+	 * @param boolean      $blnHttpOnly If true, the http-only flag will be set
 	 */
-	public static function setCookie($strName, $varValue, $intExpires, $strPath=null, $strDomain=null, $blnSecure=false, $blnHttpOnly=false)
+	public static function setCookie($strName, $varValue, $intExpires, $strPath=null, $strDomain=null, $blnSecure=null, $blnHttpOnly=false)
 	{
 		if ($strPath == '')
 		{
 			$strPath = Environment::get('path') ?: '/'; // see #4390
+		}
+
+		if ($blnSecure === null)
+		{
+			$blnSecure = false;
+
+			if ($request = static::getContainer()->get('request_stack')->getCurrentRequest())
+			{
+				$blnSecure = $request->isSecure();
+			}
 		}
 
 		$objCookie = new \stdClass();

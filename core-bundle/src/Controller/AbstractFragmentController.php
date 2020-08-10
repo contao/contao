@@ -69,7 +69,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
         $template->class = trim($templateName.' '.($data[1] ?? ''));
         $template->cssID = !empty($data[0]) ? ' id="'.$data[0].'"' : '';
 
-        if (\is_array($classes)) {
+        if (!empty($classes)) {
             $template->class .= ' '.implode(' ', $classes);
         }
     }

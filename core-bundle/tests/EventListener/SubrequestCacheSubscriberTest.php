@@ -57,6 +57,7 @@ class SubrequestCacheSubscriberTest extends TestCase
 
         $this->assertSame(30, $mainResponse->getMaxAge());
         $this->assertSame('max-age=30, public', $mainResponse->headers->get('Cache-Control'));
+        $this->assertFalse($mainResponse->headers->has(SubrequestCacheSubscriber::MERGE_CACHE_HEADER));
     }
 
     public function testMakeMasterResponsePrivateIfSubrequestIsPrivate(): void
@@ -79,6 +80,7 @@ class SubrequestCacheSubscriberTest extends TestCase
         $this->onKernelResponse($subscriber, $mainResponse, KernelInterface::MASTER_REQUEST);
 
         $this->assertSame('private', $mainResponse->headers->get('Cache-Control'));
+        $this->assertFalse($mainResponse->headers->has(SubrequestCacheSubscriber::MERGE_CACHE_HEADER));
     }
 
     public function testIgnoresSubrequestWithoutMergeHeader(): void
@@ -100,6 +102,7 @@ class SubrequestCacheSubscriberTest extends TestCase
         $this->onKernelResponse($subscriber, $mainResponse, KernelInterface::MASTER_REQUEST);
 
         $this->assertSame('max-age=60, public', $mainResponse->headers->get('Cache-Control'));
+        $this->assertFalse($mainResponse->headers->has(SubrequestCacheSubscriber::MERGE_CACHE_HEADER));
     }
 
     public function testIgnoresSubrequestWithoutCacheControlHeader(): void
@@ -122,6 +125,7 @@ class SubrequestCacheSubscriberTest extends TestCase
         $this->onKernelResponse($subscriber, $mainResponse, KernelInterface::MASTER_REQUEST);
 
         $this->assertSame('max-age=60, public', $mainResponse->headers->get('Cache-Control'));
+        $this->assertFalse($mainResponse->headers->has(SubrequestCacheSubscriber::MERGE_CACHE_HEADER));
     }
 
     private function onKernelRequest(SubrequestCacheSubscriber $subscriber, int $requestType): void
