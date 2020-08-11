@@ -382,6 +382,7 @@ select[multiple] {
 }
 .tl_checkbox_single_container label {
 	margin-left:4px;
+	margin-right:3px;
 	font-weight:600;
 }
 @media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
