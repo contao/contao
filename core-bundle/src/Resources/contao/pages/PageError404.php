@@ -85,7 +85,7 @@ class PageError404 extends Frontend
 		$objRootPage = $this->getRootPageFromUrl();
 
 		// Forward if the language should be but is not set (see #4028)
-		if ($objRootPage->urlPrefix)
+		if ($objRootPage->urlPrefix && System::getContainer()->getParameter('contao.legacy_routing'))
 		{
 			// Get the request string without the script name
 			$strRequest = Environment::get('relativeRequest');
