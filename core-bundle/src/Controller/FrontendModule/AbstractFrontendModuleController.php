@@ -29,7 +29,7 @@ abstract class AbstractFrontendModuleController extends AbstractFragmentControll
             return $this->getBackendWildcard($model);
         }
 
-        $type = $this->getType($this->getFragmentOptions($model->type));
+        $type = $this->getType();
         $template = $this->createTemplate($model, 'mod_'.$type);
 
         $this->addHeadlineToTemplate($template, $model->headline);
@@ -63,7 +63,7 @@ abstract class AbstractFrontendModuleController extends AbstractFragmentControll
             ['do' => 'themes', 'table' => 'tl_module', 'act' => 'edit', 'id' => $module->id]
         );
 
-        $name = $this->get('translator')->trans('FMD.'.$this->getType($this->getFragmentOptions($module->type)).'.0', [], 'contao_modules');
+        $name = $this->get('translator')->trans('FMD.'.$this->getType().'.0', [], 'contao_modules');
 
         $template = new BackendTemplate('be_wildcard');
         $template->wildcard = '### '.strtoupper($name).' ###';
