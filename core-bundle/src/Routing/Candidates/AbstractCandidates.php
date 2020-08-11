@@ -83,7 +83,7 @@ class AbstractCandidates implements CandidatesInterface
     public function getCandidates(Request $request): array
     {
         $url = $request->getPathInfo();
-        $url = rawurldecode(ltrim($url, '/'));
+        $url = rawurldecode(substr($url, 1));
 
         if (empty($url)) {
             throw new \RuntimeException(__METHOD__.' cannot handle empty path');
