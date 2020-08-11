@@ -47,7 +47,7 @@ class LightboxResultTest extends TestCase
     {
         $resource = 'foo/bar.png';
         $size = [100, 200, 'crop'];
-        $layoutId = '1';
+        $layoutId = 1;
 
         /** @var MockObject&LayoutModel $layoutModel */
         $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
@@ -99,7 +99,7 @@ class LightboxResultTest extends TestCase
     public function testFallBackLightboxSizeConfigurationFailsIfNoLightboxSizeSet(): void
     {
         $resource = 'foo/bar.png';
-        $layoutId = '1';
+        $layoutId = 1;
 
         /** @var MockObject&LayoutModel $layoutModel */
         $layoutModel = $this->mockClassWithProperties(LayoutModel::class);

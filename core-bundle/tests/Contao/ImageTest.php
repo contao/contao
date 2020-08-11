@@ -999,6 +999,7 @@ class ImageTest extends TestCase
 
     /**
      * @group legacy
+     * @psalm-suppress NullArgument
      *
      * @expectedDeprecation Since contao/core-bundle 4.3: Using "Contao\Image::get()" has been deprecated %s.
      */
