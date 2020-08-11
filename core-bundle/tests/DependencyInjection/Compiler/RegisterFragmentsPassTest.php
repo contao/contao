@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
-use Contao\CoreBundle\Controller\FrontendModule\TwoFactorController;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
 use Contao\CoreBundle\Fragment\FragmentPreHandlerInterface;
 use Contao\CoreBundle\Fragment\FragmentRegistry;
@@ -48,9 +47,9 @@ class RegisterFragmentsPassTest extends TestCase
         $pass->process($container);
 
         $methodCalls = $container->getDefinition('contao.fragment.registry')->getMethodCalls();
-        list($element, $module) = $methodCalls;
+        [$element, $module] = $methodCalls;
 
-        /**
+        /*
          * Test Content Element
          */
         $this->assertSame('add', $element[0]);
@@ -65,7 +64,7 @@ class RegisterFragmentsPassTest extends TestCase
         $this->assertInstanceOf(ChildDefinition::class, $definition);
         $this->assertSame('app.fragments.content_controller', $definition->getParent());
 
-        /**
+        /*
          * Test Frontend Module
          */
         $this->assertSame('add', $module[0]);
