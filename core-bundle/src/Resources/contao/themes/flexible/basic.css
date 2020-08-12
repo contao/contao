@@ -378,10 +378,12 @@ select[multiple] {
 	margin:1px 1px 1px 0;
 }
 .tl_checkbox_single_container {
-	margin:16px 0 1px;
+	height:16px;
+	margin:14px 0 1px;
 }
 .tl_checkbox_single_container label {
 	margin-left:4px;
+	margin-right:3px;
 	font-weight:600;
 }
 @media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {

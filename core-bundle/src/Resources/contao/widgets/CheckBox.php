@@ -181,7 +181,7 @@ class CheckBox extends Widget
 	protected function generateCheckbox($arrOption, $i)
 	{
 		return sprintf(
-			'<input type="checkbox" name="%s" id="opt_%s" class="tl_checkbox" value="%s"%s%s onfocus="Backend.getScrollOffset()"> <label for="opt_%s">%s%s%s</label>',
+			'<input type="checkbox" name="%s" id="opt_%s" class="tl_checkbox" value="%s"%s%s onfocus="Backend.getScrollOffset()"> <label for="opt_%s">%s%s%s</label>%s',
 			$this->strName . ($this->multiple ? '[]' : ''),
 			$this->strId . '_' . $i,
 			($this->multiple ? StringUtil::specialchars($arrOption['value']) : 1),
@@ -190,7 +190,8 @@ class CheckBox extends Widget
 			$this->strId . '_' . $i,
 			($this->mandatory && !$this->multiple ? '<span class="invisible">' . $GLOBALS['TL_LANG']['MSC']['mandatory'] . ' </span>' : ''),
 			$arrOption['label'],
-			($this->mandatory && !$this->multiple ? '<span class="mandatory">*</span>' : '')
+			($this->mandatory && !$this->multiple ? '<span class="mandatory">*</span>' : ''),
+			$this->xlabel
 		);
 	}
 }
