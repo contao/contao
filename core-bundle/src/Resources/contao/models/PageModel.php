@@ -1010,6 +1010,7 @@ class PageModel extends Model
 			$this->validAliasCharacters = $objParentPage->validAliasCharacters;
 			$this->urlPrefix = $objParentPage->urlPrefix;
 			$this->urlSuffix = $objParentPage->urlSuffix;
+			$this->disableLanguageRedirect = $objParentPage->disableLanguageRedirect;
 			$this->adminEmail = $objParentPage->adminEmail;
 			$this->enforceTwoFactor = $objParentPage->enforceTwoFactor;
 			$this->twoFactorJumpTo = $objParentPage->twoFactorJumpTo;
