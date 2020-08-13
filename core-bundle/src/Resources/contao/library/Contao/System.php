@@ -175,9 +175,9 @@ abstract class System
 			{
 				$this->arrObjects[$strKey] = $strClass;
 			}
-			elseif (isset(static::$arrSingletons[$strKey]))
+			elseif (isset(static::$arrSingletons[$strClass]))
 			{
-				$this->arrObjects[$strKey] = static::$arrSingletons[$strKey];
+				$this->arrObjects[$strKey] = static::$arrSingletons[$strClass];
 			}
 			elseif ($container->has($strClass) && (strpos($strClass, '\\') !== false || !class_exists($strClass)))
 			{
@@ -193,7 +193,7 @@ abstract class System
 			}
 			elseif (\in_array('getInstance', get_class_methods($strClass)))
 			{
-				static::$arrStaticObjects[$strKey] = static::$arrSingletons[$strKey] = $this->arrObjects[$strKey] = \call_user_func(array($strClass, 'getInstance'));
+				$this->arrObjects[$strKey] = static::$arrSingletons[$strClass] = \call_user_func(array($strClass, 'getInstance'));
 			}
 			else
 			{
@@ -235,6 +235,10 @@ abstract class System
 			{
 				static::$arrStaticObjects[$strKey] = $strClass;
 			}
+			elseif (isset(static::$arrSingletons[$strClass]))
+			{
+				static::$arrStaticObjects[$strKey] = static::$arrSingletons[$strClass];
+			}
 			elseif ($container->has($strClass) && (strpos($strClass, '\\') !== false || !class_exists($strClass)))
 			{
 				static::$arrStaticObjects[$strKey] = $container->get($strClass);
@@ -249,7 +253,7 @@ abstract class System
 			}
 			elseif (\in_array('getInstance', get_class_methods($strClass)))
 			{
-				static::$arrStaticObjects[$strKey] = static::$arrSingletons[$strKey] = \call_user_func(array($strClass, 'getInstance'));
+				static::$arrStaticObjects[$strKey] = static::$arrSingletons[$strClass] = \call_user_func(array($strClass, 'getInstance'));
 			}
 			else
 			{
