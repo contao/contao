@@ -1891,6 +1891,7 @@
       </trans-unit>
       <trans-unit id="MSC.fileMeta">
         <source>Metadata</source>
+        <target>Metadati</target>
       </trans-unit>
       <trans-unit id="MSC.versioning">
         <source>Version management</source>

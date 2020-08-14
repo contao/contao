@@ -187,9 +187,11 @@
       </trans-unit>
       <trans-unit id="ERR.urlPrefixExists">
         <source>The URL prefix &quot;%s&quot; is already used by another root page with the same domain name!</source>
+        <target>¡El prefijo de URL &quot;%s&quot; ya lo utiliza otra página raíz con el mismo nombre de dominio!</target>
       </trans-unit>
       <trans-unit id="ERR.pageUrlExists">
         <source>A page with the URL &quot;%s&quot; already exists!</source>
+        <target>¡Ya existe una página con la URL &quot;%s&quot;!</target>
       </trans-unit>
       <trans-unit id="ERR.pageUrlSuffix">
         <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>
@@ -235,6 +237,7 @@
       </trans-unit>
       <trans-unit id="ERR.forbiddenExtensions">
         <source>The following file extensions are not allowed: %s</source>
+        <target>No se permiten las siguientes extensiones de archivo:</target>
       </trans-unit>
       <trans-unit id="ERR.invalidPages">
         <source>Your selection contains invalid page IDs!</source>
@@ -246,6 +249,7 @@
       </trans-unit>
       <trans-unit id="ERR.circularPicker">
         <source>Invalid selection (circular reference)!</source>
+        <target>Selección no válida (referencia circular).</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
         <source>None of the active website root pages without an explicit DNS setting have the language fallback option set.</source>
@@ -661,9 +665,11 @@
       </trans-unit>
       <trans-unit id="FFL.range.0">
         <source>Range slider</source>
+        <target>Control deslizante de rango</target>
       </trans-unit>
       <trans-unit id="FFL.range.1">
         <source>A range slider to select a value or range of values between a specified min and max.</source>
+        <target>Un control deslizante de rango para seleccionar un valor o rango de valores entre un mínimo y un máximo especificados.</target>
       </trans-unit>
       <trans-unit id="FFL.hidden.0">
         <source>Hidden field</source>
@@ -735,6 +741,7 @@
       </trans-unit>
       <trans-unit id="PTY.error_401.1">
         <source>If a visitor requests a protected page without being authenticated, a 401 error page will be loaded instead.</source>
+        <target>Si un visitante solicita una página protegida sin estar autenticado, en su lugar se cargará una página de error 401.</target>
       </trans-unit>
       <trans-unit id="PTY.error_403.0">
         <source>403 Access denied</source>
@@ -742,6 +749,7 @@
       </trans-unit>
       <trans-unit id="PTY.error_403.1">
         <source>If a member requests a protected page without permission, a 403 error page will be loaded instead.</source>
+        <target>Si un miembro solicita una página protegida sin permiso, en su lugar se cargará una página de error 403.</target>
       </trans-unit>
       <trans-unit id="PTY.error_404.0">
         <source>404 Page not found</source>
@@ -749,6 +757,7 @@
       </trans-unit>
       <trans-unit id="PTY.error_404.1">
         <source>If a visitor requests a non-existent page, a 404 error page will be loaded instead.</source>
+        <target>Si un visitante solicita una página que no existe, se cargará una página de error 404 en su lugar.</target>
       </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
@@ -1240,6 +1249,7 @@
       </trans-unit>
       <trans-unit id="MSC.mw_column">
         <source>Layout section</source>
+        <target>Sección de diseño</target>
       </trans-unit>
       <trans-unit id="MSC.mw_enable">
         <source>Enable/disable the module</source>
@@ -1523,6 +1533,7 @@
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
         <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <target>Obtenga más información sobre cómo acelerar su flujo de trabajo mediante el uso de &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;atajos de teclado&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -1878,6 +1889,7 @@
       </trans-unit>
       <trans-unit id="MSC.fileMeta">
         <source>Metadata</source>
+        <target>Metadatos</target>
       </trans-unit>
       <trans-unit id="MSC.versioning">
         <source>Version management</source>
@@ -2568,27 +2580,35 @@
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesLabel">
         <source>Backup codes</source>
+        <target>Códigos Backup</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesShow">
         <source>Show backup codes</source>
+        <target>Mostrar códigos backup</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesExplain">
         <source>Backup codes can be used to access your account if you have lost your authentication device and cannot generate two-factor codes anymore. Treat your backup codes with the same level of attention as your password! It is recommended to save them with a password manager such as Lastpass, 1Password or Keeper.</source>
+        <target>Los códigos backup se pueden usar para acceder a su cuenta si ha perdido su dispositivo de autenticación y ya no puede generar códigos de dos factores. ¡Trate sus códigos de seguridad con el mismo nivel de atención que su contraseña! Se recomienda guardarlos con un administrador de contraseñas como Lastpass, 1Password o Keeper.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesInfo">
         <source>Put the codes in a safe spot. If you lose your authentication device and do not have backup codes, you cannot access your account anymore!</source>
+        <target>¡Guarde los códigos en un lugar seguro. Si pierde su dispositivo de autenticación y no tiene códigos de seguridad, ya no podrá acceder a su cuenta!</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesGenerate">
         <source>Generate backup codes</source>
+        <target>Genera códigos backup</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesRegenerate">
         <source>Regenerate backup codes</source>
+        <target>Regenerar codigos backup</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesRegenerateInfo">
         <source>When you regenerate the backup codes, your old codes will not work anymore.</source>
+        <target>Cuando regenere los códigos backup, sus códigos antiguos ya no funcionarán.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorTrustDevice">
         <source>Trust this device</source>
+        <target>Confiar en este dispositivo</target>
       </trans-unit>
       <trans-unit id="MSC.userTemplateEditor">
         <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
@@ -2600,9 +2620,11 @@
       </trans-unit>
       <trans-unit id="MSC.userThemeImport">
         <source>There is at least one regular user with permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, these users implicitly have full control over the system!</source>
+        <target>Hay al menos un usuario habitual con permiso para importar temas. Dado que los temas pueden contener plantillas arbitrarias y las plantillas son archivos PHP, estos usuarios tienen implícitamente un control total sobre el sistema.</target>
       </trans-unit>
       <trans-unit id="MSC.groupThemeImport">
         <source>There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!</source>
+        <target>Hay al menos un grupo de usuarios que otorga permiso para importar temas. Dado que los temas pueden contener plantillas arbitrarias y las plantillas son archivos PHP, los usuarios de estos grupos tienen implícitamente un control total sobre el sistema.</target>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
@@ -2618,21 +2640,26 @@
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
+        <target>Vista previa de los resultados de búsqueda de Google</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.1">
         <source>Here you can preview the metadata in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
       </trans-unit>
       <trans-unit id="MSC.clearTrustedDevices">
         <source>Clear trusted devices</source>
+        <target>Borrar dispositivos de confianza</target>
       </trans-unit>
       <trans-unit id="MSC.trustedDevices">
         <source>Trusted devices</source>
+        <target>Dispositivos confiables</target>
       </trans-unit>
       <trans-unit id="MSC.noTrustedDevices">
         <source>Currently there are no trusted devices.</source>
+        <target>Actualmente no hay dispositivos confiables.</target>
       </trans-unit>
       <trans-unit id="MSC.device">
         <source>Device</source>
+        <target>Dispositivo</target>
       </trans-unit>
       <trans-unit id="MSC.browser">
         <source>Browser</source>
@@ -2640,12 +2667,15 @@
       </trans-unit>
       <trans-unit id="MSC.operatingSystem">
         <source>Operating system</source>
+        <target>Sistema operativo</target>
       </trans-unit>
       <trans-unit id="MSC.openToolbar">
         <source>Open the Contao toolbar</source>
+        <target>Abrir la barra de herramientas de Contao</target>
       </trans-unit>
       <trans-unit id="MSC.closeToolbar">
         <source>Close the Contao toolbar</source>
+        <target>Cerrar la barra de herramientas de Contao</target>
       </trans-unit>
       <trans-unit id="MSC.noSerpPreview">
         <source>The preview URL cannot be generated, because the route has mandatory parameters.</source>
@@ -2856,12 +2886,15 @@
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.summary">
         <source>Indexed %d URI(s) successfully. %d failed.</source>
+        <target>%dURI indexado(s) correctamente. %dha(n) fallado.</target>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.warning">
         <source>%d URI(s) were skipped (if you are missing one, checkout the debug log).</source>
+        <target>Se omitieron los %d URI (si le falta uno, consulte el registro de depuración).</target>
       </trans-unit>
       <trans-unit id="CRAWL.brokenLinkChecker.summary">
         <source>Checked %d link(s) successfully. %d were broken.</source>
+        <target>%d Enlace (s) comprobado(s) correctamente. %d estaban rotos.</target>
       </trans-unit>
     </body>
   </file>

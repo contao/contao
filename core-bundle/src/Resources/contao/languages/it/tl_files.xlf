@@ -75,6 +75,7 @@
       </trans-unit>
       <trans-unit id="tl_files.meta.0">
         <source>Metadata</source>
+        <target>Metadati</target>
       </trans-unit>
       <trans-unit id="tl_files.meta.1">
         <source>Here you can enter the file metadata.</source>

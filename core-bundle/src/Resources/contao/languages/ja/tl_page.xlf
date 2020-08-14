@@ -586,8 +586,8 @@
         <target>ID %sのページのアーティクルを編集</target>
       </trans-unit>
       <trans-unit id="tl_page.legacyRouting">
-        <source>Disable legacy routing mode to configure the URL prefix and suffix in the root page.</source>
-        <target>ルートページでURLのプリフィックスとサフィックスを構成する古いルーティングモードを無効にします。</target>
+        <source>Disable legacy routing mode to enable this configuration.</source>
+        <target>古いルーティング方式を無効にして、この構成を有効にします。</target>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>
@@ -663,8 +663,7 @@
       </trans-unit>
       <trans-unit id="CACHE.31536000">
         <source>1 year</source>
-        <target>1
-年</target>
+        <target>1年</target>
       </trans-unit>
     </body>
   </file>

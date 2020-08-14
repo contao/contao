@@ -31,6 +31,7 @@
       </trans-unit>
       <trans-unit id="XPT.errorExplain">
         <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, search the &lt;a href=&quot;https://contao.org/en/frequently-asked.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/en/support.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
+        <target>La ejecución del script se detuvo porque algo no funciona correctamente. El mensaje de error real está oculto por este aviso por razones de seguridad y se puede encontrar en el archivo de registro actual (ver arriba). Si no comprende el mensaje de error o no sabe cómo solucionar el problema, busque las &lt;a href=&quot;https://contao.org/en/frequently-asked.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;preguntas frecuentes de Contao&lt;/a&gt; o visite la &lt;a href=&quot;https://contao.org/en/support.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;página de soporte de Contao.&lt;/a&gt;</target>
       </trans-unit>
       <trans-unit id="XPT.requestToken">
         <source>Invalid request token</source>
@@ -50,6 +51,7 @@
       </trans-unit>
       <trans-unit id="XPT.tokenExplainTwo">
         <source>For more information, search the &lt;a href=&quot;https://contao.org/en/frequently-asked.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/en/support.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
+        <target>Para obtener más información, busque las &lt;a href=&quot;https://contao.org/en/frequently-asked.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;preguntas frecuentes de Contao&lt;/a&gt; o visite la &lt;a href=&quot;https://contao.org/en/support.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;página de soporte de Contao&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="XPT.unavailable">
         <source>Service unavailable</source>
@@ -61,15 +63,19 @@
       </trans-unit>
       <trans-unit id="XPT.missingRouteParameters.title">
         <source>Unable to generate front end URL</source>
+        <target>No se puede generar la URL del front-end</target>
       </trans-unit>
       <trans-unit id="XPT.missingRouteParameters.matter">
         <source>The URL could not be generated, because the route has mandatory parameters that are not given. Additional information (e.g. a news alias) must be provided.</source>
+        <target>No se pudo generar la URL porque la ruta tiene parámetros obligatorios que no se dan. Se debe proporcionar información adicional (por ejemplo, un alias de noticias).</target>
       </trans-unit>
       <trans-unit id="XPT.missingRouteParameters.explain">
         <source>Symfony routes can have variable parameters, which are validated using regular expressions. The following configuration could not be resolved:</source>
+        <target>Las rutas de Symfony pueden tener parámetros variables, que se validan mediante expresiones regulares. No se pudo resolver la siguiente configuración:</target>
       </trans-unit>
       <trans-unit id="XPT.missingRouteParameters.path">
         <source>Route path</source>
+        <target>Ruta path</target>
       </trans-unit>
       <trans-unit id="XPT.missingRouteParameters.parameterName">
         <source>Name</source>
@@ -77,6 +83,7 @@
       </trans-unit>
       <trans-unit id="XPT.missingRouteParameters.parameterRequirement">
         <source>Requirement (Regex)</source>
+        <target>Requisito (Regex)</target>
       </trans-unit>
       <trans-unit id="XPT.missingRouteParameters.parameterDefault">
         <source>Default value</source>
@@ -84,6 +91,7 @@
       </trans-unit>
       <trans-unit id="XPT.missingRouteParameters.parameterEmpty">
         <source>empty</source>
+        <target>vacío</target>
       </trans-unit>
     </body>
   </file>

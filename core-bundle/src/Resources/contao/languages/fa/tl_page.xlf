@@ -564,7 +564,7 @@
         <target>ویرایش مقاله‌های برگه شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_page.legacyRouting">
-        <source>Disable legacy routing mode to configure the URL prefix and suffix in the root page.</source>
+        <source>Disable legacy routing mode to enable this configuration.</source>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>
