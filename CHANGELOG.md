@@ -2,6 +2,15 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.10.0-RC4] (2020-08-14)
+
+**Fixed issues:**
+
+- [#2151] Correctly inherit the disableLanguageRedirect property ([aschempp])
+- [#2145] Disable the no-language-redirect feature in legacy routing mode ([aschempp])
+- [#2144] Correctly handle multiple slashes in a path ([aschempp])
+- [#2136] Decorate mailer.mailer instead of mailer ([bytehead])
+
 ## [4.10.0-RC3] (2020-08-06)
 
 **New features:**
@@ -121,6 +130,7 @@ This project adheres to [Semantic Versioning].
 - [#1458] Always set host and language when generating the navigation menu ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.10.0-RC4]: https://github.com/contao/contao/releases/tag/4.10.0-RC4
 [4.10.0-RC3]: https://github.com/contao/contao/releases/tag/4.10.0-RC3
 [4.10.0-RC2]: https://github.com/contao/contao/releases/tag/4.10.0-RC2
 [4.10.0-RC1]: https://github.com/contao/contao/releases/tag/4.10.0-RC1
@@ -134,6 +144,10 @@ This project adheres to [Semantic Versioning].
 [m-vo]: https://github.com/m-vo
 [richardhj]: https://github.com/richardhj
 [Toflar]: https://github.com/Toflar
+[#2151]: https://github.com/contao/contao/pull/2151
+[#2145]: https://github.com/contao/contao/pull/2145
+[#2144]: https://github.com/contao/contao/pull/2144
+[#2136]: https://github.com/contao/contao/pull/2136
 [#2017]: https://github.com/contao/contao/pull/2017
 [#2021]: https://github.com/contao/contao/pull/2021
 [#2019]: https://github.com/contao/contao/pull/2019

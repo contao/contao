@@ -75,6 +75,7 @@
       </trans-unit>
       <trans-unit id="tl_files.meta.0">
         <source>Metadata</source>
+        <target>Metadatos</target>
       </trans-unit>
       <trans-unit id="tl_files.meta.1">
         <source>Here you can enter the file metadata.</source>
@@ -141,6 +142,7 @@
       </trans-unit>
       <trans-unit id="tl_files.fileLocation">
         <source>Path: %s</source>
+        <target>Path: %s</target>
       </trans-unit>
       <trans-unit id="tl_files.syncAdded">
         <source>Added the file or folder &quot;%s&quot;</source>
@@ -224,6 +226,7 @@
       </trans-unit>
       <trans-unit id="tl_files.source">
         <source>Edit the source text of file &quot;%s&quot;</source>
+        <target>Editar el texto fuente del archivo &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_files.upload">
         <source>Upload files to folder &quot;%s&quot;</source>

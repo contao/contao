@@ -79,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_page.redirectBack.1">
         <source>Redirect the member back to the last page visited instead of the redirect page.</source>
+        <target>Redirigir al miembro a la última página visitada en lugar de a la página de redireccionamiento.</target>
       </trans-unit>
       <trans-unit id="tl_page.fallback.0">
         <source>Language fallback</source>
@@ -90,9 +91,11 @@
       </trans-unit>
       <trans-unit id="tl_page.disableLanguageRedirect.0">
         <source>Disable language redirect</source>
+        <target>Deshabilitar la redirección de idioma</target>
       </trans-unit>
       <trans-unit id="tl_page.disableLanguageRedirect.1">
         <source>Do not redirect visitors to this website root based on their preferred browser language.</source>
+        <target>No redirija a los visitantes a la raíz de este sitio web según el idioma de su navegador preferido.</target>
       </trans-unit>
       <trans-unit id="tl_page.favicon.0">
         <source>Favicon</source>
@@ -136,9 +139,11 @@
       </trans-unit>
       <trans-unit id="tl_page.mailerTransport.0">
         <source>Mailer transport</source>
+        <target>Transporte por correo</target>
       </trans-unit>
       <trans-unit id="tl_page.mailerTransport.1">
         <source>Here you can override the mailer transport used to send e-mails on this website.</source>
+        <target>Aquí puede anular el transporte de correo utilizado para enviar correos electrónicos en este sitio web.</target>
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.0">
         <source>E-mail address of the website administrator</source>
@@ -146,6 +151,7 @@
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.1">
         <source>This e-mail address will be used to send and receive system messages.</source>
+        <target>Esta dirección de correo electrónico se utilizará para enviar y recibir mensajes del sistema.</target>
       </trans-unit>
       <trans-unit id="tl_page.dateFormat.0">
         <source>Date format</source>
@@ -189,15 +195,19 @@
       </trans-unit>
       <trans-unit id="tl_page.urlPrefix.0">
         <source>URL prefix</source>
+        <target>Prefijo de URL</target>
       </trans-unit>
       <trans-unit id="tl_page.urlPrefix.1">
         <source>Enter a URL prefix (e.g. the language) that will be prepended to aliases for this root page.</source>
+        <target>Ingrese un prefijo de URL (p. ej., el idioma) que se antepondrá a los alias de esta página raíz.</target>
       </trans-unit>
       <trans-unit id="tl_page.urlSuffix.0">
         <source>URL suffix</source>
+        <target>Sufijo de URL</target>
       </trans-unit>
       <trans-unit id="tl_page.urlSuffix.1">
         <source>The URL suffix will be added to the URI string to simulate static documents.</source>
+        <target>El sufijo de URL se agregará a la cadena de URI para simular documentos estáticos.</target>
       </trans-unit>
       <trans-unit id="tl_page.createSitemap.0">
         <source>Create an XML sitemap</source>
@@ -353,9 +363,11 @@
       </trans-unit>
       <trans-unit id="tl_page.sitemap.0">
         <source>Show in HTML sitemap</source>
+        <target>Mostrar en el mapa del sitio HTML</target>
       </trans-unit>
       <trans-unit id="tl_page.sitemap.1">
         <source>Here you can define whether the page is shown in the HTML sitemap.</source>
+        <target>Aquí puede definir si la página se muestra en el mapa del sitio HTML.</target>
       </trans-unit>
       <trans-unit id="tl_page.hide.0">
         <source>Hide from navigation</source>
@@ -371,6 +383,7 @@
       </trans-unit>
       <trans-unit id="tl_page.guests.1">
         <source>Hide the page if a member is logged in.</source>
+        <target>Ocultar la página si una miembro está conectado.</target>
       </trans-unit>
       <trans-unit id="tl_page.tabindex.0">
         <source>Tab index</source>
@@ -402,6 +415,7 @@
       </trans-unit>
       <trans-unit id="tl_page.start.1">
         <source>If you want to prevent the page from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Si desea evitar que la página se muestre en el sitio web antes de una fecha/hora determinada, puede ingresar aquí. De lo contrario, deje el campo en blanco.</target>
       </trans-unit>
       <trans-unit id="tl_page.stop.0">
         <source>Show until</source>
@@ -409,6 +423,7 @@
       </trans-unit>
       <trans-unit id="tl_page.stop.1">
         <source>If you want to prevent the page from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Si desea evitar que la página se muestre en el sitio web después de una determinada fecha/hora, puede ingresarla aquí. De lo contrario, deje el campo en blanco.</target>
       </trans-unit>
       <trans-unit id="tl_page.enforceTwoFactor.0">
         <source>Enforce two-factor authentication</source>
@@ -424,6 +439,7 @@
       </trans-unit>
       <trans-unit id="tl_page.twoFactorJumpTo.1">
         <source>Please choose the page to which members will be redirected to set up two-factor authentication.</source>
+        <target>Elija la página a la que se redirigirá a los miembros para configurar la autenticación de dos factores.</target>
       </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
@@ -431,6 +447,7 @@
       </trans-unit>
       <trans-unit id="tl_page.meta_legend">
         <source>Metadata</source>
+        <target>Metadatos</target>
       </trans-unit>
       <trans-unit id="tl_page.system_legend">
         <source>System settings</source>
@@ -442,9 +459,11 @@
       </trans-unit>
       <trans-unit id="tl_page.url_legend">
         <source>URL settings</source>
+        <target>Configuración de URL</target>
       </trans-unit>
       <trans-unit id="tl_page.language_legend">
         <source>Language settings</source>
+        <target>Ajustes de idioma</target>
       </trans-unit>
       <trans-unit id="tl_page.website_legend">
         <source>Website settings</source>
@@ -567,7 +586,8 @@
         <target>Editar artículos de la página con ID %s</target>
       </trans-unit>
       <trans-unit id="tl_page.legacyRouting">
-        <source>Disable legacy routing mode to configure the URL prefix and suffix in the root page.</source>
+        <source>Disable legacy routing mode to enable this configuration.</source>
+        <target>Deshabilitar el modo de enrutamiento heredado para habilitar esta configuración.</target>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

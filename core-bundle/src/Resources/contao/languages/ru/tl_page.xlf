@@ -586,8 +586,8 @@
         <target>Редактировать статьи на странице ID %s</target>
       </trans-unit>
       <trans-unit id="tl_page.legacyRouting">
-        <source>Disable legacy routing mode to configure the URL prefix and suffix in the root page.</source>
-        <target>Отключить устаревший режим маршрутизации, чтобы настроить префикс и суффикс URL на корневой странице.</target>
+        <source>Disable legacy routing mode to enable this configuration.</source>
+        <target>Отключите устаревший режим маршрутизации, чтобы включить эту конфигурацию.</target>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

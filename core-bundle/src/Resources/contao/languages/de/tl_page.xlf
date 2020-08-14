@@ -586,8 +586,8 @@
         <target>Artikel der Seite ID %s bearbeiten</target>
       </trans-unit>
       <trans-unit id="tl_page.legacyRouting">
-        <source>Disable legacy routing mode to configure the URL prefix and suffix in the root page.</source>
-        <target>Deaktivieren Sie den Legacy-Routing-Modus, um das URL-Präfix und -Suffix in der Root-Seite zu konfigurieren.</target>
+        <source>Disable legacy routing mode to enable this configuration.</source>
+        <target>Deaktivieren Sie den Legacy-Routing-Modus, um diese Einstellung zu aktivieren.</target>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

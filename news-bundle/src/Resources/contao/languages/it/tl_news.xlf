@@ -255,6 +255,7 @@
       </trans-unit>
       <trans-unit id="tl_news.meta_legend">
         <source>Metadata</source>
+        <target>Metadati</target>
       </trans-unit>
       <trans-unit id="tl_news.expert_legend">
         <source>Expert settings</source>
