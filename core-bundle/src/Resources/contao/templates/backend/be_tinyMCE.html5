@@ -40,7 +40,9 @@ window.tinymce && tinymce.init({
     file_picker_types: <?= json_encode($this->fileBrowserTypes) ?>,
   <?php $this->endblock(); ?>
 
-  content_css: 'system/themes/<?= Backend::getTheme() ?>/tinymce.min.css',
+  <?php $this->block('content_css'); ?>
+    content_css: 'system/themes/<?= Backend::getTheme() ?>/tinymce.min.css',
+  <?php $this->endblock(); ?>
 
   <?php $this->block('plugins'); ?>
     plugins: 'autosave charmap code fullscreen image importcss link lists paste searchreplace stripnbsp tabfocus table visualblocks visualchars',
