@@ -321,11 +321,7 @@ class FileUpload extends \Backend
 		// Resized successfully
 		if ($blnResize)
 		{
-			\System::getContainer()
-				->get('contao.image.image_factory')
-				->create(TL_ROOT . '/' . $strImage, array($arrImageSize[0], $arrImageSize[1]), TL_ROOT . '/' . $strImage)
-			;
-
+			$objFile->resizeTo($arrImageSize[0], $arrImageSize[1]);
 			\Message::addInfo(sprintf($GLOBALS['TL_LANG']['MSC']['fileResized'], $objFile->basename));
 			$this->log('File "' . $strImage . '" was scaled down to the maximum dimensions', __METHOD__, TL_FILES);
 			$this->blnHasResized = true;
