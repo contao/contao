@@ -459,9 +459,9 @@ class InstallationController implements ContainerAwareInterface
             $installTool->persistConfig('exampleWebsite', null);
             $installTool->logException($e);
 
-            for($rootException = $e; null !== $rootException->getPrevious(); $rootException = $rootException->getPrevious());
+            for ($rootException = $e; null !== $rootException->getPrevious(); $rootException = $rootException->getPrevious());
 
-            $this->context['import_error'] = $this->trans('import_exception') . "\n" . $rootException->getMessage();
+            $this->context['import_error'] = $this->trans('import_exception')."\n".$rootException->getMessage();
 
             return null;
         }
