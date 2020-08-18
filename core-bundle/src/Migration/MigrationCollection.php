@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Migration;
 class MigrationCollection
 {
     /**
-     * @var array<MigrationInterface>
+     * @var iterable<MigrationInterface>
      */
     private $migrations;
 

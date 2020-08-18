@@ -246,6 +246,9 @@ class UrlGeneratorTest extends TestCase
         );
     }
 
+    /**
+     * @psalm-suppress InvalidArgument
+     */
     public function testHandlesNonArrayParameters(): void
     {
         $generator = $this->getUrlGenerator($this->mockRouterWithContext(['alias' => 'foo']));

@@ -71,7 +71,7 @@ class LegacyRoutingListener
             );
         };
 
-        foreach (['urlPrefix', 'urlSuffix'] as $field) {
+        foreach (['urlPrefix', 'urlSuffix', 'disableLanguageRedirect'] as $field) {
             $GLOBALS['TL_DCA']['tl_page']['fields'][$field]['eval']['disabled'] = true;
             $GLOBALS['TL_DCA']['tl_page']['fields'][$field]['eval']['helpwizard'] = false;
             $GLOBALS['TL_DCA']['tl_page']['fields'][$field]['xlabel'][] = $renderHelpIcon;

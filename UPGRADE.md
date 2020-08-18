@@ -267,6 +267,8 @@ The keys of the following front end modules have been changed:
 
  * `articleList` -> `articlelist`
  * `rss_reader`  -> `rssReader`
+ * `nl_list`     -> `newsletterlist`
+ * `nl_reader`   -> `newsletterreader`
 
 ### Custom database drivers
 

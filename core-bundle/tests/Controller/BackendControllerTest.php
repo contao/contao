@@ -106,7 +106,7 @@ class BackendControllerTest extends TestCase
         $response = $controller->pickerAction($request);
 
         $this->assertSame('/foobar', $response->getTargetUrl());
-        $this->assertSame(307, $response->getStatusCode());
+        $this->assertSame(302, $response->getStatusCode());
     }
 
     public function testDoesNotReturnAResponseInThePickerActionMethodIfThePickerExtrasAreInvalid(): void

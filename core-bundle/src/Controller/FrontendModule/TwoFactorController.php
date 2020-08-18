@@ -163,7 +163,7 @@ class TwoFactorController extends AbstractFrontendModuleController
                 $user->useTwoFactor = '1';
                 $user->save();
 
-                return new RedirectResponse($return, Response::HTTP_TEMPORARY_REDIRECT);
+                return new RedirectResponse($return);
             }
 
             $template->message = $translator->trans('ERR.invalidTwoFactor', [], 'contao_default');
@@ -197,7 +197,7 @@ class TwoFactorController extends AbstractFrontendModuleController
         // Clear all trusted devices
         $this->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
 
-        return new RedirectResponse($this->page->getAbsoluteUrl(), Response::HTTP_TEMPORARY_REDIRECT);
+        return new RedirectResponse($this->page->getAbsoluteUrl());
     }
 
     private function generateBackupCodes(FrontendUser $user): void

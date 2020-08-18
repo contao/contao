@@ -324,12 +324,12 @@ class FigureTest extends TestCase
      */
     public function testGetLegacyTemplateData(array $preconditions, array $buildAttributes, \Closure $assert): void
     {
-        [$metadata, $linkAttributes, $lightbox] = $preconditions;
+        [$metadata, $linkAttributes, $lightbox, $options] = $preconditions;
         [$includeFullMetadata, $floatingProperty, $marginProperty] = $buildAttributes;
 
         System::setContainer($this->getContainerWithContaoConfiguration());
 
-        $figure = new Figure($this->getImageMock(), $metadata, $linkAttributes, $lightbox);
+        $figure = new Figure($this->getImageMock(), $metadata, $linkAttributes, $lightbox, $options);
         $data = $figure->getLegacyTemplateData($marginProperty, $floatingProperty, $includeFullMetadata);
 
         $assert($data);
@@ -340,7 +340,7 @@ class FigureTest extends TestCase
         $imageSrc = Path::canonicalize(__DIR__.'/../../Fixtures/files/public/foo.jpg');
 
         yield 'basic image data' => [
-            [null, null, null],
+            [null, null, null, null],
             [false, null, null],
             function (array $data) use ($imageSrc): void {
                 $this->assertSame(['img foo'], $data['picture']['img']);
@@ -367,7 +367,7 @@ class FigureTest extends TestCase
         ]);
 
         yield 'with metadata' => [
-            [$simpleMetadata, null, null],
+            [$simpleMetadata, null, null, null],
             [false, null, null],
             function (array $data): void {
                 $this->assertSame('a', $data['picture']['alt']);
@@ -377,7 +377,7 @@ class FigureTest extends TestCase
         ];
 
         yield 'with full metadata' => [
-            [$simpleMetadata, null, null],
+            [$simpleMetadata, null, null, null],
             [true, null, null],
             function (array $data): void {
                 $this->assertSame('a', $data['alt']);
@@ -387,7 +387,7 @@ class FigureTest extends TestCase
         ];
 
         yield 'with metadata containing link' => [
-            [$metadataWithLink, null, null],
+            [$metadataWithLink, null, null, null],
             [true, null, null],
             function (array $data): void {
                 $this->assertSame('t', $data['linkTitle']);
@@ -410,7 +410,7 @@ class FigureTest extends TestCase
         ];
 
         yield 'with href link attribute' => [
-            [null, $basicLinkAttributes, null],
+            [null, $basicLinkAttributes, null, null],
             [false, null, null],
             function (array $data): void {
                 $this->assertSame('', $data['linkTitle']);
@@ -422,7 +422,7 @@ class FigureTest extends TestCase
         ];
 
         yield 'with full metadata and href link attribute' => [
-            [$metadataWithLink, $basicLinkAttributes, null],
+            [$metadataWithLink, $basicLinkAttributes, null, null],
             [true, null, null],
             function (array $data): void {
                 $this->assertSame('foo://meta', $data['imageUrl']);
@@ -431,7 +431,7 @@ class FigureTest extends TestCase
         ];
 
         yield 'with extended link attributes' => [
-            [null, $extendedLinkAttributes, null],
+            [null, $extendedLinkAttributes, null, null],
             [false, null, null],
             function (array $data): void {
                 $this->assertTrue($data['fullsize']);
@@ -474,7 +474,7 @@ class FigureTest extends TestCase
         ;
 
         yield 'with lightbox' => [
-            [null, null, $lightbox],
+            [null, null, $lightbox, null],
             [false, null, null],
             function (array $data): void {
                 $this->assertSame(['lightbox img'], $data['lightboxPicture']['img']);
@@ -490,7 +490,7 @@ class FigureTest extends TestCase
         ];
 
         yield 'with legacy properties 1' => [
-            [null, null, null],
+            [null, null, null, null],
             [false, 'above', ['top' => '1', 'right' => '2', 'bottom' => '3', 'left' => '4', 'unit' => 'em']],
             function (array $data): void {
                 $this->assertTrue($data['addBefore']);
@@ -499,7 +499,7 @@ class FigureTest extends TestCase
         ];
 
         yield 'with legacy properties 2' => [
-            [null, null, null],
+            [null, null, null, null],
             [false, 'above', 'a:5:{s:3:"top";s:1:"1";s:5:"right";s:1:"2";s:6:"bottom";s:1:"3";s:4:"left";s:1:"4";s:4:"unit";s:2:"em";}'],
             function (array $data): void {
                 $this->assertTrue($data['addBefore']);
@@ -508,10 +508,19 @@ class FigureTest extends TestCase
         ];
 
         yield 'with legacy properties 3' => [
-            [null, null, null],
+            [null, null, null, null],
             [false, 'below', null],
             function (array $data): void {
                 $this->assertFalse($data['addBefore']);
+            },
+        ];
+
+        yield 'with template options' => [
+            [null, null, null, ['foo' => 'bar', 'addImage' => false]],
+            [false, null, null],
+            function (array $data): void {
+                $this->assertSame('bar', $data['foo']);
+                $this->assertFalse($data['addImage']);
             },
         ];
     }

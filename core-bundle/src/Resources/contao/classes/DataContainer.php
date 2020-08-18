@@ -1260,7 +1260,7 @@ abstract class DataContainer extends Backend
 		$ns = 'contao.db.';
 		$tags = array($ns . $this->table, $ns . $this->table . '.' . $this->id);
 
-		if ($this->ptable && $this->activeRecord && $this->activeRecord->pid > 0)
+		if (!empty($this->ptable) && $this->activeRecord && $this->activeRecord->pid > 0)
 		{
 			$tags[] = $ns . $this->ptable;
 			$tags[] = $ns . $this->ptable . '.' . $this->activeRecord->pid;

@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Share a page via a social network.
@@ -32,20 +31,18 @@ class FrontendShare extends Frontend
 			case 'facebook':
 				return new RedirectResponse(
 					'https://www.facebook.com/sharer/sharer.php'
-						. '?u=' . rawurlencode(Input::get('u', true)),
-					Response::HTTP_TEMPORARY_REDIRECT
+						. '?u=' . rawurlencode(Input::get('u', true))
 				);
 
 			case 'twitter':
 				return new RedirectResponse(
 					'https://twitter.com/intent/tweet'
 						. '?url=' . rawurlencode(Input::get('u', true))
-						. '&text=' . rawurlencode(Input::get('t', true)),
-					Response::HTTP_TEMPORARY_REDIRECT
+						. '&text=' . rawurlencode(Input::get('t', true))
 				);
 		}
 
-		return new RedirectResponse('../', Response::HTTP_TEMPORARY_REDIRECT);
+		return new RedirectResponse('../');
 	}
 }
 

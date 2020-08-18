@@ -175,9 +175,9 @@ abstract class System
 			{
 				$this->arrObjects[$strKey] = $strClass;
 			}
-			elseif (isset(static::$arrSingletons[$strKey]))
+			elseif (isset(static::$arrSingletons[$strClass]))
 			{
-				$this->arrObjects[$strKey] = static::$arrSingletons[$strKey];
+				$this->arrObjects[$strKey] = static::$arrSingletons[$strClass];
 			}
 			elseif ($container->has($strClass) && (strpos($strClass, '\\') !== false || !class_exists($strClass)))
 			{
@@ -193,7 +193,7 @@ abstract class System
 			}
 			elseif (\in_array('getInstance', get_class_methods($strClass)))
 			{
-				static::$arrStaticObjects[$strKey] = static::$arrSingletons[$strKey] = $this->arrObjects[$strKey] = \call_user_func(array($strClass, 'getInstance'));
+				$this->arrObjects[$strKey] = static::$arrSingletons[$strClass] = \call_user_func(array($strClass, 'getInstance'));
 			}
 			else
 			{
@@ -235,6 +235,10 @@ abstract class System
 			{
 				static::$arrStaticObjects[$strKey] = $strClass;
 			}
+			elseif (isset(static::$arrSingletons[$strClass]))
+			{
+				static::$arrStaticObjects[$strKey] = static::$arrSingletons[$strClass];
+			}
 			elseif ($container->has($strClass) && (strpos($strClass, '\\') !== false || !class_exists($strClass)))
 			{
 				static::$arrStaticObjects[$strKey] = $container->get($strClass);
@@ -249,7 +253,7 @@ abstract class System
 			}
 			elseif (\in_array('getInstance', get_class_methods($strClass)))
 			{
-				static::$arrStaticObjects[$strKey] = static::$arrSingletons[$strKey] = \call_user_func(array($strClass, 'getInstance'));
+				static::$arrStaticObjects[$strKey] = static::$arrSingletons[$strClass] = \call_user_func(array($strClass, 'getInstance'));
 			}
 			else
 			{
@@ -661,19 +665,29 @@ abstract class System
 	/**
 	 * Set a cookie
 	 *
-	 * @param string  $strName     The cookie name
-	 * @param mixed   $varValue    The cookie value
-	 * @param integer $intExpires  The expiration date
-	 * @param string  $strPath     An optional path
-	 * @param string  $strDomain   An optional domain name
-	 * @param boolean $blnSecure   If true, the secure flag will be set
-	 * @param boolean $blnHttpOnly If true, the http-only flag will be set
+	 * @param string       $strName     The cookie name
+	 * @param mixed        $varValue    The cookie value
+	 * @param integer      $intExpires  The expiration date
+	 * @param string|null  $strPath     An optional path
+	 * @param string|null  $strDomain   An optional domain name
+	 * @param boolean|null $blnSecure   If true, the secure flag will be set
+	 * @param boolean      $blnHttpOnly If true, the http-only flag will be set
 	 */
-	public static function setCookie($strName, $varValue, $intExpires, $strPath=null, $strDomain=null, $blnSecure=false, $blnHttpOnly=false)
+	public static function setCookie($strName, $varValue, $intExpires, $strPath=null, $strDomain=null, $blnSecure=null, $blnHttpOnly=false)
 	{
 		if ($strPath == '')
 		{
 			$strPath = Environment::get('path') ?: '/'; // see #4390
+		}
+
+		if ($blnSecure === null)
+		{
+			$blnSecure = false;
+
+			if ($request = static::getContainer()->get('request_stack')->getCurrentRequest())
+			{
+				$blnSecure = $request->isSecure();
+			}
 		}
 
 		$objCookie = new \stdClass();
@@ -886,12 +900,12 @@ abstract class System
 	 * Redirect to another page
 	 *
 	 * @param string  $strLocation The target URL
-	 * @param integer $intStatus   The HTTP status code (defaults to 307)
+	 * @param integer $intStatus   The HTTP status code (defaults to 303)
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             Use Controller::redirect() instead.
 	 */
-	public static function redirect($strLocation, $intStatus=307)
+	public static function redirect($strLocation, $intStatus=303)
 	{
 		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\System::redirect()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Controller::redirect()" instead.');
 

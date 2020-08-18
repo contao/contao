@@ -2120,7 +2120,7 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $container->getDefinition(ContaoMailer::class);
 
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('mailer', $definition->getDecoratedService()[0]);
+        $this->assertSame('mailer.mailer', $definition->getDecoratedService()[0]);
 
         $this->assertEquals(
             [

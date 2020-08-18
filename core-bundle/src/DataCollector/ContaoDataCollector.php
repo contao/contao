@@ -18,6 +18,7 @@ use Contao\CoreBundle\Util\PackageUtil;
 use Contao\LayoutModel;
 use Contao\Model\Registry;
 use Contao\PageModel;
+use Contao\StringUtil;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -85,7 +86,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     }
 
     /**
-     * @return array<string>
+     * @return array<string|bool>
      */
     public function getClassesSet(): array
     {
@@ -97,7 +98,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     }
 
     /**
-     * @return array<string>
+     * @return array<string|bool>
      */
     public function getClassesAliased(): array
     {
@@ -109,7 +110,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     }
 
     /**
-     * @return array<string>
+     * @return array<string|bool>
      */
     public function getClassesComposerized(): array
     {
@@ -238,7 +239,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
             return '';
         }
 
-        return sprintf('%s (ID %s)', $layout->name, $layout->id);
+        return sprintf('%s (ID %s)', StringUtil::decodeEntities($layout->name), $layout->id);
     }
 
     private function getTemplateName(): string
