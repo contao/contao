@@ -2,6 +2,8 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.10.0] (2020-08-18)
+
 ## [4.10.0-RC4] (2020-08-14)
 
 **Fixed issues:**
@@ -130,6 +132,7 @@ This project adheres to [Semantic Versioning].
 - [#1458] Always set host and language when generating the navigation menu ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.10.0]: https://github.com/contao/contao/releases/tag/4.10.0
 [4.10.0-RC4]: https://github.com/contao/contao/releases/tag/4.10.0-RC4
 [4.10.0-RC3]: https://github.com/contao/contao/releases/tag/4.10.0-RC3
 [4.10.0-RC2]: https://github.com/contao/contao/releases/tag/4.10.0-RC2
