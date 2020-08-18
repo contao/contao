@@ -36,9 +36,9 @@ class XliffFileLoader extends Loader
         $this->addToGlobals = $addToGlobals;
     }
 
-    public function load($file, $type = null): string
+    public function load($resource, $type = null): string
     {
-        return $this->convertXlfToPhp((string) $file, $type ?: 'en');
+        return $this->convertXlfToPhp((string) $resource, $type ?: 'en');
     }
 
     public function supports($resource, $type = null): bool
