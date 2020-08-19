@@ -736,7 +736,6 @@ class File extends \System
 		\System::getContainer()
 			->get('contao.image.image_factory')
 			->create(TL_ROOT . '/' . $this->strFile, array($width, $height, $mode), TL_ROOT . '/' . $this->strFile)
-			->getUrl(TL_ROOT)
 		;
 
 		$this->arrPathinfo = array();
