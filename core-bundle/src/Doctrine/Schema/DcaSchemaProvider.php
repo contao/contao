@@ -49,7 +49,7 @@ class DcaSchemaProvider
 
     public function createSchema(): Schema
     {
-        trigger_deprecation('contao/core-bundle', '4.11', 'Using the DcaSchemaProvider to create the schema is deprecated. Use the SchemaProvider instead.');
+        trigger_deprecation('contao/core-bundle', '4.11', 'Using the DcaSchemaProvider to create the schema has been deprecated and will no longer work in Contao 5.0. Use the SchemaProvider instead.');
 
         return $this->schemaProvider->createSchema();
     }
