@@ -733,19 +733,18 @@ class File extends \System
 			return false;
 		}
 
-		$return = \System::getContainer()
+		\System::getContainer()
 			->get('contao.image.image_factory')
 			->create(TL_ROOT . '/' . $this->strFile, array($width, $height, $mode), TL_ROOT . '/' . $this->strFile)
-			->getUrl(TL_ROOT)
 		;
 
-		if ($return)
-		{
-			$this->arrPathinfo = array();
-			$this->arrImageSize = array();
-		}
+		$this->arrPathinfo = array();
+		$this->arrImageSize = array();
 
-		return $return;
+		// Clear the image size cache as mtime could potentially not change
+		unset(static::$arrImageSizeCache[$this->strFile . '|' . $this->mtime]);
+
+		return true;
 	}
 
 	/**
