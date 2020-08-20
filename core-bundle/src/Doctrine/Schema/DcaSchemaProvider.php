@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Doctrine\Schema;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Database\Installer;
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
@@ -304,18 +303,6 @@ class DcaSchemaProvider
                     } else {
                         $sqlTarget[$table][$category] = $fields;
                     }
-                }
-            }
-        }
-
-        /** @var Connection $connection */
-        $connection = $this->doctrine->getConnection();
-
-        // Apply the schema filter (see contao/installation-bundle#78)
-        if ($filter = $connection->getConfiguration()->getSchemaAssetsFilter()) {
-            foreach (array_keys($sqlTarget) as $key) {
-                if (!$filter($key)) {
-                    unset($sqlTarget[$key]);
                 }
             }
         }
