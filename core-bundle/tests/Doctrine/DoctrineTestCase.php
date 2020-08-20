@@ -123,7 +123,8 @@ abstract class DoctrineTestCase extends TestCase
     protected function getTestEntityManager(): EntityManager
     {
         $params = [
-            'driver' => 'mysqli',
+            'driver' => 'pdo_sqlite',
+            'memory' => true,
         ];
 
         $driverChain = new MappingDriverChain();
