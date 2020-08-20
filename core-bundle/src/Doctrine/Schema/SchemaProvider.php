@@ -23,15 +23,9 @@ class SchemaProvider
      */
     private $entityManager;
 
-    /**
-     * @var SchemaTool|null
-     */
-    private $schemaTool;
-
-    public function __construct(EntityManagerInterface $entityManager, SchemaTool $schemaTool = null)
+    public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
-        $this->schemaTool = $schemaTool;
     }
 
     /**
@@ -39,14 +33,12 @@ class SchemaProvider
      */
     public function createSchema(): Schema
     {
-        if (null === $this->schemaTool) {
-            $this->schemaTool = new SchemaTool($this->entityManager);
-        }
+        $schemaTool = new SchemaTool($this->entityManager);
 
         $metadata = $this->entityManager->getMetadataFactory()->getAllMetadata();
 
         // This will trigger the contao.listener.doctrine_schema
         // listener that will append the DCA definitions.
-        return $this->schemaTool->getSchemaFromMetadata($metadata);
+        return $schemaTool->getSchemaFromMetadata($metadata);
     }
 }

@@ -13,61 +13,15 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Doctrine\Schema;
 
 use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
-use Contao\CoreBundle\Tests\TestCase;
-use Doctrine\DBAL\Schema\Schema;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping\ClassMetadata;
-use Doctrine\ORM\Mapping\ClassMetadataFactory;
-use Doctrine\ORM\Tools\SchemaTool;
+use Contao\CoreBundle\Tests\Doctrine\DoctrineTestCase;
 
-class SchemaProviderTest extends TestCase
+class SchemaProviderTest extends DoctrineTestCase
 {
     public function testCreateSchemaGetsSchemaFromMetadata(): void
     {
-        $metadata = [
-            new ClassMetadata('EntityA'),
-            new ClassMetadata('EntityB'),
-        ];
+        $schemaProvider = new SchemaProvider($this->getTestEntityManager());
+        $schema = $schemaProvider->createSchema();
 
-        $schema = $this->createMock(Schema::class);
-
-        $schemaProvider = new SchemaProvider(
-            $this->mockEntityManager($metadata),
-            $this->mockSchemaTool($metadata, $schema)
-        );
-
-        $this->assertSame($schema, $schemaProvider->createSchema());
-    }
-
-    private function mockSchemaTool(array $metadata, Schema $schema)
-    {
-        $schemaTool = $this->createMock(SchemaTool::class);
-        $schemaTool
-            ->expects($this->once())
-            ->method('getSchemaFromMetadata')
-            ->with($metadata)
-            ->willReturn($schema)
-        ;
-
-        return $schemaTool;
-    }
-
-    private function mockEntityManager(array $metadata)
-    {
-        $factory = $this->createMock(ClassMetadataFactory::class);
-        $factory
-            ->expects($this->once())
-            ->method('getAllMetadata')
-            ->willReturn($metadata)
-        ;
-
-        $entityManager = $this->createMock(EntityManagerInterface::class);
-        $entityManager
-            ->expects($this->once())
-            ->method('getMetadataFactory')
-            ->willReturn($factory)
-        ;
-
-        return $entityManager;
+        $this->assertTrue($schema->hasTable('foo'));
     }
 }
