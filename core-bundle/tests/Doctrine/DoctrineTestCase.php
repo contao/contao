@@ -105,6 +105,9 @@ abstract class DoctrineTestCase extends TestCase
         );
     }
 
+    /**
+     * Returns an empty Schema which has the default table options set.
+     */
     protected function getSchema(): Schema
     {
         $schemaConfig = new SchemaConfig();
