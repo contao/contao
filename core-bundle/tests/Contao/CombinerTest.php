@@ -105,6 +105,19 @@ class CombinerTest extends TestCase
             $combiner->getFileUrls()
         );
 
+        $this->assertSame(
+            [
+                'https://cdn.example.com/file1.css',
+                'https://cdn.example.com/file2.css|screen',
+                'https://cdn.example.com/file3.css|screen',
+            ],
+            $combiner->getFileUrls('https://cdn.example.com/')
+        );
+
+        $combinedFile = $combiner->getCombinedFile('https://cdn.example.com/');
+
+        $this->assertRegExp('#^https://cdn.example.com/assets/css/[a-z0-9]+\.css$#', $combinedFile);
+
         $combinedFile = $combiner->getCombinedFile();
 
         $this->assertRegExp('/^assets\/css\/[a-z0-9]+\.css$/', $combinedFile);
