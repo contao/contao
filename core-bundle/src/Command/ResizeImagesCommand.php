@@ -29,6 +29,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Process\Exception\ProcessSignaledException;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
@@ -352,7 +353,13 @@ class ResizeImagesCommand extends Command
 
     private function finishSubProcess(Process $process, string $path): void
     {
-        $process->wait();
+        try {
+            $process->wait();
+        } catch (ProcessSignaledException $exception) {
+            $this->io->writeln($path.' failed: '.$exception->getMessage());
+
+            return;
+        }
 
         if (!$process->isSuccessful()) {
             $this->io->writeln($path.' failed');
