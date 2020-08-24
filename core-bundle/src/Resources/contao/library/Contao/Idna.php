@@ -100,6 +100,14 @@ class Idna
 			return $strEmail; // see #6241
 		}
 
+		$strSubject = null;
+
+		// Strip the subject query string (see #2149)
+		if (strpos($strEmail, '?subject=') !== false)
+		{
+			list($strEmail, $strSubject) = explode('?subject=', $strEmail);
+		}
+
 		$arrChunks = explode('@', $strEmail);
 		$strHost = static::encode(array_pop($arrChunks));
 
@@ -108,7 +116,7 @@ class Idna
 			return '';
 		}
 
-		return implode('@', $arrChunks) . '@' . $strHost;
+		return implode('@', $arrChunks) . '@' . $strHost . ($strSubject ? '?subject=' . $strSubject : '');
 	}
 
 	/**
@@ -130,6 +138,14 @@ class Idna
 			return $strEmail; // see #6241
 		}
 
+		$strSubject = null;
+
+		// Strip the subject query string (see #2149)
+		if (strpos($strEmail, '?subject=') !== false)
+		{
+			list($strEmail, $strSubject) = explode('?subject=', $strEmail);
+		}
+
 		$arrChunks = explode('@', $strEmail);
 		$strHost = static::decode(array_pop($arrChunks));
 
@@ -138,7 +154,7 @@ class Idna
 			return '';
 		}
 
-		return implode('@', $arrChunks) . '@' . $strHost;
+		return implode('@', $arrChunks) . '@' . $strHost . ($strSubject ? '?subject=' . $strSubject : '');
 	}
 
 	/**

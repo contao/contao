@@ -92,6 +92,7 @@ class IdnaTest extends TestCase
         $this->assertSame('', Idna::encodeUrl(''));
         $this->assertSame('#', Idna::encodeUrl('#'));
         $this->assertSame('mailto:info@xn--fbar-5qaa.de', Idna::encodeUrl('mailto:info@fööbar.de'));
+        $this->assertSame('mailto:info@xn--fbar-5qaa.de?subject=Foobar', Idna::encodeUrl('mailto:info@fööbar.de?subject=Foobar'));
 
         $this->expectException('InvalidArgumentException');
 
@@ -108,6 +109,7 @@ class IdnaTest extends TestCase
         $this->assertSame('', Idna::decodeUrl(''));
         $this->assertSame('#', Idna::decodeUrl('#'));
         $this->assertSame('mailto:info@fööbar.de', Idna::decodeUrl('mailto:info@xn--fbar-5qaa.de'));
+        $this->assertSame('mailto:info@fööbar.de?subject=Foobar', Idna::decodeUrl('mailto:info@xn--fbar-5qaa.de?subject=Foobar'));
 
         $this->expectException('InvalidArgumentException');
 
