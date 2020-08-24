@@ -153,7 +153,8 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
 
         foreach ($request->cookies as $key => $value) {
             if ($this->isCsrfCookie($key, $value)) {
-                $response->headers->clearCookie($key, $basePath, null, $isSecure);
+                $sameSite = $isSecure ? Cookie::SAMESITE_NONE : Cookie::SAMESITE_LAX;
+                $response->headers->clearCookie($key, $basePath, null, $isSecure, true, $sameSite);
             }
         }
     }
