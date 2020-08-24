@@ -342,7 +342,7 @@ class ResizeImagesCommand extends Command
 
         $count = array_sum($counts);
 
-        $this->io->writeln('Resized '.($count - $failedCount).' Images successfully.');
+        $this->io->writeln('Resized '.($count - $failedCount).' images successfully.');
 
         if ($failedCount > 0) {
             $this->io->writeln('Resizing of '.$failedCount.' images failed.');
