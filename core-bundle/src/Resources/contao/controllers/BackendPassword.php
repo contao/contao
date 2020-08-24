@@ -81,21 +81,46 @@ class BackendPassword extends \Backend
 			// Save the data
 			else
 			{
+				$this->loadDataContainer('tl_user');
+
+				$dc = new \DC_Table('tl_user');
+				$dc->id = $this->User->id;
+
 				// Make sure the password has been changed
 				if (password_verify($pw, $this->User->password))
 				{
 					\Message::addError($GLOBALS['TL_LANG']['MSC']['pw_change']);
 				}
+				// Check for regexp on password field
+				elseif (isset($GLOBALS['TL_DCA']['tl_user']['fields']['password']['eval']['rgxp'], $GLOBALS['TL_HOOKS']['addCustomRegexp'])
+					&& \is_array($GLOBALS['TL_HOOKS']['addCustomRegexp']))
+				{
+					$rgxp = $GLOBALS['TL_DCA']['tl_user']['fields']['password']['eval']['rgxp'];
+					$widget = new Password(Password::getAttributesFromDca($GLOBALS['TL_DCA']['tl_user']['fields']['password'], 'password'));
+					$widget->dataContainer = $dc;
+
+					foreach ($GLOBALS['TL_HOOKS']['addCustomRegexp'] as $callback)
+					{
+						$this->import($callback[0]);
+						$break = $this->{$callback[0]}->{$callback[1]}($rgxp, $pw, $widget);
+
+						// Stop the loop if a callback returned true
+						if ($break === true)
+						{
+							break;
+						}
+					}
+
+					if ($widget->hasErrors())
+					{
+						Message::addError($widget->getErrorsAsString());
+					}
+				}
 				else
 				{
-					$this->loadDataContainer('tl_user');
-
 					// Trigger the save_callback
 					if (\is_array($GLOBALS['TL_DCA']['tl_user']['fields']['password']['save_callback']))
 					{
-						$dc = new \DC_Table('tl_user');
-						$dc->id = $this->User->id;
-
 						foreach ($GLOBALS['TL_DCA']['tl_user']['fields']['password']['save_callback'] as $callback)
 						{
 							if (\is_array($callback))
