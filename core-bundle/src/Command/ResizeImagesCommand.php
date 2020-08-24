@@ -255,7 +255,7 @@ class ResizeImagesCommand extends Command
             }
         } finally {
             $this->tableOutput->clear();
-            $this->io->writeln('Resized '.$count.' Images.');
+            $this->io->writeln('Resized '.$count.' images.');
         }
     }
 
