@@ -112,7 +112,7 @@ class IdnaTest extends TestCase
         $this->expectException('InvalidArgumentException');
 
         Idna::decodeUrl('www.xn--fbar-5qaa.de');
-        Idna::decodeUrl('index.php ?foo=bar');
+        Idna::decodeUrl('index.php?foo=bar');
     }
 
     public function testHandlesQueryStrings()
