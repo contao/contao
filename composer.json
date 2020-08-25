@@ -1,7 +1,7 @@
 {
     "name": "contao/contao",
     "type": "symfony-bundle",
-    "description": "Contao Open Source CMS Development Package",
+    "description": "Contao Open Source CMS development package",
     "homepage": "https://contao.org",
     "license": "LGPL-3.0-or-later",
     "authors": [
