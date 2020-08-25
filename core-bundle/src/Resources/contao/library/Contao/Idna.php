@@ -101,14 +101,29 @@ class Idna
 		}
 
 		$arrChunks = explode('@', $strEmail);
-		$strHost = static::encode(array_pop($arrChunks));
+		$strHost = array_pop($arrChunks);
 
 		if ($strHost == '')
 		{
 			return '';
 		}
 
-		return implode('@', $arrChunks) . '@' . $strHost;
+		$strQuery = null;
+
+		// Strip the query string (see #2149)
+		if (strpos($strHost, '?') !== false)
+		{
+			list($strHost, $strQuery) = explode('?', $strHost, 2);
+		}
+
+		$strHost = static::encode($strHost);
+
+		if ($strHost == '')
+		{
+			return '';
+		}
+
+		return implode('@', $arrChunks) . '@' . $strHost . ($strQuery ? '?' . $strQuery : '');
 	}
 
 	/**
@@ -131,14 +146,29 @@ class Idna
 		}
 
 		$arrChunks = explode('@', $strEmail);
-		$strHost = static::decode(array_pop($arrChunks));
+		$strHost = array_pop($arrChunks);
 
 		if ($strHost == '')
 		{
 			return '';
 		}
 
-		return implode('@', $arrChunks) . '@' . $strHost;
+		$strQuery = null;
+
+		// Strip the query string (see #2149)
+		if (strpos($strHost, '?') !== false)
+		{
+			list($strHost, $strQuery) = explode('?', $strHost, 2);
+		}
+
+		$strHost = static::decode($strHost);
+
+		if ($strHost == '')
+		{
+			return '';
+		}
+
+		return implode('@', $arrChunks) . '@' . $strHost . ($strQuery ? '?' . $strQuery : '');
 	}
 
 	/**
