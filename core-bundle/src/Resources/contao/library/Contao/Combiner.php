@@ -197,10 +197,17 @@ class Combiner extends System
 	/**
 	 * Generates the files and returns the URLs.
 	 *
+	 * @param string $strUrl An optional URL to prepend
+	 *
 	 * @return array The file URLs
 	 */
-	public function getFileUrls()
+	public function getFileUrls($strUrl=null)
 	{
+		if ($strUrl === null)
+		{
+			$strUrl = System::getContainer()->get('contao.assets.assets_context')->getStaticUrl();
+		}
+
 		$return = array();
 		$strTarget = substr($this->strMode, 1);
 
@@ -218,7 +225,7 @@ class Combiner extends System
 					$objFile->close();
 				}
 
-				$return[] = $strPath . '|' . $arrFile['version'];
+				$return[] = $strUrl . $strPath . '|' . $arrFile['version'];
 			}
 			else
 			{
@@ -236,7 +243,7 @@ class Combiner extends System
 					$name .= '|' . $arrFile['media'];
 				}
 
-				$return[] = $name . '|' . $arrFile['version'];
+				$return[] = $strUrl . $name . '|' . $arrFile['version'];
 			}
 		}
 
@@ -254,7 +261,7 @@ class Combiner extends System
 	{
 		if (Config::get('debugMode'))
 		{
-			return $this->getDebugMarkup();
+			return $this->getDebugMarkup($strUrl);
 		}
 
 		return $this->getCombinedFileUrl($strUrl);
@@ -263,11 +270,13 @@ class Combiner extends System
 	/**
 	 * Generates the debug markup.
 	 *
+	 * @param string $strUrl An optional URL to prepend
+	 *
 	 * @return string The debug markup
 	 */
-	protected function getDebugMarkup()
+	protected function getDebugMarkup($strUrl)
 	{
-		$return = $this->getFileUrls();
+		$return = $this->getFileUrls($strUrl);
 
 		foreach ($return as $k=>$v)
 		{
