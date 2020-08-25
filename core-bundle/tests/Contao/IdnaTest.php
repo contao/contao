@@ -92,7 +92,6 @@ class IdnaTest extends TestCase
         $this->assertSame('', Idna::encodeUrl(''));
         $this->assertSame('#', Idna::encodeUrl('#'));
         $this->assertSame('mailto:info@xn--fbar-5qaa.de', Idna::encodeUrl('mailto:info@fööbar.de'));
-        $this->assertSame('mailto:info@xn--fbar-5qaa.de?subject=Foobar', Idna::encodeUrl('mailto:info@fööbar.de?subject=Foobar'));
 
         $this->expectException('InvalidArgumentException');
 
@@ -109,11 +108,22 @@ class IdnaTest extends TestCase
         $this->assertSame('', Idna::decodeUrl(''));
         $this->assertSame('#', Idna::decodeUrl('#'));
         $this->assertSame('mailto:info@fööbar.de', Idna::decodeUrl('mailto:info@xn--fbar-5qaa.de'));
-        $this->assertSame('mailto:info@fööbar.de?subject=Foobar', Idna::decodeUrl('mailto:info@xn--fbar-5qaa.de?subject=Foobar'));
 
         $this->expectException('InvalidArgumentException');
 
         Idna::decodeUrl('www.xn--fbar-5qaa.de');
-        Idna::decodeUrl('index.php?foo=bar');
+        Idna::decodeUrl('index.php ?foo=bar');
+    }
+
+    public function testHandlesQueryStrings()
+    {
+        $decoded = 'mailto:info@fööbar.de';
+        $encoded = 'mailto:info@xn--fbar-5qaa.de';
+
+        // Add a query string that would trigger a LabelOutOfBoundsException
+        $queryString = '?subject='.str_repeat('a', 64);
+
+        $this->assertSame($encoded.$queryString, Idna::encodeUrl($decoded.$queryString));
+        $this->assertSame($decoded.$queryString, Idna::decodeUrl($encoded.$queryString));
     }
 }
