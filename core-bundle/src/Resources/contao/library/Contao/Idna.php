@@ -158,7 +158,7 @@ class Idna
 		// Strip the query string (see #2149)
 		if (strpos($strHost, '?') !== false)
 		{
-			list($strHost, $strQuery) = explode('?', $strHost);
+			list($strHost, $strQuery) = explode('?', $strHost, 2);
 		}
 
 		$strHost = static::decode($strHost);
