@@ -70,14 +70,15 @@ class RequestTokenListener
 
         // Only check the request token if a) the request is a POST request, b)
         // the request is not an Ajax request, c) the _token_check attribute is
-        // not false, d) the _token_check attribute is set or the request is a
-        // Contao request and e) the request has cookies, an authenticated user
-        // or the session has been started
+        // not false, d) the request is a Contao master request, e) the _token_check 
+        // attribute is set or the request is a Contao request and f) the request 
+        // has cookies, an authenticated user or the session has been started
         if (
             'POST' !== $request->getRealMethod()
             || $request->isXmlHttpRequest()
             || false === $request->attributes->get('_token_check')
             || (!$request->attributes->has('_token_check') && !$this->scopeMatcher->isContaoRequest($request))
+            || !$this->scopeMatcher->isContaoMasterRequest($event)
             || (
                 (0 === $request->cookies->count() || [$this->csrfCookiePrefix.$this->csrfTokenName] === $request->cookies->keys())
                 && !$request->getUserInfo()
