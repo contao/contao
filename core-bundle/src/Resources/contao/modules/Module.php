@@ -140,9 +140,14 @@ abstract class Module extends Frontend
 		$this->arrData = $objModule->row();
 		$this->cssID = StringUtil::deserialize($objModule->cssID, true);
 
-		if ($this->customTpl && TL_MODE == 'FE')
+		if ($this->customTpl)
 		{
-			$this->strTemplate = $this->customTpl;
+			$request = Controller::getCurrentRequest();
+
+			if (System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request))
+			{
+				$this->strTemplate = $this->customTpl;
+			}
 		}
 
 		$arrHeadline = StringUtil::deserialize($objModule->headline);

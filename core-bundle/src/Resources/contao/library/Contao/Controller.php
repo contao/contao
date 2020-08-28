@@ -21,6 +21,7 @@ use Contao\Model\Collection;
 use League\Uri\Components\Query;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\Glob;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Abstract parent class for Controllers
@@ -1130,6 +1131,23 @@ abstract class Controller extends System
 		}
 
 		throw new RedirectResponseException($strLocation, $intStatus);
+	}
+
+	/**
+	 * Get the current request from the request stack
+	 *
+	 * @return Request
+	 */
+	public static function getCurrentRequest()
+	{
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request === null)
+		{
+			throw new \RuntimeException('The request stack did not contain a request');
+		}
+
+		return $request;
 	}
 
 	/**

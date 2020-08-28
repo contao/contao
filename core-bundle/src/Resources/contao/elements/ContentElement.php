@@ -173,9 +173,14 @@ abstract class ContentElement extends Frontend
 		$this->arrData = $objElement->row();
 		$this->cssID = StringUtil::deserialize($objElement->cssID, true);
 
-		if ($this->customTpl && TL_MODE == 'FE')
+		if ($this->customTpl)
 		{
-			$this->strTemplate = $this->customTpl;
+			$request = Controller::getCurrentRequest();
+
+			if (System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request))
+			{
+				$this->strTemplate = $this->customTpl;
+			}
 		}
 
 		$arrHeadline = StringUtil::deserialize($objElement->headline);

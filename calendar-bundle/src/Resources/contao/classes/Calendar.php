@@ -207,6 +207,10 @@ class Calendar extends Frontend
 		$count = 0;
 		ksort($this->arrEvents);
 
+		$request = Controller::getCurrentRequest();
+		$origScope = $request->attributes->get('_scope');
+		$request->attributes->set('_scope', 'frontend');
+
 		// Add the feed items
 		foreach ($this->arrEvents as $days)
 		{
@@ -280,6 +284,8 @@ class Calendar extends Frontend
 				}
 			}
 		}
+
+		$request->attributes->set('_scope', $origScope);
 
 		$webDir = StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir'));
 

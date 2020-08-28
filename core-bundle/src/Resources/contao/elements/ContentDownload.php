@@ -86,8 +86,9 @@ class ContentDownload extends ContentElement
 	protected function compile()
 	{
 		$objFile = new File($this->singleSRC);
+		$request = Controller::getCurrentRequest();
 
-		if (TL_MODE == 'FE')
+		if (System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request))
 		{
 			global $objPage;
 

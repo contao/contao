@@ -828,6 +828,10 @@ class tl_news extends Contao\Backend
 			return;
 		}
 
+		$request = Contao\Controller::getCurrentRequest();
+		$origScope = $request->attributes->get('_scope');
+		$request->attributes->set('_scope', 'frontend');
+
 		$this->import('Contao\News', 'News');
 
 		foreach ($session as $id)
@@ -837,6 +841,8 @@ class tl_news extends Contao\Backend
 
 		$this->import('Contao\Automator', 'Automator');
 		$this->Automator->generateSitemap();
+
+		$request->attributes->set('_scope', $origScope);
 
 		$objSession->set('news_feed_updater', null);
 	}

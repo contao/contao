@@ -28,7 +28,9 @@ class ContentHtml extends ContentElement
 	 */
 	protected function compile()
 	{
-		if (TL_MODE == 'FE')
+		$request = Controller::getCurrentRequest();
+
+		if (System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request))
 		{
 			$this->Template->html = $this->html;
 		}
