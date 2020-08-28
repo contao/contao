@@ -70,13 +70,11 @@ class PluginTest extends TestCase
         $this->assertSame(ContaoCoreBundle::class, $bundles[5]->getName());
         $this->assertSame(['core'], $bundles[5]->getReplace());
 
+        $loadAfter = $bundles[5]->getLoadAfter();
+        sort($loadAfter);
+
         $this->assertSame(
             [
-                FrameworkBundle::class,
-                SecurityBundle::class,
-                TwigBundle::class,
-                MonologBundle::class,
-                SwiftmailerBundle::class,
                 DoctrineBundle::class,
                 DoctrineCacheBundle::class,
                 KnpMenuBundle::class,
@@ -85,9 +83,14 @@ class PluginTest extends TestCase
                 NelmioCorsBundle::class,
                 NelmioSecurityBundle::class,
                 SchebTwoFactorBundle::class,
+                FrameworkBundle::class,
+                MonologBundle::class,
+                SecurityBundle::class,
+                SwiftmailerBundle::class,
+                TwigBundle::class,
                 CmfRoutingBundle::class,
             ],
-            $bundles[5]->getLoadAfter()
+            $loadAfter
         );
     }
 
