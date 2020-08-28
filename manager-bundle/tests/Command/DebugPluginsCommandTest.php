@@ -246,12 +246,7 @@ Bundles Registered by Plugin "Contao\CoreBundle\ContaoManager\Plugin"
  ---------------------------------------------------------------------- ---------- --------------------------------------------------------- ------------- 
   Terminal42\ServiceAnnotationBundle\Terminal42ServiceAnnotationBundle                                                                        All          
  ---------------------------------------------------------------------- ---------- --------------------------------------------------------- ------------- 
-  Contao\CoreBundle\ContaoCoreBundle                                     core       Symfony\Bundle\FrameworkBundle\FrameworkBundle            All          
-                                                                                    Symfony\Bundle\SecurityBundle\SecurityBundle                           
-                                                                                    Symfony\Bundle\TwigBundle\TwigBundle                                   
-                                                                                    Symfony\Bundle\MonologBundle\MonologBundle                             
-                                                                                    Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle                     
-                                                                                    Doctrine\Bundle\DoctrineBundle\DoctrineBundle                          
+  Contao\CoreBundle\ContaoCoreBundle                                     core       Doctrine\Bundle\DoctrineBundle\DoctrineBundle             All          
                                                                                     Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle                
                                                                                     Knp\Bundle\MenuBundle\KnpMenuBundle                                    
                                                                                     Knp\Bundle\TimeBundle\KnpTimeBundle                                    
@@ -259,6 +254,11 @@ Bundles Registered by Plugin "Contao\CoreBundle\ContaoManager\Plugin"
                                                                                     Nelmio\CorsBundle\NelmioCorsBundle                                     
                                                                                     Nelmio\SecurityBundle\NelmioSecurityBundle                             
                                                                                     Scheb\TwoFactorBundle\SchebTwoFactorBundle                             
+                                                                                    Symfony\Bundle\FrameworkBundle\FrameworkBundle                         
+                                                                                    Symfony\Bundle\MonologBundle\MonologBundle                             
+                                                                                    Symfony\Bundle\SecurityBundle\SecurityBundle                           
+                                                                                    Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle                     
+                                                                                    Symfony\Bundle\TwigBundle\TwigBundle                                   
                                                                                     Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle                      
  ---------------------------------------------------------------------- ---------- --------------------------------------------------------- ------------- 
 
