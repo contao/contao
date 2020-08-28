@@ -66,21 +66,24 @@ class PluginTest extends TestCase
         $this->assertSame(ContaoCoreBundle::class, $bundles[3]->getName());
         $this->assertSame(['core'], $bundles[3]->getReplace());
 
+        $loadAfter = $bundles[3]->getLoadAfter();
+        sort($loadAfter);
+
         $this->assertSame(
             [
-                FrameworkBundle::class,
-                SecurityBundle::class,
-                TwigBundle::class,
-                MonologBundle::class,
-                SwiftmailerBundle::class,
+                ContaoManagerBundle::class,
                 DoctrineBundle::class,
                 DoctrineCacheBundle::class,
                 KnpMenuBundle::class,
                 KnpTimeBundle::class,
                 LexikMaintenanceBundle::class,
-                ContaoManagerBundle::class,
+                FrameworkBundle::class,
+                MonologBundle::class,
+                SecurityBundle::class,
+                SwiftmailerBundle::class,
+                TwigBundle::class,
             ],
-            $bundles[3]->getLoadAfter()
+            $loadAfter
         );
     }
 
