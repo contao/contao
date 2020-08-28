@@ -16,11 +16,20 @@ use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\ContaoManager\Plugin;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\DelegatingParser;
+use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
+use Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle;
 use Knp\Bundle\MenuBundle\KnpMenuBundle;
 use Knp\Bundle\TimeBundle\KnpTimeBundle;
+use Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle;
+use Nelmio\CorsBundle\NelmioCorsBundle;
+use Nelmio\SecurityBundle\NelmioSecurityBundle;
 use PHPUnit\Framework\TestCase;
 use Scheb\TwoFactorBundle\SchebTwoFactorBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
+use Symfony\Bundle\MonologBundle\MonologBundle;
+use Symfony\Bundle\SecurityBundle\SecurityBundle;
+use Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle;
+use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
@@ -60,7 +69,29 @@ class PluginTest extends TestCase
 
         $this->assertSame(ContaoCoreBundle::class, $bundles[5]->getName());
         $this->assertSame(['core'], $bundles[5]->getReplace());
-        $this->assertContains(FrameworkBundle::class, $bundles[5]->getLoadAfter());
+
+        $loadAfter = $bundles[5]->getLoadAfter();
+        sort($loadAfter);
+
+        $this->assertSame(
+            [
+                DoctrineBundle::class,
+                DoctrineCacheBundle::class,
+                KnpMenuBundle::class,
+                KnpTimeBundle::class,
+                LexikMaintenanceBundle::class,
+                NelmioCorsBundle::class,
+                NelmioSecurityBundle::class,
+                SchebTwoFactorBundle::class,
+                FrameworkBundle::class,
+                MonologBundle::class,
+                SecurityBundle::class,
+                SwiftmailerBundle::class,
+                TwigBundle::class,
+                CmfRoutingBundle::class,
+            ],
+            $loadAfter
+        );
     }
 
     public function testReturnsTheRouteCollection(): void
