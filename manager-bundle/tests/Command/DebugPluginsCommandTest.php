@@ -12,21 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Tests\Command;
 
-use Contao\CalendarBundle\ContaoManager\Plugin as CalendarBundlePlugin;
-use Contao\CommentsBundle\ContaoManager\Plugin as CommentsBundlePlugin;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\ContaoManager\Plugin as CoreBundlePlugin;
-use Contao\FaqBundle\ContaoManager\Plugin as FaqBundlePlugin;
-use Contao\InstallationBundle\ContaoManager\Plugin as InstallationBundlePlugin;
-use Contao\ListingBundle\ContaoManager\Plugin as ListingBundlePlugin;
 use Contao\ManagerBundle\Command\DebugPluginsCommand;
-use Contao\ManagerBundle\ContaoManager\Plugin as ManagerBundlePlugin;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Contao\ManagerBundle\Tests\Fixtures\ContaoManager\Plugin as FixturesPlugin;
 use Contao\ManagerPlugin\PluginLoader;
-use Contao\NewsBundle\ContaoManager\Plugin as NewsBundlePlugin;
 use Contao\NewsBundle\ContaoNewsBundle;
-use Contao\NewsletterBundle\ContaoManager\Plugin as NewsletterBundlePlugin;
 use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -53,47 +45,30 @@ class DebugPluginsCommandTest extends ContaoTestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute($arguments);
 
-        $this->assertSame($expectedOutput, $commandTester->getDisplay(true));
+        $this->assertStringContainsString($expectedOutput, $commandTester->getDisplay(true));
     }
 
     public function commandOutputProvider(): \Generator
     {
-        yield 'Lists the plugins' => [
-            [
-                'contao/core-bundle' => new CoreBundlePlugin(),
-                'contao/calendar-bundle' => new CalendarBundlePlugin(),
-                'contao/comments-bundle' => new CommentsBundlePlugin(),
-                'contao/faq-bundle' => new FaqBundlePlugin(),
-                'contao/installation-bundle' => new InstallationBundlePlugin(),
-                'contao/listing-bundle' => new ListingBundlePlugin(),
-                'contao/news-bundle' => new NewsBundlePlugin(),
-                'contao/newsletter-bundle' => new NewsletterBundlePlugin(),
-                'contao/manager-bundle' => new ManagerBundlePlugin(),
-            ],
-            [],
-            [],
-            $this->getPluginsOutput(),
-        ];
-
         yield 'Lists the test plugin' => [
             ['foo/bar-bundle' => new FixturesPlugin()],
             [],
             [],
-            $this->getTestPluginOutput(),
+            'Contao Manager Plugins',
         ];
 
         yield 'Lists the registered bundles by package name' => [
             ['contao/core-bundle' => new CoreBundlePlugin()],
             [],
             ['name' => 'contao/core-bundle', '--bundles' => true],
-            $this->getRegisteredBundlesOutput(),
+            'Bundles Registered by Plugin "Contao\CoreBundle\ContaoManager\Plugin"',
         ];
 
         yield 'Lists the registered bundles by class name' => [
             ['contao/core-bundle' => new CoreBundlePlugin()],
             [],
             ['name' => CoreBundlePlugin::class, '--bundles' => true],
-            $this->getRegisteredBundlesOutput(),
+            'Bundles Registered by Plugin "Contao\CoreBundle\ContaoManager\Plugin"',
         ];
 
         yield 'Lists the bundles in loading order' => [
@@ -103,7 +78,7 @@ class DebugPluginsCommandTest extends ContaoTestCase
                 new ContaoNewsBundle(),
             ],
             ['--bundles' => true],
-            $this->getLoadingOrderOutput(),
+            'Registered Bundles in Loading Order',
         ];
     }
 
@@ -174,114 +149,6 @@ class DebugPluginsCommandTest extends ContaoTestCase
         $container->set('kernel', $kernel);
 
         return $kernel;
-    }
-
-    private function getPluginsOutput(): string
-    {
-        $check = '\\' === \DIRECTORY_SEPARATOR ? '1' : "\xE2\x9C\x94";
-
-        return <<<OUTPUT
-
-Contao Manager Plugins
-======================
-
- ------------------------------------------------ ---------------------------- -------- --------- -------- ----------- ----------- ----- 
-  Plugin Class                                     Composer Package             Features / Plugin Interfaces                             
- ------------------------------------------------ ---------------------------- -------- --------- -------- ----------- ----------- ----- 
-                                                                                Bundle   Routing   Config   Extension   Dependent   API  
- ------------------------------------------------ ---------------------------- -------- --------- -------- ----------- ----------- ----- 
-  Contao\\CoreBundle\\ContaoManager\\Plugin           contao/core-bundle           $check        $check                                               
-  Contao\\CalendarBundle\\ContaoManager\\Plugin       contao/calendar-bundle       $check                                                        
-  Contao\\CommentsBundle\\ContaoManager\\Plugin       contao/comments-bundle       $check                                                        
-  Contao\\FaqBundle\\ContaoManager\\Plugin            contao/faq-bundle            $check                                                        
-  Contao\\InstallationBundle\\ContaoManager\\Plugin   contao/installation-bundle   $check        $check                                               
-  Contao\\ListingBundle\\ContaoManager\\Plugin        contao/listing-bundle        $check                                                        
-  Contao\\NewsBundle\\ContaoManager\\Plugin           contao/news-bundle           $check                                                        
-  Contao\\NewsletterBundle\\ContaoManager\\Plugin     contao/newsletter-bundle     $check                                                        
-  Contao\\ManagerBundle\\ContaoManager\\Plugin        contao/manager-bundle        $check        $check         $check        $check           $check           $check    
- ------------------------------------------------ ---------------------------- -------- --------- -------- ----------- ----------- ----- 
-
-
-OUTPUT;
-    }
-
-    private function getTestPluginOutput(): string
-    {
-        $check = '\\' === \DIRECTORY_SEPARATOR ? '1' : "\xE2\x9C\x94";
-
-        return <<<OUTPUT
-
-Contao Manager Plugins
-======================
-
- ---------------------------------------------------------- ------------------ -------- --------- -------- ----------- ----------- ----- 
-  Plugin Class                                               Composer Package   Features / Plugin Interfaces                             
- ---------------------------------------------------------- ------------------ -------- --------- -------- ----------- ----------- ----- 
-                                                                                Bundle   Routing   Config   Extension   Dependent   API  
- ---------------------------------------------------------- ------------------ -------- --------- -------- ----------- ----------- ----- 
-  Contao\\ManagerBundle\\Tests\\Fixtures\\ContaoManager\\Plugin   foo/bar-bundle                                 $check                            
- ---------------------------------------------------------- ------------------ -------- --------- -------- ----------- ----------- ----- 
-
-
-OUTPUT;
-    }
-
-    private function getRegisteredBundlesOutput(): string
-    {
-        return <<<'OUTPUT'
-
-Bundles Registered by Plugin "Contao\CoreBundle\ContaoManager\Plugin"
-=====================================================================
-
- ---------------------------------------------------------------------- ---------- --------------------------------------------------------- ------------- 
-  Bundle                                                                 Replaces   Load After                                                Environment  
- ---------------------------------------------------------------------- ---------- --------------------------------------------------------- ------------- 
-  Knp\Bundle\MenuBundle\KnpMenuBundle                                                                                                         All          
- ---------------------------------------------------------------------- ---------- --------------------------------------------------------- ------------- 
-  Knp\Bundle\TimeBundle\KnpTimeBundle                                                                                                         All          
- ---------------------------------------------------------------------- ---------- --------------------------------------------------------- ------------- 
-  Scheb\TwoFactorBundle\SchebTwoFactorBundle                                                                                                  All          
- ---------------------------------------------------------------------- ---------- --------------------------------------------------------- ------------- 
-  Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle                                                                                           All          
- ---------------------------------------------------------------------- ---------- --------------------------------------------------------- ------------- 
-  Terminal42\ServiceAnnotationBundle\Terminal42ServiceAnnotationBundle                                                                        All          
- ---------------------------------------------------------------------- ---------- --------------------------------------------------------- ------------- 
-  Contao\CoreBundle\ContaoCoreBundle                                     core       Symfony\Bundle\FrameworkBundle\FrameworkBundle            All          
-                                                                                    Symfony\Bundle\SecurityBundle\SecurityBundle                           
-                                                                                    Symfony\Bundle\TwigBundle\TwigBundle                                   
-                                                                                    Symfony\Bundle\MonologBundle\MonologBundle                             
-                                                                                    Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle                     
-                                                                                    Doctrine\Bundle\DoctrineBundle\DoctrineBundle                          
-                                                                                    Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle                
-                                                                                    Knp\Bundle\MenuBundle\KnpMenuBundle                                    
-                                                                                    Knp\Bundle\TimeBundle\KnpTimeBundle                                    
-                                                                                    Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle                  
-                                                                                    Nelmio\CorsBundle\NelmioCorsBundle                                     
-                                                                                    Nelmio\SecurityBundle\NelmioSecurityBundle                             
-                                                                                    Scheb\TwoFactorBundle\SchebTwoFactorBundle                             
-                                                                                    Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle                      
- ---------------------------------------------------------------------- ---------- --------------------------------------------------------- ------------- 
-
-
-OUTPUT;
-    }
-
-    private function getLoadingOrderOutput(): string
-    {
-        return <<<'OUTPUT'
-
-Registered Bundles in Loading Order
-===================================
-
- ------------------ ------------------------------------------ 
-  Bundle Name        Contao Resources Path                     
- ------------------ ------------------------------------------ 
-  ContaoCoreBundle   contao/core-bundle/src/Resources/contao/  
-  ContaoNewsBundle   contao/news-bundle/src/Resources/contao/  
- ------------------ ------------------------------------------ 
-
-
-OUTPUT;
     }
 
     private function normalizeDisplay(string $string): string

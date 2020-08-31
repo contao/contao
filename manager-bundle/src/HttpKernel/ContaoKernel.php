@@ -389,11 +389,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
     private static function loadEnv(string $projectDir, string $defaultEnv = 'prod'): void
     {
-        // Do not load .env files if they are already loaded or actual env variables are used
-        if (isset($_SERVER['APP_ENV'])) {
-            return;
-        }
-
         // Load cached env vars if the .env.local.php file exists
         // See https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/4.2/config/bootstrap.php
         if (\is_array($env = @include $projectDir.'/.env.local.php')) {
