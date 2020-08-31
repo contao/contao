@@ -440,9 +440,13 @@ class tl_news_feed extends Contao\Backend
 			return;
 		}
 
-		$request = Contao\Controller::getCurrentRequest();
-		$origScope = $request->attributes->get('_scope');
-		$request->attributes->set('_scope', 'frontend');
+		$request = Contao\System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request)
+		{
+			$origScope = $request->attributes->get('_scope');
+			$request->attributes->set('_scope', 'frontend');
+		}
 
 		$this->import('Contao\News', 'News');
 
@@ -454,7 +458,10 @@ class tl_news_feed extends Contao\Backend
 		$this->import('Contao\Automator', 'Automator');
 		$this->Automator->generateSitemap();
 
-		$request->attributes->set('_scope', $origScope);
+		if ($request)
+		{
+			$request->attributes->set('_scope', $origScope);
+		}
 
 		$objSession->set('news_feed_updater', null);
 	}

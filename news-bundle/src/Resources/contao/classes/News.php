@@ -138,9 +138,13 @@ class News extends Frontend
 		{
 			$arrUrls = array();
 
-			$request = Controller::getCurrentRequest();
-			$origScope = $request->attributes->get('_scope');
-			$request->attributes->set('_scope', 'frontend');
+			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+			if ($request)
+			{
+				$origScope = $request->attributes->get('_scope');
+				$request->attributes->set('_scope', 'frontend');
+			}
 
 			while ($objArticle->next())
 			{
@@ -248,7 +252,10 @@ class News extends Frontend
 				$objFeed->addItem($objItem);
 			}
 
-			$request->attributes->set('_scope', $origScope);
+			if ($request)
+			{
+				$request->attributes->set('_scope', $origScope);
+			}
 		}
 
 		$webDir = StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir'));

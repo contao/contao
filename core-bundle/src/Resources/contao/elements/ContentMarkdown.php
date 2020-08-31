@@ -32,9 +32,9 @@ class ContentMarkdown extends ContentElement
 	 */
 	public function generate()
 	{
-		$request = Controller::getCurrentRequest();
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
-		if (System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$return = '<pre>' . StringUtil::specialchars($this->code) . '</pre>';
 

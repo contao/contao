@@ -315,10 +315,10 @@ class ContentGallery extends ContentElement
 			++$rowcount;
 		}
 
-		$request = Controller::getCurrentRequest();
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
 		// Always use the default template in the back end
-		if (System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$this->galleryTpl = '';
 		}

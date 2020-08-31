@@ -152,9 +152,13 @@ class tl_content_calendar extends Contao\Backend
 			return;
 		}
 
-		$request = Contao\Controller::getCurrentRequest();
-		$origScope = $request->attributes->get('_scope');
-		$request->attributes->set('_scope', 'frontend');
+		$request = Contao\System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request)
+		{
+			$origScope = $request->attributes->get('_scope');
+			$request->attributes->set('_scope', 'frontend');
+		}
 
 		$this->import('Contao\Calendar', 'Calendar');
 
@@ -166,7 +170,10 @@ class tl_content_calendar extends Contao\Backend
 		$this->import('Contao\Automator', 'Automator');
 		$this->Automator->generateSitemap();
 
-		$request->attributes->set('_scope', $origScope);
+		if ($request)
+		{
+			$request->attributes->set('_scope', $origScope);
+		}
 
 		$objSession->set('calendar_feed_updater', null);
 	}

@@ -59,10 +59,10 @@ class ContentMedia extends ContentElement
 			return '';
 		}
 
-		$request = Controller::getCurrentRequest();
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
 		// Display a list of files in the back end
-		if (System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$return = '<ul>';
 

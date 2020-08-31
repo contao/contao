@@ -81,10 +81,10 @@ class ContentHyperlink extends ContentElement
 			$this->Template->rel = ' rel="noreferrer noopener"';
 		}
 
-		$request = Controller::getCurrentRequest();
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
 		// Unset the title attributes in the back end (see #6258)
-		if (System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$this->Template->title = '';
 			$this->Template->linkTitle = '';

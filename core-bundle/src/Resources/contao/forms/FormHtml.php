@@ -42,9 +42,9 @@ class FormHtml extends Widget
 	 */
 	public function parse($arrAttributes=null)
 	{
-		$request = Controller::getCurrentRequest();
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
-		if (System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$this->html = htmlspecialchars($this->html);
 		}
@@ -59,14 +59,14 @@ class FormHtml extends Widget
 	 */
 	public function generate()
 	{
-		$request = Controller::getCurrentRequest();
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
-		if (System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request))
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
-			return $this->html;
+			return htmlspecialchars($this->html);
 		}
 
-		return htmlspecialchars($this->html);
+		return $this->html;
 	}
 }
 

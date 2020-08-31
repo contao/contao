@@ -586,9 +586,10 @@ abstract class Widget extends Controller
 
 		if ($this->customTpl)
 		{
-			$request = Controller::getCurrentRequest();
+			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
-			if (System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request))
+			// Use the custom template unless it is a back end request
+			if (!$request || !System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 			{
 				$this->strTemplate = $this->customTpl;
 			}
