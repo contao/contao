@@ -634,7 +634,7 @@ abstract class Backend extends \Controller
 	 */
 	public static function findSearchablePages($pid=0, $domain='', $blnIsXmlSitemap=false)
 	{
-		$objPages = PageModel::findByPid($pid);
+		$objPages = PageModel::findByPid($pid, array('order'=>'sorting'));
 
 		if ($objPages === null)
 		{
