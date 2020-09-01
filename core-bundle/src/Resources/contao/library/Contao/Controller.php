@@ -1558,7 +1558,16 @@ abstract class Controller extends System
 			$intMaxWidth = Config::get('maxImageWidth');
 		}
 
-		$arrMargin = (TL_MODE == 'BE') ? array() : StringUtil::deserialize($arrItem['imagemargin']);
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
+		{
+			$arrMargin = array();
+		}
+		else
+		{
+			$arrMargin = StringUtil::deserialize($arrItem['imagemargin']);
+		}
 
 		// Store the original dimensions
 		$objTemplate->width = $imgSize[0];
