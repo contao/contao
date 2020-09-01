@@ -634,6 +634,9 @@ abstract class Backend extends \Controller
 	 */
 	public static function findSearchablePages($pid=0, $domain='', $blnIsXmlSitemap=false)
 	{
+		// Since the publication status of a page is not inherited by its child
+		// pages, we have to use findByPid() instead of findPublishedByPid() and
+		// filter out unpublished pages in the foreach loop (see #2217)
 		$objPages = PageModel::findByPid($pid, array('order'=>'sorting'));
 
 		if ($objPages === null)
