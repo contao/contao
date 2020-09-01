@@ -634,7 +634,10 @@ abstract class Backend extends \Controller
 	 */
 	public static function findSearchablePages($pid=0, $domain='', $blnIsXmlSitemap=false)
 	{
-		$objPages = \PageModel::findPublishedByPid($pid, array('ignoreFePreview'=>true));
+		// Since the publication status of a page is not inherited by its child
+		// pages, we have to use findByPid() instead of findPublishedByPid() and
+		// filter out unpublished pages in the foreach loop (see #2217)
+		$objPages = PageModel::findByPid($pid, array('order'=>'sorting'));
 
 		if ($objPages === null)
 		{
@@ -642,12 +645,15 @@ abstract class Backend extends \Controller
 		}
 
 		$arrPages = array();
+		$time = Date::floorToMinute();
 
 		// Recursively walk through all subpages
 		foreach ($objPages as $objPage)
 		{
+			$isPublished = ($objPage->published && ($objPage->start == '' || $objPage->start <= $time) && ($objPage->stop == '' || $objPage->stop > ($time + 60)));
+
 			// Searchable and not protected
-			if ($objPage->type == 'regular' && (!$objPage->noSearch || $blnIsXmlSitemap) && (!$blnIsXmlSitemap || $objPage->robots != 'noindex,nofollow') && (!$objPage->protected || \Config::get('indexProtected')))
+			if ($isPublished && $objPage->type == 'regular' && (!$objPage->noSearch || $blnIsXmlSitemap) && (!$blnIsXmlSitemap || $objPage->robots != 'noindex,nofollow') && (!$objPage->protected || \Config::get('indexProtected')))
 			{
 				$arrPages[] = $objPage->getAbsoluteUrl();
 
