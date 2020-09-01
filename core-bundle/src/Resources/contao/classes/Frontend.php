@@ -349,7 +349,7 @@ abstract class Frontend extends \Controller
 					$strUrl = \System::getContainer()->get('router')->generate('contao_index', $arrParams);
 					$strUrl = substr($strUrl, \strlen(\Environment::get('path')) + 1);
 
-					static::redirect($strUrl, 301);
+					static::redirect($strUrl);
 				}
 
 				// Redirect if the page alias is not "index" or "/" (see #8498, #8560 and #1210)
