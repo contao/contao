@@ -27,7 +27,7 @@
       </trans-unit>
       <trans-unit id="FMD.newslist.1">
         <source>Adds a list of news items to the page</source>
-        <target>Ten moduł wyświetla listę pewnych liczb aktualności danego archiwum.</target>
+        <target>Ten moduł wyświetla listę aktualności danego archiwum.</target>
       </trans-unit>
       <trans-unit id="FMD.newsreader.0">
         <source>Newsreader</source>

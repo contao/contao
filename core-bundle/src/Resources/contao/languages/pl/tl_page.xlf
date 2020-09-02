@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_page.title.1">
         <source>Please enter the page name.</source>
-        <target>Nazwa strony wyświetla się w nawigacji. Nie powinien zawierać więcej niż 65 znaków.</target>
+        <target>Nazwa strony wyświetla się w nawigacji. Nie powinna zawierać więcej niż 65 znaków.</target>
       </trans-unit>
       <trans-unit id="tl_page.alias.0">
         <source>Page alias</source>
@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_page.type.1">
         <source>Please choose the page type.</source>
-        <target>Wybierz typ strony zależnie od jej przeznaczenia.</target>
+        <target>Wybierz typ strony, zależnie od jej przeznaczenia.</target>
       </trans-unit>
       <trans-unit id="tl_page.pageTitle.0">
         <source>Page title</source>
@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_page.robots.1">
         <source>Here you can define how search engines handle the page.</source>
-        <target>Tutaj możesz zdefiniować jak wyszukiwarki mają interpretować Twoją stronę.</target>
+        <target>Tutaj możesz zdefiniować, jak wyszukiwarki mają interpretować Twoją stronę.</target>
       </trans-unit>
       <trans-unit id="tl_page.description.0">
         <source>Page description</source>
@@ -79,7 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_page.redirectBack.1">
         <source>Redirect the member back to the last page visited instead of the redirect page.</source>
-        <target>Przekieruj użytkownika z powrotem do ostatnio odwiedzanej strony zamiast do określonej strony docelowej.</target>
+        <target>Przekieruj użytkownika z powrotem do ostatnio odwiedzanej strony, zamiast do określonej strony docelowej.</target>
       </trans-unit>
       <trans-unit id="tl_page.fallback.0">
         <source>Language fallback</source>
@@ -95,7 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_page.dns.1">
         <source>Here you can restrict the access to the website to a certain domain name.</source>
-        <target>Jeśli przypiszesz nazwę domenę do punktu startowego, odwiedzający będą przekierowani do tej strony dopiero wtedy kiedy wpiszą odpowiedni adres domeny (np. &lt;em&gt;twojadomena.pl&lt;/em&gt; lub &lt;em&gt;subdomena.twojadomena.pl&lt;/em&gt;).</target>
+        <target>Jeśli przypiszesz nazwę domenę do punktu startowego, odwiedzający będą przekierowani do tej strony dopiero wtedy, kiedy wpiszą odpowiedni adres domeny (np. &lt;em&gt;twojadomena.pl&lt;/em&gt; lub &lt;em&gt;subdomena.twojadomena.pl&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.0">
         <source>E-mail address of the website administrator</source>
@@ -103,6 +103,7 @@
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.1">
         <source>This e-mail address will be used to send and receive system messages.</source>
+        <target>Ten adres e-mail zostanie użyty do wysyłania i odbierania wiadomości systemowych.</target>
       </trans-unit>
       <trans-unit id="tl_page.dateFormat.0">
         <source>Date format</source>
@@ -110,7 +111,7 @@
       </trans-unit>
       <trans-unit id="tl_page.dateFormat.1">
         <source>The date format string will be parsed with the PHP date() function.</source>
-        <target>Wprowadź format daty obsługiwany przez funkcję PHP function date().</target>
+        <target>Wprowadź format daty obsługiwany przez funkcję PHP date().</target>
       </trans-unit>
       <trans-unit id="tl_page.timeFormat.0">
         <source>Time format</source>
@@ -118,7 +119,7 @@
       </trans-unit>
       <trans-unit id="tl_page.timeFormat.1">
         <source>The time format string will be parsed with the PHP date() function.</source>
-        <target>Wprowadź format czasu obsługiwany przez funkcję PHP function date().</target>
+        <target>Wprowadź format czasu obsługiwany przez funkcję PHP date().</target>
       </trans-unit>
       <trans-unit id="tl_page.datimFormat.0">
         <source>Date and time format</source>
@@ -126,7 +127,7 @@
       </trans-unit>
       <trans-unit id="tl_page.datimFormat.1">
         <source>The date and time format string will be parsed with the PHP date() function.</source>
-        <target>Wprowadź format daty i czasu obsługiwany przez funkcję PHP function date().</target>
+        <target>Wprowadź format daty i czasu obsługiwany przez funkcję PHP date().</target>
       </trans-unit>
       <trans-unit id="tl_page.createSitemap.0">
         <source>Create an XML sitemap</source>
@@ -158,7 +159,7 @@
       </trans-unit>
       <trans-unit id="tl_page.autoforward.1">
         <source>Redirect visitors to another page (e.g. a login page).</source>
-        <target>Jeśli wybierzesz tą opcję, odwiedzający będą przekierowywani do innej strony (np. strony logowania lub strony powitalnej).</target>
+        <target>Jeśli wybierzesz tę opcję, odwiedzający będą przekierowywani do innej strony (np. strony logowania lub strony powitalnej).</target>
       </trans-unit>
       <trans-unit id="tl_page.protected.0">
         <source>Protect page</source>
@@ -166,11 +167,11 @@
       </trans-unit>
       <trans-unit id="tl_page.protected.1">
         <source>Restrict page access to certain member groups.</source>
-        <target>Jeśli wybierzesz tą opcję możesz ograniczyć dostęp do strony dla pewnych grup.</target>
+        <target>Jeśli wybierzesz tę opcję, możesz ograniczyć dostęp do strony dla pewnych grup.</target>
       </trans-unit>
       <trans-unit id="tl_page.groups.0">
         <source>Allowed member groups</source>
-        <target>Zezwolone grupy użytkowników</target>
+        <target>Dozwolone grupy użytkowników</target>
       </trans-unit>
       <trans-unit id="tl_page.groups.1">
         <source>These groups will be able to access the page.</source>
@@ -178,19 +179,19 @@
       </trans-unit>
       <trans-unit id="tl_page.includeLayout.0">
         <source>Assign a layout</source>
-        <target>Ustal szablon</target>
+        <target>Ustal układ</target>
       </trans-unit>
       <trans-unit id="tl_page.includeLayout.1">
         <source>Assign a page layout to the page and its subpages.</source>
-        <target>Domyślnie strona używa takiego samego szablonu jak strona nadrzędna. Jeśli wybierzesz tą opcję, możesz ustalić nowy szablon dla tej strony jak i jej podstron.</target>
+        <target>Domyślnie strona używa takiego samego układu jak strona nadrzędna. Jeśli wybierzesz tę opcję, możesz ustalić nowy układ dla tej strony jak i jej podstron.</target>
       </trans-unit>
       <trans-unit id="tl_page.layout.0">
         <source>Page layout</source>
-        <target>Szablon strony</target>
+        <target>Układ strony</target>
       </trans-unit>
       <trans-unit id="tl_page.layout.1">
         <source>You can manage page layouts with the &quot;themes&quot; module.</source>
-        <target>Wybierz szablon strony. Możesz edytować lub tworzyć szablony używając modułu &lt;em&gt;szablony strony&lt;/em&gt;.</target>
+        <target>Wybierz układ strony. Możesz edytować lub tworzyć układy używając modułu &lt;em&gt;Układy stron&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_page.mobileLayout.0">
         <source>Mobile page layout</source>
@@ -214,7 +215,7 @@
       </trans-unit>
       <trans-unit id="tl_page.cache.1">
         <source>The number of seconds after which the page should no longer be considered fresh by shared caches.</source>
-        <target>Liczba sekund, po której strona przestanie być uznawana jako &quot;świeża&quot; przez pamięć podręczną.</target>
+        <target>Liczba sekund, po których strona przestanie być uznawana jako &quot;świeża&quot; przez pamięć podręczną.</target>
       </trans-unit>
       <trans-unit id="tl_page.clientCache.0">
         <source>Client cache timeout</source>
@@ -222,7 +223,7 @@
       </trans-unit>
       <trans-unit id="tl_page.clientCache.1">
         <source>The number of seconds after which the page should no longer be considered fresh by the browser.</source>
-        <target>Liczba sekund, po której strona przestanie być uznawana jako &quot;świeża&quot; przez przeglądarkę.</target>
+        <target>Liczba sekund, po których strona przestanie być uznawana jako &quot;świeża&quot; przez przeglądarkę.</target>
       </trans-unit>
       <trans-unit id="tl_page.includeChmod.0">
         <source>Assign access rights</source>
@@ -230,11 +231,11 @@
       </trans-unit>
       <trans-unit id="tl_page.includeChmod.1">
         <source>Access rights determine what back end users can do with the page.</source>
-        <target>Zezwolenia pozwalają określić do jakiego obrębu użytkownik może modyfikować stronę i jej artykuły. Jeśli nie wybierzesz tej opcji, strona używa tych samych zezwoleń co strona .</target>
+        <target>Zezwolenia pozwalają określić, jak użytkownik może modyfikować stronę i jej artykuły. Jeśli nie wybierzesz tej opcji, strona będzie używać tych samych zezwoleń co strona nadrzędna.</target>
       </trans-unit>
       <trans-unit id="tl_page.cuser.0">
         <source>Owner</source>
-        <target>Użytkownik</target>
+        <target>Właściciel</target>
       </trans-unit>
       <trans-unit id="tl_page.cuser.1">
         <source>Please select a user as the owner of the page.</source>
@@ -254,7 +255,7 @@
       </trans-unit>
       <trans-unit id="tl_page.chmod.1">
         <source>Please assign the access rights for the page and its subpages.</source>
-        <target>Każda strona ma 3 poziomy dostępu: jeden dla użytkownika, jeden dla grupy i jeden dla kogokolwiek innego. Możesz ustalić różne zezwolenia dla każdego poziomu.</target>
+        <target>Każda strona ma 3 poziomy dostępu: jeden dla użytkownika, jeden dla grupy i jeden dla wszystkich pozostałych. Możesz ustalić różne zezwolenia dla każdego poziomu.</target>
       </trans-unit>
       <trans-unit id="tl_page.noSearch.0">
         <source>Do not search</source>
@@ -310,7 +311,7 @@
       </trans-unit>
       <trans-unit id="tl_page.accesskey.1">
         <source>A navigation item can be focused by pressing the [ALT] or [CTRL] key and the access key simultaneously.</source>
-        <target>Klawisz dostępu jest pojedynczym znakiem, który może być przypisany to elementu nawigacji. Jeśli odwiedzający jednocześnie wciśnie klawisz ALT i klucz dostępu (np. literę A), element nawigacji uaktywni się tak samo jak po kliknięciu.</target>
+        <target>Klawisz dostępu jest pojedynczym znakiem, który może być przypisany to elementu nawigacji. Jeśli odwiedzający jednocześnie wciśnie klawisz ALT i klawisz dostępu (np. literę A), element nawigacji uaktywni się tak samo jak po kliknięciu.</target>
       </trans-unit>
       <trans-unit id="tl_page.published.0">
         <source>Publish page</source>
@@ -322,7 +323,7 @@
       </trans-unit>
       <trans-unit id="tl_page.start.0">
         <source>Show from</source>
-        <target>Wrapper start</target>
+        <target>Pokaż od</target>
       </trans-unit>
       <trans-unit id="tl_page.start.1">
         <source>Do not show the page on the website before this day.</source>
@@ -330,7 +331,7 @@
       </trans-unit>
       <trans-unit id="tl_page.stop.0">
         <source>Show until</source>
-        <target>Wrapper stop</target>
+        <target>Pokaż do</target>
       </trans-unit>
       <trans-unit id="tl_page.stop.1">
         <source>Do not show the page on the website on and after this day.</source>
@@ -402,7 +403,7 @@
       </trans-unit>
       <trans-unit id="tl_page.publish_legend">
         <source>Publish settings</source>
-        <target>Ustawinia publikacji</target>
+        <target>Ustawienia publikacji</target>
       </trans-unit>
       <trans-unit id="tl_page.permanent">
         <source>301 Permanent redirect</source>
@@ -442,7 +443,7 @@
       </trans-unit>
       <trans-unit id="tl_page.edit.0">
         <source>Edit page</source>
-        <target>Edytuj strone</target>
+        <target>Edytuj stronę</target>
       </trans-unit>
       <trans-unit id="tl_page.edit.1">
         <source>Edit page ID %s</source>
@@ -474,7 +475,7 @@
       </trans-unit>
       <trans-unit id="tl_page.delete.0">
         <source>Delete page</source>
-        <target>Skasuj strone</target>
+        <target>Skasuj stronę</target>
       </trans-unit>
       <trans-unit id="tl_page.delete.1">
         <source>Delete page ID %s</source>
@@ -490,7 +491,7 @@
       </trans-unit>
       <trans-unit id="tl_page.pasteafter.0">
         <source>Paste after</source>
-        <target>Wklej z</target>
+        <target>Wklej po</target>
       </trans-unit>
       <trans-unit id="tl_page.pasteafter.1">
         <source>Paste after page ID %s</source>
