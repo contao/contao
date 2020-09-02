@@ -864,7 +864,7 @@ class PageModel extends \Model
 					{
 						// If $folderUrl is not yet set, use the alias of the first
 						// parent page if it is not a root page (see #2129)
-						if (!$folderUrl)
+						if (!$folderUrl && $objParentPage->alias)
 						{
 							$folderUrl = $objParentPage->alias . '/';
 						}
