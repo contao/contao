@@ -28,7 +28,14 @@ class ModuleHtml extends Module
 	 */
 	protected function compile()
 	{
-		$this->Template->html = (TL_MODE == 'FE') ? $this->html : htmlspecialchars($this->html);
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
+		{
+			return htmlspecialchars($this->html);
+		}
+
+		return $this->html;
 	}
 }
 

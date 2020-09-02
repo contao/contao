@@ -173,9 +173,15 @@ abstract class ContentElement extends Frontend
 		$this->arrData = $objElement->row();
 		$this->cssID = StringUtil::deserialize($objElement->cssID, true);
 
-		if ($this->customTpl && TL_MODE == 'FE')
+		if ($this->customTpl)
 		{
-			$this->strTemplate = $this->customTpl;
+			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+			// Use the custom template unless it is a back end request
+			if (!$request || !System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
+			{
+				$this->strTemplate = $this->customTpl;
+			}
 		}
 
 		$arrHeadline = StringUtil::deserialize($objElement->headline);
@@ -236,7 +242,7 @@ abstract class ContentElement extends Frontend
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'FE' && !BE_USER_LOGGED_IN && ($this->invisible || ($this->start != '' && $this->start > time()) || ($this->stop != '' && $this->stop < time())))
+		if ($this->isHidden())
 		{
 			return '';
 		}
@@ -277,6 +283,35 @@ abstract class ContentElement extends Frontend
 		}
 
 		return $this->Template->parse();
+	}
+
+	protected function isHidden()
+	{
+		$isInvisible = $this->invisible || ($this->start != '' && $this->start > time()) || ($this->stop != '' && $this->stop < time());
+
+		// The element is visible, so show it
+		if (!$isInvisible)
+		{
+			return false;
+		}
+
+		$tokenChecker = System::getContainer()->get('contao.security.token_checker');
+
+		// Preview mode is enabled, so show the element
+		if ($tokenChecker->hasBackendUser() && $tokenChecker->isPreviewMode())
+		{
+			return false;
+		}
+
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		// We are in the back end, so show the element
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
+		{
+			return false;
+		}
+
+		return true;
 	}
 
 	/**

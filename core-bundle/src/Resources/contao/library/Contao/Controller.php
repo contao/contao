@@ -355,44 +355,39 @@ abstract class Controller extends System
 				return '';
 			}
 
-			$arrArticles = array();
+			$return = '';
+			$intCount = 0;
 			$blnMultiMode = ($objArticles->count() > 1);
-			$arrRows = $objArticles->getModels();
-			$objLastRow = null;
+			$intLast = $objArticles->count() - 1;
 
-			/** @var ArticleModel $objRow */
-			while ($objRow = array_shift($arrRows))
+			while ($objArticles->next())
 			{
+				/** @var ArticleModel $objRow */
+				$objRow = $objArticles->current();
+
 				// Add the "first" and "last" classes (see #2583)
-				$arrCss = array();
-
-				if (empty($arrArticles))
+				if ($intCount == 0 || $intCount == $intLast)
 				{
-					$arrCss[] = 'first';
+					$arrCss = array();
+
+					if ($intCount == 0)
+					{
+						$arrCss[] = 'first';
+					}
+
+					if ($intCount == $intLast)
+					{
+						$arrCss[] = 'last';
+					}
+
+					$objRow->classes = $arrCss;
 				}
 
-				if (empty($arrRows))
-				{
-					$arrCss[] = 'last';
-				}
-
-				$objRow->classes = $arrCss;
-				$strArticle = static::getArticle($objRow, $blnMultiMode, false, $strColumn);
-
-				if ($strArticle != '')
-				{
-					$arrArticles[] = $strArticle;
-					$objLastRow = $objRow;
-				}
-				elseif (empty($arrRows) && $objLastRow != null && $objLastRow !== $objRow)
-				{
-					// Re-generate the last successful article with "last" class
-					array_pop($arrArticles);
-					$arrRows[] = $objLastRow;
-				}
+				$return .= static::getArticle($objRow, $blnMultiMode, false, $strColumn);
+				++$intCount;
 			}
 
-			return implode('', $arrArticles);
+			return $return;
 		}
 
 		// Other modules

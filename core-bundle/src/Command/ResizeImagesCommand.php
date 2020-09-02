@@ -29,6 +29,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Process\Exception\ProcessSignaledException;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 use Webmozart\PathUtil\Path;
@@ -194,15 +195,15 @@ class ResizeImagesCommand extends Command
     private function resizeImages(float $timeLimit, float $concurrent, bool $noSubProcess): int
     {
         if (!$noSubProcess && $this->supportsSubProcesses()) {
-            $this->executeConcurrent($timeLimit, $concurrent);
-        } else {
-            $this->io->warning(
-                "Running this command without sub processes.\n"
-                .'This can lead to memory leaks and eventually let the execution fail.'
-            );
-
-            $this->executeInCurrentProcess($timeLimit, $concurrent);
+            return $this->executeConcurrent($timeLimit, $concurrent);
         }
+
+        $this->io->warning(
+            "Running this command without sub processes.\n"
+            .'This can lead to memory leaks and eventually let the execution fail.'
+        );
+
+        $this->executeInCurrentProcess($timeLimit, $concurrent);
 
         return 0;
     }
@@ -251,7 +252,7 @@ class ResizeImagesCommand extends Command
             }
         } finally {
             $this->tableOutput->clear();
-            $this->io->writeln('Resized '.$count.' Images.');
+            $this->io->writeln('Resized '.$count.' images.');
         }
     }
 
@@ -263,6 +264,7 @@ class ResizeImagesCommand extends Command
         $phpFinder = new PhpExecutableFinder();
         $phpPath = $phpFinder->find();
 
+        $failedCount = 0;
         $processes = array_fill(0, (int) $concurrent ?: 1, null);
         $paths = array_fill(0, \count($processes), '');
         $counts = array_fill(0, \count($processes), 0);
@@ -280,7 +282,9 @@ class ResizeImagesCommand extends Command
                             continue;
                         }
 
-                        $this->finishSubProcess($process, $paths[$index]);
+                        if (!$this->finishSubProcess($process, $paths[$index])) {
+                            ++$failedCount;
+                        }
 
                         if ($concurrent < 1) {
                             usleep((int) (
@@ -318,14 +322,29 @@ class ResizeImagesCommand extends Command
                 continue;
             }
 
-            $this->finishSubProcess($process, $paths[$index]);
+            if (!$this->finishSubProcess($process, $paths[$index])) {
+                ++$failedCount;
+            }
+
             unset($processes[$index]);
             $this->updateOutput($processes, $counts, $paths);
         }
 
         $this->tableOutput->clear();
 
-        $this->io->writeln('Resized '.array_sum($counts).' Images.');
+        $count = array_sum($counts);
+
+        $this->io->writeln('Resized '.($count - $failedCount).' images successfully.');
+
+        if ($failedCount > 0) {
+            $this->io->writeln('Resizing of '.$failedCount.' images failed.');
+        }
+
+        if (0 !== $failedCount && $count - $failedCount <= 0) {
+            $this->io->error('No image could be resized successfully.');
+
+            return 1;
+        }
 
         return 0;
     }
@@ -343,12 +362,22 @@ class ResizeImagesCommand extends Command
         $this->table->render();
     }
 
-    private function finishSubProcess(Process $process, string $path): void
+    private function finishSubProcess(Process $process, string $path): bool
     {
-        $process->wait();
+        try {
+            $process->wait();
+        } catch (ProcessSignaledException $exception) {
+            $this->io->writeln($path.' failed: '.$exception->getMessage());
 
-        if (!$process->isSuccessful()) {
-            $this->io->writeln($path.' failed');
+            return false;
         }
+
+        if ($process->isSuccessful()) {
+            return true;
+        }
+
+        $this->io->writeln($path.' failed');
+
+        return false;
     }
 }

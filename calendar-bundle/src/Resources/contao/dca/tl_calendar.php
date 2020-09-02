@@ -463,6 +463,14 @@ class tl_calendar extends Backend
 			return;
 		}
 
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request)
+		{
+			$origScope = $request->attributes->get('_scope');
+			$request->attributes->set('_scope', 'frontend');
+		}
+
 		$this->import(Calendar::class, 'Calendar');
 
 		foreach ($session as $id)
@@ -472,6 +480,11 @@ class tl_calendar extends Backend
 
 		$this->import(Automator::class, 'Automator');
 		$this->Automator->generateSitemap();
+
+		if ($request)
+		{
+			$request->attributes->set('_scope', $origScope);
+		}
 
 		$objSession->set('calendar_feed_updater', null);
 	}
