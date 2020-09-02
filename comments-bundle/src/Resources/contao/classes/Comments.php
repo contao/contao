@@ -662,7 +662,7 @@ class Comments extends Frontend
 		if ($objNotify !== null)
 		{
 			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
-			$isBackend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
+			$isFrontend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request);
 
 			while ($objNotify->next())
 			{
@@ -673,7 +673,7 @@ class Comments extends Frontend
 				}
 
 				// Update the notification URL if it has changed (see #373)
-				if (!$isBackend && $objNotify->url != Environment::get('request'))
+				if ($isFrontend && $objNotify->url != Environment::get('request'))
 				{
 					$objNotify->url = Environment::get('request');
 					$objNotify->save();
