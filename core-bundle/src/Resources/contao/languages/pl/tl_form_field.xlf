@@ -551,7 +551,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.pastenew.0">
         <source>Add new at the top</source>
-        <target>Utwórz nowy pole formularza na górze</target>
+        <target>Utwórz nowe pole formularza na górze</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pastenew.1">
         <source>Add new after field ID %s</source>
