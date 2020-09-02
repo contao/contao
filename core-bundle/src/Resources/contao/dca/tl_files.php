@@ -827,26 +827,14 @@ class tl_files extends Backend
 	 */
 	public function protectFolder(DataContainer $dc)
 	{
-		$strPath = $dc->id;
-		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
-
-		// Check if the folder has been renamed (see #6432, #934)
-		if (Input::post('name') && !is_dir($projectDir . '/' . $strPath))
+		if (!$dc->activeRecord || !$dc->activeRecord->path)
 		{
-			if (Validator::isInsecurePath(Input::post('name')))
-			{
-				throw new RuntimeException('Invalid file or folder name ' . Input::post('name'));
-			}
-
-			$count = 0;
-			$strName = basename($strPath);
-			$strNewPath = str_replace($strName, Input::post('name'), $strPath, $count);
-
-			if ($strNewPath && $count > 0 && is_dir($projectDir . '/' . $strNewPath))
-			{
-				$strPath = $strNewPath;
-			}
+			// This should never happen, because DC_Folder does not support "override all"
+			throw new InvalidArgumentException('The DataContainer object does not contain a valid active record');
 		}
+
+		$strPath = $dc->activeRecord->path;
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Only show for folders (see #5660)
 		if (!is_dir($projectDir . '/' . $strPath))

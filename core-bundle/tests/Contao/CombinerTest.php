@@ -78,6 +78,19 @@ class CombinerTest extends ContaoTestCase
             $combiner->getFileUrls()
         );
 
+        $this->assertSame(
+            [
+                'https://cdn.example.com/file1.css|'.$mtime,
+                'https://cdn.example.com/file2.css|screen|'.$mtime,
+                'https://cdn.example.com/file3.css|screen|'.$mtime,
+            ],
+            $combiner->getFileUrls('https://cdn.example.com/')
+        );
+
+        $combinedFile = $combiner->getCombinedFile('https://cdn.example.com/');
+
+        $this->assertRegExp('#^https://cdn.example.com/assets/css/file1\.css,file2\.css,file3\.css-[a-z0-9]+\.css$#', $combinedFile);
+
         $combinedFile = $combiner->getCombinedFile();
 
         $this->assertRegExp('/^assets\/css\/file1\.css\,file2\.css\,file3\.css-[a-z0-9]+\.css$/', $combinedFile);

@@ -357,7 +357,7 @@ class Search
 					tl_search_index.pid,
 					SQRT(SUM(POW(
 						(1 + LOG(relevance)) * LOG((
-							" . (int) $objDatabase->query("SELECT COUNT(*) as count FROM tl_search")->count . "
+							" . (int) ($objDatabase->query("SELECT COUNT(*) as count FROM tl_search")->count + 1) . "
 						) / GREATEST(1, documentFrequency)),
 						2
 					))) as vectorLength
@@ -573,7 +573,7 @@ class Search
 
 			if (isset($arrWildcards[$index]))
 			{
-				$strQuery .= "+ ((1+LOG(SUM(match$index * tl_search_index.relevance))) * POW(LOG(@searchCount / @wildcardCount$index), 2) / " . (\count($arrAllKeywords) - \count($arrExcludedMatches)) . ")";
+				$strQuery .= "+ ((1+LOG(SUM(match$index * tl_search_index.relevance))) * POW(LOG((@searchCount + 1) / @wildcardCount$index), 2) / " . (\count($arrAllKeywords) - \count($arrExcludedMatches)) . ")";
 			}
 			else
 			{
@@ -592,7 +592,7 @@ class Search
 
 			if (isset($arrWildcards[$index]))
 			{
-				$strQuery .= " + POW(LOG(@searchCount / @wildcardCount$index) / " . (\count($arrAllKeywords) - \count($arrExcludedMatches)) . ", 2)";
+				$strQuery .= " + POW(LOG((@searchCount + 1) / @wildcardCount$index) / " . (\count($arrAllKeywords) - \count($arrExcludedMatches)) . ", 2)";
 			}
 			else
 			{
@@ -604,7 +604,7 @@ class Search
 		$strQuery .= " FROM (SELECT id, term";
 
 		// Calculate inverse document frequency of every matching term
-		$strQuery .= ", LOG(@searchCount / GREATEST(1, documentFrequency)) AS idf";
+		$strQuery .= ", LOG((@searchCount + 1) / GREATEST(1, documentFrequency)) AS idf";
 
 		// Store the match of every keyword and wildcard in its own column match0, match1, ...
 		foreach ($arrAllKeywords as $index => $strKeywordExpression)

@@ -68,7 +68,6 @@ class DcaLoader extends Controller
 	public function load($blnNoCache=false)
 	{
 		$this->loadDcaFiles($blnNoCache);
-		$this->addDefaultLabels($blnNoCache);
 	}
 
 	/**
@@ -131,6 +130,8 @@ class DcaLoader extends Controller
 			trigger_deprecation('contao/core-bundle', '4.3', 'Using the "dcaconfig.php" file has been deprecated and will no longer work in Contao 5.0. Create custom DCA files in the "contao/dca" folder instead.');
 			include $projectDir . '/system/config/dcaconfig.php';
 		}
+
+		$this->addDefaultLabels($blnNoCache);
 	}
 
 	/**

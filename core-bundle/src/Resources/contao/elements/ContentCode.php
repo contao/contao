@@ -30,7 +30,9 @@ class ContentCode extends ContentElement
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$return = '<pre>' . htmlspecialchars($this->code) . '</pre>';
 
