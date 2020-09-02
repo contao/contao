@@ -86,8 +86,13 @@ class ContentDownload extends ContentElement
 	protected function compile()
 	{
 		$objFile = new File($this->singleSRC);
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
-		if (TL_MODE == 'FE')
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
+		{
+			$arrMeta = Frontend::getMetaData($this->objFile->meta, $GLOBALS['TL_LANGUAGE']);
+		}
+		else
 		{
 			global $objPage;
 
@@ -97,10 +102,6 @@ class ContentDownload extends ContentElement
 			{
 				$arrMeta = Frontend::getMetaData($this->objFile->meta, $objPage->rootFallbackLanguage);
 			}
-		}
-		else
-		{
-			$arrMeta = Frontend::getMetaData($this->objFile->meta, $GLOBALS['TL_LANGUAGE']);
 		}
 
 		// Use the meta title (see #1459)

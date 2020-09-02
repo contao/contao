@@ -138,6 +138,14 @@ class News extends Frontend
 		{
 			$arrUrls = array();
 
+			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+			if ($request)
+			{
+				$origScope = $request->attributes->get('_scope');
+				$request->attributes->set('_scope', 'frontend');
+			}
+
 			while ($objArticle->next())
 			{
 				$jumpTo = $objArticle->getRelated('pid')->jumpTo;
@@ -242,6 +250,11 @@ class News extends Frontend
 				}
 
 				$objFeed->addItem($objItem);
+			}
+
+			if ($request)
+			{
+				$request->attributes->set('_scope', $origScope);
 			}
 		}
 

@@ -661,6 +661,9 @@ class Comments extends Frontend
 
 		if ($objNotify !== null)
 		{
+			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+			$isBackend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
+
 			while ($objNotify->next())
 			{
 				// Don't notify the commentor about his own comment
@@ -670,7 +673,7 @@ class Comments extends Frontend
 				}
 
 				// Update the notification URL if it has changed (see #373)
-				if (TL_MODE == 'FE' && $objNotify->url != Environment::get('request'))
+				if (!$isBackend && $objNotify->url != Environment::get('request'))
 				{
 					$objNotify->url = Environment::get('request');
 					$objNotify->save();

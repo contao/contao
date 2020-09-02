@@ -67,7 +67,9 @@ class Form extends Hybrid
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['CTE']['form'][0]) . ' ###';
@@ -78,9 +80,15 @@ class Form extends Hybrid
 			return $objTemplate->parse();
 		}
 
-		if ($this->customTpl != '' && TL_MODE == 'FE')
+		if ($this->customTpl)
 		{
-			$this->strTemplate = $this->customTpl;
+			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+			// Use the custom template unless it is a back end request
+			if (!$request || !System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
+			{
+				$this->strTemplate = $this->customTpl;
+			}
 		}
 
 		return parent::generate();

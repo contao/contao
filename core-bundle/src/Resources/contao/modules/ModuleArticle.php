@@ -55,7 +55,7 @@ class ModuleArticle extends Module
 	 */
 	public function generate($blnNoMarkup=false)
 	{
-		if (TL_MODE == 'FE' && !BE_USER_LOGGED_IN && (!$this->published || ($this->start != '' && $this->start > time()) || ($this->stop != '' && $this->stop < time())))
+		if ($this->isHidden())
 		{
 			return '';
 		}
@@ -72,6 +72,35 @@ class ModuleArticle extends Module
 		}
 
 		return parent::generate();
+	}
+
+	protected function isHidden()
+	{
+		$isUnpublished = !$this->published || ($this->start != '' && $this->start > time()) || ($this->stop != '' && $this->stop < time());
+
+		// The article is published, so show it
+		if (!$isUnpublished)
+		{
+			return false;
+		}
+
+		$tokenChecker = System::getContainer()->get('contao.security.token_checker');
+
+		// Preview mode is enabled, so show the article
+		if ($tokenChecker->hasBackendUser() && $tokenChecker->isPreviewMode())
+		{
+			return false;
+		}
+
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		// We are in the back end, so show the article
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
+		{
+			return false;
+		}
+
+		return true;
 	}
 
 	/**

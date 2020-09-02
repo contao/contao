@@ -584,9 +584,15 @@ abstract class Widget extends Controller
 
 		$this->mandatoryField = $GLOBALS['TL_LANG']['MSC']['mandatory'];
 
-		if ($this->customTpl != '' && TL_MODE == 'FE')
+		if ($this->customTpl)
 		{
-			$this->strTemplate = $this->customTpl;
+			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+			// Use the custom template unless it is a back end request
+			if (!$request || !System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
+			{
+				$this->strTemplate = $this->customTpl;
+			}
 		}
 
 		$strBuffer = $this->inherit();

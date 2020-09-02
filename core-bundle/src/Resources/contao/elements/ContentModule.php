@@ -26,7 +26,7 @@ class ContentModule extends ContentElement
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'FE' && !BE_USER_LOGGED_IN && ($this->invisible || ($this->start != '' && $this->start > time()) || ($this->stop != '' && $this->stop < time())))
+		if ($this->isHidden())
 		{
 			return '';
 		}
