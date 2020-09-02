@@ -862,10 +862,16 @@ class PageModel extends \Model
 					// Page title
 					if ($type != 'root')
 					{
+						// If $folderUrl is not yet set, use the alias of the first
+						// parent page if it is not a root page (see #2129)
+						if (!$folderUrl && $objParentPage->alias)
+						{
+							$folderUrl = $objParentPage->alias . '/';
+						}
+
 						$alias = $objParentPage->alias;
 						$name = $objParentPage->title;
 						$title = $objParentPage->pageTitle ?: $objParentPage->title;
-						$folderUrl = basename($alias) . '/' . $folderUrl;
 						$trail[] = $objParentPage->pid;
 					}
 
