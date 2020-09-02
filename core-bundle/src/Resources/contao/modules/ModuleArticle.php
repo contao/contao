@@ -193,39 +193,33 @@ class ModuleArticle extends Module
 
 		if ($objCte !== null)
 		{
-			$arrRows = $objCte->getModels();
-			$objLastRow = null;
+			$intCount = 0;
+			$intLast = $objCte->count() - 1;
 
-			/** @var ContentModel $objRow */
-			while ($objRow = array_shift($arrRows))
+			while ($objCte->next())
 			{
 				$arrCss = array();
 
-				// Add the "first" and "last" classes (see #2583)
-				if (empty($arrElements))
-				{
-					$arrCss[] = 'first';
-				}
+				/** @var ContentModel $objRow */
+				$objRow = $objCte->current();
 
-				if (empty($arrRows))
+				// Add the "first" and "last" classes (see #2583)
+				if ($intCount == 0 || $intCount == $intLast)
 				{
-					$arrCss[] = 'last';
+					if ($intCount == 0)
+					{
+						$arrCss[] = 'first';
+					}
+
+					if ($intCount == $intLast)
+					{
+						$arrCss[] = 'last';
+					}
 				}
 
 				$objRow->classes = $arrCss;
-				$strElement = $this->getContentElement($objRow, $this->strColumn);
-
-				if ($strElement != '')
-				{
-					$arrElements[] = $strElement;
-					$objLastRow = $objRow;
-				}
-				elseif (empty($arrRows) && $objLastRow != null && $objLastRow !== $objRow)
-				{
-					// Re-generate the last successful element with "last" class
-					array_pop($arrElements);
-					$arrRows[] = $objLastRow;
-				}
+				$arrElements[] = $this->getContentElement($objRow, $this->strColumn);
+				++$intCount;
 			}
 		}
 

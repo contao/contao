@@ -808,26 +808,14 @@ class tl_files extends Contao\Backend
 	 */
 	public function protectFolder(Contao\DataContainer $dc)
 	{
-		$strPath = $dc->id;
-		$projectDir = Contao\System::getContainer()->getParameter('kernel.project_dir');
-
-		// Check if the folder has been renamed (see #6432, #934)
-		if (Contao\Input::post('name') && !is_dir($projectDir . '/' . $strPath))
+		if (!$dc->activeRecord || !$dc->activeRecord->path)
 		{
-			if (Contao\Validator::isInsecurePath(Contao\Input::post('name')))
-			{
-				throw new RuntimeException('Invalid file or folder name ' . Contao\Input::post('name'));
-			}
-
-			$count = 0;
-			$strName = basename($strPath);
-			$strNewPath = str_replace($strName, Contao\Input::post('name'), $strPath, $count);
-
-			if ($strNewPath && $count > 0 && is_dir($projectDir . '/' . $strNewPath))
-			{
-				$strPath = $strNewPath;
-			}
+			// This should never happen, because DC_Folder does not support "override all"
+			throw new \InvalidArgumentException('The DataContainer object does not contain a valid active record');
 		}
+
+		$strPath = $dc->activeRecord->path;
+		$projectDir = Contao\System::getContainer()->getParameter('kernel.project_dir');
 
 		// Only show for folders (see #5660)
 		if (!is_dir($projectDir . '/' . $strPath))
