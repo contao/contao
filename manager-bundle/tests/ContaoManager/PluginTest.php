@@ -178,6 +178,7 @@ class PluginTest extends ContaoTestCase
                     } elseif (\is_callable($resource)) {
                         $container = new ContainerBuilder();
                         $container->setParameter('kernel.environment', 'prod');
+                        $container->setParameter('kernel.project_dir', __DIR__.'/../Fixtures/app');
 
                         $resource($container);
                     }
@@ -188,7 +189,7 @@ class PluginTest extends ContaoTestCase
         $plugin = new Plugin();
         $plugin->registerContainerConfiguration($loader, []);
 
-        $this->assertContains('config_prod.yml', $files);
+        $this->assertSame(['config_prod.yml'], $files);
     }
 
     public function testRegisterContainerConfigurationInDev(): void
@@ -206,6 +207,7 @@ class PluginTest extends ContaoTestCase
                     } elseif (\is_callable($resource)) {
                         $container = new ContainerBuilder();
                         $container->setParameter('kernel.environment', 'dev');
+                        $container->setParameter('kernel.project_dir', __DIR__.'/../Fixtures/app');
 
                         $resource($container);
                     }
@@ -216,7 +218,34 @@ class PluginTest extends ContaoTestCase
         $plugin = new Plugin();
         $plugin->registerContainerConfiguration($loader, []);
 
-        $this->assertContains('config_dev.yml', $files);
+        $this->assertSame(['config_dev.yml'], $files);
+    }
+
+    public function testRegisterContainerConfigurationLoadsOrmMappingConfigurationIfEntityFolderExists(): void
+    {
+        $loader = $this->createMock(LoaderInterface::class);
+        $loader
+            ->expects($this->atLeastOnce())
+            ->method('load')
+            ->willReturnCallback(
+                static function ($resource) use (&$files): void {
+                    if (\is_string($resource)) {
+                        $files[] = basename($resource);
+                    } elseif (\is_callable($resource)) {
+                        $container = new ContainerBuilder();
+                        $container->setParameter('kernel.environment', 'prod');
+                        $container->setParameter('kernel.project_dir', __DIR__.'/../Fixtures/app-with-entities');
+
+                        $resource($container);
+                    }
+                }
+            )
+        ;
+
+        $plugin = new Plugin();
+        $plugin->registerContainerConfiguration($loader, []);
+
+        $this->assertSame(['config_prod.yml', 'config_orm_mapping.yml'], $files);
     }
 
     public function testGetRouteCollectionInProd(): void

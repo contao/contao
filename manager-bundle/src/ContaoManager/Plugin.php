@@ -138,6 +138,10 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                     $loader->load('@ContaoManagerBundle/Resources/skeleton/config/config_prod.yml');
                 }
 
+                if ($container->fileExists(Path::join($container->getParameter('kernel.project_dir'), 'src/Entity'))) {
+                    $loader->load('@ContaoManagerBundle/Resources/skeleton/config/config_orm_mapping.yml');
+                }
+
                 $container->setParameter('container.dumper.inline_class_loader', true);
             }
         );
