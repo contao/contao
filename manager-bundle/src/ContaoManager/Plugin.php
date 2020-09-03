@@ -138,10 +138,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                     $loader->load('@ContaoManagerBundle/Resources/skeleton/config/config_prod.yml');
                 }
 
-                if ($container->fileExists(Path::join($container->getParameter('kernel.project_dir'), 'src/Entity'))) {
-                    $loader->load('@ContaoManagerBundle/Resources/skeleton/config/config_orm_mapping.yml');
-                }
-
                 $container->setParameter('container.dumper.inline_class_loader', true);
             }
         );
@@ -254,8 +250,9 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 }
 
                 $extensionConfigs = $this->addDefaultServerVersion($extensionConfigs, $container);
+                $extensionConfigs = $this->addDefaultPdoDriverOptions($extensionConfigs);
 
-                return $this->addDefaultPdoDriverOptions($extensionConfigs);
+                return $this->addDefaultDoctrineMapping($extensionConfigs, $container);
         }
 
         return $extensionConfigs;
@@ -365,6 +362,50 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                         'options' => [
                             \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
                         ],
+                    ],
+                ],
+            ],
+        ];
+
+        return $extensionConfigs;
+    }
+
+    /**
+     * Adds a default orm mapping for the App namespace if none was configured.
+     *
+     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     */
+    private function addDefaultDoctrineMapping(array $extensionConfigs, ContainerBuilder $container): array
+    {
+        // Do not add an 'App' mapping if it already exists or any existing
+        // mapping is targeting the '%kernel.project_dir%/src/Entity' directory.
+        foreach ($extensionConfigs as $config) {
+            if (isset($config['orm']['mappings']['App'])) {
+                return $extensionConfigs;
+            }
+
+            foreach ($config['orm']['mappings'] ?? [] as $mapping) {
+                if ('%kernel.project_dir%/src/Entity' === ($mapping['dir'] ?? '')) {
+                    return $extensionConfigs;
+                }
+            }
+        }
+
+        // Do not add an 'App' mapping if the '%kernel.project_dir%/src/Entity'
+        // directory does not exists.
+        if (!$container->fileExists(Path::join($container->getParameter('kernel.project_dir'), 'src/Entity'))) {
+            return $extensionConfigs;
+        }
+
+        $extensionConfigs[] = [
+            'orm' => [
+                'mappings' => [
+                    'App' => [
+                        'type' => 'annotation',
+                        'dir' => '%kernel.project_dir%/src/Entity',
+                        'is_bundle' => false,
+                        'prefix' => 'App\Entity',
+                        'alias' => 'App',
                     ],
                 ],
             ],

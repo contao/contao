@@ -178,7 +178,6 @@ class PluginTest extends ContaoTestCase
                     } elseif (\is_callable($resource)) {
                         $container = new ContainerBuilder();
                         $container->setParameter('kernel.environment', 'prod');
-                        $container->setParameter('kernel.project_dir', __DIR__.'/../Fixtures/app');
 
                         $resource($container);
                     }
@@ -189,7 +188,7 @@ class PluginTest extends ContaoTestCase
         $plugin = new Plugin();
         $plugin->registerContainerConfiguration($loader, []);
 
-        $this->assertSame(['config_prod.yml'], $files);
+        $this->assertContains('config_prod.yml', $files);
     }
 
     public function testRegisterContainerConfigurationInDev(): void
@@ -207,7 +206,6 @@ class PluginTest extends ContaoTestCase
                     } elseif (\is_callable($resource)) {
                         $container = new ContainerBuilder();
                         $container->setParameter('kernel.environment', 'dev');
-                        $container->setParameter('kernel.project_dir', __DIR__.'/../Fixtures/app');
 
                         $resource($container);
                     }
@@ -218,34 +216,7 @@ class PluginTest extends ContaoTestCase
         $plugin = new Plugin();
         $plugin->registerContainerConfiguration($loader, []);
 
-        $this->assertSame(['config_dev.yml'], $files);
-    }
-
-    public function testRegisterContainerConfigurationLoadsOrmMappingConfigurationIfEntityFolderExists(): void
-    {
-        $loader = $this->createMock(LoaderInterface::class);
-        $loader
-            ->expects($this->atLeastOnce())
-            ->method('load')
-            ->willReturnCallback(
-                static function ($resource) use (&$files): void {
-                    if (\is_string($resource)) {
-                        $files[] = basename($resource);
-                    } elseif (\is_callable($resource)) {
-                        $container = new ContainerBuilder();
-                        $container->setParameter('kernel.environment', 'prod');
-                        $container->setParameter('kernel.project_dir', __DIR__.'/../Fixtures/app-with-entities');
-
-                        $resource($container);
-                    }
-                }
-            )
-        ;
-
-        $plugin = new Plugin();
-        $plugin->registerContainerConfiguration($loader, []);
-
-        $this->assertSame(['config_prod.yml', 'config_orm_mapping.yml'], $files);
+        $this->assertContains('config_dev.yml', $files);
     }
 
     public function testGetRouteCollectionInProd(): void
@@ -868,6 +839,7 @@ class PluginTest extends ContaoTestCase
     {
         $pluginLoader = $this->createMock(PluginLoader::class);
         $container = new PluginContainerBuilder($pluginLoader, []);
+        $container->setParameter('kernel.project_dir', __DIR__.'/../Fixtures/app');
 
         $extensionConfigs = [
             [
@@ -914,6 +886,123 @@ class PluginTest extends ContaoTestCase
         $_ENV['DATABASE_URL'] = $url;
     }
 
+    public function testDoesNotAddDefaultDoctrineMappingIfEntityFolderDoesNotExists(): void
+    {
+        $plugin = new Plugin(
+            function () {
+                return $this->createMock(Connection::class);
+            }
+        );
+
+        $extensionConfig = $plugin->getExtensionConfig('doctrine', [], $this->getContainer());
+
+        $this->assertEmpty($extensionConfig);
+    }
+
+    /**
+     * @dataProvider getExistingDoctrineMappings
+     */
+    public function testDoesNotAddDefaultDoctrineMappingIfAlreadyExisting(array $mappings): void
+    {
+        $extensionConfigs = [
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'url' => '%env(DATABASE_URL)%',
+                            'password' => '@foobar',
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'orm' => [
+                    'mappings' => $mappings,
+                ],
+            ],
+        ];
+
+        $expect = $extensionConfigs;
+
+        $plugin = new Plugin(
+            function () {
+                return $this->createMock(Connection::class);
+            }
+        );
+
+        $container = $this->getContainer();
+        $container->setParameter('kernel.project_dir', __DIR__.'/../Fixtures/app-with-entities');
+
+        $extensionConfig = $plugin->getExtensionConfig('doctrine', $extensionConfigs, $container);
+
+        $this->assertSame($expect, $extensionConfig);
+    }
+
+    public function getExistingDoctrineMappings(): \Generator
+    {
+        yield 'with mapping "App"' => [
+            [
+                'App' => [
+                    'foo' => 'bar',
+                ],
+            ],
+        ];
+
+        yield 'with mapping configuring the root "src/Entity" directory' => [
+            [
+                'foo' => [
+                    'dir' => '%kernel.project_dir%/src/Entity',
+                ],
+            ],
+        ];
+    }
+
+    public function testAddsDefaultDoctrineMapping(): void
+    {
+        $extensionConfigs = [
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'url' => '%env(DATABASE_URL)%',
+                            'password' => '@foobar',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $expect = array_merge(
+            $extensionConfigs,
+            [[
+                'orm' => [
+                    'mappings' => [
+                        'App' => [
+                            'type' => 'annotation',
+                            'dir' => '%kernel.project_dir%/src/Entity',
+                            'is_bundle' => false,
+                            'prefix' => 'App\Entity',
+                            'alias' => 'App',
+                        ],
+                    ],
+                ],
+            ]]
+        );
+
+        $plugin = new Plugin(
+            function () {
+                return $this->createMock(Connection::class);
+            }
+        );
+
+        $container = $this->getContainer();
+        $container->setParameter('kernel.project_dir', __DIR__.'/../Fixtures/app-with-entities');
+
+        $extensionConfig = $plugin->getExtensionConfig('doctrine', $extensionConfigs, $container);
+
+        $this->assertSame($expect, $extensionConfig);
+    }
+
     private function getContainer(): PluginContainerBuilder
     {
         $pluginLoader = $this->createMock(PluginLoader::class);
@@ -931,6 +1020,7 @@ class PluginTest extends ContaoTestCase
         $container->setParameter('mailer_port', 25);
         $container->setParameter('mailer_encryption', null);
         $container->setParameter('secret', 'ThisTokenIsNotSoSecretChangeIt');
+        $container->setParameter('kernel.project_dir', __DIR__.'/../Fixtures/app');
 
         return $container;
     }
