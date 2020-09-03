@@ -326,9 +326,6 @@ abstract class Controller extends System
 						throw new AccessDeniedException('Access denied: ' . Environment::get('uri'));
 					}
 
-					// Add the "first" and "last" classes (see #2583)
-					$objArticle->classes = array('first', 'last');
-
 					return static::getArticle($objArticle);
 				}
 			}
@@ -356,35 +353,11 @@ abstract class Controller extends System
 			}
 
 			$return = '';
-			$intCount = 0;
 			$blnMultiMode = ($objArticles->count() > 1);
-			$intLast = $objArticles->count() - 1;
 
 			while ($objArticles->next())
 			{
-				/** @var ArticleModel $objRow */
-				$objRow = $objArticles->current();
-
-				// Add the "first" and "last" classes (see #2583)
-				if ($intCount == 0 || $intCount == $intLast)
-				{
-					$arrCss = array();
-
-					if ($intCount == 0)
-					{
-						$arrCss[] = 'first';
-					}
-
-					if ($intCount == $intLast)
-					{
-						$arrCss[] = 'last';
-					}
-
-					$objRow->classes = $arrCss;
-				}
-
-				$return .= static::getArticle($objRow, $blnMultiMode, false, $strColumn);
-				++$intCount;
+				$return .= static::getArticle($objArticles->current(), $blnMultiMode, false, $strColumn);
 			}
 
 			return $return;
