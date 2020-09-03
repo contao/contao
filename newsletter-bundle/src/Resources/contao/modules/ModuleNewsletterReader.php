@@ -128,7 +128,7 @@ class ModuleNewsletterReader extends Module
 
 		// Parse simple tokens and insert tags
 		$strContent = $this->replaceInsertTags($strContent);
-		$strContent = System::getContainer()->get(SimpleTokenParser::class)->parse($strContent, array());
+		$strContent = System::getContainer()->get(SimpleTokenParser::class)->parseTokens($strContent, array());
 
 		// Encode e-mail addresses
 		$strContent = StringUtil::encodeEmail($strContent);
