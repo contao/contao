@@ -245,6 +245,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
             case 'swiftmailer':
                 $extensionConfigs = $this->checkMailerTransport($extensionConfigs, $container);
+                $extensionConfigs = $this->setSendmailCommand($extensionConfigs);
 
                 if (!isset($_SERVER['MAILER_URL'])) {
                     $container->setParameter('env(MAILER_URL)', $this->getMailerUrl($container));
@@ -370,6 +371,30 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             (int) $container->getParameter('database_port'),
             $dbName
         );
+    }
+
+    /**
+     * Sets the sendmail command for Swiftmailer to the sendmail_path defined by PHP.
+     *
+     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     */
+    private function setSendmailCommand(array $extensionConfigs): array
+    {
+        $sendmailPath = @ini_get('sendmail_path');
+
+        if (!$sendmailPath) {
+            return $extensionConfigs;
+        }
+
+        foreach ($extensionConfigs as $extensionConfig) {
+            if (isset($extensionConfig['command']) || isset($extensionConfig['mailers']['default']['command'])) {
+                return $extensionConfigs;
+            }
+        }
+
+        $extensionConfigs[] = ['command' => $sendmailPath];
+
+        return $extensionConfigs;
     }
 
     private function getMailerUrl(ContainerBuilder $container): string

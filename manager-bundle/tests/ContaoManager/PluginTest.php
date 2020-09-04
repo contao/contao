@@ -570,6 +570,48 @@ class PluginTest extends ContaoTestCase
         ];
     }
 
+    public function testSetsTheSendmailCommand(): void
+    {
+        ini_set('sendmail_path', '/foobar/sendmail -t');
+
+        $container = $this->getContainer();
+
+        $extensionConfig = (new Plugin())->getExtensionConfig('swiftmailer', [], $container);
+
+        $this->assertTrue(isset($extensionConfig[0]['command']));
+    }
+
+    public function testDoesNotSetTheSendmailCommandIfAlreadyDefined(): void
+    {
+        $container = $this->getContainer();
+
+        $extensionConfigs = [[
+            'command' => '/foobar/sendmail -t',
+        ]];
+
+        $expect = $extensionConfigs;
+
+        $extensionConfig = (new Plugin())->getExtensionConfig('swiftmailer', $extensionConfigs, $container);
+
+        $this->assertSame($expect, $extensionConfig);
+
+        $extensionConfigs = [
+            [
+                'mailers' => [
+                    'default' => [
+                        'command' => '/foobar/sendmail -t',
+                    ],
+                ],
+            ],
+        ];
+
+        $expect = $extensionConfigs;
+
+        $extensionConfig = (new Plugin())->getExtensionConfig('swiftmailer', $extensionConfigs, $container);
+
+        $this->assertSame($expect, $extensionConfig);
+    }
+
     public function testRetrievesTheConnectionParametersFromTheConfiguration(): void
     {
         $pluginLoader = $this->createMock(PluginLoader::class);
