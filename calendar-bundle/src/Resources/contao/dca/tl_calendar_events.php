@@ -62,8 +62,8 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
-				'alias,pid,published,start,stop' => 'index',
-				'pid,recurring,recurrences,startTime,endTime,repeatEnd' => 'index'
+				'alias' => 'index',
+				'pid,published,start,stop' => 'index'
 			)
 		)
 	),

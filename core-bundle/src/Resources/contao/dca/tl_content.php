@@ -47,7 +47,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
-				'pid,ptable,invisible,start,stop' => 'index'
+				'pid,invisible,ptable,start,stop' => 'index'
 			)
 		)
 	),
