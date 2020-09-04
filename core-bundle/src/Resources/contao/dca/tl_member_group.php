@@ -31,7 +31,7 @@ $GLOBALS['TL_DCA']['tl_member_group'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
-				'disable,start,stop' => 'key'
+				'disable,start,stop' => 'index'
 			)
 		)
 	),
