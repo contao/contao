@@ -495,7 +495,7 @@
       </trans-unit>
       <trans-unit id="tl_module.cssID.1">
         <source>Here you can set an ID and one or more classes.</source>
-        <target>Jeśli potrzebujesz osobnej definicji do formatowania tego modułu w stylach CSS, możesz tu wprowadzić ID. To ID będzie przypisane do tego modułu i można je modyfikować w arkuszu CSS.</target>
+        <target>Jeśli potrzebujesz osobnej definicji do formatowania tego modułu w stylach CSS, możesz tu wprowadzić ID. To ID będzie przypisane do tego modułu i można je używać w arkuszu CSS.</target>
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.0">
         <source>Disable the security question</source>

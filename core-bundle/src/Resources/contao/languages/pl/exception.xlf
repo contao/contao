@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="XPT.invalidToken">
         <source>The request token could not be verified.</source>
-        <target>Token żadania nie został zweryfikowany.</target>
+        <target>Token żądania nie został zweryfikowany.</target>
       </trans-unit>
       <trans-unit id="XPT.tokenRetry">
         <source>Please &lt;a href=&quot;javascript:window.location.href=window.location.href&quot;&gt;click this link&lt;/a&gt; and try again. Do not use the back button of your browser.</source>
@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="XPT.tokenExplainOne">
         <source>This error occurs if there is a POST request without a valid authentication token. In Contao 2.10, the referer check has been replaced with a request token system. If the problem persists, you may be using an incompatible third-party extension or have not correctly updated your Contao installation.</source>
-        <target>Ten problem pojawia się, gdy występuje zapytanie POST bez prawidłowego tokena autoryzyjącego. W Contao 2.10, sprawdzanie referer został zastąpione przez system request token. Jeśli ten problem się utrzymuje, być może używasz niekompatyblinych rozszerzeń trzecich lub nieprawidłowo aktualizowałeś Contao.</target>
+        <target>Ten problem pojawia się, gdy występuje zapytanie POST bez prawidłowego tokena autoryzyjącego. W Contao 2.10, sprawdzanie referer został zastąpione przez system token żądania. Jeśli ten problem się utrzymuje, być może używasz niekompatyblinych rozszerzeń trzecich lub nieprawidłowo aktualizowałeś Contao.</target>
       </trans-unit>
       <trans-unit id="XPT.tokenExplainTwo">
         <source>For more information, search the &lt;a href=&quot;https://contao.org/en/frequently-asked.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/en/support.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>

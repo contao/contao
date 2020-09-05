@@ -1203,7 +1203,7 @@
       </trans-unit>
       <trans-unit id="MSC.id.1">
         <source>Note that changing the ID can break data integrity!</source>
-        <target>ID jest unikatowym numerycznym identyfikatorem rekordu tabeli. Numery ID są zwykle przydzielane automatycznie. Jako że numery ID używane są w zależnościach pomiędzy rekordami, zmiana lub ich usunięcie może doprowadzić do utraty integralności danych a co za tym idziedo awarii systemu!</target>
+        <target>ID jest unikatowym numerycznym identyfikatorem rekordu tabeli. Numery ID są zwykle przydzielane automatycznie. Jako że numery ID używane są w zależnościach pomiędzy rekordami, zmiana lub ich usunięcie może doprowadzić do utraty integralności danych, a co za tym idzie, do awarii systemu!</target>
       </trans-unit>
       <trans-unit id="MSC.pid.0">
         <source>Parent ID</source>
@@ -1211,7 +1211,7 @@
       </trans-unit>
       <trans-unit id="MSC.pid.1">
         <source>Note that changing the parent ID can break data integrity!</source>
-        <target>Nadrzędne ID jest identyfikatorem rekordu, który jest nadrzędnym rekordem wobec rekordu aktualnego oraz jest z nim powiązany. Nadrzędne numery ID są zwykle przydzielane automatycznie. Jako że nadrzędne numery ID używane są w zależnościach pomiędzy rekordami, zmiana lub ich usunięcie może doprowadzić do utraty integralności danych a co za tym idzie, do awarii systemu!</target>
+        <target>Nadrzędne ID jest identyfikatorem rekordu, który jest nadrzędnym rekordem wobec rekordu aktualnego oraz jest z nim powiązany. Nadrzędne numery ID są zwykle przydzielane automatycznie. Jako że nadrzędne numery ID używane są w zależnościach pomiędzy rekordami, zmiana lub ich usunięcie może doprowadzić do utraty integralności danych, a co za tym idzie, do awarii systemu!</target>
       </trans-unit>
       <trans-unit id="MSC.sorting.0">
         <source>Sorting value</source>
@@ -1533,27 +1533,27 @@ Ten e-mail został wygenerowane przez Contao. Nie odpowiadaj na niego.
       </trans-unit>
       <trans-unit id="MSC.save">
         <source>Save</source>
-        <target>Zachowaj</target>
+        <target>Zapisz</target>
       </trans-unit>
       <trans-unit id="MSC.saveNclose">
         <source>Save and close</source>
-        <target>Zachowaj i zamknij</target>
+        <target>Zapisz i zamknij</target>
       </trans-unit>
       <trans-unit id="MSC.saveNedit">
         <source>Save and edit</source>
-        <target>Zachowaj i edytuj</target>
+        <target>Zapisz i edytuj</target>
       </trans-unit>
       <trans-unit id="MSC.saveNback">
         <source>Save and go back</source>
-        <target>Zachowaj i wróć</target>
+        <target>Zapisz i wróć</target>
       </trans-unit>
       <trans-unit id="MSC.saveNcreate">
         <source>Save and new</source>
-        <target>Zachowaj i nowy</target>
+        <target>Zapisz i nowy</target>
       </trans-unit>
       <trans-unit id="MSC.saveNduplicate">
         <source>Save and duplicate</source>
-        <target>Zachowaj i duplikuj</target>
+        <target>Zapisz i duplikuj</target>
       </trans-unit>
       <trans-unit id="MSC.continue">
         <source>Continue</source>
@@ -2197,7 +2197,7 @@ Ten e-mail został wygenerowane przez Contao. Nie odpowiadaj na niego.
       </trans-unit>
       <trans-unit id="MSC.saveData">
         <source>Save data</source>
-        <target>Zachowaj dane</target>
+        <target>Zapisz dane</target>
       </trans-unit>
       <trans-unit id="MSC.savedData">
         <source>Your data has been saved.</source>
