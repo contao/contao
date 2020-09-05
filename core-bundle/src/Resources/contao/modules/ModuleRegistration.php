@@ -10,8 +10,9 @@
 
 namespace Contao;
 
-use Patchwork\Utf8;
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use Patchwork\Utf8;
+
 
 /**
  * Front end module "registration".
@@ -268,9 +269,9 @@ class ModuleRegistration extends \Module
 							}
 						}
 						catch (RedirectResponseException $e)
-                        {
-                            throw $e;
-                        }
+						{
+							throw $e;
+						}
 						catch (\Exception $e)
 						{
 							$objWidget->class = 'error';
