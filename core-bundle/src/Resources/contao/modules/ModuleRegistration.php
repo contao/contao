@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Patchwork\Utf8;
+use Contao\CoreBundle\Exception\RedirectResponseException;
 
 /**
  * Front end module "registration".
@@ -266,6 +267,10 @@ class ModuleRegistration extends \Module
 								$varValue = $callback($varValue, null);
 							}
 						}
+						catch (RedirectResponseException $e)
+                        {
+                            throw $e;
+                        }
 						catch (\Exception $e)
 						{
 							$objWidget->class = 'error';
