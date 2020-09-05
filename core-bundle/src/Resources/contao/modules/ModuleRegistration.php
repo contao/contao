@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Patchwork\Utf8;
 
-
 /**
  * Front end module "registration".
  *
