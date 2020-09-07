@@ -109,7 +109,7 @@ class PageError404 extends Frontend
 						$strRequest = Environment::get('script') . '/' . $objRootPage->language . '/' . $strRequest;
 					}
 
-					$this->redirect($strRequest, 301);
+					$this->redirect($strRequest);
 				}
 			}
 		}

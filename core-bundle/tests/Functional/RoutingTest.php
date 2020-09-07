@@ -336,7 +336,7 @@ class RoutingTest extends WebTestCase
     {
         yield 'Redirects to the language root if the request is empty' => [
             '/',
-            301,
+            302,
             'Redirecting to http://root-with-index.local/en/',
             ['language' => 'en'],
             'root-with-index.local',
@@ -366,7 +366,7 @@ class RoutingTest extends WebTestCase
 
         yield 'Redirects if the alias matches but no language is given' => [
             '/home.html',
-            301,
+            303,
             'Redirecting to http://root-with-home.local/en/home.html',
             [],
             'root-with-home.local',
@@ -890,7 +890,7 @@ class RoutingTest extends WebTestCase
     {
         yield 'Redirects to the language root if one of the accept languages matches' => [
             '/',
-            301,
+            302,
             'Redirecting to http://same-domain-root.local/de/',
             'de,en',
             'same-domain-root.local',
@@ -898,7 +898,7 @@ class RoutingTest extends WebTestCase
 
         yield 'Redirects to the language fallback if one of the accept languages matches' => [
             '/',
-            301,
+            302,
             'Redirecting to http://same-domain-root.local/en/',
             'en,de',
             'same-domain-root.local',
@@ -906,7 +906,7 @@ class RoutingTest extends WebTestCase
 
         yield 'Redirects to the language fallback if none of the accept languages matches' => [
             '/',
-            301,
+            302,
             'Redirecting to http://same-domain-root.local/en/',
             'fr,es',
             'same-domain-root.local',
@@ -914,7 +914,7 @@ class RoutingTest extends WebTestCase
 
         yield 'Redirects to "de" if "de-CH" is accepted and "de" is not' => [
             '/',
-            301,
+            302,
             'Redirecting to http://same-domain-root.local/de/',
             'de-CH',
             'same-domain-root.local',
@@ -922,7 +922,7 @@ class RoutingTest extends WebTestCase
 
         yield 'Ignores the case of the language code' => [
             '/',
-            301,
+            302,
             'Redirecting to http://same-domain-root.local/de/',
             'dE-at',
             'same-domain-root.local',
@@ -930,7 +930,7 @@ class RoutingTest extends WebTestCase
 
         yield 'Redirects to "en" if "de-CH" and "en" are accepted and "de" is not' => [
             '/',
-            301,
+            302,
             'Redirecting to http://same-domain-root.local/en/',
             'de-CH,en',
             'same-domain-root.local',
