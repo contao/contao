@@ -179,7 +179,11 @@ class ContaoCoreExtension extends Extension
         $imageSizes = [];
 
         // Do not add a size with the special name '_default' but merge its values into all other definitions instead.
-        foreach (array_diff_key($config['image']['sizes'], ['_defaults' => null]) as $name => $value) {
+        foreach ($config['image']['sizes'] as $name => $value) {
+            if ('_defaults' === $name) {
+                continue;
+            }
+
             $imageSizes['_'.$name] = $this->camelizeKeys(
                 array_merge($config['image']['sizes']['_defaults'] ?? [], $value)
             );
