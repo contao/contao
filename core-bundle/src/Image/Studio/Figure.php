@@ -100,7 +100,7 @@ final class Figure
             throw new \LogicException('This result container does not include a lightbox.');
         }
 
-        // Safely return as Closure will be evaluated at this point
+        /** @var LightboxResult */
         return $this->lightbox;
     }
 
@@ -120,7 +120,7 @@ final class Figure
             throw new \LogicException('This result container does not include metadata.');
         }
 
-        // Safely return as Closure will be evaluated at this point
+        /** @var Metadata */
         return $this->metadata;
     }
 
