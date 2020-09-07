@@ -238,7 +238,7 @@ class Route404Provider extends AbstractPageRouteProvider
         $redirect->addDefaults([
             '_controller' => RedirectController::class,
             'path' => $path,
-            'permanent' => true,
+            'permanent' => false,
         ]);
 
         $routes['tl_page.'.$route->getPageModel()->id.'.locale'] = $redirect;
