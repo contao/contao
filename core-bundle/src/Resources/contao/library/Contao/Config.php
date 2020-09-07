@@ -271,10 +271,7 @@ class Config
 		$strDestination = Path::join(TL_ROOT, 'system/config/localconfig.php');
 
 		// Get the realpath in case it is a symlink
-		if ($fs->exists($strDestination))
-		{
-			$strDestination = realpath($strDestination);
-		}
+		$strDestination = realpath($strDestination) ?: $strDestination;
 
 		// Then move the file to its final destination
 		$fs->rename($strTemp, $strDestination, true);
