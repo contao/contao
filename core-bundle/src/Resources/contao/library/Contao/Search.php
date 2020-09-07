@@ -186,7 +186,7 @@ class Search
 			// The page has already been indexed and has not changed (see #2235)
 			if ($objIndex->url == $arrSet['url'])
 			{
-				return true;
+				return false;
 			}
 
 			// Update the URL if the new URL is shorter or the current URL is not canonical
