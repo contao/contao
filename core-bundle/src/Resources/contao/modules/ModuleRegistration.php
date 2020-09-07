@@ -511,7 +511,7 @@ class ModuleRegistration extends Module
 		// Send the token
 		$optInToken->send(
 			sprintf($GLOBALS['TL_LANG']['MSC']['emailSubject'], Idna::decode(Environment::get('host'))),
-			System::getContainer()->get(SimpleTokenParser::class)->parseTokens($this->reg_text, $arrTokenData)
+			System::getContainer()->get(SimpleTokenParser::class)->parse($this->reg_text, $arrTokenData)
 		);
 	}
 

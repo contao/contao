@@ -379,7 +379,7 @@ class ModuleSubscribe extends Module
 		// Send the token
 		$optInToken->send(
 			sprintf($GLOBALS['TL_LANG']['MSC']['nl_subject'], Idna::decode(Environment::get('host'))),
-			System::getContainer()->get(SimpleTokenParser::class)->parseTokens($this->nl_subscribe, $arrData)
+			System::getContainer()->get(SimpleTokenParser::class)->parse($this->nl_subscribe, $arrData)
 		);
 
 		// Redirect to the jumpTo page

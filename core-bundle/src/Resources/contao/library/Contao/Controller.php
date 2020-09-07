@@ -2150,7 +2150,7 @@ abstract class Controller extends System
 	{
 		trigger_deprecation('contao/core-bundle', '4.10', 'Using "Contao\Controller::parseSimpleTokens()" has been deprecated and will no longer work in Contao 5.0. Use the "SimpleTokenParser::class" service instead.');
 
-		return System::getContainer()->get(SimpleTokenParser::class)->parseTokens($strBuffer, $arrData);
+		return System::getContainer()->get(SimpleTokenParser::class)->parse($strBuffer, $arrData);
 	}
 
 	/**
