@@ -40,7 +40,8 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			(
 				'id' => 'primary',
 				'username' => 'unique',
-				'email' => 'index'
+				'email' => 'index',
+				'login,disable,start,stop' => 'index'
 			)
 		)
 	),
