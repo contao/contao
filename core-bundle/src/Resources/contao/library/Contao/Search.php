@@ -177,7 +177,8 @@ class Search
 		// Calculate the checksum
 		$arrSet['checksum'] = md5($arrSet['text']);
 
-		$blnIndexExists = (bool) $objDatabase->prepare("SELECT EXISTS(SELECT id FROM tl_search WHERE checksum=? AND pid=? AND url=?) as indexExists")
+		$blnIndexExists = (bool) $objDatabase
+			->prepare("SELECT EXISTS(SELECT id FROM tl_search WHERE checksum=? AND pid=? AND url=?) as indexExists")
 			->execute($arrSet['checksum'], $arrSet['pid'], $arrSet['url'])
 			->indexExists;
 
