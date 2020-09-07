@@ -39,7 +39,7 @@ class SimpleTokenParser implements LoggerAwareInterface
      * @throws \RuntimeException         If $subject cannot be parsed
      * @throws \InvalidArgumentException If there are incorrectly formatted if-tags
      */
-    public function parseTokens(string $subject, array $tokens): string
+    public function parse(string $subject, array $tokens): string
     {
         // Check if we can use the expression language or if legacy tokens have been used
         $canUseExpressionLanguage = $this->canUseExpressionLanguage($tokens);
@@ -89,6 +89,17 @@ class SimpleTokenParser implements LoggerAwareInterface
         }
 
         return $return;
+    }
+
+    /**
+     * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.0;
+     *             use the parse() method instead
+     */
+    public function parseTokens(string $subject, array $tokens): string
+    {
+        trigger_deprecation('contao/core-bundle', '4.10', 'Using the parseTokens() method has been deprecated and will no longer work in Contao 5.0. Use the parse() method instead.');
+
+        return $this->parse($subject, $tokens);
     }
 
     private function replaceTokens(string $subject, array $data): string

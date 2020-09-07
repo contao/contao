@@ -378,14 +378,14 @@ class Newsletter extends Backend
 		$simpleTokenParser = System::getContainer()->get(SimpleTokenParser::class);
 
 		// Prepare the text content
-		$objEmail->text = $simpleTokenParser->parseTokens($text, $arrRecipient);
+		$objEmail->text = $simpleTokenParser->parse($text, $arrRecipient);
 
 		if (!$objNewsletter->sendText)
 		{
 			$objTemplate = new BackendTemplate($objNewsletter->template ?: 'mail_default');
 			$objTemplate->setData($objNewsletter->row());
 			$objTemplate->title = $objNewsletter->subject;
-			$objTemplate->body = $simpleTokenParser->parseTokens($html, $arrRecipient);
+			$objTemplate->body = $simpleTokenParser->parse($html, $arrRecipient);
 			$objTemplate->charset = Config::get('characterSet');
 			$objTemplate->recipient = $arrRecipient['email'];
 
