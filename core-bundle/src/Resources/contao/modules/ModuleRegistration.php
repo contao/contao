@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\CoreBundle\Exception\ResponseException;
 use Patchwork\Utf8;
 
 /**
@@ -267,7 +267,7 @@ class ModuleRegistration extends \Module
 								$varValue = $callback($varValue, null);
 							}
 						}
-						catch (RedirectResponseException $e)
+						catch (ResponseException $e)
 						{
 							throw $e;
 						}
