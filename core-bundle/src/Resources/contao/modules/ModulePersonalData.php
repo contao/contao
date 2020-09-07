@@ -258,7 +258,7 @@ class ModulePersonalData extends \Module
 								$varValue = $callback($varValue, $this->User, $this);
 							}
 						}
-						catch (ResponseException $e) 
+						catch (ResponseException $e)
 						{
 							throw $e;
 						}
