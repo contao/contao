@@ -319,7 +319,7 @@ class Calendar extends Frontend
 		}
 
 		$arrProcessed = array();
-		$time = Date::floorToMinute();
+		$time = time();
 
 		// Get all calendars
 		$objCalendar = CalendarModel::findByProtected('');

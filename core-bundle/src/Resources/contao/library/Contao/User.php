@@ -617,14 +617,12 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 			return false;
 		}
 
-		$time = Date::floorToMinute();
-
-		if ($this->start !== '' && $this->start > $time)
+		if ($this->start !== '' && $this->start > time())
 		{
 			return false;
 		}
 
-		if ($this->stop !== '' && $this->stop <= $time)
+		if ($this->stop !== '' && $this->stop <= time())
 		{
 			return false;
 		}

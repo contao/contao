@@ -36,7 +36,7 @@ class ModuleFaq extends Frontend
 		}
 
 		$arrProcessed = array();
-		$time = Date::floorToMinute();
+		$time = time();
 
 		// Get all categories
 		$objFaq = FaqCategoryModel::findAll();

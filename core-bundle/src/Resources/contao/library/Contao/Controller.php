@@ -689,7 +689,7 @@ abstract class Controller extends System
 		$image = $objPage->type . '.svg';
 
 		// Page not published or not active
-		if (!$objPage->published || ($objPage->start != '' && $objPage->start > time()) || ($objPage->stop != '' && $objPage->stop < time()))
+		if (!$objPage->published || ($objPage->start != '' && $objPage->start > time()) || ($objPage->stop != '' && $objPage->stop <= time()))
 		{
 			++$sub;
 		}
