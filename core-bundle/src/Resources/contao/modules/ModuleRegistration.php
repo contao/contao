@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\OptIn\OptIn;
 use Patchwork\Utf8;
 
@@ -267,6 +268,10 @@ class ModuleRegistration extends Module
 							{
 								$varValue = $callback($varValue, null);
 							}
+						}
+						catch (ResponseException $e)
+						{
+							throw $e;
 						}
 						catch (\Exception $e)
 						{

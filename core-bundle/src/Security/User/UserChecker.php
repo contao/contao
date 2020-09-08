@@ -113,7 +113,7 @@ class UserChecker implements UserCheckerInterface
         $stop = (int) $user->stop;
         $time = Date::floorToMinute(time());
         $notActiveYet = $start && $start > $time;
-        $notActiveAnymore = $stop && $stop <= $time + 60;
+        $notActiveAnymore = $stop && $stop <= $time;
         $logMessage = '';
 
         if ($notActiveYet) {

@@ -624,7 +624,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 			return false;
 		}
 
-		if ($this->stop !== '' && $this->stop <= ($time + 60))
+		if ($this->stop !== '' && $this->stop <= $time)
 		{
 			return false;
 		}
