@@ -109,7 +109,7 @@ class ModuleCalendar extends Events
 			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
 
-		$time = Date::floorToMinute();
+		$time = time();
 
 		// Find the boundaries
 		$objMinMax = $this->Database->query("SELECT MIN(startTime) AS dateFrom, MAX(endTime) AS dateTo, MAX(repeatEnd) AS repeatUntil FROM tl_calendar_events WHERE pid IN(" . implode(',', array_map('\intval', $this->cal_calendar)) . ")" . (!BE_USER_LOGGED_IN ? " AND published='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'$time')" : ""));
