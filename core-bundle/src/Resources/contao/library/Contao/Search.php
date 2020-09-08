@@ -181,9 +181,15 @@ class Search
 								->limit(1)
 								->execute($arrSet['checksum'], $arrSet['pid']);
 
-		// Update the URL if the new URL is shorter or the current URL is not canonical
-		if ($objIndex->numRows && $objIndex->url != $arrSet['url'])
+		if ($objIndex->numRows)
 		{
+			// The page has already been indexed and has not changed (see #2235)
+			if ($objIndex->url == $arrSet['url'])
+			{
+				return false;
+			}
+
+			// Update the URL if the new URL is shorter or the current URL is not canonical
 			if (strpos($objIndex->url, '?') !== false && strpos($arrSet['url'], '?') === false)
 			{
 				// The new URL is more canonical (no query string)
