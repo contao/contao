@@ -262,7 +262,7 @@ class Automator extends \System
 
 		$this->purgeXmlFiles();
 
-		$strQuery = "SELECT id, language, sitemapName FROM tl_page WHERE type='root' AND createSitemap='1' AND sitemapName!='' AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') AND published='1'";
+		$strQuery = "SELECT id, language, sitemapName FROM tl_page WHERE type='root' AND createSitemap='1' AND sitemapName!='' AND published='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'$time')";
 
 		// Get a particular root page
 		if ($intId > 0)

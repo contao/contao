@@ -168,7 +168,7 @@ class ArticleModel extends \Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = \Date::floorToMinute();
-			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
+			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		return static::findOneBy($arrColumns, $arrValues, $arrOptions);
@@ -190,7 +190,7 @@ class ArticleModel extends \Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = \Date::floorToMinute();
-			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
+			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		return static::findOneBy($arrColumns, $intId, $arrOptions);
@@ -214,7 +214,7 @@ class ArticleModel extends \Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = \Date::floorToMinute();
-			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
+			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -241,7 +241,7 @@ class ArticleModel extends \Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = \Date::floorToMinute();
-			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
+			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -270,7 +270,7 @@ class ArticleModel extends \Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = \Date::floorToMinute();
-			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
+			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		if (!isset($arrOptions['order']))

@@ -509,7 +509,7 @@ abstract class User extends \System
 				return false;
 			}
 
-			if ($this->stop != '' && $this->stop <= ($time + 60))
+			if ($this->stop != '' && $this->stop <= $time)
 			{
 				\Message::addError($GLOBALS['TL_LANG']['ERR']['invalidLogin']);
 				$this->log('The account was not active anymore (deactivation date: ' . \Date::parse(\Config::get('dateFormat'), $this->stop) . ')', __METHOD__, TL_ACCESS);
