@@ -172,10 +172,12 @@ class Newsletter extends Backend
 					$_SESSION['REJECTED_RECIPIENTS'] = array();
 				}
 
+				$time = time();
+
 				while ($objRecipients->next())
 				{
 					// Skip the recipient if the member is not active (see #8812)
-					if ($objRecipients->id !== null && ($objRecipients->disable || ($objRecipients->start != '' && $objRecipients->start > time()) || ($objRecipients->stop != '' && $objRecipients->stop < time())))
+					if ($objRecipients->id !== null && ($objRecipients->disable || ($objRecipients->start != '' && $objRecipients->start > $time) || ($objRecipients->stop != '' && $objRecipients->stop <= $time)))
 					{
 						--$intTotal;
 						echo 'Skipping <strong>' . Idna::decodeEmail($objRecipients->email) . '</strong> as the member is not active<br>';
@@ -981,7 +983,7 @@ class Newsletter extends Backend
 		}
 
 		$arrProcessed = array();
-		$time = Date::floorToMinute();
+		$time = time();
 
 		// Get all channels
 		$objNewsletter = NewsletterChannelModel::findAll();
@@ -1014,7 +1016,7 @@ class Newsletter extends Backend
 					}
 
 					// The target page has not been published (see #5520)
-					if (!$objParent->published || ($objParent->start != '' && $objParent->start > $time) || ($objParent->stop != '' && $objParent->stop <= ($time + 60)))
+					if (!$objParent->published || ($objParent->start != '' && $objParent->start > $time) || ($objParent->stop != '' && $objParent->stop <= $time))
 					{
 						continue;
 					}

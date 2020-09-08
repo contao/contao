@@ -13,7 +13,6 @@ use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\DataContainer;
-use Contao\Date;
 use Contao\FrontendUser;
 use Contao\Image;
 use Contao\Input;
@@ -470,9 +469,7 @@ class tl_member extends Backend
 	public function addIcon($row, $label, DataContainer $dc, $args)
 	{
 		$image = 'member';
-		$time = Date::floorToMinute();
-
-		$disabled = ($row['start'] !== '' && $row['start'] > $time) || ($row['stop'] !== '' && $row['stop'] < $time);
+		$disabled = ($row['start'] !== '' && $row['start'] > time()) || ($row['stop'] !== '' && $row['stop'] <= time());
 
 		if ($row['useTwoFactor'])
 		{

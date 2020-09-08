@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\ResponseException;
 use Patchwork\Utf8;
 
 /**
@@ -255,6 +256,10 @@ class ModulePersonalData extends Module
 							{
 								$varValue = $callback($varValue, $this->User, $this);
 							}
+						}
+						catch (ResponseException $e)
+						{
+							throw $e;
 						}
 						catch (\Exception $e)
 						{

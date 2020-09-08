@@ -287,7 +287,7 @@ abstract class ContentElement extends Frontend
 
 	protected function isHidden()
 	{
-		$isInvisible = $this->invisible || ($this->start != '' && $this->start > time()) || ($this->stop != '' && $this->stop < time());
+		$isInvisible = $this->invisible || ($this->start != '' && $this->start > time()) || ($this->stop != '' && $this->stop <= time());
 
 		// The element is visible, so show it
 		if (!$isInvisible)
