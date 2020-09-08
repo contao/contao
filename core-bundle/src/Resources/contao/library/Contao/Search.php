@@ -177,6 +177,17 @@ class Search
 		// Calculate the checksum
 		$arrSet['checksum'] = md5($arrSet['text']);
 
+		$blnIndexExists = $objDatabase
+			->prepare("SELECT EXISTS(SELECT id FROM tl_search WHERE checksum=? AND pid=? AND url=?) as indexExists")
+			->execute($arrSet['checksum'], $arrSet['pid'], $arrSet['url'])
+			->indexExists;
+
+		// The page has already been indexed and has not changed (see #2235)
+		if ($blnIndexExists)
+		{
+			return false;
+		}
+
 		// Prevent deadlocks
 		$objDatabase->query("LOCK TABLES tl_search WRITE, tl_search_index WRITE, tl_search_term WRITE");
 
