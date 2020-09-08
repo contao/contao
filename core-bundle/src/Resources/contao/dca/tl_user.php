@@ -614,7 +614,7 @@ class tl_user extends Contao\Backend
 	public function addIcon($row, $label, Contao\DataContainer $dc, $args)
 	{
 		$image = $row['admin'] ? 'admin' : 'user';
-		$disabled = ($row['start'] !== '' && $row['start'] > time()) || ($row['stop'] !== '' && $row['stop'] < time());
+		$disabled = ($row['start'] !== '' && $row['start'] > time()) || ($row['stop'] !== '' && $row['stop'] <= time());
 
 		if ($row['useTwoFactor'])
 		{
