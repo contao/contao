@@ -1494,7 +1494,9 @@ class FigureBuilderIntegrationTest extends TestCase
             // We are using a child class of FilesModel to benefit from realistic metadata
             // creation while being able to disable object registration
             $filesModel = new class($data) extends FilesModel {
-                /* @noinspection PhpMissingParentConstructorInspection */
+                /**
+                 * @noinspection PhpMissingParentConstructorInspection
+                 */
                 public function __construct($data)
                 {
                     $this->setRow($data);
@@ -1538,7 +1540,9 @@ class FigureBuilderIntegrationTest extends TestCase
         // We are using a child class of LayoutModel so that we can push it into the
         // registry cache and therefore make it available for the legacy code
         $layoutModel = new class($data) extends LayoutModel {
-            /* @noinspection PhpMissingParentConstructorInspection */
+            /**
+             * @noinspection PhpMissingParentConstructorInspection
+             */
             public function __construct($data)
             {
                 $this->setRow($data);
