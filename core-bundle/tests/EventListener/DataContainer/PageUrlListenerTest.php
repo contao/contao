@@ -14,13 +14,12 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\CoreBundle\EventListener\DataContainer\PageUrlListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Search\Document;
-use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Contao\CoreBundle\Slug\Slug;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Contao\Input;
 use Contao\PageModel;
+use Contao\Search;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Statement;
 use Doctrine\DBAL\FetchMode;
@@ -68,8 +67,7 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $slug,
             $this->createMock(TranslatorInterface::class),
-            $this->mockConnectionWithStatement(),
-            $this->createMock(IndexerInterface::class)
+            $this->mockConnectionWithStatement()
         );
 
         $this->assertSame($expectedAlias, $listener->generateAlias('', $dc));
@@ -159,8 +157,7 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $slug,
             $this->createMock(TranslatorInterface::class),
-            $connection,
-            $this->createMock(IndexerInterface::class)
+            $connection
         );
 
         $listener->generateAlias('', $dc);
@@ -203,8 +200,7 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $slug,
             $translator,
-            $connection,
-            $this->createMock(IndexerInterface::class)
+            $connection
         );
 
         $listener->generateAlias($value, $dc);
@@ -733,20 +729,11 @@ class PageUrlListenerTest extends TestCase
             ->willReturn($statement)
         ;
 
-        $searchIndexer = $this->createMock(IndexerInterface::class);
-        $searchIndexer
+        $search = $this->mockAdapter(['removeEntry']);
+        $search
             ->expects($this->once())
-            ->method('delete')
-            ->with($this->callback(
-                function ($document) {
-                    $this->assertInstanceOf(Document::class, $document);
-
-                    /** @var Document $document */
-                    $this->assertSame('uri', (string) $document->getUri());
-
-                    return true;
-                }
-            ))
+            ->method('removeEntry')
+            ->with('uri')
         ;
 
         /** @var MockObject&DataContainer $dc */
@@ -761,11 +748,10 @@ class PageUrlListenerTest extends TestCase
         );
 
         $listener = new PageUrlListener(
-            $this->createMock(ContaoFramework::class),
+            $this->mockContaoFramework([Search::class => $search]),
             $this->createMock(Slug::class),
             $this->createMock(TranslatorInterface::class),
-            $connection,
-            $searchIndexer
+            $connection
         );
 
         $listener->purgeSearchIndexOnAliasChange('bar', $dc);
@@ -779,8 +765,8 @@ class PageUrlListenerTest extends TestCase
             ->method($this->anything())
         ;
 
-        $searchIndexer = $this->createMock(IndexerInterface::class);
-        $searchIndexer
+        $search = $this->mockAdapter(['removeEntry']);
+        $search
             ->expects($this->never())
             ->method($this->anything())
         ;
@@ -797,11 +783,10 @@ class PageUrlListenerTest extends TestCase
         );
 
         $listener = new PageUrlListener(
-            $this->createMock(ContaoFramework::class),
+            $this->mockContaoFramework([Search::class => $search]),
             $this->createMock(Slug::class),
             $this->createMock(TranslatorInterface::class),
-            $connection,
-            $this->createMock(IndexerInterface::class)
+            $connection
         );
 
         $listener->purgeSearchIndexOnAliasChange('foo', $dc);
@@ -824,20 +809,11 @@ class PageUrlListenerTest extends TestCase
             ->willReturn($statement)
         ;
 
-        $searchIndexer = $this->createMock(IndexerInterface::class);
-        $searchIndexer
+        $search = $this->mockAdapter(['removeEntry']);
+        $search
             ->expects($this->once())
-            ->method('delete')
-            ->with($this->callback(
-                function ($document) {
-                    $this->assertInstanceOf(Document::class, $document);
-
-                    /** @var Document $document */
-                    $this->assertSame('uri', (string) $document->getUri());
-
-                    return true;
-                }
-            ))
+            ->method('removeEntry')
+            ->with('uri')
         ;
 
         /** @var MockObject&DataContainer $dc */
@@ -849,11 +825,10 @@ class PageUrlListenerTest extends TestCase
         );
 
         $listener = new PageUrlListener(
-            $this->createMock(ContaoFramework::class),
+            $this->mockContaoFramework([Search::class => $search]),
             $this->createMock(Slug::class),
             $this->createMock(TranslatorInterface::class),
-            $connection,
-            $searchIndexer
+            $connection
         );
 
         $listener->purgeSearchIndexOnDelete($dc);
@@ -867,8 +842,8 @@ class PageUrlListenerTest extends TestCase
             ->method($this->anything())
         ;
 
-        $searchIndexer = $this->createMock(IndexerInterface::class);
-        $searchIndexer
+        $search = $this->mockAdapter(['removeEntry']);
+        $search
             ->expects($this->never())
             ->method($this->anything())
         ;
@@ -882,11 +857,10 @@ class PageUrlListenerTest extends TestCase
         );
 
         $listener = new PageUrlListener(
-            $this->createMock(ContaoFramework::class),
+            $this->mockContaoFramework([Search::class => $search]),
             $this->createMock(Slug::class),
             $this->createMock(TranslatorInterface::class),
-            $connection,
-            $searchIndexer
+            $connection
         );
 
         $listener->purgeSearchIndexOnDelete($dc);
@@ -966,8 +940,7 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $this->createMock(Slug::class),
             $this->createMock(TranslatorInterface::class),
-            $connection,
-            $this->createMock(IndexerInterface::class)
+            $connection
         );
 
         /** @var DataContainer&MockObject $dc1 */
@@ -1023,8 +996,7 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $this->createMock(Slug::class),
             $this->mockTranslator(),
-            $connection,
-            $this->createMock(IndexerInterface::class)
+            $connection
         );
 
         /** @var MockObject&DataContainer $dc */
@@ -1065,8 +1037,7 @@ class PageUrlListenerTest extends TestCase
             $this->mockContaoFramework(),
             $this->createMock(Slug::class),
             $translator,
-            $connection,
-            $this->createMock(IndexerInterface::class)
+            $connection
         );
 
         /** @var MockObject&DataContainer $dc */
@@ -1154,8 +1125,7 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $this->createMock(Slug::class),
             $translator,
-            $connection,
-            $this->createMock(IndexerInterface::class)
+            $connection
         );
 
         /** @var MockObject&DataContainer $dc */
@@ -1235,8 +1205,7 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $this->createMock(Slug::class),
             $this->createMock(TranslatorInterface::class),
-            $connection,
-            $this->createMock(IndexerInterface::class)
+            $connection
         );
 
         /** @var MockObject&DataContainer $dc */
@@ -1265,8 +1234,7 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $this->createMock(Slug::class),
             $this->createMock(TranslatorInterface::class),
-            $this->mockConnectionWithStatement(),
-            $this->createMock(IndexerInterface::class)
+            $this->mockConnectionWithStatement()
         );
 
         /** @var MockObject&DataContainer $dc */
@@ -1298,8 +1266,7 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $this->createMock(Slug::class),
             $this->createMock(TranslatorInterface::class),
-            $this->mockConnectionWithStatement(),
-            $this->createMock(IndexerInterface::class)
+            $this->mockConnectionWithStatement()
         );
 
         /** @var MockObject&DataContainer $dc */
@@ -1333,8 +1300,7 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $this->createMock(Slug::class),
             $this->createMock(TranslatorInterface::class),
-            $this->mockConnectionWithStatement(),
-            $this->createMock(IndexerInterface::class)
+            $this->mockConnectionWithStatement()
         );
 
         /** @var MockObject&DataContainer $dc */
@@ -1389,8 +1355,7 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $this->createMock(Slug::class),
             $this->mockTranslator(),
-            $connection,
-            $this->createMock(IndexerInterface::class)
+            $connection
         );
 
         /** @var MockObject&DataContainer $dc */
@@ -1471,8 +1436,7 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $this->createMock(Slug::class),
             $translator,
-            $connection,
-            $this->createMock(IndexerInterface::class)
+            $connection
         );
 
         /** @var MockObject&DataContainer $dc */
@@ -1501,8 +1465,7 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $this->createMock(Slug::class),
             $this->createMock(TranslatorInterface::class),
-            $this->mockConnectionWithStatement(),
-            $this->createMock(IndexerInterface::class)
+            $this->mockConnectionWithStatement()
         );
 
         /** @var MockObject&DataContainer $dc */
@@ -1534,8 +1497,7 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $this->createMock(Slug::class),
             $this->createMock(TranslatorInterface::class),
-            $this->mockConnectionWithStatement(),
-            $this->createMock(IndexerInterface::class)
+            $this->mockConnectionWithStatement()
         );
 
         /** @var MockObject&DataContainer $dc */
@@ -1569,8 +1531,7 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $this->createMock(Slug::class),
             $this->createMock(TranslatorInterface::class),
-            $this->mockConnectionWithStatement(),
-            $this->createMock(IndexerInterface::class)
+            $this->mockConnectionWithStatement()
         );
 
         /** @var MockObject&DataContainer $dc */
