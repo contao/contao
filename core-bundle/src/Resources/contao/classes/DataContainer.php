@@ -373,7 +373,7 @@ abstract class DataContainer extends Backend
 			}
 
 			// Validate and save the field
-			if (\in_array($this->strInputName, $paletteFields) || Input::get('act') == 'overrideAll')
+			if ($objWidget->submitInput() && (\in_array($this->strInputName, $paletteFields) || Input::get('act') == 'overrideAll'))
 			{
 				$objWidget->validate();
 
@@ -385,7 +385,7 @@ abstract class DataContainer extends Backend
 						$this->noReload = true;
 					}
 				}
-				elseif ($objWidget->submitInput())
+				else
 				{
 					$varValue = $objWidget->value;
 
