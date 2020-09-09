@@ -612,9 +612,9 @@ abstract class Frontend extends Controller
 
 		$searchIndexer = System::getContainer()->get('contao.search.indexer');
 
+		// The search indexer is disabled
 		if ($searchIndexer === null)
 		{
-			// Search index is disabled
 			return;
 		}
 
