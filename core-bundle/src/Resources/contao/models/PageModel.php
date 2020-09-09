@@ -1133,12 +1133,6 @@ class PageModel extends Model
 		$objRouter = System::getContainer()->get('router');
 		$strUrl = $objRouter->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams));
 
-		// Make the URL relative to the base path
-		if (0 === strncmp($strUrl, '/', 1))
-		{
-			$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
-		}
-
 		return $this->applyLegacyLogic($strUrl, $strParams);
 	}
 

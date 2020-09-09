@@ -1198,12 +1198,6 @@ abstract class Controller extends System
 		$objRouter = System::getContainer()->get('router');
 		$strUrl = $objRouter->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $page, 'parameters' => $strParams));
 
-		// Remove path from absolute URLs
-		if (0 === strncmp($strUrl, '/', 1))
-		{
-			$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
-		}
-
 		// Decode sprintf placeholders
 		if (strpos($strParams, '%') !== false)
 		{
