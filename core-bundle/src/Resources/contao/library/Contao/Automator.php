@@ -43,6 +43,7 @@ class Automator extends System
 			return;
 		}
 
+		// Clear the index
 		$searchIndexer->clear();
 
 		$strCachePath = StringUtil::stripRootDir(System::getContainer()->getParameter('kernel.cache_dir'));
