@@ -37,7 +37,7 @@ class Automator extends System
 	{
 		$searchIndexer = System::getContainer()->get('contao.search.indexer');
 
-		// Search index is disabled
+		// The search indexer is disabled
 		if (null === $searchIndexer)
 		{
 			return;
