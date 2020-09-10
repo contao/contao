@@ -1122,6 +1122,7 @@ var Backend =
 			});
 
 			button = new Element('button', {
+				'type': 'button',
 				'html': '<span>...</span>',
 				'class': 'unselectable',
 				'data-state': 0
@@ -2520,9 +2521,10 @@ var Backend =
 				}
 			},
 			clickEvent = function(e) {
-				var input = this.getElement('input[type="checkbox"],input[type="radio"]');
+				var input = this.getElement('input[type="checkbox"],input[type="radio"]'),
+					limitToggler = $(e.target).getParent('.limit_toggler');
 
-				if (!input || input.get('disabled')) {
+				if (!input || input.get('disabled') || limitToggler !== null) {
 					return;
 				}
 
