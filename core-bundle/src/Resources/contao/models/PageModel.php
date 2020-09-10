@@ -896,7 +896,7 @@ class PageModel extends Model
 		$pname = '';
 		$ptitle = '';
 		$trail = array($this->id, $pid);
-		$time = Date::floorToMinute();
+		$time = time();
 
 		// Inherit the settings
 		if ($this->type == 'root')
