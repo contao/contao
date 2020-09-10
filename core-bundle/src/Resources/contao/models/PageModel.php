@@ -1136,7 +1136,7 @@ class PageModel extends Model
 		if (0 === strncmp($strUrl, '//', 2))
 		{
 			// Add the scheme to network paths (see #2262)
-			$strUrl = ($page->rootUseSSL ? 'https:' : 'http:').$strUrl;
+			$strUrl = ($page->rootUseSSL ? 'https:' : 'http:') . $strUrl;
 		}
 		elseif (0 === strncmp($strUrl, '/', 1))
 		{
