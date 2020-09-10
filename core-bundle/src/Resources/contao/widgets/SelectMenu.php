@@ -153,9 +153,11 @@ class SelectMenu extends \Widget
 			$strClass .= ' tl_chosen';
 		}
 
+		$hiddenName = ($this->multiple && substr($this->strName, -2) == '[]') ? substr($this->strName, 0, -2) : $this->strName;
+
 		return sprintf(
 			'%s<select name="%s" id="ctrl_%s" class="%s%s"%s onfocus="Backend.getScrollOffset()">%s</select>%s',
-			($this->multiple ? '<input type="hidden" name="' . rtrim($this->strName, '[]') . '" value="">' : ''),
+			($this->multiple ? '<input type="hidden" name="' . $hiddenName . '" value="">' : ''),
 			$this->strName,
 			$this->strId,
 			$strClass,
