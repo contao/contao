@@ -562,7 +562,7 @@ class StringUtil
 	{
 		trigger_deprecation('contao/core-bundle', '4.10', 'Using "Contao\StringUtil::parseSimpleTokens()" has been deprecated and will no longer work in Contao 5.0. Use the "SimpleTokenParser::class" service instead.');
 
-		return System::getContainer()->get(SimpleTokenParser::class)->parseTokens($strString, $arrData);
+		return System::getContainer()->get(SimpleTokenParser::class)->parse($strString, $arrData);
 	}
 
 	/**

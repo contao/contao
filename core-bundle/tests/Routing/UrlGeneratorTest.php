@@ -253,7 +253,7 @@ class UrlGeneratorTest extends TestCase
     {
         $generator = $this->getUrlGenerator($this->mockRouterWithContext(['alias' => 'foo']));
 
-        /* @phpstan-ignore-next-line */
+        /** @phpstan-ignore-next-line */
         $generator->generate('foo', 'bar');
     }
 

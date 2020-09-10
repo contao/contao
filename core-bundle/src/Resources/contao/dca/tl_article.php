@@ -16,7 +16,6 @@ use Contao\Controller;
 use Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\DataContainer;
-use Contao\Date;
 use Contao\Image;
 use Contao\Input;
 use Contao\LayoutModel;
@@ -51,7 +50,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			(
 				'id' => 'primary',
 				'alias' => 'index',
-				'pid,start,stop,published,sorting' => 'index'
+				'pid,published,inColumn,start,stop' => 'index'
 			)
 		)
 	),
@@ -556,9 +555,7 @@ class tl_article extends Backend
 	public function addIcon($row, $label)
 	{
 		$image = 'articles';
-		$time = Date::floorToMinute();
-
-		$unpublished = ($row['start'] != '' && $row['start'] > $time) || ($row['stop'] != '' && $row['stop'] < $time);
+		$unpublished = ($row['start'] != '' && $row['start'] > time()) || ($row['stop'] != '' && $row['stop'] <= time());
 
 		if ($unpublished || !$row['published'])
 		{

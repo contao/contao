@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\OptIn\OptIn;
 use Contao\CoreBundle\Util\SimpleTokenParser;
 use Patchwork\Utf8;
@@ -269,6 +270,10 @@ class ModuleRegistration extends Module
 								$varValue = $callback($varValue, null);
 							}
 						}
+						catch (ResponseException $e)
+						{
+							throw $e;
+						}
 						catch (\Exception $e)
 						{
 							$objWidget->class = 'error';
@@ -511,7 +516,7 @@ class ModuleRegistration extends Module
 		// Send the token
 		$optInToken->send(
 			sprintf($GLOBALS['TL_LANG']['MSC']['emailSubject'], Idna::decode(Environment::get('host'))),
-			System::getContainer()->get(SimpleTokenParser::class)->parseTokens($this->reg_text, $arrTokenData)
+			System::getContainer()->get(SimpleTokenParser::class)->parse($this->reg_text, $arrTokenData)
 		);
 	}
 

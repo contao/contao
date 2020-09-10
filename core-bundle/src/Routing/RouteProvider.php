@@ -230,7 +230,7 @@ class RouteProvider extends AbstractPageRouteProvider
                 [
                     '_controller' => 'Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction',
                     'path' => '/'.$urlPrefix.'/',
-                    'permanent' => true,
+                    'permanent' => false,
                 ]
             ),
             [],
