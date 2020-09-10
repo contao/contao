@@ -180,7 +180,6 @@ class Search
 								->limit(1)
 								->execute($arrSet['checksum'], $arrSet['pid']);
 
-		// Update the URL if the new URL is shorter or the current URL is not canonical
 		if ($objIndex->numRows)
 		{
 			// The new URL is more canonical (shorter and/or less fragments)
@@ -189,10 +188,11 @@ class Search
 				self::removeEntry($arrSet['url']);
 
 				$objDatabase->prepare("UPDATE tl_search %s WHERE id=?")
-					->set($arrSet)
-					->execute($objIndex->id);
+							->set($arrSet)
+							->execute($objIndex->id);
 			}
 
+			// The same page has been indexed under a different URL already (see #8460)
 			return false;
 		}
 

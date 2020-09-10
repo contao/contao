@@ -23,9 +23,9 @@ use Contao\Search;
 class SearchTest extends TestCase
 {
     /**
-     * @dataProvider compareUrlsProvider
-     *
      * @param int $expected
+     *
+     * @dataProvider compareUrlsProvider
      */
     public function testCompareUrls(array $args, $expected)
     {
