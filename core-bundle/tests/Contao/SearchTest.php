@@ -23,26 +23,21 @@ use Contao\Search;
 class SearchTest extends TestCase
 {
     /**
-     * @param int $expected
+     * @param string $moreCanonicalUrl
+     * @param string $lessCanonicalUrl
      *
      * @dataProvider compareUrlsProvider
      */
-    public function testCompareUrls(array $args, $expected)
+    public function testCompareUrls($moreCanonicalUrl, $lessCanonicalUrl)
     {
         $search = new \ReflectionClass(Search::class);
         $compareUrls = $search->getMethod('compareUrls');
         $compareUrls->setAccessible(true);
 
-        if ($expected < 0) {
-            $this->assertLessThan(0, $compareUrls->invokeArgs(null, $args));
-            $this->assertGreaterThan(0, $compareUrls->invokeArgs(null, array_reverse($args)));
-        } elseif ($expected > 0) {
-            $this->assertGreaterThan(0, $compareUrls->invokeArgs(null, $args));
-            $this->assertLessThan(0, $compareUrls->invokeArgs(null, array_reverse($args)));
-        } else {
-            $this->assertSame(0, $compareUrls->invokeArgs(null, $args));
-            $this->assertSame(0, $compareUrls->invokeArgs(null, array_reverse($args)));
-        }
+        $this->assertLessThan(0, $compareUrls->invokeArgs(null, [$moreCanonicalUrl, $lessCanonicalUrl]));
+        $this->assertGreaterThan(0, $compareUrls->invokeArgs(null, [$lessCanonicalUrl, $moreCanonicalUrl]));
+        $this->assertSame(0, $compareUrls->invokeArgs(null, [$moreCanonicalUrl, $moreCanonicalUrl]));
+        $this->assertSame(0, $compareUrls->invokeArgs(null, [$lessCanonicalUrl, $lessCanonicalUrl]));
     }
 
     /**
@@ -53,15 +48,14 @@ class SearchTest extends TestCase
     public function compareUrlsProvider()
     {
         return [
-            [['foo/bar.html', 'foo/bar.html?query'], -1],
-            [['foo/bar.html', 'foo/bar/baz.html'], -1],
-            [['foo/bar.html', 'foo/bar-baz.html'], -1],
-            [['foo/bar.html', 'foo/barr.html'], -1],
-            [['foo/bar.html', 'foo/baz.html'], -1],
-            [['foo/bar.html', 'foo/bar.html'], 0],
-            [['foo/bar-longer-url-but-no-query.html', 'foo/bar.html?query'], -1],
-            [['foo/bar-longer-url-but-less-slashes.html', 'foo/bar/baz.html'], -1],
-            [['foo.html?query/with/many/slashes/', 'foo/bar.html?query-without-slashes'], -1],
+            ['foo/bar.html', 'foo/bar.html?query'],
+            ['foo/bar.html', 'foo/bar/baz.html'],
+            ['foo/bar.html', 'foo/bar-baz.html'],
+            ['foo/bar.html', 'foo/barr.html'],
+            ['foo/bar.html', 'foo/baz.html'],
+            ['foo/bar-longer-url-but-no-query.html', 'foo/bar.html?query'],
+            ['foo/bar-longer-url-but-less-slashes.html', 'foo/bar/baz.html'],
+            ['foo.html?query/with/many/slashes/', 'foo/bar.html?query-without-slashes'],
         ];
     }
 }
