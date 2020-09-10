@@ -1,5 +1,14 @@
 # API changes
 
+## Version 4.* to 4.10
+
+### Article CSS classes
+
+The CSS classes "first" and "last" are no longer applied to articles. Use CSS
+selectors instead.
+
+More information: https://github.com/contao/contao/issues/239
+
 ## Version 4.* to 4.8
 
 ### Contao image 1.0
