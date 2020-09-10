@@ -66,6 +66,7 @@
         "paragonie/constant_time_encoding": "^2.2",
         "patchwork/utf8": "^1.2",
         "phpspec/php-diff": "^1.0",
+        "phpunit/php-token-stream": "^1.4 || ^2.0 || ^3.0 || ^4.0",
         "psr/log": "^1.0",
         "ramsey/uuid": "^3.8",
         "scheb/two-factor-bundle": "^4.11",
