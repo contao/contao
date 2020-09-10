@@ -186,8 +186,7 @@ class Search
 			// The new URL is more canonical (shorter and/or less fragments)
 			if (self::compareUrls($arrSet['url'], $objIndex->url) < 0)
 			{
-				$objDatabase->prepare("DELETE FROM tl_search WHERE url=?")
-					->execute($arrSet['url']);
+				self::removeEntry($arrSet['url']);
 
 				$objDatabase->prepare("UPDATE tl_search %s WHERE id=?")
 					->set($arrSet)
