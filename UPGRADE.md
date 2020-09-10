@@ -2,10 +2,10 @@
 
 ## Version 4.* to 4.10
 
-### Article CSS classes
+### CSS classes "first" and "last"
 
-The CSS classes "first" and "last" are no longer applied to articles. Use CSS
-selectors instead.
+The CSS classes "first" and "last" are no longer applied to articles and
+content elements. Use CSS selectors instead.
 
 More information: https://github.com/contao/contao/issues/239
 
