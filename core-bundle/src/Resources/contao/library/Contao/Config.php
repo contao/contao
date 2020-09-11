@@ -270,7 +270,7 @@ class Config
 		// Create the destination path of the localconfig.php
 		$strDestination = Path::join(TL_ROOT, 'system/config/localconfig.php');
 
-		// Get the realpath in case it is a symlink
+		// Get the realpath in case it is a symlink (see #2209)
 		$strDestination = realpath($strDestination) ?: $strDestination;
 
 		// Then move the file to its final destination
