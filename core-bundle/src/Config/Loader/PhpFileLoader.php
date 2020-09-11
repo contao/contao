@@ -12,6 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Config\Loader;
 
+use PhpParser\Node;
+use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitor\NameResolver;
+use PhpParser\NodeVisitorAbstract;
+use PhpParser\ParserFactory;
+use PhpParser\PrettyPrinter\Standard as PrettyPrinter;
 use Symfony\Component\Config\Loader\Loader;
 use Webmozart\PathUtil\Path;
 
@@ -45,58 +51,63 @@ class PhpFileLoader extends Loader
      */
     private function parseFile(string $file): array
     {
-        $code = '';
-        $namespace = '';
-        $buffer = false;
-        $stream = new \PHP_Token_Stream($file);
+        // Parse input into an AST.
+        $contents = trim(file_get_contents($file));
+        $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
+        $ast = $parser->parse($contents);
 
-        foreach ($stream as $token) {
-            switch (true) {
-                case $token instanceof \PHP_Token_OPEN_TAG:
-                case $token instanceof \PHP_Token_CLOSE_TAG:
-                    // remove
-                    break;
+        // Traverse AST to handle namespacing and drop "declare('strict_types')"
+        $namespaceResolver = new NameResolver();
 
-                case false !== $buffer:
-                    $buffer .= $token;
+        $namespaceStripper = new class() extends NodeVisitorAbstract {
+            public function leaveNode(Node $node)
+            {
+                if ($node instanceof Node\Stmt\Namespace_) {
+                    return $node->stmts;
+                }
 
-                    if (';' === (string) $token) {
-                        $code .= $this->handleDeclare($buffer);
-                        $buffer = false;
-                    }
-                    break;
+                if ($node instanceof Node\Stmt\Use_) {
+                    return NodeTraverser::REMOVE_NODE;
+                }
 
-                case $token instanceof \PHP_Token_NAMESPACE:
-                    if ('{' === $token->getName()) {
-                        $namespace = false;
-                        $code .= $token;
-                    } else {
-                        $namespace = $token->getName();
-                        $stream->seek($token->getEndTokenId());
-                    }
-                    break;
-
-                case $token instanceof \PHP_Token_DECLARE:
-                    $buffer = (string) $token;
-                    break;
-
-                default:
-                    $code .= $token;
+                return null;
             }
-        }
+        };
+
+        $declareStrictTypesStripper = new class() extends NodeVisitorAbstract {
+            public function leaveNode(Node $node)
+            {
+                if ($node instanceof Node\Stmt\Declare_) {
+                    foreach ($node->declares as $key => $declare) {
+                        if ('strict_types' === $declare->key->name) {
+                            unset($node->declares[$key]);
+                        }
+                    }
+
+                    if (empty($node->declares)) {
+                        return NodeTraverser::REMOVE_NODE;
+                    }
+                }
+
+                return null;
+            }
+        };
+
+        $traverser = new NodeTraverser();
+        $traverser->addVisitor($namespaceResolver);
+        $traverser->addVisitor($namespaceStripper);
+        $traverser->addVisitor($declareStrictTypesStripper);
+        $ast = $traverser->traverse($ast);
+
+        // todo: should we also drop any inline HTML?
+
+        // Emit code and namespace information.
+        $prettyPrinter = new PrettyPrinter();
+        $code = $prettyPrinter->prettyPrint($ast);
+        $namespaceNode = $namespaceResolver->getNameContext()->getNamespace();
+        $namespace = null !== $namespaceNode ? $namespaceNode->toString() : '';
 
         return [$code, $namespace];
-    }
-
-    private function handleDeclare(string $code): string
-    {
-        $code = preg_replace('/(,\s*)?strict_types\s*=\s*1(\s*,)?/', '', $code);
-
-        if (preg_match('/declare\(\s*\)/', $code)) {
-            return '';
-        }
-
-        return str_replace(' ', '', $code);
     }
 
     private function stripLegacyCheck(string $code): string
