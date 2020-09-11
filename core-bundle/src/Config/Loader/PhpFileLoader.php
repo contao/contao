@@ -32,7 +32,7 @@ class PhpFileLoader extends Loader
 
         $code = $this->stripLegacyCheck($code);
 
-        if (false !== $namespace && 'namespaced' === $type) {
+        if ('namespaced' === $type) {
             $code = sprintf("\nnamespace %s {%s}\n", $namespace, $code);
         }
 
