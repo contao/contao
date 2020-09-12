@@ -377,35 +377,62 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
      */
     private function addDefaultDoctrineMapping(array $extensionConfigs, ContainerBuilder $container): array
     {
-        // Do not add an 'App' mapping if it already exists or any existing
-        // mapping is targeting the '%kernel.project_dir%/src/Entity' directory.
-        foreach ($extensionConfigs as $config) {
-            if (isset($config['orm']['mappings']['App'])) {
-                return $extensionConfigs;
-            }
+        $defaultEntityManager = 'default';
 
-            foreach ($config['orm']['mappings'] ?? [] as $mapping) {
-                if ('%kernel.project_dir%/src/Entity' === ($mapping['dir'] ?? '')) {
-                    return $extensionConfigs;
-                }
+        foreach ($extensionConfigs as $config) {
+            if (null !== $em = $config['orm']['default_entity_manager'] ?? null) {
+                $defaultEntityManager = $em;
             }
         }
 
-        // Do not add an 'App' mapping if the '%kernel.project_dir%/src/Entity'
-        // directory does not exists.
+        $mappings = [];
+        $autoMappingEnabled = false;
+
+        foreach ($extensionConfigs as $config) {
+            $mappings[] = $config['orm']['mappings'] ?? [];
+
+            foreach ($config['orm']['entity_managers'] ?? [] as $em) {
+                $mappings[] = $em['mappings'] ?? [];
+            }
+
+            $autoMappingEnabled |= ($config['orm']['auto_mapping'] ?? false) ||
+                ($config['orm']['entity_managers'][$defaultEntityManager]['auto_mapping'] ?? false);
+        }
+
+        // Skip if auto mapping isn't enabled for the default entity manager.
+        if (!$autoMappingEnabled) {
+            return $extensionConfigs;
+        }
+
+        // Skip if a mapping with name or alias 'App' already exists or any
+        // mapping already targets '%kernel.project_dir%/src/Entity'.
+        foreach (array_replace(...$mappings) as $name => $values) {
+            if (
+                'App' === $name || 'App' === ($values['alias'] ?? '') ||
+                '%kernel.project_dir%/src/Entity' === ($values['dir'] ?? '')
+            ) {
+                return $extensionConfigs;
+            }
+        }
+
+        // Skip if the '%kernel.project_dir%/src/Entity' directory does not exists.
         if (!$container->fileExists(Path::join($container->getParameter('kernel.project_dir'), 'src/Entity'))) {
             return $extensionConfigs;
         }
 
         $extensionConfigs[] = [
             'orm' => [
-                'mappings' => [
-                    'App' => [
-                        'type' => 'annotation',
-                        'dir' => '%kernel.project_dir%/src/Entity',
-                        'is_bundle' => false,
-                        'prefix' => 'App\Entity',
-                        'alias' => 'App',
+                'entity_managers' => [
+                    $defaultEntityManager => [
+                        'mappings' => [
+                            'App' => [
+                                'type' => 'annotation',
+                                'dir' => '%kernel.project_dir%/src/Entity',
+                                'is_bundle' => false,
+                                'prefix' => 'App\Entity',
+                                'alias' => 'App',
+                            ],
+                        ],
                     ],
                 ],
             ],
