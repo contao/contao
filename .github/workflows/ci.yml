@@ -38,7 +38,7 @@ jobs:
                   composer install --no-interaction --no-suggest --ignore-platform-req=php
 
             - name: Run the unit tests
-              run: vendor/bin/phpunit --colors=always --debug
+              run: vendor/bin/phpunit --colors=always
 
             - name: Run the functional tests
               run: vendor/bin/phpunit --testsuite=functional --colors=always
