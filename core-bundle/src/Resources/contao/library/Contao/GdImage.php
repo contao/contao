@@ -398,6 +398,7 @@ class GdImage
 }
 
 // PHP 8.0 compatibility
-if (!class_exists('GdImage')) {
+if (!class_exists('GdImage'))
+{
 	class_alias(GdImage::class, 'GdImage');
 }
