@@ -150,7 +150,7 @@
         "doctrine/doctrine-migrations-bundle": "^1.1",
         "doctrine/event-manager": "^1.0",
         "monolog/monolog": "^1.24",
-        "phpunit/phpunit": "^8.4",
+        "phpunit/phpunit": "^8.4 || ^9.3",
         "psr/event-dispatcher": "^1.0",
         "slam/phpstan-extensions": "^5.0",
         "symfony/browser-kit": "4.4.*",
