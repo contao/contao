@@ -872,7 +872,7 @@ class Image
 	{
 		@trigger_error('Using Image::get() has been deprecated and will no longer work in Contao 5.0. Use the contao.image.image_factory service instead.', E_USER_DEPRECATED);
 
-		if ($image == '')
+		if (!$image)
 		{
 			return null;
 		}
