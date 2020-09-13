@@ -87,29 +87,34 @@ class PhpFileLoader extends Loader
                     return NodeTraverser::REMOVE_NODE;
                 }
 
-                // Drop legacy access check ("if(*) die('You cannot access this file directly!');").
-                if ($node instanceof Node\Stmt\If_) {
-                    foreach ($node->stmts as $statement) {
-                        if (
-                            $statement instanceof Node\Stmt\Expression &&
-                            $statement->expr instanceof Node\Expr\Exit_ &&
-                            $statement->expr->expr instanceof Node\Scalar\String_ &&
-                            $this->matchLegacyCheckText($statement->expr->expr->value)
-                        ) {
-                            return NodeTraverser::REMOVE_NODE;
-                        }
-                    }
+                // Drop legacy access check.
+                if ($this->matchLegacyCheck($node)) {
+                    return NodeTraverser::REMOVE_NODE;
                 }
 
                 return null;
             }
 
-            private function matchLegacyCheckText(string $text): bool
+            private function matchLegacyCheck(Node $node): bool
             {
-                return \in_array($text, [
-                    'You cannot access this file directly!',
-                    'You can not access this file directly!',
-                ], true);
+                return $node instanceof Node\Stmt\If_ &&
+                    // match "if(!defined('TL_ROOT'))"
+                    ($condition = $node->cond) instanceof Node\Expr\BooleanNot &&
+                    $condition->expr instanceof Node\Expr\FuncCall &&
+                    $condition->expr->name instanceof Node\Name &&
+                    'defined' === $condition->expr->name->toLowerString() &&
+                    null !== ($argument = $condition->expr->args[0] ?? null) &&
+                    $argument->value instanceof Node\Scalar\String_ &&
+                    'TL_ROOT' === $argument->value->value &&
+
+                    // match "die('You ...')"
+                    ($statement = $node->stmts[0] ?? null) instanceof Node\Stmt\Expression &&
+                    $statement->expr instanceof Node\Expr\Exit_ &&
+                    ($text = $statement->expr->expr) instanceof Node\Scalar\String_ &&
+                    \in_array($text->value, [
+                        'You cannot access this file directly!',
+                        'You can not access this file directly!',
+                    ], true);
             }
         };
 
