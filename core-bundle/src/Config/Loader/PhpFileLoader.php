@@ -30,8 +30,6 @@ class PhpFileLoader extends Loader
     {
         [$code, $namespace] = $this->parseFile((string) $resource);
 
-        $code = $this->stripLegacyCheck($code);
-
         if ('namespaced' === $type) {
             $code = sprintf("\nnamespace %s {%s}\n", $namespace, $code);
         }
@@ -56,12 +54,13 @@ class PhpFileLoader extends Loader
         $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
         $ast = $parser->parse($contents);
 
-        // Traverse AST to handle namespacing and drop "declare('strict_types')"
+        // Traverse and modify the AST.
         $namespaceResolver = new NameResolver();
 
-        $namespaceStripper = new class() extends NodeVisitorAbstract {
+        $nodeStripper = new class() extends NodeVisitorAbstract {
             public function leaveNode(Node $node)
             {
+                // Drop namespace and use declarations.
                 if ($node instanceof Node\Stmt\Namespace_) {
                     return $node->stmts;
                 }
@@ -70,13 +69,7 @@ class PhpFileLoader extends Loader
                     return NodeTraverser::REMOVE_NODE;
                 }
 
-                return null;
-            }
-        };
-
-        $declareStrictTypesStripper = new class() extends NodeVisitorAbstract {
-            public function leaveNode(Node $node)
-            {
+                // Drop 'strict_types' definition.
                 if ($node instanceof Node\Stmt\Declare_) {
                     foreach ($node->declares as $key => $declare) {
                         if ('strict_types' === $declare->key->name) {
@@ -89,17 +82,42 @@ class PhpFileLoader extends Loader
                     }
                 }
 
+                // Drop any inline HTML.
+                if ($node instanceof Node\Stmt\InlineHTML) {
+                    return NodeTraverser::REMOVE_NODE;
+                }
+
+                // Drop legacy access check ("if(*) die('You cannot access this file directly!');").
+                if ($node instanceof Node\Stmt\If_) {
+                    foreach ($node->stmts as $statement) {
+                        if (
+                            $statement instanceof Node\Stmt\Expression &&
+                            $statement->expr instanceof Node\Expr\Exit_ &&
+                            $statement->expr->expr instanceof Node\Scalar\String_ &&
+                            $this->matchLegacyCheckText($statement->expr->expr->value)
+                        ) {
+                            return NodeTraverser::REMOVE_NODE;
+                        }
+                    }
+                }
+
                 return null;
+            }
+
+            private function matchLegacyCheckText(string $text): bool
+            {
+                return \in_array($text, [
+                    'You cannot access this file directly!',
+                    'You can not access this file directly!',
+                ], true);
             }
         };
 
         $traverser = new NodeTraverser();
         $traverser->addVisitor($namespaceResolver);
-        $traverser->addVisitor($namespaceStripper);
-        $traverser->addVisitor($declareStrictTypesStripper);
-        $ast = $traverser->traverse($ast);
+        $traverser->addVisitor($nodeStripper);
 
-        // todo: should we also drop any inline HTML?
+        $ast = $traverser->traverse($ast);
 
         // Emit code and namespace information.
         $prettyPrinter = new PrettyPrinter();
@@ -108,19 +126,5 @@ class PhpFileLoader extends Loader
         $namespace = null !== $namespaceNode ? $namespaceNode->toString() : '';
 
         return [$code, $namespace];
-    }
-
-    private function stripLegacyCheck(string $code): string
-    {
-        $code = str_replace(
-            [
-                "if (!defined('TL_ROOT')) die('You cannot access this file directly!');",
-                "if (!defined('TL_ROOT')) die('You can not access this file directly!');",
-            ],
-            '',
-            $code
-        );
-
-        return "\n".trim($code)."\n";
     }
 }
