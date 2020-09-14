@@ -3597,7 +3597,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 <p class="tl_empty">' . $GLOBALS['TL_LANG']['MSC']['noResult'] . '</p>';
 		}
 
-		// Pass previously selected values to picker (#1487)
+		// Pass previously selected values to picker (#1816)
 		$prevPickerValue = '';
 
 		if ($this->strPickerFieldType)
@@ -4136,7 +4136,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			return $return;
 		}
 
-		// Pass previously selected values to picker (#1487)
+		// Pass previously selected values to picker (#1816)
 		$prevPickerValue = '';
 
 		if ($this->strPickerFieldType)
@@ -4773,7 +4773,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		{
 			$result = $objRow->fetchAllAssoc();
 
-			// Pass previously selected values to picker (#1487)
+			// Pass previously selected values to picker (#1816)
 			$prevPickerValue = '';
 
 			if ($this->strPickerFieldType)

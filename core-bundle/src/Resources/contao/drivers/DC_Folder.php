@@ -417,7 +417,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			\Message::addInfo($GLOBALS['TL_LANG']['MSC']['searchExclude']);
 		}
 
-		// Pass previously selected values to picker (#1487)
+		// Pass previously selected values to picker (#1816)
 		$prevPickerValue = '';
 
 		if ($this->strPickerFieldType)
