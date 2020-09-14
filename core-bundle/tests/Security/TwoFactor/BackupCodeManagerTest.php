@@ -65,7 +65,10 @@ class BackupCodeManagerTest extends TestCase
 
     public function testHandlesContaoUsers(): void
     {
-        $backupCodes = json_encode(['123456', '234567']);
+        $backupCodes = json_encode([
+            password_hash('123456', PASSWORD_BCRYPT),
+            password_hash('234567', PASSWORD_BCRYPT),
+        ]);
 
         /** @var FrontendUser&MockObject $frontendUser */
         $frontendUser = $this->mockClassWithProperties(FrontendUser::class, []);

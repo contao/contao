@@ -192,7 +192,7 @@ class TwoFactorController extends AbstractFrontendModuleController
         return new RedirectResponse($this->pageModel->getAbsoluteUrl());
     }
 
-    private function generateBackupCodes(FrontendUser $user): array
+    private function generateBackupCodes(FrontendUser $user): ?array
     {
         /** @var BackupCodeManager $backupCodeManager */
         $backupCodeManager = $this->get(BackupCodeManager::class);
