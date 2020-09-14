@@ -32,7 +32,7 @@ class ValidateCustomRgxpListener
 
     public function __invoke($input)
     {
-        if (false === @preg_match($input, null)) {
+        if (false === @preg_match($input, '')) {
             throw new \Exception($this->translator->trans('ERR.invalidCustomRgxp', [], 'contao_default'));
         }
 
