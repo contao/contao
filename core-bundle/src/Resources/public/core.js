@@ -920,7 +920,7 @@ var Backend =
 				return;
 			}
 			var frm = window.frames['simple-modal-iframe'],
-				val = [], ul, inp, field, act, it, i, sIndex;
+				val = [], ul, inp, field, act, it, i, pickerValue, sIndex;
 			if (frm === undefined) {
 				alert('Could not find the SimpleModal frame');
 				return;
