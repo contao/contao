@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\Controller\Page;
 
 use Contao\Config;
@@ -93,9 +103,7 @@ abstract class AbstractPageController extends AbstractController
             $pageHandler = new PageRegular();
 
             return $pageHandler->getResponse($pageModel, true);
-
         } catch (\UnusedArgumentsException $e) {
-
             // Restore the globals (see #7659)
             $GLOBALS['TL_HEAD'] = $arrHead;
             $GLOBALS['TL_BODY'] = $arrBody;
@@ -114,6 +122,6 @@ abstract class AbstractPageController extends AbstractController
             $adminEmail = (string) $config->get('adminEmail');
         }
 
-        list($GLOBALS['TL_ADMIN_NAME'], $GLOBALS['TL_ADMIN_EMAIL']) = StringUtil::splitFriendlyEmail($adminEmail);
+        [$GLOBALS['TL_ADMIN_NAME'], $GLOBALS['TL_ADMIN_EMAIL']] = StringUtil::splitFriendlyEmail($adminEmail);
     }
 }

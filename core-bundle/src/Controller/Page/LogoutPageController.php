@@ -41,7 +41,7 @@ class LogoutPageController extends AbstractPageController
 
         // Add the redirect= parameter to the logout URL
         $query = new Query($uri->getQuery());
-        $query = $query->merge('redirect=' . $redirect);
+        $query = $query->merge('redirect='.$redirect);
 
         return $this->redirect((string) $uri->withQuery((string) $query), Response::HTTP_TEMPORARY_REDIRECT);
     }

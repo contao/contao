@@ -25,12 +25,13 @@ class ForwardPageController extends AbstractPageController
         $forwardPage = $this->getForwardPage($pageModel);
 
         $queryString = '';
+
         if (!empty($query = $request->query->all())) {
             $queryString = '?'.http_build_query($query);
         }
 
         return $this->redirect(
-            $forwardPage->getAbsoluteUrl($request->attributes->get('parameters')) . $queryString,
+            $forwardPage->getAbsoluteUrl($request->attributes->get('parameters')).$queryString,
             'temporary' === $pageModel->redirect ? Response::HTTP_SEE_OTHER : Response::HTTP_MOVED_PERMANENTLY
         );
     }
@@ -52,7 +53,7 @@ class ForwardPageController extends AbstractPageController
 
         if (null !== ($logger = $this->get('logger'))) {
             $logger->error(
-                'Forward page ID "' . $pageModel->jumpTo . '" does not exist',
+                'Forward page ID "'.$pageModel->jumpTo.'" does not exist',
                 ['contao' => new ContaoContext(__METHOD__, ContaoContext::ERROR)]
             );
         }

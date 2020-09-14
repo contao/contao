@@ -250,8 +250,6 @@ class PrettyErrorScreenListenerTest extends TestCase
         $this->assertFalse($event->hasResponse());
     }
 
-
-
     public function testDoesNotAddResponseIfNoPageIsFoundInRoot(): void
     {
         $currentPage = $this->mockClassWithProperties(PageModel::class, ['rootId' => 17]);
@@ -269,8 +267,6 @@ class PrettyErrorScreenListenerTest extends TestCase
             ->with('error_403', 17)
             ->willReturn(null)
         ;
-
-        $response = $this->createMock(Response::class);
 
         $fragmentRenderer = $this->createMock(FragmentRendererInterface::class);
         $fragmentRenderer

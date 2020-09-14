@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\Controller\Page;
 
 use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
@@ -17,6 +27,25 @@ class ErrorPageController extends AbstractPageController implements ContentCompo
      * @var array
      */
     private $options = [];
+
+    public function supportsContentComposition(PageModel $pageModel): bool
+    {
+        return !$pageModel->autoforward || !$pageModel->jumpTo;
+    }
+
+    public function setPageOptions(array $options): void
+    {
+        $this->options = $options;
+    }
+
+    public static function getSubscribedServices(): array
+    {
+        $services = parent::getSubscribedServices();
+
+        $services['uri_signer'] = UriSigner::class;
+
+        return $services;
+    }
 
     protected function getResponse(PageModel $pageModel, Request $request): Response
     {
@@ -57,24 +86,5 @@ class ErrorPageController extends AbstractPageController implements ContentCompo
         $url = $nextPage->getAbsoluteUrl().'?redirect='.$request->getUri();
 
         return $this->redirect($this->get('uri_signer')->sign($url), Response::HTTP_SEE_OTHER);
-    }
-
-    public function supportsContentComposition(PageModel $pageModel): bool
-    {
-        return !$pageModel->autoforward || !$pageModel->jumpTo;
-    }
-
-    public function setPageOptions(array $options): void
-    {
-        $this->options = $options;
-    }
-
-    public static function getSubscribedServices(): array
-    {
-        $services = parent::getSubscribedServices();
-
-        $services['uri_signer'] = UriSigner::class;
-
-        return $services;
     }
 }
