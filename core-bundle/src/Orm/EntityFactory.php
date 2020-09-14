@@ -14,6 +14,7 @@ use Laminas\Code\Generator\DocBlock\Tag\GenericTag;
 use Laminas\Code\Generator\DocBlockGenerator;
 use Laminas\Code\Generator\FileGenerator;
 use Laminas\Code\Reflection\ClassReflection;
+use Symfony\Component\Filesystem\Filesystem;
 
 class EntityFactory
 {
@@ -135,7 +136,8 @@ class EntityFactory
                 DeclareStatement::strictTypes(1)
             ]);
 
-            file_put_contents(sprintf('%s/%s.php', $directory, $reflectionClass->getShortName()), $fileGenerator->generate());
+            $filesystem = new Filesystem();
+            $filesystem->dumpFile(sprintf('%s/%s.php', $directory, $reflectionClass->getShortName()), $fileGenerator->generate());
         }
     }
 

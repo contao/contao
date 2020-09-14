@@ -10,7 +10,7 @@ class GeneratedEntityAutoloader
     {
         $namespace = 'Contao\CoreBundle\GeneratedEntity';
 
-        $autoloader = function ($className) use ($directory, $namespace) {
+        $autoloader = function (string $className) use ($directory, $namespace): void {
             if (0 !== strpos($className, $namespace)) {
                 return;
             }

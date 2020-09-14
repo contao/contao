@@ -7,6 +7,7 @@ namespace Contao\CoreBundle\Cache;
 use Contao\CoreBundle\Orm\Collector\EntityCollector;
 use Contao\CoreBundle\Orm\Collector\ExtensionCollector;
 use Contao\CoreBundle\Orm\EntityFactory;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 
 class GeneratedEntityCacheWarmer implements CacheWarmerInterface
@@ -43,12 +44,14 @@ class GeneratedEntityCacheWarmer implements CacheWarmerInterface
 
     private function ensureCacheDirectoryExists($cacheDir)
     {
+        $filesystem = new Filesystem();
+
         if (!is_dir($cacheDir)) {
-            if (false === @mkdir($cacheDir, 0777, true)) {
+            if (false === $filesystem->mkdir($cacheDir)) {
                 throw new \RuntimeException(sprintf('Unable to create the Contao Entity directory "%s".', $cacheDir));
             }
         } elseif (!is_writable($cacheDir)) {
-            throw new \RuntimeException(sprintf('The Contao Entity directory "%s" is not writeable for the current system user.', $directory));
+            throw new \RuntimeException(sprintf('The Contao Entity directory "%s" is not writeable for the current system user.', $cacheDir));
         }
     }
 }
