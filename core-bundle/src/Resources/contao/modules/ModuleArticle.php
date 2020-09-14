@@ -138,7 +138,7 @@ class ModuleArticle extends Module
 			// Override the CSS ID and class
 			if (\is_array($arrCss) && \count($arrCss) == 2)
 			{
-				if ($arrCss[0] == '')
+				if (!$arrCss[0])
 				{
 					$arrCss[0] = $id;
 				}

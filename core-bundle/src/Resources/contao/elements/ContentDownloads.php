@@ -141,7 +141,7 @@ class ContentDownloads extends ContentElement
 				}
 
 				// Use the file name as title if none is given
-				if ($arrMeta['title'] == '')
+				if (!$arrMeta['title'])
 				{
 					$arrMeta['title'] = StringUtil::specialchars($objFile->basename);
 				}
@@ -223,7 +223,7 @@ class ContentDownloads extends ContentElement
 					}
 
 					// Use the file name as title if none is given
-					if ($arrMeta['title'] == '')
+					if (!$arrMeta['title'])
 					{
 						$arrMeta['title'] = StringUtil::specialchars($objFile->basename);
 					}

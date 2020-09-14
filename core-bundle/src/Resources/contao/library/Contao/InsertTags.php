@@ -168,7 +168,7 @@ class InsertTags extends Controller
 
 				// Accessibility tags
 				case 'lang':
-					if ($elements[1] == '')
+					if (!$elements[1])
 					{
 						$arrCache[$strTag] = '</span>';
 					}
@@ -187,7 +187,7 @@ class InsertTags extends Controller
 				case 'email':
 				case 'email_open':
 				case 'email_url':
-					if ($elements[1] == '')
+					if (!$elements[1])
 					{
 						$arrCache[$strTag] = '';
 						break;

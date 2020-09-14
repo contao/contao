@@ -377,7 +377,7 @@ class StringUtil
 		// Encode opening arrow brackets (see #3998)
 		$strString = preg_replace_callback('@</?([^\s<>/]*)@', static function ($matches) use ($strAllowedTags)
 		{
-			if ($matches[1] == '' || stripos($strAllowedTags, '<' . strtolower($matches[1]) . '>') === false)
+			if (!$matches[1] || stripos($strAllowedTags, '<' . strtolower($matches[1]) . '>') === false)
 			{
 				$matches[0] = str_replace('<', '&lt;', $matches[0]);
 			}
@@ -1037,7 +1037,7 @@ class StringUtil
 		}
 
 		// Empty string
-		if (trim($varValue) == '')
+		if (!trim($varValue))
 		{
 			return $blnForceArray ? array() : '';
 		}

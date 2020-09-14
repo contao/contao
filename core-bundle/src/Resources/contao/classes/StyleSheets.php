@@ -125,7 +125,7 @@ class StyleSheets extends Backend
 	 */
 	protected function writeStyleSheet($row)
 	{
-		if ($row['id'] == '' || $row['name'] == '')
+		if (!$row['id'] || !$row['name'])
 		{
 			return;
 		}
@@ -540,7 +540,7 @@ class StyleSheets extends Backend
 					}
 
 					// Default starting point
-					if ($row['gradientAngle'] == '')
+					if (!$row['gradientAngle'])
 					{
 						$row['gradientAngle'] = 'to top';
 					}
@@ -1461,7 +1461,7 @@ class StyleSheets extends Backend
 		foreach ($arrAttributes as $strDefinition)
 		{
 			// Skip empty definitions
-			if (trim($strDefinition) == '')
+			if (!trim($strDefinition))
 			{
 				continue;
 			}

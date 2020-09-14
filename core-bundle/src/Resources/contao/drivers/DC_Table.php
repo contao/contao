@@ -4478,7 +4478,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 					// Add the group header
 					if ($firstOrderBy != 'sorting' && !$GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['disableGrouping'])
 					{
-						$sortingMode = (\count($orderBy) == 1 && $firstOrderBy == $orderBy[0] && $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] != '' && $GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['flag'] == '') ? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['flag'];
+						$sortingMode = (\count($orderBy) == 1 && $firstOrderBy == $orderBy[0] && $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] != '' && !$GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['flag']) ? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['flag'];
 						$remoteNew = $this->formatCurrentValue($firstOrderBy, $row[$i][$firstOrderBy], $sortingMode);
 						$group = $this->formatGroupHeader($firstOrderBy, $remoteNew, $sortingMode, $row[$i]);
 
@@ -4779,7 +4779,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				$query .= " ORDER BY (SELECT " . Database::quoteIdentifier($showFields[0]) . " FROM " . $this->ptable . " WHERE " . $this->ptable . ".id=" . $this->strTable . ".pid), " . implode(', ', $orderBy);
 
 				// Set the foreignKey so that the label is translated
-				if ($GLOBALS['TL_DCA'][$table]['fields']['pid']['foreignKey'] == '')
+				if (!$GLOBALS['TL_DCA'][$table]['fields']['pid']['foreignKey'])
 				{
 					$GLOBALS['TL_DCA'][$table]['fields']['pid']['foreignKey'] = $this->ptable . '.' . $showFields[0];
 				}
@@ -4980,7 +4980,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				{
 					$current = $row[$firstOrderBy];
 					$orderBy = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['fields'];
-					$sortingMode = (\count($orderBy) == 1 && $firstOrderBy == $orderBy[0] && $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] != '' && $GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['flag'] == '') ? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['flag'];
+					$sortingMode = (\count($orderBy) == 1 && $firstOrderBy == $orderBy[0] && $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] != '' && !$GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['flag']) ? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['flag'];
 					$remoteNew = $this->formatCurrentValue($firstOrderBy, $current, $sortingMode);
 
 					// Add the group header
@@ -5443,7 +5443,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				$options_total = ceil($this->total / Config::get('resultsPerPage'));
 
 				// Reset limit if other parameters have decreased the number of results
-				if ($this->limit !== null && ($this->limit == '' || preg_replace('/,.*$/', '', $this->limit) > $this->total))
+				if ($this->limit !== null && (!$this->limit || preg_replace('/,.*$/', '', $this->limit) > $this->total))
 				{
 					$this->limit = '0,' . Config::get('resultsPerPage');
 				}
@@ -5550,7 +5550,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 					// Sort by day
 					if (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'], array(5, 6)))
 					{
-						if ($session['filter'][$filter][$field] == '')
+						if (!$session['filter'][$filter][$field])
 						{
 							$this->procedure[] = $what . "=''";
 						}
@@ -5566,7 +5566,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 					// Sort by month
 					elseif (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'], array(7, 8)))
 					{
-						if ($session['filter'][$filter][$field] == '')
+						if (!$session['filter'][$filter][$field])
 						{
 							$this->procedure[] = $what . "=''";
 						}
@@ -5582,7 +5582,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 					// Sort by year
 					elseif (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'], array(9, 10)))
 					{
-						if ($session['filter'][$filter][$field] == '')
+						if (!$session['filter'][$filter][$field])
 						{
 							$this->procedure[] = $what . "=''";
 						}
