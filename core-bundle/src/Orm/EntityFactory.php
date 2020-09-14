@@ -88,7 +88,7 @@ class EntityFactory
                 }
 
                 $tags[] = new GenericTag(
-                    get_class($annotation),
+                    $this->getAnnotationNamespace($annotation),
                     $this->annotationDumper->dump($annotation)
                 );
             }
@@ -117,7 +117,7 @@ class EntityFactory
 
                 foreach ($propertyMetaData as $annotation) {
                     $propertyDocBlockGenerator->setTag(new GenericTag(
-                        get_class($annotation),
+                        $this->getAnnotationNamespace($annotation),
                         $this->annotationDumper->dump($annotation)
                     ));
                 }
@@ -137,5 +137,10 @@ class EntityFactory
 
             file_put_contents(sprintf('%s/%s.php', $directory, $reflectionClass->getShortName()), $fileGenerator->generate());
         }
+    }
+
+    private function getAnnotationNamespace($annotation): string
+    {
+        return '\\' . get_class($annotation);
     }
 }

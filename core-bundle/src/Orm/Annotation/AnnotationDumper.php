@@ -70,7 +70,7 @@ class AnnotationDumper
             }
         }
         if (is_object($item)) {
-            return sprintf('@%s%s', get_class($item), $this->exportValues((array) $item));
+            return sprintf('@\\%s%s', get_class($item), $this->exportValues((array) $item));
         }
 
         throw new \RuntimeException('Cannot serialize value in Doctrine annotation.');
