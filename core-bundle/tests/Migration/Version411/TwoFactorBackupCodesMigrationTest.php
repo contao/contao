@@ -84,7 +84,7 @@ class TwoFactorBackupCodesMigrationTest extends TestCase
 
     public function testUpdatesTheBackupCodes(): void
     {
-        $returnValues = [
+        $rows = [
             [
                 'id' => 1,
                 'backupCodes' => '[]',
@@ -112,7 +112,7 @@ class TwoFactorBackupCodesMigrationTest extends TestCase
         $statement
             ->expects($this->exactly(4))
             ->method('fetchAll')
-            ->willReturn($returnValues)
+            ->willReturn($rows)
         ;
 
         $connection = $this->createMock(Connection::class);
