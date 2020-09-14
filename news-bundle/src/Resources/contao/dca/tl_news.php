@@ -8,7 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-use Contao\Automator;
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
@@ -20,6 +19,7 @@ use Contao\Input;
 use Contao\News;
 use Contao\NewsArchiveModel;
 use Contao\NewsModel;
+use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Versions;
@@ -55,6 +55,10 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		(
 			array('tl_news', 'adjustTime'),
 			array('tl_news', 'scheduleUpdate')
+		),
+		'oninvalidate_cache_tags_callback' => array
+		(
+			array('tl_news', 'addSitemapCacheInvalidationTag'),
 		),
 		'sql' => array
 		(
@@ -864,9 +868,6 @@ class tl_news extends Backend
 			$this->News->generateFeedsByArchive($id);
 		}
 
-		$this->import(Automator::class, 'Automator');
-		$this->Automator->generateSitemap();
-
 		if ($request)
 		{
 			$request->attributes->set('_scope', $origScope);
@@ -1138,5 +1139,13 @@ class tl_news extends Backend
 		{
 			$dc->invalidateCacheTags();
 		}
+	}
+
+	public function addSitemapCacheInvalidationTag($dc, array $tags)
+	{
+		$archiveModel = NewsArchiveModel::findByPk($dc->activeRecord->pid);
+		$pageModel = PageModel::findWithDetails($archiveModel->jumpTo);
+
+		return array_merge($tags, array('contao.sitemap.' . $pageModel->rootId));
 	}
 }
