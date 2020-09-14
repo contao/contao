@@ -11,6 +11,14 @@ services:
             calls:
                 - [setContainer, ['@service_container']]
 
+    Contao\CoreBundle\EventListener\AddCustomRegexp\CustomRgxpListener:
+        arguments:
+            - '@translator'
+
+    Contao\CoreBundle\EventListener\AddCustomRegexp\HttpUrlListener:
+        arguments:
+            - '@translator'
+
     Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener:
         arguments:
             - '@contao.framework'
@@ -36,6 +44,10 @@ services:
             - '@database_connection'
             - '@contao.search.indexer'
         public: true
+
+    Contao\CoreBundle\EventListener\DataContainer\ValidateCustomRgxpListener:
+        arguments:
+            - '@translator'
 
     Contao\CoreBundle\EventListener\FilterPageTypeListener:
         tags:
