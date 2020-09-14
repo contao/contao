@@ -312,7 +312,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		$for = $session['search'][$this->strTable]['value'];
 
 		// Limit the results by modifying $this->arrFilemounts
-		if ($for != '')
+		if ($for)
 		{
 			// Wrap in a try catch block in case the regular expression is invalid (see #7743)
 			try
@@ -387,7 +387,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		}
 
 		// Call recursive function tree()
-		if ($for != '' && empty($this->arrFilemounts))
+		if ($for && empty($this->arrFilemounts))
 		{
 			// Show an empty tree if there are no search results
 		}
@@ -1313,7 +1313,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 				}
 
 				// Restore a version
-				if (Input::post('FORM_SUBMIT') == 'tl_version' && Input::post('version') != '')
+				if (Input::post('FORM_SUBMIT') == 'tl_version' && Input::post('version'))
 				{
 					$objVersions->restore(Input::post('version'));
 					$this->reload();
@@ -1374,7 +1374,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 						$objFile = is_dir($this->strRootDir . '/' . $this->intId) ? new Folder($this->intId) : new File($this->intId);
 
 						$this->strPath = StringUtil::stripRootDir($objFile->dirname);
-						$this->strExtension = ($objFile->origext != '') ? '.' . $objFile->origext : '';
+						$this->strExtension = $objFile->origext ? '.' . $objFile->origext : '';
 						$this->varValue = $objFile->filename;
 
 						// Fix hidden Unix system files
@@ -1687,7 +1687,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 						$objFile = is_dir($this->strRootDir . '/' . $id) ? new Folder($id) : new File($id);
 
 						$this->strPath = StringUtil::stripRootDir($objFile->dirname);
-						$this->strExtension = ($objFile->origext != '') ? '.' . $objFile->origext : '';
+						$this->strExtension = $objFile->origext ? '.' . $objFile->origext : '';
 						$this->varValue = $objFile->filename;
 
 						// Fix hidden Unix system files
@@ -1972,7 +1972,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 				}
 
 				// Restore a version
-				if (Input::post('FORM_SUBMIT') == 'tl_version' && Input::post('version') != '')
+				if (Input::post('FORM_SUBMIT') == 'tl_version' && Input::post('version'))
 				{
 					$objVersions->restore(Input::post('version'));
 

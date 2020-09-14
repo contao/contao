@@ -117,7 +117,7 @@ class Message
 	{
 		$strMessages = static::generateUnwrapped($strScope);
 
-		if ($strMessages != '')
+		if ($strMessages)
 		{
 			$strMessages = '<div class="tl_message">' . $strMessages . '</div>';
 		}

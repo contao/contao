@@ -582,7 +582,7 @@ class tl_files extends Contao\Backend
 		}
 
 		// Check the length without the file extension
-		if ($dc->activeRecord && $varValue != '')
+		if ($dc->activeRecord && $varValue)
 		{
 			$intMaxlength = $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['maxlength'];
 

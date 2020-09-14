@@ -331,7 +331,7 @@ class PageRegular extends Frontend
 			}
 
 			// Main column
-			if ($strContainer != '')
+			if ($strContainer)
 			{
 				$strFramework .= sprintf('#container{%s}', substr($strContainer, 0, -1));
 			}
@@ -348,14 +348,14 @@ class PageRegular extends Frontend
 			}
 
 			// Add the layout specific CSS
-			if ($strFramework != '')
+			if ($strFramework)
 			{
 				$this->Template->framework = Template::generateInlineStyle($strFramework) . "\n";
 			}
 		}
 
 		// Overwrite the viewport tag (see #6251)
-		if ($objLayout->viewport != '')
+		if ($objLayout->viewport)
 		{
 			$this->Template->viewport = '<meta name="viewport" content="' . $objLayout->viewport . '">' . "\n";
 		}
@@ -468,7 +468,7 @@ class PageRegular extends Frontend
 		$this->Template->sections = array();
 		$this->Template->positions = array();
 
-		if ($objLayout->sections != '')
+		if ($objLayout->sections)
 		{
 			$arrPositions = array();
 			$arrSections = StringUtil::deserialize($objLayout->sections);
@@ -513,7 +513,7 @@ class PageRegular extends Frontend
 		$arrFramework = StringUtil::deserialize($objLayout->framework);
 
 		// Google web fonts
-		if ($objLayout->webfonts != '')
+		if ($objLayout->webfonts)
 		{
 			$strStyleSheets .= Template::generateStyleTag('https://fonts.googleapis.com/css?family=' . str_replace('|', '%7C', $objLayout->webfonts), 'all') . "\n";
 		}
@@ -548,7 +548,7 @@ class PageRegular extends Frontend
 					$media = implode(',', StringUtil::deserialize($objStylesheets->media));
 
 					// Overwrite the media type with a custom media query
-					if ($objStylesheets->mediaQuery != '')
+					if ($objStylesheets->mediaQuery)
 					{
 						$media = $objStylesheets->mediaQuery;
 					}
@@ -603,7 +603,7 @@ class PageRegular extends Frontend
 		if (!empty($arrExternal) && \is_array($arrExternal))
 		{
 			// Consider the sorting order (see #5038)
-			if ($objLayout->orderExt != '')
+			if ($objLayout->orderExt)
 			{
 				$tmp = StringUtil::deserialize($objLayout->orderExt);
 
@@ -672,13 +672,13 @@ class PageRegular extends Frontend
 		$strHeadTags = '[[TL_HEAD]]';
 
 		// Add the analytics scripts
-		if ($objLayout->analytics != '')
+		if ($objLayout->analytics)
 		{
 			$arrAnalytics = StringUtil::deserialize($objLayout->analytics, true);
 
 			foreach ($arrAnalytics as $strTemplate)
 			{
-				if ($strTemplate != '')
+				if ($strTemplate)
 				{
 					$objTemplate = new FrontendTemplate($strTemplate);
 					$strHeadTags .= $objTemplate->parse();
@@ -715,7 +715,7 @@ class PageRegular extends Frontend
 
 			foreach ($arrJquery as $strTemplate)
 			{
-				if ($strTemplate != '')
+				if ($strTemplate)
 				{
 					$objTemplate = new FrontendTemplate($strTemplate);
 					$strScripts .= $objTemplate->parse();
@@ -733,7 +733,7 @@ class PageRegular extends Frontend
 
 			foreach ($arrMootools as $strTemplate)
 			{
-				if ($strTemplate != '')
+				if ($strTemplate)
 				{
 					$objTemplate = new FrontendTemplate($strTemplate);
 					$strScripts .= $objTemplate->parse();
@@ -745,13 +745,13 @@ class PageRegular extends Frontend
 		}
 
 		// Add the framework agnostic JavaScripts
-		if ($objLayout->scripts != '')
+		if ($objLayout->scripts)
 		{
 			$arrScripts = StringUtil::deserialize($objLayout->scripts, true);
 
 			foreach ($arrScripts as $strTemplate)
 			{
-				if ($strTemplate != '')
+				if ($strTemplate)
 				{
 					$objTemplate = new FrontendTemplate($strTemplate);
 					$strScripts .= $objTemplate->parse();
@@ -766,7 +766,7 @@ class PageRegular extends Frontend
 		$arrExternalJs = StringUtil::deserialize($objLayout->externalJs);
 
 		// Consider the sorting order (see #5038)
-		if (!empty($arrExternalJs) && \is_array($arrExternalJs) && $objLayout->orderExtJs != '')
+		if (!empty($arrExternalJs) && \is_array($arrExternalJs) && $objLayout->orderExtJs)
 		{
 			$tmp = StringUtil::deserialize($objLayout->orderExtJs);
 
@@ -838,7 +838,7 @@ class PageRegular extends Frontend
 		}
 
 		// Add the custom JavaScript
-		if ($objLayout->script != '')
+		if ($objLayout->script)
 		{
 			$strScripts .= "\n" . trim($objLayout->script) . "\n";
 		}

@@ -462,12 +462,12 @@ class DcaExtractor extends Controller
 
 			list($engine, , $charset) = explode(' ', trim($arrTable['TABLE_OPTIONS']));
 
-			if ($engine != '')
+			if ($engine)
 			{
 				$sql['engine'] = str_replace('ENGINE=', '', $engine);
 			}
 
-			if ($charset != '')
+			if ($charset)
 			{
 				$sql['charset'] = str_replace('CHARSET=', '', $charset);
 			}
@@ -490,7 +490,7 @@ class DcaExtractor extends Controller
 					{
 						$type = trim($arrMatches[1]);
 						$field = implode(',', $arrFields[1]);
-						$sql['keys'][$field] = ($type != '') ? strtolower($type) : 'index';
+						$sql['keys'][$field] = $type ? strtolower($type) : 'index';
 					}
 				}
 			}

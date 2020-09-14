@@ -48,7 +48,7 @@ class ModuleNavigation extends Module
 
 		$strBuffer = parent::generate();
 
-		return ($this->Template->items != '') ? $strBuffer : '';
+		return $this->Template->items ? $strBuffer : '';
 	}
 
 	/**
@@ -86,7 +86,7 @@ class ModuleNavigation extends Module
 			}
 
 			// Set the domain
-			if ($objRootPage->rootId != $objPage->rootId && $objRootPage->domain != '' && $objRootPage->domain != $objPage->domain)
+			if ($objRootPage->rootId != $objPage->rootId && $objRootPage->domain && $objRootPage->domain != $objPage->domain)
 			{
 				$host = $objRootPage->domain;
 			}

@@ -862,7 +862,7 @@ class tl_calendar_events extends Contao\Backend
 		}
 
 		// Add the option currently set
-		if ($dc->activeRecord && $dc->activeRecord->source != '')
+		if ($dc->activeRecord && $dc->activeRecord->source)
 		{
 			$arrOptions[] = $dc->activeRecord->source;
 			$arrOptions = array_unique($arrOptions);

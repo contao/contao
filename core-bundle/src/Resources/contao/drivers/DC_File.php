@@ -373,7 +373,7 @@ class DC_File extends DataContainer implements \editable
 			$varValue = $varValue ? true : false;
 		}
 
-		if ($varValue != '')
+		if ($varValue)
 		{
 			// Convert binary UUIDs (see #6893)
 			if ($arrData['inputType'] == 'fileTree')
@@ -500,7 +500,7 @@ class DC_File extends DataContainer implements \editable
 					}
 				}
 
-				if ($trigger != '')
+				if ($trigger)
 				{
 					if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['inputType'] == 'checkbox' && !$GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['eval']['multiple'])
 					{

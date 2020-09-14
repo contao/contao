@@ -92,7 +92,7 @@ class ModuleFaqPage extends Module
 			$objTemp->addImage = false;
 
 			// Add an image
-			if ($objFaq->addImage && $objFaq->singleSRC != '')
+			if ($objFaq->addImage && $objFaq->singleSRC)
 			{
 				$objModel = FilesModel::findByUuid($objFaq->singleSRC);
 

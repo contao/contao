@@ -83,7 +83,7 @@ class ModuleQuicklink extends Module
 		$arrPages = array();
 
 		// Sort the array keys according to the given order
-		if ($this->orderPages != '')
+		if ($this->orderPages)
 		{
 			$tmp = StringUtil::deserialize($this->orderPages);
 

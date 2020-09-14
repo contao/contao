@@ -805,7 +805,7 @@ class tl_page extends Contao\Backend
 		{
 			$permission = 0;
 			$cid = CURRENT_ID ?: Contao\Input::get('id');
-			$ids = ($cid != '') ? array($cid) : array();
+			$ids = $cid ? array($cid) : array();
 
 			// Set permission
 			switch (Contao\Input::get('act'))
@@ -997,7 +997,7 @@ class tl_page extends Contao\Backend
 	 */
 	public function showFallbackWarning()
 	{
-		if (Contao\Input::get('act') != '')
+		if (Contao\Input::get('act'))
 		{
 			return;
 		}
@@ -1145,7 +1145,7 @@ class tl_page extends Contao\Backend
 			);
 
 			// Generate folder URL aliases (see #4933)
-			if (Contao\Config::get('folderUrl') && $objPage->folderUrl != '')
+			if (Contao\Config::get('folderUrl') && $objPage->folderUrl)
 			{
 				$varValue = $objPage->folderUrl . $varValue;
 			}
@@ -1341,7 +1341,7 @@ class tl_page extends Contao\Backend
 	 */
 	public function checkStaticUrl($varValue)
 	{
-		if ($varValue != '')
+		if ($varValue)
 		{
 			$varValue = preg_replace('@https?://@', '', $varValue);
 		}

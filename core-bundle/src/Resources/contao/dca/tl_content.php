@@ -1470,11 +1470,11 @@ class tl_content extends Contao\Backend
 			$text = Contao\StringUtil::substr(strip_tags(preg_replace('/[\n\r\t]+/', ' ', $objAlias->text)), 32);
 			$strText = $GLOBALS['TL_LANG']['CTE'][$objAlias->type][0] . ' (';
 
-			if ($headline != '')
+			if ($headline)
 			{
 				$strText .= $headline . ', ';
 			}
-			elseif ($text != '')
+			elseif ($text)
 			{
 				$strText .= $text . ', ';
 			}

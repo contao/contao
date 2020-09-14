@@ -36,7 +36,7 @@ class ContentCode extends ContentElement
 		{
 			$return = '<pre>' . htmlspecialchars($this->code) . '</pre>';
 
-			if ($this->headline != '')
+			if ($this->headline)
 			{
 				$return = '<' . $this->hl . '>' . $this->headline . '</' . $this->hl . '>' . $return;
 			}

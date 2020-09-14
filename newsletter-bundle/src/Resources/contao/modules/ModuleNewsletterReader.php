@@ -104,7 +104,7 @@ class ModuleNewsletterReader extends Module
 		}
 
 		// Overwrite the page title (see #2853 and #4955)
-		if ($objNewsletter->subject != '')
+		if ($objNewsletter->subject)
 		{
 			$objPage->pageTitle = strip_tags(StringUtil::stripInsertTags($objNewsletter->subject));
 		}

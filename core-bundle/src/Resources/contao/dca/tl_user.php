@@ -523,7 +523,7 @@ class tl_user extends Contao\Backend
 										  ->limit(1)
 										  ->execute(Contao\Input::get('id'));
 
-				if ($objUser->admin && Contao\Input::get('act') != '')
+				if ($objUser->admin && Contao\Input::get('act'))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' administrator account ID ' . Contao\Input::get('id') . '.');
 				}

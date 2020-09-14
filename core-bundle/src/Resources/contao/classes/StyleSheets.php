@@ -147,7 +147,7 @@ class StyleSheets extends Backend
 								   ->limit(1)
 								   ->execute($row['pid']);
 
-		if ($objTheme->vars != '' && \is_array(($tmp = StringUtil::deserialize($objTheme->vars))))
+		if ($objTheme->vars && \is_array(($tmp = StringUtil::deserialize($objTheme->vars))))
 		{
 			foreach ($tmp as $v)
 			{
@@ -298,7 +298,7 @@ class StyleSheets extends Backend
 			{
 				foreach ($row['trbl'] as $k=>$v)
 				{
-					if ($v != '' && $k != 'unit')
+					if ($v && $k != 'unit')
 					{
 						$return .= $lb . $k . ':' . $v . (($v == 'auto' || $v === '0') ? '' : $row['trbl']['unit']) . ';';
 					}
@@ -366,7 +366,7 @@ class StyleSheets extends Backend
 					}
 
 					// Try to shorten the definition
-					if ($top != '' && $right != '' && $bottom != '' && $left != '')
+					if ($top && $right != '' && $bottom != '' && $left != '')
 					{
 						if ($top == $right && $top == $bottom && $top == $left)
 						{
@@ -391,7 +391,7 @@ class StyleSheets extends Backend
 
 						foreach ($arrDir as $k=>$v)
 						{
-							if ($v != '')
+							if ($v)
 							{
 								$return .= $lb . 'margin-' . $k . ':' . $v . (($v == 'auto' || $v === '0') ? '' : $row['margin']['unit']) . ';';
 							}
@@ -413,7 +413,7 @@ class StyleSheets extends Backend
 					$left = $row['padding']['left'];
 
 					// Try to shorten the definition
-					if ($top != '' && $right != '' && $bottom != '' && $left != '')
+					if ($top && $right != '' && $bottom != '' && $left != '')
 					{
 						if ($top == $right && $top == $bottom && $top == $left)
 						{
@@ -438,7 +438,7 @@ class StyleSheets extends Backend
 
 						foreach ($arrDir as $k=>$v)
 						{
-							if ($v != '')
+							if ($v)
 							{
 								$return .= $lb . 'padding-' . $k . ':' . $v . (($v === '0') ? '' : $row['padding']['unit']) . ';';
 							}
@@ -605,12 +605,12 @@ class StyleSheets extends Backend
 					$shadow = $offsetx . (($offsetx === '0') ? '' : $row['shadowsize']['unit']);
 					$shadow .= ' ' . $offsety . (($offsety === '0') ? '' : $row['shadowsize']['unit']);
 
-					if ($blursize != '')
+					if ($blursize)
 					{
 						$shadow .= ' ' . $blursize . (($blursize === '0') ? '' : $row['shadowsize']['unit']);
 					}
 
-					if ($radius != '')
+					if ($radius)
 					{
 						$shadow .= ' ' . $radius . (($radius === '0') ? '' : $row['shadowsize']['unit']);
 					}
@@ -643,11 +643,11 @@ class StyleSheets extends Backend
 				$left = $row['borderwidth']['left'];
 
 				// Try to shorten the definition
-				if ($top != '' && $right != '' && $bottom != '' && $left != '' && $top == $right && $top == $bottom && $top == $left)
+				if ($top && $right && $bottom && $left && $top == $right && $top == $bottom && $top == $left)
 				{
 					$return .= $lb . 'border:' . $top . $row['borderwidth']['unit'] . (($row['borderstyle'] != '') ? ' ' . $row['borderstyle'] : '') . (($bdColor[0] != '') ? ' ' . $this->compileColor($bdColor, $blnWriteToFile, $vars) : '') . ';';
 				}
-				elseif ($top != '' && $right != '' && $bottom != '' && $left != '' && $top == $bottom && $left == $right)
+				elseif ($top && $right && $bottom && $left && $top == $bottom && $left == $right)
 				{
 					$return .= $lb . 'border-width:' . $top . $row['borderwidth']['unit'] . ' ' . $right . $row['borderwidth']['unit'] . ';';
 
@@ -661,7 +661,7 @@ class StyleSheets extends Backend
 						$return .= $lb . 'border-color:' . $this->compileColor($bdColor, $blnWriteToFile, $vars) . ';';
 					}
 				}
-				elseif ($top == '' && $right == '' && $bottom == '' && $left == '')
+				elseif (!$top && !$right && !$bottom && !$left)
 				{
 					if ($row['borderstyle'] != '')
 					{
@@ -679,7 +679,7 @@ class StyleSheets extends Backend
 
 					foreach ($arrDir as $k=>$v)
 					{
-						if ($v != '')
+						if ($v)
 						{
 							$return .= $lb . 'border-' . $k . ':' . $v . $row['borderwidth']['unit'] . (($row['borderstyle'] != '') ? ' ' . $row['borderstyle'] : '') . (($bdColor[0] != '') ? ' ' . $this->compileColor($bdColor, $blnWriteToFile, $vars) : '') . ';';
 						}
@@ -740,7 +740,7 @@ class StyleSheets extends Backend
 
 						foreach ($arrDir as $k=>$v)
 						{
-							if ($v != '')
+							if ($v)
 							{
 								$return .= $lb . 'border-' . $k . '-radius:' . $v . (($v === '0') ? '' : $row['borderradius']['unit']) . ';';
 							}
@@ -931,7 +931,7 @@ class StyleSheets extends Backend
 				$this->import($callback[0]);
 				$strTemp = $this->{$callback[0]}->{$callback[1]}($row, $blnWriteToFile, $vars, $parent);
 
-				if ($strTemp != '')
+				if ($strTemp)
 				{
 					$return .= $lb . $strTemp;
 				}
@@ -1133,7 +1133,7 @@ class StyleSheets extends Backend
 					$char = $strFile[$i];
 
 					// Whitespace
-					if ($char == '' || $char == "\n" || $char == "\t")
+					if (!$char || $char == "\n" || $char == "\t")
 					{
 						// Ignore
 					}
@@ -1555,7 +1555,7 @@ class StyleSheets extends Backend
 					$arrSet['positioning'] = 1;
 					$arrSet['trbl'][$strKey] = $varValue;
 
-					if ($strUnit != '')
+					if ($strUnit)
 					{
 						$arrSet['trbl']['unit'] = $strUnit;
 					}
@@ -1641,7 +1641,7 @@ class StyleSheets extends Backend
 							// Overwrite the unit
 							foreach ($arrUnits as $strUnit)
 							{
-								if ($strUnit != '')
+								if ($strUnit)
 								{
 									$arrSet[$strKey]['unit'] = $strUnit;
 									break;
@@ -1697,7 +1697,7 @@ class StyleSheets extends Backend
 							// Overwrite the unit
 							foreach ($arrUnits as $strUnit)
 							{
-								if ($strUnit != '')
+								if ($strUnit)
 								{
 									$arrSet[$strKey]['unit'] = $strUnit;
 									break;
@@ -1763,7 +1763,7 @@ class StyleSheets extends Backend
 							// Overwrite the unit
 							foreach ($arrUnits as $strUnit)
 							{
-								if ($strUnit != '')
+								if ($strUnit)
 								{
 									$arrSet[$strKey]['unit'] = $strUnit;
 									break;

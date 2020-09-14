@@ -56,7 +56,7 @@ class ModuleCustomnav extends Module
 
 		$strBuffer = parent::generate();
 
-		return ($this->Template->items != '') ? $strBuffer : '';
+		return $this->Template->items ? $strBuffer : '';
 	}
 
 	/**
@@ -89,7 +89,7 @@ class ModuleCustomnav extends Module
 		$arrPages = array();
 
 		// Sort the array keys according to the given order
-		if ($this->orderPages != '')
+		if ($this->orderPages)
 		{
 			$tmp = StringUtil::deserialize($this->orderPages);
 

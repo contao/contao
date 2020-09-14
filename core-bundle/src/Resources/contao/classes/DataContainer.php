@@ -380,7 +380,7 @@ abstract class DataContainer extends Backend
 				if ($objWidget->hasErrors())
 				{
 					// Skip mandatory fields on auto-submit (see #4077)
-					if (!$objWidget->mandatory || $objWidget->value != '' || Input::post('SUBMIT_TYPE') != 'auto')
+					if (!$objWidget->mandatory || $objWidget->value || Input::post('SUBMIT_TYPE') != 'auto')
 					{
 						$this->noReload = true;
 					}
@@ -517,7 +517,7 @@ abstract class DataContainer extends Backend
 			}
 		}
 
-		if ($wizard != '')
+		if ($wizard)
 		{
 			$objWidget->wizard = $wizard;
 
@@ -1187,14 +1187,14 @@ abstract class DataContainer extends Backend
 				}
 
 				// Add the panel if it is not empty
-				if ($panel != '')
+				if ($panel)
 				{
 					$panels = $panel . $panels;
 				}
 			}
 
 			// Add the group if it is not empty
-			if ($panels != '')
+			if ($panels)
 			{
 				$arrPanels[] = $panels;
 			}

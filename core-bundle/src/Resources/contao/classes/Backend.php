@@ -51,7 +51,7 @@ abstract class Backend extends Controller
 		$theme = Config::get('backendTheme');
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
-		if ($theme != '' && $theme != 'flexible' && is_dir($projectDir . '/system/themes/' . $theme))
+		if ($theme && $theme != 'flexible' && is_dir($projectDir . '/system/themes/' . $theme))
 		{
 			return $theme;
 		}
@@ -229,7 +229,7 @@ abstract class Backend extends Controller
 		// Unset the "no back button" flag
 		$arrUnset[] = 'nb';
 
-		return parent::addToUrl($strRequest . (($strRequest != '') ? '&amp;' : '') . 'rt=' . REQUEST_TOKEN, $blnAddRef, $arrUnset);
+		return parent::addToUrl($strRequest . ($strRequest ? '&amp;' : '') . 'rt=' . REQUEST_TOKEN, $blnAddRef, $arrUnset);
 	}
 
 	/**
@@ -370,7 +370,7 @@ abstract class Backend extends Controller
 		$dc = null;
 
 		// Create the data container object
-		if ($strTable != '')
+		if ($strTable)
 		{
 			if (!\in_array($strTable, $arrTables))
 			{
@@ -459,11 +459,11 @@ abstract class Backend extends Controller
 										 ->limit(1)
 										 ->execute(Input::get('id'));
 
-				if ($objRow->title != '')
+				if ($objRow->title)
 				{
 					$this->Template->headline .= ' › <span>' . $objRow->title . '</span>';
 				}
-				elseif ($objRow->name != '')
+				elseif ($objRow->name)
 				{
 					$this->Template->headline .= ' › <span>' . $objRow->name . '</span>';
 				}
@@ -536,15 +536,15 @@ abstract class Backend extends Controller
 						}
 
 						// Add object title or name
-						if ($objRow->title != '')
+						if ($objRow->title)
 						{
 							$trail[] = ' › <span>' . $objRow->title . '</span>';
 						}
-						elseif ($objRow->name != '')
+						elseif ($objRow->name)
 						{
 							$trail[] = ' › <span>' . $objRow->name . '</span>';
 						}
-						elseif ($objRow->headline != '')
+						elseif ($objRow->headline)
 						{
 							$trail[] = ' › <span>' . $objRow->headline . '</span>';
 						}
@@ -958,7 +958,7 @@ abstract class Backend extends Controller
 			{
 				$strBuffer = System::importStatic($callback[0])->{$callback[1]}();
 
-				if ($strBuffer != '')
+				if ($strBuffer)
 				{
 					$arrMessages[] = $strBuffer;
 				}
@@ -1386,7 +1386,7 @@ abstract class Backend extends Controller
 			else
 			{
 				// Filter images
-				if ($strFilter != '' && !preg_match('/\.(' . str_replace(',', '|', $strFilter) . ')$/i', $strFile))
+				if ($strFilter && !preg_match('/\.(' . str_replace(',', '|', $strFilter) . ')$/i', $strFile))
 				{
 					continue;
 				}

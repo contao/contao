@@ -373,7 +373,7 @@ class Email
 		$this->objMessage->setSubject($this->strSubject);
 
 		// HTML e-mail
-		if ($this->strHtml != '')
+		if ($this->strHtml)
 		{
 			// Embed images
 			if ($this->blnEmbedImages)
@@ -419,9 +419,9 @@ class Email
 		}
 
 		// Text content
-		if ($this->strText != '')
+		if ($this->strText)
 		{
-			if ($this->strHtml != '')
+			if ($this->strHtml)
 			{
 				$this->objMessage->addPart($this->strText, 'text/plain');
 			}
@@ -438,7 +438,7 @@ class Email
 		}
 
 		// Sender
-		if ($this->strSenderName != '')
+		if ($this->strSenderName)
 		{
 			$this->objMessage->setFrom(array($this->strSender=>$this->strSenderName));
 		}
@@ -512,7 +512,7 @@ class Email
 				$strName = trim($strName, ' "');
 				$strEmail = Idna::encodeEmail($strEmail);
 
-				if ($strName != '')
+				if ($strName)
 				{
 					$arrReturn[$strEmail] = $strName;
 				}

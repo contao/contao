@@ -251,7 +251,7 @@ class ModuleEventlist extends Events
 		$imgSize = false;
 
 		// Override the default image size
-		if ($this->imgSize != '')
+		if ($this->imgSize)
 		{
 			$size = StringUtil::deserialize($this->imgSize);
 

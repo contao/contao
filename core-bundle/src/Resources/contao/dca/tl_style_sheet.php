@@ -334,7 +334,7 @@ class tl_style_sheet extends Contao\Backend
 	 */
 	public function sanitizeCc($varValue)
 	{
-		if ($varValue != '')
+		if ($varValue)
 		{
 			$varValue = str_replace(array('<!--[', ']>'), '', $varValue);
 		}

@@ -336,7 +336,7 @@ class Database
 					$arrTmp['attributes'] = trim($arrChunks[2]);
 				}
 
-				if ($objFields->Key != '')
+				if ($objFields->Key)
 				{
 					switch ($objFields->Key)
 					{
@@ -374,7 +374,7 @@ class Database
 			{
 				$strColumnName = $objIndex->Column_name;
 
-				if ($objIndex->Sub_part != '')
+				if ($objIndex->Sub_part)
 				{
 					$strColumnName .= '(' . $objIndex->Sub_part . ')';
 				}

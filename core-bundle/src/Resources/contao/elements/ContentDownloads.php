@@ -71,7 +71,7 @@ class ContentDownloads extends ContentElement
 		$file = Input::get('file', true);
 
 		// Send the file to the browser (see #4632 and #8375)
-		if ($file != '' && (!isset($_GET['cid']) || Input::get('cid') == $this->id))
+		if ($file && (!isset($_GET['cid']) || Input::get('cid') == $this->id))
 		{
 			while ($this->objFiles->next())
 			{
@@ -287,7 +287,7 @@ class ContentDownloads extends ContentElement
 				// no break
 
 			case 'custom':
-				if ($this->orderSRC != '')
+				if ($this->orderSRC)
 				{
 					$tmp = StringUtil::deserialize($this->orderSRC);
 

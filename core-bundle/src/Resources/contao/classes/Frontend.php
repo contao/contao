@@ -111,7 +111,7 @@ abstract class Frontend extends Controller
 		}
 
 		// Remove the URL suffix if not just a language root (e.g. en/) is requested
-		if ($strRequest != '' && (!Config::get('addLanguageToUrl') || !preg_match('@^[a-z]{2}(-[A-Z]{2})?/$@', $strRequest)))
+		if ($strRequest && (!Config::get('addLanguageToUrl') || !preg_match('@^[a-z]{2}(-[A-Z]{2})?/$@', $strRequest)))
 		{
 			$intSuffixLength = \strlen(Config::get('urlSuffix'));
 
