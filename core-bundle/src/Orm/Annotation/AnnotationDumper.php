@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Orm\Annotation;
 
-use Doctrine\ORM\Mapping\Annotation;
-
 class AnnotationDumper
 {
     public function dump(object $object): string
@@ -44,7 +42,7 @@ class AnnotationDumper
             if ($this->isAssoc($item)) {
                 if ($first) {
                     array_walk($item, function (&$value, $key) {
-                        $value = $key . ' = ' . $this->innerExportValues($value, false);
+                        $value = $key . '=' . $this->innerExportValues($value, false);
                     });
                 } else {
                     array_walk($item, function (&$value, $key) {
