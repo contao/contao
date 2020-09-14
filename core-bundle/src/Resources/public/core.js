@@ -926,7 +926,7 @@ var Backend =
 				return;
 			}
 			ul = frm.document.getElementById(opt.id);
-			// Load the previous values (#1487)
+			// Load the previous values (#1816)
 			if (pickerValue = ul.get('data-picker-value')) {
 				val = JSON.parse(pickerValue);
 			}
@@ -935,7 +935,7 @@ var Backend =
 				if (inp[i].id.match(/^(check_all_|reset_)/)) {
 					continue;
 				}
-				// Add currently selected value, otherwise remove (#1487)
+				// Add currently selected value, otherwise remove (#1816)
 				sIndex = val.indexOf(inp[i].get('value'));
 				if (inp[i].checked) {
 					if (sIndex < 0) {
