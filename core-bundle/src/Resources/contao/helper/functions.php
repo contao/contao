@@ -8,6 +8,9 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\ArrayUtil;
+use Contao\Folder;
+use Contao\StringUtil;
 use Contao\System;
 use Patchwork\Utf8;
 
@@ -22,7 +25,7 @@ use Patchwork\Utf8;
  */
 function log_message($strMessage, $strLog=null)
 {
-	@trigger_error('Using log_message() has been deprecated and will no longer work in Contao 5.0. Use the logger service instead.', E_USER_DEPRECATED);
+	trigger_deprecation('contao/core-bundle', '4.0', 'Using "log_message()" has been deprecated and will no longer work in Contao 5.0. Use the logger service instead.');
 
 	if ($strLog === null)
 	{
@@ -51,43 +54,14 @@ function log_message($strMessage, $strLog=null)
  * @param boolean $blnUncached
  *
  * @return array
+ *
+ * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.0.
  */
 function scan($strFolder, $blnUncached=false)
 {
-	global $arrScanCache;
+	trigger_deprecation('contao/core-bundle', '4.10', 'Using "scan()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Folder::scan()" instead.');
 
-	// Add a trailing slash
-	if (substr($strFolder, -1, 1) != '/')
-	{
-		$strFolder .= '/';
-	}
-
-	// Load from cache
-	if (!$blnUncached && isset($arrScanCache[$strFolder]))
-	{
-		return $arrScanCache[$strFolder];
-	}
-
-	$arrReturn = array();
-
-	// Scan directory
-	foreach (scandir($strFolder, SCANDIR_SORT_ASCENDING) as $strFile)
-	{
-		if ($strFile == '.' || $strFile == '..')
-		{
-			continue;
-		}
-
-		$arrReturn[] = $strFile;
-	}
-
-	// Cache the result
-	if (!$blnUncached)
-	{
-		$arrScanCache[$strFolder] = $arrReturn;
-	}
-
-	return $arrReturn;
+	return Folder::scan($strFolder, $blnUncached);
 }
 
 /**
@@ -104,7 +78,7 @@ function scan($strFolder, $blnUncached=false)
  */
 function specialchars($strString, $blnStripInsertTags=false)
 {
-	@trigger_error('Using specialchars() has been deprecated and will no longer work in Contao 5.0. Use StringUtil::specialchars() instead.', E_USER_DEPRECATED);
+	trigger_deprecation('contao/core-bundle', '4.0', 'Using "specialchars()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\StringUtil::specialchars()" instead.');
 
 	if ($blnStripInsertTags)
 	{
@@ -128,7 +102,7 @@ function specialchars($strString, $blnStripInsertTags=false)
  */
 function standardize($strString, $blnPreserveUppercase=false)
 {
-	@trigger_error('Using standardize() has been deprecated and will no longer work in Contao 5.0. Use StringUtil::standardize() instead.', E_USER_DEPRECATED);
+	trigger_deprecation('contao/core-bundle', '4.0', 'Using "standardize()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\StringUtil::standardize()" instead.');
 
 	$arrSearch = array('/[^\pN\pL \.\&\/_-]+/u', '/[ \.\&\/-]+/');
 	$arrReplace = array('', '-');
@@ -144,7 +118,7 @@ function standardize($strString, $blnPreserveUppercase=false)
 
 	if (!$blnPreserveUppercase)
 	{
-		$strString = Patchwork\Utf8::strtolower($strString);
+		$strString = Utf8::strtolower($strString);
 	}
 
 	return trim($strString, '-');
@@ -162,7 +136,7 @@ function standardize($strString, $blnPreserveUppercase=false)
  */
 function strip_insert_tags($strString)
 {
-	@trigger_error('Using strip_insert_tags() has been deprecated and will no longer work in Contao 5.0. Use StringUtil::stripInsertTags() instead.', E_USER_DEPRECATED);
+	trigger_deprecation('contao/core-bundle', '4.0', 'Using "strip_insert_tags()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\StringUtil::stripInsertTags()" instead.');
 
 	$count = 0;
 
@@ -187,7 +161,7 @@ function strip_insert_tags($strString)
  */
 function deserialize($varValue, $blnForceArray=false)
 {
-	@trigger_error('Using deserialize() has been deprecated and will no longer work in Contao 5.0. Use StringUtil::deserialize() instead.', E_USER_DEPRECATED);
+	trigger_deprecation('contao/core-bundle', '4.0', 'Using "deserialize()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\StringUtil::deserialize()" instead.');
 
 	// Already an array
 	if (is_array($varValue))
@@ -248,7 +222,7 @@ function deserialize($varValue, $blnForceArray=false)
  */
 function trimsplit($strPattern, $strString)
 {
-	@trigger_error('Using trimsplit() has been deprecated and will no longer work in Contao 5.0. Use StringUtil::trimsplit() instead.', E_USER_DEPRECATED);
+	trigger_deprecation('contao/core-bundle', '4.0', 'Using "trimsplit()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\StringUtil::trimsplit()" instead.');
 
 	// Split
 	if (strlen($strPattern) == 1)
@@ -276,10 +250,14 @@ function trimsplit($strPattern, $strString)
  * @param boolean $blnEncode
  *
  * @return string
+ *
+ * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.0.
  */
 function ampersand($strString, $blnEncode=true)
 {
-	return preg_replace('/&(amp;)?/i', ($blnEncode ? '&amp;' : '&'), $strString);
+	trigger_deprecation('contao/core-bundle', '4.10', 'Using "ampersand()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\StringUtil::ampersand()" instead.');
+
+	return StringUtil::ampersand($strString, $blnEncode);
 }
 
 /**
@@ -289,9 +267,13 @@ function ampersand($strString, $blnEncode=true)
  * @param boolean $xhtml
  *
  * @return string
+ *
+ * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.0.
  */
 function nl2br_html5($str, $xhtml=false)
 {
+	trigger_deprecation('contao/core-bundle', '4.0', 'Using "nl2br_html5()" has been deprecated and will no longer work in Contao 5.0.');
+
 	return nl2br($str, $xhtml);
 }
 
@@ -301,9 +283,13 @@ function nl2br_html5($str, $xhtml=false)
  * @param string $str
  *
  * @return string
+ *
+ * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.0.
  */
 function nl2br_xhtml($str)
 {
+	trigger_deprecation('contao/core-bundle', '4.0', 'Using "nl2br_xhtml()" has been deprecated and will no longer work in Contao 5.0.');
+
 	return nl2br($str);
 }
 
@@ -314,25 +300,14 @@ function nl2br_xhtml($str)
  * @param boolean $xhtml
  *
  * @return string
+ *
+ * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.0.
  */
 function nl2br_pre($str, $xhtml=false)
 {
-	$str = $xhtml ? nl2br_xhtml($str) : nl2br_html5($str);
+	trigger_deprecation('contao/core-bundle', '4.0', 'Using "nl2br_pre()" has been deprecated and will no longer work in Contao 5.0.');
 
-	if (stripos($str, '<pre') === false)
-	{
-		return $str;
-	}
-
-	$chunks = array();
-	preg_match_all('/<pre[^>]*>.*<\/pre>/Uis', $str, $chunks);
-
-	foreach ($chunks as $chunk)
-	{
-		$str = str_replace($chunk, str_ireplace(array('<br>', '<br />'), '', $chunk), $str);
-	}
-
-	return $str;
+	return preg_replace('/\r?\n/', $xhtml ? '<br />' : '<br>', $str);
 }
 
 /**
@@ -342,9 +317,13 @@ function nl2br_pre($str, $xhtml=false)
  * @param string $b
  *
  * @return integer
+ *
+ * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.0.
  */
 function basename_natcasecmp($a, $b)
 {
+	trigger_deprecation('contao/core-bundle', '4.0', 'Using "basename_natcasecmp()" has been deprecated and will no longer work in Contao 5.0.');
+
 	return strnatcasecmp(basename($a), basename($b));
 }
 
@@ -355,9 +334,13 @@ function basename_natcasecmp($a, $b)
  * @param string $b
  *
  * @return integer
+ *
+ * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.0.
  */
 function basename_natcasercmp($a, $b)
 {
+	trigger_deprecation('contao/core-bundle', '4.0', 'Using "basename_natcasercmp()" has been deprecated and will no longer work in Contao 5.0.');
+
 	return -strnatcasecmp(basename($a), basename($b));
 }
 
@@ -367,14 +350,16 @@ function basename_natcasercmp($a, $b)
  * @param array $arrArray
  *
  * @return array
+ *
+ * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.0.
  */
 function natcaseksort($arrArray)
 {
-	$arrBuffer = array_flip($arrArray);
-	natcasesort($arrBuffer);
-	$arrBuffer = array_flip($arrBuffer);
+	trigger_deprecation('contao/core-bundle', '4.10', 'Using "natcaseksort()" has been deprecated and will no longer work in Contao 5.0. Use "uksort()" with "strnatcasecmp" instead.');
 
-	return $arrBuffer;
+	uksort($arrArray, 'strnatcasecmp');
+
+	return $arrArray;
 }
 
 /**
@@ -384,9 +369,13 @@ function natcaseksort($arrArray)
  * @param integer $b
  *
  * @return integer
+ *
+ * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.0.
  */
 function length_sort_asc($a, $b)
 {
+	trigger_deprecation('contao/core-bundle', '4.0', 'Using "length_sort_asc()" has been deprecated and will no longer work in Contao 5.0. Use a closure instead.');
+
 	return strlen($a) - strlen($b);
 }
 
@@ -397,9 +386,13 @@ function length_sort_asc($a, $b)
  * @param integer $b
  *
  * @return integer
+ *
+ * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.0.
  */
 function length_sort_desc($a, $b)
 {
+	trigger_deprecation('contao/core-bundle', '4.0', 'Using "length_sort_desc()" has been deprecated and will no longer work in Contao 5.0. Use a closure instead.');
+
 	return strlen($b) - strlen($a);
 }
 
@@ -409,25 +402,14 @@ function length_sort_desc($a, $b)
  * @param array   $arrCurrent
  * @param integer $intIndex
  * @param mixed   $arrNew
+ *
+ * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.0.
  */
 function array_insert(&$arrCurrent, $intIndex, $arrNew)
 {
-	if (!is_array($arrCurrent))
-	{
-		$arrCurrent = $arrNew;
+	trigger_deprecation('contao/core-bundle', '4.0', 'Using "array_insert()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\ArrayUtil::arrayInsert()" instead.');
 
-		return;
-	}
-
-	if (is_array($arrNew))
-	{
-		$arrBuffer = array_splice($arrCurrent, 0, $intIndex);
-		$arrCurrent = array_merge_recursive($arrBuffer, $arrNew, $arrCurrent);
-
-		return;
-	}
-
-	array_splice($arrCurrent, $intIndex, 0, $arrNew);
+	ArrayUtil::arrayInsert($arrCurrent, $intIndex, $arrNew);
 }
 
 /**
@@ -442,7 +424,7 @@ function array_insert(&$arrCurrent, $intIndex, $arrNew)
  */
 function array_duplicate($arrStack, $intIndex)
 {
-	@trigger_error('Using array_duplicate() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+	trigger_deprecation('contao/core-bundle', '4.0', 'Using "array_duplicate()" has been deprecated and will no longer work in Contao 5.0.');
 
 	$arrBuffer = $arrStack;
 	$arrStack = array();
@@ -472,7 +454,7 @@ function array_duplicate($arrStack, $intIndex)
  */
 function array_move_up($arrStack, $intIndex)
 {
-	@trigger_error('Using array_move_up() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+	trigger_deprecation('contao/core-bundle', '4.0', 'Using "array_move_up()" has been deprecated and will no longer work in Contao 5.0.');
 
 	if ($intIndex > 0)
 	{
@@ -501,7 +483,7 @@ function array_move_up($arrStack, $intIndex)
  */
 function array_move_down($arrStack, $intIndex)
 {
-	@trigger_error('Using array_move_down() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+	trigger_deprecation('contao/core-bundle', '4.0', 'Using "array_move_down()" has been deprecated and will no longer work in Contao 5.0.');
 
 	if (($intIndex+1) < count($arrStack))
 	{
@@ -530,7 +512,7 @@ function array_move_down($arrStack, $intIndex)
  */
 function array_delete($arrStack, $intIndex)
 {
-	@trigger_error('Using array_delete() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+	trigger_deprecation('contao/core-bundle', '4.0', 'Using "array_delete()" has been deprecated and will no longer work in Contao 5.0.');
 
 	unset($arrStack[$intIndex]);
 
@@ -543,10 +525,14 @@ function array_delete($arrStack, $intIndex)
  * @param array $arrArray
  *
  * @return boolean
+ *
+ * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.0.
  */
 function array_is_assoc($arrArray)
 {
-	return is_array($arrArray) && array_keys($arrArray) !== range(0, count($arrArray) - 1);
+	trigger_deprecation('contao/core-bundle', '4.0', 'Using "array_is_assoc()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\ArrayUtil::isAssoc()" instead.');
+
+	return ArrayUtil::isAssoc($arrArray);
 }
 
 /**
@@ -563,7 +549,7 @@ function array_is_assoc($arrArray)
  */
 function utf8_chr($dec)
 {
-	@trigger_error('Using utf8_chr() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::chr() instead.', E_USER_DEPRECATED);
+	trigger_deprecation('contao/core-bundle', '4.0', 'Using "utf8_chr()" has been deprecated and will no longer work in Contao 5.0. Use "Patchwork\Utf8::chr()" instead.');
 
 	return Utf8::chr($dec);
 }
@@ -582,7 +568,7 @@ function utf8_chr($dec)
  */
 function utf8_ord($str)
 {
-	@trigger_error('Using utf8_ord() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::ord() instead.', E_USER_DEPRECATED);
+	trigger_deprecation('contao/core-bundle', '4.0', 'Using "utf8_ord()" has been deprecated and will no longer work in Contao 5.0. Use "Patchwork\Utf8::ord()" instead.');
 
 	return Utf8::ord($str);
 }
@@ -601,7 +587,7 @@ function utf8_ord($str)
  */
 function utf8_convert_encoding($str, $to, $from=null)
 {
-	@trigger_error('Using utf8_convert_encoding() has been deprecated and will no longer work in Contao 5.0. Use StringUtil::convertEncoding() instead.', E_USER_DEPRECATED);
+	trigger_deprecation('contao/core-bundle', '4.0', 'Using "utf8_convert_encoding()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\StringUtil::convertEncoding()" instead.');
 
 	if ($str == '')
 	{
@@ -646,7 +632,7 @@ function utf8_convert_encoding($str, $to, $from=null)
  */
 function utf8_decode_entities($str)
 {
-	@trigger_error('Using utf8_decode_entities() has been deprecated and will no longer work in Contao 5.0. Use html_entity_decode() instead.', E_USER_DEPRECATED);
+	trigger_deprecation('contao/core-bundle', '4.0', 'Using "utf8_decode_entities()" has been deprecated and will no longer work in Contao 5.0. Use "html_entity_decode()" instead.');
 
 	$str = preg_replace_callback('~&#x([0-9a-f]+);~i', static function ($matches) { return Utf8::chr(hexdec($matches[1])); }, $str);
 	$str = preg_replace_callback('~&#([0-9]+);~', static function ($matches) { return Utf8::chr($matches[1]); }, $str);
@@ -665,7 +651,7 @@ function utf8_decode_entities($str)
  */
 function utf8_chr_callback($matches)
 {
-	@trigger_error('Using utf8_chr_callback() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+	trigger_deprecation('contao/core-bundle', '4.0', 'Using "utf8_chr_callback()" has been deprecated and will no longer work in Contao 5.0.');
 
 	return Utf8::chr($matches[1]);
 }
@@ -681,7 +667,7 @@ function utf8_chr_callback($matches)
  */
 function utf8_hexchr_callback($matches)
 {
-	@trigger_error('Using utf8_hexchr_callback() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+	trigger_deprecation('contao/core-bundle', '4.0', 'Using "utf8_hexchr_callback()" has been deprecated and will no longer work in Contao 5.0.');
 
 	return Utf8::chr(hexdec($matches[1]));
 }
@@ -698,7 +684,7 @@ function utf8_hexchr_callback($matches)
  */
 function utf8_detect_encoding($str)
 {
-	@trigger_error('Using utf8_detect_encoding() has been deprecated and will no longer work in Contao 5.0. Use mb_detect_encoding() instead.', E_USER_DEPRECATED);
+	trigger_deprecation('contao/core-bundle', '4.0', 'Using "utf8_detect_encoding()" has been deprecated and will no longer work in Contao 5.0. Use "mb_detect_encoding()" instead.');
 
 	return mb_detect_encoding($str, array('ASCII', 'ISO-2022-JP', 'UTF-8', 'EUC-JP', 'ISO-8859-1'));
 }
@@ -715,7 +701,7 @@ function utf8_detect_encoding($str)
  */
 function utf8_romanize($str)
 {
-	@trigger_error('Using utf8_romanize() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::toAscii() instead.', E_USER_DEPRECATED);
+	trigger_deprecation('contao/core-bundle', '4.0', 'Using "utf8_romanize()" has been deprecated and will no longer work in Contao 5.0. Use "Patchwork\Utf8::toAscii()" instead.');
 
 	return Utf8::toAscii($str);
 }
@@ -732,7 +718,7 @@ function utf8_romanize($str)
  */
 function utf8_strlen($str)
 {
-	@trigger_error('Using utf8_strlen() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::strlen() instead.', E_USER_DEPRECATED);
+	trigger_deprecation('contao/core-bundle', '4.0', 'Using "utf8_strlen()" has been deprecated and will no longer work in Contao 5.0. Use "Patchwork\Utf8::strlen()" instead.');
 
 	return Utf8::strlen($str);
 }
@@ -751,7 +737,7 @@ function utf8_strlen($str)
  */
 function utf8_strpos($haystack, $needle, $offset=0)
 {
-	@trigger_error('Using utf8_strpos() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::strpos() instead.', E_USER_DEPRECATED);
+	trigger_deprecation('contao/core-bundle', '4.0', 'Using "utf8_strpos()" has been deprecated and will no longer work in Contao 5.0. Use "Patchwork\Utf8::strpos()" instead.');
 
 	return Utf8::strpos($haystack, $needle, $offset);
 }
@@ -769,7 +755,7 @@ function utf8_strpos($haystack, $needle, $offset=0)
  */
 function utf8_strrchr($haystack, $needle)
 {
-	@trigger_error('Using utf8_strrchr() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::strrchr() instead.', E_USER_DEPRECATED);
+	trigger_deprecation('contao/core-bundle', '4.0', 'Using "utf8_strrchr()" has been deprecated and will no longer work in Contao 5.0. Use "Patchwork\Utf8::strrchr()" instead.');
 
 	return Utf8::strrchr($haystack, $needle);
 }
@@ -787,7 +773,7 @@ function utf8_strrchr($haystack, $needle)
  */
 function utf8_strrpos($haystack, $needle)
 {
-	@trigger_error('Using utf8_strrpos() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::strrpos() instead.', E_USER_DEPRECATED);
+	trigger_deprecation('contao/core-bundle', '4.0', 'Using "utf8_strrpos()" has been deprecated and will no longer work in Contao 5.0. Use "Patchwork\Utf8::strrpos()" instead.');
 
 	return Utf8::strrpos($haystack, $needle);
 }
@@ -805,7 +791,7 @@ function utf8_strrpos($haystack, $needle)
  */
 function utf8_strstr($haystack, $needle)
 {
-	@trigger_error('Using utf8_strstr() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::strstr() instead.', E_USER_DEPRECATED);
+	trigger_deprecation('contao/core-bundle', '4.0', 'Using "utf8_strstr()" has been deprecated and will no longer work in Contao 5.0. Use "Patchwork\Utf8::strstr()" instead.');
 
 	return Utf8::strstr($haystack, $needle);
 }
@@ -822,7 +808,7 @@ function utf8_strstr($haystack, $needle)
  */
 function utf8_strtolower($str)
 {
-	@trigger_error('Using utf8_strtolower() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::strtolower() instead.', E_USER_DEPRECATED);
+	trigger_deprecation('contao/core-bundle', '4.0', 'Using "utf8_strtolower()" has been deprecated and will no longer work in Contao 5.0. Use "Patchwork\Utf8::strtolower()" instead.');
 
 	return Utf8::strtolower($str);
 }
@@ -839,7 +825,7 @@ function utf8_strtolower($str)
  */
 function utf8_strtoupper($str)
 {
-	@trigger_error('Using utf8_strtoupper() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::strtoupper() instead.', E_USER_DEPRECATED);
+	trigger_deprecation('contao/core-bundle', '4.0', 'Using "utf8_strtoupper()" has been deprecated and will no longer work in Contao 5.0. Use "Patchwork\Utf8::strtoupper()" instead.');
 
 	return Utf8::strtoupper($str);
 }
@@ -858,7 +844,7 @@ function utf8_strtoupper($str)
  */
 function utf8_substr($str, $start, $length=null)
 {
-	@trigger_error('Using utf8_substr() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::substr() instead.', E_USER_DEPRECATED);
+	trigger_deprecation('contao/core-bundle', '4.0', 'Using "utf8_substr()" has been deprecated and will no longer work in Contao 5.0. Use "Patchwork\Utf8::substr()" instead.');
 
 	return Utf8::substr($str, $start, $length);
 }
@@ -875,7 +861,7 @@ function utf8_substr($str, $start, $length=null)
  */
 function utf8_ucfirst($str)
 {
-	@trigger_error('Using utf8_ucfirst() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::ucfirst() instead.', E_USER_DEPRECATED);
+	trigger_deprecation('contao/core-bundle', '4.0', 'Using "utf8_ucfirst()" has been deprecated and will no longer work in Contao 5.0. Use "Patchwork\Utf8::ucfirst()" instead.');
 
 	return Utf8::ucfirst($str);
 }
@@ -892,7 +878,7 @@ function utf8_ucfirst($str)
  */
 function utf8_str_split($str)
 {
-	@trigger_error('Using utf8_str_split() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::str_split() instead.', E_USER_DEPRECATED);
+	trigger_deprecation('contao/core-bundle', '4.0', 'Using "utf8_str_split()" has been deprecated and will no longer work in Contao 5.0. Use "Patchwork\Utf8::str_split()" instead.');
 
 	return Utf8::str_split($str);
 }
@@ -908,7 +894,7 @@ function utf8_str_split($str)
  */
 function nl2br_callback($matches)
 {
-	@trigger_error('Using nl2br_callback() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+	trigger_deprecation('contao/core-bundle', '4.0', 'Using "nl2br_callback()" has been deprecated and will no longer work in Contao 5.0.');
 
 	return str_replace("\n", '<br>', $matches[0]);
 }

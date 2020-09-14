@@ -185,6 +185,20 @@
         <source>The alias &quot;%s&quot; already exists!</source>
         <target>نام مستعار %s وجود دارد!</target>
       </trans-unit>
+      <trans-unit id="ERR.urlPrefixExists">
+        <source>The URL prefix &quot;%s&quot; is already used by another root page with the same domain name!</source>
+        <target>پیشوند URL &quot;%s&quot; قبلا توسط یک برگه ریشه دیگر با همین نام دامنه استفاده شده است!</target>
+      </trans-unit>
+      <trans-unit id="ERR.pageUrlExists">
+        <source>A page with the URL &quot;%s&quot; already exists!</source>
+        <target>قبلا یک صفحه با URL &quot;%s&quot; وجود دارد!</target>
+      </trans-unit>
+      <trans-unit id="ERR.pageUrlSuffix">
+        <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>
+      </trans-unit>
+      <trans-unit id="ERR.pageUrlPrefix">
+        <source>This URL prefix will lead to duplicate URLs (e.g. %s)!</source>
+      </trans-unit>
       <trans-unit id="ERR.importFolder">
         <source>The folder &quot;%s&quot; cannot be imported!</source>
         <target>پوشه &quot;%s&quot; قابل وارد کردن نمی‌باشد!</target>
@@ -232,6 +246,7 @@
       </trans-unit>
       <trans-unit id="ERR.circularPicker">
         <source>Invalid selection (circular reference)!</source>
+        <target>انتخاب نادرست (مرجع دایره‌ای)!</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
         <source>None of the active website root pages without an explicit DNS setting have the language fallback option set.</source>
@@ -293,9 +308,11 @@
       </trans-unit>
       <trans-unit id="ERR.duplicateSectionTitle">
         <source>Duplicate layout section title &quot;%s&quot;!</source>
+        <target>عنوان بخش چیدمان تکراری &quot;%s&quot;!</target>
       </trans-unit>
       <trans-unit id="ERR.duplicateSectionId">
         <source>Duplicate layout section ID &quot;%s&quot;!</source>
+        <target>شناسه بخش چیدمان تکراری &quot;%s&quot;!</target>
       </trans-unit>
       <trans-unit id="ERR.moduleWithoutColumn">
         <source>Please assign all modules to a column!</source>
@@ -566,12 +583,14 @@
       </trans-unit>
       <trans-unit id="FFL.fieldsetStart.0">
         <source>Fieldset start</source>
+        <target>شروع مجموعه فیلد</target>
       </trans-unit>
       <trans-unit id="FFL.fieldsetStart.1">
         <source>The opening part of a fieldset with an optional legend.</source>
       </trans-unit>
       <trans-unit id="FFL.fieldsetStop.0">
         <source>Fieldset stop</source>
+        <target>پایان مجموعه فیلد</target>
       </trans-unit>
       <trans-unit id="FFL.fieldsetStop.1">
         <source>The closing part of a fieldset.</source>
@@ -1213,6 +1232,7 @@
       </trans-unit>
       <trans-unit id="MSC.mw_column">
         <source>Layout section</source>
+        <target>بخش چیدمان</target>
       </trans-unit>
       <trans-unit id="MSC.mw_enable">
         <source>Enable/disable the module</source>
@@ -1495,8 +1515,7 @@
         <target>کلید‌های میانبر بخش مدیریت</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/books/manual/current/en/02-administration-area/keyboard-shortcuts.html&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
-        <target>برای سرعت دادن به نحوه کارتان با استفاده از &lt;a href=&quot;https://docs.contao.org/books/manual/current/en/02-administration-area/keyboard-shortcuts.html&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot;&gt; میان‌برهای صفحه کلید&lt;/a&gt; بیشتر یاد بگیرید.</target>
+        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -2531,21 +2550,25 @@
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesLabel">
         <source>Backup codes</source>
+        <target>کدهای پشتیبان</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesShow">
         <source>Show backup codes</source>
+        <target>نمایش کدهای پشتیبان</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesExplain">
-        <source>Backup codes can be used to access your account if you have lost your authentication device and cannot generate two-factor codes anymore. Treat your backup codes with the same level of attention as your password! We recommend saving them with a password manager such as Lastpass, 1Password or Keeper.</source>
+        <source>Backup codes can be used to access your account if you have lost your authentication device and cannot generate two-factor codes anymore. Treat your backup codes with the same level of attention as your password! It is recommended to save them with a password manager such as Lastpass, 1Password or Keeper.</source>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesInfo">
         <source>Put the codes in a safe spot. If you lose your authentication device and do not have backup codes, you cannot access your account anymore!</source>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesGenerate">
         <source>Generate backup codes</source>
+        <target>تولید کدهای پشتیبان</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesRegenerate">
         <source>Regenerate backup codes</source>
+        <target>بازتولید کدهای پشتیبان</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesRegenerateInfo">
         <source>When you regenerate the backup codes, your old codes will not work anymore.</source>
@@ -2578,24 +2601,25 @@
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
+        <target>پیش‌نمایش نتایج جستجوی گوگل</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.1">
         <source>Here you can preview the meta data in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
       </trans-unit>
       <trans-unit id="MSC.clearTrustedDevices">
         <source>Clear trusted devices</source>
+        <target>پاک کردن ابزارهای مورد اعتماد</target>
       </trans-unit>
       <trans-unit id="MSC.trustedDevices">
         <source>Trusted devices</source>
+        <target>ابزارهای مورد اعتماد</target>
       </trans-unit>
       <trans-unit id="MSC.noTrustedDevices">
         <source>Currently there are no trusted devices.</source>
       </trans-unit>
       <trans-unit id="MSC.device">
         <source>Device</source>
-      </trans-unit>
-      <trans-unit id="MSC.thisDevice">
-        <source>this device</source>
+        <target>ابزار</target>
       </trans-unit>
       <trans-unit id="MSC.browser">
         <source>Browser</source>
@@ -2603,6 +2627,13 @@
       </trans-unit>
       <trans-unit id="MSC.operatingSystem">
         <source>Operating system</source>
+        <target>سیستم عامل</target>
+      </trans-unit>
+      <trans-unit id="MSC.openToolbar">
+        <source>Open the Contao toolbar</source>
+      </trans-unit>
+      <trans-unit id="MSC.closeToolbar">
+        <source>Close the Contao toolbar</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

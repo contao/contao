@@ -34,7 +34,9 @@ class ModuleNewsletterList extends Module
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['newsletterlist'][0]) . ' ###';
@@ -68,7 +70,7 @@ class ModuleNewsletterList extends Module
 		$arrJumpTo = array();
 		$arrNewsletter = array();
 
-		$strRequest = ampersand(Environment::get('request'));
+		$strRequest = StringUtil::ampersand(Environment::get('request'));
 		$objNewsletter = NewsletterModel::findSentByPids($this->nl_channels);
 
 		if ($objNewsletter !== null)

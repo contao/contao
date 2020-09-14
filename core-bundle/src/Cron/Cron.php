@@ -81,7 +81,7 @@ class Cron
                 // Determine the last run date
                 $lastRunDate = null;
 
-                /** @var CronJobEntity $lastRunEntity */
+                /** @var CronJobEntity|null $lastRunEntity */
                 $lastRunEntity = $this->repository->findOneByName($name);
 
                 if (null !== $lastRunEntity) {

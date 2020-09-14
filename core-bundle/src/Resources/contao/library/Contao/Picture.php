@@ -17,7 +17,7 @@ use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeOptions;
 use Contao\Model\Collection;
 
-@trigger_error('Using the "Contao\Picture" class has been deprecated and will no longer work in Contao 5.0. Use the "contao.image.picture_factory" service instead.', E_USER_DEPRECATED);
+trigger_deprecation('contao/core-bundle', '4.3', 'Using the "Contao\Picture" class has been deprecated and will no longer work in Contao 5.0. Use the "contao.image.picture_factory" service instead.');
 
 /**
  * Resizes images and creates picture data
@@ -64,7 +64,7 @@ class Picture
 	/**
 	 * The image size items collection
 	 *
-	 * @var ImageSizeItemModel[]|Collection
+	 * @var array<ImageSizeItemModel|object>|Collection
 	 */
 	protected $imageSizeItems = array();
 
@@ -194,7 +194,7 @@ class Picture
 	/**
 	 * Set the image size items collection
 	 *
-	 * @param ImageSizeItemModel[]|Collection $imageSizeItems The image size items collection
+	 * @param array<ImageSizeItemModel|object>|Collection $imageSizeItems The image size items collection
 	 *
 	 * @return $this The picture object
 	 */
@@ -217,8 +217,8 @@ class Picture
 	 */
 	public function getTemplateData()
 	{
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
-		$image = System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . $this->image->getOriginalPath());
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+		$image = System::getContainer()->get('contao.image.image_factory')->create($projectDir . '/' . $this->image->getOriginalPath());
 
 		if (\is_string($this->imageSize) && $this->imageSize[0] === '_')
 		{
@@ -268,15 +268,15 @@ class Picture
 
 		return array
 		(
-			'img' => $picture->getImg($rootDir, $staticUrl),
-			'sources' => $picture->getSources($rootDir, $staticUrl),
+			'img' => $picture->getImg($projectDir, $staticUrl),
+			'sources' => $picture->getSources($projectDir, $staticUrl),
 		);
 	}
 
 	/**
 	 * Get the config for one picture source element
 	 *
-	 * @param Model|object $imageSize The image size or image size item model
+	 * @param ImageSizeModel|ImageSizeItemModel|object $imageSize The image size or image size item model
 	 *
 	 * @return PictureConfigurationItem
 	 */

@@ -499,7 +499,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 						}
 					}
 
-					if (array_is_assoc($value))
+					if (ArrayUtil::isAssoc($value))
 					{
 						foreach ($value as $kk=>$vv)
 						{
@@ -538,7 +538,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			{
 				$row[$i] = isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['reference'][$row[$i]]) ? ((\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['reference'][$row[$i]])) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['reference'][$row[$i]][0] : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['reference'][$row[$i]]) : $row[$i];
 			}
-			elseif ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['isAssociative'] || array_is_assoc($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['options']))
+			elseif ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['isAssociative'] || ArrayUtil::isAssoc($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['options']))
 			{
 				$row[$i] = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['options'][$row[$i]];
 			}
@@ -666,7 +666,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		// Get the new position
 		$this->getNewPosition('new', Input::get('pid'), Input::get('mode') == '2');
 
-		// Dynamically set the parent table of tl_content
+		// Dynamically set the parent table
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'])
 		{
 			$this->set['ptable'] = $this->ptable;
@@ -1568,7 +1568,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			}
 
 			// Invalidate cache tags (no need to invalidate the parent)
-			$this->invalidateCacheTags($this);
+			$this->invalidateCacheTags();
 
 			// Delete the records
 			foreach ($delete as $table=>$fields)
@@ -1759,6 +1759,8 @@ class DC_Table extends DataContainer implements \listable, \editable
 						   ->execute($this->intId);
 		}
 
+		$this->invalidateCacheTags();
+
 		$this->redirect($this->getReferer());
 	}
 
@@ -1784,8 +1786,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				$this->Database->prepare("UPDATE " . $this->strTable . " SET sorting=? WHERE id=?")
 							   ->execute($row[1]['sorting'], $row[0]['id']);
 
-				// Invalidate cache tags
-				$this->invalidateCacheTags($this);
+				$this->invalidateCacheTags();
 			}
 		}
 
@@ -1847,6 +1848,9 @@ class DC_Table extends DataContainer implements \listable, \editable
 			if (Input::post('FORM_SUBMIT') == 'tl_version' && Input::post('version') != '')
 			{
 				$objVersions->restore(Input::post('version'));
+
+				$this->invalidateCacheTags();
+
 				$this->reload();
 			}
 		}
@@ -2157,7 +2161,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				// Call the onversion_callback
 				if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onversion_callback']))
 				{
-					@trigger_error('Using the "onversion_callback" has been deprecated and will no longer work in Contao 5.0. Use the "oncreate_version_callback" instead.', E_USER_DEPRECATED);
+					trigger_deprecation('contao/core-bundle', '4.0', 'Using the "onversion_callback" has been deprecated and will no longer work in Contao 5.0. Use the "oncreate_version_callback" instead.');
 
 					foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onversion_callback'] as $callback)
 					{
@@ -2193,8 +2197,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				throw new ResponseException($objTemplate->getResponse());
 			}
 
-			// Invalidate cache tags
-			$this->invalidateCacheTags($this);
+			$this->invalidateCacheTags();
 
 			// Redirect
 			if (isset($_POST['saveNclose']))
@@ -2551,7 +2554,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 						// Call the onversion_callback
 						if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onversion_callback']))
 						{
-							@trigger_error('Using the "onversion_callback" has been deprecated and will no longer work in Contao 5.0. Use the "oncreate_version_callback" instead.', E_USER_DEPRECATED);
+							trigger_deprecation('contao/core-bundle', '4.0', 'Using the "onversion_callback" has been deprecated and will no longer work in Contao 5.0. Use the "oncreate_version_callback" instead.');
 
 							foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onversion_callback'] as $callback)
 							{
@@ -2567,6 +2570,8 @@ class DC_Table extends DataContainer implements \listable, \editable
 							}
 						}
 					}
+
+					$this->invalidateCacheTags();
 				}
 			}
 
@@ -2687,7 +2692,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			// Return the select menu
 			$return .= '
 
-<form action="' . ampersand(Environment::get('request')) . '&amp;fields=1" id="' . $this->strTable . '_all" class="tl_form tl_edit_form" method="post">
+<form action="' . StringUtil::ampersand(Environment::get('request')) . '&amp;fields=1" id="' . $this->strTable . '_all" class="tl_form tl_edit_form" method="post">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '_all">
 <input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">' . ($blnIsError ? '
@@ -2824,6 +2829,8 @@ class DC_Table extends DataContainer implements \listable, \editable
 							}
 						}
 
+						$this->invalidateCacheTags();
+
 						// Set the current timestamp before adding a new version
 						if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'])
 						{
@@ -2844,7 +2851,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 							// Call the onversion_callback
 							if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onversion_callback']))
 							{
-								@trigger_error('Using the "onversion_callback" has been deprecated and will no longer work in Contao 5.0. Use the "oncreate_version_callback" instead.', E_USER_DEPRECATED);
+								trigger_deprecation('contao/core-bundle', '4.0', 'Using the "onversion_callback" has been deprecated and will no longer work in Contao 5.0. Use the "oncreate_version_callback" instead.');
 
 								foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onversion_callback'] as $callback)
 								{
@@ -3010,7 +3017,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 			// Return the select menu
 			$return .= '
-<form action="' . ampersand(Environment::get('request')) . '&amp;fields=1" id="' . $this->strTable . '_all" class="tl_form tl_edit_form" method="post">
+<form action="' . StringUtil::ampersand(Environment::get('request')) . '&amp;fields=1" id="' . $this->strTable . '_all" class="tl_form tl_edit_form" method="post">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '_all">
 <input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">' . ($blnIsError ? '
@@ -3367,7 +3374,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 					$this->activeRecord = $objRow;
 
 					// Invalidate cache tags (no need to invalidate the parent)
-					$this->invalidateCacheTags($this);
+					$this->invalidateCacheTags();
 				}
 
 				$this->id = $origId;
@@ -4268,10 +4275,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 											   ->limit(1)
 											   ->execute($_v);
 
-					if ($objLabel->numRows)
-					{
-						$_v = $objLabel->value;
-					}
+					$_v = $objLabel->numRows ? $objLabel->value : '-';
 				}
 				elseif (\is_array($GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['reference'][$_v]))
 				{
@@ -4281,7 +4285,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				{
 					$_v = $GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['reference'][$_v];
 				}
-				elseif ($GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['eval']['isAssociative'] || array_is_assoc($GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['options']))
+				elseif ($GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['eval']['isAssociative'] || ArrayUtil::isAssoc($GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['options']))
 				{
 					$_v = $GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['options'][$_v];
 				}
@@ -4749,7 +4753,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 						$keys = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['options'];
 					}
 
-					if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['eval']['isAssociative'] || array_is_assoc($keys))
+					if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['eval']['isAssociative'] || ArrayUtil::isAssoc($keys))
 					{
 						$keys = array_keys($keys);
 					}
@@ -4948,7 +4952,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 						{
 							$args[$k] = \is_array($GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$row[$v]]) ? $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$row[$v]][0] : $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$row[$v]];
 						}
-						elseif (($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['isAssociative'] || array_is_assoc($GLOBALS['TL_DCA'][$table]['fields'][$v]['options'])) && isset($GLOBALS['TL_DCA'][$table]['fields'][$v]['options'][$row[$v]]))
+						elseif (($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['isAssociative'] || ArrayUtil::isAssoc($GLOBALS['TL_DCA'][$table]['fields'][$v]['options'])) && isset($GLOBALS['TL_DCA'][$table]['fields'][$v]['options'][$row[$v]]))
 						{
 							$args[$k] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['options'][$row[$v]];
 						}
@@ -5238,8 +5242,8 @@ class DC_Table extends DataContainer implements \listable, \editable
 		}
 
 		// Sort by option values
-		$options_sorter = natcaseksort($options_sorter);
-		$active = isset($session['search'][$this->strTable]['value']);
+		uksort($options_sorter, 'strnatcasecmp');
+		$active = isset($session['search'][$this->strTable]['value']) && $session['search'][$this->strTable]['value'] != '';
 
 		return '
 <div class="tl_search tl_subpanel">
@@ -5687,7 +5691,22 @@ class DC_Table extends DataContainer implements \listable, \editable
 			// Limit the options if there are root records
 			if (isset($GLOBALS['TL_DCA'][$table]['list']['sorting']['root']) && $GLOBALS['TL_DCA'][$table]['list']['sorting']['root'] !== false)
 			{
-				$arrProcedure[] = "id IN(" . implode(',', array_map('\intval', $GLOBALS['TL_DCA'][$table]['list']['sorting']['root'])) . ")";
+				$rootIds = array_map('\intval', $GLOBALS['TL_DCA'][$table]['list']['sorting']['root']);
+
+				// Also add the child records of the table (see #1811)
+				if ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] == 5)
+				{
+					$rootIds = array_merge($rootIds, $this->Database->getChildRecords($rootIds, $table));
+				}
+
+				if ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 6)
+				{
+					$arrProcedure[] = "pid IN(" . implode(',', $rootIds) . ")";
+				}
+				else
+				{
+					$arrProcedure[] = "id IN(" . implode(',', $rootIds) . ")";
+				}
 			}
 
 			$objFields = $this->Database->prepare("SELECT DISTINCT " . $what . " FROM " . $this->strTable . ((\is_array($arrProcedure) && isset($arrProcedure[0])) ? ' WHERE ' . implode(' AND ', $arrProcedure) : ''))
@@ -5884,7 +5903,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 					}
 
 					// Associative array
-					elseif ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['isAssociative'] || array_is_assoc($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['options']))
+					elseif ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['isAssociative'] || ArrayUtil::isAssoc($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['options']))
 					{
 						$option_label = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['options'][$vv];
 					}
@@ -6039,7 +6058,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			{
 				$remoteNew = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['reference'][$value];
 			}
-			elseif ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['isAssociative'] || array_is_assoc($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['options']))
+			elseif ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['isAssociative'] || ArrayUtil::isAssoc($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['options']))
 			{
 				$remoteNew = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['options'][$value];
 			}
@@ -6076,7 +6095,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 	{
 		static $lookup = array();
 
-		if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['isAssociative'] || array_is_assoc($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['options']))
+		if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['isAssociative'] || ArrayUtil::isAssoc($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['options']))
 		{
 			$group = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['options'][$value];
 		}

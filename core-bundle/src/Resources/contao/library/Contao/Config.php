@@ -307,7 +307,7 @@ class Config
 	 */
 	public function getActiveModules()
 	{
-		@trigger_error('Using Config::getActiveModules() has been deprecated and will no longer work in Contao 5.0. Use the container parameter "kernel.bundles" instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Config::getActiveModules()" has been deprecated and will no longer work in Contao 5.0. Use "kernel.bundles" instead.');
 
 		return ModuleLoader::getActive();
 	}
@@ -363,7 +363,7 @@ class Config
 	 *
 	 * @param string $strKey The short key
 	 *
-	 * @return mixed|null The configuration value
+	 * @return mixed The configuration value
 	 */
 	public static function get($strKey)
 	{
@@ -374,7 +374,7 @@ class Config
 	 * Temporarily set a configuration value
 	 *
 	 * @param string $strKey   The short key
-	 * @param string $varValue The configuration value
+	 * @param mixed  $varValue The configuration value
 	 */
 	public static function set($strKey, $varValue)
 	{
@@ -426,12 +426,12 @@ class Config
 		include __DIR__ . '/../../config/agents.php';
 		include __DIR__ . '/../../config/mimetypes.php';
 
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Include the local configuration file
-		if (($blnHasLcf = file_exists($rootDir . '/system/config/localconfig.php')) === true)
+		if (($blnHasLcf = file_exists($projectDir . '/system/config/localconfig.php')) === true)
 		{
-			include $rootDir . '/system/config/localconfig.php';
+			include $projectDir . '/system/config/localconfig.php';
 		}
 
 		static::loadParameters();
@@ -487,6 +487,15 @@ class Config
 			{
 				$GLOBALS['TL_CONFIG'][$strKey] = $container->getParameter($strParam);
 			}
+		}
+
+		$objRequest = $container->get('request_stack')->getCurrentRequest();
+
+		/** @var PageModel $objPage */
+		if (null !== $objRequest && ($objPage = $objRequest->attributes->get('pageModel')) instanceof PageModel)
+		{
+			$GLOBALS['TL_CONFIG']['addLanguageToUrl'] = $objPage->urlPrefix !== '';
+			$GLOBALS['TL_CONFIG']['urlSuffix'] = $objPage->urlSuffix;
 		}
 
 		if ($container->hasParameter('contao.image.valid_extensions'))

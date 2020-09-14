@@ -35,11 +35,18 @@ class Automator extends System
 	 */
 	public function purgeSearchTables()
 	{
-		// Clear the index
-		$container = System::getContainer();
-		$container->get('contao.search.indexer')->clear();
+		$searchIndexer = System::getContainer()->get('contao.search.indexer');
 
-		$strCachePath = StringUtil::stripRootDir($container->getParameter('kernel.cache_dir'));
+		// The search indexer is disabled
+		if (null === $searchIndexer)
+		{
+			return;
+		}
+
+		// Clear the index
+		$searchIndexer->clear();
+
+		$strCachePath = StringUtil::stripRootDir(System::getContainer()->getParameter('kernel.cache_dir'));
 
 		// Purge the cache folder
 		$objFolder = new Folder($strCachePath . '/contao/search');
@@ -115,7 +122,7 @@ class Automator extends System
 		$strRootDir = $container->getParameter('kernel.project_dir');
 
 		// Walk through the subfolders
-		foreach (scan($strRootDir . '/' . $strTargetPath) as $dir)
+		foreach (Folder::scan($strRootDir . '/' . $strTargetPath) as $dir)
 		{
 			if (strncmp($dir, '.', 1) !== 0)
 			{
@@ -295,7 +302,7 @@ class Automator extends System
 		{
 			$shareDir = System::getContainer()->getParameter('contao.web_dir') . '/share';
 
-			foreach (scan($shareDir) as $file)
+			foreach (Folder::scan($shareDir) as $file)
 			{
 				if (is_dir($shareDir . '/' . $file))
 				{
@@ -326,7 +333,7 @@ class Automator extends System
 
 		$this->purgeXmlFiles();
 
-		$strQuery = "SELECT id, language, sitemapName FROM tl_page WHERE type='root' AND createSitemap='1' AND sitemapName!='' AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') AND published='1'";
+		$strQuery = "SELECT id, language, sitemapName FROM tl_page WHERE type='root' AND createSitemap='1' AND sitemapName!='' AND published='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'$time')";
 
 		// Get a particular root page
 		if ($intId > 0)
@@ -376,7 +383,7 @@ class Automator extends System
 				}
 
 				$strUrl = implode('/', $strUrl);
-				$strUrl = ampersand($strUrl);
+				$strUrl = StringUtil::ampersand($strUrl);
 
 				$objFile->append('  <url><loc>' . $strUrl . '</loc></url>');
 			}
@@ -457,10 +464,10 @@ class Automator extends System
 	 */
 	public function rotateLogs()
 	{
-		@trigger_error('Using Automator::rotateLogs() has been deprecated and will no longer work in Contao 5.0. Use the logger service instead, which rotates its log files automatically.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Automator::rotateLogs()" has been deprecated and will no longer work in Contao 5.0. Use the logger service instead, which rotates its log files automatically.');
 
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
-		$arrFiles = preg_grep('/\.log$/', scan($rootDir . '/system/logs'));
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+		$arrFiles = preg_grep('/\.log$/', Folder::scan($projectDir . '/system/logs'));
 
 		foreach ($arrFiles as $strFile)
 		{
@@ -477,7 +484,7 @@ class Automator extends System
 			{
 				$strGzName = 'system/logs/' . $strFile . '.' . $i;
 
-				if (file_exists($rootDir . '/' . $strGzName))
+				if (file_exists($projectDir . '/' . $strGzName))
 				{
 					$objFile = new File($strGzName);
 					$objFile->renameTo('system/logs/' . $strFile . '.' . ($i+1));

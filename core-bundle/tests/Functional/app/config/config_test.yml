@@ -10,7 +10,7 @@ framework:
     translator: { fallbacks: ['%locale%'] }
     secret: '%env(APP_SECRET)%'
     router:
-        resource: '%kernel.project_dir%/../src/Resources/config/routing.yml'
+        resource: '%kernel.project_dir%/../src/Resources/config/routes.yml'
         strict_requirements: '%kernel.debug%'
     csrf_protection: ~
     default_locale: '%locale%'
@@ -34,10 +34,14 @@ doctrine:
                     charset: utf8mb4
                     collate: utf8mb4_unicode_ci
                     engine: InnoDB
+        types:
+            binary_string:
+                class: Contao\CoreBundle\Doctrine\DBAL\Types\BinaryStringType
     orm:
         auto_mapping: true
         auto_generate_proxy_classes: true
 
 contao:
+    legacy_routing: false
     localconfig:
         licenseAccepted: true

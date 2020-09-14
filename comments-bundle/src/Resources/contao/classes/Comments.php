@@ -501,7 +501,7 @@ class Comments extends Frontend
 	 */
 	public function convertLineFeeds($strComment)
 	{
-		$strComment = nl2br_pre($strComment);
+		$strComment = preg_replace('/\r?\n/', '<br>', $strComment);
 
 		// Use paragraphs to generate new lines
 		if (strncmp('<p>', $strComment, 3) !== 0)
@@ -661,6 +661,9 @@ class Comments extends Frontend
 
 		if ($objNotify !== null)
 		{
+			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+			$isFrontend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request);
+
 			while ($objNotify->next())
 			{
 				// Don't notify the commentor about his own comment
@@ -670,7 +673,7 @@ class Comments extends Frontend
 				}
 
 				// Update the notification URL if it has changed (see #373)
-				if (TL_MODE == 'FE' && $objNotify->url != Environment::get('request'))
+				if ($isFrontend && $objNotify->url != Environment::get('request'))
 				{
 					$objNotify->url = Environment::get('request');
 					$objNotify->save();

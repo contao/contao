@@ -57,10 +57,10 @@
         <source>Here you can enter the height of the important part.</source>
       </trans-unit>
       <trans-unit id="tl_files.meta.0">
-        <source>Meta data</source>
+        <source>Metadata</source>
       </trans-unit>
       <trans-unit id="tl_files.meta.1">
-        <source>Here you can enter the file meta data.</source>
+        <source>Here you can enter the file metadata.</source>
       </trans-unit>
       <trans-unit id="tl_files.fileupload.0">
         <source>File upload</source>

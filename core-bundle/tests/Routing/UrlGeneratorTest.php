@@ -22,8 +22,14 @@ use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
+/**
+ * @group legacy
+ */
 class UrlGeneratorTest extends TestCase
 {
+    /**
+     * @expectedDeprecation Since contao/core-bundle 4.10: Using the "Contao\CoreBundle\Routing\UrlGenerator" class has been deprecated %s.
+     */
     public function testCanWriteTheContext(): void
     {
         $router = new ParentUrlGenerator(new RouteCollection(), new RequestContext());
@@ -240,12 +246,15 @@ class UrlGeneratorTest extends TestCase
         );
     }
 
+    /**
+     * @psalm-suppress InvalidArgument
+     */
     public function testHandlesNonArrayParameters(): void
     {
-        $this
-            ->getUrlGenerator($this->mockRouterWithContext(['alias' => 'foo']))
-            ->generate('foo', 'bar')
-        ;
+        $generator = $this->getUrlGenerator($this->mockRouterWithContext(['alias' => 'foo']));
+
+        /** @phpstan-ignore-next-line */
+        $generator->generate('foo', 'bar');
     }
 
     private function getUrlGenerator(UrlGeneratorInterface $router, bool $prependLocale = false, bool $useAutoItem = true): UrlGenerator

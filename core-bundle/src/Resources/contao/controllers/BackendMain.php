@@ -14,6 +14,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Util\PackageUtil;
 use Knp\Bundle\TimeBundle\DateTimeFormatter;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -73,7 +74,7 @@ class BackendMain extends Backend
 		// Front end redirect
 		if (Input::get('do') == 'feRedirect')
 		{
-			@trigger_error('Using the "feRedirect" parameter has been deprecated and will no longer work in Contao 5.0. Use the "contao_backend_preview" route directly instead.', E_USER_DEPRECATED);
+			trigger_deprecation('contao/core-bundle', '4.0', 'Using the "feRedirect" parameter has been deprecated and will no longer work in Contao 5.0. Use the "contao_backend_preview" route directly instead.');
 
 			$this->redirectToFrontendPage(Input::get('page'), Input::get('article'));
 		}
@@ -123,19 +124,30 @@ class BackendMain extends Backend
 			$this->objAjax->executePreActions();
 		}
 
+		// Toggle nodes
+		if (Input::get('mtg'))
+		{
+			/** @var AttributeBagInterface $objSessionBag */
+			$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+			$session = $objSessionBag->all();
+			$session['backend_modules'][Input::get('mtg')] = (isset($session['backend_modules'][Input::get('mtg')]) && $session['backend_modules'][Input::get('mtg')] == 0) ? 1 : 0;
+			$objSessionBag->replace($session);
+
+			Controller::redirect(preg_replace('/(&(amp;)?|\?)mtg=[^& ]*/i', '', Environment::get('request')));
+		}
 		// Error
-		if (Input::get('act') == 'error')
+		elseif (Input::get('act') == 'error')
 		{
 			$this->Template->error = $GLOBALS['TL_LANG']['ERR']['general'];
 			$this->Template->title = $GLOBALS['TL_LANG']['ERR']['general'];
 
-			@trigger_error('Using act=error has been deprecated and will no longer work in Contao 5.0. Throw an exception instead.', E_USER_DEPRECATED);
+			trigger_deprecation('contao/core-bundle', '4.0', 'Using "act=error" has been deprecated and will no longer work in Contao 5.0. Throw an exception instead.');
 		}
 		// Welcome screen
 		elseif (!Input::get('do') && !Input::get('act'))
 		{
 			$this->Template->main .= $this->welcomeScreen();
-			$this->Template->title = $GLOBALS['TL_LANG']['MSC']['home'];
+			$this->Template->title = $GLOBALS['TL_LANG']['MSC']['dashboard'];
 		}
 		// Open a module
 		elseif (Input::get('do'))
@@ -146,7 +158,7 @@ class BackendMain extends Backend
 			{
 				$picker = System::getContainer()->get('contao.picker.builder')->createFromData(Input::get('picker', true));
 
-				if ($picker !== null && ($menu = $picker->getMenu()) && $menu->count() > 1)
+				if ($picker !== null && ($menu = $picker->getMenu()))
 				{
 					$this->Template->pickerMenu = System::getContainer()->get('contao.menu.renderer')->render($menu);
 				}
@@ -222,7 +234,7 @@ class BackendMain extends Backend
 		// File picker reference (backwards compatibility)
 		if (Input::get('popup') && Input::get('act') != 'show' && $objSession->get('filePickerRef') && ((Input::get('do') == 'page' && $this->User->hasAccess('page', 'modules')) || (Input::get('do') == 'files' && $this->User->hasAccess('files', 'modules'))))
 		{
-			$this->Template->managerHref = ampersand($objSession->get('filePickerRef'));
+			$this->Template->managerHref = StringUtil::ampersand($objSession->get('filePickerRef'));
 			$this->Template->manager = (strpos($objSession->get('filePickerRef'), 'contao/page?') !== false) ? $GLOBALS['TL_LANG']['MSC']['pagePickerHome'] : $GLOBALS['TL_LANG']['MSC']['filePickerHome'];
 		}
 

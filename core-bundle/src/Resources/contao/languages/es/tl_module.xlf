@@ -54,8 +54,7 @@
         <target>Mostrar elementos protegidos</target>
       </trans-unit>
       <trans-unit id="tl_module.showProtected.1">
-        <source>Show items that are usually only visible to authenticated users.</source>
-        <target>Por defecto los elementos protegidos no son visibles a no ser que un usuario del front end este conectado. En cambio, si seleccionas esta opción, los elementos protegidos estarán siempre visibles.</target>
+        <source>Show items that are usually only visible to authenticated members.</source>
       </trans-unit>
       <trans-unit id="tl_module.defineRoot.0">
         <source>Set a reference page</source>
@@ -82,12 +81,10 @@
         <target>Por favor selecciona una plantilla de navegación (plantillas de navegación empiezan por &lt;em&gt;nav_&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_module.customTpl.0">
-        <source>Custom module template</source>
-        <target>Personalizar plantilla de módulo</target>
+        <source>Module template</source>
       </trans-unit>
       <trans-unit id="tl_module.customTpl.1">
-        <source>Here you can overwrite the default module template.</source>
-        <target>Aquí puede sobreescribir la plantilla por defecto de módulo.</target>
+        <source>Here you can select the module template.</source>
       </trans-unit>
       <trans-unit id="tl_module.pages.0">
         <source>Pages</source>
@@ -134,8 +131,7 @@
         <target>Redirigir a la última página visitada</target>
       </trans-unit>
       <trans-unit id="tl_module.redirectBack.1">
-        <source>Redirect the user back to the last page visited instead of the redirect page.</source>
-        <target>Redirigir al usuario a la última página visitada en vez de la página de redirección.</target>
+        <source>Redirect the member back to the last page visited instead of the redirect page.</source>
       </trans-unit>
       <trans-unit id="tl_module.1cl.0">
         <source>One column</source>
@@ -408,28 +404,25 @@
         <target>Aquí puedes introducir una ID para la hoja de estilo (atributo id) y una o más clases de hoja de estilos (atributos clase) para poder dar formato al elemento del modulo utilizando CSS.</target>
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>Deshabilitar pregunta de seguridad</target>
+        <source>Disable spam protection</source>
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.1">
-        <source>Here you can disable the security question (not recommended).</source>
-        <target>Aqui puedes deshabilitar la pregunta de seguridad (no es recomendado).</target>
+        <source>Here you can disable the spam protection (not recommended).</source>
       </trans-unit>
       <trans-unit id="tl_module.reg_groups.0">
         <source>Member groups</source>
         <target>Grupos de miembros</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_groups.1">
-        <source>Here you can assign the user to one or more groups.</source>
-        <target>Cada usuario que no es un administrador hereda todos los permisos de un grupo de usuarios. Por ello, cada usuario debe ser miembro de al menos un grupo! Si un usuario es miembro de más de un grupo, se combinan los permisos entre ellos.</target>
+        <source>Here you can assign the member to one or more groups.</source>
+        <target>Aquí puede asignar el miembro a uno o varios grupos.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_allowLogin.0">
         <source>Allow login</source>
         <target>Permitir conexión</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_allowLogin.1">
-        <source>Allow the new user to log into the front end.</source>
-        <target>Si seleccionas esta opción, el nuevo usuario podrá conectarse con su nombre de usuario y contraseña.</target>
+        <source>Allow the new member to log into the front end.</source>
       </trans-unit>
       <trans-unit id="tl_module.reg_skipName.0">
         <source>Skip username</source>
@@ -476,8 +469,7 @@
         <target>Activación saltar a página</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_jumpTo.1">
-        <source>Please choose the page to which users will be redirected after the request has been completed.</source>
-        <target>Por favor selecciona la página a la que será redirigido el usuario cuando se active su cuenta.</target>
+        <source>Please choose the page to which members will be redirected after the request has been completed.</source>
       </trans-unit>
       <trans-unit id="tl_module.reg_text.0">
         <source>Activation message</source>
@@ -492,8 +484,7 @@
         <target>E-mail de confirmación</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_password.1">
-        <source>You can use the wildcards &lt;em&gt;##domain##&lt;/em&gt; (domain name), &lt;em&gt;##link##&lt;/em&gt; (activation link) and any user property (e.g. &lt;em&gt;##lastname##&lt;/em&gt;).</source>
-        <target>Por favor introduce el texto del e-mail de confirmación. Puedes utilizar cualquier campo de entrada como comodín (por ejemplo &lt;em&gt;##lastname##&lt;/em&gt;) y también &lt;em&gt;##domain##&lt;/em&gt; (nombre de dominio actual) y &lt;em&gt;##link##&lt;/em&gt; (enlace de activacion).</target>
+        <source>You can use the wildcards &lt;em&gt;##domain##&lt;/em&gt; (domain name), &lt;em&gt;##link##&lt;/em&gt; (activation link) and any member property (e.g. &lt;em&gt;##lastname##&lt;/em&gt;).</source>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>

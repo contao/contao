@@ -357,7 +357,7 @@ class Statement
 	 */
 	public function executeUncached()
 	{
-		@trigger_error('Using Statement::executeUncached() has been deprecated and will no longer work in Contao 5.0. Use Statement::execute() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Statement::executeUncached()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Statement::execute()" instead.');
 
 		return \call_user_func_array(array($this, 'execute'), \func_get_args());
 	}
@@ -372,7 +372,7 @@ class Statement
 	 */
 	public function executeCached()
 	{
-		@trigger_error('Using Statement::executeCached() has been deprecated and will no longer work in Contao 5.0. Use Statement::execute() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Statement::executeCached()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Statement::execute()" instead.');
 
 		return \call_user_func_array(array($this, 'execute'), \func_get_args());
 	}

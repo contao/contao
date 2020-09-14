@@ -21,6 +21,7 @@ use Composer\Script\Event;
 use Contao\CoreBundle\Composer\ScriptHandler;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\Filesystem\Filesystem;
 
 class ScriptHandlerTest extends TestCase
 {
@@ -61,7 +62,8 @@ class ScriptHandlerTest extends TestCase
     {
         $this->assertRandomSecretDoesNotExist();
 
-        touch($this->getFixturesDir().'/app/config/parameters.yml');
+        $fs = new Filesystem();
+        $fs->touch($this->getFixturesDir().'/app/config/parameters.yml');
 
         $this->handler->generateRandomSecret(
             $this->getComposerEvent(
@@ -73,7 +75,7 @@ class ScriptHandlerTest extends TestCase
             )
         );
 
-        unlink($this->getFixturesDir().'/app/config/parameters.yml');
+        $fs->remove($this->getFixturesDir().'/app/config/parameters.yml');
 
         $this->assertRandomSecretDoesNotExist();
     }
@@ -166,17 +168,17 @@ class ScriptHandlerTest extends TestCase
         );
 
         $this->assertSame(
-            ' -v',
+            '-v',
             $method->invokeArgs($this->handler, [$this->getComposerEvent([], 'isVerbose')])
         );
 
         $this->assertSame(
-            ' -vv',
+            '-vv',
             $method->invokeArgs($this->handler, [$this->getComposerEvent([], 'isVeryVerbose')])
         );
 
         $this->assertSame(
-            ' -vvv',
+            '-vvv',
             $method->invokeArgs($this->handler, [$this->getComposerEvent([], 'isDebug')])
         );
     }

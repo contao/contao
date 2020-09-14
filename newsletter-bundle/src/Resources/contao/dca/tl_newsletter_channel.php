@@ -8,6 +8,18 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\Backend;
+use Contao\BackendUser;
+use Contao\Controller;
+use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Mailer\AvailableTransports;
+use Contao\Image;
+use Contao\Input;
+use Contao\StringUtil;
+use Contao\System;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
 $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 (
 	// Config
@@ -105,7 +117,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},title,jumpTo;{template_legend:hide},template;{sender_legend},sender,senderName'
+		'default'                     => '{title_legend},title,jumpTo;{template_legend:hide},template;{sender_legend},mailerTransport,sender,senderName'
 	),
 
 	// Fields
@@ -143,9 +155,17 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
 			'options_callback' => static function ()
 			{
-				return Contao\Controller::getTemplateGroup('mail_');
+				return Controller::getTemplateGroup('mail_');
 			},
 			'sql'                     => "varchar(32) NOT NULL default ''"
+		),
+		'mailerTransport' => array
+		(
+			'exclude'                 => true,
+			'inputType'               => 'select',
+			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption'=>true),
+			'options_callback'        => array(AvailableTransports::class, 'getTransportOptions'),
+			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'sender' => array
 		(
@@ -153,7 +173,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 			'search'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'email', 'maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'email', 'maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50 clr'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'senderName' => array
@@ -174,7 +194,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_newsletter_channel extends Contao\Backend
+class tl_newsletter_channel extends Backend
 {
 	/**
 	 * Import the back end user object
@@ -182,13 +202,13 @@ class tl_newsletter_channel extends Contao\Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('Contao\BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 	}
 
 	/**
 	 * Check permissions to edit table tl_newsletter_channel
 	 *
-	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
+	 * @throws AccessDeniedException
 	 */
 	public function checkPermission()
 	{
@@ -223,11 +243,11 @@ class tl_newsletter_channel extends Contao\Backend
 			$GLOBALS['TL_DCA']['tl_newsletter_channel']['config']['notDeletable'] = true;
 		}
 
-		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = Contao\System::getContainer()->get('session');
+		/** @var SessionInterface $objSession */
+		$objSession = System::getContainer()->get('session');
 
 		// Check current action
-		switch (Contao\Input::get('act'))
+		switch (Input::get('act'))
 		{
 			case 'select':
 				// Allow
@@ -236,7 +256,7 @@ class tl_newsletter_channel extends Contao\Backend
 			case 'create':
 				if (!$this->User->hasAccess('create', 'newsletterp'))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to create newsletter channels.');
+					throw new AccessDeniedException('Not enough permissions to create newsletter channels.');
 				}
 				break;
 
@@ -244,9 +264,9 @@ class tl_newsletter_channel extends Contao\Backend
 			case 'copy':
 			case 'delete':
 			case 'show':
-				if (!in_array(Contao\Input::get('id'), $root) || (Contao\Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'newsletterp')))
+				if (!in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'newsletterp')))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' newsletter channel ID ' . Contao\Input::get('id') . '.');
+					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' newsletter channel ID ' . Input::get('id') . '.');
 				}
 				break;
 
@@ -256,7 +276,7 @@ class tl_newsletter_channel extends Contao\Backend
 			case 'copyAll':
 				$session = $objSession->all();
 
-				if (Contao\Input::get('act') == 'deleteAll' && !$this->User->hasAccess('delete', 'newsletterp'))
+				if (Input::get('act') == 'deleteAll' && !$this->User->hasAccess('delete', 'newsletterp'))
 				{
 					$session['CURRENT']['IDS'] = array();
 				}
@@ -268,9 +288,9 @@ class tl_newsletter_channel extends Contao\Backend
 				break;
 
 			default:
-				if (Contao\Input::get('act'))
+				if (Input::get('act'))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' newsletter channels.');
+					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' newsletter channels.');
 				}
 				break;
 		}
@@ -310,8 +330,8 @@ class tl_newsletter_channel extends Contao\Backend
 			return;
 		}
 
-		/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
-		$objSessionBag = Contao\System::getContainer()->get('session')->getBag('contao_backend');
+		/** @var AttributeBagInterface $objSessionBag */
+		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 
 		$arrNew = $objSessionBag->get('new_records');
 
@@ -324,11 +344,11 @@ class tl_newsletter_channel extends Contao\Backend
 
 				while ($objGroup->next())
 				{
-					$arrNewsletterp = Contao\StringUtil::deserialize($objGroup->newsletterp);
+					$arrNewsletterp = StringUtil::deserialize($objGroup->newsletterp);
 
 					if (is_array($arrNewsletterp) && in_array('create', $arrNewsletterp))
 					{
-						$arrNewsletters = Contao\StringUtil::deserialize($objGroup->newsletters, true);
+						$arrNewsletters = StringUtil::deserialize($objGroup->newsletters, true);
 						$arrNewsletters[] = $insertId;
 
 						$this->Database->prepare("UPDATE tl_user_group SET newsletters=? WHERE id=?")
@@ -344,11 +364,11 @@ class tl_newsletter_channel extends Contao\Backend
 										   ->limit(1)
 										   ->execute($this->User->id);
 
-				$arrNewsletterp = Contao\StringUtil::deserialize($objUser->newsletterp);
+				$arrNewsletterp = StringUtil::deserialize($objUser->newsletterp);
 
 				if (is_array($arrNewsletterp) && in_array('create', $arrNewsletterp))
 				{
-					$arrNewsletters = Contao\StringUtil::deserialize($objUser->newsletters, true);
+					$arrNewsletters = StringUtil::deserialize($objUser->newsletters, true);
 					$arrNewsletters[] = $insertId;
 
 					$this->Database->prepare("UPDATE tl_user SET newsletters=? WHERE id=?")
@@ -376,7 +396,7 @@ class tl_newsletter_channel extends Contao\Backend
 	 */
 	public function editHeader($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->canEditFieldsOf('tl_newsletter_channel') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return $this->User->canEditFieldsOf('tl_newsletter_channel') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -393,7 +413,7 @@ class tl_newsletter_channel extends Contao\Backend
 	 */
 	public function copyChannel($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('create', 'newsletterp') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return $this->User->hasAccess('create', 'newsletterp') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -410,6 +430,6 @@ class tl_newsletter_channel extends Contao\Backend
 	 */
 	public function deleteChannel($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('delete', 'newsletterp') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return $this->User->hasAccess('delete', 'newsletterp') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 }

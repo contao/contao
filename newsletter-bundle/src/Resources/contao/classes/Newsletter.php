@@ -11,8 +11,10 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\InternalServerErrorException;
+use Contao\CoreBundle\Util\SimpleTokenParser;
 use Contao\Database\Result;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Mime\Exception\RfcComplianceException;
 
 /**
  * Provide methods to handle newsletters.
@@ -30,7 +32,7 @@ class Newsletter extends Backend
 	 */
 	public function send(DataContainer $dc)
 	{
-		$objNewsletter = $this->Database->prepare("SELECT n.*, c.template AS channelTemplate, c.sender AS channelSender, c.senderName as channelSenderName FROM tl_newsletter n LEFT JOIN tl_newsletter_channel c ON n.pid=c.id WHERE n.id=?")
+		$objNewsletter = $this->Database->prepare("SELECT n.*, c.template AS channelTemplate, c.sender AS channelSender, c.senderName as channelSenderName, c.mailerTransport AS channelMailerTransport FROM tl_newsletter n LEFT JOIN tl_newsletter_channel c ON n.pid=c.id WHERE n.id=?")
 										->limit(1)
 										->execute($dc->id);
 
@@ -79,11 +81,11 @@ class Newsletter extends Backend
 
 				if ($objFiles !== null)
 				{
-					$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+					$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 					while ($objFiles->next())
 					{
-						if (is_file($rootDir . '/' . $objFiles->path))
+						if (is_file($projectDir . '/' . $objFiles->path))
 						{
 							$arrAttachments[] = $objFiles->path;
 						}
@@ -170,10 +172,12 @@ class Newsletter extends Backend
 					$_SESSION['REJECTED_RECIPIENTS'] = array();
 				}
 
+				$time = time();
+
 				while ($objRecipients->next())
 				{
 					// Skip the recipient if the member is not active (see #8812)
-					if ($objRecipients->id !== null && ($objRecipients->disable || ($objRecipients->start != '' && $objRecipients->start > time()) || ($objRecipients->stop != '' && $objRecipients->stop < time())))
+					if ($objRecipients->id !== null && ($objRecipients->disable || ($objRecipients->start != '' && $objRecipients->start > $time) || ($objRecipients->stop != '' && $objRecipients->stop <= $time)))
 					{
 						--$intTotal;
 						echo 'Skipping <strong>' . Idna::decodeEmail($objRecipients->email) . '</strong> as the member is not active<br>';
@@ -340,13 +344,22 @@ class Newsletter extends Backend
 		// Attachments
 		if (!empty($arrAttachments) && \is_array($arrAttachments))
 		{
-			$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+			$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 			foreach ($arrAttachments as $strAttachment)
 			{
-				$objEmail->attachFile($rootDir . '/' . $strAttachment);
+				$objEmail->attachFile($projectDir . '/' . $strAttachment);
 			}
 		}
+
+		// Add transport
+		if (!empty($objNewsletter->mailerTransport) || !empty($objNewsletter->channelMailerTransport))
+		{
+			$objEmail->addHeader('X-Transport', $objNewsletter->mailerTransport ?: $objNewsletter->channelMailerTransport);
+		}
+
+		// Newsletters with an unsubscribe header are less likely to be blocked (see #2174)
+		$objEmail->addHeader('List-Unsubscribe', '<mailto:' . $objNewsletter->sender . '?subject=' . rawurlencode($GLOBALS['TL_LANG']['MSC']['unsubscribe']) . '>');
 
 		return $objEmail;
 	}
@@ -363,15 +376,18 @@ class Newsletter extends Backend
 	 */
 	protected function sendNewsletter(Email $objEmail, Result $objNewsletter, $arrRecipient, $text, $html, $css=null)
 	{
+		/** @var SimpleTokenParser $simpleTokenParser */
+		$simpleTokenParser = System::getContainer()->get(SimpleTokenParser::class);
+
 		// Prepare the text content
-		$objEmail->text = StringUtil::parseSimpleTokens($text, $arrRecipient);
+		$objEmail->text = $simpleTokenParser->parse($text, $arrRecipient);
 
 		if (!$objNewsletter->sendText)
 		{
 			$objTemplate = new BackendTemplate($objNewsletter->template ?: 'mail_default');
 			$objTemplate->setData($objNewsletter->row());
 			$objTemplate->title = $objNewsletter->subject;
-			$objTemplate->body = StringUtil::parseSimpleTokens($html, $arrRecipient);
+			$objTemplate->body = $simpleTokenParser->parse($html, $arrRecipient);
 			$objTemplate->charset = Config::get('characterSet');
 			$objTemplate->recipient = $arrRecipient['email'];
 
@@ -388,7 +404,7 @@ class Newsletter extends Backend
 		{
 			$objEmail->sendTo($arrRecipient['email']);
 		}
-		catch (\Swift_RfcComplianceException $e)
+		catch (RfcComplianceException $e)
 		{
 			$_SESSION['REJECTED_RECIPIENTS'][] = $arrRecipient['email'];
 		}
@@ -422,7 +438,6 @@ class Newsletter extends Backend
 			return '';
 		}
 
-		/** @var FileUpload $objUploader */
 		$objUploader = new FileUpload();
 
 		// Import recipients
@@ -504,11 +519,11 @@ class Newsletter extends Backend
 						continue;
 					}
 
-					// Check whether the e-mail address has been blacklisted
-					$objBlacklist = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_blacklist WHERE pid=? AND hash=?")
+					// Check whether the e-mail address has been added to the deny list
+					$objDenyList = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_deny_list WHERE pid=? AND hash=?")
 												   ->execute(Input::get('id'), md5($strRecipient));
 
-					if ($objBlacklist->count > 0)
+					if ($objDenyList->count > 0)
 					{
 						$this->log('Recipient "' . $strRecipient . '" has unsubscribed from channel ID "' . Input::get('id') . '" and was not imported', __METHOD__, TL_ERROR);
 						continue;
@@ -534,7 +549,7 @@ class Newsletter extends Backend
 		// Return form
 		return '
 <div id="tl_buttons">
-<a href="' . ampersand(str_replace('&key=import', '', Environment::get('request'))) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
+<a href="' . StringUtil::ampersand(str_replace('&key=import', '', Environment::get('request'))) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>
 ' . Message::generate() . '
 <form id="tl_recipients_import" class="tl_form tl_edit_form" method="post" enctype="multipart/form-data">
@@ -968,7 +983,7 @@ class Newsletter extends Backend
 		}
 
 		$arrProcessed = array();
-		$time = Date::floorToMinute();
+		$time = time();
 
 		// Get all channels
 		$objNewsletter = NewsletterChannelModel::findAll();
@@ -1001,7 +1016,7 @@ class Newsletter extends Backend
 					}
 
 					// The target page has not been published (see #5520)
-					if (!$objParent->published || ($objParent->start != '' && $objParent->start > $time) || ($objParent->stop != '' && $objParent->stop <= ($time + 60)))
+					if (!$objParent->published || ($objParent->start != '' && $objParent->start > $time) || ($objParent->stop != '' && $objParent->stop <= $time))
 					{
 						continue;
 					}

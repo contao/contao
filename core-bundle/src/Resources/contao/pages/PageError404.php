@@ -85,7 +85,7 @@ class PageError404 extends Frontend
 		$objRootPage = $this->getRootPageFromUrl();
 
 		// Forward if the language should be but is not set (see #4028)
-		if (Config::get('addLanguageToUrl'))
+		if ($objRootPage->urlPrefix && System::getContainer()->getParameter('contao.legacy_routing'))
 		{
 			// Get the request string without the script name
 			$strRequest = Environment::get('relativeRequest');
@@ -109,7 +109,7 @@ class PageError404 extends Frontend
 						$strRequest = Environment::get('script') . '/' . $objRootPage->language . '/' . $strRequest;
 					}
 
-					$this->redirect($strRequest, 301);
+					$this->redirect($strRequest);
 				}
 			}
 		}
@@ -135,7 +135,7 @@ class PageError404 extends Frontend
 				throw new ForwardPageNotFoundException('Forward page not found');
 			}
 
-			$this->redirect($objNextPage->getFrontendUrl(), (($obj404->redirect == 'temporary') ? 302 : 301));
+			$this->redirect($objNextPage->getFrontendUrl());
 		}
 
 		return $obj404;

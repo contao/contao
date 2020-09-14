@@ -236,7 +236,7 @@ EOF;
         $response = $controller->importListWizardAction($this->mockDataContainer());
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
-        $this->assertSame(303, $response->getStatusCode());
+        $this->assertSame(302, $response->getStatusCode());
     }
 
     public function testFailsIfThereIsNoRequestObject(): void
@@ -284,7 +284,7 @@ EOF;
         $response = $controller->importListWizardAction($this->mockDataContainer());
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
-        $this->assertSame(303, $response->getStatusCode());
+        $this->assertSame(302, $response->getStatusCode());
     }
 
     public function testFailsIfTheFileExtensionIsNotCsv(): void
@@ -315,7 +315,7 @@ EOF;
         $response = $controller->importListWizardAction($this->mockDataContainer());
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
-        $this->assertSame(303, $response->getStatusCode());
+        $this->assertSame(302, $response->getStatusCode());
     }
 
     private function mockFramework(array $files = [], bool $expectError = false): ContaoFramework

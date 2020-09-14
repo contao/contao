@@ -49,7 +49,9 @@ class ModuleListing extends Module
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['listing'][0]) . ' ###';
@@ -278,7 +280,7 @@ class ModuleListing extends Module
 			$arrTh[] = array
 			(
 				'link' => $strField,
-				'href' => (ampersand($strUrl) . $strVarConnector . 'order_by=' . $arrFields[$i]) . '&amp;sort=' . $sort,
+				'href' => (StringUtil::ampersand($strUrl) . $strVarConnector . 'order_by=' . $arrFields[$i]) . '&amp;sort=' . $sort,
 				'title' => StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['list_orderBy'], $strField)),
 				'class' => $class . (($i == 0) ? ' col_first' : '') . ((($i + 1) == \count($arrFields)) ? ' col_last' : '')
 			);
@@ -469,7 +471,7 @@ class ModuleListing extends Module
 		}
 
 		// Associative array
-		elseif ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['eval']['isAssociative'] || array_is_assoc($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['options']))
+		elseif ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['eval']['isAssociative'] || ArrayUtil::isAssoc($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['options']))
 		{
 			if ($blnListSingle)
 			{

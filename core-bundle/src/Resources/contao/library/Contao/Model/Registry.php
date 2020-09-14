@@ -76,6 +76,18 @@ class Registry implements \Countable
 	}
 
 	/**
+	 * Reset the registry
+	 *
+	 * @internal Do not use this method in your code; it should only be called during kernel.reset
+	 */
+	public function reset()
+	{
+		$this->arrRegistry = array();
+		$this->arrAliases = array();
+		$this->arrIdentities = array();
+	}
+
+	/**
 	 * Count the elements
 	 *
 	 * @return integer The number of models
@@ -153,12 +165,12 @@ class Registry implements \Countable
 
 		$strTable = $objModel->getTable();
 
-		if (!\is_array($this->arrAliases[$strTable]))
+		if (!isset($this->arrAliases[$strTable]))
 		{
 			$this->arrAliases[$strTable] = array();
 		}
 
-		if (!\is_array($this->arrRegistry[$strTable]))
+		if (!isset($this->arrRegistry[$strTable]))
 		{
 			$this->arrRegistry[$strTable] = array();
 		}

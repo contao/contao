@@ -101,10 +101,11 @@ abstract class Events extends Module
 	 * @param array   $arrCalendars
 	 * @param integer $intStart
 	 * @param integer $intEnd
+	 * @param boolean $blnFeatured
 	 *
 	 * @return array
 	 */
-	protected function getAllEvents($arrCalendars, $intStart, $intEnd)
+	protected function getAllEvents($arrCalendars, $intStart, $intEnd, $blnFeatured = null)
 	{
 		if (!\is_array($arrCalendars))
 		{
@@ -116,7 +117,7 @@ abstract class Events extends Module
 		foreach ($arrCalendars as $id)
 		{
 			// Get the events of the current period
-			$objEvents = CalendarEventsModel::findCurrentByPid($id, $intStart, $intEnd);
+			$objEvents = CalendarEventsModel::findCurrentByPid($id, $intStart, $intEnd, array('showFeatured' => $blnFeatured));
 
 			if ($objEvents === null)
 			{
@@ -207,7 +208,7 @@ abstract class Events extends Module
 		// Backwards compatibility (4th argument was $strUrl)
 		if (\func_num_args() > 6)
 		{
-			@trigger_error('Calling Events::addEvent() with 7 arguments has been deprecated and will no longer work in Contao 5.0. Do not pass $strUrl as 4th argument anymore.', E_USER_DEPRECATED);
+			trigger_deprecation('contao/calendar-bundle', '4.0', 'Calling "Contao\Events::addEvent()" with 7 arguments has been deprecated and will no longer work in Contao 5.0. Do not pass $strUrl as 4th argument anymore.');
 
 			$intLimit = func_get_arg(5);
 			$intCalendar = func_get_arg(6);
@@ -319,7 +320,7 @@ abstract class Events extends Module
 		// Override the link target
 		if ($objEvents->source == 'external' && $objEvents->target)
 		{
-			$arrEvent['target'] = ' target="_blank"';
+			$arrEvent['target'] = ' target="_blank" rel="noreferrer noopener"';
 		}
 
 		// Clean the RTE output
@@ -333,7 +334,6 @@ abstract class Events extends Module
 		// Display the "read more" button for external/article links
 		if ($objEvents->source != 'default')
 		{
-			$arrEvent['details'] = true;
 			$arrEvent['hasDetails'] = true;
 		}
 
@@ -389,6 +389,11 @@ abstract class Events extends Module
 			$arrEvent['class'] .= ' current';
 		}
 
+		if ($arrEvent['featured'] == 1)
+		{
+			$arrEvent['class'] .= ' featured';
+		}
+
 		$this->arrEvents[$intKey][$intStart][] = $arrEvent;
 
 		// Multi-day event
@@ -442,7 +447,7 @@ abstract class Events extends Module
 				}
 				else
 				{
-					self::$arrUrlCache[$strCacheKey] = ampersand($objEvent->url);
+					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($objEvent->url);
 				}
 				break;
 
@@ -451,7 +456,7 @@ abstract class Events extends Module
 				if (($objTarget = $objEvent->getRelated('jumpTo')) instanceof PageModel)
 				{
 					/** @var PageModel $objTarget */
-					self::$arrUrlCache[$strCacheKey] = ampersand($blnAbsolute ? $objTarget->getAbsoluteUrl() : $objTarget->getFrontendUrl());
+					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($blnAbsolute ? $objTarget->getAbsoluteUrl() : $objTarget->getFrontendUrl());
 				}
 				break;
 
@@ -462,7 +467,7 @@ abstract class Events extends Module
 					$params = '/articles/' . ($objArticle->alias ?: $objArticle->id);
 
 					/** @var PageModel $objPid */
-					self::$arrUrlCache[$strCacheKey] = ampersand($blnAbsolute ? $objPid->getAbsoluteUrl($params) : $objPid->getFrontendUrl($params));
+					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($blnAbsolute ? $objPid->getAbsoluteUrl($params) : $objPid->getFrontendUrl($params));
 				}
 				break;
 		}
@@ -474,13 +479,13 @@ abstract class Events extends Module
 
 			if (!$objPage instanceof PageModel)
 			{
-				self::$arrUrlCache[$strCacheKey] = ampersand(Environment::get('request'));
+				self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand(Environment::get('request'));
 			}
 			else
 			{
 				$params = (Config::get('useAutoItem') ? '/' : '/events/') . ($objEvent->alias ?: $objEvent->id);
 
-				self::$arrUrlCache[$strCacheKey] = ampersand($blnAbsolute ? $objPage->getAbsoluteUrl($params) : $objPage->getFrontendUrl($params));
+				self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($blnAbsolute ? $objPage->getAbsoluteUrl($params) : $objPage->getFrontendUrl($params));
 			}
 		}
 

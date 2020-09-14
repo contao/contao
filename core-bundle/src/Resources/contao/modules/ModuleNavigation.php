@@ -32,7 +32,9 @@ class ModuleNavigation extends Module
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['navigation'][0]) . ' ###';
@@ -77,20 +79,11 @@ class ModuleNavigation extends Module
 		{
 			$objRootPage = PageModel::findWithDetails($this->rootPage);
 
-			// Set the language
-			if ($objRootPage->rootLanguage != $objPage->rootLanguage && Config::get('addLanguageToUrl'))
-			{
-				$lang = $objRootPage->rootLanguage;
-			}
-
-			// Set the domain
-			if ($objRootPage->rootId != $objPage->rootId && $objRootPage->domain != '' && $objRootPage->domain != $objPage->domain)
-			{
-				$host = $objRootPage->domain;
-			}
+			$lang = $objRootPage->rootLanguage;
+			$host = $objRootPage->domain;
 		}
 
-		$this->Template->request = ampersand(Environment::get('indexFreeRequest'));
+		$this->Template->request = StringUtil::ampersand(Environment::get('indexFreeRequest'));
 		$this->Template->skipId = 'skipNavigation' . $this->id;
 		$this->Template->skipNavigation = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['skipNavigation']);
 		$this->Template->items = $this->renderNavigation($trail[$level], 1, $host, $lang);

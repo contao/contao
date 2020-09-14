@@ -106,6 +106,9 @@ class PictureFactory implements PictureFactoryInterface
             $image = $this->imageFactory->create($path);
         }
 
+        // Support arrays in a serialized form
+        $size = StringUtil::deserialize($size);
+
         if (
             \is_array($size)
             && isset($size[2])
@@ -145,7 +148,7 @@ class PictureFactory implements PictureFactoryInterface
      *
      * @param int|array|null $size
      *
-     * @return array<(PictureConfiguration|array<string, string>|ResizeOptions|null)>
+     * @psalm-return array{0:PictureConfiguration, 1:array<string, string>, 2:ResizeOptions}
      */
     private function createConfig($size): array
     {

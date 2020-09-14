@@ -49,6 +49,13 @@
         <source>Here you can add a custom meta title to overwrite the default page title.</source>
         <target>Вы можете добавить собственный мета-заголовок, чтобы перезаписать заголовок страницы по умолчанию.</target>
       </trans-unit>
+      <trans-unit id="tl_news.robots.0">
+        <source>Robots tag</source>
+        <target>Robots tag</target>
+      </trans-unit>
+      <trans-unit id="tl_news.robots.1">
+        <source>Here you can overwrite how search engines handle the news item.</source>
+      </trans-unit>
       <trans-unit id="tl_news.description.0">
         <source>Meta description</source>
         <target>Мета-описание</target>
@@ -225,10 +232,6 @@
         <source>Date and time</source>
         <target>Дата и время</target>
       </trans-unit>
-      <trans-unit id="tl_news.meta_legend">
-        <source>Meta data</source>
-        <target>Метаданные</target>
-      </trans-unit>
       <trans-unit id="tl_news.teaser_legend">
         <source>Subheadline and teaser</source>
         <target>Подзаголовок и анонс</target>
@@ -248,6 +251,10 @@
       <trans-unit id="tl_news.source_legend">
         <source>Redirect target</source>
         <target>Переадресация</target>
+      </trans-unit>
+      <trans-unit id="tl_news.meta_legend">
+        <source>Meta data</source>
+        <target>Метаданные</target>
       </trans-unit>
       <trans-unit id="tl_news.expert_legend">
         <source>Expert settings</source>
@@ -300,6 +307,10 @@
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
         <target>Вставить в этот архив новостей</target>
+      </trans-unit>
+      <trans-unit id="tl_news.editmeta">
+        <source>Edit the news item settings</source>
+        <target>Редактировать настройки элемента</target>
       </trans-unit>
     </body>
   </file>

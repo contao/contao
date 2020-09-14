@@ -8,3 +8,18 @@ services:
         arguments:
             - '@database_connection'
             - '@contao.framework'
+
+    Contao\CoreBundle\Migration\Version410\DropSearchMigration:
+        arguments:
+            - '@database_connection'
+
+    Contao\CoreBundle\Migration\Version410\OrderFieldMigration:
+        arguments:
+            - '@database_connection'
+
+    Contao\CoreBundle\Migration\Version410\RoutingMigration:
+        arguments:
+            - '@database_connection'
+            - '@contao.framework'
+            - '%contao.url_suffix%'
+            - '%contao.prepend_locale%'

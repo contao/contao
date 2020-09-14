@@ -17,15 +17,14 @@ use Contao\Config;
 use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\System;
 use Contao\TestCase\ContaoTestCase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 class CombinerTest extends ContaoTestCase
 {
     /**
-     * @var ContainerInterface
+     * @var Filesystem
      */
-    private $container;
+    private $filesystem;
 
     public static function setUpBeforeClass(): void
     {
@@ -41,26 +40,28 @@ class CombinerTest extends ContaoTestCase
     {
         parent::setUp();
 
+        $this->filesystem = new Filesystem();
+
         $context = $this->createMock(ContaoContext::class);
         $context
             ->method('getStaticUrl')
             ->willReturn('')
         ;
 
-        $this->container = $this->getContainerWithContaoConfiguration($this->getTempDir());
-        $this->container->setParameter('contao.web_dir', $this->getTempDir().'/web');
-        $this->container->set('contao.assets.assets_context', $context);
+        $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
+        $container->setParameter('contao.web_dir', $this->getTempDir().'/web');
+        $container->set('contao.assets.assets_context', $context);
 
         Config::set('debugMode', false);
-        System::setContainer($this->container);
+        System::setContainer($container);
     }
 
     public function testCombinesCssFiles(): void
     {
-        file_put_contents($this->getTempDir().'/file1.css', 'file1 { background: url("foo.bar") }');
-        file_put_contents($this->getTempDir().'/web/file2.css', 'web/file2');
-        file_put_contents($this->getTempDir().'/file3.css', 'file3');
-        file_put_contents($this->getTempDir().'/web/file3.css', 'web/file3');
+        $this->filesystem->dumpFile($this->getTempDir().'/file1.css', 'file1 { background: url("foo.bar") }');
+        $this->filesystem->dumpFile($this->getTempDir().'/web/file2.css', 'web/file2');
+        $this->filesystem->dumpFile($this->getTempDir().'/file3.css', 'file3');
+        $this->filesystem->dumpFile($this->getTempDir().'/web/file3.css', 'web/file3');
 
         $mtime = filemtime($this->getTempDir().'/file1.css');
 
@@ -76,6 +77,19 @@ class CombinerTest extends ContaoTestCase
             ],
             $combiner->getFileUrls()
         );
+
+        $this->assertSame(
+            [
+                'https://cdn.example.com/file1.css|'.$mtime,
+                'https://cdn.example.com/file2.css|screen|'.$mtime,
+                'https://cdn.example.com/file3.css|screen|'.$mtime,
+            ],
+            $combiner->getFileUrls('https://cdn.example.com/')
+        );
+
+        $combinedFile = $combiner->getCombinedFile('https://cdn.example.com/');
+
+        $this->assertRegExp('#^https://cdn.example.com/assets/css/file1\.css,file2\.css,file3\.css-[a-z0-9]+\.css$#', $combinedFile);
 
         $combinedFile = $combiner->getCombinedFile();
 
@@ -185,9 +199,9 @@ EOF;
 
     public function testCombinesScssFiles(): void
     {
-        file_put_contents($this->getTempDir().'/file1.scss', '$color: red; @import "file1_sub";');
-        file_put_contents($this->getTempDir().'/file1_sub.scss', 'body { color: $color }');
-        file_put_contents($this->getTempDir().'/file2.scss', 'body { color: green }');
+        $this->filesystem->dumpFile($this->getTempDir().'/file1.scss', '$color: red; @import "file1_sub";');
+        $this->filesystem->dumpFile($this->getTempDir().'/file1_sub.scss', 'body { color: $color }');
+        $this->filesystem->dumpFile($this->getTempDir().'/file2.scss', 'body { color: green }');
 
         $mtime1 = filemtime($this->getTempDir().'/file1.scss');
         $mtime2 = filemtime($this->getTempDir().'/file2.scss');
@@ -222,8 +236,8 @@ EOF;
 
     public function testCombinesJsFiles(): void
     {
-        file_put_contents($this->getTempDir().'/file1.js', 'file1();');
-        file_put_contents($this->getTempDir().'/web/file2.js', 'file2();');
+        $this->filesystem->dumpFile($this->getTempDir().'/file1.js', 'file1();');
+        $this->filesystem->dumpFile($this->getTempDir().'/web/file2.js', 'file2();');
 
         $mtime1 = filemtime($this->getTempDir().'/file1.js');
         $mtime2 = filemtime($this->getTempDir().'/web/file2.js');

@@ -207,6 +207,14 @@ class Calendar extends Frontend
 		$count = 0;
 		ksort($this->arrEvents);
 
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request)
+		{
+			$origScope = $request->attributes->get('_scope');
+			$request->attributes->set('_scope', 'frontend');
+		}
+
 		// Add the feed items
 		foreach ($this->arrEvents as $days)
 		{
@@ -281,6 +289,11 @@ class Calendar extends Frontend
 			}
 		}
 
+		if ($request)
+		{
+			$request->attributes->set('_scope', $origScope);
+		}
+
 		$webDir = StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir'));
 
 		// Create the file
@@ -306,7 +319,7 @@ class Calendar extends Frontend
 		}
 
 		$arrProcessed = array();
-		$time = Date::floorToMinute();
+		$time = time();
 
 		// Get all calendars
 		$objCalendar = CalendarModel::findByProtected('');
@@ -340,7 +353,7 @@ class Calendar extends Frontend
 					}
 
 					// The target page has not been published (see #5520)
-					if (!$objParent->published || ($objParent->start != '' && $objParent->start > $time) || ($objParent->stop != '' && $objParent->stop <= ($time + 60)))
+					if (!$objParent->published || ($objParent->start != '' && $objParent->start > $time) || ($objParent->stop != '' && $objParent->stop <= $time))
 					{
 						continue;
 					}
@@ -373,6 +386,11 @@ class Calendar extends Frontend
 				{
 					while ($objEvents->next())
 					{
+						if ($blnIsSitemap && $objEvents->robots === 'noindex,nofollow')
+						{
+							continue;
+						}
+
 						$arrPages[] = sprintf(preg_replace('/%(?!s)/', '%%', $strUrl), ($objEvents->alias ?: $objEvents->id));
 					}
 				}
@@ -458,7 +476,7 @@ class Calendar extends Frontend
 				if (($objArticle = ArticleModel::findByPk($objEvent->articleId)) instanceof ArticleModel && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
 				{
 					/** @var PageModel $objPid */
-					$link = ampersand($objPid->getAbsoluteUrl('/articles/' . ($objArticle->alias ?: $objArticle->id)));
+					$link = StringUtil::ampersand($objPid->getAbsoluteUrl('/articles/' . ($objArticle->alias ?: $objArticle->id)));
 				}
 				break;
 

@@ -69,7 +69,7 @@ class MapFragmentsToGlobalsPass implements CompilerPassInterface
         $result = [];
 
         foreach ($this->findAndSortTaggedServices($tag, $container) as $reference) {
-            $definition = $container->findDefinition($reference);
+            $definition = $container->findDefinition((string) $reference);
 
             foreach ($definition->getTag($tag) as $attributes) {
                 if (!isset($attributes['category'])) {

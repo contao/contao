@@ -54,8 +54,8 @@
         <target>Показывать защищенные элементы</target>
       </trans-unit>
       <trans-unit id="tl_module.showProtected.1">
-        <source>Show items that are usually only visible to authenticated users.</source>
-        <target>Показать элементы, которые видны только авторизованным пользователям.</target>
+        <source>Show items that are usually only visible to authenticated members.</source>
+        <target>Показать элементы, которые видны только авторизованным участникам.</target>
       </trans-unit>
       <trans-unit id="tl_module.defineRoot.0">
         <source>Set a reference page</source>
@@ -82,12 +82,12 @@
         <target>Выберите шаблон навигации.</target>
       </trans-unit>
       <trans-unit id="tl_module.customTpl.0">
-        <source>Custom module template</source>
-        <target>Пользовательский шаблон модуля</target>
+        <source>Module template</source>
+        <target>Шаблон модуля</target>
       </trans-unit>
       <trans-unit id="tl_module.customTpl.1">
-        <source>Here you can overwrite the default module template.</source>
-        <target>Вы можете переписать шаблон модуля по умолчанию.</target>
+        <source>Here you can select the module template.</source>
+        <target>Вы можете выбрать шаблон модуля.</target>
       </trans-unit>
       <trans-unit id="tl_module.pages.0">
         <source>Pages</source>
@@ -134,8 +134,8 @@
         <target>Направление на последнюю посещенную страницу</target>
       </trans-unit>
       <trans-unit id="tl_module.redirectBack.1">
-        <source>Redirect the user back to the last page visited instead of the redirect page.</source>
-        <target>Направление пользователя на последнюю посещенную им страницу вместо перехода на страницу перенаправления.</target>
+        <source>Redirect the member back to the last page visited instead of the redirect page.</source>
+        <target>Направление участника на последнюю посещенную им страницу вместо перехода на страницу перенаправления.</target>
       </trans-unit>
       <trans-unit id="tl_module.1cl.0">
         <source>One column</source>
@@ -410,28 +410,28 @@
         <target>Вы можете ввести ID одного или нескольких классов.</target>
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>Отключить контрольный вопрос</target>
+        <source>Disable spam protection</source>
+        <target>Отключить защиту от спама</target>
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.1">
-        <source>Here you can disable the security question (not recommended).</source>
-        <target>Вы можете отключить контрольный вопрос (не рекомендуется).</target>
+        <source>Here you can disable the spam protection (not recommended).</source>
+        <target>Вы можете отключить защиту от спама (не рекомендуется).</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_groups.0">
         <source>Member groups</source>
         <target>Группы участников</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_groups.1">
-        <source>Here you can assign the user to one or more groups.</source>
-        <target>Определите пользователя в одну или несколько групп.</target>
+        <source>Here you can assign the member to one or more groups.</source>
+        <target>Определите участника в одну или несколько групп.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_allowLogin.0">
         <source>Allow login</source>
         <target>Разрешить вход</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_allowLogin.1">
-        <source>Allow the new user to log into the front end.</source>
-        <target>Разрешить новому пользователю авторизацию во внешнем интерфейсе.</target>
+        <source>Allow the new member to log into the front end.</source>
+        <target>Разрешить новому участнику авторизоваться во внешнем интерфейсе веб-сайта.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_skipName.0">
         <source>Skip username</source>
@@ -478,8 +478,8 @@
         <target>Страница подтверждения</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_jumpTo.1">
-        <source>Please choose the page to which users will be redirected after the request has been completed.</source>
-        <target>Выберите страницу, к которой будет направлен пользователь после активации его учетной записи.</target>
+        <source>Please choose the page to which members will be redirected after the request has been completed.</source>
+        <target>Выберите страницу, к которой будет направлен участник после активации его учетной записи.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_text.0">
         <source>Activation message</source>
@@ -494,8 +494,8 @@
         <target>Сообщение пароля</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_password.1">
-        <source>You can use the wildcards &lt;em&gt;##domain##&lt;/em&gt; (domain name), &lt;em&gt;##link##&lt;/em&gt; (activation link) and any user property (e.g. &lt;em&gt;##lastname##&lt;/em&gt;).</source>
-        <target>Вы можете использовать подстановочные знаки &lt;em&gt;##domain##&lt;/em&gt; (имя домена), &lt;em&gt;##link##&lt;/em&gt; (ссылка для активации), а так же любое поле свойств пользователя (напр. &lt;em&gt;##lastname##&lt;/em&gt;).</target>
+        <source>You can use the wildcards &lt;em&gt;##domain##&lt;/em&gt; (domain name), &lt;em&gt;##link##&lt;/em&gt; (activation link) and any member property (e.g. &lt;em&gt;##lastname##&lt;/em&gt;).</source>
+        <target>Вы можете использовать подстановочные знаки &lt;em&gt;##domain##&lt;/em&gt; (имя домена), &lt;em&gt;##link##&lt;/em&gt; (ссылка для активации), а так же любое поле свойств участника (напр. &lt;em&gt;##lastname##&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>

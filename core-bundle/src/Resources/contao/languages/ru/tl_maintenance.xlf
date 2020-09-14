@@ -38,8 +38,7 @@
         <target>Очитить поисковый индекс</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.index.1">
-        <source>Truncates the tables &lt;code&gt;tl_search&lt;/code&gt; and &lt;code&gt;tl_search_index&lt;/code&gt;. Afterwards, you have to rebuild the search index (see above).</source>
-        <target>Очищает таблицы &lt;code&gt;tl_search&lt;/code&gt; и &lt;code&gt;tl_search_index&lt;/code&gt;. После этого вы должны перестроить поисковый индекс (см. выше).</target>
+        <source>Truncates the tables &lt;code&gt;tl_search&lt;/code&gt;, &lt;code&gt;tl_search_index&lt;/code&gt; and &lt;code&gt;tl_search_term&lt;/code&gt;. Afterwards, you have to rebuild the search index (see above).</source>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.undo.0">
         <source>Purge the undo table</source>
@@ -64,6 +63,14 @@
       <trans-unit id="tl_maintenance_jobs.log.1">
         <source>Truncates the &lt;code&gt;tl_log&lt;/code&gt; table which stores all the system log entries. This job permanently deletes these records.</source>
         <target>Очищает таблицу &lt;em&gt;tl_log&lt;/em&gt;, которая хранит все записи системного журнала. Это задание безвозвратно удаляет эти записи.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.crawl_queue.0">
+        <source>Purge the crawl queue</source>
+        <target>Очистить очередь сканирования</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.crawl_queue.1">
+        <source>Truncates the &lt;code&gt;tl_crawl_queue&lt;/code&gt; table which stores all the queue information from crawl processes.</source>
+        <target>Очищает таблицу &lt;code&gt;tl_crawl_queue&lt;/code&gt;, которая хранит всю информацию об очередях процессов сканирования.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.images.0">
         <source>Purge the image cache</source>
@@ -147,6 +154,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlWaitToBeFinished">
         <source>The crawler is currently working. Please wait for it to finish to see the results.</source>
+        <target>Поисковый робот сейчас работает. Дождитесь завершения, чтобы увидеть результаты.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlDownloadDebugLog">
         <source>Download the debug log</source>
@@ -163,6 +171,10 @@
       <trans-unit id="tl_maintenance.crawlSubscriberNames.broken-link-checker">
         <source>Check for broken links</source>
         <target>Проверить битые ссылки</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlMaintenance">
+        <source>Crawling is not possible while the maintenance mode is enabled.</source>
+        <target>Работа поискового робота невозможна при включении режима обслуживания.</target>
       </trans-unit>
     </body>
   </file>

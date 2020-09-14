@@ -128,7 +128,7 @@ class Input
 
 			if ($varValue === null)
 			{
-				return $varValue;
+				return null;
 			}
 
 			$varValue = static::decodeEntities($varValue);
@@ -169,7 +169,7 @@ class Input
 
 			if ($varValue === null)
 			{
-				return $varValue;
+				return null;
 			}
 
 			$varValue = static::decodeEntities($varValue);
@@ -209,7 +209,7 @@ class Input
 
 			if ($varValue === null)
 			{
-				return $varValue;
+				return null;
 			}
 
 			$varValue = static::preserveBasicEntities($varValue);
@@ -243,7 +243,7 @@ class Input
 
 			if ($varValue === null)
 			{
-				return $varValue;
+				return null;
 			}
 
 			static::$arrCache[$strCacheKey][$strKey] = $varValue;
@@ -816,7 +816,7 @@ class Input
 	 */
 	public static function getInstance()
 	{
-		@trigger_error('Using Input::getInstance() has been deprecated and will no longer work in Contao 5.0. The Input class is now static.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Input::getInstance()" has been deprecated and will no longer work in Contao 5.0. The "Contao\Input" class is now static.');
 
 		if (static::$objInstance === null)
 		{

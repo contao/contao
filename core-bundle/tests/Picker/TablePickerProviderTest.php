@@ -342,7 +342,14 @@ class TablePickerProviderTest extends ContaoTestCase
     {
         $GLOBALS['BE_MOD']['foo']['article'] = ['tables' => ['tl_article', 'tl_content']];
         $GLOBALS['BE_MOD']['foo']['news'] = ['tables' => ['tl_news', 'tl_content']];
-        $GLOBALS['TL_DCA']['tl_content'] = ['config' => ['dataContainer' => 'Table', 'dynamicPtable' => true]];
+
+        $GLOBALS['TL_DCA']['tl_content'] = [
+            'config' => [
+                'dataContainer' => 'Table',
+                'ptable' => 'tl_article',
+                'dynamicPtable' => true,
+            ],
+        ];
 
         $params = [
             'do' => 'news',
@@ -461,6 +468,8 @@ class TablePickerProviderTest extends ContaoTestCase
 
         if ($menu) {
             $expectedItems[] = ['picker'];
+        } else {
+            $menu = $this->createMock(ItemInterface::class);
         }
 
         foreach ($modules as $module) {

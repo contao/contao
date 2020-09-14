@@ -177,7 +177,7 @@ class BackendPreviewSwitchController
                 $user->amg
             );
 
-            $andWhereGroups = "AND (groups LIKE '".implode("' OR GROUPS LIKE '", $groups)."')";
+            $andWhereGroups = "AND (`groups` LIKE '".implode("' OR `groups` LIKE '", $groups)."')";
         }
 
         $time = Date::floorToMinute();
@@ -194,7 +194,7 @@ class BackendPreviewSwitchController
                     AND login='1'
                     AND disable!='1'
                     AND (start='' OR start<='$time')
-                    AND (stop='' OR stop>'".($time + 60)."')
+                    AND (stop='' OR stop>'$time')
                 ORDER BY
                     username
             ",

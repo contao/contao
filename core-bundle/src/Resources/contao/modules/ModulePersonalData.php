@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\ResponseException;
 use Patchwork\Utf8;
 
 /**
@@ -34,7 +35,9 @@ class ModulePersonalData extends Module
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['personalData'][0]) . ' ###';
@@ -253,6 +256,10 @@ class ModulePersonalData extends Module
 							{
 								$varValue = $callback($varValue, $this->User, $this);
 							}
+						}
+						catch (ResponseException $e)
+						{
+							throw $e;
 						}
 						catch (\Exception $e)
 						{

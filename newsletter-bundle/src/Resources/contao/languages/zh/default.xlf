@@ -17,7 +17,7 @@
         <source>Please select at least one channel.</source>
         <target>请至少选择一个频道。</target>
       </trans-unit>
-      <trans-unit id="ERR.blacklisted">
+      <trans-unit id="ERR.onDenyList">
         <source>The e-mail address has been unsubscribed from the channel.</source>
         <target>该电子邮件地址已经取消订阅该频道.</target>
       </trans-unit>

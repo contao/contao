@@ -277,7 +277,7 @@ class FrontendTemplate extends Template
 	 */
 	protected function addToCache()
 	{
-		@trigger_error('Using FrontendTemplate::addToCache() has been deprecated and will no longer work in Contao 5.0. Use proper response caching headers instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.3', 'Using "Contao\FrontendTemplate::addToCache()" has been deprecated and will no longer work in Contao 5.0. Use proper response caching headers instead.');
 	}
 
 	/**
@@ -288,7 +288,7 @@ class FrontendTemplate extends Template
 	 */
 	protected function addToSearchIndex()
 	{
-		@trigger_error('Using FrontendTemplate::addToSearchIndex() has been deprecated and will no longer work in Contao 5.0. Use the kernel.terminate event instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\FrontendTemplate::addToSearchIndex()" has been deprecated and will no longer work in Contao 5.0. Use the "kernel.terminate" event instead.');
 	}
 
 	/**
@@ -303,7 +303,7 @@ class FrontendTemplate extends Template
 	 */
 	public function getCustomSection($strKey)
 	{
-		@trigger_error('Using FrontendTemplate::getCustomSection() has been deprecated and will no longer work in Contao 5.0. Use FrontendTemplate::section() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\FrontendTemplate::getCustomSection()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\FrontendTemplate::section()" instead.');
 
 		return '<div id="' . $strKey . '">' . $this->sections[$strKey] . '</div>' . "\n";
 	}
@@ -320,7 +320,7 @@ class FrontendTemplate extends Template
 	 */
 	public function getCustomSections($strKey=null)
 	{
-		@trigger_error('Using FrontendTemplate::getCustomSections() has been deprecated and will no longer work in Contao 5.0. Use FrontendTemplate::sections() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\FrontendTemplate::getCustomSections()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\FrontendTemplate::sections()" instead.');
 
 		if ($strKey != '' && !isset($this->positions[$strKey]))
 		{

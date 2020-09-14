@@ -31,7 +31,6 @@ use Contao\ManagerPlugin\Config\ExtensionPluginInterface;
 use Contao\ManagerPlugin\Dependency\DependentPluginInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
-use Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Exception\DriverException;
 use FOS\HttpCacheBundle\FOSHttpCacheBundle;
@@ -42,7 +41,6 @@ use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MonologBundle\MonologBundle;
 use Symfony\Bundle\SecurityBundle\SecurityBundle;
-use Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Bundle\WebProfilerBundle\WebProfilerBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -53,6 +51,7 @@ use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
+use Webmozart\PathUtil\Path;
 
 /**
  * @internal
@@ -82,7 +81,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         static::$autoloadModules = $modulePath;
     }
 
-    public function getPackageDependencies()
+    public function getPackageDependencies(): array
     {
         return ['contao/core-bundle'];
     }
@@ -91,12 +90,10 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     {
         $configs = [
             BundleConfig::create(FrameworkBundle::class),
-            BundleConfig::create(SecurityBundle::class),
+            BundleConfig::create(SecurityBundle::class)->setLoadAfter([FrameworkBundle::class]),
             BundleConfig::create(TwigBundle::class),
             BundleConfig::create(MonologBundle::class),
-            BundleConfig::create(SwiftmailerBundle::class),
             BundleConfig::create(DoctrineBundle::class),
-            BundleConfig::create(DoctrineCacheBundle::class),
             BundleConfig::create(LexikMaintenanceBundle::class),
             BundleConfig::create(NelmioCorsBundle::class),
             BundleConfig::create(NelmioSecurityBundle::class),
@@ -118,7 +115,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             $iniConfigs = [];
 
             foreach ($modules as $module) {
-                if (!file_exists($module->getPathname().'/.skip')) {
+                if (!file_exists(Path::join($module->getPathname(), '.skip'))) {
                     $iniConfigs[] = $parser->parse($module->getFilename(), 'ini');
                 }
             }
@@ -230,8 +227,19 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 return $this->handlePrependLocale($extensionConfigs, $container);
 
             case 'framework':
+                $extensionConfigs = $this->checkMailerTransport($extensionConfigs, $container);
+                $extensionConfigs = $this->addDefaultMailer($extensionConfigs, $container);
+
                 if (!isset($_SERVER['APP_SECRET'])) {
                     $container->setParameter('env(APP_SECRET)', $container->getParameter('secret'));
+                }
+
+                if (!isset($_SERVER['MAILER_DSN'])) {
+                    if (isset($_SERVER['MAILER_URL'])) {
+                        $container->setParameter('env(MAILER_DSN)', $this->getMailerDsnFromMailerUrl($_SERVER['MAILER_URL']));
+                    } else {
+                        $container->setParameter('env(MAILER_DSN)', $this->getMailerDsn($container));
+                    }
                 }
 
                 return $extensionConfigs;
@@ -242,13 +250,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 }
 
                 return $this->addDefaultServerVersion($extensionConfigs, $container);
-
-            case 'swiftmailer':
-                if (!isset($_SERVER['MAILER_URL'])) {
-                    $container->setParameter('env(MAILER_URL)', $this->getMailerUrl($container));
-                }
-
-                return $this->checkMailerTransport($extensionConfigs, $container);
         }
 
         return $extensionConfigs;
@@ -271,7 +272,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             }
         }
 
-        @trigger_error('Defining the "prepend_locale" parameter in the parameters.yml file has been deprecated and will no longer work in Contao 5.0. Define the "contao.prepend_locale" parameter in the config.yml file instead.', E_USER_DEPRECATED);
+        trigger_deprecation('contao/manager-bundle', '4.6', 'Defining the "prepend_locale" parameter in the parameters.yml file has been deprecated and will no longer work in Contao 5.0. Define the "contao.prepend_locale" parameter in the config.yml file instead.');
 
         $extensionConfigs[] = [
             'prepend_locale' => '%prepend_locale%',
@@ -310,6 +311,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         try {
             $connection = \call_user_func($this->dbalConnectionFactory, $params);
             $connection->connect();
+            $connection->query('SHOW TABLES');
             $connection->close();
         } catch (DriverException $e) {
             $extensionConfigs[] = [
@@ -336,6 +338,49 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         if ('mail' === $container->getParameter('mailer_transport')) {
             $container->setParameter('mailer_transport', 'sendmail');
         }
+
+        return $extensionConfigs;
+    }
+
+    /**
+     * Dynamically adds a default mailer to the config, if no mailer is defined.
+     *
+     * We cannot add a default mailer configuration to the skeleton config.yml,
+     * since different types of configurations are not allowed.
+     *
+     * For example, if the Manager Bundle defined
+     *
+     *     framework:
+     *         mailer:
+     *             dsn: '%env(MAILER_DSN)%'
+     *
+     * in the skeleton config.yml and the user adds
+     *
+     *     framework:
+     *         mailer:
+     *             transports:
+     *                 foobar: 'smtps://smtp.example.com'
+     *
+     * to their config.yml, the merged configuration will lead to an error, since
+     * you cannot use "framework.mailer.dsn" together with "framework.mailer.transports".
+     * Thus the default mailer configuration needs to be added dynamically, if
+     * not already present.
+     *
+     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     */
+    private function addDefaultMailer(array $extensionConfigs, ContainerBuilder $container): array
+    {
+        foreach ($extensionConfigs as $config) {
+            if (isset($config['mailer']) && (isset($config['mailer']['transports']) || $config['mailer']['dsn'])) {
+                return $extensionConfigs;
+            }
+        }
+
+        $extensionConfigs[] = [
+            'mailer' => [
+                'dsn' => '%env(MAILER_DSN)%',
+            ],
+        ];
 
         return $extensionConfigs;
     }
@@ -369,37 +414,152 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         );
     }
 
-    private function getMailerUrl(ContainerBuilder $container): string
+    private function getMailerDsnFromMailerUrl(string $mailerUrl): string
     {
-        if ('sendmail' === $container->getParameter('mailer_transport')) {
-            return 'sendmail://localhost';
+        if (false === $parts = parse_url($mailerUrl)) {
+            throw new \InvalidArgumentException(sprintf('The MAILER_URL "%s" is not valid.', $mailerUrl));
         }
 
-        $parameters = [];
+        $options = [
+            'transport' => null,
+            'username' => null,
+            'password' => null,
+            'host' => null,
+            'port' => null,
+            'encryption' => null,
+        ];
 
-        if ($user = $container->getParameter('mailer_user')) {
-            $parameters[] = 'username='.$this->encodeUrlParameter($user);
+        $queryOptions = [];
 
-            if ($password = $container->getParameter('mailer_password')) {
-                $parameters[] = 'password='.$this->encodeUrlParameter($password);
+        if (isset($parts['scheme'])) {
+            $options['transport'] = $parts['scheme'];
+        }
+
+        if (isset($parts['user'])) {
+            $options['username'] = rawurldecode($parts['user']);
+        }
+
+        if (isset($parts['pass'])) {
+            $options['password'] = rawurldecode($parts['pass']);
+        }
+
+        if (isset($parts['host'])) {
+            $options['host'] = rawurldecode($parts['host']);
+        }
+
+        if (isset($parts['port'])) {
+            $options['port'] = $parts['port'];
+        }
+
+        if (isset($parts['query'])) {
+            parse_str($parts['query'], $query);
+
+            foreach ($query as $key => $value) {
+                if (empty($key)) {
+                    continue;
+                }
+
+                if (\array_key_exists($key, $options)) {
+                    $options[$key] = $value;
+                } else {
+                    $queryOptions[$key] = $value;
+                }
             }
         }
 
-        if ($encryption = $container->getParameter('mailer_encryption')) {
-            $parameters[] = 'encryption='.$this->encodeUrlParameter($encryption);
+        if (empty($options['transport'])) {
+            throw new \InvalidArgumentException(sprintf('The MAILER_URL "%s" is not valid.', $mailerUrl));
         }
 
-        $qs = '';
+        if (\in_array($options['transport'], ['mail', 'sendmail'], true)) {
+            return 'sendmail+smtp://default';
+        }
 
-        if (!empty($parameters)) {
-            $qs = '?'.implode('&', $parameters);
+        /*
+         * Check for gmail transport.
+         *
+         * With Swiftmailer a DSN like "gmail://username:password@localhost" was
+         * supported out-of-the-box. See https://symfony.com/doc/4.4/email.html#using-gmail-to-send-emails
+         * Symfony Mailer supports something similar, but only with an additional
+         * dependency. See https://symfony.com/doc/4.4/components/mailer.html#transport
+         *
+         * Thus we add backwards compatibility for the "gmail" transport here.
+         */
+        if ('gmail' === $options['transport']) {
+            $options['host'] = 'smtp.gmail.com';
+            $options['transport'] = 'smtps';
+        }
+
+        if (empty($options['host']) || !\in_array($options['transport'], ['smtp', 'smtps'], true)) {
+            throw new \InvalidArgumentException(sprintf('The MAILER_URL "%s" is not valid.', $mailerUrl));
+        }
+
+        $transport = $options['transport'];
+        $credentials = '';
+        $port = '';
+
+        if (!empty($options['encryption']) && 'ssl' === $options['encryption']) {
+            $transport = 'smtps';
+        }
+
+        if (!empty($options['username'])) {
+            $credentials .= $this->encodeUrlParameter($options['username']);
+
+            if (!empty($options['password'])) {
+                $credentials .= ':'.$this->encodeUrlParameter($options['password']);
+            }
+
+            $credentials .= '@';
+        }
+
+        if (!empty($options['port'])) {
+            $port = ':'.$options['port'];
         }
 
         return sprintf(
-            'smtp://%s:%s%s',
+            '%s://%s%s%s%s',
+            $transport,
+            $credentials,
+            $options['host'],
+            $port,
+            !empty($queryOptions) ? '?'.http_build_query($queryOptions) : ''
+        );
+    }
+
+    private function getMailerDsn(ContainerBuilder $container): string
+    {
+        if ('sendmail' === $container->getParameter('mailer_transport')) {
+            return 'sendmail+smtp://default';
+        }
+
+        $transport = 'smtp';
+        $credentials = '';
+        $portSuffix = '';
+
+        if (($encryption = $container->getParameter('mailer_encryption')) && 'ssl' === $encryption) {
+            $transport = 'smtps';
+        }
+
+        if ($user = $container->getParameter('mailer_user')) {
+            $credentials .= $this->encodeUrlParameter($user);
+
+            if ($password = $container->getParameter('mailer_password')) {
+                $credentials .= ':'.$this->encodeUrlParameter($password);
+            }
+
+            $credentials .= '@';
+        }
+
+        if ($port = $container->getParameter('mailer_port')) {
+            $portSuffix = ':'.$port;
+        }
+
+        return sprintf(
+            '%s://%s%s%s',
+            $transport,
+            $credentials,
             $container->getParameter('mailer_host'),
-            (int) $container->getParameter('mailer_port'),
-            $qs
+            $portSuffix
         );
     }
 

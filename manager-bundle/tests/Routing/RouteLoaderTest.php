@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\ManagerBundle\Tests\HttpKernel;
+namespace Contao\ManagerBundle\Tests\Routing;
 
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Contao\ManagerBundle\Routing\RouteLoader;

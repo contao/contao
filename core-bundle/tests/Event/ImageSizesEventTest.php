@@ -20,13 +20,14 @@ class ImageSizesEventTest extends TestCase
 {
     public function testSupportsReadingAndWritingImageSizes(): void
     {
-        $event = new ImageSizesEvent([1]);
+        $event = new ImageSizesEvent([]);
+        $this->assertSame([], $event->getImageSizes());
 
-        $this->assertSame([1], $event->getImageSizes());
+        $event->setImageSizes(['foo' => ['bar', 'baz']]);
+        $this->assertSame(['foo' => ['bar', 'baz']], $event->getImageSizes());
 
-        $event->setImageSizes([1, 2]);
-
-        $this->assertSame([1, 2], $event->getImageSizes());
+        $event->setImageSizes(['foo' => ['bar', 'baz'], 'baz' => ['foo', 'bar']]);
+        $this->assertSame(['foo' => ['bar', 'baz'], 'baz' => ['foo', 'bar']], $event->getImageSizes());
     }
 
     public function testSupportsReadingTheUserObject(): void

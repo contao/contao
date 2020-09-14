@@ -19,9 +19,11 @@
       </trans-unit>
       <trans-unit id="tl_module.nl_text.0">
         <source>Custom text</source>
+        <target>Własny tekst</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_text.1">
         <source>Here you can e.g. enter a privacy note to make the newsletter subscription GDPR compliant.</source>
+        <target>Tutaj możesz np. wprowadzić notatkę prywatności, aby subskrypcja biuletynu była zgodna z RODO.</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_hideChannels.0">
         <source>Hide channel menu</source>
@@ -52,11 +54,11 @@
         <target>Szablon modułu</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_template.1">
-        <source>Here you can select the newsletter template.</source>
-        <target>Wybierz szablon modułu. Możesz dodać własne szablony do katalogu &lt;em&gt;templates&lt;/em&gt;. Pliki szablonów newslettera muszą zaczynać się od &lt;em&gt;nl_&lt;/em&gt; i muszą mieć rozszerzenie &lt;em&gt;.tpl&lt;/em&gt;.</target>
+        <source>Here you can select a newsletter template.</source>
       </trans-unit>
       <trans-unit id="tl_module.text_legend">
         <source>Custom text</source>
+        <target>Własny tekst</target>
       </trans-unit>
       <trans-unit id="tl_module.text_subscribe.0">
         <source>Your subscription on %s</source>
@@ -75,6 +77,18 @@ The confirmation link is valid for 24 hours. You can cancel your subscription at
 
 If you did not subscribe yourself, please ignore this e-mail.
 </source>
+        <target>Subskrybujesz następujące kanały na ##domain##:
+
+##channels##
+
+Kliknij tutaj, aby aktywować subskrypcję:
+
+##link##
+
+Link potwierdzający jest ważny przez 24 godziny. Możesz zrezygnować z subskrypcji w dowolnym momencie.
+
+Jeśli to nie ty zasubskrybowałeś te kanały, zignoruj ten e-mail.
+</target>
       </trans-unit>
       <trans-unit id="tl_module.text_unsubscribe.0">
         <source>Your subscription on %s</source>

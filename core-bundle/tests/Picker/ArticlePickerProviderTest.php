@@ -40,7 +40,7 @@ class ArticlePickerProviderTest extends ContaoTestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using a picker provider without injecting the translator service has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.4: Using a picker provider without injecting the translator service has been deprecated %s.
      */
     public function testCreatesTheMenuItem(): void
     {

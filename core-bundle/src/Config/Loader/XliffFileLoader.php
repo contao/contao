@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Config\Loader;
 
 use Symfony\Component\Config\Loader\Loader;
+use Webmozart\PathUtil\Path;
 
 /**
  * Reads XLIFF files and converts them into Contao language arrays.
@@ -22,34 +23,34 @@ class XliffFileLoader extends Loader
     /**
      * @var string
      */
-    private $rootDir;
+    private $projectDir;
 
     /**
      * @var bool
      */
     private $addToGlobals;
 
-    public function __construct(string $rootDir, bool $addToGlobals = false)
+    public function __construct(string $projectDir, bool $addToGlobals = false)
     {
-        $this->rootDir = $rootDir;
+        $this->projectDir = $projectDir;
         $this->addToGlobals = $addToGlobals;
     }
 
-    public function load($file, $type = null): string
+    public function load($resource, $type = null): string
     {
-        return $this->convertXlfToPhp((string) $file, $type ?: 'en');
+        return $this->convertXlfToPhp((string) $resource, $type ?: 'en');
     }
 
     public function supports($resource, $type = null): bool
     {
-        return 'xlf' === pathinfo((string) $resource, PATHINFO_EXTENSION);
+        return 'xlf' === Path::getExtension((string) $resource, true);
     }
 
     private function convertXlfToPhp(string $name, string $language): string
     {
         $xml = $this->getDomDocumentFromFile($name);
 
-        $return = "\n// ".str_replace(strtr($this->rootDir, '\\', '/').'/', '', strtr($name, '\\', '/'))."\n";
+        $return = "\n// ".Path::makeRelative($name, $this->projectDir)."\n";
         $fileNodes = $xml->getElementsByTagName('file');
         $language = strtolower($language);
 

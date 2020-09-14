@@ -14,8 +14,7 @@
         <target>新闻源</target>
       </trans-unit>
       <trans-unit id="MOD.tl_news">
-        <source>Articles</source>
-        <target>文章</target>
+        <source>Items</source>
       </trans-unit>
       <trans-unit id="FMD.news">
         <source>News</source>

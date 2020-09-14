@@ -375,7 +375,7 @@ class PageRegular extends Frontend
 		}
 
 		$container = System::getContainer();
-		$rootDir = $container->getParameter('kernel.project_dir');
+		$projectDir = $container->getParameter('kernel.project_dir');
 
 		// jQuery scripts
 		if ($objLayout->addJQuery)
@@ -390,7 +390,7 @@ class PageRegular extends Frontend
 
 					if (!$hash->isHit())
 					{
-						$hash->set('sha256-' . base64_encode(hash_file('sha256', $rootDir . '/assets/jquery/js/jquery.min.js', true)));
+						$hash->set('sha256-' . base64_encode(hash_file('sha256', $projectDir . '/assets/jquery/js/jquery.min.js', true)));
 						$cache->save($hash);
 					}
 
@@ -602,41 +602,9 @@ class PageRegular extends Frontend
 		// External style sheets
 		if (!empty($arrExternal) && \is_array($arrExternal))
 		{
-			// Consider the sorting order (see #5038)
-			if ($objLayout->orderExt != '')
-			{
-				$tmp = StringUtil::deserialize($objLayout->orderExt);
-
-				if (!empty($tmp) && \is_array($tmp))
-				{
-					// Remove all values
-					$arrOrder = array_map(static function () {}, array_flip($tmp));
-
-					// Move the matching elements to their position in $arrOrder
-					foreach ($arrExternal as $k=>$v)
-					{
-						if (\array_key_exists($v, $arrOrder))
-						{
-							$arrOrder[$v] = $v;
-							unset($arrExternal[$k]);
-						}
-					}
-
-					// Append the left-over style sheets at the end
-					if (!empty($arrExternal))
-					{
-						$arrOrder = array_merge($arrOrder, array_values($arrExternal));
-					}
-
-					// Remove empty (unreplaced) entries
-					$arrExternal = array_values(array_filter($arrOrder));
-					unset($arrOrder);
-				}
-			}
-
 			// Get the file entries from the database
 			$objFiles = FilesModel::findMultipleByUuids($arrExternal);
-			$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+			$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 			if ($objFiles !== null)
 			{
@@ -644,7 +612,7 @@ class PageRegular extends Frontend
 
 				while ($objFiles->next())
 				{
-					if (file_exists($rootDir . '/' . $objFiles->path))
+					if (file_exists($projectDir . '/' . $objFiles->path))
 					{
 						$arrFiles[] = $objFiles->path . '|static';
 					}
@@ -765,54 +733,22 @@ class PageRegular extends Frontend
 		// Add the external JavaScripts
 		$arrExternalJs = StringUtil::deserialize($objLayout->externalJs);
 
-		// Consider the sorting order (see #5038)
-		if (!empty($arrExternalJs) && \is_array($arrExternalJs) && $objLayout->orderExtJs != '')
-		{
-			$tmp = StringUtil::deserialize($objLayout->orderExtJs);
-
-			if (!empty($tmp) && \is_array($tmp))
-			{
-				// Remove all values
-				$arrOrder = array_map(static function () {}, array_flip($tmp));
-
-				// Move the matching elements to their position in $arrOrder
-				foreach ($arrExternalJs as $k=>$v)
-				{
-					if (\array_key_exists($v, $arrOrder))
-					{
-						$arrOrder[$v] = $v;
-						unset($arrExternalJs[$k]);
-					}
-				}
-
-				// Append the left-over JavaScripts at the end
-				if (!empty($arrExternalJs))
-				{
-					$arrOrder = array_merge($arrOrder, array_values($arrExternalJs));
-				}
-
-				// Remove empty (unreplaced) entries
-				$arrExternalJs = array_values(array_filter($arrOrder));
-				unset($arrOrder);
-			}
-		}
-
 		// Get the file entries from the database
 		$objFiles = FilesModel::findMultipleByUuids($arrExternalJs);
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		if ($objFiles !== null)
 		{
 			while ($objFiles->next())
 			{
-				if (file_exists($rootDir . '/' . $objFiles->path))
+				if (file_exists($projectDir . '/' . $objFiles->path))
 				{
 					$strScripts .= Template::generateScriptTag($objFiles->path, false, null);
 				}
 			}
 		}
 
-		// Add search index meta data
+		// Add search index metadata
 		if ($objPage !== null)
 		{
 			$noSearch = (bool) $objPage->noSearch;
@@ -825,13 +761,13 @@ class PageRegular extends Frontend
 
 			$meta = array
 			(
-				'@context' => 'https://schema.contao.org/',
-				'@type' => 'RegularPage',
-				'pageId' => (int) $objPage->id,
-				'noSearch' => $noSearch,
-				'protected' => (bool) $objPage->protected,
-				'groups' => array_map('intval', array_filter((array) $objPage->groups)),
-				'fePreview' => System::getContainer()->get('contao.security.token_checker')->isPreviewMode()
+				'@context' => array('contao' => 'https://schema.contao.org/'),
+				'@type' => 'contao:Page',
+				'contao:pageId' => (int) $objPage->id,
+				'contao:noSearch' => $noSearch,
+				'contao:protected' => (bool) $objPage->protected,
+				'contao:groups' => array_map('intval', array_filter((array) $objPage->groups)),
+				'contao:fePreview' => System::getContainer()->get('contao.security.token_checker')->isPreviewMode()
 			);
 
 			$strScripts .= '<script type="application/ld+json">' . json_encode($meta) . '</script>';

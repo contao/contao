@@ -73,22 +73,6 @@
         <source>Do not collapse elements in the back end preview.</source>
         <target>Не сажимај елементе у прегледу БекЕнда.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.doNotRedirectEmpty.0">
-        <source>Do not redirect empty URLs</source>
-        <target>Не преусмеравај празне URL</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.doNotRedirectEmpty.1">
-        <source>For an empty URL display the website instead of redirecting to the language root page (not recommended).</source>
-        <target>Ако је URL празан, прикажи сајт уместо преусмеравања на почетну страницу за изабрани језик (није препоручљиво).</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.folderUrl.0">
-        <source>Enable folder URLs</source>
-        <target>Омогући URL у стилу фолдера</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.folderUrl.1">
-        <source>Here you can enable folder-style page aliases like &lt;em&gt;docs/install/download.html&lt;/em&gt; instead of &lt;em&gt;docs-install-download.html&lt;/em&gt;.</source>
-        <target>Овде можете омогићити алиасе страница у стилу фолдера као што је &lt;em&gt;docs/install/download.html&lt;/em&gt; уместо &lt;em&gt;docs-install-download.html&lt;/em&gt;.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.allowedTags.0">
         <source>Allowed HTML tags</source>
         <target>Дозвољени HTML тагови</target>
@@ -197,10 +181,6 @@
         <source>Back end configuration</source>
         <target>Конфигурација БекЕнда</target>
       </trans-unit>
-      <trans-unit id="tl_settings.frontend_legend">
-        <source>Front end configuration</source>
-        <target>Конфигурација ФронтЕнда</target>
-      </trans-unit>
       <trans-unit id="tl_settings.security_legend">
         <source>Security settings</source>
         <target>Подешавања сигурности</target>
@@ -220,6 +200,9 @@
       <trans-unit id="tl_settings.chmod_legend">
         <source>Default access rights</source>
         <target>Подразумевана права приступа</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.configuredInApp">
+        <source>This setting has been defined in the app configuration and cannot be changed here anymore.</source>
       </trans-unit>
     </body>
   </file>

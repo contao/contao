@@ -84,7 +84,10 @@ class DataContainerCallbackListener
         }
     }
 
-    private function addCallbacks(?array &$dcaRef, array $callbacks): void
+    /**
+     * @param array|callable|null $dcaRef
+     */
+    private function addCallbacks(&$dcaRef, array $callbacks): void
     {
         if (null === $dcaRef) {
             $dcaRef = [];

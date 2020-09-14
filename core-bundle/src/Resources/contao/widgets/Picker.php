@@ -40,6 +40,8 @@ class Picker extends Widget
 		// Prepare the order field
 		if ($this->orderField != '')
 		{
+			trigger_deprecation('contao/core-bundle', '4.10', 'Using "orderField" for the picker has been deprecated and will no longer work in Contao 5.0. Use "isSortable" instead.');
+
 			$this->strOrderId = $this->orderField . str_replace($this->strField, '', $this->strId);
 			$this->strOrderName = $this->orderField . str_replace($this->strField, '', $this->strName);
 
@@ -122,9 +124,9 @@ class Picker extends Widget
 
 		$return = '<input type="hidden" name="' . $this->strName . '" id="ctrl_' . $this->strId . '" value="' . implode(',', $arrSet) . '">' . ($blnHasOrder ? '
   <input type="hidden" name="' . $this->strOrderName . '" id="ctrl_' . $this->strOrderId . '" value="' . $this->{$this->orderField} . '">' : '') . '
-  <div class="selector_container">' . (($blnHasOrder && \count($arrValues) > 1) ? '
+  <div class="selector_container">' . ((($blnHasOrder || $this->isSortable) && \count($arrValues) > 1) ? '
     <p class="sort_hint">' . $GLOBALS['TL_LANG']['MSC']['dragItemsHint'] . '</p>' : '') . '
-    <ul id="sort_' . $this->strId . '" class="' . ($blnHasOrder ? 'sortable' : '') . '">';
+    <ul id="sort_' . $this->strId . '" class="' . (($blnHasOrder || $this->isSortable) ? 'sortable' : '') . '">';
 
 		foreach ($arrValues as $k=>$v)
 		{
@@ -143,7 +145,7 @@ class Picker extends Widget
 			$extras = $this->getPickerUrlExtras($arrValues);
 
 			$return .= '
-    <p><a href="' . ampersand(System::getContainer()->get('contao.picker.builder')->getUrl($strContext, $extras)) . '" class="tl_submit" id="picker_' . $this->strName . '">' . $GLOBALS['TL_LANG']['MSC']['changeSelection'] . '</a></p>
+    <p><a href="' . StringUtil::ampersand(System::getContainer()->get('contao.picker.builder')->getUrl($strContext, $extras)) . '" class="tl_submit" id="picker_' . $this->strName . '">' . $GLOBALS['TL_LANG']['MSC']['changeSelection'] . '</a></p>
     <script>
       $("picker_' . $this->strName . '").addEvent("click", function(e) {
         e.preventDefault();
@@ -163,8 +165,8 @@ class Picker extends Widget
           }
         });
       });
-    </script>' . ($blnHasOrder ? '
-    <script>Backend.makeMultiSrcSortable("sort_' . $this->strId . '", "ctrl_' . $this->strOrderId . '", "ctrl_' . $this->strId . '")</script>' : '');
+    </script>' . ($blnHasOrder || $this->isSortable ? '
+    <script>Backend.makeMultiSrcSortable("sort_' . $this->strId . '", "ctrl_' . ($blnHasOrder ? $this->strOrderId : $this->strId) . '", "ctrl_' . $this->strId . '")</script>' : '');
 		}
 
 		$return = '<div>' . $return . '</div></div>';
@@ -187,7 +189,8 @@ class Picker extends Widget
 
 		if (!empty($this->varValue))
 		{
-			$objRows = $this->Database->execute("SELECT * FROM $strRelatedTable WHERE id IN (" . implode(',', array_map('intval', (array) $this->varValue)) . ")");
+			$strIdList = implode(',', array_map('intval', (array) $this->varValue));
+			$objRows = $this->Database->execute("SELECT * FROM $strRelatedTable WHERE id IN ($strIdList) ORDER BY FIND_IN_SET(id, '$strIdList')");
 
 			if ($objRows->numRows)
 			{
@@ -213,27 +216,7 @@ class Picker extends Widget
 			// Apply a custom sort order
 			if ($blnHasOrder)
 			{
-				$arrNew = array();
-
-				foreach ((array) $this->{$this->orderField} as $i)
-				{
-					if (isset($arrValues[$i]))
-					{
-						$arrNew[$i] = $arrValues[$i];
-						unset($arrValues[$i]);
-					}
-				}
-
-				if (!empty($arrValues))
-				{
-					foreach ($arrValues as $k=>$v)
-					{
-						$arrNew[$k] = $v;
-					}
-				}
-
-				$arrValues = $arrNew;
-				unset($arrNew);
+				$arrValues = ArrayUtil::sortByOrderField($arrValues, $this->{$this->orderField}, null, true);
 			}
 		}
 
@@ -276,7 +259,7 @@ class Picker extends Widget
 			return $labelConfig['label_callback']($arrRow, $label, $dc, $arrRow);
 		}
 
-		return $arrRow['id'];
+		return $label ?: $arrRow['id'];
 	}
 
 	protected function getRelatedTable(): string

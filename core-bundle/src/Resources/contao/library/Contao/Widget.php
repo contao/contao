@@ -584,9 +584,15 @@ abstract class Widget extends Controller
 
 		$this->mandatoryField = $GLOBALS['TL_LANG']['MSC']['mandatory'];
 
-		if ($this->customTpl != '' && TL_MODE == 'FE')
+		if ($this->customTpl)
 		{
-			$this->strTemplate = $this->customTpl;
+			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+			// Use the custom template unless it is a back end request
+			if (!$request || !System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
+			{
+				$this->strTemplate = $this->customTpl;
+			}
 		}
 
 		$strBuffer = $this->inherit();
@@ -1311,7 +1317,7 @@ abstract class Widget extends Controller
 		// Add options
 		if (\is_array($arrData['options']))
 		{
-			$blnIsAssociative = ($arrData['eval']['isAssociative'] || array_is_assoc($arrData['options']));
+			$blnIsAssociative = ($arrData['eval']['isAssociative'] || ArrayUtil::isAssoc($arrData['options']));
 			$blnUseReference = isset($arrData['reference']);
 
 			if ($arrData['eval']['includeBlankOption'] && !$arrData['eval']['multiple'])
@@ -1320,21 +1326,45 @@ abstract class Widget extends Controller
 				$arrAttributes['options'][] = array('value'=>'', 'label'=>$strLabel);
 			}
 
+			$isKnownOption = false;
+
 			foreach ($arrData['options'] as $k=>$v)
 			{
 				if (!\is_array($v))
 				{
-					$arrAttributes['options'][] = array('value'=>($blnIsAssociative ? $k : $v), 'label'=>($blnUseReference ? ((($ref = (\is_array($arrData['reference'][$v]) ? $arrData['reference'][$v][0] : $arrData['reference'][$v])) != false) ? $ref : $v) : $v));
+					$value = $blnIsAssociative ? $k : $v;
+
+					if ($varValue && $varValue == $value)
+					{
+						$isKnownOption = true;
+					}
+
+					$arrAttributes['options'][] = array('value'=>$value, 'label'=>($blnUseReference ? ((($ref = (\is_array($arrData['reference'][$v]) ? $arrData['reference'][$v][0] : $arrData['reference'][$v])) != false) ? $ref : $v) : $v));
 					continue;
 				}
 
 				$key = $blnUseReference ? ((($ref = (\is_array($arrData['reference'][$k]) ? $arrData['reference'][$k][0] : $arrData['reference'][$k])) != false) ? $ref : $k) : $k;
-				$blnIsAssoc = array_is_assoc($v);
+				$blnIsAssoc = ArrayUtil::isAssoc($v);
 
 				foreach ($v as $kk=>$vv)
 				{
-					$arrAttributes['options'][$key][] = array('value'=>($blnIsAssoc ? $kk : $vv), 'label'=>($blnUseReference ? ((($ref = (\is_array($arrData['reference'][$vv]) ? $arrData['reference'][$vv][0] : $arrData['reference'][$vv])) != false) ? $ref : $vv) : $vv));
+					$value = $blnIsAssoc ? $kk : $vv;
+
+					if ($varValue && $varValue == $value)
+					{
+						$isKnownOption = true;
+					}
+
+					$arrAttributes['options'][$key][] = array('value'=>$value, 'label'=>($blnUseReference ? ((($ref = (\is_array($arrData['reference'][$vv]) ? $arrData['reference'][$vv][0] : $arrData['reference'][$vv])) != false) ? $ref : $vv) : $vv));
 				}
+			}
+
+			// If the value is not in the options array, the current user most
+			// likely cannot access it. We add the value as unknown option, so
+			// it does not get lost when saving the record (see #920).
+			if ($varValue && !$isKnownOption)
+			{
+				$arrAttributes['options'][] = array('value'=>$varValue, 'label'=>$GLOBALS['TL_LANG']['MSC']['unknownOption']);
 			}
 		}
 
@@ -1378,7 +1408,7 @@ abstract class Widget extends Controller
 		// Warn if someone uses the "encrypt" flag (see #8589)
 		if (isset($arrAttributes['encrypt']))
 		{
-			@trigger_error('Using the "encrypt" flag' . (!empty($strTable) && !empty($strField) ? ' on ' . $strTable . '.' . $strField : '') . ' has been deprecated and will no longer work in Contao 5.0. Use the load and save callbacks with a third-party library such as OpenSSL or phpseclib instead.', E_USER_DEPRECATED);
+			trigger_deprecation('contao/core-bundle', '4.0', 'Using the "encrypt" flag' . (!empty($strTable) && !empty($strField) ? ' on ' . $strTable . '.' . $strField : '') . ' has been deprecated and will no longer work in Contao 5.0. Use the load and save callbacks with a third-party library such as OpenSSL or phpseclib instead.');
 		}
 
 		return $arrAttributes;
@@ -1496,7 +1526,7 @@ abstract class Widget extends Controller
 	 */
 	protected function addSubmit()
 	{
-		@trigger_error('Using Widget::addSubmit() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Widget::addSubmit()" has been deprecated and will no longer work in Contao 5.0.');
 
 		return '';
 	}

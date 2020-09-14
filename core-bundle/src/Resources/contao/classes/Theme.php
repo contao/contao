@@ -42,7 +42,6 @@ class Theme extends Backend
 	 */
 	public function importTheme()
 	{
-		/** @var FileUpload $objUploader */
 		$objUploader = new FileUpload();
 
 		if (Input::post('FORM_SUBMIT') == 'tl_theme_import')
@@ -124,7 +123,7 @@ class Theme extends Backend
 		// Return the form
 		return Message::generate() . '
 <div id="tl_buttons">
-<a href="' . ampersand(str_replace('&key=importTheme', '', Environment::get('request'))) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
+<a href="' . StringUtil::ampersand(str_replace('&key=importTheme', '', Environment::get('request'))) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>
 <form id="tl_theme_import" class="tl_form tl_edit_form" method="post" enctype="multipart/form-data">
 <div class="tl_formbody_edit">
@@ -163,7 +162,7 @@ class Theme extends Backend
 	{
 		$return = Message::generate() . '
 <div id="tl_buttons">
-<a href="' . ampersand(str_replace('&key=importTheme', '', Environment::get('request'))) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
+<a href="' . StringUtil::ampersand(str_replace('&key=importTheme', '', Environment::get('request'))) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>
 <form id="tl_theme_import" class="tl_form tl_edit_form" method="post">
 <div class="tl_formbody_edit">
@@ -707,7 +706,7 @@ class Theme extends Backend
 	 */
 	public function exportTheme(DataContainer $dc)
 	{
-		// Get the theme meta data
+		// Get the theme metadata
 		$objTheme = $this->Database->prepare("SELECT * FROM tl_theme WHERE id=?")
 								   ->limit(1)
 								   ->execute($dc->id);
@@ -1110,7 +1109,7 @@ class Theme extends Backend
 		}
 
 		// Recursively add the files and subfolders
-		foreach (scan($this->strRootDir . '/' . $strFolder) as $strFile)
+		foreach (Folder::scan($this->strRootDir . '/' . $strFolder) as $strFile)
 		{
 			// Skip hidden resources
 			if (strncmp($strFile, '.', 1) === 0)
@@ -1184,7 +1183,7 @@ class Theme extends Backend
 		}
 
 		// Add all template files to the archive (see #7048)
-		foreach (scan($this->strRootDir . '/' . $strFolder) as $strFile)
+		foreach (Folder::scan($this->strRootDir . '/' . $strFolder) as $strFile)
 		{
 			if (preg_match('/\.(html5|sql)$/', $strFile) && strncmp($strFile, 'be_', 3) !== 0 && strncmp($strFile, 'nl_', 3) !== 0)
 			{

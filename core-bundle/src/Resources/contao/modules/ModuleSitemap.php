@@ -32,7 +32,9 @@ class ModuleSitemap extends Module
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['sitemap'][0]) . ' ###';
@@ -69,17 +71,8 @@ class ModuleSitemap extends Module
 		{
 			$objRootPage = PageModel::findWithDetails($this->rootPage);
 
-			// Set the language
-			if ($objRootPage->rootLanguage != $objPage->rootLanguage && Config::get('addLanguageToUrl'))
-			{
-				$lang = $objRootPage->rootLanguage;
-			}
-
-			// Set the domain
-			if ($objRootPage->rootId != $objPage->rootId && $objRootPage->domain != '' && $objRootPage->domain != $objPage->domain)
-			{
-				$host = $objRootPage->domain;
-			}
+			$lang = $objRootPage->rootLanguage;
+			$host = $objRootPage->domain;
 		}
 
 		$this->showLevel = 0;

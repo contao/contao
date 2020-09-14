@@ -24,9 +24,12 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
+use Webmozart\PathUtil\Path;
 
 class MigrateCommand extends Command
 {
+    protected static $defaultName = 'contao:migrate';
+
     /**
      * @var MigrationCollection
      */
@@ -71,7 +74,6 @@ class MigrateCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('contao:migrate')
             ->addOption('with-deletes', null, InputOption::VALUE_NONE, 'Execute all database migrations including DROP queries. Can be used together with --no-interaction.')
             ->addOption('schema-only', null, InputOption::VALUE_NONE, 'Execute database schema migration only.')
             ->setDescription('Executes migrations and the database schema diff.')
@@ -120,7 +122,7 @@ class MigrateCommand extends Command
             $runOnceFiles = $this->getRunOnceFiles();
 
             if ($runOnceFiles) {
-                @trigger_error('Using runonce.php files has been deprecated and will no longer work in Contao 5.0. Use the migration framework instead.', E_USER_DEPRECATED);
+                trigger_deprecation('contao/core-bundle', '4.9', 'Using "runonce.php" files has been deprecated and will no longer work in Contao 5.0. Use the migration framework instead.');
             }
 
             foreach ($runOnceFiles as $file) {
@@ -178,7 +180,7 @@ class MigrateCommand extends Command
 
         return array_map(
             function ($path) {
-                return rtrim((new Filesystem())->makePathRelative($path, $this->projectDir), '/');
+                return Path::makeRelative($path, $this->projectDir);
             },
             $files
         );
@@ -188,11 +190,16 @@ class MigrateCommand extends Command
     {
         $this->framework->initialize();
 
-        include $this->projectDir.'/'.$file;
+        $filePath = Path::join($this->projectDir, $file);
 
-        (new Filesystem())->remove($this->projectDir.'/'.$file);
+        include $filePath;
+
+        (new Filesystem())->remove($filePath);
     }
 
+    /**
+     * @psalm-suppress InvalidReturnType
+     */
     private function executeSchemaDiff(bool $withDeletesOption): bool
     {
         if (null === $this->installer) {
@@ -206,13 +213,13 @@ class MigrateCommand extends Command
         while (true) {
             $this->installer->compileCommands();
 
-            if (!$commands = $this->installer->getCommands()) {
+            if (!$commands = $this->installer->getCommands(false)) {
                 return true;
             }
 
             $hasNewCommands = \count(
                 array_filter(
-                    array_keys(array_merge(...array_values($commands))),
+                    array_keys($commands),
                     static function ($hash) use ($commandsByHash) {
                         return !isset($commandsByHash[$hash]);
                     }
@@ -225,7 +232,7 @@ class MigrateCommand extends Command
 
             $this->io->section('Pending database migrations');
 
-            $commandsByHash = array_merge(...array_values($commands));
+            $commandsByHash = $commands;
 
             $this->io->listing($commandsByHash);
 
@@ -242,33 +249,56 @@ class MigrateCommand extends Command
             $this->io->section('Execute database migrations');
 
             $count = 0;
+            $commandHashes = $this->getCommandHashes($commands, 'yes, with deletes' === $answer);
 
-            foreach ($this->getCommandHashes($commands, 'yes, with deletes' === $answer) as $hash) {
-                $this->io->writeln(' * '.$commandsByHash[$hash]);
-                $this->installer->execCommand($hash);
-                ++$count;
-            }
+            do {
+                $commandExecuted = false;
+                $exceptions = [];
+
+                foreach ($commandHashes as $key => $hash) {
+                    $this->io->write(' * '.$commandsByHash[$hash]);
+
+                    try {
+                        $this->installer->execCommand($hash);
+
+                        ++$count;
+                        $commandExecuted = true;
+                        unset($commandHashes[$key]);
+
+                        $this->io->writeln('');
+                    } catch (\Throwable $e) {
+                        $exceptions[] = $e;
+
+                        $this->io->writeln('......FAILED');
+                    }
+                }
+            } while ($commandExecuted);
 
             $this->io->success('Executed '.$count.' SQL queries.');
-        }
 
-        return true;
+            if (\count($exceptions)) {
+                foreach ($exceptions as $exception) {
+                    $this->io->error($exception->getMessage());
+                }
+
+                return false;
+            }
+        }
     }
 
     private function getCommandHashes(array $commands, bool $withDrops): array
     {
         if (!$withDrops) {
-            unset($commands['ALTER_DROP']);
-
-            foreach ($commands as $category => $commandsByHash) {
-                foreach ($commandsByHash as $hash => $command) {
-                    if ('DROP' === $category && false === strpos($command, 'DROP INDEX')) {
-                        unset($commands[$category][$hash]);
-                    }
+            foreach ($commands as $hash => $command) {
+                if (
+                    preg_match('/^ALTER TABLE [^ ]+ DROP /', $command, $matches)
+                    || (0 === strncmp($command, 'DROP ', 5) && 0 !== strncmp($command, 'DROP INDEX', 10))
+                ) {
+                    unset($commands[$hash]);
                 }
             }
         }
 
-        return \count($commands) ? array_keys(array_merge(...array_values($commands))) : [];
+        return array_keys($commands);
     }
 }

@@ -26,7 +26,7 @@ class Messages extends Backend
 	 */
 	public function versionCheck()
 	{
-		@trigger_error('Using Messages::versionCheck() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.7', 'Using "Contao\Messages::versionCheck()" has been deprecated and will no longer work in Contao 5.0.');
 
 		return '';
 	}
@@ -69,7 +69,7 @@ class Messages extends Backend
 	{
 		$arrRoots = array();
 		$time = Date::floorToMinute();
-		$objRoots = $this->Database->execute("SELECT fallback, dns FROM tl_page WHERE type='root' AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') AND published='1' ORDER BY dns");
+		$objRoots = $this->Database->execute("SELECT fallback, dns FROM tl_page WHERE type='root' AND published='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'$time') ORDER BY dns");
 
 		while ($objRoots->next())
 		{

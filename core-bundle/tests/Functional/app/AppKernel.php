@@ -22,7 +22,6 @@ use Scheb\TwoFactorBundle\SchebTwoFactorBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MonologBundle\MonologBundle;
 use Symfony\Bundle\SecurityBundle\SecurityBundle;
-use Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -37,8 +36,7 @@ class AppKernel extends Kernel
             new FrameworkBundle(),
             new SecurityBundle(),
             new TwigBundle(),
-            new MonologBundle(),
-            new SwiftmailerBundle(),
+            new MonologBundle(), // prevents a lot of [debug] lines in the console output (see #1927)
             new DoctrineBundle(),
             new SchebTwoFactorBundle(),
             new KnpTimeBundle(),

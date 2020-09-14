@@ -42,6 +42,8 @@ class FrontendIndex extends Frontend
 	 */
 	public function run()
 	{
+		trigger_deprecation('contao/core-bundle', '4.10', 'Using "Contao\FrontendIndex::run()" has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.');
+
 		$pageId = $this->getPageIdFromUrl();
 		$objRootPage = null;
 
@@ -85,6 +87,7 @@ class FrontendIndex extends Frontend
 	 */
 	public function renderPage($pageModel)
 	{
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$objPage = $pageModel;
@@ -92,7 +95,7 @@ class FrontendIndex extends Frontend
 		// Check the URL and language of each page if there are multiple results
 		if ($objPage instanceof Collection && $objPage->count() > 1)
 		{
-			@trigger_error('Using FrontendIndex::renderPage() with a model collection has been deprecated and will no longer work Contao 5.0. Use the Symfony routing instead.', E_USER_DEPRECATED);
+			trigger_deprecation('contao/core-bundle', '4.7', 'Using "Contao\FrontendIndex::renderPage()" with a model collection has been deprecated and will no longer work Contao 5.0. Use the Symfony routing instead.');
 
 			$objNewPage = null;
 			$arrPages = array();
@@ -126,7 +129,7 @@ class FrontendIndex extends Frontend
 			}
 
 			// Use the first result (see #4872)
-			if (!Config::get('addLanguageToUrl'))
+			if (!System::getContainer()->getParameter('contao.legacy_routing') || !Config::get('addLanguageToUrl'))
 			{
 				$objNewPage = current($arrLangs);
 			}
@@ -173,10 +176,10 @@ class FrontendIndex extends Frontend
 		// If the page has an alias, it can no longer be called via ID (see #7661)
 		if ($objPage->alias != '')
 		{
-			$language = Config::get('addLanguageToUrl') ? '[a-z]{2}(-[A-Z]{2})?/' : '';
-			$suffix = Config::get('urlSuffix') ? preg_quote(Config::get('urlSuffix'), '#') : '$';
+			$language = $objPage->urlPrefix ? preg_quote($objPage->urlPrefix . '/', '#') : '';
+			$suffix = preg_quote($objPage->urlSuffix, '#');
 
-			if (preg_match('#^' . $language . $objPage->id . '(' . $suffix . '|/)#', Environment::get('relativeRequest')))
+			if (preg_match('#^' . $language . $objPage->id . '(' . $suffix . '($|\?)|/)#', Environment::get('relativeRequest')))
 			{
 				throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 			}
@@ -314,7 +317,8 @@ class FrontendIndex extends Frontend
 					return $objHandler->getResponse();
 
 				default:
-					$objHandler = new $GLOBALS['TL_PTY'][$objPage->type]();
+					$pageType = $GLOBALS['TL_PTY'][$objPage->type] ?? PageRegular::class;
+					$objHandler = new $pageType();
 
 					// Backwards compatibility
 					if (!method_exists($objHandler, 'getResponse'))
@@ -349,10 +353,7 @@ class FrontendIndex extends Frontend
 			$GLOBALS['TL_MOOTOOLS'] = $arrMootools;
 			$GLOBALS['TL_JQUERY'] = $arrJquery;
 
-			/** @var PageError404 $objHandler */
-			$objHandler = new $GLOBALS['TL_PTY']['error_404']();
-
-			return $objHandler->getResponse();
+			throw $e;
 		}
 	}
 
@@ -364,7 +365,7 @@ class FrontendIndex extends Frontend
 	 */
 	protected function outputFromCache()
 	{
-		@trigger_error('Using FrontendIndex::outputFromCache() has been deprecated and will no longer work in Contao 5.0. Use the kernel.request event instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\FrontendIndex::outputFromCache()" has been deprecated and will no longer work in Contao 5.0. Use the "kernel.request" event instead.');
 	}
 }
 

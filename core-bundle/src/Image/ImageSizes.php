@@ -158,8 +158,8 @@ class ImageSizes implements ResetInterface
         }
 
         foreach ($rows as $imageSize) {
-            // Prefix theme names that collide with existing group names
-            if (\in_array($imageSize['theme'], ['exact', 'relative', 'image_sizes'], true)) {
+            // Prefix theme names that are numeric or collide with existing group names
+            if (is_numeric($imageSize['theme']) || \in_array($imageSize['theme'], ['exact', 'relative', 'image_sizes'], true)) {
                 $imageSize['theme'] = 'Theme '.$imageSize['theme'];
             }
 

@@ -1,12 +1,21 @@
+includes:
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor/phpstan/phpstan-phpunit/rules.neon
+    - vendor/phpstan/phpstan-symfony/extension.neon
+    - vendor/phpstan/phpstan-symfony/rules.neon
+
+rules:
+    - SlamPhpStan\SymfonyFilesystemRule
+    - SlamPhpStan\SymfonyProcessRule
+    - TheCodingMachine\PHPStan\Rules\Exceptions\ThrowMustBundlePreviousExceptionRule
+
 parameters:
-    autoload_files:
-        - %currentWorkingDirectory%/vendor/autoload.php
+    dynamicConstantNames:
+        - BE_USER_LOGGED_IN
 
-    contao:
-        services_yml_path: %currentWorkingDirectory%/core-bundle/src/Resources/config/services.yml
-
-    symfony:
-        container_xml_path: %currentWorkingDirectory%/core-bundle/var/cache/phpstan/appContao_CoreBundle_Tests_Functional_app_AppKernelPhpstanDebugContainer.xml
+    universalObjectCratesClasses:
+        - Contao\Model
+        - Contao\Template
 
     excludes_analyse:
         - %currentWorkingDirectory%/core-bundle/src/Resources/*
@@ -15,21 +24,16 @@ parameters:
         - %currentWorkingDirectory%/core-bundle/tests/Functional/var/*
 
     ignoreErrors:
-        # Ignore the missing TL_SCRIPT constant in the InitializeController class
-        - '#Constant TL_SCRIPT not found\.#'
-
-        # Ignore the Adapter::missingMethod() warning
-        - '#Call to an undefined method Contao\\CoreBundle\\Framework\\Adapter::missingMethod\(\)\.#'
-
         # Ignore backwards compatibility layers when preferring lowest dependencies
         - '#Method Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface::dispatch\(\) invoked with 2 parameters, 1 required\.#'
-
-        # Ingore forward compatibility layers
-        - '#Method Symfony\\Component\\HttpFoundation\\ResponseHeaderBag::all\(\) invoked with 1 parameter, 0 required\.#'
 
         # Ignore configuration tree errors
         - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition::children\(\)\.#'
         - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition::addDefaultsIfNotSet\(\)\.#'
 
-    reportUnmatchedIgnoredErrors: false
+        # Ignore the wrong return type hint of the UrlGeneratorInterface::generate() method
+        - '#Method Contao\\CoreBundle\\Picker\\AbstractPickerProvider::generateUrl\(\) never returns null so it can be removed from the return typehint\.#'
+
+    treatPhpDocTypesAsCertain: false
+    checkGenericClassInNonGenericObjectType: false
     inferPrivatePropertyTypeFromConstructor: true

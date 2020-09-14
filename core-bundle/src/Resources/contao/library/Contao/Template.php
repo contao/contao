@@ -11,7 +11,8 @@
 namespace Contao;
 
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
-use MatthiasMullie\Minify;
+use MatthiasMullie\Minify\CSS;
+use MatthiasMullie\Minify\JS;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\VarDumper\VarDumper;
 
@@ -254,7 +255,7 @@ abstract class Template extends Controller
 	 */
 	public function showTemplateVars()
 	{
-		@trigger_error('Using Template::showTemplateVars() has been deprecated and will no longer work in Contao 5.0. Use Template::dumpTemplateVars() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Template::showTemplateVars()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Template::dumpTemplateVars()" instead.');
 
 		$this->dumpTemplateVars();
 	}
@@ -300,16 +301,13 @@ abstract class Template extends Controller
 	 */
 	public function output()
 	{
-		@trigger_error('Using Template::output() has been deprecated and will no longer work in Contao 5.0. Use Template::getResponse() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Template::output()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Template::getResponse()" instead.');
 
 		$this->compile();
 
 		header('Content-Type: ' . $this->strContentType . '; charset=' . Config::get('characterSet'));
 
 		echo $this->strBuffer;
-
-		// Flush the output buffers (see #6962)
-		$this->flushAllData();
 	}
 
 	/**
@@ -344,7 +342,7 @@ abstract class Template extends Controller
 		$strUrl = System::getContainer()->get('router')->generate($strName, $arrParams);
 		$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
 
-		return ampersand($strUrl);
+		return StringUtil::ampersand($strUrl);
 	}
 
 	/**
@@ -374,7 +372,7 @@ abstract class Template extends Controller
 
 		$context->setBaseUrl('');
 
-		return ampersand($strUrl);
+		return StringUtil::ampersand($strUrl);
 	}
 
 	/**
@@ -439,7 +437,7 @@ abstract class Template extends Controller
 	 */
 	protected function getDebugBar()
 	{
-		@trigger_error('Using Template::getDebugBar() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Template::getDebugBar()" has been deprecated and will no longer work in Contao 5.0.');
 	}
 
 	/**
@@ -517,13 +515,13 @@ abstract class Template extends Controller
 				// Minify inline scripts
 				if ($strType == 'js')
 				{
-					$objMinify = new Minify\JS();
+					$objMinify = new JS();
 					$objMinify->add($strChunk);
 					$strChunk = $objMinify->minify();
 				}
 				elseif ($strType == 'css')
 				{
-					$objMinify = new Minify\CSS();
+					$objMinify = new CSS();
 					$objMinify->add($strChunk);
 					$strChunk = $objMinify->minify();
 				}
@@ -556,20 +554,20 @@ abstract class Template extends Controller
 		if ($mtime === null && !preg_match('@^https?://@', $href))
 		{
 			$container = System::getContainer();
-			$rootDir = $container->getParameter('kernel.project_dir');
+			$projectDir = $container->getParameter('kernel.project_dir');
 
-			if (file_exists($rootDir . '/' . $href))
+			if (file_exists($projectDir . '/' . $href))
 			{
-				$mtime = filemtime($rootDir . '/' . $href);
+				$mtime = filemtime($projectDir . '/' . $href);
 			}
 			else
 			{
 				$webDir = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
 
 				// Handle public bundle resources in web/
-				if (file_exists($rootDir . '/' . $webDir . '/' . $href))
+				if (file_exists($projectDir . '/' . $webDir . '/' . $href))
 				{
-					$mtime = filemtime($rootDir . '/' . $webDir . '/' . $href);
+					$mtime = filemtime($projectDir . '/' . $webDir . '/' . $href);
 				}
 			}
 		}
@@ -612,20 +610,20 @@ abstract class Template extends Controller
 		if ($mtime === null && !preg_match('@^https?://@', $src))
 		{
 			$container = System::getContainer();
-			$rootDir = $container->getParameter('kernel.project_dir');
+			$projectDir = $container->getParameter('kernel.project_dir');
 
-			if (file_exists($rootDir . '/' . $src))
+			if (file_exists($projectDir . '/' . $src))
 			{
-				$mtime = filemtime($rootDir . '/' . $src);
+				$mtime = filemtime($projectDir . '/' . $src);
 			}
 			else
 			{
 				$webDir = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
 
 				// Handle public bundle resources in web/
-				if (file_exists($rootDir . '/' . $webDir . '/' . $src))
+				if (file_exists($projectDir . '/' . $webDir . '/' . $src))
 				{
-					$mtime = filemtime($rootDir . '/' . $webDir . '/' . $src);
+					$mtime = filemtime($projectDir . '/' . $webDir . '/' . $src);
 				}
 			}
 		}
@@ -671,7 +669,7 @@ abstract class Template extends Controller
 	 */
 	public function flushAllData()
 	{
-		@trigger_error('Using Template::flushAllData() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Template::flushAllData()" has been deprecated and will no longer work in Contao 5.0.');
 
 		if (\function_exists('fastcgi_finish_request'))
 		{

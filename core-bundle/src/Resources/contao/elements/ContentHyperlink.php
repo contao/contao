@@ -34,7 +34,7 @@ class ContentHyperlink extends ContentElement
 		}
 		else
 		{
-			$this->url = ampersand($this->url);
+			$this->url = StringUtil::ampersand($this->url);
 		}
 
 		$embed = explode('%s', $this->embed);
@@ -81,8 +81,10 @@ class ContentHyperlink extends ContentElement
 			$this->Template->rel = ' rel="noreferrer noopener"';
 		}
 
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
 		// Unset the title attributes in the back end (see #6258)
-		if (TL_MODE == 'BE')
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$this->Template->title = '';
 			$this->Template->linkTitle = '';

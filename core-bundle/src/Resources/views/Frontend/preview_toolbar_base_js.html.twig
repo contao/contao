@@ -1,45 +1,96 @@
 <style>
+    .cto-toolbar, .cto-toolbar * {
+        all: unset;
+    }
+
     .cto-toolbar {
         font-family: -apple-system,system-ui,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
         font-weight: 400;
         font-size: 14px;
         line-height: 1;
         color: #444;
+    }
+
+    @media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
+        .cto-toolbar {
+            font-weight: 300;
+            color: #222;
+        }
+    }
+
+    .cto-toolbar__open {
+        width: 36px;
+        height: 36px;
+        position: fixed;
+        right: 0;
+        top: 0;
+        background: #222;
+        border-radius: 0 0 0 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 99999;
+    }
+
+    .cto-toolbar__open svg {
+        fill: #fff;
+    }
+
+    .cto-toolbar--visible .cto-toolbar__open {
+        display: none;
+    }
+
+    .cto-toolbar__open a {
+        opacity: .7;
+    }
+
+    .cto-toolbar__inside {
+        display: grid;
+        grid-template: auto / 1fr auto;
+        width: 100%;
         background: #f2f2f2;
-        overflow: hidden;
-        position: -webkit-sticky;
-        position: sticky;
+        position: fixed;
+        left: 0;
         top: 0;
         z-index: 99999;
         border-bottom: 1px solid #ccc;
     }
 
-    @media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
-        .cto-toolbar {
-            color: #222;
-            font-weight: 300;
-        }
+    .cto-toolbar--hidden .cto-toolbar__inside {
+        display: none;
+    }
+
+    .cto-toolbar__close {
+        border-left: 1px solid #ccc;
+    }
+
+    .cto-toolbar__close a {
+        font-weight: 600;
+        font-size: 29px;
+        color: #444;
+        text-decoration: none;
+        display: block;
+        padding: 3px 8px 7px 9px;
+    }
+
+    .cto-toolbar__close a:hover {
+        color: #666;
+        background: rgba(0, 0, 0, 0.03);
+    }
+
+    .cto-toolbar__clear {
+        height: 40px;
+        display: none;
+    }
+
+    .cto-toolbar--visible .cto-toolbar__clear {
+        display: block;
     }
 
     .cto-toolbar input, .cto-toolbar select, .cto-toolbar button {
         font: inherit;
         color: inherit;
         line-height: 18px;
-    }
-
-    .cto-toolbar__inside {
-        display: grid;
-        grid-template: auto / 1fr auto;
-    }
-
-    .cto-toolbar--hidden {
-        position: fixed;
-        right: 0;
-        border: none;
-    }
-
-    .cto-toolbar--hidden .cto-toolbar__inside {
-        display: none;
     }
 
     .cto-toolbar.ajax-loading .formbody {
@@ -133,47 +184,6 @@
     .cto-toolbar .tl_submit:active {
         color: #aaa;
     }
-
-    .cto-toolbar__open {
-        display: none;
-        width: 36px;
-        height: 36px;
-        background: #222;
-    }
-
-    .cto-toolbar__open a {
-        display: flex;
-        height: 100%;
-        align-items: center;
-        justify-content: center;
-        opacity: .7;
-    }
-
-    .cto-toolbar--hidden {
-        border-radius: 0 0 0 4px;
-    }
-
-    .cto-toolbar--hidden .cto-toolbar__open {
-        display: block;
-    }
-
-    .cto-toolbar__close {
-        border-left: 1px solid #ccc;
-    }
-
-    .cto-toolbar__close a {
-        font-weight: 600;
-        font-size: 29px;
-        color: #444;
-        text-decoration: none;
-        display: block;
-        padding: 3px 8px 7px 9px;
-    }
-
-    .cto-toolbar__close a:hover {
-        color: #666;
-        background: rgba(0, 0, 0, 0.03);
-    }
 </style>
 <script>
     (function () {
@@ -197,9 +207,9 @@
 
             request.onload = function () {
                 toolbar.classList.remove('ajax-loading');
-
                 callback.apply(this);
             };
+
             request.send(body)
         }
 
@@ -225,9 +235,11 @@
         // Js for the authenticator
         window.addEventListener("cto-toolbar-loaded", function () {
             const form = toolbar.querySelector('input[name="FORM_SUBMIT"][value="tl_switch"]').form;
+
             if (!form) {
                 return;
             }
+
             form.addEventListener('submit', function (e) {
                 e.preventDefault();
                 const formData = new FormData(form);
@@ -243,28 +255,31 @@
 
             if (document.createElement('datalist') && window.HTMLDataListElement) {
                 const userField = form.querySelector('input[name="user"]');
-                const userList = form.querySelector('datalist[id="userlist"]');
 
-                userField.addEventListener('keyup', function () {
-                    if (userField.value.length < 2) {
-                        return;
-                    }
+                if (userField) {
+                    userField.addEventListener('input', function () {
+                        if (userField.value.length < 2) {
+                            return;
+                        }
 
-                    const body = {
-                        FORM_SUBMIT: 'datalist_members',
-                        REQUEST_TOKEN: form.querySelector('input[name="REQUEST_TOKEN"]').value,
-                        value: userField.value
-                    };
+                        const body = {
+                            FORM_SUBMIT: 'datalist_members',
+                            REQUEST_TOKEN: form.querySelector('input[name="REQUEST_TOKEN"]').value,
+                            value: userField.value
+                        };
 
-                    request('POST', form.action, new URLSearchParams(body), function () {
-                        userList.innerHTML = '';
-                        JSON.parse(this.response).forEach(item => {
-                            const option = document.createElement('option');
-                            option.value = item;
-                            userList.appendChild(option);
-                        });
-                    }, false);
-                });
+                        const userList = form.querySelector('datalist[id="userlist"]');
+
+                        request('POST', form.action, new URLSearchParams(body), function () {
+                            userList.innerHTML = '';
+                            JSON.parse(this.response).forEach(item => {
+                                const option = document.createElement('option');
+                                option.value = item;
+                                userList.appendChild(option);
+                            });
+                        }, false);
+                    });
+                }
             }
 
             // Collapse toolbar

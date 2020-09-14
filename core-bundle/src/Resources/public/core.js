@@ -1122,6 +1122,7 @@ var Backend =
 			});
 
 			button = new Element('button', {
+				'type': 'button',
 				'html': '<span>...</span>',
 				'class': 'unselectable',
 				'data-state': 0
@@ -2314,7 +2315,8 @@ var Backend =
 	 */
 	metaDelete: function(el) {
 		var li = el.getParent('li'),
-			opt = el.getParent('div').getElement('select');
+			select = el.getParent('div').getElement('select'),
+			opt;
 
 		// Empty the last element instead of removing it (see #4858)
 		if (li.getPrevious() === null && li.getNext() === null) {
@@ -2322,10 +2324,13 @@ var Backend =
 				input.value = '';
 			});
 		} else {
-			// Enable the option and update chosen
-			opt.getElement('option[value=' + li.getProperty('data-language') + ']').removeProperty('disabled');
+			// If the language code is valid and the option exists, enable it (see #1635)
+			if (opt = select.getElement('option[value=' + li.getProperty('data-language') + ']')) {
+				opt.removeProperty('disabled');
+			}
+
 			li.destroy();
-			opt.fireEvent('liszt:updated');
+			select.fireEvent('liszt:updated');
 		}
 	},
 
@@ -2516,9 +2521,10 @@ var Backend =
 				}
 			},
 			clickEvent = function(e) {
-				var input = this.getElement('input[type="checkbox"],input[type="radio"]');
+				var input = this.getElement('input[type="checkbox"],input[type="radio"]'),
+					limitToggler = $(e.target).getParent('.limit_toggler');
 
-				if (!input || input.get('disabled')) {
+				if (!input || input.get('disabled') || limitToggler !== null) {
 					return;
 				}
 

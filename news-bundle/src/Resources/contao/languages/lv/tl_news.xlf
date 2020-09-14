@@ -49,6 +49,13 @@
         <source>Here you can add a custom meta title to overwrite the default page title.</source>
         <target>Šeit jūs varat pievienot pielāgotu meta nosaukumu, lai pārrakstītu noklusējuma lapas nosaukumu.</target>
       </trans-unit>
+      <trans-unit id="tl_news.robots.0">
+        <source>Robots tag</source>
+        <target>Robotu birkas</target>
+      </trans-unit>
+      <trans-unit id="tl_news.robots.1">
+        <source>Here you can overwrite how search engines handle the news item.</source>
+      </trans-unit>
       <trans-unit id="tl_news.description.0">
         <source>Meta description</source>
         <target>Meta apraksts</target>
@@ -225,10 +232,6 @@
         <source>Date and time</source>
         <target>Datums un laiks</target>
       </trans-unit>
-      <trans-unit id="tl_news.meta_legend">
-        <source>Meta data</source>
-        <target>Meta dati</target>
-      </trans-unit>
       <trans-unit id="tl_news.teaser_legend">
         <source>Subheadline and teaser</source>
         <target>Apakšvirsraksts un ievads</target>
@@ -248,6 +251,10 @@
       <trans-unit id="tl_news.source_legend">
         <source>Redirect target</source>
         <target>Novirzīšanas mērķis</target>
+      </trans-unit>
+      <trans-unit id="tl_news.meta_legend">
+        <source>Meta data</source>
+        <target>Meta dati</target>
       </trans-unit>
       <trans-unit id="tl_news.expert_legend">
         <source>Expert settings</source>
@@ -300,6 +307,10 @@
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
         <target>Ielīmēt šajā jaunumu arhīvā</target>
+      </trans-unit>
+      <trans-unit id="tl_news.editmeta">
+        <source>Edit the news item settings</source>
+        <target>Rediģēt jaunumu vienuma iestatījumus</target>
       </trans-unit>
     </body>
   </file>

@@ -55,7 +55,7 @@ class ModuleArticle extends Module
 	 */
 	public function generate($blnNoMarkup=false)
 	{
-		if (TL_MODE == 'FE' && !BE_USER_LOGGED_IN && (!$this->published || ($this->start != '' && $this->start > time()) || ($this->stop != '' && $this->stop < time())))
+		if ($this->isHidden())
 		{
 			return '';
 		}
@@ -72,6 +72,35 @@ class ModuleArticle extends Module
 		}
 
 		return parent::generate();
+	}
+
+	protected function isHidden()
+	{
+		$isUnpublished = !$this->published || ($this->start != '' && $this->start > time()) || ($this->stop != '' && $this->stop <= time());
+
+		// The article is published, so show it
+		if (!$isUnpublished)
+		{
+			return false;
+		}
+
+		$tokenChecker = System::getContainer()->get('contao.security.token_checker');
+
+		// Preview mode is enabled, so show the article
+		if ($tokenChecker->hasBackendUser() && $tokenChecker->isPreviewMode())
+		{
+			return false;
+		}
+
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		// We are in the back end, so show the article
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
+		{
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -164,33 +193,9 @@ class ModuleArticle extends Module
 
 		if ($objCte !== null)
 		{
-			$intCount = 0;
-			$intLast = $objCte->count() - 1;
-
 			while ($objCte->next())
 			{
-				$arrCss = array();
-
-				/** @var ContentModel $objRow */
-				$objRow = $objCte->current();
-
-				// Add the "first" and "last" classes (see #2583)
-				if ($intCount == 0 || $intCount == $intLast)
-				{
-					if ($intCount == 0)
-					{
-						$arrCss[] = 'first';
-					}
-
-					if ($intCount == $intLast)
-					{
-						$arrCss[] = 'last';
-					}
-				}
-
-				$objRow->classes = $arrCss;
-				$arrElements[] = $this->getContentElement($objRow, $this->strColumn);
-				++$intCount;
+				$arrElements[] = $this->getContentElement($objCte->current(), $this->strColumn);
 			}
 		}
 
@@ -205,7 +210,7 @@ class ModuleArticle extends Module
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		if ($this->printable == 1)
 		{
-			@trigger_error('Setting tl_article.printable to "1" has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+			trigger_deprecation('contao/core-bundle', '4.0', 'Setting tl_article.printable to "1" has been deprecated and will no longer work in Contao 5.0.');
 
 			$this->Template->printable = !empty($GLOBALS['TL_HOOKS']['printArticleAsPdf']);
 			$this->Template->pdfButton = $this->Template->printable;

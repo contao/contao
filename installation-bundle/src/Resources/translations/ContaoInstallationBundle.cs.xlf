@@ -239,6 +239,7 @@
       </trans-unit>
       <trans-unit id="60" resname="admin_error_extnd">
         <source>For security reasons you can not use the following characters here: #&lt;&gt;()\=</source>
+        <target>Z bezpečnostních důvodů nemůžete použít následující znaky: #&lt;&gt;()\=</target>
       </trans-unit>
       <trans-unit id="61" resname="admin_error_no_space">
         <source>The username must not contain any whitespace characters!</source>

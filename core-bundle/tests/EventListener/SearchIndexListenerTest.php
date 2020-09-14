@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener;
 
+use Contao\CoreBundle\Crawl\Escargot\Factory;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Search\Document;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
@@ -51,7 +52,7 @@ class SearchIndexListenerTest extends TestCase
     {
         yield 'Should index because the response was successful and contains ld+json information' => [
             Request::create('/foobar'),
-            new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"PageMetaData","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>'),
+            new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>'),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             true,
             false,
@@ -59,7 +60,7 @@ class SearchIndexListenerTest extends TestCase
 
         yield 'Should not index because even though the response was successful and contains ld+json information, it was disabled by the feature flag' => [
             Request::create('/foobar'),
-            new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"PageMetaData","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>'),
+            new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>'),
             SearchIndexListener::FEATURE_DELETE,
             false,
             false,
@@ -67,6 +68,14 @@ class SearchIndexListenerTest extends TestCase
 
         yield 'Should be skipped because it is not a GET request' => [
             Request::create('/foobar', 'POST'),
+            new Response(),
+            SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
+            false,
+            false,
+        ];
+
+        yield 'Should be skipped because it was requested by our own crawler' => [
+            Request::create('/foobar', 'GET', [], [], [], ['HTTP_USER_AGENT' => Factory::USER_AGENT]),
             new Response(),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
@@ -91,7 +100,7 @@ class SearchIndexListenerTest extends TestCase
 
         yield 'Should be deleted because the response was not successful (404)' => [
             Request::create('/foobar', 'GET'),
-            new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"PageMetaData","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>', 404),
+            new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>', 404),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
             true,
@@ -99,7 +108,7 @@ class SearchIndexListenerTest extends TestCase
 
         yield 'Should be deleted because the response was not successful (403)' => [
             Request::create('/foobar', 'GET'),
-            new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"PageMetaData","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>', 403),
+            new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>', 403),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
             true,
@@ -107,7 +116,7 @@ class SearchIndexListenerTest extends TestCase
 
         yield 'Should not be deleted because even though the response was not successful (403), it was disabled by the feature flag ' => [
             Request::create('/foobar', 'GET'),
-            new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"PageMetaData","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>', 403),
+            new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>', 403),
             SearchIndexListener::FEATURE_INDEX,
             false,
             false,

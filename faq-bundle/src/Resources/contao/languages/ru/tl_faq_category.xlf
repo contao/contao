@@ -78,12 +78,12 @@
         <target>Требовать авторизацию для комментирования</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.requireLogin.1">
-        <source>Allow only authenticated users to create comments.</source>
-        <target>Разрешить только авторизованным пользователям создавать комментарии.</target>
+        <source>Allow only authenticated members to create comments.</source>
+        <target>Разрешить только авторизованным участникам создавать комментарии.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>Отключить контрольный вопрос</target>
+        <source>Disable spam protection</source>
+        <target>Отключить защиту от спама</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>

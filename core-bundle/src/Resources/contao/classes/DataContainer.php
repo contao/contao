@@ -22,14 +22,14 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 /**
  * Provide methods to handle data container arrays.
  *
- * @property integer $id
- * @property string  $table
- * @property mixed   $value
- * @property string  $field
- * @property string  $inputName
- * @property string  $palette
- * @property object  $activeRecord
- * @property array   $rootIds
+ * @property integer     $id
+ * @property string      $table
+ * @property mixed       $value
+ * @property string      $field
+ * @property string      $inputName
+ * @property string      $palette
+ * @property object|null $activeRecord
+ * @property array       $rootIds
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -213,7 +213,7 @@ abstract class DataContainer extends Backend
 	/**
 	 * Render a row of a box and return it as HTML string
 	 *
-	 * @param string $strPalette
+	 * @param string|array|null $strPalette
 	 *
 	 * @return string
 	 *
@@ -369,11 +369,11 @@ abstract class DataContainer extends Backend
 			// Deprecated since Contao 4.2, to be removed in Contao 5.0
 			if (!isset($_POST[$this->strInputName]) && \in_array($this->strInputName, $paletteFields))
 			{
-				@trigger_error('Using FORM_FIELDS has been deprecated and will no longer work in Contao 5.0. Make sure to always submit at least an empty string in your widget.', E_USER_DEPRECATED);
+				trigger_deprecation('contao/core-bundle', '4.2', 'Using $_POST[\'FORM_FIELDS\'] has been deprecated and will no longer work in Contao 5.0. Make sure to always submit at least an empty string in your widget.');
 			}
 
 			// Validate and save the field
-			if (\in_array($this->strInputName, $paletteFields) || Input::get('act') == 'overrideAll')
+			if ($objWidget->submitInput() && (\in_array($this->strInputName, $paletteFields) || Input::get('act') == 'overrideAll'))
 			{
 				$objWidget->validate();
 
@@ -385,7 +385,7 @@ abstract class DataContainer extends Backend
 						$this->noReload = true;
 					}
 				}
-				elseif ($objWidget->submitInput())
+				else
 				{
 					$varValue = $objWidget->value;
 
@@ -614,19 +614,32 @@ abstract class DataContainer extends Backend
 			{
 				$blnCanResize = true;
 
-				// Check the maximum width and height if the GDlib is used to resize images
-				if (!$objFile->isSvgImage && System::getContainer()->get('contao.image.imagine') instanceof Imagine)
+				if ($objFile->isSvgImage)
 				{
-					$blnCanResize = $objFile->height <= Config::get('gdMaxImgHeight') && $objFile->width <= Config::get('gdMaxImgWidth');
+					// SVG images with undefined sizes cannot be resized
+					if (!$objFile->viewWidth || !$objFile->viewHeight)
+					{
+						$blnCanResize= false;
+					}
 				}
-
-				$image = Image::getPath('placeholder.svg');
+				elseif (System::getContainer()->get('contao.image.imagine') instanceof Imagine)
+				{
+					// Check the maximum width and height if the GDlib is used to resize images
+					if ($objFile->height > Config::get('gdMaxImgHeight') || $objFile->width > Config::get('gdMaxImgWidth'))
+					{
+						$blnCanResize = false;
+					}
+				}
 
 				if ($blnCanResize)
 				{
 					$container = System::getContainer();
-					$rootDir = $container->getParameter('kernel.project_dir');
-					$image = rawurldecode($container->get('contao.image.image_factory')->create($rootDir . '/' . $objFile->path, array(699, 524, ResizeConfiguration::MODE_BOX))->getUrl($rootDir));
+					$projectDir = $container->getParameter('kernel.project_dir');
+					$image = rawurldecode($container->get('contao.image.image_factory')->create($projectDir . '/' . $objFile->path, array(699, 524, ResizeConfiguration::MODE_BOX))->getUrl($projectDir));
+				}
+				else
+				{
+					$image = Image::getPath('placeholder.svg');
 				}
 
 				$objImage = new File($image);
@@ -892,7 +905,7 @@ abstract class DataContainer extends Backend
 					$v['icon'] = Image::getPath($v['icon']);
 				}
 
-				$attributes = sprintf('style="background-image:url(\'%s\')"', Controller::addAssetsUrlTo($v['icon'])) . $attributes;
+				$attributes = sprintf(' style="background-image:url(\'%s\')"', Controller::addAssetsUrlTo($v['icon'])) . $attributes;
 			}
 
 			if ($label == '')
@@ -1236,10 +1249,8 @@ abstract class DataContainer extends Backend
 	 * Invalidate the cache tags associated with a given DC
 	 *
 	 * Call this whenever an entry is modified (added, updated, deleted).
-	 *
-	 * @param DataContainer $dc
 	 */
-	protected function invalidateCacheTags(self $dc)
+	public function invalidateCacheTags()
 	{
 		if (!System::getContainer()->has('fos_http_cache.cache_manager'))
 		{
@@ -1247,27 +1258,27 @@ abstract class DataContainer extends Backend
 		}
 
 		$ns = 'contao.db.';
-		$tags = array($ns . $dc->table, $ns . $dc->table . '.' . $dc->id);
+		$tags = array($ns . $this->table, $ns . $this->table . '.' . $this->id);
 
-		if ($dc->ptable && $dc->activeRecord && $dc->activeRecord->pid > 0)
+		if (!empty($this->ptable) && $this->activeRecord && $this->activeRecord->pid > 0)
 		{
-			$tags[] = $ns . $dc->ptable;
-			$tags[] = $ns . $dc->ptable . '.' . $dc->activeRecord->pid;
+			$tags[] = $ns . $this->ptable;
+			$tags[] = $ns . $this->ptable . '.' . $this->activeRecord->pid;
 		}
 
 		// Trigger the oninvalidate_cache_tags_callback
-		if (\is_array($GLOBALS['TL_DCA'][$dc->table]['config']['oninvalidate_cache_tags_callback']))
+		if (\is_array($GLOBALS['TL_DCA'][$this->table]['config']['oninvalidate_cache_tags_callback']))
 		{
-			foreach ($GLOBALS['TL_DCA'][$dc->table]['config']['oninvalidate_cache_tags_callback'] as $callback)
+			foreach ($GLOBALS['TL_DCA'][$this->table]['config']['oninvalidate_cache_tags_callback'] as $callback)
 			{
 				if (\is_array($callback))
 				{
 					$this->import($callback[0]);
-					$tags = $this->{$callback[0]}->{$callback[1]}($dc, $tags);
+					$tags = $this->{$callback[0]}->{$callback[1]}($this, $tags);
 				}
 				elseif (\is_callable($callback))
 				{
-					$tags = $callback($dc, $tags);
+					$tags = $callback($this, $tags);
 				}
 			}
 		}

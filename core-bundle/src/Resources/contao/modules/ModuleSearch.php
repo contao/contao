@@ -33,7 +33,9 @@ class ModuleSearch extends Module
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['search'][0]) . ' ###';
@@ -285,6 +287,7 @@ class ModuleSearch extends Module
 				$objTemplate->title = StringUtil::specialchars(StringUtil::stripInsertTags($arrResult[$i]['title']));
 				$objTemplate->class = (($i == ($from - 1)) ? 'first ' : '') . (($i == ($to - 1) || $i == ($count - 1)) ? 'last ' : '') . (($i % 2 == 0) ? 'even' : 'odd');
 				$objTemplate->relevance = sprintf($GLOBALS['TL_LANG']['MSC']['relevance'], number_format($arrResult[$i]['relevance'] / $arrResult[0]['relevance'] * 100, 2) . '%');
+				$objTemplate->unit = $GLOBALS['TL_LANG']['UNITS'][1];
 
 				$arrContext = array();
 				$strText = StringUtil::stripInsertTags($arrResult[$i]['text']);
@@ -299,6 +302,12 @@ class ModuleSearch extends Module
 					foreach ($arrChunks[0] as $strContext)
 					{
 						$arrContext[] = ' ' . $strContext . ' ';
+					}
+
+					// Skip other terms if the total length is already reached
+					if (array_sum(array_map('mb_strlen', $arrContext)) >= $totalLength)
+					{
+						break;
 					}
 				}
 

@@ -8,6 +8,9 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\Backend;
+use Contao\System;
+
 // Add palettes to tl_module
 $GLOBALS['TL_DCA']['tl_module']['palettes']['faqlist']   = '{title_legend},name,headline,type;{config_legend},faq_categories,faq_readerModule;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
 $GLOBALS['TL_DCA']['tl_module']['palettes']['faqreader'] = '{title_legend},name,headline,type;{config_legend},faq_categories;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
@@ -33,7 +36,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['faq_readerModule'] = array
 	'sql'                     => "int(10) unsigned NOT NULL default 0"
 );
 
-$bundles = Contao\System::getContainer()->getParameter('kernel.bundles');
+$bundles = System::getContainer()->getParameter('kernel.bundles');
 
 // Add the comments template drop-down menu
 if (isset($bundles['ContaoCommentsBundle']))
@@ -46,7 +49,7 @@ if (isset($bundles['ContaoCommentsBundle']))
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_module_faq extends Contao\Backend
+class tl_module_faq extends Backend
 {
 	/**
 	 * Get all FAQ reader modules and return them as array

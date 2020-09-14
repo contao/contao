@@ -17,7 +17,6 @@ use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
 use Contao\CoreBundle\Config\ResourceFinderInterface;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Parser\ImportedNamespaceParser;
 use Contao\DcaExtractor;
 use Doctrine\DBAL\Connection;
 use Laminas\Code\DeclareStatement;
@@ -33,7 +32,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
-use Symplify\CodingStandard\TokenRunner\DocBlockParser;
+use Webmozart\PathUtil\Path;
 
 class ContaoCacheWarmer implements CacheWarmerInterface
 {
@@ -60,7 +59,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * @var string
      */
-    private $rootDir;
+    private $projectDir;
 
     /**
      * @var Connection
@@ -80,12 +79,12 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * @internal Do not inherit from this class; decorate the "contao.cache.warm_internal" service instead
      */
-    public function __construct(Filesystem $filesystem, ResourceFinderInterface $finder, FileLocator $locator, string $rootDir, Connection $connection, ContaoFramework $framework, array $locales)
+    public function __construct(Filesystem $filesystem, ResourceFinderInterface $finder, FileLocator $locator, string $projectDir, Connection $connection, ContaoFramework $framework, array $locales)
     {
         $this->filesystem = $filesystem;
         $this->finder = $finder;
         $this->locator = $locator;
-        $this->rootDir = $rootDir;
+        $this->projectDir = $projectDir;
         $this->connection = $connection;
         $this->framework = $framework;
         $this->locales = $locales;
@@ -111,92 +110,38 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         return true;
     }
 
-    private function generateEntities(string $cacheDir): void
-    {
-        // Todo: Find all files
-        $entities = [
-            'Contao\CoreBundle\Orm\Entity\Content',
-        ];
-
-        $traits = [
-            'App\Orm\Extension\Content',
-        ];
-
-        // $generator = new ClassGenerator();
-
-        foreach ($entities as $entity) {
-            try {
-                $reflectionClass = new ClassReflection($entity);
-            } catch (\ReflectionException $e) {
-                continue;
-            }
-
-            $generator = ClassGenerator::fromReflection($reflectionClass);
-            $generator->setAbstract(false);
-
-            $parser = new ImportedNamespaceParser();
-            $uses = $parser->getNamespaces($reflectionClass);
-
-            $docBlock = new DocBlockReflection($reflectionClass);
-            $docBlockGenerator = DocBlockGenerator::fromReflection($docBlock);
-
-            foreach ($uses as $use) {
-                $generator->addUse($use['class'], $use['as']);
-            }
-
-            foreach ($traits as $trait) {
-                $generator->addTrait('\\' . $trait);
-            }
-
-            $generator->setDocBlock($docBlockGenerator);
-            $generator->setExtendedClass($entity);
-            $generator->setName($reflectionClass->getShortName());
-            $generator->setNamespaceName('Contao\CoreBundle\GeneratedEntity');
-
-            $fileDocs = new DocBlockGenerator();
-            $fileDocs->setLongDescription('This file is auto generated');
-
-            $fileGenerator = new FileGenerator();
-            $fileGenerator->setDocBlock($fileDocs);
-            $fileGenerator->setClass($generator);
-            $fileGenerator->setDeclares([
-                DeclareStatement::strictTypes(1)
-            ]);
-
-            @mkdir($this->rootDir . '/var/cache/dev/contao/entities/');
-            file_put_contents($this->rootDir . '/var/cache/dev/contao/entities/' . $reflectionClass->getShortName() . '.php', $fileGenerator->generate());
-        }
-    }
-
     private function generateConfigCache(string $cacheDir): void
     {
-        $dumper = new CombinedFileDumper($this->filesystem, new PhpFileLoader(), $cacheDir.'/contao');
+        $dumper = new CombinedFileDumper($this->filesystem, new PhpFileLoader(), Path::join($cacheDir, 'contao'));
 
         foreach (['autoload.php', 'config.php'] as $file) {
             $files = $this->findConfigFiles($file);
 
             if (!empty($files)) {
-                $dumper->dump($files, 'config/'.$file, ['type' => 'namespaced']);
+                $dumper->dump($files, Path::join('config', $file), ['type' => 'namespaced']);
             }
         }
     }
 
     private function generateDcaCache(string $cacheDir): void
     {
-        $dumper = new CombinedFileDumper($this->filesystem, new PhpFileLoader(), $cacheDir.'/contao');
+        $dumper = new CombinedFileDumper($this->filesystem, new PhpFileLoader(), Path::join($cacheDir, 'contao'));
         $processed = [];
         $files = $this->findDcaFiles();
 
         foreach ($files as $file) {
-            if (\in_array($file->getBasename(), $processed, true)) {
+            $baseName = $file->getBasename();
+
+            if (\in_array($baseName, $processed, true)) {
                 continue;
             }
 
-            $processed[] = $file->getBasename();
+            $processed[] = $baseName;
+            $path = Path::join('dca', $baseName);
 
             $dumper->dump(
-                $this->locator->locate('dca/'.$file->getBasename(), null, false),
-                'dca/'.$file->getBasename(),
+                $this->locator->locate($path, null, false),
+                $path,
                 ['type' => 'namespaced']
             );
         }
@@ -206,8 +151,8 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     {
         $dumper = new CombinedFileDumper(
             $this->filesystem,
-            new DelegatingLoader(new LoaderResolver([new PhpFileLoader(), new XliffFileLoader($this->rootDir)])),
-            $cacheDir.'/contao'
+            new DelegatingLoader(new LoaderResolver([new PhpFileLoader(), new XliffFileLoader($this->projectDir)])),
+            Path::join($cacheDir, 'contao')
         );
 
         $dumper->setHeader("<?php\n");
@@ -225,12 +170,16 @@ class ContaoCacheWarmer implements CacheWarmerInterface
 
                 $processed[] = $name;
 
-                $subfiles = $this->finder->findIn('languages/'.$language)->files()->name('/^'.$name.'\.(php|xlf)$/');
+                $subfiles = $this->finder
+                    ->findIn(Path::join('languages', $language))
+                    ->files()
+                    ->name("/^$name\\.(php|xlf)$/")
+                ;
 
                 try {
                     $dumper->dump(
                         iterator_to_array($subfiles),
-                        sprintf('languages/%s/%s.php', $language, $name),
+                        Path::join('languages', $language, "$name.php"),
                         ['type' => $language]
                     );
                 } catch (\OutOfBoundsException $e) {
@@ -260,7 +209,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
             }
 
             $this->filesystem->dumpFile(
-                sprintf('%s/contao/sql/%s.php', $cacheDir, $table),
+                Path::join($cacheDir, 'contao/sql', "$table.php"),
                 sprintf(
                     "<?php\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n\$this->blnIsDbTable = true;\n",
                     sprintf('$this->arrMeta = %s;', var_export($extract->getMeta(), true)),
@@ -285,14 +234,11 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         $mapper = [];
 
         foreach ($files as $file) {
-            $mapper[$file->getBasename('.html5')] = rtrim(
-                $this->filesystem->makePathRelative($file->getPath(), $this->rootDir),
-                '/'
-            );
+            $mapper[$file->getBasename('.html5')] = Path::makeRelative($file->getPath(), $this->projectDir);
         }
 
         $this->filesystem->dumpFile(
-            $cacheDir.'/contao/config/templates.php',
+            Path::join($cacheDir, 'contao/config/templates.php'),
             sprintf("<?php\n\nreturn %s;\n", var_export($mapper, true))
         );
     }
@@ -314,14 +260,14 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     private function findConfigFiles(string $name)
     {
         try {
-            return $this->locator->locate('config/'.$name, null, false);
+            return $this->locator->locate(Path::join('config', $name), null, false);
         } catch (\InvalidArgumentException $e) {
             return [];
         }
     }
 
     /**
-     * @return Finder|array<SplFileInfo>|array
+     * @return Finder|array<SplFileInfo>
      */
     private function findDcaFiles()
     {
@@ -333,19 +279,23 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     }
 
     /**
-     * @return Finder|array<SplFileInfo>|array
+     * @return Finder|array<SplFileInfo>
      */
     private function findLanguageFiles(string $language)
     {
         try {
-            return $this->finder->findIn('languages/'.$language)->files()->name('/\.(php|xlf)$/');
+            return $this->finder
+                ->findIn(Path::join('languages', $language))
+                ->files()
+                ->name('/\.(php|xlf)$/')
+            ;
         } catch (\InvalidArgumentException $e) {
             return [];
         }
     }
 
     /**
-     * @return Finder|array<SplFileInfo>|array
+     * @return Finder|array<SplFileInfo>
      */
     private function findTemplateFiles()
     {

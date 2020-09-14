@@ -71,10 +71,13 @@ class DefaultIndexer implements IndexerInterface
             'language' => $language,
             'protected' => false,
             'groups' => [],
-            'pageId' => 0,
         ];
 
         $this->extendMetaFromJsonLdScripts($document, $meta);
+
+        if (!isset($meta['pageId']) || 0 === $meta['pageId']) {
+            $this->throwBecause('No page ID could be determined.');
+        }
 
         // If search was disabled in the page settings, we do not index
         if (isset($meta['noSearch']) && true === $meta['noSearch']) {
@@ -124,6 +127,7 @@ class DefaultIndexer implements IndexerInterface
     {
         $this->connection->exec('TRUNCATE TABLE tl_search');
         $this->connection->exec('TRUNCATE TABLE tl_search_index');
+        $this->connection->exec('TRUNCATE TABLE tl_search_term');
     }
 
     /**
@@ -140,10 +144,16 @@ class DefaultIndexer implements IndexerInterface
 
     private function extendMetaFromJsonLdScripts(Document $document, array &$meta): void
     {
-        $jsonLds = $document->extractJsonLdScripts('https://schema.contao.org/', 'RegularPage');
+        $jsonLds = $document->extractJsonLdScripts('https://schema.contao.org/', 'Page');
 
         if (0 === \count($jsonLds)) {
-            $this->throwBecause('No JSON-LD found.');
+            $jsonLds = $document->extractJsonLdScripts('https://schema.contao.org/', 'RegularPage');
+
+            if (0 === \count($jsonLds)) {
+                $this->throwBecause('No JSON-LD found.');
+            }
+
+            @trigger_error('Using the JSON-LD type "RegularPage" has been deprecated and will no longer work in Contao 5.0. Use "Page" instead.', E_USER_DEPRECATED);
         }
 
         // Merge all entries to one meta array (the latter overrides the former)

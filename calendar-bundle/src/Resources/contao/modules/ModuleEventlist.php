@@ -25,6 +25,7 @@ use Patchwork\Utf8;
  * @property bool   $cal_ignoreDynamic
  * @property int    $cal_readerModule
  * @property bool   $cal_hideRunning
+ * @property string $cal_featured
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -49,7 +50,9 @@ class ModuleEventlist extends Events
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['eventlist'][0]) . ' ###';
@@ -91,6 +94,18 @@ class ModuleEventlist extends Events
 		$intYear = Input::get('year');
 		$intMonth = Input::get('month');
 		$intDay = Input::get('day');
+
+		// Handle featured events
+		$blnFeatured = null;
+
+		if ($this->cal_featured == 'featured')
+		{
+			$blnFeatured = true;
+		}
+		elseif ($this->cal_featured == 'unfeatured')
+		{
+			$blnFeatured = false;
+		}
 
 		// Jump to the current period
 		if (!isset($_GET['year']) && !isset($_GET['month']) && !isset($_GET['day']))
@@ -149,7 +164,8 @@ class ModuleEventlist extends Events
 		list($intStart, $intEnd, $strEmpty) = $this->getDatesFromFormat($this->Date, $this->cal_format);
 
 		// Get all events
-		$arrAllEvents = $this->getAllEvents($this->cal_calendar, $intStart, $intEnd);
+		$arrAllEvents = $this->getAllEvents($this->cal_calendar, $intStart, $intEnd, $blnFeatured);
+
 		$sort = ($this->cal_order == 'descending') ? 'krsort' : 'ksort';
 
 		// Sort the days
@@ -259,7 +275,19 @@ class ModuleEventlist extends Events
 			}
 		}
 
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+		$uuids = array();
+
+		for ($i=$offset; $i<$limit; $i++)
+		{
+			if ($arrEvents[$i]['addImage'] && $arrEvents[$i]['singleSRC'] != '')
+			{
+				$uuids[] = $arrEvents[$i]['singleSRC'];
+			}
+		}
+
+		// Preload all images in one query so they are loaded into the model registry
+		FilesModel::findMultipleByUuids($uuids);
 
 		// Parse events
 		for ($i=$offset; $i<$limit; $i++)
@@ -326,7 +354,7 @@ class ModuleEventlist extends Events
 			{
 				$objModel = FilesModel::findByUuid($event['singleSRC']);
 
-				if ($objModel !== null && is_file($rootDir . '/' . $objModel->path))
+				if ($objModel !== null && is_file($projectDir . '/' . $objModel->path))
 				{
 					if ($imgSize)
 					{

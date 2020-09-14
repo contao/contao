@@ -36,6 +36,8 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
  */
 class UserPasswordCommand extends Command
 {
+    protected static $defaultName = 'contao:user:password';
+
     /**
      * @var ContaoFramework
      */
@@ -63,9 +65,9 @@ class UserPasswordCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('contao:user:password')
             ->addArgument('username', InputArgument::REQUIRED, 'The username of the back end user')
             ->addOption('password', 'p', InputOption::VALUE_REQUIRED, 'The new password (using this option is not recommended for security reasons)')
+            ->addOption('require-change', 'r', InputOption::VALUE_NONE, 'Require the user to change the password on their next login.')
             ->setDescription('Changes the password of a Contao back end user.')
         ;
     }
@@ -96,11 +98,27 @@ class UserPasswordCommand extends Command
             return 1;
         }
 
-        $hash = $this->validateAndHashPassword($input->getOption('password'));
+        $this->framework->initialize();
+
+        /** @var Config $config */
+        $config = $this->framework->getAdapter(Config::class);
+        $minLength = $config->get('minPasswordLength') ?: 8;
+
+        if (Utf8::strlen($input->getOption('password')) < $minLength) {
+            throw new InvalidArgumentException(sprintf('The password must be at least %s characters long.', $minLength));
+        }
+
+        $encoder = $this->encoderFactory->getEncoder(BackendUser::class);
+        $hash = $encoder->encodePassword($input->getOption('password'), null);
 
         $affected = $this->connection->update(
             'tl_user',
-            ['password' => $hash],
+            [
+                'password' => $hash,
+                'locked' => 0,
+                'loginAttempts' => 0,
+                'pwChange' => $input->getOption('require-change') ? '1' : '',
+            ],
             ['username' => $input->getArgument('username')]
         );
 
@@ -127,25 +145,5 @@ class UserPasswordCommand extends Command
         $helper = $this->getHelper('question');
 
         return $helper->ask($input, $output, $question);
-    }
-
-    /**
-     * @throws InvalidArgumentException
-     */
-    private function validateAndHashPassword(string $password): string
-    {
-        $this->framework->initialize();
-
-        /** @var Config $config */
-        $config = $this->framework->getAdapter(Config::class);
-        $passwordLength = $config->get('minPasswordLength') ?: 8;
-
-        if (Utf8::strlen($password) < $passwordLength) {
-            throw new InvalidArgumentException(sprintf('The password must be at least %s characters long.', $passwordLength));
-        }
-
-        $encoder = $this->encoderFactory->getEncoder(BackendUser::class);
-
-        return $encoder->encodePassword($password, null);
     }
 }

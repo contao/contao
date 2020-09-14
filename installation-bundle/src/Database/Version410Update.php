@@ -40,7 +40,7 @@ class Version410Update extends AbstractMigration
     {
         $schemaManager = $this->connection->getSchemaManager();
 
-        if (!$schemaManager->tablesExist(['tl_user'])) {
+        if (!$schemaManager->tablesExist(['tl_user', 'tl_user_group', 'tl_image_size'])) {
             return false;
         }
 

@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\Model\Collection;
 use FOS\HttpCache\ResponseTagger;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
  * Parent class for front end modules.
@@ -31,7 +32,6 @@ use FOS\HttpCache\ResponseTagger;
  * @property string  $navigationTpl
  * @property string  $customTpl
  * @property array   $pages
- * @property string  $orderPages
  * @property boolean $showHidden
  * @property string  $customLabel
  * @property boolean $autologin
@@ -140,9 +140,15 @@ abstract class Module extends Frontend
 		$this->arrData = $objModule->row();
 		$this->cssID = StringUtil::deserialize($objModule->cssID, true);
 
-		if ($this->customTpl && TL_MODE == 'FE')
+		if ($this->customTpl)
 		{
-			$this->strTemplate = $this->customTpl;
+			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+			// Use the custom template unless it is a back end request
+			if (!$request || !System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
+			{
+				$this->strTemplate = $this->customTpl;
+			}
 		}
 
 		$arrHeadline = StringUtil::deserialize($objModule->headline);
@@ -343,11 +349,29 @@ abstract class Module extends Frontend
 							continue 2;
 						}
 
-						$href = $objNext->getFrontendUrl();
+						try
+						{
+							$href = $objNext->getFrontendUrl();
+						}
+						catch (ExceptionInterface $exception)
+						{
+							System::log('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage(), __METHOD__, TL_ERROR);
+
+							continue 2;
+						}
 						break;
 
 					default:
-						$href = $objSubpage->getFrontendUrl();
+						try
+						{
+							$href = $objSubpage->getFrontendUrl();
+						}
+						catch (ExceptionInterface $exception)
+						{
+							System::log('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage(), __METHOD__, TL_ERROR);
+
+							continue 2;
+						}
 						break;
 				}
 
@@ -423,12 +447,6 @@ abstract class Module extends Frontend
 		$row['target'] = '';
 		$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objSubpage->description);
 
-		// Override the link target
-		if ($objSubpage->type == 'redirect' && $objSubpage->target)
-		{
-			$row['target'] = ' target="_blank"';
-		}
-
 		$arrRel = array();
 
 		if (strncmp($objSubpage->robots, 'noindex,nofollow', 16) === 0)
@@ -436,13 +454,16 @@ abstract class Module extends Frontend
 			$arrRel[] = 'nofollow';
 		}
 
+		// Override the link target
 		if ($objSubpage->type == 'redirect' && $objSubpage->target)
 		{
 			$arrRel[] = 'noreferrer';
 			$arrRel[] = 'noopener';
+
+			$row['target'] = ' target="_blank"';
 		}
 
-		// Override the rel attribute
+		// Set the rel attribute
 		if (!empty($arrRel))
 		{
 			$row['rel'] = ' rel="' . implode(' ', $arrRel) . '"';

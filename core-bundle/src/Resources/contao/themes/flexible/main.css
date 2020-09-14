@@ -494,6 +494,7 @@ h2.sub_headline {
 .tl_box h3,.tl_tbox h3,.tl_xpl h3 {
 	margin:0;
 	padding-top:13px;
+	height:16px;
 	font-size:.875rem;
 }
 .tl_box h4,.tl_tbox h4 {
@@ -587,6 +588,15 @@ h2.sub_headline {
 	0% {
 		background-position-x:1rem;
 	}
+}
+#tl_crawl .tl_message {
+	margin-bottom:24px;
+}
+#tl_crawl .tl_message > p {
+	padding-top:0;
+	padding-bottom:0;
+	background-color:transparent;
+	background-position-y:center;
 }
 #tl_crawl .tl_tbox {
 	padding-top:0;
@@ -1658,10 +1668,12 @@ ul.sgallery li {
 
 /* Ajax box */
 #tl_ajaxBox {
-	width:20%;
+	width:300px;
 	padding:2em;
+	box-sizing:border-box;
 	position:absolute;
-	left:40%;
+	left:50%;
+	margin-left:-150px;
 	background:#fff url("icons/loading.svg") no-repeat right 2em center;
 	border:2px solid #111;
 	border-radius:2px;
@@ -1771,6 +1783,7 @@ ul.sortable button[disabled]:hover {
 }
 .ace_editor {
 	padding:3px;
+	z-index:0;
 }
 .ace_editor,.ace_editor * {
 	font-family:SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace  !important;
@@ -2095,6 +2108,14 @@ fieldset.collapsed > legend {
 .dz-message span {
 	font-size:1.3125rem;
 	color:#ccc;
+}
+
+/* TinyMCE */
+.tox-tinymce {
+	margin: 3px 0;
+}
+.tox .tox-menubar,.tox .tox-toolbar__primary,.tox .tox-statusbar {
+	background-color: #f7f7f9 !important;
 }
 
 /* Tablet */

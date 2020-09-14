@@ -225,6 +225,9 @@ class ContaoUserProviderTest extends TestCase
         $this->assertSame('newsuperhash', $user->password);
     }
 
+    /**
+     * @psalm-suppress InvalidArgument
+     */
     public function testFailsToUpgradePasswordsOfUnsupportedUsers(): void
     {
         $user = $this->createMock(UserInterface::class);
@@ -233,13 +236,14 @@ class ContaoUserProviderTest extends TestCase
         $this->expectException(UnsupportedUserException::class);
         $this->expectExceptionMessage(sprintf('Unsupported class "%s".', \get_class($user)));
 
+        /** @phpstan-ignore-next-line */
         $provider->upgradePassword($user, 'newsuperhash');
     }
 
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using the "postAuthenticate" hook has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.5: Using the "postAuthenticate" hook has been deprecated %s.
      */
     public function testTriggersThePostAuthenticateHook(): void
     {
@@ -279,9 +283,6 @@ class ContaoUserProviderTest extends TestCase
         // Dummy method to test the postAuthenticate hook
     }
 
-    /**
-     * @param ContaoFramework&MockObject $framework
-     */
     private function getProvider(ContaoFramework $framework = null, string $userClass = BackendUser::class): ContaoUserProvider
     {
         if (null === $framework) {

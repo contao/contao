@@ -10,6 +10,7 @@
 
 namespace Contao\Database;
 
+use Contao\ArrayUtil;
 use Contao\Config;
 use Contao\Controller;
 use Contao\Database;
@@ -17,11 +18,12 @@ use Contao\Dbafs;
 use Contao\File;
 use Contao\Files;
 use Contao\FilesModel;
+use Contao\Folder;
 use Contao\StringUtil;
 use Contao\System;
 use Symfony\Component\Finder\SplFileInfo;
 
-@trigger_error('Using the "Contao\Database\Updater" class has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+trigger_deprecation('contao/core-bundle', '4.0', 'Using the "Contao\Database\Updater" class has been deprecated and will no longer work in Contao 5.0.');
 
 /**
  * Adjust the database if the system is updated.
@@ -89,10 +91,10 @@ class Updater extends Controller
 						   ->execute(serialize($mootools), $objLayout->id);
 		}
 
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Update event reader
-		if (!file_exists($rootDir . '/templates/event_default.tpl'))
+		if (!file_exists($projectDir . '/templates/event_default.tpl'))
 		{
 			$this->Database->execute("UPDATE tl_module SET cal_template='event_full' WHERE cal_template='event_default'");
 		}
@@ -556,7 +558,7 @@ class Updater extends Controller
 			{
 				if (($key = array_search('layout.css', $tmp)) !== false)
 				{
-					array_insert($tmp, $key + 1, 'responsive.css');
+					ArrayUtil::arrayInsert($tmp, $key + 1, 'responsive.css');
 				}
 
 				$strFramework = serialize(array_values(array_unique($tmp)));
@@ -649,8 +651,9 @@ class Updater extends Controller
 		$arrMapper = array();
 		$arrFolders = array();
 		$arrFiles = array();
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
-		$arrScan = scan($rootDir . '/' . $strPath);
+
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+		$arrScan = Folder::scan($projectDir . '/' . $strPath);
 
 		foreach ($arrScan as $strFile)
 		{
@@ -659,7 +662,7 @@ class Updater extends Controller
 				continue;
 			}
 
-			if (is_dir($rootDir . '/' . $strPath . '/' . $strFile))
+			if (is_dir($projectDir . '/' . $strPath . '/' . $strFile))
 			{
 				$arrFolders[] = $strPath . '/' . $strFile;
 			}
@@ -689,7 +692,7 @@ class Updater extends Controller
 			if (preg_match('/^meta(_([a-z]{2}))?\.txt$/', basename($strFile), $matches))
 			{
 				$key = $matches[2] ?: 'en';
-				$arrData = file($rootDir . '/' . $strFile, FILE_IGNORE_NEW_LINES);
+				$arrData = file($projectDir . '/' . $strFile, FILE_IGNORE_NEW_LINES);
 
 				foreach ($arrData as $line)
 				{
@@ -708,7 +711,7 @@ class Updater extends Controller
 			$arrMapper[basename($strFile)] = $strUuid;
 		}
 
-		// Insert the meta data AFTER the file entries have been created
+		// Insert the metadata AFTER the file entries have been created
 		if (!empty($arrMeta))
 		{
 			foreach ($arrMeta as $file=>$meta)

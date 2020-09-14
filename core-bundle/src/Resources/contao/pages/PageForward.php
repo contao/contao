@@ -92,7 +92,7 @@ class PageForward extends Frontend
 		{
 			foreach (array_keys($_GET) as $key)
 			{
-				if ($key == 'language' && Config::get('addLanguageToUrl'))
+				if ($key == 'language')
 				{
 					continue;
 				}
@@ -133,7 +133,7 @@ class PageForward extends Frontend
 	 */
 	protected function getRedirectStatusCode($objPage)
 	{
-		return ($objPage->redirect == 'temporary') ? 302 : 301;
+		return ($objPage->redirect == 'temporary') ? 303 : 301;
 	}
 }
 

@@ -8,6 +8,15 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\Backend;
+use Contao\BackendUser;
+use Contao\Config;
+use Contao\Controller;
+use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\DataContainer;
+use Contao\StringUtil;
+use Contao\System;
+
 $GLOBALS['TL_DCA']['tl_module'] = array
 (
 	// Config
@@ -131,6 +140,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 	(
 		'id' => array
 		(
+			'search'                  => true,
 			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
 		),
 		'pid' => array
@@ -224,7 +234,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'inputType'               => 'select',
 			'options_callback' => static function ()
 			{
-				return Contao\Controller::getTemplateGroup('nav_');
+				return Controller::getTemplateGroup('nav_');
 			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
@@ -233,11 +243,11 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'options_callback' => static function (Contao\DataContainer $dc)
+			'options_callback' => static function (DataContainer $dc)
 			{
-				return Contao\Controller::getTemplateGroup('mod_' . $dc->activeRecord->type . '_');
+				return Controller::getTemplateGroup('mod_' . $dc->activeRecord->type . '_', array(), 'mod_' . $dc->activeRecord->type);
 			},
-			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'pages' => array
@@ -245,18 +255,13 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'exclude'                 => true,
 			'inputType'               => 'pageTree',
 			'foreignKey'              => 'tl_page.title',
-			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'orderField'=>'orderPages', 'mandatory'=>true),
+			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'isSortable'=>true, 'mandatory'=>true),
 			'load_callback' => array
 			(
 				array('tl_module', 'setPagesFlags')
 			),
 			'sql'                     => "blob NULL",
 			'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
-		),
-		'orderPages' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['MSC']['sortOrder'],
-			'sql'                     => "blob NULL"
 		),
 		'showHidden' => array
 		(
@@ -307,7 +312,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'inputType'               => 'select',
 			'options_callback' => static function ()
 			{
-				return Contao\Controller::getTemplateGroup('member_');
+				return Controller::getTemplateGroup('member_');
 			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
@@ -374,7 +379,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'inputType'               => 'select',
 			'options_callback' => static function ()
 			{
-				return Contao\Controller::getTemplateGroup('search_');
+				return Controller::getTemplateGroup('search_');
 			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
@@ -423,7 +428,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
 			'options_callback' => static function ()
 			{
-				return Contao\System::getContainer()->get('contao.image.image_sizes')->getOptionsForUser(Contao\BackendUser::getInstance());
+				return System::getContainer()->get('contao.image.image_sizes')->getOptionsForUser(BackendUser::getInstance());
 			},
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
@@ -488,7 +493,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'inputType'               => 'select',
 			'options_callback' => static function ()
 			{
-				return Contao\Controller::getTemplateGroup('rss_');
+				return Controller::getTemplateGroup('rss_');
 			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
@@ -627,7 +632,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_module extends Contao\Backend
+class tl_module extends Backend
 {
 	/**
 	 * Import the back end user object
@@ -635,13 +640,13 @@ class tl_module extends Contao\Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('Contao\BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 	}
 
 	/**
 	 * Check permissions to edit the table
 	 *
-	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
+	 * @throws AccessDeniedException
 	 */
 	public function checkPermission()
 	{
@@ -652,7 +657,7 @@ class tl_module extends Contao\Backend
 
 		if (!$this->User->hasAccess('modules', 'themes'))
 		{
-			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access the front end modules module.');
+			throw new AccessDeniedException('Not enough permissions to access the front end modules module.');
 		}
 	}
 
@@ -685,7 +690,7 @@ class tl_module extends Contao\Backend
 	{
 		$return = array();
 
-		Contao\System::loadLanguageFile('tl_member');
+		System::loadLanguageFile('tl_member');
 		$this->loadDataContainer('tl_member');
 
 		foreach ($GLOBALS['TL_DCA']['tl_member']['fields'] as $k=>$v)
@@ -739,7 +744,7 @@ class tl_module extends Contao\Backend
 
 		while ($objLayout->next())
 		{
-			$arrCustom = Contao\StringUtil::deserialize($objLayout->sections);
+			$arrCustom = StringUtil::deserialize($objLayout->sections);
 
 			// Add the custom layout sections
 			if (!empty($arrCustom) && is_array($arrCustom))
@@ -754,7 +759,7 @@ class tl_module extends Contao\Backend
 			}
 		}
 
-		return Contao\Backend::convertLayoutSectionIdsToAssociativeArray($arrSections);
+		return Backend::convertLayoutSectionIdsToAssociativeArray($arrSections);
 	}
 
 	/**
@@ -826,17 +831,17 @@ class tl_module extends Contao\Backend
 	/**
 	 * Dynamically add flags to the "multiSRC" field
 	 *
-	 * @param mixed                $varValue
-	 * @param Contao\DataContainer $dc
+	 * @param mixed         $varValue
+	 * @param DataContainer $dc
 	 *
 	 * @return mixed
 	 */
-	public function setMultiSrcFlags($varValue, Contao\DataContainer $dc)
+	public function setMultiSrcFlags($varValue, DataContainer $dc)
 	{
 		if ($dc->activeRecord && $dc->activeRecord->type == 'randomImage')
 		{
 			$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['isGallery'] = true;
-			$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = Contao\Config::get('validImageTypes');
+			$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = Config::get('validImageTypes');
 		}
 
 		return $varValue;
@@ -845,17 +850,17 @@ class tl_module extends Contao\Backend
 	/**
 	 * Dynamically change attributes of the "pages" field
 	 *
-	 * @param mixed                $varValue
-	 * @param Contao\DataContainer $dc
+	 * @param mixed         $varValue
+	 * @param DataContainer $dc
 	 *
 	 * @return mixed
 	 */
-	public function setPagesFlags($varValue, Contao\DataContainer $dc)
+	public function setPagesFlags($varValue, DataContainer $dc)
 	{
 		if ($dc->activeRecord && $dc->activeRecord->type == 'search')
 		{
 			$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['mandatory'] = false;
-			unset($GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['orderField']);
+			unset($GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['isSortable']);
 		}
 
 		return $varValue;

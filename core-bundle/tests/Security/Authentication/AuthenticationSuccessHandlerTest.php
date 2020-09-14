@@ -134,7 +134,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using the "postLogin" hook has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.5: Using the "postLogin" hook has been deprecated %s.
      */
     public function testTriggersThePostLoginHook(): void
     {
@@ -449,10 +449,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $this->getHandler()->onAuthenticationSuccess($request, $token);
     }
 
-    /**
-     * @param ContaoFramework&MockObject $framework
-     * @param LoggerInterface&MockObject $logger
-     */
     private function getHandler(ContaoFramework $framework = null, LoggerInterface $logger = null): AuthenticationSuccessHandler
     {
         if (null === $framework) {

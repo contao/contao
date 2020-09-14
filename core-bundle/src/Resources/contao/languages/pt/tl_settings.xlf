@@ -73,22 +73,6 @@
         <source>Do not collapse elements in the back end preview.</source>
         <target>Não colapsar elementos de conteúdo e outros recursos quando pré-visualizado no backend.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.doNotRedirectEmpty.0">
-        <source>Do not redirect empty URLs</source>
-        <target>Não redirecionar URLs brancos (vazios)</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.doNotRedirectEmpty.1">
-        <source>For an empty URL display the website instead of redirecting to the language root page (not recommended).</source>
-        <target>Para um URL branco, mostrar o site em vez de redirecionar para o idioma da página raiz (não recomendado).</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.folderUrl.0">
-        <source>Enable folder URLs</source>
-        <target>Habilitar URLs de pastas</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.folderUrl.1">
-        <source>Here you can enable folder-style page aliases like &lt;em&gt;docs/install/download.html&lt;/em&gt; instead of &lt;em&gt;docs-install-download.html&lt;/em&gt;.</source>
-        <target>Aqui você pode habilitar pseudônimos de páginas no formato de pastas como &lt;em&gt;docs/install/download.html&lt;/em&gt; ao invés de &lt;em&gt;docs-install-download.html&lt;/em&gt;.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.allowedTags.0">
         <source>Allowed HTML tags</source>
         <target>Tags HTML permitidas</target>
@@ -197,10 +181,6 @@
         <source>Back end configuration</source>
         <target>Configuração da administração</target>
       </trans-unit>
-      <trans-unit id="tl_settings.frontend_legend">
-        <source>Front end configuration</source>
-        <target>Configuração do site</target>
-      </trans-unit>
       <trans-unit id="tl_settings.security_legend">
         <source>Security settings</source>
         <target>Configurações de segurança</target>
@@ -220,6 +200,9 @@
       <trans-unit id="tl_settings.chmod_legend">
         <source>Default access rights</source>
         <target>Direitos de acesso padrão</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.configuredInApp">
+        <source>This setting has been defined in the app configuration and cannot be changed here anymore.</source>
       </trans-unit>
     </body>
   </file>

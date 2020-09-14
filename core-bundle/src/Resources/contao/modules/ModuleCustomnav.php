@@ -32,7 +32,9 @@ class ModuleCustomnav extends Module
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['customnav'][0]) . ' ###';
@@ -84,35 +86,14 @@ class ModuleCustomnav extends Module
 			return;
 		}
 
-		$arrPages = array();
-
-		// Sort the array keys according to the given order
-		if ($this->orderPages != '')
-		{
-			$tmp = StringUtil::deserialize($this->orderPages);
-
-			if (!empty($tmp) && \is_array($tmp))
-			{
-				$arrPages = array_map(static function () {}, array_flip($tmp));
-			}
-		}
-
-		// Add the items to the pre-sorted array
-		while ($objPages->next())
-		{
-			$arrPages[$objPages->id] = $objPages->current();
-		}
-
-		$arrPages = array_values(array_filter($arrPages));
-
 		$objTemplate = new FrontendTemplate($this->navigationTpl ?: 'nav_default');
 		$objTemplate->type = static::class;
 		$objTemplate->cssID = $this->cssID; // see #4897 and 6129
 		$objTemplate->level = 'level_1';
 		$objTemplate->module = $this; // see #155
 
-		/** @var PageModel[] $arrPages */
-		foreach ($arrPages as $objModel)
+		/** @var PageModel[] $objPages */
+		foreach ($objPages as $objModel)
 		{
 			$_groups = StringUtil::deserialize($objModel->groups);
 
@@ -172,14 +153,31 @@ class ModuleCustomnav extends Module
 					$row['pageTitle'] = StringUtil::specialchars($objModel->pageTitle, true);
 					$row['link'] = $objModel->title;
 					$row['href'] = $href;
+					$row['rel'] = '';
 					$row['nofollow'] = (strncmp($objModel->robots, 'noindex,nofollow', 16) === 0);
 					$row['target'] = '';
 					$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objModel->description);
 
+					$arrRel = array();
+
+					if (strncmp($objModel->robots, 'noindex,nofollow', 16) === 0)
+					{
+						$arrRel[] = 'nofollow';
+					}
+
 					// Override the link target
 					if ($objModel->type == 'redirect' && $objModel->target)
 					{
+						$arrRel[] = 'noreferrer';
+						$arrRel[] = 'noopener';
+
 						$row['target'] = ' target="_blank"';
+					}
+
+					// Set the rel attribute
+					if (!empty($arrRel))
+					{
+						$row['rel'] = ' rel="' . implode(' ', $arrRel) . '"';
 					}
 
 					$items[] = $row;
@@ -198,14 +196,31 @@ class ModuleCustomnav extends Module
 					$row['pageTitle'] = StringUtil::specialchars($objModel->pageTitle, true);
 					$row['link'] = $objModel->title;
 					$row['href'] = $href;
+					$row['rel'] = '';
 					$row['nofollow'] = (strncmp($objModel->robots, 'noindex,nofollow', 16) === 0);
 					$row['target'] = '';
 					$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objModel->description);
 
+					$arrRel = array();
+
+					if (strncmp($objModel->robots, 'noindex,nofollow', 16) === 0)
+					{
+						$arrRel[] = 'nofollow';
+					}
+
 					// Override the link target
 					if ($objModel->type == 'redirect' && $objModel->target)
 					{
+						$arrRel[] = 'noreferrer';
+						$arrRel[] = 'noopener';
+
 						$row['target'] = ' target="_blank"';
+					}
+
+					// Set the rel attribute
+					if (!empty($arrRel))
+					{
+						$row['rel'] = ' rel="' . implode(' ', $arrRel) . '"';
 					}
 
 					$items[] = $row;

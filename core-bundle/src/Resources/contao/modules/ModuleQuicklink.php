@@ -32,7 +32,9 @@ class ModuleQuicklink extends Module
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['quicklink'][0]) . ' ###';
@@ -78,30 +80,10 @@ class ModuleQuicklink extends Module
 			return;
 		}
 
-		$arrPages = array();
-
-		// Sort the array keys according to the given order
-		if ($this->orderPages != '')
-		{
-			$tmp = StringUtil::deserialize($this->orderPages);
-
-			if (!empty($tmp) && \is_array($tmp))
-			{
-				$arrPages = array_map(static function () {}, array_flip($tmp));
-			}
-		}
-
-		// Add the items to the pre-sorted array
-		while ($objPages->next())
-		{
-			$arrPages[$objPages->id] = $objPages->current();
-		}
-
 		$items = array();
-		$arrPages = array_values(array_filter($arrPages));
 
-		/** @var PageModel[] $arrPages */
-		foreach ($arrPages as $objSubpage)
+		/** @var PageModel[] $objPages */
+		foreach ($objPages as $objSubpage)
 		{
 			$objSubpage->title = StringUtil::stripInsertTags($objSubpage->title);
 			$objSubpage->pageTitle = StringUtil::stripInsertTags($objSubpage->pageTitle);
@@ -146,7 +128,7 @@ class ModuleQuicklink extends Module
 
 		$this->Template->items = $items;
 		$this->Template->formId = 'tl_quicklink_' . $this->id;
-		$this->Template->request = ampersand(Environment::get('request'));
+		$this->Template->request = StringUtil::ampersand(Environment::get('request'));
 		$this->Template->title = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['quicklink'];
 		$this->Template->button = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['go']);
 	}

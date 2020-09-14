@@ -51,11 +51,11 @@
       </trans-unit>
       <trans-unit id="tl_module.nl_template.0">
         <source>Newsletter template</source>
-        <target>Newslettertemplate</target>
+        <target>Newsletter-Template</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_template.1">
-        <source>Here you can select the newsletter template.</source>
-        <target>Hier können Sie das Newslettertemplate auswählen.</target>
+        <source>Here you can select a newsletter template.</source>
+        <target>Hier können Sie ein Newsletter-Template auswählen.</target>
       </trans-unit>
       <trans-unit id="tl_module.text_legend">
         <source>Custom text</source>

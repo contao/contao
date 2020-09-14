@@ -22,7 +22,6 @@ use Contao\ManagerPlugin\Config\ContainerBuilder as PluginContainerBuilder;
 use Contao\ManagerPlugin\PluginLoader;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
-use Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle;
 use Doctrine\DBAL\Connection;
 use FOS\HttpCacheBundle\FOSHttpCacheBundle;
 use Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle;
@@ -32,7 +31,6 @@ use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MonologBundle\MonologBundle;
 use Symfony\Bundle\SecurityBundle\SecurityBundle;
-use Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Bundle\WebProfilerBundle\WebProfilerBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -84,7 +82,7 @@ class PluginTest extends ContaoTestCase
         /** @var array<BundleConfig> $bundles */
         $bundles = $plugin->getBundles(new DelegatingParser());
 
-        $this->assertCount(14, $bundles);
+        $this->assertCount(12, $bundles);
 
         $this->assertSame(FrameworkBundle::class, $bundles[0]->getName());
         $this->assertSame([], $bundles[0]->getReplace());
@@ -92,7 +90,7 @@ class PluginTest extends ContaoTestCase
 
         $this->assertSame(SecurityBundle::class, $bundles[1]->getName());
         $this->assertSame([], $bundles[1]->getReplace());
-        $this->assertSame([], $bundles[1]->getLoadAfter());
+        $this->assertSame([FrameworkBundle::class], $bundles[1]->getLoadAfter());
 
         $this->assertSame(TwigBundle::class, $bundles[2]->getName());
         $this->assertSame([], $bundles[2]->getReplace());
@@ -102,47 +100,39 @@ class PluginTest extends ContaoTestCase
         $this->assertSame([], $bundles[3]->getReplace());
         $this->assertSame([], $bundles[3]->getLoadAfter());
 
-        $this->assertSame(SwiftmailerBundle::class, $bundles[4]->getName());
+        $this->assertSame(DoctrineBundle::class, $bundles[4]->getName());
         $this->assertSame([], $bundles[4]->getReplace());
         $this->assertSame([], $bundles[4]->getLoadAfter());
 
-        $this->assertSame(DoctrineBundle::class, $bundles[5]->getName());
+        $this->assertSame(LexikMaintenanceBundle::class, $bundles[5]->getName());
         $this->assertSame([], $bundles[5]->getReplace());
         $this->assertSame([], $bundles[5]->getLoadAfter());
 
-        $this->assertSame(DoctrineCacheBundle::class, $bundles[6]->getName());
+        $this->assertSame(NelmioCorsBundle::class, $bundles[6]->getName());
         $this->assertSame([], $bundles[6]->getReplace());
         $this->assertSame([], $bundles[6]->getLoadAfter());
 
-        $this->assertSame(LexikMaintenanceBundle::class, $bundles[7]->getName());
+        $this->assertSame(NelmioSecurityBundle::class, $bundles[7]->getName());
         $this->assertSame([], $bundles[7]->getReplace());
         $this->assertSame([], $bundles[7]->getLoadAfter());
 
-        $this->assertSame(NelmioCorsBundle::class, $bundles[8]->getName());
+        $this->assertSame(FOSHttpCacheBundle::class, $bundles[8]->getName());
         $this->assertSame([], $bundles[8]->getReplace());
         $this->assertSame([], $bundles[8]->getLoadAfter());
 
-        $this->assertSame(NelmioSecurityBundle::class, $bundles[9]->getName());
+        $this->assertSame(ContaoManagerBundle::class, $bundles[9]->getName());
         $this->assertSame([], $bundles[9]->getReplace());
-        $this->assertSame([], $bundles[9]->getLoadAfter());
+        $this->assertSame([ContaoCoreBundle::class], $bundles[9]->getLoadAfter());
 
-        $this->assertSame(FOSHttpCacheBundle::class, $bundles[10]->getName());
+        $this->assertSame(DebugBundle::class, $bundles[10]->getName());
         $this->assertSame([], $bundles[10]->getReplace());
         $this->assertSame([], $bundles[10]->getLoadAfter());
+        $this->assertFalse($bundles[10]->loadInProduction());
 
-        $this->assertSame(ContaoManagerBundle::class, $bundles[11]->getName());
+        $this->assertSame(WebProfilerBundle::class, $bundles[11]->getName());
         $this->assertSame([], $bundles[11]->getReplace());
-        $this->assertSame([ContaoCoreBundle::class], $bundles[11]->getLoadAfter());
-
-        $this->assertSame(DebugBundle::class, $bundles[12]->getName());
-        $this->assertSame([], $bundles[12]->getReplace());
-        $this->assertSame([], $bundles[12]->getLoadAfter());
-        $this->assertFalse($bundles[12]->loadInProduction());
-
-        $this->assertSame(WebProfilerBundle::class, $bundles[13]->getName());
-        $this->assertSame([], $bundles[13]->getReplace());
-        $this->assertSame([], $bundles[13]->getLoadAfter());
-        $this->assertFalse($bundles[13]->loadInProduction());
+        $this->assertSame([], $bundles[11]->getLoadAfter());
+        $this->assertFalse($bundles[11]->loadInProduction());
     }
 
     public function testRegistersModuleBundles(): void
@@ -167,7 +157,7 @@ class PluginTest extends ContaoTestCase
         $plugin = new Plugin();
         $configs = $plugin->getBundles($parser);
 
-        $this->assertCount(16, $configs);
+        $this->assertCount(14, $configs);
         $this->assertContains('foo1', $configs);
         $this->assertContains('foo2', $configs);
         $this->assertNotContains('foo3', $configs);
@@ -323,7 +313,7 @@ class PluginTest extends ContaoTestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Defining the "prepend_locale" parameter in the parameters.yml file %s.
+     * @expectedDeprecation Since contao/manager-bundle 4.6: Defining the "prepend_locale" parameter in the parameters.yml file %s.
      */
     public function testHandlesThePrependLocaleParameter(): void
     {
@@ -462,15 +452,66 @@ class PluginTest extends ContaoTestCase
         $container = $this->getContainer();
         $container->setParameter('mailer_transport', 'mail');
 
-        (new Plugin())->getExtensionConfig('swiftmailer', [], $container);
+        (new Plugin())->getExtensionConfig('framework', [], $container);
 
         $this->assertSame('sendmail', $container->getParameter('mailer_transport'));
+    }
+
+    public function testAddsDefaultMailer(): void
+    {
+        $expect = [
+            [
+                'mailer' => [
+                    'dsn' => '%env(MAILER_DSN)%',
+                ],
+            ],
+        ];
+
+        $container = $this->getContainer();
+        $extensionConfig = (new Plugin())->getExtensionConfig('framework', [], $container);
+
+        $this->assertSame($expect, $extensionConfig);
+    }
+
+    public function testDoesNotAddDefaultMailerIfDefined(): void
+    {
+        $extensionConfigs = [
+            [
+                'mailer' => [
+                    'dsn' => 'smtp://localhost',
+                ],
+            ],
+        ];
+
+        $expect = $extensionConfigs;
+
+        $container = $this->getContainer();
+        $extensionConfig = (new Plugin())->getExtensionConfig('framework', $extensionConfigs, $container);
+
+        $this->assertSame($expect, $extensionConfig);
+
+        $extensionConfigs = [
+            [
+                'mailer' => [
+                    'transports' => [
+                        'default' => 'smtp://localhost',
+                    ],
+                ],
+            ],
+        ];
+
+        $expect = $extensionConfigs;
+
+        $container = $this->getContainer();
+        $extensionConfig = (new Plugin())->getExtensionConfig('framework', $extensionConfigs, $container);
+
+        $this->assertSame($expect, $extensionConfig);
     }
 
     /**
      * @dataProvider getMailerParameters
      */
-    public function testSetsTheMailerUrl(string $transport, string $host, ?string $user, ?string $password, int $port, ?string $encryption, string $expected): void
+    public function testSetsTheMailerDsn(string $transport, ?string $host, ?string $user, ?string $password, ?int $port, ?string $encryption, string $expected): void
     {
         $container = $this->getContainer();
         $container->setParameter('mailer_transport', $transport);
@@ -480,15 +521,25 @@ class PluginTest extends ContaoTestCase
         $container->setParameter('mailer_port', $port);
         $container->setParameter('mailer_encryption', $encryption);
 
-        (new Plugin())->getExtensionConfig('swiftmailer', [], $container);
+        (new Plugin())->getExtensionConfig('framework', [], $container);
 
         $bag = $container->getParameterBag()->all();
 
-        $this->assertSame($expected, $bag['env(MAILER_URL)']);
+        $this->assertSame($expected, $bag['env(MAILER_DSN)']);
     }
 
     public function getMailerParameters(): \Generator
     {
+        yield [
+            'mail',
+            null,
+            null,
+            null,
+            null,
+            null,
+            'sendmail+smtp://default',
+        ];
+
         yield [
             'sendmail',
             '127.0.0.1',
@@ -496,68 +547,214 @@ class PluginTest extends ContaoTestCase
             null,
             25,
             null,
+            'sendmail+smtp://default',
+        ];
+
+        yield [
+            'smtp',
+            '127.0.0.1',
+            null,
+            null,
+            25,
+            null,
+            'smtp://127.0.0.1:25',
+        ];
+
+        yield [
+            'smtp',
+            '127.0.0.1',
+            null,
+            'foobar',
+            25,
+            null,
+            'smtp://127.0.0.1:25',
+        ];
+
+        yield [
+            'smtp',
+            '127.0.0.1',
+            'foo@bar.com',
+            null,
+            25,
+            null,
+            'smtp://foo%%40bar.com@127.0.0.1:25',
+        ];
+
+        yield [
+            'smtp',
+            '127.0.0.1',
+            'foo@bar.com',
+            'foobar',
+            25,
+            null,
+            'smtp://foo%%40bar.com:foobar@127.0.0.1:25',
+        ];
+
+        yield [
+            'smtp',
+            '127.0.0.1',
+            'foo@bar.com',
+            'foobar',
+            null,
+            'ssl',
+            'smtps://foo%%40bar.com:foobar@127.0.0.1',
+        ];
+
+        yield [
+            'smtp',
+            '127.0.0.1',
+            'foo@bar.com',
+            'foobar',
+            465,
+            'ssl',
+            'smtps://foo%%40bar.com:foobar@127.0.0.1:465',
+        ];
+
+        yield [
+            'smtp',
+            '127.0.0.1',
+            null,
+            null,
+            587,
+            'tls',
+            'smtp://127.0.0.1:587',
+        ];
+
+        yield [
+            'smtp',
+            '127.0.0.1',
+            'foo@bar.com',
+            'foobar',
+            587,
+            'tls',
+            'smtp://foo%%40bar.com:foobar@127.0.0.1:587',
+        ];
+    }
+
+    /**
+     * @dataProvider getMailerUrlParameters
+     */
+    public function testSetsTheMailerDsnFromMailerUrl(string $mailerUrl, string $expected): void
+    {
+        $_SERVER['MAILER_URL'] = $mailerUrl;
+
+        $container = $this->getContainer();
+
+        (new Plugin())->getExtensionConfig('framework', [], $container);
+
+        $bag = $container->getParameterBag()->all();
+
+        $this->assertSame($expected, $bag['env(MAILER_DSN)']);
+    }
+
+    public function getMailerUrlParameters(): \Generator
+    {
+        yield [
             'sendmail://localhost',
+            'sendmail+smtp://default',
         ];
 
         yield [
-            'smtp',
-            '127.0.0.1',
-            null,
-            null,
-            25,
-            null,
+            'mail://localhost',
+            'sendmail+smtp://default',
+        ];
+
+        yield [
+            'smtp://127.0.0.1:25',
             'smtp://127.0.0.1:25',
         ];
 
         yield [
-            'smtp',
-            '127.0.0.1',
-            null,
-            'foobar',
-            25,
-            null,
-            'smtp://127.0.0.1:25',
+            'smtp://127.0.0.1:25?local_domain=example.org&foo=bar',
+            'smtp://127.0.0.1:25?local_domain=example.org&foo=bar',
         ];
 
         yield [
-            'smtp',
-            '127.0.0.1',
-            'foo@bar.com',
-            null,
-            25,
-            null,
-            'smtp://127.0.0.1:25?username=foo%%40bar.com',
+            'smtp://foo@bar.com@127.0.0.1:25',
+            'smtp://foo%%40bar.com@127.0.0.1:25',
         ];
 
         yield [
-            'smtp',
-            '127.0.0.1',
-            'foo@bar.com',
-            'foobar',
-            25,
-            null,
-            'smtp://127.0.0.1:25?username=foo%%40bar.com&password=foobar',
+            'smtp://127.0.0.1:25?username=foo@bar.com',
+            'smtp://foo%%40bar.com@127.0.0.1:25',
         ];
 
         yield [
-            'smtp',
-            '127.0.0.1',
-            null,
-            null,
-            587,
-            'tls',
+            'smtp://127.0.0.1:25?username=foo@bar.com&password=foobar',
+            'smtp://foo%%40bar.com:foobar@127.0.0.1:25',
+        ];
+
+        yield [
+            'smtp://foo@bar.com:foobar@127.0.0.1:25',
+            'smtp://foo%%40bar.com:foobar@127.0.0.1:25',
+        ];
+
+        yield [
             'smtp://127.0.0.1:587?encryption=tls',
+            'smtp://127.0.0.1:587',
         ];
 
         yield [
-            'smtp',
-            '127.0.0.1',
-            'foo@bar.com',
-            'foobar',
-            587,
-            'tls',
-            'smtp://127.0.0.1:587?username=foo%%40bar.com&password=foobar&encryption=tls',
+            'smtp://127.0.0.1:587?username=foo@bar.com&password=foobar&encryption=tls',
+            'smtp://foo%%40bar.com:foobar@127.0.0.1:587',
         ];
+
+        yield [
+            'smtp://127.0.0.1?encryption=ssl',
+            'smtps://127.0.0.1',
+        ];
+
+        yield [
+            'smtp://foo@bar.com:foobar@127.0.0.1?encryption=ssl',
+            'smtps://foo%%40bar.com:foobar@127.0.0.1',
+        ];
+
+        yield [
+            'smtp://127.0.0.1:465?encryption=ssl',
+            'smtps://127.0.0.1:465',
+        ];
+
+        yield [
+            'smtp://127.0.0.1:465?username=foo@bar.com&password=foobar&encryption=ssl',
+            'smtps://foo%%40bar.com:foobar@127.0.0.1:465',
+        ];
+
+        yield [
+            'gmail://localhost',
+            'smtps://smtp.gmail.com',
+        ];
+
+        yield [
+            '?transport=gmail',
+            'smtps://smtp.gmail.com',
+        ];
+    }
+
+    /**
+     * @dataProvider getInvalidMailerUrlParameters
+     */
+    public function testThrowsExceptionIfMailerUrlIsInvalid(string $invalidMailerUrl): void
+    {
+        $_SERVER['MAILER_URL'] = $invalidMailerUrl;
+
+        $container = $this->getContainer();
+
+        $this->expectException(\InvalidArgumentException::class);
+
+        (new Plugin())->getExtensionConfig('framework', [], $container);
+    }
+
+    public function getInvalidMailerUrlParameters(): \Generator
+    {
+        yield['smtp'];
+
+        yield['smtp://'];
+
+        yield['//smtp'];
+
+        yield['?host=localhost'];
+
+        yield['foo://localhost'];
     }
 
     public function testRetrievesTheConnectionParametersFromTheConfiguration(): void

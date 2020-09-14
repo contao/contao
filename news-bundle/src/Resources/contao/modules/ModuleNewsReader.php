@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Exception\RedirectResponseException;
 use Patchwork\Utf8;
 
 /**
@@ -40,7 +41,9 @@ class ModuleNewsReader extends ModuleNews
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['newsreader'][0]) . ' ###';
@@ -89,10 +92,37 @@ class ModuleNewsReader extends ModuleNews
 		// Get the news item
 		$objArticle = NewsModel::findPublishedByParentAndIdOrAlias(Input::get('items'), $this->news_archives);
 
-		// The news item does not exist or has an external target (see #33)
-		if (null === $objArticle || $objArticle->source != 'default')
+		// The news item does not exist (see #33)
+		if ($objArticle === null)
 		{
 			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
+		}
+
+		// Redirect if the news item has a target URL (see #1498)
+		switch ($objArticle->source) {
+			case 'internal':
+				if ($page = PageModel::findPublishedById($objArticle->jumpTo))
+				{
+					throw new RedirectResponseException($page->getAbsoluteUrl(), 301);
+				}
+
+				throw new InternalServerErrorException('Invalid "jumpTo" value or target page not public');
+
+			case 'article':
+				if (($article = ArticleModel::findByPk($objArticle->articleId)) && ($page = PageModel::findPublishedById($article->pid)))
+				{
+					throw new RedirectResponseException($page->getAbsoluteUrl('/articles/' . ($article->alias ?: $article->id)), 301);
+				}
+
+				throw new InternalServerErrorException('Invalid "articleId" value or target page not public');
+
+			case 'external':
+				if ($objArticle->url)
+				{
+					throw new RedirectResponseException($objArticle->url, 301);
+				}
+
+				throw new InternalServerErrorException('Empty target URL');
 		}
 
 		// Set the default template
@@ -122,6 +152,11 @@ class ModuleNewsReader extends ModuleNews
 		elseif ($objArticle->teaser)
 		{
 			$objPage->description = $this->prepareMetaDescription($objArticle->teaser);
+		}
+
+		if ($objArticle->robots)
+		{
+			$objPage->robots = $objArticle->robots;
 		}
 
 		$bundles = System::getContainer()->getParameter('kernel.bundles');

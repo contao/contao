@@ -73,6 +73,13 @@
         <source>Here you can add a custom meta title to overwrite the default page title.</source>
         <target>Këtu mund të shtoni një titull në nivel meta për të zëvendësuar titullin e faqes parazgjedhore.</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.robots.0">
+        <source>Robots tag</source>
+        <target>Robots tag</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.robots.1">
+        <source>Here you can overwrite how search engines handle the event.</source>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.description.0">
         <source>Meta description</source>
         <target>Përshkrim në nivel meta</target>
@@ -237,6 +244,12 @@
         <source>Do not allow comments for this particular event.</source>
         <target>Mos lejo komente për këtë ngjarje.</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.featured.0">
+        <source>Feature event</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.featured.1">
+        <source>Show the event in a featured event list.</source>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.published.0">
         <source>Publish event</source>
         <target>Publiko ngjarjen</target>
@@ -275,10 +288,6 @@
         <source>Date and time</source>
         <target>Data dhe koha</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.meta_legend">
-        <source>Meta data</source>
-        <target>Të dhënat në nivel meta</target>
-      </trans-unit>
       <trans-unit id="tl_calendar_events.details_legend">
         <source>Event details</source>
         <target>Detajet e ngjarjes</target>
@@ -302,6 +311,10 @@
       <trans-unit id="tl_calendar_events.source_legend">
         <source>Redirect target</source>
         <target>Burimi faqes</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.meta_legend">
+        <source>Meta data</source>
+        <target>Të dhënat në nivel meta</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.expert_legend">
         <source>Expert settings</source>
@@ -359,6 +372,9 @@
         <source>Publish/unpublish event ID %s</source>
         <target>Pubkliko/ç'publiko ngjarjen ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.feature">
+        <source>Feature/unfeature event ID %s</source>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.editheader">
         <source>Edit the settings of event ID %s</source>
         <target>Përpuno cilësit e ngjarjes me ID %s</target>
@@ -366,6 +382,10 @@
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>
         <target>Fut në këtë kalendar</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.editmeta">
+        <source>Edit the event settings</source>
+        <target>Përpuno konfigurimin e ngjarjes</target>
       </trans-unit>
     </body>
   </file>

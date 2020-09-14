@@ -8,6 +8,26 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\Backend;
+use Contao\BackendUser;
+use Contao\Cache;
+use Contao\Comments;
+use Contao\CommentsModel;
+use Contao\CommentsNotifyModel;
+use Contao\Config;
+use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\DataContainer;
+use Contao\Date;
+use Contao\Email;
+use Contao\Environment;
+use Contao\Idna;
+use Contao\Image;
+use Contao\Input;
+use Contao\StringUtil;
+use Contao\System;
+use Contao\Versions;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
 $GLOBALS['TL_DCA']['tl_comments'] = array
 (
 	// Config
@@ -189,7 +209,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		),
 		'author' => array
 		(
-			'default'                 => Contao\BackendUser::getInstance()->id,
+			'default'                 => BackendUser::getInstance()->id,
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user.name',
@@ -237,7 +257,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_comments extends Contao\Backend
+class tl_comments extends Backend
 {
 	/**
 	 * Import the back end user object
@@ -245,17 +265,17 @@ class tl_comments extends Contao\Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('Contao\BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 	}
 
 	/**
 	 * Check permissions to edit table tl_comments
 	 *
-	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
+	 * @throws AccessDeniedException
 	 */
 	public function checkPermission()
 	{
-		switch (Contao\Input::get('act'))
+		switch (Input::get('act'))
 		{
 			case 'select':
 			case 'show':
@@ -267,24 +287,24 @@ class tl_comments extends Contao\Backend
 			case 'toggle':
 				$objComment = $this->Database->prepare("SELECT id, parent, source FROM tl_comments WHERE id=?")
 											 ->limit(1)
-											 ->execute(Contao\Input::get('id'));
+											 ->execute(Input::get('id'));
 
 				if ($objComment->numRows < 1)
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid comment ID ' . Contao\Input::get('id') . '.');
+					throw new AccessDeniedException('Invalid comment ID ' . Input::get('id') . '.');
 				}
 
 				if (!$this->isAllowedToEditComment($objComment->parent, $objComment->source))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' comment ID ' . Contao\Input::get('id') . ' (parent element: ' . $objComment->source . ' ID ' . $objComment->parent . ').');
+					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' comment ID ' . Input::get('id') . ' (parent element: ' . $objComment->source . ' ID ' . $objComment->parent . ').');
 				}
 				break;
 
 			case 'editAll':
 			case 'deleteAll':
 			case 'overrideAll':
-				/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-				$objSession = Contao\System::getContainer()->get('session');
+				/** @var SessionInterface $objSession */
+				$objSession = System::getContainer()->get('session');
 
 				$session = $objSession->all();
 
@@ -308,9 +328,9 @@ class tl_comments extends Contao\Backend
 				break;
 
 			default:
-				if (Contao\Input::get('act'))
+				if (Input::get('act'))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid command "' . Contao\Input::get('act') . '.');
+					throw new AccessDeniedException('Invalid command "' . Input::get('act') . '.');
 				}
 				break;
 		}
@@ -319,9 +339,9 @@ class tl_comments extends Contao\Backend
 	/**
 	 * Notify subscribers of a reply
 	 *
-	 * @param Contao\DataContainer $dc
+	 * @param DataContainer $dc
 	 */
-	public function notifyOfReply(Contao\DataContainer $dc)
+	public function notifyOfReply(DataContainer $dc)
 	{
 		// Return if there is no active record (override all) or no reply or the notification has been sent already
 		if (!$dc->activeRecord || !$dc->activeRecord->addReply || $dc->activeRecord->notifyReply)
@@ -329,19 +349,19 @@ class tl_comments extends Contao\Backend
 			return;
 		}
 
-		$objNotify = Contao\CommentsNotifyModel::findActiveBySourceAndParent($dc->activeRecord->source, $dc->activeRecord->parent);
+		$objNotify = CommentsNotifyModel::findActiveBySourceAndParent($dc->activeRecord->source, $dc->activeRecord->parent);
 
 		if ($objNotify !== null)
 		{
 			while ($objNotify->next())
 			{
 				// Prepare the URL
-				$strUrl = Contao\Idna::decode(Contao\Environment::get('base')) . $objNotify->url;
+				$strUrl = Idna::decode(Environment::get('base')) . $objNotify->url;
 
-				$objEmail = new Contao\Email();
+				$objEmail = new Email();
 				$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
 				$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'];
-				$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['com_notifyReplySubject'], Contao\Idna::decode(Contao\Environment::get('host')));
+				$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['com_notifyReplySubject'], Idna::decode(Environment::get('host')));
 				$objEmail->text = sprintf($GLOBALS['TL_LANG']['MSC']['com_notifyReplyMessage'], $objNotify->name, $strUrl . '#c' . $dc->id, $strUrl . '?token=' . $objNotify->tokenRemove);
 				$objEmail->sendTo($objNotify->email);
 			}
@@ -368,13 +388,13 @@ class tl_comments extends Contao\Backend
 		$strKey = __METHOD__ . '-' . $strSource . '-' . $intParent;
 
 		// Load cached result
-		if (Contao\Cache::has($strKey))
+		if (Cache::has($strKey))
 		{
-			return Contao\Cache::get($strKey);
+			return Cache::get($strKey);
 		}
 
 		// Order deny,allow
-		Contao\Cache::set($strKey, false);
+		Cache::set($strKey, false);
 
 		switch ($strSource)
 		{
@@ -384,9 +404,9 @@ class tl_comments extends Contao\Backend
 										  ->execute($intParent);
 
 				// Do not check whether the page is mounted (see #5174)
-				if ($objPage->numRows > 0 && $this->User->isAllowed(Contao\BackendUser::CAN_EDIT_ARTICLES, $objPage->row()))
+				if ($objPage->numRows > 0 && $this->User->isAllowed(BackendUser::CAN_EDIT_ARTICLES, $objPage->row()))
 				{
-					Contao\Cache::set($strKey, true);
+					Cache::set($strKey, true);
 				}
 				break;
 
@@ -396,9 +416,9 @@ class tl_comments extends Contao\Backend
 										  ->execute($intParent);
 
 				// Do not check whether the page is mounted (see #5174)
-				if ($objPage->numRows > 0 && $this->User->isAllowed(Contao\BackendUser::CAN_EDIT_PAGE, $objPage->row()))
+				if ($objPage->numRows > 0 && $this->User->isAllowed(BackendUser::CAN_EDIT_PAGE, $objPage->row()))
 				{
-					Contao\Cache::set($strKey, true);
+					Cache::set($strKey, true);
 				}
 				break;
 
@@ -410,7 +430,7 @@ class tl_comments extends Contao\Backend
 				// Do not check the access to the news module (see #5174)
 				if ($objArchive->numRows > 0 && $this->User->hasAccess($objArchive->pid, 'news'))
 				{
-					Contao\Cache::set($strKey, true);
+					Cache::set($strKey, true);
 				}
 				break;
 
@@ -422,13 +442,13 @@ class tl_comments extends Contao\Backend
 				// Do not check the access to the calendar module (see #5174)
 				if ($objCalendar->numRows > 0 && $this->User->hasAccess($objCalendar->pid, 'calendars'))
 				{
-					Contao\Cache::set($strKey, true);
+					Cache::set($strKey, true);
 				}
 				break;
 
 			case 'tl_faq':
 				// Do not check access to the FAQ module (see #5174)
-				Contao\Cache::set($strKey, true);
+				Cache::set($strKey, true);
 				break;
 
 			default:
@@ -441,7 +461,7 @@ class tl_comments extends Contao\Backend
 
 						if ($this->{$callback[0]}->{$callback[1]}($intParent, $strSource) === true)
 						{
-							Contao\Cache::set($strKey, true);
+							Cache::set($strKey, true);
 							break;
 						}
 					}
@@ -449,7 +469,7 @@ class tl_comments extends Contao\Backend
 				break;
 		}
 
-		return Contao\Cache::get($strKey);
+		return Cache::get($strKey);
 	}
 
 	/**
@@ -463,7 +483,7 @@ class tl_comments extends Contao\Backend
 	{
 		if ($varValue)
 		{
-			Contao\Comments::notifyCommentsSubscribers(Contao\CommentsModel::findByPk(Contao\Input::get('id')));
+			Comments::notifyCommentsSubscribers(CommentsModel::findByPk(Input::get('id')));
 		}
 
 		return $varValue;
@@ -554,8 +574,8 @@ class tl_comments extends Contao\Backend
 
 		return '
 <div class="comment_wrap">
-<div class="cte_type ' . $key . '"><a href="mailto:' . Contao\Idna::decodeEmail($arrRow['email']) . '" title="' . Contao\StringUtil::specialchars(Contao\Idna::decodeEmail($arrRow['email'])) . '">' . $arrRow['name'] . '</a>' . (($arrRow['website'] != '') ? ' (<a href="' . $arrRow['website'] . '" title="' . Contao\StringUtil::specialchars($arrRow['website']) . '" target="_blank" rel="noreferrer noopener">' . $GLOBALS['TL_LANG']['MSC']['com_website'] . '</a>)' : '') . ' – ' . Contao\Date::parse(Contao\Config::get('datimFormat'), $arrRow['date']) . ' – IP ' . Contao\StringUtil::specialchars($arrRow['ip']) . '<br>' . $title . '</div>
-<div class="limit_height mark_links' . (!Contao\Config::get('doNotCollapse') ? ' h40' : '') . '">
+<div class="cte_type ' . $key . '"><a href="mailto:' . Idna::decodeEmail($arrRow['email']) . '" title="' . StringUtil::specialchars(Idna::decodeEmail($arrRow['email'])) . '">' . $arrRow['name'] . '</a>' . (($arrRow['website'] != '') ? ' (<a href="' . $arrRow['website'] . '" title="' . StringUtil::specialchars($arrRow['website']) . '" target="_blank" rel="noreferrer noopener">' . $GLOBALS['TL_LANG']['MSC']['com_website'] . '</a>)' : '') . ' – ' . Date::parse(Config::get('datimFormat'), $arrRow['date']) . ' – IP ' . StringUtil::specialchars($arrRow['ip']) . '<br>' . $title . '</div>
+<div class="limit_height mark_links' . (!Config::get('doNotCollapse') ? ' h40' : '') . '">
 ' . $arrRow['comment'] . '
 </div>
 </div>' . "\n    ";
@@ -575,7 +595,7 @@ class tl_comments extends Contao\Backend
 	 */
 	public function editComment($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->isAllowedToEditComment($row['parent'], $row['source']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)) . ' ';
+		return $this->isAllowedToEditComment($row['parent'], $row['source']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -592,7 +612,7 @@ class tl_comments extends Contao\Backend
 	 */
 	public function deleteComment($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->isAllowedToEditComment($row['parent'], $row['source']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)) . ' ';
+		return $this->isAllowedToEditComment($row['parent'], $row['source']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -609,9 +629,9 @@ class tl_comments extends Contao\Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (Contao\Input::get('tid'))
+		if (Input::get('tid'))
 		{
-			$this->toggleVisibility(Contao\Input::get('tid'), (Contao\Input::get('state') == 1), (@func_get_arg(12) ?: null));
+			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
 			$this->redirect($this->getReferer());
 		}
 
@@ -630,26 +650,26 @@ class tl_comments extends Contao\Backend
 
 		if (!$this->isAllowedToEditComment($row['parent'], $row['source']))
 		{
-			return Contao\Image::getHtml($icon) . ' ';
+			return Image::getHtml($icon) . ' ';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label, 'data-state="' . ($row['published'] ? 1 : 0) . '"') . '</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label, 'data-state="' . ($row['published'] ? 1 : 0) . '"') . '</a> ';
 	}
 
 	/**
 	 * Disable/enable a user group
 	 *
-	 * @param integer              $intId
-	 * @param boolean              $blnVisible
-	 * @param Contao\DataContainer $dc
+	 * @param integer       $intId
+	 * @param boolean       $blnVisible
+	 * @param DataContainer $dc
 	 *
-	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
+	 * @throws AccessDeniedException
 	 */
-	public function toggleVisibility($intId, $blnVisible, Contao\DataContainer $dc=null)
+	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
 	{
 		// Set the ID and action
-		Contao\Input::setGet('id', $intId);
-		Contao\Input::setGet('act', 'toggle');
+		Input::setGet('id', $intId);
+		Input::setGet('act', 'toggle');
 
 		if ($dc)
 		{
@@ -676,23 +696,25 @@ class tl_comments extends Contao\Backend
 		// Check the field access
 		if (!$this->User->hasAccess('tl_comments::published', 'alexf'))
 		{
-			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to publish/unpublish comment ID ' . $intId . '.');
+			throw new AccessDeniedException('Not enough permissions to publish/unpublish comment ID ' . $intId . '.');
+		}
+
+		$objRow = $this->Database->prepare("SELECT * FROM tl_comments WHERE id=?")
+								 ->limit(1)
+								 ->execute($intId);
+
+		if ($objRow->numRows < 1)
+		{
+			throw new AccessDeniedException('Invalid comment ID ' . $intId . '.');
 		}
 
 		// Set the current record
 		if ($dc)
 		{
-			$objRow = $this->Database->prepare("SELECT * FROM tl_comments WHERE id=?")
-									 ->limit(1)
-									 ->execute($intId);
-
-			if ($objRow->numRows)
-			{
-				$dc->activeRecord = $objRow;
-			}
+			$dc->activeRecord = $objRow;
 		}
 
-		$objVersions = new Contao\Versions('tl_comments', $intId);
+		$objVersions = new Versions('tl_comments', $intId);
 		$objVersions->initialize();
 
 		// Trigger the save_callback
@@ -742,19 +764,24 @@ class tl_comments extends Contao\Backend
 		}
 
 		$objVersions->create();
+
+		if ($dc)
+		{
+			$dc->invalidateCacheTags();
+		}
 	}
 
 	/**
 	 * Adds the cache invalidation tags for the source.
 	 *
-	 * @param Contao\DataContainer $dc
-	 * @param array                $tags
+	 * @param DataContainer $dc
+	 * @param array         $tags
 	 *
 	 * @return array
 	 */
-	public function invalidateSourceCacheTag(Contao\DataContainer $dc, array $tags)
+	public function invalidateSourceCacheTag(DataContainer $dc, array $tags)
 	{
-		$commentModel = Contao\CommentsModel::findByPk($dc->id);
+		$commentModel = CommentsModel::findByPk($dc->id);
 
 		if (null !== $commentModel)
 		{

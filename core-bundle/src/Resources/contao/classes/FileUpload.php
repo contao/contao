@@ -263,7 +263,7 @@ class FileUpload extends Backend
 	 */
 	protected function getMaximumUploadSize()
 	{
-		@trigger_error('Using FileUpload::getMaximumUploadSize() has been deprecated and will no longer work in Contao 5.0. Use FileUpload::getMaxUploadSize() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.6', 'Using "Contao\FileUpload::getMaximumUploadSize()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\FileUpload::getMaxUploadSize()" instead.');
 
 		return static::getMaxUploadSize();
 	}
@@ -335,10 +335,7 @@ class FileUpload extends Backend
 		// Resized successfully
 		if ($blnResize)
 		{
-			$container = System::getContainer();
-			$rootDir = $container->getParameter('kernel.project_dir');
-			$container->get('contao.image.image_factory')->create($rootDir . '/' . $strImage, array($arrImageSize[0], $arrImageSize[1]), $rootDir . '/' . $strImage);
-
+			$objFile->resizeTo($arrImageSize[0], $arrImageSize[1]);
 			Message::addInfo(sprintf($GLOBALS['TL_LANG']['MSC']['fileResized'], $objFile->basename));
 			$this->log('File "' . $strImage . '" was scaled down to the maximum dimensions', __METHOD__, TL_FILES);
 			$this->blnHasResized = true;
