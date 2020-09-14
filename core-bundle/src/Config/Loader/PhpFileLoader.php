@@ -31,7 +31,7 @@ class PhpFileLoader extends Loader
         [$code, $namespace] = $this->parseFile((string) $resource);
 
         if ('namespaced' === $type) {
-            $code = sprintf("\nnamespace %s {%s}\n", $namespace, $code);
+            $code = sprintf("\nnamespace %s{%s}\n", ltrim($namespace.' '), $code);
         }
 
         return $code;
@@ -126,7 +126,7 @@ class PhpFileLoader extends Loader
 
         // Emit code and namespace information.
         $prettyPrinter = new PrettyPrinter();
-        $code = $prettyPrinter->prettyPrint($ast);
+        $code = sprintf("\n%s\n", $prettyPrinter->prettyPrint($ast));
         $namespaceNode = $namespaceResolver->getNameContext()->getNamespace();
         $namespace = null !== $namespaceNode ? $namespaceNode->toString() : '';
 
