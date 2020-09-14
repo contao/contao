@@ -98,7 +98,7 @@ class FormFileUpload extends Widget implements \uploadable
 		{
 			if ($this->mandatory)
 			{
-				if ($this->strLabel == '')
+				if (!$this->strLabel)
 				{
 					$this->addError($GLOBALS['TL_LANG']['ERR']['mdtryNoLabel']);
 				}

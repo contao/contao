@@ -108,7 +108,7 @@ class InsertTags extends Controller
 			$strTag = $tags[$_rit+1];
 
 			// Skip empty tags
-			if ($strTag == '')
+			if (!$strTag)
 			{
 				continue;
 			}
@@ -294,7 +294,7 @@ class InsertTags extends Controller
 						$this->import(FrontendUser::class, 'User');
 						$value = $this->User->{$elements[1]};
 
-						if ($value == '')
+						if (!$value)
 						{
 							$arrCache[$strTag] = $value;
 							break;
@@ -719,15 +719,15 @@ class InsertTags extends Controller
 
 				// Page
 				case 'page':
-					if ($objPage->pageTitle == '' && $elements[1] == 'pageTitle')
+					if (!$objPage->pageTitle && $elements[1] == 'pageTitle')
 					{
 						$elements[1] = 'title';
 					}
-					elseif ($objPage->parentPageTitle == '' && $elements[1] == 'parentPageTitle')
+					elseif (!$objPage->parentPageTitle && $elements[1] == 'parentPageTitle')
 					{
 						$elements[1] = 'parentTitle';
 					}
-					elseif ($objPage->mainPageTitle == '' && $elements[1] == 'mainPageTitle')
+					elseif (!$objPage->mainPageTitle && $elements[1] == 'mainPageTitle')
 					{
 						$elements[1] = 'mainTitle';
 					}

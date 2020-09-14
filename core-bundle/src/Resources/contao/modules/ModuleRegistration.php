@@ -589,7 +589,7 @@ class ModuleRegistration extends Module
 	 */
 	protected function resendActivationMail(MemberModel $objMember)
 	{
-		if ($objMember->disable == '')
+		if (!$objMember->disable)
 		{
 			return;
 		}

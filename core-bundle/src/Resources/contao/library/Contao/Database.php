@@ -279,7 +279,7 @@ class Database
 	 */
 	public function tableExists($strTable, $strDatabase=null, $blnNoCache=false)
 	{
-		if ($strTable == '')
+		if (!$strTable)
 		{
 			return false;
 		}
@@ -402,7 +402,7 @@ class Database
 	 */
 	public function fieldExists($strField, $strTable, $blnNoCache=false)
 	{
-		if ($strField == '' || $strTable == '')
+		if (!$strField || !$strTable)
 		{
 			return false;
 		}
@@ -429,7 +429,7 @@ class Database
 	 */
 	public function indexExists($strName, $strTable, $blnNoCache=false)
 	{
-		if ($strName == '' || $strTable == '')
+		if (!$strName || !$strTable)
 		{
 			return false;
 		}

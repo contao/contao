@@ -40,7 +40,7 @@ class ContentMedia extends ContentElement
 	 */
 	public function generate()
 	{
-		if ($this->playerSRC == '')
+		if (!$this->playerSRC)
 		{
 			return '';
 		}

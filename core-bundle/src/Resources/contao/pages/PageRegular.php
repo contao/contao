@@ -204,7 +204,7 @@ class PageRegular extends Frontend
 		$this->Template->pageTitle = str_replace('[-]', '', $this->Template->pageTitle);
 
 		// Fall back to the default title tag
-		if ($objLayout->titleTag == '')
+		if (!$objLayout->titleTag)
 		{
 			$objLayout->titleTag = '{{page::pageTitle}} - {{page::rootPageTitle}}';
 		}

@@ -533,7 +533,7 @@ class tl_calendar_feed extends Contao\Backend
 	public function checkFeedAlias($varValue, Contao\DataContainer $dc)
 	{
 		// No change or empty value
-		if ($varValue == $dc->value || $varValue == '')
+		if (!$varValue || $varValue == $dc->value)
 		{
 			return $varValue;
 		}

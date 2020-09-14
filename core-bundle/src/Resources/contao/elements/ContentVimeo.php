@@ -30,7 +30,7 @@ class ContentVimeo extends ContentElement
 	 */
 	public function generate()
 	{
-		if ($this->vimeo == '')
+		if (!$this->vimeo)
 		{
 			return '';
 		}

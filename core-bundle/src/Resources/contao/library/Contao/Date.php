@@ -388,17 +388,17 @@ class Date
 			$intHour -= 12;
 		}
 
-		if ($intMonth == '')
+		if (!$intMonth)
 		{
 			$intMonth = 1;
 		}
 
-		if ($intDay == '')
+		if (!$intDay)
 		{
 			$intDay = 1;
 		}
 
-		if ($intYear == '')
+		if (!$intYear)
 		{
 			$intYear = 1970;
 		}

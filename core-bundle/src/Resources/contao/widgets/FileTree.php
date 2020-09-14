@@ -116,7 +116,7 @@ class FileTree extends Widget
 		}
 
 		// Return the value as usual
-		if ($varInput == '')
+		if (!$varInput)
 		{
 			if ($this->mandatory)
 			{
@@ -145,7 +145,7 @@ class FileTree extends Widget
 	 */
 	protected function checkValue($varInput)
 	{
-		if ($varInput == '')
+		if (!$varInput)
 		{
 			return;
 		}

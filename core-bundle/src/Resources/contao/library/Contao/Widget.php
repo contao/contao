@@ -575,7 +575,7 @@ abstract class Widget extends Controller
 	 */
 	public function parse($arrAttributes=null)
 	{
-		if ($this->strTemplate == '')
+		if (!$this->strTemplate)
 		{
 			return '';
 		}
@@ -617,7 +617,7 @@ abstract class Widget extends Controller
 	 */
 	public function generateLabel()
 	{
-		if ($this->strLabel == '')
+		if (!$this->strLabel)
 		{
 			return '';
 		}
@@ -810,14 +810,14 @@ abstract class Widget extends Controller
 			$varInput = trim($varInput);
 		}
 
-		if ($varInput == '')
+		if (!$varInput)
 		{
 			if (!$this->mandatory)
 			{
 				return '';
 			}
 
-			if ($this->strLabel == '')
+			if (!$this->strLabel)
 			{
 				$this->addError($GLOBALS['TL_LANG']['ERR']['mdtryNoLabel']);
 			}

@@ -365,7 +365,7 @@ class Email
 		}
 
 		// Default subject
-		if ($this->strSubject == '')
+		if (!$this->strSubject)
 		{
 			$this->strSubject = 'No subject';
 		}
@@ -378,7 +378,7 @@ class Email
 			// Embed images
 			if ($this->blnEmbedImages)
 			{
-				if ($this->strImageDir == '')
+				if (!$this->strImageDir)
 				{
 					$this->strImageDir = System::getContainer()->getParameter('kernel.project_dir') . '/';
 				}
@@ -432,7 +432,7 @@ class Email
 		}
 
 		// Add the administrator e-mail as default sender
-		if ($this->strSender == '')
+		if (!$this->strSender)
 		{
 			list($this->strSenderName, $this->strSender) = StringUtil::splitFriendlyEmail(Config::get('adminEmail'));
 		}

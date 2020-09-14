@@ -861,7 +861,7 @@ class tl_user extends Contao\Backend
 	 */
 	public function checkAdminStatus($varValue, Contao\DataContainer $dc)
 	{
-		if ($varValue == '' && $this->User->id == $dc->id)
+		if (!$varValue && $this->User->id == $dc->id)
 		{
 			$varValue = 1;
 		}

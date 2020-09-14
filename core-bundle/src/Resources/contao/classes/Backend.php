@@ -92,7 +92,7 @@ abstract class Backend extends Controller
 	{
 		$lang = $GLOBALS['TL_LANGUAGE'];
 
-		if ($lang == '')
+		if (!$lang)
 		{
 			return 'en';
 		}
@@ -478,7 +478,7 @@ abstract class Backend extends Controller
 		{
 			$act = Input::get('act');
 
-			if ($act == '' || $act == 'paste' || $act == 'select')
+			if (!$act || $act == 'paste' || $act == 'select')
 			{
 				$act = ($dc instanceof \listable) ? 'showAll' : 'edit';
 			}
@@ -673,7 +673,7 @@ abstract class Backend extends Controller
 		// Recursively walk through all subpages
 		foreach ($objPages as $objPage)
 		{
-			$isPublished = ($objPage->published && ($objPage->start == '' || $objPage->start <= time()) && ($objPage->stop == '' || $objPage->stop > time()));
+			$isPublished = ($objPage->published && (!$objPage->start || $objPage->start <= time()) && (!$objPage->stop || $objPage->stop > time()));
 
 			// Searchable and not protected
 			if ($isPublished && $objPage->type == 'regular' && !$objPage->requireItem && (!$objPage->noSearch || $blnIsXmlSitemap) && (!$blnIsXmlSitemap || $objPage->robots != 'noindex,nofollow') && (!$objPage->protected || Config::get('indexProtected')))
@@ -767,17 +767,17 @@ abstract class Backend extends Controller
 
 		if (isset($arrMeta[$strLanguage]))
 		{
-			if (!empty($arrMeta[$strLanguage]['title']) && Input::post('title') == '')
+			if (!empty($arrMeta[$strLanguage]['title']) && !Input::post('title'))
 			{
 				Input::setPost('title', $arrMeta[$strLanguage]['title']);
 			}
 
-			if (!empty($arrMeta[$strLanguage]['alt']) && Input::post('alt') == '')
+			if (!empty($arrMeta[$strLanguage]['alt']) && !Input::post('alt'))
 			{
 				Input::setPost('alt', $arrMeta[$strLanguage]['alt']);
 			}
 
-			if (!empty($arrMeta[$strLanguage]['caption']) && Input::post('caption') == '')
+			if (!empty($arrMeta[$strLanguage]['caption']) && !Input::post('caption'))
 			{
 				Input::setPost('caption', $arrMeta[$strLanguage]['caption']);
 			}
@@ -1001,7 +1001,7 @@ abstract class Backend extends Controller
 
 		$strNode = $objSession->get($strKey);
 
-		if ($strNode == '')
+		if (!$strNode)
 		{
 			return;
 		}

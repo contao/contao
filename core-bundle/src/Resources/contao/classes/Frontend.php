@@ -69,7 +69,7 @@ abstract class Frontend extends Controller
 
 		$strRequest = Environment::get('relativeRequest');
 
-		if ($strRequest == '')
+		if (!$strRequest)
 		{
 			return null;
 		}
@@ -353,7 +353,7 @@ abstract class Frontend extends Controller
 		}
 
 		// Redirect to the website root or language root (e.g. en/)
-		if (Environment::get('relativeRequest') == '')
+		if (!Environment::get('relativeRequest'))
 		{
 			if (Config::get('addLanguageToUrl') && !Config::get('doNotRedirectEmpty'))
 			{
@@ -406,7 +406,7 @@ abstract class Frontend extends Controller
 		{
 			list($key, $value) = explode('=', $strFragment);
 
-			if ($value == '')
+			if (!$value)
 			{
 				unset($arrGet[$key]);
 			}

@@ -379,7 +379,7 @@ class ModuleEventlist extends Events
 		}
 
 		// No events found
-		if ($strEvents == '')
+		if (!$strEvents)
 		{
 			$strEvents = "\n" . '<div class="empty">' . $strEmpty . '</div>' . "\n";
 		}

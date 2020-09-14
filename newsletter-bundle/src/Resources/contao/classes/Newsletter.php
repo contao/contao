@@ -43,25 +43,25 @@ class Newsletter extends Backend
 		System::loadLanguageFile('tl_newsletter_channel');
 
 		// Set the template
-		if ($objNewsletter->template == '')
+		if (!$objNewsletter->template)
 		{
 			$objNewsletter->template = $objNewsletter->channelTemplate;
 		}
 
 		// Set the sender address
-		if ($objNewsletter->sender == '')
+		if (!$objNewsletter->sender)
 		{
 			$objNewsletter->sender = $objNewsletter->channelSender;
 		}
 
 		// Set the sender name
-		if ($objNewsletter->senderName == '')
+		if (!$objNewsletter->senderName)
 		{
 			$objNewsletter->senderName = $objNewsletter->channelSenderName;
 		}
 
 		// No sender address given
-		if ($objNewsletter->sender == '')
+		if (!$objNewsletter->sender)
 		{
 			throw new InternalServerErrorException('No sender address given. Please check the newsletter channel settings.');
 		}
@@ -735,7 +735,7 @@ class Newsletter extends Backend
 		}
 
 		// Nothing has changed or e-mail address is empty
-		if ($varValue == $objUser->newsletter || $objUser->email == '')
+		if ($varValue == $objUser->newsletter || !$objUser->email)
 		{
 			return $varValue;
 		}

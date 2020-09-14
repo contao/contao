@@ -609,7 +609,7 @@ abstract class Controller extends System
 		}
 		else
 		{
-			if ($varId == '')
+			if (!$varId)
 			{
 				return '';
 			}
@@ -1265,7 +1265,7 @@ abstract class Controller extends System
 	 */
 	public static function convertRelativeUrls($strContent, $strBase='', $blnHrefOnly=false)
 	{
-		if ($strBase == '')
+		if (!$strBase)
 		{
 			$strBase = Environment::get('base');
 		}

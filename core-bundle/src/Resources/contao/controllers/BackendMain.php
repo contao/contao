@@ -217,13 +217,13 @@ class BackendMain extends Backend
 	protected function output()
 	{
 		// Default headline
-		if ($this->Template->headline == '')
+		if (!$this->Template->headline)
 		{
 			$this->Template->headline = $GLOBALS['TL_LANG']['MSC']['dashboard'];
 		}
 
 		// Default title
-		if ($this->Template->title == '')
+		if (!$this->Template->title)
 		{
 			$this->Template->title = $this->Template->headline;
 		}

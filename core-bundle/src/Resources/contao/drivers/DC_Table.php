@@ -130,7 +130,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		}
 
 		// Check whether the table is defined
-		if ($strTable == '' || !isset($GLOBALS['TL_DCA'][$strTable]))
+		if (!$strTable || !isset($GLOBALS['TL_DCA'][$strTable]))
 		{
 			$this->log('Could not load the data container configuration for "' . $strTable . '"', __METHOD__, TL_ERROR);
 			trigger_error('Could not load the data container configuration', E_USER_ERROR);
@@ -2216,7 +2216,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			{
 				Message::reset();
 
-				if ($this->ptable == '')
+				if (!$this->ptable)
 				{
 					$this->redirect(TL_SCRIPT . '?do=' . Input::get('do'));
 				}
@@ -3632,7 +3632,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$breadcrumb = ($GLOBALS['TL_DCA'][$table]['list']['sorting']['breadcrumb'] ?? '');
 
 		// Return if there are no records
-		if ($tree == '' && Input::get('act') != 'paste')
+		if (!$tree && Input::get('act') != 'paste')
 		{
 			if ($breadcrumb)
 			{

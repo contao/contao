@@ -225,7 +225,7 @@ class StringUtil
 	 */
 	public static function decodeEntities($strString, $strQuoteStyle=ENT_COMPAT, $strCharset=null)
 	{
-		if ($strString == '')
+		if (!$strString)
 		{
 			return '';
 		}
@@ -449,7 +449,7 @@ class StringUtil
 	 */
 	public static function highlight($strString, $strPhrase, $strOpeningTag='<strong>', $strClosingTag='</strong>')
 	{
-		if ($strString == '' || $strPhrase == '')
+		if (!$strString || !$strPhrase)
 		{
 			return $strString;
 		}
@@ -911,7 +911,7 @@ class StringUtil
 	 */
 	public static function convertEncoding($str, $to, $from=null)
 	{
-		if ($str == '')
+		if (!$str)
 		{
 			return '';
 		}

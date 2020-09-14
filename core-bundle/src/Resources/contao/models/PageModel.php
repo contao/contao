@@ -916,7 +916,7 @@ class PageModel extends Model
 					$type = $objParentPage->type;
 
 					// Parent title
-					if ($ptitle == '')
+					if (!$ptitle)
 					{
 						$palias = $objParentPage->alias;
 						$pname = $objParentPage->title;
@@ -994,7 +994,7 @@ class PageModel extends Model
 			$this->twoFactorJumpTo = $objParentPage->twoFactorJumpTo;
 
 			// Store whether the root page has been published
-			$this->rootIsPublic = ($objParentPage->published && ($objParentPage->start == '' || $objParentPage->start <= $time) && ($objParentPage->stop == '' || $objParentPage->stop > $time));
+			$this->rootIsPublic = ($objParentPage->published && (!$objParentPage->start || $objParentPage->start <= $time) && (!$objParentPage->stop || $objParentPage->stop > $time));
 			$this->rootIsFallback = true;
 			$this->rootUseSSL = $objParentPage->useSSL;
 			$this->rootFallbackLanguage = $objParentPage->language;
@@ -1025,22 +1025,22 @@ class PageModel extends Model
 		$this->trail = array_reverse($trail);
 
 		// Use the global date format if none is set (see #6104)
-		if ($this->dateFormat == '')
+		if (!$this->dateFormat)
 		{
 			$this->dateFormat = Config::get('dateFormat');
 		}
 
-		if ($this->timeFormat == '')
+		if (!$this->timeFormat)
 		{
 			$this->timeFormat = Config::get('timeFormat');
 		}
 
-		if ($this->datimFormat == '')
+		if (!$this->datimFormat)
 		{
 			$this->datimFormat = Config::get('datimFormat');
 		}
 
-		$this->isPublic = ($this->published && ($this->start == '' || $this->start <= $time) && ($this->stop == '' || $this->stop > $time));
+		$this->isPublic = ($this->published && (!$this->start || $this->start <= $time) && (!$this->stop || $this->stop > $time));
 
 		// HOOK: add custom logic
 		if (!empty($GLOBALS['TL_HOOKS']['loadPageDetails']) && \is_array($GLOBALS['TL_HOOKS']['loadPageDetails']))

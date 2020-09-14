@@ -57,7 +57,7 @@ class ContentHyperlink extends ContentElement
 			$this->Template->attribute = ' data-lightbox="' . $this->rel . '"';
 		}
 
-		if ($this->linkTitle == '')
+		if (!$this->linkTitle)
 		{
 			$this->linkTitle = $this->url;
 		}

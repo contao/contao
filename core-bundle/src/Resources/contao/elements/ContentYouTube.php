@@ -30,7 +30,7 @@ class ContentYouTube extends ContentElement
 	 */
 	public function generate()
 	{
-		if ($this->youtube == '')
+		if (!$this->youtube)
 		{
 			return '';
 		}

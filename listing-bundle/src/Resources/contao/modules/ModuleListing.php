@@ -64,13 +64,13 @@ class ModuleListing extends Module
 		}
 
 		// Return if the table or the fields have not been set
-		if ($this->list_table == '' || $this->list_fields == '')
+		if (!$this->list_table || !$this->list_fields)
 		{
 			return '';
 		}
 
 		// Disable the details page
-		if ($this->list_info == '' && Input::get('show'))
+		if (!$this->list_info && Input::get('show'))
 		{
 			return '';
 		}

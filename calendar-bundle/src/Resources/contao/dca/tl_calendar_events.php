@@ -668,7 +668,7 @@ class tl_calendar_events extends Contao\Backend
 		};
 
 		// Generate the alias if there is none
-		if ($varValue == '')
+		if (!$varValue)
 		{
 			$varValue = Contao\System::getContainer()->get('contao.slug')->generate($dc->activeRecord->title, Contao\CalendarModel::findByPk($dc->activeRecord->pid)->jumpTo, $aliasExists);
 		}

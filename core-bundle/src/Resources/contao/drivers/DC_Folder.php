@@ -128,7 +128,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		}
 
 		// Check whether the table is defined
-		if ($strTable == '' || !isset($GLOBALS['TL_DCA'][$strTable]))
+		if (!$strTable || !isset($GLOBALS['TL_DCA'][$strTable]))
 		{
 			$this->log('Could not load data container configuration for "' . $strTable . '"', __METHOD__, TL_ERROR);
 			trigger_error('Could not load data container configuration', E_USER_ERROR);
@@ -600,7 +600,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		$this->import(Files::class, 'Files');
 		$strFolder = Input::get('pid', true);
 
-		if ($strFolder == '' || !file_exists($this->strRootDir . '/' . $strFolder) || !$this->isMounted($strFolder))
+		if (!$strFolder || !file_exists($this->strRootDir . '/' . $strFolder) || !$this->isMounted($strFolder))
 		{
 			throw new AccessDeniedException('Folder "' . $strFolder . '" is not mounted or is not a directory.');
 		}
@@ -2935,7 +2935,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 	 */
 	protected function isMounted($strFolder)
 	{
-		if ($strFolder == '')
+		if (!$strFolder)
 		{
 			return false;
 		}

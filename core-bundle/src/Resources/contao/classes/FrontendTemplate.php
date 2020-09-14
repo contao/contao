@@ -346,7 +346,7 @@ class FrontendTemplate extends Template
 			}
 		}
 
-		if ($sections == '')
+		if (!$sections)
 		{
 			return '';
 		}

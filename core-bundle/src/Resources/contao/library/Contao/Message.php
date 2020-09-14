@@ -93,7 +93,7 @@ class Message
 	 */
 	public static function add($strMessage, $strType, $strScope=TL_MODE)
 	{
-		if ($strMessage == '')
+		if (!$strMessage)
 		{
 			return;
 		}

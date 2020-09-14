@@ -681,7 +681,7 @@ abstract class DataContainer extends Backend
 	{
 		$return = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][1];
 
-		if ($return == '' || $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'] == 'password' || !Config::get('showHelp'))
+		if (!$return || $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'] == 'password' || !Config::get('showHelp'))
 		{
 			return '';
 		}
@@ -908,12 +908,12 @@ abstract class DataContainer extends Backend
 				$attributes = sprintf(' style="background-image:url(\'%s\')"', Controller::addAssetsUrlTo($v['icon'])) . $attributes;
 			}
 
-			if ($label == '')
+			if (!$label)
 			{
 				$label = $k;
 			}
 
-			if ($title == '')
+			if (!$title)
 			{
 				$title = $label;
 			}

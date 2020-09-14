@@ -63,7 +63,7 @@ class Encryption
 			return $varValue;
 		}
 
-		if ($varValue == '')
+		if (!$varValue)
 		{
 			return '';
 		}
@@ -109,7 +109,7 @@ class Encryption
 			return $varValue;
 		}
 
-		if ($varValue == '')
+		if (!$varValue)
 		{
 			return '';
 		}
@@ -125,7 +125,7 @@ class Encryption
 		$iv = substr($varValue, 0, $ivsize);
 		$varValue = substr($varValue, $ivsize);
 
-		if ($varValue == '')
+		if (!$varValue)
 		{
 			return '';
 		}

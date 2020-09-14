@@ -38,7 +38,7 @@ class Idna
 	 */
 	public static function encode($strDomain)
 	{
-		if ($strDomain == '')
+		if (!$strDomain)
 		{
 			return '';
 		}
@@ -64,7 +64,7 @@ class Idna
 	 */
 	public static function decode($strDomain)
 	{
-		if ($strDomain == '')
+		if (!$strDomain)
 		{
 			return '';
 		}
@@ -90,7 +90,7 @@ class Idna
 	 */
 	public static function encodeEmail($strEmail)
 	{
-		if ($strEmail == '')
+		if (!$strEmail)
 		{
 			return '';
 		}
@@ -103,7 +103,7 @@ class Idna
 		$arrChunks = explode('@', $strEmail);
 		$strHost = array_pop($arrChunks);
 
-		if ($strHost == '')
+		if (!$strHost)
 		{
 			return '';
 		}
@@ -118,7 +118,7 @@ class Idna
 
 		$strHost = static::encode($strHost);
 
-		if ($strHost == '')
+		if (!$strHost)
 		{
 			return '';
 		}
@@ -135,7 +135,7 @@ class Idna
 	 */
 	public static function decodeEmail($strEmail)
 	{
-		if ($strEmail == '')
+		if (!$strEmail)
 		{
 			return '';
 		}
@@ -148,7 +148,7 @@ class Idna
 		$arrChunks = explode('@', $strEmail);
 		$strHost = array_pop($arrChunks);
 
-		if ($strHost == '')
+		if (!$strHost)
 		{
 			return '';
 		}
@@ -163,7 +163,7 @@ class Idna
 
 		$strHost = static::decode($strHost);
 
-		if ($strHost == '')
+		if (!$strHost)
 		{
 			return '';
 		}
@@ -182,7 +182,7 @@ class Idna
 	 */
 	public static function encodeUrl($strUrl)
 	{
-		if ($strUrl == '')
+		if (!$strUrl)
 		{
 			return '';
 		}
@@ -274,7 +274,7 @@ class Idna
 	 */
 	public static function decodeUrl($strUrl)
 	{
-		if ($strUrl == '')
+		if (!$strUrl)
 		{
 			return '';
 		}

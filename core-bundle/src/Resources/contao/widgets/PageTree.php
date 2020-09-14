@@ -109,7 +109,7 @@ class PageTree extends Widget
 		}
 
 		// Return the value as usual
-		if ($varInput == '')
+		if (!$varInput)
 		{
 			if ($this->mandatory)
 			{
@@ -136,7 +136,7 @@ class PageTree extends Widget
 	 */
 	protected function checkValue($varInput)
 	{
-		if ($varInput == '' || !\is_array($this->rootNodes))
+		if (!$varInput || !\is_array($this->rootNodes))
 		{
 			return;
 		}

@@ -1132,7 +1132,7 @@ class tl_page extends Contao\Backend
 		};
 
 		// Generate an alias if there is none
-		if ($varValue == '')
+		if (!$varValue)
 		{
 			$varValue = Contao\System::getContainer()->get('contao.slug')->generate
 			(
@@ -1177,7 +1177,7 @@ class tl_page extends Contao\Backend
 		}
 
 		// No title or not a regular page
-		if ($dc->activeRecord->title == '' || !in_array($dc->activeRecord->type, array('regular', 'error_401', 'error_403', 'error_404')))
+		if (!$dc->activeRecord->title || !in_array($dc->activeRecord->type, array('regular', 'error_401', 'error_403', 'error_404')))
 		{
 			return;
 		}
@@ -1253,7 +1253,7 @@ class tl_page extends Contao\Backend
 	public function checkFeedAlias($varValue, Contao\DataContainer $dc)
 	{
 		// No change or empty value
-		if ($varValue == $dc->value || $varValue == '')
+		if (!$varValue || $varValue == $dc->value)
 		{
 			return $varValue;
 		}
@@ -1316,7 +1316,7 @@ class tl_page extends Contao\Backend
 	 */
 	public function checkFallback($varValue, Contao\DataContainer $dc)
 	{
-		if ($varValue == '')
+		if (!$varValue)
 		{
 			return '';
 		}

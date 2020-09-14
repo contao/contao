@@ -38,7 +38,7 @@ class ContentDownload extends ContentElement
 	public function generate()
 	{
 		// Return if there is no file
-		if ($this->singleSRC == '')
+		if (!$this->singleSRC)
 		{
 			return '';
 		}

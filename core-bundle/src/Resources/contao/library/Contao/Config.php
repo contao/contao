@@ -230,7 +230,7 @@ class Config
 	 */
 	public function save()
 	{
-		if ($this->strTop == '')
+		if (!$this->strTop)
 		{
 			$this->strTop = '<?php';
 		}

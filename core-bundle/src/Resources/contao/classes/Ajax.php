@@ -57,7 +57,7 @@ class Ajax extends Backend
 	 */
 	public function __construct($strAction)
 	{
-		if ($strAction == '')
+		if (!$strAction)
 		{
 			throw new \Exception('Missing Ajax action');
 		}
