@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\Cache;
 
 use Contao\CoreBundle\Orm\Collector\EntityCollector;
@@ -42,7 +50,7 @@ class GeneratedEntityCacheWarmer implements CacheWarmerInterface
         return false;
     }
 
-    private function ensureCacheDirectoryExists($cacheDir)
+    private function ensureCacheDirectoryExists($cacheDir): void
     {
         $filesystem = new Filesystem();
 

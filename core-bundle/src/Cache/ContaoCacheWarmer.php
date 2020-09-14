@@ -19,12 +19,6 @@ use Contao\CoreBundle\Config\ResourceFinderInterface;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DcaExtractor;
 use Doctrine\DBAL\Connection;
-use Laminas\Code\DeclareStatement;
-use Laminas\Code\Generator\ClassGenerator;
-use Laminas\Code\Generator\DocBlockGenerator;
-use Laminas\Code\Generator\FileGenerator;
-use Laminas\Code\Reflection\ClassReflection;
-use Laminas\Code\Reflection\DocBlockReflection;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\DelegatingLoader;
 use Symfony\Component\Config\Loader\LoaderResolver;
@@ -45,11 +39,6 @@ class ContaoCacheWarmer implements CacheWarmerInterface
      * @var ResourceFinderInterface
      */
     private $finder;
-
-    /**
-     * @var ResourceFinderInterface
-     */
-    private $entityFinder;
 
     /**
      * @var FileLocator

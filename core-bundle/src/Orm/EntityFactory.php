@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\Orm;
 
 use Contao\CoreBundle\Orm\Annotation\AnnotationDumper;
@@ -34,6 +42,7 @@ class EntityFactory
         }
 
         $tree = [];
+
         foreach ($extensions as $extensionClass) {
             try {
                 $reflectionClass = new ClassReflection($extensionClass);
@@ -50,14 +59,14 @@ class EntityFactory
 
             $index = $extendsMetaData->index;
 
-            if (!in_array($index, $entities)) {
+            if (!\in_array($index, $entities, true)) {
                 continue;
             }
 
-            if (!array_key_exists($index, $tree)) {
+            if (!\array_key_exists($index, $tree)) {
                 $tree[$index] = [
                     'extensions' => [],
-                    'indexes' => []
+                    'indexes' => [],
                 ];
             }
 
@@ -79,6 +88,7 @@ class EntityFactory
             $metaData = $this->annotationReader->getClassAnnotations($reflectionClass);
 
             $tags = [];
+
             foreach ($metaData as $annotation) {
                 if ($annotation instanceof Table) {
                     if (null === $annotation->indexes) {
@@ -96,7 +106,7 @@ class EntityFactory
 
             $docBlockGenerator = DocBlockGenerator::fromArray([
                 'shortDescription' => 'This entity is auto generated.',
-                'tags' => $tags
+                'tags' => $tags,
             ]);
 
             $classGenerator = ClassGenerator::fromReflection($reflectionClass);
@@ -107,7 +117,7 @@ class EntityFactory
             $classGenerator->setNamespaceName('Contao\CoreBundle\GeneratedEntity');
 
             foreach ($extensions as $trait) {
-                $classGenerator->addTrait('\\' . $trait);
+                $classGenerator->addTrait('\\'.$trait);
             }
 
             foreach ($classGenerator->getProperties() as $property) {
@@ -133,7 +143,7 @@ class EntityFactory
             $fileGenerator->setDocBlock($fileDocs);
             $fileGenerator->setClass($classGenerator);
             $fileGenerator->setDeclares([
-                DeclareStatement::strictTypes(1)
+                DeclareStatement::strictTypes(1),
             ]);
 
             $filesystem = new Filesystem();
@@ -143,6 +153,6 @@ class EntityFactory
 
     private function getAnnotationNamespace($annotation): string
     {
-        return '\\' . get_class($annotation);
+        return '\\'.\get_class($annotation);
     }
 }

@@ -21,7 +21,6 @@ use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddSessionBagsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\CrawlerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\DataContainerCallbackPass;
-use Contao\CoreBundle\DependencyInjection\Compiler\EntityTraitPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\MakeServicesPublicPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\MapFragmentsToGlobalsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\PickerProviderPass;
@@ -105,7 +104,7 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new RegisterRouteEnhancersPass('contao.routing.page_router', 'contao.page_router_enhancer'));
     }
 
-    public function boot()
+    public function boot(): void
     {
         $directory = sprintf('%s/contao/entities', $this->container->getParameter('kernel.cache_dir'));
 

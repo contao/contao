@@ -2,18 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Contao\CoreBundle\Orm\Collector;
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
 
-use FilesystemIterator;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
-use RecursiveRegexIterator;
-use ReflectionClass;
-use RegexIterator;
-use Contao\CoreBundle\Config\ResourceFinderInterface;
-use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
-use Doctrine\Persistence\Mapping\Driver\SymfonyFileLocator;
-use Symfony\Component\Finder\SplFileInfo;
+namespace Contao\CoreBundle\Orm\Collector;
 
 class EntityCollector
 {
@@ -27,7 +24,7 @@ class EntityCollector
 
     public function collect(): array
     {
-        if ($this->cached !== null) {
+        if (null !== $this->cached) {
             return $this->cached;
         }
 
@@ -41,13 +38,13 @@ class EntityCollector
                 continue;
             }
 
-            $iterator = new RegexIterator(
-                new RecursiveIteratorIterator(
-                    new RecursiveDirectoryIterator($searchPath, FilesystemIterator::SKIP_DOTS),
-                    RecursiveIteratorIterator::LEAVES_ONLY
+            $iterator = new \RegexIterator(
+                new \RecursiveIteratorIterator(
+                    new \RecursiveDirectoryIterator($searchPath, \FilesystemIterator::SKIP_DOTS),
+                    \RecursiveIteratorIterator::LEAVES_ONLY
                 ),
-                '/^.+' . preg_quote('.php') . '$/i',
-                RecursiveRegexIterator::GET_MATCH
+                '/^.+'.preg_quote('.php').'$/i',
+                \RecursiveRegexIterator::GET_MATCH
             );
 
             foreach ($iterator as $file) {
@@ -62,10 +59,10 @@ class EntityCollector
         $declared = get_declared_classes();
 
         foreach ($declared as $traitName) {
-            $rc = new ReflectionClass($traitName);
+            $rc = new \ReflectionClass($traitName);
             $sourceFile = $rc->getFileName();
 
-            if (!\in_array($sourceFile, $includedFiles)) {
+            if (!\in_array($sourceFile, $includedFiles, true)) {
                 continue;
             }
 
