@@ -97,7 +97,7 @@ abstract class Frontend extends Controller
 				Input::setGet('language', $arrMatches[1]);
 
 				// Trigger the root page if only the language was given
-				if ($arrMatches[3] == '')
+				if (!$arrMatches[3])
 				{
 					return null;
 				}
@@ -240,7 +240,7 @@ abstract class Frontend extends Controller
 		}
 
 		// Return if the alias is empty (see #4702 and #4972)
-		if ($arrFragments[0] == '' && \count($arrFragments) > 1)
+		if (!$arrFragments[0] && \count($arrFragments) > 1)
 		{
 			return false;
 		}
@@ -249,7 +249,7 @@ abstract class Frontend extends Controller
 		for ($i=1, $c=\count($arrFragments); $i<$c; $i+=2)
 		{
 			// Return false if the key is empty (see #4702 and #263)
-			if ($arrFragments[$i] == '')
+			if (!$arrFragments[$i])
 			{
 				return false;
 			}

@@ -399,7 +399,7 @@ abstract class Backend extends Controller
 			}
 
 			// Fabricate a new data container object
-			if ($GLOBALS['TL_DCA'][$strTable]['config']['dataContainer'] == '')
+			if (!$GLOBALS['TL_DCA'][$strTable]['config']['dataContainer'])
 			{
 				$this->log('Missing data container for table "' . $strTable . '"', __METHOD__, TL_ERROR);
 				trigger_error('Could not create a data container object', E_USER_ERROR);

@@ -235,7 +235,7 @@ class FileUpload extends Backend
 
 		for ($i=0; $i<$intCount; $i++)
 		{
-			if ($_FILES[$this->strName]['name'][$i] == '')
+			if (!$_FILES[$this->strName]['name'][$i])
 			{
 				continue;
 			}

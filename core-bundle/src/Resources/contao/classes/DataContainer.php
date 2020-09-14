@@ -1120,7 +1120,7 @@ abstract class DataContainer extends Backend
 	 */
 	protected function panel()
 	{
-		if ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] == '')
+		if (!$GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'])
 		{
 			return '';
 		}
