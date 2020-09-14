@@ -33,7 +33,13 @@ class BackupCodeManager implements BackupCodeManagerInterface
             return false;
         }
 
-        return \in_array($code, $backupCodes, true);
+        foreach ($backupCodes as $backupCode) {
+            if (password_verify($code, $backupCode)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function invalidateBackupCode($user, string $code): void
@@ -42,8 +48,14 @@ class BackupCodeManager implements BackupCodeManagerInterface
             return;
         }
 
+        $key = false;
         $backupCodes = json_decode($user->backupCodes, true);
-        $key = array_search($code, $backupCodes, true);
+
+        foreach ($backupCodes as $key => $backupCode) {
+            if (password_verify($code, $backupCode)) {
+                break;
+            }
+        }
 
         if (false !== $key) {
             unset($backupCodes[$key]);
@@ -61,7 +73,15 @@ class BackupCodeManager implements BackupCodeManagerInterface
             $backupCodes[] = $this->generateCode();
         }
 
-        $user->backupCodes = json_encode($backupCodes);
+        $user->backupCodes = json_encode(
+            array_map(
+                static function ($backupCode) {
+                    return password_hash($backupCode, PASSWORD_BCRYPT);
+                },
+                $backupCodes
+            )
+        );
+
         $user->save();
 
         return $backupCodes;
