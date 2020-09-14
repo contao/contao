@@ -402,10 +402,10 @@ abstract class Template extends Controller
 	 * template, pass '@ContaoCore/Image/Studio/figure.html.twig' into the
 	 * $template argument.
 	 *
-	 * @param int|string|FilesModel|ImageInterface  $from          Can be a FilesModel, an ImageInterface, a tl_files UUID/ID/path or a file system path
-	 * @param int|string|array|PictureConfiguration $size          A picture size configuration or reference
-	 * @param array<string, mixed>                  $configuration Configuration for the FigureBuilder
-	 * @param string                                $template      A Contao or Twig template
+	 * @param int|string|FilesModel|ImageInterface       $from          Can be a FilesModel, an ImageInterface, a tl_files UUID/ID/path or a file system path
+	 * @param int|string|array|PictureConfiguration|null $size          A picture size configuration or reference
+	 * @param array<string, mixed>                       $configuration Configuration for the FigureBuilder
+	 * @param string                                     $template      A Contao or Twig template
 	 *
 	 * @return string
 	 */
