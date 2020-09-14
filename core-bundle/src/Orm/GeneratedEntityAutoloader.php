@@ -6,7 +6,7 @@ namespace Contao\CoreBundle\Orm;
 
 class GeneratedEntityAutoloader
 {
-    public static function register($directory)
+    public static function register($directory): callable
     {
         $namespace = 'Contao\CoreBundle\GeneratedEntity';
 

@@ -8,47 +8,54 @@ class AnnotationDumper
 {
     public function dump(object $object): string
     {
-        return $this->exportValues((array) $object);
+        return $this->dumpAnnotationFromArray((array) $object);
     }
 
-    // https://github.com/thecodingmachine/tdbm-fluid-schema-builder/blob/master/src/DoctrineAnnotationDumper.php
-    private function exportValues($item): string
+    /**
+     * @param array $item
+     * @return string
+     *
+     * @see https://github.com/thecodingmachine/tdbm-fluid-schema-builder/blob/master/src/DoctrineAnnotationDumper.php
+     */
+    private function dumpAnnotationFromArray(array $item): string
     {
-        if ($item === null) {
-            return '';
-        }
-        if ($item === []) {
+        if (count($item) === 0) {
             return '';
         }
 
-        return '(' . $this->innerExportValues($item, true) . ')';
+        return '(' . $this->dumpAnnotationArguments($item, true) . ')';
     }
 
-    private function innerExportValues($item, bool $first): string
+    private function dumpAnnotationArguments($item, bool $first): string
     {
         if ($item === null) {
             return 'null';
         }
+
         if (is_string($item)) {
             return '"' . str_replace('"', '""', $item) . '"';
         }
+
         if (is_numeric($item)) {
             return (string) $item;
         }
+
         if (is_bool($item)) {
             return $item ? 'true' : 'false';
         }
+
         if (is_array($item)) {
-            if ($this->isAssoc($item)) {
+            if ($this->isAssociative($item)) {
                 if ($first) {
                     array_walk($item, function (&$value, $key) {
-                        $value = $key . '=' . $this->innerExportValues($value, false);
+                        $value = $key . '=' . $this->dumpAnnotationArguments($value, false);
                     });
                 } else {
                     array_walk($item, function (&$value, $key) {
-                        $value = '"' . addslashes($key) . '":' . $this->innerExportValues($value, false);
+                        $value = '"' . addslashes($key) . '":' . $this->dumpAnnotationArguments($value, false);
                     });
                 }
+
                 $result = implode(', ', $item);
                 if (!$first) {
                     $result = '{' . $result . '}';
@@ -56,9 +63,10 @@ class AnnotationDumper
 
                 return $result;
             } else {
-                array_walk($item, function (&$value, $key) {
-                    $value = $this->innerExportValues($value, false);
+                array_walk($item, function (&$value) {
+                    $value = $this->dumpAnnotationArguments($value, false);
                 });
+
                 $result = implode(', ', $item);
                 if (!$first) {
                     $result = '{' . $result . '}';
@@ -67,14 +75,15 @@ class AnnotationDumper
                 return $result;
             }
         }
+
         if (is_object($item)) {
-            return sprintf('@\\%s%s', get_class($item), $this->exportValues((array) $item));
+            return sprintf('@\\%s%s', get_class($item), $this->dumpAnnotationFromArray((array) $item));
         }
 
         throw new \RuntimeException('Cannot serialize value in Doctrine annotation.');
     }
 
-    private function isAssoc(array $arr): bool
+    private function isAssociative(array $arr): bool
     {
         return array_keys($arr) !== range(0, count($arr) - 1);
     }
