@@ -4,12 +4,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Orm\Entity;
 
-/**
- * TODO: laminas-code does not include docblock comment namespaces
- * TODO: we probably have to fix this in DocBlockScanner ourself
- *
- * @see https://github.com/laminas/laminas-soap/issues/8
- */
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -33,7 +27,7 @@ abstract class Content
     protected $id;
 
     /**
-     * @ORM\Column(type="text", name="test")
+     * @ORM\Column(type="integer", name="test", length=10)
      */
     protected $test;
 
