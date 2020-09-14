@@ -45,7 +45,7 @@ class GeneratedEntityCacheWarmer implements CacheWarmerInterface
     {
         if (!is_dir($cacheDir)) {
             if (false === @mkdir($cacheDir, 0777, true)) {
-                throw new \RuntimeException(sprintf('Unable to create the Contao Entity directory "%s".', $directory));
+                throw new \RuntimeException(sprintf('Unable to create the Contao Entity directory "%s".', $cacheDir));
             }
         } elseif (!is_writable($cacheDir)) {
             throw new \RuntimeException(sprintf('The Contao Entity directory "%s" is not writeable for the current system user.', $directory));
