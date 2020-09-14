@@ -169,7 +169,9 @@ class PrettyErrorScreenListener
             return null;
         }
 
-        $errorPage = PageModel::findTypeByPid('error_'.$type, $currentPage->rootId);
+        /** @var PageModel $pageAdapter */
+        $pageAdapter = $this->framework->getAdapter(PageModel::class);
+        $errorPage = $pageAdapter->findFirstOfTypeByPid('error_'.$type, $currentPage->rootId);
 
         if (!$errorPage instanceof PageModel) {
             return null;

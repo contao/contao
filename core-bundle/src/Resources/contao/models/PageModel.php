@@ -549,7 +549,7 @@ class PageModel extends Model
 	}
 
 	/**
-	 * Find an error 404 page by its parent ID
+	 * Finds first page of type by its parent ID
 	 *
 	 * @param string  $strType    The page type
 	 * @param integer $intPid     The parent page's ID
@@ -557,7 +557,7 @@ class PageModel extends Model
 	 *
 	 * @return PageModel|null The model or null if there is no 404 page
 	 */
-	public static function findTypeByPid($strType, $intPid, array $arrOptions=array())
+	public static function findFirstOfTypeByPid($strType, $intPid, array $arrOptions=array())
 	{
 		$t = static::$strTable;
 		$arrColumns = array("$t.pid=? AND $t.type=?");
