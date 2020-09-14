@@ -399,7 +399,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		{
 			for ($i=0, $c=\count($this->arrFilemounts); $i<$c; $i++)
 			{
-				if ($this->arrFilemounts[$i] != '' && is_dir($this->strRootDir . '/' . $this->arrFilemounts[$i]))
+				if ($this->arrFilemounts[$i] && is_dir($this->strRootDir . '/' . $this->arrFilemounts[$i]))
 				{
 					$return .= $this->generateTree($this->strRootDir . '/' . $this->arrFilemounts[$i], 0, true, $this->isProtectedPath($this->arrFilemounts[$i]), ($blnClipboard ? $arrClipboard : false), $arrFound);
 				}
@@ -423,7 +423,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		$labelPasteInto = $GLOBALS['TL_LANG'][$this->strTable]['pasteinto'] ?? $GLOBALS['TL_LANG']['DCA']['pasteinto'];
 		$imagePasteInto = Image::getHtml('pasteinto.svg', $labelPasteInto[0]);
 
-		if ($session['search'][$this->strTable]['value'] != '')
+		if ($session['search'][$this->strTable]['value'])
 		{
 			Message::addInfo($GLOBALS['TL_LANG']['MSC']['searchExclude']);
 		}
@@ -2305,7 +2305,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			}
 
 			// Make sure unique fields are unique
-			if ($varValue != '' && $arrData['eval']['unique'] && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $this->objActiveRecord->id))
+			if ($varValue && $arrData['eval']['unique'] && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $this->objActiveRecord->id))
 			{
 				throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $this->strField));
 			}
@@ -2369,10 +2369,10 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			}
 
 			// Save the value if there was no error
-			if (($varValue != '' || !$arrData['eval']['doNotSaveEmpty']) && ($this->varValue != $varValue || $arrData['eval']['alwaysSave']))
+			if (($varValue || !$arrData['eval']['doNotSaveEmpty']) && ($this->varValue != $varValue || $arrData['eval']['alwaysSave']))
 			{
 				// If the field is a fallback field, empty all other columns
-				if ($varValue != '' && $arrData['eval']['fallback'])
+				if ($varValue && $arrData['eval']['fallback'])
 				{
 					$this->Database->execute("UPDATE " . $this->strTable . " SET " . $this->strField . "=''");
 				}
@@ -2890,7 +2890,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		}
 
 		// Set the search value from the session
-		elseif ($session['search'][$this->strTable]['value'] != '')
+		elseif ($session['search'][$this->strTable]['value'])
 		{
 			$strPattern = "CAST(name AS CHAR) REGEXP ?";
 

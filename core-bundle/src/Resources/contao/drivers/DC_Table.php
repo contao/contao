@@ -968,7 +968,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				{
 					$value = StringUtil::deserialize($this->set[$strKey]);
 
-					if (!empty($value) && \is_array($value) && $value['value'] != '')
+					if (!empty($value) && \is_array($value) && $value['value'])
 					{
 						$value['value'] = sprintf($GLOBALS['TL_LANG']['MSC']['copyOf'], $value['value']);
 						$this->set[$strKey] = serialize($value);
@@ -4478,7 +4478,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 					// Add the group header
 					if ($firstOrderBy != 'sorting' && !$GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['disableGrouping'])
 					{
-						$sortingMode = (\count($orderBy) == 1 && $firstOrderBy == $orderBy[0] && $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] != '' && !$GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['flag']) ? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['flag'];
+						$sortingMode = (\count($orderBy) == 1 && $firstOrderBy == $orderBy[0] && $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] && !$GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['flag']) ? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['flag'];
 						$remoteNew = $this->formatCurrentValue($firstOrderBy, $row[$i][$firstOrderBy], $sortingMode);
 						$group = $this->formatGroupHeader($firstOrderBy, $remoteNew, $sortingMode, $row[$i]);
 
@@ -4692,7 +4692,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$orderBy = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['fields'];
 		$firstOrderBy = preg_replace('/\s+.*$/', '', $orderBy[0]);
 
-		if (\is_array($this->orderBy) && $this->orderBy[0] != '')
+		if (\is_array($this->orderBy) && $this->orderBy[0])
 		{
 			$orderBy = $this->orderBy;
 			$firstOrderBy = $this->firstOrderBy;
@@ -4713,7 +4713,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			$query .= (!empty($this->procedure) ? " AND " : " WHERE ") . "id IN(" . implode(',', array_map('\intval', $this->root)) . ")";
 		}
 
-		if (\is_array($orderBy) && $orderBy[0] != '')
+		if (\is_array($orderBy) && $orderBy[0])
 		{
 			foreach ($orderBy as $k=>$v)
 			{
@@ -4809,7 +4809,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 <div id="tl_buttons">' . ((Input::get('act') == 'select' || $this->ptable) ? '
 <a href="' . $this->getReferer(true, $this->ptable) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a> ' : (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']) ? '
 <a href="contao/main.php?' . $GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'] . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a> ' : '')) . ((Input::get('act') != 'select' && !$GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] && !$GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable']) ? '
-<a href="' . (($this->ptable != '') ? $this->addToUrl('act=create' . (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] < 4) ? '&amp;mode=2' : '') . '&amp;pid=' . $this->intId) : $this->addToUrl('act=create')) . '" class="header_new" title="' . StringUtil::specialchars($labelNew[1]) . '" accesskey="n" onclick="Backend.getScrollOffset()">' . $labelNew[0] . '</a> ' : '') . $this->generateGlobalButtons() . '
+<a href="' . ($this->ptable ? $this->addToUrl('act=create' . (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] < 4) ? '&amp;mode=2' : '') . '&amp;pid=' . $this->intId) : $this->addToUrl('act=create')) . '" class="header_new" title="' . StringUtil::specialchars($labelNew[1]) . '" accesskey="n" onclick="Backend.getScrollOffset()">' . $labelNew[0] . '</a> ' : '') . $this->generateGlobalButtons() . '
 </div>';
 
 		// Return "no records found" message
@@ -4980,7 +4980,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				{
 					$current = $row[$firstOrderBy];
 					$orderBy = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['fields'];
-					$sortingMode = (\count($orderBy) == 1 && $firstOrderBy == $orderBy[0] && $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] != '' && !$GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['flag']) ? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['flag'];
+					$sortingMode = (\count($orderBy) == 1 && $firstOrderBy == $orderBy[0] && $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] && !$GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['flag']) ? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['flag'];
 					$remoteNew = $this->formatCurrentValue($firstOrderBy, $current, $sortingMode);
 
 					// Add the group header
@@ -5198,7 +5198,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		}
 
 		// Set the search value from the session
-		elseif ($session['search'][$this->strTable]['value'] != '')
+		elseif ($session['search'][$this->strTable]['value'])
 		{
 			$strPattern = "CAST(%s AS CHAR) REGEXP ?";
 
@@ -5392,7 +5392,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		// Set limit from table configuration
 		else
 		{
-			$this->limit = ($session['filter'][$filter]['limit'] != '') ? (($session['filter'][$filter]['limit'] == 'all') ? null : $session['filter'][$filter]['limit']) : '0,' . Config::get('resultsPerPage');
+			$this->limit = $session['filter'][$filter]['limit'] ? (($session['filter'][$filter]['limit'] == 'all') ? null : $session['filter'][$filter]['limit']) : '0,' . Config::get('resultsPerPage');
 
 			$arrProcedure = $this->procedure;
 			$arrValues = $this->values;

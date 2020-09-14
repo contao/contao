@@ -369,15 +369,15 @@ class Installer extends Controller
 					unset($field['index'], $field['origtype']);
 
 					// Field type
-					if ($field['length'] != '')
+					if ($field['length'])
 					{
-						$field['type'] .= '(' . $field['length'] . (($field['precision'] != '') ? ',' . $field['precision'] : '') . ')';
+						$field['type'] .= '(' . $field['length'] . ($field['precision'] ? ',' . $field['precision'] : '') . ')';
 
 						unset($field['length'], $field['precision']);
 					}
 
 					// Variant collation
-					if ($field['collation'] != '' && $field['collation'] != Config::get('dbCollation'))
+					if ($field['collation'] && $field['collation'] != Config::get('dbCollation'))
 					{
 						$field['collation'] = 'COLLATE ' . $field['collation'];
 					}

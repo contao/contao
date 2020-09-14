@@ -603,7 +603,7 @@ class InsertTags extends Controller
 
 				// Conditional tags (if)
 				case 'iflng':
-					if ($elements[1] != '')
+					if ($elements[1])
 					{
 						$langs = StringUtil::trimsplit(',', $elements[1]);
 
@@ -637,7 +637,7 @@ class InsertTags extends Controller
 
 				// Conditional tags (if not)
 				case 'ifnlng':
-					if ($elements[1] != '')
+					if ($elements[1])
 					{
 						$langs = StringUtil::trimsplit(',', $elements[1]);
 
@@ -740,7 +740,7 @@ class InsertTags extends Controller
 				case 'ua':
 					$ua = Environment::get('agent');
 
-					if ($elements[1] != '')
+					if ($elements[1])
 					{
 						$arrCache[$strTag] = $ua->{$elements[1]};
 					}
@@ -753,7 +753,7 @@ class InsertTags extends Controller
 				// Abbreviations
 				case 'abbr':
 				case 'acronym':
-					if ($elements[1] != '')
+					if ($elements[1])
 					{
 						$arrCache[$strTag] = '<abbr title="' . StringUtil::specialchars($elements[1]) . '">';
 					}

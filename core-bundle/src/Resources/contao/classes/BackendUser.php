@@ -171,19 +171,19 @@ class BackendUser extends User
 				return $this->arrData['admin'] ? true : false;
 
 			case 'groups':
-				return \is_array($this->arrData['groups']) ? $this->arrData['groups'] : (($this->arrData['groups'] != '') ? array($this->arrData['groups']) : array());
+				return \is_array($this->arrData['groups']) ? $this->arrData['groups'] : ($this->arrData['groups'] ? array($this->arrData['groups']) : array());
 
 			case 'pagemounts':
-				return \is_array($this->arrData['pagemounts']) ? $this->arrData['pagemounts'] : (($this->arrData['pagemounts'] != '') ? array($this->arrData['pagemounts']) : false);
+				return \is_array($this->arrData['pagemounts']) ? $this->arrData['pagemounts'] : ($this->arrData['pagemounts'] ? array($this->arrData['pagemounts']) : false);
 
 			case 'filemounts':
-				return \is_array($this->arrData['filemounts']) ? $this->arrData['filemounts'] : (($this->arrData['filemounts'] != '') ? array($this->arrData['filemounts']) : false);
+				return \is_array($this->arrData['filemounts']) ? $this->arrData['filemounts'] : ($this->arrData['filemounts'] ? array($this->arrData['filemounts']) : false);
 
 			case 'filemountIds':
 				return $this->arrFilemountIds;
 
 			case 'fop':
-				return \is_array($this->arrData['fop']) ? $this->arrData['fop'] : (($this->arrData['fop'] != '') ? array($this->arrData['fop']) : false);
+				return \is_array($this->arrData['fop']) ? $this->arrData['fop'] : ($this->arrData['fop'] ? array($this->arrData['fop']) : false);
 
 			case 'alexf':
 				return $this->alexf;

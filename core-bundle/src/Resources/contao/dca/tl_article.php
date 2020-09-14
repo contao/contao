@@ -540,7 +540,7 @@ class tl_article extends Contao\Backend
 	{
 		$image = 'articles';
 
-		$unpublished = ($row['start'] != '' && $row['start'] > time()) || ($row['stop'] != '' && $row['stop'] <= time());
+		$unpublished = ($row['start'] && $row['start'] > time()) || ($row['stop'] && $row['stop'] <= time());
 
 		if ($unpublished || !$row['published'])
 		{

@@ -556,7 +556,7 @@ class Newsletter extends Backend
       <option value="semicolon">' . $GLOBALS['TL_LANG']['MSC']['semicolon'] . '</option>
       <option value="tabulator">' . $GLOBALS['TL_LANG']['MSC']['tabulator'] . '</option>
       <option value="linebreak">' . $GLOBALS['TL_LANG']['MSC']['linebreak'] . '</option>
-    </select>' . (($GLOBALS['TL_LANG']['MSC']['separator'][1] != '') ? '
+    </select>' . ($GLOBALS['TL_LANG']['MSC']['separator'][1] ? '
     <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['MSC']['separator'][1] . '</p>' : '') . '
   </div>
   <div class="widget clr">

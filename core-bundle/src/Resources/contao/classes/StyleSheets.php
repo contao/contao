@@ -156,7 +156,7 @@ class StyleSheets extends Backend
 		}
 
 		// Merge the global style sheet variables
-		if ($row['vars'] != '' && \is_array($tmp = StringUtil::deserialize($row['vars'])))
+		if ($row['vars'] && \is_array($tmp = StringUtil::deserialize($row['vars'])))
 		{
 			foreach ($tmp as $v)
 			{
@@ -216,7 +216,7 @@ class StyleSheets extends Backend
 		}
 
 		// Comment
-		if ((!$blnWriteToFile || $export) && $row['comment'] != '')
+		if ((!$blnWriteToFile || $export) && $row['comment'])
 		{
 			$search = array('@^\s*/\*+@', '@\*+/\s*$@');
 			$comment = preg_replace($search, '', $row['comment']);
@@ -242,7 +242,7 @@ class StyleSheets extends Backend
 			// Width
 			$row['width'] = StringUtil::deserialize($row['width']);
 
-			if (isset($row['width']['value']) && $row['width']['value'] != '')
+			if (isset($row['width']['value']) && $row['width']['value'])
 			{
 				$return .= $lb . 'width:' . $row['width']['value'] . (($row['width']['value'] == 'auto') ? '' : $row['width']['unit']) . ';';
 			}
@@ -250,7 +250,7 @@ class StyleSheets extends Backend
 			// Height
 			$row['height'] = StringUtil::deserialize($row['height']);
 
-			if (isset($row['height']['value']) && $row['height']['value'] != '')
+			if (isset($row['height']['value']) && $row['height']['value'])
 			{
 				$return .= $lb . 'height:' . $row['height']['value'] . (($row['height']['value'] == 'auto') ? '' : $row['height']['unit']) . ';';
 			}
@@ -258,7 +258,7 @@ class StyleSheets extends Backend
 			// Min-width
 			$row['minwidth'] = StringUtil::deserialize($row['minwidth']);
 
-			if (isset($row['minwidth']['value']) && $row['minwidth']['value'] != '')
+			if (isset($row['minwidth']['value']) && $row['minwidth']['value'])
 			{
 				$return .= $lb . 'min-width:' . $row['minwidth']['value'] . (($row['minwidth']['value'] == 'inherit') ? '' : $row['minwidth']['unit']) . ';';
 			}
@@ -266,7 +266,7 @@ class StyleSheets extends Backend
 			// Min-height
 			$row['minheight'] = StringUtil::deserialize($row['minheight']);
 
-			if (isset($row['minheight']['value']) && $row['minheight']['value'] != '')
+			if (isset($row['minheight']['value']) && $row['minheight']['value'])
 			{
 				$return .= $lb . 'min-height:' . $row['minheight']['value'] . (($row['minheight']['value'] == 'inherit') ? '' : $row['minheight']['unit']) . ';';
 			}
@@ -274,7 +274,7 @@ class StyleSheets extends Backend
 			// Max-width
 			$row['maxwidth'] = StringUtil::deserialize($row['maxwidth']);
 
-			if (isset($row['maxwidth']['value']) && $row['maxwidth']['value'] != '')
+			if (isset($row['maxwidth']['value']) && $row['maxwidth']['value'])
 			{
 				$return .= $lb . 'max-width:' . $row['maxwidth']['value'] . (($row['maxwidth']['value'] == 'inherit' || $row['maxwidth']['value'] == 'none') ? '' : $row['maxwidth']['unit']) . ';';
 			}
@@ -282,7 +282,7 @@ class StyleSheets extends Backend
 			// Max-height
 			$row['maxheight'] = StringUtil::deserialize($row['maxheight']);
 
-			if (isset($row['maxheight']['value']) && $row['maxheight']['value'] != '')
+			if (isset($row['maxheight']['value']) && $row['maxheight']['value'])
 			{
 				$return .= $lb . 'max-height:' . $row['maxheight']['value'] . (($row['maxheight']['value'] == 'inherit' || $row['maxheight']['value'] == 'none') ? '' : $row['maxheight']['unit']) . ';';
 			}
@@ -306,31 +306,31 @@ class StyleSheets extends Backend
 			}
 
 			// Position
-			if ($row['position'] != '')
+			if ($row['position'])
 			{
 				$return .= $lb . 'position:' . $row['position'] . ';';
 			}
 
 			// Overflow
-			if ($row['overflow'] != '')
+			if ($row['overflow'])
 			{
 				$return .= $lb . 'overflow:' . $row['overflow'] . ';';
 			}
 
 			// Float
-			if ($row['floating'] != '')
+			if ($row['floating'])
 			{
 				$return .= $lb . 'float:' . $row['floating'] . ';';
 			}
 
 			// Clear
-			if ($row['clear'] != '')
+			if ($row['clear'])
 			{
 				$return .= $lb . 'clear:' . $row['clear'] . ';';
 			}
 
 			// Display
-			if ($row['display'] != '')
+			if ($row['display'])
 			{
 				$return .= $lb . 'display:' . $row['display'] . ';';
 			}
@@ -340,7 +340,7 @@ class StyleSheets extends Backend
 		if ($row['alignment'])
 		{
 			// Margin
-			if ($row['margin'] != '' || $row['align'] != '')
+			if ($row['margin'] || $row['align'])
 			{
 				$row['margin'] = StringUtil::deserialize($row['margin']);
 
@@ -352,7 +352,7 @@ class StyleSheets extends Backend
 					$left = $row['margin']['left'];
 
 					// Overwrite the left and right margin if an alignment is set
-					if ($row['align'] != '')
+					if ($row['align'])
 					{
 						if ($row['align'] == 'left' || $row['align'] == 'center')
 						{
@@ -366,7 +366,7 @@ class StyleSheets extends Backend
 					}
 
 					// Try to shorten the definition
-					if ($top && $right != '' && $bottom != '' && $left != '')
+					if ($top && $right && $bottom && $left)
 					{
 						if ($top == $right && $top == $bottom && $top == $left)
 						{
@@ -401,7 +401,7 @@ class StyleSheets extends Backend
 			}
 
 			// Padding
-			if ($row['padding'] != '')
+			if ($row['padding'])
 			{
 				$row['padding'] = StringUtil::deserialize($row['padding']);
 
@@ -413,7 +413,7 @@ class StyleSheets extends Backend
 					$left = $row['padding']['left'];
 
 					// Try to shorten the definition
-					if ($top && $right != '' && $bottom != '' && $left != '')
+					if ($top && $right && $bottom && $left)
 					{
 						if ($top == $right && $top == $bottom && $top == $left)
 						{
@@ -448,19 +448,19 @@ class StyleSheets extends Backend
 			}
 
 			// Vertical alignment
-			if ($row['verticalalign'] != '')
+			if ($row['verticalalign'])
 			{
 				$return .= $lb . 'vertical-align:' . $row['verticalalign'] . ';';
 			}
 
 			// Text alignment
-			if ($row['textalign'] != '')
+			if ($row['textalign'])
 			{
 				$return .= $lb . 'text-align:' . $row['textalign'] . ';';
 			}
 
 			// White space
-			if ($row['whitespace'] != '')
+			if ($row['whitespace'])
 			{
 				$return .= $lb . 'white-space:' . $row['whitespace'] . ';';
 			}
@@ -472,7 +472,7 @@ class StyleSheets extends Backend
 			$bgColor = StringUtil::deserialize($row['bgcolor'], true);
 
 			// Try to shorten the definition
-			if ($bgColor[0] != '' && $row['bgimage'] != '' && $row['bgposition'] != '' && $row['bgrepeat'] != '')
+			if ($bgColor[0] && $row['bgimage'] && $row['bgposition'] && $row['bgrepeat'])
 			{
 				if (($strImage = $this->generateBase64Image($row['bgimage'], $parent)) !== false)
 				{
@@ -487,7 +487,7 @@ class StyleSheets extends Backend
 			else
 			{
 				// Background color
-				if ($bgColor[0] != '')
+				if ($bgColor[0])
 				{
 					$return .= $lb . 'background-color:' . $this->compileColor($bgColor, $blnWriteToFile, $vars) . ';';
 				}
@@ -497,7 +497,7 @@ class StyleSheets extends Backend
 				{
 					$return .= $lb . 'background-image:none;';
 				}
-				elseif ($row['bgimage'] != '')
+				elseif ($row['bgimage'])
 				{
 					if (($strImage = $this->generateBase64Image($row['bgimage'], $parent)) !== false)
 					{
@@ -511,20 +511,20 @@ class StyleSheets extends Backend
 				}
 
 				// Background position
-				if ($row['bgposition'] != '')
+				if ($row['bgposition'])
 				{
 					$return .= $lb . 'background-position:' . $row['bgposition'] . ';';
 				}
 
 				// Background repeat
-				if ($row['bgrepeat'] != '')
+				if ($row['bgrepeat'])
 				{
 					$return .= $lb . 'background-repeat:' . $row['bgrepeat'] . ';';
 				}
 			}
 
 			// Background gradient
-			if ($row['gradientAngle'] != '' && $row['gradientColors'] != '')
+			if ($row['gradientAngle'] && $row['gradientColors'])
 			{
 				$row['gradientColors'] = StringUtil::deserialize($row['gradientColors']);
 
@@ -533,7 +533,7 @@ class StyleSheets extends Backend
 					$bgImage = '';
 
 					// CSS3 PIE only supports -pie-background, so if there is a background image, include it here, too.
-					if ($row['bgimage'] != '' && $row['bgposition'] != '' && $row['bgrepeat'] != '')
+					if ($row['bgimage'] && $row['bgposition'] && $row['bgrepeat'])
 					{
 						$glue = (strncmp($row['bgimage'], 'data:', 5) !== 0 && strncmp($row['bgimage'], 'http://', 7) !== 0 && strncmp($row['bgimage'], 'https://', 8) !== 0 && strncmp($row['bgimage'], '/', 1) !== 0) ? $strGlue : '';
 						$bgImage = 'url("' . $glue . $row['bgimage'] . '") ' . $row['bgposition'] . ' ' . $row['bgrepeat'] . ',';
@@ -590,12 +590,12 @@ class StyleSheets extends Backend
 			}
 
 			// Box shadow
-			if ($row['shadowsize'] != '')
+			if ($row['shadowsize'])
 			{
 				$shColor = StringUtil::deserialize($row['shadowcolor'], true);
 				$row['shadowsize'] = StringUtil::deserialize($row['shadowsize']);
 
-				if (\is_array($row['shadowsize']) && $row['shadowsize']['top'] != '' && $row['shadowsize']['right'] != '')
+				if (\is_array($row['shadowsize']) && $row['shadowsize']['top'] && $row['shadowsize']['right'])
 				{
 					$offsetx = $row['shadowsize']['top'];
 					$offsety = $row['shadowsize']['right'];
@@ -615,7 +615,7 @@ class StyleSheets extends Backend
 						$shadow .= ' ' . $radius . (($radius === '0') ? '' : $row['shadowsize']['unit']);
 					}
 
-					if ($shColor[0] != '')
+					if ($shColor[0])
 					{
 						$shadow .= ' ' . $this->compileColor($shColor, $blnWriteToFile, $vars);
 					}
@@ -645,30 +645,30 @@ class StyleSheets extends Backend
 				// Try to shorten the definition
 				if ($top && $right && $bottom && $left && $top == $right && $top == $bottom && $top == $left)
 				{
-					$return .= $lb . 'border:' . $top . $row['borderwidth']['unit'] . (($row['borderstyle'] != '') ? ' ' . $row['borderstyle'] : '') . (($bdColor[0] != '') ? ' ' . $this->compileColor($bdColor, $blnWriteToFile, $vars) : '') . ';';
+					$return .= $lb . 'border:' . $top . $row['borderwidth']['unit'] . ($row['borderstyle'] ? ' ' . $row['borderstyle'] : '') . ($bdColor[0] ? ' ' . $this->compileColor($bdColor, $blnWriteToFile, $vars) : '') . ';';
 				}
 				elseif ($top && $right && $bottom && $left && $top == $bottom && $left == $right)
 				{
 					$return .= $lb . 'border-width:' . $top . $row['borderwidth']['unit'] . ' ' . $right . $row['borderwidth']['unit'] . ';';
 
-					if ($row['borderstyle'] != '')
+					if ($row['borderstyle'])
 					{
 						$return .= $lb . 'border-style:' . $row['borderstyle'] . ';';
 					}
 
-					if ($bdColor[0] != '')
+					if ($bdColor[0])
 					{
 						$return .= $lb . 'border-color:' . $this->compileColor($bdColor, $blnWriteToFile, $vars) . ';';
 					}
 				}
 				elseif (!$top && !$right && !$bottom && !$left)
 				{
-					if ($row['borderstyle'] != '')
+					if ($row['borderstyle'])
 					{
 						$return .= $lb . 'border-style:' . $row['borderstyle'] . ';';
 					}
 
-					if ($bdColor[0] != '')
+					if ($bdColor[0])
 					{
 						$return .= $lb . 'border-color:' . $this->compileColor($bdColor, $blnWriteToFile, $vars) . ';';
 					}
@@ -681,30 +681,30 @@ class StyleSheets extends Backend
 					{
 						if ($v)
 						{
-							$return .= $lb . 'border-' . $k . ':' . $v . $row['borderwidth']['unit'] . (($row['borderstyle'] != '') ? ' ' . $row['borderstyle'] : '') . (($bdColor[0] != '') ? ' ' . $this->compileColor($bdColor, $blnWriteToFile, $vars) : '') . ';';
+							$return .= $lb . 'border-' . $k . ':' . $v . $row['borderwidth']['unit'] . ($row['borderstyle'] ? ' ' . $row['borderstyle'] : '') . ($bdColor[0] ? ' ' . $this->compileColor($bdColor, $blnWriteToFile, $vars) : '') . ';';
 						}
 					}
 				}
 			}
 			else
 			{
-				if ($row['borderstyle'] != '')
+				if ($row['borderstyle'])
 				{
 					$return .= $lb . 'border-style:' . $row['borderstyle'] . ';';
 				}
 
-				if ($bdColor[0] != '')
+				if ($bdColor[0])
 				{
 					$return .= $lb . 'border-color:' . $this->compileColor($bdColor, $blnWriteToFile, $vars) . ';';
 				}
 			}
 
 			// Border radius
-			if ($row['borderradius'] != '')
+			if ($row['borderradius'])
 			{
 				$row['borderradius'] = StringUtil::deserialize($row['borderradius']);
 
-				if (\is_array($row['borderradius']) && ($row['borderradius']['top'] != '' || $row['borderradius']['right'] != '' || $row['borderradius']['bottom'] != '' || $row['borderradius']['left'] != ''))
+				if (\is_array($row['borderradius']) && ($row['borderradius']['top'] || $row['borderradius']['right'] || $row['borderradius']['bottom'] || $row['borderradius']['left']))
 				{
 					$top = $row['borderradius']['top'];
 					$right = $row['borderradius']['right'];
@@ -713,7 +713,7 @@ class StyleSheets extends Backend
 					$borderradius = '';
 
 					// Try to shorten the definition
-					if ($top != '' && $right != '' && $bottom != '' && $left != '')
+					if ($top && $right && $bottom && $left)
 					{
 						if ($top == $right && $top == $bottom && $top == $left)
 						{
@@ -750,7 +750,7 @@ class StyleSheets extends Backend
 			}
 
 			// Border collapse
-			if ($row['bordercollapse'] != '')
+			if ($row['bordercollapse'])
 			{
 				$return .= $lb . 'border-collapse:' . $row['bordercollapse'] . ';';
 			}
@@ -758,7 +758,7 @@ class StyleSheets extends Backend
 			// Border spacing
 			$row['borderspacing'] = StringUtil::deserialize($row['borderspacing']);
 
-			if (isset($row['borderspacing']['value']) && $row['borderspacing']['value'] != '')
+			if (isset($row['borderspacing']['value']) && $row['borderspacing']['value'])
 			{
 				$return .= $lb . 'border-spacing:' . $row['borderspacing']['value'] . $row['borderspacing']['unit'] . ';';
 			}
@@ -772,26 +772,26 @@ class StyleSheets extends Backend
 			$row['fontfamily'] = str_replace(', ', ',', $row['fontfamily']);
 
 			// Try to shorten the definition
-			if ($row['fontfamily'] != '' && $row['fontfamily'] != 'inherit' && isset($row['fontsize']['value']) && $row['fontsize']['value'] != '' && $row['fontsize']['value'] != 'inherit')
+			if ($row['fontfamily'] && $row['fontfamily'] != 'inherit' && isset($row['fontsize']['value']) && $row['fontsize']['value'] && $row['fontsize']['value'] != 'inherit')
 			{
-				$return .= $lb . 'font:' . $row['fontsize']['value'] . $row['fontsize']['unit'] . ((isset($row['lineheight']['value']) && $row['lineheight']['value'] != '') ? '/' . $row['lineheight']['value'] . $row['lineheight']['unit'] : '') . ' ' . $row['fontfamily'] . ';';
+				$return .= $lb . 'font:' . $row['fontsize']['value'] . $row['fontsize']['unit'] . ((isset($row['lineheight']['value']) && $row['lineheight']['value']) ? '/' . $row['lineheight']['value'] . $row['lineheight']['unit'] : '') . ' ' . $row['fontfamily'] . ';';
 			}
 			else
 			{
 				// Font family
-				if ($row['fontfamily'] != '')
+				if ($row['fontfamily'])
 				{
 					$return .= $lb . 'font-family:' . $row['fontfamily'] . ';';
 				}
 
 				// Font size
-				if (isset($row['fontsize']['value']) && $row['fontsize']['value'] != '')
+				if (isset($row['fontsize']['value']) && $row['fontsize']['value'])
 				{
 					$return .= $lb . 'font-size:' . $row['fontsize']['value'] . $row['fontsize']['unit'] . ';';
 				}
 
 				// Line height
-				if (isset($row['lineheight']['value']) && $row['lineheight']['value'] != '')
+				if (isset($row['lineheight']['value']) && $row['lineheight']['value'])
 				{
 					$return .= $lb . 'line-height:' . $row['lineheight']['value'] . $row['lineheight']['unit'] . ';';
 				}
@@ -846,13 +846,13 @@ class StyleSheets extends Backend
 			$fnColor = StringUtil::deserialize($row['fontcolor'], true);
 
 			// Font color
-			if ($fnColor[0] != '')
+			if ($fnColor[0])
 			{
 				$return .= $lb . 'color:' . $this->compileColor($fnColor, $blnWriteToFile, $vars) . ';';
 			}
 
 			// Text transform
-			if ($row['texttransform'] != '')
+			if ($row['texttransform'])
 			{
 				$return .= $lb . 'text-transform:' . $row['texttransform'] . ';';
 			}
@@ -860,7 +860,7 @@ class StyleSheets extends Backend
 			// Text indent
 			$row['textindent'] = StringUtil::deserialize($row['textindent']);
 
-			if (isset($row['textindent']['value']) && $row['textindent']['value'] != '')
+			if (isset($row['textindent']['value']) && $row['textindent']['value'])
 			{
 				$return .= $lb . 'text-indent:' . $row['textindent']['value'] . $row['textindent']['unit'] . ';';
 			}
@@ -868,7 +868,7 @@ class StyleSheets extends Backend
 			// Letter spacing
 			$row['letterspacing'] = StringUtil::deserialize($row['letterspacing']);
 
-			if (isset($row['letterspacing']['value']) && $row['letterspacing']['value'] != '')
+			if (isset($row['letterspacing']['value']) && $row['letterspacing']['value'])
 			{
 				$return .= $lb . 'letter-spacing:' . $row['letterspacing']['value'] . $row['letterspacing']['unit'] . ';';
 			}
@@ -876,7 +876,7 @@ class StyleSheets extends Backend
 			// Word spacing
 			$row['wordspacing'] = StringUtil::deserialize($row['wordspacing']);
 
-			if (isset($row['wordspacing']['value']) && $row['wordspacing']['value'] != '')
+			if (isset($row['wordspacing']['value']) && $row['wordspacing']['value'])
 			{
 				$return .= $lb . 'word-spacing:' . $row['wordspacing']['value'] . $row['wordspacing']['unit'] . ';';
 			}
@@ -886,7 +886,7 @@ class StyleSheets extends Backend
 		if ($row['list'])
 		{
 			// List bullet
-			if ($row['liststyletype'] != '')
+			if ($row['liststyletype'])
 			{
 				$return .= $lb . 'list-style-type:' . $row['liststyletype'] . ';';
 			}
@@ -896,7 +896,7 @@ class StyleSheets extends Backend
 			{
 				$return .= $lb . 'list-style-image:none;';
 			}
-			elseif ($row['liststyleimage'] != '')
+			elseif ($row['liststyleimage'])
 			{
 				if (($strImage = $this->generateBase64Image($row['liststyleimage'], $parent)) !== false)
 				{
@@ -914,7 +914,7 @@ class StyleSheets extends Backend
 		$return = preg_replace('/([^0-9.+-])0\.([0-9]+)/', '$1.$2', $return);
 
 		// Custom code
-		if ($row['own'] != '')
+		if ($row['own'])
 		{
 			$own = trim(StringUtil::decodeEntities($row['own']));
 			$own = preg_replace('/url\("(?!data:|\/)/', 'url("' . $strGlue, $own);
@@ -1356,7 +1356,7 @@ class StyleSheets extends Backend
 								   ->limit(1)
 								   ->execute($objStyleSheet->pid);
 
-		if ($objTheme->vars != '' && \is_array(($tmp = StringUtil::deserialize($objTheme->vars))))
+		if ($objTheme->vars && \is_array(($tmp = StringUtil::deserialize($objTheme->vars))))
 		{
 			foreach ($tmp as $v)
 			{
@@ -1365,7 +1365,7 @@ class StyleSheets extends Backend
 		}
 
 		// Merge the global style sheet variables
-		if ($objStyleSheet->vars != '' && \is_array(($tmp = StringUtil::deserialize($objStyleSheet->vars))))
+		if ($objStyleSheet->vars && \is_array(($tmp = StringUtil::deserialize($objStyleSheet->vars))))
 		{
 			foreach ($tmp as $v)
 			{
@@ -1383,7 +1383,7 @@ class StyleSheets extends Backend
 		$blnClose = false;
 
 		// Add the media query (see #7560)
-		if ($objStyleSheet->mediaQuery != '')
+		if ($objStyleSheet->mediaQuery)
 		{
 			$objFile->append('@media ' . $objStyleSheet->mediaQuery . ' {');
 			$blnClose = true;
@@ -1885,7 +1885,7 @@ class StyleSheets extends Backend
 					}
 					$arrWSC = preg_split('/\s+/', $arrChunks[1]);
 
-					if ($arrWSC[2] != '' && !preg_match('/^#[a-f0-9]+$/i', $arrWSC[2]))
+					if ($arrWSC[2] && !preg_match('/^#[a-f0-9]+$/i', $arrWSC[2]))
 					{
 						$arrSet['own'][] = $strDefinition;
 						break;
@@ -1902,12 +1902,12 @@ class StyleSheets extends Backend
 						'unit' => $strUnit
 					);
 
-					if ($arrWSC[1] != '')
+					if ($arrWSC[1])
 					{
 						$arrSet['borderstyle'] = $arrWSC[1];
 					}
 
-					if ($arrWSC[2] != '')
+					if ($arrWSC[2])
 					{
 						$arrSet['bordercolor'] = str_replace('#', '', $arrWSC[2]);
 					}
@@ -1924,7 +1924,7 @@ class StyleSheets extends Backend
 					}
 					$arrWSC = preg_split('/\s+/', $arrChunks[1]);
 
-					if ($arrWSC[2] != '' && !preg_match('/^#[a-f0-9]+$/i', $arrWSC[2]))
+					if ($arrWSC[2] && !preg_match('/^#[a-f0-9]+$/i', $arrWSC[2]))
 					{
 						$arrSet['own'][] = $strDefinition;
 						break;
@@ -1934,7 +1934,7 @@ class StyleSheets extends Backend
 					$varValue = preg_replace('/[^0-9.-]+/', '', $arrWSC[0]);
 					$strUnit = preg_replace('/[^acehimnprtvwx%]/', '', $arrWSC[0]);
 
-					if ((isset($arrSet['borderwidth']['unit']) && $arrSet['borderwidth']['unit'] != $strUnit) || ($arrWSC[1] != '' && isset($arrSet['borderstyle']) && $arrSet['borderstyle'] != $arrWSC[1]) || ($arrWSC[2] != '' && isset($arrSet['bordercolor']) && $arrSet['bordercolor'] != $arrWSC[2]))
+					if ((isset($arrSet['borderwidth']['unit']) && $arrSet['borderwidth']['unit'] != $strUnit) || ($arrWSC[1] && isset($arrSet['borderstyle']) && $arrSet['borderstyle'] != $arrWSC[1]) || ($arrWSC[2] && isset($arrSet['bordercolor']) && $arrSet['bordercolor'] != $arrWSC[2]))
 					{
 						$arrSet['own'][] = $strDefinition;
 						break;
@@ -1942,12 +1942,12 @@ class StyleSheets extends Backend
 					$arrSet['borderwidth'][$strName] = preg_replace('/[^0-9.-]+/', '', $varValue);
 					$arrSet['borderwidth']['unit'] = $strUnit;
 
-					if ($arrWSC[1] != '')
+					if ($arrWSC[1])
 					{
 						$arrSet['borderstyle'] = $arrWSC[1];
 					}
 
-					if ($arrWSC[2] != '')
+					if ($arrWSC[2])
 					{
 						$arrSet['bordercolor'] = str_replace('#', '', $arrWSC[2]);
 					}

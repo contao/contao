@@ -273,12 +273,12 @@ class Form extends Hybrid
 		$strAttributes = '';
 		$arrAttributes = StringUtil::deserialize($this->attributes, true);
 
-		if ($arrAttributes[0] != '')
+		if ($arrAttributes[0])
 		{
 			$strAttributes .= ' id="' . $arrAttributes[0] . '"';
 		}
 
-		if ($arrAttributes[1] != '')
+		if ($arrAttributes[1])
 		{
 			$strAttributes .= ' class="' . $arrAttributes[1] . '"';
 		}
@@ -446,7 +446,7 @@ class Form extends Hybrid
 				}
 			}
 
-			$uploaded = trim($uploaded) != '' ? "\n\n---\n" . $uploaded : '';
+			$uploaded = trim($uploaded) ? "\n\n---\n" . $uploaded : '';
 			$email->text = StringUtil::decodeEntities(trim($message)) . $uploaded . "\n\n";
 
 			// Send the e-mail
@@ -472,7 +472,7 @@ class Form extends Hybrid
 					$arrSet[$k] = $v;
 
 					// Convert date formats into timestamps (see #6827)
-					if ($arrSet[$k] != '' && \in_array($arrFields[$k]->rgxp, array('date', 'time', 'datim')))
+					if ($arrSet[$k] && \in_array($arrFields[$k]->rgxp, array('date', 'time', 'datim')))
 					{
 						$objDate = new Date($arrSet[$k], Date::getFormatFromRgxp($arrFields[$k]->rgxp));
 						$arrSet[$k] = $objDate->tstamp;

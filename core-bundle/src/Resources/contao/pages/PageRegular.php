@@ -286,7 +286,7 @@ class PageRegular extends Frontend
 			{
 				$arrSize = StringUtil::deserialize($objLayout->width);
 
-				if (isset($arrSize['value']) && $arrSize['value'] != '' && $arrSize['value'] >= 0)
+				if (isset($arrSize['value']) && $arrSize['value'] && $arrSize['value'] >= 0)
 				{
 					$arrMargin = array('left'=>'0 auto 0 0', 'center'=>'0 auto', 'right'=>'0 0 0 auto');
 					$strFramework .= sprintf('#wrapper{width:%s;margin:%s}', $arrSize['value'] . $arrSize['unit'], $arrMargin[$objLayout->align]);
@@ -298,7 +298,7 @@ class PageRegular extends Frontend
 			{
 				$arrSize = StringUtil::deserialize($objLayout->headerHeight);
 
-				if (isset($arrSize['value']) && $arrSize['value'] != '' && $arrSize['value'] >= 0)
+				if (isset($arrSize['value']) && $arrSize['value'] && $arrSize['value'] >= 0)
 				{
 					$strFramework .= sprintf('#header{height:%s}', $arrSize['value'] . $arrSize['unit']);
 				}
@@ -311,7 +311,7 @@ class PageRegular extends Frontend
 			{
 				$arrSize = StringUtil::deserialize($objLayout->widthLeft);
 
-				if (isset($arrSize['value']) && $arrSize['value'] != '' && $arrSize['value'] >= 0)
+				if (isset($arrSize['value']) && $arrSize['value'] && $arrSize['value'] >= 0)
 				{
 					$strFramework .= sprintf('#left{width:%s;right:%s}', $arrSize['value'] . $arrSize['unit'], $arrSize['value'] . $arrSize['unit']);
 					$strContainer .= sprintf('padding-left:%s;', $arrSize['value'] . $arrSize['unit']);
@@ -323,7 +323,7 @@ class PageRegular extends Frontend
 			{
 				$arrSize = StringUtil::deserialize($objLayout->widthRight);
 
-				if (isset($arrSize['value']) && $arrSize['value'] != '' && $arrSize['value'] >= 0)
+				if (isset($arrSize['value']) && $arrSize['value'] && $arrSize['value'] >= 0)
 				{
 					$strFramework .= sprintf('#right{width:%s}', $arrSize['value'] . $arrSize['unit']);
 					$strContainer .= sprintf('padding-right:%s;', $arrSize['value'] . $arrSize['unit']);
@@ -341,7 +341,7 @@ class PageRegular extends Frontend
 			{
 				$arrSize = StringUtil::deserialize($objLayout->footerHeight);
 
-				if (isset($arrSize['value']) && $arrSize['value'] != '' && $arrSize['value'] >= 0)
+				if (isset($arrSize['value']) && $arrSize['value'] && $arrSize['value'] >= 0)
 				{
 					$strFramework .= sprintf('#footer{height:%s}', $arrSize['value'] . $arrSize['unit']);
 				}
