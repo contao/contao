@@ -35,7 +35,7 @@ class TwoFactorBackupCodesMigration extends AbstractMigration
     {
         $schemaManager = $this->connection->getSchemaManager();
 
-        if (!$schemaManager->tablesExist('tl_user') || !$schemaManager->tablesExist('tl_member')) {
+        if (!$schemaManager->tablesExist(['tl_user', 'tl_member'])) {
             return false;
         }
 
