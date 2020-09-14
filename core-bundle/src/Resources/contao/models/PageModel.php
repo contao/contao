@@ -549,6 +549,34 @@ class PageModel extends Model
 	}
 
 	/**
+	 * Find an error 404 page by its parent ID
+	 *
+	 * @param string  $strType    The page type
+	 * @param integer $intPid     The parent page's ID
+	 * @param array   $arrOptions An optional options array
+	 *
+	 * @return PageModel|null The model or null if there is no 404 page
+	 */
+	public static function findTypeByPid($strType, $intPid, array $arrOptions=array())
+	{
+		$t = static::$strTable;
+		$arrColumns = array("$t.pid=? AND $t.type=?");
+
+		if (!static::isPreviewMode($arrOptions))
+		{
+			$time = Date::floorToMinute();
+			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+		}
+
+		if (!isset($arrOptions['order']))
+		{
+			$arrOptions['order'] = "$t.sorting";
+		}
+
+		return static::findOneBy($arrColumns, [$intPid, $strType], $arrOptions);
+	}
+
+	/**
 	 * Find pages matching a list of possible alias names
 	 *
 	 * @param array $arrAliases An array of possible alias names

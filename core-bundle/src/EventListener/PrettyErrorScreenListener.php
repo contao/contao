@@ -17,9 +17,10 @@ use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Exception\RouteParametersException;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\PageError404;
+use Contao\PageModel;
 use Contao\StringUtil;
 use Symfony\Component\HttpFoundation\AcceptHeader;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -27,6 +28,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Symfony\Component\HttpKernel\Fragment\FragmentRendererInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 use Symfony\Component\Security\Core\Security;
 use Twig\Environment;
@@ -57,12 +59,18 @@ class PrettyErrorScreenListener
      */
     private $security;
 
-    public function __construct(bool $prettyErrorScreens, Environment $twig, ContaoFramework $framework, Security $security)
+    /**
+     * @var FragmentRendererInterface
+     */
+    private $inlineRenderer;
+
+    public function __construct(bool $prettyErrorScreens, Environment $twig, ContaoFramework $framework, Security $security, FragmentRendererInterface $inlineRenderer)
     {
         $this->prettyErrorScreens = $prettyErrorScreens;
         $this->twig = $twig;
         $this->framework = $framework;
         $this->security = $security;
+        $this->inlineRenderer = $inlineRenderer;
     }
 
     /**
@@ -146,28 +154,33 @@ class PrettyErrorScreenListener
 
         $processing = true;
 
-        if (null !== ($response = $this->getResponseFromPageHandler($type))) {
+        if (null !== ($response = $this->getResponseFromPageHandler($type, $event->getRequest()))) {
             $event->setResponse($response);
         }
 
         $processing = false;
     }
 
-    private function getResponseFromPageHandler(int $type): ?Response
+    private function getResponseFromPageHandler(int $type, Request $request): ?Response
     {
-        $this->framework->initialize(true);
+        $currentPage = $request->attributes->get('pageModel');
 
-        $key = 'error_'.$type;
-
-        if (!isset($GLOBALS['TL_PTY'][$key]) || !class_exists($GLOBALS['TL_PTY'][$key])) {
+        if (!$currentPage instanceof PageModel) {
             return null;
         }
 
-        /** @var PageError404 $pageHandler */
-        $pageHandler = new $GLOBALS['TL_PTY'][$key]();
+        $errorPage = PageModel::findTypeByPid('error_'.$type, $currentPage->rootId);
+
+        if (!$errorPage instanceof PageModel) {
+            return null;
+        }
 
         try {
-            return $pageHandler->getResponse();
+            return $this->inlineRenderer->render(
+                $errorPage->getAbsoluteUrl(),
+                $request,
+                ['ignore_errors' => false]
+            );
         } catch (ResponseException $e) {
             return $e->getResponse();
         } catch (\Exception $e) {

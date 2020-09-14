@@ -84,9 +84,13 @@ class FrontendIndex extends Frontend
 	 * @throws \LogicException
 	 * @throws PageNotFoundException
 	 * @throws AccessDeniedException
+	 *
+	 * @deprecated Using FrontendIndex::renderPage() has been deprecated and will no longer work in Contao 5.0. Use page controllers instead.
 	 */
 	public function renderPage($pageModel)
 	{
+		trigger_deprecation('contao/core-bundle', '4.11', 'Using "Contao\FrontendIndex::renderPage()" has been deprecated and will no longer work Contao 5.0. Use the Symfony routing instead.');
+
 		/** @var PageModel $objPage */
 		global $objPage;
 

@@ -14,9 +14,11 @@ namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\Routing\Page\ContentCompositionInterface;
 use Contao\CoreBundle\Routing\Page\DynamicRouteInterface;
+use Contao\CoreBundle\Routing\Page\PageOptionsAwareInterface;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\RouteConfig;
 use Contao\FrontendIndex;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\PriorityTaggedServiceTrait;
 use Symfony\Component\DependencyInjection\Container;
@@ -53,14 +55,20 @@ class RegisterPagesPass implements CompilerPassInterface
         foreach ($this->findAndSortTaggedServices(self::TAG_NAME, $container) as $reference) {
             $definition = $container->findDefinition((string) $reference);
             $tags = $definition->getTag(self::TAG_NAME);
+            $class = $definition->getClass();
 
             $definition->clearTag(self::TAG_NAME);
 
             foreach ($tags as $attributes) {
+                $attributes['type'] = $this->getPageType($class, $attributes);
+
+                $serviceId = 'contao.page.'.$attributes['type'];
+
+                $childDefinition = new ChildDefinition((string) $reference);
+                $childDefinition->setPublic(true);
+
                 $routeEnhancer = null;
                 $contentComposition = (bool) ($attributes['contentComposition'] ?? true);
-                $class = $definition->getClass();
-                $type = $this->getPageType($class, $attributes);
 
                 if (is_a($class, DynamicRouteInterface::class, true)) {
                     $routeEnhancer = $reference;
@@ -70,10 +78,15 @@ class RegisterPagesPass implements CompilerPassInterface
                     $contentComposition = $reference;
                 }
 
-                $config = $this->getRouteConfig($reference, $definition, $attributes);
-                $registry->addMethodCall('add', [$type, $config, $routeEnhancer, $contentComposition]);
+                if (is_a($class, PageOptionsAwareInterface::class, true)) {
+                    $childDefinition->addMethodCall('setPageOptions', [$attributes]);
+                }
 
-                $definition->addTag(self::TAG_NAME, $attributes);
+                $config = $this->getRouteConfig($reference, $definition, $attributes);
+                $registry->addMethodCall('add', [$attributes['type'], $config, $routeEnhancer, $contentComposition]);
+
+                $childDefinition->addTag(self::TAG_NAME, $attributes);
+                $container->setDefinition($serviceId, $childDefinition);
             }
         }
     }

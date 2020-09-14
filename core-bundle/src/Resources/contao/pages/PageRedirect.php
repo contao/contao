@@ -12,6 +12,8 @@ namespace Contao;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
+trigger_deprecation('contao/core-bundle', '4.11', 'Page types are deprecated, use page controllers instead.');
+
 /**
  * Provide methods to handle a redirect page.
  *

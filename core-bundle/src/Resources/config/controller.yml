@@ -1,0 +1,28 @@
+services:
+    Contao\CoreBundle\Controller\Page\ErrorPageController:
+        tags:
+            - { name: contao.page, type: error_401, status_code: 401 }
+            - { name: contao.page, type: error_403, status_code: 403 }
+            - { name: contao.page, type: error_404, status_code: 404 }
+
+    Contao\CoreBundle\Controller\Page\ForwardPageController:
+        tags:
+            - { name: contao.page, contentComposition: false }
+
+    Contao\CoreBundle\Controller\Page\LogoutPageController:
+        arguments:
+            - '@security.logout_url_generator'
+        tags:
+            - { name: contao.page, contentComposition: false }
+
+    Contao\CoreBundle\Controller\Page\RedirectPageController:
+        tags:
+            - { name: contao.page, contentComposition: false }
+
+    Contao\CoreBundle\Controller\Page\RegularPageController:
+        tags:
+            - { name: contao.page }
+
+    Contao\CoreBundle\Controller\Page\RootPageController:
+        tags:
+            - { name: contao.page, contentComposition: false }
