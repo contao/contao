@@ -276,7 +276,7 @@
             "vendor/bin/phpstan analyze core-bundle/src core-bundle/tests --level=5 --memory-limit=1G --ansi"
         ],
         "psalm": [
-            "vendor/bin/psalm --no-suggestions --threads=4"
+            "vendor/bin/psalm --no-suggestions"
         ],
         "unit-tests": [
             "vendor/bin/phpunit --colors=always"
