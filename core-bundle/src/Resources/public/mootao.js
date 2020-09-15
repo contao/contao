@@ -427,7 +427,7 @@ Contao.SerpPreview = new Class(
 			descriptionField = $(this.options.descriptionField),
 			descriptionFallbackField = $(this.options.descriptionFallbackField),
 			indexEmpty = this.options.trail.indexOf('›') === -1,
-			titleTag = this.options.titleTag === '' ? '%s' : this.options.titleTag;
+			titleTag = this.options.titleTag || '%s';
 
 		titleField && titleField.addEvent('input', function() {
 			if (titleField.value) {
