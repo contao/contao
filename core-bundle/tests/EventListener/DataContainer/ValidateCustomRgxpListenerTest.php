@@ -44,7 +44,7 @@ class ValidateCustomRgxpListenerTest extends TestCase
         ;
 
         $listener = new ValidateCustomRgxpListener($translator);
-        
-        $this->assertEquals('/foo/i', $listener('/foo/i'));
+
+        $this->assertSame('/foo/i', $listener('/foo/i'));
     }
 }
