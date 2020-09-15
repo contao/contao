@@ -42,6 +42,35 @@ class TwoFactorBackupCodesMigrationTest extends TestCase
         $this->assertFalse($migration->shouldRun());
     }
 
+    public function testDodesNothingIfColumnsDoNotExist(): void
+    {
+        $schemaManager = $this->createMock(MySqlSchemaManager::class);
+        $schemaManager
+            ->expects($this->once())
+            ->method('tablesExist')
+            ->with(['tl_user', 'tl_member'])
+            ->willReturn(true)
+        ;
+
+        $schemaManager
+            ->expects($this->exactly(2))
+            ->method('listTableColumns')
+            ->withConsecutive(['tl_user'], ['tl_member'])
+            ->willReturn([])
+        ;
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('getSchemaManager')
+            ->willReturn($schemaManager)
+        ;
+
+        $migration = new TwoFactorBackupCodesMigration($connection);
+
+        $this->assertFalse($migration->shouldRun());
+    }
+
     public function testDoesNothingIfNoRowsExist(): void
     {
         $schemaManager = $this->createMock(MySqlSchemaManager::class);
@@ -50,6 +79,13 @@ class TwoFactorBackupCodesMigrationTest extends TestCase
             ->method('tablesExist')
             ->with(['tl_user', 'tl_member'])
             ->willReturn(true)
+        ;
+
+        $schemaManager
+            ->expects($this->exactly(2))
+            ->method('listTableColumns')
+            ->withConsecutive(['tl_user'], ['tl_member'])
+            ->willReturn(['backupcodes' => []])
         ;
 
         $statement = $this->createMock(Statement::class);
@@ -101,6 +137,13 @@ class TwoFactorBackupCodesMigrationTest extends TestCase
             ->method('tablesExist')
             ->with(['tl_user', 'tl_member'])
             ->willReturn(true)
+        ;
+
+        $schemaManager
+            ->expects($this->exactly(2))
+            ->method('listTableColumns')
+            ->withConsecutive(['tl_user'], ['tl_member'])
+            ->willReturn(['backupcodes' => []])
         ;
 
         $statement = $this->createMock(Statement::class);

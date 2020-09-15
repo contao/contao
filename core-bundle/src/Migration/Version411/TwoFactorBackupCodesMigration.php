@@ -39,6 +39,13 @@ class TwoFactorBackupCodesMigration extends AbstractMigration
             return false;
         }
 
+        $userColumns = $schemaManager->listTableColumns('tl_user');
+        $memberColumns = $schemaManager->listTableColumns('tl_member');
+
+        if (!isset($userColumns['backupcodes'], $memberColumns['backupcodes'])) {
+            return false;
+        }
+
         $users = $this->getAffectedRowsForTable('tl_user');
         $members = $this->getAffectedRowsForTable('tl_member');
 
