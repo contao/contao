@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\EventListener\AddCustomRegexp;
+namespace Contao\CoreBundle\EventListener\Widget;
 
 use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\Widget;
@@ -44,7 +44,7 @@ class CustomRgxpListener
         }
 
         if (!preg_match($widget->custom_rgxp, $input)) {
-            $widget->addError($this->translator->trans('ERR.customRgxp', [], 'contao_default'));
+            $widget->addError($this->translator->trans('ERR.customRgxp', [$widget->label], 'contao_default'));
         }
 
         return true;

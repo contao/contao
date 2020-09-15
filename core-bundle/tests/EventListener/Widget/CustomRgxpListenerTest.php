@@ -10,16 +10,17 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\EventListener\AddCustomRegexp;
+namespace Contao\CoreBundle\Tests\EventListener\Widget;
 
-use Contao\CoreBundle\EventListener\AddCustomRegexp\HttpUrlListener;
+use Contao\CoreBundle\EventListener\Widget\CustomRgxpListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Widget;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class HttpUrlListenerTest extends TestCase
+class CustomRgxpListenerTest extends TestCase
 {
-    public function testReturnsFalseIfNotHttpurlType(): void
+    public function testReturnsFalseIfNotCustomRgxpType(): void
     {
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
@@ -28,12 +29,12 @@ class HttpUrlListenerTest extends TestCase
             ->willReturnArgument(0)
         ;
 
-        $listener = new HttpUrlListener($translator);
+        $listener = new CustomRgxpListener($translator);
 
         $this->assertFalse($listener('foobar', 'input', $this->createMock(Widget::class)));
     }
 
-    public function testReturnsTrueIfNoString(): void
+    public function testReturnsTrueIfNoCustomRgxpSet(): void
     {
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
@@ -42,12 +43,12 @@ class HttpUrlListenerTest extends TestCase
             ->willReturnArgument(0)
         ;
 
-        $listener = new HttpUrlListener($translator);
+        $listener = new CustomRgxpListener($translator);
 
-        $this->assertTrue($listener(HttpUrlListener::RGXP_NAME, [], $this->createMock(Widget::class)));
+        $this->assertTrue($listener(CustomRgxpListener::RGXP_NAME, 'input', $this->createMock(Widget::class)));
     }
 
-    public function testAddsErrorIfInputIsNotAbsoluteUrl(): void
+    public function testAddsErrorIfInputDoesNotMatchCustomRgxp(): void
     {
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
@@ -56,19 +57,20 @@ class HttpUrlListenerTest extends TestCase
             ->willReturnArgument(0)
         ;
 
-        $widget = $this->createMock(Widget::class);
+        /** @var Widget&MockObject $widget */
+        $widget = $this->mockClassWithProperties(Widget::class, ['custom_rgxp' => '/^foo/i']);
         $widget
             ->expects($this->once())
             ->method('addError')
-            ->with('ERR.invalidHttpUrl')
+            ->with('ERR.customRgxp')
         ;
 
-        $listener = new HttpUrlListener($translator);
+        $listener = new CustomRgxpListener($translator);
 
-        $this->assertTrue($listener(HttpUrlListener::RGXP_NAME, 'example.com', $widget));
+        $this->assertTrue($listener(CustomRgxpListener::RGXP_NAME, 'notfoo', $widget));
     }
 
-    public function testDoesNotAddErrorIfInputIsAbsoluteUrl(): void
+    public function testDoesNotAddErrorIfInputMatchesCustomRgxp(): void
     {
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
@@ -77,15 +79,16 @@ class HttpUrlListenerTest extends TestCase
             ->willReturnArgument(0)
         ;
 
-        $widget = $this->createMock(Widget::class);
+        /** @var Widget&MockObject $widget */
+        $widget = $this->mockClassWithProperties(Widget::class, ['custom_rgxp' => '/^foo/i']);
         $widget
             ->expects($this->never())
             ->method('addError')
-            ->with('ERR.invalidHttpUrl')
+            ->with('ERR.customRgxp')
         ;
 
-        $listener = new HttpUrlListener($translator);
+        $listener = new CustomRgxpListener($translator);
 
-        $this->assertTrue($listener(HttpUrlListener::RGXP_NAME, 'https://example.com', $widget));
+        $this->assertTrue($listener(CustomRgxpListener::RGXP_NAME, 'foobar', $widget));
     }
 }

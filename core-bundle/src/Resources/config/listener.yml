@@ -11,11 +11,11 @@ services:
             calls:
                 - [setContainer, ['@service_container']]
 
-    Contao\CoreBundle\EventListener\AddCustomRegexp\CustomRgxpListener:
+    Contao\CoreBundle\EventListener\Widget\CustomRgxpListener:
         arguments:
             - '@translator'
 
-    Contao\CoreBundle\EventListener\AddCustomRegexp\HttpUrlListener:
+    Contao\CoreBundle\EventListener\Widget\HttpUrlListener:
         arguments:
             - '@translator'
 

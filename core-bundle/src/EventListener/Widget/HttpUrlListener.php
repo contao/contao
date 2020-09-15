@@ -10,9 +10,10 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\EventListener\AddCustomRegexp;
+namespace Contao\CoreBundle\EventListener\Widget;
 
 use Contao\CoreBundle\ServiceAnnotation\Hook;
+use Contao\Validator;
 use Contao\Widget;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -44,7 +45,9 @@ class HttpUrlListener
         }
 
         if (!preg_match('~^https?://~i', $input)) {
-            $widget->addError($this->translator->trans('ERR.invalidHttpUrl', [], 'contao_default'));
+            $widget->addError($this->translator->trans('ERR.invalidHttpUrl', [$widget->label], 'contao_default'));
+        } elseif (!Validator::isUrl($input)) {
+            $widget->addError($this->translator->trans('ERR.url', [$widget->label], 'contao_default'));
         }
 
         return true;

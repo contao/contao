@@ -249,7 +249,7 @@
         <source>Please assign all modules to a column!</source>
       </trans-unit>
       <trans-unit id="ERR.invalidHttpUrl">
-        <source>Invalid absolute URL.</source>
+        <source>Please enter a valid URL starting with either http:// or https://!</source>
       </trans-unit>
       <trans-unit id="ERR.customRgxp">
         <source>Invalid format.</source>
