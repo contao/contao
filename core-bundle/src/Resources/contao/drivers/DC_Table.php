@@ -968,7 +968,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				{
 					$value = StringUtil::deserialize($this->set[$strKey]);
 
-					if (!empty($value) && \is_array($value) && $value['value'])
+					if (!empty($value['value']))
 					{
 						$value['value'] = sprintf($GLOBALS['TL_LANG']['MSC']['copyOf'], $value['value']);
 						$this->set[$strKey] = serialize($value);
@@ -3072,7 +3072,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		}
 
 		// Make sure unique fields are unique
-		if ($varValue && $arrData['eval']['unique'] && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $this->objActiveRecord->id))
+		if ((string) $varValue !== '' && $arrData['eval']['unique'] && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $this->objActiveRecord->id))
 		{
 			throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $this->strField));
 		}
@@ -3153,7 +3153,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		}
 
 		// Save the value if there was no error
-		if (($varValue || !$arrData['eval']['doNotSaveEmpty']) && ($this->varValue !== $varValue || $arrData['eval']['alwaysSave']))
+		if (((string) $varValue !== '' || !$arrData['eval']['doNotSaveEmpty']) && ($this->varValue !== $varValue || $arrData['eval']['alwaysSave']))
 		{
 			// If the field is a fallback field, empty all other columns (see #6498)
 			if ($varValue && $arrData['eval']['fallback'])
@@ -5198,7 +5198,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		}
 
 		// Set the search value from the session
-		elseif ($session['search'][$this->strTable]['value'])
+		elseif ((string) $session['search'][$this->strTable]['value'] !== '')
 		{
 			$strPattern = "CAST(%s AS CHAR) REGEXP ?";
 
@@ -5243,7 +5243,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 		// Sort by option values
 		$options_sorter = natcaseksort($options_sorter);
-		$active = isset($session['search'][$this->strTable]['value']) && $session['search'][$this->strTable]['value'] !== '';
+		$active = isset($session['search'][$this->strTable]['value']) && (string) $session['search'][$this->strTable]['value'] !== '';
 
 		return '
 <div class="tl_search tl_subpanel">

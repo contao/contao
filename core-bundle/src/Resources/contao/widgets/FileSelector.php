@@ -109,7 +109,7 @@ class FileSelector extends Widget
 		$arrFound = array();
 
 		// Search for a specific file
-		if ($for)
+		if ((string) $for !== '')
 		{
 			// Wrap in a try catch block in case the regular expression is invalid (see #7743)
 			try

@@ -69,7 +69,7 @@ class PageSelector extends Widget
 			$strKeyword = ltrim(Input::postRaw('keyword'), '*');
 
 			// Make sure the regular expression is valid
-			if ($strKeyword)
+			if ($strKeyword !== '')
 			{
 				try
 				{
@@ -93,7 +93,7 @@ class PageSelector extends Widget
 		$arrFound = array();
 
 		// Search for a specific page
-		if ($for)
+		if ((string) $for !== '')
 		{
 			// Wrap in a try catch block in case the regular expression is invalid (see #7743)
 			try

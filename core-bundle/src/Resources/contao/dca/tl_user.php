@@ -863,7 +863,7 @@ class tl_user extends Contao\Backend
 	{
 		if (!$varValue && $this->User->id == $dc->id)
 		{
-			$varValue = 1;
+			$varValue = '1';
 		}
 
 		return $varValue;
