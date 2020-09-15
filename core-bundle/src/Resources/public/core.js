@@ -937,9 +937,11 @@ var Backend =
 				}
 				// Add currently selected value, otherwise remove (#1816)
 				sIndex = val.indexOf(inp[i].get('value'));
-				if (inp[i].checked && sIndex == -1) {
-					val.push(inp[i].get('value'));
-				} else if (!inp[i].checked && sIndex != -1) {
+				if (inp[i].checked) {
+					if (sIndex == -1) {
+						val.push(inp[i].get('value'));
+					}
+				} else if (sIndex != -1) {
 					val.splice(sIndex, 1);
 				}
 			}
