@@ -38,17 +38,17 @@ class ContentAccordionStop extends ContentElement
 
 		$this->Template->addWrapper = true;
 
-		$next = ContentModel::findOneBy([
-            'ptable = ?',
-            'pid = ?',
+		$next = ContentModel::findOneBy(array(
+			'ptable = ?',
+			'pid = ?',
 			'sorting > ?',
-        ], [
-            $this->ptable,
-            $this->pid,
-            $this->sorting,
-        ], [
-            'order' => 'sorting ASC',
-		]);
+		), array(
+			$this->ptable,
+			$this->pid,
+			$this->sorting,
+		), array(
+			'order' => 'sorting ASC',
+		));
 
 		if (null !== $next && 'accordionStart' !== $next->type)
 		{
