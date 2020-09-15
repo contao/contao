@@ -58,16 +58,20 @@ class BackupCodeManager implements BackupCodeManagerInterface
             }
         }
 
-        if (false !== $codeToInvalidate) {
-            $key = array_search($codeToInvalidate, $backupCodes, true);
-
-            if (false !== $key) {
-                unset($backupCodes[$key]);
-
-                $user->backupCodes = json_encode(array_values($backupCodes));
-                $user->save();
-            }
+        if (false === $codeToInvalidate) {
+            return;
         }
+
+        $key = array_search($codeToInvalidate, $backupCodes, true);
+
+        if (false === $key) {
+            return;
+        }
+
+        unset($backupCodes[$key]);
+
+        $user->backupCodes = json_encode(array_values($backupCodes));
+        $user->save();
     }
 
     public function generateBackupCodes(User $user): ?array
