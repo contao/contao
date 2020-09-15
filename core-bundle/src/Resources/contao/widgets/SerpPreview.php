@@ -28,8 +28,6 @@ class SerpPreview extends Widget
 	 */
 	public function generate()
 	{
-		global $objPage;
-
 		/** @var Model $class */
 		$class = Model::getClassFromTable($this->strTable);
 		$model = $class::findByPk($this->activeRecord->id);
@@ -37,11 +35,6 @@ class SerpPreview extends Widget
 		if (!$model instanceof Model)
 		{
 			throw new \RuntimeException('Could not fetch the associated model');
-		}
-
-		if ($model instanceof PageModel)
-		{
-			$objPage = $model->loadDetails();
 		}
 
 		$id = $model->id;
@@ -78,6 +71,13 @@ class SerpPreview extends Widget
 		// apply title tag from layout if available
 		if ('' != $titleTag)
 		{
+			global $objPage;
+
+			if ($model instanceof PageModel)
+			{
+				$objPage = $model->loadDetails();
+			}
+
 			$titleTag = str_replace('{{page::pageTitle}}', '%s', $titleTag);
 			$titleTag = self::replaceInsertTags($titleTag);
 			$title = StringUtil::substr(sprintf($titleTag, $title), 64);
