@@ -107,14 +107,14 @@ class PageRegular extends Frontend
 		{
 			if ($module['enable'])
 			{
-				$arrModuleIds[] = $module['mod'];
+				$arrModuleIds[] = (int) $module['mod'];
 			}
 		}
 
 		// Get all modules in a single DB query
 		$objModules = ModuleModel::findMultipleByIds($arrModuleIds);
 
-		if ($objModules !== null || \in_array(0, $arrModuleIds))
+		if ($objModules !== null || \in_array(0, $arrModuleIds, true))
 		{
 			$arrMapper = array();
 
