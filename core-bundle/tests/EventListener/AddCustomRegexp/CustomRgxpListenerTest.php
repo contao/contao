@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\EventListener\AddCustomRegexp;
 use Contao\CoreBundle\EventListener\AddCustomRegexp\CustomRgxpListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Widget;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CustomRgxpListenerTest extends TestCase
