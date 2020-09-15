@@ -40,8 +40,8 @@ class StyleSheets extends Backend
 	public function updateStyleSheet($intId)
 	{
 		$objStyleSheet = $this->Database->prepare("SELECT * FROM tl_style_sheet WHERE id=?")
-			->limit(1)
-			->execute($intId);
+										->limit(1)
+										->execute($intId);
 
 		if ($objStyleSheet->numRows < 1)
 		{
@@ -144,8 +144,8 @@ class StyleSheets extends Backend
 
 		// Get the global theme variables
 		$objTheme = $this->Database->prepare("SELECT vars FROM tl_theme WHERE id=?")
-			->limit(1)
-			->execute($row['pid']);
+								   ->limit(1)
+								   ->execute($row['pid']);
 
 		if ($objTheme->vars != '' && \is_array(($tmp = StringUtil::deserialize($objTheme->vars))))
 		{
@@ -172,7 +172,7 @@ class StyleSheets extends Backend
 		$objFile->write('/* ' . $row['name'] . ".css */\n");
 
 		$objDefinitions = $this->Database->prepare("SELECT * FROM tl_style WHERE pid=? AND invisible!='1' ORDER BY sorting")
-			->execute($row['id']);
+										 ->execute($row['id']);
 
 		// Append the definition
 		while ($objDefinitions->next())
@@ -1107,7 +1107,7 @@ class StyleSheets extends Backend
 
 				// Create the new style sheet
 				$objStyleSheet = $this->Database->prepare("INSERT INTO tl_style_sheet (pid, tstamp, name, media) VALUES (?, ?, ?, ?)")
-					->execute(Input::get('id'), time(), $strName, array('all'));
+												->execute(Input::get('id'), time(), $strName, array('all'));
 
 				$insertId = $objStyleSheet->insertId;
 
@@ -1341,8 +1341,8 @@ class StyleSheets extends Backend
 	public function exportStyleSheet(DataContainer $dc)
 	{
 		$objStyleSheet = $this->Database->prepare("SELECT * FROM tl_style_sheet WHERE id=?")
-			->limit(1)
-			->execute($dc->id);
+										->limit(1)
+										->execute($dc->id);
 
 		if ($objStyleSheet->numRows < 1)
 		{
@@ -1353,8 +1353,8 @@ class StyleSheets extends Backend
 
 		// Get the global theme variables
 		$objTheme = $this->Database->prepare("SELECT vars FROM tl_theme WHERE id=?")
-			->limit(1)
-			->execute($objStyleSheet->pid);
+								   ->limit(1)
+								   ->execute($objStyleSheet->pid);
 
 		if ($objTheme->vars != '' && \is_array(($tmp = StringUtil::deserialize($objTheme->vars))))
 		{
@@ -1395,7 +1395,7 @@ class StyleSheets extends Backend
 		}
 
 		$objDefinitions = $this->Database->prepare("SELECT * FROM tl_style WHERE pid=? AND invisible!='1' ORDER BY sorting")
-			->execute($objStyleSheet->id);
+										 ->execute($objStyleSheet->id);
 
 		// Append the definition
 		while ($objDefinitions->next())
@@ -1424,8 +1424,8 @@ class StyleSheets extends Backend
 	public function checkStyleSheetName($strName)
 	{
 		$objStyleSheet = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_style_sheet WHERE name=?")
-			->limit(1)
-			->execute($strName);
+										->limit(1)
+										->execute($strName);
 
 		if ($objStyleSheet->count < 1)
 		{
