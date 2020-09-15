@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Image\Studio;
 use Contao\CoreBundle\Event\FileMetadataEvent;
 use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\FilesModel;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
@@ -756,10 +757,10 @@ class FigureBuilder
             return [];
         }
 
-        $locales = [str_replace('-', '_', $page->language)];
+        $locales = [LocaleUtil::formatAsLocale($page->language)];
 
         if (null !== $page->rootFallbackLanguage) {
-            $locales[] = str_replace('-', '_', $page->rootFallbackLanguage);
+            $locales[] = LocaleUtil::formatAsLocale($page->rootFallbackLanguage);
         }
 
         return array_unique(array_filter($locales));

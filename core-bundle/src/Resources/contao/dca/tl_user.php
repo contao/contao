@@ -13,6 +13,7 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\Input;
@@ -172,7 +173,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'language' => array
 		(
-			'default'                 => str_replace('-', '_', $GLOBALS['TL_LANGUAGE']),
+			'default'                 => LocaleUtil::formatAsLocale($GLOBALS['TL_LANGUAGE']),
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'select',

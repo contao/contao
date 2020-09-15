@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Model\Collection;
 
 /**
@@ -127,7 +128,7 @@ class ContentMedia extends ContentElement
 		$objFiles->reset();
 
 		// Convert the language to a locale (see #5678)
-		$strLanguage = str_replace('-', '_', $objPage->language);
+		$strLanguage = LocaleUtil::formatAsLocale($objPage->language);
 
 		// Pass File objects to the template
 		while ($objFiles->next())

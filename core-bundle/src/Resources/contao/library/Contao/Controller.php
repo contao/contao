@@ -20,6 +20,7 @@ use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Monolog\ContaoContext as ContaoMonologContext;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\CoreBundle\Util\SimpleTokenParser;
 use Contao\Database\Result;
 use Contao\Image\PictureConfiguration;
@@ -1163,6 +1164,8 @@ abstract class Controller extends System
 		// Set the language
 		if ($strForceLang !== null)
 		{
+			$strForceLang = LocaleUtil::formatAsLocale($strForceLang);
+
 			$page->language = $strForceLang;
 			$page->rootLanguage = $strForceLang;
 

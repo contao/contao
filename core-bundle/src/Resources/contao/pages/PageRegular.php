@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
@@ -74,9 +75,9 @@ class PageRegular extends Frontend
 	protected function prepare($objPage)
 	{
 		$GLOBALS['TL_KEYWORDS'] = '';
-		$GLOBALS['TL_LANGUAGE'] = $objPage->language;
+		$GLOBALS['TL_LANGUAGE'] = LocaleUtil::formatAsLanguageTag($objPage->language);
 
-		$locale = str_replace('-', '_', $objPage->language);
+		$locale = LocaleUtil::formatAsLocale($objPage->language);
 
 		$container = System::getContainer();
 		$container->get('request_stack')->getCurrentRequest()->setLocale($locale);

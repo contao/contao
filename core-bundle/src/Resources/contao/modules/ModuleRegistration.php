@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\OptIn\OptIn;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\CoreBundle\Util\SimpleTokenParser;
 use Patchwork\Utf8;
 
@@ -68,7 +69,7 @@ class ModuleRegistration extends Module
 		/** @var PageModel $objPage */
 		global $objPage;
 
-		$GLOBALS['TL_LANGUAGE'] = $objPage->language;
+		$GLOBALS['TL_LANGUAGE'] = LocaleUtil::formatAsLanguageTag($objPage->language);
 
 		System::loadLanguageFile('tl_member');
 		$this->loadDataContainer('tl_member');
