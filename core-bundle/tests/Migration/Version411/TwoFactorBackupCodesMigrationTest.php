@@ -123,11 +123,11 @@ class TwoFactorBackupCodesMigrationTest extends TestCase
         $rows = [
             [
                 'id' => 1,
-                'backupCodes' => '[]',
+                'backupCodes' => '["4ead45-4ea70a"]',
             ],
             [
                 'id' => 2,
-                'backupCodes' => '[]',
+                'backupCodes' => '["0082ec-b95f03"]',
             ],
         ];
 
