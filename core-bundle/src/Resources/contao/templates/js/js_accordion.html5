@@ -1,0 +1,9 @@
+<?php $GLOBALS['TL_CSS'][] = 'handorgel/handorgel.min.css'; ?>
+<?= \Contao\Template::generateScriptTag('handorgel/handorgel.min.js', false, null) ?>
+<script>
+  document.querySelectorAll('.ce_accordion').forEach(function(element) {
+    new handorgel(element, {
+      multiSelectable: false
+    });
+  })
+</script>

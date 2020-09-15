@@ -38,12 +38,24 @@ class ContentAccordionStart extends ContentElement
 			$this->Template->title = $this->mooHeadline;
 		}
 
-		$classes = StringUtil::deserialize($this->mooClasses);
+		$this->Template->addWrapper = true;
 
-		$this->Template->toggler = $classes[0] ?: 'toggler';
-		$this->Template->accordion = $classes[1] ?: 'accordion';
-		$this->Template->headlineStyle = $this->mooStyle;
-		$this->Template->headline = $this->mooHeadline;
+		$prev = ContentModel::findOneBy([
+            'ptable = ?',
+            'pid = ?',
+			'sorting < ?',
+        ], [
+            $this->ptable,
+            $this->pid,
+            $this->sorting,
+        ], [
+            'order' => 'sorting DESC',
+		]);
+
+		if (null !== $prev && 'accordionStop' !== $prev->type)
+		{
+			$this->Template->addWrapper = false;
+		}
 	}
 }
 
