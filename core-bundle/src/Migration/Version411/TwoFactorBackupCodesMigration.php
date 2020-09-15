@@ -57,10 +57,6 @@ class TwoFactorBackupCodesMigration extends AbstractMigration
     {
         $rows = $this->getAffectedRowsForTable($table);
 
-        if (!\count($rows)) {
-            return;
-        }
-
         foreach ($rows as $row) {
             $backupCodes = json_decode($row['backupCodes'], true);
 
