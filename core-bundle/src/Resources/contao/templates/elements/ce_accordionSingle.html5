@@ -1,5 +1,5 @@
 
-<section class="<?= $this->class ?> ce_accordion ce_text block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
+<section class="<?= $this->class ?> ce_accordion ce_text block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?><?= $this->attributes ?>>
 
   <div class="<?= $this->toggler ?>"<?php if ($this->headlineStyle): ?> style="<?= $this->headlineStyle ?>"<?php endif; ?>>
     <?= $this->headline ?>
