@@ -21,7 +21,7 @@ class UndoDescriptionListener
      */
     private $options;
 
-    public function onGenerateDescription(UndoDescriptionEvent $event): void
+    public function __invoke(UndoDescriptionEvent $event): void
     {
         $this->options = $event->getOptions();
         $row = $event->getData();

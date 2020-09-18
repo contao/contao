@@ -18,7 +18,7 @@ use Contao\StringUtil;
 
 class ContentUndoDescriptionListener
 {
-    public function onGenerateDescription(UndoDescriptionEvent $event): void
+    public function __invoke(UndoDescriptionEvent $event): void
     {
         if ('tl_content' !== $event->getTable()) {
             return;

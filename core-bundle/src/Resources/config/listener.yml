@@ -399,8 +399,8 @@ services:
 
     Contao\CoreBundle\EventListener\Undo\UndoDescriptionListener:
         tags:
-            - { name: kernel.event_listener, event: contao.undo_description, method: onGenerateDescription }
+            - kernel.event_listener
 
     Contao\CoreBundle\EventListener\Undo\ContentUndoDescriptionListener:
         tags:
-            - { name: kernel.event_listener, event: contao.undo_description, method: onGenerateDescription }
+            - kernel.event_listener
