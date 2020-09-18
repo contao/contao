@@ -395,7 +395,7 @@ services:
             - '@contao.routing.scope_matcher'
             - '@event_dispatcher'
         tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+            - kernel.event_listener
 
     contao.listener.descriptor_generation:
         class: Contao\CoreBundle\EventListener\Descriptor\DescriptorGenerationListener
