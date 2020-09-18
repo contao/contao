@@ -36,7 +36,7 @@ class UndoDescriptionListener
         if (isset($this->options['label_callback'])) {
             $callback = $this->options['label_callback'];
 
-            if (is_callable($callback)) {
+            if (\is_callable($callback)) {
                 $description = $callback($row);
             }
         }
@@ -48,7 +48,7 @@ class UndoDescriptionListener
 
         // Fallback: If everything else failed, we fall back to the row ID
         if (null === $description) {
-            $description = (string)$row['id'];
+            $description = (string) $row['id'];
         }
 
         $event->setDescription($description);
@@ -64,9 +64,12 @@ class UndoDescriptionListener
             $fields = [$fields];
         }
 
-        $values = array_map(function ($field) use ($row) {
-            return (isset($row[$field])) ? $row[$field] : '';
-        }, $fields);
+        $values = array_map(
+            static function ($field) use ($row) {
+                return $row[$field] ?? '';
+            },
+            $fields
+        );
 
         if (null === $format) {
             return implode(', ', $values);

@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\EventListener;
 use Contao\CoreBundle\Event\UndoDescriptionEvent;
 use Contao\CoreBundle\EventListener\Undo\UndoDescriptionListener;
 use Contao\CoreBundle\Tests\TestCase;
-use Generator;
 
 class UndoDescriptionListenerTest extends TestCase
 {
@@ -26,9 +25,6 @@ class UndoDescriptionListenerTest extends TestCase
 
     /**
      * @dataProvider rowAndOptionsProvider
-     * @param array $data
-     * @param array $options
-     * @param string $expected
      */
     public function testGetDescriptionForRow(array $data, array $options, string $expected): void
     {
@@ -40,66 +36,66 @@ class UndoDescriptionListenerTest extends TestCase
         $this->assertSame($event->getDescription(), $expected);
     }
 
-    public function rowAndOptionsProvider(): Generator
+    public function rowAndOptionsProvider(): \Generator
     {
         yield 'Single field with format' => [
             $this->getTestData(),
             [
                 'fields' => 'lastname',
-                'format' => '%s'
+                'format' => '%s',
             ],
-            'Doe'
+            'Doe',
         ];
 
         yield 'Single field without format' => [
             $this->getTestData(),
             [
-                'fields' => 'lastname'
+                'fields' => 'lastname',
             ],
-            'Doe'
+            'Doe',
         ];
 
         yield 'Multiple fields with format' => [
             $this->getTestData(),
             [
                 'fields' => ['firstname', 'lastname', 'company'],
-                'format' => '%s %s (%s)'
+                'format' => '%s %s (%s)',
             ],
-            'John Doe (Acme Corp.)'
+            'John Doe (Acme Corp.)',
         ];
 
         yield 'Multiple fields without format' => [
             $this->getTestData(),
             [
-                'fields' => ['firstname', 'lastname', 'company']
+                'fields' => ['firstname', 'lastname', 'company'],
             ],
-            'John, Doe, Acme Corp.'
+            'John, Doe, Acme Corp.',
         ];
 
         yield 'Run label callback' => [
             $this->getTestData(),
             [
-                'label_callback' => function(array $row) {
-                    return strtoupper($row['firstname'] . ' ' . $row['lastname']);
-                }
+                'label_callback' => static function (array $row) {
+                    return strtoupper($row['firstname'].' '.$row['lastname']);
+                },
             ],
-            'JOHN DOE'
+            'JOHN DOE',
         ];
 
         yield 'Fallback to commonly used fields, if no options where defined' => [
             $this->getTestData(),
             [],
-            'john.doe'
+            'john.doe',
         ];
 
         yield 'Fallback to row ID, if no commonly used field is present' => [
             [
                 'id' => 42,
                 'firstname' => 'John',
-                'lastname' => 'Doe'
+                'lastname' => 'Doe',
             ],
             [],
-            '42'
+            '42',
         ];
     }
 
@@ -111,7 +107,7 @@ class UndoDescriptionListenerTest extends TestCase
             'lastname' => 'Doe',
             'email' => 'john.doe@acmecorp.com',
             'username' => 'john.doe',
-            'company' => 'Acme Corp.'
+            'company' => 'Acme Corp.',
         ];
     }
 }
