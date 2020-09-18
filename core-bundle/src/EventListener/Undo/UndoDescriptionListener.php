@@ -2,15 +2,23 @@
 
 declare(strict_types=1);
 
-namespace Contao\CoreBundle\EventListener\Descriptor;
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
 
-use Contao\CoreBundle\Event\DescriptorGenerationEvent;
+namespace Contao\CoreBundle\EventListener\Undo;
 
-class DescriptorGenerationListener
+use Contao\CoreBundle\Event\UndoDescriptionEvent;
+
+class UndoDescriptionListener
 {
     private $options;
 
-    public function onDescriptorGeneration(DescriptorGenerationEvent $event): void
+    public function onGenerateDescription(UndoDescriptionEvent $event): void
     {
         $this->options = $event->getOptions();
         $row = $event->getData();
@@ -22,7 +30,7 @@ class DescriptorGenerationListener
         }
 
         // Fallback: Check for some often used fields
-        if ($descriptor === null) {
+        if (null === $descriptor) {
             $descriptor = $this->getFallbackDescriptor($row);
         }
 
@@ -33,17 +41,20 @@ class DescriptorGenerationListener
     {
         $options = $this->options;
         $fields = $options['fields'];
-        $format = (isset($options['format'])) ? $options['format'] : null;
+        $format = $options['format'] ?? null;
 
-        if (is_string($fields)) {
-            $fields = [ $fields ];
+        if (\is_string($fields)) {
+            $fields = [$fields];
         }
 
-        $fields = array_map(function($field) use($row) {
-            return $row[$field];
-        }, $fields);
+        $fields = array_map(
+            static function ($field) use ($row) {
+                return $row[$field];
+            },
+            $fields
+        );
 
-        if ($format === null) {
+        if (null === $format) {
             return implode(', ', $fields);
         }
 
@@ -52,7 +63,7 @@ class DescriptorGenerationListener
 
     private function getFallbackDescriptor(array $row): ?string
     {
-        foreach ([ 'title', 'username', 'email', 'name', 'headline' ] as $key) {
+        foreach (['title', 'username', 'email', 'name', 'headline'] as $key) {
             if (!empty($row[$key])) {
                 return $row[$key];
             }

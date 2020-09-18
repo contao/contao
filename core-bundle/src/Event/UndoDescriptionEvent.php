@@ -2,11 +2,19 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\Event;
 
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
-class DescriptorGenerationEvent extends Event
+class UndoDescriptionEvent extends Event
 {
     /**
      * @var string
@@ -23,14 +31,11 @@ class DescriptorGenerationEvent extends Event
      */
     private $descriptor;
 
-    /** @var array */
+    /**
+     * @var array
+     */
     private $options;
 
-    /**
-     * @param string $table
-     * @param array $data
-     * @param array $options
-     */
     public function __construct(string $table, array $data, array $options = [])
     {
         $this->table = $table;
@@ -38,9 +43,6 @@ class DescriptorGenerationEvent extends Event
         $this->options = $options;
     }
 
-    /**
-     * @return array
-     */
     public function getData(): array
     {
         return $this->data;
@@ -55,24 +57,18 @@ class DescriptorGenerationEvent extends Event
     }
 
     /**
-     * @param string $descriptor
+     * @param ?string $descriptor
      */
     public function setDescriptor(string $descriptor = null): void
     {
         $this->descriptor = $descriptor;
     }
 
-    /**
-     * @return string
-     */
     public function getTable(): string
     {
         return $this->table;
     }
 
-    /**
-     * @return array
-     */
     public function getOptions(): array
     {
         return $this->options;

@@ -2,17 +2,25 @@
 
 declare(strict_types=1);
 
-namespace Contao\CoreBundle\EventListener\Descriptor;
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
 
-use Contao\CoreBundle\Event\DescriptorGenerationEvent;
+namespace Contao\CoreBundle\EventListener\Undo;
+
+use Contao\CoreBundle\Event\UndoDescriptionEvent;
 use Contao\FilesModel;
 use Contao\StringUtil;
 
-class ContentDescriptorGenerationListener
+class ContentUndoDescriptionListener
 {
-    public function onDescriptorGeneration(DescriptorGenerationEvent $event): void
+    public function onGenerateDescription(UndoDescriptionEvent $event): void
     {
-        if ($event->getTable() !== 'tl_content') {
+        if ('tl_content' !== $event->getTable()) {
             return;
         }
 
@@ -27,24 +35,22 @@ class ContentDescriptorGenerationListener
         $event->setDescriptor($descriptor);
     }
 
-    /**
-     * @param array $data
-     * @return string
-     */
     private function getMethodFromType(string $type): string
     {
-        return 'get' . ucwords($type) . 'Descriptor';
+        return 'get'.ucwords($type).'Descriptor';
     }
 
     private function getHeadlineDescriptor(array $data): string
     {
         $headline = StringUtil::deserialize($data['headline']);
+
         return $headline[1];
     }
 
     private function getTextDescriptor(array $data): string
     {
         $text = $data['text'];
+
         return StringUtil::substrHtml($text, 100);
     }
 
@@ -56,6 +62,7 @@ class ContentDescriptorGenerationListener
     private function getListDescriptor(array $data): string
     {
         $items = StringUtil::deserialize($data['listitems']);
+
         return implode(', ', array_values($items));
     }
 
@@ -64,23 +71,27 @@ class ContentDescriptorGenerationListener
         $uuid = StringUtil::binToUuid($data['singleSRC']);
         $image = FilesModel::findByUuid($uuid);
 
-        return ($image !== null) ? $image->name . '.' . $image->extension : $uuid;
+        return null !== $image ? $image->name.'.'.$image->extension : $uuid;
     }
 
     private function getGalleryDescriptor(array $data): string
     {
-        $uuids = array_map(function ($uuid) {
-            return \StringUtil::binToUuid($uuid);
-        }, StringUtil::deserialize($data['multiSRC']));
+        $uuids = array_map(
+            static function ($uuid) {
+                return \StringUtil::binToUuid($uuid);
+            },
+            StringUtil::deserialize($data['multiSRC'])
+        );
 
         $files = FilesModel::findMultipleByUuids($uuids);
 
-        if ($files === null) {
+        if (null === $files) {
             return implode(', ', $uuids);
         }
 
-        $fileNames = array_reduce($files->fetchAll(), function ($acc, $file) {
+        $fileNames = array_reduce($files->fetchAll(), static function ($acc, $file) {
             array_push($acc, $file['name']);
+
             return $acc;
         }, []);
 

@@ -11,7 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Event\ContaoCoreEvents;
-use Contao\CoreBundle\Event\DescriptorGenerationEvent;
+use Contao\CoreBundle\Event\UndoDescriptionEvent;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\ResponseException;
@@ -1526,11 +1526,11 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 		$this->import(BackendUser::class, 'User');
 
-        $event = new DescriptorGenerationEvent($this->strTable, $data[$this->strTable][0], [
+        $event = new UndoDescriptionEvent($this->strTable, $data[$this->strTable][0], [
             'fields' => $GLOBALS['TL_DCA'][$this->strTable]['list']['restore']['fields'],
             'format' => $GLOBALS['TL_DCA'][$this->strTable]['list']['restore']['format']
         ]);
-        System::getContainer()->get('event_dispatcher')->dispatch(ContaoCoreEvents::DESCRIPTOR_GENERATION, $event);
+        System::getContainer()->get('event_dispatcher')->dispatch(ContaoCoreEvents::UNDO_DESCRIPTION, $event);
 
         // Use ID as fallback
         if (($descriptor = $event->getDescriptor()) === null) {
