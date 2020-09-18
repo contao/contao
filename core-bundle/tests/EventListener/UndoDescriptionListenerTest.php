@@ -19,20 +19,13 @@ use Generator;
 
 class UndoDescriptionListenerTest extends TestCase
 {
-    /**
-     * @var array
-     */
-    private $data;
-
     protected function setUp(): void
     {
-        $this->data = $this->getTestData();
-
         parent::setUp();
     }
 
     /**
-     * @dataProvider getDataAndOptionsProvider
+     * @dataProvider rowAndOptionsProvider
      * @param array $data
      * @param array $options
      * @param string $expected
@@ -47,7 +40,7 @@ class UndoDescriptionListenerTest extends TestCase
         $this->assertSame($event->getDescription(), $expected);
     }
 
-    public function getDataAndOptionsProvider(): Generator
+    public function rowAndOptionsProvider(): Generator
     {
         yield 'Single field with format' => [
             $this->getTestData(),

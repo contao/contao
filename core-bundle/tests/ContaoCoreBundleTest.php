@@ -41,6 +41,7 @@ use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Event\RobotsTxtEvent;
 use Contao\CoreBundle\Event\SlugValidCharactersEvent;
+use Contao\CoreBundle\EventListener\Undo\UndoDescriptionListener;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
 use Symfony\Cmf\Component\Routing\DependencyInjection\Compiler\RegisterRouteEnhancersPass;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -102,6 +103,7 @@ class ContaoCoreBundleTest extends TestCase
                             PreviewUrlConvertEvent::class => ContaoCoreEvents::PREVIEW_URL_CONVERT,
                             RobotsTxtEvent::class => ContaoCoreEvents::ROBOTS_TXT,
                             SlugValidCharactersEvent::class => ContaoCoreEvents::SLUG_VALID_CHARACTERS,
+                            UndoDescriptionListener::class => ContaoCoreEvents::UNDO_DESCRIPTION
                         ];
 
                         $this->assertEquals(new AddEventAliasesPass($eventAliases), $pass);
