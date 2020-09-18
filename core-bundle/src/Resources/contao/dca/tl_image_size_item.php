@@ -53,9 +53,9 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 			'headerFields'            => array('name', 'tstamp', 'width', 'height', 'resizeMode', 'zoom'),
 			'child_record_callback'   => array('tl_image_size_item', 'listImageSizeItem')
 		),
-        'restore' => array
+        'undo' => array
         (
-            'label_callback' => array('tl_image_size_item', 'restoreLabelCallback')
+            'label_callback' => array('tl_image_size_item', 'undoLabelCallback')
         ),
 		'global_operations' => array
 		(
@@ -414,7 +414,7 @@ class tl_image_size_item extends Backend
 		}
 	}
 
-    public function restoreLabelCallback($row)
+    public function undoLabelCallback($row)
     {
         $parent = 'PID ' . $row['pid'];
 

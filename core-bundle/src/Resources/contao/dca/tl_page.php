@@ -93,7 +93,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'format'                  => '%s',
 			'label_callback'          => array('tl_page', 'addIcon')
 		),
-        'restore' => array
+        'undo' => array
         (
             'fields' => array('title')
         ),
