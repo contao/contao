@@ -76,6 +76,16 @@ class UndoDescriptionListenerTest extends TestCase
             'John, Doe, Acme Corp.'
         ];
 
+        yield 'Run label callback' => [
+            $this->getTestData(),
+            [
+                'label_callback' => function(array $row) {
+                    return strtoupper($row['firstname'] . ' ' . $row['lastname']);
+                }
+            ],
+            'JOHN DOE'
+        ];
+
         yield 'Fallback to commonly used fields, if no options where defined' => [
             $this->getTestData(),
             [],
