@@ -29,13 +29,18 @@ class UndoDescriptionEvent extends Event
     /**
      * @var string
      */
-    private $descriptor;
+    private $description;
 
     /**
      * @var array
      */
     private $options;
 
+    /**
+     * @param string $table
+     * @param array $data
+     * @param array $options
+     */
     public function __construct(string $table, array $data, array $options = [])
     {
         $this->table = $table;
@@ -43,32 +48,41 @@ class UndoDescriptionEvent extends Event
         $this->options = $options;
     }
 
+    /**
+     * @return string
+     */
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param ?string $description
+     */
+    public function setDescription(string $description = null): void
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTable(): string
+    {
+        return $this->table;
+    }
+
+    /**
+     * @return array
+     */
     public function getData(): array
     {
         return $this->data;
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public function getDescriptor(): ?string
-    {
-        return $this->descriptor;
-    }
-
-    /**
-     * @param ?string $descriptor
-     */
-    public function setDescriptor(string $descriptor = null): void
-    {
-        $this->descriptor = $descriptor;
-    }
-
-    public function getTable(): string
-    {
-        return $this->table;
-    }
-
     public function getOptions(): array
     {
         return $this->options;

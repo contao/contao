@@ -16,28 +16,31 @@ use Contao\CoreBundle\Event\UndoDescriptionEvent;
 
 class UndoDescriptionListener
 {
+    /**
+     * @var array
+     */
     private $options;
 
     public function onGenerateDescription(UndoDescriptionEvent $event): void
     {
         $this->options = $event->getOptions();
         $row = $event->getData();
-        $descriptor = null;
+        $description = null;
 
         // Get description by defined fields and format
         if (isset($this->options['fields'])) {
-            $descriptor = $this->getDescriptorFromFields($row);
+            $description = $this->getDescriptionFromFields($row);
         }
 
         // Fallback: Check for some often used fields
-        if (null === $descriptor) {
-            $descriptor = $this->getFallbackDescriptor($row);
+        if (null === $description) {
+            $description = $this->getFallbackDescription($row);
         }
 
-        $event->setDescriptor($descriptor);
+        $event->setDescription($description);
     }
 
-    private function getDescriptorFromFields(array $row): string
+    private function getDescriptionFromFields(array $row): string
     {
         $options = $this->options;
         $fields = $options['fields'];
@@ -61,7 +64,7 @@ class UndoDescriptionListener
         return vsprintf($format, $fields);
     }
 
-    private function getFallbackDescriptor(array $row): ?string
+    private function getFallbackDescription(array $row): ?string
     {
         foreach (['title', 'username', 'email', 'name', 'headline'] as $key) {
             if (!empty($row[$key])) {

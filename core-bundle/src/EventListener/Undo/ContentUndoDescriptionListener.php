@@ -32,7 +32,7 @@ class ContentUndoDescriptionListener
             $descriptor = $this->{$method}($data);
         }
 
-        $event->setDescriptor($descriptor);
+        $event->setDescription($descriptor);
     }
 
     private function getMethodFromType(string $type): string
