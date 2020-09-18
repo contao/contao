@@ -1532,13 +1532,8 @@ class DC_Table extends DataContainer implements \listable, \editable
         ]);
         System::getContainer()->get('event_dispatcher')->dispatch(ContaoCoreEvents::UNDO_DESCRIPTION, $event);
 
-        // Use ID as fallback
-        if (($descripion = $event->getDescription()) === null) {
-            $descripion = 'ID ' . $data[$this->strTable][0]['id'];
-        }
-
 		$objUndoStmt = $this->Database->prepare("INSERT INTO tl_undo (pid, tstamp, fromTable, query, affectedRows, data, description) VALUES (?, ?, ?, ?, ?, ?, ?)")
-									  ->execute($this->User->id, time(), $this->strTable, 'DELETE FROM '.$this->strTable.' WHERE id='.$this->intId, $affected, serialize($data), $descripion);
+									  ->execute($this->User->id, time(), $this->strTable, 'DELETE FROM '.$this->strTable.' WHERE id='.$this->intId, $affected, serialize($data), $event->getDescription());
 
 		// Delete the records
 		if ($objUndoStmt->affectedRows)

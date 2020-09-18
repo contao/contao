@@ -37,6 +37,11 @@ class UndoDescriptionListener
             $description = $this->getFallbackDescription($row);
         }
 
+        // If everything else failed, we fall back to the row ID
+        if (null === $description) {
+            $description = (string)$row['id'];
+        }
+
         $event->setDescription($description);
     }
 
@@ -50,18 +55,15 @@ class UndoDescriptionListener
             $fields = [$fields];
         }
 
-        $fields = array_map(
-            static function ($field) use ($row) {
-                return $row[$field];
-            },
-            $fields
-        );
+        $values = array_map(function ($field) use ($row) {
+            return (isset($row[$field])) ? $row[$field] : '';
+        }, $fields);
 
         if (null === $format) {
-            return implode(', ', $fields);
+            return implode(', ', $values);
         }
 
-        return vsprintf($format, $fields);
+        return vsprintf($format, $values);
     }
 
     private function getFallbackDescription(array $row): ?string
