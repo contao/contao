@@ -120,12 +120,11 @@ class PictureFactory implements PictureFactoryInterface
         if ($size instanceof PictureConfiguration) {
             $config = $size;
         } else {
-            [$config, $attributes, $options] = $this->createConfig($size);
+            [$config, $attributes, $configOptions] = $this->createConfig($size);
         }
 
-        if (null === $options) {
-            $options = new ResizeOptions();
-        }
+        // Always prefer options passed to this function
+        $options = $options ?? $configOptions ?? new ResizeOptions();
 
         if (!$options->getImagineOptions()) {
             $options->setImagineOptions($this->imagineOptions);
