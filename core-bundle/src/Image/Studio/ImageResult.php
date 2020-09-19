@@ -19,6 +19,7 @@ use Contao\Image\ImageDimensions;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureInterface;
+use Contao\Image\ResizeOptions;
 use Psr\Container\ContainerInterface;
 use Webmozart\PathUtil\Path;
 
@@ -38,6 +39,11 @@ class ImageResult
      * @var int|string|array|PictureConfiguration|null
      */
     private $sizeConfiguration;
+
+    /**
+     * @var ResizeOptions|null
+     */
+    private $resizeOptions;
 
     /**
      * Cached picture.
@@ -64,12 +70,13 @@ class ImageResult
      *
      * @internal Use the Contao\Image\Studio\Studio factory to get an instance of this class
      */
-    public function __construct(ContainerInterface $locator, string $projectDir, $filePathOrImage, $sizeConfiguration = null)
+    public function __construct(ContainerInterface $locator, string $projectDir, $filePathOrImage, $sizeConfiguration = null, ResizeOptions $resizeOptions = null)
     {
         $this->locator = $locator;
         $this->projectDir = $projectDir;
         $this->filePathOrImageInterface = $filePathOrImage;
         $this->sizeConfiguration = $sizeConfiguration;
+        $this->resizeOptions = $resizeOptions;
     }
 
     /**
@@ -77,11 +84,32 @@ class ImageResult
      */
     public function getPicture(): PictureInterface
     {
-        if (null === $this->picture) {
-            $this->picture = $this->pictureFactory()->create($this->filePathOrImageInterface, $this->sizeConfiguration);
+        if (null !== $this->picture) {
+            return $this->picture;
         }
 
-        return $this->picture;
+        // Unlike the Contao\Image\PictureFactory the PictureFactoryInterface
+        // does not know about ResizeOptions. We therefore check if the third
+        // argument of the 'create' method allows setting them.
+        $canHandleResizeOptions = static function (PictureFactoryInterface $factory): bool {
+            $createParameters = (new \ReflectionClass($factory))
+                ->getMethod('create')
+                ->getParameters()
+            ;
+
+            return isset($createParameters[2]) &&
+                null !== ($type = $createParameters[2]->getType()) &&
+                ResizeOptions::class === $type->getName();
+        };
+
+        $factory = $this->pictureFactory();
+        $arguments = [$this->filePathOrImageInterface, $this->sizeConfiguration];
+
+        if (null !== $this->resizeOptions && $canHandleResizeOptions($factory)) {
+            $arguments[] = $this->resizeOptions;
+        }
+
+        return $this->picture = $this->pictureFactory()->create(...$arguments);
     }
 
     /**

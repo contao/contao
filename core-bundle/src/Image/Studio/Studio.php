@@ -18,6 +18,7 @@ use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\Image\PictureFactoryInterface;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
+use Contao\Image\ResizeOptions;
 use Psr\Container\ContainerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
@@ -59,9 +60,9 @@ class Studio implements ServiceSubscriberInterface
     /**
      * @param string|ImageInterface $filePathOrImage
      */
-    public function createImage($filePathOrImage, $sizeConfiguration): ImageResult
+    public function createImage($filePathOrImage, $sizeConfiguration, ResizeOptions $resizeOptions = null): ImageResult
     {
-        return new ImageResult($this->locator, $this->projectDir, $filePathOrImage, $sizeConfiguration);
+        return new ImageResult($this->locator, $this->projectDir, $filePathOrImage, $sizeConfiguration, $resizeOptions);
     }
 
     /**
