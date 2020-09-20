@@ -133,6 +133,13 @@ class FigureBuilder
     private $lightboxSizeConfiguration;
 
     /**
+     * User defined lightbox resize options.
+     *
+     * @var ResizeOptions|null
+     */
+    private $lightboxResizeOptions;
+
+    /**
      * User defined lightbox group identifier. This will overwrite the default if set.
      *
      * @var string|null
@@ -421,6 +428,19 @@ class FigureBuilder
     }
 
     /**
+     * Sets resize options for the lightbox image.
+     *
+     * By default or if the argument is set to null, resize options are derived
+     * from predefined image sizes.
+     */
+    public function setLightboxResizeOptions(?ResizeOptions $resizeOptions): self
+    {
+        $this->lightboxResizeOptions = $resizeOptions;
+
+        return $this;
+    }
+
+    /**
      * Sets a custom lightbox group ID.
      *
      * By default or if the argument is set to null, the ID will be empty. For
@@ -601,7 +621,13 @@ class FigureBuilder
 
         return $this->locator
             ->get(Studio::class)
-            ->createLightboxImage($filePathOrImage, $url, $this->lightboxSizeConfiguration, $this->lightboxGroupIdentifier)
+            ->createLightboxImage(
+                $filePathOrImage,
+                $url,
+                $this->lightboxSizeConfiguration,
+                $this->lightboxGroupIdentifier,
+                $this->lightboxResizeOptions
+            )
         ;
     }
 
