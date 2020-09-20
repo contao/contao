@@ -32,6 +32,7 @@ class ValidateCustomRgxpListener
 
     public function __invoke($input)
     {
+        // preg_match() returns false if the regular expression is invalid
         if (false === @preg_match($input, '')) {
             throw new \Exception($this->translator->trans('ERR.invalidCustomRgxp', [], 'contao_default'));
         }
