@@ -830,8 +830,8 @@ class FigureBuilderTest extends TestCase
             ->expects($this->exactly(2))
             ->method('createImage')
             ->willReturnMap([
-                [$filePath1, null, $imageResult1],
-                [$filePath2, null, $imageResult2],
+                [$filePath1, null, null, $imageResult1],
+                [$filePath2, null, null, $imageResult2],
             ])
         ;
 
