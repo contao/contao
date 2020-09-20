@@ -97,8 +97,13 @@ class ImageResult
                 ->getParameters()
             ;
 
-            return isset($createParameters[2]) &&
-                null !== ($type = $createParameters[2]->getType()) &&
+            if (!isset($createParameters[2])) {
+                return false;
+            }
+
+            $type = $createParameters[2]->getType();
+
+            return $type instanceof \ReflectionNamedType &&
                 ResizeOptions::class === $type->getName();
         };
 
