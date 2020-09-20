@@ -34,6 +34,9 @@ parameters:
         # Ignore the wrong return type hint of the UrlGeneratorInterface::generate() method
         - '#Method Contao\\CoreBundle\\Picker\\AbstractPickerProvider::generateUrl\(\) never returns null so it can be removed from the return typehint\.#'
 
+        # Ignore missing documentation of the ReflectionType::getName() method
+        - '#Call to an undefined method ReflectionType::getName\(\)\.#'
+
     treatPhpDocTypesAsCertain: false
     checkGenericClassInNonGenericObjectType: false
     inferPrivatePropertyTypeFromConstructor: true
