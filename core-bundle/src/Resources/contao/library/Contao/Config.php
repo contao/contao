@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Symfony\Component\Filesystem\Filesystem;
+use Webmozart\PathUtil\Path;
 
 /**
  * Loads and writes the local configuration file
@@ -246,7 +247,7 @@ class Config
 			$strFile .= "\n" . $this->strBottom . "\n";
 		}
 
-		$strTemp = TL_ROOT . '/system/tmp/' . md5(uniqid(mt_rand(), true));
+		$strTemp = Path::join(TL_ROOT, 'system/tmp', md5(uniqid(mt_rand(), true)));
 
 		// Write to a temp file first
 		$objFile = fopen($strTemp, 'w');
@@ -266,7 +267,7 @@ class Config
 		// Adjust the file permissions (see #8178)
 		$fs->chmod($strTemp, self::get('defaultFileChmod'));
 
-		$strDestination = TL_ROOT . '/system/config/localconfig.php';
+		$strDestination = Path::join(TL_ROOT, 'system/config/localconfig.php');
 
 		// Get the realpath in case it is a symlink (see #2209)
 		if ($realpath = realpath($strDestination))
