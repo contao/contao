@@ -147,7 +147,7 @@
         "contao/monorepo-tools": "dev-master",
         "contao/phpstan": "^0.12",
         "contao/test-case": "^4.0",
-        "doctrine/doctrine-migrations-bundle": "^1.1",
+        "doctrine/doctrine-migrations-bundle": "^1.1|^2.2",
         "doctrine/event-manager": "^1.0",
         "monolog/monolog": "^1.24",
         "phpunit/phpunit": "^8.4",
