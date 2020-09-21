@@ -10,6 +10,9 @@
 
 namespace Contao;
 
+use Symfony\Component\Filesystem\Filesystem;
+use Webmozart\PathUtil\Path;
+
 /**
  * Loads and writes the local configuration file
  *
@@ -244,37 +247,47 @@ class Config
 			$strFile .= "\n" . $this->strBottom . "\n";
 		}
 
-		$strTemp = md5(uniqid(mt_rand(), true));
+		$strTemp = Path::join(TL_ROOT, 'system/tmp', md5(uniqid(mt_rand(), true)));
 
 		// Write to a temp file first
-		$objFile = fopen(TL_ROOT . '/system/tmp/' . $strTemp, 'w');
+		$objFile = fopen($strTemp, 'w');
 		fwrite($objFile, $strFile);
 		fclose($objFile);
 
 		// Make sure the file has been written (see #4483)
-		if (!filesize(TL_ROOT . '/system/tmp/' . $strTemp))
+		if (!filesize($strTemp))
 		{
-			\System::log('The local configuration file could not be written. Have your reached your quota limit?', __METHOD__, TL_ERROR);
+			\System::log('The local configuration file could not be written. Have you reached your quota limit?', __METHOD__, TL_ERROR);
 
 			return;
 		}
 
+		$fs = new Filesystem();
+
 		// Adjust the file permissions (see #8178)
-		$this->Files->chmod('system/tmp/' . $strTemp, \Config::get('defaultFileChmod'));
+		$fs->chmod($strTemp, self::get('defaultFileChmod'));
+
+		$strDestination = Path::join(TL_ROOT, 'system/config/localconfig.php');
+
+		// Get the realpath in case it is a symlink (see #2209)
+		if ($realpath = realpath($strDestination))
+		{
+			$strDestination = $realpath;
+		}
 
 		// Then move the file to its final destination
-		$this->Files->rename('system/tmp/' . $strTemp, 'system/config/localconfig.php');
+		$fs->rename($strTemp, $strDestination, true);
 
 		// Reset the Zend OPcache
 		if (\function_exists('opcache_invalidate'))
 		{
-			opcache_invalidate(TL_ROOT . '/system/config/localconfig.php', true);
+			opcache_invalidate($strDestination, true);
 		}
 
 		// Recompile the APC file (thanks to Trenker)
 		if (\function_exists('apc_compile_file') && !ini_get('apc.stat'))
 		{
-			apc_compile_file(TL_ROOT . '/system/config/localconfig.php');
+			apc_compile_file($strDestination);
 		}
 
 		$this->blnIsModified = false;
