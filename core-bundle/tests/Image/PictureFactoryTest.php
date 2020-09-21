@@ -657,7 +657,7 @@ class PictureFactoryTest extends TestCase
         yield 'Fallback to default predefined size' => [
             null,
             null,
-            true, // !
+            true,
         ];
     }
 
