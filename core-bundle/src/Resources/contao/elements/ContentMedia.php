@@ -151,18 +151,7 @@ class ContentMedia extends ContentElement
 
 		$size = StringUtil::deserialize($this->playerSize);
 
-		if (!\is_array($size) || empty($size[0]) || empty($size[1]))
-		{
-			if ($this->Template->isVideo)
-			{
-				$this->Template->size = ' width="640" height="360"';
-			}
-			else
-			{
-				$this->Template->size = ' width="400" height="40"';
-			}
-		}
-		else
+		if (\is_array($size) && !empty($size[0]) && !empty($size[1]))
 		{
 			$this->Template->size = ' width="' . $size[0] . '" height="' . $size[1] . '"';
 		}
