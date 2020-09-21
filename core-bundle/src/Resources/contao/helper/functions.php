@@ -208,7 +208,7 @@ function deserialize($varValue, $blnForceArray=false)
 	}
 
 	// Empty string
-	if (trim($varValue) == '')
+	if (!trim($varValue))
 	{
 		return $blnForceArray ? array() : '';
 	}
@@ -603,7 +603,7 @@ function utf8_convert_encoding($str, $to, $from=null)
 {
 	@trigger_error('Using utf8_convert_encoding() has been deprecated and will no longer work in Contao 5.0. Use StringUtil::convertEncoding() instead.', E_USER_DEPRECATED);
 
-	if ($str == '')
+	if (!$str)
 	{
 		return '';
 	}

@@ -251,7 +251,7 @@ class ModuleEventReader extends Events
 		}
 
 		// Clean the RTE output
-		if ($objEvent->teaser != '')
+		if ($objEvent->teaser)
 		{
 			$objTemplate->hasTeaser = true;
 			$objTemplate->teaser = StringUtil::toHtml5($objEvent->teaser);
@@ -294,7 +294,7 @@ class ModuleEventReader extends Events
 		$objTemplate->addImage = false;
 
 		// Add an image
-		if ($objEvent->addImage && $objEvent->singleSRC != '')
+		if ($objEvent->addImage && $objEvent->singleSRC)
 		{
 			$objModel = FilesModel::findByUuid($objEvent->singleSRC);
 
@@ -304,7 +304,7 @@ class ModuleEventReader extends Events
 				$arrEvent = $objEvent->row();
 
 				// Override the default image size
-				if ($this->imgSize != '')
+				if ($this->imgSize)
 				{
 					$size = StringUtil::deserialize($this->imgSize);
 
@@ -439,7 +439,7 @@ class ModuleEventReader extends Events
 		}
 
 		/** @var UserModel $objAuthor */
-		if ($objCalendar->notify != 'notify_admin' && ($objAuthor = $objEvent->getRelated('author')) instanceof UserModel && $objAuthor->email != '')
+		if ($objCalendar->notify != 'notify_admin' && ($objAuthor = $objEvent->getRelated('author')) instanceof UserModel && $objAuthor->email)
 		{
 			$arrNotifies[] = $objAuthor->email;
 		}

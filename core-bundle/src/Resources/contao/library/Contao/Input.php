@@ -480,7 +480,7 @@ class Input
 	 */
 	public static function stripTags($varValue, $strAllowedTags='')
 	{
-		if ($varValue === null || $varValue == '')
+		if (!$varValue)
 		{
 			return $varValue;
 		}
@@ -499,7 +499,7 @@ class Input
 		// Encode opening arrow brackets (see #3998)
 		$varValue = preg_replace_callback('@</?([^\s<>/]*)@', static function ($matches) use ($strAllowedTags)
 		{
-			if ($matches[1] == '' || stripos($strAllowedTags, '<' . strtolower($matches[1]) . '>') === false)
+			if (!$matches[1] || stripos($strAllowedTags, '<' . strtolower($matches[1]) . '>') === false)
 			{
 				$matches[0] = str_replace('<', '&lt;', $matches[0]);
 			}
@@ -530,7 +530,7 @@ class Input
 	 */
 	public static function xssClean($varValue, $blnStrictMode=false)
 	{
-		if ($varValue === null || $varValue == '')
+		if (!$varValue)
 		{
 			return $varValue;
 		}
@@ -654,7 +654,7 @@ class Input
 	 */
 	public static function decodeEntities($varValue)
 	{
-		if ($varValue === null || $varValue == '')
+		if (!$varValue)
 		{
 			return $varValue;
 		}
@@ -686,7 +686,7 @@ class Input
 	 */
 	public static function preserveBasicEntities($varValue)
 	{
-		if ($varValue === null || $varValue == '')
+		if (!$varValue)
 		{
 			return $varValue;
 		}
@@ -721,7 +721,7 @@ class Input
 	 */
 	public static function encodeSpecialChars($varValue)
 	{
-		if ($varValue === null || $varValue == '')
+		if (!$varValue)
 		{
 			return $varValue;
 		}

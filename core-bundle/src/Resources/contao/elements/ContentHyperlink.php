@@ -40,7 +40,7 @@ class ContentHyperlink extends ContentElement
 		$embed = explode('%s', $this->embed);
 
 		// Use an image instead of the title
-		if ($this->useImage && $this->singleSRC != '')
+		if ($this->useImage && $this->singleSRC)
 		{
 			$objModel = FilesModel::findByUuid($this->singleSRC);
 
@@ -57,7 +57,7 @@ class ContentHyperlink extends ContentElement
 			$this->Template->attribute = ' data-lightbox="' . $this->rel . '"';
 		}
 
-		if ($this->linkTitle == '')
+		if (!$this->linkTitle)
 		{
 			$this->linkTitle = $this->url;
 		}

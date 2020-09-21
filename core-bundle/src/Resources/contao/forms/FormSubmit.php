@@ -96,7 +96,7 @@ class FormSubmit extends Widget
 	 */
 	public function parse($arrAttributes=null)
 	{
-		if ($this->imageSubmit && $this->singleSRC != '')
+		if ($this->imageSubmit && $this->singleSRC)
 		{
 			$objModel = FilesModel::findByUuid($this->singleSRC);
 

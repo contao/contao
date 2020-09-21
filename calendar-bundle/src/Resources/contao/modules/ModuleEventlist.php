@@ -251,7 +251,7 @@ class ModuleEventlist extends Events
 		$imgSize = false;
 
 		// Override the default image size
-		if ($this->imgSize != '')
+		if ($this->imgSize)
 		{
 			$size = StringUtil::deserialize($this->imgSize);
 
@@ -266,7 +266,7 @@ class ModuleEventlist extends Events
 
 		for ($i=$offset; $i<$limit; $i++)
 		{
-			if ($arrEvents[$i]['addImage'] && $arrEvents[$i]['singleSRC'] != '')
+			if ($arrEvents[$i]['addImage'] && $arrEvents[$i]['singleSRC'])
 			{
 				$uuids[] = $arrEvents[$i]['singleSRC'];
 			}
@@ -336,7 +336,7 @@ class ModuleEventlist extends Events
 			$objTemplate->addImage = false;
 
 			// Add an image
-			if ($event['addImage'] && $event['singleSRC'] != '')
+			if ($event['addImage'] && $event['singleSRC'])
 			{
 				$objModel = FilesModel::findByUuid($event['singleSRC']);
 
@@ -379,7 +379,7 @@ class ModuleEventlist extends Events
 		}
 
 		// No events found
-		if ($strEvents == '')
+		if (!$strEvents)
 		{
 			$strEvents = "\n" . '<div class="empty">' . $strEmpty . '</div>' . "\n";
 		}

@@ -55,7 +55,7 @@ class ModuleQuicklink extends Module
 		// Always return an array (see #4616)
 		$this->pages = StringUtil::deserialize($this->pages, true);
 
-		if (empty($this->pages) || $this->pages[0] == '')
+		if (empty($this->pages) || !$this->pages[0])
 		{
 			return '';
 		}
@@ -83,7 +83,7 @@ class ModuleQuicklink extends Module
 		$arrPages = array();
 
 		// Sort the array keys according to the given order
-		if ($this->orderPages != '')
+		if ($this->orderPages)
 		{
 			$tmp = StringUtil::deserialize($this->orderPages);
 

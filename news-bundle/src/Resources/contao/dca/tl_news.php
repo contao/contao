@@ -639,7 +639,7 @@ class tl_news extends Contao\Backend
 		};
 
 		// Generate alias if there is none
-		if ($varValue == '')
+		if (!$varValue)
 		{
 			$varValue = Contao\System::getContainer()->get('contao.slug')->generate($dc->activeRecord->headline, Contao\NewsArchiveModel::findByPk($dc->activeRecord->pid)->jumpTo, $aliasExists);
 		}
@@ -785,7 +785,7 @@ class tl_news extends Contao\Backend
 		}
 
 		// Add the option currently set
-		if ($dc->activeRecord && $dc->activeRecord->source != '')
+		if ($dc->activeRecord && $dc->activeRecord->source)
 		{
 			$arrOptions[] = $dc->activeRecord->source;
 			$arrOptions = array_unique($arrOptions);

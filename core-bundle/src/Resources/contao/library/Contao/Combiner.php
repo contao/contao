@@ -238,7 +238,7 @@ class Combiner extends System
 				}
 
 				// Add the media query (see #7070)
-				if ($this->strMode == self::CSS && $arrFile['media'] != '' && $arrFile['media'] != 'all' && !$this->hasMediaTag($arrFile['name']))
+				if ($this->strMode == self::CSS && $arrFile['media'] && $arrFile['media'] != 'all' && !$this->hasMediaTag($arrFile['name']))
 				{
 					$name .= '|' . $arrFile['media'];
 				}
@@ -387,7 +387,7 @@ class Combiner extends System
 		$content = $this->fixPaths($content, $arrFile);
 
 		// Add the media type if there is no @media command in the code
-		if ($arrFile['media'] != '' && $arrFile['media'] != 'all' && strpos($content, '@media') === false)
+		if ($arrFile['media'] && $arrFile['media'] != 'all' && strpos($content, '@media') === false)
 		{
 			$content = '@media ' . $arrFile['media'] . "{\n" . $content . "\n}";
 		}

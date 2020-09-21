@@ -128,7 +128,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		}
 
 		// Check whether the table is defined
-		if ($strTable == '' || !isset($GLOBALS['TL_DCA'][$strTable]))
+		if (!$strTable || !isset($GLOBALS['TL_DCA'][$strTable]))
 		{
 			$this->log('Could not load data container configuration for "' . $strTable . '"', __METHOD__, TL_ERROR);
 			trigger_error('Could not load data container configuration', E_USER_ERROR);
@@ -312,7 +312,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		$for = $session['search'][$this->strTable]['value'];
 
 		// Limit the results by modifying $this->arrFilemounts
-		if ($for != '')
+		if ((string) $for !== '')
 		{
 			// Wrap in a try catch block in case the regular expression is invalid (see #7743)
 			try
@@ -387,7 +387,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		}
 
 		// Call recursive function tree()
-		if ($for != '' && empty($this->arrFilemounts))
+		if ((string) $for !== '' && empty($this->arrFilemounts))
 		{
 			// Show an empty tree if there are no search results
 		}
@@ -399,7 +399,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		{
 			for ($i=0, $c=\count($this->arrFilemounts); $i<$c; $i++)
 			{
-				if ($this->arrFilemounts[$i] != '' && is_dir($this->strRootDir . '/' . $this->arrFilemounts[$i]))
+				if ($this->arrFilemounts[$i] && is_dir($this->strRootDir . '/' . $this->arrFilemounts[$i]))
 				{
 					$return .= $this->generateTree($this->strRootDir . '/' . $this->arrFilemounts[$i], 0, true, $this->isProtectedPath($this->arrFilemounts[$i]), ($blnClipboard ? $arrClipboard : false), $arrFound);
 				}
@@ -423,7 +423,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		$labelPasteInto = $GLOBALS['TL_LANG'][$this->strTable]['pasteinto'] ?? $GLOBALS['TL_LANG']['DCA']['pasteinto'];
 		$imagePasteInto = Image::getHtml('pasteinto.svg', $labelPasteInto[0]);
 
-		if ($session['search'][$this->strTable]['value'] != '')
+		if ((string) $for !== '')
 		{
 			Message::addInfo($GLOBALS['TL_LANG']['MSC']['searchExclude']);
 		}
@@ -600,7 +600,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		$this->import(Files::class, 'Files');
 		$strFolder = Input::get('pid', true);
 
-		if ($strFolder == '' || !file_exists($this->strRootDir . '/' . $strFolder) || !$this->isMounted($strFolder))
+		if (!$strFolder || !file_exists($this->strRootDir . '/' . $strFolder) || !$this->isMounted($strFolder))
 		{
 			throw new AccessDeniedException('Folder "' . $strFolder . '" is not mounted or is not a directory.');
 		}
@@ -1313,7 +1313,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 				}
 
 				// Restore a version
-				if (Input::post('FORM_SUBMIT') == 'tl_version' && Input::post('version') != '')
+				if (Input::post('FORM_SUBMIT') == 'tl_version' && Input::post('version'))
 				{
 					$objVersions->restore(Input::post('version'));
 					$this->reload();
@@ -1374,7 +1374,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 						$objFile = is_dir($this->strRootDir . '/' . $this->intId) ? new Folder($this->intId) : new File($this->intId);
 
 						$this->strPath = StringUtil::stripRootDir($objFile->dirname);
-						$this->strExtension = ($objFile->origext != '') ? '.' . $objFile->origext : '';
+						$this->strExtension = $objFile->origext ? '.' . $objFile->origext : '';
 						$this->varValue = $objFile->filename;
 
 						// Fix hidden Unix system files
@@ -1687,7 +1687,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 						$objFile = is_dir($this->strRootDir . '/' . $id) ? new Folder($id) : new File($id);
 
 						$this->strPath = StringUtil::stripRootDir($objFile->dirname);
-						$this->strExtension = ($objFile->origext != '') ? '.' . $objFile->origext : '';
+						$this->strExtension = $objFile->origext ? '.' . $objFile->origext : '';
 						$this->varValue = $objFile->filename;
 
 						// Fix hidden Unix system files
@@ -1972,7 +1972,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 				}
 
 				// Restore a version
-				if (Input::post('FORM_SUBMIT') == 'tl_version' && Input::post('version') != '')
+				if (Input::post('FORM_SUBMIT') == 'tl_version' && Input::post('version'))
 				{
 					$objVersions->restore(Input::post('version'));
 
@@ -2305,7 +2305,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			}
 
 			// Make sure unique fields are unique
-			if ($varValue != '' && $arrData['eval']['unique'] && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $this->objActiveRecord->id))
+			if ((string) $varValue !== '' && $arrData['eval']['unique'] && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $this->objActiveRecord->id))
 			{
 				throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $this->strField));
 			}
@@ -2369,10 +2369,10 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			}
 
 			// Save the value if there was no error
-			if (($varValue != '' || !$arrData['eval']['doNotSaveEmpty']) && ($this->varValue != $varValue || $arrData['eval']['alwaysSave']))
+			if (((string) $varValue !== '' || !$arrData['eval']['doNotSaveEmpty']) && ($this->varValue != $varValue || $arrData['eval']['alwaysSave']))
 			{
 				// If the field is a fallback field, empty all other columns
-				if ($varValue != '' && $arrData['eval']['fallback'])
+				if ($varValue && $arrData['eval']['fallback'])
 				{
 					$this->Database->execute("UPDATE " . $this->strTable . " SET " . $this->strField . "=''");
 				}
@@ -2890,7 +2890,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		}
 
 		// Set the search value from the session
-		elseif ($session['search'][$this->strTable]['value'] != '')
+		elseif ((string) $session['search'][$this->strTable]['value'] !== '')
 		{
 			$strPattern = "CAST(name AS CHAR) REGEXP ?";
 
@@ -2913,7 +2913,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			$this->values[] = $session['search'][$this->strTable]['value'];
 		}
 
-		$active = isset($session['search'][$this->strTable]['value']) && $session['search'][$this->strTable]['value'] != '';
+		$active = isset($session['search'][$this->strTable]['value']) && (string) $session['search'][$this->strTable]['value'] !== '';
 
 		return '
     <div class="tl_search tl_subpanel">
@@ -2935,7 +2935,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 	 */
 	protected function isMounted($strFolder)
 	{
-		if ($strFolder == '')
+		if (!$strFolder)
 		{
 			return false;
 		}

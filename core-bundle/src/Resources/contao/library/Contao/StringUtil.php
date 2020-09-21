@@ -225,7 +225,7 @@ class StringUtil
 	 */
 	public static function decodeEntities($strString, $strQuoteStyle=ENT_COMPAT, $strCharset=null)
 	{
-		if ($strString == '')
+		if (!$strString)
 		{
 			return '';
 		}
@@ -377,7 +377,7 @@ class StringUtil
 		// Encode opening arrow brackets (see #3998)
 		$strString = preg_replace_callback('@</?([^\s<>/]*)@', static function ($matches) use ($strAllowedTags)
 		{
-			if ($matches[1] == '' || stripos($strAllowedTags, '<' . strtolower($matches[1]) . '>') === false)
+			if (!$matches[1] || stripos($strAllowedTags, '<' . strtolower($matches[1]) . '>') === false)
 			{
 				$matches[0] = str_replace('<', '&lt;', $matches[0]);
 			}
@@ -449,7 +449,7 @@ class StringUtil
 	 */
 	public static function highlight($strString, $strPhrase, $strOpeningTag='<strong>', $strClosingTag='</strong>')
 	{
-		if ($strString == '' || $strPhrase == '')
+		if (!$strString || !$strPhrase)
 		{
 			return $strString;
 		}
@@ -911,7 +911,7 @@ class StringUtil
 	 */
 	public static function convertEncoding($str, $to, $from=null)
 	{
-		if ($str == '')
+		if (!$str)
 		{
 			return '';
 		}
@@ -1037,7 +1037,7 @@ class StringUtil
 		}
 
 		// Empty string
-		if (trim($varValue) == '')
+		if (!trim($varValue))
 		{
 			return $blnForceArray ? array() : '';
 		}

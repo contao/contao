@@ -491,7 +491,7 @@ class tl_member extends Contao\Backend
 			return '';
 		}
 
-		if (!$row['login'] || $row['username'] == '' || (!$this->User->isAdmin && count(array_intersect(Contao\StringUtil::deserialize($row['groups'], true), $this->User->amg)) < 1))
+		if (!$row['login'] || !$row['username'] || (!$this->User->isAdmin && count(array_intersect(Contao\StringUtil::deserialize($row['groups'], true), $this->User->amg)) < 1))
 		{
 			return Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 		}

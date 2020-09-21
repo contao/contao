@@ -122,7 +122,7 @@ class Comments extends Frontend
 				$objPartial->addReply = false;
 
 				// Reply
-				if ($objComments->addReply && $objComments->reply != '' && ($objAuthor = $objComments->getRelated('author')) instanceof UserModel)
+				if ($objComments->addReply && $objComments->reply && ($objAuthor = $objComments->getRelated('author')) instanceof UserModel)
 				{
 					$objPartial->addReply = true;
 					$objPartial->rby = $GLOBALS['TL_LANG']['MSC']['com_reply'];
@@ -307,7 +307,7 @@ class Comments extends Frontend
 			$strWebsite = $arrWidgets['website']->value;
 
 			// Add http:// to the website
-			if (($strWebsite != '') && !preg_match('@^(https?://|ftp://|mailto:|#)@i', $strWebsite))
+			if ($strWebsite && !preg_match('@^(https?://|ftp://|mailto:|#)@i', $strWebsite))
 			{
 				$strWebsite = 'http://' . $strWebsite;
 			}
@@ -404,7 +404,7 @@ class Comments extends Frontend
 			{
 				$objEmail->sendTo(array_unique($varNotifies));
 			}
-			elseif ($varNotifies != '')
+			elseif ($varNotifies)
 			{
 				$objEmail->sendTo($varNotifies); // see #5443
 			}

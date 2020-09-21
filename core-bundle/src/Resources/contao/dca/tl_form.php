@@ -473,7 +473,7 @@ class tl_form extends Contao\Backend
 		};
 
 		// Generate an alias if there is none
-		if ($varValue == '')
+		if (!$varValue)
 		{
 			$varValue = Contao\System::getContainer()->get('contao.slug')->generate($dc->activeRecord->title, Contao\Input::post('jumpTo') ?: $dc->activeRecord->jumpTo, $aliasExists);
 		}

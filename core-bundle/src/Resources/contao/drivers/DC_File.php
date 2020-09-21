@@ -31,7 +31,7 @@ class DC_File extends DataContainer implements \editable
 		$this->intId = Input::get('id');
 
 		// Check whether the table is defined
-		if ($strTable == '' || !isset($GLOBALS['TL_DCA'][$strTable]))
+		if (!$strTable || !isset($GLOBALS['TL_DCA'][$strTable]))
 		{
 			$this->log('Could not load data container configuration for "' . $strTable . '"', __METHOD__, TL_ERROR);
 			trigger_error('Could not load data container configuration', E_USER_ERROR);
@@ -373,7 +373,7 @@ class DC_File extends DataContainer implements \editable
 			$varValue = $varValue ? true : false;
 		}
 
-		if ($varValue != '')
+		if ($varValue)
 		{
 			// Convert binary UUIDs (see #6893)
 			if ($arrData['inputType'] == 'fileTree')
@@ -500,7 +500,7 @@ class DC_File extends DataContainer implements \editable
 					}
 				}
 
-				if ($trigger != '')
+				if ($trigger)
 				{
 					if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['inputType'] == 'checkbox' && !$GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['eval']['multiple'])
 					{

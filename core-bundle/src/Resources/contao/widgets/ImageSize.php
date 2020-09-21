@@ -127,7 +127,7 @@ class ImageSize extends Widget
 	 */
 	protected function isValidOption($varInput)
 	{
-		if ($varInput == '')
+		if (!$varInput)
 		{
 			return true;
 		}

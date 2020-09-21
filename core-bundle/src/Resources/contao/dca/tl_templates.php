@@ -167,7 +167,7 @@ class tl_templates extends Contao\Backend
 
 		$strNode = $objSessionBag->get('tl_templates_node');
 
-		if ($strNode == '')
+		if (!$strNode)
 		{
 			return;
 		}
@@ -431,7 +431,7 @@ class tl_templates extends Contao\Backend
 			$strDiff = $objDiff->render(new Contao\DiffRenderer(array('field'=>$dc->id)));
 
 			// Identical versions
-			if ($strDiff == '')
+			if (!$strDiff)
 			{
 				$strBuffer .= '<p>' . $GLOBALS['TL_LANG']['MSC']['identicalVersions'] . '</p>';
 			}

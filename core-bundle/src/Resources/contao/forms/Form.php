@@ -123,7 +123,7 @@ class Form extends Hybrid
 			while ($objFields->next())
 			{
 				// Ignore the name of form fields which do not use a name (see #1268)
-				if ($objFields->name != '' && isset($GLOBALS['TL_DCA']['tl_form_field']['palettes'][$objFields->type]) && preg_match('/[,;]name[,;]/', $GLOBALS['TL_DCA']['tl_form_field']['palettes'][$objFields->type]))
+				if ($objFields->name && isset($GLOBALS['TL_DCA']['tl_form_field']['palettes'][$objFields->type]) && preg_match('/[,;]name[,;]/', $GLOBALS['TL_DCA']['tl_form_field']['palettes'][$objFields->type]))
 				{
 					$arrFields[$objFields->name] = $objFields->current();
 				}
@@ -243,7 +243,7 @@ class Form extends Hybrid
 					continue;
 				}
 
-				if ($objWidget->name != '' && $objWidget->label != '')
+				if ($objWidget->name && $objWidget->label)
 				{
 					$arrLabels[$objWidget->name] = $this->replaceInsertTags($objWidget->label); // see #4268
 				}
@@ -273,12 +273,12 @@ class Form extends Hybrid
 		$strAttributes = '';
 		$arrAttributes = StringUtil::deserialize($this->attributes, true);
 
-		if ($arrAttributes[0] != '')
+		if ($arrAttributes[0])
 		{
 			$strAttributes .= ' id="' . $arrAttributes[0] . '"';
 		}
 
-		if ($arrAttributes[1] != '')
+		if ($arrAttributes[1])
 		{
 			$strAttributes .= ' class="' . $arrAttributes[1] . '"';
 		}
@@ -446,7 +446,7 @@ class Form extends Hybrid
 				}
 			}
 
-			$uploaded = trim($uploaded) != '' ? "\n\n---\n" . $uploaded : '';
+			$uploaded = trim($uploaded) ? "\n\n---\n" . $uploaded : '';
 			$email->text = StringUtil::decodeEntities(trim($message)) . $uploaded . "\n\n";
 
 			// Send the e-mail
@@ -472,7 +472,7 @@ class Form extends Hybrid
 					$arrSet[$k] = $v;
 
 					// Convert date formats into timestamps (see #6827)
-					if ($arrSet[$k] != '' && \in_array($arrFields[$k]->rgxp, array('date', 'time', 'datim')))
+					if ($arrSet[$k] && \in_array($arrFields[$k]->rgxp, array('date', 'time', 'datim')))
 					{
 						$objDate = new Date($arrSet[$k], Date::getFormatFromRgxp($arrFields[$k]->rgxp));
 						$arrSet[$k] = $objDate->tstamp;

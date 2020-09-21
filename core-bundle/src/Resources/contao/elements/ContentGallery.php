@@ -178,7 +178,7 @@ class ContentGallery extends ContentElement
 				// no break
 
 			case 'custom':
-				if ($this->orderSRC != '')
+				if ($this->orderSRC)
 				{
 					$tmp = StringUtil::deserialize($this->orderSRC);
 

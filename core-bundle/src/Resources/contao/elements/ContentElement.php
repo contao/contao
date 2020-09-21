@@ -259,12 +259,12 @@ abstract class ContentElement extends Frontend
 
 		$this->Template->inColumn = $this->strColumn;
 
-		if ($this->Template->headline == '')
+		if (!$this->Template->headline)
 		{
 			$this->Template->headline = $this->headline;
 		}
 
-		if ($this->Template->hl == '')
+		if (!$this->Template->hl)
 		{
 			$this->Template->hl = $this->hl;
 		}
@@ -287,7 +287,7 @@ abstract class ContentElement extends Frontend
 
 	protected function isHidden()
 	{
-		$isInvisible = $this->invisible || ($this->start != '' && $this->start > time()) || ($this->stop != '' && $this->stop <= time());
+		$isInvisible = $this->invisible || ($this->start && $this->start > time()) || ($this->stop && $this->stop <= time());
 
 		// The element is visible, so show it
 		if (!$isInvisible)

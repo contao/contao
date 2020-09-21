@@ -214,7 +214,7 @@ class Config
 				{
 					$this->strBottom .= $strLine;
 				}
-				elseif ($strTrim != '')
+				elseif ($strTrim)
 				{
 					$arrChunks = array_map('trim', explode('=', $strLine, 2));
 					$this->arrData[$arrChunks[0]] = $arrChunks[1];
@@ -230,7 +230,7 @@ class Config
 	 */
 	public function save()
 	{
-		if ($this->strTop == '')
+		if (!$this->strTop)
 		{
 			$this->strTop = '<?php';
 		}
@@ -246,7 +246,7 @@ class Config
 		$strFile .= "### INSTALL SCRIPT STOP ###\n";
 		$this->strBottom = trim($this->strBottom);
 
-		if ($this->strBottom != '')
+		if ($this->strBottom)
 		{
 			$strFile .= "\n" . $this->strBottom . "\n";
 		}
