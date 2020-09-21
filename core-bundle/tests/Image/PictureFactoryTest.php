@@ -612,49 +612,49 @@ class PictureFactoryTest extends TestCase
 
     public function getResizeOptionsScenarios(): \Generator
     {
-        yield 'prefer skipIfDimensionsMatch from explicitly set options (1)' => [
+        yield 'Prefer skipIfDimensionsMatch from explicitly set options (1)' => [
             (new ResizeOptions())->setSkipIfDimensionsMatch(true),
             'size_skip',
             true,
         ];
 
-        yield 'prefer skipIfDimensionsMatch from explicitly set options (2)' => [
+        yield 'Prefer skipIfDimensionsMatch from explicitly set options (2)' => [
             (new ResizeOptions())->setSkipIfDimensionsMatch(true),
             'size_noskip',
             true,
         ];
 
-        yield 'prefer skipIfDimensionsMatch from explicitly set options (3)' => [
+        yield 'Prefer skipIfDimensionsMatch from explicitly set options (3)' => [
             (new ResizeOptions())->setSkipIfDimensionsMatch(false),
             'size_skip',
             false,
         ];
 
-        yield 'prefer skipIfDimensionsMatch from explicitly set options (4)' => [
+        yield 'Prefer skipIfDimensionsMatch from explicitly set options (4)' => [
             (new ResizeOptions())->setSkipIfDimensionsMatch(false),
             'size_noskip',
             false,
         ];
 
-        yield 'use skipIfDimensionsMatch from predefined size (1)' => [
+        yield 'Use skipIfDimensionsMatch from predefined size (1)' => [
             null,
             'size_skip',
             true,
         ];
 
-        yield 'use skipIfDimensionsMatch from predefined size (2)' => [
+        yield 'Use skipIfDimensionsMatch from predefined size (2)' => [
             null,
             'size_noskip',
             false,
         ];
 
-        yield 'fallback to default resize option when passing a picture configuration' => [
+        yield 'Fallback to default resize option when passing a picture configuration' => [
             null,
             new PictureConfiguration(),
             false,
         ];
 
-        yield 'fallback to default predefined size' => [
+        yield 'Fallback to default predefined size' => [
             null,
             null,
             true, // !
