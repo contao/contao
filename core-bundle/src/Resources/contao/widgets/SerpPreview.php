@@ -66,21 +66,23 @@ class SerpPreview extends Widget
 		$aliasField = $this->getAliasField($suffix);
 		$descriptionField = $this->getDescriptionField($suffix);
 		$descriptionFallbackField = $this->getDescriptionFallbackField($suffix);
-		$titleTag = $model->getRelated('layout')->titleTag;
 
-		// apply title tag from layout if available
-		if ('' != $titleTag)
+		// Apply title tag from layout if available
+		if ($model instanceof PageModel)
 		{
 			global $objPage;
 
-			if ($model instanceof PageModel)
-			{
-				$objPage = $model->loadDetails();
-			}
+			$objPage = $model->loadDetails();
 
-			$titleTag = str_replace('{{page::pageTitle}}', '%s', $titleTag);
-			$titleTag = self::replaceInsertTags($titleTag);
-			$title = StringUtil::substr(sprintf($titleTag, $title), 64);
+			/** @var LayoutModel $layout */
+			if ($layout = $model->getRelated('layout'))
+			{
+				$titleTag = $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}';
+				$titleTag = str_replace('{{page::pageTitle}}', '%s', $titleTag);
+				$titleTag = self::replaceInsertTags($titleTag);
+
+				$title = StringUtil::substr(sprintf($titleTag, $title), 64);
+			}
 		}
 
 		return <<<EOT
