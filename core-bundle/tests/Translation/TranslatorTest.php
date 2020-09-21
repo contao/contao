@@ -16,9 +16,23 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Translation\Translator;
 use Contao\System;
 use Symfony\Component\Translation\Translator as BaseTranslator;
+use Symfony\Component\Translation\TranslatorInterface as LegacyTranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TranslatorTest extends TestCase
 {
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation %simplements "Symfony\Component\Translation\TranslatorInterface" that is deprecated%s
+     */
+    public function testTranslatorImplementsDeprecatedInterface(): void
+    {
+        $translator = new Translator($this->createMock(BaseTranslator::class), $this->mockContaoFramework());
+        $this->assertInstanceOf(TranslatorInterface::class, $translator);
+        $this->assertInstanceOf(LegacyTranslatorInterface::class, $translator);
+    }
+
     /**
      * @dataProvider decoratedTranslatorDomainProvider
      */
