@@ -322,7 +322,7 @@ class FrontendTemplate extends Template
 	{
 		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\FrontendTemplate::getCustomSections()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\FrontendTemplate::sections()" instead.');
 
-		if ($strKey != '' && !isset($this->positions[$strKey]))
+		if ($strKey && !isset($this->positions[$strKey]))
 		{
 			return '';
 		}
@@ -346,7 +346,7 @@ class FrontendTemplate extends Template
 			}
 		}
 
-		if ($sections == '')
+		if (!$sections)
 		{
 			return '';
 		}

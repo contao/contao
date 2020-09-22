@@ -82,7 +82,7 @@ class Updater extends Controller
 		{
 			$mootools = array('moo_mediabox');
 
-			if ($objLayout->mootools != '')
+			if ($objLayout->mootools)
 			{
 				$mootools[] = $objLayout->mootools;
 			}

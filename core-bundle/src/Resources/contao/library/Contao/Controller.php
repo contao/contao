@@ -71,7 +71,7 @@ abstract class Controller extends System
 			/** @var PageModel $objPage */
 			global $objPage;
 
-			if ($objPage->templateGroup != '')
+			if ($objPage->templateGroup)
 			{
 				if (Validator::isInsecurePath($objPage->templateGroup))
 				{
@@ -469,7 +469,7 @@ abstract class Controller extends System
 				$objArticle = new ModuleArticle($objRow);
 				$objArticle->generatePdf();
 			}
-			elseif ($objRow->printable != '')
+			elseif ($objRow->printable)
 			{
 				$options = StringUtil::deserialize($objRow->printable);
 
@@ -591,7 +591,7 @@ abstract class Controller extends System
 		}
 		else
 		{
-			if ($varId == '')
+			if (!$varId)
 			{
 				return '';
 			}
@@ -672,7 +672,7 @@ abstract class Controller extends System
 		$image = $type . '.svg';
 
 		// Page not published or not active
-		if (!$objPage->published || ($objPage->start != '' && $objPage->start > time()) || ($objPage->stop != '' && $objPage->stop <= time()))
+		if (!$objPage->published || ($objPage->start && $objPage->start > time()) || ($objPage->stop && $objPage->stop <= time()))
 		{
 			++$sub;
 		}
@@ -1006,7 +1006,7 @@ abstract class Controller extends System
 		$left = $arrValues['left'];
 
 		// Try to shorten the definition
-		if ($top != '' && $right != '' && $bottom != '' && $left != '')
+		if ($top && $right  && $bottom  && $left)
 		{
 			if ($top == $right && $top == $bottom && $top == $left)
 			{
@@ -1031,7 +1031,7 @@ abstract class Controller extends System
 
 		foreach ($arrDir as $k=>$v)
 		{
-			if ($v != '')
+			if ($v)
 			{
 				$return[] = $strType . '-' . $k . ':' . $v . $arrValues['unit'] . ';';
 			}
@@ -1060,7 +1060,7 @@ abstract class Controller extends System
 		$query = $query->merge(str_replace('&amp;', '&', $strRequest));
 
 		// Add the referer ID
-		if (isset($_GET['ref']) || ($strRequest != '' && $blnAddRef))
+		if (isset($_GET['ref']) || ($strRequest && $blnAddRef))
 		{
 			$query = $query->merge('ref=' . System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id'));
 		}
@@ -1239,7 +1239,7 @@ abstract class Controller extends System
 	 */
 	public static function convertRelativeUrls($strContent, $strBase='', $blnHrefOnly=false)
 	{
-		if ($strBase == '')
+		if (!$strBase)
 		{
 			$strBase = Environment::get('base');
 		}
@@ -1729,7 +1729,7 @@ abstract class Controller extends System
 		$file = Input::get('file', true);
 
 		// Send the file to the browser and do not send a 404 header (see #5178)
-		if ($file != '')
+		if ($file)
 		{
 			while ($objFiles->next())
 			{
@@ -1779,7 +1779,7 @@ abstract class Controller extends System
 				}
 
 				// Use the file name as title if none is given
-				if ($arrMeta['title'] == '')
+				if (!$arrMeta['title'])
 				{
 					$arrMeta['title'] = StringUtil::specialchars($objFile->basename);
 				}

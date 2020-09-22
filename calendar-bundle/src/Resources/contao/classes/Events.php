@@ -324,7 +324,7 @@ abstract class Events extends Module
 		}
 
 		// Clean the RTE output
-		if ($arrEvent['teaser'] != '')
+		if ($arrEvent['teaser'])
 		{
 			$arrEvent['hasTeaser'] = true;
 			$arrEvent['teaser'] = StringUtil::toHtml5($arrEvent['teaser']);

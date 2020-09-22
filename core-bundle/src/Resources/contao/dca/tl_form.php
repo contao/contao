@@ -492,7 +492,7 @@ class tl_form extends Backend
 		};
 
 		// Generate an alias if there is none
-		if ($varValue == '')
+		if (!$varValue)
 		{
 			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->title, Input::post('jumpTo') ?: $dc->activeRecord->jumpTo, $aliasExists);
 		}

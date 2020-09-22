@@ -221,12 +221,12 @@ abstract class Module extends Frontend
 
 		$this->Template->inColumn = $this->strColumn;
 
-		if ($this->Template->headline == '')
+		if (!$this->Template->headline)
 		{
 			$this->Template->headline = $this->headline;
 		}
 
-		if ($this->Template->hl == '')
+		if (!$this->Template->hl)
 		{
 			$this->Template->hl = $this->hl;
 		}
@@ -415,7 +415,7 @@ abstract class Module extends Frontend
 		if (($objPage->id == $objSubpage->id || ($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo)) && !($this instanceof ModuleSitemap) && $href == $path)
 		{
 			// Mark active forward pages (see #4822)
-			$strClass = (($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo) ? 'forward' . ($trail ? ' trail' : '') : 'active') . (($subitems != '') ? ' submenu' : '') . ($objSubpage->protected ? ' protected' : '') . ($objSubpage->cssClass ? ' ' . $objSubpage->cssClass : '');
+			$strClass = (($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo) ? 'forward' . ($trail ? ' trail' : '') : 'active') . ($subitems ? ' submenu' : '') . ($objSubpage->protected ? ' protected' : '') . ($objSubpage->cssClass ? ' ' . $objSubpage->cssClass : '');
 
 			$row['isActive'] = true;
 			$row['isTrail'] = false;
@@ -424,7 +424,7 @@ abstract class Module extends Frontend
 		// Regular page
 		else
 		{
-			$strClass = (($subitems != '') ? 'submenu' : '') . ($objSubpage->protected ? ' protected' : '') . ($trail ? ' trail' : '') . ($objSubpage->cssClass ? ' ' . $objSubpage->cssClass : '');
+			$strClass = ($subitems ? 'submenu' : '') . ($objSubpage->protected ? ' protected' : '') . ($trail ? ' trail' : '') . ($objSubpage->cssClass ? ' ' . $objSubpage->cssClass : '');
 
 			// Mark pages on the same level (see #2419)
 			if ($objSubpage->pid == $objPage->pid)

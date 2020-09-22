@@ -548,7 +548,7 @@ class tl_news_feed extends Backend
 	public function checkFeedAlias($varValue, DataContainer $dc)
 	{
 		// No change or empty value
-		if ($varValue == $dc->value || $varValue == '')
+		if (!$varValue || $varValue == $dc->value)
 		{
 			return $varValue;
 		}

@@ -51,7 +51,7 @@ abstract class Backend extends Controller
 		$theme = Config::get('backendTheme');
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
-		if ($theme != '' && $theme != 'flexible' && is_dir($projectDir . '/system/themes/' . $theme))
+		if ($theme && $theme != 'flexible' && is_dir($projectDir . '/system/themes/' . $theme))
 		{
 			return $theme;
 		}
@@ -92,7 +92,7 @@ abstract class Backend extends Controller
 	{
 		$lang = $GLOBALS['TL_LANGUAGE'];
 
-		if ($lang == '')
+		if (!$lang)
 		{
 			return 'en';
 		}
@@ -229,7 +229,7 @@ abstract class Backend extends Controller
 		// Unset the "no back button" flag
 		$arrUnset[] = 'nb';
 
-		return parent::addToUrl($strRequest . (($strRequest != '') ? '&amp;' : '') . 'rt=' . REQUEST_TOKEN, $blnAddRef, $arrUnset);
+		return parent::addToUrl($strRequest . ($strRequest ? '&amp;' : '') . 'rt=' . REQUEST_TOKEN, $blnAddRef, $arrUnset);
 	}
 
 	/**
@@ -370,7 +370,7 @@ abstract class Backend extends Controller
 		$dc = null;
 
 		// Create the data container object
-		if ($strTable != '')
+		if ($strTable)
 		{
 			if (!\in_array($strTable, $arrTables))
 			{
@@ -399,7 +399,7 @@ abstract class Backend extends Controller
 			}
 
 			// Fabricate a new data container object
-			if ($GLOBALS['TL_DCA'][$strTable]['config']['dataContainer'] == '')
+			if (!$GLOBALS['TL_DCA'][$strTable]['config']['dataContainer'])
 			{
 				$this->log('Missing data container for table "' . $strTable . '"', __METHOD__, TL_ERROR);
 				trigger_error('Could not create a data container object', E_USER_ERROR);
@@ -459,11 +459,11 @@ abstract class Backend extends Controller
 										 ->limit(1)
 										 ->execute(Input::get('id'));
 
-				if ($objRow->title != '')
+				if ($objRow->title)
 				{
 					$this->Template->headline .= ' › <span>' . $objRow->title . '</span>';
 				}
-				elseif ($objRow->name != '')
+				elseif ($objRow->name)
 				{
 					$this->Template->headline .= ' › <span>' . $objRow->name . '</span>';
 				}
@@ -478,7 +478,7 @@ abstract class Backend extends Controller
 		{
 			$act = Input::get('act');
 
-			if ($act == '' || $act == 'paste' || $act == 'select')
+			if (!$act || $act == 'paste' || $act == 'select')
 			{
 				$act = ($dc instanceof \listable) ? 'showAll' : 'edit';
 			}
@@ -536,15 +536,15 @@ abstract class Backend extends Controller
 						}
 
 						// Add object title or name
-						if ($objRow->title != '')
+						if ($objRow->title)
 						{
 							$trail[] = ' › <span>' . $objRow->title . '</span>';
 						}
-						elseif ($objRow->name != '')
+						elseif ($objRow->name)
 						{
 							$trail[] = ' › <span>' . $objRow->name . '</span>';
 						}
-						elseif ($objRow->headline != '')
+						elseif ($objRow->headline)
 						{
 							$trail[] = ' › <span>' . $objRow->headline . '</span>';
 						}
@@ -673,7 +673,7 @@ abstract class Backend extends Controller
 		// Recursively walk through all subpages
 		foreach ($objPages as $objPage)
 		{
-			$isPublished = ($objPage->published && ($objPage->start == '' || $objPage->start <= time()) && ($objPage->stop == '' || $objPage->stop > time()));
+			$isPublished = ($objPage->published && (!$objPage->start || $objPage->start <= time()) && (!$objPage->stop || $objPage->stop > time()));
 
 			// Searchable and not protected
 			if ($isPublished && $objPage->type == 'regular' && !$objPage->requireItem && (!$objPage->noSearch || $blnIsXmlSitemap) && (!$blnIsXmlSitemap || $objPage->robots != 'noindex,nofollow') && (!$objPage->protected || Config::get('indexProtected')))
@@ -767,17 +767,17 @@ abstract class Backend extends Controller
 
 		if (isset($arrMeta[$strLanguage]))
 		{
-			if (!empty($arrMeta[$strLanguage]['title']) && Input::post('title') == '')
+			if (!empty($arrMeta[$strLanguage]['title']) && !Input::post('title'))
 			{
 				Input::setPost('title', $arrMeta[$strLanguage]['title']);
 			}
 
-			if (!empty($arrMeta[$strLanguage]['alt']) && Input::post('alt') == '')
+			if (!empty($arrMeta[$strLanguage]['alt']) && !Input::post('alt'))
 			{
 				Input::setPost('alt', $arrMeta[$strLanguage]['alt']);
 			}
 
-			if (!empty($arrMeta[$strLanguage]['caption']) && Input::post('caption') == '')
+			if (!empty($arrMeta[$strLanguage]['caption']) && !Input::post('caption'))
 			{
 				Input::setPost('caption', $arrMeta[$strLanguage]['caption']);
 			}
@@ -958,7 +958,7 @@ abstract class Backend extends Controller
 			{
 				$strBuffer = System::importStatic($callback[0])->{$callback[1]}();
 
-				if ($strBuffer != '')
+				if ($strBuffer)
 				{
 					$arrMessages[] = $strBuffer;
 				}
@@ -1001,7 +1001,7 @@ abstract class Backend extends Controller
 
 		$strNode = $objSession->get($strKey);
 
-		if ($strNode == '')
+		if (!$strNode)
 		{
 			return;
 		}
@@ -1386,7 +1386,7 @@ abstract class Backend extends Controller
 			else
 			{
 				// Filter images
-				if ($strFilter != '' && !preg_match('/\.(' . str_replace(',', '|', $strFilter) . ')$/i', $strFile))
+				if ($strFilter && !preg_match('/\.(' . str_replace(',', '|', $strFilter) . ')$/i', $strFile))
 				{
 					continue;
 				}

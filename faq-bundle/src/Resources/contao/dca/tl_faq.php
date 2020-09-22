@@ -504,7 +504,7 @@ class tl_faq extends Backend
 		};
 
 		// Generate alias if there is none
-		if ($varValue == '')
+		if (!$varValue)
 		{
 			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->question, FaqCategoryModel::findByPk($dc->activeRecord->pid)->jumpTo, $aliasExists);
 		}
