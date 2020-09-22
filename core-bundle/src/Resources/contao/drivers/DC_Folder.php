@@ -444,6 +444,14 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		$icon = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['icon'] ?: 'filemounts.svg';
 		$label = Image::getHtml($icon) . ' <label>' . $label . '</label>';
 
+		// Pass previously selected values to picker (#1816)
+		$prevPickerValue = '';
+
+		if ($this->strPickerFieldType)
+		{
+			$prevPickerValue = ' data-picker-value="' . htmlspecialchars(json_encode(array_map('strval', $this->arrPickerValue))) . '"';
+		}
+
 		// Build the tree
 		$return = $this->panel() . Message::generate() . '
 <div id="tl_buttons">' . ((Input::get('act') == 'select') ? '
@@ -459,7 +467,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 <div id="paste_hint" data-add-to-scroll-offset="20">
   <p>' . $GLOBALS['TL_LANG']['MSC']['selectNewPosition'] . '</p>
 </div>' : '') . '
-<div class="tl_listing_container tree_view" id="tl_listing">' . ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['breadcrumb'] ?? '') . ((Input::get('act') == 'select' || $this->strPickerFieldType == 'checkbox') ? '
+<div class="tl_listing_container tree_view" id="tl_listing"' . $prevPickerValue . '>' . ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['breadcrumb'] ?? '') . ((Input::get('act') == 'select' || $this->strPickerFieldType == 'checkbox') ? '
 <div class="tl_select_trigger">
 <label for="tl_select_trigger" class="tl_select_label">' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</label> <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">
 </div>' : '') . '

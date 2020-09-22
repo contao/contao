@@ -926,16 +926,29 @@ var Backend =
 				return;
 			}
 			var frm = window.frames['simple-modal-iframe'],
-				val = [], ul, inp, field, act, it, i;
+				val = [], ul, inp, field, act, it, i, pickerValue, sIndex;
 			if (frm === undefined) {
 				alert('Could not find the SimpleModal frame');
 				return;
 			}
 			ul = frm.document.getElementById(opt.id);
+			// Load the previous values (#1816)
+			if (pickerValue = ul.get('data-picker-value')) {
+				val = JSON.parse(pickerValue);
+			}
 			inp = ul.getElementsByTagName('input');
 			for (i=0; i<inp.length; i++) {
-				if (inp[i].checked && !inp[i].id.match(/^(check_all_|reset_)/)) {
-					val.push(inp[i].get('value'));
+				if (inp[i].id.match(/^(check_all_|reset_)/)) {
+					continue;
+				}
+				// Add currently selected value, otherwise remove (#1816)
+				sIndex = val.indexOf(inp[i].get('value'));
+				if (inp[i].checked) {
+					if (sIndex == -1) {
+						val.push(inp[i].get('value'));
+					}
+				} else if (sIndex != -1) {
+					val.splice(sIndex, 1);
 				}
 			}
 			if (opt.callback) {
