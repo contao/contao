@@ -95,7 +95,7 @@ class UndoDescriptionListenerTest extends TestCase
                 'lastname' => 'Doe',
             ],
             [],
-            '42',
+            'ID 42',
         ];
     }
 

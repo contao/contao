@@ -48,7 +48,7 @@ class UndoDescriptionListener
 
         // Fallback: If everything else failed, we fall back to the row ID
         if (null === $description) {
-            $description = (string) $row['id'];
+            $description = 'ID ' . (string) $row['id'];
         }
 
         $event->setDescription($description);
