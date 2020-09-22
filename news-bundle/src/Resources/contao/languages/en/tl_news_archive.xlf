@@ -5,7 +5,6 @@
       <trans-unit id="tl_news_archive.display_name">
         <source>News archive</source>
       </trans-unit>
-
       <trans-unit id="tl_news_archive.title.0">
         <source>Title</source>
       </trans-unit>

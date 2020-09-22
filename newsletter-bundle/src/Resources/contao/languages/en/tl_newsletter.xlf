@@ -5,7 +5,6 @@
       <trans-unit id="tl_newsletter.display_name">
         <source>Newsletter</source>
       </trans-unit>
-
       <trans-unit id="tl_newsletter.subject.0">
         <source>Subject</source>
       </trans-unit>
