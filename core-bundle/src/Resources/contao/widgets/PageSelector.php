@@ -69,7 +69,7 @@ class PageSelector extends Widget
 			$strKeyword = ltrim(Input::postRaw('keyword'), '*');
 
 			// Make sure the regular expression is valid
-			if ($strKeyword != '')
+			if ($strKeyword !== '')
 			{
 				try
 				{
@@ -93,7 +93,7 @@ class PageSelector extends Widget
 		$arrFound = array();
 
 		// Search for a specific page
-		if ($for != '')
+		if ((string) $for !== '')
 		{
 			// Wrap in a try catch block in case the regular expression is invalid (see #7743)
 			try
@@ -274,7 +274,7 @@ class PageSelector extends Widget
 		switch ($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'])
 		{
 			case 'File':
-				if (Config::get($this->strField) != '')
+				if (Config::get($this->strField))
 				{
 					$this->varValue = Config::get($this->strField);
 				}
@@ -414,7 +414,7 @@ class PageSelector extends Widget
 		$return .= '</div><div style="clear:both"></div></li>';
 
 		// Begin a new submenu
-		if ($blnIsOpen || (!empty($childs) && $objSessionBag->get('page_selector_search') != ''))
+		if ($blnIsOpen || (!empty($childs) && $objSessionBag->get('page_selector_search')))
 		{
 			$return .= '<li class="parent" id="' . $node . '_' . $id . '"><ul class="level_' . $level . '">';
 

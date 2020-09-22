@@ -70,7 +70,8 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
 
         if ($this->requiresCsrf($request, $response)) {
             $this->setCookies($request, $response);
-        } else {
+        } elseif ($response->isSuccessful()) {
+            // Only delete the CSRF token cookie if the response is successful (#2252)
             $this->removeCookies($request, $response);
             $this->replaceTokenOccurrences($response);
         }

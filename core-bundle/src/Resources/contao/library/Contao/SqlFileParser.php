@@ -44,7 +44,7 @@ class SqlFileParser
 			$subpatterns = array();
 
 			// Unset comments and empty lines
-			if (preg_match('/^[#-]+/', $v) || trim($v) == '')
+			if (preg_match('/^[#-]+/', $v) || !trim($v))
 			{
 				unset($data[$k]);
 				continue;
@@ -56,13 +56,13 @@ class SqlFileParser
 				$table = $subpatterns[1];
 			}
 			// Get the table options
-			elseif ($table != '' && preg_match('/^\)([^;]+);/', $v, $subpatterns))
+			elseif ($table && preg_match('/^\)([^;]+);/', $v, $subpatterns))
 			{
 				$return[$table]['TABLE_OPTIONS'] = $subpatterns[1];
 				$table = '';
 			}
 			// Add the fields
-			elseif ($table != '')
+			elseif ($table)
 			{
 				preg_match('/^[^`]*`([^`]+)`/', trim($v), $key_name);
 				$first = preg_replace('/\s[^\n\r]+/', '', $key_name[0]);

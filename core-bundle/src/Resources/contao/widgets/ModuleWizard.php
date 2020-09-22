@@ -112,7 +112,7 @@ class ModuleWizard extends Widget
 		$positions = array();
 
 		// Add custom layout sections
-		if ($objRow->sections != '')
+		if ($objRow->sections)
 		{
 			$arrSections = StringUtil::deserialize($objRow->sections);
 

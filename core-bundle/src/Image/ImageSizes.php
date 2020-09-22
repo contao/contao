@@ -16,11 +16,11 @@ use Contao\BackendUser;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\ImageSizesEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Translation\Translator;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Service\ResetInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ImageSizes implements ResetInterface
 {
@@ -40,7 +40,7 @@ class ImageSizes implements ResetInterface
     private $framework;
 
     /**
-     * @var Translator
+     * @var TranslatorInterface
      */
     private $translator;
 
@@ -57,7 +57,7 @@ class ImageSizes implements ResetInterface
     /**
      * @internal Do not inherit from this class; decorate the "contao.image.image_sizes" service instead
      */
-    public function __construct(Connection $connection, EventDispatcherInterface $eventDispatcher, ContaoFramework $framework, Translator $translator)
+    public function __construct(Connection $connection, EventDispatcherInterface $eventDispatcher, ContaoFramework $framework, TranslatorInterface $translator)
     {
         $this->connection = $connection;
         $this->eventDispatcher = $eventDispatcher;

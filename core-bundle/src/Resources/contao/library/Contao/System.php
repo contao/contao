@@ -332,7 +332,7 @@ abstract class System
 		}
 
 		// Use a specific referer
-		if ($strTable != '' && isset($session[$strTable]) && Input::get('act') != 'select')
+		if ($strTable && isset($session[$strTable]) && Input::get('act') != 'select')
 		{
 			$session['current'] = $session[$strTable];
 		}
@@ -340,7 +340,7 @@ abstract class System
 		// Remove parameters helper
 		$cleanUrl = static function ($url, $params=array('rt', 'ref'))
 		{
-			if ($url == '' || strpos($url, '?') === false)
+			if (!$url || strpos($url, '?') === false)
 			{
 				return $url;
 			}
@@ -360,13 +360,13 @@ abstract class System
 		$return = $cleanUrl($strUrl, array('tg', 'ptg'));
 
 		// Fallback to the generic referer in the front end
-		if ($return == '' && \defined('TL_MODE') && TL_MODE == 'FE')
+		if (!$return && \defined('TL_MODE') && TL_MODE == 'FE')
 		{
 			$return = Environment::get('httpReferer');
 		}
 
 		// Fallback to the current URL if there is no referer
-		if ($return == '')
+		if (!$return)
 		{
 			$return = (\defined('TL_MODE') && TL_MODE == 'BE') ? 'contao/main.php' : Environment::get('url');
 		}
@@ -390,7 +390,7 @@ abstract class System
 		}
 
 		// Fall back to English
-		if ($strLanguage == '')
+		if (!$strLanguage)
 		{
 			$strLanguage = 'en';
 		}
@@ -675,7 +675,7 @@ abstract class System
 	 */
 	public static function setCookie($strName, $varValue, $intExpires, $strPath=null, $strDomain=null, $blnSecure=null, $blnHttpOnly=false)
 	{
-		if ($strPath == '')
+		if (!$strPath)
 		{
 			$strPath = Environment::get('path') ?: '/'; // see #4390
 		}

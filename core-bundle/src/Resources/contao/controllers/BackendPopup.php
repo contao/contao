@@ -61,7 +61,7 @@ class BackendPopup extends Backend
 	 */
 	public function run()
 	{
-		if ($this->strFile == '')
+		if (!$this->strFile)
 		{
 			die('No file given');
 		}

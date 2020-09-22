@@ -704,7 +704,7 @@ class tl_calendar_events extends Backend
 		};
 
 		// Generate the alias if there is none
-		if ($varValue == '')
+		if (!$varValue)
 		{
 			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->title, CalendarModel::findByPk($dc->activeRecord->pid)->jumpTo, $aliasExists);
 		}
@@ -898,7 +898,7 @@ class tl_calendar_events extends Backend
 		}
 
 		// Add the option currently set
-		if ($dc->activeRecord && $dc->activeRecord->source != '')
+		if ($dc->activeRecord && $dc->activeRecord->source)
 		{
 			$arrOptions[] = $dc->activeRecord->source;
 			$arrOptions = array_unique($arrOptions);

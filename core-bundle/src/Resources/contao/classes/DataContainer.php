@@ -380,7 +380,7 @@ abstract class DataContainer extends Backend
 				if ($objWidget->hasErrors())
 				{
 					// Skip mandatory fields on auto-submit (see #4077)
-					if (!$objWidget->mandatory || $objWidget->value != '' || Input::post('SUBMIT_TYPE') != 'auto')
+					if (!$objWidget->mandatory || $objWidget->value || Input::post('SUBMIT_TYPE') != 'auto')
 					{
 						$this->noReload = true;
 					}
@@ -517,7 +517,7 @@ abstract class DataContainer extends Backend
 			}
 		}
 
-		if ($wizard != '')
+		if ($wizard)
 		{
 			$objWidget->wizard = $wizard;
 
@@ -681,7 +681,7 @@ abstract class DataContainer extends Backend
 	{
 		$return = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][1];
 
-		if ($return == '' || $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'] == 'password' || !Config::get('showHelp'))
+		if (!$return || $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'] == 'password' || !Config::get('showHelp'))
 		{
 			return '';
 		}
@@ -908,12 +908,12 @@ abstract class DataContainer extends Backend
 				$attributes = sprintf(' style="background-image:url(\'%s\')"', Controller::addAssetsUrlTo($v['icon'])) . $attributes;
 			}
 
-			if ($label == '')
+			if (!$label)
 			{
 				$label = $k;
 			}
 
-			if ($title == '')
+			if (!$title)
 			{
 				$title = $label;
 			}
@@ -1120,7 +1120,7 @@ abstract class DataContainer extends Backend
 	 */
 	protected function panel()
 	{
-		if ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] == '')
+		if (!$GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'])
 		{
 			return '';
 		}
@@ -1187,14 +1187,14 @@ abstract class DataContainer extends Backend
 				}
 
 				// Add the panel if it is not empty
-				if ($panel != '')
+				if ($panel)
 				{
 					$panels = $panel . $panels;
 				}
 			}
 
 			// Add the group if it is not empty
-			if ($panels != '')
+			if ($panels)
 			{
 				$arrPanels[] = $panels;
 			}

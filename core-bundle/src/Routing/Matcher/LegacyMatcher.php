@@ -69,8 +69,6 @@ class LegacyMatcher implements RequestMatcherInterface
             return $this->requestMatcher->matchRequest($request);
         }
 
-        trigger_deprecation('contao/core-bundle', '4.0', 'Using the "getPageIdFromUrl" hook has been deprecated and will no longer work in Contao 5.0.');
-
         $locale = null;
         $fragments = null;
 
@@ -96,6 +94,8 @@ class LegacyMatcher implements RequestMatcherInterface
             $input = $this->framework->getAdapter(Input::class);
             $input->setGet('language', $locale);
         }
+
+        trigger_deprecation('contao/core-bundle', '4.0', 'Using the "getPageIdFromUrl" hook has been deprecated and will no longer work in Contao 5.0.');
 
         $fragments = $this->executeLegacyHook($fragments);
         $pathInfo = $this->createPathFromFragments($fragments, $locale);

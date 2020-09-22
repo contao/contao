@@ -486,8 +486,9 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'useSSL' => array
 		(
 			'exclude'                 => true,
-			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'inputType'               => 'select',
+			'options'                 => array(''=>'http://', '1'=>'https://'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'autoforward' => array
@@ -847,7 +848,7 @@ class tl_page extends Backend
 		{
 			$permission = 0;
 			$cid = CURRENT_ID ?: Input::get('id');
-			$ids = ($cid != '') ? array($cid) : array();
+			$ids = $cid ? array($cid) : array();
 
 			// Set permission
 			switch (Input::get('act'))
@@ -1043,7 +1044,7 @@ class tl_page extends Backend
 	 */
 	public function showFallbackWarning()
 	{
-		if (Input::get('act') != '')
+		if (Input::get('act'))
 		{
 			return;
 		}
@@ -1190,7 +1191,7 @@ class tl_page extends Backend
 	public function checkFeedAlias($varValue, DataContainer $dc)
 	{
 		// No change or empty value
-		if ($varValue == $dc->value || $varValue == '')
+		if (!$varValue || $varValue == $dc->value)
 		{
 			return $varValue;
 		}
@@ -1253,7 +1254,7 @@ class tl_page extends Backend
 	 */
 	public function checkFallback($varValue, DataContainer $dc)
 	{
-		if ($varValue == '')
+		if (!$varValue)
 		{
 			return '';
 		}
@@ -1278,7 +1279,7 @@ class tl_page extends Backend
 	 */
 	public function checkStaticUrl($varValue)
 	{
-		if ($varValue != '')
+		if ($varValue)
 		{
 			$varValue = preg_replace('@https?://@', '', $varValue);
 		}

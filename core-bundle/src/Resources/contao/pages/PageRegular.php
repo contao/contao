@@ -107,14 +107,14 @@ class PageRegular extends Frontend
 		{
 			if ($module['enable'])
 			{
-				$arrModuleIds[] = $module['mod'];
+				$arrModuleIds[] = (int) $module['mod'];
 			}
 		}
 
 		// Get all modules in a single DB query
 		$objModules = ModuleModel::findMultipleByIds($arrModuleIds);
 
-		if ($objModules !== null || \in_array(0, $arrModuleIds))
+		if ($objModules !== null || \in_array(0, $arrModuleIds, true))
 		{
 			$arrMapper = array();
 
@@ -204,7 +204,7 @@ class PageRegular extends Frontend
 		$this->Template->pageTitle = str_replace('[-]', '', $this->Template->pageTitle);
 
 		// Fall back to the default title tag
-		if ($objLayout->titleTag == '')
+		if (!$objLayout->titleTag)
 		{
 			$objLayout->titleTag = '{{page::pageTitle}} - {{page::rootPageTitle}}';
 		}
@@ -286,7 +286,7 @@ class PageRegular extends Frontend
 			{
 				$arrSize = StringUtil::deserialize($objLayout->width);
 
-				if (isset($arrSize['value']) && $arrSize['value'] != '' && $arrSize['value'] >= 0)
+				if (isset($arrSize['value']) && $arrSize['value'] && $arrSize['value'] >= 0)
 				{
 					$arrMargin = array('left'=>'0 auto 0 0', 'center'=>'0 auto', 'right'=>'0 0 0 auto');
 					$strFramework .= sprintf('#wrapper{width:%s;margin:%s}', $arrSize['value'] . $arrSize['unit'], $arrMargin[$objLayout->align]);
@@ -298,7 +298,7 @@ class PageRegular extends Frontend
 			{
 				$arrSize = StringUtil::deserialize($objLayout->headerHeight);
 
-				if (isset($arrSize['value']) && $arrSize['value'] != '' && $arrSize['value'] >= 0)
+				if (isset($arrSize['value']) && $arrSize['value'] && $arrSize['value'] >= 0)
 				{
 					$strFramework .= sprintf('#header{height:%s}', $arrSize['value'] . $arrSize['unit']);
 				}
@@ -311,7 +311,7 @@ class PageRegular extends Frontend
 			{
 				$arrSize = StringUtil::deserialize($objLayout->widthLeft);
 
-				if (isset($arrSize['value']) && $arrSize['value'] != '' && $arrSize['value'] >= 0)
+				if (isset($arrSize['value']) && $arrSize['value'] && $arrSize['value'] >= 0)
 				{
 					$strFramework .= sprintf('#left{width:%s;right:%s}', $arrSize['value'] . $arrSize['unit'], $arrSize['value'] . $arrSize['unit']);
 					$strContainer .= sprintf('padding-left:%s;', $arrSize['value'] . $arrSize['unit']);
@@ -323,7 +323,7 @@ class PageRegular extends Frontend
 			{
 				$arrSize = StringUtil::deserialize($objLayout->widthRight);
 
-				if (isset($arrSize['value']) && $arrSize['value'] != '' && $arrSize['value'] >= 0)
+				if (isset($arrSize['value']) && $arrSize['value'] && $arrSize['value'] >= 0)
 				{
 					$strFramework .= sprintf('#right{width:%s}', $arrSize['value'] . $arrSize['unit']);
 					$strContainer .= sprintf('padding-right:%s;', $arrSize['value'] . $arrSize['unit']);
@@ -331,7 +331,7 @@ class PageRegular extends Frontend
 			}
 
 			// Main column
-			if ($strContainer != '')
+			if ($strContainer)
 			{
 				$strFramework .= sprintf('#container{%s}', substr($strContainer, 0, -1));
 			}
@@ -341,21 +341,21 @@ class PageRegular extends Frontend
 			{
 				$arrSize = StringUtil::deserialize($objLayout->footerHeight);
 
-				if (isset($arrSize['value']) && $arrSize['value'] != '' && $arrSize['value'] >= 0)
+				if (isset($arrSize['value']) && $arrSize['value'] && $arrSize['value'] >= 0)
 				{
 					$strFramework .= sprintf('#footer{height:%s}', $arrSize['value'] . $arrSize['unit']);
 				}
 			}
 
 			// Add the layout specific CSS
-			if ($strFramework != '')
+			if ($strFramework)
 			{
 				$this->Template->framework = Template::generateInlineStyle($strFramework) . "\n";
 			}
 		}
 
 		// Overwrite the viewport tag (see #6251)
-		if ($objLayout->viewport != '')
+		if ($objLayout->viewport)
 		{
 			$this->Template->viewport = '<meta name="viewport" content="' . $objLayout->viewport . '">' . "\n";
 		}
@@ -468,7 +468,7 @@ class PageRegular extends Frontend
 		$this->Template->sections = array();
 		$this->Template->positions = array();
 
-		if ($objLayout->sections != '')
+		if ($objLayout->sections)
 		{
 			$arrPositions = array();
 			$arrSections = StringUtil::deserialize($objLayout->sections);
@@ -513,7 +513,7 @@ class PageRegular extends Frontend
 		$arrFramework = StringUtil::deserialize($objLayout->framework);
 
 		// Google web fonts
-		if ($objLayout->webfonts != '')
+		if ($objLayout->webfonts)
 		{
 			$strStyleSheets .= Template::generateStyleTag('https://fonts.googleapis.com/css?family=' . str_replace('|', '%7C', $objLayout->webfonts), 'all') . "\n";
 		}
@@ -548,7 +548,7 @@ class PageRegular extends Frontend
 					$media = implode(',', StringUtil::deserialize($objStylesheets->media));
 
 					// Overwrite the media type with a custom media query
-					if ($objStylesheets->mediaQuery != '')
+					if ($objStylesheets->mediaQuery)
 					{
 						$media = $objStylesheets->mediaQuery;
 					}
@@ -640,13 +640,13 @@ class PageRegular extends Frontend
 		$strHeadTags = '[[TL_HEAD]]';
 
 		// Add the analytics scripts
-		if ($objLayout->analytics != '')
+		if ($objLayout->analytics)
 		{
 			$arrAnalytics = StringUtil::deserialize($objLayout->analytics, true);
 
 			foreach ($arrAnalytics as $strTemplate)
 			{
-				if ($strTemplate != '')
+				if ($strTemplate)
 				{
 					$objTemplate = new FrontendTemplate($strTemplate);
 					$strHeadTags .= $objTemplate->parse();
@@ -683,7 +683,7 @@ class PageRegular extends Frontend
 
 			foreach ($arrJquery as $strTemplate)
 			{
-				if ($strTemplate != '')
+				if ($strTemplate)
 				{
 					$objTemplate = new FrontendTemplate($strTemplate);
 					$strScripts .= $objTemplate->parse();
@@ -701,7 +701,7 @@ class PageRegular extends Frontend
 
 			foreach ($arrMootools as $strTemplate)
 			{
-				if ($strTemplate != '')
+				if ($strTemplate)
 				{
 					$objTemplate = new FrontendTemplate($strTemplate);
 					$strScripts .= $objTemplate->parse();
@@ -713,13 +713,13 @@ class PageRegular extends Frontend
 		}
 
 		// Add the framework agnostic JavaScripts
-		if ($objLayout->scripts != '')
+		if ($objLayout->scripts)
 		{
 			$arrScripts = StringUtil::deserialize($objLayout->scripts, true);
 
 			foreach ($arrScripts as $strTemplate)
 			{
-				if ($strTemplate != '')
+				if ($strTemplate)
 				{
 					$objTemplate = new FrontendTemplate($strTemplate);
 					$strScripts .= $objTemplate->parse();
@@ -774,7 +774,7 @@ class PageRegular extends Frontend
 		}
 
 		// Add the custom JavaScript
-		if ($objLayout->script != '')
+		if ($objLayout->script)
 		{
 			$strScripts .= "\n" . trim($objLayout->script) . "\n";
 		}

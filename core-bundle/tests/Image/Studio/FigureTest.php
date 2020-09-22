@@ -327,7 +327,9 @@ class FigureTest extends TestCase
         [$metadata, $linkAttributes, $lightbox, $options] = $preconditions;
         [$includeFullMetadata, $floatingProperty, $marginProperty] = $buildAttributes;
 
-        System::setContainer($this->getContainerWithContaoConfiguration());
+        System::setContainer($this->getContainerWithContaoConfiguration(
+            Path::canonicalize(__DIR__.'/../../Fixtures')
+        ));
 
         $figure = new Figure($this->getImageMock(), $metadata, $linkAttributes, $lightbox, $options);
         $data = $figure->getLegacyTemplateData($marginProperty, $floatingProperty, $includeFullMetadata);
@@ -337,7 +339,7 @@ class FigureTest extends TestCase
 
     public function provideLegacyTemplateDataScenarios(): \Generator
     {
-        $imageSrc = Path::canonicalize(__DIR__.'/../../Fixtures/files/public/foo.jpg');
+        $imageSrc = 'files/public/foo.jpg';
 
         yield 'basic image data' => [
             [null, null, null, null],
@@ -527,7 +529,9 @@ class FigureTest extends TestCase
 
     public function testApplyLegacyTemplate(): void
     {
-        System::setContainer($this->getContainerWithContaoConfiguration());
+        System::setContainer($this->getContainerWithContaoConfiguration(
+            Path::canonicalize(__DIR__.'/../../Fixtures')
+        ));
 
         $template = new FrontendTemplate('ce_image');
 
@@ -544,7 +548,9 @@ class FigureTest extends TestCase
 
     public function testApplyLegacyTemplateDataDoesNotOverwriteHref(): void
     {
-        System::setContainer($this->getContainerWithContaoConfiguration());
+        System::setContainer($this->getContainerWithContaoConfiguration(
+            Path::canonicalize(__DIR__.'/../../Fixtures')
+        ));
 
         $template = new \stdClass();
 
@@ -570,7 +576,7 @@ class FigureTest extends TestCase
         $img = ['img foo'];
         $sources = ['sources foo'];
         $filePath = 'path/to/resource.jpg';
-        $imageSrc = Path::canonicalize(__DIR__.'/../../Fixtures/files/public/foo.jpg'); // use existing file so that we can read the file info
+        $imageSrc = 'files/public/foo.jpg'; // use existing file so that we can read the file info
         $originalWidth = 100;
         $originalHeight = 50;
 

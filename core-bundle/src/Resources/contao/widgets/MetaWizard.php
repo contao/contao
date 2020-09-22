@@ -84,7 +84,7 @@ class MetaWizard extends Widget
 			}
 			else
 			{
-				if ($v != '')
+				if ($v)
 				{
 					// Take the fields from the DCA (see #4327)
 					$varInput[$v] = array_combine(array_keys($this->metaFields), array_fill(0, \count($this->metaFields), ''));
