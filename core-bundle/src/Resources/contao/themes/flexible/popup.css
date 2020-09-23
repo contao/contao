@@ -61,9 +61,12 @@ body {
 #download {
 	margin:24px 18px 12px;
 }
+#download a {
+	padding-top:6px;
+}
 #download img {
 	position:relative;
-	top:-2px;
+	top:-1px;
 }
 .tl_submit {
 	padding:8px 12px 4px 10px;
