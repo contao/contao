@@ -226,12 +226,12 @@
         <target>Bitte geben Sie den Namen der Sitemap-Datei ohne Dateiendung ein.</target>
       </trans-unit>
       <trans-unit id="tl_page.useSSL.0">
-        <source>Use HTTPS</source>
-        <target>HTTPS verwenden</target>
+        <source>Protocol</source>
+        <target>Protokoll</target>
       </trans-unit>
       <trans-unit id="tl_page.useSSL.1">
-        <source>This website is available via HTTPS.</source>
-        <target>Diese Webseite ist über HTTPS verfügbar.</target>
+        <source>Here you can select which protocol to use for the website.</source>
+        <target>Hier legen Sie fest, welches Protokoll für die Webseite verwendet werden soll.</target>
       </trans-unit>
       <trans-unit id="tl_page.autoforward.0">
         <source>Forward to another page</source>

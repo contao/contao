@@ -2685,6 +2685,10 @@
         <source>The preview URL cannot be generated, because the route has mandatory parameters.</source>
         <target>Die Vorschau-URL kann nicht erstellt werden, weil die Route Parameter benötigt.</target>
       </trans-unit>
+      <trans-unit id="MSC.unknownOption">
+        <source>Unknown option</source>
+        <target>Unbekannte Option</target>
+      </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
         <target>Byte</target>
