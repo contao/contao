@@ -47,6 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_member_group.stop.1">
         <source>If you want to prevent the group from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>اگر می‌خواهید از فعال بودن گروه بعد از تاریخ/ساعت مشخصی جلوگیری کنید، می‌توانید اینجا وارد کنید. در غیر این صوت فیلد را خالی بگذارید.</target>
       </trans-unit>
       <trans-unit id="tl_member_group.title_legend">
         <source>Title</source>

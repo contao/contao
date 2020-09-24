@@ -2665,6 +2665,10 @@
         <source>Close the Contao toolbar</source>
         <target>Contaoツールバーを閉じる</target>
       </trans-unit>
+      <trans-unit id="MSC.unknownOption">
+        <source>Unknown option</source>
+        <target>不明なオプション</target>
+      </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
         <target>byte</target>

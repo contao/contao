@@ -31,6 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_user_group.start.1">
         <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Si desea evitar que el grupo esté activo antes de una fecha / hora determinada, puede ingresarlo aquí. De lo contrario, deje el campo en blanco.</target>
       </trans-unit>
       <trans-unit id="tl_user_group.stop.0">
         <source>Deactivate on</source>
@@ -38,6 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_user_group.stop.1">
         <source>If you want to prevent the group from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Si desea evitar que el grupo esté activo después de una determinada fecha / hora, puede ingresarlo aquí. De lo contrario, deje el campo en blanco.</target>
       </trans-unit>
       <trans-unit id="tl_user_group.title_legend">
         <source>Title</source>
@@ -49,6 +51,7 @@
       </trans-unit>
       <trans-unit id="tl_user_group.elements_legend">
         <source>Allowed elements</source>
+        <target>Elementos permitidos</target>
       </trans-unit>
       <trans-unit id="tl_user_group.pagemounts_legend">
         <source>Pagemounts</source>
@@ -76,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_user_group.account_legend">
         <source>Group settings</source>
+        <target>Configuración de grupo</target>
       </trans-unit>
       <trans-unit id="tl_user_group.new.0">
         <source>New</source>
