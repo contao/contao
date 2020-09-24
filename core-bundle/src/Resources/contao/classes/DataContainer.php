@@ -969,24 +969,24 @@ abstract class DataContainer extends \Backend
 	}
 
 	/**
-	 * Returns a data-picker-value attribute with the currently selected picker values (#1816).
-	 * 
+	 * Returns a data-picker-value attribute with the currently selected picker values (#1816)
+	 *
 	 * @return string
 	 */
 	protected function getPickerValueAttribute()
 	{
-		$attribute = '';
-
-		if ($this->strPickerFieldType)
+		// Only load the previously selected values for the checkbox field type (#2346)
+		if ('checkbox' !== $this->strPickerFieldType)
 		{
-			$values = array_map($this->objPickerCallback, $this->arrPickerValue);
-			$values = array_map('strval', $values);
-			$values = json_encode($values);
-			$values = htmlspecialchars($values);
-			$attribute = ' data-picker-value="' . $values . '"';
+			return '';
 		}
 
-		return $attribute;
+		$values = array_map($this->objPickerCallback, $this->arrPickerValue);
+		$values = array_map('strval', $values);
+		$values = json_encode($values);
+		$values = htmlspecialchars($values);
+
+		return ' data-picker-value="' . $values . '"';
 	}
 
 	/**
