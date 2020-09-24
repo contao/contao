@@ -2633,6 +2633,9 @@
         <source>Close the Contao toolbar</source>
         <target>یستن تولبار کنتائو</target>
       </trans-unit>
+      <trans-unit id="MSC.unknownOption">
+        <source>Unknown option</source>
+      </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
         <target>بایت</target>

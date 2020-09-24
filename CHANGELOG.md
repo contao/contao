@@ -2,10 +2,46 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.6] (2020-09-24)
+
+**New features:**
+
+- [#2148] Add support for HTTP cache subscribers ([aschempp])
+
+**Fixed issues:**
+
+- [#2313] Fix the resize options priority in the PictureFactory class ([m-vo])
+- [#2320] Do not prolong unconfirmed opt-in tokens ([leofeyer])
+- [#2300] Do not use the default player size ([fritzmg])
+- [#2290] Fix warnings and deprecations when running unit tests ([ausi])
+- [#2294] Stop using == '' with regard to PHP 8 ([leofeyer])
+- [#2252] Do not change the CSRF token cookie if the response is not successful ([fritzmg])
+- [#2281] Update dependecies for PHP 8.0 compatibility ([ausi])
+- [#2264] Do not try to index a page if the search indexer is disabled ([aschempp])
+- [#2260] Do not use floorToMinute() in the PageModel::loadDetails() method ([leofeyer])
+- [#2257] Only use floorToMinute() in DB queries ([leofeyer])
+- [#2249] Return early in the Search::indexPage() method if nothing has changed ([leofeyer])
+- [#2248] Fix a type error in the back end menu listener ([leofeyer])
+- [#2244] Do not log 503 exceptions ([fritzmg])
+- [#2221] Use a temporary status code to redirect to the language root ([leofeyer])
+- [#2220] Simplify the tl_content header fields ([leofeyer])
+- [#2219] Only update the comment notification URL in the front end ([leofeyer])
+- [#2206] Use the scope matcher if an element renders differently in BE and FE ([leofeyer])
+- [#2204] Only check the request token for master requests ([fritzmg])
+- [#2208] Always load DotEnv files if they exist ([leofeyer])
+- [#2200] Load the default labels in the loadDcaFiles() method ([fritzmg])
+- [#2182] Catch exceptions to prevent the resize images command from failing ([ausi])
+- [#2181] Add the assets URL to non-combined files ([ausi])
+- [#2155] Support captcha input wrapped in DIV ([aschempp])
+- [#2153] Use the class name as cache key in System::import() ([leofeyer])
+- [#2120] Support multiple fragments on the same controller ([aschempp])
+- [#2150] Fix the checkbox height on mobile devices ([leofeyer])
+
 ## [4.9.5] (2020-08-10)
 
 **Fixed issues:**
 
+- [#2139] Also invalidate the ptable cache tags in the DC_Table class ([leofeyer])
 - [#2103] $this->ptable not available in the DataContainer class ([leofeyer])
 - [#2122] Remove the Contao-Merge-Cache-Control header in the master request ([leofeyer])
 - [#2121] Correctly show the default text form field template ([leofeyer])
@@ -379,6 +415,7 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.6]: https://github.com/contao/contao/releases/tag/4.9.6
 [4.9.5]: https://github.com/contao/contao/releases/tag/4.9.5
 [4.9.4]: https://github.com/contao/contao/releases/tag/4.9.4
 [4.9.3]: https://github.com/contao/contao/releases/tag/4.9.3
@@ -406,6 +443,34 @@ This project adheres to [Semantic Versioning].
 [Tastaturberuf]: https://github.com/Tastaturberuf
 [Toflar]: https://github.com/Toflar
 [xchs]: https://github.com/xchs
+[#2148]: https://github.com/contao/contao/pull/2148
+[#2313]: https://github.com/contao/contao/pull/2313
+[#2320]: https://github.com/contao/contao/pull/2320
+[#2300]: https://github.com/contao/contao/pull/2300
+[#2290]: https://github.com/contao/contao/pull/2290
+[#2294]: https://github.com/contao/contao/pull/2294
+[#2252]: https://github.com/contao/contao/pull/2252
+[#2281]: https://github.com/contao/contao/pull/2281
+[#2264]: https://github.com/contao/contao/pull/2264
+[#2260]: https://github.com/contao/contao/pull/2260
+[#2257]: https://github.com/contao/contao/pull/2257
+[#2249]: https://github.com/contao/contao/pull/2249
+[#2248]: https://github.com/contao/contao/pull/2248
+[#2244]: https://github.com/contao/contao/pull/2244
+[#2221]: https://github.com/contao/contao/pull/2221
+[#2220]: https://github.com/contao/contao/pull/2220
+[#2219]: https://github.com/contao/contao/pull/2219
+[#2206]: https://github.com/contao/contao/pull/2206
+[#2204]: https://github.com/contao/contao/pull/2204
+[#2208]: https://github.com/contao/contao/pull/2208
+[#2200]: https://github.com/contao/contao/pull/2200
+[#2182]: https://github.com/contao/contao/pull/2182
+[#2181]: https://github.com/contao/contao/pull/2181
+[#2155]: https://github.com/contao/contao/pull/2155
+[#2153]: https://github.com/contao/contao/pull/2153
+[#2120]: https://github.com/contao/contao/pull/2120
+[#2150]: https://github.com/contao/contao/pull/2150
+[#2139]: https://github.com/contao/contao/pull/2139
 [#2103]: https://github.com/contao/contao/pull/2103
 [#2122]: https://github.com/contao/contao/pull/2122
 [#2121]: https://github.com/contao/contao/pull/2121

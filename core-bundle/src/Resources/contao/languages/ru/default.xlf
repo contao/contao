@@ -2665,6 +2665,10 @@
         <source>Close the Contao toolbar</source>
         <target>Закрыть панель инструментов Contao</target>
       </trans-unit>
+      <trans-unit id="MSC.unknownOption">
+        <source>Unknown option</source>
+        <target>Неизвестный параметр</target>
+      </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
         <target>Байт</target>

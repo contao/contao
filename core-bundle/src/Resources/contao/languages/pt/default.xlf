@@ -2640,6 +2640,9 @@ Download %s</target>
       <trans-unit id="MSC.closeToolbar">
         <source>Close the Contao toolbar</source>
       </trans-unit>
+      <trans-unit id="MSC.unknownOption">
+        <source>Unknown option</source>
+      </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
         <target>Byte</target>

@@ -83,9 +83,11 @@
       </trans-unit>
       <trans-unit id="tl_module.customTpl.0">
         <source>Module template</source>
+        <target>Plantilla de módulo</target>
       </trans-unit>
       <trans-unit id="tl_module.customTpl.1">
         <source>Here you can select the module template.</source>
+        <target>Aquí puede seleccionar la plantilla del módulo.</target>
       </trans-unit>
       <trans-unit id="tl_module.pages.0">
         <source>Pages</source>
@@ -265,9 +267,11 @@
       </trans-unit>
       <trans-unit id="tl_module.inColumn.0">
         <source>Layout section</source>
+        <target>Sección de diseño</target>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.1">
         <source>Please choose the layout section whose articles you want to list.</source>
+        <target>Elija la sección de diseño cuyos artículos desea enumerar.</target>
       </trans-unit>
       <trans-unit id="tl_module.skipFirst.0">
         <source>Skip items</source>
@@ -407,9 +411,11 @@
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.0">
         <source>Disable spam protection</source>
+        <target>Desactivar la protección contra correo no deseado</target>
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.1">
         <source>Here you can disable the spam protection (not recommended).</source>
+        <target>Aquí puede desactivar la protección contra correo no deseado (no recomendado).</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_groups.0">
         <source>Member groups</source>

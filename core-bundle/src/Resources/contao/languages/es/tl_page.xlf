@@ -323,9 +323,11 @@
       </trans-unit>
       <trans-unit id="tl_page.sitemap.0">
         <source>Show in HTML sitemap</source>
+        <target>Mostrar en el mapa del sitio HTML</target>
       </trans-unit>
       <trans-unit id="tl_page.sitemap.1">
         <source>Here you can define whether the page is shown in the HTML sitemap.</source>
+        <target>Aquí puede definir si la página se muestra en el mapa del sitio HTML.</target>
       </trans-unit>
       <trans-unit id="tl_page.hide.0">
         <source>Hide from navigation</source>
@@ -341,6 +343,7 @@
       </trans-unit>
       <trans-unit id="tl_page.guests.1">
         <source>Hide the page if a member is logged in.</source>
+        <target>Ocultar la página si una miembro está conectado.</target>
       </trans-unit>
       <trans-unit id="tl_page.tabindex.0">
         <source>Tab index</source>
@@ -372,6 +375,7 @@
       </trans-unit>
       <trans-unit id="tl_page.start.1">
         <source>If you want to prevent the page from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Si desea evitar que la página se muestre en el sitio web antes de una fecha/hora determinada, puede ingresar aquí. De lo contrario, deje el campo en blanco.</target>
       </trans-unit>
       <trans-unit id="tl_page.stop.0">
         <source>Show until</source>
@@ -379,6 +383,7 @@
       </trans-unit>
       <trans-unit id="tl_page.stop.1">
         <source>If you want to prevent the page from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Si desea evitar que la página se muestre en el sitio web después de una determinada fecha/hora, puede ingresarla aquí. De lo contrario, deje el campo en blanco.</target>
       </trans-unit>
       <trans-unit id="tl_page.enforceTwoFactor.0">
         <source>Enforce two-factor authentication</source>
@@ -394,6 +399,7 @@
       </trans-unit>
       <trans-unit id="tl_page.twoFactorJumpTo.1">
         <source>Please choose the page to which members will be redirected to set up two-factor authentication.</source>
+        <target>Elija la página a la que se redirigirá a los miembros para configurar la autenticación de dos factores.</target>
       </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
