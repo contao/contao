@@ -155,6 +155,10 @@ class ContentMedia extends ContentElement
 		{
 			$this->Template->size = ' width="' . $size[0] . '" height="' . $size[1] . '"';
 		}
+		else
+		{
+			$this->Template->size = '';
+		}
 
 		$this->Template->files = array_values(array_filter($arrFiles));
 
