@@ -969,6 +969,27 @@ abstract class DataContainer extends \Backend
 	}
 
 	/**
+	 * Returns a data-picker-value attribute with the currently selected picker values (#1816).
+	 * 
+	 * @return string
+	 */
+	protected function getPickerValueAttribute()
+	{
+		$attribute = '';
+
+		if ($this->strPickerFieldType)
+		{
+			$values = array_map($this->objPickerCallback, $this->arrPickerValue);
+			$values = array_map('strval', $values);
+			$values = json_encode($values);
+			$values = htmlspecialchars($values);
+			$attribute = ' data-picker-value="' . $values . '"';
+		}
+
+		return $attribute;
+	}
+
+	/**
 	 * Build the sort panel and return it as string
 	 *
 	 * @return string

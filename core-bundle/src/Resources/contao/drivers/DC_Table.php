@@ -3597,14 +3597,6 @@ class DC_Table extends \DataContainer implements \listable, \editable
 <p class="tl_empty">' . $GLOBALS['TL_LANG']['MSC']['noResult'] . '</p>';
 		}
 
-		// Pass previously selected values to picker (#1816)
-		$prevPickerValue = '';
-
-		if ($this->strPickerFieldType)
-		{
-			$prevPickerValue = ' data-picker-value="' . htmlspecialchars(json_encode(array_map('strval', $this->arrPickerValue))) . '"';
-		}
-
 		$return .= ((\Input::get('act') == 'select') ? '
 <form action="' . ampersand(\Environment::get('request'), true) . '" id="tl_select" class="tl_form' . ((\Input::get('act') == 'select') ? ' unselectable' : '') . '" method="post" novalidate>
 <div class="tl_formbody_edit">
@@ -3613,7 +3605,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 <div id="paste_hint">
   <p>' . $GLOBALS['TL_LANG']['MSC']['selectNewPosition'] . '</p>
 </div>' : '') . '
-<div class="tl_listing_container tree_view" id="tl_listing"' . $prevPickerValue . '>' . $breadcrumb . ((\Input::get('act') == 'select' || ($this->strPickerFieldType == 'checkbox')) ? '
+<div class="tl_listing_container tree_view" id="tl_listing"' . $this->getPickerValueAttribute() . '>' . $breadcrumb . ((\Input::get('act') == 'select' || ($this->strPickerFieldType == 'checkbox')) ? '
 <div class="tl_select_trigger">
 <label for="tl_select_trigger" class="tl_select_label">' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</label> <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">
 </div>' : '') . '
@@ -4136,14 +4128,6 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			return $return;
 		}
 
-		// Pass previously selected values to picker (#1816)
-		$prevPickerValue = '';
-
-		if ($this->strPickerFieldType)
-		{
-			$prevPickerValue = ' data-picker-value="' . htmlspecialchars(json_encode(array_map('strval', $this->arrPickerValue))) . '"';
-		}
-
 		$return .= ((\Input::get('act') == 'select') ? '
 
 <form action="' . ampersand(\Environment::get('request'), true) . '" id="tl_select" class="tl_form' . ((\Input::get('act') == 'select') ? ' unselectable' : '') . '" method="post" novalidate>
@@ -4153,7 +4137,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 <div id="paste_hint">
   <p>' . $GLOBALS['TL_LANG']['MSC']['selectNewPosition'] . '</p>
 </div>' : '') . '
-<div class="tl_listing_container parent_view' . ($this->strPickerFieldType ? ' picker unselectable' : '') . '" id="tl_listing"' . $prevPickerValue . '>
+<div class="tl_listing_container parent_view' . ($this->strPickerFieldType ? ' picker unselectable' : '') . '" id="tl_listing"' . $this->getPickerValueAttribute() . '>
 <div class="tl_header click2edit toggle_select hover-div">';
 
 		// List all records of the child table
@@ -4773,20 +4757,12 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		{
 			$result = $objRow->fetchAllAssoc();
 
-			// Pass previously selected values to picker (#1816)
-			$prevPickerValue = '';
-
-			if ($this->strPickerFieldType)
-			{
-				$prevPickerValue = ' data-picker-value="' . htmlspecialchars(json_encode(array_map('strval', $this->arrPickerValue))) . '"';
-			}
-
 			$return .= ((\Input::get('act') == 'select') ? '
 <form action="' . ampersand(\Environment::get('request'), true) . '" id="tl_select" class="tl_form' . ((\Input::get('act') == 'select') ? ' unselectable' : '') . '" method="post" novalidate>
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_select">
 <input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">' : '') . '
-<div class="tl_listing_container list_view" id="tl_listing"' . $prevPickerValue . '>' . ((\Input::get('act') == 'select' || $this->strPickerFieldType == 'checkbox') ? '
+<div class="tl_listing_container list_view" id="tl_listing"' . $this->getPickerValueAttribute() . '>' . ((\Input::get('act') == 'select' || $this->strPickerFieldType == 'checkbox') ? '
 <div class="tl_select_trigger">
 <label for="tl_select_trigger" class="tl_select_label">' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</label> <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">
 </div>' : '') . '
