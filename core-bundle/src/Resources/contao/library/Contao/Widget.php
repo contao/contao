@@ -810,7 +810,7 @@ abstract class Widget extends Controller
 			$varInput = trim($varInput);
 		}
 
-		if (!$varInput)
+		if ((string) $varInput === '')
 		{
 			if (!$this->mandatory)
 			{
