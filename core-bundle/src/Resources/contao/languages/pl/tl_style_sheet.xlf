@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_style_sheet.name.0">
         <source>Name</source>
-        <target>Imię i nazwisko</target>
+        <target>Nazwa</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.name.1">
         <source>Please enter the style sheet name.</source>
@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_style_sheet.cc.1">
         <source>Conditional comments allow you to create Internet Explorer specific style sheets (e.g. &lt;em&gt;if lt IE 9&lt;/em&gt;).</source>
-        <target>Komentarze warunkowe pozwalają utworzyć specyficzne arkusze stylów np. dla Internet Explorera.</target>
+        <target>Komentarze warunkowe pozwalają utworzyć specyficzne arkusze stylów, np. dla Internet Explorera.</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.media.0">
         <source>Media types</source>
@@ -67,7 +67,7 @@
       </trans-unit>
       <trans-unit id="tl_style_sheet.title_legend">
         <source>Name</source>
-        <target>Imię i nazwisko</target>
+        <target>Nazwa</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.expert_legend">
         <source>Expert settings</source>
@@ -103,7 +103,7 @@
       </trans-unit>
       <trans-unit id="tl_style_sheet.show.1">
         <source>Show the details of style sheet ID %s</source>
-        <target>Pokarz informacje o arkuszu stylów ID %s</target>
+        <target>Pokaż informacje o arkuszu stylów ID %s</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.edit.0">
         <source>Edit style sheet</source>
@@ -155,7 +155,7 @@
       </trans-unit>
       <trans-unit id="tl_style_sheet.export.0">
         <source>Export style sheet</source>
-        <target>Eksportuj arkusz styli</target>
+        <target>Eksportuj arkusz stylów</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.export.1">
         <source>Export style sheet ID %s</source>

@@ -70,8 +70,7 @@
         <target>Zahtevaj prijavo za komentiranje</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.requireLogin.1">
-        <source>Allow only authenticated users to create comments.</source>
-        <target>Komentiranje dovoli samo prijavljenim uporabnikom.</target>
+        <source>Allow only authenticated members to create comments.</source>
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.0">
         <source>Disable the security question</source>
@@ -190,12 +189,11 @@
         <target>Prikaži komentarje arhiva ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.0">
-        <source>RSS feeds</source>
-        <target>RSS izvlečki</target>
+        <source>News feeds</source>
+        <target>Izvleček novic</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.1">
-        <source>Manage RSS feeds</source>
-        <target>Upravljaj RSS izvlečke</target>
+        <source>Manage news feeds</source>
       </trans-unit>
     </body>
   </file>

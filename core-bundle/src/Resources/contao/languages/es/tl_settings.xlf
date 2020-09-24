@@ -15,6 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.adminEmail.1">
         <source>This e-mail address will be used to send and receive system messages.</source>
+        <target>Esta dirección de correo electrónico se utilizará para enviar y recibir mensajes del sistema.</target>
       </trans-unit>
       <trans-unit id="tl_settings.dateFormat.0">
         <source>Date format</source>

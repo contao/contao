@@ -27,7 +27,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.name.0">
         <source>Author</source>
-        <target>Imię</target>
+        <target>Autor</target>
       </trans-unit>
       <trans-unit id="tl_comments.name.1">
         <source>Please enter the author's name.</source>
@@ -67,7 +67,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.author.0">
         <source>Author</source>
-        <target>Imię</target>
+        <target>Autor</target>
       </trans-unit>
       <trans-unit id="tl_comments.author.1">
         <source>Here you can change the author of the reply.</source>
@@ -115,7 +115,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.author_legend">
         <source>Author</source>
-        <target>Imię</target>
+        <target>Autor</target>
       </trans-unit>
       <trans-unit id="tl_comments.comment_legend">
         <source>Comment</source>
@@ -127,7 +127,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.publish_legend">
         <source>Publish settings</source>
-        <target>Ustawinia publikacji</target>
+        <target>Ustawienia publikacji</target>
       </trans-unit>
       <trans-unit id="tl_comments.approved">
         <source>Approved</source>

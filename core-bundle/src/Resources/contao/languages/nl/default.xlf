@@ -2318,6 +2318,9 @@ Deze e-mail is aangemaakt door Contao. U kunt niet rechtstreeks hierop antwoorde
         <source>You have to add a root page in the site structure to enter file meta data.</source>
         <target>U dient een startpagina toe te voegen aan de site-structuur om meta-informatie op te kunnen slaan.</target>
       </trans-unit>
+      <trans-unit id="MSC.unknownOption">
+        <source>Unknown option</source>
+      </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
         <target>Byte</target>

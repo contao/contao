@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="MSC.author">
         <source>Author</source>
-        <target>Imię</target>
+        <target>Autor</target>
       </trans-unit>
       <trans-unit id="MSC.by">
         <source>by</source>
@@ -35,7 +35,7 @@
       </trans-unit>
       <trans-unit id="MSC.news_previous">
         <source>&amp;lt;</source>
-        <target>&gt;</target>
+        <target>&lt;</target>
       </trans-unit>
       <trans-unit id="MSC.news_next">
         <source>&amp;gt;</source>

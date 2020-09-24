@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_image_size.name.0">
         <source>Name</source>
-        <target>Imię i nazwisko</target>
+        <target>Nazwa</target>
       </trans-unit>
       <trans-unit id="tl_image_size.name.1">
         <source>Please enter the image size name.</source>
@@ -63,7 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.cssClass.1">
         <source>The CSS classes will be applied to the image tag.</source>
-        <target>Klasy CSS zostaną zaaplikowane do tagu obrazka.</target>
+        <target>Klasy CSS zostaną dodane do tagu obrazka.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.tstamp.0">
         <source>Revision date</source>

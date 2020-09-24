@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_user_group.name.0">
         <source>Title</source>
-        <target>Nagłówek</target>
+        <target>Nazwa</target>
       </trans-unit>
       <trans-unit id="tl_user_group.name.1">
         <source>Please enter the group title.</source>
@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_user_group.alexf.1">
         <source>Here you can choose which fields will be editable.</source>
-        <target>Kilka tabel zawiera pola, które są wykluczone z domyślnego edytowania. Tutaj masz możliwość odblokowania tych pól dla tej grupy. Przytrzymaj klawisz CTRL podczas zaznaczania obiektów.</target>
+        <target>Kilka tabel zawiera pola, które są wykluczone z domyślnego edytowania. Tutaj masz możliwość odblokowania tych pól dla grupy.</target>
       </trans-unit>
       <trans-unit id="tl_user_group.disable.0">
         <source>Deactivate</source>
@@ -43,7 +43,7 @@
       </trans-unit>
       <trans-unit id="tl_user_group.title_legend">
         <source>Title</source>
-        <target>Nagłówek</target>
+        <target>Nazwa</target>
       </trans-unit>
       <trans-unit id="tl_user_group.modules_legend">
         <source>Allowed modules</source>
@@ -67,7 +67,7 @@
       </trans-unit>
       <trans-unit id="tl_user_group.amg_legend">
         <source>Allowed member groups</source>
-        <target>Zezwolone grupy użytkowników</target>
+        <target>Dozwolone grupy użytkowników</target>
       </trans-unit>
       <trans-unit id="tl_user_group.alexf_legend">
         <source>Allowed fields</source>

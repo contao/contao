@@ -255,6 +255,7 @@
       </trans-unit>
       <trans-unit id="FMD.sitemap.0">
         <source>HTML sitemap</source>
+        <target>Mapa del sitio HTML</target>
       </trans-unit>
       <trans-unit id="FMD.sitemap.1">
         <source>Generates a list of all pages in the site structure</source>
@@ -278,6 +279,7 @@
       </trans-unit>
       <trans-unit id="FMD.logout.1">
         <source>Automatically logs out a member</source>
+        <target>Cierra la sesión de un miembro automáticamente</target>
       </trans-unit>
       <trans-unit id="FMD.personalData.0">
         <source>Personal data</source>
@@ -285,6 +287,7 @@
       </trans-unit>
       <trans-unit id="FMD.personalData.1">
         <source>Generates a form to edit a member's personal data</source>
+        <target>Genera un formulario para editar los datos personales de un miembro.</target>
       </trans-unit>
       <trans-unit id="FMD.registration.0">
         <source>Registration</source>
@@ -292,6 +295,7 @@
       </trans-unit>
       <trans-unit id="FMD.registration.1">
         <source>Generates a member registration form</source>
+        <target>Genera un formulario de registro de miembros</target>
       </trans-unit>
       <trans-unit id="FMD.changePassword.0">
         <source>Change password</source>

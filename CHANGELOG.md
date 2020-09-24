@@ -1,5 +1,26 @@
 # Change log
 
+## 4.4.52 (2020-09-24)
+
+ * Prevent insert tag injections in forms (CVE-2020-25768).
+ * Fix picker deselecting filtered elements (see #2296).
+ * Consider symlinks when saving the localconfig.php (see #2209).
+ * Do not reindex pages with the same checksum (see #2276).
+ * Correctly generate the name for hidden field in select menu (see #2275).
+ * Fix the limit toggler behavior in "select multiple" mode (see #2268).
+ * Fix the stop time in the DB queries (see #2255).
+ * Correctly generate nested folder URL aliases (see #2129).
+ * Correctly find published pages in the findSearchablePages() method (see #2217).
+ * Use a temporary status code to redirect to the language root (see #2216).
+ * Preserve unknown options in select and checkbox widgets (see #2215).
+ * Use the active record in the protectFolder() callback (see #2194).
+ * Handle the subject query string when encoding/decoding e-mails (see #2191).
+ * Add a List-Unsubscribe header to newsletters (see #2189).
+ * Add an index to tl_form_field.invisible (see #2192).
+ * Add the assets URL to non-combined files (see #2180).
+ * Fix returning a potential wrong image dimension from cache (see #2166).
+ * Show the SQL import error message (see #2163).
+
 ## 4.4.51 (2020-08-10)
 
  * Correctly apply custom CSS in the ContentModule class (see #2082).

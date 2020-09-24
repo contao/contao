@@ -15,6 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.adminEmail.1">
         <source>This e-mail address will be used to send and receive system messages.</source>
+        <target>Ten adres e-mail zostanie użyty do wysyłania i odbierania wiadomości systemowych.</target>
       </trans-unit>
       <trans-unit id="tl_settings.dateFormat.0">
         <source>Date format</source>
@@ -22,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.dateFormat.1">
         <source>The date format string will be parsed with the PHP date() function.</source>
-        <target>Wprowadź format daty obsługiwany przez funkcję PHP function date().</target>
+        <target>Wprowadź format daty obsługiwany przez funkcję PHP date().</target>
       </trans-unit>
       <trans-unit id="tl_settings.timeFormat.0">
         <source>Time format</source>
@@ -30,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.timeFormat.1">
         <source>The time format string will be parsed with the PHP date() function.</source>
-        <target>Wprowadź format czasu obsługiwany przez funkcję PHP function date().</target>
+        <target>Wprowadź format czasu obsługiwany przez funkcję PHP date().</target>
       </trans-unit>
       <trans-unit id="tl_settings.datimFormat.0">
         <source>Date and time format</source>
@@ -38,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.datimFormat.1">
         <source>The date and time format string will be parsed with the PHP date() function.</source>
-        <target>Wprowadź format daty i czasu obsługiwany przez funkcję PHP function date().</target>
+        <target>Wprowadź format daty i czasu obsługiwany przez funkcję PHP date().</target>
       </trans-unit>
       <trans-unit id="tl_settings.timeZone.0">
         <source>Time zone</source>
@@ -50,11 +51,11 @@
       </trans-unit>
       <trans-unit id="tl_settings.characterSet.0">
         <source>Character set</source>
-        <target>Kodowania znaków dla Contao</target>
+        <target>Kodowanie znaków dla Contao</target>
       </trans-unit>
       <trans-unit id="tl_settings.characterSet.1">
         <source>It is recommended to use UTF-8, so special characters are displayed correctly.</source>
-        <target>Wpisz rodzaj kodowania znaków. Rekomendowane jest używanie UTF-8, zapewnia to poprawne wyświetlanie znaków specjalnych np. diakrytycznych.</target>
+        <target>Wpisz rodzaj kodowania znaków. Rekomendowane jest używanie UTF-8, zapewnia to poprawne wyświetlanie znaków specjalnych, np. diakrytycznych.</target>
       </trans-unit>
       <trans-unit id="tl_settings.disableCron.0">
         <source>Disable the command scheduler</source>
@@ -70,7 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.minifyMarkup.1">
         <source>Minify the HTML markup before it is sent to the browser.</source>
-        <target>Minimalizuj kod źródłowy HTML zanim zostanie wysłany do przeglądarki.</target>
+        <target>Minimalizuj kod źródłowy HTML, zanim zostanie wysłany do przeglądarki.</target>
       </trans-unit>
       <trans-unit id="tl_settings.gzipScripts.0">
         <source>Compress scripts</source>
@@ -86,7 +87,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.resultsPerPage.1">
         <source>Here you can define the number of items per page in the back end.</source>
-        <target>Ilość wyników na stronie jest używana do ograniczenia wyników zapytań w admin panelu, nie dotyczy to wyszukiwarki.</target>
+        <target>Ilość wyników na stronie jest używana do ograniczenia wyników zapytań w admin panelu; nie dotyczy to wyszukiwarki.</target>
       </trans-unit>
       <trans-unit id="tl_settings.maxResultsPerPage.0">
         <source>Maximum items per page</source>
@@ -94,7 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.maxResultsPerPage.1">
         <source>This overall limit takes effect if a user chooses the &quot;show all records&quot; option.</source>
-        <target>Ta opcja ustala maksymalną ilość wyświetlanych rekordów w panelu jeśli użytkownik wybierze opcję &quot;Pokaż wszystkie rekordy&quot;.</target>
+        <target>Ta opcja ustala maksymalną ilość wyświetlanych rekordów w panelu, jeśli użytkownik wybierze opcję &quot;Pokaż wszystkie rekordy&quot;.</target>
       </trans-unit>
       <trans-unit id="tl_settings.fileSyncExclude.0">
         <source>Exclude folders from synchronization</source>
@@ -126,7 +127,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.privacyAnonymizeIp.1">
         <source>Anonymize any IP address that is stored in the database, except in the &lt;em&gt;tl_session&lt;/em&gt; table (the IP address is bound to the session for security reasons).</source>
-        <target>Anonimizuj każdy adres IP, który jest przechowywane w bazie danych, z wyjątkiem tych w tabeli &lt;em&gt;tl_session&lt;/em&gt; (adres IP jest przypisany do sesji ze względów bezpieczeństwa).</target>
+        <target>Anonimizuj każdy adres IP, który jest przechowywany w bazie danych, z wyjątkiem tych w tabeli &lt;em&gt;tl_session&lt;/em&gt; (adres IP jest przypisany do sesji ze względów bezpieczeństwa).</target>
       </trans-unit>
       <trans-unit id="tl_settings.privacyAnonymizeGA.0">
         <source>Anonymize Google Analytics</source>
@@ -158,7 +159,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.folderUrl.1">
         <source>Here you can enable folder-style page aliases like &lt;em&gt;docs/install/download.html&lt;/em&gt; instead of &lt;em&gt;docs-install-download.html&lt;/em&gt;.</source>
-        <target>Tutaj możesz włączyć folderowy styl aliasów stron jak na przykład &lt;em&gt;docs/install/downloads.html&lt;/em&gt; zamiast &lt;em&gt;docs-install-download.html&lt;/em&gt;.</target>
+        <target>Tutaj możesz włączyć folderowy styl aliasów stron, np. &lt;em&gt;docs/install/downloads.html&lt;/em&gt; zamiast &lt;em&gt;docs-install-download.html&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedTags.0">
         <source>Allowed HTML tags</source>
@@ -214,7 +215,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.maxImageWidth.1">
         <source>If the width of an image or movie exceeds this value, it will be adjusted automatically. Set to 0 to disable the limit.</source>
-        <target>Jeśli szerokość obrazka lub filmu przekroczy tą wartość, element zostanie automatycznie dostosowany. Wprowadź 0, aby wyłączyć limit.</target>
+        <target>Jeśli szerokość obrazka lub filmu przekroczy tę wartość, element zostanie automatycznie dostosowany. Wprowadź 0, aby wyłączyć limit.</target>
       </trans-unit>
       <trans-unit id="tl_settings.gdMaxImgWidth.0">
         <source>Maximum GD image width</source>
@@ -222,7 +223,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.gdMaxImgWidth.1">
         <source>Here you can enter the maximum image width that the GD library shall try to handle.</source>
-        <target>Wprowadź maksymalną długość dla obrazka, którą biblioteka GD postara się ujarzmić.</target>
+        <target>Wprowadź maksymalną długość dla obrazka, którą biblioteka GD powinna przetworzyć.</target>
       </trans-unit>
       <trans-unit id="tl_settings.gdMaxImgHeight.0">
         <source>Maximum GD image height</source>
@@ -230,7 +231,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.gdMaxImgHeight.1">
         <source>Here you can enter the maximum image height that the GD library shall try to handle.</source>
-        <target>Wprowadź maksymalną wysokość dla obrazka, którą biblioteka GD postara się ujarzmić.</target>
+        <target>Wprowadź maksymalną wysokość dla obrazka, którą biblioteka GD powinna przetworzyć.</target>
       </trans-unit>
       <trans-unit id="tl_settings.uploadTypes.0">
         <source>Upload file types</source>
@@ -238,7 +239,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.uploadTypes.1">
         <source>Here you can enter a comma separated list of uploadable file types.</source>
-        <target>Wprowadź oddzielone przecinkami rozszerzenia plików, które mogą być wysyłane na serwer. Z przyczyn bezpieczeństwa pobieranie plików ograniczone jest do katalogu &quot;tl_files&quot; i jego podkatalogów.</target>
+        <target>Wprowadź oddzielone przecinkami rozszerzenia plików, które mogą być wysyłane na serwer. Z przyczyn bezpieczeństwa wysyłanie plików ograniczone jest do katalogu &quot;tl_files&quot; i jego podkatalogów.</target>
       </trans-unit>
       <trans-unit id="tl_settings.maxFileSize.0">
         <source>Maximum upload file size</source>
@@ -254,7 +255,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.imageWidth.1">
         <source>Here you can enter the maximum width for image uploads in pixels.</source>
-        <target>Wprowadź maksymalną szerokość wysyłanego obrazka w pikslach.</target>
+        <target>Wprowadź maksymalną szerokość wysyłanego obrazka w pikselach.</target>
       </trans-unit>
       <trans-unit id="tl_settings.imageHeight.0">
         <source>Maximum image height</source>
@@ -262,7 +263,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.imageHeight.1">
         <source>Here you can enter the maximum height for image uploads in pixels.</source>
-        <target>Wprowadź maksymalną wysokość wysyłanego obrazka w pikslach.</target>
+        <target>Wprowadź maksymalną wysokość wysyłanego obrazka w pikselach.</target>
       </trans-unit>
       <trans-unit id="tl_settings.enableSearch.0">
         <source>Enable searching</source>
@@ -278,7 +279,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.indexProtected.1">
         <source>Use this option carefully and always exclude personalized pages from being indexed!</source>
-        <target>Używaj tej opcji z rozwagą i zawsze wykluczaj strony spersonalizowane lub prywatne z indeksowania!</target>
+        <target>Używaj tej opcji z rozwagą i zawsze wykluczaj z indeksowania strony spersonalizowane lub prywatne!</target>
       </trans-unit>
       <trans-unit id="tl_settings.undoPeriod.0">
         <source>Storage time for undo steps</source>
@@ -302,7 +303,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.logPeriod.1">
         <source>Here you can enter the storage time for log entries in seconds (14 days = 1209600 seconds).</source>
-        <target>Wprowadź czas (w sekundach) przez jaki przechowywane będą logi systemowe (domyślnie: 14 dni = 1209600 sekund).</target>
+        <target>Wprowadź czas (w sekundach), przez jaki przechowywane będą logi systemowe (domyślnie: 14 dni = 1209600 sekund).</target>
       </trans-unit>
       <trans-unit id="tl_settings.sessionTimeout.0">
         <source>Session timeout</source>

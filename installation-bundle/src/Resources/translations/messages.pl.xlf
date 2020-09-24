@@ -18,6 +18,7 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
+        <target>Ze względów bezpieczeństwa, instalator został zablokowany po tym, jak hasło zostało wpisane niepoprawnie więcej niż trzy razy z rzędu. Możesz to odblokować w Contao Manager lub w konsoli Contao wykonując polecenie &lt;code&gt;contao:install:unlock&lt;/code&gt;.</target>
         
       </trans-unit>
       <trans-unit id="5">
@@ -87,7 +88,7 @@
       </trans-unit>
       <trans-unit id="18">
         <source>allow_cookies</source>
-        <target>Musisz zaakceptować cisteczka (cookies) aby używać Contao.</target>
+        <target>Musisz zaakceptować cisteczka (cookies), aby używać Contao.</target>
         
       </trans-unit>
       <trans-unit id="19">
@@ -217,7 +218,7 @@
       </trans-unit>
       <trans-unit id="44">
         <source>import_exception</source>
-        <target>Import się nie powiódł! Czy baza danych jest aktualna a pliki szablonów kompatybilne z twoją wersją Conto?</target>
+        <target>Import się nie powiódł! Czy baza danych jest aktualna a pliki szablonów kompatybilne z twoją wersją Contao?</target>
         
       </trans-unit>
       <trans-unit id="45">
@@ -317,7 +318,7 @@
       </trans-unit>
       <trans-unit id="64">
         <source>admin_error</source>
-        <target>Prosimy wypełnić wszystkie pola aby utworzyć administratora!</target>
+        <target>Prosimy wypełnić wszystkie pola, aby utworzyć administratora!</target>
         
       </trans-unit>
       <trans-unit id="65">
@@ -362,6 +363,7 @@
       </trans-unit>
       <trans-unit id="73">
         <source>duplicate_subscriptions</source>
+        <target>Zduplikowane subskrypcje:</target>
         
       </trans-unit>
       <trans-unit id="74">

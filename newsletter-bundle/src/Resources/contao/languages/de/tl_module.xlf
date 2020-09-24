@@ -51,7 +51,7 @@
       </trans-unit>
       <trans-unit id="tl_module.text_subscribe.0">
         <source>Your subscription on %s</source>
-        <target>Ihr Newsletter-Abonnement auf %s</target>
+        <target>Ihr Abonnement auf %s</target>
       </trans-unit>
       <trans-unit id="tl_module.text_subscribe.1">
         <source>You have subscribed to the following channels on ##domain##:
@@ -69,7 +69,7 @@ Bitte klicken Sie ##link## um Ihr Abonnement zu aktivieren. Falls Sie die Bestel
       </trans-unit>
       <trans-unit id="tl_module.text_unsubscribe.0">
         <source>Your subscription on %s</source>
-        <target>Ihr Newsletter-Abonnement auf %s</target>
+        <target>Ihr Abonnement auf %s</target>
       </trans-unit>
       <trans-unit id="tl_module.text_unsubscribe.1">
         <source>You have unsubscribed from the following channels on ##domain##:
