@@ -350,7 +350,7 @@ services:
             - '%contao.image.valid_extensions%'
         public: true
         tags:
-            - { name: container.service_subscriber, id: contao.assets.files_context }
+            - { name: container.service_subscriber, id: contao.assets.assets_context }
 
     Contao\CoreBundle\Mailer\AvailableTransports:
         arguments:

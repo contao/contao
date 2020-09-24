@@ -154,6 +154,6 @@ class ImageResult
 
     private function staticUrl(): string
     {
-        return $this->locator->get('contao.assets.files_context')->getStaticUrl();
+        return $this->locator->get('contao.assets.assets_context')->getStaticUrl();
     }
 }
