@@ -570,6 +570,100 @@ class PictureFactoryTest extends TestCase
     }
 
     /**
+     * @dataProvider getResizeOptionsScenarios
+     */
+    public function testCreatesAPictureWithResizeOptions(?ResizeOptions $resizeOptions, $size, bool $expected): void
+    {
+        $path = $this->getTempDir().'/images/dummy.jpg';
+        $imageMock = $this->createMock(ImageInterface::class);
+
+        $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
+        $pictureGenerator
+            ->method('generate')
+            ->willReturnCallback(
+                function (ImageInterface $image, PictureConfiguration $config, ResizeOptions $options) use ($imageMock, $expected) {
+                    $this->assertSame($expected, $options->getSkipIfDimensionsMatch());
+
+                    return new Picture(['src' => $imageMock, 'srcset' => []], []);
+                }
+            )
+        ;
+
+        $imageFactory = $this->createMock(ImageFactoryInterface::class);
+        $imageFactory
+            ->method('create')
+            ->willReturn($imageMock)
+        ;
+
+        $pictureFactory = $this->getPictureFactory($pictureGenerator, $imageFactory);
+        $pictureFactory->setPredefinedSizes([
+            'size_skip' => [
+                'resizeMode' => ResizeConfiguration::MODE_BOX,
+                'skipIfDimensionsMatch' => true,
+                'items' => [],
+            ],
+            'size_noskip' => [
+                'resizeMode' => ResizeConfiguration::MODE_BOX,
+                'skipIfDimensionsMatch' => false,
+                'items' => [],
+            ],
+        ]);
+
+        $pictureFactory->create($path, $size, $resizeOptions);
+    }
+
+    public function getResizeOptionsScenarios(): \Generator
+    {
+        yield 'Prefer skipIfDimensionsMatch from explicitly set options (1)' => [
+            (new ResizeOptions())->setSkipIfDimensionsMatch(true),
+            'size_skip',
+            true,
+        ];
+
+        yield 'Prefer skipIfDimensionsMatch from explicitly set options (2)' => [
+            (new ResizeOptions())->setSkipIfDimensionsMatch(true),
+            'size_noskip',
+            true,
+        ];
+
+        yield 'Prefer skipIfDimensionsMatch from explicitly set options (3)' => [
+            (new ResizeOptions())->setSkipIfDimensionsMatch(false),
+            'size_skip',
+            false,
+        ];
+
+        yield 'Prefer skipIfDimensionsMatch from explicitly set options (4)' => [
+            (new ResizeOptions())->setSkipIfDimensionsMatch(false),
+            'size_noskip',
+            false,
+        ];
+
+        yield 'Use skipIfDimensionsMatch from predefined size (1)' => [
+            null,
+            'size_skip',
+            true,
+        ];
+
+        yield 'Use skipIfDimensionsMatch from predefined size (2)' => [
+            null,
+            'size_noskip',
+            false,
+        ];
+
+        yield 'Fallback to default resize option when passing a picture configuration' => [
+            null,
+            new PictureConfiguration(),
+            false,
+        ];
+
+        yield 'Fallback to default predefined size' => [
+            null,
+            null,
+            true,
+        ];
+    }
+
+    /**
      * @dataProvider getAspectRatios
      */
     public function testSetHasSingleAspectRatioAttribute(bool $expected, int $imgWidth, int $imgHeight, int $sourceWidth, int $sourceHeight): void
