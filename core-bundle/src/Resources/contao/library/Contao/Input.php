@@ -744,7 +744,18 @@ class Input
 	 */
 	public static function encodeInsertTags($varValue)
 	{
-		return str_replace(array('{{', '}}'), array('&#123;&#123;', '&#125;&#125;'), $varValue);
+		// Recursively encode insert tags
+		if (\is_array($varValue))
+		{
+			foreach ($varValue as $k=>$v)
+			{
+				$varValue[$k] = static::encodeInsertTags($v);
+			}
+
+			return $varValue;
+		}
+
+		return str_replace(array('{{', '}}'), array('&#123;&#123;', '&#125;&#125;'), (string) $varValue);
 	}
 
 	/**
