@@ -30,25 +30,25 @@ class ImageResultTest extends TestCase
 {
     public function testGetPicture(): void
     {
-        $filePathOrImage = 'foo/bar/foobar.png';
+        $filePathOrImage = '/project/dir/foo/bar/foobar.png';
         $sizeConfiguration = [100, 200, 'crop'];
 
         /** @var PictureInterface&MockObject $picture */
         $picture = $this->createMock(PictureInterface::class);
         $pictureFactory = $this->getPictureFactoryMock($filePathOrImage, $sizeConfiguration, $picture);
         $locator = $this->getLocatorMock($pictureFactory);
-        $imageResult = new ImageResult($locator, 'any/project/dir', $filePathOrImage, $sizeConfiguration);
+        $imageResult = new ImageResult($locator, '/project/dir', $filePathOrImage, $sizeConfiguration);
 
         $this->assertSame($picture, $imageResult->getPicture());
     }
 
     public function testGetSourcesAndImg(): void
     {
-        $filePathOrImage = 'foo/bar/foobar.png';
+        $filePathOrImage = '/project/dir/foo/bar/foobar.png';
         $sizeConfiguration = [100, 200, 'crop'];
 
-        $projectDir = 'project/dir';
-        $staticUrl = 'static/url';
+        $projectDir = '/project/dir';
+        $staticUrl = 'https://static.url';
 
         $sources = ['sources result'];
         $img = ['img result'];
@@ -79,13 +79,13 @@ class ImageResultTest extends TestCase
 
     public function testGetImageSrc(): void
     {
-        $filePath = 'foo/bar/foobar.png';
+        $filePathOrImage = '/project/dir/foo/bar/foobar.png';
         $sizeConfiguration = [100, 200, 'crop'];
 
-        $projectDir = 'project/dir';
-        $staticUrl = 'static/url';
+        $projectDir = '/project/dir';
+        $staticUrl = 'https://static.url';
 
-        $img = ['src' => 'foo', 'other' => 'bar'];
+        $img = ['src' => 'https://static.url/foo/bar/foobar.png', 'other' => 'bar'];
 
         /** @var PictureInterface&MockObject $picture */
         $picture = $this->createMock(PictureInterface::class);
@@ -96,11 +96,11 @@ class ImageResultTest extends TestCase
             ->willReturn($img)
         ;
 
-        $pictureFactory = $this->getPictureFactoryMock($filePath, $sizeConfiguration, $picture);
+        $pictureFactory = $this->getPictureFactoryMock($filePathOrImage, $sizeConfiguration, $picture);
         $locator = $this->getLocatorMock($pictureFactory, $staticUrl);
-        $imageResult = new ImageResult($locator, $projectDir, $filePath, $sizeConfiguration);
+        $imageResult = new ImageResult($locator, $projectDir, $filePathOrImage, $sizeConfiguration);
 
-        $this->assertSame('foo', $imageResult->getImageSrc());
+        $this->assertSame('https://static.url/foo/bar/foobar.png', $imageResult->getImageSrc());
     }
 
     public function testGetImageSrcAsPath(): void
@@ -143,7 +143,7 @@ class ImageResultTest extends TestCase
 
     public function testGetOriginalDimensionsFromPathResource(): void
     {
-        $filePath = 'foo/bar/foobar.png';
+        $filePathOrImage = '/project/dir/foo/bar/foobar.png';
         $dimensions = $this->createMock(ImageDimensions::class);
 
         /** @var ImageInterface&MockObject $image */
@@ -159,7 +159,7 @@ class ImageResultTest extends TestCase
         $imageFactory
             ->expects($this->once())
             ->method('create')
-            ->with($filePath)
+            ->with($filePathOrImage)
             ->willReturn($image)
         ;
 
@@ -172,7 +172,7 @@ class ImageResultTest extends TestCase
             ->willReturn($imageFactory)
         ;
 
-        $imageResult = new ImageResult($locator, 'any/project/dir', $filePath);
+        $imageResult = new ImageResult($locator, '/project/dir', $filePathOrImage);
 
         $this->assertSame($dimensions, $imageResult->getOriginalDimensions());
 
@@ -258,7 +258,6 @@ class ImageResultTest extends TestCase
         if (null !== $staticUrl) {
             $context = $this->createMock(ContaoContext::class);
             $context
-                ->expects($this->atLeastOnce())
                 ->method('getStaticUrl')
                 ->willReturn($staticUrl)
             ;
