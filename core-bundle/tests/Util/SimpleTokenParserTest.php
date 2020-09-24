@@ -13,9 +13,12 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Util;
 
 use Contao\CoreBundle\Tests\Fixtures\IteratorAggregateStub;
+use Contao\CoreBundle\Tests\Fixtures\Util\LegacySimpleTokenParser;
 use Contao\CoreBundle\Util\SimpleTokenExpressionLanguage;
 use Contao\CoreBundle\Util\SimpleTokenParser;
+use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\ExpressionLanguage\ExpressionFunction;
 use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
 
@@ -544,6 +547,118 @@ class SimpleTokenParserTest extends TestCase
             'Custom function evaluated!',
             $simpleTokenParser->parse("Custom function {if strtoupper(token) === 'FOO'}evaluated!{endif}", ['token' => 'foo'])
         );
+    }
+
+    /**
+     * @dataProvider provideBackwardsCompatibilitySamples
+     */
+    public function testDoesNotBreakBackwardsCompatibility(string $subject, array $tokens): void
+    {
+        /**
+         * @param SimpleTokenParser|LegacySimpleTokenParser $parser
+         */
+        $evaluate = function ($parser, string $subject, array $tokens): array {
+            $log = [];
+            $exception = null;
+
+            $logger = $this->createMock(LoggerInterface::class);
+            $logger
+                ->method('log')
+                ->willReturnCallback(
+                    static function ($level, $message = null) use (&$log): void {
+                        $log[] = "$level|$message";
+                    }
+                )
+            ;
+
+            $parser->setLogger($logger);
+
+            try {
+                $result = $parser->parse($subject, $tokens);
+            } catch (\Throwable $e) {
+                $result = null;
+                $exception = \get_class($e).'|'.$e->getMessage();
+            }
+
+            return [
+                'result' => $result,
+                'log' => $log,
+                'exception' => $exception,
+            ];
+        };
+
+        $legacyParser = new LegacySimpleTokenParser();
+        $parser = $this->getParser();
+
+        try {
+            $this->assertSame(
+                $evaluate($legacyParser, $subject, $tokens),
+                $evaluate($parser, $subject, $tokens)
+            );
+        } catch (AssertionFailedError $e) {
+            // Show diff for easier TDD
+            echo $subject."\n".$e->getComparisonFailure()->getDiff();
+
+            throw $e;
+        }
+    }
+
+    public function provideBackwardsCompatibilitySamples(): \Generator
+    {
+        yield 'compare using shorthand if (true)' => [
+            '{if foo}match{endif}',
+            ['foo' => true],
+        ];
+
+        yield 'compare using shorthand if (1)' => [
+            '{if foo}match{endif}',
+            ['foo' => 1],
+        ];
+
+        yield 'compare using shorthand if ("")' => [
+            '{if foo}match{endif}',
+            ['foo' => ''],
+        ];
+
+        yield 'compare using shorthand if (null)' => [
+            '{if foo}match{endif}',
+            ['foo' => null],
+        ];
+
+        yield 'compare using shorthand if (unknown variable)' => [
+            '{if unknown}match{endif}',
+            [],
+        ];
+
+        yield 'compare known against unknown variable (unknown first)' => [
+            '{if unknown==foo}match{endif}',
+            ['foo' => 1],
+        ];
+
+        yield 'compare known against unknown variable (unknown second)' => [
+            '{if foo==unknown}match{endif}',
+            ['foo' => 1],
+        ];
+
+        yield 'compare unknown variable against constant' => [
+            '{if foo==null}match{endif}',
+            [],
+        ];
+
+        yield 'use unknown operator' => [
+            '{if foo<=>1}match{endif}',
+            ['foo' => 1],
+        ];
+
+        yield 'unclosed if tag' => [
+            '{if foo==1}match',
+            ['foo' => 1],
+        ];
+
+        yield 'if without condition' => [
+            '{if}match{endif}',
+            ['fo' => true],
+        ];
     }
 
     private function getParser(SimpleTokenExpressionLanguage $expressionLanguage = null): SimpleTokenParser
