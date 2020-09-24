@@ -17,11 +17,14 @@ use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\Image\PictureFactoryInterface;
 use Contao\CoreBundle\Image\Studio\ImageResult;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\Image\Image;
 use Contao\Image\ImageDimensions;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureInterface;
+use Imagine\Image\ImagineInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 class ImageResultTest extends TestCase
 {
@@ -98,6 +101,44 @@ class ImageResultTest extends TestCase
         $imageResult = new ImageResult($locator, $projectDir, $filePath, $sizeConfiguration);
 
         $this->assertSame('foo', $imageResult->getImageSrc());
+    }
+
+    public function testGetImageSrcAsPath(): void
+    {
+        $filePathOrImage = '/project/dir/foo/bar/foobar.png';
+        $sizeConfiguration = [100, 200, 'crop'];
+
+        $projectDir = '/project/dir';
+        $staticUrl = 'https://static.url';
+
+        $filesystem = $this->createMock(Filesystem::class);
+        $filesystem
+            ->method('exists')
+            ->willReturn(true)
+        ;
+
+        $img = [
+            'src' => new Image(
+                $filePathOrImage,
+                $this->createMock(ImagineInterface::class),
+                $filesystem
+            ),
+        ];
+
+        /** @var PictureInterface&MockObject $picture */
+        $picture = $this->createMock(PictureInterface::class);
+        $picture
+            ->expects($this->once())
+            ->method('getImg')
+            ->with()
+            ->willReturn($img)
+        ;
+
+        $pictureFactory = $this->getPictureFactoryMock($filePathOrImage, $sizeConfiguration, $picture);
+        $locator = $this->getLocatorMock($pictureFactory, $staticUrl);
+        $imageResult = new ImageResult($locator, $projectDir, $filePathOrImage, $sizeConfiguration);
+
+        $this->assertSame('foo/bar/foobar.png', $imageResult->getImageSrc(true));
     }
 
     public function testGetOriginalDimensionsFromPathResource(): void
