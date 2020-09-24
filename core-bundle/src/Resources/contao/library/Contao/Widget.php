@@ -1153,7 +1153,7 @@ abstract class Widget extends Controller
 			return '';
 		}
 
-		return (\is_array($varValues) ? \in_array($strOption, $varValues) : $strOption == $varValues) ? ' selected' : '';
+		return \in_array((string) $strOption, array_map('strval', (array) $varValues), true) ? ' selected' : '';
 	}
 
 	/**
