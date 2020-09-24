@@ -2386,7 +2386,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 				}
 
 				// Set the correct empty value (see #6284, #6373)
-				if ($varValue === '')
+				if ((string) $varValue === '')
 				{
 					$varValue = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql']);
 				}

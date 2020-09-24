@@ -208,7 +208,7 @@ function deserialize($varValue, $blnForceArray=false)
 	}
 
 	// Empty string
-	if (!trim($varValue))
+	if (trim($varValue) === '')
 	{
 		return $blnForceArray ? array() : '';
 	}
