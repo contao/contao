@@ -79,7 +79,7 @@ class Studio implements ServiceSubscriberInterface
             self::class,
             'contao.image.picture_factory' => PictureFactoryInterface::class,
             'contao.image.image_factory' => ImageFactoryInterface::class,
-            'contao.assets.assets_context' => ContaoContext::class,
+            'contao.assets.files_context' => ContaoContext::class,
             'contao.framework' => ContaoFramework::class,
         ];
     }

@@ -267,7 +267,7 @@ class ImageResultTest extends TestCase
             ->method('get')
             ->willReturnMap([
                 ['contao.image.picture_factory', $pictureFactory],
-                ['contao.assets.assets_context', $context],
+                ['contao.assets.files_context', $context],
             ])
         ;
 

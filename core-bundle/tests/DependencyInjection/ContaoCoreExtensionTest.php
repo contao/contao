@@ -2155,7 +2155,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(
             [
                 'container.service_subscriber' => [
-                    ['id' => 'contao.assets.assets_context'],
+                    ['id' => 'contao.assets.files_context'],
                 ],
             ],
             $definition->getTags()
