@@ -827,13 +827,7 @@ class tl_files extends Backend
 	 */
 	public function protectFolder(DataContainer $dc)
 	{
-		if (!$dc->activeRecord || !$dc->activeRecord->path)
-		{
-			// This should never happen, because DC_Folder does not support "override all"
-			throw new InvalidArgumentException('The DataContainer object does not contain a valid active record');
-		}
-
-		$strPath = $dc->activeRecord->path;
+		$strPath = $dc->id;
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Only show for folders (see #5660)
