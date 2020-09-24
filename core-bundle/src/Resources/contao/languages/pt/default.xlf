@@ -2320,6 +2320,9 @@ Download %s</target>
         <source>You have to add a root page in the site structure to enter file meta data.</source>
         <target>Necessita adicionar uma página root à estrutura do website para introduzir meta data.</target>
       </trans-unit>
+      <trans-unit id="MSC.unknownOption">
+        <source>Unknown option</source>
+      </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
         <target>Byte</target>

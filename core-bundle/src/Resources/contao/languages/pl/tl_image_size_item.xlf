@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.media.1">
         <source>Here you can define when to use the image size, e.g. &lt;em&gt;(max-width: 600px)&lt;/em&gt;.</source>
-        <target>Tutaj możesz określić kiedy użyć rozmiaru obrazka, np. &lt;em&gt;(max-width: 600px)&lt;/em&gt;.</target>
+        <target>Tutaj możesz określić, kiedy użyć rozmiaru obrazka, np. &lt;em&gt;(max-width: 600px)&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.invisible.0">
         <source>Invisible</source>
@@ -95,7 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.pasteafter.0">
         <source>Paste at the top</source>
-        <target>Wstaw na początku</target>
+        <target>Wklej na początku</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pasteafter.1">
         <source>Paste after media query ID %s</source>
@@ -103,19 +103,19 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.pastenew.0">
         <source>Add new at the top</source>
-        <target>Utwórz nowy element arkusza na początku</target>
+        <target>Utwórz nowe media query na górze</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pastenew.1">
         <source>Add new after media query ID %s</source>
-        <target>Dodaj nowy po media query ID %s</target>
+        <target>Utwórz nowe media query pod media query ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.toggle.0">
         <source>Toggle visibility</source>
-        <target>Włącz lub wyłącz widoczność elementu</target>
+        <target>Ukryj/pokaż media query</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.toggle.1">
         <source>Toggle the visibility of media query ID %s</source>
-        <target>Włącz lub wyłącz widoczność media query ID %s</target>
+        <target>Ukryj/pokaż media query ID %s</target>
       </trans-unit>
     </body>
   </file>

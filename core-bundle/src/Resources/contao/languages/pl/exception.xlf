@@ -19,7 +19,7 @@
       </trans-unit>
       <trans-unit id="XPT.hint">
         <source>To customize this notice, create a custom Twig template overriding &lt;em&gt;%s&lt;/em&gt;.</source>
-        <target>Aby zmienić to powiadomienie, utwórz własną templatkę Twig nadpisującą &lt;em&gt;%s&lt;/em&gt;.</target>
+        <target>Aby zmienić to powiadomienie, utwórz własny szablon Twig nadpisujący &lt;em&gt;%s&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="XPT.errorOccurred">
         <source>An error occurred while executing this script. Something does not work properly.</source>
@@ -35,11 +35,11 @@
       </trans-unit>
       <trans-unit id="XPT.requestToken">
         <source>Invalid request token</source>
-        <target>Nieprawidłowy request token</target>
+        <target>Nieprawidłowy token żądania</target>
       </trans-unit>
       <trans-unit id="XPT.invalidToken">
         <source>The request token could not be verified.</source>
-        <target>Request token nie został zweryfikowany.</target>
+        <target>Token żądania nie został zweryfikowany.</target>
       </trans-unit>
       <trans-unit id="XPT.tokenRetry">
         <source>Please &lt;a href=&quot;javascript:window.location.href=window.location.href&quot;&gt;click this link&lt;/a&gt; and try again. Do not use the back button of your browser.</source>
@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="XPT.tokenExplainOne">
         <source>This error occurs if there is a POST request without a valid authentication token. In Contao 2.10, the referer check has been replaced with a request token system. If the problem persists, you may be using an incompatible third-party extension or have not correctly updated your Contao installation.</source>
-        <target>Ten problem pojawia się, gdy występuje zapytanie POST bez prawidłowego tokena autoryzyjącego. W Contao 2.10, sprawdzanie referer został zastąpione przez system request token. Jeśli ten problem się utrzymuje, być może używasz niekompatyblinych rozszerzeń trzecich lub nieprawidłowo aktualizowałeś Contao.</target>
+        <target>Ten problem pojawia się, gdy występuje zapytanie POST bez prawidłowego tokena autoryzyjącego. W Contao 2.10, sprawdzanie referer został zastąpione przez system token żądania. Jeśli ten problem się utrzymuje, być może używasz niekompatyblinych rozszerzeń trzecich lub nieprawidłowo aktualizowałeś Contao.</target>
       </trans-unit>
       <trans-unit id="XPT.tokenExplainTwo">
         <source>For more information, search the &lt;a href=&quot;https://contao.org/en/frequently-asked.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/en/support.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
@@ -99,7 +99,7 @@
       </trans-unit>
       <trans-unit id="XPT.noLayoutSpecified">
         <source>The page you have requested has not yet been associated with a page layout.</source>
-        <target>Strona, którą chcesz wyświetlić nie ma przypisanego układu strony.</target>
+        <target>Strona, którą chcesz wyświetlić, nie ma przypisanego układu strony.</target>
       </trans-unit>
       <trans-unit id="XPT.noLayoutFix">
         <source>Make sure that you have assigned a page layout to each website root page in the site structure.</source>
@@ -119,7 +119,7 @@
       </trans-unit>
       <trans-unit id="XPT.noActiveFix">
         <source>Most likely, the website is still under development and will be online in a few days. If you still think that there is something wrong, &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let him know.</source>
-        <target>Prawdopodobnie strona jest ciągle w fazie produkcji i będzie online za kilka dni. Jeśli myślisz, że jest coś nie tak, &lt;a href=&quot;%s&quot;&gt;skontaktuj się z administratorem&lt;/a&gt; i powiadom go o problemie.</target>
+        <target>Prawdopodobnie strona jest ciągle w fazie rozwoju i będzie online za kilka dni. Jeśli myślisz, że jest coś nie tak, &lt;a href=&quot;%s&quot;&gt;skontaktuj się z administratorem&lt;/a&gt; i powiadom go o problemie.</target>
       </trans-unit>
       <trans-unit id="XPT.unavailable">
         <source>Service unavailable</source>
@@ -143,7 +143,7 @@
       </trans-unit>
       <trans-unit id="XPT.insecureExplain">
         <source>Contao 4 no longer relies on &lt;code&gt;.htaccess&lt;/code&gt; files to protect folders and instead uses a public subfolder as document root. Anything above the document root must not be accessible via HTTP, otherwise anyone could download non-public resources including sensitive data such as configuration files.</source>
-        <target>Contao 4 nie polega już na plikach &lt;code&gt;.htaccess&lt;/code&gt; w celu ochrony plików, a zamiast tego używa publicznego podkatalogu jako document root. Wszystko powyżej document root nie może być dostępne przez HTTP. W przeciwnym wypadku każdy mógłby pobrać niepubliczne pliki zawierające wrażliwe dane, takie jak pliki konfiguracji.</target>
+        <target>Contao 4 nie polega już na plikach &lt;code&gt;.htaccess&lt;/code&gt; w celu ochrony katalogów, a zamiast tego używa publicznego podkatalogu jako document root. Wszystko powyżej document root nie może być dostępne przez HTTP. W przeciwnym wypadku każdy mógłby pobrać niepubliczne pliki zawierające wrażliwe dane, takie jak pliki konfiguracji.</target>
       </trans-unit>
     </body>
   </file>

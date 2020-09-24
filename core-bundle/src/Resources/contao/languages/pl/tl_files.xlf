@@ -123,11 +123,11 @@
       </trans-unit>
       <trans-unit id="tl_files.dropzone">
         <source>Click or drop files here to upload</source>
-        <target>Kliknij lub upuść pliki tutaj aby je wysłać</target>
+        <target>Kliknij lub upuść pliki tutaj, aby je wysłać</target>
       </trans-unit>
       <trans-unit id="tl_files.fileLocation">
         <source>File location: %s</source>
-        <target>Lokacja pliku: %s</target>
+        <target>Lokalizacja pliku: %s</target>
       </trans-unit>
       <trans-unit id="tl_files.syncAdded">
         <source>Added the file or folder &quot;%s&quot;</source>
@@ -135,7 +135,7 @@
       </trans-unit>
       <trans-unit id="tl_files.syncChanged">
         <source>Updated the hash of the file or folder &quot;%s&quot;</source>
-        <target>Zaktualizowano hasha pliku lub folderu &quot;%s&quot;</target>
+        <target>Zaktualizowano hash pliku lub folderu &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_files.syncUnchanged">
         <source>Found the file or folder &quot;%s&quot;</source>
@@ -175,7 +175,7 @@
       </trans-unit>
       <trans-unit id="tl_files.cut.1">
         <source>Move file or folder &quot;%s&quot;</source>
-        <target>Przenieś ten plik lub katalog</target>
+        <target>Przenieś plik lub katalog &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_files.copy.0">
         <source>Duplicate file or folder</source>
@@ -183,7 +183,7 @@
       </trans-unit>
       <trans-unit id="tl_files.copy.1">
         <source>Duplicate file or folder &quot;%s&quot;</source>
-        <target>Kopiuj ten plik lub katalog</target>
+        <target>Kopiuj plik lub katalog &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_files.edit.0">
         <source>Edit file or folder</source>
@@ -199,7 +199,7 @@
       </trans-unit>
       <trans-unit id="tl_files.delete.1">
         <source>Delete file or folder &quot;%s&quot;</source>
-        <target>Skasuj ten plik lub katalog</target>
+        <target>Skasuj plik lub katalog &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_files.show.0">
         <source>File or folder details</source>
@@ -215,7 +215,7 @@
       </trans-unit>
       <trans-unit id="tl_files.source.1">
         <source>Edit file &quot;%s&quot;</source>
-        <target>Edytuj zawartość pliku</target>
+        <target>Edytuj zawartość pliku &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_files.protect.0">
         <source>Protect folder</source>

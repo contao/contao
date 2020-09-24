@@ -2319,6 +2319,10 @@ Diese E-Mail wurde von Contao generiert. Sie können nicht darauf antworten.
         <source>You have to add a root page in the site structure to enter file meta data.</source>
         <target>Sie müssen einen Startpunkt in der Seitenstruktur anlegen, um Metadaten einzugeben.</target>
       </trans-unit>
+      <trans-unit id="MSC.unknownOption">
+        <source>Unknown option</source>
+        <target>Unbekannte Option</target>
+      </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
         <target>Byte</target>

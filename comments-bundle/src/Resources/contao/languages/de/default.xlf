@@ -91,7 +91,7 @@ Bearbeiten: %s
       </trans-unit>
       <trans-unit id="MSC.com_optInSubject">
         <source>Your subscription on %s</source>
-        <target>Ihr Newsletter-Abonnement auf %s</target>
+        <target>Ihr Abonnement auf %s</target>
       </trans-unit>
       <trans-unit id="MSC.com_optInMessage">
         <source>Hello %s,

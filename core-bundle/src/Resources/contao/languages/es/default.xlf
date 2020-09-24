@@ -223,6 +223,7 @@
       </trans-unit>
       <trans-unit id="ERR.forbiddenExtensions">
         <source>The following file extensions are not allowed: %s</source>
+        <target>No se permiten las siguientes extensiones de archivo:</target>
       </trans-unit>
       <trans-unit id="ERR.invalidPages">
         <source>Your selection contains invalid page IDs!</source>
@@ -1338,6 +1339,7 @@
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
         <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <target>Obtenga más información sobre cómo acelerar su flujo de trabajo mediante el uso de &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;atajos de teclado&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -2316,6 +2318,9 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
       <trans-unit id="MSC.metaNoLanguages">
         <source>You have to add a root page in the site structure to enter file meta data.</source>
         <target>Debe agregar una página raíz en la estructura del sitio para introducir metadatos de archivo.</target>
+      </trans-unit>
+      <trans-unit id="MSC.unknownOption">
+        <source>Unknown option</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
