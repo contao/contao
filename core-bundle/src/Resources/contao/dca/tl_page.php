@@ -323,6 +323,10 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'load_callback' => array
+			(
+				array('tl_page', 'loadDns')
+			),
 			'save_callback' => array
 			(
 				array('tl_page', 'checkDns')
@@ -1293,6 +1297,18 @@ class tl_page extends Contao\Backend
 	}
 
 	/**
+	 * Load the DNS settings
+	 *
+	 * @param mixed $varValue
+	 *
+	 * @return mixed
+	 */
+	public function loadDns($varValue)
+	{
+		return Contao\Idna::decode($varValue);
+	}
+
+	/**
 	 * Check the DNS settings
 	 *
 	 * @param mixed $varValue
@@ -1301,7 +1317,7 @@ class tl_page extends Contao\Backend
 	 */
 	public function checkDns($varValue)
 	{
-		return preg_replace('#^(?:[a-z]+://)?([a-z0-9[\].:_-]+).*$#i', '$1', $varValue);
+		return Contao\Idna::encode(preg_replace('#^(?:[a-z]+://)?([\pN\pL[\].:_-]+).*$#iu', '$1', $varValue));
 	}
 
 	/**
