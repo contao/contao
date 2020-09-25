@@ -47,16 +47,14 @@ class InstallerTest extends TestCase
 
         $this->assertArrayHasKey('ALTER_TABLE', $commands);
 
-        $expected = [
-            'ALTER TABLE tl_foo ENGINE = InnoDB ROW_FORMAT = DYNAMIC, KEY_BLOCK_SIZE=0',
+        $this->assertHasStatement(
+            $commands['ALTER_TABLE'],
+            'ALTER TABLE tl_foo ENGINE = InnoDB ROW_FORMAT = DYNAMIC, KEY_BLOCK_SIZE=0'
+        );
+        $this->assertHasStatement(
+            $commands['ALTER_TABLE'],
             'ALTER TABLE tl_foo CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci'
-        ];
-
-        foreach ($expected as $statement) {
-            $key = md5($statement);
-            $this->assertArrayHasKey($key, $commands['ALTER_TABLE']);
-            $this->assertSame($statement, $commands['ALTER_TABLE'][$key]);
-        }
+        );
     }
 
     public function testDeletesTheIndexesWhenChangingTheDatabaseEngine(): void
@@ -96,10 +94,7 @@ class InstallerTest extends TestCase
         $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_foo']);
         $commands = $installer->getCommands();
 
-        $this->assertSame(
-            'DROP INDEX foo_idx ON tl_foo',
-            $commands['ALTER_TABLE']['db24ce0a48761ea6f77d644a422a3fe0']
-        );
+        $this->assertHasStatement($commands['ALTER_TABLE'], 'DROP INDEX foo_idx ON tl_foo');
     }
 
     public function testDeletesTheIndexesWhenChangingTheCollation(): void
@@ -139,10 +134,7 @@ class InstallerTest extends TestCase
         $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_foo']);
         $commands = $installer->getCommands();
 
-        $this->assertSame(
-            'DROP INDEX foo_idx ON tl_foo',
-            $commands['ALTER_TABLE']['db24ce0a48761ea6f77d644a422a3fe0']
-        );
+        $this->assertHasStatement($commands['ALTER_TABLE'], 'DROP INDEX foo_idx ON tl_foo');
     }
 
     public function testChangesTheRowFormatIfInnodbIsUsed(): void
@@ -167,11 +159,10 @@ class InstallerTest extends TestCase
         $commands = $installer->getCommands();
 
         $this->assertArrayHasKey('ALTER_TABLE', $commands);
-        $this->assertArrayHasKey('754c11ae50c43c54456fcd31da3baccb', $commands['ALTER_TABLE']);
 
-        $this->assertSame(
-            'ALTER TABLE tl_bar ENGINE = InnoDB ROW_FORMAT = DYNAMIC',
-            $commands['ALTER_TABLE']['754c11ae50c43c54456fcd31da3baccb']
+        $this->assertHasStatement(
+            $commands['ALTER_TABLE'],
+            'ALTER TABLE tl_bar ENGINE = InnoDB ROW_FORMAT = DYNAMIC, KEY_BLOCK_SIZE=0'
         );
     }
 
@@ -199,10 +190,7 @@ class InstallerTest extends TestCase
         $this->assertArrayHasKey('ALTER_TABLE', $commands);
         $this->assertArrayHasKey('537747ae8a3a53e6277dfccf354bc7da', $commands['ALTER_TABLE']);
 
-        $this->assertSame(
-            'ALTER TABLE tl_foo ENGINE = InnoDB',
-            $commands['ALTER_TABLE']['537747ae8a3a53e6277dfccf354bc7da']
-        );
+        $this->assertHasStatement($commands['ALTER_TABLE'], 'ALTER TABLE tl_foo ENGINE = InnoDB');
     }
 
     public function testDoesNotChangeTheRowFormatIfTableOptionsAreNotAvailable(): void
@@ -251,7 +239,7 @@ class InstallerTest extends TestCase
         $commands = $installer->getCommands();
 
         $this->assertArrayHasKey('ALTER_DROP', $commands);
-        $this->assertSame('ALTER TABLE tl_foo DROP bar', reset($commands['ALTER_DROP']));
+        $this->assertHasStatement($commands['ALTER_DROP'], 'ALTER TABLE tl_foo DROP bar');
     }
 
     public function testReturnsTheAddColumnCommands(): void
@@ -277,10 +265,10 @@ class InstallerTest extends TestCase
         $commands = $installer->getCommands();
 
         $this->assertArrayHasKey('ALTER_ADD', $commands);
-
-        $commands = array_values($commands['ALTER_ADD']);
-
-        $this->assertSame('ALTER TABLE tl_foo ADD bar VARCHAR(255) NOT NULL', $commands[0]);
+        $this->assertHasStatement(
+            $commands['ALTER_ADD'],
+            'ALTER TABLE tl_foo ADD bar VARCHAR(255) NOT NULL'
+        );
     }
 
     public function testHandlesDecimalsInTheAddColumnCommands(): void
@@ -298,10 +286,10 @@ class InstallerTest extends TestCase
         $commands = $installer->getCommands();
 
         $this->assertArrayHasKey('ALTER_ADD', $commands);
-
-        $commands = array_values($commands['ALTER_ADD']);
-
-        $this->assertSame('ALTER TABLE tl_foo ADD foo NUMERIC(9,2) NOT NULL', $commands[0]);
+        $this->assertHasStatement(
+            $commands['ALTER_ADD'],
+            'ALTER TABLE tl_foo ADD foo NUMERIC(9,2) NOT NULL'
+        );
     }
 
     public function testHandlesDefaultsInTheAddColumnCommands(): void
@@ -319,10 +307,10 @@ class InstallerTest extends TestCase
         $commands = $installer->getCommands();
 
         $this->assertArrayHasKey('ALTER_ADD', $commands);
-
-        $commands = array_values($commands['ALTER_ADD']);
-
-        $this->assertSame("ALTER TABLE tl_foo ADD foo VARCHAR(255) DEFAULT ',' NOT NULL", $commands[0]);
+        $this->assertHasStatement(
+            $commands['ALTER_ADD'],
+            "ALTER TABLE tl_foo ADD foo VARCHAR(255) DEFAULT ',' NOT NULL"
+        );
     }
 
     public function testHandlesMixedColumnsInTheAddColumnCommands(): void
@@ -355,14 +343,10 @@ class InstallerTest extends TestCase
         $commands = $installer->getCommands();
 
         $this->assertArrayHasKey('ALTER_ADD', $commands);
-
-        $commands = array_values($commands['ALTER_ADD']);
-
-        $this->assertCount(4, $commands);
-        $this->assertContains('ALTER TABLE tl_foo ADD foo1 VARCHAR(255) NOT NULL', $commands);
-        $this->assertContains('ALTER TABLE tl_foo ADD foo2 INT NOT NULL', $commands);
-        $this->assertContains('ALTER TABLE tl_foo ADD foo3 NUMERIC(9,2) NOT NULL', $commands);
-        $this->assertContains("ALTER TABLE tl_foo ADD foo4 VARCHAR(255) DEFAULT ',' NOT NULL", $commands);
+        $this->assertHasStatement($commands['ALTER_ADD'], 'ALTER TABLE tl_foo ADD foo1 VARCHAR(255) NOT NULL');
+        $this->assertHasStatement($commands['ALTER_ADD'], 'ALTER TABLE tl_foo ADD foo2 INT NOT NULL');
+        $this->assertHasStatement($commands['ALTER_ADD'], 'ALTER TABLE tl_foo ADD foo3 NUMERIC(9,2) NOT NULL');
+        $this->assertHasStatement($commands['ALTER_ADD'], "ALTER TABLE tl_foo ADD foo4 VARCHAR(255) DEFAULT ',' NOT NULL");
     }
 
     public function testReturnsNoCommandsIfTheSchemasAreIdentical(): void
@@ -386,6 +370,13 @@ class InstallerTest extends TestCase
         $commands = $installer->getCommands();
 
         $this->assertEmpty($commands);
+    }
+
+    private function assertHasStatement(array $commands, string $expected): void
+    {
+        $key = md5($expected);
+        $this->assertArrayHasKey($key, $commands, 'Expected key '.$key.' for statement "'.$expected.'"');
+        $this->assertSame($expected, $commands[$key]);
     }
 
     /**
