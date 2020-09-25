@@ -1305,7 +1305,7 @@ class tl_page extends Contao\Backend
 	 */
 	public function loadDns($varValue)
 	{
-		return Idna::decode($varValue);
+		return Contao\Idna::decode($varValue);
 	}
 
 	/**
@@ -1317,7 +1317,7 @@ class tl_page extends Contao\Backend
 	 */
 	public function checkDns($varValue)
 	{
-		return Idna::encode(preg_replace('#^(?:[a-z]+://)?([\pN\pL[\].:_-]+).*$#iu', '$1', $varValue));
+		return Contao\Idna::encode(preg_replace('#^(?:[a-z]+://)?([\pN\pL[\].:_-]+).*$#iu', '$1', $varValue));
 	}
 
 	/**
