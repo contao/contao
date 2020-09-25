@@ -46,18 +46,17 @@ class InstallerTest extends TestCase
         $commands = $installer->getCommands();
 
         $this->assertArrayHasKey('ALTER_TABLE', $commands);
-        $this->assertArrayHasKey('d21451588bc7442c256f8a0be02c3430', $commands['ALTER_TABLE']);
-        $this->assertArrayHasKey('fb9f8dee53c39b7be92194908d98731e', $commands['ALTER_TABLE']);
 
-        $this->assertSame(
-            'ALTER TABLE tl_foo ENGINE = InnoDB ROW_FORMAT = DYNAMIC',
-            $commands['ALTER_TABLE']['d21451588bc7442c256f8a0be02c3430']
-        );
+        $expected = [
+            'ALTER TABLE tl_foo ENGINE = InnoDB ROW_FORMAT = DYNAMIC, KEY_BLOCK_SIZE=0',
+            'ALTER TABLE tl_foo CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci'
+        ];
 
-        $this->assertSame(
-            'ALTER TABLE tl_foo CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci',
-            $commands['ALTER_TABLE']['fb9f8dee53c39b7be92194908d98731e']
-        );
+        foreach ($expected as $statement) {
+            $key = md5($statement);
+            $this->assertArrayHasKey($key, $commands['ALTER_TABLE']);
+            $this->assertSame($statement, $commands['ALTER_TABLE'][$key]);
+        }
     }
 
     public function testDeletesTheIndexesWhenChangingTheDatabaseEngine(): void
