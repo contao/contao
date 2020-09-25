@@ -157,6 +157,7 @@ class ContentMedia extends ContentElement
 		}
 		else
 		{
+			// $this->size might contain image size data, therefore unset it (see #2351)
 			$this->Template->size = '';
 		}
 
