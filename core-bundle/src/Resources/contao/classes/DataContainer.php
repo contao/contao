@@ -969,6 +969,27 @@ abstract class DataContainer extends \Backend
 	}
 
 	/**
+	 * Return the data-picker-value attribute with the currently selected picker values (see #1816)
+	 *
+	 * @return string
+	 */
+	protected function getPickerValueAttribute()
+	{
+		// Only load the previously selected values for the checkbox field type (see #2346)
+		if ($this->strPickerFieldType != 'checkbox')
+		{
+			return '';
+		}
+
+		$values = array_map($this->objPickerCallback, $this->arrPickerValue);
+		$values = array_map('strval', $values);
+		$values = json_encode($values);
+		$values = htmlspecialchars($values);
+
+		return ' data-picker-value="' . $values . '"';
+	}
+
+	/**
 	 * Build the sort panel and return it as string
 	 *
 	 * @return string
