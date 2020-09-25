@@ -2,6 +2,8 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.10.2] (2020-09-25)
+
 ## [4.10.1] (2020-09-24)
 
 **Fixed issues:**
