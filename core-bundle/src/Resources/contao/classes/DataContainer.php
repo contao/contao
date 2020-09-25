@@ -969,14 +969,14 @@ abstract class DataContainer extends \Backend
 	}
 
 	/**
-	 * Returns a data-picker-value attribute with the currently selected picker values (#1816)
+	 * Return the data-picker-value attribute with the currently selected picker values (see #1816)
 	 *
 	 * @return string
 	 */
 	protected function getPickerValueAttribute()
 	{
-		// Only load the previously selected values for the checkbox field type (#2346)
-		if ('checkbox' !== $this->strPickerFieldType)
+		// Only load the previously selected values for the checkbox field type (see #2346)
+		if ($this->strPickerFieldType != 'checkbox')
 		{
 			return '';
 		}
