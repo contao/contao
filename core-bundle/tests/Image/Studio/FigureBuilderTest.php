@@ -693,8 +693,12 @@ class FigureBuilderTest extends TestCase
             $relativeFilePathWithInvalidExtension, [null, $relativeFilePathWithInvalidExtension], false,
         ];
 
-        yield 'external url/path with valid extension' => [
+        yield 'external url/path with valid extension (1)' => [
             'https://example.com/valid_extension.png', [null, 'https://example.com/valid_extension.png'],
+        ];
+
+        yield 'external url/path with valid extension (2)' => [
+            'https://example.com/valid_extension.PNG', [null, 'https://example.com/valid_extension.PNG'],
         ];
 
         yield 'external url/path with invalid extension' => [
