@@ -1,5 +1,10 @@
 # Change log
 
+## 4.4.53 (2020-09-25)
+
+ * Fix picker for providers with insert tags (see #2353).
+ * Correctly protect new folders (see #2340).
+
 ## 4.4.52 (2020-09-24)
 
  * Prevent insert tag injections in forms (CVE-2020-25768).
