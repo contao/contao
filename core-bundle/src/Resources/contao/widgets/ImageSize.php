@@ -145,6 +145,10 @@ class ImageSize extends \Widget
 			{
 				return true;
 			}
+			elseif (parent::isValidOption($varInput))
+			{
+				return true;
+			}
 		}
 
 		return false;
