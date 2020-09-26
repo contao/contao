@@ -164,7 +164,7 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
 
     private function enhanceImagineException(ImagineRuntimeException $exception, ImageInterface $image): \Throwable
     {
-        $format = Path::getExtension($image->getPath());
+        $format = Path::getExtension($image->getPath(), true);
 
         if (!$this->formatIsSupported($format, $image->getImagine())) {
             return new \RuntimeException(sprintf('Image format "%s" is not supported in %s on this environment. Consider removing this format from contao.image.valid_extensions or switch the contao.image.imagine_service to an implementation that supports it.', $format, \get_class($image->getImagine())), $exception->getCode(), $exception);
