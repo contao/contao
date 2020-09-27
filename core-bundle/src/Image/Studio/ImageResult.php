@@ -18,6 +18,7 @@ use Contao\Image\ImageDimensions;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureInterface;
+use Contao\Image\ResizerInterface;
 use Psr\Container\ContainerInterface;
 use Webmozart\PathUtil\Path;
 
@@ -150,6 +151,11 @@ class ImageResult
     private function pictureFactory(): PictureFactoryInterface
     {
         return $this->locator->get('contao.image.picture_factory');
+    }
+
+    private function resizer(): ResizerInterface
+    {
+        return $this->locator->get('contao.image.resizer');
     }
 
     private function staticUrl(): string
