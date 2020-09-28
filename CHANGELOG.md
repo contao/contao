@@ -2,6 +2,13 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.7] (2020-09-25)
+
+**Fixed issues:**
+
+- [#2343] Only use $dc->id in the protectFolder() method ([leofeyer])
+- [#2342] Fix entering 0 in the back end ([leofeyer])
+
 ## [4.9.6] (2020-09-24)
 
 **New features:**
@@ -415,6 +422,7 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.7]: https://github.com/contao/contao/releases/tag/4.9.7
 [4.9.6]: https://github.com/contao/contao/releases/tag/4.9.6
 [4.9.5]: https://github.com/contao/contao/releases/tag/4.9.5
 [4.9.4]: https://github.com/contao/contao/releases/tag/4.9.4
@@ -443,6 +451,8 @@ This project adheres to [Semantic Versioning].
 [Tastaturberuf]: https://github.com/Tastaturberuf
 [Toflar]: https://github.com/Toflar
 [xchs]: https://github.com/xchs
+[#2343]: https://github.com/contao/contao/pull/2343
+[#2342]: https://github.com/contao/contao/pull/2342
 [#2148]: https://github.com/contao/contao/pull/2148
 [#2313]: https://github.com/contao/contao/pull/2313
 [#2320]: https://github.com/contao/contao/pull/2320
