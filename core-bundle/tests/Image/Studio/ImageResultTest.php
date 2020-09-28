@@ -18,6 +18,7 @@ use Contao\CoreBundle\Image\PictureFactoryInterface;
 use Contao\CoreBundle\Image\Studio\ImageResult;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\DeferredImage;
+use Contao\Image\DeferredImageInterface;
 use Contao\Image\DeferredResizerInterface;
 use Contao\Image\Image;
 use Contao\Image\ImageDimensions;
@@ -200,7 +201,6 @@ class ImageResultTest extends TestCase
      */
     public function testCreateIfDeferred(array $img, array $sources, array $expectedDeferredImages): void
     {
-        /** @var PictureInterface&MockObject $picture */
         $picture = $this->createMock(PictureInterface::class);
         $picture
             ->expects($this->once())
@@ -342,7 +342,26 @@ class ImageResultTest extends TestCase
 
     public function testCreateIfDeferredFailsWithoutDeferredResizer(): void
     {
+        $picture = $this->createMock(PictureInterface::class);
+        $picture
+            ->expects($this->once())
+            ->method('getSources')
+            ->with()
+            ->willReturn([])
+        ;
+
+        $picture
+            ->expects($this->once())
+            ->method('getImg')
+            ->with()
+            ->willReturn(['src' => $this->createMock(DeferredImageInterface::class)])
+        ;
+
         $pictureFactory = $this->createMock(PictureFactoryInterface::class);
+        $pictureFactory
+            ->method('create')
+            ->willReturn($picture)
+        ;
 
         $nonDeferredResizer = $this->createMock(Resizer::class);
 
@@ -359,6 +378,45 @@ class ImageResultTest extends TestCase
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('The "contao.image.resizer" service does not support deferred resizing.');
+
+        $imageResult->createIfDeferred();
+    }
+
+    public function testCreateIfDeferredDoesNotFailWithoutDeferredResizerIfThereAreNoDeferredImages(): void
+    {
+        $picture = $this->createMock(PictureInterface::class);
+        $picture
+            ->expects($this->once())
+            ->method('getSources')
+            ->with()
+            ->willReturn([])
+        ;
+
+        $picture
+            ->expects($this->once())
+            ->method('getImg')
+            ->with()
+            ->willReturn([])
+        ;
+
+        $pictureFactory = $this->createMock(PictureFactoryInterface::class);
+        $pictureFactory
+            ->method('create')
+            ->willReturn($picture)
+        ;
+
+        $nonDeferredResizer = $this->createMock(Resizer::class);
+
+        $locator = $this->createMock(ContainerInterface::class);
+        $locator
+            ->method('get')
+            ->willReturnMap([
+                ['contao.image.picture_factory', $pictureFactory],
+                ['contao.image.resizer', $nonDeferredResizer],
+            ])
+        ;
+
+        $imageResult = new ImageResult($locator, '/project/dir', '/project/dir/image.jpg');
 
         $imageResult->createIfDeferred();
     }

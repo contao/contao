@@ -154,12 +154,6 @@ class ImageResult
      */
     public function createIfDeferred(): void
     {
-        $resizer = $this->resizer();
-
-        if (!$resizer instanceof DeferredResizerInterface) {
-            throw new \RuntimeException('The "contao.image.resizer" service does not support deferred resizing.');
-        }
-
         $picture = $this->getPicture();
 
         $array_flatten = static function (array $array): array {
@@ -186,6 +180,16 @@ class ImageResult
             $findDeferredImages($picture->getImg()),
             $array_flatten(array_map($findDeferredImages, $picture->getSources()))
         );
+
+        if (empty($deferredImages)) {
+            return;
+        }
+
+        $resizer = $this->resizer();
+
+        if (!$resizer instanceof DeferredResizerInterface) {
+            throw new \RuntimeException('The "contao.image.resizer" service does not support deferred resizing.');
+        }
 
         $resizedPaths = [];
 
