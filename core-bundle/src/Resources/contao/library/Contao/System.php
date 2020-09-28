@@ -304,10 +304,12 @@ abstract class System
 			return false;
 		}
 
-		// Only cache the remove service IDs in debug mode
-		$removedIds = $container->getParameter('kernel.debug') ? (static::$removedServiceIds ?: $container->getRemovedIds()) : $container->getRemovedIds();
+		if (null === static::$removedServiceIds)
+		{
+			static::$removedServiceIds = $container->getRemovedIds();
+		}
 
-		return isset($removedIds[$strClass]);
+		return isset(static::$removedServiceIds[$strClass]);
 	}
 
 	/**
