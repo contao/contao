@@ -15,6 +15,7 @@ namespace Contao;
  *
  * @property integer $maxlength
  * @property array   $options
+ * @property array   $unknownOption
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -145,10 +146,11 @@ class ImageSize extends \Widget
 			{
 				return true;
 			}
-			elseif (parent::isValidOption($varInput))
-			{
-				return true;
-			}
+		}
+
+		if ($varInput == $this->unknownOption[2])
+		{
+			return true;
 		}
 
 		return false;
@@ -202,6 +204,17 @@ class ImageSize extends \Widget
 
 				$arrOptions[] = sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', \StringUtil::specialchars($strKey), implode('', $arrOptgroups));
 			}
+		}
+
+		// If the user cannot select the current value, add it as unknown option,
+		// so it does not get lost when saving the record (see #920)
+		if (isset($this->unknownOption))
+		{
+			$arrOptions[] = sprintf(
+				'<option value="%s" selected>%s</option>',
+				StringUtil::specialchars($this->unknownOption[2]),
+				$GLOBALS['TL_LANG']['MSC']['unknownOption']
+			);
 		}
 
 		$arrFields[] = sprintf(

@@ -17,6 +17,7 @@ namespace Contao;
  * @property integer $size
  * @property boolean $multiple
  * @property array   $options
+ * @property array   $unknownOption
  * @property boolean $chosen
  *
  * @author Leo Feyer <https://github.com/leofeyer>
@@ -97,6 +98,28 @@ class SelectMenu extends \Widget
 	}
 
 	/**
+	 * Check whether an input is one of the given options
+	 *
+	 * @param mixed $varInput The input string or array
+	 *
+	 * @return boolean True if the selected option exists
+	 */
+	protected function isValidOption($varInput)
+	{
+		if (parent::isValidOption($varInput))
+		{
+			return true;
+		}
+
+		if ($varInput == $this->unknownOption[0])
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Generate the widget and return it as string
 	 *
 	 * @return string
@@ -145,6 +168,17 @@ class SelectMenu extends \Widget
 
 				$arrOptions[] = sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', \StringUtil::specialchars($strKey), implode('', $arrOptgroups));
 			}
+		}
+
+		// If the user cannot select the current value, add it as unknown option,
+		// so it does not get lost when saving the record (see #920)
+		if (isset($this->unknownOption))
+		{
+			$arrOptions[] = sprintf(
+				'<option value="%s" selected>%s</option>',
+				StringUtil::specialchars($this->unknownOption[0]),
+				$GLOBALS['TL_LANG']['MSC']['unknownOption']
+			);
 		}
 
 		// Chosen

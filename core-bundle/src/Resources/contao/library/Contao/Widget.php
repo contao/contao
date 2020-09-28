@@ -1390,12 +1390,9 @@ abstract class Widget extends \Controller
 
 			$unknown = array_filter($unknown);
 
-			// If the value is not in the options array, the current user most
-			// likely cannot access it. We add the value as unknown option, so
-			// it does not get lost when saving the record (see #920).
-			foreach ($unknown as $value)
+			if (!empty($unknown))
 			{
-				$arrAttributes['options'][] = array('value'=>$value, 'label'=>$GLOBALS['TL_LANG']['MSC']['unknownOption']);
+				$arrAttributes['unknownOption'] = $unknown;
 			}
 		}
 
