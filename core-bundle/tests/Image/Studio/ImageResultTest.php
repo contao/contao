@@ -224,11 +224,16 @@ class ImageResultTest extends TestCase
 
         $deferredResizer = $this->createMock(DeferredResizerInterface::class);
         $deferredResizer
-            ->expects($this->exactly(\count($expectedDeferredImages)))
+            ->expects(
+                empty($expectedDeferredImages) ?
+                    $this->never() : $this->atLeast(\count($expectedDeferredImages))
+            )
             ->method('resizeDeferredImage')
             ->with($this->callback(
                 static function ($deferredImage) use (&$expectedDeferredImages) {
-                    unset($expectedDeferredImages[array_search($deferredImage, $expectedDeferredImages, true)]);
+                    if (false !== ($key = array_search($deferredImage, $expectedDeferredImages, true))) {
+                        unset($expectedDeferredImages[$key]);
+                    }
 
                     return true;
                 }
@@ -273,21 +278,7 @@ class ImageResultTest extends TestCase
             [],
         ];
 
-        yield 'img and sources with deferred images (without duplicates)' => [
-            [
-                'src' => $deferredImage1,
-                'srcset' => [[$deferredImage2, 'foo']],
-            ],
-            [
-                [
-                    'src' => $deferredImage3,
-                    'srcset' => [[$deferredImage4]],
-                ],
-            ],
-            [$deferredImage1, $deferredImage2, $deferredImage3, $deferredImage4],
-        ];
-
-        yield 'img and sources with deferred images (with duplicates)' => [
+        yield 'img and sources with deferred images' => [
             [
                 'src' => $deferredImage1,
                 'srcset' => [[$deferredImage2, 'foo'], [$deferredImage3]],

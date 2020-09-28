@@ -156,29 +156,21 @@ class ImageResult
     {
         $picture = $this->getPicture();
 
-        $array_flatten = static function (array $array): array {
-            return array_reduce($array, 'array_merge', []);
-        };
+        $candidates = [];
 
-        $findDeferredImages = static function (array $item) use ($array_flatten): array {
-            $candidates = array_merge(
-                [$item['src'] ?? null],
-                $array_flatten($item['srcset'] ?? [])
-            );
+        foreach (array_merge([$picture->getImg()], $picture->getSources()) as $source) {
+            $candidates[] = $source['src'] ?? null;
 
-            return array_filter(
-                $candidates,
-                static function ($image): bool {
-                    return $image instanceof DeferredImageInterface;
-                }
-            );
-        };
+            foreach ($source['srcset'] ?? [] as $srcset) {
+                $candidates[] = $srcset[0] ?? null;
+            }
+        }
 
-        // Create an array of deferred images by looking through the 'src' and
-        // 'srcset' attributes of both the 'img' and all 'sources' tags.
-        $deferredImages = array_merge(
-            $findDeferredImages($picture->getImg()),
-            $array_flatten(array_map($findDeferredImages, $picture->getSources()))
+        $deferredImages = array_filter(
+            $candidates,
+            static function ($image): bool {
+                return $image instanceof DeferredImageInterface;
+            }
         );
 
         if (empty($deferredImages)) {
@@ -191,17 +183,7 @@ class ImageResult
             throw new \RuntimeException('The "contao.image.resizer" service does not support deferred resizing.');
         }
 
-        $resizedPaths = [];
-
-        /** @var DeferredImageInterface $deferredImage */
         foreach ($deferredImages as $deferredImage) {
-            // Skip already processed images
-            if (isset($resizedPaths[$deferredImage->getPath()])) {
-                continue;
-            }
-
-            $resizedPaths[$deferredImage->getPath()] = true;
-
             $resizer->resizeDeferredImage($deferredImage);
         }
     }
