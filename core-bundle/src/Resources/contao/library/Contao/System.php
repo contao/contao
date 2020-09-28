@@ -188,12 +188,12 @@ abstract class System
 			{
 				$this->arrObjects[$strKey] = $container->get($strClass);
 			}
-			elseif (($container->getParameter('kernel.debug') || !\class_exists($strClass)) && self::isServiceInlined($strClass))
+			elseif (($container->getParameter('kernel.debug') || !class_exists($strClass)) && self::isServiceInlined($strClass))
 			{
 				// In debug mode, we check for inlined services before trying to create a new instance of the class
 				throw new ServiceNotFoundException($strClass, null, null, array(), sprintf('The "%s" service or alias has been removed or inlined when the container was compiled. You should either make it public, or stop using the container directly and use dependency injection instead.', $strClass));
 			}
-			elseif (!\class_exists($strClass))
+			elseif (!class_exists($strClass))
 			{
 				throw new \RuntimeException('System::import() failed because class "' . $strClass . '" is not a valid class name or does not exist.');
 			}
@@ -261,7 +261,7 @@ abstract class System
 			{
 				static::$arrStaticObjects[$strKey] = $container->get($strClass);
 			}
-			elseif (($container->getParameter('kernel.debug') || !\class_exists($strClass)) && self::isServiceInlined($strClass))
+			elseif (($container->getParameter('kernel.debug') || !class_exists($strClass)) && self::isServiceInlined($strClass))
 			{
 				// In debug mode, we check for inlined services before trying to create a new instance of the class
 				throw new ServiceNotFoundException($strClass, null, null, array(), sprintf('The "%s" service or alias has been removed or inlined when the container was compiled. You should either make it public, or stop using the container directly and use dependency injection instead.', $strClass));
@@ -304,12 +304,12 @@ abstract class System
 			return false;
 		}
 
-		if (null === static::$removedServiceIds)
+		if (null === self::$removedServiceIds)
 		{
-			static::$removedServiceIds = $container->getRemovedIds();
+			self::$removedServiceIds = $container->getRemovedIds();
 		}
 
-		return isset(static::$removedServiceIds[$strClass]);
+		return isset(self::$removedServiceIds[$strClass]);
 	}
 
 	/**
