@@ -162,17 +162,42 @@ class ImageResult
 
         $picture = $this->getPicture();
 
-        $deferredImages = array_filter(
-            array_column(
-                array_merge([$picture->getImg()], $picture->getSources()),
-                'src'
-            ),
-            static function ($image): bool {
-                return $image instanceof DeferredImageInterface;
-            }
+        $array_flatten = static function (array $array): array {
+            return array_reduce($array, 'array_merge', []);
+        };
+
+        $findDeferredImages = static function (array $item) use ($array_flatten): array {
+            $candidates = array_merge(
+                [$item['src'] ?? null],
+                $array_flatten($item['srcset'] ?? [])
+            );
+
+            return array_filter(
+                $candidates,
+                static function ($image): bool {
+                    return $image instanceof DeferredImageInterface;
+                }
+            );
+        };
+
+        // Create an array of deferred images by looking through the 'src' and
+        // 'srcset' attributes of both the 'img' and all 'sources' tags.
+        $deferredImages = array_merge(
+            $findDeferredImages($picture->getImg()),
+            $array_flatten(array_map($findDeferredImages, $picture->getSources()))
         );
 
+        $resizedPaths = [];
+
+        /** @var DeferredImageInterface $deferredImage */
         foreach ($deferredImages as $deferredImage) {
+            // Skip already processed images
+            if (isset($resizedPaths[$deferredImage->getPath()])) {
+                continue;
+            }
+
+            $resizedPaths[$deferredImage->getPath()] = true;
+
             $resizer->resizeDeferredImage($deferredImage);
         }
     }

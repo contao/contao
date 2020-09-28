@@ -261,10 +261,11 @@ class ImageResultTest extends TestCase
             ->willReturn(true)
         ;
 
-        $image = new Image('image0.jpg', $imagine, $filesystem);
-        $deferredImage1 = new DeferredImage('image1.jpg', $imagine, $dimensions);
-        $deferredImage2 = new DeferredImage('image2.jpg', $imagine, $dimensions);
-        $deferredImage3 = new DeferredImage('image3.jpg', $imagine, $dimensions);
+        $image = new Image('/project/dir/assets/image0.jpg', $imagine, $filesystem);
+        $deferredImage1 = new DeferredImage('/project/dir/assets/image1.jpg', $imagine, $dimensions);
+        $deferredImage2 = new DeferredImage('/project/dir/assets/image2.jpg', $imagine, $dimensions);
+        $deferredImage3 = new DeferredImage('/project/dir/assets/image3.jpg', $imagine, $dimensions);
+        $deferredImage4 = new DeferredImage('/project/dir/assets/image4.jpg', $imagine, $dimensions);
 
         yield 'no deferred images' => [
             ['src' => $image],
@@ -272,31 +273,70 @@ class ImageResultTest extends TestCase
             [],
         ];
 
-        yield 'img and sources with deferred images' => [
-            ['src' => $deferredImage1],
+        yield 'img and sources with deferred images (without duplicates)' => [
             [
-                ['src' => $deferredImage2],
-                ['src' => $deferredImage3],
+                'src' => $deferredImage1,
+                'srcset' => [[$deferredImage2, 'foo']],
+            ],
+            [
+                [
+                    'src' => $deferredImage3,
+                    'srcset' => [[$deferredImage4]],
+                ],
+            ],
+            [$deferredImage1, $deferredImage2, $deferredImage3, $deferredImage4],
+        ];
+
+        yield 'img and sources with deferred images (with duplicates)' => [
+            [
+                'src' => $deferredImage1,
+                'srcset' => [[$deferredImage2, 'foo'], [$deferredImage3]],
+            ],
+            [
+                [
+                    'src' => $deferredImage3,
+                    'srcset' => [[$deferredImage2], [$deferredImage4]],
+                ],
+                [
+                    'src' => $deferredImage2,
+                    'srcset' => [[$deferredImage4]],
+                ],
+            ],
+            [$deferredImage1, $deferredImage2, $deferredImage3, $deferredImage4],
+        ];
+
+        yield 'img and sources with both deferred and non-deferred images' => [
+            [
+                'src' => $deferredImage1,
+            ],
+            [
+                [
+                    'src' => $image,
+                ],
+                [
+                    'src' => $deferredImage2,
+                    'srcset' => [[$deferredImage3]],
+                ],
             ],
             [$deferredImage1, $deferredImage2, $deferredImage3],
         ];
 
-        yield 'img and sources with both deferred and non-deferred images' => [
-            ['src' => $deferredImage1],
+        yield 'elements without src or srcset key' => [
             [
-                ['src' => $image],
-                ['src' => $deferredImage2],
+                'foo' => 'bar',
+            ],
+            [
+                [
+                    'bar' => 'foo',
+                ],
+                [
+                    'srcset' => [['foo'], [$deferredImage2]],
+                ],
+                [
+                    'src' => $deferredImage1,
+                ],
             ],
             [$deferredImage1, $deferredImage2],
-        ];
-
-        yield 'elements without src key' => [
-            ['foo' => 'bar'],
-            [
-                ['bar' => 'foo'],
-                ['src' => $deferredImage3],
-            ],
-            [$deferredImage3],
         ];
     }
 
