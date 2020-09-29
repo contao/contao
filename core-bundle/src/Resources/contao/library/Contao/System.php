@@ -66,6 +66,11 @@ abstract class System
 	protected static $objContainer;
 
 	/**
+	 * @var array|null
+	 */
+	private static $removedServiceIds;
+
+	/**
 	 * Cache
 	 * @var array
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
@@ -183,8 +188,9 @@ abstract class System
 			{
 				$this->arrObjects[$strKey] = $container->get($strClass);
 			}
-			elseif ($container instanceof Container && isset($container->getRemovedIds()[$strClass]))
+			elseif (($container->getParameter('kernel.debug') || !class_exists($strClass)) && self::isServiceInlined($strClass))
 			{
+				// In debug mode, we check for inlined services before trying to create a new instance of the class
 				throw new ServiceNotFoundException($strClass, null, null, array(), sprintf('The "%s" service or alias has been removed or inlined when the container was compiled. You should either make it public, or stop using the container directly and use dependency injection instead.', $strClass));
 			}
 			elseif (!class_exists($strClass))
@@ -197,7 +203,19 @@ abstract class System
 			}
 			else
 			{
-				$this->arrObjects[$strKey] = new $strClass();
+				try
+				{
+					$this->arrObjects[$strKey] = new $strClass();
+				}
+				catch (\Throwable $t)
+				{
+					if (!$container->getParameter('kernel.debug') && self::isServiceInlined($strClass))
+					{
+						throw new ServiceNotFoundException($strClass, null, null, array(), sprintf('The "%s" service or alias has been removed or inlined when the container was compiled. You should either make it public, or stop using the container directly and use dependency injection instead.', $strClass));
+					}
+
+					throw $t;
+				}
 			}
 		}
 	}
@@ -243,8 +261,9 @@ abstract class System
 			{
 				static::$arrStaticObjects[$strKey] = $container->get($strClass);
 			}
-			elseif ($container instanceof Container && isset($container->getRemovedIds()[$strClass]))
+			elseif (($container->getParameter('kernel.debug') || !class_exists($strClass)) && self::isServiceInlined($strClass))
 			{
+				// In debug mode, we check for inlined services before trying to create a new instance of the class
 				throw new ServiceNotFoundException($strClass, null, null, array(), sprintf('The "%s" service or alias has been removed or inlined when the container was compiled. You should either make it public, or stop using the container directly and use dependency injection instead.', $strClass));
 			}
 			elseif (!class_exists($strClass))
@@ -257,11 +276,40 @@ abstract class System
 			}
 			else
 			{
-				static::$arrStaticObjects[$strKey] = new $strClass();
+				try
+				{
+					static::$arrStaticObjects[$strKey] = new $strClass();
+				}
+				catch (\Throwable $t)
+				{
+					if (!$container->getParameter('kernel.debug') && self::isServiceInlined($strClass))
+					{
+						throw new ServiceNotFoundException($strClass, null, null, array(), sprintf('The "%s" service or alias has been removed or inlined when the container was compiled. You should either make it public, or stop using the container directly and use dependency injection instead.', $strClass));
+					}
+
+					throw $t;
+				}
 			}
 		}
 
 		return static::$arrStaticObjects[$strKey];
+	}
+
+	private static function isServiceInlined($strClass)
+	{
+		$container = static::getContainer();
+
+		if (!$container instanceof Container)
+		{
+			return false;
+		}
+
+		if (null === self::$removedServiceIds)
+		{
+			self::$removedServiceIds = $container->getRemovedIds();
+		}
+
+		return isset(self::$removedServiceIds[$strClass]);
 	}
 
 	/**
