@@ -14,8 +14,8 @@ namespace Contao;
  * @property array    $titleFields
  * @property array    $descriptionFields
  * @property string   $aliasField
- * @property callable $title_callback
  * @property callable $url_callback
+ * @property callable $title_tag_callback
  */
 class SerpPreview extends Widget
 {
