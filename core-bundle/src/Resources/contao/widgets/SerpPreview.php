@@ -14,6 +14,7 @@ namespace Contao;
  * @property array    $titleFields
  * @property array    $descriptionFields
  * @property string   $aliasField
+ * @property callable $title_callback
  * @property callable $url_callback
  */
 class SerpPreview extends Widget
@@ -67,22 +68,9 @@ class SerpPreview extends Widget
 		$descriptionField = $this->getDescriptionField($suffix);
 		$descriptionFallbackField = $this->getDescriptionFallbackField($suffix);
 
-		// Apply title tag from layout if available
-		if ($model instanceof PageModel)
+		if ($titleTag = $this->getTitleTag($model))
 		{
-			global $objPage;
-
-			$objPage = $model->loadDetails();
-
-			/** @var LayoutModel $layout */
-			if ($layout = $model->getRelated('layout'))
-			{
-				$titleTag = $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}';
-				$titleTag = str_replace('{{page::pageTitle}}', '%s', $titleTag);
-				$titleTag = self::replaceInsertTags($titleTag);
-
-				$title = StringUtil::substr(sprintf($titleTag, $title), 64);
-			}
+			$title = StringUtil::substr(sprintf($titleTag, $title), 64);
 		}
 
 		return <<<EOT
@@ -171,6 +159,26 @@ EOT;
 		}
 
 		return str_replace($placeholder, '%s', $url);
+	}
+
+	private function getTitleTag(Model $model)
+	{
+		if (!isset($this->title_tag_callback))
+		{
+			return '';
+		}
+
+		if (\is_array($this->title_tag_callback))
+		{
+			return System::importStatic($this->title_tag_callback[0])->{$this->title_tag_callback[1]}($model);
+		}
+
+		if (\is_callable($this->title_tag_callback))
+		{
+			return \call_user_func($this->title_tag_callback, $model);
+		}
+
+		return '';
 	}
 
 	private function getTitleField($suffix)
