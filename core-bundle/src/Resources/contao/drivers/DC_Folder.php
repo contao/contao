@@ -2134,10 +2134,14 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		{
 			$container = System::getContainer();
 
-			$twigCacheDir = Path::makeRelative(
-				$container->get('twig')->getCache(),
-				$container->getParameter('kernel.project_dir')
-			);
+			$twigCache = $container->get('twig')->getCache();
+
+			if (!\is_string($twigCache))
+			{
+				return;
+			}
+
+			$twigCacheDir = Path::makeRelative($twigCache, $container->getParameter('kernel.project_dir'));
 
 			// Purge whole cache as we unfortunately cannot invalidate a single file
 			(new Folder($twigCacheDir))->purge();
