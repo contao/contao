@@ -10,10 +10,10 @@
 
 namespace Contao;
 
-use League\Uri\Components\Query;
-use League\Uri\Http;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Contao\CoreBundle\Controller\Page\LogoutPageController;
 use Symfony\Component\HttpFoundation\Response;
+
+trigger_deprecation('contao/core-bundle', '4.11', 'Page types are deprecated, use page controllers instead.');
 
 /**
  * Provide methods to handle a logout page.
@@ -27,33 +27,13 @@ class PageLogout extends Frontend
 	 *
 	 * @param PageModel $objPage
 	 *
-	 * @return RedirectResponse
+	 * @return Response
 	 */
 	public function getResponse($objPage)
 	{
-		$strLogoutUrl = System::getContainer()->get('security.logout_url_generator')->getLogoutUrl();
-		$strRedirect = Environment::get('base');
+		$objRequest = System::getContainer()->get('request_stack')->getCurrentRequest();
 
-		// Redirect to last page visited
-		if ($objPage->redirectBack && ($strReferer = $this->getReferer()))
-		{
-			$strRedirect = $strReferer;
-		}
-
-		// Redirect to jumpTo page
-		elseif (($objTarget = $objPage->getRelated('jumpTo')) instanceof PageModel)
-		{
-			/** @var PageModel $objTarget */
-			$strRedirect = $objTarget->getAbsoluteUrl();
-		}
-
-		$uri = Http::createFromString($strLogoutUrl);
-
-		// Add the redirect= parameter to the logout URL
-		$query = new Query($uri->getQuery());
-		$query = $query->merge('redirect=' . $strRedirect);
-
-		return new RedirectResponse((string) $uri->withQuery((string) $query), Response::HTTP_TEMPORARY_REDIRECT);
+		return System::getContainer()->get(LogoutPageController::class)($objPage, $objRequest);
 	}
 }
 

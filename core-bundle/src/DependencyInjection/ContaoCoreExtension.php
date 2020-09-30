@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection;
 
+use Contao\CoreBundle\Controller\Page\AbstractPageController;
 use Contao\CoreBundle\Crawl\Escargot\Subscriber\EscargotSubscriberInterface;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Migration\MigrationInterface;
@@ -61,6 +62,7 @@ class ContaoCoreExtension extends Extension
         );
 
         $loader->load('commands.yml');
+        $loader->load('controller.yml');
         $loader->load('listener.yml');
         $loader->load('services.yml');
         $loader->load('migrations.yml');
@@ -99,6 +101,11 @@ class ContaoCoreExtension extends Extension
         $container
             ->registerForAutoconfiguration(MigrationInterface::class)
             ->addTag('contao.migration')
+        ;
+
+        $container
+            ->registerForAutoconfiguration(AbstractPageController::class)
+            ->addTag('contao.page')
         ;
 
         $container

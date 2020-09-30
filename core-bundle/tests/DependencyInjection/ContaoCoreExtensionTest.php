@@ -857,6 +857,7 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('twig'),
                 new Reference('contao.framework'),
                 new Reference('security.helper'),
+                new Reference('fragment.renderer.inline'),
             ],
             $definition->getArguments()
         );
