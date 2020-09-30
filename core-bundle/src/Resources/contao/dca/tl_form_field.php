@@ -40,7 +40,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
-				'pid' => 'index'
+				'pid,invisible' => 'index'
 			)
 		)
 	),
@@ -736,7 +736,15 @@ class tl_form_field extends Backend
 			return $this->getTemplateGroup('form_');
 		}
 
-		$arrTemplates = $this->getTemplateGroup('form_' . $dc->activeRecord->type . '_', array(), 'form_' . $dc->activeRecord->type);
+		$default = 'form_' . $dc->activeRecord->type;
+
+		// Backwards compatibility
+		if ($dc->activeRecord->type == 'text')
+		{
+			$default = 'form_textfield';
+		}
+
+		$arrTemplates = $this->getTemplateGroup('form_' . $dc->activeRecord->type . '_', array(), $default);
 
 		// Backwards compatibility
 		if ($dc->activeRecord->type == 'text')
@@ -920,5 +928,10 @@ class tl_form_field extends Backend
 		}
 
 		$objVersions->create();
+
+		if ($dc)
+		{
+			$dc->invalidateCacheTags();
+		}
 	}
 }

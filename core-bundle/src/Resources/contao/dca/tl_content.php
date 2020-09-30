@@ -47,7 +47,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
-				'pid,ptable,invisible,sorting' => 'index'
+				'pid,ptable,invisible,start,stop' => 'index'
 			)
 		)
 	),
@@ -60,7 +60,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'mode'                    => 4,
 			'fields'                  => array('sorting'),
 			'panelLayout'             => 'filter;search,limit',
-			'headerFields'            => array('title', 'headline', 'author', 'inColumn', 'tstamp', 'showTeaser', 'published', 'start', 'stop'),
+			'headerFields'            => array('title', 'headline', 'author', 'tstamp', 'start', 'stop'),
 			'child_record_callback'   => array('tl_content', 'addCteType')
 		),
 		'global_operations' => array
@@ -1486,11 +1486,11 @@ class tl_content extends Backend
 			$text = StringUtil::substr(strip_tags(preg_replace('/[\n\r\t]+/', ' ', $objAlias->text)), 32);
 			$strText = $GLOBALS['TL_LANG']['CTE'][$objAlias->type][0] . ' (';
 
-			if ($headline != '')
+			if ($headline)
 			{
 				$strText .= $headline . ', ';
 			}
-			elseif ($text != '')
+			elseif ($text)
 			{
 				$strText .= $text . ', ';
 			}
@@ -1865,6 +1865,8 @@ class tl_content extends Backend
 				case 'hyperlink':
 				case 'image':
 				case 'accordionSingle':
+				case 'youtube':
+				case 'vimeo':
 					$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = Config::get('validImageTypes');
 					break;
 
@@ -2110,5 +2112,10 @@ class tl_content extends Backend
 		}
 
 		$objVersions->create();
+
+		if ($dc)
+		{
+			$dc->invalidateCacheTags();
+		}
 	}
 }

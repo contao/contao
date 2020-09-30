@@ -49,7 +49,9 @@ class ModuleListing extends Module
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['listing'][0]) . ' ###';
@@ -62,13 +64,13 @@ class ModuleListing extends Module
 		}
 
 		// Return if the table or the fields have not been set
-		if ($this->list_table == '' || $this->list_fields == '')
+		if (!$this->list_table || !$this->list_fields)
 		{
 			return '';
 		}
 
 		// Disable the details page
-		if ($this->list_info == '' && Input::get('show'))
+		if (!$this->list_info && Input::get('show'))
 		{
 			return '';
 		}
@@ -235,7 +237,7 @@ class ModuleListing extends Module
 
 		foreach (preg_split('/&(amp;)?/', Environment::get('queryString')) as $fragment)
 		{
-			if ($fragment != '' && strncasecmp($fragment, 'order_by', 8) !== 0 && strncasecmp($fragment, 'sort', 4) !== 0 && strncasecmp($fragment, $id, \strlen($id)) !== 0)
+			if ($fragment && strncasecmp($fragment, 'order_by', 8) !== 0 && strncasecmp($fragment, 'sort', 4) !== 0 && strncasecmp($fragment, $id, \strlen($id)) !== 0)
 			{
 				$strUrl .= (!$blnQuery ? '?' : '&amp;') . $fragment;
 				$blnQuery = true;
@@ -365,7 +367,7 @@ class ModuleListing extends Module
 		$this->list_info = StringUtil::deserialize($this->list_info);
 		$this->list_info_where = $this->replaceInsertTags($this->list_info_where, false);
 
-		$objRecord = $this->Database->prepare("SELECT " . implode(', ', array_map('Database::quoteIdentifier', trimsplit(',', $this->list_info))) . " FROM " . $this->list_table . " WHERE " . (($this->list_info_where != '') ? "(" . $this->list_info_where . ") AND " : "") . Database::quoteIdentifier($this->strPk) . "=?")
+		$objRecord = $this->Database->prepare("SELECT " . implode(', ', array_map('Database::quoteIdentifier', trimsplit(',', $this->list_info))) . " FROM " . $this->list_table . " WHERE " . ($this->list_info_where ? "(" . $this->list_info_where . ") AND " : "") . Database::quoteIdentifier($this->strPk) . "=?")
 									->limit(1)
 									->execute($id);
 

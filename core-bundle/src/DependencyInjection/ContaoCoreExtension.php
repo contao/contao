@@ -16,12 +16,12 @@ use Contao\CoreBundle\Crawl\Escargot\Subscriber\EscargotSubscriberInterface;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Migration\MigrationInterface;
 use Contao\CoreBundle\Picker\PickerProviderInterface;
-use Contao\CoreBundle\Routing\Content\ContentRouteProviderInterface;
 use Contao\CoreBundle\Routing\Page\ContentCompositionInterface;
 use Contao\CoreBundle\Routing\Page\DynamicRouteInterface;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Imagine\Exception\RuntimeException;
 use Imagine\Gd\Imagine;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -61,10 +61,8 @@ class ContaoCoreExtension extends Extension
         );
 
         $loader->load('commands.yml');
-        $loader->load('controller.yml');
         $loader->load('listener.yml');
         $loader->load('services.yml');
-        $loader->load('routing.yml');
         $loader->load('migrations.yml');
 
         $container->setParameter('contao.web_dir', $config['web_dir']);
@@ -91,7 +89,7 @@ class ContaoCoreExtension extends Extension
         $this->setImagineService($config, $container);
         $this->overwriteImageTargetDir($config, $container);
         $this->handleTokenCheckerConfig($config, $container);
-        $this->handleLegacyRouting($config, $container, $loader);
+        $this->handleLegacyRouting($config, $configs, $container, $loader);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -101,11 +99,6 @@ class ContaoCoreExtension extends Extension
         $container
             ->registerForAutoconfiguration(MigrationInterface::class)
             ->addTag('contao.migration')
-        ;
-
-        $container
-            ->registerForAutoconfiguration(ContentRouteProviderInterface::class)
-            ->addTag('contao.content_route_provider')
         ;
 
         $container
@@ -289,27 +282,25 @@ class ContaoCoreExtension extends Extension
         }
     }
 
-    private function handleLegacyRouting(array $config, ContainerBuilder $container, YamlFileLoader $loader): void
+    private function handleLegacyRouting(array $mergedConfig, array $configs, ContainerBuilder $container, YamlFileLoader $loader): void
     {
-        $count = 0;
+        if (false === $mergedConfig['legacy_routing']) {
+            foreach ($configs as $config) {
+                if (isset($config['prepend_locale'])) {
+                    throw new InvalidConfigurationException('Setting contao.prepend_locale to "'.var_export($config['prepend_locale'], true).'" requires legacy routing.');
+                }
 
-        if (!isset($config['prepend_locale'])) {
-            ++$count;
-            $config['prepend_locale'] = false;
+                if (isset($config['url_suffix'])) {
+                    throw new InvalidConfigurationException('Setting contao.url_suffix to "'.$config['url_suffix'].'" requires legacy routing.');
+                }
+            }
         }
 
-        if (!isset($config['url_suffix'])) {
-            ++$count;
-            $config['url_suffix'] = '.html';
-        }
+        $container->setParameter('contao.legacy_routing', $mergedConfig['legacy_routing']);
+        $container->setParameter('contao.prepend_locale', $mergedConfig['prepend_locale']);
+        $container->setParameter('contao.url_suffix', $mergedConfig['url_suffix']);
 
-        $legacyRouting = 2 !== $count;
-
-        $container->setParameter('contao.prepend_locale', $config['prepend_locale']);
-        $container->setParameter('contao.url_suffix', $config['url_suffix']);
-        $container->setParameter('contao.legacy_routing', $legacyRouting);
-
-        if ($legacyRouting) {
+        if ($mergedConfig['legacy_routing']) {
             $loader->load('legacy_routing.yml');
         }
     }

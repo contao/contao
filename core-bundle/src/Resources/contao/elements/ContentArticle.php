@@ -24,7 +24,7 @@ class ContentArticle extends ContentElement
 	 */
 	public function generate()
 	{
-		return $this->getArticle($this->articleAlias, false, true);
+		return $this->getArticle($this->articleAlias, false, true, $this->strColumn);
 	}
 
 	/**

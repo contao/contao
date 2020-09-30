@@ -59,7 +59,7 @@ class RoutingTest extends FunctionalTestCase
 
         $this->loadFixtureFiles($fixtures);
 
-        $crawler = $client->request('GET', $request);
+        $crawler = $client->request('GET', "http://$host$request");
         $title = trim($crawler->filterXPath('//head/title')->text());
 
         /** @var Response $response */
@@ -88,7 +88,7 @@ class RoutingTest extends FunctionalTestCase
 
         $this->loadFixtureFiles($fixtures);
 
-        $crawler = $client->request('GET', $request);
+        $crawler = $client->request('GET', "http://$host$request");
         $title = trim($crawler->filterXPath('//head/title')->text());
 
         /** @var Response $response */
@@ -114,7 +114,7 @@ class RoutingTest extends FunctionalTestCase
         yield 'Redirects to the first regular page if the alias is not "index" and the request is empty' => [
             ['theme', 'root-with-home'],
             '/',
-            302,
+            303,
             'Redirecting to http://root-with-home.local/home.html',
             [],
             'root-with-home.local',
@@ -126,6 +126,16 @@ class RoutingTest extends FunctionalTestCase
             '/home.html',
             200,
             'Home - Root with home page',
+            [],
+            'root-with-home.local',
+            false,
+        ];
+
+        yield 'Renders the 404 page if the request string is a double-slash' => [
+            ['theme', 'root-with-home'],
+            '//',
+            404,
+            '(404 Not Found)',
             [],
             'root-with-home.local',
             false,
@@ -274,7 +284,7 @@ class RoutingTest extends FunctionalTestCase
         yield 'Redirects to the first regular page if the folder URL alias is not "index" and the request is empty' => [
             ['theme', 'root-with-folder-urls'],
             '/',
-            302,
+            303,
             'Redirecting to http://root-with-folder-urls.local/folder/url/home.html',
             [],
             'root-with-folder-urls.local',
@@ -373,7 +383,7 @@ class RoutingTest extends FunctionalTestCase
             ->exec('UPDATE tl_page SET urlPrefix=language')
         ;
 
-        $crawler = $client->request('GET', $request);
+        $crawler = $client->request('GET', "http://$host$request");
         $title = trim($crawler->filterXPath('//head/title')->text());
 
         /** @var Response $response */
@@ -403,7 +413,7 @@ class RoutingTest extends FunctionalTestCase
 
         $this->loadFixtureFiles($fixtures);
 
-        $crawler = $client->request('GET', $request);
+        $crawler = $client->request('GET', "http://$host$request");
         $title = trim($crawler->filterXPath('//head/title')->text());
 
         /** @var Response $response */
@@ -423,7 +433,7 @@ class RoutingTest extends FunctionalTestCase
         yield 'Redirects to the language root if the request is empty' => [
             ['theme', 'root-with-index'],
             '/',
-            301,
+            302,
             'Redirecting to http://root-with-index.local/en/',
             ['language' => 'en'],
             'root-with-index.local',
@@ -453,7 +463,7 @@ class RoutingTest extends FunctionalTestCase
         yield 'Redirects if the alias matches but no language is given' => [
             ['theme', 'root-with-home'],
             '/home.html',
-            301,
+            302,
             'Redirecting to http://root-with-home.local/en/home.html',
             [],
             'root-with-home.local',
@@ -463,6 +473,16 @@ class RoutingTest extends FunctionalTestCase
         yield 'Renders the 404 page if the URL suffix does not match' => [
             ['theme', 'root-with-home'],
             '/en/home.xml',
+            404,
+            '(404 Not Found)',
+            [],
+            'root-with-home.local',
+            false,
+        ];
+
+        yield 'Renders the 404 page if the path ends with a double-slash' => [
+            ['theme', 'root-with-home'],
+            '/en//',
             404,
             '(404 Not Found)',
             [],
@@ -663,7 +683,7 @@ class RoutingTest extends FunctionalTestCase
         yield 'Redirects to the first regular page if the alias is not "index" and the request is only the prefix' => [
             ['theme', 'root-with-home-and-prefix'],
             '/en/',
-            302,
+            303,
             'Redirecting to http://root-with-home.local/en/home.html',
             ['language' => 'en'],
             'root-with-home.local',
@@ -692,7 +712,7 @@ class RoutingTest extends FunctionalTestCase
             ->exec("UPDATE tl_page SET urlSuffix=''")
         ;
 
-        $crawler = $client->request('GET', $request);
+        $crawler = $client->request('GET', "http://$host$request");
         $title = trim($crawler->filterXPath('//head/title')->text());
 
         /** @var Response $response */
@@ -721,7 +741,7 @@ class RoutingTest extends FunctionalTestCase
 
         $this->loadFixtureFiles($fixtures);
 
-        $crawler = $client->request('GET', $request);
+        $crawler = $client->request('GET', "http://$host$request");
         $title = trim($crawler->filterXPath('//head/title')->text());
 
         /** @var Response $response */
@@ -747,7 +767,7 @@ class RoutingTest extends FunctionalTestCase
         yield 'Redirects to the first regular page if the alias is not "index" and the request is empty' => [
             ['theme', 'root-with-home'],
             '/',
-            302,
+            303,
             'Redirecting to http://root-with-home.local/home',
             [],
             'root-with-home.local',
@@ -867,7 +887,7 @@ class RoutingTest extends FunctionalTestCase
         yield 'Redirects to the first regular page if the folder URL alias is not "index" and the request is empty' => [
             ['theme', 'root-with-folder-urls'],
             '/',
-            302,
+            303,
             'Redirecting to http://root-with-folder-urls.local/folder/url/home',
             [],
             'root-with-folder-urls.local',
@@ -939,7 +959,7 @@ class RoutingTest extends FunctionalTestCase
 
         $this->loadFixtureFiles($fixtures);
 
-        $crawler = $client->request('GET', $request);
+        $crawler = $client->request('GET', "http://$host$request");
         $title = trim($crawler->filterXPath('//head/title')->text());
 
         /** @var Response $response */
@@ -999,7 +1019,7 @@ class RoutingTest extends FunctionalTestCase
         yield 'Redirects to the first language root if the accept languages matches' => [
             ['theme', 'same-domain-root'],
             '/',
-            302,
+            303,
             'Redirecting to http://same-domain-root.local/english-site.html',
             'en',
             'same-domain-root.local',
@@ -1008,7 +1028,7 @@ class RoutingTest extends FunctionalTestCase
         yield 'Redirects to the second language root if the accept languages matches' => [
             ['theme', 'same-domain-root'],
             '/',
-            302,
+            303,
             'Redirecting to http://same-domain-root.local/german-site.html',
             'de',
             'same-domain-root.local',
@@ -1017,7 +1037,7 @@ class RoutingTest extends FunctionalTestCase
         yield 'Redirects to the fallback root if none of the accept languages matches' => [
             ['theme', 'same-domain-root'],
             '/',
-            302,
+            303,
             'Redirecting to http://same-domain-root.local/english-site.html',
             'fr',
             'same-domain-root.local',
@@ -1044,7 +1064,7 @@ class RoutingTest extends FunctionalTestCase
             ->exec('UPDATE tl_page SET urlPrefix=language')
         ;
 
-        $crawler = $client->request('GET', $request);
+        $crawler = $client->request('GET', "http://$host$request");
         $title = trim($crawler->filterXPath('//head/title')->text());
 
         /** @var Response $response */
@@ -1073,7 +1093,7 @@ class RoutingTest extends FunctionalTestCase
 
         $this->loadFixtureFiles($fixtures);
 
-        $crawler = $client->request('GET', $request);
+        $crawler = $client->request('GET', "http://$host$request");
         $title = trim($crawler->filterXPath('//head/title')->text());
 
         /** @var Response $response */
@@ -1088,7 +1108,7 @@ class RoutingTest extends FunctionalTestCase
         yield 'Redirects to the language root if one of the accept languages matches' => [
             ['theme', 'same-domain-root'],
             '/',
-            301,
+            302,
             'Redirecting to http://same-domain-root.local/de/',
             'de,en',
             'same-domain-root.local',
@@ -1097,7 +1117,7 @@ class RoutingTest extends FunctionalTestCase
         yield 'Redirects to the language fallback if one of the accept languages matches' => [
             ['theme', 'same-domain-root'],
             '/',
-            301,
+            302,
             'Redirecting to http://same-domain-root.local/en/',
             'en,de',
             'same-domain-root.local',
@@ -1106,7 +1126,7 @@ class RoutingTest extends FunctionalTestCase
         yield 'Redirects to the language fallback if none of the accept languages matches' => [
             ['theme', 'same-domain-root'],
             '/',
-            301,
+            302,
             'Redirecting to http://same-domain-root.local/en/',
             'fr,es',
             'same-domain-root.local',
@@ -1115,7 +1135,7 @@ class RoutingTest extends FunctionalTestCase
         yield 'Redirects to "de" if "de-CH" is accepted and "de" is not' => [
             ['theme', 'same-domain-root'],
             '/',
-            301,
+            302,
             'Redirecting to http://same-domain-root.local/de/',
             'de-CH',
             'same-domain-root.local',
@@ -1124,7 +1144,7 @@ class RoutingTest extends FunctionalTestCase
         yield 'Ignores the case of the language code' => [
             ['theme', 'same-domain-root'],
             '/',
-            301,
+            302,
             'Redirecting to http://same-domain-root.local/de/',
             'dE-at',
             'same-domain-root.local',
@@ -1133,7 +1153,7 @@ class RoutingTest extends FunctionalTestCase
         yield 'Redirects to "en" if "de-CH" and "en" are accepted and "de" is not' => [
             ['theme', 'same-domain-root'],
             '/',
-            301,
+            302,
             'Redirecting to http://same-domain-root.local/en/',
             'de-CH,en',
             'same-domain-root.local',
@@ -1205,7 +1225,7 @@ class RoutingTest extends FunctionalTestCase
         yield 'Redirects to the correct language if first page does not have index alias' => [
             ['theme', 'language-index-mix'],
             '/',
-            301,
+            302,
             'Redirecting to http://example.com/de/',
             'de,en',
             'example.com',

@@ -70,7 +70,8 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
 
         if ($this->requiresCsrf($request, $response)) {
             $this->setCookies($request, $response);
-        } else {
+        } elseif ($response->isSuccessful()) {
+            // Only delete the CSRF token cookie if the response is successful (#2252)
             $this->removeCookies($request, $response);
             $this->replaceTokenOccurrences($response);
         }
@@ -81,7 +82,8 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
         return [
             // The priority must be higher than the one of the Symfony route listener (defaults to 32)
             KernelEvents::REQUEST => ['onKernelRequest', 36],
-            KernelEvents::RESPONSE => 'onKernelResponse',
+            // The priority must be higher than the one of the make-response-private listener (defaults to -896)
+            KernelEvents::RESPONSE => ['onKernelResponse', -832],
         ];
     }
 

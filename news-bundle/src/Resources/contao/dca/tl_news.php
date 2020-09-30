@@ -62,7 +62,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			(
 				'id' => 'primary',
 				'alias' => 'index',
-				'pid,start,stop,published' => 'index'
+				'pid,published,featured,start,stop' => 'index'
 			)
 		)
 	),
@@ -660,7 +660,7 @@ class tl_news extends Backend
 		};
 
 		// Generate alias if there is none
-		if ($varValue == '')
+		if (!$varValue)
 		{
 			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->headline, NewsArchiveModel::findByPk($dc->activeRecord->pid)->jumpTo, $aliasExists);
 		}
@@ -806,7 +806,7 @@ class tl_news extends Backend
 		}
 
 		// Add the option currently set
-		if ($dc->activeRecord && $dc->activeRecord->source != '')
+		if ($dc->activeRecord && $dc->activeRecord->source)
 		{
 			$arrOptions[] = $dc->activeRecord->source;
 			$arrOptions = array_unique($arrOptions);
@@ -849,6 +849,14 @@ class tl_news extends Backend
 			return;
 		}
 
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request)
+		{
+			$origScope = $request->attributes->get('_scope');
+			$request->attributes->set('_scope', 'frontend');
+		}
+
 		$this->import(News::class, 'News');
 
 		foreach ($session as $id)
@@ -858,6 +866,11 @@ class tl_news extends Backend
 
 		$this->import(Automator::class, 'Automator');
 		$this->Automator->generateSitemap();
+
+		if ($request)
+		{
+			$request->attributes->set('_scope', $origScope);
+		}
 
 		$objSession->set('news_feed_updater', null);
 	}
@@ -1120,5 +1133,10 @@ class tl_news extends Backend
 
 		// The onsubmit_callback has triggered scheduleUpdate(), so run generateFeed() now
 		$this->generateFeed();
+
+		if ($dc)
+		{
+			$dc->invalidateCacheTags();
+		}
 	}
 }

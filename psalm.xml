@@ -20,15 +20,11 @@
         <pluginClass class="Weirdan\DoctrinePsalmPlugin\Plugin"/>
     </plugins>
     <issueHandlers>
-        <UndefinedConstant>
+        <!-- TODO: Remove this again once https://github.com/symfony/symfony/pull/37869 has been fixed -->
+        <ParamNameMismatch>
             <errorLevel type="suppress">
-                <file name="core-bundle/src/Controller/InitializeController.php" />
+                <file name="core-bundle/src/DependencyInjection/Security/ContaoLoginFactory.php"/>
             </errorLevel>
-        </UndefinedConstant>
-        <UndefinedDocblockClass>
-            <errorLevel type="suppress">
-                <referencedClass name="Stringable"/>
-            </errorLevel>
-        </UndefinedDocblockClass>
+        </ParamNameMismatch>
     </issueHandlers>
 </psalm>

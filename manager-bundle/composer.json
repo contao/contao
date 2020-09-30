@@ -1,7 +1,7 @@
 {
     "name": "contao/manager-bundle",
     "type": "symfony-bundle",
-    "description": "Symfony bundle for the Contao Managed Edition",
+    "description": "Provides the Contao Managed Edition",
     "homepage": "https://contao.org",
     "license": "LGPL-3.0-or-later",
     "authors": [

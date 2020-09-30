@@ -16,6 +16,7 @@ use Contao\CoreBundle\Fragment\FragmentConfig;
 use Contao\CoreBundle\Fragment\FragmentOptionsAwareInterface;
 use Contao\CoreBundle\Fragment\FragmentPreHandlerInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\PriorityTaggedServiceTrait;
 use Symfony\Component\DependencyInjection\Container;
@@ -65,32 +66,42 @@ class RegisterFragmentsPass implements CompilerPassInterface
     {
         $preHandlers = [];
         $registry = $container->findDefinition('contao.fragment.registry');
-        $command = $container->findDefinition('contao.command.debug_fragments');
+        $command = $container->hasDefinition('contao.command.debug_fragments') ? $container->findDefinition('contao.command.debug_fragments') : null;
 
         foreach ($this->findAndSortTaggedServices($tag, $container) as $reference) {
             $definition = $container->findDefinition((string) $reference);
-            $definition->setPublic(true);
 
             $tags = $definition->getTag($tag);
             $definition->clearTag($tag);
 
             foreach ($tags as $attributes) {
                 $attributes['type'] = $this->getFragmentType($definition, $attributes);
+                $attributes['debugController'] = $this->getControllerName(new Reference($definition->getClass()), $attributes);
 
                 $identifier = sprintf('%s.%s', $tag, $attributes['type']);
-                $config = $this->getFragmentConfig($container, $reference, $attributes);
+                $serviceId = 'contao.fragment._'.$identifier;
+
+                $childDefinition = new ChildDefinition((string) $reference);
+                $childDefinition->setPublic(true);
+
+                $config = $this->getFragmentConfig($container, new Reference($serviceId), $attributes);
 
                 if (is_a($definition->getClass(), FragmentPreHandlerInterface::class, true)) {
-                    $preHandlers[$identifier] = $reference;
+                    $preHandlers[$identifier] = new Reference($serviceId);
                 }
 
                 if (is_a($definition->getClass(), FragmentOptionsAwareInterface::class, true)) {
-                    $definition->addMethodCall('setFragmentOptions', [$attributes]);
+                    $childDefinition->addMethodCall('setFragmentOptions', [$attributes]);
                 }
 
                 $registry->addMethodCall('add', [$identifier, $config]);
-                $command->addMethodCall('add', [$identifier, $config, $attributes]);
-                $definition->addTag($tag, $attributes);
+
+                if (null !== $command) {
+                    $command->addMethodCall('add', [$identifier, $config, $attributes]);
+                }
+
+                $childDefinition->addTag($tag, $attributes);
+                $container->setDefinition($serviceId, $childDefinition);
             }
         }
 

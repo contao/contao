@@ -76,7 +76,7 @@ class PageForward extends Frontend
 		$arrQuery = array();
 
 		// Extract the query string keys (see #5867)
-		if ($strQuery != '')
+		if ($strQuery)
 		{
 			$arrChunks = explode('&', $strQuery);
 
@@ -116,7 +116,7 @@ class PageForward extends Frontend
 		}
 
 		// Append the query string (see #5867)
-		if ($strQuery != '')
+		if ($strQuery)
 		{
 			$strQuery = '?' . $strQuery;
 		}
@@ -133,7 +133,7 @@ class PageForward extends Frontend
 	 */
 	protected function getRedirectStatusCode($objPage)
 	{
-		return ($objPage->redirect == 'temporary') ? 302 : 301;
+		return ($objPage->redirect == 'temporary') ? 303 : 301;
 	}
 }
 

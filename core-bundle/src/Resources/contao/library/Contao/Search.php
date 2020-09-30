@@ -177,6 +177,17 @@ class Search
 		// Calculate the checksum
 		$arrSet['checksum'] = md5($arrSet['text']);
 
+		$blnIndexExists = $objDatabase
+			->prepare("SELECT EXISTS(SELECT id FROM tl_search WHERE checksum=? AND pid=? AND url=?) as indexExists")
+			->execute($arrSet['checksum'], $arrSet['pid'], $arrSet['url'])
+			->indexExists;
+
+		// The page has already been indexed and has not changed (see #2235)
+		if ($blnIndexExists)
+		{
+			return false;
+		}
+
 		// Prevent deadlocks
 		$objDatabase->query("LOCK TABLES tl_search WRITE, tl_search_index WRITE, tl_search_term WRITE");
 
@@ -184,41 +195,22 @@ class Search
 								->limit(1)
 								->execute($arrSet['checksum'], $arrSet['pid']);
 
-		// Update the URL if the new URL is shorter or the current URL is not canonical
-		if ($objIndex->numRows && $objIndex->url != $arrSet['url'])
+		if ($objIndex->numRows)
 		{
-			// The new URL is more canonical (no query string)
-			if (strpos($objIndex->url, '?') !== false && strpos($arrSet['url'], '?') === false)
+			// The new URL is more canonical (shorter and/or less fragments)
+			if (self::compareUrls($arrSet['url'], $objIndex->url) < 0)
 			{
-				// Decrement document frequency counts
-				$objDatabase
-					->prepare("
-						UPDATE tl_search_term
-						INNER JOIN tl_search_index ON tl_search_term.id = tl_search_index.termId AND tl_search_index.pid = ?
-						SET documentFrequency = GREATEST(1, documentFrequency) - 1
-					")
-					->execute($objIndex->id);
+				self::removeEntry($arrSet['url']);
 
-				$objDatabase->prepare("DELETE FROM tl_search WHERE id=?")
-							->execute($objIndex->id);
-
-				$objDatabase->prepare("DELETE FROM tl_search_index WHERE pid=?")
+				$objDatabase->prepare("UPDATE tl_search %s WHERE id=?")
+							->set($arrSet)
 							->execute($objIndex->id);
 			}
 
-			// The current URL is more canonical (shorter and/or less fragments)
-			elseif (substr_count($arrSet['url'], '/') > substr_count($objIndex->url, '/') || (strpos($arrSet['url'], '?') !== false && strpos($objIndex->url, '?') === false) || \strlen($arrSet['url']) > \strlen($objIndex->url))
-			{
-				$arrSet['url'] = $objIndex->url;
-			}
+			$objDatabase->query("UNLOCK TABLES");
 
 			// The same page has been indexed under a different URL already (see #8460)
-			else
-			{
-				$objDatabase->query("UNLOCK TABLES");
-
-				return false;
-			}
+			return false;
 		}
 
 		$objIndex = $objDatabase->prepare("SELECT id FROM tl_search WHERE url=?")
@@ -357,7 +349,7 @@ class Search
 					tl_search_index.pid,
 					SQRT(SUM(POW(
 						(1 + LOG(relevance)) * LOG((
-							" . (int) $objDatabase->query("SELECT COUNT(*) as count FROM tl_search")->count . "
+							" . (int) ($objDatabase->query("SELECT COUNT(*) as count FROM tl_search")->count + 1) . "
 						) / GREATEST(1, documentFrequency)),
 						2
 					))) as vectorLength
@@ -573,7 +565,7 @@ class Search
 
 			if (isset($arrWildcards[$index]))
 			{
-				$strQuery .= "+ ((1+LOG(SUM(match$index * tl_search_index.relevance))) * POW(LOG(@searchCount / @wildcardCount$index), 2) / " . (\count($arrAllKeywords) - \count($arrExcludedMatches)) . ")";
+				$strQuery .= "+ ((1+LOG(SUM(match$index * tl_search_index.relevance))) * POW(LOG((@searchCount + 1) / @wildcardCount$index), 2) / " . (\count($arrAllKeywords) - \count($arrExcludedMatches)) . ")";
 			}
 			else
 			{
@@ -592,7 +584,7 @@ class Search
 
 			if (isset($arrWildcards[$index]))
 			{
-				$strQuery .= " + POW(LOG(@searchCount / @wildcardCount$index) / " . (\count($arrAllKeywords) - \count($arrExcludedMatches)) . ", 2)";
+				$strQuery .= " + POW(LOG((@searchCount + 1) / @wildcardCount$index) / " . (\count($arrAllKeywords) - \count($arrExcludedMatches)) . ", 2)";
 			}
 			else
 			{
@@ -604,7 +596,7 @@ class Search
 		$strQuery .= " FROM (SELECT id, term";
 
 		// Calculate inverse document frequency of every matching term
-		$strQuery .= ", LOG(@searchCount / GREATEST(1, documentFrequency)) AS idf";
+		$strQuery .= ", LOG((@searchCount + 1) / GREATEST(1, documentFrequency)) AS idf";
 
 		// Store the match of every keyword and wildcard in its own column match0, match1, ...
 		foreach ($arrAllKeywords as $index => $strKeywordExpression)
@@ -797,6 +789,40 @@ class Search
 		}
 
 		return static::$objInstance;
+	}
+
+	/**
+	 * @param string $strUrlA
+	 * @param string $strUrlB
+	 *
+	 * @return int negative if $strUrlA is more canonical, positive if $strUrlB is more canonical
+	 */
+	private static function compareUrls($strUrlA, $strUrlB)
+	{
+		if (strpos($strUrlA, '?') === false && strpos($strUrlB, '?') !== false)
+		{
+			return -1;
+		}
+
+		if (strpos($strUrlA, '?') !== false && strpos($strUrlB, '?') === false)
+		{
+			return 1;
+		}
+
+		$slashCountA = substr_count(explode('?', $strUrlA)[0], '/');
+		$slashCountB = substr_count(explode('?', $strUrlB)[0], '/');
+
+		if ($slashCountA !== $slashCountB)
+		{
+			return $slashCountA - $slashCountB;
+		}
+
+		if (\strlen($strUrlA) !== \strlen($strUrlB))
+		{
+			return \strlen($strUrlA) - \strlen($strUrlB);
+		}
+
+		return strcmp($strUrlA, $strUrlB);
 	}
 }
 

@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Routing\Page;
 
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
-use Symfony\Component\Routing\Route;
 
 class PageRegistry
 {
@@ -53,9 +52,43 @@ class PageRegistry
         $this->connection = $connection;
     }
 
-    public function getRouteConfig(string $type): RouteConfig
+    /**
+     * Returns the route for a page.
+     *
+     * If no path is configured (is null), the route will accept
+     * any parameters after the page alias (e.g. "en/page-alias/foo/bar.html").
+     *
+     * A route enhancer might enhance the route for a specific page.
+     */
+    public function getRoute(PageModel $pageModel): PageRoute
     {
-        return $this->routeConfigs[$type] ?? new RouteConfig();
+        $type = $pageModel->type;
+        $config = $this->routeConfigs[$type] ?? new RouteConfig();
+        $defaults = $config->getDefaults();
+        $requirements = $config->getRequirements();
+        $path = $config->getPath();
+
+        if (null === $path) {
+            $path = '/'.($pageModel->alias ?: $pageModel->id).'{!parameters}';
+            $defaults['parameters'] = '';
+            $requirements['parameters'] = $pageModel->requireItem ? '/.+' : '(/.+)?';
+        }
+
+        $route = new PageRoute($pageModel, $path, $defaults, $requirements, $config->getOptions(), $config->getMethods());
+
+        if (null !== $config->getUrlSuffix()) {
+            $route->setUrlSuffix($config->getUrlSuffix());
+        }
+
+        if (!isset($this->routeEnhancers[$type])) {
+            return $route;
+        }
+
+        /** @var DynamicRouteInterface $enhancer */
+        $enhancer = $this->routeEnhancers[$type];
+        $enhancer->configurePageRoute($route);
+
+        return $route;
     }
 
     public function getPathRegex(): array
@@ -72,20 +105,6 @@ class PageRegistry
         }
 
         return $prefixes;
-    }
-
-    public function enhancePageRoute(PageRoute $route): Route
-    {
-        $type = $route->getPageModel()->type;
-
-        if (!isset($this->routeEnhancers[$type])) {
-            return $route;
-        }
-
-        /** @var DynamicRouteInterface $enhancer */
-        $enhancer = $this->routeEnhancers[$type];
-
-        return $enhancer->enhancePageRoute($route);
     }
 
     public function supportsContentComposition(PageModel $pageModel): bool

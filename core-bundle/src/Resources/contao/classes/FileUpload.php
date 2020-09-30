@@ -86,7 +86,7 @@ class FileUpload extends Backend
 	 */
 	public function uploadTo($strTarget)
 	{
-		if ($strTarget == '' || Validator::isInsecurePath($strTarget))
+		if (!$strTarget || Validator::isInsecurePath($strTarget))
 		{
 			throw new \InvalidArgumentException('Invalid target path ' . $strTarget);
 		}
@@ -235,7 +235,7 @@ class FileUpload extends Backend
 
 		for ($i=0; $i<$intCount; $i++)
 		{
-			if ($_FILES[$this->strName]['name'][$i] == '')
+			if (!$_FILES[$this->strName]['name'][$i])
 			{
 				continue;
 			}
@@ -335,10 +335,7 @@ class FileUpload extends Backend
 		// Resized successfully
 		if ($blnResize)
 		{
-			$container = System::getContainer();
-			$projectDir = $container->getParameter('kernel.project_dir');
-			$container->get('contao.image.image_factory')->create($projectDir . '/' . $strImage, array($arrImageSize[0], $arrImageSize[1]), $projectDir . '/' . $strImage);
-
+			$objFile->resizeTo($arrImageSize[0], $arrImageSize[1]);
 			Message::addInfo(sprintf($GLOBALS['TL_LANG']['MSC']['fileResized'], $objFile->basename));
 			$this->log('File "' . $strImage . '" was scaled down to the maximum dimensions', __METHOD__, TL_FILES);
 			$this->blnHasResized = true;

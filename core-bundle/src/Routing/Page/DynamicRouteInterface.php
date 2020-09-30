@@ -12,8 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\Page;
 
-use Symfony\Component\Routing\Route;
-
 /**
  * A page can dynamically adjust the route for a page at runtime.
  */
@@ -22,15 +20,10 @@ interface DynamicRouteInterface
     /**
      * While matching URLs, Contao generates alias candidates and looks for
      * matching page models. Based on the page's "type" property, the route
-     * factory creates a default route and asks to enhance the route, as only
-     * the route provider knows about dynamic requirements or defaults.
-     *
-     * To generate URLs for a page, the respective route enhancer needs to
-     * return a route based on the page configuration. If content is available,
-     * it can be used to enhance route defaults, so the route can be generated
-     * even if no parameters have been passed to the router generate() method.
+     * factory creates a default route and asks to configure the route, as
+     * only the page knows about dynamic requirements or defaults.
      */
-    public function enhancePageRoute(PageRoute $route): Route;
+    public function configurePageRoute(PageRoute $route): void;
 
     /**
      * URL suffixes are used to generate alias candidates, which means

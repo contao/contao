@@ -28,13 +28,15 @@ class ContentHtml extends ContentElement
 	 */
 	protected function compile()
 	{
-		if (TL_MODE == 'FE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
-			$this->Template->html = $this->html;
+			$this->Template->html = '<pre>' . htmlspecialchars($this->html) . '</pre>';
 		}
 		else
 		{
-			$this->Template->html = '<pre>' . htmlspecialchars($this->html) . '</pre>';
+			$this->Template->html = $this->html;
 		}
 	}
 }

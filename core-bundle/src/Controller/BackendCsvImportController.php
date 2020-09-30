@@ -149,7 +149,7 @@ class BackendCsvImportController
                 $message = $this->framework->getAdapter(Message::class);
                 $message->addError($e->getMessage());
 
-                return new RedirectResponse($request->getUri(), 303);
+                return new RedirectResponse($request->getUri());
             }
 
             $this->connection->update(

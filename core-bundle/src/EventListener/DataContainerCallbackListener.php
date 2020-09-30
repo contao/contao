@@ -71,7 +71,10 @@ class DataContainerCallbackListener
         return $dcaRef;
     }
 
-    private function updateSingleton(?array &$dcaRef, array $callbacks): void
+    /**
+     * @param array|callable|null $dcaRef
+     */
+    private function updateSingleton(&$dcaRef, array $callbacks): void
     {
         krsort($callbacks, SORT_NUMERIC);
 
@@ -81,7 +84,10 @@ class DataContainerCallbackListener
         }
     }
 
-    private function addCallbacks(?array &$dcaRef, array $callbacks): void
+    /**
+     * @param array|callable|null $dcaRef
+     */
+    private function addCallbacks(&$dcaRef, array $callbacks): void
     {
         if (null === $dcaRef) {
             $dcaRef = [];

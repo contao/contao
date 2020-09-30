@@ -36,7 +36,9 @@ class ModuleNewsletterReader extends Module
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['newsletterreader'][0]) . ' ###';
@@ -103,7 +105,7 @@ class ModuleNewsletterReader extends Module
 		}
 
 		// Overwrite the page title (see #2853 and #4955)
-		if ($objNewsletter->subject != '')
+		if ($objNewsletter->subject)
 		{
 			$objPage->pageTitle = strip_tags(StringUtil::stripInsertTags($objNewsletter->subject));
 		}

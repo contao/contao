@@ -16,11 +16,10 @@ use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
-use Contao\CoreBundle\File\MetaData;
+use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Monolog\ContaoContext as ContaoMonologContext;
-use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Util\SimpleTokenParser;
 use Contao\Database\Result;
 use Contao\Image\PictureConfiguration;
@@ -28,6 +27,7 @@ use Contao\Model\Collection;
 use Imagine\Image\BoxInterface;
 use League\Uri\Components\Query;
 use Psr\Log\LogLevel;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\Glob;
 
@@ -71,7 +71,7 @@ abstract class Controller extends System
 			/** @var PageModel $objPage */
 			global $objPage;
 
-			if ($objPage->templateGroup != '')
+			if ($objPage->templateGroup)
 			{
 				if (Validator::isInsecurePath($objPage->templateGroup))
 				{
@@ -192,9 +192,14 @@ abstract class Controller extends System
 
 		$arrDefaultPlaces = array();
 
-		if ($strDefaultTemplate && file_exists($projectDir . '/templates/' . $strDefaultTemplate . '.html5'))
+		if ($strDefaultTemplate)
 		{
-			$arrDefaultPlaces[] = $GLOBALS['TL_LANG']['MSC']['global'];
+			$arrDefaultPlaces[] = $GLOBALS['TL_LANG']['MSC']['default'];
+
+			if (file_exists($projectDir . '/templates/' . $strDefaultTemplate . '.html5'))
+			{
+				$arrDefaultPlaces[] = $GLOBALS['TL_LANG']['MSC']['global'];
+			}
 		}
 
 		// Do not look for back end templates in theme folders (see #5379)
@@ -321,9 +326,6 @@ abstract class Controller extends System
 						throw new AccessDeniedException('Access denied: ' . Environment::get('uri'));
 					}
 
-					// Add the "first" and "last" classes (see #2583)
-					$objArticle->classes = array('first', 'last');
-
 					return static::getArticle($objArticle);
 				}
 			}
@@ -350,44 +352,15 @@ abstract class Controller extends System
 				return '';
 			}
 
-			$arrArticles = array();
+			$return = '';
 			$blnMultiMode = ($objArticles->count() > 1);
-			$arrRows = $objArticles->getModels();
-			$objLastRow = null;
 
-			/** @var ArticleModel $objRow */
-			while ($objRow = array_shift($arrRows))
+			while ($objArticles->next())
 			{
-				// Add the "first" and "last" classes (see #2583)
-				$arrCss = array();
-
-				if (empty($arrArticles))
-				{
-					$arrCss[] = 'first';
-				}
-
-				if (empty($arrRows))
-				{
-					$arrCss[] = 'last';
-				}
-
-				$objRow->classes = $arrCss;
-				$strArticle = static::getArticle($objRow, $blnMultiMode, false, $strColumn);
-
-				if ($strArticle != '')
-				{
-					$arrArticles[] = $strArticle;
-					$objLastRow = $objRow;
-				}
-				elseif (empty($arrRows) && $objLastRow != null && $objLastRow !== $objRow)
-				{
-					// Re-generate the last successful article with "last" class
-					array_pop($arrArticles);
-					$arrRows[] = $objLastRow;
-				}
+				$return .= static::getArticle($objArticles->current(), $blnMultiMode, false, $strColumn);
 			}
 
-			return implode('', $arrArticles);
+			return $return;
 		}
 
 		// Other modules
@@ -496,7 +469,7 @@ abstract class Controller extends System
 				$objArticle = new ModuleArticle($objRow);
 				$objArticle->generatePdf();
 			}
-			elseif ($objRow->printable != '')
+			elseif ($objRow->printable)
 			{
 				$options = StringUtil::deserialize($objRow->printable);
 
@@ -618,7 +591,7 @@ abstract class Controller extends System
 		}
 		else
 		{
-			if ($varId == '')
+			if (!$varId)
 			{
 				return '';
 			}
@@ -699,7 +672,7 @@ abstract class Controller extends System
 		$image = $type . '.svg';
 
 		// Page not published or not active
-		if (!$objPage->published || ($objPage->start != '' && $objPage->start > time()) || ($objPage->stop != '' && $objPage->stop < time()))
+		if (!$objPage->published || ($objPage->start && $objPage->start > time()) || ($objPage->stop && $objPage->stop <= time()))
 		{
 			++$sub;
 		}
@@ -1033,7 +1006,7 @@ abstract class Controller extends System
 		$left = $arrValues['left'];
 
 		// Try to shorten the definition
-		if ($top != '' && $right != '' && $bottom != '' && $left != '')
+		if ($top && $right  && $bottom  && $left)
 		{
 			if ($top == $right && $top == $bottom && $top == $left)
 			{
@@ -1058,7 +1031,7 @@ abstract class Controller extends System
 
 		foreach ($arrDir as $k=>$v)
 		{
-			if ($v != '')
+			if ($v)
 			{
 				$return[] = $strType . '-' . $k . ':' . $v . $arrValues['unit'] . ';';
 			}
@@ -1087,7 +1060,7 @@ abstract class Controller extends System
 		$query = $query->merge(str_replace('&amp;', '&', $strRequest));
 
 		// Add the referer ID
-		if (isset($_GET['ref']) || ($strRequest != '' && $blnAddRef))
+		if (isset($_GET['ref']) || ($strRequest && $blnAddRef))
 		{
 			$query = $query->merge('ref=' . System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id'));
 		}
@@ -1180,11 +1153,11 @@ abstract class Controller extends System
 	 * @return string An URL that can be used in the front end
 	 *
 	 * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.0.
-	 *             Use the Symfony router instead.
+	 *             Use PageModel::getFrontendUrl() instead.
 	 */
 	public static function generateFrontendUrl(array $arrRow, $strParams=null, $strForceLang=null, $blnFixDomain=false)
 	{
-		trigger_deprecation('contao/core-bundle', '4.2', 'Using "Contao\Controller::generateFrontendUrl()" has been deprecated and will no longer work in Contao 5.0. Use the Symfony router instead.');
+		trigger_deprecation('contao/core-bundle', '4.2', 'Using "Contao\Controller::generateFrontendUrl()" has been deprecated and will no longer work in Contao 5.0. Use PageModel::getFrontendUrl() instead.');
 
 		$page = new PageModel();
 		$page->preventSaving(false);
@@ -1223,10 +1196,10 @@ abstract class Controller extends System
 		}
 
 		$objRouter = System::getContainer()->get('router');
-		$strUrl = $objRouter->generate(PageRoute::ROUTE_NAME, array(PageRoute::CONTENT_PARAMETER => $page, 'parameters' => $strParams));
+		$strUrl = $objRouter->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $page, 'parameters' => $strParams));
 
 		// Remove path from absolute URLs
-		if (0 === strncmp($strUrl, '/', 1))
+		if (0 === strncmp($strUrl, '/', 1) && 0 !== strncmp($strUrl, '//', 2))
 		{
 			$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
 		}
@@ -1266,7 +1239,7 @@ abstract class Controller extends System
 	 */
 	public static function convertRelativeUrls($strContent, $strBase='', $blnHrefOnly=false)
 	{
-		if ($strBase == '')
+		if (!$strBase)
 		{
 			$strBase = Environment::get('base');
 		}
@@ -1523,8 +1496,8 @@ abstract class Controller extends System
 	 */
 	public static function addImageToTemplate($template, array $rowData, $maxWidth = null, $lightboxGroupIdentifier = null, FilesModel $filesModel = null): void
 	{
-		// Helper: Create MetaData from the specified row data
-		$createMetaDataOverwriteFromRowData = static function (bool $interpretAsContentModel) use ($rowData)
+		// Helper: Create metadata from the specified row data
+		$createMetadataOverwriteFromRowData = static function (bool $interpretAsContentModel) use ($rowData)
 		{
 			if ($interpretAsContentModel)
 			{
@@ -1532,14 +1505,14 @@ abstract class Controller extends System
 				$contentModel = (new \ReflectionClass(ContentModel::class))->newInstanceWithoutConstructor();
 
 				// This will be null if "overwriteMeta" is not set
-				return $contentModel->setRow($rowData)->getOverwriteMetaData();
+				return $contentModel->setRow($rowData)->getOverwriteMetadata();
 			}
 
-			// Manually create meta data that always contains certain properties (BC)
-			return new MetaData(array(
-				MetaData::VALUE_ALT => $rowData['alt'] ?? '',
-				MetaData::VALUE_TITLE => $rowData['imageTitle'] ?? '',
-				MetaData::VALUE_URL => self::replaceInsertTags($rowData['imageUrl'] ?? ''),
+			// Manually create metadata that always contains certain properties (BC)
+			return new Metadata(array(
+				Metadata::VALUE_ALT => $rowData['alt'] ?? '',
+				Metadata::VALUE_TITLE => $rowData['imageTitle'] ?? '',
+				Metadata::VALUE_URL => self::replaceInsertTags($rowData['imageUrl'] ?? ''),
 				'linkTitle' => $rowData['linkTitle'] ?: '',
 			));
 		};
@@ -1570,7 +1543,7 @@ abstract class Controller extends System
 
 			if (null !== $filesModel)
 			{
-				// Set empty meta data
+				// Set empty metadata
 				$templateData = array_replace_recursive(
 					$templateData,
 					array(
@@ -1675,21 +1648,21 @@ abstract class Controller extends System
 				$filesModel = clone $filesModel;
 				$filesModel->path = $rowData['singleSRC'];
 
-				// Use source + meta data from files model (if not overwritten)
+				// Use source + metadata from files model (if not overwritten)
 				$figureBuilder
 					->fromFilesModel($filesModel)
-					->setMetaData($createMetaDataOverwriteFromRowData(true));
+					->setMetadata($createMetadataOverwriteFromRowData(true));
 
-				$includeFullMetaData = true;
+				$includeFullMetadata = true;
 			}
 			else
 			{
-				// Always ignore file meta data when building from path (BC)
+				// Always ignore file metadata when building from path (BC)
 				$figureBuilder
 					->fromPath($rowData['singleSRC'], false)
-					->setMetaData($createMetaDataOverwriteFromRowData(false));
+					->setMetadata($createMetadataOverwriteFromRowData(false));
 
-				$includeFullMetaData = false;
+				$includeFullMetadata = false;
 			}
 		}
 		catch (InvalidResourceException $e)
@@ -1724,7 +1697,7 @@ abstract class Controller extends System
 			->build();
 
 		// Build result and apply it to the template
-		$figure->applyLegacyTemplateData($template, $margin, $rowData['floating'] ?: null, $includeFullMetaData);
+		$figure->applyLegacyTemplateData($template, $margin, $rowData['floating'] ?: null, $includeFullMetadata);
 
 		// Fall back to manually specified link title or empty string if not set (backwards compatibility)
 		$template->linkTitle = $template->linkTitle ?? StringUtil::specialchars($rowData['title'] ?? '');
@@ -1756,7 +1729,7 @@ abstract class Controller extends System
 		$file = Input::get('file', true);
 
 		// Send the file to the browser and do not send a 404 header (see #5178)
-		if ($file != '')
+		if ($file)
 		{
 			while ($objFiles->next())
 			{
@@ -1806,7 +1779,7 @@ abstract class Controller extends System
 				}
 
 				// Use the file name as title if none is given
-				if ($arrMeta['title'] == '')
+				if (!$arrMeta['title'])
 				{
 					$arrMeta['title'] = StringUtil::specialchars($objFile->basename);
 				}
@@ -2177,7 +2150,7 @@ abstract class Controller extends System
 	{
 		trigger_deprecation('contao/core-bundle', '4.10', 'Using "Contao\Controller::parseSimpleTokens()" has been deprecated and will no longer work in Contao 5.0. Use the "SimpleTokenParser::class" service instead.');
 
-		return System::getContainer()->get(SimpleTokenParser::class)->parseTokens($strBuffer, $arrData);
+		return System::getContainer()->get(SimpleTokenParser::class)->parse($strBuffer, $arrData);
 	}
 
 	/**

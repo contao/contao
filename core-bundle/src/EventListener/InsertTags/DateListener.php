@@ -18,7 +18,6 @@ use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\Date;
 use Contao\PageModel;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
 /**
  * Provides a {{format_date::<timestamp>::<format>}} and a
@@ -59,7 +58,7 @@ use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
  *
  * @Hook("replaceInsertTags")
  */
-class DateListener implements ServiceAnnotationInterface
+class DateListener
 {
     /**
      * @var ContaoFramework

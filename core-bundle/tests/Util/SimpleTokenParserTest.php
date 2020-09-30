@@ -26,7 +26,7 @@ class SimpleTokenParserTest extends TestCase
      */
     public function testParsesSimpleTokens(string $string, array $tokens, string $expected): void
     {
-        $this->assertSame($expected, $this->getParser()->parseTokens($string, $tokens));
+        $this->assertSame($expected, $this->getParser()->parse($string, $tokens));
     }
 
     public function parseSimpleTokensProvider(): \Generator
@@ -298,7 +298,7 @@ class SimpleTokenParserTest extends TestCase
      */
     public function testParsesSimpleTokensLegacy(string $string, array $tokens, string $expected): void
     {
-        $this->assertSame($expected, $this->getParser()->parseTokens($string, $tokens));
+        $this->assertSame($expected, $this->getParser()->parse($string, $tokens));
     }
 
     public function parseSimpleTokensLegacyProvider(): \Generator
@@ -357,7 +357,7 @@ class SimpleTokenParserTest extends TestCase
      */
     public function testHandlesLineBreaksWhenParsingSimpleTokens(string $string, array $tokens, string $expected): void
     {
-        $this->assertSame($expected, $this->getParser()->parseTokens($string, $tokens));
+        $this->assertSame($expected, $this->getParser()->parse($string, $tokens));
     }
 
     public function parseSimpleTokensCorrectNewlines(): \Generator
@@ -404,7 +404,7 @@ class SimpleTokenParserTest extends TestCase
      */
     public function testDoesNotExecutePhpCode(string $string): void
     {
-        $this->assertSame($string, $this->getParser()->parseTokens($string, []));
+        $this->assertSame($string, $this->getParser()->parse($string, []));
     }
 
     public function parseSimpleTokensDoesntExecutePhp(): \Generator
@@ -445,7 +445,7 @@ class SimpleTokenParserTest extends TestCase
      */
     public function testDoesNotExecutePhpCodeInTokens(array $tokens): void
     {
-        $this->assertSame($tokens['foo'], $this->getParser()->parseTokens('##foo##', $tokens));
+        $this->assertSame($tokens['foo'], $this->getParser()->parse('##foo##', $tokens));
     }
 
     public function parseSimpleTokensDoesntExecutePhpInToken(): \Generator
@@ -491,7 +491,7 @@ class SimpleTokenParserTest extends TestCase
 
         $this->assertSame(
             'This is <?php echo "I am evil";?> evil',
-            $this->getParser()->parseTokens('This is ##open####open2####close## evil', $data)
+            $this->getParser()->parse('This is ##open####open2####close## evil', $data)
         );
     }
 
@@ -500,7 +500,7 @@ class SimpleTokenParserTest extends TestCase
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('Cannot use the constant() function in the expression for security reasons.');
 
-        $this->getParser()->parseTokens('{if constant("PHP_VERSION") > 7}match{else}no-match{endif}', []);
+        $this->getParser()->parse('{if constant("PHP_VERSION") > 7}match{else}no-match{endif}', []);
     }
 
     /**
@@ -510,7 +510,7 @@ class SimpleTokenParserTest extends TestCase
     {
         $this->expectException('InvalidArgumentException');
 
-        $this->getParser()->parseTokens($string, ['foo' => 'bar']);
+        $this->getParser()->parse($string, ['foo' => 'bar']);
     }
 
     public function parseSimpleTokensInvalidComparison(): \Generator
@@ -542,7 +542,7 @@ class SimpleTokenParserTest extends TestCase
 
         $this->assertSame(
             'Custom function evaluated!',
-            $simpleTokenParser->parseTokens("Custom function {if strtoupper(token) === 'FOO'}evaluated!{endif}", ['token' => 'foo'])
+            $simpleTokenParser->parse("Custom function {if strtoupper(token) === 'FOO'}evaluated!{endif}", ['token' => 'foo'])
         );
     }
 

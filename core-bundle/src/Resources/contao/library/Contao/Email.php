@@ -225,7 +225,6 @@ class Email
 
 			default:
 				throw new \Exception(sprintf('Invalid argument "%s"', $strKey));
-				break;
 		}
 	}
 
@@ -430,7 +429,7 @@ class Email
 		}
 
 		// Default subject
-		if ($this->strSubject == '')
+		if (!$this->strSubject)
 		{
 			$this->strSubject = 'No subject';
 		}
@@ -445,12 +444,12 @@ class Email
 		}
 
 		// HTML e-mail
-		if ($this->strHtml != '')
+		if ($this->strHtml)
 		{
 			// Embed images
 			if ($this->blnEmbedImages)
 			{
-				if ($this->strImageDir == '')
+				if (!$this->strImageDir)
 				{
 					$this->strImageDir = System::getContainer()->getParameter('kernel.project_dir') . '/';
 				}
@@ -507,27 +506,24 @@ class Email
 		}
 
 		// Text content
-		if ($this->strText != '')
+		if ($this->strText)
 		{
 			if ($this->objMessage instanceof EmailMessage)
 			{
 				$this->objMessage->text($this->strText, $this->strCharset);
 			}
+			elseif ($this->strHtml)
+			{
+				$this->objMessage->addPart($this->strText, 'text/plain');
+			}
 			else
 			{
-				if ($this->strHtml != '')
-				{
-					$this->objMessage->addPart($this->strText, 'text/plain');
-				}
-				else
-				{
-					$this->objMessage->setBody($this->strText, 'text/plain');
-				}
+				$this->objMessage->setBody($this->strText, 'text/plain');
 			}
 		}
 
 		// Add the administrator e-mail as default sender
-		if ($this->strSender == '')
+		if (!$this->strSender)
 		{
 			list($this->strSenderName, $this->strSender) = StringUtil::splitFriendlyEmail(Config::get('adminEmail'));
 		}
@@ -537,16 +533,13 @@ class Email
 		{
 			$this->objMessage->from(new Address($this->strSender, $this->strSenderName ?? ''));
 		}
+		elseif ($this->strSenderName)
+		{
+			$this->objMessage->setFrom(array($this->strSender=>$this->strSenderName));
+		}
 		else
 		{
-			if ($this->strSenderName != '')
-			{
-				$this->objMessage->setFrom(array($this->strSender=>$this->strSenderName));
-			}
-			else
-			{
-				$this->objMessage->setFrom($this->strSender);
-			}
+			$this->objMessage->setFrom($this->strSender);
 		}
 
 		// Set the return path (see #5004)
@@ -637,16 +630,13 @@ class Email
 				{
 					$arrReturn[] = new Address($strEmail, $strName);
 				}
+				elseif ($strName)
+				{
+					$arrReturn[$strEmail] = $strName;
+				}
 				else
 				{
-					if ($strName != '')
-					{
-						$arrReturn[$strEmail] = $strName;
-					}
-					else
-					{
-						$arrReturn[] = $strEmail;
-					}
+					$arrReturn[] = $strEmail;
 				}
 			}
 		}

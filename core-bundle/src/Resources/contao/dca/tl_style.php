@@ -815,5 +815,10 @@ class tl_style extends Backend
 
 		// The onsubmit_callback has triggered scheduleUpdate(), so run updateStyleSheet() now (see #1052)
 		$this->updateStyleSheet();
+
+		if ($dc)
+		{
+			$dc->invalidateCacheTags();
+		}
 	}
 }

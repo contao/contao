@@ -143,11 +143,9 @@ class FormTextArea extends Widget
 
 			case 'value':
 				return StringUtil::specialchars(str_replace('\n', "\n", $this->varValue));
-				break;
 
 			case 'rawValue':
 				return $this->varValue;
-				break;
 
 			default:
 				return parent::__get($strKey);

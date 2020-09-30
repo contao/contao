@@ -182,7 +182,7 @@ function deserialize($varValue, $blnForceArray=false)
 	}
 
 	// Empty string
-	if (trim($varValue) == '')
+	if (trim($varValue) === '')
 	{
 		return $blnForceArray ? array() : '';
 	}
@@ -255,7 +255,7 @@ function trimsplit($strPattern, $strString)
  */
 function ampersand($strString, $blnEncode=true)
 {
-	trigger_deprecation('contao/core-bundle', '4.0', 'Using "ampersand()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\StringUtil::ampersand()" instead.');
+	trigger_deprecation('contao/core-bundle', '4.10', 'Using "ampersand()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\StringUtil::ampersand()" instead.');
 
 	return StringUtil::ampersand($strString, $blnEncode);
 }
@@ -589,7 +589,7 @@ function utf8_convert_encoding($str, $to, $from=null)
 {
 	trigger_deprecation('contao/core-bundle', '4.0', 'Using "utf8_convert_encoding()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\StringUtil::convertEncoding()" instead.');
 
-	if ($str == '')
+	if (!$str)
 	{
 		return '';
 	}

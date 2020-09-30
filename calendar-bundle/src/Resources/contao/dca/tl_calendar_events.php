@@ -63,7 +63,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			(
 				'id' => 'primary',
 				'alias' => 'index',
-				'pid,start,stop,published' => 'index'
+				'pid,published,featured,start,stop' => 'index'
 			)
 		)
 	),
@@ -704,7 +704,7 @@ class tl_calendar_events extends Backend
 		};
 
 		// Generate the alias if there is none
-		if ($varValue == '')
+		if (!$varValue)
 		{
 			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->title, CalendarModel::findByPk($dc->activeRecord->pid)->jumpTo, $aliasExists);
 		}
@@ -898,7 +898,7 @@ class tl_calendar_events extends Backend
 		}
 
 		// Add the option currently set
-		if ($dc->activeRecord && $dc->activeRecord->source != '')
+		if ($dc->activeRecord && $dc->activeRecord->source)
 		{
 			$arrOptions[] = $dc->activeRecord->source;
 			$arrOptions = array_unique($arrOptions);
@@ -994,6 +994,14 @@ class tl_calendar_events extends Backend
 			return;
 		}
 
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request)
+		{
+			$origScope = $request->attributes->get('_scope');
+			$request->attributes->set('_scope', 'frontend');
+		}
+
 		$this->import(Calendar::class, 'Calendar');
 
 		foreach ($session as $id)
@@ -1003,6 +1011,11 @@ class tl_calendar_events extends Backend
 
 		$this->import(Automator::class, 'Automator');
 		$this->Automator->generateSitemap();
+
+		if ($request)
+		{
+			$request->attributes->set('_scope', $origScope);
+		}
 
 		$objSession->set('calendar_feed_updater', null);
 	}
@@ -1267,5 +1280,10 @@ class tl_calendar_events extends Backend
 
 		// The onsubmit_callback has triggered scheduleUpdate(), so run generateFeed() now
 		$this->generateFeed();
+
+		if ($dc)
+		{
+			$dc->invalidateCacheTags();
+		}
 	}
 }

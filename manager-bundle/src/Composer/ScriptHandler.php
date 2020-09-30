@@ -77,7 +77,7 @@ class ScriptHandler
 
         // Backwards compatibility with symfony/process <3.3 (see #1964)
         if (method_exists(Process::class, 'setCommandline')) {
-            $command = implode(' ', $command);
+            $command = implode(' ', array_map('escapeshellarg', $command));
         }
 
         $process = new Process($command);
@@ -92,7 +92,7 @@ class ScriptHandler
         );
 
         if (!$process->isSuccessful()) {
-            throw new \RuntimeException(sprintf('An error occurred while executing the "%s" command: %s', $cmd, $process->getErrorOutput()));
+            throw new \RuntimeException(sprintf('An error occurred while executing the "%s" command: %s', implode(' ', $cmd), $process->getErrorOutput()));
         }
     }
 

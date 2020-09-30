@@ -82,7 +82,7 @@ class Updater extends Controller
 		{
 			$mootools = array('moo_mediabox');
 
-			if ($objLayout->mootools != '')
+			if ($objLayout->mootools)
 			{
 				$mootools[] = $objLayout->mootools;
 			}
@@ -711,7 +711,7 @@ class Updater extends Controller
 			$arrMapper[basename($strFile)] = $strUuid;
 		}
 
-		// Insert the meta data AFTER the file entries have been created
+		// Insert the metadata AFTER the file entries have been created
 		if (!empty($arrMeta))
 		{
 			foreach ($arrMeta as $file=>$meta)

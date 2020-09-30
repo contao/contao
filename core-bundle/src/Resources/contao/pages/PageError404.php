@@ -85,13 +85,13 @@ class PageError404 extends Frontend
 		$objRootPage = $this->getRootPageFromUrl();
 
 		// Forward if the language should be but is not set (see #4028)
-		if ($objRootPage->urlPrefix)
+		if ($objRootPage->urlPrefix && System::getContainer()->getParameter('contao.legacy_routing'))
 		{
 			// Get the request string without the script name
 			$strRequest = Environment::get('relativeRequest');
 
 			// Only redirect if there is no language fragment (see #4669)
-			if ($strRequest != '' && !preg_match('@^[a-z]{2}(-[A-Z]{2})?/@', $strRequest))
+			if ($strRequest && !preg_match('@^[a-z]{2}(-[A-Z]{2})?/@', $strRequest))
 			{
 				// Handle language fragments without trailing slash (see #7666)
 				if (preg_match('@^[a-z]{2}(-[A-Z]{2})?$@', $strRequest))
@@ -109,7 +109,7 @@ class PageError404 extends Frontend
 						$strRequest = Environment::get('script') . '/' . $objRootPage->language . '/' . $strRequest;
 					}
 
-					$this->redirect($strRequest, 301);
+					$this->redirect($strRequest);
 				}
 			}
 		}

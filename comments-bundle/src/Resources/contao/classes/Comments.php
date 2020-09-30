@@ -122,7 +122,7 @@ class Comments extends Frontend
 				$objPartial->addReply = false;
 
 				// Reply
-				if ($objComments->addReply && $objComments->reply != '' && ($objAuthor = $objComments->getRelated('author')) instanceof UserModel)
+				if ($objComments->addReply && $objComments->reply && ($objAuthor = $objComments->getRelated('author')) instanceof UserModel)
 				{
 					$objPartial->addReply = true;
 					$objPartial->rby = $GLOBALS['TL_LANG']['MSC']['com_reply'];
@@ -307,7 +307,7 @@ class Comments extends Frontend
 			$strWebsite = $arrWidgets['website']->value;
 
 			// Add http:// to the website
-			if (($strWebsite != '') && !preg_match('@^(https?://|ftp://|mailto:|#)@i', $strWebsite))
+			if ($strWebsite && !preg_match('@^(https?://|ftp://|mailto:|#)@i', $strWebsite))
 			{
 				$strWebsite = 'http://' . $strWebsite;
 			}
@@ -404,7 +404,7 @@ class Comments extends Frontend
 			{
 				$objEmail->sendTo(array_unique($varNotifies));
 			}
-			elseif ($varNotifies != '')
+			elseif ($varNotifies)
 			{
 				$objEmail->sendTo($varNotifies); // see #5443
 			}
@@ -661,6 +661,9 @@ class Comments extends Frontend
 
 		if ($objNotify !== null)
 		{
+			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+			$isFrontend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request);
+
 			while ($objNotify->next())
 			{
 				// Don't notify the commentor about his own comment
@@ -670,7 +673,7 @@ class Comments extends Frontend
 				}
 
 				// Update the notification URL if it has changed (see #373)
-				if (TL_MODE == 'FE' && $objNotify->url != Environment::get('request'))
+				if ($isFrontend && $objNotify->url != Environment::get('request'))
 				{
 					$objNotify->url = Environment::get('request');
 					$objNotify->save();

@@ -1,5 +1,14 @@
 # API changes
 
+## Version 4.* to 4.10
+
+### CSS classes "first" and "last"
+
+The CSS classes "first" and "last" are no longer applied to articles and
+content elements. Use CSS selectors instead.
+
+More information: https://github.com/contao/contao/issues/239
+
 ## Version 4.* to 4.8
 
 ### Contao image 1.0
@@ -267,6 +276,8 @@ The keys of the following front end modules have been changed:
 
  * `articleList` -> `articlelist`
  * `rss_reader`  -> `rssReader`
+ * `nl_list`     -> `newsletterlist`
+ * `nl_reader`   -> `newsletterreader`
 
 ### Custom database drivers
 

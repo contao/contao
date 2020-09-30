@@ -399,7 +399,6 @@ class ZipReader
 			// Unknown
 			default:
 				throw new \Exception('Unknown compression method');
-				break;
 		}
 
 		// Check uncompressed data

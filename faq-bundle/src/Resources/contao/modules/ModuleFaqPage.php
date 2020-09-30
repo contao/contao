@@ -34,7 +34,9 @@ class ModuleFaqPage extends Module
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['faqpage'][0]) . ' ###';
@@ -90,7 +92,7 @@ class ModuleFaqPage extends Module
 			$objTemp->addImage = false;
 
 			// Add an image
-			if ($objFaq->addImage && $objFaq->singleSRC != '')
+			if ($objFaq->addImage && $objFaq->singleSRC)
 			{
 				$objModel = FilesModel::findByUuid($objFaq->singleSRC);
 

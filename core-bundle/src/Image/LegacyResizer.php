@@ -24,7 +24,7 @@ use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeCoordinates;
 use Contao\Image\ResizeOptions;
 use Contao\System;
-use Imagine\Exception\Exception as ImagineException;
+use Imagine\Exception\RuntimeException as ImagineRuntimeException;
 use Imagine\Gd\Imagine as GdImagine;
 use Imagine\Image\Box;
 use Imagine\Image\ImagineInterface;
@@ -90,7 +90,7 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
 
         try {
             return parent::resize($image, $config, $options);
-        } catch (ImagineException $exception) {
+        } catch (ImagineRuntimeException $exception) {
             throw $this->enhanceImagineException($exception, $image);
         }
     }
@@ -99,7 +99,7 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
     {
         try {
             return parent::resizeDeferredImage($image, $blocking);
-        } catch (ImagineException $exception) {
+        } catch (ImagineRuntimeException $exception) {
             throw $this->enhanceImagineException($exception, $image);
         }
     }
@@ -159,7 +159,7 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
         return !empty($GLOBALS['TL_HOOKS']['getImage']) && \is_array($GLOBALS['TL_HOOKS']['getImage']);
     }
 
-    private function enhanceImagineException(\Throwable $exception, ImageInterface $image): \Throwable
+    private function enhanceImagineException(ImagineRuntimeException $exception, ImageInterface $image): \Throwable
     {
         $format = Path::getExtension($image->getPath());
 

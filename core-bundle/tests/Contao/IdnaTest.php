@@ -91,4 +91,16 @@ class IdnaTest extends TestCase
         Idna::decodeUrl('www.xn--fbar-5qaa.de');
         Idna::decodeUrl('index.php?foo=bar');
     }
+
+    public function testHandlesQueryStrings(): void
+    {
+        $decoded = 'mailto:info@fööbar.de';
+        $encoded = 'mailto:info@xn--fbar-5qaa.de';
+
+        // Add a query string that would trigger a LabelOutOfBoundsException
+        $queryString = '?subject='.str_repeat('a', 64);
+
+        $this->assertSame($encoded.$queryString, Idna::encodeUrl($decoded.$queryString));
+        $this->assertSame($decoded.$queryString, Idna::decodeUrl($encoded.$queryString));
+    }
 }

@@ -58,12 +58,16 @@ class DebugFragmentsCommand extends Command
         natsort($identifiers);
 
         foreach ($identifiers as $identifier) {
+            $attributes = $this->attributes[$identifier];
+            $controller = $attributes['debugController'] ?? $this->configs[$identifier]->getController();
+            unset($attributes['debugController']);
+
             $rows[] = [
                 $identifier,
-                $this->configs[$identifier]->getController(),
+                $controller,
                 $this->configs[$identifier]->getRenderer(),
                 $this->generateArray($this->configs[$identifier]->getOptions()),
-                $this->generateArray($this->attributes[$identifier]),
+                $this->generateArray($attributes),
             ];
         }
 

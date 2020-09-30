@@ -26,9 +26,8 @@ use Doctrine\DBAL\FetchMode;
 use Nyholm\Psr7\Uri;
 use Symfony\Contracts\Service\ResetInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
-class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
+class PageUrlListener implements ResetInterface
 {
     /**
      * @var ContaoFramework
@@ -150,7 +149,7 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
         // First check if another root page uses the same url prefix and domain
         $count = $this->connection
             ->executeQuery(
-                'SELECT COUNT(*) FROM tl_page WHERE urlPrefix=:urlPrefix AND dns=:dns AND id!=:rootId',
+                "SELECT COUNT(*) FROM tl_page WHERE urlPrefix=:urlPrefix AND dns=:dns AND id!=:rootId AND type='root'",
                 [
                     'urlPrefix' => $value,
                     'dns' => $dc->activeRecord->dns,
@@ -240,7 +239,10 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
 
         /** @var PageModel $page */
         foreach ($pages as $page) {
-            $this->aliasExists($page->alias, (int) $page->id, $rootPage, true);
+            if ($page->alias) {
+                $this->aliasExists($page->alias, (int) $page->id, $rootPage, true);
+            }
+
             $this->recursiveValidatePages((int) $page->id, $rootPage);
         }
     }
@@ -260,10 +262,17 @@ class PageUrlListener implements ServiceAnnotationInterface, ResetInterface
             /** @var Input $input */
             $input = $this->framework->getAdapter(Input::class);
 
-            // TODO: this won't work in edit-all, in legacy mode or if user does not have access to these fields
-            $currentDomain = $input->post('dns') ?: '';
-            $currentPrefix = $input->post('urlPrefix') ?: '';
-            $currentSuffix = $input->post('urlSuffix') ?: '';
+            if (null !== ($dns = $input->post('dns'))) {
+                $currentDomain = $dns;
+            }
+
+            if (null !== ($urlPrefix = $input->post('urlPrefix'))) {
+                $currentPrefix = $urlPrefix;
+            }
+
+            if (null !== ($urlSuffix = $input->post('urlSuffix'))) {
+                $currentSuffix = $urlSuffix;
+            }
         }
 
         $aliasIds = $this->connection

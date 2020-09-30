@@ -175,9 +175,9 @@ abstract class System
 			{
 				$this->arrObjects[$strKey] = $strClass;
 			}
-			elseif (isset(static::$arrSingletons[$strKey]))
+			elseif (isset(static::$arrSingletons[$strClass]))
 			{
-				$this->arrObjects[$strKey] = static::$arrSingletons[$strKey];
+				$this->arrObjects[$strKey] = static::$arrSingletons[$strClass];
 			}
 			elseif ($container->has($strClass) && (strpos($strClass, '\\') !== false || !class_exists($strClass)))
 			{
@@ -193,7 +193,7 @@ abstract class System
 			}
 			elseif (\in_array('getInstance', get_class_methods($strClass)))
 			{
-				static::$arrStaticObjects[$strKey] = static::$arrSingletons[$strKey] = $this->arrObjects[$strKey] = \call_user_func(array($strClass, 'getInstance'));
+				$this->arrObjects[$strKey] = static::$arrSingletons[$strClass] = \call_user_func(array($strClass, 'getInstance'));
 			}
 			else
 			{
@@ -235,6 +235,10 @@ abstract class System
 			{
 				static::$arrStaticObjects[$strKey] = $strClass;
 			}
+			elseif (isset(static::$arrSingletons[$strClass]))
+			{
+				static::$arrStaticObjects[$strKey] = static::$arrSingletons[$strClass];
+			}
 			elseif ($container->has($strClass) && (strpos($strClass, '\\') !== false || !class_exists($strClass)))
 			{
 				static::$arrStaticObjects[$strKey] = $container->get($strClass);
@@ -249,7 +253,7 @@ abstract class System
 			}
 			elseif (\in_array('getInstance', get_class_methods($strClass)))
 			{
-				static::$arrStaticObjects[$strKey] = static::$arrSingletons[$strKey] = \call_user_func(array($strClass, 'getInstance'));
+				static::$arrStaticObjects[$strKey] = static::$arrSingletons[$strClass] = \call_user_func(array($strClass, 'getInstance'));
 			}
 			else
 			{
@@ -328,7 +332,7 @@ abstract class System
 		}
 
 		// Use a specific referer
-		if ($strTable != '' && isset($session[$strTable]) && Input::get('act') != 'select')
+		if ($strTable && isset($session[$strTable]) && Input::get('act') != 'select')
 		{
 			$session['current'] = $session[$strTable];
 		}
@@ -336,7 +340,7 @@ abstract class System
 		// Remove parameters helper
 		$cleanUrl = static function ($url, $params=array('rt', 'ref'))
 		{
-			if ($url == '' || strpos($url, '?') === false)
+			if (!$url || strpos($url, '?') === false)
 			{
 				return $url;
 			}
@@ -356,13 +360,13 @@ abstract class System
 		$return = $cleanUrl($strUrl, array('tg', 'ptg'));
 
 		// Fallback to the generic referer in the front end
-		if ($return == '' && \defined('TL_MODE') && TL_MODE == 'FE')
+		if (!$return && \defined('TL_MODE') && TL_MODE == 'FE')
 		{
 			$return = Environment::get('httpReferer');
 		}
 
 		// Fallback to the current URL if there is no referer
-		if ($return == '')
+		if (!$return)
 		{
 			$return = (\defined('TL_MODE') && TL_MODE == 'BE') ? 'contao/main.php' : Environment::get('url');
 		}
@@ -386,7 +390,7 @@ abstract class System
 		}
 
 		// Fall back to English
-		if ($strLanguage == '')
+		if (!$strLanguage)
 		{
 			$strLanguage = 'en';
 		}
@@ -661,19 +665,29 @@ abstract class System
 	/**
 	 * Set a cookie
 	 *
-	 * @param string  $strName     The cookie name
-	 * @param mixed   $varValue    The cookie value
-	 * @param integer $intExpires  The expiration date
-	 * @param string  $strPath     An optional path
-	 * @param string  $strDomain   An optional domain name
-	 * @param boolean $blnSecure   If true, the secure flag will be set
-	 * @param boolean $blnHttpOnly If true, the http-only flag will be set
+	 * @param string       $strName     The cookie name
+	 * @param mixed        $varValue    The cookie value
+	 * @param integer      $intExpires  The expiration date
+	 * @param string|null  $strPath     An optional path
+	 * @param string|null  $strDomain   An optional domain name
+	 * @param boolean|null $blnSecure   If true, the secure flag will be set
+	 * @param boolean      $blnHttpOnly If true, the http-only flag will be set
 	 */
-	public static function setCookie($strName, $varValue, $intExpires, $strPath=null, $strDomain=null, $blnSecure=false, $blnHttpOnly=false)
+	public static function setCookie($strName, $varValue, $intExpires, $strPath=null, $strDomain=null, $blnSecure=null, $blnHttpOnly=false)
 	{
-		if ($strPath == '')
+		if (!$strPath)
 		{
 			$strPath = Environment::get('path') ?: '/'; // see #4390
+		}
+
+		if ($blnSecure === null)
+		{
+			$blnSecure = false;
+
+			if ($request = static::getContainer()->get('request_stack')->getCurrentRequest())
+			{
+				$blnSecure = $request->isSecure();
+			}
 		}
 
 		$objCookie = new \stdClass();

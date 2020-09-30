@@ -75,7 +75,11 @@ class ModuleWizard extends Widget
 		// Add the module type (see #3835)
 		foreach ($modules as $k=>$v)
 		{
-			$v['type'] = $GLOBALS['TL_LANG']['FMD'][$v['type']][0];
+			if (isset($GLOBALS['TL_LANG']['FMD'][$v['type']][0]))
+			{
+				$v['type'] = $GLOBALS['TL_LANG']['FMD'][$v['type']][0];
+			}
+
 			$modules[$k] = $v;
 		}
 
@@ -108,7 +112,7 @@ class ModuleWizard extends Widget
 		$positions = array();
 
 		// Add custom layout sections
-		if ($objRow->sections != '')
+		if ($objRow->sections)
 		{
 			$arrSections = StringUtil::deserialize($objRow->sections);
 

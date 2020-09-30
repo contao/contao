@@ -41,7 +41,9 @@ class ModuleNewsReader extends ModuleNews
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['newsreader'][0]) . ' ###';
@@ -105,7 +107,6 @@ class ModuleNewsReader extends ModuleNews
 				}
 
 				throw new InternalServerErrorException('Invalid "jumpTo" value or target page not public');
-				break;
 
 			case 'article':
 				if (($article = ArticleModel::findByPk($objArticle->articleId)) && ($page = PageModel::findPublishedById($article->pid)))
@@ -114,7 +115,6 @@ class ModuleNewsReader extends ModuleNews
 				}
 
 				throw new InternalServerErrorException('Invalid "articleId" value or target page not public');
-				break;
 
 			case 'external':
 				if ($objArticle->url)
@@ -123,7 +123,6 @@ class ModuleNewsReader extends ModuleNews
 				}
 
 				throw new InternalServerErrorException('Empty target URL');
-				break;
 		}
 
 		// Set the default template
@@ -194,7 +193,7 @@ class ModuleNewsReader extends ModuleNews
 		}
 
 		/** @var UserModel $objAuthor */
-		if ($objArchive->notify != 'notify_admin' && ($objAuthor = $objArticle->getRelated('author')) instanceof UserModel && $objAuthor->email != '')
+		if ($objArchive->notify != 'notify_admin' && ($objAuthor = $objArticle->getRelated('author')) instanceof UserModel && $objAuthor->email)
 		{
 			$arrNotifies[] = $objAuthor->email;
 		}

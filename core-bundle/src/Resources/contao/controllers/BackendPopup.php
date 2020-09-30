@@ -61,7 +61,7 @@ class BackendPopup extends Backend
 	 */
 	public function run()
 	{
-		if ($this->strFile == '')
+		if (!$this->strFile)
 		{
 			die('No file given');
 		}
@@ -132,7 +132,7 @@ class BackendPopup extends Backend
 				$objTemplate->dataUri = $objFile->dataUri;
 			}
 
-			// Meta data
+			// Metadata
 			if (($objModel = FilesModel::findByPath($this->strFile)) instanceof FilesModel)
 			{
 				$arrMeta = StringUtil::deserialize($objModel->meta);
