@@ -106,17 +106,17 @@ class SelectMenu extends \Widget
 	 */
 	protected function isValidOption($varInput)
 	{
-		if (parent::isValidOption($varInput))
+		$arrOptions = $this->arrOptions;
+
+		if (isset($this->unknownOption[0]))
 		{
-			return true;
+			$this->arrOptions['unknown'][] = array('value'=>$this->unknownOption[0]);
 		}
 
-		if ($varInput == $this->unknownOption[0])
-		{
-			return true;
-		}
+		$blnIsValid = parent::isValidOption($varInput);
+		$this->arrOptions = $arrOptions;
 
-		return false;
+		return $blnIsValid;
 	}
 
 	/**
@@ -141,7 +141,15 @@ class SelectMenu extends \Widget
 			$this->arrOptions = array(array('value'=>'', 'label'=>'-'));
 		}
 
-		foreach ($this->arrOptions as $strKey=>$arrOption)
+		$arrAllOptions = $this->arrOptions;
+
+		// Add an unknown option, so it is not lost when saving the record (see #920)
+		if (isset($this->unknownOption[0]))
+		{
+			$arrAllOptions[] = array('value'=>$this->unknownOption[0], 'label'=>$GLOBALS['TL_LANG']['MSC']['unknownOption']);
+		}
+
+		foreach ($arrAllOptions as $strKey=>$arrOption)
 		{
 			if (isset($arrOption['value']))
 			{
@@ -168,17 +176,6 @@ class SelectMenu extends \Widget
 
 				$arrOptions[] = sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', \StringUtil::specialchars($strKey), implode('', $arrOptgroups));
 			}
-		}
-
-		// If the user cannot select the current value, add it as unknown option,
-		// so it does not get lost when saving the record (see #920)
-		if (isset($this->unknownOption))
-		{
-			$arrOptions[] = sprintf(
-				'<option value="%s" selected>%s</option>',
-				StringUtil::specialchars($this->unknownOption[0]),
-				$GLOBALS['TL_LANG']['MSC']['unknownOption']
-			);
 		}
 
 		// Chosen

@@ -1388,12 +1388,7 @@ abstract class Widget extends \Controller
 				}
 			}
 
-			$unknown = array_filter($unknown);
-
-			if (!empty($unknown))
-			{
-				$arrAttributes['unknownOption'] = $unknown;
-			}
+			$arrAttributes['unknownOption'] = array_filter($unknown);
 		}
 
 		if (\is_array($arrAttributes['sql']) && !isset($arrAttributes['sql']['columnDefinition']))

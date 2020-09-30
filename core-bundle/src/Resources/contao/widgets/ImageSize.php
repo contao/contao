@@ -148,7 +148,7 @@ class ImageSize extends \Widget
 			}
 		}
 
-		if ($varInput == $this->unknownOption[2])
+		if (isset($this->unknownOption[2]) && $varInput == $this->unknownOption[2])
 		{
 			return true;
 		}
@@ -176,8 +176,15 @@ class ImageSize extends \Widget
 
 		$arrFields = array();
 		$arrOptions = array();
+		$arrAllOptions = $this->arrOptions;
 
-		foreach ($this->arrOptions as $strKey=>$arrOption)
+		// Add an unknown option, so it is not lost when saving the record (see #920)
+		if (isset($this->unknownOption[2]))
+		{
+			$arrAllOptions[] = array('value'=>$this->unknownOption[2], 'label'=>$GLOBALS['TL_LANG']['MSC']['unknownOption']);
+		}
+
+		foreach ($arrAllOptions as $strKey=>$arrOption)
 		{
 			if (isset($arrOption['value']))
 			{
@@ -204,17 +211,6 @@ class ImageSize extends \Widget
 
 				$arrOptions[] = sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', \StringUtil::specialchars($strKey), implode('', $arrOptgroups));
 			}
-		}
-
-		// If the user cannot select the current value, add it as unknown option,
-		// so it does not get lost when saving the record (see #920)
-		if (isset($this->unknownOption))
-		{
-			$arrOptions[] = sprintf(
-				'<option value="%s" selected>%s</option>',
-				StringUtil::specialchars($this->unknownOption[2]),
-				$GLOBALS['TL_LANG']['MSC']['unknownOption']
-			);
 		}
 
 		$arrFields[] = sprintf(
