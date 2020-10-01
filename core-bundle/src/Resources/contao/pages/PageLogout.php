@@ -31,7 +31,6 @@ class PageLogout extends Frontend
 	 */
 	public function getResponse($objPage)
 	{
-		$strLogoutUrl = System::getContainer()->get('security.logout_url_generator')->getLogoutUrl();
 		$strRedirect = Environment::get('base');
 
 		// Redirect to last page visited
@@ -47,6 +46,15 @@ class PageLogout extends Frontend
 			$strRedirect = $objTarget->getAbsoluteUrl();
 		}
 
+		$container = System::getContainer();
+
+		// Redirect immediately, if there is no logged in user
+		if (null === $container->get('security.helper')->getUser())
+		{
+			return new RedirectResponse($strRedirect);
+		}
+
+		$strLogoutUrl = $container->get('security.logout_url_generator')->getLogoutUrl();
 		$uri = Http::createFromString($strLogoutUrl);
 
 		// Add the redirect= parameter to the logout URL
