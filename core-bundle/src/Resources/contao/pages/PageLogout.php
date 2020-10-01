@@ -48,10 +48,10 @@ class PageLogout extends Frontend
 
 		$container = System::getContainer();
 
-		// Redirect immediately, if there is no logged in user
+		// Redirect immediately, if there is no logged in user (see #2388)
 		if (null === $container->get('security.helper')->getUser())
 		{
-			return new RedirectResponse($strRedirect);
+			//return new RedirectResponse($strRedirect);
 		}
 
 		$strLogoutUrl = $container->get('security.logout_url_generator')->getLogoutUrl();
