@@ -81,9 +81,12 @@ class CheckBox extends \Widget
 	{
 		$arrOptions = $this->arrOptions;
 
-		foreach ($this->unknownOption as $v)
+		if (\is_array($this->unknownOption))
 		{
-			$this->arrOptions[] = array('value'=>$v);
+			foreach ($this->unknownOption as $v)
+			{
+				$this->arrOptions[] = array('value'=>$v);
+			}
 		}
 
 		$blnIsValid = parent::isValidOption($varInput);
@@ -130,9 +133,12 @@ class CheckBox extends \Widget
 		$arrAllOptions = $this->arrOptions;
 
 		// Add unknown options, so they are not lost when saving the record (see #920)
-		foreach ($this->unknownOption as $val)
+		if (\is_array($this->unknownOption))
 		{
-			$arrAllOptions[] = array('value' => $val, 'label' => $GLOBALS['TL_LANG']['MSC']['unknownOption']);
+			foreach ($this->unknownOption as $val)
+			{
+				$arrAllOptions[] = array('value' => $val, 'label' => $GLOBALS['TL_LANG']['MSC']['unknownOption']);
+			}
 		}
 
 		foreach ($arrAllOptions as $i=>$arrOption)
