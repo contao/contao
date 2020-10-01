@@ -385,7 +385,8 @@ abstract class DataContainer extends Backend
 						$this->noReload = true;
 					}
 				}
-				else
+				// The return value of submitInput() might have changed, therefore check it again here (see #2383)
+				elseif ($objWidget->submitInput())
 				{
 					$varValue = $objWidget->value;
 
