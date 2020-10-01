@@ -15,6 +15,7 @@ namespace Contao;
  *
  * @property boolean $mandatory
  * @property array   $options
+ * @property array   $unknownOption
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -80,6 +81,28 @@ class RadioButton extends \Widget
 	}
 
 	/**
+	 * Check whether an input is one of the given options
+	 *
+	 * @param mixed $varInput The input string or array
+	 *
+	 * @return boolean True if the selected option exists
+	 */
+	protected function isValidOption($varInput)
+	{
+		$arrOptions = $this->arrOptions;
+
+		if (isset($this->unknownOption[0]))
+		{
+			$this->arrOptions[] = array('value'=>$this->unknownOption[0]);
+		}
+
+		$blnIsValid = parent::isValidOption($varInput);
+		$this->arrOptions = $arrOptions;
+
+		return $blnIsValid;
+	}
+
+	/**
 	 * Generate the widget and return it as string
 	 *
 	 * @return string
@@ -87,8 +110,15 @@ class RadioButton extends \Widget
 	public function generate()
 	{
 		$arrOptions = array();
+		$arrAllOptions = $this->arrOptions;
 
-		foreach ($this->arrOptions as $i=>$arrOption)
+		// Add an unknown option, so it is not lost when saving the record (see #920)
+		if (isset($this->unknownOption[0]))
+		{
+			$arrAllOptions[] = array('value'=>$this->unknownOption[0], 'label'=>$GLOBALS['TL_LANG']['MSC']['unknownOption']);
+		}
+
+		foreach ($arrAllOptions as $i=>$arrOption)
 		{
 			$arrOptions[] = sprintf(
 				'<input type="radio" name="%s" id="opt_%s" class="tl_radio" value="%s"%s%s onfocus="Backend.getScrollOffset()"> <label for="opt_%s">%s</label>',

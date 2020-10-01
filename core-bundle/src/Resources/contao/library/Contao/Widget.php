@@ -1277,6 +1277,7 @@ abstract class Widget extends \Controller
 		$arrAttributes['description'] = $arrData['label'][1];
 		$arrAttributes['type'] = $arrData['inputType'];
 		$arrAttributes['dataContainer'] = $objDca;
+		$arrAttributes['value'] = \StringUtil::deserialize($varValue);
 
 		// Internet Explorer does not support onchange for checkboxes and radio buttons
 		if ($arrData['eval']['submitOnChange'])
@@ -1354,7 +1355,7 @@ abstract class Widget extends \Controller
 				$arrAttributes['options'][] = array('value'=>'', 'label'=>$strLabel);
 			}
 
-			$isKnownOption = false;
+			$unknown = (array) $arrAttributes['value'];
 
 			foreach ($arrData['options'] as $k=>$v)
 			{
@@ -1362,9 +1363,9 @@ abstract class Widget extends \Controller
 				{
 					$value = $blnIsAssociative ? $k : $v;
 
-					if ($varValue && $varValue == $value)
+					if (($i = array_search($value, $unknown)) !== false)
 					{
-						$isKnownOption = true;
+						unset($unknown[$i]);
 					}
 
 					$arrAttributes['options'][] = array('value'=>$value, 'label'=>($blnUseReference ? ((($ref = (\is_array($arrData['reference'][$v]) ? $arrData['reference'][$v][0] : $arrData['reference'][$v])) != false) ? $ref : $v) : $v));
@@ -1378,22 +1379,16 @@ abstract class Widget extends \Controller
 				{
 					$value = $blnIsAssoc ? $kk : $vv;
 
-					if ($varValue && $varValue == $value)
+					if (($i = array_search($value, $unknown)) !== false)
 					{
-						$isKnownOption = true;
+						unset($unknown[$i]);
 					}
 
 					$arrAttributes['options'][$key][] = array('value'=>$value, 'label'=>($blnUseReference ? ((($ref = (\is_array($arrData['reference'][$vv]) ? $arrData['reference'][$vv][0] : $arrData['reference'][$vv])) != false) ? $ref : $vv) : $vv));
 				}
 			}
 
-			// If the value is not in the options array, the current user most
-			// likely cannot access it. We add the value as unknown option, so
-			// it does not get lost when saving the record (see #920).
-			if ($varValue && !$isKnownOption)
-			{
-				$arrAttributes['options'][] = array('value'=>$varValue, 'label'=>$GLOBALS['TL_LANG']['MSC']['unknownOption']);
-			}
+			$arrAttributes['unknownOption'] = array_filter($unknown);
 		}
 
 		if (\is_array($arrAttributes['sql']) && !isset($arrAttributes['sql']['columnDefinition']))
@@ -1408,8 +1403,6 @@ abstract class Widget extends \Controller
 				$arrAttributes['unique'] = $arrAttributes['sql']['customSchemaOptions']['unique'];
 			}
 		}
-
-		$arrAttributes['value'] = \StringUtil::deserialize($varValue);
 
 		// Convert timestamps
 		if ($varValue !== null && $varValue !== '' && \in_array($arrData['eval']['rgxp'], array('date', 'time', 'datim')))

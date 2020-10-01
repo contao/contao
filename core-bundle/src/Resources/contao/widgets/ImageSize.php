@@ -15,6 +15,7 @@ namespace Contao;
  *
  * @property integer $maxlength
  * @property array   $options
+ * @property array   $unknownOption
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -147,6 +148,11 @@ class ImageSize extends \Widget
 			}
 		}
 
+		if (isset($this->unknownOption[2]) && $varInput == $this->unknownOption[2])
+		{
+			return true;
+		}
+
 		return false;
 	}
 
@@ -170,8 +176,15 @@ class ImageSize extends \Widget
 
 		$arrFields = array();
 		$arrOptions = array();
+		$arrAllOptions = $this->arrOptions;
 
-		foreach ($this->arrOptions as $strKey=>$arrOption)
+		// Add an unknown option, so it is not lost when saving the record (see #920)
+		if (isset($this->unknownOption[2]))
+		{
+			$arrAllOptions[] = array('value'=>$this->unknownOption[2], 'label'=>$GLOBALS['TL_LANG']['MSC']['unknownOption']);
+		}
+
+		foreach ($arrAllOptions as $strKey=>$arrOption)
 		{
 			if (isset($arrOption['value']))
 			{
