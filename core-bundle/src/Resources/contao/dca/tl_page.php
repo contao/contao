@@ -1154,6 +1154,10 @@ class tl_page extends Contao\Backend
 				$varValue = $objPage->folderUrl . $varValue;
 			}
 		}
+		elseif (preg_match('/^[1-9]\d*$/', $varValue))
+		{
+			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasNumeric'], $varValue));
+		}
 		elseif ($aliasExists($varValue))
 		{
 			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
