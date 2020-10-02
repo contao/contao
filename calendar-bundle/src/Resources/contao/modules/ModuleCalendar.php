@@ -43,6 +43,11 @@ class ModuleCalendar extends \Events
 	protected $strTemplate = 'mod_calendar';
 
 	/**
+	 * @var array
+	 */
+	protected $arrAllEvents;
+
+	/**
 	 * Do not show the module if no calendar has been selected
 	 *
 	 * @return string
@@ -109,10 +114,33 @@ class ModuleCalendar extends \Events
 			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 		}
 
-		$time = \Date::floorToMinute();
+		// Get all events (see #1818)
+		$this->arrAllEvents = $this->getAllEvents($this->cal_calendar, $this->Date->monthBegin, $this->Date->monthEnd);
+		$dateFrom = null;
+		$dateTo = null;
 
 		// Find the boundaries
-		$objMinMax = $this->Database->query("SELECT MIN(startTime) AS dateFrom, MAX(endTime) AS dateTo, MAX(repeatEnd) AS repeatUntil FROM tl_calendar_events WHERE pid IN(" . implode(',', array_map('\intval', $this->cal_calendar)) . ")" . (!BE_USER_LOGGED_IN ? " AND published='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'$time')" : ""));
+		if (!empty($this->arrAllEvents))
+		{
+			$keys = array_keys($this->arrAllEvents);
+			$dateFrom = $keys[0];
+			$dateTo = $keys[\count($keys) - 1];
+
+			// Check for recurring events and adjust the end date accordingly
+			foreach ($this->arrAllEvents as $day => $times)
+			{
+				foreach ($times as $time => $events)
+				{
+					foreach ($events as $event)
+					{
+						if ($event['recurring'] && $event['repeatEnd'] > $dateTo)
+						{
+							$dateTo = $event['repeatEnd'];
+						}
+					}
+				}
+			}
+		}
 
 		/** @var FrontendTemplate|object $objTemplate */
 		$objTemplate = new \FrontendTemplate($this->cal_ctemplate);
@@ -130,7 +158,7 @@ class ModuleCalendar extends \Events
 		$intPrevYm = (int) ($prevYear . str_pad($prevMonth, 2, 0, STR_PAD_LEFT));
 
 		// Only generate a link if there are events (see #4160)
-		if (($objMinMax->dateFrom !== null && $intPrevYm >= date('Ym', $objMinMax->dateFrom)) || $intPrevYm >= date('Ym'))
+		if (($dateFrom !== null && $intPrevYm >= substr($dateFrom, 0, 6)) || $intPrevYm >= date('Ym'))
 		{
 			$objTemplate->prevHref = $this->strUrl . '?month=' . $intPrevYm;
 			$objTemplate->prevTitle = \StringUtil::specialchars($lblPrevious);
@@ -148,7 +176,7 @@ class ModuleCalendar extends \Events
 		$intNextYm = $nextYear . str_pad($nextMonth, 2, 0, STR_PAD_LEFT);
 
 		// Only generate a link if there are events (see #4160)
-		if (($objMinMax->dateTo !== null && $intNextYm <= date('Ym', max($objMinMax->dateTo, $objMinMax->repeatUntil))) || $intNextYm <= date('Ym'))
+		if (($dateTo !== null && $intNextYm <= substr($dateTo, 0, 6)) || $intNextYm <= date('Ym'))
 		{
 			$objTemplate->nextHref = $this->strUrl . '?month=' . $intNextYm;
 			$objTemplate->nextTitle = \StringUtil::specialchars($lblNext);
@@ -224,7 +252,6 @@ class ModuleCalendar extends \Events
 
 		$intColumnCount = -1;
 		$intNumberOfRows = ceil(($intDaysInMonth + $intFirstDayOffset) / 7);
-		$arrAllEvents = $this->getAllEvents($this->cal_calendar, $this->Date->monthBegin, $this->Date->monthEnd);
 		$arrDays = array();
 
 		// Compile days
@@ -262,7 +289,7 @@ class ModuleCalendar extends \Events
 			}
 
 			// Inactive days
-			if (empty($intKey) || !isset($arrAllEvents[$intKey]))
+			if (empty($intKey) || !isset($this->arrAllEvents[$intKey]))
 			{
 				$arrDays[$strWeekClass][$i]['label'] = $intDay;
 				$arrDays[$strWeekClass][$i]['class'] = 'days' . $strClass;
@@ -274,7 +301,7 @@ class ModuleCalendar extends \Events
 			$arrEvents = array();
 
 			// Get all events of a day
-			foreach ($arrAllEvents[$intKey] as $v)
+			foreach ($this->arrAllEvents[$intKey] as $v)
 			{
 				foreach ($v as $vv)
 				{
