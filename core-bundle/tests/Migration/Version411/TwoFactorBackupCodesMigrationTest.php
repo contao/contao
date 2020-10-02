@@ -42,7 +42,7 @@ class TwoFactorBackupCodesMigrationTest extends TestCase
         $this->assertFalse($migration->shouldRun());
     }
 
-    public function testDodesNothingIfColumnsDoNotExist(): void
+    public function testDodesNothingIfTheColumnsDoNotExist(): void
     {
         $schemaManager = $this->createMock(MySqlSchemaManager::class);
         $schemaManager
@@ -71,7 +71,7 @@ class TwoFactorBackupCodesMigrationTest extends TestCase
         $this->assertFalse($migration->shouldRun());
     }
 
-    public function testDoesNothingIfNoRowsExist(): void
+    public function testDoesNothingIfThereAreNoRows(): void
     {
         $schemaManager = $this->createMock(MySqlSchemaManager::class);
         $schemaManager

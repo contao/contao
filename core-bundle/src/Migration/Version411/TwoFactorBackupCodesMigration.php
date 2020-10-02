@@ -72,7 +72,7 @@ class TwoFactorBackupCodesMigration extends AbstractMigration
             }
 
             $this->connection
-                ->prepare('UPDATE '.$table.' SET backupCodes = :backupCodes WHERE id = :id')
+                ->prepare("UPDATE $table SET backupCodes = :backupCodes WHERE id = :id")
                 ->execute([
                     ':backupCodes' => json_encode($backupCodes),
                     ':id' => $row['id'],
@@ -83,11 +83,11 @@ class TwoFactorBackupCodesMigration extends AbstractMigration
 
     private function getAffectedRowsForTable(string $table): array
     {
-        $statement = $this->connection->prepare('
+        $statement = $this->connection->prepare("
             SELECT id, backupCodes
-            FROM '.$table.'
-            WHERE backupCodes IS NOT NULL AND backupCodes REGEXP "[a-f0-9]{6}-[a-f0-9]{6}"
-        ');
+            FROM $table
+            WHERE backupCodes IS NOT NULL AND backupCodes REGEXP '[a-f0-9]{6}-[a-f0-9]{6}'
+        ");
 
         $statement->execute();
 
