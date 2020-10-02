@@ -254,7 +254,11 @@ class Installer
 
             if (strtolower($tableOptions->Engine) !== strtolower($engine)) {
                 if ($innodb && $dynamic) {
-                    $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine.' ROW_FORMAT = DYNAMIC, KEY_BLOCK_SIZE=0';
+                    $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine.' ROW_FORMAT = DYNAMIC';
+
+                    if (false !== stripos($tableOptions->Create_options, 'key_block_size=')) {
+                        $command .= ', KEY_BLOCK_SIZE=0';
+                    }
                 } else {
                     $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine;
                 }
@@ -263,7 +267,12 @@ class Installer
                 $alterTables[md5($command)] = $command;
             } elseif ($innodb && $dynamic) {
                 if (false === stripos($tableOptions->Create_options, 'row_format=dynamic')) {
-                    $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine.' ROW_FORMAT = DYNAMIC, KEY_BLOCK_SIZE=0';
+                    $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine.' ROW_FORMAT = DYNAMIC';
+
+                    if (false !== stripos($tableOptions->Create_options, 'key_block_size=')) {
+                        $command .= ', KEY_BLOCK_SIZE=0';
+                    }
+
                     $alterTables[md5($command)] = $command;
                 }
             }
