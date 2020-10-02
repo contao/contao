@@ -14,6 +14,7 @@ use League\Uri\Components\Query;
 use League\Uri\Http;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 
 /**
  * Provide methods to handle a logout page.
@@ -49,7 +50,8 @@ class PageLogout extends Frontend
 		$container = System::getContainer();
 
 		// Redirect immediately if there is no logged in user (see #2388)
-		if (!$container->get('security.helper')->getUser())
+		$token = $container->get('security.helper')->getToken();
+		if (null === $token || $token instanceof AnonymousToken)
 		{
 			return new RedirectResponse($strRedirect);
 		}
