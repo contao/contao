@@ -51,6 +51,7 @@ class PageLogout extends Frontend
 
 		// Redirect immediately if there is no logged in user (see #2388)
 		$token = $container->get('security.helper')->getToken();
+
 		if (null === $token || $token instanceof AnonymousToken)
 		{
 			return new RedirectResponse($strRedirect);
