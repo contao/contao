@@ -269,7 +269,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
 			'exclude'                 => true,
 			'inputType'               => 'serpPreview',
-			'eval'                    => array('url_callback'=>array('tl_page', 'getSerpUrl'), 'titleFields'=>array('pageTitle', 'title')),
+			'eval'                    => array('url_callback'=>array('tl_page', 'getSerpUrl'), 'title_tag_callback'=>array('tl_page', 'getTitleTag'), 'titleFields'=>array('pageTitle', 'title')),
 			'sql'                     => null
 		),
 		'redirect' => array
@@ -994,6 +994,31 @@ class tl_page extends Contao\Backend
 	public function getSerpUrl(Contao\PageModel $model)
 	{
 		return $model->getAbsoluteUrl();
+	}
+
+	/**
+	 * Return the title tag from the associated page layout
+	 *
+	 * @param Contao\PageModel $model
+	 *
+	 * @return string
+	 */
+	public function getTitleTag(Contao\PageModel $model)
+	{
+		$model->loadDetails();
+
+		/** @var Contao\LayoutModel $layout */
+		if (!$layout = $model->getRelated('layout'))
+		{
+			return '';
+		}
+
+		global $objPage;
+
+		// Set the global page object so we can replace the insert tags
+		$objPage = $model;
+
+		return self::replaceInsertTags(str_replace('{{page::pageTitle}}', '%s', $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}'));
 	}
 
 	/**

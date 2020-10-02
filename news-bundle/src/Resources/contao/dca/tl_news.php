@@ -239,7 +239,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
 			'exclude'                 => true,
 			'inputType'               => 'serpPreview',
-			'eval'                    => array('url_callback'=>array('tl_news', 'getSerpUrl'), 'titleFields'=>array('pageTitle', 'headline'), 'descriptionFields'=>array('description', 'teaser')),
+			'eval'                    => array('url_callback'=>array('tl_news', 'getSerpUrl'), 'title_tag_callback'=>array('tl_news', 'getTitleTag'), 'titleFields'=>array('pageTitle', 'headline'), 'descriptionFields'=>array('description', 'teaser')),
 			'sql'                     => null
 		),
 		'subheadline' => array
@@ -689,6 +689,43 @@ class tl_news extends Contao\Backend
 	public function getSerpUrl(Contao\NewsModel $model)
 	{
 		return Contao\News::generateNewsUrl($model, false, true);
+	}
+
+	/**
+	 * Return the title tag from the associated page layout
+	 *
+	 * @param Contao\NewsModel $model
+	 *
+	 * @return string
+	 */
+	public function getTitleTag(Contao\NewsModel $model)
+	{
+		/** @var Contao\NewsArchiveModel $archive */
+		if (!$archive = $model->getRelated('pid'))
+		{
+			return '';
+		}
+
+		/** @var Contao\PageModel $page */
+		if (!$page = $archive->getRelated('jumpTo'))
+		{
+			return '';
+		}
+
+		$page->loadDetails();
+
+		/** @var Contao\LayoutModel $layout */
+		if (!$layout = $page->getRelated('layout'))
+		{
+			return '';
+		}
+
+		global $objPage;
+
+		// Set the global page object so we can replace the insert tags
+		$objPage = $page;
+
+		return self::replaceInsertTags(str_replace('{{page::pageTitle}}', '%s', $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}'));
 	}
 
 	/**

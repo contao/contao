@@ -259,7 +259,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
 			'exclude'                 => true,
 			'inputType'               => 'serpPreview',
-			'eval'                    => array('url_callback'=>array('tl_calendar_events', 'getSerpUrl'), 'titleFields'=>array('pageTitle', 'title'), 'descriptionFields'=>array('description', 'teaser')),
+			'eval'                    => array('url_callback'=>array('tl_calendar_events', 'getSerpUrl'), 'title_tag_callback'=>array('tl_calendar_events', 'getTitleTag'), 'titleFields'=>array('pageTitle', 'title'), 'descriptionFields'=>array('description', 'teaser')),
 			'sql'                     => null
 		),
 		'location' => array
@@ -751,6 +751,43 @@ class tl_calendar_events extends Contao\Backend
 	public function getSerpUrl(Contao\CalendarEventsModel $model)
 	{
 		return Contao\Events::generateEventUrl($model, true);
+	}
+
+	/**
+	 * Return the title tag from the associated page layout
+	 *
+	 * @param Contao\NewsModel $model
+	 *
+	 * @return string
+	 */
+	public function getTitleTag(Contao\CalendarEventsModel $model)
+	{
+		/** @var Contao\CalendarModel $calendar */
+		if (!$calendar = $model->getRelated('pid'))
+		{
+			return '';
+		}
+
+		/** @var Contao\PageModel $page */
+		if (!$page = $calendar->getRelated('jumpTo'))
+		{
+			return '';
+		}
+
+		$page->loadDetails();
+
+		/** @var Contao\LayoutModel $layout */
+		if (!$layout = $page->getRelated('layout'))
+		{
+			return '';
+		}
+
+		global $objPage;
+
+		// Set the global page object so we can replace the insert tags
+		$objPage = $page;
+
+		return self::replaceInsertTags(str_replace('{{page::pageTitle}}', '%s', $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}'));
 	}
 
 	/**
