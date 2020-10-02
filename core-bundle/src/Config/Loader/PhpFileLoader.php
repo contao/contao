@@ -13,6 +13,17 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Config\Loader;
 
 use PhpParser\Node;
+use PhpParser\Node\Expr\BooleanNot;
+use PhpParser\Node\Expr\Exit_;
+use PhpParser\Node\Expr\FuncCall;
+use PhpParser\Node\Name;
+use PhpParser\Node\Scalar\String_;
+use PhpParser\Node\Stmt\Declare_;
+use PhpParser\Node\Stmt\Expression;
+use PhpParser\Node\Stmt\If_;
+use PhpParser\Node\Stmt\InlineHTML;
+use PhpParser\Node\Stmt\Namespace_;
+use PhpParser\Node\Stmt\Use_;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\NodeVisitorAbstract;
@@ -49,28 +60,27 @@ class PhpFileLoader extends Loader
      */
     private function parseFile(string $file): array
     {
-        // Parse input into an AST.
-        $contents = trim(file_get_contents($file));
-        $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
-        $ast = $parser->parse($contents);
+        $ast = (new ParserFactory())
+            ->create(ParserFactory::PREFER_PHP7)
+            ->parse(trim(file_get_contents($file)))
+        ;
 
-        // Traverse and modify the AST.
         $namespaceResolver = new NameResolver();
 
         $nodeStripper = new class() extends NodeVisitorAbstract {
             public function leaveNode(Node $node)
             {
-                // Drop namespace and use declarations.
-                if ($node instanceof Node\Stmt\Namespace_) {
+                // Drop namespace and use declarations
+                if ($node instanceof Namespace_) {
                     return $node->stmts;
                 }
 
-                if ($node instanceof Node\Stmt\Use_) {
+                if ($node instanceof Use_) {
                     return NodeTraverser::REMOVE_NODE;
                 }
 
-                // Drop 'strict_types' definition.
-                if ($node instanceof Node\Stmt\Declare_) {
+                // Drop 'strict_types' definition
+                if ($node instanceof Declare_) {
                     foreach ($node->declares as $key => $declare) {
                         if ('strict_types' === $declare->key->name) {
                             unset($node->declares[$key]);
@@ -82,12 +92,12 @@ class PhpFileLoader extends Loader
                     }
                 }
 
-                // Drop any inline HTML.
-                if ($node instanceof Node\Stmt\InlineHTML) {
+                // Drop any inline HTML
+                if ($node instanceof InlineHTML) {
                     return NodeTraverser::REMOVE_NODE;
                 }
 
-                // Drop legacy access check.
+                // Drop legacy access check
                 if ($this->matchLegacyCheck($node)) {
                     return NodeTraverser::REMOVE_NODE;
                 }
@@ -97,24 +107,21 @@ class PhpFileLoader extends Loader
 
             private function matchLegacyCheck(Node $node): bool
             {
-                return $node instanceof Node\Stmt\If_ &&
+                return $node instanceof If_
                     // match "if(!defined('TL_ROOT'))"
-                    ($condition = $node->cond) instanceof Node\Expr\BooleanNot &&
-                    $condition->expr instanceof Node\Expr\FuncCall &&
-                    $condition->expr->name instanceof Node\Name &&
-                    'defined' === $condition->expr->name->toLowerString() &&
-                    null !== ($argument = $condition->expr->args[0] ?? null) &&
-                    $argument->value instanceof Node\Scalar\String_ &&
-                    'TL_ROOT' === $argument->value->value &&
+                    && ($condition = $node->cond) instanceof BooleanNot
+                    && $condition->expr instanceof FuncCall
+                    && $condition->expr->name instanceof Name
+                    && 'defined' === $condition->expr->name->toLowerString()
+                    && null !== ($argument = $condition->expr->args[0] ?? null)
+                    && $argument->value instanceof String_
+                    && 'TL_ROOT' === $argument->value->value
 
                     // match "die('You ...')"
-                    ($statement = $node->stmts[0] ?? null) instanceof Node\Stmt\Expression &&
-                    $statement->expr instanceof Node\Expr\Exit_ &&
-                    ($text = $statement->expr->expr) instanceof Node\Scalar\String_ &&
-                    \in_array($text->value, [
-                        'You cannot access this file directly!',
-                        'You can not access this file directly!',
-                    ], true);
+                    && ($statement = $node->stmts[0] ?? null) instanceof Expression
+                    && $statement->expr instanceof Exit_
+                    && ($text = $statement->expr->expr) instanceof String_
+                    && \in_array($text->value, ['You cannot access this file directly!', 'You can not access this file directly!'], true);
             }
         };
 
@@ -124,7 +131,7 @@ class PhpFileLoader extends Loader
 
         $ast = $traverser->traverse($ast);
 
-        // Emit code and namespace information.
+        // Emit code and namespace information
         $prettyPrinter = new PrettyPrinter();
         $code = sprintf("\n%s\n", $prettyPrinter->prettyPrint($ast));
         $namespaceNode = $namespaceResolver->getNameContext()->getNamespace();
