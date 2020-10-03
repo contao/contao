@@ -423,7 +423,7 @@ class FilesModel extends Model
 			}
 
 			// Make sure we resolve insert tags pointing to files
-			if (isset($data[Metadata::VALUE_URL]))
+			if (isset($data[Metadata::VALUE_URL]) && 0 === stripos($data[Metadata::VALUE_URL], '{{file'))
 			{
 				$data[Metadata::VALUE_URL] = Controller::replaceInsertTags($data[Metadata::VALUE_URL]);
 			}
