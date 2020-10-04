@@ -214,9 +214,10 @@ class PageUrlListener implements ResetInterface
             ->fetchAll(FetchMode::COLUMN)
         ;
 
+        /** @var Search $search */
+        $search = $this->framework->getAdapter(Search::class);
+
         foreach ($urls as $url) {
-            /** @var Search $search */
-            $search = $this->framework->getAdapter(Search::class);
             $search->removeEntry($url);
         }
     }
