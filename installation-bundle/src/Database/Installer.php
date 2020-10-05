@@ -257,7 +257,7 @@ class Installer
                     $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine.' ROW_FORMAT = DYNAMIC';
 
                     if (false !== stripos($tableOptions->Create_options, 'key_block_size=')) {
-                        $command .= ', KEY_BLOCK_SIZE = 0';
+                        $command .= ' KEY_BLOCK_SIZE = 0';
                     }
                 } else {
                     $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine;
@@ -270,7 +270,7 @@ class Installer
                     $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine.' ROW_FORMAT = DYNAMIC';
 
                     if (false !== stripos($tableOptions->Create_options, 'key_block_size=')) {
-                        $command .= ', KEY_BLOCK_SIZE = 0';
+                        $command .= ' KEY_BLOCK_SIZE = 0';
                     }
 
                     $alterTables[md5($command)] = $command;

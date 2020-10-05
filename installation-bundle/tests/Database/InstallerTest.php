@@ -128,7 +128,7 @@ class InstallerTest extends TestCase
         $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_foo']);
         $commands = $installer->getCommands();
 
-        $this->assertHasStatement($commands['ALTER_TABLE'], 'ALTER TABLE tl_foo ENGINE = InnoDB ROW_FORMAT = DYNAMIC, KEY_BLOCK_SIZE = 0');
+        $this->assertHasStatement($commands['ALTER_TABLE'], 'ALTER TABLE tl_foo ENGINE = InnoDB ROW_FORMAT = DYNAMIC KEY_BLOCK_SIZE = 0');
     }
 
     public function testDeletesTheIndexesWhenChangingTheDatabaseEngine(): void
@@ -277,7 +277,7 @@ class InstallerTest extends TestCase
 
         $this->assertHasStatement(
             $commands['ALTER_TABLE'],
-            'ALTER TABLE tl_bar ENGINE = InnoDB ROW_FORMAT = DYNAMIC, KEY_BLOCK_SIZE = 0'
+            'ALTER TABLE tl_bar ENGINE = InnoDB ROW_FORMAT = DYNAMIC KEY_BLOCK_SIZE = 0'
         );
     }
 
