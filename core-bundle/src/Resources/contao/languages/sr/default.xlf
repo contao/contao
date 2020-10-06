@@ -185,6 +185,9 @@
         <source>The alias &quot;%s&quot; already exists!</source>
         <target>Алиас &quot;%s&quot; већ постоји!</target>
       </trans-unit>
+      <trans-unit id="ERR.aliasNumeric">
+        <source>Numeric aliases are not supported!</source>
+      </trans-unit>
       <trans-unit id="ERR.importFolder">
         <source>The folder &quot;%s&quot; cannot be imported!</source>
         <target>Фолдер &quot;%s&quot; не може бити увезен!</target>
