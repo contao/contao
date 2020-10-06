@@ -479,6 +479,18 @@ class SimpleTokenParserTest extends TestCase
             'This is my ',
         ];
 
+        yield 'Test unknown token is treated as null (match)' => [
+            'This is my {if foo===null}match{endif}',
+            ['val&#ue' => 1],
+            'This is my match',
+        ];
+
+        yield 'Test unknown token is treated as null (no match)' => [
+            'This is my {if foo!="bar"}match{endif}',
+            ['val&#ue' => 1],
+            'This is my match',
+        ];
+
         yield 'Test indexed token replacement' => [
             'This is my ##0##,##1##',
             ['test@foobar.com', 'foo@test.com'],

@@ -174,10 +174,10 @@ class SimpleTokenParser implements LoggerAwareInterface
         if (!\array_key_exists($token, $data)) {
             $this->logUnmatchedVariables($token);
 
-            return false;
+            $tokenValue = null;
+        } else {
+            $tokenValue = $data[$token];
         }
-
-        $tokenValue = $data[$token];
 
         // Normalize types
         $value = trim($value, ' ');
