@@ -44,7 +44,7 @@ class SqlFileParser
 			$subpatterns = array();
 
 			// Unset comments and empty lines
-			if (preg_match('/^[#-]+/', $v) || !trim($v))
+			if (preg_match('/^[#-]+/', $v) || trim($v) === '')
 			{
 				unset($data[$k]);
 				continue;

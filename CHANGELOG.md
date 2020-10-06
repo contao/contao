@@ -2,6 +2,30 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.10.2] (2020-09-25)
+
+## [4.10.1] (2020-09-24)
+
+**Fixed issues:**
+
+- [#2328] Fix the popup button padding ([leofeyer])
+- [#2323] Fix the routing SSL logic ([leofeyer])
+- [#2311] Fix the FigureTest paths ([m-vo])
+- [#2298] Do not predefine the number of Psalm threads ([leofeyer])
+- [#2280] Update the UPGRADE.md file ([leofeyer])
+- [#2270] Fix a wrong type hint ([bytehead])
+- [#2267] Keep the fileTree sorting order when changing selection ([ausi])
+- [#2261] Do not validate widgets that do not submit input ([leofeyer])
+- [#2250] Skip indexing if a page has not changed ([ausi])
+- [#2227] Use a temporary status code to redirect to the language root ([leofeyer])
+- [#2247] Rename the SimpleTokenParser::parseTokens() method ([leofeyer])
+- [#2173] Work towards Psalm level 6 (part 2) ([m-vo])
+- [#2234] Review the composite indexes ([leofeyer])
+- [#2226] Do not add the first/last classes to articles ([leofeyer])
+- [#2184] Fix invalid "array to string conversion" in ScriptHandler exception message ([m-vo])
+- [#2172] Prevent zero values for idf measure in search algorithm ([ausi])
+- [#2167] Also add a template block for "content_css" ([frontendschlampe])
+
 ## [4.10.0] (2020-08-18)
 
 ## [4.10.0-RC4] (2020-08-14)
@@ -132,6 +156,7 @@ This project adheres to [Semantic Versioning].
 - [#1458] Always set host and language when generating the navigation menu ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.10.1]: https://github.com/contao/contao/releases/tag/4.10.1
 [4.10.0]: https://github.com/contao/contao/releases/tag/4.10.0
 [4.10.0-RC4]: https://github.com/contao/contao/releases/tag/4.10.0-RC4
 [4.10.0-RC3]: https://github.com/contao/contao/releases/tag/4.10.0-RC3
@@ -143,10 +168,28 @@ This project adheres to [Semantic Versioning].
 [dmolineus]: https://github.com/dmolineus
 [eS-IT]: https://github.com/eS-IT
 [fritzmg]: https://github.com/fritzmg
+[frontendschlampe]: https://github.com/frontendschlampe
 [leofeyer]: https://github.com/leofeyer
 [m-vo]: https://github.com/m-vo
 [richardhj]: https://github.com/richardhj
 [Toflar]: https://github.com/Toflar
+[#2328]: https://github.com/contao/contao/pull/2328
+[#2323]: https://github.com/contao/contao/pull/2323
+[#2311]: https://github.com/contao/contao/pull/2311
+[#2298]: https://github.com/contao/contao/pull/2298
+[#2280]: https://github.com/contao/contao/pull/2280
+[#2270]: https://github.com/contao/contao/pull/2270
+[#2267]: https://github.com/contao/contao/pull/2267
+[#2261]: https://github.com/contao/contao/pull/2261
+[#2250]: https://github.com/contao/contao/pull/2250
+[#2227]: https://github.com/contao/contao/pull/2227
+[#2247]: https://github.com/contao/contao/pull/2247
+[#2173]: https://github.com/contao/contao/pull/2173
+[#2234]: https://github.com/contao/contao/pull/2234
+[#2226]: https://github.com/contao/contao/pull/2226
+[#2184]: https://github.com/contao/contao/pull/2184
+[#2172]: https://github.com/contao/contao/pull/2172
+[#2167]: https://github.com/contao/contao/pull/2167
 [#2151]: https://github.com/contao/contao/pull/2151
 [#2145]: https://github.com/contao/contao/pull/2145
 [#2144]: https://github.com/contao/contao/pull/2144

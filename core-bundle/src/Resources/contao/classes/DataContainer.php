@@ -385,7 +385,8 @@ abstract class DataContainer extends Backend
 						$this->noReload = true;
 					}
 				}
-				else
+				// The return value of submitInput() might have changed, therefore check it again here (see #2383)
+				elseif ($objWidget->submitInput())
 				{
 					$varValue = $objWidget->value;
 
@@ -1111,6 +1112,27 @@ abstract class DataContainer extends Backend
 		}
 
 		return '';
+	}
+
+	/**
+	 * Return the data-picker-value attribute with the currently selected picker values (see #1816)
+	 *
+	 * @return string
+	 */
+	protected function getPickerValueAttribute()
+	{
+		// Only load the previously selected values for the checkbox field type (see #2346)
+		if ($this->strPickerFieldType != 'checkbox')
+		{
+			return '';
+		}
+
+		$values = array_map($this->objPickerCallback, $this->arrPickerValue);
+		$values = array_map('strval', $values);
+		$values = json_encode($values);
+		$values = htmlspecialchars($values);
+
+		return ' data-picker-value="' . $values . '"';
 	}
 
 	/**
