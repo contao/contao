@@ -85,7 +85,7 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new AddResourcesPathsPass());
         $container->addCompilerPass(new TaggedMigrationsPass());
         $container->addCompilerPass(new PickerProviderPass());
-        $container->addCompilerPass(new RegisterPagesPass());
+        $container->addCompilerPass(new RegisterPagesPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 1);
         $container->addCompilerPass(new RegisterFragmentsPass(FrontendModuleReference::TAG_NAME));
         $container->addCompilerPass(new RegisterFragmentsPass(ContentElementReference::TAG_NAME));
         $container->addCompilerPass(new FragmentRendererPass('contao.fragment.handler'));

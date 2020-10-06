@@ -40,7 +40,7 @@ class InsecureInstallationListenerTest extends TestCase
         $listener = new InsecureInstallationListener();
         $listener($this->getResponseEvent($request));
 
-        $this->addToAssertionCount(1);  // does not throw an exception
+        $this->addToAssertionCount(1); // does not throw an exception
     }
 
     public function testDoesNotThrowAnExceptionOnLocalhost(): void
@@ -51,7 +51,7 @@ class InsecureInstallationListenerTest extends TestCase
         $listener = new InsecureInstallationListener();
         $listener($this->getResponseEvent($request));
 
-        $this->addToAssertionCount(1);  // does not throw an exception
+        $this->addToAssertionCount(1); // does not throw an exception
     }
 
     private function getRequest(): Request
