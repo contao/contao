@@ -331,7 +331,7 @@ class SimpleTokenParserTest extends TestCase
     /**
      * @dataProvider handlesUnknownTokensProvider
      */
-    public function testHandlesUnknownTokens(string $condition, string $logMessage): void
+    public function testHandlesUnknownTokens(string $condition, string $logMessage, bool $match): void
     {
         $parser = $this->getParser();
 
@@ -345,7 +345,7 @@ class SimpleTokenParserTest extends TestCase
         $parser->setLogger($logger);
 
         $this->assertSame(
-            'no-match',
+            $match ? 'match' : 'no-match',
             $parser->parse("{if $condition}match{else}no-match{endif}", ['foobar' => 1])
         );
     }
@@ -353,39 +353,74 @@ class SimpleTokenParserTest extends TestCase
     public function handlesUnknownTokensProvider(): \Generator
     {
         yield 'Test single unknown token (left side of comparison)' => [
-            'foo == 1', 'Tried to evaluate unknown simple token(s): "foo".',
+            'foo == 1',
+            'Tried to evaluate unknown simple token(s): "foo".',
+            false,
         ];
 
         yield 'Test single unknown token (right side of comparison)' => [
-            '1 == foo', 'Tried to evaluate unknown simple token(s): "foo".',
+            '1 == foo',
+            'Tried to evaluate unknown simple token(s): "foo".',
+            false,
+        ];
+
+        yield 'Test inverted comparison with unknown token matches' => [
+            'foo != "bar"',
+            'Tried to evaluate unknown simple token(s): "foo".',
+            true,
+        ];
+
+        yield 'Test unknown token is equal to be null' => [
+            'foo === null',
+            'Tried to evaluate unknown simple token(s): "foo".',
+            true,
         ];
 
         yield 'Test single unknown token (array test)' => [
-            'foo in [1, 2, 3]', 'Tried to evaluate unknown simple token(s): "foo".',
+            'foo in [1, 2, 3]',
+            'Tried to evaluate unknown simple token(s): "foo".',
+            false,
         ];
 
         yield 'Test single unknown token (regex test)' => [
             'foo matches "/whatever/"', 'Tried to evaluate unknown simple token(s): "foo".',
+            false,
         ];
 
         yield 'Test PHP constants are treated as unknown variables' => [
-            '__FILE__=="foo"', 'Tried to evaluate unknown simple token(s): "__FILE__".',
+            '__FILE__=="foo"',
+            'Tried to evaluate unknown simple token(s): "__FILE__".',
+            false,
         ];
 
         yield 'Test multiple unknown tokens' => [
-            'foo == bar', 'Tried to evaluate unknown simple token(s): "foo", "bar".',
+            'foo === 1 and bar == null',
+            'Tried to evaluate unknown simple token(s): "foo", "bar".',
+            false,
+        ];
+
+        yield 'Test multiple unknown tokens are considered equal' => [
+            'foo === bar',
+            'Tried to evaluate unknown simple token(s): "foo", "bar".',
+            true,
         ];
 
         yield 'Test unknown token is only reported once' => [
-            '1 == foo or foo in [2, 3]', 'Tried to evaluate unknown simple token(s): "foo".',
+            '1 == foo or foo in [2, 3]',
+            'Tried to evaluate unknown simple token(s): "foo".',
+            false,
         ];
 
         yield 'Test true/false/null are recognized as constants (not reported)' => [
-            'foo == true || foo == false || foo == null', 'Tried to evaluate unknown simple token(s): "foo".',
+            'foo == true || foo == false || foo == null',
+            'Tried to evaluate unknown simple token(s): "foo".',
+            true,
         ];
 
         yield 'Test known tokens are not reported' => [
-            'foo == 0 or foobar == 1 or bar == 2', 'Tried to evaluate unknown simple token(s): "foo", "bar".',
+            'foo == 0 or foobar == 1 or bar == 2',
+            'Tried to evaluate unknown simple token(s): "foo", "bar".',
+            true,
         ];
     }
 
