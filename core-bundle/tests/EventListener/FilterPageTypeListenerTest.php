@@ -104,7 +104,6 @@ class FilterPageTypeListenerTest extends TestCase
         ;
 
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->expects($this->once())
             ->method('fetchColumn')
@@ -135,12 +134,10 @@ class FilterPageTypeListenerTest extends TestCase
      */
     private function mockDataContainer(?int $pid): DataContainer
     {
-        /** @var DataContainer&MockObject $dataContainer */
-        $dataContainer = $this->mockClassWithProperties(
+        /** @var DataContainer&MockObject */
+        return $this->mockClassWithProperties(
             DataContainer::class,
             ['activeRecord' => null === $pid ? null : (object) ['pid' => $pid]]
         );
-
-        return $dataContainer;
     }
 }

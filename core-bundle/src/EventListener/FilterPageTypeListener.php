@@ -59,10 +59,10 @@ class FilterPageTypeListener
             return;
         }
 
-        $siblingTypes = $this->connection->executeQuery(
-            'SELECT DISTINCT(type) FROM tl_page WHERE pid=?',
-            [$dc->activeRecord->pid]
-        )->fetchAll(FetchMode::COLUMN);
+        $siblingTypes = $this->connection
+            ->executeQuery('SELECT DISTINCT(type) FROM tl_page WHERE pid=?', [$dc->activeRecord->pid])
+            ->fetchAll(FetchMode::COLUMN)
+        ;
 
         foreach (array_intersect(['error_401', 'error_403', 'error_404'], $siblingTypes) as $type) {
             $event->removeOption($type);
