@@ -37,6 +37,8 @@ services:
         public: true
 
     Contao\CoreBundle\EventListener\FilterPageTypeListener:
+        arguments:
+            - '@database_connection'
         tags:
             - { name: kernel.event_listener }
 
