@@ -1,5 +1,10 @@
 # Change log
 
+## 4.4.54 (2020-10-07)
+
+ * Correctly detect unknown options (see #2360).
+ * Support legacy console scripts in the initialize.php (see #2344).
+
 ## 4.4.53 (2020-09-25)
 
  * Fix picker for providers with insert tags (see #2353).
