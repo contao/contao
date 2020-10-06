@@ -139,7 +139,7 @@ class MetaWizard extends Widget
 			foreach ($this->varValue as $lang=>$meta)
 			{
 				$return .= '
-    <li class="' . (($count % 2 == 0) ? 'even' : 'odd') . '" data-language="' . $lang . '"><span class="lang">' . ($languages[$lang] ?? $lang) . ' ' . Image::getHtml('delete.svg', '', 'class="tl_metawizard_img" title="' . $GLOBALS['TL_LANG']['MSC']['delete'] . '" onclick="Backend.metaDelete(this)"') . '</span>';
+    <li class="' . (($count % 2 == 0) ? 'even' : 'odd') . '" data-language="' . $lang . '"><span class="lang">' . ($languages[$lang] ?? $lang) . '</span>';
 
 				// Take the fields from the DCA (see #4327)
 				foreach ($this->metaFields as $field=>$fieldConfig)
@@ -164,19 +164,6 @@ class MetaWizard extends Widget
 			$return .= '
   </ul>';
 		}
-
-		$options = array('<option value="">-</option>');
-
-		// Add the remaining languages
-		foreach ($languages as $k=>$v)
-		{
-			$options[] = '<option value="' . $k . '"' . (isset($this->varValue[$k]) ? ' disabled' : '') . '>' . $v . '</option>';
-		}
-
-		$return .= '
-  <div class="tl_metawizard_new">
-    <select name="' . $this->strId . '[language]" class="tl_select" onchange="Backend.toggleAddLanguageButton(this)">' . implode('', $options) . '</select> <input type="button" class="tl_submit" disabled value="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['aw_new']) . '" onclick="Backend.metaWizard(this, \'ctrl_' . $this->strId . '\')">
-  </div>';
 
 		return $return;
 	}
