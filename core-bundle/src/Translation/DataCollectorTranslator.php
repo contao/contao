@@ -47,7 +47,7 @@ class DataCollectorTranslator extends SymfonyDataCollectorTranslator implements 
     public function trans($id, array $parameters = [], $domain = null, $locale = null): string
     {
         $translated = $this->translator->trans($id, $parameters, $domain, $locale);
-        $catalogue = $this->translator->getCatalogue();
+        $catalogue = $this->translator->getCatalogue($locale);
 
         // Forward to the default translator
         if (null === $domain || 0 !== strncmp($domain, 'contao_', 7) || null !== $catalogue && $catalogue->has($id, $domain)) {
