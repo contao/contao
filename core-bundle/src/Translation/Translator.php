@@ -50,7 +50,7 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
     public function trans($id, array $parameters = [], $domain = null, $locale = null): string
     {
         // Forward to the default translator
-        if (null === $domain || 0 !== strncmp($domain, 'contao_', 7)) {
+        if (null === $domain || 0 !== strncmp($domain, 'contao_', 7) || $this->translator->getCatalogue()->has($id, $domain)) {
             return $this->translator->trans($id, $parameters, $domain, $locale);
         }
 
