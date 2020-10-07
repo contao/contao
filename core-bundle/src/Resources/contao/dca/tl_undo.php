@@ -15,6 +15,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
+use Contao\UserModel;
 
 $GLOBALS['TL_DCA']['tl_undo'] = array
 (
@@ -95,18 +96,18 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 		'fromTable' => array
 		(
 			'sorting'                 => true,
-            'filter'                  => true,
-            'sql'                     => "varchar(255) NOT NULL default ''"
+			'filter'                  => true,
+			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'query' => array
 		(
 			'sql'                     => "text NULL"
 		),
-        'description' => array
-        (
-            'label'                   => &$GLOBALS['TL_LANG']['tl_undo']['description'],
-            'sql'                     => "text NULL"
-        ),
+		'description' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_undo']['description'],
+			'sql'                     => "text NULL"
+		),
 		'affectedRows' => array
 		(
 			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
@@ -223,28 +224,29 @@ class tl_undo extends Backend
 		return $data;
 	}
 
-	public function labelCallback($row, $label, \DataContainer $dc, $args)
+	public function labelCallback($row, $label, DataContainer $dc, $args)
 	{
-        $table = $args[2];
-	    \Contao\System::loadLanguageFile($table);
+		$table = $args[2];
+		System::loadLanguageFile($table);
 
-	    // Date
-        $args[0] = sprintf('<span style="color:#999;padding-right:3px">%s</span>', $args[0]);
+		// Date
+		$args[0] = sprintf('<span style="color:#999;padding-right:3px">%s</span>', $args[0]);
 
-        // Username
-        $user = \Contao\UserModel::findById($args[1]);
+		// Username
+		$user = UserModel::findById($args[1]);
 
-        if ($user !== null) {
-            $args[1] = $user->username;
-        }
+		if ($user !== null)
+		{
+			$args[1] = $user->username;
+		}
 
-        // fromTable
-        $args[2] = '<strong>' . ($GLOBALS['TL_LANG'][$table]['display_name']) ?: $args[2] . '</strong>';
+		// fromTable
+		$args[2] = '<strong>' . ($GLOBALS['TL_LANG'][$table]['display_name']) ?: $args[2] . '</strong>';
 
-        // Description
-        $description = htmlentities($args[3]);
-        $args[3] = sprintf('<span title="%s">%s</span>', $description, \Contao\StringUtil::substr($description, 100));
+		// Description
+		$description = htmlentities($args[3]);
+		$args[3] = sprintf('<span title="%s">%s</span>', $description, StringUtil::substr($description, 100));
 
-        return $args;
+		return $args;
 	}
 }

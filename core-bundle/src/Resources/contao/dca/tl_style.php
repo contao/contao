@@ -76,10 +76,10 @@ $GLOBALS['TL_DCA']['tl_style'] = array
 			'headerFields'            => array('name', 'tstamp', 'media'),
 			'child_record_callback'   => array('StyleSheets', 'compileDefinition')
 		),
-        'undo' => array
-        (
-            'fields' => array('selector')
-        ),
+		'undo' => array
+		(
+			'fields' => array('selector')
+		),
 		'global_operations' => array
 		(
 			'all' => array

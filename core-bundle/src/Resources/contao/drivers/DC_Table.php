@@ -1526,14 +1526,14 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 		$this->import(BackendUser::class, 'User');
 
-        $event = new UndoDescriptionEvent($this->strTable, $data[$this->strTable][0], [
-            'fields' => $GLOBALS['TL_DCA'][$this->strTable]['list']['undo']['fields'],
-            'format' => $GLOBALS['TL_DCA'][$this->strTable]['list']['undo']['format']
-        ]);
-        System::getContainer()->get('event_dispatcher')->dispatch($event, ContaoCoreEvents::UNDO_DESCRIPTION);
+		$event = new UndoDescriptionEvent($this->strTable, $data[$this->strTable][0], array(
+			'fields' => $GLOBALS['TL_DCA'][$this->strTable]['list']['undo']['fields'],
+			'format' => $GLOBALS['TL_DCA'][$this->strTable]['list']['undo']['format']
+		));
+		System::getContainer()->get('event_dispatcher')->dispatch($event, ContaoCoreEvents::UNDO_DESCRIPTION);
 
 		$objUndoStmt = $this->Database->prepare("INSERT INTO tl_undo (pid, tstamp, fromTable, query, affectedRows, data, description) VALUES (?, ?, ?, ?, ?, ?, ?)")
-									  ->execute($this->User->id, time(), $this->strTable, 'DELETE FROM '.$this->strTable.' WHERE id='.$this->intId, $affected, serialize($data), $event->getDescription());
+									  ->execute($this->User->id, time(), $this->strTable, 'DELETE FROM ' . $this->strTable . ' WHERE id=' . $this->intId, $affected, serialize($data), $event->getDescription());
 
 		// Delete the records
 		if ($objUndoStmt->affectedRows)
