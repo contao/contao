@@ -2,6 +2,23 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.10.3] (2020-10-07)
+
+**New features:**
+
+- [#2379] Add the image_container class to the default figure template ([m-vo])
+
+**Fixed issues:**
+
+- [#2410] Port the numeric alias changes to the PageUrlListener class ([leofeyer])
+- [#2341] Make the SimpleTokenParser backwards compatible ([m-vo])
+- [#2397] Check allowed page types ([aschempp])
+- [#2337] Fix the asset URL handling in the image studio ([m-vo])
+- [#2265] Purge the search tables directly ([aschempp])
+- [#2372] Remove existing tags from annotations that could  be arrays ([aschempp])
+- [#2385] Check submitInput() again after validation ([leofeyer])
+- [#2365] Fix non-normalized file extension comparisons when building lightboxes ([m-vo])
+
 ## [4.10.2] (2020-09-25)
 
 ## [4.10.1] (2020-09-24)
@@ -156,6 +173,8 @@ This project adheres to [Semantic Versioning].
 - [#1458] Always set host and language when generating the navigation menu ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.10.3]: https://github.com/contao/contao/releases/tag/4.10.3
+[4.10.2]: https://github.com/contao/contao/releases/tag/4.10.2
 [4.10.1]: https://github.com/contao/contao/releases/tag/4.10.1
 [4.10.0]: https://github.com/contao/contao/releases/tag/4.10.0
 [4.10.0-RC4]: https://github.com/contao/contao/releases/tag/4.10.0-RC4
@@ -173,6 +192,15 @@ This project adheres to [Semantic Versioning].
 [m-vo]: https://github.com/m-vo
 [richardhj]: https://github.com/richardhj
 [Toflar]: https://github.com/Toflar
+[#2379]: https://github.com/contao/contao/pull/2379
+[#2410]: https://github.com/contao/contao/pull/2410
+[#2341]: https://github.com/contao/contao/pull/2341
+[#2397]: https://github.com/contao/contao/pull/2397
+[#2337]: https://github.com/contao/contao/pull/2337
+[#2265]: https://github.com/contao/contao/pull/2265
+[#2372]: https://github.com/contao/contao/pull/2372
+[#2385]: https://github.com/contao/contao/pull/2385
+[#2365]: https://github.com/contao/contao/pull/2365
 [#2328]: https://github.com/contao/contao/pull/2328
 [#2323]: https://github.com/contao/contao/pull/2323
 [#2311]: https://github.com/contao/contao/pull/2311
