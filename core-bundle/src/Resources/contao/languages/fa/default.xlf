@@ -185,6 +185,9 @@
         <source>The alias &quot;%s&quot; already exists!</source>
         <target>نام مستعار %s وجود دارد!</target>
       </trans-unit>
+      <trans-unit id="ERR.aliasNumeric">
+        <source>Numeric aliases are not supported!</source>
+      </trans-unit>
       <trans-unit id="ERR.urlPrefixExists">
         <source>The URL prefix &quot;%s&quot; is already used by another root page with the same domain name!</source>
         <target>پیشوند URL &quot;%s&quot; قبلا توسط یک برگه ریشه دیگر با همین نام دامنه استفاده شده است!</target>
