@@ -32,15 +32,6 @@ class UndoDescriptionListener
             $description = $this->getDescriptionFromFields($row);
         }
 
-        // Run callback
-        if (isset($this->options['label_callback'])) {
-            $callback = $this->options['label_callback'];
-
-            if (\is_callable($callback)) {
-                $description = $callback($row);
-            }
-        }
-
         // Fallback: Check for some often used fields
         if (null === $description) {
             $description = $this->getFallbackDescription($row);

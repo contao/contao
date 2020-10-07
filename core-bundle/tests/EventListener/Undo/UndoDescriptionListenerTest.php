@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\EventListener;
+namespace Contao\CoreBundle\Tests\EventListener\Undo;
 
 use Contao\CoreBundle\Event\UndoDescriptionEvent;
 use Contao\CoreBundle\EventListener\Undo\UndoDescriptionListener;
@@ -18,11 +18,6 @@ use Contao\CoreBundle\Tests\TestCase;
 
 class UndoDescriptionListenerTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
-
     /**
      * @dataProvider rowAndOptionsProvider
      */
@@ -70,16 +65,6 @@ class UndoDescriptionListenerTest extends TestCase
                 'fields' => ['firstname', 'lastname', 'company'],
             ],
             'John, Doe, Acme Corp.',
-        ];
-
-        yield 'Run label callback' => [
-            $this->getTestData(),
-            [
-                'label_callback' => static function (array $row) {
-                    return strtoupper($row['firstname'].' '.$row['lastname']);
-                },
-            ],
-            'JOHN DOE',
         ];
 
         yield 'Fallback to commonly used fields, if no options where defined' => [
