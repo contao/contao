@@ -149,6 +149,7 @@ use Symfony\Cmf\Component\Routing\DynamicRouter;
 use Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher;
 use Symfony\Cmf\Component\Routing\ProviderBasedGenerator;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Compiler\ResolvePrivatesPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
@@ -191,6 +192,10 @@ class ContaoCoreExtensionTest extends TestCase
 
         $extension = new ContaoCoreExtension();
         $extension->load($params, $this->container);
+
+        // Resolve private services (see #949)
+        $pass = new ResolvePrivatesPass();
+        $pass->process($this->container);
     }
 
     public function testReturnsTheCorrectAlias(): void
@@ -1547,7 +1552,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $definition = $this->container->getDefinition(LegacyCron::class);
 
-        $this->assertTrue($definition->isPublic());
+        $this->assertTrue($definition->isPrivate());
 
         $this->assertEquals(
             [
@@ -1779,7 +1784,7 @@ class ContaoCoreExtensionTest extends TestCase
     {
         $this->assertTrue($this->container->has('contao.image.imagine'));
 
-        $definition = $this->container->findDefinition('contao.image.imagine');
+        $definition = $this->container->getAlias('contao.image.imagine');
 
         $this->assertTrue($definition->isPublic());
     }
