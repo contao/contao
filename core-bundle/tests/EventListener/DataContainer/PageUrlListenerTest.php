@@ -712,6 +712,51 @@ class PageUrlListenerTest extends TestCase
         ];
     }
 
+    public function testPreventsNumericAliases(): void
+    {
+        /** @var MockObject&PageModel $page */
+        $page = $this->mockClassWithProperties(PageModel::class, ['id' => 17]);
+
+        $pageAdapter = $this->mockAdapter(['findWithDetails']);
+        $pageAdapter
+            ->expects($this->once())
+            ->method('findWithDetails')
+            ->with($page->id)
+            ->willReturn($page)
+        ;
+
+        $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
+
+        $slug = $this->createMock(Slug::class);
+        $slug
+            ->expects($this->never())
+            ->method('generate')
+        ;
+
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->expects($this->once())
+            ->method('trans')
+            ->with('ERR.aliasNumeric')
+            ->willReturn('Numeric aliases are not supported!')
+        ;
+
+        /** @var MockObject&DataContainer $dc */
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => $page->id]);
+
+        $listener = new PageUrlListener(
+            $framework,
+            $slug,
+            $translator,
+            $this->mockConnectionWithStatement()
+        );
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Numeric aliases are not supported!');
+
+        $listener->generateAlias('123', $dc);
+    }
+
     public function testPurgesTheSearchIndexOnAliasChange(): void
     {
         $statement = $this->createMock(Statement::class);
