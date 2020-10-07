@@ -41,7 +41,7 @@ class UserCheckerTest extends TestCase
         $userChecker->checkPreAuth($user);
         $userChecker->checkPostAuth($user);
 
-        $this->addToAssertionCount(1);  // does not throw an exception
+        $this->addToAssertionCount(1); // does not throw an exception
     }
 
     public function testDoesNothingIfTheUserIsNotAContaoUser(): void

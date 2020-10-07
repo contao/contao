@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Image\Studio;
 
 use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\Image\PictureFactoryInterface;
+use Contao\Image\Image;
 use Contao\Image\ImageDimensions;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
@@ -100,10 +101,18 @@ class ImageResult
     }
 
     /**
-     * Returns the "src" attribute of the image.
+     * Returns the "src" attribute of the image. This will return an URL by
+     * default. Set $asPath to true to get a relative file path instead.
      */
-    public function getImageSrc(): string
+    public function getImageSrc(bool $asPath = false): string
     {
+        if ($asPath) {
+            /** @var Image $image */
+            $image = $this->getPicture()->getImg()['src'];
+
+            return Path::makeRelative($image->getPath(), $this->projectDir);
+        }
+
         return $this->getImg()['src'] ?? '';
     }
 

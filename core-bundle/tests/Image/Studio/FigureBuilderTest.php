@@ -28,6 +28,7 @@ use Contao\System;
 use Contao\Validator;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Webmozart\PathUtil\Path;
 
 class FigureBuilderTest extends TestCase
@@ -375,7 +376,9 @@ class FigureBuilderTest extends TestCase
      */
     public function testAutoFetchMetadataFromFilesModel(string $serializedMetadata, $locale, array $expectedMetadata): void
     {
-        System::setContainer($this->getContainerWithContaoConfiguration());
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('request_stack', $this->createMock(RequestStack::class));
+        System::setContainer($container);
 
         $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields'] = [
             'title' => '', 'alt' => '', 'link' => '', 'caption' => '',
@@ -693,8 +696,12 @@ class FigureBuilderTest extends TestCase
             $relativeFilePathWithInvalidExtension, [null, $relativeFilePathWithInvalidExtension], false,
         ];
 
-        yield 'external url/path with valid extension' => [
+        yield 'external url/path with valid lowercase extension' => [
             'https://example.com/valid_extension.png', [null, 'https://example.com/valid_extension.png'],
+        ];
+
+        yield 'external url/path with valid uppercase extension' => [
+            'https://example.com/valid_extension.PNG', [null, 'https://example.com/valid_extension.PNG'],
         ];
 
         yield 'external url/path with invalid extension' => [

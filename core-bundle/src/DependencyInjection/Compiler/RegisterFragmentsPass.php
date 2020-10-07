@@ -100,7 +100,6 @@ class RegisterFragmentsPass implements CompilerPassInterface
                     $command->addMethodCall('add', [$identifier, $config, $attributes]);
                 }
 
-                $childDefinition->addTag($tag, $attributes);
                 $container->setDefinition($serviceId, $childDefinition);
             }
         }

@@ -16,6 +16,8 @@ use Contao\CoreBundle\Tests\Fixtures\IteratorAggregateStub;
 use Contao\CoreBundle\Util\SimpleTokenExpressionLanguage;
 use Contao\CoreBundle\Util\SimpleTokenParser;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 use Symfony\Component\ExpressionLanguage\ExpressionFunction;
 use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
 
@@ -291,6 +293,138 @@ class SimpleTokenParserTest extends TestCase
     }
 
     /**
+     * @dataProvider parsesSimpleTokensWithShorthandIfProvider
+     */
+    public function testParsesSimpleTokensWithShorthandIf($value, bool $match): void
+    {
+        $this->assertSame(
+            $match ? 'match' : 'no-match',
+            $this->getParser()->parse('{if value}match{else}no-match{endif}', ['value' => $value])
+        );
+    }
+
+    public function parsesSimpleTokensWithShorthandIfProvider(): \Generator
+    {
+        yield 'Test true matches' => [true, true];
+
+        yield 'Test 1 matches' => [1, true];
+
+        yield 'Test "1" matches' => ['1', true];
+
+        yield 'Test "anything" matches' => ['anything', true];
+
+        yield 'Test non-empty array matches' => [['foo'], true];
+
+        yield 'Test false does not match' => [false, false];
+
+        yield 'Test 0 does not match' => [0, false];
+
+        yield 'Test "0" does not match' => ['0', false];
+
+        yield 'Test null does not match' => [null, false];
+
+        yield 'Test empty string does not match' => ['', false];
+
+        yield 'Test empty array does not match' => [[], false];
+    }
+
+    /**
+     * @dataProvider handlesUnknownTokensProvider
+     */
+    public function testHandlesUnknownTokens(string $condition, string $logMessage, bool $match): void
+    {
+        $parser = $this->getParser();
+
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger
+            ->expects($this->once())
+            ->method('log')
+            ->with(LogLevel::INFO, $logMessage)
+        ;
+
+        $parser->setLogger($logger);
+
+        $this->assertSame(
+            $match ? 'match' : 'no-match',
+            $parser->parse("{if $condition}match{else}no-match{endif}", ['foobar' => 1])
+        );
+    }
+
+    public function handlesUnknownTokensProvider(): \Generator
+    {
+        yield 'Test single unknown token (left side of comparison)' => [
+            'foo == 1',
+            'Tried to evaluate unknown simple token(s): "foo".',
+            false,
+        ];
+
+        yield 'Test single unknown token (right side of comparison)' => [
+            '1 == foo',
+            'Tried to evaluate unknown simple token(s): "foo".',
+            false,
+        ];
+
+        yield 'Test inverted comparison with unknown token matches' => [
+            'foo != "bar"',
+            'Tried to evaluate unknown simple token(s): "foo".',
+            true,
+        ];
+
+        yield 'Test unknown token is equal to be null' => [
+            'foo === null',
+            'Tried to evaluate unknown simple token(s): "foo".',
+            true,
+        ];
+
+        yield 'Test single unknown token (array test)' => [
+            'foo in [1, 2, 3]',
+            'Tried to evaluate unknown simple token(s): "foo".',
+            false,
+        ];
+
+        yield 'Test single unknown token (regex test)' => [
+            'foo matches "/whatever/"', 'Tried to evaluate unknown simple token(s): "foo".',
+            false,
+        ];
+
+        yield 'Test PHP constants are treated as unknown variables' => [
+            '__FILE__=="foo"',
+            'Tried to evaluate unknown simple token(s): "__FILE__".',
+            false,
+        ];
+
+        yield 'Test multiple unknown tokens' => [
+            'foo === 1 and bar == null',
+            'Tried to evaluate unknown simple token(s): "foo", "bar".',
+            false,
+        ];
+
+        yield 'Test multiple unknown tokens are considered equal' => [
+            'foo === bar',
+            'Tried to evaluate unknown simple token(s): "foo", "bar".',
+            true,
+        ];
+
+        yield 'Test unknown token is only reported once' => [
+            '1 == foo or foo in [2, 3]',
+            'Tried to evaluate unknown simple token(s): "foo".',
+            false,
+        ];
+
+        yield 'Test true/false/null are recognized as constants (not reported)' => [
+            'foo == true || foo == false || foo == null',
+            'Tried to evaluate unknown simple token(s): "foo".',
+            true,
+        ];
+
+        yield 'Test known tokens are not reported' => [
+            'foo == 0 or foobar == 1 or bar == 2',
+            'Tried to evaluate unknown simple token(s): "foo", "bar".',
+            true,
+        ];
+    }
+
+    /**
      * @group legacy
      * @dataProvider parseSimpleTokensLegacyProvider
      *
@@ -343,6 +477,18 @@ class SimpleTokenParserTest extends TestCase
             'This is my {if val&#ue<0}match{endif}',
             ['val&#ue' => 9],
             'This is my ',
+        ];
+
+        yield 'Test unknown token is treated as null (match)' => [
+            'This is my {if foo===null}match{endif}',
+            ['val&#ue' => 1],
+            'This is my match',
+        ];
+
+        yield 'Test unknown token is treated as null (no match)' => [
+            'This is my {if foo!="bar"}match{endif}',
+            ['val&#ue' => 1],
+            'This is my match',
         ];
 
         yield 'Test indexed token replacement' => [
@@ -515,7 +661,6 @@ class SimpleTokenParserTest extends TestCase
 
     public function parseSimpleTokensInvalidComparison(): \Generator
     {
-        yield 'PHP constants are not allowed' => ['{if foo==__FILE__}{endif}'];
         yield 'Not closed string (")' => ['{if foo=="bar}{endif}'];
         yield 'Not closed string (\')' => ['{if foo==\'bar}{endif}'];
         yield 'Additional chars after string ("/)' => ['{if foo=="bar"/}{endif}'];
