@@ -51,8 +51,8 @@ class ContentUndoDescriptionListener
 
     private function getTextDescription(array $data): string
     {
-        $text = $data['text'];
-        return StringUtil::substrHtml($text, 100);
+        $text = strip_tags($data['text']);
+        return StringUtil::substr($text, 100);
     }
 
     private function getHtmlDescription(array $data): string
