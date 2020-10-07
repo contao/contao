@@ -100,7 +100,7 @@ class CrawlCommand extends Command
         $baseUris = $this->escargotFactory->getCrawlUriCollection();
 
         if ($baseUris->containsHost('localhost')) {
-            $io->warning('You are going to crawl localhost URIs. This is likely not desired and due to a missing domain configuration in your root page settings. You may also configure a fallback request context using "router.request_context.*" if you want to execute all CLI commands with the same request context.');
+            $io->warning('You are going to crawl localhost URIs. This is likely not desired and due to a missing domain configuration in your root page settings. You may also configure a fallback request context using "router.request_context.*" if you want to execute all CLI commands with the same request context. See more at https://symfony.com/doc/current/routing.html#forcing-https-on-generated-urls');
         }
 
         try {
