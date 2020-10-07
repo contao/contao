@@ -71,7 +71,7 @@ class Configuration implements ConfigurationInterface
                     ->info('Allows to set TL_CONFIG variables, overriding settings stored in localconfig.php. Changes in the Contao back end will not have any effect.')
                 ->end()
                 ->arrayNode('locales')
-                    ->info('Allows to configure which languages can be used within Contao. Defaults to all languages for which a translation exists.')
+                    ->info('Allows to configure which languages can be used in the Contao back end. Defaults to all languages for which a translation exists.')
                     ->prototype('scalar')->end()
                     ->defaultValue($this->getLocales())
                 ->end()
