@@ -30,6 +30,31 @@ class ContentUndoDescriptionListenerTest extends TestCase
         $this->assertSame($event->getDescription(), null);
     }
 
+    public function testStopsPropagationIfDescriptionFound(): void
+    {
+        $listener = new ContentUndoDescriptionListener();
+
+        $event = new UndoDescriptionEvent('tl_content', [
+            'type' => 'headline',
+            'headline' => ['unit' => 'h3', 'value' => 'This is a headline']
+        ], []);
+        $listener($event);
+
+        $this->assertTrue($event->isPropagationStopped());
+        $this->assertSame($event->getDescription(), 'This is a headline');
+    }
+
+    public function testEventStillPropagatesIfNoDescriptionFound(): void
+    {
+        $listener = new ContentUndoDescriptionListener();
+
+        $event = new UndoDescriptionEvent('tl_content', ['type' => 'myContentElement'], []);
+        $listener($event);
+
+        $this->assertFalse($event->isPropagationStopped());
+        $this->assertSame($event->getDescription(), null);
+    }
+
     /**
      * @dataProvider rowAndOptionsProvider
      */

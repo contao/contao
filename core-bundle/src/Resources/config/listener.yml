@@ -402,3 +402,8 @@ services:
         tags:
             # Other description listener should run before this, hence the low priority.
             - { name: kernel.event_listener, priority: -256 }
+
+    contao.listener.tl_content_undo_description:
+        class: Contao\CoreBundle\EventListener\Undo\ContentUndoDescriptionListener
+        tags:
+            - kernel.event_listener

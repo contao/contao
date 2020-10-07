@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /*
  * This file is part of Contao.
@@ -23,7 +25,11 @@ class ContentUndoDescriptionListener
         }
 
         $description = $this->getDescriptionForType($event->getData());
-        $event->setDescription($description);
+
+        if ($description !== null) {
+            $event->stopPropagation();
+            $event->setDescription($description);
+        }
     }
 
     private function getMethodFromType(string $type): string
