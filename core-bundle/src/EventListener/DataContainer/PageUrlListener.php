@@ -77,6 +77,10 @@ class PageUrlListener implements ResetInterface
         $pageModel = $pageAdapter->findWithDetails($dc->id);
 
         if ('' !== $value) {
+            if (preg_match('/^[1-9]\d*$/', $value)) {
+                throw new \RuntimeException(sprintf($this->translator->trans('ERR.aliasNumeric', [], 'contao_default')));
+            }
+
             try {
                 $this->aliasExists($value, (int) $pageModel->id, $pageModel, true);
             } catch (DuplicateAliasException $exception) {
