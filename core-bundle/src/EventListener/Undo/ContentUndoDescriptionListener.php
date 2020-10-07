@@ -171,12 +171,12 @@ class ContentUndoDescriptionListener
 //        return implode(', ', $fileNames);
 //    }
 
-    public function getYoutubeDescription(array $data): string
+    private function getYoutubeDescription(array $data): string
     {
         return $data['youtube'];
     }
 
-    public function getVimeoDescription(array $data): string
+    private function getVimeoDescription(array $data): string
     {
         return $data['vimeo'];
     }
