@@ -14,9 +14,7 @@ namespace Contao\CoreBundle\Tests\EventListener\Undo;
 
 use Contao\CoreBundle\Event\UndoDescriptionEvent;
 use Contao\CoreBundle\EventListener\Undo\ContentUndoDescriptionListener;
-use Contao\CoreBundle\EventListener\Undo\UndoDescriptionListener;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\StringUtil;
 
 class ContentUndoDescriptionListenerTest extends TestCase
 {
@@ -36,7 +34,7 @@ class ContentUndoDescriptionListenerTest extends TestCase
 
         $event = new UndoDescriptionEvent('tl_content', [
             'type' => 'headline',
-            'headline' => ['unit' => 'h3', 'value' => 'This is a headline']
+            'headline' => ['unit' => 'h3', 'value' => 'This is a headline'],
         ], []);
         $listener($event);
 
@@ -72,16 +70,16 @@ class ContentUndoDescriptionListenerTest extends TestCase
     {
         yield 'Not a supported content element' => [
             [
-                'type' => 'myCustomContentElement'
+                'type' => 'myCustomContentElement',
             ],
             [],
-            null
+            null,
         ];
 
         yield 'Headline' => [
             [
                 'type' => 'headline',
-                'headline' => serialize(['unit' => 'h1', 'value' => 'This is a headline'])
+                'headline' => serialize(['unit' => 'h1', 'value' => 'This is a headline']),
             ],
             [],
             'This is a headline',
@@ -90,7 +88,7 @@ class ContentUndoDescriptionListenerTest extends TestCase
         yield 'Text' => [
             [
                 'type' => 'text',
-                'text' => '<p>Contao is a powerful open source CMS.</p>'
+                'text' => '<p>Contao is a powerful open source CMS.</p>',
             ],
             [],
             'Contao is a powerful open source CMS.',
@@ -99,68 +97,67 @@ class ContentUndoDescriptionListenerTest extends TestCase
         yield 'HTML' => [
             [
                 'type' => 'html',
-                'html' => '<p>Contao is a powerful open source CMS.</p>'
+                'html' => '<p>Contao is a powerful open source CMS.</p>',
             ],
             [],
-            htmlspecialchars('<p>Contao is a powerful open source CMS.</p>')
+            htmlspecialchars('<p>Contao is a powerful open source CMS.</p>'),
         ];
 
         yield 'List' => [
             [
                 'type' => 'list',
-                'listitems' => serialize(['Foo', 'Bar', 'Baz'])
+                'listitems' => serialize(['Foo', 'Bar', 'Baz']),
             ],
             [],
-            'Foo, Bar, Baz'
+            'Foo, Bar, Baz',
         ];
 
         yield 'Table' => [
             [
                 'type' => 'table',
-                'tableitems' => serialize([['TH 1', 'TH 2', 'TH 3'], ['TD 1', 'TD 1', 'TD 1']])
+                'tableitems' => serialize([['TH 1', 'TH 2', 'TH 3'], ['TD 1', 'TD 1', 'TD 1']]),
             ],
             [],
-            'TH 1, TH 2, TH 3'
+            'TH 1, TH 2, TH 3',
         ];
 
         yield 'AccordionStart with mooHeadline' => [
             [
                 'type' => 'accordionStart',
-                'mooHeadline' => 'An accordion section'
+                'mooHeadline' => 'An accordion section',
             ],
             [],
-            'An accordion section'
+            'An accordion section',
         ];
 
         yield 'AccordionStart without mooHeadline' => [
             [
                 'id' => 42,
                 'type' => 'accordionStart',
-                'mooHeadline' => ''
+                'mooHeadline' => '',
             ],
             [],
-            'ID 42'
+            'ID 42',
         ];
 
         yield 'AccordionStop' => [
             [
                 'id' => 42,
-                'type' => 'accordionStop'
+                'type' => 'accordionStop',
             ],
             [],
-            'ID 42'
+            'ID 42',
         ];
-
 
         yield 'AccordionSingle with headline' => [
             [
                 'id' => 42,
                 'type' => 'accordionSingle',
                 'mooHeadline' => 'This is a section headline',
-                'text' => '<p>This is the section text.</p>'
+                'text' => '<p>This is the section text.</p>',
             ],
             [],
-            'This is a section headline'
+            'This is a section headline',
         ];
 
         yield 'AccordionSingle without headline' => [
@@ -168,31 +165,31 @@ class ContentUndoDescriptionListenerTest extends TestCase
                 'id' => 42,
                 'type' => 'accordionSingle',
                 'mooHeadline' => '',
-                'text' => '<p>This is the section text.</p>'
+                'text' => '<p>This is the section text.</p>',
             ],
             [],
-            htmlspecialchars('<p>This is the section text.</p>')
+            htmlspecialchars('<p>This is the section text.</p>'),
         ];
 
         yield 'SliderStart' => [
             [
                 'id' => 42,
-                'type' => 'sliderStart'
+                'type' => 'sliderStart',
             ],
             [],
-            'ID 42'
+            'ID 42',
         ];
 
         yield 'SliderStop' => [
             [
                 'id' => 42,
-                'type' => 'sliderStop'
+                'type' => 'sliderStop',
             ],
             [],
-            'ID 42'
+            'ID 42',
         ];
 
-        $codeSnippet = <<<CODE_SNIPPET
+        $codeSnippet = <<<'CODE_SNIPPET'
 <?php declare(strict_types=1);
 // Comment
 echo 'This is a code snippet';
@@ -201,13 +198,13 @@ CODE_SNIPPET;
         yield 'Code' => [
             [
                 'type' => 'code',
-                'code' => $codeSnippet
+                'code' => $codeSnippet,
             ],
             [],
-            htmlspecialchars($codeSnippet)
+            htmlspecialchars($codeSnippet),
         ];
 
-        $markdownSnippet = <<<MARKDOWN_SNIPPET
+        $markdownSnippet = <<<'MARKDOWN_SNIPPET'
 # This is a headline
 This is a markdown paragraph.
 MARKDOWN_SNIPPET;
@@ -215,39 +212,39 @@ MARKDOWN_SNIPPET;
         yield 'Markdown' => [
             [
                 'type' => 'markdown',
-                'markdown' => $markdownSnippet
+                'markdown' => $markdownSnippet,
             ],
             [],
-            $markdownSnippet
+            $markdownSnippet,
         ];
 
         yield 'Hyperlink' => [
             [
                 'type' => 'hyperlink',
-                'url' => 'https://contao.org'
+                'url' => 'https://contao.org',
             ],
             [],
-            'https://contao.org'
+            'https://contao.org',
         ];
 
         yield 'Toplink with linkTitle' => [
             [
                 'id' => 42,
                 'type' => 'toplink',
-                'linkTitle' => 'Nach oben'
+                'linkTitle' => 'Nach oben',
             ],
             [],
-            'Nach oben'
+            'Nach oben',
         ];
 
         yield 'Toplink without linkTitle' => [
             [
                 'id' => 42,
                 'type' => 'toplink',
-                'linkTitle' => ''
+                'linkTitle' => '',
             ],
             [],
-            'ID 42'
+            'ID 42',
         ];
 
         // TODO: Image
@@ -258,20 +255,20 @@ MARKDOWN_SNIPPET;
             [
                 'id' => 42,
                 'type' => 'youtube',
-                'youtube' => 'https://www.youtube.com/watch?v=REboWtl5gmE'
+                'youtube' => 'https://www.youtube.com/watch?v=REboWtl5gmE',
             ],
             [],
-            'https://www.youtube.com/watch?v=REboWtl5gmE'
+            'https://www.youtube.com/watch?v=REboWtl5gmE',
         ];
 
         yield 'Vimeo' => [
             [
                 'id' => 42,
                 'type' => 'vimeo',
-                'vimeo' => 'https://vimeo.com/275028611'
+                'vimeo' => 'https://vimeo.com/275028611',
             ],
             [],
-            'https://vimeo.com/275028611'
+            'https://vimeo.com/275028611',
         ];
 
         // TODO: Download

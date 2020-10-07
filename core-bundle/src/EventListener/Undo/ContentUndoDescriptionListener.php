@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\Undo;
 
 use Contao\CoreBundle\Event\UndoDescriptionEvent;
-use Contao\FilesModel;
 use Contao\StringUtil;
 
 class ContentUndoDescriptionListener
@@ -26,7 +25,7 @@ class ContentUndoDescriptionListener
 
         $description = $this->getDescriptionForType($event->getData());
 
-        if ($description !== null) {
+        if (null !== $description) {
             $event->stopPropagation();
             $event->setDescription($description);
         }
@@ -34,42 +33,48 @@ class ContentUndoDescriptionListener
 
     private function getMethodFromType(string $type): string
     {
-        return 'get' . ucwords($type) . 'Description';
+        return 'get'.ucwords($type).'Description';
     }
 
     private function getDescriptionForType(array $data): ?string
     {
         $method = $this->getMethodFromType($data['type']);
+
         return method_exists($this, $method) ? $this->{$method}($data) : null;
     }
 
     private function getHeadlineDescription(array $data): string
     {
         $headline = StringUtil::deserialize($data['headline']);
+
         return $headline['value'];
     }
 
     private function getTextDescription(array $data): string
     {
         $text = strip_tags($data['text']);
+
         return StringUtil::substr($text, 100);
     }
 
     private function getHtmlDescription(array $data): string
     {
         $html = htmlspecialchars($data['html']);
+
         return StringUtil::substr($html, 100);
     }
 
     private function getListDescription(array $data): string
     {
         $items = StringUtil::deserialize($data['listitems']);
+
         return implode(', ', array_values($items));
     }
 
     private function getTableDescription(array $data): string
     {
         $table = StringUtil::deserialize($data['tableitems']);
+
         return implode(', ', $table[0]);
     }
 
@@ -79,12 +84,12 @@ class ContentUndoDescriptionListener
             return $data['mooHeadline'];
         }
 
-        return 'ID ' . $data['id'];
+        return 'ID '.$data['id'];
     }
 
     private function getAccordionStopDescription(array $data): string
     {
-        return 'ID ' . $data['id'];
+        return 'ID '.$data['id'];
     }
 
     private function getAccordionSingleDescription(array $data): string
@@ -102,7 +107,7 @@ class ContentUndoDescriptionListener
             return $data['headline'];
         }
 
-        return 'ID ' . $data['id'];
+        return 'ID '.$data['id'];
     }
 
     private function getSliderStopDescription(array $data): string
@@ -111,7 +116,7 @@ class ContentUndoDescriptionListener
             return $data['headline'];
         }
 
-        return 'ID ' . $data['id'];
+        return 'ID '.$data['id'];
     }
 
     private function getCodeDescription(array $data): string
@@ -131,7 +136,7 @@ class ContentUndoDescriptionListener
 
     private function getToplinkDescription(array $data): string
     {
-        return !empty($data['linkTitle']) ? $data['linkTitle'] : 'ID ' . $data['id'];
+        return !empty($data['linkTitle']) ? $data['linkTitle'] : 'ID '.$data['id'];
     }
 
 //    private function getImageDescription(array $data): string
@@ -176,13 +181,8 @@ class ContentUndoDescriptionListener
         return $data['vimeo'];
     }
 
-
-    /**
-     * @param UndoDescriptionEvent $event
-     * @return bool
-     */
-    private function supports(UndoDescriptionEvent $event)
+    private function supports(UndoDescriptionEvent $event): bool
     {
-        return ('tl_content' === $event->getTable());
+        return 'tl_content' === $event->getTable();
     }
 }
