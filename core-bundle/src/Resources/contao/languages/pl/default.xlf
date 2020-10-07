@@ -185,6 +185,9 @@
         <source>The alias &quot;%s&quot; already exists!</source>
         <target>Alias strony &quot;%s&quot; już istnieje!</target>
       </trans-unit>
+      <trans-unit id="ERR.aliasNumeric">
+        <source>Numeric aliases are not supported!</source>
+      </trans-unit>
       <trans-unit id="ERR.importFolder">
         <source>The folder &quot;%s&quot; cannot be imported!</source>
         <target>Katalog &quot;%s&quot; nie może być zaimportowany!</target>

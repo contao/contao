@@ -2,12 +2,31 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.8] (2020-10-07)
+
+**Fixed issues:**
+
+- [#2403] Resolve private services in the ContaoCoreExtensionTest class ([leofeyer])
+- [#2399] Remove the last username from the session after use ([ausi])
+- [#2363] Reset the KEY_BLOCK_SIZE when migrating the MySQL engine and row format ([aschempp])
+- [#2388] Ignore the logout URL if no user is present ([fritzmg])
+- [#2376] Add a title tag callback to the SERP preview ([leofeyer])
+- [#2361] Prevent using page aliases that could be page IDs ([leofeyer])
+- [#2380] Fix the popup button padding ([leofeyer])
+- [#2373] Use $this->imageHref in the image.html5 template ([leofeyer])
+- [#2339] Optimize the check for inlined services ([aschempp])
+- [#2366] Harden non-normalized file extension comparisons in the LegacyResizer ([m-vo])
+- [#2369] Correctly check for numeric page IDs ([aschempp])
+- [#2351] Override the size variable for the ce_player template ([fritzmg])
+- [#2362] Correctly handle IDNA hostnames in the root page ([leofeyer])
+- [#2345] Support legacy console scripts in the initialize.php ([aschempp])
+
 ## [4.9.7] (2020-09-25)
 
 **Fixed issues:**
 
-- [#2343] Only use $dc->id in the protectFolder() method ([leofeyer])
 - [#2342] Fix entering 0 in the back end ([leofeyer])
+- [#2343] Only use $dc->id in the protectFolder() method ([leofeyer])
 
 ## [4.9.6] (2020-09-24)
 
@@ -422,6 +441,7 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.8]: https://github.com/contao/contao/releases/tag/4.9.8
 [4.9.7]: https://github.com/contao/contao/releases/tag/4.9.7
 [4.9.6]: https://github.com/contao/contao/releases/tag/4.9.6
 [4.9.5]: https://github.com/contao/contao/releases/tag/4.9.5
@@ -451,8 +471,22 @@ This project adheres to [Semantic Versioning].
 [Tastaturberuf]: https://github.com/Tastaturberuf
 [Toflar]: https://github.com/Toflar
 [xchs]: https://github.com/xchs
-[#2343]: https://github.com/contao/contao/pull/2343
+[#2403]: https://github.com/contao/contao/pull/2403
+[#2399]: https://github.com/contao/contao/pull/2399
+[#2363]: https://github.com/contao/contao/pull/2363
+[#2388]: https://github.com/contao/contao/pull/2388
+[#2376]: https://github.com/contao/contao/pull/2376
+[#2361]: https://github.com/contao/contao/pull/2361
+[#2380]: https://github.com/contao/contao/pull/2380
+[#2373]: https://github.com/contao/contao/pull/2373
+[#2339]: https://github.com/contao/contao/pull/2339
+[#2366]: https://github.com/contao/contao/pull/2366
+[#2369]: https://github.com/contao/contao/pull/2369
+[#2351]: https://github.com/contao/contao/pull/2351
+[#2362]: https://github.com/contao/contao/pull/2362
+[#2345]: https://github.com/contao/contao/pull/2345
 [#2342]: https://github.com/contao/contao/pull/2342
+[#2343]: https://github.com/contao/contao/pull/2343
 [#2148]: https://github.com/contao/contao/pull/2148
 [#2313]: https://github.com/contao/contao/pull/2313
 [#2320]: https://github.com/contao/contao/pull/2320

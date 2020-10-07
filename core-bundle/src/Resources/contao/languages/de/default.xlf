@@ -185,6 +185,10 @@
         <source>The alias &quot;%s&quot; already exists!</source>
         <target>Der Alias &quot;%s&quot; existiert bereits!</target>
       </trans-unit>
+      <trans-unit id="ERR.aliasNumeric">
+        <source>Numeric aliases are not supported!</source>
+        <target>Numerische Aliase werden nicht unterstützt!</target>
+      </trans-unit>
       <trans-unit id="ERR.importFolder">
         <source>The folder &quot;%s&quot; cannot be imported!</source>
         <target>Der Ordner &quot;%s&quot; kann nicht importiert werden!</target>

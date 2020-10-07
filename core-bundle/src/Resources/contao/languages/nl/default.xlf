@@ -185,6 +185,9 @@
         <source>The alias &quot;%s&quot; already exists!</source>
         <target>Pagina alias &quot;%s&quot; bestaat reeds!</target>
       </trans-unit>
+      <trans-unit id="ERR.aliasNumeric">
+        <source>Numeric aliases are not supported!</source>
+      </trans-unit>
       <trans-unit id="ERR.importFolder">
         <source>The folder &quot;%s&quot; cannot be imported!</source>
         <target>Map &quot;%s&quot; kan niet worden geïmporteerd!</target>

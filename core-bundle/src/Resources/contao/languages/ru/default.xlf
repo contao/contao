@@ -185,6 +185,10 @@
         <source>The alias &quot;%s&quot; already exists!</source>
         <target>Алиас страницы &quot;%s&quot; уже существует!</target>
       </trans-unit>
+      <trans-unit id="ERR.aliasNumeric">
+        <source>Numeric aliases are not supported!</source>
+        <target>Цифровые алиасы не поддерживаются!</target>
+      </trans-unit>
       <trans-unit id="ERR.importFolder">
         <source>The folder &quot;%s&quot; cannot be imported!</source>
         <target>Каталог &quot;%s&quot; не может быть импортирован!</target>
