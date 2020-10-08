@@ -139,13 +139,18 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
         }
 
         $content = $response->getContent();
+        $tokens = $this->tokenStorage->getUsedTokens();
 
-        foreach ($this->tokenStorage->getUsedTokens() as $value) {
-            $content = str_replace($value, '', $content);
+        if (!\is_string($content) || empty($tokens)) {
+            return;
         }
 
-        $response->setContent($content);
-        $response->headers->remove('Content-Length');
+        $content = str_replace($tokens, '', $content, $replacedCount);
+
+        if ($replacedCount > 0) {
+            $response->setContent($content);
+            $response->headers->remove('Content-Length');
+        }
     }
 
     private function removeCookies(Request $request, Response $response): void
