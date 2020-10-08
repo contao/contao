@@ -148,7 +148,7 @@ class CsrfTokenCookieSubscriberTest extends TestCase
         $response = new Response(
             '<html><body><form><input name="REQUEST_TOKEN" value="tokenValue"></form></body></html>',
             200,
-            ['Content-Type' => 'text/html']
+            ['Content-Type' => 'text/html', 'Content-Length' => 1234]
         );
 
         $listener = new CsrfTokenCookieSubscriber($tokenStorage);
@@ -158,6 +158,8 @@ class CsrfTokenCookieSubscriberTest extends TestCase
             '<html><body><form><input name="REQUEST_TOKEN" value=""></form></body></html>',
             $response->getContent()
         );
+
+        $this->assertFalse($response->headers->has('Content-Length'));
 
         $cookies = $response->headers->getCookies();
 

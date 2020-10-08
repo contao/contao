@@ -145,6 +145,7 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
         }
 
         $response->setContent($content);
+        $response->headers->remove('Content-Length');
     }
 
     private function removeCookies(Request $request, Response $response): void
