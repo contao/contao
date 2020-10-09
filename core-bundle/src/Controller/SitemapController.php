@@ -38,7 +38,6 @@ class SitemapController extends AbstractController
 
         /** @var PageModel $pageModel */
         $pageModel = $this->get('contao.framework')->getAdapter(PageModel::class);
-
         $rootPages = $pageModel->findPublishedRootPages(['dns' => $request->server->get('HTTP_HOST')]);
 
         if (null === $rootPages) {
@@ -97,7 +96,7 @@ class SitemapController extends AbstractController
 
         // HOOK: take additional pages
         if (isset($GLOBALS['TL_HOOKS']['getSearchablePages']) && \is_array($GLOBALS['TL_HOOKS']['getSearchablePages'])) {
-            trigger_deprecation('contao/core-bundle', '4.11', 'Using the "getSearchablePages" hook is deprecated. Use the SitemapEvent instead.');
+            trigger_deprecation('contao/core-bundle', '4.11', 'Using the "getSearchablePages" hook is deprecated. Use the "contao.sitemap" event instead.');
 
             foreach ($GLOBALS['TL_HOOKS']['getSearchablePages'] as $callback) {
                 $pages = $systemAdapter->importStatic($callback[0])->{$callback[1]}($pages, $rootPage->id, true, $rootPage->language);

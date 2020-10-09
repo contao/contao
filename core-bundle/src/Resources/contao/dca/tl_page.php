@@ -8,6 +8,7 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\Automator;
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
@@ -1789,6 +1790,11 @@ class tl_page extends Backend
 		}
 	}
 
+	/**
+	 * @param DataContainer $dc
+	 *
+	 * @return array
+	 */
 	public function addSitemapCacheInvalidationTag($dc, array $tags)
 	{
 		$pageModel = PageModel::findWithDetails($dc->id);

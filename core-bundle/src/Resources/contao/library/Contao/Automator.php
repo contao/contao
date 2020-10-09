@@ -328,7 +328,6 @@ class Automator extends System
 
 		/** @var CacheManager $cacheManager */
 		$cacheManager = $container->get('fos_http_cache.cache_manager');
-
 		$tag = 'contao.sitemap';
 
 		if ($intId > 0)

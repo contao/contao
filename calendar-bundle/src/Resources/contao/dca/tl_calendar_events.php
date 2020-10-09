@@ -1330,6 +1330,11 @@ class tl_calendar_events extends Backend
 		}
 	}
 
+	/**
+	 * @param DataContainer $dc
+	 *
+	 * @return array
+	 */
 	public function addSitemapCacheInvalidationTag($dc, array $tags)
 	{
 		$calendar = CalendarModel::findByPk($dc->activeRecord->pid);

@@ -134,6 +134,7 @@ class SitemapControllerTest extends TestCase
             Backend::class => $backendAdapter,
             System::class => $systemAdapter,
         ]);
+
         $framework
             ->expects($this->once())
             ->method('initialize')
@@ -145,7 +146,6 @@ class SitemapControllerTest extends TestCase
             ->method('dispatch')
             ->with($this->callback(
                 function (SitemapEvent $event) {
-                    $this->assertInstanceOf(\DOMDocument::class, $event->getDocument());
                     $this->assertSame('https://www.foobar.com/sitemap.xml', $event->getRequest()->getUri());
                     $this->assertSame([42, 21], $event->getRootPageIds());
 
@@ -155,7 +155,6 @@ class SitemapControllerTest extends TestCase
         ;
 
         $responseTagger = $this->createMock(ResponseTagger::class);
-
         $responseTagger
             ->expects($this->once())
             ->method('addTags')

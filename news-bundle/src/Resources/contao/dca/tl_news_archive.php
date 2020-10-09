@@ -582,6 +582,11 @@ class tl_news_archive extends Backend
 		return $this->User->hasAccess('delete', 'newp') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
+	/**
+	 * @param DataContainer $dc
+	 *
+	 * @return array
+	 */
 	public function addSitemapCacheInvalidationTag($dc, array $tags)
 	{
 		$pageModel = PageModel::findWithDetails($dc->activeRecord->jumpTo);

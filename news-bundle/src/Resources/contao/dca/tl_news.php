@@ -1183,6 +1183,11 @@ class tl_news extends Backend
 		}
 	}
 
+	/**
+	 * @param DataContainer $dc
+	 *
+	 * @return array
+	 */
 	public function addSitemapCacheInvalidationTag($dc, array $tags)
 	{
 		$archiveModel = NewsArchiveModel::findByPk($dc->activeRecord->pid);
