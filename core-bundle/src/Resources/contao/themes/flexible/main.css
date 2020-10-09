@@ -1533,9 +1533,6 @@ ul.sgallery li {
 .tl_metawizard li.odd {
 	background:#f9f9fb;
 }
-.tl_metawizard span img {
-	cursor:pointer;
-}
 .tl_metawizard label {
 	float:left;
 	width:18%;
@@ -1558,6 +1555,13 @@ ul.sgallery li {
 	font-weight:600;
 	position:relative;
 }
+.tl_metawizard .lang img {
+	position:absolute;
+	right:0;
+	top:-1px;
+	cursor:pointer;
+}
+
 @media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
 	.tl_metawizard .lang {
 		font-weight:500;
