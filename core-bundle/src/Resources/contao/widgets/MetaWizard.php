@@ -165,19 +165,6 @@ class MetaWizard extends Widget
   </ul>';
 		}
 
-		$options = array('<option value="">-</option>');
-
-		// Add the remaining languages
-		foreach ($languages as $k=>$v)
-		{
-			$options[] = '<option value="' . $k . '"' . (isset($this->varValue[$k]) ? ' disabled' : '') . '>' . $v . '</option>';
-		}
-
-		$return .= '
-  <div class="tl_metawizard_new">
-    <select name="' . $this->strId . '[language]" class="tl_select" onchange="Backend.toggleAddLanguageButton(this)">' . implode('', $options) . '</select> <input type="button" class="tl_submit" disabled value="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['aw_new']) . '" onclick="Backend.metaWizard(this, \'ctrl_' . $this->strId . '\')">
-  </div>';
-
 		return $return;
 	}
 }

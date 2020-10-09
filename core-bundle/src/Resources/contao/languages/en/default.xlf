@@ -959,12 +959,6 @@
       <trans-unit id="MSC.aw_caption">
         <source>Caption</source>
       </trans-unit>
-      <trans-unit id="MSC.aw_delete">
-        <source>Delete the language</source>
-      </trans-unit>
-      <trans-unit id="MSC.aw_new">
-        <source>Add language</source>
-      </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>
       </trans-unit>
