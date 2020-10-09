@@ -224,10 +224,7 @@ class ImageResultTest extends TestCase
 
         $deferredResizer = $this->createMock(DeferredResizerInterface::class);
         $deferredResizer
-            ->expects(
-                empty($expectedDeferredImages) ?
-                    $this->never() : $this->atLeast(\count($expectedDeferredImages))
-            )
+            ->expects(empty($expectedDeferredImages) ? $this->never() : $this->atLeast(\count($expectedDeferredImages)))
             ->method('resizeDeferredImage')
             ->with($this->callback(
                 static function ($deferredImage) use (&$expectedDeferredImages) {
@@ -408,7 +405,6 @@ class ImageResultTest extends TestCase
         ;
 
         $imageResult = new ImageResult($locator, '/project/dir', '/project/dir/image.jpg');
-
         $imageResult->createIfDeferred();
     }
 
@@ -434,7 +430,6 @@ class ImageResultTest extends TestCase
     private function getLocatorMock(?PictureFactoryInterface $pictureFactory = null, string $staticUrl = null)
     {
         $locator = $this->createMock(ContainerInterface::class);
-
         $context = null;
 
         if (null !== $staticUrl) {
