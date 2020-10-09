@@ -157,6 +157,7 @@ use Psr\Container\ContainerInterface as PsrContainerInterface;
 use Symfony\Cmf\Component\Routing\DynamicRouter;
 use Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Compiler\ResolvePrivatesPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
@@ -1673,7 +1674,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $definition = $container->getDefinition(LegacyCron::class);
 
-        $this->assertTrue($definition->isPublic());
+        $this->assertTrue($definition->isPrivate());
 
         $this->assertEquals(
             [
@@ -1938,7 +1939,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertTrue($container->has('contao.image.imagine'));
 
-        $definition = $container->findDefinition('contao.image.imagine');
+        $definition = $container->getAlias('contao.image.imagine');
 
         $this->assertTrue($definition->isPublic());
     }
@@ -4081,6 +4082,10 @@ class ContaoCoreExtensionTest extends TestCase
 
         $extension = new ContaoCoreExtension();
         $extension->load($params, $container);
+
+        // Resolve private services (see #949)
+        $pass = new ResolvePrivatesPass();
+        $pass->process($container);
 
         return $container;
     }

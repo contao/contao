@@ -266,7 +266,7 @@ class tl_theme extends Backend
 	 */
 	public function addPreviewImage($row, $label)
 	{
-		if ($row['screenshot'] != '')
+		if ($row['screenshot'])
 		{
 			$objFile = FilesModel::findByUuid($row['screenshot']);
 

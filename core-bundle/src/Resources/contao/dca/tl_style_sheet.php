@@ -307,12 +307,12 @@ class tl_style_sheet extends Backend
 		$cc = '';
 		$media = StringUtil::deserialize($row['media']);
 
-		if ($row['cc'] != '')
+		if ($row['cc'])
 		{
 			$cc = ' &lt;!--[' . $row['cc'] . ']&gt;';
 		}
 
-		if ($row['mediaQuery'] != '')
+		if ($row['mediaQuery'])
 		{
 			return '<div class="tl_content_left">' . $row['name'] . ' <span style="color:#999;padding-left:3px">@media ' . $row['mediaQuery'] . $cc . '</span>' . "</div>\n";
 		}
@@ -346,7 +346,7 @@ class tl_style_sheet extends Backend
 	 */
 	public function sanitizeCc($varValue)
 	{
-		if ($varValue != '')
+		if ($varValue)
 		{
 			$varValue = str_replace(array('<!--[', ']>'), '', $varValue);
 		}

@@ -39,7 +39,7 @@ class PageRoot extends Frontend
 
 		$objNextPage = $this->getNextPage($rootPageId);
 
-		return ($blnPreferAlias && $objNextPage->alias != '') ? $objNextPage->alias : $objNextPage->id;
+		return ($blnPreferAlias && $objNextPage->alias) ? $objNextPage->alias : $objNextPage->id;
 	}
 
 	/**

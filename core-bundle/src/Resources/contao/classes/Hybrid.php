@@ -98,7 +98,7 @@ abstract class Hybrid extends Frontend
 			$this->objParent = $objModel;
 		}
 
-		if ($this->strKey == '' || $this->strTable == '')
+		if (!$this->strKey || !$this->strTable)
 		{
 			return;
 		}
@@ -237,12 +237,12 @@ abstract class Hybrid extends Frontend
 
 		$this->Template->inColumn = $this->strColumn;
 
-		if ($this->Template->headline == '')
+		if (!$this->Template->headline)
 		{
 			$this->Template->headline = $this->headline;
 		}
 
-		if ($this->Template->hl == '')
+		if (!$this->Template->hl)
 		{
 			$this->Template->hl = $this->hl;
 		}
@@ -263,7 +263,7 @@ abstract class Hybrid extends Frontend
 			return false;
 		}
 
-		$isInvisible = $this->objParent->invisible || ($this->objParent->start != '' && $this->objParent->start > time()) || ($this->objParent->stop != '' && $this->objParent->stop <= time());
+		$isInvisible = $this->objParent->invisible || ($this->objParent->start && $this->objParent->start > time()) || ($this->objParent->stop && $this->objParent->stop <= time());
 
 		// The element is visible, so show it
 		if (!$isInvisible)

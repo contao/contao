@@ -45,7 +45,7 @@ class DcaLoader extends Controller
 	 */
 	public function __construct($strTable)
 	{
-		if ($strTable == '')
+		if (!$strTable)
 		{
 			throw new \Exception('The table name must not be empty');
 		}

@@ -612,7 +612,7 @@ class Image
 	 */
 	public static function getPath($src)
 	{
-		if ($src == '')
+		if (!$src)
 		{
 			return '';
 		}
@@ -675,7 +675,7 @@ class Image
 	{
 		$src = static::getPath($src);
 
-		if ($src == '')
+		if (!$src)
 		{
 			return '';
 		}
@@ -871,7 +871,7 @@ class Image
 	{
 		trigger_deprecation('contao/core-bundle', '4.3', 'Using "Contao\Image::get()" has been deprecated and will no longer work in Contao 5.0. Use the "contao.image.image_factory" service instead.');
 
-		if ($image == '')
+		if (!$image)
 		{
 			return null;
 		}

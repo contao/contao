@@ -30,7 +30,7 @@ class ContentVimeo extends ContentElement
 	 */
 	public function generate()
 	{
-		if ($this->vimeo == '')
+		if (!$this->vimeo)
 		{
 			return '';
 		}
@@ -41,7 +41,7 @@ class ContentVimeo extends ContentElement
 		{
 			$return = '<p><a href="https://vimeo.com/' . $this->vimeo . '" target="_blank" rel="noreferrer noopener">vimeo.com/' . $this->vimeo . '</a></p>';
 
-			if ($this->headline != '')
+			if ($this->headline)
 			{
 				$return = '<' . $this->hl . '>' . $this->headline . '</' . $this->hl . '>' . $return;
 			}
