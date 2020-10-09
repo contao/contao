@@ -84,7 +84,7 @@ class TextStore extends Widget
 			$this->strName,
 			$this->strId,
 			($this->strClass ? ' ' . $this->strClass : ''),
-			(($this->varValue != '') ? '*****' : ''),
+			($this->varValue ? '*****' : ''),
 			$this->getAttributes(),
 			$this->wizard
 		);

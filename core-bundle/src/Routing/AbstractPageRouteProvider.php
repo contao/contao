@@ -53,7 +53,7 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
         $aliases = [];
 
         foreach ($candidates as $candidate) {
-            if (is_numeric($candidate)) {
+            if (preg_match('/^[1-9]\d*$/', $candidate)) {
                 $ids[] = (int) $candidate;
             } else {
                 $aliases[] = $candidate;
@@ -96,7 +96,7 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
 
             [, $id] = explode('.', $name);
 
-            if (!is_numeric($id)) {
+            if (!preg_match('/^[1-9]\d*$/', $id)) {
                 continue;
             }
 

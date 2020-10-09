@@ -16,6 +16,9 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LogLevel;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use Symfony\Component\ExpressionLanguage\Lexer;
+use Symfony\Component\ExpressionLanguage\SyntaxError;
+use Symfony\Component\ExpressionLanguage\Token;
 
 class SimpleTokenParser implements LoggerAwareInterface
 {
@@ -137,15 +140,31 @@ class SimpleTokenParser implements LoggerAwareInterface
 
     private function evaluateExpression(string $expression, array $data, bool $canUseExpressionLanguage): bool
     {
-        if ($canUseExpressionLanguage) {
-            try {
-                return $this->expressionLanguage->evaluate($expression, $data);
-            } catch (\Exception $e) {
-                throw new \InvalidArgumentException($e->getMessage(), 0, $e);
-            }
+        if (!$canUseExpressionLanguage) {
+            return $this->evaluateExpressionLegacy($expression, $data);
         }
 
-        // Legacy code
+        $unmatchedVariables = array_diff($this->getVariables($expression), array_keys($data));
+
+        if (!empty($unmatchedVariables)) {
+            $this->logUnmatchedVariables(...$unmatchedVariables);
+
+            // Define variables that weren't provided with the value 'null'
+            $data = array_merge(
+                array_combine($unmatchedVariables, array_fill(0, \count($unmatchedVariables), null)),
+                $data
+            );
+        }
+
+        try {
+            return (bool) $this->expressionLanguage->evaluate($expression, $data);
+        } catch (SyntaxError $e) {
+            throw new \InvalidArgumentException($e->getMessage(), 0, $e);
+        }
+    }
+
+    private function evaluateExpressionLegacy(string $expression, array $data): bool
+    {
         if (!preg_match('/^([^=!<>\s]+) *([=!<>]+)(.+)$/s', $expression, $matches)) {
             return false;
         }
@@ -153,14 +172,12 @@ class SimpleTokenParser implements LoggerAwareInterface
         [, $token, $operator, $value] = $matches;
 
         if (!\array_key_exists($token, $data)) {
-            if (null !== $this->logger) {
-                $this->logger->log(LogLevel::INFO, sprintf('Tried to evaluate unknown simple token "%s".', $token));
-            }
+            $this->logUnmatchedVariables($token);
 
-            return false;
+            $tokenValue = null;
+        } else {
+            $tokenValue = $data[$token];
         }
-
-        $tokenValue = $data[$token];
 
         // Normalize types
         $value = trim($value, ' ');
@@ -216,5 +233,63 @@ class SimpleTokenParser implements LoggerAwareInterface
             default:
                 throw new \InvalidArgumentException(sprintf('Unknown simple token comparison operator "%s".', $operator));
         }
+    }
+
+    private function getVariables(string $expression): array
+    {
+        /** @var array<Token> $tokens */
+        $tokens = [];
+
+        try {
+            $tokenStream = (new Lexer())->tokenize($expression);
+
+            while (!$tokenStream->isEOF()) {
+                $tokens[] = $tokenStream->current;
+                $tokenStream->next();
+            }
+        } catch (SyntaxError $e) {
+            // We cannot identify the variables if tokenizing fails
+            return [];
+        }
+
+        $variables = [];
+
+        for ($i = 0; $i < \count($tokens); ++$i) {
+            if (!$tokens[$i]->test(Token::NAME_TYPE)) {
+                continue;
+            }
+
+            $value = $tokens[$i]->value;
+
+            // Skip constant nodes (see Symfony/Component/ExpressionLanguage/Parser#parsePrimaryExpression()
+            if (\in_array($value, ['true', 'TRUE', 'false', 'FALSE', 'null'], true)) {
+                continue;
+            }
+
+            // Skip functions
+            if (isset($tokens[$i + 1]) && '(' === $tokens[$i + 1]->value) {
+                ++$i;
+
+                continue;
+            }
+
+            if (!\in_array($value, $variables, true)) {
+                $variables[] = $value;
+            }
+        }
+
+        return $variables;
+    }
+
+    private function logUnmatchedVariables(string ...$tokenNames): void
+    {
+        if (null === $this->logger) {
+            return;
+        }
+
+        $this->logger->log(
+            LogLevel::INFO,
+            sprintf('Tried to evaluate unknown simple token(s): "%s".', implode('", "', $tokenNames))
+        );
     }
 }

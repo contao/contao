@@ -13,7 +13,9 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * @internal
@@ -37,6 +39,10 @@ class ClearSessionDataListener
 
         if (!$request->hasSession() || !$request->getSession()->isStarted()) {
             return;
+        }
+
+        if ($event->getResponse()->isSuccessful()) {
+            $this->clearLoginData($request->getSession());
         }
 
         $this->clearLegacyAttributeBags('FE_DATA');
@@ -67,5 +73,11 @@ class ClearSessionDataListener
         }
 
         unset($_SESSION['FORM_DATA'], $_SESSION['FILES']);
+    }
+
+    private function clearLoginData(SessionInterface $session): void
+    {
+        $session->remove(Security::AUTHENTICATION_ERROR);
+        $session->remove(Security::LAST_USERNAME);
     }
 }

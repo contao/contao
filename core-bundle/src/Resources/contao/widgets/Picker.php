@@ -38,7 +38,7 @@ class Picker extends Widget
 		parent::__construct($arrAttributes);
 
 		// Prepare the order field
-		if ($this->orderField != '')
+		if ($this->orderField)
 		{
 			trigger_deprecation('contao/core-bundle', '4.10', 'Using "orderField" for the picker has been deprecated and will no longer work in Contao 5.0. Use "isSortable" instead.');
 
@@ -70,7 +70,7 @@ class Picker extends Widget
 		}
 
 		// Store the order value
-		if ($this->orderField != '')
+		if ($this->orderField)
 		{
 			$arrNew = array();
 
@@ -90,7 +90,7 @@ class Picker extends Widget
 		}
 
 		// Return the value as usual
-		if ($varInput == '')
+		if (!$varInput)
 		{
 			if ($this->mandatory)
 			{
@@ -118,7 +118,7 @@ class Picker extends Widget
 	public function generate()
 	{
 		$strContext = $this->context ?: 'dc.' . $this->getRelatedTable();
-		$blnHasOrder = ($this->orderField != '' && \is_array($this->{$this->orderField}));
+		$blnHasOrder = $this->orderField && \is_array($this->{$this->orderField});
 		$arrValues = $this->generateValues($blnHasOrder);
 		$arrSet = array_keys($arrValues);
 

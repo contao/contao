@@ -1086,7 +1086,7 @@ class Theme extends Backend
 		$strFolder = preg_replace('@^' . preg_quote(Config::get('uploadPath'), '@') . '/@', '', $strFolder);
 
 		// Add the default upload folder name
-		if ($strFolder == '')
+		if (!$strFolder)
 		{
 			$strTarget = 'files';
 			$strFolder = Config::get('uploadPath');
@@ -1162,7 +1162,7 @@ class Theme extends Backend
 		$strFolder = preg_replace('@^templates/@', '', $strFolder);
 
 		// Re-add the templates folder name
-		if ($strFolder == '')
+		if (!$strFolder)
 		{
 			$strFolder = 'templates';
 		}
@@ -1201,7 +1201,7 @@ class Theme extends Backend
 	 */
 	protected function customizeUploadPath($strPath)
 	{
-		if ($strPath == '')
+		if (!$strPath)
 		{
 			return '';
 		}
@@ -1218,7 +1218,7 @@ class Theme extends Backend
 	 */
 	protected function standardizeUploadPath($strPath)
 	{
-		if ($strPath == '')
+		if (!$strPath)
 		{
 			return '';
 		}

@@ -275,7 +275,7 @@ abstract class Template extends Controller
 	 */
 	public function parse()
 	{
-		if ($this->strTemplate == '')
+		if (!$this->strTemplate)
 		{
 			return '';
 		}

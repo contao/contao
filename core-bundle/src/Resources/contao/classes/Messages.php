@@ -87,7 +87,7 @@ class Messages extends Backend
 
 		foreach ($arrRoots as $k=>$v)
 		{
-			if ($v != '')
+			if ($v)
 			{
 				continue;
 			}

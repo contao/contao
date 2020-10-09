@@ -240,7 +240,7 @@ abstract class Widget extends Controller
 				break;
 
 			case 'class':
-				if ($varValue != '' && strpos($this->strClass, $varValue) === false)
+				if ($varValue && strpos($this->strClass, $varValue) === false)
 				{
 					$this->strClass = trim($this->strClass . ' ' . $varValue);
 				}
@@ -575,7 +575,7 @@ abstract class Widget extends Controller
 	 */
 	public function parse($arrAttributes=null)
 	{
-		if ($this->strTemplate == '')
+		if (!$this->strTemplate)
 		{
 			return '';
 		}
@@ -617,7 +617,7 @@ abstract class Widget extends Controller
 	 */
 	public function generateLabel()
 	{
-		if ($this->strLabel == '')
+		if (!$this->strLabel)
 		{
 			return '';
 		}
@@ -625,7 +625,7 @@ abstract class Widget extends Controller
 		return sprintf(
 			'<label%s%s>%s%s%s</label>',
 			($this->blnForAttribute ? ' for="ctrl_' . $this->strId . '"' : ''),
-			(($this->strClass != '') ? ' class="' . $this->strClass . '"' : ''),
+			($this->strClass ? ' class="' . $this->strClass . '"' : ''),
 			($this->mandatory ? '<span class="invisible">' . $GLOBALS['TL_LANG']['MSC']['mandatory'] . ' </span>' : ''),
 			$this->strLabel,
 			($this->mandatory ? '<span class="mandatory">*</span>' : '')
@@ -703,7 +703,7 @@ abstract class Widget extends Controller
 			return ' ' . $strKey;
 		}
 
-		if ($varValue != '')
+		if ($varValue)
 		{
 			return ' ' . $strKey . '="' . StringUtil::specialchars($varValue) . '"';
 		}
@@ -810,14 +810,14 @@ abstract class Widget extends Controller
 			$varInput = trim($varInput);
 		}
 
-		if ($varInput == '')
+		if ((string) $varInput === '')
 		{
 			if (!$this->mandatory)
 			{
 				return '';
 			}
 
-			if ($this->strLabel == '')
+			if (!$this->strLabel)
 			{
 				$this->addError($GLOBALS['TL_LANG']['ERR']['mdtryNoLabel']);
 			}
@@ -847,7 +847,7 @@ abstract class Widget extends Controller
 			$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['maxval'], $this->strLabel, $this->maxval));
 		}
 
-		if ($this->rgxp != '')
+		if ($this->rgxp)
 		{
 			switch ($this->rgxp)
 			{
@@ -1063,7 +1063,7 @@ abstract class Widget extends Controller
 			}
 		}
 
-		if ($this->isHexColor && $varInput != '' && strncmp($varInput, '$', 1) !== 0)
+		if ($this->isHexColor && $varInput && strncmp($varInput, '$', 1) !== 0)
 		{
 			$varInput = preg_replace('/[^a-f0-9]+/i', '', $varInput);
 		}
@@ -1078,7 +1078,7 @@ abstract class Widget extends Controller
 			$varInput = preg_replace('/\s+/', '_', trim($varInput));
 		}
 
-		if (\is_bool($this->trailingSlash) && $varInput != '')
+		if (\is_bool($this->trailingSlash) && $varInput)
 		{
 			$varInput = preg_replace('/\/+$/', '', $varInput) . ($this->trailingSlash ? '/' : '');
 		}
@@ -1249,6 +1249,7 @@ abstract class Widget extends Controller
 		$arrAttributes['description'] = $arrData['label'][1];
 		$arrAttributes['type'] = $arrData['inputType'];
 		$arrAttributes['dataContainer'] = $objDca;
+		$arrAttributes['value'] = StringUtil::deserialize($varValue);
 
 		// Internet Explorer does not support onchange for checkboxes and radio buttons
 		if ($arrData['eval']['submitOnChange'])
@@ -1326,7 +1327,7 @@ abstract class Widget extends Controller
 				$arrAttributes['options'][] = array('value'=>'', 'label'=>$strLabel);
 			}
 
-			$isKnownOption = false;
+			$unknown = (array) $arrAttributes['value'];
 
 			foreach ($arrData['options'] as $k=>$v)
 			{
@@ -1334,9 +1335,9 @@ abstract class Widget extends Controller
 				{
 					$value = $blnIsAssociative ? $k : $v;
 
-					if ($varValue && $varValue == $value)
+					if (($i = array_search($value, $unknown)) !== false)
 					{
-						$isKnownOption = true;
+						unset($unknown[$i]);
 					}
 
 					$arrAttributes['options'][] = array('value'=>$value, 'label'=>($blnUseReference ? ((($ref = (\is_array($arrData['reference'][$v]) ? $arrData['reference'][$v][0] : $arrData['reference'][$v])) != false) ? $ref : $v) : $v));
@@ -1350,22 +1351,16 @@ abstract class Widget extends Controller
 				{
 					$value = $blnIsAssoc ? $kk : $vv;
 
-					if ($varValue && $varValue == $value)
+					if (($i = array_search($value, $unknown)) !== false)
 					{
-						$isKnownOption = true;
+						unset($unknown[$i]);
 					}
 
 					$arrAttributes['options'][$key][] = array('value'=>$value, 'label'=>($blnUseReference ? ((($ref = (\is_array($arrData['reference'][$vv]) ? $arrData['reference'][$vv][0] : $arrData['reference'][$vv])) != false) ? $ref : $vv) : $vv));
 				}
 			}
 
-			// If the value is not in the options array, the current user most
-			// likely cannot access it. We add the value as unknown option, so
-			// it does not get lost when saving the record (see #920).
-			if ($varValue && !$isKnownOption)
-			{
-				$arrAttributes['options'][] = array('value'=>$varValue, 'label'=>$GLOBALS['TL_LANG']['MSC']['unknownOption']);
-			}
+			$arrAttributes['unknownOption'] = array_filter($unknown);
 		}
 
 		if (\is_array($arrAttributes['sql']) && !isset($arrAttributes['sql']['columnDefinition']))
@@ -1380,8 +1375,6 @@ abstract class Widget extends Controller
 				$arrAttributes['unique'] = $arrAttributes['sql']['customSchemaOptions']['unique'];
 			}
 		}
-
-		$arrAttributes['value'] = StringUtil::deserialize($varValue);
 
 		// Convert timestamps
 		if ($varValue !== null && $varValue !== '' && \in_array($arrData['eval']['rgxp'], array('date', 'time', 'datim')))

@@ -1533,9 +1533,6 @@ ul.sgallery li {
 .tl_metawizard li.odd {
 	background:#f9f9fb;
 }
-.tl_metawizard span img {
-	cursor:pointer;
-}
 .tl_metawizard label {
 	float:left;
 	width:18%;
@@ -1554,26 +1551,21 @@ ul.sgallery li {
 }
 .tl_metawizard .lang {
 	display:block;
-	margin-bottom:9px;
+	margin:3px 0 9px;
 	font-weight:600;
 	position:relative;
 }
+.tl_metawizard .lang img {
+	position:absolute;
+	right:0;
+	top:-1px;
+	cursor:pointer;
+}
+
 @media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
 	.tl_metawizard .lang {
 		font-weight:500;
 	}
-}
-.tl_metawizard_img {
-	position:absolute;
-	right:0;
-	top:-1px;
-}
-.tl_metawizard_new .tl_select {
-	margin-right:4px;
-	max-width:200px;
-}
-.tl_metawizard_new .tl_submit {
-	line-height:1;
 }
 
 /* Section wizard */

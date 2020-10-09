@@ -118,7 +118,7 @@ class Statement
 	 */
 	public function prepare($strQuery)
 	{
-		if ($strQuery == '')
+		if (!$strQuery)
 		{
 			throw new \Exception('Empty query string');
 		}
@@ -265,7 +265,7 @@ class Statement
 		}
 
 		// Make sure there is a query string
-		if ($this->strQuery == '')
+		if (!$this->strQuery)
 		{
 			throw new \Exception('Empty query string');
 		}

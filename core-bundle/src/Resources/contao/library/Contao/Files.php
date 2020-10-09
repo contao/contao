@@ -324,7 +324,7 @@ class Files
 	{
 		foreach (\func_get_args() as $strPath)
 		{
-			if ($strPath == '')
+			if (!$strPath)
 			{
 				throw new \RuntimeException('No file or folder name given'); // see #5795
 			}

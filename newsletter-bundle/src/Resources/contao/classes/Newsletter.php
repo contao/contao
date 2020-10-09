@@ -45,25 +45,25 @@ class Newsletter extends Backend
 		System::loadLanguageFile('tl_newsletter_channel');
 
 		// Set the template
-		if ($objNewsletter->template == '')
+		if (!$objNewsletter->template)
 		{
 			$objNewsletter->template = $objNewsletter->channelTemplate;
 		}
 
 		// Set the sender address
-		if ($objNewsletter->sender == '')
+		if (!$objNewsletter->sender)
 		{
 			$objNewsletter->sender = $objNewsletter->channelSender;
 		}
 
 		// Set the sender name
-		if ($objNewsletter->senderName == '')
+		if (!$objNewsletter->senderName)
 		{
 			$objNewsletter->senderName = $objNewsletter->channelSenderName;
 		}
 
 		// No sender address given
-		if ($objNewsletter->sender == '')
+		if (!$objNewsletter->sender)
 		{
 			throw new InternalServerErrorException('No sender address given. Please check the newsletter channel settings.');
 		}
@@ -109,7 +109,7 @@ class Newsletter extends Backend
 		$token = Input::get('token');
 
 		// Send newsletter
-		if ($token != '' && $token == $objSession->get('tl_newsletter_send'))
+		if ($token && $token == $objSession->get('tl_newsletter_send'))
 		{
 			$referer = preg_replace('/&(amp;)?(start|mpc|token|recipient|preview)=[^&]*/', '', Environment::get('request'));
 
@@ -177,7 +177,7 @@ class Newsletter extends Backend
 				while ($objRecipients->next())
 				{
 					// Skip the recipient if the member is not active (see #8812)
-					if ($objRecipients->id !== null && ($objRecipients->disable || ($objRecipients->start != '' && $objRecipients->start > $time) || ($objRecipients->stop != '' && $objRecipients->stop <= $time)))
+					if ($objRecipients->id !== null && ($objRecipients->disable || ($objRecipients->start && $objRecipients->start > $time) || ($objRecipients->stop && $objRecipients->stop <= $time)))
 					{
 						--$intTotal;
 						echo 'Skipping <strong>' . Idna::decodeEmail($objRecipients->email) . '</strong> as the member is not active<br>';
@@ -237,7 +237,7 @@ class Newsletter extends Backend
 
 		$strToken = md5(uniqid(mt_rand(), true));
 		$objSession->set('tl_newsletter_send', $strToken);
-		$sprintf = ($objNewsletter->senderName != '') ? $objNewsletter->senderName . ' &lt;%s&gt;' : '%s';
+		$sprintf = $objNewsletter->senderName ? $objNewsletter->senderName . ' &lt;%s&gt;' : '%s';
 		$this->import(BackendUser::class, 'User');
 
 		// Preview newsletter
@@ -333,7 +333,7 @@ class Newsletter extends Backend
 		$objEmail->subject = $objNewsletter->subject;
 
 		// Add sender name
-		if ($objNewsletter->senderName != '')
+		if ($objNewsletter->senderName)
 		{
 			$objEmail->fromName = $objNewsletter->senderName;
 		}
@@ -566,7 +566,7 @@ class Newsletter extends Backend
       <option value="semicolon">' . $GLOBALS['TL_LANG']['MSC']['semicolon'] . '</option>
       <option value="tabulator">' . $GLOBALS['TL_LANG']['MSC']['tabulator'] . '</option>
       <option value="linebreak">' . $GLOBALS['TL_LANG']['MSC']['linebreak'] . '</option>
-    </select>' . (($GLOBALS['TL_LANG']['MSC']['separator'][1] != '') ? '
+    </select>' . ($GLOBALS['TL_LANG']['MSC']['separator'][1] ? '
     <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['MSC']['separator'][1] . '</p>' : '') . '
   </div>
   <div class="widget clr">
@@ -745,7 +745,7 @@ class Newsletter extends Backend
 		}
 
 		// Nothing has changed or e-mail address is empty
-		if ($varValue == $objUser->newsletter || $objUser->email == '')
+		if ($varValue == $objUser->newsletter || !$objUser->email)
 		{
 			return $varValue;
 		}
@@ -827,7 +827,7 @@ class Newsletter extends Backend
 				$strEmail = Input::post('email', true);
 
 				// E-mail address has changed
-				if (!empty($_POST) && $strEmail != '' && $strEmail != $objUser->email)
+				if (!empty($_POST) && $strEmail && $strEmail != $objUser->email)
 				{
 					$objCount = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_recipients WHERE email=?")
 											   ->execute($strEmail);
@@ -1016,7 +1016,7 @@ class Newsletter extends Backend
 					}
 
 					// The target page has not been published (see #5520)
-					if (!$objParent->published || ($objParent->start != '' && $objParent->start > $time) || ($objParent->stop != '' && $objParent->stop <= $time))
+					if (!$objParent->published || ($objParent->start && $objParent->start > $time) || ($objParent->stop && $objParent->stop <= $time))
 					{
 						continue;
 					}

@@ -57,7 +57,7 @@ class Ajax extends Backend
 	 */
 	public function __construct($strAction)
 	{
-		if ($strAction == '')
+		if (!$strAction)
 		{
 			throw new \Exception('Missing Ajax action');
 		}
@@ -257,7 +257,7 @@ class Ajax extends Backend
 				$objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField], $dc->field, $varValue, $strField, $dc->table, $dc));
 
 				// Load a particular node
-				if (Input::post('folder', true) != '')
+				if (Input::post('folder', true))
 				{
 					throw new ResponseException($this->convertToResponse($objWidget->generateAjax(Input::post('folder', true), Input::post('field'), (int) Input::post('level'))));
 				}
@@ -351,7 +351,7 @@ class Ajax extends Backend
 				}
 
 				// Convert the selected values
-				if ($varValue != '')
+				if ($varValue)
 				{
 					$varValue = StringUtil::trimsplit("\t", $varValue);
 

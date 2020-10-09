@@ -1021,7 +1021,7 @@ abstract class Model
 	 */
 	protected static function find(array $arrOptions)
 	{
-		if (static::$strTable == '')
+		if (!static::$strTable)
 		{
 			return null;
 		}
@@ -1137,7 +1137,7 @@ abstract class Model
 	 */
 	public static function countBy($strColumn=null, $varValue=null, array $arrOptions=array())
 	{
-		if (static::$strTable == '')
+		if (!static::$strTable)
 		{
 			return 0;
 		}

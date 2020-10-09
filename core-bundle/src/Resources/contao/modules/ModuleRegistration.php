@@ -98,7 +98,7 @@ class ModuleRegistration extends Module
 			return;
 		}
 
-		if ($this->memberTpl != '')
+		if ($this->memberTpl)
 		{
 			$this->Template = new FrontendTemplate($this->memberTpl);
 			$this->Template->setData($this->arrData);
@@ -158,7 +158,7 @@ class ModuleRegistration extends Module
 		$objMember = null;
 
 		// Check for a follow-up registration (see #7992)
-		if ($this->reg_activate && Input::post('email', true) != '' && ($objMember = MemberModel::findUnactivatedByEmail(Input::post('email', true))) !== null)
+		if ($this->reg_activate && Input::post('email', true) && ($objMember = MemberModel::findUnactivatedByEmail(Input::post('email', true))) !== null)
 		{
 			$this->resendActivationMail($objMember);
 
@@ -248,7 +248,7 @@ class ModuleRegistration extends Module
 				}
 
 				// Make sure that unique fields are unique (check the eval setting first -> #3063)
-				if ($varValue != '' && $arrData['eval']['unique'] && !$this->Database->isUniqueValue('tl_member', $field, $varValue))
+				if ((string) $varValue !== '' && $arrData['eval']['unique'] && !$this->Database->isUniqueValue('tl_member', $field, $varValue))
 				{
 					$objWidget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $field));
 				}
@@ -488,7 +488,7 @@ class ModuleRegistration extends Module
 			// Make sure newsletter is an array
 			if (!\is_array($arrData['newsletter']))
 			{
-				if ($arrData['newsletter'] != '')
+				if ($arrData['newsletter'])
 				{
 					$arrData['newsletter'] = array($arrData['newsletter']);
 				}
@@ -593,7 +593,7 @@ class ModuleRegistration extends Module
 	 */
 	protected function resendActivationMail(MemberModel $objMember)
 	{
-		if ($objMember->disable == '')
+		if (!$objMember->disable)
 		{
 			return;
 		}
