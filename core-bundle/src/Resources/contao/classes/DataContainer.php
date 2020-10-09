@@ -380,12 +380,13 @@ abstract class DataContainer extends Backend
 				if ($objWidget->hasErrors())
 				{
 					// Skip mandatory fields on auto-submit (see #4077)
-					if (!$objWidget->mandatory || $objWidget->value != '' || Input::post('SUBMIT_TYPE') != 'auto')
+					if (!$objWidget->mandatory || $objWidget->value || Input::post('SUBMIT_TYPE') != 'auto')
 					{
 						$this->noReload = true;
 					}
 				}
-				else
+				// The return value of submitInput() might have changed, therefore check it again here (see #2383)
+				elseif ($objWidget->submitInput())
 				{
 					$varValue = $objWidget->value;
 
@@ -517,7 +518,7 @@ abstract class DataContainer extends Backend
 			}
 		}
 
-		if ($wizard != '')
+		if ($wizard)
 		{
 			$objWidget->wizard = $wizard;
 
@@ -681,7 +682,7 @@ abstract class DataContainer extends Backend
 	{
 		$return = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][1];
 
-		if ($return == '' || $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'] == 'password' || !Config::get('showHelp'))
+		if (!$return || $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'] == 'password' || !Config::get('showHelp'))
 		{
 			return '';
 		}
@@ -908,12 +909,12 @@ abstract class DataContainer extends Backend
 				$attributes = sprintf(' style="background-image:url(\'%s\')"', Controller::addAssetsUrlTo($v['icon'])) . $attributes;
 			}
 
-			if ($label == '')
+			if (!$label)
 			{
 				$label = $k;
 			}
 
-			if ($title == '')
+			if (!$title)
 			{
 				$title = $label;
 			}
@@ -1114,13 +1115,34 @@ abstract class DataContainer extends Backend
 	}
 
 	/**
+	 * Return the data-picker-value attribute with the currently selected picker values (see #1816)
+	 *
+	 * @return string
+	 */
+	protected function getPickerValueAttribute()
+	{
+		// Only load the previously selected values for the checkbox field type (see #2346)
+		if ($this->strPickerFieldType != 'checkbox')
+		{
+			return '';
+		}
+
+		$values = array_map($this->objPickerCallback, $this->arrPickerValue);
+		$values = array_map('strval', $values);
+		$values = json_encode($values);
+		$values = htmlspecialchars($values);
+
+		return ' data-picker-value="' . $values . '"';
+	}
+
+	/**
 	 * Build the sort panel and return it as string
 	 *
 	 * @return string
 	 */
 	protected function panel()
 	{
-		if ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] == '')
+		if (!$GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'])
 		{
 			return '';
 		}
@@ -1187,14 +1209,14 @@ abstract class DataContainer extends Backend
 				}
 
 				// Add the panel if it is not empty
-				if ($panel != '')
+				if ($panel)
 				{
 					$panels = $panel . $panels;
 				}
 			}
 
 			// Add the group if it is not empty
-			if ($panels != '')
+			if ($panels)
 			{
 				$arrPanels[] = $panels;
 			}

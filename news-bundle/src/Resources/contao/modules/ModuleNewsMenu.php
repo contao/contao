@@ -147,7 +147,7 @@ class ModuleNewsMenu extends ModuleNews
 
 		$this->Template->yearly = true;
 		$this->Template->items = $arrItems;
-		$this->Template->showQuantity = ($this->news_showQuantity != '');
+		$this->Template->showQuantity = (bool) $this->news_showQuantity;
 	}
 
 	/**

@@ -82,7 +82,7 @@ abstract class ModuleNews extends Module
 		$objTemplate = new FrontendTemplate($this->news_template ?: 'news_latest');
 		$objTemplate->setData($objArticle->row());
 
-		if ($objArticle->cssClass != '')
+		if ($objArticle->cssClass)
 		{
 			$strClass = ' ' . $objArticle->cssClass . $strClass;
 		}
@@ -106,7 +106,7 @@ abstract class ModuleNews extends Module
 		$objTemplate->hasTeaser = false;
 
 		// Clean the RTE output
-		if ($objArticle->teaser != '')
+		if ($objArticle->teaser)
 		{
 			$objTemplate->hasTeaser = true;
 			$objTemplate->teaser = StringUtil::toHtml5($objArticle->teaser);
@@ -161,7 +161,7 @@ abstract class ModuleNews extends Module
 		$objTemplate->addImage = false;
 
 		// Add an image
-		if ($objArticle->addImage && $objArticle->singleSRC != '')
+		if ($objArticle->addImage && $objArticle->singleSRC)
 		{
 			$objModel = FilesModel::findByUuid($objArticle->singleSRC);
 
@@ -171,7 +171,7 @@ abstract class ModuleNews extends Module
 				$arrArticle = $objArticle->row();
 
 				// Override the default image size
-				if ($this->imgSize != '')
+				if ($this->imgSize)
 				{
 					$size = StringUtil::deserialize($this->imgSize);
 
@@ -258,7 +258,7 @@ abstract class ModuleNews extends Module
 
 		foreach ($objArticles as $objArticle)
 		{
-			if ($objArticle->addImage && $objArticle->singleSRC != '')
+			if ($objArticle->addImage && $objArticle->singleSRC)
 			{
 				$uuids[] = $objArticle->singleSRC;
 			}

@@ -60,9 +60,9 @@ jobs:
 
             - name: Check the coding style
               run: |
-                  vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests --config vendor/contao/easy-coding-standard/config/default.yaml --no-progress-bar --ansi
-                  vendor/bin/ecs check *-bundle/src/Resources/contao --config vendor/contao/easy-coding-standard/config/legacy.yaml --no-progress-bar --ansi
-                  vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config vendor/contao/easy-coding-standard/config/template.yaml --no-progress-bar --ansi
+                  vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests --config vendor/contao/easy-coding-standard/config/default.php --no-progress-bar --ansi
+                  vendor/bin/ecs check *-bundle/src/Resources/contao --config vendor/contao/easy-coding-standard/config/legacy.php --no-progress-bar --ansi
+                  vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config vendor/contao/easy-coding-standard/config/template.php --no-progress-bar --ansi
 
             - name: Analyze the code
               run: |

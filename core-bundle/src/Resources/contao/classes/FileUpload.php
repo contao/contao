@@ -86,7 +86,7 @@ class FileUpload extends Backend
 	 */
 	public function uploadTo($strTarget)
 	{
-		if ($strTarget == '' || Validator::isInsecurePath($strTarget))
+		if (!$strTarget || Validator::isInsecurePath($strTarget))
 		{
 			throw new \InvalidArgumentException('Invalid target path ' . $strTarget);
 		}
@@ -235,7 +235,7 @@ class FileUpload extends Backend
 
 		for ($i=0; $i<$intCount; $i++)
 		{
-			if ($_FILES[$this->strName]['name'][$i] == '')
+			if (!$_FILES[$this->strName]['name'][$i])
 			{
 				continue;
 			}

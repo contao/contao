@@ -76,7 +76,7 @@ class ModuleArticle extends Module
 
 	protected function isHidden()
 	{
-		$isUnpublished = !$this->published || ($this->start != '' && $this->start > time()) || ($this->stop != '' && $this->stop <= time());
+		$isUnpublished = !$this->published || ($this->start && $this->start > time()) || ($this->stop && $this->stop <= time());
 
 		// The article is published, so show it
 		if (!$isUnpublished)
@@ -138,7 +138,7 @@ class ModuleArticle extends Module
 			// Override the CSS ID and class
 			if (\is_array($arrCss) && \count($arrCss) == 2)
 			{
-				if ($arrCss[0] == '')
+				if (!$arrCss[0])
 				{
 					$arrCss[0] = $id;
 				}
@@ -168,11 +168,11 @@ class ModuleArticle extends Module
 		}
 
 		// Overwrite the page title (see #2853 and #4955)
-		if (!$this->blnNoMarkup && $strArticle != '' && ($strArticle == $this->id || $strArticle == $this->alias) && $this->title != '')
+		if (!$this->blnNoMarkup && $strArticle && ($strArticle == $this->id || $strArticle == $this->alias) && $this->title)
 		{
 			$objPage->pageTitle = strip_tags(StringUtil::stripInsertTags($this->title));
 
-			if ($this->teaser != '')
+			if ($this->teaser)
 			{
 				$objPage->description = $this->prepareMetaDescription($this->teaser);
 			}
@@ -182,7 +182,7 @@ class ModuleArticle extends Module
 		$this->Template->backlink = false;
 
 		// Back link
-		if (!$this->multiMode && $strArticle != '' && ($strArticle == $this->id || $strArticle == $this->alias))
+		if (!$this->multiMode && $strArticle && ($strArticle == $this->id || $strArticle == $this->alias))
 		{
 			$this->Template->backlink = 'javascript:history.go(-1)'; // see #6955
 			$this->Template->back = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goBack']);
@@ -202,9 +202,9 @@ class ModuleArticle extends Module
 		$this->Template->teaser = $this->teaser;
 		$this->Template->elements = $arrElements;
 
-		if ($this->keywords != '')
+		if ($this->keywords)
 		{
-			$GLOBALS['TL_KEYWORDS'] .= (($GLOBALS['TL_KEYWORDS'] != '') ? ', ' : '') . $this->keywords;
+			$GLOBALS['TL_KEYWORDS'] .= ($GLOBALS['TL_KEYWORDS'] ? ', ' : '') . $this->keywords;
 		}
 
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
@@ -217,7 +217,7 @@ class ModuleArticle extends Module
 		}
 
 		// New structure
-		elseif ($this->printable != '')
+		elseif ($this->printable)
 		{
 			$options = StringUtil::deserialize($this->printable);
 

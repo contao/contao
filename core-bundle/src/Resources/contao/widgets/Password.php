@@ -104,7 +104,7 @@ class Password extends Widget
 	{
 		$this->blnSubmitInput = false;
 
-		if (($varInput == '' || $varInput == '*****') && $this->varValue != '')
+		if ((!$varInput || $varInput == '*****') && $this->varValue)
 		{
 			return '*****';
 		}
@@ -154,7 +154,7 @@ class Password extends Widget
 			$this->strName,
 			$this->strId,
 			($this->strClass ? ' ' . $this->strClass : ''),
-			(($this->varValue != '') ? '*****' : ''),
+			($this->varValue ? '*****' : ''),
 			$this->getAttributes(),
 			$this->wizard,
 			(($this->description && Config::get('showHelp') && !$this->hasErrors()) ? "\n  " . '<p class="tl_help tl_tip">' . $this->description . '</p>' : '')
@@ -190,7 +190,7 @@ class Password extends Widget
 			$this->strName,
 			$this->strId,
 			($this->strClass ? ' ' . $this->strClass : ''),
-			(($this->varValue != '') ? '*****' : ''),
+			($this->varValue ? '*****' : ''),
 			$this->getAttributes(),
 			((isset($GLOBALS['TL_LANG']['MSC']['confirm'][1]) && Config::get('showHelp')) ? "\n  " . '<p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['MSC']['confirm'][1] . '</p>' : '')
 		);

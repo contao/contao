@@ -140,6 +140,9 @@
       <trans-unit id="ERR.aliasExists">
         <source>The alias "%s" already exists!</source>
       </trans-unit>
+      <trans-unit id="ERR.aliasNumeric">
+        <source>Numeric aliases are not supported!</source>
+      </trans-unit>
       <trans-unit id="ERR.urlPrefixExists">
         <source>The URL prefix "%s" is already used by another root page with the same domain name!</source>
       </trans-unit>
@@ -964,12 +967,6 @@
       </trans-unit>
       <trans-unit id="MSC.aw_caption">
         <source>Caption</source>
-      </trans-unit>
-      <trans-unit id="MSC.aw_delete">
-        <source>Delete the language</source>
-      </trans-unit>
-      <trans-unit id="MSC.aw_new">
-        <source>Add language</source>
       </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>

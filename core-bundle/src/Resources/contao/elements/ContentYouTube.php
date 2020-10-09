@@ -30,7 +30,7 @@ class ContentYouTube extends ContentElement
 	 */
 	public function generate()
 	{
-		if ($this->youtube == '')
+		if (!$this->youtube)
 		{
 			return '';
 		}
@@ -41,7 +41,7 @@ class ContentYouTube extends ContentElement
 		{
 			$return = '<p><a href="https://youtu.be/' . $this->youtube . '" target="_blank" rel="noreferrer noopener">youtu.be/' . $this->youtube . '</a></p>';
 
-			if ($this->headline != '')
+			if ($this->headline)
 			{
 				$return = '<' . $this->hl . '>' . $this->headline . '</' . $this->hl . '>' . $return;
 			}

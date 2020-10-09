@@ -83,7 +83,7 @@ class FormSelectMenu extends Widget
 				break;
 
 			case 'multiple':
-				if ($varValue != '')
+				if ($varValue)
 				{
 					$this->arrAttributes['multiple'] = 'multiple';
 				}
@@ -200,7 +200,7 @@ class FormSelectMenu extends Widget
 		}
 
 		// Custom class
-		if ($this->strClass != '')
+		if ($this->strClass)
 		{
 			$strClass .= ' ' . $this->strClass;
 		}

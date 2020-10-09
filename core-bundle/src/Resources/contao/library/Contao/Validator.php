@@ -364,7 +364,7 @@ class Validator
 	 */
 	public static function isValidFileName($strName)
 	{
-		if ($strName == '')
+		if (!$strName)
 		{
 			return false;
 		}

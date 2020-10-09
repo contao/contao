@@ -72,10 +72,6 @@ final class Page implements ServiceTagInterface
             unset($data['value']);
         }
 
-        if (!isset($data['type'])) {
-            throw new \LogicException('@Page annotation requires a type property.');
-        }
-
         if (isset($data['locale'])) {
             $data['defaults']['_locale'] = $data['locale'];
             unset($data['locale']);

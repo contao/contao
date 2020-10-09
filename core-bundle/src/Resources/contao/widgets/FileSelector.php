@@ -72,7 +72,7 @@ class FileSelector extends Widget
 		$this->import(BackendUser::class, 'User');
 		$this->convertValuesToPaths();
 
-		if ($this->extensions != '')
+		if ($this->extensions)
 		{
 			$this->arrValidFileTypes = StringUtil::trimsplit(',', strtolower($this->extensions));
 		}
@@ -86,7 +86,7 @@ class FileSelector extends Widget
 			$strKeyword = ltrim(Input::postRaw('keyword'), '*');
 
 			// Make sure the regular expression is valid
-			if ($strKeyword != '')
+			if ($strKeyword)
 			{
 				try
 				{
@@ -109,7 +109,7 @@ class FileSelector extends Widget
 		$arrFound = array();
 
 		// Search for a specific file
-		if ($for != '')
+		if ((string) $for !== '')
 		{
 			// Wrap in a try catch block in case the regular expression is invalid (see #7743)
 			try
@@ -147,7 +147,7 @@ class FileSelector extends Widget
 					$arrPaths = array();
 
 					// Respect existing limitations
-					if ($this->path != '')
+					if ($this->path)
 					{
 						while ($objRoot->next())
 						{
@@ -206,7 +206,7 @@ class FileSelector extends Widget
 		$strNode = $objSessionBag->get('tl_files_picker');
 
 		// Unset the node if it is not within the path (see #5899)
-		if ($strNode != '' && $this->path != '' && strncmp($strNode . '/', $this->path . '/', \strlen($this->path) + 1) !== 0)
+		if ($strNode && $this->path && strncmp($strNode . '/', $this->path . '/', \strlen($this->path) + 1) !== 0)
 		{
 			$objSessionBag->remove('tl_files_picker');
 		}
@@ -225,7 +225,7 @@ class FileSelector extends Widget
 			$root = $GLOBALS['TL_DCA']['tl_files']['list']['sorting']['root'];
 
 			// Allow only those roots that are within the custom path
-			if ($this->path != '')
+			if ($this->path)
 			{
 				$root = array_intersect(preg_grep('/^' . preg_quote($this->path, '/') . '(?:$|\/)/', $root), $root);
 
@@ -248,7 +248,7 @@ class FileSelector extends Widget
 		}
 
 		// Show a custom path (see #4926)
-		elseif ($this->path != '')
+		elseif ($this->path)
 		{
 			$tree .= $this->renderFiletree($projectDir . '/' . $this->path, 0, false, $this->isProtectedPath($this->path), $arrFound);
 		}
@@ -311,7 +311,7 @@ class FileSelector extends Widget
 		switch ($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'])
 		{
 			case 'File':
-				if (Config::get($this->strField) != '')
+				if (Config::get($this->strField))
 				{
 					$this->varValue = Config::get($this->strField);
 				}
@@ -338,7 +338,7 @@ class FileSelector extends Widget
 
 		$this->convertValuesToPaths();
 
-		if ($this->extensions != '')
+		if ($this->extensions)
 		{
 			$this->arrValidFileTypes = StringUtil::trimsplit(',', $this->extensions);
 		}
@@ -626,7 +626,7 @@ class FileSelector extends Widget
 		}
 
 		// Return if the custom path is not within the upload path (see #8562)
-		if ($this->path != '' && strpos($this->path, Config::get('uploadPath') . '/') !== 0)
+		if ($this->path && strpos($this->path, Config::get('uploadPath') . '/') !== 0)
 		{
 			return;
 		}

@@ -353,7 +353,7 @@ class Calendar extends Frontend
 					}
 
 					// The target page has not been published (see #5520)
-					if (!$objParent->published || ($objParent->start != '' && $objParent->start > $time) || ($objParent->stop != '' && $objParent->stop <= $time))
+					if (!$objParent->published || ($objParent->start && $objParent->start > $time) || ($objParent->stop && $objParent->stop <= $time))
 					{
 						continue;
 					}
@@ -451,7 +451,7 @@ class Calendar extends Frontend
 		$title .= ' ' . $objEvent->title;
 
 		// Backwards compatibility (see #8329)
-		if ($strBase != '' && !preg_match('#^https?://#', $strUrl))
+		if ($strBase && !preg_match('#^https?://#', $strUrl))
 		{
 			$strUrl = $strBase . $strUrl;
 		}

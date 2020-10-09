@@ -49,6 +49,7 @@ services:
         class: Contao\CoreBundle\Cache\ContaoCacheClearer
         arguments:
             - '@filesystem'
+        public: true
 
     contao.cache.warm_internal:
         class: Contao\CoreBundle\Cache\ContaoCacheWarmer
@@ -60,6 +61,7 @@ services:
             - '@database_connection'
             - '@contao.framework'
             - '%contao.locales%'
+        public: true
 
     Contao\CoreBundle\Controller\BackendController: ~
 
