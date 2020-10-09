@@ -220,7 +220,6 @@ class CsrfTokenCookieSubscriberTest extends TestCase
         $tokenStorage->getToken('tokenName');
 
         $response = $this->createMock(Response::class);
-
         $response
             ->expects($this->once())
             ->method('isSuccessful')
