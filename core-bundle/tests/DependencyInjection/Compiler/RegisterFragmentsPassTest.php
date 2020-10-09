@@ -232,8 +232,6 @@ class RegisterFragmentsPassTest extends TestCase
 
     public function testFailsToRegisterGlobalsMapListenerIfCategoryIsMissing(): void
     {
-        $this->expectException(InvalidConfigurationException::class);
-
         $contentController = new Definition('App\Fragments\Text');
         $contentController->addTag('contao.content_element');
 
@@ -243,6 +241,9 @@ class RegisterFragmentsPassTest extends TestCase
         (new ResolveClassPass())->process($container);
 
         $pass = new RegisterFragmentsPass(ContentElementReference::TAG_NAME, 'TL_CTE', ContentProxy::class);
+
+        $this->expectException(InvalidConfigurationException::class);
+
         $pass->process($container);
     }
 
