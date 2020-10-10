@@ -237,7 +237,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'inputType'               => 'select',
 			'eval'                    => array('helpwizard'=>true, 'submitOnChange'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['PTY'],
-			'sql'                     => "varchar(64) NOT NULL default 'regular'"
+			'sql'                     => "varchar(255) NOT NULL default 'regular'"
 		),
 		'pageTitle' => array
 		(
