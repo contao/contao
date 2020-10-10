@@ -257,7 +257,7 @@ final class Figure
 
         $image = $this->getImage();
         $originalSize = $image->getOriginalDimensions()->getSize();
-        $fileInfoImageSize = (new File(rawurldecode($image->getImageSrc())))->imageSize;
+        $fileInfoImageSize = (array) (new File($image->getImageSrc(true)))->imageSize;
 
         $linkAttributes = $this->getLinkAttributes();
         $metadata = $this->hasMetadata() ? $this->getMetadata() : new Metadata([]);
@@ -273,7 +273,7 @@ final class Figure
                 'width' => $originalSize->getWidth(),
                 'height' => $originalSize->getHeight(),
                 'arrSize' => $fileInfoImageSize,
-                'imgSize' => sprintf(' width="%d" height="%d"', $fileInfoImageSize[0], $fileInfoImageSize[1]),
+                'imgSize' => !empty($fileInfoImageSize) ? sprintf(' width="%d" height="%d"', $fileInfoImageSize[0], $fileInfoImageSize[1]) : '',
                 'singleSRC' => $image->getFilePath(),
                 'src' => $image->getImageSrc(),
                 'fullsize' => ('_blank' === ($linkAttributes['target'] ?? null)) || $this->hasLightbox(),

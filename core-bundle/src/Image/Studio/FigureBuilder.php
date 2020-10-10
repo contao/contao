@@ -545,7 +545,7 @@ class FigureBuilder
                 return [$target, null];
             }
 
-            $validExtension = \in_array(Path::getExtension($target), $this->validExtensions, true);
+            $validExtension = \in_array(Path::getExtension($target, true), $this->validExtensions, true);
             $externalUrl = 1 === preg_match('#^https?://#', $target);
 
             if (!$validExtension) {

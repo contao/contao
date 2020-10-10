@@ -21,6 +21,8 @@ use Contao\Date;
 use Contao\Events;
 use Contao\Image;
 use Contao\Input;
+use Contao\LayoutModel;
+use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Versions;
@@ -292,7 +294,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
 			'exclude'                 => true,
 			'inputType'               => 'serpPreview',
-			'eval'                    => array('url_callback'=>array('tl_calendar_events', 'getSerpUrl'), 'titleFields'=>array('pageTitle', 'title'), 'descriptionFields'=>array('description', 'teaser')),
+			'eval'                    => array('url_callback'=>array('tl_calendar_events', 'getSerpUrl'), 'title_tag_callback'=>array('tl_calendar_events', 'getTitleTag'), 'titleFields'=>array('pageTitle', 'title'), 'descriptionFields'=>array('description', 'teaser')),
 			'sql'                     => null
 		),
 		'location' => array
@@ -708,6 +710,10 @@ class tl_calendar_events extends Backend
 		{
 			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->title, CalendarModel::findByPk($dc->activeRecord->pid)->jumpTo, $aliasExists);
 		}
+		elseif (preg_match('/^[1-9]\d*$/', $varValue))
+		{
+			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasNumeric'], $varValue));
+		}
 		elseif ($aliasExists($varValue))
 		{
 			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
@@ -783,6 +789,43 @@ class tl_calendar_events extends Backend
 	public function getSerpUrl(CalendarEventsModel $model)
 	{
 		return Events::generateEventUrl($model, true);
+	}
+
+	/**
+	 * Return the title tag from the associated page layout
+	 *
+	 * @param CalendarEventsModel $model
+	 *
+	 * @return string
+	 */
+	public function getTitleTag(CalendarEventsModel $model)
+	{
+		/** @var CalendarModel $calendar */
+		if (!$calendar = $model->getRelated('pid'))
+		{
+			return '';
+		}
+
+		/** @var PageModel $page */
+		if (!$page = $calendar->getRelated('jumpTo'))
+		{
+			return '';
+		}
+
+		$page->loadDetails();
+
+		/** @var LayoutModel $layout */
+		if (!$layout = $page->getRelated('layout'))
+		{
+			return '';
+		}
+
+		global $objPage;
+
+		// Set the global page object so we can replace the insert tags
+		$objPage = $page;
+
+		return self::replaceInsertTags(str_replace('{{page::pageTitle}}', '%s', $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}'));
 	}
 
 	/**

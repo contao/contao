@@ -185,6 +185,10 @@
         <source>The alias &quot;%s&quot; already exists!</source>
         <target>&quot;%s&quot;というエイリアスは既に存在します。</target>
       </trans-unit>
+      <trans-unit id="ERR.aliasNumeric">
+        <source>Numeric aliases are not supported!</source>
+        <target>数字だけのエイリアスはサポートしていません!</target>
+      </trans-unit>
       <trans-unit id="ERR.urlPrefixExists">
         <source>The URL prefix &quot;%s&quot; is already used by another root page with the same domain name!</source>
         <target>&quot;%s&quot;というURLプリフィックスは既に同じドメイン名の別のルートページで使用されています!</target>

@@ -72,8 +72,6 @@ class RegisterPagesPass implements CompilerPassInterface
 
                 $config = $this->getRouteConfig($reference, $definition, $attributes);
                 $registry->addMethodCall('add', [$type, $config, $routeEnhancer, $contentComposition]);
-
-                $definition->addTag(self::TAG_NAME, $attributes);
             }
         }
     }

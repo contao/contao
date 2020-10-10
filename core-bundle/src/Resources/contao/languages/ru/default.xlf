@@ -185,6 +185,10 @@
         <source>The alias &quot;%s&quot; already exists!</source>
         <target>Алиас страницы &quot;%s&quot; уже существует!</target>
       </trans-unit>
+      <trans-unit id="ERR.aliasNumeric">
+        <source>Numeric aliases are not supported!</source>
+        <target>Цифровые алиасы не поддерживаются!</target>
+      </trans-unit>
       <trans-unit id="ERR.urlPrefixExists">
         <source>The URL prefix &quot;%s&quot; is already used by another root page with the same domain name!</source>
         <target>Префикс URL &quot;%s&quot; уже используется другой корневой страницей с тем же именем домена!</target>
