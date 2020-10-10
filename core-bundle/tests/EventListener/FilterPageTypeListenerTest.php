@@ -139,11 +139,11 @@ class FilterPageTypeListenerTest extends TestCase
                 'id' => $id,
                 'pid' => $pid,
             ],
-            static function ($v) {
+            static function ($v): bool {
                 return null !== $v;
             }
         );
-        dump($activeRecord);
+
         /** @var DataContainer&MockObject */
         return $this->mockClassWithProperties(
             DataContainer::class,
