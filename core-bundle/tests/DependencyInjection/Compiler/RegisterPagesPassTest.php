@@ -19,6 +19,7 @@ use Contao\CoreBundle\Fixtures\Controller\Page\TestPageController;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendIndex;
+use FoobarVendor\FoobarBundle\Controller\Page\Foobar\Foobar\Foobar\Foobar\Foobar\Foobar\Foobar\Foobar\Foobar\Foobar\FoobarPageController;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -345,6 +346,25 @@ class RegisterPagesPassTest extends TestCase
         $container->setDefinition('test.controller', $definition);
 
         $pass = new RegisterPagesPass();
+        $pass->process($container);
+    }
+
+    public function testChecksForPageTypeLength(): void
+    {
+        $registry = $this->createMock(Definition::class);
+
+        $definition = new Definition(AbstractController::class);
+        $definition->addTag('contao.page', ['type' => FoobarPageController::class]);
+
+        $container = new ContainerBuilder();
+        $container->setDefinition(PageRegistry::class, $registry);
+        $container->setDefinition('test.controller', $definition);
+
+        $pass = new RegisterPagesPass();
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Page type "'.FoobarPageController::class.'" exceeds the maximum length of 128.');
+
         $pass->process($container);
     }
 }

@@ -12,6 +12,7 @@ use Contao\Automator;
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
+use Contao\CoreBundle\DependencyInjection\Compiler\RegisterPagesPass;
 use Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener;
 use Contao\CoreBundle\EventListener\DataContainer\PageTypeOptionsListener;
 use Contao\CoreBundle\EventListener\DataContainer\PageUrlListener;
@@ -239,7 +240,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'inputType'               => 'select',
 			'eval'                    => array('helpwizard'=>true, 'submitOnChange'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['PTY'],
-			'sql'                     => "varchar(255) NOT NULL default 'regular'"
+			'sql'                     => ['type' => 'string', 'length' => RegisterPagesPass::MAX_PAGE_TYPE_LENGTH, 'default' => 'regular'],
 		),
 		'pageTitle' => array
 		(

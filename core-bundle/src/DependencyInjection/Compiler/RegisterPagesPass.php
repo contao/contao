@@ -32,6 +32,8 @@ class RegisterPagesPass implements CompilerPassInterface
 {
     use PriorityTaggedServiceTrait;
 
+    public const MAX_PAGE_TYPE_LENGTH = 128;
+
     private const TAG_NAME = 'contao.page';
 
     /**
@@ -61,6 +63,10 @@ class RegisterPagesPass implements CompilerPassInterface
                 $contentComposition = (bool) ($attributes['contentComposition'] ?? true);
                 $class = $definition->getClass();
                 $type = $this->getPageType($class, $attributes);
+
+                if (\strlen($type) > self::MAX_PAGE_TYPE_LENGTH) {
+                    throw new \InvalidArgumentException(sprintf('Page type "%s" exceeds the maximum length of %d.', $type, self::MAX_PAGE_TYPE_LENGTH));
+                }
 
                 if (is_a($class, DynamicRouteInterface::class, true)) {
                     $routeEnhancer = $reference;
