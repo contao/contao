@@ -344,7 +344,7 @@ class Statement
 	 */
 	public function explain()
 	{
-		return $this->resConnection->executeQuery('EXPLAIN ' . $this->strQuery)->fetch();
+		return $this->resConnection->fetchAssociative('EXPLAIN ' . $this->strQuery);
 	}
 
 	/**

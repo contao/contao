@@ -99,7 +99,7 @@ class OrderFieldMigration extends AbstractMigration
         $orderFieldQuoted = $this->connection->quoteIdentifier($orderField);
         $fieldQuoted = $this->connection->quoteIdentifier($field);
 
-        $stmt = $this->connection->query("
+        $rows = $this->connection->fetchAssociative("
             SELECT
                 $orderFieldQuoted, $fieldQuoted
             FROM
@@ -111,9 +111,9 @@ class OrderFieldMigration extends AbstractMigration
                 AND $fieldQuoted != ''
         ");
 
-        while (false !== ($row = $stmt->fetch(\PDO::FETCH_OBJ))) {
-            $items = StringUtil::deserialize($row->$field, true);
-            $order = array_map(static function (): void {}, array_flip(StringUtil::deserialize($row->$orderField, true)));
+        foreach ($rows as $row) {
+            $items = StringUtil::deserialize($row[$field], true);
+            $order = array_map(static function (): void {}, array_flip(StringUtil::deserialize($row[$orderField], true)));
 
             foreach ($items as $key => $value) {
                 if (\array_key_exists($value, $order)) {
@@ -137,12 +137,12 @@ class OrderFieldMigration extends AbstractMigration
                 ")
                 ->execute([
                     ':items' => serialize($items),
-                    ':field' => $row->$field,
-                    ':orderField' => $row->$orderField,
+                    ':field' => $row[$field],
+                    ':orderField' => $row[$orderField],
                 ])
             ;
         }
 
-        $this->connection->query("ALTER TABLE $tableQuoted DROP $orderFieldQuoted");
+        $this->connection->executeStatement("ALTER TABLE $tableQuoted DROP $orderFieldQuoted");
     }
 }

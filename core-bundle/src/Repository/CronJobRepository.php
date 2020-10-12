@@ -40,11 +40,11 @@ class CronJobRepository extends ServiceEntityRepository
     {
         $table = $this->getClassMetadata()->getTableName();
 
-        $this->connection->exec("LOCK TABLES $table WRITE, $table AS t0 WRITE, $table AS t0_ WRITE");
+        $this->connection->executeStatement("LOCK TABLES $table WRITE, $table AS t0 WRITE, $table AS t0_ WRITE");
     }
 
     public function unlockTable(): void
     {
-        $this->connection->exec('UNLOCK TABLES');
+        $this->connection->executeStatement('UNLOCK TABLES');
     }
 }

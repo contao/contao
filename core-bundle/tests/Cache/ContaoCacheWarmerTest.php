@@ -109,7 +109,7 @@ class ContaoCacheWarmerTest extends TestCase
     {
         $connection = $this->createMock(Connection::class);
         $connection
-            ->method('query')
+            ->method('executeQuery')
             ->willThrowException(new \Exception())
         ;
 

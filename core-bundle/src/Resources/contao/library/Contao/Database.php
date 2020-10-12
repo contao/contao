@@ -585,7 +585,7 @@ class Database
 	 */
 	public function setDatabase($strDatabase)
 	{
-		$this->resConnection->exec("USE $strDatabase");
+		$this->resConnection->executeStatement("USE $strDatabase");
 	}
 
 	/**
@@ -626,7 +626,7 @@ class Database
 			$arrLocks[] = $this->resConnection->quoteIdentifier($table) . ' ' . $mode;
 		}
 
-		$this->resConnection->exec('LOCK TABLES ' . implode(', ', $arrLocks) . ';');
+		$this->resConnection->executeStatement('LOCK TABLES ' . implode(', ', $arrLocks) . ';');
 	}
 
 	/**
@@ -634,7 +634,7 @@ class Database
 	 */
 	public function unlockTables()
 	{
-		$this->resConnection->exec('UNLOCK TABLES;');
+		$this->resConnection->executeStatement('UNLOCK TABLES;');
 	}
 
 	/**
@@ -649,14 +649,13 @@ class Database
 		try
 		{
 			// MySQL 8 compatibility
-			$this->resConnection->executeQuery('SET @@SESSION.information_schema_stats_expiry = 0');
+			$this->resConnection->executeStatement('SET @@SESSION.information_schema_stats_expiry = 0');
 		}
 		catch (DriverException $e)
 		{
 		}
 
-		$statement = $this->resConnection->executeQuery('SHOW TABLE STATUS LIKE ' . $this->resConnection->quote($strTable));
-		$status = $statement->fetch(\PDO::FETCH_ASSOC);
+		$status = $this->resConnection->fetchAssociative('SHOW TABLE STATUS LIKE ' . $this->resConnection->quote($strTable));
 
 		return $status['Data_length'] + $status['Index_length'];
 	}
@@ -673,14 +672,13 @@ class Database
 		try
 		{
 			// MySQL 8 compatibility
-			$this->resConnection->executeQuery('SET @@SESSION.information_schema_stats_expiry = 0');
+			$this->resConnection->executeStatement('SET @@SESSION.information_schema_stats_expiry = 0');
 		}
 		catch (DriverException $e)
 		{
 		}
 
-		$statement = $this->resConnection->executeQuery('SHOW TABLE STATUS LIKE ' . $this->resConnection->quote($strTable));
-		$status = $statement->fetch(\PDO::FETCH_ASSOC);
+		$status = $this->resConnection->fetchAssociative('SHOW TABLE STATUS LIKE ' . $this->resConnection->quote($strTable));
 
 		return $status['Auto_increment'];
 	}
@@ -696,8 +694,7 @@ class Database
 
 		if (empty($ids))
 		{
-			$statement = $this->resConnection->executeQuery(implode(' UNION ALL ', array_fill(0, 10, "SELECT UNHEX(REPLACE(UUID(), '-', '')) AS uuid")));
-			$ids = $statement->fetchAll(\PDO::FETCH_COLUMN);
+			$ids = $this->resConnection->fetchFirstColumn(implode(' UNION ALL ', array_fill(0, 10, "SELECT UNHEX(REPLACE(UUID(), '-', '')) AS uuid")));
 		}
 
 		return array_pop($ids);

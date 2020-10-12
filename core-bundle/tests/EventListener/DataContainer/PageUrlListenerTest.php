@@ -21,8 +21,7 @@ use Contao\Input;
 use Contao\PageModel;
 use Contao\Search;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\Statement;
-use Doctrine\DBAL\FetchMode;
+use Doctrine\DBAL\Statement;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -759,19 +758,12 @@ class PageUrlListenerTest extends TestCase
 
     public function testPurgesTheSearchIndexOnAliasChange(): void
     {
-        $statement = $this->createMock(Statement::class);
-        $statement
-            ->expects($this->once())
-            ->method('fetchAll')
-            ->willReturn(['uri'])
-        ;
-
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
-            ->method('executeQuery')
+            ->method('fetchFirstColumn')
             ->with('SELECT url FROM tl_search WHERE pid=:pageId', ['pageId' => 17])
-            ->willReturn($statement)
+            ->willReturn(['uri'])
         ;
 
         $search = $this->mockAdapter(['removeEntry']);
@@ -839,19 +831,12 @@ class PageUrlListenerTest extends TestCase
 
     public function testPurgesTheSearchIndexOnDelete(): void
     {
-        $statement = $this->createMock(Statement::class);
-        $statement
-            ->expects($this->once())
-            ->method('fetchAll')
-            ->willReturn(['uri'])
-        ;
-
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
-            ->method('executeQuery')
+            ->method('fetchFirstColumn')
             ->with('SELECT url FROM tl_search WHERE pid=:pageId', ['pageId' => 17])
-            ->willReturn($statement)
+            ->willReturn(['uri'])
         ;
 
         $search = $this->mockAdapter(['removeEntry']);
@@ -938,21 +923,11 @@ class PageUrlListenerTest extends TestCase
             ]
         );
 
-        $statement = $this->createMock(Statement::class);
-        $statement
-            ->expects($this->exactly(5))
-            ->method('fetchAll')
-            ->willReturn([])
-        ;
-
         $connection = $this->createMock(Connection::class);
         $connection
-            ->expects($this->exactly(5))
-            ->method('executeQuery')
+            ->expects($this->exactly(3))
+            ->method('fetchFirstColumn')
             ->withConsecutive(
-                [
-                    "SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'",
-                ],
                 [
                     'SELECT id FROM tl_page WHERE alias LIKE :alias AND id!=:id',
                     [
@@ -968,9 +943,6 @@ class PageUrlListenerTest extends TestCase
                     ],
                 ],
                 [
-                    "SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'",
-                ],
-                [
                     'SELECT id FROM tl_page WHERE alias LIKE :alias AND id!=:id',
                     [
                         'alias' => '%baz%',
@@ -978,7 +950,21 @@ class PageUrlListenerTest extends TestCase
                     ],
                 ]
             )
-            ->willReturn($statement)
+            ->willReturn([])
+        ;
+
+        $connection
+            ->expects($this->exactly(2))
+            ->method('fetchAllAssociative')
+            ->withConsecutive(
+                [
+                    "SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'",
+                ],
+                [
+                    "SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'",
+                ]
+            )
+            ->willReturn([])
         ;
 
         $listener = new PageUrlListener(
@@ -1060,22 +1046,15 @@ class PageUrlListenerTest extends TestCase
     {
         $translator = $this->mockTranslator('ERR.urlPrefixExists', 'en');
 
-        $statement = $this->createMock(Statement::class);
-        $statement
-            ->expects($this->once())
-            ->method('fetchColumn')
-            ->willReturn(1)
-        ;
-
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
-            ->method('executeQuery')
+            ->method('fetchOne')
             ->with(
                 "SELECT COUNT(*) FROM tl_page WHERE urlPrefix=:urlPrefix AND dns=:dns AND id!=:rootId AND type='root'",
                 ['urlPrefix' => 'en', 'dns' => 'www.example.com', 'rootId' => 1]
             )
-            ->willReturn($statement)
+            ->willReturn(1)
         ;
 
         $listener = new PageUrlListener(
@@ -1600,63 +1579,36 @@ class PageUrlListenerTest extends TestCase
      */
     private function mockConnection(array $prefixAndSuffix, array $ids, array $aliases, array $aliasIds, bool $prefixCheck = false): Connection
     {
-        $args = [];
-        $statements = [];
+        $connection = $this->createMock(Connection::class);
 
         if ($prefixCheck) {
-            $args[] = ["SELECT COUNT(*) FROM tl_page WHERE urlPrefix=:urlPrefix AND dns=:dns AND id!=:rootId AND type='root'"];
-
-            $statement = $this->createMock(Statement::class);
-            $statement
+            $connection
                 ->expects($this->once())
-                ->method('fetchColumn')
+                ->method('fetchOne')
+                ->with("SELECT COUNT(*) FROM tl_page WHERE urlPrefix=:urlPrefix AND dns=:dns AND id!=:rootId AND type='root'")
                 ->willReturn(0)
             ;
-
-            $statements[] = $statement;
         }
 
-        $args[] = ["SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'"];
-
-        $statement = $this->createMock(Statement::class);
-        $statement
+        $connection
             ->expects($this->once())
-            ->method('fetchAll')
+            ->method('fetchAllAssociative')
+            ->with("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'")
             ->willReturn($prefixAndSuffix)
         ;
 
-        $statements[] = $statement;
+        $values = [];
 
-        foreach ($ids as $k => $id) {
-            if (!isset($aliases[$k])) {
-                continue;
+        foreach (array_keys($ids) as $k) {
+            if (isset($aliases[$k])) {
+                $values[] = $aliasIds[$k];
             }
-
-            $args[] = [
-                'SELECT id FROM tl_page WHERE alias LIKE :alias AND id!=:id',
-                [
-                    'alias' => '%'.$aliases[$k].'%',
-                    'id' => $id,
-                ],
-            ];
-
-            $statement = $this->createMock(Statement::class);
-            $statement
-                ->expects($this->once())
-                ->method('fetchAll')
-                ->with(FetchMode::COLUMN)
-                ->willReturn($aliasIds[$k])
-            ;
-
-            $statements[] = $statement;
         }
 
-        $connection = $this->createMock(Connection::class);
         $connection
-            ->expects($this->exactly(\count($statements)))
-            ->method('executeQuery')
-            ->withConsecutive(...$args)
-            ->willReturnOnConsecutiveCalls(...$statements)
+            ->expects($this->exactly(\count($values)))
+            ->method('fetchFirstColumn')
+            ->willReturnOnConsecutiveCalls(...$values)
         ;
 
         return $connection;

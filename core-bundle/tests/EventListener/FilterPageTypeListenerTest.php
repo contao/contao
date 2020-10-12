@@ -17,8 +17,6 @@ use Contao\CoreBundle\EventListener\FilterPageTypeListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\FetchMode;
-use Doctrine\DBAL\Statement;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class FilterPageTypeListenerTest extends TestCase
@@ -60,7 +58,7 @@ class FilterPageTypeListenerTest extends TestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
-            ->method('fetchColumn')
+            ->method('fetchOne')
             ->willReturn('foo')
         ;
 
@@ -77,7 +75,7 @@ class FilterPageTypeListenerTest extends TestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
-            ->method('fetchColumn')
+            ->method('fetchOne')
             ->with('SELECT type FROM tl_page WHERE id=?', [17])
             ->willReturn('foo')
         ;
@@ -95,27 +93,19 @@ class FilterPageTypeListenerTest extends TestCase
 
     public function testRemovesErrorTypesAlreadyPresentInTheRootPage(): void
     {
-        $statement = $this->createMock(Statement::class);
-        $statement
-            ->expects($this->once())
-            ->method('fetchAll')
-            ->with(FetchMode::COLUMN)
-            ->willReturn(['foo', 'error_401', 'error_403'])
-        ;
-
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
-            ->method('fetchColumn')
+            ->method('fetchOne')
             ->with('SELECT type FROM tl_page WHERE id=?', [1])
             ->willReturn('root')
         ;
 
         $connection
             ->expects($this->once())
-            ->method('executeQuery')
+            ->method('fetchFirstColumn')
             ->with('SELECT DISTINCT(type) FROM tl_page WHERE pid=?', [1])
-            ->willReturn($statement)
+            ->willReturn(['foo', 'error_401', 'error_403'])
         ;
 
         $event = new FilterPageTypeEvent(

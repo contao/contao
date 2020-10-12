@@ -380,7 +380,7 @@ class RoutingTest extends FunctionalTestCase
         self::$container
             ->get('doctrine')
             ->getConnection()
-            ->exec('UPDATE tl_page SET urlPrefix=language')
+            ->executeStatement('UPDATE tl_page SET urlPrefix=language')
         ;
 
         $crawler = $client->request('GET', "http://$host$request");
@@ -709,7 +709,7 @@ class RoutingTest extends FunctionalTestCase
         self::$container
             ->get('doctrine')
             ->getConnection()
-            ->exec("UPDATE tl_page SET urlSuffix=''")
+            ->executeStatement("UPDATE tl_page SET urlSuffix=''")
         ;
 
         $crawler = $client->request('GET', "http://$host$request");
@@ -1061,7 +1061,7 @@ class RoutingTest extends FunctionalTestCase
         self::$container
             ->get('doctrine')
             ->getConnection()
-            ->exec('UPDATE tl_page SET urlPrefix=language')
+            ->executeStatement('UPDATE tl_page SET urlPrefix=language')
         ;
 
         $crawler = $client->request('GET', "http://$host$request");

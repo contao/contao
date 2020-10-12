@@ -17,7 +17,7 @@ use Contao\CoreBundle\Search\Indexer\DefaultIndexer;
 use Contao\CoreBundle\Search\Indexer\IndexerException;
 use Contao\Search;
 use Contao\TestCase\ContaoTestCase;
-use Doctrine\DBAL\Driver\Connection;
+use Doctrine\DBAL\Connection;
 use Nyholm\Psr7\Uri;
 
 class DefaultIndexerTest extends ContaoTestCase
@@ -182,7 +182,7 @@ class DefaultIndexerTest extends ContaoTestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->exactly(3))
-            ->method('exec')
+            ->method('executeStatement')
             ->withConsecutive(
                 ['TRUNCATE TABLE tl_search'],
                 ['TRUNCATE TABLE tl_search_index'],

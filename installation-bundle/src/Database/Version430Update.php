@@ -52,14 +52,14 @@ class Version430Update extends AbstractMigration
 
     public function run(): MigrationResult
     {
-        $this->connection->query('
+        $this->connection->executeStatement('
             ALTER TABLE
                 tl_layout
             CHANGE
                 sections sections blob NULL
         ');
 
-        $statement = $this->connection->query("
+        $layouts = $this->connection->fetchAllAssociative("
             SELECT
                 id, sections, sPosition
             FROM
@@ -68,8 +68,8 @@ class Version430Update extends AbstractMigration
                 sections != ''
         ");
 
-        while (false !== ($layout = $statement->fetch(\PDO::FETCH_OBJ))) {
-            $sections = StringUtil::trimsplit(',', $layout->sections);
+        foreach ($layouts as $layout) {
+            $sections = StringUtil::trimsplit(',', $layout['sections']);
 
             if (!empty($sections) && \is_array($sections)) {
                 $set = [];
@@ -79,7 +79,7 @@ class Version430Update extends AbstractMigration
                         'title' => $section,
                         'id' => $section,
                         'template' => 'block_section',
-                        'position' => $layout->sPosition,
+                        'position' => $layout['sPosition'],
                     ];
                 }
 
@@ -92,18 +92,18 @@ class Version430Update extends AbstractMigration
                         id = :id
                 ');
 
-                $stmt->execute([':sections' => serialize(array_values($set)), ':id' => $layout->id]);
+                $stmt->execute([':sections' => serialize(array_values($set)), ':id' => $layout['id']]);
             }
         }
 
-        $this->connection->query("
+        $this->connection->executeStatement("
             ALTER TABLE
                 tl_layout
             ADD
                 combineScripts char(1) NOT NULL default ''
         ");
 
-        $this->connection->query("
+        $this->connection->executeStatement("
             UPDATE
                 tl_layout
             SET

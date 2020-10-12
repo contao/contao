@@ -11,7 +11,7 @@
 namespace Contao;
 
 use Contao\Database\Result;
-use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -1454,7 +1454,7 @@ abstract class Widget extends Controller
 					return null;
 				}
 
-				if (\in_array($sql['type'], array(Type::BIGINT, Type::DECIMAL, Type::INTEGER, Type::SMALLINT, Type::FLOAT)))
+				if (\in_array($sql['type'], array(Types::BIGINT, Types::DECIMAL, Types::INTEGER, Types::SMALLINT, Types::FLOAT)))
 				{
 					return 0;
 				}

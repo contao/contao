@@ -135,7 +135,7 @@ class ImageSizes implements ResetInterface
 
         $this->options = $GLOBALS['TL_CROP'];
 
-        $rows = $this->connection->fetchAll(
+        $rows = $this->connection->fetchAllAssociative(
             'SELECT
                 s.id, s.name, s.width, s.height, t.name as theme
             FROM

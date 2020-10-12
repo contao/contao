@@ -624,7 +624,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $statement = $this->createMock(Statement::class);
         $statement
             ->expects($this->once())
-            ->method('fetch')
+            ->method('fetchAssociative')
             ->willReturn($data)
         ;
 

@@ -21,7 +21,6 @@ use Contao\Input;
 use Contao\PageModel;
 use Contao\Search;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\FetchMode;
 use Symfony\Contracts\Service\ResetInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -143,17 +142,14 @@ class PageUrlListener implements ResetInterface
         }
 
         // First check if another root page uses the same url prefix and domain
-        $count = $this->connection
-            ->executeQuery(
-                "SELECT COUNT(*) FROM tl_page WHERE urlPrefix=:urlPrefix AND dns=:dns AND id!=:rootId AND type='root'",
-                [
-                    'urlPrefix' => $value,
-                    'dns' => $dc->activeRecord->dns,
-                    'rootId' => $dc->id,
-                ]
-            )
-            ->fetchColumn()
-        ;
+        $count = $this->connection->fetchOne(
+            "SELECT COUNT(*) FROM tl_page WHERE urlPrefix=:urlPrefix AND dns=:dns AND id!=:rootId AND type='root'",
+            [
+                'urlPrefix' => $value,
+                'dns' => $dc->activeRecord->dns,
+                'rootId' => $dc->id,
+            ]
+        );
 
         if ($count > 0) {
             throw new \RuntimeException($this->translator->trans('ERR.urlPrefixExists', [$value], 'contao_default'));
@@ -210,13 +206,10 @@ class PageUrlListener implements ResetInterface
 
     public function purgeSearchIndex(int $pageId): void
     {
-        $urls = $this->connection
-            ->executeQuery(
-                'SELECT url FROM tl_search WHERE pid=:pageId',
-                ['pageId' => $pageId]
-            )
-            ->fetchAll(FetchMode::COLUMN)
-        ;
+        $urls = $this->connection->fetchFirstColumn(
+            'SELECT url FROM tl_search WHERE pid=:pageId',
+            ['pageId' => $pageId]
+        );
 
         /** @var Search $search */
         $search = $this->framework->getAdapter(Search::class);
@@ -274,16 +267,13 @@ class PageUrlListener implements ResetInterface
             }
         }
 
-        $aliasIds = $this->connection
-            ->executeQuery(
-                'SELECT id FROM tl_page WHERE alias LIKE :alias AND id!=:id',
-                [
-                    'alias' => '%'.$this->stripPrefixesAndSuffixes($currentAlias, $currentPrefix, $currentSuffix).'%',
-                    'id' => $currentId,
-                ]
-            )
-            ->fetchAll(FetchMode::COLUMN)
-        ;
+        $aliasIds = $this->connection->fetchFirstColumn(
+            'SELECT id FROM tl_page WHERE alias LIKE :alias AND id!=:id',
+            [
+                'alias' => '%'.$this->stripPrefixesAndSuffixes($currentAlias, $currentPrefix, $currentSuffix).'%',
+                'id' => $currentId,
+            ]
+        );
 
         if (0 === \count($aliasIds)) {
             return false;
@@ -344,10 +334,7 @@ class PageUrlListener implements ResetInterface
             $this->prefixes = [];
             $this->suffixes = [];
 
-            $rows = $this->connection
-                ->executeQuery("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'")
-                ->fetchAll()
-            ;
+            $rows = $this->connection->fetchAllAssociative("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'");
 
             if (0 === ($prefixLength = \strlen($urlPrefix))) {
                 $this->prefixes = array_column($rows, 'urlPrefix');
