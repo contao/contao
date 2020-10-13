@@ -24,18 +24,29 @@ class ModuleHtml extends Module
 	protected $strTemplate = 'mod_html';
 
 	/**
-	 * Generate the module
+	 * Parse the template
+	 *
+	 * @return string
 	 */
-	protected function compile()
+	public function generate()
 	{
+		$strBuffer = parent::generate();
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
 		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
-			return htmlspecialchars($this->html);
+			return htmlspecialchars($strBuffer);
 		}
 
-		return $this->html;
+		return $strBuffer;
+	}
+
+	/**
+	 * Generate the module
+	 */
+	protected function compile()
+	{
+		$this->Template->html = $this->html;
 	}
 }
 
