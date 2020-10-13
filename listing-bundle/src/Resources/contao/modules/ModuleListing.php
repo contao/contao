@@ -367,7 +367,7 @@ class ModuleListing extends Module
 		$this->list_info = StringUtil::deserialize($this->list_info);
 		$this->list_info_where = $this->replaceInsertTags($this->list_info_where, false);
 
-		$objRecord = $this->Database->prepare("SELECT " . implode(', ', array_map('Database::quoteIdentifier', trimsplit(',', $this->list_info))) . " FROM " . $this->list_table . " WHERE " . ($this->list_info_where ? "(" . $this->list_info_where . ") AND " : "") . Database::quoteIdentifier($this->strPk) . "=?")
+		$objRecord = $this->Database->prepare("SELECT " . implode(', ', array_map('Database::quoteIdentifier', StringUtil::trimsplit(',', $this->list_info))) . " FROM " . $this->list_table . " WHERE " . ($this->list_info_where ? "(" . $this->list_info_where . ") AND " : "") . Database::quoteIdentifier($this->strPk) . "=?")
 									->limit(1)
 									->execute($id);
 

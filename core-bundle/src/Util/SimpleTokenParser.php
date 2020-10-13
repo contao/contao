@@ -254,7 +254,7 @@ class SimpleTokenParser implements LoggerAwareInterface
 
         $variables = [];
 
-        for ($i = 0; $i < \count($tokens); ++$i) {
+        for ($i = 0, $c = \count($tokens); $i < $c; ++$i) {
             if (!$tokens[$i]->test(Token::NAME_TYPE)) {
                 continue;
             }
