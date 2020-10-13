@@ -5,6 +5,7 @@ composer:
     require:
         contao/manager-plugin: ^2.6.2
     conflict:
+        doctrine/annotations: <1.7
         doctrine/persistence: 1.3.2
         nikic/php-parser: 4.7.0
         zendframework/zend-code: <3.3.1
