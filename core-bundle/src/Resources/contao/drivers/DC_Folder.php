@@ -1979,7 +1979,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 
 					// Purge the script cache (see #7005)
 					$this->purgeCache($objFile);
-
 					$this->reload();
 				}
 			}
@@ -2133,7 +2132,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		if ('twig' === $file->extension)
 		{
 			$container = System::getContainer();
-
 			$twigCache = $container->get('twig')->getCache();
 
 			if (!\is_string($twigCache))
