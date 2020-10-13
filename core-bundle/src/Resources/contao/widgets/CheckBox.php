@@ -227,7 +227,7 @@ class CheckBox extends Widget
 			($this->mandatory && !$this->multiple ? '<span class="invisible">' . $GLOBALS['TL_LANG']['MSC']['mandatory'] . ' </span>' : ''),
 			$arrOption['label'],
 			($this->mandatory && !$this->multiple ? '<span class="mandatory">*</span>' : ''),
-			$this->xlabel
+			!$this->multiple ? $this->xlabel : ''
 		);
 	}
 }
