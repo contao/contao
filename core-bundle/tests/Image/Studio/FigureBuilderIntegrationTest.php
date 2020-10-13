@@ -1629,14 +1629,14 @@ class FigureBuilderIntegrationTest extends TestCase
             ? $template->getData()
             : get_object_vars($template);
 
-        $sortByKeyRecursive = static function (array &$array) use (&$sortByKeyRecursive) {
+        $sortByKeyRecursive = static function (array &$array) use (&$sortByKeyRecursive): void {
             foreach ($array as &$value) {
                 if (\is_array($value)) {
                     $sortByKeyRecursive($value);
                 }
             }
 
-            return ksort($array);
+            ksort($array);
         };
 
         $sortByKeyRecursive($expected);

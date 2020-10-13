@@ -3763,6 +3763,14 @@ class ContaoCoreExtensionTest extends TestCase
                 'contao' => [
                     'image' => [
                         'sizes' => [
+                            '_defaults' => [
+                                'width' => 150,
+                            ],
+                            'foo' => [
+                                'height' => 250,
+                            ],
+                            'bar' => [
+                            ],
                             'foobar' => [
                                 'width' => 100,
                                 'height' => 200,
@@ -3798,32 +3806,57 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame('setPredefinedSizes', $methodCalls[0][0]);
 
-        $this->assertSame(
-            [[
-                '_foobar' => [
-                    'width' => 100,
-                    'height' => 200,
+        $expectedSizes = [[
+            '_foo' => [
+                'width' => 150,
+                'height' => 250,
+                'items' => [],
+                'formats' => [],
+            ],
+            '_bar' => [
+                'width' => 150,
+                'items' => [],
+                'formats' => [],
+            ],
+            '_foobar' => [
+                'width' => 100,
+                'height' => 200,
+                'resizeMode' => 'box',
+                'zoom' => 100,
+                'cssClass' => 'foobar-image',
+                'lazyLoading' => true,
+                'densities' => '1x, 2x',
+                'sizes' => '100vw',
+                'skipIfDimensionsMatch' => false,
+                'items' => [[
+                    'width' => 50,
+                    'height' => 50,
                     'resizeMode' => 'box',
                     'zoom' => 100,
-                    'cssClass' => 'foobar-image',
-                    'lazyLoading' => true,
-                    'densities' => '1x, 2x',
-                    'sizes' => '100vw',
-                    'skipIfDimensionsMatch' => false,
-                    'items' => [[
-                        'width' => 50,
-                        'height' => 50,
-                        'resizeMode' => 'box',
-                        'zoom' => 100,
-                        'densities' => '0.5x, 2x',
-                        'sizes' => '50vw',
-                        'media' => '(max-width: 900px)',
-                    ]],
-                    'formats' => [],
-                ],
-            ]],
-            $methodCalls[0][1]
-        );
+                    'densities' => '0.5x, 2x',
+                    'sizes' => '50vw',
+                    'media' => '(max-width: 900px)',
+                ]],
+                'formats' => [],
+            ],
+        ]];
+
+        $sizes = $methodCalls[0][1];
+
+        $sortByKeyRecursive = static function (array &$array) use (&$sortByKeyRecursive): void {
+            foreach ($array as &$value) {
+                if (\is_array($value)) {
+                    $sortByKeyRecursive($value);
+                }
+            }
+
+            ksort($array);
+        };
+
+        $sortByKeyRecursive($expectedSizes);
+        $sortByKeyRecursive($sizes);
+
+        $this->assertSame($expectedSizes, $sizes);
     }
 
     public function testSetsTheCrawlOptionsOnTheEscargotFactory(): void
