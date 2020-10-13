@@ -15,7 +15,7 @@
         }
     ],
     "require": {
-        "php": "^7.2",
+        "php": "^7.3",
         "ext-json": "*",
         "contao/core-bundle": "self.version",
         "contao/installation-bundle": "self.version",
