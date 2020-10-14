@@ -151,7 +151,7 @@ class InstallTool
             return true;
         }
 
-        return $this->connection->fetchOne('SELECT COUNT(*) AS count FROM tl_page') < 1;
+        return $this->connection->fetchOne('SELECT COUNT(*) FROM tl_page') < 1;
     }
 
     /**
@@ -184,9 +184,7 @@ class InstallTool
      */
     public function hasConfigurationError(array &$context): bool
     {
-        $row = $this->connection->fetchAssociative('SELECT @@version as Version');
-
-        [$version] = explode('-', $row['Version']);
+        [$version] = explode('-', $this->connection->fetchOne('SELECT @@version'));
 
         // The database version is too old
         if (version_compare($version, '5.1.0', '<')) {
@@ -342,16 +340,7 @@ class InstallTool
     public function hasAdminUser(): bool
     {
         try {
-            $count = $this->connection->fetchOne("
-                SELECT
-                    COUNT(*) AS count
-                FROM
-                    tl_user
-                WHERE
-                    `admin` = '1'
-            ");
-
-            if ($count > 0) {
+            if ($this->connection->fetchOne("SELECT COUNT(*) FROM tl_user WHERE `admin` = '1'") > 0) {
                 return true;
             }
         } catch (DBALException $e) {
