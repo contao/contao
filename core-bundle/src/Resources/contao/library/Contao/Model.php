@@ -812,7 +812,7 @@ abstract class Model
 			array
 			(
 				'limit'  => 1,
-				'column' => $isAlias ? array("$t.alias=?") : array("$t.id=?"),
+				'column' => $isAlias ? array("BINARY $t.alias=?") : array("$t.id=?"),
 				'value'  => $varId,
 				'return' => 'Model'
 			),
