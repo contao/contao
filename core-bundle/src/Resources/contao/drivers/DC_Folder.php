@@ -21,6 +21,7 @@ use Imagine\Gd\Imagine;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Webmozart\PathUtil\Path;
 
 /**
  * Provide methods to modify the file system.
@@ -1977,12 +1978,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 					$objVersions->restore(Input::post('version'));
 
 					// Purge the script cache (see #7005)
-					if ($objFile->extension == 'css' || $objFile->extension == 'scss' || $objFile->extension == 'less')
-					{
-						$this->import(Automator::class, 'Automator');
-						$this->Automator->purgeScriptCache();
-					}
-
+					$this->purgeCache($objFile);
 					$this->reload();
 				}
 			}
@@ -2025,11 +2021,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 				}
 
 				// Purge the script cache (see #7005)
-				if (\in_array($objFile->extension, array('css', 'scss', 'less', 'js')))
-				{
-					$this->import(Automator::class, 'Automator');
-					$this->Automator->purgeScriptCache();
-				}
+				$this->purgeCache($objFile);
 			}
 
 			if (isset($_POST['saveNclose']))
@@ -2125,6 +2117,33 @@ class DC_Folder extends DataContainer implements \listable, \editable
 </div>
 </div>
 </form>' . "\n\n" . $codeEditor;
+	}
+
+	private function purgeCache(File $file): void
+	{
+		if (\in_array($file->extension, array('css', 'scss', 'less', 'js')))
+		{
+			$this->import(Automator::class, 'Automator');
+			$this->Automator->purgeScriptCache();
+
+			return;
+		}
+
+		if ('twig' === $file->extension)
+		{
+			$container = System::getContainer();
+			$twigCache = $container->get('twig')->getCache();
+
+			if (!\is_string($twigCache))
+			{
+				return;
+			}
+
+			$twigCacheDir = Path::makeRelative($twigCache, $container->getParameter('kernel.project_dir'));
+
+			// Purge whole cache as we unfortunately cannot invalidate a single file
+			(new Folder($twigCacheDir))->purge();
+		}
 	}
 
 	/**
