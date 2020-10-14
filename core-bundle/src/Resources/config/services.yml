@@ -63,6 +63,32 @@ services:
             - '%contao.locales%'
         public: true
 
+    contao.cache.warm_entites:
+        class: Contao\CoreBundle\Cache\GeneratedEntityCacheWarmer
+        arguments:
+            - '@contao.orm.entity_collector'
+            - '@contao.orm.extension_collector'
+            - '@contao.orm.entity_factory'
+
+    contao.orm.entity_collector:
+        class: Contao\CoreBundle\Orm\Collector\EntityCollector
+        arguments:
+            - '%contao.entity_paths%'
+
+    contao.orm.extension_collector:
+        class: Contao\CoreBundle\Orm\Collector\ExtensionCollector
+        arguments:
+            - '%contao.entity_paths%'
+
+    contao.orm.annotation_dumper:
+        class: Contao\CoreBundle\Orm\Annotation\AnnotationDumper
+
+    contao.orm.entity_factory:
+        class: Contao\CoreBundle\Orm\EntityFactory
+        arguments:
+            - '@annotation_reader'
+            - '@contao.orm.annotation_dumper'
+
     Contao\CoreBundle\Controller\BackendController: ~
 
     Contao\CoreBundle\Controller\BackendCsvImportController:
@@ -481,6 +507,12 @@ services:
         class: Symfony\Component\Config\FileLocator
         arguments:
             - '%contao.resources_paths%'
+        public: true
+
+    contao.entity_finder:
+        class: Contao\CoreBundle\Config\ResourceFinder
+        arguments:
+            - '%contao.entity_paths%'
         public: true
 
     contao.routing.backend_matcher:

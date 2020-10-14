@@ -37,5 +37,6 @@ class ContaoCacheClearer implements CacheClearerInterface
         $this->filesystem->remove(Path::join($cacheDir, 'contao/dca'));
         $this->filesystem->remove(Path::join($cacheDir, 'contao/languages'));
         $this->filesystem->remove(Path::join($cacheDir, 'contao/sql'));
+        $this->filesystem->remove(Path::join($cacheDir, 'contao/entities'));
     }
 }
