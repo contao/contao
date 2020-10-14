@@ -18,6 +18,7 @@ use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\Image\PictureFactoryInterface;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
+use Contao\Image\ResizerInterface;
 use Psr\Container\ContainerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
@@ -79,6 +80,7 @@ class Studio implements ServiceSubscriberInterface
             self::class,
             'contao.image.picture_factory' => PictureFactoryInterface::class,
             'contao.image.image_factory' => ImageFactoryInterface::class,
+            'contao.image.resizer' => ResizerInterface::class,
             'contao.assets.files_context' => ContaoContext::class,
             'contao.framework' => ContaoFramework::class,
         ];

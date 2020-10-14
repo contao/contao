@@ -17,10 +17,14 @@ use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\Image\PictureFactoryInterface;
 use Contao\CoreBundle\Image\Studio\ImageResult;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\Image\DeferredImage;
+use Contao\Image\DeferredImageInterface;
+use Contao\Image\DeferredResizerInterface;
 use Contao\Image\Image;
 use Contao\Image\ImageDimensions;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureInterface;
+use Contao\Image\Resizer;
 use Imagine\Image\ImagineInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
@@ -231,6 +235,218 @@ class ImageResultTest extends TestCase
     }
 
     /**
+     * @dataProvider provideDeferredImages
+     */
+    public function testCreateIfDeferred(array $img, array $sources, array $expectedDeferredImages): void
+    {
+        $picture = $this->createMock(PictureInterface::class);
+        $picture
+            ->expects($this->once())
+            ->method('getSources')
+            ->with()
+            ->willReturn($sources)
+        ;
+
+        $picture
+            ->expects($this->once())
+            ->method('getImg')
+            ->with()
+            ->willReturn($img)
+        ;
+
+        $pictureFactory = $this->createMock(PictureFactoryInterface::class);
+        $pictureFactory
+            ->method('create')
+            ->willReturn($picture)
+        ;
+
+        $deferredResizer = $this->createMock(DeferredResizerInterface::class);
+        $deferredResizer
+            ->expects(empty($expectedDeferredImages) ? $this->never() : $this->atLeast(\count($expectedDeferredImages)))
+            ->method('resizeDeferredImage')
+            ->with($this->callback(
+                static function ($deferredImage) use (&$expectedDeferredImages) {
+                    if (false !== ($key = array_search($deferredImage, $expectedDeferredImages, true))) {
+                        unset($expectedDeferredImages[$key]);
+                    }
+
+                    return true;
+                }
+            ))
+        ;
+
+        $locator = $this->createMock(ContainerInterface::class);
+        $locator
+            ->method('get')
+            ->willReturnMap([
+                ['contao.image.picture_factory', $pictureFactory],
+                ['contao.image.resizer', $deferredResizer],
+            ])
+        ;
+
+        $imageResult = new ImageResult($locator, '/project/dir', '/project/dir/image.jpg');
+        $imageResult->createIfDeferred();
+
+        $this->assertEmpty($expectedDeferredImages, 'test all images were processed');
+    }
+
+    public function provideDeferredImages(): \Generator
+    {
+        $imagine = $this->createMock(ImagineInterface::class);
+        $dimensions = $this->createMock(ImageDimensions::class);
+
+        $filesystem = $this->createMock(Filesystem::class);
+        $filesystem
+            ->method('exists')
+            ->willReturn(true)
+        ;
+
+        $image = new Image('/project/dir/assets/image0.jpg', $imagine, $filesystem);
+        $deferredImage1 = new DeferredImage('/project/dir/assets/image1.jpg', $imagine, $dimensions);
+        $deferredImage2 = new DeferredImage('/project/dir/assets/image2.jpg', $imagine, $dimensions);
+        $deferredImage3 = new DeferredImage('/project/dir/assets/image3.jpg', $imagine, $dimensions);
+        $deferredImage4 = new DeferredImage('/project/dir/assets/image4.jpg', $imagine, $dimensions);
+
+        yield 'no deferred images' => [
+            ['src' => $image],
+            [],
+            [],
+        ];
+
+        yield 'img and sources with deferred images' => [
+            [
+                'src' => $deferredImage1,
+                'srcset' => [[$deferredImage2, 'foo'], [$deferredImage3]],
+            ],
+            [
+                [
+                    'src' => $deferredImage3,
+                    'srcset' => [[$deferredImage2], [$deferredImage4]],
+                ],
+                [
+                    'src' => $deferredImage2,
+                    'srcset' => [[$deferredImage4]],
+                ],
+            ],
+            [$deferredImage1, $deferredImage2, $deferredImage3, $deferredImage4],
+        ];
+
+        yield 'img and sources with both deferred and non-deferred images' => [
+            [
+                'src' => $deferredImage1,
+            ],
+            [
+                [
+                    'src' => $image,
+                ],
+                [
+                    'src' => $deferredImage2,
+                    'srcset' => [[$deferredImage3]],
+                ],
+            ],
+            [$deferredImage1, $deferredImage2, $deferredImage3],
+        ];
+
+        yield 'elements without src or srcset key' => [
+            [
+                'foo' => 'bar',
+            ],
+            [
+                [
+                    'bar' => 'foo',
+                ],
+                [
+                    'srcset' => [['foo'], [$deferredImage2]],
+                ],
+                [
+                    'src' => $deferredImage1,
+                ],
+            ],
+            [$deferredImage1, $deferredImage2],
+        ];
+    }
+
+    public function testCreateIfDeferredFailsWithoutDeferredResizer(): void
+    {
+        $picture = $this->createMock(PictureInterface::class);
+        $picture
+            ->expects($this->once())
+            ->method('getSources')
+            ->with()
+            ->willReturn([])
+        ;
+
+        $picture
+            ->expects($this->once())
+            ->method('getImg')
+            ->with()
+            ->willReturn(['src' => $this->createMock(DeferredImageInterface::class)])
+        ;
+
+        $pictureFactory = $this->createMock(PictureFactoryInterface::class);
+        $pictureFactory
+            ->method('create')
+            ->willReturn($picture)
+        ;
+
+        $nonDeferredResizer = $this->createMock(Resizer::class);
+
+        $locator = $this->createMock(ContainerInterface::class);
+        $locator
+            ->method('get')
+            ->willReturnMap([
+                ['contao.image.picture_factory', $pictureFactory],
+                ['contao.image.resizer', $nonDeferredResizer],
+            ])
+        ;
+
+        $imageResult = new ImageResult($locator, '/project/dir', '/project/dir/image.jpg');
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('The "contao.image.resizer" service does not support deferred resizing.');
+
+        $imageResult->createIfDeferred();
+    }
+
+    public function testCreateIfDeferredDoesNotFailWithoutDeferredResizerIfThereAreNoDeferredImages(): void
+    {
+        $picture = $this->createMock(PictureInterface::class);
+        $picture
+            ->expects($this->once())
+            ->method('getSources')
+            ->with()
+            ->willReturn([])
+        ;
+
+        $picture
+            ->expects($this->once())
+            ->method('getImg')
+            ->with()
+            ->willReturn([])
+        ;
+
+        $pictureFactory = $this->createMock(PictureFactoryInterface::class);
+        $pictureFactory
+            ->method('create')
+            ->willReturn($picture)
+        ;
+
+        $nonDeferredResizer = $this->createMock(Resizer::class);
+
+        $locator = $this->createMock(ContainerInterface::class);
+        $locator
+            ->method('get')
+            ->willReturnMap([
+                ['contao.image.picture_factory', $pictureFactory],
+                ['contao.image.resizer', $nonDeferredResizer],
+            ])
+        ;
+
+        $imageResult = new ImageResult($locator, '/project/dir', '/project/dir/image.jpg');
+        $imageResult->createIfDeferred();
+    }
+
+    /**
      * @return PictureFactoryInterface&MockObject
      */
     private function getPictureFactoryMock($filePathOrImage, $sizeConfiguration, PictureInterface $picture)
@@ -252,7 +468,6 @@ class ImageResultTest extends TestCase
     private function getLocatorMock(?PictureFactoryInterface $pictureFactory = null, string $staticUrl = null)
     {
         $locator = $this->createMock(ContainerInterface::class);
-
         $context = null;
 
         if (null !== $staticUrl) {

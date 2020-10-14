@@ -2157,6 +2157,7 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 'container.service_subscriber' => [
                     ['id' => 'contao.assets.files_context'],
+                    ['id' => 'contao.image.resizer'],
                 ],
             ],
             $definition->getTags()
