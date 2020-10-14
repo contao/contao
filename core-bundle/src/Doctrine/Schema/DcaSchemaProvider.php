@@ -418,12 +418,7 @@ class DcaSchemaProvider
             return 3072;
         }
 
-        $version = $this->doctrine
-            ->getConnection()
-            ->fetchAssociative('SELECT @@version as Value')
-        ;
-
-        [$ver] = explode('-', $version['Value']);
+        [$ver] = explode('-', $this->doctrine->getConnection()->fetchOne('SELECT @@version'));
 
         // As there is no reliable way to get the vendor (see #84), we are
         // guessing based on the version number. The check will not be run

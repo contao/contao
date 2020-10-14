@@ -346,10 +346,14 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     {
         $connection = $this->createMock(Connection::class);
         $connection
+            ->method('fetchOne')
+            ->willReturn($version)
+        ;
+
+        $connection
             ->method('fetchAssociative')
             ->willReturnOnConsecutiveCalls(
                 ['Value' => $largePrefixes],
-                ['Value' => $version],
                 ['Value' => $filePerTable],
                 ['Value' => $fileFormat]
             )
@@ -593,6 +597,11 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $connection
             ->method('fetchAssociative')
             ->willReturn(['Value' => 'On'])
+        ;
+
+        $connection
+            ->method('fetchOne')
+            ->willReturn('8.0.13')
         ;
 
         $provider = $this->getProvider(
