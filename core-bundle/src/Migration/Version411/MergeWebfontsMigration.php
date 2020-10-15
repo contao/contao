@@ -68,7 +68,7 @@ class MergeWebfontsMigration extends AbstractMigration
                 ->prepare("UPDATE $tableQuoted SET $headFieldQuoted = :head WHERE id = :id")
                 ->execute([
                     ':id' => $row['id'],
-                    ':head' => $row['head']."\n".'<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=' . str_replace('|', '%7C', $row['webfonts']) . '">',
+                    ':head' => $row['head']."\n".'<link rel="stylesheet" href="https://fonts.googleapis.com/css?family='.str_replace('|', '%7C', $row['webfonts']).'">',
                 ])
             ;
         }
