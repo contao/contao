@@ -67,6 +67,10 @@ class TwoFactorBackupCodesMigration extends AbstractMigration
         foreach ($rows as $row) {
             $backupCodes = json_decode($row['backupCodes'], true);
 
+            if (!\is_array($backupCodes)) {
+                continue;
+            }
+
             foreach ($backupCodes as $key => $backupCode) {
                 $backupCodes[$key] = password_hash($backupCode, PASSWORD_DEFAULT);
             }

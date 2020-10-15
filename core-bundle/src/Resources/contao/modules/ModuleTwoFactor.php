@@ -171,7 +171,7 @@ class ModuleTwoFactor extends BackendModule
 	 *
 	 * @return array
 	 */
-	private function generateBackupCodes(BackendUser $user): ?array
+	private function generateBackupCodes(BackendUser $user)
 	{
 		/** @var BackupCodeManager $backupCodeManager */
 		$backupCodeManager = System::getContainer()->get(BackupCodeManager::class);

@@ -55,16 +55,19 @@
             <li><code><?= $backupCode ?></code></li>
           <?php endforeach; ?>
         </ul>
-      <?php endif; ?>
-      <form class="tl_two_factor_form" method="post">
-        <input type="hidden" name="FORM_SUBMIT" value="tl_two_factor_generate_backup_codes">
-        <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
-        <div class="submit_container cf">
-          <button type="submit" class="tl_submit"><?= $this->trans(empty($this->backupCodes) ? 'MSC.twoFactorBackupCodesGenerate' : 'MSC.twoFactorBackupCodesRegenerate') ?></button>
-        </div>
-      </form>
-      <?php if (!empty($this->backupCodes)): ?>
-        <p><?= $this->trans('MSC.twoFactorBackupCodesRegenerateInfo') ?></p>
+      <?php else: ?>
+        <?php if (!empty($this->backupCodes)): ?>
+          <div class="tl_message">
+            <p class="tl_info"><?= $this->trans('MSC.twoFactorBackupCodesRegenerateInfo') ?></p>
+          </div>
+        <?php endif; ?>
+        <form class="tl_two_factor_form" method="post">
+          <input type="hidden" name="FORM_SUBMIT" value="tl_two_factor_generate_backup_codes">
+          <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
+          <div class="submit_container cf">
+            <button type="submit" class="tl_submit"><?= $this->trans(empty($this->backupCodes) ? 'MSC.twoFactorBackupCodesGenerate' : 'MSC.twoFactorBackupCodesRegenerate') ?></button>
+          </div>
+        </form>
       <?php endif; ?>
     </div>
     <div class="tl_trusted_devices">
