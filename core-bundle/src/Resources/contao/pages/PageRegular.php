@@ -512,12 +512,6 @@ class PageRegular extends Frontend
 		$arrStyleSheets = StringUtil::deserialize($objLayout->stylesheet);
 		$arrFramework = StringUtil::deserialize($objLayout->framework);
 
-		// Google web fonts
-		if ($objLayout->webfonts)
-		{
-			$strStyleSheets .= Template::generateStyleTag('https://fonts.googleapis.com/css?family=' . str_replace('|', '%7C', $objLayout->webfonts), 'all') . "\n";
-		}
-
 		// Add the Contao CSS framework style sheets
 		if (\is_array($arrFramework))
 		{
