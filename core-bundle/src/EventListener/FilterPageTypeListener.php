@@ -60,7 +60,7 @@ class FilterPageTypeListener
         }
 
         $siblingTypes = $this->connection
-            ->executeQuery('SELECT DISTINCT(type) FROM tl_page WHERE pid=?', [$dc->activeRecord->pid])
+            ->executeQuery('SELECT DISTINCT(type) FROM tl_page WHERE pid=? AND id!=?', [$dc->activeRecord->pid, $dc->activeRecord->id])
             ->fetchAll(FetchMode::COLUMN)
         ;
 

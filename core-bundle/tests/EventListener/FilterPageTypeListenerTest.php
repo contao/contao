@@ -114,13 +114,13 @@ class FilterPageTypeListenerTest extends TestCase
         $connection
             ->expects($this->once())
             ->method('executeQuery')
-            ->with('SELECT DISTINCT(type) FROM tl_page WHERE pid=?', [1])
+            ->with('SELECT DISTINCT(type) FROM tl_page WHERE pid=? AND id!=?', [1, 2])
             ->willReturn($statement)
         ;
 
         $event = new FilterPageTypeEvent(
             ['foo', 'root', 'error_401', 'error_403', 'error_404'],
-            $this->mockDataContainer(1)
+            $this->mockDataContainer(1, 2)
         );
 
         $listener = new FilterPageTypeListener($connection);
@@ -132,12 +132,22 @@ class FilterPageTypeListenerTest extends TestCase
     /**
      * @return DataContainer&MockObject
      */
-    private function mockDataContainer(?int $pid): DataContainer
+    private function mockDataContainer(?int $pid, int $id = null): DataContainer
     {
+        $activeRecord = array_filter(
+            [
+                'id' => $id,
+                'pid' => $pid,
+            ],
+            static function ($v): bool {
+                return null !== $v;
+            }
+        );
+
         /** @var DataContainer&MockObject */
         return $this->mockClassWithProperties(
             DataContainer::class,
-            ['activeRecord' => null === $pid ? null : (object) ['pid' => $pid]]
+            ['activeRecord' => empty($activeRecord) ? null : (object) $activeRecord]
         );
     }
 }
