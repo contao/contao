@@ -50,22 +50,18 @@ class MergeWebfontsMigration extends AbstractMigration
 
     public function run(): MigrationResult
     {
-        $tableQuoted = $this->connection->quoteIdentifier('tl_layout');
-        $webfontsFieldQuoted = $this->connection->quoteIdentifier('webfonts');
-        $headFieldQuoted = $this->connection->quoteIdentifier('head');
-
         $rows = $this->connection->fetchAllAssociative("
             SELECT
-                id, $webfontsFieldQuoted, $headFieldQuoted
+                id, webfonts, head
             FROM
-                $tableQuoted
+                tl_layout
             WHERE
-                $webfontsFieldQuoted != ''
+                webfonts != ''
         ");
 
         foreach ($rows as $row) {
             $this->connection
-                ->prepare("UPDATE $tableQuoted SET $headFieldQuoted = :head WHERE id = :id")
+                ->prepare('UPDATE tl_layout SET head = :head WHERE id = :id')
                 ->execute([
                     ':id' => $row['id'],
                     ':head' => $row['head']."\n".'<link rel="stylesheet" href="https://fonts.googleapis.com/css?family='.str_replace('|', '%7C', $row['webfonts']).'">',
@@ -73,7 +69,7 @@ class MergeWebfontsMigration extends AbstractMigration
             ;
         }
 
-        $this->connection->executeStatement("ALTER TABLE tl_layout DROP $webfontsFieldQuoted");
+        $this->connection->executeStatement('ALTER TABLE tl_layout DROP webfonts');
 
         return $this->createResult(true);
     }
