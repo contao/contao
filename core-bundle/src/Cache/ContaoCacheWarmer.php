@@ -235,7 +235,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     private function isCompleteInstallation(): bool
     {
         try {
-            $this->connection->query('SELECT COUNT(*) FROM tl_page');
+            $this->connection->executeQuery('SELECT COUNT(*) FROM tl_page');
         } catch (\Exception $e) {
             return false;
         }

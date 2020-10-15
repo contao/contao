@@ -26,7 +26,6 @@ use Contao\Image;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Statement;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -1119,18 +1118,11 @@ class ContentCompositionListenerTest extends TestCase
 
     private function expectArticleCount(int $count): void
     {
-        $statement = $this->createMock(Statement::class);
-        $statement
-            ->expects($this->once())
-            ->method('fetchColumn')
-            ->willReturn($count)
-        ;
-
         $this->connection
             ->expects($this->once())
-            ->method('executeQuery')
+            ->method('fetchOne')
             ->with('SELECT COUNT(*) FROM tl_article WHERE pid=:pid')
-            ->willReturn($statement)
+            ->willReturn($count)
         ;
     }
 }

@@ -15,9 +15,9 @@
         }
     ],
     "require": {
-        "php": "^7.2",
+        "php": "^7.3",
         "contao/core-bundle": "self.version",
-        "doctrine/dbal": "^2.10",
+        "doctrine/dbal": "^2.11",
         "patchwork/utf8": "^1.2",
         "psr/log": "^1.0",
         "symfony/config": "4.4.*",

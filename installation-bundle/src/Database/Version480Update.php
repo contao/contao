@@ -60,14 +60,14 @@ class Version480Update extends AbstractMigration
 
     public function run(): MigrationResult
     {
-        $this->connection->query('
+        $this->connection->executeStatement('
             ALTER TABLE
                 tl_layout
             DROP
                 picturefill
         ');
 
-        $statement = $this->connection->query('
+        $rows = $this->connection->fetchAllAssociative('
             SELECT
                 id, jquery, scripts
             FROM
@@ -75,9 +75,9 @@ class Version480Update extends AbstractMigration
         ');
 
         // Remove the "j_mediaelement" and "js_mediaelement" templates
-        while (false !== ($row = $statement->fetch(\PDO::FETCH_OBJ))) {
-            if ($row->jquery) {
-                $jquery = StringUtil::deserialize($row->jquery);
+        foreach ($rows as $row) {
+            if ($row['jquery']) {
+                $jquery = StringUtil::deserialize($row['jquery']);
 
                 if (\is_array($jquery) && false !== ($i = array_search('j_mediaelement', $jquery, true))) {
                     unset($jquery[$i]);
@@ -91,12 +91,12 @@ class Version480Update extends AbstractMigration
                             id = :id
                     ');
 
-                    $stmt->execute([':jquery' => serialize(array_values($jquery)), ':id' => $row->id]);
+                    $stmt->execute([':jquery' => serialize(array_values($jquery)), ':id' => $row['id']]);
                 }
             }
 
-            if ($row->scripts) {
-                $scripts = StringUtil::deserialize($row->scripts);
+            if ($row['scripts']) {
+                $scripts = StringUtil::deserialize($row['scripts']);
 
                 if (\is_array($scripts) && false !== ($i = array_search('js_mediaelement', $scripts, true))) {
                     unset($scripts[$i]);
@@ -110,12 +110,12 @@ class Version480Update extends AbstractMigration
                             id = :id
                     ');
 
-                    $stmt->execute([':scripts' => serialize(array_values($scripts)), ':id' => $row->id]);
+                    $stmt->execute([':scripts' => serialize(array_values($scripts)), ':id' => $row['id']]);
                 }
             }
         }
 
-        $this->connection->query("
+        $this->connection->executeStatement("
             ALTER TABLE
                 tl_image_size
             ADD
@@ -123,14 +123,14 @@ class Version480Update extends AbstractMigration
         ");
 
         // Enable the "skipIfDimensionsMatch" option for existing image sizes (backwards compatibility)
-        $this->connection->query("
+        $this->connection->executeStatement("
             UPDATE
                 tl_image_size
             SET
                 skipIfDimensionsMatch = '1'
         ");
 
-        $this->connection->query('
+        $this->connection->executeStatement('
             ALTER TABLE
                 tl_files
             CHANGE
@@ -143,7 +143,7 @@ class Version480Update extends AbstractMigration
                 importantPartHeight importantPartHeight DOUBLE PRECISION DEFAULT 0 NOT NULL
         ');
 
-        $statement = $this->connection->query('
+        $files = $this->connection->fetchAllAssociative('
             SELECT
                 id, path, importantPartX, importantPartY, importantPartWidth, importantPartHeight
             FROM
@@ -153,14 +153,14 @@ class Version480Update extends AbstractMigration
         ');
 
         // Convert the important part to relative values as fractions
-        while (false !== ($file = $statement->fetch(\PDO::FETCH_OBJ))) {
-            $path = Path::join($this->projectDir, $file->path);
+        foreach ($files as $file) {
+            $path = Path::join($this->projectDir, $file['path']);
 
             if (!file_exists($path) || is_dir($path)) {
                 continue;
             }
 
-            $imageSize = (new File($file->path))->imageViewSize;
+            $imageSize = (new File($file['path']))->imageViewSize;
 
             if (empty($imageSize[0]) || empty($imageSize[1])) {
                 continue;
@@ -179,15 +179,15 @@ class Version480Update extends AbstractMigration
             ');
 
             $stmt->execute([
-                ':id' => $file->id,
-                ':x' => $file->importantPartX / $imageSize[0],
-                ':y' => $file->importantPartY / $imageSize[1],
-                ':width' => $file->importantPartWidth / $imageSize[0],
-                ':height' => $file->importantPartHeight / $imageSize[1],
+                ':id' => $file['id'],
+                ':x' => $file['importantPartX'] / $imageSize[0],
+                ':y' => $file['importantPartY'] / $imageSize[1],
+                ':width' => $file['importantPartWidth'] / $imageSize[0],
+                ':height' => $file['importantPartHeight'] / $imageSize[1],
             ]);
         }
 
-        $this->connection->query('
+        $this->connection->executeStatement('
             ALTER TABLE
                 tl_module
             ADD
@@ -195,7 +195,7 @@ class Version480Update extends AbstractMigration
         ');
 
         // Disable the minimum keyword length for existing modules (backwards compatibility)
-        $this->connection->query("
+        $this->connection->executeStatement("
             UPDATE
                 tl_module
             SET
@@ -204,14 +204,14 @@ class Version480Update extends AbstractMigration
                 type = 'search'
         ");
 
-        $this->connection->query("
+        $this->connection->executeStatement("
             ALTER TABLE
                 tl_module
             CHANGE
                 contextLength contextLength varchar(64) NOT NULL default ''
         ");
 
-        $statement = $this->connection->query("
+        $rows = $this->connection->fetchAllAssociative("
             SELECT
                 id, contextLength, totalLength
             FROM
@@ -221,7 +221,7 @@ class Version480Update extends AbstractMigration
         ");
 
         // Consolidate the search context fields
-        while (false !== ($row = $statement->fetch(\PDO::FETCH_OBJ))) {
+        foreach ($rows as $row) {
             $stmt = $this->connection->prepare('
                 UPDATE
                     tl_module
@@ -232,12 +232,12 @@ class Version480Update extends AbstractMigration
             ');
 
             $stmt->execute([
-                ':id' => $row->id,
-                ':context' => serialize([$row->contextLength, $row->totalLength]),
+                ':id' => $row['id'],
+                ':context' => serialize([$row['contextLength'], $row['totalLength']]),
             ]);
         }
 
-        $this->connection->query("
+        $this->connection->executeStatement("
             ALTER TABLE
                 tl_layout
             ADD
@@ -245,7 +245,7 @@ class Version480Update extends AbstractMigration
         ");
 
         // Move the default image densities to the page layout
-        $this->connection->query('
+        $this->connection->executeStatement('
             UPDATE
                 tl_layout l
             SET
@@ -256,7 +256,7 @@ class Version480Update extends AbstractMigration
         // cookies out there, we can simply drop the old table here and let the
         // install tool create the new one
         if ($this->connection->getSchemaManager()->tablesExist(['tl_remember_me'])) {
-            $this->connection->query('DROP TABLE tl_remember_me');
+            $this->connection->executeStatement('DROP TABLE tl_remember_me');
         }
 
         return $this->createResult(true);

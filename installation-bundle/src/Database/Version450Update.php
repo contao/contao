@@ -51,28 +51,28 @@ class Version450Update extends AbstractMigration
 
     public function run(): MigrationResult
     {
-        $this->connection->query('
+        $this->connection->executeStatement('
             ALTER TABLE
                 tl_content
             ADD
                 youtubeOptions text NULL
         ');
 
-        $this->connection->query('
+        $this->connection->executeStatement('
             ALTER TABLE
                 tl_content
             ADD
                 youtubeStart int(10) unsigned NOT NULL default 0
         ');
 
-        $this->connection->query('
+        $this->connection->executeStatement('
             ALTER TABLE
                 tl_content
             ADD
                 youtubeStop int(10) unsigned NOT NULL default 0
         ');
 
-        $this->connection->query("
+        $this->connection->executeStatement("
             UPDATE
                 tl_form_field
             SET
@@ -81,7 +81,7 @@ class Version450Update extends AbstractMigration
                 type = 'fieldset' AND fsType = 'fsStart'
         ");
 
-        $this->connection->query("
+        $this->connection->executeStatement("
             UPDATE
                 tl_form_field
             SET
@@ -96,7 +96,7 @@ class Version450Update extends AbstractMigration
         ;
 
         if (isset($columns['news_order'])) {
-            $this->connection->query("
+            $this->connection->executeStatement("
                 UPDATE
                     tl_module
                 SET
@@ -105,7 +105,7 @@ class Version450Update extends AbstractMigration
                     news_order = 'ascending'
             ");
 
-            $this->connection->query("
+            $this->connection->executeStatement("
                 UPDATE
                     tl_module
                 SET
@@ -115,7 +115,7 @@ class Version450Update extends AbstractMigration
             ");
         }
 
-        $this->connection->query('
+        $this->connection->executeStatement('
             ALTER TABLE
                 tl_layout
             ADD

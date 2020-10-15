@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Picker;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DcaLoader;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Result;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -248,7 +249,9 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
             $qb->addSelect('ptable');
         }
 
-        $data = $qb->execute()->fetch();
+        /** @var Result $result */
+        $result = $qb->execute();
+        $data = $result->fetchAssociative();
 
         if (false === $data) {
             return [null, null];

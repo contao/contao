@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Doctrine;
 
-use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database\Installer;
@@ -57,7 +56,7 @@ abstract class DoctrineTestCase extends TestCase
         ;
 
         $connection
-            ->method('query')
+            ->method('executeQuery')
             ->willReturn($statement)
         ;
 
@@ -196,6 +195,77 @@ abstract class DoctrineTestCase extends TestCase
     }
 
     /**
+     * Mocks a Doctrine registry with a custom database connection.
+     *
+     * @param Connection|MockObject $connection
+     *
+     * @return Registry&MockObject
+     */
+    protected function mockDoctrineRegistryWithConnection(Connection $connection = null, string $filter = null): Registry
+    {
+        $schemaManager = $this->createMock(AbstractSchemaManager::class);
+        $schemaManager
+            ->method('tablesExist')
+            ->willReturn(true)
+        ;
+
+        $config = $this->createMock(Configuration::class);
+        $config
+            ->method('getSchemaAssetsFilter')
+            ->willReturn($this->getSchemaAssetsFilter($filter))
+        ;
+
+        if (!$connection) {
+            $connection = $this->createMock(Connection::class);
+        }
+
+        $connection
+            ->method('getDatabasePlatform')
+            ->willReturn(new MySqlPlatform())
+        ;
+
+        $connection
+            ->method('getSchemaManager')
+            ->willReturn($schemaManager)
+        ;
+
+        $connection
+            ->method('getParams')
+            ->willReturn(
+                [
+                    'defaultTableOptions' => [
+                        'charset' => 'utf8mb4',
+                        'collate' => 'utf8mb4_unicode_ci',
+                    ],
+                ]
+            )
+        ;
+
+        $connection
+            ->method('getConfiguration')
+            ->willReturn($config)
+        ;
+
+        $registry = $this->createMock(Registry::class);
+        $registry
+            ->method('getConnection')
+            ->willReturn($connection)
+        ;
+
+        $registry
+            ->method('getConnections')
+            ->willReturn([$connection])
+        ;
+
+        $registry
+            ->method('getManagerNames')
+            ->willReturn([])
+        ;
+
+        return $registry;
+    }
+
+    /**
      * Mocks the Contao framework with the database installer.
      *
      * @return ContaoFramework&MockObject
@@ -220,14 +290,6 @@ abstract class DoctrineTestCase extends TestCase
         ;
 
         return $framework;
-    }
-
-    protected function getProvider(array $dca = [], array $file = [], Statement $statement = null, string $filter = null): DcaSchemaProvider
-    {
-        return new DcaSchemaProvider(
-            $this->mockContaoFrameworkWithInstaller($dca, $file),
-            $this->mockDoctrineRegistry($statement, $filter)
-        );
     }
 
     protected function getSchemaAssetsFilter(string $filter = null): ?callable

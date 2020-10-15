@@ -187,10 +187,7 @@ class PageRegistry
             return;
         }
 
-        $results = $this->connection
-            ->query("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'")
-            ->fetchAll()
-        ;
+        $results = $this->connection->fetchAllAssociative("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'");
 
         $urlSuffixes = [
             array_column($results, 'urlSuffix'),

@@ -78,7 +78,7 @@ class CeAccessMigrationTest extends TestCase
 
         $connection
             ->expects($this->once())
-            ->method('query')
+            ->method('executeStatement')
         ;
 
         $connection

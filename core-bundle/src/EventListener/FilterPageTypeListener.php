@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Event\FilterPageTypeEvent;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\FetchMode;
 
 /**
  * @internal
@@ -48,7 +47,7 @@ class FilterPageTypeListener
 
         $event->removeOption('root');
 
-        $parentType = $this->connection->fetchColumn('SELECT type FROM tl_page WHERE id=?', [$dc->activeRecord->pid]);
+        $parentType = $this->connection->fetchOne('SELECT type FROM tl_page WHERE id=?', [$dc->activeRecord->pid]);
 
         // Error pages can only be placed directly inside root pages
         if ('root' !== $parentType) {
@@ -59,10 +58,10 @@ class FilterPageTypeListener
             return;
         }
 
-        $siblingTypes = $this->connection
-            ->executeQuery('SELECT DISTINCT(type) FROM tl_page WHERE pid=?', [$dc->activeRecord->pid])
-            ->fetchAll(FetchMode::COLUMN)
-        ;
+        $siblingTypes = $this->connection->fetchFirstColumn(
+            'SELECT DISTINCT(type) FROM tl_page WHERE pid=?',
+            [$dc->activeRecord->pid]
+        );
 
         foreach (array_intersect(['error_401', 'error_403', 'error_404'], $siblingTypes) as $type) {
             $event->removeOption($type);

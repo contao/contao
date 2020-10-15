@@ -311,7 +311,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         try {
             $connection = \call_user_func($this->dbalConnectionFactory, $params);
             $connection->connect();
-            $connection->query('SHOW TABLES');
+            $connection->executeQuery('SHOW TABLES');
             $connection->close();
         } catch (DriverException $e) {
             $extensionConfigs[] = [

@@ -52,7 +52,7 @@ class Version400Update extends AbstractMigration
 
     public function run(): MigrationResult
     {
-        $this->connection->query('
+        $this->connection->executeStatement('
             ALTER TABLE
                 tl_layout
             ADD
@@ -60,7 +60,7 @@ class Version400Update extends AbstractMigration
         ');
 
         // Adjust the framework agnostic scripts
-        $statement = $this->connection->query("
+        $layouts = $this->connection->fetchAllAssociative("
             SELECT
                 id, addJQuery, jquery, addMooTools, mootools
             FROM
@@ -69,12 +69,12 @@ class Version400Update extends AbstractMigration
                 framework != ''
         ");
 
-        while (false !== ($layout = $statement->fetch(\PDO::FETCH_OBJ))) {
+        foreach ($layouts as $layout) {
             $scripts = [];
 
             // Check if j_slider is enabled
-            if ($layout->addJQuery) {
-                $jquery = StringUtil::deserialize($layout->jquery);
+            if ($layout['addJQuery']) {
+                $jquery = StringUtil::deserialize($layout['jquery']);
 
                 if (!empty($jquery) && \is_array($jquery)) {
                     $key = array_search('j_slider', $jquery, true);
@@ -92,14 +92,14 @@ class Version400Update extends AbstractMigration
                                 id = :id
                         ');
 
-                        $stmt->execute([':jquery' => serialize(array_values($jquery)), ':id' => $layout->id]);
+                        $stmt->execute([':jquery' => serialize(array_values($jquery)), ':id' => $layout['id']]);
                     }
                 }
             }
 
             // Check if moo_slider is enabled
-            if ($layout->addMooTools) {
-                $mootools = StringUtil::deserialize($layout->mootools);
+            if ($layout['addMooTools']) {
+                $mootools = StringUtil::deserialize($layout['mootools']);
 
                 if (!empty($mootools) && \is_array($mootools)) {
                     $key = array_search('moo_slider', $mootools, true);
@@ -117,7 +117,7 @@ class Version400Update extends AbstractMigration
                                 id = :id
                         ');
 
-                        $stmt->execute([':mootools' => serialize(array_values($mootools)), ':id' => $layout->id]);
+                        $stmt->execute([':mootools' => serialize(array_values($mootools)), ':id' => $layout['id']]);
                     }
                 }
             }
@@ -133,12 +133,12 @@ class Version400Update extends AbstractMigration
                         id = :id
                 ');
 
-                $stmt->execute([':scripts' => serialize(array_values($scripts)), ':id' => $layout->id]);
+                $stmt->execute([':scripts' => serialize(array_values($scripts)), ':id' => $layout['id']]);
             }
         }
 
         // Replace moo_slimbox with moo_mediabox
-        $statement = $this->connection->query("
+        $layouts = $this->connection->fetchAllAssociative("
             SELECT
                 id, mootools
             FROM
@@ -147,8 +147,8 @@ class Version400Update extends AbstractMigration
                 framework != ''
         ");
 
-        while (false !== ($layout = $statement->fetch(\PDO::FETCH_OBJ))) {
-            $mootools = StringUtil::deserialize($layout->mootools);
+        foreach ($layouts as $layout) {
+            $mootools = StringUtil::deserialize($layout['mootools']);
 
             if (!empty($mootools) && \is_array($mootools)) {
                 $key = array_search('moo_slimbox', $mootools, true);
@@ -166,13 +166,13 @@ class Version400Update extends AbstractMigration
                             id = :id
                     ');
 
-                    $stmt->execute([':mootools' => serialize(array_values($mootools)), ':id' => $layout->id]);
+                    $stmt->execute([':mootools' => serialize(array_values($mootools)), ':id' => $layout['id']]);
                 }
             }
         }
 
         // Adjust the list of framework style sheets
-        $statement = $this->connection->query("
+        $layouts = $this->connection->fetchAllAssociative("
             SELECT
                 id, framework
             FROM
@@ -181,8 +181,8 @@ class Version400Update extends AbstractMigration
                 framework != ''
         ");
 
-        while (false !== ($layout = $statement->fetch(\PDO::FETCH_OBJ))) {
-            $framework = StringUtil::deserialize($layout->framework);
+        foreach ($layouts as $layout) {
+            $framework = StringUtil::deserialize($layout['framework']);
 
             if (!empty($framework) && \is_array($framework)) {
                 $key = array_search('tinymce.css', $framework, true);
@@ -199,13 +199,13 @@ class Version400Update extends AbstractMigration
                             id = :id
                     ');
 
-                    $stmt->execute([':framework' => serialize(array_values($framework)), ':id' => $layout->id]);
+                    $stmt->execute([':framework' => serialize(array_values($framework)), ':id' => $layout['id']]);
                 }
             }
         }
 
         // Adjust the module types
-        $this->connection->query("
+        $this->connection->executeStatement("
             UPDATE
                 tl_module
             SET
@@ -214,7 +214,7 @@ class Version400Update extends AbstractMigration
                 type = 'articleList'
         ");
 
-        $this->connection->query("
+        $this->connection->executeStatement("
             UPDATE
                 tl_module
             SET
@@ -223,7 +223,7 @@ class Version400Update extends AbstractMigration
                 type = 'rss_reader'
         ");
 
-        $this->connection->query("
+        $this->connection->executeStatement("
             UPDATE
                 tl_form_field
             SET

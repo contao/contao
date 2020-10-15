@@ -67,7 +67,7 @@ class Version410Update extends AbstractMigration
             $options = array_merge(...$options);
         }
 
-        $rows = $this->connection->fetchAll('
+        $rows = $this->connection->fetchAllAssociative('
             SELECT
                 id
             FROM
@@ -79,14 +79,14 @@ class Version410Update extends AbstractMigration
         }
 
         // Add the database fields
-        $this->connection->query('
+        $this->connection->executeStatement('
             ALTER TABLE
                 tl_user
             ADD
                 imageSizes blob NULL
         ');
 
-        $this->connection->query('
+        $this->connection->executeStatement('
             ALTER TABLE
                 tl_user_group
             ADD

@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Search\Indexer;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Search\Document;
 use Contao\Search;
-use Doctrine\DBAL\Driver\Connection;
+use Doctrine\DBAL\Connection;
 
 class DefaultIndexer implements IndexerInterface
 {
@@ -125,9 +125,9 @@ class DefaultIndexer implements IndexerInterface
 
     public function clear(): void
     {
-        $this->connection->exec('TRUNCATE TABLE tl_search');
-        $this->connection->exec('TRUNCATE TABLE tl_search_index');
-        $this->connection->exec('TRUNCATE TABLE tl_search_term');
+        $this->connection->executeStatement('TRUNCATE TABLE tl_search');
+        $this->connection->executeStatement('TRUNCATE TABLE tl_search_index');
+        $this->connection->executeStatement('TRUNCATE TABLE tl_search_term');
     }
 
     /**

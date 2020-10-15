@@ -53,15 +53,15 @@ class Version440Update extends AbstractMigration
     public function run(): MigrationResult
     {
         // Add the js_autofocus.html5 template
-        $statement = $this->connection->query('
+        $layouts = $this->connection->fetchAllAssociative('
             SELECT
                 id, scripts
             FROM
                 tl_layout
         ');
 
-        while (false !== ($layout = $statement->fetch(\PDO::FETCH_OBJ))) {
-            $scripts = StringUtil::deserialize($layout->scripts);
+        foreach ($layouts as $layout) {
+            $scripts = StringUtil::deserialize($layout['scripts']);
 
             if (!empty($scripts) && \is_array($scripts)) {
                 $scripts[] = 'js_autofocus';
@@ -75,7 +75,7 @@ class Version440Update extends AbstractMigration
                         id = :id
                 ');
 
-                $stmt->execute([':scripts' => serialize(array_values(array_unique($scripts))), ':id' => $layout->id]);
+                $stmt->execute([':scripts' => serialize(array_values(array_unique($scripts))), ':id' => $layout['id']]);
             }
         }
 
@@ -93,21 +93,21 @@ class Version440Update extends AbstractMigration
             $this->enableOverwriteMeta('tl_news');
         }
 
-        $this->connection->query("
+        $this->connection->executeStatement("
             ALTER TABLE
                 tl_content
             CHANGE
                 title imageTitle varchar(255) NOT NULL DEFAULT ''
         ");
 
-        $this->connection->query("
+        $this->connection->executeStatement("
             ALTER TABLE
                 tl_content
             ADD
                 overwriteMeta CHAR(1) DEFAULT '' NOT NULL
         ");
 
-        $this->connection->query("
+        $this->connection->executeStatement("
             UPDATE
                 tl_content
             SET
@@ -121,14 +121,14 @@ class Version440Update extends AbstractMigration
 
     private function enableOverwriteMeta(string $table): void
     {
-        $this->connection->query("
+        $this->connection->executeStatement("
             ALTER TABLE
                 $table
             ADD
                 overwriteMeta CHAR(1) DEFAULT '' NOT NULL
         ");
 
-        $this->connection->query("
+        $this->connection->executeStatement("
             UPDATE
                 $table
             SET
