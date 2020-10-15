@@ -137,6 +137,29 @@ class RegisterFragmentsPassTest extends TestCase
         $this->assertTrue($definition->isPublic());
     }
 
+    public function testCopiesTagsToChildDefinition(): void
+    {
+        $contentController = new Definition('App\Fragments\Text');
+        $contentController->setPublic(false);
+        $contentController->addTag('contao.content_element');
+        $contentController->addTag('foo.bar');
+
+        $container = $this->getContainerWithFragmentServices();
+        $container->setDefinition('app.fragments.content_controller', $contentController);
+
+        (new ResolveClassPass())->process($container);
+
+        $pass = new RegisterFragmentsPass(ContentElementReference::TAG_NAME);
+        $pass->process($container);
+
+        /** @var ChildDefinition $definition */
+        $definition = $container->findDefinition('contao.fragment._contao.content_element.text');
+
+        $this->assertInstanceOf(ChildDefinition::class, $definition);
+        $this->assertSame('app.fragments.content_controller', $definition->getParent());
+        $this->assertSame(['foo.bar' => [[]]], $definition->getTags());
+    }
+
     public function testRegistersThePreHandlers(): void
     {
         $contentController = new Definition(FragmentPreHandlerInterface::class);
