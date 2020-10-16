@@ -744,8 +744,8 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 		$cr = array();
 
-		// ID and PID are mandatory
-		if (!$this->intId || !Input::get('pid'))
+		// ID and PID are mandatory (PID can be 0!)
+		if (!$this->intId || !isset($_GET['pid']))
 		{
 			$this->redirect($this->getReferer());
 		}
