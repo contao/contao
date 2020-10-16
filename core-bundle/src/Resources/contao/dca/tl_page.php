@@ -1799,7 +1799,8 @@ class tl_page extends Backend
 	{
 		$pageModel = PageModel::findWithDetails($dc->id);
 
-		if (null === $pageModel) {
+		if ($pageModel === null)
+		{
 			return $tags;
 		}
 

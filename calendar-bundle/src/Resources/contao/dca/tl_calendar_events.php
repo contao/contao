@@ -1340,7 +1340,8 @@ class tl_calendar_events extends Backend
 		$calendar = CalendarModel::findByPk($dc->activeRecord->pid);
 		$pageModel = PageModel::findWithDetails($calendar->jumpTo);
 
-		if (null === $pageModel) {
+		if ($pageModel === null)
+		{
 			return $tags;
 		}
 

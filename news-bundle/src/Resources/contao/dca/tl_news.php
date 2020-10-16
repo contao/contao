@@ -1193,6 +1193,11 @@ class tl_news extends Backend
 		$archiveModel = NewsArchiveModel::findByPk($dc->activeRecord->pid);
 		$pageModel = PageModel::findWithDetails($archiveModel->jumpTo);
 
+		if ($pageModel === null)
+		{
+			return $tags;
+		}
+
 		return array_merge($tags, array('contao.sitemap.' . $pageModel->rootId));
 	}
 }

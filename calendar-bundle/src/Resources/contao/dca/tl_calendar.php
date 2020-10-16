@@ -591,7 +591,8 @@ class tl_calendar extends Backend
 	{
 		$pageModel = PageModel::findWithDetails($dc->activeRecord->jumpTo);
 
-		if (null === $pageModel) {
+		if ($pageModel === null)
+		{
 			return $tags;
 		}
 
