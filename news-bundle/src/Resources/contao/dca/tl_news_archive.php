@@ -8,7 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-use Contao\Automator;
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\CoreBundle\Exception\AccessDeniedException;
@@ -16,6 +15,7 @@ use Contao\DataContainer;
 use Contao\Image;
 use Contao\Input;
 use Contao\News;
+use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
@@ -47,6 +47,10 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 		'onsubmit_callback' => array
 		(
 			array('tl_news_archive', 'scheduleUpdate')
+		),
+		'oninvalidate_cache_tags_callback' => array
+		(
+			array('tl_news_archive', 'addSitemapCacheInvalidationTag'),
 		),
 		'sql' => array
 		(
@@ -478,9 +482,6 @@ class tl_news_archive extends Backend
 			$this->News->generateFeedsByArchive($id);
 		}
 
-		$this->import(Automator::class, 'Automator');
-		$this->Automator->generateSitemap();
-
 		if ($request)
 		{
 			$request->attributes->set('_scope', $origScope);
@@ -579,5 +580,22 @@ class tl_news_archive extends Backend
 	public function deleteArchive($row, $href, $label, $title, $icon, $attributes)
 	{
 		return $this->User->hasAccess('delete', 'newp') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+	}
+
+	/**
+	 * @param DataContainer $dc
+	 *
+	 * @return array
+	 */
+	public function addSitemapCacheInvalidationTag($dc, array $tags)
+	{
+		$pageModel = PageModel::findWithDetails($dc->activeRecord->jumpTo);
+
+		if ($pageModel === null)
+		{
+			return $tags;
+		}
+
+		return array_merge($tags, array('contao.sitemap.' . $pageModel->rootId));
 	}
 }

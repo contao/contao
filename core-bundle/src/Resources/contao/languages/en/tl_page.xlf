@@ -158,18 +158,6 @@
       <trans-unit id="tl_page.urlSuffix.1">
         <source>The URL suffix will be added to the URI string to simulate static documents.</source>
       </trans-unit>
-      <trans-unit id="tl_page.createSitemap.0">
-        <source>Create an XML sitemap</source>
-      </trans-unit>
-      <trans-unit id="tl_page.createSitemap.1">
-        <source>Create a Google XML sitemap in the &lt;em&gt;share/&lt;/em&gt; directory.</source>
-      </trans-unit>
-      <trans-unit id="tl_page.sitemapName.0">
-        <source>Sitemap file name</source>
-      </trans-unit>
-      <trans-unit id="tl_page.sitemapName.1">
-        <source>Please enter the name of the sitemap file without extension.</source>
-      </trans-unit>
       <trans-unit id="tl_page.useSSL.0">
         <source>Protocol</source>
       </trans-unit>

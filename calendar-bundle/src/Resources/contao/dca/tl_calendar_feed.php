@@ -470,9 +470,6 @@ class tl_calendar_feed extends Backend
 			$this->Calendar->generateFeedsByCalendar($id);
 		}
 
-		$this->import(Automator::class, 'Automator');
-		$this->Automator->generateSitemap();
-
 		if ($request)
 		{
 			$request->attributes->set('_scope', $origScope);

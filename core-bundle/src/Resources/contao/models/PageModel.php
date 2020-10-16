@@ -51,8 +51,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string  $validAliasCharacters
  * @property string  $urlPrefix
  * @property string  $urlSuffix
- * @property string  $createSitemap
- * @property string  $sitemapName
  * @property string  $useSSL
  * @property string  $autoforward
  * @property string  $protected
@@ -143,8 +141,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static PageModel|null findOneByValidAliasCharacters($val, array $opt=array())
  * @method static PageModel|null findOneByUrlPrefix($val, array $opt=array())
  * @method static PageModel|null findOneByUrlSuffix($val, array $opt=array())
- * @method static PageModel|null findOneByCreateSitemap($val, array $opt=array())
- * @method static PageModel|null findOneBySitemapName($val, array $opt=array())
  * @method static PageModel|null findOneByUseSSL($val, array $opt=array())
  * @method static PageModel|null findOneByAutoforward($val, array $opt=array())
  * @method static PageModel|null findOneByProtected($val, array $opt=array())
@@ -201,8 +197,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static Collection|PageModel[]|PageModel|null findByValidAliasCharacters($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByUrlPrefix($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByUrlSuffix($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByCreateSitemap($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findBySitemapName($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByUseSSL($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByAutoforward($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByProtected($val, array $opt=array())
@@ -263,8 +257,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static integer countByValidAliasCharacters($val, array $opt=array())
  * @method static integer countByUrlPrefix($val, array $opt=array())
  * @method static integer countByUrlSuffix($val, array $opt=array())
- * @method static integer countByCreateSitemap($val, array $opt=array())
- * @method static integer countBySitemapName($val, array $opt=array())
  * @method static integer countByUseSSL($val, array $opt=array())
  * @method static integer countByAutoforward($val, array $opt=array())
  * @method static integer countByProtected($val, array $opt=array())

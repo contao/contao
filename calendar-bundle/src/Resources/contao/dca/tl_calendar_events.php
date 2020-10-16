@@ -8,7 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-use Contao\Automator;
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Calendar;
@@ -58,6 +57,10 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		(
 			array('tl_calendar_events', 'adjustTime'),
 			array('tl_calendar_events', 'scheduleUpdate')
+		),
+		'oninvalidate_cache_tags_callback' => array
+		(
+			array('tl_calendar_events', 'addSitemapCacheInvalidationTag'),
 		),
 		'sql' => array
 		(
@@ -1052,9 +1055,6 @@ class tl_calendar_events extends Backend
 			$this->Calendar->generateFeedsByCalendar($id);
 		}
 
-		$this->import(Automator::class, 'Automator');
-		$this->Automator->generateSitemap();
-
 		if ($request)
 		{
 			$request->attributes->set('_scope', $origScope);
@@ -1328,5 +1328,23 @@ class tl_calendar_events extends Backend
 		{
 			$dc->invalidateCacheTags();
 		}
+	}
+
+	/**
+	 * @param DataContainer $dc
+	 *
+	 * @return array
+	 */
+	public function addSitemapCacheInvalidationTag($dc, array $tags)
+	{
+		$calendar = CalendarModel::findByPk($dc->activeRecord->pid);
+		$pageModel = PageModel::findWithDetails($calendar->jumpTo);
+
+		if ($pageModel === null)
+		{
+			return $tags;
+		}
+
+		return array_merge($tags, array('contao.sitemap.' . $pageModel->rootId));
 	}
 }
