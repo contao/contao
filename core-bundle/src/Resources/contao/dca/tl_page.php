@@ -1799,6 +1799,10 @@ class tl_page extends Backend
 	{
 		$pageModel = PageModel::findWithDetails($dc->id);
 
+		if (null === $pageModel) {
+			return $tags;
+		}
+
 		return array_merge($tags, array('contao.sitemap.' . $pageModel->rootId));
 	}
 }

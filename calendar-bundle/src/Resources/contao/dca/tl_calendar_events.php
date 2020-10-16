@@ -1340,6 +1340,10 @@ class tl_calendar_events extends Backend
 		$calendar = CalendarModel::findByPk($dc->activeRecord->pid);
 		$pageModel = PageModel::findWithDetails($calendar->jumpTo);
 
+		if (null === $pageModel) {
+			return $tags;
+		}
+
 		return array_merge($tags, array('contao.sitemap.' . $pageModel->rootId));
 	}
 }

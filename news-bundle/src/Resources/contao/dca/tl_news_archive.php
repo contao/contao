@@ -591,6 +591,10 @@ class tl_news_archive extends Backend
 	{
 		$pageModel = PageModel::findWithDetails($dc->activeRecord->jumpTo);
 
+		if (null === $pageModel) {
+			return $tags;
+		}
+
 		return array_merge($tags, array('contao.sitemap.' . $pageModel->rootId));
 	}
 }
