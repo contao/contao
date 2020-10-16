@@ -23,3 +23,7 @@ services:
             - '@contao.framework'
             - '%contao.url_suffix%'
             - '%contao.prepend_locale%'
+
+    Contao\CoreBundle\Migration\Version411\MergeWebfontsMigration:
+        arguments:
+            - '@database_connection'
