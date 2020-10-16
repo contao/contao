@@ -150,7 +150,7 @@ class Password extends Widget
 	public function generate()
 	{
 		return sprintf(
-			'<input type="password" autocomplete="off" name="%s" id="ctrl_%s" class="tl_text tl_password%s" value="%s"%s onfocus="Backend.getScrollOffset()">%s%s',
+			'<input type="password" name="%s" id="ctrl_%s" class="tl_text tl_password%s" value="%s" autocomplete="new-password"%s onfocus="Backend.getScrollOffset()">%s%s',
 			$this->strName,
 			$this->strId,
 			($this->strClass ? ' ' . $this->strClass : ''),
@@ -186,7 +186,7 @@ class Password extends Widget
 	public function generateConfirmation()
 	{
 		return sprintf(
-			'<input type="password" autocomplete="off" name="%s_confirm" id="ctrl_%s_confirm" class="tl_text tl_password confirm%s" value="%s"%s onfocus="Backend.getScrollOffset()">%s',
+			'<input type="password" name="%s_confirm" id="ctrl_%s_confirm" class="tl_text tl_password confirm%s" value="%s" autocomplete="new-password"%s onfocus="Backend.getScrollOffset()">%s',
 			$this->strName,
 			$this->strId,
 			($this->strClass ? ' ' . $this->strClass : ''),
