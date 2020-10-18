@@ -95,6 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.extnd.1">
         <source>Allows everything except special characters which are usually encoded for security reasons: #&lt;&gt;()\=</source>
+        <target>Povolí cokoli kromě speciálních znaků, které jsou běžně zašifrované z bezpečnostních důvodů: #&lt;&gt;()\=</target>
       </trans-unit>
       <trans-unit id="tl_form_field.date.0">
         <source>Date</source>
@@ -170,21 +171,27 @@
       </trans-unit>
       <trans-unit id="tl_form_field.minval.0">
         <source>Minimum value</source>
+        <target>Minimální délka</target>
       </trans-unit>
       <trans-unit id="tl_form_field.minval.1">
         <source>Here you can set the minimum value for numeric fields.</source>
+        <target>Zde můžete určit minimální délku číselných polí.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.maxval.0">
         <source>Maximum value</source>
+        <target>Maximální délka</target>
       </trans-unit>
       <trans-unit id="tl_form_field.maxval.1">
         <source>Here you can set the maximum value for numeric fields.</source>
+        <target>Zde můžete určit maximální délku číselných polí.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.step.0">
         <source>Step</source>
+        <target>Krok</target>
       </trans-unit>
       <trans-unit id="tl_form_field.step.1">
         <source>Here you can set the discrete step size of the field.</source>
+        <target>Zde můžete určit velikost pole.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.size.0">
         <source>Rows and columns</source>
@@ -291,12 +298,12 @@
         <target>Sem můžete zadat velikost nahrávaného souboru (&lt;em&gt;velikost&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_form_field.customTpl.0">
-        <source>Custom form field template</source>
-        <target>Vlastní předloha formulářového pole</target>
+        <source>Form field template</source>
+        <target>Předloha formulářového pole</target>
       </trans-unit>
       <trans-unit id="tl_form_field.customTpl.1">
-        <source>Here you can overwrite the default form field template.</source>
-        <target>Zde můžete přepsat výchozí předlohu formulářového pole.</target>
+        <source>Here you can select the form field template.</source>
+        <target>Zde můžete zvolit předlohu formulářového pole.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.slabel.0">
         <source>Submit button label</source>
@@ -376,24 +383,31 @@
       </trans-unit>
       <trans-unit id="tl_form_field.new.0">
         <source>New</source>
+        <target>Nové</target>
       </trans-unit>
       <trans-unit id="tl_form_field.new.1">
         <source>Create a new form field</source>
+        <target>Vytvořit nové pole formuláře</target>
       </trans-unit>
       <trans-unit id="tl_form_field.show">
         <source>Show the details of form field ID %s</source>
+        <target>Zobrazit podrobnosti k poli formuláře ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.edit">
         <source>Edit form field ID %s</source>
+        <target>Upravit pole formuláře ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.cut">
         <source>Move form field ID %s</source>
+        <target>Přesunout pole formuláře ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.copy">
         <source>Duplicate form field ID %s</source>
+        <target>Duplikovat pole formuláře ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.delete">
         <source>Delete form field ID %s</source>
+        <target>Smazat pole formuláře ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.editheader">
         <source>Edit the form settings</source>
@@ -401,6 +415,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.toggle">
         <source>Hide/unhide form field ID %s</source>
+        <target>Zobrazit/Skrýt pole formuláře ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pasteafter.0">
         <source>Paste at the top</source>
@@ -408,12 +423,15 @@
       </trans-unit>
       <trans-unit id="tl_form_field.pasteafter.1">
         <source>Paste after form field ID %s</source>
+        <target>Vložit za pole formuláře ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pastenew.0">
         <source>Create a new form field at the top</source>
+        <target>Vytvořit nové pole formuláře na prvním místě</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pastenew.1">
         <source>Create a new form field after form field ID %s</source>
+        <target>Vytvořit nové pole formuláře po poli ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.option.1">
         <source>Import options from a CSV file</source>

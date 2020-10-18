@@ -67,8 +67,13 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $request = new Request();
         $request->query->set('page', '9');
 
-        $event = new PreviewUrlConvertEvent($request);
-        $pageModel = $this->createConfiguredMock(PageModel::class, ['getPreviewUrl' => '/en/content-elements.html']);
+        $pageModel = $this->createMock(PageModel::class);
+        $pageModel
+            ->expects($this->once())
+            ->method('getPreviewUrl')
+            ->with(null)
+            ->willReturn('/en/content-elements.html')
+        ;
 
         $adapters = [
             PageModel::class => $this->mockConfiguredAdapter(['findWithDetails' => $pageModel]),
@@ -76,6 +81,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         ];
 
         $framework = $this->mockContaoFramework($adapters);
+        $event = new PreviewUrlConvertEvent($request);
 
         $listener = new PreviewUrlConvertListener($framework);
         $listener($event);
@@ -98,5 +104,36 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $listener($event);
 
         $this->assertNull($event->getUrl());
+    }
+
+    public function testConvertsThePreviewUrlWithPageAndArticle(): void
+    {
+        $request = new Request();
+        $request->query->set('page', '9');
+        $request->query->set('article', 'foobar');
+
+        /** @var ArticleModel $articleModel */
+        $articleModel = $this->mockClassWithProperties(ArticleModel::class);
+        $articleModel->alias = 'foobar';
+        $articleModel->inColumn = 'main';
+
+        $pageModel = $this->createMock(PageModel::class);
+        $pageModel
+            ->expects($this->once())
+            ->method('getPreviewUrl')
+            ->with('/articles/foobar')
+            ->willReturn('/en/content-elements/articles/foobar.html')
+        ;
+
+        $adapters = [
+            PageModel::class => $this->mockConfiguredAdapter(['findWithDetails' => $pageModel]),
+            ArticleModel::class => $this->mockConfiguredAdapter(['findByAlias' => $articleModel]),
+        ];
+
+        $framework = $this->mockContaoFramework($adapters);
+        $event = new PreviewUrlConvertEvent($request);
+
+        $listener = new PreviewUrlConvertListener($framework);
+        $listener($event);
     }
 }

@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\OptIn\OptIn;
+use Contao\CoreBundle\Util\SimpleTokenParser;
 use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\Session\Session;
 
@@ -36,7 +37,9 @@ class ModulePassword extends Module
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['lostPassword'][0]) . ' ###';
@@ -152,7 +155,6 @@ class ModulePassword extends Module
 
 			if ($objMember === null)
 			{
-				sleep(2); // Wait 2 seconds while brute forcing :)
 				$this->Template->error = $GLOBALS['TL_LANG']['MSC']['accountNotFound'];
 			}
 			else
@@ -317,7 +319,10 @@ class ModulePassword extends Module
 		$arrData['link'] = Idna::decode(Environment::get('base')) . Environment::get('request') . ((strpos(Environment::get('request'), '?') !== false) ? '&' : '?') . 'token=' . $optInToken->getIdentifier();
 
 		// Send the token
-		$optInToken->send(sprintf($GLOBALS['TL_LANG']['MSC']['passwordSubject'], Idna::decode(Environment::get('host'))), StringUtil::parseSimpleTokens($this->reg_password, $arrData));
+		$optInToken->send(
+			sprintf($GLOBALS['TL_LANG']['MSC']['passwordSubject'], Idna::decode(Environment::get('host'))),
+			System::getContainer()->get(SimpleTokenParser::class)->parse($this->reg_password, $arrData)
+		);
 
 		$this->log('A new password has been requested for user ID ' . $objMember->id . ' (' . Idna::decodeEmail($objMember->email) . ')', __METHOD__, TL_ACCESS);
 

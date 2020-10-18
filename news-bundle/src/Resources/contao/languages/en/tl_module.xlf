@@ -36,7 +36,7 @@
         <source>News template</source>
       </trans-unit>
       <trans-unit id="tl_module.news_template.1">
-        <source>Here you can select the news template.</source>
+        <source>Here you can select a news template.</source>
       </trans-unit>
       <trans-unit id="tl_module.news_format.0">
         <source>Archive format</source>

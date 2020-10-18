@@ -29,6 +29,7 @@ use Contao\Model\Collection;
  * @property boolean $externalImages
  * @property string  $sender
  * @property string  $senderName
+ * @property string  $mailerTransport
  * @property boolean $sent
  * @property string  $date
  * @property integer $channel
@@ -50,6 +51,7 @@ use Contao\Model\Collection;
  * @method static NewsletterModel|null findOneByExternalImages($val, array $opt=array())
  * @method static NewsletterModel|null findOneBySender($val, array $opt=array())
  * @method static NewsletterModel|null findOneBySenderName($val, array $opt=array())
+ * @method static NewsletterModel|null findOneByMailerTransport($val, array $opt=array())
  * @method static NewsletterModel|null findOneBySent($val, array $opt=array())
  * @method static NewsletterModel|null findOneByDate($val, array $opt=array())
  *
@@ -66,6 +68,7 @@ use Contao\Model\Collection;
  * @method static Collection|NewsletterModel[]|NewsletterModel|null findByExternalImages($val, array $opt=array())
  * @method static Collection|NewsletterModel[]|NewsletterModel|null findBySender($val, array $opt=array())
  * @method static Collection|NewsletterModel[]|NewsletterModel|null findBySenderName($val, array $opt=array())
+ * @method static Collection|NewsletterModel[]|NewsletterModel|null findByMailerTransport($val, array $opt=array())
  * @method static Collection|NewsletterModel[]|NewsletterModel|null findBySent($val, array $opt=array())
  * @method static Collection|NewsletterModel[]|NewsletterModel|null findByDate($val, array $opt=array())
  * @method static Collection|NewsletterModel[]|NewsletterModel|null findMultipleByIds($val, array $opt=array())
@@ -86,6 +89,7 @@ use Contao\Model\Collection;
  * @method static integer countByExternalImages($val, array $opt=array())
  * @method static integer countBySender($val, array $opt=array())
  * @method static integer countBySenderName($val, array $opt=array())
+ * @method static integer countByMailerTransport($val, array $opt=array())
  * @method static integer countBySent($val, array $opt=array())
  * @method static integer countByDate($val, array $opt=array())
  *

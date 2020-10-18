@@ -16,7 +16,7 @@ use Contao\CoreBundle\ContaoCoreBundle;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
 
-@trigger_error('Using the "Contao\CoreBundle\Framework\ScopeAwareTrait" trait has been deprecated and will no longer work in Contao 5.0. Use the "contao.routing.scope_matcher" service instead.', E_USER_DEPRECATED);
+trigger_deprecation('contao/core-bundle', '4.4', 'Using the "Contao\CoreBundle\Framework\ScopeAwareTrait" trait has been deprecated and will no longer work in Contao 5.0. Use the "contao.routing.scope_matcher" service instead.');
 
 /**
  * @deprecated Deprecated since Contao 4.4, to be removed in Contao 5.0; use

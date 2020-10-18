@@ -8,15 +8,17 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\CoreBundle\DataContainer\PaletteManipulator;
+
 // Extend the default palettes
-Contao\CoreBundle\DataContainer\PaletteManipulator::create()
-	->addLegend('faq_legend', 'amg_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_BEFORE)
-	->addField(array('faqs', 'faqp'), 'faq_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_APPEND)
+PaletteManipulator::create()
+	->addLegend('faq_legend', 'amg_legend', PaletteManipulator::POSITION_BEFORE)
+	->addField(array('faqs', 'faqp'), 'faq_legend', PaletteManipulator::POSITION_APPEND)
 	->applyToPalette('extend', 'tl_user')
 	->applyToPalette('custom', 'tl_user')
 ;
 
-// Add fields to tl_user_group
+// Add fields to tl_user
 $GLOBALS['TL_DCA']['tl_user']['fields']['faqs'] = array
 (
 	'exclude'                 => true,

@@ -28,14 +28,14 @@ class ContentToplink extends ContentElement
 	 */
 	protected function compile()
 	{
-		if ($this->linkTitle == '')
+		if (!$this->linkTitle)
 		{
 			$this->linkTitle = $GLOBALS['TL_LANG']['MSC']['backToTop'];
 		}
 
 		$this->Template->label = $this->linkTitle;
 		$this->Template->title = StringUtil::specialchars($this->linkTitle);
-		$this->Template->request = ampersand(Environment::get('request'));
+		$this->Template->request = StringUtil::ampersand(Environment::get('request'));
 	}
 }
 

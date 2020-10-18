@@ -23,6 +23,11 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class LegacyCronTest extends TestCase
 {
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Since contao/core-bundle 4.9: Using $GLOBALS['TL_CRON'] has been deprecated %s
+     */
     public function testLegacyCronJobsAreExecuted(): void
     {
         // Mock a simple object to be used for TL_CRON
@@ -61,7 +66,6 @@ class LegacyCronTest extends TestCase
             'monthly' => [['TestCron', 'onMonthly']],
         ];
 
-        // Mock the System adapter and return the simple object
         $systemAdapter = $this->mockAdapter(['importStatic', 'loadLanguageFile']);
         $systemAdapter
             ->expects($this->exactly(5))

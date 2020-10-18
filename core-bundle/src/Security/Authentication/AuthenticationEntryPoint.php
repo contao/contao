@@ -79,16 +79,12 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
         } catch (ResponseException $e) {
             return $e->getResponse();
         } catch (InsufficientAuthenticationException $e) {
-            throw new UnauthorizedHttpException('', $e->getMessage());
+            throw new UnauthorizedHttpException('', $e->getMessage(), $e);
         }
     }
 
     private function redirectToBackend(Request $request): RedirectResponse
     {
-        if ($request->query->count() < 1) {
-            return new RedirectResponse($this->router->generate('contao_backend_login'));
-        }
-
         $url = $this->router->generate(
             'contao_backend_login',
             ['redirect' => $request->getUri()],

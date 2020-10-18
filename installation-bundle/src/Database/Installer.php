@@ -31,6 +31,11 @@ class Installer
     private $commands;
 
     /**
+     * @var array
+     */
+    private $commandOrder;
+
+    /**
      * @var DcaSchemaProvider
      */
     private $schemaProvider;
@@ -47,13 +52,37 @@ class Installer
     /**
      * @return array<string>
      */
-    public function getCommands(): array
+    public function getCommands(bool $byGroup = true): array
     {
         if (null === $this->commands) {
             $this->compileCommands();
         }
 
-        return $this->commands;
+        if ($byGroup || !$this->commands) {
+            return $this->commands;
+        }
+
+        $commandsByHash = array_merge(...array_values($this->commands));
+
+        uksort(
+            $commandsByHash,
+            function ($a, $b) {
+                $indexA = array_search($a, $this->commandOrder, true);
+                $indexB = array_search($b, $this->commandOrder, true);
+
+                if (false === $indexA) {
+                    $indexA = \count($this->commandOrder);
+                }
+
+                if (false === $indexB) {
+                    $indexB = \count($this->commandOrder);
+                }
+
+                return $indexA - $indexB;
+            }
+        );
+
+        return $commandsByHash;
     }
 
     /**
@@ -67,7 +96,7 @@ class Installer
 
         foreach ($this->commands as $commands) {
             if (isset($commands[$hash])) {
-                $this->connection->query($commands[$hash]);
+                $this->connection->executeStatement($commands[$hash]);
 
                 return;
             }
@@ -89,6 +118,8 @@ class Installer
             'DROP' => [],
             'ALTER_DROP' => [],
         ];
+
+        $order = [];
 
         // The schema assets filter is a callable as of Doctrine DBAL 2.9
         $filter = static function (string $assetName): bool {
@@ -114,20 +145,24 @@ class Installer
             switch (true) {
                 case 0 === strncmp($sql, 'CREATE TABLE ', 13):
                     $return['CREATE'][md5($sql)] = $sql;
+                    $order[] = md5($sql);
                     break;
 
                 case 0 === strncmp($sql, 'DROP TABLE ', 11):
                     $return['DROP'][md5($sql)] = $sql;
+                    $order[] = md5($sql);
                     break;
 
                 case 0 === strncmp($sql, 'CREATE INDEX ', 13):
                 case 0 === strncmp($sql, 'CREATE UNIQUE INDEX ', 20):
                 case 0 === strncmp($sql, 'CREATE FULLTEXT INDEX ', 22):
                     $return['ALTER_ADD'][md5($sql)] = $sql;
+                    $order[] = md5($sql);
                     break;
 
                 case 0 === strncmp($sql, 'DROP INDEX', 10):
                     $return['ALTER_CHANGE'][md5($sql)] = $sql;
+                    $order[] = md5($sql);
                     break;
 
                 case preg_match('/^(ALTER TABLE [^ ]+) /', $sql, $matches):
@@ -142,15 +177,18 @@ class Installer
                         switch (true) {
                             case 0 === strncmp($part, 'DROP ', 5):
                                 $return['ALTER_DROP'][md5($command)] = $command;
+                                $order[] = md5($command);
                                 break;
 
                             case 0 === strncmp($part, 'ADD ', 4):
                                 $return['ALTER_ADD'][md5($command)] = $command;
+                                $order[] = md5($command);
                                 break;
 
                             case 0 === strncmp($part, 'CHANGE ', 7):
                             case 0 === strncmp($part, 'RENAME ', 7):
                                 $return['ALTER_CHANGE'][md5($command)] = $command;
+                                $order[] = md5($command);
                                 break;
 
                             default:
@@ -165,7 +203,7 @@ class Installer
             }
         }
 
-        $this->checkEngineAndCollation($return, $fromSchema, $toSchema);
+        $this->checkEngineAndCollation($return, $order, $fromSchema, $toSchema);
 
         $return = array_filter($return);
 
@@ -177,12 +215,13 @@ class Installer
         }
 
         $this->commands = $return;
+        $this->commandOrder = $order;
     }
 
     /**
      * Checks engine and collation and adds the ALTER TABLE queries.
      */
-    private function checkEngineAndCollation(array &$sql, Schema $fromSchema, Schema $toSchema): void
+    private function checkEngineAndCollation(array &$sql, array &$order, Schema $fromSchema, Schema $toSchema): void
     {
         $tables = $toSchema->getTables();
         $dynamic = $this->hasDynamicRowFormat();
@@ -198,12 +237,11 @@ class Installer
 
             $this->setLegacyOptions($table);
 
-            $tableOptions = $this->connection
-                ->query("SHOW TABLE STATUS LIKE '".$tableName."'")
-                ->fetch(\PDO::FETCH_OBJ)
-            ;
+            $tableOptions = $this->connection->fetchAssociative(
+                'SHOW TABLE STATUS WHERE Name = ? AND Engine IS NOT NULL AND Create_options IS NOT NULL AND Collation IS NOT NULL',
+                [$tableName]
+            );
 
-            // The table does not yet exist
             if (false === $tableOptions) {
                 continue;
             }
@@ -211,9 +249,13 @@ class Installer
             $engine = $table->getOption('engine');
             $innodb = 'innodb' === strtolower($engine);
 
-            if (strtolower($tableOptions->Engine) !== strtolower($engine)) {
+            if (strtolower($tableOptions['Engine']) !== strtolower($engine)) {
                 if ($innodb && $dynamic) {
                     $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine.' ROW_FORMAT = DYNAMIC';
+
+                    if (false !== stripos($tableOptions['Create_options'], 'key_block_size=')) {
+                        $command .= ' KEY_BLOCK_SIZE = 0';
+                    }
                 } else {
                     $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine;
                 }
@@ -221,15 +263,20 @@ class Installer
                 $deleteIndexes = true;
                 $alterTables[md5($command)] = $command;
             } elseif ($innodb && $dynamic) {
-                if (false === stripos($tableOptions->Create_options, 'row_format=dynamic')) {
+                if (false === stripos($tableOptions['Create_options'], 'row_format=dynamic')) {
                     $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine.' ROW_FORMAT = DYNAMIC';
+
+                    if (false !== stripos($tableOptions['Create_options'], 'key_block_size=')) {
+                        $command .= ' KEY_BLOCK_SIZE = 0';
+                    }
+
                     $alterTables[md5($command)] = $command;
                 }
             }
 
             $collate = $table->getOption('collate');
 
-            if ($tableOptions->Collation !== $collate) {
+            if ($tableOptions['Collation'] !== $collate) {
                 $charset = $table->getOption('charset');
                 $command = 'ALTER TABLE '.$tableName.' CONVERT TO CHARACTER SET '.$charset.' COLLATE '.$collate;
                 $deleteIndexes = true;
@@ -256,44 +303,38 @@ class Installer
                     $indexCommand = $platform->getDropIndexSQL($indexName, $tableName);
                     $strKey = md5($indexCommand);
 
-                    if (isset($sql['ALTER_CHANGE'][$strKey])) {
-                        unset($sql['ALTER_CHANGE'][$strKey]);
+                    if (!isset($sql['ALTER_CHANGE'][$strKey])) {
+                        $sql['ALTER_TABLE'][$strKey] = $indexCommand;
+                        $order[] = $strKey;
                     }
-
-                    $sql['ALTER_TABLE'][$strKey] = $indexCommand;
                 }
             }
 
             foreach ($alterTables as $k => $alterTable) {
                 $sql['ALTER_TABLE'][$k] = $alterTable;
+                $order[] = $k;
             }
         }
     }
 
     private function hasDynamicRowFormat(): bool
     {
-        $filePerTable = $this->connection
-            ->query("SHOW VARIABLES LIKE 'innodb_file_per_table'")
-            ->fetch(\PDO::FETCH_OBJ)
-        ;
+        $filePerTable = $this->connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_file_per_table'");
 
         // Dynamic rows require innodb_file_per_table to be enabled
-        if (!\in_array(strtolower((string) $filePerTable->Value), ['1', 'on'], true)) {
+        if (!\in_array(strtolower((string) $filePerTable['Value']), ['1', 'on'], true)) {
             return false;
         }
 
-        $fileFormat = $this->connection
-            ->query("SHOW VARIABLES LIKE 'innodb_file_format'")
-            ->fetch(\PDO::FETCH_OBJ)
-        ;
+        $fileFormat = $this->connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_file_format'");
 
         // MySQL 8 and MariaDB 10.3 no longer have the "innodb_file_format" setting
-        if (false === $fileFormat || '' === $fileFormat->Value) {
+        if (false === $fileFormat || '' === $fileFormat['Value']) {
             return true;
         }
 
         // Dynamic rows require the Barracuda file format in MySQL <8 and MariaDB <10.3
-        return 'barracuda' === strtolower((string) $fileFormat->Value);
+        return 'barracuda' === strtolower((string) $fileFormat['Value']);
     }
 
     /**

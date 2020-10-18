@@ -15,6 +15,7 @@ namespace Contao\InstallationBundle;
 use Contao\Backend;
 use Contao\Config;
 use Contao\CoreBundle\Migration\MigrationCollection;
+use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\File;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
@@ -22,6 +23,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
+use Webmozart\PathUtil\Path;
 
 class InstallTool
 {
@@ -33,7 +35,7 @@ class InstallTool
     /**
      * @var string
      */
-    private $rootDir;
+    private $projectDir;
 
     /**
      * @var LoggerInterface
@@ -48,23 +50,23 @@ class InstallTool
     /**
      * @internal Do not inherit from this class; decorate the "contao.install_tool" service instead
      */
-    public function __construct(Connection $connection, string $rootDir, LoggerInterface $logger, MigrationCollection $migrations)
+    public function __construct(Connection $connection, string $projectDir, LoggerInterface $logger, MigrationCollection $migrations)
     {
         $this->connection = $connection;
-        $this->rootDir = $rootDir;
+        $this->projectDir = $projectDir;
         $this->logger = $logger;
         $this->migrations = $migrations;
     }
 
     public function isLocked(): bool
     {
-        $file = $this->rootDir.'/var/install_lock';
+        $file = Path::join($this->projectDir, 'var/install_lock');
 
         if (!file_exists($file)) {
             return false;
         }
 
-        $count = file_get_contents($this->rootDir.'/var/install_lock');
+        $count = file_get_contents($file);
 
         return (int) $count >= 3;
     }
@@ -82,10 +84,10 @@ class InstallTool
     public function increaseLoginCount(): void
     {
         $count = 0;
-        $file = $this->rootDir.'/var/install_lock';
+        $file = Path::join($this->projectDir, 'var/install_lock');
 
         if (file_exists($file)) {
-            $count = file_get_contents($this->rootDir.'/var/install_lock');
+            $count = file_get_contents($file);
         }
 
         $fs = new Filesystem();
@@ -107,7 +109,7 @@ class InstallTool
         // Return if there is a working database connection already
         try {
             $this->connection->connect();
-            $this->connection->query('SHOW TABLES');
+            $this->connection->executeQuery('SHOW TABLES');
 
             return true;
         } catch (\Exception $e) {
@@ -128,7 +130,7 @@ class InstallTool
         $quotedName = $this->connection->quoteIdentifier($name);
 
         try {
-            $this->connection->query('use '.$quotedName);
+            $this->connection->executeStatement('USE '.$quotedName);
         } catch (DBALException $e) {
             $this->logException($e);
 
@@ -149,14 +151,7 @@ class InstallTool
             return true;
         }
 
-        $statement = $this->connection->query('
-            SELECT
-                COUNT(*) AS count
-            FROM
-                tl_page
-        ');
-
-        return $statement->fetch(\PDO::FETCH_OBJ)->count < 1;
+        return $this->connection->fetchOne('SELECT COUNT(*) FROM tl_page') < 1;
     }
 
     /**
@@ -173,7 +168,7 @@ class InstallTool
             ->getListTableColumnsSQL('tl_layout', $this->connection->getDatabase())
         ;
 
-        $columns = $this->connection->fetchAll($sql);
+        $columns = $this->connection->fetchAllAssociative($sql);
 
         foreach ($columns as $column) {
             if ('sections' === $column['Field']) {
@@ -189,12 +184,7 @@ class InstallTool
      */
     public function hasConfigurationError(array &$context): bool
     {
-        $row = $this->connection
-            ->query('SELECT @@version as Version')
-            ->fetch(\PDO::FETCH_OBJ)
-        ;
-
-        [$version] = explode('-', $row->Version);
+        [$version] = explode('-', $this->connection->fetchOne('SELECT @@version'));
 
         // The database version is too old
         if (version_compare($version, '5.1.0', '<')) {
@@ -208,10 +198,10 @@ class InstallTool
 
         // Check the collation if the user has configured it
         if (isset($options['collate'])) {
-            $statement = $this->connection->query("SHOW COLLATION LIKE '".$options['collate']."'");
+            $row = $this->connection->fetchAssociative("SHOW COLLATION LIKE '".$options['collate']."'");
 
             // The configured collation is not installed
-            if (false === ($row = $statement->fetch(\PDO::FETCH_OBJ))) {
+            if (false === $row) {
                 $context['errorCode'] = 2;
                 $context['collation'] = $options['collate'];
 
@@ -222,10 +212,10 @@ class InstallTool
         // Check the engine if the user has configured it
         if (isset($options['engine'])) {
             $engineFound = false;
-            $statement = $this->connection->query('SHOW ENGINES');
+            $rows = $this->connection->fetchAllAssociative('SHOW ENGINES');
 
-            while (false !== ($row = $statement->fetch(\PDO::FETCH_OBJ))) {
-                if ($options['engine'] === $row->Engine) {
+            foreach ($rows as $row) {
+                if ($options['engine'] === $row['Engine']) {
                     $engineFound = true;
                     break;
                 }
@@ -249,13 +239,10 @@ class InstallTool
                 return true;
             }
 
-            $row = $this->connection
-                ->query("SHOW VARIABLES LIKE 'innodb_large_prefix'")
-                ->fetch(\PDO::FETCH_OBJ)
-            ;
+            $row = $this->connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_large_prefix'");
 
             // The variable no longer exists as of MySQL 8 and MariaDB 10.3
-            if (false === $row || '' === $row->Value) {
+            if (false === $row || '' === $row['Value']) {
                 return false;
             }
 
@@ -270,31 +257,25 @@ class InstallTool
             }
 
             // The innodb_large_prefix option is disabled
-            if (!\in_array(strtolower((string) $row->Value), ['1', 'on'], true)) {
+            if (!\in_array(strtolower((string) $row['Value']), ['1', 'on'], true)) {
                 $context['errorCode'] = 5;
 
                 return true;
             }
 
-            $row = $this->connection
-                ->query("SHOW VARIABLES LIKE 'innodb_file_per_table'")
-                ->fetch(\PDO::FETCH_OBJ)
-            ;
+            $row = $this->connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_file_per_table'");
 
             // The innodb_file_per_table option is disabled
-            if (!\in_array(strtolower((string) $row->Value), ['1', 'on'], true)) {
+            if (!\in_array(strtolower((string) $row['Value']), ['1', 'on'], true)) {
                 $context['errorCode'] = 6;
 
                 return true;
             }
 
-            $row = $this->connection
-                ->query("SHOW VARIABLES LIKE 'innodb_file_format'")
-                ->fetch(\PDO::FETCH_OBJ)
-            ;
+            $row = $this->connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_file_format'");
 
             // The InnoDB file format is not Barracuda
-            if ('' !== $row->Value && 'barracuda' !== strtolower((string) $row->Value)) {
+            if ('' !== $row['Value'] && 'barracuda' !== strtolower((string) $row['Value'])) {
                 $context['errorCode'] = 6;
 
                 return true;
@@ -325,7 +306,7 @@ class InstallTool
         $finder = Finder::create()
             ->files()
             ->name('*.sql')
-            ->in($this->rootDir.'/templates')
+            ->in(Path::join($this->projectDir, 'templates'))
         ;
 
         $templates = [];
@@ -344,31 +325,22 @@ class InstallTool
 
             foreach ($tables as $table) {
                 if (0 === strncmp($table, 'tl_', 3)) {
-                    $this->connection->query('TRUNCATE TABLE '.$this->connection->quoteIdentifier($table));
+                    $this->connection->executeStatement('TRUNCATE TABLE '.$this->connection->quoteIdentifier($table));
                 }
             }
         }
 
-        $data = file($this->rootDir.'/templates/'.$template);
+        $data = file(Path::join($this->projectDir, 'templates', $template));
 
         foreach (preg_grep('/^INSERT /', $data) as $query) {
-            $this->connection->query($query);
+            $this->connection->executeStatement($query);
         }
     }
 
     public function hasAdminUser(): bool
     {
         try {
-            $statement = $this->connection->query("
-                SELECT
-                    COUNT(*) AS count
-                FROM
-                    tl_user
-                WHERE
-                    `admin` = '1'
-            ");
-
-            if ($statement->fetch(\PDO::FETCH_OBJ)->count > 0) {
+            if ($this->connection->fetchOne("SELECT COUNT(*) FROM tl_user WHERE `admin` = '1'") > 0) {
                 return true;
             }
         } catch (DBALException $e) {
@@ -451,6 +423,7 @@ class InstallTool
     {
         $messages = [];
 
+        /** @var MigrationResult $migrationResult */
         foreach ($this->migrations->run() as $migrationResult) {
             $messages[] = $migrationResult->getMessage();
         }

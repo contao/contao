@@ -241,7 +241,7 @@ class TemplateLoaderTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using hyphens in the template name "mod_article-custom.html5" has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.9: Using hyphens in the template name "mod_article-custom.html5" has been deprecated %s.
      */
     public function testSupportsHyphensInCustomTemplateNames(): void
     {

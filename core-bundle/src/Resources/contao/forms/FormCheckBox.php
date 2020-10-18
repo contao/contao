@@ -66,6 +66,8 @@ class FormCheckBox extends Widget
 			case 'rgxp':
 			case 'minlength':
 			case 'maxlength':
+			case 'minval':
+			case 'maxval':
 				// Ignore
 				break;
 
@@ -255,7 +257,7 @@ class FormCheckBox extends Widget
 			);
 		}
 
-		if ($this->strLabel != '')
+		if ($this->strLabel)
 		{
 			return sprintf(
 				'<fieldset id="ctrl_%s" class="checkbox_container%s"><legend>%s%s%s</legend>%s<input type="hidden" name="%s" value=""%s%s</fieldset>',

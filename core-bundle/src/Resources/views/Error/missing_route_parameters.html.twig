@@ -1,0 +1,31 @@
+{% trans_default_domain 'contao_exception' %}
+{% extends "@ContaoCore/Error/layout.html.twig" %}
+
+{% block title %}
+    {{ 'XPT.missingRouteParameters.title'|trans }}
+{% endblock %}
+{% block matter %}
+    <p>{{ 'XPT.missingRouteParameters.matter'|trans }}</p>
+{% endblock %}
+{% block explain %}
+    <p>{{ 'XPT.missingRouteParameters.explain'|trans }}</p>
+    <p>{{ 'XPT.missingRouteParameters.path'|trans }}: <code>{{ throwable.route.path }}</code></p>
+    <table>
+        <thead>
+        <tr>
+            <th>{{ 'XPT.missingRouteParameters.parameterName'|trans }}</th>
+            <th>{{ 'XPT.missingRouteParameters.parameterRequirement'|trans }}</th>
+            <th>{{ 'XPT.missingRouteParameters.parameterDefault'|trans }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for variable, requirement in throwable.route.requirements %}
+            <tr>
+                <td>{{ variable }}</td>
+                <td><code>{{ requirement }}</code></td>
+                <td>{% if throwable.route.defaults[variable] is empty %}<i>{{ 'XPT.missingRouteParameters.parameterEmpty'|trans }}</i>{% else %}{{ throwable.route.defaults[variable] }}{% endif %}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

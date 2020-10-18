@@ -110,24 +110,18 @@ class AuthenticationProvider extends DaoAuthenticationProvider
             return $token;
         }
 
-        // AnonymousToken and TwoFactorTokenInterface can be ignored. Guard
-        // might return null due to having multiple Guard authenticators.
-        if ($token instanceof AnonymousToken || $token instanceof TwoFactorTokenInterface || null === $token) {
+        // AnonymousToken and TwoFactorTokenInterface can be ignored.
+        if ($token instanceof AnonymousToken || $token instanceof TwoFactorTokenInterface) {
+            return $token;
+        }
+
+        // Skip two-factor authentication on trusted devices
+        if ($this->trustedDeviceManager->isTrustedDevice($token->getUser(), $this->providerKey)) {
             return $token;
         }
 
         $request = $this->requestStack->getMasterRequest();
         $context = $this->authenticationContextFactory->create($request, $token, $this->providerKey);
-        $firewallName = $context->getFirewallName();
-        $user = $context->getUser();
-
-        // Skip two-factor authentication on trusted devices
-        if ($this->trustedDeviceManager->isTrustedDevice($user, $firewallName)) {
-            // Renew the token
-            $this->trustedDeviceManager->addTrustedDevice($user, $firewallName);
-
-            return $context->getToken();
-        }
 
         return $this->twoFactorAuthenticationHandler->beginTwoFactorAuthentication($context);
     }
@@ -236,7 +230,7 @@ class AuthenticationProvider extends DaoAuthenticationProvider
             return false;
         }
 
-        @trigger_error('Using the "checkCredentials" hook has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+        trigger_deprecation('contao/core-bundle', '4.5', 'Using the "checkCredentials" hook has been deprecated and will no longer work in Contao 5.0.');
 
         /** @var System $system */
         $system = $this->framework->getAdapter(System::class);

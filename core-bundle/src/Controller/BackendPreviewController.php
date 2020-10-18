@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
+use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -19,8 +20,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -48,21 +47,15 @@ class BackendPreviewController
     private $dispatcher;
 
     /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
      * @var AuthorizationCheckerInterface
      */
     private $authorizationChecker;
 
-    public function __construct(string $previewScript, FrontendPreviewAuthenticator $previewAuthenticator, EventDispatcherInterface $dispatcher, RouterInterface $router, AuthorizationCheckerInterface $authorizationChecker)
+    public function __construct(string $previewScript, FrontendPreviewAuthenticator $previewAuthenticator, EventDispatcherInterface $dispatcher, AuthorizationCheckerInterface $authorizationChecker)
     {
         $this->previewScript = $previewScript;
         $this->previewAuthenticator = $previewAuthenticator;
         $this->dispatcher = $dispatcher;
-        $this->router = $router;
         $this->authorizationChecker = $authorizationChecker;
     }
 
@@ -71,7 +64,9 @@ class BackendPreviewController
      */
     public function __invoke(Request $request): Response
     {
-        if ($request->getScriptName() !== $this->previewScript) {
+        // Skip the redirect if there is no preview script, otherwise we will
+        // end up in an endless loop (see #1511)
+        if ($this->previewScript && $request->getScriptName() !== $this->previewScript) {
             return new RedirectResponse($this->previewScript.$request->getRequestUri());
         }
 
@@ -89,12 +84,12 @@ class BackendPreviewController
 
         $urlConvertEvent = new PreviewUrlConvertEvent($request);
 
-        $this->dispatcher->dispatch($urlConvertEvent);
+        $this->dispatcher->dispatch($urlConvertEvent, ContaoCoreEvents::PREVIEW_URL_CONVERT);
 
         if ($targetUrl = $urlConvertEvent->getUrl()) {
             return new RedirectResponse($targetUrl);
         }
 
-        return new RedirectResponse($this->router->generate('contao_root', [], UrlGeneratorInterface::ABSOLUTE_URL));
+        return new RedirectResponse($request->getBaseUrl().'/');
     }
 }

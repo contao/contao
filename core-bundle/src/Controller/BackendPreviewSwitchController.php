@@ -17,7 +17,6 @@ use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\Date;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\FetchMode;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -93,7 +92,7 @@ class BackendPreviewSwitchController
     }
 
     /**
-     * @Route("/contao/preview_switch", name="contao_backend_preview_switch")
+     * @Route("/contao/preview_switch", name="contao_backend_switch")
      */
     public function __invoke(Request $request): Response
     {
@@ -133,7 +132,7 @@ class BackendPreviewSwitchController
                 '@ContaoCore/Frontend/preview_toolbar_base.html.twig',
                 [
                     'request_token' => $this->tokenManager->getToken($this->csrfTokenName)->getValue(),
-                    'action' => $this->router->generate('contao_backend_preview_switch'),
+                    'action' => $this->router->generate('contao_backend_switch'),
                     'canSwitchUser' => $canSwitchUser,
                     'user' => $frontendUsername,
                     'show' => $showUnpublished,
@@ -177,13 +176,13 @@ class BackendPreviewSwitchController
                 $user->amg
             );
 
-            $andWhereGroups = "AND (groups LIKE '".implode("' OR GROUPS LIKE '", $groups)."')";
+            $andWhereGroups = "AND (`groups` LIKE '".implode("' OR `groups` LIKE '", $groups)."')";
         }
 
         $time = Date::floorToMinute();
 
         // Get the active front end users
-        $result = $this->connection->executeQuery(
+        return $this->connection->fetchFirstColumn(
             "
                 SELECT
                     username
@@ -194,13 +193,11 @@ class BackendPreviewSwitchController
                     AND login='1'
                     AND disable!='1'
                     AND (start='' OR start<='$time')
-                    AND (stop='' OR stop>'".($time + 60)."')
+                    AND (stop='' OR stop>'$time')
                 ORDER BY
                     username
             ",
             [str_replace('%', '', $request->request->get('value')).'%']
         );
-
-        return $result->fetchAll(FetchMode::COLUMN);
     }
 }

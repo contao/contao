@@ -41,7 +41,9 @@ class ModuleFaqList extends Module
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['faqlist'][0]) . ' ###';
@@ -147,12 +149,12 @@ class ModuleFaqList extends Module
 		// Get the URL from the jumpTo page of the category
 		if (!isset($this->arrTargets[$jumpTo]))
 		{
-			$this->arrTargets[$jumpTo] = ampersand(Environment::get('request'));
+			$this->arrTargets[$jumpTo] = StringUtil::ampersand(Environment::get('request'));
 
 			if ($jumpTo > 0 && ($objTarget = PageModel::findByPk($jumpTo)) !== null)
 			{
 				/** @var PageModel $objTarget */
-				$this->arrTargets[$jumpTo] = ampersand($objTarget->getFrontendUrl(Config::get('useAutoItem') ? '/%s' : '/items/%s'));
+				$this->arrTargets[$jumpTo] = StringUtil::ampersand($objTarget->getFrontendUrl(Config::get('useAutoItem') ? '/%s' : '/items/%s'));
 			}
 		}
 

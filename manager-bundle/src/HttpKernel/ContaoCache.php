@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\ManagerBundle\HttpKernel;
 
 use Contao\CoreBundle\EventListener\HttpCache\StripCookiesSubscriber;
+use Contao\CoreBundle\EventListener\HttpCache\StripQueryParametersSubscriber;
 use FOS\HttpCache\SymfonyCache\CacheInvalidation;
 use FOS\HttpCache\SymfonyCache\CleanupCacheTagsListener;
 use FOS\HttpCache\SymfonyCache\EventDispatchingHttpCache;
@@ -25,6 +26,7 @@ use Symfony\Component\Cache\Adapter\TagAwareAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Toflar\Psr6HttpCacheStore\Psr6Store;
+use Webmozart\PathUtil\Path;
 
 class ContaoCache extends HttpCache implements CacheInvalidation
 {
@@ -34,9 +36,14 @@ class ContaoCache extends HttpCache implements CacheInvalidation
     {
         parent::__construct($kernel, $cacheDir);
 
-        $whitelist = array_filter(explode(',', $_SERVER['COOKIE_WHITELIST'] ?? ''));
+        $stripCookies = new StripCookiesSubscriber($this->readEnvCsv('COOKIE_ALLOW_LIST', 'COOKIE_WHITELIST'));
+        $stripCookies->removeFromDenyList($this->readEnvCsv('COOKIE_REMOVE_FROM_DENY_LIST'));
 
-        $this->addSubscriber(new StripCookiesSubscriber($whitelist));
+        $stripQueryParams = new StripQueryParametersSubscriber($this->readEnvCsv('QUERY_PARAMS_ALLOW_LIST'));
+        $stripQueryParams->removeFromDenyList($this->readEnvCsv('QUERY_PARAMS_REMOVE_FROM_DENY_LIST'));
+
+        $this->addSubscriber($stripCookies);
+        $this->addSubscriber($stripQueryParams);
         $this->addSubscriber(new PurgeListener());
         $this->addSubscriber(new PurgeTagsListener());
         $this->addSubscriber(new CleanupCacheTagsListener());
@@ -59,7 +66,7 @@ class ContaoCache extends HttpCache implements CacheInvalidation
 
     protected function createStore(): Psr6Store
     {
-        $cacheDir = $this->cacheDir ?: $this->kernel->getCacheDir().'/http_cache';
+        $cacheDir = $this->cacheDir ?: Path::join($this->kernel->getCacheDir(), 'http_cache');
 
         return new Psr6Store([
             'cache_directory' => $cacheDir,
@@ -67,5 +74,16 @@ class ContaoCache extends HttpCache implements CacheInvalidation
             'cache_tags_header' => TagHeaderFormatter::DEFAULT_HEADER_NAME,
             'prune_threshold' => 5000,
         ]);
+    }
+
+    private function readEnvCsv(string $key, string $oldName = ''): array
+    {
+        if ('' !== $oldName && isset($_SERVER[$oldName])) {
+            trigger_deprecation('contao/manager-bundle', '4.10', sprintf('Using the "%s" environment variable has been deprecated. Use "%s" instead.', $oldName, $key));
+
+            $key = $oldName;
+        }
+
+        return array_filter(explode(',', $_SERVER[$key] ?? ''));
     }
 }

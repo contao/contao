@@ -54,8 +54,7 @@
         <target>Modullayout</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_template.1">
-        <source>Here you can select the newsletter template.</source>
-        <target>Vælg et modullayout. Du kan tilføje tilpassede layouts til folderen &lt;em&gt;templates&lt;/em&gt;. Filnavne for nyhedsbrevsskabelonfiler begynder med &lt;em&gt;nl_&lt;/em&gt; og skal have filendelse &lt;em&gt;.tpl&lt;/em&gt;.</target>
+        <source>Here you can select a newsletter template.</source>
       </trans-unit>
       <trans-unit id="tl_module.text_legend">
         <source>Custom text</source>

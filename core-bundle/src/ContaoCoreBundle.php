@@ -13,17 +13,19 @@ declare(strict_types=1);
 namespace Contao\CoreBundle;
 
 use Contao\CoreBundle\DependencyInjection\Compiler\AddAssetsPackagesPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\AddAvailableTransportsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddCronJobsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddSessionBagsPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\CrawlerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\DataContainerCallbackPass;
-use Contao\CoreBundle\DependencyInjection\Compiler\EscargotSubscriberPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\MakeServicesPublicPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\MapFragmentsToGlobalsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\PickerProviderPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterHookListenersPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\RegisterPagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RemembermeServicesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\SearchIndexerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\TaggedMigrationsPass;
@@ -40,6 +42,7 @@ use Contao\CoreBundle\Event\SlugValidCharactersEvent;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
+use Symfony\Cmf\Component\Routing\DependencyInjection\Compiler\RegisterRouteEnhancersPass;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\EventDispatcher\DependencyInjection\AddEventAliasesPass;
@@ -82,6 +85,7 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new AddResourcesPathsPass());
         $container->addCompilerPass(new TaggedMigrationsPass());
         $container->addCompilerPass(new PickerProviderPass());
+        $container->addCompilerPass(new RegisterPagesPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 1);
         $container->addCompilerPass(new RegisterFragmentsPass(FrontendModuleReference::TAG_NAME));
         $container->addCompilerPass(new RegisterFragmentsPass(ContentElementReference::TAG_NAME));
         $container->addCompilerPass(new FragmentRendererPass('contao.fragment.handler'));
@@ -90,8 +94,10 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new DataContainerCallbackPass());
         $container->addCompilerPass(new TranslationDataCollectorPass());
         $container->addCompilerPass(new RegisterHookListenersPass(), PassConfig::TYPE_OPTIMIZE);
-        $container->addCompilerPass(new SearchIndexerPass());
-        $container->addCompilerPass(new EscargotSubscriberPass());
+        $container->addCompilerPass(new SearchIndexerPass()); // Must be before the CrawlerPass
+        $container->addCompilerPass(new CrawlerPass());
         $container->addCompilerPass(new AddCronJobsPass());
+        $container->addCompilerPass(new AddAvailableTransportsPass());
+        $container->addCompilerPass(new RegisterRouteEnhancersPass('contao.routing.page_router', 'contao.page_router_enhancer'));
     }
 }

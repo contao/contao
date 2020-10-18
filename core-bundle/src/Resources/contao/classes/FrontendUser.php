@@ -156,7 +156,7 @@ class FrontendUser extends User
 	 */
 	public function authenticate()
 	{
-		@trigger_error('Using FrontendUser::authenticate() has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.5', 'Using "Contao\FrontendUser::authenticate()" has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.');
 
 		return System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
 	}
@@ -171,7 +171,7 @@ class FrontendUser extends User
 	 */
 	public function login()
 	{
-		@trigger_error('Using FrontendUser::login() has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.5', 'Using "Contao\FrontendUser::login()" has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.');
 
 		return System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
 	}
@@ -228,7 +228,7 @@ class FrontendUser extends User
 		// Make sure that groups is an array
 		if (!\is_array($this->groups))
 		{
-			$this->groups = ($this->groups != '') ? array($this->groups) : array();
+			$this->groups = $this->groups ? array($this->groups) : array();
 		}
 
 		// Skip inactive groups

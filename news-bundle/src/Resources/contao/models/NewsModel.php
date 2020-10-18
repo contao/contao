@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\File\ModelMetadataTrait;
 use Contao\Model\Collection;
 
 /**
@@ -24,6 +25,7 @@ use Contao\Model\Collection;
  * @property integer $date
  * @property integer $time
  * @property string  $pageTitle
+ * @property string  $robots
  * @property string  $description
  * @property string  $subheadline
  * @property string  $teaser
@@ -63,6 +65,7 @@ use Contao\Model\Collection;
  * @method static NewsModel|null findOneByTime($val, array $opt=array())
  * @method static NewsModel|null findOneByPageTitle($val, array $opt=array())
  * @method static NewsModel|null findOneByDescription($val, array $opt=array())
+ * @method static NewsModel|null findOneByRobots($val, array $opt=array())
  * @method static NewsModel|null findOneBySubheadline($val, array $opt=array())
  * @method static NewsModel|null findOneByTeaser($val, array $opt=array())
  * @method static NewsModel|null findOneByAddImage($val, array $opt=array())
@@ -97,6 +100,7 @@ use Contao\Model\Collection;
  * @method static Collection|NewsModel[]|NewsModel|null findByTime($val, array $opt=array())
  * @method static Collection|NewsModel[]|NewsModel|null findByPageTitle($val, array $opt=array())
  * @method static Collection|NewsModel[]|NewsModel|null findByDescription($val, array $opt=array())
+ * @method static Collection|NewsModel[]|NewsModel|null findByRobots($val, array $opt=array())
  * @method static Collection|NewsModel[]|NewsModel|null findBySubheadline($val, array $opt=array())
  * @method static Collection|NewsModel[]|NewsModel|null findByTeaser($val, array $opt=array())
  * @method static Collection|NewsModel[]|NewsModel|null findByAddImage($val, array $opt=array())
@@ -135,6 +139,7 @@ use Contao\Model\Collection;
  * @method static integer countByTime($val, array $opt=array())
  * @method static integer countByPageTitle($val, array $opt=array())
  * @method static integer countByDescription($val, array $opt=array())
+ * @method static integer countByRobots($val, array $opt=array())
  * @method static integer countBySubheadline($val, array $opt=array())
  * @method static integer countByTeaser($val, array $opt=array())
  * @method static integer countByAddImage($val, array $opt=array())
@@ -164,6 +169,8 @@ use Contao\Model\Collection;
  */
 class NewsModel extends Model
 {
+	use ModelMetadataTrait;
+
 	/**
 	 * Table name
 	 * @var string
@@ -193,7 +200,7 @@ class NewsModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
+			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		return static::findOneBy($arrColumns, $varId, $arrOptions);
@@ -233,7 +240,7 @@ class NewsModel extends Model
 		if (!BE_USER_LOGGED_IN || TL_MODE == 'BE')
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
+			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -278,7 +285,7 @@ class NewsModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
+			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		return static::countBy($arrColumns, null, $arrOptions);
@@ -300,7 +307,7 @@ class NewsModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
+			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -328,7 +335,7 @@ class NewsModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
+			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -369,7 +376,7 @@ class NewsModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
+			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -406,7 +413,7 @@ class NewsModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
+			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		return static::countBy($arrColumns, array($intFrom, $intTo), $arrOptions);

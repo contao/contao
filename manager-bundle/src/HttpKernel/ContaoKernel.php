@@ -22,6 +22,7 @@ use Contao\ManagerPlugin\Bundle\Parser\IniParser;
 use Contao\ManagerPlugin\Bundle\Parser\JsonParser;
 use Contao\ManagerPlugin\Config\ConfigPluginInterface;
 use Contao\ManagerPlugin\Config\ContainerBuilder as PluginContainerBuilder;
+use Contao\ManagerPlugin\HttpKernel\HttpCacheSubscriberPluginInterface;
 use Contao\ManagerPlugin\PluginLoader;
 use FOS\HttpCache\SymfonyCache\HttpCacheProvider;
 use ProxyManager\Configuration;
@@ -33,6 +34,7 @@ use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Kernel;
+use Webmozart\PathUtil\Path;
 
 class ContaoKernel extends Kernel implements HttpCacheProvider
 {
@@ -90,7 +92,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     public function getRootDir(): string
     {
         if (null === $this->rootDir) {
-            $this->rootDir = $this->getProjectDir().'/app';
+            $this->rootDir = Path::join($this->getProjectDir(), 'app');
         }
 
         return $this->rootDir;
@@ -98,12 +100,12 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
     public function getCacheDir(): string
     {
-        return $this->getProjectDir().'/var/cache/'.$this->getEnvironment();
+        return Path::join($this->getProjectDir(), 'var/cache', $this->getEnvironment());
     }
 
     public function getLogDir(): string
     {
-        return $this->getProjectDir().'/var/logs';
+        return Path::join($this->getProjectDir(), 'var/logs');
     }
 
     public function getPluginLoader(): PluginLoader
@@ -134,7 +136,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         if (null === $this->bundleLoader) {
             $parser = new DelegatingParser();
             $parser->addParser(new JsonParser());
-            $parser->addParser(new IniParser($this->getProjectDir().'/system/modules'));
+            $parser->addParser(new IniParser(Path::join($this->getProjectDir(), 'system/modules')));
 
             $this->bundleLoader = new BundleLoader($this->getPluginLoader(), new ConfigResolverFactory(), $parser);
         }
@@ -201,7 +203,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
             $loader->load($servicesFile);
         }
 
-        if (is_dir($this->getProjectDir().'/src')) {
+        if (is_dir(Path::join($this->getProjectDir(), 'src'))) {
             $loader->load(__DIR__.'/../Resources/skeleton/config/services.php');
         }
     }
@@ -212,7 +214,18 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
             return $this->httpCache;
         }
 
-        return $this->httpCache = new ContaoCache($this, $this->getProjectDir().'/var/cache/prod/http_cache');
+        $this->httpCache = new ContaoCache($this, Path::join($this->getProjectDir(), 'var/cache/prod/http_cache'));
+
+        /** @var array<HttpCacheSubscriberPluginInterface> $plugins */
+        $plugins = $this->getPluginLoader()->getInstancesOf(HttpCacheSubscriberPluginInterface::class);
+
+        foreach ($plugins as $plugin) {
+            foreach ($plugin->getHttpCacheSubscribers() as $subscriber) {
+                $this->httpCache->addSubscriber($subscriber);
+            }
+        }
+
+        return $this->httpCache;
     }
 
     /**
@@ -316,20 +329,22 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
     private function getConfigFile(string $file): ?string
     {
-        $rootDir = $this->getProjectDir();
+        $projectDir = $this->getProjectDir();
 
         foreach (['.yaml', '.yml'] as $ext) {
-            if (file_exists($rootDir.'/config/'.$file.$ext)) {
-                return $rootDir.'/config/'.$file.$ext;
+            if (file_exists($path = Path::join($projectDir, 'config', $file.$ext))) {
+                return $path;
             }
         }
 
         // Fallback to the legacy config file (see #566)
         foreach (['.yaml', '.yml'] as $ext) {
-            if (file_exists($rootDir.'/app/config/'.$file.$ext)) {
-                @trigger_error(sprintf('Storing the "%s" file in the "app/config" folder has been deprecated and will no longer work in Contao 5.0. Move it to the "config" folder instead.', $file.$ext), E_USER_DEPRECATED);
+            $path = Path::join($projectDir, 'app/config', $file.$ext);
 
-                return $rootDir.'/app/config/'.$file.$ext;
+            if (file_exists($path)) {
+                trigger_deprecation('contao/manager-bundle', '4.9', sprintf('Storing the "%s" file in the "app/config" folder has been deprecated and will no longer work in Contao 5.0. Move it to the "config" folder instead.', $file.$ext));
+
+                return $path;
             }
         }
 
@@ -340,7 +355,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     {
         $configs = $this->getBundleLoader()->getBundleConfigs(
             'dev' === $this->getEnvironment(),
-            $this->debug ? null : $this->getCacheDir().'/bundles.map'
+            $this->debug ? null : Path::join($this->getCacheDir(), 'bundles.map')
         );
 
         foreach ($configs as $config) {
@@ -358,14 +373,14 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     private static function create(string $projectDir, string $env = null): self
     {
         if (null === $env) {
-            $env = (string) ($_SERVER['APP_ENV'] ?? 'prod');
+            $env = $_SERVER['APP_ENV'] ?? 'prod';
         }
 
         if ('dev' !== $env && 'prod' !== $env) {
             throw new \RuntimeException('The Contao Managed Edition only supports the "dev" and "prod" environments');
         }
 
-        Plugin::autoloadModules($projectDir.'/system/modules');
+        Plugin::autoloadModules(Path::join($projectDir, 'system/modules'));
         static::setProjectDir($projectDir);
 
         if ('dev' === $env) {
@@ -377,19 +392,14 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
     private static function loadEnv(string $projectDir, string $defaultEnv = 'prod'): void
     {
-        // Do not load .env files if they are already loaded or actual env variables are used
-        if (isset($_SERVER['APP_ENV'])) {
-            return;
-        }
-
         // Load cached env vars if the .env.local.php file exists
         // See https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/4.2/config/bootstrap.php
-        if (\is_array($env = @include $projectDir.'/.env.local.php')) {
+        if (\is_array($env = @include Path::join($projectDir, '.env.local.php'))) {
             foreach ($env as $k => $v) {
                 $_ENV[$k] = $_ENV[$k] ?? (isset($_SERVER[$k]) && 0 !== strpos($k, 'HTTP_') ? $_SERVER[$k] : $v);
             }
-        } elseif (file_exists($projectDir.'/.env')) {
-            (new Dotenv(false))->loadEnv($projectDir.'/.env', 'APP_ENV', $defaultEnv);
+        } elseif (file_exists($filePath = Path::join($projectDir, '.env'))) {
+            (new Dotenv(false))->loadEnv($filePath, 'APP_ENV', $defaultEnv);
         }
 
         $_SERVER += $_ENV;

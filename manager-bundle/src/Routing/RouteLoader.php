@@ -14,11 +14,13 @@ namespace Contao\ManagerBundle\Routing;
 
 use Contao\ManagerPlugin\PluginLoader;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
+use Symfony\Bundle\FrameworkBundle\Routing\RouteLoaderInterface;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\RouteCollection;
+use Webmozart\PathUtil\Path;
 
-class RouteLoader
+class RouteLoader implements RouteLoaderInterface
 {
     /**
      * @var LoaderInterface
@@ -38,17 +40,17 @@ class RouteLoader
     /**
      * @var string
      */
-    private $rootDir;
+    private $projectDir;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao_manager.routing_loader" service instead
      */
-    public function __construct(LoaderInterface $loader, PluginLoader $pluginLoader, KernelInterface $kernel, string $rootDir)
+    public function __construct(LoaderInterface $loader, PluginLoader $pluginLoader, KernelInterface $kernel, string $projectDir)
     {
         $this->loader = $loader;
         $this->pluginLoader = $pluginLoader;
         $this->kernel = $kernel;
-        $this->rootDir = $rootDir;
+        $this->projectDir = $projectDir;
     }
 
     /**
@@ -92,21 +94,25 @@ class RouteLoader
     private function getConfigFile(): ?string
     {
         foreach (['routes.yaml', 'routes.yml', 'routing.yaml', 'routing.yml'] as $file) {
-            if (file_exists($this->rootDir.'/config/'.$file)) {
-                if (0 === strncmp($file, 'routing.', 8)) {
-                    @trigger_error(sprintf('Using a "%s" file has been deprecated and will no longer work in Contao 5.0. Rename it to "routes.yaml" instead.', $file), E_USER_DEPRECATED);
+            $path = Path::join($this->projectDir, 'config', $file);
+
+            if (file_exists($path)) {
+                if ('routing' === Path::getFilenameWithoutExtension($file)) {
+                    trigger_deprecation('contao/manager-bundle', '4.9', sprintf('Using a "%s" file has been deprecated and will no longer work in Contao 5.0. Rename it to "routes.yaml" instead.', $file));
                 }
 
-                return $this->rootDir.'/config/'.$file;
+                return $path;
             }
         }
 
         // Fallback to the legacy config file (see #566)
         foreach (['routes.yaml', 'routes.yml', 'routing.yaml', 'routing.yml'] as $file) {
-            if (file_exists($this->rootDir.'/app/config/'.$file)) {
-                @trigger_error(sprintf('Storing the "%s" file in the "app/config" folder has been deprecated and will no longer work in Contao 5.0. Move it to the "config" folder instead.', $file), E_USER_DEPRECATED);
+            $path = Path::join($this->projectDir, 'app/config', $file);
 
-                return $this->rootDir.'/app/config/'.$file;
+            if (file_exists($path)) {
+                trigger_deprecation('contao/manager-bundle', '4.9', sprintf('Storing the "%s" file in the "app/config" folder has been deprecated and will no longer work in Contao 5.0. Move it to the "config" folder instead.', $file));
+
+                return $path;
             }
         }
 

@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<psalm
+    errorLevel="7"
+    resolveFromConfigFile="true"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="https://getpsalm.org/schema/config"
+    xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+>
+    <projectFiles>
+        <directory name="core-bundle/src"/>
+        <directory name="core-bundle/tests"/>
+        <ignoreFiles>
+            <directory name="core-bundle/src/Resources"/>
+            <directory name="core-bundle/tests/Fixtures"/>
+        </ignoreFiles>
+    </projectFiles>
+    <plugins>
+        <pluginClass class="Psalm\PhpUnitPlugin\Plugin"/>
+        <pluginClass class="Psalm\SymfonyPsalmPlugin\Plugin"/>
+        <pluginClass class="Weirdan\DoctrinePsalmPlugin\Plugin"/>
+    </plugins>
+    <issueHandlers>
+        <!-- TODO: Remove this again once https://github.com/symfony/symfony/pull/37869 has been fixed -->
+        <ParamNameMismatch>
+            <errorLevel type="suppress">
+                <file name="core-bundle/src/DependencyInjection/Security/ContaoLoginFactory.php"/>
+            </errorLevel>
+        </ParamNameMismatch>
+    </issueHandlers>
+</psalm>

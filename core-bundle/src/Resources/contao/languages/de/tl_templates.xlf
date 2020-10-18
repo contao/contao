@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_templates.original.0">
         <source>Original template</source>
-        <target>Originaltemplate</target>
+        <target>Original-Template</target>
       </trans-unit>
       <trans-unit id="tl_templates.original.1">
         <source>Here you can select the template that you want to customize.</source>

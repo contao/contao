@@ -49,9 +49,9 @@ abstract class Backend extends Controller
 	public static function getTheme()
 	{
 		$theme = Config::get('backendTheme');
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
-		if ($theme != '' && $theme != 'flexible' && is_dir($rootDir . '/system/themes/' . $theme))
+		if ($theme && $theme != 'flexible' && is_dir($projectDir . '/system/themes/' . $theme))
 		{
 			return $theme;
 		}
@@ -67,12 +67,12 @@ abstract class Backend extends Controller
 	public static function getThemes()
 	{
 		$arrReturn = array();
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
-		$arrThemes = scan($rootDir . '/system/themes');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+		$arrThemes = Folder::scan($projectDir . '/system/themes');
 
 		foreach ($arrThemes as $strTheme)
 		{
-			if (strncmp($strTheme, '.', 1) === 0 || !is_dir($rootDir . '/system/themes/' . $strTheme))
+			if (strncmp($strTheme, '.', 1) === 0 || !is_dir($projectDir . '/system/themes/' . $strTheme))
 			{
 				continue;
 			}
@@ -92,16 +92,16 @@ abstract class Backend extends Controller
 	{
 		$lang = $GLOBALS['TL_LANGUAGE'];
 
-		if ($lang == '')
+		if (!$lang)
 		{
 			return 'en';
 		}
 
 		$lang = str_replace('-', '_', $lang);
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// The translation exists
-		if (file_exists($rootDir . '/assets/tinymce4/js/langs/' . $lang . '.js'))
+		if (file_exists($projectDir . '/assets/tinymce4/js/langs/' . $lang . '.js'))
 		{
 			return $lang;
 		}
@@ -109,7 +109,7 @@ abstract class Backend extends Controller
 		if (($short = substr($GLOBALS['TL_LANGUAGE'], 0, 2)) != $lang)
 		{
 			// Try the short tag, e.g. "de" instead of "de_CH"
-			if (file_exists($rootDir . '/assets/tinymce4/js/langs/' . $short . '.js'))
+			if (file_exists($projectDir . '/assets/tinymce4/js/langs/' . $short . '.js'))
 			{
 				return $short;
 			}
@@ -117,7 +117,7 @@ abstract class Backend extends Controller
 		elseif (($long = $short . '_' . strtoupper($short)) != $lang)
 		{
 			// Try the long tag, e.g. "fr_FR" instead of "fr" (see #6952)
-			if (file_exists($rootDir . '/assets/tinymce4/js/langs/' . $long . '.js'))
+			if (file_exists($projectDir . '/assets/tinymce4/js/langs/' . $long . '.js'))
 			{
 				return $long;
 			}
@@ -194,19 +194,19 @@ abstract class Backend extends Controller
 	public static function getTinyTemplates()
 	{
 		$strDir = Config::get('uploadPath') . '/tiny_templates';
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
-		if (!is_dir($rootDir . '/' . $strDir))
+		if (!is_dir($projectDir . '/' . $strDir))
 		{
 			return '';
 		}
 
 		$arrFiles = array();
-		$arrTemplates = scan($rootDir . '/' . $strDir);
+		$arrTemplates = Folder::scan($projectDir . '/' . $strDir);
 
 		foreach ($arrTemplates as $strFile)
 		{
-			if (strncmp('.', $strFile, 1) !== 0 && is_file($rootDir . '/' . $strDir . '/' . $strFile))
+			if (strncmp('.', $strFile, 1) !== 0 && is_file($projectDir . '/' . $strDir . '/' . $strFile))
 			{
 				$arrFiles[] = '{ title: "' . $strFile . '", url: "' . $strDir . '/' . $strFile . '" }';
 			}
@@ -229,7 +229,7 @@ abstract class Backend extends Controller
 		// Unset the "no back button" flag
 		$arrUnset[] = 'nb';
 
-		return parent::addToUrl($strRequest . (($strRequest != '') ? '&amp;' : '') . 'rt=' . REQUEST_TOKEN, $blnAddRef, $arrUnset);
+		return parent::addToUrl($strRequest . ($strRequest ? '&amp;' : '') . 'rt=' . REQUEST_TOKEN, $blnAddRef, $arrUnset);
 	}
 
 	/**
@@ -370,7 +370,7 @@ abstract class Backend extends Controller
 		$dc = null;
 
 		// Create the data container object
-		if ($strTable != '')
+		if ($strTable)
 		{
 			if (!\in_array($strTable, $arrTables))
 			{
@@ -399,7 +399,7 @@ abstract class Backend extends Controller
 			}
 
 			// Fabricate a new data container object
-			if ($GLOBALS['TL_DCA'][$strTable]['config']['dataContainer'] == '')
+			if (!$GLOBALS['TL_DCA'][$strTable]['config']['dataContainer'])
 			{
 				$this->log('Missing data container for table "' . $strTable . '"', __METHOD__, TL_ERROR);
 				trigger_error('Could not create a data container object', E_USER_ERROR);
@@ -459,11 +459,11 @@ abstract class Backend extends Controller
 										 ->limit(1)
 										 ->execute(Input::get('id'));
 
-				if ($objRow->title != '')
+				if ($objRow->title)
 				{
 					$this->Template->headline .= ' › <span>' . $objRow->title . '</span>';
 				}
-				elseif ($objRow->name != '')
+				elseif ($objRow->name)
 				{
 					$this->Template->headline .= ' › <span>' . $objRow->name . '</span>';
 				}
@@ -478,7 +478,7 @@ abstract class Backend extends Controller
 		{
 			$act = Input::get('act');
 
-			if ($act == '' || $act == 'paste' || $act == 'select')
+			if (!$act || $act == 'paste' || $act == 'select')
 			{
 				$act = ($dc instanceof \listable) ? 'showAll' : 'edit';
 			}
@@ -536,15 +536,15 @@ abstract class Backend extends Controller
 						}
 
 						// Add object title or name
-						if ($objRow->title != '')
+						if ($objRow->title)
 						{
 							$trail[] = ' › <span>' . $objRow->title . '</span>';
 						}
-						elseif ($objRow->name != '')
+						elseif ($objRow->name)
 						{
 							$trail[] = ' › <span>' . $objRow->name . '</span>';
 						}
-						elseif ($objRow->headline != '')
+						elseif ($objRow->headline)
 						{
 							$trail[] = ' › <span>' . $objRow->headline . '</span>';
 						}
@@ -658,7 +658,10 @@ abstract class Backend extends Controller
 	 */
 	public static function findSearchablePages($pid=0, $domain='', $blnIsXmlSitemap=false)
 	{
-		$objPages = PageModel::findPublishedByPid($pid, array('ignoreFePreview'=>true));
+		// Since the publication status of a page is not inherited by its child
+		// pages, we have to use findByPid() instead of findPublishedByPid() and
+		// filter out unpublished pages in the foreach loop (see #2217)
+		$objPages = PageModel::findByPid($pid, array('order'=>'sorting'));
 
 		if ($objPages === null)
 		{
@@ -670,8 +673,10 @@ abstract class Backend extends Controller
 		// Recursively walk through all subpages
 		foreach ($objPages as $objPage)
 		{
+			$isPublished = ($objPage->published && (!$objPage->start || $objPage->start <= time()) && (!$objPage->stop || $objPage->stop > time()));
+
 			// Searchable and not protected
-			if ($objPage->type == 'regular' && !$objPage->requireItem && (!$objPage->noSearch || $blnIsXmlSitemap) && (!$blnIsXmlSitemap || $objPage->robots != 'noindex,nofollow') && (!$objPage->protected || Config::get('indexProtected')))
+			if ($isPublished && $objPage->type == 'regular' && !$objPage->requireItem && (!$objPage->noSearch || $blnIsXmlSitemap) && (!$blnIsXmlSitemap || $objPage->robots != 'noindex,nofollow') && (!$objPage->protected || Config::get('indexProtected')))
 			{
 				$arrPages[] = $objPage->getAbsoluteUrl();
 
@@ -706,7 +711,7 @@ abstract class Backend extends Controller
 	 */
 	public static function addFileMetaInformationToRequest($strUuid, $strPtable, $intPid)
 	{
-		@trigger_error('Using Backend::addFileMetaInformationToRequest() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.4', 'Using "Contao\Backend::addFileMetaInformationToRequest()" has been deprecated and will no longer work in Contao 5.0.');
 
 		$objFile = FilesModel::findByUuid($strUuid);
 
@@ -762,17 +767,17 @@ abstract class Backend extends Controller
 
 		if (isset($arrMeta[$strLanguage]))
 		{
-			if (!empty($arrMeta[$strLanguage]['title']) && Input::post('title') == '')
+			if (!empty($arrMeta[$strLanguage]['title']) && !Input::post('title'))
 			{
 				Input::setPost('title', $arrMeta[$strLanguage]['title']);
 			}
 
-			if (!empty($arrMeta[$strLanguage]['alt']) && Input::post('alt') == '')
+			if (!empty($arrMeta[$strLanguage]['alt']) && !Input::post('alt'))
 			{
 				Input::setPost('alt', $arrMeta[$strLanguage]['alt']);
 			}
 
-			if (!empty($arrMeta[$strLanguage]['caption']) && Input::post('caption') == '')
+			if (!empty($arrMeta[$strLanguage]['caption']) && !Input::post('caption'))
 			{
 				Input::setPost('caption', $arrMeta[$strLanguage]['caption']);
 			}
@@ -932,7 +937,7 @@ abstract class Backend extends Controller
 		$label = '<a href="' . self::addToUrl('pn=' . $row['id']) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $label . '</a>';
 
 		// Return the image
-		return '<a href="contao/main.php?do=feRedirect&amp;page=' . $row['id'] . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($image, '', $imageAttribute) . '</a> ' . $label;
+		return '<a href="contao/preview.php?page=' . $row['id'] . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($image, '', $imageAttribute) . '</a> ' . $label;
 	}
 
 	/**
@@ -953,7 +958,7 @@ abstract class Backend extends Controller
 			{
 				$strBuffer = System::importStatic($callback[0])->{$callback[1]}();
 
-				if ($strBuffer != '')
+				if ($strBuffer)
 				{
 					$arrMessages[] = $strBuffer;
 				}
@@ -996,7 +1001,7 @@ abstract class Backend extends Controller
 
 		$strNode = $objSession->get($strKey);
 
-		if ($strNode == '')
+		if (!$strNode)
 		{
 			return;
 		}
@@ -1007,10 +1012,10 @@ abstract class Backend extends Controller
 			throw new \RuntimeException('Insecure path ' . $strNode);
 		}
 
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Currently selected folder does not exist
-		if (!is_dir($rootDir . '/' . $strNode))
+		if (!is_dir($projectDir . '/' . $strNode))
 		{
 			$objSession->set($strKey, '');
 
@@ -1118,7 +1123,7 @@ abstract class Backend extends Controller
 			return '';
 		}
 
-		return ' <a href="' . ampersand($factory->getUrl($context, $extras)) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pagepicker']) . '" id="pp_' . $inputName . '">' . Image::getHtml((\is_array($extras) && isset($extras['icon']) ? $extras['icon'] : 'pickpage.svg'), $GLOBALS['TL_LANG']['MSC']['pagepicker']) . '</a>
+		return ' <a href="' . StringUtil::ampersand($factory->getUrl($context, $extras)) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pagepicker']) . '" id="pp_' . $inputName . '">' . Image::getHtml((\is_array($extras) && isset($extras['icon']) ? $extras['icon'] : 'pickpage.svg'), $GLOBALS['TL_LANG']['MSC']['pagepicker']) . '</a>
   <script>
     $("pp_' . $inputName . '").addEvent("click", function(e) {
       e.preventDefault();
@@ -1144,7 +1149,7 @@ abstract class Backend extends Controller
 	{
 		$host = Environment::get('host');
 
-		if (strncmp($host, 'xn--', 4) === 0)
+		if (strpos($host, 'xn--') !== 'false')
 		{
 			$host = Idna::decode($host);
 		}
@@ -1289,7 +1294,7 @@ abstract class Backend extends Controller
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		if ($strFilter === true)
 		{
-			@trigger_error('Passing "true" to Backend::createFileList() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+			trigger_deprecation('contao/core-bundle', '4.0', 'Passing "true" to "Contao\Backend::createFileList()" has been deprecated and will no longer work in Contao 5.0.');
 
 			$strFilter = 'gif,jpg,jpeg,png';
 		}
@@ -1339,13 +1344,13 @@ abstract class Backend extends Controller
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		if ($strFilter === true)
 		{
-			@trigger_error('Passing "true" to Backend::doCreateFileList() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+			trigger_deprecation('contao/core-bundle', '4.0', 'Passing "true" to "Contao\Backend::doCreateFileList()" has been deprecated and will no longer work in Contao 5.0.');
 
 			$strFilter = 'gif,jpg,jpeg,png';
 		}
 
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
-		$arrPages = scan($rootDir . '/' . $strFolder);
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+		$arrPages = Folder::scan($projectDir . '/' . $strFolder);
 
 		// Empty folder
 		if (empty($arrPages))
@@ -1372,7 +1377,7 @@ abstract class Backend extends Controller
 			}
 
 			// Folders
-			if (is_dir($rootDir . '/' . $strFolder . '/' . $strFile))
+			if (is_dir($projectDir . '/' . $strFolder . '/' . $strFile))
 			{
 				$strFolders .=  $this->doCreateFileList($strFolder . '/' . $strFile, $level, $strFilter);
 			}
@@ -1381,7 +1386,7 @@ abstract class Backend extends Controller
 			else
 			{
 				// Filter images
-				if ($strFilter != '' && !preg_match('/\.(' . str_replace(',', '|', $strFilter) . ')$/i', $strFile))
+				if ($strFilter && !preg_match('/\.(' . str_replace(',', '|', $strFilter) . ')$/i', $strFile))
 				{
 					continue;
 				}

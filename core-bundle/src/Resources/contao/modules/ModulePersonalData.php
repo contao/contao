@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\ResponseException;
 use Patchwork\Utf8;
 
 /**
@@ -34,7 +35,9 @@ class ModulePersonalData extends Module
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['personalData'][0]) . ' ###';
@@ -54,7 +57,7 @@ class ModulePersonalData extends Module
 			return '';
 		}
 
-		if ($this->memberTpl != '')
+		if ($this->memberTpl)
 		{
 			$this->strTemplate = $this->memberTpl;
 		}
@@ -201,7 +204,7 @@ class ModulePersonalData extends Module
 			// Increase the row count if it is a password field
 			if ($objWidget instanceof FormPassword)
 			{
-				if ($objMember->password != '')
+				if ($objMember->password)
 				{
 					$objWidget->mandatory = false;
 				}
@@ -232,7 +235,7 @@ class ModulePersonalData extends Module
 				}
 
 				// Make sure that unique fields are unique (check the eval setting first -> #3063)
-				if ($varValue != '' && $arrData['eval']['unique'] && !$this->Database->isUniqueValue('tl_member', $field, $varValue, $this->User->id))
+				if ((string) $varValue !== '' && $arrData['eval']['unique'] && !$this->Database->isUniqueValue('tl_member', $field, $varValue, $this->User->id))
 				{
 					$objWidget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $field));
 				}
@@ -253,6 +256,10 @@ class ModulePersonalData extends Module
 							{
 								$varValue = $callback($varValue, $this->User, $this);
 							}
+						}
+						catch (ResponseException $e)
+						{
+							throw $e;
 						}
 						catch (\Exception $e)
 						{

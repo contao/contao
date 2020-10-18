@@ -176,12 +176,6 @@
       <trans-unit id="tl_layout.internal_first">
         <source>Load internal style sheets first</source>
       </trans-unit>
-      <trans-unit id="tl_layout.webfonts.0">
-        <source>Google web fonts</source>
-      </trans-unit>
-      <trans-unit id="tl_layout.webfonts.1">
-        <source>Here you can add Google web fonts to your website. Specify the font families without the base URL (e.g. &lt;em&gt;Ubuntu|Ubuntu+Mono&lt;/em&gt;).</source>
-      </trans-unit>
       <trans-unit id="tl_layout.lightboxSize.0">
         <source>Lightbox image size</source>
       </trans-unit>
@@ -332,9 +326,6 @@
       <trans-unit id="tl_layout.sections_legend">
         <source>Custom sections</source>
       </trans-unit>
-      <trans-unit id="tl_layout.webfonts_legend">
-        <source>Web fonts</source>
-      </trans-unit>
       <trans-unit id="tl_layout.image_legend">
         <source>Image sizes</source>
       </trans-unit>
@@ -389,8 +380,8 @@
       <trans-unit id="tl_layout.analytics_google">
         <source>Google Analytics</source>
       </trans-unit>
-      <trans-unit id="tl_layout.analytics_piwik">
-        <source>Piwik</source>
+      <trans-unit id="tl_layout.analytics_matomo">
+        <source>Matomo</source>
       </trans-unit>
       <trans-unit id="tl_layout.new.0">
         <source>New</source>

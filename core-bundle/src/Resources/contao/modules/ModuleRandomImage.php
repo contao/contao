@@ -149,7 +149,7 @@ class ModuleRandomImage extends Module
 		{
 			$arrImage['caption'] = null;
 		}
-		elseif ($arrImage['caption'] == '')
+		elseif (!$arrImage['caption'])
 		{
 			$arrImage['caption'] = $arrImage['title'];
 		}

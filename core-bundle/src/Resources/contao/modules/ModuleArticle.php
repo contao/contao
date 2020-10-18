@@ -55,7 +55,7 @@ class ModuleArticle extends Module
 	 */
 	public function generate($blnNoMarkup=false)
 	{
-		if (TL_MODE == 'FE' && !BE_USER_LOGGED_IN && (!$this->published || ($this->start != '' && $this->start > time()) || ($this->stop != '' && $this->stop < time())))
+		if ($this->isHidden())
 		{
 			return '';
 		}
@@ -72,6 +72,35 @@ class ModuleArticle extends Module
 		}
 
 		return parent::generate();
+	}
+
+	protected function isHidden()
+	{
+		$isUnpublished = !$this->published || ($this->start && $this->start > time()) || ($this->stop && $this->stop <= time());
+
+		// The article is published, so show it
+		if (!$isUnpublished)
+		{
+			return false;
+		}
+
+		$tokenChecker = System::getContainer()->get('contao.security.token_checker');
+
+		// Preview mode is enabled, so show the article
+		if ($tokenChecker->hasBackendUser() && $tokenChecker->isPreviewMode())
+		{
+			return false;
+		}
+
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		// We are in the back end, so show the article
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
+		{
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -109,7 +138,7 @@ class ModuleArticle extends Module
 			// Override the CSS ID and class
 			if (\is_array($arrCss) && \count($arrCss) == 2)
 			{
-				if ($arrCss[0] == '')
+				if (!$arrCss[0])
 				{
 					$arrCss[0] = $id;
 				}
@@ -139,11 +168,11 @@ class ModuleArticle extends Module
 		}
 
 		// Overwrite the page title (see #2853 and #4955)
-		if (!$this->blnNoMarkup && $strArticle != '' && ($strArticle == $this->id || $strArticle == $this->alias) && $this->title != '')
+		if (!$this->blnNoMarkup && $strArticle && ($strArticle == $this->id || $strArticle == $this->alias) && $this->title)
 		{
 			$objPage->pageTitle = strip_tags(StringUtil::stripInsertTags($this->title));
 
-			if ($this->teaser != '')
+			if ($this->teaser)
 			{
 				$objPage->description = $this->prepareMetaDescription($this->teaser);
 			}
@@ -153,7 +182,7 @@ class ModuleArticle extends Module
 		$this->Template->backlink = false;
 
 		// Back link
-		if (!$this->multiMode && $strArticle != '' && ($strArticle == $this->id || $strArticle == $this->alias))
+		if (!$this->multiMode && $strArticle && ($strArticle == $this->id || $strArticle == $this->alias))
 		{
 			$this->Template->backlink = 'javascript:history.go(-1)'; // see #6955
 			$this->Template->back = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goBack']);
@@ -164,55 +193,31 @@ class ModuleArticle extends Module
 
 		if ($objCte !== null)
 		{
-			$intCount = 0;
-			$intLast = $objCte->count() - 1;
-
 			while ($objCte->next())
 			{
-				$arrCss = array();
-
-				/** @var ContentModel $objRow */
-				$objRow = $objCte->current();
-
-				// Add the "first" and "last" classes (see #2583)
-				if ($intCount == 0 || $intCount == $intLast)
-				{
-					if ($intCount == 0)
-					{
-						$arrCss[] = 'first';
-					}
-
-					if ($intCount == $intLast)
-					{
-						$arrCss[] = 'last';
-					}
-				}
-
-				$objRow->classes = $arrCss;
-				$arrElements[] = $this->getContentElement($objRow, $this->strColumn);
-				++$intCount;
+				$arrElements[] = $this->getContentElement($objCte->current(), $this->strColumn);
 			}
 		}
 
 		$this->Template->teaser = $this->teaser;
 		$this->Template->elements = $arrElements;
 
-		if ($this->keywords != '')
+		if ($this->keywords)
 		{
-			$GLOBALS['TL_KEYWORDS'] .= (($GLOBALS['TL_KEYWORDS'] != '') ? ', ' : '') . $this->keywords;
+			$GLOBALS['TL_KEYWORDS'] .= ($GLOBALS['TL_KEYWORDS'] ? ', ' : '') . $this->keywords;
 		}
 
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		if ($this->printable == 1)
 		{
-			@trigger_error('Setting tl_article.printable to "1" has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+			trigger_deprecation('contao/core-bundle', '4.0', 'Setting tl_article.printable to "1" has been deprecated and will no longer work in Contao 5.0.');
 
 			$this->Template->printable = !empty($GLOBALS['TL_HOOKS']['printArticleAsPdf']);
 			$this->Template->pdfButton = $this->Template->printable;
 		}
 
 		// New structure
-		elseif ($this->printable != '')
+		elseif ($this->printable)
 		{
 			$options = StringUtil::deserialize($this->printable);
 

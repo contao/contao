@@ -376,7 +376,7 @@ class PreviewToolbarListenerTest extends TestCase
     /**
      * @return RouterInterface&MockObject
      */
-    private function mockRouterWithContext(array $expectedParameters = [], string $expectedRoute = 'contao_backend_preview_switch', int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH): RouterInterface
+    private function mockRouterWithContext(array $expectedParameters = [], string $expectedRoute = 'contao_backend_switch', int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH): RouterInterface
     {
         $router = $this->createMock(RouterInterface::class);
         $router

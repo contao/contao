@@ -19,7 +19,6 @@ use Contao\Image\DeferredImageInterface;
 use Contao\Image\DeferredImageStorageInterface;
 use Contao\Image\DeferredResizerInterface;
 use Contao\Image\ImageInterface;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ClockMock;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
@@ -47,11 +46,11 @@ class ResizeImagesCommandTest extends TestCase
 
         $command = $this->getCommand(null, null, $storage);
         $tester = new CommandTester($command);
-        $code = $tester->execute([]);
+        $code = $tester->execute([], ['capture_stderr_separately' => true]);
         $display = $tester->getDisplay();
 
         $this->assertSame(0, $code);
-        $this->assertRegExp('/All images resized/', $display);
+        $this->assertRegExp('/Resized 0 images/', $display);
     }
 
     public function testResizesImages(): void
@@ -79,13 +78,13 @@ class ResizeImagesCommandTest extends TestCase
 
         $command = $this->getCommand($factory, $resizer, $storage);
         $tester = new CommandTester($command);
-        $code = $tester->execute([]);
+        $code = $tester->execute(['--no-sub-process' => true], ['capture_stderr_separately' => true]);
         $display = $tester->getDisplay();
 
         $this->assertSame(0, $code);
-        $this->assertRegExp('/image1.jpg.+done/', $display);
-        $this->assertRegExp('/image2.jpg.+done/', $display);
-        $this->assertRegExp('/All images resized/', $display);
+        $this->assertRegExp('/image1.jpg/', $display);
+        $this->assertRegExp('/image2.jpg/', $display);
+        $this->assertRegExp('/Resized 2 images/', $display);
     }
 
     public function testTimeLimit(): void
@@ -121,23 +120,18 @@ class ResizeImagesCommandTest extends TestCase
 
         $command = $this->getCommand($factory, $resizer, $storage);
         $tester = new CommandTester($command);
-        $code = $tester->execute(['--time-limit' => 0.5]);
+        $code = $tester->execute(['--no-sub-process' => true, '--time-limit' => 0.5], ['capture_stderr_separately' => true]);
         $display = $tester->getDisplay();
 
         ClockMock::withClockMock(false);
 
         $this->assertSame(0, $code);
-        $this->assertRegExp('/image1.jpg.+done/', $display);
+        $this->assertRegExp('/image1.jpg/', $display);
         $this->assertRegExp('/Time limit of 0.5 seconds reached/', $display);
-        $this->assertNotRegExp('/image2.jpg.+done/', $display);
-        $this->assertNotRegExp('/All images resized/', $display);
+        $this->assertRegExp('/Resized 1 images/', $display);
+        $this->assertNotRegExp('/image2.jpg/', $display);
     }
 
-    /**
-     * @param ImageFactoryInterface&MockObject         $factory
-     * @param DeferredResizerInterface&MockObject      $resizer
-     * @param DeferredImageStorageInterface&MockObject $storage
-     */
     private function getCommand(ImageFactoryInterface $factory = null, DeferredResizerInterface $resizer = null, DeferredImageStorageInterface $storage = null): ResizeImagesCommand
     {
         return new ResizeImagesCommand(

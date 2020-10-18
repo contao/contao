@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Http\FirewallMapInterface;
 
 class TokenChecker
@@ -54,6 +55,11 @@ class TokenChecker
     private $trustResolver;
 
     /**
+     * @var VoterInterface
+     */
+    private $roleVoter;
+
+    /**
      * @var string
      */
     private $previewScript;
@@ -61,13 +67,14 @@ class TokenChecker
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.token_checker" service instead
      */
-    public function __construct(RequestStack $requestStack, FirewallMapInterface $firewallMap, TokenStorageInterface $tokenStorage, SessionInterface $session, AuthenticationTrustResolverInterface $trustResolver, string $previewScript = '')
+    public function __construct(RequestStack $requestStack, FirewallMapInterface $firewallMap, TokenStorageInterface $tokenStorage, SessionInterface $session, AuthenticationTrustResolverInterface $trustResolver, VoterInterface $roleVoter, string $previewScript = '')
     {
         $this->requestStack = $requestStack;
         $this->firewallMap = $firewallMap;
         $this->tokenStorage = $tokenStorage;
         $this->session = $session;
         $this->trustResolver = $trustResolver;
+        $this->roleVoter = $roleVoter;
         $this->previewScript = $previewScript;
     }
 
@@ -78,7 +85,7 @@ class TokenChecker
     {
         $token = $this->getToken(self::FRONTEND_FIREWALL);
 
-        return null !== $token && $token->getUser() instanceof FrontendUser;
+        return null !== $token && VoterInterface::ACCESS_GRANTED === $this->roleVoter->vote($token, null, ['ROLE_MEMBER']);
     }
 
     /**
@@ -88,7 +95,7 @@ class TokenChecker
     {
         $token = $this->getToken(self::BACKEND_FIREWALL);
 
-        return null !== $token && $token->getUser() instanceof BackendUser;
+        return null !== $token && VoterInterface::ACCESS_GRANTED === $this->roleVoter->vote($token, null, ['ROLE_USER']);
     }
 
     /**

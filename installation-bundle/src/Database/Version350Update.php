@@ -51,14 +51,14 @@ class Version350Update extends AbstractMigration
 
     public function run(): MigrationResult
     {
-        $this->connection->query('
+        $this->connection->executeStatement('
             ALTER TABLE
                 tl_member
             CHANGE
                 username username varchar(64) COLLATE utf8_bin NULL
         ');
 
-        $this->connection->query("
+        $this->connection->executeStatement("
             UPDATE
                 tl_member
             SET
@@ -67,7 +67,7 @@ class Version350Update extends AbstractMigration
                 username = ''
         ");
 
-        $this->connection->query('
+        $this->connection->executeStatement('
             ALTER TABLE
                 tl_member
             DROP INDEX

@@ -1021,7 +1021,7 @@ abstract class Model
 	 */
 	protected static function find(array $arrOptions)
 	{
-		if (static::$strTable == '')
+		if (!static::$strTable)
 		{
 			return null;
 		}
@@ -1137,7 +1137,7 @@ abstract class Model
 	 */
 	public static function countBy($strColumn=null, $varValue=null, array $arrOptions=array())
 	{
-		if (static::$strTable == '')
+		if (!static::$strTable)
 		{
 			return 0;
 		}
@@ -1189,6 +1189,8 @@ abstract class Model
 			return static::$arrClassNames[$strTable];
 		}
 
+		trigger_deprecation('contao/core-bundle', '4.10', sprintf('Not registering table "%s" in $GLOBALS[\'TL_MODELS\'] has been deprecated and will no longer work in Contao 5.0.', $strTable));
+
 		$arrChunks = explode('_', $strTable);
 
 		if ($arrChunks[0] == 'tl')
@@ -1234,7 +1236,10 @@ abstract class Model
 	 */
 	protected static function createModelFromDbResult(Result $objResult)
 	{
-		return new static($objResult);
+		/** @var static $strClass */
+		$strClass = static::getClassFromTable(static::$strTable);
+
+		return new $strClass($objResult);
 	}
 
 	/**

@@ -35,11 +35,11 @@
       </trans-unit>
       <trans-unit id="tl_content.inline.0">
         <source>Show in browser</source>
-        <target>Mostra nel browser</target>
+        <target>Visualizza nel browser</target>
       </trans-unit>
       <trans-unit id="tl_content.inline.1">
         <source>Show the file in the browser instead of opening the download dialog.</source>
-        <target>Mostra il file nel browser invece di aprire la finestra di dialogo di download.</target>
+        <target>Visualizza il file all'interno del browser invece di aprire la finestra di dialogo del download.</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.0">
         <source>Overwrite meta data</source>
@@ -390,16 +390,16 @@
         <target>Template galley</target>
       </trans-unit>
       <trans-unit id="tl_content.galleryTpl.1">
-        <source>Here you can select the gallery template.</source>
-        <target>Selezionare il template della gallery</target>
+        <source>Here you can select a gallery template.</source>
+        <target>Qui puoi selezionare un template per la galleria.</target>
       </trans-unit>
       <trans-unit id="tl_content.customTpl.0">
-        <source>Custom element template</source>
-        <target>Template personalizzato dell'elemento</target>
+        <source>Content element template</source>
+        <target>Modello di elemento di contenuto</target>
       </trans-unit>
       <trans-unit id="tl_content.customTpl.1">
-        <source>Here you can overwrite the default element template.</source>
-        <target>E' possibile sovrascrivere il tamplate di default dell'elemento</target>
+        <source>Here you can select the content element template.</source>
+        <target>Qui puoi selezionare il template dell'elemento di contenuto.</target>
       </trans-unit>
       <trans-unit id="tl_content.playerSRC.0">
         <source>Video/audio files</source>
@@ -623,6 +623,7 @@
       </trans-unit>
       <trans-unit id="tl_content.start.1">
         <source>If you want to prevent the element from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Se si desidera impedire che l'elemento venga visualizzato sul sito Web prima di una determinata data / ora, è possibile inserirlo qui. Altrimenti lascia il campo vuoto.</target>
       </trans-unit>
       <trans-unit id="tl_content.stop.0">
         <source>Show until</source>
@@ -630,6 +631,7 @@
       </trans-unit>
       <trans-unit id="tl_content.stop.1">
         <source>If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Se si desidera impedire che l'elemento venga visualizzato sul sito Web dopo una determinata data / ora, è possibile inserirlo qui. Altrimenti lascia il campo vuoto.</target>
       </trans-unit>
       <trans-unit id="tl_content.type_legend">
         <source>Element type</source>
@@ -881,6 +883,7 @@
       </trans-unit>
       <trans-unit id="tl_content.toggle">
         <source>Hide/unhide content element ID %s</source>
+        <target>Nascondi/mostra elemento di contenuto ID %s</target>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.0">
         <source>Paste at the top</source>
@@ -892,9 +895,11 @@
       </trans-unit>
       <trans-unit id="tl_content.pastenew.0">
         <source>Create a new content element at the top</source>
+        <target>Crea un nuovo elemento di contenuto in cima</target>
       </trans-unit>
       <trans-unit id="tl_content.pastenew.1">
         <source>Create a new content element after content element ID %s</source>
+        <target>Crea un nuovo elemento di contenuto dopo l'elemento ID %s</target>
       </trans-unit>
       <trans-unit id="tl_content.editalias">
         <source>Edit the source element ID %s</source>

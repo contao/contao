@@ -62,14 +62,14 @@ class Version447Update extends AbstractMigration
 
         // Back up the existing subscriptions
         if (!$schemaManager->tablesExist(['tl_newsletter_recipients_backup'])) {
-            $this->connection->query('
+            $this->connection->executeStatement('
                 CREATE TABLE
                     tl_newsletter_recipients_backup
                 LIKE
                     tl_newsletter_recipients
             ');
 
-            $this->connection->query('
+            $this->connection->executeStatement('
                 INSERT
                     tl_newsletter_recipients_backup
                 SELECT
@@ -80,7 +80,7 @@ class Version447Update extends AbstractMigration
         }
 
         // Find multiple subscriptions for the same channel with the same e-mail address
-        $duplicates = $this->connection->query('
+        $duplicates = $this->connection->fetchAllAssociative('
             SELECT
                 pid, email
             FROM
@@ -95,7 +95,7 @@ class Version447Update extends AbstractMigration
 
         $messages = [];
 
-        while (false !== ($duplicate = $duplicates->fetch(\PDO::FETCH_OBJ))) {
+        foreach ($duplicates as $duplicate) {
             $count = 0;
 
             // Find the oldest, active subscription preferring real subscriptions over imported ones
@@ -110,9 +110,9 @@ class Version447Update extends AbstractMigration
                     active = '1' DESC, addedOn != '' DESC, id
             ");
 
-            $subscriptions->execute(['pid' => $duplicate->pid, ':email' => $duplicate->email]);
+            $subscriptions->execute(['pid' => $duplicate['pid'], ':email' => $duplicate['email']]);
 
-            while (false !== ($subscription = $subscriptions->fetch(\PDO::FETCH_OBJ))) {
+            while (false !== ($subscription = $subscriptions->fetchAssociative())) {
                 if (0 === $count++) {
                     continue; // keep the first subscription
                 }
@@ -124,13 +124,13 @@ class Version447Update extends AbstractMigration
                         id = :id
                 ');
 
-                $delete->execute(['id' => $subscription->id]);
+                $delete->execute(['id' => $subscription['id']]);
             }
 
-            $messages[] = $duplicate->email;
+            $messages[] = $duplicate['email'];
         }
 
-        $this->connection->query('CREATE UNIQUE INDEX pid_email ON tl_newsletter_recipients (pid, email)');
+        $this->connection->executeStatement('CREATE UNIQUE INDEX pid_email ON tl_newsletter_recipients (pid, email)');
 
         if ($messages) {
             return $this->createResult(

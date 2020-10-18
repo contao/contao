@@ -23,9 +23,11 @@ use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeOptions;
 use Contao\Image\ResizerInterface;
 use Contao\ImageSizeModel;
+use Contao\StringUtil;
 use Imagine\Image\ImagineInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Webmozart\PathUtil\Path;
 
 class ImageFactory implements ImageFactoryInterface
 {
@@ -109,6 +111,9 @@ class ImageFactory implements ImageFactoryInterface
         $this->predefinedSizes = $predefinedSizes;
     }
 
+    /**
+     * @param int|array|string|ResizeConfiguration|null $size
+     */
     public function create($path, $size = null, $options = null): ImageInterface
     {
         if (null !== $options && !\is_string($options) && !$options instanceof ResizeOptions) {
@@ -119,7 +124,7 @@ class ImageFactory implements ImageFactoryInterface
             $image = $path;
         } else {
             $path = (string) $path;
-            $fileExtension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+            $fileExtension = Path::getExtension($path, true);
 
             if (\in_array($fileExtension, ['svg', 'svgz'], true)) {
                 $imagine = $this->imagineSvg;
@@ -131,7 +136,7 @@ class ImageFactory implements ImageFactoryInterface
                 throw new \InvalidArgumentException(sprintf('Image type "%s" was not allowed to be processed', $fileExtension));
             }
 
-            if (!$this->filesystem->isAbsolutePath($path)) {
+            if (!Path::isAbsolute($path)) {
                 throw new \InvalidArgumentException(sprintf('Image path "%s" must be absolute', $path));
             }
 
@@ -147,6 +152,9 @@ class ImageFactory implements ImageFactoryInterface
         }
 
         $targetPath = $options instanceof ResizeOptions ? $options->getTargetPath() : $options;
+
+        // Support arrays in a serialized form
+        $size = StringUtil::deserialize($size);
 
         if ($size instanceof ResizeConfiguration) {
             /** @var ResizeConfiguration $resizeConfig */
@@ -302,7 +310,7 @@ class ImageFactory implements ImageFactoryInterface
      */
     private function createImportantPart(ImageInterface $image): ?ImportantPart
     {
-        if (0 !== strncmp($image->getPath(), $this->uploadDir.'/', \strlen($this->uploadDir) + 1)) {
+        if (!Path::isBasePath($this->uploadDir, $image->getPath())) {
             return null;
         }
 
@@ -326,7 +334,7 @@ class ImageFactory implements ImageFactoryInterface
             (float) $file->importantPartX + (float) $file->importantPartWidth >= 2
             || (float) $file->importantPartY + (float) $file->importantPartHeight >= 2
         ) {
-            @trigger_error(sprintf('Defining the important part in absolute pixels has been deprecated and will no longer work in Contao 5.0. Run the database migration to migrate to the new format.'), E_USER_DEPRECATED);
+            trigger_deprecation('contao/core-bundle', '4.8', 'Defining the important part in absolute pixels has been deprecated and will no longer work in Contao 5.0. Run the database migration to migrate to the new format.');
 
             if ($this->logger) {
                 $this->logger->warning(

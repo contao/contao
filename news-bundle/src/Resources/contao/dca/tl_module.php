@@ -8,6 +8,12 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\Backend;
+use Contao\BackendUser;
+use Contao\Controller;
+use Contao\DataContainer;
+use Contao\System;
+
 // Add a palette selector
 $GLOBALS['TL_DCA']['tl_module']['palettes']['__selector__'][] = 'news_format';
 
@@ -74,7 +80,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_template'] = array
 	'inputType'               => 'select',
 	'options_callback' => static function ()
 	{
-		return Contao\Controller::getTemplateGroup('news_');
+		return Controller::getTemplateGroup('news_');
 	},
 	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
 	'sql'                     => "varchar(64) NOT NULL default ''"
@@ -117,7 +123,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_showQuantity'] = array
 	'sql'                     => "char(1) NOT NULL default ''"
 );
 
-$bundles = Contao\System::getContainer()->getParameter('kernel.bundles');
+$bundles = System::getContainer()->getParameter('kernel.bundles');
 
 // Add the comments template drop-down menu
 if (isset($bundles['ContaoCommentsBundle']))
@@ -130,7 +136,7 @@ if (isset($bundles['ContaoCommentsBundle']))
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_module_news extends Contao\Backend
+class tl_module_news extends Backend
 {
 	/**
 	 * Import the back end user object
@@ -138,7 +144,7 @@ class tl_module_news extends Contao\Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('Contao\BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 	}
 
 	/**
@@ -188,11 +194,11 @@ class tl_module_news extends Contao\Backend
 	/**
 	 * Return the sorting options
 	 *
-	 * @param Contao\DataContainer $dc
+	 * @param DataContainer $dc
 	 *
 	 * @return array
 	 */
-	public function getSortingOptions(Contao\DataContainer $dc)
+	public function getSortingOptions(DataContainer $dc)
 	{
 		if ($dc->activeRecord && $dc->activeRecord->type == 'newsmenu')
 		{

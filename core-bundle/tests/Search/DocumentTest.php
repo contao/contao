@@ -50,7 +50,7 @@ class DocumentTest extends TestCase
         $this->assertSame('https://example.com', (string) $document->getUri());
         $this->assertSame(200, $document->getStatusCode());
         $this->assertSame(['content-type' => ['text/html']], $document->getHeaders());
-        $this->assertSame($expectedJsonLds, $document->extractJsonLdScripts());
+        $this->assertSame($expectedJsonLds, $document->extractJsonLdScripts('https://contao.org/'));
     }
 
     public function documentProvider(): \Generator
@@ -61,38 +61,54 @@ class DocumentTest extends TestCase
         ];
 
         yield 'Test with one valid json ld element' => [
-            '<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"PageMetaData","foobar":true}</script></body></html>',
+            '<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","foobar":true}</script></body></html>',
             [
                 [
-                    '@context' => 'https://contao.org/',
-                    '@type' => 'PageMetaData',
+                    '@type' => 'Page',
+                    'foobar' => true,
+                ],
+            ],
+        ];
+
+        yield 'Test with one valid json ld element without context' => [
+            '<html><body><script type="application/ld+json">{"@type":"https:\/\/contao.org\/Page","https:\/\/contao.org\/foobar":true}</script></body></html>',
+            [
+                [
+                    '@type' => 'Page',
+                    'foobar' => true,
+                ],
+            ],
+        ];
+
+        yield 'Test with one valid json ld element with context prefix' => [
+            '<html><body><script type="application/ld+json">{"@context":{"contao":"https:\/\/contao.org\/"},"@type":"contao:Page","contao:foobar":true}</script></body></html>',
+            [
+                [
+                    '@type' => 'Page',
                     'foobar' => true,
                 ],
             ],
         ];
 
         yield 'Test with two valid json ld elements' => [
-            '<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"PageMetaData","foobar":true}</script><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"PageMetaData","foobar":false}</script></body></html>',
+            '<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","foobar":true}</script><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","foobar":false}</script></body></html>',
             [
                 [
-                    '@context' => 'https://contao.org/',
-                    '@type' => 'PageMetaData',
+                    '@type' => 'Page',
                     'foobar' => true,
                 ],
                 [
-                    '@context' => 'https://contao.org/',
-                    '@type' => 'PageMetaData',
+                    '@type' => 'Page',
                     'foobar' => false,
                 ],
             ],
         ];
 
         yield 'Test with one valid and one invalid json ld element' => [
-            '<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"PageMetaData","foobar":true}</script><script type="application/ld+json">{"@context":"https:\/\/contao.org\/", ...</script></body></html>',
+            '<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","foobar":true}</script><script type="application/ld+json">{"@context":"https:\/\/contao.org\/", ...</script></body></html>',
             [
                 [
-                    '@context' => 'https://contao.org/',
-                    '@type' => 'PageMetaData',
+                    '@type' => 'Page',
                     'foobar' => true,
                 ],
             ],
@@ -105,7 +121,7 @@ class DocumentTest extends TestCase
             new Uri('https://example.com'),
             200,
             ['Content-Type' => ['text/html']],
-            '<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"PageMetaData","foobar":true}</script></body></html>'
+            '<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","foobar":true}</script></body></html>'
         );
 
         $this->assertSame([], $document->extractJsonLdScripts('https://example.com/'));

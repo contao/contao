@@ -13,6 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Config;
+use Contao\CoreBundle\Framework\Adapter;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Environment;
 use Contao\Frontend;
 use Contao\Model\Collection;
@@ -34,18 +36,22 @@ class RoutingTest extends ContaoTestCase
         parent::setUp();
 
         Config::set('urlSuffix', '.html');
-        Config::set('folderUrl', false);
         Config::set('addLanguageToUrl', false);
         Config::set('useAutoItem', false);
 
         Environment::reset();
+
+        $container = new ContainerBuilder();
+        $container->setParameter('contao.legacy_routing', true);
+
+        System::setContainer($container);
 
         $_GET = [];
         $GLOBALS['TL_AUTO_ITEM'] = ['items'];
     }
 
     /**
-     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.
      */
     public function testReturnsThePageIdFromTheUrl(): void
     {
@@ -65,33 +71,27 @@ class RoutingTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $container = new ContainerBuilder();
-        $container->set('request_stack', $requestStack);
-
-        System::setContainer($container);
+        System::getContainer()->set('request_stack', $requestStack);
 
         $this->assertSame('home', Frontend::getPageIdFromUrl());
         $this->assertEmpty($_GET);
     }
 
     /**
-     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.
      */
     public function testReturnsNullIfTheRequestIsEmpty(): void
     {
         $_SERVER['REQUEST_URI'] = '/';
 
-        $container = new ContainerBuilder();
-        $container->set('request_stack', new RequestStack());
-
-        System::setContainer($container);
+        System::getContainer()->set('request_stack', new RequestStack());
 
         $this->assertNull(Frontend::getPageIdFromUrl());
         $this->assertEmpty($_GET);
     }
 
     /**
-     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.
      */
     public function testReturnsFalseIfTheRequestContainsAutoItem(): void
     {
@@ -111,17 +111,14 @@ class RoutingTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $container = new ContainerBuilder();
-        $container->set('request_stack', $requestStack);
-
-        System::setContainer($container);
+        System::getContainer()->set('request_stack', $requestStack);
 
         $this->assertFalse(Frontend::getPageIdFromUrl());
         $this->assertEmpty($_GET);
     }
 
     /**
-     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.
      */
     public function testReturnsFalseIfTheUrlSuffixDoesNotMatch(): void
     {
@@ -141,17 +138,14 @@ class RoutingTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $container = new ContainerBuilder();
-        $container->set('request_stack', $requestStack);
-
-        System::setContainer($container);
+        System::getContainer()->set('request_stack', $requestStack);
 
         $this->assertFalse(Frontend::getPageIdFromUrl());
         $this->assertEmpty($_GET);
     }
 
     /**
-     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.
      */
     public function testReturnsFalseUponDuplicateParameters(): void
     {
@@ -171,17 +165,15 @@ class RoutingTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $container = new ContainerBuilder();
-        $container->set('request_stack', $requestStack);
-
-        System::setContainer($container);
+        System::getContainer()->set('request_stack', $requestStack);
+        System::getContainer()->set('contao.framework', $this->mockFrameworkWithPageAdapter());
 
         $this->assertFalse(Frontend::getPageIdFromUrl());
         $this->assertSame(['foo' => 'bar1'], $_GET);
     }
 
     /**
-     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.
      */
     public function testReturnsFalseIfTheRequestContainsAnAutoItemKeyword(): void
     {
@@ -201,10 +193,8 @@ class RoutingTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $container = new ContainerBuilder();
-        $container->set('request_stack', $requestStack);
-
-        System::setContainer($container);
+        System::getContainer()->set('request_stack', $requestStack);
+        System::getContainer()->set('contao.framework', $this->mockFrameworkWithPageAdapter());
         Config::set('useAutoItem', true);
 
         $this->assertFalse(Frontend::getPageIdFromUrl());
@@ -212,7 +202,7 @@ class RoutingTest extends ContaoTestCase
     }
 
     /**
-     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.
      */
     public function testReturnsFalseIfAFragmentKeyIsEmpty(): void
     {
@@ -232,17 +222,15 @@ class RoutingTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $container = new ContainerBuilder();
-        $container->set('request_stack', $requestStack);
-
-        System::setContainer($container);
+        System::getContainer()->set('request_stack', $requestStack);
+        System::getContainer()->set('contao.framework', $this->mockFrameworkWithPageAdapter());
 
         $this->assertFalse(Frontend::getPageIdFromUrl());
         $this->assertEmpty($_GET);
     }
 
     /**
-     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.
      */
     public function testDecodesTheRequestString(): void
     {
@@ -262,10 +250,7 @@ class RoutingTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $container = new ContainerBuilder();
-        $container->set('request_stack', $requestStack);
-
-        System::setContainer($container);
+        System::getContainer()->set('request_stack', $requestStack);
 
         $this->assertSame('höme', Frontend::getPageIdFromUrl());
         $this->assertEmpty($_GET);
@@ -277,7 +262,7 @@ class RoutingTest extends ContaoTestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      *
-     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.
      */
     public function testAddsTheAutoItemFragment(): void
     {
@@ -299,10 +284,8 @@ class RoutingTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $container = new ContainerBuilder();
-        $container->set('request_stack', $requestStack);
-
-        System::setContainer($container);
+        System::getContainer()->set('request_stack', $requestStack);
+        System::getContainer()->set('contao.framework', $this->mockFrameworkWithPageAdapter());
         Config::set('useAutoItem', true);
 
         $this->assertSame('home', Frontend::getPageIdFromUrl());
@@ -310,7 +293,7 @@ class RoutingTest extends ContaoTestCase
     }
 
     /**
-     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.
      */
     public function testReturnsNullIfOnlyTheLanguageIsGiven(): void
     {
@@ -330,10 +313,7 @@ class RoutingTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $container = new ContainerBuilder();
-        $container->set('request_stack', $requestStack);
-
-        System::setContainer($container);
+        System::getContainer()->set('request_stack', $requestStack);
         Config::set('addLanguageToUrl', true);
 
         $this->assertNull(Frontend::getPageIdFromUrl());
@@ -341,7 +321,7 @@ class RoutingTest extends ContaoTestCase
     }
 
     /**
-     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.
      */
     public function testReturnsFalseIfTheLanguageIsNotProvided(): void
     {
@@ -361,10 +341,7 @@ class RoutingTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $container = new ContainerBuilder();
-        $container->set('request_stack', $requestStack);
-
-        System::setContainer($container);
+        System::getContainer()->set('request_stack', $requestStack);
         Config::set('addLanguageToUrl', true);
 
         $this->assertFalse(Frontend::getPageIdFromUrl());
@@ -372,7 +349,7 @@ class RoutingTest extends ContaoTestCase
     }
 
     /**
-     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.
      */
     public function testReturnsFalseIfTheAliasIsEmpty(): void
     {
@@ -392,10 +369,8 @@ class RoutingTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $container = new ContainerBuilder();
-        $container->set('request_stack', $requestStack);
-
-        System::setContainer($container);
+        System::getContainer()->set('request_stack', $requestStack);
+        System::getContainer()->set('contao.framework', $this->mockFrameworkWithPageAdapter());
         Config::set('addLanguageToUrl', true);
         Config::set('useAutoItem', true);
 
@@ -404,7 +379,7 @@ class RoutingTest extends ContaoTestCase
     }
 
     /**
-     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.
      */
     public function testReturnsFalseIfThereAreNoFragments(): void
     {
@@ -430,17 +405,15 @@ class RoutingTest extends ContaoTestCase
             ->willReturn(null)
         ;
 
-        $container = new ContainerBuilder();
-        $container->set('request_stack', $requestStack);
-
-        System::setContainer($container);
+        System::getContainer()->set('request_stack', $requestStack);
+        System::getContainer()->set('contao.framework', $this->mockFrameworkWithPageAdapter($pageModel));
 
         $this->assertFalse(Frontend::getPageIdFromUrl());
         $this->assertEmpty($_GET);
     }
 
     /**
-     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.
      */
     public function testHandlesFolderUrlsWithoutLanguage(): void
     {
@@ -488,19 +461,15 @@ class RoutingTest extends ContaoTestCase
 
         $framework = $this->mockContaoFramework([PageModel::class => $pageModel]);
 
-        $container = new ContainerBuilder();
-        $container->set('request_stack', $requestStack);
-        $container->set('contao.framework', $framework);
-
-        System::setContainer($container);
-        Config::set('folderUrl', true);
+        System::getContainer()->set('request_stack', $requestStack);
+        System::getContainer()->set('contao.framework', $framework);
 
         $this->assertSame('foo/bar/home', Frontend::getPageIdFromUrl());
         $this->assertEmpty($_GET);
     }
 
     /**
-     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.
      */
     public function testHandlesFolderUrlsWithLanguage(): void
     {
@@ -557,12 +526,8 @@ class RoutingTest extends ContaoTestCase
 
         $framework = $this->mockContaoFramework([PageModel::class => $pageModel]);
 
-        $container = new ContainerBuilder();
-        $container->set('request_stack', $requestStack);
-        $container->set('contao.framework', $framework);
-
-        System::setContainer($container);
-        Config::set('folderUrl', true);
+        System::getContainer()->set('request_stack', $requestStack);
+        System::getContainer()->set('contao.framework', $framework);
         Config::set('addLanguageToUrl', true);
 
         $this->assertSame('foo/bar/home', Frontend::getPageIdFromUrl());
@@ -570,7 +535,7 @@ class RoutingTest extends ContaoTestCase
     }
 
     /**
-     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.
      */
     public function testReturnsFalseIfThereAreNoAliases(): void
     {
@@ -618,14 +583,27 @@ class RoutingTest extends ContaoTestCase
 
         $framework = $this->mockContaoFramework([PageModel::class => $pageModel]);
 
-        $container = new ContainerBuilder();
-        $container->set('request_stack', $requestStack);
-        $container->set('contao.framework', $framework);
-
-        System::setContainer($container);
-        Config::set('folderUrl', true);
+        System::getContainer()->set('request_stack', $requestStack);
+        System::getContainer()->set('contao.framework', $framework);
 
         $this->assertFalse(Frontend::getPageIdFromUrl());
         $this->assertEmpty($_GET);
+    }
+
+    /**
+     * @return ContaoFramework&MockObject
+     */
+    private function mockFrameworkWithPageAdapter(Adapter $pageAdapter = null): ContaoFramework
+    {
+        if (null === $pageAdapter) {
+            $pageAdapter = $this->mockAdapter(['findByAliases']);
+            $pageAdapter
+                ->expects($this->once())
+                ->method('findByAliases')
+                ->willReturn(null)
+            ;
+        }
+
+        return $this->mockContaoFramework([PageModel::class => $pageAdapter]);
     }
 }

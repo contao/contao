@@ -32,7 +32,9 @@ class ModuleChangePassword extends Module
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['changePassword'][0]) . ' ###';
@@ -74,7 +76,7 @@ class ModuleChangePassword extends Module
 			'name'      => 'oldpassword',
 			'label'     => &$GLOBALS['TL_LANG']['MSC']['oldPassword'],
 			'inputType' => 'text',
-			'eval'      => array('mandatory'=>true, 'preserveTags'=>true, 'hideInput'=>true),
+			'eval'      => array('mandatory'=>true, 'preserveTags'=>true, 'hideInput'=>true, 'autocomplete'=>'current-password'),
 		);
 
 		// New password widget
@@ -150,7 +152,6 @@ class ModuleChangePassword extends Module
 					{
 						$objWidget->value = '';
 						$objWidget->addError($GLOBALS['TL_LANG']['MSC']['oldPasswordWrong']);
-						sleep(2); // Wait 2 seconds while brute forcing :)
 					}
 				}
 

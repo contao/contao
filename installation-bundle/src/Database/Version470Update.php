@@ -16,6 +16,7 @@ use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Filesystem\Filesystem;
+use Webmozart\PathUtil\Path;
 
 /**
  * @internal
@@ -70,7 +71,7 @@ class Version470Update extends AbstractMigration
 
     public function run(): MigrationResult
     {
-        $this->connection->query("
+        $this->connection->executeStatement("
             ALTER TABLE
                 tl_layout
             ADD
@@ -79,7 +80,7 @@ class Version470Update extends AbstractMigration
 
         // Enable the "minifyMarkup" option if it was enabled before
         if (isset($GLOBALS['TL_CONFIG']['minifyMarkup']) && $GLOBALS['TL_CONFIG']['minifyMarkup']) {
-            $this->connection->query("
+            $this->connection->executeStatement("
                 UPDATE
                     tl_layout
                 SET
@@ -92,8 +93,8 @@ class Version470Update extends AbstractMigration
             $folders = array_map('trim', explode(',', $GLOBALS['TL_CONFIG']['fileSyncExclude']));
 
             foreach ($folders as $folder) {
-                if (is_dir($this->projectDir.'/'.$this->uploadPath.'/'.$folder)) {
-                    $this->filesystem->touch($this->projectDir.'/'.$this->uploadPath.'/'.$folder.'/.nosync');
+                if (is_dir($path = Path::join($this->projectDir, $this->uploadPath, $folder))) {
+                    $this->filesystem->touch(Path::join($path, '.nosync'));
                 }
             }
         }
@@ -101,14 +102,14 @@ class Version470Update extends AbstractMigration
         $schemaManager = $this->connection->getSchemaManager();
 
         if ($schemaManager->tablesExist(['tl_comments_notify'])) {
-            $this->connection->query("
+            $this->connection->executeStatement("
                 ALTER TABLE
                     tl_comments_notify
                 ADD
                     active CHAR(1) DEFAULT '' NOT NULL
             ");
 
-            $this->connection->query("
+            $this->connection->executeStatement("
                 UPDATE
                     tl_comments_notify
                 SET

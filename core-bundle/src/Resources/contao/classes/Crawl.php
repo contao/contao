@@ -18,6 +18,7 @@ use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Monolog\Handler\GroupHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -37,6 +38,11 @@ class Crawl extends Backend implements \executable
 	private $valid = true;
 
 	/**
+	 * @var string
+	 */
+	private $logDir;
+
+	/**
 	 * Return true if the module is active
 	 *
 	 * @return boolean
@@ -53,13 +59,35 @@ class Crawl extends Backend implements \executable
 	 */
 	public function run()
 	{
+		if (!System::getContainer()->has('contao.crawl.escargot_factory'))
+		{
+			return '';
+		}
+
+		// Hide the crawler in maintenance mode (see #1379)
+		try
+		{
+			$driver = System::getContainer()->get('lexik_maintenance.driver.factory')->getDriver();
+			$blnMaintenance = $driver->isExists();
+		}
+		catch (\Exception $e)
+		{
+			$blnMaintenance = false;
+		}
+
 		/** @var Factory $factory */
 		$factory = System::getContainer()->get('contao.crawl.escargot_factory');
 		$subscriberNames = $factory->getSubscriberNames();
 		$subscribersWidget = $this->generateSubscribersWidget($subscriberNames);
-		$memberWidget = $this->generateMemberWidget();
+		$memberWidget = null;
+
+		if (System::getContainer()->getParameter('contao.search.index_protected'))
+		{
+			$memberWidget = $this->generateMemberWidget();
+		}
 
 		$template = new BackendTemplate('be_crawl');
+		$template->isMaintenance = $blnMaintenance;
 		$template->isActive = $this->isActive();
 		$template->subscribersWidget = $subscribersWidget;
 		$template->memberWidget = $memberWidget;
@@ -76,8 +104,9 @@ class Crawl extends Backend implements \executable
 
 		$jobId = Input::get('jobId');
 		$queue = $factory->createLazyQueue();
-		$debugLogPath = sys_get_temp_dir() . '/contao-crawl/' . $jobId . '_log.csv';
-		$resultCache = sys_get_temp_dir() . '/contao-crawl/' . $jobId . '.result-cache';
+
+		$debugLogPath = $this->getLogDir() . '/' . $jobId . '_log.csv';
+		$resultCache = $this->getLogDir() . '/' . $jobId . '.result-cache';
 
 		if ($downloadLog = Input::get('downloadLog'))
 		{
@@ -102,7 +131,7 @@ class Crawl extends Backend implements \executable
 		/** @var FrontendPreviewAuthenticator $objAuthenticator */
 		$objAuthenticator = System::getContainer()->get('contao.security.frontend_preview_authenticator');
 
-		if ($memberWidget->value)
+		if ($memberWidget && $memberWidget->value)
 		{
 			$objMember = Database::getInstance()->prepare('SELECT username FROM tl_member WHERE id=?')
 												->execute((int) $memberWidget->value);
@@ -241,6 +270,7 @@ class Crawl extends Backend implements \executable
 		foreach ($factory->getSubscribers($activeSubscribers) as $subscriber)
 		{
 			$subscriberHandler = new CrawlCsvLogHandler($this->getSubscriberLogFilePath($subscriber->getName(), $jobId), Logger::INFO);
+			$subscriberHandler->setFilterSource(\get_class($subscriber));
 			$handlers[] = $subscriberHandler;
 		}
 
@@ -252,9 +282,26 @@ class Crawl extends Backend implements \executable
 		return $logger;
 	}
 
+	private function getLogDir(): string
+	{
+		if (null !== $this->logDir)
+		{
+			return $this->logDir;
+		}
+
+		$this->logDir = sprintf('%s/%s/contao-crawl', sys_get_temp_dir(), md5(System::getContainer()->getParameter('kernel.project_dir')));
+
+		if (!is_dir($this->logDir))
+		{
+			(new Filesystem())->mkdir($this->logDir);
+		}
+
+		return $this->logDir;
+	}
+
 	private function getSubscriberLogFilePath(string $subscriberName, string $jobId): string
 	{
-		return sys_get_temp_dir() . '/contao-crawl/' . $jobId . '_' . $subscriberName . '_log.csv';
+		return $this->getLogDir() . '/' . $jobId . '_' . $subscriberName . '_log.csv';
 	}
 
 	private function generateSubscribersWidget(array $subscriberNames): Widget
@@ -316,7 +363,7 @@ class Crawl extends Backend implements \executable
 		// Get the active front end users
 		if (BackendUser::getInstance()->isAdmin)
 		{
-			$objMembers = Database::getInstance()->execute("SELECT id, username FROM tl_member WHERE login='1' AND disable!='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') ORDER BY username");
+			$objMembers = Database::getInstance()->execute("SELECT id, username FROM tl_member WHERE login='1' AND disable!='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'$time') ORDER BY username");
 		}
 		else
 		{
@@ -324,7 +371,7 @@ class Crawl extends Backend implements \executable
 
 			if (!empty($amg) && \is_array($amg))
 			{
-				$objMembers = Database::getInstance()->execute("SELECT id, username FROM tl_member WHERE (groups LIKE '%\"" . implode('"%\' OR \'%"', array_map('\intval', $amg)) . "\"%') AND login='1' AND disable!='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') ORDER BY username");
+				$objMembers = Database::getInstance()->execute("SELECT id, username FROM tl_member WHERE (`groups` LIKE '%\"" . implode('"%\' OR \'%"', array_map('\intval', $amg)) . "\"%') AND login='1' AND disable!='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'$time') ORDER BY username");
 			}
 		}
 

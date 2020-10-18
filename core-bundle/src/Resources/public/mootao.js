@@ -35,14 +35,8 @@ Request.Contao = new Class(
 	},
 
 	initialize: function(options) {
-		if (options && !options.url) {
-			var form = options.field.getParent('form');
-
-			if (form && form.hasAttribute('action')) {
-				this.options.url = form.getAttribute('action');
-			} else {
-				this.options.url = location.href;
-			}
+		if (options && !options.url && options.field && options.field.form && options.field.form.action) {
+			this.options.url = options.field.form.action;
 		}
 		this.parent(options);
 	},
@@ -395,13 +389,13 @@ Contao.SerpPreview = new Class(
 {
 	options: {
 		id: 0,
-		baseUrl: null,
-		urlSuffix: null,
+		trail: null,
 		titleField: null,
 		titleFallbackField: null,
 		aliasField: null,
 		descriptionField: null,
-		descriptionFallbackField: null
+		descriptionFallbackField: null,
+		titleTag: null
 	},
 
 	shorten: function(str, max) {
@@ -432,14 +426,14 @@ Contao.SerpPreview = new Class(
 			aliasField = $(this.options.aliasField),
 			descriptionField = $(this.options.descriptionField),
 			descriptionFallbackField = $(this.options.descriptionFallbackField),
-			a = new Element('a', { 'href': this.options.baseUrl }),
-			indexEmpty = (a.pathname == '/' || a.pathname.match(/^\/[a-z]{2}(-[A-Z]{2})?\/$/));
+			indexEmpty = this.options.trail.indexOf('›') === -1,
+			titleTag = this.options.titleTag || '%s';
 
 		titleField && titleField.addEvent('input', function() {
 			if (titleField.value) {
-				serpTitle.set('text', this.shorten(titleField.value, 64));
+				serpTitle.set('text', this.shorten(titleTag.replace(/\%s/, titleField.value), 64));
 			} else if (titleFallbackField && titleFallbackField.value) {
-				serpTitle.set('text', this.shorten(this.html2string(titleFallbackField.value), 64));
+				serpTitle.set('text', this.shorten(this.html2string(titleTag.replace(/\%s/, titleFallbackField.value)), 64));
 			} else {
 				serpTitle.set('text', '');
 			}
@@ -447,14 +441,14 @@ Contao.SerpPreview = new Class(
 
 		titleFallbackField && titleFallbackField.addEvent('input', function() {
 			if (titleField && titleField.value) return;
-			serpTitle.set('text', this.shorten(this.html2string(titleFallbackField.value), 64));
+			serpTitle.set('text', this.shorten(this.html2string(titleTag.replace(/\%s/, titleFallbackField.value)), 64));
 		}.bind(this));
 
 		aliasField && aliasField.addEvent('input', function() {
 			if (aliasField.value == 'index' && indexEmpty) {
-				serpUrl.set('text', this.options.baseUrl);
+				serpUrl.set('text', this.options.trail);
 			} else {
-				serpUrl.set('text', this.options.baseUrl + (aliasField.value || this.options.id) + this.options.urlSuffix);
+				serpUrl.set('text', this.options.trail + ' › ' + (aliasField.value || this.options.id).replace(/\//g, ' › '));
 			}
 		}.bind(this));
 

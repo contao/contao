@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle\Database;
 
+use Contao\ArrayUtil;
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\StringUtil;
@@ -52,7 +53,7 @@ class Version330Update extends AbstractMigration
 
     public function run(): MigrationResult
     {
-        $statement = $this->connection->query("
+        $layouts = $this->connection->fetchAllAssociative("
             SELECT
                 id, framework
             FROM
@@ -61,13 +62,13 @@ class Version330Update extends AbstractMigration
                 framework != ''
         ");
 
-        while (false !== ($layout = $statement->fetch(\PDO::FETCH_OBJ))) {
+        foreach ($layouts as $layout) {
             $framework = '';
-            $tmp = StringUtil::deserialize($layout->framework);
+            $tmp = StringUtil::deserialize($layout['framework']);
 
             if (!empty($tmp) && \is_array($tmp)) {
                 if (false !== ($key = array_search('layout.css', $tmp, true))) {
-                    array_insert($tmp, $key + 1, 'responsive.css');
+                    ArrayUtil::arrayInsert($tmp, $key + 1, 'responsive.css');
                 }
 
                 $framework = serialize(array_values(array_unique($tmp)));
@@ -82,11 +83,11 @@ class Version330Update extends AbstractMigration
                     id = :id
             ');
 
-            $stmt->execute([':framework' => $framework, ':id' => $layout->id]);
+            $stmt->execute([':framework' => $framework, ':id' => $layout['id']]);
         }
 
         // Add the "viewport" field (triggers the version 3.3 update)
-        $this->connection->query("
+        $this->connection->executeStatement("
             ALTER TABLE
                 tl_layout
             ADD

@@ -11,6 +11,8 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\ResponseException;
+use Doctrine\DBAL\Types\BinaryType;
+use Doctrine\DBAL\Types\BlobType;
 
 /**
  * Provide methods to handle versioning.
@@ -181,16 +183,6 @@ class Versions extends Controller
 			}
 		}
 
-		$intVersion = 1;
-
-		$objVersion = $this->Database->prepare("SELECT MAX(version) AS version FROM tl_version WHERE pid=? AND fromTable=?")
-									 ->execute($this->intPid, $this->strTable);
-
-		if ($objVersion->version !== null)
-		{
-			$intVersion = $objVersion->version + 1;
-		}
-
 		$strDescription = '';
 
 		if (!empty($data['title']))
@@ -227,11 +219,16 @@ class Versions extends Controller
 			$strDescription = $data['subject'];
 		}
 
-		$this->Database->prepare("UPDATE tl_version SET active='' WHERE pid=? AND fromTable=?")
-					   ->execute($this->intPid, $this->strTable);
+		$intId = $this->Database->prepare("INSERT INTO tl_version (pid, tstamp, version, fromTable, username, userid, description, editUrl, active, data) VALUES (?, ?, IFNULL((SELECT MAX(version) FROM (SELECT version FROM tl_version WHERE pid=? AND fromTable=?) v), 0) + 1, ?, ?, ?, ?, ?, 1, ?)")
+								->execute($this->intPid, time(), $this->intPid, $this->strTable, $this->strTable, $blnHideUser ? null : $this->getUsername(), $blnHideUser ? 0 : $this->getUserId(), $strDescription, $this->getEditUrl(), serialize($data))
+								->insertId;
 
-		$this->Database->prepare("INSERT INTO tl_version (pid, tstamp, version, fromTable, username, userid, description, editUrl, active, data) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1, ?)")
-					   ->execute($this->intPid, time(), $intVersion, $this->strTable, $blnHideUser ? null : $this->getUsername(), $blnHideUser ? 0 : $this->getUserId(), $strDescription, $this->getEditUrl(), serialize($data));
+		$this->Database->prepare("UPDATE tl_version SET active='' WHERE pid=? AND fromTable=? AND id!=?")
+					   ->execute($this->intPid, $this->strTable, $intId);
+
+		$intVersion = $this->Database->prepare("SELECT version FROM tl_version WHERE id=?")
+									 ->execute($intId)
+									 ->version;
 
 		// Trigger the oncreate_version_callback
 		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['oncreate_version_callback']))
@@ -345,7 +342,7 @@ class Versions extends Controller
 		// Trigger the deprecated onrestore_callback
 		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onrestore_callback']))
 		{
-			@trigger_error('Using the "onrestore_callback" has been deprecated and will no longer work in Contao 5.0. Use the "onrestore_version_callback" instead.', E_USER_DEPRECATED);
+			trigger_deprecation('contao/core-bundle', '4.0', 'Using the "onrestore_callback" has been deprecated and will no longer work in Contao 5.0. Use the "onrestore_version_callback" instead.');
 
 			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onrestore_callback'] as $callback)
 			{
@@ -463,7 +460,14 @@ class Versions extends Controller
 							continue;
 						}
 
-						$blnIsBinary = strncmp($arrFields[$k], 'binary(', 7) === 0 || strncmp($arrFields[$k], 'blob ', 5) === 0;
+						if (\is_array($arrFields[$k]))
+						{
+							$blnIsBinary = $arrFields[$k]['type'] === BinaryType::class || $arrFields[$k]['type'] === BlobType::class;
+						}
+						else
+						{
+							$blnIsBinary = strncmp($arrFields[$k], 'binary(', 7) === 0 || strncmp($arrFields[$k], 'blob ', 5) === 0;
+						}
 
 						// Decrypt the values
 						if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['encrypt'])
@@ -554,15 +558,26 @@ class Versions extends Controller
 							$from[$k] = explode("\n", $from[$k]);
 						}
 
+						$field = $k;
+
+						if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['label']))
+						{
+							$field = \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['label']) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['label'][0] : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['label'];
+						}
+						elseif (isset($GLOBALS['TL_LANG']['MSC'][$k]))
+						{
+							$field = \is_array($GLOBALS['TL_LANG']['MSC'][$k]) ? $GLOBALS['TL_LANG']['MSC'][$k][0] : $GLOBALS['TL_LANG']['MSC'][$k];
+						}
+
 						$objDiff = new \Diff($from[$k], $to[$k]);
-						$strBuffer .= $objDiff->render(new DiffRenderer(array('field'=>($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['label'][0] ?: (isset($GLOBALS['TL_LANG']['MSC'][$k]) ? (\is_array($GLOBALS['TL_LANG']['MSC'][$k]) ? $GLOBALS['TL_LANG']['MSC'][$k][0] : $GLOBALS['TL_LANG']['MSC'][$k]) : $k)))));
+						$strBuffer .= $objDiff->render(new DiffRenderer(array('field'=>$field)));
 					}
 				}
 			}
 		}
 
 		// Identical versions
-		if ($strBuffer == '')
+		if (!$strBuffer)
 		{
 			$strBuffer = '<p>' . $GLOBALS['TL_LANG']['MSC']['identicalVersions'] . '</p>';
 		}
@@ -688,7 +703,7 @@ class Versions extends Controller
 					$arrRow['editUrl'] = preg_replace('/id=[^&]+/', 'id=' . $filesModel->path, $arrRow['editUrl']);
 				}
 
-				$arrRow['editUrl'] = preg_replace(array('/&(amp;)?popup=1/', '/&(amp;)?rt=[^&]+/'), array('', '&amp;rt=' . REQUEST_TOKEN), ampersand($arrRow['editUrl']));
+				$arrRow['editUrl'] = preg_replace(array('/&(amp;)?popup=1/', '/&(amp;)?rt=[^&]+/'), array('', '&amp;rt=' . REQUEST_TOKEN), StringUtil::ampersand($arrRow['editUrl']));
 			}
 
 			$arrVersions[] = $arrRow;
@@ -812,14 +827,14 @@ class Versions extends Controller
 	{
 		if (!\is_array($var))
 		{
-			return $binary ? StringUtil::binToUuid($var) : $var;
+			return $binary && Validator::isBinaryUuid($var) ? StringUtil::binToUuid($var) : $var;
 		}
 
 		if (!\is_array(current($var)))
 		{
 			if ($binary)
 			{
-				$var = array_map(static function ($v) { return $v ? StringUtil::binToUuid($v) : ''; }, $var);
+				$var = array_map(static function ($v) { return Validator::isBinaryUuid($v) ? StringUtil::binToUuid($v) : $v; }, $var);
 			}
 
 			return implode(', ', $var);

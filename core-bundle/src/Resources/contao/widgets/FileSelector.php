@@ -72,7 +72,7 @@ class FileSelector extends Widget
 		$this->import(BackendUser::class, 'User');
 		$this->convertValuesToPaths();
 
-		if ($this->extensions != '')
+		if ($this->extensions)
 		{
 			$this->arrValidFileTypes = StringUtil::trimsplit(',', strtolower($this->extensions));
 		}
@@ -86,7 +86,7 @@ class FileSelector extends Widget
 			$strKeyword = ltrim(Input::postRaw('keyword'), '*');
 
 			// Make sure the regular expression is valid
-			if ($strKeyword != '')
+			if ($strKeyword)
 			{
 				try
 				{
@@ -109,7 +109,7 @@ class FileSelector extends Widget
 		$arrFound = array();
 
 		// Search for a specific file
-		if ($for != '')
+		if ((string) $for !== '')
 		{
 			// Wrap in a try catch block in case the regular expression is invalid (see #7743)
 			try
@@ -147,7 +147,7 @@ class FileSelector extends Widget
 					$arrPaths = array();
 
 					// Respect existing limitations
-					if ($this->path != '')
+					if ($this->path)
 					{
 						while ($objRoot->next())
 						{
@@ -206,7 +206,7 @@ class FileSelector extends Widget
 		$strNode = $objSessionBag->get('tl_files_picker');
 
 		// Unset the node if it is not within the path (see #5899)
-		if ($strNode != '' && $this->path != '' && strncmp($strNode . '/', $this->path . '/', \strlen($this->path) + 1) !== 0)
+		if ($strNode && $this->path && strncmp($strNode . '/', $this->path . '/', \strlen($this->path) + 1) !== 0)
 		{
 			$objSessionBag->remove('tl_files_picker');
 		}
@@ -217,7 +217,7 @@ class FileSelector extends Widget
 			Backend::addFilesBreadcrumb('tl_files_picker');
 		}
 
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Root nodes (breadcrumb menu)
 		if (!empty($GLOBALS['TL_DCA']['tl_files']['list']['sorting']['root']))
@@ -225,14 +225,14 @@ class FileSelector extends Widget
 			$root = $GLOBALS['TL_DCA']['tl_files']['list']['sorting']['root'];
 
 			// Allow only those roots that are within the custom path
-			if ($this->path != '')
+			if ($this->path)
 			{
 				$root = array_intersect(preg_grep('/^' . preg_quote($this->path, '/') . '(?:$|\/)/', $root), $root);
 
 				if (empty($root))
 				{
 					// Set all folders inside the custom path as root nodes
-					$root = array_map(function ($el) { return $this->path . '/' . $el; }, scan($rootDir . '/' . $this->path));
+					$root = array_map(function ($el) { return $this->path . '/' . $el; }, Folder::scan($projectDir . '/' . $this->path));
 
 					// Hide the breadcrumb
 					$GLOBALS['TL_DCA']['tl_file']['list']['sorting']['breadcrumb'] = '';
@@ -243,20 +243,20 @@ class FileSelector extends Widget
 
 			foreach ($nodes as $node)
 			{
-				$tree .= $this->renderFiletree($rootDir . '/' . $node, 0, true, true, $arrFound);
+				$tree .= $this->renderFiletree($projectDir . '/' . $node, 0, true, true, $arrFound);
 			}
 		}
 
 		// Show a custom path (see #4926)
-		elseif ($this->path != '')
+		elseif ($this->path)
 		{
-			$tree .= $this->renderFiletree($rootDir . '/' . $this->path, 0, false, $this->isProtectedPath($this->path), $arrFound);
+			$tree .= $this->renderFiletree($projectDir . '/' . $this->path, 0, false, $this->isProtectedPath($this->path), $arrFound);
 		}
 
 		// Start from root
 		elseif ($this->User->isAdmin)
 		{
-			$tree .= $this->renderFiletree($rootDir . '/' . Config::get('uploadPath'), 0, false, true, $arrFound);
+			$tree .= $this->renderFiletree($projectDir . '/' . Config::get('uploadPath'), 0, false, true, $arrFound);
 		}
 
 		// Show mounted files to regular users
@@ -266,7 +266,7 @@ class FileSelector extends Widget
 
 			foreach ($nodes as $node)
 			{
-				$tree .= $this->renderFiletree($rootDir . '/' . $node, 0, true, true, $arrFound);
+				$tree .= $this->renderFiletree($projectDir . '/' . $node, 0, true, true, $arrFound);
 			}
 		}
 
@@ -311,7 +311,7 @@ class FileSelector extends Widget
 		switch ($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'])
 		{
 			case 'File':
-				if (Config::get($this->strField) != '')
+				if (Config::get($this->strField))
 				{
 					$this->varValue = Config::get($this->strField);
 				}
@@ -338,7 +338,7 @@ class FileSelector extends Widget
 
 		$this->convertValuesToPaths();
 
-		if ($this->extensions != '')
+		if ($this->extensions)
 		{
 			$this->arrValidFileTypes = StringUtil::trimsplit(',', $this->extensions);
 		}
@@ -403,7 +403,7 @@ class FileSelector extends Widget
 		// Scan directory and sort the result
 		else
 		{
-			foreach (scan($path) as $v)
+			foreach (Folder::scan($path) as $v)
 			{
 				if (strncmp($v, '.', 1) === 0)
 				{
@@ -439,7 +439,7 @@ class FileSelector extends Widget
 		// Process folders
 		for ($f=0, $c=\count($folders); $f<$c; $f++)
 		{
-			$content = scan($folders[$f]);
+			$content = Folder::scan($folders[$f]);
 			$currentFolder = StringUtil::stripRootDir($folders[$f]);
 			$countFiles = \count($content);
 
@@ -557,13 +557,13 @@ class FileSelector extends Widget
 				// Generate thumbnail
 				if ($objFile->isImage && $objFile->viewHeight > 0 && Config::get('thumbnails') && ($objFile->isSvgImage || ($objFile->height <= Config::get('gdMaxImgHeight') && $objFile->width <= Config::get('gdMaxImgWidth'))))
 				{
-					$rootDir = System::getContainer()->getParameter('kernel.project_dir');
-					$thumbnail .= '<br>' . Image::getHtml(System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . rawurldecode($currentEncoded), array(100, 75, ResizeConfiguration::MODE_BOX))->getUrl($rootDir), '', 'style="margin:0 0 2px -18px"');
-					$importantPart = System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . rawurldecode($currentEncoded))->getImportantPart();
+					$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+					$thumbnail .= '<br>' . Image::getHtml(System::getContainer()->get('contao.image.image_factory')->create($projectDir . '/' . rawurldecode($currentEncoded), array(100, 75, ResizeConfiguration::MODE_BOX))->getUrl($projectDir), '', 'style="margin:0 0 2px -18px"');
+					$importantPart = System::getContainer()->get('contao.image.image_factory')->create($projectDir . '/' . rawurldecode($currentEncoded))->getImportantPart();
 
 					if ($importantPart->getX() > 0 || $importantPart->getY() > 0 || $importantPart->getWidth() < 1 || $importantPart->getHeight() < 1)
 					{
-						$thumbnail .= ' ' . Image::getHtml(System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . rawurldecode($currentEncoded), (new ResizeConfiguration())->setWidth(80)->setHeight(60)->setMode(ResizeConfiguration::MODE_BOX)->setZoomLevel(100))->getUrl($rootDir), '', 'style="margin:0 0 2px 0;vertical-align:bottom"');
+						$thumbnail .= ' ' . Image::getHtml(System::getContainer()->get('contao.image.image_factory')->create($projectDir . '/' . rawurldecode($currentEncoded), (new ResizeConfiguration())->setWidth(80)->setHeight(60)->setMode(ResizeConfiguration::MODE_BOX)->setZoomLevel(100))->getUrl($projectDir), '', 'style="margin:0 0 2px 0;vertical-align:bottom"');
 					}
 				}
 
@@ -626,7 +626,7 @@ class FileSelector extends Widget
 		}
 
 		// Return if the custom path is not within the upload path (see #8562)
-		if ($this->path != '' && strpos($this->path, Config::get('uploadPath') . '/') !== 0)
+		if ($this->path && strpos($this->path, Config::get('uploadPath') . '/') !== 0)
 		{
 			return;
 		}
@@ -648,11 +648,11 @@ class FileSelector extends Widget
 	 */
 	protected function isProtectedPath($path)
 	{
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		do
 		{
-			if (file_exists($rootDir . '/' . $path . '/.public'))
+			if (file_exists($projectDir . '/' . $path . '/.public'))
 			{
 				return false;
 			}

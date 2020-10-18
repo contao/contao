@@ -34,7 +34,9 @@ class ModuleFaqPage extends Module
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['faqpage'][0]) . ' ###';
@@ -75,7 +77,7 @@ class ModuleFaqPage extends Module
 		global $objPage;
 
 		$arrFaqs = array_fill_keys($this->faq_categories, array());
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Add FAQs
 		while ($objFaq->next())
@@ -90,11 +92,11 @@ class ModuleFaqPage extends Module
 			$objTemp->addImage = false;
 
 			// Add an image
-			if ($objFaq->addImage && $objFaq->singleSRC != '')
+			if ($objFaq->addImage && $objFaq->singleSRC)
 			{
 				$objModel = FilesModel::findByUuid($objFaq->singleSRC);
 
-				if ($objModel !== null && is_file($rootDir . '/' . $objModel->path))
+				if ($objModel !== null && is_file($projectDir . '/' . $objModel->path))
 				{
 					// Do not override the field now that we have a model registry (see #6303)
 					$arrFaq = $objFaq->row();

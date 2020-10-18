@@ -31,6 +31,7 @@
       </trans-unit>
       <trans-unit id="MOD.themes.1">
         <source>Manage themes, front end modules, page layouts or image sizes</source>
+        <target>Управление темами, модулями внешнего интерфейса, макетами страниц или размерами изображений</target>
       </trans-unit>
       <trans-unit id="MOD.page.0">
         <source>Site structure</source>
@@ -46,6 +47,7 @@
       </trans-unit>
       <trans-unit id="MOD.tpl_editor.1">
         <source>Add or edit custom templates</source>
+        <target>Добавить или редактировать пользовательские шаблоны</target>
       </trans-unit>
       <trans-unit id="MOD.accounts">
         <source>Account manager</source>
@@ -57,6 +59,7 @@
       </trans-unit>
       <trans-unit id="MOD.member.1">
         <source>Manage member accounts (front end)</source>
+        <target>Управление учётными записями участников (внешний интерфейс).</target>
       </trans-unit>
       <trans-unit id="MOD.mgroup.0">
         <source>Member groups</source>
@@ -64,6 +67,7 @@
       </trans-unit>
       <trans-unit id="MOD.mgroup.1">
         <source>Manage member groups (front end)</source>
+        <target>Управление группами участников (внешний интерфейс).</target>
       </trans-unit>
       <trans-unit id="MOD.user.0">
         <source>Users</source>
@@ -71,6 +75,7 @@
       </trans-unit>
       <trans-unit id="MOD.user.1">
         <source>Manage user accounts (back end)</source>
+        <target>Управление учётными записями пользователей (панель управления).</target>
       </trans-unit>
       <trans-unit id="MOD.group.0">
         <source>User groups</source>
@@ -78,6 +83,7 @@
       </trans-unit>
       <trans-unit id="MOD.group.1">
         <source>Manage user groups (back end)</source>
+        <target>Управление группами пользователей (панель управления).</target>
       </trans-unit>
       <trans-unit id="MOD.opt_in.0">
         <source>Double opt-in</source>
@@ -85,6 +91,7 @@
       </trans-unit>
       <trans-unit id="MOD.opt_in.1">
         <source>Manage double opt-in tokens</source>
+        <target>Управление двойными токенами</target>
       </trans-unit>
       <trans-unit id="MOD.system">
         <source>System</source>
@@ -96,6 +103,7 @@
       </trans-unit>
       <trans-unit id="MOD.files.1">
         <source>Manage files and folders</source>
+        <target>Управление файлами и каталогами</target>
       </trans-unit>
       <trans-unit id="MOD.log.0">
         <source>System log</source>
@@ -103,6 +111,7 @@
       </trans-unit>
       <trans-unit id="MOD.log.1">
         <source>Browse the system log</source>
+        <target>Просмотр системного журнала</target>
       </trans-unit>
       <trans-unit id="MOD.settings.0">
         <source>Settings</source>
@@ -110,6 +119,7 @@
       </trans-unit>
       <trans-unit id="MOD.settings.1">
         <source>Adjust the Contao configuration</source>
+        <target>Настройка конфигурации Contao</target>
       </trans-unit>
       <trans-unit id="MOD.maintenance.0">
         <source>Maintenance</source>
@@ -117,6 +127,7 @@
       </trans-unit>
       <trans-unit id="MOD.maintenance.1">
         <source>Crawl the website or purge generated data</source>
+        <target>Просканировать веб-сайт или удалить сгенерированные данные</target>
       </trans-unit>
       <trans-unit id="MOD.security.0">
         <source>Security</source>
@@ -283,15 +294,15 @@
         <target>Автоматический выход из системы</target>
       </trans-unit>
       <trans-unit id="FMD.logout.1">
-        <source>Automatically logs out a user</source>
-        <target>Автоматическое завершение сеанса пользователя</target>
+        <source>Automatically logs out a member</source>
+        <target>Автоматическое завершение сеанса участника</target>
       </trans-unit>
       <trans-unit id="FMD.personalData.0">
         <source>Personal data</source>
         <target>Личные данные</target>
       </trans-unit>
       <trans-unit id="FMD.personalData.1">
-        <source>Generates a form to edit a user's personal data</source>
+        <source>Generates a form to edit a member's personal data</source>
         <target>Создает форму для заполнения личных данных участника</target>
       </trans-unit>
       <trans-unit id="FMD.registration.0">
@@ -299,8 +310,8 @@
         <target>Регистрация пользователя</target>
       </trans-unit>
       <trans-unit id="FMD.registration.1">
-        <source>Generates a user registration form</source>
-        <target>Создает форму для заполнения пользователем при регистрации</target>
+        <source>Generates a member registration form</source>
+        <target>Создает форму для заполнения участником при регистрации</target>
       </trans-unit>
       <trans-unit id="FMD.changePassword.0">
         <source>Change password</source>

@@ -166,7 +166,7 @@ class UserPasswordCommandTest extends TestCase
     /**
      * @dataProvider usernamePasswordProvider
      */
-    public function testUpdatesTheDatabaseOnSuccess(string $username, string $password): void
+    public function testResetsPassword(string $username, string $password): void
     {
         /** @var Connection&MockObject $connection */
         $connection = $this->createMock(Connection::class);
@@ -175,7 +175,12 @@ class UserPasswordCommandTest extends TestCase
             ->method('update')
             ->with(
                 'tl_user',
-                ['password' => '$argon2id$v=19$m=65536,t=6,p=1$T+WK0xPOk21CQ2dX9AFplw$2uCrfvt7Tby81Dhc8Y7wHQQGP1HnPC3nDEb4FtXsfrQ'],
+                [
+                    'password' => '$argon2id$v=19$m=65536,t=6,p=1$T+WK0xPOk21CQ2dX9AFplw$2uCrfvt7Tby81Dhc8Y7wHQQGP1HnPC3nDEb4FtXsfrQ',
+                    'locked' => 0,
+                    'loginAttempts' => 0,
+                    'pwChange' => '',
+                ],
                 ['username' => $username]
             )
             ->willReturn(1)
@@ -197,9 +202,39 @@ class UserPasswordCommandTest extends TestCase
         yield ['k.jones', 'kevinjones'];
     }
 
-    /**
-     * @param Connection&MockObject $connection
-     */
+    public function testResetsPasswordWithRequiredChangeOnNextLogin(): void
+    {
+        $username = 'foobar';
+        $password = '12345678';
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('update')
+            ->with(
+                'tl_user',
+                [
+                    'password' => '$argon2id$v=19$m=65536,t=6,p=1$T+WK0xPOk21CQ2dX9AFplw$2uCrfvt7Tby81Dhc8Y7wHQQGP1HnPC3nDEb4FtXsfrQ',
+                    'locked' => 0,
+                    'loginAttempts' => 0,
+                    'pwChange' => '1',
+                ],
+                ['username' => $username]
+            )
+            ->willReturn(1)
+        ;
+
+        $input = [
+            'username' => $username,
+            '--password' => $password,
+            '--require-change' => null,
+        ];
+
+        $command = $this->getCommand($connection, $password);
+
+        (new CommandTester($command))->execute($input, ['interactive' => false]);
+    }
+
     private function getCommand(Connection $connection = null, string $password = null): UserPasswordCommand
     {
         if (null === $connection) {

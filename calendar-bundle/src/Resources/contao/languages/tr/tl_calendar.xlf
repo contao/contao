@@ -70,12 +70,10 @@
         <target>Yorum yapmak için oturum açılmalı</target>
       </trans-unit>
       <trans-unit id="tl_calendar.requireLogin.1">
-        <source>Allow only authenticated users to create comments.</source>
-        <target>Sadece oturum açmış kullanıcıların yorum yapmasına izin ver.</target>
+        <source>Allow only authenticated members to create comments.</source>
       </trans-unit>
       <trans-unit id="tl_calendar.disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>Güvenlik sorusu kullanılmasın</target>
+        <source>Disable spam protection</source>
       </trans-unit>
       <trans-unit id="tl_calendar.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>
@@ -142,12 +140,11 @@
         <target>Tam makaleler</target>
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.0">
-        <source>RSS feeds</source>
-        <target>RSS beslemeleri</target>
+        <source>Calendar feeds</source>
+        <target>Takvim akışları</target>
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.1">
-        <source>Manage RSS feeds</source>
-        <target>RSS beslemelerini yönet</target>
+        <source>Manage calendar feeds</source>
       </trans-unit>
       <trans-unit id="tl_calendar.new.0">
         <source>New</source>

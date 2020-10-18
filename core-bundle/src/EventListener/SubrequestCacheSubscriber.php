@@ -82,6 +82,7 @@ class SubrequestCacheSubscriber implements EventSubscriberInterface, ResetInterf
 
         if ($isMasterRequest) {
             $this->currentStrategy = array_pop($this->strategyStack);
+            $response->headers->remove(self::MERGE_CACHE_HEADER);
         }
     }
 

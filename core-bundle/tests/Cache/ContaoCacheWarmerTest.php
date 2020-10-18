@@ -18,7 +18,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\System;
 use Doctrine\DBAL\Connection;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -68,7 +67,7 @@ class ContaoCacheWarmerTest extends TestCase
         $this->assertFileExists($this->getFixturesDir().'/var/cache/contao/sql/tl_test.php');
 
         $this->assertStringContainsString(
-            "\$GLOBALS['TL_TEST'] = true;",
+            "\$GLOBALS['TL_TEST'] = \\true;",
             file_get_contents($this->getFixturesDir().'/var/cache/contao/config/config.php')
         );
 
@@ -78,7 +77,7 @@ class ContaoCacheWarmerTest extends TestCase
         );
 
         $this->assertStringContainsString(
-            "\$GLOBALS['TL_DCA']['tl_test'] = [\n",
+            "\$GLOBALS['TL_DCA']['tl_test'] = [",
             file_get_contents($this->getFixturesDir().'/var/cache/contao/dca/tl_test.php')
         );
 
@@ -110,7 +109,7 @@ class ContaoCacheWarmerTest extends TestCase
     {
         $connection = $this->createMock(Connection::class);
         $connection
-            ->method('query')
+            ->method('executeQuery')
             ->willThrowException(new \Exception())
         ;
 
@@ -126,10 +125,6 @@ class ContaoCacheWarmerTest extends TestCase
         $this->assertFileNotExists($this->getFixturesDir().'/var/cache/contao');
     }
 
-    /**
-     * @param Connection&MockObject      $connection
-     * @param ContaoFramework&MockObject $framework
-     */
     private function getCacheWarmer(Connection $connection = null, ContaoFramework $framework = null, string $bundle = 'test-bundle'): ContaoCacheWarmer
     {
         if (null === $connection) {

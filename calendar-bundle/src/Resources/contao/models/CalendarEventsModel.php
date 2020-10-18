@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\File\ModelMetadataTrait;
 use Contao\Model\Collection;
 
 /**
@@ -27,6 +28,7 @@ use Contao\Model\Collection;
  * @property integer $startDate
  * @property integer $endDate
  * @property string  $pageTitle
+ * @property string  $robots
  * @property string  $description
  * @property string  $location
  * @property string  $address
@@ -53,6 +55,7 @@ use Contao\Model\Collection;
  * @property boolean $target
  * @property string  $cssClass
  * @property boolean $noComments
+ * @property boolean $featured
  * @property boolean $published
  * @property string  $start
  * @property string  $stop
@@ -72,6 +75,7 @@ use Contao\Model\Collection;
  * @method static CalendarEventsModel|null findOneByStartDate($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByEndDate($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByPageTitle($val, array $opt=array())
+ * @method static CalendarEventsModel|null findOneByRobots($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByDescription($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByLocation($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByAddress($val, array $opt=array())
@@ -98,6 +102,7 @@ use Contao\Model\Collection;
  * @method static CalendarEventsModel|null findOneByTarget($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByCssClass($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByNoComments($val, array $opt=array())
+ * @method static CalendarEventsModel|null findOneByFeatured($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByPublished($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByStart($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByStop($val, array $opt=array())
@@ -113,6 +118,7 @@ use Contao\Model\Collection;
  * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByStartDate($val, array $opt=array())
  * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByEndDate($val, array $opt=array())
  * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByPageTitle($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByRobots($val, array $opt=array())
  * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByDescription($val, array $opt=array())
  * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByLocation($val, array $opt=array())
  * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByAddress($val, array $opt=array())
@@ -139,6 +145,7 @@ use Contao\Model\Collection;
  * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByTarget($val, array $opt=array())
  * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByCssClass($val, array $opt=array())
  * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByNoComments($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByFeatured($val, array $opt=array())
  * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByPublished($val, array $opt=array())
  * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByStart($val, array $opt=array())
  * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByStop($val, array $opt=array())
@@ -158,6 +165,7 @@ use Contao\Model\Collection;
  * @method static integer countByStartDate($val, array $opt=array())
  * @method static integer countByEndDate($val, array $opt=array())
  * @method static integer countByPageTitle($val, array $opt=array())
+ * @method static integer countByRobots($val, array $opt=array())
  * @method static integer countByDescription($val, array $opt=array())
  * @method static integer countByLocation($val, array $opt=array())
  * @method static integer countByAddress($val, array $opt=array())
@@ -184,6 +192,7 @@ use Contao\Model\Collection;
  * @method static integer countByTarget($val, array $opt=array())
  * @method static integer countByCssClass($val, array $opt=array())
  * @method static integer countByNoComments($val, array $opt=array())
+ * @method static integer countByFeatured($val, array $opt=array())
  * @method static integer countByPublished($val, array $opt=array())
  * @method static integer countByStart($val, array $opt=array())
  * @method static integer countByStop($val, array $opt=array())
@@ -192,6 +201,8 @@ use Contao\Model\Collection;
  */
 class CalendarEventsModel extends Model
 {
+	use ModelMetadataTrait;
+
 	/**
 	 * Table name
 	 * @var string
@@ -221,7 +232,7 @@ class CalendarEventsModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
+			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		return static::findOneBy($arrColumns, $varId, $arrOptions);
@@ -245,10 +256,22 @@ class CalendarEventsModel extends Model
 
 		$arrColumns = array("$t.pid=? AND (($t.startTime>=$intStart AND $t.startTime<=$intEnd) OR ($t.endTime>=$intStart AND $t.endTime<=$intEnd) OR ($t.startTime<=$intStart AND $t.endTime>=$intEnd) OR ($t.recurring='1' AND ($t.recurrences=0 OR $t.repeatEnd>=$intStart) AND $t.startTime<=$intEnd))");
 
+		if (isset($arrOptions['showFeatured']))
+		{
+			if ($arrOptions['showFeatured'] === true)
+			{
+				$arrColumns[] = "$t.featured='1'";
+			}
+			elseif ($arrOptions['showFeatured'] === false)
+			{
+				$arrColumns[] = "$t.featured=''";
+			}
+		}
+
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
+			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -275,7 +298,7 @@ class CalendarEventsModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
+			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -306,7 +329,7 @@ class CalendarEventsModel extends Model
 		$time = Date::floorToMinute();
 
 		// Get upcoming events using endTime instead of startTime (see #3917)
-		$arrColumns = array("($t.endTime>=$time OR ($t.recurring='1' AND ($t.recurrences=0 OR $t.repeatEnd>=$time))) AND $t.pid IN(" . implode(',', array_map('\intval', $arrIds)) . ") AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'");
+		$arrColumns = array("$t.pid IN(" . implode(',', array_map('\intval', $arrIds)) . ") AND $t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time') AND ($t.endTime>=$time OR ($t.recurring='1' AND ($t.recurrences=0 OR $t.repeatEnd>=$time)))");
 
 		if ($intLimit > 0)
 		{

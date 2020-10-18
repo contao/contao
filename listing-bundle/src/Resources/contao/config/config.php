@@ -8,5 +8,7 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\ModuleListing;
+
 // Front end module
-$GLOBALS['FE_MOD']['application']['listing'] = 'Contao\ModuleListing';
+$GLOBALS['FE_MOD']['application']['listing'] = ModuleListing::class;

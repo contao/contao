@@ -137,6 +137,14 @@ class News extends Frontend
 		{
 			$arrUrls = array();
 
+			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+			if ($request)
+			{
+				$origScope = $request->attributes->get('_scope');
+				$request->attributes->set('_scope', 'frontend');
+			}
+
 			while ($objArticle->next())
 			{
 				$jumpTo = $objArticle->getRelated('pid')->jumpTo;
@@ -242,6 +250,11 @@ class News extends Frontend
 
 				$objFeed->addItem($objItem);
 			}
+
+			if ($request)
+			{
+				$request->attributes->set('_scope', $origScope);
+			}
 		}
 
 		$webDir = StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir'));
@@ -269,7 +282,7 @@ class News extends Frontend
 		}
 
 		$arrProcessed = array();
-		$time = Date::floorToMinute();
+		$time = time();
 
 		// Get all news archives
 		$objArchive = NewsArchiveModel::findByProtected('');
@@ -303,7 +316,7 @@ class News extends Frontend
 					}
 
 					// The target page has not been published (see #5520)
-					if (!$objParent->published || ($objParent->start != '' && $objParent->start > $time) || ($objParent->stop != '' && $objParent->stop <= ($time + 60)))
+					if (!$objParent->published || ($objParent->start && $objParent->start > $time) || ($objParent->stop && $objParent->stop <= $time))
 					{
 						continue;
 					}
@@ -336,6 +349,11 @@ class News extends Frontend
 				{
 					while ($objArticle->next())
 					{
+						if ($blnIsSitemap && $objArticle->robots === 'noindex,nofollow')
+						{
+							continue;
+						}
+
 						$arrPages[] = $this->getLink($objArticle, $strUrl);
 					}
 				}
@@ -377,7 +395,7 @@ class News extends Frontend
 				}
 				else
 				{
-					self::$arrUrlCache[$strCacheKey] = ampersand($objItem->url);
+					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($objItem->url);
 				}
 				break;
 
@@ -386,7 +404,7 @@ class News extends Frontend
 				if (($objTarget = $objItem->getRelated('jumpTo')) instanceof PageModel)
 				{
 					/** @var PageModel $objTarget */
-					self::$arrUrlCache[$strCacheKey] = ampersand($blnAbsolute ? $objTarget->getAbsoluteUrl() : $objTarget->getFrontendUrl());
+					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($blnAbsolute ? $objTarget->getAbsoluteUrl() : $objTarget->getFrontendUrl());
 				}
 				break;
 
@@ -397,7 +415,7 @@ class News extends Frontend
 					$params = '/articles/' . ($objArticle->alias ?: $objArticle->id);
 
 					/** @var PageModel $objPid */
-					self::$arrUrlCache[$strCacheKey] = ampersand($blnAbsolute ? $objPid->getAbsoluteUrl($params) : $objPid->getFrontendUrl($params));
+					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($blnAbsolute ? $objPid->getAbsoluteUrl($params) : $objPid->getFrontendUrl($params));
 				}
 				break;
 		}
@@ -409,17 +427,17 @@ class News extends Frontend
 
 			if (!$objPage instanceof PageModel)
 			{
-				self::$arrUrlCache[$strCacheKey] = ampersand(Environment::get('request'));
+				self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand(Environment::get('request'));
 			}
 			else
 			{
 				$params = (Config::get('useAutoItem') ? '/' : '/items/') . ($objItem->alias ?: $objItem->id);
 
-				self::$arrUrlCache[$strCacheKey] = ampersand($blnAbsolute ? $objPage->getAbsoluteUrl($params) : $objPage->getFrontendUrl($params));
+				self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($blnAbsolute ? $objPage->getAbsoluteUrl($params) : $objPage->getFrontendUrl($params));
 			}
 
 			// Add the current archive parameter (news archive)
-			if ($blnAddArchive && Input::get('month') != '')
+			if ($blnAddArchive && Input::get('month'))
 			{
 				self::$arrUrlCache[$strCacheKey] .= '?month=' . Input::get('month');
 			}
@@ -459,13 +477,13 @@ class News extends Frontend
 				if (($objArticle = ArticleModel::findByPk($objItem->articleId)) instanceof ArticleModel && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
 				{
 					/** @var PageModel $objPid */
-					return ampersand($objPid->getAbsoluteUrl('/articles/' . ($objArticle->alias ?: $objArticle->id)));
+					return StringUtil::ampersand($objPid->getAbsoluteUrl('/articles/' . ($objArticle->alias ?: $objArticle->id)));
 				}
 				break;
 		}
 
 		// Backwards compatibility (see #8329)
-		if ($strBase != '' && !preg_match('#^https?://#', $strUrl))
+		if ($strBase && !preg_match('#^https?://#', $strUrl))
 		{
 			$strUrl = $strBase . $strUrl;
 		}

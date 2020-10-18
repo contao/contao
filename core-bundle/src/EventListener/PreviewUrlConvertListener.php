@@ -16,6 +16,7 @@ use Contao\ArticleModel;
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageModel;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @internal
@@ -40,35 +41,38 @@ class PreviewUrlConvertListener
 
         $request = $event->getRequest();
 
-        if ($request->query->get('url')) {
+        if ($request->query->has('url')) {
             $event->setUrl($request->getBaseUrl().'/'.$request->query->get('url'));
 
             return;
         }
 
-        if ($request->query->get('page')) {
+        if ($request->query->has('page')) {
             /** @var PageModel $pageAdapter */
             $pageAdapter = $this->framework->getAdapter(PageModel::class);
 
-            if ($page = $pageAdapter->findWithDetails($request->query->get('page'))) {
-                $params = null;
-
-                /** @var ArticleModel $articleAdapter */
-                $articleAdapter = $this->framework->getAdapter(ArticleModel::class);
-
-                // Add the /article/ fragment (see contao/core-bundle#673)
-                if ($article = $articleAdapter->findByAlias($request->query->get('article'))) {
-                    $params = sprintf(
-                        '/articles/%s%s',
-                        'main' !== $article->inColumn ? $article->inColumn.':' : '',
-                        $article->id
-                    );
-                }
-
-                $event->setUrl($page->getPreviewUrl($params));
-
+            if (!$page = $pageAdapter->findWithDetails($request->query->get('page'))) {
                 return;
             }
+
+            $event->setUrl($page->getPreviewUrl($this->getParams($request)));
         }
+    }
+
+    private function getParams(Request $request): ?string
+    {
+        if (!$request->query->has('article')) {
+            return null;
+        }
+
+        /** @var ArticleModel $articleAdapter */
+        $articleAdapter = $this->framework->getAdapter(ArticleModel::class);
+
+        if (!$article = $articleAdapter->findByAlias($request->query->get('article'))) {
+            return null;
+        }
+
+        // Add the /article/ fragment (see contao/core-bundle#673)
+        return sprintf('/articles/%s%s', 'main' !== $article->inColumn ? $article->inColumn.':' : '', $article->alias);
     }
 }

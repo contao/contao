@@ -10,7 +10,9 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\OptIn\OptIn;
+use Contao\CoreBundle\Util\SimpleTokenParser;
 use Patchwork\Utf8;
 
 /**
@@ -33,7 +35,9 @@ class ModuleRegistration extends Module
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['registration'][0]) . ' ###';
@@ -94,7 +98,7 @@ class ModuleRegistration extends Module
 			return;
 		}
 
-		if ($this->memberTpl != '')
+		if ($this->memberTpl)
 		{
 			$this->Template = new FrontendTemplate($this->memberTpl);
 			$this->Template->setData($this->arrData);
@@ -154,7 +158,7 @@ class ModuleRegistration extends Module
 		$objMember = null;
 
 		// Check for a follow-up registration (see #7992)
-		if ($this->reg_activate && Input::post('email', true) != '' && ($objMember = MemberModel::findUnactivatedByEmail(Input::post('email', true))) !== null)
+		if ($this->reg_activate && Input::post('email', true) && ($objMember = MemberModel::findUnactivatedByEmail(Input::post('email', true))) !== null)
 		{
 			$this->resendActivationMail($objMember);
 
@@ -222,7 +226,7 @@ class ModuleRegistration extends Module
 				$encoder = System::getContainer()->get('security.encoder_factory')->getEncoder(FrontendUser::class);
 
 				// Check whether the password matches the username
-				if ($objWidget instanceof FormPassword && $encoder->isPasswordValid($varValue, Input::post('username'), null))
+				if ($objWidget instanceof FormPassword && ($username = Input::post('username')) && $encoder->isPasswordValid($varValue, $username, null))
 				{
 					$objWidget->addError($GLOBALS['TL_LANG']['ERR']['passwordName']);
 				}
@@ -244,7 +248,7 @@ class ModuleRegistration extends Module
 				}
 
 				// Make sure that unique fields are unique (check the eval setting first -> #3063)
-				if ($varValue != '' && $arrData['eval']['unique'] && !$this->Database->isUniqueValue('tl_member', $field, $varValue))
+				if ((string) $varValue !== '' && $arrData['eval']['unique'] && !$this->Database->isUniqueValue('tl_member', $field, $varValue))
 				{
 					$objWidget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $field));
 				}
@@ -265,6 +269,10 @@ class ModuleRegistration extends Module
 							{
 								$varValue = $callback($varValue, null);
 							}
+						}
+						catch (ResponseException $e)
+						{
+							throw $e;
 						}
 						catch (\Exception $e)
 						{
@@ -480,7 +488,7 @@ class ModuleRegistration extends Module
 			// Make sure newsletter is an array
 			if (!\is_array($arrData['newsletter']))
 			{
-				if ($arrData['newsletter'] != '')
+				if ($arrData['newsletter'])
 				{
 					$arrData['newsletter'] = array($arrData['newsletter']);
 				}
@@ -506,7 +514,10 @@ class ModuleRegistration extends Module
 		$arrTokenData['channel'] = $arrTokenData['channels'];
 
 		// Send the token
-		$optInToken->send(sprintf($GLOBALS['TL_LANG']['MSC']['emailSubject'], Idna::decode(Environment::get('host'))), StringUtil::parseSimpleTokens($this->reg_text, $arrTokenData));
+		$optInToken->send(
+			sprintf($GLOBALS['TL_LANG']['MSC']['emailSubject'], Idna::decode(Environment::get('host'))),
+			System::getContainer()->get(SimpleTokenParser::class)->parse($this->reg_text, $arrTokenData)
+		);
 	}
 
 	/**
@@ -582,7 +593,7 @@ class ModuleRegistration extends Module
 	 */
 	protected function resendActivationMail(MemberModel $objMember)
 	{
-		if ($objMember->disable == '')
+		if (!$objMember->disable)
 		{
 			return;
 		}

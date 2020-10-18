@@ -18,16 +18,15 @@
         <target>Tukaj lahko nastavite dovoljenja za novice.</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeeds.0">
-        <source>Allowed RSS feeds</source>
-        <target>Dovoljeni viri RSS</target>
+        <source>Allowed news feeds</source>
       </trans-unit>
       <trans-unit id="tl_user.newsfeeds.1">
         <source>Here you can grant access to one or more news feeds.</source>
         <target>Tu lahko dovolite dostop do enega ali več virov novic.</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeedp.0">
-        <source>RSS feed permissions</source>
-        <target>Dovoljenja virov RSS</target>
+        <source>News feed permissions</source>
+        <target>Dovoljenja za vir novic</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeedp.1">
         <source>Here you can define the news feed permissions.</source>

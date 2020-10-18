@@ -76,6 +76,16 @@ class FaviconController
         $response = new BinaryFileResponse($faviconModel->path);
         $response->setSharedMaxAge(31556952);
 
+        switch ($faviconModel->extension) {
+            case 'svg':
+                $response->headers->set('Content-Type', 'image/svg+xml');
+                break;
+
+            case 'ico':
+                $response->headers->set('Content-Type', 'image/x-icon');
+                break;
+        }
+
         if (null !== $this->responseTagger) {
             $this->responseTagger->addTags(['contao.db.tl_page.'.$rootPage->id]);
         }

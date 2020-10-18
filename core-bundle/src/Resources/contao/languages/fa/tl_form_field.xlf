@@ -292,12 +292,10 @@
         <target>اینجا می‌توانید اندازه ورودی بارگزاری را وارد نمایید (خصوصیت &lt;em&gt;اندازه&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_form_field.customTpl.0">
-        <source>Custom form field template</source>
-        <target>قالب فیلد فرم سفارشی</target>
+        <source>Form field template</source>
       </trans-unit>
       <trans-unit id="tl_form_field.customTpl.1">
-        <source>Here you can overwrite the default form field template.</source>
-        <target>اینجا می‌توانید قالب فیلد اختیاری پیش‌فرض را رونویسی کنید.</target>
+        <source>Here you can select the form field template.</source>
       </trans-unit>
       <trans-unit id="tl_form_field.slabel.0">
         <source>Submit button label</source>

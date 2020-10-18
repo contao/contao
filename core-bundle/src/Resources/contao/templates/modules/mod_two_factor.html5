@@ -24,7 +24,7 @@
         </div>
         <div class="widget widget-text">
           <label for="verify"><?= $this->trans('MSC.twoFactorVerification') ?></label>
-          <input type="text" name="verify" id="verify" class="text" value="" autocapitalize="off" autocomplete="off" required>
+          <input type="text" name="verify" id="verify" class="text" value="" autocapitalize="off" autocomplete="one-time-code" required>
           <p class="help"><?= $this->trans('MSC.twoFactorVerificationHelp') ?></p>
         </div>
         <div class="submit_container">
@@ -36,17 +36,15 @@
     <div class="message">
       <p class="confirm"><?= $this->trans('MSC.twoFactorActive') ?></p>
     </div>
-    <?php if (!$this->enforceTwoFactor): ?>
-      <form class="tl_two_factor_form" id="<?= $this->formId ?>" method="post">
-        <div class="formbody">
-          <input type="hidden" name="FORM_SUBMIT" value="tl_two_factor_disable">
-          <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
-          <div class="submit_container">
-            <button type="submit" class="submit"><?= $this->trans('MSC.disable') ?></button>
-          </div>
+    <form class="tl_two_factor_form" id="<?= $this->formId ?>" method="post">
+      <div class="formbody">
+        <input type="hidden" name="FORM_SUBMIT" value="tl_two_factor_disable">
+        <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
+        <div class="submit_container">
+          <button type="submit" class="submit"><?= $this->trans('MSC.disable') ?></button>
         </div>
-      </form>
-    <?php endif; ?>
+      </div>
+    </form>
     <div class="recovery_codes">
       <h3><?= $this->trans('MSC.twoFactorBackupCodesLabel') ?></h3>
       <p><?= $this->trans('MSC.twoFactorBackupCodesExplain') ?></p>
@@ -62,7 +60,7 @@
         <div class="message">
           <p class="info"><?= $this->trans('MSC.twoFactorBackupCodesInfo') ?></p>
         </div>
-        <ul class="recovery-codes">
+        <ul class="backup-codes">
           <?php foreach ($this->backupCodes as $backupCode): ?>
             <li><code><?= $backupCode ?></code></li>
           <?php endforeach; ?>
@@ -92,7 +90,7 @@
             </tr>
             <?php foreach ($this->trustedDevices as $trustedDevice): ?>
               <tr>
-                <td><?= $trustedDevice->getDeviceFamily() ?><?php if ($this->currentDevice === $trustedDevice->getCookieValue()): ?> (<?= $this->trans('MSC.thisDevice') ?>)<?php endif; ?></td>
+                <td><?= $trustedDevice->getDeviceFamily() ?></td>
                 <td><?= $trustedDevice->getUaFamily() ?></td>
                 <td><?= $trustedDevice->getOsFamily() ?></td>
                 <td><?= $trustedDevice->getCreated()->format(Contao\Config::get('datimFormat')) ?></td>

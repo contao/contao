@@ -23,7 +23,17 @@ class BackupCodeManager implements BackupCodeManagerInterface
             return false;
         }
 
-        return \in_array($code, json_decode($user->backupCodes, true), true);
+        if (null === $user->backupCodes) {
+            return false;
+        }
+
+        $backupCodes = json_decode($user->backupCodes, true);
+
+        if (null === $backupCodes) {
+            return false;
+        }
+
+        return \in_array($code, $backupCodes, true);
     }
 
     public function invalidateBackupCode($user, string $code): void

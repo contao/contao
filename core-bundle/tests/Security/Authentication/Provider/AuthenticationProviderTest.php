@@ -334,12 +334,6 @@ class AuthenticationProviderTest extends TestCase
             ->willReturn(true)
         ;
 
-        $trustedDeviceManager
-            ->expects($this->once())
-            ->method('addTrustedDevice')
-            ->with($user, 'contao_frontend')
-        ;
-
         $provider = $this->createUsernamePasswordProvider(null, $twoFactorHandler, $trustedDeviceManager);
         $provider->authenticate($token);
     }
@@ -444,7 +438,7 @@ class AuthenticationProviderTest extends TestCase
      * @group legacy
      * @dataProvider getCheckCredentialsHookData
      *
-     * @expectedDeprecation Using the "checkCredentials" hook has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.5: Using the "checkCredentials" hook has been deprecated %s.
      */
     public function testTriggersTheCheckCredentialsHook(string $callback): void
     {
@@ -528,11 +522,6 @@ class AuthenticationProviderTest extends TestCase
         return false;
     }
 
-    /**
-     * @param ContaoFramework&MockObject                $framework
-     * @param AuthenticationHandlerInterface&MockObject $twoFactorHandler
-     * @param TrustedDeviceManagerInterface&MockObject  $trustedDeviceManager
-     */
     private function createUsernamePasswordProvider(ContaoFramework $framework = null, AuthenticationHandlerInterface $twoFactorHandler = null, TrustedDeviceManagerInterface $trustedDeviceManager = null): AuthenticationProvider
     {
         $userProvider = $this->createMock(UserProviderInterface::class);

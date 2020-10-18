@@ -4,13 +4,13 @@
 
   <figure class="<?= $this->containerClass ?>">
     <?php if ($this->isVideo): ?>
-      <video<?= $this->size ?><?php if ($this->poster): ?> poster="<?= $this->poster ?>" preload="<?= $this->preload ?>"<?php endif; ?> <?= implode(' ', $this->attributes) ?>>
+      <video<?= $this->size ?><?php if ($this->poster): ?> poster="<?= $this->poster ?>"<?php endif; ?><?php if ($this->preload): ?> preload="<?= $this->preload ?>"<?php endif; ?> <?= implode(' ', $this->attributes) ?>>
         <?php foreach ($this->files as $file): ?>
           <source type="<?= $file->mime ?>" src="<?= $file->path.$this->range ?>" title="<?= $file->title ?>">
         <?php endforeach; ?>
       </video>
     <?php else: ?>
-      <audio preload="<?= $this->preload ?>" <?= implode(' ', $this->attributes) ?>>
+      <audio<?php if ($this->preload): ?> preload="<?= $this->preload ?>"<?php endif; ?> <?= implode(' ', $this->attributes) ?>>
         <?php foreach ($this->files as $file): ?>
           <source type="<?= $file->mime ?>" src="<?= $file->path ?>" title="<?= $file->title ?>">
         <?php endforeach; ?>

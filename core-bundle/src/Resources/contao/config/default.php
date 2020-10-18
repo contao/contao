@@ -13,7 +13,7 @@ $GLOBALS['TL_CONFIG']['characterSet']   = 'utf-8';
 $GLOBALS['TL_CONFIG']['adminEmail']     = '';
 $GLOBALS['TL_CONFIG']['enableSearch']   = true;
 $GLOBALS['TL_CONFIG']['indexProtected'] = false;
-$GLOBALS['TL_CONFIG']['folderUrl']      = false;
+$GLOBALS['TL_CONFIG']['folderUrl']      = true;
 
 // Date and time
 $GLOBALS['TL_CONFIG']['datimFormat'] = 'Y-m-d H:i';
@@ -103,7 +103,6 @@ $GLOBALS['TL_CONFIG']['exampleWebsite']       = '';
 $GLOBALS['TL_CONFIG']['minPasswordLength']    = 8;
 $GLOBALS['TL_CONFIG']['disableCron']          = false;
 $GLOBALS['TL_CONFIG']['coreOnlyMode']         = false;
-$GLOBALS['TL_CONFIG']['doNotRedirectEmpty']   = false;
 $GLOBALS['TL_CONFIG']['useAutoItem']          = true;
 $GLOBALS['TL_CONFIG']['privacyAnonymizeIp']   = true;
 $GLOBALS['TL_CONFIG']['privacyAnonymizeGA']   = true;

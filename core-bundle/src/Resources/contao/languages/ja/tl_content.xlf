@@ -390,16 +390,16 @@
         <target>ギャラリーのテンプレート</target>
       </trans-unit>
       <trans-unit id="tl_content.galleryTpl.1">
-        <source>Here you can select the gallery template.</source>
-        <target>ギャラリーのテンプレートを選択します。</target>
+        <source>Here you can select a gallery template.</source>
+        <target>ギャラリーのテンプレートを選択できます。</target>
       </trans-unit>
       <trans-unit id="tl_content.customTpl.0">
-        <source>Custom element template</source>
-        <target>独自のコンテント要素のテンプレート</target>
+        <source>Content element template</source>
+        <target>コンテント要素のテンプレート</target>
       </trans-unit>
       <trans-unit id="tl_content.customTpl.1">
-        <source>Here you can overwrite the default element template.</source>
-        <target>初期設定のコンテント要素のテンプレートを上書きできます。</target>
+        <source>Here you can select the content element template.</source>
+        <target>コンテント要素のテンプレートを選択できます。</target>
       </trans-unit>
       <trans-unit id="tl_content.playerSRC.0">
         <source>Video/audio files</source>

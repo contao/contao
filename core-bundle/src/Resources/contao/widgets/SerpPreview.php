@@ -10,11 +10,14 @@
 
 namespace Contao;
 
+use Symfony\Component\Routing\Exception\ExceptionInterface;
+
 /**
  * @property array    $titleFields
  * @property array    $descriptionFields
  * @property string   $aliasField
  * @property callable $url_callback
+ * @property callable $title_tag_callback
  */
 class SerpPreview extends Widget
 {
@@ -42,18 +45,27 @@ class SerpPreview extends Widget
 		$description = StringUtil::substr($this->getDescription($model), 160);
 		$alias = $this->getAlias($model);
 
-		// Get the URL with a %s placeholder for the alias or ID
-		$url = $this->getUrl($model);
-		list($baseUrl, $urlSuffix) = explode('%s', $url);
+		try
+		{
+			// Get the URL with a %s placeholder for the alias or ID
+			$url = $this->getUrl($model);
+		}
+		catch (ExceptionInterface $routingException)
+		{
+			return '<div class="serp-preview"><p class="tl_info">' . $GLOBALS['TL_LANG']['MSC']['noSerpPreview'] . '</p></div>';
+		}
+
+		list($baseUrl) = explode('%s', $url);
+		$trail = implode(' › ', $this->convertUrlToItems($baseUrl));
 
 		// Use the base URL for the index page
 		if ($model instanceof PageModel && $alias == 'index')
 		{
-			$url = $baseUrl;
+			$url = $trail;
 		}
 		else
 		{
-			$url = sprintf($url, $alias ?: $model->id);
+			$url = implode(' › ', $this->convertUrlToItems($baseUrl . ($alias ?: $model->id)));
 		}
 
 		// Get the input field suffix (edit multiple mode)
@@ -65,23 +77,28 @@ class SerpPreview extends Widget
 		$descriptionField = $this->getDescriptionField($suffix);
 		$descriptionFallbackField = $this->getDescriptionFallbackField($suffix);
 
+		if ($titleTag = $this->getTitleTag($model))
+		{
+			$title = StringUtil::substr(sprintf($titleTag, $title), 64);
+		}
+
 		return <<<EOT
 <div class="serp-preview">
-  <p id="serp_title_$id" class="title">$title</p>
   <p id="serp_url_$id" class="url">$url</p>
+  <p id="serp_title_$id" class="title">$title</p>
   <p id="serp_description_$id" class="description">$description</p>
 </div>
 <script>
   window.addEvent('domready', function() {
     new Contao.SerpPreview({
       id: '$id',
-      baseUrl: '$baseUrl',
-      urlSuffix: '$urlSuffix',
+      trail: '$trail',
       titleField: '$titleField',
       titleFallbackField: '$titleFallbackField',
       aliasField: '$aliasField',
       descriptionField: '$descriptionField',
-      descriptionFallbackField: '$descriptionFallbackField'
+      descriptionFallbackField: '$descriptionFallbackField',
+      titleTag: '$titleTag'
     });
   });
 </script>
@@ -153,6 +170,26 @@ EOT;
 		return str_replace($placeholder, '%s', $url);
 	}
 
+	private function getTitleTag(Model $model)
+	{
+		if (!isset($this->title_tag_callback))
+		{
+			return '';
+		}
+
+		if (\is_array($this->title_tag_callback))
+		{
+			return System::importStatic($this->title_tag_callback[0])->{$this->title_tag_callback[1]}($model);
+		}
+
+		if (\is_callable($this->title_tag_callback))
+		{
+			return \call_user_func($this->title_tag_callback, $model);
+		}
+
+		return '';
+	}
+
 	private function getTitleField($suffix)
 	{
 		if (!isset($this->titleFields[0]))
@@ -201,5 +238,18 @@ EOT;
 		}
 
 		return 'ctrl_' . $this->aliasField . $suffix;
+	}
+
+	private function convertUrlToItems($url): array
+	{
+		$chunks = parse_url($url);
+		$steps = array_filter(explode('/', $chunks['path']));
+
+		if (System::getContainer()->getParameter('contao.prepend_locale'))
+		{
+			array_shift($steps);
+		}
+
+		return array_merge(array($chunks['host']), $steps);
 	}
 }

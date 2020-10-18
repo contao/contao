@@ -17,7 +17,7 @@ interface HeaderStorageInterface
     /**
      * Returns all headers.
      *
-     * @return array<string,string>
+     * @return array<string>
      */
     public function all(): array;
 

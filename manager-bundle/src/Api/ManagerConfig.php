@@ -14,6 +14,7 @@ namespace Contao\ManagerBundle\Api;
 
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Yaml;
+use Webmozart\PathUtil\Path;
 
 /**
  * @internal
@@ -41,7 +42,7 @@ class ManagerConfig
             $projectDir = (string) $realpath;
         }
 
-        $this->configFile = $projectDir.'/config/contao-manager.yml';
+        $this->configFile = Path::join($projectDir, 'config/contao-manager.yml');
         $this->filesystem = $filesystem ?: new Filesystem();
     }
 
@@ -62,10 +63,14 @@ class ManagerConfig
      */
     public function read(): array
     {
-        if (!is_file($this->configFile)) {
-            $this->config = [];
-        } else {
-            $this->config = Yaml::parse(file_get_contents($this->configFile));
+        $this->config = [];
+
+        if (is_file($this->configFile)) {
+            $config = Yaml::parse(file_get_contents($this->configFile));
+
+            if (\is_array($config)) {
+                $this->config = $config;
+            }
         }
 
         return $this->config;

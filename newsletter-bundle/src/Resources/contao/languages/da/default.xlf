@@ -17,7 +17,7 @@
         <source>Please select at least one channel.</source>
         <target>Vælg mindst en nyhedskanal.</target>
       </trans-unit>
-      <trans-unit id="ERR.blacklisted">
+      <trans-unit id="ERR.onDenyList">
         <source>The e-mail address has been unsubscribed from the channel.</source>
         <target>E-mailadressen er nu afmeldt fra nyhedskanalen.</target>
       </trans-unit>

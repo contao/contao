@@ -39,9 +39,11 @@
       </trans-unit>
       <trans-unit id="MSC.cal_repeat">
         <source>This event is repeated %s%s. The next event will take place on &lt;time datetime=&quot;%s&quot; itemprop=&quot;startDate&quot;&gt;%s&lt;/time&gt;.</source>
+        <target>本事件已重复 %s%s. 下一事件将发生于 &lt;time datetime=&quot;%s&quot; itemprop=&quot;startDate&quot;&gt;%s&lt;/time&gt;.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_repeat_ended">
         <source>This event was repeated %s%s.</source>
+        <target>本事件已重复 %s%s.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_until">
         <source>until %s</source>
@@ -49,27 +51,35 @@
       </trans-unit>
       <trans-unit id="MSC.cal_single_days">
         <source>every day</source>
+        <target>每天</target>
       </trans-unit>
       <trans-unit id="MSC.cal_multiple_days">
         <source>every %s days</source>
+        <target>每 %s 天</target>
       </trans-unit>
       <trans-unit id="MSC.cal_single_weeks">
         <source>every week</source>
+        <target>每周</target>
       </trans-unit>
       <trans-unit id="MSC.cal_multiple_weeks">
         <source>every %s weeks</source>
+        <target>每 %s 周</target>
       </trans-unit>
       <trans-unit id="MSC.cal_single_months">
         <source>every month</source>
+        <target>每月</target>
       </trans-unit>
       <trans-unit id="MSC.cal_multiple_months">
         <source>every %s months</source>
+        <target>每 %s 月</target>
       </trans-unit>
       <trans-unit id="MSC.cal_single_years">
         <source>every year</source>
+        <target>每年</target>
       </trans-unit>
       <trans-unit id="MSC.cal_multiple_years">
         <source>every %s years</source>
+        <target>每 %s 年</target>
       </trans-unit>
       <trans-unit id="MSC.eventPicker">
         <source>Events</source>

@@ -18,9 +18,9 @@ use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\InstallationBundle\Database\Installer;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\Filesystem\Filesystem;
 
 class MigrateCommandTest extends TestCase
 {
@@ -60,13 +60,13 @@ class MigrateCommandTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using runonce.php files has been deprecated %s.
+     * @expectedDeprecation Since contao/core-bundle 4.9: Using "runonce.php" files has been deprecated %s.
      */
     public function testExecutesRunOnceFiles(): void
     {
         $runOnceFile = $this->getFixturesDir().'/runonceFile.php';
 
-        file_put_contents($runOnceFile, '<?php $GLOBALS["test_'.self::class.'"] = "executed";');
+        (new Filesystem())->dumpFile($runOnceFile, '<?php $GLOBALS["test_'.self::class.'"] = "executed";');
 
         $command = $this->getCommand([], [], [[$runOnceFile]]);
 
@@ -96,13 +96,16 @@ class MigrateCommandTest extends TestCase
         $installer
             ->expects($this->atLeastOnce())
             ->method('getCommands')
+            ->with(false)
             ->willReturn(
                 [
-                    'CREATE' => ['hash1' => 'First call QUERY 1', 'hash2' => 'First call QUERY 2'],
+                    'hash1' => 'First call QUERY 1',
+                    'hash2' => 'First call QUERY 2',
                 ],
                 [
-                    'CREATE' => ['hash3' => 'Second call QUERY 1', 'hash4' => 'Second call QUERY 2'],
-                    'DROP' => ['hash5' => 'DROP QUERY'],
+                    'hash3' => 'Second call QUERY 1',
+                    'hash4' => 'Second call QUERY 2',
+                    'hash5' => 'DROP QUERY',
                 ],
                 []
             )
@@ -173,7 +176,6 @@ class MigrateCommandTest extends TestCase
      * @param array<array<string>>          $pendingMigrations
      * @param array<array<MigrationResult>> $migrationResults
      * @param array<array<string>>          $runonceFiles
-     * @param Installer&MockObject          $installer
      */
     private function getCommand(array $pendingMigrations = [], array $migrationResults = [], array $runonceFiles = [], Installer $installer = null): MigrateCommand
     {

@@ -197,10 +197,17 @@ class Combiner extends System
 	/**
 	 * Generates the files and returns the URLs.
 	 *
+	 * @param string $strUrl An optional URL to prepend
+	 *
 	 * @return array The file URLs
 	 */
-	public function getFileUrls()
+	public function getFileUrls($strUrl=null)
 	{
+		if ($strUrl === null)
+		{
+			$strUrl = System::getContainer()->get('contao.assets.assets_context')->getStaticUrl();
+		}
+
 		$return = array();
 		$strTarget = substr($this->strMode, 1);
 
@@ -218,7 +225,7 @@ class Combiner extends System
 					$objFile->close();
 				}
 
-				$return[] = $strPath . '|' . $arrFile['version'];
+				$return[] = $strUrl . $strPath . '|' . $arrFile['version'];
 			}
 			else
 			{
@@ -231,12 +238,12 @@ class Combiner extends System
 				}
 
 				// Add the media query (see #7070)
-				if ($this->strMode == self::CSS && $arrFile['media'] != '' && $arrFile['media'] != 'all' && !$this->hasMediaTag($arrFile['name']))
+				if ($this->strMode == self::CSS && $arrFile['media'] && $arrFile['media'] != 'all' && !$this->hasMediaTag($arrFile['name']))
 				{
 					$name .= '|' . $arrFile['media'];
 				}
 
-				$return[] = $name . '|' . $arrFile['version'];
+				$return[] = $strUrl . $name . '|' . $arrFile['version'];
 			}
 		}
 
@@ -254,7 +261,7 @@ class Combiner extends System
 	{
 		if (Config::get('debugMode'))
 		{
-			return $this->getDebugMarkup();
+			return $this->getDebugMarkup($strUrl);
 		}
 
 		return $this->getCombinedFileUrl($strUrl);
@@ -263,11 +270,13 @@ class Combiner extends System
 	/**
 	 * Generates the debug markup.
 	 *
+	 * @param string $strUrl An optional URL to prepend
+	 *
 	 * @return string The debug markup
 	 */
-	protected function getDebugMarkup()
+	protected function getDebugMarkup($strUrl)
 	{
-		$return = $this->getFileUrls();
+		$return = $this->getFileUrls($strUrl);
 
 		foreach ($return as $k=>$v)
 		{
@@ -378,7 +387,7 @@ class Combiner extends System
 		$content = $this->fixPaths($content, $arrFile);
 
 		// Add the media type if there is no @media command in the code
-		if ($arrFile['media'] != '' && $arrFile['media'] != 'all' && strpos($content, '@media') === false)
+		if ($arrFile['media'] && $arrFile['media'] != 'all' && strpos($content, '@media') === false)
 		{
 			$content = '@media ' . $arrFile['media'] . "{\n" . $content . "\n}";
 		}
@@ -401,6 +410,11 @@ class Combiner extends System
 			$objCompiler = new Compiler();
 			$objCompiler->setImportPaths($this->strRootDir . '/' . \dirname($arrFile['name']));
 			$objCompiler->setFormatter((Config::get('debugMode') ? Expanded::class : Compressed::class));
+
+			if (Config::get('debugMode'))
+			{
+				$objCompiler->setSourceMap(Compiler::SOURCE_MAP_INLINE);
+			}
 
 			return $this->fixPaths($objCompiler->compile($content), $arrFile);
 		}

@@ -17,7 +17,7 @@
         <source>Please select at least one channel.</source>
         <target>Si prega di selezionare almeno una newsletter.</target>
       </trans-unit>
-      <trans-unit id="ERR.blacklisted">
+      <trans-unit id="ERR.onDenyList">
         <source>The e-mail address has been unsubscribed from the channel.</source>
         <target>L'indirizzo e-mail è stato eliminato dalla sottoscrizione.</target>
       </trans-unit>

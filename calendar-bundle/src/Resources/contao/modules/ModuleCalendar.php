@@ -19,6 +19,7 @@ use Patchwork\Utf8;
  * @property int    $cal_startDay
  * @property array  $cal_calendar
  * @property string $cal_ctemplate
+ * @property string $cal_featured
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -49,7 +50,9 @@ class ModuleCalendar extends Events
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['calendar'][0]) . ' ###';
@@ -110,7 +113,7 @@ class ModuleCalendar extends Events
 		$time = Date::floorToMinute();
 
 		// Find the boundaries
-		$objMinMax = $this->Database->query("SELECT MIN(startTime) AS dateFrom, MAX(endTime) AS dateTo, MAX(repeatEnd) AS repeatUntil FROM tl_calendar_events WHERE pid IN(" . implode(',', array_map('\intval', $this->cal_calendar)) . ")" . (!BE_USER_LOGGED_IN ? " AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') AND published='1'" : ""));
+		$objMinMax = $this->Database->query("SELECT MIN(startTime) AS dateFrom, MAX(endTime) AS dateTo, MAX(repeatEnd) AS repeatUntil FROM tl_calendar_events WHERE pid IN(" . implode(',', array_map('\intval', $this->cal_calendar)) . ")" . (!BE_USER_LOGGED_IN ? " AND published='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'$time')" : ""));
 
 		// Store year and month
 		$intYear = date('Y', $this->Date->tstamp);
@@ -219,9 +222,21 @@ class ModuleCalendar extends Events
 			$intFirstDayOffset += 7;
 		}
 
+		// Handle featured events
+		$blnFeatured = null;
+
+		if ($this->cal_featured == 'featured')
+		{
+			$blnFeatured = true;
+		}
+		elseif ($this->cal_featured == 'unfeatured')
+		{
+			$blnFeatured = false;
+		}
+
 		$intColumnCount = -1;
 		$intNumberOfRows = ceil(($intDaysInMonth + $intFirstDayOffset) / 7);
-		$arrAllEvents = $this->getAllEvents($this->cal_calendar, $this->Date->monthBegin, $this->Date->monthEnd);
+		$arrAllEvents = $this->getAllEvents($this->cal_calendar, $this->Date->monthBegin, $this->Date->monthEnd, $blnFeatured);
 		$arrDays = array();
 
 		// Compile days

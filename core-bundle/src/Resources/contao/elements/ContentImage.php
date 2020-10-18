@@ -36,7 +36,7 @@ class ContentImage extends ContentElement
 	 */
 	public function generate()
 	{
-		if ($this->singleSRC == '')
+		if (!$this->singleSRC)
 		{
 			return '';
 		}

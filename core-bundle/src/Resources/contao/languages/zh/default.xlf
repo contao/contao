@@ -185,6 +185,18 @@
         <source>The alias &quot;%s&quot; already exists!</source>
         <target>页面别名“%s”已经存在！</target>
       </trans-unit>
+      <trans-unit id="ERR.urlPrefixExists">
+        <source>The URL prefix &quot;%s&quot; is already used by another root page with the same domain name!</source>
+      </trans-unit>
+      <trans-unit id="ERR.pageUrlExists">
+        <source>A page with the URL &quot;%s&quot; already exists!</source>
+      </trans-unit>
+      <trans-unit id="ERR.pageUrlSuffix">
+        <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>
+      </trans-unit>
+      <trans-unit id="ERR.pageUrlPrefix">
+        <source>This URL prefix will lead to duplicate URLs (e.g. %s)!</source>
+      </trans-unit>
       <trans-unit id="ERR.importFolder">
         <source>The folder &quot;%s&quot; cannot be imported!</source>
         <target>无法导入文件夹“%s”！</target>
@@ -223,6 +235,7 @@
       </trans-unit>
       <trans-unit id="ERR.forbiddenExtensions">
         <source>The following file extensions are not allowed: %s</source>
+        <target>不允许使用以下文件扩展名：: %s</target>
       </trans-unit>
       <trans-unit id="ERR.invalidPages">
         <source>Your selection contains invalid page IDs!</source>
@@ -234,6 +247,7 @@
       </trans-unit>
       <trans-unit id="ERR.circularPicker">
         <source>Invalid selection (circular reference)!</source>
+        <target>无效选择 (循环引用)!</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
         <source>None of the active website root pages without an explicit DNS setting have the language fallback option set.</source>
@@ -309,6 +323,7 @@
       </trans-unit>
       <trans-unit id="ERR.moduleWithoutColumn">
         <source>Please assign all modules to a column!</source>
+        <target>请将所有模块分配给一列</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -648,9 +663,11 @@
       </trans-unit>
       <trans-unit id="FFL.range.0">
         <source>Range slider</source>
+        <target>范围滑块</target>
       </trans-unit>
       <trans-unit id="FFL.range.1">
         <source>A range slider to select a value or range of values between a specified min and max.</source>
+        <target>用于在指定最小值和最大值之间选择值或值范围的范围滑块。</target>
       </trans-unit>
       <trans-unit id="FFL.hidden.0">
         <source>Hidden field</source>
@@ -722,6 +739,7 @@
       </trans-unit>
       <trans-unit id="PTY.error_401.1">
         <source>If a visitor requests a protected page without being authenticated, a 401 error page will be loaded instead.</source>
+        <target>如果访问者请求受保护的页面而未经身份验证，则将加载 401 错误页。</target>
       </trans-unit>
       <trans-unit id="PTY.error_403.0">
         <source>403 Access denied</source>
@@ -729,6 +747,7 @@
       </trans-unit>
       <trans-unit id="PTY.error_403.1">
         <source>If a member requests a protected page without permission, a 403 error page will be loaded instead.</source>
+        <target>如果成员请求受保护的页面未经许可，将加载 403 错误页。</target>
       </trans-unit>
       <trans-unit id="PTY.error_404.0">
         <source>404 Page not found</source>
@@ -736,6 +755,7 @@
       </trans-unit>
       <trans-unit id="PTY.error_404.1">
         <source>If a visitor requests a non-existent page, a 404 error page will be loaded instead.</source>
+        <target>如果访问者请求不存在的页面，则将加载 404 错误页。</target>
       </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
@@ -1227,6 +1247,7 @@
       </trans-unit>
       <trans-unit id="MSC.mw_column">
         <source>Layout section</source>
+        <target>布局区域</target>
       </trans-unit>
       <trans-unit id="MSC.mw_enable">
         <source>Enable/disable the module</source>
@@ -1509,8 +1530,7 @@
         <target>后台键盘快捷键</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/books/manual/current/en/02-administration-area/keyboard-shortcuts.html&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
-        <target>了解更多关于使用&lt;a href=&quot;https://docs.contao.org/books/manual/current/en/02-administration-area/keyboard-shortcuts.html&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot;&gt;键盘快捷键&lt;/a&gt;来加快你的工作流程。</target>
+        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -2558,27 +2578,34 @@
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesLabel">
         <source>Backup codes</source>
+        <target>备份代码</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesShow">
         <source>Show backup codes</source>
+        <target>显示备份代码</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesExplain">
-        <source>Backup codes can be used to access your account if you have lost your authentication device and cannot generate two-factor codes anymore. Treat your backup codes with the same level of attention as your password! We recommend saving them with a password manager such as Lastpass, 1Password or Keeper.</source>
+        <source>Backup codes can be used to access your account if you have lost your authentication device and cannot generate two-factor codes anymore. Treat your backup codes with the same level of attention as your password! It is recommended to save them with a password manager such as Lastpass, 1Password or Keeper.</source>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesInfo">
         <source>Put the codes in a safe spot. If you lose your authentication device and do not have backup codes, you cannot access your account anymore!</source>
+        <target>将代码放在安全位置。如果您丢失了身份验证设备，并且没有备份代码，则无法再访问您的帐户！</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesGenerate">
         <source>Generate backup codes</source>
+        <target>创建备份代码</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesRegenerate">
         <source>Regenerate backup codes</source>
+        <target>重新创建备份代码</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesRegenerateInfo">
         <source>When you regenerate the backup codes, your old codes will not work anymore.</source>
+        <target>重新创建备份代码后，旧的代码不再有效。</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorTrustDevice">
         <source>Trust this device</source>
+        <target>信任这个设备</target>
       </trans-unit>
       <trans-unit id="MSC.userTemplateEditor">
         <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
@@ -2590,9 +2617,11 @@
       </trans-unit>
       <trans-unit id="MSC.userThemeImport">
         <source>There is at least one regular user with permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, these users implicitly have full control over the system!</source>
+        <target>至少有一个普通用户有权限导入主题。由于主题可以包含任意模板并且模板是PHP文件，因此这些用户可以完全控制系统！</target>
       </trans-unit>
       <trans-unit id="MSC.groupThemeImport">
         <source>There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!</source>
+        <target>至少有一个用户组有权限导入主题。由于主题可以包含任意模板并且模板是PHP文件，因此这些用户组的用户可以完全控制系统！</target>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
@@ -2608,24 +2637,27 @@
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
+        <target>谷歌搜索结果预览</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.1">
         <source>Here you can preview the meta data in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
+        <target>在这里预览Google搜索结果中的mata数据。其他搜索引擎也许会显示较长文本或者裁剪在不同位置。</target>
       </trans-unit>
       <trans-unit id="MSC.clearTrustedDevices">
         <source>Clear trusted devices</source>
+        <target>清除已信任设备</target>
       </trans-unit>
       <trans-unit id="MSC.trustedDevices">
         <source>Trusted devices</source>
+        <target>信任设备</target>
       </trans-unit>
       <trans-unit id="MSC.noTrustedDevices">
         <source>Currently there are no trusted devices.</source>
+        <target>现在没有已信任设备。</target>
       </trans-unit>
       <trans-unit id="MSC.device">
         <source>Device</source>
-      </trans-unit>
-      <trans-unit id="MSC.thisDevice">
-        <source>this device</source>
+        <target>设备</target>
       </trans-unit>
       <trans-unit id="MSC.browser">
         <source>Browser</source>
@@ -2633,6 +2665,13 @@
       </trans-unit>
       <trans-unit id="MSC.operatingSystem">
         <source>Operating system</source>
+        <target>操作系统</target>
+      </trans-unit>
+      <trans-unit id="MSC.openToolbar">
+        <source>Open the Contao toolbar</source>
+      </trans-unit>
+      <trans-unit id="MSC.closeToolbar">
+        <source>Close the Contao toolbar</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2840,12 +2879,15 @@
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.summary">
         <source>Indexed %d URI(s) successfully. %d failed.</source>
+        <target>已索引 %d URI(s) 成功。 %d 失败。</target>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.warning">
         <source>%d URI(s) were skipped (if you are missing one, checkout the debug log).</source>
+        <target>%d URI(s) 被跳过 (如果缺少一个，请检查调试日志)。</target>
       </trans-unit>
       <trans-unit id="CRAWL.brokenLinkChecker.summary">
         <source>Checked %d link(s) successfully. %d were broken.</source>
+        <target>已检查 %d link(s) 成功。 %d 个坏连接。</target>
       </trans-unit>
     </body>
   </file>

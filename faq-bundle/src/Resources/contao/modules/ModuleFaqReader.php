@@ -37,7 +37,9 @@ class ModuleFaqReader extends Module
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['faqreader'][0]) . ' ###';
@@ -106,7 +108,7 @@ class ModuleFaqReader extends Module
 		$this->Template->faq = $objFaq->row();
 
 		// Overwrite the page title and description (see #2853 and #4955)
-		if ($objFaq->question != '')
+		if ($objFaq->question)
 		{
 			$objPage->pageTitle = strip_tags(StringUtil::stripInsertTags($objFaq->question));
 			$objPage->description = $this->prepareMetaDescription($objFaq->question);
@@ -121,7 +123,7 @@ class ModuleFaqReader extends Module
 		$this->Template->addImage = false;
 
 		// Add image
-		if ($objFaq->addImage && $objFaq->singleSRC != '')
+		if ($objFaq->addImage && $objFaq->singleSRC)
 		{
 			$objModel = FilesModel::findByUuid($objFaq->singleSRC);
 
@@ -187,7 +189,7 @@ class ModuleFaqReader extends Module
 		}
 
 		/** @var UserModel $objAuthor */
-		if ($objCategory->notify != 'notify_admin' && ($objAuthor = $objFaq->getRelated('author')) instanceof UserModel && $objAuthor->email != '')
+		if ($objCategory->notify != 'notify_admin' && ($objAuthor = $objFaq->getRelated('author')) instanceof UserModel && $objAuthor->email)
 		{
 			$arrNotifies[] = $objAuthor->email;
 		}

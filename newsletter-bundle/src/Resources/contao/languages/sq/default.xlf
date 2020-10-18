@@ -17,7 +17,7 @@
         <source>Please select at least one channel.</source>
         <target>Zgjedhoni një kanal</target>
       </trans-unit>
-      <trans-unit id="ERR.blacklisted">
+      <trans-unit id="ERR.onDenyList">
         <source>The e-mail address has been unsubscribed from the channel.</source>
         <target>E-Mail adrese është larguar nga regjistrimi i kanalit.</target>
       </trans-unit>

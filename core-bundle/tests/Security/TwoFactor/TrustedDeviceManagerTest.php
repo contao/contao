@@ -28,13 +28,13 @@ class TrustedDeviceManagerTest extends TestCase
         $tokenStorage
             ->expects($this->once())
             ->method('hasTrustedToken')
-            ->with('foo', 'contao_backend', 1)
+            ->with('1', 'contao_backend', 1)
             ->willReturn(true)
         ;
 
         /** @var BackendUser $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
-        $user->username = 'foo';
+        $user->id = 1;
         $user->trustedTokenVersion = 1;
 
         $manager = new TrustedDeviceManager(

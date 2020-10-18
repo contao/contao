@@ -52,7 +52,7 @@ class WebsiteRootsConfigProvider implements ProviderInterface
         $stmt->bindValue('dns', preg_replace('@^https?://@', '', $request->headers->get('origin')));
         $stmt->execute();
 
-        if (!$stmt->fetchColumn()) {
+        if (!$stmt->fetchOne()) {
             return [];
         }
 

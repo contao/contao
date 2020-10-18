@@ -21,6 +21,7 @@ use Knp\Menu\FactoryInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Webmozart\PathUtil\Path;
 
 class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface, FrameworkAwareInterface
 {
@@ -63,7 +64,7 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
             return Validator::isUuid($config->getValue());
         }
 
-        return $this->isMatchingInsertTag($config) || 0 === strpos($config->getValue(), $this->uploadPath.'/');
+        return $this->isMatchingInsertTag($config) || Path::isBasePath($this->uploadPath, $config->getValue());
     }
 
     public function getDcaTable(): string
@@ -178,7 +179,7 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
                 $value = str_replace($chunks, '', $value);
             }
 
-            if (0 === strpos($value, $this->uploadPath.'/')) {
+            if (Path::isBasePath($this->uploadPath, $value)) {
                 $attributes['value'] = $this->urlEncode($value);
             } else {
                 $attributes['value'] = $this->urlEncode($this->convertValueToPath($value));

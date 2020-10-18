@@ -9,7 +9,15 @@ $GLOBALS['TL_CSS'][] = 'assets/tablesorter/css/tablesorter.min.css|static';
 <script>
   jQuery(function($) {
     $('.ce_table .sortable').each(function(i, table) {
-      $(table).tablesorter();
+      var attr = $(table).attr('data-sort-default'),
+          opts = {}, s;
+
+      if (attr) {
+        s = attr.split('|');
+        opts = { sortList: [[s[0], s[1] == 'desc' | 0]] };
+      }
+
+      $(table).tablesorter(opts);
     });
   });
 </script>

@@ -334,7 +334,7 @@ class File extends System
 								(int) $dimensions->getSize()->getHeight()
 							);
 
-							if (!$this->arrImageViewSize[0] || !$this->arrImageViewSize[1])
+							if (!$this->arrImageViewSize[0] || !$this->arrImageViewSize[1] || $dimensions->isUndefined())
 							{
 								$this->arrImageViewSize = false;
 							}
@@ -750,19 +750,18 @@ class File extends System
 			return false;
 		}
 
-		$return = System::getContainer()
+		System::getContainer()
 			->get('contao.image.image_factory')
 			->create($this->strRootDir . '/' . $this->strFile, array($width, $height, $mode), $this->strRootDir . '/' . $this->strFile)
-			->getUrl($this->strRootDir)
 		;
 
-		if ($return)
-		{
-			$this->arrPathinfo = array();
-			$this->arrImageSize = array();
-		}
+		$this->arrPathinfo = array();
+		$this->arrImageSize = array();
 
-		return $return;
+		// Clear the image size cache as mtime could potentially not change
+		unset(static::$arrImageSizeCache[$this->strFile . '|' . $this->mtime]);
+
+		return true;
 	}
 
 	/**
@@ -788,6 +787,7 @@ class File extends System
 
 		$response->headers->addCacheControlDirective('must-revalidate');
 		$response->headers->set('Connection', 'close');
+		$response->headers->set('Content-Type', $this->getMimeType());
 
 		throw new ResponseException($response);
 	}
