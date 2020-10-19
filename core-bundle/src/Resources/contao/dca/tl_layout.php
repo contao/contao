@@ -110,8 +110,8 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		'cols_2cll'                   => 'widthLeft',
 		'cols_2clr'                   => 'widthRight',
 		'cols_3cl'                    => 'widthLeft,widthRight',
-		'addJQuery'                   => 'jquery,jSource',
-		'addMooTools'                 => 'mootools,mooSource',
+		'addJQuery'                   => 'jquery',
+		'addMooTools'                 => 'mootools',
 		'static'                      => 'width,align'
 	),
 
@@ -346,15 +346,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'eval'                    => array('submitOnChange'=>true),
 			'sql'                     => "char(1) NOT NULL default ''"
 		),
-		'jSource' => array
-		(
-			'exclude'                 => true,
-			'inputType'               => 'select',
-			'options'                 => array('j_local', 'j_googleapis', 'j_fallback'),
-			'eval'                    => array('tl_class'=>'w50'),
-			'reference'               => &$GLOBALS['TL_LANG']['tl_layout'],
-			'sql'                     => "varchar(16) NOT NULL default ''"
-		),
 		'jquery' => array
 		(
 			'exclude'                 => true,
@@ -374,15 +365,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
 			'sql'                     => "char(1) NOT NULL default ''"
-		),
-		'mooSource' => array
-		(
-			'exclude'                 => true,
-			'inputType'               => 'select',
-			'options'                 => array('moo_local', 'moo_googleapis', 'moo_fallback'),
-			'eval'                    => array('tl_class'=>'w50'),
-			'reference'               => &$GLOBALS['TL_LANG']['tl_layout'],
-			'sql'                     => "varchar(16) NOT NULL default 'moo_local'"
 		),
 		'mootools' => array
 		(
