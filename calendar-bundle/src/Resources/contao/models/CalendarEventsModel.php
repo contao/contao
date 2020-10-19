@@ -201,7 +201,7 @@ class CalendarEventsModel extends \Model
 		}
 
 		$t = static::$strTable;
-		$arrColumns = !is_numeric($varId) ? array("$t.alias=?") : array("$t.id=?");
+		$arrColumns = !is_numeric($varId) ? array("BINARY $t.alias=?") : array("$t.id=?");
 		$arrColumns[] = "$t.pid IN(" . implode(',', array_map('\intval', $arrPids)) . ")";
 
 		if (!static::isPreviewMode($arrOptions))
