@@ -2,6 +2,13 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.10.4] (2020-10-20)
+
+**Fixed issues:**
+
+- [#2419] Fix unknown option when creating or editing error pages ([fritzmg])
+- [#2423] Correctly show the xlabel in the checkbox wizard ([leofeyer])
+
 ## [4.10.3] (2020-10-07)
 
 **New features:**
@@ -173,6 +180,7 @@ This project adheres to [Semantic Versioning].
 - [#1458] Always set host and language when generating the navigation menu ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.10.4]: https://github.com/contao/contao/releases/tag/4.10.4
 [4.10.3]: https://github.com/contao/contao/releases/tag/4.10.3
 [4.10.2]: https://github.com/contao/contao/releases/tag/4.10.2
 [4.10.1]: https://github.com/contao/contao/releases/tag/4.10.1
@@ -192,6 +200,8 @@ This project adheres to [Semantic Versioning].
 [m-vo]: https://github.com/m-vo
 [richardhj]: https://github.com/richardhj
 [Toflar]: https://github.com/Toflar
+[#2419]: https://github.com/contao/contao/pull/2419
+[#2423]: https://github.com/contao/contao/pull/2423
 [#2379]: https://github.com/contao/contao/pull/2379
 [#2410]: https://github.com/contao/contao/pull/2410
 [#2341]: https://github.com/contao/contao/pull/2341
