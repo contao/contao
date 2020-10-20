@@ -134,7 +134,7 @@ class ArticleModel extends Model
 	public static function findByIdOrAliasAndPid($varId, $intPid, array $arrOptions=array())
 	{
 		$t = static::$strTable;
-		$arrColumns = !preg_match('/^[1-9]\d*$/', $varId) ? array("$t.alias=?") : array("$t.id=?");
+		$arrColumns = !preg_match('/^[1-9]\d*$/', $varId) ? array("BINARY $t.alias=?") : array("$t.id=?");
 		$arrValues = array($varId);
 
 		if ($intPid)
@@ -158,7 +158,7 @@ class ArticleModel extends Model
 	public static function findPublishedByIdOrAliasAndPid($varId, $intPid, array $arrOptions=array())
 	{
 		$t = static::$strTable;
-		$arrColumns = !preg_match('/^[1-9]\d*$/', $varId) ? array("$t.alias=?") : array("$t.id=?");
+		$arrColumns = !preg_match('/^[1-9]\d*$/', $varId) ? array("BINARY $t.alias=?") : array("$t.id=?");
 		$arrValues = array($varId);
 
 		if ($intPid)
