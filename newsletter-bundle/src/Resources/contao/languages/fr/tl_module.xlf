@@ -19,9 +19,11 @@
       </trans-unit>
       <trans-unit id="tl_module.nl_text.0">
         <source>Custom text</source>
+        <target>Texte personnalisé</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_text.1">
         <source>Here you can e.g. enter a privacy note to make the newsletter subscription GDPR compliant.</source>
+        <target>Vous pouvez saisir ici une note de confidentialité pour rendre l'abonnement à la newsletter conforme au RGPD.</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_hideChannels.0">
         <source>Hide channel menu</source>
@@ -53,9 +55,11 @@
       </trans-unit>
       <trans-unit id="tl_module.nl_template.1">
         <source>Here you can select a newsletter template.</source>
+        <target>Choisir un modèle de bulletin d'information.</target>
       </trans-unit>
       <trans-unit id="tl_module.text_legend">
         <source>Custom text</source>
+        <target>Texte personnalisé</target>
       </trans-unit>
       <trans-unit id="tl_module.text_subscribe.0">
         <source>Your subscription on %s</source>
@@ -74,6 +78,14 @@ The confirmation link is valid for 24 hours. You can cancel your subscription at
 
 If you did not subscribe yourself, please ignore this e-mail.
 </source>
+        <target>Vous avez souscrit aux listes de diffusion suivantes sur ##domain##:
+
+          ##channels##
+
+          Veuillez cliquer sur ##link## pour valider votre abonnement. Ce lien de confirmation est valable 24H.
+
+          Si vous ne souhaitez pas souscrire à ces listes de diffusion, veuillez ignorer cet e-mail.
+        </target>
       </trans-unit>
       <trans-unit id="tl_module.text_unsubscribe.0">
         <source>Your subscription on %s</source>

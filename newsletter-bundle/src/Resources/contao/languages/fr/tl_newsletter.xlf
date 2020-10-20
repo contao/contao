@@ -55,6 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.template.1">
         <source>Here you can override the e-mail template of the channel.</source>
+        <target>Vous pouvez remplacer le modèle d'e-mail de la liste de diffusion.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendText.0">
         <source>Send as plain text</source>
@@ -110,6 +111,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.start.1">
         <source>In case the sending process is interrupted, you can enter a numeric offset here to continue with a particular recipient. You can check how many mails have been sent by selecting the category &lt;code&gt;NEWSLETTER_%s&lt;/code&gt; in the system log. If there are 120 entries, enter &quot;120&quot; to continue with the 121st recipient (counting starts at 0).</source>
+        <target>Si le processus d'envoi est interompu, vous pouvez saisir une valeur de décalage pour continuer l'envoi à partir d'un destinataire particulier. Vous pouvez vérifier combien de mail ont été envoyés en sélectionnant la catégorie &lt;code&gt;NEWSLETTER_%s&lt;/code&gt; dans le journal système.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendPreviewTo.0">
         <source>Send preview to</source>
@@ -201,6 +203,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.new.0">
         <source>New</source>
+        <target>Actualité</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.new.1">
         <source>Create a new newsletter</source>

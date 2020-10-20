@@ -74,8 +74,8 @@
         <target>N'autoriser que les utilisateurs authentifiés à créer des commentaires.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>Désactiver la question de sécurité</target>
+        <source>Disable spam protection</source>
+        <target>Désactiver la protection contre le spam</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>
@@ -134,27 +134,32 @@
         <target>Auteur et administrateur système</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.0">
-        <source>RSS feeds</source>
-        <target>Flux RSS</target>
+        <source>News feeds</source>
+        <target>Flux RSS d'actualités</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.1">
-        <source>Manage RSS feeds</source>
-        <target>Gérer les flux RSS</target>
+        <source>Manage news feeds</source>
+        <target>Gérer les flux d'actualités</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.new.0">
         <source>New</source>
+        <target>Actualité</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.new.1">
         <source>Create a new news archive</source>
+        <target>Créer une nouvelle archive d'actualités</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.show">
         <source>Show the details of news archive ID %s</source>
+        <target>Afficher les détails de l'archive d'actualités ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.edit">
         <source>Edit news archive ID %s</source>
+        <target>Éditer l'archive d'actualités ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.editheader">
         <source>Edit the settings of news archive ID %s</source>
+        <target>Éditer les paramètres de l'archive d'actualités ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.editmeta">
         <source>Edit the news archive settings</source>
@@ -162,12 +167,15 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.copy">
         <source>Duplicate news archive ID %s</source>
+        <target>Dupliquer l'archive d'actualités ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.delete">
         <source>Delete news archive ID %s</source>
+        <target>Supprimer l'archive d'actualités ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.comments">
         <source>Show comments of news archive ID %s</source>
+        <target>Afficher les commentaires de l'archive d'actualités ID %s</target>
       </trans-unit>
     </body>
   </file>

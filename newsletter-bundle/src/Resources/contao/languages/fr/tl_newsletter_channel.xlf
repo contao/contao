@@ -23,6 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.template.1">
         <source>Here you can select an e-mail template.</source>
+        <target>Vous pouvez choisir un modèle d'email.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.sender.0">
         <source>Sender e-mail address</source>
@@ -62,6 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.new.0">
         <source>New</source>
+        <target>Actualité</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.new.1">
         <source>Create a new channel</source>

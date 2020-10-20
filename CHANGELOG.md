@@ -2,6 +2,15 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.9] (2020-10-20)
+
+**Fixed issues:**
+
+- [#2434] Correctly move root level pages to the top ([leofeyer])
+- [#2430] Correctly generate the HTML module ([leofeyer])
+- [#2417] Register globals in the fragments pass ([aschempp])
+- [#2416] Remove the Content-Length header when modifying the response ([aschempp])
+
 ## [4.9.8] (2020-10-07)
 
 **Fixed issues:**
@@ -441,6 +450,7 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.9]: https://github.com/contao/contao/releases/tag/4.9.9
 [4.9.8]: https://github.com/contao/contao/releases/tag/4.9.8
 [4.9.7]: https://github.com/contao/contao/releases/tag/4.9.7
 [4.9.6]: https://github.com/contao/contao/releases/tag/4.9.6
@@ -471,6 +481,10 @@ This project adheres to [Semantic Versioning].
 [Tastaturberuf]: https://github.com/Tastaturberuf
 [Toflar]: https://github.com/Toflar
 [xchs]: https://github.com/xchs
+[#2434]: https://github.com/contao/contao/pull/2434
+[#2430]: https://github.com/contao/contao/pull/2430
+[#2417]: https://github.com/contao/contao/pull/2417
+[#2416]: https://github.com/contao/contao/pull/2416
 [#2403]: https://github.com/contao/contao/pull/2403
 [#2399]: https://github.com/contao/contao/pull/2399
 [#2363]: https://github.com/contao/contao/pull/2363

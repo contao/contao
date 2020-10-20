@@ -47,6 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.endTime.1">
         <source>Leave blank to create an open-ended event.</source>
+        <target>Laisser vide pour créer un événement sans fin.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.startDate.0">
         <source>Start date</source>
@@ -66,15 +67,19 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.pageTitle.0">
         <source>Meta title</source>
+        <target>Meta Titre</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.pageTitle.1">
         <source>Here you can add a custom meta title to overwrite the default page title.</source>
+        <target>Ajouter une méta-title personnalisé pour remplacer le titre de page par défaut.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.description.0">
         <source>Meta description</source>
+        <target>Meta description</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.description.1">
         <source>Here you can add a custom meta description to overwrite the default page description.</source>
+        <target>Ajouter une méta-description personnalisé pour remplacer la description de page par défaut.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.location.0">
         <source>Location name</source>
@@ -246,6 +251,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.start.1">
         <source>If you want to prevent the event from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Si vous ne souhaitez pas afficher l'événement sur le site avant une certaine date / heure, vous pouvez la saisir ici. Sinon, laissez le champ vide.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.0">
         <source>Show until</source>
@@ -253,6 +259,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.1">
         <source>If you want to prevent the event from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Si vous ne souhaitez pas afficher l'événement sur le site après une certaine date / heure, vous pouvez la saisir ici. Sinon, laissez le champ vide.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.tstamp.0">
         <source>Revision date</source>
@@ -294,6 +301,10 @@
         <source>Redirect target</source>
         <target>Cible de redirection</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.meta_legend">
+        <source>Meta data</source>
+        <target>Meta-données</target>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.expert_legend">
         <source>Expert settings</source>
         <target>Paramètres avancés</target>
@@ -320,6 +331,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.new.0">
         <source>New</source>
+        <target>Actualité</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.new.1">
         <source>Create a new event</source>
@@ -351,6 +363,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.editheader">
         <source>Edit the settings of event ID %s</source>
+        <target>Éditer les paramètres de l'événement ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>

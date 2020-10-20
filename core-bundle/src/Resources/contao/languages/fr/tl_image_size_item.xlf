@@ -31,6 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.source_legend">
         <source>Image source settings</source>
+        <target>Paramètres de l'image source</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.visibility_legend">
         <source>Visibility</source>
@@ -38,18 +39,19 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.new.0">
         <source>New</source>
+        <target>Nouveau</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.new.1">
         <source>Create a new media query</source>
-        <target>Créer un nouveau media query</target>
+        <target>Créer une nouvelle media query</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.show">
         <source>Show the details of media query ID %s</source>
-        <target>Afficher les détails du media query ID %s</target>
+        <target>Afficher les détails de la media query ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.edit">
         <source>Edit media query ID %s</source>
-        <target>Éditer le media query ID %s</target>
+        <target>Éditer la media query ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.editheader">
         <source>Edit the image size settings</source>
@@ -57,18 +59,19 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.cut">
         <source>Move media query ID %s</source>
-        <target>Déplacer le media query ID %s</target>
+        <target>Déplacer la media query ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.copy">
         <source>Duplicate media query ID %s</source>
-        <target>Dupliquer le media query ID %s</target>
+        <target>Dupliquer la media query ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.delete">
         <source>Delete media query ID %s</source>
-        <target>Supprimer le media query ID %s</target>
+        <target>Supprimer la media query ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.toggle">
         <source>Activate/deactivate media query ID %s</source>
+        <target>Activer/désactiver medai query ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pasteafter.0">
         <source>Paste at the top</source>
@@ -80,9 +83,11 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.pastenew.0">
         <source>Create a new media query at the top</source>
+        <target>Créer une nouvelle media query au début</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pastenew.1">
         <source>Create a new media query after media query ID %s</source>
+        <target>Créer une media query après la media query ID %s</target>
       </trans-unit>
     </body>
   </file>

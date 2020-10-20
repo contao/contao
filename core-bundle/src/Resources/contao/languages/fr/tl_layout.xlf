@@ -243,9 +243,11 @@
       </trans-unit>
       <trans-unit id="tl_layout.lightboxSize.0">
         <source>Lightbox image size</source>
+        <target>Taille de l'image pour la Lightbox</target>
       </trans-unit>
       <trans-unit id="tl_layout.lightboxSize.1">
         <source>Here you can select an image size for the images shown in the lightbox.</source>
+        <target>Ici vous pouvez sélectionner une taille d'image pour les images affichées dans la Lightbox.</target>
       </trans-unit>
       <trans-unit id="tl_layout.defaultImageDensities.0">
         <source>Default image pixel densities</source>
@@ -517,27 +519,35 @@
       </trans-unit>
       <trans-unit id="tl_layout.analytics_matomo">
         <source>Matomo</source>
+        <target>Matomo</target>
       </trans-unit>
       <trans-unit id="tl_layout.new.0">
         <source>New</source>
+        <target>Nouveau</target>
       </trans-unit>
       <trans-unit id="tl_layout.new.1">
         <source>Create a new page layout</source>
+        <target>Créer une nouvelle présentation de page</target>
       </trans-unit>
       <trans-unit id="tl_layout.show">
         <source>Show the details of page layout ID %s</source>
+        <target>Afficher les détails de la présentation de page ID %s</target>
       </trans-unit>
       <trans-unit id="tl_layout.edit">
         <source>Edit page layout ID %s</source>
+        <target>Éditer la présentation de page ID %s</target>
       </trans-unit>
       <trans-unit id="tl_layout.copy">
         <source>Duplicate page layout ID %s</source>
+        <target>Dupliquer la présentation de page ID %s</target>
       </trans-unit>
       <trans-unit id="tl_layout.cut">
         <source>Move page layout ID %s</source>
+        <target>Déplacer la présentation de page ID %s</target>
       </trans-unit>
       <trans-unit id="tl_layout.delete">
         <source>Delete page layout ID %s</source>
+        <target>Supprimer la présentation de page ID %s</target>
       </trans-unit>
     </body>
   </file>
