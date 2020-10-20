@@ -12,12 +12,15 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
+use Contao\ContentProxy;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
+use Contao\CoreBundle\EventListener\GlobalsMapListener;
 use Contao\CoreBundle\Fragment\FragmentPreHandlerInterface;
 use Contao\CoreBundle\Fragment\FragmentRegistry;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\Tests\TestCase;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\ResolveClassPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -134,6 +137,29 @@ class RegisterFragmentsPassTest extends TestCase
         $this->assertTrue($definition->isPublic());
     }
 
+    public function testCopiesTagsToChildDefinition(): void
+    {
+        $contentController = new Definition('App\Fragments\Text');
+        $contentController->setPublic(false);
+        $contentController->addTag('contao.content_element');
+        $contentController->addTag('foo.bar');
+
+        $container = $this->getContainerWithFragmentServices();
+        $container->setDefinition('app.fragments.content_controller', $contentController);
+
+        (new ResolveClassPass())->process($container);
+
+        $pass = new RegisterFragmentsPass(ContentElementReference::TAG_NAME);
+        $pass->process($container);
+
+        /** @var ChildDefinition $definition */
+        $definition = $container->findDefinition('contao.fragment._contao.content_element.text');
+
+        $this->assertInstanceOf(ChildDefinition::class, $definition);
+        $this->assertSame('app.fragments.content_controller', $definition->getParent());
+        $this->assertSame(['foo.bar' => [[]]], $definition->getTags());
+    }
+
     public function testRegistersThePreHandlers(): void
     {
         $contentController = new Definition(FragmentPreHandlerInterface::class);
@@ -173,6 +199,73 @@ class RegisterFragmentsPassTest extends TestCase
 
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('Missing service definition for "contao.fragment.pre_handlers"');
+
+        $pass->process($container);
+    }
+
+    public function testRegistersTheGlobalsMapListener(): void
+    {
+        $contentController = new Definition('App\Fragments\Text');
+        $contentController->addTag('contao.content_element', ['category' => 'content']);
+
+        $container = $this->getContainerWithFragmentServices();
+        $container->setDefinition('app.fragments.content_controller', $contentController);
+
+        (new ResolveClassPass())->process($container);
+
+        $pass = new RegisterFragmentsPass(ContentElementReference::TAG_NAME, 'TL_CTE', ContentProxy::class);
+        $pass->process($container);
+
+        $definition = null;
+
+        foreach ($container->getDefinitions() as $def) {
+            if (GlobalsMapListener::class === $def->getClass()) {
+                $definition = $def;
+                break;
+            }
+        }
+
+        $this->assertNotNull($definition);
+
+        $this->assertSame(
+            [
+                'contao.hook' => [
+                    [
+                        'hook' => 'initializeSystem',
+                        'priority' => 255,
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
+
+        $this->assertSame(
+            [
+                'TL_CTE' => [
+                    'content' => [
+                        'text' => ContentProxy::class,
+                    ],
+                ],
+            ],
+            $definition->getArguments()[0]
+        );
+
+        $this->assertTrue($definition->isPublic());
+    }
+
+    public function testFailsToRegisterGlobalsMapListenerIfCategoryIsMissing(): void
+    {
+        $contentController = new Definition('App\Fragments\Text');
+        $contentController->addTag('contao.content_element');
+
+        $container = $this->getContainerWithFragmentServices();
+        $container->setDefinition('app.fragments.content_controller', $contentController);
+
+        (new ResolveClassPass())->process($container);
+
+        $pass = new RegisterFragmentsPass(ContentElementReference::TAG_NAME, 'TL_CTE', ContentProxy::class);
+
+        $this->expectException(InvalidConfigurationException::class);
 
         $pass->process($container);
     }
