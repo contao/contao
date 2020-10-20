@@ -39,6 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_content.inline.1">
         <source>Show the file in the browser instead of opening the download dialog.</source>
+        <target>Affichez le fichier dans le navigateur au lieu d'ouvrir la boîte de dialogue de téléchargement.</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.0">
         <source>Overwrite meta data</source>
@@ -46,6 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.1">
         <source>Overwrite the meta data from the file manager.</source>
+        <target>Écraser les métadonnées à partir de l'explorateur de fichier.</target>
       </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
         <source>Source file</source>
@@ -317,6 +319,7 @@
       </trans-unit>
       <trans-unit id="tl_content.rel.1">
         <source>To trigger the lightbox, enter a &lt;em&gt;data-lightbox&lt;/em&gt; attribute here.</source>
+        <target>Pour déclencher la lightbox, entrez l'attribut &lt;em&gt;data-lightbox&lt;/em&gt; ici.</target>
       </trans-unit>
       <trans-unit id="tl_content.useImage.0">
         <source>Create an image link</source>
@@ -388,12 +391,15 @@
       </trans-unit>
       <trans-unit id="tl_content.galleryTpl.1">
         <source>Here you can select a gallery template.</source>
+        <target>Ici, vous pouvez choisir un modèle de galerie</target>
       </trans-unit>
       <trans-unit id="tl_content.customTpl.0">
         <source>Content element template</source>
+        <target>Modèle d'élement de contenu</target>
       </trans-unit>
       <trans-unit id="tl_content.customTpl.1">
         <source>Here you can select the content element template.</source>
+        <target>Ici, vous pouvez choisir un modèle pour l'élement de contenu</target>
       </trans-unit>
       <trans-unit id="tl_content.playerSRC.0">
         <source>Video/audio files</source>
@@ -441,7 +447,7 @@
       </trans-unit>
       <trans-unit id="tl_content.playerOptions.1">
         <source>Here you can select the player options.</source>
-        <target>Vous pouvez sélectionner ici les options du lecteur.</target>
+        <target>Vous pouvez choisir ici les options du lecteur.</target>
       </trans-unit>
       <trans-unit id="tl_content.playerPreload.0">
         <source>Preloading</source>
@@ -473,6 +479,7 @@
       </trans-unit>
       <trans-unit id="tl_content.playerCaption.1">
         <source>Here you can enter a caption.</source>
+        <target>Ici, vous pouvez ajouter une légende.</target>
       </trans-unit>
       <trans-unit id="tl_content.playerAspect.0">
         <source>Aspect ratio</source>
@@ -480,18 +487,23 @@
       </trans-unit>
       <trans-unit id="tl_content.playerAspect.1">
         <source>Here you can select the aspect ratio of the video to make it responsive.</source>
+        <target>Ici vous pouvez choisir un ratio pour rendre la vidéo responsive</target>
       </trans-unit>
       <trans-unit id="tl_content.splashImage.0">
         <source>Use a splash image</source>
+        <target>Utiliser une image de démarrage</target>
       </trans-unit>
       <trans-unit id="tl_content.splashImage.1">
         <source>Only load the video after the user has clicked on the splash image.</source>
+        <target>Charge la vidéo uniquement après avoir cliqué sur l'image de démarrage</target>
       </trans-unit>
       <trans-unit id="tl_content.playerColor.0">
         <source>Controls color</source>
+        <target>Couleur des commandes</target>
       </trans-unit>
       <trans-unit id="tl_content.playerColor.1">
         <source>Here you can enter a hexadecimal color (e.g. ff0000) for the video controls.</source>
+        <target>Ici, vous pouvez entrer une couleur hexadécimale (par exemple ff0000) pour les commandes vidéo.</target>
       </trans-unit>
       <trans-unit id="tl_content.sliderDelay.0">
         <source>Sliding interval</source>
@@ -611,6 +623,7 @@
       </trans-unit>
       <trans-unit id="tl_content.start.1">
         <source>If you want to prevent the element from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Si vous souhaitez empêcher l'affichage de l'élement sur le site avant une certaine date / heure, vous pouvez la saisir ici. Sinon, laissez le champ vide.</target>
       </trans-unit>
       <trans-unit id="tl_content.stop.0">
         <source>Show until</source>
@@ -618,6 +631,7 @@
       </trans-unit>
       <trans-unit id="tl_content.stop.1">
         <source>If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Si vous souhaitez empêcher l'affichage de l'élément sur le site après une certaine date / heure, vous pouvez la saisir ici. Sinon, laissez le champ vide.</target>
       </trans-unit>
       <trans-unit id="tl_content.type_legend">
         <source>Element type</source>
@@ -681,6 +695,7 @@
       </trans-unit>
       <trans-unit id="tl_content.splash_legend">
         <source>Splash image</source>
+        <target>Image de démarrage</target>
       </trans-unit>
       <trans-unit id="tl_content.expert_legend">
         <source>Expert settings</source>
@@ -748,6 +763,7 @@
       </trans-unit>
       <trans-unit id="tl_content.player_nocontrols">
         <source>Hide the controls</source>
+        <target>Cacher les commandes</target>
       </trans-unit>
       <trans-unit id="tl_content.player_loop">
         <source>Play in a loop</source>
@@ -755,9 +771,11 @@
       </trans-unit>
       <trans-unit id="tl_content.player_muted">
         <source>Mute the audio output</source>
+        <target>Couper la sortie audio</target>
       </trans-unit>
       <trans-unit id="tl_content.player_playsinline">
         <source>Play inline (no fullscreen mode)</source>
+        <target>Lecture inline (pas de mode plein écran)</target>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.auto">
         <source>Auto (preload the entiry video)</source>
@@ -777,6 +795,7 @@
       </trans-unit>
       <trans-unit id="tl_content.youtube_controls">
         <source>Hide the controls</source>
+        <target>Cacher les commandes</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_cc_load_policy">
         <source>Show captions by default</source>
@@ -820,6 +839,7 @@
       </trans-unit>
       <trans-unit id="tl_content.vimeo_portrait">
         <source>Hide the profile image</source>
+        <target>Cacher l'image de profil</target>
       </trans-unit>
       <trans-unit id="tl_content.vimeo_title">
         <source>Hide the title</source>
@@ -831,6 +851,7 @@
       </trans-unit>
       <trans-unit id="tl_content.new.0">
         <source>New</source>
+        <target>Actualité</target>
       </trans-unit>
       <trans-unit id="tl_content.new.1">
         <source>Add a new content element</source>
@@ -862,6 +883,7 @@
       </trans-unit>
       <trans-unit id="tl_content.toggle">
         <source>Hide/unhide content element ID %s</source>
+        <target>Cache/Affiche l'élement de contenu ID %s</target>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.0">
         <source>Paste at the top</source>
@@ -873,9 +895,11 @@
       </trans-unit>
       <trans-unit id="tl_content.pastenew.0">
         <source>Create a new content element at the top</source>
+        <target>Créer un nouvel élément de contenu au début</target>
       </trans-unit>
       <trans-unit id="tl_content.pastenew.1">
         <source>Create a new content element after content element ID %s</source>
+        <target>Créer un nouvel élément de contenu après l'élément de contenu ID %s</target>
       </trans-unit>
       <trans-unit id="tl_content.editalias">
         <source>Edit the source element ID %s</source>

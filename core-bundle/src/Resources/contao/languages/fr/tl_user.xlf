@@ -167,12 +167,15 @@
       </trans-unit>
       <trans-unit id="tl_user.elements.1">
         <source>Here you can select the allowed content element types.</source>
+        <target>Ici, vous pouvez sélectionner les types d'éléments de contenu autorisés.</target>
       </trans-unit>
       <trans-unit id="tl_user.fields.0">
         <source>Form fields</source>
+        <target>Champs de formulaire</target>
       </trans-unit>
       <trans-unit id="tl_user.fields.1">
         <source>Here you can select the allowed form field types.</source>
+        <target>Ici, vous pouvez sélectionner les types de champs de formulaires autorisés.</target>
       </trans-unit>
       <trans-unit id="tl_user.pagemounts.0">
         <source>Pagemounts</source>
@@ -244,6 +247,7 @@
       </trans-unit>
       <trans-unit id="tl_user.start.1">
         <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Si vous souhaitez rendre le compte inactif avant une certaine date / heure, vous pouvez la saisir ici. Sinon, laissez le champ vide.</target>
       </trans-unit>
       <trans-unit id="tl_user.stop.0">
         <source>Deactivate on</source>
@@ -251,6 +255,7 @@
       </trans-unit>
       <trans-unit id="tl_user.stop.1">
         <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Si vous souhaitez rendre le compte inactif après une certaine date / heure, vous pouvez la saisir ici. Sinon, laissez le champ vide.</target>
       </trans-unit>
       <trans-unit id="tl_user.session.0">
         <source>Purge data</source>
@@ -290,6 +295,7 @@
       </trans-unit>
       <trans-unit id="tl_user.elements_legend">
         <source>Allowed elements</source>
+        <target>Elements autorisés</target>
       </trans-unit>
       <trans-unit id="tl_user.pagemounts_legend">
         <source>Pagemounts</source>
@@ -329,6 +335,7 @@
       </trans-unit>
       <trans-unit id="tl_user.tempLabel">
         <source>Shared cache</source>
+        <target>Cache serveur</target>
       </trans-unit>
       <trans-unit id="tl_user.sessionPurged">
         <source>The session data has been purged</source>
@@ -340,6 +347,7 @@
       </trans-unit>
       <trans-unit id="tl_user.tempPurged">
         <source>The shared cache has been purged</source>
+        <target>Le cache serveur a été purgé</target>
       </trans-unit>
       <trans-unit id="tl_user.FileUpload">
         <source>Default uploader</source>
@@ -351,6 +359,7 @@
       </trans-unit>
       <trans-unit id="tl_user.new.0">
         <source>New</source>
+        <target>Actualité</target>
       </trans-unit>
       <trans-unit id="tl_user.new.1">
         <source>Create a new user</source>

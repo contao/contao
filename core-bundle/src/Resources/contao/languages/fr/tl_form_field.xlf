@@ -95,6 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.extnd.1">
         <source>Allows everything except special characters which are usually encoded for security reasons: #&lt;&gt;()\=</source>
+        <target>Autorise tout sauf les caractères spéciaux qui sont généralement encodés pour des raisons de sécurité :  #&lt;&gt;()\=</target>
       </trans-unit>
       <trans-unit id="tl_form_field.date.0">
         <source>Date</source>
@@ -170,21 +171,27 @@
       </trans-unit>
       <trans-unit id="tl_form_field.minval.0">
         <source>Minimum value</source>
+        <target>Valeur minimum</target>
       </trans-unit>
       <trans-unit id="tl_form_field.minval.1">
         <source>Here you can set the minimum value for numeric fields.</source>
+        <target>Saisir la valeur minimum pour les champs numériques.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.maxval.0">
         <source>Maximum value</source>
+        <target>Valeur maximum</target>
       </trans-unit>
       <trans-unit id="tl_form_field.maxval.1">
         <source>Here you can set the maximum value for numeric fields.</source>
+        <target>Saisir la valeur maximum pour les champs numériques.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.step.0">
         <source>Step</source>
+        <target>Pas</target>
       </trans-unit>
       <trans-unit id="tl_form_field.step.1">
         <source>Here you can set the discrete step size of the field.</source>
+        <target>Ici, vous pouvez saisir le pas pour ce champ</target>
       </trans-unit>
       <trans-unit id="tl_form_field.size.0">
         <source>Rows and columns</source>
@@ -292,9 +299,11 @@
       </trans-unit>
       <trans-unit id="tl_form_field.customTpl.0">
         <source>Form field template</source>
+        <target>Modèle du champ de formulaire</target>
       </trans-unit>
       <trans-unit id="tl_form_field.customTpl.1">
         <source>Here you can select the form field template.</source>
+        <target>Ici, vous pouvez choisir le modèle du champ de formulaire.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.slabel.0">
         <source>Submit button label</source>
@@ -374,24 +383,31 @@
       </trans-unit>
       <trans-unit id="tl_form_field.new.0">
         <source>New</source>
+        <target>Actualité</target>
       </trans-unit>
       <trans-unit id="tl_form_field.new.1">
         <source>Create a new form field</source>
+        <target>Créer un nouveau champ de formulaire</target>
       </trans-unit>
       <trans-unit id="tl_form_field.show">
         <source>Show the details of form field ID %s</source>
+        <target>Éditer le champ ID de formulaire %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.edit">
         <source>Edit form field ID %s</source>
+        <target>Éditer le champ ID de formulaire %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.cut">
         <source>Move form field ID %s</source>
+        <target>Déplacer le champ de formulaire ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.copy">
         <source>Duplicate form field ID %s</source>
+        <target>Dupliquer le champ de formulaire ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.delete">
         <source>Delete form field ID %s</source>
+        <target>Supprimer le champ de formulaire ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.editheader">
         <source>Edit the form settings</source>
@@ -399,6 +415,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.toggle">
         <source>Hide/unhide form field ID %s</source>
+        <target>Cacher/afficher le champ de formulaire ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pasteafter.0">
         <source>Paste at the top</source>
@@ -406,12 +423,15 @@
       </trans-unit>
       <trans-unit id="tl_form_field.pasteafter.1">
         <source>Paste after form field ID %s</source>
+        <target>Coller après le champ de formulaire ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pastenew.0">
         <source>Create a new form field at the top</source>
+        <target>Créer un nouveau champ de formulaire au début</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pastenew.1">
         <source>Create a new form field after form field ID %s</source>
+        <target>Créer un nouveau champ de formulaire après le champ de formulaire ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.option.1">
         <source>Import options from a CSV file</source>

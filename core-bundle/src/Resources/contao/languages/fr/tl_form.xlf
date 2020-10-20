@@ -87,6 +87,7 @@
       </trans-unit>
       <trans-unit id="tl_form.skipEmpty.1">
         <source>Do not include empty fields in the form data.</source>
+        <target>Ne pas inclure de champs vides dans les données du formulaire</target>
       </trans-unit>
       <trans-unit id="tl_form.email.0">
         <source>E-mail</source>
@@ -202,6 +203,7 @@
       </trans-unit>
       <trans-unit id="tl_form.new.0">
         <source>New</source>
+        <target>Actualité</target>
       </trans-unit>
       <trans-unit id="tl_form.new.1">
         <source>Create a new form</source>
