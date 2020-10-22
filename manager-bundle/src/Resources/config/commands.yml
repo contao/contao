@@ -5,7 +5,7 @@ services:
     contao.command.initialize-application:
         class: Contao\ManagerBundle\Command\InitializeApplicationCommand
         arguments:
-            -  '%kernel.project_dir%'
+            - '%kernel.project_dir%'
             - '%contao.web_dir%'
 
     contao.command.debug-plugins:
