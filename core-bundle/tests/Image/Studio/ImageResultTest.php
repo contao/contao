@@ -25,8 +25,8 @@ use Contao\Image\Image;
 use Contao\Image\ImageDimensions;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureInterface;
-use Imagine\Image\ImagineInterface;
 use Contao\Image\ResizeOptions;
+use Imagine\Image\ImagineInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -92,17 +92,17 @@ class ImageResultTest extends TestCase
             true,
         ];
 
-        yield 'custom picture factory with resize options' => [
+        yield 'Custom picture factory with resize options' => [
             PictureFactoryWithResizeOptionsStub::class,
             true,
         ];
 
-        yield 'custom picture factory without resize options' => [
+        yield 'Custom picture factory without resize options' => [
             PictureFactoryWithoutResizeOptionsStub::class,
             false,
         ];
 
-        yield 'custom picture factory with random options' => [
+        yield 'Custom picture factory with random options' => [
             PictureFactoryWithRandomArgumentStub::class,
             false,
         ];
