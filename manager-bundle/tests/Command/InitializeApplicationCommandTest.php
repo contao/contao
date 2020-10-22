@@ -200,7 +200,10 @@ class InitializeApplicationCommandTest extends ContaoTestCase
         $commandTester->execute([]);
     }
 
-    private function getProcessFactoryMock(): Process
+    /**
+     * @return Process&MockObject
+     */
+    private function getProcessFactoryMock()
     {
         $process = $this->createMock(Process::class);
         $process
@@ -208,7 +211,6 @@ class InitializeApplicationCommandTest extends ContaoTestCase
             ->willReturn(true)
         ;
 
-        /** @var Process&MockObject $processFactory */
         $processFactory = $this->createMock(ProcessFactory::class);
         $processFactory
             ->method('create')
