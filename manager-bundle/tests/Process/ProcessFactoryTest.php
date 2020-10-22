@@ -31,6 +31,6 @@ class ProcessFactoryTest extends ContaoTestCase
         $this->assertSame('cwd', $process->getWorkingDirectory());
         $this->assertSame(['env'], $process->getEnv());
         $this->assertSame('input', $process->getInput());
-        $this->assertSame(100, $process->getTimeout());
+        $this->assertSame(100.0, $process->getTimeout());
     }
 }
