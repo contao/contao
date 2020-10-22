@@ -12,11 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Command;
 
+use Contao\ManagerBundle\Process\ProcessFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Process\Process;
 use Webmozart\PathUtil\Path;
 
 /**
@@ -36,10 +36,22 @@ class InitializeApplicationCommand extends Command
      */
     private $webDir;
 
-    public function __construct(string $projectDir, string $webDir)
+    /**
+     * @var Filesystem
+     */
+    private $filesystem;
+
+    /**
+     * @var ProcessFactory
+     */
+    private $processFactory;
+
+    public function __construct(string $projectDir, string $webDir, Filesystem $filesystem = null, ProcessFactory $processFactory = null)
     {
         $this->projectDir = $projectDir;
         $this->webDir = $webDir;
+        $this->filesystem = $filesystem ?? new Filesystem();
+        $this->processFactory = $processFactory ?? new ProcessFactory();
 
         parent::__construct();
     }
@@ -52,7 +64,7 @@ class InitializeApplicationCommand extends Command
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->purgeProdCache();
 
@@ -74,6 +86,8 @@ class InitializeApplicationCommand extends Command
         foreach ($commands as $command) {
             $this->executeCommand(array_merge($command, $commandFlags), $output);
         }
+
+        return 0;
     }
 
     /**
@@ -81,16 +95,14 @@ class InitializeApplicationCommand extends Command
      */
     private function purgeProdCache(): void
     {
-        $filesystem = new Filesystem();
-
         $cacheDir = Path::join($this->projectDir, 'var/cache/prod');
 
         try {
-            if (!$filesystem->exists($cacheDir)) {
+            if (!$this->filesystem->exists($cacheDir)) {
                 return;
             }
 
-            $filesystem->remove($cacheDir);
+            $this->filesystem->remove($cacheDir);
         } catch (\Exception $e) {
             // ignore
         }
@@ -101,7 +113,7 @@ class InitializeApplicationCommand extends Command
      */
     private function executeCommand(array $command, OutputInterface $output): void
     {
-        $process = new Process(
+        $process = $this->processFactory->create(
             array_merge(
                 [Path::join($this->projectDir, 'vendor/bin', 'contao-console')],
                 $command
