@@ -58,6 +58,7 @@ class ScriptHandler
         }
 
         $process = new Process($command);
+        $process->setTimeout(null);
 
         $process->run(
             static function (string $type, string $buffer) use ($event): void {

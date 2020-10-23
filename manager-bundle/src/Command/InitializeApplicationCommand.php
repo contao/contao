@@ -131,7 +131,7 @@ class InitializeApplicationCommand extends Command
             )
         );
 
-        // Increase the timeout according to terminal42/background-process (see #54)
+        // Increase the timeout according to contao/manager-bundle (see #54)
         $process->setTimeout(500);
 
         $process->run(
