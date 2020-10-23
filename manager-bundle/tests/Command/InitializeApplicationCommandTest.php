@@ -109,11 +109,15 @@ class InitializeApplicationCommandTest extends ContaoTestCase
             ->willReturn(false)
         ;
 
-        $process = $this->createMock(Process::class);
-        $process
-            ->method('isSuccessful')
-            ->willReturn(true)
-        ;
+        $processes = $this->getProcessMocks();
+
+        foreach ($processes as $process) {
+            $process
+                ->expects($this->once())
+                ->method('setTimeout')
+                ->with(500)
+            ;
+        }
 
         $phpPath = (new PhpExecutableFinder())->find();
         $this->assertStringContainsString('php', $phpPath);
@@ -132,7 +136,7 @@ class InitializeApplicationCommandTest extends ContaoTestCase
         $processFactory
             ->expects($this->exactly(7))
             ->method('create')
-            ->willReturn($process)
+            ->willReturn(...$processes)
             ->withConsecutive(...$commandArguments)
         ;
 
@@ -191,27 +195,8 @@ class InitializeApplicationCommandTest extends ContaoTestCase
             ->willReturn(false)
         ;
 
-        $process = $this->createMock(Process::class);
-
-        $process
-            ->method('isSuccessful')
-            ->willReturn(false)
-        ;
-
-        $process
-            ->method('getErrorOutput')
-            ->willReturn('<error>')
-        ;
-
-        $processFactory = $this->createMock(ProcessFactory::class);
-        $processFactory
-            ->expects($this->once())
-            ->method('create')
-            ->willReturn($process)
-        ;
-
         $command = new InitializeApplicationCommand(
-            'project/dir', 'web', $filesystem, $processFactory
+            'project/dir', 'web', $filesystem, $this->getProcessFactoryMock($this->getProcessMocks(false))
         );
 
         $commandTester = (new CommandTester($command));
@@ -232,36 +217,8 @@ class InitializeApplicationCommandTest extends ContaoTestCase
             ->willReturn(false)
         ;
 
-        $processes = [];
-
-        for ($i = 1; $i <= 7; ++$i) {
-            $processes[$i] = $this->createMock(Process::class);
-
-            $processes[$i]
-                ->method('isSuccessful')
-                ->willReturn(true)
-            ;
-
-            $processes[$i]
-                ->method('run')
-                ->with($this->callback(
-                    static function ($callable) use ($i) {
-                        $callable('', "[output $i]");
-
-                        return true;
-                    }
-                ))
-            ;
-        }
-
-        $processFactory = $this->createMock(ProcessFactory::class);
-        $processFactory
-            ->method('create')
-            ->willReturn(...$processes)
-        ;
-
         $command = new InitializeApplicationCommand(
-            'project/dir', 'web', $filesystem, $processFactory
+            'project/dir', 'web', $filesystem, $this->getProcessFactoryMock()
         );
 
         $commandTester = new CommandTester($command);
@@ -276,20 +233,52 @@ class InitializeApplicationCommandTest extends ContaoTestCase
     /**
      * @return ProcessFactory&MockObject
      */
-    private function getProcessFactoryMock()
+    private function getProcessFactoryMock(array $processes = null)
     {
-        $process = $this->createMock(Process::class);
-        $process
-            ->method('isSuccessful')
-            ->willReturn(true)
-        ;
+        if (null === $processes) {
+            $processes = $this->getProcessMocks();
+        }
 
         $processFactory = $this->createMock(ProcessFactory::class);
         $processFactory
             ->method('create')
-            ->willReturn($process)
+            ->willReturn(...$processes)
         ;
 
         return $processFactory;
+    }
+
+    private function getProcessMocks(bool $successful = true): array
+    {
+        $processes = [];
+
+        for ($i = 1; $i <= 7; ++$i) {
+            $process = $this->createMock(Process::class);
+
+            $process
+                ->method('isSuccessful')
+                ->willReturn($successful)
+            ;
+
+            $process
+                ->method('run')
+                ->with($this->callback(
+                    static function ($callable) use ($i) {
+                        $callable('', "[output $i]");
+
+                        return true;
+                    }
+                ))
+            ;
+
+            $process
+                ->method('getErrorOutput')
+                ->willReturn('<error>')
+            ;
+
+            $processes[] = $process;
+        }
+
+        return $processes;
     }
 }
