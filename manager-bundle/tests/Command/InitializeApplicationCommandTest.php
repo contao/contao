@@ -78,6 +78,24 @@ class InitializeApplicationCommandTest extends ContaoTestCase
         (new CommandTester($command))->execute([]);
     }
 
+    public function testSuppressesFilesystemErrors(): void
+    {
+        $filesystem = $this->createMock(Filesystem::class);
+
+        $filesystem
+            ->expects($this->once())
+            ->method('exists')
+            ->with('project/dir/var/cache/prod')
+            ->willThrowException(new \Exception())
+        ;
+
+        $command = new InitializeApplicationCommand(
+            'project/dir', 'web', $filesystem, $this->getProcessFactoryMock()
+        );
+
+        (new CommandTester($command))->execute([]);
+    }
+
     /**
      * @dataProvider provideCommands
      */
@@ -202,6 +220,57 @@ class InitializeApplicationCommandTest extends ContaoTestCase
         $this->expectExceptionMessageMatches('/An error occurred while executing the ".+" command: <error>/');
 
         $commandTester->execute([]);
+    }
+
+    public function testDelegatesOutputOfSubProcesses(): void
+    {
+        $filesystem = $this->createMock(Filesystem::class);
+        $filesystem
+            ->expects($this->once())
+            ->method('exists')
+            ->with('project/dir/var/cache/prod')
+            ->willReturn(false)
+        ;
+
+        $processes = [];
+
+        for ($i = 1; $i <= 7; ++$i) {
+            $processes[$i] = $this->createMock(Process::class);
+
+            $processes[$i]
+                ->method('isSuccessful')
+                ->willReturn(true)
+            ;
+
+            $processes[$i]
+                ->method('run')
+                ->with($this->callback(
+                    static function ($callable) use ($i) {
+                        $callable('', "[output $i]");
+
+                        return true;
+                    }
+                ))
+            ;
+        }
+
+        $processFactory = $this->createMock(ProcessFactory::class);
+        $processFactory
+            ->method('create')
+            ->willReturn(...$processes)
+        ;
+
+        $command = new InitializeApplicationCommand(
+            'project/dir', 'web', $filesystem, $processFactory
+        );
+
+        $commandTester = new CommandTester($command);
+        $commandTester->execute([]);
+
+        $this->assertSame(
+            '[output 1][output 2][output 3][output 4][output 5][output 6][output 7]',
+            $commandTester->getDisplay()
+        );
     }
 
     /**
