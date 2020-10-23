@@ -17,6 +17,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Process\PhpExecutableFinder;
 use Webmozart\PathUtil\Path;
 
 /**
@@ -46,12 +47,18 @@ class InitializeApplicationCommand extends Command
      */
     private $processFactory;
 
+    /**
+     * @var string
+     */
+    private $phpPath;
+
     public function __construct(string $projectDir, string $webDir, Filesystem $filesystem = null, ProcessFactory $processFactory = null)
     {
         $this->projectDir = $projectDir;
         $this->webDir = $webDir;
         $this->filesystem = $filesystem ?? new Filesystem();
         $this->processFactory = $processFactory ?? new ProcessFactory();
+        $this->phpPath = (new PhpExecutableFinder())->find();
 
         parent::__construct();
     }
@@ -67,6 +74,10 @@ class InitializeApplicationCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->purgeProdCache();
+
+        if (false === $this->phpPath) {
+            throw new \RuntimeException('The php executable could not be found.');
+        }
 
         $commands = [
             ['contao:install-web-dir', '--env=prod'],
@@ -115,7 +126,7 @@ class InitializeApplicationCommand extends Command
     {
         $process = $this->processFactory->create(
             array_merge(
-                [Path::join($this->projectDir, 'vendor/bin', 'contao-console')],
+                [$this->phpPath, Path::join($this->projectDir, 'vendor/bin', 'contao-console')],
                 $command
             )
         );

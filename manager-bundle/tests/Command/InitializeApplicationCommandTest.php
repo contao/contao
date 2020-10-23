@@ -19,6 +19,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
 class InitializeApplicationCommandTest extends ContaoTestCase
@@ -96,14 +97,17 @@ class InitializeApplicationCommandTest extends ContaoTestCase
             ->willReturn(true)
         ;
 
+        $phpPath = (new PhpExecutableFinder())->find();
+        $this->assertStringContainsString('php', $phpPath);
+
         $commandArguments = [
-            [array_merge(['project/dir/vendor/bin/contao-console', 'contao:install-web-dir', '--env=prod'], $flags)],
-            [array_merge(['project/dir/vendor/bin/contao-console', 'cache:clear', '--no-warmup', '--env=prod'], $flags)],
-            [array_merge(['project/dir/vendor/bin/contao-console', 'cache:clear', '--no-warmup', '--env=dev'], $flags)],
-            [array_merge(['project/dir/vendor/bin/contao-console', 'cache:warmup', '--env=prod'], $flags)],
-            [array_merge(['project/dir/vendor/bin/contao-console', 'assets:install', 'web', '--symlink', '--relative', '--env=prod'], $flags)],
-            [array_merge(['project/dir/vendor/bin/contao-console', 'contao:install', 'web', '--env=prod'], $flags)],
-            [array_merge(['project/dir/vendor/bin/contao-console', 'contao:symlinks', 'web', '--env=prod'], $flags)],
+            [array_merge([$phpPath, 'project/dir/vendor/bin/contao-console', 'contao:install-web-dir', '--env=prod'], $flags)],
+            [array_merge([$phpPath, 'project/dir/vendor/bin/contao-console', 'cache:clear', '--no-warmup', '--env=prod'], $flags)],
+            [array_merge([$phpPath, 'project/dir/vendor/bin/contao-console', 'cache:clear', '--no-warmup', '--env=dev'], $flags)],
+            [array_merge([$phpPath, 'project/dir/vendor/bin/contao-console', 'cache:warmup', '--env=prod'], $flags)],
+            [array_merge([$phpPath, 'project/dir/vendor/bin/contao-console', 'assets:install', 'web', '--symlink', '--relative', '--env=prod'], $flags)],
+            [array_merge([$phpPath, 'project/dir/vendor/bin/contao-console', 'contao:install', 'web', '--env=prod'], $flags)],
+            [array_merge([$phpPath, 'project/dir/vendor/bin/contao-console', 'contao:symlinks', 'web', '--env=prod'], $flags)],
         ];
 
         $processFactory = $this->createMock(ProcessFactory::class);
@@ -201,7 +205,7 @@ class InitializeApplicationCommandTest extends ContaoTestCase
     }
 
     /**
-     * @return Process&MockObject
+     * @return ProcessFactory&MockObject
      */
     private function getProcessFactoryMock()
     {

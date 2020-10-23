@@ -14,6 +14,7 @@ namespace Contao\ManagerBundle\Composer;
 
 use Composer\Script\Event;
 use Composer\Util\Filesystem;
+use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 use Webmozart\PathUtil\Path;
 
@@ -43,6 +44,13 @@ class ScriptHandler
                 implode(' ', $command)
             )
         );
+
+        if (false === ($phpPath = (new PhpExecutableFinder())->find())) {
+            throw new \RuntimeException('The php executable could not be found.');
+        }
+
+        $command[0] = Path::join(__DIR__.'/../../bin', $command[0]);
+        array_unshift($command, $phpPath);
 
         // Backwards compatibility with symfony/process <3.3 (see #1964)
         if (method_exists(Process::class, 'setCommandline')) {
