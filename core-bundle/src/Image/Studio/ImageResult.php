@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Image\Studio;
 
 use Contao\CoreBundle\Image\ImageFactoryInterface;
+use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Image\PictureFactoryInterface;
 use Contao\Image\Image;
 use Contao\Image\ImageDimensions;
@@ -92,6 +93,10 @@ class ImageResult
         // does not know about ResizeOptions. We therefore check if the third
         // argument of the 'create' method allows setting them.
         $canHandleResizeOptions = static function (PictureFactoryInterface $factory): bool {
+            if ($factory instanceof PictureFactory) {
+                return true;
+            }
+
             $createParameters = (new \ReflectionClass($factory))
                 ->getMethod('create')
                 ->getParameters()
