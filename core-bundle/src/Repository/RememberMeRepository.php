@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Repository;
 
 use Contao\CoreBundle\Entity\RememberMe;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\DBAL\Connection;
 
 /**
