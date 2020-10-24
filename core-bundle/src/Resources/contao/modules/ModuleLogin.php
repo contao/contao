@@ -191,7 +191,7 @@ class ModuleLogin extends Module
 		$this->Template->username = $GLOBALS['TL_LANG']['MSC']['username'];
 		$this->Template->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
 		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['login']);
-		$this->Template->value = StringUtil::specialchars($container->get('security.authentication_utils')->getLastUsername());
+		$this->Template->value = Input::encodeInsertTags(StringUtil::specialchars($container->get('security.authentication_utils')->getLastUsername()));
 		$this->Template->autologin = $this->autologin;
 		$this->Template->autoLabel = $GLOBALS['TL_LANG']['MSC']['autologin'];
 	}

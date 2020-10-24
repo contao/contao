@@ -13,10 +13,13 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Fragment\Reference;
 
 use Contao\ContentModel;
+use Contao\ContentProxy;
 
 class ContentElementReference extends FragmentReference
 {
     public const TAG_NAME = 'contao.content_element';
+    public const GLOBALS_KEY = 'TL_CTE';
+    public const PROXY_CLASS = ContentProxy::class;
 
     public function __construct(ContentModel $model, string $section = 'main')
     {

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
+use Contao\CoreBundle\EventListener\GlobalsMapListener;
 use Contao\CoreBundle\Fragment\FragmentConfig;
 use Contao\CoreBundle\Fragment\FragmentOptionsAwareInterface;
 use Contao\CoreBundle\Fragment\FragmentPreHandlerInterface;
@@ -38,13 +39,25 @@ class RegisterFragmentsPass implements CompilerPassInterface
      */
     private $tag;
 
-    public function __construct(string $tag = null)
+    /**
+     * @var string|null
+     */
+    private $globalsKey;
+
+    /**
+     * @var string|null
+     */
+    private $proxyClass;
+
+    public function __construct(string $tag = null, string $globalsKey = null, string $proxyClass = null)
     {
         if (null === $tag) {
             @trigger_error('Using "new RegisterFragmentsPass()" without passing the tag name has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
         }
 
         $this->tag = $tag;
+        $this->globalsKey = $globalsKey;
+        $this->proxyClass = $proxyClass;
     }
 
     /**
@@ -64,6 +77,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
      */
     protected function registerFragments(ContainerBuilder $container, string $tag): void
     {
+        $globals = [];
         $preHandlers = [];
         $registry = $container->findDefinition('contao.fragment.registry');
         $command = $container->hasDefinition('contao.command.debug_fragments') ? $container->findDefinition('contao.command.debug_fragments') : null;
@@ -100,12 +114,21 @@ class RegisterFragmentsPass implements CompilerPassInterface
                     $command->addMethodCall('add', [$identifier, $config, $attributes]);
                 }
 
-                $childDefinition->addTag($tag, $attributes);
+                $childDefinition->setTags($definition->getTags());
                 $container->setDefinition($serviceId, $childDefinition);
+
+                if ($this->globalsKey && $this->proxyClass) {
+                    if (!isset($attributes['category'])) {
+                        throw new InvalidConfigurationException(sprintf('Missing category for "%s" fragment on service ID "%s"', $tag, (string) $reference));
+                    }
+
+                    $globals[$this->globalsKey][$attributes['category']][$attributes['type']] = $this->proxyClass;
+                }
             }
         }
 
         $this->addPreHandlers($container, $preHandlers);
+        $this->addGlobalsMapListener($globals, $container);
     }
 
     protected function getFragmentConfig(ContainerBuilder $container, Reference $reference, array $attributes): Reference
@@ -167,5 +190,18 @@ class RegisterFragmentsPass implements CompilerPassInterface
         }
 
         return Container::underscore($className);
+    }
+
+    private function addGlobalsMapListener(array $globals, ContainerBuilder $container): void
+    {
+        if (empty($globals)) {
+            return;
+        }
+
+        $listener = new Definition(GlobalsMapListener::class, [$globals]);
+        $listener->setPublic(true);
+        $listener->addTag('contao.hook', ['hook' => 'initializeSystem', 'priority' => 255]);
+
+        $container->setDefinition('contao.listener.'.ContainerBuilder::hash($listener), $listener);
     }
 }

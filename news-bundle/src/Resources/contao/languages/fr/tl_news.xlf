@@ -43,15 +43,19 @@
       </trans-unit>
       <trans-unit id="tl_news.pageTitle.0">
         <source>Meta title</source>
+        <target>Meta Titre</target>
       </trans-unit>
       <trans-unit id="tl_news.pageTitle.1">
         <source>Here you can add a custom meta title to overwrite the default page title.</source>
+        <target>Ajouter une méta-title personnalisé pour remplacer le titre de page par défaut.</target>
       </trans-unit>
       <trans-unit id="tl_news.description.0">
         <source>Meta description</source>
+        <target>Meta description</target>
       </trans-unit>
       <trans-unit id="tl_news.description.1">
         <source>Here you can add a custom meta description to overwrite the default page description.</source>
+        <target>Ajouter une méta-description personnalisé pour remplacer la description de page par défaut.</target>
       </trans-unit>
       <trans-unit id="tl_news.subheadline.0">
         <source>Subheadline</source>
@@ -195,6 +199,7 @@
       </trans-unit>
       <trans-unit id="tl_news.start.1">
         <source>If you want to prevent the news item from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Si vous ne souhaitez pas diffuser l'actualité sur le site avant une certaine date / heure, vous pouvez la saisir ici. Sinon, laissez le champ vide.</target>
       </trans-unit>
       <trans-unit id="tl_news.stop.0">
         <source>Show until</source>
@@ -202,6 +207,7 @@
       </trans-unit>
       <trans-unit id="tl_news.stop.1">
         <source>If you want to prevent the news item from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Si vous ne souhaitez pas diffuser l'actualité sur le site après une certaine date / heure, vous pouvez la saisir ici. Sinon, laissez le champ vide.</target>
       </trans-unit>
       <trans-unit id="tl_news.tstamp.0">
         <source>Revision date</source>
@@ -218,10 +224,6 @@
       <trans-unit id="tl_news.date_legend">
         <source>Date and time</source>
         <target>Date et heure</target>
-      </trans-unit>
-      <trans-unit id="tl_news.meta_legend">
-        <source>Meta data</source>
-        <target>Meta-données</target>
       </trans-unit>
       <trans-unit id="tl_news.teaser_legend">
         <source>Subheadline and teaser</source>
@@ -243,6 +245,10 @@
         <source>Redirect target</source>
         <target>Cible de redirection</target>
       </trans-unit>
+      <trans-unit id="tl_news.meta_legend">
+        <source>Meta data</source>
+        <target>Meta-données</target>
+      </trans-unit>
       <trans-unit id="tl_news.expert_legend">
         <source>Expert settings</source>
         <target>Paramètres avancés</target>
@@ -253,6 +259,7 @@
       </trans-unit>
       <trans-unit id="tl_news.new.0">
         <source>New</source>
+        <target>Actualité</target>
       </trans-unit>
       <trans-unit id="tl_news.new.1">
         <source>Create a new news item</source>
@@ -288,10 +295,15 @@
       </trans-unit>
       <trans-unit id="tl_news.editheader">
         <source>Edit the settings of news item ID %s</source>
+        <target>Éditer les paramètres de l'actualité ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
         <target>Coller dans cette archive</target>
+      </trans-unit>
+      <trans-unit id="tl_news.editmeta">
+        <source>Edit the news item settings</source>
+        <target>Éditer les paramètres de l'actualité</target>
       </trans-unit>
     </body>
   </file>

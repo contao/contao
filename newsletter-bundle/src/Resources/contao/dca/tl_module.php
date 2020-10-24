@@ -111,7 +111,7 @@ class tl_module_newsletter extends Contao\Backend
 	 */
 	public function getSubscribeDefault($varValue)
 	{
-		if (!trim($varValue))
+		if (trim($varValue) === '')
 		{
 			$varValue = $GLOBALS['TL_LANG']['tl_module']['text_subscribe'][1];
 		}
@@ -128,7 +128,7 @@ class tl_module_newsletter extends Contao\Backend
 	 */
 	public function getUnsubscribeDefault($varValue)
 	{
-		if (!trim($varValue))
+		if (trim($varValue) === '')
 		{
 			$varValue = $GLOBALS['TL_LANG']['tl_module']['text_unsubscribe'][1];
 		}

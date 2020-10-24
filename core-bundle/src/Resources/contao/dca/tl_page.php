@@ -269,7 +269,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
 			'exclude'                 => true,
 			'inputType'               => 'serpPreview',
-			'eval'                    => array('url_callback'=>array('tl_page', 'getSerpUrl'), 'titleFields'=>array('pageTitle', 'title')),
+			'eval'                    => array('url_callback'=>array('tl_page', 'getSerpUrl'), 'title_tag_callback'=>array('tl_page', 'getTitleTag'), 'titleFields'=>array('pageTitle', 'title')),
 			'sql'                     => null
 		),
 		'redirect' => array
@@ -323,6 +323,10 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'load_callback' => array
+			(
+				array('tl_page', 'loadDns')
+			),
 			'save_callback' => array
 			(
 				array('tl_page', 'checkDns')
@@ -993,6 +997,31 @@ class tl_page extends Contao\Backend
 	}
 
 	/**
+	 * Return the title tag from the associated page layout
+	 *
+	 * @param Contao\PageModel $model
+	 *
+	 * @return string
+	 */
+	public function getTitleTag(Contao\PageModel $model)
+	{
+		$model->loadDetails();
+
+		/** @var Contao\LayoutModel $layout */
+		if (!$layout = $model->getRelated('layout'))
+		{
+			return '';
+		}
+
+		global $objPage;
+
+		// Set the global page object so we can replace the insert tags
+		$objPage = $model;
+
+		return self::replaceInsertTags(str_replace('{{page::pageTitle}}', '%s', $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}'));
+	}
+
+	/**
 	 * Show a warning if there is no language fallback page
 	 */
 	public function showFallbackWarning()
@@ -1150,6 +1179,10 @@ class tl_page extends Contao\Backend
 				$varValue = $objPage->folderUrl . $varValue;
 			}
 		}
+		elseif (preg_match('/^[1-9]\d*$/', $varValue))
+		{
+			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasNumeric'], $varValue));
+		}
 		elseif ($aliasExists($varValue))
 		{
 			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
@@ -1293,6 +1326,18 @@ class tl_page extends Contao\Backend
 	}
 
 	/**
+	 * Load the DNS settings
+	 *
+	 * @param mixed $varValue
+	 *
+	 * @return mixed
+	 */
+	public function loadDns($varValue)
+	{
+		return Contao\Idna::decode($varValue);
+	}
+
+	/**
 	 * Check the DNS settings
 	 *
 	 * @param mixed $varValue
@@ -1301,7 +1346,7 @@ class tl_page extends Contao\Backend
 	 */
 	public function checkDns($varValue)
 	{
-		return preg_replace('#^(?:[a-z]+://)?([a-z0-9[\].:_-]+).*$#i', '$1', $varValue);
+		return Contao\Idna::encode(preg_replace('#^(?:[a-z]+://)?([\pN\pL[\].:_-]+).*$#iu', '$1', $varValue));
 	}
 
 	/**

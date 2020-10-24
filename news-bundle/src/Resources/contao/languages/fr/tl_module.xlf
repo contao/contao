@@ -46,7 +46,7 @@
         <target>Modèle d'actualités</target>
       </trans-unit>
       <trans-unit id="tl_module.news_template.1">
-        <source>Here you can select the news template.</source>
+        <source>Here you can select a news template.</source>
         <target>Choisir un modèle d'actualités.</target>
       </trans-unit>
       <trans-unit id="tl_module.news_format.0">
@@ -115,6 +115,7 @@
       </trans-unit>
       <trans-unit id="tl_module.featured_first">
         <source>Show featured news items first</source>
+        <target>Affiches les actualités vedettes en premier</target>
       </trans-unit>
       <trans-unit id="tl_module.order_date_asc">
         <source>Date ascending</source>
