@@ -26,7 +26,7 @@ class InitializeApplicationCommandTest extends ContaoTestCase
 {
     public function testIsHidden(): void
     {
-        $command = new InitializeApplicationCommand('project/dir', 'web');
+        $command = new InitializeApplicationCommand('project/dir', 'project/dir/web');
 
         $this->assertTrue($command->isHidden());
     }
@@ -49,7 +49,7 @@ class InitializeApplicationCommandTest extends ContaoTestCase
         ;
 
         $command = new InitializeApplicationCommand(
-            'project/dir', 'web', $filesystem, $this->getProcessFactoryMock()
+            'project/dir', 'project/dir/web', $filesystem, $this->getProcessFactoryMock()
         );
 
         (new CommandTester($command))->execute([]);
@@ -72,7 +72,7 @@ class InitializeApplicationCommandTest extends ContaoTestCase
         ;
 
         $command = new InitializeApplicationCommand(
-            'project/dir', 'web', $filesystem, $this->getProcessFactoryMock()
+            'project/dir', 'project/dir/web', $filesystem, $this->getProcessFactoryMock()
         );
 
         (new CommandTester($command))->execute([]);
@@ -90,7 +90,7 @@ class InitializeApplicationCommandTest extends ContaoTestCase
         ;
 
         $command = new InitializeApplicationCommand(
-            'project/dir', 'web', $filesystem, $this->getProcessFactoryMock()
+            'project/dir', 'project/dir/web', $filesystem, $this->getProcessFactoryMock()
         );
 
         (new CommandTester($command))->execute([]);
@@ -141,7 +141,7 @@ class InitializeApplicationCommandTest extends ContaoTestCase
         ;
 
         $command = new InitializeApplicationCommand(
-            'project/dir', 'web', $filesystem, $processFactory
+            'project/dir', 'project/dir/web', $filesystem, $processFactory
         );
 
         (new CommandTester($command))->execute([], $options);
@@ -196,7 +196,7 @@ class InitializeApplicationCommandTest extends ContaoTestCase
         ;
 
         $command = new InitializeApplicationCommand(
-            'project/dir', 'web', $filesystem, $this->getProcessFactoryMock($this->getProcessMocks(false))
+            'project/dir', 'project/dir/web', $filesystem, $this->getProcessFactoryMock($this->getProcessMocks(false))
         );
 
         $commandTester = (new CommandTester($command));
@@ -218,7 +218,7 @@ class InitializeApplicationCommandTest extends ContaoTestCase
         ;
 
         $command = new InitializeApplicationCommand(
-            'project/dir', 'web', $filesystem, $this->getProcessFactoryMock()
+            'project/dir', 'project/dir/web', $filesystem, $this->getProcessFactoryMock()
         );
 
         $commandTester = new CommandTester($command);

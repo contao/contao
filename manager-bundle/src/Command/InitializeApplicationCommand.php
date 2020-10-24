@@ -55,7 +55,7 @@ class InitializeApplicationCommand extends Command
     public function __construct(string $projectDir, string $webDir, Filesystem $filesystem = null, ProcessFactory $processFactory = null)
     {
         $this->projectDir = $projectDir;
-        $this->webDir = $webDir;
+        $this->webDir = Path::makeRelative($webDir, $projectDir);
         $this->filesystem = $filesystem ?? new Filesystem();
         $this->processFactory = $processFactory ?? new ProcessFactory();
         $this->phpPath = (new PhpExecutableFinder())->find();
