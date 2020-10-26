@@ -48,8 +48,6 @@ doctrine:
                     collate: utf8mb4_unicode_ci
                     engine: InnoDB
                     row_format: DYNAMIC
-                options:
-                    !php/const PDO::MYSQL_ATTR_MULTI_STATEMENTS: false
         types:
             binary_string:
                 class: Contao\CoreBundle\Doctrine\DBAL\Types\BinaryStringType
