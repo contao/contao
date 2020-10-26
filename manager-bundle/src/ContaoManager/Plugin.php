@@ -223,7 +223,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             }
 
             // Do not add PDO options, if custom options have been defined
-            if (isset($extensionConfig['dbal']['connections']['default']['options'])) {
+            if (isset($extensionConfig['dbal']['connections']['default']) && \array_key_exists('options', $extensionConfig['dbal']['connections']['default'])) {
                 return $extensionConfigs;
             }
         }
