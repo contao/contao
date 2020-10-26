@@ -287,6 +287,16 @@ class StringUtilTest extends TestCase
                 ['value' => 'foobar'],
                 '{{iflng::en}}hi{{iflng}}{{elseifinserttag::whodoesthisanyway}}',
             ],
+            'Test unknown token is treated as null (match)' => [
+                'This is my {if foo===null}match{endif}',
+                ['value' => 1],
+                'This is my match',
+            ],
+            'Test unknown token is treated as null (no match)' => [
+                'This is my {if foo!="bar"}match{endif}',
+                ['value' => 1],
+                'This is my match',
+            ],
         ];
     }
 
