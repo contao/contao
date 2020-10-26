@@ -230,7 +230,7 @@ class PluginTest extends TestCase
      */
     public function testGetExtensionConfig()
     {
-        $container = new PluginContainerBuilder(new PluginLoader(), []);
+        $container = new PluginContainerBuilder(new PluginLoader(''), []);
 
         $extensionConfigs = [
             [
