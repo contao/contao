@@ -153,7 +153,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
         $extensionConfigs = $this->addDefaultServerVersion($extensionConfigs, $container);
 
-        return $this->addDefaultPdoDriverOptions($extensionConfigs, $container);
+        return $this->addDefaultPdoDriverOptions($extensionConfigs);
     }
 
     /**
@@ -214,7 +214,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
      *
      * @return array
      */
-    private function addDefaultPdoDriverOptions(array $extensionConfigs, PluginContainerBuilder $container)
+    private function addDefaultPdoDriverOptions(array $extensionConfigs)
     {
         // Do not add PDO options, if constant does not exist
         if (!\defined('PDO::MYSQL_ATTR_MULTI_STATEMENTS')) {
