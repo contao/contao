@@ -216,6 +216,11 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
      */
     private function setPdoDriverOptions(array $extensionConfigs, PluginContainerBuilder $container)
     {
+        // Do not add PDO options, if constant does not exist
+        if (!\defined('PDO::MYSQL_ATTR_MULTI_STATEMENTS')) {
+            return $extensionConfigs;
+        }
+
         foreach ($extensionConfigs as $extensionConfig) {
             // Do not add PDO options, if selected driver is not pdo_mysql
             if (isset($extensionConfig['dbal']['connections']['default']['driver']) && 'pdo_mysql' !== $extensionConfig['dbal']['connections']['default']['driver']) {
@@ -228,20 +233,17 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             }
         }
 
-        // Add PDO driver options dynamically, if defined
-        if (\defined('PDO::MYSQL_ATTR_MULTI_STATEMENTS')) {
-            $extensionConfigs[] = [
-                'dbal' => [
-                    'connections' => [
-                        'default' => [
-                            'options' => [
-                                PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
-                            ],
+        $extensionConfigs[] = [
+            'dbal' => [
+                'connections' => [
+                    'default' => [
+                        'options' => [
+                            PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
                         ],
                     ],
                 ],
-            ];
-        }
+            ],
+        ];
 
         return $extensionConfigs;
     }
