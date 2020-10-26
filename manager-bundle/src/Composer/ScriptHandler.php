@@ -45,6 +45,9 @@ class ScriptHandler
             )
         );
 
+        // Purge the cache, to make sure the 'contao:initialize-application' command is found
+        self::purgeCacheFolder();
+
         if (false === ($phpPath = (new PhpExecutableFinder())->find())) {
             throw new \RuntimeException('The php executable could not be found.');
         }
