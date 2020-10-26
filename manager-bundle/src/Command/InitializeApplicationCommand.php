@@ -52,13 +52,20 @@ class InitializeApplicationCommand extends Command
      */
     private $phpPath;
 
+    /**
+     * @var string
+     */
+    private $consolePath;
+
     public function __construct(string $projectDir, string $webDir, Filesystem $filesystem = null, ProcessFactory $processFactory = null)
     {
         $this->projectDir = $projectDir;
         $this->webDir = Path::makeRelative($webDir, $projectDir);
         $this->filesystem = $filesystem ?? new Filesystem();
         $this->processFactory = $processFactory ?? new ProcessFactory();
+
         $this->phpPath = (new PhpExecutableFinder())->find();
+        $this->consolePath = Path::canonicalize(__DIR__.'/../../bin/contao-console');
 
         parent::__construct();
     }
@@ -124,12 +131,7 @@ class InitializeApplicationCommand extends Command
      */
     private function executeCommand(array $command, OutputInterface $output): void
     {
-        $process = $this->processFactory->create(
-            array_merge(
-                [$this->phpPath, Path::join($this->projectDir, 'vendor/bin', 'contao-console')],
-                $command
-            )
-        );
+        $process = $this->processFactory->create(array_merge([$this->phpPath, $this->consolePath], $command));
 
         // Increase the timeout according to contao/manager-bundle (see #54)
         $process->setTimeout(500);
