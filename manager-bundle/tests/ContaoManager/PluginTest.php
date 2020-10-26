@@ -14,6 +14,7 @@ use Contao\ManagerBundle\ContaoManager\Plugin;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\ManagerPlugin\Config\ContainerBuilder as PluginContainerBuilder;
 use Contao\ManagerPlugin\PluginLoader;
+use PDO;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
@@ -298,6 +299,52 @@ class PluginTest extends TestCase
                     'connections' => [
                         'default' => [
                             'server_version' => '5.1',
+                        ],
+                    ],
+                ],
+            ],
+        ], $result);
+
+        $extensionConfigs = [
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'driver' => 'pdo_mysql',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $result = $this->plugin->getExtensionConfig('doctrine', $extensionConfigs, $container);
+
+        $this->assertSame([
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'driver' => 'pdo_mysql',
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'server_version' => '5.1',
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'options' => [
+                                PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
+                            ],
                         ],
                     ],
                 ],
