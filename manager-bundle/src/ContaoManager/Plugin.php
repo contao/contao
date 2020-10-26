@@ -19,6 +19,7 @@ use Contao\ManagerPlugin\Dependency\DependentPluginInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Exception\DriverException;
+use PDO;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -150,6 +151,28 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             return $extensionConfigs;
         }
 
+        $extensionConfigs = $this->setDatabaseServerVersion($extensionConfigs, $container);
+
+        return $this->setPdoDriverOptions($extensionConfigs, $container);
+    }
+
+    /**
+     * Sets path to enable autoloading of legacy Contao modules.
+     *
+     * @param string $modulePath
+     */
+    public static function autoloadModules($modulePath)
+    {
+        static::$autoloadModules = $modulePath;
+    }
+
+    /**
+     * Sets the server_version parameter, if no database connection cannot be made yet.
+     *
+     * @return array
+     */
+    private function setDatabaseServerVersion(array $extensionConfigs, PluginContainerBuilder $container)
+    {
         $params = [];
 
         foreach ($extensionConfigs as $extensionConfig) {
@@ -187,12 +210,39 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     }
 
     /**
-     * Sets path to enable autoloading of legacy Contao modules.
+     * Sets the PDO driver options, if applicable (#2459).
      *
-     * @param string $modulePath
+     * @return array
      */
-    public static function autoloadModules($modulePath)
+    private function setPdoDriverOptions(array $extensionConfigs, PluginContainerBuilder $container)
     {
-        static::$autoloadModules = $modulePath;
+        foreach ($extensionConfigs as $extensionConfig) {
+            // Do not add PDO options, if selected driver is not pdo_mysql
+            if (isset($extensionConfig['dbal']['connections']['default']['driver']) && 'pdo_mysql' !== $extensionConfig['dbal']['connections']['default']['driver']) {
+                return $extensionConfigs;
+            }
+
+            // Do not add PDO options, if custom options have been defined
+            if (isset($extensionConfig['dbal']['connections']['default']['options'])) {
+                return $extensionConfigs;
+            }
+        }
+
+        // Add PDO driver options dynamically, if defined
+        if (\defined('PDO::MYSQL_ATTR_MULTI_STATEMENTS')) {
+            $extensionConfigs[] = [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'options' => [
+                                PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
+                            ],
+                        ],
+                    ],
+                ],
+            ];
+        }
+
+        return $extensionConfigs;
     }
 }
