@@ -12,6 +12,8 @@ namespace Contao\ManagerBundle\Tests\ContaoManager;
 
 use Contao\ManagerBundle\ContaoManager\Plugin;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
+use Contao\ManagerPlugin\Config\ContainerBuilder as PluginContainerBuilder;
+use Contao\ManagerPlugin\PluginLoader;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
@@ -221,5 +223,140 @@ class PluginTest extends TestCase
         $this->assertCount(3, $routes);
         $this->assertSame('/_wdt/foobar', $routes[0]->getPath());
         $this->assertSame('/_profiler/foobar', $routes[1]->getPath());
+    }
+
+    /**
+     * Tests the getExtensionConfig() method.
+     */
+    public function testGetExtensionConfig()
+    {
+        $container = new PluginContainerBuilder(new PluginLoader(''), []);
+
+        $extensionConfigs = [
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'driver' => 'mysqli',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $result = $this->plugin->getExtensionConfig('doctrine', $extensionConfigs, $container);
+
+        $this->assertSame(
+            [
+                [
+                    'dbal' => [
+                        'connections' => [
+                            'default' => [
+                                'driver' => 'mysqli',
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    'dbal' => [
+                        'connections' => [
+                            'default' => [
+                                'server_version' => '5.1',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            $result
+        );
+
+        $extensionConfigs = [
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'driver' => 'pdo_mysql',
+                            'options' => null,
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $result = $this->plugin->getExtensionConfig('doctrine', $extensionConfigs, $container);
+
+        $this->assertSame(
+            [
+                [
+                    'dbal' => [
+                        'connections' => [
+                            'default' => [
+                                'driver' => 'pdo_mysql',
+                                'options' => null,
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    'dbal' => [
+                        'connections' => [
+                            'default' => [
+                                'server_version' => '5.1',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            $result
+        );
+
+        $extensionConfigs = [
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'driver' => 'pdo_mysql',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $result = $this->plugin->getExtensionConfig('doctrine', $extensionConfigs, $container);
+
+        $this->assertSame(
+            [
+                [
+                    'dbal' => [
+                        'connections' => [
+                            'default' => [
+                                'driver' => 'pdo_mysql',
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    'dbal' => [
+                        'connections' => [
+                            'default' => [
+                                'server_version' => '5.1',
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    'dbal' => [
+                        'connections' => [
+                            'default' => [
+                                'options' => [
+                                    \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            $result
+        );
     }
 }

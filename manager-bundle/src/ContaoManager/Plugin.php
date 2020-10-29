@@ -150,6 +150,28 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             return $extensionConfigs;
         }
 
+        $extensionConfigs = $this->addDefaultServerVersion($extensionConfigs, $container);
+
+        return $this->addDefaultPdoDriverOptions($extensionConfigs);
+    }
+
+    /**
+     * Sets path to enable autoloading of legacy Contao modules.
+     *
+     * @param string $modulePath
+     */
+    public static function autoloadModules($modulePath)
+    {
+        static::$autoloadModules = $modulePath;
+    }
+
+    /**
+     * Sets the server_version parameter, if no database connection cannot be made yet.
+     *
+     * @return array
+     */
+    private function addDefaultServerVersion(array $extensionConfigs, PluginContainerBuilder $container)
+    {
         $params = [];
 
         foreach ($extensionConfigs as $extensionConfig) {
@@ -187,12 +209,41 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     }
 
     /**
-     * Sets path to enable autoloading of legacy Contao modules.
+     * Sets the PDO driver options if applicable (see #2459).
      *
-     * @param string $modulePath
+     * @return array
      */
-    public static function autoloadModules($modulePath)
+    private function addDefaultPdoDriverOptions(array $extensionConfigs)
     {
-        static::$autoloadModules = $modulePath;
+        // Do not add PDO options if the constant does not exist
+        if (!\defined('PDO::MYSQL_ATTR_MULTI_STATEMENTS')) {
+            return $extensionConfigs;
+        }
+
+        foreach ($extensionConfigs as $extensionConfig) {
+            // Do not add PDO options if the selected driver is not pdo_mysql
+            if (isset($extensionConfig['dbal']['connections']['default']['driver']) && 'pdo_mysql' !== $extensionConfig['dbal']['connections']['default']['driver']) {
+                return $extensionConfigs;
+            }
+
+            // Do not add PDO options if custom options have been defined
+            if (isset($extensionConfig['dbal']['connections']['default']) && \array_key_exists('options', $extensionConfig['dbal']['connections']['default'])) {
+                return $extensionConfigs;
+            }
+        }
+
+        $extensionConfigs[] = [
+            'dbal' => [
+                'connections' => [
+                    'default' => [
+                        'options' => [
+                            \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        return $extensionConfigs;
     }
 }
