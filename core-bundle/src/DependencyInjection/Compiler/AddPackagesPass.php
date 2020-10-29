@@ -65,6 +65,11 @@ class AddPackagesPass implements CompilerPassInterface
     {
         $packages = [];
 
+        // Composer v2
+        if (isset($json['packages'])) {
+            $json = $json['packages'];
+        }
+
         foreach ($json as $package) {
             if (isset($package['version'])) {
                 if (isset($package['extra']['branch-alias'][$package['version']])) {

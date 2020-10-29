@@ -23,10 +23,14 @@ class AddPackagesPassTest extends TestCase
 {
     /**
      * Tests adding the packages.
+     *
+     * @param string $jsonFile
+     *
+     * @dataProvider getJsonFiles
      */
-    public function testAddsThePackages()
+    public function testAddsThePackages($jsonFile)
     {
-        $pass = new AddPackagesPass($this->getRootDir().'/vendor/composer/installed.json');
+        $pass = new AddPackagesPass($jsonFile);
         $container = new ContainerBuilder();
 
         $pass->process($container);
@@ -42,6 +46,14 @@ class AddPackagesPassTest extends TestCase
 
         $this->assertSame('1.0.0', $packages['contao/test-bundle1']);
         $this->assertSame('dev-develop', $packages['contao/test-bundle2']);
+    }
+
+    public function getJsonFiles()
+    {
+        return [
+            [$this->getRootDir().'/vendor/composer/installed.json'],
+            [$this->getRootDir().'/vendor/composer/installedv2.json'],
+        ];
     }
 
     /**
