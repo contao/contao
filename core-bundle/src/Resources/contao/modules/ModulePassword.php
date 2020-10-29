@@ -63,6 +63,23 @@ class ModulePassword extends \Module
 		\System::loadLanguageFile('tl_member');
 		$this->loadDataContainer('tl_member');
 
+		// Call onload_callback (e.g. to check permissions)
+		if (\is_array($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback']))
+		{
+			foreach ($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback'] as $callback)
+			{
+				if (\is_array($callback))
+				{
+					$this->import($callback[0]);
+					$this->{$callback[0]}->{$callback[1]}();
+				}
+				elseif (\is_callable($callback))
+				{
+					$callback();
+				}
+			}
+		}
+
 		// Set new password
 		if (strncmp(\Input::get('token'), 'PW', 2) === 0)
 		{
