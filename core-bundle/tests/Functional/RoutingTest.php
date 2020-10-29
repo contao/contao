@@ -1018,7 +1018,6 @@ class RoutingTest extends WebTestCase
     {
         static::loadFileIntoDatabase(__DIR__.'/app/Resources/issue-2465.sql');
 
-        Config::set('useAutoItem', true);
         Config::set('folderUrl', true);
         Config::set('addLanguageToUrl', true);
 
