@@ -443,23 +443,21 @@ class RouteProviderTest extends TestCase
             ['de', 'fr'],
         ];
 
-        // createPage() generates a rootSorting value from the language, so the test order is by language
-        yield 'Sorts by root page sorting if all of the languages are fallback' => [
+        yield 'Sorts by alias if all of the languages are fallback' => [
             [
                 1 => $this->createPage('en', 'foo', true),
-                3 => $this->createPage('ru', 'foo', true),
-                2 => $this->createPage('fr', 'foo', true),
+                2 => $this->createPage('ru', 'foo', true),
+                3 => $this->createPage('fr', 'foo', true),
                 0 => $this->createPage('en', 'foo/bar', true),
             ],
             ['de'],
         ];
 
-        // createPage() generates a rootSorting value from the language, so the test order is by language
-        yield 'Sorts by root page sorting if none of the languages is fallback' => [
+        yield 'Sorts by alias if none of the languages is fallback' => [
             [
                 1 => $this->createPage('en', 'foo', false),
-                3 => $this->createPage('ru', 'foo', false),
-                2 => $this->createPage('fr', 'foo', false),
+                2 => $this->createPage('ru', 'foo', false),
+                3 => $this->createPage('fr', 'foo', false),
                 0 => $this->createPage('en', 'foo/bar', false),
             ],
             ['de'],
@@ -674,7 +672,7 @@ class RouteProviderTest extends TestCase
         $page->rootLanguage = $language;
         $page->rootIsFallback = $fallback;
         $page->rootUseSSL = 'https' === $scheme;
-        $page->rootSorting = array_reduce((array) $language, static function ($c, $i) { return $c + \ord($i); }, 0);
+        $page->rootSorting = mt_rand();
 
         return $page;
     }

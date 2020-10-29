@@ -1013,4 +1013,30 @@ class RoutingTest extends WebTestCase
         $this->assertSame(200, $response->getStatusCode());
         $this->assertStringContainsString('', $title);
     }
+
+    public function testCorrectPageForUnknownLanguage(): void
+    {
+        static::loadFileIntoDatabase(__DIR__.'/app/Resources/issue-2465.sql');
+
+        Config::set('folderUrl', true);
+        Config::set('addLanguageToUrl', true);
+
+        $request = 'https://domain1.local/it/';
+
+        $_SERVER['REQUEST_URI'] = $request;
+        $_SERVER['HTTP_HOST'] = 'domain1.local';
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'de,en';
+
+        $client = $this->createClient(['environment' => 'locale'], $_SERVER);
+        System::setContainer($client->getContainer());
+
+        $crawler = $client->request('GET', $request);
+        $title = trim($crawler->filterXPath('//head/title')->text());
+
+        /** @var Response $response */
+        $response = $client->getResponse();
+
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertStringContainsString('Domain1', $title);
+    }
 }

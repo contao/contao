@@ -429,24 +429,22 @@ class RouteProvider implements RouteProviderInterface
                         if ($pageB->rootIsFallback && !$pageA->rootIsFallback) {
                             return 1;
                         }
+                    } else {
+                        if (null === $langA && null !== $langB) {
+                            return 1;
+                        }
 
-                        return $pageA->rootSorting <=> $pageB->rootSorting;
-                    }
+                        if (null !== $langA && null === $langB) {
+                            return -1;
+                        }
 
-                    if (null === $langA && null !== $langB) {
-                        return 1;
-                    }
+                        if ($langA < $langB) {
+                            return -1;
+                        }
 
-                    if (null !== $langA && null === $langB) {
-                        return -1;
-                    }
-
-                    if ($langA < $langB) {
-                        return -1;
-                    }
-
-                    if ($langA > $langB) {
-                        return 1;
+                        if ($langA > $langB) {
+                            return 1;
+                        }
                     }
                 }
 
