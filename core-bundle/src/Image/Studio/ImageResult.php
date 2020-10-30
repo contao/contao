@@ -108,8 +108,7 @@ class ImageResult
 
             $type = $createParameters[2]->getType();
 
-            return $type instanceof \ReflectionNamedType &&
-                ResizeOptions::class === $type->getName();
+            return $type instanceof \ReflectionNamedType && ResizeOptions::class === $type->getName();
         };
 
         $factory = $this->pictureFactory();
