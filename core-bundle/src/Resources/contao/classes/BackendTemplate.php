@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\Response;
+
 /**
  * Provide methods to handle back end templates.
  *
@@ -42,6 +44,21 @@ class BackendTemplate extends Template
 		}
 
 		return $strBuffer;
+	}
+
+	/**
+	 * Return a response object
+	 *
+	 * @param bool $blnForceCacheHeaders
+	 *
+	 * @return Response The response object
+	 */
+	public function getResponse()
+	{
+		$response = parent::getResponse();
+		$response->headers->set('Cache-Control', 'no-cache, no-store');
+
+		return $response->setPrivate();
 	}
 
 	/**
