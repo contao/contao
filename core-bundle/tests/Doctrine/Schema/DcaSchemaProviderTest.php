@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\Doctrine\Schema;
 
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
 use Contao\CoreBundle\Tests\Doctrine\DoctrineTestCase;
-use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Statement;
@@ -22,16 +21,6 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 
 class DcaSchemaProviderTest extends DoctrineTestCase
 {
-    /**
-     * @group legacy
-     *
-     * @expectedDeprecation %simplements "Symfony\Bridge\Doctrine\RegistryInterface" that is deprecated%s
-     */
-    public function testRegistryImplementsDeprecatedInterface(): void
-    {
-        $this->createMock(Registry::class);
-    }
-
     public function testHasAnEmptySchema(): void
     {
         $this->assertCount(0, $this->getProvider()->createSchema()->getTableNames());
