@@ -41,7 +41,7 @@ final class Callback implements ServiceTagInterface
     public $target;
 
     /**
-     * @var int
+     * @var int|null
      */
     public $priority;
 
