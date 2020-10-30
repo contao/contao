@@ -49,8 +49,6 @@ class BackendTemplate extends Template
 	/**
 	 * Return a response object
 	 *
-	 * @param bool $blnForceCacheHeaders
-	 *
 	 * @return Response The response object
 	 */
 	public function getResponse()
