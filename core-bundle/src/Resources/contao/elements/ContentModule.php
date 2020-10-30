@@ -60,7 +60,7 @@ class ContentModule extends ContentElement
 		}
 
 		// Clone the model so we do not modify the shared model in the registry
- 		$objModel = $objModel->cloneOriginal();
+		$objModel = $objModel->cloneOriginal();
 		$objModel->cssID = $cssID;
 		$objModel->typePrefix = 'ce_';
 
