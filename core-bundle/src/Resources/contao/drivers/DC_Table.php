@@ -1526,10 +1526,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 		$this->import(BackendUser::class, 'User');
 
-		$event = new UndoDescriptionEvent($this->strTable, $data[$this->strTable][0], array(
-			'fields' => $GLOBALS['TL_DCA'][$this->strTable]['list']['undo']['fields'],
-			'format' => $GLOBALS['TL_DCA'][$this->strTable]['list']['undo']['format']
-		));
+		$event = new UndoDescriptionEvent($this->strTable, $data[$this->strTable][0]);
 		System::getContainer()->get('event_dispatcher')->dispatch($event, ContaoCoreEvents::UNDO_DESCRIPTION);
 
 		$objUndoStmt = $this->Database->prepare("INSERT INTO tl_undo (pid, tstamp, fromTable, query, affectedRows, data, description) VALUES (?, ?, ?, ?, ?, ?, ?)")

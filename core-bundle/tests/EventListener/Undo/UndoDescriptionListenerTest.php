@@ -15,19 +15,47 @@ namespace Contao\CoreBundle\Tests\EventListener\Undo;
 use Contao\CoreBundle\Event\UndoDescriptionEvent;
 use Contao\CoreBundle\EventListener\Undo\UndoDescriptionListener;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\TextField;
+use Symfony\Component\VarDumper\VarDumper;
 
 class UndoDescriptionListenerTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        $GLOBALS['TL_DCA'] = [];
+    }
+
     /**
      * @dataProvider rowAndOptionsProvider
      */
-    public function testGetDescriptionForRow(array $data, array $options, string $expected): void
+    public function testGetDescriptionForRow(array $data, array $options, ?string $expected): void
     {
+        $table = 'tl_member';
+        $GLOBALS['TL_DCA'][$table]['list'] = ['undo' => $options];
         $listener = new UndoDescriptionListener();
 
-        $event = new UndoDescriptionEvent('tl_member', $data, $options);
+        $event = new UndoDescriptionEvent($table, $data);
         $listener($event);
 
+        $this->assertSame($event->getDescription(), $expected);
+    }
+
+    /**
+     * @dataProvider rowAndOptionsForContentElementsProvider
+     */
+    public function testGetDescriptionForDifferentContentElements(array $data, array $options, ?string $expected): void
+    {
+        $table = 'tl_content';
+        $GLOBALS['TL_DCA'][$table]['list'] = [
+            'undo' => array_merge(
+                ['discriminator' => 'type'],
+                $options
+            )
+        ];
+        $listener = new UndoDescriptionListener();
+
+        $event = new UndoDescriptionEvent($table, $data);
+        $listener($event);
         $this->assertSame($event->getDescription(), $expected);
     }
 
@@ -81,6 +109,38 @@ class UndoDescriptionListenerTest extends TestCase
             ],
             [],
             'ID 42',
+        ];
+    }
+
+    public function rowAndOptionsForContentElementsProvider(): \Generator
+    {
+        $elementMap = [
+            'fields' => [
+                'headline' => 'headline',
+                'text' => 'text',
+                'image' => 'singleSRC',
+                'gallery' => 'multiSRC'
+            ]
+        ];
+
+        yield 'Gets description for headline element according to element map' => [
+            [
+                'id' => 42,
+                'type' => 'headline',
+                'headline' => serialize(['unit' => 'h2', 'value' => 'This is a headline'])
+            ],
+            $elementMap,
+            serialize(['unit' => 'h2', 'value' => 'This is a headline'])
+        ];
+
+        yield 'Gets description for text element according to element map' => [
+            [
+                'id' => 42,
+                'type' => 'text',
+                'text' => '<p>This is a test element</p>'
+            ],
+            $elementMap,
+            '<p>This is a test element</p>'
         ];
     }
 

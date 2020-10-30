@@ -12,24 +12,22 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\Undo;
 
+use Contao\ArrayUtil;
 use Contao\CoreBundle\Event\UndoDescriptionEvent;
 
 class UndoDescriptionListener
 {
-    /**
-     * @var array
-     */
-    private $options;
-
     public function __invoke(UndoDescriptionEvent $event): void
     {
-        $this->options = $event->getOptions();
+        $table = $event->getTable();
         $row = $event->getData();
+        $fields = $GLOBALS['TL_DCA'][$table]['list']['undo']['fields'] ?? null;
+        $format = $GLOBALS['TL_DCA'][$table]['list']['undo']['format'] ?? null;
         $description = null;
 
         // Get description by defined fields and format
-        if (isset($this->options['fields'])) {
-            $description = $this->getDescriptionFromFields($row);
+        if (!empty($fields)) {
+            $description = $this->getDescriptionFromFields($table, $row, $fields, $format);
         }
 
         // Fallback: Check for some often used fields
@@ -39,25 +37,28 @@ class UndoDescriptionListener
 
         // Fallback: If everything else failed, we fall back to the row ID
         if (null === $description) {
-            $description = 'ID '.(string) $row['id'];
+            $description = 'ID ' . (string)$row['id'];
         }
 
         $event->setDescription($description);
     }
 
-    private function getDescriptionFromFields(array $row): string
+    private function getDescriptionFromFields(string $table, array $row, $fields, ?string $format = null): string
     {
-        $options = $this->options;
-        $fields = $options['fields'];
-        $format = $options['format'] ?? null;
+        // Check if field config is of schema $type => $field
+        if (ArrayUtil::isAssoc($fields) && isset($GLOBALS['TL_DCA'][$table]['list']['undo']['discriminator'])) {
+            $discriminator = $GLOBALS['TL_DCA'][$table]['list']['undo']['discriminator'];
+            // TODO: Make discriminator column variable
+            $fields = $fields[$row[$discriminator]];
+        }
 
         if (\is_string($fields)) {
             $fields = [$fields];
         }
 
         $values = array_map(
-            static function ($field) use ($row) {
-                return $row[$field] ?? '';
+            function ($field) use ($row) {
+                return $this->getValueFromDca($row[$field], $field) ?? '';
             },
             $fields
         );
@@ -71,12 +72,17 @@ class UndoDescriptionListener
 
     private function getFallbackDescription(array $row): ?string
     {
-        foreach (['title', 'username', 'email', 'name', 'headline'] as $key) {
-            if (!empty($row[$key])) {
-                return $row[$key];
+        foreach (['title', 'username', 'email', 'name', 'headline'] as $field) {
+            if (!empty($row[$field])) {
+                return $this->getValueFromDca($row[$field], $field);
             }
         }
 
         return null;
+    }
+
+    private function getValueFromDca(string $value, string $field): string
+    {
+        return $value;
     }
 }

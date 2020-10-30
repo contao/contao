@@ -31,16 +31,10 @@ class UndoDescriptionEvent extends Event
      */
     private $description;
 
-    /**
-     * @var array
-     */
-    private $options;
-
-    public function __construct(string $table, array $data, array $options = [])
+    public function __construct(string $table, array $data)
     {
         $this->table = $table;
         $this->data = $data;
-        $this->options = $options;
     }
 
     public function getDescription(): ?string
@@ -61,10 +55,5 @@ class UndoDescriptionEvent extends Event
     public function getData(): array
     {
         return $this->data;
-    }
-
-    public function getOptions(): array
-    {
-        return $this->options;
     }
 }
