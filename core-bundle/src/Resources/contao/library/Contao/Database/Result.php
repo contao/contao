@@ -400,7 +400,7 @@ class Result
 			return $blnEnumerated ? array_values($this->resultSet[$this->intIndex]) : $this->resultSet[$this->intIndex];
 		}
 
-		$row = array_merge(isset($this->resultSet[$this->intIndex]) ? $this->resultSet[$this->intIndex] : array(), $this->arrModified);
+		$row = array_merge($this->resultSet[$this->intIndex] ?? array(), $this->arrModified);
 
 		return $blnEnumerated ? array_values($row) : $row;
 	}
