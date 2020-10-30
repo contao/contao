@@ -38,7 +38,6 @@ use FOS\HttpCacheBundle\FOSHttpCacheBundle;
 use Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
 use Nelmio\SecurityBundle\NelmioSecurityBundle;
-use PDO;
 use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MonologBundle\MonologBundle;
@@ -333,24 +332,24 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     }
 
     /**
-     * Sets the PDO driver options, if applicable (#2459).
+     * Sets the PDO driver options if applicable (#2459).
      *
      * @return array<string,array<string,array<string,array<string,mixed>>>>
      */
     private function addDefaultPdoDriverOptions(array $extensionConfigs): array
     {
-        // Do not add PDO options, if constant does not exist
+        // Do not add PDO options if the constant does not exist
         if (!\defined('PDO::MYSQL_ATTR_MULTI_STATEMENTS')) {
             return $extensionConfigs;
         }
 
         foreach ($extensionConfigs as $extensionConfig) {
-            // Do not add PDO options, if selected driver is not pdo_mysql
+            // Do not add PDO options if the selected driver is not pdo_mysql
             if (isset($extensionConfig['dbal']['connections']['default']['driver']) && 'pdo_mysql' !== $extensionConfig['dbal']['connections']['default']['driver']) {
                 return $extensionConfigs;
             }
 
-            // Do not add PDO options, if custom options have been defined
+            // Do not add PDO options if custom options have been defined
             if (isset($extensionConfig['dbal']['connections']['default']) && \array_key_exists('options', $extensionConfig['dbal']['connections']['default'])) {
                 return $extensionConfigs;
             }
@@ -361,7 +360,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 'connections' => [
                     'default' => [
                         'options' => [
-                            PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
+                            \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
                         ],
                     ],
                 ],

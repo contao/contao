@@ -28,7 +28,6 @@ use FOS\HttpCacheBundle\FOSHttpCacheBundle;
 use Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
 use Nelmio\SecurityBundle\NelmioSecurityBundle;
-use PDO;
 use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MonologBundle\MonologBundle;
@@ -456,7 +455,7 @@ class PluginTest extends ContaoTestCase
                         'connections' => [
                             'default' => [
                                 'options' => [
-                                    PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
+                                    \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
                                 ],
                             ],
                         ],
@@ -487,17 +486,15 @@ class PluginTest extends ContaoTestCase
 
         $expect = array_merge(
             $extensionConfigs,
-            [
-                [
-                    'dbal' => [
-                        'connections' => [
-                            'default' => [
-                                'server_version' => '5.5',
-                            ],
+            [[
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'server_version' => '5.5',
                         ],
                     ],
                 ],
-            ]
+            ]]
         );
 
         $container = $this->getContainer();
@@ -523,17 +520,15 @@ class PluginTest extends ContaoTestCase
 
         $expect = array_merge(
             $extensionConfigs,
-            [
-                [
-                    'dbal' => [
-                        'connections' => [
-                            'default' => [
-                                'server_version' => '5.5',
-                            ],
+            [[
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'server_version' => '5.5',
                         ],
                     ],
                 ],
-            ]
+            ]]
         );
 
         $container = $this->getContainer();
