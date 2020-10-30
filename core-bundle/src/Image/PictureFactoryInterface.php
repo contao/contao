@@ -35,5 +35,5 @@ interface PictureFactoryInterface
      *
      * @return PictureInterface
      */
-    public function create($path, $size = null);
+    public function create($path, $size = null/*, ResizeOptions $options = null*/);
 }
