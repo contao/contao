@@ -438,7 +438,7 @@ abstract class Backend extends Controller
 		elseif (Input::get('key') && isset($arrModule[Input::get('key')]))
 		{
 			$objCallback = System::importStatic($arrModule[Input::get('key')][0]);
-			$response = $objCallback->{$arrModule[Input::get('key')][1]}($dc);
+			$response = $objCallback->{$arrModule[Input::get('key')][1] ?? '__invoke'}($dc);
 
 			if ($response instanceof RedirectResponse)
 			{
