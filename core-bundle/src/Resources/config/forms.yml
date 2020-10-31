@@ -1,0 +1,10 @@
+services:
+    _defaults:
+        autoconfigure: true
+        autowire: true
+        bind:
+            $projectDir: '%kernel.project_dir%'
+
+    Contao\CoreBundle\Form\:
+        resource: '../../Form/*'
+        exclude: '../../Form/Data'
