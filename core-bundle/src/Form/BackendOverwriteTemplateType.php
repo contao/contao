@@ -57,7 +57,7 @@ class BackendOverwriteTemplateType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $getLabel = function (string $id): ?string {
+        $getLabel = function (string $id): string {
             return $this->translator->trans("$id.0", [], 'contao_default');
         };
 
@@ -151,7 +151,7 @@ class BackendOverwriteTemplateType extends AbstractType
     /**
      * Get a list of Contao template choices, grouped by vendor/module.
      *
-     * @return array<string, array<string, string>
+     * @return array<string, array<string, string>>
      */
     private function getContaoTemplates(): array
     {
@@ -190,7 +190,7 @@ class BackendOverwriteTemplateType extends AbstractType
      *
      * @param array<string,string> $targetPathMapping
      *
-     * @return array<string, array<string, string>
+     * @return array<string, array<string, string>>
      */
     private function getBundleTemplates(array &$targetPathMapping): array
     {
