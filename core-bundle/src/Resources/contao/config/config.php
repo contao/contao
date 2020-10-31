@@ -40,6 +40,7 @@ use Contao\ContentToplink;
 use Contao\ContentVimeo;
 use Contao\ContentYouTube;
 use Contao\CoreBundle\Controller\BackendCsvImportController;
+use Contao\CoreBundle\Controller\BackendOverwriteTemplateController;
 use Contao\Crawl;
 use Contao\FileSelector;
 use Contao\FilesModel;
@@ -173,7 +174,7 @@ $GLOBALS['BE_MOD'] = array
 		'tpl_editor' => array
 		(
 			'tables'      => array('tl_templates'),
-			'new_tpl'     => array('tl_templates', 'addNewTemplate'),
+			'new_tpl'     => array(BackendOverwriteTemplateController::class),
 			'compare'     => array('tl_templates', 'compareTemplate')
 		)
 	),
