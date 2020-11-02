@@ -175,7 +175,7 @@ class ModuleSubscribe extends Module
 		// Find an unconfirmed token
 		if ((!$optInToken = $optIn->find(Input::get('token'))) || !$optInToken->isValid() || \count($arrRelated = $optInToken->getRelatedRecords()) < 1 || key($arrRelated) != 'tl_newsletter_recipients' || \count($arrIds = current($arrRelated)) < 1)
 		{
-			$this->Template->type = 'error';
+			$this->Template->mclass = 'error';
 			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['invalidToken'];
 
 			return;
@@ -183,7 +183,7 @@ class ModuleSubscribe extends Module
 
 		if ($optInToken->isConfirmed())
 		{
-			$this->Template->type = 'error';
+			$this->Template->mclass = 'error';
 			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['tokenConfirmed'];
 
 			return;
@@ -196,7 +196,7 @@ class ModuleSubscribe extends Module
 		{
 			if (!$objRecipient = NewsletterRecipientsModel::findByPk($intId))
 			{
-				$this->Template->type = 'error';
+				$this->Template->mclass = 'error';
 				$this->Template->message = $GLOBALS['TL_LANG']['MSC']['invalidToken'];
 
 				return;
@@ -204,7 +204,7 @@ class ModuleSubscribe extends Module
 
 			if ($optInToken->getEmail() != $objRecipient->email)
 			{
-				$this->Template->type = 'error';
+				$this->Template->mclass = 'error';
 				$this->Template->message = $GLOBALS['TL_LANG']['MSC']['tokenEmailMismatch'];
 
 				return;
