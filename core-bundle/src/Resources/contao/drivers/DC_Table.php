@@ -5007,17 +5007,20 @@ class DC_Table extends DataContainer implements \listable, \editable
 				// Call the label_callback ($row, $label, $this)
 				if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback']) || \is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback']))
 				{
+					// add the associative keys 
+					$argsWithKeys = array_combine($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['fields'], $args);
+					
 					if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback']))
 					{
 						$strClass = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback'][0];
 						$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback'][1];
 
 						$this->import($strClass);
-						$args = $this->$strClass->$strMethod($row, $label, $this, $args);
+						$args = $this->$strClass->$strMethod($row, $label, $this, $args, $argsWithKeys);
 					}
 					elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback']))
 					{
-						$args = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback']($row, $label, $this, $args);
+						$args = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback']($row, $label, $this, $args, $argsWithKeys);
 					}
 
 					// Handle strings and arrays
