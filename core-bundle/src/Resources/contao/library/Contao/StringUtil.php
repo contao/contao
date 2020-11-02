@@ -225,7 +225,7 @@ class StringUtil
 	 */
 	public static function decodeEntities($strString, $strQuoteStyle=ENT_COMPAT, $strCharset=null)
 	{
-		if (!$strString)
+		if ((string) $strString === '')
 		{
 			return '';
 		}
