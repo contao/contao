@@ -25,9 +25,15 @@ class UndoDescriptionListener
         $format = $GLOBALS['TL_DCA'][$table]['list']['undo']['format'] ?? null;
         $description = null;
 
+        // Check if field config is of schema $type => $field
+        if (ArrayUtil::isAssoc($fields) && isset($GLOBALS['TL_DCA'][$table]['list']['undo']['discriminator'])) {
+            $discriminator = $GLOBALS['TL_DCA'][$table]['list']['undo']['discriminator'];
+            $fields = $fields[$row[$discriminator]] ?? null;
+        }
+
         // Get description by defined fields and format
         if (!empty($fields)) {
-            $description = $this->getDescriptionFromFields($table, $row, $fields, $format);
+            $description = $this->getDescriptionFromFields($row, $fields, $format);
         }
 
         // Fallback: Check for some often used fields
@@ -43,15 +49,8 @@ class UndoDescriptionListener
         $event->setDescription($description);
     }
 
-    private function getDescriptionFromFields(string $table, array $row, $fields, ?string $format = null): string
+    private function getDescriptionFromFields(array $row, $fields, ?string $format = null): string
     {
-        // Check if field config is of schema $type => $field
-        if (ArrayUtil::isAssoc($fields) && isset($GLOBALS['TL_DCA'][$table]['list']['undo']['discriminator'])) {
-            $discriminator = $GLOBALS['TL_DCA'][$table]['list']['undo']['discriminator'];
-            // TODO: Make discriminator column variable
-            $fields = $fields[$row[$discriminator]];
-        }
-
         if (\is_string($fields)) {
             $fields = [$fields];
         }

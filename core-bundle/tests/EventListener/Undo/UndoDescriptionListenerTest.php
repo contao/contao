@@ -47,7 +47,8 @@ class UndoDescriptionListenerTest extends TestCase
     {
         $table = 'tl_content';
         $GLOBALS['TL_DCA'][$table]['list'] = [
-            'undo' => array_merge(
+            'undo' => array_merge
+            (
                 ['discriminator' => 'type'],
                 $options
             )
@@ -119,11 +120,12 @@ class UndoDescriptionListenerTest extends TestCase
                 'headline' => 'headline',
                 'text' => 'text',
                 'image' => 'singleSRC',
-                'gallery' => 'multiSRC'
+                'gallery' => 'multiSRC',
+                'hyperlink' => ['url', 'linkText'],
             ]
         ];
 
-        yield 'Gets description for headline element according to element map' => [
+        yield 'Gets description for headline element' => [
             [
                 'id' => 42,
                 'type' => 'headline',
@@ -133,7 +135,7 @@ class UndoDescriptionListenerTest extends TestCase
             serialize(['unit' => 'h2', 'value' => 'This is a headline'])
         ];
 
-        yield 'Gets description for text element according to element map' => [
+        yield 'Gets description for text element' => [
             [
                 'id' => 42,
                 'type' => 'text',
@@ -141,6 +143,36 @@ class UndoDescriptionListenerTest extends TestCase
             ],
             $elementMap,
             '<p>This is a test element</p>'
+        ];
+
+        yield 'Gets description for hyperlink element' => [
+            [
+                'id' => 42,
+                'type' => 'hyperlink',
+                'url' => 'https://contao.org',
+                'linkText' => 'This is a hyperlink element'
+            ],
+            $elementMap,
+            'https://contao.org, This is a hyperlink element'
+        ];
+
+        yield 'Falls back to commonly used fields if no field is defined for element' => [
+            [
+                'id' => 42,
+                'type' => 'my_custom_content_element',
+                'headline' => serialize(['unit' => 'h2', 'value' => 'Element headline'])
+            ],
+            $elementMap,
+            serialize(['unit' => 'h2', 'value' => 'Element headline'])
+        ];
+
+        yield 'Falls back to ID if no field is defined for element' => [
+            [
+                'id' => 42,
+                'type' => 'my_custom_content_element'
+            ],
+            $elementMap,
+            'ID 42'
         ];
     }
 

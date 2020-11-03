@@ -63,6 +63,38 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'headerFields'            => array('title', 'headline', 'author', 'tstamp', 'start', 'stop'),
 			'child_record_callback'   => array('tl_content', 'addCteType')
 		),
+		'undo' => array
+		(
+			'fields' => array
+			(
+				'headline' => 'headline',
+				'text' => 'text',
+				'html' => 'html',
+				'list' => 'list',
+				'table' => 'table',
+				'accordionStart' => 'mooHeadline',
+				// Leave out 'accordionStop' as there is no field to describe it
+				'accordionSingle' => 'mooHeadline',
+				'sliderStart' => 'headline',
+				// Leave out 'sliderStop' as there is no field to describe it
+				'code' => 'code',
+				'markdown' => 'markdown',
+				'hyperlink' => 'url',
+				'toplink' => 'linkTitle',
+				'image' => 'singleSRC',
+				'gallery' => 'multiSRC',
+				'player' => 'playerSRC',
+				'youtube' => 'youtube',
+				'vimeo' => 'vimeo',
+				'download' => 'singleSRC',
+				'downloads' => 'multiSRC',
+				'alias' => 'cteAlias',
+				'article' => 'articleAlias',
+				'teaser' => 'article',
+				'form' => 'form',
+				'module' => 'module'
+			)
+		),
 		'global_operations' => array
 		(
 			'all' => array
