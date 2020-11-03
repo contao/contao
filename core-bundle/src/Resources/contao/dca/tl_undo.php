@@ -97,6 +97,7 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 		(
 			'sorting'                 => true,
 			'filter'                  => true,
+			// TODO: Use display_name in filter drop down, e.g. via `reference`
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'query' => array
@@ -105,6 +106,7 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 		),
 		'description' => array
 		(
+			'search'                  => true,
 			'label'                   => &$GLOBALS['TL_LANG']['tl_undo']['description'],
 			'sql'                     => "text NULL"
 		),

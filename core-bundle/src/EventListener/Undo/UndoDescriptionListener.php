@@ -82,6 +82,11 @@ class UndoDescriptionListener
 
     private function getValueFromDca(string $value, string $field): string
     {
+        // Get value according to DCA settings and depending on "data type":
+        // Example: The correct value for an image according to the DCA settings is the string representation of an UUID.
+        // However, the most meaningful value for the editor is the file name.
+        // TODO: 1. Convert raw data from database
+        // TODO: 2. Convert it to something meaningful for the editor.
         return $value;
     }
 }
