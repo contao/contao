@@ -62,14 +62,11 @@ class ModuleCloseAccount extends Module
 	{
 		$this->import(FrontendUser::class, 'User');
 
+		System::loadLanguageFile('tl_member');
+		$this->loadDataContainer('tl_member');
+
 		// Initialize the password widget
-		$arrField = array
-		(
-			'name' => 'password',
-			'inputType' => 'text',
-			'label' => $GLOBALS['TL_LANG']['MSC']['password'][0],
-			'eval' => array('hideInput'=>true, 'preserveTags'=>true, 'mandatory'=>true, 'required'=>true)
-		);
+		$arrField = $GLOBALS['TL_DCA']['tl_member']['fields']['password'];
 
 		$objWidget = new FormTextField(FormTextField::getAttributesFromDca($arrField, $arrField['name']));
 		$objWidget->rowClass = 'row_0 row_first even';
