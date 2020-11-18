@@ -96,6 +96,11 @@ services:
         tags:
             - controller.service_arguments
 
+    Contao\CoreBundle\Cache\ApplicationCacheState:
+        arguments:
+            - '@cache.system'
+        public: true
+
     # Backwards compatibility
     contao.controller.backend_csv_import:
         alias: Contao\CoreBundle\Controller\BackendCsvImportController
