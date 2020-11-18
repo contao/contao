@@ -11,6 +11,15 @@ services:
             calls:
                 - [setContainer, ['@service_container']]
 
+
+    Contao\CoreBundle\EventListener\BackendRebuildCacheMessageListener:
+        arguments:
+            - '@contao.routing.scope_matcher'
+            - '@Contao\CoreBundle\Cache\ApplicationCacheState'
+            - '@translator'
+        tags:
+            - { name: kernel.event_listener }
+
     Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener:
         arguments:
             - '@contao.framework'
