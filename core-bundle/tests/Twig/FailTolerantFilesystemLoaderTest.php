@@ -119,6 +119,6 @@ class FailTolerantFilesystemLoaderTest extends TestCase
 
     private function getTestRoot(): string
     {
-        return Path::canonicalize(__DIR__.'/../Fixtures');
+        return Path::canonicalize(__DIR__.'/../Fixtures/Twig');
     }
 }
