@@ -78,4 +78,15 @@ class ContaoManagerPassTest extends ContaoTestCase
 
         $pass->process($container);
     }
+
+    public function testDoesNotAddAManagerLinkIfManagerPathIsSetToFalse(): void
+    {
+        $container = new ContainerBuilder();
+        $container->setParameter('contao.web_dir', $this->getTempDir());
+        $container->setParameter('contao_manager.manager_path', 'false');
+
+        $pass = new ContaoManagerPass();
+
+        $pass->process($container);
+    }
 }

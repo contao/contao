@@ -26,6 +26,11 @@ class ContaoManagerPass implements CompilerPassInterface
         $webDir = $container->getParameter('contao.web_dir');
         $managerPath = $container->getParameter('contao_manager.manager_path');
 
+        if('false' === $managerPath)
+        {
+            return;
+        }
+
         if (null === $managerPath) {
             if (is_file(Path::join($webDir, 'contao-manager.phar.php'))) {
                 $managerPath = 'contao-manager.phar.php';
