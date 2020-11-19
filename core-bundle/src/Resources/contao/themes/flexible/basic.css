@@ -58,6 +58,7 @@ h1,h2,h3,h4,h5,h6,strong,b,th {
 	body {
 		color:#222;
 		font-weight:300;
+		-webkit-font-smoothing:antialiased;
 	}
 	h1,h2,h3,h4,h5,h6,strong,b,th {
 		font-weight:500;
