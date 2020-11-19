@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\HttpKernel;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\Model;
+use Contao\PageModel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
@@ -77,6 +78,15 @@ class ModelArgumentResolver implements ArgumentValueResolverInterface
 
         if ($type && $value instanceof $type) {
             return $value;
+        }
+
+        // Special handling for pageModel that could be globally registered
+        if (
+            isset($GLOBALS['objPage'])
+            && $GLOBALS['objPage'] instanceof PageModel
+            && $GLOBALS['objPage']->id === (int) $value
+        ) {
+            return $GLOBALS['objPage'];
         }
 
         /** @var Model $model */
