@@ -15,12 +15,14 @@ namespace Contao\CoreBundle\Tests\Fragment\Reference;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\ModuleModel;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class FrontendModuleReferenceTest extends TestCase
 {
     public function testCreatesTheControllerNameFromTheModelType(): void
     {
-        $model = new ModuleModel();
+        /** @var ModuleModel&MockObject $model */
+        $model = $this->mockClassWithProperties(ModuleModel::class);
         $model->type = 'foobar';
 
         $reference = new FrontendModuleReference($model);
@@ -30,8 +32,7 @@ class FrontendModuleReferenceTest extends TestCase
 
     public function testAddsTheSectionAttribute(): void
     {
-        $model = new ModuleModel();
-        $model->type = 'foobar';
+        $model = $this->createMock(ModuleModel::class);
 
         $reference = new FrontendModuleReference($model);
         $this->assertSame('main', $reference->attributes['section']);

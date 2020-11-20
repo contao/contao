@@ -18,6 +18,7 @@ use Contao\FrontendTemplate;
 use Contao\ModuleModel;
 use Contao\System;
 use FOS\HttpCache\ResponseTagger;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -36,7 +37,7 @@ class FrontendModuleControllerTest extends TestCase
         $controller = new TestController();
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_test'));
 
-        $controller(new Request([], [], ['_scope' => 'frontend']), new ModuleModel(), 'main');
+        $controller(new Request([], [], ['_scope' => 'frontend']), $this->createMock(ModuleModel::class), 'main');
     }
 
     public function testCreatesTheTemplateFromTheTypeFragmentOption(): void
@@ -45,7 +46,7 @@ class FrontendModuleControllerTest extends TestCase
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_foo'));
         $controller->setFragmentOptions(['type' => 'foo']);
 
-        $controller(new Request(), new ModuleModel(), 'main');
+        $controller(new Request(), $this->createMock(ModuleModel::class), 'main');
     }
 
     public function testCreatesTheTemplateFromTheTemplateFragmentOption(): void
@@ -54,12 +55,13 @@ class FrontendModuleControllerTest extends TestCase
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_bar'));
         $controller->setFragmentOptions(['template' => 'mod_bar']);
 
-        $controller(new Request(), new ModuleModel(), 'main');
+        $controller(new Request(), $this->createMock(ModuleModel::class), 'main');
     }
 
     public function testCreatesTheTemplateFromACustomTpl(): void
     {
-        $model = new ModuleModel();
+        /** @var ModuleModel&MockObject $model */
+        $model = $this->mockClassWithProperties(ModuleModel::class);
         $model->customTpl = 'mod_bar';
 
         $container = $this->mockContainerWithFrameworkTemplate('mod_bar');
@@ -79,7 +81,7 @@ class FrontendModuleControllerTest extends TestCase
         $controller = new TestController();
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_test'));
 
-        $response = $controller(new Request(), new ModuleModel(), 'main');
+        $response = $controller(new Request(), $this->createMock(ModuleModel::class), 'main');
         $template = json_decode($response->getContent(), true);
 
         $this->assertSame('', $template['cssID']);
@@ -88,7 +90,8 @@ class FrontendModuleControllerTest extends TestCase
 
     public function testSetsTheHeadlineFromTheModel(): void
     {
-        $model = new ModuleModel();
+        /** @var ModuleModel&MockObject $model */
+        $model = $this->mockClassWithProperties(ModuleModel::class);
         $model->headline = serialize(['unit' => 'h6', 'value' => 'foobar']);
 
         $controller = new TestController();
@@ -103,7 +106,8 @@ class FrontendModuleControllerTest extends TestCase
 
     public function testSetsTheCssIdAndClassFromTheModel(): void
     {
-        $model = new ModuleModel();
+        /** @var ModuleModel&MockObject $model */
+        $model = $this->mockClassWithProperties(ModuleModel::class);
         $model->cssID = serialize(['foo', 'bar']);
 
         $controller = new TestController();
@@ -121,7 +125,7 @@ class FrontendModuleControllerTest extends TestCase
         $controller = new TestController();
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_test'));
 
-        $response = $controller(new Request(), new ModuleModel(), 'left');
+        $response = $controller(new Request(), $this->createMock(ModuleModel::class), 'left');
         $template = json_decode($response->getContent(), true);
 
         $this->assertSame('left', $template['inColumn']);
@@ -129,7 +133,8 @@ class FrontendModuleControllerTest extends TestCase
 
     public function testAddsTheCacheTags(): void
     {
-        $model = new ModuleModel();
+        /** @var ModuleModel&MockObject $model */
+        $model = $this->mockClassWithProperties(ModuleModel::class);
         $model->id = 42;
 
         $responseTagger = $this->createMock(ResponseTagger::class);

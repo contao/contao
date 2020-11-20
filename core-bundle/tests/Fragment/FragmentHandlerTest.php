@@ -117,7 +117,7 @@ class FragmentHandlerTest extends TestCase
 
         $renderers = $this->mockServiceLocatorWithRenderer('inline', [$callback]);
 
-        $GLOBALS['objPage'] = new PageModel();
+        $GLOBALS['objPage'] = $this->mockClassWithProperties(PageModel::class);
         $GLOBALS['objPage']->id = 42;
 
         $fragmentHandler = $this->getFragmentHandler($fragmentRegistry, $renderers);
@@ -139,7 +139,7 @@ class FragmentHandlerTest extends TestCase
 
         $renderers = $this->mockServiceLocatorWithRenderer('inline', [$callback]);
 
-        $GLOBALS['objPage'] = new PageModel();
+        $GLOBALS['objPage'] = $this->mockClassWithProperties(PageModel::class);
         $GLOBALS['objPage']->id = 42;
 
         $fragmentHandler = $this->getFragmentHandler($fragmentRegistry, $renderers);
