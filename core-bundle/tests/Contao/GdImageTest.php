@@ -19,6 +19,18 @@ use Contao\System;
 
 class GdImageTest extends TestCase
 {
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using the "Contao\GdImage" class has been deprecated %s.
+     */
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        spl_autoload_call(GdImage::class);
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -26,11 +38,6 @@ class GdImageTest extends TestCase
         System::setContainer($this->getContainerWithContaoConfiguration($this->getTempDir()));
     }
 
-    /**
-     * @group legacy
-     *
-     * @expectedDeprecation Using the "Contao\GdImage" class has been deprecated %s.
-     */
     public function testCreatesImagesFromResources(): void
     {
         $resource = imagecreate(1, 1);

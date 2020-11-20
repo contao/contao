@@ -42,6 +42,18 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TwoFactorControllerTest extends TestCase
 {
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation %sserialize%sInvalidTwoFactorCodeException%s
+     */
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        spl_autoload_call(InvalidTwoFactorCodeException::class);
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -227,11 +239,6 @@ class TwoFactorControllerTest extends TestCase
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
     }
 
-    /**
-     * @group legacy
-     *
-     * @expectedDeprecation %sserialize%sInvalidTwoFactorCodeException%s
-     */
     public function testFailsIfTheTwoFactorCodeIsInvalid(): void
     {
         /** @var FrontendUser&MockObject $user */

@@ -19,6 +19,20 @@ use PHPUnit\Framework\TestCase;
 
 class PaletteManipulatorTest extends TestCase
 {
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using the "Contao\CoreBundle\Exception\PaletteNotFoundException" class has been deprecated %s.
+     * @expectedDeprecation Using the "Contao\CoreBundle\Exception\PalettePositionException" class has been deprecated %s.
+     */
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        spl_autoload_call(PaletteNotFoundException::class);
+        spl_autoload_call(PalettePositionException::class);
+    }
+
     public function testPrependsAFieldToAPalette(): void
     {
         $pm = PaletteManipulator::create()
@@ -330,10 +344,6 @@ class PaletteManipulatorTest extends TestCase
         $this->assertTrue($closureCalled);
     }
 
-    /**
-     * @group legacy
-     * @expectedDeprecation Using the "Contao\CoreBundle\Exception\PaletteNotFoundException" class has been deprecated %s.
-     */
     public function testFailsIfTheDcaPaletteDoesNotExist(): void
     {
         $pm = PaletteManipulator::create()
@@ -363,10 +373,6 @@ class PaletteManipulatorTest extends TestCase
         $pm->applyToSubpalette('name', 'tl_test');
     }
 
-    /**
-     * @group legacy
-     * @expectedDeprecation Using the "Contao\CoreBundle\Exception\PalettePositionException" class has been deprecated %s.
-     */
     public function testFailsIfThePositionIsInvalid(): void
     {
         $this->expectException(PalettePositionException::class);

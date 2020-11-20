@@ -26,6 +26,13 @@ class TranslatorTest extends TestCase
      *
      * @expectedDeprecation %simplements "Symfony\Component\Translation\TranslatorInterface" that is deprecated%s
      */
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        spl_autoload_call(Translator::class);
+    }
+
     public function testTranslatorImplementsDeprecatedInterface(): void
     {
         $translator = new Translator($this->createMock(BaseTranslator::class), $this->mockContaoFramework());
