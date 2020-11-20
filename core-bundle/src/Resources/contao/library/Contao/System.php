@@ -329,6 +329,25 @@ abstract class System
 	 */
 	public static function setContainer(ContainerInterface $container)
 	{
+		// Reset state if a container was previously set
+		if (null !== static::$objContainer)
+		{
+			foreach (self::$arrSingletons as $singleton)
+			{
+				if (\in_array('reset', get_class_methods($singleton), true))
+				{
+					$singleton::reset();
+				}
+			}
+
+			self::$removedServiceIds = null;
+			self::$arrStaticObjects = array();
+			self::$arrSingletons = array();
+			self::$arrLanguages = array();
+			self::$arrLanguageFiles = array();
+			self::$arrImageSizes = array();
+		}
+
 		static::$objContainer = $container;
 	}
 

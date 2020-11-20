@@ -74,6 +74,14 @@ class Files
 	}
 
 	/**
+	 * @internal
+	 */
+	public static function reset(): void
+	{
+		self::$objInstance = null;
+	}
+
+	/**
 	 * Create a directory
 	 *
 	 * @param string $strDirectory The directory name

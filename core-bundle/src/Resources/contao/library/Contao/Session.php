@@ -99,6 +99,14 @@ class Session
 	}
 
 	/**
+	 * @internal
+	 */
+	public static function reset(): void
+	{
+		static::$objInstance = null;
+	}
+
+	/**
 	 * Return a session variable
 	 *
 	 * @param string $strKey The variable name
