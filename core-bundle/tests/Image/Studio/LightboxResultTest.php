@@ -16,6 +16,7 @@ use Contao\CoreBundle\Image\Studio\ImageResult;
 use Contao\CoreBundle\Image\Studio\LightboxResult;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\Image\ResizeOptions;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -323,5 +324,37 @@ class LightboxResultTest extends TestCase
         $lightboxResult = new LightboxResult($locator, null, 'foo://bar');
 
         $this->assertSame('', $lightboxResult->getGroupIdentifier());
+    }
+
+    public function testPassesOnResizeOptions(): void
+    {
+        $resource = 'foo/bar.png';
+        $size = [100, 200, 'crop'];
+        $resizeOptions = new ResizeOptions();
+
+        /** @var MockObject&ImageResult $image */
+        $image = $this->createMock(ImageResult::class);
+
+        /** @var MockObject&Studio $studio */
+        $studio = $this->createMock(Studio::class);
+        $studio
+            ->expects($this->once())
+            ->method('createImage')
+            ->with($resource, $size, $resizeOptions)
+            ->willReturn($image)
+        ;
+
+        /** @var MockObject&ContainerInterface $locator */
+        $locator = $this->createMock(ContainerInterface::class);
+        $locator
+            ->expects($this->once())
+            ->method('get')
+            ->with(Studio::class)
+            ->willReturn($studio)
+        ;
+
+        $lightboxResult = new LightboxResult($locator, $resource, null, $size, null, $resizeOptions);
+
+        $this->assertSame($image, $lightboxResult->getImage());
     }
 }
