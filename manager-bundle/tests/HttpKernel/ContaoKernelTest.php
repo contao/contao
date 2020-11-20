@@ -272,6 +272,8 @@ class ContaoKernelTest extends ContaoTestCase
 
         $this->assertSame(['1.1.1.1', '2.2.2.2'], Request::getTrustedProxies());
         $this->assertSame(Request::HEADER_X_FORWARDED_ALL ^ Request::HEADER_X_FORWARDED_HOST, Request::getTrustedHeaderSet());
+
+        unset($_SERVER['TRUSTED_PROXIES']);
     }
 
     public function testSetsRequestTrustedHostsFromEnvVars(): void
@@ -283,6 +285,8 @@ class ContaoKernelTest extends ContaoTestCase
         ContaoKernel::fromRequest($this->getTempDir(), Request::create('/'));
 
         $this->assertSame(['{1.1.1.1}i', '{2.2.2.2}i'], Request::getTrustedHosts());
+
+        unset($_SERVER['TRUSTED_HOSTS']);
     }
 
     public function testEnablesRequestHttpMethodParameterOverride(): void
