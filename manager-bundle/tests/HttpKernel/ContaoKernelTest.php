@@ -102,6 +102,9 @@ class ContaoKernelTest extends ContaoTestCase
         $this->assertArrayNotHasKey(AppBundle::class, $bundles);
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testRegistersAppBundle(): void
     {
         $bundleLoader = $this->createMock(BundleLoader::class);
