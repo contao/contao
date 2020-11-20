@@ -1255,6 +1255,32 @@ class RoutingTest extends FunctionalTestCase
         $this->assertStringContainsString('', $title);
     }
 
+    public function testCorrectPageForUnknownLanguage(): void
+    {
+        Config::set('folderUrl', true);
+        Config::set('addLanguageToUrl', true);
+
+        $request = 'http://domain1.local/it/';
+
+        $_SERVER['REQUEST_URI'] = $request;
+        $_SERVER['HTTP_HOST'] = 'domain1.local';
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'de,en';
+
+        $client = $this->createClient(['environment' => 'locale'], $_SERVER);
+        System::setContainer($client->getContainer());
+
+        $this->loadFixtureFiles(['issue-2465']);
+
+        $crawler = $client->request('GET', $request);
+        $title = trim($crawler->filterXPath('//head/title')->text());
+
+        /** @var Response $response */
+        $response = $client->getResponse();
+
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertStringContainsString('Domain1', $title);
+    }
+
     private function loadFixtureFiles(array $fileNames): void
     {
         // Do not reload the fixtures if they have not changed
