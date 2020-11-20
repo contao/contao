@@ -67,6 +67,8 @@ class ModuleCloseAccount extends Module
 
 		// Initialize the password widget
 		$arrField = $GLOBALS['TL_DCA']['tl_member']['fields']['password'];
+		$arrField['name'] = 'password';
+		$arrField['eval']['hideInput'] = true;
 
 		$objWidget = new FormTextField(FormTextField::getAttributesFromDca($arrField, $arrField['name']));
 		$objWidget->rowClass = 'row_0 row_first even';
