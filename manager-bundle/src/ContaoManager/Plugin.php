@@ -249,7 +249,9 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                     $container->setParameter('env(DATABASE_URL)', $this->getDatabaseUrl($container));
                 }
 
-                return $this->addDefaultServerVersion($extensionConfigs, $container);
+                $extensionConfigs = $this->addDefaultServerVersion($extensionConfigs, $container);
+
+                return $this->addDefaultPdoDriverOptions($extensionConfigs);
         }
 
         return $extensionConfigs;
@@ -324,6 +326,45 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 ],
             ];
         }
+
+        return $extensionConfigs;
+    }
+
+    /**
+     * Sets the PDO driver options if applicable (#2459).
+     *
+     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     */
+    private function addDefaultPdoDriverOptions(array $extensionConfigs): array
+    {
+        // Do not add PDO options if the constant does not exist
+        if (!\defined('PDO::MYSQL_ATTR_MULTI_STATEMENTS')) {
+            return $extensionConfigs;
+        }
+
+        foreach ($extensionConfigs as $extensionConfig) {
+            // Do not add PDO options if the selected driver is not pdo_mysql
+            if (isset($extensionConfig['dbal']['connections']['default']['driver']) && 'pdo_mysql' !== $extensionConfig['dbal']['connections']['default']['driver']) {
+                return $extensionConfigs;
+            }
+
+            // Do not add PDO options if custom options have been defined
+            if (isset($extensionConfig['dbal']['connections']['default']) && \array_key_exists('options', $extensionConfig['dbal']['connections']['default'])) {
+                return $extensionConfigs;
+            }
+        }
+
+        $extensionConfigs[] = [
+            'dbal' => [
+                'connections' => [
+                    'default' => [
+                        'options' => [
+                            \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
+                        ],
+                    ],
+                ],
+            ],
+        ];
 
         return $extensionConfigs;
     }

@@ -23,6 +23,7 @@ use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FilesModel;
 use Contao\Image\ImageInterface;
+use Contao\Image\ResizeOptions;
 use Contao\PageModel;
 use Contao\System;
 use Contao\Validator;
@@ -340,6 +341,20 @@ class FigureBuilderTest extends TestCase
         $this->getFigureBuilder($studio)
             ->fromPath($absoluteFilePath, false)
             ->setSize($size)
+            ->build()
+        ;
+    }
+
+    public function testSetResizeOptions(): void
+    {
+        [$absoluteFilePath] = $this->getTestFilePaths();
+
+        $resizeOptions = new ResizeOptions();
+        $studio = $this->getStudioMockForImage($absoluteFilePath, null, $resizeOptions);
+
+        $this->getFigureBuilder($studio)
+            ->fromPath($absoluteFilePath, false)
+            ->setResizeOptions($resizeOptions)
             ->build()
         ;
     }
@@ -773,6 +788,27 @@ class FigureBuilderTest extends TestCase
         $this->assertTrue($figure->hasLightbox());
     }
 
+    public function testSetLightboxResizeOptions(): void
+    {
+        /** @var ImageInterface&MockObject $image */
+        $image = $this->createMock(ImageInterface::class);
+        $resizeOptions = new ResizeOptions();
+        $studio = $this->getStudioMockForLightbox($image, null, null, null, $resizeOptions);
+
+        $figure = $this->getFigure(
+            static function (FigureBuilder $builder) use ($image, $resizeOptions): void {
+                $builder
+                    ->setLightboxResourceOrUrl($image)
+                    ->setLightboxResizeOptions($resizeOptions)
+                    ->enableLightbox()
+                ;
+            },
+            $studio
+        );
+
+        $this->assertTrue($figure->hasLightbox());
+    }
+
     public function testSetLightboxGroupIdentifier(): void
     {
         /** @var ImageInterface&MockObject $image */
@@ -830,8 +866,8 @@ class FigureBuilderTest extends TestCase
             ->expects($this->exactly(2))
             ->method('createImage')
             ->willReturnMap([
-                [$filePath1, null, $imageResult1],
-                [$filePath2, null, $imageResult2],
+                [$filePath1, null, null, $imageResult1],
+                [$filePath2, null, null, $imageResult2],
             ])
         ;
 
@@ -891,7 +927,7 @@ class FigureBuilderTest extends TestCase
     /**
      * @return MockObject&Studio
      */
-    private function getStudioMockForImage(string $expectedFilePath, $expectedSizeConfiguration = null)
+    private function getStudioMockForImage(string $expectedFilePath, $expectedSizeConfiguration = null, ResizeOptions $resizeOptions = null)
     {
         /** @var ImageResult&MockObject $image */
         $image = $this->createMock(ImageResult::class);
@@ -901,7 +937,7 @@ class FigureBuilderTest extends TestCase
         $studio
             ->expects($this->once())
             ->method('createImage')
-            ->with($expectedFilePath, $expectedSizeConfiguration)
+            ->with($expectedFilePath, $expectedSizeConfiguration, $resizeOptions)
             ->willReturn($image)
         ;
 
@@ -911,7 +947,7 @@ class FigureBuilderTest extends TestCase
     /**
      * @return MockObject&Studio
      */
-    private function getStudioMockForLightbox($expectedResource, ?string $expectedUrl, $expectedSizeConfiguration = null, string $expectedGroupIdentifier = null)
+    private function getStudioMockForLightbox($expectedResource, ?string $expectedUrl, $expectedSizeConfiguration = null, string $expectedGroupIdentifier = null, ResizeOptions $resizeOptions = null)
     {
         /** @var LightboxResult&MockObject $lightbox */
         $lightbox = $this->createMock(LightboxResult::class);
@@ -921,7 +957,7 @@ class FigureBuilderTest extends TestCase
         $studio
             ->expects($this->once())
             ->method('createLightboxImage')
-            ->with($expectedResource, $expectedUrl, $expectedSizeConfiguration, $expectedGroupIdentifier)
+            ->with($expectedResource, $expectedUrl, $expectedSizeConfiguration, $expectedGroupIdentifier, $resizeOptions)
             ->willReturn($lightbox)
         ;
 

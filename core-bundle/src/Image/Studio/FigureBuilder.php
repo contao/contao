@@ -17,6 +17,7 @@ use Contao\CoreBundle\File\Metadata;
 use Contao\FilesModel;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
+use Contao\Image\ResizeOptions;
 use Contao\PageModel;
 use Contao\Validator;
 use Psr\Container\ContainerInterface;
@@ -81,6 +82,15 @@ class FigureBuilder
     private $sizeConfiguration;
 
     /**
+     * User defined resize options.
+     *
+     * @phpcsSuppress SlevomatCodingStandard.Classes.UnusedPrivateElements
+     *
+     * @var ResizeOptions|null
+     */
+    private $resizeOptions;
+
+    /**
      * User defined custom locale. This will overwrite the default if set.
      *
      * @var string|null
@@ -121,6 +131,13 @@ class FigureBuilder
      * @var mixed|null
      */
     private $lightboxSizeConfiguration;
+
+    /**
+     * User defined lightbox resize options.
+     *
+     * @var ResizeOptions|null
+     */
+    private $lightboxResizeOptions;
 
     /**
      * User defined lightbox group identifier. This will overwrite the default if set.
@@ -281,6 +298,19 @@ class FigureBuilder
     }
 
     /**
+     * Sets resize options.
+     *
+     * By default or if the argument is set to null, resize options are derived
+     * from predefined image sizes.
+     */
+    public function setResizeOptions(?ResizeOptions $resizeOptions): self
+    {
+        $this->resizeOptions = $resizeOptions;
+
+        return $this;
+    }
+
+    /**
      * Sets custom metadata.
      *
      * By default or if the argument is set to null, metadata is trying to be
@@ -398,6 +428,19 @@ class FigureBuilder
     }
 
     /**
+     * Sets resize options for the lightbox image.
+     *
+     * By default or if the argument is set to null, resize options are derived
+     * from predefined image sizes.
+     */
+    public function setLightboxResizeOptions(?ResizeOptions $resizeOptions): self
+    {
+        $this->lightboxResizeOptions = $resizeOptions;
+
+        return $this;
+    }
+
+    /**
      * Sets a custom lightbox group ID.
      *
      * By default or if the argument is set to null, the ID will be empty. For
@@ -448,7 +491,7 @@ class FigureBuilder
 
         $imageResult = $this->locator
             ->get(Studio::class)
-            ->createImage($settings->filePath, $settings->sizeConfiguration)
+            ->createImage($settings->filePath, $settings->sizeConfiguration, $settings->resizeOptions)
         ;
 
         // Define the values via closure to make their evaluation lazy
@@ -578,7 +621,13 @@ class FigureBuilder
 
         return $this->locator
             ->get(Studio::class)
-            ->createLightboxImage($filePathOrImage, $url, $this->lightboxSizeConfiguration, $this->lightboxGroupIdentifier)
+            ->createLightboxImage(
+                $filePathOrImage,
+                $url,
+                $this->lightboxSizeConfiguration,
+                $this->lightboxGroupIdentifier,
+                $this->lightboxResizeOptions
+            )
         ;
     }
 
