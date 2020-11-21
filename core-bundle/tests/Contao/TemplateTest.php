@@ -20,37 +20,32 @@ use Contao\System;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\VarDumper\VarDumper;
+use Webmozart\PathUtil\Path;
 
 class TemplateTest extends TestCase
 {
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->filesystem = new Filesystem();
-        $this->filesystem->mkdir($this->getFixturesDir().'/templates');
+        (new Filesystem())->mkdir(Path::join($this->getTempDir(), 'templates'));
 
-        System::setContainer($this->getContainerWithContaoConfiguration($this->getFixturesDir()));
+        System::setContainer($this->getContainerWithContaoConfiguration($this->getTempDir()));
     }
 
     protected function tearDown(): void
     {
         parent::tearDown();
 
-        $this->filesystem->remove($this->getFixturesDir().'/templates');
+        (new Filesystem())->remove(Path::join($this->getTempDir(), 'templates'));
     }
 
     public function testReplacesTheVariables(): void
     {
         Config::set('debugMode', false);
 
-        $this->filesystem->dumpFile(
-            $this->getFixturesDir().'/templates/test_template.html5',
+        (new Filesystem())->dumpFile(
+            Path::join($this->getTempDir(), 'templates/test_template.html5'),
             '<?= $this->value ?>'
         );
 
@@ -64,8 +59,8 @@ class TemplateTest extends TestCase
 
     public function testHandlesExceptions(): void
     {
-        $this->filesystem->dumpFile(
-            $this->getFixturesDir().'/templates/test_template.html5',
+        (new Filesystem())->dumpFile(
+            Path::join($this->getTempDir(), 'templates/test_template.html5'),
             'test<?php throw new Exception ?>'
         );
 
@@ -87,8 +82,8 @@ class TemplateTest extends TestCase
 
     public function testHandlesExceptionsInsideBlocks(): void
     {
-        $this->filesystem->dumpFile(
-            $this->getFixturesDir().'/templates/test_template.html5',
+        (new Filesystem())->dumpFile(
+            Path::join($this->getTempDir(), 'templates/test_template.html5'),
             <<<'EOF'
 <?php
     echo 'test1';
@@ -120,8 +115,10 @@ EOF
 
     public function testHandlesExceptionsInParentTemplate(): void
     {
-        $this->filesystem->dumpFile(
-            $this->getFixturesDir().'/templates/test_parent.html5',
+        $filesystem = new Filesystem();
+
+        $filesystem->dumpFile(
+            Path::join($this->getTempDir(), 'templates/test_parent.html5'),
             <<<'EOF'
 <?php
     echo 'test1';
@@ -141,8 +138,8 @@ EOF
 EOF
         );
 
-        $this->filesystem->dumpFile(
-            $this->getFixturesDir().'/templates/test_template.html5',
+        $filesystem->dumpFile(
+            Path::join($this->getTempDir(), 'templates/test_template.html5'),
             <<<'EOF'
 <?php
     echo 'test1';
@@ -179,10 +176,15 @@ EOF
 
     public function testParsesNestedBlocks(): void
     {
-        $this->filesystem->dumpFile($this->getFixturesDir().'/templates/test_parent.html5', '');
+        $filesystem = new Filesystem();
 
-        $this->filesystem->dumpFile(
-            $this->getFixturesDir().'/templates/test_template.html5',
+        $filesystem->dumpFile(
+            Path::join($this->getTempDir(), 'templates/test_parent.html5'),
+            ''
+        );
+
+        $filesystem->dumpFile(
+            Path::join($this->getTempDir(), 'templates/test_template.html5'),
             <<<'EOF'
 <?php
     echo 'test1';
