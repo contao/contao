@@ -829,9 +829,9 @@ services:
     Contao\CoreBundle\Twig\Extension\ImageExtension: ~
 
     Contao\CoreBundle\Twig\FailTolerantFilesystemLoader:
-        decorates: 'twig.loader.native_filesystem'
+        decorates: twig.loader.native_filesystem
         arguments:
-            -  '@Contao\CoreBundle\Twig\FailTolerantFilesystemLoader.inner'
+            - '@Contao\CoreBundle\Twig\FailTolerantFilesystemLoader.inner'
             - '@Contao\CoreBundle\Cache\ApplicationCacheState'
             - '%kernel.project_dir%'
 
