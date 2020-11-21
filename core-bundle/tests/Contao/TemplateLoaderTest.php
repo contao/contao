@@ -57,6 +57,8 @@ class TemplateLoaderTest extends TestCase
 
         (new Filesystem())->remove(Path::join($this->getTempDir(), 'templates'));
 
+        TemplateLoader::reset();
+
         unset($GLOBALS['TL_LANG'], $GLOBALS['TL_CTE'], $GLOBALS['TL_FFL'], $GLOBALS['FE_MOD']);
     }
 
@@ -82,8 +84,6 @@ class TemplateLoaderTest extends TestCase
             ],
             Controller::getTemplateGroup('mod_article_')
         );
-
-        TemplateLoader::reset();
     }
 
     public function testReturnsACustomTemplateInContaoTemplates(): void
@@ -105,8 +105,6 @@ class TemplateLoaderTest extends TestCase
             ],
             Controller::getTemplateGroup('mod_article_')
         );
-
-        TemplateLoader::reset();
     }
 
     public function testReturnsACustomTemplateInAnotherBundle(): void
@@ -128,8 +126,6 @@ class TemplateLoaderTest extends TestCase
             ],
             Controller::getTemplateGroup('mod_article_')
         );
-
-        TemplateLoader::reset();
     }
 
     public function testReturnsMultipleRootTemplatesWithTheSamePrefix(): void
@@ -153,8 +149,6 @@ class TemplateLoaderTest extends TestCase
             ],
             Controller::getTemplateGroup('ctlg_view_')
         );
-
-        TemplateLoader::reset();
     }
 
     public function testReturnsATemplateGroup(): void
@@ -202,8 +196,6 @@ class TemplateLoaderTest extends TestCase
             ],
             Controller::getTemplateGroup('mod_article_list_')
         );
-
-        TemplateLoader::reset();
     }
 
     public function testSupportsAdditionalMappers(): void
@@ -264,7 +256,5 @@ class TemplateLoaderTest extends TestCase
             ],
             Controller::getTemplateGroup('mod_article_')
         );
-
-        TemplateLoader::reset();
     }
 }
