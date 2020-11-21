@@ -57,6 +57,7 @@ class SymlinksCommandTest extends TestCase
         $display = $tester->getDisplay();
 
         $this->assertSame(1, $code);
+
         $this->assertNotRegExp('# web/files +files #', $display);
         $this->assertRegExp('# web/files/public +files/public #', $display);
         $this->assertRegExp('# web/system/modules/foobar/html/foo/bar +Skipped because system/modules/foobar/html will be symlinked\. #', $display);
