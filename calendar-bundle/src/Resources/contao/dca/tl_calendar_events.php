@@ -638,6 +638,7 @@ class tl_calendar_events extends Backend
 			case 'show':
 			case 'delete':
 			case 'toggle':
+			case 'feature':
 				$objCalendar = $this->Database->prepare("SELECT pid FROM tl_calendar_events WHERE id=?")
 											  ->limit(1)
 											  ->execute($id);
