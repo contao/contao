@@ -107,7 +107,7 @@ jobs:
             - name: Run the functional tests
               run: vendor/bin/phpunit --testsuite=functional --colors=always
               env:
-                  DATABASE_URL: mysql://root:root@localhost:3306/contao_test
+                  DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
 
     php8:
         name: PHP 8.0
@@ -139,7 +139,7 @@ jobs:
             - name: Run the functional tests
               run: vendor/bin/phpunit --testsuite=functional --colors=always
               env:
-                  DATABASE_URL: mysql://root:root@localhost:3306/contao_test
+                  DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
 
     prefer-lowest:
         name: Prefer Lowest
@@ -149,7 +149,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 7.4
+                  php-version: 7.3
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
                   tools: flex
                   coverage: none
@@ -171,7 +171,7 @@ jobs:
             - name: Run the functional tests
               run: vendor/bin/phpunit --testsuite=functional --colors=always
               env:
-                  DATABASE_URL: mysql://root:root@localhost:3306/contao_test
+                  DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
 
     bundles:
         name: Bundles
