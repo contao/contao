@@ -601,7 +601,7 @@ class tl_faq extends Backend
 			return sprintf(preg_replace('/%(?!s)/', '%%', $strSuffix), ($objFaq->alias ?: $objFaq->id));
 		}
 
-		throw new Exception("FAQ categories without existing redirect page cannot be used in an FAQ list");
+		throw new Exception('FAQ categories without existing redirect page cannot be used in an FAQ list');
 	}
 
 	/**
