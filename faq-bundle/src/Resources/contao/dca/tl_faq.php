@@ -591,7 +591,7 @@ class tl_faq extends Backend
 		// A jumpTo page is not mandatory for FAQ categories (see #6226) but required for the FAQ list module
 		if ($jumpTo < 1)
 		{
-			throw new Exception("FAQ categories without redirect page cannot be used in an FAQ list");
+			throw new Exception('FAQ categories without redirect page cannot be used in an FAQ list');
 		}
 
 		if (($objTarget = PageModel::findByPk($jumpTo)) !== null)
