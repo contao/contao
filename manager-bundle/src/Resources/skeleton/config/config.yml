@@ -26,11 +26,11 @@ framework:
         cookie_secure: auto
     fragments: { path: /_fragment }
     cache:
-         pools:
-             doctrine.result_cache_pool:
-                 adapter: cache.app
-             doctrine.system_cache_pool:
-                 adapter: cache.system
+        pools:
+            doctrine.result_cache_pool:
+                adapter: cache.app
+            doctrine.system_cache_pool:
+                adapter: cache.system
 
 # Contao configuration
 contao:
