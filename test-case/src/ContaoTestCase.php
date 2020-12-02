@@ -31,9 +31,6 @@ abstract class ContaoTestCase extends TestCase
      */
     private static $tempDirs = [];
 
-    /**
-     * {@inheritdoc}
-     */
     public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
