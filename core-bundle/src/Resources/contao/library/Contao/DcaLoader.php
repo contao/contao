@@ -138,6 +138,8 @@ class DcaLoader extends Controller
 	 */
 	private function addDefaultLabels($blnNoCache)
 	{
+		$this->loadLanguageFile($this->strTable, null, $blnNoCache);
+
 		// Return if there are no labels
 		if (!isset(static::$arrLanguageFiles[$this->strTable]))
 		{
