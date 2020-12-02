@@ -525,9 +525,9 @@ class tl_faq extends Backend
 
 	public function checkSerpPreview()
 	{
-		$objFaqCategory = FaqCategoryModel::findByPk(CURRENT_ID);
+		$objFaqCategory = $this->Database->prepare('SELECT p.id FROM tl_faq_category c INNER JOIN tl_page p ON p.id = c.jumpTo WHERE c.id=? AND c.jumpTo > 0')->limit(1)->execute(CURRENT_ID);
 
-		if ($objFaqCategory === null || $objFaqCategory->jumpTo < 1 || $objFaqCategory->getRelated('jumpTo') === null)
+		if ($objFaqCategory->numRows < 1)
 		{
 			PaletteManipulator::create()
 				->removeField('serpPreview', 'meta_legend')
