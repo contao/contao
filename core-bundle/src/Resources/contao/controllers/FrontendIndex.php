@@ -285,10 +285,10 @@ class FrontendIndex extends Frontend
 		}
 
 		// Backup some globals (see #7659)
-		$arrHead = $GLOBALS['TL_HEAD'];
-		$arrBody = $GLOBALS['TL_BODY'];
-		$arrMootools = $GLOBALS['TL_MOOTOOLS'];
-		$arrJquery = $GLOBALS['TL_JQUERY'];
+		$arrHead = $GLOBALS['TL_HEAD'] ?? array();
+		$arrBody = $GLOBALS['TL_BODY'] ?? array();
+		$arrMootools = $GLOBALS['TL_MOOTOOLS'] ?? array();
+		$arrJquery = $GLOBALS['TL_JQUERY'] ?? array();
 
 		try
 		{

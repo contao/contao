@@ -160,12 +160,10 @@ class ModuleArticle extends Module
 		}
 
 		// Get section and article alias
-		list($strSection, $strArticle) = explode(':', Input::get('articles'));
+		$chunks = explode(':', Input::get('articles'));
 
-		if ($strArticle === null)
-		{
-			$strArticle = $strSection;
-		}
+		$strSection = $chunks[0];
+		$strArticle = $chunks[1] ?? $strSection;
 
 		// Overwrite the page title (see #2853 and #4955)
 		if (!$this->blnNoMarkup && $strArticle && ($strArticle == $this->id || $strArticle == $this->alias) && $this->title)

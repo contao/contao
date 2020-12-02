@@ -152,8 +152,8 @@ abstract class ModuleNews extends Module
 		// Add the meta information
 		$objTemplate->date = $arrMeta['date'];
 		$objTemplate->hasMetaFields = !empty($arrMeta);
-		$objTemplate->numberOfComments = $arrMeta['ccount'];
-		$objTemplate->commentCount = $arrMeta['comments'];
+		$objTemplate->numberOfComments = $arrMeta['ccount'] ?? 0;
+		$objTemplate->commentCount = $arrMeta['comments'] ?? 0;
 		$objTemplate->timestamp = $objArticle->date;
 		$objTemplate->author = $arrMeta['author'];
 		$objTemplate->datetime = date('Y-m-d\TH:i:sP', $objArticle->date);

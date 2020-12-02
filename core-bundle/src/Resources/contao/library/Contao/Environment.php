@@ -218,6 +218,11 @@ class Environment
 	 */
 	protected static function httpAcceptLanguage()
 	{
+		if (empty($_SERVER['HTTP_ACCEPT_LANGUAGE']))
+		{
+			return array();
+		}
+
 		$arrAccepted = array();
 		$arrLanguages = array();
 

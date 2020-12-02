@@ -169,6 +169,11 @@ class PageRegular extends Frontend
 				}
 				else
 				{
+					if (!isset($arrCustomSections[$arrModule['col']]))
+					{
+						$arrCustomSections[$arrModule['col']] = '';
+					}
+
 					$arrCustomSections[$arrModule['col']] .= $this->getFrontendModule($arrModule['mod'], $arrModule['col']);
 				}
 			}
@@ -531,7 +536,7 @@ class PageRegular extends Frontend
 		}
 
 		// Make sure TL_USER_CSS is set
-		if (!\is_array($GLOBALS['TL_USER_CSS']))
+		if (!isset($GLOBALS['TL_USER_CSS']) || !\is_array($GLOBALS['TL_USER_CSS']))
 		{
 			$GLOBALS['TL_USER_CSS'] = array();
 		}
