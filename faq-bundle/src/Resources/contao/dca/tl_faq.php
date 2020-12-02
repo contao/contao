@@ -580,6 +580,12 @@ class tl_faq extends Backend
 	{
 		/** @var FaqCategoryModel $objCategory */
 		$objCategory = $objFaq->getRelated('pid');
+
+		if ($objCategory === null)
+		{
+			throw new Exception('FAQ category does not exist.');
+		}
+
 		$jumpTo = (int) $objCategory->jumpTo;
 
 		// A jumpTo page is not mandatory for FAQ categories (see #6226) but required for the FAQ list module
