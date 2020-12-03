@@ -54,6 +54,10 @@ class TestListener
     {
     }
 
+    public function onLoadLast(): void
+    {
+    }
+
     public function onArticleWizard(): void
     {
     }

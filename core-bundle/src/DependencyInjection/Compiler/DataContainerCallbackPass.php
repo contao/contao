@@ -86,6 +86,8 @@ class DataContainerCallbackPass implements CompilerPassInterface
             $serviceId,
             $this->getMethod($attributes, $class, $serviceId),
         ];
+
+        krsort($callbacks[$attributes['table']][$attributes['target']], SORT_NUMERIC);
     }
 
     private function getMethod(array $attributes, string $class, string $serviceId): string

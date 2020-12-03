@@ -405,7 +405,7 @@ class DataContainerCallbackPassTest extends TestCase
             [
                 'table' => 'tl_page',
                 'target' => 'config.onload',
-                'method' => 'onLoadFirst',
+                'method' => 'onLoadSecond',
                 'priority' => 10,
             ]
         );
@@ -415,8 +415,18 @@ class DataContainerCallbackPassTest extends TestCase
             [
                 'table' => 'tl_page',
                 'target' => 'config.onload',
-                'method' => 'onLoadSecond',
+                'method' => 'onLoadFirst',
                 'priority' => 100,
+            ]
+        );
+
+        $definitionB->addTag(
+            'contao.callback',
+            [
+                'table' => 'tl_page',
+                'target' => 'config.onload',
+                'method' => 'onLoadLast',
+                'priority' => -50,
             ]
         );
 
@@ -431,12 +441,15 @@ class DataContainerCallbackPassTest extends TestCase
             [
                 'tl_page' => [
                     'config.onload_callback' => [
-                        10 => [
-                            ['test.callback_listener.a', 'onLoadCallback'],
+                        100 => [
                             ['test.callback_listener.b', 'onLoadFirst'],
                         ],
-                        100 => [
+                        10 => [
+                            ['test.callback_listener.a', 'onLoadCallback'],
                             ['test.callback_listener.b', 'onLoadSecond'],
+                        ],
+                        -50 => [
+                            ['test.callback_listener.b', 'onLoadLast'],
                         ],
                     ],
                 ],
