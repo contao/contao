@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\Image;
 use Contao\BackendUser;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\ImageSizesEvent;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\ImageSizes;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
@@ -41,16 +40,6 @@ class ImageSizesTest extends TestCase
      */
     private $imageSizes;
 
-    /**
-     * @var ContaoFramework&MockObject
-     */
-    private $framework;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -69,14 +58,12 @@ class ImageSizesTest extends TestCase
 
         $this->connection = $this->createMock(Connection::class);
         $this->eventDispatcher = $this->createMock(EventDispatcherInterface::class);
-        $this->framework = $this->mockContaoFramework();
-        $this->translator = $this->createMock(TranslatorInterface::class);
 
         $this->imageSizes = new ImageSizes(
             $this->connection,
             $this->eventDispatcher,
-            $this->framework,
-            $this->translator
+            $this->mockContaoFramework(),
+            $this->createMock(TranslatorInterface::class)
         );
     }
 
