@@ -128,7 +128,7 @@ class Input
 
 			if ($varValue === null)
 			{
-				return $varValue;
+				return null;
 			}
 
 			$varValue = static::decodeEntities($varValue);
@@ -169,7 +169,7 @@ class Input
 
 			if ($varValue === null)
 			{
-				return $varValue;
+				return null;
 			}
 
 			$varValue = static::decodeEntities($varValue);
@@ -209,7 +209,7 @@ class Input
 
 			if ($varValue === null)
 			{
-				return $varValue;
+				return null;
 			}
 
 			$varValue = static::preserveBasicEntities($varValue);
@@ -243,7 +243,7 @@ class Input
 
 			if ($varValue === null)
 			{
-				return $varValue;
+				return null;
 			}
 
 			static::$arrCache[$strCacheKey][$strKey] = $varValue;
@@ -547,7 +547,7 @@ class Input
 		}
 
 		// Return if the value is not a string
-		if (\is_bool($varValue) || $varValue === null || is_numeric($varValue))
+		if (\is_bool($varValue) || is_numeric($varValue))
 		{
 			return $varValue;
 		}
