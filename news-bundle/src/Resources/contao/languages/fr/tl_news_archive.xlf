@@ -70,7 +70,7 @@
         <target>Connexion préalable nécessaire</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.requireLogin.1">
-        <source>Allow only authenticated users to create comments.</source>
+        <source>Allow only authenticated members to create comments.</source>
         <target>N'autoriser que les utilisateurs authentifiés à créer des commentaires.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.0">
@@ -190,12 +190,12 @@
         <target>Afficher les commentaires de l'archive ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.0">
-        <source>RSS feeds</source>
-        <target>Flux RSS</target>
+        <source>News feeds</source>
+        <target>Flux RSS d'actualités</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.1">
-        <source>Manage RSS feeds</source>
-        <target>Gérer les flux RSS</target>
+        <source>Manage news feeds</source>
+        <target>Gérer les flux d'actualités</target>
       </trans-unit>
     </body>
   </file>
