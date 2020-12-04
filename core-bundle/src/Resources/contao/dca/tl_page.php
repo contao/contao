@@ -1174,7 +1174,7 @@ class tl_page extends Contao\Backend
 			);
 
 			// Generate folder URL aliases (see #4933)
-			if (Contao\Config::get('folderUrl') && $objPage->folderUrl)
+			if ($objPage->folderUrl && Contao\Config::get('folderUrl'))
 			{
 				$varValue = $objPage->folderUrl . $varValue;
 			}

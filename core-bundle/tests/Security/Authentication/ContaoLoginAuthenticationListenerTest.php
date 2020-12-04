@@ -171,7 +171,7 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
             ->willReturn(null)
         ;
 
-        $request = $this->mockRequest(true);
+        $request = $this->mockRequest();
         $request->request->set('FORM_SUBMIT', 'tl_login');
         $request->request->set('verify', '123456');
 

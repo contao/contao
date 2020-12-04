@@ -266,7 +266,7 @@ class GdImageTest extends TestCase
 
     private function assertIsGdResource($resource): void
     {
-        if (\is_object($resource)) {
+        if (PHP_MAJOR_VERSION >= 8) {
             // PHP >= 8.0
             $this->assertInstanceOf(\GdImage::class, $resource);
         } else {
