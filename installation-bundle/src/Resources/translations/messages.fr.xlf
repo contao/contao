@@ -18,6 +18,7 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
+        <target>Explication verrouillée</target>
         
       </trans-unit>
       <trans-unit id="5">
@@ -292,7 +293,7 @@
       </trans-unit>
       <trans-unit id="59">
         <source>admin_error_extnd</source>
-        <target>Pour des raisons de sécurité, vous ne pouvez pas utiliser les caractères suivants ici : #()/&lt;=&gt;</target>
+        <target>Pour une question de sécurité, vous ne pouvez pas utiliser ici les caractères suivants : #&lt;&gt;()\=</target>
         
       </trans-unit>
       <trans-unit id="60">
@@ -362,6 +363,7 @@
       </trans-unit>
       <trans-unit id="73">
         <source>duplicate_subscriptions</source>
+        <target>Doublons d'abonnements</target>
         
       </trans-unit>
       <trans-unit id="74">
@@ -372,6 +374,11 @@
       <trans-unit id="75">
         <source>duplicate_subscriptions_end</source>
         <target>Les doublons ont été purgés automatiquement. Une copie de l'abonnement d'origine a été enregistrée dans &lt;code&gt;tl_newsletter_recipients_backup&lt;/code&gt;</target>
+        
+      </trans-unit>
+      <trans-unit id="76">
+        <source>misconfigured_database_url_explain</source>
+        <target>Impossible de se connecter à la base de données à l'aide de l'URL de connexion trouvée dans la variable d'environnement &lt;code&gt;DATABASE_URL&lt;/code&gt;.</target>
         
       </trans-unit>
     </body>

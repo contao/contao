@@ -47,6 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.sizes.1">
         <source>Here you can define the intended layout width of the image, the actual size should be defined via CSS. Example: &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;.</source>
+        <target>Ici, vous pouvez définir la largeur prévue pour l'image dans la mise en page, la taille réelle doit être définie via CSS. Exemple: em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;</target>
       </trans-unit>
       <trans-unit id="tl_image_size.densities.0">
         <source>Pixel densities/scale factors</source>

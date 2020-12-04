@@ -14,8 +14,8 @@
         <target>Adresse e-mail de l'administrateur</target>
       </trans-unit>
       <trans-unit id="tl_settings.adminEmail.1">
-        <source>Auto-generated messages like subscription confirmation e-mails will be sent to this address.</source>
-        <target>Les messages générés par eux-mêmes (ex.: les courriels de confirmation d'inscription) seront envoyés à cette adresse.</target>
+        <source>This e-mail address will be used to send and receive system messages.</source>
+        <target>Cette adresse e-mail sera utilisée pour envoyer et recevoir des messages système.</target>
       </trans-unit>
       <trans-unit id="tl_settings.dateFormat.0">
         <source>Date format</source>

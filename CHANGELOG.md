@@ -1,5 +1,13 @@
 # Change log
 
+## 4.4.55 (2020-12-04)
+
+ * Trigger the onload_callback when featuring news (see #2531).
+ * Trigger the onload_callback in the "password" and "change password" modules (see #2471).
+ * Handle Composer 2 when reading the installed.json file (see #2470).
+ * Evaluate unknown simple tokens (see #2453).
+ * Use binary comparison when looking for aliases in the database (see #2427).
+
 ## 4.4.54 (2020-10-07)
 
  * Correctly detect unknown options (see #2360).
