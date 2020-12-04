@@ -15,7 +15,7 @@
         }
     ],
     "require": {
-        "php": "^7.2",
+        "php": "^7.2 || ^8.0",
         "ext-dom": "*",
         "ext-gd": "*",
         "ext-hash": "*",
@@ -120,7 +120,7 @@
         "doctrine/event-manager": "^1.0",
         "lexik/maintenance-bundle": "^2.1.5",
         "monolog/monolog": "^1.24",
-        "phpunit/phpunit": "^8.4",
+        "phpunit/phpunit": "^8.5",
         "psr/event-dispatcher": "^1.0",
         "symfony/browser-kit": "4.4.*",
         "symfony/http-client": "4.4.*",
