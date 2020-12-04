@@ -12,6 +12,7 @@ composer:
         contao/monorepo-tools: dev-master
         contao/phpstan: ^0.12
         slam/phpstan-extensions: ^5.0
+        thecodingmachine/phpstan-strict-rules: ^0.12
 
 repositories:
     core-bundle:
