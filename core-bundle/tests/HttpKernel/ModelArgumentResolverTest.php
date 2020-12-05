@@ -19,9 +19,17 @@ use Contao\PageModel;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
+use Contao\CoreBundle\Framework\ContaoFramework;
 
 class ModelArgumentResolverTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        unset($GLOBALS);
+    }
+
     /**
      * @dataProvider getArguments
      */
@@ -159,4 +167,34 @@ class ModelArgumentResolverTest extends TestCase
 
         $this->assertFalse($resolver->supports($request, $argument));
     }
+
+    public function testReturnsTheGlobalPageModel(): void
+    {
+        $framework = $this->createMock(ContaoFramework::class);
+        $framework
+            ->expects($this->once())
+            ->method('initialize')
+        ;
+        $framework
+            ->expects($this->never())
+            ->method('getAdapter')
+        ;
+
+        $pageModel = $this->mockClassWithProperties(PageModel::class, ['id' => 42]);
+        $GLOBALS['objPage'] = $pageModel;
+
+        $request = Request::create('/foobar');
+        $request->attributes->set('pageModel', 42);
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
+
+        $argument = new ArgumentMetadata('pageModel', PageModel::class, false, false, '', true);
+        $resolver = new ModelArgumentResolver($framework, $this->mockScopeMatcher());
+
+        $this->assertTrue($resolver->supports($request, $argument));
+
+        foreach ($resolver->resolve($request, $argument) as $model) {
+            $this->assertSame($pageModel, $model);
+        }
+    }
+
 }
