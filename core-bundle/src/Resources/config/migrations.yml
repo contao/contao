@@ -19,6 +19,7 @@ services:
     Contao\CoreBundle\Migration\Version401\Version410Update:
         arguments:
             - '@database_connection'
+            - '@contao.framework'
 
     Contao\CoreBundle\Migration\Version403\Version430Update:
         arguments:
