@@ -84,7 +84,7 @@ class ModelArgumentResolver implements ArgumentValueResolverInterface
         if (
             isset($GLOBALS['objPage'])
             && $GLOBALS['objPage'] instanceof PageModel
-            && $GLOBALS['objPage']->id === (int) $value
+            && (int) $GLOBALS['objPage']->id === (int) $value
         ) {
             return $GLOBALS['objPage'];
         }
