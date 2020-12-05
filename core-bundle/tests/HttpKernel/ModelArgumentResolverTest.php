@@ -13,13 +13,13 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\HttpKernel;
 
 use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\HttpKernel\ModelArgumentResolver;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
-use Contao\CoreBundle\Framework\ContaoFramework;
 
 class ModelArgumentResolverTest extends TestCase
 {
@@ -196,5 +196,4 @@ class ModelArgumentResolverTest extends TestCase
             $this->assertSame($pageModel, $model);
         }
     }
-
 }
