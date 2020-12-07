@@ -34,11 +34,6 @@ class InstallCommand extends Command
     private $fs;
 
     /**
-     * @var SymfonyStyle
-     */
-    private $io;
-
-    /**
      * @var array
      */
     private $rows = [];
@@ -83,14 +78,14 @@ class InstallCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->fs = new Filesystem();
-        $this->io = new SymfonyStyle($input, $output);
         $this->webDir = rtrim($input->getArgument('target'), '/');
 
         $this->addEmptyDirs();
 
         if (!empty($this->rows)) {
-            $this->io->newLine();
-            $this->io->listing($this->rows);
+            $io = new SymfonyStyle($input, $output);
+            $io->newLine();
+            $io->listing($this->rows);
         }
 
         return 0;

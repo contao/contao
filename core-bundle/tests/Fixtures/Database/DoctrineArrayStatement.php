@@ -37,7 +37,7 @@ class DoctrineArrayStatement extends ArrayStatement implements Statement
         throw new \RuntimeException('Not implemented');
     }
 
-    public function bindParam($column, &$variable, $type = ParameterType::STRING, $length = null): void
+    public function bindParam($param, &$variable, $type = ParameterType::STRING, $length = null): void
     {
         throw new \RuntimeException('Not implemented');
     }

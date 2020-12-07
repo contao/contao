@@ -454,8 +454,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	}
 
 	/**
-	 * {@inheritdoc}
-	 *
 	 * @return User
 	 */
 	public static function loadUserByUsername($username)
@@ -506,9 +504,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 		return $this->username;
 	}
 
-	/**
-	 * {@inheritdoc}
-	 */
 	public function setUsername($username)
 	{
 		$this->username = $username;
@@ -524,9 +519,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 		return $this->password;
 	}
 
-	/**
-	 * {@inheritdoc}
-	 */
 	public function setPassword($password)
 	{
 		$this->password = $password;
@@ -542,9 +534,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 		return $this->salt;
 	}
 
-	/**
-	 * {@inheritdoc}
-	 */
 	public function setSalt($salt)
 	{
 		$this->salt = $salt;

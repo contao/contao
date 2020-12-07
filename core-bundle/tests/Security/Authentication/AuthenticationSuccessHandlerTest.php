@@ -104,7 +104,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
         $this->expectException(BadRequestHttpException::class);
 
-        $handler = $this->getHandler(null, null);
+        $handler = $this->getHandler();
         $handler->onAuthenticationSuccess($request, $token);
     }
 

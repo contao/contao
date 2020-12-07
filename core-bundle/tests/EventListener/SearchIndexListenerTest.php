@@ -91,7 +91,7 @@ class SearchIndexListenerTest extends TestCase
         ];
 
         yield 'Should be ignored because the response was not successful (404) but there was no ld+json data' => [
-            Request::create('/foobar', 'GET'),
+            Request::create('/foobar'),
             new Response('', 404),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
@@ -99,7 +99,7 @@ class SearchIndexListenerTest extends TestCase
         ];
 
         yield 'Should be deleted because the response was not successful (404)' => [
-            Request::create('/foobar', 'GET'),
+            Request::create('/foobar'),
             new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>', 404),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
@@ -107,7 +107,7 @@ class SearchIndexListenerTest extends TestCase
         ];
 
         yield 'Should be deleted because the response was not successful (403)' => [
-            Request::create('/foobar', 'GET'),
+            Request::create('/foobar'),
             new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>', 403),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
@@ -115,7 +115,7 @@ class SearchIndexListenerTest extends TestCase
         ];
 
         yield 'Should not be deleted because even though the response was not successful (403), it was disabled by the feature flag ' => [
-            Request::create('/foobar', 'GET'),
+            Request::create('/foobar'),
             new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>', 403),
             SearchIndexListener::FEATURE_INDEX,
             false,

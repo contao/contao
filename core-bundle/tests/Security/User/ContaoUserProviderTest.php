@@ -219,7 +219,7 @@ class ContaoUserProviderTest extends TestCase
             ->method('save')
         ;
 
-        $userProvider = $this->getProvider(null, BackendUser::class);
+        $userProvider = $this->getProvider();
         $userProvider->upgradePassword($user, 'newsuperhash');
 
         $this->assertSame('newsuperhash', $user->password);

@@ -22,13 +22,13 @@ class BinaryStringType extends Type
 {
     public const NAME = 'binary_string';
 
-    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform): string
+    public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
     {
-        if (!empty($fieldDeclaration['fixed'])) {
-            return $platform->getBinaryTypeDeclarationSQL($fieldDeclaration);
+        if (!empty($column['fixed'])) {
+            return $platform->getBinaryTypeDeclarationSQL($column);
         }
 
-        return $platform->getBlobTypeDeclarationSQL($fieldDeclaration);
+        return $platform->getBlobTypeDeclarationSQL($column);
     }
 
     public function getName(): string
