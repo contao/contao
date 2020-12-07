@@ -315,7 +315,6 @@ class PaletteManipulator
             $legend = $this->findLegendForField($config, $parent);
 
             if (false !== $legend) {
-                $legend = (string) $legend;
                 $offset += array_search($parent, $config[$legend]['fields'], true);
                 array_splice($config[$legend]['fields'], $offset, 0, $action['fields']);
 
@@ -380,7 +379,7 @@ class PaletteManipulator
      *
      * @return string|false
      */
-    private function findLegendForField(array &$config, string $field)
+    private function findLegendForField(array $config, string $field)
     {
         foreach ($config as $legend => $group) {
             if (\in_array($field, $group['fields'], true)) {

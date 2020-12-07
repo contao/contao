@@ -107,7 +107,6 @@ class ModuleNewsReader extends ModuleNews
 				}
 
 				throw new InternalServerErrorException('Invalid "jumpTo" value or target page not public');
-				break;
 
 			case 'article':
 				if (($article = ArticleModel::findByPk($objArticle->articleId)) && ($page = PageModel::findPublishedById($article->pid)))
@@ -116,7 +115,6 @@ class ModuleNewsReader extends ModuleNews
 				}
 
 				throw new InternalServerErrorException('Invalid "articleId" value or target page not public');
-				break;
 
 			case 'external':
 				if ($objArticle->url)
@@ -125,7 +123,6 @@ class ModuleNewsReader extends ModuleNews
 				}
 
 				throw new InternalServerErrorException('Empty target URL');
-				break;
 		}
 
 		// Set the default template
