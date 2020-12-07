@@ -30,13 +30,19 @@ class Version480Update extends AbstractMigration
     private $connection;
 
     /**
+     * @var Filesystem
+     */
+    private $filesystem;
+
+    /**
      * @var string
      */
     private $projectDir;
 
-    public function __construct(Connection $connection, string $projectDir)
+    public function __construct(Connection $connection, Filesystem $filesystem, string $projectDir)
     {
         $this->connection = $connection;
+        $this->filesystem = $filesystem;
         $this->projectDir = $projectDir;
     }
 
@@ -154,7 +160,7 @@ class Version480Update extends AbstractMigration
 
         // Convert the important part to relative values as fractions
         while (false !== ($file = $statement->fetch(\PDO::FETCH_OBJ))) {
-            if (!(new Filesystem())->exists($this->projectDir.'/'.$file->path) || is_dir($this->projectDir.'/'.$file->path)) {
+            if (!$this->filesystem->exists($this->projectDir.'/'.$file->path) || is_dir($this->projectDir.'/'.$file->path)) {
                 continue;
             }
 
