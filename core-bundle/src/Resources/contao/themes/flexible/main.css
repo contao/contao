@@ -1541,10 +1541,13 @@ ul.sgallery li {
 	width:18%;
 	margin-top:9px;
 }
-.tl_metawizard .tl_text {
+.tl_metawizard .tl_text, .tl_metawizard .tl_textarea {
 	float:left;
 	width:82%;
 	margin:1px 0;
+}
+.tl_metawizard .tl_textarea {
+	resize: vertical;
 }
 .tl_metawizard .tl_text + a {
 	top:6px;
