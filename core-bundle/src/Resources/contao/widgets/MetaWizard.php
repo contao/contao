@@ -146,9 +146,12 @@ class MetaWizard extends Widget
 				{
 					$return .= '<label for="ctrl_' . $this->strId . '_' . $field . '_' . $count . '">' . $GLOBALS['TL_LANG']['MSC']['aw_' . $field] . '</label>';
 
-					if (isset($fieldConfig['type']) && 'textarea' === $fieldConfig['type']) {
+					if (isset($fieldConfig['type']) && 'textarea' === $fieldConfig['type'])
+					{
 						$return .= '<textarea name="' . $this->strId . '[' . $lang . '][' . $field . ']" id="ctrl_' . $this->strId . '_' . $field . '_' . $count . '" class="tl_textarea"' . (!empty($fieldConfig['attributes']) ? ' ' . $fieldConfig['attributes'] : '') . '>' . $meta[$field] . '</textarea>';
-					} else {
+					}
+					else
+					{
 						$return .= '<input type="text" name="' . $this->strId . '[' . $lang . '][' . $field . ']" id="ctrl_' . $this->strId . '_' . $field . '_' . $count . '" class="tl_text" value="' . StringUtil::specialchars($meta[$field]) . '"' . (!empty($fieldConfig['attributes']) ? ' ' . $fieldConfig['attributes'] : '') . '>';
 					}
 
