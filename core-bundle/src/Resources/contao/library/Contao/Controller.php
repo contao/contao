@@ -1531,7 +1531,7 @@ abstract class Controller extends System
 			$objFile = null;
 		}
 
-		$imgSize = $objFile ? $objFile->imageSize : false;
+		$imgSize = $objFile->imageSize ?? array();
 		$size = StringUtil::deserialize($arrItem['size']);
 
 		if (is_numeric($size))

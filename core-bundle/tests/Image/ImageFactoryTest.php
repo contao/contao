@@ -114,7 +114,7 @@ class ImageFactoryTest extends TestCase
         $path = $this->getFixturesDir().'/assets/images/dummy.svg';
 
         if (!$this->filesystem->exists(\dirname($path))) {
-            $this->filesystem->mkdir(\dirname($path), 0777);
+            $this->filesystem->mkdir(\dirname($path));
         }
 
         $this->filesystem->dumpFile($path, '');
@@ -698,7 +698,7 @@ class ImageFactoryTest extends TestCase
         $projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
         if (!$fs->exists(\dirname($projectDir.'/'.$path))) {
-            $fs->mkdir(\dirname($projectDir.'/'.$path), 0777);
+            $fs->mkdir(\dirname($projectDir.'/'.$path));
         }
 
         $fs->dumpFile($projectDir.'/'.$path, '');
@@ -786,7 +786,7 @@ class ImageFactoryTest extends TestCase
         $projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
         if (!$fs->exists(\dirname($projectDir.'/'.$path))) {
-            $fs->mkdir(\dirname($projectDir.'/'.$path), 0777);
+            $fs->mkdir(\dirname($projectDir.'/'.$path));
         }
 
         $fs->dumpFile($projectDir.'/'.$path, '');

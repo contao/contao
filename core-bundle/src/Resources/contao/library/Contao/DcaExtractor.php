@@ -406,7 +406,13 @@ class DcaExtractor extends Controller
 				// Check whether there is a relation (see #6524)
 				if (isset($config['relation']))
 				{
-					$table = substr($config['foreignKey'], 0, strrpos($config['foreignKey'], '.'));
+					$table = null;
+
+					if (isset($config['foreignKey']))
+					{
+						$table = substr($config['foreignKey'], 0, strrpos($config['foreignKey'], '.'));
+					}
+
 					$arrRelations[$field] = array_merge(array('table'=>$table, 'field'=>'id'), $config['relation']);
 
 					// Store the field delimiter if the related IDs are stored in CSV format (see #257)
@@ -545,28 +551,25 @@ class DcaExtractor extends Controller
 		);
 
 		// Fields
-		if (!empty($fields))
+		$this->arrFields = array();
+		$this->arrOrderFields = array();
+
+		foreach ($fields as $field=>$config)
 		{
-			$this->arrFields = array();
-			$this->arrOrderFields = array();
-
-			foreach ($fields as $field=>$config)
+			if (isset($config['sql']))
 			{
-				if (isset($config['sql']))
-				{
-					$this->arrFields[$field] = $config['sql'];
-				}
+				$this->arrFields[$field] = $config['sql'];
+			}
 
-				// Only add order fields of binary fields (see #7785)
-				if (isset($config['inputType'], $config['eval']['orderField']) && $config['inputType'] == 'fileTree')
-				{
-					$this->arrOrderFields[] = $config['eval']['orderField'];
-				}
+			// Only add order fields of binary fields (see #7785)
+			if (isset($config['inputType'], $config['eval']['orderField']) && $config['inputType'] == 'fileTree')
+			{
+				$this->arrOrderFields[] = $config['eval']['orderField'];
+			}
 
-				if (isset($config['eval']['unique']) && $config['eval']['unique'])
-				{
-					$this->arrUniqueFields[] = $field;
-				}
+			if (isset($config['eval']['unique']) && $config['eval']['unique'])
+			{
+				$this->arrUniqueFields[] = $field;
 			}
 		}
 
