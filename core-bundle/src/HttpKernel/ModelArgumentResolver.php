@@ -82,10 +82,10 @@ class ModelArgumentResolver implements ArgumentValueResolverInterface
 
         // Special handling for pageModel that could be globally registered
         if (
-            is_a($type, PageModel::class, true)
-            && isset($GLOBALS['objPage'])
+            isset($GLOBALS['objPage'])
             && $GLOBALS['objPage'] instanceof PageModel
             && (int) $GLOBALS['objPage']->id === (int) $value
+            && is_a($type, PageModel::class, true)
         ) {
             return $GLOBALS['objPage'];
         }

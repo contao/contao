@@ -23,18 +23,13 @@ use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 
 class ModelArgumentResolverTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        unset($GLOBALS);
-    }
-
     /**
      * @dataProvider getArguments
      */
     public function testResolvesTheModel(string $name, string $class): void
     {
+        unset($GLOBALS['objPage']);
+
         System::setContainer($this->getContainerWithContaoConfiguration());
 
         $pageModel = $this->createMock(PageModel::class);
@@ -175,6 +170,7 @@ class ModelArgumentResolverTest extends TestCase
             ->expects($this->once())
             ->method('initialize')
         ;
+
         $framework
             ->expects($this->never())
             ->method('getAdapter')
