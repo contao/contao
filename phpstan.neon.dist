@@ -27,6 +27,9 @@ parameters:
         # Ignore the missing TL_SCRIPT constant in the InitializeController class
         - '#Constant TL_SCRIPT not found\.#'
 
+        # Ignore the missing array_insert function in the Version330Update class
+        - '#Function array_insert not found\.#'
+
         # Ignore backwards compatibility layers when preferring lowest dependencies
         - '#Method Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface::dispatch\(\) invoked with 2 parameters, 1 required\.#'
 

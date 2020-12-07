@@ -17,6 +17,7 @@ use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\File;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * @internal
@@ -153,7 +154,7 @@ class Version480Update extends AbstractMigration
 
         // Convert the important part to relative values as fractions
         while (false !== ($file = $statement->fetch(\PDO::FETCH_OBJ))) {
-            if (!file_exists($this->projectDir.'/'.$file->path) || is_dir($this->projectDir.'/'.$file->path)) {
+            if (!(new Filesystem())->exists($this->projectDir.'/'.$file->path) || is_dir($this->projectDir.'/'.$file->path)) {
                 continue;
             }
 
