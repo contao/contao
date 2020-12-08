@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use FOS\HttpCache\ResponseTagger;
-
 /**
  * Provide methods to get all events of a certain period from the database.
  *

@@ -1363,10 +1363,7 @@ abstract class DataContainer extends Backend
 			{
 				$tags[] = 'contao.db.' . $ctable . '.' . $objIds->id;
 
-				if (!empty($GLOBALS['TL_DCA'][$ctable]['config']['ctable']))
-				{
-					$this->addCtableTags($ctable, $objIds->id, $tags);
-				}
+				$this->addCtableTags($ctable, $objIds->id, $tags);
 			}
 		}
 	}

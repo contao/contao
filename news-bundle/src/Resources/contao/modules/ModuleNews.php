@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\Model\Collection;
-use FOS\HttpCache\ResponseTagger;
 
 /**
  * Parent class for news modules.

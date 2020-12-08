@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
-use FOS\HttpCache\ResponseTagger;
 use Patchwork\Utf8;
 
 /**
