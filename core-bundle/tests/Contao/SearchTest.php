@@ -42,12 +42,7 @@ class SearchTest extends TestCase
         $this->assertSame(0, $compareUrls->invokeArgs(null, [$lessCanonicalUrl, $lessCanonicalUrl]));
     }
 
-    /**
-     * Provides the data for the testCompareUrls() method.
-     *
-     * @return array
-     */
-    public function compareUrlsProvider()
+    public function compareUrlsProvider(): array
     {
         return [
             ['foo/bar.html', 'foo/bar.html?query'],

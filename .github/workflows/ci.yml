@@ -19,16 +19,16 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 7.3
+                  php-version: 7.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
-                  tools: prestissimo, flex
+                  tools: flex
                   coverage: pcov
 
             - name: Checkout
               uses: actions/checkout@v1
 
             - name: Install the dependencies
-              run: composer install --no-interaction --no-suggest
+              run: composer install --no-interaction
 
             - name: Generate the coverage report
               run: php -d pcov.enabled=1 vendor/bin/phpunit --testsuite=coverage --coverage-clover=clover.xml --colors=always
@@ -47,16 +47,16 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 7.3
+                  php-version: 7.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
-                  tools: prestissimo, flex
+                  tools: flex
                   coverage: none
 
             - name: Checkout
               uses: actions/checkout@v1
 
             - name: Install the dependencies
-              run: composer install --no-interaction --no-suggest
+              run: composer install --no-interaction
 
             - name: Check the coding style
               run: |
@@ -87,7 +87,7 @@ jobs:
               with:
                   php-version: ${{ matrix.php }}
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
-                  tools: prestissimo, flex
+                  tools: flex
                   coverage: none
 
             - name: Initialize the database
@@ -99,7 +99,7 @@ jobs:
               uses: actions/checkout@v1
 
             - name: Install the dependencies
-              run: composer install --no-interaction --no-suggest
+              run: composer install --no-interaction
 
             - name: Run the unit tests
               run: vendor/bin/phpunit --colors=always
@@ -107,7 +107,39 @@ jobs:
             - name: Run the functional tests
               run: vendor/bin/phpunit --testsuite=functional --colors=always
               env:
-                  DATABASE_URL: mysql://root:root@localhost:3306/contao_test
+                  DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
+
+    php8:
+        name: PHP 8.0
+        runs-on: ubuntu-latest
+        if: github.event_name != 'push'
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 8.0
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
+                  tools: flex
+                  coverage: none
+
+            - name: Initialize the database
+              run: |
+                  sudo /etc/init.d/mysql start
+                  mysql -uroot -proot -e "CREATE database contao_test"
+
+            - name: Checkout
+              uses: actions/checkout@v1
+
+            - name: Install the dependencies
+              run: composer install --ignore-platform-reqs --no-interaction
+
+            - name: Run the unit tests
+              run: vendor/bin/phpunit --colors=always
+
+            - name: Run the functional tests
+              run: vendor/bin/phpunit --testsuite=functional --colors=always
+              env:
+                  DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
 
     prefer-lowest:
         name: Prefer Lowest
@@ -119,7 +151,7 @@ jobs:
               with:
                   php-version: 7.3
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
-                  tools: prestissimo, flex
+                  tools: flex
                   coverage: none
 
             - name: Initialize the database
@@ -131,7 +163,7 @@ jobs:
               uses: actions/checkout@v1
 
             - name: Install the dependencies
-              run: composer update --prefer-lowest --prefer-stable --no-interaction --no-suggest
+              run: composer update --prefer-lowest --prefer-stable --no-interaction
 
             - name: Run the unit tests
               run: vendor/bin/phpunit --colors=always
@@ -139,7 +171,7 @@ jobs:
             - name: Run the functional tests
               run: vendor/bin/phpunit --testsuite=functional --colors=always
               env:
-                  DATABASE_URL: mysql://root:root@localhost:3306/contao_test
+                  DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
 
     bundles:
         name: Bundles
@@ -149,9 +181,9 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 7.3
+                  php-version: 7.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
-                  tools: prestissimo, flex
+                  tools: flex
                   coverage: none
 
             - name: Checkout
@@ -174,7 +206,7 @@ jobs:
                           }
                           file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
                       '
-                      COMPOSER_ROOT_VERSION=dev-${{ env.GITHUB_SHA }} composer install --no-interaction --no-suggest
+                      COMPOSER_ROOT_VERSION=dev-${{ env.GITHUB_SHA }} composer install --no-interaction
                       vendor/bin/phpunit --colors=always
                       cd ..
                   done
@@ -187,10 +219,10 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 7.3
+                  php-version: 7.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   ini-values: memory_limit=1G
-                  tools: prestissimo, flex
+                  tools: flex
                   coverage: none
 
             - name: Adjust the Git autocrlf setting
@@ -200,7 +232,7 @@ jobs:
               uses: actions/checkout@v1
 
             - name: Install the dependencies
-              run: composer install --no-interaction --no-suggest --no-progress
+              run: composer install --no-interaction --no-progress
 
             - name: Run the unit tests
               run: vendor/bin/phpunit.bat --colors=always
@@ -213,9 +245,8 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 7.3
+                  php-version: 7.4
                   extensions: json, zlib
-                  tools: prestissimo
                   coverage: none
 
             - name: Checkout
@@ -224,7 +255,7 @@ jobs:
             - name: Install the dependencies
               run: |
                   composer global require contao/monorepo-tools:dev-master
-                  composer install --no-interaction --no-suggest
+                  composer install --no-interaction
 
             - name: Validate the composer.json files
               run: $HOME/.composer/vendor/bin/monorepo-tools composer-json --validate --ansi
@@ -237,9 +268,8 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 7.3
+                  php-version: 7.4
                   extensions: json, zlib
-                  tools: prestissimo
                   coverage: none
 
             - name: Checkout

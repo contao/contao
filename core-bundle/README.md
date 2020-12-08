@@ -58,7 +58,7 @@ framework:
 ```
 
 Add the Contao routes to your `config/routing.yaml` file, and be sure to load
-the `ContaoCoreBundle` at the very end, so the catch all route does not catch
+the `ContaoCoreBundle` at the very end, so the catch-all route does not catch
 your application routes.
 
 ```yml

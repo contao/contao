@@ -37,11 +37,6 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
     private $repository;
 
     /**
-     * @var UserProviderInterface&MockObject
-     */
-    private $userProvider;
-
-    /**
      * @var ExpiringTokenBasedRememberMeServices
      */
     private $listener;
@@ -61,7 +56,6 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
     protected function setUp(): void
     {
         $this->repository = $this->createMock(RememberMeRepository::class);
-        $this->userProvider = $this->createMock(UserProviderInterface::class);
 
         $user = $this->createMock(UserInterface::class);
         $user
@@ -69,19 +63,20 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
             ->willReturn([])
         ;
 
-        $this->userProvider
+        $userProvider = $this->createMock(UserProviderInterface::class);
+        $userProvider
             ->method('supportsClass')
             ->willReturn(true)
         ;
 
-        $this->userProvider
+        $userProvider
             ->method('loadUserByUsername')
             ->willReturn($user)
         ;
 
         $this->listener = new ExpiringTokenBasedRememberMeServices(
             $this->repository,
-            [$this->userProvider],
+            [$userProvider],
             self::SECRET,
             'contao_frontend',
             self::$options

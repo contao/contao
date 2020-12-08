@@ -58,6 +58,7 @@ class RoutingTest extends WebTestCase
 
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
 
         $client = $this->createClient([], $_SERVER);
         System::setContainer($client->getContainer());
@@ -317,6 +318,7 @@ class RoutingTest extends WebTestCase
 
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
 
         $client = $this->createClient(['environment' => 'locale'], $_SERVER);
         System::setContainer($client->getContainer());
@@ -565,6 +567,7 @@ class RoutingTest extends WebTestCase
 
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
 
         $client = $this->createClient(['environment' => 'suffix'], $_SERVER);
         System::setContainer($client->getContainer());

@@ -105,6 +105,12 @@ class InsertTags extends Controller
 		for ($_rit=0, $_cnt=\count($tags); $_rit<$_cnt; $_rit+=2)
 		{
 			$strBuffer .= $tags[$_rit];
+
+			if (!isset($tags[$_rit+1]))
+			{
+				continue;
+			}
+
 			$strTag = $tags[$_rit+1];
 
 			// Skip empty tags

@@ -15,7 +15,7 @@
         }
     ],
     "require": {
-        "php": "^7.2",
+        "php": "^7.2 || ^8.0",
         "ext-dom": "*",
         "ext-gd": "*",
         "ext-hash": "*",
@@ -148,11 +148,12 @@
         "contao/test-case": "^4.0",
         "doctrine/event-manager": "^1.0",
         "monolog/monolog": "^1.24",
-        "phpunit/phpunit": "^8.4",
+        "phpunit/phpunit": "^8.5",
         "psr/event-dispatcher": "^1.0",
         "slam/phpstan-extensions": "^5.0",
         "symfony/browser-kit": "4.4.*",
-        "symfony/phpunit-bridge": "4.4.*"
+        "symfony/phpunit-bridge": "4.4.*",
+        "thecodingmachine/phpstan-strict-rules": "^0.12"
     },
     "extra": {
         "contao-manager-plugin": {

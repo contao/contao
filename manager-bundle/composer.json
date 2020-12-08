@@ -15,7 +15,7 @@
         }
     ],
     "require": {
-        "php": "^7.2",
+        "php": "^7.2 || ^8.0",
         "ext-json": "*",
         "contao/core-bundle": "self.version",
         "contao/installation-bundle": "self.version",
@@ -59,7 +59,7 @@
     "require-dev": {
         "composer/composer": "^1.0",
         "contao/test-case": "^4.0",
-        "phpunit/phpunit": "^8.4",
+        "phpunit/phpunit": "^8.5",
         "symfony/phpunit-bridge": "4.4.*"
     },
     "conflict": {

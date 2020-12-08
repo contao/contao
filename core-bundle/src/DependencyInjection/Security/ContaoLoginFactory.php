@@ -76,7 +76,7 @@ class ContaoLoginFactory extends AbstractFactory
         return 'contao.security.authentication_listener';
     }
 
-    protected function createEntryPoint($container, $id, $config, $defaultEntryPoint): string
+    protected function createEntryPoint($container, $id, $config, $defaultEntryPointId): string
     {
         return 'contao.security.entry_point';
     }

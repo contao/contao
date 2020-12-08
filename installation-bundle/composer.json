@@ -15,7 +15,7 @@
         }
     ],
     "require": {
-        "php": "^7.2",
+        "php": "^7.2 || ^8.0",
         "contao/core-bundle": "self.version",
         "doctrine/dbal": "^2.10",
         "patchwork/utf8": "^1.2",
@@ -37,7 +37,7 @@
     },
     "require-dev": {
         "contao/manager-plugin": "^2.3.1",
-        "phpunit/phpunit": "^8.4",
+        "phpunit/phpunit": "^8.5",
         "symfony/http-client": "4.4.*",
         "symfony/phpunit-bridge": "4.4.*"
     },
