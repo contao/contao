@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use FOS\HttpCache\ResponseTagger;
 use Patchwork\Utf8;
 
 /**
@@ -75,6 +76,20 @@ class ModuleEventlist extends Events
 		if ($this->cal_readerModule > 0  && (isset($_GET['events']) || (Config::get('useAutoItem') && isset($_GET['auto_item']))))
 		{
 			return $this->getFrontendModule($this->cal_readerModule, $this->strColumn);
+		}
+
+		// Add a response tag for every calendar (see #2137). Events and content
+		// elements will be tagged automatically in the getAllEvents() method.
+		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		{
+			$arrTags = array();
+
+			foreach ($this->cal_calendar as $id)
+			{
+				$arrTags[] = 'contao.db.tl_calendar.' . $id;
+			}
+
+			System::getContainer()->get('fos_http_cache.http.symfony_response_tagger')->addTags($arrTags);
 		}
 
 		return parent::generate();

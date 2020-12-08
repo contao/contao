@@ -73,6 +73,20 @@ class ModuleNewsArchive extends ModuleNews
 			return '';
 		}
 
+		// Add a response tag for every news archive (see #2137). News and content
+		// elements will be tagged automatically in the parseArticles() method.
+		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		{
+			$arrTags = array();
+
+			foreach ($this->news_archives as $id)
+			{
+				$arrTags[] = 'contao.db.tl_news_archive.' . $id;
+			}
+
+			System::getContainer()->get('fos_http_cache.http.symfony_response_tagger')->addTags($arrTags);
+		}
+
 		return parent::generate();
 	}
 

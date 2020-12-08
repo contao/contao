@@ -71,6 +71,20 @@ class ModuleCalendar extends Events
 			return '';
 		}
 
+		// Add a response tag for every calendar (see #2137). Events and content
+		// elements will be tagged automatically in the getAllEvents() method.
+		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		{
+			$arrTags = array();
+
+			foreach ($this->cal_calendar as $id)
+			{
+				$arrTags[] = 'contao.db.tl_calendar.' . $id;
+			}
+
+			System::getContainer()->get('fos_http_cache.http.symfony_response_tagger')->addTags($arrTags);
+		}
+
 		$this->strUrl = preg_replace('/\?.*$/', '', Environment::get('request'));
 		$this->strLink = $this->strUrl;
 
