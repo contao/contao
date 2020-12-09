@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\ManagerBundle\ContaoManager;
 
 use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\Util\PackageUtil;
 use Contao\ManagerBundle\ContaoManager\ApiCommand\GenerateJwtCookieCommand;
 use Contao\ManagerBundle\ContaoManager\ApiCommand\GetConfigCommand;
 use Contao\ManagerBundle\ContaoManager\ApiCommand\GetDotEnvCommand;
@@ -513,7 +514,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         }
 
         if (\in_array($options['transport'], ['mail', 'sendmail'], true)) {
-            return 'sendmail+smtp://default';
+            return 'sendmail://default';
         }
 
         /*
@@ -570,7 +571,11 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     private function getMailerDsn(ContainerBuilder $container): string
     {
         if ('sendmail' === $container->getParameter('mailer_transport')) {
-            return 'sendmail+smtp://default';
+            if ($this->supportsNativeMailer()) {
+                return 'native://default';
+            }
+
+            return 'sendmail://default';
         }
 
         $transport = 'smtp';
@@ -607,5 +612,10 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     private function encodeUrlParameter(string $parameter): string
     {
         return str_replace('%', '%%', rawurlencode($parameter));
+    }
+
+    private function supportsNativeMailer(): bool
+    {
+        return version_compare(PackageUtil::getNormalizedVersion('symfony/mailer'), '5.2.0', '>=');
     }
 }

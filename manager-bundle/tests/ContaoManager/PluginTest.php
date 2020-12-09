@@ -615,7 +615,7 @@ class PluginTest extends ContaoTestCase
             null,
             null,
             null,
-            'sendmail+smtp://default',
+            'native://default',
         ];
 
         yield [
@@ -625,7 +625,7 @@ class PluginTest extends ContaoTestCase
             null,
             25,
             null,
-            'sendmail+smtp://default',
+            'native://default',
         ];
 
         yield [
@@ -729,12 +729,12 @@ class PluginTest extends ContaoTestCase
     {
         yield [
             'sendmail://localhost',
-            'sendmail+smtp://default',
+            'sendmail://default',
         ];
 
         yield [
             'mail://localhost',
-            'sendmail+smtp://default',
+            'sendmail://default',
         ];
 
         yield [

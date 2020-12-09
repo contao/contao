@@ -44,7 +44,7 @@
         "symfony/http-client": "4.4.*",
         "symfony/http-foundation": "4.4.*",
         "symfony/http-kernel": "4.4.*",
-        "symfony/mailer": "4.4.*",
+        "symfony/mailer": "4.4.* || 5.2.*",
         "symfony/monolog-bridge": "4.4.*",
         "symfony/monolog-bundle": "^3.1",
         "symfony/process": "4.4.*",
@@ -77,7 +77,7 @@
         },
         "contao-manager-plugin": "Contao\\ManagerBundle\\ContaoManager\\Plugin",
         "symfony": {
-            "require": "4.4.*"
+            "require": "4.4.* || 5.2.*"
         }
     },
     "autoload": {
