@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\OptIn\OptIn;
-use FOS\HttpCache\ResponseTagger;
 
 /**
  * Class Comments
@@ -43,10 +42,9 @@ class Comments extends Frontend
 
 		$objTemplate->comments = array(); // see #4064
 
-		// Tag the response
+		// Tag the comment (see #2137)
 		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
 		{
-			/** @var ResponseTagger $responseTagger */
 			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
 			$responseTagger->addTags(array(sprintf('contao.comments.%s.%s', $strSource, $intParent)));
 		}

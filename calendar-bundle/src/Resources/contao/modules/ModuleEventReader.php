@@ -237,12 +237,6 @@ class ModuleEventReader extends Events
 		$objTemplate->hasDetails = false;
 		$objTemplate->hasTeaser = false;
 
-		// Tag the event (see #2137)
-		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
-		{
-			System::getContainer()->get('fos_http_cache.http.symfony_response_tagger')->addTags(array('contao.db.tl_calendar_events.' . $objEvent->id));
-		}
-
 		// Clean the RTE output
 		if ($objEvent->teaser)
 		{
@@ -397,6 +391,13 @@ class ModuleEventReader extends Events
 		};
 
 		$this->Template->event = $objTemplate->parse();
+
+		// Tag the event (see #2137)
+		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		{
+			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+			$responseTagger->addTags(array('contao.db.tl_calendar_events.' . $objEvent->id));
+		}
 
 		$bundles = System::getContainer()->getParameter('kernel.bundles');
 
