@@ -281,21 +281,10 @@ abstract class Events extends Module
 			}
 		}
 
-		// Tag the event and its child content elements (see #2137). Calendars
-		// will be tagged separately in the related front end modules.
+		// Tag the event (see #2137)
 		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
 		{
-			$arrTags = array('contao.db.tl_calendar_events.' . $objEvents->id);
-
-			if ($objElements = ContentModel::findPublishedByPidAndTable($objEvents->id, 'tl_calendar_events'))
-			{
-				foreach ($objElements as $objElement)
-				{
-					$arrTags[] = 'contao.db.tl_content.' . $objElement->id;
-				}
-			}
-
-			System::getContainer()->get('fos_http_cache.http.symfony_response_tagger')->addTags($arrTags);
+			System::getContainer()->get('fos_http_cache.http.symfony_response_tagger')->addTags(array('contao.db.tl_calendar_events.' . $objEvents->id));
 		}
 
 		// Store raw data

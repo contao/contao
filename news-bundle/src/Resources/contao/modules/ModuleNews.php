@@ -222,21 +222,10 @@ abstract class ModuleNews extends Module
 			}
 		}
 
-		// Tag the news and its child content elements (see #2137). News archives
-		// will be tagged separately in the related front end modules.
+		// Tag the news (see #2137)
 		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
 		{
-			$arrTags = array('contao.db.tl_news.' . $objArticle->id);
-
-			if ($objElements = ContentModel::findPublishedByPidAndTable($objArticle->id, 'tl_news'))
-			{
-				foreach ($objElements as $objElement)
-				{
-					$arrTags[] = 'contao.db.tl_content.' . $objElement->id;
-				}
-			}
-
-			System::getContainer()->get('fos_http_cache.http.symfony_response_tagger')->addTags($arrTags);
+			System::getContainer()->get('fos_http_cache.http.symfony_response_tagger')->addTags(array('contao.db.tl_news.' . $objArticle->id));
 		}
 
 		return $objTemplate->parse();

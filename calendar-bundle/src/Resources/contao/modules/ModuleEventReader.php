@@ -237,20 +237,10 @@ class ModuleEventReader extends Events
 		$objTemplate->hasDetails = false;
 		$objTemplate->hasTeaser = false;
 
-		// Tag the event and its child content elements (see #2137)
+		// Tag the event (see #2137)
 		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
 		{
-			$arrTags = array('contao.db.tl_calendar_events.' . $objEvent->id);
-
-			if ($objElements = ContentModel::findPublishedByPidAndTable($objEvent->id, 'tl_calendar_events'))
-			{
-				foreach ($objElements as $objElement)
-				{
-					$arrTags[] = 'contao.db.tl_content.' . $objElement->id;
-				}
-			}
-
-			System::getContainer()->get('fos_http_cache.http.symfony_response_tagger')->addTags($arrTags);
+			System::getContainer()->get('fos_http_cache.http.symfony_response_tagger')->addTags(array('contao.db.tl_calendar_events.' . $objEvent->id));
 		}
 
 		// Clean the RTE output
