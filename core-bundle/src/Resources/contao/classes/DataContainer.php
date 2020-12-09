@@ -1312,6 +1312,8 @@ abstract class DataContainer extends Backend
 	{
 		if (empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']))
 		{
+			$tags[] = 'contao.db.' . $strTable;
+
 			return;
 		}
 
