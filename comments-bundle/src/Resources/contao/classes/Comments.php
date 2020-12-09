@@ -42,7 +42,7 @@ class Comments extends Frontend
 
 		$objTemplate->comments = array(); // see #4064
 
-		// Tag the comment (see #2137)
+		// Tag the source record (see #2137)
 		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
 		{
 			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
@@ -100,6 +100,7 @@ class Comments extends Frontend
 		if ($objComments !== null && ($total = $objComments->count()) > 0)
 		{
 			$count = 0;
+			$tags = array();
 			$objPartial = new FrontendTemplate($objConfig->template ?: 'com_default');
 
 			while ($objComments->next())
@@ -132,7 +133,16 @@ class Comments extends Frontend
 				}
 
 				$arrComments[] = $objPartial->parse();
+				$tags[] = 'contao.db.tl_comments.' . $objComments->id;
+
 				++$count;
+			}
+
+			// Tag the comments (see #2137)
+			if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+			{
+				$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+				$responseTagger->addTags($tags);
 			}
 		}
 
