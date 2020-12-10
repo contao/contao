@@ -1289,9 +1289,9 @@ class tl_page extends Backend
 
 		// The first part will match IPv6 addresses in square brackets. The
 		// second part will match domain names and IPv4 addresses.
-		preg_match('#(?:^(?:[a-z]+]://)?(\[[0-9a-f:]+]))|(?:^(?:[a-z]+://)?([\pN\pL._-]*))#ui', $varValue, $matches);
+		preg_match('#^(?:[a-z]+://)?(\[[0-9a-f:]+]|[\pN\pL._-]*)#ui', $varValue, $matches);
 
-		return Idna::encode($matches[2] ?? $matches[1]);
+		return Idna::encode($matches[1]);
 	}
 
 	/**
