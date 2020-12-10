@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
-use Contao\CoreBundle\Util\PackageUtil;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -40,6 +39,6 @@ class AddNativeTransportFactoryPass implements CompilerPassInterface
 
     private function supportsNativeMailer(): bool
     {
-        return version_compare(PackageUtil::getNormalizedVersion('symfony/mailer'), '5.2.0', '>=');
+        return class_exists(NativeTransportFactory::class);
     }
 }
