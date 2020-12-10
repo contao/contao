@@ -1067,7 +1067,6 @@ abstract class Controller extends System
 	 */
 	public static function addToUrl($strRequest, $blnAddRef=true, $arrUnset=array())
 	{
-		/** @var Query $query */
 		$query = new Query(Environment::get('queryString'));
 
 		// Remove the request token and referer ID

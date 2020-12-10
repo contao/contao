@@ -105,10 +105,7 @@ class PaletteManipulator
         return $this;
     }
 
-    /**
-     * @param string $name
-     */
-    public function applyToPalette($name, string $table): self
+    public function applyToPalette(string $name, string $table): self
     {
         $palettes = &$GLOBALS['TL_DCA'][$table]['palettes'];
 
