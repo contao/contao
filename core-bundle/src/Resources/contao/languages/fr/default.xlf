@@ -2811,7 +2811,7 @@
       </trans-unit>
       <trans-unit id="DCA.new.0">
         <source>New</source>
-        <target>Actualité</target>
+        <target>Nouveau</target>
       </trans-unit>
       <trans-unit id="DCA.new.1">
         <source>Create a new element</source>
