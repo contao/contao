@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
-use FOS\HttpCache\ResponseTagger;
 use Patchwork\Utf8;
 
 /**
@@ -238,15 +237,6 @@ class ModuleEventReader extends Events
 		$objTemplate->hasDetails = false;
 		$objTemplate->hasTeaser = false;
 
-		// Tag the response
-		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
-		{
-			/** @var ResponseTagger $responseTagger */
-			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
-			$responseTagger->addTags(array('contao.db.tl_calendar_events.' . $objEvent->id));
-			$responseTagger->addTags(array('contao.db.tl_calendar.' . $objEvent->pid));
-		}
-
 		// Clean the RTE output
 		if ($objEvent->teaser)
 		{
@@ -401,6 +391,13 @@ class ModuleEventReader extends Events
 		};
 
 		$this->Template->event = $objTemplate->parse();
+
+		// Tag the event (see #2137)
+		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		{
+			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+			$responseTagger->addTags(array('contao.db.tl_calendar_events.' . $objEvent->id));
+		}
 
 		$bundles = System::getContainer()->getParameter('kernel.bundles');
 

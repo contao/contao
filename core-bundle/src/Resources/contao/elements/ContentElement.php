@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\Model\Collection;
-use FOS\HttpCache\ResponseTagger;
 
 /**
  * Parent class for content elements.
@@ -274,10 +273,9 @@ abstract class ContentElement extends Frontend
 			$this->Template->class .= ' ' . implode(' ', $this->objModel->classes);
 		}
 
-		// Tag the response
+		// Tag the content element (see #2137)
 		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
 		{
-			/** @var ResponseTagger $responseTagger */
 			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
 			$responseTagger->addTags(array('contao.db.tl_content.' . $this->id));
 		}

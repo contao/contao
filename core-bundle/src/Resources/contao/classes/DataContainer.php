@@ -1278,14 +1278,10 @@ abstract class DataContainer extends Backend
 			return;
 		}
 
-		$ns = 'contao.db.';
-		$tags = array($ns . $this->table, $ns . $this->table . '.' . $this->id);
+		$tags = array('contao.db.' . $this->table . '.' . $this->id);
 
-		if (!empty($this->ptable) && $this->activeRecord && $this->activeRecord->pid > 0)
-		{
-			$tags[] = $ns . $this->ptable;
-			$tags[] = $ns . $this->ptable . '.' . $this->activeRecord->pid;
-		}
+		$this->addPtableTags($this->table, $this->id, $tags);
+		$this->addCtableTags($this->table, $this->id, $tags);
 
 		// Trigger the oninvalidate_cache_tags_callback
 		if (\is_array($GLOBALS['TL_DCA'][$this->table]['config']['oninvalidate_cache_tags_callback']))
@@ -1310,6 +1306,68 @@ abstract class DataContainer extends Backend
 		/** @var CacheManager $cacheManager */
 		$cacheManager = System::getContainer()->get('fos_http_cache.cache_manager');
 		$cacheManager->invalidateTags($tags);
+	}
+
+	private function addPtableTags($strTable, $intId, &$tags)
+	{
+		if (empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']))
+		{
+			$tags[] = 'contao.db.' . $strTable;
+
+			return;
+		}
+
+		$ptable = $GLOBALS['TL_DCA'][$strTable]['config']['ptable'];
+
+		Controller::loadDataContainer($ptable);
+
+		$objPid = $this->Database->prepare('SELECT pid FROM ' . Database::quoteIdentifier($strTable) . ' WHERE id=?')
+								 ->execute($intId);
+
+		if (!$objPid->numRows)
+		{
+			return;
+		}
+
+		$tags[] = 'contao.db.' . $ptable . '.' . $objPid->pid;
+
+		$this->addPtableTags($ptable, $objPid->pid, $tags);
+	}
+
+	private function addCtableTags($strTable, $intId, &$tags)
+	{
+		if (empty($GLOBALS['TL_DCA'][$strTable]['config']['ctable']))
+		{
+			return;
+		}
+
+		foreach ($GLOBALS['TL_DCA'][$strTable]['config']['ctable'] as $ctable)
+		{
+			Controller::loadDataContainer($ctable);
+
+			if ($GLOBALS['TL_DCA'][$ctable]['config']['dynamicPtable'])
+			{
+				$objIds = $this->Database->prepare('SELECT id FROM ' . Database::quoteIdentifier($ctable) . ' WHERE pid=? AND ptable=?')
+										 ->execute($intId, $strTable);
+			}
+			else
+			{
+				$objIds = $this->Database->prepare('SELECT id FROM ' . Database::quoteIdentifier($ctable) . ' WHERE pid=?')
+										 ->execute($intId);
+			}
+
+			if (!$objIds->numRows)
+			{
+				continue;
+			}
+
+			while ($objIds->next())
+			{
+				$tags[] = 'contao.db.' . $ctable . '.' . $objIds->id;
+
+				$this->addCtableTags($ctable, $objIds->id, $tags);
+			}
+		}
 	}
 
 	/**
