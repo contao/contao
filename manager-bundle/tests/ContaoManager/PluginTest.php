@@ -40,6 +40,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Mailer\Transport\NativeTransportFactory;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -615,7 +616,7 @@ class PluginTest extends ContaoTestCase
             null,
             null,
             null,
-            'native://default',
+            $this->supportsNativeMailer() ? 'native://default' : 'sendmail://default',
         ];
 
         yield [
@@ -625,7 +626,7 @@ class PluginTest extends ContaoTestCase
             null,
             25,
             null,
-            'native://default',
+            $this->supportsNativeMailer() ? 'native://default' : 'sendmail://default',
         ];
 
         yield [
@@ -904,5 +905,10 @@ class PluginTest extends ContaoTestCase
         $container->setParameter('secret', 'ThisTokenIsNotSoSecretChangeIt');
 
         return $container;
+    }
+
+    private function supportsNativeMailer(): bool
+    {
+        return class_exists(NativeTransportFactory::class);
     }
 }
