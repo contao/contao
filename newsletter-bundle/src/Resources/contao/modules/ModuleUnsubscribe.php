@@ -90,7 +90,6 @@ class ModuleUnsubscribe extends Module
 				'eval' => array('mandatory'=>true)
 			);
 
-			/** @var Widget $objWidget */
 			$objWidget = new FormCaptcha(FormCaptcha::getAttributesFromDca($arrField, $arrField['name']));
 		}
 

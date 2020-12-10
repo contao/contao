@@ -14,7 +14,10 @@ namespace Contao\CoreBundle\Translation;
 
 use Symfony\Component\Translation\DataCollectorTranslator as SymfonyDataCollectorTranslator;
 use Symfony\Component\Translation\MessageCatalogueInterface;
+use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Service\ResetInterface;
+use Symfony\Contracts\Translation\LocaleAwareInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
@@ -22,16 +25,16 @@ use Symfony\Contracts\Service\ResetInterface;
 class DataCollectorTranslator extends SymfonyDataCollectorTranslator implements ResetInterface
 {
     /**
-     * @var SymfonyDataCollectorTranslator
+     * @var TranslatorInterface|TranslatorBagInterface|LocaleAwareInterface
      */
     private $translator;
 
+    /**
+     * @var array
+     */
     private $messages = [];
 
-    /**
-     * @param SymfonyDataCollectorTranslator $translator
-     */
-    public function __construct($translator)
+    public function __construct(TranslatorInterface $translator)
     {
         parent::__construct($translator);
 
@@ -60,6 +63,10 @@ class DataCollectorTranslator extends SymfonyDataCollectorTranslator implements 
 
     public function transChoice($id, $number, array $parameters = [], $domain = null, $locale = null): string
     {
+        if (!method_exists($this->translator, 'transChoice')) {
+            return $this->trans($id, $parameters, $domain, $locale);
+        }
+
         return $this->translator->transChoice($id, $number, $parameters, $domain, $locale);
     }
 

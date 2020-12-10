@@ -42,7 +42,6 @@ class Theme extends Backend
 	 */
 	public function importTheme()
 	{
-		/** @var FileUpload $objUploader */
 		$objUploader = new FileUpload();
 
 		if (Input::post('FORM_SUBMIT') == 'tl_theme_import')
