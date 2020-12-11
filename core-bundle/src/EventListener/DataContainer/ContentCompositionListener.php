@@ -192,7 +192,7 @@ class ContentCompositionListener
         return $this->renderArticlePasteAfterButton($dc, $row, $cr, $clipboard);
     }
 
-    private function renderArticlePasteIntoButton(DataContainer $dc, array $row, bool $cr, array $clipboard = null)
+    private function renderArticlePasteIntoButton(DataContainer $dc, array $row, bool $cr, array $clipboard = null): string
     {
         $pageModel = $this->framework->createInstance(PageModel::class);
         $pageModel->preventSaving(false);
@@ -215,7 +215,7 @@ class ContentCompositionListener
         );
     }
 
-    private function renderArticlePasteAfterButton(DataContainer $dc, array $row, bool $cr, array $clipboard = null)
+    private function renderArticlePasteAfterButton(DataContainer $dc, array $row, bool $cr, array $clipboard = null): string
     {
         /** @var PageModel $pageAdapter */
         $pageAdapter = $this->framework->getAdapter(PageModel::class);

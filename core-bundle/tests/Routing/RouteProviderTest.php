@@ -378,10 +378,10 @@ class RouteProviderTest extends TestCase
 
         yield 'Sorts by alias if all of the languages are fallback' => [
             [
-                1 => $this->createPage('en', 'foo', true),
-                2 => $this->createPage('ru', 'foo', true),
-                3 => $this->createPage('fr', 'foo', true),
-                0 => $this->createPage('en', 'foo/bar', true),
+                1 => $this->createPage('en', 'foo'),
+                2 => $this->createPage('ru', 'foo'),
+                3 => $this->createPage('fr', 'foo'),
+                0 => $this->createPage('en', 'foo/bar'),
             ],
             ['de'],
         ];
@@ -498,8 +498,8 @@ class RouteProviderTest extends TestCase
     public function getRootRoutes(): \Generator
     {
         $pages = [
-            2 => $this->createRootPage('en', 'english-root', true),
-            1 => $this->createPage('en', 'index', true),
+            2 => $this->createRootPage('en', 'english-root'),
+            1 => $this->createPage('en', 'index'),
             0 => $this->createRootPage('de', 'german-root', false),
         ];
 
@@ -516,8 +516,8 @@ class RouteProviderTest extends TestCase
         ];
 
         $pages = [
-            2 => $this->createRootPage('en', 'english-root', true),
-            1 => $this->createPage('en', 'index', true),
+            2 => $this->createRootPage('en', 'english-root'),
+            1 => $this->createPage('en', 'index'),
             0 => $this->createRootPage('de', 'german-root', false),
         ];
 

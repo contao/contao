@@ -641,6 +641,7 @@ class tl_calendar_events extends Backend
 			case 'show':
 			case 'delete':
 			case 'toggle':
+			case 'feature':
 				$objCalendar = $this->Database->prepare("SELECT pid FROM tl_calendar_events WHERE id=?")
 											  ->limit(1)
 											  ->execute($id);
@@ -1141,12 +1142,47 @@ class tl_calendar_events extends Backend
 		Input::setGet('id', $intId);
 		Input::setGet('act', 'feature');
 
-		$this->checkPermission();
+		if ($dc)
+		{
+			$dc->id = $intId; // see #8043
+		}
+
+		// Trigger the onload_callback
+		if (is_array($GLOBALS['TL_DCA']['tl_calendar_events']['config']['onload_callback']))
+		{
+			foreach ($GLOBALS['TL_DCA']['tl_calendar_events']['config']['onload_callback'] as $callback)
+			{
+				if (is_array($callback))
+				{
+					$this->import($callback[0]);
+					$this->{$callback[0]}->{$callback[1]}($dc);
+				}
+				elseif (is_callable($callback))
+				{
+					$callback($dc);
+				}
+			}
+		}
 
 		// Check permissions to feature
 		if (!$this->User->hasAccess('tl_calendar_events::featured', 'alexf'))
 		{
 			throw new AccessDeniedException('Not enough permissions to feature/unfeature event ID ' . $intId . '.');
+		}
+
+		$objRow = $this->Database->prepare("SELECT * FROM tl_calendar_events WHERE id=?")
+								 ->limit(1)
+								 ->execute($intId);
+
+		if ($objRow->numRows < 1)
+		{
+			throw new AccessDeniedException('Invalid event ID ' . $intId . '.');
+		}
+
+		// Set the current record
+		if ($dc)
+		{
+			$dc->activeRecord = $objRow;
 		}
 
 		$objVersions = new Versions('tl_calendar_events', $intId);
@@ -1169,11 +1205,41 @@ class tl_calendar_events extends Backend
 			}
 		}
 
+		$time = time();
+
 		// Update the database
-		$this->Database->prepare("UPDATE tl_calendar_events SET tstamp=" . time() . ", featured='" . ($blnVisible ? 1 : '') . "' WHERE id=?")
+		$this->Database->prepare("UPDATE tl_calendar_events SET tstamp=$time, featured='" . ($blnVisible ? 1 : '') . "' WHERE id=?")
 					   ->execute($intId);
 
+		if ($dc)
+		{
+			$dc->activeRecord->tstamp = $time;
+			$dc->activeRecord->published = ($blnVisible ? '1' : '');
+		}
+
+		// Trigger the onsubmit_callback
+		if (is_array($GLOBALS['TL_DCA']['tl_calendar_events']['config']['onsubmit_callback']))
+		{
+			foreach ($GLOBALS['TL_DCA']['tl_calendar_events']['config']['onsubmit_callback'] as $callback)
+			{
+				if (is_array($callback))
+				{
+					$this->import($callback[0]);
+					$this->{$callback[0]}->{$callback[1]}($dc);
+				}
+				elseif (is_callable($callback))
+				{
+					$callback($dc);
+				}
+			}
+		}
+
 		$objVersions->create();
+
+		if ($dc)
+		{
+			$dc->invalidateCacheTags();
+		}
 	}
 
 	/**
