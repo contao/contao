@@ -2,6 +2,15 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.10.5] (2020-12-11)
+
+**Fixed issues:**
+
+- [#2553] Strip port numbers from root page domains ([leofeyer])
+- [#2532] Trigger the onload_callback when featuring news/events ([leofeyer])
+- [#2524] Add the feature action to the permission checks ([bytehead])
+- [#2314] Add missing ResizeOptions to the studio classes ([m-vo])
+
 ## [4.10.4] (2020-10-20)
 
 **Fixed issues:**
@@ -180,6 +189,7 @@ This project adheres to [Semantic Versioning].
 - [#1458] Always set host and language when generating the navigation menu ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.10.5]: https://github.com/contao/contao/releases/tag/4.10.5
 [4.10.4]: https://github.com/contao/contao/releases/tag/4.10.4
 [4.10.3]: https://github.com/contao/contao/releases/tag/4.10.3
 [4.10.2]: https://github.com/contao/contao/releases/tag/4.10.2
@@ -200,6 +210,10 @@ This project adheres to [Semantic Versioning].
 [m-vo]: https://github.com/m-vo
 [richardhj]: https://github.com/richardhj
 [Toflar]: https://github.com/Toflar
+[#2553]: https://github.com/contao/contao/pull/2553
+[#2532]: https://github.com/contao/contao/pull/2532
+[#2524]: https://github.com/contao/contao/pull/2524
+[#2314]: https://github.com/contao/contao/pull/2314
 [#2419]: https://github.com/contao/contao/pull/2419
 [#2423]: https://github.com/contao/contao/pull/2423
 [#2379]: https://github.com/contao/contao/pull/2379
