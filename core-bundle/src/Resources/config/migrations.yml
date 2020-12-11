@@ -4,6 +4,49 @@ services:
 
     Contao\CoreBundle\Migration\MigrationCollection: ~
 
+    Contao\CoreBundle\Migration\Version400\Version400Update:
+        arguments:
+            - '@database_connection'
+
+    Contao\CoreBundle\Migration\Version401\Version410Update:
+        arguments:
+            - '@database_connection'
+            - '@contao.framework'
+
+    Contao\CoreBundle\Migration\Version403\Version430Update:
+        arguments:
+            - '@database_connection'
+
+    Contao\CoreBundle\Migration\Version404\Version440Update:
+        arguments:
+            - '@database_connection'
+
+    Contao\CoreBundle\Migration\Version404\Version447Update:
+        arguments:
+            - '@database_connection'
+            - '@translator'
+
+    Contao\CoreBundle\Migration\Version405\Version450Update:
+        arguments:
+            - '@database_connection'
+
+    Contao\CoreBundle\Migration\Version406\Version460Update:
+        arguments:
+            - '@database_connection'
+
+    Contao\CoreBundle\Migration\Version407\Version470Update:
+        arguments:
+            - '@database_connection'
+            - '@filesystem'
+            - '%contao.upload_path%'
+            - '%kernel.project_dir%'
+
+    Contao\CoreBundle\Migration\Version408\Version480Update:
+        arguments:
+            - '@database_connection'
+            - '@filesystem'
+            - '%kernel.project_dir%'
+
     Contao\CoreBundle\Migration\Version409\CeAccessMigration:
         arguments:
             - '@database_connection'

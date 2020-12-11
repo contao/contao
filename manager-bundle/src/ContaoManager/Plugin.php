@@ -86,7 +86,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         return ['contao/core-bundle'];
     }
 
-    public function getBundles(ParserInterface $parser)
+    public function getBundles(ParserInterface $parser): array
     {
         $configs = [
             BundleConfig::create(FrameworkBundle::class),

@@ -53,6 +53,7 @@ class RoutingTest extends FunctionalTestCase
 
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
 
         $client = $this->createClient([], $_SERVER);
         System::setContainer($client->getContainer());
@@ -90,8 +91,6 @@ class RoutingTest extends FunctionalTestCase
 
         $crawler = $client->request('GET', "http://$host$request");
         $title = trim($crawler->filterXPath('//head/title')->text());
-
-        /** @var Response $response */
         $response = $client->getResponse();
 
         $this->assertSame($statusCode, $response->getStatusCode());
@@ -407,6 +406,7 @@ class RoutingTest extends FunctionalTestCase
 
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
 
         $client = $this->createClient(['environment' => 'locale'], $_SERVER);
         System::setContainer($client->getContainer());
@@ -415,8 +415,6 @@ class RoutingTest extends FunctionalTestCase
 
         $crawler = $client->request('GET', "http://$host$request");
         $title = trim($crawler->filterXPath('//head/title')->text());
-
-        /** @var Response $response */
         $response = $client->getResponse();
 
         if (!isset($query['language'])) {
@@ -735,6 +733,7 @@ class RoutingTest extends FunctionalTestCase
 
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
 
         $client = $this->createClient(['environment' => 'suffix'], $_SERVER);
         System::setContainer($client->getContainer());
@@ -743,8 +742,6 @@ class RoutingTest extends FunctionalTestCase
 
         $crawler = $client->request('GET', "http://$host$request");
         $title = trim($crawler->filterXPath('//head/title')->text());
-
-        /** @var Response $response */
         $response = $client->getResponse();
 
         $this->assertSame($statusCode, $response->getStatusCode());
@@ -961,8 +958,6 @@ class RoutingTest extends FunctionalTestCase
 
         $crawler = $client->request('GET', "http://$host$request");
         $title = trim($crawler->filterXPath('//head/title')->text());
-
-        /** @var Response $response */
         $response = $client->getResponse();
 
         $this->assertSame($statusCode, $response->getStatusCode());
@@ -1095,8 +1090,6 @@ class RoutingTest extends FunctionalTestCase
 
         $crawler = $client->request('GET', "http://$host$request");
         $title = trim($crawler->filterXPath('//head/title')->text());
-
-        /** @var Response $response */
         $response = $client->getResponse();
 
         $this->assertSame($statusCode, $response->getStatusCode());
@@ -1247,8 +1240,6 @@ class RoutingTest extends FunctionalTestCase
 
         $crawler = $client->request('GET', '/main/sub-zh.html');
         $title = trim($crawler->filterXPath('//head/title')->text());
-
-        /** @var Response $response */
         $response = $client->getResponse();
 
         $this->assertSame(200, $response->getStatusCode());
@@ -1273,8 +1264,6 @@ class RoutingTest extends FunctionalTestCase
 
         $crawler = $client->request('GET', $request);
         $title = trim($crawler->filterXPath('//head/title')->text());
-
-        /** @var Response $response */
         $response = $client->getResponse();
 
         $this->assertSame(200, $response->getStatusCode());

@@ -499,7 +499,6 @@ class ContaoFrameworkTest extends TestCase
 
     public function testCreatesAnObjectInstance(): void
     {
-        /** @var ContaoFramework $framework */
         $framework = $this->mockFramework();
 
         $class = LegacyClass::class;
@@ -511,7 +510,6 @@ class ContaoFrameworkTest extends TestCase
 
     public function testCreateASingeltonObjectInstance(): void
     {
-        /** @var ContaoFramework $framework */
         $framework = $this->mockFramework();
 
         $class = LegacySingletonClass::class;
@@ -523,7 +521,6 @@ class ContaoFrameworkTest extends TestCase
 
     public function testCreatesAdaptersForLegacyClasses(): void
     {
-        /** @var ContaoFramework $framework */
         $framework = $this->mockFramework();
         $adapter = $framework->getAdapter(LegacyClass::class);
 

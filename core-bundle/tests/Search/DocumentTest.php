@@ -22,7 +22,7 @@ class DocumentTest extends TestCase
 {
     public function testCreatesADocumentFromRequestAndResponse(): void
     {
-        $request = Request::create('https://example.com/foo?bar=baz', 'GET');
+        $request = Request::create('https://example.com/foo?bar=baz');
         $response = new Response('body', 200, ['content-type' => ['text/html']]);
         $document = Document::createFromRequestResponse($request, $response);
 

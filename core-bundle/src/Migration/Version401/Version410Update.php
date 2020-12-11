@@ -10,8 +10,9 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\InstallationBundle\Database;
+namespace Contao\CoreBundle\Migration\Version401;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Doctrine\DBAL\Connection;
@@ -26,9 +27,15 @@ class Version410Update extends AbstractMigration
      */
     private $connection;
 
-    public function __construct(Connection $connection)
+    /**
+     * @var ContaoFramework
+     */
+    private $framework;
+
+    public function __construct(Connection $connection, ContaoFramework $framework)
     {
         $this->connection = $connection;
+        $this->framework = $framework;
     }
 
     public function getName(): string
@@ -51,6 +58,8 @@ class Version410Update extends AbstractMigration
 
     public function run(): MigrationResult
     {
+        $this->framework->initialize();
+
         $crop = $GLOBALS['TL_CROP'];
 
         if (empty($crop)) {

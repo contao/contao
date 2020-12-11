@@ -33,14 +33,14 @@ class SortedIterator extends \SplHeap
 	/**
 	 * Sort items ascending
 	 *
-	 * @param mixed $a The first SplFileInfo object
-	 * @param mixed $b The second SplFileInfo object
+	 * @param mixed $value1 The first SplFileInfo object
+	 * @param mixed $value2 The second SplFileInfo object
 	 *
 	 * @return integer Negative value if $b is less than $a, positive value if $b is greater than $a or 0 if they are equal
 	 */
-	public function compare($a, $b)
+	public function compare($value1, $value2)
 	{
-		return strcmp($b->getRealpath(), $a->getRealpath());
+		return strcmp($value2->getRealpath(), $value1->getRealpath());
 	}
 }
 
