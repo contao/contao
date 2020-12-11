@@ -780,7 +780,7 @@ abstract class Widget extends Controller
 				break;
 			}
 
-			$varValue = $varValue[$part];
+			$varValue = $varValue[$part] ?? null;
 		}
 
 		return $varValue;

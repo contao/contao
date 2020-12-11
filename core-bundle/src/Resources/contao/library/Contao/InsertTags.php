@@ -105,14 +105,14 @@ class InsertTags extends Controller
 		for ($_rit=0, $_cnt=\count($tags); $_rit<$_cnt; $_rit+=2)
 		{
 			$strBuffer .= $tags[$_rit];
-			$strTag = $tags[$_rit+1] ?? '';
 
 			// Skip empty tags
-			if (!$strTag)
+			if (empty($tags[$_rit+1]))
 			{
 				continue;
 			}
 
+			$strTag = $tags[$_rit+1];
 			$flags = explode('|', $strTag);
 			$tag = array_shift($flags);
 			$elements = explode('::', $tag);

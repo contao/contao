@@ -25,12 +25,9 @@ use Contao\Search;
 class SearchTest extends TestCase
 {
     /**
-     * @param string $moreCanonicalUrl
-     * @param string $lessCanonicalUrl
-     *
      * @dataProvider compareUrlsProvider
      */
-    public function testCompareUrls($moreCanonicalUrl, $lessCanonicalUrl): void
+    public function testCompareUrls(string $moreCanonicalUrl, string $lessCanonicalUrl): void
     {
         $search = new \ReflectionClass(Search::class);
         $compareUrls = $search->getMethod('compareUrls');
@@ -42,20 +39,15 @@ class SearchTest extends TestCase
         $this->assertSame(0, $compareUrls->invokeArgs(null, [$lessCanonicalUrl, $lessCanonicalUrl]));
     }
 
-    /**
-     * Provides the data for the testCompareUrls() method.
-     */
-    public function compareUrlsProvider(): array
+    public function compareUrlsProvider(): \Generator
     {
-        return [
-            ['foo/bar.html', 'foo/bar.html?query'],
-            ['foo/bar.html', 'foo/bar/baz.html'],
-            ['foo/bar.html', 'foo/bar-baz.html'],
-            ['foo/bar.html', 'foo/barr.html'],
-            ['foo/bar.html', 'foo/baz.html'],
-            ['foo/bar-longer-url-but-no-query.html', 'foo/bar.html?query'],
-            ['foo/bar-longer-url-but-less-slashes.html', 'foo/bar/baz.html'],
-            ['foo.html?query/with/many/slashes/', 'foo/bar.html?query-without-slashes'],
-        ];
+        yield ['foo/bar.html', 'foo/bar.html?query'];
+        yield ['foo/bar.html', 'foo/bar/baz.html'];
+        yield ['foo/bar.html', 'foo/bar-baz.html'];
+        yield ['foo/bar.html', 'foo/barr.html'];
+        yield ['foo/bar.html', 'foo/baz.html'];
+        yield ['foo/bar-longer-url-but-no-query.html', 'foo/bar.html?query'];
+        yield ['foo/bar-longer-url-but-less-slashes.html', 'foo/bar/baz.html'];
+        yield ['foo.html?query/with/many/slashes/', 'foo/bar.html?query-without-slashes'];
     }
 }

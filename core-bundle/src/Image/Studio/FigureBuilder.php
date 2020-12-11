@@ -660,10 +660,11 @@ class FigureBuilder
             return [];
         }
 
-        $locales = [
-            str_replace('-', '_', $page->language),
-            str_replace('-', '_', $page->rootFallbackLanguage),
-        ];
+        $locales = [str_replace('-', '_', $page->language)];
+
+        if (null !== $page->rootFallbackLanguage) {
+            $locales[] = str_replace('-', '_', $page->rootFallbackLanguage);
+        }
 
         return array_unique(array_filter($locales));
     }
