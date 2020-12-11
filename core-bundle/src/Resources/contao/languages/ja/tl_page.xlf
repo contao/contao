@@ -227,9 +227,11 @@
       </trans-unit>
       <trans-unit id="tl_page.useSSL.0">
         <source>Protocol</source>
+        <target>プロトコル</target>
       </trans-unit>
       <trans-unit id="tl_page.useSSL.1">
         <source>Here you can select which protocol to use for the website.</source>
+        <target>ウェブサイトで使用するプロトコルを選択できます。</target>
       </trans-unit>
       <trans-unit id="tl_page.autoforward.0">
         <source>Forward to another page</source>
