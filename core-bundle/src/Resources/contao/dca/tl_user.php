@@ -586,7 +586,7 @@ class tl_user extends Backend
 			'default' => $GLOBALS['TL_DCA'][$dc->table]['palettes']['login']
 		);
 
-		$arrFields = StringUtil::trimsplit('[,;]', $GLOBALS['TL_DCA'][$dc->table]['palettes']['default']);
+		$arrFields = StringUtil::trimsplit('[,;]', $GLOBALS['TL_DCA'][$dc->table]['palettes']['default'] ?? '');
 
 		foreach ($arrFields as $strField)
 		{
@@ -679,7 +679,7 @@ class tl_user extends Backend
 	 */
 	public function copyUser($row, $href, $label, $title, $icon, $attributes, $table)
 	{
-		if ($GLOBALS['TL_DCA'][$table]['config']['closed'])
+		if ($GLOBALS['TL_DCA'][$table]['config']['closed'] ?? null)
 		{
 			return '';
 		}
@@ -1013,7 +1013,7 @@ class tl_user extends Backend
 		}
 
 		// Trigger the onload_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_user']['config']['onload_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_user']['config']['onload_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_user']['config']['onload_callback'] as $callback)
 			{
@@ -1057,7 +1057,7 @@ class tl_user extends Backend
 		$blnVisible = !$blnVisible;
 
 		// Trigger the save_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_user']['fields']['disable']['save_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_user']['fields']['disable']['save_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_user']['fields']['disable']['save_callback'] as $callback)
 			{
@@ -1086,7 +1086,7 @@ class tl_user extends Backend
 		}
 
 		// Trigger the onsubmit_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_user']['config']['onsubmit_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_user']['config']['onsubmit_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_user']['config']['onsubmit_callback'] as $callback)
 			{

@@ -562,7 +562,7 @@ class tl_form_field extends Backend
 			$GLOBALS['TL_DCA']['tl_form_field']['config']['closed'] = true;
 			$GLOBALS['TL_DCA']['tl_form_field']['config']['notEditable'] = true;
 		}
-		elseif (!in_array($GLOBALS['TL_DCA']['tl_form_field']['fields']['type']['sql']['default'], $this->User->fields))
+		elseif (!in_array($GLOBALS['TL_DCA']['tl_form_field']['fields']['type']['sql']['default'] ?? null, $this->User->fields))
 		{
 			$GLOBALS['TL_DCA']['tl_form_field']['fields']['type']['default'] = $this->User->fields[0];
 		}
@@ -833,7 +833,7 @@ class tl_form_field extends Backend
 		}
 
 		// Trigger the onload_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_form_field']['config']['onload_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_form_field']['config']['onload_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_form_field']['config']['onload_callback'] as $callback)
 			{
@@ -882,7 +882,7 @@ class tl_form_field extends Backend
 		$blnVisible = !$blnVisible;
 
 		// Trigger the save_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_form_field']['fields']['invisible']['save_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_form_field']['fields']['invisible']['save_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_form_field']['fields']['invisible']['save_callback'] as $callback)
 			{
@@ -911,7 +911,7 @@ class tl_form_field extends Backend
 		}
 
 		// Trigger the onsubmit_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_form_field']['config']['onsubmit_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_form_field']['config']['onsubmit_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_form_field']['config']['onsubmit_callback'] as $callback)
 			{

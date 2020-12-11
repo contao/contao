@@ -185,7 +185,7 @@ class ContentCompositionListener
      */
     public function renderArticlePasteButton(DataContainer $dc, array $row, string $table, bool $cr, array $clipboard = null): string
     {
-        if ($table === $GLOBALS['TL_DCA'][$dc->table]['config']['ptable']) {
+        if ($table === ($GLOBALS['TL_DCA'][$dc->table]['config']['ptable'] ?? null)) {
             return $this->renderArticlePasteIntoButton($dc, $row, $cr, $clipboard);
         }
 

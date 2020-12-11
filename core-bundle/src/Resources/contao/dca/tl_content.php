@@ -1117,7 +1117,7 @@ class tl_content extends Backend
 			$GLOBALS['TL_DCA']['tl_content']['config']['closed'] = true;
 			$GLOBALS['TL_DCA']['tl_content']['config']['notEditable'] = true;
 		}
-		elseif (!in_array($GLOBALS['TL_DCA']['tl_content']['fields']['type']['sql']['default'], $this->User->elements))
+		elseif (!in_array($GLOBALS['TL_DCA']['tl_content']['fields']['type']['sql']['default'] ?? null, $this->User->elements))
 		{
 			$GLOBALS['TL_DCA']['tl_content']['fields']['type']['default'] = $this->User->elements[0];
 		}
@@ -2017,7 +2017,7 @@ class tl_content extends Backend
 		}
 
 		// Trigger the onload_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'] as $callback)
 			{
@@ -2066,7 +2066,7 @@ class tl_content extends Backend
 		$blnVisible = !$blnVisible;
 
 		// Trigger the save_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_content']['fields']['invisible']['save_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_content']['fields']['invisible']['save_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_content']['fields']['invisible']['save_callback'] as $callback)
 			{
@@ -2095,7 +2095,7 @@ class tl_content extends Backend
 		}
 
 		// Trigger the onsubmit_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_content']['config']['onsubmit_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_content']['config']['onsubmit_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_content']['config']['onsubmit_callback'] as $callback)
 			{

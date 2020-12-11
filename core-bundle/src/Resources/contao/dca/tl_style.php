@@ -728,7 +728,7 @@ class tl_style extends Backend
 		}
 
 		// Trigger the onload_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_style']['config']['onload_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_style']['config']['onload_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_style']['config']['onload_callback'] as $callback)
 			{
@@ -766,7 +766,7 @@ class tl_style extends Backend
 		$blnVisible = !$blnVisible;
 
 		// Trigger the save_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_style']['fields']['invisible']['save_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_style']['fields']['invisible']['save_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_style']['fields']['invisible']['save_callback'] as $callback)
 			{
@@ -795,7 +795,7 @@ class tl_style extends Backend
 		}
 
 		// Trigger the onsubmit_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_style']['config']['onsubmit_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_style']['config']['onsubmit_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_style']['config']['onsubmit_callback'] as $callback)
 			{

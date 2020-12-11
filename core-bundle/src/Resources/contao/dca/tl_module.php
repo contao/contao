@@ -695,7 +695,7 @@ class tl_module extends Backend
 
 		foreach ($GLOBALS['TL_DCA']['tl_member']['fields'] as $k=>$v)
 		{
-			if ($v['eval']['feEditable'])
+			if ($v['eval']['feEditable'] ?? null)
 			{
 				$return[$k] = $GLOBALS['TL_DCA']['tl_member']['fields'][$k]['label'][0];
 			}

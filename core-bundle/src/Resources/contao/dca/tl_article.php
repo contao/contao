@@ -732,7 +732,7 @@ class tl_article extends Backend
 	 */
 	public function copyArticle($row, $href, $label, $title, $icon, $attributes, $table)
 	{
-		if ($GLOBALS['TL_DCA'][$table]['config']['closed'])
+		if ($GLOBALS['TL_DCA'][$table]['config']['closed'] ?? null)
 		{
 			return '';
 		}
@@ -933,7 +933,7 @@ class tl_article extends Backend
 		}
 
 		// Trigger the onload_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_article']['config']['onload_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_article']['config']['onload_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_article']['config']['onload_callback'] as $callback)
 			{
@@ -974,7 +974,7 @@ class tl_article extends Backend
 		$objVersions->initialize();
 
 		// Trigger the save_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_article']['fields']['published']['save_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_article']['fields']['published']['save_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_article']['fields']['published']['save_callback'] as $callback)
 			{
@@ -1003,7 +1003,7 @@ class tl_article extends Backend
 		}
 
 		// Trigger the onsubmit_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_article']['config']['onsubmit_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_article']['config']['onsubmit_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_article']['config']['onsubmit_callback'] as $callback)
 			{
