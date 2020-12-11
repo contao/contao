@@ -269,7 +269,7 @@ class ImageResultTest extends TestCase
         $projectDir = 'project/dir';
         $filePath = 'project/dir/file/path';
 
-        $locator = $this->getLocatorMock(null);
+        $locator = $this->getLocatorMock();
         $imageResult = new ImageResult($locator, $projectDir, $filePath);
 
         $this->assertSame('file/path', $imageResult->getFilePath());
