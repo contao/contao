@@ -349,7 +349,7 @@ class Search
 					tl_search_index.pid,
 					SQRT(SUM(POW(
 						(1 + LOG(relevance)) * LOG((
-							" . (int) ($objDatabase->query("SELECT COUNT(*) as count FROM tl_search")->count + 1) . "
+							" . ($objDatabase->query("SELECT COUNT(*) as count FROM tl_search")->count + 1) . "
 						) / GREATEST(1, documentFrequency)),
 						2
 					))) as vectorLength

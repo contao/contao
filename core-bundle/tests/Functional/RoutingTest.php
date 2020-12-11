@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\Functional;
 use Contao\Config;
 use Contao\System;
 use Contao\TestCase\FunctionalTestCase;
-use Symfony\Component\HttpFoundation\Response;
 
 class RoutingTest extends FunctionalTestCase
 {
@@ -62,8 +61,6 @@ class RoutingTest extends FunctionalTestCase
 
         $crawler = $client->request('GET', "http://$host$request");
         $title = trim($crawler->filterXPath('//head/title')->text());
-
-        /** @var Response $response */
         $response = $client->getResponse();
 
         $this->assertSame($statusCode, $response->getStatusCode());
@@ -384,8 +381,6 @@ class RoutingTest extends FunctionalTestCase
 
         $crawler = $client->request('GET', "http://$host$request");
         $title = trim($crawler->filterXPath('//head/title')->text());
-
-        /** @var Response $response */
         $response = $client->getResponse();
 
         $this->assertSame($statusCode, $response->getStatusCode());
@@ -712,8 +707,6 @@ class RoutingTest extends FunctionalTestCase
 
         $crawler = $client->request('GET', "http://$host$request");
         $title = trim($crawler->filterXPath('//head/title')->text());
-
-        /** @var Response $response */
         $response = $client->getResponse();
 
         $this->assertSame($statusCode, $response->getStatusCode());
@@ -1061,8 +1054,6 @@ class RoutingTest extends FunctionalTestCase
 
         $crawler = $client->request('GET', "http://$host$request");
         $title = trim($crawler->filterXPath('//head/title')->text());
-
-        /** @var Response $response */
         $response = $client->getResponse();
 
         $this->assertSame($statusCode, $response->getStatusCode());

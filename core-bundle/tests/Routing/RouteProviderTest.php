@@ -498,8 +498,8 @@ class RouteProviderTest extends TestCase
     public function getRootRoutes(): \Generator
     {
         $pages = [
-            2 => $this->createRootPage('en', 'english-root', true),
-            1 => $this->createPage('en', 'index', true),
+            2 => $this->createRootPage('en', 'english-root'),
+            1 => $this->createPage('en', 'index'),
             0 => $this->createRootPage('de', 'german-root', false),
         ];
 
@@ -516,8 +516,8 @@ class RouteProviderTest extends TestCase
         ];
 
         $pages = [
-            2 => $this->createRootPage('en', 'english-root', true),
-            1 => $this->createPage('en', 'index', true),
+            2 => $this->createRootPage('en', 'english-root'),
+            1 => $this->createPage('en', 'index'),
             0 => $this->createRootPage('de', 'german-root', false),
         ];
 

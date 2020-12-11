@@ -45,7 +45,7 @@ class FigureBuilderTest extends TestCase
 
         $studio = $this->getStudioMockForImage($absoluteFilePath);
 
-        $this->getFigureBuilder($studio, null)->fromFilesModel($model)->build();
+        $this->getFigureBuilder($studio)->fromFilesModel($model)->build();
     }
 
     public function testFromFilesModelFailsWithInvalidDBAFSType(): void
