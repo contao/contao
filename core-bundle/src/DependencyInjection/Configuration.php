@@ -58,10 +58,10 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue('%kernel.secret%')
                 ->end()
                 ->integerNode('error_level')
-                    ->info('The error reporting level set when the framework is initialized.')
+                    ->info('The error reporting level set when the framework is initialized. Defaults to E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED.')
                     ->min(-1)
                     ->max(32767)
-                    ->defaultValue($this->getErrorLevel())
+                    ->defaultValue(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED)
                 ->end()
                 ->booleanNode('legacy_routing')
                     ->defaultTrue()
@@ -445,19 +445,6 @@ class Configuration implements ConfigurationInterface
                 ->end()
             ->end()
         ;
-    }
-
-    private function getErrorLevel(): int
-    {
-        if (PHP_MAJOR_VERSION < 8) {
-            return E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED;
-        }
-
-        // Disable E_WARNING in PHP 8, because a number of notices have been
-        // converted into warnings and now cause a lot of issues with undefined
-        // array keys and undefined properties.
-        // @see https://www.php.net/manual/de/migration80.incompatible.php
-        return E_ALL & ~E_WARNING & ~E_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED;
     }
 
     /**
