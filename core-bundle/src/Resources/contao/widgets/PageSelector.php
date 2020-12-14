@@ -247,7 +247,7 @@ class PageSelector extends Widget
 
 		// Return the tree
 		return '<ul class="tl_listing tree_view picker_selector' . ($this->strClass ? ' ' . $this->strClass : '') . '" id="' . $this->strId . '" data-callback="reloadPagetree" data-inserttag="link_url">
-    <li class="tl_folder_top"><div class="tl_left">' . Image::getHtml($GLOBALS['TL_DCA']['tl_page']['list']['sorting']['icon'] ?: 'pagemounts.svg') . ' ' . $GLOBALS['TL_LANG']['MOD']['page'][0] . '</div> <div class="tl_right">&nbsp;</div><div style="clear:both"></div></li><li class="parent" id="' . $this->strId . '_parent"><ul>' . $tree . $strReset . '
+    <li class="tl_folder_top"><div class="tl_left">' . Image::getHtml($GLOBALS['TL_DCA']['tl_page']['list']['sorting']['icon'] ?? 'pagemounts.svg') . ' ' . $GLOBALS['TL_LANG']['MOD']['page'][0] . '</div> <div class="tl_right">&nbsp;</div><div style="clear:both"></div></li><li class="parent" id="' . $this->strId . '_parent"><ul>' . $tree . $strReset . '
   </ul></li></ul>';
 	}
 
@@ -271,7 +271,7 @@ class PageSelector extends Widget
 		$this->loadDataContainer($this->strTable);
 
 		// Load current values
-		switch ($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'])
+		switch ($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'] ?? null)
 		{
 			case 'File':
 				if (Config::get($this->strField))

@@ -1239,22 +1239,22 @@ abstract class Widget extends Controller
 	 */
 	public static function getAttributesFromDca($arrData, $strName, $varValue=null, $strField='', $strTable='', $objDca=null)
 	{
-		$arrAttributes = $arrData['eval'];
+		$arrAttributes = $arrData['eval'] ?? array();
 
 		$arrAttributes['id'] = $strName;
 		$arrAttributes['name'] = $strName;
 		$arrAttributes['strField'] = $strField;
 		$arrAttributes['strTable'] = $strTable;
 		$arrAttributes['label'] = (($label = \is_array($arrData['label']) ? $arrData['label'][0] : $arrData['label']) !== null) ? $label : $strField;
-		$arrAttributes['description'] = $arrData['label'][1];
-		$arrAttributes['type'] = $arrData['inputType'];
+		$arrAttributes['description'] = $arrData['label'][1] ?? null;
+		$arrAttributes['type'] = $arrData['inputType'] ?? null;
 		$arrAttributes['dataContainer'] = $objDca;
 		$arrAttributes['value'] = StringUtil::deserialize($varValue);
 
 		// Internet Explorer does not support onchange for checkboxes and radio buttons
-		if ($arrData['eval']['submitOnChange'])
+		if ($arrData['eval']['submitOnChange'] ?? null)
 		{
-			if ($arrData['inputType'] == 'checkbox' || $arrData['inputType'] == 'checkboxWizard' || $arrData['inputType'] == 'radio' || $arrData['inputType'] == 'radioTable')
+			if (($arrData['inputType'] ?? null) == 'checkbox' || ($arrData['inputType'] ?? null) == 'checkboxWizard' || ($arrData['inputType'] ?? null) == 'radio' || ($arrData['inputType'] ?? null) == 'radioTable')
 			{
 				$arrAttributes['onclick'] = trim($arrAttributes['onclick'] . " Backend.autoSubmit('" . $strTable . "')");
 			}
@@ -1264,27 +1264,27 @@ abstract class Widget extends Controller
 			}
 		}
 
-		$arrAttributes['allowHtml'] = ($arrData['eval']['allowHtml'] || $arrData['eval']['rte'] || $arrData['eval']['preserveTags']);
+		$arrAttributes['allowHtml'] = (($arrData['eval']['allowHtml'] ?? null) || ($arrData['eval']['rte'] ?? null) || ($arrData['eval']['preserveTags'] ?? null));
 
 		// Decode entities if HTML is allowed
-		if ($arrAttributes['allowHtml'] || $arrData['inputType'] == 'fileTree')
+		if ($arrAttributes['allowHtml'] || ($arrData['inputType'] ?? null) == 'fileTree')
 		{
 			$arrAttributes['decodeEntities'] = true;
 		}
 
 		// Add Ajax event
-		if ($arrData['inputType'] == 'checkbox' && $arrData['eval']['submitOnChange'] && \is_array($GLOBALS['TL_DCA'][$strTable]['subpalettes']) && \array_key_exists($strField, $GLOBALS['TL_DCA'][$strTable]['subpalettes']))
+		if (($arrData['inputType'] ?? null) == 'checkbox' && ($arrData['eval']['submitOnChange'] ?? null) && \is_array($GLOBALS['TL_DCA'][$strTable]['subpalettes'] ?? null) && \array_key_exists($strField, $GLOBALS['TL_DCA'][$strTable]['subpalettes']))
 		{
 			$arrAttributes['onclick'] = "AjaxRequest.toggleSubpalette(this, 'sub_" . $strName . "', '" . $strField . "')";
 		}
 
 		// Options callback
-		if (\is_array($arrData['options_callback']))
+		if (\is_array($arrData['options_callback'] ?? null))
 		{
 			$arrCallback = $arrData['options_callback'];
 			$arrData['options'] = static::importStatic($arrCallback[0])->{$arrCallback[1]}($objDca);
 		}
-		elseif (\is_callable($arrData['options_callback']))
+		elseif (\is_callable($arrData['options_callback'] ?? null))
 		{
 			$arrData['options'] = $arrData['options_callback']($objDca);
 		}
@@ -1303,7 +1303,7 @@ abstract class Widget extends Controller
 		}
 
 		// Add default option to single checkbox
-		if ($arrData['inputType'] == 'checkbox' && !isset($arrData['options']) && !isset($arrData['options_callback']) && !isset($arrData['foreignKey']))
+		if (($arrData['inputType'] ?? null) == 'checkbox' && !isset($arrData['options']) && !isset($arrData['options_callback']) && !isset($arrData['foreignKey']))
 		{
 			if (TL_MODE == 'FE' && isset($arrAttributes['description']))
 			{
@@ -1316,12 +1316,12 @@ abstract class Widget extends Controller
 		}
 
 		// Add options
-		if (\is_array($arrData['options']))
+		if (\is_array($arrData['options'] ?? null))
 		{
-			$blnIsAssociative = ($arrData['eval']['isAssociative'] || ArrayUtil::isAssoc($arrData['options']));
+			$blnIsAssociative = ($arrData['eval']['isAssociative'] ?? null) || ArrayUtil::isAssoc($arrData['options'] ?? array());
 			$blnUseReference = isset($arrData['reference']);
 
-			if ($arrData['eval']['includeBlankOption'] && !$arrData['eval']['multiple'])
+			if (($arrData['eval']['includeBlankOption'] ?? null) && !($arrData['eval']['multiple'] ?? null))
 			{
 				$strLabel = $arrData['eval']['blankOptionLabel'] ?? '-';
 				$arrAttributes['options'][] = array('value'=>'', 'label'=>$strLabel);
@@ -1377,7 +1377,7 @@ abstract class Widget extends Controller
 		}
 
 		// Convert timestamps
-		if ($varValue !== null && $varValue !== '' && \in_array($arrData['eval']['rgxp'], array('date', 'time', 'datim')))
+		if ($varValue !== null && $varValue !== '' && \in_array($arrData['eval']['rgxp'] ?? null, array('date', 'time', 'datim')))
 		{
 			$objDate = new Date($varValue, Date::getFormatFromRgxp($arrData['eval']['rgxp']));
 			$arrAttributes['value'] = $objDate->{$arrData['eval']['rgxp']};

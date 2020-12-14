@@ -81,7 +81,7 @@ class ModulePersonalData extends Module
 		$this->loadDataContainer('tl_member');
 
 		// Call onload_callback (e.g. to check permissions)
-		if (\is_array($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback']))
+		if (\is_array($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback'] as $callback)
 			{
@@ -322,7 +322,7 @@ class ModulePersonalData extends Module
 			$objMember->save();
 
 			// Create a new version
-			if ($GLOBALS['TL_DCA'][$strTable]['config']['enableVersioning'])
+			if ($GLOBALS['TL_DCA'][$strTable]['config']['enableVersioning'] ?? null)
 			{
 				$objVersions->create();
 			}
@@ -344,7 +344,7 @@ class ModulePersonalData extends Module
 			}
 
 			// Call the onsubmit_callback
-			if (\is_array($GLOBALS['TL_DCA']['tl_member']['config']['onsubmit_callback']))
+			if (\is_array($GLOBALS['TL_DCA']['tl_member']['config']['onsubmit_callback'] ?? null))
 			{
 				foreach ($GLOBALS['TL_DCA']['tl_member']['config']['onsubmit_callback'] as $callback)
 				{

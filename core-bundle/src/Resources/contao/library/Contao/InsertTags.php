@@ -302,7 +302,7 @@ class InsertTags extends Controller
 
 						$this->loadDataContainer('tl_member');
 
-						if ($GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['inputType'] == 'password')
+						if (($GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['inputType'] ?? null) == 'password')
 						{
 							$arrCache[$strTag] = '';
 							break;
@@ -311,7 +311,7 @@ class InsertTags extends Controller
 						$value = StringUtil::deserialize($value);
 
 						// Decrypt the value
-						if ($GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['eval']['encrypt'])
+						if ($GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['eval']['encrypt'] ?? null)
 						{
 							$value = Encryption::decrypt($value);
 						}

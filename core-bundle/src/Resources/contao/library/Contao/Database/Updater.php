@@ -774,7 +774,7 @@ class Updater extends Controller
 			}
 
 			// Make sure there are fields (see #6437)
-			if (\is_array($GLOBALS['TL_DCA'][$strTable]['fields']))
+			if (\is_array($GLOBALS['TL_DCA'][$strTable]['fields'] ?? null))
 			{
 				foreach ($GLOBALS['TL_DCA'][$strTable]['fields'] as $strField=>$arrField)
 				{
