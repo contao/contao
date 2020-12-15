@@ -2688,7 +2688,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				if ($field == 'pid' || $field == 'sorting' || (!($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['exclude'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['doNotShow'] ?? null) && (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['inputType']) || \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['input_field_callback'] ?? null) || \is_callable($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['input_field_callback'] ?? null))))
 				{
 					$options .= '
-  <input type="checkbox" name="all_fields[]" id="all_' . $field . '" class="tl_checkbox" value="' . StringUtil::specialchars($field) . '"> <label for="all_' . $field . '" class="tl_checkbox_label">' . (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] ?? $GLOBALS['TL_LANG']['MSC'][$field][0] ?? $field) . ' <span style="color:#999;padding-left:3px">[' . $field . ']</span>') . '</label><br>';
+  <input type="checkbox" name="all_fields[]" id="all_' . $field . '" class="tl_checkbox" value="' . StringUtil::specialchars($field) . '"> <label for="all_' . $field . '" class="tl_checkbox_label">' . (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] ?: ($GLOBALS['TL_LANG']['MSC'][$field][0] ?: $field)) . ' <span style="color:#999;padding-left:3px">[' . $field . ']</span>') . '</label><br>';
 				}
 			}
 
@@ -3014,7 +3014,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				if ($field == 'pid' || $field == 'sorting' || (!($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['exclude'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['doNotShow'] ?? null) && (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['inputType']) || \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['input_field_callback'] ?? null) || \is_callable($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['input_field_callback'] ?? null))))
 				{
 					$options .= '
-  <input type="checkbox" name="all_fields[]" id="all_' . $field . '" class="tl_checkbox" value="' . StringUtil::specialchars($field) . '"> <label for="all_' . $field . '" class="tl_checkbox_label">' . (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] ?? $GLOBALS['TL_LANG']['MSC'][$field][0] ?? $field) . ' <span style="color:#999;padding-left:3px">[' . $field . ']</span>') . '</label><br>';
+  <input type="checkbox" name="all_fields[]" id="all_' . $field . '" class="tl_checkbox" value="' . StringUtil::specialchars($field) . '"> <label for="all_' . $field . '" class="tl_checkbox_label">' . (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] ?: ($GLOBALS['TL_LANG']['MSC'][$field][0] ?: $field)) . ' <span style="color:#999;padding-left:3px">[' . $field . ']</span>') . '</label><br>';
 				}
 			}
 
@@ -3079,7 +3079,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		// Make sure unique fields are unique
 		if ((string) $varValue !== '' && ($arrData['eval']['unique'] ?? null) && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $this->objActiveRecord->id))
 		{
-			throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?? $this->strField));
+			throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $this->strField));
 		}
 
 		// Handle multi-select fields in "override all" mode
@@ -3559,7 +3559,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			$label = $GLOBALS['TL_LANG']['MOD']['page'][0];
 		}
 
-		$icon = $GLOBALS['TL_DCA'][$table]['list']['sorting']['icon'] ?? 'pagemounts.svg';
+		$icon = $GLOBALS['TL_DCA'][$table]['list']['sorting']['icon'] ?: 'pagemounts.svg';
 		$label = Image::getHtml($icon) . ' <label>' . $label . '</label>';
 
 		// Check the default labels (see #509)
@@ -3990,7 +3990,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			}
 			else
 			{
-				$args[$k] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$objRow->$v] ?? $objRow->$v;
+				$args[$k] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$objRow->$v] ?: $objRow->$v;
 			}
 		}
 
@@ -4950,7 +4950,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 							foreach ($row_v as $option)
 							{
-								$args_k[] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$option] ?? $option;
+								$args_k[] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$option] ?: $option;
 							}
 
 							$args[$k] = implode(', ', $args_k);
@@ -4975,7 +4975,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				}
 
 				// Shorten the label it if it is too long
-				$label = vsprintf($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['format'] ?? '%s', $args);
+				$label = vsprintf($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['format'] ?: '%s', $args);
 
 				if (($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['maxCharacters'] ?? null) > 0 && $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['maxCharacters'] < \strlen(strip_tags($label)))
 				{

@@ -250,7 +250,7 @@ class ModuleRegistration extends Module
 				// Make sure that unique fields are unique (check the eval setting first -> #3063)
 				if ((string) $varValue !== '' && ($arrData['eval']['unique'] ?? null) && !$this->Database->isUniqueValue('tl_member', $field, $varValue))
 				{
-					$objWidget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?? $field));
+					$objWidget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $field));
 				}
 
 				// Save callback

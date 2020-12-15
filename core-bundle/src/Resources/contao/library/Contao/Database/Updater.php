@@ -691,7 +691,7 @@ class Updater extends Controller
 			// Handle meta.txt files
 			if (preg_match('/^meta(_([a-z]{2}))?\.txt$/', basename($strFile), $matches))
 			{
-				$key = $matches[2] ?? 'en';
+				$key = $matches[2] ?: 'en';
 				$arrData = file($projectDir . '/' . $strFile, FILE_IGNORE_NEW_LINES);
 
 				foreach ($arrData as $line)

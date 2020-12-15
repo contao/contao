@@ -337,7 +337,7 @@ abstract class Backend extends Controller
 		$objSession = System::getContainer()->get('session');
 
 		$arrTables = $arrModule['tables'] ?? array();
-		$strTable = Input::get('table') ?? $arrTables[0] ?? null;
+		$strTable = Input::get('table') ?: ($arrTables[0] ?? null);
 		$id = (!Input::get('act') && Input::get('id')) ? Input::get('id') : $objSession->get('CURRENT_ID');
 
 		// Store the current ID in the current session

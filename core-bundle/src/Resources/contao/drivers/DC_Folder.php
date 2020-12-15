@@ -442,7 +442,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			$label = $GLOBALS['TL_LANG']['MOD']['files'][0];
 		}
 
-		$icon = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['icon'] ?? 'filemounts.svg';
+		$icon = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['icon'] ?: 'filemounts.svg';
 		$label = Image::getHtml($icon) . ' <label>' . $label . '</label>';
 
 		// Build the tree
@@ -1881,7 +1881,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 				if (!($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['exclude'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['doNotShow'] ?? null) && (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['inputType']) || \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['input_field_callback'] ?? null)))
 				{
 					$options .= '
-  <input type="checkbox" name="all_fields[]" id="all_' . $field . '" class="tl_checkbox" value="' . StringUtil::specialchars($field) . '"> <label for="all_' . $field . '" class="tl_checkbox_label">' . (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] ?? $GLOBALS['TL_LANG']['MSC'][$field][0] ?? $field) . ' <span style="color:#999;padding-left:3px">[' . $field . ']</span>') . '</label><br>';
+  <input type="checkbox" name="all_fields[]" id="all_' . $field . '" class="tl_checkbox" value="' . StringUtil::specialchars($field) . '"> <label for="all_' . $field . '" class="tl_checkbox_label">' . (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] ?: ($GLOBALS['TL_LANG']['MSC'][$field][0] ?: $field)) . ' <span style="color:#999;padding-left:3px">[' . $field . ']</span>') . '</label><br>';
 				}
 			}
 
@@ -2937,7 +2937,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
     <div class="tl_search tl_subpanel">
       <strong>' . $GLOBALS['TL_LANG']['MSC']['search'] . ':</strong>
       <select name="tl_field" class="tl_select' . ($active ? ' active' : '') . '">
-        <option value="name">' . ($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['label'][0] ?? (\is_array($GLOBALS['TL_LANG']['MSC']['name'] ?? null) ? $GLOBALS['TL_LANG']['MSC']['name'][0] : ($GLOBALS['TL_LANG']['MSC']['name'] ?? null))) . '</option>
+        <option value="name">' . ($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['label'][0] ?: (\is_array($GLOBALS['TL_LANG']['MSC']['name'] ?? null) ? $GLOBALS['TL_LANG']['MSC']['name'][0] : ($GLOBALS['TL_LANG']['MSC']['name'] ?? null))) . '</option>
       </select>
       <span>=</span>
       <input type="search" name="tl_value" class="tl_text' . ($active ? ' active' : '') . '" value="' . StringUtil::specialchars($session['search'][$this->strTable]['value'] ?? '') . '">
