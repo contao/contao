@@ -4461,8 +4461,8 @@ class DC_Table extends DataContainer implements \listable, \editable
 				for ($i=0, $c=\count($row); $i<$c; $i++)
 				{
 					$this->current[] = $row[$i]['id'];
-					$imagePasteAfter = Image::getHtml('pasteafter.svg', sprintf($labelPasteAfter[1], $row[$i]['id']));
-					$imagePasteNew = Image::getHtml('new.svg', sprintf($labelPasteNew[1], $row[$i]['id']));
+					$imagePasteAfter = Image::getHtml('pasteafter.svg', sprintf($labelPasteAfter[1] ?? $labelPasteAfter[0], $row[$i]['id']));
+					$imagePasteNew = Image::getHtml('new.svg', sprintf($labelPasteNew[1] ?? $labelPasteNew[0], $row[$i]['id']));
 
 					// Decrypt encrypted value
 					foreach ($row[$i] as $k=>$v)
@@ -4494,9 +4494,9 @@ class DC_Table extends DataContainer implements \listable, \editable
 						}
 					}
 
-					$blnWrapperStart = \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['start']);
-					$blnWrapperSeparator = \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['separator']);
-					$blnWrapperStop = \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['stop']);
+					$blnWrapperStart = isset($row[$i]['type']) && \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['start']);
+					$blnWrapperSeparator = isset($row[$i]['type']) && \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['separator']);
+					$blnWrapperStop = isset($row[$i]['type']) && \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['stop']);
 					$blnIndentFirst = isset($row[$i - 1]['type']) && \in_array($row[$i - 1]['type'], $GLOBALS['TL_WRAPPERS']['start']);
 					$blnIndentLast = isset($row[$i + 1]['type']) && \in_array($row[$i + 1]['type'], $GLOBALS['TL_WRAPPERS']['stop']);
 

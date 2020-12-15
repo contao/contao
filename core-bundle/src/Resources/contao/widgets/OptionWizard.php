@@ -90,7 +90,7 @@ class OptionWizard extends Widget
 		$arrButtons = array('copy', 'delete', 'drag');
 
 		// Make sure there is at least an empty array
-		if (!\is_array($this->varValue) || !$this->varValue[0])
+		if (!\is_array($this->varValue) || empty($this->varValue[0]))
 		{
 			$this->varValue = array(array(''));
 		}

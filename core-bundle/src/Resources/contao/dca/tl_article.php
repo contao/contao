@@ -116,7 +116,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			(
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"',
+				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"',
 				'button_callback'     => array('tl_article', 'deleteArticle')
 			),
 			'toggle' => array
@@ -614,7 +614,7 @@ class tl_article extends Backend
 	public function getActiveLayoutSections(DataContainer $dc)
 	{
 		// Show only active sections
-		if ($dc->activeRecord->pid)
+		if ($dc->activeRecord->pid ?? null)
 		{
 			$arrSections = array();
 			$objPage = PageModel::findWithDetails($dc->activeRecord->pid);

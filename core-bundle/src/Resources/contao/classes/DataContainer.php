@@ -224,6 +224,11 @@ abstract class DataContainer extends Backend
 	{
 		$arrData = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField] ?? array();
 
+		if (!isset($arrData['inputType']))
+		{
+			return '';
+		}
+
 		// Check if the field is excluded
 		if ($arrData['exclude'] ?? null)
 		{
@@ -233,7 +238,7 @@ abstract class DataContainer extends Backend
 		$xlabel = '';
 
 		// Toggle line wrap (textarea)
-		if (($arrData['inputType'] ?? null) == 'textarea' && !isset($arrData['eval']['rte']))
+		if ($arrData['inputType'] == 'textarea' && !isset($arrData['eval']['rte']))
 		{
 			$xlabel .= ' ' . Image::getHtml('wrap.svg', $GLOBALS['TL_LANG']['MSC']['wordWrap'], 'title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['wordWrap']) . '" class="toggleWrap" onclick="Backend.toggleWrap(\'ctrl_' . $this->strInputName . '\')"');
 		}
@@ -538,17 +543,17 @@ abstract class DataContainer extends Backend
 			$this->blnUploadable = true;
 		}
 
-		if (($arrData['inputType'] ?? null) != 'password')
+		if ($arrData['inputType'] != 'password')
 		{
 			$arrClasses[] = 'widget';
 		}
 
 		// Mark floated single checkboxes
-		if (($arrData['inputType'] ?? null) == 'checkbox' && !($arrData['eval']['multiple'] ?? null) && \in_array('w50', $arrClasses))
+		if ($arrData['inputType'] == 'checkbox' && !($arrData['eval']['multiple'] ?? null) && \in_array('w50', $arrClasses))
 		{
 			$arrClasses[] = 'cbx';
 		}
-		elseif (($arrData['inputType'] ?? null) == 'text' && ($arrData['eval']['multiple'] ?? null) && \in_array('wizard', $arrClasses))
+		elseif ($arrData['inputType'] == 'text' && ($arrData['eval']['multiple'] ?? null) && \in_array('wizard', $arrClasses))
 		{
 			$arrClasses[] = 'inline';
 		}
@@ -593,7 +598,7 @@ abstract class DataContainer extends Backend
 		}
 
 		// Handle multi-select fields in "override all" mode
-		elseif ((($arrData['inputType'] ?? null) == 'checkbox' || ($arrData['inputType'] ?? null) == 'checkboxWizard') && ($arrData['eval']['multiple'] ?? null) && Input::get('act') == 'overrideAll')
+		elseif (($arrData['inputType'] == 'checkbox' || $arrData['inputType'] == 'checkboxWizard') && ($arrData['eval']['multiple'] ?? null) && Input::get('act') == 'overrideAll')
 		{
 			$updateMode = '
 </div>
