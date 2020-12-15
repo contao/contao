@@ -147,7 +147,7 @@ abstract class Hybrid extends Frontend
 		// Merge the CSS classes (see #6011)
 		if (!empty($this->cssID[1]))
 		{
-			$cssID[1] = trim($cssID[1] . ' ' . $this->cssID[1]);
+			$cssID[1] = trim(($cssID[1] ?? '') . ' ' . $this->cssID[1]);
 		}
 
 		$this->cssID = $cssID;
@@ -233,7 +233,7 @@ abstract class Hybrid extends Frontend
 
 		$this->Template->style = !empty($this->arrStyle) ? implode(' ', $this->arrStyle) : '';
 		$this->Template->cssID = !empty($this->cssID[0]) ? ' id="' . $this->cssID[0] . '"' : '';
-		$this->Template->class = trim($this->typePrefix . $this->strKey . ' ' . $this->cssID[1]);
+		$this->Template->class = trim($this->typePrefix . $this->strKey . ' ' . ($this->cssID[1] ?? null));
 
 		$this->Template->inColumn = $this->strColumn;
 

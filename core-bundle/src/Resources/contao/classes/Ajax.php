@@ -226,7 +226,7 @@ class Ajax extends Backend
 				}
 
 				/** @var PageSelector $strClass */
-				$strClass = $GLOBALS['BE_FFL']['pageSelector'];
+				$strClass = $GLOBALS['BE_FFL']['pageSelector'] ?? null;
 
 				/** @var PageSelector $objWidget */
 				$objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField], $dc->field, $varValue, $strField, $dc->table, $dc));
@@ -261,7 +261,7 @@ class Ajax extends Backend
 				}
 
 				/** @var FileSelector $strClass */
-				$strClass = $GLOBALS['BE_FFL']['fileSelector'];
+				$strClass = $GLOBALS['BE_FFL']['fileSelector'] ?? null;
 
 				/** @var FileSelector $objWidget */
 				$objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField], $dc->field, $varValue, $strField, $dc->table, $dc));
@@ -391,7 +391,7 @@ class Ajax extends Backend
 				}
 
 				/** @var FileTree|PageTree|Picker $strClass */
-				$strClass = $GLOBALS['BE_FFL'][$strKey];
+				$strClass = $GLOBALS['BE_FFL'][$strKey] ?? null;
 
 				/** @var FileTree|PageTree|Picker $objWidget */
 				$objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField], $dc->inputName, $varValue, $strField, $dc->table, $dc));

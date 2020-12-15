@@ -1513,7 +1513,7 @@ abstract class Controller extends System
 				Metadata::VALUE_ALT => $rowData['alt'] ?? '',
 				Metadata::VALUE_TITLE => $rowData['imageTitle'] ?? '',
 				Metadata::VALUE_URL => self::replaceInsertTags($rowData['imageUrl'] ?? ''),
-				'linkTitle' => $rowData['linkTitle'] ?: '',
+				'linkTitle' => $rowData['linkTitle'] ?? '',
 			));
 		};
 
@@ -1697,7 +1697,7 @@ abstract class Controller extends System
 			->build();
 
 		// Build result and apply it to the template
-		$figure->applyLegacyTemplateData($template, $margin, $rowData['floating'] ?: null, $includeFullMetadata);
+		$figure->applyLegacyTemplateData($template, $margin, $rowData['floating'] ?? null, $includeFullMetadata);
 
 		// Fall back to manually specified link title or empty string if not set (backwards compatibility)
 		$template->linkTitle = $template->linkTitle ?? StringUtil::specialchars($rowData['title'] ?? '');

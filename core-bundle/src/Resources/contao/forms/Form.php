@@ -153,7 +153,7 @@ class Form extends Hybrid
 			foreach ($arrFields as $objField)
 			{
 				/** @var FormFieldModel $objField */
-				$strClass = $GLOBALS['TL_FFL'][$objField->type];
+				$strClass = $GLOBALS['TL_FFL'][$objField->type] ?? null;
 
 				// Continue if the class is not defined
 				if (!class_exists($strClass))
@@ -495,7 +495,7 @@ class Form extends Hybrid
 			{
 				foreach ($_SESSION['FILES'] as $k=>$v)
 				{
-					if ($v['uploaded'])
+					if ($v['uploaded'] ?? null)
 					{
 						$arrSet[$k] = StringUtil::stripRootDir($v['tmp_name']);
 					}

@@ -135,7 +135,7 @@ class BackendFile extends Backend
 		}
 
 		/** @var FileSelector $strClass */
-		$strClass = $GLOBALS['BE_FFL']['fileSelector'];
+		$strClass = $GLOBALS['BE_FFL']['fileSelector'] ?? null;
 
 		/** @var FileSelector $objFileTree */
 		$objFileTree = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$strTable]['fields'][$strField], $strField, $arrValues, $strField, $strTable, $objDca));

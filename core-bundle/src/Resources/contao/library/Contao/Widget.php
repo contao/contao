@@ -233,7 +233,7 @@ abstract class Widget extends Controller
 				$this->varValue = StringUtil::deserialize($varValue);
 
 				// Decrypt the value if it is encrypted
-				if ($this->arrConfiguration['encrypt'])
+				if ($this->arrConfiguration['encrypt'] ?? null)
 				{
 					$this->varValue = Encryption::decrypt($this->varValue);
 				}
@@ -1113,12 +1113,12 @@ abstract class Widget extends Controller
 	 */
 	protected function isChecked($arrOption)
 	{
-		if (empty($this->varValue) && empty($_POST) && $arrOption['default'])
+		if (empty($this->varValue) && empty($_POST) && ($arrOption['default'] ?? null))
 		{
 			return static::optionChecked(1, 1);
 		}
 
-		return static::optionChecked($arrOption['value'], $this->varValue);
+		return static::optionChecked($arrOption['value'] ?? null, $this->varValue);
 	}
 
 	/**
@@ -1130,12 +1130,12 @@ abstract class Widget extends Controller
 	 */
 	protected function isSelected($arrOption)
 	{
-		if (empty($this->varValue) && empty($_POST) && $arrOption['default'])
+		if (empty($this->varValue) && empty($_POST) && ($arrOption['default'] ?? null))
 		{
 			return static::optionSelected(1, 1);
 		}
 
-		return static::optionSelected($arrOption['value'], $this->varValue);
+		return static::optionSelected($arrOption['value'] ?? null, $this->varValue);
 	}
 
 	/**
@@ -1256,11 +1256,11 @@ abstract class Widget extends Controller
 		{
 			if (($arrData['inputType'] ?? null) == 'checkbox' || ($arrData['inputType'] ?? null) == 'checkboxWizard' || ($arrData['inputType'] ?? null) == 'radio' || ($arrData['inputType'] ?? null) == 'radioTable')
 			{
-				$arrAttributes['onclick'] = trim($arrAttributes['onclick'] . " Backend.autoSubmit('" . $strTable . "')");
+				$arrAttributes['onclick'] = trim(($arrAttributes['onclick'] ?? '') . " Backend.autoSubmit('" . $strTable . "')");
 			}
 			else
 			{
-				$arrAttributes['onchange'] = trim($arrAttributes['onchange'] . " Backend.autoSubmit('" . $strTable . "')");
+				$arrAttributes['onchange'] = trim(($arrAttributes['onchange'] ?? '') . " Backend.autoSubmit('" . $strTable . "')");
 			}
 		}
 
@@ -1318,7 +1318,7 @@ abstract class Widget extends Controller
 		// Add options
 		if (\is_array($arrData['options'] ?? null))
 		{
-			$blnIsAssociative = ($arrData['eval']['isAssociative'] ?? null) || ArrayUtil::isAssoc($arrData['options'] ?? array());
+			$blnIsAssociative = ($arrData['eval']['isAssociative'] ?? null) || ArrayUtil::isAssoc($arrData['options'] ?? null);
 			$blnUseReference = isset($arrData['reference']);
 
 			if (($arrData['eval']['includeBlankOption'] ?? null) && !($arrData['eval']['multiple'] ?? null))
@@ -1340,11 +1340,11 @@ abstract class Widget extends Controller
 						unset($unknown[$i]);
 					}
 
-					$arrAttributes['options'][] = array('value'=>$value, 'label'=>($blnUseReference ? ((($ref = (\is_array($arrData['reference'][$v]) ? $arrData['reference'][$v][0] : $arrData['reference'][$v])) != false) ? $ref : $v) : $v));
+					$arrAttributes['options'][] = array('value'=>$value, 'label'=>($blnUseReference && isset($arrData['reference'][$v]) ? ((($ref = (\is_array($arrData['reference'][$v]) ? $arrData['reference'][$v][0] : $arrData['reference'][$v])) != false) ? $ref : $v) : $v));
 					continue;
 				}
 
-				$key = $blnUseReference ? ((($ref = (\is_array($arrData['reference'][$k]) ? $arrData['reference'][$k][0] : $arrData['reference'][$k])) != false) ? $ref : $k) : $k;
+				$key = $blnUseReference && isset($arrData['reference'][$k]) ? ((($ref = (\is_array($arrData['reference'][$k]) ? $arrData['reference'][$k][0] : $arrData['reference'][$k])) != false) ? $ref : $k) : $k;
 				$blnIsAssoc = ArrayUtil::isAssoc($v);
 
 				foreach ($v as $kk=>$vv)
@@ -1356,14 +1356,14 @@ abstract class Widget extends Controller
 						unset($unknown[$i]);
 					}
 
-					$arrAttributes['options'][$key][] = array('value'=>$value, 'label'=>($blnUseReference ? ((($ref = (\is_array($arrData['reference'][$vv]) ? $arrData['reference'][$vv][0] : $arrData['reference'][$vv])) != false) ? $ref : $vv) : $vv));
+					$arrAttributes['options'][$key][] = array('value'=>$value, 'label'=>($blnUseReference && isset($arrData['reference'][$vv]) ? ((($ref = (\is_array($arrData['reference'][$vv]) ? $arrData['reference'][$vv][0] : $arrData['reference'][$vv])) != false) ? $ref : $vv) : $vv));
 				}
 			}
 
 			$arrAttributes['unknownOption'] = array_filter($unknown);
 		}
 
-		if (\is_array($arrAttributes['sql']) && !isset($arrAttributes['sql']['columnDefinition']))
+		if (\is_array($arrAttributes['sql'] ?? null) && !isset($arrAttributes['sql']['columnDefinition']))
 		{
 			if (!isset($arrAttributes['maxlength']) && isset($arrAttributes['sql']['length']))
 			{

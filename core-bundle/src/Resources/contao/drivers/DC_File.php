@@ -166,7 +166,10 @@ class DC_File extends DataContainer implements \editable
 
 				if (isset($legends[$k]))
 				{
-					list($key, $cls) = explode(':', $legends[$k]);
+					$chunks = explode(':', $legends[$k]);
+					$key = $chunks[0] ?? null;
+					$cls = $chunks[1] ?? null;
+
 					$legend = "\n" . '<legend onclick="AjaxRequest.toggleFieldset(this, \'' . $key . '\', \'' . $this->strTable . '\')">' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '</legend>';
 				}
 
@@ -365,7 +368,7 @@ class DC_File extends DataContainer implements \editable
 			return;
 		}
 
-		$arrData = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField];
+		$arrData = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField] ?? array();
 
 		// Make sure that checkbox values are boolean
 		if (($arrData['inputType'] ?? null) == 'checkbox' && !($arrData['eval']['multiple'] ?? null))

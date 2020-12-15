@@ -176,7 +176,7 @@ class ModuleListing extends Module
 		// Cast date fields to int (see #5609)
 		$isInt = function ($field)
 		{
-			return $GLOBALS['TL_DCA'][$this->list_table]['fields'][$field]['eval']['rgxp'] == 'date' || $GLOBALS['TL_DCA'][$this->list_table]['fields'][$field]['eval']['rgxp'] == 'time' || $GLOBALS['TL_DCA'][$this->list_table]['fields'][$field]['eval']['rgxp'] == 'datim';
+			return ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$field]['eval']['rgxp'] ?? null) == 'date' || ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$field]['eval']['rgxp'] ?? null) == 'time' || ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$field]['eval']['rgxp'] ?? null) == 'datim';
 		};
 
 		$order_by = Input::get('order_by');
@@ -467,19 +467,19 @@ class ModuleListing extends Module
 		// Reference
 		elseif (\is_array($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['reference'] ?? null))
 		{
-			$value = $GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['reference'][$value];
+			$value = $GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['reference'][$value] ?? null;
 		}
 
 		// Associative array
-		elseif (($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['eval']['isAssociative'] ?? null) || ArrayUtil::isAssoc($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['options'] ?? array()))
+		elseif (($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['eval']['isAssociative'] ?? null) || ArrayUtil::isAssoc($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['options'] ?? null))
 		{
 			if ($blnListSingle)
 			{
-				$value = $GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['options'][$value];
+				$value = $GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['options'][$value] ?? null;
 			}
 			else
 			{
-				$value = '<span class="value">[' . $value . ']</span> ' . $GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['options'][$value];
+				$value = '<span class="value">[' . $value . ']</span> ' . ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['options'][$value] ?? null);
 			}
 		}
 

@@ -222,7 +222,7 @@ abstract class DataContainer extends Backend
 	 */
 	protected function row($strPalette=null)
 	{
-		$arrData = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField];
+		$arrData = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField] ?? array();
 
 		// Check if the field is excluded
 		if ($arrData['exclude'] ?? null)
@@ -241,7 +241,7 @@ abstract class DataContainer extends Backend
 		// Add the help wizard
 		if ($arrData['eval']['helpwizard'] ?? null)
 		{
-			$xlabel .= ' <a href="contao/help.php?table=' . $this->strTable . '&amp;field=' . $this->strField . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['helpWizard']) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $arrData['label'][0])) . '\',\'url\':this.href});return false">' . Image::getHtml('about.svg', $GLOBALS['TL_LANG']['MSC']['helpWizard']) . '</a>';
+			$xlabel .= ' <a href="contao/help.php?table=' . $this->strTable . '&amp;field=' . $this->strField . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['helpWizard']) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $arrData['label'][0] ?? '')) . '\',\'url\':this.href});return false">' . Image::getHtml('about.svg', $GLOBALS['TL_LANG']['MSC']['helpWizard']) . '</a>';
 		}
 
 		// Add a custom xlabel
@@ -563,7 +563,9 @@ abstract class DataContainer extends Backend
 		// Replace the textarea with an RTE instance
 		if (!empty($arrData['eval']['rte']))
 		{
-			list ($file, $type) = explode('|', $arrData['eval']['rte'], 2);
+			$chunks = explode('|', $arrData['eval']['rte'], 2);
+			$file = $chunks[0] ?? null;
+			$type = $chunks[1] ?? null;
 
 			$fileBrowserTypes = array();
 			$pickerBuilder = System::getContainer()->get('contao.picker.builder');
@@ -680,7 +682,7 @@ abstract class DataContainer extends Backend
 	 */
 	public function help($strClass='')
 	{
-		$return = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][1];
+		$return = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][1] ?? null;
 
 		if (!$return || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'] ?? null) == 'password' || !Config::get('showHelp'))
 		{
@@ -798,16 +800,16 @@ abstract class DataContainer extends Backend
 			}
 
 			// Call a custom function instead of using the default button
-			if (\is_array($v['button_callback']))
+			if (\is_array($v['button_callback'] ?? null))
 			{
 				$this->import($v['button_callback'][0]);
-				$return .= $this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($arrRow, $v['href'], $label, $title, $v['icon'], $attributes, $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext, $this);
+				$return .= $this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($arrRow, $v['href'] ?? null, $label, $title, $v['icon'] ?? null, $attributes, $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext, $this);
 				continue;
 			}
 
-			if (\is_callable($v['button_callback']))
+			if (\is_callable($v['button_callback'] ?? null))
 			{
-				$return .= $v['button_callback']($arrRow, $v['href'], $label, $title, $v['icon'], $attributes, $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext, $this);
+				$return .= $v['button_callback']($arrRow, $v['href'] ?? null, $label, $title, $v['icon'] ?? null, $attributes, $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext, $this);
 				continue;
 			}
 
@@ -849,11 +851,11 @@ abstract class DataContainer extends Backend
 
 			foreach ($arrDirections as $dir)
 			{
-				$label = $GLOBALS['TL_LANG'][$strTable][$dir][0] ?: $dir;
-				$title = $GLOBALS['TL_LANG'][$strTable][$dir][1] ?: $dir;
+				$label = $GLOBALS['TL_LANG'][$strTable][$dir][0] ?? $dir;
+				$title = $GLOBALS['TL_LANG'][$strTable][$dir][1] ?? $dir;
 
 				$label = Image::getHtml($dir . '.svg', $label);
-				$href = $v['href'] ?: '&amp;act=move';
+				$href = $v['href'] ?? '&amp;act=move';
 
 				if ($dir == 'up')
 				{
@@ -885,7 +887,7 @@ abstract class DataContainer extends Backend
 
 		foreach ($GLOBALS['TL_DCA'][$this->strTable]['list']['global_operations'] as $k=>$v)
 		{
-			if (!$v['showOnSelect'] && Input::get('act') == 'select')
+			if (!($v['showOnSelect'] ?? null) && Input::get('act') == 'select')
 			{
 				continue;
 			}
@@ -896,7 +898,7 @@ abstract class DataContainer extends Backend
 			$attributes = !empty($v['attributes']) ? ' ' . ltrim($v['attributes']) : '';
 
 			// Custom icon (see #5541)
-			if ($v['icon'])
+			if ($v['icon'] ?? null)
 			{
 				$v['class'] = trim($v['class'] . ' header_icon');
 
@@ -920,14 +922,14 @@ abstract class DataContainer extends Backend
 			}
 
 			// Call a custom function instead of using the default button
-			if (\is_array($v['button_callback']))
+			if (\is_array($v['button_callback'] ?? null))
 			{
 				$this->import($v['button_callback'][0]);
 				$return .= $this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($v['href'], $label, $title, $v['class'], $attributes, $this->strTable, $this->root);
 				continue;
 			}
 
-			if (\is_callable($v['button_callback']))
+			if (\is_callable($v['button_callback'] ?? null))
 			{
 				$return .= $v['button_callback']($v['href'], $label, $title, $v['class'], $attributes, $this->strTable, $this->root);
 				continue;
@@ -1012,14 +1014,14 @@ abstract class DataContainer extends Backend
 			}
 
 			// Call a custom function instead of using the default button
-			if (\is_array($v['button_callback']))
+			if (\is_array($v['button_callback'] ?? null))
 			{
 				$this->import($v['button_callback'][0]);
 				$return .= $this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($arrRow, $v['href'], $label, $title, $v['icon'], $attributes, $strPtable, array(), null, false, null, null, $this);
 				continue;
 			}
 
-			if (\is_callable($v['button_callback']))
+			if (\is_callable($v['button_callback'] ?? null))
 			{
 				$return .= $v['button_callback']($arrRow, $v['href'], $label, $title, $v['icon'], $attributes, $strPtable, array(), null, false, null, null, $this);
 				continue;
@@ -1036,7 +1038,7 @@ abstract class DataContainer extends Backend
 					$href = $this->addToUrl($v['href'] . '&amp;id=' . $arrRow['id'] . '&amp;popup=1');
 				}
 
-				$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", sprintf(\is_array($GLOBALS['TL_LANG'][$strPtable]['show']) ? $GLOBALS['TL_LANG'][$strPtable]['show'][1] : $GLOBALS['TL_LANG'][$strPtable]['show'], $arrRow['id']))) . '\',\'url\':this.href});return false"' . $attributes . '>' . Image::getHtml($v['icon'], $label) . '</a> ';
+				$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", sprintf(\is_array($GLOBALS['TL_LANG'][$strPtable]['show'] ?? null) ? $GLOBALS['TL_LANG'][$strPtable]['show'][1] : ($GLOBALS['TL_LANG'][$strPtable]['show'] ?? ''), $arrRow['id']))) . '\',\'url\':this.href});return false"' . $attributes . '>' . Image::getHtml($v['icon'], $label) . '</a> ';
 			}
 			else
 			{

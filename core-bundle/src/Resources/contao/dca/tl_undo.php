@@ -194,7 +194,7 @@ class tl_undo extends Backend
 					}
 					else
 					{
-						$label = is_array($GLOBALS['TL_LANG']['MSC'][$i]) ? $GLOBALS['TL_LANG']['MSC'][$i][0] : $GLOBALS['TL_LANG']['MSC'][$i];
+						$label = is_array($GLOBALS['TL_LANG']['MSC'][$i] ?? null) ? $GLOBALS['TL_LANG']['MSC'][$i][0] : ($GLOBALS['TL_LANG']['MSC'][$i] ?? null);
 					}
 
 					if (!$label)

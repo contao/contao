@@ -125,7 +125,7 @@ class BackendPage extends Backend
 		}
 
 		/** @var PageSelector $strClass */
-		$strClass = $GLOBALS['BE_FFL']['pageSelector'];
+		$strClass = $GLOBALS['BE_FFL']['pageSelector'] ?? null;
 
 		/** @var PageSelector $objPageTree */
 		$objPageTree = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$strTable]['fields'][$strField], $strField, $arrValues, $strField, $strTable, $objDca));

@@ -733,7 +733,7 @@ class Versions extends Controller
 			}
 
 			// Skip deleted files (see #8480)
-			if ($v['fromTable'] == 'tl_files' && $arrVersions[$k]['deleted'])
+			if (($v['fromTable'] ?? null) == 'tl_files' && ($arrVersions[$k]['deleted'] ?? null))
 			{
 				--$intCount;
 				unset($arrVersions[$k]);

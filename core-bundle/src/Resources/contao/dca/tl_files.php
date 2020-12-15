@@ -547,7 +547,7 @@ class tl_files extends Backend
 
 		$arrData = StringUtil::deserialize($objData->data);
 
-		if (!is_array($arrData))
+		if (!is_array($arrData) || !isset($arrData['content']))
 		{
 			return;
 		}
@@ -875,7 +875,7 @@ class tl_files extends Backend
 			}
 		}
 
-		$class = $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['tl_class'] . ' cbx';
+		$class = ($GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['tl_class'] ?? '') . ' cbx';
 
 		if (in_array(Input::get('act'), array('editAll', 'overrideAll')))
 		{
@@ -960,7 +960,7 @@ class tl_files extends Backend
 			}
 		}
 
-		$class = $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['tl_class'] . ' cbx';
+		$class = ($GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['tl_class'] ?? '') . ' cbx';
 
 		if (in_array(Input::get('act'), array('editAll', 'overrideAll')))
 		{

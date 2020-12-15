@@ -45,7 +45,7 @@ class QueryBuilder
 			foreach ($objBase->getRelations() as $strKey=>$arrConfig)
 			{
 				// Automatically join the single-relation records
-				if ($arrConfig['load'] == 'eager' || $arrOptions['eager'])
+				if ($arrConfig['load'] == 'eager' || ($arrOptions['eager'] ?? null))
 				{
 					if ($arrConfig['type'] == 'hasOne' || $arrConfig['type'] == 'belongsTo')
 					{
@@ -105,7 +105,7 @@ class QueryBuilder
 	{
 		$strQuery = "SELECT COUNT(*) AS count FROM " . $arrOptions['table'];
 
-		if ($arrOptions['column'] !== null)
+		if (isset($arrOptions['column']))
 		{
 			$strQuery .= " WHERE " . (\is_array($arrOptions['column']) ? implode(" AND ", $arrOptions['column']) : $arrOptions['table'] . '.' . Database::quoteIdentifier($arrOptions['column']) . "=?");
 		}

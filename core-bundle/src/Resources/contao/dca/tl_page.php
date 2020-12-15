@@ -1586,7 +1586,7 @@ class tl_page extends Backend
 			$objSession = System::getContainer()->get('session');
 
 			$session = $objSession->all();
-			$ids = $session['CURRENT']['IDS'];
+			$ids = $session['CURRENT']['IDS'] ?? array();
 
 			foreach ($ids as $id)
 			{

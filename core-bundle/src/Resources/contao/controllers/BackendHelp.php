@@ -60,23 +60,23 @@ class BackendHelp extends Backend
 		$objTemplate->rows = array();
 		$objTemplate->explanation = '';
 
-		$arrData = $GLOBALS['TL_DCA'][$table]['fields'][$field];
+		$arrData = $GLOBALS['TL_DCA'][$table]['fields'][$field] ?? array();
 
 		// Add the reference
 		if (!empty($arrData['reference']))
 		{
 			$rows = array();
 
-			if (\is_array($arrData['options']))
+			if (\is_array($arrData['options'] ?? null))
 			{
 				$options = $arrData['options'];
 			}
-			elseif (\is_array($arrData['options_callback']))
+			elseif (\is_array($arrData['options_callback'] ?? null))
 			{
 				$this->import($arrData['options_callback'][0]);
 				$options = $this->{$arrData['options_callback'][0]}->{$arrData['options_callback'][1]}(new DC_Table($table));
 			}
-			elseif (\is_callable($arrData['options_callback']))
+			elseif (\is_callable($arrData['options_callback'] ?? null))
 			{
 				$options = $arrData['options_callback']();
 			}
@@ -105,20 +105,20 @@ class BackendHelp extends Backend
 
 					foreach ($option as $opt)
 					{
-						$rows[] = $arrData['reference'][$opt];
+						$rows[] = $arrData['reference'][$opt] ?? null;
 					}
 				}
 				elseif (isset($arrData['reference'][$key]))
 				{
 					$rows[] = $arrData['reference'][$key];
 				}
-				elseif (\is_array($arrData['reference'][$option]))
+				elseif (\is_array($arrData['reference'][$option] ?? null))
 				{
 					$rows[] = $arrData['reference'][$option];
 				}
 				else
 				{
-					$rows[] = array('headspan', $arrData['reference'][$option]);
+					$rows[] = array('headspan', $arrData['reference'][$option] ?? null);
 				}
 			}
 
@@ -147,7 +147,7 @@ class BackendHelp extends Backend
 		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['helpWizardTitle']);
 		$objTemplate->host = Backend::getDecodedHostname();
 		$objTemplate->charset = Config::get('characterSet');
-		$objTemplate->headline = $arrData['label'][0] ?: $field;
+		$objTemplate->headline = $arrData['label'][0] ?? $field;
 		$objTemplate->helpWizard = $GLOBALS['TL_LANG']['MSC']['helpWizard'];
 
 		return $objTemplate->getResponse();
