@@ -24,10 +24,9 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
     public function testAnnotatedCallbacks(): void
     {
         $listener = $this->createListener();
-
         $annotationReader = new AnnotationReader();
 
-        /** @var callback $annotation */
+        /** @var Callback $annotation */
         $annotation = $annotationReader->getClassAnnotation(new \ReflectionClass($listener), Callback::class);
 
         $this->assertSame('tl_settings', $annotation->table);

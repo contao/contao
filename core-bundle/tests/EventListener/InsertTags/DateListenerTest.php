@@ -28,7 +28,6 @@ class DateListenerTest extends TestCase
     public function testAnnotatedCallbacks(): void
     {
         $listener = new DateListener($this->getFramework(), new RequestStack());
-
         $annotationReader = new AnnotationReader();
 
         /** @var Hook $annotation */
