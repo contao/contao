@@ -529,7 +529,7 @@ class PageRegular extends Frontend
 		}
 
 		// Make sure TL_USER_CSS is set
-		if (!\is_array($GLOBALS['TL_USER_CSS'] ?? null))
+		if (!isset($GLOBALS['TL_USER_CSS']) || !\is_array($GLOBALS['TL_USER_CSS']))
 		{
 			$GLOBALS['TL_USER_CSS'] = array();
 		}

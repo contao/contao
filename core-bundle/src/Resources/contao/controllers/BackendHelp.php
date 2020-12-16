@@ -131,13 +131,16 @@ class BackendHelp extends Backend
 			System::loadLanguageFile('explain');
 			$key = $arrData['explanation'];
 
-			if (!\is_array($GLOBALS['TL_LANG']['XPL'][$key]))
+			if (isset($GLOBALS['TL_LANG']['XPL'][$key]))
 			{
-				$objTemplate->explanation = trim($GLOBALS['TL_LANG']['XPL'][$key]);
-			}
-			else
-			{
-				$objTemplate->rows = $GLOBALS['TL_LANG']['XPL'][$key];
+				if (\is_array($GLOBALS['TL_LANG']['XPL'][$key]))
+				{
+					$objTemplate->rows = $GLOBALS['TL_LANG']['XPL'][$key];
+				}
+				else
+				{
+					$objTemplate->explanation = trim($GLOBALS['TL_LANG']['XPL'][$key]);
+				}
 			}
 		}
 
