@@ -34,28 +34,32 @@ abstract class DoctrineTestCase extends TestCase
     /**
      * Mocks a Doctrine registry with database connection.
      *
+     * @param Connection|MockObject|null $connection
+     *
      * @return Registry&MockObject
      */
-    protected function mockDoctrineRegistry(Connection $connection = null): Registry
+    protected function mockDoctrineRegistry($connection = null): Registry
     {
         if (null === $connection) {
             $connection = $this->createMock(Connection::class);
         }
 
-        $connection
-            ->method('getDatabasePlatform')
-            ->willReturn(new MySqlPlatform())
-        ;
+        if ($connection instanceof MockObject) {
+            $connection
+                ->method('getDatabasePlatform')
+                ->willReturn(new MySqlPlatform())
+            ;
 
-        $connection
-            ->method('getParams')
-            ->willReturn(['defaultTableOptions' => $this->getDefaultTableOptions()])
-        ;
+            $connection
+                ->method('getParams')
+                ->willReturn(['defaultTableOptions' => $this->getDefaultTableOptions()])
+            ;
 
-        $connection
-            ->method('getConfiguration')
-            ->willReturn($this->createMock(Configuration::class))
-        ;
+            $connection
+                ->method('getConfiguration')
+                ->willReturn($this->createMock(Configuration::class))
+            ;
+        }
 
         $registry = $this->createMock(Registry::class);
         $registry
@@ -93,7 +97,10 @@ abstract class DoctrineTestCase extends TestCase
         return $framework;
     }
 
-    protected function getDcaSchemaProvider(array $dca = [], array $file = [], Connection $connection = null): DcaSchemaProvider
+    /**
+     * @param Connection|MockObject|null $connection
+     */
+    protected function getDcaSchemaProvider(array $dca = [], array $file = [], $connection = null): DcaSchemaProvider
     {
         return new DcaSchemaProvider(
             $this->mockContaoFrameworkWithInstaller($dca, $file),
