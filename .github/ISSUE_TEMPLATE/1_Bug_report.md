@@ -5,7 +5,7 @@ about: Report errors and problems
 
 **Affected version(s)**
 
-Contao 4.4 or Contao 4.9?
+Contao 4.9 or Contao 4.10?
 
 **Description**
 
