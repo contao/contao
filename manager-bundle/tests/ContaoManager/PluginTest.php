@@ -896,7 +896,11 @@ class PluginTest extends ContaoTestCase
 
         $extensionConfig = $plugin->getExtensionConfig('doctrine', [], $this->getContainer());
 
-        $this->assertEmpty($extensionConfig);
+        // Ignore dbal entry
+        unset($extensionConfig[0]['dbal']);
+
+        $this->assertCount(1, $extensionConfig);
+        $this->assertEmpty($extensionConfig[0]);
     }
 
     /**
@@ -915,6 +919,17 @@ class PluginTest extends ContaoTestCase
                     ],
                 ],
                 'orm' => $ormConfig,
+            ],
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'options' => [
+                                \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
+                            ],
+                        ],
+                    ],
+                ],
             ],
         ];
 
