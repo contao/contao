@@ -87,7 +87,7 @@ class PageRegular extends Frontend
 
 		// Set the layout template and template group
 		$objPage->template = $objLayout->template ?: 'fe_page';
-		$objPage->templateGroup = $objTheme->templates;
+		$objPage->templateGroup = $objTheme->templates ?? null;
 
 		// Minify the markup
 		$objPage->minifyMarkup = $objLayout->minifyMarkup;
