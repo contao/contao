@@ -17,11 +17,11 @@ use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\Doctrine\DoctrineTestCase;
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
-use Doctrine\DBAL\Statement;
 
 class DcaSchemaProviderTest extends DoctrineTestCase
 {
@@ -314,14 +314,8 @@ class DcaSchemaProviderTest extends DoctrineTestCase
             ],
         ];
 
-        $statement = $this->createMock(Statement::class);
-        $statement
-            ->method('fetch')
-            ->willReturn((object) ['Collation' => null])
-        ;
-
         $schema = $this->getSchema();
-        $this->getDcaSchemaProvider($dca, [], $statement)->appendToSchema($schema);
+        $this->getDcaSchemaProvider($dca)->appendToSchema($schema);
         $table = $schema->getTable('tl_member');
 
         $this->assertTrue($table->hasIndex('PRIMARY'));
@@ -360,18 +354,35 @@ class DcaSchemaProviderTest extends DoctrineTestCase
             ],
         ];
 
-        $statement = $this->createMock(Statement::class);
-        $statement
-            ->method('fetch')
-            ->willReturnOnConsecutiveCalls(
-                ['Value' => $largePrefixes],
-                ['Value' => $filePerTable],
-                ['Value' => $fileFormat]
+        $connection = $this->createMock(Connection::class);
+
+        $connection
+            ->method('fetchAssociative')
+            ->willReturnCallback(
+                static function ($query) use ($fileFormat, $filePerTable, $largePrefixes) {
+                    $map = [
+                        "SHOW VARIABLES LIKE 'innodb_large_prefix'" => $largePrefixes,
+                        "SHOW VARIABLES LIKE 'innodb_file_per_table'" => $filePerTable,
+                        "SHOW VARIABLES LIKE 'innodb_file_format'" => $fileFormat,
+                    ];
+
+                    if (\array_key_exists($query, $map)) {
+                        return ['Value' => $map[$query]];
+                    }
+
+                    throw new \RuntimeException("Test does not mirror actual query, got: '$query'");
+                }
             )
         ;
 
+        $connection
+            ->method('fetchOne')
+            ->with('SELECT @@version')
+            ->willReturn($version)
+        ;
+
         $schema = $this->getSchema();
-        $this->getDcaSchemaProvider($dca, [], $statement)->appendToSchema($schema);
+        $this->getDcaSchemaProvider($dca, [], $connection)->appendToSchema($schema);
         $table = $schema->getTable('tl_files');
 
         $this->assertTrue($table->hasColumn('name'));
@@ -592,14 +603,21 @@ class DcaSchemaProviderTest extends DoctrineTestCase
             ],
         ];
 
-        $statement = $this->createMock(Statement::class);
-        $statement
-            ->method('fetch')
-            ->willReturn((object) ['Value' => 'On'])
+        $connection = $this->createMock(Connection::class);
+
+        $connection
+            ->method('fetchAssociative')
+            ->willReturn(['Value' => null])
+        ;
+
+        $connection
+            ->method('fetchOne')
+            ->with('SELECT @@version')
+            ->willReturn('foo')
         ;
 
         $schema = $this->getSchema();
-        $this->getDcaSchemaProvider($dca, [], $statement)->appendToSchema($schema);
+        $this->getDcaSchemaProvider($dca, [], $connection)->appendToSchema($schema);
         $table = $schema->getTable('tl_search');
 
         $this->assertTrue($table->hasColumn('text'));

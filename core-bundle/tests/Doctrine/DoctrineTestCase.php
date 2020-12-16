@@ -23,7 +23,6 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\SchemaConfig;
-use Doctrine\DBAL\Statement;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
@@ -37,17 +36,15 @@ abstract class DoctrineTestCase extends TestCase
      *
      * @return Registry&MockObject
      */
-    protected function mockDoctrineRegistry(Statement $statement = null): Registry
+    protected function mockDoctrineRegistry(Connection $connection = null): Registry
     {
-        $connection = $this->createMock(Connection::class);
+        if (null === $connection) {
+            $connection = $this->createMock(Connection::class);
+        }
+
         $connection
             ->method('getDatabasePlatform')
             ->willReturn(new MySqlPlatform())
-        ;
-
-        $connection
-            ->method('executeQuery')
-            ->willReturn($statement)
         ;
 
         $connection
@@ -96,11 +93,11 @@ abstract class DoctrineTestCase extends TestCase
         return $framework;
     }
 
-    protected function getDcaSchemaProvider(array $dca = [], array $file = [], Statement $statement = null): DcaSchemaProvider
+    protected function getDcaSchemaProvider(array $dca = [], array $file = [], Connection $connection = null): DcaSchemaProvider
     {
         return new DcaSchemaProvider(
             $this->mockContaoFrameworkWithInstaller($dca, $file),
-            $this->mockDoctrineRegistry($statement),
+            $this->mockDoctrineRegistry($connection),
             $this->createMock(SchemaProvider::class)
         );
     }
