@@ -311,7 +311,14 @@ class ModulePersonalData extends Module
 			$temp = $objWidget->parse();
 
 			$this->Template->fields .= $temp;
+
+			if (!isset($arrFields[$strGroup][$field]))
+			{
+				$arrFields[$strGroup][$field] = '';
+			}
+
 			$arrFields[$strGroup][$field] .= $temp;
+
 			++$row;
 		}
 

@@ -156,8 +156,8 @@ abstract class ModuleNews extends Module
 		$objTemplate->timestamp = $objArticle->date;
 		$objTemplate->author = $arrMeta['author'];
 		$objTemplate->datetime = date('Y-m-d\TH:i:sP', $objArticle->date);
-
 		$objTemplate->addImage = false;
+		$objTemplate->addBefore = false;
 
 		// Add an image
 		if ($objArticle->addImage && $objArticle->singleSRC)

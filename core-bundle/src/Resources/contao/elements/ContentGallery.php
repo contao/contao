@@ -269,6 +269,7 @@ class ContentGallery extends ContentElement
 				// Empty cell
 				if (($j+$i) >= $limit || !\is_array($images[($i+$j)]))
 				{
+					$objCell->addImage = false;
 					$objCell->colWidth = $colwidth . '%';
 					$objCell->class = 'col_' . $j . $class_td;
 				}
