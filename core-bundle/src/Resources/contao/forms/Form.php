@@ -596,11 +596,11 @@ class Form extends Hybrid
 		}
 
 		$arrMessageBox = array('TL_ERROR', 'TL_CONFIRM', 'TL_INFO');
-		$_SESSION['FORM_DATA'] = \is_array($_SESSION['FORM_DATA']) ? $_SESSION['FORM_DATA'] : array();
+		$_SESSION['FORM_DATA'] = \is_array($_SESSION['FORM_DATA'] ?? null) ? $_SESSION['FORM_DATA'] : array();
 
 		foreach ($arrMessageBox as $tl)
 		{
-			if (\is_array($_SESSION[$formId][$tl]))
+			if (\is_array($_SESSION[$formId][$tl] ?? null))
 			{
 				$_SESSION[$formId][$tl] = array_unique($_SESSION[$formId][$tl]);
 
