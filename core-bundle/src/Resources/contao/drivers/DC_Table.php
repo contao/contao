@@ -3559,7 +3559,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			$label = $GLOBALS['TL_LANG']['MOD']['page'][0];
 		}
 
-		$icon = $GLOBALS['TL_DCA'][$table]['list']['sorting']['icon'] ?? 'pagemounts.svg';
+		$icon = !empty($GLOBALS['TL_DCA'][$table]['list']['sorting']['icon']) ? $GLOBALS['TL_DCA'][$table]['list']['sorting']['icon'] : 'pagemounts.svg';
 		$label = Image::getHtml($icon) . ' <label>' . $label . '</label>';
 
 		// Check the default labels (see #509)
@@ -4975,7 +4975,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				}
 
 				// Shorten the label it if it is too long
-				$label = vsprintf($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['format'] ?? '%s', $args);
+				$label = vsprintf(!empty($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['format']) ? $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['format'] : '%s', $args);
 
 				if (($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['maxCharacters'] ?? null) > 0 && $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['maxCharacters'] < \strlen(strip_tags($label)))
 				{
@@ -5916,7 +5916,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 					// Associative array
 					elseif (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['isAssociative'] ?? null) || ArrayUtil::isAssoc($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['options'] ?? null))
 					{
-						$option_label = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['options'][$vv] ?? '-';
+						$option_label = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['options'][$vv] ?? null;
 					}
 
 					// No empty options allowed

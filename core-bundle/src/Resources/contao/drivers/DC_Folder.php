@@ -442,7 +442,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			$label = $GLOBALS['TL_LANG']['MOD']['files'][0];
 		}
 
-		$icon = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['icon'] ?? 'filemounts.svg';
+		$icon = !empty($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['icon']) ? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['icon'] : 'filemounts.svg';
 		$label = Image::getHtml($icon) . ' <label>' . $label . '</label>';
 
 		// Build the tree

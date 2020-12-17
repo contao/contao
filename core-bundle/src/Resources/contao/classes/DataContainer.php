@@ -856,11 +856,11 @@ abstract class DataContainer extends Backend
 
 			foreach ($arrDirections as $dir)
 			{
-				$label = $GLOBALS['TL_LANG'][$strTable][$dir][0] ?? $dir;
-				$title = $GLOBALS['TL_LANG'][$strTable][$dir][1] ?? $dir;
+				$label = !empty($GLOBALS['TL_LANG'][$strTable][$dir][0]) ? $GLOBALS['TL_LANG'][$strTable][$dir][0] : $dir;
+				$title = !empty($GLOBALS['TL_LANG'][$strTable][$dir][1]) ? $GLOBALS['TL_LANG'][$strTable][$dir][1] : $dir;
 
 				$label = Image::getHtml($dir . '.svg', $label);
-				$href = $v['href'] ?? '&amp;act=move';
+				$href = !empty($v['href']) ? $v['href'] : '&amp;act=move';
 
 				if ($dir == 'up')
 				{
