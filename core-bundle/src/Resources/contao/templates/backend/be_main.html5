@@ -25,15 +25,6 @@
       echo $objCombiner->getCombinedFile();
     ?>">
     <?= $this->stylesheets ?>
-    <style>
-      :root {
-        <?php if (!empty($this->themeConfig['brand']['color'])): ?>--brand-color:<?= $this->themeConfig['brand']['color'] ?>; <?php endif; ?>
-        <?php if (true === $this->themeConfig['header']['invert']): ?>--header-invert:1; <?php endif; ?>
-        <?php if (!empty($this->themeConfig['environment']['background_color'])): ?>--environment-background-color:<?= $this->themeConfig['environment']['background_color'] ?>; <?php endif; ?>
-        <?php if (!empty($this->themeConfig['environment']['text_color'])): ?>--environment-text-color:<?= $this->themeConfig['environment']['text_color'] ?>; <?php endif; ?>
-        <?php if (!empty($this->themeConfig['main']['background_color'])): ?>--main-background-color:<?= $this->themeConfig['main']['background_color'] ?>; <?php endif; ?>
-      }
-    </style>
 
     <script><?= $this->getLocaleString() ?></script>
     <script src="<?php
@@ -53,20 +44,13 @@
   <?php $this->endblock(); ?>
 
 </head>
-<body id="top" class="<?= $this->ua ?><?php if ($this->isPopup): ?> popup<?php endif; ?><?php if (!empty($this->themeConfig['css_classes'])): ?> <?= implode(' ', $this->themeConfig['css_classes']) ?><?php endif; ?>">
+<body id="top" class="<?= $this->ua ?><?php if ($this->isPopup): ?> popup<?php endif; ?>"<?= $this->dataAttributes ?>>
 
   <?php $this->block('header'); ?>
     <?php if (!$this->isPopup): ?>
       <header id="header">
         <div class="inner">
-          <div class="header-brand">
-            <h1><a href="<?= $this->route('contao_backend') ?>" accesskey="h" id="home" title="<?= $this->home ?>">
-                <span class="title">Contao</span><?php if (!empty($this->themeConfig['header']['title'])): ?><span class="custom-title"><?= $this->themeConfig['header']['title'] ?></span><?php endif; ?>
-              </a></h1>
-            <?php if (!empty($this->themeConfig['environment']['title'])): ?>
-              <div class="environment"><?= $this->themeConfig['environment']['title'] ?></div>
-            <?php endif; ?>
-          </div>
+          <h1><a href="<?= $this->route('contao_backend') ?>" accesskey="h" id="home" title="<?= $this->home ?>"><span class="app-title">Contao</span><?php if (!empty($this->badgeTitle)): ?><span class="badge-title"><?= $this->badgeTitle ?></span><?php endif; ?></a></h1>
           <?= $this->headerMenu ?>
         </div>
       </header>

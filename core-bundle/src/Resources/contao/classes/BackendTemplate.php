@@ -19,12 +19,16 @@ use Symfony\Component\HttpFoundation\Response;
  * @property array  $javascripts
  * @property array  $stylesheets
  * @property string $mootools
- * @property array  $themeConfig
+ * @property string $dataAttributes
+ * @property string $badgeTitle
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class BackendTemplate extends Template
 {
+	public $dataAttributes = '';
+	public $badgeTitle = '';
+
 	/**
 	 * Add a hook to modify the template output
 	 *
@@ -74,6 +78,9 @@ class BackendTemplate extends Template
 		{
 			$this->ua .= ' fullscreen';
 		}
+
+		// Add backend config to the template @see #403
+		$this->addBackendConfig();
 
 		// Style sheets
 		if (!empty($GLOBALS['TL_CSS']) && \is_array($GLOBALS['TL_CSS']))
@@ -150,9 +157,6 @@ class BackendTemplate extends Template
 			$this->mootools .= $strMootools;
 		}
 
-		// Add theme config to the template @see #403
-		$this->addThemeConfig();
-
 		$strBuffer = $this->parse();
 		$strBuffer = static::replaceOldBePaths($strBuffer);
 
@@ -227,30 +231,44 @@ class BackendTemplate extends Template
 			. '});';
 	}
 
-	private function addThemeConfig(): void
+	private function addBackendConfig(): void
 	{
 		$container = System::getContainer();
 
-		if (!$container->hasParameter('contao.theme'))
+		if (!$container->hasParameter('contao.backend'))
 		{
-			$this->themeConfig = null;
-
 			return;
 		}
 
-		$themeConfig = $container->getParameter('contao.theme');
+		$backendConfig = $container->getParameter('contao.backend');
 
-		if (true === $themeConfig['brand']['whitelabel'])
+		if (!empty($backendConfig['attributes']) && \is_array($backendConfig['attributes']))
 		{
-			$themeConfig['css_classes'][] = 'brand--whitelabel';
+			foreach ($backendConfig['attributes'] as $key => $value)
+			{
+				$this->dataAttributes .= sprintf(' data-%s="%s"', $key, $value);
+			}
 		}
 
-		if (!empty($themeConfig['environment']['title']))
+		if (!empty($backendConfig['custom_css']) && \is_array($backendConfig['custom_css']))
 		{
-			$themeConfig['css_classes'][] = 'environment--' . StringUtil::standardize($themeConfig['environment']['title']);
+			if (!\is_array($GLOBALS['TL_CSS']))
+			{
+				$GLOBALS['TL_CSS'] = array();
+			}
+			$GLOBALS['TL_CSS'] = array_merge($GLOBALS['TL_CSS'], $backendConfig['custom_css']);
 		}
 
-		$this->themeConfig = $themeConfig;
+		if (!empty($backendConfig['custom_js']) && \is_array($backendConfig['custom_js']))
+		{
+			if (!\is_array($GLOBALS['TL_JAVASCRIPT']))
+			{
+				$GLOBALS['TL_JAVASCRIPT'] = array();
+			}
+			$GLOBALS['TL_JAVASCRIPT'] = array_merge($GLOBALS['TL_JAVASCRIPT'], $backendConfig['custom_js']);
+		}
+
+		$this->badgeTitle = $backendConfig['badge_title'];
 	}
 }
 

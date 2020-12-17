@@ -9,10 +9,6 @@
 /* Body */
 body {
 	background:#eaeaec url("icons/contao.svg") center 4.5em no-repeat;
-	background-color:var(--main-background-color);
-}
-body.brand--whitelabel {
-	background-image:none;
 }
 
 /* Container */
@@ -43,21 +39,6 @@ body.brand--whitelabel {
 }
 .js #javascript {
 	display:none;
-}
-
-/* Brand header */
-#container .header-brand {
-	display:flex;
-	align-items:flex-start;
-	background:#f47c00;
-	background:var(--brand-color);
-}
-#container .header-brand h1 {
-	margin-bottom:0;
-	padding:13px;
-	color:#fff;
-	font-weight: 400;
-	filter:invert(var(--header-invert));
 }
 
 /* Login form */
