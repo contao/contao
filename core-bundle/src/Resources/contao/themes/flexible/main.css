@@ -35,9 +35,13 @@ body:not(.fullscreen) #header .inner {
 }
 #header h1 a {
 	display:block;
+	height:16px;
 	padding:12px 12px 12px 43px;
 	background:url("icons/logo.svg") no-repeat 10px center;
 	font-weight:400;
+}
+#header h1 a .app-title {
+	float: left;
 }
 @media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
 	#header h1 a {
@@ -2176,7 +2180,6 @@ fieldset.collapsed > legend {
 	}
 	#header h1 a {
 		min-width:22px;
-		height:16px;
 		padding:12px;
 	}
 	#header h1 a .app-title {

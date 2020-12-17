@@ -50,7 +50,7 @@
     <?php if (!$this->isPopup): ?>
       <header id="header">
         <div class="inner">
-          <h1><a href="<?= $this->route('contao_backend') ?>" accesskey="h" id="home" title="<?= $this->home ?>"><span class="app-title">Contao</span><?php if (!empty($this->badgeTitle)): ?><span class="badge-title"><?= $this->badgeTitle ?></span><?php endif; ?></a></h1>
+          <h1><a href="<?= $this->route('contao_backend') ?>" accesskey="h" id="home" title="<?= $this->home ?>"><?php if (!empty($this->badgeTitle)): ?><span class="badge-title"><?= $this->badgeTitle ?></span><?php endif; ?><span class="app-title">Contao</span></a></h1>
           <?= $this->headerMenu ?>
         </div>
       </header>
