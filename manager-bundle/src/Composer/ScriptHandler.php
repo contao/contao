@@ -20,7 +20,7 @@ use Webmozart\PathUtil\Path;
 
 /**
  * @deprecated Deprecated since Contao 4.11, to be removed in Contao 5.0; use
- *             the InitializeApplicationCommand instead.
+ *             the contao-script-handler binary instead.
  */
 class ScriptHandler
 {
@@ -29,12 +29,11 @@ class ScriptHandler
      */
     public static function initializeApplication(Event $event): void
     {
-        trigger_deprecation('contao/manager-bundle', '4.11', 'Using ScriptHandler::initializeApplication has been deprecated and will be removed in Contao 5.0. Use the InitializeApplicationCommand instead.');
+        trigger_deprecation('contao/manager-bundle', '4.11', 'Using ScriptHandler::initializeApplication has been deprecated and will be removed in Contao 5.0. Use the contao-script-handler binary instead.');
 
         $command = array_filter([
-            'contao-console',
-            'contao:initialize-application',
-            $event->getIO()->isDecorated() ? '--ansi' : '',
+            'contao-script-handler',
+            $event->getIO()->isDecorated() ? '--ansi' : '--no-ansi',
         ]);
 
         $event->getIO()->write(
@@ -44,9 +43,6 @@ class ScriptHandler
                 implode(' ', $command)
             )
         );
-
-        // Purge the cache, to make sure the 'contao:initialize-application' command is found
-        self::purgeCacheFolder();
 
         if (false === ($phpPath = (new PhpExecutableFinder())->find())) {
             throw new \RuntimeException('The php executable could not be found.');
