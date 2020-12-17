@@ -2175,6 +2175,7 @@ fieldset.collapsed > legend {
 		transform:translateY(-40px);
 	}
 	#header h1 a {
+		min-width:22px;
 		height:16px;
 		padding:12px;
 	}
