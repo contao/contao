@@ -118,7 +118,7 @@ class ResizeImagesCommand extends Command
         }
 
         if (!$output instanceof ConsoleOutputInterface) {
-            throw new InvalidArgumentException(sprintf('Output must be an instance of "%s"', ConsoleOutputInterface::class));
+            throw new \InvalidArgumentException(sprintf('Output must be an instance of "%s"', ConsoleOutputInterface::class));
         }
 
         $this->io = new SymfonyStyle($input, $output->section());
