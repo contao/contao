@@ -208,14 +208,14 @@ class ConfigurationTest extends TestCase
             'contao' => [
                 'backend' => [
                     'attributes' => [
-                        'My App' => 'app-name',
+                        'data-App Name' => 'My App',
                     ],
                 ],
             ],
         ];
 
         $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionMessageMatches('/The attribute name "My App" must be a valid HTML attribute name./');
+        $this->expectExceptionMessageMatches('/The attribute name "data-App Name" must be a valid HTML attribute name./');
 
         (new Processor())->processConfiguration($this->configuration, $params);
     }
