@@ -215,7 +215,7 @@ class ConfigurationTest extends TestCase
         ];
 
         $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionMessageMatches('/The attribute name "My App" must consist of allowed characters only/');
+        $this->expectExceptionMessageMatches('/The attribute name "My App" must be a valid HTML attribute name./');
 
         (new Processor())->processConfiguration($this->configuration, $params);
     }

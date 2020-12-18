@@ -462,7 +462,7 @@ class Configuration implements ConfigurationInterface
                         static function (array $attributes): array {
                             foreach (array_keys($attributes) as $name) {
                                 if (preg_match('/[^a-z0-9\-\.:_]/', (string) $name)) {
-                                    throw new \InvalidArgumentException(sprintf('The attribute name "%s" must consist of allowed characters only', $name));
+                                    throw new \InvalidArgumentException(sprintf('The attribute name "%s" must be a valid HTML attribute name.', $name));
                                 }
                             }
 
