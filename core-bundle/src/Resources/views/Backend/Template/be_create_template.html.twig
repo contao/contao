@@ -1,0 +1,65 @@
+{% form_theme form '@ContaoCore/Backend/Form/contao_form_theme.html.twig' %}
+
+{% if error %}
+    <div class="tl_message">
+        <p class="tl_error">{{ error }}</p>
+    </div>
+{% endif %}
+
+<div id="tl_buttons">
+    <a href="{{ referer }}" class="header_back" title="{{ 'MSC.backBTTitle'|trans({}, 'contao_default') }}"
+       accesskey="b"
+       onclick="Backend.getScrollOffset()">{{ 'MSC.backBT'|trans({}, 'contao_default') }}</a>
+</div>
+
+{{ form_start(form, {attr: {class: 'tl_form tl_edit_form'} }) }}
+<div class="tl_formbody_edit">
+    <div id="selector_templates" class="tl_tbox cf">
+        {{ form_row(form.type, {attr: {widget_class: ''} }) }}
+    </div>
+    <div data-group-templates="contao" class="tl_tbox cf hidden">
+        {{ form_row(form.sourceContao, {attr: {class: 'tl_chosen' }, row_attr: {class: 'w50'} }) }}
+        {{ form_row(form.targetDirectory, {row_attr: {class: 'w50'} }) }}
+    </div>
+    <div data-group-templates="bundle" class="tl_tbox cf hidden">
+        {{ form_row(form.sourceBundle, {attr: {class: 'tl_chosen' }, row_attr: {class: 'w50'} }) }}
+    </div>
+
+    <div class="tl_formbody_submit">
+        <div class="tl_submit_container">
+            <button type="submit" class="tl_submit" accesskey="s">
+                {{ 'tl_templates.newTpl'|trans({}, 'contao_default') }}
+            </button>
+        </div>
+    </div>
+
+    <input type="hidden" name="REQUEST_TOKEN" value="{{ contao_csrf_token }}">
+</div>
+
+{# Show the form group depending on the selected type radio field. #}
+<script type="application/javascript">
+    const selectors = document.querySelectorAll('#selector_templates input[type="radio"]');
+    const groups = document.querySelectorAll('*[data-group-templates]');
+
+    let init = false;
+
+    selectors.forEach(selector => {
+        const showGroup = value => {
+            groups.forEach(group => {
+                group.classList.toggle('hidden', group.getAttribute('data-group-templates') !== value)
+            });
+        };
+
+        selector.addEventListener('change', () => showGroup(selector.value));
+
+        if (selector.checked) {
+            showGroup(selector.value);
+            init = true;
+        }
+    })
+
+    if (!init) {
+        selectors[0].click();
+    }
+</script>
+{{ form_end(form) }}

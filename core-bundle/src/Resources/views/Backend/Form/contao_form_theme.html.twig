@@ -1,0 +1,58 @@
+{% use "form_div_layout.html.twig" %}
+
+{% block form_help -%}
+    {%- set help_attr = help_attr|merge({class: (help_attr.class|default('') ~ ' tl_help tl_tip')|trim}) -%}
+    {{ parent() }}
+{%- endblock %}
+
+{%- block form_row -%}
+    {%- set row_attr = row_attr|merge({class: (row_attr.class|default('') ~ ' widget')|trim}) -%}
+    {%- set widget_attr = {} -%}
+    {%- if help is not empty -%}
+        {%- set widget_attr = {attr: {'aria-describedby': id ~"_help"}} -%}
+    {%- endif -%}
+    <div{% with {attr: row_attr} %}{{ block('attributes') }}{% endwith %}>
+        {%- if not expanded -%}
+            {%- if errors|length > 0 -%}
+                {%- set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' error')|trim}) -%}
+            {%- endif -%}
+            <h3>{{ form_label(form, null, {label_attr: label_attr}) }}</h3>
+        {%- endif -%}
+        {{- form_widget(form, widget_attr) -}}
+        {{- form_help(form) -}}
+        {{- form_errors(form) -}}
+    </div>
+{%- endblock form_row -%}
+
+{%- block form_errors -%}
+    {%- if errors|length > 0 -%}
+        <ul>
+            {%- for error in errors -%}
+                <li><p class="tl_error tl_tip">{{ error.message }}</p></li>
+            {%- endfor -%}
+        </ul>
+    {%- endif -%}
+{%- endblock -%}
+
+{%- block choice_widget_expanded -%}
+    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' tl_radio_container')|trim}) -%}
+    <fieldset {{ block('widget_container_attributes') }}>
+        <legend>{{ form_label(form) }}</legend>
+        {%- for child in form %}
+            {{- form_widget(child, {attr: {
+                class: 'tl_radio',
+                onfocus: 'Backend.getScrollOffset()'
+            }}) -}}
+            {{ ' ' }}{{ form_label(child, null, {translation_domain: choice_translation_domain}) -}}
+            <br>
+        {% endfor -%}
+    </fieldset>
+{%- endblock choice_widget_expanded -%}
+
+{%- block choice_widget_collapsed -%}
+    {%- set attr = attr|merge({
+        class: (attr.class|default('') ~ ' tl_select')|trim,
+        onfocus: 'Backend.getScrollOffset()'
+    }) -%}
+    {{ parent() }}
+{%- endblock -%}

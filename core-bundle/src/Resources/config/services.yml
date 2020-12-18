@@ -65,6 +65,15 @@ services:
 
     Contao\CoreBundle\Controller\BackendController: ~
 
+    Contao\CoreBundle\Controller\BackendOverwriteTemplateController:
+        arguments:
+            - '@request_stack'
+            - '@form.factory'
+            - '@twig'
+            - '@contao.csrf.token_manager'
+            - '%contao.csrf_token_name%'
+        public: true
+
     Contao\CoreBundle\Controller\BackendCsvImportController:
         arguments:
             - '@contao.framework'
