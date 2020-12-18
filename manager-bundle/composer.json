@@ -59,7 +59,7 @@
         "webmozart/path-util": "^2.2"
     },
     "require-dev": {
-        "contao/test-case": "^4.0",
+        "contao/test-case": "^4.2",
         "phpunit/phpunit": "^8.5",
         "symfony/phpunit-bridge": "4.4.*"
     },
