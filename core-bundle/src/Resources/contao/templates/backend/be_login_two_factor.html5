@@ -36,7 +36,7 @@
   <?php $this->endblock(); ?>
 
 </head>
-<body class="<?= $this->ua ?>"<?= $this->dataAttributes ?>>
+<body class="<?= $this->ua ?>"<?php foreach ($this->attributes as $name => $value): ?> <?= $name ?>="<?= $value?>"<?php endforeach; ?>>
 
   <?php $this->block('container'); ?>
     <div id="container">

@@ -455,8 +455,8 @@ class Configuration implements ConfigurationInterface
             ->addDefaultsIfNotSet()
             ->children()
                 ->arrayNode('attributes')
-                    ->info('Adds HTML data attributes to the <body> tag in the back end.')
-                    ->example(['app-name' => 'My App', 'app-version' => '1.2.3'])
+                    ->info('Adds HTML attributes to the <body> tag in the back end.')
+                    ->example(['data-app-name' => 'My App', 'data-app-version' => '1.2.3'])
                     ->validate()
                     ->always(
                         static function (array $attributes): array {

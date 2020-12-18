@@ -19,14 +19,14 @@ use Symfony\Component\HttpFoundation\Response;
  * @property array  $javascripts
  * @property array  $stylesheets
  * @property string $mootools
- * @property string $dataAttributes
+ * @property array  $attributes
  * @property string $badgeTitle
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class BackendTemplate extends Template
 {
-	public $dataAttributes = '';
+	public $attributes = array();
 	public $badgeTitle = '';
 
 	/**
@@ -243,10 +243,7 @@ class BackendTemplate extends Template
 
 		if (!empty($backendConfig['attributes']) && \is_array($backendConfig['attributes']))
 		{
-			foreach ($backendConfig['attributes'] as $key => $value)
-			{
-				$this->dataAttributes .= sprintf(' data-%s="%s"', $key, $value);
-			}
+			$this->attributes = $backendConfig['attributes'];
 		}
 
 		if (!empty($backendConfig['custom_css']) && \is_array($backendConfig['custom_css']))

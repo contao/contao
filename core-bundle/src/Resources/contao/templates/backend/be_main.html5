@@ -44,7 +44,7 @@
   <?php $this->endblock(); ?>
 
 </head>
-<body id="top" class="<?= $this->ua ?><?php if ($this->isPopup): ?> popup<?php endif; ?>"<?= $this->dataAttributes ?>>
+<body id="top" class="<?= $this->ua ?><?php if ($this->isPopup): ?> popup<?php endif; ?>"<?php foreach ($this->attributes as $name => $value): ?> <?= $name ?>="<?= $value?>"<?php endforeach; ?>>
 
   <?php $this->block('header'); ?>
     <?php if (!$this->isPopup): ?>
