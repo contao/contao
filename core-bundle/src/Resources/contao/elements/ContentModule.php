@@ -54,7 +54,7 @@ class ContentModule extends ContentElement
 		// Merge the CSS classes (see #6011)
 		if (!empty($this->cssID[1]))
 		{
-			$cssID[1] = trim($cssID[1] . ' ' . $this->cssID[1]);
+			$cssID[1] = trim(($cssID[1] ?? '') . ' ' . $this->cssID[1]);
 		}
 
 		// Clone the model so we do not modify the shared model in the registry

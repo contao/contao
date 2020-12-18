@@ -60,7 +60,7 @@ class Version410Update extends AbstractMigration
     {
         $this->framework->initialize();
 
-        $crop = $GLOBALS['TL_CROP'];
+        $crop = $GLOBALS['TL_CROP'] ?? [];
 
         if (empty($crop)) {
             return $this->createResult(true);

@@ -170,7 +170,7 @@ class FormCheckBox extends Widget
 
 		foreach ($this->arrOptions as $i=>$arrOption)
 		{
-			if ($arrOption['group'])
+			if ($arrOption['group'] ?? null)
 			{
 				if ($blnHasGroups)
 				{
@@ -183,7 +183,7 @@ class FormCheckBox extends Widget
 				$arrOptions[] = array
 				(
 					'type'  => 'group_start',
-					'label' => StringUtil::specialchars($arrOption['label'])
+					'label' => StringUtil::specialchars($arrOption['label'] ?? '')
 				);
 
 				$blnHasGroups = true;
@@ -198,10 +198,10 @@ class FormCheckBox extends Widget
 						'type'       => 'option',
 						'name'       => $this->strName . ((\count($this->arrOptions) > 1) ? '[]' : ''),
 						'id'         => $this->strId . '_' . $i,
-						'value'      => $arrOption['value'],
+						'value'      => $arrOption['value'] ?? null,
 						'checked'    => $this->isChecked($arrOption),
 						'attributes' => $this->getAttributes(),
-						'label'      => $arrOption['label']
+						'label'      => $arrOption['label'] ?? null
 					)
 				);
 			}
@@ -247,13 +247,13 @@ class FormCheckBox extends Widget
 				'<span><input type="checkbox" name="%s" id="opt_%s" class="checkbox" value="%s"%s%s%s <label id="lbl_%s" for="opt_%s">%s</label></span> ',
 				$this->strName . ((\count($this->arrOptions) > 1) ? '[]' : ''),
 				$this->strId . '_' . $i,
-				$arrOption['value'],
+				$arrOption['value'] ?? null,
 				$this->isChecked($arrOption),
 				$this->getAttributes(),
 				$this->strTagEnding,
 				$this->strId . '_' . $i,
 				$this->strId . '_' . $i,
-				$arrOption['label']
+				$arrOption['label'] ?? null
 			);
 		}
 

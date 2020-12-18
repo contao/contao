@@ -95,9 +95,10 @@ class ModuleFaqPage extends Module
 
 			// Clean the RTE output
 			$objTemp->answer = StringUtil::toHtml5($objFaq->answer);
-
 			$objTemp->answer = StringUtil::encodeEmail($objTemp->answer);
+
 			$objTemp->addImage = false;
+			$objTemp->addBefore = false;
 
 			// Add an image
 			if ($objFaq->addImage && $objFaq->singleSRC)

@@ -97,7 +97,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 			(
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"'
+				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"'
 			),
 			'toggle' => array
 			(
@@ -428,7 +428,7 @@ class tl_newsletter_recipients extends Backend
 		}
 
 		// Trigger the onload_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_newsletter_recipients']['config']['onload_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_newsletter_recipients']['config']['onload_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_newsletter_recipients']['config']['onload_callback'] as $callback)
 			{
@@ -469,7 +469,7 @@ class tl_newsletter_recipients extends Backend
 		$objVersions->initialize();
 
 		// Trigger the save_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_newsletter_recipients']['fields']['active']['save_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_newsletter_recipients']['fields']['active']['save_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_newsletter_recipients']['fields']['active']['save_callback'] as $callback)
 			{
@@ -498,7 +498,7 @@ class tl_newsletter_recipients extends Backend
 		}
 
 		// Trigger the onsubmit_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_newsletter_recipients']['config']['onsubmit_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_newsletter_recipients']['config']['onsubmit_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_newsletter_recipients']['config']['onsubmit_callback'] as $callback)
 			{

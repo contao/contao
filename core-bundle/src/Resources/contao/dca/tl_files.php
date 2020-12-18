@@ -547,7 +547,7 @@ class tl_files extends Backend
 
 		$arrData = StringUtil::deserialize($objData->data);
 
-		if (!is_array($arrData))
+		if (!is_array($arrData) || !isset($arrData['content']))
 		{
 			return;
 		}
@@ -603,16 +603,19 @@ class tl_files extends Backend
 		// Check the length without the file extension
 		if ($dc->activeRecord && $varValue)
 		{
-			$intMaxlength = $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['maxlength'];
+			$intMaxlength = $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['maxlength'] ?? null;
 
-			if ($dc->activeRecord->type == 'file')
+			if ($intMaxlength)
 			{
-				$intMaxlength -= (strlen($dc->activeRecord->extension) + 1);
-			}
+				if ($dc->activeRecord->type == 'file')
+				{
+					$intMaxlength -= (strlen($dc->activeRecord->extension) + 1);
+				}
 
-			if ($intMaxlength && Utf8::strlen($varValue) > $intMaxlength)
-			{
-				throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['maxlength'], $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['label'][0], $intMaxlength));
+				if (Utf8::strlen($varValue) > $intMaxlength)
+				{
+					throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['maxlength'], $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['label'][0], $intMaxlength));
+				}
 			}
 		}
 
@@ -717,7 +720,7 @@ class tl_files extends Backend
 	 */
 	public function uploadFile($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (isset($row['type']) && $row['type'] == 'folder' && !$GLOBALS['TL_DCA']['tl_files']['config']['closed'] && !$GLOBALS['TL_DCA']['tl_files']['config']['notCreatable'] && Input::get('act') != 'select')
+		if (($row['type'] ?? null) == 'folder' && !($GLOBALS['TL_DCA']['tl_files']['config']['closed'] ?? null) && !($GLOBALS['TL_DCA']['tl_files']['config']['notCreatable'] ?? null) && Input::get('act') != 'select')
 		{
 			return '<a href="' . $this->addToUrl($href . '&amp;pid=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '" ' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ';
 		}
@@ -872,7 +875,7 @@ class tl_files extends Backend
 			}
 		}
 
-		$class = $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['tl_class'] . ' cbx';
+		$class = ($GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['tl_class'] ?? '') . ' cbx';
 
 		if (in_array(Input::get('act'), array('editAll', 'overrideAll')))
 		{
@@ -957,7 +960,7 @@ class tl_files extends Backend
 			}
 		}
 
-		$class = $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['tl_class'] . ' cbx';
+		$class = ($GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['tl_class'] ?? '') . ' cbx';
 
 		if (in_array(Input::get('act'), array('editAll', 'overrideAll')))
 		{
