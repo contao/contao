@@ -1,9 +1,9 @@
 includes:
-    - vendor/contao/phpstan/extension.neon
-    - vendor/phpstan/phpstan-phpunit/extension.neon
-    - vendor/phpstan/phpstan-phpunit/rules.neon
-    - vendor/phpstan/phpstan-symfony/extension.neon
-    - vendor/phpstan/phpstan-symfony/rules.neon
+    - vendor-bin/code-quality/vendor/contao/phpstan/extension.neon
+    - vendor-bin/code-quality/vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor-bin/code-quality/vendor/phpstan/phpstan-phpunit/rules.neon
+    - vendor-bin/code-quality/vendor/phpstan/phpstan-symfony/extension.neon
+    - vendor-bin/code-quality/vendor/phpstan/phpstan-symfony/rules.neon
 
 rules:
     - SlamPhpStan\SymfonyFilesystemRule

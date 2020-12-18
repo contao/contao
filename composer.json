@@ -141,19 +141,7 @@
     },
     "require-dev": {
         "ext-fileinfo": "*",
-        "composer/composer": "^1.0",
-        "contao/easy-coding-standard": "^1.2.2",
-        "contao/monorepo-tools": "dev-master",
-        "contao/phpstan": "^0.12",
-        "contao/test-case": "^4.0",
-        "doctrine/event-manager": "^1.0",
-        "monolog/monolog": "^1.24",
-        "phpunit/phpunit": "^8.5",
-        "psr/event-dispatcher": "^1.0",
-        "slam/phpstan-extensions": "^5.0",
-        "symfony/browser-kit": "4.4.*",
-        "symfony/phpunit-bridge": "4.4.*",
-        "thecodingmachine/phpstan-strict-rules": "^0.12"
+        "bamarni/composer-bin-plugin": "^1.4"
     },
     "extra": {
         "contao-manager-plugin": {
@@ -253,9 +241,9 @@
             "@monorepo-tools"
         ],
         "cs-fixer": [
-            "vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests --config vendor/contao/easy-coding-standard/config/default.yaml --fix --ansi",
-            "vendor/bin/ecs check *-bundle/src/Resources/contao --config vendor/contao/easy-coding-standard/config/legacy.yaml --fix --ansi",
-            "vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config vendor/contao/easy-coding-standard/config/template.yaml --fix --ansi"
+            "vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests --config vendor-bin/code-quality/vendor/contao/easy-coding-standard/config/default.yaml --fix --ansi",
+            "vendor/bin/ecs check *-bundle/src/Resources/contao --config vendor-bin/code-quality/vendor/contao/easy-coding-standard/config/legacy.yaml --fix --ansi",
+            "vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config vendor-bin/code-quality/vendor/contao/easy-coding-standard/config/template.yaml --fix --ansi"
         ],
         "functional-tests": [
             "vendor/bin/phpunit --testsuite=functional --colors=always"

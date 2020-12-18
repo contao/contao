@@ -3,6 +3,7 @@ extends: default
 ignore: |
     /node_modules/
     /vendor/
+    /vendor-bin/
 
 rules:
     braces:
