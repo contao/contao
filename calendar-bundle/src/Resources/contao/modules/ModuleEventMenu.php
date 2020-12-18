@@ -106,12 +106,14 @@ class ModuleEventMenu extends ModuleCalendar
 		{
 			foreach ($arrDay as $arrEvents)
 			{
-				if (!isset($arrData[substr($intDay, 0, 4)]))
+				$year = substr($intDay, 0, 4);
+
+				if (!isset($arrData[$year]))
 				{
-					$arrData[substr($intDay, 0, 4)] = 0;
+					$arrData[$year] = 0;
 				}
 
-				$arrData[substr($intDay, 0, 4)] += \count($arrEvents);
+				$arrData[$year] += \count($arrEvents);
 			}
 		}
 
@@ -166,12 +168,15 @@ class ModuleEventMenu extends ModuleCalendar
 		{
 			foreach ($arrDay as $arrEvents)
 			{
-				if (!isset($arrData[substr($intDay, 0, 4)][substr($intDay, 4, 2)]))
+				$year = substr($intDay, 0, 4);
+				$month = substr($intDay, 4, 2);
+
+				if (!isset($arrData[$year][$month]))
 				{
-					$arrData[substr($intDay, 0, 4)][substr($intDay, 4, 2)] = 0;
+					$arrData[$year][$month] = 0;
 				}
 
-				$arrData[substr($intDay, 0, 4)][substr($intDay, 4, 2)] += \count($arrEvents);
+				$arrData[$year][$month] += \count($arrEvents);
 			}
 		}
 
