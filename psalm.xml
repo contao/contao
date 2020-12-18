@@ -17,14 +17,5 @@
     <plugins>
         <pluginClass class="Psalm\PhpUnitPlugin\Plugin"/>
         <pluginClass class="Psalm\SymfonyPsalmPlugin\Plugin"/>
-        <pluginClass class="Weirdan\DoctrinePsalmPlugin\Plugin"/>
     </plugins>
-    <issueHandlers>
-        <!-- TODO: Remove this again once https://github.com/symfony/symfony/pull/37869 has been fixed -->
-        <ParamNameMismatch>
-            <errorLevel type="suppress">
-                <file name="core-bundle/src/DependencyInjection/Security/ContaoLoginFactory.php"/>
-            </errorLevel>
-        </ParamNameMismatch>
-    </issueHandlers>
 </psalm>

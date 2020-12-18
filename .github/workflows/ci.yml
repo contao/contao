@@ -28,7 +28,9 @@ jobs:
               uses: actions/checkout@v1
 
             - name: Install the dependencies
-              run: composer install --no-interaction
+              run: |
+                  composer install --no-interaction
+                  composer bin phpunit install --no-interaction
 
             - name: Generate the coverage report
               run: php -d pcov.enabled=1 vendor/bin/phpunit --testsuite=coverage --coverage-clover=clover.xml --colors=always
@@ -56,13 +58,15 @@ jobs:
               uses: actions/checkout@v1
 
             - name: Install the dependencies
-              run: composer install --no-interaction
-
-            - name: Check the coding style
               run: |
-                  vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests --config vendor/contao/easy-coding-standard/config/default.php --no-progress-bar --ansi
-                  vendor/bin/ecs check *-bundle/src/Resources/contao --config vendor/contao/easy-coding-standard/config/legacy.php --no-progress-bar --ansi
-                  vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config vendor/contao/easy-coding-standard/config/template.php --no-progress-bar --ansi
+                  composer install --no-interaction
+                  composer bin code-quality install --no-interaction
+
+            - name: Check the coding standard
+              run: |
+                  vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests --config vendor-bin/code-quality/vendor/contao/easy-coding-standard/config/default.php --no-progress-bar --ansi
+                  vendor/bin/ecs check *-bundle/src/Resources/contao --config vendor-bin/code-quality/vendor/contao/easy-coding-standard/config/legacy.php --no-progress-bar --ansi
+                  vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config vendor-bin/code-quality/vendor/contao/easy-coding-standard/config/template.php --no-progress-bar --ansi
 
             - name: Analyze the code
               run: |
@@ -101,7 +105,9 @@ jobs:
               uses: actions/checkout@v1
 
             - name: Install the dependencies
-              run: composer install --no-interaction
+              run: |
+                  composer install --no-interaction
+                  composer bin phpunit install --no-interaction
 
             - name: Run the unit tests
               run: vendor/bin/phpunit --colors=always
@@ -133,7 +139,9 @@ jobs:
               uses: actions/checkout@v1
 
             - name: Install the dependencies
-              run: composer install --ignore-platform-reqs --no-interaction
+              run: |
+                  composer install --no-interaction
+                  composer bin phpunit install --no-interaction
 
             - name: Run the unit tests
               run: vendor/bin/phpunit --colors=always
@@ -165,7 +173,9 @@ jobs:
               uses: actions/checkout@v1
 
             - name: Install the dependencies
-              run: composer update --prefer-lowest --prefer-stable --no-interaction
+              run: |
+                  composer update --prefer-lowest --prefer-stable --no-interaction
+                  composer bin phpunit update --no-interaction
 
             - name: Run the unit tests
               run: vendor/bin/phpunit --colors=always
@@ -234,7 +244,9 @@ jobs:
               uses: actions/checkout@v1
 
             - name: Install the dependencies
-              run: composer install --no-interaction --no-progress
+              run: |
+                  composer install --no-interaction
+                  composer bin phpunit install --no-interaction
 
             - name: Run the unit tests
               run: vendor/bin/phpunit.bat --colors=always
@@ -256,11 +268,11 @@ jobs:
 
             - name: Install the dependencies
               run: |
-                  composer global require contao/monorepo-tools:dev-master
                   composer install --no-interaction
+                  composer bin monorepo-tools install --no-interaction
 
             - name: Validate the composer.json files
-              run: $HOME/.composer/vendor/bin/monorepo-tools composer-json --validate --ansi
+              run: vendor/bin/monorepo-tools composer-json --validate --ansi
 
     monorepo-split:
         name: Monorepo Split

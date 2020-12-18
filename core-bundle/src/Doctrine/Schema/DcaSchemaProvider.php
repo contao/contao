@@ -158,8 +158,9 @@ class DcaSchemaProvider
         $chunks = explode(' ', $sql, 2);
         $dbType = $chunks[0];
         $def = $chunks[1] ?? null;
-
         $type = strtok(strtolower($dbType), '(), ');
+
+        /** @psalm-suppress TooFewArguments */
         $length = (int) strtok('(), ');
 
         $fixed = false;

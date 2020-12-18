@@ -1,0 +1,10 @@
+{
+    "require": {
+        "contao/monorepo-tools": "dev-master"
+    },
+    "extra": {
+        "symfony": {
+            "require": ">=4.4"
+        }
+    }
+}
