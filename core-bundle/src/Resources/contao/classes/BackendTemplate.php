@@ -79,7 +79,6 @@ class BackendTemplate extends Template
 			$this->ua .= ' fullscreen';
 		}
 
-		// Add backend config to the template @see #403
 		$this->addBackendConfig();
 
 		// Style sheets

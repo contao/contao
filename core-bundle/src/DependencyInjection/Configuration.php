@@ -455,8 +455,21 @@ class Configuration implements ConfigurationInterface
             ->addDefaultsIfNotSet()
             ->children()
                 ->arrayNode('attributes')
-                    ->info('Adds data attributes to the body of the back end.')
+                    ->info('Adds HTML data attributes to the <body> tag in the back end.')
                     ->example(['app-name' => 'My App', 'app-version' => '1.2.3'])
+                    ->validate()
+                    ->always(
+                        static function (array $attributes): array {
+                            foreach (array_keys($attributes) as $name) {
+                                if (preg_match('/[^a-z0-9\-\.:_]/', (string) $name)) {
+                                    throw new \InvalidArgumentException(sprintf('The attribute name "%s" must consist of lowercase letters, digits, hyphen, dot, colon and underscore only', $name));
+                                }
+                            }
+
+                            return $attributes;
+                        }
+                    )
+                    ->end()
                     ->normalizeKeys(false)
                     ->useAttributeAsKey('name')
                     ->scalarPrototype()->end()
