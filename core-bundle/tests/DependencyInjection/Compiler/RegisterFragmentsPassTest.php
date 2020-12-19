@@ -13,8 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
 use Contao\ContentProxy;
-use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
-use Contao\CoreBundle\EventListener\DataContainer\CustomTemplateOptionsListener;
+use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;;
 use Contao\CoreBundle\EventListener\GlobalsMapListener;
 use Contao\CoreBundle\Fragment\FragmentPreHandlerInterface;
 use Contao\CoreBundle\Fragment\FragmentRegistry;
@@ -190,7 +189,6 @@ class RegisterFragmentsPassTest extends TestCase
         $contentController->addTag('contao.content_element');
 
         $container = new ContainerBuilder();
-        $container->setDefinition(CustomTemplateOptionsListener::class, new Definition());
         $container->setDefinition('contao.fragment.registry', new Definition());
         $container->setDefinition('contao.command.debug_fragments', new Definition());
         $container->setDefinition('app.fragments.content_controller', $contentController);
@@ -282,43 +280,6 @@ class RegisterFragmentsPassTest extends TestCase
 
         $pass = new RegisterFragmentsPass(ContentElementReference::TAG_NAME);
         $pass->process($container);
-    }
-
-    public function testRegistersTheFragmentTemplates(): void
-    {
-        $contentController = new Definition('App\Fragments\Text');
-        $contentController->addTag('contao.content_element', ['template' => 'ce_foo']);
-
-        $moduleController = new Definition('App\Fragments\LoginController');
-        $moduleController->addTag('contao.frontend_module', ['template' => 'mod_foo']);
-
-        $container = $this->getContainerWithContaoConfiguration();
-        $container->setDefinition('app.fragments.content_controller', $contentController);
-        $container->setDefinition('app.fragments.module_controller', $moduleController);
-
-        (new ResolveClassPass())->process($container);
-
-        $pass = new RegisterFragmentsPass(ContentElementReference::TAG_NAME);
-        $pass->process($container);
-
-        $pass = new RegisterFragmentsPass(FrontendModuleReference::TAG_NAME);
-        $pass->process($container);
-
-        $methodCalls = $container->getDefinition(CustomTemplateOptionsListener::class)->getMethodCalls();
-
-        $this->assertSame(
-            [
-                [
-                    'setFragmentTemplate',
-                    ['tl_content', 'text', 'ce_foo'],
-                ],
-                [
-                    'setFragmentTemplate',
-                    ['tl_module', 'login', 'mod_foo'],
-                ],
-            ],
-            $methodCalls
-        );
     }
 
     private function getContainerWithFragmentServices(): ContainerBuilder

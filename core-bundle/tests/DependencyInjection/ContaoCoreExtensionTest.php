@@ -532,20 +532,13 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 new Reference('contao.framework'),
                 new Reference('request_stack'),
+                new Reference('contao.fragment.registry'),
+                new Reference('service_container'),
             ],
             $definition->getArguments()
         );
 
-        $this->assertSame(
-            [
-                'kernel.reset' => [
-                    [
-                        'method' => 'reset',
-                    ],
-                ],
-            ],
-            $definition->getTags()
-        );
+        $this->assertSame([], $definition->getTags());
     }
 
     public function testRegistersTheDoctrineSchemaListener(): void

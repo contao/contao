@@ -12,13 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
-use Contao\CoreBundle\EventListener\DataContainer\CustomTemplateOptionsListener;
 use Contao\CoreBundle\EventListener\GlobalsMapListener;
 use Contao\CoreBundle\Fragment\FragmentConfig;
 use Contao\CoreBundle\Fragment\FragmentOptionsAwareInterface;
 use Contao\CoreBundle\Fragment\FragmentPreHandlerInterface;
-use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
-use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -84,18 +81,6 @@ class RegisterFragmentsPass implements CompilerPassInterface
         $preHandlers = [];
         $registry = $container->findDefinition('contao.fragment.registry');
         $command = $container->hasDefinition('contao.command.debug_fragments') ? $container->findDefinition('contao.command.debug_fragments') : null;
-        $callback = $container->findDefinition(CustomTemplateOptionsListener::class);
-        $table = null;
-
-        switch ($tag) {
-            case ContentElementReference::TAG_NAME:
-                $table = 'tl_content';
-                break;
-
-            case FrontendModuleReference::TAG_NAME:
-                $table = 'tl_module';
-                break;
-        }
 
         foreach ($this->findAndSortTaggedServices($tag, $container) as $reference) {
             // If a controller has multiple methods for different fragment types (e.g. a content
@@ -146,10 +131,6 @@ class RegisterFragmentsPass implements CompilerPassInterface
                     }
 
                     $globals[$this->globalsKey][$attributes['category']][$attributes['type']] = $this->proxyClass;
-                }
-
-                if (null !== $table && isset($attributes['template'])) {
-                    $callback->addMethodCall('setFragmentTemplate', [$table, $attributes['type'], $attributes['template']]);
                 }
             }
         }

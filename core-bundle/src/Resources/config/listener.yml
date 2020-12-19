@@ -95,8 +95,8 @@ services:
         arguments:
             - '@contao.framework'
             - '@request_stack'
-        tags:
-            - { name: kernel.reset, method: reset }
+            - '@contao.fragment.registry'
+            - '@service_container'
 
     contao.listener.doctrine_schema:
         class: Contao\CoreBundle\EventListener\DoctrineSchemaListener

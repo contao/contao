@@ -12,15 +12,26 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
+use Contao\ContentElement;
+use Contao\ContentProxy;
 use Contao\Controller;
+use Contao\CoreBundle\Fragment\FragmentOptionsAwareInterface;
+use Contao\CoreBundle\Fragment\FragmentRegistry;
+use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
+use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\DataContainer;
+use Contao\Module;
+use Contao\ModuleProxy;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Contracts\Service\ResetInterface;
 
-class CustomTemplateOptionsListener implements ResetInterface
+class CustomTemplateOptionsListener implements ContainerAwareInterface
 {
+    use ContainerAwareTrait;
+
     /**
      * @var Controller
      */
@@ -32,17 +43,18 @@ class CustomTemplateOptionsListener implements ResetInterface
     private $requestStack;
 
     /**
-     * @var array<string,array<string,string>>
+     * @var FragmentRegistry
      */
-    private $fragmentTemplates = [];
+    private $fragmentRegistry;
 
-    public function __construct(ContaoFramework $framework, RequestStack $requestStack)
+    public function __construct(ContaoFramework $framework, RequestStack $requestStack, FragmentRegistry $fragmentRegistry)
     {
         /** @var Controller $controller */
         $controller = $framework->getAdapter(Controller::class);
 
         $this->controller = $controller;
         $this->requestStack = $requestStack;
+        $this->fragmentRegistry = $fragmentRegistry;
     }
 
     /**
@@ -50,7 +62,7 @@ class CustomTemplateOptionsListener implements ResetInterface
      */
     public function onArticle(DataContainer $dc): array
     {
-        return $this->getTemplates($dc, 'mod_article');
+        return $this->getTemplateGroup('mod_article');
     }
 
     /**
@@ -62,7 +74,19 @@ class CustomTemplateOptionsListener implements ResetInterface
             return $this->getOverrideAllTemplates('ce_');
         }
 
-        return $this->getTemplates($dc, 'ce_'.$dc->activeRecord->type);
+        $class = ContentElement::findClass($dc->activeRecord->type);
+
+        if (ContentProxy::class === $class || empty($class)) {
+            $defaultTemplate = $this->getFragmentTemplate(ContentElementReference::TAG_NAME.'.'.$dc->activeRecord->type);
+        } else {
+            $defaultTemplate = $this->getTemplateFromObject(new $class($dc->activeRecord));
+        }
+
+        if (null === $defaultTemplate) {
+            $defaultTemplate = 'ce_'.$dc->activeRecord->type;
+        }
+
+        return $this->getTemplateGroup($defaultTemplate);
     }
 
     /**
@@ -70,7 +94,7 @@ class CustomTemplateOptionsListener implements ResetInterface
      */
     public function onForm(DataContainer $dc): array
     {
-        return $this->getTemplates($dc, 'form_wrapper');
+        return $this->getTemplateGroup('form_wrapper');
     }
 
     /**
@@ -84,10 +108,10 @@ class CustomTemplateOptionsListener implements ResetInterface
 
         // Backwards compatibility
         if ('text' === $dc->activeRecord->type) {
-            return $this->getTemplates($dc, 'form_textfield');
+            return $this->getTemplateGroup('form_textfield');
         }
 
-        return $this->getTemplates($dc, 'form_'.$dc->activeRecord->type);
+        return $this->getTemplateGroup('form_'.$dc->activeRecord->type);
     }
 
     /**
@@ -99,32 +123,23 @@ class CustomTemplateOptionsListener implements ResetInterface
             return $this->getOverrideAllTemplates('mod_');
         }
 
-        return $this->getTemplates($dc, 'mod_'.$dc->activeRecord->type);
-    }
+        $class = Module::findClass($dc->activeRecord->type);
 
-    /**
-     * Registers a custom default template for fragments.
-     *
-     * @param string $table    The data container table the fragment belongs to
-     * @param string $type     The type of the fragment
-     * @param string $template The name of the custom default template
-     */
-    public function setFragmentTemplate(string $table, string $type, string $template): void
-    {
-        $this->fragmentTemplates[$table][$type] = $template;
-    }
-
-    public function reset(): void
-    {
-        $this->fragmentTemplates = [];
-    }
-
-    private function getTemplates(DataContainer $dc, string $template): array
-    {
-        if (isset($dc->activeRecord->type, $this->fragmentTemplates[$dc->table][$dc->activeRecord->type])) {
-            $template = $this->fragmentTemplates[$dc->table][$dc->activeRecord->type];
+        if (ModuleProxy::class === $class || empty($class)) {
+            $defaultTemplate = $this->getFragmentTemplate(FrontendModuleReference::TAG_NAME.'.'.$dc->activeRecord->type);
+        } else {
+            $defaultTemplate = $this->getTemplateFromObject(new $class($dc->activeRecord));
         }
 
+        if (null === $defaultTemplate) {
+            $defaultTemplate = 'mod_'.$dc->activeRecord->type;
+        }
+
+        return $this->getTemplateGroup($defaultTemplate);
+    }
+
+    private function getTemplateGroup(string $template): array
+    {
         return $this->controller->getTemplateGroup($template.'_', [], $template);
     }
 
@@ -143,5 +158,53 @@ class CustomTemplateOptionsListener implements ResetInterface
         }
 
         return 'overrideAll' === $request->query->get('act');
+    }
+
+    /**
+     * Returns the configured template for the given fragment.
+     */
+    private function getFragmentTemplate(string $identifier): ?string
+    {
+        if (!$this->fragmentRegistry->has($identifier)) {
+
+            return null;
+        }
+
+        $config = $this->fragmentRegistry->get($identifier);
+
+        if (!$this->container->has($config->getController())) {
+
+            return null;
+        }
+
+        $controller = $this->container->get($config->getController());
+
+        if (!$controller instanceof FragmentOptionsAwareInterface) {
+
+            return null;
+        }
+
+        $options = $controller->getFragmentOptions();
+
+        return $options['template'] ?? null;
+    }
+
+    /**
+     * Uses the reflection API to return the default template name from the given object.
+     */
+    private function getTemplateFromObject($object): ?string
+    {
+        $reflection = new \ReflectionClass($object);
+
+        try {
+            $property = $reflection->getProperty('strTemplate');
+        } catch (\ReflectionException $e) {
+            // Property does not exist
+            return null;
+        }
+
+        $property->setAccessible(true);
+
+        return $property->getValue($object) ?: null;
     }
 }

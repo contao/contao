@@ -18,4 +18,9 @@ interface FragmentOptionsAwareInterface
      * Sets the fragment options.
      */
     public function setFragmentOptions(array $options): void;
+
+    /**
+     * Returns the fragment options.
+     */
+    public function getFragmentOptions(): array;
 }
