@@ -162,7 +162,10 @@
             "Contao\\CoreBundle\\Tests\\": "tests/",
             "Contao\\NewBundle\\": "tests/Fixtures/vendor/contao/new-bundle/src/",
             "Contao\\TestBundle\\": "tests/Fixtures/vendor/contao/test-bundle/"
-        }
+        },
+        "classmap": [
+            "core-bundle/tests/Fixtures/src/Resources/contao/"
+        ]
     },
     "support": {
         "issues": "https://github.com/contao/contao/issues",
