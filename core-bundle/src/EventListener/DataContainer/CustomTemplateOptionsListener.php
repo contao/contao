@@ -18,9 +18,8 @@ use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\DataContainer;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Service\ResetInterface;
-use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
-class CustomTemplateOptionsListener implements ServiceAnnotationInterface, ResetInterface
+class CustomTemplateOptionsListener implements ResetInterface
 {
     /**
      * @var Controller
