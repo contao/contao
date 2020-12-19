@@ -166,21 +166,18 @@ class CustomTemplateOptionsListener implements ContainerAwareInterface
     private function getFragmentTemplate(string $identifier): ?string
     {
         if (!$this->fragmentRegistry->has($identifier)) {
-
             return null;
         }
 
         $config = $this->fragmentRegistry->get($identifier);
 
         if (!$this->container->has($config->getController())) {
-
             return null;
         }
 
         $controller = $this->container->get($config->getController());
 
         if (!$controller instanceof FragmentOptionsAwareInterface) {
-
             return null;
         }
 

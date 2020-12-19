@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
 use Contao\ContentProxy;
-use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;;
+use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
 use Contao\CoreBundle\EventListener\GlobalsMapListener;
 use Contao\CoreBundle\Fragment\FragmentPreHandlerInterface;
 use Contao\CoreBundle\Fragment\FragmentRegistry;
