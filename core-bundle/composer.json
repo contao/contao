@@ -164,7 +164,7 @@
             "Contao\\TestBundle\\": "tests/Fixtures/vendor/contao/test-bundle/"
         },
         "classmap": [
-            "core-bundle/tests/Fixtures/src/Resources/contao/"
+            "tests/Fixtures/src/Resources/contao/"
         ]
     },
     "support": {
