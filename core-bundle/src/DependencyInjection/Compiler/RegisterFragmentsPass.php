@@ -131,7 +131,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
                     $childDefinition->addMethodCall('setFragmentOptions', [$attributes]);
                 }
 
-                $$registry->addMethodCall('add', [$identifier, $config]);
+                $registry->addMethodCall('add', [$identifier, $config]);
 
                 if (null !== $command) {
                     $command->addMethodCall('add', [$identifier, $config, $attributes]);
