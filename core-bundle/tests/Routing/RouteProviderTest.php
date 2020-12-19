@@ -20,7 +20,6 @@ use Contao\CoreBundle\Routing\RouteProvider;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Model\Collection;
 use Contao\PageModel;
-use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -205,14 +204,14 @@ class RouteProviderTest extends TestCase
         }
 
         if (!empty($aliases)) {
-            $conditions[] = 'tl_page.alias IN ('.implode(',', $aliases).')';
+            $conditions[] = 'tl_page.alias IN ('.implode(',', array_fill(0, \count($aliases), '?')).')';
         }
 
         $pageAdapter = $this->mockAdapter(['findBy']);
         $pageAdapter
             ->expects($this->once())
             ->method('findBy')
-            ->with([implode(' OR ', $conditions)], [])
+            ->with([implode(' OR ', $conditions)], $aliases)
             ->willReturn(null)
         ;
 
@@ -444,23 +443,21 @@ class RouteProviderTest extends TestCase
             ['de', 'fr'],
         ];
 
-        // createPage() generates a rootSorting value from the language, so the test order is by language
-        yield 'Sorts by root page sorting if all of the languages are fallback' => [
+        yield 'Sorts by alias if all of the languages are fallback' => [
             [
-                1 => $this->createPage('en', 'foo', true),
-                3 => $this->createPage('ru', 'foo', true),
-                2 => $this->createPage('fr', 'foo', true),
-                0 => $this->createPage('en', 'foo/bar', true),
+                1 => $this->createPage('en', 'foo'),
+                2 => $this->createPage('ru', 'foo'),
+                3 => $this->createPage('fr', 'foo'),
+                0 => $this->createPage('en', 'foo/bar'),
             ],
             ['de'],
         ];
 
-        // createPage() generates a rootSorting value from the language, so the test order is by language
-        yield 'Sorts by root page sorting if none of the languages is fallback' => [
+        yield 'Sorts by alias if none of the languages is fallback' => [
             [
                 1 => $this->createPage('en', 'foo', false),
-                3 => $this->createPage('ru', 'foo', false),
-                2 => $this->createPage('fr', 'foo', false),
+                2 => $this->createPage('ru', 'foo', false),
+                3 => $this->createPage('fr', 'foo', false),
                 0 => $this->createPage('en', 'foo/bar', false),
             ],
             ['de'],
@@ -675,7 +672,7 @@ class RouteProviderTest extends TestCase
         $page->rootLanguage = $language;
         $page->rootIsFallback = $fallback;
         $page->rootUseSSL = 'https' === $scheme;
-        $page->rootSorting = array_reduce((array) $language, static function ($c, $i) { return $c + \ord($i); }, 0);
+        $page->rootSorting = mt_rand();
 
         return $page;
     }
@@ -689,12 +686,6 @@ class RouteProviderTest extends TestCase
             $framework = $this->mockContaoFramework();
         }
 
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->method('quote')
-            ->willReturnArgument(0)
-        ;
-
-        return new RouteProvider($framework, $connection, $urlSuffix, $prependLocale);
+        return new RouteProvider($framework, $urlSuffix, $prependLocale);
     }
 }

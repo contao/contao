@@ -150,6 +150,7 @@ use Symfony\Cmf\Component\Routing\DynamicRouter;
 use Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher;
 use Symfony\Cmf\Component\Routing\ProviderBasedGenerator;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Compiler\ResolvePrivatesPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
@@ -192,6 +193,10 @@ class ContaoCoreExtensionTest extends TestCase
 
         $extension = new ContaoCoreExtension();
         $extension->load($params, $this->container);
+
+        // Resolve private services (see #949)
+        $pass = new ResolvePrivatesPass();
+        $pass->process($this->container);
     }
 
     public function testReturnsTheCorrectAlias(): void
@@ -488,7 +493,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(
             [
                 'kernel.request' => ['onKernelRequest', 36],
-                'kernel.response' => 'onKernelResponse',
+                'kernel.response' => ['onKernelResponse', -832],
             ],
             CsrfTokenCookieSubscriber::getSubscribedEvents()
         );
@@ -747,7 +752,9 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(
             [
                 'kernel.event_listener' => [
-                    [],
+                    [
+                        'priority' => -896,
+                    ],
                 ],
             ],
             $tags
@@ -761,6 +768,18 @@ class ContaoCoreExtensionTest extends TestCase
 
         // Ensure that the listener is registered after the MergeHeaderListener
         $this->assertTrue($priority < $mergeHeadersListenerPriority);
+
+        $clearSessionDataListenerDefinition = $this->container->getDefinition('contao.listener.clear_session_data');
+        $clearSessionDataListenerTags = $clearSessionDataListenerDefinition->getTags();
+        $clearSessionDataListenerPriority = $clearSessionDataListenerTags['kernel.event_listener'][0]['priority'] ?? 0;
+
+        // Ensure that the listener is registered after the ClearSessionDataListener
+        $this->assertTrue($priority < $clearSessionDataListenerPriority);
+
+        $csrfCookieListenerPriority = CsrfTokenCookieSubscriber::getSubscribedEvents()['kernel.response'][1] ?? 0;
+
+        // Ensure that the listener is registered after the CsrfTokenCookieSubscriber
+        $this->assertTrue($priority < (int) $csrfCookieListenerPriority);
     }
 
     public function testRegistersTheMergeHttpHeadersListener(): void
@@ -1562,7 +1581,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $definition = $this->container->getDefinition(LegacyCron::class);
 
-        $this->assertTrue($definition->isPublic());
+        $this->assertTrue($definition->isPrivate());
 
         $this->assertEquals(
             [
@@ -1794,7 +1813,7 @@ class ContaoCoreExtensionTest extends TestCase
     {
         $this->assertTrue($this->container->has('contao.image.imagine'));
 
-        $definition = $this->container->findDefinition('contao.image.imagine');
+        $definition = $this->container->getAlias('contao.image.imagine');
 
         $this->assertTrue($definition->isPublic());
     }
@@ -2627,7 +2646,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEquals(
             [
                 new Reference('contao.framework'),
-                new Reference('database_connection'),
                 new Reference('%contao.url_suffix%'),
                 new Reference('%contao.prepend_locale%'),
             ],

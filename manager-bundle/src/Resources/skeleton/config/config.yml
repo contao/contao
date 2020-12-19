@@ -1,6 +1,7 @@
 imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
+    - { resource: services.yml }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
@@ -22,7 +23,14 @@ framework:
     default_locale: '%locale%'
     session:
         handler_id: ~
+        cookie_secure: auto
     fragments: { path: /_fragment }
+    cache:
+        pools:
+            doctrine.result_cache_pool:
+                adapter: cache.app
+            doctrine.system_cache_pool:
+                adapter: cache.system
 
 # Contao configuration
 contao:
@@ -47,8 +55,6 @@ doctrine:
                     collate: utf8mb4_unicode_ci
                     engine: InnoDB
                     row_format: DYNAMIC
-                options:
-                    !php/const PDO::MYSQL_ATTR_MULTI_STATEMENTS: false
         types:
             binary_string:
                 class: Contao\CoreBundle\Doctrine\DBAL\Types\BinaryStringType
@@ -58,29 +64,13 @@ doctrine:
         naming_strategy: doctrine.orm.naming_strategy.default
         metadata_cache_driver:
             type: service
-            id: doctrine_cache.providers.doctrine_metadata_cache
-        result_cache_driver:
-            type: service
-            id: doctrine_cache.providers.doctrine_result_cache
+            id: app.doctrine_system_cache_provider
         query_cache_driver:
             type: service
-            id: doctrine_cache.providers.doctrine_query_cache
-
-# Doctrine cache configuration
-doctrine_cache:
-    providers:
-        doctrine_metadata_cache:
-            file_system:
-                extension: .cache
-                directory: '%kernel.cache_dir%/doctrine/metadata'
-        doctrine_result_cache:
-            file_system:
-                extension: .cache
-                directory: '%kernel.cache_dir%/doctrine/result'
-        doctrine_query_cache:
-            file_system:
-                extension: .cache
-                directory: '%kernel.cache_dir%/doctrine/query'
+            id: app.doctrine_system_cache_provider
+        result_cache_driver:
+            type: service
+            id: app.doctrine_result_cache_provider
 
 # SwiftMailer configuration
 swiftmailer:

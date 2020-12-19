@@ -554,7 +554,7 @@ class tl_comments extends Contao\Backend
 
 		return '
 <div class="comment_wrap">
-<div class="cte_type ' . $key . '"><a href="mailto:' . Contao\Idna::decodeEmail($arrRow['email']) . '" title="' . Contao\StringUtil::specialchars(Contao\Idna::decodeEmail($arrRow['email'])) . '">' . $arrRow['name'] . '</a>' . (($arrRow['website'] != '') ? ' (<a href="' . $arrRow['website'] . '" title="' . Contao\StringUtil::specialchars($arrRow['website']) . '" target="_blank" rel="noreferrer noopener">' . $GLOBALS['TL_LANG']['MSC']['com_website'] . '</a>)' : '') . ' – ' . Contao\Date::parse(Contao\Config::get('datimFormat'), $arrRow['date']) . ' – IP ' . Contao\StringUtil::specialchars($arrRow['ip']) . '<br>' . $title . '</div>
+<div class="cte_type ' . $key . '"><a href="mailto:' . Contao\Idna::decodeEmail($arrRow['email']) . '" title="' . Contao\StringUtil::specialchars(Contao\Idna::decodeEmail($arrRow['email'])) . '">' . $arrRow['name'] . '</a>' . ($arrRow['website'] ? ' (<a href="' . $arrRow['website'] . '" title="' . Contao\StringUtil::specialchars($arrRow['website']) . '" target="_blank" rel="noreferrer noopener">' . $GLOBALS['TL_LANG']['MSC']['com_website'] . '</a>)' : '') . ' – ' . Contao\Date::parse(Contao\Config::get('datimFormat'), $arrRow['date']) . ' – IP ' . Contao\StringUtil::specialchars($arrRow['ip']) . '<br>' . $title . '</div>
 <div class="limit_height mark_links' . (!Contao\Config::get('doNotCollapse') ? ' h40' : '') . '">
 ' . $arrRow['comment'] . '
 </div>
@@ -679,17 +679,19 @@ class tl_comments extends Contao\Backend
 			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to publish/unpublish comment ID ' . $intId . '.');
 		}
 
+		$objRow = $this->Database->prepare("SELECT * FROM tl_comments WHERE id=?")
+								 ->limit(1)
+								 ->execute($intId);
+
+		if ($objRow->numRows < 1)
+		{
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid comment ID ' . $intId . '.');
+		}
+
 		// Set the current record
 		if ($dc)
 		{
-			$objRow = $this->Database->prepare("SELECT * FROM tl_comments WHERE id=?")
-									 ->limit(1)
-									 ->execute($intId);
-
-			if ($objRow->numRows)
-			{
-				$dc->activeRecord = $objRow;
-			}
+			$dc->activeRecord = $objRow;
 		}
 
 		$objVersions = new Contao\Versions('tl_comments', $intId);
@@ -742,6 +744,11 @@ class tl_comments extends Contao\Backend
 		}
 
 		$objVersions->create();
+
+		if ($dc)
+		{
+			$dc->invalidateCacheTags();
+		}
 	}
 
 	/**

@@ -91,6 +91,10 @@ class LegacyMatcherTest extends TestCase
     }
 
     /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using the "getPageIdFromUrl" hook has been deprecated %s
+     *
      * @dataProvider getRequestData
      */
     public function testMatchesRequestWithoutFolderUrl(string $requestPath, ?string $language, string $urlSuffix, bool $useAutoItem, string $resultPath, ...$hooks): void
@@ -233,6 +237,11 @@ class LegacyMatcherTest extends TestCase
         ];
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using the "getPageIdFromUrl" hook has been deprecated %s
+     */
     public function testMatchRequestFromPathIfFolderUrlIsNotFound(): void
     {
         $config = [
@@ -289,6 +298,11 @@ class LegacyMatcherTest extends TestCase
         $matcher->matchRequest($request);
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using the "getPageIdFromUrl" hook has been deprecated %s
+     */
     public function testMatchRequestFromPathIfFolderUrlHasNoModel(): void
     {
         $config = [
@@ -345,6 +359,11 @@ class LegacyMatcherTest extends TestCase
         $matcher->matchRequest($request);
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using the "getPageIdFromUrl" hook has been deprecated %s
+     */
     public function testUsesPageAliasFromFolderUrlRoute(): void
     {
         $config = [
@@ -404,6 +423,11 @@ class LegacyMatcherTest extends TestCase
         $matcher->matchRequest($request);
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using the "getPageIdFromUrl" hook has been deprecated %s
+     */
     public function testMatchesFragmentsWithParametersFolderUrlRoute(): void
     {
         $config = [
@@ -466,6 +490,11 @@ class LegacyMatcherTest extends TestCase
         $matcher->matchRequest($request);
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using the "getPageIdFromUrl" hook has been deprecated %s
+     */
     public function testAddsAutoItemToFragmentsOfFolderUrlRoute(): void
     {
         $config = [
@@ -580,6 +609,11 @@ class LegacyMatcherTest extends TestCase
         $matcher->matchRequest($request);
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using the "getPageIdFromUrl" hook has been deprecated %s
+     */
     public function testThrowsExceptionIfHookReturnsAnEmptyAlias(): void
     {
         $config = [

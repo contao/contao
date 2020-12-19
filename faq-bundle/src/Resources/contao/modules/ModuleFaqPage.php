@@ -34,7 +34,9 @@ class ModuleFaqPage extends Module
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['faqpage'][0]) . ' ###';
@@ -52,6 +54,13 @@ class ModuleFaqPage extends Module
 		if (empty($this->faq_categories) || !\is_array($this->faq_categories))
 		{
 			return '';
+		}
+
+		// Tag the FAQ categories (see #2137)
+		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		{
+			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+			$responseTagger->addTags(array_map(static function ($id) { return 'contao.db.tl_faq_category.' . $id; }, $this->faq_categories));
 		}
 
 		return parent::generate();
@@ -74,6 +83,7 @@ class ModuleFaqPage extends Module
 		/** @var PageModel $objPage */
 		global $objPage;
 
+		$tags = array();
 		$arrFaqs = array_fill_keys($this->faq_categories, array());
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
@@ -90,7 +100,7 @@ class ModuleFaqPage extends Module
 			$objTemp->addImage = false;
 
 			// Add an image
-			if ($objFaq->addImage && $objFaq->singleSRC != '')
+			if ($objFaq->addImage && $objFaq->singleSRC)
 			{
 				$objModel = FilesModel::findByUuid($objFaq->singleSRC);
 
@@ -124,6 +134,15 @@ class ModuleFaqPage extends Module
 			$arrFaqs[$objFaq->pid]['items'][] = $objTemp;
 			$arrFaqs[$objFaq->pid]['headline'] = $objPid->headline;
 			$arrFaqs[$objFaq->pid]['title'] = $objPid->title;
+
+			$tags[] = 'contao.db.tl_faq.' . $objFaq->id;
+		}
+
+		// Tag the FAQs (see #2137)
+		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		{
+			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+			$responseTagger->addTags($tags);
 		}
 
 		$arrFaqs = array_values(array_filter($arrFaqs));

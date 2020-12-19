@@ -269,7 +269,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
 			'exclude'                 => true,
 			'inputType'               => 'serpPreview',
-			'eval'                    => array('url_callback'=>array('tl_page', 'getSerpUrl'), 'titleFields'=>array('pageTitle', 'title')),
+			'eval'                    => array('url_callback'=>array('tl_page', 'getSerpUrl'), 'title_tag_callback'=>array('tl_page', 'getTitleTag'), 'titleFields'=>array('pageTitle', 'title')),
 			'sql'                     => null
 		),
 		'redirect' => array
@@ -323,6 +323,10 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'load_callback' => array
+			(
+				array('tl_page', 'loadDns')
+			),
 			'save_callback' => array
 			(
 				array('tl_page', 'checkDns')
@@ -805,7 +809,7 @@ class tl_page extends Contao\Backend
 		{
 			$permission = 0;
 			$cid = CURRENT_ID ?: Contao\Input::get('id');
-			$ids = ($cid != '') ? array($cid) : array();
+			$ids = $cid ? array($cid) : array();
 
 			// Set permission
 			switch (Contao\Input::get('act'))
@@ -993,11 +997,36 @@ class tl_page extends Contao\Backend
 	}
 
 	/**
+	 * Return the title tag from the associated page layout
+	 *
+	 * @param Contao\PageModel $model
+	 *
+	 * @return string
+	 */
+	public function getTitleTag(Contao\PageModel $model)
+	{
+		$model->loadDetails();
+
+		/** @var Contao\LayoutModel $layout */
+		if (!$layout = $model->getRelated('layout'))
+		{
+			return '';
+		}
+
+		global $objPage;
+
+		// Set the global page object so we can replace the insert tags
+		$objPage = $model;
+
+		return self::replaceInsertTags(str_replace('{{page::pageTitle}}', '%s', $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}'));
+	}
+
+	/**
 	 * Show a warning if there is no language fallback page
 	 */
 	public function showFallbackWarning()
 	{
-		if (Contao\Input::get('act') != '')
+		if (Contao\Input::get('act'))
 		{
 			return;
 		}
@@ -1132,7 +1161,7 @@ class tl_page extends Contao\Backend
 		};
 
 		// Generate an alias if there is none
-		if ($varValue == '')
+		if (!$varValue)
 		{
 			$varValue = Contao\System::getContainer()->get('contao.slug')->generate
 			(
@@ -1145,10 +1174,14 @@ class tl_page extends Contao\Backend
 			);
 
 			// Generate folder URL aliases (see #4933)
-			if (Contao\Config::get('folderUrl') && $objPage->folderUrl != '')
+			if ($objPage->folderUrl && Contao\Config::get('folderUrl'))
 			{
 				$varValue = $objPage->folderUrl . $varValue;
 			}
+		}
+		elseif (preg_match('/^[1-9]\d*$/', $varValue))
+		{
+			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasNumeric'], $varValue));
 		}
 		elseif ($aliasExists($varValue))
 		{
@@ -1177,7 +1210,7 @@ class tl_page extends Contao\Backend
 		}
 
 		// No title or not a regular page
-		if ($dc->activeRecord->title == '' || !in_array($dc->activeRecord->type, array('regular', 'error_401', 'error_403', 'error_404')))
+		if (!$dc->activeRecord->title || !in_array($dc->activeRecord->type, array('regular', 'error_401', 'error_403', 'error_404')))
 		{
 			return;
 		}
@@ -1253,7 +1286,7 @@ class tl_page extends Contao\Backend
 	public function checkFeedAlias($varValue, Contao\DataContainer $dc)
 	{
 		// No change or empty value
-		if ($varValue == $dc->value || $varValue == '')
+		if (!$varValue || $varValue == $dc->value)
 		{
 			return $varValue;
 		}
@@ -1293,6 +1326,18 @@ class tl_page extends Contao\Backend
 	}
 
 	/**
+	 * Load the DNS settings
+	 *
+	 * @param mixed $varValue
+	 *
+	 * @return mixed
+	 */
+	public function loadDns($varValue)
+	{
+		return Contao\Idna::decode($varValue);
+	}
+
+	/**
 	 * Check the DNS settings
 	 *
 	 * @param mixed $varValue
@@ -1301,7 +1346,7 @@ class tl_page extends Contao\Backend
 	 */
 	public function checkDns($varValue)
 	{
-		return preg_replace('#^(?:[a-z]+://)?([a-z0-9[\].:_-]+).*$#i', '$1', $varValue);
+		return Contao\Idna::encode(preg_replace('#^(?:[a-z]+://)?([\pN\pL[\].:_-]+).*$#iu', '$1', $varValue));
 	}
 
 	/**
@@ -1316,7 +1361,7 @@ class tl_page extends Contao\Backend
 	 */
 	public function checkFallback($varValue, Contao\DataContainer $dc)
 	{
-		if ($varValue == '')
+		if (!$varValue)
 		{
 			return '';
 		}
@@ -1341,7 +1386,7 @@ class tl_page extends Contao\Backend
 	 */
 	public function checkStaticUrl($varValue)
 	{
-		if ($varValue != '')
+		if ($varValue)
 		{
 			$varValue = preg_replace('@https?://@', '', $varValue);
 		}
@@ -1790,17 +1835,19 @@ class tl_page extends Contao\Backend
 			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to publish/unpublish page ID ' . $intId . '.');
 		}
 
+		$objRow = $this->Database->prepare("SELECT * FROM tl_page WHERE id=?")
+								 ->limit(1)
+								 ->execute($intId);
+
+		if ($objRow->numRows < 1)
+		{
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid page ID ' . $intId . '.');
+		}
+
 		// Set the current record
 		if ($dc)
 		{
-			$objRow = $this->Database->prepare("SELECT * FROM tl_page WHERE id=?")
-									 ->limit(1)
-									 ->execute($intId);
-
-			if ($objRow->numRows)
-			{
-				$dc->activeRecord = $objRow;
-			}
+			$dc->activeRecord = $objRow;
 		}
 
 		$objVersions = new Contao\Versions('tl_page', $intId);
@@ -1856,5 +1903,10 @@ class tl_page extends Contao\Backend
 
 		// The onsubmit_callback has triggered scheduleUpdate(), so run generateSitemap() now
 		$this->generateSitemap();
+
+		if ($dc)
+		{
+			$dc->invalidateCacheTags();
+		}
 	}
 }

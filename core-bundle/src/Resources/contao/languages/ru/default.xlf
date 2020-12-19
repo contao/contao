@@ -185,6 +185,10 @@
         <source>The alias &quot;%s&quot; already exists!</source>
         <target>Алиас страницы &quot;%s&quot; уже существует!</target>
       </trans-unit>
+      <trans-unit id="ERR.aliasNumeric">
+        <source>Numeric aliases are not supported!</source>
+        <target>Цифровые алиасы не поддерживаются!</target>
+      </trans-unit>
       <trans-unit id="ERR.importFolder">
         <source>The folder &quot;%s&quot; cannot be imported!</source>
         <target>Каталог &quot;%s&quot; не может быть импортирован!</target>
@@ -2091,7 +2095,7 @@
       </trans-unit>
       <trans-unit id="MSC.jsDisabled">
         <source>It seems that you have disabled JavaScript in your browser. The Contao back end will not work properly without JavaScript.</source>
-        <target>Вероятно, в вашем браузере отключен JavaScript. Панель управления Contao не сможет работать без JavaScript как положено.</target>
+        <target>Вероятно, в вашем браузере отключен JavaScript. Панель управления Contao не сможет работать без JavaScript надлежащим образом.</target>
       </trans-unit>
       <trans-unit id="MSC.copyOf">
         <source>%s (copy)</source>
@@ -2664,6 +2668,10 @@
       <trans-unit id="MSC.closeToolbar">
         <source>Close the Contao toolbar</source>
         <target>Закрыть панель инструментов Contao</target>
+      </trans-unit>
+      <trans-unit id="MSC.unknownOption">
+        <source>Unknown option</source>
+        <target>Неизвестный параметр</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

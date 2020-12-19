@@ -171,7 +171,7 @@ class FrontendIndex extends Frontend
 		}
 
 		// If the page has an alias, it can no longer be called via ID (see #7661)
-		if ($objPage->alias != '')
+		if ($objPage->alias)
 		{
 			$language = Config::get('addLanguageToUrl') ? '[a-z]{2}(-[A-Z]{2})?/' : '';
 			$suffix = preg_quote(Config::get('urlSuffix'), '#');
@@ -227,7 +227,7 @@ class FrontendIndex extends Frontend
 		}
 
 		// Set the admin e-mail address
-		if ($objPage->adminEmail != '')
+		if ($objPage->adminEmail)
 		{
 			list($GLOBALS['TL_ADMIN_NAME'], $GLOBALS['TL_ADMIN_EMAIL']) = StringUtil::splitFriendlyEmail($objPage->adminEmail);
 		}
@@ -250,7 +250,7 @@ class FrontendIndex extends Frontend
 		}
 
 		// Check whether there are domain name restrictions
-		if ($objPage->domain != '' && $objPage->domain != Environment::get('host'))
+		if ($objPage->domain && $objPage->domain != Environment::get('host'))
 		{
 			$this->log('Page ID "' . $objPage->id . '" was requested via "' . Environment::get('host') . '" but can only be accessed via "' . $objPage->domain . '" (' . Environment::get('base') . Environment::get('request') . ')', __METHOD__, TL_ERROR);
 

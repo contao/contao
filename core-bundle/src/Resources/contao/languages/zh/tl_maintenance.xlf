@@ -172,6 +172,9 @@
         <source>Check for broken links</source>
         <target>检查坏链接</target>
       </trans-unit>
+      <trans-unit id="tl_maintenance.crawlMaintenance">
+        <source>Crawling is not possible while the maintenance mode is enabled.</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

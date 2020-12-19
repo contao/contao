@@ -10,13 +10,14 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\InstallationBundle\Database;
+namespace Contao\CoreBundle\Migration\Version408;
 
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\File;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * @internal
@@ -29,13 +30,19 @@ class Version480Update extends AbstractMigration
     private $connection;
 
     /**
+     * @var Filesystem
+     */
+    private $filesystem;
+
+    /**
      * @var string
      */
     private $projectDir;
 
-    public function __construct(Connection $connection, string $projectDir)
+    public function __construct(Connection $connection, Filesystem $filesystem, string $projectDir)
     {
         $this->connection = $connection;
+        $this->filesystem = $filesystem;
         $this->projectDir = $projectDir;
     }
 
@@ -153,7 +160,7 @@ class Version480Update extends AbstractMigration
 
         // Convert the important part to relative values as fractions
         while (false !== ($file = $statement->fetch(\PDO::FETCH_OBJ))) {
-            if (!file_exists($this->projectDir.'/'.$file->path) || is_dir($this->projectDir.'/'.$file->path)) {
+            if (!$this->filesystem->exists($this->projectDir.'/'.$file->path) || is_dir($this->projectDir.'/'.$file->path)) {
                 continue;
             }
 

@@ -48,7 +48,7 @@ class PreviewUrlConvertListener
         /** @var News $newsAdapter */
         $newsAdapter = $this->framework->getAdapter(News::class);
 
-        $event->setUrl($request->getSchemeAndHttpHost().'/'.$newsAdapter->generateNewsUrl($news));
+        $event->setUrl($newsAdapter->generateNewsUrl($news, false, true));
     }
 
     private function getNewsModel(Request $request): ?NewsModel

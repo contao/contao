@@ -34,7 +34,9 @@ class ModuleNewsletterList extends Module
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['newsletterlist'][0]) . ' ###';
@@ -52,6 +54,13 @@ class ModuleNewsletterList extends Module
 		if (empty($this->nl_channels) || !\is_array($this->nl_channels))
 		{
 			return '';
+		}
+
+		// Tag the channels (see #2137)
+		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		{
+			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+			$responseTagger->addTags(array_map(static function ($id) { return 'contao.db.tl_newsletter_channel.' . $id; }, $this->nl_channels));
 		}
 
 		return parent::generate();
@@ -73,6 +82,8 @@ class ModuleNewsletterList extends Module
 
 		if ($objNewsletter !== null)
 		{
+			$tags = array();
+
 			while ($objNewsletter->next())
 			{
 				/** @var NewsletterChannelModel $objTarget */
@@ -117,6 +128,15 @@ class ModuleNewsletterList extends Module
 					'time' => Date::parse($objPage->timeFormat, $objNewsletter->date),
 					'channel' => $objNewsletter->pid
 				);
+
+				$tags[] = 'contao.db.tl_newsletter.' . $objNewsletter->id;
+			}
+
+			// Tag the newsletters (see #2137)
+			if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+			{
+				$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+				$responseTagger->addTags($tags);
 			}
 		}
 

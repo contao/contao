@@ -18,16 +18,16 @@
         <target>Définir les permissions des actualités.</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeeds.0">
-        <source>Allowed RSS feeds</source>
-        <target>Flux RSS autorisés</target>
+        <source>Allowed news feeds</source>
+        <target>Flux d'actualités autorisés</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeeds.1">
         <source>Here you can grant access to one or more news feeds.</source>
         <target>Accorder l'accès à un ou plusieurs flux RSS.</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeedp.0">
-        <source>RSS feed permissions</source>
-        <target>Permissions des flux RSS</target>
+        <source>News feed permissions</source>
+        <target>Permissions des flux d'actualités</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeedp.1">
         <source>Here you can define the news feed permissions.</source>

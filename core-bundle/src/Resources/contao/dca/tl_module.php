@@ -782,7 +782,7 @@ class tl_module extends Contao\Backend
 	 */
 	public function getActivationDefault($varValue)
 	{
-		if (!trim($varValue))
+		if (trim($varValue) === '')
 		{
 			$varValue = (is_array($GLOBALS['TL_LANG']['tl_module']['emailText']) ? $GLOBALS['TL_LANG']['tl_module']['emailText'][1] : $GLOBALS['TL_LANG']['tl_module']['emailText']);
 		}
@@ -799,7 +799,7 @@ class tl_module extends Contao\Backend
 	 */
 	public function getPasswordDefault($varValue)
 	{
-		if (!trim($varValue))
+		if (trim($varValue) === '')
 		{
 			$varValue = (is_array($GLOBALS['TL_LANG']['tl_module']['passwordText']) ? $GLOBALS['TL_LANG']['tl_module']['passwordText'][1] : $GLOBALS['TL_LANG']['tl_module']['passwordText']);
 		}

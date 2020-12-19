@@ -17,6 +17,7 @@ use Contao\CoreBundle\Crawl\Escargot\Factory;
 use Nyholm\Psr7\Uri;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpClient\MockHttpClient;
@@ -41,7 +42,7 @@ class CrawlCommandTest extends TestCase
 
     public function testAbortsIfEscargotCouldNotBeInstantiated(): void
     {
-        $escargotFactory = $this->createInvalidEscargotFactory(new \InvalidArgumentException('Something went wrong!'));
+        $escargotFactory = $this->createInvalidEscargotFactory(new InvalidArgumentException('Something went wrong!'));
         $command = new CrawlCommand($escargotFactory, new Filesystem());
 
         $tester = new CommandTester($command);

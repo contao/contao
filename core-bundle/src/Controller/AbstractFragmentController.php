@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Controller;
 use Contao\CoreBundle\Fragment\FragmentOptionsAwareInterface;
 use Contao\FrontendTemplate;
 use Contao\Model;
+use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\Template;
 use Symfony\Component\DependencyInjection\Container;
@@ -26,9 +27,24 @@ abstract class AbstractFragmentController extends AbstractController implements 
      */
     protected $options = [];
 
+    /**
+     * @var PageModel|null
+     */
+    private $pageModel;
+
     public function setFragmentOptions(array $options): void
     {
         $this->options = $options;
+    }
+
+    protected function setPageModel(?PageModel $pageModel): void
+    {
+        $this->pageModel = $pageModel;
+    }
+
+    protected function getPageModel(): ?PageModel
+    {
+        return $this->pageModel;
     }
 
     /**
@@ -69,7 +85,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
         $template->class = trim($templateName.' '.($data[1] ?? ''));
         $template->cssID = !empty($data[0]) ? ' id="'.$data[0].'"' : '';
 
-        if (\is_array($classes)) {
+        if (!empty($classes)) {
             $template->class .= ' '.implode(' ', $classes);
         }
     }

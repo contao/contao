@@ -470,6 +470,24 @@ class SearchIndexSubscriberTest extends TestCase
             ->willReturn($statusCode)
         ;
 
+        $response
+            ->method('getInfo')
+            ->willReturnCallback(
+                static function (string $key) use ($statusCode) {
+                    switch ($key) {
+                        case 'http_code':
+                            return $statusCode;
+
+                        case 'response_headers':
+                            return [];
+
+                        default:
+                            return null;
+                    }
+                }
+            )
+        ;
+
         return $response;
     }
 

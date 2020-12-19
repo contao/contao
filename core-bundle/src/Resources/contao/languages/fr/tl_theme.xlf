@@ -123,9 +123,11 @@
       </trans-unit>
       <trans-unit id="tl_theme.importTheme.0">
         <source>Import</source>
+        <target>Importer</target>
       </trans-unit>
       <trans-unit id="tl_theme.importTheme.1">
         <source>Import a theme</source>
+        <target>Importer un thème</target>
       </trans-unit>
       <trans-unit id="tl_theme.editmeta">
         <source>Edit the theme settings</source>
@@ -133,6 +135,7 @@
       </trans-unit>
       <trans-unit id="tl_theme.new.0">
         <source>New</source>
+        <target>Nouveau</target>
       </trans-unit>
       <trans-unit id="tl_theme.new.1">
         <source>Create a new theme</source>

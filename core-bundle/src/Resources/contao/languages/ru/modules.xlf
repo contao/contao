@@ -303,7 +303,7 @@
       </trans-unit>
       <trans-unit id="FMD.personalData.1">
         <source>Generates a form to edit a user's personal data</source>
-        <target>Создает форму для заполнения личных данных участника</target>
+        <target>Создает форму для заполнения личных данных пользователя</target>
       </trans-unit>
       <trans-unit id="FMD.registration.0">
         <source>Registration</source>

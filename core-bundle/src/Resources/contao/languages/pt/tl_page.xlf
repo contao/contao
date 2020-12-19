@@ -391,8 +391,7 @@
         <target>Página de redireccionamento para autenticação 2 passos</target>
       </trans-unit>
       <trans-unit id="tl_page.twoFactorJumpTo.1">
-        <source>Please choose the page to which visitors will be redirected when setting up two-factor authentication.</source>
-        <target>Escolha página de redireccionamento para visitantes configurarem autenticação em 2 passos.</target>
+        <source>Please choose the page to which members will be redirected to set up two-factor authentication.</source>
       </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>

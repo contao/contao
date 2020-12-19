@@ -178,7 +178,7 @@ class ContentGallery extends ContentElement
 				// no break
 
 			case 'custom':
-				if ($this->orderSRC != '')
+				if ($this->orderSRC)
 				{
 					$tmp = StringUtil::deserialize($this->orderSRC);
 
@@ -315,8 +315,10 @@ class ContentGallery extends ContentElement
 			++$rowcount;
 		}
 
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
 		// Always use the default template in the back end
-		if (TL_MODE == 'BE')
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$this->galleryTpl = '';
 		}

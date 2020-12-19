@@ -233,7 +233,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 					'title'           => 'maxlength="255"',
 					'alt'             => 'maxlength="255"',
 					'link'            => array('attributes'=>'maxlength="255"', 'dcaPicker'=>true),
-					'caption'         => 'maxlength="255"'
+					'caption'         => array('type'=>'textarea')
 				)
 			),
 			'sql'                     => "blob NULL"
@@ -582,7 +582,7 @@ class tl_files extends Contao\Backend
 		}
 
 		// Check the length without the file extension
-		if ($dc->activeRecord && $varValue != '')
+		if ($dc->activeRecord && $varValue)
 		{
 			$intMaxlength = $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['maxlength'];
 
@@ -810,24 +810,6 @@ class tl_files extends Contao\Backend
 	{
 		$strPath = $dc->id;
 		$projectDir = Contao\System::getContainer()->getParameter('kernel.project_dir');
-
-		// Check if the folder has been renamed (see #6432, #934)
-		if (Contao\Input::post('name') && !is_dir($projectDir . '/' . $strPath))
-		{
-			if (Contao\Validator::isInsecurePath(Contao\Input::post('name')))
-			{
-				throw new RuntimeException('Invalid file or folder name ' . Contao\Input::post('name'));
-			}
-
-			$count = 0;
-			$strName = basename($strPath);
-			$strNewPath = str_replace($strName, Contao\Input::post('name'), $strPath, $count);
-
-			if ($strNewPath && $count > 0 && is_dir($projectDir . '/' . $strNewPath))
-			{
-				$strPath = $strNewPath;
-			}
-		}
 
 		// Only show for folders (see #5660)
 		if (!is_dir($projectDir . '/' . $strPath))
