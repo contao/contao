@@ -4075,7 +4075,6 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $container->getDefinition(ValidateCustomRgxpListener::class);
 
         $this->assertNull($definition->getClass());
-        $this->assertTrue($definition->isPublic());
 
         $this->assertEquals(
             [
@@ -4094,7 +4093,6 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $container->getDefinition(CustomRgxpListener::class);
 
         $this->assertNull($definition->getClass());
-        $this->assertTrue($definition->isPublic());
 
         $this->assertEquals(
             [
@@ -4113,7 +4111,6 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $container->getDefinition(HttpUrlListener::class);
 
         $this->assertNull($definition->getClass());
-        $this->assertTrue($definition->isPublic());
 
         $this->assertEquals(
             [

@@ -13,16 +13,39 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\CoreBundle\EventListener\DataContainer\ValidateCustomRgxpListener;
+use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\CoreBundle\Tests\TestCase;
+use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ValidateCustomRgxpListenerTest extends TestCase
 {
+    public function testServiceAnnotation(): void
+    {
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->expects($this->never())
+            ->method('trans')
+            ->willReturnArgument(0)
+        ;
+
+        $listener = new ValidateCustomRgxpListener($translator);
+
+        $annotationReader = new AnnotationReader();
+        $annotation = $annotationReader->getClassAnnotation(new \ReflectionClass($listener), Callback::class);
+
+        $this->assertSame(
+            [
+                'table' => 'tl_form_field',
+                'target' => 'fields.custom_rgxp.save',
+                'priority' => null,
+            ],
+            (array) $annotation
+        );
+    }
+
     public function testThrowsExceptionIfInvalidRegex(): void
     {
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('ERR.invalidCustomRgxp');
-
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
             ->expects($this->once())
@@ -31,6 +54,10 @@ class ValidateCustomRgxpListenerTest extends TestCase
         ;
 
         $listener = new ValidateCustomRgxpListener($translator);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('ERR.invalidCustomRgxp');
+
         $listener('foo');
     }
 
