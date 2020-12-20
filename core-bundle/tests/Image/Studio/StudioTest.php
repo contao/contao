@@ -18,6 +18,7 @@ use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\Image\PictureFactoryInterface;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\Image\ResizerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
@@ -39,6 +40,7 @@ class StudioTest extends TestCase
             Studio::class,
             PictureFactoryInterface::class,
             ImageFactoryInterface::class,
+            ResizerInterface::class,
             ContaoFramework::class,
             ContaoContext::class,
         ];

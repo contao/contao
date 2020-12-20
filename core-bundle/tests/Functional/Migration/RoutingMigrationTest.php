@@ -32,7 +32,7 @@ class RoutingMigrationTest extends FunctionalTestCase
         $connection = static::$container->get('database_connection');
 
         foreach ($dropFields as $field) {
-            $connection->exec('ALTER TABLE tl_page DROP '.$field);
+            $connection->executeStatement('ALTER TABLE tl_page DROP '.$field);
         }
 
         /** @var ContaoFramework $framework */
@@ -78,7 +78,7 @@ class RoutingMigrationTest extends FunctionalTestCase
 
         /** @var Connection $connection */
         $connection = static::$container->get('database_connection');
-        $connection->exec('ALTER TABLE tl_page DROP urlPrefix, DROP urlSuffix, DROP useFolderUrl');
+        $connection->executeStatement('ALTER TABLE tl_page DROP urlPrefix, DROP urlSuffix, DROP useFolderUrl');
 
         $columns = $connection->getSchemaManager()->listTableColumns('tl_page');
 
@@ -112,7 +112,7 @@ class RoutingMigrationTest extends FunctionalTestCase
 
         /** @var Connection $connection */
         $connection = static::$container->get('database_connection');
-        $connection->exec('ALTER TABLE tl_page DROP urlPrefix, DROP urlSuffix, DROP useFolderUrl');
+        $connection->executeStatement('ALTER TABLE tl_page DROP urlPrefix, DROP urlSuffix, DROP useFolderUrl');
 
         /** @var ContaoFramework $framework */
         $framework = static::$container->get('contao.framework');
@@ -124,7 +124,7 @@ class RoutingMigrationTest extends FunctionalTestCase
         $migration = new RoutingMigration($connection, $framework, $urlSuffix, $prependLocale);
         $migration->run();
 
-        $rows = $connection->fetchAll('SELECT type, language, urlPrefix, urlSuffix, useFolderUrl FROM tl_page');
+        $rows = $connection->fetchAllAssociative('SELECT type, language, urlPrefix, urlSuffix, useFolderUrl FROM tl_page');
 
         foreach ($rows as $row) {
             if ('root' !== $row['type']) {

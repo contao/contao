@@ -19,6 +19,7 @@ use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Schema\TableDiff;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use PHPUnit\Framework\TestCase;
 
 class DoctrineAlterTableListenerTest extends TestCase
@@ -26,9 +27,9 @@ class DoctrineAlterTableListenerTest extends TestCase
     public function testConvertsRenameToDropAndAdd(): void
     {
         $table = new Table('tl_member');
-        $table->addColumn('bar', Type::INTEGER);
+        $table->addColumn('bar', Types::INTEGER);
 
-        $column = new Column('foo', Type::getType(Type::INTEGER));
+        $column = new Column('foo', Type::getType(Types::INTEGER));
 
         $tableDiff = new TableDiff('tl_member');
         $tableDiff->renamedColumns['bar'] = $column;

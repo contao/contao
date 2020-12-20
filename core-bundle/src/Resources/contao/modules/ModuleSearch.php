@@ -97,7 +97,7 @@ class ModuleSearch extends Module
 		$this->Template->results = '';
 
 		// Execute the search if there are keywords
-		if ((string) $strKeywords !== '' && $strKeywords != '*' && !$this->jumpTo)
+		if ($strKeywords !== '' && $strKeywords != '*' && !$this->jumpTo)
 		{
 			// Search pages
 			if (!empty($this->pages) && \is_array($this->pages))
@@ -191,7 +191,7 @@ class ModuleSearch extends Module
 
 				foreach ($arrResult as $k=>$v)
 				{
-					if ($v['protected'])
+					if ($v['protected'] ?? null)
 					{
 						if (!FE_USER_LOGGED_IN || !\is_array($this->User->groups))
 						{

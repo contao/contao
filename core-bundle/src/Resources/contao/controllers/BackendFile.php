@@ -118,7 +118,7 @@ class BackendFile extends Backend
 		}
 
 		// Call the load_callback
-		if (\is_array($GLOBALS['TL_DCA'][$strTable]['fields'][$strField]['load_callback']))
+		if (\is_array($GLOBALS['TL_DCA'][$strTable]['fields'][$strField]['load_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA'][$strTable]['fields'][$strField]['load_callback'] as $callback)
 			{
@@ -135,7 +135,7 @@ class BackendFile extends Backend
 		}
 
 		/** @var FileSelector $strClass */
-		$strClass = $GLOBALS['BE_FFL']['fileSelector'];
+		$strClass = $GLOBALS['BE_FFL']['fileSelector'] ?? null;
 
 		/** @var FileSelector $objFileTree */
 		$objFileTree = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$strTable]['fields'][$strField], $strField, $arrValues, $strField, $strTable, $objDca));
@@ -154,7 +154,7 @@ class BackendFile extends Backend
 		$objTemplate->search = $GLOBALS['TL_LANG']['MSC']['search'];
 		$objTemplate->searchExclude = $GLOBALS['TL_LANG']['MSC']['searchExclude'];
 		$objTemplate->value = $objSessionBag->get('file_selector_search');
-		$objTemplate->breadcrumb = $GLOBALS['TL_DCA']['tl_files']['list']['sorting']['breadcrumb'];
+		$objTemplate->breadcrumb = $GLOBALS['TL_DCA']['tl_files']['list']['sorting']['breadcrumb'] ?? null;
 
 		if ($this->User->hasAccess('files', 'modules'))
 		{

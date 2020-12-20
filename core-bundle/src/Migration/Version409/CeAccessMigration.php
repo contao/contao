@@ -55,7 +55,7 @@ class CeAccessMigration extends AbstractMigration
     {
         $this->framework->initialize();
 
-        $this->connection->query('
+        $this->connection->executeStatement('
             ALTER TABLE
                 tl_user_group
             ADD

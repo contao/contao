@@ -167,11 +167,11 @@ class ImageSizesTest extends TestCase
 
         $this->connection
             ->expects($this->exactly(2))
-            ->method('fetchAll')
+            ->method('fetchAllAssociative')
             ->willReturn([])
         ;
 
-        // Test that fetchAll() is only called once
+        // Test that fetchAllAssociative() is only called once
         $this->imageSizes->getAllOptions();
         $this->imageSizes->getAllOptions();
 
@@ -198,7 +198,7 @@ class ImageSizesTest extends TestCase
     {
         $this->connection
             ->expects($this->atLeastOnce())
-            ->method('fetchAll')
+            ->method('fetchAllAssociative')
             ->willReturn($imageSizes)
         ;
     }

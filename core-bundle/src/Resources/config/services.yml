@@ -353,6 +353,7 @@ services:
         public: true
         tags:
             - { name: container.service_subscriber, id: contao.assets.files_context }
+            - { name: container.service_subscriber, id: contao.image.resizer }
 
     Contao\CoreBundle\Mailer\AvailableTransports:
         arguments:

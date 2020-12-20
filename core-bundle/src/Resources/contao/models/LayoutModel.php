@@ -34,7 +34,6 @@ use Contao\Model\Collection;
  * @property string  $modules
  * @property string  $template
  * @property string  $minifyMarkup
- * @property string  $webfonts
  * @property string  $lightboxSize
  * @property string  $defaultImageDensities
  * @property string  $viewport
@@ -78,7 +77,6 @@ use Contao\Model\Collection;
  * @method static LayoutModel|null findOneByModules($val, array $opt=array())
  * @method static LayoutModel|null findOneByTemplate($val, array $opt=array())
  * @method static LayoutModel|null findOneByMinifyMarkup($val, array $opt=array())
- * @method static LayoutModel|null findOneByWebfonts($val, array $opt=array())
  * @method static LayoutModel|null findOneByLightboxSize($val, array $opt=array())
  * @method static LayoutModel|null findOneByDefaultImageDensities($val, array $opt=array())
  * @method static LayoutModel|null findOneByViewport($val, array $opt=array())
@@ -118,7 +116,6 @@ use Contao\Model\Collection;
  * @method static Collection|LayoutModel[]|LayoutModel|null findByModules($val, array $opt=array())
  * @method static Collection|LayoutModel[]|LayoutModel|null findByTemplate($val, array $opt=array())
  * @method static Collection|LayoutModel[]|LayoutModel|null findByMinifyMarkup($val, array $opt=array())
- * @method static Collection|LayoutModel[]|LayoutModel|null findByWebfonts($val, array $opt=array())
  * @method static Collection|LayoutModel[]|LayoutModel|null findByLightboxSize($val, array $opt=array())
  * @method static Collection|LayoutModel[]|LayoutModel|null findByDefaultImageDensities($val, array $opt=array())
  * @method static Collection|LayoutModel[]|LayoutModel|null findByViewport($val, array $opt=array())
@@ -162,7 +159,6 @@ use Contao\Model\Collection;
  * @method static integer countByModules($val, array $opt=array())
  * @method static integer countByTemplate($val, array $opt=array())
  * @method static integer countByMinifyMarkup($val, array $opt=array())
- * @method static integer countByWebfonts($val, array $opt=array())
  * @method static integer countByLightboxSize($val, array $opt=array())
  * @method static integer countByDefaultImageDensities($val, array $opt=array())
  * @method static integer countByViewport($val, array $opt=array())

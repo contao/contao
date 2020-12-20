@@ -18,13 +18,12 @@ use Contao\CoreBundle\Routing\Candidates\PageCandidates;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\FetchMode;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Statement;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 
-class CandidatesTest extends TestCase
+class PageCandidatesTest extends TestCase
 {
     /**
      * @dataProvider getCandidatesProvider
@@ -512,8 +511,7 @@ class CandidatesTest extends TestCase
     {
         $statement = $this->createMock(Statement::class);
         $statement
-            ->method('fetchAll')
-            ->with(FetchMode::COLUMN)
+            ->method('fetchFirstColumn')
             ->willReturn([15])
         ;
 

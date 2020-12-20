@@ -81,7 +81,7 @@ class ModulePersonalData extends Module
 		$this->loadDataContainer('tl_member');
 
 		// Call onload_callback (e.g. to check permissions)
-		if (\is_array($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback']))
+		if (\is_array($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback'] as $callback)
 			{
@@ -131,34 +131,34 @@ class ModulePersonalData extends Module
 		// Build the form
 		foreach ($this->editable as $field)
 		{
-			$arrData = &$GLOBALS['TL_DCA']['tl_member']['fields'][$field];
+			$arrData = $GLOBALS['TL_DCA']['tl_member']['fields'][$field] ?? array();
 
 			// Map checkboxWizards to regular checkbox widgets
-			if ($arrData['inputType'] == 'checkboxWizard')
+			if (($arrData['inputType'] ?? null) == 'checkboxWizard')
 			{
 				$arrData['inputType'] = 'checkbox';
 			}
 
 			// Map fileTrees to upload widgets (see #8091)
-			if ($arrData['inputType'] == 'fileTree')
+			if (($arrData['inputType'] ?? null) == 'fileTree')
 			{
 				$arrData['inputType'] = 'upload';
 			}
 
 			/** @var Widget $strClass */
-			$strClass = $GLOBALS['TL_FFL'][$arrData['inputType']];
+			$strClass = $GLOBALS['TL_FFL'][$arrData['inputType']] ?? null;
 
 			// Continue if the class does not exist
-			if (!$arrData['eval']['feEditable'] || !class_exists($strClass))
+			if (!($arrData['eval']['feEditable'] ?? null) || !class_exists($strClass))
 			{
 				continue;
 			}
 
-			$strGroup = $arrData['eval']['feGroup'];
+			$strGroup = $arrData['eval']['feGroup'] ?? null;
 
 			$arrData['eval']['required'] = false;
 
-			if ($arrData['eval']['mandatory'])
+			if ($arrData['eval']['mandatory'] ?? null)
 			{
 				if (\is_array($this->User->$field))
 				{
@@ -177,7 +177,7 @@ class ModulePersonalData extends Module
 			$varValue = $this->User->$field;
 
 			// Call the load_callback
-			if (isset($arrData['load_callback']) && \is_array($arrData['load_callback']))
+			if (\is_array($arrData['load_callback'] ?? null))
 			{
 				foreach ($arrData['load_callback'] as $callback)
 				{
@@ -218,7 +218,7 @@ class ModulePersonalData extends Module
 				$objWidget->validate();
 				$varValue = $objWidget->value;
 
-				$rgxp = $arrData['eval']['rgxp'];
+				$rgxp = $arrData['eval']['rgxp'] ?? null;
 
 				// Convert date formats into timestamps (check the eval setting first -> #3063)
 				if ($varValue !== null && $varValue !== '' && \in_array($rgxp, array('date', 'time', 'datim')))
@@ -235,13 +235,13 @@ class ModulePersonalData extends Module
 				}
 
 				// Make sure that unique fields are unique (check the eval setting first -> #3063)
-				if ((string) $varValue !== '' && $arrData['eval']['unique'] && !$this->Database->isUniqueValue('tl_member', $field, $varValue, $this->User->id))
+				if ((string) $varValue !== '' && ($arrData['eval']['unique'] ?? null) && !$this->Database->isUniqueValue('tl_member', $field, $varValue, $this->User->id))
 				{
 					$objWidget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $field));
 				}
 
 				// Trigger the save_callback (see #5247)
-				if (\is_array($arrData['save_callback']) && $objWidget->submitInput() && !$objWidget->hasErrors())
+				if (\is_array($arrData['save_callback'] ?? null) && $objWidget->submitInput() && !$objWidget->hasErrors())
 				{
 					foreach ($arrData['save_callback'] as $callback)
 					{
@@ -286,7 +286,7 @@ class ModulePersonalData extends Module
 					}
 
 					// Encrypt the value (see #7815)
-					if ($arrData['eval']['encrypt'])
+					if ($arrData['eval']['encrypt'] ?? null)
 					{
 						$varValue = Encryption::encrypt($varValue);
 					}
@@ -311,7 +311,14 @@ class ModulePersonalData extends Module
 			$temp = $objWidget->parse();
 
 			$this->Template->fields .= $temp;
+
+			if (!isset($arrFields[$strGroup][$field]))
+			{
+				$arrFields[$strGroup][$field] = '';
+			}
+
 			$arrFields[$strGroup][$field] .= $temp;
+
 			++$row;
 		}
 
@@ -322,7 +329,7 @@ class ModulePersonalData extends Module
 			$objMember->save();
 
 			// Create a new version
-			if ($GLOBALS['TL_DCA'][$strTable]['config']['enableVersioning'])
+			if ($GLOBALS['TL_DCA'][$strTable]['config']['enableVersioning'] ?? null)
 			{
 				$objVersions->create();
 			}
@@ -344,7 +351,7 @@ class ModulePersonalData extends Module
 			}
 
 			// Call the onsubmit_callback
-			if (\is_array($GLOBALS['TL_DCA']['tl_member']['config']['onsubmit_callback']))
+			if (\is_array($GLOBALS['TL_DCA']['tl_member']['config']['onsubmit_callback'] ?? null))
 			{
 				foreach ($GLOBALS['TL_DCA']['tl_member']['config']['onsubmit_callback'] as $callback)
 				{

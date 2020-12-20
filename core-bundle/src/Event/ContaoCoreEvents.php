@@ -64,6 +64,13 @@ final class ContaoCoreEvents
     public const ROBOTS_TXT = 'contao.robots_txt';
 
     /**
+     * The contao.sitemap event is triggered when the /sitemap.xml route is called.
+     *
+     * @see SitemapEvent
+     */
+    public const SITEMAP = 'contao.sitemap';
+
+    /**
      * The contao.slug_valid_characters event is triggered when the valid slug characters options are generated.
      *
      * @see SlugValidCharactersEvent

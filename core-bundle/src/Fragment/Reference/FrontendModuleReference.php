@@ -13,10 +13,13 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Fragment\Reference;
 
 use Contao\ModuleModel;
+use Contao\ModuleProxy;
 
 class FrontendModuleReference extends FragmentReference
 {
     public const TAG_NAME = 'contao.frontend_module';
+    public const GLOBALS_KEY = 'FE_MOD';
+    public const PROXY_CLASS = ModuleProxy::class;
 
     public function __construct(ModuleModel $model, string $section = 'main')
     {

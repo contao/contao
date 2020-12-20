@@ -19,7 +19,6 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\MySqlSchemaManager;
 use Doctrine\DBAL\Schema\Schema;
-use Doctrine\DBAL\Statement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -551,62 +550,31 @@ class InstallerTest extends TestCase
         ;
 
         $connection
-            ->method('query')
+            ->method('fetchAssociative')
             ->willReturnCallback(
-                function (string $query) use ($filePerTable): ?MockObject {
+                static function (string $query, array $parameters) use ($filePerTable, $fromSchema) {
                     switch ($query) {
                         case "SHOW VARIABLES LIKE 'innodb_file_per_table'":
-                            $statement = $this->createMock(Statement::class);
-                            $statement
-                                ->method('fetch')
-                                ->willReturn((object) ['Value' => $filePerTable])
-                            ;
-
-                            return $statement;
+                            return ['Value' => $filePerTable];
 
                         case "SHOW VARIABLES LIKE 'innodb_file_format'":
-                            $statement = $this->createMock(Statement::class);
-                            $statement
-                                ->method('fetch')
-                                ->willReturn((object) ['Value' => 'Barracuda'])
-                            ;
+                            return ['Value' => 'Barracuda'];
 
-                            return $statement;
+                        case 'SHOW TABLE STATUS WHERE Name = ? AND Engine IS NOT NULL AND Create_options IS NOT NULL AND Collation IS NOT NULL':
+                            $table = $fromSchema->getTable($parameters[0]);
+
+                            if ($table->hasOption('engine')) {
+                                return [
+                                    'Engine' => $table->getOption('engine'),
+                                    'Create_options' => implode(', ', $table->getOption('create_options')),
+                                    'Collation' => $table->hasOption('collate') ? $table->getOption('collate') : '',
+                                ];
+                            }
+
+                            return false;
                     }
 
                     return null;
-                }
-            )
-        ;
-
-        $connection
-            ->method('executeQuery')
-            ->willReturnCallback(
-                function (string $query, array $parameters) use ($fromSchema): ?MockObject {
-                    if ('SHOW TABLE STATUS WHERE Name = ? AND Engine IS NOT NULL AND Create_options IS NOT NULL AND Collation IS NOT NULL' !== $query) {
-                        return null;
-                    }
-
-                    $table = $fromSchema->getTable($parameters[0]);
-                    $statement = $this->createMock(Statement::class);
-
-                    if ($table->hasOption('engine')) {
-                        $statement
-                            ->method('fetch')
-                            ->willReturn((object) [
-                                'Engine' => $table->getOption('engine'),
-                                'Create_options' => implode(', ', $table->getOption('create_options')),
-                                'Collation' => $table->hasOption('collate') ? $table->getOption('collate') : '',
-                            ])
-                        ;
-                    } else {
-                        $statement
-                            ->method('fetch')
-                            ->willReturn(false)
-                        ;
-                    }
-
-                    return $statement;
                 }
             )
         ;

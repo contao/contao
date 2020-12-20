@@ -96,7 +96,7 @@ class Installer
 
         foreach ($this->commands as $commands) {
             if (isset($commands[$hash])) {
-                $this->connection->query($commands[$hash]);
+                $this->connection->executeStatement($commands[$hash]);
 
                 return;
             }
@@ -237,13 +237,10 @@ class Installer
 
             $this->setLegacyOptions($table);
 
-            $tableOptions = $this->connection
-                ->executeQuery(
-                    'SHOW TABLE STATUS WHERE Name = ? AND Engine IS NOT NULL AND Create_options IS NOT NULL AND Collation IS NOT NULL',
-                    [$tableName]
-                )
-                ->fetch(\PDO::FETCH_OBJ)
-            ;
+            $tableOptions = $this->connection->fetchAssociative(
+                'SHOW TABLE STATUS WHERE Name = ? AND Engine IS NOT NULL AND Create_options IS NOT NULL AND Collation IS NOT NULL',
+                [$tableName]
+            );
 
             if (false === $tableOptions) {
                 continue;
@@ -252,11 +249,11 @@ class Installer
             $engine = $table->getOption('engine');
             $innodb = 'innodb' === strtolower($engine);
 
-            if (strtolower($tableOptions->Engine) !== strtolower($engine)) {
+            if (strtolower($tableOptions['Engine']) !== strtolower($engine)) {
                 if ($innodb && $dynamic) {
                     $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine.' ROW_FORMAT = DYNAMIC';
 
-                    if (false !== stripos($tableOptions->Create_options, 'key_block_size=')) {
+                    if (false !== stripos($tableOptions['Create_options'], 'key_block_size=')) {
                         $command .= ' KEY_BLOCK_SIZE = 0';
                     }
                 } else {
@@ -266,10 +263,10 @@ class Installer
                 $deleteIndexes = true;
                 $alterTables[md5($command)] = $command;
             } elseif ($innodb && $dynamic) {
-                if (false === stripos($tableOptions->Create_options, 'row_format=dynamic')) {
+                if (false === stripos($tableOptions['Create_options'], 'row_format=dynamic')) {
                     $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine.' ROW_FORMAT = DYNAMIC';
 
-                    if (false !== stripos($tableOptions->Create_options, 'key_block_size=')) {
+                    if (false !== stripos($tableOptions['Create_options'], 'key_block_size=')) {
                         $command .= ' KEY_BLOCK_SIZE = 0';
                     }
 
@@ -279,7 +276,7 @@ class Installer
 
             $collate = $table->getOption('collate');
 
-            if ($tableOptions->Collation !== $collate) {
+            if ($tableOptions['Collation'] !== $collate) {
                 $charset = $table->getOption('charset');
                 $command = 'ALTER TABLE '.$tableName.' CONVERT TO CHARACTER SET '.$charset.' COLLATE '.$collate;
                 $deleteIndexes = true;
@@ -322,28 +319,22 @@ class Installer
 
     private function hasDynamicRowFormat(): bool
     {
-        $filePerTable = $this->connection
-            ->query("SHOW VARIABLES LIKE 'innodb_file_per_table'")
-            ->fetch(\PDO::FETCH_OBJ)
-        ;
+        $filePerTable = $this->connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_file_per_table'");
 
         // Dynamic rows require innodb_file_per_table to be enabled
-        if (!\in_array(strtolower((string) $filePerTable->Value), ['1', 'on'], true)) {
+        if (!\in_array(strtolower((string) $filePerTable['Value']), ['1', 'on'], true)) {
             return false;
         }
 
-        $fileFormat = $this->connection
-            ->query("SHOW VARIABLES LIKE 'innodb_file_format'")
-            ->fetch(\PDO::FETCH_OBJ)
-        ;
+        $fileFormat = $this->connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_file_format'");
 
         // MySQL 8 and MariaDB 10.3 no longer have the "innodb_file_format" setting
-        if (false === $fileFormat || '' === $fileFormat->Value) {
+        if (false === $fileFormat || '' === $fileFormat['Value']) {
             return true;
         }
 
         // Dynamic rows require the Barracuda file format in MySQL <8 and MariaDB <10.3
-        return 'barracuda' === strtolower((string) $fileFormat->Value);
+        return 'barracuda' === strtolower((string) $fileFormat['Value']);
     }
 
     /**

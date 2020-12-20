@@ -5,7 +5,7 @@ composer:
     require:
         contao/manager-plugin: ^2.6.2
     conflict:
-        doctrine/persistence: 1.3.2
+        doctrine/annotations: <1.7
         nikic/php-parser: 4.7.0
         zendframework/zend-code: <3.3.1
     require-dev:
@@ -16,6 +16,7 @@ composer:
         psalm/plugin-phpunit: ^0.10
         psalm/plugin-symfony: ^1.0
         slam/phpstan-extensions: ^5.0
+        thecodingmachine/phpstan-strict-rules: ^0.12
         weirdan/doctrine-psalm-plugin: ^0.11
 
 repositories:

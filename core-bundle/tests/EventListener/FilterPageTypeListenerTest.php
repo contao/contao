@@ -17,8 +17,6 @@ use Contao\CoreBundle\EventListener\FilterPageTypeListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\FetchMode;
-use Doctrine\DBAL\Statement;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class FilterPageTypeListenerTest extends TestCase
@@ -60,7 +58,7 @@ class FilterPageTypeListenerTest extends TestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
-            ->method('fetchColumn')
+            ->method('fetchOne')
             ->willReturn('foo')
         ;
 
@@ -77,7 +75,7 @@ class FilterPageTypeListenerTest extends TestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
-            ->method('fetchColumn')
+            ->method('fetchOne')
             ->with('SELECT type FROM tl_page WHERE id=?', [17])
             ->willReturn('foo')
         ;
@@ -95,32 +93,24 @@ class FilterPageTypeListenerTest extends TestCase
 
     public function testRemovesErrorTypesAlreadyPresentInTheRootPage(): void
     {
-        $statement = $this->createMock(Statement::class);
-        $statement
-            ->expects($this->once())
-            ->method('fetchAll')
-            ->with(FetchMode::COLUMN)
-            ->willReturn(['foo', 'error_401', 'error_403'])
-        ;
-
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
-            ->method('fetchColumn')
+            ->method('fetchOne')
             ->with('SELECT type FROM tl_page WHERE id=?', [1])
             ->willReturn('root')
         ;
 
         $connection
             ->expects($this->once())
-            ->method('executeQuery')
-            ->with('SELECT DISTINCT(type) FROM tl_page WHERE pid=?', [1])
-            ->willReturn($statement)
+            ->method('fetchFirstColumn')
+            ->with('SELECT DISTINCT(type) FROM tl_page WHERE pid=? AND id!=?', [1, 2])
+            ->willReturn(['foo', 'error_401', 'error_403'])
         ;
 
         $event = new FilterPageTypeEvent(
             ['foo', 'root', 'error_401', 'error_403', 'error_404'],
-            $this->mockDataContainer(1)
+            $this->mockDataContainer(1, 2)
         );
 
         $listener = new FilterPageTypeListener($connection);
@@ -132,12 +122,19 @@ class FilterPageTypeListenerTest extends TestCase
     /**
      * @return DataContainer&MockObject
      */
-    private function mockDataContainer(?int $pid): DataContainer
+    private function mockDataContainer(?int $pid, int $id = null): DataContainer
     {
+        $activeRecord = array_filter(
+            compact('id', 'pid'),
+            static function ($v): bool {
+                return null !== $v;
+            }
+        );
+
         /** @var DataContainer&MockObject */
         return $this->mockClassWithProperties(
             DataContainer::class,
-            ['activeRecord' => null === $pid ? null : (object) ['pid' => $pid]]
+            ['activeRecord' => empty($activeRecord) ? null : (object) $activeRecord]
         );
     }
 }
