@@ -28,9 +28,7 @@ jobs:
               uses: actions/checkout@v1
 
             - name: Install the dependencies
-              run: |
-                  composer install --no-interaction
-                  composer bin phpunit install --no-interaction
+              run: composer install --no-interaction --no-progress
 
             - name: Generate the coverage report
               run: php -d pcov.enabled=1 vendor/bin/phpunit --testsuite=coverage --coverage-clover=clover.xml --colors=always
@@ -59,17 +57,18 @@ jobs:
 
             - name: Install the dependencies
               run: |
-                  composer install --no-interaction
-                  composer bin code-quality install --no-interaction
+                  composer install --no-interaction --no-progress
+                  composer bin ecs install --no-interaction --no-progress
+                  composer bin phpstan install --no-interaction --no-progress
 
             - name: Check the coding standard
               run: |
-                  vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests --config vendor-bin/code-quality/vendor/contao/easy-coding-standard/config/default.yaml --no-progress-bar --ansi
-                  vendor/bin/ecs check *-bundle/src/Resources/contao --config vendor-bin/code-quality/vendor/contao/easy-coding-standard/config/legacy.yaml --no-progress-bar --ansi
-                  vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config vendor-bin/code-quality/vendor/contao/easy-coding-standard/config/template.yaml --no-progress-bar --ansi
+                  tools/ecs/vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests --config tools/ecs/vendor/contao/easy-coding-standard/config/default.yaml --no-progress-bar --ansi
+                  tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao --config tools/ecs/vendor/contao/easy-coding-standard/config/legacy.yaml --no-progress-bar --ansi
+                  tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config tools/ecs/vendor/contao/easy-coding-standard/config/template.yaml --no-progress-bar --ansi
 
             - name: Analyze the code
-              run: vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
+              run: tools/phpstan/vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
 
             - name: Analyze the YAML files
               run: |
@@ -103,9 +102,7 @@ jobs:
               uses: actions/checkout@v1
 
             - name: Install the dependencies
-              run: |
-                  composer install --no-interaction
-                  composer bin phpunit install --no-interaction
+              run: composer install --no-interaction --no-progress
 
             - name: Run the unit tests
               run: vendor/bin/phpunit --colors=always
@@ -137,9 +134,7 @@ jobs:
               uses: actions/checkout@v1
 
             - name: Install the dependencies
-              run: |
-                  composer install --no-interaction
-                  composer bin phpunit install --no-interaction
+              run: composer install --ignore-platform-reqs --no-interaction --no-progress
 
             - name: Run the unit tests
               run: vendor/bin/phpunit --colors=always
@@ -171,9 +166,7 @@ jobs:
               uses: actions/checkout@v1
 
             - name: Install the dependencies
-              run: |
-                  composer update --prefer-lowest --prefer-stable --no-interaction
-                  composer bin phpunit update --no-interaction
+              run: composer update --prefer-lowest --prefer-stable --no-interaction --no-progress
 
             - name: Run the unit tests
               run: vendor/bin/phpunit --colors=always
@@ -216,7 +209,7 @@ jobs:
                           }
                           file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
                       '
-                      COMPOSER_ROOT_VERSION=dev-${{ env.GITHUB_SHA }} composer install --no-interaction
+                      COMPOSER_ROOT_VERSION=dev-${{ env.GITHUB_SHA }} composer install --no-interaction --no-progress
                       vendor/bin/phpunit --colors=always
                       cd ..
                   done
@@ -242,9 +235,7 @@ jobs:
               uses: actions/checkout@v1
 
             - name: Install the dependencies
-              run: |
-                  composer install --no-interaction
-                  composer bin phpunit install --no-interaction
+              run: composer install --no-interaction --no-progress
 
             - name: Run the unit tests
               run: vendor/bin/phpunit.bat --colors=always
@@ -266,11 +257,11 @@ jobs:
 
             - name: Install the dependencies
               run: |
-                  composer install --no-interaction
-                  composer bin monorepo-tools install --no-interaction
+                  composer install --no-interaction --no-progress
+                  composer bin monorepo install --no-interaction --no-progress
 
             - name: Validate the composer.json files
-              run: vendor/bin/monorepo-tools composer-json --validate --ansi
+              run: tools/monorepo/vendor/bin/monorepo-tools composer-json --validate --ansi
 
     monorepo-split:
         name: Monorepo Split
