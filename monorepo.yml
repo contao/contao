@@ -8,16 +8,6 @@ composer:
         doctrine/annotations: <1.7
         nikic/php-parser: 4.7.0
         zendframework/zend-code: <3.3.1
-    require-dev:
-        contao/easy-coding-standard: ^3.0
-        contao/monorepo-tools: dev-master
-        phpstan/phpstan-phpunit: ^0.12
-        phpstan/phpstan-symfony: ^0.12
-        psalm/plugin-phpunit: ^0.10
-        psalm/plugin-symfony: ^1.0
-        slam/phpstan-extensions: ^5.0
-        thecodingmachine/phpstan-strict-rules: ^0.12
-        weirdan/doctrine-psalm-plugin: ^0.11
 
 repositories:
     core-bundle:

@@ -4,7 +4,7 @@
     resolveFromConfigFile="true"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
-    xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+    xsi:schemaLocation="https://getpsalm.org/schema/config tools/psalm/vendor/vimeo/psalm/config.xsd"
 >
     <projectFiles>
         <directory name="core-bundle/src"/>
@@ -17,14 +17,13 @@
     <plugins>
         <pluginClass class="Psalm\PhpUnitPlugin\Plugin"/>
         <pluginClass class="Psalm\SymfonyPsalmPlugin\Plugin"/>
-        <pluginClass class="Weirdan\DoctrinePsalmPlugin\Plugin"/>
     </plugins>
     <issueHandlers>
-        <!-- TODO: Remove this again once https://github.com/symfony/symfony/pull/37869 has been fixed -->
-        <ParamNameMismatch>
+        <!-- TODO: Remove this again once https://github.com/vimeo/psalm/issues/4874 has been fixed -->
+        <TooFewArguments>
             <errorLevel type="suppress">
-                <file name="core-bundle/src/DependencyInjection/Security/ContaoLoginFactory.php"/>
+                <file name="core-bundle/src/Doctrine/Schema/DcaSchemaProvider.php"/>
             </errorLevel>
-        </ParamNameMismatch>
+        </TooFewArguments>
     </issueHandlers>
 </psalm>

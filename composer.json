@@ -117,7 +117,7 @@
         "twig/twig": "^2.7",
         "ua-parser/uap-php": "^3.9",
         "webignition/robots-txt-file": "^3.0",
-        "webmozart/path-util": "^2.0",
+        "webmozart/path-util": "^2.2",
         "wikimedia/less.php": "^1.7"
     },
     "replace": {
@@ -145,25 +145,18 @@
     },
     "require-dev": {
         "ext-fileinfo": "*",
-        "composer/composer": "^1.0",
-        "contao/easy-coding-standard": "^3.0",
-        "contao/monorepo-tools": "dev-master",
+        "bamarni/composer-bin-plugin": "^1.4",
+        "composer/composer": "^1.0 || ^2.0",
         "contao/test-case": "^4.2",
-        "doctrine/event-manager": "^1.0",
-        "monolog/monolog": "^1.24",
-        "phpstan/phpstan-phpunit": "^0.12",
-        "phpstan/phpstan-symfony": "^0.12",
         "phpunit/phpunit": "^8.5",
-        "psalm/plugin-phpunit": "^0.10",
-        "psalm/plugin-symfony": "^1.0",
-        "psr/event-dispatcher": "^1.0",
-        "slam/phpstan-extensions": "^5.0",
         "symfony/browser-kit": "4.4.*",
-        "symfony/phpunit-bridge": "4.4.*",
-        "thecodingmachine/phpstan-strict-rules": "^0.12",
-        "weirdan/doctrine-psalm-plugin": "^0.11"
+        "symfony/phpunit-bridge": "4.4.*"
     },
     "extra": {
+        "bamarni-bin": {
+            "bin-links": false,
+            "target-directory": "tools"
+        },
         "branch-alias": {
             "dev-master": "4.11.x-dev"
         },
@@ -265,21 +258,21 @@
             "@monorepo-tools"
         ],
         "cs-fixer": [
-            "vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests --config vendor/contao/easy-coding-standard/config/default.php --fix --ansi",
-            "vendor/bin/ecs check *-bundle/src/Resources/contao --config vendor/contao/easy-coding-standard/config/legacy.php --fix --ansi",
-            "vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config vendor/contao/easy-coding-standard/config/template.php --fix --ansi"
+            "tools/ecs/vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests --config tools/ecs/vendor/contao/easy-coding-standard/config/default.php --fix --ansi",
+            "tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao --config tools/ecs/vendor/contao/easy-coding-standard/config/legacy.php --fix --ansi",
+            "tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config tools/ecs/vendor/contao/easy-coding-standard/config/template.php --fix --ansi"
         ],
         "functional-tests": [
             "vendor/bin/phpunit --testsuite=functional --colors=always"
         ],
         "monorepo-tools": [
-            "vendor/bin/monorepo-tools composer-json --validate --ansi"
+            "tools/monorepo/vendor/bin/monorepo-tools composer-json --validate --ansi"
         ],
         "phpstan": [
-            "vendor/bin/phpstan analyze core-bundle/src core-bundle/tests --level=5 --memory-limit=1G --ansi"
+            "tools/phpstan/vendor/bin/phpstan analyze core-bundle/src core-bundle/tests --level=5 --memory-limit=1G --ansi"
         ],
         "psalm": [
-            "vendor/bin/psalm --no-suggestions"
+            "tools/psalm/vendor/bin/psalm --no-suggestions"
         ],
         "unit-tests": [
             "vendor/bin/phpunit --colors=always"
