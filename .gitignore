@@ -3,8 +3,8 @@
 /vendor/
 
 # Composer bin
-/vendor-bin/*/composer.lock
-/vendor-bin/*/vendor
+/tools/*/composer.lock
+/tools/*/vendor
 
 # Monorepo Tools
 /.monorepo-split-cache/

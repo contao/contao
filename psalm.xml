@@ -4,7 +4,7 @@
     resolveFromConfigFile="true"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
-    xsi:schemaLocation="https://getpsalm.org/schema/config vendor-bin/code-quality/vendor/vimeo/psalm/config.xsd"
+    xsi:schemaLocation="https://getpsalm.org/schema/config tools/psalm/vendor/vimeo/psalm/config.xsd"
 >
     <projectFiles>
         <directory name="core-bundle/src"/>
@@ -18,4 +18,12 @@
         <pluginClass class="Psalm\PhpUnitPlugin\Plugin"/>
         <pluginClass class="Psalm\SymfonyPsalmPlugin\Plugin"/>
     </plugins>
+    <issueHandlers>
+        <!-- TODO: Remove this again once https://github.com/vimeo/psalm/issues/4874 has been fixed -->
+        <TooFewArguments>
+            <errorLevel type="suppress">
+                <file name="core-bundle/src/Doctrine/Schema/DcaSchemaProvider.php"/>
+            </errorLevel>
+        </TooFewArguments>
+    </issueHandlers>
 </psalm>
