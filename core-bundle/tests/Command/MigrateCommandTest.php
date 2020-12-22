@@ -19,12 +19,15 @@ use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\InstallationBundle\Database\Installer;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
 
 class MigrateCommandTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     public function testExecutesWithoutPendingMigrations(): void
     {
         $command = $this->getCommand();
@@ -60,11 +63,11 @@ class MigrateCommandTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Since contao/core-bundle 4.9: Using "runonce.php" files has been deprecated %s.
      */
     public function testExecutesRunOnceFiles(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.9: Using "runonce.php" files has been deprecated %s.');
+
         $runOnceFile = $this->getFixturesDir().'/runonceFile.php';
 
         (new Filesystem())->dumpFile($runOnceFile, '<?php $GLOBALS["test_'.self::class.'"] = "executed";');

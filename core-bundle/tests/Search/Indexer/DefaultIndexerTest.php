@@ -19,9 +19,12 @@ use Contao\Search;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
 use Nyholm\Psr7\Uri;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class DefaultIndexerTest extends ContaoTestCase
 {
+    use ExpectDeprecationTrait;
+
     /**
      * @dataProvider indexProvider
      */
@@ -130,11 +133,11 @@ class DefaultIndexerTest extends ContaoTestCase
     /**
      * @group legacy
      * @dataProvider indexProviderDeprecated
-     *
-     * @expectedDeprecation Using the JSON-LD type "RegularPage" has been deprecated and will no longer work in Contao 5.0. Use "Page" instead.
      */
     public function testIndexesADocumentWithDeprecatedJsonLd(Document $document, ?array $expectedIndexParams, string $expectedMessage = null, bool $indexProtected = false): void
     {
+        $this->expectDeprecation('Using the JSON-LD type "RegularPage" has been deprecated and will no longer work in Contao 5.0. Use "Page" instead.');
+
         $this->testIndexesADocument($document, $expectedIndexParams, $expectedMessage, $indexProtected);
     }
 

@@ -154,6 +154,7 @@ use Contao\ImagineSvg\Imagine as ImagineSvg;
 use Knp\Menu\Matcher\Matcher;
 use Knp\Menu\Renderer\ListRenderer;
 use Psr\Container\ContainerInterface as PsrContainerInterface;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Cmf\Component\Routing\DynamicRouter;
 use Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher;
 use Symfony\Component\Config\FileLocator;
@@ -176,6 +177,8 @@ use Webmozart\PathUtil\Path;
 
 class ContaoCoreExtensionTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     public function testReturnsTheCorrectAlias(): void
     {
         $extension = new ContaoCoreExtension();
@@ -4066,11 +4069,11 @@ class ContaoCoreExtensionTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Since contao/core-bundle 4.4: Using the "contao.image.target_path" parameter has been deprecated %s.
      */
     public function testRegistersTheImageTargetPath(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.4: Using the "contao.image.target_path" parameter has been deprecated %s.');
+
         $container = new ContainerBuilder(
             new ParameterBag([
                 'kernel.debug' => false,

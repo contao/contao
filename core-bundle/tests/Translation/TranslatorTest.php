@@ -15,12 +15,15 @@ namespace Contao\CoreBundle\Tests\Translation;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Translation\Translator;
 use Contao\System;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Translation\Translator as BaseTranslator;
 use Symfony\Component\Translation\TranslatorInterface as LegacyTranslatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TranslatorTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     /**
      * @group legacy
      */
@@ -84,14 +87,14 @@ class TranslatorTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation The Symfony\Component\Translation\Translator::transChoice method is deprecated %s.
      */
     public function testForwardsTheLegacyMethodCallsToTheDecoratedTranslator(): void
     {
         if (!method_exists(BaseTranslator::class, 'transChoice')) {
             $this->markTestSkipped('The transChoice() method no longer exists.');
         }
+
+        $this->expectDeprecation('The Symfony\Component\Translation\Translator::transChoice method is deprecated %s.');
 
         $originalTranslator = $this->createMock(BaseTranslator::class);
         $originalTranslator

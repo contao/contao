@@ -18,11 +18,14 @@ use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Knp\Menu\MenuItem;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
 
 class ArticlePickerProviderTest extends ContaoTestCase
 {
+    use ExpectDeprecationTrait;
+
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
@@ -39,11 +42,11 @@ class ArticlePickerProviderTest extends ContaoTestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Since contao/core-bundle 4.4: Using a picker provider without injecting the translator service has been deprecated %s.
      */
     public function testCreatesTheMenuItem(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.4: Using a picker provider without injecting the translator service has been deprecated %s.');
+
         $config = json_encode([
             'context' => 'link',
             'extras' => [],

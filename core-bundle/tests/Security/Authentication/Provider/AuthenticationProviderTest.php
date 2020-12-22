@@ -26,6 +26,7 @@ use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextFactoryInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Handler\AuthenticationHandlerInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManagerInterface;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
@@ -39,6 +40,8 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class AuthenticationProviderTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     public function testAuthenticatesTwoFactorToken(): void
     {
         $user = $this->createPartialMock(FrontendUser::class, []);
@@ -437,11 +440,11 @@ class AuthenticationProviderTest extends TestCase
     /**
      * @group legacy
      * @dataProvider getCheckCredentialsHookData
-     *
-     * @expectedDeprecation Since contao/core-bundle 4.5: Using the "checkCredentials" hook has been deprecated %s.
      */
     public function testTriggersTheCheckCredentialsHook(string $callback): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.5: Using the "checkCredentials" hook has been deprecated %s.');
+
         /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['getPassword', 'save']);
         $user->username = 'foo';

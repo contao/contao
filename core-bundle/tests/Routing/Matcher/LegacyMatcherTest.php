@@ -21,6 +21,7 @@ use Contao\Input;
 use Contao\PageModel;
 use Contao\System;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
@@ -30,6 +31,8 @@ use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
  */
 class LegacyMatcherTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     public function testDoesNothingIfNoHooksAreRegistered(): void
     {
         unset($GLOBALS['TL_HOOKS']['getPageIdFromUrl']);
@@ -78,13 +81,12 @@ class LegacyMatcherTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Since contao/core-bundle 4.0: Using the "getPageIdFromUrl" hook has been deprecated %s
-     *
      * @dataProvider getRequestData
      */
     public function testMatchesRequestWithoutFolderUrl(string $requestPath, ?string $language, string $urlSuffix, bool $useAutoItem, string $resultPath, ...$hooks): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.0: Using the "getPageIdFromUrl" hook has been deprecated %s');
+
         $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = $hooks;
 
         $config = [
@@ -217,11 +219,11 @@ class LegacyMatcherTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Since contao/core-bundle 4.0: Using the "getPageIdFromUrl" hook has been deprecated %s
      */
     public function testMatchRequestFromPathIfFolderUrlIsNotFound(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.0: Using the "getPageIdFromUrl" hook has been deprecated %s');
+
         $config = [
             'useAutoItem' => false,
         ];
@@ -271,11 +273,11 @@ class LegacyMatcherTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Since contao/core-bundle 4.0: Using the "getPageIdFromUrl" hook has been deprecated %s
      */
     public function testMatchRequestFromPathIfFolderUrlHasNoModel(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.0: Using the "getPageIdFromUrl" hook has been deprecated %s');
+
         $config = [
             'useAutoItem' => false,
         ];
@@ -325,11 +327,11 @@ class LegacyMatcherTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Since contao/core-bundle 4.0: Using the "getPageIdFromUrl" hook has been deprecated %s
      */
     public function testUsesPageAliasFromFolderUrlRoute(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.0: Using the "getPageIdFromUrl" hook has been deprecated %s');
+
         $config = [
             'useAutoItem' => false,
         ];
@@ -383,11 +385,11 @@ class LegacyMatcherTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Since contao/core-bundle 4.0: Using the "getPageIdFromUrl" hook has been deprecated %s
      */
     public function testMatchesFragmentsWithParametersFolderUrlRoute(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.0: Using the "getPageIdFromUrl" hook has been deprecated %s');
+
         $config = [
             'useAutoItem' => false,
         ];
@@ -444,11 +446,11 @@ class LegacyMatcherTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Since contao/core-bundle 4.0: Using the "getPageIdFromUrl" hook has been deprecated %s
      */
     public function testAddsAutoItemToFragmentsOfFolderUrlRoute(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.0: Using the "getPageIdFromUrl" hook has been deprecated %s');
+
         $config = [
             'useAutoItem' => true,
         ];
@@ -540,11 +542,11 @@ class LegacyMatcherTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Since contao/core-bundle 4.0: Using the "getPageIdFromUrl" hook has been deprecated %s
      */
     public function testThrowsExceptionIfHookReturnsAnEmptyAlias(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.0: Using the "getPageIdFromUrl" hook has been deprecated %s');
+
         $config = [
             'useAutoItem' => false,
         ];
