@@ -41,13 +41,7 @@ class LegacyMatcherTest extends TestCase
             false
         );
 
-        $request = $this->createMock(Request::class);
-        $request
-            ->method('getPathInfo')
-            ->willReturn('foo.html')
-        ;
-
-        $matcher->matchRequest($request);
+        $matcher->matchRequest(Request::create('foo.html'));
     }
 
     /**
@@ -55,13 +49,6 @@ class LegacyMatcherTest extends TestCase
      */
     public function testDoesNotExecuteHooksIfTheRequestPathIsEmpty(string $pathInfo, bool $prependLocale, bool $noRouteFound = false): void
     {
-        $request = $this->createMock(Request::class);
-        $request
-            ->expects($this->once())
-            ->method('getPathInfo')
-            ->willReturn($pathInfo)
-        ;
-
         $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = ['foo', 'bar'];
 
         $matcher = new LegacyMatcher(
@@ -75,7 +62,7 @@ class LegacyMatcherTest extends TestCase
             $this->expectException(ResourceNotFoundException::class);
         }
 
-        $matcher->matchRequest($request);
+        $matcher->matchRequest(Request::create($pathInfo));
     }
 
     public function getRootRequestData(): \Generator
@@ -98,13 +85,6 @@ class LegacyMatcherTest extends TestCase
      */
     public function testMatchesRequestWithoutFolderUrl(string $requestPath, ?string $language, string $urlSuffix, bool $useAutoItem, string $resultPath, ...$hooks): void
     {
-        $request = $this->createMock(Request::class);
-        $request
-            ->expects($this->once())
-            ->method('getPathInfo')
-            ->willReturn($requestPath)
-        ;
-
         $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = $hooks;
 
         $config = [
@@ -120,7 +100,7 @@ class LegacyMatcherTest extends TestCase
             null !== $language
         );
 
-        $matcher->matchRequest($request);
+        $matcher->matchRequest(Request::create($requestPath));
     }
 
     /**
@@ -253,13 +233,7 @@ class LegacyMatcherTest extends TestCase
         );
 
         $folderUrlMatched = 0;
-
-        $request = $this->createMock(Request::class);
-        $request
-            ->expects($this->once())
-            ->method('getPathInfo')
-            ->willReturn('foo.html')
-        ;
+        $request = Request::create('foo.html');
 
         $matcher = $this->createMock(RequestMatcherInterface::class);
         $matcher
@@ -313,13 +287,7 @@ class LegacyMatcherTest extends TestCase
         );
 
         $folderUrlMatched = 0;
-
-        $request = $this->createMock(Request::class);
-        $request
-            ->expects($this->once())
-            ->method('getPathInfo')
-            ->willReturn('foo.html')
-        ;
+        $request = Request::create('foo.html');
 
         $matcher = $this->createMock(RequestMatcherInterface::class);
         $matcher
@@ -373,12 +341,7 @@ class LegacyMatcherTest extends TestCase
         );
 
         $folderUrlMatched = 0;
-
-        $request = $this->createMock(Request::class);
-        $request
-            ->method('getPathInfo')
-            ->willReturn('foo.html')
-        ;
+        $request = Request::create('foo.html');
 
         $matcher = $this->createMock(RequestMatcherInterface::class);
         $matcher
@@ -436,12 +399,7 @@ class LegacyMatcherTest extends TestCase
         );
 
         $folderUrlMatched = 0;
-
-        $request = $this->createMock(Request::class);
-        $request
-            ->method('getPathInfo')
-            ->willReturn('foo/bar/baz.html')
-        ;
+        $request = Request::create('foo/bar/baz.html');
 
         $matcher = $this->createMock(RequestMatcherInterface::class);
         $matcher
@@ -502,12 +460,7 @@ class LegacyMatcherTest extends TestCase
         );
 
         $folderUrlMatched = 0;
-
-        $request = $this->createMock(Request::class);
-        $request
-            ->method('getPathInfo')
-            ->willReturn('foo/baz.html')
-        ;
+        $request = Request::create('foo/baz.html');
 
         $matcher = $this->createMock(RequestMatcherInterface::class);
         $matcher
@@ -556,23 +509,15 @@ class LegacyMatcherTest extends TestCase
             'useAutoItem' => false,
         ];
 
-        $framework = $this->mockFrameworkWithAdapters($this->mockConfigAdapter($config));
-
-        $request = $this->createMock(Request::class);
-        $request
-            ->expects($this->once())
-            ->method('getPathInfo')
-            ->willReturn('foo.php')
-        ;
-
         $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = [[]];
 
+        $framework = $this->mockFrameworkWithAdapters($this->mockConfigAdapter($config));
         $matcher = new LegacyMatcher($framework, $this->mockRequestMatcher(), '.html', false);
 
         $this->expectException(ResourceNotFoundException::class);
         $this->expectExceptionMessage('URL suffix does not match');
 
-        $matcher->matchRequest($request);
+        $matcher->matchRequest(Request::create('foo.php'));
     }
 
     public function testThrowsExceptionIfLanguageIsMissing(): void
@@ -582,23 +527,15 @@ class LegacyMatcherTest extends TestCase
             'useAutoItem' => false,
         ];
 
-        $framework = $this->mockFrameworkWithAdapters($this->mockConfigAdapter($config));
-
-        $request = $this->createMock(Request::class);
-        $request
-            ->expects($this->once())
-            ->method('getPathInfo')
-            ->willReturn('foo/bar.html')
-        ;
-
         $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = [[]];
 
+        $framework = $this->mockFrameworkWithAdapters($this->mockConfigAdapter($config));
         $matcher = new LegacyMatcher($framework, $this->mockRequestMatcher(), '.html', true);
 
         $this->expectException(ResourceNotFoundException::class);
         $this->expectExceptionMessage('Locale does not match');
 
-        $matcher->matchRequest($request);
+        $matcher->matchRequest(Request::create('foo/bar.html'));
     }
 
     /**
@@ -618,13 +555,6 @@ class LegacyMatcherTest extends TestCase
             [['foo', 'bar', ['foo'], ['']]]
         );
 
-        $request = $this->createMock(Request::class);
-        $request
-            ->expects($this->once())
-            ->method('getPathInfo')
-            ->willReturn('foo.html')
-        ;
-
         $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = [['foo', 'bar']];
 
         $matcher = new LegacyMatcher($framework, $this->mockRequestMatcher(), '.html', false);
@@ -632,7 +562,7 @@ class LegacyMatcherTest extends TestCase
         $this->expectException(ResourceNotFoundException::class);
         $this->expectExceptionMessage('Page alias is empty');
 
-        $matcher->matchRequest($request);
+        $matcher->matchRequest(Request::create('foo.html'));
     }
 
     /**

@@ -23,11 +23,13 @@ class TranslatorTest extends TestCase
 {
     /**
      * @group legacy
-     *
-     * @expectedDeprecation %simplements "Symfony\Component\Translation\TranslatorInterface" that is deprecated%s
      */
     public function testTranslatorImplementsDeprecatedInterface(): void
     {
+        if (method_exists(BaseTranslator::class, 'transChoice')) {
+            $this->expectDeprecation('%s "Symfony\Component\Translation\TranslatorInterface" that is deprecated %s');
+        }
+
         $translator = new Translator($this->createMock(BaseTranslator::class), $this->mockContaoFramework());
 
         $this->assertInstanceOf(TranslatorInterface::class, $translator);
@@ -87,6 +89,10 @@ class TranslatorTest extends TestCase
      */
     public function testForwardsTheLegacyMethodCallsToTheDecoratedTranslator(): void
     {
+        if (!method_exists(BaseTranslator::class, 'transChoice')) {
+            $this->markTestSkipped('The transChoice() method no longer exists.');
+        }
+
         $originalTranslator = $this->createMock(BaseTranslator::class);
         $originalTranslator
             ->expects($this->once())

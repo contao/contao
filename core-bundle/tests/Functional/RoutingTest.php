@@ -1237,6 +1237,11 @@ class RoutingTest extends FunctionalTestCase
         $this->assertStringContainsString('', $title);
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation %sUsing the "Contao\CoreBundle\Routing\FrontendLoader" class has been deprecated%s.
+     */
     public function testCorrectPageForUnknownLanguage(): void
     {
         Config::set('folderUrl', true);

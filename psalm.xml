@@ -19,6 +19,11 @@
         <pluginClass class="Psalm\SymfonyPsalmPlugin\Plugin"/>
     </plugins>
     <issueHandlers>
+        <UndefinedTrait>
+            <errorLevel type="suppress">
+                <file name="vendor/symfony/phpunit-bridge/ExpectDeprecationTrait.php"/>
+            </errorLevel>
+        </UndefinedTrait>
         <!-- TODO: Remove this again once https://github.com/vimeo/psalm/issues/4874 has been fixed -->
         <TooFewArguments>
             <errorLevel type="suppress">

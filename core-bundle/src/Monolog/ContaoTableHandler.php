@@ -16,6 +16,7 @@ use Contao\StringUtil;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Statement;
+use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\AbstractProcessingHandler;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -90,7 +91,7 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
         ]);
     }
 
-    protected function getDefaultFormatter(): LineFormatter
+    protected function getDefaultFormatter(): FormatterInterface
     {
         return new LineFormatter('%message%');
     }

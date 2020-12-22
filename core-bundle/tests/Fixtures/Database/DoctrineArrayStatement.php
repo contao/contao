@@ -16,6 +16,9 @@ use Doctrine\DBAL\Cache\ArrayStatement;
 use Doctrine\DBAL\Driver\Statement;
 use Doctrine\DBAL\ParameterType;
 
+/**
+ * @deprecated
+ */
 class DoctrineArrayStatement extends ArrayStatement implements Statement
 {
     private $rowCount;

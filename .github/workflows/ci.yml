@@ -71,7 +71,7 @@ jobs:
             - name: Analyze the code
               run: |
                   tools/phpstan/vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=5 --no-progress
-                  tools/psalm/vendor/bin/psalm --no-suggestions --threads=4 --no-progress
+                  tools/psalm/vendor/bin/psalm --no-suggestions --no-progress
 
             - name: Analyze the YAML files
               run: |

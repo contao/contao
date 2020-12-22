@@ -160,6 +160,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Compiler\ResolvePrivatesPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\ServiceLocator;
@@ -4118,8 +4119,10 @@ class ContaoCoreExtensionTest extends TestCase
         $extension->load($params, $container);
 
         // Resolve private services (see #949)
-        $pass = new ResolvePrivatesPass();
-        $pass->process($container);
+        if (!(new \ReflectionMethod(Definition::class, 'setPrivate'))->isDeprecated()) {
+            $pass = new ResolvePrivatesPass();
+            $pass->process($container);
+        }
 
         return $container;
     }

@@ -59,10 +59,12 @@ class TranslationListenerTest extends TestCase
             ->method('trans')
         ;
 
-        $translator
-            ->expects($this->never())
-            ->method('transChoice')
-        ;
+        if (method_exists($translator, 'transChoice')) {
+            $translator
+                ->expects($this->never())
+                ->method('transChoice')
+            ;
+        }
 
         $listener = new TranslationListener($translator);
 
