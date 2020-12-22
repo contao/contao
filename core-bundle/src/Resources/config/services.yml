@@ -99,7 +99,6 @@ services:
     # Backwards compatibility
     contao.controller.backend_csv_import:
         alias: Contao\CoreBundle\Controller\BackendCsvImportController
-        deprecated: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\BackendCsvImportController" instead.
         public: true
 
     Contao\CoreBundle\Controller\FaviconController:
@@ -130,7 +129,6 @@ services:
     # Backwards compatibility
     contao.controller.images:
         alias: Contao\CoreBundle\Controller\ImagesController
-        deprecated: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\ImagesController" instead.
         public: true
 
     Contao\CoreBundle\Controller\InsertTagsController:
@@ -142,7 +140,6 @@ services:
     # Backwards compatibility
     contao.controller.insert_tags:
         alias: Contao\CoreBundle\Controller\InsertTagsController
-        deprecated: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\InsertTagsController" instead.
         public: true
 
     Contao\CoreBundle\Controller\RobotsTxtController:
