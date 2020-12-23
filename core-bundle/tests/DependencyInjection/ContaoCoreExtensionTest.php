@@ -169,7 +169,6 @@ use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
 use Symfony\Component\HttpKernel\EventListener\ErrorListener;
 use Symfony\Component\HttpKernel\EventListener\LocaleListener as BaseLocaleListener;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator;
 use Symfony\Component\Security\Http\Firewall;
@@ -4121,8 +4120,10 @@ class ContaoCoreExtensionTest extends TestCase
         $extension = new ContaoCoreExtension();
         $extension->load($params, $container);
 
-        // Resolve private services (see #949)
-        if (Kernel::MAJOR_VERSION === 4) {
+        // To find out whether we need to run the ResolvePrivatesPass, we take
+        // a private service and check the isPublic() return value. In Symfony
+        // 4.4, it will be "true", whereas in Symfony 5, it will be "false".
+        if (true === $container->findDefinition('contao.routing.page_router')->isPublic()) {
             $pass = new ResolvePrivatesPass();
             $pass->process($container);
         }

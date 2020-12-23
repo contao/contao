@@ -19,7 +19,6 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
-use Symfony\Component\HttpKernel\Kernel;
 use Webmozart\PathUtil\Path;
 
 class Configuration implements ConfigurationInterface
@@ -484,7 +483,8 @@ class Configuration implements ConfigurationInterface
      */
     private function getDeprecationArgs(string $package, string $version, string $message): array
     {
-        if (Kernel::MAJOR_VERSION === 4) {
+        /** @phpstan-ignore-next-line */
+        if (method_exists('root', TreeBuilder::class)) {
             return [$message];
         }
 

@@ -38,9 +38,6 @@ parameters:
         - '#Call to an undefined method .*::transChoice\(\)\.#'
         - '#Trying to mock an undefined method transChoice\(\) on class Symfony\\Component\\Translation\\Translator\.#'
 
-        # Ignore kernel version comparisons (e.g. Kernel::MAJOR_VERSION === 4)
-        - '#Strict comparison using === between \d and \d will always evaluate to false\.#'
-
     treatPhpDocTypesAsCertain: false
     checkGenericClassInNonGenericObjectType: false
     inferPrivatePropertyTypeFromConstructor: true
