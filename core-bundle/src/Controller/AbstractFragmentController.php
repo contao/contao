@@ -19,6 +19,7 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\Template;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 abstract class AbstractFragmentController extends AbstractController implements FragmentOptionsAwareInterface
 {
@@ -27,24 +28,48 @@ abstract class AbstractFragmentController extends AbstractController implements 
      */
     protected $options = [];
 
-    /**
-     * @var PageModel|null
-     */
-    private $pageModel;
-
     public function setFragmentOptions(array $options): void
     {
         $this->options = $options;
     }
 
-    protected function setPageModel(?PageModel $pageModel): void
+    public static function getSubscribedServices(): array
     {
-        $this->pageModel = $pageModel;
+        $services = parent::getSubscribedServices();
+
+        $services['request_stack'] = RequestStack::class;
+
+        return $services;
     }
 
     protected function getPageModel(): ?PageModel
     {
-        return $this->pageModel;
+        $request = $this->get('request_stack')->getCurrentRequest();
+
+        if (null === $request || !$request->attributes->has('pageModel')) {
+            return null;
+        }
+
+        $pageModel = $request->attributes->get('pageModel');
+
+        if ($pageModel instanceof PageModel) {
+            return $pageModel;
+        }
+
+        if (
+            isset($GLOBALS['objPage'])
+            && $GLOBALS['objPage'] instanceof PageModel
+            && (int) $GLOBALS['objPage']->id === (int) $pageModel
+        ) {
+            return $GLOBALS['objPage'];
+        }
+
+        $this->initializeContaoFramework();
+
+        /** @var PageModel $pageAdapter */
+        $pageAdapter = $this->get('contao.framework')->getAdapter(PageModel::class);
+
+        return $pageAdapter->findByPk((int) $pageModel);
     }
 
     /**
