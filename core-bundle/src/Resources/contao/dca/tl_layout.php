@@ -507,7 +507,7 @@ class tl_layout extends Backend
 	 */
 	public function getStyleSheets(DataContainer $dc)
 	{
-		$intPid = $dc->activeRecord->pid;
+		$intPid = $dc->activeRecord->pid ?? null;
 
 		if (Input::get('act') == 'overrideAll')
 		{
