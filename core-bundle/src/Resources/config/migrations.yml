@@ -70,3 +70,7 @@ services:
     Contao\CoreBundle\Migration\Version411\MergeWebfontsMigration:
         arguments:
             - '@database_connection'
+
+    Contao\CoreBundle\Migration\Version411\RemoveJsHighlightMigration:
+        arguments:
+            - '@database_connection'
