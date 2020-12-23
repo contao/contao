@@ -46,6 +46,7 @@
         "contao-components/tinymce4": "^4.7 || ^5.0",
         "contao/image": "^1.0",
         "contao/imagine-svg": "^0.2.3 || ^1.0",
+        "contao/polyfill-symfony": "^1.0",
         "doctrine/dbal": "^2.11",
         "doctrine/doctrine-bundle": "^1.8 || ^2.0",
         "doctrine/orm": "^2.6.3",
@@ -146,7 +147,6 @@
             "src/Resources/contao/"
         ],
         "files": [
-            "src/Resources/functions/symfony-polyfill.php",
             "src/Resources/functions/utf8_bootup.php"
         ],
         "exclude-from-classmap": [
