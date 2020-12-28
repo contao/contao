@@ -801,6 +801,8 @@ class InsertTags extends Controller
 
 				case 'image':
 				case 'picture':
+					trigger_deprecation('contao/core-bundle', '4.11', 'Using the "image" and "picture" insert tags has been deprecated and will no longer work in Contao 5.0. Use the "figure" insert tag instead.');
+
 					$width = null;
 					$height = null;
 					$alt = '';
