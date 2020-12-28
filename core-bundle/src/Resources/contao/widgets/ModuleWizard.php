@@ -188,7 +188,7 @@ class ModuleWizard extends Widget
 			// Add modules
 			foreach ($modules as $v)
 			{
-				$options .= '<option value="' . StringUtil::specialchars($v['id']) . '"' . static::optionSelected($v['id'], $this->varValue[$i]['mod']) . '>' . $v['name'] . ' [' . $v['type'] . ']</option>';
+				$options .= '<option value="' . StringUtil::specialchars($v['id']) . '"' . static::optionSelected($v['id'], $this->varValue[$i]['mod'] ?? null) . '>' . $v['name'] . ' [' . $v['type'] . ']</option>';
 			}
 
 			$return .= '
@@ -200,7 +200,7 @@ class ModuleWizard extends Widget
 			// Add columns
 			foreach ($cols as $k=>$v)
 			{
-				$options .= '<option value="' . StringUtil::specialchars($k) . '"' . static::optionSelected($k, $this->varValue[$i]['col']) . '>' . $v . '</option>';
+				$options .= '<option value="' . StringUtil::specialchars($k) . '"' . static::optionSelected($k, $this->varValue[$i]['col'] ?? null) . '>' . $v . '</option>';
 			}
 
 			$return .= '
@@ -212,7 +212,7 @@ class ModuleWizard extends Widget
 			{
 				if ($button == 'edit')
 				{
-					$return .= ' <a href="contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->varValue[$i]['mod'] . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['tl_layout']['edit_module']) . '" class="module_link" ' . (($this->varValue[$i]['mod'] > 0) ? '' : ' style="display:none"') . ' onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_layout']['edit_module'])) . '\',\'url\':this.href});return false">' . Image::getHtml('edit.svg') . '</a>' . Image::getHtml('edit_.svg', '', 'class="module_image"' . (($this->varValue[$i]['mod'] > 0) ? ' style="display:none"' : ''));
+					$return .= ' <a href="contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . ($this->varValue[$i]['mod'] ?? null) . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['tl_layout']['edit_module']) . '" class="module_link" ' . (($this->varValue[$i]['mod'] ?? null) > 0 ? '' : ' style="display:none"') . ' onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_layout']['edit_module'])) . '\',\'url\':this.href});return false">' . Image::getHtml('edit.svg') . '</a>' . Image::getHtml('edit_.svg', '', 'class="module_image"' . (($this->varValue[$i]['mod'] ?? null) > 0 ? ' style="display:none"' : ''));
 				}
 				elseif ($button == 'drag')
 				{
