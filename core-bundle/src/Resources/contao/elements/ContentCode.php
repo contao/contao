@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Highlight\Highlighter;
+
 /**
  * Front end content element "code".
  *
@@ -61,8 +63,20 @@ class ContentCode extends ContentElement
 			$this->highlight = 'cpp';
 		}
 
-		$this->Template->code = htmlspecialchars($this->code);
-		$this->Template->cssClass = strtolower($this->highlight) ?: 'nohighlight';
+		$hl = new Highlighter();
+
+		try
+		{
+			$this->Template->code = $hl->highlight(strtolower($this->highlight) ?: 'plaintext', $this->code)->value;
+		}
+		catch (\DomainException $e)
+		{
+			$this->Template->code = htmlspecialchars($this->code);
+		}
+
+		$this->Template->cssClass = 'hljs ' . (strtolower($this->highlight) ?: 'nohighlight');
+
+		$GLOBALS['TL_CSS'][] = 'assets/highlight/css/foundation.css|static';
 	}
 }
 
