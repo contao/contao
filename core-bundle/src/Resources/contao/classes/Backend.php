@@ -347,7 +347,11 @@ abstract class Backend extends Controller
 		}
 
 		\define('CURRENT_ID', (Input::get('table') ? $id : Input::get('id')));
-		$this->Template->headline = $GLOBALS['TL_LANG']['MOD'][$module][0];
+
+		if (isset($GLOBALS['TL_LANG']['MOD'][$module][0]))
+		{
+			$this->Template->headline = $GLOBALS['TL_LANG']['MOD'][$module][0];
+		}
 
 		// Add the module style sheet
 		if (isset($arrModule['stylesheet']))
