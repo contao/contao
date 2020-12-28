@@ -27,6 +27,7 @@ use FOS\HttpCacheBundle\FOSHttpCacheBundle;
 use Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
 use Nelmio\SecurityBundle\NelmioSecurityBundle;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MonologBundle\MonologBundle;
@@ -45,6 +46,8 @@ use Symfony\Component\Routing\RouteCollection;
 
 class PluginTest extends ContaoTestCase
 {
+    use ExpectDeprecationTrait;
+
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
@@ -310,11 +313,11 @@ class PluginTest extends ContaoTestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Since contao/manager-bundle 4.6: Defining the "prepend_locale" parameter in the parameters.yml file %s.
      */
     public function testHandlesThePrependLocaleParameter(): void
     {
+        $this->expectDeprecation('Since contao/manager-bundle 4.6: Defining the "prepend_locale" parameter in the parameters.yml file %s.');
+
         $container = $this->getContainer();
         $container->setParameter('prepend_locale', true);
 

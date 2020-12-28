@@ -54,7 +54,12 @@ class FrontendPreviewTokenTest extends TestCase
     {
         $token = new FrontendPreviewToken(null, true);
         $serialized = $token->__serialize();
-        $expected = [true, ['anon.', true, [], [], []]];
+
+        if (method_exists($token, 'getRoles')) {
+            $expected = [true, ['anon.', true, [], [], []]];
+        } else {
+            $expected = [true, ['anon.', true, null, [], []]];
+        }
 
         $this->assertSame($expected, $serialized);
 
