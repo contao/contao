@@ -56,12 +56,7 @@ class TranslationListenerTest extends TestCase
         $translator = $this->createMock(Translator::class);
         $translator
             ->expects($this->never())
-            ->method('trans')
-        ;
-
-        $translator
-            ->expects($this->never())
-            ->method('transChoice')
+            ->method($this->anything())
         ;
 
         $listener = new TranslationListener($translator);
