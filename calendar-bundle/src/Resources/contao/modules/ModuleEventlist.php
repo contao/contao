@@ -367,7 +367,7 @@ class ModuleEventlist extends Events
 				$eventModel = CalendarEventsModel::findByPk($event['id']);
 
 				$figure = $figureBuilder
-					->setSize($eventModel->size ?: $this->imgSize ?: null)
+					->setSize($this->imgSize ?: $eventModel->size ?: null)
 					->setMetaData($eventModel->getOverwriteMetaData())
 					->enableLightbox($eventModel->fullsize)
 					->build();

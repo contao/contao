@@ -293,7 +293,7 @@ class ModuleEventReader extends Events
 		if ($objEvent->addImage && null !== ($figureBuilder = $this->getFigureBuilderIfResourceExists($objEvent->singleSRC)))
 		{
 			$figureBuilder
-				->setSize($objEvent->size ?: $this->imgSize ?: null)
+				->setSize($this->imgSize ?: $objEvent->size ?: null)
 				->setMetaData($objEvent->getOverwriteMetaData())
 				->enableLightbox($objEvent->fullsize)
 				->build()
