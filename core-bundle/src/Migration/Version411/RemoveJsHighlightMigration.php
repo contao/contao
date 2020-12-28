@@ -46,16 +46,16 @@ class RemoveJsHighlightMigration extends AbstractMigration
             return false;
         }
 
-        $layout = $this->connection->fetchAssociative("
+        $count = $this->connection->fetchOne("
             SELECT
-                COUNT(*) AS cnt
+                COUNT(*)
             FROM
                 tl_layout
             WHERE
                 scripts LIKE '%js_highlight%'
         ");
 
-        return $layout['cnt'] > 0;
+        return $count > 0;
     }
 
     public function run(): MigrationResult
