@@ -1641,7 +1641,7 @@ class tl_content extends Backend
 		$arrPids = array();
 		$arrArticle = array();
 		$arrRoot = array();
-		$intPid = $dc->activeRecord->pid;
+		$intPid = $dc->activeRecord->pid ?? null;
 
 		if (Input::get('act') == 'overrideAll')
 		{
