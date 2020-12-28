@@ -16,9 +16,11 @@ use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\System;
 
 /**
- * This trait is intended to be used in legacy content elements and modules
- * where dependency injection isn't available and missing images are silently
- * ignored for BC reasons.
+ * This trait simplifies the FigureBuilder usage in legacy content elements and
+ * modules where dependency injection isn't available and missing images are
+ * silently ignored for BC reasons.
+ *
+ * @internal
  */
 trait LegacyFigureBuilderTrait
 {
