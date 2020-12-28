@@ -854,6 +854,7 @@ services:
         arguments:
             - '@Contao\CoreBundle\Image\Studio\Studio'
             - '@twig'
+        public: true
 
     Contao\CoreBundle\Twig\Runtime\InsertTagRuntime:
         arguments:
