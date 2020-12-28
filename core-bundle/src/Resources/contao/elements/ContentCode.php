@@ -76,7 +76,7 @@ class ContentCode extends ContentElement
 
 		$this->Template->cssClass = 'hljs ' . (strtolower($this->highlight) ?: 'nohighlight');
 
-		$GLOBALS['TL_CSS'][] = 'assets/highlight/css/foundation.css|static';
+		$GLOBALS['TL_CSS'][] = 'vendor/scrivo/highlight.php/styles/foundation.css';
 	}
 }
 
