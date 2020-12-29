@@ -292,8 +292,21 @@ class ModuleEventReader extends Events
 		// Add an image
 		if ($objEvent->addImage && null !== ($figureBuilder = $this->getFigureBuilderIfResourceExists($objEvent->singleSRC)))
 		{
+			$imgSize = $objEvent->size ?: null;
+
+			// Override the default image size
+			if ($this->imgSize)
+			{
+				$size = StringUtil::deserialize($this->imgSize);
+
+				if ($size[0] > 0 || $size[1] > 0 || is_numeric($size[2]) || ($size[2][0] ?? null) === '_')
+				{
+					$imgSize = $this->imgSize;
+				}
+			}
+
 			$figureBuilder
-				->setSize($this->imgSize ?: $objEvent->size ?: null)
+				->setSize($imgSize)
 				->setMetaData($objEvent->getOverwriteMetaData())
 				->enableLightbox($objEvent->fullsize)
 				->build()

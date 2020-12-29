@@ -272,20 +272,7 @@ class ModuleEventlist extends Events
 		$dayCount = 0;
 		$eventCount = 0;
 		$headerCount = 0;
-		$imgSize = false;
 
-		// Override the default image size
-		if ($this->imgSize)
-		{
-			$size = StringUtil::deserialize($this->imgSize);
-
-			if ($size[0] > 0 || $size[1] > 0 || is_numeric($size[2]) || ($size[2][0] ?? null) === '_')
-			{
-				$imgSize = $this->imgSize;
-			}
-		}
-
-		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 		$uuids = array();
 
 		for ($i=$offset; $i<$limit; $i++)
@@ -366,8 +353,21 @@ class ModuleEventlist extends Events
 				/** @var CalendarEventsModel $eventModel */
 				$eventModel = CalendarEventsModel::findByPk($event['id']);
 
+				$imgSize = $eventModel->size ?: null;
+
+				// Override the default image size
+				if ($this->imgSize)
+				{
+					$size = StringUtil::deserialize($this->imgSize);
+
+					if ($size[0] > 0 || $size[1] > 0 || is_numeric($size[2]) || ($size[2][0] ?? null) === '_')
+					{
+						$imgSize = $this->imgSize;
+					}
+				}
+
 				$figure = $figureBuilder
-					->setSize($imgSize ?: $eventModel->size ?: null)
+					->setSize($imgSize)
 					->setMetaData($eventModel->getOverwriteMetaData())
 					->enableLightbox($eventModel->fullsize)
 					->build();
