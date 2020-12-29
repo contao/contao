@@ -99,6 +99,7 @@ class FormTextField extends Widget
 			case 'minval':
 				if ($this->rgxp == 'digit')
 				{
+					$this->arrConfiguration['minval'] = $varValue;
 					$this->arrAttributes['min'] = $varValue;
 				}
 				break;
@@ -107,6 +108,7 @@ class FormTextField extends Widget
 			case 'maxval':
 				if ($this->rgxp == 'digit')
 				{
+					$this->arrConfiguration['maxval'] = $varValue;
 					$this->arrAttributes['max'] = $varValue;
 				}
 				break;
