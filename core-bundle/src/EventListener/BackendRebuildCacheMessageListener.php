@@ -12,8 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
-use Contao\CoreBundle\Cache\ApplicationCacheState;
 use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\CoreBundle\Twig\FailTolerantFilesystemLoader;
+use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -29,19 +30,19 @@ class BackendRebuildCacheMessageListener
     private $scopeMatcher;
 
     /**
-     * @var ApplicationCacheState
+     * @var CacheItemPoolInterface
      */
-    private $cacheState;
+    private $cache;
 
     /**
      * @var TranslatorInterface
      */
     private $translator;
 
-    public function __construct(ScopeMatcher $scopeMatcher, ApplicationCacheState $cacheState, TranslatorInterface $translator)
+    public function __construct(ScopeMatcher $scopeMatcher, CacheItemPoolInterface $cache, TranslatorInterface $translator)
     {
         $this->scopeMatcher = $scopeMatcher;
-        $this->cacheState = $cacheState;
+        $this->cache = $cache;
         $this->translator = $translator;
     }
 
@@ -53,7 +54,7 @@ class BackendRebuildCacheMessageListener
             return;
         }
 
-        if (!$this->cacheState->isDirty()) {
+        if (!$this->cache->hasItem(FailTolerantFilesystemLoader::CACHE_DIRTY_FLAG)) {
             return;
         }
 

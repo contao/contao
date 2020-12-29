@@ -12,10 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener;
 
-use Contao\CoreBundle\Cache\ApplicationCacheState;
 use Contao\CoreBundle\EventListener\BackendRebuildCacheMessageListener;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Twig\FailTolerantFilesystemLoader;
+use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -39,9 +40,10 @@ class BackendRebuildCacheMessageListenerTest extends TestCase
             ->willReturn($backendRequest)
         ;
 
-        $cacheState = $this->createMock(ApplicationCacheState::class);
-        $cacheState
-            ->method('isDirty')
+        $cacheItemPool = $this->createMock(CacheItemPoolInterface::class);
+        $cacheItemPool
+            ->method('hasItem')
+            ->with(FailTolerantFilesystemLoader::CACHE_DIRTY_FLAG)
             ->willReturn($dirty)
         ;
 
@@ -55,7 +57,7 @@ class BackendRebuildCacheMessageListenerTest extends TestCase
 
         $listener = new BackendRebuildCacheMessageListener(
             $scopeMatcher,
-            $cacheState,
+            $cacheItemPool,
             $translator
         );
 
@@ -76,9 +78,10 @@ class BackendRebuildCacheMessageListenerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $cacheState = $this->createMock(ApplicationCacheState::class);
-        $cacheState
-            ->method('isDirty')
+        $cacheItemPool = $this->createMock(CacheItemPoolInterface::class);
+        $cacheItemPool
+            ->method('hasItem')
+            ->with(FailTolerantFilesystemLoader::CACHE_DIRTY_FLAG)
             ->willReturn(true)
         ;
 
@@ -110,7 +113,7 @@ class BackendRebuildCacheMessageListenerTest extends TestCase
 
         $listener = new BackendRebuildCacheMessageListener(
             $scopeMatcher,
-            $cacheState,
+            $cacheItemPool,
             $translator
         );
 

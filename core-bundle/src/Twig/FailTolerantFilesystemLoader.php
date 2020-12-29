@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig;
 
-use Contao\CoreBundle\Cache\ApplicationCacheState;
+use Psr\Cache\CacheItemPoolInterface;
 use Twig\Loader\FilesystemLoader;
 use Twig\Loader\LoaderInterface;
 use Twig\Loader\SourceContextLoaderInterface;
@@ -28,15 +28,17 @@ use Webmozart\PathUtil\Path;
  */
 class FailTolerantFilesystemLoader implements LoaderInterface, SourceContextLoaderInterface
 {
+    public const CACHE_DIRTY_FLAG = 'contao.template_path_cache_dirty';
+
     /**
      * @var FilesystemLoader
      */
     private $inner;
 
     /**
-     * @var ApplicationCacheState
+     * @var CacheItemPoolInterface
      */
-    private $cacheState;
+    private $cache;
 
     /**
      * @var string
@@ -48,10 +50,10 @@ class FailTolerantFilesystemLoader implements LoaderInterface, SourceContextLoad
      */
     private $bundleTemplatesDir;
 
-    public function __construct(FilesystemLoader $inner, ApplicationCacheState $cacheState, string $projectDir)
+    public function __construct(FilesystemLoader $inner, CacheItemPoolInterface $cache, string $projectDir)
     {
         $this->inner = $inner;
-        $this->cacheState = $cacheState;
+        $this->cache = $cache;
         $this->projectDir = $projectDir;
 
         $this->bundleTemplatesDir = Path::join($projectDir, 'templates/bundles');
@@ -59,8 +61,8 @@ class FailTolerantFilesystemLoader implements LoaderInterface, SourceContextLoad
 
     public function addPath($path, $namespace = FilesystemLoader::MAIN_NAMESPACE): void
     {
-        // Allow missing bundle template paths if the application cache is dirty
-        if ($this->cacheState->isDirty()) {
+        // Ignore missing bundle template paths if the application cache is dirty
+        if ($this->cache->hasItem(self::CACHE_DIRTY_FLAG)) {
             $absolutePath = Path::makeAbsolute($path, $this->projectDir);
 
             if (Path::isBasePath($this->bundleTemplatesDir, $absolutePath) && !is_dir($absolutePath)) {

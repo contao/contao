@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig;
 
-use Contao\CoreBundle\Cache\ApplicationCacheState;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\FailTolerantFilesystemLoader;
+use Psr\Cache\CacheItemPoolInterface;
 use Twig\Loader\FilesystemLoader;
 use Webmozart\PathUtil\Path;
 
@@ -32,15 +32,16 @@ class FailTolerantFilesystemLoaderTest extends TestCase
             ->with($path, 'namespace')
         ;
 
-        $cacheState = $this->createMock(ApplicationCacheState::class);
-        $cacheState
-            ->method('isDirty')
+        $cacheItemPool = $this->createMock(CacheItemPoolInterface::class);
+        $cacheItemPool
+            ->method('hasItem')
+            ->with(FailTolerantFilesystemLoader::CACHE_DIRTY_FLAG)
             ->willReturn(false)
         ;
 
         $filesystemLoader = new FailTolerantFilesystemLoader(
             $inner,
-            $cacheState,
+            $cacheItemPool,
             $this->getTestRoot(),
         );
 
@@ -59,15 +60,16 @@ class FailTolerantFilesystemLoaderTest extends TestCase
             ->with($path, 'namespace')
         ;
 
-        $cacheState = $this->createMock(ApplicationCacheState::class);
-        $cacheState
-            ->method('isDirty')
+        $cacheItemPool = $this->createMock(CacheItemPoolInterface::class);
+        $cacheItemPool
+            ->method('hasItem')
+            ->with(FailTolerantFilesystemLoader::CACHE_DIRTY_FLAG)
             ->willReturn(true)
         ;
 
         $filesystemLoader = new FailTolerantFilesystemLoader(
             $inner,
-            $cacheState,
+            $cacheItemPool,
             $this->getTestRoot(),
         );
 

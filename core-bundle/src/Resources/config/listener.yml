@@ -14,7 +14,7 @@ services:
     Contao\CoreBundle\EventListener\BackendRebuildCacheMessageListener:
         arguments:
             - '@contao.routing.scope_matcher'
-            - '@Contao\CoreBundle\Cache\ApplicationCacheState'
+            - '@cache.system'
             - '@translator'
         tags:
             - { name: kernel.event_listener }

@@ -96,11 +96,6 @@ services:
         tags:
             - controller.service_arguments
 
-    Contao\CoreBundle\Cache\ApplicationCacheState:
-        arguments:
-            - '@cache.system'
-        public: true
-
     # Backwards compatibility
     contao.controller.backend_csv_import:
         alias: Contao\CoreBundle\Controller\BackendCsvImportController
@@ -832,7 +827,7 @@ services:
         decorates: twig.loader.native_filesystem
         arguments:
             - '@Contao\CoreBundle\Twig\FailTolerantFilesystemLoader.inner'
-            - '@Contao\CoreBundle\Cache\ApplicationCacheState'
+            - '@cache.system'
             - '%kernel.project_dir%'
 
     Contao\CoreBundle\Twig\Runtime\FigureRendererRuntime:
