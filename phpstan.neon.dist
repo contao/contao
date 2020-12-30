@@ -24,6 +24,11 @@ parameters:
         - %currentWorkingDirectory%/core-bundle/tests/Functional/var/*
 
     ignoreErrors:
+        # Ignore the forward compatible phpDoc comment of the PictureFactoryInterface
+        -
+            message: '#PHPDoc tag @param references unknown parameter: \$options#'
+            path: %currentWorkingDirectory%/core-bundle/src/Image/PictureFactoryInterface.php
+
         # Ignore backwards compatibility layers when preferring lowest dependencies
         - '#Method Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface::dispatch\(\) invoked with 2 parameters, 1 required\.#'
 
