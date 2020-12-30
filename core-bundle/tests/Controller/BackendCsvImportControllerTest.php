@@ -29,6 +29,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Twig\Environment;
+use Twig\Loader\LoaderInterface;
 
 class BackendCsvImportControllerTest extends TestCase
 {
@@ -41,6 +43,8 @@ class BackendCsvImportControllerTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('session', new Session(new MockArraySessionStorage()));
         $container->set('contao.resource_finder', $finder);
+        $container->set('request_stack', $this->createMock(RequestStack::class));
+        $container->set('twig', new Environment($this->createMock(LoaderInterface::class)));
 
         System::setContainer($container);
     }

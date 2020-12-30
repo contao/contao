@@ -15,11 +15,15 @@ namespace Contao\CoreBundle\Tests\Contao;
 use Contao\BackendTemplate;
 use Contao\Config;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Twig\CallableProxy;
 use Contao\FrontendTemplate;
 use Contao\System;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\VarDumper\VarDumper;
+use Twig\Environment;
+use Twig\Loader\LoaderInterface;
 
 class TemplateTest extends TestCase
 {
@@ -35,7 +39,11 @@ class TemplateTest extends TestCase
         $this->filesystem = new Filesystem();
         $this->filesystem->mkdir($this->getFixturesDir().'/templates');
 
-        System::setContainer($this->getContainerWithContaoConfiguration($this->getFixturesDir()));
+        $container = $this->getContainerWithContaoConfiguration($this->getFixturesDir());
+        $container->set('request_stack', $this->createMock(RequestStack::class));
+        $container->set('twig', new Environment($this->createMock(LoaderInterface::class)));
+
+        System::setContainer($container);
     }
 
     protected function tearDown(): void
@@ -250,5 +258,62 @@ EOF
         $template->dumpTemplateVars();
 
         $this->assertSame(['test' => 1], $dump);
+    }
+
+    public function testForwardsToTwig(): void
+    {
+        $this->filesystem->dumpFile($this->getFixturesDir().'/templates/old.html5', 'PHP template content');
+
+        $loader = $this->createMock(LoaderInterface::class);
+        $loader
+            ->expects($this->exactly(2))
+            ->method('exists')
+            ->willReturnMap([
+                ['new.html.twig', true],
+                ['old.html.twig', false],
+            ])
+        ;
+
+        $twig = $this->createMock(Environment::class);
+
+        $twig
+            ->method('getLoader')
+            ->willReturn($loader)
+        ;
+
+        $twig
+            ->expects($this->once())
+            ->method('render')
+            ->with(
+                'new.html.twig',
+                $this->callback(
+                    function (array $context) {
+                        $this->assertCount(3, $context);
+                        $this->assertSame(1, $context['bar']);
+                        $this->assertInstanceOf(CallableProxy::class, $context['foobar']);
+                        $this->assertSame('foobar', (string) $context['foobar']);
+
+                        return true;
+                    }
+                )
+            )
+            ->willReturn('Twig template content')
+        ;
+
+        $container = System::getContainer();
+        $container->set('twig', $twig);
+
+        $template = new FrontendTemplate('new');
+
+        $template->bar = 1;
+        $template->foobar = static function (): string {
+            return 'foobar';
+        };
+
+        $this->assertSame('Twig template content', $template->parse());
+
+        // Parsing PHP templates should not call Environment#render()
+        $template = new FrontendTemplate('old');
+        $this->assertSame('PHP template content', $template->parse());
     }
 }
