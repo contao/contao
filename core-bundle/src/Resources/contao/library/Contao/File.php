@@ -244,7 +244,7 @@ class File extends System
 				return 'data:' . $this->mime . ';base64,' . base64_encode($this->getContent());
 
 			case 'imageSize':
-				if ($this->isImage && empty($this->arrImageSize))
+				if (empty($this->arrImageSize) && $this->isImage)
 				{
 					$strCacheKey = $this->strFile . '|' . ($this->exists() ? $this->mtime : 0);
 
