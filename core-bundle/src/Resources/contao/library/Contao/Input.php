@@ -547,7 +547,7 @@ class Input
 		}
 
 		// Return if the value is not a string
-		if (\is_bool($varValue) || $varValue === null || is_numeric($varValue))
+		if (\is_bool($varValue) || is_numeric($varValue))
 		{
 			return $varValue;
 		}
