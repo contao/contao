@@ -288,7 +288,6 @@ class File extends System
 
 						if (!$this->arrImageSize)
 						{
-							throw new \Exception('foo');
 							$this->arrImageSize = @getimagesize($this->strRootDir . '/' . $this->strFile);
 						}
 					}
