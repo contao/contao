@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Controller\InsertTagsController;
 use Contao\CoreBundle\Twig\Runtime\FigureRendererRuntime;
+use Contao\CoreBundle\Util\ArrayString;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -782,7 +783,16 @@ class InsertTags extends Controller
 					{
 						if (\array_key_exists($index, $args))
 						{
-							$args[$index] = $this->parseArrayString($args[$index], true);
+							try
+							{
+								$args[$index] = ArrayString::parse($args[$index], true);
+							}
+							catch (\InvalidArgumentException $e)
+							{
+								$arrCache[$strTag] = '';
+
+								break;
+							}
 						}
 					}
 
@@ -1158,94 +1168,6 @@ class InsertTags extends Controller
 		}
 
 		return StringUtil::restoreBasicEntities($strBuffer);
-	}
-
-	/**
-	 * Recursively parses a string representing an (associative) array into an
-	 * array. If the input does not resemble an array, it is returned as a
-	 * trimmed string instead.
-	 *
-	 * Format:
-	 *   - Arrays must be surrounded with "[" and "]"
-	 *   - Elements need to be separated with a ","
-	 *   - Keys and values need to be separated with a ":"
-	 *   - Keys can be omitted.
-	 *
-	 * Examples:
-	 *   '[a, b]'				->  [0 => 'a', 1 => 'b']
-	 *   '[a: foo, b]'			->  ['a' => 'foo', 1 => 'b']
-	 *   '[[a, b], foo: [c]]'	->  [0 => [0 => 'a', 1 => 'b' ], 'foo' => [0 => 'c']]
-	 *   ' foo '				->  'foo'
-	 *
-	 * @return string|array<int|string, string|array>
-	 */
-	private function parseArrayString(string $string, bool $canOmitBrackets = false)
-	{
-		$string = trim($string);
-
-		if (1 === preg_match('/^\[(.*)\]$/', $string, $matches))
-		{
-			$string = $matches[1];
-		}
-		elseif (!$canOmitBrackets)
-		{
-			return $string;
-		}
-
-		// Split by tokens
-		$result = array();
-		$namedKeys = array();
-		$currentIndex = 0;
-		$depth = 0;
-
-		for ($i = 0; $i < \strlen($string); $i++)
-		{
-			$char = $string[$i];
-
-			if (',' === $char && 0 === $depth)
-			{
-				$currentIndex++;
-				continue;
-			}
-
-			if (':' === $char && 0 === $depth)
-			{
-				$namedKeys[$currentIndex] = $result[$currentIndex];
-				$result[$currentIndex] = '';
-				continue;
-			}
-
-			if ('[' === $char)
-			{
-				$depth++;
-
-				// Prevent stack overflow from too deep nesting
-				if ($depth > 16)
-				{
-					return $string;
-				}
-			}
-			elseif (']' === $char)
-			{
-				$depth--;
-			}
-
-			$result[$currentIndex] .= $char;
-		}
-
-		// Resolve named keys
-		foreach ($namedKeys as $index => $key)
-		{
-			if ('' === $key)
-			{
-				continue;
-			}
-
-			$result[$key] = $result[$index];
-			unset($result[$index]);
-		}
-
-		return array_map(array($this, 'parseArrayString'), $result);
 	}
 }
 
