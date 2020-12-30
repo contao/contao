@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\CoreBundle\Twig\CallableProxy;
 use Psr\Log\LogLevel;
 
 /**
@@ -75,6 +76,15 @@ trait TemplateInheritance
 	 */
 	public function inherit()
 	{
+		// Forward to Twig if the template is available as "<template>.html.twig"
+		$twig = System::getContainer()->get('twig');
+		$twigTemplate = "{$this->strTemplate}.html.twig";
+
+		if ($twig->getLoader()->exists($twigTemplate))
+		{
+			return $twig->render($twigTemplate, $this->getTwigContext());
+		}
+
 		$strBuffer = '';
 
 		// Start with the template itself
@@ -322,6 +332,21 @@ trait TemplateInheritance
 		}
 
 		return Controller::getTemplate($strTemplate);
+	}
+
+	private function getTwigContext(): array
+	{
+		$context = $this->arrData;
+
+		foreach ($context as $key => &$value)
+		{
+			if (\is_callable($value))
+			{
+				$value = new CallableProxy($value);
+			}
+		}
+
+		return array_merge($context, array('_contao_encoding' => 'input'));
 	}
 }
 
