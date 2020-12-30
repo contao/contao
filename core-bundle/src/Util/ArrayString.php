@@ -33,8 +33,6 @@ class ArrayString
      *   '[a: "foo", b]' -> ['a' => 'foo', 1 => 'b']
      *   '[a: 2, b: true]' -> ['a' => 2, 'b' => true]
      *   '[[a, b], foo: [c]]' -> [0 => [0 => 'a', 1 => 'b' ], 'foo' => [0 => 'c']]
-     *
-     * @return string|array<int|string, string|array>
      */
     public static function parse(string $string, bool $canOmitOuterBrackets = false): array
     {
@@ -175,7 +173,7 @@ class ArrayString
 
             $result[$key] = $result[$index];
 
-            unset($namedKeys[$index], $result[$index]);
+            unset($result[$index]);
         }
 
         return $result;
@@ -184,7 +182,7 @@ class ArrayString
     /**
      * Detect the value type and return the typed version.
      *
-     * @return int|float|string|null
+     * @return int|float|bool|string|null
      */
     private static function autoCast(string $value)
     {
