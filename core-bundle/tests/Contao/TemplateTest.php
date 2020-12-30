@@ -288,10 +288,16 @@ EOF
                 'new.html.twig',
                 $this->callback(
                     function (array $context) {
-                        $this->assertCount(3, $context);
+                        $this->assertCount(5, $context);
+
+                        // Context
                         $this->assertSame(1, $context['bar']);
                         $this->assertInstanceOf(CallableProxy::class, $context['foobar']);
                         $this->assertSame('foobar', (string) $context['foobar']);
+
+                        // Template functions
+                        $this->assertInstanceOf(CallableProxy::class, $context['section']);
+                        $this->assertInstanceOf(CallableProxy::class, $context['sections']);
 
                         return true;
                     }

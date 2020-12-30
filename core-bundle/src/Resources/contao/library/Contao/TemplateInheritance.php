@@ -338,7 +338,8 @@ trait TemplateInheritance
 	{
 		$context = $this->arrData;
 
-		foreach ($context as $key => &$value)
+		// Make callables accessible by replacing them with a proxy object
+		foreach ($context as &$value)
 		{
 			if (\is_callable($value))
 			{
@@ -346,7 +347,24 @@ trait TemplateInheritance
 			}
 		}
 
-		return array_merge($context, array('_contao_encoding' => 'input'));
+		unset($value);
+
+		// Make class functions available by adding an invokable object with their name
+		if ($this instanceof FrontendTemplate)
+		{
+			foreach (array('section', 'sections') as $function)
+			{
+				if (!\array_key_exists($function, $context))
+				{
+					$context[$function] = new CallableProxy(array($this, $function));
+				}
+			}
+		}
+
+		// Mark as Contao template context
+		$context['_contao_encoding'] = 'input';
+
+		return $context;
 	}
 }
 
