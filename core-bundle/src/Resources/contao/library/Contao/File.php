@@ -252,7 +252,7 @@ class File extends System
 					{
 						$this->arrImageSize = static::$arrImageSizeCache[$strCacheKey];
 					}
-					elseif ($this->isImage)
+					else
 					{
 						try
 						{
@@ -284,11 +284,6 @@ class File extends System
 						catch (\Exception $e)
 						{
 							// ignore
-						}
-
-						if (!$this->arrImageSize)
-						{
-							$this->arrImageSize = @getimagesize($this->strRootDir . '/' . $this->strFile);
 						}
 					}
 
