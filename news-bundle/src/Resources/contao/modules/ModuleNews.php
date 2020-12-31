@@ -362,12 +362,16 @@ abstract class ModuleNews extends Module
 	 */
 	protected function generateLink($strLink, $objArticle, $blnAddArchive=false, $blnIsReadMore=false)
 	{
+		$blnIsInternal = $objArticle->source != 'external';
+		$strReadMore = $blnIsInternal ? $GLOBALS['TL_LANG']['MSC']['readMore'] : $GLOBALS['TL_LANG']['MSC']['open'];
+		$strArticleUrl = News::generateNewsUrl($objArticle, $blnAddArchive);
+
 		return sprintf(
 			'<a href="%s" title="%s" itemprop="url">%s%s</a>',
-			News::generateNewsUrl($objArticle, $blnAddArchive),
-			StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline), true),
+			$strArticleUrl,
+			StringUtil::specialchars(sprintf($strReadMore, $blnIsInternal ? $objArticle->headline : $strArticleUrl), true),
 			($blnIsReadMore ? $strLink : '<span itemprop="headline">'.$strLink.'</span>'),
-			($blnIsReadMore && $objArticle->source != 'external' ? '<span class="invisible"> ' . $objArticle->headline . '</span>' : '')
+			($blnIsReadMore && $blnIsInternal ? '<span class="invisible"> ' . $objArticle->headline . '</span>' : '')
 		);
 	}
 }
