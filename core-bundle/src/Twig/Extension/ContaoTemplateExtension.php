@@ -17,7 +17,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Extension\AbstractExtension;
-use Twig\TwigFilter;
 use Twig\TwigFunction;
 
 class ContaoTemplateExtension extends AbstractExtension
@@ -54,20 +53,6 @@ class ContaoTemplateExtension extends AbstractExtension
         ];
     }
 
-    public function getFilters(): array
-    {
-        return [
-            new TwigFilter(
-                'c',
-                [$this, 'handleInputEncoding'],
-                [
-                    'is_safe' => ['all'],
-                    'needs_context' => true,
-                ]
-            ),
-        ];
-    }
-
     /**
      * Renders a Contao back end template with the given blocks.
      */
@@ -90,19 +75,5 @@ class ContaoTemplateExtension extends AbstractExtension
         $response = $controller->run();
 
         return $response->getContent();
-    }
-
-    /**
-     * THis filter is a drop-in replacement for 'raw' but can be substituted
-     * with a harmless identity function (i.e. removing 'is_safe') once we're
-     * switching to output encoding.
-     */
-    public function handleInputEncoding(array $context, string $input): string
-    {
-        if (($context['_contao_encoding'] ?? null) !== 'input') {
-            throw new \LogicException("The filter 'c' must only be applied to Contao template context. Did you mean 'raw'?");
-        }
-
-        return $input;
     }
 }

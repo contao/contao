@@ -833,6 +833,10 @@ services:
         tags:
             - { name: kernel.reset, method: reset }
 
+    Contao\CoreBundle\Twig\Extension\ContaoCompatExtension:
+        arguments:
+            - '@twig'
+
     Contao\CoreBundle\Twig\Extension\ImageExtension: ~
 
     Contao\CoreBundle\Twig\Runtime\FigureRendererRuntime:

@@ -11,7 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Monolog\ContaoContext;
-use Contao\CoreBundle\Twig\CallableProxy;
+use Contao\CoreBundle\Twig\Compat\ProxyFactory;
 use Psr\Log\LogLevel;
 
 /**
@@ -338,31 +338,24 @@ trait TemplateInheritance
 	{
 		$context = $this->arrData;
 
-		// Make callables accessible by replacing them with a proxy object
-		foreach ($context as &$value)
+		// We're wrapping all values in proxy objects to bypass escaping and
+		// allowing the evaluation of callables.
+		foreach ($context as $name => $value)
 		{
-			if (\is_callable($value))
-			{
-				$value = new CallableProxy($value);
-			}
+			$context[$name] = ProxyFactory::createValueHolder($value, $name);
 		}
 
-		unset($value);
-
-		// Make class functions available by adding an invokable object with their name
+		// We're also delegating calls to context sensitive template methods.
 		if ($this instanceof FrontendTemplate)
 		{
 			foreach (array('section', 'sections') as $function)
 			{
 				if (!\array_key_exists($function, $context))
 				{
-					$context[$function] = new CallableProxy(array($this, $function));
+					$context[$function] = ProxyFactory::createValueHolder(array($this, $function), $function);
 				}
 			}
 		}
-
-		// Mark as Contao template context
-		$context['_contao_encoding'] = 'input';
 
 		return $context;
 	}

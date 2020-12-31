@@ -19,7 +19,6 @@ use Contao\CoreBundle\Twig\Extension\ContaoTemplateExtension;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Twig\Node\Node;
 use Twig\TwigFunction;
 
 class ContaoTemplateExtensionTest extends TestCase
@@ -73,50 +72,6 @@ class ContaoTemplateExtensionTest extends TestCase
     public function testDoesNotRenderTheBackEndTemplateIfNotInBackEndScope(): void
     {
         $this->assertEmpty($this->getExtension(null, 'frontend')->renderContaoBackendTemplate());
-    }
-
-    public function testRegistersTheEncodingFilter(): void
-    {
-        $extension = $this->getExtension();
-
-        $this->assertCount(1, $extension->getFilters());
-        $cFilter = $extension->getFilters()[0];
-
-        $this->assertSame('c', $cFilter->getName());
-        $this->assertSame(['all'], $cFilter->getSafe(new Node()));
-    }
-
-    public function testEncodingFilterPassesOnInput(): void
-    {
-        $extension = $this->getExtension();
-
-        $output = $extension->handleInputEncoding(['_contao_encoding' => 'input'], 'foo');
-
-        $this->assertSame('foo', $output);
-    }
-
-    /**
-     * @dataProvider provideInvalidContexts
-     */
-    public function testEncodingFilterThrowsIfNotContaoTemplateContext(array $context): void
-    {
-        $extension = $this->getExtension();
-
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage("The filter 'c' must only be applied to Contao template context. Did you mean 'raw'?");
-
-        $extension->handleInputEncoding($context, 'foo');
-    }
-
-    public function provideInvalidContexts(): \Generator
-    {
-        yield 'no _contao_encoding key' => [
-            [],
-        ];
-
-        yield 'bad value' => [
-            ['_contao_encoding' => 'foo'],
-        ];
     }
 
     private function getExtension(ContaoFramework $framework = null, string $scope = 'backend'): ContaoTemplateExtension

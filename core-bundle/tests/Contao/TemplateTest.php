@@ -15,7 +15,10 @@ namespace Contao\CoreBundle\Tests\Contao;
 use Contao\BackendTemplate;
 use Contao\Config;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Twig\CallableProxy;
+use Contao\CoreBundle\Twig\Compat\ArrayValueHolder;
+use Contao\CoreBundle\Twig\Compat\InvokableValueHolder;
+use Contao\CoreBundle\Twig\Compat\ObjectValueHolder;
+use Contao\CoreBundle\Twig\Compat\ScalarValueHolder;
 use Contao\FrontendTemplate;
 use Contao\System;
 use Symfony\Component\Asset\Packages;
@@ -288,16 +291,22 @@ EOF
                 'new.html.twig',
                 $this->callback(
                     function (array $context) {
-                        $this->assertCount(5, $context);
+                        $this->assertCount(6, $context);
 
                         // Context
-                        $this->assertSame(1, $context['bar']);
-                        $this->assertInstanceOf(CallableProxy::class, $context['foobar']);
-                        $this->assertSame('foobar', (string) $context['foobar']);
+                        $this->assertSame(1, $context['foo_scalar']);
+
+                        $this->assertInstanceOf(ScalarValueHolder::class, $context['foo_wrapped_scalar']);
+                        $this->assertSame('<i>bar</i>', (string) $context['foo_wrapped_scalar']);
+
+                        $this->assertInstanceOf(ArrayValueHolder::class, $context['foo_array']);
+                        $this->assertSame(1, $context['foo_array'][0]);
+
+                        $this->assertInstanceOf(ObjectValueHolder::class, $context['foo_object']);
 
                         // Template functions
-                        $this->assertInstanceOf(CallableProxy::class, $context['section']);
-                        $this->assertInstanceOf(CallableProxy::class, $context['sections']);
+                        $this->assertInstanceOf(InvokableValueHolder::class, $context['section']);
+                        $this->assertInstanceOf(InvokableValueHolder::class, $context['sections']);
 
                         return true;
                     }
@@ -310,11 +319,10 @@ EOF
         $container->set('twig', $twig);
 
         $template = new FrontendTemplate('new');
-
-        $template->bar = 1;
-        $template->foobar = static function (): string {
-            return 'foobar';
-        };
+        $template->foo_scalar = 1;
+        $template->foo_wrapped_scalar = '<i>bar</i>';
+        $template->foo_array = [1, 2];
+        $template->foo_object = new \stdClass();
 
         $this->assertSame('Twig template content', $template->parse());
 

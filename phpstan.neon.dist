@@ -38,6 +38,10 @@ parameters:
         - '#Call to an undefined method .*::transChoice\(\)\.#'
         - '#Trying to mock an undefined method transChoice\(\) on class Symfony\\Component\\Translation\\Translator\.#'
 
+        # Ignore proxy tests calling magic methods
+        - message: '#Call to an undefined method Contao\\CoreBundle\\Twig\\Compat\\ObjectValueHolder::\w#'
+          path: %currentWorkingDirectory%/core-bundle/tests/Twig/Compat/ProxyFactoryTest.php
+
     treatPhpDocTypesAsCertain: false
     checkGenericClassInNonGenericObjectType: false
     inferPrivatePropertyTypeFromConstructor: true
