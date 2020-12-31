@@ -159,7 +159,7 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
         $twoFactorTokenFactory
             ->expects($this->once())
             ->method('create')
-            ->with($authenticatedToken, '123456', 'provider_key', [])
+            ->with($authenticatedToken, 'provider_key', [])
             ->willReturn($newToken)
         ;
 
@@ -167,7 +167,7 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
         $authenticationManager
             ->expects($this->once())
             ->method('authenticate')
-            ->with($newToken)
+            ->with($newToken->createWithCredentials('123456'))
             ->willReturn(null)
         ;
 

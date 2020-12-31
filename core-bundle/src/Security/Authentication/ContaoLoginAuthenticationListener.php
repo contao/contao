@@ -70,14 +70,13 @@ class ContaoLoginAuthenticationListener extends AbstractAuthenticationListener
 
             $token = $this->twoFactorTokenFactory->create(
                 $currentToken->getAuthenticatedToken(),
-                $authCode,
                 $this->providerKey,
                 $currentToken->getTwoFactorProviders()
             );
 
             $token->setAttributes($currentToken->getAttributes());
 
-            return $this->authenticationManager->authenticate($token);
+            return $this->authenticationManager->authenticate($currentToken->createWithCredentials($authCode));
         }
 
         $username = $request->request->get('username');
