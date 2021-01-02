@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Controller\InsertTagsController;
+use Contao\CoreBundle\Exception\ArrayStringParserException;
 use Contao\CoreBundle\Twig\Runtime\FigureRendererRuntime;
 use Contao\CoreBundle\Util\ArrayString;
 use Symfony\Component\HttpFoundation\Request;
@@ -783,15 +784,21 @@ class InsertTags extends Controller
 					{
 						if (\array_key_exists($index, $args))
 						{
+							$arrayString = trim($args[$index]);
+
+							// Allow omitting outer brackets
+							if (0 !== strpos($arrayString, '['))
+							{
+								$arrayString = "[$arrayString]";
+							}
+
 							try
 							{
-								$args[$index] = ArrayString::parse($args[$index], true);
+								$args[$index] = ArrayString::parse($arrayString);
 							}
-							catch (\InvalidArgumentException $e)
+							catch (ArrayStringParserException $e)
 							{
-								$arrCache[$strTag] = '';
-
-								break;
+								// Fallback to unprocessed string
 							}
 						}
 					}
