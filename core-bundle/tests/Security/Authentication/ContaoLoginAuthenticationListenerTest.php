@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\Security\Authentication;
 use Contao\CoreBundle\Security\Authentication\ContaoLoginAuthenticationListener;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
-use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenFactoryInterface;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -180,7 +179,7 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
             $this->createMock(AuthenticationSuccessHandlerInterface::class),
             $failureHandler,
             [], // Options
-            $this->createMock(TwoFactorTokenFactoryInterface::class),
+            null, // TwoFactorTokenFactory - Backwards compatibility
             null, // Logger
             null // Event Dispatcher
         );
