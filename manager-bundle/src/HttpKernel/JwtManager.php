@@ -86,6 +86,7 @@ class JwtManager
             try {
                 return $this->parseCookie((string) $request->cookies->get(self::COOKIE_NAME));
             } catch (\Exception $e) {
+                // do nothing
             }
         }
 
