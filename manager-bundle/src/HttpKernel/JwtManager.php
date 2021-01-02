@@ -55,6 +55,7 @@ class JwtManager
         if (null !== $signer) {
             @trigger_error('Second argument ($signer) of JwtManager::__construct(...) is deprecated since Contao 4.9, to be removed in Contao 5.0. Use the Configuration object instead.', E_USER_DEPRECATED);
         }
+
         $this->config = $config ?: Configuration::forSymmetricSigner(
             $signer ?: new Sha256(),
             InMemory::file($secretFile)
