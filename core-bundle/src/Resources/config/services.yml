@@ -628,7 +628,7 @@ services:
             - '@contao.security.authentication_success_handler'
             - '@contao.security.authentication_failure_handler'
             - []
-            - '@scheb_two_factor.token_factory'
+            - ~ # Backwards compatibility
             - '@?logger'
             - '@?event_dispatcher'
         tags:

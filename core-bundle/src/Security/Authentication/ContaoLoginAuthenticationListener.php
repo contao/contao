@@ -38,17 +38,15 @@ class ContaoLoginAuthenticationListener extends AbstractAuthenticationListener
      */
     private $tokenStorage;
 
-    /**
-     * @var TwoFactorTokenFactoryInterface
-     */
-    private $twoFactorTokenFactory;
-
-    public function __construct(TokenStorageInterface $tokenStorage, AuthenticationManagerInterface $authenticationManager, SessionAuthenticationStrategyInterface $sessionStrategy, HttpUtils $httpUtils, string $providerKey, AuthenticationSuccessHandlerInterface $successHandler, AuthenticationFailureHandlerInterface $failureHandler, array $options, TwoFactorTokenFactoryInterface $twoFactorTokenFactory, LoggerInterface $logger = null, EventDispatcherInterface $dispatcher = null)
+    public function __construct(TokenStorageInterface $tokenStorage, AuthenticationManagerInterface $authenticationManager, SessionAuthenticationStrategyInterface $sessionStrategy, HttpUtils $httpUtils, string $providerKey, AuthenticationSuccessHandlerInterface $successHandler, AuthenticationFailureHandlerInterface $failureHandler, array $options, TwoFactorTokenFactoryInterface $twoFactorTokenFactory = null, LoggerInterface $logger = null, EventDispatcherInterface $dispatcher = null)
     {
+        if (func_get_arg(8) instanceof TwoFactorTokenFactoryInterface) {
+            @trigger_error('Eight argument of ContaoLoginAuthenticationListener::__construct(...) is deprecated since Contao 4.9, to be removed in Contao 5.0.', E_USER_DEPRECATED);
+        }
+
         parent::__construct($tokenStorage, $authenticationManager, $sessionStrategy, $httpUtils, $providerKey, $successHandler, $failureHandler, $options, $logger, $dispatcher);
 
         $this->tokenStorage = $tokenStorage;
-        $this->twoFactorTokenFactory = $twoFactorTokenFactory;
     }
 
     protected function requiresAuthentication(Request $request): bool
@@ -67,14 +65,6 @@ class ContaoLoginAuthenticationListener extends AbstractAuthenticationListener
 
         if ($currentToken instanceof TwoFactorTokenInterface) {
             $authCode = $request->request->get('verify');
-
-            $token = $this->twoFactorTokenFactory->create(
-                $currentToken->getAuthenticatedToken(),
-                $this->providerKey,
-                $currentToken->getTwoFactorProviders()
-            );
-
-            $token->setAttributes($currentToken->getAttributes());
 
             return $this->authenticationManager->authenticate($currentToken->createWithCredentials($authCode));
         }
