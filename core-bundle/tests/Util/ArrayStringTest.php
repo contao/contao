@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Util;
 
+use Contao\CoreBundle\Exception\ArrayStringParserException;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Util\ArrayString;
 
@@ -75,7 +76,7 @@ class ArrayStringTest extends TestCase
      */
     public function testThrowsIfFormatIsInvalid(string $input, string $exception): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(ArrayStringParserException::class);
         $this->expectDeprecationMessage($exception);
 
         ArrayString::parse($input);

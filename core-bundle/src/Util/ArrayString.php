@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Util;
 
+use Contao\CoreBundle\Exception\ArrayStringParserException;
+
 class ArrayString
 {
     /**
@@ -34,15 +36,13 @@ class ArrayString
      *   '[a: 2, b: true]' -> ['a' => 2, 'b' => true]
      *   '[[a, b], foo: [c]]' -> [0 => [0 => 'a', 1 => 'b' ], 'foo' => [0 => 'c']]
      */
-    public static function parse(string $string, bool $canOmitOuterBrackets = false): array
+    public static function parse(string $string): array
     {
-        $string = trim($string);
-
-        if (1 === preg_match('/^\[(.*)\]$/', $string, $matches)) {
-            $string = $matches[1];
-        } elseif (!$canOmitOuterBrackets) {
-            throw new \InvalidArgumentException('Bad format: Array notation must include outer brackets.');
+        if (1 !== preg_match('/^\s*\[(.*)\]\s*$/', $string, $matches)) {
+            throw new ArrayStringParserException('Bad format: Array notation must include outer brackets.');
         }
+
+        $string = $matches[1];
 
         $result = [];
         $resultOriginal = [];
@@ -126,11 +126,11 @@ class ArrayString
             // Handle keys
             if (':' === $char) {
                 if ('' === ($key = $resultOriginal[$currentElement] ?? '')) {
-                    throw new \InvalidArgumentException("Bad format: Key for index $currentElement cannot be empty.");
+                    throw new ArrayStringParserException("Bad format: Key for index $currentElement cannot be empty.");
                 }
 
                 if (\array_key_exists($key, $namedKeys)) {
-                    throw new \InvalidArgumentException("Bad format: Key '$key' cannot appear more than once.");
+                    throw new ArrayStringParserException("Bad format: Key '$key' cannot appear more than once.");
                 }
 
                 $namedKeys[$key] = $currentElement;
@@ -144,7 +144,7 @@ class ArrayString
             // Parse next item
             if (',' === $char) {
                 if (!\array_key_exists($currentElement, $result)) {
-                    throw new \InvalidArgumentException("Bad format: Did not expect to see '$char' at position $charIndex.");
+                    throw new ArrayStringParserException("Bad format: Did not expect to see '$char' at position $charIndex.");
                 }
 
                 ++$currentElement;
@@ -168,7 +168,7 @@ class ArrayString
         // Resolve named keys
         foreach ($namedKeys as $key => $index) {
             if (!\array_key_exists($index, $result)) {
-                throw new \InvalidArgumentException("Bad format: Key '$key' is missing a value.");
+                throw new ArrayStringParserException("Bad format: Key '$key' is missing a value.");
             }
 
             $result[$key] = $result[$index];
