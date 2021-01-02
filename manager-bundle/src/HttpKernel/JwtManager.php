@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\ManagerBundle\HttpKernel;
 
 use Lcobucci\JWT\Builder;
-use Lcobucci\JWT\ClaimsFormatter;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
@@ -53,20 +52,27 @@ class JwtManager
             $filesystem->dumpFile($secretFile, $secret);
         }
 
+        if (null !== $signer) {
+            @trigger_error('Second argument ($signer) of JwtManager::__construct(...) is deprecated since Contao 4.9, to be removed in Contao 5.0. Use the Configuration object instead.', E_USER_DEPRECATED);
+        }
         $this->config = $config ?: Configuration::forSymmetricSigner(
             $signer ?: new Sha256(),
             InMemory::file($secretFile)
         );
 
         if (null !== $builder) {
+            @trigger_error('Third argument ($builder) of JwtManager::__construct(...) is deprecated since Contao 4.9, to be removed in Contao 5.0. Use the Configuration object instead.', E_USER_DEPRECATED);
+
             $this->config->setBuilderFactory(
-                static function (ClaimsFormatter $formatter) use ($builder): Builder {
+                static function () use ($builder): Builder {
                     return $builder;
                 }
             );
         }
 
         if (null !== $parser) {
+            @trigger_error('Fourth argument ($parser) of JwtManager::__construct(...) is deprecated since Contao 4.9, to be removed in Contao 5.0. Use the Configuration object instead.', E_USER_DEPRECATED);
+
             $this->config->setParser($parser);
         }
 

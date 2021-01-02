@@ -41,7 +41,7 @@ class ContaoLoginAuthenticationListener extends AbstractAuthenticationListener
     public function __construct(TokenStorageInterface $tokenStorage, AuthenticationManagerInterface $authenticationManager, SessionAuthenticationStrategyInterface $sessionStrategy, HttpUtils $httpUtils, string $providerKey, AuthenticationSuccessHandlerInterface $successHandler, AuthenticationFailureHandlerInterface $failureHandler, array $options, TwoFactorTokenFactoryInterface $twoFactorTokenFactory = null, LoggerInterface $logger = null, EventDispatcherInterface $dispatcher = null)
     {
         if (func_get_arg(8) instanceof TwoFactorTokenFactoryInterface) {
-            @trigger_error('Eight argument of ContaoLoginAuthenticationListener::__construct(...) is deprecated since Contao 4.9, to be removed in Contao 5.0.', E_USER_DEPRECATED);
+            @trigger_error('Eight argument ($twoFactorTokenFactory) of ContaoLoginAuthenticationListener::__construct(...) is deprecated since Contao 4.9, to be removed in Contao 5.0.', E_USER_DEPRECATED);
         }
 
         parent::__construct($tokenStorage, $authenticationManager, $sessionStrategy, $httpUtils, $providerKey, $successHandler, $failureHandler, $options, $logger, $dispatcher);
