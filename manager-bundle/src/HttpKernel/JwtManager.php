@@ -12,9 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\HttpKernel;
 
+use Lcobucci\JWT\Builder;
+use Lcobucci\JWT\ClaimsFormatter;
 use Lcobucci\JWT\Configuration;
+use Lcobucci\JWT\Signer;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Signer\Key\InMemory;
+use Lcobucci\JWT\Token\Parser;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -30,7 +34,7 @@ class JwtManager
      */
     private $config;
 
-    public function __construct(string $projectDir, Configuration $config = null, Filesystem $filesystem = null)
+    public function __construct(string $projectDir, Signer $signer = null, Builder $builder = null, Parser $parser = null, Filesystem $filesystem = null, Configuration $config = null)
     {
         $secret = null;
 
@@ -50,9 +54,21 @@ class JwtManager
         }
 
         $this->config = $config ?: Configuration::forSymmetricSigner(
-            new Sha256(),
+            $signer ?: new Sha256(),
             InMemory::file($secretFile)
         );
+
+        if (null !== $builder) {
+            $this->config->setBuilderFactory(
+                static function (ClaimsFormatter $formatter) use ($builder): Builder {
+                    return $builder;
+                }
+            );
+        }
+
+        if (null !== $parser) {
+            $this->config->setParser($parser);
+        }
 
         $this->config->setValidationConstraints(new SignedWith($this->config->signer(), $this->config->signingKey()));
     }
