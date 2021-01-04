@@ -14,13 +14,7 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\ContentProxy;
 use Contao\Controller;
-use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
-use Contao\CoreBundle\Controller\FrontendModule\AbstractFrontendModuleController;
 use Contao\CoreBundle\EventListener\DataContainer\CustomTemplateOptionsListener;
-use Contao\CoreBundle\Fragment\FragmentConfig;
-use Contao\CoreBundle\Fragment\FragmentRegistry;
-use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
-use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database\Result;
@@ -29,8 +23,6 @@ use Contao\LegacyElement;
 use Contao\LegacyModule;
 use Contao\ModuleProxy;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -62,41 +54,56 @@ class CustomTemplateOptionsListenerTest extends TestCase
         unset($GLOBALS['TL_CTE']);
     }
 
-    public function testReturnsTheDefaultTemplate(): void
+    public function testReturnsTheDefaultElementTemplate(): void
     {
-        $callback = new CustomTemplateOptionsListener($this->getFramework(), new RequestStack(), $this->getFragmentRegistry());
-        $callback->setContainer($this->getContainer());
+        $callback = new CustomTemplateOptionsListener($this->getFramework(), new RequestStack(), [], 'ce_', ContentProxy::class);
 
-        $this->assertSame(['' => 'mod_article'], $callback->onArticle($this->mockDataContainer('tl_article')));
-        $this->assertSame(['' => 'ce_foobar'], $callback->onContent($this->mockDataContainer('tl_content', ['type' => 'foobar'])));
-        $this->assertSame(['' => 'form_wrapper'], $callback->onForm($this->mockDataContainer('tl_form')));
-        $this->assertSame(['' => 'form_foobar'], $callback->onFormField($this->mockDataContainer('tl_form_field', ['type' => 'foobar'])));
-        $this->assertSame(['' => 'mod_foobar'], $callback->onModule($this->mockDataContainer('tl_module', ['type' => 'foobar'])));
+        $this->assertSame(['' => 'ce_fragment_element'], $callback($this->mockDataContainer('tl_content', ['type' => 'fragment_element'])));
     }
 
-    public function testReturnsTheCustomTemplate(): void
+    public function testReturnsTheDefaultModuleTemplate(): void
     {
-        $callback = new CustomTemplateOptionsListener($this->getFramework(), new RequestStack(), $this->getFragmentRegistry());
-        $callback->setContainer($this->getContainer());
+        $callback = new CustomTemplateOptionsListener($this->getFramework(), new RequestStack(), [], 'mod_', ModuleProxy::class);
 
-        $this->assertSame(['' => 'ce_custom_fragment_template'], $callback->onContent($this->mockDataContainer('tl_content', ['type' => 'fragment_element'])));
-        $this->assertSame(['' => 'ce_custom_legacy_template'], $callback->onContent($this->mockDataContainer('tl_content', ['type' => 'legacy_element'])));
-        $this->assertSame(['' => 'mod_custom_fragment_template'], $callback->onModule($this->mockDataContainer('tl_module', ['type' => 'fragment_module'])));
-        $this->assertSame(['' => 'mod_custom_legacy_template'], $callback->onModule($this->mockDataContainer('tl_module', ['type' => 'legacy_module'])));
+        $this->assertSame(['' => 'mod_fragment_module'], $callback($this->mockDataContainer('tl_module', ['type' => 'fragment_module'])));
     }
 
-    public function testReturnsAllTemplatesInOverrideAllMode(): void
+    public function testReturnsTheCustomElementTemplate(): void
+    {
+        $callback = new CustomTemplateOptionsListener($this->getFramework(), new RequestStack(), ['fragment_element' => 'ce_custom_fragment_template'], 'ce_', ContentProxy::class);
+
+        $this->assertSame(['' => 'ce_custom_fragment_template'], $callback($this->mockDataContainer('tl_content', ['type' => 'fragment_element'])));
+        $this->assertSame(['' => 'ce_custom_legacy_template'], $callback($this->mockDataContainer('tl_content', ['type' => 'legacy_element'])));
+    }
+
+    public function testReturnsTheCustomModuleTemplate(): void
+    {
+        $callback = new CustomTemplateOptionsListener($this->getFramework(), new RequestStack(), ['fragment_module' => 'mod_custom_fragment_template'], 'mod_', ModuleProxy::class);
+
+        $this->assertSame(['' => 'mod_custom_fragment_template'], $callback($this->mockDataContainer('tl_module', ['type' => 'fragment_module'])));
+        $this->assertSame(['' => 'mod_custom_legacy_template'], $callback($this->mockDataContainer('tl_module', ['type' => 'legacy_module'])));
+    }
+
+    public function testReturnsAllElementTemplatesInOverrideAllMode(): void
     {
         $request = new Request(['act' => 'overrideAll']);
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $callback = new CustomTemplateOptionsListener($this->getFramework(), $requestStack, $this->getFragmentRegistry());
-        $callback->setContainer($this->getContainer());
+        $callback = new CustomTemplateOptionsListener($this->getFramework(), $requestStack, [], 'ce_', ContentProxy::class);
 
-        $this->assertSame(['' => '-', 'ce_all' => 'ce_all'], $callback->onContent($this->mockDataContainer('tl_content')));
-        $this->assertSame(['' => '-', 'mod_all' => 'mod_all'], $callback->onModule($this->mockDataContainer('tl_module')));
-        $this->assertSame(['' => '-', 'form_all' => 'form_all'], $callback->onFormField($this->mockDataContainer('tl_form_field')));
+        $this->assertSame(['' => '-', 'ce_all' => 'ce_all'], $callback($this->mockDataContainer('tl_content')));
+    }
+
+    public function testReturnsAllModuleTemplatesInOverrideAllMode(): void
+    {
+        $request = new Request(['act' => 'overrideAll']);
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $callback = new CustomTemplateOptionsListener($this->getFramework(), $requestStack, [], 'mod_', ModuleProxy::class);
+
+        $this->assertSame(['' => '-', 'mod_all' => 'mod_all'], $callback($this->mockDataContainer('tl_module')));
     }
 
     private function getFramework(array $adapters = []): ContaoFramework
@@ -106,17 +113,13 @@ class CustomTemplateOptionsListenerTest extends TestCase
             ->method('getTemplateGroup')
             ->willReturnMap([
                 ['ce_', ['ce_all' => 'ce_all']],
-                ['ce_foobar_', [], 'ce_foobar', ['' => 'ce_foobar']],
+                ['ce_fragment_element_', [], 'ce_fragment_element', ['' => 'ce_fragment_element']],
                 ['ce_custom_fragment_template_', [], 'ce_custom_fragment_template', ['' => 'ce_custom_fragment_template']],
                 ['ce_custom_legacy_template_', [], 'ce_custom_legacy_template', ['' => 'ce_custom_legacy_template']],
                 ['mod_', ['mod_all' => 'mod_all']],
-                ['mod_foobar_', [], 'mod_foobar', ['' => 'mod_foobar']],
+                ['mod_fragment_module_', [], 'mod_fragment_module', ['' => 'mod_fragment_module']],
                 ['mod_custom_fragment_template_', [], 'mod_custom_fragment_template', ['' => 'mod_custom_fragment_template']],
                 ['mod_custom_legacy_template_', [], 'mod_custom_legacy_template', ['' => 'mod_custom_legacy_template']],
-                ['mod_article_', [], 'mod_article', ['' => 'mod_article']],
-                ['form_', ['form_all' => 'form_all']],
-                ['form_wrapper_', [], 'form_wrapper', ['' => 'form_wrapper']],
-                ['form_foobar_', [], 'form_foobar', ['' => 'form_foobar']],
             ])
         ;
 
@@ -134,30 +137,5 @@ class CustomTemplateOptionsListenerTest extends TestCase
         }
 
         return $dc;
-    }
-
-    private function getContainer(): ContainerInterface
-    {
-        $container = new ContainerBuilder();
-
-        $foobarElementController = $this->getMockForAbstractClass(AbstractContentElementController::class);
-        $foobarElementController->setFragmentOptions(['template' => 'ce_custom_fragment_template']);
-
-        $foobarModuleController = $this->getMockForAbstractClass(AbstractFrontendModuleController::class);
-        $foobarModuleController->setFragmentOptions(['template' => 'mod_custom_fragment_template']);
-
-        $container->set('foobar_element_controller', $foobarElementController);
-        $container->set('foobar_module_controller', $foobarModuleController);
-
-        return $container;
-    }
-
-    private function getFragmentRegistry(): FragmentRegistry
-    {
-        $fragmentRegistry = new FragmentRegistry();
-        $fragmentRegistry->add(ContentElementReference::TAG_NAME.'.fragment_element', new FragmentConfig('foobar_element_controller'));
-        $fragmentRegistry->add(FrontendModuleReference::TAG_NAME.'.fragment_module', new FragmentConfig('foobar_module_controller'));
-
-        return $fragmentRegistry;
     }
 }

@@ -37,11 +37,6 @@ abstract class AbstractFragmentController extends AbstractController implements 
         $this->options = $options;
     }
 
-    public function getFragmentOptions(): array
-    {
-        return $this->options;
-    }
-
     protected function setPageModel(?PageModel $pageModel): void
     {
         $this->pageModel = $pageModel;

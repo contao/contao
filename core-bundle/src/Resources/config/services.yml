@@ -1,3 +1,11 @@
+parameters:
+    contao.content_element.templates: []
+    contao.frontend_module.templates: []
+    contao.content_proxy: 'Contao\ContentProxy'
+    contao.module_proxy: 'Contao\ModuleProxy'
+    contao.content_element_template_prefix: 'ce_'
+    contao.frontend_module_template_prefix: 'mod_'
+
 services:
     _defaults:
         autoconfigure: true

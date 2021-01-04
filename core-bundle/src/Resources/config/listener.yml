@@ -1,7 +1,4 @@
 services:
-    _defaults:
-        autoconfigure: true
-
     _instanceof:
         Contao\CoreBundle\Framework\FrameworkAwareInterface:
             calls:
@@ -91,12 +88,27 @@ services:
         tags:
             - { name: contao.hook, hook: loadDataContainer }
 
-    Contao\CoreBundle\EventListener\DataContainer\CustomTemplateOptionsListener:
+    contao.listener.data_container.custom_element_template_options_listener:
+        class: Contao\CoreBundle\EventListener\DataContainer\CustomTemplateOptionsListener
         arguments:
             - '@contao.framework'
             - '@request_stack'
-            - '@contao.fragment.registry'
-            - '@service_container'
+            - '%contao.content_element.templates%'
+            - '%contao.content_element_template_prefix%'
+            - '%contao.content_proxy%'
+        tags:
+            - { name: contao.callback, table: tl_content, target: fields.customTpl.options }
+
+    contao.listener.data_container.custom_module_template_options_listener:
+        class: Contao\CoreBundle\EventListener\DataContainer\CustomTemplateOptionsListener
+        arguments:
+            - '@contao.framework'
+            - '@request_stack'
+            - '%contao.frontend_module.templates%'
+            - '%contao.frontend_module_template_prefix%'
+            - '%contao.module_proxy%'
+        tags:
+            - { name: contao.callback, table: tl_module, target: fields.customTpl.options }
 
     contao.listener.doctrine_schema:
         class: Contao\CoreBundle\EventListener\DoctrineSchemaListener

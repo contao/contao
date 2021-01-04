@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\DependencyInjection;
 
 use Ausi\SlugGenerator\SlugGenerator;
 use Contao\BackendUser;
+use Contao\ContentProxy;
 use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\CoreBundle\Cache\ContaoCacheClearer;
 use Contao\CoreBundle\Cache\ContaoCacheWarmer;
@@ -51,7 +52,6 @@ use Contao\CoreBundle\EventListener\BypassMaintenanceListener;
 use Contao\CoreBundle\EventListener\ClearSessionDataListener;
 use Contao\CoreBundle\EventListener\CommandSchedulerListener;
 use Contao\CoreBundle\EventListener\CsrfTokenCookieSubscriber;
-use Contao\CoreBundle\EventListener\DataContainer\CustomTemplateOptionsListener;
 use Contao\CoreBundle\EventListener\DataContainerCallbackListener;
 use Contao\CoreBundle\EventListener\DoctrineSchemaListener;
 use Contao\CoreBundle\EventListener\ExceptionConverterListener;
@@ -144,6 +144,7 @@ use Contao\FrontendUser;
 use Contao\Image\PictureGenerator;
 use Contao\Image\ResizeCalculator;
 use Contao\ImagineSvg\Imagine as ImagineSvg;
+use Contao\ModuleProxy;
 use Knp\Menu\Matcher\Matcher;
 use Knp\Menu\Renderer\ListRenderer;
 use Symfony\Cmf\Component\Routing\DynamicRouter;
@@ -520,11 +521,11 @@ class ContaoCoreExtensionTest extends TestCase
         );
     }
 
-    public function testRegistersTheCustomTemplateOptionsListener(): void
+    public function testRegistersTheCustomElementTemplateOptionsListener(): void
     {
-        $this->assertTrue($this->container->has(CustomTemplateOptionsListener::class));
+        $this->assertTrue($this->container->has('contao.listener.data_container.custom_element_template_options_listener'));
 
-        $definition = $this->container->getDefinition(CustomTemplateOptionsListener::class);
+        $definition = $this->container->getDefinition('contao.listener.data_container.custom_element_template_options_listener');
 
         $this->assertTrue($definition->isPrivate());
 
@@ -532,13 +533,46 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 new Reference('contao.framework'),
                 new Reference('request_stack'),
-                new Reference('contao.fragment.registry'),
-                new Reference('service_container'),
+                '%contao.content_element.templates%',
+                '%contao.content_element_template_prefix%',
+                '%contao.content_proxy%',
             ],
             $definition->getArguments()
         );
 
-        $this->assertSame([], $definition->getTags());
+        $this->assertSame([
+            'contao.callback' => [[
+                'table' => 'tl_content',
+                'target' => 'fields.customTpl.options',
+            ]],
+        ], $definition->getTags());
+    }
+
+    public function testRegistersTheCustomModuleTemplateOptionsListener(): void
+    {
+        $this->assertTrue($this->container->has('contao.listener.data_container.custom_module_template_options_listener'));
+
+        $definition = $this->container->getDefinition('contao.listener.data_container.custom_module_template_options_listener');
+
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('contao.framework'),
+                new Reference('request_stack'),
+                '%contao.frontend_module.templates%',
+                '%contao.frontend_module_template_prefix%',
+                '%contao.module_proxy%',
+            ],
+            $definition->getArguments()
+        );
+
+        $this->assertSame([
+            'contao.callback' => [[
+                'table' => 'tl_module',
+                'target' => 'fields.customTpl.options',
+            ]],
+        ], $definition->getTags());
     }
 
     public function testRegistersTheDoctrineSchemaListener(): void

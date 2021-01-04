@@ -79,6 +79,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
     {
         $globals = [];
         $preHandlers = [];
+        $templates = [];
         $registry = $container->findDefinition('contao.fragment.registry');
         $command = $container->hasDefinition('contao.command.debug_fragments') ? $container->findDefinition('contao.command.debug_fragments') : null;
 
@@ -107,6 +108,10 @@ class RegisterFragmentsPass implements CompilerPassInterface
                 $childDefinition->setPublic(true);
 
                 $config = $this->getFragmentConfig($container, new Reference($serviceId), $attributes);
+
+                if (!empty($attributes['template'])) {
+                    $templates[$attributes['type']] = $attributes['template'];
+                }
 
                 if (is_a($definition->getClass(), FragmentPreHandlerInterface::class, true)) {
                     $preHandlers[$identifier] = new Reference($serviceId);
@@ -137,6 +142,8 @@ class RegisterFragmentsPass implements CompilerPassInterface
 
         $this->addPreHandlers($container, $preHandlers);
         $this->addGlobalsMapListener($globals, $container);
+
+        $container->setParameter($tag.'.templates', $templates);
     }
 
     protected function getFragmentConfig(ContainerBuilder $container, Reference $reference, array $attributes): Reference

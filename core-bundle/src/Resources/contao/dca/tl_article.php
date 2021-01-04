@@ -248,6 +248,10 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'select',
+			'options_callback' => static function ()
+			{
+				return Contao\Controller::getTemplateGroup('mod_article_', array(), 'mod_article');
+			},
 			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),

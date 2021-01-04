@@ -13,25 +13,14 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\ContentElement;
-use Contao\ContentProxy;
 use Contao\Controller;
-use Contao\CoreBundle\Fragment\FragmentOptionsAwareInterface;
-use Contao\CoreBundle\Fragment\FragmentRegistry;
-use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
-use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\DataContainer;
 use Contao\Module;
-use Contao\ModuleProxy;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class CustomTemplateOptionsListener implements ContainerAwareInterface
+class CustomTemplateOptionsListener
 {
-    use ContainerAwareTrait;
-
     /**
      * @var Controller
      */
@@ -43,99 +32,64 @@ class CustomTemplateOptionsListener implements ContainerAwareInterface
     private $requestStack;
 
     /**
-     * @var FragmentRegistry
+     * @var array
      */
-    private $fragmentRegistry;
+    private $customTemplates;
 
-    public function __construct(ContaoFramework $framework, RequestStack $requestStack, FragmentRegistry $fragmentRegistry)
+    /**
+     * @var string
+     */
+    private $prefix;
+
+    /**
+     * @var string
+     */
+    private $proxyClass;
+
+    public function __construct(ContaoFramework $framework, RequestStack $requestStack, array $customTemplates, string $prefix, string $proxyClass)
     {
-        /** @var Controller $controller */
         $controller = $framework->getAdapter(Controller::class);
 
         $this->controller = $controller;
         $this->requestStack = $requestStack;
-        $this->fragmentRegistry = $fragmentRegistry;
+        $this->prefix = $prefix;
+        $this->customTemplates = $customTemplates;
+        $this->proxyClass = $proxyClass;
     }
 
-    /**
-     * @Callback(table="tl_article", target="fields.customTpl.options")
-     */
-    public function onArticle(DataContainer $dc): array
-    {
-        return $this->getTemplateGroup('mod_article');
-    }
-
-    /**
-     * @Callback(table="tl_content", target="fields.customTpl.options")
-     */
-    public function onContent(DataContainer $dc): array
+    public function __invoke(DataContainer $dc)
     {
         if ($this->isOverrideAll()) {
-            return $this->getOverrideAllTemplates('ce_');
+            return $this->getOverrideAllTemplates($this->prefix);
         }
 
-        $class = ContentElement::findClass($dc->activeRecord->type);
+        $defaultTemplate = $this->customTemplates[$dc->activeRecord->type] ?? null;
 
-        if (ContentProxy::class === $class || empty($class)) {
-            $defaultTemplate = $this->getFragmentTemplate(ContentElementReference::TAG_NAME.'.'.$dc->activeRecord->type);
-        } else {
-            $defaultTemplate = $this->getTemplateFromObject(new $class($dc->activeRecord));
+        // Extract default template from legacy class
+        if (null === $defaultTemplate) {
+            $class = $this->getLegacyClass($dc);
+
+            if (!empty($class) && $class !== $this->proxyClass) {
+                $defaultTemplate = $this->getTemplateFromObject(new $class($dc->activeRecord));
+            }
         }
 
         if (null === $defaultTemplate) {
-            $defaultTemplate = 'ce_'.$dc->activeRecord->type;
+            $defaultTemplate = $this->prefix.$dc->activeRecord->type;
         }
 
         return $this->getTemplateGroup($defaultTemplate);
     }
 
-    /**
-     * @Callback(table="tl_form", target="fields.customTpl.options")
-     */
-    public function onForm(DataContainer $dc): array
+    private function getLegacyClass(DataContainer $dc): ?string
     {
-        return $this->getTemplateGroup('form_wrapper');
-    }
+        switch ($dc->table) {
+            case 'tl_content': return ContentElement::findClass($dc->activeRecord->type);
 
-    /**
-     * @Callback(table="tl_form_field", target="fields.customTpl.options")
-     */
-    public function onFormField(DataContainer $dc): array
-    {
-        if ($this->isOverrideAll()) {
-            return $this->getOverrideAllTemplates('form_');
+            case 'tl_module': return Module::findClass($dc->activeRecord->type);
         }
 
-        // Backwards compatibility
-        if ('text' === $dc->activeRecord->type) {
-            return $this->getTemplateGroup('form_textfield');
-        }
-
-        return $this->getTemplateGroup('form_'.$dc->activeRecord->type);
-    }
-
-    /**
-     * @Callback(table="tl_module", target="fields.customTpl.options")
-     */
-    public function onModule(DataContainer $dc): array
-    {
-        if ($this->isOverrideAll()) {
-            return $this->getOverrideAllTemplates('mod_');
-        }
-
-        $class = Module::findClass($dc->activeRecord->type);
-
-        if (ModuleProxy::class === $class || empty($class)) {
-            $defaultTemplate = $this->getFragmentTemplate(FrontendModuleReference::TAG_NAME.'.'.$dc->activeRecord->type);
-        } else {
-            $defaultTemplate = $this->getTemplateFromObject(new $class($dc->activeRecord));
-        }
-
-        if (null === $defaultTemplate) {
-            $defaultTemplate = 'mod_'.$dc->activeRecord->type;
-        }
-
-        return $this->getTemplateGroup($defaultTemplate);
+        return null;
     }
 
     private function getTemplateGroup(string $template): array
@@ -158,32 +112,6 @@ class CustomTemplateOptionsListener implements ContainerAwareInterface
         }
 
         return 'overrideAll' === $request->query->get('act');
-    }
-
-    /**
-     * Returns the configured template for the given fragment.
-     */
-    private function getFragmentTemplate(string $identifier): ?string
-    {
-        if (!$this->fragmentRegistry->has($identifier)) {
-            return null;
-        }
-
-        $config = $this->fragmentRegistry->get($identifier);
-
-        if (!$this->container->has($config->getController())) {
-            return null;
-        }
-
-        $controller = $this->container->get($config->getController());
-
-        if (!$controller instanceof FragmentOptionsAwareInterface) {
-            return null;
-        }
-
-        $options = $controller->getFragmentOptions();
-
-        return $options['template'] ?? null;
     }
 
     /**
