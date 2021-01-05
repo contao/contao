@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\DependencyInjection;
 
 use Ausi\SlugGenerator\SlugGenerator;
 use Contao\BackendUser;
-use Contao\ContentProxy;
 use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\CoreBundle\Cache\ContaoCacheClearer;
 use Contao\CoreBundle\Cache\ContaoCacheWarmer;
@@ -144,7 +143,6 @@ use Contao\FrontendUser;
 use Contao\Image\PictureGenerator;
 use Contao\Image\ResizeCalculator;
 use Contao\ImagineSvg\Imagine as ImagineSvg;
-use Contao\ModuleProxy;
 use Knp\Menu\Matcher\Matcher;
 use Knp\Menu\Renderer\ListRenderer;
 use Symfony\Cmf\Component\Routing\DynamicRouter;
