@@ -48,6 +48,7 @@ class CustomTemplateOptionsListener
 
     public function __construct(ContaoFramework $framework, RequestStack $requestStack, array $customTemplates, string $prefix, string $proxyClass)
     {
+        /** @var Controller $controller */
         $controller = $framework->getAdapter(Controller::class);
 
         $this->controller = $controller;
