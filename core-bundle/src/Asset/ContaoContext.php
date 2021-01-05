@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Asset;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageModel;
 use Symfony\Component\Asset\Context\ContextInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Contao\CoreBundle\Framework\ContaoFramework;
 
 /**
  * @internal Do not use this class in your code; use the "contao.assets.assets_context" or "contao.assets.files_context" service instead
@@ -102,6 +102,10 @@ class ContaoContext implements ContextInterface
         $request = $this->requestStack->getCurrentRequest();
 
         if (null === $request || !$request->attributes->has('pageModel')) {
+            if (isset($GLOBALS['objPage']) && $GLOBALS['objPage'] instanceof PageModel) {
+                return $GLOBALS['objPage'];
+            }
+
             return null;
         }
 
