@@ -114,7 +114,7 @@
     },
     "require-dev": {
         "ext-fileinfo": "*",
-        "composer/composer": "^1.0",
+        "composer/composer": "^1.0 || ^2.0",
         "contao/manager-plugin": "^2.3.1",
         "contao/test-case": "^4.2",
         "lexik/maintenance-bundle": "^2.1.5",
