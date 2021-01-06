@@ -179,7 +179,7 @@
             "contao/newsletter-bundle": "Contao\\NewsletterBundle\\ContaoManager\\Plugin"
         },
         "symfony": {
-            "require": "4.4.* || 5.2.*"
+            "require": "4.4.* || ^5.2"
         }
     },
     "autoload": {
