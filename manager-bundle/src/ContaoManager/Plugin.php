@@ -571,7 +571,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     private function getMailerDsn(ContainerBuilder $container): string
     {
         if (!$container->hasParameter('mailer_transport') || 'sendmail' === $container->getParameter('mailer_transport')) {
-            if ($this->supportsNativeMailer()) {
+            if (class_exists(NativeTransportFactory::class)) {
                 return 'native://default';
             }
 
@@ -612,10 +612,5 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     private function encodeUrlParameter(string $parameter): string
     {
         return str_replace('%', '%%', rawurlencode($parameter));
-    }
-
-    private function supportsNativeMailer(): bool
-    {
-        return class_exists(NativeTransportFactory::class);
     }
 }

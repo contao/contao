@@ -27,7 +27,7 @@ class AddNativeTransportFactoryPassTest extends TestCase
         $pass = new AddNativeTransportFactoryPass();
         $pass->process($container);
 
-        if ($this->supportsNativeMailer()) {
+        if (class_exists(NativeTransportFactory::class)) {
             $this->assertTrue($container->hasDefinition('mailer.transport_factory.native'));
 
             /** @var ChildDefinition $definition */
@@ -38,10 +38,5 @@ class AddNativeTransportFactoryPassTest extends TestCase
         } else {
             $this->assertFalse($container->hasDefinition('mailer.transport_factory.native'));
         }
-    }
-
-    private function supportsNativeMailer(): bool
-    {
-        return class_exists(NativeTransportFactory::class);
     }
 }
