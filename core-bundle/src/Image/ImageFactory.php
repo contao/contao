@@ -157,7 +157,6 @@ class ImageFactory implements ImageFactoryInterface
         $size = StringUtil::deserialize($size);
 
         if ($size instanceof ResizeConfiguration) {
-            /** @var ResizeConfiguration $resizeConfig */
             $resizeConfig = $size;
             $importantPart = null;
         } else {

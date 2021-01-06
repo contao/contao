@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Routing;
 use Contao\CoreBundle\Routing\UrlGenerator;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Symfony\Component\Routing\Generator\UrlGenerator as ParentUrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -27,11 +28,12 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class UrlGeneratorTest extends TestCase
 {
-    /**
-     * @expectedDeprecation Since contao/core-bundle 4.10: Using the "Contao\CoreBundle\Routing\UrlGenerator" class has been deprecated %s.
-     */
+    use ExpectDeprecationTrait;
+
     public function testCanWriteTheContext(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.10: Using the "Contao\CoreBundle\Routing\UrlGenerator" class has been deprecated %s.');
+
         $router = new ParentUrlGenerator(new RouteCollection(), new RequestContext());
         $generator = new UrlGenerator($router, $this->mockContaoFramework(), false);
 
@@ -252,8 +254,6 @@ class UrlGeneratorTest extends TestCase
     public function testHandlesNonArrayParameters(): void
     {
         $generator = $this->getUrlGenerator($this->mockRouterWithContext(['alias' => 'foo']));
-
-        /** @phpstan-ignore-next-line */
         $generator->generate('foo', 'bar');
     }
 

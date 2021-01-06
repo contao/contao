@@ -26,7 +26,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
-use Symfony\Component\Security\Core\Authentication\Token\RememberMeToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -34,16 +33,6 @@ use Symfony\Component\Security\Core\Authorization\Voter\RoleVoter;
 
 class TokenCheckerTest extends TestCase
 {
-    /**
-     * @var AuthenticationTrustResolver
-     */
-    private $trustResolver;
-
-    protected function setUp(): void
-    {
-        $this->trustResolver = new AuthenticationTrustResolver(AnonymousToken::class, RememberMeToken::class);
-    }
-
     /**
      * @dataProvider getUserInTokenStorageData
      */
@@ -69,7 +58,7 @@ class TokenCheckerTest extends TestCase
             $this->mockFirewallMapWithConfigContext($firewallContext),
             $tokenStorage,
             $session,
-            $this->trustResolver,
+            new AuthenticationTrustResolver(),
             $this->getRoleVoter()
         );
 
@@ -121,7 +110,7 @@ class TokenCheckerTest extends TestCase
             $this->mockFirewallMapWithConfigContext($firewallContext),
             $tokenStorage,
             $session,
-            $this->trustResolver,
+            new AuthenticationTrustResolver(),
             $this->getRoleVoter()
         );
 
@@ -148,7 +137,7 @@ class TokenCheckerTest extends TestCase
             $this->mockFirewallMapWithConfigContext('contao_backend'),
             $this->mockTokenStorage(FrontendUser::class),
             $this->mockSessionWithToken($token),
-            $this->trustResolver,
+            new AuthenticationTrustResolver(),
             $this->getRoleVoter()
         );
 
@@ -165,7 +154,7 @@ class TokenCheckerTest extends TestCase
             $this->mockFirewallMapWithConfigContext('contao_frontend'),
             $this->mockTokenStorage(BackendUser::class),
             $this->mockSessionWithToken($token),
-            $this->trustResolver,
+            new AuthenticationTrustResolver(),
             $this->getRoleVoter()
         );
 
@@ -195,7 +184,7 @@ class TokenCheckerTest extends TestCase
             $this->mockFirewallMapWithConfigContext('contao_backend'),
             $this->mockTokenStorage(BackendUser::class),
             $session,
-            $this->trustResolver,
+            new AuthenticationTrustResolver(),
             $this->getRoleVoter(),
             '/preview.php'
         );
@@ -230,7 +219,7 @@ class TokenCheckerTest extends TestCase
             $this->mockFirewallMapWithConfigContext('contao_backend'),
             $this->mockTokenStorage(BackendUser::class),
             $session,
-            $this->trustResolver,
+            new AuthenticationTrustResolver(),
             $this->getRoleVoter()
         );
 
@@ -257,7 +246,7 @@ class TokenCheckerTest extends TestCase
             $this->mockFirewallMapWithConfigContext('contao_frontend'),
             $this->mockTokenStorage(FrontendUser::class),
             $session,
-            $this->trustResolver,
+            new AuthenticationTrustResolver(),
             $this->getRoleVoter()
         );
 
@@ -290,7 +279,7 @@ class TokenCheckerTest extends TestCase
             $this->mockFirewallMapWithConfigContext('contao_backend'),
             $this->mockTokenStorage(BackendUser::class),
             $session,
-            $this->trustResolver,
+            new AuthenticationTrustResolver(),
             $this->getRoleVoter()
         );
 
@@ -306,7 +295,7 @@ class TokenCheckerTest extends TestCase
             $this->mockFirewallMapWithConfigContext('contao_frontend'),
             $this->mockTokenStorage(FrontendUser::class),
             $this->mockSessionWithToken($token),
-            $this->trustResolver,
+            new AuthenticationTrustResolver(),
             $this->getRoleVoter()
         );
 
@@ -322,7 +311,7 @@ class TokenCheckerTest extends TestCase
             $this->mockFirewallMapWithConfigContext('contao_backend'),
             $this->mockTokenStorage(BackendUser::class),
             $this->mockSessionWithToken($token),
-            $this->trustResolver,
+            new AuthenticationTrustResolver(),
             $this->getRoleVoter()
         );
 

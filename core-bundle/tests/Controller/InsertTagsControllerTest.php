@@ -39,7 +39,7 @@ class InsertTagsControllerTest extends TestCase
         $this->assertSame('3858f62230ac3c915f300c664312c63f', $response->getContent());
 
         $request = new Request();
-        $request->query->set('clientCache', 300);
+        $request->query->set('clientCache', '300');
 
         $controller = new InsertTagsController($framework);
         $response = $controller->renderAction($request, '{{request_token}}');

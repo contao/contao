@@ -143,7 +143,7 @@ class PreviewToolbarListenerTest extends TestCase
 
         $event = new ResponseEvent(
             $this->createMock(HttpKernelInterface::class),
-            $this->getRequestMock(false, 'html'),
+            $this->getRequestMock(),
             HttpKernelInterface::MASTER_REQUEST,
             $response
         );

@@ -47,7 +47,7 @@ class ArrayUtil
 	/**
 	 * Return true if an array is associative
 	 *
-	 * @param array $arrArray
+	 * @param mixed $arrArray
 	 *
 	 * @return boolean
 	 */

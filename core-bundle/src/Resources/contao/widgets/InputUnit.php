@@ -112,7 +112,7 @@ class InputUnit extends Widget
 	 */
 	protected function isSelected($arrOption)
 	{
-		if (empty($this->varValue) && empty($_POST) && $arrOption['default'])
+		if (empty($this->varValue) && empty($_POST) && ($arrOption['default'] ?? null))
 		{
 			return $this->optionSelected(1, 1);
 		}
@@ -122,7 +122,7 @@ class InputUnit extends Widget
 			return '';
 		}
 
-		return $this->optionSelected($arrOption['value'], $this->varValue['unit']);
+		return $this->optionSelected($arrOption['value'] ?? null, $this->varValue['unit'] ?? null);
 	}
 
 	/**

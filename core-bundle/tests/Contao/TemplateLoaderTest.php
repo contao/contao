@@ -19,10 +19,13 @@ use Contao\FormTextField;
 use Contao\ModuleArticleList;
 use Contao\System;
 use Contao\TemplateLoader;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Filesystem;
 
 class TemplateLoaderTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -240,11 +243,11 @@ class TemplateLoaderTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Since contao/core-bundle 4.9: Using hyphens in the template name "mod_article-custom.html5" has been deprecated %s.
      */
     public function testSupportsHyphensInCustomTemplateNames(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.9: Using hyphens in the template name "mod_article-custom.html5" has been deprecated %s.');
+
         $fs = new Filesystem();
         $fs->touch($this->getFixturesDir().'/templates/mod_article-custom.html5');
         $fs->touch($this->getFixturesDir().'/templates/mod_article_custom.html5');

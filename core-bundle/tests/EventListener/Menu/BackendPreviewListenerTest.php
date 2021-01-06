@@ -51,7 +51,7 @@ class BackendPreviewListenerTest extends ContaoTestCase
         ;
 
         $request = new Request();
-        $request->query->set('id', 42);
+        $request->query->set('id', '42');
 
         if (null !== $do) {
             $request->query->set('do', $do);

@@ -100,7 +100,7 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 			(
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"',
+				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"',
 				'button_callback'     => array('tl_news_feed', 'deleteFeed')
 			),
 			'show' => array
@@ -193,11 +193,14 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 		),
 		'feedBase' => array
 		(
-			'default'                 => Environment::get('base'),
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('trailingSlash'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'load_callback' => array
+			(
+				array('tl_news_feed', 'addFeedBase')
+			),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'description' => array
@@ -559,6 +562,23 @@ class tl_news_feed extends Backend
 		if (in_array($varValue, $arrFeeds))
 		{
 			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
+		}
+
+		return $varValue;
+	}
+
+	/**
+	 * Add the RSS-feed base URL
+	 *
+	 * @param mixed $varValue
+	 *
+	 * @return string
+	 */
+	public function addFeedBase($varValue)
+	{
+		if (!$varValue)
+		{
+			$varValue = Environment::get('base');
 		}
 
 		return $varValue;

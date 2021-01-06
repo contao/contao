@@ -139,7 +139,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			(
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"',
+				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"',
 				'button_callback'     => array('tl_page', 'deletePage')
 			),
 			'toggle' => array
@@ -1240,7 +1240,16 @@ class tl_page extends Backend
 	 */
 	public function checkDns($varValue)
 	{
-		return Idna::encode(preg_replace('#^(?:[a-z]+://)?([\pN\pL[\].:_-]+).*$#iu', '$1', $varValue));
+		if (!$varValue)
+		{
+			return '';
+		}
+
+		// The first part will match IPv6 addresses in square brackets. The
+		// second part will match domain names and IPv4 addresses.
+		preg_match('#^(?:[a-z]+://)?(\[[0-9a-f:]+]|[\pN\pL._-]*)#ui', $varValue, $matches);
+
+		return Idna::encode($matches[1]);
 	}
 
 	/**
@@ -1377,7 +1386,7 @@ class tl_page extends Backend
 	 */
 	public function copyPage($row, $href, $label, $title, $icon, $attributes, $table)
 	{
-		if ($GLOBALS['TL_DCA'][$table]['config']['closed'])
+		if ($GLOBALS['TL_DCA'][$table]['config']['closed'] ?? null)
 		{
 			return '';
 		}
@@ -1400,7 +1409,7 @@ class tl_page extends Backend
 	 */
 	public function copyPageWithSubpages($row, $href, $label, $title, $icon, $attributes, $table)
 	{
-		if ($GLOBALS['TL_DCA'][$table]['config']['closed'])
+		if ($GLOBALS['TL_DCA'][$table]['config']['closed'] ?? null)
 		{
 			return '';
 		}
@@ -1577,7 +1586,7 @@ class tl_page extends Backend
 			$objSession = System::getContainer()->get('session');
 
 			$session = $objSession->all();
-			$ids = $session['CURRENT']['IDS'];
+			$ids = $session['CURRENT']['IDS'] ?? array();
 
 			foreach ($ids as $id)
 			{
@@ -1594,16 +1603,19 @@ class tl_page extends Backend
 				$strAlias = '';
 
 				// Generate new alias through save callbacks
-				foreach ($GLOBALS['TL_DCA'][$dc->table]['fields']['alias']['save_callback'] as $callback)
+				if (is_array($GLOBALS['TL_DCA'][$dc->table]['fields']['alias']['save_callback'] ?? null))
 				{
-					if (is_array($callback))
+					foreach ($GLOBALS['TL_DCA'][$dc->table]['fields']['alias']['save_callback'] as $callback)
 					{
-						$this->import($callback[0]);
-						$strAlias = $this->{$callback[0]}->{$callback[1]}($strAlias, $dc);
-					}
-					elseif (is_callable($callback))
-					{
-						$strAlias = $callback($strAlias, $dc);
+						if (is_array($callback))
+						{
+							$this->import($callback[0]);
+							$strAlias = $this->{$callback[0]}->{$callback[1]}($strAlias, $dc);
+						}
+						elseif (is_callable($callback))
+						{
+							$strAlias = $callback($strAlias, $dc);
+						}
 					}
 				}
 
@@ -1696,7 +1708,7 @@ class tl_page extends Backend
 		}
 
 		// Trigger the onload_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_page']['config']['onload_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_page']['config']['onload_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_page']['config']['onload_callback'] as $callback)
 			{
@@ -1737,7 +1749,7 @@ class tl_page extends Backend
 		$objVersions->initialize();
 
 		// Trigger the save_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_page']['fields']['published']['save_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_page']['fields']['published']['save_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_page']['fields']['published']['save_callback'] as $callback)
 			{
@@ -1766,7 +1778,7 @@ class tl_page extends Backend
 		}
 
 		// Trigger the onsubmit_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_page']['config']['onsubmit_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_page']['config']['onsubmit_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_page']['config']['onsubmit_callback'] as $callback)
 			{

@@ -15,19 +15,24 @@ namespace Contao\CoreBundle\Tests\Translation;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Translation\Translator;
 use Contao\System;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Translation\Translator as BaseTranslator;
 use Symfony\Component\Translation\TranslatorInterface as LegacyTranslatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TranslatorTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     /**
      * @group legacy
-     *
-     * @expectedDeprecation %simplements "Symfony\Component\Translation\TranslatorInterface" that is deprecated%s
      */
     public function testTranslatorImplementsDeprecatedInterface(): void
     {
+        if (method_exists(BaseTranslator::class, 'transChoice')) {
+            $this->expectDeprecation('%s "Symfony\Component\Translation\TranslatorInterface" that is deprecated %s');
+        }
+
         $translator = new Translator($this->createMock(BaseTranslator::class), $this->mockContaoFramework());
 
         $this->assertInstanceOf(TranslatorInterface::class, $translator);
@@ -82,11 +87,15 @@ class TranslatorTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation The Symfony\Component\Translation\Translator::transChoice method is deprecated %s.
      */
     public function testForwardsTheLegacyMethodCallsToTheDecoratedTranslator(): void
     {
+        if (!method_exists(BaseTranslator::class, 'transChoice')) {
+            $this->markTestSkipped('The transChoice() method no longer exists.');
+        }
+
+        $this->expectDeprecation('The Symfony\Component\Translation\Translator::transChoice method is deprecated %s.');
+
         $originalTranslator = $this->createMock(BaseTranslator::class);
         $originalTranslator
             ->expects($this->once())

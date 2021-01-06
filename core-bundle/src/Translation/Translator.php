@@ -23,7 +23,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleAwareInterface, LegacyTranslatorInterface
 {
     /**
-     * @var TranslatorInterface|TranslatorBagInterface|LegacyTranslatorInterface
+     * @var TranslatorInterface|TranslatorBagInterface|LocaleAwareInterface|LegacyTranslatorInterface
      */
     private $translator;
 
