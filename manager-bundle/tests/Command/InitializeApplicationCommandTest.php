@@ -35,7 +35,6 @@ class InitializeApplicationCommandTest extends ContaoTestCase
     public function testPurgesProdCacheDirectory(): void
     {
         $filesystem = $this->createMock(Filesystem::class);
-
         $filesystem
             ->expects($this->once())
             ->method('exists')
@@ -50,7 +49,10 @@ class InitializeApplicationCommandTest extends ContaoTestCase
         ;
 
         $command = new InitializeApplicationCommand(
-            'project/dir', 'project/dir/web', $filesystem, $this->getProcessFactoryMock()
+            'project/dir',
+            'project/dir/web',
+            $filesystem,
+            $this->getProcessFactoryMock()
         );
 
         (new CommandTester($command))->execute([]);
@@ -59,7 +61,6 @@ class InitializeApplicationCommandTest extends ContaoTestCase
     public function testDoesNotPurgeProdCacheDirectoryIfItDoesntExist(): void
     {
         $filesystem = $this->createMock(Filesystem::class);
-
         $filesystem
             ->expects($this->once())
             ->method('exists')
@@ -73,7 +74,10 @@ class InitializeApplicationCommandTest extends ContaoTestCase
         ;
 
         $command = new InitializeApplicationCommand(
-            'project/dir', 'project/dir/web', $filesystem, $this->getProcessFactoryMock()
+            'project/dir',
+            'project/dir/web',
+            $filesystem,
+            $this->getProcessFactoryMock()
         );
 
         (new CommandTester($command))->execute([]);
@@ -82,7 +86,6 @@ class InitializeApplicationCommandTest extends ContaoTestCase
     public function testSuppressesFilesystemErrors(): void
     {
         $filesystem = $this->createMock(Filesystem::class);
-
         $filesystem
             ->expects($this->once())
             ->method('exists')
@@ -91,7 +94,10 @@ class InitializeApplicationCommandTest extends ContaoTestCase
         ;
 
         $command = new InitializeApplicationCommand(
-            'project/dir', 'project/dir/web', $filesystem, $this->getProcessFactoryMock()
+            'project/dir',
+            'project/dir/web',
+            $filesystem,
+            $this->getProcessFactoryMock()
         );
 
         (new CommandTester($command))->execute([]);
@@ -121,6 +127,7 @@ class InitializeApplicationCommandTest extends ContaoTestCase
         }
 
         $phpPath = (new PhpExecutableFinder())->find();
+
         $this->assertStringContainsString('php', $phpPath);
 
         $commandFilePath = (new \ReflectionClass(InitializeApplicationCommand::class))->getFileName();
@@ -144,9 +151,7 @@ class InitializeApplicationCommandTest extends ContaoTestCase
             ->withConsecutive(...$commandArguments)
         ;
 
-        $command = new InitializeApplicationCommand(
-            'project/dir', 'project/dir/web', $filesystem, $processFactory
-        );
+        $command = new InitializeApplicationCommand('project/dir', 'project/dir/web', $filesystem, $processFactory);
 
         (new CommandTester($command))->execute([], $options);
     }
@@ -200,7 +205,10 @@ class InitializeApplicationCommandTest extends ContaoTestCase
         ;
 
         $command = new InitializeApplicationCommand(
-            'project/dir', 'project/dir/web', $filesystem, $this->getProcessFactoryMock($this->getProcessMocks(false))
+            'project/dir',
+            'project/dir/web',
+            $filesystem,
+            $this->getProcessFactoryMock($this->getProcessMocks(false))
         );
 
         $commandTester = (new CommandTester($command));
@@ -222,7 +230,10 @@ class InitializeApplicationCommandTest extends ContaoTestCase
         ;
 
         $command = new InitializeApplicationCommand(
-            'project/dir', 'project/dir/web', $filesystem, $this->getProcessFactoryMock()
+            'project/dir',
+            'project/dir/web',
+            $filesystem,
+            $this->getProcessFactoryMock()
         );
 
         $commandTester = new CommandTester($command);
@@ -258,7 +269,6 @@ class InitializeApplicationCommandTest extends ContaoTestCase
 
         for ($i = 1; $i <= 7; ++$i) {
             $process = $this->createMock(Process::class);
-
             $process
                 ->method('isSuccessful')
                 ->willReturn($successful)

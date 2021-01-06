@@ -19,13 +19,7 @@ class ProcessFactoryTest extends ContaoTestCase
 {
     public function testCreatesCommand(): void
     {
-        $process = (new ProcessFactory())->create(
-            ['command'],
-            'cwd',
-            ['env'],
-            'input',
-            100
-        );
+        $process = (new ProcessFactory())->create(['command'], 'cwd', ['env'], 'input', 100);
 
         $this->assertStringContainsString('command', $process->getCommandLine());
         $this->assertSame('cwd', $process->getWorkingDirectory());

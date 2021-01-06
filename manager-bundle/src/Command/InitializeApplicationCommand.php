@@ -63,7 +63,6 @@ class InitializeApplicationCommand extends Command
         $this->webDir = Path::makeRelative($webDir, $projectDir);
         $this->filesystem = $filesystem ?? new Filesystem();
         $this->processFactory = $processFactory ?? new ProcessFactory();
-
         $this->phpPath = (new PhpExecutableFinder())->find();
         $this->consolePath = Path::canonicalize(__DIR__.'/../../bin/contao-console');
 
@@ -74,7 +73,7 @@ class InitializeApplicationCommand extends Command
     {
         $this
             ->setHidden(true)
-            ->setDescription('Executes all tasks to initialize a Contao Managed Edition. Add this command to your composer "post-install-cmd" and "post-update-cmd" scripts.')
+            ->setDescription('Initializes a Contao Managed Edition. Add this command to your composer "post-install-cmd" and "post-update-cmd" scripts.')
         ;
     }
 
@@ -108,19 +107,14 @@ class InitializeApplicationCommand extends Command
         return 0;
     }
 
-    /**
-     * Removes the prod cache directory.
-     */
     private function purgeProdCache(): void
     {
         $cacheDir = Path::join($this->projectDir, 'var/cache/prod');
 
         try {
-            if (!$this->filesystem->exists($cacheDir)) {
-                return;
+            if ($this->filesystem->exists($cacheDir)) {
+                $this->filesystem->remove($cacheDir);
             }
-
-            $this->filesystem->remove($cacheDir);
         } catch (\Exception $e) {
             // ignore
         }

@@ -33,7 +33,7 @@ require $projectDir.'/vendor/autoload.php';
 
 $kernel = ContaoKernel::fromInput($projectDir, new ArrayInput(['--env' => 'prod']));
 
-// Purge cache in case it's corrupted
+// Purge the cache in case it is corrupted
 (new Filesystem())->remove($kernel->getCacheDir());
 
 $application = new ContaoApplication($kernel);

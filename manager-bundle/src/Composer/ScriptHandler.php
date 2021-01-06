@@ -29,7 +29,7 @@ class ScriptHandler
      */
     public static function initializeApplication(Event $event): void
     {
-        trigger_deprecation('contao/manager-bundle', '4.11', 'Using ScriptHandler::initializeApplication has been deprecated and will be removed in Contao 5.0. Use the contao-script-handler binary instead.');
+        trigger_deprecation('contao/manager-bundle', '4.11', 'Using ScriptHandler::initializeApplication() has been deprecated and will be removed in Contao 5.0. Use the contao-script-handler binary instead.');
 
         $command = array_filter([
             'contao-script-handler',
@@ -38,14 +38,14 @@ class ScriptHandler
 
         $event->getIO()->write(
             sprintf(
-                '<warning>Please edit your root composer.json and set "%s" to "%s" instead of calling "ScriptHandler::initializeApplication" directly.</warning>',
+                '<warning>Please edit your root composer.json and set "%s" to "%s" instead of calling "ScriptHandler::initializeApplication()" directly.</warning>',
                 $event->getName(),
                 implode(' ', $command)
             )
         );
 
         if (false === ($phpPath = (new PhpExecutableFinder())->find())) {
-            throw new \RuntimeException('The php executable could not be found.');
+            throw new \RuntimeException('The PHP executable could not be found.');
         }
 
         $command[0] = Path::join(__DIR__.'/../../bin', $command[0]);
@@ -68,7 +68,7 @@ class ScriptHandler
 
     public static function purgeCacheFolder(): void
     {
-        trigger_deprecation('contao/manager-bundle', '4.11', 'Using ScriptHandler::purgeCacheFolder has been deprecated and will be removed in Contao 5.0.');
+        trigger_deprecation('contao/manager-bundle', '4.11', 'Using ScriptHandler::purgeCacheFolder() has been deprecated and will be removed in Contao 5.0.');
 
         $filesystem = new Filesystem();
         $filesystem->removeDirectory(Path::join(getcwd(), 'var/cache/prod'));
@@ -79,7 +79,7 @@ class ScriptHandler
      */
     public static function addAppDirectory(): void
     {
-        trigger_deprecation('contao/manager-bundle', '4.11', 'Using ScriptHandler::addAppDirectory has been deprecated and will be removed in Contao 5.0.');
+        trigger_deprecation('contao/manager-bundle', '4.11', 'Using ScriptHandler::addAppDirectory() has been deprecated and will be removed in Contao 5.0.');
 
         $filesystem = new Filesystem();
         $filesystem->ensureDirectoryExists(Path::join(getcwd(), 'app'));
