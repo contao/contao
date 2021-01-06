@@ -99,7 +99,7 @@ services:
     # Backwards compatibility
     contao.controller.backend_csv_import:
         alias: Contao\CoreBundle\Controller\BackendCsvImportController
-        # FIXME: re-enable this as soon as we are on Symfony 5 only
+        # TODO: re-enable this as soon as we are on Symfony 5 only
         #deprecated:
         #    package: contao/core-bundle
         #    version: 4.9
@@ -134,7 +134,7 @@ services:
     # Backwards compatibility
     contao.controller.images:
         alias: Contao\CoreBundle\Controller\ImagesController
-        # FIXME: re-enable this as soon as we are on Symfony 5 only
+        # TODO: re-enable this as soon as we are on Symfony 5 only
         #deprecated:
         #    package: contao/core-bundle
         #    version: 4.9
@@ -150,7 +150,7 @@ services:
     # Backwards compatibility
     contao.controller.insert_tags:
         alias: Contao\CoreBundle\Controller\InsertTagsController
-        # FIXME: re-enable this as soon as we are on Symfony 5 only
+        # TODO: re-enable this as soon as we are on Symfony 5 only
         #deprecated:
         #    package: contao/core-bundle
         #    version: 4.9

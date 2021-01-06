@@ -209,7 +209,7 @@ class BackendController extends AbstractController
         $services = parent::getSubscribedServices();
 
         $services['contao.picker.builder'] = PickerBuilderInterface::class;
-        $services['uri_signer'] = 'uri_signer'; // FIXME: adjust this once https://github.com/symfony/symfony/pull/35298 has been merged
+        $services['uri_signer'] = 'uri_signer'; // TODO: adjust this once we are on Symfony 5 only (see https://github.com/symfony/symfony/pull/35298)
 
         return $services;
     }

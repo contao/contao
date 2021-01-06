@@ -24,11 +24,5 @@
                 <file name="vendor/symfony/phpunit-bridge/ExpectDeprecationTrait.php"/>
             </errorLevel>
         </UndefinedTrait>
-        <!-- TODO: Remove this again once https://github.com/vimeo/psalm/issues/4874 has been fixed -->
-        <TooFewArguments>
-            <errorLevel type="suppress">
-                <file name="core-bundle/src/Doctrine/Schema/DcaSchemaProvider.php"/>
-            </errorLevel>
-        </TooFewArguments>
     </issueHandlers>
 </psalm>
