@@ -35,19 +35,6 @@
         "symfony/debug-bundle": "4.4.* || 5.2.*",
         "symfony/dependency-injection": "4.4.* || 5.2.*",
         "symfony/deprecation-contracts": "^2.1",
-<<<<<<< HEAD
-        "symfony/dotenv": "4.4.*",
-        "symfony/doctrine-bridge": "4.4.*",
-        "symfony/expression-language": "4.4.*",
-        "symfony/filesystem": "4.4.*",
-        "symfony/finder": "4.4.*",
-        "symfony/framework-bundle": "4.4.*",
-        "symfony/http-client": "4.4.*",
-        "symfony/http-foundation": "4.4.*",
-        "symfony/http-kernel": "4.4.*",
-        "symfony/mailer": "4.4.* || 5.2.*",
-        "symfony/monolog-bridge": "4.4.*",
-=======
         "symfony/dotenv": "4.4.* || 5.2.*",
         "symfony/doctrine-bridge": "4.4.* || 5.2.*",
         "symfony/expression-language": "4.4.* || 5.2.*",
@@ -59,7 +46,6 @@
         "symfony/http-kernel": "4.4.* || 5.2.*",
         "symfony/mailer": "4.4.* || 5.2.*",
         "symfony/monolog-bridge": "4.4.* || 5.2.*",
->>>>>>> origin/master
         "symfony/monolog-bundle": "^3.1",
         "symfony/process": "4.4.* || 5.2.*",
         "symfony/proxy-manager-bridge": "4.4.* || 5.2.*",
