@@ -336,8 +336,8 @@ abstract class Backend extends Controller
 		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
-		$arrTables = (array) $arrModule['tables'];
-		$strTable = Input::get('table') ?: $arrTables[0];
+		$arrTables = (array) ($arrModule['tables'] ?? array());
+		$strTable = Input::get('table') ?: ($arrTables[0] ?? null);
 		$id = (!Input::get('act') && Input::get('id')) ? Input::get('id') : $objSession->get('CURRENT_ID');
 
 		// Store the current ID in the current session
@@ -382,11 +382,11 @@ abstract class Backend extends Controller
 			$this->loadDataContainer($strTable);
 
 			// Include all excluded fields which are allowed for the current user
-			if ($GLOBALS['TL_DCA'][$strTable]['fields'])
+			if (\is_array($GLOBALS['TL_DCA'][$strTable]['fields'] ?? null))
 			{
 				foreach ($GLOBALS['TL_DCA'][$strTable]['fields'] as $k=>$v)
 				{
-					if ($v['exclude'] && $this->User->hasAccess($strTable . '::' . $k, 'alexf'))
+					if (($v['exclude'] ?? null) && $this->User->hasAccess($strTable . '::' . $k, 'alexf'))
 					{
 						if ($strTable == 'tl_user_group')
 						{
@@ -399,7 +399,7 @@ abstract class Backend extends Controller
 			}
 
 			// Fabricate a new data container object
-			if (!$GLOBALS['TL_DCA'][$strTable]['config']['dataContainer'])
+			if (!isset($GLOBALS['TL_DCA'][$strTable]['config']['dataContainer']))
 			{
 				$this->log('Missing data container for table "' . $strTable . '"', __METHOD__, TL_ERROR);
 				trigger_error('Could not create a data container object', E_USER_ERROR);
@@ -426,7 +426,7 @@ abstract class Backend extends Controller
 		}
 
 		// Trigger the module callback
-		elseif (class_exists($arrModule['callback']))
+		elseif (class_exists($arrModule['callback'] ?? null))
 		{
 			/** @var Module $objCallback */
 			$objCallback = new $arrModule['callback']($dc);
@@ -518,9 +518,9 @@ abstract class Backend extends Controller
 
 				$pid = $dc->id;
 				$table = $strTable;
-				$ptable = ($act != 'edit') ? $GLOBALS['TL_DCA'][$strTable]['config']['ptable'] : $strTable;
+				$ptable = $act != 'edit' ? ($GLOBALS['TL_DCA'][$strTable]['config']['ptable'] ?? null) : $strTable;
 
-				while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'], array(5, 6)))
+				while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null, array(5, 6)))
 				{
 					$objRow = $this->Database->prepare("SELECT * FROM " . $ptable . " WHERE id=?")
 											 ->limit(1)
@@ -556,7 +556,7 @@ abstract class Backend extends Controller
 					// Next parent table
 					$pid = $objRow->pid;
 					$table = $ptable;
-					$ptable = ($GLOBALS['TL_DCA'][$ptable]['config']['dynamicPtable']) ? $objRow->ptable : $GLOBALS['TL_DCA'][$ptable]['config']['ptable'];
+					$ptable = ($GLOBALS['TL_DCA'][$ptable]['config']['dynamicPtable'] ?? null) ? $objRow->ptable : ($GLOBALS['TL_DCA'][$ptable]['config']['ptable'] ?? null);
 				}
 
 				// Add the last parent table

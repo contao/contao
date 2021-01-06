@@ -113,7 +113,7 @@ class ModuleArticle extends Module
 		// Generate the CSS ID if it is not set
 		if (empty($this->cssID[0]))
 		{
-			$this->cssID = array($id, $this->cssID[1]);
+			$this->cssID = array($id, $this->cssID[1] ?? null);
 		}
 
 		$this->Template->column = $this->inColumn;
@@ -157,12 +157,9 @@ class ModuleArticle extends Module
 		}
 
 		// Get section and article alias
-		list($strSection, $strArticle) = explode(':', Input::get('articles'));
-
-		if ($strArticle === null)
-		{
-			$strArticle = $strSection;
-		}
+		$chunks = explode(':', Input::get('articles'));
+		$strSection = $chunks[0] ?? null;
+		$strArticle = $chunks[1] ?? $strSection;
 
 		// Overwrite the page title (see #2853 and #4955)
 		if (!$this->blnNoMarkup && $strArticle && ($strArticle == $this->id || $strArticle == $this->alias) && $this->title)

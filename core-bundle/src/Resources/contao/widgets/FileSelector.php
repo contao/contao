@@ -308,7 +308,7 @@ class FileSelector extends Widget
 		$this->loadDataContainer($this->strTable);
 
 		// Load the current values
-		switch ($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'])
+		switch ($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'] ?? null)
 		{
 			case 'File':
 				if (Config::get($this->strField))

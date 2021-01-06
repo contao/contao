@@ -322,7 +322,7 @@ final class Figure
         }
 
         // Other
-        if (null !== $floating) {
+        if ($floating) {
             $templateData['floatClass'] = " float_$floating";
         }
 

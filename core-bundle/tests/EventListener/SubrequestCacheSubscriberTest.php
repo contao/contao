@@ -14,9 +14,11 @@ namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\Tests\TestCase;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -130,31 +132,13 @@ class SubrequestCacheSubscriberTest extends TestCase
 
     private function onKernelRequest(SubrequestCacheSubscriber $subscriber, int $requestType): void
     {
-        $event = $this->createMock(RequestEvent::class);
-        $event
-            ->expects($this->once())
-            ->method('getRequestType')
-            ->willReturn($requestType)
-        ;
-
+        $event = new RequestEvent($this->createMock(Kernel::class), new Request(), $requestType);
         $subscriber->onKernelRequest($event);
     }
 
     private function onKernelResponse(SubrequestCacheSubscriber $subscriber, Response $response, int $requestType): void
     {
-        $event = $this->createMock(ResponseEvent::class);
-        $event
-            ->expects($this->atLeastOnce())
-            ->method('getResponse')
-            ->willReturn($response)
-        ;
-
-        $event
-            ->expects($this->once())
-            ->method('getRequestType')
-            ->willReturn($requestType)
-        ;
-
+        $event = new ResponseEvent($this->createMock(Kernel::class), new Request(), $requestType, $response);
         $subscriber->onKernelResponse($event);
     }
 }

@@ -99,7 +99,7 @@ class OrderFieldMigration extends AbstractMigration
         $orderFieldQuoted = $this->connection->quoteIdentifier($orderField);
         $fieldQuoted = $this->connection->quoteIdentifier($field);
 
-        $rows = $this->connection->fetchAssociative("
+        $rows = $this->connection->fetchAllAssociative("
             SELECT
                 $orderFieldQuoted, $fieldQuoted
             FROM

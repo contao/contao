@@ -88,7 +88,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			(
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"'
+				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"'
 			),
 			'toggle' => array
 			(
@@ -348,7 +348,7 @@ class tl_faq extends Backend
 		// HOOK: comments extension required
 		if (!isset($bundles['ContaoCommentsBundle']))
 		{
-			$key = array_search('allowComments', $GLOBALS['TL_DCA']['tl_faq']['list']['sorting']['headerFields']);
+			$key = array_search('allowComments', $GLOBALS['TL_DCA']['tl_faq']['list']['sorting']['headerFields'] ?? array());
 			unset($GLOBALS['TL_DCA']['tl_faq']['list']['sorting']['headerFields'][$key]);
 		}
 
@@ -597,7 +597,7 @@ class tl_faq extends Backend
 		}
 
 		// Trigger the onload_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_faq']['config']['onload_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_faq']['config']['onload_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_faq']['config']['onload_callback'] as $callback)
 			{
@@ -638,7 +638,7 @@ class tl_faq extends Backend
 		$objVersions->initialize();
 
 		// Trigger the save_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_faq']['fields']['published']['save_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_faq']['fields']['published']['save_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_faq']['fields']['published']['save_callback'] as $callback)
 			{
@@ -667,7 +667,7 @@ class tl_faq extends Backend
 		}
 
 		// Trigger the onsubmit_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_faq']['config']['onsubmit_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_faq']['config']['onsubmit_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_faq']['config']['onsubmit_callback'] as $callback)
 			{

@@ -87,7 +87,7 @@ class PageRegular extends Frontend
 
 		// Set the layout template and template group
 		$objPage->template = $objLayout->template ?: 'fe_page';
-		$objPage->templateGroup = $objTheme->templates;
+		$objPage->templateGroup = $objTheme->templates ?? null;
 
 		// Minify the markup
 		$objPage->minifyMarkup = $objLayout->minifyMarkup;
@@ -99,13 +99,12 @@ class PageRegular extends Frontend
 		$arrCustomSections = array();
 		$arrSections = array('header', 'left', 'right', 'main', 'footer');
 		$arrModules = StringUtil::deserialize($objLayout->modules);
-
 		$arrModuleIds = array();
 
 		// Filter the disabled modules
 		foreach ($arrModules as $module)
 		{
-			if ($module['enable'])
+			if ($module['enable'] ?? null)
 			{
 				$arrModuleIds[] = (int) $module['mod'];
 			}
@@ -130,7 +129,7 @@ class PageRegular extends Frontend
 			foreach ($arrModules as $arrModule)
 			{
 				// Disabled module
-				if (!BE_USER_LOGGED_IN && !$arrModule['enable'])
+				if (!BE_USER_LOGGED_IN && !($arrModule['enable'] ?? null))
 				{
 					continue;
 				}
@@ -169,6 +168,11 @@ class PageRegular extends Frontend
 				}
 				else
 				{
+					if (!isset($arrCustomSections[$arrModule['col']]))
+					{
+						$arrCustomSections[$arrModule['col']] = '';
+					}
+
 					$arrCustomSections[$arrModule['col']] .= $this->getFrontendModule($arrModule['mod'], $arrModule['col']);
 				}
 			}
@@ -177,7 +181,7 @@ class PageRegular extends Frontend
 		$this->Template->sections = $arrCustomSections;
 
 		// Mark RTL languages (see #7171)
-		if ($GLOBALS['TL_LANG']['MSC']['textDirection'] == 'rtl')
+		if (($GLOBALS['TL_LANG']['MSC']['textDirection'] ?? null) == 'rtl')
 		{
 			$this->Template->isRTL = true;
 		}
@@ -525,7 +529,7 @@ class PageRegular extends Frontend
 		}
 
 		// Make sure TL_USER_CSS is set
-		if (!\is_array($GLOBALS['TL_USER_CSS']))
+		if (!isset($GLOBALS['TL_USER_CSS']) || !\is_array($GLOBALS['TL_USER_CSS']))
 		{
 			$GLOBALS['TL_USER_CSS'] = array();
 		}

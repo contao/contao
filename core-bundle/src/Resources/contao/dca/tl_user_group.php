@@ -82,7 +82,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			(
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"'
+				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"'
 			),
 			'toggle' => array
 			(
@@ -433,7 +433,7 @@ class tl_user_group extends Backend
 						continue;
 					}
 
-					if ($vv['exclude'] || $vv['orig_exclude'])
+					if (($vv['exclude'] ?? null) || ($vv['orig_exclude'] ?? null))
 					{
 						$arrReturn[$k][StringUtil::specialchars($k . '::' . $kk)] = isset($vv['label'][0]) ? $vv['label'][0] . ' <span style="color:#999;padding-left:3px">[' . $kk . ']</span>' : $kk;
 					}
@@ -503,7 +503,7 @@ class tl_user_group extends Backend
 		}
 
 		// Trigger the onload_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_user_group']['config']['onload_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_user_group']['config']['onload_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_user_group']['config']['onload_callback'] as $callback)
 			{
@@ -547,7 +547,7 @@ class tl_user_group extends Backend
 		$blnVisible = !$blnVisible;
 
 		// Trigger the save_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_user_group']['fields']['disable']['save_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_user_group']['fields']['disable']['save_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_user_group']['fields']['disable']['save_callback'] as $callback)
 			{
@@ -564,7 +564,7 @@ class tl_user_group extends Backend
 		}
 
 		// Trigger the onsubmit_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_user_group']['config']['onsubmit_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_user_group']['config']['onsubmit_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_user_group']['config']['onsubmit_callback'] as $callback)
 			{

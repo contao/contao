@@ -1,0 +1,5 @@
+{
+    "require": {
+        "contao/monorepo-tools": "dev-master"
+    }
+}
