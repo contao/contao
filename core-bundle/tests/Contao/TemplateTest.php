@@ -292,55 +292,32 @@ EOF
             'setOptions' => ['foo' => 'bar'],
         ];
 
-        System::setContainer(
-            $this->getContainerForFigureRendering($expectedFigureBuilderCalls)
-        );
+        System::setContainer($this->getContainerForFigureRendering($expectedFigureBuilderCalls));
 
-        $this->filesystem->dumpFile(
-            $this->getFixturesDir().'/templates/image.html5',
-            '<result>'
-        );
+        $this->filesystem->dumpFile($this->getFixturesDir().'/templates/image.html5', '<result>');
 
-        $this->assertSame(
-            '<result>',
-            (new FrontendTemplate())->figure('resource', '_size', $configuration)
-        );
+        $this->assertSame('<result>', (new FrontendTemplate())->figure('resource', '_size', $configuration));
     }
 
     public function testFigureFunctionWithCustomTemplate(): void
     {
-        System::setContainer(
-            $this->getContainerForFigureRendering([], 'custom_figure')
-        );
+        System::setContainer($this->getContainerForFigureRendering([], 'custom_figure'));
 
-        $this->filesystem->dumpFile(
-            $this->getFixturesDir().'/templates/custom_figure.html5',
-            '<result>'
-        );
+        $this->filesystem->dumpFile($this->getFixturesDir().'/templates/custom_figure.html5', '<result>');
 
-        $this->assertSame(
-            '<result>',
-            (new FrontendTemplate())->figure(1, null, [], 'custom_figure')
-        );
+        $this->assertSame('<result>', (new FrontendTemplate())->figure(1, null, [], 'custom_figure'));
     }
 
     public function testFigureFunctionWithTwigTemplate(): void
     {
-        System::setContainer(
-            $this->getContainerForFigureRendering([], '@App/custom_figure.html.twig', true)
-        );
+        System::setContainer($this->getContainerForFigureRendering([], '@App/custom_figure.html.twig', true));
 
-        $this->assertSame(
-            '<result>',
-            (new FrontendTemplate())->figure(1, null, [], '@App/custom_figure.html.twig')
-        );
+        $this->assertSame('<result>', (new FrontendTemplate())->figure(1, null, [], '@App/custom_figure.html.twig'));
     }
 
     public function testFigureFunctionFailsWithInvalidConfiguration(): void
     {
-        System::setContainer(
-            $this->getContainerForFigureRendering([])
-        );
+        System::setContainer($this->getContainerForFigureRendering([]));
 
         $template = new FrontendTemplate();
 

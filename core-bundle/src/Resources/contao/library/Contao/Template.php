@@ -396,11 +396,12 @@ abstract class Template extends Controller
 	}
 
 	/**
-	 * Renders a figure. The provided configuration array is used to configure
-	 * a FigureBuilder. If not explicitly set the default image.html5 template
-	 * will be used to render the results. To use the core's default Twig
-	 * template, pass '@ContaoCore/Image/Studio/figure.html.twig' into the
-	 * $template argument.
+	 * Render a figure
+	 *
+	 * The provided configuration array is used to configure a FigureBuilder.
+	 * If not explicitly set, the default template "image.html5" will be used
+	 * to render the results. To use the core's default Twig template, pass
+	 * "@ContaoCore/Image/Studio/figure.html.twig" as $template argument.
 	 *
 	 * @param int|string|FilesModel|ImageInterface       $from          Can be a FilesModel, an ImageInterface, a tl_files UUID/ID/path or a file system path
 	 * @param int|string|array|PictureConfiguration|null $size          A picture size configuration or reference
