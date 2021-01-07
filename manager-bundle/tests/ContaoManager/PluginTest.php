@@ -612,6 +612,12 @@ class PluginTest extends ContaoTestCase
 
     public function getMailerParameters(): \Generator
     {
+        $default = 'sendmail://default';
+
+        if (class_exists(NativeTransportFactory::class)) {
+            $default = 'native://default';
+        }
+
         yield [
             'mail',
             null,
@@ -619,7 +625,7 @@ class PluginTest extends ContaoTestCase
             null,
             null,
             null,
-            $this->supportsNativeMailer() ? 'native://default' : 'sendmail://default',
+            $default,
         ];
 
         yield [
@@ -629,7 +635,7 @@ class PluginTest extends ContaoTestCase
             null,
             25,
             null,
-            $this->supportsNativeMailer() ? 'native://default' : 'sendmail://default',
+            $default,
         ];
 
         yield [
@@ -908,10 +914,5 @@ class PluginTest extends ContaoTestCase
         $container->setParameter('secret', 'ThisTokenIsNotSoSecretChangeIt');
 
         return $container;
-    }
-
-    private function supportsNativeMailer(): bool
-    {
-        return class_exists(NativeTransportFactory::class);
     }
 }
