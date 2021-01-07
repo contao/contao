@@ -49,6 +49,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Mailer\Transport\NativeTransportFactory;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Webmozart\PathUtil\Path;
@@ -513,7 +514,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         }
 
         if (\in_array($options['transport'], ['mail', 'sendmail'], true)) {
-            return 'sendmail+smtp://default';
+            return 'sendmail://default';
         }
 
         /*
@@ -569,8 +570,8 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
     private function getMailerDsn(ContainerBuilder $container): string
     {
-        if ('sendmail' === $container->getParameter('mailer_transport')) {
-            return 'sendmail+smtp://default';
+        if (!$container->hasParameter('mailer_transport') || 'sendmail' === $container->getParameter('mailer_transport')) {
+            return class_exists(NativeTransportFactory::class) ? 'native://default' : 'sendmail://default';
         }
 
         $transport = 'smtp';

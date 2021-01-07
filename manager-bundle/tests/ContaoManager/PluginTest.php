@@ -41,6 +41,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Mailer\Transport\NativeTransportFactory;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -611,6 +612,12 @@ class PluginTest extends ContaoTestCase
 
     public function getMailerParameters(): \Generator
     {
+        $default = 'sendmail://default';
+
+        if (class_exists(NativeTransportFactory::class)) {
+            $default = 'native://default';
+        }
+
         yield [
             'mail',
             null,
@@ -618,7 +625,7 @@ class PluginTest extends ContaoTestCase
             null,
             null,
             null,
-            'sendmail+smtp://default',
+            $default,
         ];
 
         yield [
@@ -628,7 +635,7 @@ class PluginTest extends ContaoTestCase
             null,
             25,
             null,
-            'sendmail+smtp://default',
+            $default,
         ];
 
         yield [
@@ -732,12 +739,12 @@ class PluginTest extends ContaoTestCase
     {
         yield [
             'sendmail://localhost',
-            'sendmail+smtp://default',
+            'sendmail://default',
         ];
 
         yield [
             'mail://localhost',
-            'sendmail+smtp://default',
+            'sendmail://default',
         ];
 
         yield [

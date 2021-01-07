@@ -15,6 +15,7 @@ namespace Contao\CoreBundle;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddAssetsPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddAvailableTransportsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddCronJobsPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\AddNativeTransportFactoryPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddSessionBagsPass;
@@ -112,5 +113,6 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new AddCronJobsPass());
         $container->addCompilerPass(new AddAvailableTransportsPass());
         $container->addCompilerPass(new RegisterRouteEnhancersPass('contao.routing.page_router', 'contao.page_router_enhancer'));
+        $container->addCompilerPass(new AddNativeTransportFactoryPass());
     }
 }
