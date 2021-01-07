@@ -2,10 +2,8 @@
 
 ## Version 4.* to 4.11
 
-The provided integration of MooTools as well as jQuery does not support
-loading from CDNs anymore. You have to make sure the correct version
-is loaded from your local installation.
-Loading from a CDN does not provide any advantage anymore:
+Loading MooTools and jQuery from CDN is no longer supported, because it does
+not provide any advantage anymore.
 
 More information: https://github.com/contao/contao/pull/2438
 
