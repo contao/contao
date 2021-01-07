@@ -24,6 +24,9 @@ use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @internal
+ */
 class JwtManager
 {
     public const COOKIE_NAME = 'contao_settings';
