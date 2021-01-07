@@ -847,8 +847,8 @@ class PluginTest extends ContaoTestCase
 
     public function testRetrievesTheConnectionParametersFromTheConfiguration(): void
     {
-        $pluginLoader = $this->createMock(PluginLoader::class);
-        $container = new PluginContainerBuilder($pluginLoader, []);
+        $container = new PluginContainerBuilder($this->createMock(PluginLoader::class), []);
+        $container->setParameter('kernel.project_dir', __DIR__.'/../Fixtures/app');
 
         $extensionConfigs = [
             [
@@ -895,6 +895,260 @@ class PluginTest extends ContaoTestCase
         $_ENV['DATABASE_URL'] = $url;
     }
 
+    public function testDoesNotAddDefaultDoctrineMappingIfEntityFolderDoesNotExists(): void
+    {
+        $plugin = new Plugin(
+            function () {
+                return $this->createMock(Connection::class);
+            }
+        );
+
+        $extensionConfig = $plugin->getExtensionConfig('doctrine', [], $this->getContainer());
+
+        // Ignore the DBAL entry
+        unset($extensionConfig[0]['dbal']);
+
+        $this->assertCount(1, $extensionConfig);
+        $this->assertEmpty($extensionConfig[0]);
+    }
+
+    /**
+     * @dataProvider getOrmMappingConfigurations
+     */
+    public function testOnlyAddsTheDefaultDoctrineMappingIfAutoMappingIsEnabledAndNotAlreadyConfigured(array $ormConfig, string $defaultEntityManager, bool $shouldAdd): void
+    {
+        $extensionConfigs = [
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'url' => '%env(DATABASE_URL)%',
+                            'password' => '@foobar',
+                        ],
+                    ],
+                ],
+                'orm' => $ormConfig,
+            ],
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'options' => [
+                                \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $expect = $extensionConfigs;
+
+        if ($shouldAdd) {
+            $expect = array_merge(
+                $extensionConfigs,
+                [[
+                    'orm' => [
+                        'entity_managers' => [
+                            $defaultEntityManager => [
+                                'mappings' => [
+                                    'App' => [
+                                        'type' => 'annotation',
+                                        'dir' => '%kernel.project_dir%/src/Entity',
+                                        'is_bundle' => false,
+                                        'prefix' => 'App\Entity',
+                                        'alias' => 'App',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ]]
+            );
+        }
+
+        $plugin = new Plugin(
+            function () {
+                return $this->createMock(Connection::class);
+            }
+        );
+
+        $container = $this->getContainer();
+        $container->setParameter('kernel.project_dir', __DIR__.'/../Fixtures/app-with-entities');
+
+        $this->assertSame($expect, $plugin->getExtensionConfig('doctrine', $extensionConfigs, $container));
+    }
+
+    public function getOrmMappingConfigurations(): \Generator
+    {
+        // Positive configurations
+        yield 'with global auto_mapping enabled' => [
+            [
+                'auto_mapping' => true,
+            ],
+            'default',
+            true,
+        ];
+
+        yield 'with auto_mapping enabled in default entity manager' => [
+            [
+                'entity_managers' => [
+                    'default' => [
+                        'auto_mapping' => true,
+                    ],
+                ],
+            ],
+            'default',
+            true,
+        ];
+
+        yield 'with auto_mapping enabled in a renamed default entity manager' => [
+            [
+                'default_entity_manager' => 'foo',
+                'entity_managers' => [
+                    'foo' => [
+                        'auto_mapping' => true,
+                    ],
+                ],
+            ],
+            'foo',
+            true,
+        ];
+
+        // Skip, because auto_mapping is not set
+        yield 'with auto_mapping not set' => [
+            [
+            ],
+            'default',
+            false,
+        ];
+
+        yield 'with global auto_mapping disabled' => [
+            [
+                'auto_mapping' => false,
+            ],
+            'default',
+            false,
+        ];
+
+        yield 'with auto_mapping disabled in default entity manager' => [
+            [
+                'entity_managers' => [
+                    'default' => [
+                        'auto_mapping' => false,
+                    ],
+                ],
+            ],
+            'default',
+            false,
+        ];
+
+        yield 'with auto_mapping disabled in a renamed default entity manager' => [
+            [
+                'default_entity_manager' => 'foo',
+                'entity_managers' => [
+                    'foo' => [
+                        'auto_mapping' => false,
+                    ],
+                ],
+            ],
+            'foo',
+            false,
+        ];
+
+        // Skip, because conflicting mapping already exists (global)
+        yield 'with existing global mapping "App"' => [
+            [
+                'auto_mapping' => true,
+                'mappings' => [
+                    'App' => [
+                        'foo' => 'bar',
+                    ],
+                ],
+            ],
+            'default',
+            false,
+        ];
+
+        yield 'with existing global mapping with alias "App"' => [
+            [
+                'auto_mapping' => true,
+                'mappings' => [
+                    'Foo' => [
+                        'alias' => 'App',
+                    ],
+                ],
+            ],
+            'default',
+            false,
+        ];
+
+        yield 'with existing global mapping setting target directory' => [
+            [
+                'auto_mapping' => true,
+                'mappings' => [
+                    'Foo' => [
+                        'dir' => '%kernel.project_dir%/src/Entity',
+                    ],
+                ],
+            ],
+            'default',
+            false,
+        ];
+
+        // Skip, because conflicting mapping already exists (in any entity manager)
+        yield 'with existing mapping "App" in any entity manager' => [
+            [
+                'auto_mapping' => true,
+                'entity_managers' => [
+                    'foo' => [
+                        'mappings' => [
+                            'App' => [
+                                'foo' => 'bar',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'default',
+            false,
+        ];
+
+        yield 'with existing mapping with alias "App" in any entity manager' => [
+            [
+                'auto_mapping' => true,
+                'entity_managers' => [
+                    'foo' => [
+                        'mappings' => [
+                            'bar' => [
+                                'alias' => 'App',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'default',
+            false,
+        ];
+
+        yield 'with existing mapping setting target directory in any entity manager' => [
+            [
+                'auto_mapping' => true,
+                'entity_managers' => [
+                    'foo' => [
+                        'mappings' => [
+                            'bar' => [
+                                'dir' => '%kernel.project_dir%/src/Entity',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'default',
+            false,
+        ];
+    }
+
     private function getContainer(): PluginContainerBuilder
     {
         $pluginLoader = $this->createMock(PluginLoader::class);
@@ -912,6 +1166,7 @@ class PluginTest extends ContaoTestCase
         $container->setParameter('mailer_port', 25);
         $container->setParameter('mailer_encryption', null);
         $container->setParameter('secret', 'ThisTokenIsNotSoSecretChangeIt');
+        $container->setParameter('kernel.project_dir', __DIR__.'/../Fixtures/app');
 
         return $container;
     }
