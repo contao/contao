@@ -31,7 +31,7 @@ class UrlMatcher extends RedirectableUrlMatcher implements FinalMatcherInterface
         parent::__construct(new RouteCollection(), new RequestContext());
     }
 
-    public function finalMatch(RouteCollection $collection, Request $request)
+    public function finalMatch(RouteCollection $collection, Request $request): array
     {
         $this->routes = $collection;
 

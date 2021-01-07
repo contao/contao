@@ -59,8 +59,8 @@ class FilterPageTypeListener
         }
 
         $siblingTypes = $this->connection->fetchFirstColumn(
-            'SELECT DISTINCT(type) FROM tl_page WHERE pid=?',
-            [$dc->activeRecord->pid]
+            'SELECT DISTINCT(type) FROM tl_page WHERE pid=? AND id!=?',
+            [$dc->activeRecord->pid, $dc->activeRecord->id]
         );
 
         foreach (array_intersect(['error_401', 'error_403', 'error_404'], $siblingTypes) as $type) {

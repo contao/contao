@@ -139,12 +139,22 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
         }
 
         $content = $response->getContent();
+        $tokens = $this->tokenStorage->getUsedTokens();
 
-        foreach ($this->tokenStorage->getUsedTokens() as $value) {
-            $content = str_replace($value, '', $content);
+        if (!\is_string($content) || empty($tokens)) {
+            return;
         }
 
-        $response->setContent($content);
+        $content = str_replace($tokens, '', $content, $replacedCount);
+
+        if ($replacedCount > 0) {
+            $response->setContent($content);
+
+            // Remove the Content-Length header now that we have changed the
+            // content length (see #2416). Do not add the header or adjust an
+            // existing one (see symfony/symfony#1846).
+            $response->headers->remove('Content-Length');
+        }
     }
 
     private function removeCookies(Request $request, Response $response): void

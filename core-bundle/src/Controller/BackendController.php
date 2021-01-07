@@ -23,6 +23,7 @@ use Contao\BackendPassword;
 use Contao\BackendPopup;
 use Contao\CoreBundle\Picker\PickerBuilderInterface;
 use Contao\CoreBundle\Picker\PickerConfig;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -181,9 +182,14 @@ class BackendController extends AbstractController
         $extras = [];
 
         if ($request->query->has('extras')) {
-            $extras = $request->query->get('extras');
+            if ($request->query instanceof InputBag) {
+                $extras = $request->query->all('extras');
+            } else { /** @phpstan-ignore-line */
+                // Backwards compatibility with symfony/http-foundation <5.0
+                $extras = $request->query->get('extras');
+            }
 
-            if (!\is_array($extras)) {
+            if (empty($extras) || !\is_array($extras)) {
                 throw new BadRequestHttpException('Invalid picker extras');
             }
         }
@@ -203,7 +209,7 @@ class BackendController extends AbstractController
         $services = parent::getSubscribedServices();
 
         $services['contao.picker.builder'] = PickerBuilderInterface::class;
-        $services['uri_signer'] = 'uri_signer'; // FIXME: adjust this once https://github.com/symfony/symfony/pull/35298 has been merged
+        $services['uri_signer'] = 'uri_signer'; // TODO: adjust this once we are on Symfony 5 only (see https://github.com/symfony/symfony/pull/35298)
 
         return $services;
     }

@@ -112,7 +112,7 @@ class Versions extends Controller
 	 */
 	public function getLatestVersion()
 	{
-		if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['enableVersioning'])
+		if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['enableVersioning'] ?? null))
 		{
 			return null;
 		}
@@ -129,7 +129,7 @@ class Versions extends Controller
 	 */
 	public function initialize()
 	{
-		if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['enableVersioning'])
+		if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['enableVersioning'] ?? null))
 		{
 			return;
 		}
@@ -153,7 +153,7 @@ class Versions extends Controller
 	 */
 	public function create($blnHideUser=false)
 	{
-		if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['enableVersioning'])
+		if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['enableVersioning'] ?? null))
 		{
 			return;
 		}
@@ -177,7 +177,7 @@ class Versions extends Controller
 		// Remove fields that are excluded from versioning
 		foreach (array_keys($data) as $k)
 		{
-			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['versionize']) && $GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['versionize'] === false)
+			if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['versionize'] ?? null) === false)
 			{
 				unset($data[$k]);
 			}
@@ -231,7 +231,7 @@ class Versions extends Controller
 									 ->version;
 
 		// Trigger the oncreate_version_callback
-		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['oncreate_version_callback']))
+		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['oncreate_version_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['oncreate_version_callback'] as $callback)
 			{
@@ -257,7 +257,7 @@ class Versions extends Controller
 	 */
 	public function restore($intVersion)
 	{
-		if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['enableVersioning'])
+		if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['enableVersioning'] ?? null))
 		{
 			return;
 		}
@@ -287,27 +287,27 @@ class Versions extends Controller
 		// Reset fields added after storing the version to their default value (see #7755)
 		foreach (array_diff_key($arrFields, $data) as $k=>$v)
 		{
-			$data[$k] = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['sql']);
+			$data[$k] = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['sql'] ?? array());
 		}
 
 		foreach ($data as $k=>$v)
 		{
 			// Remove fields that are excluded from versioning
-			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['versionize']) && $GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['versionize'] === false)
+			if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['versionize'] ?? null) === false)
 			{
 				unset($data[$k]);
 				continue;
 			}
 
 			// Reset unique fields if the restored value already exists (see #698)
-			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['unique']) && $GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['unique'] === true)
+			if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['unique'] ?? null) === true)
 			{
 				$objResult = $this->Database->prepare("SELECT COUNT(*) AS cnt FROM " . $this->strTable . " WHERE " . Database::quoteIdentifier($k) . "=? AND id!=?")
 											->execute($v, $this->intPid);
 
 				if ($objResult->cnt > 0)
 				{
-					$data[$k] = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['sql']);
+					$data[$k] = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['sql'] ?? array());
 				}
 			}
 		}
@@ -323,7 +323,7 @@ class Versions extends Controller
 					   ->execute($this->strTable, $this->intPid, $intVersion);
 
 		// Trigger the onrestore_version_callback
-		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onrestore_version_callback']))
+		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onrestore_version_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onrestore_version_callback'] as $callback)
 			{
@@ -340,7 +340,7 @@ class Versions extends Controller
 		}
 
 		// Trigger the deprecated onrestore_callback
-		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onrestore_callback']))
+		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onrestore_callback'] ?? null))
 		{
 			trigger_deprecation('contao/core-bundle', '4.0', 'Using the "onrestore_callback" has been deprecated and will no longer work in Contao 5.0. Use the "onrestore_version_callback" instead.');
 
@@ -455,7 +455,7 @@ class Versions extends Controller
 				{
 					if ($from[$k] != $to[$k])
 					{
-						if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['doNotShow'] || $GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['hideInput'])
+						if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['doNotShow'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['hideInput'] ?? null))
 						{
 							continue;
 						}
@@ -470,13 +470,13 @@ class Versions extends Controller
 						}
 
 						// Decrypt the values
-						if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['encrypt'])
+						if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['encrypt'] ?? null)
 						{
 							$to[$k] = Encryption::decrypt($to[$k]);
 							$from[$k] = Encryption::decrypt($from[$k]);
 						}
 
-						if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['multiple'] || \in_array($k, $arrOrderFields))
+						if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['multiple'] ?? null) || \in_array($k, $arrOrderFields))
 						{
 							if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['csv']))
 							{
@@ -524,17 +524,17 @@ class Versions extends Controller
 						}
 
 						// Convert date fields
-						if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['rgxp'] == 'date')
+						if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['rgxp'] ?? null) == 'date')
 						{
 							$to[$k] = Date::parse(Config::get('dateFormat'), $to[$k] ?: '');
 							$from[$k] = Date::parse(Config::get('dateFormat'), $from[$k] ?: '');
 						}
-						elseif ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['rgxp'] == 'time')
+						elseif (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['rgxp'] ?? null) == 'time')
 						{
 							$to[$k] = Date::parse(Config::get('timeFormat'), $to[$k] ?: '');
 							$from[$k] = Date::parse(Config::get('timeFormat'), $from[$k] ?: '');
 						}
-						elseif ($k == 'tstamp' || $GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['rgxp'] == 'datim')
+						elseif ($k == 'tstamp' || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['rgxp'] ?? null) == 'datim')
 						{
 							$to[$k] = Date::parse(Config::get('datimFormat'), $to[$k] ?: '');
 							$from[$k] = Date::parse(Config::get('datimFormat'), $from[$k] ?: '');
@@ -733,7 +733,7 @@ class Versions extends Controller
 			}
 
 			// Skip deleted files (see #8480)
-			if ($v['fromTable'] == 'tl_files' && $arrVersions[$k]['deleted'])
+			if (($v['fromTable'] ?? null) == 'tl_files' && ($arrVersions[$k]['deleted'] ?? null))
 			{
 				--$intCount;
 				unset($arrVersions[$k]);

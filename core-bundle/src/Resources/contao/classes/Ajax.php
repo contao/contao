@@ -203,8 +203,13 @@ class Ajax extends Backend
 				$varValue = null;
 				$strField = $dc->field = Input::post('name');
 
+				if (!isset($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]))
+				{
+					throw new BadRequestHttpException('Invalid field name: ' . $strField);
+				}
+
 				// Call the load_callback
-				if (\is_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback']))
+				if (\is_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback'] ?? null))
 				{
 					foreach ($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback'] as $callback)
 					{
@@ -221,7 +226,7 @@ class Ajax extends Backend
 				}
 
 				/** @var PageSelector $strClass */
-				$strClass = $GLOBALS['BE_FFL']['pageSelector'];
+				$strClass = $GLOBALS['BE_FFL']['pageSelector'] ?? null;
 
 				/** @var PageSelector $objWidget */
 				$objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField], $dc->field, $varValue, $strField, $dc->table, $dc));
@@ -233,8 +238,13 @@ class Ajax extends Backend
 				$varValue = null;
 				$strField = $dc->field = Input::post('name');
 
+				if (!isset($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]))
+				{
+					throw new BadRequestHttpException('Invalid field name: ' . $strField);
+				}
+
 				// Call the load_callback
-				if (\is_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback']))
+				if (\is_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback'] ?? null))
 				{
 					foreach ($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback'] as $callback)
 					{
@@ -251,7 +261,7 @@ class Ajax extends Backend
 				}
 
 				/** @var FileSelector $strClass */
-				$strClass = $GLOBALS['BE_FFL']['fileSelector'];
+				$strClass = $GLOBALS['BE_FFL']['fileSelector'] ?? null;
 
 				/** @var FileSelector $objWidget */
 				$objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField], $dc->field, $varValue, $strField, $dc->table, $dc));
@@ -283,9 +293,7 @@ class Ajax extends Backend
 				// The field does not exist
 				if (!isset($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]))
 				{
-					$this->log('Field "' . $strField . '" does not exist in DCA "' . $dc->table . '"', __METHOD__, TL_ERROR);
-
-					throw new BadRequestHttpException('Bad request');
+					throw new BadRequestHttpException('Invalid field name: ' . $strField);
 				}
 
 				$objRow = null;
@@ -294,7 +302,7 @@ class Ajax extends Backend
 				// Load the value
 				if (Input::get('act') != 'overrideAll')
 				{
-					if ($GLOBALS['TL_DCA'][$dc->table]['config']['dataContainer'] == 'File')
+					if (($GLOBALS['TL_DCA'][$dc->table]['config']['dataContainer'] ?? null) == 'File')
 					{
 						$varValue = Config::get($strField);
 					}
@@ -317,7 +325,7 @@ class Ajax extends Backend
 				}
 
 				// Call the load_callback
-				if (\is_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback']))
+				if (\is_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback'] ?? null))
 				{
 					foreach ($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback'] as $callback)
 					{
@@ -383,7 +391,7 @@ class Ajax extends Backend
 				}
 
 				/** @var FileTree|PageTree|Picker $strClass */
-				$strClass = $GLOBALS['BE_FFL'][$strKey];
+				$strClass = $GLOBALS['BE_FFL'][$strKey] ?? null;
 
 				/** @var FileTree|PageTree|Picker $objWidget */
 				$objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField], $dc->inputName, $varValue, $strField, $dc->table, $dc));
@@ -409,7 +417,7 @@ class Ajax extends Backend
 				$this->import(BackendUser::class, 'User');
 
 				// Check whether the field is a selector field and allowed for regular users (thanks to Fabian Mihailowitsch) (see #4427)
-				if (!\is_array($GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__']) || !\in_array(Input::post('field'), $GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__']) || ($GLOBALS['TL_DCA'][$dc->table]['fields'][Input::post('field')]['exclude'] && !$this->User->hasAccess($dc->table . '::' . Input::post('field'), 'alexf')))
+				if (!\is_array($GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__'] ?? null) || !\in_array(Input::post('field'), $GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__']) || (($GLOBALS['TL_DCA'][$dc->table]['fields'][Input::post('field')]['exclude'] ?? null) && !$this->User->hasAccess($dc->table . '::' . Input::post('field'), 'alexf')))
 				{
 					$this->log('Field "' . Input::post('field') . '" is not an allowed selector field (possible SQL injection attempt)', __METHOD__, TL_ERROR);
 

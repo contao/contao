@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Image\Studio;
 
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
+use Contao\Image\ResizeOptions;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\StringUtil;
@@ -47,7 +48,7 @@ class LightboxResult
      *
      * @internal Use the Contao\Image\Studio\Studio factory to get an instance of this class
      */
-    public function __construct(ContainerInterface $locator, $filePathOrImage, ?string $url, $sizeConfiguration = null, string $groupIdentifier = null)
+    public function __construct(ContainerInterface $locator, $filePathOrImage, ?string $url, $sizeConfiguration = null, string $groupIdentifier = null, ResizeOptions $resizeOptions = null)
     {
         if (1 !== \count(array_filter([$filePathOrImage, $url]))) {
             throw new \InvalidArgumentException('A lightbox must be either constructed with a resource or an URL.');
@@ -60,7 +61,11 @@ class LightboxResult
         if (null !== $filePathOrImage) {
             $this->image = $locator
                 ->get(Studio::class)
-                ->createImage($filePathOrImage, $sizeConfiguration ?? $this->getDefaultLightboxSizeConfiguration())
+                ->createImage(
+                    $filePathOrImage,
+                    $sizeConfiguration ?? $this->getDefaultLightboxSizeConfiguration(),
+                    $resizeOptions
+                )
             ;
         }
     }

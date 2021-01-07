@@ -16,6 +16,7 @@ use Contao\BackendTemplate;
 use Contao\CoreBundle\Controller\AbstractFragmentController;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\ModuleModel;
+use Contao\PageModel;
 use Contao\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,11 +24,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class AbstractFrontendModuleController extends AbstractFragmentController
 {
-    public function __invoke(Request $request, ModuleModel $model, string $section, array $classes = null): Response
+    public function __invoke(Request $request, ModuleModel $model, string $section, array $classes = null, PageModel $pageModel = null): Response
     {
         if ($this->get('contao.routing.scope_matcher')->isBackendRequest($request)) {
             return $this->getBackendWildcard($model);
         }
+
+        $this->setPageModel($pageModel);
 
         $type = $this->getType();
         $template = $this->createTemplate($model, 'mod_'.$type);

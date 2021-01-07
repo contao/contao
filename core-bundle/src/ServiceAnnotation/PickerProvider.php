@@ -29,7 +29,7 @@ use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
 final class PickerProvider implements ServiceTagInterface
 {
     /**
-     * @var int
+     * @var int|null
      */
     public $priority;
 
