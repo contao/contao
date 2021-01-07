@@ -11,12 +11,15 @@
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
+use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\FaqCategoryModel;
+use Contao\FaqModel;
 use Contao\Image;
 use Contao\Input;
+use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Versions;
@@ -35,7 +38,8 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		'markAsCopy'                  => 'question',
 		'onload_callback' => array
 		(
-			array('tl_faq', 'checkPermission')
+			array('tl_faq', 'checkPermission'),
+			array('tl_faq', 'removeMetaFields')
 		),
 		'sql' => array
 		(
@@ -108,7 +112,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('addImage', 'addEnclosure', 'overwriteMeta'),
-		'default'                     => '{title_legend},question,alias,author;{answer_legend},answer;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},noComments;{publish_legend},published'
+		'default'                     => '{title_legend},question,alias,author;{meta_legend},pageTitle,robots,description,serpPreview;{answer_legend},answer;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},noComments;{publish_legend},published'
 	),
 
 	// Subpalettes
@@ -187,6 +191,39 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'eval'                    => array('mandatory'=>true, 'rte'=>'tinyMCE', 'helpwizard'=>true),
 			'explanation'             => 'insertTags',
 			'sql'                     => "text NULL"
+		),
+		'pageTitle' => array
+		(
+			'exclude'                 => true,
+			'search'                  => true,
+			'inputType'               => 'text',
+			'eval'                    => array('maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(255) NOT NULL default ''"
+		),
+		'robots' => array
+		(
+			'exclude'                 => true,
+			'search'                  => true,
+			'inputType'               => 'select',
+			'options'                 => array('index,follow', 'index,nofollow', 'noindex,follow', 'noindex,nofollow'),
+			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption' => true),
+			'sql'                     => "varchar(32) NOT NULL default ''"
+		),
+		'description' => array
+		(
+			'exclude'                 => true,
+			'search'                  => true,
+			'inputType'               => 'textarea',
+			'eval'                    => array('style'=>'height:60px', 'decodeEntities'=>true, 'tl_class'=>'clr'),
+			'sql'                     => "text NULL"
+		),
+		'serpPreview' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
+			'exclude'                 => true,
+			'inputType'               => 'serpPreview',
+			'eval'                    => array('url_callback'=>array('tl_faq', 'getSerpUrl'), 'titleFields'=>array('pageTitle', 'question'), 'descriptionFields'=>array('description', 'answer')),
+			'sql'                     => null
 		),
 		'addImage' => array
 		(
@@ -487,6 +524,25 @@ class tl_faq extends Backend
 	}
 
 	/**
+	 * Remove the meta fields if the FAQ category does not have a jumpTo page
+	 *
+	 * @param DataContainer $dc
+	 */
+	public function removeMetaFields(DataContainer $dc)
+	{
+		$objFaqCategory = $this->Database
+			->prepare('SELECT c.jumpTo FROM tl_faq f LEFT JOIN tl_faq_category c ON f.pid=c.id WHERE f.id=?')
+			->execute($dc->id);
+
+		if (!$objFaqCategory->jumpTo)
+		{
+			PaletteManipulator::create()
+				->removeField(array('pageTitle', 'robots', 'description', 'serpPreview'), 'meta_legend')
+				->applyToPalette('default', 'tl_faq');
+		}
+	}
+
+	/**
 	 * Auto-generate the FAQ alias if it has not been set yet
 	 *
 	 * @param mixed         $varValue
@@ -518,6 +574,41 @@ class tl_faq extends Backend
 		}
 
 		return $varValue;
+	}
+
+	/**
+	 * Return the SERP URL
+	 *
+	 * @param FaqModel $objFaq
+	 *
+	 * @return string
+	 */
+	public function getSerpUrl(FaqModel $objFaq)
+	{
+		/** @var FaqCategoryModel $objCategory */
+		$objCategory = $objFaq->getRelated('pid');
+
+		if ($objCategory === null)
+		{
+			throw new Exception('Invalid FAQ category');
+		}
+
+		$jumpTo = (int) $objCategory->jumpTo;
+
+		// A jumpTo page is not mandatory for FAQ categories (see #6226) but required for the FAQ list module
+		if ($jumpTo < 1)
+		{
+			throw new Exception('FAQ categories without redirect page cannot be used in an FAQ list');
+		}
+
+		if (!$objTarget = PageModel::findByPk($jumpTo))
+		{
+			throw new Exception('Invalid jumpTo page: ' . $jumpTo);
+		}
+
+		$strSuffix = StringUtil::ampersand($objTarget->getAbsoluteUrl(Config::get('useAutoItem') ? '/%s' : '/items/%s'));
+
+		return sprintf(preg_replace('/%(?!s)/', '%%', $strSuffix), $objFaq->alias ?: $objFaq->id);
 	}
 
 	/**
