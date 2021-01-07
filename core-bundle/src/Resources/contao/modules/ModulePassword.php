@@ -68,7 +68,7 @@ class ModulePassword extends Module
 		$this->loadDataContainer('tl_member');
 
 		// Call onload_callback (e.g. to check permissions)
-		if (\is_array($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback']))
+		if (\is_array($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback'] as $callback)
 			{
@@ -124,7 +124,7 @@ class ModulePassword extends Module
 		foreach ($arrFields as $arrField)
 		{
 			/** @var Widget $strClass */
-			$strClass = $GLOBALS['TL_FFL'][$arrField['inputType']];
+			$strClass = $GLOBALS['TL_FFL'][$arrField['inputType']] ?? null;
 
 			// Continue if the class is not defined
 			if (!class_exists($strClass))
@@ -132,7 +132,7 @@ class ModulePassword extends Module
 				continue;
 			}
 
-			$arrField['eval']['required'] = $arrField['eval']['mandatory'];
+			$arrField['eval']['required'] = $arrField['eval']['mandatory'] ?? null;
 
 			/** @var Widget $objWidget */
 			$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, $arrField['name']));
@@ -240,7 +240,7 @@ class ModulePassword extends Module
 		$arrField = $GLOBALS['TL_DCA']['tl_member']['fields']['password'];
 
 		/** @var Widget $strClass */
-		$strClass = $GLOBALS['TL_FFL']['password'];
+		$strClass = $GLOBALS['TL_FFL']['password'] ?? null;
 
 		// Fallback to default if the class is not defined
 		if (!class_exists($strClass))
@@ -277,7 +277,7 @@ class ModulePassword extends Module
 				$optInToken->confirm();
 
 				// Create a new version
-				if ($GLOBALS['TL_DCA']['tl_member']['config']['enableVersioning'])
+				if ($GLOBALS['TL_DCA']['tl_member']['config']['enableVersioning'] ?? null)
 				{
 					$objVersions->create();
 				}

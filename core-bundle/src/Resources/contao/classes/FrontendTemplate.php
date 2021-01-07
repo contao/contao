@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use FOS\HttpCache\ResponseTagger;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -403,10 +402,9 @@ class FrontendTemplate extends Template
 				$response->setVary(array('Cookie'));
 			}
 
-			// Tag the response with cache tags für the shared cache only
+			// Tag the page (see #2137)
 			if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
 			{
-				/** @var ResponseTagger $responseTagger */
 				$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
 				$responseTagger->addTags(array('contao.db.tl_page.' . $objPage->id));
 			}

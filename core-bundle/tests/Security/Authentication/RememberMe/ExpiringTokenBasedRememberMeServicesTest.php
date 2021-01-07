@@ -56,7 +56,6 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
     protected function setUp(): void
     {
         $this->repository = $this->createMock(RememberMeRepository::class);
-        $userProvider = $this->createMock(UserProviderInterface::class);
 
         $user = $this->createMock(UserInterface::class);
         $user
@@ -64,6 +63,7 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
             ->willReturn([])
         ;
 
+        $userProvider = $this->createMock(UserProviderInterface::class);
         $userProvider
             ->method('supportsClass')
             ->willReturn(true)

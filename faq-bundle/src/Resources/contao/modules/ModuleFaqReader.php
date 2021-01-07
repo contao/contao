@@ -138,6 +138,7 @@ class ModuleFaqReader extends Module
 
 		$this->Template->answer = StringUtil::encodeEmail($objFaq->answer);
 		$this->Template->addImage = false;
+		$this->Template->before = false;
 
 		// Add image
 		if ($objFaq->addImage && $objFaq->singleSRC)
@@ -171,6 +172,13 @@ class ModuleFaqReader extends Module
 		}
 
 		$this->Template->info = sprintf($GLOBALS['TL_LANG']['MSC']['faqCreatedBy'], Date::parse($objPage->dateFormat, $objFaq->tstamp), $strAuthor);
+
+		// Tag the FAQ (see #2137)
+		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		{
+			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+			$responseTagger->addTags(array('contao.db.tl_faq.' . $objFaq->id));
+		}
 
 		$bundles = System::getContainer()->getParameter('kernel.bundles');
 

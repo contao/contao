@@ -79,10 +79,10 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         $this->locales = $locales;
     }
 
-    public function warmUp($cacheDir): void
+    public function warmUp($cacheDir): array
     {
         if (!$this->isCompleteInstallation()) {
-            return;
+            return [];
         }
 
         $this->framework->initialize();
@@ -92,6 +92,8 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         $this->generateLanguageCache($cacheDir);
         $this->generateDcaExtracts($cacheDir);
         $this->generateTemplateMapper($cacheDir);
+
+        return [];
     }
 
     public function isOptional(): bool

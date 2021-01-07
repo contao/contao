@@ -96,7 +96,7 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 			(
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['tl_faq_category']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"',
+				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"',
 				'button_callback'     => array('tl_faq_category', 'deleteCategory')
 			),
 			'show' => array

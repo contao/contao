@@ -301,10 +301,10 @@ class File extends System
 				return $this->arrImageSize;
 
 			case 'width':
-				return $this->imageSize[0];
+				return $this->imageSize[0] ?? null;
 
 			case 'height':
-				return $this->imageSize[1];
+				return $this->imageSize[1] ?? null;
 
 			case 'imageViewSize':
 				if (empty($this->arrImageViewSize))
