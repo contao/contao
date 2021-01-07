@@ -218,7 +218,7 @@ class StringUtil
 	/**
 	 * Decode all entities
 	 *
-	 * @param string  $strString     The string to decode
+	 * @param mixed   $strString     The string to decode
 	 * @param integer $strQuoteStyle The quote style (defaults to ENT_COMPAT)
 	 * @param string  $strCharset    An optional charset
 	 *
@@ -226,7 +226,7 @@ class StringUtil
 	 */
 	public static function decodeEntities($strString, $strQuoteStyle=ENT_COMPAT, $strCharset=null)
 	{
-		if (!$strString)
+		if ((string) $strString === '')
 		{
 			return '';
 		}

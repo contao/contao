@@ -87,6 +87,15 @@ class StringUtilTest extends TestCase
         StringUtil::stripRootDir($this->getFixturesDir());
     }
 
+    public function testHandlesFalseyValuesWhenDecodingEntities(): void
+    {
+        $this->assertSame('0', StringUtil::decodeEntities(0));
+        $this->assertSame('0', StringUtil::decodeEntities('0'));
+        $this->assertSame('', StringUtil::decodeEntities(''));
+        $this->assertSame('', StringUtil::decodeEntities(false));
+        $this->assertSame('', StringUtil::decodeEntities(null));
+    }
+
     /**
      * @dataProvider trimsplitProvider
      */

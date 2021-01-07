@@ -96,7 +96,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 			(
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"',
+				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"',
 				'button_callback'     => array('tl_comments', 'deleteComment')
 			),
 			'toggle' => array
@@ -677,7 +677,7 @@ class tl_comments extends Backend
 		}
 
 		// Trigger the onload_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_comments']['config']['onload_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_comments']['config']['onload_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_comments']['config']['onload_callback'] as $callback)
 			{
@@ -718,7 +718,7 @@ class tl_comments extends Backend
 		$objVersions->initialize();
 
 		// Trigger the save_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_comments']['fields']['published']['save_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_comments']['fields']['published']['save_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_comments']['fields']['published']['save_callback'] as $callback)
 			{
@@ -747,7 +747,7 @@ class tl_comments extends Backend
 		}
 
 		// Trigger the onsubmit_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_comments']['config']['onsubmit_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_comments']['config']['onsubmit_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_comments']['config']['onsubmit_callback'] as $callback)
 			{

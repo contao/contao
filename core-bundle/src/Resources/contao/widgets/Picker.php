@@ -229,7 +229,7 @@ class Picker extends Widget
 
 		if ($mode === 4)
 		{
-			$callback = $GLOBALS['TL_DCA'][$dc->table]['list']['sorting']['child_record_callback'];
+			$callback = $GLOBALS['TL_DCA'][$dc->table]['list']['sorting']['child_record_callback'] ?? null;
 
 			if (\is_array($callback))
 			{
@@ -247,14 +247,14 @@ class Picker extends Widget
 		$labelConfig = &$GLOBALS['TL_DCA'][$dc->table]['list']['label'];
 		$label = vsprintf($labelConfig['format'], array_intersect_key($arrRow, array_flip($labelConfig['fields'])));
 
-		if (\is_array($labelConfig['label_callback']))
+		if (\is_array($labelConfig['label_callback'] ?? null))
 		{
 			$this->import($labelConfig['label_callback'][0]);
 
 			return $this->{$labelConfig['label_callback'][0]}->{$labelConfig['label_callback'][1]}($arrRow, $label, $dc, $arrRow);
 		}
 
-		if (\is_callable($labelConfig['label_callback']))
+		if (\is_callable($labelConfig['label_callback'] ?? null))
 		{
 			return $labelConfig['label_callback']($arrRow, $label, $dc, $arrRow);
 		}

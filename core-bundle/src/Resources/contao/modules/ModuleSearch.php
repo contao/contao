@@ -191,7 +191,7 @@ class ModuleSearch extends Module
 
 				foreach ($arrResult as $k=>$v)
 				{
-					if ($v['protected'])
+					if ($v['protected'] ?? null)
 					{
 						if (!FE_USER_LOGGED_IN || !\is_array($this->User->groups))
 						{

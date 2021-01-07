@@ -1,8 +1,4 @@
 <style>
-    .cto-toolbar, .cto-toolbar * {
-        all: unset;
-    }
-
     .cto-toolbar {
         font-family: -apple-system,system-ui,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
         font-weight: 400;
@@ -30,10 +26,6 @@
         align-items: center;
         justify-content: center;
         z-index: 99999;
-    }
-
-    .cto-toolbar__open svg {
-        fill: #fff;
     }
 
     .cto-toolbar--visible .cto-toolbar__open {
@@ -103,7 +95,8 @@
         align-items: baseline;
         justify-content: flex-end;
         padding: 5px 0;
-        margin-right: .5em;
+        margin: 0 .5em 0 0;
+        background: none;
     }
 
     .cto-toolbar .formbody > div {
@@ -297,6 +290,33 @@
                     }
 
                 });
+            });
+        });
+
+        // Copy published link to clipboard
+        window.addEventListener('cto-toolbar-loaded', function() {
+            const copyButton = document.getElementById('copyPublishedPath');
+
+            copyButton.addEventListener('click', function(event) {
+                const href = window.location.href.replace('{{ preview_script|escape('js') }}', '');
+
+                function clipboardFallback() {
+                    const input = document.createElement('input');
+                    input.value = href;
+                    document.body.appendChild(input);
+                    input.select();
+                    input.setSelectionRange(0, 99999);
+                    document.execCommand('copy');
+                    document.body.removeChild(input);
+                }
+
+                event.preventDefault();
+
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(href).catch(clipboardFallback);
+                } else {
+                    clipboardFallback();
+                }
             });
         });
     })();

@@ -264,7 +264,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
             $jwtManager = new JwtManager($projectDir);
             $jwt = $jwtManager->parseRequest($request);
 
-            if (\is_array($jwt) && $jwt['debug'] ?? false) {
+            if (\is_array($jwt) && ($jwt['debug'] ?? false)) {
                 $env = 'dev';
             }
 

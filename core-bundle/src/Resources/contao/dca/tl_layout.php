@@ -84,7 +84,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			(
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"'
+				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"'
 			),
 			'show' => array
 			(
@@ -489,7 +489,7 @@ class tl_layout extends Backend
 	 */
 	public function getStyleSheets(DataContainer $dc)
 	{
-		$intPid = $dc->activeRecord->pid;
+		$intPid = $dc->activeRecord->pid ?? null;
 
 		if (Input::get('act') == 'overrideAll')
 		{

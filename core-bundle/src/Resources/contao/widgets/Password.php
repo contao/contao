@@ -122,7 +122,7 @@ class Password extends Widget
 			$this->addError($GLOBALS['TL_LANG']['ERR']['passwordMatch']);
 		}
 
-		if ($varInput == $GLOBALS['TL_USERNAME'])
+		if (isset($GLOBALS['TL_USERNAME']) && $varInput == $GLOBALS['TL_USERNAME'])
 		{
 			$this->addError($GLOBALS['TL_LANG']['ERR']['passwordName']);
 		}

@@ -593,7 +593,7 @@ class PageModel extends Model
 	public static function findPublishedByIdOrAlias($varId, array $arrOptions=array())
 	{
 		$t = static::$strTable;
-		$arrColumns = !preg_match('/^[1-9]\d*$/', $varId) ? array("$t.alias=?") : array("$t.id=?");
+		$arrColumns = !preg_match('/^[1-9]\d*$/', $varId) ? array("BINARY $t.alias=?") : array("$t.id=?");
 
 		if (!static::isPreviewMode($arrOptions))
 		{
@@ -832,7 +832,7 @@ class PageModel extends Model
 	/**
 	 * Find a page by its ID and return it with the inherited details
 	 *
-	 * @param integer $intId The page's ID
+	 * @param integer|string $intId The page's ID
 	 *
 	 * @return PageModel|null The model or null if there is no matching page
 	 */

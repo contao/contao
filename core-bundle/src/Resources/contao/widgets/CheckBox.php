@@ -225,9 +225,9 @@ class CheckBox extends Widget
 			$this->getAttributes(),
 			$this->strId . '_' . $i,
 			($this->mandatory && !$this->multiple ? '<span class="invisible">' . $GLOBALS['TL_LANG']['MSC']['mandatory'] . ' </span>' : ''),
-			$arrOption['label'],
+			$arrOption['label'] ?? null,
 			($this->mandatory && !$this->multiple ? '<span class="mandatory">*</span>' : ''),
-			$this->xlabel
+			!$this->multiple ? $this->xlabel : ''
 		);
 	}
 }

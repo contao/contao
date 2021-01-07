@@ -108,7 +108,7 @@ class BackendPage extends Backend
 		$arrValues = array_filter(explode(',', Input::get('value')));
 
 		// Call the load_callback
-		if (\is_array($GLOBALS['TL_DCA'][$strTable]['fields'][$strField]['load_callback']))
+		if (\is_array($GLOBALS['TL_DCA'][$strTable]['fields'][$strField]['load_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA'][$strTable]['fields'][$strField]['load_callback'] as $callback)
 			{
@@ -125,7 +125,7 @@ class BackendPage extends Backend
 		}
 
 		/** @var PageSelector $strClass */
-		$strClass = $GLOBALS['BE_FFL']['pageSelector'];
+		$strClass = $GLOBALS['BE_FFL']['pageSelector'] ?? null;
 
 		/** @var PageSelector $objPageTree */
 		$objPageTree = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$strTable]['fields'][$strField], $strField, $arrValues, $strField, $strTable, $objDca));
@@ -143,7 +143,7 @@ class BackendPage extends Backend
 		$objTemplate->addSearch = true;
 		$objTemplate->search = $GLOBALS['TL_LANG']['MSC']['search'];
 		$objTemplate->value = $objSessionBag->get('page_selector_search');
-		$objTemplate->breadcrumb = $GLOBALS['TL_DCA']['tl_page']['list']['sorting']['breadcrumb'];
+		$objTemplate->breadcrumb = $GLOBALS['TL_DCA']['tl_page']['list']['sorting']['breadcrumb'] ?? null;
 
 		if ($this->User->hasAccess('page', 'modules'))
 		{
