@@ -39,7 +39,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		'onload_callback' => array
 		(
 			array('tl_faq', 'checkPermission'),
-			array('tl_faq', 'checkSerpPreview')
+			array('tl_faq', 'removeMetaFields')
 		),
 		'sql' => array
 		(
@@ -112,7 +112,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('addImage', 'addEnclosure', 'overwriteMeta'),
-		'default'                     => '{title_legend},question,alias,author;{answer_legend},answer;{meta_legend},pageTitle,robots,description,serpPreview;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},noComments;{publish_legend},published'
+		'default'                     => '{title_legend},question,alias,author;{meta_legend},pageTitle,robots,description,serpPreview;{answer_legend},answer;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},noComments;{publish_legend},published'
 	),
 
 	// Subpalettes
@@ -523,14 +523,21 @@ class tl_faq extends Backend
 		}
 	}
 
-	public function checkSerpPreview()
+	/**
+	 * Remove the meta fields if the FAQ category does not have a jumpTo page
+	 *
+	 * @param DataContainer $dc
+	 */
+	public function removeMetaFields(DataContainer $dc)
 	{
-		$objFaqCategory = $this->Database->prepare('SELECT p.id FROM tl_faq_category c INNER JOIN tl_page p ON p.id = c.jumpTo WHERE c.id=? AND c.jumpTo > 0')->limit(1)->execute(CURRENT_ID);
+		$objFaqCategory = $this->Database
+			->prepare('SELECT c.jumpTo FROM tl_faq f LEFT JOIN tl_faq_category c ON f.pid=c.id WHERE f.id=?')
+			->execute($dc->id);
 
-		if ($objFaqCategory->numRows < 1)
+		if (!$objFaqCategory->jumpTo)
 		{
 			PaletteManipulator::create()
-				->removeField('serpPreview', 'meta_legend')
+				->removeField(array('pageTitle', 'robots', 'description', 'serpPreview'), 'meta_legend')
 				->applyToPalette('default', 'tl_faq');
 		}
 	}
@@ -583,7 +590,7 @@ class tl_faq extends Backend
 
 		if ($objCategory === null)
 		{
-			throw new Exception('FAQ category does not exist.');
+			throw new Exception('Invalid FAQ category');
 		}
 
 		$jumpTo = (int) $objCategory->jumpTo;
@@ -594,14 +601,14 @@ class tl_faq extends Backend
 			throw new Exception('FAQ categories without redirect page cannot be used in an FAQ list');
 		}
 
-		if (($objTarget = PageModel::findByPk($jumpTo)) !== null)
+		if (!$objTarget = PageModel::findByPk($jumpTo))
 		{
-			$strSuffix = StringUtil::ampersand($objTarget->getFrontendUrl(Config::get('useAutoItem') ? '/%s' : '/items/%s'));
-
-			return sprintf(preg_replace('/%(?!s)/', '%%', $strSuffix), ($objFaq->alias ?: $objFaq->id));
+			throw new Exception('Invalid jumpTo page: ' . $jumpTo);
 		}
 
-		throw new Exception('FAQ categories without existing redirect page cannot be used in an FAQ list');
+		$strSuffix = StringUtil::ampersand($objTarget->getAbsoluteUrl(Config::get('useAutoItem') ? '/%s' : '/items/%s'));
+
+		return sprintf(preg_replace('/%(?!s)/', '%%', $strSuffix), $objFaq->alias ?: $objFaq->id);
 	}
 
 	/**
