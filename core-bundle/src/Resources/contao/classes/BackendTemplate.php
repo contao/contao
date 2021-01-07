@@ -19,16 +19,13 @@ use Symfony\Component\HttpFoundation\Response;
  * @property array  $javascripts
  * @property array  $stylesheets
  * @property string $mootools
- * @property array  $attributes
+ * @property string $attributes
  * @property string $badgeTitle
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class BackendTemplate extends Template
 {
-	public $attributes = array();
-	public $badgeTitle = '';
-
 	/**
 	 * Add a hook to modify the template output
 	 *
@@ -230,6 +227,9 @@ class BackendTemplate extends Template
 			. '});';
 	}
 
+	/**
+	 * Add the contao.backend configuration
+	 */
 	private function addBackendConfig(): void
 	{
 		$container = System::getContainer();
@@ -243,7 +243,11 @@ class BackendTemplate extends Template
 
 		if (!empty($backendConfig['attributes']) && \is_array($backendConfig['attributes']))
 		{
-			$this->attributes = $backendConfig['attributes'];
+			$this->attributes = ' ' . implode(' ', array_map(
+				static function ($v, $k) { return sprintf('%s="%s"', $k, $v); },
+				$backendConfig['attributes'],
+				array_keys($backendConfig['attributes'])
+			));
 		}
 
 		if (!empty($backendConfig['custom_css']) && \is_array($backendConfig['custom_css']))
@@ -252,6 +256,7 @@ class BackendTemplate extends Template
 			{
 				$GLOBALS['TL_CSS'] = array();
 			}
+
 			$GLOBALS['TL_CSS'] = array_merge($GLOBALS['TL_CSS'], $backendConfig['custom_css']);
 		}
 
@@ -261,6 +266,7 @@ class BackendTemplate extends Template
 			{
 				$GLOBALS['TL_JAVASCRIPT'] = array();
 			}
+
 			$GLOBALS['TL_JAVASCRIPT'] = array_merge($GLOBALS['TL_JAVASCRIPT'], $backendConfig['custom_js']);
 		}
 

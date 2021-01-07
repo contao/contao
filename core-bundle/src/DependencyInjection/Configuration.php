@@ -461,7 +461,7 @@ class Configuration implements ConfigurationInterface
                     ->always(
                         static function (array $attributes): array {
                             foreach (array_keys($attributes) as $name) {
-                                if (preg_match('/[^a-z0-9\-\.:_]/', (string) $name)) {
+                                if (preg_match('/[^a-z0-9\-.:_]/', (string) $name)) {
                                     throw new \InvalidArgumentException(sprintf('The attribute name "%s" must be a valid HTML attribute name.', $name));
                                 }
                             }
@@ -475,12 +475,12 @@ class Configuration implements ConfigurationInterface
                     ->scalarPrototype()->end()
                 ->end()
                 ->arrayNode('custom_css')
-                    ->info('Adds custom css assets to the back end.')
+                    ->info('Adds custom style sheets to the back end.')
                     ->example(['files/backend/custom.css'])
                     ->scalarPrototype()->end()
                 ->end()
                 ->arrayNode('custom_js')
-                    ->info('Adds custom javascript assets to the back end.')
+                    ->info('Adds custom JavaScript files to the back end.')
                     ->example(['files/backend/custom.js'])
                     ->scalarPrototype()->end()
                 ->end()
