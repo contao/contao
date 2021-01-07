@@ -108,10 +108,27 @@ class ModuleFaqReader extends Module
 		$this->Template->faq = $objFaq->row();
 
 		// Overwrite the page title and description (see #2853 and #4955)
-		if ($objFaq->question)
+		if ($objFaq->pageTitle)
+		{
+			$objPage->pageTitle = $objFaq->pageTitle;
+		}
+		elseif ($objFaq->question)
 		{
 			$objPage->pageTitle = strip_tags(StringUtil::stripInsertTags($objFaq->question));
+		}
+
+		if ($objFaq->description)
+		{
+			$objPage->description = $objFaq->description;
+		}
+		elseif ($objFaq->question)
+		{
 			$objPage->description = $this->prepareMetaDescription($objFaq->question);
+		}
+
+		if ($objFaq->robots)
+		{
+			$objPage->robots = $objFaq->robots;
 		}
 
 		$this->Template->question = $objFaq->question;
