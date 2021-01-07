@@ -11,8 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
-use Contao\CoreBundle\Util\PackageUtil;
-use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -384,75 +382,13 @@ class PageRegular extends Frontend
 		// jQuery scripts
 		if ($objLayout->addJQuery)
 		{
-			if ($objLayout->jSource == 'j_googleapis' || $objLayout->jSource == 'j_fallback')
-			{
-				try
-				{
-					/** @var AdapterInterface $cache */
-					$cache = $container->get('cache.system');
-					$hash = $cache->getItem('contao.jquery_hash');
-
-					if (!$hash->isHit())
-					{
-						$hash->set('sha256-' . base64_encode(hash_file('sha256', $projectDir . '/assets/jquery/js/jquery.min.js', true)));
-						$cache->save($hash);
-					}
-
-					$this->Template->mooScripts .= Template::generateScriptTag('https://code.jquery.com/jquery-' . PackageUtil::getNormalizedVersion('contao-components/jquery') . '.min.js', false, false, $hash->get(), 'anonymous', 'no-referrer') . "\n";
-
-					// Local fallback (thanks to DyaGa)
-					if ($objLayout->jSource == 'j_fallback')
-					{
-						$this->Template->mooScripts .= Template::generateInlineScript('window.jQuery || document.write(\'<script src="' . Controller::addAssetsUrlTo('assets/jquery/js/jquery.min.js') . '">\x3C/script>\')') . "\n";
-					}
-				}
-				catch (\OutOfBoundsException $e)
-				{
-					$GLOBALS['TL_JAVASCRIPT'][] = 'assets/jquery/js/jquery.min.js|static';
-				}
-			}
-			else
-			{
-				$GLOBALS['TL_JAVASCRIPT'][] = 'assets/jquery/js/jquery.min.js|static';
-			}
+			$GLOBALS['TL_JAVASCRIPT'][] = 'assets/jquery/js/jquery.min.js|static';
 		}
 
 		// MooTools scripts
 		if ($objLayout->addMooTools)
 		{
-			if ($objLayout->mooSource == 'moo_googleapis' || $objLayout->mooSource == 'moo_fallback')
-			{
-				try
-				{
-					$version = PackageUtil::getNormalizedVersion('contao-components/mootools');
-
-					if (version_compare($version, '1.5.1', '>'))
-					{
-						$this->Template->mooScripts .= Template::generateScriptTag('https://ajax.googleapis.com/ajax/libs/mootools/' . $version . '/mootools.min.js', false, false, null, 'anonymous', 'no-referrer') . "\n";
-					}
-					else
-					{
-						$this->Template->mooScripts .= Template::generateScriptTag('https://ajax.googleapis.com/ajax/libs/mootools/' . $version . '/mootools-yui-compressed.js', false, false, null, 'anonymous', 'no-referrer') . "\n";
-					}
-
-					// Local fallback (thanks to DyaGa)
-					if ($objLayout->mooSource == 'moo_fallback')
-					{
-						$this->Template->mooScripts .= Template::generateInlineScript('window.MooTools || document.write(\'<script src="' . Controller::addAssetsUrlTo('assets/mootools/js/mootools-core.min.js') . '">\x3C/script>\')') . "\n";
-					}
-
-					$GLOBALS['TL_JAVASCRIPT'][] = 'assets/mootools/js/mootools-more.min.js|static';
-					$GLOBALS['TL_JAVASCRIPT'][] = 'assets/mootools/js/mootools-mobile.min.js|static';
-				}
-				catch (\OutOfBoundsException $e)
-				{
-					$GLOBALS['TL_JAVASCRIPT'][] = 'assets/mootools/js/mootools.min.js|static';
-				}
-			}
-			else
-			{
-				$GLOBALS['TL_JAVASCRIPT'][] = 'assets/mootools/js/mootools.min.js|static';
-			}
+			$GLOBALS['TL_JAVASCRIPT'][] = 'assets/mootools/js/mootools.min.js|static';
 		}
 
 		// Check whether TL_APPEND_JS exists (see #4890)
