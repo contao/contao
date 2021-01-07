@@ -284,6 +284,7 @@ class ModuleEventReader extends Events
 		}
 
 		$objTemplate->addImage = false;
+		$objTemplate->addBefore = false;
 
 		// Add an image
 		if ($objEvent->addImage && $objEvent->singleSRC)

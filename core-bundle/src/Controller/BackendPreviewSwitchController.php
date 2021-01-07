@@ -103,7 +103,7 @@ class BackendPreviewSwitchController
         }
 
         if ($request->isMethod('GET')) {
-            return Response::create($this->renderToolbar());
+            return new Response($this->renderToolbar());
         }
 
         if ('tl_switch' === $request->request->get('FORM_SUBMIT')) {

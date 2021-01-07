@@ -14,18 +14,20 @@ namespace Contao\CoreBundle\Tests\Framework;
 
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
 use Contao\CoreBundle\Tests\TestCase;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class FrameworkAwareTraitTest extends TestCase
 {
     use FrameworkAwareTrait;
+    use ExpectDeprecationTrait;
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Since contao/core-bundle 4.3: Using "Contao\CoreBundle\Framework\FrameworkAwareTrait::getFramework()" has been deprecated %s.
      */
     public function testDeprecatesTheGetFrameworkMethod(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.3: Using "Contao\CoreBundle\Framework\FrameworkAwareTrait::getFramework()" has been deprecated %s.');
+
         $framework = $this->mockContaoFramework();
         $this->setFramework($framework);
 
@@ -34,12 +36,12 @@ class FrameworkAwareTraitTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Since contao/core-bundle 4.3: Using "Contao\CoreBundle\Framework\FrameworkAwareTrait::getFramework()" has been deprecated %s.
      */
     public function testFailsIfTheFrameworkHasNotBeenSet(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.3: Using "Contao\CoreBundle\Framework\FrameworkAwareTrait::getFramework()" has been deprecated %s.');
         $this->expectException('LogicException');
+
         $this->getFramework();
     }
 }

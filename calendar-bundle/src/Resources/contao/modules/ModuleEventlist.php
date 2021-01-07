@@ -355,6 +355,7 @@ class ModuleEventlist extends Events
 			}
 
 			$objTemplate->addImage = false;
+			$objTemplate->addBefore = false;
 
 			// Add an image
 			if ($event['addImage'] && $event['singleSRC'])

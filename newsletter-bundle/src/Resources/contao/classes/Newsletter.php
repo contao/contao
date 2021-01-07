@@ -621,10 +621,10 @@ class Newsletter extends Backend
 	 */
 	public function createNewUser($intUser, $arrData)
 	{
-		$arrNewsletters = StringUtil::deserialize($arrData['newsletter'], true);
+		$arrNewsletters = StringUtil::deserialize($arrData['newsletter'] ?? '', true);
 
 		// Return if there are no newsletters
-		if (!\is_array($arrNewsletters))
+		if (empty($arrNewsletters) || !\is_array($arrNewsletters))
 		{
 			return;
 		}

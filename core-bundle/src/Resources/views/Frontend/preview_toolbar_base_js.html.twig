@@ -292,5 +292,32 @@
                 });
             });
         });
+
+        // Copy published link to clipboard
+        window.addEventListener('cto-toolbar-loaded', function() {
+            const copyButton = document.getElementById('copyPublishedPath');
+
+            copyButton.addEventListener('click', function(event) {
+                const href = window.location.href.replace('{{ preview_script|escape('js') }}', '');
+
+                function clipboardFallback() {
+                    const input = document.createElement('input');
+                    input.value = href;
+                    document.body.appendChild(input);
+                    input.select();
+                    input.setSelectionRange(0, 99999);
+                    document.execCommand('copy');
+                    document.body.removeChild(input);
+                }
+
+                event.preventDefault();
+
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(href).catch(clipboardFallback);
+                } else {
+                    clipboardFallback();
+                }
+            });
+        });
     })();
 </script>

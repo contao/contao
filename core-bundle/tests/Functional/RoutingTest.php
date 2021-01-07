@@ -15,9 +15,12 @@ namespace Contao\CoreBundle\Tests\Functional;
 use Contao\Config;
 use Contao\System;
 use Contao\TestCase\FunctionalTestCase;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class RoutingTest extends FunctionalTestCase
 {
+    use ExpectDeprecationTrait;
+
     /**
      * @var array
      */
@@ -71,11 +74,11 @@ class RoutingTest extends FunctionalTestCase
     /**
      * @group legacy
      * @dataProvider getAliases
-     *
-     * @expectedDeprecation Since contao/core-bundle 4.10: Using the "Contao\CoreBundle\Routing\FrontendLoader" class has been deprecated %s.
      */
     public function testResolvesAliasesInLegacyMode(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.10: Using the "Contao\CoreBundle\Routing\FrontendLoader" class has been deprecated %s.');
+
         Config::set('useAutoItem', $autoItem);
 
         $_SERVER['REQUEST_URI'] = $request;
@@ -391,11 +394,11 @@ class RoutingTest extends FunctionalTestCase
     /**
      * @group legacy
      * @dataProvider getAliasesWithLocale
-     *
-     * @expectedDeprecation Since contao/core-bundle 4.10: Using the "Contao\CoreBundle\Routing\FrontendLoader" class has been deprecated %s.
      */
     public function testResolvesAliasesWithLocaleInLegacyMode(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.10: Using the "Contao\CoreBundle\Routing\FrontendLoader" class has been deprecated %s.');
+
         Config::set('useAutoItem', $autoItem);
         Config::set('addLanguageToUrl', true);
 
@@ -717,11 +720,11 @@ class RoutingTest extends FunctionalTestCase
     /**
      * @group legacy
      * @dataProvider getAliasesWithoutUrlSuffix
-     *
-     * @expectedDeprecation Since contao/core-bundle 4.10: Using the "Contao\CoreBundle\Routing\FrontendLoader" class has been deprecated %s.
      */
     public function testResolvesAliasesWithoutUrlSuffixInLegacyMode(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.10: Using the "Contao\CoreBundle\Routing\FrontendLoader" class has been deprecated %s.');
+
         Config::set('useAutoItem', $autoItem);
 
         $_SERVER['REQUEST_URI'] = $request;
@@ -1063,11 +1066,11 @@ class RoutingTest extends FunctionalTestCase
     /**
      * @group legacy
      * @dataProvider getRootAliasesWithLocale
-     *
-     * @expectedDeprecation Since contao/core-bundle 4.10: Using the "Contao\CoreBundle\Routing\FrontendLoader" class has been deprecated %s.
      */
     public function testResolvesTheRootPageWithLocaleInLegacyMode(array $fixtures, string $request, int $statusCode, string $pageTitle, string $acceptLanguages, string $host): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.10: Using the "Contao\CoreBundle\Routing\FrontendLoader" class has been deprecated %s.');
+
         Config::set('addLanguageToUrl', true);
 
         $_SERVER['REQUEST_URI'] = $request;
@@ -1237,8 +1240,13 @@ class RoutingTest extends FunctionalTestCase
         $this->assertStringContainsString('', $title);
     }
 
+    /**
+     * @group legacy
+     */
     public function testCorrectPageForUnknownLanguage(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.10: Using the "Contao\CoreBundle\Routing\FrontendLoader" class has been deprecated %s.');
+
         Config::set('folderUrl', true);
         Config::set('addLanguageToUrl', true);
 
