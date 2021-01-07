@@ -371,7 +371,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     }
 
     /**
-     * Adds a default orm mapping for the App namespace if none was configured.
+     * Adds a default ORM mapping for the App namespace if none is configured.
      *
      * @return array<string,array<string,array<string,array<string,mixed>>>>
      */
@@ -395,27 +395,28 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 $mappings[] = $em['mappings'] ?? [];
             }
 
-            $autoMappingEnabled |= ($config['orm']['auto_mapping'] ?? false) ||
-                ($config['orm']['entity_managers'][$defaultEntityManager]['auto_mapping'] ?? false);
+            $autoMappingEnabled |= ($config['orm']['auto_mapping'] ?? false)
+                || ($config['orm']['entity_managers'][$defaultEntityManager]['auto_mapping'] ?? false);
         }
 
-        // Skip if auto mapping isn't enabled for the default entity manager.
+        // Skip if auto mapping is not enabled for the default entity manager.
         if (!$autoMappingEnabled) {
             return $extensionConfigs;
         }
 
-        // Skip if a mapping with name or alias 'App' already exists or any
-        // mapping already targets '%kernel.project_dir%/src/Entity'.
+        // Skip if a mapping with the name or alias "App" already exists or any
+        // mapping already targets "%kernel.project_dir%/src/Entity".
         foreach (array_replace(...$mappings) as $name => $values) {
             if (
-                'App' === $name || 'App' === ($values['alias'] ?? '') ||
-                '%kernel.project_dir%/src/Entity' === ($values['dir'] ?? '')
+                'App' === $name
+                || 'App' === ($values['alias'] ?? '')
+                || '%kernel.project_dir%/src/Entity' === ($values['dir'] ?? '')
             ) {
                 return $extensionConfigs;
             }
         }
 
-        // Skip if the '%kernel.project_dir%/src/Entity' directory does not exists.
+        // Skip if the "%kernel.project_dir%/src/Entity" directory does not exist.
         if (!$container->fileExists(Path::join($container->getParameter('kernel.project_dir'), 'src/Entity'))) {
             return $extensionConfigs;
         }

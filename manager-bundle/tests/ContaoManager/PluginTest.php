@@ -837,8 +837,7 @@ class PluginTest extends ContaoTestCase
 
     public function testRetrievesTheConnectionParametersFromTheConfiguration(): void
     {
-        $pluginLoader = $this->createMock(PluginLoader::class);
-        $container = new PluginContainerBuilder($pluginLoader, []);
+        $container = new PluginContainerBuilder($this->createMock(PluginLoader::class), []);
         $container->setParameter('kernel.project_dir', __DIR__.'/../Fixtures/app');
 
         $extensionConfigs = [
@@ -896,7 +895,7 @@ class PluginTest extends ContaoTestCase
 
         $extensionConfig = $plugin->getExtensionConfig('doctrine', [], $this->getContainer());
 
-        // Ignore dbal entry
+        // Ignore the DBAL entry
         unset($extensionConfig[0]['dbal']);
 
         $this->assertCount(1, $extensionConfig);
@@ -906,7 +905,7 @@ class PluginTest extends ContaoTestCase
     /**
      * @dataProvider getOrmMappingConfigurations
      */
-    public function testOnlyAddsDefaultDoctrineMappingIfAutoMappingEnabledAndNotAlreadyExisting(array $ormConfig, string $defaultEntityManager, bool $shouldAdd): void
+    public function testOnlyAddsTheDefaultDoctrineMappingIfAutoMappingIsEnabledAndNotAlreadyConfigured(array $ormConfig, string $defaultEntityManager, bool $shouldAdd): void
     {
         $extensionConfigs = [
             [
@@ -933,6 +932,8 @@ class PluginTest extends ContaoTestCase
             ],
         ];
 
+        $expect = $extensionConfigs;
+
         if ($shouldAdd) {
             $expect = array_merge(
                 $extensionConfigs,
@@ -954,8 +955,6 @@ class PluginTest extends ContaoTestCase
                     ],
                 ]]
             );
-        } else {
-            $expect = $extensionConfigs;
         }
 
         $plugin = new Plugin(
@@ -967,16 +966,12 @@ class PluginTest extends ContaoTestCase
         $container = $this->getContainer();
         $container->setParameter('kernel.project_dir', __DIR__.'/../Fixtures/app-with-entities');
 
-        $this->assertSame(
-            $expect,
-            $plugin->getExtensionConfig('doctrine', $extensionConfigs, $container)
-        );
+        $this->assertSame($expect, $plugin->getExtensionConfig('doctrine', $extensionConfigs, $container));
     }
 
     public function getOrmMappingConfigurations(): \Generator
     {
-        // positive configurations
-
+        // Positive configurations
         yield 'with global auto_mapping enabled' => [
             [
                 'auto_mapping' => true,
@@ -1010,8 +1005,7 @@ class PluginTest extends ContaoTestCase
             true,
         ];
 
-        // skip, because auto_mapping is not set
-
+        // Skip, because auto_mapping is not set
         yield 'with auto_mapping not set' => [
             [
             ],
@@ -1052,8 +1046,7 @@ class PluginTest extends ContaoTestCase
             false,
         ];
 
-        // skip, because conflicting mapping already exists (global)
-
+        // Skip, because conflicting mapping already exists (global)
         yield 'with existing global mapping "App"' => [
             [
                 'auto_mapping' => true,
@@ -1093,8 +1086,7 @@ class PluginTest extends ContaoTestCase
             false,
         ];
 
-        // skip, because conflicting mapping already exists (in any entity manager)
-
+        // Skip, because conflicting mapping already exists (in any entity manager)
         yield 'with existing mapping "App" in any entity manager' => [
             [
                 'auto_mapping' => true,
