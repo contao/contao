@@ -96,7 +96,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			(
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"',
+				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"',
 				'button_callback'     => array('tl_user', 'deleteUser')
 			),
 			'toggle' => array
@@ -149,7 +149,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'sorting'                 => true,
 			'flag'                    => 1,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'extnd', 'nospace'=>true, 'unique'=>true, 'maxlength'=>64, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'extnd', 'nospace'=>true, 'unique'=>true, 'maxlength'=>64, 'tl_class'=>'w50', 'autocapitalize'=>'off', 'autocomplete'=>'username'),
 			'sql'                     => "varchar(64) BINARY NULL"
 		),
 		'name' => array
@@ -539,7 +539,7 @@ class tl_user extends Backend
 										  ->limit(1)
 										  ->execute(Input::get('id'));
 
-				if ($objUser->admin && Input::get('act') != '')
+				if ($objUser->admin && Input::get('act'))
 				{
 					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' administrator account ID ' . Input::get('id') . '.');
 				}
@@ -586,7 +586,7 @@ class tl_user extends Backend
 			'default' => $GLOBALS['TL_DCA'][$dc->table]['palettes']['login']
 		);
 
-		$arrFields = StringUtil::trimsplit('[,;]', $GLOBALS['TL_DCA'][$dc->table]['palettes']['default']);
+		$arrFields = StringUtil::trimsplit('[,;]', $GLOBALS['TL_DCA'][$dc->table]['palettes']['default'] ?? '');
 
 		foreach ($arrFields as $strField)
 		{
@@ -679,7 +679,7 @@ class tl_user extends Backend
 	 */
 	public function copyUser($row, $href, $label, $title, $icon, $attributes, $table)
 	{
-		if ($GLOBALS['TL_DCA'][$table]['config']['closed'])
+		if ($GLOBALS['TL_DCA'][$table]['config']['closed'] ?? null)
 		{
 			return '';
 		}
@@ -877,9 +877,9 @@ class tl_user extends Backend
 	 */
 	public function checkAdminStatus($varValue, DataContainer $dc)
 	{
-		if ($varValue == '' && $this->User->id == $dc->id)
+		if (!$varValue && $this->User->id == $dc->id)
 		{
-			$varValue = 1;
+			$varValue = '1';
 		}
 
 		return $varValue;
@@ -1013,7 +1013,7 @@ class tl_user extends Backend
 		}
 
 		// Trigger the onload_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_user']['config']['onload_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_user']['config']['onload_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_user']['config']['onload_callback'] as $callback)
 			{
@@ -1057,7 +1057,7 @@ class tl_user extends Backend
 		$blnVisible = !$blnVisible;
 
 		// Trigger the save_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_user']['fields']['disable']['save_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_user']['fields']['disable']['save_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_user']['fields']['disable']['save_callback'] as $callback)
 			{
@@ -1086,7 +1086,7 @@ class tl_user extends Backend
 		}
 
 		// Trigger the onsubmit_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_user']['config']['onsubmit_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_user']['config']['onsubmit_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_user']['config']['onsubmit_callback'] as $callback)
 			{

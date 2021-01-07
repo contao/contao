@@ -17,8 +17,10 @@ use Contao\CoreBundle\EventListener\DataContainer\PageTypeOptionsListener;
 use Contao\CoreBundle\EventListener\DataContainer\PageUrlListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\DataContainer;
+use Contao\Idna;
 use Contao\Image;
 use Contao\Input;
+use Contao\LayoutModel;
 use Contao\Message;
 use Contao\Messages;
 use Contao\Model;
@@ -44,7 +46,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			array('tl_page', 'setRootType'),
 			array('tl_page', 'showFallbackWarning'),
 			array('tl_page', 'makeRedirectPageMandatory'),
-			array('tl_page', 'generateSitemap')
 		),
 		'oncut_callback' => array
 		(
@@ -57,6 +58,10 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'onsubmit_callback' => array
 		(
 			array('tl_page', 'scheduleUpdate'),
+		),
+		'oninvalidate_cache_tags_callback' => array
+		(
+			array('tl_page', 'addSitemapCacheInvalidationTag'),
 		),
 		'sql' => array
 		(
@@ -134,7 +139,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			(
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"',
+				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"',
 				'button_callback'     => array('tl_page', 'deletePage')
 			),
 			'toggle' => array
@@ -168,13 +173,13 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'__selector__'                => array('type', 'fallback', 'autoforward', 'protected', 'createSitemap', 'includeLayout', 'includeCache', 'includeChmod', 'enforceTwoFactor'),
+		'__selector__'                => array('type', 'fallback', 'autoforward', 'protected', 'includeLayout', 'includeCache', 'includeChmod', 'enforceTwoFactor'),
 		'default'                     => '{title_legend},title,alias,type',
 		'regular'                     => '{title_legend},title,alias,type;{meta_legend},pageTitle,robots,description,serpPreview;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,noSearch,guests,requireItem;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
 		'forward'                     => '{title_legend},title,alias,type;{meta_legend},pageTitle;{redirect_legend},jumpTo,redirect;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,guests;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
 		'redirect'                    => '{title_legend},title,alias,type;{meta_legend},pageTitle;{redirect_legend},redirect,url,target;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,guests;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
-		'root'                        => '{title_legend},title,alias,type;{meta_legend},pageTitle;{url_legend},dns,useSSL,urlPrefix,urlSuffix,validAliasCharacters,useFolderUrl;{language_legend},language,fallback,disableLanguageRedirect;{global_legend:hide},adminEmail,mailerTransport,dateFormat,timeFormat,datimFormat,staticFiles,staticPlugins;{sitemap_legend:hide},createSitemap;{protected_legend:hide},protected;{layout_legend},includeLayout;{twoFactor_legend:hide},enforceTwoFactor;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{publish_legend},published,start,stop',
-		'rootfallback'                => '{title_legend},title,alias,type;{meta_legend},pageTitle;{url_legend},dns,useSSL,urlPrefix,urlSuffix,validAliasCharacters,useFolderUrl;{language_legend},language,fallback,disableLanguageRedirect;{website_legend:hide},favicon,robotsTxt;{global_legend:hide},adminEmail,mailerTransport,dateFormat,timeFormat,datimFormat,staticFiles,staticPlugins;{sitemap_legend:hide},createSitemap;{protected_legend:hide},protected;{layout_legend},includeLayout;{twoFactor_legend:hide},enforceTwoFactor;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{publish_legend},published,start,stop',
+		'root'                        => '{title_legend},title,alias,type;{meta_legend},pageTitle;{url_legend},dns,useSSL,urlPrefix,urlSuffix,validAliasCharacters,useFolderUrl;{language_legend},language,fallback,disableLanguageRedirect;{global_legend:hide},adminEmail,mailerTransport,dateFormat,timeFormat,datimFormat,staticFiles,staticPlugins;{protected_legend:hide},protected;{layout_legend},includeLayout;{twoFactor_legend:hide},enforceTwoFactor;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{publish_legend},published,start,stop',
+		'rootfallback'                => '{title_legend},title,alias,type;{meta_legend},pageTitle;{url_legend},dns,useSSL,urlPrefix,urlSuffix,validAliasCharacters,useFolderUrl;{language_legend},language,fallback,disableLanguageRedirect;{website_legend:hide},favicon,robotsTxt;{global_legend:hide},adminEmail,mailerTransport,dateFormat,timeFormat,datimFormat,staticFiles,staticPlugins;{protected_legend:hide},protected;{layout_legend},includeLayout;{twoFactor_legend:hide},enforceTwoFactor;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{publish_legend},published,start,stop',
 		'logout'                      => '{title_legend},title,alias,type;{forward_legend},jumpTo,redirectBack;{protected_legend:hide},protected;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
 		'error_401'                   => '{title_legend},title,alias,type;{meta_legend},pageTitle,robots,description;{forward_legend},autoforward;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass;{publish_legend},published,start,stop',
 		'error_403'                   => '{title_legend},title,alias,type;{meta_legend},pageTitle,robots,description;{forward_legend},autoforward;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass;{publish_legend},published,start,stop',
@@ -186,7 +191,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 	(
 		'autoforward'                 => 'jumpTo',
 		'protected'                   => 'groups',
-		'createSitemap'               => 'sitemapName',
 		'includeLayout'               => 'layout',
 		'includeCache'                => 'clientCache,cache,alwaysLoadFromCache',
 		'includeChmod'                => 'cuser,cgroup,chmod',
@@ -277,7 +281,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
 			'exclude'                 => true,
 			'inputType'               => 'serpPreview',
-			'eval'                    => array('url_callback'=>array('tl_page', 'getSerpUrl'), 'titleFields'=>array('pageTitle', 'title')),
+			'eval'                    => array('url_callback'=>array('tl_page', 'getSerpUrl'), 'title_tag_callback'=>array('tl_page', 'getTitleTag'), 'titleFields'=>array('pageTitle', 'title')),
 			'sql'                     => null
 		),
 		'redirect' => array
@@ -331,6 +335,10 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'load_callback' => array
+			(
+				array('tl_page', 'loadDns')
+			),
 			'save_callback' => array
 			(
 				array('tl_page', 'checkDns')
@@ -464,30 +472,12 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'eval'                    => array('nospace'=>'true', 'maxlength'=>16, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(16) NOT NULL default '.html'"
 		),
-		'createSitemap' => array
-		(
-			'exclude'                 => true,
-			'inputType'               => 'checkbox',
-			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) NOT NULL default ''"
-		),
-		'sitemapName' => array
-		(
-			'exclude'                 => true,
-			'search'                  => true,
-			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'unique'=>true, 'rgxp'=>'alnum', 'decodeEntities'=>true, 'maxlength'=>32, 'tl_class'=>'w50'),
-			'save_callback' => array
-			(
-				array('tl_page', 'checkFeedAlias')
-			),
-			'sql'                     => "varchar(32) NOT NULL default ''"
-		),
 		'useSSL' => array
 		(
 			'exclude'                 => true,
-			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'inputType'               => 'select',
+			'options'                 => array(''=>'http://', '1'=>'https://'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'autoforward' => array
@@ -847,7 +837,7 @@ class tl_page extends Backend
 		{
 			$permission = 0;
 			$cid = CURRENT_ID ?: Input::get('id');
-			$ids = ($cid != '') ? array($cid) : array();
+			$ids = $cid ? array($cid) : array();
 
 			// Set permission
 			switch (Input::get('act'))
@@ -1039,11 +1029,36 @@ class tl_page extends Backend
 	}
 
 	/**
+	 * Return the title tag from the associated page layout
+	 *
+	 * @param PageModel $model
+	 *
+	 * @return string
+	 */
+	public function getTitleTag(PageModel $model)
+	{
+		$model->loadDetails();
+
+		/** @var LayoutModel $layout */
+		if (!$layout = $model->getRelated('layout'))
+		{
+			return '';
+		}
+
+		global $objPage;
+
+		// Set the global page object so we can replace the insert tags
+		$objPage = $model;
+
+		return self::replaceInsertTags(str_replace('{{page::pageTitle}}', '%s', $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}'));
+	}
+
+	/**
 	 * Show a warning if there is no language fallback page
 	 */
 	public function showFallbackWarning()
 	{
-		if (Input::get('act') != '')
+		if (Input::get('act'))
 		{
 			return;
 		}
@@ -1069,31 +1084,6 @@ class tl_page extends Backend
 		{
 			$GLOBALS['TL_DCA']['tl_page']['fields']['jumpTo']['eval']['mandatory'] = true;
 		}
-	}
-
-	/**
-	 * Check for modified pages and update the XML files if necessary
-	 */
-	public function generateSitemap()
-	{
-		/** @var SessionInterface $objSession */
-		$objSession = System::getContainer()->get('session');
-
-		$session = $objSession->get('sitemap_updater');
-
-		if (empty($session) || !is_array($session))
-		{
-			return;
-		}
-
-		$this->import(Automator::class, 'Automator');
-
-		foreach ($session as $id)
-		{
-			$this->Automator->generateSitemap($id);
-		}
-
-		$objSession->set('sitemap_updater', null);
 	}
 
 	/**
@@ -1190,7 +1180,7 @@ class tl_page extends Backend
 	public function checkFeedAlias($varValue, DataContainer $dc)
 	{
 		// No change or empty value
-		if ($varValue == $dc->value || $varValue == '')
+		if (!$varValue || $varValue == $dc->value)
 		{
 			return $varValue;
 		}
@@ -1230,6 +1220,18 @@ class tl_page extends Backend
 	}
 
 	/**
+	 * Load the DNS settings
+	 *
+	 * @param mixed $varValue
+	 *
+	 * @return mixed
+	 */
+	public function loadDns($varValue)
+	{
+		return Idna::decode($varValue);
+	}
+
+	/**
 	 * Check the DNS settings
 	 *
 	 * @param mixed $varValue
@@ -1238,7 +1240,16 @@ class tl_page extends Backend
 	 */
 	public function checkDns($varValue)
 	{
-		return preg_replace('#^(?:[a-z]+://)?([a-z0-9[\].:_-]+).*$#i', '$1', $varValue);
+		if (!$varValue)
+		{
+			return '';
+		}
+
+		// The first part will match IPv6 addresses in square brackets. The
+		// second part will match domain names and IPv4 addresses.
+		preg_match('#^(?:[a-z]+://)?(\[[0-9a-f:]+]|[\pN\pL._-]*)#ui', $varValue, $matches);
+
+		return Idna::encode($matches[1]);
 	}
 
 	/**
@@ -1253,7 +1264,7 @@ class tl_page extends Backend
 	 */
 	public function checkFallback($varValue, DataContainer $dc)
 	{
-		if ($varValue == '')
+		if (!$varValue)
 		{
 			return '';
 		}
@@ -1278,7 +1289,7 @@ class tl_page extends Backend
 	 */
 	public function checkStaticUrl($varValue)
 	{
-		if ($varValue != '')
+		if ($varValue)
 		{
 			$varValue = preg_replace('@https?://@', '', $varValue);
 		}
@@ -1375,7 +1386,7 @@ class tl_page extends Backend
 	 */
 	public function copyPage($row, $href, $label, $title, $icon, $attributes, $table)
 	{
-		if ($GLOBALS['TL_DCA'][$table]['config']['closed'])
+		if ($GLOBALS['TL_DCA'][$table]['config']['closed'] ?? null)
 		{
 			return '';
 		}
@@ -1398,7 +1409,7 @@ class tl_page extends Backend
 	 */
 	public function copyPageWithSubpages($row, $href, $label, $title, $icon, $attributes, $table)
 	{
-		if ($GLOBALS['TL_DCA'][$table]['config']['closed'])
+		if ($GLOBALS['TL_DCA'][$table]['config']['closed'] ?? null)
 		{
 			return '';
 		}
@@ -1575,7 +1586,7 @@ class tl_page extends Backend
 			$objSession = System::getContainer()->get('session');
 
 			$session = $objSession->all();
-			$ids = $session['CURRENT']['IDS'];
+			$ids = $session['CURRENT']['IDS'] ?? array();
 
 			foreach ($ids as $id)
 			{
@@ -1592,16 +1603,19 @@ class tl_page extends Backend
 				$strAlias = '';
 
 				// Generate new alias through save callbacks
-				foreach ($GLOBALS['TL_DCA'][$dc->table]['fields']['alias']['save_callback'] as $callback)
+				if (is_array($GLOBALS['TL_DCA'][$dc->table]['fields']['alias']['save_callback'] ?? null))
 				{
-					if (is_array($callback))
+					foreach ($GLOBALS['TL_DCA'][$dc->table]['fields']['alias']['save_callback'] as $callback)
 					{
-						$this->import($callback[0]);
-						$strAlias = $this->{$callback[0]}->{$callback[1]}($strAlias, $dc);
-					}
-					elseif (is_callable($callback))
-					{
-						$strAlias = $callback($strAlias, $dc);
+						if (is_array($callback))
+						{
+							$this->import($callback[0]);
+							$strAlias = $this->{$callback[0]}->{$callback[1]}($strAlias, $dc);
+						}
+						elseif (is_callable($callback))
+						{
+							$strAlias = $callback($strAlias, $dc);
+						}
 					}
 				}
 
@@ -1694,7 +1708,7 @@ class tl_page extends Backend
 		}
 
 		// Trigger the onload_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_page']['config']['onload_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_page']['config']['onload_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_page']['config']['onload_callback'] as $callback)
 			{
@@ -1735,7 +1749,7 @@ class tl_page extends Backend
 		$objVersions->initialize();
 
 		// Trigger the save_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_page']['fields']['published']['save_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_page']['fields']['published']['save_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_page']['fields']['published']['save_callback'] as $callback)
 			{
@@ -1764,7 +1778,7 @@ class tl_page extends Backend
 		}
 
 		// Trigger the onsubmit_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_page']['config']['onsubmit_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_page']['config']['onsubmit_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_page']['config']['onsubmit_callback'] as $callback)
 			{
@@ -1782,12 +1796,26 @@ class tl_page extends Backend
 
 		$objVersions->create();
 
-		// The onsubmit_callback has triggered scheduleUpdate(), so run generateSitemap() now
-		$this->generateSitemap();
-
 		if ($dc)
 		{
 			$dc->invalidateCacheTags();
 		}
+	}
+
+	/**
+	 * @param DataContainer $dc
+	 *
+	 * @return array
+	 */
+	public function addSitemapCacheInvalidationTag($dc, array $tags)
+	{
+		$pageModel = PageModel::findWithDetails($dc->id);
+
+		if ($pageModel === null)
+		{
+			return $tags;
+		}
+
+		return array_merge($tags, array('contao.sitemap.' . $pageModel->rootId));
 	}
 }

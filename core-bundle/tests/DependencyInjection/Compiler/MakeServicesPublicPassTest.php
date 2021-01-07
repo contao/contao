@@ -28,6 +28,7 @@ class MakeServicesPublicPassTest extends TestCase
         $container->setDefinition('fragment.handler', (new Definition())->setPublic(false));
         $container->setDefinition('lexik_maintenance.driver.factory', (new Definition())->setPublic(false));
         $container->setDefinition('monolog.logger.contao', (new Definition())->setPublic(false));
+        $container->setDefinition('security.authentication_utils', (new Definition())->setPublic(false));
         $container->setDefinition('security.authentication.trust_resolver', (new Definition())->setPublic(false));
         $container->setDefinition('security.firewall.map', (new Definition())->setPublic(false));
         $container->setDefinition('security.logout_url_generator', (new Definition())->setPublic(false));
@@ -50,6 +51,7 @@ class MakeServicesPublicPassTest extends TestCase
         $this->assertTrue($container->getDefinition('fragment.handler')->isPublic());
         $this->assertTrue($container->getDefinition('lexik_maintenance.driver.factory')->isPublic());
         $this->assertTrue($container->getDefinition('monolog.logger.contao')->isPublic());
+        $this->assertTrue($container->getDefinition('security.authentication_utils')->isPublic());
         $this->assertTrue($container->getDefinition('security.authentication.trust_resolver')->isPublic());
         $this->assertTrue($container->getDefinition('security.firewall.map')->isPublic());
         $this->assertTrue($container->getDefinition('security.logout_url_generator')->isPublic());

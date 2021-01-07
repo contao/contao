@@ -49,7 +49,7 @@ class PageRoute extends Route implements RouteObjectInterface
         $defaults = array_merge(
             [
                 '_token_check' => true,
-                '_controller' => 'Contao\FrontendIndex:renderPage',
+                '_controller' => 'Contao\FrontendIndex::renderPage',
                 '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
                 '_locale' => $pageModel->rootLanguage,
                 '_format' => 'html',
@@ -75,7 +75,7 @@ class PageRoute extends Route implements RouteObjectInterface
             $requirements,
             $options,
             $pageModel->domain,
-            $pageModel->rootUseSSL ? 'https' : null,
+            $pageModel->rootUseSSL ? 'https' : 'http',
             $methods
         );
 

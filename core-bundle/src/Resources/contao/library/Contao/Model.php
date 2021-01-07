@@ -806,7 +806,7 @@ abstract class Model
 			array
 			(
 				'limit'  => 1,
-				'column' => $isAlias ? array("$t.alias=?") : array("$t.id=?"),
+				'column' => $isAlias ? array("BINARY $t.alias=?") : array("$t.id=?"),
 				'value'  => $varId,
 				'return' => 'Model'
 			),
@@ -1021,13 +1021,13 @@ abstract class Model
 	 */
 	protected static function find(array $arrOptions)
 	{
-		if (static::$strTable == '')
+		if (!static::$strTable)
 		{
 			return null;
 		}
 
 		// Try to load from the registry
-		if ($arrOptions['return'] == 'Model')
+		if (($arrOptions['return'] ?? null) == 'Model')
 		{
 			$arrColumn = (array) $arrOptions['column'];
 
@@ -1072,17 +1072,17 @@ abstract class Model
 		}
 
 		$objStatement = static::preFind($objStatement);
-		$objResult = $objStatement->execute($arrOptions['value']);
+		$objResult = $objStatement->execute($arrOptions['value'] ?? null);
 
 		if ($objResult->numRows < 1)
 		{
-			return $arrOptions['return'] == 'Array' ? array() : null;
+			return ($arrOptions['return'] ?? null) == 'Array' ? array() : null;
 		}
 
 		$objResult = static::postFind($objResult);
 
 		// Try to load from the registry
-		if ($arrOptions['return'] == 'Model')
+		if (($arrOptions['return'] ?? null) == 'Model')
 		{
 			$objModel = Registry::getInstance()->fetch(static::$strTable, $objResult->{static::$strPk});
 
@@ -1094,7 +1094,7 @@ abstract class Model
 			return static::createModelFromDbResult($objResult);
 		}
 
-		if ($arrOptions['return'] == 'Array')
+		if (($arrOptions['return'] ?? null) == 'Array')
 		{
 			return static::createCollectionFromDbResult($objResult, static::$strTable)->getModels();
 		}
@@ -1137,7 +1137,7 @@ abstract class Model
 	 */
 	public static function countBy($strColumn=null, $varValue=null, array $arrOptions=array())
 	{
-		if (static::$strTable == '')
+		if (!static::$strTable)
 		{
 			return 0;
 		}

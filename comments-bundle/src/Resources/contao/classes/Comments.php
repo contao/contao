@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\OptIn\OptIn;
-use FOS\HttpCache\ResponseTagger;
 
 /**
  * Class Comments
@@ -43,10 +42,9 @@ class Comments extends Frontend
 
 		$objTemplate->comments = array(); // see #4064
 
-		// Tag the response
+		// Tag the source record (see #2137)
 		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
 		{
-			/** @var ResponseTagger $responseTagger */
 			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
 			$responseTagger->addTags(array(sprintf('contao.comments.%s.%s', $strSource, $intParent)));
 		}
@@ -102,6 +100,7 @@ class Comments extends Frontend
 		if ($objComments !== null && ($total = $objComments->count()) > 0)
 		{
 			$count = 0;
+			$tags = array();
 			$objPartial = new FrontendTemplate($objConfig->template ?: 'com_default');
 
 			while ($objComments->next())
@@ -122,7 +121,7 @@ class Comments extends Frontend
 				$objPartial->addReply = false;
 
 				// Reply
-				if ($objComments->addReply && $objComments->reply != '' && ($objAuthor = $objComments->getRelated('author')) instanceof UserModel)
+				if ($objComments->addReply && $objComments->reply && ($objAuthor = $objComments->getRelated('author')) instanceof UserModel)
 				{
 					$objPartial->addReply = true;
 					$objPartial->rby = $GLOBALS['TL_LANG']['MSC']['com_reply'];
@@ -134,7 +133,16 @@ class Comments extends Frontend
 				}
 
 				$arrComments[] = $objPartial->parse();
+				$tags[] = 'contao.db.tl_comments.' . $objComments->id;
+
 				++$count;
+			}
+
+			// Tag the comments (see #2137)
+			if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+			{
+				$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+				$responseTagger->addTags($tags);
 			}
 		}
 
@@ -246,7 +254,7 @@ class Comments extends Frontend
 		foreach ($arrFields as $arrField)
 		{
 			/** @var Widget $strClass */
-			$strClass = $GLOBALS['TL_FFL'][$arrField['inputType']];
+			$strClass = $GLOBALS['TL_FFL'][$arrField['inputType']] ?? null;
 
 			// Continue if the class is not defined
 			if (!class_exists($strClass))
@@ -254,10 +262,10 @@ class Comments extends Frontend
 				continue;
 			}
 
-			$arrField['eval']['required'] = $arrField['eval']['mandatory'];
+			$arrField['eval']['required'] = $arrField['eval']['mandatory'] ?? null;
 
 			/** @var Widget $objWidget */
-			$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, $arrField['name'], $arrField['value']));
+			$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, $arrField['name'], $arrField['value'] ?? null));
 
 			// Append the parent ID to prevent duplicate IDs (see #1493)
 			$objWidget->id .= '_' . $intParent;
@@ -307,7 +315,7 @@ class Comments extends Frontend
 			$strWebsite = $arrWidgets['website']->value;
 
 			// Add http:// to the website
-			if (($strWebsite != '') && !preg_match('@^(https?://|ftp://|mailto:|#)@i', $strWebsite))
+			if ($strWebsite && !preg_match('@^(https?://|ftp://|mailto:|#)@i', $strWebsite))
 			{
 				$strWebsite = 'http://' . $strWebsite;
 			}
@@ -404,7 +412,7 @@ class Comments extends Frontend
 			{
 				$objEmail->sendTo(array_unique($varNotifies));
 			}
-			elseif ($varNotifies != '')
+			elseif ($varNotifies)
 			{
 				$objEmail->sendTo($varNotifies); // see #5443
 			}

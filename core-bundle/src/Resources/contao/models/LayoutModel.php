@@ -34,7 +34,6 @@ use Contao\Model\Collection;
  * @property string  $modules
  * @property string  $template
  * @property string  $minifyMarkup
- * @property string  $webfonts
  * @property string  $lightboxSize
  * @property string  $defaultImageDensities
  * @property string  $viewport
@@ -43,10 +42,8 @@ use Contao\Model\Collection;
  * @property string  $onload
  * @property string  $head
  * @property boolean $addJQuery
- * @property string  $jSource
  * @property string  $jquery
  * @property boolean $addMooTools
- * @property string  $mooSource
  * @property string  $mootools
  * @property string  $analytics
  * @property string  $externalJs
@@ -78,7 +75,6 @@ use Contao\Model\Collection;
  * @method static LayoutModel|null findOneByModules($val, array $opt=array())
  * @method static LayoutModel|null findOneByTemplate($val, array $opt=array())
  * @method static LayoutModel|null findOneByMinifyMarkup($val, array $opt=array())
- * @method static LayoutModel|null findOneByWebfonts($val, array $opt=array())
  * @method static LayoutModel|null findOneByLightboxSize($val, array $opt=array())
  * @method static LayoutModel|null findOneByDefaultImageDensities($val, array $opt=array())
  * @method static LayoutModel|null findOneByViewport($val, array $opt=array())
@@ -87,10 +83,8 @@ use Contao\Model\Collection;
  * @method static LayoutModel|null findOneByOnload($val, array $opt=array())
  * @method static LayoutModel|null findOneByHead($val, array $opt=array())
  * @method static LayoutModel|null findOneByAddJQuery($val, array $opt=array())
- * @method static LayoutModel|null findOneByJSource($val, array $opt=array())
  * @method static LayoutModel|null findOneByJquery($val, array $opt=array())
  * @method static LayoutModel|null findOneByAddMooTools($val, array $opt=array())
- * @method static LayoutModel|null findOneByMooSource($val, array $opt=array())
  * @method static LayoutModel|null findOneByMootools($val, array $opt=array())
  * @method static LayoutModel|null findOneByAnalytics($val, array $opt=array())
  * @method static LayoutModel|null findOneByExternalJs($val, array $opt=array())
@@ -118,7 +112,6 @@ use Contao\Model\Collection;
  * @method static Collection|LayoutModel[]|LayoutModel|null findByModules($val, array $opt=array())
  * @method static Collection|LayoutModel[]|LayoutModel|null findByTemplate($val, array $opt=array())
  * @method static Collection|LayoutModel[]|LayoutModel|null findByMinifyMarkup($val, array $opt=array())
- * @method static Collection|LayoutModel[]|LayoutModel|null findByWebfonts($val, array $opt=array())
  * @method static Collection|LayoutModel[]|LayoutModel|null findByLightboxSize($val, array $opt=array())
  * @method static Collection|LayoutModel[]|LayoutModel|null findByDefaultImageDensities($val, array $opt=array())
  * @method static Collection|LayoutModel[]|LayoutModel|null findByViewport($val, array $opt=array())
@@ -127,10 +120,8 @@ use Contao\Model\Collection;
  * @method static Collection|LayoutModel[]|LayoutModel|null findByOnload($val, array $opt=array())
  * @method static Collection|LayoutModel[]|LayoutModel|null findByHead($val, array $opt=array())
  * @method static Collection|LayoutModel[]|LayoutModel|null findByAddJQuery($val, array $opt=array())
- * @method static Collection|LayoutModel[]|LayoutModel|null findByJSource($val, array $opt=array())
  * @method static Collection|LayoutModel[]|LayoutModel|null findByJquery($val, array $opt=array())
  * @method static Collection|LayoutModel[]|LayoutModel|null findByAddMooTools($val, array $opt=array())
- * @method static Collection|LayoutModel[]|LayoutModel|null findByMooSource($val, array $opt=array())
  * @method static Collection|LayoutModel[]|LayoutModel|null findByMootools($val, array $opt=array())
  * @method static Collection|LayoutModel[]|LayoutModel|null findByAnalytics($val, array $opt=array())
  * @method static Collection|LayoutModel[]|LayoutModel|null findByExternalJs($val, array $opt=array())
@@ -162,7 +153,6 @@ use Contao\Model\Collection;
  * @method static integer countByModules($val, array $opt=array())
  * @method static integer countByTemplate($val, array $opt=array())
  * @method static integer countByMinifyMarkup($val, array $opt=array())
- * @method static integer countByWebfonts($val, array $opt=array())
  * @method static integer countByLightboxSize($val, array $opt=array())
  * @method static integer countByDefaultImageDensities($val, array $opt=array())
  * @method static integer countByViewport($val, array $opt=array())
@@ -171,10 +161,8 @@ use Contao\Model\Collection;
  * @method static integer countByOnload($val, array $opt=array())
  * @method static integer countByHead($val, array $opt=array())
  * @method static integer countByAddJQuery($val, array $opt=array())
- * @method static integer countByJSource($val, array $opt=array())
  * @method static integer countByJquery($val, array $opt=array())
  * @method static integer countByAddMooTools($val, array $opt=array())
- * @method static integer countByMooSource($val, array $opt=array())
  * @method static integer countByMootools($val, array $opt=array())
  * @method static integer countByAnalytics($val, array $opt=array())
  * @method static integer countByExternalJs($val, array $opt=array())

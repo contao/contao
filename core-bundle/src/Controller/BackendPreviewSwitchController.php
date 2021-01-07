@@ -17,7 +17,6 @@ use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\Date;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\FetchMode;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -104,7 +103,7 @@ class BackendPreviewSwitchController
         }
 
         if ($request->isMethod('GET')) {
-            return Response::create($this->renderToolbar());
+            return new Response($this->renderToolbar());
         }
 
         if ('tl_switch' === $request->request->get('FORM_SUBMIT')) {
@@ -183,7 +182,7 @@ class BackendPreviewSwitchController
         $time = Date::floorToMinute();
 
         // Get the active front end users
-        $result = $this->connection->executeQuery(
+        return $this->connection->fetchFirstColumn(
             "
                 SELECT
                     username
@@ -200,7 +199,5 @@ class BackendPreviewSwitchController
             ",
             [str_replace('%', '', $request->request->get('value')).'%']
         );
-
-        return $result->fetchAll(FetchMode::COLUMN);
     }
 }

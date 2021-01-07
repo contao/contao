@@ -64,22 +64,20 @@ class RobotsTxtListener
 
         /** @var PageModel $pageModel */
         $pageModel = $this->contaoFramework->getAdapter(PageModel::class);
-        $rootPages = $pageModel->findPublishedRootPages(['dns' => $event->getRootPage()->dns]);
 
-        // Generate the sitemaps
-        foreach ($rootPages as $rootPage) {
-            if (!$rootPage->createSitemap) {
-                continue;
-            }
+        // Only fetch the fallback page because there can only be one sitemap per host
+        $rootPage = $pageModel->findPublishedFallbackByHostname($event->getRootPage()->dns);
 
-            $sitemap = sprintf(
-                '%s%s/share/%s.xml',
-                $rootPage->useSSL ? 'https://' : 'http://',
-                $rootPage->dns ?: $event->getRequest()->server->get('HTTP_HOST'),
-                $rootPage->sitemapName
-            );
-
-            $event->getFile()->getNonGroupDirectives()->add(new Directive('Sitemap', $sitemap));
+        if (null === $rootPage) {
+            return;
         }
+
+        $sitemap = sprintf(
+            '%s%s/sitemap.xml',
+            $rootPage->useSSL ? 'https://' : 'http://',
+            $rootPage->dns ?: $event->getRequest()->server->get('HTTP_HOST')
+        );
+
+        $event->getFile()->getNonGroupDirectives()->add(new Directive('Sitemap', $sitemap));
     }
 }

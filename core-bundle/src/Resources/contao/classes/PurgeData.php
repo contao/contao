@@ -132,7 +132,8 @@ class PurgeData extends Backend implements \executable
 				'id' => 'purge_' . $key,
 				'title' => $GLOBALS['TL_LANG']['tl_maintenance_jobs'][$key][0],
 				'description' => $GLOBALS['TL_LANG']['tl_maintenance_jobs'][$key][1],
-				'group' => 'custom'
+				'group' => 'custom',
+				'affected' => ''
 			);
 		}
 
@@ -141,7 +142,7 @@ class PurgeData extends Backend implements \executable
 		$objTemplate->job = $GLOBALS['TL_LANG']['tl_maintenance']['job'];
 		$objTemplate->description = $GLOBALS['TL_LANG']['tl_maintenance']['description'];
 		$objTemplate->submit = StringUtil::specialchars($GLOBALS['TL_LANG']['tl_maintenance']['clearCache']);
-		$objTemplate->help = (Config::get('showHelp') && ($GLOBALS['TL_LANG']['tl_maintenance']['cacheTables'][1] != '')) ? $GLOBALS['TL_LANG']['tl_maintenance']['cacheTables'][1] : '';
+		$objTemplate->help = (Config::get('showHelp') && $GLOBALS['TL_LANG']['tl_maintenance']['cacheTables'][1]) ? $GLOBALS['TL_LANG']['tl_maintenance']['cacheTables'][1] : '';
 
 		return $objTemplate->parse();
 	}

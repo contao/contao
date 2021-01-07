@@ -98,7 +98,7 @@ class FormFileUpload extends Widget implements \uploadable
 		{
 			if ($this->mandatory)
 			{
-				if ($this->strLabel == '')
+				if (!$this->strLabel)
 				{
 					$this->addError($GLOBALS['TL_LANG']['ERR']['mdtryNoLabel']);
 				}
@@ -234,7 +234,7 @@ class FormFileUpload extends Widget implements \uploadable
 				$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 				// Store the file if the upload folder exists
-				if ($strUploadFolder != '' && is_dir($projectDir . '/' . $strUploadFolder))
+				if ($strUploadFolder && is_dir($projectDir . '/' . $strUploadFolder))
 				{
 					$this->import(Files::class, 'Files');
 

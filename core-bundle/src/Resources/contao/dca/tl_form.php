@@ -99,7 +99,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 			(
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"',
+				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"',
 				'button_callback'     => array('tl_form', 'deleteForm')
 			),
 			'show' => array
@@ -492,9 +492,13 @@ class tl_form extends Backend
 		};
 
 		// Generate an alias if there is none
-		if ($varValue == '')
+		if (!$varValue)
 		{
 			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->title, Input::post('jumpTo') ?: $dc->activeRecord->jumpTo, $aliasExists);
+		}
+		elseif (preg_match('/^[1-9]\d*$/', $varValue))
+		{
+			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasNumeric'], $varValue));
 		}
 		elseif ($aliasExists($varValue))
 		{

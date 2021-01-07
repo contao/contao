@@ -536,7 +536,7 @@ class Environment
 		$return->class = $os . ' ' . $browser . ' ' . $engine;
 
 		// Add the version number if available
-		if ($version != '')
+		if ($version)
 		{
 			$return->class .= ' ' . $shorty . $version;
 		}

@@ -18,7 +18,7 @@ use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -131,7 +131,7 @@ class BackendPreviewControllerTest extends TestCase
     private function mockRequest(): Request
     {
         $request = $this->createMock(Request::class);
-        $request->query = new ParameterBag();
+        $request->query = new InputBag();
 
         $request
             ->method('getScriptName')

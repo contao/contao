@@ -39,9 +39,10 @@ class ContentText extends ContentElement
 
 		$this->Template->text = StringUtil::encodeEmail($this->text);
 		$this->Template->addImage = false;
+		$this->Template->addBefore = false;
 
 		// Add an image
-		if ($this->addImage && $this->singleSRC != '')
+		if ($this->addImage && $this->singleSRC)
 		{
 			$objModel = FilesModel::findByUuid($this->singleSRC);
 

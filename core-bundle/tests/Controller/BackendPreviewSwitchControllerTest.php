@@ -18,7 +18,6 @@ use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\ResultStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -37,7 +36,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $controller = new BackendPreviewSwitchController(
             $this->createMock(FrontendPreviewAuthenticator::class),
             $this->mockTokenChecker(),
-            $this->mockConnection(),
+            $this->createMock(Connection::class),
             $this->mockSecurity(),
             $this->getTwigMock(),
             $this->mockRouter(),
@@ -61,7 +60,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $controller = new BackendPreviewSwitchController(
             $this->createMock(FrontendPreviewAuthenticator::class),
             $this->mockTokenChecker(),
-            $this->mockConnection(),
+            $this->createMock(Connection::class),
             $this->mockSecurity(),
             $this->getTwigMock(),
             $this->mockRouter(),
@@ -92,7 +91,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $controller = new BackendPreviewSwitchController(
             $this->createMock(FrontendPreviewAuthenticator::class),
             $this->mockTokenChecker(),
-            $this->mockConnection(),
+            $this->createMock(Connection::class),
             $this->mockSecurity(),
             $this->getTwigMock(),
             $this->mockRouter(),
@@ -124,7 +123,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $controller = new BackendPreviewSwitchController(
             $this->createMock(FrontendPreviewAuthenticator::class),
             $this->mockTokenChecker(),
-            $this->mockConnection([]),
+            $this->createMock(Connection::class),
             $this->mockSecurity(),
             $this->getTwigMock(),
             $this->mockRouter(),
@@ -229,24 +228,5 @@ class BackendPreviewSwitchControllerTest extends TestCase
         ;
 
         return $twig;
-    }
-
-    /**
-     * @return Connection&MockObject
-     */
-    private function mockConnection(array $return = []): Connection
-    {
-        $resultStatement = $this->createMock(ResultStatement::class)
-            ->method('fetchAll')
-            ->willReturn($return)
-        ;
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->method('executeQuery')
-            ->willReturn($resultStatement)
-        ;
-
-        return $connection;
     }
 }

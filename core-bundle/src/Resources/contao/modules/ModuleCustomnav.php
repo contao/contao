@@ -49,14 +49,14 @@ class ModuleCustomnav extends Module
 		// Always return an array (see #4616)
 		$this->pages = StringUtil::deserialize($this->pages, true);
 
-		if (empty($this->pages) || $this->pages[0] == '')
+		if (empty($this->pages) || !$this->pages[0])
 		{
 			return '';
 		}
 
 		$strBuffer = parent::generate();
 
-		return ($this->Template->items != '') ? $strBuffer : '';
+		return $this->Template->items ? $strBuffer : '';
 	}
 
 	/**

@@ -148,7 +148,7 @@ class tl_undo extends Backend
 		$GLOBALS['TL_DCA']['tl_undo']['list']['sorting']['root'] = $objSteps->numRows ? $objSteps->fetchEach('id') : array(0);
 
 		// Redirect if there is an error
-		if (Input::get('act') && !in_array(Input::get('id'), $GLOBALS['TL_DCA']['tl_undo']['list']['sorting']['root']))
+		if (Input::get('act') && !in_array(Input::get('id'), $GLOBALS['TL_DCA']['tl_undo']['list']['sorting']['root'] ?? array()))
 		{
 			throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' undo step ID ' . Input::get('id') . '.');
 		}
@@ -187,12 +187,14 @@ class tl_undo extends Backend
 						}
 					}
 
+					$label = null;
+
 					// Get the field label
 					if (isset($GLOBALS['TL_DCA'][$strTable]['fields'][$i]['label']))
 					{
 						$label = is_array($GLOBALS['TL_DCA'][$strTable]['fields'][$i]['label']) ? $GLOBALS['TL_DCA'][$strTable]['fields'][$i]['label'][0] : $GLOBALS['TL_DCA'][$strTable]['fields'][$i]['label'];
 					}
-					else
+					elseif (isset($GLOBALS['TL_LANG']['MSC'][$i]))
 					{
 						$label = is_array($GLOBALS['TL_LANG']['MSC'][$i]) ? $GLOBALS['TL_LANG']['MSC'][$i][0] : $GLOBALS['TL_LANG']['MSC'][$i];
 					}

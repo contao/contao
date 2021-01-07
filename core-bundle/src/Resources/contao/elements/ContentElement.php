@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\Model\Collection;
-use FOS\HttpCache\ResponseTagger;
 
 /**
  * Parent class for content elements.
@@ -254,17 +253,17 @@ abstract class ContentElement extends Frontend
 
 		// Do not change this order (see #6191)
 		$this->Template->style = !empty($this->arrStyle) ? implode(' ', $this->arrStyle) : '';
-		$this->Template->class = trim('ce_' . $this->type . ' ' . $this->cssID[1]);
+		$this->Template->class = trim('ce_' . $this->type . ' ' . ($this->cssID[1] ?? ''));
 		$this->Template->cssID = !empty($this->cssID[0]) ? ' id="' . $this->cssID[0] . '"' : '';
 
 		$this->Template->inColumn = $this->strColumn;
 
-		if ($this->Template->headline == '')
+		if (!$this->Template->headline)
 		{
 			$this->Template->headline = $this->headline;
 		}
 
-		if ($this->Template->hl == '')
+		if (!$this->Template->hl)
 		{
 			$this->Template->hl = $this->hl;
 		}
@@ -274,10 +273,9 @@ abstract class ContentElement extends Frontend
 			$this->Template->class .= ' ' . implode(' ', $this->objModel->classes);
 		}
 
-		// Tag the response
+		// Tag the content element (see #2137)
 		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
 		{
-			/** @var ResponseTagger $responseTagger */
 			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
 			$responseTagger->addTags(array('contao.db.tl_content.' . $this->id));
 		}
@@ -287,7 +285,7 @@ abstract class ContentElement extends Frontend
 
 	protected function isHidden()
 	{
-		$isInvisible = $this->invisible || ($this->start != '' && $this->start > time()) || ($this->stop != '' && $this->stop <= time());
+		$isInvisible = $this->invisible || ($this->start && $this->start > time()) || ($this->stop && $this->stop <= time());
 
 		// The element is visible, so show it
 		if (!$isInvisible)

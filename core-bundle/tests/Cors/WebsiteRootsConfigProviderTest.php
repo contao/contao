@@ -14,8 +14,8 @@ namespace Contao\CoreBundle\Tests\Cors;
 
 use Contao\CoreBundle\Cors\WebsiteRootsConfigProvider;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\Statement;
 use Doctrine\DBAL\Schema\MySqlSchemaManager;
+use Doctrine\DBAL\Statement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,7 +35,7 @@ class WebsiteRootsConfigProviderTest extends TestCase
 
         $statement
             ->expects($this->once())
-            ->method('fetchColumn')
+            ->method('fetchOne')
             ->willReturn('1')
         ;
 
@@ -67,7 +67,7 @@ class WebsiteRootsConfigProviderTest extends TestCase
 
         $statement
             ->expects($this->once())
-            ->method('fetchColumn')
+            ->method('fetchOne')
             ->willReturn('0')
         ;
 

@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\Model\Collection;
-use FOS\HttpCache\ResponseTagger;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
@@ -216,17 +215,17 @@ abstract class Module extends Frontend
 
 		// Do not change this order (see #6191)
 		$this->Template->style = !empty($this->arrStyle) ? implode(' ', $this->arrStyle) : '';
-		$this->Template->class = trim('mod_' . $this->type . ' ' . $this->cssID[1]);
+		$this->Template->class = trim('mod_' . $this->type . ' ' . ($this->cssID[1] ?? ''));
 		$this->Template->cssID = !empty($this->cssID[0]) ? ' id="' . $this->cssID[0] . '"' : '';
 
 		$this->Template->inColumn = $this->strColumn;
 
-		if ($this->Template->headline == '')
+		if (!$this->Template->headline)
 		{
 			$this->Template->headline = $this->headline;
 		}
 
-		if ($this->Template->hl == '')
+		if (!$this->Template->hl)
 		{
 			$this->Template->hl = $this->hl;
 		}
@@ -236,10 +235,9 @@ abstract class Module extends Frontend
 			$this->Template->class .= ' ' . implode(' ', $this->objModel->classes);
 		}
 
-		// Tag the response
+		// Tag the module (see #2137)
 		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
 		{
-			/** @var ResponseTagger $responseTagger */
 			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
 			$responseTagger->addTags(array('contao.db.tl_module.' . $this->id));
 		}
@@ -415,7 +413,7 @@ abstract class Module extends Frontend
 		if (($objPage->id == $objSubpage->id || ($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo)) && !($this instanceof ModuleSitemap) && $href == $path)
 		{
 			// Mark active forward pages (see #4822)
-			$strClass = (($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo) ? 'forward' . ($trail ? ' trail' : '') : 'active') . (($subitems != '') ? ' submenu' : '') . ($objSubpage->protected ? ' protected' : '') . ($objSubpage->cssClass ? ' ' . $objSubpage->cssClass : '');
+			$strClass = (($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo) ? 'forward' . ($trail ? ' trail' : '') : 'active') . ($subitems ? ' submenu' : '') . ($objSubpage->protected ? ' protected' : '') . ($objSubpage->cssClass ? ' ' . $objSubpage->cssClass : '');
 
 			$row['isActive'] = true;
 			$row['isTrail'] = false;
@@ -424,7 +422,7 @@ abstract class Module extends Frontend
 		// Regular page
 		else
 		{
-			$strClass = (($subitems != '') ? 'submenu' : '') . ($objSubpage->protected ? ' protected' : '') . ($trail ? ' trail' : '') . ($objSubpage->cssClass ? ' ' . $objSubpage->cssClass : '');
+			$strClass = ($subitems ? 'submenu' : '') . ($objSubpage->protected ? ' protected' : '') . ($trail ? ' trail' : '') . ($objSubpage->cssClass ? ' ' . $objSubpage->cssClass : '');
 
 			// Mark pages on the same level (see #2419)
 			if ($objSubpage->pid == $objPage->pid)

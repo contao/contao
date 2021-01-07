@@ -30,6 +30,7 @@ use Contao\Model\Registry;
 use Contao\PageModel;
 use Contao\RequestToken;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -38,6 +39,8 @@ use Symfony\Contracts\Service\ResetInterface;
 
 class ContaoFrameworkTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     /**
      * @runInSeparateProcess
      * @preserveGlobalState disabled
@@ -338,7 +341,7 @@ class ContaoFrameworkTest extends TestCase
 
         $framework->initialize();
 
-        $this->addToAssertionCount(1);  // does not throw an exception
+        $this->addToAssertionCount(1); // does not throw an exception
     }
 
     public function testOverridesTheErrorLevel(): void
@@ -440,7 +443,7 @@ class ContaoFrameworkTest extends TestCase
 
         $framework->initialize();
 
-        $this->addToAssertionCount(1);  // does not throw an exception
+        $this->addToAssertionCount(1); // does not throw an exception
     }
 
     public function getInstallRoutes(): \Generator
@@ -467,11 +470,11 @@ class ContaoFrameworkTest extends TestCase
      *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
-     *
-     * @expectedDeprecation Since contao/core-bundle 4.5: Using "$_SESSION" has been deprecated %s.
      */
     public function testRegistersTheLazySessionAccessObject(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.5: Using "$_SESSION" has been deprecated %s.');
+
         $beBag = new ArrayAttributeBag();
         $beBag->setName('contao_backend');
 
@@ -499,7 +502,6 @@ class ContaoFrameworkTest extends TestCase
 
     public function testCreatesAnObjectInstance(): void
     {
-        /** @var ContaoFramework $framework */
         $framework = $this->mockFramework();
 
         $class = LegacyClass::class;
@@ -511,7 +513,6 @@ class ContaoFrameworkTest extends TestCase
 
     public function testCreateASingeltonObjectInstance(): void
     {
-        /** @var ContaoFramework $framework */
         $framework = $this->mockFramework();
 
         $class = LegacySingletonClass::class;
@@ -523,7 +524,6 @@ class ContaoFrameworkTest extends TestCase
 
     public function testCreatesAdaptersForLegacyClasses(): void
     {
-        /** @var ContaoFramework $framework */
         $framework = $this->mockFramework();
         $adapter = $framework->getAdapter(LegacyClass::class);
 
@@ -696,6 +696,9 @@ class ContaoFrameworkTest extends TestCase
         $this->assertCount(0, $registry);
     }
 
+    /**
+     * @param TokenChecker&MockObject $tokenChecker
+     */
     private function mockFramework(Request $request = null, ScopeMatcher $scopeMatcher = null, TokenChecker $tokenChecker = null): ContaoFramework
     {
         $requestStack = new RequestStack();

@@ -11,8 +11,7 @@
 namespace Contao;
 
 use ScssPhp\ScssPhp\Compiler;
-use ScssPhp\ScssPhp\Formatter\Compressed;
-use ScssPhp\ScssPhp\Formatter\Expanded;
+use ScssPhp\ScssPhp\OutputStyle;
 
 /**
  * Combines .css or .js files into one single file
@@ -238,7 +237,7 @@ class Combiner extends System
 				}
 
 				// Add the media query (see #7070)
-				if ($this->strMode == self::CSS && $arrFile['media'] != '' && $arrFile['media'] != 'all' && !$this->hasMediaTag($arrFile['name']))
+				if ($this->strMode == self::CSS && $arrFile['media'] && $arrFile['media'] != 'all' && !$this->hasMediaTag($arrFile['name']))
 				{
 					$name .= '|' . $arrFile['media'];
 				}
@@ -387,7 +386,7 @@ class Combiner extends System
 		$content = $this->fixPaths($content, $arrFile);
 
 		// Add the media type if there is no @media command in the code
-		if ($arrFile['media'] != '' && $arrFile['media'] != 'all' && strpos($content, '@media') === false)
+		if ($arrFile['media'] && $arrFile['media'] != 'all' && strpos($content, '@media') === false)
 		{
 			$content = '@media ' . $arrFile['media'] . "{\n" . $content . "\n}";
 		}
@@ -409,14 +408,14 @@ class Combiner extends System
 		{
 			$objCompiler = new Compiler();
 			$objCompiler->setImportPaths($this->strRootDir . '/' . \dirname($arrFile['name']));
-			$objCompiler->setFormatter((Config::get('debugMode') ? Expanded::class : Compressed::class));
+			$objCompiler->setOutputStyle((Config::get('debugMode') ? OutputStyle::EXPANDED : OutputStyle::COMPRESSED));
 
 			if (Config::get('debugMode'))
 			{
 				$objCompiler->setSourceMap(Compiler::SOURCE_MAP_INLINE);
 			}
 
-			return $this->fixPaths($objCompiler->compile($content), $arrFile);
+			return $this->fixPaths($objCompiler->compile($content, $this->strRootDir . '/' . $arrFile['name']), $arrFile);
 		}
 
 		$strPath = \dirname($arrFile['name']);

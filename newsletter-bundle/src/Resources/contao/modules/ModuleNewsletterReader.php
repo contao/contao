@@ -105,7 +105,7 @@ class ModuleNewsletterReader extends Module
 		}
 
 		// Overwrite the page title (see #2853 and #4955)
-		if ($objNewsletter->subject != '')
+		if ($objNewsletter->subject)
 		{
 			$objPage->pageTitle = strip_tags(StringUtil::stripInsertTags($objNewsletter->subject));
 		}
@@ -135,6 +135,13 @@ class ModuleNewsletterReader extends Module
 
 		$this->Template->content = $strContent;
 		$this->Template->subject = $objNewsletter->subject;
+
+		// Tag the newsletter (see #2137)
+		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		{
+			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+			$responseTagger->addTags(array('contao.db.tl_newsletter.' . $objNewsletter->id));
+		}
 	}
 }
 

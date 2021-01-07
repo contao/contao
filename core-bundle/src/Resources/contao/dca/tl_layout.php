@@ -84,7 +84,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			(
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"'
+				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"'
 			),
 			'show' => array
 			(
@@ -98,7 +98,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('rows', 'cols', 'addJQuery', 'addMooTools', 'static'),
-		'default'                     => '{title_legend},name;{header_legend},rows;{column_legend},cols;{sections_legend:hide},sections;{webfonts_legend:hide},webfonts;{image_legend:hide},lightboxSize,defaultImageDensities;{style_legend},framework,stylesheet,external,loadingOrder,combineScripts;{modules_legend},modules;{script_legend},scripts,analytics,externalJs,script;{jquery_legend:hide},addJQuery;{mootools_legend:hide},addMooTools;{static_legend:hide},static;{expert_legend:hide},template,minifyMarkup,viewport,titleTag,cssClass,onload,head'
+		'default'                     => '{title_legend},name;{header_legend},rows;{column_legend},cols;{sections_legend:hide},sections;{image_legend:hide},lightboxSize,defaultImageDensities;{style_legend},framework,stylesheet,external,loadingOrder,combineScripts;{modules_legend},modules;{script_legend},scripts,analytics,externalJs,script;{jquery_legend:hide},addJQuery;{mootools_legend:hide},addMooTools;{static_legend:hide},static;{expert_legend:hide},template,minifyMarkup,viewport,titleTag,cssClass,onload,head'
 	),
 
 	// Subpalettes
@@ -110,8 +110,8 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		'cols_2cll'                   => 'widthLeft',
 		'cols_2clr'                   => 'widthRight',
 		'cols_3cl'                    => 'widthLeft,widthRight',
-		'addJQuery'                   => 'jquery,jSource',
-		'addMooTools'                 => 'mootools,mooSource',
+		'addJQuery'                   => 'jquery',
+		'addMooTools'                 => 'mootools',
 		'static'                      => 'width,align'
 	),
 
@@ -279,14 +279,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'eval'                    => array('tl_class'=>'w50 m12'),
 			'sql'                     => "char(1) NOT NULL default '1'"
 		),
-		'webfonts' => array
-		(
-			'exclude'                 => true,
-			'search'                  => true,
-			'inputType'               => 'text',
-			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
-		),
 		'lightboxSize' => array
 		(
 			'exclude'                 => true,
@@ -354,15 +346,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'eval'                    => array('submitOnChange'=>true),
 			'sql'                     => "char(1) NOT NULL default ''"
 		),
-		'jSource' => array
-		(
-			'exclude'                 => true,
-			'inputType'               => 'select',
-			'options'                 => array('j_local', 'j_googleapis', 'j_fallback'),
-			'eval'                    => array('tl_class'=>'w50'),
-			'reference'               => &$GLOBALS['TL_LANG']['tl_layout'],
-			'sql'                     => "varchar(16) NOT NULL default ''"
-		),
 		'jquery' => array
 		(
 			'exclude'                 => true,
@@ -382,15 +365,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
 			'sql'                     => "char(1) NOT NULL default ''"
-		),
-		'mooSource' => array
-		(
-			'exclude'                 => true,
-			'inputType'               => 'select',
-			'options'                 => array('moo_local', 'moo_googleapis', 'moo_fallback'),
-			'eval'                    => array('tl_class'=>'w50'),
-			'reference'               => &$GLOBALS['TL_LANG']['tl_layout'],
-			'sql'                     => "varchar(16) NOT NULL default 'moo_local'"
 		),
 		'mootools' => array
 		(
@@ -515,7 +489,7 @@ class tl_layout extends Backend
 	 */
 	public function getStyleSheets(DataContainer $dc)
 	{
-		$intPid = $dc->activeRecord->pid;
+		$intPid = $dc->activeRecord->pid ?? null;
 
 		if (Input::get('act') == 'overrideAll')
 		{

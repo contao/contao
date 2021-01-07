@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Picker;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DcaLoader;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Result;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -131,7 +132,8 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         $this->framework->initialize();
         $this->framework->createInstance(DcaLoader::class, [$table])->load();
 
-        return $this->getDataContainer() === $GLOBALS['TL_DCA'][$table]['config']['dataContainer']
+        return isset($GLOBALS['TL_DCA'][$table]['config']['dataContainer'])
+            && $this->getDataContainer() === $GLOBALS['TL_DCA'][$table]['config']['dataContainer']
             && 0 !== \count($this->getModulesForTable($table));
     }
 
@@ -248,7 +250,9 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
             $qb->addSelect('ptable');
         }
 
-        $data = $qb->execute()->fetch();
+        /** @var Result $result */
+        $result = $qb->execute();
+        $data = $result->fetchAssociative();
 
         if (false === $data) {
             return [null, null];

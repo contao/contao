@@ -72,10 +72,6 @@ final class Page implements ServiceTagInterface
             unset($data['value']);
         }
 
-        if (!isset($data['type'])) {
-            throw new \LogicException('@Page annotation requires a type property.');
-        }
-
         if (isset($data['locale'])) {
             $data['defaults']['_locale'] = $data['locale'];
             unset($data['locale']);
@@ -95,7 +91,7 @@ final class Page implements ServiceTagInterface
             $method = 'set'.str_replace('_', '', $key);
 
             if (!method_exists($this, $method)) {
-                throw new \BadMethodCallException(sprintf('Unknown property "%s" on annotation "%s".', $key, static::class));
+                throw new \BadMethodCallException(sprintf('Unknown property "%s" on annotation "%s".', $key, self::class));
             }
 
             $this->$method($value);

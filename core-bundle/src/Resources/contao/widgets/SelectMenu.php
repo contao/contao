@@ -17,6 +17,7 @@ namespace Contao;
  * @property integer $size
  * @property boolean $multiple
  * @property array   $options
+ * @property array   $unknownOption
  * @property boolean $chosen
  *
  * @author Leo Feyer <https://github.com/leofeyer>
@@ -97,6 +98,28 @@ class SelectMenu extends Widget
 	}
 
 	/**
+	 * Check whether an input is one of the given options
+	 *
+	 * @param mixed $varInput The input string or array
+	 *
+	 * @return boolean True if the selected option exists
+	 */
+	protected function isValidOption($varInput)
+	{
+		$arrOptions = $this->arrOptions;
+
+		if (isset($this->unknownOption[0]))
+		{
+			$this->arrOptions['unknown'][] = array('value'=>$this->unknownOption[0]);
+		}
+
+		$blnIsValid = parent::isValidOption($varInput);
+		$this->arrOptions = $arrOptions;
+
+		return $blnIsValid;
+	}
+
+	/**
 	 * Generate the widget and return it as string
 	 *
 	 * @return string
@@ -118,7 +141,15 @@ class SelectMenu extends Widget
 			$this->arrOptions = array(array('value'=>'', 'label'=>'-'));
 		}
 
-		foreach ($this->arrOptions as $strKey=>$arrOption)
+		$arrAllOptions = $this->arrOptions;
+
+		// Add an unknown option, so it is not lost when saving the record (see #920)
+		if (isset($this->unknownOption[0]))
+		{
+			$arrAllOptions[] = array('value'=>$this->unknownOption[0], 'label'=>$GLOBALS['TL_LANG']['MSC']['unknownOption']);
+		}
+
+		foreach ($arrAllOptions as $strKey=>$arrOption)
 		{
 			if (isset($arrOption['value']))
 			{
@@ -126,7 +157,7 @@ class SelectMenu extends Widget
 					'<option value="%s"%s>%s</option>',
 					StringUtil::specialchars($arrOption['value']),
 					$this->isSelected($arrOption),
-					$arrOption['label']
+					$arrOption['label'] ?? null
 				);
 			}
 			else
@@ -137,9 +168,9 @@ class SelectMenu extends Widget
 				{
 					$arrOptgroups[] = sprintf(
 						'<option value="%s"%s>%s</option>',
-						StringUtil::specialchars($arrOptgroup['value']),
+						StringUtil::specialchars($arrOptgroup['value'] ?? ''),
 						$this->isSelected($arrOptgroup),
-						$arrOptgroup['label']
+						$arrOptgroup['label'] ?? null
 					);
 				}
 

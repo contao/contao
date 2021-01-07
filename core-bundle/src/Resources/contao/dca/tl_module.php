@@ -87,7 +87,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			(
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"'
+				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"'
 			),
 			'show' => array
 			(
@@ -695,7 +695,7 @@ class tl_module extends Backend
 
 		foreach ($GLOBALS['TL_DCA']['tl_member']['fields'] as $k=>$v)
 		{
-			if ($v['eval']['feEditable'])
+			if ($v['eval']['feEditable'] ?? null)
 			{
 				$return[$k] = $GLOBALS['TL_DCA']['tl_member']['fields'][$k]['label'][0];
 			}
@@ -791,9 +791,9 @@ class tl_module extends Backend
 	 */
 	public function getActivationDefault($varValue)
 	{
-		if (!trim($varValue))
+		if (trim($varValue) === '')
 		{
-			$varValue = (is_array($GLOBALS['TL_LANG']['tl_module']['emailText']) ? $GLOBALS['TL_LANG']['tl_module']['emailText'][1] : $GLOBALS['TL_LANG']['tl_module']['emailText']);
+			$varValue = (is_array($GLOBALS['TL_LANG']['tl_module']['emailText'] ?? null) ? $GLOBALS['TL_LANG']['tl_module']['emailText'][1] : ($GLOBALS['TL_LANG']['tl_module']['emailText'] ?? null));
 		}
 
 		return $varValue;
@@ -808,9 +808,9 @@ class tl_module extends Backend
 	 */
 	public function getPasswordDefault($varValue)
 	{
-		if (!trim($varValue))
+		if (trim($varValue) === '')
 		{
-			$varValue = (is_array($GLOBALS['TL_LANG']['tl_module']['passwordText']) ? $GLOBALS['TL_LANG']['tl_module']['passwordText'][1] : $GLOBALS['TL_LANG']['tl_module']['passwordText']);
+			$varValue = (is_array($GLOBALS['TL_LANG']['tl_module']['passwordText'] ?? null) ? $GLOBALS['TL_LANG']['tl_module']['passwordText'][1] : ($GLOBALS['TL_LANG']['tl_module']['passwordText'] ?? null));
 		}
 
 		return $varValue;

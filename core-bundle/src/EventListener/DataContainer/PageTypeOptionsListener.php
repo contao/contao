@@ -47,7 +47,7 @@ class PageTypeOptionsListener
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    public function __invoke(DataContainer $dc)
+    public function __invoke(DataContainer $dc): array
     {
         $options = array_unique(array_merge(array_keys($GLOBALS['TL_PTY']), $this->pageRegistry->keys()));
 

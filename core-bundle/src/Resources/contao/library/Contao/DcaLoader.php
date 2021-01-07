@@ -45,7 +45,7 @@ class DcaLoader extends Controller
 	 */
 	public function __construct($strTable)
 	{
-		if ($strTable == '')
+		if (!$strTable)
 		{
 			throw new \Exception('The table name must not be empty');
 		}
@@ -141,20 +141,6 @@ class DcaLoader extends Controller
 	 */
 	private function addDefaultLabels($blnNoCache)
 	{
-		// Return if there are no labels
-		if (!isset(static::$arrLanguageFiles[$this->strTable]))
-		{
-			return;
-		}
-
-		// Return if the labels have been added already
-		if (!$blnNoCache && isset(static::$arrLoaded['languageFiles'][$this->strTable]))
-		{
-			return;
-		}
-
-		static::$arrLoaded['languageFiles'][$this->strTable] = true;
-
 		// Operations
 		foreach (array('global_operations', 'operations') as $key)
 		{
@@ -170,7 +156,7 @@ class DcaLoader extends Controller
 					continue;
 				}
 
-				if (isset($GLOBALS['TL_LANG'][$this->strTable][$k]))
+				if (isset($GLOBALS['TL_LANG'][$this->strTable][$k]) || !isset($GLOBALS['TL_LANG']['DCA'][$k]))
 				{
 					$v['label'] = &$GLOBALS['TL_LANG'][$this->strTable][$k];
 				}
@@ -193,10 +179,7 @@ class DcaLoader extends Controller
 					continue;
 				}
 
-				if (isset($GLOBALS['TL_LANG'][$this->strTable][$k]))
-				{
-					$v['label'] = &$GLOBALS['TL_LANG'][$this->strTable][$k];
-				}
+				$v['label'] = &$GLOBALS['TL_LANG'][$this->strTable][$k];
 			}
 
 			unset($v);
@@ -208,7 +191,7 @@ class DcaLoader extends Controller
 	 */
 	private function setDynamicPTable(): void
 	{
-		if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? false) || !isset($GLOBALS['BE_MOD']))
+		if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null) || !isset($GLOBALS['BE_MOD']))
 		{
 			return;
 		}

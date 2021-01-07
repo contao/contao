@@ -129,7 +129,7 @@ class GdImage
 	/**
 	 * Set the GD resource handle
 	 *
-	 * @param resource $gdResource The GD resource handle
+	 * @param \GdImage|resource $gdResource The GD resource handle
 	 *
 	 * @return static
 	 *
@@ -137,7 +137,7 @@ class GdImage
 	 */
 	public function setResource($gdResource)
 	{
-		if (!\is_resource($gdResource) || get_resource_type($gdResource) !== 'gd')
+		if (!$gdResource instanceof \GdImage && (!\is_resource($gdResource) || get_resource_type($gdResource) !== 'gd'))
 		{
 			throw new \InvalidArgumentException('$gdResource is not a valid GD resource');
 		}
@@ -396,4 +396,8 @@ class GdImage
 	}
 }
 
-class_alias(GdImage::class, 'GdImage');
+// PHP 8.0 compatibility
+if (!class_exists('GdImage'))
+{
+	class_alias(GdImage::class, 'GdImage');
+}

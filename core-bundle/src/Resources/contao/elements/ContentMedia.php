@@ -40,7 +40,7 @@ class ContentMedia extends ContentElement
 	 */
 	public function generate()
 	{
-		if ($this->playerSRC == '')
+		if (!$this->playerSRC)
 		{
 			return '';
 		}
@@ -74,7 +74,7 @@ class ContentMedia extends ContentElement
 
 			$return .= '</ul>';
 
-			if ($this->headline != '')
+			if ($this->headline)
 			{
 				$return = '<' . $this->hl . '>' . $this->headline . '</' . $this->hl . '>' . $return;
 			}
@@ -98,7 +98,7 @@ class ContentMedia extends ContentElement
 		$this->Template->poster = false;
 
 		// Optional poster
-		if ($this->posterSRC != '' && ($objFile = FilesModel::findByUuid($this->posterSRC)) !== null)
+		if ($this->posterSRC && ($objFile = FilesModel::findByUuid($this->posterSRC)) !== null)
 		{
 			$this->Template->poster = $objFile->path;
 		}
@@ -151,20 +151,14 @@ class ContentMedia extends ContentElement
 
 		$size = StringUtil::deserialize($this->playerSize);
 
-		if (!\is_array($size) || empty($size[0]) || empty($size[1]))
+		if (\is_array($size) && !empty($size[0]) && !empty($size[1]))
 		{
-			if ($this->Template->isVideo)
-			{
-				$this->Template->size = ' width="640" height="360"';
-			}
-			else
-			{
-				$this->Template->size = ' width="400" height="40"';
-			}
+			$this->Template->size = ' width="' . $size[0] . '" height="' . $size[1] . '"';
 		}
 		else
 		{
-			$this->Template->size = ' width="' . $size[0] . '" height="' . $size[1] . '"';
+			// $this->size might contain image size data, therefore unset it (see #2351)
+			$this->Template->size = '';
 		}
 
 		$this->Template->files = array_values(array_filter($arrFiles));

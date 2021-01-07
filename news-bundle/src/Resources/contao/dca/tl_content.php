@@ -8,7 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-use Contao\Automator;
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\CoreBundle\Exception\AccessDeniedException;
@@ -174,9 +173,6 @@ class tl_content_news extends Backend
 		{
 			$this->News->generateFeedsByArchive($id);
 		}
-
-		$this->import(Automator::class, 'Automator');
-		$this->Automator->generateSitemap();
 
 		if ($request)
 		{
