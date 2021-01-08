@@ -97,7 +97,7 @@ class ModuleSearch extends Module
 		$this->Template->results = '';
 
 		// Execute the search if there are keywords
-		if ((string) $strKeywords !== '' && $strKeywords != '*' && !$this->jumpTo)
+		if ($strKeywords !== '' && $strKeywords != '*' && !$this->jumpTo)
 		{
 			// Search pages
 			if (!empty($this->pages) && \is_array($this->pages))

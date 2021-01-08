@@ -156,7 +156,8 @@ class FormTextField extends Widget
 						return $this->varValue;
 					}
 				}
-				elseif ($this->rgxp == 'email' || $this->rgxp == 'friendly')
+
+				if ($this->rgxp == 'email' || $this->rgxp == 'friendly')
 				{
 					return Idna::decodeEmail($this->varValue);
 				}

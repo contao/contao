@@ -131,7 +131,7 @@ class InitializeController extends AbstractController
      *
      * @see HttpKernel::handleException()
      */
-    private function handleException(\Throwable $e, Request $request, $type): void
+    private function handleException(\Throwable $e, Request $request, int $type): void
     {
         $event = new ExceptionEvent($this->get('http_kernel'), $request, $type, $e);
         $this->get('event_dispatcher')->dispatch($event, KernelEvents::EXCEPTION);
@@ -188,10 +188,8 @@ class InitializeController extends AbstractController
 
     /**
      * Execute kernel.response and kernel.finish_request events.
-     *
-     * @param int $type
      */
-    private function handleResponse(Request $request, Response $response, $type): void
+    private function handleResponse(Request $request, Response $response, int $type): void
     {
         $event = new ResponseEvent($this->get('http_kernel'), $request, $type, $response);
 

@@ -141,20 +141,6 @@ class DcaLoader extends Controller
 	 */
 	private function addDefaultLabels($blnNoCache)
 	{
-		// Return if there are no labels
-		if (!isset(static::$arrLanguageFiles[$this->strTable]))
-		{
-			return;
-		}
-
-		// Return if the labels have been added already
-		if (!$blnNoCache && isset(static::$arrLoaded['languageFiles'][$this->strTable]))
-		{
-			return;
-		}
-
-		static::$arrLoaded['languageFiles'][$this->strTable] = true;
-
 		// Operations
 		foreach (array('global_operations', 'operations') as $key)
 		{
@@ -170,7 +156,7 @@ class DcaLoader extends Controller
 					continue;
 				}
 
-				if (isset($GLOBALS['TL_LANG'][$this->strTable][$k]))
+				if (isset($GLOBALS['TL_LANG'][$this->strTable][$k]) || !isset($GLOBALS['TL_LANG']['DCA'][$k]))
 				{
 					$v['label'] = &$GLOBALS['TL_LANG'][$this->strTable][$k];
 				}
@@ -193,10 +179,7 @@ class DcaLoader extends Controller
 					continue;
 				}
 
-				if (isset($GLOBALS['TL_LANG'][$this->strTable][$k]))
-				{
-					$v['label'] = &$GLOBALS['TL_LANG'][$this->strTable][$k];
-				}
+				$v['label'] = &$GLOBALS['TL_LANG'][$this->strTable][$k];
 			}
 
 			unset($v);

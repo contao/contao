@@ -279,7 +279,7 @@ class FigureBuilder
         }
 
         if (is_numeric($identifier)) {
-            return $this->fromId($identifier);
+            return $this->fromId((int) $identifier);
         }
 
         return $this->fromPath($identifier);
@@ -660,10 +660,11 @@ class FigureBuilder
             return [];
         }
 
-        $locales = [
-            str_replace('-', '_', $page->language),
-            str_replace('-', '_', $page->rootFallbackLanguage),
-        ];
+        $locales = [str_replace('-', '_', $page->language)];
+
+        if (null !== $page->rootFallbackLanguage) {
+            $locales[] = str_replace('-', '_', $page->rootFallbackLanguage);
+        }
 
         return array_unique(array_filter($locales));
     }

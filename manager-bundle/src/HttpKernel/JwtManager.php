@@ -142,7 +142,6 @@ class JwtManager
      */
     private function hasCookie(Response $response): bool
     {
-        /** @var array<Cookie> $cookies */
         $cookies = $response->headers->getCookies();
 
         foreach ($cookies as $cookie) {

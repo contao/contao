@@ -35,7 +35,7 @@ final class Hook implements ServiceTagInterface
     public $value;
 
     /**
-     * @var int|null
+     * @var int
      */
     public $priority;
 

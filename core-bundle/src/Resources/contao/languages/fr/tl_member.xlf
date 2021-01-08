@@ -243,7 +243,7 @@
       </trans-unit>
       <trans-unit id="tl_member.new.0">
         <source>New</source>
-        <target>Actualité</target>
+        <target>Nouveau</target>
       </trans-unit>
       <trans-unit id="tl_member.new.1">
         <source>Create a new member</source>

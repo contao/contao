@@ -14,6 +14,8 @@ namespace Contao\CoreBundle\Tests\Contao\Database;
 
 use Contao\CoreBundle\Tests\Fixtures\Database\DoctrineArrayStatement;
 use Contao\Database\Result;
+use PHPUnit\Framework\Error\Notice;
+use PHPUnit\Framework\Error\Warning;
 use PHPUnit\Framework\TestCase;
 
 class ResultTest extends TestCase
@@ -51,7 +53,7 @@ class ResultTest extends TestCase
             }
         }
 
-        $this->expectNotice();
+        $this->expectException(PHP_MAJOR_VERSION < 8 ? Notice::class : Warning::class);
 
         $resultStatement->fetchField();
     }
@@ -92,10 +94,10 @@ class ResultTest extends TestCase
             $this->assertSame(['field' => 'new value'], $result->row());
             $this->assertSame(['new value'], $result->row(true));
             $this->assertSame('value1', $result->fetchField());
-            $this->assertSame('value1', $result->fetchField(0));
+            $this->assertSame('value1', $result->fetchField());
         }
 
-        $this->expectNotice();
+        $this->expectException(PHP_MAJOR_VERSION < 8 ? Notice::class : Warning::class);
 
         $result->fetchField(1);
     }
@@ -141,10 +143,10 @@ class ResultTest extends TestCase
             $this->assertSame(['field' => 'new value'], $result->row());
             $this->assertSame(['new value'], $result->row(true));
             $this->assertSame('value2', $result->fetchField());
-            $this->assertSame('value2', $result->fetchField(0));
+            $this->assertSame('value2', $result->fetchField());
         }
 
-        $this->expectNotice();
+        $this->expectException(PHP_MAJOR_VERSION < 8 ? Notice::class : Warning::class);
 
         $result->fetchField(1);
     }

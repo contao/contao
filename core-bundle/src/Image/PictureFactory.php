@@ -211,7 +211,6 @@ class PictureFactory implements PictureFactoryInterface
                 if (null !== $imageSizeItems) {
                     $configItems = [];
 
-                    /** @var ImageSizeItemModel $imageSizeItem */
                     foreach ($imageSizeItems as $imageSizeItem) {
                         $configItems[] = $this->createConfigItem($imageSizeItem->row());
                     }
