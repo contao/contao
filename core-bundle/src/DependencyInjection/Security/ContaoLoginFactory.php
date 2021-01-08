@@ -53,12 +53,7 @@ class ContaoLoginFactory extends AbstractFactory
     {
         $twoFactorProviderId = TwoFactorFactory::PROVIDER_ID_PREFIX.$id;
         $twoFactorFirewallConfigId = 'contao.security.two_factor_firewall_config.'.$id;
-
-        $twoFactorFirewallConfig = new Definition(TwoFactorFirewallConfig::class, [
-            $config,
-            $id,
-            null,
-        ]);
+        $twoFactorFirewallConfig = new Definition(TwoFactorFirewallConfig::class, [$config, $id, null]);
 
         $container
             ->setDefinition($twoFactorFirewallConfigId, $twoFactorFirewallConfig)
