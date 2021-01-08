@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Security\Authentication;
 
 use Psr\Log\LoggerInterface;
-use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenFactoryInterface;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,9 +30,6 @@ use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategyInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-/**
- * @internal
- */
 class ContaoLoginAuthenticationListener extends AbstractAuthenticationListener
 {
     /**
@@ -41,12 +37,8 @@ class ContaoLoginAuthenticationListener extends AbstractAuthenticationListener
      */
     private $tokenStorage;
 
-    public function __construct(TokenStorageInterface $tokenStorage, AuthenticationManagerInterface $authenticationManager, SessionAuthenticationStrategyInterface $sessionStrategy, HttpUtils $httpUtils, string $providerKey, AuthenticationSuccessHandlerInterface $successHandler, AuthenticationFailureHandlerInterface $failureHandler, array $options, TwoFactorTokenFactoryInterface $twoFactorTokenFactory = null, LoggerInterface $logger = null, EventDispatcherInterface $dispatcher = null)
+    public function __construct(TokenStorageInterface $tokenStorage, AuthenticationManagerInterface $authenticationManager, SessionAuthenticationStrategyInterface $sessionStrategy, HttpUtils $httpUtils, string $providerKey, AuthenticationSuccessHandlerInterface $successHandler, AuthenticationFailureHandlerInterface $failureHandler, array $options, LoggerInterface $logger = null, EventDispatcherInterface $dispatcher = null)
     {
-        if (null !== $twoFactorTokenFactory) {
-            @trigger_error('Eight argument ($twoFactorTokenFactory) of ContaoLoginAuthenticationListener::__construct(...) is deprecated since Contao 4.9, to be removed in Contao 5.0.', E_USER_DEPRECATED);
-        }
-
         parent::__construct($tokenStorage, $authenticationManager, $sessionStrategy, $httpUtils, $providerKey, $successHandler, $failureHandler, $options, $logger, $dispatcher);
 
         $this->tokenStorage = $tokenStorage;
