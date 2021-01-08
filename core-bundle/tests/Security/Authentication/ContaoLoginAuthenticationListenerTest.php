@@ -179,7 +179,6 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
             $this->createMock(AuthenticationSuccessHandlerInterface::class),
             $failureHandler,
             [], // Options
-            null, // TwoFactorTokenFactory - Backwards compatibility
             null, // Logger
             null // Event Dispatcher
         );
