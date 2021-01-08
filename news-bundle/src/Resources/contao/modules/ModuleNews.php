@@ -162,9 +162,22 @@ abstract class ModuleNews extends Module
 		$objTemplate->addImage = false;
 		$objTemplate->addBefore = false;
 
-		// Add image
+		// Add an image
 		if ($objArticle->addImage && null !== ($figureBuilder = $this->getFigureBuilderIfResourceExists($objArticle->singleSRC)))
 		{
+			$imgSize = $objArticle->size ?: null;
+
+			// Override the default image size
+			if ($this->imgSize)
+			{
+				$size = StringUtil::deserialize($this->imgSize);
+
+				if ($size[0] > 0 || $size[1] > 0 || is_numeric($size[2]) || ($size[2][0] ?? null) === '_')
+				{
+					$imgSize = $this->imgSize;
+				}
+			}
+
 			// If the external link is opened in a new window, open the image link in a new window, too (see #210)
 			if ('external' === $objTemplate->source && $objTemplate->target)
 			{
@@ -172,7 +185,7 @@ abstract class ModuleNews extends Module
 			}
 
 			$figure = $figureBuilder
-				->setSize($objArticle->size)
+				->setSize($imgSize)
 				->setMetaData($objArticle->getOverwriteMetaData())
 				->enableLightbox($objArticle->fullsize)
 				->build();
