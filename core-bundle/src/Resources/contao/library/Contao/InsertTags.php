@@ -459,15 +459,15 @@ class InsertTags extends Controller
 					switch (strtolower($elements[0]))
 					{
 						case 'link':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s%s>%s</a>', $strUrl, StringUtil::specialchars($strTitle), $strClass, $strTarget, $strName);
+							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s%s>%s</a>', $strUrl ?: './', StringUtil::specialchars($strTitle), $strClass, $strTarget, $strName);
 							break;
 
 						case 'link_open':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s%s>', $strUrl, StringUtil::specialchars($strTitle), $strClass, $strTarget);
+							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s%s>', $strUrl ?: './', StringUtil::specialchars($strTitle), $strClass, $strTarget);
 							break;
 
 						case 'link_url':
-							$arrCache[$strTag] = $strUrl;
+							$arrCache[$strTag] = $strUrl ?: './';
 							break;
 
 						case 'link_title':
