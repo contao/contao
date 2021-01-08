@@ -110,3 +110,10 @@ fos_http_cache:
         annotations:
             enabled: false
         max_header_value_length: 4096
+
+# Scheb 2FA configuration
+scheb_two_factor:
+    trusted_device:
+        enabled: true
+    backup_codes:
+        enabled: true
