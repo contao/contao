@@ -135,8 +135,6 @@ class ModuleFaqReader extends Module
 				->enableLightbox($objFaq->fullsize)
 				->build()
 				->applyLegacyTemplateData($this->Template, $objFaq->imagemargin, $objFaq->floating);
-
-			$this->Template->useImage = true;
 		}
 
 		$this->Template->enclosure = array();

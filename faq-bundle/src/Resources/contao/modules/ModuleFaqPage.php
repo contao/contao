@@ -112,8 +112,6 @@ class ModuleFaqPage extends Module
 					->enableLightbox($objFaq->fullsize)
 					->build()
 					->applyLegacyTemplateData($objTemp, $objFaq->imagemargin, $objFaq->floating);
-
-				$this->Template->useImage = true;
 			}
 
 			$objTemp->enclosure = array();
