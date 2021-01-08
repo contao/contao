@@ -345,10 +345,12 @@ class File extends System
 
 			case 'viewWidth':
 				$imageViewSize = $this->imageViewSize;
+
 				return !empty($imageViewSize) ? $imageViewSize[0] : null;
 
 			case 'viewHeight':
 				$imageViewSize = $this->imageViewSize;
+
 				return !empty($imageViewSize) ? $imageViewSize[1] : null;
 
 			case 'isImage':
