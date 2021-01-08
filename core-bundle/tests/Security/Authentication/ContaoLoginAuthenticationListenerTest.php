@@ -125,28 +125,27 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
 
     public function testHandlesTwoFactorAuthentication(): void
     {
-        $currentToken = $this->createMock(TwoFactorTokenInterface::class);
-        $currentTokenWithCredentials = $currentToken->createWithCredentials('123456');
-
-        $currentToken
+        $tokenWithCredentials = $this->createMock(TwoFactorTokenInterface::class);
+        $token = $this->createMock(TwoFactorTokenInterface::class);
+        $token
             ->expects($this->once())
             ->method('createWithCredentials')
             ->with('123456')
-            ->willReturn($currentTokenWithCredentials)
+            ->willReturn($tokenWithCredentials)
         ;
 
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
         $tokenStorage
             ->expects($this->once())
             ->method('getToken')
-            ->willReturn($currentToken)
+            ->willReturn($token)
         ;
 
         $authenticationManager = $this->createMock(AuthenticationManagerInterface::class);
         $authenticationManager
             ->expects($this->once())
             ->method('authenticate')
-            ->with($currentTokenWithCredentials)
+            ->with($tokenWithCredentials)
             ->willReturn(null)
         ;
 
