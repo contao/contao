@@ -188,12 +188,13 @@ class ModuleSearch extends Module
 			if (Config::get('indexProtected'))
 			{
 				$this->import(FrontendUser::class, 'User');
+				$blnFeUserLoggedIn = System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
 
 				foreach ($arrResult as $k=>$v)
 				{
 					if ($v['protected'])
 					{
-						if (!FE_USER_LOGGED_IN || !\is_array($this->User->groups))
+						if (!$blnFeUserLoggedIn || !\is_array($this->User->groups))
 						{
 							unset($arrResult[$k]);
 						}

@@ -172,7 +172,7 @@ class Comments extends Frontend
 		$this->import(FrontendUser::class, 'User');
 
 		// Access control
-		if ($objConfig->requireLogin && !FE_USER_LOGGED_IN)
+		if ($objConfig->requireLogin && !System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
 		{
 			$objTemplate->requireLogin = true;
 			$objTemplate->login = $GLOBALS['TL_LANG']['MSC']['com_login'];

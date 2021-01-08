@@ -69,11 +69,13 @@ abstract class Events extends Module
 
 		if ($objCalendar !== null)
 		{
+			$blnFeUserLoggedIn = System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
+
 			while ($objCalendar->next())
 			{
 				if ($objCalendar->protected)
 				{
-					if (!FE_USER_LOGGED_IN || !\is_array($this->User->groups))
+					if (!$blnFeUserLoggedIn || !\is_array($this->User->groups))
 					{
 						continue;
 					}
