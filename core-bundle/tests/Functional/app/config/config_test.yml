@@ -45,3 +45,9 @@ contao:
     legacy_routing: false
     localconfig:
         licenseAccepted: true
+
+scheb_two_factor:
+    trusted_device:
+        enabled: true
+    backup_codes:
+        enabled: true
