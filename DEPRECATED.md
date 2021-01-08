@@ -363,3 +363,12 @@ Subscribe to one of the Symfony events instead (e.g. `kernel.request`).
 Using the `langconfig.php` file to adjust translations is deprecated in Contao
 4.0 and will no longer be supported in Contao 5.0. Add the language files with
 your modifications to the `contao/languages` folder instead.
+
+## FE_USER_LOGGED_IN
+
+The constant `FE_USER_LOGGED_IN` has been deprecated and will be removed in Contao
+5.0. Use the token checker service instead:
+
+```php
+$hasFrontendUser = System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
+```
