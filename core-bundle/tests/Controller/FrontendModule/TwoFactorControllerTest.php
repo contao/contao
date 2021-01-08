@@ -229,8 +229,6 @@ class TwoFactorControllerTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation %sserialize%sInvalidTwoFactorCodeException%s
      */
     public function testFailsIfTheTwoFactorCodeIsInvalid(): void
     {
