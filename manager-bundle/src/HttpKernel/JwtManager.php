@@ -12,44 +12,30 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\HttpKernel;
 
-use Lcobucci\JWT\Builder;
-use Lcobucci\JWT\Parser;
-use Lcobucci\JWT\Signer;
+use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
+use Lcobucci\JWT\Signer\Key\InMemory;
+use Lcobucci\JWT\Validation\Constraint\SignedWith;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @internal
+ */
 class JwtManager
 {
     public const COOKIE_NAME = 'contao_settings';
 
     /**
-     * @var Signer
+     * @var Configuration
      */
-    private $signer;
+    private $config;
 
-    /**
-     * @var Builder
-     */
-    private $builder;
-
-    /**
-     * @var Parser
-     */
-    private $parser;
-
-    /**
-     * @var string
-     */
-    private $secret;
-
-    public function __construct(string $projectDir, Signer $signer = null, Builder $builder = null, Parser $parser = null, Filesystem $filesystem = null)
+    public function __construct(string $projectDir, Filesystem $filesystem = null, Configuration $config = null)
     {
-        $this->signer = $signer ?: new Sha256();
-        $this->builder = $builder ?: new Builder();
-        $this->parser = $parser ?: new Parser();
+        $secret = null;
 
         if (null === $filesystem) {
             $filesystem = new Filesystem();
@@ -58,13 +44,16 @@ class JwtManager
         $secretFile = $projectDir.'/var/jwt_secret';
 
         if ($filesystem->exists($secretFile)) {
-            $this->secret = file_get_contents($secretFile);
+            $secret = file_get_contents($secretFile);
         }
 
-        if (!\is_string($this->secret) || 64 !== \strlen($this->secret)) {
-            $this->secret = bin2hex(random_bytes(32));
-            $filesystem->dumpFile($secretFile, $this->secret);
+        if (!\is_string($secret) || 64 !== \strlen($secret)) {
+            $secret = bin2hex(random_bytes(32));
+            $filesystem->dumpFile($secretFile, $secret);
         }
+
+        $this->config = $config ?: Configuration::forSymmetricSigner(new Sha256(), InMemory::file($secretFile));
+        $this->config->setValidationConstraints(new SignedWith($this->config->signer(), $this->config->signingKey()));
     }
 
     public function parseRequest(Request $request): ?array
@@ -111,29 +100,42 @@ class JwtManager
      */
     public function createCookie(array $payload = []): Cookie
     {
+        $builder = $this->config->builder();
+
         foreach ($payload as $k => $v) {
-            $this->builder->set($k, $v);
+            $builder = $builder->withClaim($k, $v);
         }
 
-        $token = $this->builder
-            ->setIssuedAt(time())
-            ->setExpiration(strtotime('+30 minutes'))
-            ->sign($this->signer, $this->secret)
-            ->getToken()
+        $token = $builder
+            ->issuedAt(new \DateTimeImmutable())
+            ->expiresAt(new \DateTimeImmutable('now +30 minutes'))
+            ->getToken($this->config->signer(), $this->config->signingKey())
         ;
 
-        return Cookie::create(self::COOKIE_NAME, (string) $token);
+        return Cookie::create(self::COOKIE_NAME, $token->toString());
     }
 
     public function parseCookie(string $data): ?array
     {
-        $token = $this->parser->parse($data);
+        $token = $this->config->parser()->parse($data);
 
-        if ($token->isExpired() || !$token->verify($this->signer, $this->secret)) {
+        if (
+            $token->isExpired(new \DateTimeImmutable())
+            || !$this->config->validator()->validate($token, ...$this->config->validationConstraints())
+        ) {
             return null;
         }
 
-        return array_map('strval', $token->getClaims());
+        return array_map(
+            static function ($value) {
+                if ($value instanceof \DateTimeInterface) {
+                    return $value->format('U');
+                }
+
+                return (string) $value;
+            },
+            $token->claims()->all()
+        );
     }
 
     /**
