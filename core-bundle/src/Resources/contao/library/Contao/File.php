@@ -331,12 +331,12 @@ class File extends System
 
 							if (!$this->arrImageViewSize[0] || !$this->arrImageViewSize[1] || $dimensions->isUndefined())
 							{
-								$this->arrImageViewSize = false;
+								$this->arrImageViewSize = array();
 							}
 						}
 						catch (\Exception $e)
 						{
-							$this->arrImageViewSize = false;
+							$this->arrImageViewSize = array();
 						}
 					}
 				}
@@ -344,10 +344,10 @@ class File extends System
 				return $this->arrImageViewSize;
 
 			case 'viewWidth':
-				return $this->imageViewSize !== false ? $this->imageViewSize[0] : null;
+				return $this->imageViewSize[0] ?? null;
 
 			case 'viewHeight':
-				return $this->imageViewSize !== false ? $this->imageViewSize[1] : null;
+				return $this->imageViewSize[1] ?? null;
 
 			case 'isImage':
 				return $this->isGdImage || $this->isSvgImage;
