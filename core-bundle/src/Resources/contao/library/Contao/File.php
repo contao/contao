@@ -344,10 +344,12 @@ class File extends System
 				return $this->arrImageViewSize;
 
 			case 'viewWidth':
-				return !empty($this->imageViewSize) ? $this->imageViewSize[0] : null;
+				$imageViewSize = $this->imageViewSize;
+				return !empty($imageViewSize) ? $imageViewSize[0] : null;
 
 			case 'viewHeight':
-				return !empty($this->imageViewSize) ? $this->imageViewSize[1] : null;
+				$imageViewSize = $this->imageViewSize;
+				return !empty($imageViewSize) ? $imageViewSize[1] : null;
 
 			case 'isImage':
 				return $this->isGdImage || $this->isSvgImage;
