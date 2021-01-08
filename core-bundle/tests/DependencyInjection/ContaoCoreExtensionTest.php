@@ -2715,7 +2715,6 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('contao.security.authentication_success_handler'),
                 new Reference('contao.security.authentication_failure_handler'),
                 [],
-                null, // Backwards compatibility
                 new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
                 new Reference('event_dispatcher', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
             ],
