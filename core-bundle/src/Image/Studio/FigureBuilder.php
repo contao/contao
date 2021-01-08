@@ -279,7 +279,7 @@ class FigureBuilder
         }
 
         if (is_numeric($identifier)) {
-            return $this->fromId($identifier);
+            return $this->fromId((int) $identifier);
         }
 
         return $this->fromPath($identifier);

@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\Security\Authentication;
 use Contao\CoreBundle\Security\Authentication\ContaoLoginAuthenticationListener;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
-use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenFactoryInterface;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -126,48 +125,28 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
 
     public function testHandlesTwoFactorAuthentication(): void
     {
-        $authenticatedToken = $this->createMock(UsernamePasswordToken::class);
+        $tokenWithCredentials = $this->createMock(TwoFactorTokenInterface::class);
 
-        $currentToken = $this->createMock(TwoFactorTokenInterface::class);
-        $currentToken
+        $token = $this->createMock(TwoFactorTokenInterface::class);
+        $token
             ->expects($this->once())
-            ->method('getAuthenticatedToken')
-            ->willReturn($authenticatedToken)
-        ;
-
-        $currentToken
-            ->expects($this->once())
-            ->method('getAttributes')
-            ->willReturn(['foo'])
+            ->method('createWithCredentials')
+            ->with('123456')
+            ->willReturn($tokenWithCredentials)
         ;
 
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
         $tokenStorage
             ->expects($this->once())
             ->method('getToken')
-            ->willReturn($currentToken)
-        ;
-
-        $newToken = $this->createMock(TwoFactorTokenInterface::class);
-        $newToken
-            ->expects($this->once())
-            ->method('setAttributes')
-            ->with(['foo'])
-        ;
-
-        $twoFactorTokenFactory = $this->createMock(TwoFactorTokenFactoryInterface::class);
-        $twoFactorTokenFactory
-            ->expects($this->once())
-            ->method('create')
-            ->with($authenticatedToken, '123456', 'provider_key', [])
-            ->willReturn($newToken)
+            ->willReturn($token)
         ;
 
         $authenticationManager = $this->createMock(AuthenticationManagerInterface::class);
         $authenticationManager
             ->expects($this->once())
             ->method('authenticate')
-            ->with($newToken)
+            ->with($tokenWithCredentials)
             ->willReturn(null)
         ;
 
@@ -175,11 +154,11 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
         $request->request->set('FORM_SUBMIT', 'tl_login');
         $request->request->set('verify', '123456');
 
-        $listener = $this->createListener($authenticationManager, $tokenStorage, $twoFactorTokenFactory);
+        $listener = $this->createListener($authenticationManager, $tokenStorage);
         $listener($this->mockRequestEvent($request));
     }
 
-    private function createListener(AuthenticationManagerInterface $authenticationManager, TokenStorageInterface $tokenStorage = null, TwoFactorTokenFactoryInterface $twoFactorTokenFactory = null): ContaoLoginAuthenticationListener
+    private function createListener(AuthenticationManagerInterface $authenticationManager, TokenStorageInterface $tokenStorage = null): ContaoLoginAuthenticationListener
     {
         $failureHandler = $this->createMock(AuthenticationFailureHandlerInterface::class);
         $failureHandler
@@ -191,10 +170,6 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
             $tokenStorage = $this->createMock(TokenStorageInterface::class);
         }
 
-        if (null === $twoFactorTokenFactory) {
-            $twoFactorTokenFactory = $this->createMock(TwoFactorTokenFactoryInterface::class);
-        }
-
         return new ContaoLoginAuthenticationListener(
             $tokenStorage,
             $authenticationManager,
@@ -204,7 +179,6 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
             $this->createMock(AuthenticationSuccessHandlerInterface::class),
             $failureHandler,
             [], // Options
-            $twoFactorTokenFactory,
             null, // Logger
             null // Event Dispatcher
         );
