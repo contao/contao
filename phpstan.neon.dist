@@ -43,9 +43,6 @@ parameters:
         # Ignore test case classes not starting with "Abstract" (backwards compatibility)
         - '#Abstract class Contao\\CoreBundle\\Tests\\.*TestCase should start with "Abstract" prefix\.#'
 
-        # Ignore backwards compatibility layer, to be removed in Contao 5.0
-        - '#Constructor of class Contao\\CoreBundle\\Security\\Authentication\\ContaoLoginAuthenticationListener has an unused parameter \$twoFactorTokenFactory\.#'
-
     reportUnmatchedIgnoredErrors: false
     checkGenericClassInNonGenericObjectType: false
     inferPrivatePropertyTypeFromConstructor: true
