@@ -40,8 +40,6 @@ class ContentImage extends ContentElement
 	 */
 	public function generate()
 	{
-		// Note: These file operations are only here for BC reasons and do not
-		//       serve any functional purpose anymore.
 		if (!$this->singleSRC)
 		{
 			return '';
