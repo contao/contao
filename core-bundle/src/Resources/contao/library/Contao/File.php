@@ -254,9 +254,11 @@ class File extends System
 					}
 					else
 					{
+						$imageFactory = System::getContainer()->get('contao.image.image_factory');
+
 						try
 						{
-							$dimensions = System::getContainer()->get('contao.image.image_factory')->create($this->strRootDir . '/' . $this->strFile)->getDimensions();
+							$dimensions = $imageFactory->create($this->strRootDir . '/' . $this->strFile)->getDimensions();
 
 							if (!$dimensions->isRelative() && !$dimensions->isUndefined())
 							{
