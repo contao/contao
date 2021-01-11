@@ -38,7 +38,7 @@ final class ScalarValueHolder implements SafeHTMLValueHolderInterface
         try {
             return (string) $this->value;
         } catch (\Throwable $e) {
-            throw new \RuntimeException(sprintf("Value '%s' could not be converted to string: %s", $this->name, $e->getMessage()), 0, $e);
+            throw new \RuntimeException("Value '{$this->name}' could not be converted to string: {$e->getMessage()}", 0, $e);
         }
     }
 }

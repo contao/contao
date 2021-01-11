@@ -31,7 +31,7 @@ final class ArrayValueHolder extends \ArrayIterator implements SafeHTMLValueHold
 
     public function __toString(): string
     {
-        throw new \RuntimeException("Value '{$this->valueName}' is an array and but was tried to be output as a string.");
+        throw new \RuntimeException("Array '{$this->valueName}' cannot be converted to string.");
     }
 
     /**
@@ -39,10 +39,7 @@ final class ArrayValueHolder extends \ArrayIterator implements SafeHTMLValueHold
      */
     public function offsetGet($key)
     {
-        return ProxyFactory::createValueHolder(
-            parent::offsetGet($key),
-            "{$this->valueName}.$key"
-        );
+        return ProxyFactory::createValueHolder(parent::offsetGet($key), "{$this->valueName}.$key");
     }
 
     /**
@@ -50,9 +47,6 @@ final class ArrayValueHolder extends \ArrayIterator implements SafeHTMLValueHold
      */
     public function current()
     {
-        return ProxyFactory::createValueHolder(
-            parent::current(),
-            "{$this->valueName}.{$this->key()}"
-        );
+        return ProxyFactory::createValueHolder(parent::current(), "{$this->valueName}.{$this->key()}");
     }
 }

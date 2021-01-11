@@ -50,8 +50,10 @@ class ProxyFactoryTest extends TestCase
 
         yield [[]];
 
-        yield [new class() implements SafeHTMLValueHolderInterface {
-        }];
+        yield [
+            new class() implements SafeHTMLValueHolderInterface {
+            },
+        ];
     }
 
     public function testCreateValueHolderWrapsScalars(): void

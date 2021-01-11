@@ -41,7 +41,6 @@ final class ObjectValueHolder implements SafeHTMLValueHolderInterface
     {
         $this->object = $object;
         $this->name = $name;
-
         $this->class = \get_class($this->object);
     }
 
@@ -49,10 +48,7 @@ final class ObjectValueHolder implements SafeHTMLValueHolderInterface
     {
         // Properties
         if (isset($this->object->$item) || \array_key_exists((string) $item, (array) $this->object)) {
-            return ProxyFactory::createValueHolder(
-                $this->object->$item,
-                "{$this->name}.$item"
-            );
+            return ProxyFactory::createValueHolder($this->object->$item, "{$this->name}.$item");
         }
 
         // Methods
@@ -63,10 +59,7 @@ final class ObjectValueHolder implements SafeHTMLValueHolderInterface
             throw new \RuntimeException("Value '{$this->name}' of type {$this->class} does not support accessing {$item}.");
         }
 
-        return ProxyFactory::createValueHolder(
-            $this->object->$method(...$arguments),
-            "{$this->name}#$method"
-        );
+        return ProxyFactory::createValueHolder($this->object->$method(...$arguments), "{$this->name}#$method");
     }
 
     public function __toString(): string

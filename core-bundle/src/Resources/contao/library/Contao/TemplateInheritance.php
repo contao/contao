@@ -76,13 +76,18 @@ trait TemplateInheritance
 	 */
 	public function inherit()
 	{
-		// Forward to Twig if the template is available as "<template>.html.twig"
-		$twig = System::getContainer()->get('twig');
-		$twigTemplate = "{$this->strTemplate}.html.twig";
+		$container = System::getContainer();
 
-		if ($twig->getLoader()->exists($twigTemplate))
+		if ($container->has('twig'))
 		{
-			return $twig->render($twigTemplate, $this->getTwigContext());
+			$twig = $container->get('twig');
+			$twigTemplate = "{$this->strTemplate}.html.twig";
+
+			// Forward to Twig if the template is available as "<template>.html.twig"
+			if ($twig->getLoader()->exists($twigTemplate))
+			{
+				return $twig->render($twigTemplate, $this->getTwigContext());
+			}
 		}
 
 		$strBuffer = '';
@@ -111,7 +116,7 @@ trait TemplateInheritance
 				}
 				else
 				{
-					System::getContainer()
+					$container
 						->get('monolog.logger.contao')
 						->log(
 							LogLevel::ERROR,
@@ -338,14 +343,14 @@ trait TemplateInheritance
 	{
 		$context = $this->arrData;
 
-		// We're wrapping all values in proxy objects to bypass escaping and
-		// allowing the evaluation of callables.
+		// Wrap all values in proxy objects to bypass escaping and to allow
+		// evaluating callables
 		foreach ($context as $name => $value)
 		{
 			$context[$name] = ProxyFactory::createValueHolder($value, $name);
 		}
 
-		// We're also delegating calls to context sensitive template methods.
+		// Delegate calls to context sensitive template methods
 		if ($this instanceof FrontendTemplate)
 		{
 			foreach (array('section', 'sections') as $function)

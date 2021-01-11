@@ -41,12 +41,9 @@ final class InvokableValueHolder implements SafeHTMLValueHolderInterface
     public function invoke(...$args)
     {
         try {
-            return ProxyFactory::createValueHolder(
-                ($this->callable)(...$args),
-                $this->name
-            );
+            return ProxyFactory::createValueHolder(($this->callable)(...$args), $this->name);
         } catch (\Throwable $e) {
-            throw new \RuntimeException(sprintf("Value '%s' could not be invoked: %s", $this->name, $e->getMessage()), 0, $e);
+            throw new \RuntimeException("Value '{$this->name}' could not be invoked: {$e->getMessage()}", 0, $e);
         }
     }
 }

@@ -29,6 +29,11 @@ parameters:
             message: '#PHPDoc tag @param references unknown parameter: \$options#'
             path: %currentWorkingDirectory%/core-bundle/src/Image/PictureFactoryInterface.php
 
+        # Ignore proxy tests calling magic methods
+        -
+            message: '#Call to an undefined method Contao\\CoreBundle\\Twig\\Compat\\ObjectValueHolder::\w#'
+            path: %currentWorkingDirectory%/core-bundle/tests/Twig/Compat/ProxyFactoryTest.php
+
         # Ignore backwards compatibility layers when preferring lowest dependencies
         - '#Method Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface::dispatch\(\) invoked with 2 parameters, 1 required\.#'
 
@@ -42,10 +47,6 @@ parameters:
         # Ignore the missing transChoice() method of the Translator class
         - '#Call to an undefined method .*::transChoice\(\)\.#'
         - '#Trying to mock an undefined method transChoice\(\) on class Symfony\\Component\\Translation\\Translator\.#'
-
-        # Ignore proxy tests calling magic methods
-        - message: '#Call to an undefined method Contao\\CoreBundle\\Twig\\Compat\\ObjectValueHolder::\w#'
-          path: %currentWorkingDirectory%/core-bundle/tests/Twig/Compat/ProxyFactoryTest.php
 
     treatPhpDocTypesAsCertain: false
     checkGenericClassInNonGenericObjectType: false

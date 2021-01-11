@@ -285,7 +285,6 @@ EOF
         ;
 
         $twig = $this->createMock(Environment::class);
-
         $twig
             ->method('getLoader')
             ->willReturn($loader)

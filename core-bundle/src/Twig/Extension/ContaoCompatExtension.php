@@ -26,7 +26,6 @@ class ContaoCompatExtension extends AbstractExtension
     {
         /** @var EscaperExtension $extension */
         $extension = $twig->getExtension(EscaperExtension::class);
-
         $extension->addSafeClass(SafeHTMLValueHolderInterface::class, ['html']);
     }
 }
