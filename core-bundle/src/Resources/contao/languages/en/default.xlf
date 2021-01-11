@@ -2012,6 +2012,9 @@
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option</source>
       </trans-unit>
+      <trans-unit id="MSC.copyURL">
+        <source>Copy URL</source>
+      </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
       </trans-unit>

@@ -92,7 +92,7 @@ class InsertTagsListener
             case 'event':
                 return sprintf(
                     '<a href="%s" title="%s">%s</a>',
-                    $events->generateEventUrl($model, \in_array('absolute', $flags, true)),
+                    $events->generateEventUrl($model, \in_array('absolute', $flags, true)) ?: './',
                     StringUtil::specialchars($model->title),
                     $model->title
                 );
@@ -100,12 +100,12 @@ class InsertTagsListener
             case 'event_open':
                 return sprintf(
                     '<a href="%s" title="%s">',
-                    $events->generateEventUrl($model, \in_array('absolute', $flags, true)),
+                    $events->generateEventUrl($model, \in_array('absolute', $flags, true)) ?: './',
                     StringUtil::specialchars($model->title)
                 );
 
             case 'event_url':
-                return $events->generateEventUrl($model, \in_array('absolute', $flags, true));
+                return $events->generateEventUrl($model, \in_array('absolute', $flags, true)) ?: './';
 
             case 'event_title':
                 return StringUtil::specialchars($model->title);

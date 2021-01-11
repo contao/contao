@@ -11,10 +11,16 @@
 namespace Contao;
 
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
+use Contao\CoreBundle\Image\Studio\FigureBuilder;
+use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\Image\ImageInterface;
+use Contao\Image\PictureConfiguration;
 use MatthiasMullie\Minify\CSS;
 use MatthiasMullie\Minify\JS;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\VarDumper\VarDumper;
+use Webmozart\PathUtil\Path;
 
 /**
  * Parses and outputs template files
@@ -387,6 +393,53 @@ abstract class Template extends Controller
 	public function trans($strId, array $arrParams=array(), $strDomain='contao_default')
 	{
 		return System::getContainer()->get('translator')->trans($strId, $arrParams, $strDomain);
+	}
+
+	/**
+	 * Render a figure
+	 *
+	 * The provided configuration array is used to configure a FigureBuilder.
+	 * If not explicitly set, the default template "image.html5" will be used
+	 * to render the results. To use the core's default Twig template, pass
+	 * "@ContaoCore/Image/Studio/figure.html.twig" as $template argument.
+	 *
+	 * @param int|string|FilesModel|ImageInterface       $from          Can be a FilesModel, an ImageInterface, a tl_files UUID/ID/path or a file system path
+	 * @param int|string|array|PictureConfiguration|null $size          A picture size configuration or reference
+	 * @param array<string, mixed>                       $configuration Configuration for the FigureBuilder
+	 * @param string                                     $template      A Contao or Twig template
+	 *
+	 * @return string
+	 */
+	public function figure($from, $size, $configuration = array(), $template = 'image')
+	{
+		$configuration['from'] = $from;
+		$configuration['size'] = $size;
+
+		/** @var FigureBuilder $figureBuilder */
+		$figureBuilder = System::getContainer()
+			->get(Studio::class)
+			->createFigureBuilder();
+
+		$propertyAccessor = PropertyAccess::createPropertyAccessor();
+
+		foreach ($configuration as $property => $value)
+		{
+			$propertyAccessor->setValue($figureBuilder, $property, $value);
+		}
+
+		$figure = $figureBuilder->build();
+
+		if ('twig' === Path::getExtension($template, true))
+		{
+			return System::getContainer()
+				->get('twig')
+				->render($template, array('figure' => $figure));
+		}
+
+		$imageTemplate = new FrontendTemplate($template);
+		$figure->applyLegacyTemplateData($imageTemplate);
+
+		return $imageTemplate->parse();
 	}
 
 	/**

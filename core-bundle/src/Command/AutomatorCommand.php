@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Command;
 use Contao\Automator;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -61,7 +62,7 @@ class AutomatorCommand extends Command
 
         try {
             $this->runAutomator($input, $output);
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             $output->writeln(sprintf('%s (see help contao:automator).', $e->getMessage()));
 
             return 1;
@@ -122,7 +123,7 @@ class AutomatorCommand extends Command
 
         if (null !== $task) {
             if (!\in_array($task, $commands, true)) {
-                throw new \InvalidArgumentException(sprintf('Invalid task "%s"', $task)); // no full stop here
+                throw new InvalidArgumentException(sprintf('Invalid task "%s"', $task)); // no full stop here
             }
 
             return $task;

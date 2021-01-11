@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Image\Studio\LegacyFigureBuilderTrait;
 use Patchwork\Utf8;
 
 /**
@@ -31,6 +32,8 @@ use Patchwork\Utf8;
  */
 class ModuleEventlist extends Events
 {
+	use LegacyFigureBuilderTrait;
+
 	/**
 	 * Current date object
 	 * @var Date
@@ -269,20 +272,7 @@ class ModuleEventlist extends Events
 		$dayCount = 0;
 		$eventCount = 0;
 		$headerCount = 0;
-		$imgSize = false;
 
-		// Override the default image size
-		if ($this->imgSize)
-		{
-			$size = StringUtil::deserialize($this->imgSize);
-
-			if ($size[0] > 0 || $size[1] > 0 || is_numeric($size[2]) || ($size[2][0] ?? null) === '_')
-			{
-				$imgSize = $this->imgSize;
-			}
-		}
-
-		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 		$uuids = array();
 
 		for ($i=$offset; $i<$limit; $i++)
@@ -358,32 +348,40 @@ class ModuleEventlist extends Events
 			$objTemplate->addBefore = false;
 
 			// Add an image
-			if ($event['addImage'] && $event['singleSRC'])
+			if ($event['addImage'] && null !== ($figureBuilder = $this->getFigureBuilderIfResourceExists($event['singleSRC'])))
 			{
-				$objModel = FilesModel::findByUuid($event['singleSRC']);
+				/** @var CalendarEventsModel $eventModel */
+				$eventModel = CalendarEventsModel::findByPk($event['id']);
+				$imgSize = $eventModel->size ?: null;
 
-				if ($objModel !== null && is_file($projectDir . '/' . $objModel->path))
+				// Override the default image size
+				if ($this->imgSize)
 				{
-					if ($imgSize)
+					$size = StringUtil::deserialize($this->imgSize);
+
+					if ($size[0] > 0 || $size[1] > 0 || is_numeric($size[2]) || ($size[2][0] ?? null) === '_')
 					{
-						$event['size'] = $imgSize;
-					}
-
-					$event['singleSRC'] = $objModel->path;
-					$this->addImageToTemplate($objTemplate, $event, null, null, $objModel);
-
-					// Link to the event if no image link has been defined
-					if (!$objTemplate->fullsize && !$objTemplate->imageUrl)
-					{
-						// Unset the image title attribute
-						$picture = $objTemplate->picture;
-						unset($picture['title']);
-						$objTemplate->picture = $picture;
-
-						// Link to the event
-						$objTemplate->linkTitle = $objTemplate->readMore;
+						$imgSize = $this->imgSize;
 					}
 				}
+
+				$figure = $figureBuilder
+					->setSize($imgSize)
+					->setMetadata($eventModel->getOverwriteMetadata())
+					->enableLightbox($eventModel->fullsize)
+					->build();
+
+				// Rebuild with link to event if none is set
+				if (!$figure->getLinkHref())
+				{
+					$figure = $figureBuilder
+						->setLinkHref($event['href'])
+						->setLinkAttribute('title', $objTemplate->readMore)
+						->setOptions(array('linkTitle' => $objTemplate->readMore)) // Backwards compatibility
+						->build();
+				}
+
+				$figure->applyLegacyTemplateData($objTemplate, $eventModel->imagemargin, $eventModel->floating);
 			}
 
 			$objTemplate->enclosure = array();
