@@ -274,7 +274,7 @@ abstract class Module extends Frontend
 		$groups = array();
 
 		// Get all groups of the current front end user
-		if (FE_USER_LOGGED_IN)
+		if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
 		{
 			$this->import(FrontendUser::class, 'User');
 			$groups = $this->User->groups;

@@ -35,9 +35,10 @@ class ModulePersonalData extends Module
 	 */
 	public function generate()
 	{
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+		$container = System::getContainer();
+		$request = $container->get('request_stack')->getCurrentRequest();
 
-		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
+		if ($request && $container->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['personalData'][0]) . ' ###';
@@ -52,7 +53,7 @@ class ModulePersonalData extends Module
 		$this->editable = StringUtil::deserialize($this->editable);
 
 		// Return if there are not editable fields or if there is no logged in user
-		if (empty($this->editable) || !\is_array($this->editable) || !FE_USER_LOGGED_IN)
+		if (empty($this->editable) || !\is_array($this->editable) || !$container->get('contao.security.token_checker')->hasFrontendUser())
 		{
 			return '';
 		}
