@@ -37,11 +37,14 @@ use Imagine\Image\Box;
 use Imagine\Image\ImageInterface as ImagineImageInterface;
 use Imagine\Image\ImagineInterface;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Filesystem;
 use Webmozart\PathUtil\Path;
 
 class ImageFactoryTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     /**
      * @var Filesystem
      */
@@ -115,7 +118,7 @@ class ImageFactoryTest extends TestCase
         $path = $this->getFixturesDir().'/assets/images/dummy.svg';
 
         if (!$this->filesystem->exists(\dirname($path))) {
-            $this->filesystem->mkdir(\dirname($path), 0777);
+            $this->filesystem->mkdir(\dirname($path));
         }
 
         $this->filesystem->dumpFile($path, '');
@@ -528,11 +531,11 @@ class ImageFactoryTest extends TestCase
     /**
      * @group legacy
      * @dataProvider getInvalidImportantParts
-     *
-     * @expectedDeprecation Since contao/core-bundle 4.8: Defining the important part in absolute pixels has been deprecated %s.
      */
     public function testCreatesAnImageObjectFromAnImagePathWithInvalidImportantPart($invalid, $expected): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.8: Defining the important part in absolute pixels has been deprecated %s.');
+
         $path = $this->getFixturesDir().'/images/dummy.jpg';
 
         /** @var FilesModel&MockObject $filesModel */
@@ -633,11 +636,11 @@ class ImageFactoryTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.
      */
     public function testExecutesTheExecuteResizeHook(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.');
+
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpg';
 
         System::setContainer($this->getContainerWithContaoConfiguration($this->getFixturesDir()));
@@ -701,7 +704,7 @@ class ImageFactoryTest extends TestCase
         $projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
         if (!$fs->exists(\dirname($projectDir.'/'.$path))) {
-            $fs->mkdir(\dirname($projectDir.'/'.$path), 0777);
+            $fs->mkdir(\dirname($projectDir.'/'.$path));
         }
 
         $fs->dumpFile($projectDir.'/'.$path, '');
@@ -711,11 +714,11 @@ class ImageFactoryTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.
      */
     public function testExecutesTheGetImageHook(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.');
+
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpg';
 
         System::setContainer($this->getContainerWithContaoConfiguration($this->getFixturesDir()));
@@ -789,7 +792,7 @@ class ImageFactoryTest extends TestCase
         $projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
         if (!$fs->exists(\dirname($projectDir.'/'.$path))) {
-            $fs->mkdir(\dirname($projectDir.'/'.$path), 0777);
+            $fs->mkdir(\dirname($projectDir.'/'.$path));
         }
 
         $fs->dumpFile($projectDir.'/'.$path, '');
@@ -799,11 +802,11 @@ class ImageFactoryTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.
      */
     public function testIgnoresAnEmptyHookReturnValue(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.');
+
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpg';
 
         System::setContainer($this->getContainerWithContaoConfiguration($this->getFixturesDir()));

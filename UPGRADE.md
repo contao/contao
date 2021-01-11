@@ -1,5 +1,21 @@
 # API changes
 
+## Version 4.* to 4.11
+
+Loading MooTools and jQuery from CDN is no longer supported, because it does
+not provide any advantage anymore.
+
+More information: https://github.com/contao/contao/pull/2438
+
+## Version 4.* to 4.10
+
+### CSS classes "first" and "last"
+
+The CSS classes "first" and "last" are no longer applied to articles and
+content elements. Use CSS selectors instead.
+
+More information: https://github.com/contao/contao/issues/239
+
 ## Version 4.* to 4.8
 
 ### Contao image 1.0

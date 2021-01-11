@@ -252,7 +252,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 					'title'           => 'maxlength="255"',
 					'alt'             => 'maxlength="255"',
 					'link'            => array('attributes'=>'maxlength="255"', 'dcaPicker'=>true),
-					'caption'         => 'maxlength="255"'
+					'caption'         => array('type'=>'textarea')
 				)
 			),
 			'sql'                     => "blob NULL"
@@ -547,7 +547,7 @@ class tl_files extends Backend
 
 		$arrData = StringUtil::deserialize($objData->data);
 
-		if (!is_array($arrData))
+		if (!is_array($arrData) || !isset($arrData['content']))
 		{
 			return;
 		}
@@ -601,18 +601,21 @@ class tl_files extends Backend
 		}
 
 		// Check the length without the file extension
-		if ($dc->activeRecord && $varValue != '')
+		if ($dc->activeRecord && $varValue)
 		{
-			$intMaxlength = $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['maxlength'];
+			$intMaxlength = $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['maxlength'] ?? null;
 
-			if ($dc->activeRecord->type == 'file')
+			if ($intMaxlength)
 			{
-				$intMaxlength -= (strlen($dc->activeRecord->extension) + 1);
-			}
+				if ($dc->activeRecord->type == 'file')
+				{
+					$intMaxlength -= (strlen($dc->activeRecord->extension) + 1);
+				}
 
-			if ($intMaxlength && Utf8::strlen($varValue) > $intMaxlength)
-			{
-				throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['maxlength'], $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['label'][0], $intMaxlength));
+				if (Utf8::strlen($varValue) > $intMaxlength)
+				{
+					throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['maxlength'], $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['label'][0], $intMaxlength));
+				}
 			}
 		}
 
@@ -717,7 +720,7 @@ class tl_files extends Backend
 	 */
 	public function uploadFile($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (isset($row['type']) && $row['type'] == 'folder' && !$GLOBALS['TL_DCA']['tl_files']['config']['closed'] && !$GLOBALS['TL_DCA']['tl_files']['config']['notCreatable'] && Input::get('act') != 'select')
+		if (($row['type'] ?? null) == 'folder' && !($GLOBALS['TL_DCA']['tl_files']['config']['closed'] ?? null) && !($GLOBALS['TL_DCA']['tl_files']['config']['notCreatable'] ?? null) && Input::get('act') != 'select')
 		{
 			return '<a href="' . $this->addToUrl($href . '&amp;pid=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '" ' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ';
 		}
@@ -830,24 +833,6 @@ class tl_files extends Backend
 		$strPath = $dc->id;
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
-		// Check if the folder has been renamed (see #6432, #934)
-		if (Input::post('name') && !is_dir($projectDir . '/' . $strPath))
-		{
-			if (Validator::isInsecurePath(Input::post('name')))
-			{
-				throw new RuntimeException('Invalid file or folder name ' . Input::post('name'));
-			}
-
-			$count = 0;
-			$strName = basename($strPath);
-			$strNewPath = str_replace($strName, Input::post('name'), $strPath, $count);
-
-			if ($strNewPath && $count > 0 && is_dir($projectDir . '/' . $strNewPath))
-			{
-				$strPath = $strNewPath;
-			}
-		}
-
 		// Only show for folders (see #5660)
 		if (!is_dir($projectDir . '/' . $strPath))
 		{
@@ -890,7 +875,7 @@ class tl_files extends Backend
 			}
 		}
 
-		$class = $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['tl_class'] . ' cbx';
+		$class = ($GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['tl_class'] ?? '') . ' cbx';
 
 		if (in_array(Input::get('act'), array('editAll', 'overrideAll')))
 		{
@@ -975,7 +960,7 @@ class tl_files extends Backend
 			}
 		}
 
-		$class = $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['tl_class'] . ' cbx';
+		$class = ($GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['tl_class'] ?? '') . ' cbx';
 
 		if (in_array(Input::get('act'), array('editAll', 'overrideAll')))
 		{

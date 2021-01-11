@@ -17,7 +17,7 @@ use Contao\CoreBundle\EventListener\RequestTokenListener;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -30,7 +30,7 @@ class RequestTokenListenerTest extends TestCase
         $request = Request::create('/account.html', 'POST');
         $request->setMethod('POST');
         $request->attributes->set('_token_check', true);
-        $request->cookies = new ParameterBag(['unrelated-cookie' => 'to-activate-csrf']);
+        $request->cookies = new InputBag(['unrelated-cookie' => 'to-activate-csrf']);
 
         $this->validateRequestTokenForRequest($request);
     }
@@ -75,7 +75,7 @@ class RequestTokenListenerTest extends TestCase
         $request = Request::create('/account.html');
         $request->setMethod('POST');
         $request->attributes->set('_token_check', true);
-        $request->cookies = new ParameterBag(['csrf_contao_csrf_token' => 'value']);
+        $request->cookies = new InputBag(['csrf_contao_csrf_token' => 'value']);
 
         $this->validateRequestTokenForRequest($request, false);
     }
@@ -101,13 +101,19 @@ class RequestTokenListenerTest extends TestCase
 
         $request = Request::create('/account.html');
         $request->setMethod('POST');
-        $request->cookies = new ParameterBag(['unrelated-cookie' => 'to-activate-csrf']);
+        $request->cookies = new InputBag(['unrelated-cookie' => 'to-activate-csrf']);
 
         $event = $this->createMock(RequestEvent::class);
         $event
             ->expects($this->once())
             ->method('getRequest')
             ->willReturn($request)
+        ;
+
+        $event
+            ->expects($this->once())
+            ->method('isMasterRequest')
+            ->willReturn(true)
         ;
 
         $listener = new RequestTokenListener($framework, $scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
@@ -130,13 +136,19 @@ class RequestTokenListenerTest extends TestCase
         $request = Request::create('/account.html');
         $request->setMethod('POST');
         $request->attributes->set('_token_check', true);
-        $request->cookies = new ParameterBag(['unrelated-cookie' => 'to-activate-csrf']);
+        $request->cookies = new InputBag(['unrelated-cookie' => 'to-activate-csrf']);
 
         $event = $this->createMock(RequestEvent::class);
         $event
             ->expects($this->once())
             ->method('getRequest')
             ->willReturn($request)
+        ;
+
+        $event
+            ->expects($this->once())
+            ->method('isMasterRequest')
+            ->willReturn(true)
         ;
 
         $listener = new RequestTokenListener($framework, $scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
@@ -160,13 +172,19 @@ class RequestTokenListenerTest extends TestCase
         $request = Request::create('/account.html');
         $request->setMethod('GET');
         $request->attributes->set('_token_check', true);
-        $request->cookies = new ParameterBag(['unrelated-cookie' => 'to-activate-csrf']);
+        $request->cookies = new InputBag(['unrelated-cookie' => 'to-activate-csrf']);
 
         $event = $this->createMock(RequestEvent::class);
         $event
             ->expects($this->once())
             ->method('getRequest')
             ->willReturn($request)
+        ;
+
+        $event
+            ->expects($this->once())
+            ->method('isMasterRequest')
+            ->willReturn(true)
         ;
 
         $listener = new RequestTokenListener($framework, $scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
@@ -187,7 +205,7 @@ class RequestTokenListenerTest extends TestCase
         $request = Request::create('/account.html');
         $request->setMethod('POST');
         $request->attributes->set('_token_check', true);
-        $request->cookies = new ParameterBag(['unrelated-cookie' => 'to-activate-csrf']);
+        $request->cookies = new InputBag(['unrelated-cookie' => 'to-activate-csrf']);
         $request->headers->set('X-Requested-With', 'XMLHttpRequest');
 
         $event = $this->createMock(RequestEvent::class);
@@ -195,6 +213,12 @@ class RequestTokenListenerTest extends TestCase
             ->expects($this->once())
             ->method('getRequest')
             ->willReturn($request)
+        ;
+
+        $event
+            ->expects($this->once())
+            ->method('isMasterRequest')
+            ->willReturn(true)
         ;
 
         $listener = new RequestTokenListener($framework, $scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
@@ -214,7 +238,7 @@ class RequestTokenListenerTest extends TestCase
 
         $request = Request::create('/account.html');
         $request->setMethod('POST');
-        $request->cookies = new ParameterBag(['unrelated-cookie' => 'to-activate-csrf']);
+        $request->cookies = new InputBag(['unrelated-cookie' => 'to-activate-csrf']);
         $request->attributes->set('_token_check', false);
 
         $event = $this->createMock(RequestEvent::class);
@@ -222,6 +246,12 @@ class RequestTokenListenerTest extends TestCase
             ->expects($this->once())
             ->method('getRequest')
             ->willReturn($request)
+        ;
+
+        $event
+            ->expects($this->once())
+            ->method('isMasterRequest')
+            ->willReturn(true)
         ;
 
         $listener = new RequestTokenListener($framework, $scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
@@ -247,13 +277,46 @@ class RequestTokenListenerTest extends TestCase
 
         $request = Request::create('/account.html');
         $request->setMethod('POST');
-        $request->cookies = new ParameterBag(['unrelated-cookie' => 'to-activate-csrf']);
+        $request->cookies = new InputBag(['unrelated-cookie' => 'to-activate-csrf']);
 
         $event = $this->createMock(RequestEvent::class);
         $event
             ->expects($this->once())
             ->method('getRequest')
             ->willReturn($request)
+        ;
+
+        $event
+            ->expects($this->once())
+            ->method('isMasterRequest')
+            ->willReturn(true)
+        ;
+
+        $listener = new RequestTokenListener($framework, $scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
+        $listener($event);
+    }
+
+    public function testDoesNotValidateTheRequestTokenIfNotAMasterRequest(): void
+    {
+        $framework = $this->mockContaoFramework();
+        $framework
+            ->expects($this->never())
+            ->method('getAdapter')
+        ;
+
+        $scopeMatcher = $this->createMock(ScopeMatcher::class);
+        $csrfTokenManager = $this->createMock(CsrfTokenManagerInterface::class);
+
+        $event = $this->createMock(RequestEvent::class);
+        $event
+            ->expects($this->never())
+            ->method('getRequest')
+        ;
+
+        $event
+            ->expects($this->once())
+            ->method('isMasterRequest')
+            ->willReturn(false)
         ;
 
         $listener = new RequestTokenListener($framework, $scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
@@ -278,6 +341,12 @@ class RequestTokenListenerTest extends TestCase
             ->expects($this->once())
             ->method('getRequest')
             ->willReturn($request)
+        ;
+
+        $event
+            ->expects($this->once())
+            ->method('isMasterRequest')
+            ->willReturn(true)
         ;
 
         $listener = new RequestTokenListener($framework, $scopeMatcher, $csrfTokenManager, 'contao_csrf_token');

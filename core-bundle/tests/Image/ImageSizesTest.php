@@ -17,11 +17,11 @@ use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\ImageSizesEvent;
 use Contao\CoreBundle\Image\ImageSizes;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Translation\Translator;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Service\ResetInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ImageSizesTest extends TestCase
 {
@@ -50,7 +50,7 @@ class ImageSizesTest extends TestCase
             ],
             'exact' => [
                 'crop',
-                'left_top',    'center_top',    'right_top',
+                'left_top', 'center_top', 'right_top',
                 'left_center', 'center_center', 'right_center',
                 'left_bottom', 'center_bottom', 'right_bottom',
             ],
@@ -63,7 +63,7 @@ class ImageSizesTest extends TestCase
             $this->connection,
             $this->eventDispatcher,
             $this->mockContaoFramework(),
-            $this->createMock(Translator::class)
+            $this->createMock(TranslatorInterface::class)
         );
     }
 
@@ -167,11 +167,11 @@ class ImageSizesTest extends TestCase
 
         $this->connection
             ->expects($this->exactly(2))
-            ->method('fetchAll')
+            ->method('fetchAllAssociative')
             ->willReturn([])
         ;
 
-        // Test that fetchAll() is only called once
+        // Test that fetchAllAssociative() is only called once
         $this->imageSizes->getAllOptions();
         $this->imageSizes->getAllOptions();
 
@@ -198,7 +198,7 @@ class ImageSizesTest extends TestCase
     {
         $this->connection
             ->expects($this->atLeastOnce())
-            ->method('fetchAll')
+            ->method('fetchAllAssociative')
             ->willReturn($imageSizes)
         ;
     }

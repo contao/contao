@@ -12,7 +12,6 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\DataContainer;
-use Contao\Date;
 use Contao\Image;
 use Contao\Input;
 use Contao\StringUtil;
@@ -30,7 +29,8 @@ $GLOBALS['TL_DCA']['tl_member_group'] = array
 		(
 			'keys' => array
 			(
-				'id' => 'primary'
+				'id' => 'primary',
+				'disable,start,stop' => 'index'
 			)
 		)
 	),
@@ -76,7 +76,7 @@ $GLOBALS['TL_DCA']['tl_member_group'] = array
 			(
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"'
+				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"'
 			),
 			'toggle' => array
 			(
@@ -192,9 +192,7 @@ class tl_member_group extends Backend
 	public function addIcon($row, $label)
 	{
 		$image = 'mgroup';
-		$time = Date::floorToMinute();
-
-		$disabled = ($row['start'] !== '' && $row['start'] > $time) || ($row['stop'] !== '' && $row['stop'] < $time);
+		$disabled = ($row['start'] !== '' && $row['start'] > time()) || ($row['stop'] !== '' && $row['stop'] <= time());
 
 		if ($disabled || $row['disable'])
 		{
@@ -261,7 +259,7 @@ class tl_member_group extends Backend
 		}
 
 		// Trigger the onload_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_member_group']['config']['onload_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_member_group']['config']['onload_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_member_group']['config']['onload_callback'] as $callback)
 			{
@@ -305,7 +303,7 @@ class tl_member_group extends Backend
 		$blnVisible = !$blnVisible;
 
 		// Trigger the save_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_member_group']['fields']['disable']['save_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_member_group']['fields']['disable']['save_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_member_group']['fields']['disable']['save_callback'] as $callback)
 			{
@@ -334,7 +332,7 @@ class tl_member_group extends Backend
 		}
 
 		// Trigger the onsubmit_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_member_group']['config']['onsubmit_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_member_group']['config']['onsubmit_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_member_group']['config']['onsubmit_callback'] as $callback)
 			{

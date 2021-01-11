@@ -15,6 +15,7 @@ framework:
     translator: { fallbacks: ['%locale%'] }
     secret: '%env(APP_SECRET)%'
     router:
+        utf8: true
         resource: contao_manager.routing_loader::loadFromPlugins
         type: service
         strict_requirements: '%kernel.debug%'
@@ -55,8 +56,6 @@ doctrine:
                     collate: utf8mb4_unicode_ci
                     engine: InnoDB
                     row_format: DYNAMIC
-                options:
-                    !php/const PDO::MYSQL_ATTR_MULTI_STATEMENTS: false
         types:
             binary_string:
                 class: Contao\CoreBundle\Doctrine\DBAL\Types\BinaryStringType
@@ -112,3 +111,10 @@ fos_http_cache:
         annotations:
             enabled: false
         max_header_value_length: 4096
+
+# Scheb 2FA configuration
+scheb_two_factor:
+    trusted_device:
+        enabled: true
+    backup_codes:
+        enabled: true

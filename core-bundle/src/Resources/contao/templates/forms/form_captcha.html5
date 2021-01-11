@@ -27,7 +27,7 @@
         var e = document.getElementById('ctrl_<?= $this->id ?>'),
             p = e.parentNode, f = p.parentNode;
 
-        if ('fieldset' === f.nodeName.toLowerCase() && 1 === f.children.length) {
+        if (f.classList.contains('widget-captcha') || 'fieldset' === f.nodeName.toLowerCase() && 1 === f.children.length) {
           p = f;
         }
 

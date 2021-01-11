@@ -87,7 +87,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			(
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"'
+				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"'
 			),
 			'show' => array
 			(
@@ -469,9 +469,13 @@ class tl_newsletter extends Backend
 		};
 
 		// Generate alias if there is none
-		if ($varValue == '')
+		if (!$varValue)
 		{
 			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->subject, NewsletterChannelModel::findByPk($dc->activeRecord->pid)->jumpTo, $aliasExists);
+		}
+		elseif (preg_match('/^[1-9]\d*$/', $varValue))
+		{
+			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasNumeric'], $varValue));
 		}
 		elseif ($aliasExists($varValue))
 		{

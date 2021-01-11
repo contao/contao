@@ -105,14 +105,14 @@ class InsertTags extends Controller
 		for ($_rit=0, $_cnt=\count($tags); $_rit<$_cnt; $_rit+=2)
 		{
 			$strBuffer .= $tags[$_rit];
-			$strTag = $tags[$_rit+1] ?? '';
 
 			// Skip empty tags
-			if ($strTag == '')
+			if (empty($tags[$_rit+1]))
 			{
 				continue;
 			}
 
+			$strTag = $tags[$_rit+1];
 			$flags = explode('|', $strTag);
 			$tag = array_shift($flags);
 			$elements = explode('::', $tag);
@@ -127,7 +127,7 @@ class InsertTags extends Controller
 			// Skip certain elements if the output will be cached
 			if ($blnCache)
 			{
-				if ($elements[0] == 'date' || $elements[0] == 'ua' || $elements[0] == 'post' || $elements[1] == 'back' || $elements[1] == 'referer' || \in_array('uncached', $flags) || strncmp($elements[0], 'cache_', 6) === 0)
+				if ($elements[0] == 'date' || $elements[0] == 'ua' || $elements[0] == 'post' || ($elements[1] ?? null) == 'back' || ($elements[1] ?? null) == 'referer' || \in_array('uncached', $flags) || strncmp($elements[0], 'cache_', 6) === 0)
 				{
 					/** @var FragmentHandler $fragmentHandler */
 					$fragmentHandler = $container->get('fragment.handler');
@@ -168,7 +168,7 @@ class InsertTags extends Controller
 
 				// Accessibility tags
 				case 'lang':
-					if ($elements[1] == '')
+					if (!$elements[1])
 					{
 						$arrCache[$strTag] = '</span>';
 					}
@@ -187,7 +187,7 @@ class InsertTags extends Controller
 				case 'email':
 				case 'email_open':
 				case 'email_url':
-					if ($elements[1] == '')
+					if (!$elements[1])
 					{
 						$arrCache[$strTag] = '';
 						break;
@@ -294,7 +294,7 @@ class InsertTags extends Controller
 						$this->import(FrontendUser::class, 'User');
 						$value = $this->User->{$elements[1]};
 
-						if ($value == '')
+						if (!$value)
 						{
 							$arrCache[$strTag] = $value;
 							break;
@@ -302,7 +302,7 @@ class InsertTags extends Controller
 
 						$this->loadDataContainer('tl_member');
 
-						if ($GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['inputType'] == 'password')
+						if (($GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['inputType'] ?? null) == 'password')
 						{
 							$arrCache[$strTag] = '';
 							break;
@@ -311,14 +311,14 @@ class InsertTags extends Controller
 						$value = StringUtil::deserialize($value);
 
 						// Decrypt the value
-						if ($GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['eval']['encrypt'])
+						if ($GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['eval']['encrypt'] ?? null)
 						{
 							$value = Encryption::decrypt($value);
 						}
 
-						$rgxp = $GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['eval']['rgxp'];
-						$opts = $GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['options'];
-						$rfrc = $GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['reference'];
+						$rgxp = $GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['eval']['rgxp'] ?? null;
+						$opts = $GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['options'] ?? null;
+						$rfrc = $GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['reference'] ?? null;
 
 						if ($rgxp == 'date')
 						{
@@ -459,15 +459,15 @@ class InsertTags extends Controller
 					switch (strtolower($elements[0]))
 					{
 						case 'link':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s%s>%s</a>', $strUrl, StringUtil::specialchars($strTitle), $strClass, $strTarget, $strName);
+							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s%s>%s</a>', $strUrl ?: './', StringUtil::specialchars($strTitle), $strClass, $strTarget, $strName);
 							break;
 
 						case 'link_open':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s%s>', $strUrl, StringUtil::specialchars($strTitle), $strClass, $strTarget);
+							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s%s>', $strUrl ?: './', StringUtil::specialchars($strTitle), $strClass, $strTarget);
 							break;
 
 						case 'link_url':
-							$arrCache[$strTag] = $strUrl;
+							$arrCache[$strTag] = $strUrl ?: './';
 							break;
 
 						case 'link_title':
@@ -603,7 +603,7 @@ class InsertTags extends Controller
 
 				// Conditional tags (if)
 				case 'iflng':
-					if ($elements[1] != '')
+					if ($elements[1])
 					{
 						$langs = StringUtil::trimsplit(',', $elements[1]);
 
@@ -637,7 +637,7 @@ class InsertTags extends Controller
 
 				// Conditional tags (if not)
 				case 'ifnlng':
-					if ($elements[1] != '')
+					if ($elements[1])
 					{
 						$langs = StringUtil::trimsplit(',', $elements[1]);
 
@@ -719,15 +719,15 @@ class InsertTags extends Controller
 
 				// Page
 				case 'page':
-					if ($objPage->pageTitle == '' && $elements[1] == 'pageTitle')
+					if (!$objPage->pageTitle && $elements[1] == 'pageTitle')
 					{
 						$elements[1] = 'title';
 					}
-					elseif ($objPage->parentPageTitle == '' && $elements[1] == 'parentPageTitle')
+					elseif (!$objPage->parentPageTitle && $elements[1] == 'parentPageTitle')
 					{
 						$elements[1] = 'parentTitle';
 					}
-					elseif ($objPage->mainPageTitle == '' && $elements[1] == 'mainPageTitle')
+					elseif (!$objPage->mainPageTitle && $elements[1] == 'mainPageTitle')
 					{
 						$elements[1] = 'mainTitle';
 					}
@@ -740,7 +740,7 @@ class InsertTags extends Controller
 				case 'ua':
 					$ua = Environment::get('agent');
 
-					if ($elements[1] != '')
+					if ($elements[1])
 					{
 						$arrCache[$strTag] = $ua->{$elements[1]};
 					}
@@ -753,7 +753,7 @@ class InsertTags extends Controller
 				// Abbreviations
 				case 'abbr':
 				case 'acronym':
-					if ($elements[1] != '')
+					if ($elements[1])
 					{
 						$arrCache[$strTag] = '<abbr title="' . StringUtil::specialchars($elements[1]) . '">';
 					}
@@ -896,7 +896,7 @@ class InsertTags extends Controller
 								$dimensions = ' width="' . StringUtil::specialchars($imgSize[0]) . '" height="' . StringUtil::specialchars($imgSize[1]) . '"';
 							}
 
-							$arrCache[$strTag] = '<img src="' . Controller::addFilesUrlTo($src) . '" ' . $dimensions . ' alt="' . StringUtil::specialchars($alt) . '"' . (($class != '') ? ' class="' . StringUtil::specialchars($class) . '"' : '') . '>';
+							$arrCache[$strTag] = '<img src="' . Controller::addFilesUrlTo($src) . '" ' . $dimensions . ' alt="' . StringUtil::specialchars($alt) . '"' . ($class ? ' class="' . StringUtil::specialchars($class) . '"' : '') . '>';
 						}
 
 						// Picture
@@ -919,9 +919,9 @@ class InsertTags extends Controller
 						}
 
 						// Add a lightbox link
-						if ($rel != '')
+						if ($rel)
 						{
-							$arrCache[$strTag] = '<a href="' . Controller::addFilesUrlTo($strFile) . '"' . (($alt != '') ? ' title="' . StringUtil::specialchars($alt) . '"' : '') . ' data-lightbox="' . StringUtil::specialchars($rel) . '">' . $arrCache[$strTag] . '</a>';
+							$arrCache[$strTag] = '<a href="' . Controller::addFilesUrlTo($strFile) . '"' . ($alt ? ' title="' . StringUtil::specialchars($alt) . '"' : '') . ' data-lightbox="' . StringUtil::specialchars($rel) . '">' . $arrCache[$strTag] . '</a>';
 						}
 					}
 					catch (\Exception $e)

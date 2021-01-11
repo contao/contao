@@ -53,8 +53,8 @@ class DropSearchMigration extends AbstractMigration
 
     public function run(): MigrationResult
     {
-        $this->connection->query('DROP TABLE IF EXISTS tl_search_index');
-        $this->connection->query('DROP TABLE IF EXISTS tl_search');
+        $this->connection->executeStatement('DROP TABLE IF EXISTS tl_search_index');
+        $this->connection->executeStatement('DROP TABLE IF EXISTS tl_search');
 
         return $this->createResult(true);
     }

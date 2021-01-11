@@ -16,7 +16,6 @@ use Contao\Controller;
 use Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\DataContainer;
-use Contao\Date;
 use Contao\Image;
 use Contao\Input;
 use Contao\LayoutModel;
@@ -51,7 +50,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			(
 				'id' => 'primary',
 				'alias' => 'index',
-				'pid,start,stop,published,sorting' => 'index'
+				'pid,published,inColumn,start,stop' => 'index'
 			)
 		)
 	),
@@ -117,7 +116,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			(
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"',
+				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"',
 				'button_callback'     => array('tl_article', 'deleteArticle')
 			),
 			'toggle' => array
@@ -556,9 +555,7 @@ class tl_article extends Backend
 	public function addIcon($row, $label)
 	{
 		$image = 'articles';
-		$time = Date::floorToMinute();
-
-		$unpublished = ($row['start'] != '' && $row['start'] > $time) || ($row['stop'] != '' && $row['stop'] < $time);
+		$unpublished = ($row['start'] && $row['start'] > time()) || ($row['stop'] && $row['stop'] <= time());
 
 		if ($unpublished || !$row['published'])
 		{
@@ -591,9 +588,13 @@ class tl_article extends Backend
 		};
 
 		// Generate an alias if there is none
-		if ($varValue == '')
+		if (!$varValue)
 		{
 			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->title, $dc->activeRecord->pid, $aliasExists);
+		}
+		elseif (preg_match('/^[1-9]\d*$/', $varValue))
+		{
+			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasNumeric'], $varValue));
 		}
 		elseif ($aliasExists($varValue))
 		{
@@ -613,7 +614,7 @@ class tl_article extends Backend
 	public function getActiveLayoutSections(DataContainer $dc)
 	{
 		// Show only active sections
-		if ($dc->activeRecord->pid)
+		if ($dc->activeRecord->pid ?? null)
 		{
 			$arrSections = array();
 			$objPage = PageModel::findWithDetails($dc->activeRecord->pid);
@@ -731,7 +732,7 @@ class tl_article extends Backend
 	 */
 	public function copyArticle($row, $href, $label, $title, $icon, $attributes, $table)
 	{
-		if ($GLOBALS['TL_DCA'][$table]['config']['closed'])
+		if ($GLOBALS['TL_DCA'][$table]['config']['closed'] ?? null)
 		{
 			return '';
 		}
@@ -823,7 +824,7 @@ class tl_article extends Backend
 			$objSession = System::getContainer()->get('session');
 
 			$session = $objSession->all();
-			$ids = $session['CURRENT']['IDS'];
+			$ids = $session['CURRENT']['IDS'] ?? array();
 
 			foreach ($ids as $id)
 			{
@@ -932,7 +933,7 @@ class tl_article extends Backend
 		}
 
 		// Trigger the onload_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_article']['config']['onload_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_article']['config']['onload_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_article']['config']['onload_callback'] as $callback)
 			{
@@ -973,7 +974,7 @@ class tl_article extends Backend
 		$objVersions->initialize();
 
 		// Trigger the save_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_article']['fields']['published']['save_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_article']['fields']['published']['save_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_article']['fields']['published']['save_callback'] as $callback)
 			{
@@ -1002,7 +1003,7 @@ class tl_article extends Backend
 		}
 
 		// Trigger the onsubmit_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_article']['config']['onsubmit_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_article']['config']['onsubmit_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_article']['config']['onsubmit_callback'] as $callback)
 			{

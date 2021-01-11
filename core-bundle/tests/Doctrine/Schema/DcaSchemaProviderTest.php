@@ -14,10 +14,11 @@ namespace Contao\CoreBundle\Tests\Doctrine\Schema;
 
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
 use Contao\CoreBundle\Tests\Doctrine\DoctrineTestCase;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
-use Doctrine\DBAL\Statement;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class DcaSchemaProviderTest extends DoctrineTestCase
 {
@@ -292,12 +293,6 @@ class DcaSchemaProviderTest extends DoctrineTestCase
 
     public function testCreatesTheTableDefinitions(): void
     {
-        $statement = $this->createMock(Statement::class);
-        $statement
-            ->method('fetch')
-            ->willReturn((object) ['Collation' => null])
-        ;
-
         $provider = $this->getProvider(
             [
                 'tl_member' => [
@@ -315,9 +310,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
                         'name' => 'KEY `name` (`firstname`, `lastname`)',
                     ],
                 ],
-            ],
-            [],
-            $statement
+            ]
         );
 
         $schema = $provider->createSchema();
@@ -351,14 +344,18 @@ class DcaSchemaProviderTest extends DoctrineTestCase
      */
     public function testAddsTheIndexLength(?int $expected, string $tableOptions, $largePrefixes = null, string $version = null, string $filePerTable = null, string $fileFormat = null): void
     {
-        $statement = $this->createMock(Statement::class);
-        $statement
-            ->method('fetch')
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('fetchOne')
+            ->willReturn($version)
+        ;
+
+        $connection
+            ->method('fetchAssociative')
             ->willReturnOnConsecutiveCalls(
-                (object) ['Value' => $largePrefixes],
-                (object) ['Value' => $version],
-                (object) ['Value' => $filePerTable],
-                (object) ['Value' => $fileFormat]
+                ['Value' => $largePrefixes],
+                ['Value' => $filePerTable],
+                ['Value' => $fileFormat]
             )
         ;
 
@@ -375,7 +372,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
                 ],
             ],
             [],
-            $statement
+            $connection
         );
 
         $schema = $provider->createSchema();
@@ -596,10 +593,15 @@ class DcaSchemaProviderTest extends DoctrineTestCase
 
     public function testHandlesFulltextIndexes(): void
     {
-        $statement = $this->createMock(Statement::class);
-        $statement
-            ->method('fetch')
-            ->willReturn((object) ['Value' => 'On'])
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('fetchAssociative')
+            ->willReturn(['Value' => 'On'])
+        ;
+
+        $connection
+            ->method('fetchOne')
+            ->willReturn('8.0.13')
         ;
 
         $provider = $this->getProvider(
@@ -615,7 +617,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
                 ],
             ],
             [],
-            $statement
+            $connection
         );
 
         $schema = $provider->createSchema();
@@ -732,5 +734,16 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $schema = $provider->createSchema();
 
         $this->assertCount(0, $schema->getTables());
+    }
+
+    /**
+     * @param Connection&MockObject $connection
+     */
+    private function getProvider(array $dca = [], array $file = [], Connection $connection = null, string $filter = null): DcaSchemaProvider
+    {
+        return new DcaSchemaProvider(
+            $this->mockContaoFrameworkWithInstaller($dca, $file),
+            $this->mockDoctrineRegistryWithConnection($connection, $filter)
+        );
     }
 }

@@ -410,22 +410,15 @@ class DcaSchemaProvider
 
         $largePrefix = $this->doctrine
             ->getConnection()
-            ->query("SHOW VARIABLES LIKE 'innodb_large_prefix'")
-            ->fetch(\PDO::FETCH_OBJ)
+            ->fetchAssociative("SHOW VARIABLES LIKE 'innodb_large_prefix'")
         ;
 
         // The variable no longer exists as of MySQL 8 and MariaDB 10.3
-        if (false === $largePrefix || '' === $largePrefix->Value) {
+        if (false === $largePrefix || '' === $largePrefix['Value']) {
             return 3072;
         }
 
-        $version = $this->doctrine
-            ->getConnection()
-            ->query('SELECT @@version as Value')
-            ->fetch(\PDO::FETCH_OBJ)
-        ;
-
-        [$ver] = explode('-', $version->Value);
+        [$ver] = explode('-', $this->doctrine->getConnection()->fetchOne('SELECT @@version'));
 
         // As there is no reliable way to get the vendor (see #84), we are
         // guessing based on the version number. The check will not be run
@@ -438,29 +431,27 @@ class DcaSchemaProvider
         }
 
         // The innodb_large_prefix option is disabled
-        if (!\in_array(strtolower((string) $largePrefix->Value), ['1', 'on'], true)) {
+        if (!\in_array(strtolower((string) $largePrefix['Value']), ['1', 'on'], true)) {
             return 767;
         }
 
         $filePerTable = $this->doctrine
             ->getConnection()
-            ->query("SHOW VARIABLES LIKE 'innodb_file_per_table'")
-            ->fetch(\PDO::FETCH_OBJ)
+            ->fetchAssociative("SHOW VARIABLES LIKE 'innodb_file_per_table'")
         ;
 
         // The innodb_file_per_table option is disabled
-        if (!\in_array(strtolower((string) $filePerTable->Value), ['1', 'on'], true)) {
+        if (!\in_array(strtolower((string) $filePerTable['Value']), ['1', 'on'], true)) {
             return 767;
         }
 
         $fileFormat = $this->doctrine
             ->getConnection()
-            ->query("SHOW VARIABLES LIKE 'innodb_file_format'")
-            ->fetch(\PDO::FETCH_OBJ)
+            ->fetchAssociative("SHOW VARIABLES LIKE 'innodb_file_format'")
         ;
 
         // The InnoDB file format is not Barracuda
-        if ('' !== $fileFormat->Value && 'barracuda' !== strtolower((string) $fileFormat->Value)) {
+        if ('' !== $fileFormat['Value'] && 'barracuda' !== strtolower((string) $fileFormat['Value'])) {
             return 767;
         }
 

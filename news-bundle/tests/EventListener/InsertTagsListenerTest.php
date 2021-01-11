@@ -99,6 +99,42 @@ class InsertTagsListenerTest extends ContaoTestCase
         );
     }
 
+    public function testHandlesEmptyUrls(): void
+    {
+        /** @var NewsModel&MockObject $newsModel */
+        $newsModel = $this->mockClassWithProperties(NewsModel::class);
+        $newsModel->headline = '"Foo" is not "bar"';
+        $newsModel->teaser = '<p>Foo does not equal bar.</p>';
+
+        $news = $this->mockAdapter(['generateNewsUrl']);
+        $news
+            ->method('generateNewsUrl')
+            ->willReturn('')
+        ;
+
+        $adapters = [
+            NewsModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => $newsModel]),
+            News::class => $news,
+        ];
+
+        $listener = new InsertTagsListener($this->mockContaoFramework($adapters));
+
+        $this->assertSame(
+            '<a href="./" title="&quot;Foo&quot; is not &quot;bar&quot;">"Foo" is not "bar"</a>',
+            $listener('news::2', false, null, [])
+        );
+
+        $this->assertSame(
+            '<a href="./" title="&quot;Foo&quot; is not &quot;bar&quot;">',
+            $listener('news_open::2', false, null, [])
+        );
+
+        $this->assertSame(
+            './',
+            $listener('news_url::2', false, null, [])
+        );
+    }
+
     public function testReturnsFalseIfTheTagIsUnknown(): void
     {
         $listener = new InsertTagsListener($this->mockContaoFramework());

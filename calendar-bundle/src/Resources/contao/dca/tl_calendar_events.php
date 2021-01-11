@@ -8,7 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-use Contao\Automator;
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Calendar;
@@ -21,6 +20,8 @@ use Contao\Date;
 use Contao\Events;
 use Contao\Image;
 use Contao\Input;
+use Contao\LayoutModel;
+use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Versions;
@@ -57,13 +58,17 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			array('tl_calendar_events', 'adjustTime'),
 			array('tl_calendar_events', 'scheduleUpdate')
 		),
+		'oninvalidate_cache_tags_callback' => array
+		(
+			array('tl_calendar_events', 'addSitemapCacheInvalidationTag'),
+		),
 		'sql' => array
 		(
 			'keys' => array
 			(
 				'id' => 'primary',
 				'alias' => 'index',
-				'pid,start,stop,published' => 'index'
+				'pid,published,featured,start,stop' => 'index'
 			)
 		)
 	),
@@ -114,7 +119,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			(
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"'
+				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"'
 			),
 			'toggle' => array
 			(
@@ -292,7 +297,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
 			'exclude'                 => true,
 			'inputType'               => 'serpPreview',
-			'eval'                    => array('url_callback'=>array('tl_calendar_events', 'getSerpUrl'), 'titleFields'=>array('pageTitle', 'title'), 'descriptionFields'=>array('description', 'teaser')),
+			'eval'                    => array('url_callback'=>array('tl_calendar_events', 'getSerpUrl'), 'title_tag_callback'=>array('tl_calendar_events', 'getTitleTag'), 'titleFields'=>array('pageTitle', 'title'), 'descriptionFields'=>array('description', 'teaser')),
 			'sql'                     => null
 		),
 		'location' => array
@@ -584,7 +589,7 @@ class tl_calendar_events extends Backend
 		// HOOK: comments extension required
 		if (!isset($bundles['ContaoCommentsBundle']))
 		{
-			$key = array_search('allowComments', $GLOBALS['TL_DCA']['tl_calendar_events']['list']['sorting']['headerFields']);
+			$key = array_search('allowComments', $GLOBALS['TL_DCA']['tl_calendar_events']['list']['sorting']['headerFields'] ?? array());
 			unset($GLOBALS['TL_DCA']['tl_calendar_events']['list']['sorting']['headerFields'][$key]);
 		}
 
@@ -636,6 +641,7 @@ class tl_calendar_events extends Backend
 			case 'show':
 			case 'delete':
 			case 'toggle':
+			case 'feature':
 				$objCalendar = $this->Database->prepare("SELECT pid FROM tl_calendar_events WHERE id=?")
 											  ->limit(1)
 											  ->execute($id);
@@ -704,9 +710,13 @@ class tl_calendar_events extends Backend
 		};
 
 		// Generate the alias if there is none
-		if ($varValue == '')
+		if (!$varValue)
 		{
 			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->title, CalendarModel::findByPk($dc->activeRecord->pid)->jumpTo, $aliasExists);
+		}
+		elseif (preg_match('/^[1-9]\d*$/', $varValue))
+		{
+			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasNumeric'], $varValue));
 		}
 		elseif ($aliasExists($varValue))
 		{
@@ -783,6 +793,43 @@ class tl_calendar_events extends Backend
 	public function getSerpUrl(CalendarEventsModel $model)
 	{
 		return Events::generateEventUrl($model, true);
+	}
+
+	/**
+	 * Return the title tag from the associated page layout
+	 *
+	 * @param CalendarEventsModel $model
+	 *
+	 * @return string
+	 */
+	public function getTitleTag(CalendarEventsModel $model)
+	{
+		/** @var CalendarModel $calendar */
+		if (!$calendar = $model->getRelated('pid'))
+		{
+			return '';
+		}
+
+		/** @var PageModel $page */
+		if (!$page = $calendar->getRelated('jumpTo'))
+		{
+			return '';
+		}
+
+		$page->loadDetails();
+
+		/** @var LayoutModel $layout */
+		if (!$layout = $page->getRelated('layout'))
+		{
+			return '';
+		}
+
+		global $objPage;
+
+		// Set the global page object so we can replace the insert tags
+		$objPage = $page;
+
+		return self::replaceInsertTags(str_replace('{{page::pageTitle}}', '%s', $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}'));
 	}
 
 	/**
@@ -898,7 +945,7 @@ class tl_calendar_events extends Backend
 		}
 
 		// Add the option currently set
-		if ($dc->activeRecord && $dc->activeRecord->source != '')
+		if ($dc->activeRecord && $dc->activeRecord->source)
 		{
 			$arrOptions[] = $dc->activeRecord->source;
 			$arrOptions = array_unique($arrOptions);
@@ -994,6 +1041,14 @@ class tl_calendar_events extends Backend
 			return;
 		}
 
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request)
+		{
+			$origScope = $request->attributes->get('_scope');
+			$request->attributes->set('_scope', 'frontend');
+		}
+
 		$this->import(Calendar::class, 'Calendar');
 
 		foreach ($session as $id)
@@ -1001,8 +1056,10 @@ class tl_calendar_events extends Backend
 			$this->Calendar->generateFeedsByCalendar($id);
 		}
 
-		$this->import(Automator::class, 'Automator');
-		$this->Automator->generateSitemap();
+		if ($request)
+		{
+			$request->attributes->set('_scope', $origScope);
+		}
 
 		$objSession->set('calendar_feed_updater', null);
 	}
@@ -1085,7 +1142,27 @@ class tl_calendar_events extends Backend
 		Input::setGet('id', $intId);
 		Input::setGet('act', 'feature');
 
-		$this->checkPermission();
+		if ($dc)
+		{
+			$dc->id = $intId; // see #8043
+		}
+
+		// Trigger the onload_callback
+		if (is_array($GLOBALS['TL_DCA']['tl_calendar_events']['config']['onload_callback'] ?? null))
+		{
+			foreach ($GLOBALS['TL_DCA']['tl_calendar_events']['config']['onload_callback'] as $callback)
+			{
+				if (is_array($callback))
+				{
+					$this->import($callback[0]);
+					$this->{$callback[0]}->{$callback[1]}($dc);
+				}
+				elseif (is_callable($callback))
+				{
+					$callback($dc);
+				}
+			}
+		}
 
 		// Check permissions to feature
 		if (!$this->User->hasAccess('tl_calendar_events::featured', 'alexf'))
@@ -1093,11 +1170,26 @@ class tl_calendar_events extends Backend
 			throw new AccessDeniedException('Not enough permissions to feature/unfeature event ID ' . $intId . '.');
 		}
 
+		$objRow = $this->Database->prepare("SELECT * FROM tl_calendar_events WHERE id=?")
+								 ->limit(1)
+								 ->execute($intId);
+
+		if ($objRow->numRows < 1)
+		{
+			throw new AccessDeniedException('Invalid event ID ' . $intId . '.');
+		}
+
+		// Set the current record
+		if ($dc)
+		{
+			$dc->activeRecord = $objRow;
+		}
+
 		$objVersions = new Versions('tl_calendar_events', $intId);
 		$objVersions->initialize();
 
 		// Trigger the save_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_calendar_events']['fields']['featured']['save_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_calendar_events']['fields']['featured']['save_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_calendar_events']['fields']['featured']['save_callback'] as $callback)
 			{
@@ -1113,11 +1205,41 @@ class tl_calendar_events extends Backend
 			}
 		}
 
+		$time = time();
+
 		// Update the database
-		$this->Database->prepare("UPDATE tl_calendar_events SET tstamp=" . time() . ", featured='" . ($blnVisible ? 1 : '') . "' WHERE id=?")
+		$this->Database->prepare("UPDATE tl_calendar_events SET tstamp=$time, featured='" . ($blnVisible ? 1 : '') . "' WHERE id=?")
 					   ->execute($intId);
 
+		if ($dc)
+		{
+			$dc->activeRecord->tstamp = $time;
+			$dc->activeRecord->published = ($blnVisible ? '1' : '');
+		}
+
+		// Trigger the onsubmit_callback
+		if (is_array($GLOBALS['TL_DCA']['tl_calendar_events']['config']['onsubmit_callback'] ?? null))
+		{
+			foreach ($GLOBALS['TL_DCA']['tl_calendar_events']['config']['onsubmit_callback'] as $callback)
+			{
+				if (is_array($callback))
+				{
+					$this->import($callback[0]);
+					$this->{$callback[0]}->{$callback[1]}($dc);
+				}
+				elseif (is_callable($callback))
+				{
+					$callback($dc);
+				}
+			}
+		}
+
 		$objVersions->create();
+
+		if ($dc)
+		{
+			$dc->invalidateCacheTags();
+		}
 	}
 
 	/**
@@ -1177,7 +1299,7 @@ class tl_calendar_events extends Backend
 		}
 
 		// Trigger the onload_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_calendar_events']['config']['onload_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_calendar_events']['config']['onload_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_calendar_events']['config']['onload_callback'] as $callback)
 			{
@@ -1218,7 +1340,7 @@ class tl_calendar_events extends Backend
 		$objVersions->initialize();
 
 		// Trigger the save_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_calendar_events']['fields']['published']['save_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_calendar_events']['fields']['published']['save_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_calendar_events']['fields']['published']['save_callback'] as $callback)
 			{
@@ -1247,7 +1369,7 @@ class tl_calendar_events extends Backend
 		}
 
 		// Trigger the onsubmit_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_calendar_events']['config']['onsubmit_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_calendar_events']['config']['onsubmit_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_calendar_events']['config']['onsubmit_callback'] as $callback)
 			{
@@ -1272,5 +1394,23 @@ class tl_calendar_events extends Backend
 		{
 			$dc->invalidateCacheTags();
 		}
+	}
+
+	/**
+	 * @param DataContainer $dc
+	 *
+	 * @return array
+	 */
+	public function addSitemapCacheInvalidationTag($dc, array $tags)
+	{
+		$calendar = CalendarModel::findByPk($dc->activeRecord->pid);
+		$pageModel = PageModel::findWithDetails($calendar->jumpTo);
+
+		if ($pageModel === null)
+		{
+			return $tags;
+		}
+
+		return array_merge($tags, array('contao.sitemap.' . $pageModel->rootId));
 	}
 }

@@ -28,7 +28,7 @@ class ContentToplink extends ContentElement
 	 */
 	protected function compile()
 	{
-		if ($this->linkTitle == '')
+		if (!$this->linkTitle)
 		{
 			$this->linkTitle = $GLOBALS['TL_LANG']['MSC']['backToTop'];
 		}

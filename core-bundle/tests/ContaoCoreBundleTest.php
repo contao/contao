@@ -16,13 +16,13 @@ use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddAssetsPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddAvailableTransportsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddCronJobsPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\AddNativeTransportFactoryPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddSessionBagsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\CrawlerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\DataContainerCallbackPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\MakeServicesPublicPass;
-use Contao\CoreBundle\DependencyInjection\Compiler\MapFragmentsToGlobalsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\PickerProviderPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterHookListenersPass;
@@ -64,7 +64,6 @@ class ContaoCoreBundleTest extends TestCase
             RegisterFragmentsPass::class,
             FragmentRendererPass::class,
             RemembermeServicesPass::class,
-            MapFragmentsToGlobalsPass::class,
             DataContainerCallbackPass::class,
             TranslationDataCollectorPass::class,
             RegisterHookListenersPass::class,
@@ -73,6 +72,7 @@ class ContaoCoreBundleTest extends TestCase
             AddCronJobsPass::class,
             AddAvailableTransportsPass::class,
             RegisterRouteEnhancersPass::class,
+            AddNativeTransportFactoryPass::class,
         ];
 
         $security = $this->createMock(SecurityExtension::class);

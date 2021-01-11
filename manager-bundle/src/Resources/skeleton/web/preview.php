@@ -30,6 +30,9 @@ $request = Request::createFromGlobals();
 $kernel = ContaoKernel::fromRequest(\dirname(__DIR__), $request);
 $response = $kernel->handle($request);
 
+// Prevent preview URLs from being indexed
+$response->headers->set('X-Robots-Tag', 'noindex');
+
 // Force no-cache on all responses in the preview front controller
 $response->headers->set('Cache-Control', 'no-store');
 

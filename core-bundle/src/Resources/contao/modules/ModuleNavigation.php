@@ -32,7 +32,9 @@ class ModuleNavigation extends Module
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['navigation'][0]) . ' ###';
@@ -46,7 +48,7 @@ class ModuleNavigation extends Module
 
 		$strBuffer = parent::generate();
 
-		return ($this->Template->items != '') ? $strBuffer : '';
+		return $this->Template->items ? $strBuffer : '';
 	}
 
 	/**

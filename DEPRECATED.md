@@ -95,7 +95,7 @@ $data = [
 ];
 ```
 
-For more information see: https://github.com/contao/image/blob/master/README.md
+More information: https://github.com/contao/image/blob/master/README.md
 
 ## FORM_FIELDS
 
@@ -292,7 +292,7 @@ $refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->
 
 ## PHP entry points
 
-Contao 4 only uses a single PHP entry point, namely the `index.php` or 
+Contao 4 only uses a single PHP entry point, namely the `index.php` or
 `preview.php` file. The previous PHP entry points have been removed and a route
 has been set up for each one instead (see UPGRADE.md).
 

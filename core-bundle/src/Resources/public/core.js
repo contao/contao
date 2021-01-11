@@ -926,16 +926,29 @@ var Backend =
 				return;
 			}
 			var frm = window.frames['simple-modal-iframe'],
-				val = [], ul, inp, field, act, it, i;
+				val = [], ul, inp, field, act, it, i, pickerValue, sIndex;
 			if (frm === undefined) {
 				alert('Could not find the SimpleModal frame');
 				return;
 			}
 			ul = frm.document.getElementById(opt.id);
+			// Load the previous values (#1816)
+			if (pickerValue = ul.get('data-picker-value')) {
+				val = JSON.parse(pickerValue);
+			}
 			inp = ul.getElementsByTagName('input');
 			for (i=0; i<inp.length; i++) {
-				if (inp[i].checked && !inp[i].id.match(/^(check_all_|reset_)/)) {
-					val.push(inp[i].get('value'));
+				if (inp[i].id.match(/^(check_all_|reset_)/)) {
+					continue;
+				}
+				// Add currently selected value, otherwise remove (#1816)
+				sIndex = val.indexOf(inp[i].get('value'));
+				if (inp[i].checked) {
+					if (sIndex == -1) {
+						val.push(inp[i].get('value'));
+					}
+				} else if (sIndex != -1) {
+					val.splice(sIndex, 1);
 				}
 			}
 			if (opt.callback) {
@@ -1122,6 +1135,7 @@ var Backend =
 			});
 
 			button = new Element('button', {
+				'type': 'button',
 				'html': '<span>...</span>',
 				'class': 'unselectable',
 				'data-state': 0
@@ -2253,69 +2267,12 @@ var Backend =
 	},
 
 	/**
-	 * Meta wizard
-	 *
-	 * @param {object} el The submit button
-	 * @param {string} ul The DOM element
-	 */
-	metaWizard: function(el, ul) {
-		var opt = el.getParent('div').getElement('select');
-
-		if (opt.value == '') {
-			return; // no language given
-		}
-
-		var li = $(ul).getLast('li').clone(true, true),
-			span = li.getElement('span'),
-			img = span.getElement('img');
-
-		// Update the data-language attribute
-		li.setProperty('data-language', opt.value);
-
-		// Update the language text
-		span.set('text', opt.options[opt.selectedIndex].text + ' ');
-		img.inject(span, 'bottom');
-
-		// Update the name, label and ID attributes
-		li.getElements('input').each(function(inp) {
-			inp.value = '';
-			inp.name = inp.name.replace(/\[[a-z]{2}(_[A-Z]{2})?]/, '[' + opt.value + ']');
-			var lbl = inp.getPrevious('label'),
-				i = parseInt(lbl.get('for').replace(/ctrl_[^_]+_/, ''));
-			lbl.set('for', lbl.get('for').replace(i, i+1));
-			inp.id = lbl.get('for');
-		});
-
-		// Update the class name
-		li.className = (li.className == 'even') ? 'odd' : 'even';
-		li.inject($(ul), 'bottom');
-
-		// Update the picker
-		li.getElements('a[id^=pp_]').each(function(link) {
-			var i = parseInt(link.get('id').replace(/pp_[^_]+_/, ''));
-			link.id = link.get('id').replace(i, i + 1);
-			var script = link.getNext('script');
-			script.set('html', script.get('html').replace(new RegExp('_' + i, 'g'), '_' + (i + 1)));
-			eval(script.get('html'));
-		});
-
-		// Disable the "add language" button
-		el.getParent('div').getElement('input[type="button"]').setProperty('disabled', true);
-
-		// Disable the option
-		opt.options[opt.selectedIndex].setProperty('disabled', true);
-		opt.value = '';
-	},
-
-	/**
 	 * Remove a meta entry
 	 *
 	 * @param {object} el The DOM element
 	 */
 	metaDelete: function(el) {
-		var li = el.getParent('li'),
-			select = el.getParent('div').getElement('select'),
-			opt;
+		var li = el.getParent('li');
 
 		// Empty the last element instead of removing it (see #4858)
 		if (li.getPrevious() === null && li.getNext() === null) {
@@ -2323,13 +2280,7 @@ var Backend =
 				input.value = '';
 			});
 		} else {
-			// If the language code is valid and the option exists, enable it (see #1635)
-			if (opt = select.getElement('option[value=' + li.getProperty('data-language') + ']')) {
-				opt.removeProperty('disabled');
-			}
-
 			li.destroy();
-			select.fireEvent('liszt:updated');
 		}
 	},
 
@@ -2520,9 +2471,10 @@ var Backend =
 				}
 			},
 			clickEvent = function(e) {
-				var input = this.getElement('input[type="checkbox"],input[type="radio"]');
+				var input = this.getElement('input[type="checkbox"],input[type="radio"]'),
+					limitToggler = $(e.target).getParent('.limit_toggler');
 
-				if (!input || input.get('disabled')) {
+				if (!input || input.get('disabled') || limitToggler !== null) {
 					return;
 				}
 

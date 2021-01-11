@@ -32,7 +32,9 @@ class ModuleChangePassword extends Module
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['changePassword'][0]) . ' ###';
@@ -68,13 +70,30 @@ class ModuleChangePassword extends Module
 		System::loadLanguageFile('tl_member');
 		$this->loadDataContainer('tl_member');
 
+		// Call onload_callback (e.g. to check permissions)
+		if (\is_array($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback'] ?? null))
+		{
+			foreach ($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback'] as $callback)
+			{
+				if (\is_array($callback))
+				{
+					$this->import($callback[0]);
+					$this->{$callback[0]}->{$callback[1]}();
+				}
+				elseif (\is_callable($callback))
+				{
+					$callback();
+				}
+			}
+		}
+
 		// Old password widget
 		$arrFields['oldPassword'] = array
 		(
 			'name'      => 'oldpassword',
 			'label'     => &$GLOBALS['TL_LANG']['MSC']['oldPassword'],
 			'inputType' => 'text',
-			'eval'      => array('mandatory'=>true, 'preserveTags'=>true, 'hideInput'=>true),
+			'eval'      => array('mandatory'=>true, 'preserveTags'=>true, 'hideInput'=>true, 'autocomplete'=>'current-password'),
 		);
 
 		// New password widget
@@ -108,7 +127,7 @@ class ModuleChangePassword extends Module
 		foreach ($arrFields as $strKey=>$arrField)
 		{
 			/** @var Widget $strClass */
-			$strClass = $GLOBALS['TL_FFL'][$arrField['inputType']];
+			$strClass = $GLOBALS['TL_FFL'][$arrField['inputType']] ?? null;
 
 			// Continue if the class is not defined
 			if (!class_exists($strClass))
@@ -116,7 +135,7 @@ class ModuleChangePassword extends Module
 				continue;
 			}
 
-			$arrField['eval']['required'] = $arrField['eval']['mandatory'];
+			$arrField['eval']['required'] = $arrField['eval']['mandatory'] ?? null;
 
 			/** @var Widget $objWidget */
 			$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, $arrField['name']));
@@ -173,7 +192,7 @@ class ModuleChangePassword extends Module
 			$objMember->save();
 
 			// Create a new version
-			if ($GLOBALS['TL_DCA'][$strTable]['config']['enableVersioning'])
+			if ($GLOBALS['TL_DCA'][$strTable]['config']['enableVersioning'] ?? null)
 			{
 				$objVersions->create();
 			}

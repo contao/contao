@@ -167,7 +167,7 @@ class tl_opt_in extends Backend
 
 			foreach ($arrRow as $k=>$v)
 			{
-				$label = is_array($GLOBALS['TL_DCA']['tl_opt_in_related']['fields'][$k]['label']) ? $GLOBALS['TL_DCA']['tl_opt_in_related']['fields'][$k]['label'][0] : $GLOBALS['TL_DCA']['tl_opt_in_related']['fields'][$k]['label'];
+				$label = is_array($GLOBALS['TL_DCA']['tl_opt_in_related']['fields'][$k]['label'] ?? null) ? $GLOBALS['TL_DCA']['tl_opt_in_related']['fields'][$k]['label'][0] : ($GLOBALS['TL_DCA']['tl_opt_in_related']['fields'][$k]['label'] ?? null);
 
 				$arrAdd[$label] = $v;
 			}

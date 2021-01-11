@@ -1432,6 +1432,7 @@ class FigureBuilderIntegrationTest extends TestCase
     {
         // Evaluate preconditions and setup container
         $container = $this->getContainerWithContaoConfiguration(self::$testRoot);
+        $container->set('request_stack', $this->createMock(RequestStack::class));
         System::setContainer($container);
 
         [$preConditions, $arguments] = $testCase();
@@ -1494,7 +1495,9 @@ class FigureBuilderIntegrationTest extends TestCase
             // We are using a child class of FilesModel to benefit from realistic metadata
             // creation while being able to disable object registration
             $filesModel = new class($data) extends FilesModel {
-                /* @noinspection PhpMissingParentConstructorInspection */
+                /**
+                 * @noinspection PhpMissingParentConstructorInspection
+                 */
                 public function __construct($data)
                 {
                     $this->setRow($data);
@@ -1538,7 +1541,9 @@ class FigureBuilderIntegrationTest extends TestCase
         // We are using a child class of LayoutModel so that we can push it into the
         // registry cache and therefore make it available for the legacy code
         $layoutModel = new class($data) extends LayoutModel {
-            /* @noinspection PhpMissingParentConstructorInspection */
+            /**
+             * @noinspection PhpMissingParentConstructorInspection
+             */
             public function __construct($data)
             {
                 $this->setRow($data);
@@ -1624,14 +1629,14 @@ class FigureBuilderIntegrationTest extends TestCase
             ? $template->getData()
             : get_object_vars($template);
 
-        $sortByKeyRecursive = static function (array &$array) use (&$sortByKeyRecursive) {
+        $sortByKeyRecursive = static function (array &$array) use (&$sortByKeyRecursive): void {
             foreach ($array as &$value) {
                 if (\is_array($value)) {
                     $sortByKeyRecursive($value);
                 }
             }
 
-            return ksort($array);
+            ksort($array);
         };
 
         $sortByKeyRecursive($expected);

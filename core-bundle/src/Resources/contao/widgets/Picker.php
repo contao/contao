@@ -38,7 +38,7 @@ class Picker extends Widget
 		parent::__construct($arrAttributes);
 
 		// Prepare the order field
-		if ($this->orderField != '')
+		if ($this->orderField)
 		{
 			trigger_deprecation('contao/core-bundle', '4.10', 'Using "orderField" for the picker has been deprecated and will no longer work in Contao 5.0. Use "isSortable" instead.');
 
@@ -70,7 +70,7 @@ class Picker extends Widget
 		}
 
 		// Store the order value
-		if ($this->orderField != '')
+		if ($this->orderField)
 		{
 			$arrNew = array();
 
@@ -90,7 +90,7 @@ class Picker extends Widget
 		}
 
 		// Return the value as usual
-		if ($varInput == '')
+		if (!$varInput)
 		{
 			if ($this->mandatory)
 			{
@@ -118,7 +118,7 @@ class Picker extends Widget
 	public function generate()
 	{
 		$strContext = $this->context ?: 'dc.' . $this->getRelatedTable();
-		$blnHasOrder = ($this->orderField != '' && \is_array($this->{$this->orderField}));
+		$blnHasOrder = $this->orderField && \is_array($this->{$this->orderField});
 		$arrValues = $this->generateValues($blnHasOrder);
 		$arrSet = array_keys($arrValues);
 
@@ -229,7 +229,7 @@ class Picker extends Widget
 
 		if ($mode === 4)
 		{
-			$callback = $GLOBALS['TL_DCA'][$dc->table]['list']['sorting']['child_record_callback'];
+			$callback = $GLOBALS['TL_DCA'][$dc->table]['list']['sorting']['child_record_callback'] ?? null;
 
 			if (\is_array($callback))
 			{
@@ -247,14 +247,14 @@ class Picker extends Widget
 		$labelConfig = &$GLOBALS['TL_DCA'][$dc->table]['list']['label'];
 		$label = vsprintf($labelConfig['format'], array_intersect_key($arrRow, array_flip($labelConfig['fields'])));
 
-		if (\is_array($labelConfig['label_callback']))
+		if (\is_array($labelConfig['label_callback'] ?? null))
 		{
 			$this->import($labelConfig['label_callback'][0]);
 
 			return $this->{$labelConfig['label_callback'][0]}->{$labelConfig['label_callback'][1]}($arrRow, $label, $dc, $arrRow);
 		}
 
-		if (\is_callable($labelConfig['label_callback']))
+		if (\is_callable($labelConfig['label_callback'] ?? null))
 		{
 			return $labelConfig['label_callback']($arrRow, $label, $dc, $arrRow);
 		}

@@ -100,7 +100,7 @@ final class Figure
             throw new \LogicException('This result container does not include a lightbox.');
         }
 
-        // Safely return as Closure will be evaluated at this point
+        /** @var LightboxResult */
         return $this->lightbox;
     }
 
@@ -120,7 +120,7 @@ final class Figure
             throw new \LogicException('This result container does not include metadata.');
         }
 
-        // Safely return as Closure will be evaluated at this point
+        /** @var Metadata */
         return $this->metadata;
     }
 
@@ -257,7 +257,7 @@ final class Figure
 
         $image = $this->getImage();
         $originalSize = $image->getOriginalDimensions()->getSize();
-        $fileInfoImageSize = (new File(rawurldecode($image->getImageSrc())))->imageSize;
+        $fileInfoImageSize = (array) (new File($image->getImageSrc(true)))->imageSize;
 
         $linkAttributes = $this->getLinkAttributes();
         $metadata = $this->hasMetadata() ? $this->getMetadata() : new Metadata([]);
@@ -273,7 +273,7 @@ final class Figure
                 'width' => $originalSize->getWidth(),
                 'height' => $originalSize->getHeight(),
                 'arrSize' => $fileInfoImageSize,
-                'imgSize' => sprintf(' width="%d" height="%d"', $fileInfoImageSize[0], $fileInfoImageSize[1]),
+                'imgSize' => !empty($fileInfoImageSize) ? sprintf(' width="%d" height="%d"', $fileInfoImageSize[0], $fileInfoImageSize[1]) : '',
                 'singleSRC' => $image->getFilePath(),
                 'src' => $image->getImageSrc(),
                 'fullsize' => ('_blank' === ($linkAttributes['target'] ?? null)) || $this->hasLightbox(),
@@ -322,7 +322,7 @@ final class Figure
         }
 
         // Other
-        if (null !== $floating) {
+        if ($floating) {
             $templateData['floatClass'] = " float_$floating";
         }
 

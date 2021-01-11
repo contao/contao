@@ -14,12 +14,20 @@ namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\BackendTemplate;
 use Contao\Config;
+use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\Image\Studio\Figure;
+use Contao\CoreBundle\Image\Studio\FigureBuilder;
+use Contao\CoreBundle\Image\Studio\ImageResult;
+use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\System;
 use Symfony\Component\Asset\Packages;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 use Symfony\Component\VarDumper\VarDumper;
+use Twig\Environment;
 
 class TemplateTest extends TestCase
 {
@@ -250,5 +258,121 @@ EOF
         $template->dumpTemplateVars();
 
         $this->assertSame(['test' => 1], $dump);
+    }
+
+    public function testFigureFunction(): void
+    {
+        $metadata = new Metadata([]);
+
+        $configuration = [
+            'metadata' => $metadata,
+            'disableMetadata' => true,
+            'locale' => 'de',
+            'linkAttributes' => ['foo' => 'bar'],
+            'linkHref' => 'foo',
+            'lightboxResourceOrUrl' => 'foobar',
+            'lightboxSize' => '_lightbox_size',
+            'lightboxGroupIdentifier' => '123',
+            'enableLightbox' => true,
+            'options' => ['foo' => 'bar'],
+        ];
+
+        $expectedFigureBuilderCalls = [
+            'from' => 'resource',
+            'setSize' => '_size',
+            'setMetadata' => $metadata,
+            'disableMetadata' => true,
+            'setLocale' => 'de',
+            'setLinkAttributes' => ['foo' => 'bar'],
+            'setLinkHref' => 'foo',
+            'setLightboxResourceOrUrl' => 'foobar',
+            'setLightboxSize' => '_lightbox_size',
+            'setLightboxGroupIdentifier' => '123',
+            'enableLightbox' => true,
+            'setOptions' => ['foo' => 'bar'],
+        ];
+
+        System::setContainer($this->getContainerForFigureRendering($expectedFigureBuilderCalls));
+
+        $this->filesystem->dumpFile($this->getFixturesDir().'/templates/image.html5', '<result>');
+
+        $this->assertSame('<result>', (new FrontendTemplate())->figure('resource', '_size', $configuration));
+    }
+
+    public function testFigureFunctionWithCustomTemplate(): void
+    {
+        System::setContainer($this->getContainerForFigureRendering([], 'custom_figure'));
+
+        $this->filesystem->dumpFile($this->getFixturesDir().'/templates/custom_figure.html5', '<result>');
+
+        $this->assertSame('<result>', (new FrontendTemplate())->figure(1, null, [], 'custom_figure'));
+    }
+
+    public function testFigureFunctionWithTwigTemplate(): void
+    {
+        System::setContainer($this->getContainerForFigureRendering([], '@App/custom_figure.html.twig', true));
+
+        $this->assertSame('<result>', (new FrontendTemplate())->figure(1, null, [], '@App/custom_figure.html.twig'));
+    }
+
+    public function testFigureFunctionFailsWithInvalidConfiguration(): void
+    {
+        System::setContainer($this->getContainerForFigureRendering([]));
+
+        $template = new FrontendTemplate();
+
+        $this->expectException(NoSuchPropertyException::class);
+
+        $template->figure(1, null, ['invalid' => 'foobar']);
+    }
+
+    private function getContainerForFigureRendering(array $figureBuilderCalls, string $expectedTemplate = 'image', bool $withTwig = false): ContainerBuilder
+    {
+        $image = $this->createMock(ImageResult::class);
+        $image
+            ->method('getImageSrc')
+            ->willReturn('files/public/foo.jpg')
+        ;
+
+        $figure = new Figure($image);
+
+        $figureBuilder = $this->createMock(FigureBuilder::class);
+        $figureBuilder
+            ->method('build')
+            ->willReturn($figure)
+        ;
+
+        foreach ($figureBuilderCalls as $method => $value) {
+            $figureBuilder
+                ->expects($this->once())
+                ->method($method)
+                ->with($value)
+                ->willReturn($figureBuilder)
+            ;
+        }
+
+        $container = $this->getContainerWithContaoConfiguration($this->getFixturesDir());
+
+        $studio = $this->createMock(Studio::class);
+        $studio
+            ->method('createFigureBuilder')
+            ->willReturn($figureBuilder)
+        ;
+
+        $container->set(Studio::class, $studio);
+
+        if ($withTwig) {
+            $twig = $this->createMock(Environment::class);
+            $twig
+                ->expects($this->once())
+                ->method('render')
+                ->with($expectedTemplate, ['figure' => $figure])
+                ->willReturn('<result>')
+            ;
+
+            $container->set('twig', $twig);
+        }
+
+        return $container;
     }
 }

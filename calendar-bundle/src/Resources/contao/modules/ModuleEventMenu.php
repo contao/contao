@@ -37,7 +37,9 @@ class ModuleEventMenu extends ModuleCalendar
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['eventmenu'][0]) . ' ###';
@@ -104,7 +106,14 @@ class ModuleEventMenu extends ModuleCalendar
 		{
 			foreach ($arrDay as $arrEvents)
 			{
-				$arrData[substr($intDay, 0, 4)] += \count($arrEvents);
+				$year = substr($intDay, 0, 4);
+
+				if (!isset($arrData[$year]))
+				{
+					$arrData[$year] = 0;
+				}
+
+				$arrData[$year] += \count($arrEvents);
 			}
 		}
 
@@ -159,7 +168,15 @@ class ModuleEventMenu extends ModuleCalendar
 		{
 			foreach ($arrDay as $arrEvents)
 			{
-				$arrData[substr($intDay, 0, 4)][substr($intDay, 4, 2)] += \count($arrEvents);
+				$year = substr($intDay, 0, 4);
+				$month = substr($intDay, 4, 2);
+
+				if (!isset($arrData[$year][$month]))
+				{
+					$arrData[$year][$month] = 0;
+				}
+
+				$arrData[$year][$month] += \count($arrEvents);
 			}
 		}
 

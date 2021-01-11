@@ -40,7 +40,9 @@ class ModuleSubscribe extends Module
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['subscribe'][0]) . ' ###';
@@ -173,7 +175,7 @@ class ModuleSubscribe extends Module
 		// Find an unconfirmed token
 		if ((!$optInToken = $optIn->find(Input::get('token'))) || !$optInToken->isValid() || \count($arrRelated = $optInToken->getRelatedRecords()) < 1 || key($arrRelated) != 'tl_newsletter_recipients' || \count($arrIds = current($arrRelated)) < 1)
 		{
-			$this->Template->type = 'error';
+			$this->Template->mclass = 'error';
 			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['invalidToken'];
 
 			return;
@@ -181,7 +183,7 @@ class ModuleSubscribe extends Module
 
 		if ($optInToken->isConfirmed())
 		{
-			$this->Template->type = 'error';
+			$this->Template->mclass = 'error';
 			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['tokenConfirmed'];
 
 			return;
@@ -194,7 +196,7 @@ class ModuleSubscribe extends Module
 		{
 			if (!$objRecipient = NewsletterRecipientsModel::findByPk($intId))
 			{
-				$this->Template->type = 'error';
+				$this->Template->mclass = 'error';
 				$this->Template->message = $GLOBALS['TL_LANG']['MSC']['invalidToken'];
 
 				return;
@@ -202,7 +204,7 @@ class ModuleSubscribe extends Module
 
 			if ($optInToken->getEmail() != $objRecipient->email)
 			{
-				$this->Template->type = 'error';
+				$this->Template->mclass = 'error';
 				$this->Template->message = $GLOBALS['TL_LANG']['MSC']['tokenEmailMismatch'];
 
 				return;
@@ -377,7 +379,7 @@ class ModuleSubscribe extends Module
 		// Send the token
 		$optInToken->send(
 			sprintf($GLOBALS['TL_LANG']['MSC']['nl_subject'], Idna::decode(Environment::get('host'))),
-			System::getContainer()->get(SimpleTokenParser::class)->parseTokens($this->nl_subscribe, $arrData)
+			System::getContainer()->get(SimpleTokenParser::class)->parse($this->nl_subscribe, $arrData)
 		);
 
 		// Redirect to the jumpTo page

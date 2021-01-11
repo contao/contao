@@ -25,8 +25,9 @@ class ContentProxy extends ContentElement
 	public function generate()
 	{
 		$reference = new ContentElementReference($this->objModel, $this->strColumn);
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
-		if ('BE' === TL_MODE)
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$reference->setBackendScope();
 		}

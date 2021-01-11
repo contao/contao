@@ -48,7 +48,7 @@ class PhpFileLoaderTest extends TestCase
     {
         $expects = <<<'EOF'
 
-$GLOBALS['TL_TEST'] = true;
+$GLOBALS['TL_TEST'] = \true;
 
 EOF;
 
@@ -59,21 +59,7 @@ EOF;
 
         $content = <<<'EOF'
 
-$GLOBALS['TL_DCA']['tl_test'] = [
-    'config' => [
-        'dataContainer' => 'Table',
-        'sql' => [
-            'keys' => [
-                'id' => 'primary',
-            ],
-        ],
-    ],
-    'fields' => [
-        'id' => [
-            'sql' => "int(10) unsigned NOT NULL auto_increment"
-        ],
-    ],
-];
+$GLOBALS['TL_DCA']['tl_test'] = ['config' => ['dataContainer' => 'Table', 'sql' => ['keys' => ['id' => 'primary']]], 'fields' => ['id' => ['sql' => "int(10) unsigned NOT NULL auto_increment"]]];
 
 EOF;
 
@@ -104,7 +90,7 @@ EOF;
         $expects = <<<'EOF'
 
 namespace {
-    $GLOBALS['TL_DCA']['tl_test']['config']['dataContainer'] = 'Table';
+$GLOBALS['TL_DCA']['tl_test']['config']['dataContainer'] = 'Table';
 }
 
 EOF;
@@ -119,8 +105,8 @@ EOF;
 
         $expects = <<<'EOF'
 
-namespace  {
-$GLOBALS['TL_TEST'] = true;
+namespace {
+$GLOBALS['TL_TEST'] = \true;
 }
 
 EOF;
@@ -141,21 +127,7 @@ EOF;
     {
         $content = <<<'EOF'
 
-$GLOBALS['TL_DCA']['tl_test'] = [
-    'config' => [
-        'dataContainer' => 'Table',
-        'sql' => [
-            'keys' => [
-                'id' => 'primary',
-            ],
-        ],
-    ],
-    'fields' => [
-        'id' => [
-            'sql' => "int(10) unsigned NOT NULL auto_increment"
-        ],
-    ],
-];
+$GLOBALS['TL_DCA']['tl_test'] = ['config' => ['dataContainer' => 'Table', 'sql' => ['keys' => ['id' => 'primary']]], 'fields' => ['id' => ['sql' => "int(10) unsigned NOT NULL auto_increment"]]];
 
 EOF;
 
@@ -174,27 +146,7 @@ EOF;
     {
         $content = <<<'EOF'
 
-/**
- * I am a declare(strict_types=1) comment
- */
-
-
-
-$GLOBALS['TL_DCA']['tl_test'] = [
-    'config' => [
-        'dataContainer' => 'Table',
-        'sql' => [
-            'keys' => [
-                'id' => 'primary',
-            ],
-        ],
-    ],
-    'fields' => [
-        'id' => [
-            'sql' => "int(10) unsigned NOT NULL auto_increment"
-        ],
-    ],
-];
+$GLOBALS['TL_DCA']['tl_test'] = ['config' => ['dataContainer' => 'Table', 'sql' => ['keys' => ['id' => 'primary']]], 'fields' => ['id' => ['sql' => "int(10) unsigned NOT NULL auto_increment"]]];
 
 EOF;
 
@@ -219,23 +171,8 @@ EOF;
     {
         $content = <<<'EOF'
 
-declare(ticks=1);
-
-$GLOBALS['TL_DCA']['tl_test'] = [
-    'config' => [
-        'dataContainer' => 'Table',
-        'sql' => [
-            'keys' => [
-                'id' => 'primary',
-            ],
-        ],
-    ],
-    'fields' => [
-        'id' => [
-            'sql' => "int(10) unsigned NOT NULL auto_increment"
-        ],
-    ],
-];
+declare (ticks=1);
+$GLOBALS['TL_DCA']['tl_test'] = ['config' => ['dataContainer' => 'Table', 'sql' => ['keys' => ['id' => 'primary']]], 'fields' => ['id' => ['sql' => "int(10) unsigned NOT NULL auto_increment"]]];
 
 EOF;
 

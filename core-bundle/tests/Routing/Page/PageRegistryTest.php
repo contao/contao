@@ -20,7 +20,6 @@ use Contao\CoreBundle\Routing\Page\RouteConfig;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Statement;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class PageRegistryTest extends TestCase
@@ -363,19 +362,12 @@ class PageRegistryTest extends TestCase
 
     private function mockConnectionWithPrefixAndSuffix(string $urlPrefix = '', string $urlSuffix = '.html'): Connection
     {
-        $statement = $this->createMock(Statement::class);
-        $statement
-            ->expects($this->once())
-            ->method('fetchAll')
-            ->willReturn([compact('urlPrefix', 'urlSuffix')])
-        ;
-
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
-            ->method('query')
+            ->method('fetchAllAssociative')
             ->with("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'")
-            ->willReturn($statement)
+            ->willReturn([compact('urlPrefix', 'urlSuffix')])
         ;
 
         return $connection;

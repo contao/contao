@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Image\Studio\LegacyFigureBuilderTrait;
+
 /**
  * Content element "YouTube".
  *
@@ -17,6 +19,8 @@ namespace Contao;
  */
 class ContentYouTube extends ContentElement
 {
+	use LegacyFigureBuilderTrait;
+
 	/**
 	 * Template
 	 * @var string
@@ -30,16 +34,18 @@ class ContentYouTube extends ContentElement
 	 */
 	public function generate()
 	{
-		if ($this->youtube == '')
+		if (!$this->youtube)
 		{
 			return '';
 		}
 
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$return = '<p><a href="https://youtu.be/' . $this->youtube . '" target="_blank" rel="noreferrer noopener">youtu.be/' . $this->youtube . '</a></p>';
 
-			if ($this->headline != '')
+			if ($this->headline)
 			{
 				$return = '<' . $this->hl . '>' . $this->headline . '</' . $this->hl . '>' . $return;
 			}
@@ -123,18 +129,12 @@ class ContentYouTube extends ContentElement
 		}
 
 		// Add a splash image
-		if ($this->splashImage)
+		if ($this->splashImage && null !== ($figureBuilder = $this->getFigureBuilderIfResourceExists($this->singleSRC)))
 		{
-			$objFile = FilesModel::findByUuid($this->singleSRC);
-
-			if ($objFile !== null && is_file(TL_ROOT . '/' . $objFile->path))
-			{
-				$this->singleSRC = $objFile->path;
-
-				$objSplash = new \stdClass();
-				$this->addImageToTemplate($objSplash, $this->arrData, null, null, $objFile);
-				$this->Template->splashImage = $objSplash;
-			}
+			$this->Template->splashImage = (object) $figureBuilder
+				->setSize($this->size)
+				->build()
+				->getLegacyTemplateData();
 		}
 
 		$this->Template->src = $url;

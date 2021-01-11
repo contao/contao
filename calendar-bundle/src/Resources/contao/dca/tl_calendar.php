@@ -8,7 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-use Contao\Automator;
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Calendar;
@@ -16,6 +15,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\Input;
+use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
@@ -47,6 +47,10 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		'onsubmit_callback' => array
 		(
 			array('tl_calendar', 'scheduleUpdate')
+		),
+		'oninvalidate_cache_tags_callback' => array
+		(
+			array('tl_calendar', 'addSitemapCacheInvalidationTag'),
 		),
 		'sql' => array
 		(
@@ -111,7 +115,7 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 			(
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"',
+				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"',
 				'button_callback'     => array('tl_calendar', 'deleteCalendar')
 			),
 			'show' => array
@@ -463,6 +467,14 @@ class tl_calendar extends Backend
 			return;
 		}
 
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request)
+		{
+			$origScope = $request->attributes->get('_scope');
+			$request->attributes->set('_scope', 'frontend');
+		}
+
 		$this->import(Calendar::class, 'Calendar');
 
 		foreach ($session as $id)
@@ -470,8 +482,10 @@ class tl_calendar extends Backend
 			$this->Calendar->generateFeedsByCalendar($id);
 		}
 
-		$this->import(Automator::class, 'Automator');
-		$this->Automator->generateSitemap();
+		if ($request)
+		{
+			$request->attributes->set('_scope', $origScope);
+		}
 
 		$objSession->set('calendar_feed_updater', null);
 	}
@@ -566,5 +580,22 @@ class tl_calendar extends Backend
 	public function deleteCalendar($row, $href, $label, $title, $icon, $attributes)
 	{
 		return $this->User->hasAccess('delete', 'calendarp') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)) . ' ';
+	}
+
+	/**
+	 * @param DataContainer $dc
+	 *
+	 * @return array
+	 */
+	public function addSitemapCacheInvalidationTag($dc, array $tags)
+	{
+		$pageModel = PageModel::findWithDetails($dc->activeRecord->jumpTo);
+
+		if ($pageModel === null)
+		{
+			return $tags;
+		}
+
+		return array_merge($tags, array('contao.sitemap.' . $pageModel->rootId));
 	}
 }

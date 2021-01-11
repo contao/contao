@@ -14,16 +14,14 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\CoreBundle\EventListener\DataContainer\PageUrlListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Search\Document;
-use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Contao\CoreBundle\Slug\Slug;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Contao\Input;
 use Contao\PageModel;
+use Contao\Search;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\Statement;
-use Doctrine\DBAL\FetchMode;
+use Doctrine\DBAL\Statement;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -68,8 +66,7 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $slug,
             $this->createMock(TranslatorInterface::class),
-            $this->mockConnectionWithStatement(),
-            $this->createMock(IndexerInterface::class)
+            $this->mockConnectionWithStatement()
         );
 
         $this->assertSame($expectedAlias, $listener->generateAlias('', $dc));
@@ -159,8 +156,7 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $slug,
             $this->createMock(TranslatorInterface::class),
-            $connection,
-            $this->createMock(IndexerInterface::class)
+            $connection
         );
 
         $listener->generateAlias('', $dc);
@@ -203,8 +199,7 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $slug,
             $translator,
-            $connection,
-            $this->createMock(IndexerInterface::class)
+            $connection
         );
 
         $listener->generateAlias($value, $dc);
@@ -716,37 +711,66 @@ class PageUrlListenerTest extends TestCase
         ];
     }
 
-    public function testPurgesTheSearchIndexOnAliasChange(): void
+    public function testPreventsNumericAliases(): void
     {
-        $statement = $this->createMock(Statement::class);
-        $statement
+        /** @var MockObject&PageModel $page */
+        $page = $this->mockClassWithProperties(PageModel::class, ['id' => 17]);
+
+        $pageAdapter = $this->mockAdapter(['findWithDetails']);
+        $pageAdapter
             ->expects($this->once())
-            ->method('fetchAll')
-            ->willReturn(['uri'])
+            ->method('findWithDetails')
+            ->with($page->id)
+            ->willReturn($page)
         ;
 
+        $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
+
+        $slug = $this->createMock(Slug::class);
+        $slug
+            ->expects($this->never())
+            ->method('generate')
+        ;
+
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->expects($this->once())
+            ->method('trans')
+            ->with('ERR.aliasNumeric')
+            ->willReturn('Numeric aliases are not supported!')
+        ;
+
+        /** @var MockObject&DataContainer $dc */
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => $page->id]);
+
+        $listener = new PageUrlListener(
+            $framework,
+            $slug,
+            $translator,
+            $this->mockConnectionWithStatement()
+        );
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Numeric aliases are not supported!');
+
+        $listener->generateAlias('123', $dc);
+    }
+
+    public function testPurgesTheSearchIndexOnAliasChange(): void
+    {
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
-            ->method('executeQuery')
+            ->method('fetchFirstColumn')
             ->with('SELECT url FROM tl_search WHERE pid=:pageId', ['pageId' => 17])
-            ->willReturn($statement)
+            ->willReturn(['uri'])
         ;
 
-        $searchIndexer = $this->createMock(IndexerInterface::class);
-        $searchIndexer
+        $search = $this->mockAdapter(['removeEntry']);
+        $search
             ->expects($this->once())
-            ->method('delete')
-            ->with($this->callback(
-                function ($document) {
-                    $this->assertInstanceOf(Document::class, $document);
-
-                    /** @var Document $document */
-                    $this->assertSame('uri', (string) $document->getUri());
-
-                    return true;
-                }
-            ))
+            ->method('removeEntry')
+            ->with('uri')
         ;
 
         /** @var MockObject&DataContainer $dc */
@@ -761,11 +785,10 @@ class PageUrlListenerTest extends TestCase
         );
 
         $listener = new PageUrlListener(
-            $this->createMock(ContaoFramework::class),
+            $this->mockContaoFramework([Search::class => $search]),
             $this->createMock(Slug::class),
             $this->createMock(TranslatorInterface::class),
-            $connection,
-            $searchIndexer
+            $connection
         );
 
         $listener->purgeSearchIndexOnAliasChange('bar', $dc);
@@ -779,8 +802,8 @@ class PageUrlListenerTest extends TestCase
             ->method($this->anything())
         ;
 
-        $searchIndexer = $this->createMock(IndexerInterface::class);
-        $searchIndexer
+        $search = $this->mockAdapter(['removeEntry']);
+        $search
             ->expects($this->never())
             ->method($this->anything())
         ;
@@ -797,11 +820,10 @@ class PageUrlListenerTest extends TestCase
         );
 
         $listener = new PageUrlListener(
-            $this->createMock(ContaoFramework::class),
+            $this->mockContaoFramework([Search::class => $search]),
             $this->createMock(Slug::class),
             $this->createMock(TranslatorInterface::class),
-            $connection,
-            $this->createMock(IndexerInterface::class)
+            $connection
         );
 
         $listener->purgeSearchIndexOnAliasChange('foo', $dc);
@@ -809,35 +831,19 @@ class PageUrlListenerTest extends TestCase
 
     public function testPurgesTheSearchIndexOnDelete(): void
     {
-        $statement = $this->createMock(Statement::class);
-        $statement
-            ->expects($this->once())
-            ->method('fetchAll')
-            ->willReturn(['uri'])
-        ;
-
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
-            ->method('executeQuery')
+            ->method('fetchFirstColumn')
             ->with('SELECT url FROM tl_search WHERE pid=:pageId', ['pageId' => 17])
-            ->willReturn($statement)
+            ->willReturn(['uri'])
         ;
 
-        $searchIndexer = $this->createMock(IndexerInterface::class);
-        $searchIndexer
+        $search = $this->mockAdapter(['removeEntry']);
+        $search
             ->expects($this->once())
-            ->method('delete')
-            ->with($this->callback(
-                function ($document) {
-                    $this->assertInstanceOf(Document::class, $document);
-
-                    /** @var Document $document */
-                    $this->assertSame('uri', (string) $document->getUri());
-
-                    return true;
-                }
-            ))
+            ->method('removeEntry')
+            ->with('uri')
         ;
 
         /** @var MockObject&DataContainer $dc */
@@ -849,11 +855,10 @@ class PageUrlListenerTest extends TestCase
         );
 
         $listener = new PageUrlListener(
-            $this->createMock(ContaoFramework::class),
+            $this->mockContaoFramework([Search::class => $search]),
             $this->createMock(Slug::class),
             $this->createMock(TranslatorInterface::class),
-            $connection,
-            $searchIndexer
+            $connection
         );
 
         $listener->purgeSearchIndexOnDelete($dc);
@@ -867,8 +872,8 @@ class PageUrlListenerTest extends TestCase
             ->method($this->anything())
         ;
 
-        $searchIndexer = $this->createMock(IndexerInterface::class);
-        $searchIndexer
+        $search = $this->mockAdapter(['removeEntry']);
+        $search
             ->expects($this->never())
             ->method($this->anything())
         ;
@@ -882,11 +887,10 @@ class PageUrlListenerTest extends TestCase
         );
 
         $listener = new PageUrlListener(
-            $this->createMock(ContaoFramework::class),
+            $this->mockContaoFramework([Search::class => $search]),
             $this->createMock(Slug::class),
             $this->createMock(TranslatorInterface::class),
-            $connection,
-            $searchIndexer
+            $connection
         );
 
         $listener->purgeSearchIndexOnDelete($dc);
@@ -919,21 +923,11 @@ class PageUrlListenerTest extends TestCase
             ]
         );
 
-        $statement = $this->createMock(Statement::class);
-        $statement
-            ->expects($this->exactly(5))
-            ->method('fetchAll')
-            ->willReturn([])
-        ;
-
         $connection = $this->createMock(Connection::class);
         $connection
-            ->expects($this->exactly(5))
-            ->method('executeQuery')
+            ->expects($this->exactly(3))
+            ->method('fetchFirstColumn')
             ->withConsecutive(
-                [
-                    "SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'",
-                ],
                 [
                     'SELECT id FROM tl_page WHERE alias LIKE :alias AND id!=:id',
                     [
@@ -949,9 +943,6 @@ class PageUrlListenerTest extends TestCase
                     ],
                 ],
                 [
-                    "SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'",
-                ],
-                [
                     'SELECT id FROM tl_page WHERE alias LIKE :alias AND id!=:id',
                     [
                         'alias' => '%baz%',
@@ -959,15 +950,28 @@ class PageUrlListenerTest extends TestCase
                     ],
                 ]
             )
-            ->willReturn($statement)
+            ->willReturn([])
+        ;
+
+        $connection
+            ->expects($this->exactly(2))
+            ->method('fetchAllAssociative')
+            ->withConsecutive(
+                [
+                    "SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'",
+                ],
+                [
+                    "SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'",
+                ]
+            )
+            ->willReturn([])
         ;
 
         $listener = new PageUrlListener(
             $framework,
             $this->createMock(Slug::class),
             $this->createMock(TranslatorInterface::class),
-            $connection,
-            $this->createMock(IndexerInterface::class)
+            $connection
         );
 
         /** @var DataContainer&MockObject $dc1 */
@@ -1023,8 +1027,7 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $this->createMock(Slug::class),
             $this->mockTranslator(),
-            $connection,
-            $this->createMock(IndexerInterface::class)
+            $connection
         );
 
         /** @var MockObject&DataContainer $dc */
@@ -1043,30 +1046,22 @@ class PageUrlListenerTest extends TestCase
     {
         $translator = $this->mockTranslator('ERR.urlPrefixExists', 'en');
 
-        $statement = $this->createMock(Statement::class);
-        $statement
-            ->expects($this->once())
-            ->method('fetchColumn')
-            ->willReturn(1)
-        ;
-
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
-            ->method('executeQuery')
+            ->method('fetchOne')
             ->with(
                 "SELECT COUNT(*) FROM tl_page WHERE urlPrefix=:urlPrefix AND dns=:dns AND id!=:rootId AND type='root'",
                 ['urlPrefix' => 'en', 'dns' => 'www.example.com', 'rootId' => 1]
             )
-            ->willReturn($statement)
+            ->willReturn(1)
         ;
 
         $listener = new PageUrlListener(
             $this->mockContaoFramework(),
             $this->createMock(Slug::class),
             $translator,
-            $connection,
-            $this->createMock(IndexerInterface::class)
+            $connection
         );
 
         /** @var MockObject&DataContainer $dc */
@@ -1154,8 +1149,7 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $this->createMock(Slug::class),
             $translator,
-            $connection,
-            $this->createMock(IndexerInterface::class)
+            $connection
         );
 
         /** @var MockObject&DataContainer $dc */
@@ -1235,8 +1229,7 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $this->createMock(Slug::class),
             $this->createMock(TranslatorInterface::class),
-            $connection,
-            $this->createMock(IndexerInterface::class)
+            $connection
         );
 
         /** @var MockObject&DataContainer $dc */
@@ -1265,8 +1258,7 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $this->createMock(Slug::class),
             $this->createMock(TranslatorInterface::class),
-            $this->mockConnectionWithStatement(),
-            $this->createMock(IndexerInterface::class)
+            $this->mockConnectionWithStatement()
         );
 
         /** @var MockObject&DataContainer $dc */
@@ -1298,8 +1290,7 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $this->createMock(Slug::class),
             $this->createMock(TranslatorInterface::class),
-            $this->mockConnectionWithStatement(),
-            $this->createMock(IndexerInterface::class)
+            $this->mockConnectionWithStatement()
         );
 
         /** @var MockObject&DataContainer $dc */
@@ -1333,8 +1324,7 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $this->createMock(Slug::class),
             $this->createMock(TranslatorInterface::class),
-            $this->mockConnectionWithStatement(),
-            $this->createMock(IndexerInterface::class)
+            $this->mockConnectionWithStatement()
         );
 
         /** @var MockObject&DataContainer $dc */
@@ -1389,8 +1379,7 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $this->createMock(Slug::class),
             $this->mockTranslator(),
-            $connection,
-            $this->createMock(IndexerInterface::class)
+            $connection
         );
 
         /** @var MockObject&DataContainer $dc */
@@ -1471,8 +1460,7 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $this->createMock(Slug::class),
             $translator,
-            $connection,
-            $this->createMock(IndexerInterface::class)
+            $connection
         );
 
         /** @var MockObject&DataContainer $dc */
@@ -1501,8 +1489,7 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $this->createMock(Slug::class),
             $this->createMock(TranslatorInterface::class),
-            $this->mockConnectionWithStatement(),
-            $this->createMock(IndexerInterface::class)
+            $this->mockConnectionWithStatement()
         );
 
         /** @var MockObject&DataContainer $dc */
@@ -1534,8 +1521,7 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $this->createMock(Slug::class),
             $this->createMock(TranslatorInterface::class),
-            $this->mockConnectionWithStatement(),
-            $this->createMock(IndexerInterface::class)
+            $this->mockConnectionWithStatement()
         );
 
         /** @var MockObject&DataContainer $dc */
@@ -1569,8 +1555,7 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $this->createMock(Slug::class),
             $this->createMock(TranslatorInterface::class),
-            $this->mockConnectionWithStatement(),
-            $this->createMock(IndexerInterface::class)
+            $this->mockConnectionWithStatement()
         );
 
         /** @var MockObject&DataContainer $dc */
@@ -1594,63 +1579,36 @@ class PageUrlListenerTest extends TestCase
      */
     private function mockConnection(array $prefixAndSuffix, array $ids, array $aliases, array $aliasIds, bool $prefixCheck = false): Connection
     {
-        $args = [];
-        $statements = [];
+        $connection = $this->createMock(Connection::class);
 
         if ($prefixCheck) {
-            $args[] = ["SELECT COUNT(*) FROM tl_page WHERE urlPrefix=:urlPrefix AND dns=:dns AND id!=:rootId AND type='root'"];
-
-            $statement = $this->createMock(Statement::class);
-            $statement
+            $connection
                 ->expects($this->once())
-                ->method('fetchColumn')
+                ->method('fetchOne')
+                ->with("SELECT COUNT(*) FROM tl_page WHERE urlPrefix=:urlPrefix AND dns=:dns AND id!=:rootId AND type='root'")
                 ->willReturn(0)
             ;
-
-            $statements[] = $statement;
         }
 
-        $args[] = ["SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'"];
-
-        $statement = $this->createMock(Statement::class);
-        $statement
+        $connection
             ->expects($this->once())
-            ->method('fetchAll')
+            ->method('fetchAllAssociative')
+            ->with("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'")
             ->willReturn($prefixAndSuffix)
         ;
 
-        $statements[] = $statement;
+        $values = [];
 
-        foreach ($ids as $k => $id) {
-            if (!isset($aliases[$k])) {
-                continue;
+        foreach (array_keys($ids) as $k) {
+            if (isset($aliases[$k])) {
+                $values[] = $aliasIds[$k];
             }
-
-            $args[] = [
-                'SELECT id FROM tl_page WHERE alias LIKE :alias AND id!=:id',
-                [
-                    'alias' => '%'.$aliases[$k].'%',
-                    'id' => $id,
-                ],
-            ];
-
-            $statement = $this->createMock(Statement::class);
-            $statement
-                ->expects($this->once())
-                ->method('fetchAll')
-                ->with(FetchMode::COLUMN)
-                ->willReturn($aliasIds[$k])
-            ;
-
-            $statements[] = $statement;
         }
 
-        $connection = $this->createMock(Connection::class);
         $connection
-            ->expects($this->exactly(\count($statements)))
-            ->method('executeQuery')
-            ->withConsecutive(...$args)
-            ->willReturnOnConsecutiveCalls(...$statements)
+            ->expects($this->exactly(\count($values)))
+            ->method('fetchFirstColumn')
+            ->willReturnOnConsecutiveCalls(...$values)
         ;
 
         return $connection;

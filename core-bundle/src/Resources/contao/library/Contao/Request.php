@@ -225,7 +225,7 @@ class Request
 	 */
 	public function hasError()
 	{
-		return $this->strError != '';
+		return (bool) $this->strError;
 	}
 
 	/**
@@ -297,7 +297,7 @@ class Request
 		{
 			$default['Authorization'] = 'Authorization: Basic ' . base64_encode($uri['user'] . ':' . $uri['pass']);
 		}
-		elseif ($this->strUsername != '')
+		elseif ($this->strUsername)
 		{
 			$default['Authorization'] = 'Authorization: Basic ' . base64_encode($this->strUsername . ':' . $this->strPassword);
 		}
@@ -311,7 +311,7 @@ class Request
 		$request .= implode("\r\n", $default);
 		$request .= "\r\n\r\n";
 
-		if ($this->strData != '')
+		if ($this->strData)
 		{
 			$request .= $this->strData . "\r\n";
 		}

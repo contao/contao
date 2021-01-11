@@ -171,19 +171,19 @@ class BackendUser extends User
 				return $this->arrData['admin'] ? true : false;
 
 			case 'groups':
-				return \is_array($this->arrData['groups']) ? $this->arrData['groups'] : (($this->arrData['groups'] != '') ? array($this->arrData['groups']) : array());
+				return \is_array($this->arrData['groups']) ? $this->arrData['groups'] : ($this->arrData['groups'] ? array($this->arrData['groups']) : array());
 
 			case 'pagemounts':
-				return \is_array($this->arrData['pagemounts']) ? $this->arrData['pagemounts'] : (($this->arrData['pagemounts'] != '') ? array($this->arrData['pagemounts']) : false);
+				return \is_array($this->arrData['pagemounts']) ? $this->arrData['pagemounts'] : ($this->arrData['pagemounts'] ? array($this->arrData['pagemounts']) : false);
 
 			case 'filemounts':
-				return \is_array($this->arrData['filemounts']) ? $this->arrData['filemounts'] : (($this->arrData['filemounts'] != '') ? array($this->arrData['filemounts']) : false);
+				return \is_array($this->arrData['filemounts']) ? $this->arrData['filemounts'] : ($this->arrData['filemounts'] ? array($this->arrData['filemounts']) : false);
 
 			case 'filemountIds':
 				return $this->arrFilemountIds;
 
 			case 'fop':
-				return \is_array($this->arrData['fop']) ? $this->arrData['fop'] : (($this->arrData['fop'] != '') ? array($this->arrData['fop']) : false);
+				return \is_array($this->arrData['fop']) ? $this->arrData['fop'] : ($this->arrData['fop'] ? array($this->arrData['fop']) : false);
 
 			case 'alexf':
 				return $this->alexf;
@@ -437,7 +437,7 @@ class BackendUser extends User
 
 		foreach ((array) $this->groups as $id)
 		{
-			$objGroup = $this->Database->prepare("SELECT * FROM tl_user_group WHERE id=? AND disable!='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "')")
+			$objGroup = $this->Database->prepare("SELECT * FROM tl_user_group WHERE id=? AND disable!='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'$time')")
 									   ->limit(1)
 									   ->execute($id);
 
@@ -450,7 +450,7 @@ class BackendUser extends User
 					// The new page/file picker can return integers instead of arrays, so use empty() instead of is_array() and StringUtil::deserialize(true) here
 					if (!empty($value))
 					{
-						$this->$field = array_merge((\is_array($this->$field) ? $this->$field : (($this->$field != '') ? array($this->$field) : array())), $value);
+						$this->$field = array_merge((\is_array($this->$field) ? $this->$field : ($this->$field ? array($this->$field) : array())), $value);
 						$this->$field = array_unique($this->$field);
 					}
 				}
@@ -519,7 +519,7 @@ class BackendUser extends User
 			{
 				$arrModules[$strGroupName]['class'] = 'group-' . $strGroupName . ' node-expanded';
 				$arrModules[$strGroupName]['title'] = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['collapseNode']);
-				$arrModules[$strGroupName]['label'] = (($label = \is_array($GLOBALS['TL_LANG']['MOD'][$strGroupName]) ? $GLOBALS['TL_LANG']['MOD'][$strGroupName][0] : $GLOBALS['TL_LANG']['MOD'][$strGroupName]) != false) ? $label : $strGroupName;
+				$arrModules[$strGroupName]['label'] = ($label = \is_array($GLOBALS['TL_LANG']['MOD'][$strGroupName] ?? null) ? $GLOBALS['TL_LANG']['MOD'][$strGroupName][0] : ($GLOBALS['TL_LANG']['MOD'][$strGroupName] ?? null)) ? $label : $strGroupName;
 				$arrModules[$strGroupName]['href'] = $router->generate('contao_backend', array('do'=>Input::get('do'), 'mtg'=>$strGroupName, 'ref'=>$strRefererId));
 				$arrModules[$strGroupName]['ajaxUrl'] = $router->generate('contao_backend');
 				$arrModules[$strGroupName]['icon'] = 'modPlus.gif'; // backwards compatibility with e.g. EasyThemes
@@ -534,7 +534,7 @@ class BackendUser extends User
 					{
 						$arrModules[$strGroupName]['modules'][$strModuleName] = $arrModuleConfig;
 						$arrModules[$strGroupName]['modules'][$strModuleName]['title'] = StringUtil::specialchars($GLOBALS['TL_LANG']['MOD'][$strModuleName][1]);
-						$arrModules[$strGroupName]['modules'][$strModuleName]['label'] = (($label = \is_array($GLOBALS['TL_LANG']['MOD'][$strModuleName]) ? $GLOBALS['TL_LANG']['MOD'][$strModuleName][0] : $GLOBALS['TL_LANG']['MOD'][$strModuleName]) != false) ? $label : $strModuleName;
+						$arrModules[$strGroupName]['modules'][$strModuleName]['label'] = ($label = \is_array($GLOBALS['TL_LANG']['MOD'][$strModuleName] ?? null) ? $GLOBALS['TL_LANG']['MOD'][$strModuleName][0] : ($GLOBALS['TL_LANG']['MOD'][$strModuleName] ?? null)) ? $label : $strModuleName;
 						$arrModules[$strGroupName]['modules'][$strModuleName]['class'] = 'navigation ' . $strModuleName;
 						$arrModules[$strGroupName]['modules'][$strModuleName]['href'] = $router->generate('contao_backend', array('do'=>$strModuleName, 'ref'=>$strRefererId));
 						$arrModules[$strGroupName]['modules'][$strModuleName]['isActive'] = false;

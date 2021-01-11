@@ -51,7 +51,7 @@ abstract class Backend extends Controller
 		$theme = Config::get('backendTheme');
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
-		if ($theme != '' && $theme != 'flexible' && is_dir($projectDir . '/system/themes/' . $theme))
+		if ($theme && $theme != 'flexible' && is_dir($projectDir . '/system/themes/' . $theme))
 		{
 			return $theme;
 		}
@@ -92,7 +92,7 @@ abstract class Backend extends Controller
 	{
 		$lang = $GLOBALS['TL_LANGUAGE'];
 
-		if ($lang == '')
+		if (!$lang)
 		{
 			return 'en';
 		}
@@ -229,7 +229,7 @@ abstract class Backend extends Controller
 		// Unset the "no back button" flag
 		$arrUnset[] = 'nb';
 
-		return parent::addToUrl($strRequest . (($strRequest != '') ? '&amp;' : '') . 'rt=' . REQUEST_TOKEN, $blnAddRef, $arrUnset);
+		return parent::addToUrl($strRequest . ($strRequest ? '&amp;' : '') . 'rt=' . REQUEST_TOKEN, $blnAddRef, $arrUnset);
 	}
 
 	/**
@@ -336,8 +336,8 @@ abstract class Backend extends Controller
 		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
-		$arrTables = (array) $arrModule['tables'];
-		$strTable = Input::get('table') ?: $arrTables[0];
+		$arrTables = (array) ($arrModule['tables'] ?? array());
+		$strTable = Input::get('table') ?: ($arrTables[0] ?? null);
 		$id = (!Input::get('act') && Input::get('id')) ? Input::get('id') : $objSession->get('CURRENT_ID');
 
 		// Store the current ID in the current session
@@ -370,7 +370,7 @@ abstract class Backend extends Controller
 		$dc = null;
 
 		// Create the data container object
-		if ($strTable != '')
+		if ($strTable)
 		{
 			if (!\in_array($strTable, $arrTables))
 			{
@@ -382,11 +382,11 @@ abstract class Backend extends Controller
 			$this->loadDataContainer($strTable);
 
 			// Include all excluded fields which are allowed for the current user
-			if ($GLOBALS['TL_DCA'][$strTable]['fields'])
+			if (\is_array($GLOBALS['TL_DCA'][$strTable]['fields'] ?? null))
 			{
 				foreach ($GLOBALS['TL_DCA'][$strTable]['fields'] as $k=>$v)
 				{
-					if ($v['exclude'] && $this->User->hasAccess($strTable . '::' . $k, 'alexf'))
+					if (($v['exclude'] ?? null) && $this->User->hasAccess($strTable . '::' . $k, 'alexf'))
 					{
 						if ($strTable == 'tl_user_group')
 						{
@@ -399,7 +399,7 @@ abstract class Backend extends Controller
 			}
 
 			// Fabricate a new data container object
-			if ($GLOBALS['TL_DCA'][$strTable]['config']['dataContainer'] == '')
+			if (!isset($GLOBALS['TL_DCA'][$strTable]['config']['dataContainer']))
 			{
 				$this->log('Missing data container for table "' . $strTable . '"', __METHOD__, TL_ERROR);
 				trigger_error('Could not create a data container object', E_USER_ERROR);
@@ -426,7 +426,7 @@ abstract class Backend extends Controller
 		}
 
 		// Trigger the module callback
-		elseif (class_exists($arrModule['callback']))
+		elseif (class_exists($arrModule['callback'] ?? null))
 		{
 			/** @var Module $objCallback */
 			$objCallback = new $arrModule['callback']($dc);
@@ -459,11 +459,11 @@ abstract class Backend extends Controller
 										 ->limit(1)
 										 ->execute(Input::get('id'));
 
-				if ($objRow->title != '')
+				if ($objRow->title)
 				{
 					$this->Template->headline .= ' › <span>' . $objRow->title . '</span>';
 				}
-				elseif ($objRow->name != '')
+				elseif ($objRow->name)
 				{
 					$this->Template->headline .= ' › <span>' . $objRow->name . '</span>';
 				}
@@ -478,7 +478,7 @@ abstract class Backend extends Controller
 		{
 			$act = Input::get('act');
 
-			if ($act == '' || $act == 'paste' || $act == 'select')
+			if (!$act || $act == 'paste' || $act == 'select')
 			{
 				$act = ($dc instanceof \listable) ? 'showAll' : 'edit';
 			}
@@ -518,9 +518,9 @@ abstract class Backend extends Controller
 
 				$pid = $dc->id;
 				$table = $strTable;
-				$ptable = ($act != 'edit') ? $GLOBALS['TL_DCA'][$strTable]['config']['ptable'] : $strTable;
+				$ptable = $act != 'edit' ? ($GLOBALS['TL_DCA'][$strTable]['config']['ptable'] ?? null) : $strTable;
 
-				while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'], array(5, 6)))
+				while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null, array(5, 6)))
 				{
 					$objRow = $this->Database->prepare("SELECT * FROM " . $ptable . " WHERE id=?")
 											 ->limit(1)
@@ -536,15 +536,15 @@ abstract class Backend extends Controller
 						}
 
 						// Add object title or name
-						if ($objRow->title != '')
+						if ($objRow->title)
 						{
 							$trail[] = ' › <span>' . $objRow->title . '</span>';
 						}
-						elseif ($objRow->name != '')
+						elseif ($objRow->name)
 						{
 							$trail[] = ' › <span>' . $objRow->name . '</span>';
 						}
-						elseif ($objRow->headline != '')
+						elseif ($objRow->headline)
 						{
 							$trail[] = ' › <span>' . $objRow->headline . '</span>';
 						}
@@ -556,7 +556,7 @@ abstract class Backend extends Controller
 					// Next parent table
 					$pid = $objRow->pid;
 					$table = $ptable;
-					$ptable = ($GLOBALS['TL_DCA'][$ptable]['config']['dynamicPtable']) ? $objRow->ptable : $GLOBALS['TL_DCA'][$ptable]['config']['ptable'];
+					$ptable = ($GLOBALS['TL_DCA'][$ptable]['config']['dynamicPtable'] ?? null) ? $objRow->ptable : ($GLOBALS['TL_DCA'][$ptable]['config']['ptable'] ?? null);
 				}
 
 				// Add the last parent table
@@ -658,7 +658,10 @@ abstract class Backend extends Controller
 	 */
 	public static function findSearchablePages($pid=0, $domain='', $blnIsXmlSitemap=false)
 	{
-		$objPages = PageModel::findPublishedByPid($pid, array('ignoreFePreview'=>true));
+		// Since the publication status of a page is not inherited by its child
+		// pages, we have to use findByPid() instead of findPublishedByPid() and
+		// filter out unpublished pages in the foreach loop (see #2217)
+		$objPages = PageModel::findByPid($pid, array('order'=>'sorting'));
 
 		if ($objPages === null)
 		{
@@ -670,8 +673,10 @@ abstract class Backend extends Controller
 		// Recursively walk through all subpages
 		foreach ($objPages as $objPage)
 		{
+			$isPublished = ($objPage->published && (!$objPage->start || $objPage->start <= time()) && (!$objPage->stop || $objPage->stop > time()));
+
 			// Searchable and not protected
-			if ($objPage->type == 'regular' && !$objPage->requireItem && (!$objPage->noSearch || $blnIsXmlSitemap) && (!$blnIsXmlSitemap || $objPage->robots != 'noindex,nofollow') && (!$objPage->protected || Config::get('indexProtected')))
+			if ($isPublished && $objPage->type == 'regular' && !$objPage->requireItem && (!$objPage->noSearch || $blnIsXmlSitemap) && (!$blnIsXmlSitemap || $objPage->robots != 'noindex,nofollow') && (!$objPage->protected || Config::get('indexProtected')))
 			{
 				$arrPages[] = $objPage->getAbsoluteUrl();
 
@@ -762,17 +767,17 @@ abstract class Backend extends Controller
 
 		if (isset($arrMeta[$strLanguage]))
 		{
-			if (!empty($arrMeta[$strLanguage]['title']) && Input::post('title') == '')
+			if (!empty($arrMeta[$strLanguage]['title']) && !Input::post('title'))
 			{
 				Input::setPost('title', $arrMeta[$strLanguage]['title']);
 			}
 
-			if (!empty($arrMeta[$strLanguage]['alt']) && Input::post('alt') == '')
+			if (!empty($arrMeta[$strLanguage]['alt']) && !Input::post('alt'))
 			{
 				Input::setPost('alt', $arrMeta[$strLanguage]['alt']);
 			}
 
-			if (!empty($arrMeta[$strLanguage]['caption']) && Input::post('caption') == '')
+			if (!empty($arrMeta[$strLanguage]['caption']) && !Input::post('caption'))
 			{
 				Input::setPost('caption', $arrMeta[$strLanguage]['caption']);
 			}
@@ -953,7 +958,7 @@ abstract class Backend extends Controller
 			{
 				$strBuffer = System::importStatic($callback[0])->{$callback[1]}();
 
-				if ($strBuffer != '')
+				if ($strBuffer)
 				{
 					$arrMessages[] = $strBuffer;
 				}
@@ -996,7 +1001,7 @@ abstract class Backend extends Controller
 
 		$strNode = $objSession->get($strKey);
 
-		if ($strNode == '')
+		if (!$strNode)
 		{
 			return;
 		}
@@ -1144,7 +1149,7 @@ abstract class Backend extends Controller
 	{
 		$host = Environment::get('host');
 
-		if (strncmp($host, 'xn--', 4) === 0)
+		if (strpos($host, 'xn--') !== 'false')
 		{
 			$host = Idna::decode($host);
 		}
@@ -1381,7 +1386,7 @@ abstract class Backend extends Controller
 			else
 			{
 				// Filter images
-				if ($strFilter != '' && !preg_match('/\.(' . str_replace(',', '|', $strFilter) . ')$/i', $strFile))
+				if ($strFilter && !preg_match('/\.(' . str_replace(',', '|', $strFilter) . ')$/i', $strFile))
 				{
 					continue;
 				}

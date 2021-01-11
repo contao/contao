@@ -99,7 +99,7 @@ class DcaExtractor extends Controller
 	 */
 	protected function __construct($strTable)
 	{
-		if ($strTable == '')
+		if (!$strTable)
 		{
 			throw new \Exception('The table name must not be empty');
 		}
@@ -378,13 +378,13 @@ class DcaExtractor extends Controller
 		}
 
 		// Return if the DC type is "File"
-		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'] == 'File')
+		if (($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'] ?? null) == 'File')
 		{
 			return;
 		}
 
 		// Return if the DC type is "Folder" and the DC is not database assisted
-		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'] == 'Folder' && empty($GLOBALS['TL_DCA'][$this->strTable]['config']['databaseAssisted']))
+		if (($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'] ?? null) == 'Folder' && empty($GLOBALS['TL_DCA'][$this->strTable]['config']['databaseAssisted']))
 		{
 			return;
 		}
@@ -406,7 +406,13 @@ class DcaExtractor extends Controller
 				// Check whether there is a relation (see #6524)
 				if (isset($config['relation']))
 				{
-					$table = substr($config['foreignKey'], 0, strrpos($config['foreignKey'], '.'));
+					$table = null;
+
+					if (isset($config['foreignKey']))
+					{
+						$table = substr($config['foreignKey'], 0, strrpos($config['foreignKey'], '.'));
+					}
+
 					$arrRelations[$field] = array_merge(array('table'=>$table, 'field'=>'id'), $config['relation']);
 
 					// Store the field delimiter if the related IDs are stored in CSV format (see #257)
@@ -462,12 +468,12 @@ class DcaExtractor extends Controller
 
 			list($engine, , $charset) = explode(' ', trim($arrTable['TABLE_OPTIONS']));
 
-			if ($engine != '')
+			if ($engine)
 			{
 				$sql['engine'] = str_replace('ENGINE=', '', $engine);
 			}
 
-			if ($charset != '')
+			if ($charset)
 			{
 				$sql['charset'] = str_replace('CHARSET=', '', $charset);
 			}
@@ -490,7 +496,7 @@ class DcaExtractor extends Controller
 					{
 						$type = trim($arrMatches[1]);
 						$field = implode(',', $arrFields[1]);
-						$sql['keys'][$field] = ($type != '') ? strtolower($type) : 'index';
+						$sql['keys'][$field] = $type ? strtolower($type) : 'index';
 					}
 				}
 			}

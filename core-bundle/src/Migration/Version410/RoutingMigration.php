@@ -82,7 +82,7 @@ class RoutingMigration extends AbstractMigration
         $sql = $this->connection->getDatabasePlatform()->getAlterTableSQL($diff);
 
         foreach ($sql as $statement) {
-            $this->connection->exec($statement);
+            $this->connection->executeStatement($statement);
         }
 
         $prefix = $this->prependLocale ? 'language' : "''";

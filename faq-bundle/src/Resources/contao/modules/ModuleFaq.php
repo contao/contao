@@ -36,7 +36,7 @@ class ModuleFaq extends Frontend
 		}
 
 		$arrProcessed = array();
-		$time = Date::floorToMinute();
+		$time = time();
 
 		// Get all categories
 		$objFaq = FaqCategoryModel::findAll();
@@ -70,7 +70,7 @@ class ModuleFaq extends Frontend
 					}
 
 					// The target page has not been published (see #5520)
-					if (!$objParent->published || ($objParent->start != '' && $objParent->start > $time) || ($objParent->stop != '' && $objParent->stop <= ($time + 60)))
+					if (!$objParent->published || ($objParent->start && $objParent->start > $time) || ($objParent->stop && $objParent->stop <= $time))
 					{
 						continue;
 					}
@@ -103,6 +103,11 @@ class ModuleFaq extends Frontend
 				{
 					while ($objItems->next())
 					{
+						if ($blnIsSitemap && $objItems->robots === 'noindex,nofollow')
+						{
+							continue;
+						}
+
 						$arrPages[] = sprintf(preg_replace('/%(?!s)/', '%%', $strUrl), ($objItems->alias ?: $objItems->id));
 					}
 				}

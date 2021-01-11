@@ -13,7 +13,6 @@ use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\DataContainer;
-use Contao\Date;
 use Contao\FrontendUser;
 use Contao\Image;
 use Contao\Input;
@@ -40,7 +39,8 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			(
 				'id' => 'primary',
 				'username' => 'unique',
-				'email' => 'index'
+				'email' => 'index',
+				'login,disable,start,stop' => 'index'
 			)
 		)
 	),
@@ -85,7 +85,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			(
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"'
+				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"'
 			),
 			'toggle' => array
 			(
@@ -302,7 +302,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'sorting'                 => true,
 			'flag'                    => 1,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'unique'=>true, 'rgxp'=>'extnd', 'nospace'=>true, 'maxlength'=>64, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'login', 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'unique'=>true, 'rgxp'=>'extnd', 'nospace'=>true, 'maxlength'=>64, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'login', 'tl_class'=>'w50', 'autocapitalize'=>'off', 'autocomplete'=>'username'),
 			'sql'                     => 'varchar(64) BINARY NULL'
 		),
 		'password' => array
@@ -469,9 +469,7 @@ class tl_member extends Backend
 	public function addIcon($row, $label, DataContainer $dc, $args)
 	{
 		$image = 'member';
-		$time = Date::floorToMinute();
-
-		$disabled = ($row['start'] !== '' && $row['start'] > $time) || ($row['stop'] !== '' && $row['stop'] < $time);
+		$disabled = ($row['start'] !== '' && $row['start'] > time()) || ($row['stop'] !== '' && $row['stop'] <= time());
 
 		if ($row['useTwoFactor'])
 		{
@@ -508,7 +506,7 @@ class tl_member extends Backend
 			return '';
 		}
 
-		if (!$row['login'] || $row['username'] == '' || (!$this->User->isAdmin && count(array_intersect(StringUtil::deserialize($row['groups'], true), $this->User->amg)) < 1))
+		if (!$row['login'] || !$row['username'] || (!$this->User->isAdmin && count(array_intersect(StringUtil::deserialize($row['groups'], true), $this->User->amg)) < 1))
 		{
 			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 		}
@@ -639,7 +637,7 @@ class tl_member extends Backend
 		}
 
 		// Trigger the onload_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback'] as $callback)
 			{
@@ -683,7 +681,7 @@ class tl_member extends Backend
 		$blnVisible = !$blnVisible;
 
 		// Trigger the save_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_member']['fields']['disable']['save_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_member']['fields']['disable']['save_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_member']['fields']['disable']['save_callback'] as $callback)
 			{
@@ -712,7 +710,7 @@ class tl_member extends Backend
 		}
 
 		// Trigger the onsubmit_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_member']['config']['onsubmit_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_member']['config']['onsubmit_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_member']['config']['onsubmit_callback'] as $callback)
 			{

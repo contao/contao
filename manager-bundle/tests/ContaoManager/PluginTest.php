@@ -27,6 +27,7 @@ use FOS\HttpCacheBundle\FOSHttpCacheBundle;
 use Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
 use Nelmio\SecurityBundle\NelmioSecurityBundle;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MonologBundle\MonologBundle;
@@ -40,11 +41,14 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Mailer\Transport\NativeTransportFactory;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 class PluginTest extends ContaoTestCase
 {
+    use ExpectDeprecationTrait;
+
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
@@ -266,8 +270,6 @@ class PluginTest extends ContaoTestCase
 
         $plugin = new Plugin();
         $collection = $plugin->getRouteCollection($resolver, $kernel);
-
-        /** @var array<Route> $routes */
         $routes = array_values($collection->all());
 
         $this->assertCount(3, $routes);
@@ -312,11 +314,11 @@ class PluginTest extends ContaoTestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Since contao/manager-bundle 4.6: Defining the "prepend_locale" parameter in the parameters.yml file %s.
      */
     public function testHandlesThePrependLocaleParameter(): void
     {
+        $this->expectDeprecation('Since contao/manager-bundle 4.6: Defining the "prepend_locale" parameter in the parameters.yml file %s.');
+
         $container = $this->getContainer();
         $container->setParameter('prepend_locale', true);
 
@@ -414,7 +416,7 @@ class PluginTest extends ContaoTestCase
         ];
     }
 
-    public function testAddsTheDefaultServerVersion(): void
+    public function testAddsTheDefaultServerVersionAndPdoOptions(): void
     {
         $extensionConfigs = [
             [
@@ -422,6 +424,86 @@ class PluginTest extends ContaoTestCase
                     'connections' => [
                         'default' => [
                             'driver' => 'pdo_mysql',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $expect = array_merge(
+            $extensionConfigs,
+            [
+                [
+                    'dbal' => [
+                        'connections' => [
+                            'default' => [
+                                'server_version' => '5.5',
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    'dbal' => [
+                        'connections' => [
+                            'default' => [
+                                'options' => [
+                                    \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        $container = $this->getContainer();
+        $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
+
+        $this->assertSame($expect, $extensionConfig);
+    }
+
+    public function testDoesNotAddDefaultPdoOptionsIfDriverIsNotPdo(): void
+    {
+        $extensionConfigs = [
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'driver' => 'mysqli',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $expect = array_merge(
+            $extensionConfigs,
+            [[
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'server_version' => '5.5',
+                        ],
+                    ],
+                ],
+            ]]
+        );
+
+        $container = $this->getContainer();
+        $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
+
+        $this->assertSame($expect, $extensionConfig);
+    }
+
+    public function testDoesNotAddDefaultPdoOptionsIfCustomOptionsPresent(): void
+    {
+        $extensionConfigs = [
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'driver' => 'mysqli',
+                            'options' => null,
                         ],
                     ],
                 ],
@@ -530,6 +612,12 @@ class PluginTest extends ContaoTestCase
 
     public function getMailerParameters(): \Generator
     {
+        $default = 'sendmail://default';
+
+        if (class_exists(NativeTransportFactory::class)) {
+            $default = 'native://default';
+        }
+
         yield [
             'mail',
             null,
@@ -537,7 +625,7 @@ class PluginTest extends ContaoTestCase
             null,
             null,
             null,
-            'sendmail+smtp://default',
+            $default,
         ];
 
         yield [
@@ -547,7 +635,7 @@ class PluginTest extends ContaoTestCase
             null,
             25,
             null,
-            'sendmail+smtp://default',
+            $default,
         ];
 
         yield [
@@ -651,12 +739,12 @@ class PluginTest extends ContaoTestCase
     {
         yield [
             'sendmail://localhost',
-            'sendmail+smtp://default',
+            'sendmail://default',
         ];
 
         yield [
             'mail://localhost',
-            'sendmail+smtp://default',
+            'sendmail://default',
         ];
 
         yield [
@@ -759,8 +847,8 @@ class PluginTest extends ContaoTestCase
 
     public function testRetrievesTheConnectionParametersFromTheConfiguration(): void
     {
-        $pluginLoader = $this->createMock(PluginLoader::class);
-        $container = new PluginContainerBuilder($pluginLoader, []);
+        $container = new PluginContainerBuilder($this->createMock(PluginLoader::class), []);
+        $container->setParameter('kernel.project_dir', __DIR__.'/../Fixtures/app');
 
         $extensionConfigs = [
             [
@@ -807,6 +895,260 @@ class PluginTest extends ContaoTestCase
         $_ENV['DATABASE_URL'] = $url;
     }
 
+    public function testDoesNotAddDefaultDoctrineMappingIfEntityFolderDoesNotExists(): void
+    {
+        $plugin = new Plugin(
+            function () {
+                return $this->createMock(Connection::class);
+            }
+        );
+
+        $extensionConfig = $plugin->getExtensionConfig('doctrine', [], $this->getContainer());
+
+        // Ignore the DBAL entry
+        unset($extensionConfig[0]['dbal']);
+
+        $this->assertCount(1, $extensionConfig);
+        $this->assertEmpty($extensionConfig[0]);
+    }
+
+    /**
+     * @dataProvider getOrmMappingConfigurations
+     */
+    public function testOnlyAddsTheDefaultDoctrineMappingIfAutoMappingIsEnabledAndNotAlreadyConfigured(array $ormConfig, string $defaultEntityManager, bool $shouldAdd): void
+    {
+        $extensionConfigs = [
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'url' => '%env(DATABASE_URL)%',
+                            'password' => '@foobar',
+                        ],
+                    ],
+                ],
+                'orm' => $ormConfig,
+            ],
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'options' => [
+                                \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $expect = $extensionConfigs;
+
+        if ($shouldAdd) {
+            $expect = array_merge(
+                $extensionConfigs,
+                [[
+                    'orm' => [
+                        'entity_managers' => [
+                            $defaultEntityManager => [
+                                'mappings' => [
+                                    'App' => [
+                                        'type' => 'annotation',
+                                        'dir' => '%kernel.project_dir%/src/Entity',
+                                        'is_bundle' => false,
+                                        'prefix' => 'App\Entity',
+                                        'alias' => 'App',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ]]
+            );
+        }
+
+        $plugin = new Plugin(
+            function () {
+                return $this->createMock(Connection::class);
+            }
+        );
+
+        $container = $this->getContainer();
+        $container->setParameter('kernel.project_dir', __DIR__.'/../Fixtures/app-with-entities');
+
+        $this->assertSame($expect, $plugin->getExtensionConfig('doctrine', $extensionConfigs, $container));
+    }
+
+    public function getOrmMappingConfigurations(): \Generator
+    {
+        // Positive configurations
+        yield 'with global auto_mapping enabled' => [
+            [
+                'auto_mapping' => true,
+            ],
+            'default',
+            true,
+        ];
+
+        yield 'with auto_mapping enabled in default entity manager' => [
+            [
+                'entity_managers' => [
+                    'default' => [
+                        'auto_mapping' => true,
+                    ],
+                ],
+            ],
+            'default',
+            true,
+        ];
+
+        yield 'with auto_mapping enabled in a renamed default entity manager' => [
+            [
+                'default_entity_manager' => 'foo',
+                'entity_managers' => [
+                    'foo' => [
+                        'auto_mapping' => true,
+                    ],
+                ],
+            ],
+            'foo',
+            true,
+        ];
+
+        // Skip, because auto_mapping is not set
+        yield 'with auto_mapping not set' => [
+            [
+            ],
+            'default',
+            false,
+        ];
+
+        yield 'with global auto_mapping disabled' => [
+            [
+                'auto_mapping' => false,
+            ],
+            'default',
+            false,
+        ];
+
+        yield 'with auto_mapping disabled in default entity manager' => [
+            [
+                'entity_managers' => [
+                    'default' => [
+                        'auto_mapping' => false,
+                    ],
+                ],
+            ],
+            'default',
+            false,
+        ];
+
+        yield 'with auto_mapping disabled in a renamed default entity manager' => [
+            [
+                'default_entity_manager' => 'foo',
+                'entity_managers' => [
+                    'foo' => [
+                        'auto_mapping' => false,
+                    ],
+                ],
+            ],
+            'foo',
+            false,
+        ];
+
+        // Skip, because conflicting mapping already exists (global)
+        yield 'with existing global mapping "App"' => [
+            [
+                'auto_mapping' => true,
+                'mappings' => [
+                    'App' => [
+                        'foo' => 'bar',
+                    ],
+                ],
+            ],
+            'default',
+            false,
+        ];
+
+        yield 'with existing global mapping with alias "App"' => [
+            [
+                'auto_mapping' => true,
+                'mappings' => [
+                    'Foo' => [
+                        'alias' => 'App',
+                    ],
+                ],
+            ],
+            'default',
+            false,
+        ];
+
+        yield 'with existing global mapping setting target directory' => [
+            [
+                'auto_mapping' => true,
+                'mappings' => [
+                    'Foo' => [
+                        'dir' => '%kernel.project_dir%/src/Entity',
+                    ],
+                ],
+            ],
+            'default',
+            false,
+        ];
+
+        // Skip, because conflicting mapping already exists (in any entity manager)
+        yield 'with existing mapping "App" in any entity manager' => [
+            [
+                'auto_mapping' => true,
+                'entity_managers' => [
+                    'foo' => [
+                        'mappings' => [
+                            'App' => [
+                                'foo' => 'bar',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'default',
+            false,
+        ];
+
+        yield 'with existing mapping with alias "App" in any entity manager' => [
+            [
+                'auto_mapping' => true,
+                'entity_managers' => [
+                    'foo' => [
+                        'mappings' => [
+                            'bar' => [
+                                'alias' => 'App',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'default',
+            false,
+        ];
+
+        yield 'with existing mapping setting target directory in any entity manager' => [
+            [
+                'auto_mapping' => true,
+                'entity_managers' => [
+                    'foo' => [
+                        'mappings' => [
+                            'bar' => [
+                                'dir' => '%kernel.project_dir%/src/Entity',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'default',
+            false,
+        ];
+    }
+
     private function getContainer(): PluginContainerBuilder
     {
         $pluginLoader = $this->createMock(PluginLoader::class);
@@ -824,6 +1166,7 @@ class PluginTest extends ContaoTestCase
         $container->setParameter('mailer_port', 25);
         $container->setParameter('mailer_encryption', null);
         $container->setParameter('secret', 'ThisTokenIsNotSoSecretChangeIt');
+        $container->setParameter('kernel.project_dir', __DIR__.'/../Fixtures/app');
 
         return $container;
     }

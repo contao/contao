@@ -176,12 +176,6 @@
       <trans-unit id="tl_layout.internal_first">
         <source>Load internal style sheets first</source>
       </trans-unit>
-      <trans-unit id="tl_layout.webfonts.0">
-        <source>Google web fonts</source>
-      </trans-unit>
-      <trans-unit id="tl_layout.webfonts.1">
-        <source>Here you can add Google web fonts to your website. Specify the font families without the base URL (e.g. &lt;em&gt;Ubuntu|Ubuntu+Mono&lt;/em&gt;).</source>
-      </trans-unit>
       <trans-unit id="tl_layout.lightboxSize.0">
         <source>Lightbox image size</source>
       </trans-unit>
@@ -248,12 +242,6 @@
       <trans-unit id="tl_layout.addJQuery.1">
         <source>Include the jQuery library in the layout.</source>
       </trans-unit>
-      <trans-unit id="tl_layout.jSource.0">
-        <source>jQuery source</source>
-      </trans-unit>
-      <trans-unit id="tl_layout.jSource.1">
-        <source>Here you can select from where to load the jQuery script.</source>
-      </trans-unit>
       <trans-unit id="tl_layout.jquery.0">
         <source>jQuery templates</source>
       </trans-unit>
@@ -265,12 +253,6 @@
       </trans-unit>
       <trans-unit id="tl_layout.addMooTools.1">
         <source>Include the MooTools library in the layout.</source>
-      </trans-unit>
-      <trans-unit id="tl_layout.mooSource.0">
-        <source>MooTools source</source>
-      </trans-unit>
-      <trans-unit id="tl_layout.mooSource.1">
-        <source>Here you can select from where to load the MooTools scripts.</source>
       </trans-unit>
       <trans-unit id="tl_layout.mootools.0">
         <source>MooTools templates</source>
@@ -332,9 +314,6 @@
       <trans-unit id="tl_layout.sections_legend">
         <source>Custom sections</source>
       </trans-unit>
-      <trans-unit id="tl_layout.webfonts_legend">
-        <source>Web fonts</source>
-      </trans-unit>
       <trans-unit id="tl_layout.image_legend">
         <source>Image sizes</source>
       </trans-unit>
@@ -356,26 +335,8 @@
       <trans-unit id="tl_layout.jquery_legend">
         <source>jQuery</source>
       </trans-unit>
-      <trans-unit id="tl_layout.j_local">
-        <source>Local file</source>
-      </trans-unit>
-      <trans-unit id="tl_layout.j_googleapis">
-        <source>CDN (code.jquery.com)</source>
-      </trans-unit>
-      <trans-unit id="tl_layout.j_fallback">
-        <source>CDN with local fallback</source>
-      </trans-unit>
       <trans-unit id="tl_layout.mootools_legend">
         <source>MooTools</source>
-      </trans-unit>
-      <trans-unit id="tl_layout.moo_local">
-        <source>Local file</source>
-      </trans-unit>
-      <trans-unit id="tl_layout.moo_googleapis">
-        <source>CDN (googleapis.com)</source>
-      </trans-unit>
-      <trans-unit id="tl_layout.moo_fallback">
-        <source>CDN with local fallback</source>
       </trans-unit>
       <trans-unit id="tl_layout.html5">
         <source>HTML</source>

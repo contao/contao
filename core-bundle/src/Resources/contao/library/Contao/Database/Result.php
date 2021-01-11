@@ -103,7 +103,7 @@ class Result
 	{
 		if ($this->resResult)
 		{
-			$this->resResult->closeCursor();
+			$this->resResult->free();
 		}
 	}
 
@@ -434,12 +434,12 @@ class Result
 
 		while ($this->resResult && \count($this->resultSet) <= $index)
 		{
-			$row = $this->resResult->fetch(\PDO::FETCH_ASSOC);
+			$row = $this->resResult->fetchAssociative();
 
 			if ($row === false)
 			{
 				$this->rowCount = \count($this->resultSet);
-				$this->resResult->closeCursor();
+				$this->resResult->free();
 				$this->resResult = null;
 				break;
 			}

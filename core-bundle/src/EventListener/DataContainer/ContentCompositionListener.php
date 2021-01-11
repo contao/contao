@@ -156,13 +156,10 @@ class ContentCompositionListener
         }
 
         // Check whether there are articles (e.g. on copied pages)
-        $total = $this->connection
-            ->executeQuery(
-                'SELECT COUNT(*) FROM tl_article WHERE pid=:pid',
-                ['pid' => $dc->id]
-            )
-            ->fetchColumn()
-        ;
+        $total = $this->connection->fetchOne(
+            'SELECT COUNT(*) FROM tl_article WHERE pid=:pid',
+            ['pid' => $dc->id]
+        );
 
         if ($total > 0) {
             return;
@@ -188,14 +185,14 @@ class ContentCompositionListener
      */
     public function renderArticlePasteButton(DataContainer $dc, array $row, string $table, bool $cr, array $clipboard = null): string
     {
-        if ($table === $GLOBALS['TL_DCA'][$dc->table]['config']['ptable']) {
+        if ($table === ($GLOBALS['TL_DCA'][$dc->table]['config']['ptable'] ?? null)) {
             return $this->renderArticlePasteIntoButton($dc, $row, $cr, $clipboard);
         }
 
         return $this->renderArticlePasteAfterButton($dc, $row, $cr, $clipboard);
     }
 
-    private function renderArticlePasteIntoButton(DataContainer $dc, array $row, bool $cr, array $clipboard = null)
+    private function renderArticlePasteIntoButton(DataContainer $dc, array $row, bool $cr, array $clipboard = null): string
     {
         $pageModel = $this->framework->createInstance(PageModel::class);
         $pageModel->preventSaving(false);
@@ -218,7 +215,7 @@ class ContentCompositionListener
         );
     }
 
-    private function renderArticlePasteAfterButton(DataContainer $dc, array $row, bool $cr, array $clipboard = null)
+    private function renderArticlePasteAfterButton(DataContainer $dc, array $row, bool $cr, array $clipboard = null): string
     {
         /** @var PageModel $pageAdapter */
         $pageAdapter = $this->framework->getAdapter(PageModel::class);

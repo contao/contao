@@ -134,7 +134,7 @@ class Route404ProviderTest extends TestCase
         $this->assertInstanceOf(Route::class, $route);
         $this->assertSame(RedirectController::class, $route->getDefault('_controller'));
         $this->assertSame('/en/foo.html', $route->getDefault('path'));
-        $this->assertTrue($route->getDefault('permanent'));
+        $this->assertFalse($route->getDefault('permanent'));
     }
 
     public function testDoesNotCheckCandidatesForEmptyPath(): void

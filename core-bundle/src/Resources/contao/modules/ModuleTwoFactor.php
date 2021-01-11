@@ -60,6 +60,7 @@ class ModuleTwoFactor extends BackendModule
 		$this->Template->href = $this->getReferer(true);
 		$this->Template->ref = $ref;
 		$this->Template->messages = Message::generateUnwrapped();
+		$this->Template->backupCodes = json_decode((string) $user->backupCodes, true) ?? array();
 
 		if (Input::get('act') == 'enable')
 		{
@@ -71,21 +72,10 @@ class ModuleTwoFactor extends BackendModule
 			$this->disableTwoFactor($user, $return);
 		}
 
-		if (Input::post('FORM_SUBMIT') == 'tl_two_factor_show_backup_codes')
-		{
-			if (!$user->backupCodes || !\count(json_decode($user->backupCodes, true)))
-			{
-				$this->generateBackupCodes($user);
-			}
-
-			$this->Template->showBackupCodes = true;
-		}
-
 		if (Input::post('FORM_SUBMIT') == 'tl_two_factor_generate_backup_codes')
 		{
-			$this->generateBackupCodes($user);
-
 			$this->Template->showBackupCodes = true;
+			$this->Template->backupCodes = System::getContainer()->get(BackupCodeManager::class)->generateBackupCodes($user);
 		}
 
 		if (Input::post('FORM_SUBMIT') == 'tl_two_factor_clear_trusted_devices')
@@ -94,7 +84,6 @@ class ModuleTwoFactor extends BackendModule
 		}
 
 		$this->Template->isEnabled = (bool) $user->useTwoFactor;
-		$this->Template->backupCodes = json_decode((string) $user->backupCodes, true) ?? array();
 		$this->Template->trustedDevices = $container->get('contao.security.two_factor.trusted_device_manager')->getTrustedDevices($user);
 	}
 
@@ -173,17 +162,5 @@ class ModuleTwoFactor extends BackendModule
 		System::getContainer()->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
 
 		throw new RedirectResponseException($return);
-	}
-
-	/**
-	 * Generate backup codes for two-factor authentication
-	 *
-	 * @param BackendUser $user
-	 */
-	private function generateBackupCodes(BackendUser $user)
-	{
-		/** @var BackupCodeManager $backupCodeManager */
-		$backupCodeManager = System::getContainer()->get(BackupCodeManager::class);
-		$backupCodeManager->generateBackupCodes($user);
 	}
 }

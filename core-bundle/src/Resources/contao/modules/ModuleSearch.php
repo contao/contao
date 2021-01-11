@@ -33,7 +33,9 @@ class ModuleSearch extends Module
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['search'][0]) . ' ###';
@@ -95,7 +97,7 @@ class ModuleSearch extends Module
 		$this->Template->results = '';
 
 		// Execute the search if there are keywords
-		if ($strKeywords != '' && $strKeywords != '*' && !$this->jumpTo)
+		if ($strKeywords !== '' && $strKeywords != '*' && !$this->jumpTo)
 		{
 			// Search pages
 			if (!empty($this->pages) && \is_array($this->pages))
@@ -189,7 +191,7 @@ class ModuleSearch extends Module
 
 				foreach ($arrResult as $k=>$v)
 				{
-					if ($v['protected'])
+					if ($v['protected'] ?? null)
 					{
 						if (!FE_USER_LOGGED_IN || !\is_array($this->User->groups))
 						{

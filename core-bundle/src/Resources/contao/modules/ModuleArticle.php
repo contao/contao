@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use FOS\HttpCache\ResponseTagger;
-
 /**
  * Provides methodes to handle articles.
  *
@@ -55,7 +53,7 @@ class ModuleArticle extends Module
 	 */
 	public function generate($blnNoMarkup=false)
 	{
-		if (TL_MODE == 'FE' && !BE_USER_LOGGED_IN && (!$this->published || ($this->start != '' && $this->start > time()) || ($this->stop != '' && $this->stop < time())))
+		if ($this->isHidden())
 		{
 			return '';
 		}
@@ -63,15 +61,43 @@ class ModuleArticle extends Module
 		$this->type = 'article';
 		$this->blnNoMarkup = $blnNoMarkup;
 
-		// Tag response
+		// Tag the article (see #2137)
 		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
 		{
-			/** @var ResponseTagger $responseTagger */
 			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
 			$responseTagger->addTags(array('contao.db.tl_article.' . $this->id));
 		}
 
 		return parent::generate();
+	}
+
+	protected function isHidden()
+	{
+		$isUnpublished = !$this->published || ($this->start && $this->start > time()) || ($this->stop && $this->stop <= time());
+
+		// The article is published, so show it
+		if (!$isUnpublished)
+		{
+			return false;
+		}
+
+		$tokenChecker = System::getContainer()->get('contao.security.token_checker');
+
+		// Preview mode is enabled, so show the article
+		if ($tokenChecker->hasBackendUser() && $tokenChecker->isPreviewMode())
+		{
+			return false;
+		}
+
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		// We are in the back end, so show the article
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
+		{
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -87,7 +113,7 @@ class ModuleArticle extends Module
 		// Generate the CSS ID if it is not set
 		if (empty($this->cssID[0]))
 		{
-			$this->cssID = array($id, $this->cssID[1]);
+			$this->cssID = array($id, $this->cssID[1] ?? null);
 		}
 
 		$this->Template->column = $this->inColumn;
@@ -109,7 +135,7 @@ class ModuleArticle extends Module
 			// Override the CSS ID and class
 			if (\is_array($arrCss) && \count($arrCss) == 2)
 			{
-				if ($arrCss[0] == '')
+				if (!$arrCss[0])
 				{
 					$arrCss[0] = $id;
 				}
@@ -131,19 +157,16 @@ class ModuleArticle extends Module
 		}
 
 		// Get section and article alias
-		list($strSection, $strArticle) = explode(':', Input::get('articles'));
-
-		if ($strArticle === null)
-		{
-			$strArticle = $strSection;
-		}
+		$chunks = explode(':', Input::get('articles'));
+		$strSection = $chunks[0] ?? null;
+		$strArticle = $chunks[1] ?? $strSection;
 
 		// Overwrite the page title (see #2853 and #4955)
-		if (!$this->blnNoMarkup && $strArticle != '' && ($strArticle == $this->id || $strArticle == $this->alias) && $this->title != '')
+		if (!$this->blnNoMarkup && $strArticle && ($strArticle == $this->id || $strArticle == $this->alias) && $this->title)
 		{
 			$objPage->pageTitle = strip_tags(StringUtil::stripInsertTags($this->title));
 
-			if ($this->teaser != '')
+			if ($this->teaser)
 			{
 				$objPage->description = $this->prepareMetaDescription($this->teaser);
 			}
@@ -153,7 +176,7 @@ class ModuleArticle extends Module
 		$this->Template->backlink = false;
 
 		// Back link
-		if (!$this->multiMode && $strArticle != '' && ($strArticle == $this->id || $strArticle == $this->alias))
+		if (!$this->multiMode && $strArticle && ($strArticle == $this->id || $strArticle == $this->alias))
 		{
 			$this->Template->backlink = 'javascript:history.go(-1)'; // see #6955
 			$this->Template->back = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goBack']);
@@ -164,48 +187,18 @@ class ModuleArticle extends Module
 
 		if ($objCte !== null)
 		{
-			$arrRows = $objCte->getModels();
-			$objLastRow = null;
-
-			/** @var ContentModel $objRow */
-			while ($objRow = array_shift($arrRows))
+			while ($objCte->next())
 			{
-				$arrCss = array();
-
-				// Add the "first" and "last" classes (see #2583)
-				if (empty($arrElements))
-				{
-					$arrCss[] = 'first';
-				}
-
-				if (empty($arrRows))
-				{
-					$arrCss[] = 'last';
-				}
-
-				$objRow->classes = $arrCss;
-				$strElement = $this->getContentElement($objRow, $this->strColumn);
-
-				if ($strElement != '')
-				{
-					$arrElements[] = $strElement;
-					$objLastRow = $objRow;
-				}
-				elseif (empty($arrRows) && $objLastRow != null && $objLastRow !== $objRow)
-				{
-					// Re-generate the last successful element with "last" class
-					array_pop($arrElements);
-					$arrRows[] = $objLastRow;
-				}
+				$arrElements[] = $this->getContentElement($objCte->current(), $this->strColumn);
 			}
 		}
 
 		$this->Template->teaser = $this->teaser;
 		$this->Template->elements = $arrElements;
 
-		if ($this->keywords != '')
+		if ($this->keywords)
 		{
-			$GLOBALS['TL_KEYWORDS'] .= (($GLOBALS['TL_KEYWORDS'] != '') ? ', ' : '') . $this->keywords;
+			$GLOBALS['TL_KEYWORDS'] .= ($GLOBALS['TL_KEYWORDS'] ? ', ' : '') . $this->keywords;
 		}
 
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
@@ -218,7 +211,7 @@ class ModuleArticle extends Module
 		}
 
 		// New structure
-		elseif ($this->printable != '')
+		elseif ($this->printable)
 		{
 			$options = StringUtil::deserialize($this->printable);
 

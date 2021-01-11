@@ -37,7 +37,9 @@ class ModulePassword extends Module
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['lostPassword'][0]) . ' ###';
@@ -64,6 +66,23 @@ class ModulePassword extends Module
 
 		System::loadLanguageFile('tl_member');
 		$this->loadDataContainer('tl_member');
+
+		// Call onload_callback (e.g. to check permissions)
+		if (\is_array($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback'] ?? null))
+		{
+			foreach ($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback'] as $callback)
+			{
+				if (\is_array($callback))
+				{
+					$this->import($callback[0]);
+					$this->{$callback[0]}->{$callback[1]}();
+				}
+				elseif (\is_callable($callback))
+				{
+					$callback();
+				}
+			}
+		}
 
 		// Set new password
 		if (strncmp(Input::get('token'), 'pw-', 3) === 0)
@@ -105,7 +124,7 @@ class ModulePassword extends Module
 		foreach ($arrFields as $arrField)
 		{
 			/** @var Widget $strClass */
-			$strClass = $GLOBALS['TL_FFL'][$arrField['inputType']];
+			$strClass = $GLOBALS['TL_FFL'][$arrField['inputType']] ?? null;
 
 			// Continue if the class is not defined
 			if (!class_exists($strClass))
@@ -113,7 +132,7 @@ class ModulePassword extends Module
 				continue;
 			}
 
-			$arrField['eval']['required'] = $arrField['eval']['mandatory'];
+			$arrField['eval']['required'] = $arrField['eval']['mandatory'] ?? null;
 
 			/** @var Widget $objWidget */
 			$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, $arrField['name']));
@@ -221,7 +240,7 @@ class ModulePassword extends Module
 		$arrField = $GLOBALS['TL_DCA']['tl_member']['fields']['password'];
 
 		/** @var Widget $strClass */
-		$strClass = $GLOBALS['TL_FFL']['password'];
+		$strClass = $GLOBALS['TL_FFL']['password'] ?? null;
 
 		// Fallback to default if the class is not defined
 		if (!class_exists($strClass))
@@ -258,7 +277,7 @@ class ModulePassword extends Module
 				$optInToken->confirm();
 
 				// Create a new version
-				if ($GLOBALS['TL_DCA']['tl_member']['config']['enableVersioning'])
+				if ($GLOBALS['TL_DCA']['tl_member']['config']['enableVersioning'] ?? null)
 				{
 					$objVersions->create();
 				}
@@ -319,7 +338,7 @@ class ModulePassword extends Module
 		// Send the token
 		$optInToken->send(
 			sprintf($GLOBALS['TL_LANG']['MSC']['passwordSubject'], Idna::decode(Environment::get('host'))),
-			System::getContainer()->get(SimpleTokenParser::class)->parseTokens($this->reg_password, $arrData)
+			System::getContainer()->get(SimpleTokenParser::class)->parse($this->reg_password, $arrData)
 		);
 
 		$this->log('A new password has been requested for user ID ' . $objMember->id . ' (' . Idna::decodeEmail($objMember->email) . ')', __METHOD__, TL_ACCESS);

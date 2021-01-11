@@ -49,6 +49,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Mailer\Transport\NativeTransportFactory;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Webmozart\PathUtil\Path;
@@ -86,7 +87,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         return ['contao/core-bundle'];
     }
 
-    public function getBundles(ParserInterface $parser)
+    public function getBundles(ParserInterface $parser): array
     {
         $configs = [
             BundleConfig::create(FrameworkBundle::class),
@@ -249,7 +250,10 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                     $container->setParameter('env(DATABASE_URL)', $this->getDatabaseUrl($container));
                 }
 
-                return $this->addDefaultServerVersion($extensionConfigs, $container);
+                $extensionConfigs = $this->addDefaultServerVersion($extensionConfigs, $container);
+                $extensionConfigs = $this->addDefaultPdoDriverOptions($extensionConfigs);
+
+                return $this->addDefaultDoctrineMapping($extensionConfigs, $container);
         }
 
         return $extensionConfigs;
@@ -311,7 +315,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         try {
             $connection = \call_user_func($this->dbalConnectionFactory, $params);
             $connection->connect();
-            $connection->query('SHOW TABLES');
+            $connection->executeQuery('SHOW TABLES');
             $connection->close();
         } catch (DriverException $e) {
             $extensionConfigs[] = [
@@ -324,6 +328,117 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 ],
             ];
         }
+
+        return $extensionConfigs;
+    }
+
+    /**
+     * Sets the PDO driver options if applicable (#2459).
+     *
+     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     */
+    private function addDefaultPdoDriverOptions(array $extensionConfigs): array
+    {
+        // Do not add PDO options if the constant does not exist
+        if (!\defined('PDO::MYSQL_ATTR_MULTI_STATEMENTS')) {
+            return $extensionConfigs;
+        }
+
+        foreach ($extensionConfigs as $extensionConfig) {
+            // Do not add PDO options if the selected driver is not pdo_mysql
+            if (isset($extensionConfig['dbal']['connections']['default']['driver']) && 'pdo_mysql' !== $extensionConfig['dbal']['connections']['default']['driver']) {
+                return $extensionConfigs;
+            }
+
+            // Do not add PDO options if custom options have been defined
+            if (isset($extensionConfig['dbal']['connections']['default']) && \array_key_exists('options', $extensionConfig['dbal']['connections']['default'])) {
+                return $extensionConfigs;
+            }
+        }
+
+        $extensionConfigs[] = [
+            'dbal' => [
+                'connections' => [
+                    'default' => [
+                        'options' => [
+                            \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        return $extensionConfigs;
+    }
+
+    /**
+     * Adds a default ORM mapping for the App namespace if none is configured.
+     *
+     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     */
+    private function addDefaultDoctrineMapping(array $extensionConfigs, ContainerBuilder $container): array
+    {
+        $defaultEntityManager = 'default';
+
+        foreach ($extensionConfigs as $config) {
+            if (null !== $em = $config['orm']['default_entity_manager'] ?? null) {
+                $defaultEntityManager = $em;
+            }
+        }
+
+        $mappings = [];
+        $autoMappingEnabled = false;
+
+        foreach ($extensionConfigs as $config) {
+            $mappings[] = $config['orm']['mappings'] ?? [];
+
+            foreach ($config['orm']['entity_managers'] ?? [] as $em) {
+                $mappings[] = $em['mappings'] ?? [];
+            }
+
+            $autoMappingEnabled |= ($config['orm']['auto_mapping'] ?? false)
+                || ($config['orm']['entity_managers'][$defaultEntityManager]['auto_mapping'] ?? false);
+        }
+
+        // Skip if auto mapping is not enabled for the default entity manager.
+        if (!$autoMappingEnabled) {
+            return $extensionConfigs;
+        }
+
+        // Skip if a mapping with the name or alias "App" already exists or any
+        // mapping already targets "%kernel.project_dir%/src/Entity".
+        foreach (array_replace(...$mappings) as $name => $values) {
+            if (
+                'App' === $name
+                || 'App' === ($values['alias'] ?? '')
+                || '%kernel.project_dir%/src/Entity' === ($values['dir'] ?? '')
+            ) {
+                return $extensionConfigs;
+            }
+        }
+
+        // Skip if the "%kernel.project_dir%/src/Entity" directory does not exist.
+        if (!$container->fileExists(Path::join($container->getParameter('kernel.project_dir'), 'src/Entity'))) {
+            return $extensionConfigs;
+        }
+
+        $extensionConfigs[] = [
+            'orm' => [
+                'entity_managers' => [
+                    $defaultEntityManager => [
+                        'mappings' => [
+                            'App' => [
+                                'type' => 'annotation',
+                                'dir' => '%kernel.project_dir%/src/Entity',
+                                'is_bundle' => false,
+                                'prefix' => 'App\Entity',
+                                'alias' => 'App',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
 
         return $extensionConfigs;
     }
@@ -472,7 +587,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         }
 
         if (\in_array($options['transport'], ['mail', 'sendmail'], true)) {
-            return 'sendmail+smtp://default';
+            return 'sendmail://default';
         }
 
         /*
@@ -528,8 +643,8 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
     private function getMailerDsn(ContainerBuilder $container): string
     {
-        if ('sendmail' === $container->getParameter('mailer_transport')) {
-            return 'sendmail+smtp://default';
+        if (!$container->hasParameter('mailer_transport') || 'sendmail' === $container->getParameter('mailer_transport')) {
+            return class_exists(NativeTransportFactory::class) ? 'native://default' : 'sendmail://default';
         }
 
         $transport = 'smtp';

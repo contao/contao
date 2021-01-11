@@ -66,6 +66,11 @@ class RequestTokenListener
      */
     public function __invoke(RequestEvent $event): void
     {
+        // Don't do anything if it's not the master request
+        if (!$event->isMasterRequest()) {
+            return;
+        }
+
         $request = $event->getRequest();
 
         // Only check the request token if a) the request is a POST request, b)

@@ -49,7 +49,9 @@ class ModuleListing extends Module
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['listing'][0]) . ' ###';
@@ -62,13 +64,13 @@ class ModuleListing extends Module
 		}
 
 		// Return if the table or the fields have not been set
-		if ($this->list_table == '' || $this->list_fields == '')
+		if (!$this->list_table || !$this->list_fields)
 		{
 			return '';
 		}
 
 		// Disable the details page
-		if ($this->list_info == '' && Input::get('show'))
+		if (!$this->list_info && Input::get('show'))
 		{
 			return '';
 		}
@@ -126,7 +128,7 @@ class ModuleListing extends Module
 
 			foreach ($arrSearchFields as $field)
 			{
-				$strOptions .= '  <option value="' . $field . '"' . (($field == $strSearch) ? ' selected="selected"' : '') . '>' . ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$field]['label'][0] ?? $field) . '</option>' . "\n";
+				$strOptions .= '  <option value="' . $field . '"' . ($field == $strSearch ? ' selected="selected"' : '') . '>' . ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$field]['label'][0] ?? $field) . '</option>' . "\n";
 			}
 		}
 
@@ -174,7 +176,7 @@ class ModuleListing extends Module
 		// Cast date fields to int (see #5609)
 		$isInt = function ($field)
 		{
-			return $GLOBALS['TL_DCA'][$this->list_table]['fields'][$field]['eval']['rgxp'] == 'date' || $GLOBALS['TL_DCA'][$this->list_table]['fields'][$field]['eval']['rgxp'] == 'time' || $GLOBALS['TL_DCA'][$this->list_table]['fields'][$field]['eval']['rgxp'] == 'datim';
+			return ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$field]['eval']['rgxp'] ?? null) == 'date' || ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$field]['eval']['rgxp'] ?? null) == 'time' || ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$field]['eval']['rgxp'] ?? null) == 'datim';
 		};
 
 		$order_by = Input::get('order_by');
@@ -235,7 +237,7 @@ class ModuleListing extends Module
 
 		foreach (preg_split('/&(amp;)?/', Environment::get('queryString')) as $fragment)
 		{
-			if ($fragment != '' && strncasecmp($fragment, 'order_by', 8) !== 0 && strncasecmp($fragment, 'sort', 4) !== 0 && strncasecmp($fragment, $id, \strlen($id)) !== 0)
+			if ($fragment && strncasecmp($fragment, 'order_by', 8) !== 0 && strncasecmp($fragment, 'sort', 4) !== 0 && strncasecmp($fragment, $id, \strlen($id)) !== 0)
 			{
 				$strUrl .= (!$blnQuery ? '?' : '&amp;') . $fragment;
 				$blnQuery = true;
@@ -253,7 +255,7 @@ class ModuleListing extends Module
 		for ($i=0, $c=\count($arrFields); $i<$c; $i++)
 		{
 			// Never show passwords
-			if ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$arrFields[$i]]['inputType'] == 'password')
+			if (($GLOBALS['TL_DCA'][$this->list_table]['fields'][$arrFields[$i]]['inputType'] ?? null) == 'password')
 			{
 				continue;
 			}
@@ -307,7 +309,7 @@ class ModuleListing extends Module
 				}
 
 				// Never show passwords
-				if ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['inputType'] == 'password')
+				if (($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['inputType'] ?? null) == 'password')
 				{
 					continue;
 				}
@@ -365,7 +367,7 @@ class ModuleListing extends Module
 		$this->list_info = StringUtil::deserialize($this->list_info);
 		$this->list_info_where = $this->replaceInsertTags($this->list_info_where, false);
 
-		$objRecord = $this->Database->prepare("SELECT " . implode(', ', array_map('Database::quoteIdentifier', trimsplit(',', $this->list_info))) . " FROM " . $this->list_table . " WHERE " . (($this->list_info_where != '') ? "(" . $this->list_info_where . ") AND " : "") . Database::quoteIdentifier($this->strPk) . "=?")
+		$objRecord = $this->Database->prepare("SELECT " . implode(', ', array_map('Database::quoteIdentifier', StringUtil::trimsplit(',', $this->list_info))) . " FROM " . $this->list_table . " WHERE " . ($this->list_info_where ? "(" . $this->list_info_where . ") AND " : "") . Database::quoteIdentifier($this->strPk) . "=?")
 									->limit(1)
 									->execute($id);
 
@@ -382,7 +384,7 @@ class ModuleListing extends Module
 		foreach ($arrRow as $k=>$v)
 		{
 			// Never show passwords
-			if ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['inputType'] == 'password')
+			if (($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['inputType'] ?? null) == 'password')
 			{
 				--$limit;
 				continue;
@@ -431,53 +433,53 @@ class ModuleListing extends Module
 		}
 
 		// Date
-		elseif ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['eval']['rgxp'] == 'date')
+		elseif (($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['eval']['rgxp'] ?? null) == 'date')
 		{
 			$value = Date::parse($objPage->dateFormat, $value);
 		}
 
 		// Time
-		elseif ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['eval']['rgxp'] == 'time')
+		elseif (($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['eval']['rgxp'] ?? null) == 'time')
 		{
 			$value = Date::parse($objPage->timeFormat, $value);
 		}
 
 		// Date and time
-		elseif ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['eval']['rgxp'] == 'datim')
+		elseif (($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['eval']['rgxp'] ?? null) == 'datim')
 		{
 			$value = Date::parse($objPage->datimFormat, $value);
 		}
 
 		// URLs
-		elseif ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['eval']['rgxp'] == 'url' && preg_match('@^(https?://|ftp://)@i', $value))
+		elseif (($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['eval']['rgxp'] ?? null) == 'url' && preg_match('@^(https?://|ftp://)@i', $value))
 		{
 			$value = Idna::decode($value); // see #5946
 			$value = '<a href="' . $value . '" target="_blank" rel="noreferrer noopener">' . $value . '</a>';
 		}
 
 		// E-mail addresses
-		elseif ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['eval']['rgxp'] == 'email')
+		elseif (($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['eval']['rgxp'] ?? null) == 'email')
 		{
 			$value = StringUtil::encodeEmail(Idna::decode($value)); // see #5946
 			$value = '<a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;' . $value . '">' . $value . '</a>';
 		}
 
 		// Reference
-		elseif (\is_array($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['reference']))
+		elseif (\is_array($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['reference'] ?? null))
 		{
-			$value = $GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['reference'][$value];
+			$value = $GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['reference'][$value] ?? null;
 		}
 
 		// Associative array
-		elseif ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['eval']['isAssociative'] || ArrayUtil::isAssoc($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['options']))
+		elseif (($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['eval']['isAssociative'] ?? null) || ArrayUtil::isAssoc($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['options'] ?? null))
 		{
 			if ($blnListSingle)
 			{
-				$value = $GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['options'][$value];
+				$value = $GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['options'][$value] ?? null;
 			}
 			else
 			{
-				$value = '<span class="value">[' . $value . ']</span> ' . $GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['options'][$value];
+				$value = '<span class="value">[' . $value . ']</span> ' . ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['options'][$value] ?? null);
 			}
 		}
 

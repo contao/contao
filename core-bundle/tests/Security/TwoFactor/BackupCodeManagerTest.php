@@ -65,7 +65,10 @@ class BackupCodeManagerTest extends TestCase
 
     public function testHandlesContaoUsers(): void
     {
-        $backupCodes = json_encode(['123456', '234567']);
+        $backupCodes = json_encode([
+            password_hash('123456', PASSWORD_DEFAULT),
+            password_hash('234567', PASSWORD_DEFAULT),
+        ]);
 
         /** @var FrontendUser&MockObject $frontendUser */
         $frontendUser = $this->mockClassWithProperties(FrontendUser::class, []);
@@ -83,7 +86,10 @@ class BackupCodeManagerTest extends TestCase
 
     public function testInvalidatesBackupCode(): void
     {
-        $backupCodes = json_encode(['123456', '234567']);
+        $backupCodes = json_encode([
+            '$2y$10$vY0fVrqfUmzzHSQpT6ZMPOGwrYLq.9s/Y1M9cV9/0K0SlGH/kMotC', // 4ead45-4ea70a
+            '$2y$10$Ie2VHgQLiNTfAI1kDV19U.i9dsvIE4tt3h75rpVHnoWqJFS0Lq1Yy', // 0082ec-b95f03
+        ]);
 
         /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
@@ -95,9 +101,10 @@ class BackupCodeManagerTest extends TestCase
         ;
 
         $backupCodeManager = new BackupCodeManager();
-        $backupCodeManager->invalidateBackupCode($user, '123456');
+        $backupCodeManager->invalidateBackupCode($user, '4ead45-4ea70a');
 
-        $this->assertFalse($backupCodeManager->isBackupCode($user, '123456'));
+        $this->assertFalse($backupCodeManager->isBackupCode($user, '4ead45-4ea70a'));
+        $this->assertTrue($backupCodeManager->isBackupCode($user, '0082ec-b95f03'));
     }
 
     public function testGenerateBackupCodes(): void

@@ -159,9 +159,11 @@ use Contao\ImagineSvg\Imagine as ImagineSvg;
 use Knp\Menu\Matcher\Matcher;
 use Knp\Menu\Renderer\ListRenderer;
 use Psr\Container\ContainerInterface as PsrContainerInterface;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Cmf\Component\Routing\DynamicRouter;
 use Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Compiler\ResolvePrivatesPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
@@ -179,6 +181,8 @@ use Webmozart\PathUtil\Path;
 
 class ContaoCoreExtensionTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     public function testReturnsTheCorrectAlias(): void
     {
         $extension = new ContaoCoreExtension();
@@ -1678,7 +1682,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $definition = $container->getDefinition(LegacyCron::class);
 
-        $this->assertTrue($definition->isPublic());
+        $this->assertTrue($definition->isPrivate());
 
         $this->assertEquals(
             [
@@ -1943,7 +1947,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertTrue($container->has('contao.image.imagine'));
 
-        $definition = $container->findDefinition('contao.image.imagine');
+        $definition = $container->getAlias('contao.image.imagine');
 
         $this->assertTrue($definition->isPublic());
     }
@@ -2161,6 +2165,7 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 'container.service_subscriber' => [
                     ['id' => 'contao.assets.files_context'],
+                    ['id' => 'contao.image.resizer'],
                 ],
             ],
             $definition->getTags()
@@ -3093,7 +3098,6 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('contao.security.authentication_success_handler'),
                 new Reference('contao.security.authentication_failure_handler'),
                 [],
-                new Reference('scheb_two_factor.token_factory'),
                 new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
                 new Reference('event_dispatcher', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
             ],
@@ -3840,6 +3844,14 @@ class ContaoCoreExtensionTest extends TestCase
                 'contao' => [
                     'image' => [
                         'sizes' => [
+                            '_defaults' => [
+                                'width' => 150,
+                            ],
+                            'foo' => [
+                                'height' => 250,
+                            ],
+                            'bar' => [
+                            ],
                             'foobar' => [
                                 'width' => 100,
                                 'height' => 200,
@@ -3875,32 +3887,57 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame('setPredefinedSizes', $methodCalls[0][0]);
 
-        $this->assertSame(
-            [[
-                '_foobar' => [
-                    'width' => 100,
-                    'height' => 200,
+        $expectedSizes = [[
+            '_foo' => [
+                'width' => 150,
+                'height' => 250,
+                'items' => [],
+                'formats' => [],
+            ],
+            '_bar' => [
+                'width' => 150,
+                'items' => [],
+                'formats' => [],
+            ],
+            '_foobar' => [
+                'width' => 100,
+                'height' => 200,
+                'resizeMode' => 'box',
+                'zoom' => 100,
+                'cssClass' => 'foobar-image',
+                'lazyLoading' => true,
+                'densities' => '1x, 2x',
+                'sizes' => '100vw',
+                'skipIfDimensionsMatch' => false,
+                'items' => [[
+                    'width' => 50,
+                    'height' => 50,
                     'resizeMode' => 'box',
                     'zoom' => 100,
-                    'cssClass' => 'foobar-image',
-                    'lazyLoading' => true,
-                    'densities' => '1x, 2x',
-                    'sizes' => '100vw',
-                    'skipIfDimensionsMatch' => false,
-                    'items' => [[
-                        'width' => 50,
-                        'height' => 50,
-                        'resizeMode' => 'box',
-                        'zoom' => 100,
-                        'densities' => '0.5x, 2x',
-                        'sizes' => '50vw',
-                        'media' => '(max-width: 900px)',
-                    ]],
-                    'formats' => [],
-                ],
-            ]],
-            $methodCalls[0][1]
-        );
+                    'densities' => '0.5x, 2x',
+                    'sizes' => '50vw',
+                    'media' => '(max-width: 900px)',
+                ]],
+                'formats' => [],
+            ],
+        ]];
+
+        $sizes = $methodCalls[0][1];
+
+        $sortByKeyRecursive = static function (array &$array) use (&$sortByKeyRecursive): void {
+            foreach ($array as &$value) {
+                if (\is_array($value)) {
+                    $sortByKeyRecursive($value);
+                }
+            }
+
+            ksort($array);
+        };
+
+        $sortByKeyRecursive($expectedSizes);
+        $sortByKeyRecursive($sizes);
+
+        $this->assertSame($expectedSizes, $sizes);
     }
 
     public function testSetsTheCrawlOptionsOnTheEscargotFactory(): void
@@ -4108,11 +4145,11 @@ class ContaoCoreExtensionTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Since contao/core-bundle 4.4: Using the "contao.image.target_path" parameter has been deprecated %s.
      */
     public function testRegistersTheImageTargetPath(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.4: Using the "contao.image.target_path" parameter has been deprecated %s.');
+
         $container = new ContainerBuilder(
             new ParameterBag([
                 'kernel.debug' => false,
@@ -4159,6 +4196,14 @@ class ContaoCoreExtensionTest extends TestCase
 
         $extension = new ContaoCoreExtension();
         $extension->load($params, $container);
+
+        // To find out whether we need to run the ResolvePrivatesPass, we take
+        // a private service and check the isPublic() return value. In Symfony
+        // 4.4, it will be "true", whereas in Symfony 5, it will be "false".
+        if (true === $container->findDefinition('contao.routing.page_router')->isPublic()) {
+            $pass = new ResolvePrivatesPass();
+            $pass->process($container);
+        }
 
         return $container;
     }
