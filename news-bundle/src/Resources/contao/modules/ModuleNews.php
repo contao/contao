@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Image\Studio\LegacyFigureBuilderTrait;
 use Contao\Model\Collection;
 
 /**
@@ -22,6 +23,8 @@ use Contao\Model\Collection;
  */
 abstract class ModuleNews extends Module
 {
+	use LegacyFigureBuilderTrait;
+
 	/**
 	 * Sort out protected archives
 	 *
@@ -160,48 +163,46 @@ abstract class ModuleNews extends Module
 		$objTemplate->addBefore = false;
 
 		// Add an image
-		if ($objArticle->addImage && $objArticle->singleSRC)
+		if ($objArticle->addImage && null !== ($figureBuilder = $this->getFigureBuilderIfResourceExists($objArticle->singleSRC)))
 		{
-			$objModel = FilesModel::findByUuid($objArticle->singleSRC);
+			$imgSize = $objArticle->size ?: null;
 
-			if ($objModel !== null && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . $objModel->path))
+			// Override the default image size
+			if ($this->imgSize)
 			{
-				// Do not override the field now that we have a model registry (see #6303)
-				$arrArticle = $objArticle->row();
+				$size = StringUtil::deserialize($this->imgSize);
 
-				// Override the default image size
-				if ($this->imgSize)
+				if ($size[0] > 0 || $size[1] > 0 || is_numeric($size[2]) || ($size[2][0] ?? null) === '_')
 				{
-					$size = StringUtil::deserialize($this->imgSize);
-
-					if ($size[0] > 0 || $size[1] > 0 || is_numeric($size[2]) || ($size[2][0] ?? null) === '_')
-					{
-						$arrArticle['size'] = $this->imgSize;
-					}
-				}
-
-				$arrArticle['singleSRC'] = $objModel->path;
-				$this->addImageToTemplate($objTemplate, $arrArticle, null, null, $objModel);
-
-				// Link to the news article if no image link has been defined (see #30)
-				if (!$objTemplate->fullsize && !$objTemplate->imageUrl)
-				{
-					// Unset the image title attribute
-					$picture = $objTemplate->picture;
-					unset($picture['title']);
-					$objTemplate->picture = $picture;
-
-					// Link to the news article
-					$objTemplate->href = $objTemplate->link;
-					$objTemplate->linkTitle = StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline), true);
-
-					// If the external link is opened in a new window, open the image link in a new window, too (see #210)
-					if ($objTemplate->source == 'external' && $objTemplate->target && strpos($objTemplate->attributes, 'target="_blank"') === false)
-					{
-						$objTemplate->attributes .= ' target="_blank"';
-					}
+					$imgSize = $this->imgSize;
 				}
 			}
+
+			// If the external link is opened in a new window, open the image link in a new window as well (see #210)
+			if ('external' === $objTemplate->source && $objTemplate->target)
+			{
+				$figureBuilder->setLinkAttribute('target', '_blank');
+			}
+
+			$figure = $figureBuilder
+				->setSize($imgSize)
+				->setMetadata($objArticle->getOverwriteMetadata())
+				->enableLightbox($objArticle->fullsize)
+				->build();
+
+			// Rebuild with link to news article if none is set
+			if (!$figure->getLinkHref())
+			{
+				$linkTitle = StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline), true);
+
+				$figure = $figureBuilder
+					->setLinkHref($objTemplate->link)
+					->setLinkAttribute('title', $linkTitle)
+					->setOptions(array('linkTitle' => $linkTitle)) // Backwards compatibility
+					->build();
+			}
+
+			$figure->applyLegacyTemplateData($objTemplate, $objArticle->imagemargin, $objArticle->floating);
 		}
 
 		$objTemplate->enclosure = array();

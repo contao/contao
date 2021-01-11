@@ -1493,9 +1493,14 @@ abstract class Controller extends System
 	 * @param integer|null    $maxWidth                An optional maximum width of the image
 	 * @param string|null     $lightboxGroupIdentifier An optional lightbox group identifier
 	 * @param FilesModel|null $filesModel              An optional files model
+	 *
+	 * @deprecated Deprecated since Contao 4.11, to be removed in Contao 5.0;
+	 *             use the Contao\CoreBundle\Image\Studio\FigureBuilder instead.
 	 */
 	public static function addImageToTemplate($template, array $rowData, $maxWidth = null, $lightboxGroupIdentifier = null, FilesModel $filesModel = null): void
 	{
+		trigger_deprecation('contao/core-bundle', '4.11', 'Using Controller::addImageToTemplate() is deprecated and will no longer work in Contao 5.0. Use the "Contao\CoreBundle\Image\Studio\FigureBuilder" class instead.');
+
 		// Helper: Create metadata from the specified row data
 		$createMetadataOverwriteFromRowData = static function (bool $interpretAsContentModel) use ($rowData)
 		{

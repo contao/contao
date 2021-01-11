@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Image\Studio\LegacyFigureBuilderTrait;
 use Contao\Model\Collection;
 
 /**
@@ -20,6 +21,8 @@ use Contao\Model\Collection;
  */
 class ContentGallery extends ContentElement
 {
+	use LegacyFigureBuilderTrait;
+
 	/**
 	 * Files object
 	 * @var Collection|FilesModel
@@ -100,15 +103,7 @@ class ContentGallery extends ContentElement
 				}
 
 				// Add the image
-				$images[$objFiles->path] = array
-				(
-					'id'         => $objFiles->id,
-					'uuid'       => $objFiles->uuid,
-					'name'       => $objFile->basename,
-					'singleSRC'  => $objFiles->path,
-					'filesModel' => $objFiles->current()
-				);
-
+				$images[$objFiles->path] = $objFiles->current();
 				$auxDate[] = $objFile->mtime;
 			}
 
@@ -138,15 +133,7 @@ class ContentGallery extends ContentElement
 					}
 
 					// Add the image
-					$images[$objSubfiles->path] = array
-					(
-						'id'         => $objSubfiles->id,
-						'uuid'       => $objSubfiles->uuid,
-						'name'       => $objFile->basename,
-						'singleSRC'  => $objSubfiles->path,
-						'filesModel' => $objSubfiles->current()
-					);
-
+					$images[$objSubfiles->path] = $objSubfiles->current();
 					$auxDate[] = $objFile->mtime;
 				}
 			}
@@ -228,8 +215,13 @@ class ContentGallery extends ContentElement
 
 		$rowcount = 0;
 		$colwidth = floor(100/$this->perRow);
-		$strLightboxId = 'lb' . $this->id;
 		$body = array();
+
+		$figureBuilder = $this
+			->getFigureBuilder()
+			->setSize($this->size)
+			->setLightboxGroupIdentifier('lb' . $this->id)
+			->enableLightbox($this->fullsize);
 
 		// Rows
 		for ($i=$offset; $i<$limit; $i+=$this->perRow)
@@ -263,31 +255,24 @@ class ContentGallery extends ContentElement
 					$class_td .= ' col_last';
 				}
 
-				$objCell = new \stdClass();
-				$key = 'row_' . $rowcount . $class_tr . $class_eo;
-
-				// Empty cell
-				if (($j+$i) >= $limit || !\is_array($images[($i+$j)]))
+				// Image / empty cell
+				if (($j + $i) < $limit && null !== ($image = $images[$i + $j] ?? null))
 				{
-					$objCell->addImage = false;
-					$objCell->colWidth = $colwidth . '%';
-					$objCell->class = 'col_' . $j . $class_td;
+					$cellData = $figureBuilder
+						->fromFilesModel($image)
+						->build()
+						->getLegacyTemplateData($this->imagemargin);
 				}
 				else
 				{
-					// Add size and margin
-					$images[($i+$j)]['size'] = $this->size;
-					$images[($i+$j)]['imagemargin'] = $this->imagemargin;
-					$images[($i+$j)]['fullsize'] = $this->fullsize;
-
-					$this->addImageToTemplate($objCell, $images[($i+$j)], null, $strLightboxId, $images[($i+$j)]['filesModel']);
-
-					// Add column width and class
-					$objCell->colWidth = $colwidth . '%';
-					$objCell->class = 'col_' . $j . $class_td;
+					$cellData = array('addImage' => false);
 				}
 
-				$body[$key][$j] = $objCell;
+				// Add column width and class
+				$cellData['colWidth'] = $colwidth . '%';
+				$cellData['class'] = 'col_' . $j . $class_td;
+
+				$body['row_' . $rowcount . $class_tr . $class_eo][$j] = (object) $cellData;
 			}
 
 			++$rowcount;
