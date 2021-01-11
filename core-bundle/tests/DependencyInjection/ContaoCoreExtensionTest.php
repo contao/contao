@@ -1244,6 +1244,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEquals(
             [
                 new Reference('request_stack'),
+                new Reference('contao.framework'),
                 new Reference('staticPlugins'),
                 new Reference('%kernel.debug%'),
             ],
@@ -1263,6 +1264,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEquals(
             [
                 new Reference('request_stack'),
+                new Reference('contao.framework'),
                 new Reference('staticFiles'),
                 new Reference('%kernel.debug%'),
             ],
