@@ -75,8 +75,6 @@ class ContentCode extends ContentElement
 		}
 
 		$this->Template->cssClass = 'hljs ' . (strtolower($this->highlight) ?: 'nohighlight');
-
-		$GLOBALS['TL_CSS'][] = 'assets/highlight/css/foundation.css|static';
 	}
 }
 

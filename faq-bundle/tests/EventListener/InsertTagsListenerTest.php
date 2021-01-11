@@ -82,6 +82,52 @@ class InsertTagsListenerTest extends ContaoTestCase
         );
     }
 
+    public function testHandlesEmptyUrls(): void
+    {
+        $page = $this->createMock(PageModel::class);
+        $page
+            ->method('getFrontendUrl')
+            ->willReturn('')
+        ;
+
+        $categoryModel = $this->createMock(FaqCategoryModel::class);
+        $categoryModel
+            ->method('getRelated')
+            ->willReturn($page)
+        ;
+
+        /** @var FaqModel&MockObject $faqModel */
+        $faqModel = $this->mockClassWithProperties(FaqModel::class);
+        $faqModel->alias = 'what-does-foobar-mean';
+        $faqModel->question = 'What does "foobar" mean?';
+
+        $faqModel
+            ->method('getRelated')
+            ->willReturn($categoryModel)
+        ;
+
+        $adapters = [
+            FaqModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => $faqModel]),
+        ];
+
+        $listener = new InsertTagsListener($this->mockContaoFramework($adapters));
+
+        $this->assertSame(
+            '<a href="./" title="What does &quot;foobar&quot; mean?">What does "foobar" mean?</a>',
+            $listener->onReplaceInsertTags('faq::2', false, null, [])
+        );
+
+        $this->assertSame(
+            '<a href="./" title="What does &quot;foobar&quot; mean?">',
+            $listener->onReplaceInsertTags('faq_open::2', false, null, [])
+        );
+
+        $this->assertSame(
+            './',
+            $listener->onReplaceInsertTags('faq_url::2', false, null, [])
+        );
+    }
+
     public function testReturnsFalseIfTheTagIsUnknown(): void
     {
         $listener = new InsertTagsListener($this->mockContaoFramework());

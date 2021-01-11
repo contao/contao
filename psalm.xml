@@ -1,7 +1,15 @@
 <?xml version="1.0"?>
+<!--
+Depending on the installed PHP version, Composer will allow packages using
+PHP 7.4 or 8.0 syntax. Psalm, however, will use the minimum PHP version defined
+in the composer.json for its parser (which is currently PHP 7.2), therefore we
+have to specify "7.4" here to make Psalm understand arrow functions.
+
+@see https://github.com/laminas/laminas-code/issues/67
+-->
 <psalm
     errorLevel="7"
-    resolveFromConfigFile="true"
+    phpVersion="7.4"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
     xsi:schemaLocation="https://getpsalm.org/schema/config tools/psalm/vendor/vimeo/psalm/config.xsd"
@@ -24,11 +32,5 @@
                 <file name="vendor/symfony/phpunit-bridge/ExpectDeprecationTrait.php"/>
             </errorLevel>
         </UndefinedTrait>
-        <!-- TODO: Remove this again once https://github.com/vimeo/psalm/issues/4874 has been fixed -->
-        <TooFewArguments>
-            <errorLevel type="suppress">
-                <file name="core-bundle/src/Doctrine/Schema/DcaSchemaProvider.php"/>
-            </errorLevel>
-        </TooFewArguments>
     </issueHandlers>
 </psalm>

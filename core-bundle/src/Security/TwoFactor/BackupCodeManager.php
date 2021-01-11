@@ -33,7 +33,13 @@ class BackupCodeManager implements BackupCodeManagerInterface
             return false;
         }
 
-        return \in_array($code, $backupCodes, true);
+        foreach ($backupCodes as $backupCode) {
+            if (password_verify($code, $backupCode)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function invalidateBackupCode($user, string $code): void
@@ -42,18 +48,33 @@ class BackupCodeManager implements BackupCodeManagerInterface
             return;
         }
 
-        $backupCodes = json_decode($user->backupCodes, true);
-        $key = array_search($code, $backupCodes, true);
+        $codeToInvalidate = false;
+        $backupCodes = array_values(json_decode($user->backupCodes, true));
 
-        if (false !== $key) {
-            unset($backupCodes[$key]);
-            $user->backupCodes = json_encode($backupCodes);
+        foreach ($backupCodes as $backupCode) {
+            if (password_verify($code, $backupCode)) {
+                $codeToInvalidate = $backupCode;
+                break;
+            }
         }
 
+        if (false === $codeToInvalidate) {
+            return;
+        }
+
+        $key = array_search($codeToInvalidate, $backupCodes, true);
+
+        if (false === $key) {
+            return;
+        }
+
+        unset($backupCodes[$key]);
+
+        $user->backupCodes = json_encode(array_values($backupCodes));
         $user->save();
     }
 
-    public function generateBackupCodes(User $user): ?array
+    public function generateBackupCodes(User $user): array
     {
         $backupCodes = [];
 
@@ -61,7 +82,15 @@ class BackupCodeManager implements BackupCodeManagerInterface
             $backupCodes[] = $this->generateCode();
         }
 
-        $user->backupCodes = json_encode($backupCodes);
+        $user->backupCodes = json_encode(
+            array_map(
+                static function ($backupCode) {
+                    return password_hash($backupCode, PASSWORD_DEFAULT);
+                },
+                $backupCodes
+            )
+        );
+
         $user->save();
 
         return $backupCodes;

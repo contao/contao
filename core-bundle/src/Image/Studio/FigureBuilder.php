@@ -163,7 +163,7 @@ class FigureBuilder
     private $options = [];
 
     /**
-     * @internal Use the Contao\Image\Studio\Studio factory to get an instance of this class
+     * @internal Use the Contao\CoreBundle\Image\Studio\Studio factory to get an instance of this class
      */
     public function __construct(ContainerInterface $locator, string $projectDir, string $uploadPath, array $validExtensions)
     {
@@ -279,7 +279,7 @@ class FigureBuilder
         }
 
         if (is_numeric($identifier)) {
-            return $this->fromId($identifier);
+            return $this->fromId((int) $identifier);
         }
 
         return $this->fromPath($identifier);

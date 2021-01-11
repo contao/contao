@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Image\Studio\LegacyFigureBuilderTrait;
+
 /**
  * Front end content element "text".
  *
@@ -17,6 +19,8 @@ namespace Contao;
  */
 class ContentText extends ContentElement
 {
+	use LegacyFigureBuilderTrait;
+
 	/**
 	 * Template
 	 * @var string
@@ -42,15 +46,14 @@ class ContentText extends ContentElement
 		$this->Template->addBefore = false;
 
 		// Add an image
-		if ($this->addImage && $this->singleSRC)
+		if ($this->addImage && null !== ($figureBuilder = $this->getFigureBuilderIfResourceExists($this->singleSRC)))
 		{
-			$objModel = FilesModel::findByUuid($this->singleSRC);
-
-			if ($objModel !== null && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . $objModel->path))
-			{
-				$this->singleSRC = $objModel->path;
-				$this->addImageToTemplate($this->Template, $this->arrData, null, null, $objModel);
-			}
+			$figureBuilder
+				->setSize($this->size)
+				->setMetadata($this->objModel->getOverwriteMetadata())
+				->enableLightbox($this->fullsize)
+				->build()
+				->applyLegacyTemplateData($this->Template, $this->imagemargin, $this->floating);
 		}
 	}
 }

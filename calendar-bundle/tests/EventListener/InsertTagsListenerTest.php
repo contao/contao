@@ -99,6 +99,42 @@ class InsertTagsListenerTest extends ContaoTestCase
         );
     }
 
+    public function testHandlesEmptyUrls(): void
+    {
+        /** @var CalendarEventsModel&MockObject $eventModel */
+        $eventModel = $this->mockClassWithProperties(CalendarEventsModel::class);
+        $eventModel->title = 'The "foobar" event';
+        $eventModel->teaser = '<p>The annual foobar event.</p>';
+
+        $events = $this->mockAdapter(['generateEventUrl']);
+        $events
+            ->method('generateEventUrl')
+            ->willReturn('')
+        ;
+
+        $adapters = [
+            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => $eventModel]),
+            Events::class => $events,
+        ];
+
+        $listener = new InsertTagsListener($this->mockContaoFramework($adapters));
+
+        $this->assertSame(
+            '<a href="./" title="The &quot;foobar&quot; event">The "foobar" event</a>',
+            $listener('event::2', false, null, [])
+        );
+
+        $this->assertSame(
+            '<a href="./" title="The &quot;foobar&quot; event">',
+            $listener('event_open::2', false, null, [])
+        );
+
+        $this->assertSame(
+            './',
+            $listener('event_url::2', false, null, [])
+        );
+    }
+
     public function testReturnsFalseIfTheTagIsUnknown(): void
     {
         $listener = new InsertTagsListener($this->mockContaoFramework());

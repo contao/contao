@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\CoreBundle\Image\Studio\LegacyFigureBuilderTrait;
 use Patchwork\Utf8;
 
 /**
@@ -27,6 +28,8 @@ use Patchwork\Utf8;
  */
 class ModuleEventReader extends Events
 {
+	use LegacyFigureBuilderTrait;
+
 	/**
 	 * Template
 	 * @var string
@@ -287,29 +290,27 @@ class ModuleEventReader extends Events
 		$objTemplate->addBefore = false;
 
 		// Add an image
-		if ($objEvent->addImage && $objEvent->singleSRC)
+		if ($objEvent->addImage && null !== ($figureBuilder = $this->getFigureBuilderIfResourceExists($objEvent->singleSRC)))
 		{
-			$objModel = FilesModel::findByUuid($objEvent->singleSRC);
+			$imgSize = $objEvent->size ?: null;
 
-			if ($objModel !== null && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . $objModel->path))
+			// Override the default image size
+			if ($this->imgSize)
 			{
-				// Do not override the field now that we have a model registry (see #6303)
-				$arrEvent = $objEvent->row();
+				$size = StringUtil::deserialize($this->imgSize);
 
-				// Override the default image size
-				if ($this->imgSize)
+				if ($size[0] > 0 || $size[1] > 0 || is_numeric($size[2]) || ($size[2][0] ?? null) === '_')
 				{
-					$size = StringUtil::deserialize($this->imgSize);
-
-					if ($size[0] > 0 || $size[1] > 0 || is_numeric($size[2]) || ($size[2][0] ?? null) === '_')
-					{
-						$arrEvent['size'] = $this->imgSize;
-					}
+					$imgSize = $this->imgSize;
 				}
-
-				$arrEvent['singleSRC'] = $objModel->path;
-				$this->addImageToTemplate($objTemplate, $arrEvent, null, null, $objModel);
 			}
+
+			$figureBuilder
+				->setSize($imgSize)
+				->setMetadata($objEvent->getOverwriteMetadata())
+				->enableLightbox($objEvent->fullsize)
+				->build()
+				->applyLegacyTemplateData($objTemplate, $objEvent->imagemargin, $objEvent->floating);
 		}
 
 		$objTemplate->enclosure = array();

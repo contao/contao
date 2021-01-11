@@ -4,12 +4,12 @@ branch_filter: /^(master|\d+\.\d+)$/
 composer:
     require:
         contao/manager-plugin: ^2.6.2
-    require-dev:
-        bamarni/composer-bin-plugin: ^1.4
     conflict:
         doctrine/annotations: <1.7
         nikic/php-parser: 4.7.0
         zendframework/zend-code: <3.3.1
+    require-dev:
+        bamarni/composer-bin-plugin: ^1.4
 
 repositories:
     core-bundle:
