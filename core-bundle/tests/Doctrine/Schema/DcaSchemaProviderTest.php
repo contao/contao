@@ -22,13 +22,14 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class DcaSchemaProviderTest extends DoctrineTestCase
 {
+    use ExpectDeprecationTrait;
+
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Since contao/core-bundle 4.11: Using the DcaSchemaProvider to create the schema has been deprecated and will no longer work in Contao 5.0. Use the SchemaProvider instead.
      */
     public function testCreateSchema(): void
     {
@@ -46,6 +47,8 @@ class DcaSchemaProviderTest extends DoctrineTestCase
             $this->createMock(Registry::class),
             $schemaProvider
         );
+
+        $this->expectDeprecation('Since contao/core-bundle 4.11: Using the DcaSchemaProvider class to create the schema has been deprecated and will no longer work in Contao 5.0. Use the Contao\CoreBundle\Doctrine\Schema\SchemaProvider\SchemaProvider class instead.');
 
         $this->assertSame($schema, $dcaSchemaProvider->createSchema());
     }
@@ -355,7 +358,6 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         ];
 
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->method('fetchAssociative')
             ->willReturnCallback(
@@ -604,7 +606,6 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         ];
 
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->method('fetchAssociative')
             ->willReturn(['Value' => null])
@@ -637,7 +638,6 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     public function testAppendToSchemaFailsIfIndexesAreInvalid(array $dca, string $expectedExceptionMessage): void
     {
         $dcaSchemaProvider = $this->getDcaSchemaProvider($dca);
-
         $schema = $this->getSchema();
 
         $this->expectExceptionMessage($expectedExceptionMessage);

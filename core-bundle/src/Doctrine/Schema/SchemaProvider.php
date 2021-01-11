@@ -34,11 +34,9 @@ class SchemaProvider
     public function createSchema(): Schema
     {
         $schemaTool = new SchemaTool($this->entityManager);
-
         $metadata = $this->entityManager->getMetadataFactory()->getAllMetadata();
 
-        // This will trigger the contao.listener.doctrine_schema
-        // listener that will append the DCA definitions.
+        // Triggers the contao.listener.doctrine_schema listener that appends the DCA definitions
         return $schemaTool->getSchemaFromMetadata($metadata);
     }
 }
