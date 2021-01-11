@@ -163,7 +163,7 @@ class FigureBuilder
     private $options = [];
 
     /**
-     * @internal Use the Contao\Image\Studio\Studio factory to get an instance of this class
+     * @internal Use the Contao\CoreBundle\Image\Studio\Studio factory to get an instance of this class
      */
     public function __construct(ContainerInterface $locator, string $projectDir, string $uploadPath, array $validExtensions)
     {

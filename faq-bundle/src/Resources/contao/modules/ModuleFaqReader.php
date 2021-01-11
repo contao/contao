@@ -131,7 +131,7 @@ class ModuleFaqReader extends Module
 		{
 			$figureBuilder
 				->setSize($objFaq->size)
-				->setMetaData($objFaq->getOverwriteMetaData())
+				->setMetadata($objFaq->getOverwriteMetadata())
 				->enableLightbox($objFaq->fullsize)
 				->build()
 				->applyLegacyTemplateData($this->Template, $objFaq->imagemargin, $objFaq->floating);

@@ -352,7 +352,6 @@ class ModuleEventlist extends Events
 			{
 				/** @var CalendarEventsModel $eventModel */
 				$eventModel = CalendarEventsModel::findByPk($event['id']);
-
 				$imgSize = $eventModel->size ?: null;
 
 				// Override the default image size
@@ -368,7 +367,7 @@ class ModuleEventlist extends Events
 
 				$figure = $figureBuilder
 					->setSize($imgSize)
-					->setMetaData($eventModel->getOverwriteMetaData())
+					->setMetadata($eventModel->getOverwriteMetadata())
 					->enableLightbox($eventModel->fullsize)
 					->build();
 
@@ -378,7 +377,7 @@ class ModuleEventlist extends Events
 					$figure = $figureBuilder
 						->setLinkHref($event['href'])
 						->setLinkAttribute('title', $objTemplate->readMore)
-						->setOptions(array('linkTitle' => $objTemplate->readMore)) // BC
+						->setOptions(array('linkTitle' => $objTemplate->readMore)) // Backwards compatibility
 						->build();
 				}
 

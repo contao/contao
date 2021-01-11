@@ -217,7 +217,8 @@ class ContentGallery extends ContentElement
 		$colwidth = floor(100/$this->perRow);
 		$body = array();
 
-		$figureBuilder = $this->getFigureBuilder()
+		$figureBuilder = $this
+			->getFigureBuilder()
 			->setSize($this->size)
 			->setLightboxGroupIdentifier('lb' . $this->id)
 			->enableLightbox($this->fullsize);

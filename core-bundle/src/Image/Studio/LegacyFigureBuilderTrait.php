@@ -17,8 +17,8 @@ use Contao\System;
 
 /**
  * This trait simplifies the FigureBuilder usage in legacy content elements and
- * modules where dependency injection isn't available and missing images are
- * silently ignored for BC reasons.
+ * front end modules where dependency injection is not available and missing
+ * images are silently ignored to remain backwards compatible.
  *
  * @internal
  */
@@ -26,10 +26,7 @@ trait LegacyFigureBuilderTrait
 {
     private function getFigureBuilder(): FigureBuilder
     {
-        /** @var Studio $studio */
-        $studio = System::getContainer()->get(Studio::class);
-
-        return $studio->createFigureBuilder();
+        return System::getContainer()->get(Studio::class)->createFigureBuilder();
     }
 
     /**

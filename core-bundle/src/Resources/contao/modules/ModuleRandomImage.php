@@ -125,20 +125,19 @@ class ModuleRandomImage extends Module
 			return;
 		}
 
-		$imageData = $this->getFigureBuilder()
+		$imageData = $this
+			->getFigureBuilder()
 			->fromFilesModel($images[array_rand($images)])
 			->setSize($this->imgSize)
 			->enableLightbox($this->fullsize)
 			->build()
 			->getLegacyTemplateData();
 
-		$this->Template->setData(
-			array_merge(
-				$this->Template->getData(),
-				$imageData,
-				array('caption' => $this->useCaption ? $imageData['title'] ?? '' : null)
-			)
-		);
+		$this->Template->setData(array_merge(
+			$this->Template->getData(),
+			$imageData,
+			array('caption' => $this->useCaption ? $imageData['title'] ?? '' : null)
+		));
 	}
 }
 

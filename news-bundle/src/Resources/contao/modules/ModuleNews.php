@@ -178,7 +178,7 @@ abstract class ModuleNews extends Module
 				}
 			}
 
-			// If the external link is opened in a new window, open the image link in a new window, too (see #210)
+			// If the external link is opened in a new window, open the image link in a new window as well (see #210)
 			if ('external' === $objTemplate->source && $objTemplate->target)
 			{
 				$figureBuilder->setLinkAttribute('target', '_blank');
@@ -186,7 +186,7 @@ abstract class ModuleNews extends Module
 
 			$figure = $figureBuilder
 				->setSize($imgSize)
-				->setMetaData($objArticle->getOverwriteMetaData())
+				->setMetadata($objArticle->getOverwriteMetadata())
 				->enableLightbox($objArticle->fullsize)
 				->build();
 
@@ -198,7 +198,7 @@ abstract class ModuleNews extends Module
 				$figure = $figureBuilder
 					->setLinkHref($objTemplate->link)
 					->setLinkAttribute('title', $linkTitle)
-					->setOptions(array('linkTitle' => $linkTitle)) // BC
+					->setOptions(array('linkTitle' => $linkTitle)) // Backwards compatibility
 					->build();
 			}
 

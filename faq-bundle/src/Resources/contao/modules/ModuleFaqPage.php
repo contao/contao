@@ -107,7 +107,7 @@ class ModuleFaqPage extends Module
 			{
 				$figureBuilder
 					->setSize($objFaq->size)
-					->setMetaData($objFaq->getOverwriteMetaData())
+					->setMetadata($objFaq->getOverwriteMetadata())
 					->setLightboxGroupIdentifier('lightbox[' . substr(md5('mod_faqpage_' . $objFaq->id), 0, 6) . ']')
 					->enableLightbox($objFaq->fullsize)
 					->build()

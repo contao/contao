@@ -48,7 +48,7 @@ class ContentHyperlink extends ContentElement
 		{
 			$figureBuilder
 				->setSize($this->size)
-				->setMetaData($this->objModel->getOverwriteMetaData())
+				->setMetadata($this->objModel->getOverwriteMetadata())
 				->build()
 				->applyLegacyTemplateData($this->Template);
 

@@ -72,7 +72,7 @@ class ContentImage extends ContentElement
 
 		$figureBuilder
 			->setSize($this->size)
-			->setMetaData($this->objModel->getOverwriteMetaData())
+			->setMetadata($this->objModel->getOverwriteMetadata())
 			->enableLightbox($this->fullsize)
 			->build()
 			->applyLegacyTemplateData($this->Template, $this->imagemargin);
