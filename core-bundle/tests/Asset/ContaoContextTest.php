@@ -61,6 +61,7 @@ class ContaoContextTest extends TestCase
             ->method('getBasePath')
             ->willReturn($basePath)
         ;
+
         $request->attributes = $this->createMock(ParameterBag::class);
 
         $requestStack = new RequestStack();
@@ -159,6 +160,7 @@ class ContaoContextTest extends TestCase
             ->method('getBasePath')
             ->willReturn($basePath)
         ;
+
         $request->attributes = new ParameterBag(['pageModel' => 42]);
 
         $requestStack = new RequestStack();
@@ -207,6 +209,7 @@ class ContaoContextTest extends TestCase
             ->method('getBasePath')
             ->willReturn('/foo')
         ;
+
         $request->attributes = $this->createMock(ParameterBag::class);
 
         $requestStack = new RequestStack();
@@ -299,7 +302,6 @@ class ContaoContextTest extends TestCase
         }
 
         $framework = $this->mockContaoFramework();
-
         $framework
             ->expects($this->never())
             ->method('initialize')
