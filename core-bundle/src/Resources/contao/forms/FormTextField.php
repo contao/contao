@@ -202,8 +202,8 @@ class FormTextField extends Widget
 				{
 					return $this->arrAttributes['min'];
 				}
-				return parent::__get($strKey);
 
+				return parent::__get($strKey);
 
 			case 'max':
 			case 'maxval':
@@ -211,6 +211,7 @@ class FormTextField extends Widget
 				{
 					return $this->arrAttributes['max'];
 				}
+
 				return parent::__get($strKey);
 
 			default:
