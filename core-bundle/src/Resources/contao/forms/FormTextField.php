@@ -196,6 +196,24 @@ class FormTextField extends Widget
 
 				return 'text';
 
+			case 'min':
+			case 'minval':
+				if ($this->rgxp == 'digit')
+				{
+					return $this->arrAttributes['min'];
+				}
+
+				return parent::__get($strKey);
+
+			case 'max':
+			case 'maxval':
+				if ($this->rgxp == 'digit')
+				{
+					return $this->arrAttributes['max'];
+				}
+
+				return parent::__get($strKey);
+
 			default:
 				return parent::__get($strKey);
 		}
