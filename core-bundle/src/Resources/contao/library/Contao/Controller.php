@@ -738,10 +738,12 @@ abstract class Controller extends System
 		// Only apply the restrictions in the front end
 		if (TL_MODE == 'FE')
 		{
+			$blnFeUserLoggedIn = System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
+
 			// Protected element
 			if ($objElement->protected)
 			{
-				if (!FE_USER_LOGGED_IN)
+				if (!$blnFeUserLoggedIn)
 				{
 					$blnReturn = false;
 				}
@@ -766,7 +768,7 @@ abstract class Controller extends System
 			}
 
 			// Show to guests only
-			elseif ($objElement->guests && FE_USER_LOGGED_IN)
+			elseif ($objElement->guests && $blnFeUserLoggedIn)
 			{
 				$blnReturn = false;
 			}
