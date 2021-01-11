@@ -33,7 +33,6 @@ class ModuleChangePassword extends Module
 	public function generate()
 	{
 		$container = System::getContainer();
-
 		$request = $container->get('request_stack')->getCurrentRequest();
 
 		if ($request && $container->get('contao.routing.scope_matcher')->isBackendRequest($request))
