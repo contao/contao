@@ -1937,14 +1937,11 @@
       <trans-unit id="MSC.twoFactorBackupCodesLabel">
         <source>Backup codes</source>
       </trans-unit>
-      <trans-unit id="MSC.twoFactorBackupCodesShow">
-        <source>Show backup codes</source>
-      </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesExplain">
         <source>Backup codes can be used to access your account if you have lost your authentication device and cannot generate two-factor codes anymore. Treat your backup codes with the same level of attention as your password! It is recommended to save them with a password manager such as Lastpass, 1Password or Keeper.</source>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesInfo">
-        <source>Put the codes in a safe spot. If you lose your authentication device and do not have backup codes, you cannot access your account anymore!</source>
+        <source>Make sure to copy the codes now. You will not be able to see them again!</source>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesGenerate">
         <source>Generate backup codes</source>
