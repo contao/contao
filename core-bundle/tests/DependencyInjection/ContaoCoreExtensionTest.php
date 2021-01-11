@@ -3686,7 +3686,6 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $container->getDefinition(ImageExtension::class);
 
         $this->assertTrue($definition->isPrivate());
-
         $this->assertSame([], $definition->getArguments());
     }
 
@@ -3699,7 +3698,6 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $container->getDefinition(TextExtension::class);
 
         $this->assertTrue($definition->isPrivate());
-
         $this->assertSame([], $definition->getArguments());
     }
 
@@ -3749,7 +3747,6 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $container->getDefinition(PictureConfigurationRuntime::class);
 
         $this->assertTrue($definition->isPrivate());
-
         $this->assertSame([], $definition->getArguments());
     }
 

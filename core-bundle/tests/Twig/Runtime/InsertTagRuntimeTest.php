@@ -32,7 +32,6 @@ class InsertTagRuntimeTest extends TestCase
         ;
 
         $framework = $this->mockContaoFramework([Controller::class => $controller]);
-
         $runtime = new InsertTagRuntime($framework);
 
         if (null !== $cacheArgument) {
