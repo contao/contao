@@ -96,7 +96,7 @@ class TwoFactorBackupCodesMigrationTest extends TestCase
 
         $statement
             ->expects($this->exactly(2))
-            ->method('fetchAll')
+            ->method('fetchAllAssociative')
             ->willReturn([])
         ;
 
@@ -154,7 +154,7 @@ class TwoFactorBackupCodesMigrationTest extends TestCase
 
         $statement
             ->expects($this->exactly(4))
-            ->method('fetchAll')
+            ->method('fetchAllAssociative')
             ->willReturn($rows)
         ;
 

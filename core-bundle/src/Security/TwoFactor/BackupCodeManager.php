@@ -74,7 +74,7 @@ class BackupCodeManager implements BackupCodeManagerInterface
         $user->save();
     }
 
-    public function generateBackupCodes(User $user): ?array
+    public function generateBackupCodes(User $user): array
     {
         $backupCodes = [];
 

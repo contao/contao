@@ -95,6 +95,6 @@ class TwoFactorBackupCodesMigration extends AbstractMigration
 
         $statement->execute();
 
-        return $statement->fetchAll();
+        return $statement->fetchAllAssociative();
     }
 }

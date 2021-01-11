@@ -119,7 +119,7 @@ class TwoFactorController extends AbstractFrontendModuleController
 
         if ('tl_two_factor_generate_backup_codes' === $request->request->get('FORM_SUBMIT')) {
             $template->showBackupCodes = true;
-            $template->backupCodes = $this->generateBackupCodes($user);
+            $template->backupCodes = $this->get(BackupCodeManager::class)->generateBackupCodes($user);
         }
 
         if ('tl_two_factor_clear_trusted_devices' === $request->request->get('FORM_SUBMIT')) {
@@ -190,13 +190,5 @@ class TwoFactorController extends AbstractFrontendModuleController
         $this->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
 
         return new RedirectResponse($this->pageModel->getAbsoluteUrl());
-    }
-
-    private function generateBackupCodes(FrontendUser $user): ?array
-    {
-        /** @var BackupCodeManager $backupCodeManager */
-        $backupCodeManager = $this->get(BackupCodeManager::class);
-
-        return $backupCodeManager->generateBackupCodes($user);
     }
 }

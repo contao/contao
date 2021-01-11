@@ -75,7 +75,7 @@ class ModuleTwoFactor extends BackendModule
 		if (Input::post('FORM_SUBMIT') == 'tl_two_factor_generate_backup_codes')
 		{
 			$this->Template->showBackupCodes = true;
-			$this->Template->backupCodes = $this->generateBackupCodes($user);
+			$this->Template->backupCodes = System::getContainer()->get(BackupCodeManager::class)->generateBackupCodes($user);
 		}
 
 		if (Input::post('FORM_SUBMIT') == 'tl_two_factor_clear_trusted_devices')
@@ -162,20 +162,5 @@ class ModuleTwoFactor extends BackendModule
 		System::getContainer()->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
 
 		throw new RedirectResponseException($return);
-	}
-
-	/**
-	 * Generate backup codes for two-factor authentication
-	 *
-	 * @param BackendUser $user
-	 *
-	 * @return array
-	 */
-	private function generateBackupCodes(BackendUser $user)
-	{
-		/** @var BackupCodeManager $backupCodeManager */
-		$backupCodeManager = System::getContainer()->get(BackupCodeManager::class);
-
-		return $backupCodeManager->generateBackupCodes($user);
 	}
 }
