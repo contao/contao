@@ -238,6 +238,11 @@ services:
         arguments:
             - '@contao.framework'
             - '@doctrine'
+            - '@Contao\CoreBundle\Doctrine\Schema\SchemaProvider'
+
+    Contao\CoreBundle\Doctrine\Schema\SchemaProvider:
+        arguments:
+            - '@doctrine.orm.default_entity_manager'
 
     contao.fragment.handler:
         class: Contao\CoreBundle\Fragment\FragmentHandler

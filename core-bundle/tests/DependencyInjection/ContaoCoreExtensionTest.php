@@ -46,6 +46,7 @@ use Contao\CoreBundle\Csrf\MemoryTokenStorage;
 use Contao\CoreBundle\DataCollector\ContaoDataCollector;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
+use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\CoreBundle\EventListener\BackendLocaleListener;
 use Contao\CoreBundle\EventListener\BypassMaintenanceListener;
 use Contao\CoreBundle\EventListener\ClearSessionDataListener;
@@ -1764,7 +1765,7 @@ class ContaoCoreExtensionTest extends TestCase
         );
     }
 
-    public function testRegistersTheDoctrineSchemaProvider(): void
+    public function testRegistersTheDcaSchemaProvider(): void
     {
         $container = $this->getContainerBuilder();
 
@@ -1779,6 +1780,25 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 new Reference('contao.framework'),
                 new Reference('doctrine'),
+                new Reference(SchemaProvider::class),
+            ],
+            $definition->getArguments()
+        );
+    }
+
+    public function testRegistersTheDoctrineSchemaProvider(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $this->assertTrue($container->has(SchemaProvider::class));
+
+        $definition = $container->getDefinition(SchemaProvider::class);
+
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('doctrine.orm.default_entity_manager'),
             ],
             $definition->getArguments()
         );

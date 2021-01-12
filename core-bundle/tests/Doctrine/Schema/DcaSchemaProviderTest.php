@@ -13,30 +13,53 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Doctrine\Schema;
 
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
+use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\Doctrine\DoctrineTestCase;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
-use Doctrine\ORM\Mapping\ClassMetadata;
-use PHPUnit\Framework\MockObject\MockObject;
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Schema\Table;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class DcaSchemaProviderTest extends DoctrineTestCase
 {
-    public function testHasAnEmptySchema(): void
+    use ExpectDeprecationTrait;
+
+    /**
+     * @group legacy
+     */
+    public function testCreateSchema(): void
     {
-        $this->assertCount(0, $this->getProvider()->createSchema()->getTableNames());
+        $schema = $this->createMock(Schema::class);
+
+        $schemaProvider = $this->createMock(SchemaProvider::class);
+        $schemaProvider
+            ->expects($this->once())
+            ->method('createSchema')
+            ->willReturn($schema)
+        ;
+
+        $dcaSchemaProvider = new DcaSchemaProvider(
+            $this->createMock(ContaoFramework::class),
+            $this->createMock(Registry::class),
+            $schemaProvider
+        );
+
+        $this->expectDeprecation('Since contao/core-bundle 4.11: Using the DcaSchemaProvider class to create the schema has been deprecated and will no longer work in Contao 5.0. Use the Contao\CoreBundle\Doctrine\Schema\SchemaProvider\SchemaProvider class instead.');
+
+        $this->assertSame($schema, $dcaSchemaProvider->createSchema());
     }
 
     /**
-     * @dataProvider createSchemaProvider
+     * @dataProvider provideDefinitions
      */
-    public function testCreatesASchema(array $dca = [], array $sql = []): void
+    public function testAppendToSchema(array $dca = [], array $sql = []): void
     {
-        $schema = $this->getProvider($dca, $sql)->createSchema();
-
-        $this->assertCount(1, $schema->getTableNames());
-        $this->assertTrue($schema->hasTable('tl_member'));
-
+        $schema = $this->getSchema();
+        $this->getDcaSchemaProvider($dca, $sql)->appendToSchema($schema);
         $table = $schema->getTable('tl_member');
 
         $this->assertTrue($table->hasColumn('id'));
@@ -138,10 +161,9 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         }
     }
 
-    public function createSchemaProvider(): \Generator
+    public function provideDefinitions(): \Generator
     {
-        // Test table fields SQL string from DCA file
-        yield [
+        yield 'table fields SQL string from DCA file' => [
             [
                 'tl_member' => [
                     'TABLE_FIELDS' => [
@@ -162,8 +184,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
             ],
         ];
 
-        // Test schema definition from DCA file
-        yield [
+        yield 'schema definition from DCA file' => [
             [
                 'tl_member' => [
                     'SCHEMA_FIELDS' => [
@@ -184,8 +205,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
             ],
         ];
 
-        // Test table fields from database.sql file
-        yield [
+        yield 'table fields from database.sql file' => [
             [],
             [
                 'tl_member' => [
@@ -208,7 +228,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         ];
     }
 
-    public function testHandlesSimpleFieldDefinition(): void
+    public function testAppendToSchemaHandlesSimpleFieldDefinition(): void
     {
         $dca = [
             'tl_member' => [
@@ -218,7 +238,8 @@ class DcaSchemaProviderTest extends DoctrineTestCase
             ],
         ];
 
-        $schema = $this->getProvider($dca)->createSchema();
+        $schema = $this->getSchema();
+        $this->getDcaSchemaProvider($dca)->appendToSchema($schema);
         $table = $schema->getTable('tl_member');
 
         $this->assertTrue($table->hasColumn('id'));
@@ -227,97 +248,77 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertFalse($table->getColumn('id')->getFixed());
     }
 
-    public function testReadsTheTableOptions(): void
+    /**
+     * @dataProvider provideTableOptions
+     */
+    public function testAppendToSchemaReadsTheTableOptions(string $options, \Closure $assertions): void
     {
-        $options = 'ENGINE=InnoDB ROW_FORMAT=DYNAMIC';
+        $dca = [
+            'tl_member' => [
+                'TABLE_OPTIONS' => $options,
+            ],
+        ];
 
-        $provider = $this->getProvider(
-            [
-                'tl_member' => [
-                    'TABLE_OPTIONS' => $options.' DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci',
-                ],
-            ]
-        );
-
-        $schema = $provider->createSchema();
-
-        $this->assertCount(1, $schema->getTableNames());
-        $this->assertTrue($schema->hasTable('tl_member'));
-
+        $schema = $this->getSchema();
+        $this->getDcaSchemaProvider($dca)->appendToSchema($schema);
         $table = $schema->getTable('tl_member');
 
-        $this->assertSame('InnoDB', $table->getOption('engine'));
-        $this->assertSame('utf8', $table->getOption('charset'));
-        $this->assertSame('utf8_unicode_ci', $table->getOption('collate'));
-
-        $provider = $this->getProvider(
-            [],
-            [
-                'tl_member' => [
-                    'TABLE_OPTIONS' => $options.' DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci',
-                ],
-            ]
-        );
-
-        $schema = $provider->createSchema();
-
-        $this->assertCount(1, $schema->getTableNames());
-        $this->assertTrue($schema->hasTable('tl_member'));
-
-        $table = $schema->getTable('tl_member');
-
-        $this->assertSame('InnoDB', $table->getOption('engine'));
-        $this->assertSame('utf8mb4', $table->getOption('charset'));
-        $this->assertSame('utf8mb4_unicode_ci', $table->getOption('collate'));
-
-        $provider = $this->getProvider(
-            [
-                'tl_member' => [
-                    'TABLE_OPTIONS' => 'ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE latin1_general_ci',
-                ],
-            ]
-        );
-
-        $schema = $provider->createSchema();
-
-        $this->assertCount(1, $schema->getTableNames());
-        $this->assertTrue($schema->hasTable('tl_member'));
-
-        $table = $schema->getTable('tl_member');
-
-        $this->assertSame('MyISAM', $table->getOption('engine'));
-        $this->assertSame('latin1', $table->getOption('charset'));
-        $this->assertSame('latin1_general_ci', $table->getOption('collate'));
-        $this->assertFalse($table->hasOption('row_format'));
+        $assertions($table);
     }
 
-    public function testCreatesTheTableDefinitions(): void
+    public function provideTableOptions(): \Generator
     {
-        $provider = $this->getProvider(
-            [
-                'tl_member' => [
-                    'TABLE_FIELDS' => [
-                        'id' => '`id` int(10) NOT NULL default 0',
-                        'pid' => '`pid` int(10) NULL',
-                        'username' => "`username` varchar(128) NOT NULL default ''",
-                        'firstname' => "`firstname` varchar(128) NOT NULL default ''",
-                        'lastname' => "`lastname` varchar(128) NOT NULL default ''",
-                    ],
-                    'TABLE_CREATE_DEFINITIONS' => [
-                        'PRIMARY' => 'PRIMARY KEY (`id`)',
-                        'pid' => 'KEY `pid` (`pid`)',
-                        'username' => 'UNIQUE KEY `username` (`username`)',
-                        'name' => 'KEY `name` (`firstname`, `lastname`)',
-                    ],
+        yield [
+            'ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci',
+            function (Table $table): void {
+                $this->assertSame('InnoDB', $table->getOption('engine'));
+                $this->assertSame('utf8', $table->getOption('charset'));
+                $this->assertSame('utf8_unicode_ci', $table->getOption('collate'));
+            },
+        ];
+
+        yield [
+            'ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci',
+            function (Table $table): void {
+                $this->assertSame('InnoDB', $table->getOption('engine'));
+                $this->assertSame('utf8mb4', $table->getOption('charset'));
+                $this->assertSame('utf8mb4_unicode_ci', $table->getOption('collate'));
+            },
+        ];
+
+        yield [
+            'ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE latin1_general_ci',
+            function (Table $table): void {
+                $this->assertSame('MyISAM', $table->getOption('engine'));
+                $this->assertSame('latin1', $table->getOption('charset'));
+                $this->assertSame('latin1_general_ci', $table->getOption('collate'));
+                $this->assertFalse($table->hasOption('row_format'));
+            },
+        ];
+    }
+
+    public function testAppendToSchemaCreatesTheTableDefinitions(): void
+    {
+        $dca = [
+            'tl_member' => [
+                'TABLE_FIELDS' => [
+                    'id' => '`id` int(10) NOT NULL default 0',
+                    'pid' => '`pid` int(10) NULL',
+                    'username' => "`username` varchar(128) NOT NULL default ''",
+                    'firstname' => "`firstname` varchar(128) NOT NULL default ''",
+                    'lastname' => "`lastname` varchar(128) NOT NULL default ''",
                 ],
-            ]
-        );
+                'TABLE_CREATE_DEFINITIONS' => [
+                    'PRIMARY' => 'PRIMARY KEY (`id`)',
+                    'pid' => 'KEY `pid` (`pid`)',
+                    'username' => 'UNIQUE KEY `username` (`username`)',
+                    'name' => 'KEY `name` (`firstname`, `lastname`)',
+                ],
+            ],
+        ];
 
-        $schema = $provider->createSchema();
-
-        $this->assertCount(1, $schema->getTableNames());
-        $this->assertTrue($schema->hasTable('tl_member'));
-
+        $schema = $this->getSchema();
+        $this->getDcaSchemaProvider($dca)->appendToSchema($schema);
         $table = $schema->getTable('tl_member');
 
         $this->assertTrue($table->hasIndex('PRIMARY'));
@@ -338,48 +339,52 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     }
 
     /**
-     * @dataProvider getIndexes
+     * @dataProvider provideIndexes
      *
      * @param bool|string $largePrefixes
      */
-    public function testAddsTheIndexLength(?int $expected, string $tableOptions, $largePrefixes = null, string $version = null, string $filePerTable = null, string $fileFormat = null): void
+    public function testAppendToSchemaAddsTheIndexLength(?int $expected, string $tableOptions, $largePrefixes = null, string $version = null, string $filePerTable = null, string $fileFormat = null): void
     {
+        $dca = [
+            'tl_files' => [
+                'TABLE_FIELDS' => [
+                    'name' => "`name` varchar(255) NOT NULL default ''",
+                ],
+                'TABLE_CREATE_DEFINITIONS' => [
+                    'name' => 'KEY `name` (`name`)',
+                ],
+                'TABLE_OPTIONS' => $tableOptions,
+            ],
+        ];
+
         $connection = $this->createMock(Connection::class);
         $connection
-            ->method('fetchOne')
-            ->willReturn($version)
-        ;
-
-        $connection
             ->method('fetchAssociative')
-            ->willReturnOnConsecutiveCalls(
-                ['Value' => $largePrefixes],
-                ['Value' => $filePerTable],
-                ['Value' => $fileFormat]
+            ->willReturnCallback(
+                static function ($query) use ($fileFormat, $filePerTable, $largePrefixes) {
+                    $map = [
+                        "SHOW VARIABLES LIKE 'innodb_large_prefix'" => $largePrefixes,
+                        "SHOW VARIABLES LIKE 'innodb_file_per_table'" => $filePerTable,
+                        "SHOW VARIABLES LIKE 'innodb_file_format'" => $fileFormat,
+                    ];
+
+                    if (\array_key_exists($query, $map)) {
+                        return ['Value' => $map[$query]];
+                    }
+
+                    throw new \RuntimeException("Test does not mirror actual query, got: '$query'");
+                }
             )
         ;
 
-        $provider = $this->getProvider(
-            [
-                'tl_files' => [
-                    'TABLE_FIELDS' => [
-                        'name' => "`name` varchar(255) NOT NULL default ''",
-                    ],
-                    'TABLE_CREATE_DEFINITIONS' => [
-                        'name' => 'KEY `name` (`name`)',
-                    ],
-                    'TABLE_OPTIONS' => $tableOptions,
-                ],
-            ],
-            [],
-            $connection
-        );
+        $connection
+            ->method('fetchOne')
+            ->with('SELECT @@version')
+            ->willReturn($version)
+        ;
 
-        $schema = $provider->createSchema();
-
-        $this->assertCount(1, $schema->getTableNames());
-        $this->assertTrue($schema->hasTable('tl_files'));
-
+        $schema = $this->getSchema();
+        $this->getDcaSchemaProvider($dca, [], $connection)->appendToSchema($schema);
         $table = $schema->getTable('tl_files');
 
         $this->assertTrue($table->hasColumn('name'));
@@ -403,7 +408,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         }
     }
 
-    public function getIndexes(): \Generator
+    public function provideIndexes(): \Generator
     {
         yield 'MyISAM, utf8' => [
             null,
@@ -549,29 +554,24 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         }
     }
 
-    public function testHandlesIndexesOverMultipleColumns(): void
+    public function testAppendToSchemaHandlesIndexesOverMultipleColumns(): void
     {
-        $provider = $this->getProvider(
-            [
-                'tl_foo' => [
-                    'TABLE_FIELDS' => [
-                        'col1' => "`col1` varchar(255) NOT NULL default ''",
-                        'col2' => "`col2` varchar(255) NOT NULL default ''",
-                        'col3' => "`col3` varchar(255) NOT NULL default ''",
-                    ],
-                    'TABLE_CREATE_DEFINITIONS' => [
-                        'col123' => 'KEY `col123` (`col1`(100), `col2`, `col3`(99))',
-                    ],
-                    'TABLE_OPTIONS' => 'ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci',
+        $dca = [
+            'tl_foo' => [
+                'TABLE_FIELDS' => [
+                    'col1' => "`col1` varchar(255) NOT NULL default ''",
+                    'col2' => "`col2` varchar(255) NOT NULL default ''",
+                    'col3' => "`col3` varchar(255) NOT NULL default ''",
                 ],
-            ]
-        );
+                'TABLE_CREATE_DEFINITIONS' => [
+                    'col123' => 'KEY `col123` (`col1`(100), `col2`, `col3`(99))',
+                ],
+                'TABLE_OPTIONS' => 'ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci',
+            ],
+        ];
 
-        $schema = $provider->createSchema();
-
-        $this->assertCount(1, $schema->getTableNames());
-        $this->assertTrue($schema->hasTable('tl_foo'));
-
+        $schema = $this->getSchema();
+        $this->getDcaSchemaProvider($dca)->appendToSchema($schema);
         $table = $schema->getTable('tl_foo');
 
         for ($i = 1; $i <= 3; ++$i) {
@@ -591,40 +591,34 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         }
     }
 
-    public function testHandlesFulltextIndexes(): void
+    public function testAppendToSchemaHandlesFulltextIndexes(): void
     {
+        $dca = [
+            'tl_search' => [
+                'TABLE_FIELDS' => [
+                    'text' => '`text` mediumtext NULL',
+                ],
+                'TABLE_CREATE_DEFINITIONS' => [
+                    'text' => 'FULLTEXT KEY `text` (`text`)',
+                ],
+                'TABLE_OPTIONS' => 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci',
+            ],
+        ];
+
         $connection = $this->createMock(Connection::class);
         $connection
             ->method('fetchAssociative')
-            ->willReturn(['Value' => 'On'])
+            ->willReturn(['Value' => null])
         ;
 
         $connection
             ->method('fetchOne')
-            ->willReturn('8.0.13')
+            ->with('SELECT @@version')
+            ->willReturn('foo')
         ;
 
-        $provider = $this->getProvider(
-            [
-                'tl_search' => [
-                    'TABLE_FIELDS' => [
-                        'text' => '`text` mediumtext NULL',
-                    ],
-                    'TABLE_CREATE_DEFINITIONS' => [
-                        'text' => 'FULLTEXT KEY `text` (`text`)',
-                    ],
-                    'TABLE_OPTIONS' => 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci',
-                ],
-            ],
-            [],
-            $connection
-        );
-
-        $schema = $provider->createSchema();
-
-        $this->assertCount(1, $schema->getTableNames());
-        $this->assertTrue($schema->hasTable('tl_search'));
-
+        $schema = $this->getSchema();
+        $this->getDcaSchemaProvider($dca, [], $connection)->appendToSchema($schema);
         $table = $schema->getTable('tl_search');
 
         $this->assertTrue($table->hasColumn('text'));
@@ -638,19 +632,22 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertSame(['fulltext'], $table->getIndex('text')->getFlags());
     }
 
-    public function testAppliesTheSchemaFilterToTheSqlDefinitions(): void
+    /**
+     * @dataProvider provideInvalidIndexDefinitions
+     */
+    public function testAppendToSchemaFailsIfIndexesAreInvalid(array $dca, string $expectedExceptionMessage): void
     {
-        $provider = $this->getProvider(['member' => [], 'tl_member' => []], [], null, '/^tl_/');
-        $schema = $provider->createSchema();
+        $dcaSchemaProvider = $this->getDcaSchemaProvider($dca);
+        $schema = $this->getSchema();
 
-        $this->assertCount(1, $schema->getTableNames());
-        $this->assertFalse($schema->hasTable('member'));
-        $this->assertTrue($schema->hasTable('tl_member'));
+        $this->expectExceptionMessage($expectedExceptionMessage);
+
+        $dcaSchemaProvider->appendToSchema($schema);
     }
 
-    public function testFailsIfThePrimaryKeyIsInvalid(): void
+    public function provideInvalidIndexDefinitions(): \Generator
     {
-        $provider = $this->getProvider(
+        yield 'invalid primary key' => [
             [
                 'tl_member' => [
                     'TABLE_FIELDS' => [
@@ -660,17 +657,11 @@ class DcaSchemaProviderTest extends DoctrineTestCase
                         'PRIMARY' => 'PRIMARY KEY (id)',
                     ],
                 ],
-            ]
-        );
+            ],
+            'Primary key definition "primary key (id)" could not be parsed.',
+        ];
 
-        $this->expectException('RuntimeException');
-
-        $provider->createSchema();
-    }
-
-    public function testFailsIfAKeyIsInvalid(): void
-    {
-        $provider = $this->getProvider(
+        yield 'invalid index' => [
             [
                 'tl_files' => [
                     'TABLE_FIELDS' => [
@@ -680,70 +671,8 @@ class DcaSchemaProviderTest extends DoctrineTestCase
                         'path' => 'KEY path (path)',
                     ],
                 ],
-            ]
-        );
-
-        $this->expectException('RuntimeException');
-
-        $provider->createSchema();
-    }
-
-    public function testCreatesSchemaFromOrm(): void
-    {
-        $metadata = new ClassMetadata('tl_member');
-        $metadata->setPrimaryTable(['name' => 'tl_member']);
-
-        $provider = new DcaSchemaProvider(
-            $this->mockContaoFrameworkWithInstaller(),
-            $this->mockDoctrineRegistryWithOrm([$metadata])
-        );
-
-        $schema = $provider->createSchema();
-
-        $this->assertCount(1, $schema->getTables());
-        $this->assertTrue($schema->hasTable('tl_member'));
-    }
-
-    public function testAppliesTheSchemaFilterToTheOrmEntities(): void
-    {
-        $class1 = new ClassMetadata('tl_member');
-        $class1->setPrimaryTable(['name' => 'tl_member']);
-
-        $class2 = new ClassMetadata('member');
-        $class2->setPrimaryTable(['name' => 'member']);
-
-        $provider = new DcaSchemaProvider(
-            $this->mockContaoFrameworkWithInstaller(),
-            $this->mockDoctrineRegistryWithOrm([$class1, $class2], '/^tl_/')
-        );
-
-        $schema = $provider->createSchema();
-
-        $this->assertCount(1, $schema->getTables());
-        $this->assertTrue($schema->hasTable('tl_member'));
-        $this->assertFalse($schema->hasTable('member'));
-    }
-
-    public function testDoesNotCreateTheSchemaFromOrmIfThereIsNoMetadata(): void
-    {
-        $provider = new DcaSchemaProvider(
-            $this->mockContaoFrameworkWithInstaller(),
-            $this->mockDoctrineRegistryWithOrm()
-        );
-
-        $schema = $provider->createSchema();
-
-        $this->assertCount(0, $schema->getTables());
-    }
-
-    /**
-     * @param Connection&MockObject $connection
-     */
-    private function getProvider(array $dca = [], array $file = [], Connection $connection = null, string $filter = null): DcaSchemaProvider
-    {
-        return new DcaSchemaProvider(
-            $this->mockContaoFrameworkWithInstaller($dca, $file),
-            $this->mockDoctrineRegistryWithConnection($connection, $filter)
-        );
+            ],
+            'Key definition "key path (path)" could not be parsed.',
+        ];
     }
 }

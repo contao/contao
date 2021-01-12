@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle\Database;
 
-use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
+use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Schema;
@@ -36,14 +36,14 @@ class Installer
     private $commandOrder;
 
     /**
-     * @var DcaSchemaProvider
+     * @var SchemaProvider
      */
     private $schemaProvider;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.installer" service instead
      */
-    public function __construct(Connection $connection, DcaSchemaProvider $schemaProvider)
+    public function __construct(Connection $connection, SchemaProvider $schemaProvider)
     {
         $this->connection = $connection;
         $this->schemaProvider = $schemaProvider;
@@ -121,23 +121,9 @@ class Installer
 
         $order = [];
 
-        // The schema assets filter is a callable as of Doctrine DBAL 2.9
-        $filter = static function (string $assetName): bool {
-            return 0 === strncmp($assetName, 'tl_', 3);
-        };
-
-        $config = $this->connection->getConfiguration();
-
-        // Overwrite the schema filter (see #78)
-        $previousFilter = $config->getSchemaAssetsFilter();
-        $config->setSchemaAssetsFilter($filter);
-
         // Create the from and to schema
         $fromSchema = $this->connection->getSchemaManager()->createSchema();
         $toSchema = $this->schemaProvider->createSchema();
-
-        // Reset the schema filter
-        $config->setSchemaAssetsFilter($previousFilter);
 
         $diff = $fromSchema->getMigrateToSql($toSchema, $this->connection->getDatabasePlatform());
 
