@@ -43,7 +43,7 @@ class GdImage
 	/**
 	 * Create a new object to handle a GD image
 	 *
-	 * @param resource $gdResource The GD resource handle
+	 * @param \GdImage|resource $gdResource The GD resource handle
 	 */
 	public function __construct($gdResource)
 	{
@@ -119,7 +119,7 @@ class GdImage
 	/**
 	 * Get the GD resource handle
 	 *
-	 * @return resource The GD resource handle
+	 * @return \GdImage|resource The GD resource handle
 	 */
 	public function getResource()
 	{
