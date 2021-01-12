@@ -1589,6 +1589,8 @@ abstract class Controller extends System
 			}
 
 			// Normalize size
+			$size = StringUtil::deserialize($size);
+
 			if ($size instanceof PictureConfiguration)
 			{
 				return array($size, $margin);
