@@ -19,9 +19,12 @@ use Contao\System;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Statement;
 use Monolog\Logger;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class ContaoTableHandlerTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     public function testSupportsReadingAndWritingTheDbalServiceName(): void
     {
         $handler = new ContaoTableHandler();
@@ -35,11 +38,11 @@ class ContaoTableHandlerTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Since contao/core-bundle 4.0: Using the "addLogEntry" hook has been deprecated %s.
      */
     public function testHandlesContaoRecords(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.0: Using the "addLogEntry" hook has been deprecated %s.');
+
         $record = [
             'level' => Logger::DEBUG,
             'extra' => ['contao' => new ContaoContext('foobar')],

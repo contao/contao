@@ -133,7 +133,7 @@ class ImageSizes implements ResetInterface
         // The framework is required to have the TL_CROP options available
         $this->framework->initialize();
 
-        $this->options = $GLOBALS['TL_CROP'];
+        $this->options = $GLOBALS['TL_CROP'] ?? [];
 
         $rows = $this->connection->fetchAllAssociative(
             'SELECT

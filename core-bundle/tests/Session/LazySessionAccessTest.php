@@ -15,18 +15,21 @@ namespace Contao\CoreBundle\Tests\Session;
 use Contao\CoreBundle\Session\LazySessionAccess;
 use Contao\CoreBundle\Session\MockNativeSessionStorage;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class LazySessionAccessTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Since contao/core-bundle 4.5: Using "$_SESSION" has been deprecated %s.
      */
     public function testStartsSessionOnOffsetExists(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.5: Using "$_SESSION" has been deprecated %s.');
+
         $beBag = new AttributeBag();
         $beBag->setName('contao_backend');
 
@@ -48,11 +51,11 @@ class LazySessionAccessTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Since contao/core-bundle 4.5: Using "$_SESSION" has been deprecated %s.
      */
     public function testStartsSessionOnOffsetGet(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.5: Using "$_SESSION" has been deprecated %s.');
+
         $beBag = new AttributeBag();
         $beBag->setName('contao_backend');
 
@@ -74,11 +77,11 @@ class LazySessionAccessTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Since contao/core-bundle 4.5: Using "$_SESSION" has been deprecated %s.
      */
     public function testStartsSessionOnOffsetSet(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.5: Using "$_SESSION" has been deprecated %s.');
+
         $beBag = new AttributeBag();
         $beBag->setName('contao_backend');
 
@@ -103,11 +106,11 @@ class LazySessionAccessTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Since contao/core-bundle 4.5: Using "$_SESSION" has been deprecated %s.
      */
     public function testStartsSessionOnOffsetUnset(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.5: Using "$_SESSION" has been deprecated %s.');
+
         $beBag = new AttributeBag();
         $beBag->setName('contao_backend');
 
@@ -131,11 +134,11 @@ class LazySessionAccessTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Since contao/core-bundle 4.5: Using "$_SESSION" has been deprecated %s.
      */
     public function testStartsSessionOnCount(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.5: Using "$_SESSION" has been deprecated %s.');
+
         $beBag = new AttributeBag();
         $beBag->setName('contao_backend');
 

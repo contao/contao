@@ -156,7 +156,7 @@ class StyleSheets extends Backend
 		}
 
 		// Merge the global style sheet variables
-		if ($row['vars'] != '' && \is_array($tmp = StringUtil::deserialize($row['vars'])))
+		if (!empty($row['vars']) && \is_array($tmp = StringUtil::deserialize($row['vars'])))
 		{
 			foreach ($tmp as $v)
 			{

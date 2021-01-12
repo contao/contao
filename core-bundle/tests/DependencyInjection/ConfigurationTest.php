@@ -202,6 +202,24 @@ class ConfigurationTest extends TestCase
         $this->checkKeys($tree->getChildren());
     }
 
+    public function testFailsIfABackendAttributeNameContainsInvalidCharacters(): void
+    {
+        $params = [
+            'contao' => [
+                'backend' => [
+                    'attributes' => [
+                        'data-App Name' => 'My App',
+                    ],
+                ],
+            ],
+        ];
+
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessageMatches('/The attribute name "data-App Name" must be a valid HTML attribute name./');
+
+        (new Processor())->processConfiguration($this->configuration, $params);
+    }
+
     /**
      * Ensure that all non-deprecated configuration keys are in lower case and
      * separated by underscores (aka snake_case).

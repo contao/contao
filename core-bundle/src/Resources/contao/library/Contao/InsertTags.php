@@ -105,14 +105,14 @@ class InsertTags extends Controller
 		for ($_rit=0, $_cnt=\count($tags); $_rit<$_cnt; $_rit+=2)
 		{
 			$strBuffer .= $tags[$_rit];
-			$strTag = $tags[$_rit+1] ?? '';
 
 			// Skip empty tags
-			if (!$strTag)
+			if (empty($tags[$_rit+1]))
 			{
 				continue;
 			}
 
+			$strTag = $tags[$_rit+1];
 			$flags = explode('|', $strTag);
 			$tag = array_shift($flags);
 			$elements = explode('::', $tag);
@@ -127,7 +127,7 @@ class InsertTags extends Controller
 			// Skip certain elements if the output will be cached
 			if ($blnCache)
 			{
-				if ($elements[0] == 'date' || $elements[0] == 'ua' || $elements[0] == 'post' || $elements[1] == 'back' || $elements[1] == 'referer' || \in_array('uncached', $flags) || strncmp($elements[0], 'cache_', 6) === 0)
+				if ($elements[0] == 'date' || $elements[0] == 'ua' || $elements[0] == 'post' || ($elements[1] ?? null) == 'back' || ($elements[1] ?? null) == 'referer' || \in_array('uncached', $flags) || strncmp($elements[0], 'cache_', 6) === 0)
 				{
 					/** @var FragmentHandler $fragmentHandler */
 					$fragmentHandler = $container->get('fragment.handler');
@@ -302,7 +302,7 @@ class InsertTags extends Controller
 
 						$this->loadDataContainer('tl_member');
 
-						if ($GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['inputType'] == 'password')
+						if (($GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['inputType'] ?? null) == 'password')
 						{
 							$arrCache[$strTag] = '';
 							break;
@@ -311,14 +311,14 @@ class InsertTags extends Controller
 						$value = StringUtil::deserialize($value);
 
 						// Decrypt the value
-						if ($GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['eval']['encrypt'])
+						if ($GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['eval']['encrypt'] ?? null)
 						{
 							$value = Encryption::decrypt($value);
 						}
 
-						$rgxp = $GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['eval']['rgxp'];
-						$opts = $GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['options'];
-						$rfrc = $GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['reference'];
+						$rgxp = $GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['eval']['rgxp'] ?? null;
+						$opts = $GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['options'] ?? null;
+						$rfrc = $GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['reference'] ?? null;
 
 						if ($rgxp == 'date')
 						{
@@ -459,15 +459,15 @@ class InsertTags extends Controller
 					switch (strtolower($elements[0]))
 					{
 						case 'link':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s%s>%s</a>', $strUrl, StringUtil::specialchars($strTitle), $strClass, $strTarget, $strName);
+							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s%s>%s</a>', $strUrl ?: './', StringUtil::specialchars($strTitle), $strClass, $strTarget, $strName);
 							break;
 
 						case 'link_open':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s%s>', $strUrl, StringUtil::specialchars($strTitle), $strClass, $strTarget);
+							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s%s>', $strUrl ?: './', StringUtil::specialchars($strTitle), $strClass, $strTarget);
 							break;
 
 						case 'link_url':
-							$arrCache[$strTag] = $strUrl;
+							$arrCache[$strTag] = $strUrl ?: './';
 							break;
 
 						case 'link_title':

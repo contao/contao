@@ -12,20 +12,21 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Doctrine;
 
+use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
+use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database\Installer;
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Doctrine\Common\EventManager;
+use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
-use Doctrine\DBAL\Schema\AbstractSchemaManager;
-use Doctrine\DBAL\Schema\MySqlSchemaManager;
-use Doctrine\DBAL\Statement;
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Schema\SchemaConfig;
 use Doctrine\ORM\Configuration;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping\ClassMetadataFactory;
-use Doctrine\ORM\Mapping\DefaultQuoteStrategy;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
+use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
 use PHPUnit\Framework\MockObject\MockObject;
 
 abstract class DoctrineTestCase extends TestCase
@@ -33,233 +34,37 @@ abstract class DoctrineTestCase extends TestCase
     /**
      * Mocks a Doctrine registry with database connection.
      *
-     * @return Registry&MockObject
-     */
-    protected function mockDoctrineRegistry(Statement $statement = null, string $filter = null): Registry
-    {
-        $schemaManager = $this->createMock(AbstractSchemaManager::class);
-        $schemaManager
-            ->method('tablesExist')
-            ->willReturn(true)
-        ;
-
-        $config = $this->createMock(Configuration::class);
-        $config
-            ->method('getSchemaAssetsFilter')
-            ->willReturn($this->getSchemaAssetsFilter($filter))
-        ;
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->method('getDatabasePlatform')
-            ->willReturn(new MySqlPlatform())
-        ;
-
-        $connection
-            ->method('executeQuery')
-            ->willReturn($statement)
-        ;
-
-        $connection
-            ->method('getSchemaManager')
-            ->willReturn($schemaManager)
-        ;
-
-        $connection
-            ->method('getParams')
-            ->willReturn(
-                [
-                    'defaultTableOptions' => [
-                        'charset' => 'utf8mb4',
-                        'collate' => 'utf8mb4_unicode_ci',
-                    ],
-                ]
-            )
-        ;
-
-        $connection
-            ->method('getConfiguration')
-            ->willReturn($config)
-        ;
-
-        $registry = $this->createMock(Registry::class);
-        $registry
-            ->method('getConnection')
-            ->willReturn($connection)
-        ;
-
-        $registry
-            ->method('getConnections')
-            ->willReturn([$connection])
-        ;
-
-        $registry
-            ->method('getManagerNames')
-            ->willReturn([])
-        ;
-
-        return $registry;
-    }
-
-    /**
-     * Mocks a Doctrine registry with database connection and ORM.
+     * @param Connection|MockObject|null $connection
      *
      * @return Registry&MockObject
      */
-    protected function mockDoctrineRegistryWithOrm(array $metadata = [], string $filter = null): Registry
+    protected function mockDoctrineRegistry($connection = null): Registry
     {
-        $config = $this->createMock(Configuration::class);
-        $config
-            ->method('getSchemaAssetsFilter')
-            ->willReturn($this->getSchemaAssetsFilter($filter))
-        ;
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->method('getDatabasePlatform')
-            ->willReturn(new MySqlPlatform())
-        ;
-
-        $connection
-            ->expects(!empty($metadata) ? $this->once() : $this->never())
-            ->method('getSchemaManager')
-            ->willReturn(new MySqlSchemaManager($connection))
-        ;
-
-        $connection
-            ->method('getConfiguration')
-            ->willReturn($config)
-        ;
-
-        $factory = $this->createMock(ClassMetadataFactory::class);
-        $factory
-            ->method('getAllMetadata')
-            ->willReturn($metadata)
-        ;
-
-        $configuration = $this->createMock(Configuration::class);
-        $configuration
-            ->method('getQuoteStrategy')
-            ->willReturn(new DefaultQuoteStrategy())
-        ;
-
-        $eventManager = $this->createMock(EventManager::class);
-        $eventManager
-            ->method('hasListeners')
-            ->willReturn(false)
-        ;
-
-        $em = $this->createMock(EntityManagerInterface::class);
-        $em
-            ->method('getMetadataFactory')
-            ->willReturn($factory)
-        ;
-
-        $em
-            ->method('getConnection')
-            ->willReturn($connection)
-        ;
-
-        $em
-            ->method('getConfiguration')
-            ->willReturn($configuration)
-        ;
-
-        $em
-            ->method('getEventManager')
-            ->willReturn($eventManager)
-        ;
-
-        $registry = $this->createMock(Registry::class);
-        $registry
-            ->method('getConnection')
-            ->willReturn($connection)
-        ;
-
-        $registry
-            ->method('getConnections')
-            ->willReturn([$connection])
-        ;
-
-        $registry
-            ->method('getManagerNames')
-            ->willReturn([$em])
-        ;
-
-        $registry
-            ->method('getManager')
-            ->willReturn($em)
-        ;
-
-        return $registry;
-    }
-
-    /**
-     * Mocks a Doctrine registry with a custom database connection.
-     *
-     * @param Connection|MockObject $connection
-     *
-     * @return Registry&MockObject
-     */
-    protected function mockDoctrineRegistryWithConnection(Connection $connection = null, string $filter = null): Registry
-    {
-        $schemaManager = $this->createMock(AbstractSchemaManager::class);
-        $schemaManager
-            ->method('tablesExist')
-            ->willReturn(true)
-        ;
-
-        $config = $this->createMock(Configuration::class);
-        $config
-            ->method('getSchemaAssetsFilter')
-            ->willReturn($this->getSchemaAssetsFilter($filter))
-        ;
-
-        if (!$connection) {
+        if (null === $connection) {
             $connection = $this->createMock(Connection::class);
         }
 
-        $connection
-            ->method('getDatabasePlatform')
-            ->willReturn(new MySqlPlatform())
-        ;
+        if ($connection instanceof MockObject) {
+            $connection
+                ->method('getDatabasePlatform')
+                ->willReturn(new MySqlPlatform())
+            ;
 
-        $connection
-            ->method('getSchemaManager')
-            ->willReturn($schemaManager)
-        ;
+            $connection
+                ->method('getParams')
+                ->willReturn(['defaultTableOptions' => $this->getDefaultTableOptions()])
+            ;
 
-        $connection
-            ->method('getParams')
-            ->willReturn(
-                [
-                    'defaultTableOptions' => [
-                        'charset' => 'utf8mb4',
-                        'collate' => 'utf8mb4_unicode_ci',
-                    ],
-                ]
-            )
-        ;
-
-        $connection
-            ->method('getConfiguration')
-            ->willReturn($config)
-        ;
+            $connection
+                ->method('getConfiguration')
+                ->willReturn($this->createMock(Configuration::class))
+            ;
+        }
 
         $registry = $this->createMock(Registry::class);
         $registry
             ->method('getConnection')
             ->willReturn($connection)
-        ;
-
-        $registry
-            ->method('getConnections')
-            ->willReturn([$connection])
-        ;
-
-        $registry
-            ->method('getManagerNames')
-            ->willReturn([])
         ;
 
         return $registry;
@@ -292,14 +97,64 @@ abstract class DoctrineTestCase extends TestCase
         return $framework;
     }
 
-    protected function getSchemaAssetsFilter(string $filter = null): ?callable
+    /**
+     * @param Connection&MockObject $connection
+     */
+    protected function getDcaSchemaProvider(array $dca = [], array $file = [], $connection = null): DcaSchemaProvider
     {
-        if (null === $filter) {
-            return null;
-        }
+        return new DcaSchemaProvider(
+            $this->mockContaoFrameworkWithInstaller($dca, $file),
+            $this->mockDoctrineRegistry($connection),
+            $this->createMock(SchemaProvider::class)
+        );
+    }
 
-        return static function (string $assetName) use ($filter): bool {
-            return (bool) preg_match($filter, $assetName);
-        };
+    /**
+     * Returns an empty Schema which has the default table options set.
+     */
+    protected function getSchema(): Schema
+    {
+        $schemaConfig = new SchemaConfig();
+        $schemaConfig->setDefaultTableOptions($this->getDefaultTableOptions());
+
+        return new Schema([], [], $schemaConfig);
+    }
+
+    /**
+     * Returns an EntityManager configured to load the annotated entities in
+     * the tests/Fixture/Entity directory.
+     */
+    protected function getTestEntityManager(): EntityManager
+    {
+        $params = [
+            'driver' => 'pdo_sqlite',
+            'memory' => true,
+        ];
+
+        $driverChain = new MappingDriverChain();
+        $driverChain->addDriver(
+            new AnnotationDriver(
+                new AnnotationReader(),
+                __DIR__.'/../Fixtures/Entity'
+            ),
+            'Contao\\CoreBundle\\Tests\\Fixtures\\Entity'
+        );
+
+        $config = new Configuration();
+        $config->setEntityNamespaces(['ContaoTestsDoctrine' => 'Contao\CoreBundle\Tests\Fixtures\Entity']);
+        $config->setAutoGenerateProxyClasses(true);
+        $config->setProxyDir(sys_get_temp_dir());
+        $config->setProxyNamespace('ContaoTests\Doctrine');
+        $config->setMetadataDriverImpl($driverChain);
+
+        return EntityManager::create($params, $config);
+    }
+
+    private function getDefaultTableOptions(): array
+    {
+        return [
+            'charset' => 'utf8mb4',
+            'collate' => 'utf8mb4_unicode_ci',
+        ];
     }
 }

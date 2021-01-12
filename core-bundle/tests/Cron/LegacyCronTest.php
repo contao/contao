@@ -20,16 +20,19 @@ use Contao\CoreBundle\Repository\CronJobRepository;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\System;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class LegacyCronTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Since contao/core-bundle 4.9: Using $GLOBALS['TL_CRON'] has been deprecated %s
      */
     public function testLegacyCronJobsAreExecuted(): void
     {
+        $this->expectDeprecation("Since contao/core-bundle 4.9: Using \$GLOBALS['TL_CRON'] has been deprecated %s");
+
         // Mock a simple object to be used for TL_CRON
         $legacyCronObject = $this->createMock(TestCronJob::class);
         $legacyCronObject

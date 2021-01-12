@@ -44,13 +44,20 @@
   <?php $this->endblock(); ?>
 
 </head>
-<body id="top" class="<?= $this->ua ?><?php if ($this->isPopup): ?> popup<?php endif; ?>">
+<body id="top" class="<?= $this->ua ?><?php if ($this->isPopup): ?> popup<?php endif; ?>"<?= $this->attributes ?>>
 
   <?php $this->block('header'); ?>
     <?php if (!$this->isPopup): ?>
       <header id="header">
         <div class="inner">
-          <h1><a href="<?= $this->route('contao_backend') ?>" accesskey="h" id="home" title="<?= $this->home ?>">Contao</a></h1>
+          <h1>
+            <a href="<?= $this->route('contao_backend') ?>" accesskey="h" id="home" title="<?= $this->home ?>">
+              <span class="app-title">Contao</span>
+              <?php if ($this->badgeTitle): ?>
+                <span class="badge-title"><?= $this->badgeTitle ?></span>
+              <?php endif; ?>
+            </a>
+          </h1>
           <?= $this->headerMenu ?>
         </div>
       </header>

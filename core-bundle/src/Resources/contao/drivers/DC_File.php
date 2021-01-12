@@ -41,7 +41,7 @@ class DC_File extends DataContainer implements \editable
 		$this->strTable = $strTable;
 
 		// Call onload_callback (e.g. to check permissions)
-		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onload_callback']))
+		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onload_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onload_callback'] as $callback)
 			{
@@ -136,7 +136,7 @@ class DC_File extends DataContainer implements \editable
 						$legends[$k] = substr($vv, 1, -1);
 						unset($boxes[$k][$kk]);
 					}
-					elseif (!\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$vv]) || $GLOBALS['TL_DCA'][$this->strTable]['fields'][$vv]['exclude'])
+					elseif (!\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$vv] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$vv]['exclude'] ?? null))
 					{
 						unset($boxes[$k][$kk]);
 					}
@@ -166,7 +166,10 @@ class DC_File extends DataContainer implements \editable
 
 				if (isset($legends[$k]))
 				{
-					list($key, $cls) = explode(':', $legends[$k]);
+					$chunks = explode(':', $legends[$k]);
+					$key = $chunks[0] ?? null;
+					$cls = $chunks[1] ?? null;
+
 					$legend = "\n" . '<legend onclick="AjaxRequest.toggleFieldset(this, \'' . $key . '\', \'' . $this->strTable . '\')">' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '</legend>';
 				}
 
@@ -211,9 +214,9 @@ class DC_File extends DataContainer implements \editable
 					$this->varValue = Config::get($this->strField);
 
 					// Handle entities
-					if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'] == 'text' || $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'] == 'textarea')
+					if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'] ?? null) == 'text' || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'] ?? null) == 'textarea')
 					{
-						if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['eval']['multiple'])
+						if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['eval']['multiple'] ?? null)
 						{
 							$this->varValue = StringUtil::deserialize($this->varValue);
 						}
@@ -232,7 +235,7 @@ class DC_File extends DataContainer implements \editable
 					}
 
 					// Call load_callback
-					if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['load_callback']))
+					if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['load_callback'] ?? null))
 					{
 						foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['load_callback'] as $callback)
 						{
@@ -271,7 +274,7 @@ class DC_File extends DataContainer implements \editable
 		$arrButtons['saveNclose'] = '<button type="submit" name="saveNclose" id="saveNclose" class="tl_submit" accesskey="c">' . $GLOBALS['TL_LANG']['MSC']['saveNclose'] . '</button>';
 
 		// Call the buttons_callback (see #4691)
-		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['edit']['buttons_callback']))
+		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['edit']['buttons_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA'][$this->strTable]['edit']['buttons_callback'] as $callback)
 			{
@@ -313,7 +316,7 @@ class DC_File extends DataContainer implements \editable
 		if (!$this->noReload && Input::post('FORM_SUBMIT') == $this->strTable)
 		{
 			// Call onsubmit_callback
-			if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onsubmit_callback']))
+			if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onsubmit_callback'] ?? null))
 			{
 				foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onsubmit_callback'] as $callback)
 				{
@@ -365,10 +368,10 @@ class DC_File extends DataContainer implements \editable
 			return;
 		}
 
-		$arrData = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField];
+		$arrData = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField] ?? array();
 
 		// Make sure that checkbox values are boolean
-		if ($arrData['inputType'] == 'checkbox' && !$arrData['eval']['multiple'])
+		if (($arrData['inputType'] ?? null) == 'checkbox' && !($arrData['eval']['multiple'] ?? null))
 		{
 			$varValue = $varValue ? true : false;
 		}
@@ -376,7 +379,7 @@ class DC_File extends DataContainer implements \editable
 		if ($varValue)
 		{
 			// Convert binary UUIDs (see #6893)
-			if ($arrData['inputType'] == 'fileTree')
+			if (($arrData['inputType'] ?? null) == 'fileTree')
 			{
 				$varValue = StringUtil::deserialize($varValue);
 
@@ -391,14 +394,14 @@ class DC_File extends DataContainer implements \editable
 			}
 
 			// Convert date formats into timestamps
-			if ($varValue !== null && $varValue !== '' && \in_array($arrData['eval']['rgxp'], array('date', 'time', 'datim')))
+			if ($varValue !== null && $varValue !== '' && \in_array($arrData['eval']['rgxp'] ?? null, array('date', 'time', 'datim')))
 			{
 				$objDate = new Date($varValue, Date::getFormatFromRgxp($arrData['eval']['rgxp']));
 				$varValue = $objDate->tstamp;
 			}
 
 			// Handle entities
-			if ($arrData['inputType'] == 'text' || $arrData['inputType'] == 'textarea')
+			if (($arrData['inputType'] ?? null) == 'text' || ($arrData['inputType'] ?? null) == 'textarea')
 			{
 				$varValue = StringUtil::deserialize($varValue);
 
@@ -414,7 +417,7 @@ class DC_File extends DataContainer implements \editable
 		}
 
 		// Trigger the save_callback
-		if (\is_array($arrData['save_callback']))
+		if (\is_array($arrData['save_callback'] ?? null))
 		{
 			foreach ($arrData['save_callback'] as $callback)
 			{
@@ -443,7 +446,7 @@ class DC_File extends DataContainer implements \editable
 		}
 
 		// Save the value if there was no error
-		if ($strCurrent != $varValue && (\strlen($varValue) || !$arrData['eval']['doNotSaveEmpty']))
+		if ($strCurrent != $varValue && (\strlen($varValue) || !($arrData['eval']['doNotSaveEmpty'] ?? null)))
 		{
 			Config::persist($this->strField, $varValue);
 
@@ -453,7 +456,7 @@ class DC_File extends DataContainer implements \editable
 			// Add a log entry
 			if (!\is_array($deserialize) && !\is_array(StringUtil::deserialize($prior)))
 			{
-				if ($arrData['inputType'] == 'password' || $arrData['inputType'] == 'textStore')
+				if (($arrData['inputType'] ?? null) == 'password' || ($arrData['inputType'] ?? null) == 'textStore')
 				{
 					$this->log('The global configuration variable "' . $this->strField . '" has been changed', __METHOD__, TL_CONFIGURATION);
 				}
@@ -476,8 +479,7 @@ class DC_File extends DataContainer implements \editable
 	 */
 	public function getPalette()
 	{
-		$palette = 'default';
-		$strPalette = $GLOBALS['TL_DCA'][$this->strTable]['palettes'][$palette];
+		$strPalette = $GLOBALS['TL_DCA'][$this->strTable]['palettes']['default'] ?? '';
 
 		// Check whether there are selector fields
 		if (!empty($GLOBALS['TL_DCA'][$this->strTable]['palettes']['__selector__']))
@@ -494,7 +496,7 @@ class DC_File extends DataContainer implements \editable
 				{
 					$key = (Input::get('act') == 'editAll') ? $name . '_' . $this->intId : $name;
 
-					if (!$GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['eval']['submitOnChange'])
+					if (!($GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['eval']['submitOnChange'] ?? null))
 					{
 						$trigger = Input::post($key);
 					}
@@ -502,7 +504,7 @@ class DC_File extends DataContainer implements \editable
 
 				if ($trigger)
 				{
-					if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['inputType'] == 'checkbox' && !$GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['eval']['multiple'])
+					if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['inputType'] ?? null) == 'checkbox' && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['eval']['multiple'] ?? null))
 					{
 						$sValues[] = $name;
 

@@ -19,6 +19,8 @@ use Symfony\Component\HttpFoundation\Response;
  * @property array  $javascripts
  * @property array  $stylesheets
  * @property string $mootools
+ * @property string $attributes
+ * @property string $badgeTitle
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -73,6 +75,8 @@ class BackendTemplate extends Template
 		{
 			$this->ua .= ' fullscreen';
 		}
+
+		$this->addBackendConfig();
 
 		// Style sheets
 		if (!empty($GLOBALS['TL_CSS']) && \is_array($GLOBALS['TL_CSS']))
@@ -221,6 +225,52 @@ class BackendTemplate extends Template
 				. 'cancel:"' . $GLOBALS['TL_LANG']['DP']['cancel'] . '",'
 				. 'week:"' . $GLOBALS['TL_LANG']['DP']['week'] . '"'
 			. '});';
+	}
+
+	/**
+	 * Add the contao.backend configuration
+	 */
+	private function addBackendConfig(): void
+	{
+		$container = System::getContainer();
+
+		if (!$container->hasParameter('contao.backend'))
+		{
+			return;
+		}
+
+		$backendConfig = $container->getParameter('contao.backend');
+
+		if (!empty($backendConfig['attributes']) && \is_array($backendConfig['attributes']))
+		{
+			$this->attributes = ' ' . implode(' ', array_map(
+				static function ($v, $k) { return sprintf('%s="%s"', $k, $v); },
+				$backendConfig['attributes'],
+				array_keys($backendConfig['attributes'])
+			));
+		}
+
+		if (!empty($backendConfig['custom_css']) && \is_array($backendConfig['custom_css']))
+		{
+			if (!\is_array($GLOBALS['TL_CSS']))
+			{
+				$GLOBALS['TL_CSS'] = array();
+			}
+
+			$GLOBALS['TL_CSS'] = array_merge($GLOBALS['TL_CSS'], $backendConfig['custom_css']);
+		}
+
+		if (!empty($backendConfig['custom_js']) && \is_array($backendConfig['custom_js']))
+		{
+			if (!\is_array($GLOBALS['TL_JAVASCRIPT']))
+			{
+				$GLOBALS['TL_JAVASCRIPT'] = array();
+			}
+
+			$GLOBALS['TL_JAVASCRIPT'] = array_merge($GLOBALS['TL_JAVASCRIPT'], $backendConfig['custom_js']);
+		}
+
+		$this->badgeTitle = $backendConfig['badge_title'];
 	}
 }
 

@@ -19,6 +19,7 @@ use Contao\System;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -28,6 +29,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class LogoutHandlerTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     public function testAddsTheLogEntry(): void
     {
         $framework = $this->mockContaoFramework();
@@ -77,11 +80,11 @@ class LogoutHandlerTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Since contao/core-bundle 4.5: Using the "postLogout" hook has been deprecated %s.
      */
     public function testTriggersThePostLogoutHook(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.5: Using the "postLogout" hook has been deprecated %s.');
+
         /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->username = 'foobar';

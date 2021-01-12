@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Image\Studio\LegacyFigureBuilderTrait;
 use Patchwork\Utf8;
 
 /**
@@ -24,6 +25,8 @@ use Patchwork\Utf8;
  */
 class ModuleFaqReader extends Module
 {
+	use LegacyFigureBuilderTrait;
+
 	/**
 	 * Template
 	 * @var string
@@ -108,10 +111,27 @@ class ModuleFaqReader extends Module
 		$this->Template->faq = $objFaq->row();
 
 		// Overwrite the page title and description (see #2853 and #4955)
-		if ($objFaq->question)
+		if ($objFaq->pageTitle)
+		{
+			$objPage->pageTitle = $objFaq->pageTitle;
+		}
+		elseif ($objFaq->question)
 		{
 			$objPage->pageTitle = strip_tags(StringUtil::stripInsertTags($objFaq->question));
+		}
+
+		if ($objFaq->description)
+		{
+			$objPage->description = $objFaq->description;
+		}
+		elseif ($objFaq->question)
+		{
 			$objPage->description = $this->prepareMetaDescription($objFaq->question);
+		}
+
+		if ($objFaq->robots)
+		{
+			$objPage->robots = $objFaq->robots;
 		}
 
 		$this->Template->question = $objFaq->question;
@@ -121,20 +141,17 @@ class ModuleFaqReader extends Module
 
 		$this->Template->answer = StringUtil::encodeEmail($objFaq->answer);
 		$this->Template->addImage = false;
+		$this->Template->before = false;
 
 		// Add image
-		if ($objFaq->addImage && $objFaq->singleSRC)
+		if ($objFaq->addImage && null !== ($figureBuilder = $this->getFigureBuilderIfResourceExists($objFaq->singleSRC)))
 		{
-			$objModel = FilesModel::findByUuid($objFaq->singleSRC);
-
-			if ($objModel !== null && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . $objModel->path))
-			{
-				// Do not override the field now that we have a model registry (see #6303)
-				$arrFaq = $objFaq->row();
-				$arrFaq['singleSRC'] = $objModel->path;
-
-				$this->addImageToTemplate($this->Template, $arrFaq, null, null, $objModel);
-			}
+			$figureBuilder
+				->setSize($objFaq->size)
+				->setMetadata($objFaq->getOverwriteMetadata())
+				->enableLightbox($objFaq->fullsize)
+				->build()
+				->applyLegacyTemplateData($this->Template, $objFaq->imagemargin, $objFaq->floating);
 		}
 
 		$this->Template->enclosure = array();
@@ -154,6 +171,13 @@ class ModuleFaqReader extends Module
 		}
 
 		$this->Template->info = sprintf($GLOBALS['TL_LANG']['MSC']['faqCreatedBy'], Date::parse($objPage->dateFormat, $objFaq->tstamp), $strAuthor);
+
+		// Tag the FAQ (see #2137)
+		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		{
+			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+			$responseTagger->addTags(array('contao.db.tl_faq.' . $objFaq->id));
+		}
 
 		$bundles = System::getContainer()->getParameter('kernel.bundles');
 

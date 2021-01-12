@@ -259,7 +259,7 @@ class TablePickerProviderTest extends ContaoTestCase
             'picker' => 'foobar',
         ];
 
-        $config = $this->mockPickerConfig('tl_article', '');
+        $config = $this->mockPickerConfig('tl_article');
 
         $provider = $this->createTableProvider(
             null,
@@ -429,7 +429,7 @@ class TablePickerProviderTest extends ContaoTestCase
             'table' => 'tl_content',
         ];
 
-        $config = $this->mockPickerConfig('tl_content', '');
+        $config = $this->mockPickerConfig('tl_content');
 
         $provider = $this->createTableProvider(
             null,
@@ -461,6 +461,9 @@ class TablePickerProviderTest extends ContaoTestCase
         );
     }
 
+    /**
+     * @param ItemInterface&MockObject $menu
+     */
     private function createMenuTableProvider(array $modules, string $current, ItemInterface $menu = null): TablePickerProvider
     {
         $expectedItems = [];

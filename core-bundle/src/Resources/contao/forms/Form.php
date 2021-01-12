@@ -153,7 +153,7 @@ class Form extends Hybrid
 			foreach ($arrFields as $objField)
 			{
 				/** @var FormFieldModel $objField */
-				$strClass = $GLOBALS['TL_FFL'][$objField->type];
+				$strClass = $GLOBALS['TL_FFL'][$objField->type] ?? null;
 
 				// Continue if the class is not defined
 				if (!class_exists($strClass))
@@ -183,7 +183,7 @@ class Form extends Hybrid
 				}
 
 				// Unset the default value depending on the field type (see #4722)
-				if (!empty($arrData['value']) && !\in_array('value', StringUtil::trimsplit('[,;]', $GLOBALS['TL_DCA']['tl_form_field']['palettes'][$objField->type])))
+				if (!empty($arrData['value']) && !\in_array('value', StringUtil::trimsplit('[,;]', $GLOBALS['TL_DCA']['tl_form_field']['palettes'][$objField->type] ?? '')))
 				{
 					$arrData['value'] = '';
 				}
@@ -495,7 +495,7 @@ class Form extends Hybrid
 			{
 				foreach ($_SESSION['FILES'] as $k=>$v)
 				{
-					if ($v['uploaded'])
+					if ($v['uploaded'] ?? null)
 					{
 						$arrSet[$k] = StringUtil::stripRootDir($v['tmp_name']);
 					}
@@ -517,7 +517,7 @@ class Form extends Hybrid
 			{
 				if ($v === '')
 				{
-					$arrSet[$k] = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->targetTable]['fields'][$k]['sql']);
+					$arrSet[$k] = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->targetTable]['fields'][$k]['sql'] ?? array());
 				}
 			}
 
@@ -596,11 +596,11 @@ class Form extends Hybrid
 		}
 
 		$arrMessageBox = array('TL_ERROR', 'TL_CONFIRM', 'TL_INFO');
-		$_SESSION['FORM_DATA'] = \is_array($_SESSION['FORM_DATA']) ? $_SESSION['FORM_DATA'] : array();
+		$_SESSION['FORM_DATA'] = \is_array($_SESSION['FORM_DATA'] ?? null) ? $_SESSION['FORM_DATA'] : array();
 
 		foreach ($arrMessageBox as $tl)
 		{
-			if (\is_array($_SESSION[$formId][$tl]))
+			if (\is_array($_SESSION[$formId][$tl] ?? null))
 			{
 				$_SESSION[$formId][$tl] = array_unique($_SESSION[$formId][$tl]);
 

@@ -46,6 +46,7 @@ use Contao\CoreBundle\Csrf\MemoryTokenStorage;
 use Contao\CoreBundle\DataCollector\ContaoDataCollector;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
+use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\CoreBundle\EventListener\BackendLocaleListener;
 use Contao\CoreBundle\EventListener\BypassMaintenanceListener;
 use Contao\CoreBundle\EventListener\ClearSessionDataListener;
@@ -154,6 +155,7 @@ use Contao\ImagineSvg\Imagine as ImagineSvg;
 use Knp\Menu\Matcher\Matcher;
 use Knp\Menu\Renderer\ListRenderer;
 use Psr\Container\ContainerInterface as PsrContainerInterface;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Cmf\Component\Routing\DynamicRouter;
 use Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher;
 use Symfony\Component\Config\FileLocator;
@@ -175,6 +177,8 @@ use Webmozart\PathUtil\Path;
 
 class ContaoCoreExtensionTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     public function testReturnsTheCorrectAlias(): void
     {
         $extension = new ContaoCoreExtension();
@@ -1761,7 +1765,7 @@ class ContaoCoreExtensionTest extends TestCase
         );
     }
 
-    public function testRegistersTheDoctrineSchemaProvider(): void
+    public function testRegistersTheDcaSchemaProvider(): void
     {
         $container = $this->getContainerBuilder();
 
@@ -1776,6 +1780,25 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 new Reference('contao.framework'),
                 new Reference('doctrine'),
+                new Reference(SchemaProvider::class),
+            ],
+            $definition->getArguments()
+        );
+    }
+
+    public function testRegistersTheDoctrineSchemaProvider(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $this->assertTrue($container->has(SchemaProvider::class));
+
+        $definition = $container->getDefinition(SchemaProvider::class);
+
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('doctrine.orm.default_entity_manager'),
             ],
             $definition->getArguments()
         );
@@ -3090,7 +3113,6 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('contao.security.authentication_success_handler'),
                 new Reference('contao.security.authentication_failure_handler'),
                 [],
-                new Reference('scheb_two_factor.token_factory'),
                 new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
                 new Reference('event_dispatcher', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
             ],
@@ -4065,11 +4087,11 @@ class ContaoCoreExtensionTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Since contao/core-bundle 4.4: Using the "contao.image.target_path" parameter has been deprecated %s.
      */
     public function testRegistersTheImageTargetPath(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.4: Using the "contao.image.target_path" parameter has been deprecated %s.');
+
         $container = new ContainerBuilder(
             new ParameterBag([
                 'kernel.debug' => false,
@@ -4117,9 +4139,13 @@ class ContaoCoreExtensionTest extends TestCase
         $extension = new ContaoCoreExtension();
         $extension->load($params, $container);
 
-        // Resolve private services (see #949)
-        $pass = new ResolvePrivatesPass();
-        $pass->process($container);
+        // To find out whether we need to run the ResolvePrivatesPass, we take
+        // a private service and check the isPublic() return value. In Symfony
+        // 4.4, it will be "true", whereas in Symfony 5, it will be "false".
+        if (true === $container->findDefinition('contao.routing.page_router')->isPublic()) {
+            $pass = new ResolvePrivatesPass();
+            $pass->process($container);
+        }
 
         return $container;
     }

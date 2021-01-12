@@ -10,8 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Image\Studio\LegacyFigureBuilderTrait;
 use Contao\Model\Collection;
-use FOS\HttpCache\ResponseTagger;
 
 /**
  * Parent class for news modules.
@@ -23,6 +23,8 @@ use FOS\HttpCache\ResponseTagger;
  */
 abstract class ModuleNews extends Module
 {
+	use LegacyFigureBuilderTrait;
+
 	/**
 	 * Sort out protected archives
 	 *
@@ -152,57 +154,55 @@ abstract class ModuleNews extends Module
 		// Add the meta information
 		$objTemplate->date = $arrMeta['date'];
 		$objTemplate->hasMetaFields = !empty($arrMeta);
-		$objTemplate->numberOfComments = $arrMeta['ccount'];
-		$objTemplate->commentCount = $arrMeta['comments'];
+		$objTemplate->numberOfComments = $arrMeta['ccount'] ?? null;
+		$objTemplate->commentCount = $arrMeta['comments'] ?? null;
 		$objTemplate->timestamp = $objArticle->date;
 		$objTemplate->author = $arrMeta['author'];
 		$objTemplate->datetime = date('Y-m-d\TH:i:sP', $objArticle->date);
-
 		$objTemplate->addImage = false;
+		$objTemplate->addBefore = false;
 
 		// Add an image
-		if ($objArticle->addImage && $objArticle->singleSRC)
+		if ($objArticle->addImage && null !== ($figureBuilder = $this->getFigureBuilderIfResourceExists($objArticle->singleSRC)))
 		{
-			$objModel = FilesModel::findByUuid($objArticle->singleSRC);
+			$imgSize = $objArticle->size ?: null;
 
-			if ($objModel !== null && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . $objModel->path))
+			// Override the default image size
+			if ($this->imgSize)
 			{
-				// Do not override the field now that we have a model registry (see #6303)
-				$arrArticle = $objArticle->row();
+				$size = StringUtil::deserialize($this->imgSize);
 
-				// Override the default image size
-				if ($this->imgSize)
+				if ($size[0] > 0 || $size[1] > 0 || is_numeric($size[2]) || ($size[2][0] ?? null) === '_')
 				{
-					$size = StringUtil::deserialize($this->imgSize);
-
-					if ($size[0] > 0 || $size[1] > 0 || is_numeric($size[2]) || ($size[2][0] ?? null) === '_')
-					{
-						$arrArticle['size'] = $this->imgSize;
-					}
-				}
-
-				$arrArticle['singleSRC'] = $objModel->path;
-				$this->addImageToTemplate($objTemplate, $arrArticle, null, null, $objModel);
-
-				// Link to the news article if no image link has been defined (see #30)
-				if (!$objTemplate->fullsize && !$objTemplate->imageUrl)
-				{
-					// Unset the image title attribute
-					$picture = $objTemplate->picture;
-					unset($picture['title']);
-					$objTemplate->picture = $picture;
-
-					// Link to the news article
-					$objTemplate->href = $objTemplate->link;
-					$objTemplate->linkTitle = StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline), true);
-
-					// If the external link is opened in a new window, open the image link in a new window, too (see #210)
-					if ($objTemplate->source == 'external' && $objTemplate->target && strpos($objTemplate->attributes, 'target="_blank"') === false)
-					{
-						$objTemplate->attributes .= ' target="_blank"';
-					}
+					$imgSize = $this->imgSize;
 				}
 			}
+
+			// If the external link is opened in a new window, open the image link in a new window as well (see #210)
+			if ('external' === $objTemplate->source && $objTemplate->target)
+			{
+				$figureBuilder->setLinkAttribute('target', '_blank');
+			}
+
+			$figure = $figureBuilder
+				->setSize($imgSize)
+				->setMetadata($objArticle->getOverwriteMetadata())
+				->enableLightbox($objArticle->fullsize)
+				->build();
+
+			// Rebuild with link to news article if none is set
+			if (!$figure->getLinkHref())
+			{
+				$linkTitle = StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline), true);
+
+				$figure = $figureBuilder
+					->setLinkHref($objTemplate->link)
+					->setLinkAttribute('title', $linkTitle)
+					->setOptions(array('linkTitle' => $linkTitle)) // Backwards compatibility
+					->build();
+			}
+
+			$figure->applyLegacyTemplateData($objTemplate, $objArticle->imagemargin, $objArticle->floating);
 		}
 
 		$objTemplate->enclosure = array();
@@ -223,13 +223,11 @@ abstract class ModuleNews extends Module
 			}
 		}
 
-		// Tag the response
+		// Tag the news (see #2137)
 		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
 		{
-			/** @var ResponseTagger $responseTagger */
 			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
 			$responseTagger->addTags(array('contao.db.tl_news.' . $objArticle->id));
-			$responseTagger->addTags(array('contao.db.tl_news_archive.' . $objArticle->pid));
 		}
 
 		return $objTemplate->parse();
@@ -365,37 +363,16 @@ abstract class ModuleNews extends Module
 	 */
 	protected function generateLink($strLink, $objArticle, $blnAddArchive=false, $blnIsReadMore=false)
 	{
-		// Internal link
-		if ($objArticle->source != 'external')
-		{
-			return sprintf(
-				'<a href="%s" title="%s" itemprop="url"><span itemprop="headline">%s</span>%s</a>',
-				News::generateNewsUrl($objArticle, $blnAddArchive),
-				StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline), true),
-				$strLink,
-				($blnIsReadMore ? '<span class="invisible"> ' . $objArticle->headline . '</span>' : '')
-			);
-		}
+		$blnIsInternal = $objArticle->source != 'external';
+		$strReadMore = $blnIsInternal ? $GLOBALS['TL_LANG']['MSC']['readMore'] : $GLOBALS['TL_LANG']['MSC']['open'];
+		$strArticleUrl = News::generateNewsUrl($objArticle, $blnAddArchive);
 
-		// Encode e-mail addresses
-		if (0 === strncmp($objArticle->url, 'mailto:', 7))
-		{
-			$strArticleUrl = StringUtil::encodeEmail($objArticle->url);
-		}
-
-		// Ampersand URIs
-		else
-		{
-			$strArticleUrl = StringUtil::ampersand($objArticle->url);
-		}
-
-		// External link
 		return sprintf(
-			'<a href="%s" title="%s"%s itemprop="url"><span itemprop="headline">%s</span></a>',
+			'<a href="%s" title="%s" itemprop="url">%s%s</a>',
 			$strArticleUrl,
-			StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['open'], $strArticleUrl)),
-			($objArticle->target ? ' target="_blank" rel="noreferrer noopener"' : ''),
-			$strLink
+			StringUtil::specialchars(sprintf($strReadMore, $blnIsInternal ? $objArticle->headline : $strArticleUrl), true),
+			($blnIsReadMore ? $strLink : '<span itemprop="headline">' . $strLink . '</span>'),
+			($blnIsReadMore && $blnIsInternal ? '<span class="invisible"> ' . $objArticle->headline . '</span>' : '')
 		);
 	}
 }

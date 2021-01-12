@@ -105,10 +105,7 @@ class PaletteManipulator
         return $this;
     }
 
-    /**
-     * @param string $name
-     */
-    public function applyToPalette($name, string $table): self
+    public function applyToPalette(string $name, string $table): self
     {
         $palettes = &$GLOBALS['TL_DCA'][$table]['palettes'];
 
@@ -315,7 +312,6 @@ class PaletteManipulator
             $legend = $this->findLegendForField($config, $parent);
 
             if (false !== $legend) {
-                $legend = (string) $legend;
                 $offset += array_search($parent, $config[$legend]['fields'], true);
                 array_splice($config[$legend]['fields'], $offset, 0, $action['fields']);
 

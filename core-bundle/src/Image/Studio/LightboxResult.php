@@ -46,7 +46,7 @@ class LightboxResult
      * @param string|ImageInterface|null                 $filePathOrImage
      * @param array|PictureConfiguration|int|string|null $sizeConfiguration
      *
-     * @internal Use the Contao\Image\Studio\Studio factory to get an instance of this class
+     * @internal Use the Contao\CoreBundle\Image\Studio\Studio factory to get an instance of this class
      */
     public function __construct(ContainerInterface $locator, $filePathOrImage, ?string $url, $sizeConfiguration = null, string $groupIdentifier = null, ResizeOptions $resizeOptions = null)
     {

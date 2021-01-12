@@ -45,7 +45,7 @@ class FigureBuilderTest extends TestCase
 
         $studio = $this->getStudioMockForImage($absoluteFilePath);
 
-        $this->getFigureBuilder($studio, null)->fromFilesModel($model)->build();
+        $this->getFigureBuilder($studio)->fromFilesModel($model)->build();
     }
 
     public function testFromFilesModelFailsWithInvalidDBAFSType(): void
@@ -315,7 +315,9 @@ class FigureBuilderTest extends TestCase
 
         yield 'uuid' => ['1d902bf1-2683-406e-b004-f0b59095e5a1'];
 
-        yield 'id' => [5];
+        yield 'id as integer' => [5];
+
+        yield 'id as string' => ['5'];
 
         yield 'relative path' => [$relativeFilePath];
 

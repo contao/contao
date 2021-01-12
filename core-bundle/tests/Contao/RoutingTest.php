@@ -22,6 +22,7 @@ use Contao\PageModel;
 use Contao\System;
 use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -31,6 +32,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class RoutingTest extends ContaoTestCase
 {
+    use ExpectDeprecationTrait;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -50,11 +53,10 @@ class RoutingTest extends ContaoTestCase
         $GLOBALS['TL_AUTO_ITEM'] = ['items'];
     }
 
-    /**
-     * @expectedDeprecation Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.
-     */
     public function testReturnsThePageIdFromTheUrl(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.');
+
         $_SERVER['REQUEST_URI'] = 'home.html?foo=bar';
 
         $request = $this->createMock(Request::class);
@@ -77,11 +79,10 @@ class RoutingTest extends ContaoTestCase
         $this->assertEmpty($_GET);
     }
 
-    /**
-     * @expectedDeprecation Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.
-     */
     public function testReturnsNullIfTheRequestIsEmpty(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.');
+
         $_SERVER['REQUEST_URI'] = '/';
 
         System::getContainer()->set('request_stack', new RequestStack());
@@ -90,11 +91,10 @@ class RoutingTest extends ContaoTestCase
         $this->assertEmpty($_GET);
     }
 
-    /**
-     * @expectedDeprecation Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.
-     */
     public function testReturnsFalseIfTheRequestContainsAutoItem(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.');
+
         $_SERVER['REQUEST_URI'] = 'home/auto_item/foo.html';
 
         $request = $this->createMock(Request::class);
@@ -117,11 +117,10 @@ class RoutingTest extends ContaoTestCase
         $this->assertEmpty($_GET);
     }
 
-    /**
-     * @expectedDeprecation Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.
-     */
     public function testReturnsFalseIfTheUrlSuffixDoesNotMatch(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.');
+
         $_SERVER['REQUEST_URI'] = 'home/auto_item/foo.xml';
 
         $request = $this->createMock(Request::class);
@@ -144,11 +143,10 @@ class RoutingTest extends ContaoTestCase
         $this->assertEmpty($_GET);
     }
 
-    /**
-     * @expectedDeprecation Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.
-     */
     public function testReturnsFalseUponDuplicateParameters(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.');
+
         $_SERVER['REQUEST_URI'] = 'home/foo/bar1/foo/bar2.html';
 
         $request = $this->createMock(Request::class);
@@ -172,11 +170,10 @@ class RoutingTest extends ContaoTestCase
         $this->assertSame(['foo' => 'bar1'], $_GET);
     }
 
-    /**
-     * @expectedDeprecation Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.
-     */
     public function testReturnsFalseIfTheRequestContainsAnAutoItemKeyword(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.');
+
         $_SERVER['REQUEST_URI'] = 'home/items/bar.html';
 
         $request = $this->createMock(Request::class);
@@ -201,11 +198,10 @@ class RoutingTest extends ContaoTestCase
         $this->assertEmpty($_GET);
     }
 
-    /**
-     * @expectedDeprecation Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.
-     */
     public function testReturnsFalseIfAFragmentKeyIsEmpty(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.');
+
         $_SERVER['REQUEST_URI'] = 'home//foo.html';
 
         $request = $this->createMock(Request::class);
@@ -229,11 +225,10 @@ class RoutingTest extends ContaoTestCase
         $this->assertEmpty($_GET);
     }
 
-    /**
-     * @expectedDeprecation Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.
-     */
     public function testDecodesTheRequestString(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.');
+
         $_SERVER['REQUEST_URI'] = 'h%C3%B6me.html';
 
         $request = $this->createMock(Request::class);
@@ -261,11 +256,11 @@ class RoutingTest extends ContaoTestCase
      *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
-     *
-     * @expectedDeprecation Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.
      */
     public function testAddsTheAutoItemFragment(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.');
+
         include_once __DIR__.'/../../src/Resources/contao/helper/functions.php';
 
         $_SERVER['REQUEST_URI'] = 'home/foo.html';
@@ -292,11 +287,10 @@ class RoutingTest extends ContaoTestCase
         $this->assertSame(['auto_item' => 'foo'], $_GET);
     }
 
-    /**
-     * @expectedDeprecation Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.
-     */
     public function testReturnsNullIfOnlyTheLanguageIsGiven(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.');
+
         $_SERVER['REQUEST_URI'] = 'en/';
 
         $request = $this->createMock(Request::class);
@@ -320,11 +314,10 @@ class RoutingTest extends ContaoTestCase
         $this->assertSame(['language' => 'en'], $_GET);
     }
 
-    /**
-     * @expectedDeprecation Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.
-     */
     public function testReturnsFalseIfTheLanguageIsNotProvided(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.');
+
         $_SERVER['REQUEST_URI'] = 'home.html';
 
         $request = $this->createMock(Request::class);
@@ -348,11 +341,10 @@ class RoutingTest extends ContaoTestCase
         $this->assertEmpty($_GET);
     }
 
-    /**
-     * @expectedDeprecation Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.
-     */
     public function testReturnsFalseIfTheAliasIsEmpty(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.');
+
         $_SERVER['REQUEST_URI'] = 'en//foo/bar.html';
 
         $request = $this->createMock(Request::class);
@@ -378,11 +370,10 @@ class RoutingTest extends ContaoTestCase
         $this->assertSame(['language' => 'en'], $_GET);
     }
 
-    /**
-     * @expectedDeprecation Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.
-     */
     public function testReturnsFalseIfThereAreNoFragments(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.');
+
         $_SERVER['REQUEST_URI'] = '/.html';
 
         $request = $this->createMock(Request::class);
@@ -412,11 +403,10 @@ class RoutingTest extends ContaoTestCase
         $this->assertEmpty($_GET);
     }
 
-    /**
-     * @expectedDeprecation Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.
-     */
     public function testHandlesFolderUrlsWithoutLanguage(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.');
+
         $_SERVER['REQUEST_URI'] = 'foo/bar/home.html';
         $_SERVER['HTTP_HOST'] = 'domain.com';
 
@@ -468,11 +458,10 @@ class RoutingTest extends ContaoTestCase
         $this->assertEmpty($_GET);
     }
 
-    /**
-     * @expectedDeprecation Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.
-     */
     public function testHandlesFolderUrlsWithLanguage(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.');
+
         $_SERVER['REQUEST_URI'] = 'en/foo/bar/home/news/test.html';
         $_SERVER['HTTP_HOST'] = 'domain.com';
 
@@ -534,11 +523,10 @@ class RoutingTest extends ContaoTestCase
         $this->assertSame(['language' => 'en', 'news' => 'test'], $_GET);
     }
 
-    /**
-     * @expectedDeprecation Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.
-     */
     public function testReturnsFalseIfThereAreNoAliases(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.');
+
         $_SERVER['REQUEST_URI'] = 'foo/bar/home.html';
         $_SERVER['HTTP_HOST'] = 'domain.com';
 

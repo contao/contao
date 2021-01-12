@@ -1,0 +1,9 @@
+{
+    "require": {
+        "phpstan/phpstan": "^0.12",
+        "phpstan/phpstan-phpunit": "^0.12",
+        "phpstan/phpstan-symfony": "^0.12",
+        "slam/phpstan-extensions": "^5.0",
+        "thecodingmachine/phpstan-strict-rules": "^0.12"
+    }
+}

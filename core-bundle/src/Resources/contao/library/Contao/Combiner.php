@@ -11,8 +11,7 @@
 namespace Contao;
 
 use ScssPhp\ScssPhp\Compiler;
-use ScssPhp\ScssPhp\Formatter\Compressed;
-use ScssPhp\ScssPhp\Formatter\Expanded;
+use ScssPhp\ScssPhp\OutputStyle;
 
 /**
  * Combines .css or .js files into one single file
@@ -409,14 +408,14 @@ class Combiner extends System
 		{
 			$objCompiler = new Compiler();
 			$objCompiler->setImportPaths($this->strRootDir . '/' . \dirname($arrFile['name']));
-			$objCompiler->setFormatter((Config::get('debugMode') ? Expanded::class : Compressed::class));
+			$objCompiler->setOutputStyle((Config::get('debugMode') ? OutputStyle::EXPANDED : OutputStyle::COMPRESSED));
 
 			if (Config::get('debugMode'))
 			{
 				$objCompiler->setSourceMap(Compiler::SOURCE_MAP_INLINE);
 			}
 
-			return $this->fixPaths($objCompiler->compile($content), $arrFile);
+			return $this->fixPaths($objCompiler->compile($content, $this->strRootDir . '/' . $arrFile['name']), $arrFile);
 		}
 
 		$strPath = \dirname($arrFile['name']);

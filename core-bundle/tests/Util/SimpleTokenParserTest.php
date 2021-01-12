@@ -13,16 +13,19 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Util;
 
 use Contao\CoreBundle\Tests\Fixtures\IteratorAggregateStub;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Util\SimpleTokenExpressionLanguage;
 use Contao\CoreBundle\Util\SimpleTokenParser;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\ExpressionLanguage\ExpressionFunction;
 use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
 
 class SimpleTokenParserTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     /**
      * @dataProvider parseSimpleTokensProvider
      */
@@ -427,11 +430,11 @@ class SimpleTokenParserTest extends TestCase
     /**
      * @group legacy
      * @dataProvider parseSimpleTokensLegacyProvider
-     *
-     * @expectedDeprecation Since contao/core-bundle 4.10: Using tokens that are not valid PHP variables has been deprecated %s.
      */
     public function testParsesSimpleTokensLegacy(string $string, array $tokens, string $expected): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.10: Using tokens that are not valid PHP variables has been deprecated %s.');
+
         $this->assertSame($expected, $this->getParser()->parse($string, $tokens));
     }
 

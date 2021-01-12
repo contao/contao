@@ -24,18 +24,13 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
     public function testAnnotatedCallbacks(): void
     {
         $listener = $this->createListener();
-
         $annotationReader = new AnnotationReader();
+
+        /** @var Callback $annotation */
         $annotation = $annotationReader->getClassAnnotation(new \ReflectionClass($listener), Callback::class);
 
-        $this->assertSame(
-            [
-                'table' => 'tl_settings',
-                'target' => 'config.onload',
-                'priority' => null,
-            ],
-            (array) $annotation
-        );
+        $this->assertSame('tl_settings', $annotation->table);
+        $this->assertSame('config.onload', $annotation->target);
     }
 
     public function testLoadCallbackExitsOnMissingLocalconfigParameter(): void

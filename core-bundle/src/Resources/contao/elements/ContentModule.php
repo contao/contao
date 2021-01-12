@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use FOS\HttpCache\ResponseTagger;
-
 /**
  * Front end content element "module".
  *
@@ -56,7 +54,7 @@ class ContentModule extends ContentElement
 		// Merge the CSS classes (see #6011)
 		if (!empty($this->cssID[1]))
 		{
-			$cssID[1] = trim($cssID[1] . ' ' . $this->cssID[1]);
+			$cssID[1] = trim(($cssID[1] ?? '') . ' ' . $this->cssID[1]);
 		}
 
 		// Clone the model so we do not modify the shared model in the registry
@@ -67,10 +65,9 @@ class ContentModule extends ContentElement
 		/** @var Module $objModule */
 		$objModule = new $strClass($objModel, $this->strColumn);
 
-		// Tag the response
+		// Tag the content element (see #2137)
 		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
 		{
-			/** @var ResponseTagger $responseTagger */
 			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
 			$responseTagger->addTags(array('contao.db.tl_content.' . $this->id));
 		}
