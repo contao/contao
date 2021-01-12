@@ -36,7 +36,7 @@
   <?php $this->endblock(); ?>
 
 </head>
-<body class="<?= $this->ua ?>">
+<body class="<?= $this->ua ?>"<?= $this->attributes ?>>
 
   <?php $this->block('container'); ?>
     <div id="container">
@@ -47,6 +47,9 @@
             <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
             <input type="hidden" name="_target_path" value="<?= $this->targetPath ?>">
             <input type="hidden" name="_always_use_target_path" value="1">
+            <?php if ($this->badgeTitle): ?>
+              <span class="badge-title"><?= $this->badgeTitle ?></span>
+            <?php endif; ?>
             <h1><?= $this->headline ?></h1>
             <div class="widget widget-text">
               <label for="verify"><?= $this->authCode ?></label>

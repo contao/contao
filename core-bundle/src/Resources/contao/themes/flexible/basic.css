@@ -591,6 +591,24 @@ a.tl_submit {
 	background-color:#fffce1 !important;
 }
 
+/* Badge */
+.badge-title {
+	float:right;
+	margin-left:8px;
+	margin-top:-8px;
+	border-radius:8px;
+	padding:2px 5px;
+	background:#0F1C26;
+	color:#fff;
+	font-size:.75rem;
+	font-weight:600;
+}
+@media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
+	.badge-title {
+		font-weight:500;
+	}
+}
+
 /* Split button */
 @media (min-width:1280px) {
 	#sbtog {

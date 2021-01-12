@@ -133,6 +133,7 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addSearchNode())
                 ->append($this->addCrawlNode())
                 ->append($this->addMailerNode())
+                ->append($this->addBackendNode())
             ->end()
         ;
 
@@ -442,6 +443,51 @@ class Configuration implements ConfigurationInterface
                             ->end()
                         ->end()
                     ->end()
+                ->end()
+            ->end()
+        ;
+    }
+
+    private function addBackendNode(): NodeDefinition
+    {
+        return (new TreeBuilder('backend'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('attributes')
+                    ->info('Adds HTML attributes to the <body> tag in the back end.')
+                    ->example(['data-app-name' => 'My App', 'data-app-version' => '1.2.3'])
+                    ->validate()
+                    ->always(
+                        static function (array $attributes): array {
+                            foreach (array_keys($attributes) as $name) {
+                                if (preg_match('/[^a-z0-9\-.:_]/', (string) $name)) {
+                                    throw new \InvalidArgumentException(sprintf('The attribute name "%s" must be a valid HTML attribute name.', $name));
+                                }
+                            }
+
+                            return $attributes;
+                        }
+                    )
+                    ->end()
+                    ->normalizeKeys(false)
+                    ->useAttributeAsKey('name')
+                    ->scalarPrototype()->end()
+                ->end()
+                ->arrayNode('custom_css')
+                    ->info('Adds custom style sheets to the back end.')
+                    ->example(['files/backend/custom.css'])
+                    ->scalarPrototype()->end()
+                ->end()
+                ->arrayNode('custom_js')
+                    ->info('Adds custom JavaScript files to the back end.')
+                    ->example(['files/backend/custom.js'])
+                    ->scalarPrototype()->end()
+                ->end()
+                ->scalarNode('badge_title')
+                    ->info('Configures the title of the badge in the back end.')
+                    ->example('develop')
+                    ->defaultValue('')
                 ->end()
             ->end()
         ;

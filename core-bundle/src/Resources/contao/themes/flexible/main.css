@@ -35,9 +35,13 @@ body:not(.fullscreen) #header .inner {
 }
 #header h1 a {
 	display:block;
+	height:16px;
 	padding:12px 12px 12px 43px;
 	background:url("icons/logo.svg") no-repeat 10px center;
 	font-weight:400;
+}
+#header h1 a .app-title {
+	float: left;
 }
 @media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
 	#header h1 a {
@@ -2175,10 +2179,14 @@ fieldset.collapsed > legend {
 		transform:translateY(-40px);
 	}
 	#header h1 a {
-		width:22px;
+		min-width:22px;
 		padding:12px;
-		text-indent:34px; /* 22px width + 12px padding */
-		overflow:hidden;
+	}
+	#header h1 a .app-title {
+		display:none;
+	}
+	#header h1 a .badge-title {
+		margin-left:32px;
 	}
 	#tmenu > li > a {
 		width:16px;
