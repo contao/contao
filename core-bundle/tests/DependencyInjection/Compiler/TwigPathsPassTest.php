@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
-use Contao\CoreBundle\DependencyInjection\Compiler\TwigPathsPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\RewireTwigPathsPass;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\FailTolerantFilesystemLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -38,7 +38,7 @@ class TwigPathsPassTest extends TestCase
             FailTolerantFilesystemLoader::class => $decoratedService,
         ]);
 
-        (new TwigPathsPass())->process($container);
+        (new RewireTwigPathsPass())->process($container);
 
         $this->assertFalse($originalService->hasMethodCall('addPath'));
         $this->assertTrue($originalService->hasMethodCall('foo'));

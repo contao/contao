@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 /**
  * @internal
  */
-class TwigPathsPass implements CompilerPassInterface
+class RewireTwigPathsPass implements CompilerPassInterface
 {
     /**
      * Rewires registered 'addPath' method calls to our decorated service.
