@@ -758,11 +758,6 @@ class PluginTest extends ContaoTestCase
         ];
 
         yield [
-            'smtp://foo@bar.com@127.0.0.1:25',
-            'smtp://foo%%40bar.com@127.0.0.1:25',
-        ];
-
-        yield [
             'smtp://127.0.0.1:25?username=foo@bar.com',
             'smtp://foo%%40bar.com@127.0.0.1:25',
         ];
