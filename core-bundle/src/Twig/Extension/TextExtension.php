@@ -22,7 +22,7 @@ class TextExtension extends AbstractExtension
     {
         return [
             new TwigFunction(
-                'contao_insert',
+                'insert_tag',
                 [InsertTagRuntime::class, 'replace'],
                 ['is_safe' => ['html']]
             ),

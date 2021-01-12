@@ -29,7 +29,7 @@ class TextExtensionTest extends TestCase
 
         $node = $this->createMock(Node::class);
 
-        $this->assertSame('contao_insert', $contaoInsertTagFn->getName());
+        $this->assertSame('insert_tag', $contaoInsertTagFn->getName());
         $this->assertSame([InsertTagRuntime::class, 'replace'], $contaoInsertTagFn->getCallable());
         $this->assertSame(['html'], $contaoInsertTagFn->getSafe($node));
     }
