@@ -94,8 +94,8 @@ services:
             - '@contao.framework'
             - '@request_stack'
             - '%contao.content_element.templates%'
-            - '%contao.content_element_template_prefix%'
-            - '%contao.content_proxy%'
+            - ce_
+            - Contao\ContentProxy
         tags:
             - { name: contao.callback, table: tl_content, target: fields.customTpl.options }
 
@@ -105,8 +105,8 @@ services:
             - '@contao.framework'
             - '@request_stack'
             - '%contao.frontend_module.templates%'
-            - '%contao.frontend_module_template_prefix%'
-            - '%contao.module_proxy%'
+            - mod_
+            - Contao\ModuleProxy
         tags:
             - { name: contao.callback, table: tl_module, target: fields.customTpl.options }
 
