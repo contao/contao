@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\ContentProxy;
 use Contao\Controller;
-use Contao\CoreBundle\EventListener\DataContainer\CustomTemplateOptionsListener;
+use Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database\Result;
@@ -26,7 +26,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class CustomTemplateOptionsListenerTest extends TestCase
+class TemplateOptionsListenerTest extends TestCase
 {
     public static function setUpBeforeClass(): void
     {
@@ -56,21 +56,21 @@ class CustomTemplateOptionsListenerTest extends TestCase
 
     public function testReturnsTheDefaultElementTemplate(): void
     {
-        $callback = new CustomTemplateOptionsListener($this->getFramework(), new RequestStack(), [], 'ce_', ContentProxy::class);
+        $callback = new TemplateOptionsListener($this->getFramework(), new RequestStack(), [], 'ce_', ContentProxy::class);
 
         $this->assertSame(['' => 'ce_fragment_element'], $callback($this->mockDataContainer('tl_content', ['type' => 'fragment_element'])));
     }
 
     public function testReturnsTheDefaultModuleTemplate(): void
     {
-        $callback = new CustomTemplateOptionsListener($this->getFramework(), new RequestStack(), [], 'mod_', ModuleProxy::class);
+        $callback = new TemplateOptionsListener($this->getFramework(), new RequestStack(), [], 'mod_', ModuleProxy::class);
 
         $this->assertSame(['' => 'mod_fragment_module'], $callback($this->mockDataContainer('tl_module', ['type' => 'fragment_module'])));
     }
 
     public function testReturnsTheCustomElementTemplate(): void
     {
-        $callback = new CustomTemplateOptionsListener($this->getFramework(), new RequestStack(), ['fragment_element' => 'ce_custom_fragment_template'], 'ce_', ContentProxy::class);
+        $callback = new TemplateOptionsListener($this->getFramework(), new RequestStack(), ['fragment_element' => 'ce_custom_fragment_template'], 'ce_', ContentProxy::class);
 
         $this->assertSame(['' => 'ce_custom_fragment_template'], $callback($this->mockDataContainer('tl_content', ['type' => 'fragment_element'])));
         $this->assertSame(['' => 'ce_custom_legacy_template'], $callback($this->mockDataContainer('tl_content', ['type' => 'legacy_element'])));
@@ -78,7 +78,7 @@ class CustomTemplateOptionsListenerTest extends TestCase
 
     public function testReturnsTheCustomModuleTemplate(): void
     {
-        $callback = new CustomTemplateOptionsListener($this->getFramework(), new RequestStack(), ['fragment_module' => 'mod_custom_fragment_template'], 'mod_', ModuleProxy::class);
+        $callback = new TemplateOptionsListener($this->getFramework(), new RequestStack(), ['fragment_module' => 'mod_custom_fragment_template'], 'mod_', ModuleProxy::class);
 
         $this->assertSame(['' => 'mod_custom_fragment_template'], $callback($this->mockDataContainer('tl_module', ['type' => 'fragment_module'])));
         $this->assertSame(['' => 'mod_custom_legacy_template'], $callback($this->mockDataContainer('tl_module', ['type' => 'legacy_module'])));
@@ -90,7 +90,7 @@ class CustomTemplateOptionsListenerTest extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $callback = new CustomTemplateOptionsListener($this->getFramework(), $requestStack, [], 'ce_', ContentProxy::class);
+        $callback = new TemplateOptionsListener($this->getFramework(), $requestStack, [], 'ce_', ContentProxy::class);
 
         $this->assertSame(['' => '-', 'ce_all' => 'ce_all'], $callback($this->mockDataContainer('tl_content')));
     }
@@ -101,7 +101,7 @@ class CustomTemplateOptionsListenerTest extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $callback = new CustomTemplateOptionsListener($this->getFramework(), $requestStack, [], 'mod_', ModuleProxy::class);
+        $callback = new TemplateOptionsListener($this->getFramework(), $requestStack, [], 'mod_', ModuleProxy::class);
 
         $this->assertSame(['' => '-', 'mod_all' => 'mod_all'], $callback($this->mockDataContainer('tl_module')));
     }

@@ -88,8 +88,8 @@ services:
         tags:
             - { name: contao.hook, hook: loadDataContainer }
 
-    contao.listener.data_container.custom_element_template_options_listener:
-        class: Contao\CoreBundle\EventListener\DataContainer\CustomTemplateOptionsListener
+    contao.listener.data_container.element_template_options_listener:
+        class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
         arguments:
             - '@contao.framework'
             - '@request_stack'
@@ -99,8 +99,8 @@ services:
         tags:
             - { name: contao.callback, table: tl_content, target: fields.customTpl.options }
 
-    contao.listener.data_container.custom_module_template_options_listener:
-        class: Contao\CoreBundle\EventListener\DataContainer\CustomTemplateOptionsListener
+    contao.listener.data_container.module_template_options_listener:
+        class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
         arguments:
             - '@contao.framework'
             - '@request_stack'

@@ -17,7 +17,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DataContainer;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class CustomTemplateOptionsListener
+class TemplateOptionsListener
 {
     /**
      * @var Controller
@@ -37,14 +37,14 @@ class CustomTemplateOptionsListener
     /**
      * @var string
      */
-    private $prefix;
+    private $templatePrefix;
 
     /**
      * @var string
      */
     private $proxyClass;
 
-    public function __construct(ContaoFramework $framework, RequestStack $requestStack, array $customTemplates, string $prefix, string $proxyClass = null)
+    public function __construct(ContaoFramework $framework, RequestStack $requestStack, array $customTemplates, string $templatePrefix, string $proxyClass = null)
     {
         /** @var Controller $controller */
         $controller = $framework->getAdapter(Controller::class);
@@ -52,7 +52,7 @@ class CustomTemplateOptionsListener
         $this->controller = $controller;
         $this->requestStack = $requestStack;
         $this->customTemplates = $customTemplates;
-        $this->prefix = $prefix;
+        $this->templatePrefix = $templatePrefix;
         $this->proxyClass = $proxyClass;
     }
 
@@ -60,13 +60,13 @@ class CustomTemplateOptionsListener
     {
         if ($this->isOverrideAll()) {
             // Add a blank option that allows us to reset all custom templates to the default one
-            return array_merge(['' => '-'], $this->controller->getTemplateGroup($this->prefix));
+            return array_merge(['' => '-'], $this->controller->getTemplateGroup($this->templatePrefix));
         }
 
         $defaultTemplate = $this->customTemplates[$dc->activeRecord->type] ?? $this->getLegacyDefaultTemplate($dc);
 
         if (null === $defaultTemplate) {
-            $defaultTemplate = $this->prefix.$dc->activeRecord->type;
+            $defaultTemplate = $this->templatePrefix.$dc->activeRecord->type;
         }
 
         return $this->getTemplateGroup($defaultTemplate);
@@ -88,7 +88,7 @@ class CustomTemplateOptionsListener
         }
 
         $object = new $class($dc->activeRecord);
-        $reflection = new \ReflectionClass($object);
+        $reflection = new \ReflectionClass($class);
 
         try {
             $property = $reflection->getProperty('strTemplate');

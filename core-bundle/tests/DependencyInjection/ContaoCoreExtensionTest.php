@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\DependencyInjection;
 
 use Ausi\SlugGenerator\SlugGenerator;
 use Contao\BackendUser;
+use Contao\ContentProxy;
 use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\CoreBundle\Cache\ContaoCacheClearer;
 use Contao\CoreBundle\Cache\ContaoCacheWarmer;
@@ -143,6 +144,7 @@ use Contao\FrontendUser;
 use Contao\Image\PictureGenerator;
 use Contao\Image\ResizeCalculator;
 use Contao\ImagineSvg\Imagine as ImagineSvg;
+use Contao\ModuleProxy;
 use Knp\Menu\Matcher\Matcher;
 use Knp\Menu\Renderer\ListRenderer;
 use Symfony\Cmf\Component\Routing\DynamicRouter;
@@ -521,9 +523,9 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function testRegistersTheCustomElementTemplateOptionsListener(): void
     {
-        $this->assertTrue($this->container->has('contao.listener.data_container.custom_element_template_options_listener'));
+        $this->assertTrue($this->container->has('contao.listener.data_container.element_template_options_listener'));
 
-        $definition = $this->container->getDefinition('contao.listener.data_container.custom_element_template_options_listener');
+        $definition = $this->container->getDefinition('contao.listener.data_container.element_template_options_listener');
 
         $this->assertTrue($definition->isPrivate());
 
@@ -532,8 +534,8 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('contao.framework'),
                 new Reference('request_stack'),
                 '%contao.content_element.templates%',
-                '%contao.content_element_template_prefix%',
-                '%contao.content_proxy%',
+                'ce_',
+                ContentProxy::class,
             ],
             $definition->getArguments()
         );
@@ -548,9 +550,9 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function testRegistersTheCustomModuleTemplateOptionsListener(): void
     {
-        $this->assertTrue($this->container->has('contao.listener.data_container.custom_module_template_options_listener'));
+        $this->assertTrue($this->container->has('contao.listener.data_container.module_template_options_listener'));
 
-        $definition = $this->container->getDefinition('contao.listener.data_container.custom_module_template_options_listener');
+        $definition = $this->container->getDefinition('contao.listener.data_container.module_template_options_listener');
 
         $this->assertTrue($definition->isPrivate());
 
@@ -559,8 +561,8 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('contao.framework'),
                 new Reference('request_stack'),
                 '%contao.frontend_module.templates%',
-                '%contao.frontend_module_template_prefix%',
-                '%contao.module_proxy%',
+                'mod_',
+                ModuleProxy::class,
             ],
             $definition->getArguments()
         );
