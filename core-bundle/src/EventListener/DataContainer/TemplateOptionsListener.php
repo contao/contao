@@ -69,7 +69,7 @@ class TemplateOptionsListener
             $defaultTemplate = $this->templatePrefix.$dc->activeRecord->type;
         }
 
-        return $this->getTemplateGroup($defaultTemplate);
+        return $this->controller->getTemplateGroup($defaultTemplate.'_', [], $defaultTemplate);
     }
 
     /**
@@ -100,11 +100,6 @@ class TemplateOptionsListener
         $property->setAccessible(true);
 
         return $property->getValue($object) ?: null;
-    }
-
-    private function getTemplateGroup(string $template): array
-    {
-        return $this->controller->getTemplateGroup($template.'_', [], $template);
     }
 
     private function isOverrideAll(): bool
