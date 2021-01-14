@@ -87,18 +87,9 @@ class TemplateOptionsListener
             return null;
         }
 
-        $reflection = new \ReflectionClass($class);
+        $properties = (new \ReflectionClass($class))->getDefaultProperties();
 
-        try {
-            $property = $reflection->getProperty('strTemplate');
-        } catch (\ReflectionException $e) {
-            // Property does not exist
-            return null;
-        }
-
-        $property->setAccessible(true);
-
-        return $property->getValue($reflection->newInstanceWithoutConstructor()) ?: null;
+        return $properties['strTemplate'] ?? null;
     }
 
     private function isOverrideAll(): bool
