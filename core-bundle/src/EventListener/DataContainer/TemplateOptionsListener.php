@@ -65,7 +65,7 @@ class TemplateOptionsListener
 
         $defaultTemplate = $this->customTemplates[$dc->activeRecord->type] ?? $this->getLegacyDefaultTemplate($dc);
 
-        if (null === $defaultTemplate) {
+        if (empty($defaultTemplate)) {
             $defaultTemplate = $this->templatePrefix.$dc->activeRecord->type;
         }
 
