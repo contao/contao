@@ -13,6 +13,10 @@ abstract class FunctionalTestCase extends WebTestCase
 {
     protected static function loadFixtures(array $yamlFiles, bool $truncateTables = true): void
     {
+        if (!self::$booted) {
+            throw new \RuntimeException('Please boot the kernel before calling '.__METHOD__);
+        }
+
         $doctrine = self::$container->get('doctrine');
 
         /** @var Connection $connection */
@@ -39,6 +43,10 @@ abstract class FunctionalTestCase extends WebTestCase
 
     protected static function resetDatabaseSchema(): void
     {
+        if (!self::$booted) {
+            throw new \RuntimeException('Please boot the kernel before calling '.__METHOD__);
+        }
+
         $doctrine = self::$container->get('doctrine');
 
         /** @var Connection $connection */
