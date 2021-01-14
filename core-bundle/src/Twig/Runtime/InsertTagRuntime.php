@@ -34,13 +34,13 @@ final class InsertTagRuntime implements RuntimeExtensionInterface
     /**
      * Resolves an insert tag.
      */
-    public function replace(string $insertTag, bool $cached = true): string
+    public function replace(string $insertTag): string
     {
         $this->framework->initialize();
 
         /** @var Controller $controller */
         $controller = $this->framework->getAdapter(Controller::class);
 
-        return $controller->replaceInsertTags('{{'.$insertTag.'}}', $cached);
+        return $controller->replaceInsertTags('{{'.$insertTag.'}}', false);
     }
 }
