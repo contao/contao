@@ -87,7 +87,6 @@ class TemplateOptionsListener
             return null;
         }
 
-        $object = new $class($dc->activeRecord);
         $reflection = new \ReflectionClass($class);
 
         try {
@@ -99,7 +98,7 @@ class TemplateOptionsListener
 
         $property->setAccessible(true);
 
-        return $property->getValue($object) ?: null;
+        return $property->getValue($reflection->newInstanceWithoutConstructor()) ?: null;
     }
 
     private function isOverrideAll(): bool
