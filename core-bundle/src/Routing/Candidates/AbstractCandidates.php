@@ -93,7 +93,8 @@ class AbstractCandidates implements CandidatesInterface
 
         foreach ($this->urlPrefixes as $prefix) {
             // Language prefix only (e.g. URL = /en/)
-            if ($url === $prefix.'/') {
+            // Includes "/en" to redirect to language prefix with slash
+            if ($url === $prefix.'/' || $url === $prefix) {
                 $candidates[] = 'index';
                 continue;
             }
