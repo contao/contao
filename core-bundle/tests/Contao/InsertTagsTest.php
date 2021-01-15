@@ -55,22 +55,34 @@ class InsertTagsTest extends TestCase
             ['files/cat.jpg', '_my_size', []],
         ];
 
+        yield 'with custom template' => [
+            '{{figure::files/cat.jpg?template=foo.html.twig}}',
+            ['files/cat.jpg', null, [], 'foo.html.twig'],
+        ];
+
         yield 'with nested options' => [
-            '{{figure::1000?size=5&metadata[title]=foo%20bar&options[attr][class]=baz&enableLightbox=1}}',
+            '{{figure::1000?size=5&metadata[title]=foo%20bar&options[attr][class]=baz}}',
             [
                 '1000',
                 '5',
                 [
                     'metadata' => ['title' => 'foo bar'],
                     'options' => ['attr' => ['class' => 'baz']],
-                    'enableLightbox' => '1',
                 ],
             ],
         ];
 
-        yield 'with custom template' => [
-            '{{figure::files/foo.jpg::customTemplate.html.twig}}',
-            ['files/foo.jpg', null, [], 'customTemplate.html.twig'],
+        yield 'complex configuration' => [
+            '{{figure::files/foo.jpg?size=_my_size&metadata[alt]=alt&template=my_template.html.twig&enableLightbox=1}}',
+            [
+                'files/foo.jpg',
+                '_my_size',
+                [
+                    'metadata' => ['alt' => 'alt'],
+                    'enableLightbox' => '1',
+                ],
+                'my_template.html.twig',
+            ],
         ];
     }
 
@@ -102,7 +114,7 @@ class InsertTagsTest extends TestCase
         ];
 
         yield 'too many arguments' => [
-            '{{figure::5?size=1::foo.html.twig::other}}', false,
+            '{{figure::5?size=1::other}}', false,
         ];
 
         yield 'invalid configuration' => [

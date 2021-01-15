@@ -767,11 +767,10 @@ class InsertTags extends Controller
 
 				// Images
 				case 'figure':
-					// Expected format: figure::<from>[?<key>=<value>,[&<key>=<value>]*][::<template>]
+					// Expected format: {{figure::<from>[?<key>=<value>,[&<key>=<value>]*]}}
 					list($from, $configuration) = $this->parseUrlWithQueryString($elements[1] ?? '');
-					$template = $elements[2] ?? null;
 
-					if (null === $from || \count($elements) > 3)
+					if (null === $from || 2 !== \count($elements))
 					{
 						$arrCache[$strTag] = '';
 
@@ -780,7 +779,8 @@ class InsertTags extends Controller
 
 					// Build arguments for FigureRendererRuntime#render
 					$size = $configuration['size'] ?? null;
-					unset($configuration['size']);
+					$template = $configuration['template'] ?? null;
+					unset($configuration['size'], $configuration['template']);
 
 					$args = array($from, $size, $configuration);
 
