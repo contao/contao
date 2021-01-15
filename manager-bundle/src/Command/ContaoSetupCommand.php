@@ -16,7 +16,6 @@ use Contao\ManagerBundle\Process\ProcessFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Webmozart\PathUtil\Path;
 
@@ -33,11 +32,6 @@ class ContaoSetupCommand extends Command
     private $webDir;
 
     /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
      * @var ProcessFactory
      */
     private $processFactory;
@@ -52,14 +46,13 @@ class ContaoSetupCommand extends Command
      */
     private $consolePath;
 
-    public function __construct(string $projectDir, string $webDir, Filesystem $filesystem = null, ProcessFactory $processFactory = null)
+    public function __construct(string $projectDir, string $webDir, ProcessFactory $processFactory = null)
     {
-        $this->projectDir = $projectDir;
         $this->webDir = Path::makeRelative($webDir, $projectDir);
-        $this->filesystem = $filesystem ?? new Filesystem();
-        $this->processFactory = $processFactory ?? new ProcessFactory();
         $this->phpPath = (new PhpExecutableFinder())->find();
         $this->consolePath = Path::canonicalize(__DIR__.'/../../bin/contao-console');
+
+        $this->processFactory = $processFactory ?? new ProcessFactory();
 
         parent::__construct();
     }

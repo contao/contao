@@ -12,95 +12,23 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Tests\Command;
 
-use Contao\ManagerBundle\Command\InitializeApplicationCommand;
+use Contao\ManagerBundle\Command\ContaoSetupCommand;
 use Contao\ManagerBundle\Process\ProcessFactory;
 use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 use Webmozart\PathUtil\Path;
 
-class InitializeApplicationCommandTest extends ContaoTestCase
+class ContaoSetupCommandTest extends ContaoTestCase
 {
     public function testIsHidden(): void
     {
-        $command = new InitializeApplicationCommand('project/dir', 'project/dir/web');
+        $command = new ContaoSetupCommand('project/dir', 'project/dir/web');
 
         $this->assertTrue($command->isHidden());
-    }
-
-    public function testPurgesProdCacheDirectory(): void
-    {
-        $filesystem = $this->createMock(Filesystem::class);
-        $filesystem
-            ->expects($this->once())
-            ->method('exists')
-            ->with('project/dir/var/cache/prod')
-            ->willReturn(true)
-        ;
-
-        $filesystem
-            ->expects($this->once())
-            ->method('remove')
-            ->with('project/dir/var/cache/prod')
-        ;
-
-        $command = new InitializeApplicationCommand(
-            'project/dir',
-            'project/dir/web',
-            $filesystem,
-            $this->getProcessFactoryMock()
-        );
-
-        (new CommandTester($command))->execute([]);
-    }
-
-    public function testDoesNotPurgeProdCacheDirectoryIfItDoesntExist(): void
-    {
-        $filesystem = $this->createMock(Filesystem::class);
-        $filesystem
-            ->expects($this->once())
-            ->method('exists')
-            ->with('project/dir/var/cache/prod')
-            ->willReturn(false)
-        ;
-
-        $filesystem
-            ->expects($this->never())
-            ->method('remove')
-        ;
-
-        $command = new InitializeApplicationCommand(
-            'project/dir',
-            'project/dir/web',
-            $filesystem,
-            $this->getProcessFactoryMock()
-        );
-
-        (new CommandTester($command))->execute([]);
-    }
-
-    public function testSuppressesFilesystemErrors(): void
-    {
-        $filesystem = $this->createMock(Filesystem::class);
-        $filesystem
-            ->expects($this->once())
-            ->method('exists')
-            ->with('project/dir/var/cache/prod')
-            ->willThrowException(new \Exception())
-        ;
-
-        $command = new InitializeApplicationCommand(
-            'project/dir',
-            'project/dir/web',
-            $filesystem,
-            $this->getProcessFactoryMock()
-        );
-
-        (new CommandTester($command))->execute([]);
     }
 
     /**
@@ -108,14 +36,6 @@ class InitializeApplicationCommandTest extends ContaoTestCase
      */
     public function testExecutesCommands(array $options, array $flags): void
     {
-        $filesystem = $this->createMock(Filesystem::class);
-        $filesystem
-            ->expects($this->once())
-            ->method('exists')
-            ->with('project/dir/var/cache/prod')
-            ->willReturn(false)
-        ;
-
         $processes = $this->getProcessMocks();
 
         foreach ($processes as $process) {
@@ -130,7 +50,7 @@ class InitializeApplicationCommandTest extends ContaoTestCase
 
         $this->assertStringContainsString('php', $phpPath);
 
-        $commandFilePath = (new \ReflectionClass(InitializeApplicationCommand::class))->getFileName();
+        $commandFilePath = (new \ReflectionClass(ContaoSetupCommand::class))->getFileName();
         $consolePath = Path::join(Path::getDirectory($commandFilePath), '../../bin/contao-console');
 
         $commandArguments = [
@@ -151,7 +71,7 @@ class InitializeApplicationCommandTest extends ContaoTestCase
             ->withConsecutive(...$commandArguments)
         ;
 
-        $command = new InitializeApplicationCommand('project/dir', 'project/dir/web', $filesystem, $processFactory);
+        $command = new ContaoSetupCommand('project/dir', 'project/dir/web', $processFactory);
 
         (new CommandTester($command))->execute([], $options);
     }
@@ -196,18 +116,9 @@ class InitializeApplicationCommandTest extends ContaoTestCase
 
     public function testThrowsIfCommandFails(): void
     {
-        $filesystem = $this->createMock(Filesystem::class);
-        $filesystem
-            ->expects($this->once())
-            ->method('exists')
-            ->with('project/dir/var/cache/prod')
-            ->willReturn(false)
-        ;
-
-        $command = new InitializeApplicationCommand(
+        $command = new ContaoSetupCommand(
             'project/dir',
             'project/dir/web',
-            $filesystem,
             $this->getProcessFactoryMock($this->getProcessMocks(false))
         );
 
@@ -221,18 +132,9 @@ class InitializeApplicationCommandTest extends ContaoTestCase
 
     public function testDelegatesOutputOfSubProcesses(): void
     {
-        $filesystem = $this->createMock(Filesystem::class);
-        $filesystem
-            ->expects($this->once())
-            ->method('exists')
-            ->with('project/dir/var/cache/prod')
-            ->willReturn(false)
-        ;
-
-        $command = new InitializeApplicationCommand(
+        $command = new ContaoSetupCommand(
             'project/dir',
             'project/dir/web',
-            $filesystem,
             $this->getProcessFactoryMock()
         );
 
@@ -240,7 +142,8 @@ class InitializeApplicationCommandTest extends ContaoTestCase
         $commandTester->execute([]);
 
         $this->assertSame(
-            '[output 1][output 2][output 3][output 4][output 5][output 6][output 7]',
+            '[output 1][output 2][output 3][output 4][output 5][output 6][output 7]'.
+            "Done! Please open the Contao install tool or run contao:migrate on the command line to make sure the database is up-to-date.\n",
             $commandTester->getDisplay()
         );
     }
