@@ -122,11 +122,11 @@
       <trans-unit id="tl_form_field.custom.1">
         <source>Checks against a custom regular expression.</source>
       </trans-unit>
-      <trans-unit id="tl_form_field.custom_rgxp.0">
+      <trans-unit id="tl_form_field.customRgxp.0">
         <source>Custom regular expression</source>
       </trans-unit>
-      <trans-unit id="tl_form_field.custom_rgxp.1">
-        <source>The custom regular expression to be checked against.</source>
+      <trans-unit id="tl_form_field.customRgxp.1">
+        <source>The custom regular expression including delimiters and modifiers.</source>
       </trans-unit>
       <trans-unit id="tl_form_field.placeholder.0">
         <source>Placeholder</source>

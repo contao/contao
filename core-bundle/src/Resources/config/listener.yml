@@ -11,14 +11,6 @@ services:
             calls:
                 - [setContainer, ['@service_container']]
 
-    Contao\CoreBundle\EventListener\Widget\CustomRgxpListener:
-        arguments:
-            - '@translator'
-
-    Contao\CoreBundle\EventListener\Widget\HttpUrlListener:
-        arguments:
-            - '@translator'
-
     Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener:
         arguments:
             - '@contao.framework'
@@ -53,6 +45,14 @@ services:
             - '@database_connection'
         tags:
             - { name: kernel.event_listener }
+
+    Contao\CoreBundle\EventListener\Widget\CustomRgxpListener:
+        arguments:
+            - '@translator'
+
+    Contao\CoreBundle\EventListener\Widget\HttpUrlListener:
+        arguments:
+            - '@translator'
 
     contao.listener.backend_locale:
         class: Contao\CoreBundle\EventListener\BackendLocaleListener

@@ -39,12 +39,12 @@ class CustomRgxpListener
             return false;
         }
 
-        if (empty($widget->custom_rgxp) || !\is_string($input)) {
+        if (empty($widget->customRgxp) || !\is_string($input)) {
             return true;
         }
 
-        if (!preg_match($widget->custom_rgxp, $input)) {
-            $widget->addError($this->translator->trans('ERR.customRgxp', [$widget->label], 'contao_default'));
+        if (!preg_match($widget->customRgxp, $input)) {
+            $widget->addError($this->translator->trans('ERR.customRgxp', [$widget->customRgxp], 'contao_default'));
         }
 
         return true;

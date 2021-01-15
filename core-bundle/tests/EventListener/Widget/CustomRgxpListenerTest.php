@@ -83,7 +83,7 @@ class CustomRgxpListenerTest extends TestCase
         ;
 
         /** @var Widget&MockObject $widget */
-        $widget = $this->mockClassWithProperties(Widget::class, ['custom_rgxp' => '/^foo/i']);
+        $widget = $this->mockClassWithProperties(Widget::class, ['customRgxp' => '/^foo/i']);
         $widget
             ->expects($this->once())
             ->method('addError')
@@ -105,7 +105,7 @@ class CustomRgxpListenerTest extends TestCase
         ;
 
         /** @var Widget&MockObject $widget */
-        $widget = $this->mockClassWithProperties(Widget::class, ['custom_rgxp' => '/^foo/i']);
+        $widget = $this->mockClassWithProperties(Widget::class, ['customRgxp' => '/^foo/i']);
         $widget
             ->expects($this->never())
             ->method('addError')

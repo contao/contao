@@ -37,7 +37,7 @@ class ValidateCustomRgxpListenerTest extends TestCase
         $this->assertSame(
             [
                 'table' => 'tl_form_field',
-                'target' => 'fields.custom_rgxp.save',
+                'target' => 'fields.customRgxp.save',
                 'priority' => null,
             ],
             (array) $annotation

@@ -16,7 +16,7 @@ use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * @Callback(table="tl_form_field", target="fields.custom_rgxp.save")
+ * @Callback(table="tl_form_field", target="fields.customRgxp.save")
  */
 class ValidateCustomRgxpListener
 {
