@@ -37,7 +37,7 @@ class ContaoSetupCommand extends Command
     private $processFactory;
 
     /**
-     * @var string
+     * @var string|false
      */
     private $phpPath;
 
