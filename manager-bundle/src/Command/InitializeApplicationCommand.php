@@ -79,8 +79,6 @@ class InitializeApplicationCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->purgeProdCache();
-
         if (false === $this->phpPath) {
             throw new \RuntimeException('The php executable could not be found.');
         }
@@ -105,19 +103,6 @@ class InitializeApplicationCommand extends Command
         }
 
         return 0;
-    }
-
-    private function purgeProdCache(): void
-    {
-        $cacheDir = Path::join($this->projectDir, 'var/cache/prod');
-
-        try {
-            if ($this->filesystem->exists($cacheDir)) {
-                $this->filesystem->remove($cacheDir);
-            }
-        } catch (\Exception $e) {
-            // ignore
-        }
     }
 
     /**
