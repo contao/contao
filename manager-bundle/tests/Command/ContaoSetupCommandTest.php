@@ -34,7 +34,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
     /**
      * @dataProvider provideCommands
      */
-    public function testExecutesCommands(array $options, array $flags): void
+    public function testExecutesCommands(array $options, array $flags, array $phpFlags = []): void
     {
         $processes = $this->getProcessMocks();
 
@@ -54,13 +54,13 @@ class ContaoSetupCommandTest extends ContaoTestCase
         $consolePath = Path::join(Path::getDirectory($commandFilePath), '../../bin/contao-console');
 
         $commandArguments = [
-            [array_merge([$phpPath, $consolePath, 'contao:install-web-dir', '--env=prod'], $flags)],
-            [array_merge([$phpPath, $consolePath, 'cache:clear', '--no-warmup', '--env=prod'], $flags)],
-            [array_merge([$phpPath, $consolePath, 'cache:clear', '--no-warmup', '--env=dev'], $flags)],
-            [array_merge([$phpPath, $consolePath, 'cache:warmup', '--env=prod'], $flags)],
-            [array_merge([$phpPath, $consolePath, 'assets:install', 'web', '--symlink', '--relative', '--env=prod'], $flags)],
-            [array_merge([$phpPath, $consolePath, 'contao:install', 'web', '--env=prod'], $flags)],
-            [array_merge([$phpPath, $consolePath, 'contao:symlinks', 'web', '--env=prod'], $flags)],
+            [array_merge([$phpPath], $phpFlags, [$consolePath, 'contao:install-web-dir', '--env=prod'], $flags)],
+            [array_merge([$phpPath], $phpFlags, [$consolePath, 'cache:clear', '--no-warmup', '--env=prod'], $flags)],
+            [array_merge([$phpPath], $phpFlags, [$consolePath, 'cache:clear', '--no-warmup', '--env=dev'], $flags)],
+            [array_merge([$phpPath], $phpFlags, [$consolePath, 'cache:warmup', '--env=prod'], $flags)],
+            [array_merge([$phpPath], $phpFlags, [$consolePath, 'assets:install', 'web', '--symlink', '--relative', '--env=prod'], $flags)],
+            [array_merge([$phpPath], $phpFlags, [$consolePath, 'contao:install', 'web', '--env=prod'], $flags)],
+            [array_merge([$phpPath], $phpFlags, [$consolePath, 'contao:symlinks', 'web', '--env=prod'], $flags)],
         ];
 
         $processFactory = $this->createMock(ProcessFactory::class);
@@ -106,6 +106,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
         yield 'debug' => [
             ['verbosity' => OutputInterface::VERBOSITY_DEBUG],
             ['--no-ansi', '-vvv'],
+            ['-ddisplay_errors=-1', '-ddisplay_startup_errors=-1'],
         ];
 
         yield 'ansi and verbose' => [

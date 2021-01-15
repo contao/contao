@@ -71,6 +71,13 @@ class ContaoSetupCommand extends Command
             throw new \RuntimeException('The php executable could not be found.');
         }
 
+        $php = [$this->phpPath];
+
+        if (OutputInterface::VERBOSITY_DEBUG === $output->getVerbosity()) {
+            $php[] = '-ddisplay_errors=-1';
+            $php[] = '-ddisplay_startup_errors=-1';
+        }
+
         $commands = [
             ['contao:install-web-dir', '--env=prod'],
             ['cache:clear', '--no-warmup', '--env=prod'],
@@ -87,7 +94,7 @@ class ContaoSetupCommand extends Command
         ]);
 
         foreach ($commands as $command) {
-            $this->executeCommand(array_merge($command, $commandFlags), $output);
+            $this->executeCommand(array_merge($php, [$this->consolePath], $command, $commandFlags), $output);
         }
 
         $output->writeln('<info>Done! Please open the Contao install tool or run contao:migrate on the command line to make sure the database is up-to-date.</info>');
@@ -100,7 +107,7 @@ class ContaoSetupCommand extends Command
      */
     private function executeCommand(array $command, OutputInterface $output): void
     {
-        $process = $this->processFactory->create(array_merge([$this->phpPath, $this->consolePath], $command));
+        $process = $this->processFactory->create($command);
 
         // Increase the timeout according to contao/manager-bundle (see #54)
         $process->setTimeout(500);

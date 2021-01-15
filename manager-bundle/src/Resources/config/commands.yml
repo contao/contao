@@ -3,7 +3,7 @@ services:
         autoconfigure: true
 
     contao.command.initialize-application:
-        class: Contao\ManagerBundle\Command\InitializeApplicationCommand
+        class: Contao\ManagerBundle\Command\ContaoSetupCommand
         arguments:
             - '%kernel.project_dir%'
             - '%contao.web_dir%'
