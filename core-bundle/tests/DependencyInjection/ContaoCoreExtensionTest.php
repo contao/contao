@@ -148,6 +148,11 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Translation\DataCollectorTranslator;
 use Contao\CoreBundle\Translation\Translator;
 use Contao\CoreBundle\Twig\Extension\ContaoTemplateExtension;
+use Contao\CoreBundle\Twig\Extension\ImageExtension;
+use Contao\CoreBundle\Twig\Extension\TextExtension;
+use Contao\CoreBundle\Twig\Runtime\FigureRendererRuntime;
+use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
+use Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime;
 use Contao\FrontendUser;
 use Contao\Image\PictureGenerator;
 use Contao\Image\ResizeCalculator;
@@ -3696,6 +3701,79 @@ class ContaoCoreExtensionTest extends TestCase
             ],
             $definition->getTags()
         );
+    }
+
+    public function testRegistersTheImageTwigExtension(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $this->assertTrue($container->has(ImageExtension::class));
+
+        $definition = $container->getDefinition(ImageExtension::class);
+
+        $this->assertTrue($definition->isPrivate());
+        $this->assertSame([], $definition->getArguments());
+    }
+
+    public function testRegistersTheTextTwigExtension(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $this->assertTrue($container->has(TextExtension::class));
+
+        $definition = $container->getDefinition(TextExtension::class);
+
+        $this->assertTrue($definition->isPrivate());
+        $this->assertSame([], $definition->getArguments());
+    }
+
+    public function testRegistersTheTwigFigureRendererRuntime(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $this->assertTrue($container->has(FigureRendererRuntime::class));
+
+        $definition = $container->getDefinition(FigureRendererRuntime::class);
+
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference(Studio::class),
+                new Reference('twig'),
+            ],
+            $definition->getArguments()
+        );
+    }
+
+    public function testRegistersTheTwigInsertTagRuntimeRuntime(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $this->assertTrue($container->has(InsertTagRuntime::class));
+
+        $definition = $container->getDefinition(InsertTagRuntime::class);
+
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('contao.framework'),
+            ],
+            $definition->getArguments()
+        );
+    }
+
+    public function testRegistersThePictureConfigurationRuntimeRuntime(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $this->assertTrue($container->has(PictureConfigurationRuntime::class));
+
+        $definition = $container->getDefinition(PictureConfigurationRuntime::class);
+
+        $this->assertTrue($definition->isPrivate());
+        $this->assertSame([], $definition->getArguments());
     }
 
     public function testRegistersTheTwigTemplateExtension(): void

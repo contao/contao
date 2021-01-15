@@ -841,10 +841,16 @@ services:
 
     Contao\CoreBundle\Twig\Extension\ImageExtension: ~
 
+    Contao\CoreBundle\Twig\Extension\TextExtension: ~
+
     Contao\CoreBundle\Twig\Runtime\FigureRendererRuntime:
         arguments:
             - '@Contao\CoreBundle\Image\Studio\Studio'
             - '@twig'
+
+    Contao\CoreBundle\Twig\Runtime\InsertTagRuntime:
+        arguments:
+            - '@contao.framework'
 
     Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime: ~
 
