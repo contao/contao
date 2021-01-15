@@ -102,6 +102,8 @@ class InitializeApplicationCommand extends Command
             $this->executeCommand(array_merge($command, $commandFlags), $output);
         }
 
+        $output->writeln('<info>Done! Please open the Contao install tool or run contao:migrate on the command line to make sure the database is up-to-date.</info>');
+
         return 0;
     }
 
