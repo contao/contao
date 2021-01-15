@@ -135,7 +135,7 @@
             {% set caption_attributes = figure.options.caption_attr|default({})|merge(options.caption_attr|default({})) %}
             {% set base_attributes = { 'itemprop': 'caption' } %}
             <figcaption{{ _self.html_attributes(base_attributes|merge(caption_attributes)) }}>
-                {{- figure.metadata.caption -}}
+                {{- figure.metadata.caption|raw -}}
             </figcaption>
         {% endif %}
     {% endapply %}

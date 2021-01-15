@@ -165,10 +165,7 @@ class Factory
      */
     public function create(BaseUriCollection $baseUris, QueueInterface $queue, array $selectedSubscribers, array $clientOptions = []): Escargot
     {
-        $escargot = Escargot::create($baseUris, $queue)
-            ->withHttpClient($this->createHttpClient($clientOptions))
-            ->withUserAgent(self::USER_AGENT)
-        ;
+        $escargot = Escargot::create($baseUris, $queue)->withHttpClient($this->createHttpClient($clientOptions));
 
         $this->registerDefaultSubscribers($escargot);
         $this->registerSubscribers($escargot, $this->validateSubscribers($selectedSubscribers));
@@ -182,10 +179,7 @@ class Factory
      */
     public function createFromJobId(string $jobId, QueueInterface $queue, array $selectedSubscribers, array $clientOptions = []): Escargot
     {
-        $escargot = Escargot::createFromJobId($jobId, $queue)
-            ->withHttpClient($this->createHttpClient($clientOptions))
-            ->withUserAgent(self::USER_AGENT)
-        ;
+        $escargot = Escargot::createFromJobId($jobId, $queue)->withHttpClient($this->createHttpClient($clientOptions));
 
         $this->registerDefaultSubscribers($escargot);
         $this->registerSubscribers($escargot, $this->validateSubscribers($selectedSubscribers));
@@ -198,7 +192,10 @@ class Factory
         return HttpClient::create(
             array_merge_recursive(
                 [
-                    'headers' => ['accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'],
+                    'headers' => [
+                        'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                        'user-agent' => self::USER_AGENT,
+                    ],
                     'max_duration' => 10, // Ignore requests that take longer than 10 seconds
                 ],
                 array_merge_recursive($this->getDefaultHttpClientOptions(), $options)

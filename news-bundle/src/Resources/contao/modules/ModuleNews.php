@@ -45,11 +45,13 @@ abstract class ModuleNews extends Module
 
 		if ($objArchive !== null)
 		{
+			$blnFeUserLoggedIn = System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
+
 			while ($objArchive->next())
 			{
 				if ($objArchive->protected)
 				{
-					if (!FE_USER_LOGGED_IN || !\is_array($this->User->groups))
+					if (!$blnFeUserLoggedIn || !\is_array($this->User->groups))
 					{
 						continue;
 					}

@@ -32,9 +32,10 @@ class ModuleChangePassword extends Module
 	 */
 	public function generate()
 	{
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+		$container = System::getContainer();
+		$request = $container->get('request_stack')->getCurrentRequest();
 
-		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
+		if ($request && $container->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['changePassword'][0]) . ' ###';
@@ -47,7 +48,7 @@ class ModuleChangePassword extends Module
 		}
 
 		// Return if there is no logged in user
-		if (!FE_USER_LOGGED_IN)
+		if (!$container->get('contao.security.token_checker')->hasFrontendUser())
 		{
 			return '';
 		}
