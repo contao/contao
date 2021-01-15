@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\ManagerBundle\Tests\Command;
 
 use Contao\ManagerBundle\Command\ContaoSetupCommand;
-use Contao\ManagerBundle\Process\ProcessFactory;
 use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Output\OutputInterface;
