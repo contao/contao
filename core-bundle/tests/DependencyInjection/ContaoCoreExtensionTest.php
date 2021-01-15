@@ -3735,7 +3735,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $definition = $container->getDefinition(FigureRendererRuntime::class);
 
-        $this->assertTrue($definition->isPrivate());
+        $this->assertTrue($definition->isPublic());
 
         $this->assertEquals(
             [

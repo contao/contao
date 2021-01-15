@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Runtime\FigureRendererRuntime;
 use Contao\InsertTags;
@@ -114,6 +115,7 @@ class InsertTagsTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration();
 
         $container->set('request_stack', $this->createMock(RequestStack::class));
+        $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
 
         foreach ($configuration as $name => $value) {
             $container->set($name, $value);
