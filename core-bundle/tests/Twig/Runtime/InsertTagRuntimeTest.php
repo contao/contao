@@ -31,8 +31,6 @@ class InsertTagRuntimeTest extends TestCase
         $framework = $this->mockContaoFramework([Controller::class => $controller]);
         $runtime = new InsertTagRuntime($framework);
 
-        $result = $runtime->replace('tag');
-
-        $this->assertSame('replaced-tag', $result);
+        $this->assertSame('replaced-tag', $runtime->replace('tag'));
     }
 }
