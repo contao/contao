@@ -1211,10 +1211,6 @@ class tl_content extends Backend
 
 		switch ($objCte->type)
 		{
-			case 'code':
-				Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_content']['includeTemplate'], 'js_highlight'));
-				break;
-
 			case 'gallery':
 				Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_content']['includeTemplates'], 'moo_mediabox', 'j_colorbox'));
 				break;
@@ -1641,7 +1637,7 @@ class tl_content extends Backend
 		$arrPids = array();
 		$arrArticle = array();
 		$arrRoot = array();
-		$intPid = $dc->activeRecord->pid;
+		$intPid = $dc->activeRecord->pid ?? null;
 
 		if (Input::get('act') == 'overrideAll')
 		{

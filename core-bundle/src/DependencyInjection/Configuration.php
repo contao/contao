@@ -77,7 +77,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->booleanNode('prepend_locale')
                     ->info('Whether or not to add the page language to the URL.')
-                    ->setDeprecated('The URL prefix is configured per root page since Contao 4.10. Using this option requires legacy routing.')
+                    ->setDeprecated(...$this->getDeprecationArgs('contao/core-bundle', '4.10', 'The URL prefix is configured per root page since Contao 4.10. Using this option requires legacy routing.'))
                     ->defaultFalse()
                 ->end()
                 ->booleanNode('pretty_error_screens')
@@ -113,7 +113,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue('css,csv,html,ini,js,json,less,md,scss,svg,svgz,txt,xliff,xml,yml,yaml')
                 ->end()
                 ->scalarNode('url_suffix')
-                    ->setDeprecated('The URL suffix is configured per root page since Contao 4.10. Using this option requires legacy routing.')
+                    ->setDeprecated(...$this->getDeprecationArgs('contao/core-bundle', '4.10', 'The URL suffix is configured per root page since Contao 4.10. Using this option requires legacy routing.'))
                     ->defaultValue('.html')
                 ->end()
                 ->scalarNode('web_dir')
@@ -133,6 +133,7 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addSearchNode())
                 ->append($this->addCrawlNode())
                 ->append($this->addMailerNode())
+                ->append($this->addBackendNode())
             ->end()
         ;
 
@@ -281,7 +282,7 @@ class Configuration implements ConfigurationInterface
                                         ->scalarNode('sizes')
                                         ->end()
                                         ->enumNode('resizeMode')
-                                            ->setDeprecated('Using contao.image.sizes.*.items.resizeMode is deprecated. Please use contao.image.sizes.*.items.resize_mode instead.')
+                                            ->setDeprecated(...$this->getDeprecationArgs('contao/core-bundle', '4.9', 'Using contao.image.sizes.*.items.resizeMode is deprecated. Please use contao.image.sizes.*.items.resize_mode instead.'))
                                             ->values([
                                                 ResizeConfiguration::MODE_CROP,
                                                 ResizeConfiguration::MODE_BOX,
@@ -292,7 +293,7 @@ class Configuration implements ConfigurationInterface
                                 ->end()
                             ->end()
                             ->enumNode('resizeMode')
-                                ->setDeprecated('Using contao.image.sizes.*.resizeMode is deprecated. Please use contao.image.sizes.*.resize_mode instead.')
+                                ->setDeprecated(...$this->getDeprecationArgs('contao/core-bundle', '4.9', 'Using contao.image.sizes.*.resizeMode is deprecated. Please use contao.image.sizes.*.resize_mode instead.'))
                                 ->values([
                                     ResizeConfiguration::MODE_CROP,
                                     ResizeConfiguration::MODE_BOX,
@@ -300,13 +301,13 @@ class Configuration implements ConfigurationInterface
                                 ])
                             ->end()
                             ->scalarNode('cssClass')
-                                ->setDeprecated('Using contao.image.sizes.*.cssClass is deprecated. Please use contao.image.sizes.*.css_class instead.')
+                                ->setDeprecated(...$this->getDeprecationArgs('contao/core-bundle', '4.9', 'Using contao.image.sizes.*.cssClass is deprecated. Please use contao.image.sizes.*.css_class instead.'))
                             ->end()
                             ->booleanNode('lazyLoading')
-                                ->setDeprecated('Using contao.image.sizes.*.lazyLoading is deprecated. Please use contao.image.sizes.*.lazy_loading instead.')
+                                ->setDeprecated(...$this->getDeprecationArgs('contao/core-bundle', '4.9', 'Using contao.image.sizes.*.lazyLoading is deprecated. Please use contao.image.sizes.*.lazy_loading instead.'))
                             ->end()
                             ->booleanNode('skipIfDimensionsMatch')
-                                ->setDeprecated('Using contao.image.sizes.*.skipIfDimensionsMatch is deprecated. Please use contao.image.sizes.*.skip_if_dimensions_match instead.')
+                                ->setDeprecated(...$this->getDeprecationArgs('contao/core-bundle', '4.9', 'Using contao.image.sizes.*.skipIfDimensionsMatch is deprecated. Please use contao.image.sizes.*.skip_if_dimensions_match instead.'))
                             ->end()
                         ->end()
                     ->end()
@@ -325,7 +326,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->scalarNode('target_path')
-                    ->setDeprecated('Use the "contao.image.target_dir" parameter instead.')
+                    ->setDeprecated(...$this->getDeprecationArgs('contao/core-bundle', '4.9', 'Use the "contao.image.target_dir" parameter instead.'))
                     ->defaultNull()
                 ->end()
                 ->arrayNode('valid_extensions')
@@ -447,6 +448,51 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
+    private function addBackendNode(): NodeDefinition
+    {
+        return (new TreeBuilder('backend'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('attributes')
+                    ->info('Adds HTML attributes to the <body> tag in the back end.')
+                    ->example(['data-app-name' => 'My App', 'data-app-version' => '1.2.3'])
+                    ->validate()
+                    ->always(
+                        static function (array $attributes): array {
+                            foreach (array_keys($attributes) as $name) {
+                                if (preg_match('/[^a-z0-9\-.:_]/', (string) $name)) {
+                                    throw new \InvalidArgumentException(sprintf('The attribute name "%s" must be a valid HTML attribute name.', $name));
+                                }
+                            }
+
+                            return $attributes;
+                        }
+                    )
+                    ->end()
+                    ->normalizeKeys(false)
+                    ->useAttributeAsKey('name')
+                    ->scalarPrototype()->end()
+                ->end()
+                ->arrayNode('custom_css')
+                    ->info('Adds custom style sheets to the back end.')
+                    ->example(['files/backend/custom.css'])
+                    ->scalarPrototype()->end()
+                ->end()
+                ->arrayNode('custom_js')
+                    ->info('Adds custom JavaScript files to the back end.')
+                    ->example(['files/backend/custom.js'])
+                    ->scalarPrototype()->end()
+                ->end()
+                ->scalarNode('badge_title')
+                    ->info('Configures the title of the badge in the back end.')
+                    ->example('develop')
+                    ->defaultValue('')
+                ->end()
+            ->end()
+        ;
+    }
+
     /**
      * @return array<string>
      */
@@ -474,5 +520,20 @@ class Configuration implements ConfigurationInterface
         }
 
         return array_values(array_unique($languages));
+    }
+
+    /**
+     * @return array<string>
+     *
+     * @todo Remove this as soon as we are on Symfony 5 only
+     */
+    private function getDeprecationArgs(string $package, string $version, string $message): array
+    {
+        /** @phpstan-ignore-next-line */
+        if (method_exists('root', TreeBuilder::class)) {
+            return [$message];
+        }
+
+        return [$package, $version, $message];
     }
 }

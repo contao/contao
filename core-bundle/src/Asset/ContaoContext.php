@@ -12,16 +12,25 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Asset;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageModel;
 use Symfony\Component\Asset\Context\ContextInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+/**
+ * @internal Do not use this class in your code; use the "contao.assets.assets_context" or "contao.assets.files_context" service instead
+ */
 class ContaoContext implements ContextInterface
 {
     /**
      * @var RequestStack
      */
     private $requestStack;
+
+    /**
+     * @var ContaoFramework
+     */
+    private $framework;
 
     /**
      * @var string
@@ -33,9 +42,10 @@ class ContaoContext implements ContextInterface
      */
     private $debug;
 
-    public function __construct(RequestStack $requestStack, string $field, bool $debug = false)
+    public function __construct(RequestStack $requestStack, ContaoFramework $framework, string $field, bool $debug = false)
     {
         $this->requestStack = $requestStack;
+        $this->framework = $framework;
         $this->field = $field;
         $this->debug = $debug;
     }
@@ -89,11 +99,36 @@ class ContaoContext implements ContextInterface
 
     private function getPageModel(): ?PageModel
     {
-        if (isset($GLOBALS['objPage']) && $GLOBALS['objPage'] instanceof PageModel) {
+        $request = $this->requestStack->getCurrentRequest();
+
+        if (null === $request || !$request->attributes->has('pageModel')) {
+            if (isset($GLOBALS['objPage']) && $GLOBALS['objPage'] instanceof PageModel) {
+                return $GLOBALS['objPage'];
+            }
+
+            return null;
+        }
+
+        $pageModel = $request->attributes->get('pageModel');
+
+        if ($pageModel instanceof PageModel) {
+            return $pageModel;
+        }
+
+        if (
+            isset($GLOBALS['objPage'])
+            && $GLOBALS['objPage'] instanceof PageModel
+            && (int) $GLOBALS['objPage']->id === (int) $pageModel
+        ) {
             return $GLOBALS['objPage'];
         }
 
-        return null;
+        $this->framework->initialize();
+
+        /** @var PageModel $pageAdapter */
+        $pageAdapter = $this->framework->getAdapter(PageModel::class);
+
+        return $pageAdapter->findByPk((int) $pageModel);
     }
 
     /**

@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle\Tests\Database;
 
-use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
+use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\InstallationBundle\Database\Installer;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
@@ -584,7 +584,7 @@ class InstallerTest extends TestCase
             ->willReturn($this->createMock(Configuration::class))
         ;
 
-        $schemaProvider = $this->createMock(DcaSchemaProvider::class);
+        $schemaProvider = $this->createMock(SchemaProvider::class);
         $schemaProvider
             ->method('createSchema')
             ->willReturn($toSchema)

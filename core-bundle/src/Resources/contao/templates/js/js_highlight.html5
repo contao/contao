@@ -1,9 +1,0 @@
-<?php
-
-// Add the highlight style sheet
-$GLOBALS['TL_CSS'][] = 'assets/highlight/css/foundation.css|static';
-
-?>
-
-<script src="<?= $this->asset('js/highlight.min.js', 'contao-components/highlight') ?>"></script>
-<script>hljs.initHighlightingOnLoad()</script>

@@ -82,6 +82,7 @@ class ContaoCoreExtension extends Extension
         $container->setParameter('contao.image.reject_large_uploads', $config['image']['reject_large_uploads']);
         $container->setParameter('contao.security.two_factor.enforce_backend', $config['security']['two_factor']['enforce_backend']);
         $container->setParameter('contao.localconfig', $config['localconfig'] ?? []);
+        $container->setParameter('contao.backend', $config['backend']);
 
         $this->handleSearchConfig($config, $container);
         $this->handleCrawlConfig($config, $container);

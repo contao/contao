@@ -15,14 +15,9 @@ namespace Contao\CoreBundle\Doctrine\Schema;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Database\Installer;
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\Schema;
-use Doctrine\DBAL\Schema\SchemaConfig;
 use Doctrine\DBAL\Schema\Table;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping\ClassMetadata;
-use Doctrine\ORM\Tools\SchemaTool;
 
 class DcaSchemaProvider
 {
@@ -37,21 +32,30 @@ class DcaSchemaProvider
     private $doctrine;
 
     /**
+     * @var SchemaProvider
+     */
+    private $schemaProvider;
+
+    /**
      * @internal Do not inherit from this class; decorate the "contao.doctrine.schema_provider" service instead
      */
-    public function __construct(ContaoFramework $framework, Registry $doctrine)
+    public function __construct(ContaoFramework $framework, Registry $doctrine, SchemaProvider $schemaProvider)
     {
         $this->framework = $framework;
         $this->doctrine = $doctrine;
+        $this->schemaProvider = $schemaProvider;
     }
 
+    /**
+     * @deprecated Deprecated since Contao 4.11, to be removed in Contao 5.0;
+     *             use the Contao\CoreBundle\Doctrine\Schema\SchemaProvider
+     *             class instead.
+     */
     public function createSchema(): Schema
     {
-        if (0 !== \count($this->doctrine->getManagerNames())) {
-            return $this->createSchemaFromOrm();
-        }
+        trigger_deprecation('contao/core-bundle', '4.11', 'Using the DcaSchemaProvider class to create the schema has been deprecated and will no longer work in Contao 5.0. Use the Contao\CoreBundle\Doctrine\Schema\SchemaProvider\SchemaProvider class instead.');
 
-        return $this->createSchemaFromDca();
+        return $this->schemaProvider->createSchema();
     }
 
     /**
@@ -106,51 +110,6 @@ class DcaSchemaProvider
                 }
             }
         }
-    }
-
-    private function createSchemaFromOrm(): Schema
-    {
-        /** @var EntityManagerInterface $manager */
-        $manager = $this->doctrine->getManager();
-
-        /** @var array<ClassMetadata> $metadata */
-        $metadata = $manager->getMetadataFactory()->getAllMetadata();
-
-        /** @var Connection $connection */
-        $connection = $this->doctrine->getConnection();
-
-        // Apply the schema filter
-        if ($filter = $connection->getConfiguration()->getSchemaAssetsFilter()) {
-            foreach ($metadata as $key => $data) {
-                if (!$filter($data->getTableName())) {
-                    unset($metadata[$key]);
-                }
-            }
-        }
-
-        if (empty($metadata)) {
-            return $this->createSchemaFromDca();
-        }
-
-        $tool = new SchemaTool($manager);
-
-        return $tool->getSchemaFromMetadata($metadata);
-    }
-
-    private function createSchemaFromDca(): Schema
-    {
-        $config = new SchemaConfig();
-        $params = $this->doctrine->getConnection()->getParams();
-
-        if (isset($params['defaultTableOptions'])) {
-            $config->setDefaultTableOptions($params['defaultTableOptions']);
-        }
-
-        $schema = new Schema([], [], $config);
-
-        $this->appendToSchema($schema);
-
-        return $schema;
     }
 
     private function parseColumnSql(Table $table, string $columnName, string $sql): void
@@ -345,18 +304,6 @@ class DcaSchemaProvider
                     } else {
                         $sqlTarget[$table][$category] = $fields;
                     }
-                }
-            }
-        }
-
-        /** @var Connection $connection */
-        $connection = $this->doctrine->getConnection();
-
-        // Apply the schema filter (see contao/installation-bundle#78)
-        if ($filter = $connection->getConfiguration()->getSchemaAssetsFilter()) {
-            foreach (array_keys($sqlTarget) as $key) {
-                if (!$filter($key)) {
-                    unset($sqlTarget[$key]);
                 }
             }
         }

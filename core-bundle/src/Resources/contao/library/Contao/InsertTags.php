@@ -98,6 +98,7 @@ class InsertTags extends Controller
 
 		$strBuffer = '';
 		$container = System::getContainer();
+		$blnFeUserLoggedIn = $container->get('contao.security.token_checker')->hasFrontendUser();
 
 		// Create one cache per cache setting (see #7700)
 		$arrCache = &static::$arrItCache[$blnCache];
@@ -289,7 +290,7 @@ class InsertTags extends Controller
 
 				// Front end user
 				case 'user':
-					if (FE_USER_LOGGED_IN)
+					if ($blnFeUserLoggedIn)
 					{
 						$this->import(FrontendUser::class, 'User');
 						$value = $this->User->{$elements[1]};
@@ -393,7 +394,7 @@ class InsertTags extends Controller
 						// User login page
 						if ($elements[1] == 'login')
 						{
-							if (!FE_USER_LOGGED_IN)
+							if (!$blnFeUserLoggedIn)
 							{
 								break;
 							}
@@ -459,15 +460,15 @@ class InsertTags extends Controller
 					switch (strtolower($elements[0]))
 					{
 						case 'link':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s%s>%s</a>', $strUrl, StringUtil::specialchars($strTitle), $strClass, $strTarget, $strName);
+							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s%s>%s</a>', $strUrl ?: './', StringUtil::specialchars($strTitle), $strClass, $strTarget, $strName);
 							break;
 
 						case 'link_open':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s%s>', $strUrl, StringUtil::specialchars($strTitle), $strClass, $strTarget);
+							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s%s>', $strUrl ?: './', StringUtil::specialchars($strTitle), $strClass, $strTarget);
 							break;
 
 						case 'link_url':
-							$arrCache[$strTag] = $strUrl;
+							$arrCache[$strTag] = $strUrl ?: './';
 							break;
 
 						case 'link_title':

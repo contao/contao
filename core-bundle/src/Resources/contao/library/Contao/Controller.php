@@ -721,10 +721,12 @@ abstract class Controller extends System
 		// Only apply the restrictions in the front end
 		if (TL_MODE == 'FE')
 		{
+			$blnFeUserLoggedIn = System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
+
 			// Protected element
 			if ($objElement->protected)
 			{
-				if (!FE_USER_LOGGED_IN)
+				if (!$blnFeUserLoggedIn)
 				{
 					$blnReturn = false;
 				}
@@ -749,7 +751,7 @@ abstract class Controller extends System
 			}
 
 			// Show to guests only
-			elseif ($objElement->guests && FE_USER_LOGGED_IN)
+			elseif ($objElement->guests && $blnFeUserLoggedIn)
 			{
 				$blnReturn = false;
 			}
@@ -1493,9 +1495,14 @@ abstract class Controller extends System
 	 * @param integer|null    $maxWidth                An optional maximum width of the image
 	 * @param string|null     $lightboxGroupIdentifier An optional lightbox group identifier
 	 * @param FilesModel|null $filesModel              An optional files model
+	 *
+	 * @deprecated Deprecated since Contao 4.11, to be removed in Contao 5.0;
+	 *             use the Contao\CoreBundle\Image\Studio\FigureBuilder instead.
 	 */
 	public static function addImageToTemplate($template, array $rowData, $maxWidth = null, $lightboxGroupIdentifier = null, FilesModel $filesModel = null): void
 	{
+		trigger_deprecation('contao/core-bundle', '4.11', 'Using Controller::addImageToTemplate() is deprecated and will no longer work in Contao 5.0. Use the "Contao\CoreBundle\Image\Studio\FigureBuilder" class instead.');
+
 		// Helper: Create metadata from the specified row data
 		$createMetadataOverwriteFromRowData = static function (bool $interpretAsContentModel) use ($rowData)
 		{
@@ -1593,6 +1600,8 @@ abstract class Controller extends System
 			{
 				return array($size, $margin);
 			}
+
+			$size = StringUtil::deserialize($size);
 
 			if (is_numeric($size))
 			{
@@ -1693,7 +1702,7 @@ abstract class Controller extends System
 			->setSize($size)
 			->setLightboxGroupIdentifier($lightboxGroupIdentifier)
 			->setLightboxSize($lightboxSize)
-			->enableLightbox('1' === ($rowData['fullsize'] ?? null))
+			->enableLightbox($rowData['fullsize'] ?? false)
 			->build();
 
 		// Build result and apply it to the template

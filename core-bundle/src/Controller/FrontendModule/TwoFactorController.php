@@ -115,18 +115,11 @@ class TwoFactorController extends AbstractFrontendModuleController
             }
         }
 
-        if ('tl_two_factor_show_backup_codes' === $request->request->get('FORM_SUBMIT')) {
-            if (!$user->backupCodes || !\count(json_decode($user->backupCodes, true))) {
-                $this->generateBackupCodes($user);
-            }
-
-            $template->showBackupCodes = true;
-        }
+        $template->backupCodes = json_decode((string) $user->backupCodes, true) ?? [];
 
         if ('tl_two_factor_generate_backup_codes' === $request->request->get('FORM_SUBMIT')) {
-            $this->generateBackupCodes($user);
-
             $template->showBackupCodes = true;
+            $template->backupCodes = $this->get(BackupCodeManager::class)->generateBackupCodes($user);
         }
 
         if ('tl_two_factor_clear_trusted_devices' === $request->request->get('FORM_SUBMIT')) {
@@ -135,7 +128,6 @@ class TwoFactorController extends AbstractFrontendModuleController
 
         $template->isEnabled = (bool) $user->useTwoFactor;
         $template->href = $this->pageModel->getAbsoluteUrl().'?2fa=enable';
-        $template->backupCodes = json_decode((string) $user->backupCodes, true) ?? [];
         $template->trustedDevices = $this->get('contao.security.two_factor.trusted_device_manager')->getTrustedDevices($user);
 
         return new Response($template->parse());
@@ -198,12 +190,5 @@ class TwoFactorController extends AbstractFrontendModuleController
         $this->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
 
         return new RedirectResponse($this->pageModel->getAbsoluteUrl());
-    }
-
-    private function generateBackupCodes(FrontendUser $user): void
-    {
-        /** @var BackupCodeManager $backupCodeManager */
-        $backupCodeManager = $this->get(BackupCodeManager::class);
-        $backupCodeManager->generateBackupCodes($user);
     }
 }

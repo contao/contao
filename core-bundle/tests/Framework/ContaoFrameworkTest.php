@@ -30,6 +30,7 @@ use Contao\Model\Registry;
 use Contao\PageModel;
 use Contao\RequestToken;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -38,6 +39,8 @@ use Symfony\Contracts\Service\ResetInterface;
 
 class ContaoFrameworkTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     /**
      * @runInSeparateProcess
      * @preserveGlobalState disabled
@@ -467,11 +470,11 @@ class ContaoFrameworkTest extends TestCase
      *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
-     *
-     * @expectedDeprecation Since contao/core-bundle 4.5: Using "$_SESSION" has been deprecated %s.
      */
     public function testRegistersTheLazySessionAccessObject(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.5: Using "$_SESSION" has been deprecated %s.');
+
         $beBag = new ArrayAttributeBag();
         $beBag->setName('contao_backend');
 

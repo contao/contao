@@ -33,6 +33,7 @@ services:
         class: Contao\CoreBundle\Asset\ContaoContext
         arguments:
             - '@request_stack'
+            - '@contao.framework'
             - staticPlugins
             - '%kernel.debug%'
         public: true
@@ -41,6 +42,7 @@ services:
         class: Contao\CoreBundle\Asset\ContaoContext
         arguments:
             - '@request_stack'
+            - '@contao.framework'
             - staticFiles
             - '%kernel.debug%'
         public: true
@@ -99,7 +101,11 @@ services:
     # Backwards compatibility
     contao.controller.backend_csv_import:
         alias: Contao\CoreBundle\Controller\BackendCsvImportController
-        deprecated: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\BackendCsvImportController" instead.
+        # TODO: re-enable this as soon as we are on Symfony 5 only
+        #deprecated:
+        #    package: contao/core-bundle
+        #    version: 4.9
+        #    message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\BackendCsvImportController" instead.
         public: true
 
     Contao\CoreBundle\Controller\FaviconController:
@@ -130,7 +136,11 @@ services:
     # Backwards compatibility
     contao.controller.images:
         alias: Contao\CoreBundle\Controller\ImagesController
-        deprecated: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\ImagesController" instead.
+        # TODO: re-enable this as soon as we are on Symfony 5 only
+        #deprecated:
+        #    package: contao/core-bundle
+        #    version: 4.9
+        #    message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\ImagesController" instead.
         public: true
 
     Contao\CoreBundle\Controller\InsertTagsController:
@@ -142,7 +152,11 @@ services:
     # Backwards compatibility
     contao.controller.insert_tags:
         alias: Contao\CoreBundle\Controller\InsertTagsController
-        deprecated: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\InsertTagsController" instead.
+        # TODO: re-enable this as soon as we are on Symfony 5 only
+        #deprecated:
+        #    package: contao/core-bundle
+        #    version: 4.9
+        #    message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\InsertTagsController" instead.
         public: true
 
     Contao\CoreBundle\Controller\RobotsTxtController:
@@ -226,6 +240,11 @@ services:
         arguments:
             - '@contao.framework'
             - '@doctrine'
+            - '@Contao\CoreBundle\Doctrine\Schema\SchemaProvider'
+
+    Contao\CoreBundle\Doctrine\Schema\SchemaProvider:
+        arguments:
+            - '@doctrine.orm.default_entity_manager'
 
     contao.fragment.handler:
         class: Contao\CoreBundle\Fragment\FragmentHandler
@@ -638,7 +657,6 @@ services:
             - '@contao.security.authentication_success_handler'
             - '@contao.security.authentication_failure_handler'
             - []
-            - '@scheb_two_factor.token_factory'
             - '@?logger'
             - '@?event_dispatcher'
         tags:
@@ -823,10 +841,16 @@ services:
 
     Contao\CoreBundle\Twig\Extension\ImageExtension: ~
 
+    Contao\CoreBundle\Twig\Extension\TextExtension: ~
+
     Contao\CoreBundle\Twig\Runtime\FigureRendererRuntime:
         arguments:
             - '@Contao\CoreBundle\Image\Studio\Studio'
             - '@twig'
+
+    Contao\CoreBundle\Twig\Runtime\InsertTagRuntime:
+        arguments:
+            - '@contao.framework'
 
     Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime: ~
 

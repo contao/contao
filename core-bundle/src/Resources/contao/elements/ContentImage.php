@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Image\Studio\LegacyFigureBuilderTrait;
+
 /**
  * Front end content element "image".
  *
@@ -17,6 +19,8 @@ namespace Contao;
  */
 class ContentImage extends ContentElement
 {
+	use LegacyFigureBuilderTrait;
+
 	/**
 	 * Template
 	 * @var string
@@ -59,9 +63,19 @@ class ContentImage extends ContentElement
 	 */
 	protected function compile()
 	{
-		$this->arrData['floating'] = '';
+		$figureBuilder = $this->getFigureBuilderIfResourceExists($this->objFilesModel);
 
-		$this->addImageToTemplate($this->Template, $this->arrData, null, null, $this->objFilesModel);
+		if (null === $figureBuilder)
+		{
+			return;
+		}
+
+		$figureBuilder
+			->setSize($this->size)
+			->setMetadata($this->objModel->getOverwriteMetadata())
+			->enableLightbox($this->fullsize)
+			->build()
+			->applyLegacyTemplateData($this->Template, $this->imagemargin);
 	}
 }
 

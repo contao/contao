@@ -23,6 +23,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManagerInterface;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,6 +35,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class AuthenticationSuccessHandlerTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     public function testUpdatesTheUserAndAlwaysRedirectsToTargetPathInBackend(): void
     {
         $logger = $this->createMock(LoggerInterface::class);
@@ -133,11 +136,11 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Since contao/core-bundle 4.5: Using the "postLogin" hook has been deprecated %s.
      */
     public function testTriggersThePostLoginHook(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.5: Using the "postLogin" hook has been deprecated %s.');
+
         $logger = $this->createMock(LoggerInterface::class);
         $logger
             ->expects($this->once())
