@@ -14,7 +14,6 @@ namespace Contao\ManagerBundle\Tests\Command;
 
 use Contao\ManagerBundle\Command\ContaoSetupCommand;
 use Contao\TestCase\ContaoTestCase;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Process\PhpExecutableFinder;
@@ -62,13 +61,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
             array_merge([$phpPath], $phpFlags, [$consolePath, 'contao:symlinks', 'web', '--env=prod'], $flags),
         ];
 
-        $invocationCount = 0;
-
-        $createProcessHandler = static function (array $command) use (&$invocationCount, $commandArguments, $processes): Process {
-            self::assertEquals($commandArguments[$invocationCount], $command);
-
-            return $processes[$invocationCount++];
-        };
+        $createProcessHandler = $this->getCreateProcessHandler($processes, $commandArguments, $invocationCount);
 
         $command = new ContaoSetupCommand('project/dir', 'project/dir/web', $createProcessHandler);
 
@@ -121,7 +114,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
         $command = new ContaoSetupCommand(
             'project/dir',
             'project/dir/web',
-            $this->getProcessFactoryMock($this->getProcessMocks(false))
+            $this->getCreateProcessHandler($this->getProcessMocks(false))
         );
 
         $commandTester = (new CommandTester($command));
@@ -137,7 +130,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
         $command = new ContaoSetupCommand(
             'project/dir',
             'project/dir/web',
-            $this->getProcessFactoryMock()
+            $this->getCreateProcessHandler($this->getProcessMocks())
         );
 
         $commandTester = new CommandTester($command);
@@ -151,21 +144,19 @@ class ContaoSetupCommandTest extends ContaoTestCase
     }
 
     /**
-     * @return ProcessFactory&MockObject
+     * @return (\Closure(array<string>):Process)
      */
-    private function getProcessFactoryMock(array $processes = null)
+    private function getCreateProcessHandler(array $processes, array $validateCommandArguments = null, &$invocationCount = null): callable
     {
-        if (null === $processes) {
-            $processes = $this->getProcessMocks();
-        }
+        $invocationCount = $invocationCount ?? 0;
 
-        $processFactory = $this->createMock(ProcessFactory::class);
-        $processFactory
-            ->method('create')
-            ->willReturn(...$processes)
-        ;
+        return static function (array $command) use (&$invocationCount, $validateCommandArguments, $processes): Process {
+            if (null !== $validateCommandArguments) {
+                self::assertEquals($validateCommandArguments[$invocationCount], $command);
+            }
 
-        return $processFactory;
+            return $processes[$invocationCount++];
+        };
     }
 
     private function getProcessMocks(bool $successful = true): array
