@@ -20,7 +20,7 @@ use Webmozart\PathUtil\Path;
 
 /**
  * @deprecated Deprecated since Contao 4.11, to be removed in Contao 5.0; use
- *             the vendor/bin/contao-setup binary instead.
+ *             the "contao-setup" binary instead.
  */
 class ScriptHandler
 {
@@ -29,7 +29,7 @@ class ScriptHandler
      */
     public static function initializeApplication(Event $event): void
     {
-        trigger_deprecation('contao/manager-bundle', '4.11', 'Using ScriptHandler::initializeApplication() has been deprecated and will no longer work in Contao 5.0. Use the vendor/bin/contao-setup binary instead.');
+        trigger_deprecation('contao/manager-bundle', '4.11', 'Using ScriptHandler::initializeApplication() has been deprecated and will no longer work in Contao 5.0. Use the "contao-setup" binary instead.');
 
         $command = array_filter([
             'contao-setup',
