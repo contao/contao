@@ -22,7 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class RewireTwigPathsPass implements CompilerPassInterface
 {
     /**
-     * Rewires registered 'addPath' method calls to our decorated service.
+     * Rewires the registered "addPath" method calls to our decorated service.
      */
     public function process(ContainerBuilder $container): void
     {

@@ -63,7 +63,7 @@ class BackendRebuildCacheMessageListener
 
         $session->getFlashBag()->add(
             'contao.BE.info',
-            $this->translator->trans('ERR.application_cache', [], 'contao_default')
+            $this->translator->trans('ERR.applicationCache', [], 'contao_default')
         );
     }
 }

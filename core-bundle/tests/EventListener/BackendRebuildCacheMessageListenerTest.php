@@ -27,11 +27,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BackendRebuildCacheMessageListenerTest extends TestCase
 {
-    /**
-     * @testWith [false, true]
-     *           [true, false]
-     *           [false, false]
-     */
     public function testDoesNotAddMessageIfNotBackendRequestOrAppCacheIsNotDirty(bool $backendRequest, bool $dirty): void
     {
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
@@ -47,8 +42,6 @@ class BackendRebuildCacheMessageListenerTest extends TestCase
             ->willReturn($dirty)
         ;
 
-        $translator = $this->createMock(TranslatorInterface::class);
-
         $request = $this->createMock(Request::class);
         $request
             ->expects($this->never())
@@ -58,7 +51,7 @@ class BackendRebuildCacheMessageListenerTest extends TestCase
         $listener = new BackendRebuildCacheMessageListener(
             $scopeMatcher,
             $cacheItemPool,
-            $translator
+            $this->createMock(TranslatorInterface::class)
         );
 
         $event = new RequestEvent(
@@ -88,7 +81,7 @@ class BackendRebuildCacheMessageListenerTest extends TestCase
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
             ->method('trans')
-            ->with('ERR.application_cache', [], 'contao_default')
+            ->with('ERR.applicationCache', [], 'contao_default')
             ->willReturn('message')
         ;
 

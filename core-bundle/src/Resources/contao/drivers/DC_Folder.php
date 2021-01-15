@@ -2149,13 +2149,13 @@ class DC_Folder extends DataContainer implements \listable, \editable
 
 		if (!empty($bundleTemplatePaths))
 		{
-			// If a bundle template path is changed, the whole container cache
-			// needs to be rebuild because the template paths are added at
-			// compile time.
+			// If a bundle template path is changed, the whole container cache needs to
+			// be rebuild because the template paths are added at compile time
 			$cacheItemPool = System::getContainer()->get('cache.system');
 
 			$item = $cacheItemPool->getItem(FailTolerantFilesystemLoader::CACHE_DIRTY_FLAG);
 			$item->set(true);
+
 			$cacheItemPool->save($item);
 
 			return;
@@ -2163,9 +2163,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 
 		if (\in_array('twig', $extensions, true))
 		{
-			$twigCache = System::getContainer()
-				->get('twig')
-				->getCache();
+			$twigCache = System::getContainer()->get('twig')->getCache();
 
 			if (\is_string($twigCache) && is_dir($twigCache))
 			{

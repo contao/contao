@@ -42,7 +42,7 @@ class FailTolerantFilesystemLoaderTest extends TestCase
         $filesystemLoader = new FailTolerantFilesystemLoader(
             $inner,
             $cacheItemPool,
-            $this->getTestRoot(),
+            $this->getTestRoot()
         );
 
         $filesystemLoader->addPath($path, 'namespace');
@@ -70,7 +70,7 @@ class FailTolerantFilesystemLoaderTest extends TestCase
         $filesystemLoader = new FailTolerantFilesystemLoader(
             $inner,
             $cacheItemPool,
-            $this->getTestRoot(),
+            $this->getTestRoot()
         );
 
         $filesystemLoader->addPath($path, 'namespace');
