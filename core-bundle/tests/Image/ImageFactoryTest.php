@@ -640,7 +640,9 @@ class ImageFactoryTest extends TestCase
     {
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpg';
 
-        System::setContainer($this->getContainerWithContaoConfiguration($this->getFixturesDir()));
+        $container = $this->getContainerWithContaoConfiguration($this->getFixturesDir());
+
+        System::setContainer($container);
 
         $path = $this->getFixturesDir().'/images/dummy.jpg';
         $adapter = $this->mockConfiguredAdapter(['findByPath' => null]);
@@ -651,6 +653,8 @@ class ImageFactoryTest extends TestCase
 
         $imagine = new Imagine();
         $imageFactory = $this->getImageFactory($resizer, $imagine, $imagine, null, $framework);
+
+        $container->set('contao.image.image_factory', $imageFactory);
 
         $GLOBALS['TL_HOOKS'] = [
             'executeResize' => [[static::class, 'executeResizeHookCallback']],
@@ -718,7 +722,9 @@ class ImageFactoryTest extends TestCase
     {
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpg';
 
-        System::setContainer($this->getContainerWithContaoConfiguration($this->getFixturesDir()));
+        $container = $this->getContainerWithContaoConfiguration($this->getFixturesDir());
+
+        System::setContainer($container);
 
         $path = $this->getFixturesDir().'/images/dummy.jpg';
         $adapter = $this->mockConfiguredAdapter(['findByPath' => null]);
@@ -729,6 +735,8 @@ class ImageFactoryTest extends TestCase
 
         $imagine = new Imagine();
         $imageFactory = $this->getImageFactory($resizer, $imagine, $imagine, null, $framework);
+
+        $container->set('contao.image.image_factory', $imageFactory);
 
         $GLOBALS['TL_HOOKS'] = [
             'executeResize' => [[static::class, 'executeResizeHookCallback']],
@@ -806,7 +814,9 @@ class ImageFactoryTest extends TestCase
     {
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpg';
 
-        System::setContainer($this->getContainerWithContaoConfiguration($this->getFixturesDir()));
+        $container = $this->getContainerWithContaoConfiguration($this->getFixturesDir());
+
+        System::setContainer($container);
 
         $path = $this->getFixturesDir().'/images/dummy.jpg';
 
@@ -822,6 +832,8 @@ class ImageFactoryTest extends TestCase
 
         $imagine = new Imagine();
         $imageFactory = $this->getImageFactory($resizer, $imagine, $imagine, null, $framework);
+
+        $container->set('contao.image.image_factory', $imageFactory);
 
         $GLOBALS['TL_HOOKS'] = [
             'getImage' => [[static::class, 'emptyHookCallback']],

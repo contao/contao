@@ -2,6 +2,7 @@ extends: default
 
 ignore: |
     /node_modules/
+    /tools/
     /vendor/
 
 rules:

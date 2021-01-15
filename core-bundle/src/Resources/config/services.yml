@@ -33,6 +33,7 @@ services:
         class: Contao\CoreBundle\Asset\ContaoContext
         arguments:
             - '@request_stack'
+            - '@contao.framework'
             - staticPlugins
             - '%kernel.debug%'
         public: true
@@ -41,6 +42,7 @@ services:
         class: Contao\CoreBundle\Asset\ContaoContext
         arguments:
             - '@request_stack'
+            - '@contao.framework'
             - staticFiles
             - '%kernel.debug%'
         public: true
@@ -637,7 +639,6 @@ services:
             - '@contao.security.authentication_success_handler'
             - '@contao.security.authentication_failure_handler'
             - []
-            - '@scheb_two_factor.token_factory'
             - '@?logger'
             - '@?event_dispatcher'
         tags:

@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Image;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureInterface;
+use Contao\Image\ResizeOptions;
 
 interface PictureFactoryInterface
 {
@@ -32,8 +33,9 @@ interface PictureFactoryInterface
      *
      * @param string|ImageInterface                      $path
      * @param int|string|array|PictureConfiguration|null $size
+     * @param ResizeOptions|null                         $options
      *
      * @return PictureInterface
      */
-    public function create($path, $size = null);
+    public function create($path, $size = null/*, ResizeOptions $options = null*/);
 }

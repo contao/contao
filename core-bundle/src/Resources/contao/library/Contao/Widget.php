@@ -1444,11 +1444,6 @@ abstract class Widget extends Controller
 			}
 			else
 			{
-				if (isset($sql['default']))
-				{
-					return $sql['default'];
-				}
-
 				if (isset($sql['notnull']) && !$sql['notnull'])
 				{
 					return null;

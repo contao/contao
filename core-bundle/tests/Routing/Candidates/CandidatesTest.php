@@ -244,6 +244,17 @@ class CandidatesTest extends TestCase
         ];
 
         yield [
+            '/en',
+            ['.html'],
+            ['en'],
+            [
+                'default' => ['index', '/', 15],
+                'legacy' => [],
+                'locale' => [],
+            ],
+        ];
+
+        yield [
             '/bar.php',
             ['.php'],
             [''],
