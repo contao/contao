@@ -38,7 +38,7 @@ class ScriptHandler
 
         $event->getIO()->write(
             sprintf(
-                '<warning>Please edit your root composer.json and set "%s" to "%s" instead of calling "ScriptHandler::initializeApplication()" directly.</warning>',
+                '<warning>Please edit your root composer.json and set "%s" to "%s" instead of using "ScriptHandler::initializeApplication()".</warning>',
                 $event->getName(),
                 implode(' ', $command)
             )
