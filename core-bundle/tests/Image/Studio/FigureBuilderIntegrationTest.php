@@ -19,6 +19,7 @@ use Contao\CoreBundle\Image\ImageFactory;
 use Contao\CoreBundle\Image\LegacyResizer;
 use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FilesModel;
 use Contao\FrontendTemplate;
@@ -1430,9 +1431,17 @@ class FigureBuilderIntegrationTest extends TestCase
 
     private function setUpTestCase(\Closure $testCase): array
     {
+        $tokenChecker = $this->createMock(TokenChecker::class);
+        $tokenChecker
+            ->method('hasFrontendUser')
+            ->willReturn(false)
+        ;
+
         // Evaluate preconditions and setup container
         $container = $this->getContainerWithContaoConfiguration(self::$testRoot);
         $container->set('request_stack', $this->createMock(RequestStack::class));
+        $container->set('contao.security.token_checker', $tokenChecker);
+
         System::setContainer($container);
 
         [$preConditions, $arguments] = $testCase();

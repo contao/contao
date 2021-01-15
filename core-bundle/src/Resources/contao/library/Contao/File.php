@@ -254,9 +254,11 @@ class File extends System
 					}
 					else
 					{
+						$imageFactory = System::getContainer()->get('contao.image.image_factory');
+
 						try
 						{
-							$dimensions = System::getContainer()->get('contao.image.image_factory')->create($this->strRootDir . '/' . $this->strFile)->getDimensions();
+							$dimensions = $imageFactory->create($this->strRootDir . '/' . $this->strFile)->getDimensions();
 
 							if (!$dimensions->isRelative() && !$dimensions->isUndefined())
 							{
@@ -284,11 +286,6 @@ class File extends System
 						catch (\Exception $e)
 						{
 							// ignore
-						}
-
-						if (!$this->arrImageSize)
-						{
-							$this->arrImageSize = @getimagesize($this->strRootDir . '/' . $this->strFile);
 						}
 					}
 
@@ -349,10 +346,16 @@ class File extends System
 				return $this->arrImageViewSize;
 
 			case 'viewWidth':
-				return $this->imageViewSize !== false ? $this->imageViewSize[0] : null;
+				// Store in variable as empty() calls __isset() which is not implemented and thus alway true
+				$imageViewSize = $this->imageViewSize;
+
+				return !empty($imageViewSize) ? $imageViewSize[0] : null;
 
 			case 'viewHeight':
-				return $this->imageViewSize !== false ? $this->imageViewSize[1] : null;
+				// Store in variable as empty() calls __isset() which is not implemented and thus alway true
+				$imageViewSize = $this->imageViewSize;
+
+				return !empty($imageViewSize) ? $imageViewSize[1] : null;
 
 			case 'isImage':
 				return $this->isGdImage || $this->isSvgImage;

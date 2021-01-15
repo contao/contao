@@ -33,6 +33,7 @@ services:
         class: Contao\CoreBundle\Asset\ContaoContext
         arguments:
             - '@request_stack'
+            - '@contao.framework'
             - staticPlugins
             - '%kernel.debug%'
         public: true
@@ -41,6 +42,7 @@ services:
         class: Contao\CoreBundle\Asset\ContaoContext
         arguments:
             - '@request_stack'
+            - '@contao.framework'
             - staticFiles
             - '%kernel.debug%'
         public: true

@@ -1,5 +1,14 @@
 # Deprecated features
 
+## FE_USER_LOGGED_IN
+
+The constant `FE_USER_LOGGED_IN` has been deprecated and will be removed in
+Contao 5.0. Use the token checker service instead:
+
+```php
+$hasFrontendUser = System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
+```
+
 ## kernel.packages
 
 The `kernel.packages` parameter has been deprecated in Contao 4.5 and will be

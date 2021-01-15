@@ -17,6 +17,7 @@ use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Contao\System;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -24,7 +25,7 @@ class ContaoContextTest extends TestCase
 {
     public function testReturnsAnEmptyBasePathInDebugMode(): void
     {
-        $context = new ContaoContext(new RequestStack(), 'staticPlugins', true);
+        $context = new ContaoContext(new RequestStack(), $this->mockContaoFramework(), 'staticPlugins', true);
 
         $this->assertSame('', $context->getBasePath());
     }
@@ -61,6 +62,8 @@ class ContaoContextTest extends TestCase
             ->willReturn($basePath)
         ;
 
+        $request->attributes = $this->createMock(ParameterBag::class);
+
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
@@ -71,6 +74,118 @@ class ContaoContextTest extends TestCase
         $GLOBALS['objPage'] = $page;
 
         $context = $this->getContaoContext('staticPlugins', $requestStack);
+
+        $this->assertSame($expected, $context->getBasePath());
+
+        unset($GLOBALS['objPage']);
+    }
+
+    /**
+     * @dataProvider getBasePaths
+     */
+    public function testUsesThePageModelFromRequestAttributes(string $domain, bool $useSSL, string $basePath, string $expected): void
+    {
+        $request = $this->createMock(Request::class);
+        $request
+            ->expects($this->once())
+            ->method('getBasePath')
+            ->willReturn($basePath)
+        ;
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $page = $this->getPageWithDetails();
+        $page->rootUseSSL = $useSSL;
+        $page->staticPlugins = $domain;
+
+        $request->attributes = new ParameterBag(['pageModel' => $page]);
+        unset($GLOBALS['objPage']);
+
+        $context = $this->getContaoContext('staticPlugins', $requestStack);
+
+        $this->assertSame($expected, $context->getBasePath());
+    }
+
+    /**
+     * @dataProvider getBasePaths
+     */
+    public function testGetsPageModelFromIdInRequestAttributes(string $domain, bool $useSSL, string $basePath, string $expected): void
+    {
+        $request = $this->createMock(Request::class);
+        $request
+            ->expects($this->once())
+            ->method('getBasePath')
+            ->willReturn($basePath)
+        ;
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $page = $this->getPageWithDetails();
+        $page->id = 42;
+        $page->rootUseSSL = $useSSL;
+        $page->staticPlugins = $domain;
+
+        $request->attributes = new ParameterBag(['pageModel' => 42]);
+        unset($GLOBALS['objPage']);
+
+        $pageAdapter = $this->mockAdapter(['findByPk']);
+        $pageAdapter
+            ->expects($this->atLeastOnce())
+            ->method('findByPk')
+            ->with(42)
+            ->willReturn($page)
+        ;
+
+        $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
+        $framework
+            ->expects($this->atLeastOnce())
+            ->method('initialize')
+        ;
+
+        $context = new ContaoContext($requestStack, $framework, 'staticPlugins');
+
+        $this->assertSame($expected, $context->getBasePath());
+    }
+
+    /**
+     * @dataProvider getBasePaths
+     */
+    public function testUsesTheGlobalPageModelWithSameIdInRequestAttributes(string $domain, bool $useSSL, string $basePath, string $expected): void
+    {
+        $request = $this->createMock(Request::class);
+        $request
+            ->expects($this->once())
+            ->method('getBasePath')
+            ->willReturn($basePath)
+        ;
+
+        $request->attributes = new ParameterBag(['pageModel' => 42]);
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $page = $this->getPageWithDetails();
+        $page->id = 42;
+        $page->rootUseSSL = $useSSL;
+        $page->staticPlugins = $domain;
+
+        $GLOBALS['objPage'] = $page;
+
+        $pageAdapter = $this->mockAdapter(['findByPk']);
+        $pageAdapter
+            ->expects($this->never())
+            ->method('findByPk')
+        ;
+
+        $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
+        $framework
+            ->expects($this->never())
+            ->method('initialize')
+        ;
+
+        $context = new ContaoContext($requestStack, $framework, 'staticPlugins');
 
         $this->assertSame($expected, $context->getBasePath());
 
@@ -95,6 +210,8 @@ class ContaoContextTest extends TestCase
             ->willReturn('/foo')
         ;
 
+        $request->attributes = $this->createMock(ParameterBag::class);
+
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
@@ -111,7 +228,7 @@ class ContaoContextTest extends TestCase
 
     public function testReturnsAnEmptyStaticUrlIfTheBasePathIsEmpty(): void
     {
-        $context = new ContaoContext(new RequestStack(), 'staticPlugins');
+        $context = new ContaoContext(new RequestStack(), $this->mockContaoFramework(), 'staticPlugins');
 
         $this->assertSame('', $context->getStaticUrl());
     }
@@ -135,7 +252,10 @@ class ContaoContextTest extends TestCase
 
     public function testReadsTheSslConfigurationFromTheRequest(): void
     {
+        unset($GLOBALS['objPage']);
+
         $request = new Request();
+        $request->attributes = $this->createMock(ParameterBag::class);
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
@@ -183,6 +303,12 @@ class ContaoContextTest extends TestCase
             $requestStack = new RequestStack();
         }
 
-        return new ContaoContext($requestStack, $field);
+        $framework = $this->mockContaoFramework();
+        $framework
+            ->expects($this->never())
+            ->method('initialize')
+        ;
+
+        return new ContaoContext($requestStack, $framework, $field);
     }
 }
