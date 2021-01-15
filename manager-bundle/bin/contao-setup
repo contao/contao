@@ -13,7 +13,8 @@ declare(strict_types=1);
 
 use Contao\ManagerBundle\Console\ContaoApplication;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
-use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Filesystem\Filesystem;
 
 set_time_limit(0);
 @ini_set('zlib.output_compression', '0');
@@ -30,8 +31,11 @@ if (file_exists(__DIR__.'/../autoload.php')) {
 
 require $projectDir.'/vendor/autoload.php';
 
-$input = new ArgvInput();
-$kernel = ContaoKernel::fromInput($projectDir, $input);
+$kernel = ContaoKernel::fromInput($projectDir, new ArrayInput(['--env' => 'prod']));
+
+// Purge the cache in case it is corrupted
+(new Filesystem())->remove($kernel->getCacheDir());
 
 $application = new ContaoApplication($kernel);
-$application->run($input);
+$application->setDefaultCommand('contao:setup');
+$application->run();
