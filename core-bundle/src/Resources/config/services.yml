@@ -843,6 +843,13 @@ services:
 
     Contao\CoreBundle\Twig\Extension\TextExtension: ~
 
+    Contao\CoreBundle\Twig\FailTolerantFilesystemLoader:
+        decorates: twig.loader.native_filesystem
+        arguments:
+            - '@Contao\CoreBundle\Twig\FailTolerantFilesystemLoader.inner'
+            - '@cache.system'
+            - '%kernel.project_dir%'
+
     Contao\CoreBundle\Twig\Runtime\FigureRendererRuntime:
         arguments:
             - '@Contao\CoreBundle\Image\Studio\Studio'

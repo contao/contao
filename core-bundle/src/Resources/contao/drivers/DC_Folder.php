@@ -14,10 +14,12 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
+use Contao\CoreBundle\Twig\FailTolerantFilesystemLoader;
 use Contao\CoreBundle\Util\SymlinkUtil;
 use Contao\Image\ResizeConfiguration;
 use Imagine\Exception\RuntimeException;
 use Imagine\Gd\Imagine;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -990,6 +992,8 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		if (is_dir($this->strRootDir . '/' . $source))
 		{
 			$this->Files->rrdir($source);
+
+			$this->purgeCache($source);
 
 			$strWebDir = StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir'));
 
@@ -1978,7 +1982,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 					$objVersions->restore(Input::post('version'));
 
 					// Purge the script cache (see #7005)
-					$this->purgeCache($objFile);
+					$this->purgeCache($objFile->path);
 					$this->reload();
 				}
 			}
@@ -2021,7 +2025,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 				}
 
 				// Purge the script cache (see #7005)
-				$this->purgeCache($objFile);
+				$this->purgeCache($objFile->path);
 			}
 
 			if (isset($_POST['saveNclose']))
@@ -2119,30 +2123,52 @@ class DC_Folder extends DataContainer implements \listable, \editable
 </form>' . "\n\n" . $codeEditor;
 	}
 
-	private function purgeCache(File $file): void
+	private function purgeCache(string ...$affectedPaths): void
 	{
-		if (\in_array($file->extension, array('css', 'scss', 'less', 'js')))
+		$extensions = array_unique(array_map(
+			static function (string $path): string
+			{
+				return Path::getExtension($path, true);
+			},
+			$affectedPaths
+		));
+
+		if (!empty(array_intersect(array('css', 'scss', 'less', 'js'), $extensions)))
 		{
 			$this->import(Automator::class, 'Automator');
 			$this->Automator->purgeScriptCache();
+		}
+
+		$bundleTemplatePaths = array_filter(
+			$affectedPaths,
+			static function (string $path): bool
+			{
+				return Path::isBasePath('templates/bundles', $path) && empty(Path::getExtension($path));
+			}
+		);
+
+		if (!empty($bundleTemplatePaths))
+		{
+			// If a bundle template path is changed, the whole container cache needs to
+			// be rebuild because the template paths are added at compile time
+			$cacheItemPool = System::getContainer()->get('cache.system');
+
+			$item = $cacheItemPool->getItem(FailTolerantFilesystemLoader::CACHE_DIRTY_FLAG);
+			$item->set(true);
+
+			$cacheItemPool->save($item);
 
 			return;
 		}
 
-		if ('twig' === $file->extension)
+		if (\in_array('twig', $extensions, true))
 		{
-			$container = System::getContainer();
-			$twigCache = $container->get('twig')->getCache();
+			$twigCache = System::getContainer()->get('twig')->getCache();
 
-			if (!\is_string($twigCache))
+			if (\is_string($twigCache) && is_dir($twigCache))
 			{
-				return;
+				(new Filesystem())->remove($twigCache);
 			}
-
-			$twigCacheDir = Path::makeRelative($twigCache, $container->getParameter('kernel.project_dir'));
-
-			// Purge whole cache as we unfortunately cannot invalidate a single file
-			(new Folder($twigCacheDir))->purge();
 		}
 	}
 
@@ -2250,6 +2276,8 @@ class DC_Folder extends DataContainer implements \listable, \editable
 
 			// Rename the file
 			$this->Files->rename($this->strPath . '/' . $this->varValue . $this->strExtension, $this->strPath . '/' . $varValue . $this->strExtension);
+
+			$this->purgeCache($this->strPath . '/' . $this->varValue . $this->strExtension, $this->strPath . '/' . $varValue . $this->strExtension);
 
 			// New folders
 			if (stripos($this->intId, '__new__') !== false)
