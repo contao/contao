@@ -248,7 +248,7 @@
     },
     "bin": [
         "manager-bundle/bin/contao-console",
-        "manager-bundle/bin/contao-script-handler"
+         "manager-bundle/bin/contao-setup"
     ],
     "scripts": {
         "all": [

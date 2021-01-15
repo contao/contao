@@ -92,7 +92,7 @@
     },
     "bin": [
         "bin/contao-console",
-        "bin/contao-script-handler"
+        "bin/contao-setup"
     ],
     "support": {
         "issues": "https://github.com/contao/contao/issues",
