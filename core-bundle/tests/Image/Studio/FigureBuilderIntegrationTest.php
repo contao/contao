@@ -1008,6 +1008,41 @@ class FigureBuilderIntegrationTest extends TestCase
             ),
         ];
 
+        yield 'using max-width with a serialized size' => [
+            static function () use ($baseRowData) {
+                return [
+                    null,
+                    [
+                        new \stdClass(),
+                        array_merge($baseRowData, [
+                            'size' => 'a:3:{i:0;s:3:"150";i:1;s:3:"100";i:2;s:4:"crop";}',
+                        ]),
+                        90,
+                        null,
+                        null,
+                    ],
+                ];
+            },
+            array_replace_recursive(
+                $baseExpectedTemplateData,
+                [
+                    'arrSize' => [
+                        0 => 90,
+                        1 => 60,
+                        3 => 'width="90" height="60"',
+                    ],
+                    'imgSize' => ' width="90" height="60"',
+                    'picture' => [
+                        'img' => [
+                            'width' => 90,
+                            'height' => 60,
+                        ],
+                        'title' => '',
+                    ],
+                ]
+            ),
+        ];
+
         yield 'defining max-width and margin' => [
             static function () use ($baseRowData) {
                 return [

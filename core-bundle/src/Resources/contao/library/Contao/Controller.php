@@ -1596,6 +1596,8 @@ abstract class Controller extends System
 				return array($size, $margin);
 			}
 
+			$size = StringUtil::deserialize($size);
+
 			if (is_numeric($size))
 			{
 				$size = array(0, 0, (int) $size);
