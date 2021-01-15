@@ -27,6 +27,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BackendRebuildCacheMessageListenerTest extends TestCase
 {
+    /**
+     * @dataProvider provideRequestAndDirty
+     */
     public function testDoesNotAddMessageIfNotBackendRequestOrAppCacheIsNotDirty(bool $backendRequest, bool $dirty): void
     {
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
@@ -61,6 +64,13 @@ class BackendRebuildCacheMessageListenerTest extends TestCase
         );
 
         $listener($event);
+    }
+
+    public function provideRequestAndDirty(): \Generator
+    {
+        yield [false, true];
+        yield [true, false];
+        yield [false, false];
     }
 
     public function testAddsMessage(): void
