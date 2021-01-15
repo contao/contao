@@ -43,7 +43,7 @@ class ContentGallery extends ContentElement
 	public function generate()
 	{
 		// Use the home directory of the current user as file source
-		if ($this->useHomeDir && FE_USER_LOGGED_IN)
+		if ($this->useHomeDir && System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
 		{
 			$this->import(FrontendUser::class, 'User');
 

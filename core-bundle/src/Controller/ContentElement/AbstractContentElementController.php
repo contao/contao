@@ -14,17 +14,14 @@ namespace Contao\CoreBundle\Controller\ContentElement;
 
 use Contao\ContentModel;
 use Contao\CoreBundle\Controller\AbstractFragmentController;
-use Contao\PageModel;
 use Contao\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 abstract class AbstractContentElementController extends AbstractFragmentController
 {
-    public function __invoke(Request $request, ContentModel $model, string $section, array $classes = null, PageModel $pageModel = null): Response
+    public function __invoke(Request $request, ContentModel $model, string $section, array $classes = null): Response
     {
-        $this->setPageModel($pageModel);
-
         $type = $this->getType();
         $template = $this->createTemplate($model, 'ce_'.$type);
 

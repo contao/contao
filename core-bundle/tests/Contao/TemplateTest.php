@@ -15,16 +15,21 @@ namespace Contao\CoreBundle\Tests\Contao;
 use Contao\BackendTemplate;
 use Contao\Config;
 use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Image\ImageFactory;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\ImageResult;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
+use Contao\Image\ResizerInterface;
 use Contao\System;
+use Imagine\Image\ImagineInterface;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 use Symfony\Component\VarDumper\VarDumper;
 use Twig\Environment;
@@ -43,7 +48,11 @@ class TemplateTest extends TestCase
         $this->filesystem = new Filesystem();
         $this->filesystem->mkdir($this->getFixturesDir().'/templates');
 
-        System::setContainer($this->getContainerWithContaoConfiguration($this->getFixturesDir()));
+        $container = $this->getContainerWithContaoConfiguration($this->getFixturesDir());
+        $container->set('filesystem', $this->filesystem);
+        $container->set('request_stack', new RequestStack());
+
+        System::setContainer($container);
     }
 
     protected function tearDown(): void
@@ -351,7 +360,22 @@ EOF
             ;
         }
 
+        $imageFactory = new ImageFactory(
+            $this->createMock(ResizerInterface::class),
+            $this->createMock(ImagineInterface::class),
+            $this->createMock(ImagineInterface::class),
+            new Filesystem(),
+            $this->createMock(ContaoFramework::class),
+            false,
+            ['jpeg_quality' => 80],
+            ['jpg', 'svg'],
+            $this->getFixturesDir()
+        );
+
         $container = $this->getContainerWithContaoConfiguration($this->getFixturesDir());
+        $container->set('filesystem', new Filesystem());
+        $container->set('request_stack', new RequestStack());
+        $container->set('contao.image.image_factory', $imageFactory);
 
         $studio = $this->createMock(Studio::class);
         $studio
