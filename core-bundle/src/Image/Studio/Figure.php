@@ -221,7 +221,7 @@ final class Figure
             $mapping = $metadata->all();
 
             // Handle special chars
-            foreach ([Metadata::VALUE_ALT, Metadata::VALUE_TITLE, Metadata::VALUE_CAPTION] as $key) {
+            foreach ([Metadata::VALUE_ALT, Metadata::VALUE_TITLE] as $key) {
                 if (isset($mapping[$key])) {
                     $mapping[$key] = StringUtil::specialchars($mapping[$key]);
                 }

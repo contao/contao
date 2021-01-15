@@ -385,6 +385,11 @@ class FigureTest extends TestCase
             Metadata::VALUE_URL => 'foo://meta',
         ]);
 
+        $metadataWithHtml = new Metadata([
+            Metadata::VALUE_ALT => 'Here <b>is</b> some <i>HTML</i>!',
+            Metadata::VALUE_CAPTION => 'Here <b>is</b> some <i>HTML</i>!',
+        ]);
+
         yield 'with metadata' => [
             [$simpleMetadata, null, null, null],
             [false, null, null],
@@ -415,6 +420,15 @@ class FigureTest extends TestCase
                 $this->assertSame('', $data['attributes']);
 
                 $this->assertArrayNotHasKey('title', $data['picture']);
+            },
+        ];
+
+        yield 'with metadata containing HTML' => [
+            [$metadataWithHtml, null, null, null],
+            [true, null, null],
+            function (array $data): void {
+                $this->assertSame('Here <b>is</b> some <i>HTML</i>!', $data['caption']);
+                $this->assertSame('Here &lt;b&gt;is&lt;/b&gt; some &lt;i&gt;HTML&lt;/i&gt;!', $data['alt']);
             },
         ];
 
