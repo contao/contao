@@ -37,5 +37,5 @@ $kernel = ContaoKernel::fromInput($projectDir, new ArrayInput(['--env' => 'prod'
 (new Filesystem())->remove($kernel->getCacheDir());
 
 $application = new ContaoApplication($kernel);
-$application->setDefaultCommand('contao:initialize-application');
+$application->setDefaultCommand('contao:setup');
 $application->run();

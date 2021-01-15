@@ -23,14 +23,9 @@ use Webmozart\PathUtil\Path;
 /**
  * @internal
  */
-class InitializeApplicationCommand extends Command
+class ContaoSetupCommand extends Command
 {
-    protected static $defaultName = 'contao:initialize-application';
-
-    /**
-     * @var string
-     */
-    private $projectDir;
+    protected static $defaultName = 'contao:setup';
 
     /**
      * @var string
@@ -73,7 +68,7 @@ class InitializeApplicationCommand extends Command
     {
         $this
             ->setHidden(true)
-            ->setDescription('Initializes a Contao Managed Edition. Add this command to your composer "post-install-cmd" and "post-update-cmd" scripts.')
+            ->setDescription('Sets up a Contao Managed Edition. This command will be run when executing the "contao-setup" binary.')
         ;
     }
 
