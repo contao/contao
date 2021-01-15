@@ -34,14 +34,9 @@ class ValidateCustomRgxpListenerTest extends TestCase
         $annotationReader = new AnnotationReader();
         $annotation = $annotationReader->getClassAnnotation(new \ReflectionClass($listener), Callback::class);
 
-        $this->assertSame(
-            [
-                'table' => 'tl_form_field',
-                'target' => 'fields.customRgxp.save',
-                'priority' => null,
-            ],
-            (array) $annotation
-        );
+        $this->assertSame('tl_form_field', $annotation->table);
+        $this->assertSame('fields.customRgxp.save', $annotation->target);
+        $this->assertSame(0, (int) $annotation->priority);
     }
 
     public function testThrowsExceptionIfInvalidRegex(): void

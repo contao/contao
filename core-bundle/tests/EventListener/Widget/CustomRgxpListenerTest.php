@@ -36,13 +36,8 @@ class CustomRgxpListenerTest extends TestCase
         $annotationReader = new AnnotationReader();
         $annotation = $annotationReader->getClassAnnotation(new \ReflectionClass($listener), Hook::class);
 
-        $this->assertSame(
-            [
-                'value' => 'addCustomRegexp',
-                'priority' => null,
-            ],
-            (array) $annotation
-        );
+        $this->assertSame('addCustomRegexp', $annotation->value);
+        $this->assertSame(0, (int) $annotation->priority);
     }
 
     public function testReturnsFalseIfNotCustomRgxpType(): void
