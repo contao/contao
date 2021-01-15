@@ -11,7 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Controller\InsertTagsController;
-use Contao\CoreBundle\Twig\Runtime\FigureRendererRuntime;
+use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -777,24 +777,17 @@ class InsertTags extends Controller
 						break;
 					}
 
-					// Build arguments for FigureRendererRuntime#render
 					$size = $configuration['size'] ?? null;
-					$template = $configuration['template'] ?? null;
+					$template = $configuration['template'] ?? '@ContaoCore/Image/Studio/figure.html.twig';
+
 					unset($configuration['size'], $configuration['template']);
 
-					$args = array($from, $size, $configuration);
-
-					if (null !== $template)
-					{
-						$args[] = $template;
-					}
-
 					// Render the figure
-					$figureRenderer = $container->get(FigureRendererRuntime::class);
+					$figureRenderer = $container->get(FigureRenderer::class);
 
 					try
 					{
-						$arrCache[$strTag] = $figureRenderer->render(...$args);
+						$arrCache[$strTag] = $figureRenderer->render($from, $size, $configuration, $template);
 					}
 					catch (\Throwable $e)
 					{

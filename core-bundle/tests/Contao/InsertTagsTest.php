@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Twig\Runtime\FigureRendererRuntime;
 use Contao\InsertTags;
 use Contao\System;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -26,8 +26,8 @@ class InsertTagsTest extends TestCase
      */
     public function testFigureInsertTag(string $input, array $expectedArguments): void
     {
-        $figureRendererRuntime = $this->createMock(FigureRendererRuntime::class);
-        $figureRendererRuntime
+        $figureRenderer = $this->createMock(FigureRenderer::class);
+        $figureRenderer
             ->expects($this->once())
             ->method('render')
             ->with(...$expectedArguments)
@@ -35,7 +35,7 @@ class InsertTagsTest extends TestCase
         ;
 
         $this->setContainerWithContaoConfiguration([
-            FigureRendererRuntime::class => $figureRendererRuntime,
+            FigureRenderer::class => $figureRenderer,
         ]);
 
         $output = (new InsertTags())->replace($input, false);
@@ -91,15 +91,15 @@ class InsertTagsTest extends TestCase
      */
     public function testFigureInsertTagReturnsEmptyStringIfInvalid(string $input, bool $invalidConfiguration): void
     {
-        $figureRendererRuntime = $this->createMock(FigureRendererRuntime::class);
-        $figureRendererRuntime
+        $figureRenderer = $this->createMock(FigureRenderer::class);
+        $figureRenderer
             ->expects($invalidConfiguration ? $this->once() : $this->never())
             ->method('render')
             ->willThrowException(new \InvalidArgumentException('bad call'))
         ;
 
         $this->setContainerWithContaoConfiguration([
-            FigureRendererRuntime::class => $figureRendererRuntime,
+            FigureRenderer::class => $figureRenderer,
         ]);
 
         $output = (new InsertTags())->replace($input, false);

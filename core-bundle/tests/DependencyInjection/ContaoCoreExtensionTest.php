@@ -91,6 +91,7 @@ use Contao\CoreBundle\Image\ImageFactory;
 use Contao\CoreBundle\Image\ImageSizes;
 use Contao\CoreBundle\Image\LegacyResizer;
 use Contao\CoreBundle\Image\PictureFactory;
+use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Mailer\AvailableTransports;
 use Contao\CoreBundle\Mailer\ContaoMailer;
@@ -2194,6 +2195,25 @@ class ContaoCoreExtensionTest extends TestCase
         );
     }
 
+    public function testRegistersTheFigureRenderer(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $this->assertTrue($container->has(FigureRenderer::class));
+
+        $definition = $container->getDefinition(FigureRenderer::class);
+
+        $this->assertTrue($definition->isPublic());
+
+        $this->assertEquals(
+            [
+                new Reference(Studio::class),
+                new Reference('twig'),
+            ],
+            $definition->getArguments()
+        );
+    }
+
     public function testRegistersTheBackendMenuBuilder(): void
     {
         $container = $this->getContainerBuilder();
@@ -3735,12 +3755,11 @@ class ContaoCoreExtensionTest extends TestCase
 
         $definition = $container->getDefinition(FigureRendererRuntime::class);
 
-        $this->assertTrue($definition->isPublic());
+        $this->assertTrue($definition->isPrivate());
 
         $this->assertEquals(
             [
-                new Reference(Studio::class),
-                new Reference('twig'),
+                new Reference(FigureRenderer::class),
             ],
             $definition->getArguments()
         );

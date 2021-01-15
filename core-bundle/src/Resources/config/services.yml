@@ -374,6 +374,12 @@ services:
             - { name: container.service_subscriber, id: contao.assets.files_context }
             - { name: container.service_subscriber, id: contao.image.resizer }
 
+    Contao\CoreBundle\Image\Studio\FigureRenderer:
+        arguments:
+            - '@Contao\CoreBundle\Image\Studio\Studio'
+            - '@twig'
+        public: true
+
     Contao\CoreBundle\Mailer\AvailableTransports:
         arguments:
             - '@?translator'
@@ -852,9 +858,7 @@ services:
 
     Contao\CoreBundle\Twig\Runtime\FigureRendererRuntime:
         arguments:
-            - '@Contao\CoreBundle\Image\Studio\Studio'
-            - '@twig'
-        public: true
+            - '@Contao\CoreBundle\Image\Studio\FigureRenderer'
 
     Contao\CoreBundle\Twig\Runtime\InsertTagRuntime:
         arguments:
