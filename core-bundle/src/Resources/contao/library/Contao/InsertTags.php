@@ -11,9 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Controller\InsertTagsController;
-use Contao\CoreBundle\Exception\ArrayStringParserException;
 use Contao\CoreBundle\Twig\Runtime\FigureRendererRuntime;
-use Contao\CoreBundle\Util\ArrayString;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -769,40 +767,29 @@ class InsertTags extends Controller
 
 				// Images
 				case 'figure':
-					// Expected format: <from>, <size>[, <configuration>[, <template>]]
-					$args = \array_slice($elements, 1);
+					// Expected format: figure::<from>[?<key>=<value>,[&<key>=<value>]*][::<template>]
+					list($from, $configuration) = $this->parseUrlWithQueryString($elements[1] ?? '');
+					$template = $elements[2] ?? null;
 
-					if (\count($args) < 2)
+					if (null === $from || \count($elements) > 3)
 					{
 						$arrCache[$strTag] = '';
 
 						break;
 					}
 
-					// Allow implicit arrays for <size> and <configuration>
-					foreach (array(1, 2) as $index)
+					// Build arguments for FigureRendererRuntime#render
+					$size = $configuration['size'] ?? null;
+					unset($configuration['size']);
+
+					$args = array($from, $size, $configuration);
+
+					if (null !== $template)
 					{
-						if (\array_key_exists($index, $args))
-						{
-							$arrayString = trim($args[$index]);
-
-							// Allow omitting outer brackets
-							if (0 !== strpos($arrayString, '['))
-							{
-								$arrayString = "[$arrayString]";
-							}
-
-							try
-							{
-								$args[$index] = ArrayString::parse($arrayString);
-							}
-							catch (ArrayStringParserException $e)
-							{
-								// Fallback to unprocessed string
-							}
-						}
+						$args[] = $template;
 					}
 
+					// Render the figure
 					$figureRenderer = $container->get(FigureRendererRuntime::class);
 
 					try
@@ -818,8 +805,6 @@ class InsertTags extends Controller
 
 				case 'image':
 				case 'picture':
-					trigger_deprecation('contao/core-bundle', '4.11', 'Using the "image" and "picture" insert tags has been deprecated and will no longer work in Contao 5.0. Use the "figure" insert tag instead.');
-
 					$width = null;
 					$height = null;
 					$alt = '';
@@ -1175,6 +1160,19 @@ class InsertTags extends Controller
 		}
 
 		return StringUtil::restoreBasicEntities($strBuffer);
+	}
+
+	/**
+	 * @return array[string|null, array]
+	 */
+	private function parseUrlWithQueryString(string $url): array
+	{
+		$base = parse_url($url, PHP_URL_PATH) ?: null;
+		$query = parse_url($url, PHP_URL_QUERY) ?: '';
+
+		parse_str($query, $attributes);
+
+		return array($base, $attributes);
 	}
 }
 

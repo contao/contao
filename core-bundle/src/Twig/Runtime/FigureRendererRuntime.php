@@ -23,7 +23,10 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Twig\Environment;
 use Twig\Extension\RuntimeExtensionInterface;
 
-final class FigureRendererRuntime implements RuntimeExtensionInterface
+/**
+ * @final
+ */
+class FigureRendererRuntime implements RuntimeExtensionInterface
 {
     /**
      * @var Studio
