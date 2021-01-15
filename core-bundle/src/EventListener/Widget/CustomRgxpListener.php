@@ -44,7 +44,7 @@ class CustomRgxpListener
         }
 
         if (!preg_match($widget->customRgxp, $input)) {
-            $widget->addError($this->translator->trans('ERR.customRgxp', [$widget->customRgxp], 'contao_default'));
+            $widget->addError($widget->errorMsg ?: $this->translator->trans('ERR.customRgxp', [$widget->customRgxp], 'contao_default'));
         }
 
         return true;

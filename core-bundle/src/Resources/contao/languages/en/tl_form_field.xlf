@@ -236,6 +236,12 @@
       <trans-unit id="tl_form_field.tabindex.1">
         <source>The position of the form field in the tabbing order.</source>
       </trans-unit>
+      <trans-unit id="tl_form_field.errorMsg.0">
+        <source>Error message</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.errorMsg.1">
+        <source>This optional error message will be shown in the front end if the form field does not validate.</source>
+      </trans-unit>
       <trans-unit id="tl_form_field.fSize.0">
         <source>Field size</source>
       </trans-unit>
